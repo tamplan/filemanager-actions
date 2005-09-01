@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=%%%VERSION%%%
+Encoding=UTF-8
+Name=Nautilus Actions Configuration
+Type=Application
+Comment=Add items to the Nautilus context menu
+Exec=nact
+Icon=%%%DATA_DIR%%%/nautilus-launch-icon.png
+Categories=Application;FileManager;DesktopSettings;Settings;AdvancedSettings;
+#Categories=GNOME;Application;SystemSetup
+GenericName[en_US]=Nautilus Actions Configuration Tool
+Name[en_US]=Nautilus Actions Configuration
