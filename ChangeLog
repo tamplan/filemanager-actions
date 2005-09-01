@@ -1,4 +1,15 @@
-* Fri Aug 28 2005 Frederic Ruaudel <grumz@grumz.net> 0.4
+* Wed Aug 31 2005 Frederic Ruaudel <grumz@grumz.net> 0.5
+- Fix bug with special characters in new config name in nact #66
+- Change the default per user folder config path to the one define 
+by fd.o (~/.config/.nautilus-actions)
+- In nact, create the per user config folder if it doesn't exist bug #59 and move the old one if it exists to the new one.
+- In nact fix the problem with Delete Config button that stay greyed after a deletion even after selecting another config.
+- In NACT, add a confirm dialog with trying to close without saving the changes (bug #60)
+- In nact, now display system wide config in read only mode and a Preference menu has been added to switch this display on or off
+- In nact, in normal user mode, if a config is created with the same name as a system-wide one, it is overwritten (it already works for the extension since 0.4)
+- In nact, fix a bug that prevent creating a new config with the same name as a just deleted one if save wasn't pressed between the two event. 
+
+* Sun Aug 28 2005 Frederic Ruaudel <grumz@grumz.net> 0.4
 - Add -fPIC option in the Makefile to make nautilus-actions compile on 64bits arch
 - Apply patch from Ed Catmur that add DESTDIR var in Makefile for gentoo ebuild
 - Add the desktop file for nact submited by Ed Catmur

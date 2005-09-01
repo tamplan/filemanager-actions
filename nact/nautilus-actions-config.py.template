@@ -44,17 +44,98 @@ class Config:
 		self.menu_item["tooltip"] = ""
 		self.test = {}
 		self.test["basename"] = ""
-		self.test["isfile"] = False
+		self.test["isfile"] = True
 		self.test["isdir"] = False
 		self.test["accept_multiple_file"] = False
 		self.test["schemes"] = []
 		self.tobedeleted = False
+		self.readonly = False
+		self.overwritten = False
+		self.ow_filename = ""
+		self.ow_command = {}
+		self.ow_command["path"] = ""
+		self.ow_command["parameters"] = ""
+		self.ow_menu_item = {}
+		self.ow_menu_item["label"] = ""
+		self.ow_menu_item["tooltip"] = ""
+		self.ow_test = {}
+		self.ow_test["basename"] = ""
+		self.ow_test["isfile"] = True
+		self.ow_test["isdir"] = False
+		self.ow_test["accept_multiple_file"] = False
+		self.ow_test["schemes"] = []
+		self.ow_tobedeleted = False
+		self.ow_readonly = False
+
 
 	def mark_as_deleted (self):
-		self.tobedeleted = True
+		if self.overwritten:
+			self.restore_overwritten_config ()
+		else:
+			self.tobedeleted = True
 
 	def is_deleted (self):
 		return self.tobedeleted
+
+	def is_overwritten (self):
+		return self.overwritten
+
+	def overwrite_config (self):
+		if not self.overwritten:
+		#
+			self.overwritten = True
+			
+			# Save overwritten config
+			self.ow_filename = self.filename
+			self.ow_command = self.command
+			self.ow_menu_item = self.menu_item
+			self.ow_test = self.test
+			self.ow_tobedeleted = self.tobedeleted
+			self.ow_readonly = self.readonly
+
+			# reset new one
+			self.filename = ""
+			del (self.command)
+			self.command = {}
+			self.command["path"] = ""
+			self.command["parameters"] = ""
+			del (self.menu_item)
+			self.menu_item = {}
+			self.menu_item["label"] = ""
+			self.menu_item["tooltip"] = ""
+			del (self.test)
+			self.test = {}
+			self.test["basename"] = ""
+			self.test["isfile"] = True
+			self.test["isdir"] = False
+			self.test["accept_multiple_file"] = False
+			self.test["schemes"] = []
+			self.tobedeleted = False
+			self.readonly = False
+		#
+
+	def restore_overwritten_config (self):
+		if self.overwritten:
+			self.overwritten = False
+			
+			# Restore overwritten config
+			self.filename = self.ow_filename
+			self.command = self.ow_command
+			self.menu_item = self.ow_menu_item
+			self.test = self.ow_test
+			self.tobedeleted = self.ow_tobedeleted
+			self.readonly = self.ow_readonly
+
+			# Delete overwritten config
+			del (self.ow_command)
+			del (self.ow_menu_item)
+			del (self.ow_test)
+		
+	def is_readonly (self):
+		return self.readonly
+
+	def set_readonly (self, is_readonly):
+		self.readonly = bool
 
 	def Bool2Str (self, bool):
 		if bool:
@@ -147,12 +228,24 @@ class Config:
 
 class ConfigParser:
 	def __init__ (self):
-		uid = os.getuid ()
-		if uid == 0:
+		self.uid = os.getuid ()
+		self.home_dir = pwd.getpwuid (self.uid)[5]
+		if self.uid == 0:
 			self.config_dir = ["%%%DEFAULT_CONFIG_PATH%%%"]
 		else:
-			home_dir = pwd.getpwuid (uid)[5]
-			self.config_dir = [home_dir + "/%%%DEFAULT_PER_USER_PATH%%%"]
+			current_config_dir = self.home_dir + "/%%%DEFAULT_PER_USER_PATH%%%"
+			old_configdir = self.home_dir + "/%%%OLD_DEFAULT_PER_USER_PATH%%%"
+			
+			if not os.path.exists (current_config_dir):
+				os.makedirs (current_config_dir)
+				
+			if os.path.isdir (old_configdir) and old_configdir != current_config_dir:
+			#
+				os.rename (old_configdir, current_config_dir);
+			#
+
+			self.config_dir = [current_config_dir, "%%%DEFAULT_CONFIG_PATH%%%"]
+				
 
 class ConfigReader (ConfigParser):
 	def __init__ (self):
@@ -271,6 +364,8 @@ class ConfigReader (ConfigParser):
 								#
 								node2 = node2.next
 							#
+							if filename[0:len (self.home_dir)] != self.home_dir and self.uid != 0:
+								new_config.set_readonly (True)
 							self.config_list[string.lower (new_config.get_name ())] = new_config
 						#
 						node = node.next
@@ -316,14 +411,16 @@ class ConfigWriter (ConfigParser):
 			#
 			if (not delete_file):
 			#
+				count = 0;
 				doc = libxml2.newDoc ("1.0")
 				main_node = libxml2.newNode ("nautilus-actions-config")
 				main_node.setProp ("version", "0.1")
 				doc.setRootElement (main_node)
 				for config in config_list:
 				#
-					if not config.is_deleted (): # Skip deleted config
+					if not config.is_deleted () and not config.is_readonly (): # Skip deleted and readonly config
 					#
+						count += 1;
 						node_action = main_node.newChild (None, "action", None)
 						node_action.setProp ("name", config.get_name ())
 						
@@ -347,7 +444,8 @@ class ConfigWriter (ConfigParser):
 						node_menu_item.newChild (None, "tooltip", config.get_menu_item_tooltip ())
 					#
 				#
-				doc.saveFile (filename)
+				if count > 0: # if not all readonly or deleted
+					doc.saveFile (filename)
 				doc.freeDoc ()
 			#
 			else: # delete old file
@@ -435,6 +533,27 @@ class NACTFileChooserDialog (NACTGui):
 		self.widget.hide ()
 		self.entry_path.set_text (self.GetCurrentFile ())
 
+class NACTConfirmSaveDialog (NACTGui):
+	def __init__ (self, save_handler):
+		NACTGui.__init__ (self, "DialogConfirmSave")
+
+		dic = { "ActionConfirmDialogCancel" : self.ActionCloseHandler,
+				  "ActionConfirmDialogClose" : self.ActionDialogCloseHandler,
+				  "ActionConfirmDialogSave" : self.ActionConfirmDialogSaveHandler,
+				  "ActionConfirmDialogNoSave": self.ActionConfirmDialogNoSaveHandler
+				}
+
+		self.signal_autoconnect (dic)
+		self.save_handler = save_handler
+
+	def ActionConfirmDialogSaveHandler (self, widget):
+		self.widget.hide ()
+		self.save_handler (widget)
+		gtk.main_quit ()
+	
+	def ActionConfirmDialogNoSaveHandler (self, widget):
+		self.widget.hide ()
+		gtk.main_quit ()
 
 class NACTMainWindow (NACTGui):
 	def __init__ (self):
@@ -448,12 +567,13 @@ class NACTMainWindow (NACTGui):
 		self.new_config_name = "New Config"
 
 		
-		dic = { "ActionAppQuit" : gtk.main_quit, 
-				"ActionQuit" : gtk.main_quit,
+		dic = { "ActionAppQuit" : self.ActionAppQuitHandler, 
+				"ActionQuit" : self.ActionQuitHandler,
 				"ActionNewConfig" : self.ActionNewConfigHandler,
 				"ActionDeleteConfig" : self.ActionDeleteConfigHandler,
 				"ActionConfigSelect" : self.ActionConfigSelectHandler,
 				"ActionShowLegend" : self.ActionShowLegendHandler,
+				"ActionShowROConfig" : self.ActionShowROConfigHandler,
 				"ActionBrowse" : self.ActionBrowseHandler,
 				"ActionLabelChange" : self.ActionLabelChangeHandler,
 				"ActionTooltipChange" : self.ActionTooltipChangeHandler,
@@ -470,6 +590,7 @@ class NACTMainWindow (NACTGui):
 				}
 
 		self.signal_autoconnect (dic)
+		self.show_systemwide = True
 		self.config_reader = ConfigReader ()
 		self.config_list = self.config_reader.getConfigList ()
 		self.config_writer = ConfigWriter ()
@@ -480,21 +601,38 @@ class NACTMainWindow (NACTGui):
 		self.legenddialog = NACTLegendDialog ()
 		self.filedialog = NACTFileChooserDialog (self.get_widget ("EntryPath"))
 		self.aboutdialog = NACTAboutDialog ()
+		self.confirmsavedialog = NACTConfirmSaveDialog (self.ActionSaveHandler)
+		self.uid = os.getuid ()
+		if self.uid == 0:
+			self.get_widget ("MenuPreferences").hide ()
 		self.config_selection_change = False
 		self.config_modified = False
 		self.ManageWidgetSensitivity ()
 
-	def UpdateConfigList (self, model):
+	def UpdateConfigList (self):
+		model = self.get_widget("TreeViewConfigList").get_model ()
 		model.clear ()
 		for config_name in self.config_list.keys ():
-			model.append([config_name , gtk.STOCK_PREFERENCES, False])
+		#
+			config = self.config_list[config_name]
+			if not config.is_deleted ():
+				if not config.is_readonly ():
+				#
+					model.prepend([config_name , gtk.STOCK_PREFERENCES, False])
+				#
+				elif self.show_systemwide:
+				#
+					model.append([config_name , gtk.STOCK_PREFERENCES, False])
+				#
+		#
 
 	def CreateConfigListStore (self):
 		dist_store = gtk.ListStore (str, str, gobject.TYPE_BOOLEAN)
-		self.UpdateConfigList (dist_store)
 
 		treeview = self.get_widget("TreeViewConfigList")
 		treeview.set_model (dist_store)
+
+		self.UpdateConfigList ()
 		
 		column = gtk.TreeViewColumn ()
 		column.set_title ("_Config List")
@@ -548,13 +686,29 @@ class NACTMainWindow (NACTGui):
 		save2_widget = self.get_widget ("MenuSave")
 		delete1_widget = self.get_widget ("ToolButtonDeleteConfig")
 		delete2_widget = self.get_widget ("MenuDeleteConfig")
+		readonly1_widget = self.get_widget ("LabelRootWarning")
+		readonly2_widget = self.get_widget ("VBoxMenu")
+		readonly3_widget = self.get_widget ("VBoxCommand")
+		readonly4_widget = self.get_widget ("VBoxTest")
 		save1_widget.set_sensitive (False)
 		save2_widget.set_sensitive (False)
 		delete1_widget.set_sensitive (False)
 		delete2_widget.set_sensitive (False)
-		if self.GetCurrentEditedConfig () != None:
-			delete1_widget.set_sensitive (True)
-			delete2_widget.set_sensitive (True)
+		readonly1_widget.hide ()
+		readonly2_widget.set_sensitive (True)
+		readonly3_widget.set_sensitive (True)
+		readonly4_widget.set_sensitive (True)
+		config_name = self.GetCurrentEditedConfig ()
+		if config_name != None and config_name != self.new_config_name:
+			config = self.config_list[config_name]
+			if config.is_readonly ():
+				readonly1_widget.show ()
+				readonly2_widget.set_sensitive (False)
+				readonly3_widget.set_sensitive (False)
+				readonly4_widget.set_sensitive (False)
+			else:
+				delete1_widget.set_sensitive (True)
+				delete2_widget.set_sensitive (True)
 		if self.config_modified:
 			save1_widget.set_sensitive (True)
 			save2_widget.set_sensitive (True)
@@ -571,13 +725,6 @@ class NACTMainWindow (NACTGui):
 		#
 
 	def SetCurrentFilename (self, path):
-#		filechooser = self.get_widget ("FileChooserDialogPath")
-#		dir = os.path.dirname (path)
-#		if filechooser.get_current_folder () != dir:
-#			filechooser.set_current_folder (dir)
-#		filechooser.set_filename (path)
-#		while gtk.events_pending():
-#			gtk.main_iteration(False)
 		self.filedialog.SetCurrentFile (path)
 		self.get_widget ("EntryPath").set_text (path)
 		
@@ -622,15 +769,61 @@ class NACTMainWindow (NACTGui):
 
 	def ActionNewConfigNameEditHandler (self, cellrenderer, path, new_text, model):
 		treeview = self.get_widget("TreeViewConfigList")
-		if new_text != self.new_config_name and not self.config_list.has_key (new_text) and len (new_text) > 0:
+		tmp = ""
+		for c in new_text: # Trim all characters which are not alphanumeric
+			if c in string.letters:
+				tmp += c
+			elif c in string.digits:
+				tmp += c
+		new_text = tmp
+		if new_text != self.new_config_name and len (new_text) > 0:
 		#
-			iter = model.get_iter_from_string (path)
-			model.set (iter, 0, new_text)
-			model.set (iter, 2, False)
-			new_config = Config (new_text)
-			self.config_list[new_text] = new_config
-			treeview.set_cursor (path, None, False)
-			self.config_modified = True
+			is_ok = True
+			new_config = None
+			if self.config_list.has_key (new_text):
+			#
+				is_ok = False
+				config = self.config_list[new_text]
+				if config.is_deleted ():
+				#
+					is_ok = True
+					del (self.config_list[new_text])
+				#
+				elif config.is_readonly (): # Overwrite system-wide config
+				#
+					config.overwrite_config ()
+					if config.is_overwritten:
+						new_config = config
+						is_ok = True
+				#
+			#
+				
+			if is_ok:
+			#
+				iter = model.get_iter_from_string (path)
+				model.set (iter, 0, new_text)
+				model.set (iter, 2, False)
+				if new_config == None:
+					new_config = Config (new_text)
+					self.config_list[new_text] = new_config
+				self.UpdateConfigList ()
+				iter = model.get_iter_first ()
+				found = False
+				while iter and not found:
+				#
+					if model.get_value (iter, 0) == new_text:
+					#
+						treeview.set_cursor (model.get_path (iter), None, False)
+						found = True
+					#
+					iter = model.iter_next (iter)
+				#
+				self.config_modified = True
+			#
+			else:
+			#
+				treeview.set_cursor_on_cell (path, treeview.get_column (0), None, True)
+			#
 			self.ManageWidgetSensitivity ()
 		#
 		else:
@@ -650,7 +843,8 @@ class NACTMainWindow (NACTGui):
 		#
 			config_name = model.get_value (iter, 0)
 			self.config_list[config_name].mark_as_deleted ()
-			model.remove (iter)
+			#model.remove (iter)
+			self.UpdateConfigList ()
 			self.get_widget ("TreeViewConfigList").get_selection ().unselect_all ()
 			self.get_widget ("VBoxConfigSelected").hide ()
 			self.get_widget ("VBoxNoSelection").show ()
@@ -670,10 +864,20 @@ class NACTMainWindow (NACTGui):
 			self.get_widget ("VBoxConfigSelected").show ()
 		while gtk.events_pending():
 			gtk.main_iteration(False)
+		self.ManageWidgetSensitivity ()
 			
 	
 	def ActionShowLegendHandler (self, widget):
 		self.legenddialog.Show ()
+
+	def ActionShowROConfigHandler (self, widget):
+		self.show_systemwide = widget.get_active ()
+		config_name = self.GetCurrentEditedConfig ()
+		self.UpdateConfigList ()
+		self.get_widget ("TreeViewConfigList").get_selection ().unselect_all ()
+		self.get_widget ("VBoxConfigSelected").hide ()
+		self.get_widget ("VBoxNoSelection").show ()
+		self.ManageWidgetSensitivity ()
 
 	def ActionBrowseHandler (self, widget):
 		self.filedialog.Show ()
@@ -919,7 +1123,7 @@ class NACTMainWindow (NACTGui):
 		self.config_reader.LoadConfigFiles ()
 		self.config_list = self.config_reader.getConfigList ()
 		model = self.get_widget ("TreeViewConfigList").get_model ()
-		self.UpdateConfigList (model)
+		self.UpdateConfigList ()
 		self.get_widget ("TreeViewConfigList").get_selection ().unselect_all ()
 		self.get_widget ("VBoxConfigSelected").hide ()
 		self.get_widget ("VBoxNoSelection").show ()
@@ -934,6 +1138,16 @@ class NACTMainWindow (NACTGui):
 
 	def ActionAboutHandler (self, widget):
 		self.aboutdialog.Show ()
+
+	def ActionQuitHandler (self, widget):
+		if not self.config_modified:
+			gtk.main_quit ()
+		else:
+			self.confirmsavedialog.Show ()
+
+	def ActionAppQuitHandler (self, widget, event):
+		self.ActionQuitHandler (widget)
+		return True
 
 ## MAIN ##
 app = NACTMainWindow ()
