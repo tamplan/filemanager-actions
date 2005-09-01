@@ -1,0 +1,9 @@
+* Fri Aug 19 2005 Frederic Ruaudel <ruaudel@embl.fr> 0.3
+- Fix a bug in NACT when parsing 'accept-multiple-files' tags
+- Remove a unused function
+
+* Fri Aug 19 2005 Frederic Ruaudel <ruaudel@embl.fr> 0.2
+- Add NACT the configuration GUI
+
+* Thu Aug 12 2005 Frederic Ruaudel <ruaudel@embl.fr> 0.1
+- First version
