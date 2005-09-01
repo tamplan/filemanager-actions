@@ -1,9 +1,26 @@
-* Fri Aug 19 2005 Frederic Ruaudel <ruaudel@embl.fr> 0.3
+* Fri Aug 28 2005 Frederic Ruaudel <grumz@grumz.net> 0.4
+- Add -fPIC option in the Makefile to make nautilus-actions compile on 64bits arch
+- Apply patch from Ed Catmur that add DESTDIR var in Makefile for gentoo ebuild
+- Add the desktop file for nact submited by Ed Catmur
+- Add per user config possibility. Per user config are saved by default in ~/.nautilus-actions
+- NACT has been updated to manage per user config. If launch as normal user, it edit the user
+config and if launched as root, it manage system wide config.
+- add LICENSE file of the GNU GPL License
+- Update authors and contributors list
+- Add more user friendly description of schemes in Nact.
+- Add %M pattern for the parameters field which give the list of the files like %m but with full path 
+- Modify NACT to add the %M option in the legend dialog and to take care of it in the example string
+- In NACT, replace the buggy FileChooserButton with an Entry and a Browse Button.
+- Add an action for launching nact from nautilus in the config folder and add it in install part of Makefile
+- Add installation of nact desktop file in the Makefile
+- Add some customization to the desktop file to insert value (version, icon) from the Makefile
+
+* Fri Aug 19 2005 Frederic Ruaudel <grumz@grumz.net> 0.3
 - Fix a bug in NACT when parsing 'accept-multiple-files' tags
 - Remove a unused function
 
-* Fri Aug 19 2005 Frederic Ruaudel <ruaudel@embl.fr> 0.2
+* Fri Aug 19 2005 Frederic Ruaudel <grumz@grumz.net> 0.2
 - Add NACT the configuration GUI
 
-* Thu Aug 12 2005 Frederic Ruaudel <ruaudel@embl.fr> 0.1
+* Thu Aug 12 2005 Frederic Ruaudel <grumz@grumz.net> 0.1
 - First version

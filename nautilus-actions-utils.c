@@ -14,6 +14,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 	 * %p : parent directory of the selected directory(ies) of basedir of the file(s)
 	 * %f : the name of the selected file or the 1st one if many are selected
 	 * %m : list of the basename of the selected files/directories separated by space.
+	 * %M : list of the selected files/directories with their complete path separated by space.
 	 * %s : scheme of the gnome-vfs URI
 	 * %h : hostname of the gnome-vfs URI
 	 * %U : username of the gnome-vfs URI
@@ -39,8 +40,12 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		gchar* username = g_strdup (gnome_vfs_uri_get_user_name (gvfs_uri));
 		gchar* parent_dir;
 		gchar* file_list;
+		gchar* path_file_list;
 		GList* file_iter = NULL;
 		GString* tmp_file_list = g_string_new (filename);
+		GString* tmp_path_file_list = g_string_new ("");
+		
+		g_string_printf (tmp_path_file_list, "%s/%s", dirname, filename);
 		
 		if (gnome_vfs_uri_has_parent (gvfs_uri))
 		{
@@ -60,14 +65,15 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 			GnomeVFSURI* tmp_gvfs_uri = gnome_vfs_uri_new (tmp_uri);
 			gchar* tmp_filename = g_path_get_basename (gnome_vfs_uri_get_path (tmp_gvfs_uri));
 			
-			tmp_file_list = g_string_append (tmp_file_list, " ");
-			tmp_file_list = g_string_append (tmp_file_list, tmp_filename);
+			g_string_append_printf (tmp_file_list, " %s", tmp_filename);
+			g_string_append_printf (tmp_path_file_list, " %s/%s", dirname, tmp_filename);
 			
 			g_free (tmp_filename);
 			gnome_vfs_uri_unref (tmp_gvfs_uri);
 			g_free (tmp_uri);
 		}
 		file_list = g_string_free (tmp_file_list, FALSE);
+		path_file_list = g_string_free (tmp_path_file_list, FALSE);
 
 		
 		while (iter = g_strstr_len (iter, strlen (iter), "%"))
@@ -90,6 +96,9 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 					break;
 				case 'm': // list of the basename of the selected files/directories separated by space
 					tmp_string = g_string_append (tmp_string, file_list);
+					break;
+	 			case 'M': // list of the selected files/directories with their complete path separated by space.
+					tmp_string = g_string_append (tmp_string, path_file_list);
 					break;
 				case 's': // scheme of the gnome-vfs URI
 					tmp_string = g_string_append (tmp_string, scheme);
@@ -118,6 +127,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		g_free (dirname);
 		g_free (filename);
 		g_free (file_list);
+		g_free (path_file_list);
 		g_free (scheme);
 		g_free (hostname);
 		g_free (username);

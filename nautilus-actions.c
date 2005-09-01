@@ -28,14 +28,15 @@ static void nautilus_actions_execute (NautilusMenuItem *item, ConfigAction *acti
 
 	cmd = g_string_new (action->command->path);
 
+	
 	param = nautilus_actions_utils_parse_parameter (action->command->parameters, files);
-
+	
 	if (param != NULL)
 	{
 		g_string_append_printf (cmd, " %s", param);
 		g_free (param);
 	}
-	
+
 	g_spawn_command_line_async (cmd->str, NULL);
 	
 	g_string_free (cmd, TRUE);
@@ -52,18 +53,19 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (ConfigAction *action
 				action->menu_item->label, 
 				action->menu_item->tooltip, 
 				NULL);
-	
+
 	g_signal_connect_data (item, 
 				"activate", 
 				G_CALLBACK (nautilus_actions_execute),
 				action, 
 				(GClosureNotify)nautilus_actions_config_free_action, 
 				0);
-	
+
 	g_object_set_data_full (G_OBJECT (item),
 			"files",
 			nautilus_file_info_list_copy (files),
 			(GDestroyNotify) nautilus_file_info_list_free);
+	
 	
 	g_free (name);
 	

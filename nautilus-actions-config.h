@@ -10,6 +10,10 @@ G_BEGIN_DECLS
 #define DEFAULT_CONFIG_PATH "/usr/share/nautilus-actions"
 #endif
 
+#ifndef DEFAULT_PER_USER_PATH 
+#define DEFAULT_PER_USER_PATH ".nautilus-actions"
+#endif
+
 typedef enum _IsFileEnumType IsFileType; /* not used */
 typedef struct _ConfigAction ConfigAction;
 typedef struct _ConfigActionTest ConfigActionTest;
@@ -27,6 +31,7 @@ enum _IsFileEnumType /* not used */
 struct _ConfigAction
 {
 	gchar* name; /* name must be uniq */
+	gchar* version;
 	ConfigActionTest *test;
 	ConfigActionCommand *command;
 	ConfigActionMenuItem *menu_item;

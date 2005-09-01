@@ -1,3 +1,8 @@
-Frederic Ruaudel <ruaudel@embl.fr>
+Frederic Ruaudel <grumz@grumz.net>
 
 based on nautilus-sendto module from Roberto Majadas <roberto.majadas@hispalinux.es>
+
+== Contributors ==
+
+Ed Catmur <ed@catmur.co.uk> : NACT .desktop file and Makefile patch for packaging on gentoo
+Kasys : Makefile patch to build on 64bits arch

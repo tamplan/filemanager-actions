@@ -35,20 +35,11 @@ gboolean nautilus_actions_test_validate (ConfigActionTest *action_test, GList* f
 	gboolean test_basename = FALSE;
 	GPatternSpec* glob_pattern = g_pattern_spec_new (action_test->basename);
 	GList* iter;
-	int dir_count = 0;
-	int file_count = 0;
-	int total_count = 0;
-	int scheme_ok_count = 0;
-	int glob_ok_count = 0;
-
-	if ((files != NULL) && (files->next == NULL) && (!action_test->accept_multiple_file))
-	{
-		test_multiple_file = TRUE;
-	}
-	else if (action_test->accept_multiple_file)
-	{
-		test_multiple_file = TRUE;
-	}
+	guint dir_count = 0;
+	guint file_count = 0;
+	guint total_count = 0;
+	guint scheme_ok_count = 0;
+	guint glob_ok_count = 0;
 
 	for (iter = files; iter; iter = iter->next)
 	{
@@ -75,6 +66,15 @@ gboolean nautilus_actions_test_validate (ConfigActionTest *action_test, GList* f
 		g_free (tmp_filename);
 
 		total_count++;
+	}
+
+	if ((files != NULL) && (files->next == NULL) && (!action_test->accept_multiple_file))
+	{
+		test_multiple_file = TRUE;
+	}
+	else if (action_test->accept_multiple_file)
+	{
+		test_multiple_file = TRUE;
 	}
 
 	if (action_test->isdir && action_test->isfile)

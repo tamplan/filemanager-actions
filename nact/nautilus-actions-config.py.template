@@ -3,6 +3,7 @@
 
 import sys
 import os.path
+import pwd
 import popen2
 import string
 import commands
@@ -146,7 +147,12 @@ class Config:
 
 class ConfigParser:
 	def __init__ (self):
-		self.config_dir = ["%%%DEFAULT_CONFIG_PATH%%%"]
+		uid = os.getuid ()
+		if uid == 0:
+			self.config_dir = ["%%%DEFAULT_CONFIG_PATH%%%"]
+		else:
+			home_dir = pwd.getpwuid (uid)[5]
+			self.config_dir = [home_dir + "/%%%DEFAULT_PER_USER_PATH%%%"]
 
 class ConfigReader (ConfigParser):
 	def __init__ (self):
@@ -367,10 +373,23 @@ class ConfigWriter (ConfigParser):
 			#
 		#
 
+
 class NACTGui (gtk.glade.XML):
 	def __init__ (self, windowname):
 		gladefile = "%%%DATA_DIR%%%/nautilus-actions-config.glade"
 		gtk.glade.XML.__init__ (self, gladefile, windowname)
+		self.widget = self.get_widget (windowname)
+	
+	def Show (self):
+		self.widget.show ()
+
+	def ActionDialogCloseHandler (self, widget, event):
+		self.widget.hide ()
+		return True
+
+	def ActionCloseHandler (self, widget):
+		self.widget.hide ()
+
 
 class NACTAboutDialog (NACTGui):
 	def __init__ (self):
@@ -380,14 +399,8 @@ class NACTAboutDialog (NACTGui):
 				}
 
 		self.signal_autoconnect (dic)
-		self.get_widget ("AboutDialog").set_version ("%%%VERSION%%%")
+		self.widget.set_version ("%%%VERSION%%%")
 
-	def Show (self):
-		self.get_widget ("AboutDialog").show ()
-
-	def ActionDialogCloseHandler (self, widget, event):
-		self.get_widget ("AboutDialog").hide ()
-		return True
 
 class NACTLegendDialog (NACTGui):
 	def __init__ (self):
@@ -399,21 +412,39 @@ class NACTLegendDialog (NACTGui):
 
 		self.signal_autoconnect (dic)
 
-	def Show (self):
-		self.get_widget ("DialogLegend").show ()
 
-	def ActionDialogCloseHandler (self, widget, event):
-		self.get_widget ("DialogLegend").hide ()
-		return True
+class NACTFileChooserDialog (NACTGui):
+	def __init__ (self, entry_path):
+		NACTGui.__init__ (self, "FileChooserDialogPath")
 
-	def ActionCloseHandler (self, widget):
-		self.get_widget ("DialogLegend").hide ()
+		dic = { "ActionFileDialogClose" : self.ActionDialogCloseHandler, 
+				  "ActionFileDialogCancel" : self.ActionCloseHandler,
+				  "ActionFileChoose" : self.ActionFileChooseHandler
+				}
+
+		self.signal_autoconnect (dic)
+		self.entry_path = entry_path
+
+	def SetCurrentFile (self, filename):
+		self.widget.set_filename (filename)
+
+	def GetCurrentFile (self):
+		return self.widget.get_filename ()
+
+	def ActionFileChooseHandler (self, widget):
+		self.widget.hide ()
+		self.entry_path.set_text (self.GetCurrentFile ())
+
 
 class NACTMainWindow (NACTGui):
 	def __init__ (self):
 		NACTGui.__init__ (self, "WindowMain")
 
-		self.scheme_list = ["file", "sftp", "smb", "ftp", "dav"]
+		self.scheme_list = [["file" , "Local files"], 
+								  ["sftp" , "SSH files"], 
+								  ["smb" , "Windows files"], 
+								  ["ftp" , "FTP files"], 
+								  ["dav" , "Webdav files"] ]
 		self.new_config_name = "New Config"
 
 		
@@ -423,6 +454,7 @@ class NACTMainWindow (NACTGui):
 				"ActionDeleteConfig" : self.ActionDeleteConfigHandler,
 				"ActionConfigSelect" : self.ActionConfigSelectHandler,
 				"ActionShowLegend" : self.ActionShowLegendHandler,
+				"ActionBrowse" : self.ActionBrowseHandler,
 				"ActionLabelChange" : self.ActionLabelChangeHandler,
 				"ActionTooltipChange" : self.ActionTooltipChangeHandler,
 				"ActionPathChange" : self.ActionPathChangeHandler,
@@ -446,6 +478,7 @@ class NACTMainWindow (NACTGui):
 		self.example_text = self.get_widget ("LabelExampleCmd").get_label ()
 		self.config_title_text = self.get_widget ("LabelConfigTitle").get_label ()
 		self.legenddialog = NACTLegendDialog ()
+		self.filedialog = NACTFileChooserDialog (self.get_widget ("EntryPath"))
 		self.aboutdialog = NACTAboutDialog ()
 		self.config_selection_change = False
 		self.config_modified = False
@@ -479,9 +512,9 @@ class NACTMainWindow (NACTGui):
 		treeview.append_column (column)
 
 	def CreateSchemeListStore (self):
-		dist_store = gtk.ListStore (gobject.TYPE_BOOLEAN, str)
+		dist_store = gtk.ListStore (gobject.TYPE_BOOLEAN, str, str)
 		for scheme in self.scheme_list:
-			dist_store.append([False, scheme])
+			dist_store.append([False, scheme[0], scheme[1]])
 		treeview = self.get_widget("TreeViewSelectScheme")
 		treeview.set_model (dist_store)
 
@@ -498,6 +531,16 @@ class NACTMainWindow (NACTGui):
 		text_renderer = gtk.CellRendererText ()
 		column.pack_end (text_renderer, True)
 		column.add_attribute (text_renderer, "text", 1)
+
+		column.set_min_width (100)
+		treeview.append_column(column)
+		
+		column = gtk.TreeViewColumn ()
+		column.set_title ("Description")
+
+		text_renderer = gtk.CellRendererText ()
+		column.pack_start (text_renderer, False)
+		column.add_attribute (text_renderer, "text", 2)
 		treeview.append_column(column)
 
 	def ManageWidgetSensitivity (self):
@@ -528,13 +571,15 @@ class NACTMainWindow (NACTGui):
 		#
 
 	def SetCurrentFilename (self, path):
-		filechooser = self.get_widget ("FileChooserButtonPath")
-		dir = os.path.dirname (path)
-		if filechooser.get_current_folder () != dir:
-			filechooser.set_current_folder (dir)
-		filechooser.set_filename (path)
-		while gtk.events_pending():
-			gtk.main_iteration(False)
+#		filechooser = self.get_widget ("FileChooserDialogPath")
+#		dir = os.path.dirname (path)
+#		if filechooser.get_current_folder () != dir:
+#			filechooser.set_current_folder (dir)
+#		filechooser.set_filename (path)
+#		while gtk.events_pending():
+#			gtk.main_iteration(False)
+		self.filedialog.SetCurrentFile (path)
+		self.get_widget ("EntryPath").set_text (path)
 		
 	def FillConfigPanelFromConfigName (self, config_name):
 		if config_name != self.new_config_name:
@@ -577,7 +622,7 @@ class NACTMainWindow (NACTGui):
 
 	def ActionNewConfigNameEditHandler (self, cellrenderer, path, new_text, model):
 		treeview = self.get_widget("TreeViewConfigList")
-		if new_text != self.new_config_name and not self.config_list.has_key (new_text):
+		if new_text != self.new_config_name and not self.config_list.has_key (new_text) and len (new_text) > 0:
 		#
 			iter = model.get_iter_from_string (path)
 			model.set (iter, 0, new_text)
@@ -630,116 +675,134 @@ class NACTMainWindow (NACTGui):
 	def ActionShowLegendHandler (self, widget):
 		self.legenddialog.Show ()
 
-	def ParseParameters (self, parameters, config_name):
-		ex_path = "/path/to"
-		ex_files = [ "file1.txt", "file2.txt" ]
-		ex_dirs = [ "dir1", "dir2"]
-		ex_mixed = ["file1.txt", "dir1" ]
-		ex_scheme = "file"
-		ex_one = "file.txt"
-		ex_list = [ ex_one ]
-		config = self.config_list[config_name]
-		if config.get_test_accept_multiple_file ():
-		#
-			if config.get_test_isfile () and config.get_test_isdir ():
-			#
-				ex_one = ex_files[0]
-				ex_list = ex_mixed
-			#
-			elif config.get_test_isfile ():
-			#
-				ex_one = ex_files[0]
-				ex_list = ex_files
-			#
-			elif config.get_test_isdir ():
-			#
-				ex_one = ex_dirs[0]
-				ex_list = ex_dirs
-			#
-		#
-		else:
-		#
-			if config.get_test_isdir () and not config.get_test_isfile ():
-			#
-				ex_one = "dir"
-			#
-		#
-		schemes = config.get_test_schemes ()
-		if len (schemes) != 0:
-		#
-			ex_scheme = schemes[0]
-		#
-		if ex_scheme == "file":
-		#
-			if len (schemes) > 1:
-				ex_scheme = schemes[1]
-				ex_host = "test.example.net"
-			else:
-				ex_host = ""
-		#
-		else:
-		#
-			ex_host = "test.example.net"
-		#
+	def ActionBrowseHandler (self, widget):
+		self.filedialog.Show ()
 
-		tmp = parameters
-		pos = string.find (tmp, "%")
-		retv = tmp[:pos]
-		while pos != -1 and len (tmp) >= pos + 2:
+	def ParseParameters (self, parameters, config_name):
+		retv = ""
+		if config_name != self.new_config_name:
 		#
-			ex_str = ""
-			if tmp[pos+1] == 'u':
+			ex_path = "/path/to"
+			ex_files = [ "file1.txt", "file2.txt" ]
+			ex_dirs = [ "dir1", "dir2"]
+			ex_mixed = ["file1.txt", "dir1" ]
+			ex_scheme = "file"
+			ex_one = "file.txt"
+			ex_list = [ ex_one ]
+			ex_path_list = [ ex_path + "/" + ex_one ]
+			config = self.config_list[config_name]
+			if config.get_test_accept_multiple_file ():
 			#
-				ex_str = ex_scheme + "://" + ex_path + ex_one
-			#		
-			elif tmp[pos+1] == 'd':
+				if config.get_test_isfile () and config.get_test_isdir ():
+				#
+					ex_one = ex_files[0]
+					ex_list = ex_mixed
+				#
+				elif config.get_test_isfile ():
+				#
+					ex_one = ex_files[0]
+					ex_list = ex_files
+				#
+				elif config.get_test_isdir ():
+				#
+					ex_one = ex_dirs[0]
+					ex_list = ex_dirs
+				#
+
+				ex_path_list = []
+				for value in ex_list:
+				#
+					ex_path_list.append ( ex_path + "/" + value)
+				#
 			#
-				ex_str = ex_path
+			else:
 			#
-			elif tmp[pos+1] == 'p':
+				if config.get_test_isdir () and not config.get_test_isfile ():
+				#
+					ex_one = "dir"
+				#
 			#
-				ex_str = os.path.dirname (ex_path)
+			schemes = config.get_test_schemes ()
+			if len (schemes) != 0:
 			#
-			elif tmp[pos+1] == 'f':
+				ex_scheme = schemes[0]
 			#
-				ex_str = ex_one
+			if ex_scheme == "file":
 			#
-			elif tmp[pos+1] == 'm':
+				if len (schemes) > 1:
+					ex_scheme = schemes[1]
+					ex_host = "test.example.net"
+				else:
+					ex_host = ""
 			#
-				ex_str = string.join (ex_list, " ")
+			else:
 			#
-			elif tmp[pos+1] == 's':
+				ex_host = "test.example.net"
 			#
-				ex_str = ex_scheme
-			#
-			elif tmp[pos+1] == 'h':
-			#
-				ex_str = ex_host
-			#
-			elif tmp[pos+1] == 'U':
-			#
-				ex_str = "root"
-			#
-			elif tmp[pos+1] == '%':
-			#
-				ex_str = "%"
-			#
-			retv += ex_str
-			tmp = tmp[pos+2:]
+
+			tmp = parameters
 			pos = string.find (tmp, "%")
-			retv += tmp[:pos]
+			retv = tmp[:pos]
+			while pos != -1 and len (tmp) >= pos + 2:
+			#
+				ex_str = ""
+				if tmp[pos+1] == 'u':
+				#
+					ex_str = ex_scheme + "://" + ex_path + ex_one
+				#		
+				elif tmp[pos+1] == 'd':
+				#
+					ex_str = ex_path
+				#
+				elif tmp[pos+1] == 'p':
+				#
+					ex_str = os.path.dirname (ex_path)
+				#
+				elif tmp[pos+1] == 'f':
+				#
+					ex_str = ex_one
+				#
+				elif tmp[pos+1] == 'm':
+				#
+					ex_str = string.join (ex_list, " ")
+				#
+				elif tmp[pos+1] == 'M':
+				#
+					ex_str = string.join (ex_path_list, " ")
+				#
+				elif tmp[pos+1] == 's':
+				#
+					ex_str = ex_scheme
+				#
+				elif tmp[pos+1] == 'h':
+				#
+					ex_str = ex_host
+				#
+				elif tmp[pos+1] == 'U':
+				#
+					ex_str = "root"
+				#
+				elif tmp[pos+1] == '%':
+				#
+					ex_str = "%"
+				#
+				retv += ex_str
+				tmp = tmp[pos+2:]
+				pos = string.find (tmp, "%")
+				retv += tmp[:pos]
+			#
 		#
 		return retv
 
 	def UpdateCommandExample (self):
-		path = self.get_widget ("FileChooserButtonPath").get_filename ()
+		path = self.get_widget ("EntryPath").get_text ()
 		parameters = self.ParseParameters (self.get_widget ("EntryParameters").get_text (), self.GetCurrentEditedConfig ())
 		self.get_widget ("LabelExampleCmd").set_label (self.example_text % (path, parameters))
 
 	def ActionPathChangeHandler (self, widget):
 		if not self.config_selection_change:
 		#
-			path = self.get_widget ("FileChooserButtonPath").get_filename ()
+			path = self.get_widget ("EntryPath").get_text ()
 			config_name = self.GetCurrentEditedConfig ()
 			if config_name != None and self.config_list[config_name].get_command_path () != path :
 			#

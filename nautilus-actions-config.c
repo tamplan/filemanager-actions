@@ -10,25 +10,55 @@ static GList *nautilus_actions_config_get_config_files (void)
 	GDir* config_dir = NULL;
 	gchar* filename;
 	gchar* path;
+	gchar* per_user_dir = g_build_path ("/", g_get_home_dir (), DEFAULT_PER_USER_PATH, NULL);
 
-	/* First get system-wide config files */
-	config_dir = g_dir_open (DEFAULT_CONFIG_PATH, 0, NULL);
-	if (config_dir != NULL)
+	/* First get the per user files so they have priority because there are first parsed */
+
+	if (g_file_test (per_user_dir, G_FILE_TEST_IS_DIR))
 	{
-		filename = g_dir_read_name (config_dir);
-		while (filename != NULL)
+		config_dir = g_dir_open (per_user_dir, 0, NULL);
+		if (config_dir != NULL)
 		{
-			path = g_build_path ("/", DEFAULT_CONFIG_PATH, filename, NULL);
-			if (g_file_test (path, G_FILE_TEST_IS_REGULAR))
-			{
-				/* This is a regular file, we can add it */
-				config_files = g_list_append (config_files, g_strdup (path));
-			}
-			g_free (path);
 			filename = g_dir_read_name (config_dir);
-		}
+			while (filename != NULL)
+			{
+				path = g_build_path ("/", per_user_dir, filename, NULL);
+				if (g_file_test (path, G_FILE_TEST_IS_REGULAR))
+				{
+					// This is a regular file, we can add it 
+					config_files = g_list_append (config_files, g_strdup (path));
+				}
+				g_free (path);
+				filename = g_dir_read_name (config_dir);
+			}
 
-		g_dir_close (config_dir);
+			g_dir_close (config_dir);
+		}
+	}
+	
+	g_free (per_user_dir);
+
+	/* Then get system-wide config files, if there are duplicate of above, they will be skipped during parsing */
+	if (g_file_test (DEFAULT_CONFIG_PATH, G_FILE_TEST_IS_DIR))
+	{
+		config_dir = g_dir_open (DEFAULT_CONFIG_PATH, 0, NULL);
+		if (config_dir != NULL)
+		{
+			filename = g_dir_read_name (config_dir);
+			while (filename != NULL)
+			{
+				path = g_build_path ("/", DEFAULT_CONFIG_PATH, filename, NULL);
+				if (g_file_test (path, G_FILE_TEST_IS_REGULAR))
+				{
+					/* This is a regular file, we can add it */
+					config_files = g_list_append (config_files, g_strdup (path));
+				}
+				g_free (path);
+				filename = g_dir_read_name (config_dir);
+			}
+
+			g_dir_close (config_dir);
+		}
 	}
 
 	return config_files;
@@ -47,13 +77,14 @@ static void nautilus_actions_config_free_config_files (GList* config_files)
 	config_files = NULL;
 }
 
-static ConfigAction *nautilus_actions_config_action_new (gchar* name)
+static ConfigAction *nautilus_actions_config_action_new (gchar* name, gchar* version)
 {
 	ConfigAction* action = NULL;
 
 	action = g_new (ConfigAction, 1);
 	
-	action->name = g_strdup (name); // FIXME: must check that this name is uniq
+	action->name = g_strdup (name); 
+	action->version = g_strdup (version);
 	
 	action->test = g_new (ConfigActionTest, 1);
 	action->test->basename = NULL;
@@ -97,7 +128,7 @@ static gboolean nautilus_actions_config_action_fill_test_scheme (GList** test_sc
 	return retv;
 }
 
-static gboolean nautilus_actions_config_action_fill_test (ConfigActionTest *test_action, xmlNode* config_test_node)
+static gboolean nautilus_actions_config_action_fill_test (ConfigAction *action, xmlNode* config_test_node)
 {
 	xmlNode *iter;
 	gboolean retv = FALSE;
@@ -106,6 +137,8 @@ static gboolean nautilus_actions_config_action_fill_test (ConfigActionTest *test
 	gboolean isdir_ok = FALSE;
 	gboolean scheme_ok = FALSE;
 	gboolean accept_multiple_file_ok = FALSE;
+	ConfigActionTest* test_action = action->test;
+
 
 	for (iter = config_test_node->children; iter; iter = iter->next)
 	{
@@ -148,6 +181,15 @@ static gboolean nautilus_actions_config_action_fill_test (ConfigActionTest *test
 			accept_multiple_file_ok = nautilus_actions_utils_parse_boolean (text, &test_action->accept_multiple_file);
 			xmlFree (text);
 		}
+		else if (!accept_multiple_file_ok && iter->type == XML_ELEMENT_NODE &&
+				g_ascii_strncasecmp (iter->name, 
+								"accept-multiple-files",
+								strlen ("accept-multiple-files")) == 0)
+		{
+			text = xmlNodeGetContent (iter);
+			accept_multiple_file_ok = nautilus_actions_utils_parse_boolean (text, &test_action->accept_multiple_file);
+			xmlFree (text);
+		}
 		else if (!scheme_ok && iter->type == XML_ELEMENT_NODE &&
 				g_ascii_strncasecmp (iter->name, 
 								"scheme",
@@ -156,7 +198,8 @@ static gboolean nautilus_actions_config_action_fill_test (ConfigActionTest *test
 			scheme_ok = nautilus_actions_config_action_fill_test_scheme (&(test_action->schemes), iter);
 		}
 	}
-
+	
+	
 	if (basename_ok && isfile_ok && isdir_ok && accept_multiple_file_ok && scheme_ok)
 	{
 		retv = TRUE;
@@ -165,12 +208,13 @@ static gboolean nautilus_actions_config_action_fill_test (ConfigActionTest *test
 	return retv;
 }
 
-static gboolean nautilus_actions_config_action_fill_command (ConfigActionCommand *command_action, xmlNode* config_command_node)
+static gboolean nautilus_actions_config_action_fill_command (ConfigAction *action, xmlNode* config_command_node)
 {
 	xmlNode *iter;
 	gboolean retv = FALSE;
 	gboolean path_ok = FALSE;
 	gboolean parameters_ok = FALSE;
+	ConfigActionCommand* command_action = action->command;
 
 	for (iter = config_command_node->children; iter; iter = iter->next)
 	{
@@ -206,12 +250,13 @@ static gboolean nautilus_actions_config_action_fill_command (ConfigActionCommand
 	return retv;
 }
 
-static gboolean nautilus_actions_config_action_fill_menu_item (ConfigActionMenuItem *menu_item_action, xmlNode* config_menu_item_node)
+static gboolean nautilus_actions_config_action_fill_menu_item (ConfigAction *action, xmlNode* config_menu_item_node)
 {
 	xmlNode *iter;
 	gboolean retv = FALSE;
 	gboolean label_ok = FALSE;
 	gboolean tootip_ok = FALSE;
+	ConfigActionMenuItem* menu_item_action = action->menu_item;
 
 	for (iter = config_menu_item_node->children; iter; iter = iter->next)
 	{
@@ -262,21 +307,21 @@ static gboolean nautilus_actions_config_action_fill (ConfigAction* action, xmlNo
 											"test",
 											strlen ("test")) == 0)
 		{
-			test_ok = nautilus_actions_config_action_fill_test (action->test, iter);
+			test_ok = nautilus_actions_config_action_fill_test (action, iter);
 		}
 		else if (!command_ok && iter->type == XML_ELEMENT_NODE &&
 				g_ascii_strncasecmp (iter->name, 
 											"command",
 											strlen ("command")) == 0)
 		{
-			command_ok = nautilus_actions_config_action_fill_command (action->command, iter);
+			command_ok = nautilus_actions_config_action_fill_command (action, iter);
 		}
 		else if (!menu_item_ok && iter->type == XML_ELEMENT_NODE &&
 				g_ascii_strncasecmp (iter->name, 
 											"menu-item",
 											strlen ("menu-item")) == 0)
 		{
-			menu_item_ok = nautilus_actions_config_action_fill_menu_item (action->menu_item, iter);
+			menu_item_ok = nautilus_actions_config_action_fill_menu_item (action, iter);
 		}
 	}
 
@@ -298,7 +343,7 @@ GList *nautilus_actions_config_get_fake_list (char* filename, int level)
 	GList* iter;
 	gchar* base = g_path_get_basename (filename);
 
-	action = nautilus_actions_config_action_new (base);
+	action = nautilus_actions_config_action_new (base, 0.1);
 	g_free (base);
 	action->test->basename = g_strdup ("*");
 	action->test->isfile = TRUE;
@@ -315,12 +360,18 @@ GList *nautilus_actions_config_get_fake_list (char* filename, int level)
 	return config_actions;
 }
 */
-static GList *nautilus_actions_config_parse_file (const gchar* filename)
+
+static gint nautilus_actions_compare_actions (const ConfigAction* action1, const gchar* action_name)
 {
-	GList* config_actions = NULL;
+	return g_ascii_strcasecmp (action1->name, action_name);
+}
+
+static GList *nautilus_actions_config_parse_file (const gchar* filename, GList* config_actions)
+{
 	xmlDoc *doc = NULL;
 	xmlNode *root_node;
 	xmlNode *iter;
+	xmlChar* version;
 	ConfigAction *action;
 
 	doc = xmlParseFile (filename);
@@ -331,6 +382,8 @@ static GList *nautilus_actions_config_parse_file (const gchar* filename)
 										"nautilus-actions-config", 
 										strlen ("nautilus-actions-config")) == 0)
 		{
+			version = xmlGetProp (root_node, "version");
+			
 			for (iter = root_node->children; iter; iter = iter->next)
 			{
 				xmlChar *config_name;
@@ -343,19 +396,24 @@ static GList *nautilus_actions_config_parse_file (const gchar* filename)
 					config_name = xmlGetProp (iter, "name");
 					if (config_name != NULL)
 					{
-						action = nautilus_actions_config_action_new ((gchar*)config_name);
-						if (nautilus_actions_config_action_fill (action, iter))
+						if (g_list_find_custom (config_actions, config_name, nautilus_actions_compare_actions) == NULL)
 						{
-							config_actions = g_list_append (config_actions, action);
-						}
-						else
-						{
-							nautilus_actions_config_free_action (action);
+							// We skip this file because per user config have priority and there are in the beginning of the file list
+							action = nautilus_actions_config_action_new ((gchar*)config_name, version);
+							if (nautilus_actions_config_action_fill (action, iter))
+							{
+								config_actions = g_list_append (config_actions, action);
+							}
+							else
+							{
+								nautilus_actions_config_free_action (action);
+							}
 						}
 						xmlFree (config_name);
 					}
 				}
 			}
+			xmlFree (version);
 		}
 
 		xmlFreeDoc(doc);
@@ -374,7 +432,7 @@ GList *nautilus_actions_config_get_list (void)
 	ConfigAction* action;
 	GList* iter;
 
-	action = nautilus_actions_config_action_new ("test");
+	action = nautilus_actions_config_action_new ("test", 0.1);
 	action->test->basename = g_strdup ("**");
 	action->test->isfile = TRUE;
 	action->test->isdir = TRUE;
@@ -414,7 +472,8 @@ GList *nautilus_actions_config_get_list (void)
 	for (iter = config_files; iter; iter = iter->next)
 	{
 		gchar* filename = (gchar*)iter->data;
-		config_actions = g_list_concat (config_actions, nautilus_actions_config_parse_file (filename));
+		//config_actions = g_list_concat (config_actions, nautilus_actions_config_parse_file (filename));
+		config_actions = nautilus_actions_config_parse_file (filename, config_actions);
 	}
 
 	nautilus_actions_config_free_config_files (config_files);
@@ -429,7 +488,7 @@ ConfigAction *nautilus_actions_config_action_dup (ConfigAction* action)
 
 	if (action != NULL)
 	{
-		new_action = nautilus_actions_config_action_new (action->name);
+		new_action = nautilus_actions_config_action_new (action->name, action->version);
 	
 
 		if (action->test != NULL)
@@ -542,6 +601,11 @@ void nautilus_actions_config_free_action (ConfigAction* action)
 		{
 			g_free (action->name);
 			action->name = NULL;
+		}
+		if (action->version != NULL)
+		{
+			g_free (action->version);
+			action->version = NULL;
 		}
 		g_free (action);
 		action = NULL;
