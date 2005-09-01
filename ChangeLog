@@ -1,5 +1,17 @@
 2005-09-01  Rodrigo Moya <rodrigo@novell.com>
 
+	* autogen.sh:
+	* configure.in:
+	* Makefile.am:
+	* config/Makefile.am:
+	* nact/Makefile.am:
+	* plugin/Makefile.am: added auto* setup.
+
+	* nact/nact.desktop.in:
+	* nact/nautilus-actions-config.in: renamed.
+
+	* po/*: added basic GETTEXT support.
+	
 	* plugin/*: moved plugin implementation to its own module.
 
 * Wed Aug 31 2005 Frederic Ruaudel <grumz@grumz.net> 0.5

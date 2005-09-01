@@ -1,0 +1,87 @@
+AC_PREREQ(2.52)
+
+AC_INIT(nautilus-actions, 0.6, http://www.gnome.org)
+AM_CONFIG_HEADER(config.h)
+
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+
+AM_MAINTAINER_MODE
+                                                                                
+AM_DISABLE_STATIC
+AC_PROG_CC
+AM_PROG_LIBTOOL
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+
+dnl --------------------------------------------------
+
+GLIB_REQUIRED=2.4.0
+GTK_REQUIRED=2.4.0
+GLADE_REQUIRED=2.4.0
+EBOOK_REQUIRED=1.0.0
+BONOBO_ACTIVATION_REQUIRED=2.6.0
+BONOBO_REQUIRED=2.6.0
+GNOME_REQUIRED=2.7.0
+GAIM_REQUIRED=1.0.0
+GNOME_REQUIRED=2.7.0
+NAUTILUS_EXTENSION=2.8.0
+BLUETOOTH_REQUIRED=0.6.0
+
+AC_SUBST(GLIB_REQUIRED)
+AC_SUBST(GTK_REQUIRED)
+AC_SUBST(GLADE_REQUIRED)
+AC_SUBST(EBOOK_REQUIRED)
+AC_SUBST(GAIM_REQUIRED)
+AC_SUBST(BONOBO_ACTIVATION_REQUIRED)
+AC_SUBST(BONOBO_REQUIRED)
+
+PKG_CHECK_MODULES(NAUTILUS_ACTIONS,\
+	 glib-2.0 >= $GLIB_REQUIRED                \
+	 gthread-2.0 >= $GLIB_REQUIRED             \
+	 gmodule-2.0 >= $GLIB_REQUIRED		  \
+	 gtk+-2.0    >= $GTK_REQUIRED             \
+	 libglade-2.0 >= $GLADE_REQUIRED            \
+	 libbonobo-2.0 >= $BONOBO_REQUIRED	  \
+	 libgnome-2.0 >= $GNOME_REQUIRED	\
+	 libgnomeui-2.0 >= $GNOME_REQUIRED	\
+	 bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED \
+	 libnautilus-extension >= $NAUTILUS_EXTENSION)
+AC_SUBST(NAUTILUS_ACTIONS_CFLAGS)
+AC_SUBST(NAUTILUS_ACTIONS_LIBS)
+
+NAUTILUS_EXTENSIONS_DIR=`pkg-config --variable=extensiondir libnautilus-extension`
+AC_SUBST(NAUTILUS_EXTENSIONS_DIR)
+
+dnl --------------------------------------------------
+
+GNOME_COMPILE_WARNINGS
+
+GNOME_COMMON_INIT
+
+ALL_LINGUAS="es"
+
+GETTEXT_PACKAGE=nautilus-actions
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [GetText Package])
+                                                                               
+AM_GLIB_GNU_GETTEXT
+AC_PROG_INTLTOOL
+
+if test "x${prefix}" = "xNONE"; then
+  AC_DEFINE_UNQUOTED(LOCALEDIR, "${ac_default_prefix}/${DATADIRNAME}/locale", [Locale dir])
+else
+  AC_DEFINE_UNQUOTED(LOCALEDIR, "${prefix}/${DATADIRNAME}/locale", [Locale dir])
+fi
+
+
+AC_OUTPUT([
+Makefile
+plugin/Makefile
+config/Makefile
+nact/Makefile
+nact/nautilus-actions-config
+nact/nact.desktop.in
+po/Makefile.in
+])
+
