@@ -1,3 +1,13 @@
+2005-09-02  Rodrigo Moya <rodrigo@novell.com>
+
+	* Makefile.am: removed templates dir from build.
+
+	* nact/nautilus-actions-config.in: fixed paths.
+
+	* nact/nautilus-actions-config.glade: renamed.
+
+	* po/es,po: created correct stub file.
+
 2005-09-01  Rodrigo Moya <rodrigo@novell.com>
 
 	* autogen.sh:

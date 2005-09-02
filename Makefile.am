@@ -1,1 +1,1 @@
-SUBDIRS = config plugin nact templates po
+SUBDIRS = config plugin nact po

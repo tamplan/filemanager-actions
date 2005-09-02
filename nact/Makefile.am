@@ -1,7 +1,7 @@
 bin_SCRIPTS = nautilus-actions-config
 
 gladedir = $(datadir)/nautilus-actions
-glade_DATA = nautilus-actions-config_dev.glade
+glade_DATA = nautilus-actions-config.glade
 
 pixmpapsdir = $(datadir)/nautilus-actions
 pixmpaps_DATA = nautilus-launch-icon.png
