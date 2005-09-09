@@ -1,6 +1,8 @@
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
 	* MAINTAINERS: Add the list of maintainers
 
+	* README: Add information about the project
+
 2005-09-07  Frederic Ruaudel <grumz@grumz.net> 0.6
 
 	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()
