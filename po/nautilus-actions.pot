@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-09 16:09+0200\n"
+"POT-Creation-Date: 2005-09-09 19:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -246,6 +246,54 @@ msgstr ""
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../nact/nautilus-actions-config.glade.h:66
 msgid "translator-credits"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:584
+msgid "New Config"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:655
+msgid "_Config List"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:906
+msgid "/path/to"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:907
+#: ../nact/nautilus-actions-config.in:909
+msgid "file1.txt"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:907
+msgid "file2.txt"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:908
+#: ../nact/nautilus-actions-config.in:909
+msgid "dir1"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:908
+msgid "dir2"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:910
+#: ../nact/nautilus-actions-config.in:951
+msgid "file"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:911
+msgid "file.txt"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:943
+msgid "dir"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:955
+#: ../nact/nautilus-actions-config.in:961
+msgid "test.example.net"
 msgstr ""
 
 #: ../config/config_newaction.xml.in.h:1
