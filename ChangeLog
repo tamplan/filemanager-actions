@@ -1,5 +1,9 @@
 2005-09-06  Frederic Ruaudel <grumz@grumz.net>
 
+	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()
+to use nautilus_file_info_get_name() instead of gnome_vfs_uri_get_path () to avoid 
+problem with url encoded filenames (Bug #84)
+
 	* configure.in : add a --with-nautilus-extdir option to the 
 ./configure script. If this option is not used, it tries to use 
 the pkg-config command. If the result is empty, ./configure 

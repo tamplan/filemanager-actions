@@ -63,7 +63,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		{
 			gchar* tmp_uri = nautilus_file_info_get_uri ((NautilusFileInfo *)file_iter->data);
 			GnomeVFSURI* tmp_gvfs_uri = gnome_vfs_uri_new (tmp_uri);
-			gchar* tmp_filename = g_path_get_basename (gnome_vfs_uri_get_path (tmp_gvfs_uri));
+			gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo*)file_iter->data);
 			
 			g_string_append_printf (tmp_file_list, " %s", tmp_filename);
 			g_string_append_printf (tmp_path_file_list, " %s/%s", dirname, tmp_filename);
