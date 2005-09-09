@@ -1,4 +1,6 @@
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
+	* nact/nautilus-actions-config.in: Add i18n support to nact
+
 	* po/nautilus-actions.pot: Generate the translation message list file
 
 	* configure.in: Remove useless dependencies

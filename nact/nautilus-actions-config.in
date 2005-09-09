@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Gui for nautilus actions extension
 
+
 import sys
 import os.path
 import pwd
@@ -12,6 +13,17 @@ import glob
 import libxml2
 import types
 import shutil
+
+# Set i18n support :
+APP="nautilus-actions"
+DIR="@LOCALEDIR@"
+import locale
+import gettext
+locale.setlocale(locale.LC_ALL, '')
+gtk.glade.bindtextdomain(APP, DIR)
+gtk.glade.textdomain(APP)
+gettext.install(APP, DIR, unicode=1)
+
 try:
 	import pygtk
 	#tell pyGTK, if possible, that we want GTKv2
@@ -480,7 +492,7 @@ class ConfigWriter (ConfigParser):
 class NACTGui (gtk.glade.XML):
 	def __init__ (self, windowname):
 		gladefile = "@prefix@/share/nautilus-actions/nact/nautilus-actions-config.glade"
-		gtk.glade.XML.__init__ (self, gladefile, windowname)
+		gtk.glade.XML.__init__ (self, gladefile, windowname, gettext.textdomain())
 		self.widget = self.get_widget (windowname)
 	
 	def Show (self):
@@ -569,7 +581,7 @@ class NACTMainWindow (NACTGui):
 								  ["smb" , "Windows files"], 
 								  ["ftp" , "FTP files"], 
 								  ["dav" , "Webdav files"] ]
-		self.new_config_name = "New Config"
+		self.new_config_name = _("New Config")
 
 		
 		dic = { "ActionAppQuit" : self.ActionAppQuitHandler, 
@@ -640,7 +652,7 @@ class NACTMainWindow (NACTGui):
 		self.UpdateConfigList ()
 		
 		column = gtk.TreeViewColumn ()
-		column.set_title ("_Config List")
+		column.set_title (_("_Config List"))
 		
 		icon_renderer = gtk.CellRendererPixbuf ()
 		column.pack_start (icon_renderer, False)
@@ -662,7 +674,7 @@ class NACTMainWindow (NACTGui):
 		treeview.set_model (dist_store)
 
 		column = gtk.TreeViewColumn ()
-		column.set_title ("Scheme")
+#		column.set_title ("Scheme")
 
 		renderer = gtk.CellRendererToggle()
 		renderer.connect ('toggled', self.ActionToggleSchemeHandler, dist_store)
@@ -679,7 +691,7 @@ class NACTMainWindow (NACTGui):
 		treeview.append_column(column)
 		
 		column = gtk.TreeViewColumn ()
-		column.set_title ("Description")
+#		column.set_title ("Description")
 
 		text_renderer = gtk.CellRendererText ()
 		column.pack_start (text_renderer, False)
@@ -891,12 +903,12 @@ class NACTMainWindow (NACTGui):
 		retv = ""
 		if config_name != self.new_config_name:
 		#
-			ex_path = "/path/to"
-			ex_files = [ "file1.txt", "file2.txt" ]
-			ex_dirs = [ "dir1", "dir2"]
-			ex_mixed = ["file1.txt", "dir1" ]
-			ex_scheme = "file"
-			ex_one = "file.txt"
+			ex_path = _("/path/to")
+			ex_files = [ _("file1.txt"), _("file2.txt") ]
+			ex_dirs = [ _("dir1"), _("dir2")]
+			ex_mixed = [_("file1.txt"), _("dir1") ]
+			ex_scheme = _("file")
+			ex_one = _("file.txt")
 			ex_list = [ ex_one ]
 			ex_path_list = [ ex_path + "/" + ex_one ]
 			config = self.config_list[config_name]
@@ -928,7 +940,7 @@ class NACTMainWindow (NACTGui):
 			#
 				if config.get_test_isdir () and not config.get_test_isfile ():
 				#
-					ex_one = "dir"
+					ex_one = _("dir")
 				#
 			#
 			schemes = config.get_test_schemes ()
@@ -936,17 +948,17 @@ class NACTMainWindow (NACTGui):
 			#
 				ex_scheme = schemes[0]
 			#
-			if ex_scheme == "file":
+			if ex_scheme == _("file"):
 			#
 				if len (schemes) > 1:
 					ex_scheme = schemes[1]
-					ex_host = "test.example.net"
+					ex_host = _("test.example.net")
 				else:
 					ex_host = ""
 			#
 			else:
 			#
-				ex_host = "test.example.net"
+				ex_host = _("test.example.net")
 			#
 
 			tmp = parameters
