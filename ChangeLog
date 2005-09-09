@@ -1,4 +1,6 @@
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
+	* po/es.po: Update strings of Spanish translation
+
 	* po/fr.po: Start French translation
 
 	* nact/nautilus-actions-config.in: Add i18n support to nact
