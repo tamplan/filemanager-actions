@@ -11,7 +11,7 @@ G_BEGIN_DECLS
 #endif
 
 #ifndef DEFAULT_PER_USER_PATH 
-#define DEFAULT_PER_USER_PATH ".nautilus-actions"
+#define DEFAULT_PER_USER_PATH ".config/nautilus-actions"
 #endif
 
 typedef enum _IsFileEnumType IsFileType; /* not used */

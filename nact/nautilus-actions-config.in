@@ -11,6 +11,7 @@ import shelve
 import glob
 import libxml2
 import types
+import shutil
 try:
 	import pygtk
 	#tell pyGTK, if possible, that we want GTKv2
@@ -234,15 +235,19 @@ class ConfigParser:
 			self.config_dir = ["@prefix@/share/nautilus-actions"]
 		else:
 			current_config_dir = self.home_dir + "/.config/nautilus-actions"
-			old_configdir = self.home_dir + "/.nautilus-actions"
+			old_configdir_list = [ self.home_dir + "/.nautilus-actions", self.home_dir + "/.config/.nautilus-actions" ]
 			
 			if not os.path.exists (current_config_dir):
 				os.makedirs (current_config_dir)
 				
-			if os.path.isdir (old_configdir) and old_configdir != current_config_dir:
-			#
-				os.rename (old_configdir, current_config_dir);
-			#
+			for old_configdir in old_configdir_list:
+				if os.path.isdir (old_configdir) and old_configdir != current_config_dir:
+				#
+					for file in glob.glob (old_configdir + "/*.xml"):
+						shutil.copy (file, current_config_dir)
+						os.remove (file)
+					os.rmdir (old_configdir)
+				#
 
 			self.config_dir = [current_config_dir, "@prefix@/share/nautilus-actions"]
 				

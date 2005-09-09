@@ -8,6 +8,13 @@ about last characters of the paramters not set if the parameter string don't fin
 	* nact/nautilus-actions-config.in: Fix display of the example string in
 ParseParameters() function. The last character was missing if not a %? pattern.
 
+	* nact/nautilus-actions-config.in: Fix problem with old config file migration 
+and add migration to the new folder (Bug #90)
+
+	* nact/nautilus-actions-config.in:
+	* plugin/nautilus-actions-config.h: change the default per user config directory
+from ~/.config/.nautilus-actions to ~/.config/nautilus-actions.
+
 2005-09-06  Frederic Ruaudel <grumz@grumz.net>
 
 	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()
