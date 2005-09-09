@@ -1,4 +1,6 @@
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
+	* po/nautilus-actions.pot: Generate the translation message list file
+
 	* configure.in: Remove useless dependencies
 
 	* Makefile.am: add intltool tool in EXTRA_DIST options
