@@ -1,3 +1,13 @@
+2005-09-07  Frederic Ruaudel <grumz@grumz.net>
+
+	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()
+to quote every filenames and folder names and url decode Gnome-vfs URIs. Fix the problem
+about last characters of the paramters not set if the parameter string don't finish by a 
+%? pattern which cause the quote bug (Bug #32)
+
+	* nact/nautilus-actions-config.in: Fix display of the example string in
+ParseParameters() function. The last character was missing if not a %? pattern.
+
 2005-09-06  Frederic Ruaudel <grumz@grumz.net>
 
 	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()

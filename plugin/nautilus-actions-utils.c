@@ -32,9 +32,8 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		int current_len = strlen (iter);
 		gchar* uri = nautilus_file_info_get_uri ((NautilusFileInfo*)files->data);
 		GnomeVFSURI* gvfs_uri = gnome_vfs_uri_new (uri);
-		gchar* dirname = g_path_get_dirname (gnome_vfs_uri_get_path (gvfs_uri));
-		//gchar* filename = g_path_get_basename (gnome_vfs_uri_get_path (gvfs_uri));
-		gchar* filename = nautilus_file_info_get_name ((NautilusFileInfo*)files->data);
+		gchar* filename;
+		gchar* dirname;
 		gchar* scheme = g_strdup (gnome_vfs_uri_get_scheme (gvfs_uri));
 		gchar* hostname = g_strdup (gnome_vfs_uri_get_host_name (gvfs_uri));
 		gchar* username = g_strdup (gnome_vfs_uri_get_user_name (gvfs_uri));
@@ -42,15 +41,33 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		gchar* file_list;
 		gchar* path_file_list;
 		GList* file_iter = NULL;
-		GString* tmp_file_list = g_string_new (filename);
-		GString* tmp_path_file_list = g_string_new ("");
+		GString* tmp_file_list;
+		GString* tmp_path_file_list;
+		gchar* tmp;
+		gchar* tmp2;
 		
-		g_string_printf (tmp_path_file_list, "%s/%s", dirname, filename);
+		tmp = gnome_vfs_uri_extract_dirname (gvfs_uri);
+		dirname = gnome_vfs_unescape_string (tmp, "");
+		g_free (tmp);
+
+		tmp = nautilus_file_info_get_name ((NautilusFileInfo*)files->data);
+		filename = g_shell_quote (tmp);
+		tmp2 = g_build_path ("/", dirname, tmp, NULL);
+		g_free (tmp);
+		tmp_file_list = g_string_new (filename);
+		tmp = g_shell_quote (tmp2);
+		tmp_path_file_list = g_string_new (tmp);
+		g_free (tmp2);
+		g_free (tmp);
 		
 		if (gnome_vfs_uri_has_parent (gvfs_uri))
 		{
 			GnomeVFSURI* gvfs_parent_uri = gnome_vfs_uri_get_parent (gvfs_uri);
-			parent_dir = g_path_get_dirname (gnome_vfs_uri_get_path (gvfs_parent_uri));
+			tmp = g_path_get_dirname (gnome_vfs_uri_get_path (gvfs_parent_uri));
+			tmp2 = gnome_vfs_unescape_string (tmp, "");
+			parent_dir = g_shell_quote (tmp2);
+			g_free (tmp2);
+			g_free (tmp);
 			gnome_vfs_uri_unref (gvfs_parent_uri);
 		}
 		else
@@ -61,16 +78,19 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		// We already have the first item, so we start with the next one if any
 		for (file_iter = files->next; file_iter; file_iter = file_iter->next)
 		{
-			gchar* tmp_uri = nautilus_file_info_get_uri ((NautilusFileInfo *)file_iter->data);
-			GnomeVFSURI* tmp_gvfs_uri = gnome_vfs_uri_new (tmp_uri);
 			gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo*)file_iter->data);
 			
-			g_string_append_printf (tmp_file_list, " %s", tmp_filename);
-			g_string_append_printf (tmp_path_file_list, " %s/%s", dirname, tmp_filename);
+			gchar* quoted_tmp_filename = g_shell_quote (tmp_filename);
+			g_string_append_printf (tmp_file_list, " %s", quoted_tmp_filename);
+
+			tmp = g_build_path ("/", dirname, tmp_filename, NULL);
+			tmp2 = g_shell_quote (tmp);
+			g_string_append_printf (tmp_path_file_list, " %s", tmp2);
 			
+			g_free (tmp2);
+			g_free (tmp);
 			g_free (tmp_filename);
-			gnome_vfs_uri_unref (tmp_gvfs_uri);
-			g_free (tmp_uri);
+			g_free (quoted_tmp_filename);
 		}
 		file_list = g_string_free (tmp_file_list, FALSE);
 		path_file_list = g_string_free (tmp_path_file_list, FALSE);
@@ -86,7 +106,9 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 					tmp_string = g_string_append (tmp_string, uri);
 					break;
 				case 'd': // selected directory or base dir of the selected file(s)
-					tmp_string = g_string_append (tmp_string, dirname);
+					tmp = g_shell_quote (dirname);
+					tmp_string = g_string_append (tmp_string, tmp);
+					g_free (tmp);
 					break;
 				case 'p': // parent directory of the selected directory(ies) of basedir of the file(s)
 					tmp_string = g_string_append (tmp_string, parent_dir);
@@ -116,6 +138,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 			iter+=2; // skip the % sign and the character after.
 			old_iter = iter; // store the new start of the string
 		}
+		tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter));
 
 		if (!found) // if no % sign present, simply copy the param string
 		{

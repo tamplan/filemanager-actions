@@ -995,6 +995,7 @@ class NACTMainWindow (NACTGui):
 				pos = string.find (tmp, "%")
 				retv += tmp[:pos]
 			#
+			retv += tmp[pos:]
 		#
 		return retv
 
