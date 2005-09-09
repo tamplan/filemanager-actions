@@ -479,7 +479,7 @@ class ConfigWriter (ConfigParser):
 
 class NACTGui (gtk.glade.XML):
 	def __init__ (self, windowname):
-		gladefile = "@prefix@/share/nautilus-actions/nautilus-actions-config.glade"
+		gladefile = "@prefix@/share/nautilus-actions/nact/nautilus-actions-config.glade"
 		gtk.glade.XML.__init__ (self, gladefile, windowname)
 		self.widget = self.get_widget (windowname)
 	

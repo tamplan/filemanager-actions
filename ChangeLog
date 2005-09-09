@@ -15,6 +15,10 @@ and add migration to the new folder (Bug #90)
 	* plugin/nautilus-actions-config.h: change the default per user config directory
 from ~/.config/.nautilus-actions to ~/.config/nautilus-actions.
 
+	* nact/Makefile.am:
+	* nact/nautilus-actions-config.in: Move nact files in nact subdir of system wide 
+config folder
+
 2005-09-06  Frederic Ruaudel <grumz@grumz.net>
 
 	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()

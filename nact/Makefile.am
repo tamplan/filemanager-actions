@@ -1,10 +1,10 @@
 bin_SCRIPTS = nautilus-actions-config
 
-gladedir = $(datadir)/nautilus-actions
+gladedir = $(datadir)/nautilus-actions/nact
 glade_DATA = nautilus-actions-config.glade
 
-pixmpapsdir = $(datadir)/nautilus-actions
-pixmpaps_DATA = nautilus-launch-icon.png
+pixmapsdir = $(datadir)/nautilus-actions/nact
+pixmaps_DATA = nautilus-launch-icon.png
 
 Applicationsdir = $(datadir)/applications
 Applications_in_files = nact.desktop.in
