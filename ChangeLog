@@ -1,4 +1,7 @@
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
+	* nact/nact.desktop.in.in: Add i18n support and fix the @autotools_vars@ substitution.
+Still have problem with @datadir@ expanding in ${prefix}.
+
 	* MAINTAINERS: Add the list of maintainers
 
 	* README: Add information about the project
