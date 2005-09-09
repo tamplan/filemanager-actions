@@ -417,7 +417,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="LabelConfigTitle">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">&lt;b&gt;&lt;span size=&quot;x-large&quot;&gt;Config for &lt;i&gt;%s&lt;/i&gt;&lt;/span&gt;&lt;/b&gt;</property>
+			      <property name="label" translatable="yes" comments="%s is replaced in the python script, so please don't change it">&lt;b&gt;&lt;span size=&quot;x-large&quot;&gt;Config for &lt;i&gt;%s&lt;/i&gt;&lt;/span&gt;&lt;/b&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">True</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -534,7 +534,7 @@
 			      <child>
 				<widget class="GtkLabel" id="label2">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">      </property>
+				  <property name="label">      </property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -744,7 +744,7 @@
 			      <child>
 				<widget class="GtkLabel" id="label6">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">      </property>
+				  <property name="label">      </property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1120,7 +1120,7 @@
 					    <widget class="GtkLabel" id="LabelExampleCmd">
 					      <property name="visible">True</property>
 					      <property name="can_focus">True</property>
-					      <property name="label" translatable="yes">&lt;i&gt;&lt;b&gt;&lt;small&gt;ex: %s %s&lt;/small&gt;&lt;/b&gt;&lt;/i&gt;</property>
+					      <property name="label" translatable="yes" comments="%s are replaced in the python script, so please don't change them">&lt;i&gt;&lt;b&gt;&lt;small&gt;ex: %s %s&lt;/small&gt;&lt;/b&gt;&lt;/i&gt;</property>
 					      <property name="use_underline">False</property>
 					      <property name="use_markup">True</property>
 					      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1217,7 +1217,7 @@
 			      <child>
 				<widget class="GtkLabel" id="label11">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">      </property>
+				  <property name="label">      </property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1558,7 +1558,7 @@
 
 <widget class="GtkAboutDialog" id="AboutDialog">
   <property name="destroy_with_parent">False</property>
-  <property name="name" translatable="yes">NACT</property>
+  <property name="name">NACT</property>
   <property name="copyright" translatable="yes">(C) 2005 Frederic Ruaudel &lt;grumz@grumz.net&gt;</property>
   <property name="comments" translatable="yes">Nautilus Action Configuration Tool
 Application to configure Nautilus Action extension</property>

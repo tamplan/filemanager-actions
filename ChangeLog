@@ -1,4 +1,7 @@
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
+	* nact/nautilus-actions-config.glade: Unmark untranslatable string in glade (indent spaces,
+program name, etc.)
+
 	* config/Makefile.am:
 	* config/config_newaction.xml : 
 	* config/config_newaction.xml.in: replace config/config_newaction.xml by 
