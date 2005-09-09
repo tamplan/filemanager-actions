@@ -1,1 +1,3 @@
-nact/nautilus-actions-config_dev.glade
+nact/nact.desktop.in.in
+nact/nautilus-actions-config.glade
+config/config_newaction.xml.in

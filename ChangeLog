@@ -1,4 +1,6 @@
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
+	* po/POTFILES.in: Update list of files containing translatable strings.
+
 	* nact/nautilus-actions-config.glade: Unmark untranslatable string in glade (indent spaces,
 program name, etc.)
 
