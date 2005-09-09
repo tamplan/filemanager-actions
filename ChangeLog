@@ -1,4 +1,4 @@
-2005-09-07  Frederic Ruaudel <grumz@grumz.net>
+2005-09-07  Frederic Ruaudel <grumz@grumz.net> 0.6
 
 	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()
 to quote every filenames and folder names and url decode Gnome-vfs URIs. Fix the problem
@@ -25,7 +25,7 @@ config folder
 	* README:
 	* INSTALL: Add installation instructions
 
-2005-09-06  Frederic Ruaudel <grumz@grumz.net>
+2005-09-06  Frederic Ruaudel <grumz@grumz.net> 0.6
 
 	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()
 to use nautilus_file_info_get_name() instead of gnome_vfs_uri_get_path () to avoid 
@@ -37,7 +37,7 @@ the pkg-config command. If the result is empty, ./configure
 write an error on the output asking to the user to
 use the option to determine the path manually and exit.
 
-2005-09-02  Rodrigo Moya <rodrigo@novell.com>
+2005-09-02  Rodrigo Moya <rodrigo@novell.com> 0.6
 
 	* Makefile.am: removed templates dir from build.
 
@@ -47,7 +47,7 @@ use the option to determine the path manually and exit.
 
 	* po/es,po: created correct stub file.
 
-2005-09-01  Rodrigo Moya <rodrigo@novell.com>
+2005-09-01  Rodrigo Moya <rodrigo@novell.com> 0.6
 
 	* autogen.sh:
 	* configure.in:
