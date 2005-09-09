@@ -1,4 +1,10 @@
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
+	* config/Makefile.am:
+	* config/config_newaction.xml : 
+	* config/config_newaction.xml.in: replace config/config_newaction.xml by 
+config/config_newaction.xml.in to add i18n support. And modify Makefile.am to 
+add intltool operations.
+
 	* nact/nact.desktop.in.in: Add i18n support and fix the @autotools_vars@ substitution.
 Still have problem with @datadir@ expanding in ${prefix}.
 
