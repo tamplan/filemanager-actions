@@ -1,3 +1,11 @@
+2005-09-06  Frederic Ruaudel <grumz@grumz.net>
+
+	* configure.in : add a --with-nautilus-extdir option to the 
+./configure script. If this option is not used, it tries to use 
+the pkg-config command. If the result is empty, ./configure 
+write an error on the output asking to the user to
+use the option to determine the path manually and exit.
+
 2005-09-02  Rodrigo Moya <rodrigo@novell.com>
 
 	* Makefile.am: removed templates dir from build.

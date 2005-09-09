@@ -49,9 +49,18 @@ PKG_CHECK_MODULES(NAUTILUS_ACTIONS,\
 	 libnautilus-extension >= $NAUTILUS_EXTENSION)
 AC_SUBST(NAUTILUS_ACTIONS_CFLAGS)
 AC_SUBST(NAUTILUS_ACTIONS_LIBS)
+AC_ARG_WITH(nautilus-extdir,
+[ AC_HELP_STRING([--with-nautilus-extdir=EXTDIR],
+					  [EXTDIR define the folder where nautilus stores its extentions plugins. [default=auto]])],
+[ NAUTILUS_EXTENSIONS_DIR=$withval ],
+[ NAUTILUS_EXTENSIONS_DIR=`pkg-config --variable=extensiondir libnautilus-extension` ])
 
-NAUTILUS_EXTENSIONS_DIR=`pkg-config --variable=extensiondir libnautilus-extension`
 AC_SUBST(NAUTILUS_EXTENSIONS_DIR)
+
+if test -z ${NAUTILUS_EXTENSIONS_DIR}; then
+	AC_MSG_ERROR([*** Can't determine nautilus extension folder, please use --with-nautilus-extdir options to define it manually ]);
+fi
+
 
 dnl --------------------------------------------------
 
