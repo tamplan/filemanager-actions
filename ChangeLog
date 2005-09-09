@@ -1,4 +1,6 @@
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
+	* configure.in: Remove useless dependencies
+
 	* Makefile.am: add intltool tool in EXTRA_DIST options
 
 	* po/POTFILES.in: Update list of files containing translatable strings.
