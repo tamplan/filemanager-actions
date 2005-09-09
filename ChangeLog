@@ -7,7 +7,7 @@
 
 	* po/nautilus-actions.pot: Generate the translation message list file
 
-	* configure.in: Remove useless dependencies
+	* configure.in: Remove useless dependencies and add French translation in ALL_LINGUAS.
 
 	* Makefile.am: add intltool tool in EXTRA_DIST options
 
