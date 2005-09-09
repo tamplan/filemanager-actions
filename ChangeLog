@@ -19,6 +19,9 @@ from ~/.config/.nautilus-actions to ~/.config/nautilus-actions.
 	* nact/nautilus-actions-config.in: Move nact files in nact subdir of system wide 
 config folder
 
+	* config/config_newaction.xml:
+	* nact/nact.desktop.in.in: Change name of the executable from nact to nautilus-actions-config
+
 2005-09-06  Frederic Ruaudel <grumz@grumz.net>
 
 	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()

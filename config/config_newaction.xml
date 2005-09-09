@@ -15,7 +15,7 @@
       </scheme>
     </test>
     <command>
-      <path>/usr/bin/nact</path>
+      <path>/usr/bin/nautilus-actions-config</path>
       <parameters/>
     </command>
     <menu-item>
