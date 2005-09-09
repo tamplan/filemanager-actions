@@ -22,6 +22,9 @@ config folder
 	* config/config_newaction.xml:
 	* nact/nact.desktop.in.in: Change name of the executable from nact to nautilus-actions-config
 
+	* README:
+	* INSTALL: Add installation instructions
+
 2005-09-06  Frederic Ruaudel <grumz@grumz.net>
 
 	* plugin/nautilus-actions-utils.c: modify nautilus_actions_utils_parse_parameter ()
