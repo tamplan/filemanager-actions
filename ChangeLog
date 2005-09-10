@@ -1,5 +1,8 @@
 2005-09-10  Frederic Ruaudel <grumz@grumz.net> 0.7
 
+	* configure.in: Add LOCALEDIR in the list of @variable@ with AC_SUBST 
+for the python script 
+
 	* config/Makefile.am: Fix the intltool replacement var in config_DATA
 
 2005-09-09  Frederic Ruaudel <grumz@grumz.net> 0.7
