@@ -1,5 +1,8 @@
 2005-09-10  Frederic Ruaudel <grumz@grumz.net> 0.7
 
+	* nact/nautilus-actions-config.in: fix compilation error relative to 
+i18n support
+
 	* configure.in: Add LOCALEDIR in the list of @variable@ with AC_SUBST 
 for the python script 
 
