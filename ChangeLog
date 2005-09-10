@@ -1,5 +1,7 @@
 2005-09-10  Frederic Ruaudel <grumz@grumz.net> 0.7
 
+	* fr.po: Update French translation
+
 	* configure.in:
 	* nact/nact.desktop.in.in: Fix the problem with the icon path substitution (Bug#100)	
 
