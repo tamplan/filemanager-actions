@@ -603,6 +603,7 @@ class NACTMainWindow (NACTGui):
 				}
 
 		self.signal_autoconnect (dic)
+		self.AlignLabels ()
 		self.show_systemwide = True
 		self.config_reader = ConfigReader ()
 		self.config_list = self.config_reader.getConfigList ()
@@ -638,6 +639,13 @@ class NACTMainWindow (NACTGui):
 					model.append([config_name , gtk.STOCK_PREFERENCES, False])
 				#
 		#
+
+	def AlignLabels (self):
+		label_list = self.get_widget_prefix ("LabelAlign")
+		sizegrp = gtk.SizeGroup (gtk.SIZE_GROUP_HORIZONTAL)
+		for label in label_list:
+			sizegrp.add_widget (label)
+			
 
 	def CreateConfigListStore (self):
 		dist_store = gtk.ListStore (str, str, gobject.TYPE_BOOLEAN)

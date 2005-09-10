@@ -570,8 +570,7 @@
 				      <property name="spacing">12</property>
 
 				      <child>
-					<widget class="GtkLabel" id="label3">
-					  <property name="width_request">75</property>
+					<widget class="GtkLabel" id="LabelAlign1">
 					  <property name="visible">True</property>
 					  <property name="label" translatable="yes">Label :</property>
 					  <property name="use_underline">False</property>
@@ -630,8 +629,7 @@
 				      <property name="spacing">12</property>
 
 				      <child>
-					<widget class="GtkLabel" id="label4">
-					  <property name="width_request">75</property>
+					<widget class="GtkLabel" id="LabelAlign2">
 					  <property name="visible">True</property>
 					  <property name="label" translatable="yes">Tooltip :</property>
 					  <property name="use_underline">False</property>
@@ -779,8 +777,7 @@
 				      <property name="spacing">12</property>
 
 				      <child>
-					<widget class="GtkLabel" id="label7">
-					  <property name="width_request">75</property>
+					<widget class="GtkLabel" id="LabelAlign3">
 					  <property name="visible">True</property>
 					  <property name="label" translatable="yes">Path :</property>
 					  <property name="use_underline">False</property>
@@ -938,8 +935,7 @@
 					  <property name="spacing">12</property>
 
 					  <child>
-					    <widget class="GtkLabel" id="label8">
-					      <property name="width_request">75</property>
+					    <widget class="GtkLabel" id="LabelAlign4">
 					      <property name="visible">True</property>
 					      <property name="label" translatable="yes">Parameters :</property>
 					      <property name="use_underline">False</property>
@@ -1252,8 +1248,7 @@
 				      <property name="spacing">12</property>
 
 				      <child>
-					<widget class="GtkLabel" id="label12">
-					  <property name="width_request">75</property>
+					<widget class="GtkLabel" id="LabelAlign5">
 					  <property name="visible">True</property>
 					  <property name="label" translatable="yes">File Pattern :</property>
 					  <property name="use_underline">False</property>

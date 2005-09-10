@@ -1,5 +1,10 @@
 2005-09-10  Frederic Ruaudel <grumz@grumz.net> 0.7
 
+	* nact/nautilus-actions-config.in:
+	* nact/nautilus-actions-config.glade: Use dynamic sizing for label of the config panel
+with SizeGroup to allow translation label text to display correctly if they are longer than the
+original ones.
+
 	* nact/nautilus-actions-config.in: fix compilation error relative to 
 i18n support
 
