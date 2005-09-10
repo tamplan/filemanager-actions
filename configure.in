@@ -66,13 +66,17 @@ AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL
 
 if test "x${prefix}" = "xNONE"; then
-  LOCALEDIR="${ac_default_prefix}/${DATADIRNAME}/locale"
+  DATADIR="${ac_default_prefix}/${DATADIRNAME}" 
+  LOCALEDIR="${DATADIR}/locale"
   AC_DEFINE_UNQUOTED(LOCALEDIR, "${LOCALEDIR}", [Locale dir])
 else
-  LOCALEDIR="${prefix}/${DATADIRNAME}/locale"
+  DATADIR="${prefix}/${DATADIRNAME}"
+  LOCALEDIR="${DATADIR}/locale"
   AC_DEFINE_UNQUOTED(LOCALEDIR, "${LOCALEDIR}", [Locale dir])
 fi
+AC_SUBST(DATADIR)
 AC_SUBST(LOCALEDIR)
+
 
 
 AC_OUTPUT([
