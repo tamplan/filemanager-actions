@@ -1,4 +1,7 @@
 2005-09-12  Frederic Ruaudel <grumz@grumz.net> 0.7
+	
+	* po/*.po: Fix Bad charset due to bad LANG setting when generated po
+files with msginit.
 
 	* configure.in:
 	* fr.po: Add German translation (Gabriel Meier <gabriel.meier@web.de>)
