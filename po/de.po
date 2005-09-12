@@ -62,7 +62,7 @@ msgstr "<b>%f</b> : der Name der gewählten Datei oder der ersten, wenn mehrere 
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
 msgid "<b>%h</b> : hostname of the gnome-vfs URI"
-msgstr "b>%h</b> : Hostname der gnome-vfs Dateiadresse"
+msgstr "<b>%h</b> : Hostname der gnome-vfs Dateiadresse"
 
 #: ../nact/nautilus-actions-config.glade.h:15
 #, no-c-format
