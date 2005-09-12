@@ -1,0 +1,328 @@
+# German translations for nautilus-actions package
+# German messages for nautilus-actions.
+# Copyright (C) 2005 THE nautilus-actions'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the nautilus-actions package.
+# Gabriel Meier <gabriel.meier@web.de>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nautilus-actions 0.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-09-09 19:46+0200\n"
+"PO-Revision-Date: 2005-09-10 11:51+0200\n"
+"Last-Translator: Gabriel Meier <gabriel.meier@web.de>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../nact/nact.desktop.in.in.h:1
+msgid "Add items to the Nautilus context menu"
+msgstr "Aktionen zum Nautilus Kontext-Menü hinzufügen"
+
+#: ../nact/nact.desktop.in.in.h:2
+msgid "Nautilus Actions Configuration"
+msgstr "Nautilus Actions Konfiguration"
+
+#: ../nact/nautilus-actions-config.glade.h:1
+msgid "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
+msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
+
+#: ../nact/nautilus-actions-config.glade.h:3
+#, no-c-format
+msgid "<b>%%</b> : a percent sign"
+msgstr "<b>%%</b> : ein Prozentzeichen"
+
+#: ../nact/nautilus-actions-config.glade.h:5
+#, no-c-format
+msgid ""
+"<b>%M</b> : list of the selected files/directories with their full path "
+"separated by space."
+msgstr ""
+"<b>%M</b> : Liste der gewählten Dateien/Verzeichnisse mit ihrem vollständigen Pfad "
+"getrennt duch Leerzeichen"
+
+#: ../nact/nautilus-actions-config.glade.h:7
+#, no-c-format
+msgid "<b>%U</b> : username of the gnome-vfs URI"
+msgstr "<b>%U</b> : Benutzername der gnome-vfs Dateiadresse"
+
+#: ../nact/nautilus-actions-config.glade.h:9
+#, no-c-format
+msgid "<b>%d</b> : base dir of the selected file(s)"
+msgstr "<b>%d</b> : Basisverzeichnis der gewählten Datei(en)"
+
+#: ../nact/nautilus-actions-config.glade.h:11
+#, no-c-format
+msgid ""
+"<b>%f</b> : the name of the selected file or the 1st one if many are selected"
+msgstr "<b>%f</b> : der Name der gewählten Datei oder der ersten, wenn mehrere ausgewählt sind"
+
+#: ../nact/nautilus-actions-config.glade.h:13
+#, no-c-format
+msgid "<b>%h</b> : hostname of the gnome-vfs URI"
+msgstr "b>%h</b> : Hostname der gnome-vfs Dateiadresse"
+
+#: ../nact/nautilus-actions-config.glade.h:15
+#, no-c-format
+msgid ""
+"<b>%m</b> : list of the basename of the selected files/directories separated "
+"by space."
+msgstr ""
+"<b>%m</b> : Liste der Datei-/Verzeichnisnamen getrennt durch Leerzeichen."
+
+
+
+#: ../nact/nautilus-actions-config.glade.h:17
+#, no-c-format
+msgid "<b>%p</b> : parent directory of the selected file(s)"
+msgstr "<b>%p</b> : Parent-Verzeichnis der gewählten Datei(en)"
+
+#: ../nact/nautilus-actions-config.glade.h:19
+#, no-c-format
+msgid "<b>%s</b> : scheme of the gnome-vfs URI"
+msgstr "<b>%s</b> : Schema der gnome-vfs Dateiadresse"
+
+#: ../nact/nautilus-actions-config.glade.h:21
+#, no-c-format
+msgid "<b>%u</b> : gnome-vfs URI"
+msgstr "<b>%u</b> : gnome-vfs Dateiadresse"
+
+#. %s is replaced in the python script, so please don't change it
+#: ../nact/nautilus-actions-config.glade.h:24
+#, no-c-format
+msgid "<b><span size=\"x-large\">Config for <i>%s</i></span></b>"
+msgstr "<b><span size=\"x-large\">Konfiguration für <i>%s</i></span></b>"
+
+#. %s are replaced in the python script, so please don't change them
+#: ../nact/nautilus-actions-config.glade.h:27
+#, no-c-format
+msgid "<i><b><small>ex: %s %s</small></b></i>"
+msgstr "<i><b><small>ex: %s %s</small></b></i>"
+
+#: ../nact/nautilus-actions-config.glade.h:28
+msgid ""
+"<span color=\"red\"><b>Note:</b> this config is defined system wide, start "
+"NACT as root to edit it</span>"
+msgstr ""
+"<span color=\"red\"><b>Hinweis:</b> Diese Konfiguration bezieht sich auf das gesamte System. "
+"Starten Sie NACT zum bearbeiten als root</span>"
+
+
+#: ../nact/nautilus-actions-config.glade.h:29
+msgid "<span size=\"larger\"><b>Parameters Legend</b></span>"
+msgstr "<span size=\"larger\"><b>Legende der Paraameter</b></span>"
+
+#: ../nact/nautilus-actions-config.glade.h:30
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Save changes made to your "
+"configurations before closing ?</span>\n"
+"\n"
+"If you don't save, your changes will be discarded."
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">Änderungen an den Konfigurationen "
+"vor dem Verlassen speichern?</span>\n"
+"\n"
+"Wenn sie nicht speichern werden Ihre Änderungen verworfen."
+
+
+#: ../nact/nautilus-actions-config.glade.h:33
+msgid "<span weight=\"bold\">Appearance Conditions</span>"
+msgstr "<span weight=\"bold\">Bedingungen zum Erscheinen</span>"
+
+#: ../nact/nautilus-actions-config.glade.h:34
+msgid "<span weight=\"bold\">Command</span>"
+msgstr "<span weight=\"bold\">Befehl</span>"
+
+#: ../nact/nautilus-actions-config.glade.h:35
+msgid "<span weight=\"bold\">Nautilus Menu Item</span>"
+msgstr "<span weight=\"bold\">Nautilus Menüpunkt</span>"
+
+#: ../nact/nautilus-actions-config.glade.h:36
+msgid "A string with joker ? or * that will be used to match the files"
+msgstr "Eine Zeichenkette mit den Platzhaltern ? oder * die zum Erkennen der Dateien genutzt wird"
+
+#: ../nact/nautilus-actions-config.glade.h:37
+msgid "Appears if scheme is in this list :"
+msgstr "Erscheint für folgende Dateien :"
+
+#: ../nact/nautilus-actions-config.glade.h:38
+msgid "Appears if selection contains :"
+msgstr "Erscheint für"
+
+#: ../nact/nautilus-actions-config.glade.h:39
+msgid "Appears if selection has multiple files or folders"
+msgstr "Erscheint, wenn die Auswahl mehrere Dateien oder Verzeichnisse enthält"
+
+#: ../nact/nautilus-actions-config.glade.h:40
+msgid "Browse..."
+msgstr "Durchsuchen"
+
+#: ../nact/nautilus-actions-config.glade.h:41
+msgid "File Pattern :"
+msgstr "Dateimuster :"
+
+#: ../nact/nautilus-actions-config.glade.h:42
+msgid "Label :"
+msgstr "Beschriftung :"
+
+#: ../nact/nautilus-actions-config.glade.h:43
+msgid "Label of the menu item in the nautilus contextual menu"
+msgstr "Beschriftung des Menüpunktes im Nautilus Kontext-Manü"
+
+#: ../nact/nautilus-actions-config.glade.h:44
+msgid "Legend"
+msgstr "Legende"
+
+#: ../nact/nautilus-actions-config.glade.h:45
+msgid ""
+"Nautilus Action Configuration Tool\n"
+"Application to configure Nautilus Action extension"
+msgstr ""
+"Nautilus Action Configuration Tool\n"
+"Anwendung zur Konfiguration der Nautilus-Action Erweiterung"
+
+#: ../nact/nautilus-actions-config.glade.h:47
+msgid "Nautilus Actions Configuration Tool"
+msgstr "Nautilus Actions Konfigurationstool"
+
+#: ../nact/nautilus-actions-config.glade.h:48
+msgid "Parameters :"
+msgstr "Parameter :"
+
+#: ../nact/nautilus-actions-config.glade.h:49
+msgid "Path :"
+msgstr "Pfad :"
+
+#: ../nact/nautilus-actions-config.glade.h:50
+msgid "Select a command"
+msgstr "Wählen Sie einen Befehl"
+
+#: ../nact/nautilus-actions-config.glade.h:51
+msgid ""
+"Select a config in the list to edit or click the <i>New Config</i> button to "
+"create a new one."
+msgstr ""
+"Wählen Sie eine Konfiguration aus der Liste aus, oder klicken Sie den <i>Neue Konfig</i> Button "
+"um eine neue zu erstellen."
+
+
+#: ../nact/nautilus-actions-config.glade.h:52
+msgid "Show system wide config"
+msgstr "Systemweite Konfigurationen anzeigen"
+
+#: ../nact/nautilus-actions-config.glade.h:53
+msgid "Tooltip :"
+msgstr "Tooltip :"
+
+#: ../nact/nautilus-actions-config.glade.h:54
+msgid "Tooltip of the menu item that will appear in the nautilus statusbar"
+msgstr "Tooltip des Menüpunktes, der in der Nautilus-Statusleiste erscheint"
+
+#: ../nact/nautilus-actions-config.glade.h:55
+msgid "_Delete Config"
+msgstr "Konfiguration _Löschen"
+
+#: ../nact/nautilus-actions-config.glade.h:56
+msgid "_File"
+msgstr "_Datei"
+
+#: ../nact/nautilus-actions-config.glade.h:57
+msgid "_Help"
+msgstr "_Hilfe"
+
+#: ../nact/nautilus-actions-config.glade.h:58
+msgid "_New Config"
+msgstr "_Neue Konfiguration"
+
+#: ../nact/nautilus-actions-config.glade.h:59
+msgid "_Preferences"
+msgstr "_Einstellungen"
+
+#: ../nact/nautilus-actions-config.glade.h:60
+msgid "_Reload"
+msgstr "Neu _laden"
+
+#: ../nact/nautilus-actions-config.glade.h:61
+msgid "both"
+msgstr "beides"
+
+#: ../nact/nautilus-actions-config.glade.h:62
+msgid "only files"
+msgstr "nur Dateien"
+
+#: ../nact/nautilus-actions-config.glade.h:63
+msgid "only folders"
+msgstr "nur Verzeichnisse"
+
+#: ../nact/nautilus-actions-config.glade.h:64
+msgid ""
+"parameters that will be send to the program. Click the 'Legend' button to "
+"see the different replacement options"
+msgstr ""
+"Parameter, die an das Programm übergeben werden. Klicken Sie den 'Legend'-Button "
+"um die verschiedenen Optionen anzusehen"
+
+
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../nact/nautilus-actions-config.glade.h:66
+msgid "translator-credits"
+msgstr "Gabriel Meier <gabriel.meier@web.de>"
+
+#: ../nact/nautilus-actions-config.in:584
+msgid "New Config"
+msgstr "Neue Konfiguration"
+
+#: ../nact/nautilus-actions-config.in:655
+msgid "_Config List"
+msgstr "_Konfigurationen"
+
+#: ../nact/nautilus-actions-config.in:906
+msgid "/path/to"
+msgstr "/Pfad/zu"
+
+#: ../nact/nautilus-actions-config.in:907
+#: ../nact/nautilus-actions-config.in:909
+msgid "file1.txt"
+msgstr "Datei1.txt"
+
+#: ../nact/nautilus-actions-config.in:907
+msgid "file2.txt"
+msgstr "Datei2.txt"
+
+#: ../nact/nautilus-actions-config.in:908
+#: ../nact/nautilus-actions-config.in:909
+msgid "dir1"
+msgstr "Verz1"
+
+#: ../nact/nautilus-actions-config.in:908
+msgid "dir2"
+msgstr "Verz2"
+
+#: ../nact/nautilus-actions-config.in:910
+#: ../nact/nautilus-actions-config.in:951
+msgid "file"
+msgstr "Datei"
+
+#: ../nact/nautilus-actions-config.in:911
+msgid "file.txt"
+msgstr "Datei.txt"
+
+#: ../nact/nautilus-actions-config.in:943
+msgid "dir"
+msgstr "Verzeichnis"
+
+#: ../nact/nautilus-actions-config.in:955
+#: ../nact/nautilus-actions-config.in:961
+msgid "test.example.net"
+msgstr "test.Beispiel.net"
+
+#: ../config/config_newaction.xml.in.h:1
+msgid "Create a new action using NACT"
+msgstr "Eine neue Aktion mit NACT erstellen"
+
+#: ../config/config_newaction.xml.in.h:2
+msgid "New Action..."
+msgstr "Neue Aktion..."
