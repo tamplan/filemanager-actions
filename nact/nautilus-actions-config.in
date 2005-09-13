@@ -577,11 +577,11 @@ class NACTMainWindow (NACTGui):
 	def __init__ (self):
 		NACTGui.__init__ (self, "WindowMain")
 
-		self.scheme_list = [["file" , "Local files"], 
-								  ["sftp" , "SSH files"], 
-								  ["smb" , "Windows files"], 
-								  ["ftp" , "FTP files"], 
-								  ["dav" , "Webdav files"] ]
+		self.scheme_list = [["file" , N_("Local files")], 
+								  ["sftp" , N_("SSH files")], 
+								  ["smb" , N_("Windows files")], 
+								  ["ftp" , N_("FTP files")], 
+								  ["dav" , N_("Webdav files")] ]
 		self.new_config_name = _("New Config")
 
 		
@@ -678,7 +678,7 @@ class NACTMainWindow (NACTGui):
 	def CreateSchemeListStore (self):
 		dist_store = gtk.ListStore (gobject.TYPE_BOOLEAN, str, str)
 		for scheme in self.scheme_list:
-			dist_store.append([False, scheme[0], scheme[1]])
+			dist_store.append([False, scheme[0], _(scheme[1])])
 		treeview = self.get_widget("TreeViewSelectScheme")
 		treeview.set_model (dist_store)
 
@@ -1181,6 +1181,7 @@ locale.setlocale(locale.LC_ALL, '')
 gtk.glade.bindtextdomain(APP, DIR)
 gtk.glade.textdomain(APP)
 gettext.install(APP, DIR, unicode=1)
+N_ = str
 app = NACTMainWindow ()
 gtk.main ()
 

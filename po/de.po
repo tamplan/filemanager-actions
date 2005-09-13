@@ -3,12 +3,12 @@
 # Copyright (C) 2005 THE nautilus-actions'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the nautilus-actions package.
 # Gabriel Meier <gabriel.meier@web.de>, 2005.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-09 19:46+0200\n"
+"POT-Creation-Date: 2005-09-13 10:53+0200\n"
 "PO-Revision-Date: 2005-09-10 11:51+0200\n"
 "Last-Translator: Gabriel Meier <gabriel.meier@web.de>\n"
 "Language-Team: German\n"
@@ -40,8 +40,8 @@ msgid ""
 "<b>%M</b> : list of the selected files/directories with their full path "
 "separated by space."
 msgstr ""
-"<b>%M</b> : Liste der gewählten Dateien/Verzeichnisse mit ihrem vollständigen Pfad "
-"getrennt duch Leerzeichen"
+"<b>%M</b> : Liste der gewählten Dateien/Verzeichnisse mit ihrem "
+"vollständigen Pfad getrennt duch Leerzeichen"
 
 #: ../nact/nautilus-actions-config.glade.h:7
 #, no-c-format
@@ -57,7 +57,9 @@ msgstr "<b>%d</b> : Basisverzeichnis der gewählten Datei(en)"
 #, no-c-format
 msgid ""
 "<b>%f</b> : the name of the selected file or the 1st one if many are selected"
-msgstr "<b>%f</b> : der Name der gewählten Datei oder der ersten, wenn mehrere ausgewählt sind"
+msgstr ""
+"<b>%f</b> : der Name der gewählten Datei oder der ersten, wenn mehrere "
+"ausgewählt sind"
 
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
@@ -71,8 +73,6 @@ msgid ""
 "by space."
 msgstr ""
 "<b>%m</b> : Liste der Datei-/Verzeichnisnamen getrennt durch Leerzeichen."
-
-
 
 #: ../nact/nautilus-actions-config.glade.h:17
 #, no-c-format
@@ -106,9 +106,8 @@ msgid ""
 "<span color=\"red\"><b>Note:</b> this config is defined system wide, start "
 "NACT as root to edit it</span>"
 msgstr ""
-"<span color=\"red\"><b>Hinweis:</b> Diese Konfiguration bezieht sich auf das gesamte System. "
-"Starten Sie NACT zum bearbeiten als root</span>"
-
+"<span color=\"red\"><b>Hinweis:</b> Diese Konfiguration bezieht sich auf das "
+"gesamte System. Starten Sie NACT zum bearbeiten als root</span>"
 
 #: ../nact/nautilus-actions-config.glade.h:29
 msgid "<span size=\"larger\"><b>Parameters Legend</b></span>"
@@ -121,11 +120,10 @@ msgid ""
 "\n"
 "If you don't save, your changes will be discarded."
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">Änderungen an den Konfigurationen "
-"vor dem Verlassen speichern?</span>\n"
+"<span weight=\"bold\" size=\"larger\">Änderungen an den Konfigurationen vor "
+"dem Verlassen speichern?</span>\n"
 "\n"
 "Wenn sie nicht speichern werden Ihre Änderungen verworfen."
-
 
 #: ../nact/nautilus-actions-config.glade.h:33
 msgid "<span weight=\"bold\">Appearance Conditions</span>"
@@ -141,7 +139,9 @@ msgstr "<span weight=\"bold\">Nautilus Menüpunkt</span>"
 
 #: ../nact/nautilus-actions-config.glade.h:36
 msgid "A string with joker ? or * that will be used to match the files"
-msgstr "Eine Zeichenkette mit den Platzhaltern ? oder * die zum Erkennen der Dateien genutzt wird"
+msgstr ""
+"Eine Zeichenkette mit den Platzhaltern ? oder * die zum Erkennen der Dateien "
+"genutzt wird"
 
 #: ../nact/nautilus-actions-config.glade.h:37
 msgid "Appears if scheme is in this list :"
@@ -204,9 +204,8 @@ msgid ""
 "Select a config in the list to edit or click the <i>New Config</i> button to "
 "create a new one."
 msgstr ""
-"Wählen Sie eine Konfiguration aus der Liste aus, oder klicken Sie den <i>Neue Konfig</i> Button "
-"um eine neue zu erstellen."
-
+"Wählen Sie eine Konfiguration aus der Liste aus, oder klicken Sie den "
+"<i>Neue Konfig</i> Button um eine neue zu erstellen."
 
 #: ../nact/nautilus-actions-config.glade.h:52
 msgid "Show system wide config"
@@ -261,61 +260,79 @@ msgid ""
 "parameters that will be send to the program. Click the 'Legend' button to "
 "see the different replacement options"
 msgstr ""
-"Parameter, die an das Programm übergeben werden. Klicken Sie den 'Legend'-Button "
-"um die verschiedenen Optionen anzusehen"
-
-
+"Parameter, die an das Programm übergeben werden. Klicken Sie den 'Legend'-"
+"Button um die verschiedenen Optionen anzusehen"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../nact/nautilus-actions-config.glade.h:66
 msgid "translator-credits"
 msgstr "Gabriel Meier <gabriel.meier@web.de>"
 
+#: ../nact/nautilus-actions-config.in:580
+msgid "Local files"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:581
+msgid "SSH files"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:582
+msgid "Windows files"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:583
+msgid "FTP files"
+msgstr ""
+
 #: ../nact/nautilus-actions-config.in:584
+msgid "Webdav files"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:585
 msgid "New Config"
 msgstr "Neue Konfiguration"
 
-#: ../nact/nautilus-actions-config.in:655
+#: ../nact/nautilus-actions-config.in:664
 msgid "_Config List"
 msgstr "_Konfigurationen"
 
-#: ../nact/nautilus-actions-config.in:906
+#: ../nact/nautilus-actions-config.in:915
 msgid "/path/to"
 msgstr "/Pfad/zu"
 
-#: ../nact/nautilus-actions-config.in:907
-#: ../nact/nautilus-actions-config.in:909
+#: ../nact/nautilus-actions-config.in:916
+#: ../nact/nautilus-actions-config.in:918
 msgid "file1.txt"
 msgstr "Datei1.txt"
 
-#: ../nact/nautilus-actions-config.in:907
+#: ../nact/nautilus-actions-config.in:916
 msgid "file2.txt"
 msgstr "Datei2.txt"
 
-#: ../nact/nautilus-actions-config.in:908
-#: ../nact/nautilus-actions-config.in:909
+#: ../nact/nautilus-actions-config.in:917
+#: ../nact/nautilus-actions-config.in:918
 msgid "dir1"
 msgstr "Verz1"
 
-#: ../nact/nautilus-actions-config.in:908
+#: ../nact/nautilus-actions-config.in:917
 msgid "dir2"
 msgstr "Verz2"
 
-#: ../nact/nautilus-actions-config.in:910
-#: ../nact/nautilus-actions-config.in:951
+#: ../nact/nautilus-actions-config.in:919
+#: ../nact/nautilus-actions-config.in:960
 msgid "file"
 msgstr "Datei"
 
-#: ../nact/nautilus-actions-config.in:911
+#: ../nact/nautilus-actions-config.in:920
 msgid "file.txt"
 msgstr "Datei.txt"
 
-#: ../nact/nautilus-actions-config.in:943
+#: ../nact/nautilus-actions-config.in:952
 msgid "dir"
 msgstr "Verzeichnis"
 
-#: ../nact/nautilus-actions-config.in:955
-#: ../nact/nautilus-actions-config.in:961
+#: ../nact/nautilus-actions-config.in:964
+#: ../nact/nautilus-actions-config.in:970
 msgid "test.example.net"
 msgstr "test.Beispiel.net"
 

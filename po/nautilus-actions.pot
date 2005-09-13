@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-09 19:46+0200\n"
+"POT-Creation-Date: 2005-09-13 10:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -248,51 +248,71 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 
+#: ../nact/nautilus-actions-config.in:580
+msgid "Local files"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:581
+msgid "SSH files"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:582
+msgid "Windows files"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:583
+msgid "FTP files"
+msgstr ""
+
 #: ../nact/nautilus-actions-config.in:584
+msgid "Webdav files"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.in:585
 msgid "New Config"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:655
+#: ../nact/nautilus-actions-config.in:664
 msgid "_Config List"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:906
+#: ../nact/nautilus-actions-config.in:915
 msgid "/path/to"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:907
-#: ../nact/nautilus-actions-config.in:909
+#: ../nact/nautilus-actions-config.in:916
+#: ../nact/nautilus-actions-config.in:918
 msgid "file1.txt"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:907
+#: ../nact/nautilus-actions-config.in:916
 msgid "file2.txt"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:908
-#: ../nact/nautilus-actions-config.in:909
+#: ../nact/nautilus-actions-config.in:917
+#: ../nact/nautilus-actions-config.in:918
 msgid "dir1"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:908
+#: ../nact/nautilus-actions-config.in:917
 msgid "dir2"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:910
-#: ../nact/nautilus-actions-config.in:951
+#: ../nact/nautilus-actions-config.in:919
+#: ../nact/nautilus-actions-config.in:960
 msgid "file"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:911
+#: ../nact/nautilus-actions-config.in:920
 msgid "file.txt"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:943
+#: ../nact/nautilus-actions-config.in:952
 msgid "dir"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:955
-#: ../nact/nautilus-actions-config.in:961
+#: ../nact/nautilus-actions-config.in:964
+#: ../nact/nautilus-actions-config.in:970
 msgid "test.example.net"
 msgstr ""
 

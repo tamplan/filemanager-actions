@@ -4,6 +4,11 @@
 files, but only on for the reader part. If the config is saved with NACT
 only the text of the current LANG will be saved.
 
+	* po/*.po:
+	* po/nautilus-actions.pot:
+	* nact/nautilus-actions-config.in: Add missing strings in NACT (description
+of the schemes)
+
 2005-09-12  Frederic Ruaudel <grumz@grumz.net> 0.7
 	
 	* po/*.po: Fix Bad charset due to bad LANG setting when generated po
