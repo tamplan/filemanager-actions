@@ -1,5 +1,10 @@
 2005-09-13  Frederic Ruaudel <grumz@grumz.net> 0.7
 
+	* po/*.po:
+	* po/nautilus-actions.pot:
+	* nact/nautilus-actions-config.glade: Fix mistake in tooltip text and
+add information about Feature #73
+
 	* nact/nautilus-actions-config.in:
 	* plugin/nautilus-actions-config.h:
 	* plugin/nautilus-actions-config.c:

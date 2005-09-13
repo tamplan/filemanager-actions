@@ -810,7 +810,7 @@
 					  <child>
 					    <widget class="GtkEntry" id="EntryPath">
 					      <property name="visible">True</property>
-					      <property name="tooltip" translatable="yes">parameters that will be send to the program. Click the 'Legend' button to see the different replacement options</property>
+					      <property name="tooltip" translatable="yes">The command that will be launched when selecting the action in nautilus menu</property>
 					      <property name="can_focus">True</property>
 					      <property name="editable">True</property>
 					      <property name="visibility">True</property>
@@ -1275,7 +1275,7 @@
 				      <child>
 					<widget class="GtkEntry" id="EntryFilePattern">
 					  <property name="visible">True</property>
-					  <property name="tooltip" translatable="yes">A string with joker ? or * that will be used to match the files</property>
+					  <property name="tooltip" translatable="yes">A string with joker ? or * that will be used to match the files. You can match several file pattern by separating them with semi-colon ;</property>
 					  <property name="can_focus">True</property>
 					  <property name="editable">True</property>
 					  <property name="visibility">True</property>

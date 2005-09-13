@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-13 10:53+0200\n"
+"POT-Creation-Date: 2005-09-13 16:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -126,7 +126,9 @@ msgid "<span weight=\"bold\">Nautilus Menu Item</span>"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:36
-msgid "A string with joker ? or * that will be used to match the files"
+msgid ""
+"A string with joker ? or * that will be used to match the files. You can "
+"match several file pattern by separating them with semi-colon ;"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:37
@@ -194,125 +196,130 @@ msgid "Show system wide config"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:53
-msgid "Tooltip :"
+msgid ""
+"The command that will be launched when selecting the action in nautilus menu"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:54
-msgid "Tooltip of the menu item that will appear in the nautilus statusbar"
+msgid "Tooltip :"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:55
-msgid "_Delete Config"
+msgid "Tooltip of the menu item that will appear in the nautilus statusbar"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:56
-msgid "_File"
+msgid "_Delete Config"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:57
-msgid "_Help"
+msgid "_File"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:58
-msgid "_New Config"
+msgid "_Help"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:59
-msgid "_Preferences"
+msgid "_New Config"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:60
-msgid "_Reload"
+msgid "_Preferences"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:61
-msgid "both"
+msgid "_Reload"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:62
-msgid "only files"
+msgid "both"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:63
-msgid "only folders"
+msgid "only files"
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:64
+msgid "only folders"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:65
 msgid ""
 "parameters that will be send to the program. Click the 'Legend' button to "
 "see the different replacement options"
 msgstr ""
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:67
 msgid "translator-credits"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:580
+#: ../nact/nautilus-actions-config.in:633
 msgid "Local files"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:581
+#: ../nact/nautilus-actions-config.in:634
 msgid "SSH files"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:582
+#: ../nact/nautilus-actions-config.in:635
 msgid "Windows files"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:583
+#: ../nact/nautilus-actions-config.in:636
 msgid "FTP files"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:584
+#: ../nact/nautilus-actions-config.in:637
 msgid "Webdav files"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:585
+#: ../nact/nautilus-actions-config.in:638
 msgid "New Config"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:664
+#: ../nact/nautilus-actions-config.in:717
 msgid "_Config List"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:915
+#: ../nact/nautilus-actions-config.in:968
 msgid "/path/to"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:916
-#: ../nact/nautilus-actions-config.in:918
+#: ../nact/nautilus-actions-config.in:969
+#: ../nact/nautilus-actions-config.in:971
 msgid "file1.txt"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:916
+#: ../nact/nautilus-actions-config.in:969
 msgid "file2.txt"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:917
-#: ../nact/nautilus-actions-config.in:918
+#: ../nact/nautilus-actions-config.in:970
+#: ../nact/nautilus-actions-config.in:971
 msgid "dir1"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:917
+#: ../nact/nautilus-actions-config.in:970
 msgid "dir2"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:919
-#: ../nact/nautilus-actions-config.in:960
+#: ../nact/nautilus-actions-config.in:972
+#: ../nact/nautilus-actions-config.in:1013
 msgid "file"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:920
+#: ../nact/nautilus-actions-config.in:973
 msgid "file.txt"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:952
+#: ../nact/nautilus-actions-config.in:1005
 msgid "dir"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.in:964
-#: ../nact/nautilus-actions-config.in:970
+#: ../nact/nautilus-actions-config.in:1017
+#: ../nact/nautilus-actions-config.in:1023
 msgid "test.example.net"
 msgstr ""
 
