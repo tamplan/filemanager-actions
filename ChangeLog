@@ -2,8 +2,9 @@
 
 	* po/*.po:
 	* po/nautilus-actions.pot:
-	* nact/nautilus-actions-config.glade: Fix mistake in tooltip text and
-add information about Feature #73
+	* nact/nautilus-actions-config.glade: Fix mistake in tooltip text, add
+information about Feature #73, add missed string and fix some problem in 
+the GUI.
 
 	* nact/nautilus-actions-config.in:
 	* plugin/nautilus-actions-config.h:
