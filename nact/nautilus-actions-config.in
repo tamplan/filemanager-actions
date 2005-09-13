@@ -237,6 +237,7 @@ class Config:
 
 class ConfigParser:
 	def __init__ (self):
+		self.lang = os.environ["LANG"][:2]
 		self.uid = os.getuid ()
 		self.home_dir = pwd.getpwuid (self.uid)[5]
 		if self.uid == 0:
@@ -366,11 +367,15 @@ class ConfigReader (ConfigParser):
 									#
 										if self.isElementOk (node3, "label"):
 										#
-											new_config.set_menu_item_label (node3.getContent ())
+											lang = node3.prop ("lang")
+											if lang == self.lang or (lang == None and new_config.get_menu_item_label () == ""):
+												new_config.set_menu_item_label (node3.getContent ())
 										#
 										elif self.isElementOk (node3, "tooltip"):
 										#
-											new_config.set_menu_item_tooltip (node3.getContent ())
+											lang = node3.prop ("lang")
+											if lang == self.lang or (lang == None and new_config.get_menu_item_tooltip () == ""):
+												new_config.set_menu_item_tooltip (node3.getContent ())
 										#
 										node3 = node3.next
 									#

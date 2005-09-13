@@ -1,3 +1,9 @@
+2005-09-13  Frederic Ruaudel <grumz@grumz.net> 0.7
+
+	* nact/nautilus-actions-config.in: Add support for xml:lang in config
+files, but only on for the reader part. If the config is saved with NACT
+only the text of the current LANG will be saved.
+
 2005-09-12  Frederic Ruaudel <grumz@grumz.net> 0.7
 	
 	* po/*.po: Fix Bad charset due to bad LANG setting when generated po
