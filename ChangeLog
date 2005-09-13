@@ -1,5 +1,8 @@
 2005-09-13  Frederic Ruaudel <grumz@grumz.net> 0.7
 
+	* nact/nautilus-actions-config.in: Fix problem with system wide config 
+overwritten by user not read correctly by NACT.
+
 	* plugin/nautilus-actions-config.c:
 	* nact/nautilus-actions-config.in: Add support for xml:lang in config
 files. For NACT, it is only for the reader part. If the config is saved with 

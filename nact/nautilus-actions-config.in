@@ -89,7 +89,7 @@ class Config:
 	def is_overwritten (self):
 		return self.overwritten
 
-	def overwrite_config (self):
+	def overwrite_config (self, new_config=None):
 		if not self.overwritten:
 		#
 			self.overwritten = True
@@ -102,25 +102,36 @@ class Config:
 			self.ow_tobedeleted = self.tobedeleted
 			self.ow_readonly = self.readonly
 
-			# reset new one
-			self.filename = ""
-			del (self.command)
-			self.command = {}
-			self.command["path"] = ""
-			self.command["parameters"] = ""
-			del (self.menu_item)
-			self.menu_item = {}
-			self.menu_item["label"] = ""
-			self.menu_item["tooltip"] = ""
-			del (self.test)
-			self.test = {}
-			self.test["basename"] = ""
-			self.test["isfile"] = True
-			self.test["isdir"] = False
-			self.test["accept_multiple_file"] = False
-			self.test["schemes"] = []
-			self.tobedeleted = False
-			self.readonly = False
+			if new_config == None:
+				# reset new one
+				self.filename = ""
+				del (self.command)
+				self.command = {}
+				self.command["path"] = ""
+				self.command["parameters"] = ""
+				del (self.menu_item)
+				self.menu_item = {}
+				self.menu_item["label"] = ""
+				self.menu_item["tooltip"] = ""
+				del (self.test)
+				self.test = {}
+				self.test["basename"] = ""
+				self.test["isfile"] = True
+				self.test["isdir"] = False
+				self.test["accept_multiple_file"] = False
+				self.test["schemes"] = []
+				self.tobedeleted = False
+				self.readonly = False
+			else:
+				del (self.command)
+				del (self.menu_item)
+				del (self.test)
+				self.filename = new_config.filename
+				self.command = new_config.command
+				self.menu_item = new_config.menu_item
+				self.test = new_config.test
+				self.tobedeleted = new_config.tobedeleted
+				self.readonly = new_config.readonly
 		#
 
 	def restore_overwritten_config (self):
@@ -258,7 +269,7 @@ class ConfigParser:
 					os.rmdir (old_configdir)
 				#
 
-			self.config_dir = [current_config_dir, "@prefix@/share/nautilus-actions"]
+			self.config_dir = ["@prefix@/share/nautilus-actions", current_config_dir]
 				
 
 class ConfigReader (ConfigParser):
@@ -384,7 +395,10 @@ class ConfigReader (ConfigParser):
 							#
 							if filename[0:len (self.home_dir)] != self.home_dir and self.uid != 0:
 								new_config.set_readonly (True)
-							self.config_list[string.lower (new_config.get_name ())] = new_config
+							if not self.config_list.has_key (string.lower (new_config.get_name ())):
+								self.config_list[string.lower (new_config.get_name ())] = new_config
+							else:
+								self.config_list[string.lower (new_config.get_name ())].overwrite_config (new_config)
 						#
 						node = node.next
 					#
