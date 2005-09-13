@@ -255,39 +255,99 @@ static gboolean nautilus_actions_config_action_fill_menu_item (ConfigAction *act
 	xmlNode *iter;
 	gboolean retv = FALSE;
 	gboolean label_ok = FALSE;
-	gboolean tootip_ok = FALSE;
+	gboolean label_lang_ok = FALSE;
+	gboolean tooltip_ok = FALSE;
+	gboolean tooltip_lang_ok = FALSE;
 	ConfigActionMenuItem* menu_item_action = action->menu_item;
+	gchar* lang = g_strdup (g_getenv ("LANG"));
+	xmlChar* xmlLang;
 
 	for (iter = config_menu_item_node->children; iter; iter = iter->next)
 	{
 		xmlChar* text;
 		
-		if (!label_ok && iter->type == XML_ELEMENT_NODE &&
+		if (iter->type == XML_ELEMENT_NODE &&
 				g_ascii_strncasecmp (iter->name, 
 								"label",
 								strlen ("label")) == 0)
 		{
+			xmlLang = xmlGetProp (iter, "lang");
 			text = xmlNodeGetContent (iter);
-			menu_item_action->label = g_strdup (text);
+			if (lang == NULL && xmlLang == NULL)
+			{
+				//--> No $LANG set, get the default one (no xml:lang)
+				menu_item_action->label = g_strdup (text);
+				label_ok = TRUE;
+				label_lang_ok = TRUE;
+			}
+			else if (lang != NULL && xmlLang == NULL)
+			{
+				if (!label_lang_ok)
+				{
+					//--> $LANG set, not found the good xml:lang yet, get the default one (no xml:lang)
+					menu_item_action->label = g_strdup (text);
+					label_ok = TRUE;
+				}
+			}
+			else if (lang != NULL && (xmlLang != NULL && g_ascii_strncasecmp (xmlLang, lang, strlen (xmlLang)) == 0))
+			{ 
+				//--> $LANG set, found the good xml:lang, free the default one if any and set the good one instead
+				if (menu_item_action->label != NULL)
+				{
+					g_free (menu_item_action->label);
+				}
+				menu_item_action->label = g_strdup (text);
+				label_ok = TRUE;
+				label_lang_ok = TRUE;
+			}
 			xmlFree (text);
-			label_ok = TRUE;
+			xmlFree (xmlLang);
 		}
-		else if (!tootip_ok && iter->type == XML_ELEMENT_NODE &&
+		else if (iter->type == XML_ELEMENT_NODE &&
 				g_ascii_strncasecmp (iter->name, 
 								"tooltip",
 								strlen ("tooltip")) == 0)
 		{
+			xmlLang = xmlGetProp (iter, "lang");
 			text = xmlNodeGetContent (iter);
-			menu_item_action->tooltip = g_strdup (text);
+			if (lang == NULL && xmlLang == NULL)
+			{
+				//--> No $LANG set, get the default one (no xml:lang)
+				menu_item_action->tooltip = g_strdup (text);
+				tooltip_ok = TRUE;
+				tooltip_lang_ok = TRUE;
+			}
+			else if (lang != NULL && xmlLang == NULL)
+			{
+				if (!tooltip_lang_ok)
+				{
+					//--> $LANG set, not found the good xml:lang yet, get the default one (no xml:lang)
+					menu_item_action->tooltip = g_strdup (text);
+					tooltip_ok = TRUE;
+				}
+			}
+			else if (lang != NULL && (xmlLang != NULL && g_ascii_strncasecmp (xmlLang, lang, strlen (xmlLang)) == 0))
+			{ 
+				//--> $LANG set, found the good xml:lang, free the default one if any and set the good one instead
+				if (menu_item_action->tooltip != NULL)
+				{
+					g_free (menu_item_action->tooltip);
+				}
+				menu_item_action->tooltip = g_strdup (text);
+				tooltip_ok = TRUE;
+				tooltip_lang_ok = TRUE;
+			}
 			xmlFree (text);
-			tootip_ok = TRUE;
+			xmlFree (xmlLang);
 		}
 	}
 
-	if (label_ok && tootip_ok)
+	if (label_ok && tooltip_ok)
 	{
 		retv = TRUE;
 	}
+
+	g_free (lang);
 
 	return retv;
 }
