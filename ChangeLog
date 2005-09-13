@@ -1,5 +1,7 @@
 2005-09-13  Frederic Ruaudel <grumz@grumz.net> 0.7
 
+	* nact/nautilus-actions-config.in: Fix problem with new config creation
+
 	* po/*.po:
 	* po/nautilus-actions.pot:
 	* nact/nautilus-actions-config.glade: Fix mistake in tooltip text, add

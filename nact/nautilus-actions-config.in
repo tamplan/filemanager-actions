@@ -849,13 +849,14 @@ class NACTMainWindow (NACTGui):
 	def ActionNewConfigNameEditHandler (self, cellrenderer, path, new_text, model):
 		treeview = self.get_widget("TreeViewConfigList")
 		tmp = ""
+		not_trimmed_text = new_text
 		for c in new_text: # Trim all characters which are not alphanumeric
 			if c in string.letters:
 				tmp += c
 			elif c in string.digits:
 				tmp += c
 		new_text = tmp
-		if new_text != self.new_config_name and len (new_text) > 0:
+		if not_trimmed_text != self.new_config_name and len (new_text) > 0:
 		#
 			is_ok = True
 			new_config = None
