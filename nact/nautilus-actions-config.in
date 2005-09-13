@@ -52,7 +52,7 @@ class Config:
 		self.menu_item["label"] = ""
 		self.menu_item["tooltip"] = ""
 		self.test = {}
-		self.test["basename"] = ""
+		self.test["basename"] = []
 		self.test["isfile"] = True
 		self.test["isdir"] = False
 		self.test["accept_multiple_file"] = False
@@ -68,7 +68,7 @@ class Config:
 		self.ow_menu_item["label"] = ""
 		self.ow_menu_item["tooltip"] = ""
 		self.ow_test = {}
-		self.ow_test["basename"] = ""
+		self.ow_test["basename"] = []
 		self.ow_test["isfile"] = True
 		self.ow_test["isdir"] = False
 		self.ow_test["accept_multiple_file"] = False
@@ -115,7 +115,7 @@ class Config:
 				self.menu_item["tooltip"] = ""
 				del (self.test)
 				self.test = {}
-				self.test["basename"] = ""
+				self.test["basename"] = []
 				self.test["isfile"] = True
 				self.test["isdir"] = False
 				self.test["accept_multiple_file"] = False
@@ -181,8 +181,21 @@ class Config:
 	def set_menu_item_tooltip (self, tooltip):
 		self.menu_item["tooltip"] = tooltip
 
-	def set_test_basename (self, basename):
-		self.test["basename"] = basename
+	def set_test_basename (self, basenames):
+		self.test["basename"] =  basenames
+
+	def set_test_basename_str (self, basenames_str):
+		del (self.test["basename"])
+		self.test["basename"] = []
+		basename_list = string.split (basenames_str, ";")
+		for basename in basename_list:
+			basename = string.strip (basename)
+			if len (basename) != 0:
+				self.test["basename"].append (basename)
+
+	def append_test_basename (self, basename):
+		if not basename in self.test["basename"]:
+			self.test["basename"].append (basename)
 
 	def set_test_isfile (self, isfile):
 		self.test["isfile"] = isfile
@@ -215,6 +228,9 @@ class Config:
 
 	def get_menu_item_tooltip (self):
 		return self.menu_item["tooltip"]
+
+	def get_test_basename_str (self):
+		return string.join (self.test["basename"], " ; ")
 
 	def get_test_basename (self):
 		return self.test["basename"]
@@ -302,6 +318,7 @@ class ConfigReader (ConfigParser):
 				root = doc.children
 				if self.isElementOk (root, "nautilus-actions-config"):
 				#
+					version = root.prop ("version")
 					node = root.children
 					while node != None:
 					#
@@ -318,7 +335,25 @@ class ConfigReader (ConfigParser):
 									#
 										if self.isElementOk (node3, "basename"):
 										#
-											new_config.set_test_basename (node3.getContent ())
+											basename_list = []
+											if version == "0.1":
+											#
+												basename_list.append (node3.getContent ())
+											#
+											else:
+											#
+												node4 = node3.children
+												while node4 != None:
+												#
+													if self.isElementOk (node4, "match"):
+													#
+														basename_list.append (node4.getContent ())
+													#
+													node4 = node4.next
+												#
+											#
+											new_config.set_test_basename (basename_list)
+													
 										#
 										elif self.isElementOk (node3, "isfile"):
 										#
@@ -446,7 +481,7 @@ class ConfigWriter (ConfigParser):
 				count = 0;
 				doc = libxml2.newDoc ("1.0")
 				main_node = libxml2.newNode ("nautilus-actions-config")
-				main_node.setProp ("version", "0.1")
+				main_node.setProp ("version", "0.2")
 				doc.setRootElement (main_node)
 				for config in config_list:
 				#
@@ -457,7 +492,11 @@ class ConfigWriter (ConfigParser):
 						node_action.setProp ("name", config.get_name ())
 						
 						node_test = node_action.newChild (None, "test", None)
-						node_test.newChild (None, "basename", config.get_test_basename ())
+						node_basename = node_test.newChild (None, "basename", None)
+						for basename in config.get_test_basename ():
+						#
+							node_basename.newChild (None, "match", basename)
+						#
 						node_test.newChild (None, "isfile", config.get_test_isfile (True))
 						node_test.newChild (None, "isdir", config.get_test_isdir (True))
 						node_test.newChild (None, "accept-multiple-files", config.get_test_accept_multiple_file (True))
@@ -779,7 +818,7 @@ class NACTMainWindow (NACTGui):
 
 			self.SetCurrentFilename (config.get_command_path ())
 			self.get_widget ("EntryParameters").set_text (config.get_command_parameters ())
-			self.get_widget ("EntryFilePattern").set_text (config.get_test_basename ())
+			self.get_widget ("EntryFilePattern").set_text (config.get_test_basename_str ())
 
 			if config.get_test_isfile () and config.get_test_isdir ():
 				self.get_widget ("RadioButtonBoth").set_active (True)
@@ -1102,7 +1141,7 @@ class NACTMainWindow (NACTGui):
 			config_name = self.GetCurrentEditedConfig ()
 			if config_name != None:
 			#
-				self.config_list[config_name].set_test_basename (entry.get_text ())
+				self.config_list[config_name].set_test_basename_str (entry.get_text ())
 				self.config_modified = True
 			#
 		#

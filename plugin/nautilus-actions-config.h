@@ -39,7 +39,7 @@ struct _ConfigAction
 
 struct _ConfigActionTest
 {
-	gchar* basename;
+	GList* basenames;
 	gboolean isfile;
 	gboolean isdir;
 	gboolean accept_multiple_file;

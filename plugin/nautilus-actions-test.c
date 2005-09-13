@@ -33,14 +33,21 @@ gboolean nautilus_actions_test_validate (ConfigActionTest *action_test, GList* f
 	gboolean test_file_type = FALSE;
 	gboolean test_scheme = FALSE;
 	gboolean test_basename = FALSE;
-	GPatternSpec* glob_pattern = g_pattern_spec_new (action_test->basename);
+	GList* glob_patterns = NULL;
 	GList* iter;
+	GList* iter2;
 	guint dir_count = 0;
 	guint file_count = 0;
 	guint total_count = 0;
 	guint scheme_ok_count = 0;
 	guint glob_ok_count = 0;
+	gboolean basename_match_ok = FALSE;
 
+	for (iter = action_test->basenames; iter; iter = iter->next)
+	{
+		glob_patterns = g_list_append (glob_patterns, g_pattern_spec_new ((gchar*)iter->data));
+	}
+	
 	for (iter = files; iter; iter = iter->next)
 	{
 		gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo *)iter->data);
@@ -56,9 +63,18 @@ gboolean nautilus_actions_test_validate (ConfigActionTest *action_test, GList* f
 
 		scheme_ok_count += nautilus_actions_test_check_scheme (action_test->schemes, (NautilusFileInfo*)iter->data);
 
+		basename_match_ok = FALSE;
+		iter2 = glob_patterns;
+		while (iter2 && !basename_match_ok)
+		{
+			if (g_pattern_match_string ((GPatternSpec*)iter2->data, tmp_filename))
+			{
+				basename_match_ok = TRUE;
+			}
+			iter2 = iter2->next;
+		}
 
-		//if (g_pattern_match (glob_pattern, strlen (tmp_filename), tmp_filename, g_strreverse (tmp_filename)))
-		if (g_pattern_match_string (glob_pattern, tmp_filename))
+		if (basename_match_ok)
 		{
 			glob_ok_count++;
 		}
@@ -115,7 +131,11 @@ gboolean nautilus_actions_test_validate (ConfigActionTest *action_test, GList* f
 		retv = TRUE;
 	}
 	
-	g_pattern_spec_free (glob_pattern);
+	for (iter = glob_patterns; iter; iter = iter->next)
+	{
+		g_pattern_spec_free ((GPatternSpec*)iter->data);
+	}
+	g_list_free (glob_patterns);
 
 	return retv;
 }

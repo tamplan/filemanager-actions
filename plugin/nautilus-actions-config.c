@@ -87,7 +87,7 @@ static ConfigAction *nautilus_actions_config_action_new (gchar* name, gchar* ver
 	action->version = g_strdup (version);
 	
 	action->test = g_new (ConfigActionTest, 1);
-	action->test->basename = NULL;
+	action->test->basenames = NULL;
 	action->test->isfile = FALSE;
 	action->test->isdir = FALSE;
 	action->test->accept_multiple_file = FALSE;
@@ -102,6 +102,41 @@ static ConfigAction *nautilus_actions_config_action_new (gchar* name, gchar* ver
 	action->menu_item->tooltip = NULL;
 	
 	return action;
+}
+
+static gboolean nautilus_actions_config_action_fill_test_basenames (GList** test_basenames, xmlNode* config_test_basename_node, const gchar* config_version)
+{
+	xmlNode *iter;
+	gboolean retv = FALSE;
+
+	if (g_ascii_strncasecmp (config_version, "0.1", strlen (config_version)) == 0)
+	{
+		//--> manage backward compatibility
+		xmlChar* text = xmlNodeGetContent (config_test_basename_node);
+		(*test_basenames) = g_list_append ((*test_basenames), g_strdup (text));
+		xmlFree (text);
+		retv = TRUE;
+	}
+	else
+	{
+		for (iter = config_test_basename_node->children; iter; iter = iter->next)
+		{
+			xmlChar* text;
+			
+			if (iter->type == XML_ELEMENT_NODE &&
+					g_ascii_strncasecmp (iter->name, 
+									"match",
+									strlen ("match")) == 0)
+			{
+				text = xmlNodeGetContent (iter);
+				(*test_basenames) = g_list_append ((*test_basenames), g_strdup (text));
+				xmlFree (text);
+				retv = TRUE;
+			}
+		}
+	}
+
+	return retv;
 }
 
 static gboolean nautilus_actions_config_action_fill_test_scheme (GList** test_scheme, xmlNode* config_test_scheme_node)
@@ -149,10 +184,7 @@ static gboolean nautilus_actions_config_action_fill_test (ConfigAction *action, 
 								"basename",
 								strlen ("basename")) == 0)
 		{
-			text = xmlNodeGetContent (iter);
-			test_action->basename = g_strdup (text);
-			xmlFree (text);
-			basename_ok = TRUE;
+			basename_ok = nautilus_actions_config_action_fill_test_basenames (&(test_action->basenames), iter, action->version);
 		}
 		else if (!isfile_ok && iter->type == XML_ELEMENT_NODE &&
 				g_ascii_strncasecmp ((gchar*)iter->name, 
@@ -553,9 +585,12 @@ ConfigAction *nautilus_actions_config_action_dup (ConfigAction* action)
 
 		if (action->test != NULL)
 		{
-			if (action->test->basename != NULL)
+			if (action->test->basenames != NULL)
 			{
-				new_action->test->basename = g_strdup (action->test->basename);
+				for (iter = action->test->basenames; iter; iter = iter->next)
+				{
+					new_action->test->basenames = g_list_append (new_action->test->basenames, g_strdup ((gchar*)iter->data));
+				}
 			}
 			new_action->test->isfile = action->test->isfile;
 			new_action->test->isdir = action->test->isdir;
@@ -648,10 +683,14 @@ void nautilus_actions_config_free_action (ConfigAction* action)
 				g_list_free (action->test->schemes);
 				action->test->schemes = NULL;
 			}
-			if (action->test->basename != NULL)
+			if (action->test->basenames != NULL)
 			{
-				g_free (action->test->basename);
-				action->test->basename = NULL;
+				for (iter = action->test->basenames; iter; iter = iter->next)
+				{
+					g_free ((gchar*)iter->data);
+				}
+				g_list_free (action->test->basenames);
+				action->test->basenames = NULL;
 			}
 			g_free (action->test);
 			action->test = NULL;

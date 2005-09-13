@@ -1,5 +1,12 @@
 2005-09-13  Frederic Ruaudel <grumz@grumz.net> 0.7
 
+	* nact/nautilus-actions-config.in:
+	* plugin/nautilus-actions-config.h:
+	* plugin/nautilus-actions-config.c:
+	* plugin/nautilus-actions-test.c: Add the possibility to add several 
+file patterns (Feature #73). In NACT, add several file patterns separated
+by semi-colon ';'
+
 	* configure.in: Update version number
 
 	* nact/nautilus-actions-config.in: Fix problem with system wide config 
