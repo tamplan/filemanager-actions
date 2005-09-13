@@ -143,7 +143,8 @@ msgid ""
 "match several file pattern by separating them with semi-colon ;"
 msgstr ""
 "Eine Zeichenkette mit den Platzhaltern ? oder * die zum Erkennen der Dateien "
-"genutzt wird"
+"genutzt wird. Sie können mehrere Dateimuster getrennt durch Semikolon "
+"eingeben"
 
 #: ../nact/nautilus-actions-config.glade.h:37
 msgid "Appears if scheme is in this list :"
@@ -220,7 +221,9 @@ msgstr "Systemweite Konfigurationen anzeigen"
 #: ../nact/nautilus-actions-config.glade.h:54
 msgid ""
 "The command that will be launched when selecting the action in nautilus menu"
-msgstr ""
+msgstr "" 
+"Das Kommando, das ausgeführt wird, wenn die Aktion im Nautilus-Menü "
+" ausgewählt wird."
 
 #: ../nact/nautilus-actions-config.glade.h:55
 msgid "Tooltip :"
