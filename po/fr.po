@@ -46,23 +46,31 @@ msgstr ""
 #: ../nact/nautilus-actions-config.glade.h:7
 #, no-c-format
 msgid "<b>%U</b> : username of the gnome-vfs URI"
-msgstr "<b>%U</b> : nom de l'utilisateur présente dans l'URI gnome-vfs"
+msgstr ""
+"<b>%U</b> : nom de l'utilisateur présente dans l'URI "
+"gnome-vfs"
 
 #: ../nact/nautilus-actions-config.glade.h:9
 #, no-c-format
 msgid "<b>%d</b> : base dir of the selected file(s)"
-msgstr "<b>%d</b> : le repertoire contenant le(s) ficher(s) sélectioné(s)"
+msgstr ""
+"<b>%d</b> : le repertoire contenant le(s) ficher(s) "
+"sélectioné(s)"
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
 msgid ""
 "<b>%f</b> : the name of the selected file or the 1st one if many are selected"
-msgstr "<b>%f</b> : le fichier selectionné ou le 1er de la liste si plusieurs"
+msgstr ""
+"<b>%f</b> : le fichier selectionné ou le 1er de la liste "
+"si plusieurs"
 
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
 msgid "<b>%h</b> : hostname of the gnome-vfs URI"
-msgstr "<b>%h</b> : le nom de la machine hôte présente dans l'URI gnome-vfs"
+msgstr ""
+"<b>%h</b> : le nom de la machine hôte présente "
+"dans l'URI gnome-vfs"
 
 #: ../nact/nautilus-actions-config.glade.h:15
 #, no-c-format
@@ -142,7 +150,7 @@ msgid ""
 "match several file pattern by separating them with semi-colon ;"
 msgstr ""
 "Une chaine de caractères avec des jokers ? ou * qui sera utilisée pour faire "
-"la correspondance avec les fichiers. Vous pouvez mettre plusieurs correspondance"
+"la correspondance avec les fichiers. Vous pouvez mettre plusieurs correspondances "
 "séparées par des points virgules ;"
 
 #: ../nact/nautilus-actions-config.glade.h:37
@@ -171,7 +179,7 @@ msgstr "Libéllé :"
 
 #: ../nact/nautilus-actions-config.glade.h:43
 msgid "Label of the menu item in the nautilus contextual menu"
-msgstr "Libélé de l'entrée de menu dans le menu contextuel de Nautilus"
+msgstr "Libéllé de l'entrée de menu dans le menu contextuel de Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:44
 msgid "Legend"
@@ -211,7 +219,7 @@ msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:52
 msgid "Show system wide config"
-msgstr "Monter les configs système"
+msgstr "Montrer les configs systèmes"
 
 #: ../nact/nautilus-actions-config.glade.h:53
 msgid ""
@@ -303,7 +311,7 @@ msgstr "Nouvelle Config"
 
 #: ../nact/nautilus-actions-config.in:717
 msgid "_Config List"
-msgstr "Liste des _Configs"
+msgstr "_Configurations"
 
 #: ../nact/nautilus-actions-config.in:968
 msgid "/path/to"
