@@ -1,11 +1,9 @@
 [Desktop Entry]
-Version=@VERSION@
+Version=1.0
+Type=Application
 Encoding=UTF-8
 _Name=Nautilus Actions Configuration
-Type=Application
 _Comment=Add items to the Nautilus context menu
 Exec=nautilus-actions-config
-Icon=@DATADIR@/pixmaps/nautilus-launch-icon.png
+Icon=nautilus-launch-icon.png
 Categories=Application;FileManager;DesktopSettings;Settings;AdvancedSettings;
-GenericName[en_US]=Nautilus Actions Configuration Tool
-Name[en_US]=Nautilus Actions Configuration
