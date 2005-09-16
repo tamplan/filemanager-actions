@@ -1,5 +1,8 @@
 2005-09-16  Frederic Ruaudel <grumz@grumz.net> 0.8
 	
+	* plugin/nautilus-actions-module.c: Fix macro name according to
+the changes made for GObject default macros
+
 	* plugin/nautilus-actions.h: Add GObject missing default macros.
 
 2005-09-15  Frederic Ruaudel <grumz@grumz.net> 0.8
