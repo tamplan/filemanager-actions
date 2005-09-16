@@ -1,3 +1,7 @@
+2005-09-16  Frederic Ruaudel <grumz@grumz.net> 0.8
+	
+	* plugin/nautilus-actions.h: Add GObject missing default macros.
+
 2005-09-15  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* nact/nact.desktop.in.in: Make it fd.o compliant
