@@ -1,5 +1,9 @@
 2005-09-17  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* nact/nautilus-actions-config.glade: 
+	* nact/nautilus-actions-config.in: Fix alignment problem in NACT
+interface (Bug #105).
+
 	* po/*.po:
 	* po/nautilus-actions.pot: Update translations strings
 
