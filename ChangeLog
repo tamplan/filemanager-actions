@@ -1,5 +1,9 @@
 2005-09-17  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* po/POTFILES.in: Rename nact/nact.desktop.in.in into
+nact/nact.desktop.in because there is no need anymore for autotool var
+expansion
+
 	* configure.in: Remove the generation of nact/nact.desktop.in
 because there is no need anymore for autotool var expansion
 
