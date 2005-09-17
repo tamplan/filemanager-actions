@@ -18,6 +18,7 @@ typedef struct _NautilusActionsClass NautilusActionsClass;
 struct _NautilusActions 
 {
 	GObject __parent;
+	GList* configs;
 };
 
 struct _NautilusActionsClass

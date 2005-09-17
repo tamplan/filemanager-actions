@@ -1,5 +1,9 @@
 2005-09-17  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* plugin/nautilus-actions.c: 
+	* plugin/nautilus-actions.h: Start migration of extensions data
+into the NautilusActions GObject.
+
 	* nact/nautilus-actions-config.glade: 
 	* nact/nautilus-actions-config.in: Fix alignment problem in NACT
 interface (Bug #105).

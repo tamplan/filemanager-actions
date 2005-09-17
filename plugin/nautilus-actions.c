@@ -72,14 +72,14 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (ConfigAction *action
 	return item;
 }
 
-static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, GtkWidget *window, GList *files)
+static GList *nautilus_actions_get_file_items (NautilusActions *actions, GtkWidget *window, GList *files)
 {
 	GList *items = NULL;
-	GList *config_actions = nautilus_actions_config_get_list ();
 	GList *iter;
 	NautilusMenuItem *item;
+	actions->configs = nautilus_actions_config_get_list ();
 
-	for (iter = config_actions; iter; iter = iter->next)
+	for (iter = actions->configs; iter; iter = iter->next)
 	{
 		/* Foreach configured action, check if we add a menu item */
 		ConfigAction *action = nautilus_actions_config_action_dup ((ConfigAction*)iter->data);
@@ -91,7 +91,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 		}
 	}
 	
-	nautilus_actions_config_free_list (config_actions);
+	nautilus_actions_config_free_list (actions->configs);
 	
 	return items;
 }
@@ -102,11 +102,12 @@ static void nautilus_actions_class_init (NautilusActions *actions)
 
 static void nautilus_actions_instance_init (NautilusActions *actions)
 {
+	actions->configs = NULL;
 }
 
 static void nautilus_actions_menu_provider_iface_init (NautilusMenuProviderIface *iface)
 {
-	iface->get_file_items = nautilus_actions_get_file_items;
+	iface->get_file_items = (GList* (*) (NautilusMenuProvider* provider, GtkWidget* window, GList* files))nautilus_actions_get_file_items;
 }
 
 void nautilus_actions_register_type (GTypeModule *module)
