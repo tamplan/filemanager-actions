@@ -1,4 +1,19 @@
-2005-09-17  Rodrigo Moya <rodrigo@novell.com>
+2005-09-17  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* nact/nautilus-actions-icon.png: 
+	* nact/nautilus-actions-icon.xcf: Create a new nautilus actions icon
+
+	* nact/nautilus-launch-icon.png: Remove the old nautilus actions icon
+
+	* nact/Makefile.am: 
+	* nact/nact.desktop.in.in: 
+	* nact/nautilus-actions-config.glade: Replace the old icon by the new one
+
+	* nact/nautilus-actions-config.glade: Update informations of the about
+dialog (license and project URL)
+
+
+2005-09-17  Rodrigo Moya <rodrigo@novell.com> 0.8
 
 	* configure.in: define DEFAULT_CONFIG_PATH.
 
