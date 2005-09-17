@@ -49,6 +49,8 @@ if test -z ${NAUTILUS_EXTENSIONS_DIR}; then
 	AC_MSG_ERROR([*** Can't determine nautilus extension folder, please use --with-nautilus-extdir options to define it manually ]);
 fi
 
+default_config_path=`eval echo $datadir/nautilus-actions`
+AC_DEFINE_UNQUOTED(DEFAULT_CONFIG_PATH, "$default_config_path", [Default system configuration path])
 
 dnl --------------------------------------------------
 

@@ -6,10 +6,6 @@
 
 G_BEGIN_DECLS
 
-#ifndef DEFAULT_CONFIG_PATH
-#define DEFAULT_CONFIG_PATH "/usr/share/nautilus-actions"
-#endif
-
 #ifndef DEFAULT_PER_USER_PATH 
 #define DEFAULT_PER_USER_PATH ".config/nautilus-actions"
 #endif
