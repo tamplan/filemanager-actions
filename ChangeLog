@@ -49,7 +49,7 @@ the changes made for GObject default macros
 
 2005-09-15  Frederic Ruaudel <grumz@grumz.net> 0.8
 
-	* nact/nact.desktop.in.in: Make it fd.o compliant
+	* nact/nact.desktop.in.in: Make it fd.o compliant (Bug #109 and #100)
 	
 	* nact/nautilus-actions-config.in: Fix the problem with nact not starting
 when $LANG var not set (Bug #108)
