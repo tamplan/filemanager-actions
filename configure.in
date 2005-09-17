@@ -86,7 +86,6 @@ Makefile
 plugin/Makefile
 config/Makefile
 nact/Makefile
-nact/nact.desktop.in
 nact/nautilus-actions-config
 po/Makefile.in
 ])

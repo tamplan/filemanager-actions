@@ -1,5 +1,13 @@
 2005-09-17  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* configure.in: Remove the generation of nact/nact.desktop.in
+because there is no need anymore for autotool var expansion
+
+	* nact/nact.desktop.in.in:
+	* nact/nact.desktop.in: Rename nact/nact.desktop.in.in into 
+nact/nact.desktop.in because there is no need anymore for autotool var
+expansion
+
 	* nact/nautilus-actions-icon.png: 
 	* nact/nautilus-actions-icon.xcf: Create a new nautilus actions icon
 
