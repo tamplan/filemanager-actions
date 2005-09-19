@@ -1,3 +1,11 @@
+2005-09-19  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* configure.in:
+	* config/Makefile.am:
+	* po/POTFILES.in:
+	* config/config_newaction.schemas.in.in: Add the GConf schemas for
+the new action config and configure it with i18n support.
+
 2005-09-17  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* plugin/nautilus-actions.c: 

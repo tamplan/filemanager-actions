@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<gconfschemafile>
+  <schemalist>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/menu-item/label</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/menu-item/label</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <default>New Action...</default>
+        <short>The label of the menu item</short>
+        <long>The label of the menu item that will appear in the Nautilus contextual menu when the selection match the test options</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/menu-item/tooltip</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/menu-item/tooltip</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <default>Create a new action using NACT</default>
+        <short>The tooltip of the menu item</short>
+        <long>The tooltip of the menu item that will appear in the Nautilus statusbar when the user passes over the contextual menu item with his mouse</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/command/path</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/command/path</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>The path of the command</short>
+        <long>The path of the command to start when the user select the menu item in the Nautilus contextual menu</long>
+      </locale>
+      <default>@BINDIR@/nautilus-actions-config</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/command/parameters</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/command/parameters</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>The parameters of the command</short>
+        <long>The parameters of the command to start when the user select the menu item in the Nautilus contextual menu.
+
+The parameters can contains some special token which is replaced by nautilus informations before starting the command :
+
+%p : parent directory of the selected file(s)
+%d : base dir of the selected file(s)
+%f : the name of the selected file or the 1st one if many are selected
+%m : list of the basename of the selected files/directories separated
+%M : list of the selected files/directories with their full path
+%u : gnome-vfs URI
+%s : scheme of the gnome-vfs URI
+%h : hostname of the gnome-vfs URI
+%U : username of the gnome-vfs URI
+%% : a percent sign</long>
+      </locale>
+      <default></default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/test/basename</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/test/basename</applyto>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <locale name="C">
+        <short>The list of pattern to match selected files</short>
+        <long>A list of string with joker * or ? to match the selected files. Each selected files schould match at least one of the pattern to be valid.</long>
+      </locale>
+      <default>[*]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/test/isfile</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/test/isfile</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>True if the selection must have files, false otherwise</short>
+        <long>This options is tied with isdir options. Here is the valid combination :
+
+- isfile is true and isdir is false : selection holds only files
+- isfile is false and isdir is true : selection holds only folders
+- isfile is true and isdir is true : selection holds both files and folders
+- isfile is false and isdir is false : invalid combination</long>
+      </locale>
+      <default>true</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/test/isdir</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/test/isdir</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>True if the selection must have folders, false otherwise</short>
+        <long>This options is tied with isfile options. Here is the valid combination :
+
+- isfile is true and isdir is false : selection holds only files
+- isfile is false and isdir is true : selection holds only folders
+- isfile is true and isdir is true : selection holds both files and folders
+- isfile is false and isdir is false : invalid combination</long>
+      </locale>
+      <default>true</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/test/accept-multiple-files</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/test/accept-multiple-files</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>True if the selection must have several items, false otherwise</short>
+        <long>If you want to activate this config if several files or folders are selected, set 'true' to this key. If you want just one file of folder, set 'false'</long>
+      </locale>
+      <default>true</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/test/scheme</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/test/scheme</applyto>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <locale name="C">
+        <short>The list of GnomeVFS schemes where the selected files should be</short>
+        <long>Define the list of valid GnomeVFS scheme to match the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one use in GnomeVFS URI.
+
+example of GnomeVFS URI : 
+file:///tmp/foo.txt
+sftp:///root@test.example.net/tmp/foo.txt
+
+The most common schemes are :
+
+file : local files
+sftp : files accessed via SSH
+ftp : files accessed via FTP
+smb : files accessed via Samba (Windows share)
+dav : files accessed via WebDav
+
+All valid GnomeVFS scheme can be used here.</long>
+      </locale>
+      <default>[file,sftp,smb,ftp,dav]</default>
+    </schema>
+  </schemalist>
+</gconfschemafile>

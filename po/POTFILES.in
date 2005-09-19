@@ -2,3 +2,4 @@ nact/nact.desktop.in
 nact/nautilus-actions-config.glade
 nact/nautilus-actions-config.in
 config/config_newaction.xml.in
+config/config_newaction.schemas.in.in
