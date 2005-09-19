@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-17 21:34+0200\n"
+"POT-Creation-Date: 2005-09-19 11:14+0200\n"
 "PO-Revision-Date: 2005-09-10 11:51+0200\n"
 "Last-Translator: Gabriel Meier <gabriel.meier@web.de>\n"
 "Language-Team: German\n"
@@ -314,54 +314,169 @@ msgstr "Webdav Dateien"
 msgid "New Config"
 msgstr "Neue Konfiguration"
 
-#: ../nact/nautilus-actions-config.in:721
+#: ../nact/nautilus-actions-config.in:727
 msgid "_Config List"
 msgstr "_Konfigurationen"
 
-#: ../nact/nautilus-actions-config.in:973
+#: ../nact/nautilus-actions-config.in:979
 msgid "/path/to"
 msgstr "/Pfad/zu"
 
-#: ../nact/nautilus-actions-config.in:974
-#: ../nact/nautilus-actions-config.in:976
+#: ../nact/nautilus-actions-config.in:980
+#: ../nact/nautilus-actions-config.in:982
 msgid "file1.txt"
 msgstr "Datei1.txt"
 
-#: ../nact/nautilus-actions-config.in:974
+#: ../nact/nautilus-actions-config.in:980
 msgid "file2.txt"
 msgstr "Datei2.txt"
 
-#: ../nact/nautilus-actions-config.in:975
-#: ../nact/nautilus-actions-config.in:976
+#: ../nact/nautilus-actions-config.in:981
+#: ../nact/nautilus-actions-config.in:982
 msgid "dir1"
 msgstr "Verz1"
 
-#: ../nact/nautilus-actions-config.in:975
+#: ../nact/nautilus-actions-config.in:981
 msgid "dir2"
 msgstr "Verz2"
 
-#: ../nact/nautilus-actions-config.in:977
-#: ../nact/nautilus-actions-config.in:1018
+#: ../nact/nautilus-actions-config.in:983
+#: ../nact/nautilus-actions-config.in:1024
 msgid "file"
 msgstr "Datei"
 
-#: ../nact/nautilus-actions-config.in:978
+#: ../nact/nautilus-actions-config.in:984
 msgid "file.txt"
 msgstr "Datei.txt"
 
-#: ../nact/nautilus-actions-config.in:1010
+#: ../nact/nautilus-actions-config.in:1016
 msgid "dir"
 msgstr "Verzeichnis"
 
-#: ../nact/nautilus-actions-config.in:1022
 #: ../nact/nautilus-actions-config.in:1028
+#: ../nact/nautilus-actions-config.in:1034
 msgid "test.example.net"
 msgstr "test.Beispiel.net"
 
 #: ../config/config_newaction.xml.in.h:1
+#: ../config/config_newaction.schemas.in.in.h:2
 msgid "Create a new action using NACT"
 msgstr "Eine neue Aktion mit NACT erstellen"
 
 #: ../config/config_newaction.xml.in.h:2
+#: ../config/config_newaction.schemas.in.in.h:5
 msgid "New Action..."
 msgstr "Neue Aktion..."
+
+#: ../config/config_newaction.schemas.in.in.h:1
+msgid ""
+"A list of string with joker * or ? to match the selected files. Each "
+"selected files schould match at least one of the pattern to be valid."
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:3
+msgid ""
+"Define the list of valid GnomeVFS scheme to match the selected items. The "
+"GnomeVFS scheme is the protocol used to access the files. The keyword to use "
+"is the one use in GnomeVFS URI. example of GnomeVFS URI : file:///tmp/foo."
+"txt sftp:///root@test.example.net/tmp/foo.txt The most common schemes are : "
+"file : local files sftp : files accessed via SSH ftp : files accessed via "
+"FTP smb : files accessed via Samba (Windows share) dav : files accessed via "
+"WebDav All valid GnomeVFS scheme can be used here."
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:4
+msgid ""
+"If you want to activate this config if several files or folders are "
+"selected, set 'true' to this key. If you want just one file of folder, set "
+"'false'"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:6
+msgid "The label of the menu item"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:7
+#, fuzzy
+msgid ""
+"The label of the menu item that will appear in the Nautilus contextual menu "
+"when the selection match the test options"
+msgstr "Tooltip des Menüpunktes, der in der Nautilus-Statusleiste erscheint"
+
+#: ../config/config_newaction.schemas.in.in.h:8
+msgid "The list of GnomeVFS schemes where the selected files should be"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:9
+msgid "The list of pattern to match selected files"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:10
+msgid "The parameters of the command"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:12
+#, no-c-format
+msgid ""
+"The parameters of the command to start when the user select the menu item in "
+"the Nautilus contextual menu. The parameters can contains some special token "
+"which is replaced by nautilus informations before starting the command : %"
+"p : parent directory of the selected file(s) %d : base dir of the selected "
+"file(s) %f : the name of the selected file or the 1st one if many are "
+"selected %m : list of the basename of the selected files/directories "
+"separated %M : list of the selected files/directories with their full path %"
+"u : gnome-vfs URI %s : scheme of the gnome-vfs URI %h : hostname of the "
+"gnome-vfs URI %U : username of the gnome-vfs URI %% : a percent sign"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:13
+msgid "The path of the command"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:14
+#, fuzzy
+msgid ""
+"The path of the command to start when the user select the menu item in the "
+"Nautilus contextual menu"
+msgstr "Beschriftung des Menüpunktes im Nautilus Kontext-Manü"
+
+#: ../config/config_newaction.schemas.in.in.h:15
+msgid "The tooltip of the menu item"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:16
+#, fuzzy
+msgid ""
+"The tooltip of the menu item that will appear in the Nautilus statusbar when "
+"the user passes over the contextual menu item with his mouse"
+msgstr "Tooltip des Menüpunktes, der in der Nautilus-Statusleiste erscheint"
+
+#: ../config/config_newaction.schemas.in.in.h:17
+msgid ""
+"This options is tied with isdir options. Here is the valid combination : - "
+"isfile is true and isdir is false : selection holds only files - isfile is "
+"false and isdir is true : selection holds only folders - isfile is true and "
+"isdir is true : selection holds both files and folders - isfile is false and "
+"isdir is false : invalid combination"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:18
+msgid ""
+"This options is tied with isfile options. Here is the valid combination : - "
+"isfile is true and isdir is false : selection holds only files - isfile is "
+"false and isdir is true : selection holds only folders - isfile is true and "
+"isdir is true : selection holds both files and folders - isfile is false and "
+"isdir is false : invalid combination"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:19
+msgid "True if the selection must have files, false otherwise"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:20
+msgid "True if the selection must have folders, false otherwise"
+msgstr ""
+
+#: ../config/config_newaction.schemas.in.in.h:21
+msgid "True if the selection must have several items, false otherwise"
+msgstr ""

@@ -1,5 +1,8 @@
 2005-09-19  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* po/*.po:
+	* po/nautilus-actions.pot: Update translations strings
+
 	* configure.in:
 	* config/Makefile.am:
 	* po/POTFILES.in:
