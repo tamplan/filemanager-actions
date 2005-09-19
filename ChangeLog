@@ -1,5 +1,7 @@
 2005-09-19  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* po/README_TRANSLATORS: Add some information for translators
+
 	* po/*.po:
 	* po/nautilus-actions.pot: Update translations strings
 
