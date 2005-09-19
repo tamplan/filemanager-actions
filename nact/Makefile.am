@@ -16,5 +16,4 @@ Applications_DATA = $(Applications_in_files:.desktop.in=.desktop)
 
 DISTCLEANFILES =		\
 	nact.desktop		\
-	nact.desktop.in		\
 	nautilus-actions-config
