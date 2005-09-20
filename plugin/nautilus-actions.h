@@ -13,14 +13,22 @@ G_BEGIN_DECLS
 #define NAUTILUS_IS_ACTIONS_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), NAUTILUS_ACTIONS_TYPE))
 #define NAUTILUS_ACTIONS_GET_CLASS(o)		(G_TYPE_INSTANCE_GET_CLASS ((obj), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass))
 
+#ifndef NAUTILUS_ACTIONS_GCONF_PATH
+#define NAUTILUS_ACTIONS_GCONF_PATH "/apps/nautilus-actions"
+#endif
+
+#ifndef NAUTILUS_ACTIONS_GCONF_CONFIG_DIR
+#define NAUTILUS_ACTIONS_GCONF_CONFIG_DIR "configurations"
+#endif
+
 typedef struct _NautilusActions	NautilusActions;
 typedef struct _NautilusActionsClass NautilusActionsClass;
 
 struct _NautilusActions 
 {
 	GObject __parent;
-	GList* configs;
 	GConfClient* gconf_client;
+	GList* configs;
 	gboolean dispose_has_run;
 };
 

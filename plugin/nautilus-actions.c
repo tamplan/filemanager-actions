@@ -98,6 +98,18 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 	return items;
 }
 
+static void nautilus_actions_notify_config_changes (GConfClient* client, 
+																	 guint cnxid,
+																	 GConfEntry* entry,
+																	 gpointer user_data)
+{
+	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
+
+	if (!self->dispose_has_run)
+	{
+	}
+}
+
 static void nautilus_actions_instance_dispose (GObject *obj)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (obj);
@@ -137,17 +149,27 @@ static void nautilus_actions_class_init (NautilusActionsClass *actions_class)
 static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer klass)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (instance);
+	gchar* path = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_GCONF_PATH, 
+												NAUTILUS_ACTIONS_GCONF_CONFIG_DIR);
+	
+	self->gconf_client = gconf_client_get_default ();
+	gconf_client_add_dir (self->gconf_client, path, 
+									GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);
+	gconf_client_notify_add (self->gconf_client, path, 
+									 nautilus_actions_notify_config_changes,
+		  							 self, NULL, NULL);
+	
 	self->configs = NULL;
 	self->configs = nautilus_actions_config_get_list ();
-	self->gconf_client = gconf_client_get_default ();
 	self->dispose_has_run = FALSE;
 
 	parent_class = g_type_class_peek_parent (klass);
+	g_free (path);
 }
 
 static void nautilus_actions_menu_provider_iface_init (NautilusMenuProviderIface *iface)
 {
-	iface->get_file_items = (GList* (*) (NautilusMenuProvider* provider, GtkWidget* window, GList* files))nautilus_actions_get_file_items;
+	iface->get_file_items = nautilus_actions_get_file_items;
 }
 
 void nautilus_actions_register_type (GTypeModule *module)
