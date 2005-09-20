@@ -104,10 +104,70 @@ static void nautilus_actions_notify_config_changes (GConfClient* client,
 																	 gpointer user_data)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
+	gchar* key = g_strdup (gconf_entry_get_key (entry));
+	gchar* tmp;
+	gchar* config_name = NULL;
+	gchar** strlist;
+	GList* iter = NULL;
 
 	if (!self->dispose_has_run)
 	{
+		// Fisrt, get the config name :
+		tmp = key + strlen (self->config_root_dir) + 1; // remove the root path from the key + a slash
+		strlist = g_strsplit_set (tmp, "/", 2); // Separate the first token of the relative path from the end
+		config_name = g_strdup (strlist[0]);
+		//nautilus_actions_config_action_update_label ((ConfigAction*)self->configs->data, strlist[1]);
+		if ((iter = g_list_find_custom (self->configs, config_name, 
+										(GCompareFunc)nautilus_actions_utils_compare_actions)) != NULL)
+		{
+			// config already exist => update value
+			ConfigAction* action = (ConfigAction*)iter->data;
+
+			if (g_ascii_strcasecmp (strlist[1], "test/basename") == 0)
+			{
+				nautilus_actions_config_action_update_test_basenames (action, gconf_value_get_list (gconf_entry_get_value (entry)));
+			}
+			else if (g_ascii_strcasecmp (strlist[1], "test/isfile") == 0)
+			{
+			}
+			else if (g_ascii_strcasecmp (strlist[1], "test/isdir") == 0)
+			{
+			}
+			else if (g_ascii_strcasecmp (strlist[1], "test/accept-multiple-file") == 0)
+			{
+			}
+			else if (g_ascii_strcasecmp (strlist[1], "test/scheme") == 0)
+			{
+				nautilus_actions_config_action_update_test_schemes (action, gconf_value_get_list (gconf_entry_get_value (entry)));
+			}
+			else if (g_ascii_strcasecmp (strlist[1], "command/parameters") == 0)
+			{
+				nautilus_actions_config_action_update_command_parameters (action, gconf_value_get_string (gconf_entry_get_value (entry)));
+			}
+			else if (g_ascii_strcasecmp (strlist[1], "command/path") == 0)
+			{
+				nautilus_actions_config_action_update_command_path (action, gconf_value_get_string (gconf_entry_get_value (entry)));
+			}
+			else if (g_ascii_strcasecmp (strlist[1], "menu-item/label") == 0)
+			{
+				nautilus_actions_config_action_update_menu_item_label (action, gconf_value_get_string (gconf_entry_get_value (entry)));
+			}
+			else if (g_ascii_strcasecmp (strlist[1], "menu-item/tooltip") == 0)
+			{
+				nautilus_actions_config_action_update_menu_item_tooltip (action, gconf_value_get_string (gconf_entry_get_value (entry)));
+			}
+			else if (g_ascii_strcasecmp (strlist[1], "version") == 0)
+			{
+			}
+		}
+		else
+		{
+			// New config
+		}
+		g_strfreev (strlist);
 	}
+
+	g_free (key);
 }
 
 static void nautilus_actions_instance_dispose (GObject *obj)
@@ -132,6 +192,13 @@ static void nautilus_actions_instance_finalize (GObject* obj)
 	if (self->configs != NULL)
 	{
 		nautilus_actions_config_free_list (self->configs);
+		self->configs = NULL;
+	}
+
+	if (self->config_root_dir != NULL)
+	{
+		g_free (self->config_root_dir);
+		self->config_root_dir = NULL;
 	}
 
 	/* Chain up to the parent class */
@@ -149,22 +216,22 @@ static void nautilus_actions_class_init (NautilusActionsClass *actions_class)
 static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer klass)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (instance);
-	gchar* path = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_GCONF_PATH, 
+	
+	self->config_root_dir = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_GCONF_PATH, 
 												NAUTILUS_ACTIONS_GCONF_CONFIG_DIR);
 	
 	self->gconf_client = gconf_client_get_default ();
-	gconf_client_add_dir (self->gconf_client, path, 
+	gconf_client_add_dir (self->gconf_client, self->config_root_dir, 
 									GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);
-	gconf_client_notify_add (self->gconf_client, path, 
+	gconf_client_notify_add (self->gconf_client, self->config_root_dir, 
 									 nautilus_actions_notify_config_changes,
 		  							 self, NULL, NULL);
 	
 	self->configs = NULL;
-	self->configs = nautilus_actions_config_get_list (self->gconf_client, path);
+	self->configs = nautilus_actions_config_get_list (self->gconf_client, self->config_root_dir);
 	self->dispose_has_run = FALSE;
 
 	parent_class = g_type_class_peek_parent (klass);
-	g_free (path);
 }
 
 static void nautilus_actions_menu_provider_iface_init (NautilusMenuProviderIface *iface)

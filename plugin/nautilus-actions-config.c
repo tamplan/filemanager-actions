@@ -214,11 +214,6 @@ static gboolean nautilus_actions_config_action_fill (GConfClient* gconf_client, 
 	return retv;
 }
 
-static gint nautilus_actions_compare_actions (const ConfigAction* action1, const gchar* action_name)
-{
-	return g_ascii_strcasecmp (action1->name, action_name);
-}
-
 static GList *nautilus_actions_config_get_config (GConfClient* gconf_client, const gchar* config_dir, GList* config_actions)
 {
 	ConfigAction *action;
@@ -233,7 +228,7 @@ static GList *nautilus_actions_config_get_config (GConfClient* gconf_client, con
 			
 	if (config_version != NULL)
 	{
-		if (g_list_find_custom (config_actions, config_name, (GCompareFunc)nautilus_actions_compare_actions) == NULL)
+		if (g_list_find_custom (config_actions, config_name, (GCompareFunc)nautilus_actions_utils_compare_actions) == NULL)
 		{
 			action = nautilus_actions_config_action_new (config_name, config_version);
 			if (nautilus_actions_config_action_fill (gconf_client, config_dir, action))
@@ -270,6 +265,66 @@ GList *nautilus_actions_config_get_list (GConfClient* gconf_client, const gchar*
 	nautilus_actions_config_free_config_entries (config_entries);
 
 	return config_actions;
+}
+
+void nautilus_actions_config_action_update_test_basenames (ConfigAction* action, GSList* new_basenames)
+{
+	GSList* iter;
+
+	for (iter = action->test->basenames; iter; iter = iter->next)
+	{
+		g_free ((gchar*)iter->data);
+	}
+
+	g_slist_free (action->test->basenames);
+	action->test->basenames = NULL;
+
+	for (iter = new_basenames; iter; iter = iter->next)
+	{
+		action->test->basenames = g_slist_append (action->test->basenames, g_strdup ((gchar*)iter->data));
+	}
+}
+
+void nautilus_actions_config_action_update_test_schemes (ConfigAction* action, GSList* new_schemes)
+{
+	GSList* iter;
+
+	for (iter = action->test->schemes; iter; iter = iter->next)
+	{
+		g_free ((gchar*)iter->data);
+	}
+
+	g_slist_free (action->test->schemes);
+	action->test->schemes = NULL;
+
+	for (iter = new_schemes; iter; iter = iter->next)
+	{
+		action->test->schemes = g_slist_append (action->test->schemes, g_strdup ((gchar*)iter->data));
+	}
+}
+
+void nautilus_actions_config_action_update_command_parameters (ConfigAction* action, const gchar* new_parameters)
+{
+	g_free (action->command->parameters);
+	action->command->parameters = g_strdup (new_parameters);
+}
+
+void nautilus_actions_config_action_update_command_path (ConfigAction* action, const gchar* new_path)
+{
+	g_free (action->command->path);
+	action->command->path = g_strdup (new_path);
+}
+
+void nautilus_actions_config_action_update_menu_item_label (ConfigAction* action, const gchar* new_label)
+{
+	g_free (action->menu_item->label);
+	action->menu_item->label = g_strdup (new_label);
+}
+
+void nautilus_actions_config_action_update_menu_item_tooltip (ConfigAction* action, const gchar* new_tooltip)
+{
+	g_free (action->menu_item->tooltip);
+	action->menu_item->tooltip = g_strdup (new_tooltip);
 }
 
 ConfigAction *nautilus_actions_config_action_dup (ConfigAction* action)

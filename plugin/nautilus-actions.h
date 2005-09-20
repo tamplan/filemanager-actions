@@ -27,6 +27,7 @@ typedef struct _NautilusActionsClass NautilusActionsClass;
 struct _NautilusActions 
 {
 	GObject __parent;
+	gchar* config_root_dir;
 	GConfClient* gconf_client;
 	GList* configs;
 	gboolean dispose_has_run;

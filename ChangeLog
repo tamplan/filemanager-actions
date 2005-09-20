@@ -5,6 +5,7 @@
 	* plugin/nautilus-actions-test.c:
 	* plugin/nautilus-actions-utils.c:
 	* plugin/nautilus-actions-utils.h:
+	* plugin/nautilus-actions.h: 
 	* plugin/nautilus-actions.c: Add GConf support (Feature #44) and
 remove unused code. Border side effect : almost no more compilation warnings
 

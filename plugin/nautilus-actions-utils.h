@@ -8,6 +8,8 @@ G_BEGIN_DECLS
 
 gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GList* files);
 
+gint nautilus_actions_utils_compare_actions (const ConfigAction* action1, const gchar* action_name);
+
 G_END_DECLS
 
 #endif /* NAUTILUS_ACTIONS_UTILS_H */

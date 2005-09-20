@@ -162,4 +162,9 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 	return retv;
 }
 
+gint nautilus_actions_utils_compare_actions (const ConfigAction* action1, const gchar* action_name)
+{
+	return g_ascii_strcasecmp (action1->name, action_name);
+}
+
 // vim:ts=3:sw=3:tw=1024
