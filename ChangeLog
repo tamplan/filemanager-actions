@@ -1,5 +1,8 @@
 2005-09-20  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* config/config_newaction.schemas.in.in: Add version information
+to manage future config changement.
+
 	* plugin/nautilus-actions.c:
 	* plugin/nautilus-actions.h: Initialized NautilusActions GObject
 and move all data initialization into it.

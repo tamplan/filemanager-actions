@@ -56,7 +56,7 @@ The parameters can contains some special token which is replaced by nautilus inf
 %U : username of the gnome-vfs URI
 %% : a percent sign</long>
       </locale>
-      <default></default>
+      <default/>
     </schema>
     <schema>
       <key>/schemas/apps/nautilus-actions/configurations/newaction/test/basename</key>
@@ -136,6 +136,17 @@ dav : files accessed via WebDav
 All valid GnomeVFS scheme can be used here.</long>
       </locale>
       <default>[file,sftp,smb,ftp,dav]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/newaction/version</key>
+      <applyto>/apps/nautilus-actions/configurations/newaction/version</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>The version of the configuration format</short>
+        <long>The label of the menu item that will appear in the Nautilus contextual menu when the selection match the test options</long>
+      </locale>
+      <default>1.0</default>
     </schema>
   </schemalist>
 </gconfschemafile>
