@@ -160,7 +160,7 @@ static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer kl
 		  							 self, NULL, NULL);
 	
 	self->configs = NULL;
-	self->configs = nautilus_actions_config_get_list ();
+	self->configs = nautilus_actions_config_get_list (self->gconf_client, path);
 	self->dispose_has_run = FALSE;
 
 	parent_class = g_type_class_peek_parent (klass);

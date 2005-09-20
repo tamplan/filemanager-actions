@@ -3,6 +3,7 @@
 
 #include <glib-object.h>
 #include <string.h>
+#include <gconf/gconf-client.h>
 
 G_BEGIN_DECLS
 
@@ -10,19 +11,10 @@ G_BEGIN_DECLS
 #define DEFAULT_PER_USER_PATH ".config/nautilus-actions"
 #endif
 
-typedef enum _IsFileEnumType IsFileType; /* not used */
 typedef struct _ConfigAction ConfigAction;
 typedef struct _ConfigActionTest ConfigActionTest;
 typedef struct _ConfigActionCommand ConfigActionCommand;
 typedef struct _ConfigActionMenuItem ConfigActionMenuItem;
-
-enum _IsFileEnumType /* not used */
-{
-	IsFileNone = -1,
-	IsFileFalse = 0,
-	IsFileTrue = 1,
-	IsFileParent = 2,
-};
 
 struct _ConfigAction
 {
@@ -35,11 +27,11 @@ struct _ConfigAction
 
 struct _ConfigActionTest
 {
-	GList* basenames;
+	GSList* basenames;
 	gboolean isfile;
 	gboolean isdir;
 	gboolean accept_multiple_file;
-	GList* schemes;
+	GSList* schemes;
 };
 
 struct _ConfigActionCommand
@@ -54,7 +46,7 @@ struct _ConfigActionMenuItem
 	gchar* tooltip;
 };
 
-GList *nautilus_actions_config_get_list (void);
+GList *nautilus_actions_config_get_list (GConfClient* gconf_client, const gchar* config_root_dir);
 ConfigAction *nautilus_actions_config_action_dup (ConfigAction* action);
 void nautilus_actions_config_free_list (GList* config_actions);
 void nautilus_actions_config_free_action (ConfigAction* action);

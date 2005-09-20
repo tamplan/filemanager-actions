@@ -2,10 +2,10 @@
 
 #include "nautilus-actions-test.h"
 
-int nautilus_actions_test_check_scheme (GList* schemes2test, NautilusFileInfo* file)
+static int nautilus_actions_test_check_scheme (GSList* schemes2test, NautilusFileInfo* file)
 {
 	int retv = 0;
-	GList* iter;
+	GSList* iter;
 	gboolean found = FALSE;
 	
 	iter = schemes2test; 
@@ -34,7 +34,8 @@ gboolean nautilus_actions_test_validate (ConfigActionTest *action_test, GList* f
 	gboolean test_scheme = FALSE;
 	gboolean test_basename = FALSE;
 	GList* glob_patterns = NULL;
-	GList* iter;
+	GSList* iter;
+	GList* iter1;
 	GList* iter2;
 	guint dir_count = 0;
 	guint file_count = 0;
@@ -48,11 +49,11 @@ gboolean nautilus_actions_test_validate (ConfigActionTest *action_test, GList* f
 		glob_patterns = g_list_append (glob_patterns, g_pattern_spec_new ((gchar*)iter->data));
 	}
 	
-	for (iter = files; iter; iter = iter->next)
+	for (iter1 = files; iter1; iter1 = iter1->next)
 	{
-		gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo *)iter->data);
+		gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo *)iter1->data);
 		
-		if (nautilus_file_info_is_directory ((NautilusFileInfo *)iter->data))
+		if (nautilus_file_info_is_directory ((NautilusFileInfo *)iter1->data))
 		{
 			dir_count++;
 		}
@@ -61,7 +62,7 @@ gboolean nautilus_actions_test_validate (ConfigActionTest *action_test, GList* f
 			file_count++;
 		}
 
-		scheme_ok_count += nautilus_actions_test_check_scheme (action_test->schemes, (NautilusFileInfo*)iter->data);
+		scheme_ok_count += nautilus_actions_test_check_scheme (action_test->schemes, (NautilusFileInfo*)iter1->data);
 
 		basename_match_ok = FALSE;
 		iter2 = glob_patterns;
@@ -131,9 +132,9 @@ gboolean nautilus_actions_test_validate (ConfigActionTest *action_test, GList* f
 		retv = TRUE;
 	}
 	
-	for (iter = glob_patterns; iter; iter = iter->next)
+	for (iter1 = glob_patterns; iter1; iter1 = iter1->next)
 	{
-		g_pattern_spec_free ((GPatternSpec*)iter->data);
+		g_pattern_spec_free ((GPatternSpec*)iter1->data);
 	}
 	g_list_free (glob_patterns);
 
