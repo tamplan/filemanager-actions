@@ -129,12 +129,15 @@ static void nautilus_actions_notify_config_changes (GConfClient* client,
 			}
 			else if (g_ascii_strcasecmp (strlist[1], "test/isfile") == 0)
 			{
+				nautilus_actions_config_action_update_test_isfile (action, gconf_value_get_bool (gconf_entry_get_value (entry)));
 			}
 			else if (g_ascii_strcasecmp (strlist[1], "test/isdir") == 0)
 			{
+				nautilus_actions_config_action_update_test_isdir (action, gconf_value_get_bool (gconf_entry_get_value (entry)));
 			}
-			else if (g_ascii_strcasecmp (strlist[1], "test/accept-multiple-file") == 0)
+			else if (g_ascii_strcasecmp (strlist[1], "test/accept-multiple-files") == 0)
 			{
+				nautilus_actions_config_action_update_test_accept_multiple_files (action, gconf_value_get_bool (gconf_entry_get_value (entry)));
 			}
 			else if (g_ascii_strcasecmp (strlist[1], "test/scheme") == 0)
 			{

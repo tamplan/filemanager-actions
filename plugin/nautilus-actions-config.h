@@ -48,6 +48,9 @@ struct _ConfigActionMenuItem
 
 GList *nautilus_actions_config_get_list (GConfClient* gconf_client, const gchar* config_root_dir);
 void nautilus_actions_config_action_update_test_basenames (ConfigAction* action, GSList* new_basenames);
+void nautilus_actions_config_action_update_test_isfile (ConfigAction* action, gboolean new_isfile);
+void nautilus_actions_config_action_update_test_isdir (ConfigAction* action, gboolean new_isdir);
+void nautilus_actions_config_action_update_test_accept_multiple_files (ConfigAction* action, gboolean new_accept_multiple_files);
 void nautilus_actions_config_action_update_test_schemes (ConfigAction* action, GSList* new_schemes);
 void nautilus_actions_config_action_update_command_parameters (ConfigAction* action, const gchar* new_parameters);
 void nautilus_actions_config_action_update_command_path (ConfigAction* action, const gchar* new_path);

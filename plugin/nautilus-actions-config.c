@@ -285,6 +285,21 @@ void nautilus_actions_config_action_update_test_basenames (ConfigAction* action,
 	}
 }
 
+void nautilus_actions_config_action_update_test_isfile (ConfigAction* action, gboolean new_isfile)
+{
+	action->test->isfile = new_isfile;
+}
+
+void nautilus_actions_config_action_update_test_accept_multiple_files (ConfigAction* action, gboolean new_accept_multiple_files)
+{
+	action->test->accept_multiple_file = new_accept_multiple_files;
+}
+
+void nautilus_actions_config_action_update_test_isdir (ConfigAction* action, gboolean new_isdir)
+{
+	action->test->isdir = new_isdir;
+}
+
 void nautilus_actions_config_action_update_test_schemes (ConfigAction* action, GSList* new_schemes)
 {
 	GSList* iter;
