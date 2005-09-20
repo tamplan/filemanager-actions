@@ -2,6 +2,7 @@
 #define NAUTILUS_ACTIONS_H
 
 #include <glib-object.h>
+#include <gconf/gconf-client.h>
 
 G_BEGIN_DECLS
 
@@ -19,6 +20,8 @@ struct _NautilusActions
 {
 	GObject __parent;
 	GList* configs;
+	GConfClient* gconf_client;
+	gboolean dispose_has_run;
 };
 
 struct _NautilusActionsClass

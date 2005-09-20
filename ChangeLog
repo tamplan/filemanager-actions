@@ -1,5 +1,9 @@
 2005-09-20  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* plugin/nautilus-actions.c:
+	* plugin/nautilus-actions.h: Initialized NautilusActions GObject
+and move all data initialization into it.
+
 	* configure.in: Add prerequisite for GConf
 
 2005-09-19  Frederic Ruaudel <grumz@grumz.net> 0.8

@@ -10,7 +10,7 @@
 #include "nautilus-actions-test.h"
 #include "nautilus-actions-utils.h"
 
-static GObjectClass *parent_class;
+static GObjectClass *parent_class = NULL;
 static GType actions_type = 0;
 
 GType nautilus_actions_get_type (void) 
@@ -72,37 +72,77 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (ConfigAction *action
 	return item;
 }
 
-static GList *nautilus_actions_get_file_items (NautilusActions *actions, GtkWidget *window, GList *files)
+static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, GtkWidget *window, GList *files)
 {
 	GList *items = NULL;
 	GList *iter;
 	NautilusMenuItem *item;
-	actions->configs = nautilus_actions_config_get_list ();
+	NautilusActions* self = NAUTILUS_ACTIONS (provider);
 
-	for (iter = actions->configs; iter; iter = iter->next)
+	if (!self->dispose_has_run)
 	{
-		/* Foreach configured action, check if we add a menu item */
-		ConfigAction *action = nautilus_actions_config_action_dup ((ConfigAction*)iter->data);
 
-		if (nautilus_actions_test_validate (action->test, files))
+		for (iter = self->configs; iter; iter = iter->next)
 		{
-			item = nautilus_actions_create_menu_item (action, files);
-			items = g_list_append (items, item);
+			/* Foreach configured action, check if we add a menu item */
+			ConfigAction *action = nautilus_actions_config_action_dup ((ConfigAction*)iter->data);
+
+			if (nautilus_actions_test_validate (action->test, files))
+			{
+				item = nautilus_actions_create_menu_item (action, files);
+				items = g_list_append (items, item);
+			}
 		}
 	}
-	
-	nautilus_actions_config_free_list (actions->configs);
 	
 	return items;
 }
 
-static void nautilus_actions_class_init (NautilusActions *actions)
+static void nautilus_actions_instance_dispose (GObject *obj)
 {
+	NautilusActions* self = NAUTILUS_ACTIONS (obj);
+	
+	if (!self->dispose_has_run)
+	{
+		self->dispose_has_run = TRUE;
+
+		g_object_unref (self->gconf_client);
+
+		/* Chain up to the parent class */
+		G_OBJECT_CLASS (parent_class)->dispose (obj);
+	}
 }
 
-static void nautilus_actions_instance_init (NautilusActions *actions)
+static void nautilus_actions_instance_finalize (GObject* obj)
 {
-	actions->configs = NULL;
+	NautilusActions* self = NAUTILUS_ACTIONS (obj);
+
+	if (self->configs != NULL)
+	{
+		nautilus_actions_config_free_list (self->configs);
+	}
+
+	/* Chain up to the parent class */
+	G_OBJECT_CLASS (parent_class)->finalize (obj);
+}
+
+static void nautilus_actions_class_init (NautilusActionsClass *actions_class)
+{
+	GObjectClass *gobject_class = G_OBJECT_CLASS (actions_class);
+
+	gobject_class->dispose = nautilus_actions_instance_dispose;
+	gobject_class->finalize = nautilus_actions_instance_finalize;
+}
+
+static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer klass)
+{
+	NautilusActions* self = NAUTILUS_ACTIONS (instance);
+	self->configs = NULL;
+	self->configs = nautilus_actions_config_get_list ();
+	self->gconf_client = gconf_client_get_default ();
+	self->dispose_has_run = FALSE;
+
+	parent_class = g_type_class_peek_parent (klass);
 }
 
 static void nautilus_actions_menu_provider_iface_init (NautilusMenuProviderIface *iface)
