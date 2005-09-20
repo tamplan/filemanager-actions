@@ -6,7 +6,7 @@
 	* plugin/nautilus-actions-utils.c:
 	* plugin/nautilus-actions-utils.h:
 	* plugin/nautilus-actions.c: Add GConf support (Feature #44) and
-remove unused code. Border side : almost no more compilation warnings
+remove unused code. Border side effect : almost no more compilation warnings
 
 	* config/config_newaction.schemas.in.in: Add version information
 to manage future config changement and add missing list_type element
