@@ -1,3 +1,7 @@
+2005-09-20  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* configure.in: Add prerequisite for GConf
+
 2005-09-19  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* nact/Makefile.am: Remove the suppression of nact.desktop.in as
