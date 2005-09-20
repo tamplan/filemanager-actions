@@ -1,7 +1,8 @@
 2005-09-20  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* config/config_newaction.schemas.in.in: Add version information
-to manage future config changement.
+to manage future config changement and add missing list_type element
+for basename and scheme key.
 
 	* plugin/nautilus-actions.c:
 	* plugin/nautilus-actions.h: Initialized NautilusActions GObject

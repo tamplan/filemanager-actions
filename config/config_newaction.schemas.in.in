@@ -68,6 +68,7 @@ The parameters can contains some special token which is replaced by nautilus inf
         <long>A list of string with joker * or ? to match the selected files. Each selected files schould match at least one of the pattern to be valid.</long>
       </locale>
       <default>[*]</default>
+      <list_type>string</list_type>
     </schema>
     <schema>
       <key>/schemas/apps/nautilus-actions/configurations/newaction/test/isfile</key>
@@ -136,6 +137,7 @@ dav : files accessed via WebDav
 All valid GnomeVFS scheme can be used here.</long>
       </locale>
       <default>[file,sftp,smb,ftp,dav]</default>
+      <list_type>string</list_type>
     </schema>
     <schema>
       <key>/schemas/apps/nautilus-actions/configurations/newaction/version</key>
