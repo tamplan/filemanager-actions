@@ -1,5 +1,9 @@
 2005-09-21  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* plugin/nautilus-actions-utils.c:
+	* plugin/nautilus-actions.c: Fix the problem with x-nautilus-desktop
+scheme (Bug #110) and remove last compilation warnings
+
 	* plugin/nautilus-actions-config.c:
 	* plugin/nautilus-actions-config.h:
 	* plugin/nautilus-actions.c: Fix the problem with GConf list for
