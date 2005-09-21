@@ -55,7 +55,8 @@ void nautilus_actions_config_action_update_test_schemes (ConfigAction* action, G
 void nautilus_actions_config_action_update_command_parameters (ConfigAction* action, const gchar* new_parameters);
 void nautilus_actions_config_action_update_command_path (ConfigAction* action, const gchar* new_path);
 void nautilus_actions_config_action_update_menu_item_label (ConfigAction* action, const gchar* new_label);
-void nautilus_actions_config_action_update_menu_itemtooltip (ConfigAction* action, const gchar* new_tooltip);
+void nautilus_actions_config_action_update_menu_item_tooltip (ConfigAction* action, const gchar* new_tooltip);
+void nautilus_actions_config_action_update_version (ConfigAction* action, const gchar* new_version);
 ConfigAction *nautilus_actions_config_action_dup (ConfigAction* action);
 void nautilus_actions_config_free_list (GList* config_actions);
 void nautilus_actions_config_free_action (ConfigAction* action);

@@ -1,3 +1,11 @@
+2005-09-21  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* plugin/nautilus-actions-config.c:
+	* plugin/nautilus-actions-config.h:
+	* plugin/nautilus-actions.c: Fix the problem with GConf list for
+basenames and schemes list. Add updating of version in the notification
+func.
+
 2005-09-20  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* plugin/nautilus-actions-config.c:

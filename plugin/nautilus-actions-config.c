@@ -281,7 +281,7 @@ void nautilus_actions_config_action_update_test_basenames (ConfigAction* action,
 
 	for (iter = new_basenames; iter; iter = iter->next)
 	{
-		action->test->basenames = g_slist_append (action->test->basenames, g_strdup ((gchar*)iter->data));
+		action->test->basenames = g_slist_append (action->test->basenames, g_strdup (gconf_value_get_string ((GConfValue*)iter->data)));
 	}
 }
 
@@ -314,7 +314,7 @@ void nautilus_actions_config_action_update_test_schemes (ConfigAction* action, G
 
 	for (iter = new_schemes; iter; iter = iter->next)
 	{
-		action->test->schemes = g_slist_append (action->test->schemes, g_strdup ((gchar*)iter->data));
+		action->test->schemes = g_slist_append (action->test->schemes, g_strdup (gconf_value_get_string ((GConfValue*)iter->data)));
 	}
 }
 
@@ -340,6 +340,12 @@ void nautilus_actions_config_action_update_menu_item_tooltip (ConfigAction* acti
 {
 	g_free (action->menu_item->tooltip);
 	action->menu_item->tooltip = g_strdup (new_tooltip);
+}
+
+void nautilus_actions_config_action_update_version (ConfigAction* action, const gchar* new_version)
+{
+	g_free (action->version);
+	action->version = g_strdup (new_version);
 }
 
 ConfigAction *nautilus_actions_config_action_dup (ConfigAction* action)

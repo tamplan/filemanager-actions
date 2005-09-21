@@ -28,7 +28,6 @@ static void nautilus_actions_execute (NautilusMenuItem *item, ConfigAction *acti
 
 	cmd = g_string_new (action->command->path);
 
-	
 	param = nautilus_actions_utils_parse_parameter (action->command->parameters, files);
 	
 	if (param != NULL)
@@ -40,6 +39,7 @@ static void nautilus_actions_execute (NautilusMenuItem *item, ConfigAction *acti
 	g_spawn_command_line_async (cmd->str, NULL);
 	
 	g_string_free (cmd, TRUE);
+
 }
 
 static NautilusMenuItem *nautilus_actions_create_menu_item (ConfigAction *action, GList *files)
@@ -116,7 +116,6 @@ static void nautilus_actions_notify_config_changes (GConfClient* client,
 		tmp = key + strlen (self->config_root_dir) + 1; // remove the root path from the key + a slash
 		strlist = g_strsplit_set (tmp, "/", 2); // Separate the first token of the relative path from the end
 		config_name = g_strdup (strlist[0]);
-		//nautilus_actions_config_action_update_label ((ConfigAction*)self->configs->data, strlist[1]);
 		if ((iter = g_list_find_custom (self->configs, config_name, 
 										(GCompareFunc)nautilus_actions_utils_compare_actions)) != NULL)
 		{
@@ -161,6 +160,7 @@ static void nautilus_actions_notify_config_changes (GConfClient* client,
 			}
 			else if (g_ascii_strcasecmp (strlist[1], "version") == 0)
 			{
+				nautilus_actions_config_action_update_version (action, gconf_value_get_string (gconf_entry_get_value (entry)));
 			}
 		}
 		else
