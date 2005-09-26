@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions 0.7.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-26 11:31+0200\n"
+"POT-Creation-Date: 2005-09-26 15:57+0200\n"
 "PO-Revision-Date: 2005-09-10 11:51+0200\n"
 "Last-Translator: Gabriel Meier <gabriel.meier@web.de>\n"
 "Language-Team: German\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../nact/nact.desktop.in.h:1
+#: ../nact/nact.desktop.in.in.h:1
 msgid "Add items to the Nautilus context menu"
 msgstr "Aktionen zum Nautilus Kontext-Menü hinzufügen"
 
-#: ../nact/nact.desktop.in.h:2
+#: ../nact/nact.desktop.in.in.h:2
 msgid "Nautilus Actions Configuration"
 msgstr "Nautilus Actions Konfiguration"
 
@@ -156,8 +156,7 @@ msgstr "Erscheint für"
 
 #: ../nact/nautilus-actions-config.glade.h:39
 msgid "Appears if selection has multiple files or folders"
-msgstr "Erscheint, wenn die Auswahl mehrere Dateien oder "
-"Verzeichnisse umfasst"
+msgstr "Erscheint, wenn die Auswahl mehrere Dateien oder Verzeichnisse umfasst"
 
 #: ../nact/nautilus-actions-config.glade.h:40
 msgid "Browse..."
@@ -355,10 +354,10 @@ msgstr "Verzeichnis"
 msgid "test.example.net"
 msgstr "test.Beispiel.net"
 
-#: ../config/config_newaction.xml.in.h:1
+#: ../config/config_newaction.xml.in.in.h:1
 msgid "Create a new action using NACT"
 msgstr "Eine neue Aktion mit NACT erstellen"
 
-#: ../config/config_newaction.xml.in.h:2
+#: ../config/config_newaction.xml.in.in.h:2
 msgid "New Action..."
 msgstr "Neue Aktion..."

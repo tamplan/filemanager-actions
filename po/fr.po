@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions 0.7.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-26 11:31+0200\n"
+"POT-Creation-Date: 2005-09-26 15:57+0200\n"
 "PO-Revision-Date: 2005-09-09 19:55+0200\n"
 "Last-Translator: Frederic Ruaudel <grumz@grumz.net>\n"
 "Language-Team: French\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: ../nact/nact.desktop.in.h:1
+#: ../nact/nact.desktop.in.in.h:1
 msgid "Add items to the Nautilus context menu"
 msgstr "Ajoute des entrées dans le menu contextuel de Nautilus"
 
-#: ../nact/nact.desktop.in.h:2
+#: ../nact/nact.desktop.in.in.h:2
 msgid "Nautilus Actions Configuration"
 msgstr "Outils de configuration pour Nautilus Actions"
 
@@ -70,8 +70,8 @@ msgid ""
 "<b>%m</b> : list of the basename of the selected files/directories separated "
 "by space."
 msgstr ""
-"<b>%m</b> : liste des noms des fichiers selectionnés sans leur chemin, séparés "
-"par des espaces."
+"<b>%m</b> : liste des noms des fichiers selectionnés sans leur chemin, "
+"séparés par des espaces."
 
 #: ../nact/nautilus-actions-config.glade.h:17
 #, no-c-format
@@ -226,7 +226,8 @@ msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:55
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr "Ce logiciel est distribué sous la licence GNU General Public License (GPL)"
+msgstr ""
+"Ce logiciel est distribué sous la licence GNU General Public License (GPL)"
 
 #: ../nact/nautilus-actions-config.glade.h:56
 msgid "Tooltip :"
@@ -355,10 +356,10 @@ msgstr "chemin"
 msgid "test.example.net"
 msgstr "test.exemple.fr"
 
-#: ../config/config_newaction.xml.in.h:1
+#: ../config/config_newaction.xml.in.in.h:1
 msgid "Create a new action using NACT"
 msgstr "Créer une nouvelle action avec NACT"
 
-#: ../config/config_newaction.xml.in.h:2
+#: ../config/config_newaction.xml.in.in.h:2
 msgid "New Action..."
 msgstr "Nouvelle Action..."
