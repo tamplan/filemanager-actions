@@ -30,10 +30,6 @@ interface (Bug #105).
 	* nact/nautilus-actions-config.glade: Update informations of the about
 dialog (license and project URL)
 
-	* po/POTFILES.in: Rename nact/nact.desktop.in.in into
-nact/nact.desktop.in because there is no need anymore for autotool var
-expansion
-
 	* nact/nautilus-actions-icon.png: Create a new nautilus actions icon
 
 	* nact/nautilus-launch-icon.png: Remove the old nautilus actions icon
