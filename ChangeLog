@@ -1,5 +1,12 @@
 2005-09-26  Frederic Ruaudel <grumz@grumz.net> 0.7.1
 
+	* nact/nautilus-actions-config.in: Fix problem when saving new config 
+as normal user with nact (Bug #113)
+
+	* plugin/nautilus-actions-utils.c:
+	* plugin/nautilus-actions.c: Fix the problem with x-nautilus-desktop
+scheme (Bug #110) and remove some compilation warnings
+
 	* nact/nautilus-actions-config.glade:
 	* nact/nautilus-actions-config.in: Fix alignment problem in NACT
 interface (Bug #105).

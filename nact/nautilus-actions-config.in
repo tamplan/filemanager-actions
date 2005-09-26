@@ -273,6 +273,7 @@ class ConfigParser:
 		self.home_dir = pwd.getpwuid (self.uid)[5]
 		if self.uid == 0:
 			self.config_dir = ["@prefix@/share/nautilus-actions"]
+			self.savedir = self.config_dir[0]
 		else:
 			current_config_dir = self.home_dir + "/.config/nautilus-actions"
 			old_configdir_list = [ self.home_dir + "/.nautilus-actions", self.home_dir + "/.config/.nautilus-actions" ]
@@ -290,6 +291,7 @@ class ConfigParser:
 				#
 
 			self.config_dir = ["@prefix@/share/nautilus-actions", current_config_dir]
+			self.savedir = current_config_dir
 				
 
 class ConfigReader (ConfigParser):
@@ -541,7 +543,7 @@ class ConfigWriter (ConfigParser):
 			#
 				for config in file_dict[filename]:
 				#
-					self.WriteConfig2XmlFile (self.config_dir[0] + "/config_" + config.get_name () + ".xml", [ config ])
+					self.WriteConfig2XmlFile (self.savedir + "/config_" + config.get_name () + ".xml", [ config ])
 				#
 			#
 		#
