@@ -13,7 +13,7 @@
   <property name="default_height">570</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
-  <property name="icon">nautilus-actions-icon.png</property>
+  <property name="icon">nautilus-launch-icon.png</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -830,6 +830,7 @@
 
 					  <child>
 					    <widget class="GtkButton" id="ButtonPath">
+					      <property name="width_request">88</property>
 					      <property name="visible">True</property>
 					      <property name="can_focus">True</property>
 					      <property name="relief">GTK_RELIEF_NORMAL</property>
@@ -891,8 +892,8 @@
 							</widget>
 							<packing>
 							  <property name="padding">0</property>
-							  <property name="expand">True</property>
-							  <property name="fill">True</property>
+							  <property name="expand">False</property>
+							  <property name="fill">False</property>
 							</packing>
 						      </child>
 						    </widget>
@@ -903,7 +904,7 @@
 					    <packing>
 					      <property name="padding">0</property>
 					      <property name="expand">False</property>
-					      <property name="fill">False</property>
+					      <property name="fill">True</property>
 					    </packing>
 					  </child>
 					</widget>
@@ -987,6 +988,7 @@
 
 					      <child>
 						<widget class="GtkButton" id="ButtonLegend">
+						  <property name="width_request">88</property>
 						  <property name="visible">True</property>
 						  <property name="can_focus">True</property>
 						  <property name="relief">GTK_RELIEF_NORMAL</property>
@@ -1085,7 +1087,8 @@
 					  <property name="spacing">12</property>
 
 					  <child>
-					    <widget class="GtkLabel" id="LabelAlign5">
+					    <widget class="GtkLabel" id="label26">
+					      <property name="width_request">75</property>
 					      <property name="visible">True</property>
 					      <property name="label" translatable="yes"></property>
 					      <property name="use_underline">False</property>
@@ -1245,7 +1248,7 @@
 				      <property name="spacing">12</property>
 
 				      <child>
-					<widget class="GtkLabel" id="LabelAlign6">
+					<widget class="GtkLabel" id="LabelAlign5">
 					  <property name="visible">True</property>
 					  <property name="label" translatable="yes">File Pattern :</property>
 					  <property name="use_underline">False</property>
@@ -1317,8 +1320,8 @@
 				    </widget>
 				    <packing>
 				      <property name="padding">0</property>
-				      <property name="expand">True</property>
-				      <property name="fill">True</property>
+				      <property name="expand">False</property>
+				      <property name="fill">False</property>
 				    </packing>
 				  </child>
 
@@ -1437,8 +1440,8 @@
 				    </widget>
 				    <packing>
 				      <property name="padding">0</property>
-				      <property name="expand">True</property>
-				      <property name="fill">True</property>
+				      <property name="expand">False</property>
+				      <property name="fill">False</property>
 				    </packing>
 				  </child>
 
@@ -1468,8 +1471,8 @@
 					</widget>
 					<packing>
 					  <property name="padding">0</property>
-					  <property name="expand">True</property>
-					  <property name="fill">True</property>
+					  <property name="expand">False</property>
+					  <property name="fill">False</property>
 					</packing>
 				      </child>
 
@@ -1579,13 +1582,10 @@
   <property name="copyright" translatable="yes">(C) 2005 Frederic Ruaudel &lt;grumz@grumz.net&gt;</property>
   <property name="comments" translatable="yes">Nautilus Action Configuration Tool
 Application to configure Nautilus Action extension</property>
-  <property name="license" translatable="yes">This software is licensed under the GNU Genaral Public License (GPL)</property>
-  <property name="website">Project Website : http://www.grumz.net/node/8</property>
-  <property name="website_label" translatable="yes">Project Website</property>
   <property name="authors">Frederic Ruaudel &lt;grumz@grumz.net&gt;
 </property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
-  <property name="logo">nautilus-actions-icon.png</property>
+  <property name="logo">nautilus-launch-icon.png</property>
   <signal name="delete_event" handler="ActionDialogClose" last_modification_time="Thu, 18 Aug 2005 14:32:11 GMT"/>
 </widget>
 
@@ -1596,7 +1596,7 @@ Application to configure Nautilus Action extension</property>
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="icon">nautilus-actions-icon.png</property>
+  <property name="icon">nautilus-launch-icon.png</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -2019,7 +2019,7 @@ Application to configure Nautilus Action extension</property>
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
-  <property name="icon">nautilus-actions-icon.png</property>
+  <property name="icon">nautilus-launch-icon.png</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -2087,7 +2087,7 @@ Application to configure Nautilus Action extension</property>
   <property name="modal">True</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="icon">nautilus-actions-icon.png</property>
+  <property name="icon">nautilus-launch-icon.png</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>

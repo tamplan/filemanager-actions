@@ -1,35 +1,38 @@
-# Mario Izquierdo <mariodebian@gmail.com>, 2005.
-# 
-# 
+# Spanish translations for nautilus-actions package
+# Traducciones al espa�ol para el paquete nautilus-actions.
+# Copyright (C) 2005 THE nautilus-actions'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the nautilus-actions package.
+# Rodrigo Moya <rodrigo@gnome-db.org>, 2005.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-09-13 16:52+0200\n"
-"PO-Revision-Date: 2005-09-18 17:55+0200\n"
-"Last-Translator: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"PO-Revision-Date: 2005-09-09 20:23+0200\n"
+"Last-Translator: Rodrigo Moya <rodrigo@gnome-db.org>\n"
+"Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../nact/nact.desktop.in.in.h:1
 msgid "Add items to the Nautilus context menu"
-msgstr "Añadir elementos al menú contextual de Nautilus"
+msgstr ""
 
 #: ../nact/nact.desktop.in.in.h:2
 msgid "Nautilus Actions Configuration"
-msgstr "Configuracion de Acciones de Nautilus"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:1
 msgid "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
-msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:3
 #, no-c-format
 msgid "<b>%%</b> : a percent sign"
-msgstr "<b>%%</b> : un símbolo de porcentaje"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:5
 #, no-c-format
@@ -37,30 +40,27 @@ msgid ""
 "<b>%M</b> : list of the selected files/directories with their full path "
 "separated by space."
 msgstr ""
-"<b>%M</b> : lista de archivos/directorios con su ruta completa "
-"separados por un espacio."
 
 #: ../nact/nautilus-actions-config.glade.h:7
 #, no-c-format
 msgid "<b>%U</b> : username of the gnome-vfs URI"
-msgstr "<b>%U</b> : usuario de gnome-vfs URI"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:9
 #, no-c-format
 msgid "<b>%d</b> : base dir of the selected file(s)"
-msgstr "<b>%d</b> : directorio padre de los archivo(s) seleccionado(s)"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
 msgid ""
 "<b>%f</b> : the name of the selected file or the 1st one if many are selected"
 msgstr ""
-"<b>%f</b> : el nombre del archivo seleccionado o el 1º si hay varios seleccionados"
 
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
 msgid "<b>%h</b> : hostname of the gnome-vfs URI"
-msgstr "<b>%h</b> : nombre del equipo de gnome-vfs URI"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:15
 #, no-c-format
@@ -68,47 +68,43 @@ msgid ""
 "<b>%m</b> : list of the basename of the selected files/directories separated "
 "by space."
 msgstr ""
-"<b>%m</b> : lista de directorios padre de los archivos/directorios seleccionados"
-"separados por un espacio."
 
 #: ../nact/nautilus-actions-config.glade.h:17
 #, no-c-format
 msgid "<b>%p</b> : parent directory of the selected file(s)"
-msgstr "<b>%p</b> : directorio padre del (los) archivo(s) seleccionado(s)"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:19
 #, no-c-format
 msgid "<b>%s</b> : scheme of the gnome-vfs URI"
-msgstr "<b>%s</b> : esquema del gnome-vfs URI"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:21
 #, no-c-format
 msgid "<b>%u</b> : gnome-vfs URI"
-msgstr "<b>%u</b> : gnome-vfs URI"
+msgstr ""
 
 #. %s is replaced in the python script, so please don't change it
 #: ../nact/nautilus-actions-config.glade.h:24
 #, no-c-format
 msgid "<b><span size=\"x-large\">Config for <i>%s</i></span></b>"
-msgstr "<b><span size=\"x-large\">Configuración para <i>%s</i></span></b>"
+msgstr ""
 
 #. %s are replaced in the python script, so please don't change them
 #: ../nact/nautilus-actions-config.glade.h:27
 #, no-c-format
 msgid "<i><b><small>ex: %s %s</small></b></i>"
-msgstr "<i><b><small>ejemplo: %s %s</small></b></i>"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:28
 msgid ""
 "<span color=\"red\"><b>Note:</b> this config is defined system wide, start "
 "NACT as root to edit it</span>"
 msgstr ""
-"<span color=\"red\"><b>Nota:</b>  esta configuración esta definida para un sistema extenso,"
-"arranque NACT como usuario root para editarlo</span>"
 
 #: ../nact/nautilus-actions-config.glade.h:29
 msgid "<span size=\"larger\"><b>Parameters Legend</b></span>"
-msgstr "<span size=\"larger\"><b>Leyenda de Parámetros</b></span>"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:30
 msgid ""
@@ -117,239 +113,225 @@ msgid ""
 "\n"
 "If you don't save, your changes will be discarded."
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">¿Guardar cambios hechos "
-"el la configuración antes de cerrar ?</span>\n"
-"\n"
-"Si no lo guarda, los cambios serán descartados."
 
 #: ../nact/nautilus-actions-config.glade.h:33
 msgid "<span weight=\"bold\">Appearance Conditions</span>"
-msgstr "<span weight=\"bold\">Condiciones de Apariencia</span>"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:34
 msgid "<span weight=\"bold\">Command</span>"
-msgstr "<span weight=\"bold\">Comando</span>"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:35
 msgid "<span weight=\"bold\">Nautilus Menu Item</span>"
-msgstr "<span weight=\"bold\">Elemento de Menú de Nautilus</span>"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:36
 msgid ""
 "A string with joker ? or * that will be used to match the files. You can "
 "match several file pattern by separating them with semi-colon ;"
 msgstr ""
-"Una cadena con un comodín ? or * será usada para contrastar los archivos. Puede "
-"contrastar varios patrones de archivo separándolos por punto y coma ;"
 
 #: ../nact/nautilus-actions-config.glade.h:37
 msgid "Appears if scheme is in this list :"
-msgstr "Parece que el esquema no está en la lista :"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:38
 msgid "Appears if selection contains :"
-msgstr "Parece que la selección contiene :"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:39
 msgid "Appears if selection has multiple files or folders"
-msgstr "Parece que la selección tiene múltiples archivos o directorios"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:40
 msgid "Browse..."
-msgstr "Buscar..."
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:41
 msgid "Close _without Saving"
-msgstr "Cerrar si_n Guardar"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:42
 msgid "File Pattern :"
-msgstr "Patrón de archivo :"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:43
 msgid "Label :"
-msgstr "Etiqueta :"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:44
 msgid "Label of the menu item in the nautilus contextual menu"
-msgstr "Etiqueta para el elemento en el menú contextual de Nautilus"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:45
 msgid "Legend"
-msgstr "Leyenda"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:46
 msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
 msgstr ""
-"Herramienta de Configuración de Acciones de Nautilus\n"
-"Aplicación para configurar la extensión de Acciones de Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:48
 msgid "Nautilus Actions Configuration Tool"
-msgstr "Configurador de Acciones de Nautilus"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:49
 msgid "Parameters :"
-msgstr "Parámetros :"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:50
 msgid "Path :"
-msgstr "Ruta :"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:51
 msgid "Select a command"
-msgstr "Seleccione un comando"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:52
 msgid ""
 "Select a config in the list to edit or click the <i>New Config</i> button to "
 "create a new one."
 msgstr ""
-"Seleccione una configuración de la lista o haga click en el botón<i>Nueva Configuración</i> para"
-"crear una nueva."
 
 #: ../nact/nautilus-actions-config.glade.h:53
 msgid "Show system wide config"
-msgstr "Mostrar ajustes de sistema extenso"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:54
 msgid ""
 "The command that will be launched when selecting the action in nautilus menu"
 msgstr ""
-"Este comando será ejecutado cuando seleccione la acción en el menú de nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:55
 msgid "Tooltip :"
-msgstr "Truco :"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:56
 msgid "Tooltip of the menu item that will appear in the nautilus statusbar"
-msgstr "Truco del elemento del menú que aparecerá en la barra de estado de Nautilus"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:57
 msgid "_Delete Config"
-msgstr "Borrar Configuración (_D)"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:58
 msgid "_File"
-msgstr "_Archivo"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:59
 msgid "_Help"
-msgstr "Ayuda (_H)"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:60
 msgid "_New Config"
-msgstr "_Nueva Configuración"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:61
 msgid "_Preferences"
-msgstr "_Preferencias"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:62
 msgid "_Reload"
-msgstr "_Recargar"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:63
 msgid "both"
-msgstr "ámbos"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:64
 msgid "only files"
-msgstr "sólo archivos"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:65
 msgid "only folders"
-msgstr "solo directorios"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:66
 msgid ""
 "parameters that will be send to the program. Click the 'Legend' button to "
 "see the different replacement options"
 msgstr ""
-"parámetros que serán enviados al programa. Click en el botón 'Leyenda' para ver "
-"Las diferentes opciones de reemplazamiento"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../nact/nautilus-actions-config.glade.h:68
 msgid "translator-credits"
-msgstr "Mario Izquierdo (mariodebian) mariodebian@gmail.com"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:633
 msgid "Local files"
-msgstr "Archivos Locales"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:634
 msgid "SSH files"
-msgstr "Archivos SSH"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:635
 msgid "Windows files"
-msgstr "Archivos de Windows"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:636
 msgid "FTP files"
-msgstr "Archivos FTP"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:637
 msgid "Webdav files"
-msgstr "Archivos Webdav"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:638
 msgid "New Config"
-msgstr "Nueva Configuración"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:717
 msgid "_Config List"
-msgstr "Lista de _Configfuración"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:969
 msgid "/path/to"
-msgstr "/ruta/a"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:970
 #: ../nact/nautilus-actions-config.in:972
 msgid "file1.txt"
-msgstr "archivo1.txt"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:970
 msgid "file2.txt"
-msgstr "archivo2.txt"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:971
 #: ../nact/nautilus-actions-config.in:972
 msgid "dir1"
-msgstr "directorio1"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:971
 msgid "dir2"
-msgstr "directorio2"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:973
 #: ../nact/nautilus-actions-config.in:1014
 msgid "file"
-msgstr "archivo"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:974
 msgid "file.txt"
-msgstr "archivo.txt"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:1006
 msgid "dir"
-msgstr "directorio"
+msgstr ""
 
 #: ../nact/nautilus-actions-config.in:1018
 #: ../nact/nautilus-actions-config.in:1024
 msgid "test.example.net"
-msgstr "prueba.ejemplo.net"
+msgstr ""
 
 #: ../config/config_newaction.xml.in.h:1
 msgid "Create a new action using NACT"
-msgstr "Crear nueva acción usando NACT"
+msgstr ""
 
 #: ../config/config_newaction.xml.in.h:2
 msgid "New Action..."
-msgstr "Nueva Acción..."
-
+msgstr ""

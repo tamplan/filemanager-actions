@@ -49,8 +49,6 @@ if test -z ${NAUTILUS_EXTENSIONS_DIR}; then
 	AC_MSG_ERROR([*** Can't determine nautilus extension folder, please use --with-nautilus-extdir options to define it manually ]);
 fi
 
-default_config_path=`eval echo $datadir/nautilus-actions`
-AC_DEFINE_UNQUOTED(DEFAULT_CONFIG_PATH, "$default_config_path", [Default system configuration path])
 
 dnl --------------------------------------------------
 
@@ -67,21 +65,6 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [GetText Package])
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL
 
-if test "x${exec_prefix}" = "xNONE"; then
-	if test "x${prefix}" = "xNONE"; then
-		if test "x${bindir}" = "xNONE"; then
-			BINDIR=`eval echo $ac_default_prefix/bin`
-		else
-			BINDIR=`eval echo $bindir`
-		fi
-	else
-		BINDIR=`eval echo $prefix/bin`
-	fi
-else
-	BINDIR=`eval echo $bindir`
-fi
-AC_SUBST(BINDIR)
-	
 if test "x${prefix}" = "xNONE"; then
   DATADIR="${ac_default_prefix}/${DATADIRNAME}" 
   LOCALEDIR="${DATADIR}/locale"
@@ -100,8 +83,8 @@ AC_OUTPUT([
 Makefile
 plugin/Makefile
 config/Makefile
-config/config_newaction.schemas.in
 nact/Makefile
+nact/nact.desktop.in
 nact/nautilus-actions-config
 po/Makefile.in
 ])

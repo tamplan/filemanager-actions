@@ -5,12 +5,9 @@
 
 G_BEGIN_DECLS
 
-#define NAUTILUS_ACTIONS_TYPE  				(nautilus_actions_get_type ())
-#define NAUTILUS_ACTIONS(o)	 				(G_TYPE_CHECK_INSTANCE_CAST ((o), NAUTILUS_ACTIONS_TYPE, NautilusActions))
-#define NAUTILUS_ACTIONS_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass))
-#define NAUTILUS_IS_ACTIONS(o) 				(G_TYPE_CHECK_INSTANCE_TYPE ((o), NAUTILUS_ACTIONS_TYPE))
-#define NAUTILUS_IS_ACTIONS_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), NAUTILUS_ACTIONS_TYPE))
-#define NAUTILUS_ACTIONS_GET_CLASS(o)		(G_TYPE_INSTANCE_GET_CLASS ((obj), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass))
+#define NAUTILUS_TYPE_ACTIONS  (nautilus_actions_get_type ())
+#define NAUTILUS_ACTIONS(o)	 (G_TYPE_CHECK_INSTANCE_CAST ((o), NAUTILUS_TYPE_ACTIONS, NautilusActions))
+#define NAUTILUS_IS_ACTIONS(o) (G_TYPE_CHECK_INSTANCE_TYPE ((o), NAUTILUS_TYPE_ACTIONS))
 
 typedef struct _NautilusActions	NautilusActions;
 typedef struct _NautilusActionsClass NautilusActionsClass;
@@ -18,7 +15,6 @@ typedef struct _NautilusActionsClass NautilusActionsClass;
 struct _NautilusActions 
 {
 	GObject __parent;
-	GList* configs;
 };
 
 struct _NautilusActionsClass

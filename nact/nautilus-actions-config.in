@@ -666,7 +666,6 @@ class NACTMainWindow (NACTGui):
 
 		self.signal_autoconnect (dic)
 		self.AlignLabels ()
-		self.AlignButtons ()
 		self.show_systemwide = True
 		self.config_reader = ConfigReader ()
 		self.config_list = self.config_reader.getConfigList ()
@@ -708,12 +707,7 @@ class NACTMainWindow (NACTGui):
 		sizegrp = gtk.SizeGroup (gtk.SIZE_GROUP_HORIZONTAL)
 		for label in label_list:
 			sizegrp.add_widget (label)
-		
-	def AlignButtons (self):
-		sizegrp = gtk.SizeGroup (gtk.SIZE_GROUP_HORIZONTAL)
-		sizegrp.add_widget (self.get_widget ("ButtonPath"))
-		sizegrp.add_widget (self.get_widget ("ButtonLegend"))
-		
+			
 
 	def CreateConfigListStore (self):
 		dist_store = gtk.ListStore (str, str, gobject.TYPE_BOOLEAN)

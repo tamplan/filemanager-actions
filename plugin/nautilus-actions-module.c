@@ -16,7 +16,7 @@ void nautilus_module_list_types (const GType **types, int *num_types)
 {
 	static GType type_list[1];
 	
-	type_list[0] = NAUTILUS_ACTIONS_TYPE;
+	type_list[0] = NAUTILUS_TYPE_ACTIONS;
 	*types = type_list;
 
 	*num_types = 1;
