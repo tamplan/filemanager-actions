@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: nautilus-actions 0.7\n"
+"Project-Id-Version: nautilus-actions 0.7.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-13 16:52+0200\n"
+"POT-Creation-Date: 2005-09-26 11:31+0200\n"
 "PO-Revision-Date: 2005-09-09 19:55+0200\n"
 "Last-Translator: Frederic Ruaudel <grumz@grumz.net>\n"
 "Language-Team: French\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: ../nact/nact.desktop.in.in.h:1
+#: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus context menu"
 msgstr "Ajoute des entrées dans le menu contextuel de Nautilus"
 
-#: ../nact/nact.desktop.in.in.h:2
+#: ../nact/nact.desktop.in.h:2
 msgid "Nautilus Actions Configuration"
 msgstr "Outils de configuration pour Nautilus Actions"
 
@@ -32,7 +32,7 @@ msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
 #: ../nact/nautilus-actions-config.glade.h:3
 #, no-c-format
 msgid "<b>%%</b> : a percent sign"
-msgstr "<b>%%</b> : un sign pourcent"
+msgstr "<b>%%</b> : un signe pourcent"
 
 #: ../nact/nautilus-actions-config.glade.h:5
 #, no-c-format
@@ -46,12 +46,12 @@ msgstr ""
 #: ../nact/nautilus-actions-config.glade.h:7
 #, no-c-format
 msgid "<b>%U</b> : username of the gnome-vfs URI"
-msgstr "<b>%U</b> : nom de l'utilisateur présente dans l'URI gnome-vfs"
+msgstr "<b>%U</b> : nom de l'utilisateur présent dans l'URI gnome-vfs"
 
 #: ../nact/nautilus-actions-config.glade.h:9
 #, no-c-format
 msgid "<b>%d</b> : base dir of the selected file(s)"
-msgstr "<b>%d</b> : le repertoire contenant le(s) ficher(s) sélectioné(s)"
+msgstr "<b>%d</b> : le répertoire contenant le(s) ficher(s) sélectioné(s)"
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
@@ -62,7 +62,7 @@ msgstr "<b>%f</b> : le fichier selectionné ou le 1er de la liste si plusieurs"
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
 msgid "<b>%h</b> : hostname of the gnome-vfs URI"
-msgstr "<b>%h</b> : le nom de la machine hôte présente dans l'URI gnome-vfs"
+msgstr "<b>%h</b> : le nom de la machine hôte présent dans l'URI gnome-vfs"
 
 #: ../nact/nautilus-actions-config.glade.h:15
 #, no-c-format
@@ -70,7 +70,7 @@ msgid ""
 "<b>%m</b> : list of the basename of the selected files/directories separated "
 "by space."
 msgstr ""
-"<b>%m</b> : liste des noms des fichiers selectionnés sans leur chemin séparé "
+"<b>%m</b> : liste des noms des fichiers selectionnés sans leur chemin, séparés "
 "par des espaces."
 
 #: ../nact/nautilus-actions-config.glade.h:17
@@ -81,7 +81,7 @@ msgstr "<b>%p</b> : répertoire parent des fichiers selectionnés"
 #: ../nact/nautilus-actions-config.glade.h:19
 #, no-c-format
 msgid "<b>%s</b> : scheme of the gnome-vfs URI"
-msgstr "<b>%s</b> : protocole présente dans l'URI gnome-vfs"
+msgstr "<b>%s</b> : protocole présent dans l'URI gnome-vfs"
 
 #: ../nact/nautilus-actions-config.glade.h:21
 #, no-c-format
@@ -105,7 +105,7 @@ msgid ""
 "<span color=\"red\"><b>Note:</b> this config is defined system wide, start "
 "NACT as root to edit it</span>"
 msgstr ""
-"<span color=\"red\"><b>Note:</b> Cette configuration est définies au niveau "
+"<span color=\"red\"><b>Note:</b> Cette configuration est définie au niveau "
 "système, lancez NACT en tant que root pour l'éditer</span>"
 
 #: ../nact/nautilus-actions-config.glade.h:29
@@ -171,11 +171,11 @@ msgstr "Masque de Fichier :"
 
 #: ../nact/nautilus-actions-config.glade.h:43
 msgid "Label :"
-msgstr "Libéllé :"
+msgstr "Libellé :"
 
 #: ../nact/nautilus-actions-config.glade.h:44
 msgid "Label of the menu item in the nautilus contextual menu"
-msgstr "Libéllé de l'entrée de menu dans le menu contextuel de Nautilus"
+msgstr "Libellé de l'entrée de menu dans le menu contextuel de Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:45
 msgid "Legend"
@@ -210,7 +210,7 @@ msgid ""
 "Select a config in the list to edit or click the <i>New Config</i> button to "
 "create a new one."
 msgstr ""
-"Selectionnez une configuration à éditer dans la liste ou cliquez sur le "
+"Sélectionnez une configuration à éditer dans la liste ou cliquez sur le "
 "boutton <i>Nouvelle Config</i> pour en créer une nouvelle."
 
 #: ../nact/nautilus-actions-config.glade.h:53
@@ -225,52 +225,56 @@ msgstr ""
 "de Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:55
+msgid "This software is licensed under the GNU Genaral Public License (GPL)"
+msgstr "Ce logiciel est distribué sous la licence GNU General Public License (GPL)"
+
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Tooltip :"
 msgstr "Bulle d'Aide :"
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Tooltip of the menu item that will appear in the nautilus statusbar"
 msgstr ""
 "Bulle d'aide de l'entrée du menu qui apparaitra dans la barre de status de "
 "Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid "_Delete Config"
 msgstr "_Supprimer Config"
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "_File"
 msgstr "_Fichier"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "_Help"
 msgstr "_Aide"
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "_New Config"
 msgstr "_Nouvelle Config"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid "_Preferences"
 msgstr "_Préférences"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "_Reload"
 msgstr "_Recharger"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:64
 msgid "both"
 msgstr "les deux"
 
-#: ../nact/nautilus-actions-config.glade.h:64
+#: ../nact/nautilus-actions-config.glade.h:65
 msgid "only files"
 msgstr "seulement des fichiers"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid "only folders"
 msgstr "seulement des dossiers"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:67
 msgid ""
 "parameters that will be send to the program. Click the 'Legend' button to "
 "see the different replacement options"
@@ -279,75 +283,75 @@ msgstr ""
 "pour voir les différentes options de remplacements"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "translator-credits"
 msgstr "Frederic Ruaudel <grumz@grumz.net>"
 
-#: ../nact/nautilus-actions-config.in:633
+#: ../nact/nautilus-actions-config.in:639
 msgid "Local files"
 msgstr "Fichiers locaux"
 
-#: ../nact/nautilus-actions-config.in:634
+#: ../nact/nautilus-actions-config.in:640
 msgid "SSH files"
 msgstr "Fichiers SSH"
 
-#: ../nact/nautilus-actions-config.in:635
+#: ../nact/nautilus-actions-config.in:641
 msgid "Windows files"
 msgstr "Fichiers Windows"
 
-#: ../nact/nautilus-actions-config.in:636
+#: ../nact/nautilus-actions-config.in:642
 msgid "FTP files"
 msgstr "Fichiers FTP"
 
-#: ../nact/nautilus-actions-config.in:637
+#: ../nact/nautilus-actions-config.in:643
 msgid "Webdav files"
 msgstr "Fichiers Webdav"
 
-#: ../nact/nautilus-actions-config.in:638
+#: ../nact/nautilus-actions-config.in:644
 msgid "New Config"
 msgstr "Nouvelle Config"
 
-#: ../nact/nautilus-actions-config.in:717
+#: ../nact/nautilus-actions-config.in:729
 msgid "_Config List"
 msgstr "_Configurations"
 
-#: ../nact/nautilus-actions-config.in:969
+#: ../nact/nautilus-actions-config.in:981
 msgid "/path/to"
 msgstr "/chemin/vers"
 
-#: ../nact/nautilus-actions-config.in:970
-#: ../nact/nautilus-actions-config.in:972
+#: ../nact/nautilus-actions-config.in:982
+#: ../nact/nautilus-actions-config.in:984
 msgid "file1.txt"
 msgstr "fichier1.txt"
 
-#: ../nact/nautilus-actions-config.in:970
+#: ../nact/nautilus-actions-config.in:982
 msgid "file2.txt"
 msgstr "fichier2.txt"
 
-#: ../nact/nautilus-actions-config.in:971
-#: ../nact/nautilus-actions-config.in:972
+#: ../nact/nautilus-actions-config.in:983
+#: ../nact/nautilus-actions-config.in:984
 msgid "dir1"
 msgstr "chemin1"
 
-#: ../nact/nautilus-actions-config.in:971
+#: ../nact/nautilus-actions-config.in:983
 msgid "dir2"
 msgstr "chemin2"
 
-#: ../nact/nautilus-actions-config.in:973
-#: ../nact/nautilus-actions-config.in:1014
+#: ../nact/nautilus-actions-config.in:985
+#: ../nact/nautilus-actions-config.in:1026
 msgid "file"
 msgstr "fichier"
 
-#: ../nact/nautilus-actions-config.in:974
+#: ../nact/nautilus-actions-config.in:986
 msgid "file.txt"
 msgstr "fichier.txt"
 
-#: ../nact/nautilus-actions-config.in:1006
+#: ../nact/nautilus-actions-config.in:1018
 msgid "dir"
 msgstr "chemin"
 
-#: ../nact/nautilus-actions-config.in:1018
-#: ../nact/nautilus-actions-config.in:1024
+#: ../nact/nautilus-actions-config.in:1030
+#: ../nact/nautilus-actions-config.in:1036
 msgid "test.example.net"
 msgstr "test.exemple.fr"
 

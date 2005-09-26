@@ -1,3 +1,10 @@
+2005-09-26  Frederic Ruaudel <grumz@grumz.net>
+
+	* fr.po: Update French translation.
+
+	* *.po:
+	* nautilus-actions.pot: Update translations strings
+
 2005-09-19  Mario Izquierdo <mariodebian@gmail.com>
 
 	* es.po: added Spanish translation.
