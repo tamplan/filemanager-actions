@@ -1,5 +1,11 @@
 2005-09-26  Frederic Ruaudel <grumz@grumz.net> 0.7.1
 
+	* configure.in:
+	* config/config_newaction.xml.in:
+	* config/config_newaction.xml.in.in: Rename newaction config file 
+to support autotool var substitution to set the path to nact correctly 
+when prefix is not the default one.
+
 	* configure.in: Update version number
 
 	* plugin/nautilus-actions-config.c: Apply patch submited on the bug 

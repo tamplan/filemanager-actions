@@ -67,6 +67,21 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [GetText Package])
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL
 
+if test "x${exec_prefix}" = "xNONE"; then
+	if test "x${prefix}" = "xNONE"; then
+		if test "x${bindir}" = "xNONE"; then
+			BINDIR=`eval echo $ac_default_prefix/bin`
+		else
+			BINDIR=`eval echo $bindir`
+		fi
+	else
+		BINDIR=`eval echo $prefix/bin`
+	fi
+else
+	BINDIR=`eval echo $bindir`
+fi
+AC_SUBST(BINDIR)
+	
 if test "x${prefix}" = "xNONE"; then
   DATADIR="${ac_default_prefix}/${DATADIRNAME}" 
   LOCALEDIR="${DATADIR}/locale"
@@ -85,6 +100,7 @@ AC_OUTPUT([
 Makefile
 plugin/Makefile
 config/Makefile
+config/config_newaction.xml.in
 nact/Makefile
 nact/nautilus-actions-config
 po/Makefile.in
