@@ -28,6 +28,15 @@ expansion
 	* nact/nautilus-actions-config.in: Fix the problem with nact not starting
 when $LANG var not set (Bug #108)
 
+2005-09-17  Rodrigo Moya <rodrigo@novell.com> 0.7.1
+
+	* configure.in: define DEFAULT_CONFIG_PATH.
+
+	* plugin/nautilus-actions-config.h: removed #define for DEFAULT_CONFIG_PATH.
+
+	* plugin/nautilus-actions-config.c: include "config.h"
+
+
 2005-09-13  Frederic Ruaudel <grumz@grumz.net> 0.7
 
 	* nact/nautilus-actions-config.in: Fix problem with new config creation
