@@ -1,5 +1,7 @@
 2005-09-26  Frederic Ruaudel <grumz@grumz.net> 0.7.1
 
+	* nact/nautilus-actions-config.glade: Fix some layout problems
+
 	* configure.in:
 	* config/config_newaction.xml.in:
 	* config/config_newaction.xml.in.in: Rename newaction config file 
