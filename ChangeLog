@@ -1,5 +1,8 @@
 2005-09-26  Frederic Ruaudel <grumz@grumz.net> 0.7.1
 
+	* plugin/nautilus-actions-config.c: Apply patch submited on the bug 
+tracker to fix compilation warning about signedness problem (Bug #112)
+
 	* nact/nautilus-actions-config.in: Fix problem when saving new config 
 as normal user with nact (Bug #113)
 

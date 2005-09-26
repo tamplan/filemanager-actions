@@ -114,7 +114,7 @@ static gboolean nautilus_actions_config_action_fill_test_basenames (GList** test
 	{
 		//--> manage backward compatibility
 		xmlChar* text = xmlNodeGetContent (config_test_basename_node);
-		(*test_basenames) = g_list_append ((*test_basenames), g_strdup (text));
+		(*test_basenames) = g_list_append ((*test_basenames), xmlStrdup (text));
 		xmlFree (text);
 		retv = TRUE;
 	}
@@ -130,7 +130,7 @@ static gboolean nautilus_actions_config_action_fill_test_basenames (GList** test
 									strlen ("match")) == 0)
 			{
 				text = xmlNodeGetContent (iter);
-				(*test_basenames) = g_list_append ((*test_basenames), g_strdup (text));
+				(*test_basenames) = g_list_append ((*test_basenames), xmlStrdup (text));
 				xmlFree (text);
 				retv = TRUE;
 			}
@@ -155,7 +155,7 @@ static gboolean nautilus_actions_config_action_fill_test_scheme (GList** test_sc
 								strlen ("type")) == 0)
 		{
 			text = xmlNodeGetContent (iter);
-			(*test_scheme) = g_list_append ((*test_scheme), g_strdup (text));
+			(*test_scheme) = g_list_append ((*test_scheme), xmlStrdup (text));
 			xmlFree (text);
 			retv = TRUE;
 		}
@@ -259,7 +259,7 @@ static gboolean nautilus_actions_config_action_fill_command (ConfigAction *actio
 								strlen ("path")) == 0)
 		{
 			text = xmlNodeGetContent (iter);
-			command_action->path = g_strdup (text);
+			command_action->path = xmlStrdup (text);
 			xmlFree (text);
 			path_ok = TRUE;
 		}
@@ -269,7 +269,7 @@ static gboolean nautilus_actions_config_action_fill_command (ConfigAction *actio
 								strlen ("parameters")) == 0)
 		{
 			text = xmlNodeGetContent (iter);
-			command_action->parameters = g_strdup (text);
+			command_action->parameters = xmlStrdup (text);
 			xmlFree (text);
 			parameters_ok = TRUE;
 		}
@@ -309,7 +309,7 @@ static gboolean nautilus_actions_config_action_fill_menu_item (ConfigAction *act
 			if (lang == NULL && xmlLang == NULL)
 			{
 				//--> No $LANG set, get the default one (no xml:lang)
-				menu_item_action->label = g_strdup (text);
+				menu_item_action->label = xmlStrdup (text);
 				label_ok = TRUE;
 				label_lang_ok = TRUE;
 			}
@@ -318,7 +318,7 @@ static gboolean nautilus_actions_config_action_fill_menu_item (ConfigAction *act
 				if (!label_lang_ok)
 				{
 					//--> $LANG set, not found the good xml:lang yet, get the default one (no xml:lang)
-					menu_item_action->label = g_strdup (text);
+					menu_item_action->label = xmlStrdup (text);
 					label_ok = TRUE;
 				}
 			}
@@ -329,7 +329,7 @@ static gboolean nautilus_actions_config_action_fill_menu_item (ConfigAction *act
 				{
 					g_free (menu_item_action->label);
 				}
-				menu_item_action->label = g_strdup (text);
+				menu_item_action->label = xmlStrdup (text);
 				label_ok = TRUE;
 				label_lang_ok = TRUE;
 			}
@@ -346,7 +346,7 @@ static gboolean nautilus_actions_config_action_fill_menu_item (ConfigAction *act
 			if (lang == NULL && xmlLang == NULL)
 			{
 				//--> No $LANG set, get the default one (no xml:lang)
-				menu_item_action->tooltip = g_strdup (text);
+				menu_item_action->tooltip = xmlStrdup (text);
 				tooltip_ok = TRUE;
 				tooltip_lang_ok = TRUE;
 			}
@@ -355,7 +355,7 @@ static gboolean nautilus_actions_config_action_fill_menu_item (ConfigAction *act
 				if (!tooltip_lang_ok)
 				{
 					//--> $LANG set, not found the good xml:lang yet, get the default one (no xml:lang)
-					menu_item_action->tooltip = g_strdup (text);
+					menu_item_action->tooltip = xmlStrdup (text);
 					tooltip_ok = TRUE;
 				}
 			}
@@ -366,7 +366,7 @@ static gboolean nautilus_actions_config_action_fill_menu_item (ConfigAction *act
 				{
 					g_free (menu_item_action->tooltip);
 				}
-				menu_item_action->tooltip = g_strdup (text);
+				menu_item_action->tooltip = xmlStrdup (text);
 				tooltip_ok = TRUE;
 				tooltip_lang_ok = TRUE;
 			}
