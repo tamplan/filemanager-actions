@@ -27,14 +27,14 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 	{
 		gboolean found = FALSE;
 		GString* tmp_string = g_string_new ("");
-		gchar* iter = param_template;
+		gchar* iter = g_strdup (param_template);
 		gchar* old_iter = iter;
 		int current_len = strlen (iter);
 		gchar* uri = nautilus_file_info_get_uri ((NautilusFileInfo*)files->data);
 		GnomeVFSURI* gvfs_uri = gnome_vfs_uri_new (uri);
 		gchar* filename;
 		gchar* dirname;
-		gchar* scheme = g_strdup (gnome_vfs_uri_get_scheme (gvfs_uri));
+		gchar* scheme = nautilus_file_info_get_uri_scheme ((NautilusFileInfo*)files->data);
 		gchar* hostname = g_strdup (gnome_vfs_uri_get_host_name (gvfs_uri));
 		gchar* username = g_strdup (gnome_vfs_uri_get_user_name (gvfs_uri));
 		gchar* parent_dir;
@@ -47,7 +47,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		gchar* tmp2;
 		
 		tmp = gnome_vfs_uri_extract_dirname (gvfs_uri);
-		dirname = gnome_vfs_unescape_string (tmp, "");
+		dirname = (gchar*)gnome_vfs_unescape_string ((const gchar*)tmp, "");
 		g_free (tmp);
 
 		tmp = nautilus_file_info_get_name ((NautilusFileInfo*)files->data);
@@ -64,7 +64,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		{
 			GnomeVFSURI* gvfs_parent_uri = gnome_vfs_uri_get_parent (gvfs_uri);
 			tmp = g_path_get_dirname (gnome_vfs_uri_get_path (gvfs_parent_uri));
-			tmp2 = gnome_vfs_unescape_string (tmp, "");
+			tmp2 = (gchar*)gnome_vfs_unescape_string ((const gchar*)tmp, "");
 			parent_dir = g_shell_quote (tmp2);
 			g_free (tmp2);
 			g_free (tmp);
@@ -154,6 +154,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		g_free (scheme);
 		g_free (hostname);
 		g_free (username);
+		g_free (iter);
 		gnome_vfs_uri_unref (gvfs_uri);
 
 		retv = g_string_free (tmp_string, FALSE); // return the content of the GString

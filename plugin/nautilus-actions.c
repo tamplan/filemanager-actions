@@ -22,9 +22,9 @@ static void nautilus_actions_execute (NautilusMenuItem *item, ConfigAction *acti
 {
 	GList *files;
 	GString *cmd;
-	gchar* param;
+	gchar* param = NULL;
 
-	files = g_object_get_data (G_OBJECT (item), "files");
+	files = (GList*)g_object_get_data (G_OBJECT (item), "files");
 
 	cmd = g_string_new (action->command->path);
 
