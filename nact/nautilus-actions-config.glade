@@ -1582,6 +1582,9 @@
   <property name="copyright" translatable="yes">(C) 2005 Frederic Ruaudel &lt;grumz@grumz.net&gt;</property>
   <property name="comments" translatable="yes">Nautilus Action Configuration Tool
 Application to configure Nautilus Action extension</property>
+  <property name="license" translatable="yes">This software is licensed under the GNU Genaral Public License (GPL)</property>
+  <property name="wrap_license">False</property>
+  <property name="website">Project Website : http://www.grumz.net/node/8</property>
   <property name="authors">Frederic Ruaudel &lt;grumz@grumz.net&gt;
 </property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
