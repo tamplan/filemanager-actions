@@ -830,7 +830,6 @@
 
 					  <child>
 					    <widget class="GtkButton" id="ButtonPath">
-					      <property name="width_request">88</property>
 					      <property name="visible">True</property>
 					      <property name="can_focus">True</property>
 					      <property name="relief">GTK_RELIEF_NORMAL</property>
@@ -892,8 +891,8 @@
 							</widget>
 							<packing>
 							  <property name="padding">0</property>
-							  <property name="expand">False</property>
-							  <property name="fill">False</property>
+							  <property name="expand">True</property>
+							  <property name="fill">True</property>
 							</packing>
 						      </child>
 						    </widget>
@@ -904,7 +903,7 @@
 					    <packing>
 					      <property name="padding">0</property>
 					      <property name="expand">False</property>
-					      <property name="fill">True</property>
+					      <property name="fill">False</property>
 					    </packing>
 					  </child>
 					</widget>
@@ -988,7 +987,6 @@
 
 					      <child>
 						<widget class="GtkButton" id="ButtonLegend">
-						  <property name="width_request">88</property>
 						  <property name="visible">True</property>
 						  <property name="can_focus">True</property>
 						  <property name="relief">GTK_RELIEF_NORMAL</property>
@@ -1087,8 +1085,7 @@
 					  <property name="spacing">12</property>
 
 					  <child>
-					    <widget class="GtkLabel" id="label26">
-					      <property name="width_request">75</property>
+					    <widget class="GtkLabel" id="LabelAlign5">
 					      <property name="visible">True</property>
 					      <property name="label" translatable="yes"></property>
 					      <property name="use_underline">False</property>
@@ -1248,7 +1245,7 @@
 				      <property name="spacing">12</property>
 
 				      <child>
-					<widget class="GtkLabel" id="LabelAlign5">
+					<widget class="GtkLabel" id="LabelAlign6">
 					  <property name="visible">True</property>
 					  <property name="label" translatable="yes">File Pattern :</property>
 					  <property name="use_underline">False</property>
@@ -1320,8 +1317,8 @@
 				    </widget>
 				    <packing>
 				      <property name="padding">0</property>
-				      <property name="expand">False</property>
-				      <property name="fill">False</property>
+				      <property name="expand">True</property>
+				      <property name="fill">True</property>
 				    </packing>
 				  </child>
 
@@ -1440,8 +1437,8 @@
 				    </widget>
 				    <packing>
 				      <property name="padding">0</property>
-				      <property name="expand">False</property>
-				      <property name="fill">False</property>
+				      <property name="expand">True</property>
+				      <property name="fill">True</property>
 				    </packing>
 				  </child>
 
@@ -1471,8 +1468,8 @@
 					</widget>
 					<packing>
 					  <property name="padding">0</property>
-					  <property name="expand">False</property>
-					  <property name="fill">False</property>
+					  <property name="expand">True</property>
+					  <property name="fill">True</property>
 					</packing>
 				      </child>
 
