@@ -1,5 +1,7 @@
 2005-09-26  Frederic Ruaudel <grumz@grumz.net> 0.7.1
 
+	* configure.in: Update version number
+
 	* plugin/nautilus-actions-config.c: Apply patch submited on the bug 
 tracker to fix compilation warning about signedness problem (Bug #112)
 
