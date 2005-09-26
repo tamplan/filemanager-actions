@@ -111,7 +111,7 @@ msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:29
 msgid "<span size=\"larger\"><b>Parameters Legend</b></span>"
-msgstr "<span size=\"larger\"><b>Legende der Paraameter</b></span>"
+msgstr "<span size=\"larger\"><b>Legende der Parameter</b></span>"
 
 #: ../nact/nautilus-actions-config.glade.h:30
 msgid ""
@@ -156,7 +156,8 @@ msgstr "Erscheint für"
 
 #: ../nact/nautilus-actions-config.glade.h:39
 msgid "Appears if selection has multiple files or folders"
-msgstr "Erscheint, wenn die Auswahl mehrere Dateien oder Verzeichnisse enthält"
+msgstr "Erscheint, wenn die Auswahl mehrere Dateien oder "
+"Verzeichnisse umfasst"
 
 #: ../nact/nautilus-actions-config.glade.h:40
 msgid "Browse..."
