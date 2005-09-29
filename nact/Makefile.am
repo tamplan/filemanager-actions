@@ -29,5 +29,4 @@ Applications_DATA = $(Applications_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
 DISTCLEANFILES =		\
-	nact.desktop		\
-	nautilus-actions-config
+	nact.desktop

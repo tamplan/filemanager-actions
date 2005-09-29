@@ -1,5 +1,9 @@
 2005-09-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* configure.in: removed generation of nautilus-actions-config script.
+
+2005-09-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libnautilus-actions/Makefile.am:
 	* libnautilus-actions/nautilus-actions-config.[ch]: added new dir
 	for common code.

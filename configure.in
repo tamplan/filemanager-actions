@@ -105,7 +105,6 @@ plugin/Makefile
 config/Makefile
 config/config_newaction.schemas.in
 nact/Makefile
-nact/nautilus-actions-config
 po/Makefile.in
 ])
 
