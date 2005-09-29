@@ -1,4 +1,18 @@
-bin_SCRIPTS = nautilus-actions-config
+bin_PROGRAMS = nautilus-actions-config
+
+INCLUDES =							\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
+	-DGLADEDIR=\""$(datadir)/nautilus-actions/nact"\"	\
+	$(NAUTILUS_ACTIONS_CFLAGS)
+
+nautilus_actions_config_SOURCES =	\
+	nact.c 				\
+	nact-editor.c			\
+	nact-editor.h
+nautilus_actions_config_LDADD =						\
+	$(NAUTILUS_ACTIONS_LIBS)					\
+	$(top_builddir)/libnautilus-actions/libnautilus-actions.la	\
+	-luuid
 
 gladedir = $(datadir)/nautilus-actions/nact
 glade_DATA = nautilus-actions-config.glade

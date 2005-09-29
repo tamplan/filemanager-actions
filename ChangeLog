@@ -1,3 +1,21 @@
+2005-09-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libnautilus-actions/Makefile.am:
+	* libnautilus-actions/nautilus-actions-config.[ch]: added new dir
+	for common code.
+
+	* nact/nact.c:
+	* nact/nact-editor.[ch]: new config tool, in C to be able to share code
+	with the plugin.
+
+	* nact/nautilus-actions-config.glade: removed old windows and added new
+	dialogs.
+
+	* nact/nautilus-actions-config.in: removed old config tool.
+
+	* configure.in:
+	* Makefile.am: added libnautilus-actions dir to build.
+	
 2005-09-29  Alexander Shopov  <ash@contact.bg>
 
 	* configure.in: Added "bg" (Bulgarian) to ALL_LINGUAS
