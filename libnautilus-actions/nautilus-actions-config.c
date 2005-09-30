@@ -198,7 +198,7 @@ nautilus_actions_config_init (NautilusActionsConfig *config, NautilusActionsConf
 	g_slist_free (list);
 
 	/* install notification callbacks */
-	gconf_client_add_dir (config->conf_client, ACTIONS_CONFIG_DIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
+	gconf_client_add_dir (config->conf_client, ACTIONS_CONFIG_DIR, GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);
 	config->actions_notify_id = gconf_client_notify_add (config->conf_client, ACTIONS_CONFIG_DIR,
 							     (GConfClientNotifyFunc) actions_changed_cb, config,
 							     NULL, NULL);
