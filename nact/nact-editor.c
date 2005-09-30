@@ -31,9 +31,14 @@ static GtkWidget *editor = NULL, *menu_label, *menu_tooltip, *command_path, *com
 	*only_files, *only_folders, *both, *accept_multiple;
 
 static void
-entry_changed_cb (GtkEditable *editable, gpointer user_data)
+field_changed_cb (GObject *editable, gpointer user_data)
 {
-	gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, TRUE);
+	gchar *label = gtk_entry_get_text (GTK_ENTRY (menu_label));
+
+	if (label && strlen (label) > 0)
+		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, TRUE);
+	else
+		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
 }
 
 static void
@@ -78,30 +83,35 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 
 	menu_label = glade_xml_get_widget (gui, "MenuLabelEntry");
 	gtk_entry_set_text (GTK_ENTRY (menu_label), action->label);
-	g_signal_connect (G_OBJECT (menu_label), "changed", G_CALLBACK (entry_changed_cb), NULL);
+	g_signal_connect (G_OBJECT (menu_label), "changed", G_CALLBACK (field_changed_cb), NULL);
 
 	menu_tooltip = glade_xml_get_widget (gui, "MenuTooltipEntry");
 	gtk_entry_set_text (GTK_ENTRY (menu_tooltip), action->tooltip);
-	g_signal_connect (G_OBJECT (menu_label), "changed", G_CALLBACK (entry_changed_cb), NULL);
+	g_signal_connect (G_OBJECT (menu_label), "changed", G_CALLBACK (field_changed_cb), NULL);
 
 	command_path = glade_xml_get_widget (gui, "CommandPathEntry");
 	gtk_entry_set_text (GTK_ENTRY (command_path), action->path);
-	g_signal_connect (G_OBJECT (command_path), "changed", G_CALLBACK (entry_changed_cb), NULL);
+	g_signal_connect (G_OBJECT (command_path), "changed", G_CALLBACK (field_changed_cb), NULL);
 
 	command_params = glade_xml_get_widget (gui, "CommandParamsEntry");
 	gtk_entry_set_text (GTK_ENTRY (command_params), action->parameters);
+	g_signal_connect (G_OBJECT (command_params), "changed", G_CALLBACK (field_changed_cb), NULL);
 
 	only_folders = glade_xml_get_widget (gui, "OnlyFoldersButton");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action->is_dir);
+	g_signal_connect (G_OBJECT (only_folders), "toggled", G_CALLBACK (field_changed_cb), NULL);
 
 	only_files = glade_xml_get_widget (gui, "OnlyFilesButton");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_files), action->is_file);
+	g_signal_connect (G_OBJECT (only_files), "toggled", G_CALLBACK (field_changed_cb), NULL);
 
 	both = glade_xml_get_widget (gui, "BothButton");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action->is_file && action->is_dir);
+	g_signal_connect (G_OBJECT (both), "toggled", G_CALLBACK (field_changed_cb), NULL);
 
 	accept_multiple = glade_xml_get_widget (gui, "AcceptMultipleButton");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (accept_multiple), action->accept_multiple_files);
+	g_signal_connect (G_OBJECT (accept_multiple), "toggled", G_CALLBACK (field_changed_cb), NULL);
 
 	g_signal_connect (G_OBJECT (glade_xml_get_widget (gui, "LegendButton")), "clicked", G_CALLBACK (legend_button_clicked_cb), NULL);
 
