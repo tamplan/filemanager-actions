@@ -1,3 +1,9 @@
+2005-09-30  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* libnautilus-actions/nautilus-actions-config.h:
+	* libnautilus-actions/nautilus-actions-config.c: add action duplicate 
+function : nautilus_actions_config_action_dup ()
+
 2005-09-30  Rodrigo Moya <rodrigo@novell.com>
 
 	* configure.in: define NAUTILUS_ACTIONS_CONFIG_VERSION.

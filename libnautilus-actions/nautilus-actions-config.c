@@ -410,6 +410,99 @@ nautilus_actions_config_action_set_basenames (NautilusActionsConfigAction *actio
 {
 }
 
+NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActionsConfigAction *action)
+{
+	NautilusActionsConfigAction* new_action = NULL;
+	gboolean success = TRUE;
+	GSList* iter;
+
+	if (action != NULL)
+	{
+		new_action = nautilus_actions_config_action_new ();
+		if (action->conf_section) {
+			new_action->conf_section = g_strdup (action->conf_section);
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action->label && success) {
+			new_action->label = g_strdup (action->label);
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action->tooltip && success) {
+			new_action->tooltip = g_strdup (action->tooltip);
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action->path && success) {
+			new_action->path = g_strdup (action->path);
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action->parameters && success) {
+			new_action->path = g_strdup (action->parameters);
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action->basenames && success) {
+			for (iter = action->basenames; iter; iter = iter->next)
+			{
+				new_action->basenames = g_slist_append (new_action->basenames, g_strdup ((gchar*)iter->data));
+			}
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action->schemes && success) {
+			for (iter = action->schemes; iter; iter = iter->next)
+			{
+				new_action->schemes = g_slist_append (new_action->schemes, g_strdup ((gchar*)iter->data));
+			}
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action->version && success) {
+			new_action->version = g_strdup (action->version);
+		}
+		else
+		{
+			success = FALSE;
+		}
+	}
+	else
+	{
+		success = FALSE;
+	}
+
+	if (!success)
+	{
+		nautilus_actions_config_action_free (new_action);
+		new_action = NULL;
+	}
+
+	return new_action;
+}
+
 void
 nautilus_actions_config_action_free (NautilusActionsConfigAction *action)
 {

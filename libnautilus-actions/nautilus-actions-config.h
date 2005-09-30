@@ -96,6 +96,7 @@ void                         nautilus_actions_config_action_set_parameters (Naut
 #define nautilus_actions_config_action_set_is_file(action, b) { if ((action)) (action)->is_file = b; }
 #define nautilus_actions_config_action_set_accept_multiple(action, b) { if ((action)) (action)->accept_multiple_files = b; }
 
+NautilusActionsConfigAction *nautilus_actions_config_action_dup (NautilusActionsConfigAction *action);
 void                         nautilus_actions_config_action_free (NautilusActionsConfigAction *action);
 
 G_END_DECLS
