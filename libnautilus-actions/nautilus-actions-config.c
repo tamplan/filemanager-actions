@@ -281,7 +281,7 @@ save_action (NautilusActionsConfig *config, NautilusActionsConfigAction *action)
 	/* set the version on the action */
 	if (action->version)
 		g_free (action->version);
-	action->version = g_strdup (VERSION);
+	action->version = g_strdup (NAUTILUS_ACTIONS_CONFIG_VERSION);
 
 	/* set the values in the config database */
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_LABEL_ENTRY);

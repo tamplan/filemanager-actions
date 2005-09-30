@@ -96,7 +96,7 @@ fi
 AC_SUBST(DATADIR)
 AC_SUBST(LOCALEDIR)
 
-
+AC_DEFINE_UNQUOTED(NAUTILUS_ACTIONS_CONFIG_VERSION, "0.3", [Version of the configuration format])
 
 AC_OUTPUT([
 Makefile

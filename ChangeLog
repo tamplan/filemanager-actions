@@ -1,5 +1,12 @@
 2005-09-30  Rodrigo Moya <rodrigo@novell.com>
 
+	* configure.in: define NAUTILUS_ACTIONS_CONFIG_VERSION.
+
+	* libnautilus-actions/nautilus-actions-config.c (save_action): use
+	NAUTILUS_ACTIONS_CONFIG_VERSION rather than the package version.
+
+2005-09-30  Rodrigo Moya <rodrigo@novell.com>
+
 	* nact/nact-editor.c (open_editor): connect to changes for all widgets, to
 	enable/disable the OK button.
 	(field_changed_cb): renamed from entry_changed_cb, to make it work with all
