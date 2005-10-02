@@ -1,3 +1,7 @@
+2005-10-02  Rodrigo Moya <rodrigo@novell.com>
+
+	* configure.in: use 1.0 for the config format version.
+
 2005-09-30  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* libnautilus-actions/nautilus-actions-config.h:
