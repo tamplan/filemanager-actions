@@ -1,3 +1,10 @@
+2005-10-03  Rodrigo Moya <rodrigo@novell.com>
+
+	* libnautilus-actions/nautilus-actions-config.c (nautilus_config_remove_action):
+	added missing implementation.
+
+	* nact/nact.c (delete_button_clicked_cb): implemented.
+	
 2005-10-02  Rodrigo Moya <rodrigo@novell.com>
 
 	* configure.in: use 1.0 for the config format version.

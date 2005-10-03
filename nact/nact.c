@@ -74,6 +74,19 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 static void
 delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+
+	if (gtk_tree_selection_get_selected (selection, NULL, &iter)) {
+		gchar *label;
+
+		gtk_tree_model_get (gtk_tree_view_get_model (GTK_TREE_VIEW (nact_actions_list)), &iter, 1, &label, -1);
+		nautilus_actions_config_remove_action (config, label);
+
+		g_free (label);
+	}
 }
 
 static void

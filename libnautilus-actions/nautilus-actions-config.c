@@ -358,6 +358,15 @@ nautilus_actions_config_update_action (NautilusActionsConfig *config, NautilusAc
 gboolean
 nautilus_actions_config_remove_action (NautilusActionsConfig *config, const gchar *label)
 {
+	NautilusActionsConfigAction *action;
+
+	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG (config), FALSE);
+	g_return_val_if_fail (label != NULL, FALSE);
+
+	if (!(action = g_hash_table_lookup (config->actions, label)))
+		return FALSE;
+
+	gconf_client_recursive_unset (config->conf_client, action->conf_section, 0, NULL);
 }
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void)
