@@ -1,5 +1,8 @@
 2005-10-06	Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* plugin/nautilus-actions-test.c: Optimize the test function. 
+If the only basename is '*', then skip the pattern matching.
+
 	* libnautilus-actions/Makefile.am:
 	* libnautilus-actions/nautilus-actions-config-gconf.c:
 	* libnautilus-actions/nautilus-actions-config-gconf.h:

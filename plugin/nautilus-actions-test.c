@@ -67,9 +67,19 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	guint glob_ok_count = 0;
 	gboolean basename_match_ok = FALSE;
 
-	for (iter = action->basenames; iter; iter = iter->next)
+	if (action->basenames && action->basenames->next != NULL && 
+			g_ascii_strncasecmp ((gchar*)(action->basenames->data), "*", 1) == 0)
 	{
-		glob_patterns = g_list_append (glob_patterns, g_pattern_spec_new ((gchar*)iter->data));
+		// if the only pattern is '*' then all files will match, so it is not 
+		// necessary to make the test for each of them
+		test_basename = TRUE;
+	}
+	else
+	{
+		for (iter = action->basenames; iter; iter = iter->next)
+		{
+			glob_patterns = g_list_append (glob_patterns, g_pattern_spec_new ((gchar*)iter->data));
+		}
 	}
 	
 	for (iter1 = files; iter1; iter1 = iter1->next)
@@ -87,20 +97,23 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 
 		scheme_ok_count += nautilus_actions_test_check_scheme (action->schemes, (NautilusFileInfo*)iter1->data);
 
-		basename_match_ok = FALSE;
-		iter2 = glob_patterns;
-		while (iter2 && !basename_match_ok)
+		if (!test_basename) // if it is already ok, skip the test to improve performance
 		{
-			if (g_pattern_match_string ((GPatternSpec*)iter2->data, tmp_filename))
+			basename_match_ok = FALSE;
+			iter2 = glob_patterns;
+			while (iter2 && !basename_match_ok)
 			{
-				basename_match_ok = TRUE;
+				if (g_pattern_match_string ((GPatternSpec*)iter2->data, tmp_filename))
+				{
+					basename_match_ok = TRUE;
+				}
+				iter2 = iter2->next;
 			}
-			iter2 = iter2->next;
-		}
 
-		if (basename_match_ok)
-		{
-			glob_ok_count++;
+			if (basename_match_ok)
+			{
+				glob_ok_count++;
+			}
 		}
 
 		g_free (tmp_filename);
@@ -145,9 +158,12 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	}
 
 
-	if (glob_ok_count == total_count)
+	if (!test_basename) // if not already tested
 	{
-		test_basename = TRUE;
+		if (glob_ok_count == total_count)
+		{
+			test_basename = TRUE;
+		}
 	}
 
 	if (test_basename && test_file_type && test_scheme && test_multiple_file)
@@ -155,10 +171,7 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 		retv = TRUE;
 	}
 	
-	for (iter1 = glob_patterns; iter1; iter1 = iter1->next)
-	{
-		g_pattern_spec_free ((GPatternSpec*)iter1->data);
-	}
+	g_list_foreach (glob_patterns, (GFunc) g_pattern_spec_free, NULL);
 	g_list_free (glob_patterns);
 
 	return retv;
