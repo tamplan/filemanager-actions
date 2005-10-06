@@ -6,4 +6,8 @@ INCLUDES =						\
 
 libnautilus_actions_la_SOURCES = 	\
 	nautilus-actions-config.c 	\
-	nautilus-actions-config.h
+	nautilus-actions-config.h  \
+	nautilus-actions-config-gconf.c \
+	nautilus-actions-config-gconf.h \
+	nautilus-actions-config-xml.c	\
+	nautilus-actions-config-xml.h

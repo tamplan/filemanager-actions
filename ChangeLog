@@ -1,3 +1,32 @@
+2005-10-06	Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* libnautilus-actions/Makefile.am:
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config-gconf.h:
+	* libnautilus-actions/nautilus-actions-config-xml.c:
+	* libnautilus-actions/nautilus-actions-config-xml.h:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h: Refactor the code of 
+libnautilus-actions to add support for the old xml config file. It will 
+be used for convert utilities.
+
+	* nact/nact-editor.c:
+	* nact/nact-editor.h:
+	* nact/nact.c:
+	* plugin/nautilus-actions-test.c:
+	* plugin/nautilus-actions-test.h:
+	* plugin/nautilus-actions-utils.c:
+	* plugin/nautilus-actions-utils.h:
+	* plugin/nautilus-actions.c:
+	* plugin/nautilus-actions.h: Change the rest of the code to use the new
+libnautilus-actions.
+
+	* plugin/Makefile.am: Add a link to the libnautilus-actions library
+
+	* plugin/nautilus-actions-config.h:
+	* plugin/nautilus-actions-config.c: remove these files. They've
+been replaced by the libnautilus-actions
+
 2005-10-03  Rodrigo Moya <rodrigo@novell.com>
 
 	* libnautilus-actions/nautilus-actions-config.c (nautilus_config_remove_action):

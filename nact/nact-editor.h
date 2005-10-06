@@ -3,6 +3,7 @@
  *
  * Authors:
  *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ *  Frederic Ruaudel (grumz@grumz.net)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -24,6 +25,7 @@
 #define _NACT_EDITOR_H_
 
 #include <libnautilus-actions/nautilus-actions-config.h>
+#include <libnautilus-actions/nautilus-actions-config-gconf.h>
 
 gboolean nact_editor_new_action (void);
 gboolean nact_editor_edit_action (NautilusActionsConfigAction *action);

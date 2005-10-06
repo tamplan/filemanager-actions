@@ -3,6 +3,7 @@
  *
  * Authors:
  *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ *  Frederic Ruaudel (grumz@grumz.net)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -25,7 +26,6 @@
 
 #include <glib/glist.h>
 #include <glib-object.h>
-#include <gconf/gconf-client.h>
 
 G_BEGIN_DECLS
 
@@ -34,9 +34,11 @@ G_BEGIN_DECLS
 #define NAUTILUS_ACTIONS_CONFIG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, NAUTILUS_ACTIONS_TYPE_CONFIG, NautilusActionsConfigClass))
 #define NAUTILUS_ACTIONS_IS_CONFIG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, NAUTILUS_ACTIONS_TYPE_CONFIG))
 #define NAUTILUS_ACTIONS_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), NAUTILUS_ACTIONS_TYPE_CONFIG))
+#define NAUTILUS_ACTIONS_CONFIG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), NAUTILUS_ACTIONS_TYPE_CONFIG, NautilusActionsConfigClass))
 
 typedef struct {
 	gchar *conf_section;
+	gchar *uuid;
 	gchar *label;
 	gchar *tooltip;
 	gchar *path;
@@ -56,21 +58,18 @@ struct _NautilusActionsConfig {
 	GObject parent;
 
 	/* Private data, don't access */
-	GConfClient *conf_client;
 	GHashTable *actions;
-	guint actions_notify_id;
 };
 
 struct _NautilusActionsConfigClass {
 	GObjectClass parent_class;
 
-	void (* action_added) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
-	void (* action_changed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
-	void (* action_removed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
+	/* Virtual private function */
+	gboolean (* save_action) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
+	gboolean (* remove_action) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
 };
 
 GType                        nautilus_actions_config_get_type (void);
-NautilusActionsConfig       *nautilus_actions_config_get (void);
 
 NautilusActionsConfigAction *nautilus_actions_config_get_action (NautilusActionsConfig *config, const gchar *label);
 GSList                      *nautilus_actions_config_get_actions (NautilusActionsConfig *config);
@@ -91,6 +90,10 @@ void                         nautilus_actions_config_action_set_path (NautilusAc
 								      const gchar *path);
 void                         nautilus_actions_config_action_set_parameters (NautilusActionsConfigAction *action,
 									    const gchar *parameters);
+void                         nautilus_actions_config_action_set_basenames (NautilusActionsConfigAction *action, 
+										 GSList *basenames);
+void                         nautilus_actions_config_action_set_schemes (NautilusActionsConfigAction *action, 
+										 GSList *schemes);
 
 #define nautilus_actions_config_action_set_is_dir(action, b) { if ((action)) (action)->is_dir = b; }
 #define nautilus_actions_config_action_set_is_file(action, b) { if ((action)) (action)->is_file = b; }

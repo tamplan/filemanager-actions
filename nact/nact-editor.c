@@ -3,6 +3,7 @@
  *
  * Authors:
  *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ *  Frederic Ruaudel (grumz@grumz.net)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -66,7 +67,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	GladeXML *gui;
 	gboolean ret = FALSE;
 	gchar *label;
-	NautilusActionsConfig *config;
+	NautilusActionsConfigGconf *config;
 
 	/* only allow one dialog at a time */
 	if (editor != NULL)
@@ -119,9 +120,9 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
 	switch (gtk_dialog_run (GTK_DIALOG (editor))) {
 	case GTK_RESPONSE_OK :
-		config = nautilus_actions_config_get ();
+		config = nautilus_actions_config_gconf_get ();
 		label = gtk_entry_get_text (GTK_ENTRY (menu_label));
-		if (is_new && nautilus_actions_config_get_action (config, label)) {
+		if (is_new && nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), label)) {
 			gchar *str;
 
 			str = g_strdup_printf (_("There is already an action named %s. Please choose another name"), label);
@@ -149,9 +150,9 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 				action, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (accept_multiple)));
 
 			if (is_new)
-				ret = nautilus_actions_config_add_action (config, action);
+				ret = nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), action);
 			else
-				ret = nautilus_actions_config_update_action (config, action);
+				ret = nautilus_actions_config_update_action (NAUTILUS_ACTIONS_CONFIG (config), action);
 		}
 		break;
 	case GTK_RESPONSE_CANCEL :

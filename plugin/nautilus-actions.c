@@ -1,3 +1,26 @@
+/* Nautilus Actions configuration tool
+ * Copyright (C) 2005 The GNOME Foundation
+ *
+ * Authors:
+ *  Frederic Ruaudel (grumz@grumz.net)
+ *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ *
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this Library; see the file COPYING.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
 #include <string.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-file-info.h>
@@ -6,7 +29,8 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 #include "nautilus-actions.h"
-#include "nautilus-actions-config.h"
+#include <libnautilus-actions/nautilus-actions-config.h>
+#include <libnautilus-actions/nautilus-actions-config-gconf.h>
 #include "nautilus-actions-test.h"
 #include "nautilus-actions-utils.h"
 
@@ -18,7 +42,7 @@ GType nautilus_actions_get_type (void)
 	return actions_type;
 }
 
-static void nautilus_actions_execute (NautilusMenuItem *item, ConfigAction *action)
+static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsConfigAction *action)
 {
 	GList *files;
 	GString *cmd;
@@ -26,9 +50,9 @@ static void nautilus_actions_execute (NautilusMenuItem *item, ConfigAction *acti
 
 	files = (GList*)g_object_get_data (G_OBJECT (item), "files");
 
-	cmd = g_string_new (action->command->path);
+	cmd = g_string_new (action->path);
 
-	param = nautilus_actions_utils_parse_parameter (action->command->parameters, files);
+	param = nautilus_actions_utils_parse_parameter (action->parameters, files);
 	
 	if (param != NULL)
 	{
@@ -42,23 +66,24 @@ static void nautilus_actions_execute (NautilusMenuItem *item, ConfigAction *acti
 
 }
 
-static NautilusMenuItem *nautilus_actions_create_menu_item (ConfigAction *action, GList *files)
+static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfigAction *action, GList *files)
 {
 	NautilusMenuItem *item;
 	gchar* name;
 
-	name = g_strdup_printf ("NautilusActions::%s", action->name);
+	// FIXME: find a way to generate a uniq name
+	name = g_strdup_printf ("NautilusActions::%s", action->uuid);
 	
 	item = nautilus_menu_item_new (name, 
-				action->menu_item->label, 
-				action->menu_item->tooltip, 
+				action->label, 
+				action->tooltip, 
 				NULL);
 
 	g_signal_connect_data (item, 
 				"activate", 
 				G_CALLBACK (nautilus_actions_execute),
 				action, 
-				(GClosureNotify)nautilus_actions_config_free_action, 
+				(GClosureNotify)nautilus_actions_config_action_free, 
 				0);
 
 	g_object_set_data_full (G_OBJECT (item),
@@ -75,29 +100,36 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (ConfigAction *action
 static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, GtkWidget *window, GList *files)
 {
 	GList *items = NULL;
-	GList *iter;
+	GSList* config_list;
+	GSList *iter;
 	NautilusMenuItem *item;
 	NautilusActions* self = NAUTILUS_ACTIONS (provider);
 
 	if (!self->dispose_has_run)
 	{
-
-		for (iter = self->configs; iter; iter = iter->next)
+		config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
+		for (iter = config_list; iter; iter = iter->next)
 		{
 			/* Foreach configured action, check if we add a menu item */
-			ConfigAction *action = nautilus_actions_config_action_dup ((ConfigAction*)iter->data);
+			NautilusActionsConfigAction *action = nautilus_actions_config_action_dup ((NautilusActionsConfigAction*)iter->data);
 
-			if (nautilus_actions_test_validate (action->test, files))
+			if (nautilus_actions_test_validate (action, files))
 			{
 				item = nautilus_actions_create_menu_item (action, files);
 				items = g_list_append (items, item);
 			}
+			else
+			{
+				nautilus_actions_config_action_free (action);
+			}
 		}
+
+		nautilus_actions_config_free_actions_list (config_list);
 	}
 	
 	return items;
 }
-
+/*
 static void nautilus_actions_notify_config_changes (GConfClient* client, 
 																	 guint cnxid,
 																	 GConfEntry* entry,
@@ -172,7 +204,7 @@ static void nautilus_actions_notify_config_changes (GConfClient* client,
 
 	g_free (key);
 }
-
+*/
 static void nautilus_actions_instance_dispose (GObject *obj)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (obj);
@@ -181,7 +213,7 @@ static void nautilus_actions_instance_dispose (GObject *obj)
 	{
 		self->dispose_has_run = TRUE;
 
-		g_object_unref (self->gconf_client);
+		g_object_unref (self->configs);
 
 		/* Chain up to the parent class */
 		G_OBJECT_CLASS (parent_class)->dispose (obj);
@@ -191,18 +223,6 @@ static void nautilus_actions_instance_dispose (GObject *obj)
 static void nautilus_actions_instance_finalize (GObject* obj)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (obj);
-
-	if (self->configs != NULL)
-	{
-		nautilus_actions_config_free_list (self->configs);
-		self->configs = NULL;
-	}
-
-	if (self->config_root_dir != NULL)
-	{
-		g_free (self->config_root_dir);
-		self->config_root_dir = NULL;
-	}
 
 	/* Chain up to the parent class */
 	G_OBJECT_CLASS (parent_class)->finalize (obj);
@@ -220,18 +240,8 @@ static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer kl
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (instance);
 	
-	self->config_root_dir = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_GCONF_PATH, 
-												NAUTILUS_ACTIONS_GCONF_CONFIG_DIR);
-	
-	self->gconf_client = gconf_client_get_default ();
-	gconf_client_add_dir (self->gconf_client, self->config_root_dir, 
-									GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);
-	gconf_client_notify_add (self->gconf_client, self->config_root_dir, 
-									 nautilus_actions_notify_config_changes,
-		  							 self, NULL, NULL);
-	
 	self->configs = NULL;
-	self->configs = nautilus_actions_config_get_list (self->gconf_client, self->config_root_dir);
+	self->configs = nautilus_actions_config_gconf_get ();
 	self->dispose_has_run = FALSE;
 
 	parent_class = g_type_class_peek_parent (klass);

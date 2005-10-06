@@ -7,8 +7,6 @@ nautilus_extension_LTLIBRARIES = libnautilus-actions.la
 libnautilus_actions_la_SOURCES = 	\
 	nautilus-actions.c		\
 	nautilus-actions.h		\
-	nautilus-actions-config.c	\
-	nautilus-actions-config.h	\
 	nautilus-actions-module.c	\
 	nautilus-actions-test.c		\
 	nautilus-actions-test.h		\
@@ -16,4 +14,5 @@ libnautilus_actions_la_SOURCES = 	\
 	nautilus-actions-utils.h
 
 libnautilus_actions_la_LDFLAGS = -module -avoid-version
-libnautilus_actions_la_LIBADD = $(NAUTILUS_ACTIONS_LIBS)
+libnautilus_actions_la_LIBADD = $(NAUTILUS_ACTIONS_LIBS) \
+	$(top_builddir)/libnautilus-actions/libnautilus-actions.la

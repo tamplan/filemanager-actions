@@ -3,6 +3,7 @@
  *
  * Authors:
  *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ *  Frederic Ruaudel (grumz@grumz.net)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -29,6 +30,7 @@
 #include <gtk/gtktreeview.h>
 #include <glade/glade-xml.h>
 #include <libnautilus-actions/nautilus-actions-config.h>
+#include <libnautilus-actions/nautilus-actions-config-gconf.h>
 
 static GladeXML *gui;
 static GtkWidget *nact_dialog;
@@ -36,7 +38,7 @@ static GtkWidget *nact_actions_list;
 static GtkWidget *nact_add_button;
 static GtkWidget *nact_edit_button;
 static GtkWidget *nact_delete_button;
-static NautilusActionsConfig *config;
+static NautilusActionsConfigGconf *config;
 
 void
 nautilus_actions_display_error (const gchar *msg)
@@ -63,7 +65,7 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		gtk_tree_model_get (gtk_tree_view_get_model (GTK_TREE_VIEW (nact_actions_list)), &iter, 1, &label, -1);
 
-		action = nautilus_actions_config_get_action (config, label);
+		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), label);
 		if (action)
 			nact_editor_edit_action (action);
 
@@ -83,7 +85,7 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 		gchar *label;
 
 		gtk_tree_model_get (gtk_tree_view_get_model (GTK_TREE_VIEW (nact_actions_list)), &iter, 1, &label, -1);
-		nautilus_actions_config_remove_action (config, label);
+		nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), label);
 
 		g_free (label);
 	}
@@ -124,7 +126,7 @@ setup_actions_list (GtkWidget *list)
 	/* create the model */
 	model = gtk_list_store_new (2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
 
-	actions = nautilus_actions_config_get_actions (config);
+	actions = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (config));
 	for (l = actions; l != NULL; l = l->next) {
 		GtkTreeIter iter;
 		NautilusActionsConfigAction *action = l->data;
@@ -200,7 +202,7 @@ main (int argc, char *argv[])
 
 	gtk_init (&argc, &argv);
 
-	config = nautilus_actions_config_get ();
+	config = nautilus_actions_config_gconf_get ();
 
 	/* create main dialog */
 	init_dialog ();
