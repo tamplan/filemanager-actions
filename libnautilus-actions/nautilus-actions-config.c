@@ -130,8 +130,17 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG (config), FALSE);
 	g_return_val_if_fail (action != NULL, FALSE);
 
-	if (g_hash_table_lookup (config->actions, action->uuid))
-		return FALSE;
+	if (action->uuid != NULL) {
+		if (g_hash_table_lookup (config->actions, action->uuid))
+			return FALSE;
+	} else {
+		uuid_t uuid;
+		gchar uuid_str[64];
+
+		uuid_generate (uuid);
+		uuid_unparse (uuid, uuid_str);
+		action->uuid = g_strdup (uuid_str);
+	}
 
 	return NAUTILUS_ACTIONS_CONFIG_GET_CLASS (config)->save_action (config, action);
 }

@@ -475,7 +475,8 @@ static gboolean nautilus_actions_config_xml_action_fill (NautilusActionsConfigAc
 	return retv;
 }
 
-gboolean nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const gchar* filename)
+gboolean
+nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const gchar* filename)
 {
 	xmlDoc *doc = NULL;
 	xmlNode *root_node;

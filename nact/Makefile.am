@@ -11,8 +11,7 @@ nautilus_actions_config_SOURCES =	\
 	nact-editor.h
 nautilus_actions_config_LDADD =						\
 	$(NAUTILUS_ACTIONS_LIBS)					\
-	$(top_builddir)/libnautilus-actions/libnautilus-actions.la	\
-	-luuid
+	$(top_builddir)/libnautilus-actions/libnautilus-actions.la
 
 gladedir = $(datadir)/nautilus-actions/nact
 glade_DATA = nautilus-actions-config.glade

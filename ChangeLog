@@ -1,5 +1,15 @@
 2005-10-06  Rodrigo Moya <rodrigo@novell.com>
 
+	* nact/Makefile.am: don't link to libuuid here.
+
+	* libnautilus-actions/Makefile.am: do it here.
+
+	* libnautilus-actions/nautilus-actions-config.c
+	(nautilus_actions_config_add_action): don't look for NULL uuids, in the
+	hash table, and generate UUID for actions that don't have it.
+
+2005-10-06  Rodrigo Moya <rodrigo@novell.com>
+
 	* libnautilus-actions/nautilus-actions-config-xml.c
 	(nautilus_actions_config_xml_get_type):
 	* libnautilus-actions/nautilus-actions-config-gconf.c
