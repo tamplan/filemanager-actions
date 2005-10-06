@@ -602,7 +602,7 @@ nautilus_actions_config_xml_get_type (void)
 					0,
 					(GInstanceInitFunc) nautilus_actions_config_xml_init
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "NautilusActionsConfigXml", &info, 0);
+		type = g_type_register_static (NAUTILUS_ACTIONS_TYPE_CONFIG, "NautilusActionsConfigXml", &info, 0);
 	}
 	return type;
 }
