@@ -72,7 +72,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 static gboolean
 remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
 {
-	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_XML (self), NULL);
+	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_XML (self), FALSE);
 
 	NautilusActionsConfigXml* config = NAUTILUS_ACTIONS_CONFIG_XML (self);
 
@@ -83,7 +83,7 @@ static GList *nautilus_actions_config_xml_get_config_files (void)
 {
 	GList* config_files = NULL;
 	GDir* config_dir = NULL;
-	gchar* filename;
+	const gchar* filename;
 	gchar* path;
 	gchar* per_user_dir = g_build_path ("/", g_get_home_dir (), ACTIONS_PER_USER_CONFIG_DIR, NULL);
 
@@ -139,14 +139,16 @@ static GList *nautilus_actions_config_xml_get_config_files (void)
 	return config_files;
 }
 
-static void nautilus_actions_config_xml_free_config_files (GList* config_files)
+static void
+nautilus_actions_config_xml_free_config_files (GList* config_files)
 {
 	g_list_foreach (config_files, (GFunc) g_free, NULL);
 	g_list_free (config_files);
 	config_files = NULL;
 }
 
-static gboolean nautilus_actions_config_xml_action_fill_test_basenames (GSList** test_basenames, xmlNode* config_test_basename_node, const gchar* config_version)
+static gboolean
+nautilus_actions_config_xml_action_fill_test_basenames (GSList** test_basenames, xmlNode* config_test_basename_node, const gchar* config_version)
 {
 	xmlNode *iter;
 	gboolean retv = FALSE;
@@ -166,9 +168,9 @@ static gboolean nautilus_actions_config_xml_action_fill_test_basenames (GSList**
 			xmlChar* text;
 			
 			if (iter->type == XML_ELEMENT_NODE &&
-					g_ascii_strncasecmp (iter->name, 
-									ACTION_BASENAMES_MATCH,
-									strlen (ACTION_BASENAMES_MATCH)) == 0)
+					g_ascii_strncasecmp ((const gchar *) iter->name, 
+							     ACTION_BASENAMES_MATCH,
+							     strlen (ACTION_BASENAMES_MATCH)) == 0)
 			{
 				text = xmlNodeGetContent (iter);
 				(*test_basenames) = g_slist_append ((*test_basenames), xmlStrdup (text));
@@ -181,7 +183,8 @@ static gboolean nautilus_actions_config_xml_action_fill_test_basenames (GSList**
 	return retv;
 }
 
-static gboolean nautilus_actions_config_xml_action_fill_test_scheme (GSList** test_scheme, xmlNode* config_test_scheme_node)
+static gboolean
+nautilus_actions_config_xml_action_fill_test_scheme (GSList** test_scheme, xmlNode* config_test_scheme_node)
 {
 	xmlNode *iter;
 	gboolean retv = FALSE;
@@ -191,9 +194,9 @@ static gboolean nautilus_actions_config_xml_action_fill_test_scheme (GSList** te
 		xmlChar* text;
 		
 		if (iter->type == XML_ELEMENT_NODE &&
-				g_ascii_strncasecmp (iter->name, 
-								ACTION_SCHEMES_TYPE,
-								strlen (ACTION_SCHEMES_TYPE)) == 0)
+				g_ascii_strncasecmp ((const gchar *) iter->name, 
+						     ACTION_SCHEMES_TYPE,
+						     strlen (ACTION_SCHEMES_TYPE)) == 0)
 		{
 			text = xmlNodeGetContent (iter);
 			(*test_scheme) = g_slist_append ((*test_scheme), xmlStrdup (text));

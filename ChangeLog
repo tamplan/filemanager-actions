@@ -1,4 +1,17 @@
-2005-10-06	Frederic Ruaudel <grumz@grumz.net> 0.8
+2005-10-06  Rodrigo Moya <rodrigo@novell.com>
+
+	* libnautilus-actions/nautilus-actions-config-xml.c (remove_action):
+	return a boolean, rather than NULL.
+	(nautilus_actions_config_xml_get_config_files): use const gchar * for
+	storing the value returned by g_dir_read_name().
+	(nautilus_actions_config_xml_action_fill_test_basenames,
+	nautilus_actions_config_xml_action_fill_test_scheme): pass const to
+	g_ascii_strncasecmp().
+
+	* libnautilus-actions/nautilus-actions-config-gconf.c (save_action,
+	remove_action): return a boolean, rather than NULL.
+
+2005-10-06  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* plugin/nautilus-actions-test.c: Optimize the test function. 
 If the only basename is '*', then skip the pattern matching.

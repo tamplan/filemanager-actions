@@ -3,7 +3,7 @@
  *
  * Authors:
  *	 Rodrigo Moya (rodrigo@gnome-db.org)
- *  Frederic Ruaudel (grumz@grumz.net)
+ *       Frederic Ruaudel (grumz@grumz.net)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as

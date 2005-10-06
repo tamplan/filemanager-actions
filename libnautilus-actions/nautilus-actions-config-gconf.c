@@ -50,7 +50,7 @@ static gint signals[LAST_SIGNAL] = { 0 };
 static gboolean
 save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 {
-	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_GCONF (self), NULL);
+	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_GCONF (self), FALSE);
 
 	NautilusActionsConfigGconf* config = NAUTILUS_ACTIONS_CONFIG_GCONF (self);
 	gchar *key;
@@ -108,7 +108,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 gboolean
 remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
 {
-	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_GCONF (self), NULL);
+	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_GCONF (self), FALSE);
 
 	NautilusActionsConfigGconf* config = NAUTILUS_ACTIONS_CONFIG_GCONF (self);
 
