@@ -1,5 +1,11 @@
 2005-10-06  Rodrigo Moya <rodrigo@novell.com>
 
+	* libnautilus-actions/nautilus-actions-config-gconf.c
+	(nautilus_actions_config_gconf_get_type): base the class in
+	NautilusActionsConfig, not GObject.
+
+2005-10-06  Rodrigo Moya <rodrigo@novell.com>
+
 	* libnautilus-actions/nautilus-actions-config-xml.c (remove_action):
 	return a boolean, rather than NULL.
 	(nautilus_actions_config_xml_get_config_files): use const gchar * for
