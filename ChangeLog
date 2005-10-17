@@ -1,3 +1,31 @@
+2005-10-17  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* Makefile.am:
+	* configure.in:
+	* utils/Makefile.am:
+	* utils/nautilus-actions-convert.c: Create a utils folder to put the 
+utilities program and code the old config conversion tool to convert old 
+xml file into GConf schemas.
+
+	* libnautilus-actions/nautilus-actions-config-xml.c:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h: Fix several bugs
+made during the first implementation
+
+
+2005-10-13  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* libnautilus-actions/Makefile.am: Add new file in the sources files
+list
+
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h: move
+Gconf element information in a common private headers.
+
+	* libnautilus-actions/nautilus-actions-config-schema.c:
+	* libnautilus-actions/nautilus-actions-config-schema.h: Add support 
+for GConf xml schema export
+
 2005-10-06  Rodrigo Moya <rodrigo@novell.com>
 
 	* nact/Makefile.am: don't link to libuuid here.

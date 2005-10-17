@@ -24,18 +24,7 @@
 #include <config.h>
 #include <uuid/uuid.h>
 #include "nautilus-actions-config-gconf.h"
-
-#define ACTIONS_CONFIG_DIR     "/apps/nautilus-actions/configurations"
-#define ACTION_LABEL_ENTRY     "label"
-#define ACTION_TOOLTIP_ENTRY   "tooltip"
-#define ACTION_PATH_ENTRY      "path"
-#define ACTION_PARAMS_ENTRY    "parameters"
-#define ACTION_BASENAMES_ENTRY "basenames"
-#define ACTION_ISFILE_ENTRY    "isfile"
-#define ACTION_ISDIR_ENTRY     "isdir"
-#define ACTION_MULTIPLE_ENTRY  "accept-multiple-files"
-#define ACTION_SCHEMES_ENTRY   "schemes"
-#define ACTION_VERSION_ENTRY   "version"
+#include "nautilus-actions-config-gconf-private.h"
 
 enum {
 	ACTION_ADDED,
@@ -142,16 +131,16 @@ static void
 nautilus_actions_config_gconf_class_init (NautilusActionsConfigGconfClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	NautilusActionsConfigClass* parent_config_class;
+	NautilusActionsConfigClass* config_class;
 
 	parent_class = g_type_class_peek_parent (klass);
-	parent_config_class = NAUTILUS_ACTIONS_CONFIG_CLASS (parent_class);
+	config_class = NAUTILUS_ACTIONS_CONFIG_CLASS (klass);
 	
 
 	object_class->finalize = nautilus_actions_config_gconf_finalize;
 	
-	parent_config_class->save_action = save_action;
-	parent_config_class->remove_action = remove_action;
+	config_class->save_action = save_action;
+	config_class->remove_action = remove_action;
 
 	klass->action_added = NULL;
 	klass->action_changed = NULL;

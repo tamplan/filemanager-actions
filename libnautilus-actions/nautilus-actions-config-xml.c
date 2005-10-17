@@ -27,6 +27,7 @@
 #include <libxml/tree.h>
 #include <uuid/uuid.h>
 #include "nautilus-actions-config-xml.h"
+#include "nautilus-actions-config.h"
 
 #define ACTIONS_CONFIG_DIR					DEFAULT_CONFIG_PATH
 #define ACTIONS_PER_USER_CONFIG_DIR		".config/nautilus-actions"
@@ -467,6 +468,9 @@ static gboolean nautilus_actions_config_xml_action_fill (NautilusActionsConfigAc
 		}
 	}
 
+	//--> not used in old config files, so init to an empty string :
+	action->conf_section = g_strdup ("");
+
 	if (test_ok && command_ok && menu_item_ok)
 	{
 		retv = TRUE;
@@ -521,7 +525,7 @@ nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const 
 						}
 						else
 						{
-							nautilus_actions_config_free_action (action);
+							nautilus_actions_config_action_free (action);
 						}
 						xmlFree (config_name);
 					}
@@ -577,14 +581,13 @@ nautilus_actions_config_xml_class_init (NautilusActionsConfigXmlClass *klass)
 
 	object_class->finalize = nautilus_actions_config_xml_finalize;
 	
-	NAUTILUS_ACTIONS_CONFIG_CLASS (parent_class)->save_action = save_action;
-	NAUTILUS_ACTIONS_CONFIG_CLASS (parent_class)->remove_action = remove_action;
+	NAUTILUS_ACTIONS_CONFIG_CLASS (klass)->save_action = save_action;
+	NAUTILUS_ACTIONS_CONFIG_CLASS (klass)->remove_action = remove_action;
 }
 
 static void
 nautilus_actions_config_xml_init (NautilusActionsConfig *config, NautilusActionsConfigClass *klass)
 {
-	nautilus_actions_config_xml_get_list (config);
 }
 
 GType
@@ -621,3 +624,5 @@ nautilus_actions_config_xml_get (void)
 
 	return NAUTILUS_ACTIONS_CONFIG_XML (g_object_ref (G_OBJECT (config)));
 }
+
+// vim:ts=3:sw=3:tw=1024:cin

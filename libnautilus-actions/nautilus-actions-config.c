@@ -95,15 +95,16 @@ add_hash_action_to_list (gpointer key, gpointer value, gpointer user_data)
 {
 	GSList **list = user_data;
 
-	*list = g_slist_append (*list, value);
+	// FIXME:
+	*list = g_slist_append (*list, nautilus_actions_config_action_dup ((NautilusActionsConfigAction*)value));
 }
 
 NautilusActionsConfigAction *
-nautilus_actions_config_get_action (NautilusActionsConfig *config, const gchar *label)
+nautilus_actions_config_get_action (NautilusActionsConfig *config, const gchar *uuid)
 {
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG (config), NULL);
 
-	return g_hash_table_lookup (config->actions, label);
+	return g_hash_table_lookup (config->actions, uuid);
 }
 
 GSList *
@@ -121,6 +122,7 @@ nautilus_actions_config_get_actions (NautilusActionsConfig *config)
 void
 nautilus_actions_config_free_actions_list (GSList *list)
 {
+	g_slist_foreach (list, (GFunc)nautilus_actions_config_action_free, NULL);
 	g_slist_free (list);
 }
 
@@ -294,7 +296,7 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 		}
 
 		if (action->parameters && success) {
-			new_action->path = g_strdup (action->parameters);
+			new_action->parameters = g_strdup (action->parameters);
 		}
 		else
 		{
@@ -311,6 +313,10 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 		{
 			success = FALSE;
 		}
+
+		new_action->is_file = action->is_file;
+		new_action->is_dir = action->is_dir;
+		new_action->accept_multiple_files = action->accept_multiple_files;
 
 		if (action->schemes && success) {
 			for (iter = action->schemes; iter; iter = iter->next)
@@ -397,3 +403,5 @@ nautilus_actions_config_action_free (NautilusActionsConfigAction *action)
 
 	g_free (action);
 }
+
+// vim:ts=3:sw=3:tw=1024:cin

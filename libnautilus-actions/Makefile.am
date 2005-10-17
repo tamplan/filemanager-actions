@@ -9,6 +9,9 @@ libnautilus_actions_la_SOURCES = 	\
 	nautilus-actions-config.h  \
 	nautilus-actions-config-gconf.c \
 	nautilus-actions-config-gconf.h \
+	nautilus-actions-config-gconf-private.h \
+	nautilus-actions-config-schema.c \
+	nautilus-actions-config-schema.h \
 	nautilus-actions-config-xml.c	\
 	nautilus-actions-config-xml.h
 libnautilus_actions_la_LIBADD = -luuid

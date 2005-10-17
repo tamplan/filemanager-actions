@@ -71,7 +71,7 @@ struct _NautilusActionsConfigClass {
 
 GType                        nautilus_actions_config_get_type (void);
 
-NautilusActionsConfigAction *nautilus_actions_config_get_action (NautilusActionsConfig *config, const gchar *label);
+NautilusActionsConfigAction *nautilus_actions_config_get_action (NautilusActionsConfig *config, const gchar *uuid);
 GSList                      *nautilus_actions_config_get_actions (NautilusActionsConfig *config);
 void                         nautilus_actions_config_free_actions_list (GSList *list);
 gboolean                     nautilus_actions_config_add_action (NautilusActionsConfig *config,

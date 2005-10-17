@@ -22,6 +22,8 @@ GLADE_REQUIRED=2.4.0
 GNOME_REQUIRED=2.7.0
 NAUTILUS_EXTENSION=2.8.0
 GCONF_REQUIRED=2.8.0
+LIBXML_REQUIRED=2.6.0
+GOBJECT_REQUIRED=2.8.0
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
@@ -53,6 +55,16 @@ fi
 
 default_config_path=`eval echo $datadir/nautilus-actions`
 AC_DEFINE_UNQUOTED(DEFAULT_CONFIG_PATH, "$default_config_path", [Default system configuration path])
+
+PKG_CHECK_MODULES(NAUTILUS_ACTIONS_UTILS,\
+	 glib-2.0 >= $GLIB_REQUIRED                \
+	 gthread-2.0 >= $GLIB_REQUIRED             \
+	 gmodule-2.0 >= $GLIB_REQUIRED		  \
+	 gconf-2.0 >= $GCONF_REQUIRED \
+	 gobject-2.0 >= $GOBJECT_REQUIRED \
+	 libxml-2.0 >= $LIBXML_REQUIRED)
+AC_SUBST(NAUTILUS_ACTIONS_UTILS_CFLAGS)
+AC_SUBST(NAUTILUS_ACTIONS_UTILS_LIBS)
 
 dnl --------------------------------------------------
 
@@ -105,6 +117,7 @@ plugin/Makefile
 config/Makefile
 config/config_newaction.schemas.in
 nact/Makefile
+utils/Makefile
 po/Makefile.in
 ])
 
