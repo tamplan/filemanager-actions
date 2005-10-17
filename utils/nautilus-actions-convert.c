@@ -87,8 +87,6 @@ int main (int argc, char** argv)
 		exit (EXIT_FAILURE);
 	}
 
-	printf ("input : %s\noutput : %s\nall : %s\ndir : %s\n", input_file, output_file, convert_all ? "TRUE" : "FALSE", output_dir);
-	
 	NautilusActionsConfigXml* xml_configs = nautilus_actions_config_xml_get ();
 	NautilusActionsConfigSchema* schema_configs = nautilus_actions_config_schema_get ();
 	g_object_set (G_OBJECT (schema_configs), "save-path", output_dir, NULL);
