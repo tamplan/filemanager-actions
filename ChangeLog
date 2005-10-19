@@ -1,5 +1,9 @@
 2005-10-19  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* utils/Makefile.am:
+	* utils/nautilus-actions-new-config.c: Create the new config 
+creation tool in command line mode.
+
 	* libnautilus-actions/nautilus-actions-config.c: Fix the copy of 
 GSList when setting schemes and basenames of an action.
 
