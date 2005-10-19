@@ -1,5 +1,8 @@
 2005-10-19  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* plugin/nautilus-actions-module.c: Add GPL licence header 
+comment
+
 	* utils/Makefile.am:
 	* utils/nautilus-actions-new-config.c: Create the new config 
 creation tool in command line mode.
