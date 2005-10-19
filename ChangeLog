@@ -1,3 +1,8 @@
+2005-10-19  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h: Fix
+the short description of the scheme entry in the Gconf Schemas
+
 2005-10-17  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* Makefile.am:

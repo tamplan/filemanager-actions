@@ -55,7 +55,7 @@
 #define ACTION_ISDIR_DESC_LONG		"This options is tied with isfile options. Here is the valid combination :\n\n- isfile is true and isdir is false : selection holds only files\n- isfile is false and isdir is true : selection holds only folders\n- isfile is true and isdir is true : selection holds both files and folders\n- isfile is false and isdir is false : invalid combination"
 #define ACTION_MULTIPLE_DESC_SHORT	"True if the selection must have several items, false otherwise"
 #define ACTION_MULTIPLE_DESC_LONG	"If you want to activate this config if several files or folders are selected, set 'true' to this key. If you want just one file or folder, set 'false'"
-#define ACTION_SCHEMES_DESC_SHORT	"The list of GnomeVFS schemes where the selected files should be"
+#define ACTION_SCHEMES_DESC_SHORT	"The list of GnomeVFS schemes where the selected files should be located"
 #define ACTION_SCHEMES_DESC_LONG		"Define the list of valid GnomeVFS scheme to match the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one use in GnomeVFS URI.\n\nexample of GnomeVFS URI : \nfile:///tmp/foo.txt\nsftp:///root@test.example.net/tmp/foo.txt\n\nThe most common schemes are :\n\nfile : local files\nsftp : files accessed via SSH\nftp : files accessed via FTP\nsmb : files accessed via Samba (Windows share)\ndav : files accessed via WebDav\n\nAll valid GnomeVFS scheme can be used here."
 #define ACTION_VERSION_DESC_SHORT	"The version of the configuration format"
 #define ACTION_VERSION_DESC_LONG		"The version of the configuration format that will be used to manage backward compatibility"
