@@ -219,9 +219,9 @@ nautilus_actions_config_action_set_parameters (NautilusActionsConfigAction *acti
 }
 
 static void 
-copy_list (gchar* data, GSList* list)
+copy_list (gchar* data, GSList** list)
 {
-	list = g_slist_append (list, g_strdup (data));
+	(*list) = g_slist_append ((*list), g_strdup (data));
 }
 
 void
@@ -232,7 +232,7 @@ nautilus_actions_config_action_set_basenames (NautilusActionsConfigAction *actio
 	g_slist_foreach (action->basenames, (GFunc) g_free, NULL);
 	g_slist_free (action->basenames);
 	action->basenames = NULL;
-	g_slist_foreach (basenames, (GFunc) copy_list, action->basenames);
+	g_slist_foreach (basenames, (GFunc) copy_list, &(action->basenames));
 }
 
 void
@@ -243,7 +243,7 @@ nautilus_actions_config_action_set_schemes (NautilusActionsConfigAction *action,
 	g_slist_foreach (action->schemes, (GFunc) g_free, NULL);
 	g_slist_free (action->schemes);
 	action->schemes = NULL;
-	g_slist_foreach (schemes, (GFunc) copy_list, action->schemes);
+	g_slist_foreach (schemes, (GFunc) copy_list, &(action->schemes));
 }
 
 NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActionsConfigAction *action)

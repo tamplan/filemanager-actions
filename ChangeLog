@@ -1,5 +1,8 @@
 2005-10-19  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* libnautilus-actions/nautilus-actions-config.c: Fix the copy of 
+GSList when setting schemes and basenames of an action.
+
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h: Fix
 the short description of the scheme entry in the Gconf Schemas
 
