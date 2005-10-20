@@ -95,8 +95,7 @@ add_hash_action_to_list (gpointer key, gpointer value, gpointer user_data)
 {
 	GSList **list = user_data;
 
-	// FIXME:
-	*list = g_slist_append (*list, nautilus_actions_config_action_dup ((NautilusActionsConfigAction*)value));
+	(*list) = g_slist_append ((*list), nautilus_actions_config_action_dup ((NautilusActionsConfigAction*)value));
 }
 
 NautilusActionsConfigAction *
@@ -354,54 +353,58 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 void
 nautilus_actions_config_action_free (NautilusActionsConfigAction *action)
 {
-	if (action->conf_section) {
-		g_free (action->conf_section);
-		action->conf_section = NULL;
-	}
+	if (action != NULL)
+	{
+		if (action->conf_section) {
+			g_free (action->conf_section);
+			action->conf_section = NULL;
+		}
 
-	if (action->uuid) {
-		g_free (action->uuid);
-		action->uuid = NULL;
-	}
+		if (action->uuid) {
+			g_free (action->uuid);
+			action->uuid = NULL;
+		}
 
-	if (action->label) {
-		g_free (action->label);
-		action->label = NULL;
-	}
+		if (action->label) {
+			g_free (action->label);
+			action->label = NULL;
+		}
 
-	if (action->tooltip) {
-		g_free (action->tooltip);
-		action->tooltip = NULL;
-	}
+		if (action->tooltip) {
+			g_free (action->tooltip);
+			action->tooltip = NULL;
+		}
 
-	if (action->path) {
-		g_free (action->path);
-		action->path = NULL;
-	}
+		if (action->path) {
+			g_free (action->path);
+			action->path = NULL;
+		}
 
-	if (action->parameters) {
-		g_free (action->parameters);
-		action->parameters = NULL;
-	}
+		if (action->parameters) {
+			g_free (action->parameters);
+			action->parameters = NULL;
+		}
 
-	if (action->basenames) {
-		g_slist_foreach (action->basenames, (GFunc) g_free, NULL);
-		g_slist_free (action->basenames);
-		action->basenames = NULL;
-	}
+		if (action->basenames) {
+			g_slist_foreach (action->basenames, (GFunc) g_free, NULL);
+			g_slist_free (action->basenames);
+			action->basenames = NULL;
+		}
 
-	if (action->schemes) {
-		g_slist_foreach (action->schemes, (GFunc) g_free, NULL);
-		g_slist_free (action->schemes);
-		action->schemes = NULL;
-	}
+		if (action->schemes) {
+			g_slist_foreach (action->schemes, (GFunc) g_free, NULL);
+			g_slist_free (action->schemes);
+			action->schemes = NULL;
+		}
 
-	if (action->version) {
-		g_free (action->version);
-		action->version = NULL;
-	}
+		if (action->version) {
+			g_free (action->version);
+			action->version = NULL;
+		}
 
-	g_free (action);
+		g_free (action);
+		action = NULL;
+	}
 }
 
 // vim:ts=3:sw=3:tw=1024:cin
