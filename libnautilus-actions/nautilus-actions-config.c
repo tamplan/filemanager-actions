@@ -95,7 +95,12 @@ add_hash_action_to_list (gpointer key, gpointer value, gpointer user_data)
 {
 	GSList **list = user_data;
 
-	(*list) = g_slist_append ((*list), nautilus_actions_config_action_dup ((NautilusActionsConfigAction*)value));
+	NautilusActionsConfigAction* action_copy = nautilus_actions_config_action_dup ((NautilusActionsConfigAction*)value);
+	
+	if (action_copy != NULL)
+	{
+		(*list) = g_slist_append ((*list), action_copy);
+	}
 }
 
 NautilusActionsConfigAction *

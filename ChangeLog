@@ -1,7 +1,9 @@
 2005-10-20  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* libnautilus-actions/nautilus-actions-config.c: Fix a bug
-in the freeing of the NautilusActionsConfigAction object
+in the freeing of the NautilusActionsConfigAction object and
+don't send broken actions in the list returned by 
+nautilus_actions_config_get_actions()
 
 2005-10-19  Frederic Ruaudel <grumz@grumz.net> 0.8
 
