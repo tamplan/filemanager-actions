@@ -1,3 +1,19 @@
+2005-10-21  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* nact/nact-utils.c:
+	* nact/nact-utils.h:
+	* nact/Makefile.am: Add some utility function to manage
+Glade widgets more easily.
+
+	* nact/nact-editor.c:
+	* nact/nact.c: Refactor the code to take care of the new utilities
+functions and of the refactored glade file. Start adding support for 
+a menu icon.
+
+	* nact/nautilus-actions-config.glade: Refactor the glade
+file to be more HIG compliant and add missing widgets. Transfers
+signals definition into it.
+
 2005-10-20  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* libnautilus-actions/nautilus-actions-config.c: Fix a bug

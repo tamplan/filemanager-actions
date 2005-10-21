@@ -31,8 +31,8 @@
 #include <glade/glade-xml.h>
 #include <libnautilus-actions/nautilus-actions-config.h>
 #include <libnautilus-actions/nautilus-actions-config-gconf.h>
+#include "nact-utils.h"
 
-static GladeXML *gui;
 static GtkWidget *nact_dialog;
 static GtkWidget *nact_actions_list;
 static GtkWidget *nact_add_button;
@@ -45,13 +45,13 @@ nautilus_actions_display_error (const gchar *msg)
 {
 }
 
-static void
+void
 add_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	nact_editor_new_action ();
 }
 
-static void
+void
 edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
@@ -73,7 +73,7 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 	}
 }
 
-static void
+void
 delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
@@ -91,12 +91,15 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 	}
 }
 
-static void
+void
 dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 {
 	switch (response_id) {
+	case GTK_RESPONSE_NONE :
 	case GTK_RESPONSE_CLOSE :
 		gtk_widget_destroy (GTK_WIDGET (dialog));
+		nact_destroy_glade_objects ();
+		g_object_unref (config);
 		gtk_main_quit ();
 		break;
 	case GTK_RESPONSE_HELP :
@@ -161,31 +164,26 @@ setup_actions_list (GtkWidget *list)
 static void
 init_dialog (void)
 {
-	gui = glade_xml_new (GLADEDIR "/nautilus-actions-config.glade", "ActionsDialog", NULL);
+	GladeXML *gui = nact_get_glade_xml_object (GLADE_MAIN_WIDGET);
 	if (!gui) {
 		nautilus_actions_display_error (_("Could not load interface for Nautilus Actions Config Tool"));
 		exit (1);
 	}
 
-	nact_dialog = glade_xml_get_widget (gui, "ActionsDialog");
-	g_signal_connect (G_OBJECT (nact_dialog), "response", G_CALLBACK (dialog_response_cb), NULL);
+	glade_xml_signal_autoconnect(gui);
 
-	nact_actions_list = glade_xml_get_widget (gui, "ActionsList");
+	nact_dialog = nact_get_glade_widget ("ActionsDialog");
+
+	nact_actions_list = nact_get_glade_widget ("ActionsList");
 	setup_actions_list (nact_actions_list);
 
-	nact_add_button = glade_xml_get_widget (gui, "AddActionButton");
-	g_signal_connect (G_OBJECT (nact_add_button), "clicked", G_CALLBACK (add_button_clicked_cb), NULL);
-
-	nact_edit_button = glade_xml_get_widget (gui, "EditActionButton");
-	gtk_widget_set_sensitive (nact_edit_button, FALSE);
-	g_signal_connect (G_OBJECT (nact_edit_button), "clicked", G_CALLBACK (edit_button_clicked_cb), NULL);
-
-	nact_delete_button = glade_xml_get_widget (gui, "DeleteActionButton");
-	gtk_widget_set_sensitive (nact_delete_button, FALSE);
-	g_signal_connect (G_OBJECT (nact_delete_button), "clicked", G_CALLBACK (delete_button_clicked_cb), NULL);
+	nact_add_button = nact_get_glade_widget ("AddActionButton");
+	nact_edit_button = nact_get_glade_widget ("EditActionButton");
+	nact_delete_button = nact_get_glade_widget ("DeleteActionButton");
 
 	/* display the dialog */
 	gtk_widget_show (nact_dialog);
+	g_object_unref (gui);
 }
 
 int
@@ -210,3 +208,5 @@ main (int argc, char *argv[])
 	/* run the application */
 	gtk_main ();
 }
+
+// vim:ts=3:sw=3:tw=1024:cin

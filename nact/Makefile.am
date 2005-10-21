@@ -7,6 +7,8 @@ INCLUDES =							\
 
 nautilus_actions_config_SOURCES =	\
 	nact.c 				\
+	nact-utils.c		\
+	nact-utils.h		\
 	nact-editor.c			\
 	nact-editor.h
 nautilus_actions_config_LDADD =						\
