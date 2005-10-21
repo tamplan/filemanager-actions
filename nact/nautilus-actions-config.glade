@@ -686,7 +686,7 @@ Application to configure Nautilus Action extension</property>
   <property name="title" translatable="yes">Edit Action</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-  <property name="modal">False</property>
+  <property name="modal">True</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">nautilus-actions-icon.png</property>
@@ -896,7 +896,7 @@ Application to configure Nautilus Action extension</property>
 			      <property name="focus_on_click">True</property>
 
 			      <child>
-				<widget class="GtkAlignment" id="alignment10">
+				<widget class="GtkAlignment" id="alignment12">
 				  <property name="visible">True</property>
 				  <property name="xalign">0.5</property>
 				  <property name="yalign">0.5</property>
@@ -908,13 +908,13 @@ Application to configure Nautilus Action extension</property>
 				  <property name="right_padding">0</property>
 
 				  <child>
-				    <widget class="GtkHBox" id="hbox25">
+				    <widget class="GtkHBox" id="hbox37">
 				      <property name="visible">True</property>
 				      <property name="homogeneous">False</property>
 				      <property name="spacing">2</property>
 
 				      <child>
-					<widget class="GtkImage" id="image12">
+					<widget class="GtkImage" id="image14">
 					  <property name="visible">True</property>
 					  <property name="stock">gtk-open</property>
 					  <property name="icon_size">4</property>
@@ -931,7 +931,7 @@ Application to configure Nautilus Action extension</property>
 				      </child>
 
 				      <child>
-					<widget class="GtkLabel" id="label50">
+					<widget class="GtkLabel" id="label57">
 					  <property name="visible">True</property>
 					  <property name="label" translatable="yes">_Browse...</property>
 					  <property name="use_underline">True</property>
@@ -1076,7 +1076,7 @@ Application to configure Nautilus Action extension</property>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>
-	      <property name="expand">True</property>
+	      <property name="expand">False</property>
 	      <property name="fill">True</property>
 	    </packing>
 	  </child>
@@ -1515,7 +1515,7 @@ Application to configure Nautilus Action extension</property>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>
-	      <property name="expand">True</property>
+	      <property name="expand">False</property>
 	      <property name="fill">True</property>
 	    </packing>
 	  </child>
@@ -1642,7 +1642,7 @@ Application to configure Nautilus Action extension</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
-			  <property name="expand">True</property>
+			  <property name="expand">False</property>
 			  <property name="fill">True</property>
 			</packing>
 		      </child>
@@ -1755,7 +1755,7 @@ Application to configure Nautilus Action extension</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
-			  <property name="expand">True</property>
+			  <property name="expand">False</property>
 			  <property name="fill">True</property>
 			</packing>
 		      </child>
@@ -1776,7 +1776,7 @@ Application to configure Nautilus Action extension</property>
 			<packing>
 			  <property name="padding">0</property>
 			  <property name="expand">False</property>
-			  <property name="fill">False</property>
+			  <property name="fill">True</property>
 			</packing>
 		      </child>
 
@@ -1871,7 +1871,7 @@ Application to configure Nautilus Action extension</property>
 	</widget>
 	<packing>
 	  <property name="padding">6</property>
-	  <property name="expand">False</property>
+	  <property name="expand">True</property>
 	  <property name="fill">True</property>
 	</packing>
       </child>
