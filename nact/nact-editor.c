@@ -290,7 +290,7 @@ gboolean
 nact_editor_new_action (void)
 {
 	gboolean val;
-	NautilusActionsConfigAction *action = nautilus_actions_config_action_new ();
+	NautilusActionsConfigAction *action = nautilus_actions_config_action_new_default ();
 
 	val = open_editor (action, TRUE);
 	nautilus_actions_config_action_free (action);
