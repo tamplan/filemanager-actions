@@ -30,6 +30,7 @@
 
 static gchar* label = "";
 static gchar* tooltip = "";
+static gchar* icon = "";
 static gchar* command = "";
 static gchar* params = "";
 static gchar** matches = NULL;
@@ -43,6 +44,7 @@ static GOptionEntry entries[] =
 {
 	{ "label", 'l', 0, G_OPTION_ARG_STRING, &label, N_("The label of the menu item"), N_("LABEL") },
 	{ "tooltip", 't', 0, G_OPTION_ARG_STRING, &tooltip, N_("The tooltip of the menu item"), N_("TOOLTIP") },
+	{ "icon", 'i', 0, G_OPTION_ARG_STRING, &icon, N_("The icon of the menu item (filename or Gtk stock id)"), N_("ICON") },
 	{ "command", 'c', 0, G_OPTION_ARG_FILENAME, &command, N_("The path of the command"), N_("PATH") },
 	{ "parameters", 'p', 0, G_OPTION_ARG_STRING, &params, N_("The parameters of the command"), N_("PARAMS") },
 	{ "match", 'm', 0, G_OPTION_ARG_STRING_ARRAY, &matches, N_("A pattern to match selected files with possibility to add jokers ? or * (you must set it for each pattern you need)"), N_("EXPR") },
@@ -94,6 +96,7 @@ int main (int argc, char** argv)
 	action = nautilus_actions_config_action_new ();
 	nautilus_actions_config_action_set_label (action, label);
 	nautilus_actions_config_action_set_tooltip (action, tooltip);
+	nautilus_actions_config_action_set_icon (action, icon);
 	nautilus_actions_config_action_set_path (action, command);
 	nautilus_actions_config_action_set_parameters (action, params);
 

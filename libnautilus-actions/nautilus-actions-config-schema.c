@@ -184,6 +184,11 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	create_schema_entry (list_node, content, "string", action->tooltip, ACTION_TOOLTIP_DESC_SHORT, ACTION_TOOLTIP_DESC_LONG, TRUE);
 	xmlFree (content);
 
+	//--> Menu item entries : icon
+	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ICON_ENTRY, NULL);
+	create_schema_entry (list_node, content, "string", action->icon, ACTION_ICON_DESC_SHORT, ACTION_ICON_DESC_LONG, FALSE);
+	xmlFree (content);
+
 	//--> Command entries : path
 	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_PATH_ENTRY, NULL);
 	create_schema_entry (list_node, content, "string", action->path, ACTION_PATH_DESC_SHORT, ACTION_PATH_DESC_LONG, FALSE);

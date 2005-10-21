@@ -203,6 +203,16 @@ nautilus_actions_config_action_set_tooltip (NautilusActionsConfigAction *action,
 }
 
 void
+nautilus_actions_config_action_set_icon (NautilusActionsConfigAction *action, const gchar *icon)
+{
+	g_return_if_fail (action != NULL);
+
+	if (action->icon)
+		g_free (action->icon);
+	action->icon = g_strdup (icon);
+}
+
+void
 nautilus_actions_config_action_set_path (NautilusActionsConfigAction *action, const gchar *path)
 {
 	g_return_if_fail (action != NULL);
@@ -285,6 +295,14 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 
 		if (action->tooltip && success) {
 			new_action->tooltip = g_strdup (action->tooltip);
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action->icon && success) {
+			new_action->icon = g_strdup (action->icon);
 		}
 		else
 		{
@@ -378,6 +396,11 @@ nautilus_actions_config_action_free (NautilusActionsConfigAction *action)
 		if (action->tooltip) {
 			g_free (action->tooltip);
 			action->tooltip = NULL;
+		}
+
+		if (action->icon) {
+			g_free (action->icon);
+			action->icon = NULL;
 		}
 
 		if (action->path) {

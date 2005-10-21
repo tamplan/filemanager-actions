@@ -105,6 +105,7 @@ static GtkTreeModel* create_stock_icon_model (void)
 	model = gtk_list_store_new (N_COLUMN, G_TYPE_STRING, G_TYPE_STRING);
 	
 	gtk_list_store_append (model, &row);
+	
 	gtk_list_store_set (model, &row, STOCK_COLUMN, "", LABEL_COLUMN, _("None"), -1);
 	stock_list = gtk_stock_list_ids ();
 
@@ -213,6 +214,8 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	menu_tooltip = nact_get_glade_widget_from ("MenuTooltipEntry", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_entry_set_text (GTK_ENTRY (menu_tooltip), action->tooltip);
 
+	menu_icon = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
+	gtk_entry_set_text (GTK_ENTRY (GTK_BIN (menu_icon)->child), action->icon);
 	
 	command_path = nact_get_glade_widget_from ("CommandPathEntry", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_entry_set_text (GTK_ENTRY (command_path), action->path);
@@ -248,6 +251,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		} else {
 			nautilus_actions_config_action_set_label (action, label);
 			nautilus_actions_config_action_set_tooltip (action, gtk_entry_get_text (GTK_ENTRY (menu_tooltip)));
+			nautilus_actions_config_action_set_icon (action, gtk_entry_get_text (GTK_ENTRY (menu_icon)));
 			nautilus_actions_config_action_set_path (action, gtk_entry_get_text (GTK_ENTRY (command_path)));
 			nautilus_actions_config_action_set_parameters (action, gtk_entry_get_text (GTK_ENTRY (command_params)));
 

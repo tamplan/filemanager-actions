@@ -41,6 +41,7 @@ typedef struct {
 	gchar *uuid;
 	gchar *label;
 	gchar *tooltip;
+	gchar *icon;
 	gchar *path;
 	gchar *parameters;
 	GSList *basenames;
@@ -86,6 +87,8 @@ void                         nautilus_actions_config_action_set_label (NautilusA
 								       const gchar *label);
 void                         nautilus_actions_config_action_set_tooltip (NautilusActionsConfigAction *action,
 									 const gchar *tooltip);
+void                         nautilus_actions_config_action_set_icon (NautilusActionsConfigAction *action,
+									 const gchar *icon);
 void                         nautilus_actions_config_action_set_path (NautilusActionsConfigAction *action,
 								      const gchar *path);
 void                         nautilus_actions_config_action_set_parameters (NautilusActionsConfigAction *action,

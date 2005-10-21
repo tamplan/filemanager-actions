@@ -427,6 +427,7 @@ static gboolean nautilus_actions_config_xml_action_fill_menu_item (NautilusActio
 
 	if (label_ok && tooltip_ok)
 	{
+		action->icon = g_strdup ("");
 		retv = TRUE;
 	}
 

@@ -153,10 +153,32 @@ setup_actions_list (GtkWidget *list)
 	actions = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (config));
 	for (l = actions; l != NULL; l = l->next) {
 		GtkTreeIter iter;
+		GtkStockItem item;
+		GdkPixbuf* icon = NULL;
 		NautilusActionsConfigAction *action = l->data;
 
+		if (action->icon != NULL)
+		{
+			if (gtk_stock_lookup (action->icon, &item))
+			{
+				icon = gtk_widget_render_icon (list, action->icon, GTK_ICON_SIZE_MENU, NULL);
+			}
+			else if (g_file_test (action->icon, G_FILE_TEST_EXISTS) && g_file_test (action->icon, G_FILE_TEST_IS_REGULAR))
+			{
+				gint width;
+				gint height;
+				GError* error = NULL;
+				
+				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
+				icon = gdk_pixbuf_new_from_file_at_size (action->icon, width, height, &error);
+				if (error)
+				{
+					icon = NULL;
+				}
+			}
+		}
 		gtk_list_store_append (model, &iter);
-		gtk_list_store_set (model, &iter, MENU_ICON_COLUMN, NULL, MENU_LABEL_COLUMN, action->label, -1);
+		gtk_list_store_set (model, &iter, MENU_ICON_COLUMN, icon, MENU_LABEL_COLUMN, action->label, -1);
 	}
 
 	nautilus_actions_config_free_actions_list (actions);

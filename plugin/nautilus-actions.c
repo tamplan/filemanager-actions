@@ -77,7 +77,7 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 	item = nautilus_menu_item_new (name, 
 				action->label, 
 				action->tooltip, 
-				NULL);
+				action->icon);
 
 	g_signal_connect_data (item, 
 				"activate", 

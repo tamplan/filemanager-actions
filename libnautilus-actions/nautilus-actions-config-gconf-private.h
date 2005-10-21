@@ -29,6 +29,7 @@
 // GConf key names :
 #define ACTION_LABEL_ENTRY     "label"
 #define ACTION_TOOLTIP_ENTRY   "tooltip"
+#define ACTION_ICON_ENTRY      "icon"
 #define ACTION_PATH_ENTRY      "path"
 #define ACTION_PARAMS_ENTRY    "parameters"
 #define ACTION_BASENAMES_ENTRY "basenames"
@@ -43,6 +44,8 @@
 #define ACTION_LABEL_DESC_LONG		"The label of the menu item that will appear in the Nautilus contextual menu when the selection match the test options"
 #define ACTION_TOOLTIP_DESC_SHORT	"The tooltip of the menu item"
 #define ACTION_TOOLTIP_DESC_LONG		"The tooltip of the menu item that will appear in the Nautilus statusbar when the user passes over the contextual menu item with his mouse"
+#define ACTION_ICON_DESC_SHORT	"The icon of the menu item"
+#define ACTION_ICON_DESC_LONG		"The icon of the menu item that will appear next to the label in the Nautilus contextual menu when the selection match the test options"
 #define ACTION_PATH_DESC_SHORT		"The path of the command"
 #define ACTION_PATH_DESC_LONG			"The path of the command to start when the user select the menu item in the Nautilus contextual menu"
 #define ACTION_PARAMS_DESC_SHORT		"The parameters of the command"

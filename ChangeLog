@@ -1,5 +1,17 @@
 2005-10-21  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config-schema.c:
+	* libnautilus-actions/nautilus-actions-config-xml.c:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h:
+	* nact/nact-editor.c:
+	* nact/nact.c:
+	* plugin/nautilus-actions.c:
+	* utils/nautilus-actions-new-config.c: Finish support for a icon 
+in the menu item (Feature #28)
+
 	* nact/nact-editor.c:
 	* nact/nact.c: Remove global variables and replace with
 the utility functions. Fix some gtk warnings.

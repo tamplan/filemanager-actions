@@ -61,6 +61,10 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	gconf_client_set_string (config->conf_client, key, action->tooltip, NULL);
 	g_free (key);
 
+	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_ICON_ENTRY);
+	gconf_client_set_string (config->conf_client, key, action->icon, NULL);
+	g_free (key);
+
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_PATH_ENTRY);
 	gconf_client_set_string (config->conf_client, key, action->path, NULL);
 	g_free (key);
@@ -241,6 +245,7 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 
 		action->uuid = g_path_get_basename (action->conf_section); // Get the last part of the config section dir
 		action->tooltip = get_action_string_value (config->conf_client, node->data, ACTION_TOOLTIP_ENTRY);
+		action->icon = get_action_string_value (config->conf_client, node->data, ACTION_ICON_ENTRY);
 		action->path = get_action_string_value (config->conf_client, node->data, ACTION_PATH_ENTRY);
 		action->parameters = get_action_string_value (config->conf_client, node->data, ACTION_PARAMS_ENTRY);
 		action->basenames = get_action_list_value (config->conf_client, node->data, ACTION_BASENAMES_ENTRY);
