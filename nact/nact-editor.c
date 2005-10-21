@@ -58,12 +58,11 @@ strip_underscore (const gchar *text)
 	return result;
 }
 
-static GtkWidget *editor = NULL, *menu_label, *menu_tooltip, *command_path, *command_params,
-	*only_files, *only_folders, *both, *accept_multiple;
-
 void
 field_changed_cb (GObject *editable, gpointer user_data)
 {
+	GtkWidget* editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
+	GtkWidget* menu_label = nact_get_glade_widget_from ("MenuLabelEntry", GLADE_EDIT_DIALOG_WIDGET);
 	gchar *label = gtk_entry_get_text (GTK_ENTRY (menu_label));
 
 	if (label && strlen (label) > 0)
@@ -75,6 +74,7 @@ field_changed_cb (GObject *editable, gpointer user_data)
 void
 legend_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
+	GtkWidget* editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
 	GladeXML *gui;
 	GtkWidget *legend_dialog;
 
@@ -155,6 +155,8 @@ static void fill_menu_icon_combo_list_of (GtkComboBoxEntry* combo)
 static gboolean
 open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 {
+	static gboolean init = FALSE;
+	GtkWidget* editor;
 	GladeXML *gui;
 	gboolean ret = FALSE;
 	gchar *label;
@@ -163,19 +165,45 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	GList* iter;
 	GtkSizeGroup* label_size_group;
 	GtkSizeGroup* button_size_group;
+	GtkWidget* menu_icon;
+	GtkWidget *menu_label, *menu_tooltip;
+	GtkWidget *command_path, *command_params;
+	GtkWidget *only_files, *only_folders, *both, *accept_multiple;
 
-	/* only allow one dialog at a time */
-	if (editor != NULL)
-		return FALSE;
+	if (!init)
+	{
+		/* load the GUI */
+		gui = nact_get_glade_xml_object (GLADE_EDIT_DIALOG_WIDGET);
+		if (!gui) {
+			nautilus_actions_display_error (_("Could not load interface for Nautilus Actions Config Tool"));
+			return FALSE;
+		}
 
-	/* load the GUI */
-	gui = nact_get_glade_xml_object (GLADE_EDIT_DIALOG_WIDGET);
-	if (!gui) {
-		nautilus_actions_display_error (_("Could not load interface for Nautilus Actions Config Tool"));
-		return FALSE;
+		glade_xml_signal_autoconnect(gui);
+
+		menu_icon = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
+		fill_menu_icon_combo_list_of (GTK_COMBO_BOX_ENTRY (menu_icon));
+	
+		aligned_widgets = nact_get_glade_widget_prefix_from ("LabelAlign", GLADE_EDIT_DIALOG_WIDGET);
+		label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
+		for (iter = aligned_widgets; iter; iter = iter->next)
+		{
+			gtk_size_group_add_widget (label_size_group, GTK_WIDGET (iter->data));
+		}
+		button_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
+		gtk_size_group_add_widget (button_size_group, 
+											nact_get_glade_widget_from ("IconBrowseButton", 
+																		GLADE_EDIT_DIALOG_WIDGET));
+		gtk_size_group_add_widget (button_size_group, 
+											nact_get_glade_widget_from ("BrowseButton", 
+																		GLADE_EDIT_DIALOG_WIDGET));
+		gtk_size_group_add_widget (button_size_group, 
+											nact_get_glade_widget_from ("LegendButton", 
+																		GLADE_EDIT_DIALOG_WIDGET));
+		/* free memory */
+		g_object_unref (gui);
+		init = TRUE;
 	}
-
-	glade_xml_signal_autoconnect(gui);
 
 	editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
 
@@ -185,7 +213,6 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	menu_tooltip = nact_get_glade_widget_from ("MenuTooltipEntry", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_entry_set_text (GTK_ENTRY (menu_tooltip), action->tooltip);
 
-	fill_menu_icon_combo_list_of (GTK_COMBO_BOX_ENTRY (nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET)));
 	
 	command_path = nact_get_glade_widget_from ("CommandPathEntry", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_entry_set_text (GTK_ENTRY (command_path), action->path);
@@ -200,27 +227,10 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_files), action->is_file);
 
 	both = nact_get_glade_widget_from ("BothButton", GLADE_EDIT_DIALOG_WIDGET);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action->is_file && action->is_dir);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (both), action->is_file && action->is_dir);
 
 	accept_multiple = nact_get_glade_widget_from ("AcceptMultipleButton", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (accept_multiple), action->accept_multiple_files);
-
-	aligned_widgets = nact_get_glade_widget_prefix_from ("LabelAlign", GLADE_EDIT_DIALOG_WIDGET);
-	label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-	for (iter = aligned_widgets; iter; iter = iter->next)
-	{
-		gtk_size_group_add_widget (label_size_group, GTK_WIDGET (iter->data));
-	}
-	button_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-	gtk_size_group_add_widget (button_size_group, 
-										nact_get_glade_widget_from ("IconBrowseButton", 
-																	GLADE_EDIT_DIALOG_WIDGET));
-	gtk_size_group_add_widget (button_size_group, 
-										nact_get_glade_widget_from ("BrowseButton", 
-																	GLADE_EDIT_DIALOG_WIDGET));
-	gtk_size_group_add_widget (button_size_group, 
-										nact_get_glade_widget_from ("LegendButton", 
-																	GLADE_EDIT_DIALOG_WIDGET));
 
 	/* run the dialog */
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
@@ -261,15 +271,13 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 				ret = nautilus_actions_config_update_action (NAUTILUS_ACTIONS_CONFIG (config), action);
 		}
 		break;
+	case GTK_RESPONSE_DELETE_EVENT:
 	case GTK_RESPONSE_CANCEL :
 		ret = FALSE;
 		break;
 	}
 
-	/* free memory */
-	gtk_widget_destroy (editor);
-	editor = NULL;
-	g_object_unref (gui);
+	gtk_widget_hide (editor);
 
 	return ret;
 }

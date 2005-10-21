@@ -33,12 +33,11 @@
 #include <libnautilus-actions/nautilus-actions-config-gconf.h>
 #include "nact-utils.h"
 
-static GtkWidget *nact_dialog;
-static GtkWidget *nact_actions_list;
-static GtkWidget *nact_add_button;
-static GtkWidget *nact_edit_button;
-static GtkWidget *nact_delete_button;
-static NautilusActionsConfigGconf *config;
+enum {
+	MENU_ICON_COLUMN = 0,
+	MENU_LABEL_COLUMN,
+	N_COLUMN
+};
 
 void
 nautilus_actions_display_error (const gchar *msg)
@@ -56,6 +55,11 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
+	GtkWidget *nact_actions_list;
+	NautilusActionsConfigGconf *config;
+
+	config = nautilus_actions_config_gconf_get ();
+	nact_actions_list = nact_get_glade_widget ("ActionsList");
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
 
@@ -71,6 +75,7 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		g_free (label);
 	}
+	g_object_unref (config);
 }
 
 void
@@ -78,6 +83,12 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
+	GtkWidget *nact_actions_list;
+	NautilusActionsConfigGconf *config;
+
+	config = nautilus_actions_config_gconf_get ();
+
+	nact_actions_list = nact_get_glade_widget ("ActionsList");
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
 
@@ -89,6 +100,7 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		g_free (label);
 	}
+	g_object_unref (config);
 }
 
 void
@@ -96,10 +108,10 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 {
 	switch (response_id) {
 	case GTK_RESPONSE_NONE :
+	case GTK_RESPONSE_DELETE_EVENT :
 	case GTK_RESPONSE_CLOSE :
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		nact_destroy_glade_objects ();
-		g_object_unref (config);
 		gtk_main_quit ();
 		break;
 	case GTK_RESPONSE_HELP :
@@ -110,6 +122,12 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 static void
 list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
 {
+	GtkWidget *nact_edit_button;
+	GtkWidget *nact_delete_button;
+	
+	nact_edit_button = nact_get_glade_widget ("EditActionButton");
+	nact_delete_button = nact_get_glade_widget ("DeleteActionButton");
+
 	if (gtk_tree_selection_count_selected_rows (selection) > 0) {
 		gtk_widget_set_sensitive (nact_edit_button, TRUE);
 		gtk_widget_set_sensitive (nact_delete_button, TRUE);
@@ -125,9 +143,12 @@ setup_actions_list (GtkWidget *list)
 	GtkListStore *model;
 	GSList *actions, *l;
 	GtkTreeViewColumn *column;
+	NautilusActionsConfigGconf *config;
+
+	config = nautilus_actions_config_gconf_get ();
 
 	/* create the model */
-	model = gtk_list_store_new (2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+	model = gtk_list_store_new (N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING);
 
 	actions = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (config));
 	for (l = actions; l != NULL; l = l->next) {
@@ -135,7 +156,7 @@ setup_actions_list (GtkWidget *list)
 		NautilusActionsConfigAction *action = l->data;
 
 		gtk_list_store_append (model, &iter);
-		gtk_list_store_set (model, &iter, 1, action->label, -1);
+		gtk_list_store_set (model, &iter, MENU_ICON_COLUMN, NULL, MENU_LABEL_COLUMN, action->label, -1);
 	}
 
 	nautilus_actions_config_free_actions_list (actions);
@@ -146,24 +167,26 @@ setup_actions_list (GtkWidget *list)
 	/* create columns on the tree view */
 	column = gtk_tree_view_column_new_with_attributes (_("Icon"),
 							   gtk_cell_renderer_pixbuf_new (),
-							   "pixbuf", 0, NULL);
+							   "pixbuf", MENU_ICON_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (list), column);
 
 	column = gtk_tree_view_column_new_with_attributes (_("Label"),
 							   gtk_cell_renderer_text_new (),
-							   "text", 1, NULL);
-	gtk_tree_view_append_column (GTK_TREE_VIEW (list), column);
-
+							   "text", MENU_LABEL_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (list), column);
 
 	/* set up selection */
 	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (list))), "changed",
 			  G_CALLBACK (list_selection_changed_cb), NULL);
+
+	g_object_unref (config);
 }
 
 static void
 init_dialog (void)
 {
+	GtkWidget *nact_dialog;
+	GtkWidget *nact_actions_list;
 	GladeXML *gui = nact_get_glade_xml_object (GLADE_MAIN_WIDGET);
 	if (!gui) {
 		nautilus_actions_display_error (_("Could not load interface for Nautilus Actions Config Tool"));
@@ -177,9 +200,6 @@ init_dialog (void)
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
 	setup_actions_list (nact_actions_list);
 
-	nact_add_button = nact_get_glade_widget ("AddActionButton");
-	nact_edit_button = nact_get_glade_widget ("EditActionButton");
-	nact_delete_button = nact_get_glade_widget ("DeleteActionButton");
 
 	/* display the dialog */
 	gtk_widget_show (nact_dialog);
@@ -200,7 +220,6 @@ main (int argc, char *argv[])
 
 	gtk_init (&argc, &argv);
 
-	config = nautilus_actions_config_gconf_get ();
 
 	/* create main dialog */
 	init_dialog ();

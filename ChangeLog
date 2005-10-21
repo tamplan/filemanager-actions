@@ -1,5 +1,9 @@
 2005-10-21  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* nact/nact-editor.c:
+	* nact/nact.c: Remove global variables and replace with
+the utility functions. Fix some gtk warnings.
+
 	* nact/nact-utils.c:
 	* nact/nact-utils.h:
 	* nact/Makefile.am: Add some utility function to manage
