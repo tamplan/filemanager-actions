@@ -1,5 +1,10 @@
 2005-10-21  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h: Add a
+function to create a NautilusActionsConfigAction object with
+correct default values.
+
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
 	* libnautilus-actions/nautilus-actions-config-gconf.c:
 	* libnautilus-actions/nautilus-actions-config-schema.c:

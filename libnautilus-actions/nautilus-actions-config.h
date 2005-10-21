@@ -83,6 +83,7 @@ gboolean                     nautilus_actions_config_remove_action (NautilusActi
 								    const gchar *label);
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void);
+NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void);
 void                         nautilus_actions_config_action_set_label (NautilusActionsConfigAction *action,
 								       const gchar *label);
 void                         nautilus_actions_config_action_set_tooltip (NautilusActionsConfigAction *action,

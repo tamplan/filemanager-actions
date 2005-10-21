@@ -130,6 +130,16 @@ nautilus_actions_config_free_actions_list (GSList *list)
 	g_slist_free (list);
 }
 
+static gchar* get_new_uuid (void)
+{
+		uuid_t uuid;
+		gchar uuid_str[64];
+
+		uuid_generate (uuid);
+		uuid_unparse (uuid, uuid_str);
+		return g_strdup (uuid_str);
+}
+
 gboolean
 nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActionsConfigAction *action)
 {
@@ -140,12 +150,7 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 		if (g_hash_table_lookup (config->actions, action->uuid))
 			return FALSE;
 	} else {
-		uuid_t uuid;
-		gchar uuid_str[64];
-
-		uuid_generate (uuid);
-		uuid_unparse (uuid, uuid_str);
-		action->uuid = g_strdup (uuid_str);
+		action->uuid = get_new_uuid ();
 	}
 
 	return NAUTILUS_ACTIONS_CONFIG_GET_CLASS (config)->save_action (config, action);
@@ -180,6 +185,28 @@ nautilus_actions_config_remove_action (NautilusActionsConfig *config, const gcha
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void)
 {
 	return g_new0 (NautilusActionsConfigAction, 1);
+}
+
+NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void)
+{
+	NautilusActionsConfigAction* new_action = nautilus_actions_config_action_new();
+	//--> Set some good default values
+	new_action->conf_section = g_strdup ("");
+	new_action->uuid = get_new_uuid ();
+	new_action->label = g_strdup ("");
+	new_action->tooltip = g_strdup ("");
+	new_action->icon = g_strdup ("");
+	new_action->path = g_strdup ("");
+	new_action->parameters = g_strdup ("");
+	new_action->basenames = NULL;
+	new_action->basenames = g_slist_append (new_action->basenames, g_strdup ("*"));
+	new_action->is_file = TRUE;
+	new_action->is_dir = FALSE;
+	new_action->accept_multiple_files = FALSE;
+	new_action->schemes = NULL;
+	new_action->schemes = g_slist_append (new_action->schemes, g_strdup ("file"));
+	
+	return new_action;
 }
 
 void
