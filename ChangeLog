@@ -1,5 +1,9 @@
 2005-10-21  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* libnautilus-actions/nautilus-actions-config-schema.c: Fix
+the schema generation by adding the list_type attribute for list
+entries.
+
 	* libnautilus-actions/nautilus-actions-config.c:
 	* libnautilus-actions/nautilus-actions-config.h: Add a
 function to create a NautilusActionsConfigAction object with

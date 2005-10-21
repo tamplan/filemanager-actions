@@ -102,6 +102,10 @@ static void create_schema_entry (xmlNodePtr list_node, xmlChar* key_path,
 	xmlNewChild (schema_node, NULL, "applyto", key_path);
 	xmlNewChild (schema_node, NULL, "owner", ACTIONS_SCHEMA_OWNER);
 	xmlNewChild (schema_node, NULL, "type", type);
+	if (g_ascii_strncasecmp (type, "list", strlen ("list")) == 0)
+	{
+		xmlNewChild (schema_node, NULL, "list_type", "string");
+	}
 	locale_node = xmlNewChild (schema_node, NULL, "locale", NULL);
 	xmlNewProp (locale_node, "name", "C");
 	xmlNewChild (locale_node, NULL, "short", short_desc);
