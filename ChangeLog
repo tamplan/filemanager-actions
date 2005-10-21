@@ -1,5 +1,8 @@
 2005-10-21  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* nact/nact.c: Fix the display of the existing config in nact's
+main dialog by using uuid instead of label as index.
+
 	* libnautilus-actions/nautilus-actions-config-schema.c: Fix
 the schema generation by adding the list_type attribute for list
 entries.

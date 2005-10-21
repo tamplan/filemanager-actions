@@ -36,6 +36,7 @@
 enum {
 	MENU_ICON_COLUMN = 0,
 	MENU_LABEL_COLUMN,
+	UUID_COLUMN,
 	N_COLUMN
 };
 
@@ -56,6 +57,7 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
 	GtkWidget *nact_actions_list;
+	GtkTreeModel* model;
 	NautilusActionsConfigGconf *config;
 
 	config = nautilus_actions_config_gconf_get ();
@@ -63,17 +65,19 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
 
-	if (gtk_tree_selection_get_selected (selection, NULL, &iter)) {
-		gchar *label;
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		gchar *uuid;
 		NautilusActionsConfigAction *action;
 
-		gtk_tree_model_get (gtk_tree_view_get_model (GTK_TREE_VIEW (nact_actions_list)), &iter, 1, &label, -1);
+		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
-		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), label);
+		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
 		if (action)
+		{
 			nact_editor_edit_action (action);
+		}
 
-		g_free (label);
+		g_free (uuid);
 	}
 	g_object_unref (config);
 }
@@ -84,6 +88,7 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
 	GtkWidget *nact_actions_list;
+	GtkTreeModel* model;
 	NautilusActionsConfigGconf *config;
 
 	config = nautilus_actions_config_gconf_get ();
@@ -92,13 +97,13 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
 
-	if (gtk_tree_selection_get_selected (selection, NULL, &iter)) {
-		gchar *label;
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		gchar *uuid;
 
-		gtk_tree_model_get (gtk_tree_view_get_model (GTK_TREE_VIEW (nact_actions_list)), &iter, 1, &label, -1);
-		nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), label);
+		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
+		nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
 
-		g_free (label);
+		g_free (uuid);
 	}
 	g_object_unref (config);
 }
@@ -148,7 +153,7 @@ setup_actions_list (GtkWidget *list)
 	config = nautilus_actions_config_gconf_get ();
 
 	/* create the model */
-	model = gtk_list_store_new (N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+	model = gtk_list_store_new (N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING);
 
 	actions = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (config));
 	for (l = actions; l != NULL; l = l->next) {
@@ -178,7 +183,7 @@ setup_actions_list (GtkWidget *list)
 			}
 		}
 		gtk_list_store_append (model, &iter);
-		gtk_list_store_set (model, &iter, MENU_ICON_COLUMN, icon, MENU_LABEL_COLUMN, action->label, -1);
+		gtk_list_store_set (model, &iter, MENU_ICON_COLUMN, icon, MENU_LABEL_COLUMN, action->label, UUID_COLUMN, action->uuid, -1);
 	}
 
 	nautilus_actions_config_free_actions_list (actions);
