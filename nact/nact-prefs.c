@@ -230,7 +230,6 @@ gboolean nact_prefs_get_main_dialog_size (gint* width, gint* height)
 
 	if (prefs->main_size_width != -1 && prefs->main_size_height != -1)
 	{
-		g_print ("toto : w %d, h %d\n", prefs->main_size_width, prefs->main_size_height);
 		retv = TRUE;
 		(*width) = prefs->main_size_width;
 		(*height) = prefs->main_size_height;
