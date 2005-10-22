@@ -23,7 +23,7 @@ GNOME_REQUIRED=2.7.0
 NAUTILUS_EXTENSION=2.8.0
 GCONF_REQUIRED=2.8.0
 LIBXML_REQUIRED=2.6.0
-GOBJECT_REQUIRED=2.8.0
+GOBJECT_REQUIRED=2.6.0
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
@@ -55,6 +55,10 @@ fi
 
 default_config_path=`eval echo $datadir/nautilus-actions`
 AC_DEFINE_UNQUOTED(DEFAULT_CONFIG_PATH, "$default_config_path", [Default system configuration path])
+/usr/bin/pkg-config glib-2.0 --atleast-version=2.8
+if test "x$?" = "x0"; then
+	AC_DEFINE_UNQUOTED(HAVE_GLIB_2_8, 1, [Version of the glib-2.0 library is at least 2.8])
+fi
 
 PKG_CHECK_MODULES(NAUTILUS_ACTIONS_UTILS,\
 	 glib-2.0 >= $GLIB_REQUIRED                \

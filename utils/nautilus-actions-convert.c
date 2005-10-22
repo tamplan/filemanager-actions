@@ -119,10 +119,9 @@ int main (int argc, char** argv)
 				// Copy the content of the temporary file into the one asked by the user
 				if (success = g_file_get_contents (path, &contents, &length, &error))
 				{
-					if (success = g_file_set_contents (output_file, contents, length, &error))
-					{
-						g_free (contents);
-					}
+					success = nautilus_actions_file_set_contents (output_file, contents, length, &error);
+					
+					g_free (contents);
 				}
 
 				//--> Remove the temporary file

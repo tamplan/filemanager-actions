@@ -1,3 +1,14 @@
+2005-10-22  Frederic Ruaudel <grumz@grumz.net> 0.8
+
+	* utils/nautilus-actions-tools-utils.c:
+	* utils/nautilus-actions-tools-utils.h:
+	* configure.in:
+	* utils/Makefile.am:
+	* utils/nautilus-actions-convert.c:
+	* utils/nautilus-actions-new-config.c: Fix some
+compatibility problem with glib < 2.8. g_file_set_contents() wasn't
+recognized.
+
 2005-10-21  Frederic Ruaudel <grumz@grumz.net> 0.8
 
 	* nact/nact.c: Fix the display of the existing config in nact's
