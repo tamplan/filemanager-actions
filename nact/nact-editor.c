@@ -30,9 +30,16 @@
 #include "nact-utils.h"
 
 enum {
-	STOCK_COLUMN = 0,
-	LABEL_COLUMN,
-	N_COLUMN
+	ICON_STOCK_COLUMN = 0,
+	ICON_LABEL_COLUMN,
+	ICON_N_COLUMN
+};
+
+enum {
+	SCHEMES_CHECKBOX_COLUMN = 0,
+	SCHEMES_KEYWORD_COLUMN,
+	SCHEMES_DESC_COLUMN,
+	SCHEMES_N_COLUMN
 };
 
 static gchar *
@@ -177,11 +184,11 @@ static GtkTreeModel* create_stock_icon_model (void)
 	GtkStockItem stock_item;
 	gchar* label;
 
-	model = gtk_list_store_new (N_COLUMN, G_TYPE_STRING, G_TYPE_STRING);
+	model = gtk_list_store_new (ICON_N_COLUMN, G_TYPE_STRING, G_TYPE_STRING);
 	
 	gtk_list_store_append (model, &row);
 	
-	gtk_list_store_set (model, &row, STOCK_COLUMN, "", LABEL_COLUMN, _("None"), -1);
+	gtk_list_store_set (model, &row, ICON_STOCK_COLUMN, "", ICON_LABEL_COLUMN, _("None"), -1);
 	stock_list = gtk_stock_list_ids ();
 
 	for (iter = stock_list; iter; iter = iter->next)
@@ -191,7 +198,7 @@ static GtkTreeModel* create_stock_icon_model (void)
 			icon = gtk_widget_render_icon (window, (gchar*)iter->data, GTK_ICON_SIZE_MENU, NULL);
 			gtk_list_store_append (model, &row);
 			label = strip_underscore (stock_item.label);
-			gtk_list_store_set (model, &row, STOCK_COLUMN, (gchar*)iter->data, LABEL_COLUMN, label, -1);
+			gtk_list_store_set (model, &row, ICON_STOCK_COLUMN, (gchar*)iter->data, ICON_LABEL_COLUMN, label, -1);
 			g_free (label);
 		}
 	}
@@ -204,11 +211,11 @@ static GtkTreeModel* create_stock_icon_model (void)
 
 static void fill_menu_icon_combo_list_of (GtkComboBoxEntry* combo)
 {
-	GtkCellRendererPixbuf *cell_renderer_pix;
-	GtkCellRendererText *cell_renderer_text;
+	GtkCellRenderer *cell_renderer_pix;
+	GtkCellRenderer *cell_renderer_text;
 	
 	gtk_combo_box_set_model (GTK_COMBO_BOX (combo), create_stock_icon_model ());
-	gtk_combo_box_entry_set_text_column (combo, STOCK_COLUMN);
+	gtk_combo_box_entry_set_text_column (combo, ICON_STOCK_COLUMN);
 	gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
 
 	cell_renderer_pix = gtk_cell_renderer_pixbuf_new ();
@@ -216,16 +223,100 @@ static void fill_menu_icon_combo_list_of (GtkComboBoxEntry* combo)
 		 cell_renderer_pix,
 		 FALSE);
 	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (combo), cell_renderer_pix,
-		"stock-id", STOCK_COLUMN);
+		"stock-id", ICON_STOCK_COLUMN);
 
 	cell_renderer_text = gtk_cell_renderer_text_new ();
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo),
 		 cell_renderer_text,
 		 TRUE);
 	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (combo), cell_renderer_text,
-		"text", LABEL_COLUMN);
+		"text", ICON_LABEL_COLUMN);
 
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
+}
+
+static void scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer,
+													  gchar *path,
+													  gpointer user_data)
+{
+	GtkTreeIter iter;
+	GValue* toggle_state = NULL;
+	GValue* scheme = NULL;
+	GValue* desc = NULL;
+	gboolean tmp;
+	GtkTreeModel* model = GTK_TREE_MODEL (user_data);
+
+	gtk_tree_model_get_iter (model, &iter, path);
+	gtk_tree_model_get_value (model, &iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state);
+	gtk_tree_model_get_value (model, &iter, SCHEMES_KEYWORD_COLUMN, &scheme);
+	gtk_tree_model_get_value (model, &iter, SCHEMES_DESC_COLUMN, &desc);
+
+	tmp = g_value_get_boolean (toggle_state);
+	g_value_unset (toggle_state);
+
+	g_value_init (&toggle_state, G_TYPE_BOOLEAN);
+	g_value_set_boolean (&toggle_state, !tmp);
+
+	gtk_list_store_set_value (GTK_LIST_STORE (model), &iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state);
+
+	// FIXME: update the action object... hummm, not sure it is the good place ??
+	
+	g_value_unset (scheme);
+	g_value_unset (desc);
+}
+
+static void create_schemes_selection_list (void)
+{
+	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_DIALOG_WIDGET);
+	GSList* iter;
+	GSList* schemes_list = nact_prefs_get_schemes_list ();
+	GtkListStore* model;
+	GtkTreeIter row;
+	gchar* label;
+	GtkTreeViewColumn *column;
+	GtkCellRenderer* toggled_cell;
+
+	model = gtk_list_store_new (SCHEMES_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING);
+	
+	for (iter = schemes_list; iter; iter = iter->next)
+	{
+		gchar** tokens = g_strsplit ((gchar*)iter->data, "|", 2);
+		
+		gtk_list_store_append (model, &row);
+		gtk_list_store_set (model, &row, SCHEMES_CHECKBOX_COLUMN, FALSE, 
+													SCHEMES_KEYWORD_COLUMN, tokens[0],
+												   SCHEMES_DESC_COLUMN, tokens[1], -1);
+		
+		g_strfreev (tokens);
+	}
+
+	g_slist_foreach (schemes_list, (GFunc)g_free, NULL);
+	g_slist_free (schemes_list);
+
+	gtk_tree_view_set_model (GTK_TREE_VIEW (listview), GTK_TREE_MODEL (model));
+	g_object_unref (model);
+	
+	toggled_cell = gtk_cell_renderer_toggle_new ();
+
+
+	g_signal_connect (G_OBJECT (toggled_cell), "toggled",
+			  G_CALLBACK (scheme_selection_toggled_cb), 
+			  gtk_tree_view_get_model (GTK_TREE_VIEW (listview)));
+
+	column = gtk_tree_view_column_new_with_attributes ("",
+							   toggled_cell,
+							   "active", SCHEMES_CHECKBOX_COLUMN, NULL);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (listview), column);
+	
+	column = gtk_tree_view_column_new_with_attributes (_("Scheme"),
+							   gtk_cell_renderer_text_new (),
+							   "text", SCHEMES_KEYWORD_COLUMN, NULL);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (listview), column);
+
+	column = gtk_tree_view_column_new_with_attributes (_("Description"),
+							   gtk_cell_renderer_text_new (),
+							   "text", SCHEMES_DESC_COLUMN, NULL);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (listview), column);
 }
 
 static gboolean
@@ -261,6 +352,8 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		menu_icon = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
 		fill_menu_icon_combo_list_of (GTK_COMBO_BOX_ENTRY (menu_icon));
 	
+		create_schemes_selection_list ();
+		
 		aligned_widgets = nact_get_glade_widget_prefix_from ("LabelAlign", GLADE_EDIT_DIALOG_WIDGET);
 		label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 		for (iter = aligned_widgets; iter; iter = iter->next)

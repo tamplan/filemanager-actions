@@ -1,5 +1,9 @@
 2005-10-22  Frederic Ruaudel <grumz@grumz.net> 
 
+	* nact/nautilus-actions-config.glade:
+	* nact/nact-editor.c: Start implementing the scheme list 
+in the edit dialog of nact.
+
 	* nact/nact-editor.c: Fix the add/edit dialog title in 
 relation with the task done.
 
