@@ -40,6 +40,8 @@ enum {
 	N_COLUMN
 };
 
+static NautilusActionsConfigGconf *config = NULL;
+
 void
 nautilus_actions_display_error (const gchar *msg)
 {
@@ -58,9 +60,7 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkTreeIter iter;
 	GtkWidget *nact_actions_list;
 	GtkTreeModel* model;
-	NautilusActionsConfigGconf *config;
 
-	config = nautilus_actions_config_gconf_get ();
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
@@ -79,7 +79,6 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		g_free (uuid);
 	}
-	g_object_unref (config);
 }
 
 void
@@ -89,9 +88,6 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkTreeIter iter;
 	GtkWidget *nact_actions_list;
 	GtkTreeModel* model;
-	NautilusActionsConfigGconf *config;
-
-	config = nautilus_actions_config_gconf_get ();
 
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
 
@@ -105,7 +101,6 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		g_free (uuid);
 	}
-	g_object_unref (config);
 }
 
 void
@@ -117,6 +112,7 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 	case GTK_RESPONSE_CLOSE :
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		nact_destroy_glade_objects ();
+		g_object_unref (config);
 		gtk_main_quit ();
 		break;
 	case GTK_RESPONSE_HELP :
@@ -148,9 +144,7 @@ setup_actions_list (GtkWidget *list)
 	GtkListStore *model;
 	GSList *actions, *l;
 	GtkTreeViewColumn *column;
-	NautilusActionsConfigGconf *config;
 
-	config = nautilus_actions_config_gconf_get ();
 
 	/* create the model */
 	model = gtk_list_store_new (N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING);
@@ -206,7 +200,6 @@ setup_actions_list (GtkWidget *list)
 	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (list))), "changed",
 			  G_CALLBACK (list_selection_changed_cb), NULL);
 
-	g_object_unref (config);
 }
 
 static void
@@ -227,7 +220,6 @@ init_dialog (void)
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
 	setup_actions_list (nact_actions_list);
 
-
 	/* display the dialog */
 	gtk_widget_show (nact_dialog);
 	g_object_unref (gui);
@@ -247,6 +239,7 @@ main (int argc, char *argv[])
 
 	gtk_init (&argc, &argv);
 
+	config = nautilus_actions_config_gconf_get ();
 
 	/* create main dialog */
 	init_dialog ();

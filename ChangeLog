@@ -1,5 +1,8 @@
 2005-10-22  Frederic Ruaudel <grumz@grumz.net> 
 
+	* nact/nact.c: Fix the segfault when trying to edit/delete
+an existing config.
+
 	* nact/nact-editor.c: Fix access to the menu icon entry
 when saving the dialog content.
 
