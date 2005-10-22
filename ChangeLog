@@ -1,5 +1,9 @@
 2005-10-22  Frederic Ruaudel <grumz@grumz.net> 
 
+	* nact/Makefile.am:
+	* nact/nact-prefs.c:
+	* nact/nact-prefs.h: Add GConf managed preferences in nact
+
 	* nact/nact.c: Fix the segfault when trying to edit/delete
 an existing config.
 
