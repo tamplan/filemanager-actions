@@ -1,5 +1,11 @@
 2005-10-22  Frederic Ruaudel <grumz@grumz.net> 
 
+	* nact/nact-editor.c:
+	* nact/nact-utils.h:
+	* nact/nautilus-actions-config.glade:
+	* nact/nact.c: Implement the preference API and manage the 
+filechooser dialog for the selection of the icon and command path.
+
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
 	* configure.in: Add a global variable to define the GConf
 basedir of n-a.

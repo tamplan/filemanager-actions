@@ -110,6 +110,9 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 	case GTK_RESPONSE_NONE :
 	case GTK_RESPONSE_DELETE_EVENT :
 	case GTK_RESPONSE_CLOSE :
+		nact_prefs_set_main_dialog_size (GTK_WINDOW (dialog));
+		nact_prefs_set_main_dialog_position (GTK_WINDOW (dialog));
+		nact_prefs_save_preferences ();
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		nact_destroy_glade_objects ();
 		g_object_unref (config);
@@ -205,6 +208,7 @@ setup_actions_list (GtkWidget *list)
 static void
 init_dialog (void)
 {
+	gint width, height, x, y;
 	GtkWidget *nact_dialog;
 	GtkWidget *nact_actions_list;
 	GladeXML *gui = nact_get_glade_xml_object (GLADE_MAIN_WIDGET);
@@ -220,6 +224,20 @@ init_dialog (void)
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
 	setup_actions_list (nact_actions_list);
 
+	/* Get the default dialog size */
+	gtk_window_get_default_size (GTK_WINDOW (nact_dialog), &width, &height);
+	/* Override with preferred one, if any */
+	nact_prefs_get_main_dialog_size (&width, &height);
+	
+	gtk_window_resize (GTK_WINDOW (nact_dialog), width, height);
+
+	/* Get the default position */
+	gtk_window_get_position (GTK_WINDOW (nact_dialog), &x, &y);
+	/* Override with preferred one, if any */
+	nact_prefs_get_main_dialog_position (&x, &y);
+
+	gtk_window_move (GTK_WINDOW (nact_dialog), x, y);
+	
 	/* display the dialog */
 	gtk_widget_show (nact_dialog);
 	g_object_unref (gui);

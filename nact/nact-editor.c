@@ -71,6 +71,81 @@ field_changed_cb (GObject *editable, gpointer user_data)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
 }
 
+void icon_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
+{
+	gchar* last_dir;
+	gchar* filename;
+	GtkWidget* filechooser = nact_get_glade_widget_from ("FileChooserDialog", GLADE_FILECHOOSER_DIALOG_WIDGET);
+	GtkWidget* combo = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
+	gboolean set_current_location = FALSE;
+
+	filename = gtk_entry_get_text (GTK_ENTRY (GTK_BIN (combo)->child));
+	if (filename != NULL && strlen (filename) > 0)
+	{
+		set_current_location = gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (filechooser), filename);
+	}
+	
+	if (!set_current_location)
+	{
+		last_dir = nact_prefs_get_icon_last_browsed_dir ();
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (filechooser), last_dir);
+		g_free (last_dir);
+	}
+
+	switch (gtk_dialog_run (GTK_DIALOG (filechooser))) 
+	{
+		case GTK_RESPONSE_OK :
+			last_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (filechooser));
+			nact_prefs_set_icon_last_browsed_dir (last_dir);
+			g_free (last_dir);
+
+			filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (filechooser));
+			gtk_entry_set_text (GTK_ENTRY (GTK_BIN (combo)->child), filename);
+			g_free (filename);
+		case GTK_RESPONSE_CANCEL:
+		case GTK_RESPONSE_DELETE_EVENT:
+			gtk_widget_hide (filechooser);
+	}		
+}
+
+
+void path_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
+{
+	gchar* last_dir;
+	gchar* filename;
+	GtkWidget* filechooser = nact_get_glade_widget_from ("FileChooserDialog", GLADE_FILECHOOSER_DIALOG_WIDGET);
+	GtkWidget* entry = nact_get_glade_widget_from ("CommandPathEntry", GLADE_EDIT_DIALOG_WIDGET);
+	gboolean set_current_location = FALSE;
+
+	filename = gtk_entry_get_text (GTK_ENTRY (entry));
+	if (filename != NULL && strlen (filename) > 0)
+	{
+		set_current_location = gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (filechooser), filename);
+	}
+	
+	if (!set_current_location)
+	{
+		last_dir = nact_prefs_get_path_last_browsed_dir ();
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (filechooser), last_dir);
+		g_free (last_dir);
+	}
+
+	switch (gtk_dialog_run (GTK_DIALOG (filechooser))) 
+	{
+		case GTK_RESPONSE_OK :
+			last_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (filechooser));
+			nact_prefs_set_path_last_browsed_dir (last_dir);
+			g_free (last_dir);
+
+			filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (filechooser));
+			gtk_entry_set_text (GTK_ENTRY (entry), filename);
+			g_free (filename);
+		case GTK_RESPONSE_CANCEL:
+		case GTK_RESPONSE_DELETE_EVENT:
+			gtk_widget_hide (filechooser);
+	}		
+}
+
 void
 legend_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
@@ -170,6 +245,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	GtkWidget *menu_label, *menu_tooltip;
 	GtkWidget *command_path, *command_params;
 	GtkWidget *only_files, *only_folders, *both, *accept_multiple;
+	gint width, height, x, y;
 
 	if (!init)
 	{
@@ -208,6 +284,18 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 
 	editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
 
+	/* Get the default dialog size */
+	gtk_window_get_default_size (GTK_WINDOW (editor), &width, &height);
+	/* Override with preferred one, if any */
+	nact_prefs_get_edit_dialog_size (&width, &height);
+	
+	gtk_window_resize (GTK_WINDOW (editor), width, height);
+
+	if (nact_prefs_get_edit_dialog_position (&x, &y))
+	{
+		gtk_window_move (GTK_WINDOW (editor), x, y);
+	}
+	
 	menu_label = nact_get_glade_widget_from ("MenuLabelEntry", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_entry_set_text (GTK_ENTRY (menu_label), action->label);
 
@@ -281,6 +369,8 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		break;
 	}
 
+	nact_prefs_set_edit_dialog_size (GTK_WINDOW (editor));
+	nact_prefs_set_edit_dialog_position (GTK_WINDOW (editor));
 	gtk_widget_hide (editor);
 
 	return ret;

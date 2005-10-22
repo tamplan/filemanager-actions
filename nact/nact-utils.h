@@ -29,6 +29,7 @@
 #define GLADE_MAIN_WIDGET "ActionsDialog"
 #define GLADE_EDIT_DIALOG_WIDGET "EditActionDialog"
 #define GLADE_LEGEND_DIALOG_WIDGET "LegendDialog"
+#define GLADE_FILECHOOSER_DIALOG_WIDGET "FileChooserDialog"
 
 GladeXML* nact_get_glade_xml_object (const gchar* root_widget);
 GtkWidget* nact_get_glade_widget_from (const gchar* widget_name, const gchar* root_widget);
