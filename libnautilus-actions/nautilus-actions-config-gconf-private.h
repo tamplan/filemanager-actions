@@ -23,7 +23,7 @@
 
 // GConf general information
 #define ACTIONS_SCHEMA_PREFIX  "/schemas"
-#define ACTIONS_CONFIG_DIR     "/apps/nautilus-actions/configurations"
+#define ACTIONS_CONFIG_DIR     NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
 #define ACTIONS_SCHEMA_OWNER	 "nautilus-actions"
 
 // GConf key names :

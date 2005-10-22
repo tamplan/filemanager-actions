@@ -1,5 +1,9 @@
 2005-10-22  Frederic Ruaudel <grumz@grumz.net> 
 
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* configure.in: Add a global variable to define the GConf
+basedir of n-a.
+
 	* nact/Makefile.am:
 	* nact/nact-prefs.c:
 	* nact/nact-prefs.h: Add GConf managed preferences in nact
