@@ -1,5 +1,8 @@
 2005-10-22  Frederic Ruaudel <grumz@grumz.net> 0.8
 
+	* nact/nact-editor.c: Fix access to the menu icon entry
+when saving the dialog content.
+
 	* utils/nautilus-actions-tools-utils.c:
 	* utils/nautilus-actions-tools-utils.h:
 	* configure.in:

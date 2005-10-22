@@ -251,7 +251,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		} else {
 			nautilus_actions_config_action_set_label (action, label);
 			nautilus_actions_config_action_set_tooltip (action, gtk_entry_get_text (GTK_ENTRY (menu_tooltip)));
-			nautilus_actions_config_action_set_icon (action, gtk_entry_get_text (GTK_ENTRY (menu_icon)));
+			nautilus_actions_config_action_set_icon (action, gtk_entry_get_text (GTK_ENTRY (GTK_BIN (menu_icon)->child)));
 			nautilus_actions_config_action_set_path (action, gtk_entry_get_text (GTK_ENTRY (command_path)));
 			nautilus_actions_config_action_set_parameters (action, gtk_entry_get_text (GTK_ENTRY (command_params)));
 
