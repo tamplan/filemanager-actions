@@ -284,6 +284,17 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 
 	editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
 
+	if (is_new)
+	{
+		gtk_window_set_title (GTK_WINDOW (editor), _("Add a New Action"));
+	}
+	else
+	{
+		gchar* title = g_strdup_printf (_("Edit Action \"%s\""), action->label);
+		gtk_window_set_title (GTK_WINDOW (editor), title);
+		g_free (title);
+	}
+
 	/* Get the default dialog size */
 	gtk_window_get_default_size (GTK_WINDOW (editor), &width, &height);
 	/* Override with preferred one, if any */

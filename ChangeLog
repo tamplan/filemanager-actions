@@ -1,5 +1,8 @@
 2005-10-22  Frederic Ruaudel <grumz@grumz.net> 
 
+	* nact/nact-editor.c: Fix the add/edit dialog title in 
+relation with the task done.
+
 	* nact/nact-editor.c:
 	* nact/nact-utils.h:
 	* nact/nautilus-actions-config.glade:
