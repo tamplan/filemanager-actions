@@ -358,10 +358,6 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 				new_action->basenames = g_slist_append (new_action->basenames, g_strdup ((gchar*)iter->data));
 			}
 		}
-		else
-		{
-			success = FALSE;
-		}
 
 		new_action->is_file = action->is_file;
 		new_action->is_dir = action->is_dir;
@@ -372,10 +368,6 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 			{
 				new_action->schemes = g_slist_append (new_action->schemes, g_strdup ((gchar*)iter->data));
 			}
-		}
-		else
-		{
-			success = FALSE;
 		}
 
 		if (action->version && success) {
