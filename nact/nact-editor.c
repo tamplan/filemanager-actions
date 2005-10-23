@@ -253,7 +253,29 @@ static void scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer,
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter, SCHEMES_CHECKBOX_COLUMN, !toggle_state, -1);
 
 	//--> Notice edition change
-	field_changed_cb (cell_renderer, NULL);
+	field_changed_cb (G_OBJECT (cell_renderer), NULL);
+
+	gtk_tree_path_free (path);
+}
+
+static void
+scheme_desc_edited_cb (GtkCellRendererText *cell,
+             const gchar         *path_string,
+             const gchar         *new_text,
+             gpointer             data)
+{
+	GtkTreeModel* model = GTK_TREE_MODEL (data);
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+	GtkTreeIter iter;
+	gchar* old_text;
+
+	gtk_tree_model_get_iter (model, &iter, path);
+
+	gtk_tree_model_get (model, &iter, SCHEMES_DESC_COLUMN, &old_text, -1);
+	g_free (old_text);
+
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter, SCHEMES_DESC_COLUMN,
+							  g_strdup (new_text), -1);
 
 	gtk_tree_path_free (path);
 }
@@ -268,6 +290,7 @@ static void create_schemes_selection_list (void)
 	gchar* label;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer* toggled_cell;
+	GtkCellRenderer* text_cell;
 
 	model = gtk_list_store_new (SCHEMES_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING);
 	
@@ -291,7 +314,6 @@ static void create_schemes_selection_list (void)
 	
 	toggled_cell = gtk_cell_renderer_toggle_new ();
 
-
 	g_signal_connect (G_OBJECT (toggled_cell), "toggled",
 			  G_CALLBACK (scheme_selection_toggled_cb), 
 			  gtk_tree_view_get_model (GTK_TREE_VIEW (listview)));
@@ -306,8 +328,15 @@ static void create_schemes_selection_list (void)
 							   "text", SCHEMES_KEYWORD_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (listview), column);
 
+	text_cell = gtk_cell_renderer_text_new ();
+	g_object_set (G_OBJECT (text_cell), "editable", TRUE, NULL);
+
+	g_signal_connect (G_OBJECT (text_cell), "edited",
+							G_CALLBACK (scheme_desc_edited_cb), 
+							gtk_tree_view_get_model (GTK_TREE_VIEW (listview)));
+	
 	column = gtk_tree_view_column_new_with_attributes (_("Description"),
-							   gtk_cell_renderer_text_new (),
+							   text_cell,
 							   "text", SCHEMES_DESC_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (listview), column);
 }
@@ -430,6 +459,9 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 
 		menu_icon = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
 		fill_menu_icon_combo_list_of (GTK_COMBO_BOX_ENTRY (menu_icon));
+
+		gtk_tooltips_set_tip (gtk_tooltips_new (), GTK_WIDGET (GTK_BIN (menu_icon)->child),
+									 _("Icon of the menu item in the Nautilus contextual menu"), "");
 	
 		create_schemes_selection_list ();
 		
@@ -554,12 +586,6 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 			g_slist_foreach (list, (GFunc) g_free, NULL);
 			g_slist_free (list);
 
-			list = NULL;
-			gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)get_all_schemes_list, &list);
-			nact_prefs_set_schemes_list (list);
-			g_slist_foreach (list, (GFunc) g_free, NULL);
-			g_slist_free (list);
-
 			if (is_new)
 				ret = nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), action);
 			else
@@ -571,9 +597,17 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		ret = FALSE;
 		break;
 	}
+	
+	// Save preferences
+	list = NULL;
+	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)get_all_schemes_list, &list);
+	nact_prefs_set_schemes_list (list);
+	g_slist_foreach (list, (GFunc) g_free, NULL);
+	g_slist_free (list);
 
 	nact_prefs_set_edit_dialog_size (GTK_WINDOW (editor));
 	nact_prefs_set_edit_dialog_position (GTK_WINDOW (editor));
+
 	gtk_widget_hide (editor);
 
 	return ret;
