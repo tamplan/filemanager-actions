@@ -1,5 +1,13 @@
 2005-10-23  Frederic Ruaudel <grumz@grumz.net> 
 
+	* nact/nautilus-actions-config.glade:
+	* po/bg.po:
+	* po/de.po:
+	* po/es.po:
+	* po/fr.po:
+	* po/nautilus-actions.pot:
+	* po/POTFILES.in: Update i18n stuff
+
 	* nact/nact-editor.c: Fix init of scheme list when add a
 new action and manage basenames pattern load/save in the edit dialog
 
