@@ -675,10 +675,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	scheme_listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_DIALOG_WIDGET);
 	scheme_model = gtk_tree_view_get_model (GTK_TREE_VIEW (scheme_listview));
 	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)reset_schemes_list, NULL);
-	if (!is_new)
-	{
-		g_slist_foreach (action->schemes, (GFunc)set_action_schemes, scheme_model);
-	}
+	g_slist_foreach (action->schemes, (GFunc)set_action_schemes, scheme_model);
 
 	/* run the dialog */
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
