@@ -258,6 +258,45 @@ static void scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer,
 	gtk_tree_path_free (path);
 }
 
+static gboolean
+cell_edited (GtkTreeModel		   *model,
+             const gchar         *path_string,
+             const gchar         *new_text,
+				 gint 					column)
+{
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+	GtkTreeIter iter;
+	gchar* old_text;
+	gboolean toggle_state;
+
+	gtk_tree_model_get_iter (model, &iter, path);
+
+	gtk_tree_model_get (model, &iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state, 
+												 column, &old_text, -1);
+	g_free (old_text);
+
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter, column,
+							  g_strdup (new_text), -1);
+
+	gtk_tree_path_free (path);
+
+	return toggle_state;
+}
+
+static void
+scheme_edited_cb (GtkCellRendererText *cell,
+             const gchar         *path_string,
+             const gchar         *new_text,
+             gpointer             data)
+{
+	GtkTreeModel* model = GTK_TREE_MODEL (data);
+	if (cell_edited (model, path_string, new_text, SCHEMES_KEYWORD_COLUMN))
+	{
+		//--> if column was checked, set the action has edited
+		field_changed_cb (G_OBJECT (cell), NULL);
+	}
+}
+
 static void
 scheme_desc_edited_cb (GtkCellRendererText *cell,
              const gchar         *path_string,
@@ -265,19 +304,63 @@ scheme_desc_edited_cb (GtkCellRendererText *cell,
              gpointer             data)
 {
 	GtkTreeModel* model = GTK_TREE_MODEL (data);
-	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+	cell_edited (model, path_string, new_text, SCHEMES_DESC_COLUMN);
+}
+
+static void
+scheme_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
+{
+	GtkWidget *delete_button = nact_get_glade_widget_from ("RemoveSchemeButton", GLADE_EDIT_DIALOG_WIDGET);
+
+	if (gtk_tree_selection_count_selected_rows (selection) > 0) {
+		gtk_widget_set_sensitive (delete_button, TRUE);
+	} else {
+		gtk_widget_set_sensitive (delete_button, FALSE);
+	}
+}
+
+void add_scheme_clicked (GtkWidget* widget, gpointer user_data)
+{
+	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_DIALOG_WIDGET);
+	GtkTreeModel* model = gtk_tree_view_get_model (GTK_TREE_VIEW (listview));
+	GtkTreeIter row;
+	
+	gtk_list_store_append (model, &row);
+	gtk_list_store_set (model, &row, SCHEMES_CHECKBOX_COLUMN, FALSE, 
+												SCHEMES_KEYWORD_COLUMN, _("new-scheme"),
+												SCHEMES_DESC_COLUMN, _("New Scheme Description"), -1);
+}
+
+void remove_scheme_clicked (GtkWidget* widget, gpointer user_data)
+{
+	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_DIALOG_WIDGET);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (listview));
+	GtkTreeModel* model = gtk_tree_view_get_model (GTK_TREE_VIEW (listview));
+	GList* selected_values_path = NULL;
 	GtkTreeIter iter;
-	gchar* old_text;
+	GtkTreePath* path;
+	GList* list_iter;
+	gboolean toggle_state;
 
-	gtk_tree_model_get_iter (model, &iter, path);
+	selected_values_path = gtk_tree_selection_get_selected_rows (selection, &model);
 
-	gtk_tree_model_get (model, &iter, SCHEMES_DESC_COLUMN, &old_text, -1);
-	g_free (old_text);
+	for (list_iter = selected_values_path; list_iter; list_iter = list_iter->next)
+	{
+		path = (GtkTreePath*)(list_iter->data);
+		gtk_tree_model_get_iter (model, &iter, path);
+		gtk_tree_model_get (model, &iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state, -1);
+		
+		gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
 
-	gtk_list_store_set (GTK_LIST_STORE (model), &iter, SCHEMES_DESC_COLUMN,
-							  g_strdup (new_text), -1);
-
-	gtk_tree_path_free (path);
+		if (toggle_state)
+		{
+			//--> if column was checked, set the action has edited
+			field_changed_cb (G_OBJECT (widget), NULL);
+		}
+	}
+	
+	g_list_foreach (selected_values_path, (GFunc)gtk_tree_path_free, NULL);
+	g_list_free (selected_values_path);
 }
 
 static void create_schemes_selection_list (void)
@@ -323,8 +406,15 @@ static void create_schemes_selection_list (void)
 							   "active", SCHEMES_CHECKBOX_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (listview), column);
 	
+	text_cell = gtk_cell_renderer_text_new ();
+	g_object_set (G_OBJECT (text_cell), "editable", TRUE, NULL);
+
+	g_signal_connect (G_OBJECT (text_cell), "edited",
+							G_CALLBACK (scheme_edited_cb), 
+							gtk_tree_view_get_model (GTK_TREE_VIEW (listview)));
+	
 	column = gtk_tree_view_column_new_with_attributes (_("Scheme"),
-							   gtk_cell_renderer_text_new (),
+							   text_cell,
 							   "text", SCHEMES_KEYWORD_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (listview), column);
 
@@ -339,6 +429,9 @@ static void create_schemes_selection_list (void)
 							   text_cell,
 							   "text", SCHEMES_DESC_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (listview), column);
+
+	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (listview))), "changed",
+			  G_CALLBACK (scheme_list_selection_changed_cb), NULL);
 }
 
 static gboolean reset_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path, 
