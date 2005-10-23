@@ -211,6 +211,43 @@ static GtkTreeModel* create_stock_icon_model (void)
 	return GTK_TREE_MODEL (model);
 }
 
+static void preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data)
+{
+	GtkWidget* image = nact_get_glade_widget_from ("IconImage", GLADE_EDIT_DIALOG_WIDGET);
+	const gchar* icon_name = gtk_entry_get_text (icon_entry);
+	GtkStockItem stock_item;
+	GdkPixbuf* icon = NULL;
+
+	if (icon_name && strlen (icon_name) > 0)
+	{
+		if (gtk_stock_lookup (icon_name, &stock_item))
+		{
+			gtk_image_set_from_stock (GTK_IMAGE (image), icon_name, GTK_ICON_SIZE_MENU);
+		}
+		else if (g_file_test (icon_name, G_FILE_TEST_EXISTS) && 
+					g_file_test (icon_name, G_FILE_TEST_IS_REGULAR))
+		{
+			gint width;
+			gint height;
+			GError* error = NULL;
+			
+			gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
+			icon = gdk_pixbuf_new_from_file_at_size (icon_name, width, height, &error);
+			if (error)
+			{
+				icon = NULL;
+			}
+			gtk_image_set_from_pixbuf (GTK_IMAGE (image), icon);
+		}
+
+		gtk_widget_show (image);
+	}
+	else
+	{
+		gtk_widget_hide (image);
+	}
+}
+
 static void fill_menu_icon_combo_list_of (GtkComboBoxEntry* combo)
 {
 	GtkCellRenderer *cell_renderer_pix;
@@ -551,6 +588,10 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		glade_xml_signal_autoconnect(gui);
 
 		menu_icon = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
+
+		g_signal_connect (G_OBJECT (GTK_BIN (menu_icon)->child), "changed",
+							   G_CALLBACK (preview_icon_changed_cb), NULL);
+		
 		fill_menu_icon_combo_list_of (GTK_COMBO_BOX_ENTRY (menu_icon));
 
 		gtk_tooltips_set_tip (gtk_tooltips_new (), GTK_WIDGET (GTK_BIN (menu_icon)->child),

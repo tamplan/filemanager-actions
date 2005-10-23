@@ -1,5 +1,9 @@
 2005-10-23  Frederic Ruaudel <grumz@grumz.net> 
 
+	* nact/nautilus-actions-config.glade:
+	* nact/nact-editor.c: Add a preview icon toward the icon 
+combobox in nact edit dialog.
+
 	* nact/nact-editor.c: Implement Add/Remove/Edit of schemes
 in nact list view.
 
