@@ -362,8 +362,8 @@ void add_scheme_clicked (GtkWidget* widget, gpointer user_data)
 	GtkTreeModel* model = gtk_tree_view_get_model (GTK_TREE_VIEW (listview));
 	GtkTreeIter row;
 	
-	gtk_list_store_append (model, &row);
-	gtk_list_store_set (model, &row, SCHEMES_CHECKBOX_COLUMN, FALSE, 
+	gtk_list_store_append (GTK_LIST_STORE (model), &row);
+	gtk_list_store_set (GTK_LIST_STORE (model), &row, SCHEMES_CHECKBOX_COLUMN, FALSE, 
 												SCHEMES_KEYWORD_COLUMN, _("new-scheme"),
 												SCHEMES_DESC_COLUMN, _("New Scheme Description"), -1);
 }
@@ -555,6 +555,47 @@ static void set_action_schemes (gchar* action_scheme, GtkTreeModel* scheme_model
 	}
 }
 
+static void set_action_basenames_list (GtkEntry* entry, GSList* basenames)
+{
+	GSList* iter;
+	gchar* entry_text;
+	gchar* tmp;
+
+	iter = basenames;
+	entry_text = g_strdup ((gchar*)iter->data);
+	iter = iter->next;
+	
+	while (iter)
+	{
+		tmp = g_strjoin (" ; ", entry_text, (gchar*)iter->data, NULL);
+		g_free (entry_text);
+		entry_text = tmp;
+		iter = iter->next;
+	}
+
+	gtk_entry_set_text (entry, entry_text);
+}
+
+static GSList* get_action_basenames_list (const gchar* patterns)
+{
+	gchar** tokens = g_strsplit (patterns, ";", -1);
+	gchar** iter;
+	GSList* list = NULL;
+	gchar* tmp;
+	
+	iter = tokens;
+	while (*iter != NULL)
+	{
+		tmp = g_strstrip (*iter);
+		list = g_slist_append (list, g_strdup (tmp));
+		iter++;
+	}
+	
+	g_strfreev (tokens);
+
+	return list;
+}
+
 static gboolean
 open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 {
@@ -571,7 +612,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	GtkSizeGroup* button_size_group;
 	GtkWidget *menu_icon, *scheme_listview;
 	GtkWidget *menu_label, *menu_tooltip;
-	GtkWidget *command_path, *command_params;
+	GtkWidget *command_path, *command_params, *test_patterns;
 	GtkWidget *only_files, *only_folders, *both, *accept_multiple;
 	gint width, height, x, y;
 	GtkTreeModel* scheme_model;
@@ -660,6 +701,9 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	command_params = nact_get_glade_widget_from ("CommandParamsEntry", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_entry_set_text (GTK_ENTRY (command_params), action->parameters);
 
+	test_patterns = nact_get_glade_widget_from ("PatternEntry", GLADE_EDIT_DIALOG_WIDGET);
+	set_action_basenames_list (GTK_ENTRY (test_patterns), action->basenames);
+
 	only_folders = nact_get_glade_widget_from ("OnlyFoldersButton", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action->is_dir);
 
@@ -696,6 +740,11 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 			nautilus_actions_config_action_set_icon (action, gtk_entry_get_text (GTK_ENTRY (GTK_BIN (menu_icon)->child)));
 			nautilus_actions_config_action_set_path (action, gtk_entry_get_text (GTK_ENTRY (command_path)));
 			nautilus_actions_config_action_set_parameters (action, gtk_entry_get_text (GTK_ENTRY (command_params)));
+
+			list = get_action_basenames_list (gtk_entry_get_text (GTK_ENTRY (test_patterns)));
+			nautilus_actions_config_action_set_basenames (action, list);
+			g_slist_foreach (list, (GFunc) g_free, NULL);
+			g_slist_free (list);
 
 			if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (only_files))) {
 				nautilus_actions_config_action_set_is_file (action, TRUE);
