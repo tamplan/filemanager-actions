@@ -80,7 +80,8 @@ field_changed_cb (GObject *object, gpointer user_data)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
 }
 
-void icon_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
+void
+icon_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	gchar* last_dir;
 	gchar* filename;

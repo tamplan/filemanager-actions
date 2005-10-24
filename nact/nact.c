@@ -42,7 +42,47 @@ enum {
 
 static NautilusActionsConfigGconf *config = NULL;
 
-void
+static void
+fill_actions_list (GtkWidget *list)
+{
+	GSList *actions, *l;
+	GtkListStore *model = gtk_tree_view_get_model (GTK_TREE_VIEW (list));
+
+	gtk_list_store_clear (model);
+
+	actions = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (config));
+	for (l = actions; l != NULL; l = l->next) {
+		GtkTreeIter iter;
+		GtkStockItem item;
+		GdkPixbuf* icon = NULL;
+		NautilusActionsConfigAction *action = l->data;
+
+		if (action->icon != NULL) {
+			if (gtk_stock_lookup (action->icon, &item)) {
+				icon = gtk_widget_render_icon (list, action->icon, GTK_ICON_SIZE_MENU, NULL);
+			} else if (g_file_test (action->icon, G_FILE_TEST_EXISTS)
+				   && g_file_test (action->icon, G_FILE_TEST_IS_REGULAR)) {
+				gint width;
+				gint height;
+				GError* error = NULL;
+				
+				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
+				icon = gdk_pixbuf_new_from_file_at_size (action->icon, width, height, &error);
+				if (error)
+					icon = NULL;
+			}
+		}
+		gtk_list_store_append (model, &iter);
+		gtk_list_store_set (model, &iter, 
+				    MENU_ICON_COLUMN, icon, 
+				    MENU_LABEL_COLUMN, action->label,
+				    UUID_COLUMN, action->uuid,
+				    -1);
+	}
+
+	nautilus_actions_config_free_actions_list (actions);
+}
+
 nautilus_actions_display_error (const gchar *msg)
 {
 }
@@ -50,7 +90,8 @@ nautilus_actions_display_error (const gchar *msg)
 void
 add_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
-	nact_editor_new_action ();
+	if (nact_editor_new_action ())
+		fill_actions_list (nact_get_glade_widget ("ActionsList"));
 }
 
 void
@@ -72,9 +113,9 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
 		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-		if (action)
-		{
-			nact_editor_edit_action (action);
+		if (action) {
+			if (nact_editor_edit_action (action))
+				fill_actions_list (nact_actions_list);
 		}
 
 		g_free (uuid);
@@ -145,47 +186,12 @@ static void
 setup_actions_list (GtkWidget *list)
 {
 	GtkListStore *model;
-	GSList *actions, *l;
 	GtkTreeViewColumn *column;
-
 
 	/* create the model */
 	model = gtk_list_store_new (N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING);
-
-	actions = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (config));
-	for (l = actions; l != NULL; l = l->next) {
-		GtkTreeIter iter;
-		GtkStockItem item;
-		GdkPixbuf* icon = NULL;
-		NautilusActionsConfigAction *action = l->data;
-
-		if (action->icon != NULL)
-		{
-			if (gtk_stock_lookup (action->icon, &item))
-			{
-				icon = gtk_widget_render_icon (list, action->icon, GTK_ICON_SIZE_MENU, NULL);
-			}
-			else if (g_file_test (action->icon, G_FILE_TEST_EXISTS) && g_file_test (action->icon, G_FILE_TEST_IS_REGULAR))
-			{
-				gint width;
-				gint height;
-				GError* error = NULL;
-				
-				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
-				icon = gdk_pixbuf_new_from_file_at_size (action->icon, width, height, &error);
-				if (error)
-				{
-					icon = NULL;
-				}
-			}
-		}
-		gtk_list_store_append (model, &iter);
-		gtk_list_store_set (model, &iter, MENU_ICON_COLUMN, icon, MENU_LABEL_COLUMN, action->label, UUID_COLUMN, action->uuid, -1);
-	}
-
-	nautilus_actions_config_free_actions_list (actions);
-
 	gtk_tree_view_set_model (GTK_TREE_VIEW (list), GTK_TREE_MODEL (model));
+	fill_actions_list (list);
 	g_object_unref (model);
 
 	/* create columns on the tree view */
