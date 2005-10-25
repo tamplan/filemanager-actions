@@ -7,7 +7,7 @@
 	remove the action from the hash table.
 
 	* nact/nact.c (delete_button_clicked_cb): add call to
-fill_actions_list to update the list when removing an action.
+	fill_actions_list to update the list when removing an action.
 
 2005-10-24  Rodrigo Moya <rodrigo@novell.com>
 
@@ -28,53 +28,53 @@ fill_actions_list to update the list when removing an action.
 	* po/POTFILES.in: Update i18n stuff
 
 	* nact/nact-editor.c: Fix init of scheme list when add a
-new action and manage basenames pattern load/save in the edit dialog
+	new action and manage basenames pattern load/save in the edit dialog
 
 	* libnautilus-actions/nautilus-actions-config.c: Set empty
-basename and scheme list valid if empty.
+	basename and scheme list valid if empty.
 
 	* nact/nautilus-actions-config.glade:
 	* nact/nact-editor.c: Add a preview icon toward the icon 
-combobox in nact edit dialog.
+	combobox in nact edit dialog.
 
 	* nact/nact-editor.c: Implement Add/Remove/Edit of schemes
-in nact list view.
+	in nact list view.
 
 	* nact/nautilus-actions-config.glade:
 	* nact/nact-editor.c: Put back the tooltip in the edit
-dialog of nact and add add/remove button to manage scheme list.
+	dialog of nact and add add/remove button to manage scheme list.
 
 	* nact/nact-editor.c: Finnish implementing the scheme list
-(save in gconf and prefs) and fix some compilation warnings.
+	(save in gconf and prefs) and fix some compilation warnings.
 
 2005-10-22  Frederic Ruaudel <grumz@grumz.net> 
 
 	* nact/nautilus-actions-config.glade:
 	* nact/nact-editor.c: Start implementing the scheme list 
-in the edit dialog of nact.
+	in the edit dialog of nact.
 
 	* nact/nact-editor.c: Fix the add/edit dialog title in 
-relation with the task done.
+	relation with the task done.
 
 	* nact/nact-editor.c:
 	* nact/nact-utils.h:
 	* nact/nautilus-actions-config.glade:
 	* nact/nact.c: Implement the preference API and manage the 
-filechooser dialog for the selection of the icon and command path.
+	filechooser dialog for the selection of the icon and command path.
 
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
 	* configure.in: Add a global variable to define the GConf
-basedir of n-a.
+	basedir of n-a.
 
 	* nact/Makefile.am:
 	* nact/nact-prefs.c:
 	* nact/nact-prefs.h: Add GConf managed preferences in nact
 
 	* nact/nact.c: Fix the segfault when trying to edit/delete
-an existing config.
+	an existing config.
 
 	* nact/nact-editor.c: Fix access to the menu icon entry
-when saving the dialog content.
+	when saving the dialog content.
 
 	* utils/nautilus-actions-tools-utils.c:
 	* utils/nautilus-actions-tools-utils.h:
@@ -82,22 +82,22 @@ when saving the dialog content.
 	* utils/Makefile.am:
 	* utils/nautilus-actions-convert.c:
 	* utils/nautilus-actions-new-config.c: Fix some
-compatibility problem with glib < 2.8. g_file_set_contents() wasn't
-recognized.
+	compatibility problem with glib < 2.8. g_file_set_contents() wasn't
+	recognized.
 
 2005-10-21  Frederic Ruaudel <grumz@grumz.net> 
 
 	* nact/nact.c: Fix the display of the existing config in nact's
-main dialog by using uuid instead of label as index.
+	main dialog by using uuid instead of label as index.
 
 	* libnautilus-actions/nautilus-actions-config-schema.c: Fix
-the schema generation by adding the list_type attribute for list
-entries.
+	the schema generation by adding the list_type attribute for list
+	entries.
 
 	* libnautilus-actions/nautilus-actions-config.c:
 	* libnautilus-actions/nautilus-actions-config.h: Add a
-function to create a NautilusActionsConfigAction object with
-correct default values.
+	function to create a NautilusActionsConfigAction object with
+	correct default values.
 
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
 	* libnautilus-actions/nautilus-actions-config-gconf.c:
@@ -109,47 +109,47 @@ correct default values.
 	* nact/nact.c:
 	* plugin/nautilus-actions.c:
 	* utils/nautilus-actions-new-config.c: Finish support for a icon 
-in the menu item (Feature #28)
+	in the menu item (Feature #28)
 
 	* nact/nact-editor.c:
 	* nact/nact.c: Remove global variables and replace with
-the utility functions. Fix some gtk warnings.
+	the utility functions. Fix some gtk warnings.
 
 	* nact/nact-utils.c:
 	* nact/nact-utils.h:
 	* nact/Makefile.am: Add some utility function to manage
-Glade widgets more easily.
+	Glade widgets more easily.
 
 	* nact/nact-editor.c:
 	* nact/nact.c: Refactor the code to take care of the new utilities
-functions and of the refactored glade file. Start adding support for 
-a menu icon.
+	functions and of the refactored glade file. Start adding support for 
+	a menu icon.
 
 	* nact/nautilus-actions-config.glade: Refactor the glade
-file to be more HIG compliant and add missing widgets. Transfers
-signals definition into it.
+	file to be more HIG compliant and add missing widgets. Transfers
+	signals definition into it.
 
 2005-10-20  Frederic Ruaudel <grumz@grumz.net> 
 
 	* libnautilus-actions/nautilus-actions-config.c: Fix a bug
-in the freeing of the NautilusActionsConfigAction object and
-don't send broken actions in the list returned by 
-nautilus_actions_config_get_actions()
+	in the freeing of the NautilusActionsConfigAction object and
+	don't send broken actions in the list returned by 
+	nautilus_actions_config_get_actions()
 
 2005-10-19  Frederic Ruaudel <grumz@grumz.net> 
 
 	* plugin/nautilus-actions-module.c: Add GPL licence header 
-comment
+	comment
 
 	* utils/Makefile.am:
 	* utils/nautilus-actions-new-config.c: Create the new config 
-creation tool in command line mode.
+	creation tool in command line mode.
 
 	* libnautilus-actions/nautilus-actions-config.c: Fix the copy of 
-GSList when setting schemes and basenames of an action.
+	GSList when setting schemes and basenames of an action.
 
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h: Fix
-the short description of the scheme entry in the Gconf Schemas
+	the short description of the scheme entry in the Gconf Schemas
 
 2005-10-17  Frederic Ruaudel <grumz@grumz.net> 
 
@@ -157,27 +157,27 @@ the short description of the scheme entry in the Gconf Schemas
 	* configure.in:
 	* utils/Makefile.am:
 	* utils/nautilus-actions-convert.c: Create a utils folder to put the 
-utilities program and code the old config conversion tool to convert old 
-xml file into GConf schemas.
+	utilities program and code the old config conversion tool to convert old 
+	xml file into GConf schemas.
 
 	* libnautilus-actions/nautilus-actions-config-xml.c:
 	* libnautilus-actions/nautilus-actions-config.c:
 	* libnautilus-actions/nautilus-actions-config.h: Fix several bugs
-made during the first implementation
+	made during the first implementation
 
 
 2005-10-13  Frederic Ruaudel <grumz@grumz.net> 
 
 	* libnautilus-actions/Makefile.am: Add new file in the sources files
-list
+	list
 
 	* libnautilus-actions/nautilus-actions-config-gconf.c:
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h: move
-Gconf element information in a common private headers.
+	Gconf element information in a common private headers.
 
 	* libnautilus-actions/nautilus-actions-config-schema.c:
 	* libnautilus-actions/nautilus-actions-config-schema.h: Add support 
-for GConf xml schema export
+	for GConf xml schema export
 
 2005-10-06  Rodrigo Moya <rodrigo@novell.com>
 
@@ -213,7 +213,7 @@ for GConf xml schema export
 2005-10-06  Frederic Ruaudel <grumz@grumz.net> 
 
 	* plugin/nautilus-actions-test.c: Optimize the test function. 
-If the only basename is '*', then skip the pattern matching.
+	If the only basename is '*', then skip the pattern matching.
 
 	* libnautilus-actions/Makefile.am:
 	* libnautilus-actions/nautilus-actions-config-gconf.c:
@@ -222,8 +222,8 @@ If the only basename is '*', then skip the pattern matching.
 	* libnautilus-actions/nautilus-actions-config-xml.h:
 	* libnautilus-actions/nautilus-actions-config.c:
 	* libnautilus-actions/nautilus-actions-config.h: Refactor the code of 
-libnautilus-actions to add support for the old xml config file. It will 
-be used for convert utilities.
+	libnautilus-actions to add support for the old xml config file. It will 
+	be used for convert utilities.
 
 	* nact/nact-editor.c:
 	* nact/nact-editor.h:
@@ -234,13 +234,13 @@ be used for convert utilities.
 	* plugin/nautilus-actions-utils.h:
 	* plugin/nautilus-actions.c:
 	* plugin/nautilus-actions.h: Change the rest of the code to use the new
-libnautilus-actions.
+	libnautilus-actions.
 
 	* plugin/Makefile.am: Add a link to the libnautilus-actions library
 
 	* plugin/nautilus-actions-config.h:
 	* plugin/nautilus-actions-config.c: remove these files. They've
-been replaced by the libnautilus-actions
+	been replaced by the libnautilus-actions
 
 2005-10-03  Rodrigo Moya <rodrigo@novell.com>
 
@@ -257,7 +257,7 @@ been replaced by the libnautilus-actions
 
 	* libnautilus-actions/nautilus-actions-config.h:
 	* libnautilus-actions/nautilus-actions-config.c: add action duplicate 
-function : nautilus_actions_config_action_dup ()
+	function : nautilus_actions_config_action_dup ()
 
 2005-09-30  Rodrigo Moya <rodrigo@novell.com>
 
@@ -308,13 +308,13 @@ function : nautilus_actions_config_action_dup ()
 
 	* plugin/nautilus-actions-utils.c:
 	* plugin/nautilus-actions.c: Fix the problem with x-nautilus-desktop
-scheme (Bug #110) and remove last compilation warnings
+	scheme (Bug #110) and remove last compilation warnings
 
 	* plugin/nautilus-actions-config.c:
 	* plugin/nautilus-actions-config.h:
 	* plugin/nautilus-actions.c: Fix the problem with GConf list for
-basenames and schemes list. Add updating of version in the notification
-func.
+	basenames and schemes list. Add updating of version in the notification
+	func.
 
 2005-09-20  Frederic Ruaudel <grumz@grumz.net> 
 
@@ -325,22 +325,22 @@ func.
 	* plugin/nautilus-actions-utils.h:
 	* plugin/nautilus-actions.h: 
 	* plugin/nautilus-actions.c: Add GConf support (Feature #44) and
-remove unused code. Border side effect : almost no more compilation warnings
+	remove unused code. Border side effect : almost no more compilation warnings
 
 	* config/config_newaction.schemas.in.in: Add version information
-to manage future config changement and add missing list_type element
-for basename and scheme key.
+	to manage future config changement and add missing list_type element
+	for basename and scheme key.
 
 	* plugin/nautilus-actions.c:
 	* plugin/nautilus-actions.h: Initialized NautilusActions GObject
-and move all data initialization into it.
+	and move all data initialization into it.
 
 	* configure.in: Add prerequisite for GConf
 
 2005-09-19  Frederic Ruaudel <grumz@grumz.net> 
 
 	* nact/Makefile.am: Remove the suppression of nact.desktop.in as
-it is no more autogenerated.
+	it is no more autogenerated.
 	
 	* po/README_TRANSLATORS: Add some information for translators
 
@@ -351,32 +351,32 @@ it is no more autogenerated.
 	* config/Makefile.am:
 	* po/POTFILES.in:
 	* config/config_newaction.schemas.in.in: Add the GConf schemas for
-the new action config and configure it with i18n support.
+	the new action config and configure it with i18n support.
 
 2005-09-17  Frederic Ruaudel <grumz@grumz.net> 
 
 	* plugin/nautilus-actions.c: 
 	* plugin/nautilus-actions.h: Start migration of extensions data
-into the NautilusActions GObject.
+	into the NautilusActions GObject.
 
 	* nact/nautilus-actions-config.glade: 
 	* nact/nautilus-actions-config.in: Fix alignment problem in NACT
-interface (Bug #105).
+	interface (Bug #105).
 
 	* po/*.po:
 	* po/nautilus-actions.pot: Update translations strings
 
 	* po/POTFILES.in: Rename nact/nact.desktop.in.in into
-nact/nact.desktop.in because there is no need anymore for autotool var
-expansion
+	nact/nact.desktop.in because there is no need anymore for autotool var
+	expansion
 
 	* configure.in: Remove the generation of nact/nact.desktop.in
-because there is no need anymore for autotool var expansion
+	because there is no need anymore for autotool var expansion
 
 	* nact/nact.desktop.in.in:
 	* nact/nact.desktop.in: Rename nact/nact.desktop.in.in into 
-nact/nact.desktop.in because there is no need anymore for autotool var
-expansion
+	nact/nact.desktop.in because there is no need anymore for autotool var
+	expansion
 
 	* nact/nautilus-actions-icon.png: 
 	* nact/nautilus-actions-icon.xcf: Create a new nautilus actions icon
@@ -388,7 +388,7 @@ expansion
 	* nact/nautilus-actions-config.glade: Replace the old icon by the new one
 
 	* nact/nautilus-actions-config.glade: Update informations of the about
-dialog (license and project URL)
+	dialog (license and project URL)
 
 
 2005-09-17  Rodrigo Moya <rodrigo@novell.com> 
@@ -402,7 +402,7 @@ dialog (license and project URL)
 2005-09-16  Frederic Ruaudel <grumz@grumz.net> 
 	
 	* plugin/nautilus-actions-module.c: Fix macro name according to
-the changes made for GObject default macros
+	the changes made for GObject default macros
 
 	* plugin/nautilus-actions.h: Add GObject missing default macros.
 
@@ -411,7 +411,7 @@ the changes made for GObject default macros
 	* nact/nact.desktop.in.in: Make it fd.o compliant (Bug #109 and #100)
 	
 	* nact/nautilus-actions-config.in: Fix the problem with nact not starting
-when $LANG var not set (Bug #108)
+	when $LANG var not set (Bug #108)
 
 2005-09-13  Frederic Ruaudel <grumz@grumz.net> 0.7
 
@@ -420,35 +420,35 @@ when $LANG var not set (Bug #108)
 	* po/*.po:
 	* po/nautilus-actions.pot:
 	* nact/nautilus-actions-config.glade: Fix mistake in tooltip text, add
-information about Feature #73, add missed string and fix some problem in 
-the GUI.
+	information about Feature #73, add missed string and fix some problem in 
+	the GUI.
 
 	* nact/nautilus-actions-config.in:
 	* plugin/nautilus-actions-config.h:
 	* plugin/nautilus-actions-config.c:
 	* plugin/nautilus-actions-test.c: Add the possibility to add several 
-file patterns (Feature #73). In NACT, add several file patterns separated
-by semi-colon ';'
+	file patterns (Feature #73). In NACT, add several file patterns separated
+	by semi-colon ';'
 
 	* configure.in: Update version number
 
 	* nact/nautilus-actions-config.in: Fix problem with system wide config 
-overwritten by user not read correctly by NACT.
+	overwritten by user not read correctly by NACT.
 
 	* plugin/nautilus-actions-config.c:
 	* nact/nautilus-actions-config.in: Add support for xml:lang in config
-files. For NACT, it is only for the reader part. If the config is saved with 
-NACT only the text of the current LANG will be saved.
+	files. For NACT, it is only for the reader part. If the config is saved with 
+	NACT only the text of the current LANG will be saved.
 
 	* po/*.po:
 	* po/nautilus-actions.pot:
 	* nact/nautilus-actions-config.in: Add missing strings in NACT (description
-of the schemes)
+	of the schemes)
 
 2005-09-12  Frederic Ruaudel <grumz@grumz.net> 
 	
 	* po/*.po: Fix Bad charset due to bad LANG setting when generated po
-files with msginit.
+	files with msginit.
 
 	* configure.in:
 	* fr.po: Add German translation (Gabriel Meier <gabriel.meier@web.de>)
@@ -459,18 +459,18 @@ files with msginit.
 
 	* configure.in:
 	* nact/nact.desktop.in.in: Fix the problem with the icon path substitution 
-(Bug#100)	
+	(Bug#100)	
 
 	* nact/nautilus-actions-config.in:
 	* nact/nautilus-actions-config.glade: Use dynamic sizing for label of 
-the config panel with SizeGroup to allow translation label text to display 
-correctly if they are longer than the original ones.
+	the config panel with SizeGroup to allow translation label text to display 
+	correctly if they are longer than the original ones.
 
 	* nact/nautilus-actions-config.in: fix compilation error relative to 
-i18n support
+	i18n support
 
 	* configure.in: Add LOCALEDIR in the list of @variable@ with AC_SUBST 
-for the python script 
+	for the python script 
 
 	* config/Makefile.am: Fix the intltool replacement var in config_DATA
 
@@ -484,23 +484,23 @@ for the python script
 	* po/nautilus-actions.pot: Generate the translation message list file
 
 	* configure.in: Remove useless dependencies and add French translation 
-in ALL_LINGUAS.
+	in ALL_LINGUAS.
 
 	* Makefile.am: add intltool tool in EXTRA_DIST options
 
 	* po/POTFILES.in: Update list of files containing translatable strings.
 
 	* nact/nautilus-actions-config.glade: Unmark untranslatable string in 
-glade (indent spaces, program name, etc.)
+	glade (indent spaces, program name, etc.)
 
 	* config/Makefile.am:
 	* config/config_newaction.xml : 
 	* config/config_newaction.xml.in: replace config/config_newaction.xml by 
-config/config_newaction.xml.in to add i18n support. And modify Makefile.am to 
-add intltool operations.
+	config/config_newaction.xml.in to add i18n support. And modify Makefile.am to 
+	add intltool operations.
 
 	* nact/nact.desktop.in.in: Add i18n support and fix the @autotools_vars@ 
-substitution. Still have problem with @datadir@ expanding in ${prefix}.
+	substitution. Still have problem with @datadir@ expanding in ${prefix}.
 
 	* MAINTAINERS: Add the list of maintainers
 
@@ -509,28 +509,28 @@ substitution. Still have problem with @datadir@ expanding in ${prefix}.
 2005-09-07  Frederic Ruaudel <grumz@grumz.net> 0.6
 
 	* plugin/nautilus-actions-utils.c: modify 
-nautilus_actions_utils_parse_parameter () to quote every filenames and 
-folder names and url decode Gnome-vfs URIs. Fix the problem
-about last characters of the paramters not set if the parameter string 
-don't finish by a %? pattern which cause the quote bug (Bug #32)
+	nautilus_actions_utils_parse_parameter () to quote every filenames and 
+	folder names and url decode Gnome-vfs URIs. Fix the problem
+	about last characters of the paramters not set if the parameter string 
+	don't finish by a %? pattern which cause the quote bug (Bug #32)
 
 	* nact/nautilus-actions-config.in: Fix display of the example string in
-ParseParameters() function. The last character was missing if not a %? pattern.
+	ParseParameters() function. The last character was missing if not a %? pattern.
 
 	* nact/nautilus-actions-config.in: Fix problem with old config file 
-migration and add migration to the new folder (Bug #90)
+	migration and add migration to the new folder (Bug #90)
 
 	* nact/nautilus-actions-config.in:
 	* plugin/nautilus-actions-config.h: change the default per user config 
-directory from ~/.config/.nautilus-actions to ~/.config/nautilus-actions.
+	directory from ~/.config/.nautilus-actions to ~/.config/nautilus-actions.
 
 	* nact/Makefile.am:
 	* nact/nautilus-actions-config.in: Move nact files in nact subdir of 
-system wide config folder
+	system wide config folder
 
 	* config/config_newaction.xml:
 	* nact/nact.desktop.in.in: Change name of the executable from nact to 
-nautilus-actions-config
+	nautilus-actions-config
 
 	* README:
 	* INSTALL: Add installation instructions
@@ -538,15 +538,15 @@ nautilus-actions-config
 2005-09-06  Frederic Ruaudel <grumz@grumz.net> 
 
 	* plugin/nautilus-actions-utils.c: modify 
-nautilus_actions_utils_parse_parameter () to use nautilus_file_info_get_name() 
-instead of gnome_vfs_uri_get_path () to avoid problem with url encoded 
-filenames (Bug #84)
+	nautilus_actions_utils_parse_parameter () to use nautilus_file_info_get_name() 
+	instead of gnome_vfs_uri_get_path () to avoid problem with url encoded 
+	filenames (Bug #84)
 
 	* configure.in : add a --with-nautilus-extdir option to the 
-./configure script. If this option is not used, it tries to use 
-the pkg-config command. If the result is empty, ./configure 
-write an error on the output asking to the user to
-use the option to determine the path manually and exit.
+	./configure script. If this option is not used, it tries to use 
+	the pkg-config command. If the result is empty, ./configure 
+	write an error on the output asking to the user to
+	use the option to determine the path manually and exit.
 
 2005-09-02  Rodrigo Moya <rodrigo@novell.com> 
 
