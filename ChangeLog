@@ -1,3 +1,8 @@
+2005-10-25  Frederic Ruaudel <grumz@grumz.net> 
+
+	* nact/nact.c (delete_button_clicked_cb): add call to
+fill_actions_list to update the list when removing an action.
+
 2005-10-24  Rodrigo Moya <rodrigo@novell.com>
 
 	* nact/nact.c (fill_actions_list): new function to reload the

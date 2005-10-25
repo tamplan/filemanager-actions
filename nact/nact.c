@@ -139,6 +139,7 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 		nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
+		fill_actions_list (nact_actions_list);
 
 		g_free (uuid);
 	}
