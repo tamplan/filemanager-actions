@@ -1,5 +1,11 @@
 2005-10-25  Frederic Ruaudel <grumz@grumz.net> 
 
+	* libnautilus-actions/nautilus-actions-config.c:
+	(nautilus_actions_config_add_action) : After call to save_action
+	add the new action in the hash table.
+	(nautilus_actions_config_remove_action) : After call to remove_action
+	remove the action from the hash table.
+
 	* nact/nact.c (delete_button_clicked_cb): add call to
 fill_actions_list to update the list when removing an action.
 

@@ -143,6 +143,7 @@ static gchar* get_new_uuid (void)
 gboolean
 nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActionsConfigAction *action)
 {
+	gboolean retv = FALSE;
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG (config), FALSE);
 	g_return_val_if_fail (action != NULL, FALSE);
 
@@ -153,7 +154,17 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 		action->uuid = get_new_uuid ();
 	}
 
-	return NAUTILUS_ACTIONS_CONFIG_GET_CLASS (config)->save_action (config, action);
+	if (NAUTILUS_ACTIONS_CONFIG_GET_CLASS (config)->save_action (config, action))
+	{
+		NautilusActionsConfigAction* action_copy = nautilus_actions_config_action_dup (action);
+		if (action_copy)
+		{
+			g_hash_table_insert (config->actions, g_strdup (action->uuid), nautilus_actions_config_action_dup (action));
+			retv = TRUE;
+		}
+	}
+	
+	return retv;
 }
 
 gboolean
@@ -172,6 +183,7 @@ gboolean
 nautilus_actions_config_remove_action (NautilusActionsConfig *config, const gchar *uuid)
 {
 	NautilusActionsConfigAction *action;
+	gboolean retv = FALSE;
 
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG (config), FALSE);
 	g_return_val_if_fail (uuid != NULL, FALSE);
@@ -179,7 +191,15 @@ nautilus_actions_config_remove_action (NautilusActionsConfig *config, const gcha
 	if (!(action = g_hash_table_lookup (config->actions, uuid)))
 		return FALSE;
 
-	return NAUTILUS_ACTIONS_CONFIG_GET_CLASS(config)->remove_action (config, action);
+	if (NAUTILUS_ACTIONS_CONFIG_GET_CLASS(config)->remove_action (config, action))
+	{
+		if (g_hash_table_remove (config->actions, uuid))
+		{
+			retv = TRUE;
+		}
+	}
+
+	return retv;
 }
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void)
