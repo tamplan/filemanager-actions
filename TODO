@@ -1,0 +1,24 @@
+Last Modified: 25/10/2005
+
+Important things to do before next release :
+
+- Implement the notification stuff in n-a plugin
+- Implement the signals in the libnautilus-actions gconf object
+- Implement the parameters example string in nact edit dialog
+- Remove the %p token that is confusing with %d token (parent dir,
+current dir) in the parameter option.
+- Implement Import/export of Gconf schemas in Nact (make a wizard style
+dialog and use the GObject of libnautilus-action like in the commandline
+tool)
+- Create a command line tool to install a schema (wrapper to
+"gconftool-2 --install-schema-file")
+- Add the option to set the actions in the background of nautilus
+windows (already a patch ready in the bug tracker, probably need some
+rewrite). Probably need to add some option in Nact.
+- Implement the Help button in nact (or hide it meanwhile)
+- Review the strings to make them coherent for i18n (eg, always use the
+same case when referencing to Nautilus. Not 'nautilus', 'Nautilus',
+'NAUTILUS', 'NaUtIluS', etc :)
+- Rename 'New Action' by something more relevant like 'Manage Actions'
+or 'Edit Actions'.
+- Sort the gtk stock item in the dropdown list in nact edit dialog.

@@ -1,5 +1,7 @@
 2005-10-25  Frederic Ruaudel <grumz@grumz.net> 
 
+	* TODO: Add list of important things to do before next release
+
 	* libnautilus-actions/nautilus-actions-config.c:
 	(nautilus_actions_config_add_action) : After call to save_action
 	add the new action in the hash table.
