@@ -71,7 +71,6 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 	NautilusMenuItem *item;
 	gchar* name;
 
-	// FIXME: find a way to generate a uniq name
 	name = g_strdup_printf ("NautilusActions::%s", action->uuid);
 	
 	item = nautilus_menu_item_new (name, 
