@@ -1,5 +1,13 @@
 2005-10-26  Frederic Ruaudel <grumz@grumz.net> 
 
+	* libnautilus-actions/nautilus-actions-config.c 
+	(nautilus_actions_config_add_action):
+	Remove a duplicate action_dup.
+
+	* utils/nautilus-actions-new-config.c (main):
+	Use the new action function with default values set to
+	avoid problem with unset unused values.
+
 	* nact/nautilus-actions-config.glade (LegendDialog):
 	* plugin/nautilus-actions-utils.c (nautilus_actions_utils_parse_parameter):
 	Remove the %p parameter that was confusing with the %d one.
