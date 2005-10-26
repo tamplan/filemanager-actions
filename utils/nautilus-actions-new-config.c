@@ -93,7 +93,7 @@ int main (int argc, char** argv)
 		exit (EXIT_FAILURE);
 	}
 
-	action = nautilus_actions_config_action_new ();
+	action = nautilus_actions_config_action_new_default ();
 	nautilus_actions_config_action_set_label (action, label);
 	nautilus_actions_config_action_set_tooltip (action, tooltip);
 	nautilus_actions_config_action_set_icon (action, icon);
