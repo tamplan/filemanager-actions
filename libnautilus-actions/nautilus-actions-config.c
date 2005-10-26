@@ -159,7 +159,7 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 		NautilusActionsConfigAction* action_copy = nautilus_actions_config_action_dup (action);
 		if (action_copy)
 		{
-			g_hash_table_insert (config->actions, g_strdup (action->uuid), nautilus_actions_config_action_dup (action));
+			g_hash_table_insert (config->actions, g_strdup (action->uuid), action_copy);
 			retv = TRUE;
 		}
 	}
