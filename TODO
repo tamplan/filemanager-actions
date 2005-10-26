@@ -20,3 +20,5 @@ same case when referencing to Nautilus. Not 'nautilus', 'Nautilus',
 - Rename 'New Action' by something more relevant like 'Manage Actions'
 or 'Edit Actions'.
 - Sort the gtk stock item in the dropdown list in nact edit dialog.
+- Find why some stock icon are not rendered correctly in Nautilus (eg: gtk-edit,
+gtk-info, etc.)
