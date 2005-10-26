@@ -1,3 +1,9 @@
+2005-10-26  Frederic Ruaudel <grumz@grumz.net> 
+
+	* nact/nautilus-actions-config.glade (LegendDialog):
+	* plugin/nautilus-actions-utils.c (nautilus_actions_utils_parse_parameter):
+	Remove the %p parameter that was confusing with the %d one.
+
 2005-10-25  Frederic Ruaudel <grumz@grumz.net> 
 
 	* TODO: Add list of important things to do before next release
