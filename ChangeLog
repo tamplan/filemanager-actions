@@ -1,3 +1,8 @@
+2005-10-27  Frederic Ruaudel <grumz@grumz.net> 
+
+	* plugin/nautilus-actions-utils.c (nautilus_actions_utils_parse_parameter):
+	Fix a problem of duplicate string if no token found in the param string
+
 2005-10-26  Frederic Ruaudel <grumz@grumz.net> 
 
 	* libnautilus-actions/nautilus-actions-config.c 

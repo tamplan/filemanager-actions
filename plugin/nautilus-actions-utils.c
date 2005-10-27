@@ -47,7 +47,6 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 	
 	if (files != NULL)
 	{
-		gboolean found = FALSE;
 		GString* tmp_string = g_string_new ("");
 		gchar* iter = g_strdup (param_template);
 		gchar* old_iter = iter;
@@ -104,7 +103,6 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		
 		while (iter = g_strstr_len (iter, strlen (iter), "%"))
 		{
-			found = TRUE; // Found at least one;
 			tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter) - strlen (iter));
 			switch (iter[1])
 			{
@@ -143,11 +141,6 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		}
 		tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter));
 
-		if (!found) // if no % sign present, simply copy the param string
-		{
-			tmp_string = g_string_append (tmp_string, param_template);
-		}
-		
 		g_free (uri);
 		g_free (dirname);
 		g_free (filename);
