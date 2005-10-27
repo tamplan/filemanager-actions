@@ -37,13 +37,6 @@ enum {
 	ICON_N_COLUMN
 };
 
-enum {
-	SCHEMES_CHECKBOX_COLUMN = 0,
-	SCHEMES_KEYWORD_COLUMN,
-	SCHEMES_DESC_COLUMN,
-	SCHEMES_N_COLUMN
-};
-
 static gchar *
 strip_underscore (const gchar *text)
 {
@@ -74,10 +67,37 @@ field_changed_cb (GObject *object, gpointer user_data)
 	GtkWidget* menu_label = nact_get_glade_widget_from ("MenuLabelEntry", GLADE_EDIT_DIALOG_WIDGET);
 	const gchar *label = gtk_entry_get_text (GTK_ENTRY (menu_label));
 
+	update_example_label ();
+
 	if (label && strlen (label) > 0)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, TRUE);
 	else
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
+}
+
+void update_example_label (void)
+{
+	GtkWidget* label_widget = nact_get_glade_widget_from ("LabelExample", GLADE_EDIT_DIALOG_WIDGET);
+	static gboolean init = FALSE;
+	static gchar label_format_string[1024];
+	gchar* tmp = nact_utils_parse_parameter ();
+	gchar* ex_str;
+
+	if (!init)
+	{
+		g_stpcpy (label_format_string, gtk_label_get_label (GTK_LABEL (label_widget)));
+		init = TRUE;
+	}
+	
+	ex_str = g_strdup_printf (label_format_string, tmp);
+	gtk_label_set_label (GTK_LABEL (label_widget), ex_str);
+	g_free (ex_str);
+	g_free (tmp);
+}
+
+void
+example_changed_cb (GObject *object, gpointer user_data)
+{
 }
 
 void
@@ -292,6 +312,7 @@ static void scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer,
 
 	//--> Notice edition change
 	field_changed_cb (G_OBJECT (cell_renderer), NULL);
+	update_example_label ();
 
 	gtk_tree_path_free (path);
 }
@@ -332,6 +353,7 @@ scheme_edited_cb (GtkCellRendererText *cell,
 	{
 		//--> if column was checked, set the action has edited
 		field_changed_cb (G_OBJECT (cell), NULL);
+		update_example_label ();
 	}
 }
 
@@ -394,6 +416,7 @@ void remove_scheme_clicked (GtkWidget* widget, gpointer user_data)
 		{
 			//--> if column was checked, set the action has edited
 			field_changed_cb (G_OBJECT (widget), NULL);
+			update_example_label ();
 		}
 	}
 	
@@ -476,28 +499,6 @@ static gboolean reset_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *pat
 											GtkTreeIter* iter, gpointer data)
 {
 	gtk_list_store_set (GTK_LIST_STORE (scheme_model), iter, SCHEMES_CHECKBOX_COLUMN, FALSE, -1);
-
-	return FALSE; // Don't stop looping
-}
-
-static gboolean get_action_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path, 
-													  GtkTreeIter* iter, gpointer data)
-{
-	GSList** list = data;
-	gboolean toggle_state;
-	gchar* scheme;
-
-	gtk_tree_model_get (scheme_model, iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state, 
-														 SCHEMES_KEYWORD_COLUMN, &scheme, -1);
-
-	if (toggle_state)
-	{
-		(*list) = g_slist_append ((*list), scheme);
-	}
-	else
-	{
-		g_free (scheme);
-	}
 
 	return FALSE; // Don't stop looping
 }
@@ -627,6 +628,8 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 			return FALSE;
 		}
 
+		create_schemes_selection_list ();
+
 		glade_xml_signal_autoconnect(gui);
 
 		menu_icon = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
@@ -639,7 +642,6 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		gtk_tooltips_set_tip (gtk_tooltips_new (), GTK_WIDGET (GTK_BIN (menu_icon)->child),
 									 _("Icon of the menu item in the Nautilus contextual menu"), "");
 	
-		create_schemes_selection_list ();
 		
 		aligned_widgets = nact_get_glade_widget_prefix_from ("LabelAlign", GLADE_EDIT_DIALOG_WIDGET);
 		label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
@@ -722,6 +724,8 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)reset_schemes_list, NULL);
 	g_slist_foreach (action->schemes, (GFunc)set_action_schemes, scheme_model);
 
+	update_example_label ();
+
 	/* run the dialog */
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
 	switch (gtk_dialog_run (GTK_DIALOG (editor))) {
@@ -762,7 +766,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 				action, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (accept_multiple)));
 
 			list = NULL;
-			gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)get_action_schemes_list, &list);
+			gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)nact_utils_get_action_schemes_list, &list);
 			nautilus_actions_config_action_set_schemes (action, list);
 			g_slist_foreach (list, (GFunc) g_free, NULL);
 			g_slist_free (list);

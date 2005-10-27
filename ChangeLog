@@ -1,5 +1,10 @@
 2005-10-27  Frederic Ruaudel <grumz@grumz.net> 
 
+	* nact/nautilus-actions-config.glade:
+	* nact/nact-editor.c:
+	* nact/nact-utils.c:
+	* nact/nact-utils.h: Implement the example string in nact editor dialog
+
 	* plugin/nautilus-actions-utils.c (nautilus_actions_utils_parse_parameter):
 	Fix a problem of duplicate string if no token found in the param string
 

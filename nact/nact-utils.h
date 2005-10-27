@@ -31,12 +31,23 @@
 #define GLADE_LEGEND_DIALOG_WIDGET "LegendDialog"
 #define GLADE_FILECHOOSER_DIALOG_WIDGET "FileChooserDialog"
 
+enum {
+	SCHEMES_CHECKBOX_COLUMN = 0,
+	SCHEMES_KEYWORD_COLUMN,
+	SCHEMES_DESC_COLUMN,
+	SCHEMES_N_COLUMN
+};
+
 GladeXML* nact_get_glade_xml_object (const gchar* root_widget);
 GtkWidget* nact_get_glade_widget_from (const gchar* widget_name, const gchar* root_widget);
 GtkWidget* nact_get_glade_widget (const gchar* widget_name);
 GList* nact_get_glade_widget_prefix_from (const gchar* widget_name, const gchar* root_widget);
 GList* nact_get_glade_widget_prefix (const gchar* widget_name);
 void nact_destroy_glade_objects (void);
+gboolean nact_utils_get_action_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path, 
+													  GtkTreeIter* iter, gpointer data);
+gchar* nact_utils_parse_parameter (void);
+
 
 #endif
 

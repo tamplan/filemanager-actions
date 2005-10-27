@@ -1200,6 +1200,7 @@ Application to configure Nautilus Action extension</property>
 			      <property name="invisible_char">*</property>
 			      <property name="activates_default">False</property>
 			      <signal name="changed" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:38:47 GMT"/>
+			      <signal name="changed" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:30:06 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -1345,6 +1346,7 @@ Application to configure Nautilus Action extension</property>
 				  <property name="invisible_char">*</property>
 				  <property name="activates_default">False</property>
 				  <signal name="changed" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:38:58 GMT"/>
+				  <signal name="changed" handler="example_change_cb" last_modification_time="Thu, 27 Oct 2005 14:30:21 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1472,13 +1474,13 @@ Application to configure Nautilus Action extension</property>
 			      </child>
 
 			      <child>
-				<widget class="GtkLabel" id="label56">
+				<widget class="GtkLabel" id="LabelExample">
 				  <property name="visible">True</property>
 				  <property name="label" translatable="yes">&lt;i&gt;&lt;b&gt;&lt;span size=&quot;small&quot;&gt;e.g., %s&lt;/span&gt;&lt;/b&gt;&lt;/i&gt;</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">True</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
-				  <property name="wrap">False</property>
+				  <property name="wrap">True</property>
 				  <property name="selectable">False</property>
 				  <property name="xalign">0</property>
 				  <property name="yalign">0.5</property>
@@ -1708,6 +1710,7 @@ Application to configure Nautilus Action extension</property>
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
 				  <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:40:58 GMT"/>
+				  <signal name="toggled" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:30:53 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1729,6 +1732,7 @@ Application to configure Nautilus Action extension</property>
 				  <property name="draw_indicator">True</property>
 				  <property name="group">OnlyFilesButton</property>
 				  <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:50:07 GMT"/>
+				  <signal name="toggled" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:31:01 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1750,6 +1754,7 @@ Application to configure Nautilus Action extension</property>
 				  <property name="draw_indicator">True</property>
 				  <property name="group">OnlyFilesButton</property>
 				  <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:41:20 GMT"/>
+				  <signal name="toggled" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:31:09 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1784,6 +1789,7 @@ Application to configure Nautilus Action extension</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
 			  <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:41:39 GMT"/>
+			  <signal name="toggled" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:31:16 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
