@@ -211,7 +211,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label17">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt; : base dir of the selected file(s)</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt; : base folder of the selected file(s)</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -269,7 +269,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label33">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%m&lt;/b&gt; : list of the basename of the selected files/directories separated by space.</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%m&lt;/b&gt; : list of the basename of the selected file(s)/folder(s) separated by space.</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -354,7 +354,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label23">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt; : list of the selected files/directories with their full path separated by space.</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt; : list of the selected file(s)/folder(s) with their full path separated by space.</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -668,7 +668,7 @@ Application to configure Nautilus Action extension</property>
 </widget>
 
 <widget class="GtkDialog" id="EditActionDialog">
-  <property name="title" translatable="yes">Edit Action</property>
+  <property name="title" translatable="yes"></property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
   <property name="modal">True</property>
@@ -813,7 +813,7 @@ Application to configure Nautilus Action extension</property>
 		      <child>
 			<widget class="GtkEntry" id="MenuLabelEntry">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">Label of the menu item in the Nautilus contextual menu</property>
+			  <property name="tooltip" translatable="yes">Label of the menu item in the Nautilus popup menu</property>
 			  <property name="can_focus">True</property>
 			  <property name="editable">True</property>
 			  <property name="visibility">True</property>
@@ -895,75 +895,13 @@ Application to configure Nautilus Action extension</property>
 			  <child>
 			    <widget class="GtkButton" id="IconBrowseButton">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Click to choose a custom icon from a file instead of a predefined icon from the dropdown list</property>
+			      <property name="tooltip" translatable="yes">Click to choose a custom icon from a file instead of a predefined icon from the drop-down list</property>
 			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">_Browse...</property>
+			      <property name="use_underline">True</property>
 			      <property name="relief">GTK_RELIEF_NORMAL</property>
 			      <property name="focus_on_click">True</property>
 			      <signal name="clicked" handler="icon_browse_button_clicked_cb" last_modification_time="Sat, 22 Oct 2005 15:07:47 GMT"/>
-
-			      <child>
-				<widget class="GtkAlignment" id="alignment12">
-				  <property name="visible">True</property>
-				  <property name="xalign">0.5</property>
-				  <property name="yalign">0.5</property>
-				  <property name="xscale">0</property>
-				  <property name="yscale">0</property>
-				  <property name="top_padding">0</property>
-				  <property name="bottom_padding">0</property>
-				  <property name="left_padding">0</property>
-				  <property name="right_padding">0</property>
-
-				  <child>
-				    <widget class="GtkHBox" id="hbox37">
-				      <property name="visible">True</property>
-				      <property name="homogeneous">False</property>
-				      <property name="spacing">2</property>
-
-				      <child>
-					<widget class="GtkImage" id="image14">
-					  <property name="visible">True</property>
-					  <property name="stock">gtk-open</property>
-					  <property name="icon_size">4</property>
-					  <property name="xalign">0.5</property>
-					  <property name="yalign">0.5</property>
-					  <property name="xpad">0</property>
-					  <property name="ypad">0</property>
-					</widget>
-					<packing>
-					  <property name="padding">0</property>
-					  <property name="expand">False</property>
-					  <property name="fill">False</property>
-					</packing>
-				      </child>
-
-				      <child>
-					<widget class="GtkLabel" id="label57">
-					  <property name="visible">True</property>
-					  <property name="label" translatable="yes">_Browse...</property>
-					  <property name="use_underline">True</property>
-					  <property name="use_markup">False</property>
-					  <property name="justify">GTK_JUSTIFY_LEFT</property>
-					  <property name="wrap">False</property>
-					  <property name="selectable">False</property>
-					  <property name="xalign">0.5</property>
-					  <property name="yalign">0.5</property>
-					  <property name="xpad">0</property>
-					  <property name="ypad">0</property>
-					  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-					  <property name="width_chars">-1</property>
-					  <property name="single_line_mode">False</property>
-					  <property name="angle">0</property>
-					</widget>
-					<packing>
-					  <property name="padding">0</property>
-					  <property name="expand">False</property>
-					  <property name="fill">False</property>
-					</packing>
-				      </child>
-				    </widget>
-				  </child>
-				</widget>
-			      </child>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -1096,7 +1034,7 @@ Application to configure Nautilus Action extension</property>
 	      <child>
 		<widget class="GtkLabel" id="label40">
 		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;Command&lt;/b&gt;</property>
+		  <property name="label" translatable="yes">&lt;b&gt;Action&lt;/b&gt;</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1190,7 +1128,7 @@ Application to configure Nautilus Action extension</property>
 			  <child>
 			    <widget class="GtkEntry" id="CommandPathEntry">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">The command that will be launched when selecting the action in Nautilus menu</property>
+			      <property name="tooltip" translatable="yes">The command that will be launched when selecting the action in Nautilus popup menu</property>
 			      <property name="can_focus">True</property>
 			      <property name="editable">True</property>
 			      <property name="visibility">True</property>
@@ -1200,7 +1138,6 @@ Application to configure Nautilus Action extension</property>
 			      <property name="invisible_char">*</property>
 			      <property name="activates_default">False</property>
 			      <signal name="changed" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:38:47 GMT"/>
-			      <signal name="changed" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:30:06 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -1214,73 +1151,11 @@ Application to configure Nautilus Action extension</property>
 			      <property name="visible">True</property>
 			      <property name="tooltip" translatable="yes">Click to choose a command from the file chooser dialog</property>
 			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">_Browse...</property>
+			      <property name="use_underline">True</property>
 			      <property name="relief">GTK_RELIEF_NORMAL</property>
 			      <property name="focus_on_click">True</property>
 			      <signal name="clicked" handler="path_browse_button_clicked_cb" last_modification_time="Sat, 22 Oct 2005 15:07:15 GMT"/>
-
-			      <child>
-				<widget class="GtkAlignment" id="alignment9">
-				  <property name="visible">True</property>
-				  <property name="xalign">0.5</property>
-				  <property name="yalign">0.5</property>
-				  <property name="xscale">0</property>
-				  <property name="yscale">0</property>
-				  <property name="top_padding">0</property>
-				  <property name="bottom_padding">0</property>
-				  <property name="left_padding">0</property>
-				  <property name="right_padding">0</property>
-
-				  <child>
-				    <widget class="GtkHBox" id="hbox23">
-				      <property name="visible">True</property>
-				      <property name="homogeneous">False</property>
-				      <property name="spacing">2</property>
-
-				      <child>
-					<widget class="GtkImage" id="image11">
-					  <property name="visible">True</property>
-					  <property name="stock">gtk-open</property>
-					  <property name="icon_size">4</property>
-					  <property name="xalign">0.5</property>
-					  <property name="yalign">0.5</property>
-					  <property name="xpad">0</property>
-					  <property name="ypad">0</property>
-					</widget>
-					<packing>
-					  <property name="padding">0</property>
-					  <property name="expand">False</property>
-					  <property name="fill">False</property>
-					</packing>
-				      </child>
-
-				      <child>
-					<widget class="GtkLabel" id="label48">
-					  <property name="visible">True</property>
-					  <property name="label" translatable="yes">_Browse...</property>
-					  <property name="use_underline">True</property>
-					  <property name="use_markup">False</property>
-					  <property name="justify">GTK_JUSTIFY_LEFT</property>
-					  <property name="wrap">False</property>
-					  <property name="selectable">False</property>
-					  <property name="xalign">0.5</property>
-					  <property name="yalign">0.5</property>
-					  <property name="xpad">0</property>
-					  <property name="ypad">0</property>
-					  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-					  <property name="width_chars">-1</property>
-					  <property name="single_line_mode">False</property>
-					  <property name="angle">0</property>
-					</widget>
-					<packing>
-					  <property name="padding">0</property>
-					  <property name="expand">False</property>
-					  <property name="fill">False</property>
-					</packing>
-				      </child>
-				    </widget>
-				  </child>
-				</widget>
-			      </child>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -1336,7 +1211,7 @@ Application to configure Nautilus Action extension</property>
 			      <child>
 				<widget class="GtkEntry" id="CommandParamsEntry">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">Parameters that will be send to the program. Click the 'Legend' button to see the different replacement tokens</property>
+				  <property name="tooltip" translatable="yes">Parameters that will be sent to the program. Click on the 'Legend' button to see the different replacement tokens</property>
 				  <property name="can_focus">True</property>
 				  <property name="editable">True</property>
 				  <property name="visibility">True</property>
@@ -1346,7 +1221,6 @@ Application to configure Nautilus Action extension</property>
 				  <property name="invisible_char">*</property>
 				  <property name="activates_default">False</property>
 				  <signal name="changed" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:38:58 GMT"/>
-				  <signal name="changed" handler="example_change_cb" last_modification_time="Thu, 27 Oct 2005 14:30:21 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1636,7 +1510,7 @@ Application to configure Nautilus Action extension</property>
 			  <child>
 			    <widget class="GtkEntry" id="PatternEntry">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">A string with joker ? or * that will be used to match the files. You can match several file pattern by separating them with semi-colon ;</property>
+			      <property name="tooltip" translatable="yes">A string with joker ? or * that will be used to match the files. You can match several file patterns by separating them with a semi-colon ;</property>
 			      <property name="can_focus">True</property>
 			      <property name="editable">True</property>
 			      <property name="visibility">True</property>
@@ -1670,7 +1544,7 @@ Application to configure Nautilus Action extension</property>
 			  <child>
 			    <widget class="GtkLabel" id="label45">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">Appears if Selection Contains:</property>
+			      <property name="label" translatable="yes">Appears if selection contains:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1702,7 +1576,7 @@ Application to configure Nautilus Action extension</property>
 				<widget class="GtkRadioButton" id="OnlyFilesButton">
 				  <property name="visible">True</property>
 				  <property name="can_focus">True</property>
-				  <property name="label" translatable="yes">Only Files</property>
+				  <property name="label" translatable="yes">Only files</property>
 				  <property name="use_underline">True</property>
 				  <property name="relief">GTK_RELIEF_NORMAL</property>
 				  <property name="focus_on_click">True</property>
@@ -1710,7 +1584,6 @@ Application to configure Nautilus Action extension</property>
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
 				  <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:40:58 GMT"/>
-				  <signal name="toggled" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:30:53 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1732,7 +1605,6 @@ Application to configure Nautilus Action extension</property>
 				  <property name="draw_indicator">True</property>
 				  <property name="group">OnlyFilesButton</property>
 				  <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:50:07 GMT"/>
-				  <signal name="toggled" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:31:01 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1754,7 +1626,6 @@ Application to configure Nautilus Action extension</property>
 				  <property name="draw_indicator">True</property>
 				  <property name="group">OnlyFilesButton</property>
 				  <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:41:20 GMT"/>
-				  <signal name="toggled" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:31:09 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1789,7 +1660,6 @@ Application to configure Nautilus Action extension</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
 			  <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:41:39 GMT"/>
-			  <signal name="toggled" handler="example_changed_cb" last_modification_time="Thu, 27 Oct 2005 14:31:16 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -1847,7 +1717,7 @@ Application to configure Nautilus Action extension</property>
 				  <child>
 				    <widget class="GtkTreeView" id="SchemesTreeView">
 				      <property name="visible">True</property>
-				      <property name="tooltip" translatable="yes">Select the kind of files where you want your config to appear. If you don't know, try selecting just 'file' which is the most common choice. You can add new one by clicking the '+' button.</property>
+				      <property name="tooltip" translatable="yes">Select the kind of files where you want your action to appear. If you don't know what to choose, try selecting just 'file' which is the most common choice. You can add new scheme by clicking on the '+' button</property>
 				      <property name="can_focus">True</property>
 				      <property name="headers_visible">False</property>
 				      <property name="rules_hint">True</property>
@@ -1904,7 +1774,7 @@ Application to configure Nautilus Action extension</property>
 				    <widget class="GtkButton" id="RemoveSchemeButton">
 				      <property name="visible">True</property>
 				      <property name="sensitive">False</property>
-				      <property name="tooltip" translatable="yes">Click to remove a scheme</property>
+				      <property name="tooltip" translatable="yes">Click to remove the selected scheme</property>
 				      <property name="can_focus">True</property>
 				      <property name="relief">GTK_RELIEF_NORMAL</property>
 				      <property name="focus_on_click">True</property>

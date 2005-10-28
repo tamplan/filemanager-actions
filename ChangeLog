@@ -1,3 +1,30 @@
+2005-10-28  Frederic Ruaudel <grumz@grumz.net> 
+
+	* config/config_newaction.schemas.in.in: Update it with the 
+	same GConf key description than those set in the code of the 
+	GConf schema GObject and rename the action "Manage Action" instead
+	of 'New Action...'
+
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* libnautilus-actions/nautilus-actions-config-schema.c:
+	* nact/nact-prefs.c:
+	* nact/nact-utils.c:
+	* nact/nact.desktop.in:
+	* nact/nautilus-actions-config.glade:
+	* po/POTFILES.in:
+	* po/bg.po:
+	* po/de.po:
+	* po/es.po:
+	* po/fr.po:
+	* po/nautilus-actions.pot:
+	* utils/nautilus-actions-new-config.c: Review all strings for i18n and make 
+	them coherent, use standard term from GNOME Documentation word list
+	and start to adapt the code to make translators life easier according to
+	http://developer.gnome.org/doc/tutorials/gnome-i18n/developer.html
+
+	* nact/nact-editor.c: Remove a useless test that test if label are 
+	duplicated. Now we have the uuid that make sure of the uniqness of actions
+
 2005-10-27  Frederic Ruaudel <grumz@grumz.net> 
 
 	* nact/nautilus-actions-config.glade:

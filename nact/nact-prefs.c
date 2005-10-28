@@ -154,11 +154,16 @@ static NactPreferences* nact_prefs_get_preferences (void)
 		if (!prefs->schemes)
 		{
 			/* initialize the default schemes */
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup (_("file|Local Files")));
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup (_("sftp|SSH Files")));
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup (_("smb|Windows Files")));
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup (_("ftp|FTP Files")));
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup (_("dav|Webdav Files")));
+			/* i18n notes : description of 'file' scheme */
+			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sLocal Files"), "file|"));
+			/* i18n notes : description of 'sftp' scheme */
+			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sSSH Files"), "sftp|"));
+			/* i18n notes : description of 'smb' scheme */
+			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sWindows Files"), "smb|"));
+			/* i18n notes : description of 'ftp' scheme */
+			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sFTP Files"), "ftp|"));
+			/* i18n notes : description of 'dav' scheme */
+			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sWebdav Files"), "dav|"));
 		}
 		prefs->main_size_width  = get_prefs_int_key (prefs->client, PREFS_MAIN_W);
 		prefs->main_size_height = get_prefs_int_key (prefs->client, PREFS_MAIN_H);

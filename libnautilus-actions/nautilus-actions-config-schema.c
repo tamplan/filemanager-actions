@@ -108,8 +108,6 @@ static void create_schema_entry (xmlNodePtr list_node, xmlChar* key_path,
 	}
 	locale_node = xmlNewChild (schema_node, NULL, "locale", NULL);
 	xmlNewProp (locale_node, "name", "C");
-	xmlNewChild (locale_node, NULL, "short", short_desc);
-	xmlNewChild (locale_node, NULL, "long", long_desc);
 	value_root_node = schema_node;
 	if (is_l10n_value)
 	{
@@ -117,6 +115,9 @@ static void create_schema_entry (xmlNodePtr list_node, xmlChar* key_path,
 		value_root_node = locale_node;
 	}
 	xmlNewChild (value_root_node, NULL, "default", value);
+
+	xmlNewChild (locale_node, NULL, "short", short_desc);
+	xmlNewChild (locale_node, NULL, "long", long_desc);
 }
 
 static gchar* gslist_to_schema_string (GSList* list)
@@ -212,12 +213,12 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 		
 	//--> test entries : is_file
 	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ISFILE_ENTRY, NULL);
-	create_schema_entry (list_node, content, "bool", bool_to_schema_string (action->is_file), ACTION_ISFILE_DESC_SHORT, ACTION_ISFILE_DESC_LONG, FALSE);
+	create_schema_entry (list_node, content, "bool", bool_to_schema_string (action->is_file), ACTION_ISFILE_DESC_SHORT, _(ACTION_ISFILE_DESC_LONG), FALSE);
 	xmlFree (content);
 
 	//--> test entries : is_dir
 	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ISDIR_ENTRY, NULL);
-	create_schema_entry (list_node, content, "bool", bool_to_schema_string (action->is_dir), ACTION_ISDIR_DESC_SHORT, ACTION_ISDIR_DESC_LONG, FALSE);
+	create_schema_entry (list_node, content, "bool", bool_to_schema_string (action->is_dir), ACTION_ISDIR_DESC_SHORT, _(ACTION_ISDIR_DESC_LONG), FALSE);
 	xmlFree (content);
 
 	//--> test entries : accept-multiple-files

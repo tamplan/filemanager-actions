@@ -48,11 +48,11 @@ static GOptionEntry entries[] =
 	{ "command", 'c', 0, G_OPTION_ARG_FILENAME, &command, N_("The path of the command"), N_("PATH") },
 	{ "parameters", 'p', 0, G_OPTION_ARG_STRING, &params, N_("The parameters of the command"), N_("PARAMS") },
 	{ "match", 'm', 0, G_OPTION_ARG_STRING_ARRAY, &matches, N_("A pattern to match selected files with possibility to add jokers ? or * (you must set it for each pattern you need)"), N_("EXPR") },
-	{ "accept-files", 'f', 0, G_OPTION_ARG_NONE, &isfile, N_("Set it if the selection must contains files"), NULL },
-	{ "accept-dirs", 'd', 0, G_OPTION_ARG_NONE, &isdir, N_("Set it if the selection must contains folders"), NULL },
-	{ "accept-multiple-files", 'M', 0, G_OPTION_ARG_NONE, &accept_multiple_files, N_("Set it if the selection must have several items"), NULL },
+	{ "accept-files", 'f', 0, G_OPTION_ARG_NONE, &isfile, N_("Set it if the selection can contains files"), NULL },
+	{ "accept-dirs", 'd', 0, G_OPTION_ARG_NONE, &isdir, N_("Set it if the selection can contains folders"), NULL },
+	{ "accept-multiple-files", 'M', 0, G_OPTION_ARG_NONE, &accept_multiple_files, N_("Set it if the selection can have several items"), NULL },
 	{ "scheme", 's', 0, G_OPTION_ARG_STRING_ARRAY, &schemes, N_("A GnomeVFS scheme where the selected files should be located (you must set it for each scheme you need)"), N_("SCHEME") },
-	{ "output-file", 'o', 0, G_OPTION_ARG_FILENAME, &output_file, N_("The path of the file where to save the new GConf schema file [default: /tmp/config_UUID.schemas]"), N_("PATH") },
+	{ "output-file", 'o', 0, G_OPTION_ARG_FILENAME, &output_file, N_("The path of the file where to save the new GConf schema definition file [default: /tmp/config_UUID.schemas]"), N_("PATH") },
 	{ NULL }
 };
 

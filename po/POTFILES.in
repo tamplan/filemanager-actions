@@ -1,10 +1,11 @@
 nact/nact.desktop.in
 nact/nautilus-actions-config.glade
 nact/nact.c
+nact/nact-utils.c
 nact/nact-editor.c
 nact/nact-prefs.c
-config/config_newaction.xml.in
 config/config_newaction.schemas.in.in
 utils/nautilus-actions-convert.c
 utils/nautilus-actions-new-config.c
 utils/nautilus-actions-tools-utils.c
+libnautilus-actions/nautilus-actions-config-gconf-private.h

@@ -153,14 +153,15 @@ gchar* nact_utils_parse_parameter (void)
 	gchar* retv = NULL;
 	GString* tmp_string = g_string_new ("");
 	
+	/* i18n notes: example strings for the command preview */
 	gchar* ex_path = _("/path/to");
 	gchar* ex_files[] = { N_("file1.txt"), N_("file2.txt"), NULL };
-	gchar* ex_dirs[] = { N_("dir1"), N_("dir2"), NULL };
-	gchar* ex_mixed[] = { N_("file1.txt"), N_("dir1"), NULL };
+	gchar* ex_dirs[] = { N_("folder1"), N_("folder2"), NULL };
+	gchar* ex_mixed[] = { N_("file1.txt"), N_("folder1"), NULL };
 	gchar* ex_scheme_default = "file";
 	gchar* ex_host_default = _("test.example.net");
 	gchar* ex_one_file = _("file.txt");
-	gchar* ex_one_dir = _("dir");
+	gchar* ex_one_dir = _("folder");
 	gchar* ex_one;
 	gchar* ex_list;
 	gchar* ex_path_list;
