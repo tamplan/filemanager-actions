@@ -104,6 +104,8 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 	NautilusMenuItem *item;
 	NautilusActions* self = NAUTILUS_ACTIONS (provider);
 
+	g_return_val_if_fail (NAUTILUS_IS_ACTIONS (self), NULL);
+
 	if (!self->dispose_has_run)
 	{
 		config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));

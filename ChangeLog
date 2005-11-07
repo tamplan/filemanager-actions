@@ -1,9 +1,12 @@
 2005-11-07  Frederic Ruaudel <grumz@grumz.net> 
+
+	* plugin/nautilus-actions.c (nautilus_actions_get_file_items): 
+	Add error checking if GObject is not of good type.
 	
-	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.c
 	(get_action_uuid_from_key): Fix extraction of uuid from GConf key
 
-	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.c
 	(actions_changed_cb): Avoid removal of already deleted action
 
 2005-10-31  Frederic Ruaudel <grumz@grumz.net> 
