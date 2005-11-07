@@ -94,12 +94,7 @@ static gchar* get_action_uuid_from_key (const gchar* key)
 	gchar* pos = g_strrstr (uuid, "/");
 	if (pos != NULL)
 	{
-		pos = '\0';
-	}
-	else
-	{
-		g_free (uuid);
-		uuid = NULL;
+		*pos = '\0';
 	}
 
 	return uuid;
@@ -136,8 +131,11 @@ actions_changed_cb (GConfClient *client,
 
 	if (value == NULL)
 	{
-		/* delete action */
-		nautilus_actions_config_remove_action (config, uuid);
+		if (action != NULL)
+		{
+			/* delete action if not already done */
+			nautilus_actions_config_remove_action (config, uuid);
+		}
 	}
 	else
 	{
