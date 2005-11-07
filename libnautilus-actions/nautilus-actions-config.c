@@ -24,8 +24,27 @@
 #include <config.h>
 #include <uuid/uuid.h>
 #include "nautilus-actions-config.h"
+#include "nautilus-actions-config-gconf-private.h"
+
+enum {
+        ACTION_ADDED,
+        ACTION_CHANGED,
+        ACTION_REMOVED,
+        LAST_SIGNAL
+};
 
 static GObjectClass *parent_class = NULL;
+static gint signals[LAST_SIGNAL] = { 0 };
+
+static void nautilus_actions_config_action_removed_default_handler (NautilusActionsConfig* config, 
+																				NautilusActionsConfigAction* action,
+																				gpointer user_data);
+static void nautilus_actions_config_action_changed_default_handler (NautilusActionsConfig* config, 
+																				NautilusActionsConfigAction* action,
+																				gpointer user_data);
+static void nautilus_actions_config_action_added_default_handler (NautilusActionsConfig* config, 
+																				NautilusActionsConfigAction* action,
+																				gpointer user_data);
 
 static void
 nautilus_actions_config_finalize (GObject *object)
@@ -55,6 +74,34 @@ nautilus_actions_config_class_init (NautilusActionsConfigClass *klass)
 	object_class->finalize = nautilus_actions_config_finalize;
 	klass->save_action = NULL; /* Pure virtual function */
 	klass->remove_action = NULL; /* Pure virtual function */
+
+	klass->action_added = nautilus_actions_config_action_added_default_handler;
+	klass->action_changed = nautilus_actions_config_action_changed_default_handler;
+	klass->action_removed = nautilus_actions_config_action_removed_default_handler;
+
+	/* create class signals */
+	signals[ACTION_ADDED] = g_signal_new ("action_added",
+														G_TYPE_FROM_CLASS (object_class),
+														G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+														G_STRUCT_OFFSET (NautilusActionsConfigClass, action_added),
+														NULL, NULL,
+														g_cclosure_marshal_VOID__POINTER,
+														G_TYPE_NONE, 1, G_TYPE_POINTER);
+	signals[ACTION_CHANGED] = g_signal_new ("action_changed",
+														G_TYPE_FROM_CLASS (object_class),
+														G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+														G_STRUCT_OFFSET (NautilusActionsConfigClass, action_changed),
+														NULL, NULL,
+														g_cclosure_marshal_VOID__POINTER,
+														G_TYPE_NONE, 1, G_TYPE_POINTER);
+	signals[ACTION_REMOVED] = g_signal_new ("action_removed",
+														G_TYPE_FROM_CLASS (object_class),
+														G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+														G_STRUCT_OFFSET (NautilusActionsConfigClass, action_removed),
+														NULL, NULL,
+														g_cclosure_marshal_VOID__POINTER,
+														G_TYPE_NONE, 1, G_TYPE_POINTER);
+
 }
 
 static void
@@ -156,27 +203,50 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 
 	if (NAUTILUS_ACTIONS_CONFIG_GET_CLASS (config)->save_action (config, action))
 	{
-		NautilusActionsConfigAction* action_copy = nautilus_actions_config_action_dup (action);
-		if (action_copy)
-		{
-			g_hash_table_insert (config->actions, g_strdup (action->uuid), action_copy);
-			retv = TRUE;
-		}
+		g_signal_emit (config, signals[ACTION_ADDED], 0, action);
+		retv = TRUE;
 	}
 	
 	return retv;
 }
 
+static void nautilus_actions_config_action_added_default_handler (NautilusActionsConfig* config, 
+																				NautilusActionsConfigAction* action,
+																				gpointer user_data)
+{
+	// FIXME: 
+	g_print ("Default action added signal handler called !\n");
+	NautilusActionsConfigAction* action_copy = nautilus_actions_config_action_dup (action);
+	if (action_copy)
+	{
+		g_hash_table_insert (config->actions, g_strdup (action->uuid), action_copy);
+	}
+}
+
 gboolean
 nautilus_actions_config_update_action (NautilusActionsConfig *config, NautilusActionsConfigAction *action)
 {
+	gboolean retv = FALSE;
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG (config), FALSE);
 	g_return_val_if_fail (action != NULL, FALSE);
 
 	if (!g_hash_table_lookup (config->actions, action->uuid))
 		return FALSE;
 
-	return NAUTILUS_ACTIONS_CONFIG_GET_CLASS(config)->save_action (config, action);
+	if (NAUTILUS_ACTIONS_CONFIG_GET_CLASS(config)->save_action (config, action))
+	{
+		g_signal_emit (config, signals[ACTION_CHANGED], 0, action);
+		retv = TRUE;
+	}
+	
+	return retv;
+}
+
+static void nautilus_actions_config_action_changed_default_handler (NautilusActionsConfig* config, 
+																				NautilusActionsConfigAction* action,
+																				gpointer user_data)
+{
+	g_print ("Default action changed signal handler called !\n");
 }
 
 gboolean
@@ -193,13 +263,23 @@ nautilus_actions_config_remove_action (NautilusActionsConfig *config, const gcha
 
 	if (NAUTILUS_ACTIONS_CONFIG_GET_CLASS(config)->remove_action (config, action))
 	{
-		if (g_hash_table_remove (config->actions, uuid))
-		{
-			retv = TRUE;
-		}
+		g_signal_emit (config, signals[ACTION_REMOVED], 0, action);
+		retv = TRUE;
 	}
 
 	return retv;
+}
+
+static void nautilus_actions_config_action_removed_default_handler (NautilusActionsConfig* config, 
+																				NautilusActionsConfigAction* action,
+																				gpointer user_data)
+{
+	g_print ("Default action removed signal handler called !\n");
+	if (!g_hash_table_remove (config->actions, action->uuid))
+	{
+		g_signal_stop_emission (config, signals[ACTION_REMOVED], 0);
+		g_print ("Error: can't remove action => stop signal emission\n");
+	}
 }
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void)
@@ -225,8 +305,27 @@ NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void)
 	new_action->accept_multiple_files = FALSE;
 	new_action->schemes = NULL;
 	new_action->schemes = g_slist_append (new_action->schemes, g_strdup ("file"));
+	new_action->version = g_strdup (NAUTILUS_ACTIONS_CONFIG_VERSION);
 	
 	return new_action;
+}
+
+void
+nautilus_actions_config_action_set_uuid (NautilusActionsConfigAction *action, const gchar *uuid)
+{
+	g_return_if_fail (action != NULL);
+
+	if (action->uuid)
+	{
+		g_free (action->uuid);
+	}
+	action->uuid = g_strdup (uuid);
+
+	if (action->conf_section)
+	{
+		g_free (action->conf_section);
+	}
+	action->conf_section = g_strdup_printf ("%s/%s", ACTIONS_CONFIG_DIR, uuid);
 }
 
 void

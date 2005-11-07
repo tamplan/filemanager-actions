@@ -30,7 +30,7 @@
 #include <libnautilus-extension/nautilus-menu-provider.h>
 #include "nautilus-actions.h"
 #include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf.h>
+#include <libnautilus-actions/nautilus-actions-config-gconf-reader.h>
 #include "nautilus-actions-test.h"
 #include "nautilus-actions-utils.h"
 
@@ -128,82 +128,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 	
 	return items;
 }
-/*
-static void nautilus_actions_notify_config_changes (GConfClient* client, 
-																	 guint cnxid,
-																	 GConfEntry* entry,
-																	 gpointer user_data)
-{
-	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
-	gchar* key = g_strdup (gconf_entry_get_key (entry));
-	gchar* tmp;
-	gchar* config_name = NULL;
-	gchar** strlist;
-	GList* iter = NULL;
 
-	if (!self->dispose_has_run)
-	{
-		// Fisrt, get the config name :
-		tmp = key + strlen (self->config_root_dir) + 1; // remove the root path from the key + a slash
-		strlist = g_strsplit_set (tmp, "/", 2); // Separate the first token of the relative path from the end
-		config_name = g_strdup (strlist[0]);
-		if ((iter = g_list_find_custom (self->configs, config_name, 
-										(GCompareFunc)nautilus_actions_utils_compare_actions)) != NULL)
-		{
-			// config already exist => update value
-			ConfigAction* action = (ConfigAction*)iter->data;
-
-			if (g_ascii_strcasecmp (strlist[1], "test/basename") == 0)
-			{
-				nautilus_actions_config_action_update_test_basenames (action, gconf_value_get_list (gconf_entry_get_value (entry)));
-			}
-			else if (g_ascii_strcasecmp (strlist[1], "test/isfile") == 0)
-			{
-				nautilus_actions_config_action_update_test_isfile (action, gconf_value_get_bool (gconf_entry_get_value (entry)));
-			}
-			else if (g_ascii_strcasecmp (strlist[1], "test/isdir") == 0)
-			{
-				nautilus_actions_config_action_update_test_isdir (action, gconf_value_get_bool (gconf_entry_get_value (entry)));
-			}
-			else if (g_ascii_strcasecmp (strlist[1], "test/accept-multiple-files") == 0)
-			{
-				nautilus_actions_config_action_update_test_accept_multiple_files (action, gconf_value_get_bool (gconf_entry_get_value (entry)));
-			}
-			else if (g_ascii_strcasecmp (strlist[1], "test/scheme") == 0)
-			{
-				nautilus_actions_config_action_update_test_schemes (action, gconf_value_get_list (gconf_entry_get_value (entry)));
-			}
-			else if (g_ascii_strcasecmp (strlist[1], "command/parameters") == 0)
-			{
-				nautilus_actions_config_action_update_command_parameters (action, gconf_value_get_string (gconf_entry_get_value (entry)));
-			}
-			else if (g_ascii_strcasecmp (strlist[1], "command/path") == 0)
-			{
-				nautilus_actions_config_action_update_command_path (action, gconf_value_get_string (gconf_entry_get_value (entry)));
-			}
-			else if (g_ascii_strcasecmp (strlist[1], "menu-item/label") == 0)
-			{
-				nautilus_actions_config_action_update_menu_item_label (action, gconf_value_get_string (gconf_entry_get_value (entry)));
-			}
-			else if (g_ascii_strcasecmp (strlist[1], "menu-item/tooltip") == 0)
-			{
-				nautilus_actions_config_action_update_menu_item_tooltip (action, gconf_value_get_string (gconf_entry_get_value (entry)));
-			}
-			else if (g_ascii_strcasecmp (strlist[1], "version") == 0)
-			{
-				nautilus_actions_config_action_update_version (action, gconf_value_get_string (gconf_entry_get_value (entry)));
-			}
-		}
-		else
-		{
-			// New config
-		}
-		g_strfreev (strlist);
-	}
-
-	g_free (key);
-}
-*/
 static void nautilus_actions_instance_dispose (GObject *obj)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (obj);
@@ -240,8 +165,20 @@ static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer kl
 	NautilusActions* self = NAUTILUS_ACTIONS (instance);
 	
 	self->configs = NULL;
-	self->configs = nautilus_actions_config_gconf_get ();
+	self->configs = nautilus_actions_config_gconf_reader_get ();
 	self->dispose_has_run = FALSE;
+
+	/*
+	g_signal_connect_after (G_OBJECT (self->configs), "action_added",
+									(GCallback)nautilus_actions_action_added_handler,
+									self);
+	g_signal_connect_after (G_OBJECT (self->configs), "action_changed",
+									(GCallback)nautilus_actions_action_changed_handler,
+									self);
+	g_signal_connect_after (G_OBJECT (self->configs), "action_removed",
+									(GCallback)nautilus_actions_action_removed_handler,
+									self);
+	*/
 
 	parent_class = g_type_class_peek_parent (klass);
 }

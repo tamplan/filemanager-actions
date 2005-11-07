@@ -68,6 +68,11 @@ struct _NautilusActionsConfigClass {
 	/* Virtual private function */
 	gboolean (* save_action) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
 	gboolean (* remove_action) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
+
+	/* Signals handler signature */
+        void (* action_added) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
+        void (* action_changed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
+        void (* action_removed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
 };
 
 GType                        nautilus_actions_config_get_type (void);
@@ -84,6 +89,8 @@ gboolean                     nautilus_actions_config_remove_action (NautilusActi
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void);
 NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void);
+void                         nautilus_actions_config_action_set_uuid (NautilusActionsConfigAction *action,
+								       const gchar *uuid);
 void                         nautilus_actions_config_action_set_label (NautilusActionsConfigAction *action,
 								       const gchar *label);
 void                         nautilus_actions_config_action_set_tooltip (NautilusActionsConfigAction *action,

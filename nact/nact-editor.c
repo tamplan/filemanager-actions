@@ -608,7 +608,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	GladeXML *gui;
 	gboolean ret = FALSE;
 	gchar *label;
-	NautilusActionsConfigGconf *config;
+	NautilusActionsConfigGconfWriter *config;
 	GList* aligned_widgets = NULL;
 	GList* iter;
 	GSList* list;
@@ -732,7 +732,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
 	switch (gtk_dialog_run (GTK_DIALOG (editor))) {
 	case GTK_RESPONSE_OK :
-		config = nautilus_actions_config_gconf_get ();
+		config = nautilus_actions_config_gconf_writer_get ();
 		label = (gchar*)gtk_entry_get_text (GTK_ENTRY (menu_label));
 		nautilus_actions_config_action_set_label (action, label);
 		nautilus_actions_config_action_set_tooltip (action, gtk_entry_get_text (GTK_ENTRY (menu_tooltip)));

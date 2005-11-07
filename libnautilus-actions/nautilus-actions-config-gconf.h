@@ -36,6 +36,7 @@ G_BEGIN_DECLS
 #define NAUTILUS_ACTIONS_CONFIG_GCONF_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, NAUTILUS_ACTIONS_TYPE_CONFIG_GCONF, NautilusActionsConfigGconfClass))
 #define NAUTILUS_ACTIONS_IS_CONFIG_GCONF(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, NAUTILUS_ACTIONS_TYPE_CONFIG_GCONF))
 #define NAUTILUS_ACTIONS_IS_CONFIG_GCONF_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), NAUTILUS_ACTIONS_TYPE_CONFIG_GCONF))
+#define NAUTILUS_ACTIONS_CONFIG_GCONF_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), NAUTILUS_ACTIONS_TYPE_CONFIG_GCONF, NautilusActionsConfigGconfClass))
 
 typedef struct _NautilusActionsConfigGconf NautilusActionsConfigGconf;
 typedef struct _NautilusActionsConfigGconfClass NautilusActionsConfigGconfClass;
@@ -45,15 +46,11 @@ struct _NautilusActionsConfigGconf {
 
 	/* Private data, don't access */
 	GConfClient *conf_client;
-	guint actions_notify_id;
 };
 
 struct _NautilusActionsConfigGconfClass {
 	NautilusActionsConfigClass parent_class;
 
-	void (* action_added) (NautilusActionsConfigGconf *config, NautilusActionsConfigAction *action);
-	void (* action_changed) (NautilusActionsConfigGconf *config, NautilusActionsConfigAction *action);
-	void (* action_removed) (NautilusActionsConfigGconf *config, NautilusActionsConfigAction *action);
 };
 
 GType                        nautilus_actions_config_gconf_get_type (void);
@@ -62,3 +59,4 @@ NautilusActionsConfigGconf       *nautilus_actions_config_gconf_get (void);
 G_END_DECLS
 
 #endif
+// vim:ts=3:sw=3:tw=1024:cin

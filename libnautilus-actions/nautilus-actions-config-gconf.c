@@ -26,87 +26,7 @@
 #include "nautilus-actions-config-gconf.h"
 #include "nautilus-actions-config-gconf-private.h"
 
-enum {
-	ACTION_ADDED,
-	ACTION_CHANGED,
-	ACTION_REMOVED,
-	LAST_SIGNAL
-};
-
 static GObjectClass *parent_class = NULL;
-static gint signals[LAST_SIGNAL] = { 0 };
-
-static gboolean
-save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
-{
-	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_GCONF (self), FALSE);
-
-	NautilusActionsConfigGconf* config = NAUTILUS_ACTIONS_CONFIG_GCONF (self);
-	gchar *key;
-
-	g_free (action->conf_section);
-	action->conf_section = g_strdup_printf ("%s/%s", ACTIONS_CONFIG_DIR, action->uuid);
-
-	/* set the version on the action */
-	if (action->version)
-		g_free (action->version);
-	action->version = g_strdup (NAUTILUS_ACTIONS_CONFIG_VERSION);
-
-	/* set the values in the config database */
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_LABEL_ENTRY);
-	gconf_client_set_string (config->conf_client, key, action->label, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_TOOLTIP_ENTRY);
-	gconf_client_set_string (config->conf_client, key, action->tooltip, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_ICON_ENTRY);
-	gconf_client_set_string (config->conf_client, key, action->icon, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_PATH_ENTRY);
-	gconf_client_set_string (config->conf_client, key, action->path, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_PARAMS_ENTRY);
-	gconf_client_set_string (config->conf_client, key, action->parameters, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_BASENAMES_ENTRY);
-	gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->basenames, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_ISFILE_ENTRY);
-	gconf_client_set_bool (config->conf_client, key, action->is_file, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_ISDIR_ENTRY);
-	gconf_client_set_bool (config->conf_client, key, action->is_dir, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_MULTIPLE_ENTRY);
-	gconf_client_set_bool (config->conf_client, key, action->accept_multiple_files, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_SCHEMES_ENTRY);
-	gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->schemes, NULL);
-	g_free (key);
-
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_VERSION_ENTRY);
-	gconf_client_set_string (config->conf_client, key, action->version, NULL);
-	g_free (key);
-}
-
-gboolean
-remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
-{
-	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_GCONF (self), FALSE);
-
-	NautilusActionsConfigGconf* config = NAUTILUS_ACTIONS_CONFIG_GCONF (self);
-
-	gconf_client_recursive_unset (config->conf_client, action->conf_section, 0, NULL);
-}
 
 static void
 nautilus_actions_config_gconf_finalize (GObject *object)
@@ -117,9 +37,6 @@ nautilus_actions_config_gconf_finalize (GObject *object)
 
 	/* free all memory */
 	if (config->conf_client) {
-		gconf_client_remove_dir (config->conf_client, ACTIONS_CONFIG_DIR, NULL);
-		gconf_client_notify_remove (config->conf_client, config->actions_notify_id);
-
 		g_object_unref (config->conf_client);
 		config->conf_client = NULL;
 	}
@@ -139,39 +56,13 @@ nautilus_actions_config_gconf_class_init (NautilusActionsConfigGconfClass *klass
 
 	parent_class = g_type_class_peek_parent (klass);
 	config_class = NAUTILUS_ACTIONS_CONFIG_CLASS (klass);
-	
+
 
 	object_class->finalize = nautilus_actions_config_gconf_finalize;
-	
-	config_class->save_action = save_action;
-	config_class->remove_action = remove_action;
 
-	klass->action_added = NULL;
-	klass->action_changed = NULL;
-	klass->action_removed = NULL;
+	config_class->save_action = NULL;
+	config_class->remove_action = NULL;
 
-	/* create class signals */
-	signals[ACTION_CHANGED] = g_signal_new ("action_added",
-						G_TYPE_FROM_CLASS (object_class),
-						G_SIGNAL_RUN_LAST,
-						G_STRUCT_OFFSET (NautilusActionsConfigGconfClass, action_added),
-						NULL, NULL,
-						g_cclosure_marshal_VOID__POINTER,
-						G_TYPE_NONE, 1, G_TYPE_POINTER);
-	signals[ACTION_CHANGED] = g_signal_new ("action_changed",
-						G_TYPE_FROM_CLASS (object_class),
-						G_SIGNAL_RUN_LAST,
-						G_STRUCT_OFFSET (NautilusActionsConfigGconfClass, action_changed),
-						NULL, NULL,
-						g_cclosure_marshal_VOID__POINTER,
-						G_TYPE_NONE, 1, G_TYPE_POINTER);
-	signals[ACTION_CHANGED] = g_signal_new ("action_removed",
-						G_TYPE_FROM_CLASS (object_class),
-						G_SIGNAL_RUN_LAST,
-						G_STRUCT_OFFSET (NautilusActionsConfigGconfClass, action_removed),
-						NULL, NULL,
-						g_cclosure_marshal_VOID__POINTER,
-						G_TYPE_NONE, 1, G_TYPE_POINTER);
 }
 
 static gboolean
@@ -221,7 +112,10 @@ actions_changed_cb (GConfClient *client,
 		    GConfEntry *entry,
 		    gpointer user_data)
 {
-	NautilusActionsConfig *config = user_data;
+	NautilusActionsConfig *config = NAUTILUS_ACTIONS_CONFIG (user_data);
+	const char* key = gconf_entry_get_key (entry);
+	GConfValue* value = gconf_entry_get_value (entry);
+
 }
 
 static void
@@ -261,11 +155,6 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 
 	g_slist_free (list);
 
-	/* install notification callbacks */
-	gconf_client_add_dir (config->conf_client, ACTIONS_CONFIG_DIR, GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);
-	config->actions_notify_id = gconf_client_notify_add (config->conf_client, ACTIONS_CONFIG_DIR,
-							     (GConfClientNotifyFunc) actions_changed_cb, config,
-							     NULL, NULL);
 }
 
 GType
@@ -303,4 +192,4 @@ nautilus_actions_config_gconf_get (void)
 	return NAUTILUS_ACTIONS_CONFIG_GCONF (g_object_ref (G_OBJECT (config)));
 }
 
-
+// vim:ts=3:sw=3:tw=1024:cin

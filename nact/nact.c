@@ -30,7 +30,7 @@
 #include <gtk/gtktreeview.h>
 #include <glade/glade-xml.h>
 #include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf.h>
+#include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
 #include "nact-utils.h"
 
 enum {
@@ -40,7 +40,7 @@ enum {
 	N_COLUMN
 };
 
-static NautilusActionsConfigGconf *config = NULL;
+static NautilusActionsConfigGconfWriter *config = NULL;
 
 static void
 fill_actions_list (GtkWidget *list)
@@ -264,7 +264,7 @@ main (int argc, char *argv[])
 
 	gtk_init (&argc, &argv);
 
-	config = nautilus_actions_config_gconf_get ();
+	config = nautilus_actions_config_gconf_writer_get ();
 
 	/* create main dialog */
 	init_dialog ();

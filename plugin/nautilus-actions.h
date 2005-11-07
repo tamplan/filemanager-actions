@@ -25,7 +25,7 @@
 #define NAUTILUS_ACTIONS_H
 
 #include <glib-object.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf.h>
+#include <libnautilus-actions/nautilus-actions-config-gconf-reader.h>
 
 G_BEGIN_DECLS
 
@@ -42,7 +42,7 @@ typedef struct _NautilusActionsClass NautilusActionsClass;
 struct _NautilusActions 
 {
 	GObject __parent;
-	NautilusActionsConfigGconf* configs;
+	NautilusActionsConfigGconfReader* configs;
 	gboolean dispose_has_run;
 };
 

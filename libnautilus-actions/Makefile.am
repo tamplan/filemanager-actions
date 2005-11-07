@@ -10,6 +10,10 @@ libnautilus_actions_la_SOURCES = 	\
 	nautilus-actions-config-gconf.c \
 	nautilus-actions-config-gconf.h \
 	nautilus-actions-config-gconf-private.h \
+	nautilus-actions-config-gconf-reader.c \
+	nautilus-actions-config-gconf-reader.h \
+	nautilus-actions-config-gconf-writer.c \
+	nautilus-actions-config-gconf-writer.h \
 	nautilus-actions-config-schema.c \
 	nautilus-actions-config-schema.h \
 	nautilus-actions-config-xml.c	\

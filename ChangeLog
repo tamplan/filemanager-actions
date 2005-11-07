@@ -1,3 +1,53 @@
+2005-10-31  Frederic Ruaudel <grumz@grumz.net> 
+
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h
+	(nautilus_actions_config_action_set_uuid): Add a function
+	to set the uuid and conf_section fields of an action.
+	(nautilus_actions_config_action_new_default): Give the default
+	version number as default value for the version fields of an action
+
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.c
+	(actions_changed_cb): implement the Gconf notification handler
+
+	* plugin/nautilus-actions.c:
+	* plugin/nautilus-actions.h: Replace the usage of Gconf object
+	by the usage of the GconfReader object.
+
+	* nact/nact-editor.c:
+	* nact/nact-editor.h:
+	* nact/nact.c: Replace the usage of the Gconf object by the usage
+	of the GConfWriter object.
+
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.h:
+	* libnautilus-actions/nautilus-actions-config-gconf-writer.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-writer.h:
+	* libnautilus-actions/Makefile.am: Create two new GObject which
+	are derived from nautilus-actions-config-gconf. The reader
+	implement the notification stuff and the writer implement
+	the modification stuff.
+
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config-gconf.h:
+	Modified to integrate the new derived GObject : GConfReader
+	and GConfWriter.
+
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config-gconf.h:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h:
+	Moved the signals from GConf object to Config object
+
+2005-10-30  Frederic Ruaudel <grumz@grumz.net> 
+	
+	* libnautilus-actions/nautilus-actions-config-gconf.h:
+	Add the GET_CLASS macro.
+
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	(nautilus_actions_config_gconf_class_init): Fix indices in
+	signals initilization stuff
+	
 2005-10-28  Frederic Ruaudel <grumz@grumz.net> 
 
 	* config/config_newaction.schemas.in.in: Update it with the 

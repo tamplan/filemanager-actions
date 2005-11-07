@@ -25,7 +25,7 @@
 #define _NACT_EDITOR_H_
 
 #include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf.h>
+#include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
 
 gboolean nact_editor_new_action (void);
 gboolean nact_editor_edit_action (NautilusActionsConfigAction *action);
