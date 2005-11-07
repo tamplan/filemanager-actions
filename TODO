@@ -1,9 +1,7 @@
-Last Modified: 25/10/2005
+Last Modified: 07/11/2005
 
 Important things to do before next release :
 
-- Implement the notification stuff in n-a plugin
-- Implement the signals in the libnautilus-actions gconf object
 - Implement Import/export of Gconf schemas in Nact (make a wizard style
 dialog and use the GObject of libnautilus-action like in the commandline
 tool)
