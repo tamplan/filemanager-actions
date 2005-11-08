@@ -12,4 +12,5 @@ windows (already a patch ready in the bug tracker, probably need some
 rewrite). Probably need to add some option in Nact.
 - Implement the Help button in nact (or hide it meanwhile)
 - Sort the gtk stock item in the dropdown list in nact edit dialog.
-- i18n doen't works anymore in Nact.
+- i18n doen't works in the command line tool and for some part of NACT 
+like the scheme list, it seems.
