@@ -1,3 +1,13 @@
+2005-11-08  Frederic Ruaudel <grumz@grumz.net> 
+
+	* nact/nact-editor.c (create_stock_icon_model): 
+	Now only display the stock icon that will be accepted by nautilus
+	in the dropdown list.
+
+	* plugin/nautilus-actions.c (nautilus_actions_create_menu_item):
+	Work around the problem of the ugly nautilus default icon when the
+	image file doesn't exists.
+
 2005-11-07  Frederic Ruaudel <grumz@grumz.net> 
 
 	* plugin/nautilus-actions.c (nautilus_actions_get_file_items): 

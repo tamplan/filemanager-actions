@@ -12,6 +12,4 @@ windows (already a patch ready in the bug tracker, probably need some
 rewrite). Probably need to add some option in Nact.
 - Implement the Help button in nact (or hide it meanwhile)
 - Sort the gtk stock item in the dropdown list in nact edit dialog.
-- Find why some stock icon are not rendered correctly in Nautilus (eg: gtk-edit,
-gtk-info, etc.)
 - i18n doen't works anymore in Nact.

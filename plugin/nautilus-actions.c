@@ -66,17 +66,31 @@ static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsCon
 
 }
 
+static const gchar* get_verified_icon_name (const gchar* icon_name)
+{
+	if (icon_name[0] == '/')
+	{
+		if (!g_file_test (icon_name, G_FILE_TEST_IS_REGULAR))
+		{
+			return NULL;
+		}
+	}
+
+	return icon_name;
+}
+
 static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfigAction *action, GList *files)
 {
 	NautilusMenuItem *item;
 	gchar* name;
+	gchar* icon_name = get_verified_icon_name (action->icon);
 
 	name = g_strdup_printf ("NautilusActions::%s", action->uuid);
 	
 	item = nautilus_menu_item_new (name, 
 				action->label, 
 				action->tooltip, 
-				action->icon);
+				icon_name);
 
 	g_signal_connect_data (item, 
 				"activate", 

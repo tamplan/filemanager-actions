@@ -60,21 +60,6 @@ strip_underscore (const gchar *text)
 	return result;
 }
 
-void
-field_changed_cb (GObject *object, gpointer user_data)
-{
-	GtkWidget* editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
-	GtkWidget* menu_label = nact_get_glade_widget_from ("MenuLabelEntry", GLADE_EDIT_DIALOG_WIDGET);
-	const gchar *label = gtk_entry_get_text (GTK_ENTRY (menu_label));
-
-	update_example_label ();
-
-	if (label && strlen (label) > 0)
-		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, TRUE);
-	else
-		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
-}
-
 void update_example_label (void)
 {
 	GtkWidget* label_widget = nact_get_glade_widget_from ("LabelExample", GLADE_EDIT_DIALOG_WIDGET);
@@ -93,6 +78,21 @@ void update_example_label (void)
 	gtk_label_set_label (GTK_LABEL (label_widget), ex_str);
 	g_free (ex_str);
 	g_free (tmp);
+}
+
+void
+field_changed_cb (GObject *object, gpointer user_data)
+{
+	GtkWidget* editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
+	GtkWidget* menu_label = nact_get_glade_widget_from ("MenuLabelEntry", GLADE_EDIT_DIALOG_WIDGET);
+	const gchar *label = gtk_entry_get_text (GTK_ENTRY (menu_label));
+
+	update_example_label ();
+
+	if (label && strlen (label) > 0)
+		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, TRUE);
+	else
+		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
 }
 
 void
@@ -203,7 +203,6 @@ static GtkTreeModel* create_stock_icon_model (void)
 	GtkListStore* model;
 	GtkTreeIter row;
 	GtkWidget* window = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
-	GdkPixbuf* icon = NULL;
 	GtkStockItem stock_item;
 	gchar* label;
 
@@ -214,16 +213,19 @@ static GtkTreeModel* create_stock_icon_model (void)
 	/* i18n notes: when no icon is selected in the drop-down list */
 	gtk_list_store_set (model, &row, ICON_STOCK_COLUMN, "", ICON_LABEL_COLUMN, _("None"), -1);
 	stock_list = gtk_stock_list_ids ();
+	GtkIconTheme* icon_theme = gtk_icon_theme_get_default ();
 
 	for (iter = stock_list; iter; iter = iter->next)
 	{
-		if (gtk_stock_lookup ((gchar*)iter->data, &stock_item))
+		GtkIconInfo *icon_info = gtk_icon_theme_lookup_icon (icon_theme, (gchar*)iter->data, GTK_ICON_SIZE_MENU, GTK_ICON_LOOKUP_FORCE_SVG);
+		if (icon_info)
 		{
-			icon = gtk_widget_render_icon (window, (gchar*)iter->data, GTK_ICON_SIZE_MENU, NULL);
+			gtk_stock_lookup ((gchar*)iter->data, &stock_item);
 			gtk_list_store_append (model, &row);
 			label = strip_underscore (stock_item.label);
 			gtk_list_store_set (model, &row, ICON_STOCK_COLUMN, (gchar*)iter->data, ICON_LABEL_COLUMN, label, -1);
 			g_free (label);
+			gtk_icon_info_free (icon_info);
 		}
 	}
 
