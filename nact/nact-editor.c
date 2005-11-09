@@ -196,6 +196,43 @@ legend_button_clicked_cb (GtkButton *button, gpointer user_data)
 	g_object_unref (gui);
 }
 
+static gint sort_stock_ids (gconstpointer a, gconstpointer b)
+{
+	GtkStockItem stock_item_a;
+	GtkStockItem stock_item_b;
+	gchar* label_a;
+	gchar* label_b;
+	gboolean is_a, is_b;
+	int retv = 0;
+
+	is_a = gtk_stock_lookup ((gchar*)a, &stock_item_a);
+	is_b = gtk_stock_lookup ((gchar*)b, &stock_item_b);
+
+	if (is_a && !is_b)
+	{
+		retv = 1;
+	}
+	else if (!is_a && is_b)
+	{
+		retv = -1;
+	}
+	else if (!is_a && !is_b)
+	{
+		retv = 0;
+	}
+	else
+	{
+		label_a = strip_underscore (stock_item_a.label);
+		label_b = strip_underscore (stock_item_b.label);
+		//retv = g_ascii_strcasecmp (label_a, label_b);
+		retv = g_utf8_collate (label_a, label_b);
+		g_free (label_a);
+		g_free (label_b);
+	}
+
+	return retv;
+}
+
 static GtkTreeModel* create_stock_icon_model (void)
 {
 	GSList* stock_list = NULL;
@@ -214,17 +251,20 @@ static GtkTreeModel* create_stock_icon_model (void)
 	gtk_list_store_set (model, &row, ICON_STOCK_COLUMN, "", ICON_LABEL_COLUMN, _("None"), -1);
 	stock_list = gtk_stock_list_ids ();
 	GtkIconTheme* icon_theme = gtk_icon_theme_get_default ();
+	stock_list = g_slist_sort (stock_list, (GCompareFunc)sort_stock_ids);
 
 	for (iter = stock_list; iter; iter = iter->next)
 	{
 		GtkIconInfo *icon_info = gtk_icon_theme_lookup_icon (icon_theme, (gchar*)iter->data, GTK_ICON_SIZE_MENU, GTK_ICON_LOOKUP_FORCE_SVG);
 		if (icon_info)
 		{
-			gtk_stock_lookup ((gchar*)iter->data, &stock_item);
-			gtk_list_store_append (model, &row);
-			label = strip_underscore (stock_item.label);
-			gtk_list_store_set (model, &row, ICON_STOCK_COLUMN, (gchar*)iter->data, ICON_LABEL_COLUMN, label, -1);
-			g_free (label);
+			if (gtk_stock_lookup ((gchar*)iter->data, &stock_item))
+			{
+				gtk_list_store_append (model, &row);
+				label = strip_underscore (stock_item.label);
+				gtk_list_store_set (model, &row, ICON_STOCK_COLUMN, (gchar*)iter->data, ICON_LABEL_COLUMN, label, -1);
+				g_free (label);
+			}
 			gtk_icon_info_free (icon_info);
 		}
 	}
