@@ -1,3 +1,11 @@
+2005-11-09  Frederic Ruaudel <grumz@grumz.net> 
+
+	* plugin/nautilus-actions.c (nautilus_actions_get_background_item):
+	(nautilus_actions_menu_provider_iface_init):
+	Apply patch from palfrey to add support for action in the background
+	of Nautilus's windows (Feature #98). It is applied automatically as if
+	we would have selected the directory the window represents.
+
 2005-11-08  Frederic Ruaudel <grumz@grumz.net> 
 
 	* nact/nact-editor.c (create_stock_icon_model): 

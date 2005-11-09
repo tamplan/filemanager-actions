@@ -145,6 +145,18 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 	return items;
 }
 
+static GList *nautilus_actions_get_background_items (NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder)
+{
+	GList *items = NULL;
+	GList *files = NULL;
+
+	files = g_list_append (files, current_folder);
+	items = nautilus_actions_get_file_items (provider, window, files);
+	g_list_free (files);
+	
+	return items;
+}
+
 static void nautilus_actions_instance_dispose (GObject *obj)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (obj);
@@ -202,6 +214,7 @@ static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer kl
 static void nautilus_actions_menu_provider_iface_init (NautilusMenuProviderIface *iface)
 {
 	iface->get_file_items = nautilus_actions_get_file_items;
+	iface->get_background_items = nautilus_actions_get_background_items;
 }
 
 void nautilus_actions_register_type (GTypeModule *module)

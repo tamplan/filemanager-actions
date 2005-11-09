@@ -5,5 +5,6 @@ based on nautilus-sendto module from Roberto Majadas <roberto.majadas@hispalinux
 
 == Contributors ==
 
+Palfrey <nautilus-actions@tevp.net> : Patch to add actions in the background popup menu of Nautilus's windows.
 Ed Catmur <ed@catmur.co.uk> : NACT .desktop file and Makefile patch for packaging on gentoo
 Kasys : Makefile patch to build on 64bits arch
