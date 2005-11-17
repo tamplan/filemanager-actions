@@ -26,7 +26,7 @@
 #include <glib/gi18n.h>
 #include <libnautilus-actions/nautilus-actions-config.h>
 #include <libnautilus-actions/nautilus-actions-config-xml.h>
-#include <libnautilus-actions/nautilus-actions-config-schema.h>
+#include <libnautilus-actions/nautilus-actions-config-schema-writer.h>
 
 static gchar* input_file = NULL;
 static gchar* output_file = NULL;
@@ -88,7 +88,7 @@ int main (int argc, char** argv)
 	}
 
 	NautilusActionsConfigXml* xml_configs = nautilus_actions_config_xml_get ();
-	NautilusActionsConfigSchema* schema_configs = nautilus_actions_config_schema_get ();
+	NautilusActionsConfigSchemaWriter* schema_configs = nautilus_actions_config_schema_writer_get ();
 	g_object_set (G_OBJECT (schema_configs), "save-path", output_dir, NULL);
 
 	if (input_file)
@@ -113,7 +113,7 @@ int main (int argc, char** argv)
 		if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_configs), action))
 		{
 			success = TRUE;
-			path = nautilus_actions_config_schema_get_saved_filename (schema_configs, action->uuid);
+			path = nautilus_actions_config_schema_writer_get_saved_filename (schema_configs, action->uuid);
 			if (output_file)
 			{
 				// Copy the content of the temporary file into the one asked by the user

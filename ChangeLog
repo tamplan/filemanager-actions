@@ -1,3 +1,25 @@
+2005-11-17  Frederic Ruaudel <grumz@grumz.net> 
+
+	* libnautilus-actions/nautilus-actions-config-schema.c:
+	* libnautilus-actions/nautilus-actions-config-schema.h:
+	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
+	* libnautilus-actions/nautilus-actions-config-schema-writer.h:
+	* utils/nautilus-actions-convert.c:
+	* utils/nautilus-actions-new-config.c: Rename NautilusActionsConfigSchema
+	GObject into NautilusActionsConfigSchemaWriter
+
+	* libnautilus-actions/Makefile.am:
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	* libnautilus-actions/nautilus-actions-config-schema-reader.h:
+	Create a GObject to read config in GConf schema description file 
+	format
+
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	Add some #define to describe the GConf XML elements
+
+	* nact/nautilus-actions-config.glade:
+	Create the Import/Export dialog layout
+
 2005-11-09  Frederic Ruaudel <grumz@grumz.net> 
 
 	* nact/nact-editor.c (create_stock_icon_model):

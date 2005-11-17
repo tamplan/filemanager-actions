@@ -14,8 +14,10 @@ libnautilus_actions_la_SOURCES = 	\
 	nautilus-actions-config-gconf-reader.h \
 	nautilus-actions-config-gconf-writer.c \
 	nautilus-actions-config-gconf-writer.h \
-	nautilus-actions-config-schema.c \
-	nautilus-actions-config-schema.h \
+	nautilus-actions-config-schema-writer.c \
+	nautilus-actions-config-schema-writer.h \
+	nautilus-actions-config-schema-reader.c \
+	nautilus-actions-config-schema-reader.h \
 	nautilus-actions-config-xml.c	\
 	nautilus-actions-config-xml.h
 libnautilus_actions_la_LIBADD = -luuid

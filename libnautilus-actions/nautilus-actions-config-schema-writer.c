@@ -26,16 +26,16 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <uuid/uuid.h>
-#include "nautilus-actions-config-schema.h"
+#include "nautilus-actions-config-schema-writer.h"
 #include "nautilus-actions-config-gconf-private.h"
 
 enum {
-	NAUTILUS_ACTIONS_CONFIG_SCHEMA_SAVE_PATH = 1,
+	NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER_SAVE_PATH = 1,
 };
 
 static GObjectClass *parent_class = NULL;
 
-gchar* nautilus_actions_config_schema_get_saved_filename (NautilusActionsConfigSchema* self, gchar* uuid)
+gchar* nautilus_actions_config_schema_writer_get_saved_filename (NautilusActionsConfigSchemaWriter* self, gchar* uuid)
 {
 	gchar* filename = NULL;
 	gchar* path = NULL;
@@ -47,14 +47,14 @@ gchar* nautilus_actions_config_schema_get_saved_filename (NautilusActionsConfigS
 	return path;
 }
 
-static void nautilus_actions_config_schema_set_property (GObject *object, guint property_id,
+static void nautilus_actions_config_schema_writer_set_property (GObject *object, guint property_id,
 																			const GValue* value, GParamSpec *pspec)
 {
-	NautilusActionsConfigSchema* self = NAUTILUS_ACTIONS_CONFIG_SCHEMA (object);
+	NautilusActionsConfigSchemaWriter* self = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (object);
 
 	switch (property_id) 
 	{
-		case NAUTILUS_ACTIONS_CONFIG_SCHEMA_SAVE_PATH:
+		case NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER_SAVE_PATH:
 			if (self->save_path)
 			{
 				g_free (self->save_path);
@@ -67,15 +67,15 @@ static void nautilus_actions_config_schema_set_property (GObject *object, guint 
 	}		
 }
 
-static void nautilus_actions_config_schema_get_property (GObject *object, guint property_id,
+static void nautilus_actions_config_schema_writer_get_property (GObject *object, guint property_id,
 																			const GValue* value, GParamSpec *pspec)
 {
 	
-	NautilusActionsConfigSchema* self = NAUTILUS_ACTIONS_CONFIG_SCHEMA (object);
+	NautilusActionsConfigSchemaWriter* self = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (object);
 
 	switch (property_id) 
 	{
-		case NAUTILUS_ACTIONS_CONFIG_SCHEMA_SAVE_PATH:
+		case NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER_SAVE_PATH:
 			g_value_set_string (value, self->save_path);
 			break;
 		default:
@@ -95,18 +95,18 @@ static void create_schema_entry (xmlNodePtr list_node, xmlChar* key_path,
 	xmlNodePtr* value_root_node = NULL;
 
 	//--> Menu item entries : label
-	schema_node = xmlNewChild (list_node, NULL, "schema", NULL);
+	schema_node = xmlNewChild (list_node, NULL, NA_GCONF_XML_SCHEMA_ENTRY, NULL);
 	content = g_build_path ("/", ACTIONS_SCHEMA_PREFIX, key_path, NULL);
-	xmlNewChild (schema_node, NULL, "key", content);
+	xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_KEY, content);
 	xmlFree (content);
-	xmlNewChild (schema_node, NULL, "applyto", key_path);
-	xmlNewChild (schema_node, NULL, "owner", ACTIONS_SCHEMA_OWNER);
-	xmlNewChild (schema_node, NULL, "type", type);
+	xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_APPLYTO, key_path);
+	xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_OWNER, ACTIONS_SCHEMA_OWNER);
+	xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_TYPE, type);
 	if (g_ascii_strncasecmp (type, "list", strlen ("list")) == 0)
 	{
-		xmlNewChild (schema_node, NULL, "list_type", "string");
+		xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_LIST_TYPE, "string");
 	}
-	locale_node = xmlNewChild (schema_node, NULL, "locale", NULL);
+	locale_node = xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_LOCALE, NULL);
 	xmlNewProp (locale_node, "name", "C");
 	value_root_node = schema_node;
 	if (is_l10n_value)
@@ -114,10 +114,10 @@ static void create_schema_entry (xmlNodePtr list_node, xmlChar* key_path,
 		// if the default value must be localized, put it in the <locale> element
 		value_root_node = locale_node;
 	}
-	xmlNewChild (value_root_node, NULL, "default", value);
+	xmlNewChild (value_root_node, NULL, NA_GCONF_XML_SCHEMA_DFT, value);
 
-	xmlNewChild (locale_node, NULL, "short", short_desc);
-	xmlNewChild (locale_node, NULL, "long", long_desc);
+	xmlNewChild (locale_node, NULL, NA_GCONF_XML_SCHEMA_SHORT, short_desc);
+	xmlNewChild (locale_node, NULL, NA_GCONF_XML_SCHEMA_LONG, long_desc);
 }
 
 static gchar* gslist_to_schema_string (GSList* list)
@@ -156,9 +156,9 @@ static gboolean
 save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 {
 	gboolean retv = FALSE;
-	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_SCHEMA (self), FALSE);
+	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_SCHEMA_WRITER (self), FALSE);
 
-	NautilusActionsConfigSchema* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA (self);
+	NautilusActionsConfigSchemaWriter* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (self);
 	xmlDocPtr doc = NULL;
 	xmlNodePtr root_node = NULL;
 	xmlNodePtr list_node = NULL;
@@ -175,9 +175,9 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 
 	// Create the GConf schema XML file and write it in the save_path folder
 	doc = xmlNewDoc ("1.0");
-	root_node = xmlNewNode (NULL, "gconfschemafile");
+	root_node = xmlNewNode (NULL, NA_GCONF_XML_ROOT);
 	xmlDocSetRootElement (doc, root_node);
-	list_node = xmlNewChild (root_node, NULL, "schemalist", NULL);
+	list_node = xmlNewChild (root_node, NULL, NA_GCONF_XML_SCHEMA_LIST, NULL);
 
 	//--> Menu item entries : label
 	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_LABEL_ENTRY, NULL);
@@ -239,7 +239,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	xmlFree (content);
 
 	// generate the filename name and save the schema into it
-	path = nautilus_actions_config_schema_get_saved_filename (config, action->uuid);
+	path = nautilus_actions_config_schema_writer_get_saved_filename (config, action->uuid);
 	if (xmlSaveFormatFileEnc (path, doc, "UTF-8", 1) != -1)
 	{
 		retv = TRUE;
@@ -255,15 +255,15 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 static gboolean
 remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
 {
-	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_SCHEMA (self), FALSE);
+	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_SCHEMA_WRITER (self), FALSE);
 
-	NautilusActionsConfigSchema* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA (self);
+	NautilusActionsConfigSchemaWriter* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (self);
 
 	return TRUE;
 }
 
 static void
-nautilus_actions_config_schema_finalize (GObject *object)
+nautilus_actions_config_schema_writer_finalize (GObject *object)
 {
 	NautilusActionsConfig *config = (NautilusActionsConfig *) object;
 
@@ -277,16 +277,16 @@ nautilus_actions_config_schema_finalize (GObject *object)
 }
 
 static void
-nautilus_actions_config_schema_class_init (NautilusActionsConfigSchemaClass *klass)
+nautilus_actions_config_schema_writer_class_init (NautilusActionsConfigSchemaWriterClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GParamSpec* pspec;
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = nautilus_actions_config_schema_finalize;
-	object_class->set_property = nautilus_actions_config_schema_set_property;
-	object_class->get_property = nautilus_actions_config_schema_get_property;
+	object_class->finalize = nautilus_actions_config_schema_writer_finalize;
+	object_class->set_property = nautilus_actions_config_schema_writer_set_property;
+	object_class->get_property = nautilus_actions_config_schema_writer_get_property;
 
 	pspec = g_param_spec_string ("save-path",
 										  "Schema Save path property",
@@ -294,7 +294,7 @@ nautilus_actions_config_schema_class_init (NautilusActionsConfigSchemaClass *kla
 										  g_get_home_dir (),
 										  G_PARAM_CONSTRUCT | G_PARAM_READWRITE);
 	g_object_class_install_property (object_class,
-												NAUTILUS_ACTIONS_CONFIG_SCHEMA_SAVE_PATH,
+												NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER_SAVE_PATH,
 												pspec);
 
 	NAUTILUS_ACTIONS_CONFIG_CLASS (klass)->save_action = save_action;
@@ -302,43 +302,43 @@ nautilus_actions_config_schema_class_init (NautilusActionsConfigSchemaClass *kla
 }
 
 static void
-nautilus_actions_config_schema_init (NautilusActionsConfig *config, NautilusActionsConfigClass *klass)
+nautilus_actions_config_schema_writer_init (NautilusActionsConfig *config, NautilusActionsConfigClass *klass)
 {
 }
 
 GType
-nautilus_actions_config_schema_get_type (void)
+nautilus_actions_config_schema_writer_get_type (void)
 {
    static GType type = 0;
 
 	if (type == 0) {
 		static GTypeInfo info = {
-					sizeof (NautilusActionsConfigSchemaClass),
+					sizeof (NautilusActionsConfigSchemaWriterClass),
 					(GBaseInitFunc) NULL,
 					(GBaseFinalizeFunc) NULL,
-					(GClassInitFunc) nautilus_actions_config_schema_class_init,
+					(GClassInitFunc) nautilus_actions_config_schema_writer_class_init,
 					NULL, NULL,
-					sizeof (NautilusActionsConfigSchema),
+					sizeof (NautilusActionsConfigSchemaWriter),
 					0,
-					(GInstanceInitFunc) nautilus_actions_config_schema_init
+					(GInstanceInitFunc) nautilus_actions_config_schema_writer_init
 		};
-		type = g_type_register_static (NAUTILUS_ACTIONS_TYPE_CONFIG, "NautilusActionsConfigSchema", &info, 0);
+		type = g_type_register_static (NAUTILUS_ACTIONS_TYPE_CONFIG, "NautilusActionsConfigSchemaWriter", &info, 0);
 	}
 	return type;
 }
 
-NautilusActionsConfigSchema *
-nautilus_actions_config_schema_get (void)
+NautilusActionsConfigSchemaWriter *
+nautilus_actions_config_schema_writer_get (void)
 {
-	static NautilusActionsConfigSchema *config = NULL;
+	static NautilusActionsConfigSchemaWriter *config = NULL;
 
-	/* we share one NautilusActionsConfigSchema object for all */
+	/* we share one NautilusActionsConfigSchemaWriter object for all */
 	if (!config) {
-		config = g_object_new (NAUTILUS_ACTIONS_TYPE_CONFIG_SCHEMA, NULL);
+		config = g_object_new (NAUTILUS_ACTIONS_TYPE_CONFIG_SCHEMA_WRITER, NULL);
 		return config;
 	}
 
-	return NAUTILUS_ACTIONS_CONFIG_SCHEMA (g_object_ref (G_OBJECT (config)));
+	return NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (g_object_ref (G_OBJECT (config)));
 }
 
 // vim:ts=3:sw=3:tw=1024:cin

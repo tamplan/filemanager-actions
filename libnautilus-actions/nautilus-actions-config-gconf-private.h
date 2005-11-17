@@ -21,6 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <glib/gi18n.h>
 #define N_(String) String
 
@@ -28,6 +29,20 @@
 #define ACTIONS_SCHEMA_PREFIX  "/schemas"
 #define ACTIONS_CONFIG_DIR     NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
 #define ACTIONS_SCHEMA_OWNER	 "nautilus-actions"
+
+// GConf XML element names
+#define NA_GCONF_XML_ROOT					"gconfschemafile"
+#define NA_GCONF_XML_SCHEMA_LIST			"schemalist"
+#define NA_GCONF_XML_SCHEMA_ENTRY		"schema"
+#define NA_GCONF_XML_SCHEMA_KEY			"key"
+#define NA_GCONF_XML_SCHEMA_APPLYTO		"applyto"
+#define NA_GCONF_XML_SCHEMA_OWNER		"owner"
+#define NA_GCONF_XML_SCHEMA_TYPE			"type"
+#define NA_GCONF_XML_SCHEMA_LOCALE		"locale"
+#define NA_GCONF_XML_SCHEMA_SHORT		"short"
+#define NA_GCONF_XML_SCHEMA_LONG			"long"
+#define NA_GCONF_XML_SCHEMA_DFT			"default"
+#define NA_GCONF_XML_SCHEMA_LIST_TYPE	"list_type"
 
 // GConf key names :
 #define ACTION_LABEL_ENTRY     "label"
