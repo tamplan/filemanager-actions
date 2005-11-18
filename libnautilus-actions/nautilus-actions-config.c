@@ -214,8 +214,6 @@ static void nautilus_actions_config_action_added_default_handler (NautilusAction
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)
 {
-	// FIXME: 
-	g_print ("Default action added signal handler called !\n");
 	NautilusActionsConfigAction* action_copy = nautilus_actions_config_action_dup (action);
 	if (action_copy)
 	{
@@ -246,7 +244,6 @@ static void nautilus_actions_config_action_changed_default_handler (NautilusActi
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)
 {
-	g_print ("Default action changed signal handler called !\n");
 }
 
 gboolean
@@ -274,7 +271,6 @@ static void nautilus_actions_config_action_removed_default_handler (NautilusActi
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)
 {
-	g_print ("Default action removed signal handler called !\n");
 	if (!g_hash_table_remove (config->actions, action->uuid))
 	{
 		g_signal_stop_emission (config, signals[ACTION_REMOVED], 0);

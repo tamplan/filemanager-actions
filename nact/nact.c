@@ -32,18 +32,11 @@
 #include <libnautilus-actions/nautilus-actions-config.h>
 #include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
 #include "nact-utils.h"
-
-enum {
-	MENU_ICON_COLUMN = 0,
-	MENU_LABEL_COLUMN,
-	UUID_COLUMN,
-	N_COLUMN
-};
+#include "nact.h"
 
 static NautilusActionsConfigGconfWriter *config = NULL;
 
-static void
-fill_actions_list (GtkWidget *list)
+void nact_fill_actions_list (GtkWidget *list)
 {
 	GSList *actions, *l;
 	GtkListStore *model = gtk_tree_view_get_model (GTK_TREE_VIEW (list));
@@ -91,7 +84,7 @@ void
 add_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	if (nact_editor_new_action ())
-		fill_actions_list (nact_get_glade_widget ("ActionsList"));
+		nact_fill_actions_list (nact_get_glade_widget ("ActionsList"));
 }
 
 void
@@ -115,7 +108,7 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
 		if (action) {
 			if (nact_editor_edit_action (action))
-				fill_actions_list (nact_actions_list);
+				nact_fill_actions_list (nact_actions_list);
 		}
 
 		g_free (uuid);
@@ -139,9 +132,20 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 		nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-		fill_actions_list (nact_actions_list);
+		nact_fill_actions_list (nact_actions_list);
 
 		g_free (uuid);
+	}
+}
+
+void im_export_button_clicked_cb (GtkButton *button, gpointer user_data)
+{
+	GtkWidget *nact_actions_list;
+
+	if (nact_import_export_actions ())
+	{
+		nact_actions_list = nact_get_glade_widget ("ActionsList");
+		nact_fill_actions_list (nact_actions_list);
 	}
 }
 
@@ -183,8 +187,7 @@ list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
 	}
 }
 
-static void
-setup_actions_list (GtkWidget *list)
+static void nact_setup_actions_list (GtkWidget *list)
 {
 	GtkListStore *model;
 	GtkTreeViewColumn *column;
@@ -192,7 +195,7 @@ setup_actions_list (GtkWidget *list)
 	/* create the model */
 	model = gtk_list_store_new (N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (list), GTK_TREE_MODEL (model));
-	fill_actions_list (list);
+	nact_fill_actions_list (list);
 	g_object_unref (model);
 
 	/* create columns on the tree view */
@@ -229,7 +232,7 @@ init_dialog (void)
 	nact_dialog = nact_get_glade_widget ("ActionsDialog");
 
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
-	setup_actions_list (nact_actions_list);
+	nact_setup_actions_list (nact_actions_list);
 
 	/* Get the default dialog size */
 	gtk_window_get_default_size (GTK_WINDOW (nact_dialog), &width, &height);

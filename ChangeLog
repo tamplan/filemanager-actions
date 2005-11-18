@@ -1,3 +1,24 @@
+2005-11-18  Frederic Ruaudel <grumz@grumz.net> 
+
+	* nact/Makefile.am:
+	* nact/nact-utils.h:
+	* nact/nact.c:
+	* nact/nact.h:
+	* nact/nautilus-actions-config.glade:
+	* nact/nact-import-export.c:
+	* nact/nact-import-export.h: Implement the import/export
+	of n-a configurations in nact.
+
+	* nact/nact-prefs.c:
+	* nact/nact-prefs.h: Add preferences for the new import/export
+	dialog in nact.
+
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	Fix the bug from the first implementation
+
+	* libnautilus-actions/nautilus-actions-config.c: Remove some
+	debug messages.
+
 2005-11-17  Frederic Ruaudel <grumz@grumz.net> 
 
 	* libnautilus-actions/nautilus-actions-config-schema.c:

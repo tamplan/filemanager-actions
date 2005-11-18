@@ -34,8 +34,14 @@
 #define PREFS_EDIT_Y  		"nact_edit_dialog_position_y"
 #define PREFS_EDIT_W  		"nact_edit_dialog_size_width"
 #define PREFS_EDIT_H  		"nact_edit_dialog_size_height"
+#define PREFS_IM_EX_X  		"nact_im_ex_dialog_position_x"
+#define PREFS_IM_EX_Y  		"nact_im_ex_dialog_position_y"
+#define PREFS_IM_EX_W  		"nact_im_ex_dialog_size_width"
+#define PREFS_IM_EX_H  		"nact_im_ex_dialog_size_height"
 #define PREFS_ICON_PATH		"nact_icon_last_browsed_dir"
 #define PREFS_PATH_PATH		"nact_path_last_browsed_dir"
+#define PREFS_IMPORT_PATH	"nact_import_last_browsed_dir"
+#define PREFS_EXPORT_PATH	"nact_export_last_browsed_dir"
 
 static GSList *
 get_prefs_list_key (GConfClient *client, const gchar *key)
@@ -135,7 +141,7 @@ static void prefs_changed_cb (GConfClient *client,
 
 	if (user_data != NULL)
 	{
-		g_print ("Key changed : %s\n", entry->key);
+		//g_print ("Key changed : %s\n", entry->key);
 	}
 }
 
@@ -169,10 +175,14 @@ static NactPreferences* nact_prefs_get_preferences (void)
 		prefs->main_size_height = get_prefs_int_key (prefs->client, PREFS_MAIN_H);
 		prefs->edit_size_width  = get_prefs_int_key (prefs->client, PREFS_EDIT_W);
 		prefs->edit_size_height = get_prefs_int_key (prefs->client, PREFS_EDIT_H);
+		prefs->im_ex_size_width  = get_prefs_int_key (prefs->client, PREFS_IM_EX_W);
+		prefs->im_ex_size_height = get_prefs_int_key (prefs->client, PREFS_IM_EX_H);
 		prefs->main_position_x  = get_prefs_int_key (prefs->client, PREFS_MAIN_X);
 		prefs->main_position_y  = get_prefs_int_key (prefs->client, PREFS_MAIN_Y);
 		prefs->edit_position_x  = get_prefs_int_key (prefs->client, PREFS_EDIT_X);
 		prefs->edit_position_y  = get_prefs_int_key (prefs->client, PREFS_EDIT_Y);
+		prefs->im_ex_position_x  = get_prefs_int_key (prefs->client, PREFS_IM_EX_X);
+		prefs->im_ex_position_y  = get_prefs_int_key (prefs->client, PREFS_IM_EX_Y);
 		tmp = get_prefs_string_key (prefs->client, PREFS_ICON_PATH);
 		if (!tmp)
 		{
@@ -186,7 +196,21 @@ static NactPreferences* nact_prefs_get_preferences (void)
 			tmp = g_strdup ("/usr/bin");
 		}
 		prefs->path_last_browsed_dir = tmp;
+
+		tmp = get_prefs_string_key (prefs->client, PREFS_IMPORT_PATH);
+		if (!tmp)
+		{
+			tmp = g_strdup ("/tmp");
+		}
+		prefs->import_last_browsed_dir = tmp;
 		
+		tmp = get_prefs_string_key (prefs->client, PREFS_EXPORT_PATH);
+		if (!tmp)
+		{
+			tmp = g_strdup ("/tmp");
+		}
+		prefs->export_last_browsed_dir = tmp;
+	
 		gconf_client_add_dir (prefs->client, NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
 		prefs->prefs_notify_id = gconf_client_notify_add (prefs->client, NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR,
 									  (GConfClientNotifyFunc) prefs_changed_cb, prefs,
@@ -273,6 +297,29 @@ void nact_prefs_set_edit_dialog_size (GtkWindow* dialog)
 	gtk_window_get_size (dialog, &(prefs->edit_size_width), &(prefs->edit_size_height));
 }
 
+gboolean nact_prefs_get_im_ex_dialog_size (gint* width, gint* height)
+{
+	gboolean retv = FALSE;
+	NactPreferences* prefs = nact_prefs_get_preferences ();
+
+	if (prefs->im_ex_size_width != -1 && prefs->im_ex_size_height != -1)
+	{
+		retv = TRUE;
+		(*width) = prefs->im_ex_size_width;
+		(*height) = prefs->im_ex_size_height;
+	}
+
+	return retv;
+
+}
+
+void nact_prefs_set_im_ex_dialog_size (GtkWindow* dialog)
+{
+	NactPreferences* prefs = nact_prefs_get_preferences ();
+
+	gtk_window_get_size (dialog, &(prefs->im_ex_size_width), &(prefs->im_ex_size_height));
+}
+
 gboolean nact_prefs_get_main_dialog_position (gint* x, gint* y)
 {
 	gboolean retv = FALSE;
@@ -317,6 +364,28 @@ void nact_prefs_set_edit_dialog_position (GtkWindow* dialog)
 	gtk_window_get_position (dialog, &(prefs->edit_position_x), &(prefs->edit_position_y));
 }
 
+gboolean nact_prefs_get_im_ex_dialog_position (gint* x, gint* y)
+{
+	gboolean retv = FALSE;
+	NactPreferences* prefs = nact_prefs_get_preferences ();
+
+	if (prefs->im_ex_position_x != -1 && prefs->im_ex_position_y != -1)
+	{
+		retv = TRUE;
+		(*x) = prefs->im_ex_position_x;
+		(*y) = prefs->im_ex_position_y;
+	}
+
+	return retv;
+}
+
+void nact_prefs_set_im_ex_dialog_position (GtkWindow* dialog)
+{
+	NactPreferences* prefs = nact_prefs_get_preferences ();
+
+	gtk_window_get_position (dialog, &(prefs->im_ex_position_x), &(prefs->im_ex_position_y));
+}
+
 gchar* nact_prefs_get_icon_last_browsed_dir (void)
 {
 	NactPreferences* prefs = nact_prefs_get_preferences ();
@@ -353,6 +422,42 @@ void nact_prefs_set_path_last_browsed_dir (const gchar* path)
 	prefs->path_last_browsed_dir = g_strdup (path);
 }
 
+gchar* nact_prefs_get_import_last_browsed_dir (void)
+{
+	NactPreferences* prefs = nact_prefs_get_preferences ();
+
+	return g_strdup (prefs->import_last_browsed_dir);
+}
+
+void nact_prefs_set_import_last_browsed_dir (const gchar* path)
+{
+	NactPreferences* prefs = nact_prefs_get_preferences ();
+
+	if (prefs->import_last_browsed_dir)
+	{
+		g_free (prefs->import_last_browsed_dir);
+	}
+	prefs->import_last_browsed_dir = g_strdup (path);
+}
+
+gchar* nact_prefs_get_export_last_browsed_dir (void)
+{
+	NactPreferences* prefs = nact_prefs_get_preferences ();
+
+	return g_strdup (prefs->export_last_browsed_dir);
+}
+
+void nact_prefs_set_export_last_browsed_dir (const gchar* path)
+{
+	NactPreferences* prefs = nact_prefs_get_preferences ();
+
+	if (prefs->export_last_browsed_dir)
+	{
+		g_free (prefs->export_last_browsed_dir);
+	}
+	prefs->export_last_browsed_dir = g_strdup (path);
+}
+
 static void nact_prefs_free_preferences (NactPreferences* prefs)
 {
 	if (prefs)
@@ -371,6 +476,16 @@ static void nact_prefs_free_preferences (NactPreferences* prefs)
 		if (prefs->path_last_browsed_dir)
 		{
 			g_free (prefs->path_last_browsed_dir);
+		}
+
+		if (prefs->import_last_browsed_dir)
+		{
+			g_free (prefs->import_last_browsed_dir);
+		}
+
+		if (prefs->export_last_browsed_dir)
+		{
+			g_free (prefs->export_last_browsed_dir);
 		}
 
 		gconf_client_remove_dir (prefs->client, NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, NULL);
@@ -392,12 +507,18 @@ void nact_prefs_save_preferences (void)
 	set_prefs_int_key (prefs->client, PREFS_MAIN_H, prefs->main_size_height);
 	set_prefs_int_key (prefs->client, PREFS_EDIT_W, prefs->edit_size_width);
 	set_prefs_int_key (prefs->client, PREFS_EDIT_H, prefs->edit_size_height);
+	set_prefs_int_key (prefs->client, PREFS_IM_EX_W, prefs->im_ex_size_width);
+	set_prefs_int_key (prefs->client, PREFS_IM_EX_H, prefs->im_ex_size_height);
 	set_prefs_int_key (prefs->client, PREFS_MAIN_X, prefs->main_position_x);
 	set_prefs_int_key (prefs->client, PREFS_MAIN_Y, prefs->main_position_y);
 	set_prefs_int_key (prefs->client, PREFS_EDIT_X, prefs->edit_position_x);
 	set_prefs_int_key (prefs->client, PREFS_EDIT_Y, prefs->edit_position_y);
+	set_prefs_int_key (prefs->client, PREFS_IM_EX_X, prefs->im_ex_position_x);
+	set_prefs_int_key (prefs->client, PREFS_IM_EX_Y, prefs->im_ex_position_y);
 	set_prefs_string_key (prefs->client, PREFS_ICON_PATH, prefs->icon_last_browsed_dir);
 	set_prefs_string_key (prefs->client, PREFS_PATH_PATH, prefs->path_last_browsed_dir);
+	set_prefs_string_key (prefs->client, PREFS_IMPORT_PATH, prefs->import_last_browsed_dir);
+	set_prefs_string_key (prefs->client, PREFS_EXPORT_PATH, prefs->export_last_browsed_dir);
 	
 	nact_prefs_free_preferences (prefs);
 }

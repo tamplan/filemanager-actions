@@ -41,26 +41,54 @@ struct _NactPreferences {
 	gint edit_size_height;
 	gint edit_position_x;
 	gint edit_position_y;
+	gint im_ex_size_width;
+	gint im_ex_size_height;
+	gint im_ex_position_x;
+	gint im_ex_position_y;
 	gchar* icon_last_browsed_dir;
 	gchar* path_last_browsed_dir;
+	gchar* import_last_browsed_dir;
+	gchar* export_last_browsed_dir;
 	GConfClient* client;
 	guint prefs_notify_id;
 };
 
 GSList* nact_prefs_get_schemes_list (void);
+
 void nact_prefs_set_schemes_list (const GSList* schemes);
+
 gboolean nact_prefs_get_main_dialog_size (gint* width, gint* height);
 void nact_prefs_set_main_dialog_size (GtkWindow* dialog);
+
 gboolean nact_prefs_get_edit_dialog_size (gint* width, gint* height);
 void nact_prefs_set_edit_dialog_size (GtkWindow* dialog);
+
+gboolean nact_prefs_get_im_ex_dialog_size (gint* width, gint* height);
+void nact_prefs_set_im_ex_dialog_size (GtkWindow* dialog);
+
+
 gboolean nact_prefs_get_main_dialog_position (gint* x, gint* y);
 void nact_prefs_set_main_dialog_position (GtkWindow* dialog);
+
 gboolean nact_prefs_get_edit_dialog_position (gint* x, gint* y);
 void nact_prefs_set_edit_dialog_position (GtkWindow* dialog);
+
+gboolean nact_prefs_get_im_ex_dialog_position (gint* x, gint* y);
+void nact_prefs_set_im_ex_dialog_position (GtkWindow* dialog);
+
+
 gchar* nact_prefs_get_icon_last_browsed_dir (void);
 void nact_prefs_set_icon_last_browsed_dir (const gchar* path);
+
 gchar* nact_prefs_get_path_last_browsed_dir (void);
 void nact_prefs_set_path_last_browsed_dir (const gchar* path);
+
+gchar* nact_prefs_get_import_last_browsed_dir (void);
+void nact_prefs_set_import_last_browsed_dir (const gchar* path);
+
+gchar* nact_prefs_get_export_last_browsed_dir (void);
+void nact_prefs_set_export_last_browsed_dir (const gchar* path);
+
 
 void nact_prefs_save_preferences (void);
 

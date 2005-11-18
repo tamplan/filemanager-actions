@@ -147,6 +147,10 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 			{
 				*type = ACTION_SCHEMES_TYPE;
 			}
+			else if (g_str_has_suffix (text, ACTION_VERSION_ENTRY))
+			{
+				*type = ACTION_VERSION_TYPE;
+			}
 
 			if (*type != ACTION_NONE_TYPE)
 			{
@@ -266,9 +270,16 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 											strlen (NA_GCONF_XML_SCHEMA_ENTRY)) == 0)
 		{
 			gchar* value;
+			gchar* uuid = NULL;
 
-			if (nautilus_actions_config_schema_reader_action_parse_schema_key (iter, &type, &value, &(action->uuid), (action->uuid != NULL)))
+			if (nautilus_actions_config_schema_reader_action_parse_schema_key (iter, &type, &value, &uuid, (action->uuid == NULL)))
 			{
+
+				if (!action->uuid)
+				{
+					nautilus_actions_config_action_set_uuid (action, uuid);
+					g_free (uuid);
+				}
 
 				switch (type)
 				{
@@ -320,10 +331,13 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 						break;
 					case ACTION_VERSION_TYPE:
 						is_version_ok = TRUE;
+						if (action->version)
+						{
+							g_free (action->version);
+						}
 						action->version = g_strdup (NAUTILUS_ACTIONS_CONFIG_VERSION);
 						break;
 					default:
-						retv = FALSE;
 						break;
 				}
 
@@ -332,10 +346,10 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		}
 	}
 		
-	if (retv && (is_version_ok && is_schemes_ok && is_multiple_ok && 
+	if (is_version_ok && is_schemes_ok && is_multiple_ok && 
 				is_isdir_ok && is_isfile_ok && is_basenames_ok && 
 				is_params_ok && is_path_ok && is_icon_ok && 
-				is_tooltip_ok && is_label_ok))
+				is_tooltip_ok && is_label_ok)
 	{
 		retv = TRUE;
 	}	
@@ -431,7 +445,6 @@ static void
 nautilus_actions_config_schema_reader_class_init (NautilusActionsConfigSchemaReaderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GParamSpec* pspec;
 
 	parent_class = g_type_class_peek_parent (klass);
 
