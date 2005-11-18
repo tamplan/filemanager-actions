@@ -3,6 +3,7 @@ nact/nautilus-actions-config.glade
 nact/nact.c
 nact/nact-utils.c
 nact/nact-editor.c
+nact/nact-import-export.c
 nact/nact-prefs.c
 config/config_newaction.schemas.in.in
 utils/nautilus-actions-convert.c

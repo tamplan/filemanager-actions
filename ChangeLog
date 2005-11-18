@@ -1,5 +1,10 @@
 2005-11-18  Frederic Ruaudel <grumz@grumz.net> 
 
+	* po/POTFILES.in: Add nact-import-export.c
+
+	* po/nautilus-actions.pot:
+	* po/*.po: Update i18n strings.
+
 	* nact/Makefile.am:
 	* nact/nact-utils.h:
 	* nact/nact.c:

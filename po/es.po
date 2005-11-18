@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-10-28 15:17+0200\n"
+"POT-Creation-Date: 2005-11-18 16:42+0100\n"
 "PO-Revision-Date: 2005-10-18 00:01+0200\n"
 "Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
@@ -27,15 +27,19 @@ msgid "Nautilus Actions Configuration"
 msgstr "Configuracion de Acciones de Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:1
+msgid " "
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:2
 msgid "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
 msgstr "© 2005 Frederic Ruaudel <grumz@grumz.net>"
 
-#: ../nact/nautilus-actions-config.glade.h:3
+#: ../nact/nautilus-actions-config.glade.h:4
 #, no-c-format
 msgid "<b>%%</b> : a percent sign"
 msgstr "<b>%%</b> : un símbolo de porcentaje"
 
-#: ../nact/nautilus-actions-config.glade.h:5
+#: ../nact/nautilus-actions-config.glade.h:6
 #, fuzzy, no-c-format
 msgid ""
 "<b>%M</b> : list of the selected file(s)/folder(s) with their full path "
@@ -44,17 +48,17 @@ msgstr ""
 "<b>%M</b> : lista de archivos/directorios seleccionados con su ruta completa "
 "separados por un espacio."
 
-#: ../nact/nautilus-actions-config.glade.h:7
+#: ../nact/nautilus-actions-config.glade.h:8
 #, no-c-format
 msgid "<b>%U</b> : username of the gnome-vfs URI"
 msgstr "<b>%U</b> : usuario del URI de gnome-vfs"
 
-#: ../nact/nautilus-actions-config.glade.h:9
+#: ../nact/nautilus-actions-config.glade.h:10
 #, fuzzy, no-c-format
 msgid "<b>%d</b> : base folder of the selected file(s)"
 msgstr "<b>%d</b> : directorio base de los archivo(s) seleccionado(s)"
 
-#: ../nact/nautilus-actions-config.glade.h:11
+#: ../nact/nautilus-actions-config.glade.h:12
 #, no-c-format
 msgid ""
 "<b>%f</b> : the name of the selected file or the 1st one if many are selected"
@@ -62,12 +66,12 @@ msgstr ""
 "<b>%f</b> : el nombre del archivo seleccionado o el 1º si hay varios "
 "seleccionados"
 
-#: ../nact/nautilus-actions-config.glade.h:13
+#: ../nact/nautilus-actions-config.glade.h:14
 #, no-c-format
 msgid "<b>%h</b> : hostname of the gnome-vfs URI"
 msgstr "<b>%h</b> : nombre del equipo del URI de gnome-vfs"
 
-#: ../nact/nautilus-actions-config.glade.h:15
+#: ../nact/nautilus-actions-config.glade.h:16
 #, fuzzy, no-c-format
 msgid ""
 "<b>%m</b> : list of the basename of the selected file(s)/folder(s) separated "
@@ -76,41 +80,46 @@ msgstr ""
 "<b>%m</b> : lista del nombre base de los archivos/directorios seleccionados "
 "separados por un espacio."
 
-#: ../nact/nautilus-actions-config.glade.h:17
+#: ../nact/nautilus-actions-config.glade.h:18
 #, no-c-format
 msgid "<b>%s</b> : scheme of the gnome-vfs URI"
 msgstr "<b>%s</b> : esquema del URI de gnome-vfs"
 
-#: ../nact/nautilus-actions-config.glade.h:19
+#: ../nact/nautilus-actions-config.glade.h:20
 #, no-c-format
 msgid "<b>%u</b> : gnome-vfs URI"
 msgstr "<b>%u</b> : URI de gnome-vfs"
 
-#: ../nact/nautilus-actions-config.glade.h:20
+#: ../nact/nautilus-actions-config.glade.h:21
 #, fuzzy
 msgid "<b>Action</b>"
 msgstr "<span weight=\"bold\">Condiciones de aparición</span>"
 
-#: ../nact/nautilus-actions-config.glade.h:21
+#: ../nact/nautilus-actions-config.glade.h:22
 #, fuzzy
 msgid "<b>Appearance Conditions</b>"
 msgstr "<span weight=\"bold\">Condiciones de aparición</span>"
 
-#: ../nact/nautilus-actions-config.glade.h:22
+#: ../nact/nautilus-actions-config.glade.h:23
 #, fuzzy
 msgid "<b>Nautilus Menu Item</b>"
 msgstr "<span weight=\"bold\">Elemento del menú de Nautilus</span>"
 
-#: ../nact/nautilus-actions-config.glade.h:24
+#: ../nact/nautilus-actions-config.glade.h:25
 #, fuzzy, no-c-format
 msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
 msgstr "<i><b><small>ejemplo: %s %s</small></b></i>"
 
-#: ../nact/nautilus-actions-config.glade.h:25
+#: ../nact/nautilus-actions-config.glade.h:26
+#, fuzzy
+msgid "<span size=\"larger\"><b>Import/Export Settings</b></span>"
+msgstr "<span size=\"larger\"><b>Leyenda de parámetros</b></span>"
+
+#: ../nact/nautilus-actions-config.glade.h:27
 msgid "<span size=\"larger\"><b>Parameters Legend</b></span>"
 msgstr "<span size=\"larger\"><b>Leyenda de parámetros</b></span>"
 
-#: ../nact/nautilus-actions-config.glade.h:26
+#: ../nact/nautilus-actions-config.glade.h:28
 #, fuzzy
 msgid ""
 "A string with joker ? or * that will be used to match the files. You can "
@@ -120,72 +129,96 @@ msgstr ""
 "archivos. Puede comparar varios patrones de archivos separándolos con un "
 "punto y coma ;"
 
-#: ../nact/nautilus-actions-config.glade.h:27
+#: ../nact/nautilus-actions-config.glade.h:29
 #, fuzzy
 msgid "Appears if scheme is in this list:"
 msgstr "Aparecer si el esquema está en esta lista :"
 
-#: ../nact/nautilus-actions-config.glade.h:28
+#: ../nact/nautilus-actions-config.glade.h:30
 #, fuzzy
 msgid "Appears if selection contains:"
 msgstr "Aparecer si la selección contiene :"
 
-#: ../nact/nautilus-actions-config.glade.h:29
+#: ../nact/nautilus-actions-config.glade.h:31
 msgid "Appears if selection has multiple files or folders"
 msgstr "Aparecer si la selección tiene múltiples archivos o carpetas"
 
-#: ../nact/nautilus-actions-config.glade.h:30
+#: ../nact/nautilus-actions-config.glade.h:32
+msgid "Automatic"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:33
 #, fuzzy
 msgid "Both"
 msgstr "ambos"
 
-#: ../nact/nautilus-actions-config.glade.h:31
+#: ../nact/nautilus-actions-config.glade.h:34
 msgid "Click to add a new scheme"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:32
+#: ../nact/nautilus-actions-config.glade.h:35
 msgid "Click to choose a command from the file chooser dialog"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:33
+#: ../nact/nautilus-actions-config.glade.h:36
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:34
+#: ../nact/nautilus-actions-config.glade.h:37
 msgid "Click to remove the selected scheme"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:35
+#: ../nact/nautilus-actions-config.glade.h:38
 msgid ""
 "Click to see the list of special tokens you can use in the parameter field"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:36
+#: ../nact/nautilus-actions-config.glade.h:39
+msgid "Export existing configs"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:40
 #, fuzzy
 msgid "File Pattern:"
 msgstr "Patrón del archivo :"
 
-#: ../nact/nautilus-actions-config.glade.h:37
+#: ../nact/nautilus-actions-config.glade.h:41
+msgid "File to Import :"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:42
+msgid "GConf schema description file (Nautilus-actions v1.x and later)"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:43
 msgid "Icon: "
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:38
+#: ../nact/nautilus-actions-config.glade.h:44
+msgid "Import all my old configs"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:45
+msgid "Import new configurations"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:46
 msgid "Import/Export"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:39
+#: ../nact/nautilus-actions-config.glade.h:47
 #, fuzzy
 msgid "Label of the menu item in the Nautilus popup menu"
 msgstr "Etiqueta del elemento en el menú contextual de Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:40
+#: ../nact/nautilus-actions-config.glade.h:48
 #, fuzzy
 msgid "Label:"
 msgstr "Etiqueta :"
 
-#: ../nact/nautilus-actions-config.glade.h:41
+#: ../nact/nautilus-actions-config.glade.h:49
 msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -193,22 +226,26 @@ msgstr ""
 "Herramienta de configuración de acciones de Nautilus\n"
 "Aplicación para configurar la extensión de «Acciones de Nautilus»"
 
-#: ../nact/nautilus-actions-config.glade.h:43
+#: ../nact/nautilus-actions-config.glade.h:51
 #, fuzzy
 msgid "Nautilus Actions"
 msgstr "Configuracion de Acciones de Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:44
+#: ../nact/nautilus-actions-config.glade.h:52
+msgid "Old XML config file (Nautilus-actions v0.x)"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:53
 #, fuzzy
 msgid "Only files"
 msgstr "sólo archivos"
 
-#: ../nact/nautilus-actions-config.glade.h:45
+#: ../nact/nautilus-actions-config.glade.h:54
 #, fuzzy
 msgid "Only folders"
 msgstr "sólo carpetas"
 
-#: ../nact/nautilus-actions-config.glade.h:46
+#: ../nact/nautilus-actions-config.glade.h:55
 #, fuzzy
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
@@ -217,28 +254,36 @@ msgstr ""
 "parámetros que se enviarán al programa. Pulse en el botón 'Leyenda' para ver "
 "las diferentes opciones de reemplazo"
 
-#: ../nact/nautilus-actions-config.glade.h:47
+#: ../nact/nautilus-actions-config.glade.h:56
 #, fuzzy
 msgid "Parameters:"
 msgstr "Parámetros :"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:57
 #, fuzzy
 msgid "Path:"
 msgstr "Ruta :"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid "Project Website"
 msgstr "Sitio web del proyecto"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:59
+msgid "Save in Folder :"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:60
+msgid "Select the configurations you want to export :"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add new scheme by clicking on the '+' button"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:62
 #, fuzzy
 msgid ""
 "The command that will be launched when selecting the action in Nautilus "
@@ -247,45 +292,50 @@ msgstr ""
 "El comando que será lanzado cuando se seleccione la acción en el menú de "
 "Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr ""
 "Este software se licencia bajo la Licencia Pública General de GNU (GPL)"
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:64
 #, fuzzy
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar"
 msgstr ""
 "Consejo del elemento del menú que aparecerá en la barra de estado de Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:65
 #, fuzzy
 msgid "Tooltip:"
 msgstr "Consejo :"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:66
+msgid "Type of configuration :"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:67
 #, fuzzy
 msgid "_Browse..."
 msgstr "Examinar…"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "translator-credits"
 msgstr ""
 "Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
 "Mario Izquierdo <mariodebian@gmail.com>"
 
 #. create columns on the tree view
-#: ../nact/nact.c:199
+#: ../nact/nact.c:202 ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr ""
 
-#: ../nact/nact.c:204
+#: ../nact/nact.c:207 ../nact/nact-import-export.c:184
 #, fuzzy
 msgid "Label"
 msgstr "Etiqueta :"
 
-#: ../nact/nact.c:223 ../nact/nact-editor.c:629
+#: ../nact/nact.c:226 ../nact/nact-editor.c:671
+#: ../nact/nact-import-export.c:346
 #, fuzzy
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Herramienta de configuración de «Acciones de Nautilus»"
@@ -327,76 +377,76 @@ msgid "folder"
 msgstr "sólo carpetas"
 
 #. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:215
+#: ../nact/nact-editor.c:251
 msgid "None"
 msgstr ""
 
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-editor.c:392
+#: ../nact/nact-editor.c:434
 msgid "new-scheme"
 msgstr ""
 
-#: ../nact/nact-editor.c:393
+#: ../nact/nact-editor.c:435
 msgid "New Scheme Description"
 msgstr ""
 
-#: ../nact/nact-editor.c:479
+#: ../nact/nact-editor.c:521
 msgid "Scheme"
 msgstr ""
 
-#: ../nact/nact-editor.c:491
+#: ../nact/nact-editor.c:533
 msgid "Description"
 msgstr ""
 
-#: ../nact/nact-editor.c:645
+#: ../nact/nact-editor.c:687
 #, fuzzy
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "Etiqueta del elemento en el menú contextual de Nautilus"
 
-#: ../nact/nact-editor.c:673
+#: ../nact/nact-editor.c:715
 #, fuzzy
 msgid "Add a New Action"
 msgstr "Acción nueva..."
 
-#: ../nact/nact-editor.c:677
+#: ../nact/nact-editor.c:719
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr ""
 
 #. initialize the default schemes
 #. i18n notes : description of 'file' scheme
-#: ../nact/nact-prefs.c:158
+#: ../nact/nact-prefs.c:164
 #, fuzzy, c-format
 msgid "%sLocal Files"
 msgstr "Archivos locales"
 
 #. i18n notes : description of 'sftp' scheme
-#: ../nact/nact-prefs.c:160
+#: ../nact/nact-prefs.c:166
 #, fuzzy, c-format
 msgid "%sSSH Files"
 msgstr "Archivos SSH"
 
 #. i18n notes : description of 'smb' scheme
-#: ../nact/nact-prefs.c:162
+#: ../nact/nact-prefs.c:168
 #, fuzzy, c-format
 msgid "%sWindows Files"
 msgstr "Archivos de Windows"
 
 #. i18n notes : description of 'ftp' scheme
-#: ../nact/nact-prefs.c:164
+#: ../nact/nact-prefs.c:170
 #, fuzzy, c-format
 msgid "%sFTP Files"
 msgstr "Archivos FTP"
 
 #. i18n notes : description of 'dav' scheme
-#: ../nact/nact-prefs.c:166
+#: ../nact/nact-prefs.c:172
 #, fuzzy, c-format
 msgid "%sWebdav Files"
 msgstr "Archivos Webdav"
 
 #. vim:ts=3:sw=3:tw=1024:cin
 #: ../config/config_newaction.schemas.in.in.h:1
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:67
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 #, fuzzy
 msgid "'true' if the selection can have several items, 'false' otherwise"
 msgstr ""
@@ -413,7 +463,7 @@ msgid "'true' if the selection must have folders, 'false' otherwise"
 msgstr "«True» si la selección debe tener carpetas, «false» en otro caso"
 
 #: ../config/config_newaction.schemas.in.in.h:4
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:60
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
 #, fuzzy
 msgid ""
 "A list of strings with joker '*' or '?' to match the selected file(s)/folder"
@@ -445,7 +495,7 @@ msgstr ""
 "esquemas GnomeVFS válidos aquí."
 
 #: ../config/config_newaction.schemas.in.in.h:6
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:68
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid ""
 "If you need one or more files or folders to be selected, set 'true' to this "
 "key. If you want just one file or folder, set 'false'"
@@ -461,12 +511,12 @@ msgid "Manage your actions using NACT configuration tool"
 msgstr ""
 
 #: ../config/config_newaction.schemas.in.in.h:9
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:52
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:67
 msgid "The icon of the menu item"
 msgstr ""
 
 #: ../config/config_newaction.schemas.in.in.h:10
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:53
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:68
 #, fuzzy
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
@@ -477,12 +527,12 @@ msgstr ""
 #. GConf description strings :
 #: ../config/config_newaction.schemas.in.in.h:11
 #: ../utils/nautilus-actions-new-config.c:45
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:48
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:63
 msgid "The label of the menu item"
 msgstr ""
 
 #: ../config/config_newaction.schemas.in.in.h:12
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:49
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:64
 #, fuzzy
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
@@ -491,18 +541,18 @@ msgstr ""
 "Truco del elemento del menú que aparecerá en la barra de estado de Nautilus"
 
 #: ../config/config_newaction.schemas.in.in.h:13
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "The list of GnomeVFS schemes where the selected files should be located"
 msgstr ""
 
 #: ../config/config_newaction.schemas.in.in.h:14
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:59
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr ""
 
 #: ../config/config_newaction.schemas.in.in.h:15
 #: ../utils/nautilus-actions-new-config.c:49
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:56
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
 msgid "The parameters of the command"
 msgstr ""
 
@@ -522,12 +572,12 @@ msgstr ""
 
 #: ../config/config_newaction.schemas.in.in.h:18
 #: ../utils/nautilus-actions-new-config.c:48
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:54
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
 msgid "The path of the command"
 msgstr ""
 
 #: ../config/config_newaction.schemas.in.in.h:19
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:55
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
 #, fuzzy
 msgid ""
 "The path of the command to start when the user select the menu item in the "
@@ -536,12 +586,12 @@ msgstr "Etiqueta para el elemento en el menú contextual de Nautilus"
 
 #: ../config/config_newaction.schemas.in.in.h:20
 #: ../utils/nautilus-actions-new-config.c:46
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:50
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:65
 msgid "The tooltip of the menu item"
 msgstr ""
 
 #: ../config/config_newaction.schemas.in.in.h:21
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:51
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:66
 #, fuzzy
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
@@ -550,12 +600,12 @@ msgstr ""
 "Truco del elemento del menú que aparecerá en la barra de estado de Nautilus"
 
 #: ../config/config_newaction.schemas.in.in.h:22
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
 msgid "The version of the configuration format"
 msgstr ""
 
 #: ../config/config_newaction.schemas.in.in.h:23
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
@@ -758,7 +808,7 @@ msgid "Can't open file %s for writing\n"
 msgstr ""
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:58
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
 "in the Nautilus popup menu.\n"
@@ -780,7 +830,7 @@ msgid ""
 msgstr ""
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:62
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
 #, fuzzy
 msgid ""
 "Here are the valid combinations :\n"
@@ -799,26 +849,26 @@ msgstr ""
 "contiene tanto archivos como carpetas - isfile es «false» e isdir es "
 "«false»: combinación inválida"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:63
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
 #, fuzzy
 msgid "'true' if the selection can have files, 'false' otherwise"
 msgstr "«True» si la selección debe tener archivos, «false» en otro caso"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:64
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
 msgid "This setting is tied with the 'isdir' setting. "
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:65
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
 #, fuzzy
 msgid "'true' if the selection can have folders, 'false' otherwise"
 msgstr "«True» si la selección debe tener carpetas, «false» en otro caso"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:66
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
 msgid "This setting is tied with the 'isfile' setting. "
 msgstr ""
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
 #, fuzzy
 msgid ""
 "Defines the list of valid GnomeVFS scheme to match the selected items. The "
