@@ -1,3 +1,10 @@
+2005-11-23  Frederic Ruaudel <grumz@grumz.net> 
+
+	* Makefile.am:
+	* configure.in: Add --enable-commandline-tool option to configure
+	to make nautilus-actions compile on systems with Glib 2.4 like FC3.
+	Glib 2.4 doesn't implement Commandline parser API.
+
 2005-11-18  Frederic Ruaudel <grumz@grumz.net> 
 
 	* po/POTFILES.in: Add nact-import-export.c

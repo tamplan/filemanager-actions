@@ -23,7 +23,7 @@ GNOME_REQUIRED=2.7.0
 NAUTILUS_EXTENSION=2.8.0
 GCONF_REQUIRED=2.8.0
 LIBXML_REQUIRED=2.6.0
-GOBJECT_REQUIRED=2.6.0
+GOBJECT_REQUIRED=2.4.0
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
@@ -52,6 +52,21 @@ AC_SUBST(NAUTILUS_EXTENSIONS_DIR)
 if test -z ${NAUTILUS_EXTENSIONS_DIR}; then
 	AC_MSG_ERROR([*** Can't determine nautilus extension folder, please use --with-nautilus-extdir options to define it manually ]);
 fi
+
+OPTIONAL_SUBDIR="utils"
+BUILD_COMMANDLINE_TOOL="yes"
+AC_ARG_ENABLE(commandline-tool,
+[  --enable-commandline-tool            define if command line tools must be build (disable it if you have GTK+ <= 2.4).
+                           [default=auto]],
+[ BUILD_COMMANDLINE_TOOL=$enableval ])
+if test $BUILD_COMMANDLINE_TOOL = "no"; then
+   OPTIONAL_SUBDIR=""
+fi
+/usr/bin/pkg-config glib-2.0 --max-version=2.4
+if test "x$?" = "x1"; then
+	OPTIONAL_SUBDIR=""
+fi
+AC_SUBST(OPTIONAL_SUBDIR)
 
 default_config_path=`eval echo $datadir/nautilus-actions`
 AC_DEFINE_UNQUOTED(DEFAULT_CONFIG_PATH, "$default_config_path", [Default system configuration path])
