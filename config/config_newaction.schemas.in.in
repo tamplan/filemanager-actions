@@ -2,8 +2,8 @@
 <gconfschemafile>
   <schemalist>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/label</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/label</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/label</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/label</applyto>
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">
@@ -13,8 +13,8 @@
       </locale>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/tooltip</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/tooltip</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/tooltip</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/tooltip</applyto>
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">
@@ -24,8 +24,8 @@
       </locale>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/icon</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/icon</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/icon</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/icon</applyto>
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">
@@ -35,8 +35,8 @@
       <default>@DATADIR@/nautilus-actions-icon.png</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/path</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/path</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/path</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/path</applyto>
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">
@@ -46,8 +46,8 @@
       <default>@BINDIR@/nautilus-actions-config</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/parameters</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/parameters</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/parameters</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/parameters</applyto>
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">
@@ -69,8 +69,8 @@ The parameters can contains some special tokens which are replaced by Nautilus i
       <default></default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/basenames</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/basenames</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/basenames</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/basenames</applyto>
       <owner>nautilus-actions</owner>
       <type>list</type>
       <list_type>string</list_type>
@@ -81,8 +81,8 @@ The parameters can contains some special tokens which are replaced by Nautilus i
       <default>[*]</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/isfile</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/isfile</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/isfile</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/isfile</applyto>
       <owner>nautilus-actions</owner>
       <type>bool</type>
       <locale name="C">
@@ -97,8 +97,8 @@ The parameters can contains some special tokens which are replaced by Nautilus i
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/isdir</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/isdir</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/isdir</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/isdir</applyto>
       <owner>nautilus-actions</owner>
       <type>bool</type>
       <locale name="C">
@@ -113,8 +113,8 @@ The parameters can contains some special tokens which are replaced by Nautilus i
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/accept-multiple-files</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/accept-multiple-files</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/accept-multiple-files</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/accept-multiple-files</applyto>
       <owner>nautilus-actions</owner>
       <type>bool</type>
       <locale name="C">
@@ -124,8 +124,8 @@ The parameters can contains some special tokens which are replaced by Nautilus i
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/schemes</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/schemes</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/schemes</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/schemes</applyto>
       <owner>nautilus-actions</owner>
       <type>list</type>
       <list_type>string</list_type>
@@ -150,8 +150,8 @@ All GnomeVFS scheme use by Nautilus can be used here.</long>
       <default>[file,sftp,ftp,dav,smb]</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/version</key>
-      <applyto>/apps/nautilus-actions/configurations/1fef2a95-4015-446c-81db-b7183d7ce988/version</applyto>
+      <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/version</key>
+      <applyto>/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/version</applyto>
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">

@@ -5,6 +5,7 @@ srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
 PKG_NAME="nautilus-actions"
+REQUIRED_AUTOMAKE_VERSION=1.7
 
 (test -f $srcdir/configure.in ) || {
     echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"

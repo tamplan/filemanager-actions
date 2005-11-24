@@ -1,3 +1,15 @@
+2005-11-24  Frederic Ruaudel <grumz@grumz.net> 
+
+	* config/config_newaction.xml.in:
+	* config/Makefile.am: Remove the old config file installation
+
+	* autogen.sh:
+	* configure.in:
+	* config/Makefile.am: Add support for GConf schema installation
+
+	* config/config_newaction.schemas.in.in: Set the uuid to a non-random
+	string so it can be recognizable.
+
 2005-11-23  Frederic Ruaudel <grumz@grumz.net> 
 
 	* Makefile.am:

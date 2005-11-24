@@ -1,11 +1,17 @@
-configdir = $(datadir)/nautilus-actions
-config_in_files = config_newaction.xml.in
-config_DATA = $(config_in_files:.xml.in=.xml)
-@INTLTOOL_XML_RULE@
-
-schemasdir = $(sysconfdir)/gconf/schemas
+schemasdir = $(GCONF_SCHEMA_FILE_DIR)
 schemas_in_files = config_newaction.schemas.in
 schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
 @INTLTOOL_SCHEMAS_RULE@
 
-DISTCLEANFILES = config_newaction.xml config_newaction.schemas
+if GCONF_SCHEMAS_INSTALL
+install-data-local: install-schemas
+install-schemas:
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) \
+		$(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
+else
+install-data-local:
+endif
+
+DISTCLEANFILES = $(schemas_DATA)
+
+EXTRA_DIST = $(schemas_in_files) 
