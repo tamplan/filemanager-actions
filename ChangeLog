@@ -1,5 +1,9 @@
 2005-11-24  Frederic Ruaudel <grumz@grumz.net> 
 
+	* plugin/nautilus-actions.c (get_verified_icon_name)
+	(nautilus_actions_create_menu_item): Fix the test of the icon. Replace 
+	empty icon string by NULL to avoid having an ugly icon instead.
+
 	* plugin/nautilus-actions-test.c (nautilus_actions_test_validate):
 	Fix the test of the '*' pattern that made n-a matches everything when
 	using multiple pattern syntax.

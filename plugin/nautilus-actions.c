@@ -75,6 +75,10 @@ static const gchar* get_verified_icon_name (const gchar* icon_name)
 			return NULL;
 		}
 	}
+	else if (strlen (icon_name) == 0)
+	{
+		return NULL;
+	}
 
 	return icon_name;
 }
@@ -83,7 +87,7 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 {
 	NautilusMenuItem *item;
 	gchar* name;
-	gchar* icon_name = get_verified_icon_name (action->icon);
+	gchar* icon_name = get_verified_icon_name (g_strstrip (action->icon));
 
 	name = g_strdup_printf ("NautilusActions::%s", action->uuid);
 	
@@ -248,4 +252,4 @@ void nautilus_actions_register_type (GTypeModule *module)
 								&menu_provider_iface_info);
 }
 
-// vim:ts=3:sw=3:tw=1024
+// vim:ts=3:sw=3:tw=1024:cin
