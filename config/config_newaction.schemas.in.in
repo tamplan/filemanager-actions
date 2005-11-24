@@ -32,7 +32,7 @@
         <short>The icon of the menu item</short>
         <long>The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings</long>
       </locale>
-      <default>@DATADIR@/nautilus-actions-icon.png</default>
+      <default>@DATADIR@/pixmaps/nautilus-actions-icon.png</default>
     </schema>
     <schema>
       <key>/schemas/apps/nautilus-actions/configurations/33333333-3333-3333-3333-333333333333/path</key>
