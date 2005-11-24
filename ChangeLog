@@ -1,5 +1,9 @@
 2005-11-24  Frederic Ruaudel <grumz@grumz.net> 
 
+	* plugin/nautilus-actions-test.c (nautilus_actions_test_validate):
+	Fix the test of the '*' pattern that made n-a matches everything when
+	using multiple pattern syntax.
+
 	* config/config_newaction.xml.in:
 	* config/Makefile.am: Remove the old config file installation
 

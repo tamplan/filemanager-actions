@@ -68,7 +68,7 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	gboolean basename_match_ok = FALSE;
 
 	if (action->basenames && action->basenames->next != NULL && 
-			g_ascii_strncasecmp ((gchar*)(action->basenames->data), "*", 1) == 0)
+			g_ascii_strcasecmp ((gchar*)(action->basenames->data), "*") == 0)
 	{
 		// if the only pattern is '*' then all files will match, so it is not 
 		// necessary to make the test for each of them
