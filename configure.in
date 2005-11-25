@@ -44,7 +44,8 @@ PKG_CHECK_MODULES(NAUTILUS_ACTIONS,\
 	 libgnome-2.0 >= $GNOME_REQUIRED	\
 	 libgnomeui-2.0 >= $GNOME_REQUIRED	\
 	 gconf-2.0 >= $GCONF_REQUIRED \
-	 libnautilus-extension >= $NAUTILUS_EXTENSION)
+	 libnautilus-extension >= $NAUTILUS_EXTENSION \
+	 uuid)
 AC_SUBST(NAUTILUS_ACTIONS_CFLAGS)
 AC_SUBST(NAUTILUS_ACTIONS_LIBS)
 AC_ARG_WITH(nautilus-extdir,

@@ -1,3 +1,8 @@
+2005-11-25  Frederic Ruaudel <grumz@grumz.net> 
+
+	* configure.in: Patch from Palfrey to add check for presence of libuuid
+	in the configure script (Bug #132).
+
 2005-11-24  Frederic Ruaudel <grumz@grumz.net> 0.99
 
 	* plugin/nautilus-actions.c (get_verified_icon_name)
