@@ -107,8 +107,6 @@ nautilus_actions_config_class_init (NautilusActionsConfigClass *klass)
 static void
 nautilus_actions_config_init (NautilusActionsConfig *config, NautilusActionsConfigClass *klass)
 {
-	GSList *list, *node;
-
 	config->actions = g_hash_table_new_full (g_str_hash, g_str_equal,
 						 (GDestroyNotify) g_free,
 						 (GDestroyNotify) nautilus_actions_config_action_free);

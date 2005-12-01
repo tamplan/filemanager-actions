@@ -23,6 +23,7 @@
 
 #include <config.h>
 #include <uuid/uuid.h>
+#include <string.h>
 #include "nautilus-actions-config-gconf-reader.h"
 #include "nautilus-actions-config-gconf-private.h"
 

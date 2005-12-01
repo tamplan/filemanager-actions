@@ -35,6 +35,7 @@ enum {
 };
 
 void nact_fill_actions_list (GtkWidget *list);
+void nautilus_actions_display_error (const gchar *msg);
 
 #endif
 

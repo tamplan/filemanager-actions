@@ -55,7 +55,7 @@ struct _NactPreferences {
 
 GSList* nact_prefs_get_schemes_list (void);
 
-void nact_prefs_set_schemes_list (const GSList* schemes);
+void nact_prefs_set_schemes_list (GSList* schemes);
 
 gboolean nact_prefs_get_main_dialog_size (gint* width, gint* height);
 void nact_prefs_set_main_dialog_size (GtkWindow* dialog);

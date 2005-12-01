@@ -137,7 +137,7 @@ static void prefs_changed_cb (GConfClient *client,
 									 	GConfEntry *entry,
 									 	gpointer user_data)
 {
-	NactPreferences* prefs = (NactPreferences*)user_data;
+	//NactPreferences* prefs = (NactPreferences*)user_data;
 
 	if (user_data != NULL)
 	{
@@ -238,7 +238,7 @@ GSList* nact_prefs_get_schemes_list (void)
 	return new_list;
 }
 
-void nact_prefs_set_schemes_list (const GSList* schemes)
+void nact_prefs_set_schemes_list (GSList* schemes)
 {
 	NactPreferences* prefs = nact_prefs_get_preferences ();
 

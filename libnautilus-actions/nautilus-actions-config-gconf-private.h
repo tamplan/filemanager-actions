@@ -23,6 +23,10 @@
 
 #include <config.h>
 #include <glib/gi18n.h>
+
+#ifdef N_
+#undef N_
+#endif
 #define N_(String) String
 
 // GConf general information

@@ -22,6 +22,7 @@
  */
 
 #include <libnautilus-extension/nautilus-file-info.h>
+#include <string.h>
 
 #include "nautilus-actions-test.h"
 

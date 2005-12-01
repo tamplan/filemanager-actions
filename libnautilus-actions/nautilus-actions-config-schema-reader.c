@@ -67,14 +67,12 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key_lo
 	
 	for (iter = config_node->children; iter; iter = iter->next)
 	{
-		xmlChar *text;
-
 		if (!retv && iter->type == XML_ELEMENT_NODE &&
 				g_ascii_strncasecmp ((gchar*)iter->name, 
 								NA_GCONF_XML_SCHEMA_DFT,
 								strlen (NA_GCONF_XML_SCHEMA_DFT)) == 0)
 		{
-			*value = xmlNodeGetContent (iter);
+			*value = (char*)xmlNodeGetContent (iter);
 			retv = TRUE;
 		}
 	}
@@ -93,14 +91,14 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 	*type = ACTION_NONE_TYPE;
 	for (iter = config_node->children; iter; iter = iter->next)
 	{
-		xmlChar *text;
+		char *text;
 
 		if (!is_key_ok && iter->type == XML_ELEMENT_NODE &&
 				g_ascii_strncasecmp ((gchar*)iter->name, 
 								NA_GCONF_XML_SCHEMA_APPLYTO,
 								strlen (NA_GCONF_XML_SCHEMA_APPLYTO)) == 0)
 		{
-			text = xmlNodeGetContent (iter);
+			text = (char*)xmlNodeGetContent (iter);
 
 			if (get_uuid)
 			{
@@ -163,7 +161,7 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 								NA_GCONF_XML_SCHEMA_DFT,
 								strlen (NA_GCONF_XML_SCHEMA_DFT)) == 0)
 		{
-			*value = xmlNodeGetContent (iter);
+			*value = (char*)xmlNodeGetContent (iter);
 			is_default_value_ok = TRUE;
 		}
 		else if (!is_default_value_ok && iter->type == XML_ELEMENT_NODE &&
@@ -187,11 +185,10 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 static GSList* schema_string_to_gslist (const gchar* str_list_value)
 {
 	GSList* list = NULL;
-	gchar* ptr = str_list_value;
-	gchar* start = NULL;
+	const gchar* ptr = str_list_value;
+	const gchar* start = NULL;
 	gchar* str_list = NULL;
 	gchar** str_list_splited = NULL;
-	gboolean found = FALSE;
 	int i;
 	
 	//--> First remove the brackets []

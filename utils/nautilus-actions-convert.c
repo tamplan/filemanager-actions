@@ -23,10 +23,13 @@
 #include <config.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <glib/gi18n.h>
+#include <glib/gstdio.h>
 #include <libnautilus-actions/nautilus-actions-config.h>
 #include <libnautilus-actions/nautilus-actions-config-xml.h>
 #include <libnautilus-actions/nautilus-actions-config-schema-writer.h>
+#include "nautilus-actions-tools-utils.h"
 
 static gchar* input_file = NULL;
 static gchar* output_file = NULL;
@@ -50,7 +53,7 @@ int main (int argc, char** argv)
 	gchar* path;
 	gboolean success = FALSE;
 	gchar* contents = NULL;
-	gssize length = 0;
+	gsize length = 0;
 
 	g_type_init ();
 
@@ -117,7 +120,7 @@ int main (int argc, char** argv)
 			if (output_file)
 			{
 				// Copy the content of the temporary file into the one asked by the user
-				if (success = g_file_get_contents (path, &contents, &length, &error))
+				if ((success = g_file_get_contents (path, &contents, &length, &error)))
 				{
 					success = nautilus_actions_file_set_contents (output_file, contents, length, &error);
 					

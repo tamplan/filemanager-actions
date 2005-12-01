@@ -88,6 +88,8 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_VERSION_ENTRY);
 	gconf_client_set_string (config->conf_client, key, action->version, NULL);
 	g_free (key);
+
+	return TRUE;
 }
 
 static gboolean

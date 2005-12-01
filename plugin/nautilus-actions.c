@@ -87,7 +87,7 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 {
 	NautilusMenuItem *item;
 	gchar* name;
-	gchar* icon_name = get_verified_icon_name (g_strstrip (action->icon));
+	const gchar* icon_name = get_verified_icon_name (g_strstrip (action->icon));
 
 	name = g_strdup_printf ("NautilusActions::%s", action->uuid);
 	
@@ -178,7 +178,7 @@ static void nautilus_actions_instance_dispose (GObject *obj)
 
 static void nautilus_actions_instance_finalize (GObject* obj)
 {
-	NautilusActions* self = NAUTILUS_ACTIONS (obj);
+	//NautilusActions* self = NAUTILUS_ACTIONS (obj);
 
 	/* Chain up to the parent class */
 	G_OBJECT_CLASS (parent_class)->finalize (obj);

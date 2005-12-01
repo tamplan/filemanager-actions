@@ -22,8 +22,10 @@
  */
 
 #include <glib.h>
-#include <libgnomevfs/gnome-vfs-file-info.h>
+#include <string.h>
+//#include <libgnomevfs/gnome-vfs-file-info.h>
 #include <libnautilus-extension/nautilus-file-info.h>
+#include <libgnomevfs/gnome-vfs.h>
 
 #include "nautilus-actions-utils.h"
 
@@ -50,7 +52,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		GString* tmp_string = g_string_new ("");
 		gchar* iter = g_strdup (param_template);
 		gchar* old_iter = iter;
-		int current_len = strlen (iter);
+		//int current_len = strlen (iter);
 		gchar* uri = nautilus_file_info_get_uri ((NautilusFileInfo*)files->data);
 		GnomeVFSURI* gvfs_uri = gnome_vfs_uri_new (uri);
 		gchar* filename;
@@ -101,7 +103,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		path_file_list = g_string_free (tmp_path_file_list, FALSE);
 
 		
-		while (iter = g_strstr_len (iter, strlen (iter), "%"))
+		while ((iter = g_strstr_len (iter, strlen (iter), "%")))
 		{
 			tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter) - strlen (iter));
 			switch (iter[1])

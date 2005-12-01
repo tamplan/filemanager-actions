@@ -106,7 +106,7 @@ get_action_string_value (GConfClient *client, const gchar *dir, const gchar *val
 	return s;
 }
 
-static void
+/*static void
 actions_changed_cb (GConfClient *client,
 		    guint cnxn_id,
 		    GConfEntry *entry,
@@ -116,7 +116,7 @@ actions_changed_cb (GConfClient *client,
 	const char* key = gconf_entry_get_key (entry);
 	GConfValue* value = gconf_entry_get_value (entry);
 
-}
+}*/
 
 static void
 nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, NautilusActionsConfigGconfClass *klass)

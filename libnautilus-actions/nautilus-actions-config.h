@@ -70,9 +70,9 @@ struct _NautilusActionsConfigClass {
 	gboolean (* remove_action) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
 
 	/* Signals handler signature */
-        void (* action_added) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
-        void (* action_changed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
-        void (* action_removed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
+        void (* action_added) (NautilusActionsConfig *config, NautilusActionsConfigAction *action, gpointer user_data);
+        void (* action_changed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action, gpointer user_data);
+        void (* action_removed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action, gpointer user_data);
 };
 
 GType                        nautilus_actions_config_get_type (void);

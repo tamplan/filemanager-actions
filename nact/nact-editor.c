@@ -30,6 +30,7 @@
 #include "nact-editor.h"
 #include "nact-utils.h"
 #include "nact-prefs.h"
+#include "nact.h"
 
 enum {
 	ICON_STOCK_COLUMN = 0,
@@ -239,7 +240,7 @@ static GtkTreeModel* create_stock_icon_model (void)
 	GSList* iter;
 	GtkListStore* model;
 	GtkTreeIter row;
-	GtkWidget* window = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
+	//GtkWidget* window = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
 	GtkStockItem stock_item;
 	gchar* label;
 
@@ -475,7 +476,7 @@ static void create_schemes_selection_list (void)
 	GSList* schemes_list = nact_prefs_get_schemes_list ();
 	GtkListStore* model;
 	GtkTreeIter row;
-	gchar* label;
+	//gchar* label;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer* toggled_cell;
 	GtkCellRenderer* text_cell;

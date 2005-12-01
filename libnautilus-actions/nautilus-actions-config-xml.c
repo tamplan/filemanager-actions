@@ -75,7 +75,7 @@ remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
 {
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_XML (self), FALSE);
 
-	NautilusActionsConfigXml* config = NAUTILUS_ACTIONS_CONFIG_XML (self);
+	//NautilusActionsConfigXml* config = NAUTILUS_ACTIONS_CONFIG_XML (self);
 
 	return TRUE;
 }
@@ -254,7 +254,7 @@ static gboolean nautilus_actions_config_xml_action_fill_test (NautilusActionsCon
 								strlen (ACTION_ISFILE)) == 0)
 		{
 			text = xmlNodeGetContent (iter);
-			isfile_ok = nautilus_actions_config_xml_parse_boolean (text, &(action->is_file));
+			isfile_ok = nautilus_actions_config_xml_parse_boolean ((char*)text, &(action->is_file));
 			xmlFree (text);
 		}
 		else if (!isdir_ok && iter->type == XML_ELEMENT_NODE &&
@@ -263,7 +263,7 @@ static gboolean nautilus_actions_config_xml_action_fill_test (NautilusActionsCon
 								strlen (ACTION_ISDIR)) == 0)
 		{
 			text = xmlNodeGetContent (iter);
-			isdir_ok = nautilus_actions_config_xml_parse_boolean (text, &(action->is_dir));
+			isdir_ok = nautilus_actions_config_xml_parse_boolean ((char*)text, &(action->is_dir));
 			xmlFree (text);
 		}
 		else if (!accept_multiple_file_ok && iter->type == XML_ELEMENT_NODE &&
@@ -272,7 +272,7 @@ static gboolean nautilus_actions_config_xml_action_fill_test (NautilusActionsCon
 								strlen (ACTION_MULTIPLE)) == 0)
 		{
 			text = xmlNodeGetContent (iter);
-			accept_multiple_file_ok = nautilus_actions_config_xml_parse_boolean (text, &(action->accept_multiple_files));
+			accept_multiple_file_ok = nautilus_actions_config_xml_parse_boolean ((char*)text, &(action->accept_multiple_files));
 			xmlFree (text);
 		}
 		else if (!scheme_ok && iter->type == XML_ELEMENT_NODE &&
@@ -310,7 +310,7 @@ static gboolean nautilus_actions_config_xml_action_fill_command (NautilusActions
 								strlen (ACTION_PATH)) == 0)
 		{
 			text = xmlNodeGetContent (iter);
-			action->path = xmlStrdup (text);
+			action->path = (char*)xmlStrdup (text);
 			xmlFree (text);
 			path_ok = TRUE;
 		}
@@ -320,7 +320,7 @@ static gboolean nautilus_actions_config_xml_action_fill_command (NautilusActions
 								strlen (ACTION_PARAMS)) == 0)
 		{
 			text = xmlNodeGetContent (iter);
-			action->parameters = xmlStrdup (text);
+			action->parameters = (char*)xmlStrdup (text);
 			xmlFree (text);
 			parameters_ok = TRUE;
 		}
@@ -354,12 +354,12 @@ static gboolean nautilus_actions_config_xml_action_fill_menu_item (NautilusActio
 								ACTION_LABEL,
 								strlen (ACTION_LABEL)) == 0)
 		{
-			xmlLang = xmlGetProp (iter, ACTION_LANG);
+			xmlLang = xmlGetProp (iter, BAD_CAST ACTION_LANG);
 			text = xmlNodeGetContent (iter);
 			if (lang == NULL && xmlLang == NULL)
 			{
 				//--> No $LANG set, get the default one (no xml:lang)
-				action->label = xmlStrdup (text);
+				action->label = (char*)xmlStrdup (text);
 				label_ok = TRUE;
 				label_lang_ok = TRUE;
 			}
@@ -368,7 +368,7 @@ static gboolean nautilus_actions_config_xml_action_fill_menu_item (NautilusActio
 				if (!label_lang_ok)
 				{
 					//--> $LANG set, not found the good xml:lang yet, get the default one (no xml:lang)
-					action->label = xmlStrdup (text);
+					action->label = (char*)xmlStrdup (text);
 					label_ok = TRUE;
 				}
 			}
@@ -379,7 +379,7 @@ static gboolean nautilus_actions_config_xml_action_fill_menu_item (NautilusActio
 				{
 					g_free (action->label);
 				}
-				action->label = xmlStrdup (text);
+				action->label = (char*)xmlStrdup (text);
 				label_ok = TRUE;
 				label_lang_ok = TRUE;
 			}
@@ -391,12 +391,12 @@ static gboolean nautilus_actions_config_xml_action_fill_menu_item (NautilusActio
 								ACTION_TOOLTIP,
 								strlen (ACTION_TOOLTIP)) == 0)
 		{
-			xmlLang = xmlGetProp (iter, ACTION_LANG);
+			xmlLang = xmlGetProp (iter, BAD_CAST ACTION_LANG);
 			text = xmlNodeGetContent (iter);
 			if (lang == NULL && xmlLang == NULL)
 			{
 				//--> No $LANG set, get the default one (no xml:lang)
-				action->tooltip = xmlStrdup (text);
+				action->tooltip = (char*)xmlStrdup (text);
 				tooltip_ok = TRUE;
 				tooltip_lang_ok = TRUE;
 			}
@@ -405,7 +405,7 @@ static gboolean nautilus_actions_config_xml_action_fill_menu_item (NautilusActio
 				if (!tooltip_lang_ok)
 				{
 					//--> $LANG set, not found the good xml:lang yet, get the default one (no xml:lang)
-					action->tooltip = xmlStrdup (text);
+					action->tooltip = (char*)xmlStrdup (text);
 					tooltip_ok = TRUE;
 				}
 			}
@@ -416,7 +416,7 @@ static gboolean nautilus_actions_config_xml_action_fill_menu_item (NautilusActio
 				{
 					g_free (action->tooltip);
 				}
-				action->tooltip = xmlStrdup (text);
+				action->tooltip = (char*)xmlStrdup (text);
 				tooltip_ok = TRUE;
 				tooltip_lang_ok = TRUE;
 			}
@@ -500,7 +500,7 @@ nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const 
 										ACTION_ROOT, 
 										strlen (ACTION_ROOT)) == 0)
 		{
-			version = xmlGetProp (root_node, ACTION_VERSION);
+			version = xmlGetProp (root_node, BAD_CAST ACTION_VERSION);
 			
 			for (iter = root_node->children; iter; iter = iter->next)
 			{
@@ -511,11 +511,11 @@ nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const 
 												ACTION_ACTION, 
 												strlen (ACTION_ACTION)) == 0)
 				{
-					config_name = xmlGetProp (iter, ACTION_ACTION_NAME);
+					config_name = xmlGetProp (iter, BAD_CAST ACTION_ACTION_NAME);
 					if (config_name != NULL)
 					{
 						action = nautilus_actions_config_action_new ();
-						action->version = xmlStrdup (version);
+						action->version = (char*)xmlStrdup (version);
 						uuid_generate (uuid);
 						uuid_unparse (uuid, uuid_str);
 						action->uuid = g_strdup (uuid_str);

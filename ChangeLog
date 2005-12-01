@@ -1,3 +1,27 @@
+2005-12-01  Frederic Ruaudel <grumz@grumz.net> 
+
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-writer.c:
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
+	* libnautilus-actions/nautilus-actions-config-xml.c:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h:
+	* nact/nact-editor.c:
+	* nact/nact-prefs.c:
+	* nact/nact-prefs.h:
+	* nact/nact-utils.c:
+	* nact/nact.c:
+	* nact/nact.h:
+	* plugin/nautilus-actions-test.c:
+	* plugin/nautilus-actions-utils.c:
+	* plugin/nautilus-actions.c:
+	* utils/nautilus-actions-convert.c:
+	* utils/nautilus-actions-new-config.c: Patch from Palfrey that removes
+	all compilation warnings (Bug #133).
+
 2005-11-26  Funda Wang  <fundawang@linux.net.cn>
 
 	* configure.in: Added Simplified Chinese translation.

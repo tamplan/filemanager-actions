@@ -22,6 +22,7 @@
  */
 
 #include <config.h>
+#include <stdlib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtkbutton.h>
 #include <gtk/gtkliststore.h>
@@ -33,13 +34,16 @@
 #include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
 #include "nact-utils.h"
 #include "nact.h"
+#include "nact-editor.h"
+#include "nact-import-export.h"
+#include "nact-prefs.h"
 
 static NautilusActionsConfigGconfWriter *config = NULL;
 
 void nact_fill_actions_list (GtkWidget *list)
 {
 	GSList *actions, *l;
-	GtkListStore *model = gtk_tree_view_get_model (GTK_TREE_VIEW (list));
+	GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model (GTK_TREE_VIEW (list)));
 
 	gtk_list_store_clear (model);
 
@@ -76,6 +80,7 @@ void nact_fill_actions_list (GtkWidget *list)
 	nautilus_actions_config_free_actions_list (actions);
 }
 
+void 
 nautilus_actions_display_error (const gchar *msg)
 {
 }
@@ -274,6 +279,7 @@ main (int argc, char *argv[])
 
 	/* run the application */
 	gtk_main ();
+	return 0;
 }
 
 // vim:ts=3:sw=3:tw=1024:cin

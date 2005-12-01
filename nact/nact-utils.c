@@ -264,7 +264,7 @@ gchar* nact_utils_parse_parameter (void)
 		ex_host = "";
 	}
 	
-	while (iter = g_strstr_len (iter, strlen (iter), "%"))
+	while ((iter = g_strstr_len (iter, strlen (iter), "%")))
 	{
 		tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter) - strlen (iter));
 		switch (iter[1])

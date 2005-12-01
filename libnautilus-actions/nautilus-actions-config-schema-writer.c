@@ -68,7 +68,7 @@ static void nautilus_actions_config_schema_writer_set_property (GObject *object,
 }
 
 static void nautilus_actions_config_schema_writer_get_property (GObject *object, guint property_id,
-																			const GValue* value, GParamSpec *pspec)
+																			GValue* value, GParamSpec *pspec)
 {
 	
 	NautilusActionsConfigSchemaWriter* self = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (object);
@@ -85,39 +85,39 @@ static void nautilus_actions_config_schema_writer_get_property (GObject *object,
 }
 
 static void create_schema_entry (xmlNodePtr list_node, xmlChar* key_path, 
-											xmlChar* type, xmlChar* value, 
-											xmlChar* short_desc, xmlChar* long_desc, 
+											char* type, const char* value, 
+											char* short_desc, char* long_desc, 
 											gboolean is_l10n_value)
 {
 	xmlNodePtr schema_node = NULL;
 	xmlNodePtr locale_node = NULL;
 	xmlChar* content = NULL;
-	xmlNodePtr* value_root_node = NULL;
+	xmlNodePtr value_root_node = NULL;
 
 	//--> Menu item entries : label
-	schema_node = xmlNewChild (list_node, NULL, NA_GCONF_XML_SCHEMA_ENTRY, NULL);
-	content = g_build_path ("/", ACTIONS_SCHEMA_PREFIX, key_path, NULL);
-	xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_KEY, content);
+	schema_node = xmlNewChild (list_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_SCHEMA_PREFIX, key_path, NULL);
+	xmlNewChild (schema_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_KEY, content);
 	xmlFree (content);
-	xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_APPLYTO, key_path);
-	xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_OWNER, ACTIONS_SCHEMA_OWNER);
-	xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_TYPE, type);
+	xmlNewChild (schema_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_APPLYTO, key_path);
+	xmlNewChild (schema_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_OWNER, BAD_CAST ACTIONS_SCHEMA_OWNER);
+	xmlNewChild (schema_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_TYPE, BAD_CAST type);
 	if (g_ascii_strncasecmp (type, "list", strlen ("list")) == 0)
 	{
-		xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_LIST_TYPE, "string");
+		xmlNewChild (schema_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_LIST_TYPE, BAD_CAST "string");
 	}
-	locale_node = xmlNewChild (schema_node, NULL, NA_GCONF_XML_SCHEMA_LOCALE, NULL);
-	xmlNewProp (locale_node, "name", "C");
+	locale_node = xmlNewChild (schema_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_LOCALE, NULL);
+	xmlNewProp (locale_node, BAD_CAST "name", BAD_CAST "C");
 	value_root_node = schema_node;
 	if (is_l10n_value)
 	{
 		// if the default value must be localized, put it in the <locale> element
 		value_root_node = locale_node;
 	}
-	xmlNewChild (value_root_node, NULL, NA_GCONF_XML_SCHEMA_DFT, value);
+	xmlNewChild (value_root_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_DFT, BAD_CAST value);
 
-	xmlNewChild (locale_node, NULL, NA_GCONF_XML_SCHEMA_SHORT, short_desc);
-	xmlNewChild (locale_node, NULL, NA_GCONF_XML_SCHEMA_LONG, long_desc);
+	xmlNewChild (locale_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_SHORT, BAD_CAST short_desc);
+	xmlNewChild (locale_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_LONG, BAD_CAST long_desc);
 }
 
 static gchar* gslist_to_schema_string (GSList* list)
@@ -174,67 +174,67 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	action->version = g_strdup (NAUTILUS_ACTIONS_CONFIG_VERSION);
 
 	// Create the GConf schema XML file and write it in the save_path folder
-	doc = xmlNewDoc ("1.0");
-	root_node = xmlNewNode (NULL, NA_GCONF_XML_ROOT);
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root_node = xmlNewNode (NULL, BAD_CAST NA_GCONF_XML_ROOT);
 	xmlDocSetRootElement (doc, root_node);
-	list_node = xmlNewChild (root_node, NULL, NA_GCONF_XML_SCHEMA_LIST, NULL);
+	list_node = xmlNewChild (root_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_LIST, NULL);
 
 	//--> Menu item entries : label
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_LABEL_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_LABEL_ENTRY, NULL);
 	create_schema_entry (list_node, content, "string", action->label, ACTION_LABEL_DESC_SHORT, ACTION_LABEL_DESC_LONG, TRUE);
 	xmlFree (content);
 
 	//--> Menu item entries : tooltip
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_TOOLTIP_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_TOOLTIP_ENTRY, NULL);
 	create_schema_entry (list_node, content, "string", action->tooltip, ACTION_TOOLTIP_DESC_SHORT, ACTION_TOOLTIP_DESC_LONG, TRUE);
 	xmlFree (content);
 
 	//--> Menu item entries : icon
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ICON_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ICON_ENTRY, NULL);
 	create_schema_entry (list_node, content, "string", action->icon, ACTION_ICON_DESC_SHORT, ACTION_ICON_DESC_LONG, FALSE);
 	xmlFree (content);
 
 	//--> Command entries : path
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_PATH_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_PATH_ENTRY, NULL);
 	create_schema_entry (list_node, content, "string", action->path, ACTION_PATH_DESC_SHORT, ACTION_PATH_DESC_LONG, FALSE);
 	xmlFree (content);
 
 	//--> Command entries : parameters
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_PARAMS_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_PARAMS_ENTRY, NULL);
 	create_schema_entry (list_node, content, "string", action->parameters, ACTION_PARAMS_DESC_SHORT, ACTION_PARAMS_DESC_LONG, FALSE);
 	xmlFree (content);
 
 	//--> Test entries : basenames
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_BASENAMES_ENTRY, NULL);
-	str_list = gslist_to_schema_string (action->basenames);
-	create_schema_entry (list_node, content, "list", str_list, ACTION_BASENAMES_DESC_SHORT, ACTION_BASENAMES_DESC_LONG, FALSE);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_BASENAMES_ENTRY, NULL);
+	str_list = BAD_CAST gslist_to_schema_string (action->basenames);
+	create_schema_entry (list_node, content, "list", (char*)str_list, ACTION_BASENAMES_DESC_SHORT, ACTION_BASENAMES_DESC_LONG, FALSE);
 	xmlFree (str_list);
 	xmlFree (content);
 		
 	//--> test entries : is_file
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ISFILE_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ISFILE_ENTRY, NULL);
 	create_schema_entry (list_node, content, "bool", bool_to_schema_string (action->is_file), ACTION_ISFILE_DESC_SHORT, _(ACTION_ISFILE_DESC_LONG), FALSE);
 	xmlFree (content);
 
 	//--> test entries : is_dir
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ISDIR_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ISDIR_ENTRY, NULL);
 	create_schema_entry (list_node, content, "bool", bool_to_schema_string (action->is_dir), ACTION_ISDIR_DESC_SHORT, _(ACTION_ISDIR_DESC_LONG), FALSE);
 	xmlFree (content);
 
 	//--> test entries : accept-multiple-files
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_MULTIPLE_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_MULTIPLE_ENTRY, NULL);
 	create_schema_entry (list_node, content, "bool", bool_to_schema_string (action->accept_multiple_files), ACTION_MULTIPLE_DESC_SHORT, ACTION_MULTIPLE_DESC_LONG, FALSE);
 	xmlFree (content);
 
 	//--> test entries : schemes
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_SCHEMES_ENTRY, NULL);
-	str_list = gslist_to_schema_string (action->schemes);
-	create_schema_entry (list_node, content, "list", str_list, ACTION_SCHEMES_DESC_SHORT, ACTION_SCHEMES_DESC_LONG, FALSE);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_SCHEMES_ENTRY, NULL);
+	str_list = BAD_CAST gslist_to_schema_string (action->schemes);
+	create_schema_entry (list_node, content, "list", (char*)str_list, ACTION_SCHEMES_DESC_SHORT, ACTION_SCHEMES_DESC_LONG, FALSE);
 	xmlFree (str_list);
 	xmlFree (content);
 
 	//--> general entry : version
-	content = g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_VERSION_ENTRY, NULL);
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_VERSION_ENTRY, NULL);
 	create_schema_entry (list_node, content, "string", action->version, ACTION_VERSION_DESC_SHORT, ACTION_VERSION_DESC_LONG, FALSE);
 	xmlFree (content);
 
@@ -257,7 +257,7 @@ remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
 {
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_SCHEMA_WRITER (self), FALSE);
 
-	NautilusActionsConfigSchemaWriter* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (self);
+	//NautilusActionsConfigSchemaWriter* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (self);
 
 	return TRUE;
 }
