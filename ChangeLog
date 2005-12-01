@@ -19,7 +19,7 @@
 	* plugin/nautilus-actions-utils.c:
 	* plugin/nautilus-actions.c:
 	* utils/nautilus-actions-convert.c:
-	* utils/nautilus-actions-new-config.c: Patch from Palfrey that removes
+	* utils/nautilus-actions-new-config.c: Patch from Tom Parker that removes
 	all compilation warnings (Bug #133).
 
 2005-11-26  Funda Wang  <fundawang@linux.net.cn>
@@ -28,7 +28,7 @@
 
 2005-11-25  Frederic Ruaudel <grumz@grumz.net> 
 
-	* configure.in: Patch from Palfrey to add check for presence of libuuid
+	* configure.in: Patch from Tom Parker to add check for presence of libuuid
 	in the configure script (Bug #132).
 
 2005-11-24  Frederic Ruaudel <grumz@grumz.net> 0.99
