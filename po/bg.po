@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions CVS head\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-18 16:42+0100\n"
-"PO-Revision-Date: 2005-09-29 12:22+0300\n"
+"POT-Creation-Date: 2005-12-03 14:26+0200\n"
+"PO-Revision-Date: 2005-12-03 14:26+0200\n"
 "Last-Translator: Alexander Shopov <ash@contact.bg>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: ../nact/nact.desktop.in.h:1
-#, fuzzy
 msgid "Add items to the Nautilus popup menu"
 msgstr "Добавяне на елементи към контекстното меню на Nautilus"
 
@@ -27,7 +26,7 @@ msgstr "Настройки на действията на Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:1
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../nact/nautilus-actions-config.glade.h:2
 msgid "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
@@ -39,13 +38,13 @@ msgid "<b>%%</b> : a percent sign"
 msgstr "<b>%%</b>: знак за процент"
 
 #: ../nact/nautilus-actions-config.glade.h:6
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "<b>%M</b> : list of the selected file(s)/folder(s) with their full path "
 "separated by space."
 msgstr ""
-"<b>%M</b>: списък с пълните имена на избраните файлове/папки разделени с "
-"интервал."
+"<b>%M</b>: списък с пълните имена и пътя на избраните файлове/папки "
+"разделени с интервал."
 
 #: ../nact/nautilus-actions-config.glade.h:8
 #, no-c-format
@@ -53,7 +52,7 @@ msgid "<b>%U</b> : username of the gnome-vfs URI"
 msgstr "<b>%U</b>: потребителско име за URI на gnome-vfs"
 
 #: ../nact/nautilus-actions-config.glade.h:10
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "<b>%d</b> : base folder of the selected file(s)"
 msgstr "<b>%d</b>: папката, в която се намират избраните файлове"
 
@@ -71,12 +70,12 @@ msgid "<b>%h</b> : hostname of the gnome-vfs URI"
 msgstr "<b>%h</b>: името на хост за URI на gnome-vfs"
 
 #: ../nact/nautilus-actions-config.glade.h:16
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "<b>%m</b> : list of the basename of the selected file(s)/folder(s) separated "
 "by space."
 msgstr ""
-"<b>%m</b>: списък с имената на избраните файлове/папки без техните надпапки "
+"<b>%m</b>: списък с имената на избраните файлове/папки без техните надпапки, "
 "разделени с интервали."
 
 #: ../nact/nautilus-actions-config.glade.h:18
@@ -90,36 +89,31 @@ msgid "<b>%u</b> : gnome-vfs URI"
 msgstr "<b>%u</b>: URI на gnome-vfs"
 
 #: ../nact/nautilus-actions-config.glade.h:21
-#, fuzzy
 msgid "<b>Action</b>"
-msgstr "<span weight=\"bold\">Условия за поява</span>"
+msgstr "<b>Действие</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:22
-#, fuzzy
 msgid "<b>Appearance Conditions</b>"
-msgstr "<span weight=\"bold\">Условия за поява</span>"
+msgstr "<b>Условия за поява</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:23
-#, fuzzy
 msgid "<b>Nautilus Menu Item</b>"
-msgstr "<span weight=\"bold\">Елемент от менюто на Nautilus</span>"
+msgstr "<b>Елемент от менюто на Nautilus</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:25
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
-msgstr "<i><b><small>напр: %s %s</small></b></i>"
+msgstr "<i><b><span size=\"small\">напр: %s</span></b></i>"
 
 #: ../nact/nautilus-actions-config.glade.h:26
-#, fuzzy
 msgid "<span size=\"larger\"><b>Import/Export Settings</b></span>"
-msgstr "<span size=\"larger\"><b>Легенда на параметрите</b></span>"
+msgstr "<span size=\"larger\"><b>Настройки на внасянето/изнасянето</b></span>"
 
 #: ../nact/nautilus-actions-config.glade.h:27
 msgid "<span size=\"larger\"><b>Parameters Legend</b></span>"
 msgstr "<span size=\"larger\"><b>Легенда на параметрите</b></span>"
 
 #: ../nact/nautilus-actions-config.glade.h:28
-#, fuzzy
 msgid ""
 "A string with joker ? or * that will be used to match the files. You can "
 "match several file patterns by separating them with a semi-colon ;"
@@ -129,12 +123,10 @@ msgstr ""
 "разделите с „;“."
 
 #: ../nact/nautilus-actions-config.glade.h:29
-#, fuzzy
 msgid "Appears if scheme is in this list:"
 msgstr "Появяване, ако схемата е списъка:"
 
 #: ../nact/nautilus-actions-config.glade.h:30
-#, fuzzy
 msgid "Appears if selection contains:"
 msgstr "Появяване, ако избраните обекти съдържат:"
 
@@ -144,78 +136,77 @@ msgstr "Появяване, ако са избрани множество обе
 
 #: ../nact/nautilus-actions-config.glade.h:32
 msgid "Automatic"
-msgstr ""
+msgstr "Автоматично"
 
 #: ../nact/nautilus-actions-config.glade.h:33
-#, fuzzy
 msgid "Both"
-msgstr "и двете"
+msgstr "И двете"
 
 #: ../nact/nautilus-actions-config.glade.h:34
 msgid "Click to add a new scheme"
-msgstr ""
+msgstr "Натиснете за добавянето на нова схема"
 
 #: ../nact/nautilus-actions-config.glade.h:35
 msgid "Click to choose a command from the file chooser dialog"
-msgstr ""
+msgstr "Натиснете за избор на команда от прозореца за избор на файлове"
 
 #: ../nact/nautilus-actions-config.glade.h:36
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list"
 msgstr ""
+"Натиснете за избор на произволна икона от файл вместо шаблонните икони в "
+"падащия списък"
 
 #: ../nact/nautilus-actions-config.glade.h:37
 msgid "Click to remove the selected scheme"
-msgstr ""
+msgstr "Натиснете за премахването на избраната схема"
 
 #: ../nact/nautilus-actions-config.glade.h:38
 msgid ""
 "Click to see the list of special tokens you can use in the parameter field"
 msgstr ""
+"Натиснете, за да видите специалните последователности в полето за параметри"
 
 #: ../nact/nautilus-actions-config.glade.h:39
 msgid "Export existing configs"
-msgstr ""
+msgstr "Изнасяне на текущите настройки"
 
 #: ../nact/nautilus-actions-config.glade.h:40
-#, fuzzy
 msgid "File Pattern:"
 msgstr "Шаблон за файлове:"
 
 #: ../nact/nautilus-actions-config.glade.h:41
 msgid "File to Import :"
-msgstr ""
+msgstr "Внасяне на файл: "
 
 #: ../nact/nautilus-actions-config.glade.h:42
 msgid "GConf schema description file (Nautilus-actions v1.x and later)"
-msgstr ""
+msgstr "Файл със схема за GConf (за версия поне 1.x)"
 
 #: ../nact/nautilus-actions-config.glade.h:43
 msgid "Icon: "
-msgstr ""
+msgstr "Икона: "
 
 #: ../nact/nautilus-actions-config.glade.h:44
 msgid "Import all my old configs"
-msgstr ""
+msgstr "Внасяне на всички стари настройки"
 
 #: ../nact/nautilus-actions-config.glade.h:45
 msgid "Import new configurations"
-msgstr ""
+msgstr "Внасяне на нови настройки"
 
 #: ../nact/nautilus-actions-config.glade.h:46
 msgid "Import/Export"
-msgstr ""
+msgstr "Внасяне/изнасяне"
 
 #: ../nact/nautilus-actions-config.glade.h:47
-#, fuzzy
 msgid "Label of the menu item in the Nautilus popup menu"
-msgstr "Надпис на елемента от контекстното меню на Nautilus"
+msgstr "Етикет на елемента от контекстното меню на Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:48
-#, fuzzy
 msgid "Label:"
-msgstr "Надпис:"
+msgstr "Етикет:"
 
 #: ../nact/nautilus-actions-config.glade.h:49
 msgid ""
@@ -226,40 +217,34 @@ msgstr ""
 "Приложението за настройване на разширението за Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:51
-#, fuzzy
 msgid "Nautilus Actions"
-msgstr "Настройки на действията на Nautilus"
+msgstr "Действията за Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:52
 msgid "Old XML config file (Nautilus-actions v0.x)"
-msgstr ""
+msgstr "Стар файл с настройки с XML (за версии 0.x)"
 
 #: ../nact/nautilus-actions-config.glade.h:53
-#, fuzzy
 msgid "Only files"
-msgstr "само файлове"
+msgstr "Само файлове"
 
 #: ../nact/nautilus-actions-config.glade.h:54
-#, fuzzy
 msgid "Only folders"
-msgstr "само папки"
+msgstr "Само папки"
 
 #: ../nact/nautilus-actions-config.glade.h:55
-#, fuzzy
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens"
 msgstr ""
-"параметри, които ще бъдат подадени на програмата. Натиснете бутона "
-"„Легенда“, за да разгледате възможностите"
+"Параметри, които ще бъдат подадени на командата. Натиснете бутона „Легенда“, "
+"за да разгледате специалните последователности"
 
 #: ../nact/nautilus-actions-config.glade.h:56
-#, fuzzy
 msgid "Parameters:"
 msgstr "Параметри:"
 
 #: ../nact/nautilus-actions-config.glade.h:57
-#, fuzzy
 msgid "Path:"
 msgstr "Път:"
 
@@ -269,11 +254,11 @@ msgstr "Уеб сайт на проекта"
 
 #: ../nact/nautilus-actions-config.glade.h:59
 msgid "Save in Folder :"
-msgstr ""
+msgstr "Запазване в папка: "
 
 #: ../nact/nautilus-actions-config.glade.h:60
 msgid "Select the configurations you want to export :"
-msgstr ""
+msgstr "Избор на настройките, които да се изнесат: "
 
 #: ../nact/nautilus-actions-config.glade.h:61
 msgid ""
@@ -281,15 +266,17 @@ msgid ""
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add new scheme by clicking on the '+' button"
 msgstr ""
+"Изберете вида на файлове, при които да се появява действието. Ако не знаете "
+"какво да изберете, пробвайте с „file“ - това е най-честият избор. Винаги "
+"можете да добавите схема чрез натискане на бутона със знак „+“."
 
 #: ../nact/nautilus-actions-config.glade.h:62
-#, fuzzy
 msgid ""
 "The command that will be launched when selecting the action in Nautilus "
 "popup menu"
 msgstr ""
-"Командата, която ще бъде стартирана при избиране на действието в менюто на "
-"Nautilus."
+"Командата, която ще бъде стартирана при избиране на действието в "
+"контекстното меню на Nautilus."
 
 #: ../nact/nautilus-actions-config.glade.h:63
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
@@ -298,24 +285,22 @@ msgstr ""
 "(GPL)"
 
 #: ../nact/nautilus-actions-config.glade.h:64
-#, fuzzy
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar"
-msgstr "Подсказка за лентата за състояние на Nautilus"
+msgstr ""
+"Подсказка за елемента на менюто ще се появява в лентата за състояние на "
+"Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:65
-#, fuzzy
 msgid "Tooltip:"
 msgstr "Подсказка:"
 
 #: ../nact/nautilus-actions-config.glade.h:66
-#, fuzzy
 msgid "Type of configuration :"
-msgstr "Версия на формата на конфигурациите"
+msgstr "Вид на настройката: "
 
 #: ../nact/nautilus-actions-config.glade.h:67
-#, fuzzy
 msgid "_Browse..."
-msgstr "Избор..."
+msgstr "_Избор..."
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../nact/nautilus-actions-config.glade.h:69
@@ -328,20 +313,20 @@ msgstr ""
 "Докладвайте за грешки на http://gnome.cult.bg/bugs"
 
 #. create columns on the tree view
-#: ../nact/nact.c:202 ../nact/nact-import-export.c:179
+#: ../nact/nact.c:207 ../nact/nact-import-export.c:179
 msgid "Icon"
-msgstr ""
+msgstr "Икона"
 
-#: ../nact/nact.c:207 ../nact/nact-import-export.c:184
-#, fuzzy
+#: ../nact/nact.c:212 ../nact/nact-import-export.c:184
 msgid "Label"
-msgstr "Надпис:"
+msgstr "Етикет"
 
-#: ../nact/nact.c:226 ../nact/nact-editor.c:671
+#: ../nact/nact.c:231 ../nact/nact-editor.c:672
 #: ../nact/nact-import-export.c:346
-#, fuzzy
 msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr "Инструмент за настройване на действията на Nautilus"
+msgstr ""
+"Файлът с описание на интерфейса на действията за Nautilus не може да бъде "
+"зареден"
 
 #. i18n notes: example strings for the command preview
 #: ../nact/nact-utils.c:157
@@ -357,14 +342,12 @@ msgid "file2.txt"
 msgstr "файл2.txt"
 
 #: ../nact/nact-utils.c:159 ../nact/nact-utils.c:160
-#, fuzzy
 msgid "folder1"
-msgstr "само папки"
+msgstr "папка1"
 
 #: ../nact/nact-utils.c:159
-#, fuzzy
 msgid "folder2"
-msgstr "само папки"
+msgstr "папка2"
 
 #: ../nact/nact-utils.c:162
 msgid "test.example.net"
@@ -375,114 +358,104 @@ msgid "file.txt"
 msgstr "файл.txt"
 
 #: ../nact/nact-utils.c:164
-#, fuzzy
 msgid "folder"
-msgstr "само папки"
+msgstr "папка"
 
 #. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:251
+#: ../nact/nact-editor.c:252
 msgid "None"
-msgstr ""
+msgstr "Няма"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-editor.c:434
-msgid "new-scheme"
-msgstr ""
-
 #: ../nact/nact-editor.c:435
+msgid "new-scheme"
+msgstr "нова-схема"
+
+#: ../nact/nact-editor.c:436
 msgid "New Scheme Description"
-msgstr ""
+msgstr "Описание на нова схема"
 
-#: ../nact/nact-editor.c:521
+#: ../nact/nact-editor.c:522
 msgid "Scheme"
-msgstr ""
+msgstr "Схема"
 
-#: ../nact/nact-editor.c:533
+#: ../nact/nact-editor.c:534
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
-#: ../nact/nact-editor.c:687
-#, fuzzy
+#: ../nact/nact-editor.c:688
 msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr "Надпис на елемента от контекстното меню на Nautilus"
+msgstr "Етикет на елемента от контекстното меню на Nautilus"
 
-#: ../nact/nact-editor.c:715
-#, fuzzy
+#: ../nact/nact-editor.c:716
 msgid "Add a New Action"
-msgstr "Ново действие..."
+msgstr "Добавяне на ново действие"
 
-#: ../nact/nact-editor.c:719
+#: ../nact/nact-editor.c:720
 #, c-format
 msgid "Edit Action \"%s\""
-msgstr ""
+msgstr "Редактиране на действието „%s“"
 
 #. initialize the default schemes
 #. i18n notes : description of 'file' scheme
 #: ../nact/nact-prefs.c:164
-#, fuzzy, c-format
+#, c-format
 msgid "%sLocal Files"
-msgstr "Локални файлове"
+msgstr "%sЛокални файлове"
 
 #. i18n notes : description of 'sftp' scheme
 #: ../nact/nact-prefs.c:166
-#, fuzzy, c-format
+#, c-format
 msgid "%sSSH Files"
-msgstr "Файлове от SSH"
+msgstr "%sФайлове от SSH"
 
 #. i18n notes : description of 'smb' scheme
 #: ../nact/nact-prefs.c:168
-#, fuzzy, c-format
+#, c-format
 msgid "%sWindows Files"
-msgstr "Файлове от Windows"
+msgstr "%sФайлове от Windows"
 
 #. i18n notes : description of 'ftp' scheme
 #: ../nact/nact-prefs.c:170
-#, fuzzy, c-format
+#, c-format
 msgid "%sFTP Files"
-msgstr "Файлове от FTP"
+msgstr "%sФайлове от FTP"
 
 #. i18n notes : description of 'dav' scheme
 #: ../nact/nact-prefs.c:172
-#, fuzzy, c-format
+#, c-format
 msgid "%sWebdav Files"
-msgstr "Файлове от WebDAV"
+msgstr "%sФайлове от WebDAV"
 
 #. vim:ts=3:sw=3:tw=1024:cin
 #: ../config/config_newaction.schemas.in.in.h:1
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
 msgid "'true' if the selection can have several items, 'false' otherwise"
 msgstr ""
-"Истина, ако трябва да са избрани няколко обекта, ако е избран един, е лъжа"
+"„True“, ако може да са избрани няколко обекта, в противен случай „false“."
 
 #: ../config/config_newaction.schemas.in.in.h:2
-#, fuzzy
 msgid "'true' if the selection must have files, 'false' otherwise"
 msgstr ""
-"Истина, ако избраните обекти трябва да съдържат само файлове, лъжа в "
-"противен случай"
+"„True“, ако трябва да е избран поне един файл, „false“ в противен случай"
 
 #: ../config/config_newaction.schemas.in.in.h:3
-#, fuzzy
 msgid "'true' if the selection must have folders, 'false' otherwise"
 msgstr ""
-"Истина, ако избраните обекти трябва да съдържат само папки, лъжа в противен "
-"случай"
+"„True“, ако трябва да е избрана поне една папка, „false“ в противен случай"
 
 #: ../config/config_newaction.schemas.in.in.h:4
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
 msgid ""
 "A list of strings with joker '*' or '?' to match the selected file(s)/folder"
 "(s). Each selected items must match at least one of the pattern for the "
 "action to appear"
 msgstr ""
-"Списък с шаблонни низове, който може да съдържа символите „?“ или „*“, към "
+"Списък с шаблонни низове, които могат да съдържа символите „?“ или „*“, към "
 "които трябва да напаснат имената на файлове. Всеки избран файл трябва да "
-"напасне подне с един от шаблоните."
+"напасне поне с един от шаблоните."
 
 #: ../config/config_newaction.schemas.in.in.h:5
-#, fuzzy
 msgid ""
 "Defines the list of valid GnomeVFS scheme to match the selected items. The "
 "GnomeVFS scheme is the protocol used to access the files. The keyword to use "
@@ -492,90 +465,84 @@ msgid ""
 "via FTP 'smb' : files accessed via Samba (Windows share) 'dav' : files "
 "accessed via WebDav All GnomeVFS scheme use by Nautilus can be used here."
 msgstr ""
-"Дефиниране на списъка с валидни схеми на GnomeVFS, които да напаснат с "
-"избраните елементи. Схемата на GnomeVFS е протоколът, който се използва за "
-"достъп до файловете. Ключовата дума, която се използва е началото на URI за "
-"GnomeVFS URI. Например: file:///tmp/foo.txt sftp:///root@test.example.net/"
-"tmp/foo.txt. Най-честите схеми са „file“: локални файлове, „sftp“: файлове "
-"достъпвани през SSH, „ftp“: файлове достъпвани през FTP, „smb“: файлове, "
-"достъпвани през Samba (или мрежата на Windows), „dav“: файлове достъпвани "
-"през WebDAV. Можете да ползвате всички валидни схеми на GnomeVFS."
+"Списък с валидни схеми на GnomeVFS, които да напаснат с избраните обекти. "
+"Схемата на GnomeVFS е протоколът, който се използва за достъп до файловете. "
+"Ключовата дума, която се използва е началото на URI за GnomeVFS URI. "
+"Например: file:///tmp/foo.txt sftp:///root@test.example.net/tmp/foo.txt. Най-"
+"честите схеми са „file“: локални файлове, „sftp“: файлове достъпвани през "
+"SSH, „ftp“: файлове достъпвани през FTP, „smb“: файлове, достъпвани през "
+"Samba (или мрежата на Windows), „dav“: файлове достъпвани през WebDAV. "
+"Можете да ползвате всички валидни схеми на GnomeVFS."
 
 #: ../config/config_newaction.schemas.in.in.h:6
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
 msgid ""
 "If you need one or more files or folders to be selected, set 'true' to this "
 "key. If you want just one file or folder, set 'false'"
 msgstr ""
-"Ако искате тази конфигурация да е активна, ако са избрани няколко файла или "
-"папки, задайте „true“ за този клавиш. Ако иската да е активна при избирането "
-"на само един файл или папка, задайте този клавиш да е „false“."
+"Ако е необходимо да са избрани повече от един файл или папки, задайте „true“ "
+"за този клавиш. Ако Ви трябва само един файл или папка, задайте този клавиш "
+"да е „false“."
 
 #: ../config/config_newaction.schemas.in.in.h:7
-#, fuzzy
 msgid "Manage Actions"
-msgstr "Ново действие..."
+msgstr "Управление на действията"
 
 #: ../config/config_newaction.schemas.in.in.h:8
 msgid "Manage your actions using NACT configuration tool"
-msgstr ""
+msgstr "Управление на действията на Nautilus"
 
 #: ../config/config_newaction.schemas.in.in.h:9
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:67
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
 msgid "The icon of the menu item"
-msgstr "Подсказката за елемента от менюто"
+msgstr "Иконата от елемента на менюто"
 
 #: ../config/config_newaction.schemas.in.in.h:10
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:68
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
 msgstr ""
-"Надписът на елемент в менюто, което се появява в контекстното меню на "
-"Nautilus, когато избраните елементи съвпадата с настройките"
+"Иконата към елемент на менюто, което се появява до етикета в контекстното "
+"меню на Nautilus, когато избраните обекти отговарят на условията за "
+"съвпадение"
 
 #. GConf description strings :
 #: ../config/config_newaction.schemas.in.in.h:11
-#: ../utils/nautilus-actions-new-config.c:45
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:63
+#: ../utils/nautilus-actions-new-config.c:48
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:67
 msgid "The label of the menu item"
-msgstr "Надписът в менюто"
+msgstr "Етикетът в менюто"
 
 #: ../config/config_newaction.schemas.in.in.h:12
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:64
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:68
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
 msgstr ""
-"Надписът на елемент в менюто, което се появява в контекстното меню на "
-"Nautilus, когато избраните елементи съвпадата с настройките"
+"Етикетът на елемент на менюто, което се появява в контекстното меню на "
+"Nautilus,  когато избраните обекти отговарят на условията за съвпадение"
 
 #: ../config/config_newaction.schemas.in.in.h:13
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid "The list of GnomeVFS schemes where the selected files should be located"
 msgstr ""
 "Списък със схеми на GnomeVFS, които показват къде трябва да са избраните "
-"обекти"
+"файлове"
 
 #: ../config/config_newaction.schemas.in.in.h:14
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
 msgid "The list of pattern to match the selected file(s)/folder(s)"
-msgstr "Списъкът с шаблони, към които да напасват избраните файлове"
+msgstr "Списъкът с шаблони, към които да напасват избраните файлове/папки"
 
 #: ../config/config_newaction.schemas.in.in.h:15
-#: ../utils/nautilus-actions-new-config.c:49
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
+#: ../utils/nautilus-actions-new-config.c:52
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
 msgid "The parameters of the command"
 msgstr "Параметрите на командата"
 
 #: ../config/config_newaction.schemas.in.in.h:17
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
 "in the Nautilus popup menu. The parameters can contains some special tokens "
@@ -587,64 +554,62 @@ msgid ""
 "s : scheme of the gnome-vfs URI %h : hostname of the gnome-vfs URI %U : "
 "username of the gnome-vfs URI %% : a percent sign"
 msgstr ""
-"Параметрите на командата, която да се стартира при избиранто на "
-"съответстващия елемент на контексното меню на Nautilus. Параметрите могат да "
-"съдържат определени специални последователности, които се заместват с "
-"определената информация преди изпълнението на командата: %p: папката, в "
-"която се намират избраните обекти, %d: базовата директория на избраните "
-"обекти, %f: имената на избраните обекти или името на първия, ако са избрани "
-"няколко, %m: списък с базовите имена на избраните файлове/папки, разделени с "
-"интервал, %M: списък с избраните файлове/папки с пълния път, %u: URI за "
-"gnome-vfs, %s: схема на URI за gnome-vfs, %h: името на хоста на URI за gnome-"
-"vfs, %U: потребителско име на URI за gnome-vfs, %%: знакът за процент"
+"Параметрите на командата, която да се стартира при избирането на "
+"съответстващия елемент на контекстното меню на Nautilus. Параметрите могат "
+"да съдържат определени специални последователности, които се заместват с "
+"определената информация преди изпълнението на командата: %d: базовата "
+"директория на избраните обекти, %f: имената на избраните обекти или името на "
+"първия, ако са избрани няколко, %m: списък с базовите имена на избраните "
+"файлове/папки, разделени с интервал, %M: списък с избраните файлове/папки с "
+"пълния път, %u: URI за gnome-vfs, %s: схема на URI за gnome-vfs, %h: името "
+"на хоста на URI за gnome-vfs, %U: потребителско име на URI за gnome-vfs, %%: "
+"знакът за процент"
 
 #: ../config/config_newaction.schemas.in.in.h:18
-#: ../utils/nautilus-actions-new-config.c:48
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
+#: ../utils/nautilus-actions-new-config.c:51
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
 msgid "The path of the command"
 msgstr "Пътят до командата"
 
 #: ../config/config_newaction.schemas.in.in.h:19
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
 msgstr ""
-"Пътят на командата, която да се стртира, когато потребителят избере "
+"Пътят на командата, която да се стартира, когато потребителят избере "
 "действието от контекстното меню на Nautilus."
 
 #: ../config/config_newaction.schemas.in.in.h:20
-#: ../utils/nautilus-actions-new-config.c:46
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:65
+#: ../utils/nautilus-actions-new-config.c:49
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
 msgid "The tooltip of the menu item"
-msgstr "Подсказката за елемента от менюто"
+msgstr "Подсказката за елемента на менюто"
 
 #: ../config/config_newaction.schemas.in.in.h:21
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:66
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
 msgstr ""
 "Подсказката, която се появява в лентата за състояние на Nautilus, когато "
-"потребителят задържи мишката си над елемента от менюто"
+"потребителят задържи мишката си над елемента от контекстното меню"
 
 #: ../config/config_newaction.schemas.in.in.h:22
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "The version of the configuration format"
-msgstr "Версия на формата на конфигурациите"
+msgstr "Версия на формата на настройките"
 
 #: ../config/config_newaction.schemas.in.in.h:23
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
-msgstr "Версия на формата на конфигурациите"
+msgstr ""
+"Версия на формата на настройките, за да се осигури съвместимост със стари "
+"версии"
 
 #: ../config/config_newaction.schemas.in.in.h:24
-#, fuzzy
 msgid ""
 "This setting is tied with the 'isdir' setting. Here are the valid "
 "combinations : - 'isfile' is 'true' and 'isdir' is 'false' : the selection "
@@ -653,14 +618,13 @@ msgid ""
 "'true' : the selection can holds both files and folders - 'isfile' is "
 "'false' and 'isdir' is 'false' : invalid combination"
 msgstr ""
-"Тази настройка е свързана с резултата от „isdir“. Валидните комбинации са: "
-"isfile да е „true“, а isdir да е „false“: избрани са само файлове, isfile да "
-"е „false“, а isdir да е „true“: избрани са само папки, и isfile, и isdir да "
-"са „true“: избрани са и папки, и файлове. Комбинацията и isfile, и isdir да "
-"са „false“ е невалидна."
+"Тази настройка е обвързана с настройката „isdir“. Валидните комбинации са: "
+"isfile е „true“, а isdir е „false“: трябва да са избрани само файлове; "
+"isfile е „false“, а isdir е „true“: трябва да са избрани само папки; и "
+"isfile, и isdir са „true“: може да са избрани и папки, и файлове. И isfile, "
+"и isdir са „false“: невалидна комбинация."
 
 #: ../config/config_newaction.schemas.in.in.h:25
-#, fuzzy
 msgid ""
 "This setting is tied with the 'isfile' setting. Here are the valid "
 "combinations : - 'isfile' is 'true' and 'isdir' is 'false' : the selection "
@@ -669,186 +633,195 @@ msgid ""
 "'true' : the selection can holds both files and folders - 'isfile' is "
 "'false' and 'isdir' is 'false' : invalid combination"
 msgstr ""
-"Тази настройка е свързана с резултата от „isfile“. Валидните комбинации са: "
-"isfile да е „true“, а isdir да е „false“: избрани са само файлове, isfile да "
-"е „false“, а isdir да е „true“: избрани са само папки, и isfile, и isdir да "
-"са „true“: избрани са и папки, и файлове. Комбинацията и isfile, и isdir да "
-"са „false“ е невалидна."
-
-#: ../utils/nautilus-actions-convert.c:38
-msgid "The old xml config file to convert"
-msgstr ""
-
-#: ../utils/nautilus-actions-convert.c:38
-#: ../utils/nautilus-actions-convert.c:39
-msgid "FILE"
-msgstr ""
-
-#: ../utils/nautilus-actions-convert.c:39
-msgid "The name of the new converted GConf schema file"
-msgstr ""
-
-#: ../utils/nautilus-actions-convert.c:40
-msgid "Convert all old xml config files from previous installations [default]"
-msgstr ""
+"Тази настройка е обвързана с настройката „isfile“. Валидните комбинации са: "
+"isfile е „true“, а isdir е „false“: трябва да са избрани само файлове; "
+"isfile е „false“, а isdir е „true“: трябва да са избрани само папки; и "
+"isfile, и isdir са „true“: може да са избрани и папки, и файлове. И isfile, "
+"и isdir са „false“: невалидна комбинация."
 
 #: ../utils/nautilus-actions-convert.c:41
+msgid "The old xml config file to convert"
+msgstr "Файл с настройки с XML в стар формат"
+
+#: ../utils/nautilus-actions-convert.c:41
+#: ../utils/nautilus-actions-convert.c:42
+msgid "FILE"
+msgstr "ФАЙЛ"
+
+#: ../utils/nautilus-actions-convert.c:42
+msgid "The name of the new converted GConf schema file"
+msgstr "Името на новопреобразувания файл със схема на GConf"
+
+#: ../utils/nautilus-actions-convert.c:43
+msgid "Convert all old xml config files from previous installations [default]"
+msgstr ""
+"Преобразуване на всички стари файлове с XML от предишната инсталация (по "
+"подразбиране)"
+
+#: ../utils/nautilus-actions-convert.c:44
 msgid ""
 "The folder where the new GConf schema files will be saved if -a options is "
 "set [default=/tmp]"
 msgstr ""
+"Папката, в която ще се запазят новите файлове със схеми на GConf, ако е "
+"указана опцията „-a“ (по подразбиране е „/tmp“)"
 
-#: ../utils/nautilus-actions-convert.c:41
+#: ../utils/nautilus-actions-convert.c:44
 msgid "DIR"
-msgstr ""
+msgstr "ПАПКА"
 
-#: ../utils/nautilus-actions-convert.c:74
-#: ../utils/nautilus-actions-new-config.c:92
+#: ../utils/nautilus-actions-convert.c:77
+#: ../utils/nautilus-actions-new-config.c:95
 #, c-format
 msgid ""
 "Syntax error:\n"
 "\t- %s\n"
 "Try %s --help\n"
 msgstr ""
+"Синтактична грешка:\n"
+"\t- %s\n"
+"Опитайте с „%s --help“\n"
 
-#: ../utils/nautilus-actions-convert.c:80
+#: ../utils/nautilus-actions-convert.c:83
 #, c-format
 msgid ""
 "Syntax error:\n"
 "\t-i and -o options are mutually exclusive with -a option\n"
 "Try %s --help\n"
 msgstr ""
+"Синтактична грешка:\n"
+"\tопцията „-i“ и „-o“ са несъвместими с „-a“\n"
+"Опитайте с „%s --help“\n"
 
-#: ../utils/nautilus-actions-convert.c:86
+#: ../utils/nautilus-actions-convert.c:89
 #, c-format
 msgid ""
 "Syntax error:\n"
 "\t-i option is mandatory when using -o option\n"
 "Try %s --help\n"
 msgstr ""
+"Синтактична грешка:\n"
+"\tопцията „-i“ е задължителна при ползването на „-o“\n"
+"Опитайте с „%s --help“\n"
 
-#: ../utils/nautilus-actions-convert.c:98
+#: ../utils/nautilus-actions-convert.c:101
 #, c-format
 msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
 msgstr ""
+"Грешка:\n"
+"\t- „%s“ не може да се анализира\n"
 
-#: ../utils/nautilus-actions-convert.c:112
+#: ../utils/nautilus-actions-convert.c:115
 #, c-format
 msgid "Converting %s ..."
-msgstr ""
+msgstr "Преобразуване на „%s“..."
 
-#: ../utils/nautilus-actions-convert.c:132
-#: ../utils/nautilus-actions-new-config.c:149
+#: ../utils/nautilus-actions-convert.c:135
+#: ../utils/nautilus-actions-new-config.c:152
 #, c-format
 msgid " Failed: Can't create %s : %s\n"
-msgstr ""
+msgstr " Неуспех: „%s“ не може да се създаде : %s\n"
 
-#: ../utils/nautilus-actions-convert.c:140
-#: ../utils/nautilus-actions-new-config.c:157
+#: ../utils/nautilus-actions-convert.c:143
+#: ../utils/nautilus-actions-new-config.c:160
 #, c-format
 msgid "  Ok, saved in %s\n"
-msgstr ""
+msgstr "  Запазен е в „%s“\n"
 
-#: ../utils/nautilus-actions-convert.c:145
-#: ../utils/nautilus-actions-new-config.c:162
+#: ../utils/nautilus-actions-convert.c:148
+#: ../utils/nautilus-actions-new-config.c:165
 #, c-format
 msgid "  Failed\n"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:45
-msgid "LABEL"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:46
-msgid "TOOLTIP"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:47
-msgid "The icon of the menu item (filename or Gtk stock id)"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:47
-msgid "ICON"
-msgstr ""
+msgstr "  Неуспех\n"
 
 #: ../utils/nautilus-actions-new-config.c:48
-#: ../utils/nautilus-actions-new-config.c:55
-msgid "PATH"
-msgstr ""
+msgid "LABEL"
+msgstr "ЕТИКЕТ"
 
 #: ../utils/nautilus-actions-new-config.c:49
-msgid "PARAMS"
-msgstr ""
+msgid "TOOLTIP"
+msgstr "ПОДСКАЗКА"
 
 #: ../utils/nautilus-actions-new-config.c:50
+msgid "The icon of the menu item (filename or Gtk stock id)"
+msgstr "Икона за елемента на менюто (име на файл или стандартна икона за GTK+)"
+
+#: ../utils/nautilus-actions-new-config.c:50
+msgid "ICON"
+msgstr "ИКОНА"
+
+#: ../utils/nautilus-actions-new-config.c:51
+#: ../utils/nautilus-actions-new-config.c:58
+msgid "PATH"
+msgstr "ПЪТ"
+
+#: ../utils/nautilus-actions-new-config.c:52
+msgid "PARAMS"
+msgstr "ПАРАМЕТРИ"
+
+#: ../utils/nautilus-actions-new-config.c:53
 msgid ""
 "A pattern to match selected files with possibility to add jokers ? or * (you "
 "must set it for each pattern you need)"
 msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:50
-msgid "EXPR"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:51
-#, fuzzy
-msgid "Set it if the selection can contains files"
-msgstr ""
-"Истина, ако избраните обекти трябва да съдържат само файлове, лъжа в "
-"противен случай"
-
-#: ../utils/nautilus-actions-new-config.c:52
-#, fuzzy
-msgid "Set it if the selection can contains folders"
-msgstr ""
-"Истина, ако избраните обекти трябва да съдържат само файлове, лъжа в "
-"противен случай"
+"Шаблонен низ, който може да съдържа символите „?“ или „*“, към който трябва "
+"да напаснат имената на файлове (задава се за всеки различен шаблон.)"
 
 #: ../utils/nautilus-actions-new-config.c:53
-#, fuzzy
-msgid "Set it if the selection can have several items"
-msgstr ""
-"Истина, ако трябва да са избрани няколко обекта, ако е избран един, е лъжа"
+msgid "EXPR"
+msgstr "ИЗРАЗ"
 
 #: ../utils/nautilus-actions-new-config.c:54
-#, fuzzy
+msgid "Set it if the selection can contains files"
+msgstr "Зададено, ако може да са избрани и файлове"
+
+#: ../utils/nautilus-actions-new-config.c:55
+msgid "Set it if the selection can contains folders"
+msgstr "Зададено, ако може да са избрани и папки"
+
+#: ../utils/nautilus-actions-new-config.c:56
+msgid "Set it if the selection can have several items"
+msgstr "Зададено, ако може да са избрани няколко обекта"
+
+#: ../utils/nautilus-actions-new-config.c:57
 msgid ""
 "A GnomeVFS scheme where the selected files should be located (you must set "
 "it for each scheme you need)"
 msgstr ""
-"Списък със схеми на GnomeVFS, които показват къде трябва да са избраните "
-"обекти"
+"Схема на GnomeVFS, която показва къде трябва да са избраните обекти (задава "
+"се за всяка различна схема)"
 
-#: ../utils/nautilus-actions-new-config.c:54
+#: ../utils/nautilus-actions-new-config.c:57
 msgid "SCHEME"
-msgstr ""
+msgstr "СХЕМА"
 
-#: ../utils/nautilus-actions-new-config.c:55
+#: ../utils/nautilus-actions-new-config.c:58
 msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
 msgstr ""
+"Пътят на файла, в който ще се запази новия файл със схеми на GConf (по "
+"подразбиране е „/tmp/config_UUID.schemas“)"
 
-#: ../utils/nautilus-actions-new-config.c:130
+#: ../utils/nautilus-actions-new-config.c:133
 #, c-format
 msgid "Creating %s ..."
-msgstr ""
+msgstr "Създаване на „%s“..."
 
 #: ../utils/nautilus-actions-tools-utils.c:48
 #, c-format
 msgid "Can't write data in file %s\n"
-msgstr ""
+msgstr "Не могат да се запишат данни във файла „%s“\n"
 
 #: ../utils/nautilus-actions-tools-utils.c:54
 #, c-format
 msgid "Can't open file %s for writing\n"
-msgstr ""
+msgstr "Файлът „%s“ не може да се отвори за запис\n"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
 "in the Nautilus popup menu.\n"
@@ -868,20 +841,26 @@ msgid ""
 "%U : username of the gnome-vfs URI\n"
 "%% : a percent sign"
 msgstr ""
-"Параметрите на командата, която да се стартира при избиранто на "
-"съответстващия елемент на контексното меню на Nautilus. Параметрите могат да "
-"съдържат определени специални последователности, които се заместват с "
-"определената информация преди изпълнението на командата: %p: папката, в "
-"която се намират избраните обекти, %d: базовата директория на избраните "
-"обекти, %f: имената на избраните обекти или името на първия, ако са избрани "
-"няколко, %m: списък с базовите имена на избраните файлове/папки, разделени с "
-"интервал, %M: списък с избраните файлове/папки с пълния път, %u: URI за "
-"gnome-vfs, %s: схема на URI за gnome-vfs, %h: името на хоста на URI за gnome-"
-"vfs, %U: потребителско име на URI за gnome-vfs, %%: знакът за процент"
+"Параметрите на командата, която да се стартира при избирането на "
+"съответстващия елемент на контекстното меню на Nautilus.\n"
+"\n"
+"Параметрите могат да съдържат определени специални последователности, които "
+"се заместват с определената информация преди изпълнението на командата:\n"
+"\n"
+"%d: базовата директория на избраните обекти;\n"
+"%f: имената на избраните обекти или името на първия, ако са избрани "
+"няколко;\n"
+"%m: списък с базовите имена на избраните файлове/папки, разделени с "
+"интервал;\n"
+"%M: списък с избраните файлове/папки с пълния път;\n"
+"%u: URI за gnome-vfs;\n"
+"%s: схема на URI за gnome-vfs;\n"
+"%h: името на хоста на URI за gnome-vfs;\n"
+"%U: потребителско име на URI за gnome-vfs;\n"
+"%%: знакът за процент."
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
 msgid ""
 "Here are the valid combinations :\n"
 "\n"
@@ -893,37 +872,32 @@ msgid ""
 "files and folders\n"
 "- 'isfile' is 'false' and 'isdir' is 'false' : invalid combination"
 msgstr ""
-"Тази настройка е свързана с резултата от „isdir“. Валидните комбинации са: "
-"isfile да е „true“, а isdir да е „false“: избрани са само файлове, isfile да "
-"е „false“, а isdir да е „true“: избрани са само папки, и isfile, и isdir да "
-"са „true“: избрани са и папки, и файлове. Комбинацията и isfile, и isdir да "
-"са „false“ е невалидна."
+"Валидните комбинации са:\n"
+"\n"
+"- isfile е „true“, а isdir е „false“: трябва да са избрани само файлове;\n"
+"- isfile да е „false“, а isdir да е „true“: трябва да са избрани само "
+"папки;\n"
+"- isfile и isdir са „true“: може да са избрани и папки, и файлове;\n"
+"- isfile и isdir са „false“: невалидна комбинация."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr ""
-"Истина, ако избраните обекти трябва да съдържат само файлове, лъжа в "
-"противен случай"
+msgstr "„True“, ако може да са избрани и файлове, „false“ в противен случай"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid "This setting is tied with the 'isdir' setting. "
-msgstr ""
+msgstr "Тази настройка е обвързана с настройката „isdir“."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr ""
-"Истина, ако избраните обекти трябва да съдържат само папки, лъжа в противен "
-"случай"
+msgstr "„True“, ако може да са избрани и папки, „false“ в противен случай"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
 msgid "This setting is tied with the 'isfile' setting. "
-msgstr ""
+msgstr "Тази настройка е обвързана с настройката „isfile“."
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-#, fuzzy
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
 msgid ""
 "Defines the list of valid GnomeVFS scheme to match the selected items. The "
 "GnomeVFS scheme is the protocol used to access the files. The keyword to use "
@@ -946,97 +920,18 @@ msgstr ""
 "Дефиниране на списъка с валидни схеми на GnomeVFS, които да напаснат с "
 "избраните елементи. Схемата на GnomeVFS е протоколът, който се използва за "
 "достъп до файловете. Ключовата дума, която се използва е началото на URI за "
-"GnomeVFS URI. Например: file:///tmp/foo.txt sftp:///root@test.example.net/"
-"tmp/foo.txt. Най-честите схеми са „file“: локални файлове, „sftp“: файлове "
-"достъпвани през SSH, „ftp“: файлове достъпвани през FTP, „smb“: файлове, "
-"достъпвани през Samba (или мрежата на Windows), „dav“: файлове достъпвани "
-"през WebDAV. Можете да ползвате всички валидни схеми на GnomeVFS."
-
-#~ msgid "<b>%p</b> : parent directory of the selected file(s)"
-#~ msgstr "<b>%p</b>: папка, в която се намират избраните файлове"
-
-#~ msgid "Create a new action using NACT"
-#~ msgstr "Създаване на ново действие чрез дейстивята на Nautilus"
-
-#~ msgid "New Action..."
-#~ msgstr "Ново действие..."
-
-#~ msgid "<b><span size=\"x-large\">Config for <i>%s</i></span></b>"
-#~ msgstr "<b><span size=\"x-large\">Конфигурация за <i>%s</i></span></b>"
-
-#~ msgid ""
-#~ "<span color=\"red\"><b>Note:</b> this config is defined system wide, "
-#~ "start NACT as root to edit it</span>"
-#~ msgstr ""
-#~ "<span color=\"red\"><b>Бележка:</b> тези насройки важат за цялата "
-#~ "система. Настройте действията на Nautilus като системен администратор, за "
-#~ "да ги промените.</span>"
-
-#~ msgid ""
-#~ "<span weight=\"bold\" size=\"larger\">Save changes made to your "
-#~ "configurations before closing ?</span>\n"
-#~ "\n"
-#~ "If you don't save, your changes will be discarded."
-#~ msgstr ""
-#~ "<span weight=\"bold\" size=\"larger\">Да се запазят ли промените по "
-#~ "конфигурациите, преди да се затвори прозореца?</span>\n"
-#~ "\n"
-#~ "Ако не запишете, промените Ви ще бъдат изгубени."
-
-#~ msgid "<span weight=\"bold\">Command</span>"
-#~ msgstr "<span weight=\"bold\">Команда</span>"
-
-#~ msgid "Close _without Saving"
-#~ msgstr "Затваряне _без запазване"
-
-#~ msgid "Legend"
-#~ msgstr "Легенда"
-
-#~ msgid "Select a command"
-#~ msgstr "Избор на команда"
-
-#~ msgid ""
-#~ "Select a config in the list to edit or click the <i>New Config</i> button "
-#~ "to create a new one."
-#~ msgstr ""
-#~ "Изберете конфигурация, която да редактирате или натиснете бутона „Нова "
-#~ "конфигурация“."
-
-#~ msgid "Show system wide config"
-#~ msgstr "Показване на системните конфигурации"
-
-#~ msgid "_Delete Config"
-#~ msgstr "_Изтриване на конфигурацията"
-
-#~ msgid "_File"
-#~ msgstr "_Файл"
-
-#~ msgid "_Help"
-#~ msgstr "_Помощ"
-
-#~ msgid "_New Config"
-#~ msgstr "Но_ва конфигурация"
-
-#~ msgid "_Preferences"
-#~ msgstr "_Настройки"
-
-#~ msgid "_Reload"
-#~ msgstr "П_резареждане"
-
-#~ msgid "New Config"
-#~ msgstr "Нова конфигурация"
-
-#~ msgid "_Config List"
-#~ msgstr "_Списък с конфигурации"
-
-#~ msgid "dir1"
-#~ msgstr "папка1"
-
-#~ msgid "dir2"
-#~ msgstr "папка2"
-
-#~ msgid "file"
-#~ msgstr "файл"
-
-#~ msgid "dir"
-#~ msgstr "папка"
+"GnomeVFS URI.\n"
+"\n"
+"Например:\n"
+"file:///tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt.\n"
+"\n"
+"Най-честите схеми са:\n"
+"„file“: локални файлове;\n"
+"„sftp“: файлове достъпвани през SSH;\n"
+"„ftp“:  файлове достъпвани през FTP;\n"
+"„smb“:  файлове, достъпвани през Samba (или мрежата на Windows);\n"
+"„dav“:  файлове достъпвани през WebDAV.\n"
+"\n"
+"Можете да ползвате всички валидни схеми на GnomeVFS, които са достъпни за "
+"Nautilus."
