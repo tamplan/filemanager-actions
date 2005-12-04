@@ -1,3 +1,11 @@
+2005-12-03  Adam Weinberger  <adamw@gnome.org>
+
+	* en_CA.po: Added Canadian English translation, despite
+	  the fact that many of the plethora of grammar and spelling
+	  errors in the source strings remains in these translated
+	  strings. If the authors register a bugzilla component, I
+	  will try to file some bug reports.
+
 2005-12-03  Alexander Shopov  <ash@contact.bg>
 
 	* bg.po: Updated Bulgarian translation by
