@@ -1,3 +1,9 @@
+2005-12-08  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* nb.po: Added Norwegian bokmål translation.
+	* no.po: Same.
+	* nautilus-actions.pot: Remove generated file.
+
 2005-12-06  Žygimantas Beručka  <zygis@gnome.org>
 
 	* lt.po: Added Lithuanian translation.
