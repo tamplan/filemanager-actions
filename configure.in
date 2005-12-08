@@ -102,7 +102,7 @@ dnl **** GConf support ***
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2
 
-ALL_LINGUAS="bg de en_CA es fr lt zh_CN"
+ALL_LINGUAS="bg de en_CA es fr lt nb no zh_CN"
 
 GETTEXT_PACKAGE=nautilus-actions
 AC_SUBST(GETTEXT_PACKAGE)
