@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-06 02:03+0100\n"
-"PO-Revision-Date: 2005-12-06 02:12+0100\n"
+"POT-Creation-Date: 2005-12-09 13:04+0100\n"
+"PO-Revision-Date: 2005-12-09 13:16+0100\n"
 "Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -550,7 +550,7 @@ msgid ""
 "(s)/folder(s) with their full path separated by space %u : gnome-vfs URI %"
 "s : scheme of the gnome-vfs URI %h : hostname of the gnome-vfs URI %U : "
 "username of the gnome-vfs URI %% : a percent sign"
-msgstr ""
+msgstr "Los parámetros del comando a iniciar cuando el usuario selecciona el elemento del menú en el menú emergente de Nautilus. Los parámetros pueden contener algunos tokens especiales que se reemplazan por información de Nautilus antes de iniciar el comando: %d: carpeta base de los archivos seleccionados, %f: el nombre del archivo seleccionado o el primero si se seleccionan varios; %m: lista del nombre base de los archivos/carpetas seleccionados separados por un espacio; %M: lista de los archivos/carpetas seleccionados con su ruta completa separada por un espacio; %u: URI de gnome-vfs; %s: esquema de la URI de gnome-vfs; %h: nombre del host de la URI de gnome-vfs; %U : nombre de usuario de la URI de gnome-vfs; %%: un signo porciento"
 
 #: ../config/config_newaction.schemas.in.in.h:18
 #: ../utils/nautilus-actions-new-config.c:51
@@ -642,13 +642,17 @@ msgstr "El nombre del archivo de esquema GConf convertido nuevo"
 
 #: ../utils/nautilus-actions-convert.c:43
 msgid "Convert all old xml config files from previous installations [default]"
-msgstr "Convertir todos los archivos antiguos de configuración xml de las instalaciones anteriores [predeterminado]"
+msgstr ""
+"Convertir todos los archivos antiguos de configuración xml de las "
+"instalaciones anteriores [predeterminado]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid ""
 "The folder where the new GConf schema files will be saved if -a options is "
 "set [default=/tmp]"
-msgstr "La carpeta donde de guardarán los archivos de esquema GConf nuevos si se establece la opción -a [predeterminado=/tmp]"
+msgstr ""
+"La carpeta donde de guardarán los archivos de esquema GConf nuevos si se "
+"establece la opción -a [predeterminado=/tmp]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid "DIR"
@@ -684,6 +688,9 @@ msgid ""
 "\t-i option is mandatory when using -o option\n"
 "Try %s --help\n"
 msgstr ""
+"Error de sintaxis\n"
+"      la opción -i es obligatoria cuando se usa la opción -o\n"
+"Mire %s --help\n"
 
 #: ../utils/nautilus-actions-convert.c:101
 #, c-format
@@ -746,7 +753,7 @@ msgstr "PARÁMS"
 msgid ""
 "A pattern to match selected files with possibility to add jokers ? or * (you "
 "must set it for each pattern you need)"
-msgstr ""
+msgstr "Un patrón para coincidir con los archivos seleccionados con la posibilidad de añadir comodines ? o * (debe establecerlo por cada patrón que necesite)"
 
 #: ../utils/nautilus-actions-new-config.c:53
 msgid "EXPR"
@@ -768,7 +775,9 @@ msgstr "Establézcalo si la selección puede contener varios elementos"
 msgid ""
 "A GnomeVFS scheme where the selected files should be located (you must set "
 "it for each scheme you need)"
-msgstr "Un esquema GnomeVFS donde los archivos seleccionados deberían situarse (debe establecerla por cada esquema que necesite)"
+msgstr ""
+"Un esquema GnomeVFS donde los archivos seleccionados deberían situarse (debe "
+"establecerla por cada esquema que necesite)"
 
 #: ../utils/nautilus-actions-new-config.c:57
 msgid "SCHEME"
@@ -778,7 +787,9 @@ msgstr "ESQUEMA"
 msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
-msgstr "La ruta del archivo donde guardar el archivo de definición nuevo del esquema GConf [predeterminado: /tmp/config_UUID.schemas]"
+msgstr ""
+"La ruta del archivo donde guardar el archivo de definición nuevo del esquema "
+"GConf [predeterminado: /tmp/config_UUID.schemas]"
 
 #: ../utils/nautilus-actions-new-config.c:133
 #, c-format
@@ -816,6 +827,19 @@ msgid ""
 "%U : username of the gnome-vfs URI\n"
 "%% : a percent sign"
 msgstr ""
+"Los parámetros del comando para iniciar cuando el usuario seleccione el elemento del menú en el menú emergente de Nautilus.\n"
+"\n"
+"Los parámetros pueden contener algunos tokens especiales se reemplazan por imformaciones de Nautilus antes de iniciar el comando:\n"
+"\n"
+"%d : carpeta base de los archivos seleccionados\n"
+"%f : el nombre del archivo seleccionado o el del primer archivo si hay varios seleccionados\n"
+"%m : lista de los nombres base de los archivos/carpetas seleccionados separados por un espacio\n"
+"%M : lista de los archivos/carpetas seleccionados con su ruta completa separada por un espacio\n"
+"%u : URI gnome-vfs \n"
+"%s : esquema de la URI de gnome-vfs\n"
+"%h : nombre de host de la URI gnome-vfs\n"
+"%U : nombre de usuario de la URI gnome-vfs\n"
+"%% : un signo de porcentaje"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
