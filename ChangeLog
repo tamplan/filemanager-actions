@@ -1,3 +1,7 @@
+2005-12-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* configure.in: Added 'gl' to ALL_LINGUAS.
+
 2005-12-09  Amanpreet Singh Alam <amanpreetalam@yahoo.com>
 
 	* configure.in: Punjabi (pa) Languague is added
