@@ -1,6 +1,10 @@
+2005-12-20  Frederic Ruaudel <grumz@grumz.net> 
+
+	* configure.in: Added 'vi' to ALL_LINGUAS.
+
 2005-12-19  Ankit Patel  <ankit644@yahoo.com>
 
-        * configure.in: Added 'gu' to ALL_LINGUAS.
+	* configure.in: Added 'gu' to ALL_LINGUAS.
 
 2005-12-16  Lasse Bang Mikkelsen  <lbm@fatalerror.dk>
 
