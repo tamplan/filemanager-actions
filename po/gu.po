@@ -1,3 +1,4 @@
+# translation of nautilus-actions.HEAD.gu.po to Gujarati
 # translation of nautilus-actions.HEAD.po to Gujarati
 # This file is distributed under the same license as the PACKAGE package.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
@@ -5,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: nautilus-actions.HEAD\n"
+"Project-Id-Version: nautilus-actions.HEAD.gu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-19 06:48+0100\n"
-"PO-Revision-Date: 2005-12-19 18:30+0530\n"
+"POT-Creation-Date: 2005-12-19 23:05+0100\n"
+"PO-Revision-Date: 2005-12-20 11:41+0530\n"
 "Last-Translator: Ankit Patel <ankit644@yahoo.com>\n"
 "Language-Team: Gujarati <indianoss-gujarati@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.9.1\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n\n"
+"\n"
 
 #: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
@@ -111,7 +113,9 @@ msgstr "<span size=\"larger\"><b>પરિમાણો દંતકથા</b></s
 msgid ""
 "A string with joker ? or * that will be used to match the files. You can "
 "match several file patterns by separating them with a semi-colon ;"
-msgstr "જોકર સાથેની શબ્દમાળા ? અથવા * કે જે ફાઈલો સરખાવવા માટે વપરાશે. તમે ઘણી ફાઈલ ભાતો તેમને અર્ધવિરામ (;) થી અલગ પાડીને સરખાવી શકો છો"
+msgstr ""
+"જોકર સાથેની શબ્દમાળા ? અથવા * કે જે ફાઈલો સરખાવવા માટે વપરાશે. તમે ઘણી ફાઈલ ભાતો "
+"તેમને અર્ધવિરામ (;) થી અલગ પાડીને સરખાવી શકો છો"
 
 #: ../nact/nautilus-actions-config.glade.h:29
 msgid "Appears if scheme is in this list:"
@@ -145,7 +149,9 @@ msgstr "ફાઈલ પસંદગી સંવાદમાંથી આદે
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list"
-msgstr "નીચે આવતી યાદીમાંથી પૂર્વવ્યાખ્યાયિત ચિહ્નની જગ્યાએ વૈવિધ્યપૂર્ણ ચિહ્ન પસંદ કરવા માટે ક્લિક કરો"
+msgstr ""
+"નીચે આવતી યાદીમાંથી પૂર્વવ્યાખ્યાયિત ચિહ્નની જગ્યાએ વૈવિધ્યપૂર્ણ ચિહ્ન પસંદ કરવા માટે ક્લિક "
+"કરો"
 
 #: ../nact/nautilus-actions-config.glade.h:37
 msgid "Click to remove the selected scheme"
@@ -223,7 +229,9 @@ msgstr "માત્ર ફોલ્ડરો"
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens"
-msgstr "પરિમાણો કે જે કાર્યક્રમને મોકલાશે. અલગ ફેરબદલી ટોકનો જોવા માટે 'દંતકથા' બટન પર ક્લિક કરો"
+msgstr ""
+"પરિમાણો કે જે કાર્યક્રમને મોકલાશે. અલગ ફેરબદલી ટોકનો જોવા માટે 'દંતકથા' બટન પર ક્લિક "
+"કરો"
 
 #: ../nact/nautilus-actions-config.glade.h:56
 msgid "Parameters:"
@@ -250,7 +258,10 @@ msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add new scheme by clicking on the '+' button"
-msgstr "ફાઈલોનો પ્રકાર પસંદ કરો કે જ્યાં તમે તમારી ક્રિયાને દેખાડવા માંગો. જો તમે શું પસંદ કરવાનું તે જાણતા નહિં હોય, તો ખાલી 'ફાઈલ' પસંદ કરવાનો પ્રયાસ કરો કે જે ખૂબ સામાન્ય પસંદગી છે. તમે '+' બટન પર ક્લિક કરીને નવી પદ્ધતિ ઉમેરી શકો છો"
+msgstr ""
+"ફાઈલોનો પ્રકાર પસંદ કરો કે જ્યાં તમે તમારી ક્રિયાને દેખાડવા માંગો. જો તમે શું પસંદ કરવાનું તે "
+"જાણતા નહિં હોય, તો ખાલી 'ફાઈલ' પસંદ કરવાનો પ્રયાસ કરો કે જે ખૂબ સામાન્ય પસંદગી છે. તમે "
+"'+' બટન પર ક્લિક કરીને નવી પદ્ધતિ ઉમેરી શકો છો"
 
 #: ../nact/nautilus-actions-config.glade.h:62
 msgid ""
@@ -416,7 +427,9 @@ msgid ""
 "A list of strings with joker '*' or '?' to match the selected file(s)/folder"
 "(s). Each selected items must match at least one of the pattern for the "
 "action to appear"
-msgstr "પસંદ કરેલ ફાઈલો/ફોલ્ડરો સાથે સરખાવવા માટે જોકર '*' અથવા '?' સાથે શબ્દમાળાઓની યાદી. દરેક પસંદ કરેલ વસ્તુઓ ક્રિયાને દેખાવા માટે ઓછામાં ઓછી એક ભાત સાથે બંધબેસવી જ જોઈએ"
+msgstr ""
+"પસંદ કરેલ ફાઈલો/ફોલ્ડરો સાથે સરખાવવા માટે જોકર '*' અથવા '?' સાથે શબ્દમાળાઓની યાદી. "
+"દરેક પસંદ કરેલ વસ્તુઓ ક્રિયાને દેખાવા માટે ઓછામાં ઓછી એક ભાત સાથે બંધબેસવી જ જોઈએ"
 
 #: ../config/config_newaction.schemas.in.in.h:5
 msgid ""
@@ -427,14 +440,23 @@ msgid ""
 "'file' : local files 'sftp' : files accessed via SSH 'ftp' : files accessed "
 "via FTP 'smb' : files accessed via Samba (Windows share) 'dav' : files "
 "accessed via WebDav All GnomeVFS scheme use by Nautilus can be used here."
-msgstr "પસંદ કરેલ વસ્તુઓ સાથે સરખાવવા માટે માન્ય GnomeVFS પદ્ધતિની યાદી વ્યાખ્યાયિત કરે છે. GnomeVFS પદ્ધતિ એ ફાઈલો વાપરવા માટે વપરાતો પ્રોટોકોલ છે. વાપરવા માટેનો કીવર્ડ એ GnomeVFS URI માં વપરાયેલ તે છે. GnomeVFS URI નું ઉદાહરણ : file:///tmp/foo.txt sftp:///root@test.example.net/tmp/foo.txt આ એકદમ સામાન્ય પદ્ધતિઓ છે : 'file' : સ્થાનિક ફાઈલો 'sftp' : SSH 'ftp' દ્વારા વપરાતી ફાઈલો : FTP 'smb' દ્વારા વપરાતી ફાઈલો : Samba (Windows share) 'dav' દ્વારા વપરાતી ફાઈલો : WebDav દ્વારા વપરાતી ફાઈલો નોટિલસ દ્વારા વપરાતી બધી GnomeVFS પદ્ધતિ અંહિ વાપરી શકાય છે."
+msgstr ""
+"પસંદ કરેલ વસ્તુઓ સાથે સરખાવવા માટે માન્ય GnomeVFS પદ્ધતિની યાદી વ્યાખ્યાયિત કરે છે. "
+"GnomeVFS પદ્ધતિ એ ફાઈલો વાપરવા માટે વપરાતો પ્રોટોકોલ છે. વાપરવા માટેનો કીવર્ડ એ "
+"GnomeVFS URI માં વપરાયેલ તે છે. GnomeVFS URI નું ઉદાહરણ : file:///tmp/foo.txt "
+"sftp:///root@test.example.net/tmp/foo.txt આ એકદમ સામાન્ય પદ્ધતિઓ છે : 'file' : "
+"સ્થાનિક ફાઈલો 'sftp' : SSH 'ftp' દ્વારા વપરાતી ફાઈલો : FTP 'smb' દ્વારા વપરાતી "
+"ફાઈલો : Samba (Windows share) 'dav' દ્વારા વપરાતી ફાઈલો : WebDav દ્વારા વપરાતી "
+"ફાઈલો નોટિલસ દ્વારા વપરાતી બધી GnomeVFS પદ્ધતિ અંહિ વાપરી શકાય છે."
 
 #: ../config/config_newaction.schemas.in.in.h:6
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
 msgid ""
 "If you need one or more files or folders to be selected, set 'true' to this "
 "key. If you want just one file or folder, set 'false'"
-msgstr "જો તમને એક અથવા વધુ ફાઈલો અથવા ફોલ્ડરો પસંદ થાય એમ જરૂરી હોય, તો આ કીને 'સાચું' સુયોજિત કરો. જો તમને ખાલી એક ફાઈલ અથવા ફોલ્ડર જરૂરી હોય, તો 'ખોટું' સુયોજિત કરો"
+msgstr ""
+"જો તમને એક અથવા વધુ ફાઈલો અથવા ફોલ્ડરો પસંદ થાય એમ જરૂરી હોય, તો આ કીને 'સાચું' "
+"સુયોજિત કરો. જો તમને ખાલી એક ફાઈલ અથવા ફોલ્ડર જરૂરી હોય, તો 'ખોટું' સુયોજિત કરો"
 
 #: ../config/config_newaction.schemas.in.in.h:7
 msgid "Manage Actions"
@@ -454,7 +476,9 @@ msgstr "મેનુ વસ્તુનું ચિહ્ન"
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
-msgstr "મેનુ વસ્તુનું ચિહ્ન કે જે નોટિલસ પોપઅપ મેનુમાં જ્યારે પસંદગી શરતોના સુયોજનોના દેખાવ સાથે બંધબેસે ત્યારે લેબલની આગળ દેખાશે"
+msgstr ""
+"મેનુ વસ્તુનું ચિહ્ન કે જે નોટિલસ પોપઅપ મેનુમાં જ્યારે પસંદગી શરતોના સુયોજનોના દેખાવ સાથે બંધબેસે "
+"ત્યારે લેબલની આગળ દેખાશે"
 
 #. GConf description strings :
 #: ../config/config_newaction.schemas.in.in.h:11
@@ -468,7 +492,9 @@ msgstr "મેનુ વસ્તુનું લેબલ"
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
-msgstr "મેનુ વસ્તુનું લેબલ કે જે નોટિલસ પોપઅપ મેનુમાં જ્યારે પસંદગી શરતોના સુયોજનોના દેખાવ સાથે બંધબેસે ત્યારે લેબલની આગળ દેખાશે"
+msgstr ""
+"મેનુ વસ્તુનું લેબલ કે જે નોટિલસ પોપઅપ મેનુમાં જ્યારે પસંદગી શરતોના સુયોજનોના દેખાવ સાથે બંધબેસે "
+"ત્યારે લેબલની આગળ દેખાશે"
 
 #: ../config/config_newaction.schemas.in.in.h:13
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
@@ -498,7 +524,7 @@ msgid ""
 "(s)/folder(s) with their full path separated by space %u : gnome-vfs URI %"
 "s : scheme of the gnome-vfs URI %h : hostname of the gnome-vfs URI %U : "
 "username of the gnome-vfs URI %% : a percent sign"
-msgstr ""
+msgstr "શરૂ કરવા માટેના આદેશના પરિમાણો કે જ્યારે વપરાશકર્તા નોટિલસ પોપઅપ મેનુમાં મેનુ વસ્તુ પસંદ કરે છે. પરિમાણો અમુક ચોક્કસ ટોકનો સમાવી શકે છે કે જેઓ આદેશ શરૂ કરવા પહેલાં નોટિલસ જાણકારીઓ દ્વારા બદલાઈ જાય : %d : પસંદ કરેલ ફાઈલોનું આધાર ફોલ્ડર %f : પસંદ કરેલ ફાઈલનું નામ અથવા પસંદ કરેલ ઘણીમાંનુ પ્રથમ %m : જગ્યા દ્વારા અલગ કરેલ પસંદ કરેલ ફાઈલો/ફોલ્ડરોના આધારનામની યાદી %M : જગ્યા દ્વારા અલગ કરેલ પસંદ કરેલ ફાઈલો/ફોલ્ડરોની તેમના પથ સાથેની યાદી %u : gnome-vfs URI %s : gnome-vfs URI ની પદ્ધતિ %h : gnome-vfs URI નું યજમાનનામ %U : gnome-vfs URI નું વપરાશકર્તાનામ %% : ટકાનું ચિહ્ન"
 
 #: ../config/config_newaction.schemas.in.in.h:18
 #: ../utils/nautilus-actions-new-config.c:51
@@ -511,32 +537,32 @@ msgstr "આદેશનો પાથ"
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
-msgstr ""
+msgstr "શરૂ કરવા માટેના આદેશનો પાથ કે જ્યારે વપરાશકર્તા નોટિલસ પોપઅપ મેનુમાંથી મેનુ વસ્તુ પસંદ કરે"
 
 #: ../config/config_newaction.schemas.in.in.h:20
 #: ../utils/nautilus-actions-new-config.c:49
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
 msgid "The tooltip of the menu item"
-msgstr ""
+msgstr "મેનુ વસ્તુની સાધનમદદ"
 
 #: ../config/config_newaction.schemas.in.in.h:21
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
-msgstr ""
+msgstr "મેનુ વસ્તુની સાધનમદદ કે જે નોટિલસ પરિસ્થિતિદર્શક પટ્ટીમાં દેખાશે જ્યારે વપરાશકર્તા તેના માઉસ સાથે નોટિલસ પોપઅપ મેનુ વસ્તુનો નિર્દેશ કરે"
 
 #: ../config/config_newaction.schemas.in.in.h:22
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "The version of the configuration format"
-msgstr ""
+msgstr "રૂપરેખાંકન બંધારણની આવૃત્તિ"
 
 #: ../config/config_newaction.schemas.in.in.h:23
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
-msgstr ""
+msgstr "રૂપરેખાંકન બંધારણની આવૃત્તિ કે જે પાછળનાને આધાર આપવા માટેની સુસંગતતાની વ્યવસ્થા કરવા માટે વપરાશે"
 
 #: ../config/config_newaction.schemas.in.in.h:24
 msgid ""
@@ -546,7 +572,7 @@ msgid ""
 "selection must holds only folders - 'isfile' is 'true' and 'isdir' is "
 "'true' : the selection can holds both files and folders - 'isfile' is "
 "'false' and 'isdir' is 'false' : invalid combination"
-msgstr ""
+msgstr "આ સુયોજન એ 'isdir' સુયોજન સાથે બંધાયેલ છે. અંહિ માન્ય જોડણીઓ છે : - 'isfile' એ 'true' અને 'isdir' એ 'false' છે : પસંદગી ઘણી ફાઈલો રાખતી હોવી જ જોઈએ - 'isfile' એ 'false' અને 'isdir' એ 'true' છે : પસંદગી માત્ર ફોલ્ડરો રાખતી હોવી જ જોઈએ - 'isfile' એ 'true' અને 'isdir' એ 'true' છે : પસંદગી બંને ફાઈલો અને ફોલ્ડરો રાખી શકે છે - 'isfile' એ 'false' અને 'isdir' એ 'false' છે : અયોગ્ય જોડણી"
 
 #: ../config/config_newaction.schemas.in.in.h:25
 msgid ""
@@ -556,34 +582,34 @@ msgid ""
 "selection must holds only folders - 'isfile' is 'true' and 'isdir' is "
 "'true' : the selection can holds both files and folders - 'isfile' is "
 "'false' and 'isdir' is 'false' : invalid combination"
-msgstr ""
+msgstr "આ સુયોજન એ 'isfile' સુયોજન સાથે બંધાયેલ છે. અંહિ માન્ય જોડણીઓ છે : - 'isfile' એ 'true' અને 'isdir' એ 'false' છે : પસંદગી ઘણી ફાઈલો રાખતી હોવી જ જોઈએ - 'isfile' એ 'false' અને 'isdir' એ 'true' છે : પસંદગી માત્ર ફોલ્ડરો રાખતી હોવી જ જોઈએ - 'isfile' એ 'true' અને 'isdir' એ 'true' છે : પસંદગી બંને ફાઈલો અને ફોલ્ડરો રાખી શકે છે - 'isfile' એ 'false' અને 'isdir' એ 'false' છે : અયોગ્ય જોડણી"
 
 #: ../utils/nautilus-actions-convert.c:41
 msgid "The old xml config file to convert"
-msgstr ""
+msgstr "રૂપાંતરિત કરવા માટેની જૂની xml રૂપરેખા ફાઈલ"
 
 #: ../utils/nautilus-actions-convert.c:41
 #: ../utils/nautilus-actions-convert.c:42
 msgid "FILE"
-msgstr ""
+msgstr "FILE"
 
 #: ../utils/nautilus-actions-convert.c:42
 msgid "The name of the new converted GConf schema file"
-msgstr ""
+msgstr "નવી રૂપાંતરિત થયેલ GConf પદ્ધતિ ફાઈલનું નામ"
 
 #: ../utils/nautilus-actions-convert.c:43
 msgid "Convert all old xml config files from previous installations [default]"
-msgstr ""
+msgstr "બધી જૂની xml રૂપરેખા ફાઈલોને પહેલાંના સ્થાપનોમાંથી રૂપાંતરિત કરો [મૂળભૂત]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid ""
 "The folder where the new GConf schema files will be saved if -a options is "
 "set [default=/tmp]"
-msgstr ""
+msgstr "ફોલ્ડર કે જ્યાં નવી GConf પદ્ધતિ ફાઈલો સંગ્રહાશે જો -a વિકલ્પો સુયોજિત હોય [default=/tmp]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid "DIR"
-msgstr ""
+msgstr "DIR"
 
 #: ../utils/nautilus-actions-convert.c:77
 #: ../utils/nautilus-actions-new-config.c:95
@@ -593,6 +619,9 @@ msgid ""
 "\t- %s\n"
 "Try %s --help\n"
 msgstr ""
+"વાક્યરચના ભૂલ:\n"
+"\t- %s\n"
+"%s --help પ્રયત્ન કરો\n"
 
 #: ../utils/nautilus-actions-convert.c:83
 #, c-format
@@ -601,6 +630,9 @@ msgid ""
 "\t-i and -o options are mutually exclusive with -a option\n"
 "Try %s --help\n"
 msgstr ""
+"વાક્યરચના ભૂલ:\n"
+"\t-i અને -o વિકલ્પો એ -a વિકલ્પ સાથે લાગતાવળગતા છે\n"
+"%s --help પ્રયત્ન કરો\n"
 
 #: ../utils/nautilus-actions-convert.c:89
 #, c-format
@@ -609,6 +641,9 @@ msgid ""
 "\t-i option is mandatory when using -o option\n"
 "Try %s --help\n"
 msgstr ""
+"વાક્યરચના ભૂલ:\n"
+"\t-i વિકલ્પ જરૂરી છે જ્યારે -o વિકલ્પ વાપરી રહ્યા હોય\n"
+"%s --help પ્રયત્ન કરો\n"
 
 #: ../utils/nautilus-actions-convert.c:101
 #, c-format
@@ -616,107 +651,109 @@ msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
 msgstr ""
+"ભૂલ:\n"
+"\t- %s નું પદચ્છેદન કરી શકતા નથી\n"
 
 #: ../utils/nautilus-actions-convert.c:115
 #, c-format
 msgid "Converting %s ..."
-msgstr ""
+msgstr "%s રૂપાંતરિત કરી રહ્યા છીએ ..."
 
 #: ../utils/nautilus-actions-convert.c:135
 #: ../utils/nautilus-actions-new-config.c:152
 #, c-format
 msgid " Failed: Can't create %s : %s\n"
-msgstr ""
+msgstr " નિષ્ફળ: %s બનાવી શકતા નથી : %s\n"
 
 #: ../utils/nautilus-actions-convert.c:143
 #: ../utils/nautilus-actions-new-config.c:160
 #, c-format
 msgid "  Ok, saved in %s\n"
-msgstr ""
+msgstr "  બરાબર, %s માં સંગ્રહાયું\n"
 
 #: ../utils/nautilus-actions-convert.c:148
 #: ../utils/nautilus-actions-new-config.c:165
 #, c-format
 msgid "  Failed\n"
-msgstr ""
+msgstr "  નિષ્ફળ\n"
 
 #: ../utils/nautilus-actions-new-config.c:48
 msgid "LABEL"
-msgstr ""
+msgstr "LABEL"
 
 #: ../utils/nautilus-actions-new-config.c:49
 msgid "TOOLTIP"
-msgstr ""
+msgstr "TOOLTIP"
 
 #: ../utils/nautilus-actions-new-config.c:50
 msgid "The icon of the menu item (filename or Gtk stock id)"
-msgstr ""
+msgstr "મેનુ વસ્તુનું ચિહ્ન (ફાઈલનામ અથવા Gtk stock id)"
 
 #: ../utils/nautilus-actions-new-config.c:50
 msgid "ICON"
-msgstr ""
+msgstr "ICON"
 
 #: ../utils/nautilus-actions-new-config.c:51
 #: ../utils/nautilus-actions-new-config.c:58
 msgid "PATH"
-msgstr ""
+msgstr "PATH"
 
 #: ../utils/nautilus-actions-new-config.c:52
 msgid "PARAMS"
-msgstr ""
+msgstr "PARAMS"
 
 #: ../utils/nautilus-actions-new-config.c:53
 msgid ""
 "A pattern to match selected files with possibility to add jokers ? or * (you "
 "must set it for each pattern you need)"
-msgstr ""
+msgstr "પસંદ કરેલ ફાઈલોને જોકરો ? અથવા * સાથે સંભવિતપણે સરખાવવા માટેની ભાત (તમારે તેને દરેક ભાત માટે સુયોજિત કરવું જ જોઈએ જો તમને જરૂરીયાત હોય)"
 
 #: ../utils/nautilus-actions-new-config.c:53
 msgid "EXPR"
-msgstr ""
+msgstr "EXPR"
 
 #: ../utils/nautilus-actions-new-config.c:54
 msgid "Set it if the selection can contains files"
-msgstr ""
+msgstr "જો પસંદગી ફાઈલો સમાવી શકે તો તેને સુયોજિત કરો"
 
 #: ../utils/nautilus-actions-new-config.c:55
 msgid "Set it if the selection can contains folders"
-msgstr ""
+msgstr "જો પસંદગી ફોલ્ડરો સમાવી શકે તો તેને સુયોજિત કરો"
 
 #: ../utils/nautilus-actions-new-config.c:56
 msgid "Set it if the selection can have several items"
-msgstr ""
+msgstr "જો પસંદગીને ઘણી વસ્તુઓ હોઈ શકે તો તેને સુયોજિત કરો"
 
 #: ../utils/nautilus-actions-new-config.c:57
 msgid ""
 "A GnomeVFS scheme where the selected files should be located (you must set "
 "it for each scheme you need)"
-msgstr ""
+msgstr "GnomeVFS પદ્ધતિ કે જ્યાં પસંદ કરેલ ફાઈલો સ્થિત થવી જોઈએ (તમારે તેને દરેક પદ્ધતિ માટે સુયોજિત કરવી જોઈએ જો તમને જરૂરીયાત હોય)"
 
 #: ../utils/nautilus-actions-new-config.c:57
 msgid "SCHEME"
-msgstr ""
+msgstr "SCHEME"
 
 #: ../utils/nautilus-actions-new-config.c:58
 msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
-msgstr ""
+msgstr "ફાઈલનો પાથ કે જ્યાં નવી GConf પદ્ધતિ ફાઈલને સંગ્રહવાની છે [default: /tmp/config_UUID.schemas]"
 
 #: ../utils/nautilus-actions-new-config.c:133
 #, c-format
 msgid "Creating %s ..."
-msgstr ""
+msgstr "%s બનાવી રહ્યા છીએ ..."
 
 #: ../utils/nautilus-actions-tools-utils.c:48
 #, c-format
 msgid "Can't write data in file %s\n"
-msgstr ""
+msgstr "ફાઈલ %s માં માહિતી લખી શકતા નથી\n"
 
 #: ../utils/nautilus-actions-tools-utils.c:54
 #, c-format
 msgid "Can't open file %s for writing\n"
-msgstr ""
+msgstr "ફાઈલ %s ને લખવા માટે ખોલી શકતા નથી\n"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
@@ -739,6 +776,19 @@ msgid ""
 "%U : username of the gnome-vfs URI\n"
 "%% : a percent sign"
 msgstr ""
+"શરૂ કરવા માટેના આદેશના પરિમાણો કે જ્યારે વપરાશકર્તા નોટિલસ પોપઅપ મેનુમાં મેનુ વસ્તુ પસંદ કરે છે.\n"
+"\n"
+"પરિમાણો વિશિષ્ટ ટોકનો સમાવી શકે છે કે જેઓ આદેશ શરૂ કરવા પહેલાં નોટિલસ જાણકારીઓ દ્વારા બદલાઈ જાય છે :\n"
+"\n"
+"%d : પસંદ કરેલ ફાઈલોનું આધાર ફોલ્ડર\n"
+"%f : પસંદ કરેલ ફાઈલનું નામ અથવા પ્રથમ જો ઘણી બધી પસંદ કરેલ હોય\n"
+"%m : પસંદ કરેલ ફાઈલો/ફોલ્ડરોના આધારનામની જગ્યાથી અલગ પડેલ યાદી\n"
+"%M : પસંદ કરેલ ફાઈલો/ફોલ્ડરોના આખા પાથની જગ્યાથી અલગ પડેલ યાદી\n"
+"%u : gnome-vfs URI\n"
+"%s : gnome-vfs URI ની પદ્ધતિ\n"
+"%h : gnome-vfs URI નું યજમાનનામ\n"
+"%U : gnome-vfs URI નું વપરાશકર્તા નામ\n"
+"%% : ટકાનું ચિહ્ન"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
@@ -753,22 +803,28 @@ msgid ""
 "files and folders\n"
 "- 'isfile' is 'false' and 'isdir' is 'false' : invalid combination"
 msgstr ""
+"અંહિ માન્ય જોડકાંઓ છે :\n"
+"\n"
+"- 'isfile' એ 'true' અને 'isdir' એ 'false' છે : પસંદગી માત્ર ફાઈલો જ રાખતી હોવી જોઈએ\n"
+"- 'isfile' એ 'false' અને 'isdir' એ 'true' છે : પસંદગી માત્ર ફોલ્ડરો જ રાખતી હોવી જોઈએ\n"
+"- 'isfile' એ 'true' અને 'isdir' એ 'true' છે : પસંદગી બંને ફાઈલો અને ફોલ્ડરો રાખી શકે છે\n"
+"- 'isfile' એ 'false' અને 'isdir' એ 'false' છે : અયોગ્ય જોડકું"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr ""
+msgstr "'true' જો પસંદગીને ફાઈલો હોઈ શકે, નહિંતર 'false'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid "This setting is tied with the 'isdir' setting. "
-msgstr ""
+msgstr "આ સુયોજન એ 'isdir' સુયોજન સાથે બંધાયેલ છે. "
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr ""
+msgstr "'true' જો પસંદગીને ફોલ્ડરો હોઈ શકે, નહિંતર 'false'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
 msgid "This setting is tied with the 'isfile' setting. "
-msgstr ""
+msgstr "આ સુયોજન 'isfile' સુયોજન સાથે બંધાયેલ છે. "
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
@@ -791,4 +847,19 @@ msgid ""
 "\n"
 "All GnomeVFS scheme use by Nautilus can be used here."
 msgstr ""
+"પસંદ કરેલ વસ્તુઓ સરખાવવા માટે માન્ય GnomeVFS પદ્ધતિની યાદી વ્યાખ્યાયિત કરે છે. GnomeVFS પદ્ધતિ એ ફાઈલો વાપરવા માટે વપરાતો પ્રોટોકોલ છે. વાપરવાનો કીવર્ડ એ GnomeVFS URI માં વાપરવાનો છે તે છે.\n"
+"\n"
+"GnomeVFS URI નું ઉદાહરણ : \n"
+"file:///tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt\n"
+"\n"
+"આ ખૂબ સામાન્ય પદ્ધતિઓ છે :\n"
+"\n"
+"'file' : સ્થાનિક ફાઈલો\n"
+"'sftp' : SSH મારફતે વપરાતી ફાઈલો\n"
+"'ftp' : FTP મારફતે વપરાતી ફાઈલો\n"
+"'smb' : Samba (Windows share) મારફતે વપરાતી ફાઈલો\n"
+"'dav' : WebDav મારફતે વપરાતી ફાઈલો\n"
+"\n"
+"નોટિલસ દ્વારા વપરાતી બધી GnomeVFS પદ્ધતિ અંહિ વાપરી શકાય છે."
 
