@@ -1,9 +1,17 @@
 2005-12-20  Frederic Ruaudel <grumz@grumz.net> 
 
 	* configure.in: Added 'vi' to ALL_LINGUAS.
+
 	* nact/nautilus-actions-config.glade: Apply the new 
 	notebook layout to fix the problem with 800x600 screen
 	and fix some strings (Bugzilla bug #324593).
+
+	* config/config_newaction.schemas.in.in:
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* utils/nautilus-actions-convert.c:
+	* utils/nautilus-actions-new-config.c:
+	Fix some typos in strings (Bugzilla bug #324593).
+
 
 2005-12-19  Ankit Patel  <ankit644@yahoo.com>
 

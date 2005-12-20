@@ -39,9 +39,9 @@ static gboolean convert_all = FALSE;
 static GOptionEntry entries[] =
 {
 	{ "input-file", 'i', 0, G_OPTION_ARG_FILENAME, &input_file, N_("The old xml config file to convert"), N_("FILE") },
-	{ "output-file", 'o', 0, G_OPTION_ARG_FILENAME, &output_file, N_("The name of the new converted GConf schema file"), N_("FILE") },
+	{ "output-file", 'o', 0, G_OPTION_ARG_FILENAME, &output_file, N_("The name of the newly-converted GConf schema file"), N_("FILE") },
 	{ "all", 'a', 0, G_OPTION_ARG_NONE, &convert_all, N_("Convert all old xml config files from previous installations [default]"), NULL },
-	{ "output-dir", 'd', 0, G_OPTION_ARG_FILENAME, &output_dir, N_("The folder where the new GConf schema files will be saved if -a options is set [default=/tmp]"), N_("DIR") },
+	{ "output-dir", 'd', 0, G_OPTION_ARG_FILENAME, &output_dir, N_("The folder where the new GConf schema files will be saved if option -a is set [default=/tmp]"), N_("DIR") },
 	{ NULL }
 };
 
@@ -80,13 +80,13 @@ int main (int argc, char** argv)
 
 	if (convert_all && (input_file || output_file))
 	{
-		fprintf (stderr, _("Syntax error:\n\t-i and -o options are mutually exclusive with -a option\nTry %s --help\n"), g_get_prgname ());
+		fprintf (stderr, _("Syntax error:\n\tOptions -i and -o are mutually exclusive with option -a\nTry %s --help\n"), g_get_prgname ());
 		exit (EXIT_FAILURE);
 	}
 
 	if (output_file && !input_file)
 	{
-		fprintf (stderr, _("Syntax error:\n\t-i option is mandatory when using -o option\nTry %s --help\n"), g_get_prgname ());
+		fprintf (stderr, _("Syntax error:\n\tOption -i is mandatory when using option -o\nTry %s --help\n"), g_get_prgname ());
 		exit (EXIT_FAILURE);
 	}
 

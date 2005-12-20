@@ -18,9 +18,9 @@
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">
-        <default>Manage your actions using NACT configuration tool</default>
+        <default>Manage your actions using NACT, the configuration tool</default>
         <short>The tooltip of the menu item</short>
-        <long>The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse</long>
+        <long>The tooltip of the menu item that will appear in the Nautilus statusbar when the user points the mouse to the Nautilus popup menu item.</long>
       </locale>
     </schema>
     <schema>
@@ -54,12 +54,12 @@
         <short>The parameters of the command</short>
         <long>The parameters of the command to start when the user selects the menu item in the Nautilus popup menu.
 
-The parameters can contains some special tokens which are replaced by Nautilus informations before starting the command :
+The parameters can contain some special tokens which are replaced by Nautilus informations before starting the command :
 
 %d : base folder of the selected file(s)
 %f : the name of the selected file or the 1st one if many are selected
-%m : list of the basename of the selected file(s)/folder(s) separated by space
-%M : list of the selected file(s)/folder(s) with their full path separated by space
+%m : space-separated list of the basenames of the selected file(s)/folder(s)
+%M : space-separated list of the selected file(s)/folder(s), with their full paths
 %u : gnome-vfs URI
 %s : scheme of the gnome-vfs URI
 %h : hostname of the gnome-vfs URI
@@ -75,8 +75,8 @@ The parameters can contains some special tokens which are replaced by Nautilus i
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C">
-        <short>The list of pattern to match the selected file(s)/folder(s)</short>
-        <long>A list of strings with joker '*' or '?' to match the selected file(s)/folder(s). Each selected items must match at least one of the pattern for the action to appear</long>
+        <short>The list of patterns to match the selected file(s)/folder(s)</short>
+        <long>A list of strings with joker '*' or '?' to match the selected file(s)/folder(s). Each selected items must match at least one of the patterns for the action to appear</long>
       </locale>
       <default>[*]</default>
     </schema>
@@ -119,7 +119,7 @@ The parameters can contains some special tokens which are replaced by Nautilus i
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have several items, 'false' otherwise</short>
-        <long>If you need one or more files or folders to be selected, set 'true' to this key. If you want just one file or folder, set 'false'</long>
+        <long>If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'</long>
       </locale>
       <default>true</default>
     </schema>
@@ -131,7 +131,7 @@ The parameters can contains some special tokens which are replaced by Nautilus i
       <list_type>string</list_type>
       <locale name="C">
         <short>The list of GnomeVFS schemes where the selected files should be located</short>
-        <long>Defines the list of valid GnomeVFS scheme to match the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one use in GnomeVFS URI.
+        <long>Defines the list of valid GnomeVFS schemes to be matched with the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one used in the GnomeVFS URI.
 
 Example of GnomeVFS URI : 
 file:///tmp/foo.txt
@@ -145,7 +145,7 @@ The most common schemes are :
 'smb' : files accessed via Samba (Windows share)
 'dav' : files accessed via WebDav
 
-All GnomeVFS scheme use by Nautilus can be used here.</long>
+All GnomeVFS schemes used by Nautilus can be used here.</long>
       </locale>
       <default>[file,sftp,ftp,dav,smb]</default>
     </schema>
