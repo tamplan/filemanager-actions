@@ -1,3 +1,7 @@
+2005-12-26  Ilkka Tuohela <hile@iki.fi>
+
+	* configure.in: Added 'fi' (Finnish) to ALL_LINGUAS.
+
 2005-12-24  Takeshi AIHANA <aihana@gnome.gr.jp>
 
 	* configure.in: Added 'ja' (Japanese) to ALL_LINGUAS.
