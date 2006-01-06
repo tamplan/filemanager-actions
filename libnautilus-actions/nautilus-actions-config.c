@@ -193,8 +193,10 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 	g_return_val_if_fail (action != NULL, FALSE);
 
 	if (action->uuid != NULL) {
-		if (g_hash_table_lookup (config->actions, action->uuid))
+		if (g_hash_table_lookup (config->actions, action->uuid)) 
+		{
 			return FALSE;
+		}
 	} else {
 		action->uuid = get_new_uuid ();
 	}
@@ -500,6 +502,20 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 	{
 		nautilus_actions_config_action_free (new_action);
 		new_action = NULL;
+	}
+
+	return new_action;
+}
+
+NautilusActionsConfigAction *nautilus_actions_config_action_dup_new (NautilusActionsConfigAction *action)
+{
+	NautilusActionsConfigAction* new_action = NULL;
+
+	if ((new_action = nautilus_actions_config_action_dup (action)) != NULL)
+	{
+		gchar* uuid = get_new_uuid ();
+		nautilus_actions_config_action_set_uuid (new_action, uuid);
+		g_free (uuid);
 	}
 
 	return new_action;

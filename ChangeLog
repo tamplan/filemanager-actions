@@ -1,4 +1,10 @@
 2006-01-06  Frederic Ruaudel <grumz@grumz.net> 
+
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h:
+	* nact/nautilus-actions-config.glade:
+	* nact/nact.c: Implement Feature #325524 which allow an action to be
+	duplicated to facilitate the edition of several quite same config.
 	
 	* nact/nact-editor.c: Fix a GTK warning about the function
 	gtk_combo_box_entry_set_text_column() when opening the edit

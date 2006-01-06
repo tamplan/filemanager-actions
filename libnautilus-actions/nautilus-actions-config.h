@@ -111,6 +111,7 @@ void                         nautilus_actions_config_action_set_schemes (Nautilu
 #define nautilus_actions_config_action_set_accept_multiple(action, b) { if ((action)) (action)->accept_multiple_files = b; }
 
 NautilusActionsConfigAction *nautilus_actions_config_action_dup (NautilusActionsConfigAction *action);
+NautilusActionsConfigAction *nautilus_actions_config_action_dup_new (NautilusActionsConfigAction *action);
 void                         nautilus_actions_config_action_free (NautilusActionsConfigAction *action);
 
 G_END_DECLS

@@ -121,6 +121,40 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 }
 
 void
+duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
+{
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	GtkWidget *nact_actions_list;
+	GtkTreeModel* model;
+
+	nact_actions_list = nact_get_glade_widget ("ActionsList");
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) 
+	{
+		gchar *uuid;
+		NautilusActionsConfigAction *action;
+		NautilusActionsConfigAction* new_action;
+
+		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
+
+		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
+		new_action = nautilus_actions_config_action_dup_new (action);
+		if (new_action) 
+		{
+			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), new_action))
+			{
+				nact_fill_actions_list (nact_actions_list);
+			}
+		}
+
+		g_free (uuid);
+	}
+}
+
+void
 delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
@@ -179,16 +213,20 @@ list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
 {
 	GtkWidget *nact_edit_button;
 	GtkWidget *nact_delete_button;
+	GtkWidget *nact_duplicate_button;
 	
 	nact_edit_button = nact_get_glade_widget ("EditActionButton");
 	nact_delete_button = nact_get_glade_widget ("DeleteActionButton");
+	nact_duplicate_button = nact_get_glade_widget ("DuplicateActionButton");
 
 	if (gtk_tree_selection_count_selected_rows (selection) > 0) {
 		gtk_widget_set_sensitive (nact_edit_button, TRUE);
 		gtk_widget_set_sensitive (nact_delete_button, TRUE);
+		gtk_widget_set_sensitive (nact_duplicate_button, TRUE);
 	} else {
 		gtk_widget_set_sensitive (nact_edit_button, FALSE);
 		gtk_widget_set_sensitive (nact_delete_button, FALSE);
+		gtk_widget_set_sensitive (nact_duplicate_button, FALSE);
 	}
 }
 
