@@ -319,7 +319,10 @@ static void fill_menu_icon_combo_list_of (GtkComboBoxEntry* combo)
 	GtkCellRenderer *cell_renderer_text;
 	
 	gtk_combo_box_set_model (GTK_COMBO_BOX (combo), create_stock_icon_model ());
-	gtk_combo_box_entry_set_text_column (combo, ICON_STOCK_COLUMN);
+	if (gtk_combo_box_entry_get_text_column (combo) == -1)
+	{
+		gtk_combo_box_entry_set_text_column (combo, ICON_STOCK_COLUMN);
+	}
 	gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
 
 	cell_renderer_pix = gtk_cell_renderer_pixbuf_new ();

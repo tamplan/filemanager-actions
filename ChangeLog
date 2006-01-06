@@ -1,3 +1,9 @@
+2006-01-06  Frederic Ruaudel <grumz@grumz.net> 
+	
+	* nact/nact-editor.c: Fix a GTK warning about the function
+	gtk_combo_box_entry_set_text_column() when opening the edit
+	dialog more than once.
+
 2005-12-28  Yair Hershkovitz  <yairhr@gmail.com>
 
 	* configure.in: Added 'he' (Hebrew) to ALL_LINGUAS.
