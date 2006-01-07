@@ -6,8 +6,8 @@ msgid ""
 ""
 msgstr "Project-Id-Version: nautilus-actions Gnome HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-21 07:10+0100\n"
-"PO-Revision-Date: 2005-12-21 17:47+1030\n"
+"POT-Creation-Date: 2006-01-07 06:55+0100\n"
+"PO-Revision-Date: 2006-01-07 22:23+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -140,7 +140,8 @@ msgstr "Cả hai"
 msgid ""
 "Check this box if you want to get back all your configurations from the "
 "version of Nautilus-actions 0.7.1 or lesser."
-msgstr "Hãy đánh dấu trong hộp này nếu bạn muốn nhận lại các cấu hình từ phiên bản Nautilus-actions 0.7.1 hay trước."
+msgstr "Hãy đánh dấu trong hộp này nếu bạn muốn nhận lại các cấu hình từ phiên bản "
+"Nautilus-actions 0.7.1 hay trước."
 
 #:../nact/nautilus-actions-config.glade.h:36
 msgid "Click to add a new scheme"
@@ -171,123 +172,139 @@ msgid "Conditions"
 msgstr "Điều kiện"
 
 #:../nact/nautilus-actions-config.glade.h:42
+msgid "Create a copy of the selected action."
+msgstr "Tạo một bản sao của hành động đã chọn."
+
+#:../nact/nautilus-actions-config.glade.h:43
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
+msgstr "Xóa bỏ hành động, không cần xác định, cũng không thể phục hồi nó."
+
+#:../nact/nautilus-actions-config.glade.h:44
 msgid "Export existing configs"
 msgstr "Xuất cấu hình đã có"
 
-#:../nact/nautilus-actions-config.glade.h:43
+#:../nact/nautilus-actions-config.glade.h:45
 msgid "File to Import"
 msgstr "Tập tin cần nhập"
 
-#:../nact/nautilus-actions-config.glade.h:44
+#:../nact/nautilus-actions-config.glade.h:46
 msgid "GConf schema description file (Nautilus-actions v1.x and later)"
 msgstr "Tập tin diễn tả giản đồ GConf (Nautilus-actions phiên bản 1.x và sau)"
 
-#:../nact/nautilus-actions-config.glade.h:45
+#:../nact/nautilus-actions-config.glade.h:47
 msgid "Icon:"
 msgstr "Hình:"
 
-#:../nact/nautilus-actions-config.glade.h:46
+#:../nact/nautilus-actions-config.glade.h:48
 msgid "Import all my old configs"
 msgstr "Nhập mọi cấu hình cũ của tôi"
 
-#:../nact/nautilus-actions-config.glade.h:47
+#:../nact/nautilus-actions-config.glade.h:49
 msgid "Import new configurations"
 msgstr "Nhập cấu hình mới"
 
-#:../nact/nautilus-actions-config.glade.h:48
+#:../nact/nautilus-actions-config.glade.h:50
 msgid "Import/Export"
 msgstr "Nhập/Xuất"
 
-#:../nact/nautilus-actions-config.glade.h:49
+#:../nact/nautilus-actions-config.glade.h:51
 msgid "Import/Export Settings"
 msgstr "Thiết lập Nhập/Xuất"
 
-#:../nact/nautilus-actions-config.glade.h:50
+#:../nact/nautilus-actions-config.glade.h:52
 msgid "Label of the menu item in the Nautilus popup menu"
 msgstr "Nhãn của mục trình đơn trong trình đơn bật lên Nautilus"
 
 # Type: text
 # Description
 # label of file system
-#:../nact/nautilus-actions-config.glade.h:51
+#:../nact/nautilus-actions-config.glade.h:53
 msgid "Label:"
 msgstr "Nhãn:"
 
-#:../nact/nautilus-actions-config.glade.h:52
+#:../nact/nautilus-actions-config.glade.h:54
+msgid ""
+"Manage importation of external action configurations and exportation of "
+"existing actions."
+msgstr "Quản lý việc nhập các cấu hình hành động bên ngoài và việc xuất các hành động tồn tại."
+
+#:../nact/nautilus-actions-config.glade.h:55
 msgid "Menu Item & Action"
 msgstr "Mục trình đơn và hành động"
 
-#:../nact/nautilus-actions-config.glade.h:53
+#:../nact/nautilus-actions-config.glade.h:56
 msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
 msgstr "Công cụ Cấu hình Hành động Nautilus\n"
 "Ứng dụng cần cấu hình phần mở rộng Hành động Nautilus"
 
-#:../nact/nautilus-actions-config.glade.h:55
+#:../nact/nautilus-actions-config.glade.h:58
 msgid "Nautilus Action Editor"
 msgstr "Bộ sửa đổi hành động Nautilus"
 
-#:../nact/nautilus-actions-config.glade.h:56
+#:../nact/nautilus-actions-config.glade.h:59
 msgid "Nautilus Actions"
 msgstr "Hành động Nautilus"
 
-#:../nact/nautilus-actions-config.glade.h:57
+#:../nact/nautilus-actions-config.glade.h:60
 msgid "Old XML config file (Nautilus-actions v0.x)"
 msgstr "Tập tin cấu hình XML cũ (Nautilus-actions phiên bản 0.x)"
 
-#:../nact/nautilus-actions-config.glade.h:58
+#:../nact/nautilus-actions-config.glade.h:61
 msgid "Only files"
 msgstr "Chỉ tập tin"
 
-#:../nact/nautilus-actions-config.glade.h:59
+#:../nact/nautilus-actions-config.glade.h:62
 msgid "Only folders"
 msgstr "Chỉ thư mục"
 
-#:../nact/nautilus-actions-config.glade.h:60
+#:../nact/nautilus-actions-config.glade.h:63
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens"
 msgstr "Tham số sẽ được gởi cho chương trình. Hãy nhấn vào cái nút « Chú giải » để "
 "xem những hiệu bài thay thế khác nhau."
 
-#:../nact/nautilus-actions-config.glade.h:61
+#:../nact/nautilus-actions-config.glade.h:64
 msgid "Parameters:"
 msgstr "Tham số:"
 
-#:../nact/nautilus-actions-config.glade.h:62
+#:../nact/nautilus-actions-config.glade.h:65
 msgid "Path:"
 msgstr "Đường dẫn:"
 
-#:../nact/nautilus-actions-config.glade.h:63
+#:../nact/nautilus-actions-config.glade.h:66
 msgid "Project Website"
 msgstr "Nơi Mạng của Dự án"
 
-#:../nact/nautilus-actions-config.glade.h:64
+#:../nact/nautilus-actions-config.glade.h:67
 msgid "Save in Folder"
 msgstr "Lưu vào thư mục"
 
-#:../nact/nautilus-actions-config.glade.h:65
+#:../nact/nautilus-actions-config.glade.h:68
 msgid "Select the configurations you want to export :"
 msgstr "Chọn những cấu hình cần xuất:"
 
-#:../nact/nautilus-actions-config.glade.h:66
+#:../nact/nautilus-actions-config.glade.h:69
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select multiple one."
-msgstr "Chọn những cấu hình cần xuất. Hãy sử dụng phím Shift hay Ctrl để chọn nhiều điều."
+msgstr "Chọn những cấu hình cần xuất. Hãy sử dụng phím Shift hay Ctrl để chọn nhiều "
+"điều."
 
-#:../nact/nautilus-actions-config.glade.h:67
+#:../nact/nautilus-actions-config.glade.h:70
 msgid "Select the file you want to import."
 msgstr "Chọn tập tin cần nhập."
 
-#:../nact/nautilus-actions-config.glade.h:68
+#:../nact/nautilus-actions-config.glade.h:71
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exists."
 msgstr "Hãy chọn thư mục nơi bạn muốn lưu cấu hình. Thư mục này phải tồn tại."
 
-#:../nact/nautilus-actions-config.glade.h:69
+#:../nact/nautilus-actions-config.glade.h:72
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
@@ -296,47 +313,47 @@ msgstr "Hãy chọn kiểu tập tin nơi bạn muốn hành động xuất hi�
 "nên chọn gì, thử chọn chỉ « tập tin » mà là sự chọn thường nhất. Có thể thêm "
 "lược đồ mới bằng cách nhấn vào cái nút « + »."
 
-#:../nact/nautilus-actions-config.glade.h:70
+#:../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu"
 msgstr "Lệnh sẽ được khởi chạy khi chọn hành động trong trình đơn bật lên Nautilus"
 
-#:../nact/nautilus-actions-config.glade.h:71
+#:../nact/nautilus-actions-config.glade.h:74
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr "Phần mềm này được phát hành với điều kiện của Quyền Công Chung Gnu (GPL)."
 
-#:../nact/nautilus-actions-config.glade.h:72
+#:../nact/nautilus-actions-config.glade.h:75
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar"
 msgstr "Mẹo công cụ của mục trình đơn sẽ xuất hiện trong thanh trạng thái Nautilus"
 
-#:../nact/nautilus-actions-config.glade.h:73
+#:../nact/nautilus-actions-config.glade.h:76
 msgid "Tooltip:"
 msgstr "Mẹo công cụ:"
 
-#:../nact/nautilus-actions-config.glade.h:74
+#:../nact/nautilus-actions-config.glade.h:77
 msgid "Type of configuration :"
 msgstr "Kiểu cấu hinh:"
 
-#:../nact/nautilus-actions-config.glade.h:75
+#:../nact/nautilus-actions-config.glade.h:78
 msgid "_Browse"
 msgstr "_Duyệt"
 
 #.TRANSLATORS: Replace this string with your names, one name per line.
-#:../nact/nautilus-actions-config.glade.h:77
+#:../nact/nautilus-actions-config.glade.h:80
 msgid "translator-credits"
 msgstr "Nhóm Việt hóa Gnome <gnomevi-list@lists.sourceforge.net>"
 
 #.create columns on the tree view
-#:../nact/nact.c:207 ../nact/nact-import-export.c:179
+#:../nact/nact.c:245 ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "Hình"
 
-#:../nact/nact.c:212 ../nact/nact-import-export.c:184
+#:../nact/nact.c:250 ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "Nhãn"
 
-#:../nact/nact.c:231 ../nact/nact-editor.c:672
+#:../nact/nact.c:269 ../nact/nact-editor.c:675
 #:../nact/nact-import-export.c:346
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Không thể tải giao diện cho Công cụ Cấu hình Hành động Nautilus"
@@ -380,31 +397,31 @@ msgid "None"
 msgstr "Không có"
 
 #.i18n notes : scheme name set for a new entry in the scheme list
-#:../nact/nact-editor.c:435
+#:../nact/nact-editor.c:438
 msgid "new-scheme"
 msgstr "lược-đồ-mới"
 
-#:../nact/nact-editor.c:436
+#:../nact/nact-editor.c:439
 msgid "New Scheme Description"
 msgstr "Mô tả Lược đồ Mới"
 
-#:../nact/nact-editor.c:522
+#:../nact/nact-editor.c:525
 msgid "Scheme"
 msgstr "Lược đồ"
 
-#:../nact/nact-editor.c:534
+#:../nact/nact-editor.c:537
 msgid "Description"
 msgstr "Mô tả"
 
-#:../nact/nact-editor.c:688
+#:../nact/nact-editor.c:691
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "Biểu tượng của mục trình đơn trong trình đơn bật lên Nautilus"
 
-#:../nact/nact-editor.c:716
+#:../nact/nact-editor.c:719
 msgid "Add a New Action"
 msgstr "Thêm hành động mới"
 
-#:../nact/nact-editor.c:720
+#:../nact/nact-editor.c:723
 #,c-format
 msgid "Edit Action \"%s\""
 msgstr "Sửa đổi hành động « %s »"
@@ -596,7 +613,8 @@ msgstr "Mẹo công cụ của mục trình đơn"
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points the mouse to the Nautilus popup menu item."
-msgstr "Mẹo công cụ của mục trình đơn sẽ xuất hiện trong thanh trạng thái Nautilus khi người dùng chỉ con chuột đến mục trình đơn bật lệnh Nautilus"
+msgstr "Mẹo công cụ của mục trình đơn sẽ xuất hiện trong thanh trạng thái Nautilus "
+"khi người dùng chỉ con chuột đến mục trình đơn bật lệnh Nautilus"
 
 #:../config/config_newaction.schemas.in.in.h:22
 #:../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
@@ -670,7 +688,8 @@ msgstr "Chuyển đổi mọi tập tin cấu hình XML cũ từ bản cài đ�
 msgid ""
 "The folder where the new GConf schema files will be saved if option -a is "
 "set [default=/tmp]"
-msgstr "Thư mục nơi những tập tin giản đồ GConf mới sẽ được kưu nếu tùy chọn « -a » được lập [mặc định=/tmp]"
+msgstr "Thư mục nơi những tập tin giản đồ GConf mới sẽ được kưu nếu tùy chọn « -a » "
+"được lập [mặc định=/tmp]"
 
 #:../utils/nautilus-actions-convert.c:44
 msgid "DIR"
