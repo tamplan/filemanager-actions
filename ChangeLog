@@ -1,3 +1,8 @@
+2006-01-08  Frederic Ruaudel <grumz@grumz.net> 
+
+	* nact/nact.c: Fix a bug with the stock icon of the
+	Edit button in Nact with GTK+2.4 (thanks to wwp for the report).
+
 2006-01-06  Frederic Ruaudel <grumz@grumz.net> 
 
 	* libnautilus-actions/nautilus-actions-config.c:

@@ -264,6 +264,7 @@ init_dialog (void)
 	gint width, height, x, y;
 	GtkWidget *nact_dialog;
 	GtkWidget *nact_actions_list;
+	GtkWidget* nact_edit_button;
 	GladeXML *gui = nact_get_glade_xml_object (GLADE_MAIN_WIDGET);
 	if (!gui) {
 		nautilus_actions_display_error (_("Could not load interface for Nautilus Actions Config Tool"));
@@ -290,7 +291,15 @@ init_dialog (void)
 	nact_prefs_get_main_dialog_position (&x, &y);
 
 	gtk_window_move (GTK_WINDOW (nact_dialog), x, y);
-	
+
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION == 4))	
+	/* Fix a stock icon bug with GTK+ 2.4 */
+	nact_edit_button = nact_get_glade_widget ("EditActionButton");
+	gtk_button_set_use_stock (GTK_BUTTON (nact_edit_button), FALSE);
+	gtk_button_set_use_underline (GTK_BUTTON (nact_edit_button), TRUE);
+	gtk_button_set_label (GTK_BUTTON (nact_edit_button), "_Edit");
+#endif
+
 	/* display the dialog */
 	gtk_widget_show (nact_dialog);
 	g_object_unref (gui);
