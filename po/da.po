@@ -1,7 +1,7 @@
 # Danish translation of nautilus-actions.
-# Copyright (C) 2005
+# Copyright (C) 2005, 06
 # This file is distributed under the same license as the nautilus-actions package.
-# Lasse Bang Mikkelsen <lbm@fatalerror.dk>, 2005.
+# Lasse Bang Mikkelsen <lbm@fatalerror.dk>, 2005, 06.
 #
 #      Konventioner:
 #
