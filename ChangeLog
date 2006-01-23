@@ -1,3 +1,7 @@
+2006-01-22  Raphael Higino  <raphaelh@cvs.gnome.org>
+
+	* configure.in: Added pt_BR to ALL_LINGUAS.
+
 2006-01-08  Frederic Ruaudel <grumz@grumz.net> 
 
 	* nact/nact.c: Fix a bug with the stock icon of the
