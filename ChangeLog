@@ -1,3 +1,7 @@
+2006-01-29  Josep Puigdemont i Casamajó  <josep.puigdemont@gmail.com>
+
+	* configure.in: Added 'ca' to ALL_LINGUAS.
+
 2006-01-27  Chao-Hsiung Liao  <j_h_liau@yahoo.com.tw>
 
 	* configure.in: Added "zh_HK" "zh_TW" to ALL_LINGUAS.
