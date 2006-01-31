@@ -5,6 +5,13 @@
 	* utils/nautilus-actions-convert.c:
 	* utils/nautilus-actions-new-config.c: Fix bug #327027 (Spelling/grammar fixes)
 
+	* config/Makefile.in: (removed)
+	* config/config_newaction.schemas.in: (removed)
+	* Makefile.am:
+	* configure.in: Removed the config file that add the config tool in all contextual
+	menu because it doesn't make sense since it is not related with the selected files.
+
+
 2006-01-29  Josep Puigdemont i Casamajó  <josep.puigdemont@gmail.com>
 
 	* configure.in: Added 'ca' to ALL_LINGUAS.

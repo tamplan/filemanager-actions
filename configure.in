@@ -145,8 +145,6 @@ AC_OUTPUT([
 Makefile
 libnautilus-actions/Makefile
 plugin/Makefile
-config/Makefile
-config/config_newaction.schemas.in
 nact/Makefile
 utils/Makefile
 po/Makefile.in
