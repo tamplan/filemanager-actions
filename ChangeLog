@@ -11,6 +11,9 @@
 	* configure.in: Removed the config file that add the config tool in all contextual
 	menu because it doesn't make sense since it is not related with the selected files.
 
+	* nact/nautilus-actions-config.glade: Remove the possibility to reorder items in
+	main dialog of Nact (Bug #326699) since it is not possible yet to keep track of this 
+	state.
 
 2006-01-29  Josep Puigdemont i Casamajó  <josep.puigdemont@gmail.com>
 
