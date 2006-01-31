@@ -38,9 +38,9 @@ static gboolean convert_all = FALSE;
 
 static GOptionEntry entries[] =
 {
-	{ "input-file", 'i', 0, G_OPTION_ARG_FILENAME, &input_file, N_("The old xml config file to convert"), N_("FILE") },
+	{ "input-file", 'i', 0, G_OPTION_ARG_FILENAME, &input_file, N_("The old XML config file to convert"), N_("FILE") },
 	{ "output-file", 'o', 0, G_OPTION_ARG_FILENAME, &output_file, N_("The name of the newly-converted GConf schema file"), N_("FILE") },
-	{ "all", 'a', 0, G_OPTION_ARG_NONE, &convert_all, N_("Convert all old xml config files from previous installations [default]"), NULL },
+	{ "all", 'a', 0, G_OPTION_ARG_NONE, &convert_all, N_("Convert all old XML config files from previous installations [default]"), NULL },
 	{ "output-dir", 'd', 0, G_OPTION_ARG_FILENAME, &output_dir, N_("The folder where the new GConf schema files will be saved if option -a is set [default=/tmp]"), N_("DIR") },
 	{ NULL }
 };
@@ -112,7 +112,7 @@ int main (int argc, char** argv)
 	for (iter = actions; iter; iter = iter->next)
 	{
 		NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)(iter->data);
-		printf (_("Converting %s ..."), action->label);
+		printf (_("Converting %s..."), action->label);
 		if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_configs), action))
 		{
 			success = TRUE;
@@ -132,7 +132,7 @@ int main (int argc, char** argv)
 				
 				if (!success)
 				{
-					printf (_(" Failed: Can't create %s : %s\n"), output_file, error->message);
+					printf (_(" Failed: Can't create %s: %s\n"), output_file, error->message);
 				}
 				g_free (path);
 				path = output_file;
@@ -140,7 +140,7 @@ int main (int argc, char** argv)
 
 			if (success)
 			{
-				printf (_("  Ok, saved in %s\n"), path);
+				printf (_("  OK, saved in %s\n"), path);
 			}
 		}
 		else

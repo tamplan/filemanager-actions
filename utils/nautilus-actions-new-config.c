@@ -47,10 +47,10 @@ static GOptionEntry entries[] =
 {
 	{ "label", 'l', 0, G_OPTION_ARG_STRING, &label, N_("The label of the menu item"), N_("LABEL") },
 	{ "tooltip", 't', 0, G_OPTION_ARG_STRING, &tooltip, N_("The tooltip of the menu item"), N_("TOOLTIP") },
-	{ "icon", 'i', 0, G_OPTION_ARG_STRING, &icon, N_("The icon of the menu item (filename or Gtk stock id)"), N_("ICON") },
+	{ "icon", 'i', 0, G_OPTION_ARG_STRING, &icon, N_("The icon of the menu item (filename or GTK stock ID)"), N_("ICON") },
 	{ "command", 'c', 0, G_OPTION_ARG_FILENAME, &command, N_("The path of the command"), N_("PATH") },
 	{ "parameters", 'p', 0, G_OPTION_ARG_STRING, &params, N_("The parameters of the command"), N_("PARAMS") },
-	{ "match", 'm', 0, G_OPTION_ARG_STRING_ARRAY, &matches, N_("A pattern to match selected files with possibility to add jokers ? or * (you must set it for each pattern you need)"), N_("EXPR") },
+	{ "match", 'm', 0, G_OPTION_ARG_STRING_ARRAY, &matches, N_("A pattern to match selected files against. May include wildcards (* or ?) (you must set one option for each pattern you need)"), N_("EXPR") },
 	{ "accept-files", 'f', 0, G_OPTION_ARG_NONE, &isfile, N_("Set it if the selection can contain files"), NULL },
 	{ "accept-dirs", 'd', 0, G_OPTION_ARG_NONE, &isdir, N_("Set it if the selection can contain folders"), NULL },
 	{ "accept-multiple-files", 'M', 0, G_OPTION_ARG_NONE, &accept_multiple_files, N_("Set it if the selection can have several items"), NULL },
@@ -130,7 +130,7 @@ int main (int argc, char** argv)
 	NautilusActionsConfigSchemaWriter* schema_configs = nautilus_actions_config_schema_writer_get ();
 	g_object_set (G_OBJECT (schema_configs), "save-path", "/tmp", NULL);
 
-	printf (_("Creating %s ..."), action->label);
+	printf (_("Creating %s..."), action->label);
 	if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_configs), action))
 	{
 		success = TRUE;
@@ -149,7 +149,7 @@ int main (int argc, char** argv)
 			
 			if (!success)
 			{
-				printf (_(" Failed: Can't create %s : %s\n"), output_file, error->message);
+				printf (_(" Failed: Can't create %s: %s\n"), output_file, error->message);
 			}
 			g_free (path);
 			path = output_file;
@@ -157,7 +157,7 @@ int main (int argc, char** argv)
 
 		if (success)
 		{
-			printf (_("  Ok, saved in %s\n"), path);
+			printf (_("  OK, saved in %s\n"), path);
 		}
 	}
 	else

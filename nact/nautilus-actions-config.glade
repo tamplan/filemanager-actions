@@ -154,7 +154,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label15">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt; : gnome-vfs URI</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt;: gnome-vfs URI</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -180,7 +180,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label18">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt; : hostname of the gnome-vfs URI</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt;: hostname of the gnome-vfs URI</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -206,7 +206,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label17">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt; : base folder of the selected file(s)</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt;: base folder of the selected file(s)</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -232,7 +232,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label16">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt; : scheme of the gnome-vfs URI</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt;: scheme of the gnome-vfs URI</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -258,7 +258,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label22">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%%&lt;/b&gt; : a percent sign</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%%&lt;/b&gt;: a percent sign</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -284,7 +284,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label20">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt; : username of the gnome-vfs URI</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt;: username of the gnome-vfs URI</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -310,7 +310,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label21">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%f&lt;/b&gt; : the name of the selected file or the 1st one if many are selected</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%f&lt;/b&gt;: the name of the selected file or the 1st one if many are selected</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -336,7 +336,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label23">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt; : space-separated list of the selected file(s)/folder(s) with their full paths</property>
+		  <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt;: space-separated list of the selected file(s)/folder(s) with their full paths</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -362,7 +362,7 @@ Application to configure Nautilus Action extension</property>
 		<widget class="GtkLabel" id="label33">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;%m&lt;/b&gt; : space-separated list of the basenames of the selected
+		  <property name="label" translatable="yes">&lt;b&gt;%m&lt;/b&gt;: space-separated list of the basenames of the selected
 file(s)/folder(s)</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
@@ -845,7 +845,7 @@ file(s)/folder(s)</property>
 		  <child>
 		    <widget class="GtkEntry" id="MenuLabelEntry">
 		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Label of the menu item in the Nautilus popup menu</property>
+		      <property name="tooltip" translatable="yes">Label of the menu item in the Nautilus popup menu.</property>
 		      <property name="can_focus">True</property>
 		      <property name="editable">True</property>
 		      <property name="visibility">True</property>
@@ -868,7 +868,7 @@ file(s)/folder(s)</property>
 		  <child>
 		    <widget class="GtkEntry" id="MenuTooltipEntry">
 		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Tooltip of the menu item that will appear in the Nautilus statusbar</property>
+		      <property name="tooltip" translatable="yes">Tooltip of the menu item that will appear in the Nautilus statusbar.</property>
 		      <property name="can_focus">True</property>
 		      <property name="editable">True</property>
 		      <property name="visibility">True</property>
@@ -927,7 +927,7 @@ file(s)/folder(s)</property>
 		      <child>
 			<widget class="GtkButton" id="IconBrowseButton">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">Click to choose a custom icon from a file instead of a predefined icon from the drop-down list</property>
+			  <property name="tooltip" translatable="yes">Click to choose a custom icon from a file instead of a predefined icon from the drop-down list.</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">_Browse</property>
 			  <property name="use_underline">True</property>
@@ -1109,7 +1109,7 @@ file(s)/folder(s)</property>
 		      <child>
 			<widget class="GtkEntry" id="CommandPathEntry">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">The command that will be launched by selecting the action in Nautilus popup menu</property>
+			  <property name="tooltip" translatable="yes">The command that will be launched by selecting the action in Nautilus popup menu.</property>
 			  <property name="can_focus">True</property>
 			  <property name="editable">True</property>
 			  <property name="visibility">True</property>
@@ -1131,7 +1131,7 @@ file(s)/folder(s)</property>
 		      <child>
 			<widget class="GtkButton" id="BrowseButton">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">Click to choose a command from the file chooser dialog</property>
+			  <property name="tooltip" translatable="yes">Click to choose a command from the file chooser dialog.</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">_Browse</property>
 			  <property name="use_underline">True</property>
@@ -1187,7 +1187,7 @@ file(s)/folder(s)</property>
 		      <child>
 			<widget class="GtkEntry" id="CommandParamsEntry">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">Parameters that will be sent to the program. Click on the 'Legend' button to see the different replacement tokens</property>
+			  <property name="tooltip" translatable="yes">Parameters that will be sent to the program. Click on the 'Legend' button to see the different replacement tokens.</property>
 			  <property name="can_focus">True</property>
 			  <property name="editable">True</property>
 			  <property name="visibility">True</property>
@@ -1209,7 +1209,7 @@ file(s)/folder(s)</property>
 		      <child>
 			<widget class="GtkButton" id="LegendButton">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">Click to see the list of special tokens you can use in the parameter field</property>
+			  <property name="tooltip" translatable="yes">Click to see the list of special tokens you can use in the parameter field.</property>
 			  <property name="can_focus">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
 			  <property name="focus_on_click">True</property>
@@ -1427,7 +1427,7 @@ file(s)/folder(s)</property>
 	      <child>
 		<widget class="GtkEntry" id="PatternEntry">
 		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">A string with joker ? or * that will be used to match the files. You can match several file patterns by separating them with a semi-colon ;</property>
+		  <property name="tooltip" translatable="yes">A string with wildcards (? or *) that will be used to match the files. You can match several file patterns by separating them with a semi-colon (;).</property>
 		  <property name="can_focus">True</property>
 		  <property name="editable">True</property>
 		  <property name="visibility">True</property>
@@ -1614,7 +1614,7 @@ file(s)/folder(s)</property>
 			  <child>
 			    <widget class="GtkTreeView" id="SchemesTreeView">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Select the kind of files where you want your action to appear. If you don't know what to choose, try selecting just 'file' which is the most common choice. You can add a new scheme by clicking on the '+' button</property>
+			      <property name="tooltip" translatable="yes">Select the kind of files where you want your action to appear. If you don't know what to choose, try selecting just 'file' which is the most common choice. You can add a new scheme by clicking on the '+' button.</property>
 			      <property name="can_focus">True</property>
 			      <property name="headers_visible">False</property>
 			      <property name="rules_hint">True</property>
@@ -1642,7 +1642,7 @@ file(s)/folder(s)</property>
 			  <child>
 			    <widget class="GtkButton" id="button7">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Click to add a new scheme</property>
+			      <property name="tooltip" translatable="yes">Click to add a new scheme.</property>
 			      <property name="can_focus">True</property>
 			      <property name="relief">GTK_RELIEF_NORMAL</property>
 			      <property name="focus_on_click">True</property>
@@ -1671,7 +1671,7 @@ file(s)/folder(s)</property>
 			    <widget class="GtkButton" id="RemoveSchemeButton">
 			      <property name="visible">True</property>
 			      <property name="sensitive">False</property>
-			      <property name="tooltip" translatable="yes">Click to remove the selected scheme</property>
+			      <property name="tooltip" translatable="yes">Click to remove the selected scheme.</property>
 			      <property name="can_focus">True</property>
 			      <property name="relief">GTK_RELIEF_NORMAL</property>
 			      <property name="focus_on_click">True</property>
@@ -1996,7 +1996,7 @@ file(s)/folder(s)</property>
 			      <child>
 				<widget class="GtkLabel" id="IELabelAlign1">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">File to Import</property>
+				  <property name="label" translatable="yes">File to Import:</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2071,7 +2071,7 @@ file(s)/folder(s)</property>
 			      <child>
 				<widget class="GtkLabel" id="label61">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Type of configuration :</property>
+				  <property name="label" translatable="yes">Type of configuration:</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2308,7 +2308,7 @@ file(s)/folder(s)</property>
 			      <child>
 				<widget class="GtkLabel" id="label58">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Select the configurations you want to export :</property>
+				  <property name="label" translatable="yes">Select the configurations you want to export:</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2342,7 +2342,7 @@ file(s)/folder(s)</property>
 				  <child>
 				    <widget class="GtkTreeView" id="ExportTreeView">
 				      <property name="visible">True</property>
-				      <property name="tooltip" translatable="yes">Select the configurations you want to export. Use Shift or Ctrl key to select multiple one.</property>
+				      <property name="tooltip" translatable="yes">Select the configurations you want to export. Use Shift or Ctrl key to select more than one.</property>
 				      <property name="can_focus">True</property>
 				      <property name="headers_visible">False</property>
 				      <property name="rules_hint">True</property>
@@ -2377,7 +2377,7 @@ file(s)/folder(s)</property>
 			      <child>
 				<widget class="GtkLabel" id="IELabelAlign2">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Save in Folder</property>
+				  <property name="label" translatable="yes">Save in Folder:</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2402,7 +2402,7 @@ file(s)/folder(s)</property>
 			      <child>
 				<widget class="GtkEntry" id="ExportEntry">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">Select the folder you want your config to be saved in. This folder must exists.</property>
+				  <property name="tooltip" translatable="yes">Select the folder you want your config to be saved in. This folder must exist.</property>
 				  <property name="can_focus">True</property>
 				  <property name="editable">True</property>
 				  <property name="visibility">True</property>
