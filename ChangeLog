@@ -1,3 +1,8 @@
+2006-02-08  Frederic Ruaudel <grumz@grumz.net> 1.0
+
+	* nact/nact.c: The action list in the main dialog of Nact is now 
+	alphabetically sorted (Bug #326699)
+
 2006-02-07  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* configure.in: Added 'th' (Thai) to ALL_LINGUAS.

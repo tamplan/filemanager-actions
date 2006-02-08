@@ -40,6 +40,14 @@
 
 static NautilusActionsConfigGconfWriter *config = NULL;
 
+gint actions_list_sort_by_label (gconstpointer a1, gconstpointer a2)
+{
+	NautilusActionsConfigAction* action1 = (NautilusActionsConfigAction*)a1;
+	NautilusActionsConfigAction* action2 = (NautilusActionsConfigAction*)a2;
+
+	return g_utf8_collate (action1->label, action2->label);
+}
+
 void nact_fill_actions_list (GtkWidget *list)
 {
 	GSList *actions, *l;
@@ -48,6 +56,7 @@ void nact_fill_actions_list (GtkWidget *list)
 	gtk_list_store_clear (model);
 
 	actions = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (config));
+	actions = g_slist_sort (actions, (GCompareFunc)actions_list_sort_by_label);
 	for (l = actions; l != NULL; l = l->next) {
 		GtkTreeIter iter;
 		GtkStockItem item;
