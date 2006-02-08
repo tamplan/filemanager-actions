@@ -1,5 +1,6 @@
 2006-02-08  Frederic Ruaudel <grumz@grumz.net> 1.0
 
+	* configure.in: Update the version number to 1.0
 	* nact/nact.c: The action list in the main dialog of Nact is now 
 	alphabetically sorted (Bug #326699)
 
