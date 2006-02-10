@@ -1,28 +1,30 @@
-# Czech translation of gnome-2.14
-# Copyright (C) 2006 Lukas Novotny <lukasnov@cvs.gnome.org>
+# translation of nautilus-actions.HEAD.po to
+# Czech translation of Nautilus Actions
+# Copyright (C) 2006 Tomas Kyjovsky
 # This file is distributed under the same license as the PACKAGE package.
-# Lukas Novotny <lukasnov@cvs.gnome.org>, 2006.
-# 
+# Tomas Kyjovsky <tomas.kyjovsky@mail.muni.cz>, 2006.
+#
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: nautilus-actions 0.99\n"
+"Project-Id-Version: nautilus-actions.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-26 11:27+0100\n"
-"PO-Revision-Date: 2006-01-28 22:24+0100\n"
-"Last-Translator: Lukas Novotny <lukasnov@cvs.gnome.org>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"POT-Creation-Date: 2006-01-24 16:03+0100\n"
+"PO-Revision-Date: 2006-02-09 15:59+0100\n"
+"Last-Translator: Tomas Kyjovsky <tomas.kyjovsky@mail.muni.cz>\n"
+"Language-Team:  <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11\n"
 
 #: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
-msgstr "Přidat položky do menu aplikace Nautilus"
+msgstr "Přidat položky do vyskakovacího menu programu Nautilus"
 
 #: ../nact/nact.desktop.in.h:2
 msgid "Nautilus Actions Configuration"
-msgstr "Konfigurace: Nautilus činnosti"
+msgstr "Konfigurace akcí programu Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:1
 msgid " "
@@ -34,12 +36,12 @@ msgstr "  "
 
 #: ../nact/nautilus-actions-config.glade.h:3
 msgid "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
-msgstr "(C)·2005·Frederic·Ruaudel·<grumz@grumz.net>"
+msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
 
 #: ../nact/nautilus-actions-config.glade.h:5
 #, no-c-format
 msgid "<b>%%</b> : a percent sign"
-msgstr "<b>%%</b> : procentuální znak"
+msgstr "<b>%%</b> : znak procenta"
 
 #: ../nact/nautilus-actions-config.glade.h:7
 #, no-c-format
@@ -47,29 +49,28 @@ msgid ""
 "<b>%M</b> : space-separated list of the selected file(s)/folder(s) with "
 "their full paths"
 msgstr ""
-"<b>%M</b> : oddělené umístění seznamu vybraného(ých) souboru(ů)/adresáře(ů) s jejich plnou cestou"
+"<b>%M</b> : mezerami oddělovaný seznam vybraných souborů/složek"
+"s plnými cestami"
 
 #: ../nact/nautilus-actions-config.glade.h:9
 #, no-c-format
 msgid "<b>%U</b> : username of the gnome-vfs URI"
-msgstr "<b>%U</b> : uživatelské jméno pro gnome-vfs·URI"
+msgstr "<b>%U</b> : užvatelské jméno gnome-vfs URI"
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
 msgid "<b>%d</b> : base folder of the selected file(s)"
-msgstr "<b>%d</b> : základní adresář pro vybraný(é) soubor(y)"
+msgstr "<b>%d</b> : základní složka vybraných souborů"
 
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
-msgid ""
-"<b>%f</b> : the name of the selected file or the 1st one if many are selected"
-msgstr ""
-"<b>%f</b> : jméno vybraného souboru nebo prvního vybraného jestliže jich bylo více"
+msgid "<b>%f</b> : the name of the selected file or the 1st one if many are selected"
+msgstr "<b>%f</b> : jméno vybraného souboru, nebo prvního, je-li je vybráno více"
 
 #: ../nact/nautilus-actions-config.glade.h:15
 #, no-c-format
 msgid "<b>%h</b> : hostname of the gnome-vfs URI"
-msgstr "<b>%h</b> : jméno hostitele gnome-vfs URI"
+msgstr "<b>%h</b> : jméno hostitelského počítače gnome-vfs URI"
 
 #: ../nact/nautilus-actions-config.glade.h:17
 #, no-c-format
@@ -77,108 +78,99 @@ msgid ""
 "<b>%m</b> : space-separated list of the basenames of the selected\n"
 "file(s)/folder(s)"
 msgstr ""
-"<b>%m</b> : oddělené místo se seznamem výchozích jmen pro vybraný(é)\n"
-"soubor(y)/adresář(e)"
+"<b>%m</b> : mezerami oddělovaný seznam základních jmen\n"
+"vybraných souborů/složek"
 
 #: ../nact/nautilus-actions-config.glade.h:20
 #, no-c-format
 msgid "<b>%s</b> : scheme of the gnome-vfs URI"
-msgstr "<b>%s</b> : návrh gnome-vfs URI"
+msgstr "<b>%s</b> : schéma gnome-vfs URI"
 
 #: ../nact/nautilus-actions-config.glade.h:22
 #, no-c-format
 msgid "<b>%u</b> : gnome-vfs URI"
-msgstr "<b>%u</b>·:·gnome-vfs·URI"
+msgstr "<b>%u</b> : gnome-vfs URI"
 
 #: ../nact/nautilus-actions-config.glade.h:23
 msgid "<b>Action</b>"
-msgstr "<b>Činnost</b>"
+msgstr "<b>Akce</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:24
-#, fuzzy
 msgid "<b>Appears if scheme is in this list</b>"
-msgstr "<b>Appears·if·schéma je v tomto seznamu</b>"
+msgstr "<b>Objeví se, pokud je schéma v tomto seznamu</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:25
-#, fuzzy
 msgid "<b>Appears if selection contains</b>"
-msgstr "<b>Appears·if·selection·obsahuje</b>"
+msgstr "<b>Objeví se, pokud výběr obsahuje</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:26
 msgid "<b>File Pattern</b>"
-msgstr "<b>Vzorový název soubor</b>"
+msgstr "<b>Vzor souboru</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:27
 msgid "<b>Nautilus Menu Item</b>"
-msgstr "<b>Položka menu aplikace Nautilus</b>"
+msgstr "<b>Položka v menu Nautilus</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:29
 #, no-c-format
-#, fuzzy
 msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
-msgstr "<i><b><span·size=\"small\">Například,·%s</span></b></i>"
+msgstr "<i><b><span size=\"small\">např. %s</span></b></i>"
 
 #: ../nact/nautilus-actions-config.glade.h:30
-#, fuzzy
 msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
-msgstr "<span·size=\"larger\"><b>Legenda parametrů</b></span>"
+msgstr "<span size=\"larger\"><b>Vysvětlivka parametru</b></span>"
 
 #: ../nact/nautilus-actions-config.glade.h:31
 msgid ""
 "A string with joker ? or * that will be used to match the files. You can "
 "match several file patterns by separating them with a semi-colon ;"
 msgstr ""
-"Řetězec s žolíkem ? nebo * který bude použit k porovnávání souborů. Vy můžete"
-"porovnávat různé varianty souboru prostřednictvím sdružování vyhledávání do kolon za "
-"pomoci středníku"
+"Řetězec s žolíkem ? nebo * bude napasován na soubory. Můžete "
+"napasovat na více vzorů, když že je oddělíte středníkem ;"
 
 #: ../nact/nautilus-actions-config.glade.h:32
-#, fuzzy
 msgid "Appears if selection has multiple files or folders"
-msgstr "Appears·if·selection má stejné názvy souborů nebo adresářů"
+msgstr "Objeví se, pokud výběr obsahuje více souborů nebo složek"
 
 #: ../nact/nautilus-actions-config.glade.h:33
 msgid "Automatic"
-msgstr "Automatická"
+msgstr "Automatický"
 
 #: ../nact/nautilus-actions-config.glade.h:34
 msgid "Both"
-msgstr "Soubory i adresáře"
+msgstr "Oba"
 
 #: ../nact/nautilus-actions-config.glade.h:35
 msgid ""
 "Check this box if you want to get back all your configurations from the "
 "version of Nautilus-actions 0.7.1 or lesser."
 msgstr ""
-"Označte zaškrtávací políčko, pokuď chcete importovat vaše konfigurace z "
-"verze aplikace Nautilus-actions 0.7.1 nebo i starší."
+"Zaškrtněte toto políčko, pokud chcete získat zpět všechny své konfigurace"
+"z verze Nautilus-actions 0.7.1 nebo nižší."
 
 #: ../nact/nautilus-actions-config.glade.h:36
 msgid "Click to add a new scheme"
-msgstr "Klepněte na toto tlačítko pro přidání nového schématu"
+msgstr "Klikněte pro přidání nového schématu"
 
 #: ../nact/nautilus-actions-config.glade.h:37
 msgid "Click to choose a command from the file chooser dialog"
-msgstr "Klepněte na toto·tlačítko·pro·vyhledání·souboru obsahující příkazy pro tuto činnost"
+msgstr "Klikněte pro výběr příkazu z dialogu výběru souborů"
 
 #: ../nact/nautilus-actions-config.glade.h:38
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list"
 msgstr ""
-"Klepněte na toto tlačítko pro vyhledání souboru s ikonou na pevném disku "
-"namísto vybrání předdefinované ikony z vysunovacího seznamu"
+"Klikněte pro výběr vlastní ikonky ze souboru, místo předdefinované ikonky "
+"ze seznamu"
 
 #: ../nact/nautilus-actions-config.glade.h:39
 msgid "Click to remove the selected scheme"
-msgstr "Klepněte na toto tlačítko pro odstranění vybraného schématu"
+msgstr "Klikněte pro odstranění vybraného schématu"
 
 #: ../nact/nautilus-actions-config.glade.h:40
-msgid ""
-"Click to see the list of special tokens you can use in the parameter field"
-msgstr ""
-"Klepněte na toto tlačítko pro zobrazení seznamu speciálních tokenů, které "
-"můžete použít v editačním poli Parametry"
+msgid "Click to see the list of special tokens you can use in the parameter field"
+msgstr "Kliknutím zobrazíte seznam speciálních symbolů, které lze použít v poli pro parametr"
 
 #: ../nact/nautilus-actions-config.glade.h:41
 msgid "Conditions"
@@ -186,26 +178,23 @@ msgstr "Podmínky"
 
 #: ../nact/nautilus-actions-config.glade.h:42
 msgid "Create a copy of the selected action."
-msgstr "Vytvoří kopii vybrané činnosti"
+msgstr "Vytvořit kopii vybrané akce."
 
 #: ../nact/nautilus-actions-config.glade.h:43
-#, fuzzy
-msgid ""
-"Delete the action without any confirmation nor the possibility to restore it."
-msgstr ""
-"Smaže činnost aniž nějaká potvrzení nebo schopnosti budou vráceny."
+msgid "Delete the action without any confirmation nor the possibility to restore it."
+msgstr "Vymazat akci bez jakéhokoli potvrzení a možnosti její obnovy."
 
 #: ../nact/nautilus-actions-config.glade.h:44
 msgid "Export existing configs"
-msgstr "Export existujících konfigurací"
+msgstr "Exportovat existující nastavení"
 
 #: ../nact/nautilus-actions-config.glade.h:45
 msgid "File to Import"
-msgstr "Soubor pro import"
+msgstr "Soubor k importu"
 
 #: ../nact/nautilus-actions-config.glade.h:46
 msgid "GConf schema description file (Nautilus-actions v1.x and later)"
-msgstr "Soubor popisující GConf schéma (Nautilus-actions·verze 1.x·a novější)"
+msgstr "Popisný soubor schématu GCOnf (Nautilus-actions v1.x a novější)"
 
 #: ../nact/nautilus-actions-config.glade.h:47
 msgid "Icon:"
@@ -213,58 +202,59 @@ msgstr "Ikona:"
 
 #: ../nact/nautilus-actions-config.glade.h:48
 msgid "Import all my old configs"
-msgstr "Importovat všechny moje staré konfigurace"
+msgstr "Importovat všechna má stará nastavení"
 
 #: ../nact/nautilus-actions-config.glade.h:49
 msgid "Import new configurations"
-msgstr "Importovat nové konfigurace"
+msgstr "Importovat nová nastavení"
 
 #: ../nact/nautilus-actions-config.glade.h:50
 msgid "Import/Export"
-msgstr "Importovat/Exportovat"
+msgstr "Import/Export"
 
 #: ../nact/nautilus-actions-config.glade.h:51
 msgid "Import/Export Settings"
-msgstr "Import/Export nastavení"
+msgstr "Nastavení Importu/Exportu"
 
 #: ../nact/nautilus-actions-config.glade.h:52
 msgid "Label of the menu item in the Nautilus popup menu"
-msgstr "Pojmenování položky menu v aplikaci Nautilus "
+msgstr "Jmenovka položky menu ve vyskakovacím menu programu Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:53
 msgid "Label:"
-msgstr "Pojmenování:"
+msgstr "Jmenovka:"
 
 #: ../nact/nautilus-actions-config.glade.h:54
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
 msgstr ""
-"Správa importu externích konfigurací činnosti a exportu existujících činností."
+"Provést importaci externích konfigurací akcí a exportaci "
+"existujících akcí."
 
 #: ../nact/nautilus-actions-config.glade.h:55
 msgid "Menu Item & Action"
-msgstr "Položka menu & činnosti"
+msgstr "Položka menu & akce"
 
 #: ../nact/nautilus-actions-config.glade.h:56
 msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
 msgstr ""
-"Konfigurační nástroj pro Nautilus činnosti\n"
-"Aplikace·pro·konfiguraci·rozšíření Nautilus·činností"
+"Nástroj pro konfiguraci akcí programu Nautilus\n"
+"Aplikace pro konfiguraci rozšíření Nautilus Actions"
 
 #: ../nact/nautilus-actions-config.glade.h:58
 msgid "Nautilus Action Editor"
-msgstr "Editor pro Nautilus·činnosti·"
+msgstr "Editor akcí programu Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:59
 msgid "Nautilus Actions"
-msgstr "Nautilus·činnosti"
+msgstr "Akce programu Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:60
 msgid "Old XML config file (Nautilus-actions v0.x)"
-msgstr "Starý konfigurační soubor ve formátu XML (Nautilus-actions·verze 0.x)"
+msgstr "Starý konfigurační XML soubor (Nautilus-actions v0.x)"
 
 #: ../nact/nautilus-actions-config.glade.h:61
 msgid "Only files"
@@ -272,15 +262,15 @@ msgstr "Pouze soubory"
 
 #: ../nact/nautilus-actions-config.glade.h:62
 msgid "Only folders"
-msgstr "Pouze adresáře"
+msgstr "Pouze složky"
 
 #: ../nact/nautilus-actions-config.glade.h:63
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens"
 msgstr ""
-"Parametry, které budou odeslány do programu. Klepněte na tlačítko 'Legenda' k "
-"zobrazení informací o různých tokenech"
+"Parametry, které budou předány programu. Kliknutím na tlačítko 'Legenda' "
+"zobrazíte jiné zástupné symboly"
 
 #: ../nact/nautilus-actions-config.glade.h:64
 msgid "Parameters:"
@@ -288,73 +278,71 @@ msgstr "Parametry:"
 
 #: ../nact/nautilus-actions-config.glade.h:65
 msgid "Path:"
-msgstr "Cíl:"
+msgstr "Cesta:"
 
 #: ../nact/nautilus-actions-config.glade.h:66
 msgid "Project Website"
-msgstr "Webové stránky projektu"
+msgstr "Webová stránka projektu"
 
 #: ../nact/nautilus-actions-config.glade.h:67
 msgid "Save in Folder"
-msgstr "Uložit do adresáře"
+msgstr "Uložit ve složce"
 
 #: ../nact/nautilus-actions-config.glade.h:68
 msgid "Select the configurations you want to export :"
-msgstr "Vyberte konfigurace pro export"
+msgstr "Vyberte nastavení, která chcete exportovat :"
 
 #: ../nact/nautilus-actions-config.glade.h:69
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select multiple one."
 msgstr ""
-"Vyberte konfigurace které chcete exportovat. Použijte klávesu Shift nebo Ctrl"
-"pro výběr více jak jedné konfigurace."
+"Vyberte nastavení, která chcete exportovat. Použijte klávesu Shift nebo Ctrl "
+"pro výběr více položek."
 
 #: ../nact/nautilus-actions-config.glade.h:70
 msgid "Select the file you want to import."
-msgstr "Vyhledejte soubor, který chcete importovat."
+msgstr "Vyberte soubor, který chcete importovat."
 
 #: ../nact/nautilus-actions-config.glade.h:71
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exists."
-msgstr "Vyhledejte adresář, kam chcete uložit vaše konfigurace. Tento adresář musí "
+msgstr ""
+"Vyberte složku, do které chcete nastavení uložit. Tato složka musí"
 "existovat."
 
 #: ../nact/nautilus-actions-config.glade.h:72
-#, fuzzy
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add a new scheme by clicking on the '+' button"
 msgstr ""
-"Vyberte typ souborů, které chcete pro svou činnost použít. Jestliže nevíte "
-"který typ použít, zkuste vybrat přesně 'soubor' který je ???the·most·common·"
-"choice???. Můžete také přidat nové schéma klepnutím na tlačítko '+'."
+"Vyberte typ souborů, pro které chcete akce zobrazovat. Pokud nevíte, "
+"který vybrat, zkuste vybrat pouze 'soubor', který je nejběžnější "
+"volbou. Nové schéma můžete přidat pomocí tlačítka '+'"
 
 #: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu"
-msgstr ""
-"Příkaz, který bude spuštěn při klepnutí na vybranou položku v menu aplikace "
-"Nautilus"
+msgstr "Příkaz, který bude spuštěn výběrem akce ve vyskakovacím menu programu Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:74
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr "Tento software je publikován pod licencí 'GNU·Genaral·Public·License·(GPL)'"
+msgstr "Tento sofrware je licencován pod licencí GNU General Public Licence (GPL)"
 
 #: ../nact/nautilus-actions-config.glade.h:75
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar"
-msgstr "Popis nástroje je popiska, která se zobrazí v stavovém řádku aplikace Nautilus"
+msgstr "Nápověda k položce menu, která se bude zobratovat ve stavové liště programu Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:76
 msgid "Tooltip:"
-msgstr "Popis nástroje:"
+msgstr "Nápověda:"
 
 #: ../nact/nautilus-actions-config.glade.h:77
 msgid "Type of configuration :"
-msgstr "Typ konfigurace:"
+msgstr "Typ konfigurace :"
 
 #: ../nact/nautilus-actions-config.glade.h:78
 msgid "_Browse"
@@ -363,7 +351,7 @@ msgstr "_Procházet"
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../nact/nautilus-actions-config.glade.h:80
 msgid "translator-credits"
-msgstr "Lukáš Novotný <lukasnov@cvs.gnome.org>"
+msgstr "překladatel"
 
 #. create columns on the tree view
 #: ../nact/nact.c:245 ../nact/nact-import-export.c:179
@@ -372,17 +360,17 @@ msgstr "Ikona"
 
 #: ../nact/nact.c:250 ../nact/nact-import-export.c:184
 msgid "Label"
-msgstr "Pojmenování"
+msgstr "Jmenovka"
 
 #: ../nact/nact.c:270 ../nact/nact-editor.c:675
 #: ../nact/nact-import-export.c:346
 msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr "Nemohu načíst rozhraní pro konfigurační nástroj aplikace Nautilus činnosti"
+msgstr "Nebylo možné načíst rozhraní pro Násroj konfigurace akcí programu Nautilus"
 
 #. i18n notes: example strings for the command preview
 #: ../nact/nact-utils.c:157
 msgid "/path/to"
-msgstr "/cíl/do"
+msgstr "/cesta/k"
 
 #: ../nact/nact-utils.c:158 ../nact/nact-utils.c:160
 msgid "file1.txt"
@@ -394,15 +382,15 @@ msgstr "soubor2.txt"
 
 #: ../nact/nact-utils.c:159 ../nact/nact-utils.c:160
 msgid "folder1"
-msgstr "adresář1"
+msgstr "složka1"
 
 #: ../nact/nact-utils.c:159
 msgid "folder2"
-msgstr "adresář2"
+msgstr "složka2"
 
 #: ../nact/nact-utils.c:162
 msgid "test.example.net"
-msgstr "test.napriklad.net"
+msgstr "test.example.net"
 
 #: ../nact/nact-utils.c:163
 msgid "file.txt"
@@ -410,21 +398,21 @@ msgstr "soubor.txt"
 
 #: ../nact/nact-utils.c:164
 msgid "folder"
-msgstr "adresář"
+msgstr "složka"
 
 #. i18n notes: when no icon is selected in the drop-down list
 #: ../nact/nact-editor.c:252
 msgid "None"
-msgstr "Žádná"
+msgstr "Žádný"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
 #: ../nact/nact-editor.c:438
 msgid "new-scheme"
-msgstr "nový schéma"
+msgstr "nové-schéma"
 
 #: ../nact/nact-editor.c:439
 msgid "New Scheme Description"
-msgstr "Nový popis schéma"
+msgstr "Popis nového schématu"
 
 #: ../nact/nact-editor.c:525
 msgid "Scheme"
@@ -436,75 +424,74 @@ msgstr "Popis"
 
 #: ../nact/nact-editor.c:691
 msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr "Ikona pro položku menu v aplikaci Nautilus"
+msgstr "Ikona položky menu ve vyskakovacím menu programu Nautilus"
 
 #: ../nact/nact-editor.c:719
 msgid "Add a New Action"
-msgstr "Přidat novou činnost"
+msgstr "Přidat novou akci"
 
 #: ../nact/nact-editor.c:723
 #, c-format
 msgid "Edit Action \"%s\""
-msgstr "Editovat činnost \"%s\""
+msgstr "Upravit akci \"%s\""
 
 #. initialize the default schemes
 #. i18n notes : description of 'file' scheme
 #: ../nact/nact-prefs.c:164
 #, c-format
 msgid "%sLocal Files"
-msgstr "%sSoubory z lokálního disku"
+msgstr "%sLokální soubory"
 
 #. i18n notes : description of 'sftp' scheme
 #: ../nact/nact-prefs.c:166
 #, c-format
 msgid "%sSSH Files"
-msgstr "%sSoubory typu SSH"
+msgstr "%sSSH Soubory"
 
 #. i18n notes : description of 'smb' scheme
 #: ../nact/nact-prefs.c:168
 #, c-format
 msgid "%sWindows Files"
-msgstr "%sSoubory operačního systému Windows"
+msgstr "%sWindows Soubory"
 
 #. i18n notes : description of 'ftp' scheme
 #: ../nact/nact-prefs.c:170
 #, c-format
 msgid "%sFTP Files"
-msgstr "%sSoubory typu FTP"
+msgstr "%sFTP Soubory"
 
 #. i18n notes : description of 'dav' scheme
 #: ../nact/nact-prefs.c:172
 #, c-format
 msgid "%sWebdav Files"
-msgstr "%sSoubory typu Webdav"
+msgstr "%sWebdav Soubory"
 
 #. vim:ts=3:sw=3:tw=1024:cin
 #: ../config/config_newaction.schemas.in.in.h:1
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
 msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr "'true' jestliže·výběr·může·obsahovat·různé položky,·jinak·'false'"
+msgstr "'Pravdivé' pokud výběr může obsahovat více položek, jinak 'nepravdivé'"
 
 #: ../config/config_newaction.schemas.in.in.h:2
 msgid "'true' if the selection must have files, 'false' otherwise"
-msgstr "'true' jestliže·výběr·musí·obsahovat·soubory,·jinak·'false'"
+msgstr "'Pravdivé' pokud výběr musí obsahovat soubory, jinak 'nepravdivé'"
 
 #: ../config/config_newaction.schemas.in.in.h:3
 msgid "'true' if the selection must have folders, 'false' otherwise"
-msgstr "'true'·jestliže výběr musí obsahovat adresáře, jinak 'false'"
+msgstr "'Pravdivé' pokud výběr musí obsahovat složky, jinak 'nepravdivé'"
 
 #: ../config/config_newaction.schemas.in.in.h:4
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
-#, fuzzy
 msgid ""
 "A list of strings with joker '*' or '?' to match the selected file(s)/folder"
 "(s). Each selected items must match at least one of the patterns for the "
 "action to appear"
 msgstr ""
-"Seznam řetězců·s·žolíky·'?' nebo·'*·'který·bude·použit·k·porovnávání·souboru(ů)/adresáře(ů).·"
-"Každé vybrané položky musí obsahovat nejméně jedny formáty pro činnost k zobrazení"
+"Seznam řetězců s žolíky '*' nebo '?' pro napasování na vybrané soubory/složky. "
+"Každá vybraná položka musí pasovat alespoň k jednomu vzoru, aby se "
+"akce objevila"
 
 #: ../config/config_newaction.schemas.in.in.h:5
-#, fuzzy
 msgid ""
 "Defines the list of valid GnomeVFS schemes to be matched with the selected "
 "items. The GnomeVFS scheme is the protocol used to access the files. The "
@@ -515,14 +502,14 @@ msgid ""
 "share) 'dav' : files accessed via WebDav All GnomeVFS schemes used by "
 "Nautilus can be used here."
 msgstr ""
-"Definice seznamu platných GnomeVFS schémat je PLATNÝ pro vybrané"
-"položky.·GnomeVFS·schéma je·protokol·používaný pro přístup k souborům."
-"Klíčové slovo GnomeVFS·URI je použito pouze jednou.·Například·GnomeVFS·"
-"URI·:·file:///tmp/foo.txt·sftp:///root@test.napriklad.net/tmp/foo.txt·"
-"Schémata jsou :·'file'·:·soubory na lokálním disku·'sftp'·:·soubory přístupné přes protokol·SSH·"
-"'ftp'·:·soubory·přístupné·přes·protokol·FTP·'smb'·:·soubory·přístupné·přes·protokol·Samba·(sdílení "
-"souborů s operačním systémem Windows)·'dav'·:·soubory·přístupné·přes·protokol·WebDav."
-"Všechny·GnomeVFS·schémata·používaná aplikací Nautilus mohou být použity i zde."
+"Definuje seznam platných GnomeVFS schémat pasujících k vybraným položkám"
+"Schéma GnomeVFS je protokol pro přístup k souborům. Klíčové slovo "
+"k použití je to, které je použito v GnomeVFS URI. Příklad GnomeVFS "
+"URI : file:///tmp/foo.txt sftp:///root@test.example.net/tmp/foo.txt Nejběžnější "
+"schémata jsou : 'file' : lokální soubory 'sftp' : soubory přístupné přes SSH "
+"'ftp' : soubory přístupné přes FTP 'smb' : soubory přístupné přes Sambu (sdílení"
+"v systému Windows) 'dav' : soubory přístupné přes WebDav Libovolná GnomeVFS schémata, používaná "
+"programem Nautilus, zde mohou být použita."
 
 #: ../config/config_newaction.schemas.in.in.h:6
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
@@ -530,64 +517,61 @@ msgid ""
 "If you need one or more files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set 'false'"
 msgstr ""
-"Jestliže potřebujete vybrat jeden nebo i více souborů nebo adresářů, nastavte tento "
-"klíč na 'true'.·Jestliže chcete vybrat pouze jeden soubor nebo adresář, nastavte 'false'"
+"Pokud potřebujete více vybraných souborů nebo složek, nastavte tuto položku na "
+"'pravdivé'. Pokud chcete pouze jeden soubor nebo jednu složku, nastavte 'nepravdivé'"
 
 #: ../config/config_newaction.schemas.in.in.h:7
 msgid "Manage Actions"
-msgstr "Správce činností"
+msgstr "Spravovat akce"
 
 #: ../config/config_newaction.schemas.in.in.h:8
 msgid "Manage your actions using NACT, the configuration tool"
-msgstr "Správce činností používající NACT, konfigurační nástroj"
+msgstr "Spravovat akce pomocí NACT, konfiguračním nástrojem"
 
 #: ../config/config_newaction.schemas.in.in.h:9
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
 msgid "The icon of the menu item"
-msgstr "Ikona položky menu"
+msgstr "Ikona položky v menu"
 
 #: ../config/config_newaction.schemas.in.in.h:10
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
-#, fuzzy
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
 msgstr ""
-"Ikona položky menu bude zobrazena příští LABEL v menu aplikace Nautilus "
-"když vyberete ???zobrazení podmínek nastavení???"
+"Ikona položky v menu, která se objeví vedle jmenovky ve vyskakovacím menu programu "
+"Nautilus, pokud výběr vyhovuje nastaveným podmínkám vzhledu"
 
 #. GConf description strings :
 #: ../config/config_newaction.schemas.in.in.h:11
 #: ../utils/nautilus-actions-new-config.c:48
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:67
 msgid "The label of the menu item"
-msgstr "Pojmenování položky menu"
+msgstr "Jmenovka položky v menu"
 
 #: ../config/config_newaction.schemas.in.in.h:12
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:68
-#, fuzzy
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
 msgstr ""
-"Pojmenování položky·menu·bude·zobrazena·v·menu·aplikace·Nautilus·"
-"když·vyberete·??zobrazení·podmínek·nastavení??"
+"Jmenovka položky v menu, která se objeví ve vyskakovacím menu programu Nautilus, "
+"pokud výběr vyhovuje nastavené podmínce vzhledu"
 
 #: ../config/config_newaction.schemas.in.in.h:13
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
-#, fuzzy
 msgid "The list of GnomeVFS schemes where the selected files should be located"
-msgstr "Seznam GnomeVFS schémat u vybraných souborů by měl být vyhledán"
+msgstr "Seznam schémat GnomeVFS, kde by vybrané soubory měly být umístněny"
 
 #: ../config/config_newaction.schemas.in.in.h:14
 msgid "The list of patterns to match the selected file(s)/folder(s)"
-msgstr "Seznam variant porovnávání pro vybraný(é) soubor(y)/adresář(e)"
+msgstr "Seznam vzorů k napasování na vybrané soubory/složky"
 
 #: ../config/config_newaction.schemas.in.in.h:15
 #: ../utils/nautilus-actions-new-config.c:52
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
 msgid "The parameters of the command"
-msgstr "Parametry pro příkaz"
+msgstr "Parametry příkazu"
 
 #: ../config/config_newaction.schemas.in.in.h:17
 #, no-c-format
@@ -602,49 +586,49 @@ msgid ""
 "scheme of the gnome-vfs URI %h : hostname of the gnome-vfs URI %U : username "
 "of the gnome-vfs URI %% : a percent sign"
 msgstr ""
-"Parametry u příkazu pro spuštění, když uživatel vybere položku menu v aplikaci "
-"Nautilus. Parametry mohou obsahovat speciální znaky které jsou nahrazeny aplikací "
-"Nautilus před spuštěním příkazu·:·%d·:·základní adresář vybraného(ých) souboru(ů)"
-"·%f·:·jméno vybraného souboru nebo·prvního, jestliže je vybraných souborů více·%m·:·"
-"oddělené místo seznamu základních jmen vybraného(ých)·souboru(ů)/adresáře(ů)"
-"·%M·:·oddělené·místo·seznamu vybraného(ých) souboru(ů)/adresáře(ů),·se zadáním"
-" jejich umístěním %u·:·gnome-vfs·URI·%s·:·schéma pro·gnome-vfs·URI·%h·:·jméno"
-"hostitele pro gnome-vfs·URI·%U·:·uživatelské jméno pro gnome-vfs·URI·%%·:·znak procento"
+"Parametry příkazu, který se spustí, když uživatel vybere položku z vyskakovacího "
+"menu programu Nautilus. Parametry mohou obsahovat některé speciální symboly, "
+"které budou před spuštěním příkazu nahrazeny informacemi programu Nautilus : "
+"%d : základní složka vybraného souboru %f : jméno vybraného souboru "
+"nebo prvního z vybraných, pokud je jich více %m : mezerami oddělovaný seznam "
+"základních jmen vybraných souborů/složek %M : mezerami oddělovaný seznam "
+"vybraných souborů/složek, s plnými cestami %u : gnome-vfs URI %s : "
+"schéma gnome-vfs URI %h : jméno hostitelského počítače gnome-vfs URI %U : "
+"uživatelské jméno gnome-vfs URI %% : symbol procenta"
 
 #: ../config/config_newaction.schemas.in.in.h:18
 #: ../utils/nautilus-actions-new-config.c:51
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
-#, fuzzy
 msgid "The path of the command"
-msgstr "Cíl k příkazu"
+msgstr "Cesta příkazu"
 
 #: ../config/config_newaction.schemas.in.in.h:19
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
-#, fuzzy
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
 msgstr ""
-"Cíl pro nastartování příkazu když uživatel vybere položku menu v aplikaci Nautilus"
+"Cesta příkazu, který se spustí, když uživatel vybere položku z vyskakovacího "
+"menu programu Nautilus"
 
 #: ../config/config_newaction.schemas.in.in.h:20
 #: ../utils/nautilus-actions-new-config.c:49
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
 msgid "The tooltip of the menu item"
-msgstr "Popis·nástroje·položky·menu"
+msgstr "Nápověda k položce v menu"
 
 #: ../config/config_newaction.schemas.in.in.h:21
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points the mouse to the Nautilus popup menu item."
 msgstr ""
-"Popis·nástroje·pro·položky·menu·jenž·se·zobrazí·v·stavovém·řádku·aplikace·Nautilus,"
-"když·uživatel·přejde·na·tuto·položku·myší"
+"Nápověda k položce v menu, která se objeví ve stavové liště programu Nautilus, "
+"když uživatel ukáže myší na položku z vyskakovacího menu programu Nautilus."
 
 #: ../config/config_newaction.schemas.in.in.h:22
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "The version of the configuration format"
-msgstr "Verze konfiguračního formátu"
+msgstr "Verze formátu konfigurace"
 
 #: ../config/config_newaction.schemas.in.in.h:23
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
@@ -652,7 +636,8 @@ msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
 msgstr ""
-"Verze konfiguračního formátu jenž bude použita pro správu zpětné kompatibility"
+"Verze formátu konfigurace, která bude použita pro správu zpětné "
+"kompatibility"
 
 #: ../config/config_newaction.schemas.in.in.h:24
 msgid ""
@@ -663,12 +648,12 @@ msgid ""
 "'true' : the selection can holds both files and folders - 'isfile' is "
 "'false' and 'isdir' is 'false' : invalid combination"
 msgstr ""
-"Toto nastavení je vázáno na 'isdir' nastavení. Správné·kombinace·"
-"jsou·:·- 'isfile' je 'true' a 'isdir' je 'false' : výběr·musí·obsahovat·nějaké·"
-"soubory - 'isfile' je 'false' a 'isdir' je 'true' : výběr·musí·obsahovat·nějaké"
-"adresáře - 'isfile' je 'true' a 'isdir' je·'true' : výběr·může·obsahovat·jak·"
-"soubory·tak·i·adresáře - 'isfile' je·'false' a 'isdir' je 'false' : neplatné·"
-"kombinace"
+"Toto nastavení je svázáno s nastavením 'isdir'. Zde jsou platné "
+"kombinace : - 'isfile' je 'pravdivé' a 'isdir' je 'nepravdivé' : výběr "
+"může obsahovat pouze soubory - 'isfile' je 'nepravdivé' a 'isdir' je 'pravdivé' : "
+"výběr může obsahovat pouze složky - 'isfile' je 'pravdivé' a 'isdir' je "
+"'pravdivé' : výběr může obsahovat soubory i složky - 'isfile' je "
+"'nepravdivé' a 'isdir' je 'nepravdivé' : neplatná kombinace"
 
 #: ../config/config_newaction.schemas.in.in.h:25
 msgid ""
@@ -678,16 +663,17 @@ msgid ""
 "selection must holds only folders - 'isfile' is 'true' and 'isdir' is "
 "'true' : the selection can holds both files and folders - 'isfile' is "
 "'false' and 'isdir' is 'false' : invalid combination"
-msgstr "Toto·nastavení·je·vázáno·na·'isfile'·nastavení.·Správné kombinace "
-"jsou : -·'isfile'·je·'true'·a·'isdir'·je·'false'·:·výběr musí obsahovat nějaké "
-"soubory·-·'isfile'·je·'false'·a·'isdir'·je·'true'·:·výběr musí obsahovat nějaké"
-"adresáře·-·'isfile'·je·'true'·a·'isdir'·je 'true'·:·výběr může obsahovat jak "
-"soubory tak i adresáře·-·'isfile'·je 'false'·a·'isdir'·je·'false'·:·neplatné "
-"kombinace"
+msgstr ""
+"Toto nastavení je svázáno s nastavením 'isfile'. Zde jsou platné "
+"kombinace : - 'isfile' je 'pravdivé' a 'isdir' je 'nepravdivé' : výběr "
+"může obsahovat pouze soubory - 'isfile' je 'nepravdivé' a 'isdir' je 'pravdivé' : "
+"výběr může obsahovat pouze složky - 'isfile' je 'pravdivé' a 'isdir' je "
+"'pravdivé' : výběr může obsahovat soubory i složky - 'isfile' je "
+"'nepravdivé' a 'isdir' je 'nepravdivé' : neplatná kombinace"
 
 #: ../utils/nautilus-actions-convert.c:41
 msgid "The old xml config file to convert"
-msgstr "Starý xml konfigurační soubor pro převod"
+msgstr "Starý konfigurační XML soubor ke konverzi"
 
 #: ../utils/nautilus-actions-convert.c:41
 #: ../utils/nautilus-actions-convert.c:42
@@ -696,19 +682,19 @@ msgstr "SOUBOR"
 
 #: ../utils/nautilus-actions-convert.c:42
 msgid "The name of the newly-converted GConf schema file"
-msgstr "Jméno nově vytvářeného souboru GConf·schématu"
+msgstr "Jméno nově zkonvertovaného souboru schématu GConf"
 
 #: ../utils/nautilus-actions-convert.c:43
 msgid "Convert all old xml config files from previous installations [default]"
-msgstr "Převést všechny staré xml konfigurační soubory z předchozích instalací [výchozí]"
+msgstr "Konvertuj všechny staré konfigurační XML soubory z předchozích instalací [přednastaveno]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid ""
 "The folder where the new GConf schema files will be saved if option -a is "
 "set [default=/tmp]"
 msgstr ""
-"Adresář, kam bude uloženo nové GConf·schéma jestliže volba -a·"
-"byla nastavena je [default=/tmp]"
+"Složka, do které budou ukládány soubory nových GConf schémat pokud bude volba -a "
+"nastavena na [default=/tmp]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid "DIR"
@@ -723,8 +709,8 @@ msgid ""
 "Try %s --help\n"
 msgstr ""
 "Syntaktická chyba:\n"
-"\t-·%s\n"
-"Pro nápovědu zadejte·%s·--help\n"
+"\t- %s\n"
+"Zkuste %s --help\n"
 
 #: ../utils/nautilus-actions-convert.c:83
 #, c-format
@@ -734,8 +720,8 @@ msgid ""
 "Try %s --help\n"
 msgstr ""
 "Syntaktická chyba:\n"
-"\tvolba·-i·a·-o·se·navzájem·vylučují s volbou -a\n"
-"Pro·nápovědu·zadejte·%s·--help\n"
+"\tMožnosti -i a -o jsou vzájemně neslučitelné s možností -a\n"
+"Zkuste %s --help\n"
 
 #: ../utils/nautilus-actions-convert.c:89
 #, c-format
@@ -745,17 +731,17 @@ msgid ""
 "Try %s --help\n"
 msgstr ""
 "Syntaktická chyba:\n"
-"\tvolba·-i·je povinná, pokuď použijete volbu -o\n"
-"Pro nápovědu zadejte·%s·--help\n"
+"\tVolba -i je povinná, pokud je použita volba -o\n"
+"Zkuste %s --help\n"
 
 #: ../utils/nautilus-actions-convert.c:101
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
 msgstr ""
 "Chyba:\n"
-"\t-·Nemohu analyzovat %s\n"
+"\t- Nelze syntakticky analyzovat %s\n"
 
 #: ../utils/nautilus-actions-convert.c:115
 #, c-format
@@ -766,31 +752,31 @@ msgstr "Konvertuji %s ..."
 #: ../utils/nautilus-actions-new-config.c:152
 #, c-format
 msgid " Failed: Can't create %s : %s\n"
-msgstr " Selhání: Nemohu vytvořit %s·:·%s\n"
+msgstr " Selhání: Nemohu vytvořit %s : %s\n"
 
 #: ../utils/nautilus-actions-convert.c:143
 #: ../utils/nautilus-actions-new-config.c:160
 #, c-format
 msgid "  Ok, saved in %s\n"
-msgstr "··v pořádku uloženo v %s\n"
+msgstr "  V pořádku, uloženo v %s\n"
 
 #: ../utils/nautilus-actions-convert.c:148
 #: ../utils/nautilus-actions-new-config.c:165
 #, c-format
 msgid "  Failed\n"
-msgstr "··Selhání\n"
+msgstr "  Selhání\n"
 
 #: ../utils/nautilus-actions-new-config.c:48
 msgid "LABEL"
-msgstr "POJMENOVÁNÍ"
+msgstr "JMENOVKA"
 
 #: ../utils/nautilus-actions-new-config.c:49
 msgid "TOOLTIP"
-msgstr "POPIS NÁSTROJE"
+msgstr "NÁPOVĚDA"
 
 #: ../utils/nautilus-actions-new-config.c:50
 msgid "The icon of the menu item (filename or Gtk stock id)"
-msgstr "Ikona položky menu (jméno souboru nebo Gtk stock·id)"
+msgstr "Ikona položky menu (jméno souboru nebo Gtk stock id)"
 
 #: ../utils/nautilus-actions-new-config.c:50
 msgid "ICON"
@@ -799,46 +785,43 @@ msgstr "IKONA"
 #: ../utils/nautilus-actions-new-config.c:51
 #: ../utils/nautilus-actions-new-config.c:58
 msgid "PATH"
-msgstr "CÍL"
+msgstr "CESTA"
 
 #: ../utils/nautilus-actions-new-config.c:52
-#, fuzzy
 msgid "PARAMS"
-msgstr "PARAMS"
+msgstr "PARAMETRY"
 
 #: ../utils/nautilus-actions-new-config.c:53
 msgid ""
 "A pattern to match selected files with possibility to add jokers ? or * (you "
 "must set it for each pattern you need)"
 msgstr ""
-"Formát pro porovnání nalezených souborů s možností přidání žolíků ?·nebo·* "
-"(musíte je nastavit pro každou variantu zvlášť)"
+"Vzor pro napasování na vybrané soubory s možností přidat žolíky ? nebo * "
+"(musíte nastavit pro každý vzor, který potřebujete)"
 
 #: ../utils/nautilus-actions-new-config.c:53
-#, fuzzy
 msgid "EXPR"
-msgstr "EXPR???"
+msgstr "EXPR"
 
 #: ../utils/nautilus-actions-new-config.c:54
 msgid "Set it if the selection can contain files"
-msgstr "Nastavit,·jestliže·výběr·obsahuje·soubory"
+msgstr "Nastavte, pokud výběr může obsahovat soubory"
 
 #: ../utils/nautilus-actions-new-config.c:55
 msgid "Set it if the selection can contain folders"
-msgstr "Nastavit, jestliže výběr obsahuje adresáře"
+msgstr "Nastavte, pokud výběr může obsahovat složky"
 
 #: ../utils/nautilus-actions-new-config.c:56
 msgid "Set it if the selection can have several items"
-msgstr "Nastavit,·jestliže·výběr·obsahuje·několik položek"
+msgstr "Nastavte, pokud výběr může obsahovat více položek"
 
 #: ../utils/nautilus-actions-new-config.c:57
-#, fuzzy
 msgid ""
 "A GnomeVFS scheme where the selected files should be located (you must set "
 "it for each scheme you need)"
 msgstr ""
-"GnomeVFS schéma ODKUD vybrané soubory by měly být umístěny (musí být určeno "
-"pro každé schéma odděleně)"
+"Schéma GnomeVFS, kde by vybrané soubory měly být umístněny (musíte "
+"nastavit pro každý vzor, který potřebujete)"
 
 #: ../utils/nautilus-actions-new-config.c:57
 msgid "SCHEME"
@@ -849,8 +832,8 @@ msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
 msgstr ""
-"Cílový adresář pro uložení nového definičního souboru pro GConf·schéma"
-"[default:·/tmp/config_UUID.schemas]"
+"Cesta k souboru, do kterého bude uložena definice schématu GConf "
+"[přednastaveno: /tmp/config_UUID.schemas]"
 
 #: ../utils/nautilus-actions-new-config.c:133
 #, c-format
@@ -872,8 +855,8 @@ msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
 msgstr ""
-"Popis nástroje pro položky menu jenž se zobrazí v stavovém řádku aplikace Nautilus,"
-"když uživatel přejde na tuto položku myší"
+"Nápověda k položce menu, která se objeví ve stavové liště programu Nautilus, "
+"pokud uživatel ukáže myší na položku vyskakovacího menu programu Nautilus"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
@@ -896,26 +879,27 @@ msgid ""
 "%U : username of the gnome-vfs URI\n"
 "%% : a percent sign"
 msgstr ""
-"Parametry·u·příkazu·pro·spuštění,·když·uživatel·vybere·položku·menu·v·aplikaci·"
-"Nautilus.\n"
+"Parametry příkazu, který bude spuštěn, když uživatel vybere položku z vyskakovacího "
+"menu programu Nautilus.\n"
 "\n"
-"Parametry·mohou·obsahovat·speciální·znaky·které·jsou·nahrazeny·aplikací·"
-"Nautilus·před·spuštěním·příkazu :\n"
+"Parametry mohou obsahovat některé speciální symboly, které budou před spuštěním "
+"příkazu nahrazeny informacemi programu Nautilus :\n"
 "\n"
-"%d : základní·adresář·vybraného(ých)·souboru(ů)\n"
-"%f : jméno·vybraného·souboru·nebo prvního,·jestliže·je·vybraných·souborů·více \n"
-"%m : oddělené·místo·seznamu·základních·jmen·vybraného(ých) souboru(ů)/adresáře(ů)\n"
-"%M : oddělené místo seznamu·vybraného(ých)·souboru(ů)/adresáře(ů), se·zadáním"
-"·jejich·umístěním\n"
-"%u : gnome-vfs URI \n"
-"%s : schéma·pro gnome-vfs URI \n"
-"%h : jméno hostitele·pro·gnome-vfs URI \n"
-"%U : uživatelské·jméno·pro·gnome-vfs URI \n"
-"%% : znak procento"
+"%d : základní složka vybraných souborů\n"
+"%f : jméno vybraného souboru, nebo prvního, je-li jich vybráno více\n"
+"%m : mezerami oddělovaný seznam vybraných souborů/složek"
+"(s)\n"
+"%M : mezerami oddělovaný seznam vybraných souborů/složek"
+"s plnými cestami\n"
+"%u : gnome-vfs URI\n"
+"%s : schéma gnome-vfs URI\n"
+"%h : jméno hostitelského počítače gnome-vfs URI\n"
+"%U : uživatelské jméno gnome-vfs URI\n"
+"%% : znak procenta"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
 msgid "The list of pattern to match the selected file(s)/folder(s)"
-msgstr "seznam variant porovnání pro vybraný soubor(y)/adresář(e)"
+msgstr "Seznam vzorů pro napasování na vybrané soubory/složky"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
@@ -930,32 +914,34 @@ msgid ""
 "files and folders\n"
 "- 'isfile' is 'false' and 'isdir' is 'false' : invalid combination"
 msgstr ""
-"Platné kombinace·:\n"
+"Zde jsou platné kombinace :\n"
 "\n"
-"-·'isfile'·je·'true'·a·'isdir'·je·'false'·:·výběr musí obsahovat pouze soubory\n"
-"-·'isfile'·je·'false'·a·'isdir'·is·'true'·:·výběr·musí·obsahovat·pouze adresáře\n"
-"-·'isfile'·je·'true'·a·'isdir'·je·'true'·:·výběr·může·obsahovat·jak soubory tak i adresáře\n"
-"-·'isfile'·je·'false'·a·'isdir'·je·'false'·:·neplatná kombinace"
+"- 'isfile' je 'pravdivé' a 'isdir' je 'nepravdivé' : výběr může obsahovat "
+"pouze soubory\n"
+"- 'isfile' je 'nepravdivé' a 'isdir' je 'pravdivé' : výběr může obsahovat "
+"pouze složky\n"
+"- 'isfile' je 'pravdivé' a 'isdir' je 'pravdivé' : výběr může obsahovat "
+"soubory i složky\n"
+"- 'isfile' je 'nepravdivé' a 'isdir' je 'pravdivé' : neplatná kombinace"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr "'true' jestliže·výběr·může·obsahovat·adresáře,·jinak·'false'"
+msgstr "'pravdivé', pokud výběr může obsahovat soubory, jinak 'nepravdivé'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid "This setting is tied with the 'isdir' setting. "
-msgstr "Toto·nastavení·je·vázáno·na·'isdir'·nastavení.·"
+msgstr "Toto nastavení je svázáno s nastavením 'isdir'. "
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr "'true' jestliže·výběr·může·obsahovat·adresáře,·jinak·'false'"
+msgstr "'pravdivé', pokud výběr může obsahovat složky, jinak 'nepravdivé'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
 msgid "This setting is tied with the 'isfile' setting. "
-msgstr "Toto nastavení je vázáno na 'isfile' nastavení. "
+msgstr "Toto nastavení je svázáno s nastavením 'isfile'. "
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
-#, fuzzy
 msgid ""
 "Defines the list of valid GnomeVFS schemes to be matched with the selected "
 "items. The GnomeVFS scheme is the protocol used to access the files. The "
@@ -975,21 +961,21 @@ msgid ""
 "\n"
 "All GnomeVFS schemes used by Nautilus can be used here."
 msgstr ""
-"Definice·seznamu·platných·GnomeVFS·schémat·je·PLATNÝ·pro·vybrané"
-"položky. GnomeVFS schéma·je protokol používaný·pro·přístup·k·souborům."
-"Klíčové·slovo·GnomeVFS URI·je·použito·pouze·jednou.\n"
-"\n "
-"Například GnomeVFS URI·:·\n"
+"Definuje seznam platných schémat GnomeVFS k napasování na vybrané polkožky. "
+"Schéma GnomeVFS je protokol pro přístup k souborům. Klíčové slovo k použití "
+"je to, které je použito v GnomeVFS URI.\n"
+"\n"
+"Příklady GnomeVFS URI : \n"
 "file:///tmp/foo.txt\n"
-"sftp:///root@test.napriklad.net/tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt\n"
 "\n"
-"Schémata·jsou·:\n"
+"Nejběžnější schémata jsou :\n"
 "\n"
-"'file' : soubory·na·lokálním·disku \n"
-"'sftp' : soubory·přístupné·přes·protokol SSH \n"
-"'ftp' : soubory přístupné přes protokol FTP \n"
-"'smb' : soubory přístupné přes protokol Samba (sdílení·souborů·s·operačním·systémem·Windows) \n"
-"'dav' : soubory přístupné přes protokol WebDav\n"
+"'file' : lokální soubory\n"
+"'sftp' : soubory dostupné přes SSH\n"
+"'ftp' : soubory dostupné přes FTP\n"
+"'smb' : soubory dostupné přes Sambu (sdílení Windows)\n"
+"'dav' : soubory dostupné přes WebDav\n"
 "\n"
-"Všechny GnomeVFS schémata používaná·aplikací·Nautilus·mohou·být·použity i·zde."
+"Všechna schémata GnomeVFS používané programem Nautilus mohou být použita zde."
 
