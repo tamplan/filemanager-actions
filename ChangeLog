@@ -1,3 +1,7 @@
+2006-03-02  Inaki Larranaga  <dooteo@euskalgnu.org>
+
+	* configure.in: Added 'eu' (Basque) to ALL_LINGUAS.
+
 2006-02-08  Frederic Ruaudel <grumz@grumz.net> 1.0
 
 	* configure.in: Update the version number to 1.0
