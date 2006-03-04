@@ -2,14 +2,14 @@
 # translation of nautilus-actions.po to Macedonian
 # This file is distributed under the same license as the PACKAGE package.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
-# Arangel Angov <ufo@linux.net.mk>, 2005.
+# Arangel Angov <ufo@linux.net.mk>, 2005, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: mk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-22 18:58+0100\n"
-"PO-Revision-Date: 2005-12-16 19:44+0100\n"
+"PO-Revision-Date: 2006-03-04 09:50+0100\n"
 "Last-Translator: Arangel Angov <ufo@linux.net.mk>\n"
 "Language-Team: Macedonian <ossm-members@hedona.on.net.mk>\n"
 "MIME-Version: 1.0\n"
@@ -416,11 +416,11 @@ msgstr "„точно“ ако избраното може да содржи н
 
 #: ../config/config_newaction.schemas.in.in.h:2
 msgid "'true' if the selection must have files, 'false' otherwise"
-msgstr ""
+msgstr "'вклучено' ако избраното мора да содржи датотеки, 'исклучено' ако не содржи"
 
 #: ../config/config_newaction.schemas.in.in.h:3
 msgid "'true' if the selection must have folders, 'false' otherwise"
-msgstr ""
+msgstr "'вклучено' ако избраното мора да содржи папки 'исклучено' ако не содржи"
 
 #: ../config/config_newaction.schemas.in.in.h:4
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
@@ -447,6 +447,8 @@ msgid ""
 "If you need one or more files or folders to be selected, set 'true' to this "
 "key. If you want just one file or folder, set 'false'"
 msgstr ""
+"Ако ви требаат избрани повеќе од една датотека или папка вклучете го овој "
+"клуч. Ако сакате само една датотека или папка исклучете го."
 
 #: ../config/config_newaction.schemas.in.in.h:7
 msgid "Manage Actions"
@@ -708,15 +710,15 @@ msgstr "ИЗРАЗ"
 
 #: ../utils/nautilus-actions-new-config.c:51
 msgid "Set it if the selection can contains files"
-msgstr ""
+msgstr "Поставете го ако избраното можете да содржи датотеки"
 
 #: ../utils/nautilus-actions-new-config.c:52
 msgid "Set it if the selection can contains folders"
-msgstr ""
+msgstr "Поставете го ако собраното можете да содржи папки"
 
 #: ../utils/nautilus-actions-new-config.c:53
 msgid "Set it if the selection can have several items"
-msgstr ""
+msgstr "Поставете го ако избраното може да содржи неколку предмети"
 
 #: ../utils/nautilus-actions-new-config.c:54
 msgid ""
@@ -787,19 +789,19 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
 msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr ""
+msgstr "'вклучено' ако избраното може да содржи датотеки, 'исклучено' ако не содржи"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
 msgid "This setting is tied with the 'isdir' setting. "
-msgstr ""
+msgstr "Тоа поставување е врзано со 'isdir' поставувањето. "
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr ""
+msgstr "'вклучено' 'ако избраното може да содржи папки, 'исклучено' ако не содржи"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
 msgid "This setting is tied with the 'isfile' setting. "
-msgstr ""
+msgstr "Ова поставување е врзано со 'isfile' поставувањето. "
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
