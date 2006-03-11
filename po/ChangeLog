@@ -1,3 +1,8 @@
+2006-03-11  Frank Arnold  <farnold@cvs.gnome.org>
+
+	* POTFILES.in: Removed config/config_newaction.schemas.in.
+	* de.po: Replaced wrong spaces caused by copy/paste inside gtranslator.
+
 2006-03-03  Leonid Kanter <leon@asplinux.ru>
 
 	* ru.po: Added Russian translation from

@@ -1,4 +1,3 @@
-config/config_newaction.schemas.in
 nact/nact.desktop.in
 nact/nautilus-actions-config.glade
 nact/nact.c
