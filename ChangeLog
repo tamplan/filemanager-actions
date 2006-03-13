@@ -1,3 +1,7 @@
+2006-03-13  Runa Bhattacharjee <runa@bengalinux.org>
+
+	* configure.in: Added "bn" (Bengali) to ALL_LINGUAS.
+
 2006-03-02  Inaki Larranaga  <dooteo@euskalgnu.org>
 
 	* configure.in: Added 'eu' (Basque) to ALL_LINGUAS.
