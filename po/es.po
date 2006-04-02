@@ -1,3 +1,4 @@
+# translation of es.po to
 # translation of es.po to Spanish
 # Spanish translation of es
 # Mario Izquierdo <mariodebian@gmail.com>, 2005.
@@ -8,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-01 16:27+0100\n"
-"PO-Revision-Date: 2006-03-03 00:40+0100\n"
+"POT-Creation-Date: 2006-04-02 14:20+0200\n"
+"PO-Revision-Date: 2006-04-02 14:31+0200\n"
 "Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
-"Language-Team: Spanish <traductores@es.gnome.org>\n"
+"Language-Team:  <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
-"X-Generator: KBabel 1.9.1\n"
+"X-Generator: KBabel 1.10.2\n"
 
 #: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
@@ -48,7 +49,9 @@ msgstr "<b>%%</b> : un símbolo de porcentaje"
 msgid ""
 "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
 "full paths"
-msgstr "<b>%M</b>: lista separada por espacios de archivo(s)/carpeta(s) seleccionados con su ruta completa"
+msgstr ""
+"<b>%M</b>: lista separada por espacios de archivo(s)/carpeta(s) "
+"seleccionados con su ruta completa"
 
 #: ../nact/nautilus-actions-config.glade.h:9
 #, no-c-format
@@ -63,7 +66,9 @@ msgstr "<b>%d</b>: carpeta base de los archivo(s) seleccionado(s)"
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
 msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
-msgstr "<b>%f</b>: el nombre del archivo seleccionado o el 1º si hay varios seleccionados"
+msgstr ""
+"<b>%f</b>: el nombre del archivo seleccionado o el 1º si hay varios "
+"seleccionados"
 
 #: ../nact/nautilus-actions-config.glade.h:15
 #, no-c-format
@@ -122,7 +127,10 @@ msgstr "<span size=\"larger\"><b>Leyenda de parámetros</b></span>"
 msgid ""
 "A string with wildcards (? or *) that will be used to match the files. You "
 "can match several file patterns by separating them with a semi-colon (;)."
-msgstr "Se usará una cadena con un comodín (? o *) para hacerlos coincidir con los archivos. Puede comparar varios patrones de archivos separándolos con un punto y coma (;)"
+msgstr ""
+"Se usará una cadena con un comodín (? o *) para hacerlos coincidir con los "
+"archivos. Puede comparar varios patrones de archivos separándolos con un "
+"punto y coma (;)."
 
 #: ../nact/nautilus-actions-config.glade.h:32
 msgid "Appears if selection has multiple files or folders"
@@ -156,7 +164,9 @@ msgstr "Pulse para elegir un comando del diálogo de selección de archivos."
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list."
-msgstr "Pulse para elegir un icono predeterminado de un archivo en lugar de un icono predefinido de la lista desplegable."
+msgstr ""
+"Pulse para elegir un icono predeterminado de un archivo en lugar de un icono "
+"predefinido de la lista desplegable."
 
 #: ../nact/nautilus-actions-config.glade.h:39
 msgid "Click to remove the selected scheme."
@@ -164,7 +174,9 @@ msgstr "Pulse para quitar el esquema seleccionado."
 
 #: ../nact/nautilus-actions-config.glade.h:40
 msgid "Click to see the list of special tokens you can use in the parameter field."
-msgstr "Pulse para ver la lista de tokens especiales que puede usar en el campo de parámetros."
+msgstr ""
+"Pulse para ver la lista de tokens especiales que puede usar en el campo de "
+"parámetros."
 
 #: ../nact/nautilus-actions-config.glade.h:41
 msgid "Conditions"
@@ -196,7 +208,7 @@ msgstr "Icono:"
 
 #: ../nact/nautilus-actions-config.glade.h:48
 msgid "Import all my old configs"
-msgstr "Importar todas mis antiguas configuraciones"
+msgstr "Importar todas mis configuraciones antiguas"
 
 #: ../nact/nautilus-actions-config.glade.h:49
 msgid "Import new configurations"
@@ -262,7 +274,9 @@ msgstr "Sólo carpetas"
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
-msgstr "Parámetros que se enviarán al programa. Pulse en el botón 'Leyenda' para ver los diferentes tokens de reemplazo."
+msgstr ""
+"Parámetros que se enviarán al programa. Pulse en el botón 'Leyenda' para ver "
+"los diferentes tokens de reemplazo."
 
 #: ../nact/nautilus-actions-config.glade.h:64
 msgid "Parameters:"
@@ -284,7 +298,9 @@ msgstr "Guardar en la carpeta:"
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
-msgstr "Seleccione las configuraciones que quiere exportar. Use Mayus o Ctrl para seleccionar más de una."
+msgstr ""
+"Seleccione las configuraciones que quiere exportar. Use Mayús o Ctrl para "
+"seleccionar más de una."
 
 #: ../nact/nautilus-actions-config.glade.h:69
 msgid "Select the configurations you want to export:"
@@ -298,20 +314,27 @@ msgstr "Seleccione el archivo quiera importar."
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
-msgstr "Seleccione la carpeta que donde quiere guardar su configuración. Esta carpeta debe existir."
+msgstr ""
+"Seleccione la carpeta que donde quiere guardar su configuración. Esta "
+"carpeta debe existir."
 
 #: ../nact/nautilus-actions-config.glade.h:72
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add a new scheme by clicking on the '+' button."
-msgstr "Seleccione la clase de archivos donde quiere que su acción aparezca. Si no sabe qué elegir, intente seleccionando tan sólo 'file' que es la opción más común. Puede añadir un esquema nuevo pulsando en el botón '+'."
+msgstr ""
+"Seleccione la clase de archivos donde quiere que su acción aparezca. Si no "
+"sabe qué elegir, intente seleccionando tan sólo 'file' que es la opción más "
+"común. Puede añadir un esquema nuevo pulsando en el botón '+'."
 
 #: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
-msgstr "El comando que se lanzará cuando se seleccione la acción en el menú de Nautilus."
+msgstr ""
+"El comando que se lanzará cuando se seleccione la acción en el menú de "
+"Nautilus."
 
 #: ../nact/nautilus-actions-config.glade.h:74
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
@@ -319,7 +342,9 @@ msgstr "Este software se licencia bajo la Licencia Pública General de GNU (GPL)
 
 #: ../nact/nautilus-actions-config.glade.h:75
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr "Consejo del elemento del menú que aparecerá en la barra de estado de Nautilus."
+msgstr ""
+"Consejo del elemento del menú que aparecerá en la barra de estado de "
+"Nautilus."
 
 #: ../nact/nautilus-actions-config.glade.h:76
 msgid "Tooltip:"
@@ -341,15 +366,15 @@ msgstr ""
 "Mario Izquierdo <mariodebian@gmail.com>"
 
 #. create columns on the tree view
-#: ../nact/nact.c:245 ../nact/nact-import-export.c:179
+#: ../nact/nact.c:254 ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "Icono"
 
-#: ../nact/nact.c:250 ../nact/nact-import-export.c:184
+#: ../nact/nact.c:259 ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "Etiqueta"
 
-#: ../nact/nact.c:270 ../nact/nact-editor.c:675
+#: ../nact/nact.c:279 ../nact/nact-editor.c:675
 #: ../nact/nact-import-export.c:346
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr ""
@@ -470,7 +495,9 @@ msgstr "El nombre del archivo de esquema GConf convertido nuevo"
 
 #: ../utils/nautilus-actions-convert.c:43
 msgid "Convert all old XML config files from previous installations [default]"
-msgstr "Convertir todos los archivos XML antiguos de configuración de las instalaciones anteriores [predeterminado]"
+msgstr ""
+"Convertir todos los archivos XML antiguos de configuración de las "
+"instalaciones anteriores [predeterminado]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid ""
@@ -600,7 +627,9 @@ msgstr "PARÁMS"
 msgid ""
 "A pattern to match selected files against. May include wildcards (* or ?) "
 "(you must set one option for each pattern you need)"
-msgstr "Un patrón para coincidir con los archivos seleccionados. Puede incluir comodines (? o *) (debe establecer una opción por cada patrón que necesite)"
+msgstr ""
+"Un patrón para coincidir con los archivos seleccionados. Puede incluir "
+"comodines (? o *) (debe establecer una opción por cada patrón que necesite)"
 
 #: ../utils/nautilus-actions-new-config.c:53
 msgid "EXPR"
@@ -712,14 +741,19 @@ msgid ""
 "%U: username of the :%s/GnomeVFS URI\n"
 "%%: a percent sign"
 msgstr ""
-"Los parámetros del comando para iniciar cuando el usuario seleccione el elemento del menú en el menú contextual de Nautilus.\n"
+"Los parámetros del comando para iniciar cuando el usuario seleccione el "
+"elemento del menú en el menú contextual de Nautilus.\n"
 "\n"
-"Los parámetros pueden contener algunos tokens especiales que se reemplazan por información de Nautilus antes de iniciar el comando:\n"
+"Los parámetros pueden contener algunos tokens especiales que se reemplazan "
+"por información de Nautilus antes de iniciar el comando:\n"
 "\n"
 "%d : carpeta base de los archivos seleccionados\n"
-"%f : el nombre del archivo seleccionado o el del primer archivo si hay varios seleccionados\n"
-"%m : lista de los nombres base de los archivos/carpetas seleccionados separados por un espacio\n"
-"%M : lista de los archivos/carpetas seleccionados con su ruta completa separada por un espacio\n"
+"%f : el nombre del archivo seleccionado o el del primer archivo si hay "
+"varios seleccionados\n"
+"%m : lista de los nombres base de los archivos/carpetas seleccionados "
+"separados por un espacio\n"
+"%M : lista de los archivos/carpetas seleccionados con su ruta completa "
+"separada por un espacio\n"
 "%u : URI GnomeVFS \n"
 "%s : esquema de la URI de GnomeVFS\n"
 "%h : nombre de host de la URI GnomeVFS\n"
@@ -755,8 +789,10 @@ msgstr ""
 "\n"
 "isfile=TRUE e isdir=FALSE: la selección sólo puede contener archivos\n"
 "isfile=FALSE e isdir=TRUE: la selección sólo pude contener carpetas\n"
-"isfile=TRUE e isdir=TRUE: la selección contiene tanto archivos como carpetas\n"
-"isfile=FALSE e isdir=FALSE: combinación inválida (su configuración nunca aparecerá)"
+"isfile=TRUE e isdir=TRUE: la selección contiene tanto archivos como "
+"carpetas\n"
+"isfile=FALSE e isdir=FALSE: combinación inválida (su configuración nunca "
+"aparecerá)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid "'true' if the selection can have files, 'false' otherwise"
@@ -813,7 +849,10 @@ msgid ""
 "\n"
 "All GnomeVFS schemes used by Nautilus can be used here."
 msgstr ""
-"Define la lista de esquemas GnomeVFS válidos para coincidir con los elementos seleccionados. El esquema GnomeVFS es el protocolo que se usa para acceder a los archivos. La palabra clave para usar es la que se usa en el URI de GnomeVFS:\n"
+"Define la lista de esquemas GnomeVFS válidos para coincidir con los "
+"elementos seleccionados. El esquema GnomeVFS es el protocolo que se usa para "
+"acceder a los archivos. La palabra clave para usar es la que se usa en el "
+"URI de GnomeVFS:\n"
 "\n"
 "Ejemplo de URI GnomeVFS:\n"
 "file:///tmp/foo.txt\n"
