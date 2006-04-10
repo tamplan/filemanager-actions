@@ -1,3 +1,13 @@
+2006-04-10  Frederic Ruaudel <grumz@grumz.net>
+
+	* po/LINGUAS:
+	* configure.in: Move the ALL_LINGUAS list into a separated file named
+	po/LINGUAS to make translators' life easier (see 
+	http://live.gnome.org/GnomeGoals/PoLinguas for more details)
+
+	* configure.in: Remove 'eu' (Basque) to ALL_LINGUAS because there is
+	no corresponding po file (Bug #336215)
+
 2006-03-13  Runa Bhattacharjee <runa@bengalinux.org>
 
 	* configure.in: Added "bn" (Bengali) to ALL_LINGUAS.
