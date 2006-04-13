@@ -329,6 +329,8 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	config = nautilus_actions_config_gconf_writer_get ();
+	g_set_application_name (PACKAGE);
+	gtk_window_set_default_icon_name (PACKAGE);
 
 	/* create main dialog */
 	init_dialog ();

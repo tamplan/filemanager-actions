@@ -1,3 +1,21 @@
+2006-04-13  Frederic Ruaudel <grumz@grumz.net>
+
+	* icons: Add new Tango style icons created by Ulisse
+
+	* AUTHORS: Update Contributors list
+
+	* configure.in:
+	* Makefile.am:
+	* nact/Makefile.am:
+	* nact/nact.c:
+	* nact/nact.desktop.in:
+	* nact/nautilus-actions-config.glade: Make theme-friendly icons
+	installation to achieve GnomeGoal#2 (see 
+	http://live.gnome.org/GnomeGoals/AppIcon for more details)
+
+	* nact/nautilus-actions-icon.png:
+	* nact/nautilus-actions-icon.xcf: Remove old icons
+
 2006-04-10  Frederic Ruaudel <grumz@grumz.net>
 
 	* po/LINGUAS:
