@@ -39,6 +39,8 @@ typedef enum {
 	ACTION_PATH_TYPE,
 	ACTION_PARAMS_TYPE,
 	ACTION_BASENAMES_TYPE,
+	ACTION_MATCHCASE_TYPE,
+	ACTION_MIMETYPES_TYPE,
 	ACTION_ISFILE_TYPE,
 	ACTION_ISDIR_TYPE,
 	ACTION_MULTIPLE_TYPE,
@@ -250,6 +252,8 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 	gboolean is_path_ok = FALSE;
 	gboolean is_params_ok = FALSE;
 	gboolean is_basenames_ok = FALSE;
+	gboolean is_matchcase_ok = FALSE;
+	gboolean is_mimetypes_ok = FALSE;
 	gboolean is_isfile_ok = FALSE;
 	gboolean is_isdir_ok = FALSE;
 	gboolean is_multiple_ok = FALSE;
@@ -307,6 +311,17 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 						g_slist_foreach (list, (GFunc)g_free, NULL);
 						g_slist_free (list);
 						break;
+					case ACTION_MATCHCASE_TYPE:
+						is_matchcase_ok = TRUE;
+						nautilus_actions_config_action_set_match_case (action, schema_string_to_bool (value));
+						break;
+					case ACTION_MIMETYPES_TYPE:
+						is_mimetypes_ok = TRUE;
+						list = schema_string_to_gslist (value);
+						nautilus_actions_config_action_set_mimetypes (action, list);
+						g_slist_foreach (list, (GFunc)g_free, NULL);
+						g_slist_free (list);
+						break;
 					case ACTION_ISFILE_TYPE:
 						is_isfile_ok = TRUE;
 						nautilus_actions_config_action_set_is_file (action, schema_string_to_bool (value));
@@ -343,12 +358,25 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		}
 	}
 		
-	if (is_version_ok && is_schemes_ok && is_multiple_ok && 
+	if (is_version_ok)
+	{
+		if (g_ascii_strcasecmp (action->version, "1.0") == 0 && 
+				is_schemes_ok && is_multiple_ok && 
 				is_isdir_ok && is_isfile_ok && is_basenames_ok && 
 				is_params_ok && is_path_ok && is_icon_ok && 
 				is_tooltip_ok && is_label_ok)
-	{
-		retv = TRUE;
+		{
+			retv = TRUE;
+		}
+		else if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 && 
+				is_schemes_ok && is_multiple_ok && 
+				is_matchcase_ok && is_mimetypes_ok &&
+				is_isdir_ok && is_isfile_ok && is_basenames_ok && 
+				is_params_ok && is_path_ok && is_icon_ok && 
+				is_tooltip_ok && is_label_ok)
+		{
+			retv = TRUE;
+		}
 	}	
 
 	return retv;

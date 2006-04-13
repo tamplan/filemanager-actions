@@ -1,5 +1,21 @@
 2006-04-13  Frederic Ruaudel <grumz@grumz.net>
 
+	* configure.in: Update the version of n-a and the config file.
+
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-writer.c:
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
+	* libnautilus-actions/nautilus-actions-config-xml.c:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h:
+	* nact/nact-editor.c:
+	* nact/nautilus-actions-config.glade: Start to manage the mimetype
+	patterns and the case insensitive filename patterns (Bug #325581 
+	and Bug #329260).
+
 	* icons: Add new Tango style icons created by Ulisse
 
 	* AUTHORS: Update Contributors list

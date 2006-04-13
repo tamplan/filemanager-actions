@@ -55,6 +55,8 @@
 #define ACTION_PATH_ENTRY      "path"
 #define ACTION_PARAMS_ENTRY    "parameters"
 #define ACTION_BASENAMES_ENTRY "basenames"
+#define ACTION_MATCHCASE_ENTRY "matchcase"
+#define ACTION_MIMETYPES_ENTRY "mimetypes"
 #define ACTION_ISFILE_ENTRY    "isfile"
 #define ACTION_ISDIR_ENTRY     "isdir"
 #define ACTION_MULTIPLE_ENTRY  "accept-multiple-files"
@@ -76,7 +78,11 @@
 /* i18n notes : Sorry for this long paragraph, will try to fix it the next release */
 #define ACTION_PARAMS_DESC_LONG		_("The parameters of the command to start when the user selects the menu item in the Nautilus popup menu.\n\nThe parameters can contain some special tokens which are replaced by Nautilus information before starting the command:\n\n%d: base folder of the selected file(s)\n%f: the name of the selected file or the first one if many are selected\n%m: space-separated list of the basenames of the selected file(s)/folder(s)\n%M: space-separated list of the selected file(s)/folder(s), with their full paths\n%u: GnomeVFS URI\n%s: scheme of the GnomeVFS URI\n%h: hostname of the GnomeVFS URI\n%U: username of the :%s/GnomeVFS URI\n%%: a percent sign")
 #define ACTION_BASENAMES_DESC_SHORT	_("The list of pattern to match the selected file(s)/folder(s)")
-#define ACTION_BASENAMES_DESC_LONG	_("A list of strings with joker '*' or '?' to match the selected file(s)/folder(s). Each selected items must match at least one of the patterns for the action to appear")
+#define ACTION_BASENAMES_DESC_LONG	_("A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear")
+#define ACTION_MATCHCASE_DESC_SHORT _("'true' if the filename patterns have to be case sensitive, 'false' otherwise")
+#define ACTION_MATCHCASE_DESC_LONG	_("If you need to mach a filename in a case sensitive manner, set this key to 'true'. If you want that for example '*.jpg' match also 'photo.JPG', set 'false'")
+#define ACTION_MIMETYPES_DESC_SHORT	_("The list of pattern to match the mimetypes of the selected file(s)")
+#define ACTION_MIMETYPES_DESC_LONG	_("A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear")
 /* i18n notes : Sorry for this long paragraph, will try to fix it in the next release */
 #define ACTION_ISFILE_ISDIR_COMBINAITION_DESC_LONG N_("The valid combinations are:\n\nisfile=TRUE and isdir=FALSE: the selection may hold only files\nisfile=FALSE and isdir=TRUE: the selection may hold only folders\nisfile=TRUE and isdir=TRUE': the selection may hold both files and folders\nisfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)")
 #define ACTION_ISFILE_DESC_SHORT		_("'true' if the selection can have files, 'false' otherwise")

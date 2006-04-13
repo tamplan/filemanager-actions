@@ -69,6 +69,14 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->basenames, NULL);
 	g_free (key);
 
+	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_MATCHCASE_ENTRY);
+	gconf_client_set_bool (config->conf_client, key, action->match_case, NULL);
+	g_free (key);
+
+	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_MIMETYPES_ENTRY);
+	gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->mimetypes, NULL);
+	g_free (key);
+
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_ISFILE_ENTRY);
 	gconf_client_set_bool (config->conf_client, key, action->is_file, NULL);
 	g_free (key);

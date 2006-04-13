@@ -168,6 +168,18 @@ actions_changed_cb (GConfClient *client,
 			g_slist_foreach (list, (GFunc)g_free, NULL);
 			g_slist_free (list);
 		}
+		else if (g_str_has_suffix (key, ACTION_MATCHCASE_ENTRY))
+		{
+			nautilus_actions_config_action_set_match_case (action, gconf_value_get_bool (value));
+		}
+		else if (g_str_has_suffix (key, ACTION_MIMETYPES_ENTRY))
+		{
+			list = NULL;
+			g_slist_foreach (gconf_value_get_list (value), (GFunc) copy_list, &list);
+			nautilus_actions_config_action_set_mimetypes (action, list);
+			g_slist_foreach (list, (GFunc)g_free, NULL);
+			g_slist_free (list);
+		}
 		else if (g_str_has_suffix (key, ACTION_ISFILE_ENTRY))
 		{
 			nautilus_actions_config_action_set_is_file (action, gconf_value_get_bool (value));

@@ -296,6 +296,9 @@ NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void)
 	new_action->parameters = g_strdup ("");
 	new_action->basenames = NULL;
 	new_action->basenames = g_slist_append (new_action->basenames, g_strdup ("*"));
+	new_action->match_case = TRUE;
+	new_action->mimetypes = NULL;
+	new_action->mimetypes = g_slist_append (new_action->mimetypes, g_strdup ("*/*"));
 	new_action->is_file = TRUE;
 	new_action->is_dir = FALSE;
 	new_action->accept_multiple_files = FALSE;
@@ -391,6 +394,17 @@ nautilus_actions_config_action_set_basenames (NautilusActionsConfigAction *actio
 	g_slist_foreach (basenames, (GFunc) copy_list, &(action->basenames));
 }
 
+void nautilus_actions_config_action_set_mimetypes (NautilusActionsConfigAction *action, GSList *mimetypes)
+{
+	g_return_if_fail (action != NULL);
+
+	g_slist_foreach (action->mimetypes, (GFunc) g_free, NULL);
+	g_slist_free (action->mimetypes);
+	action->mimetypes = NULL;
+	g_slist_foreach (mimetypes, (GFunc) copy_list, &(action->mimetypes));
+}
+
+
 void
 nautilus_actions_config_action_set_schemes (NautilusActionsConfigAction *action, GSList *schemes)
 {
@@ -471,6 +485,15 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 			for (iter = action->basenames; iter; iter = iter->next)
 			{
 				new_action->basenames = g_slist_append (new_action->basenames, g_strdup ((gchar*)iter->data));
+			}
+		}
+		
+		new_action->match_case = action->match_case;
+
+		if (action->mimetypes && success) {
+			for (iter = action->mimetypes; iter; iter = iter->next)
+			{
+				new_action->mimetypes = g_slist_append (new_action->mimetypes, g_strdup ((gchar*)iter->data));
 			}
 		}
 
@@ -565,6 +588,12 @@ nautilus_actions_config_action_free (NautilusActionsConfigAction *action)
 			g_slist_foreach (action->basenames, (GFunc) g_free, NULL);
 			g_slist_free (action->basenames);
 			action->basenames = NULL;
+		}
+
+		if (action->mimetypes) {
+			g_slist_foreach (action->mimetypes, (GFunc) g_free, NULL);
+			g_slist_free (action->mimetypes);
+			action->mimetypes = NULL;
 		}
 
 		if (action->schemes) {

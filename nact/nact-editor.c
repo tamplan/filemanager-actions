@@ -605,7 +605,7 @@ static void set_action_schemes (gchar* action_scheme, GtkTreeModel* scheme_model
 	}
 }
 
-static void set_action_basenames_list (GtkEntry* entry, GSList* basenames)
+static void set_action_match_string_list (GtkEntry* entry, GSList* basenames)
 {
 	GSList* iter;
 	gchar* entry_text;
@@ -626,7 +626,7 @@ static void set_action_basenames_list (GtkEntry* entry, GSList* basenames)
 	gtk_entry_set_text (entry, entry_text);
 }
 
-static GSList* get_action_basenames_list (const gchar* patterns)
+static GSList* get_action_match_string_list (const gchar* patterns)
 {
 	gchar** tokens = g_strsplit (patterns, ";", -1);
 	gchar** iter;
@@ -662,7 +662,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	GtkSizeGroup* button_size_group;
 	GtkWidget *menu_icon, *scheme_listview;
 	GtkWidget *menu_label, *menu_tooltip;
-	GtkWidget *command_path, *command_params, *test_patterns;
+	GtkWidget *command_path, *command_params, *test_patterns, *match_case, *test_mimetypes;
 	GtkWidget *only_files, *only_folders, *both, *accept_multiple;
 	gint width, height, x, y;
 	GtkTreeModel* scheme_model;
@@ -692,6 +692,12 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	
 		
 		aligned_widgets = nact_get_glade_widget_prefix_from ("LabelAlign", GLADE_EDIT_DIALOG_WIDGET);
+		label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
+		for (iter = aligned_widgets; iter; iter = iter->next)
+		{
+			gtk_size_group_add_widget (label_size_group, GTK_WIDGET (iter->data));
+		}
+		aligned_widgets = nact_get_glade_widget_prefix_from ("CLabelAlign", GLADE_EDIT_DIALOG_WIDGET);
 		label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 		for (iter = aligned_widgets; iter; iter = iter->next)
 		{
@@ -753,7 +759,13 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_entry_set_text (GTK_ENTRY (command_params), action->parameters);
 
 	test_patterns = nact_get_glade_widget_from ("PatternEntry", GLADE_EDIT_DIALOG_WIDGET);
-	set_action_basenames_list (GTK_ENTRY (test_patterns), action->basenames);
+	set_action_match_string_list (GTK_ENTRY (test_patterns), action->basenames);
+
+	match_case = nact_get_glade_widget_from ("MatchCaseButton", GLADE_EDIT_DIALOG_WIDGET);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (match_case), action->match_case);
+
+	test_mimetypes = nact_get_glade_widget_from ("MimeTypeEntry", GLADE_EDIT_DIALOG_WIDGET);
+	set_action_match_string_list (GTK_ENTRY (test_mimetypes), action->mimetypes);
 
 	only_folders = nact_get_glade_widget_from ("OnlyFoldersButton", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action->is_dir);
@@ -786,8 +798,16 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		nautilus_actions_config_action_set_path (action, gtk_entry_get_text (GTK_ENTRY (command_path)));
 		nautilus_actions_config_action_set_parameters (action, gtk_entry_get_text (GTK_ENTRY (command_params)));
 
-		list = get_action_basenames_list (gtk_entry_get_text (GTK_ENTRY (test_patterns)));
+		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_patterns)));
 		nautilus_actions_config_action_set_basenames (action, list);
+		g_slist_foreach (list, (GFunc) g_free, NULL);
+		g_slist_free (list);
+
+		nautilus_actions_config_action_set_match_case (
+			action, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (match_case)));
+		
+		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_mimetypes)));
+		nautilus_actions_config_action_set_mimetypes (action, list);
 		g_slist_foreach (list, (GFunc) g_free, NULL);
 		g_slist_free (list);
 

@@ -143,11 +143,25 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 		action->path = get_action_string_value (config->conf_client, node->data, ACTION_PATH_ENTRY);
 		action->parameters = get_action_string_value (config->conf_client, node->data, ACTION_PARAMS_ENTRY);
 		action->basenames = get_action_list_value (config->conf_client, node->data, ACTION_BASENAMES_ENTRY);
+		action->match_case = get_action_bool_value (config->conf_client, node->data, ACTION_MATCHCASE_ENTRY);
+		action->mimetypes = get_action_list_value (config->conf_client, node->data, ACTION_MIMETYPES_ENTRY);
 		action->is_file = get_action_bool_value (config->conf_client, node->data, ACTION_ISFILE_ENTRY);
 		action->is_dir = get_action_bool_value (config->conf_client, node->data, ACTION_ISDIR_ENTRY);
 		action->accept_multiple_files = get_action_bool_value (config->conf_client, node->data, ACTION_MULTIPLE_ENTRY);
 		action->schemes = get_action_list_value (config->conf_client, node->data, ACTION_SCHEMES_ENTRY);
 		action->version = get_action_string_value (config->conf_client, node->data, ACTION_VERSION_ENTRY);
+
+		if (g_ascii_strcasecmp (action->version, "1.0") == 0)
+		{
+			//--> manage backward compatibility
+			action->match_case = TRUE;
+			action->mimetypes = g_slist_append (action->mimetypes, g_strdup ("*/*"));
+		}
+		else
+		{
+			action->mimetypes = get_action_list_value (config->conf_client, node->data, ACTION_MIMETYPES_ENTRY);
+			action->match_case = get_action_bool_value (config->conf_client, node->data, ACTION_MATCHCASE_ENTRY);
+		}
 
 		/* add the new action to the hash table */
 		g_hash_table_insert (NAUTILUS_ACTIONS_CONFIG (config)->actions, g_strdup (action->uuid), action);

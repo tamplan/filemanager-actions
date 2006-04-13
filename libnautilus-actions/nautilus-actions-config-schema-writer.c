@@ -210,7 +210,19 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	create_schema_entry (list_node, content, "list", (char*)str_list, ACTION_BASENAMES_DESC_SHORT, ACTION_BASENAMES_DESC_LONG, FALSE);
 	xmlFree (str_list);
 	xmlFree (content);
-		
+
+	//--> test entries : match_case
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_MATCHCASE_ENTRY, NULL);
+	create_schema_entry (list_node, content, "bool", bool_to_schema_string (action->match_case), ACTION_MATCHCASE_DESC_SHORT, ACTION_MATCHCASE_DESC_LONG, FALSE);
+	xmlFree (content);
+
+	//--> Test entries : mimetypes
+	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_MIMETYPES_ENTRY, NULL);
+	str_list = BAD_CAST gslist_to_schema_string (action->mimetypes);
+	create_schema_entry (list_node, content, "list", (char*)str_list, ACTION_MIMETYPES_DESC_SHORT, ACTION_MIMETYPES_DESC_LONG, FALSE);
+	xmlFree (str_list);
+	xmlFree (content);
+			
 	//--> test entries : is_file
 	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ISFILE_ENTRY, NULL);
 	create_schema_entry (list_node, content, "bool", bool_to_schema_string (action->is_file), ACTION_ISFILE_DESC_SHORT, _(ACTION_ISFILE_DESC_LONG), FALSE);

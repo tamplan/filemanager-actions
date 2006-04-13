@@ -1,6 +1,6 @@
 AC_PREREQ(2.52)
 
-AC_INIT(nautilus-actions, 1.0, http://www.grumz.net)
+AC_INIT(nautilus-actions, 1.1, http://www.grumz.net)
 AM_CONFIG_HEADER(config.h)
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
@@ -142,7 +142,7 @@ fi
 AC_SUBST(DATADIR)
 AC_SUBST(LOCALEDIR)
 
-AC_DEFINE_UNQUOTED(NAUTILUS_ACTIONS_CONFIG_VERSION, "1.0", [Version of the configuration format])
+AC_DEFINE_UNQUOTED(NAUTILUS_ACTIONS_CONFIG_VERSION, "1.1", [Version of the configuration format])
 AC_DEFINE_UNQUOTED(NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, "/apps/nautilus-actions", [GConf base dir where all config will be stored])
 
 AC_OUTPUT([

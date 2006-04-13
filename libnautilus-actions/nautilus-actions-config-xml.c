@@ -287,6 +287,9 @@ static gboolean nautilus_actions_config_xml_action_fill_test (NautilusActionsCon
 	
 	if (basename_ok && isfile_ok && isdir_ok && accept_multiple_file_ok && scheme_ok)
 	{
+		//--> manage backward compatibility
+		action->match_case = TRUE;
+		action->mimetypes = g_slist_append (action->mimetypes, g_strdup ("*/*"));
 		retv = TRUE;
 	}
 

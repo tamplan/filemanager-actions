@@ -44,7 +44,9 @@ typedef struct {
 	gchar *icon;
 	gchar *path;
 	gchar *parameters;
+	gboolean match_case;
 	GSList *basenames;
+	GSList *mimetypes;
 	gboolean is_dir;
 	gboolean is_file;
 	gboolean accept_multiple_files;
@@ -103,9 +105,12 @@ void                         nautilus_actions_config_action_set_parameters (Naut
 									    const gchar *parameters);
 void                         nautilus_actions_config_action_set_basenames (NautilusActionsConfigAction *action, 
 										 GSList *basenames);
+void                         nautilus_actions_config_action_set_mimetypes (NautilusActionsConfigAction *action, 
+										 GSList *mimetypes);
 void                         nautilus_actions_config_action_set_schemes (NautilusActionsConfigAction *action, 
 										 GSList *schemes);
 
+#define nautilus_actions_config_action_set_match_case(action, b) { if ((action)) (action)->match_case = b; }
 #define nautilus_actions_config_action_set_is_dir(action, b) { if ((action)) (action)->is_dir = b; }
 #define nautilus_actions_config_action_set_is_file(action, b) { if ((action)) (action)->is_file = b; }
 #define nautilus_actions_config_action_set_accept_multiple(action, b) { if ((action)) (action)->accept_multiple_files = b; }
