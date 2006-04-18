@@ -383,6 +383,13 @@ copy_list (gchar* data, GSList** list)
 	(*list) = g_slist_append ((*list), g_strdup (data));
 }
 
+static void 
+copy_list_strdown (gchar* data, GSList** list)
+{
+	// make sure that the elements are copied with their case lowered
+	(*list) = g_slist_append ((*list), g_ascii_strdown (data, strlen (data)));
+}
+
 void
 nautilus_actions_config_action_set_basenames (NautilusActionsConfigAction *action, GSList *basenames)
 {
@@ -401,7 +408,7 @@ void nautilus_actions_config_action_set_mimetypes (NautilusActionsConfigAction *
 	g_slist_foreach (action->mimetypes, (GFunc) g_free, NULL);
 	g_slist_free (action->mimetypes);
 	action->mimetypes = NULL;
-	g_slist_foreach (mimetypes, (GFunc) copy_list, &(action->mimetypes));
+	g_slist_foreach (mimetypes, (GFunc) copy_list_strdown, &(action->mimetypes));
 }
 
 
@@ -413,7 +420,7 @@ nautilus_actions_config_action_set_schemes (NautilusActionsConfigAction *action,
 	g_slist_foreach (action->schemes, (GFunc) g_free, NULL);
 	g_slist_free (action->schemes);
 	action->schemes = NULL;
-	g_slist_foreach (schemes, (GFunc) copy_list, &(action->schemes));
+	g_slist_foreach (schemes, (GFunc) copy_list_strdown, &(action->schemes));
 }
 
 NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActionsConfigAction *action)

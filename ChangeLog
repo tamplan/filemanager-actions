@@ -1,5 +1,10 @@
 2006-04-18  Frederic Ruaudel <grumz@grumz.net>
 
+	* libnautilus-actions/nautilus-actions-config.c:
+	* plugin/nautilus-actions-test.c: Finish implementing
+	the management of the mimetype patterns and the case 
+	insensitive filename patterns (Bug #325581 and Bug #329260).
+
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
 	Fixed typos in the new strings (Bug #338773)
 

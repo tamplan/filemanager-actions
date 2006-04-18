@@ -57,7 +57,9 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	gboolean test_file_type = FALSE;
 	gboolean test_scheme = FALSE;
 	gboolean test_basename = FALSE;
+	gboolean test_mimetype = FALSE;
 	GList* glob_patterns = NULL;
+	GList* glob_mime_patterns = NULL;
 	GSList* iter;
 	GList* iter1;
 	GList* iter2;
@@ -66,7 +68,9 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	guint total_count = 0;
 	guint scheme_ok_count = 0;
 	guint glob_ok_count = 0;
+	guint mime_glob_ok_count = 0;
 	gboolean basename_match_ok = FALSE;
+	gboolean mimetype_match_ok = FALSE;
 
 	if (action->basenames && action->basenames->next != NULL && 
 			g_ascii_strcasecmp ((gchar*)(action->basenames->data), "*") == 0)
@@ -79,13 +83,57 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	{
 		for (iter = action->basenames; iter; iter = iter->next)
 		{
-			glob_patterns = g_list_append (glob_patterns, g_pattern_spec_new ((gchar*)iter->data));
+			gchar* tmp_pattern = (gchar*)iter->data;
+			if (!action->match_case)
+			{
+				//--> if case-insensitive asked, lower all the string since the pattern matching function 
+				// don't manage it itself.
+				tmp_pattern = g_ascii_strdown ((gchar*)iter->data, strlen ((gchar*)iter->data));
+			}
+			
+			glob_patterns = g_list_append (glob_patterns, g_pattern_spec_new (tmp_pattern));
+			
+			if (!action->match_case)
+			{
+				g_free (tmp_pattern);
+			}
 		}
 	}
 	
+	if (action->mimetypes && action->mimetypes->next != NULL && 
+			(g_ascii_strcasecmp ((gchar*)(action->mimetypes->data), "*") == 0 || 
+			 g_ascii_strcasecmp ((gchar*)(action->mimetypes->data), "*/*") == 0))
+	{
+		// if the only pattern is '*' or */* then all mimetypes will match, so it is not 
+		// necessary to make the test for each of them
+		test_mimetype = TRUE;
+	}
+	else
+	{
+		for (iter = action->mimetypes; iter; iter = iter->next)
+		{
+			glob_mime_patterns = g_list_append (glob_mime_patterns, g_pattern_spec_new ((gchar*)iter->data));
+		}
+	}
+
 	for (iter1 = files; iter1; iter1 = iter1->next)
 	{
 		gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo *)iter1->data);
+		gchar* tmp_mimetype = nautilus_file_info_get_mime_type ((NautilusFileInfo *)iter1->data);
+
+		if (!action->match_case)
+		{
+			//--> if case-insensitive asked, lower all the string since the pattern matching function 
+			// don't manage it itself.
+			gchar* tmp_filename2 = g_ascii_strdown (tmp_filename, strlen (tmp_filename));
+			g_free (tmp_filename);
+			tmp_filename = tmp_filename2;
+		}
+
+		//--> for the moment we deal with all mimetypes case-insensitively
+		gchar* tmp_mimetype2 = g_ascii_strdown (tmp_mimetype, strlen (tmp_mimetype));
+		g_free (tmp_mimetype);
+		tmp_mimetype = tmp_mimetype2;
 		
 		if (nautilus_file_info_is_directory ((NautilusFileInfo *)iter1->data))
 		{
@@ -117,6 +165,26 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 			}
 		}
 
+		if (!test_mimetype) // if it is already ok, skip the test to improve performance
+		{
+			mimetype_match_ok = FALSE;
+			iter2 = glob_mime_patterns;
+			while (iter2 && !mimetype_match_ok)
+			{
+				if (g_pattern_match_string ((GPatternSpec*)iter2->data, tmp_mimetype))
+				{
+					mimetype_match_ok = TRUE;
+				}
+				iter2 = iter2->next;
+			}
+
+			if (mimetype_match_ok)
+			{
+				mime_glob_ok_count++;
+			}
+		}
+
+		g_free (tmp_mimetype);
 		g_free (tmp_filename);
 
 		total_count++;
@@ -167,13 +235,23 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 		}
 	}
 
-	if (test_basename && test_file_type && test_scheme && test_multiple_file)
+	if (!test_mimetype) // if not already tested
+	{
+		if (mime_glob_ok_count == total_count)
+		{
+			test_mimetype = TRUE;
+		}
+	}
+
+	if (test_basename && test_mimetype && test_file_type && test_scheme && test_multiple_file)
 	{
 		retv = TRUE;
 	}
 	
 	g_list_foreach (glob_patterns, (GFunc) g_pattern_spec_free, NULL);
 	g_list_free (glob_patterns);
+	g_list_foreach (glob_mime_patterns, (GFunc) g_pattern_spec_free, NULL);
+	g_list_free (glob_mime_patterns);
 
 	return retv;
 }
