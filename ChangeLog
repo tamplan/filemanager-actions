@@ -1,5 +1,8 @@
 2006-04-18  Frederic Ruaudel <grumz@grumz.net>
 
+	* nact/nact-editor.c: Fix a SegFault when setting 
+	empty patterns in Nact's edit dialog.
+
 	* libnautilus-actions/nautilus-actions-config.c:
 	* plugin/nautilus-actions-test.c: Finish implementing
 	the management of the mimetype patterns and the case 

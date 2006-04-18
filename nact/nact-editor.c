@@ -605,43 +605,60 @@ static void set_action_schemes (gchar* action_scheme, GtkTreeModel* scheme_model
 	}
 }
 
-static void set_action_match_string_list (GtkEntry* entry, GSList* basenames)
+static void set_action_match_string_list (GtkEntry* entry, GSList* basenames, const gchar* default_string)
 {
 	GSList* iter;
 	gchar* entry_text;
 	gchar* tmp;
 
 	iter = basenames;
-	entry_text = g_strdup ((gchar*)iter->data);
-	iter = iter->next;
-	
-	while (iter)
+	if (!iter)
 	{
-		tmp = g_strjoin (" ; ", entry_text, (gchar*)iter->data, NULL);
-		g_free (entry_text);
-		entry_text = tmp;
+		entry_text = g_strdup (default_string);
+	}
+	else
+	{
+		entry_text = g_strdup ((gchar*)iter->data);
 		iter = iter->next;
+	
+		while (iter)
+		{
+			tmp = g_strjoin (" ; ", entry_text, (gchar*)iter->data, NULL);
+			g_free (entry_text);
+			entry_text = tmp;
+			iter = iter->next;
+		}
 	}
 
 	gtk_entry_set_text (entry, entry_text);
 }
 
-static GSList* get_action_match_string_list (const gchar* patterns)
+static GSList* get_action_match_string_list (const gchar* patterns, const gchar* default_string)
 {
-	gchar** tokens = g_strsplit (patterns, ";", -1);
+	gchar** tokens;
 	gchar** iter;
 	GSList* list = NULL;
 	gchar* tmp;
-	
-	iter = tokens;
-	while (*iter != NULL)
+
+	tmp = g_strstrip (patterns);
+	if (strlen (tmp) == 0)
 	{
-		tmp = g_strstrip (*iter);
-		list = g_slist_append (list, g_strdup (tmp));
-		iter++;
+		list = g_slist_append (list, g_strdup (default_string));
 	}
-	
-	g_strfreev (tokens);
+	else
+	{
+		tokens = g_strsplit (patterns, ";", -1);
+		
+		iter = tokens;
+		while (*iter != NULL)
+		{
+			tmp = g_strstrip (*iter);
+			list = g_slist_append (list, g_strdup (tmp));
+			iter++;
+		}
+		
+		g_strfreev (tokens);
+	}
 
 	return list;
 }
@@ -759,13 +776,13 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_entry_set_text (GTK_ENTRY (command_params), action->parameters);
 
 	test_patterns = nact_get_glade_widget_from ("PatternEntry", GLADE_EDIT_DIALOG_WIDGET);
-	set_action_match_string_list (GTK_ENTRY (test_patterns), action->basenames);
+	set_action_match_string_list (GTK_ENTRY (test_patterns), action->basenames, "*");
 
 	match_case = nact_get_glade_widget_from ("MatchCaseButton", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (match_case), action->match_case);
 
 	test_mimetypes = nact_get_glade_widget_from ("MimeTypeEntry", GLADE_EDIT_DIALOG_WIDGET);
-	set_action_match_string_list (GTK_ENTRY (test_mimetypes), action->mimetypes);
+	set_action_match_string_list (GTK_ENTRY (test_mimetypes), action->mimetypes, "*/*");
 
 	only_folders = nact_get_glade_widget_from ("OnlyFoldersButton", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action->is_dir);
@@ -798,7 +815,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		nautilus_actions_config_action_set_path (action, gtk_entry_get_text (GTK_ENTRY (command_path)));
 		nautilus_actions_config_action_set_parameters (action, gtk_entry_get_text (GTK_ENTRY (command_params)));
 
-		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_patterns)));
+		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_patterns)), "*");
 		nautilus_actions_config_action_set_basenames (action, list);
 		g_slist_foreach (list, (GFunc) g_free, NULL);
 		g_slist_free (list);
@@ -806,7 +823,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		nautilus_actions_config_action_set_match_case (
 			action, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (match_case)));
 		
-		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_mimetypes)));
+		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_mimetypes)), "*/*");
 		nautilus_actions_config_action_set_mimetypes (action, list);
 		g_slist_foreach (list, (GFunc) g_free, NULL);
 		g_slist_free (list);
