@@ -80,8 +80,8 @@
 #define ACTION_BASENAMES_DESC_SHORT	_("The list of pattern to match the selected file(s)/folder(s)")
 #define ACTION_BASENAMES_DESC_LONG	_("A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear")
 #define ACTION_MATCHCASE_DESC_SHORT _("'true' if the filename patterns have to be case sensitive, 'false' otherwise")
-#define ACTION_MATCHCASE_DESC_LONG	_("If you need to mach a filename in a case sensitive manner, set this key to 'true'. If you want that for example '*.jpg' match also 'photo.JPG', set 'false'")
-#define ACTION_MIMETYPES_DESC_SHORT	_("The list of pattern to match the mimetypes of the selected file(s)")
+#define ACTION_MATCHCASE_DESC_LONG	_("If you need to match a filename in a case sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'")
+#define ACTION_MIMETYPES_DESC_SHORT	_("The list of patterns to match the mimetypes of the selected file(s)")
 #define ACTION_MIMETYPES_DESC_LONG	_("A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear")
 /* i18n notes : Sorry for this long paragraph, will try to fix it in the next release */
 #define ACTION_ISFILE_ISDIR_COMBINAITION_DESC_LONG N_("The valid combinations are:\n\nisfile=TRUE and isdir=FALSE: the selection may hold only files\nisfile=FALSE and isdir=TRUE: the selection may hold only folders\nisfile=TRUE and isdir=TRUE': the selection may hold both files and folders\nisfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)")

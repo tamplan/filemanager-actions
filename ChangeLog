@@ -1,3 +1,8 @@
+2006-04-18  Frederic Ruaudel <grumz@grumz.net>
+
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	Fixed typos in the new strings (Bug #338773)
+
 2006-04-13  Frederic Ruaudel <grumz@grumz.net>
 
 	* configure.in: Update the version of n-a and the config file.
