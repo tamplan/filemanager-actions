@@ -131,6 +131,14 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 			{
 				*type = ACTION_BASENAMES_TYPE;
 			}
+			else if (g_str_has_suffix (text, ACTION_MATCHCASE_ENTRY))
+			{
+				*type = ACTION_MATCHCASE_TYPE;
+			}
+			else if (g_str_has_suffix (text, ACTION_MIMETYPES_ENTRY))
+			{
+				*type = ACTION_MIMETYPES_TYPE;
+			}
 			else if (g_str_has_suffix (text, ACTION_ISFILE_ENTRY))
 			{
 				*type = ACTION_ISFILE_TYPE;
@@ -347,7 +355,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 						{
 							g_free (action->version);
 						}
-						action->version = g_strdup (NAUTILUS_ACTIONS_CONFIG_VERSION);
+						action->version = g_strdup (value);
 						break;
 					default:
 						break;
@@ -366,6 +374,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 				is_params_ok && is_path_ok && is_icon_ok && 
 				is_tooltip_ok && is_label_ok)
 		{
+
 			retv = TRUE;
 		}
 		else if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 && 
@@ -379,6 +388,14 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		}
 	}	
 
+	/*
+	g_warning ("schemes : %d, multiple : %d, match_case : %d, mimetypes : %d, isdir : %d, isfile : %d, basenames : %d, param : %d, path : %d, icon : %d, tooltip : %d, label : %d, TRUE: %d, version: %s",
+				is_schemes_ok ,  is_multiple_ok ,  
+				is_matchcase_ok ,  is_mimetypes_ok , 
+				is_isdir_ok ,  is_isfile_ok ,  is_basenames_ok ,  
+				is_params_ok ,  is_path_ok ,  is_icon_ok ,  
+				is_tooltip_ok ,  is_label_ok, TRUE, action->version);
+	*/
 	return retv;
 }
 
@@ -405,7 +422,7 @@ gboolean nautilus_actions_config_schema_reader_parse_file (NautilusActionsConfig
 												NA_GCONF_XML_SCHEMA_LIST, 
 												strlen (NA_GCONF_XML_SCHEMA_LIST)) == 0)
 				{
-					action = nautilus_actions_config_action_new ();
+					action = nautilus_actions_config_action_new_default ();
 					if (action->uuid != NULL)
 					{
 						g_free (action->uuid);

@@ -37,6 +37,8 @@ static gchar* icon = "";
 static gchar* command = "";
 static gchar* params = "";
 static gchar** matches = NULL;
+static gboolean match_case = FALSE;
+static gchar** mimetypes = NULL;
 static gboolean isfile = FALSE;
 static gboolean isdir = FALSE;
 static gboolean accept_multiple_files = FALSE;
@@ -51,6 +53,8 @@ static GOptionEntry entries[] =
 	{ "command", 'c', 0, G_OPTION_ARG_FILENAME, &command, N_("The path of the command"), N_("PATH") },
 	{ "parameters", 'p', 0, G_OPTION_ARG_STRING, &params, N_("The parameters of the command"), N_("PARAMS") },
 	{ "match", 'm', 0, G_OPTION_ARG_STRING_ARRAY, &matches, N_("A pattern to match selected files against. May include wildcards (* or ?) (you must set one option for each pattern you need)"), N_("EXPR") },
+	{ "match-case", 'C', 0, G_OPTION_ARG_NONE, &match_case, N_("The path of the command"), N_("PATH") },
+	{ "mimetypes", 'T', 0, G_OPTION_ARG_STRING_ARRAY, &mimetypes, N_("A pattern to match selected files' mimetype against. May include wildcards (* or ?) (you must set one option for each pattern you need)"), N_("EXPR") },
 	{ "accept-files", 'f', 0, G_OPTION_ARG_NONE, &isfile, N_("Set it if the selection can contain files"), NULL },
 	{ "accept-dirs", 'd', 0, G_OPTION_ARG_NONE, &isdir, N_("Set it if the selection can contain folders"), NULL },
 	{ "accept-multiple-files", 'M', 0, G_OPTION_ARG_NONE, &accept_multiple_files, N_("Set it if the selection can have several items"), NULL },
@@ -70,6 +74,7 @@ int main (int argc, char** argv)
 	gsize length = 0;
 	NautilusActionsConfigAction* action;
 	GSList* basenames = NULL;
+	GSList* mimetypes_list = NULL;
 	GSList* schemes_list = NULL;
 	int i;
 
@@ -112,6 +117,18 @@ int main (int argc, char** argv)
 	nautilus_actions_config_action_set_basenames (action, basenames);
 	g_slist_foreach (basenames, (GFunc) g_free, NULL);
 	g_slist_free (basenames);
+	
+	nautilus_actions_config_action_set_match_case (action, match_case);
+
+	i = 0;
+	while (mimetypes != NULL && mimetypes[i] != NULL)
+	{
+		mimetypes_list = g_slist_append (mimetypes_list, g_strdup (mimetypes[i]));
+		i++;
+	}
+	nautilus_actions_config_action_set_mimetypes (action, mimetypes_list);
+	g_slist_foreach (mimetypes_list, (GFunc) g_free, NULL);
+	g_slist_free (mimetypes_list);
 
 	nautilus_actions_config_action_set_is_file (action, isfile);
 	nautilus_actions_config_action_set_is_dir (action, isdir);

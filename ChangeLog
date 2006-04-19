@@ -1,3 +1,11 @@
+2006-04-19  Frederic Ruaudel <grumz@grumz.net>
+
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	* utils/nautilus-actions-new-config.c: Fix some missing change 
+	concerning the implementation of the management of the mimetype 
+	patterns and the case insensitive filename patterns (Bug #325581 
+	and Bug #329260).
+
 2006-04-18  Frederic Ruaudel <grumz@grumz.net>
 
 	* nact/nact-editor.c: Fix a SegFault when setting 
