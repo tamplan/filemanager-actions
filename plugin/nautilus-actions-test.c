@@ -119,73 +119,78 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	for (iter1 = files; iter1; iter1 = iter1->next)
 	{
 		gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo *)iter1->data);
-		gchar* tmp_mimetype = nautilus_file_info_get_mime_type ((NautilusFileInfo *)iter1->data);
 
-		if (!action->match_case)
+		if (tmp_filename)
 		{
-			//--> if case-insensitive asked, lower all the string since the pattern matching function 
-			// don't manage it itself.
-			gchar* tmp_filename2 = g_ascii_strdown (tmp_filename, strlen (tmp_filename));
+			gchar* tmp_mimetype = nautilus_file_info_get_mime_type ((NautilusFileInfo *)iter1->data);
+
+			if (!action->match_case)
+			{
+				//--> if case-insensitive asked, lower all the string since the pattern matching function 
+				// don't manage it itself.
+				gchar* tmp_filename2 = g_ascii_strdown (tmp_filename, strlen (tmp_filename));
+				g_free (tmp_filename);
+				tmp_filename = tmp_filename2;
+			}
+
+			//--> for the moment we deal with all mimetypes case-insensitively
+			gchar* tmp_mimetype2 = g_ascii_strdown (tmp_mimetype, strlen (tmp_mimetype));
+			g_free (tmp_mimetype);
+			tmp_mimetype = tmp_mimetype2;
+			
+			if (nautilus_file_info_is_directory ((NautilusFileInfo *)iter1->data))
+			{
+				dir_count++;
+			}
+			else
+			{
+				file_count++;
+			}
+
+			scheme_ok_count += nautilus_actions_test_check_scheme (action->schemes, (NautilusFileInfo*)iter1->data);
+
+			if (!test_basename) // if it is already ok, skip the test to improve performance
+			{
+				basename_match_ok = FALSE;
+				iter2 = glob_patterns;
+				while (iter2 && !basename_match_ok)
+				{
+					if (g_pattern_match_string ((GPatternSpec*)iter2->data, tmp_filename))
+					{
+						basename_match_ok = TRUE;
+					}
+					iter2 = iter2->next;
+				}
+
+				if (basename_match_ok)
+				{
+					glob_ok_count++;
+				}
+			}
+
+			if (!test_mimetype) // if it is already ok, skip the test to improve performance
+			{
+				mimetype_match_ok = FALSE;
+				iter2 = glob_mime_patterns;
+				while (iter2 && !mimetype_match_ok)
+				{
+					if (g_pattern_match_string ((GPatternSpec*)iter2->data, tmp_mimetype))
+					{
+						mimetype_match_ok = TRUE;
+					}
+					iter2 = iter2->next;
+				}
+
+				if (mimetype_match_ok)
+				{
+					mime_glob_ok_count++;
+				}
+			}
+
+			g_free (tmp_mimetype);
 			g_free (tmp_filename);
-			tmp_filename = tmp_filename2;
+
 		}
-
-		//--> for the moment we deal with all mimetypes case-insensitively
-		gchar* tmp_mimetype2 = g_ascii_strdown (tmp_mimetype, strlen (tmp_mimetype));
-		g_free (tmp_mimetype);
-		tmp_mimetype = tmp_mimetype2;
-		
-		if (nautilus_file_info_is_directory ((NautilusFileInfo *)iter1->data))
-		{
-			dir_count++;
-		}
-		else
-		{
-			file_count++;
-		}
-
-		scheme_ok_count += nautilus_actions_test_check_scheme (action->schemes, (NautilusFileInfo*)iter1->data);
-
-		if (!test_basename) // if it is already ok, skip the test to improve performance
-		{
-			basename_match_ok = FALSE;
-			iter2 = glob_patterns;
-			while (iter2 && !basename_match_ok)
-			{
-				if (g_pattern_match_string ((GPatternSpec*)iter2->data, tmp_filename))
-				{
-					basename_match_ok = TRUE;
-				}
-				iter2 = iter2->next;
-			}
-
-			if (basename_match_ok)
-			{
-				glob_ok_count++;
-			}
-		}
-
-		if (!test_mimetype) // if it is already ok, skip the test to improve performance
-		{
-			mimetype_match_ok = FALSE;
-			iter2 = glob_mime_patterns;
-			while (iter2 && !mimetype_match_ok)
-			{
-				if (g_pattern_match_string ((GPatternSpec*)iter2->data, tmp_mimetype))
-				{
-					mimetype_match_ok = TRUE;
-				}
-				iter2 = iter2->next;
-			}
-
-			if (mimetype_match_ok)
-			{
-				mime_glob_ok_count++;
-			}
-		}
-
-		g_free (tmp_mimetype);
-		g_free (tmp_filename);
 
 		total_count++;
 	}

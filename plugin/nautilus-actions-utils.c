@@ -73,6 +73,11 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		g_free (tmp);
 
 		tmp = nautilus_file_info_get_name ((NautilusFileInfo*)files->data);
+		if (!tmp)
+		{
+			tmp = g_strdup ("");
+		}
+
 		filename = g_shell_quote (tmp);
 		tmp2 = g_build_path ("/", dirname, tmp, NULL);
 		g_free (tmp);
@@ -87,6 +92,11 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		{
 			gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo*)file_iter->data);
 			
+			if (!tmp_filename)
+			{
+				tmp_filename = g_strdup ("");
+			}
+
 			gchar* quoted_tmp_filename = g_shell_quote (tmp_filename);
 			g_string_append_printf (tmp_file_list, " %s", quoted_tmp_filename);
 
