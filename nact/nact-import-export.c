@@ -223,10 +223,14 @@ gboolean nact_import_actions (void)
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("XMLRadioButton", 
 																			GLADE_IM_EX_PORT_DIALOG_WIDGET))))
 		{
-			// TODO: Handle error
 			if (nautilus_actions_config_xml_parse_file (xml_reader, file_path))
 			{
 				generic_reader = NAUTILUS_ACTIONS_CONFIG (xml_reader);
+			}
+			else
+			{
+				// TODO: Handle error
+				g_warning ("Can't parse file '%s' with xml reader !", file_path);
 			}
 		}
 		else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("GConfRadioButton", 
@@ -235,6 +239,11 @@ gboolean nact_import_actions (void)
 			if (nautilus_actions_config_schema_reader_parse_file (schema_reader, file_path))
 			{
 				generic_reader = NAUTILUS_ACTIONS_CONFIG (schema_reader);
+			}
+			else
+			{
+				// TODO: Handle error
+				g_warning ("Can't parse file '%s' with gconf schema reader !", file_path);
 			}
 		}
 		else /* Automatic detection asked */
@@ -246,6 +255,11 @@ gboolean nact_import_actions (void)
 			else if (nautilus_actions_config_schema_reader_parse_file (schema_reader, file_path))
 			{
 				generic_reader = NAUTILUS_ACTIONS_CONFIG (schema_reader);
+			}
+			else
+			{
+				// TODO: Handle error
+				g_warning ("Can't parse file '%s' with xml reader nor gconf schema reader !", file_path);
 			}
 		}
 	}
@@ -259,8 +273,12 @@ gboolean nact_import_actions (void)
 			NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)(iter->data);
 			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), action))
 			{
-				// TODO: better error handling
 				retv = TRUE;
+			}
+			else
+			{
+				// TODO: better error handling
+				g_warning ("Action '%s' importation failed !", action->label);
 			}
 		}
 	}
