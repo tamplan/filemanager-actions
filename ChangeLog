@@ -1,4 +1,4 @@
-2006-04-19  Frederic Ruaudel <grumz@grumz.net>
+2006-04-19  Frederic Ruaudel <grumz@grumz.net> 1.2
 
 	* plugin/nautilus-actions-test.c:
 	* plugin/nautilus-actions-utils.c: Fix problem with crash
