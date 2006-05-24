@@ -20,4 +20,4 @@ libnautilus_actions_la_SOURCES = 	\
 	nautilus-actions-config-schema-reader.h \
 	nautilus-actions-config-xml.c	\
 	nautilus-actions-config-xml.h
-libnautilus_actions_la_LIBADD = -luuid
+libnautilus_actions_la_LIBADD = -lxml2 -luuid
