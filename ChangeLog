@@ -1,3 +1,11 @@
+2006-06-16  Frederic Ruaudel <grumz@grumz.net>
+
+	* configure.in:
+	* plugin/nautilus-actions.c: Fix Bug #325584 which make nautilus
+	updates his popup menus when a config changes in nautilus-actions.
+	This requires a patch applied to Nautilus (see Bug #339273 comitted
+	in Nautilus' CVS Head).
+
 2006-05-24  Frederic Ruaudel <grumz@grumz.net>
 
 	* libnautilus-actions/Makefile.am: Fix missing libxml2 

@@ -92,6 +92,10 @@ PKG_CHECK_MODULES(NAUTILUS_ACTIONS_UTILS,\
 AC_SUBST(NAUTILUS_ACTIONS_UTILS_CFLAGS)
 AC_SUBST(NAUTILUS_ACTIONS_UTILS_LIBS)
 
+# Check for menu update function
+AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)
+AC_CHECK_FUNCS(nautilus_menu_provider_emit_items_updated_signal)
+
 dnl --------------------------------------------------
 
 GNOME_COMPILE_WARNINGS

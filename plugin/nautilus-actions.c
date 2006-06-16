@@ -21,6 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <string.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-file-info.h>
@@ -41,6 +42,14 @@ GType nautilus_actions_get_type (void)
 {
 	return actions_type;
 }
+
+#ifndef HAVE_NAUTILUS_MENU_PROVIDER_EMIT_ITEMS_UPDATED_SIGNAL
+static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvider *provider)
+{
+	//--> fake function for backward compatibility
+	//-> do nothing
+}
+#endif
 
 static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsConfigAction *action)
 {
@@ -126,6 +135,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 
 	if (!self->dispose_has_run)
 	{
+		//--> TODO: Move the retrievial of the config list in the action change handler to improve perf.
 		config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
 		for (iter = config_list; iter; iter = iter->next)
 		{
@@ -143,6 +153,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 			}
 		}
 
+		//--> TODO: Move the retrievial of the config list in the action change handler to improve perf.
 		nautilus_actions_config_free_actions_list (config_list);
 	}
 	
@@ -176,6 +187,23 @@ static void nautilus_actions_instance_dispose (GObject *obj)
 	}
 }
 
+static void nautilus_actions_action_changed_handler (NautilusActionsConfig* config, 
+																				NautilusActionsConfigAction* action,
+																				gpointer user_data)
+{
+	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
+	
+	g_return_if_fail (NAUTILUS_IS_ACTIONS (self));
+
+	if (!self->dispose_has_run)
+	{
+		nautilus_menu_provider_emit_items_updated_signal (self);
+		//--> TODO: Move the retrievial of the config list here to improve perf.
+		//--> Place the config_list var in the self object, then here first free the present
+		// list and get the new one.
+	}
+}
+
 static void nautilus_actions_instance_finalize (GObject* obj)
 {
 	//NautilusActions* self = NAUTILUS_ACTIONS (obj);
@@ -200,17 +228,15 @@ static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer kl
 	self->configs = nautilus_actions_config_gconf_reader_get ();
 	self->dispose_has_run = FALSE;
 
-	/*
 	g_signal_connect_after (G_OBJECT (self->configs), "action_added",
-									(GCallback)nautilus_actions_action_added_handler,
+									(GCallback)nautilus_actions_action_changed_handler,
 									self);
 	g_signal_connect_after (G_OBJECT (self->configs), "action_changed",
 									(GCallback)nautilus_actions_action_changed_handler,
 									self);
 	g_signal_connect_after (G_OBJECT (self->configs), "action_removed",
-									(GCallback)nautilus_actions_action_removed_handler,
+									(GCallback)nautilus_actions_action_changed_handler,
 									self);
-	*/
 
 	parent_class = g_type_class_peek_parent (klass);
 }
