@@ -126,7 +126,6 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, GtkWidget *window, GList *files)
 {
 	GList *items = NULL;
-	GSList* config_list;
 	GSList *iter;
 	NautilusMenuItem *item;
 	NautilusActions* self = NAUTILUS_ACTIONS (provider);
@@ -135,9 +134,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 
 	if (!self->dispose_has_run)
 	{
-		//--> TODO: Move the retrievial of the config list in the action change handler to improve perf.
-		config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
-		for (iter = config_list; iter; iter = iter->next)
+		for (iter = self->config_list; iter; iter = iter->next)
 		{
 			/* Foreach configured action, check if we add a menu item */
 			NautilusActionsConfigAction *action = nautilus_actions_config_action_dup ((NautilusActionsConfigAction*)iter->data);
@@ -153,8 +150,6 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 			}
 		}
 
-		//--> TODO: Move the retrievial of the config list in the action change handler to improve perf.
-		nautilus_actions_config_free_actions_list (config_list);
 	}
 	
 	return items;
@@ -198,9 +193,9 @@ static void nautilus_actions_action_changed_handler (NautilusActionsConfig* conf
 	if (!self->dispose_has_run)
 	{
 		nautilus_menu_provider_emit_items_updated_signal (self);
-		//--> TODO: Move the retrievial of the config list here to improve perf.
-		//--> Place the config_list var in the self object, then here first free the present
-		// list and get the new one.
+
+		nautilus_actions_config_free_actions_list (self->config_list);
+		self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
 	}
 }
 
@@ -226,6 +221,8 @@ static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer kl
 	
 	self->configs = NULL;
 	self->configs = nautilus_actions_config_gconf_reader_get ();
+	self->config_list = NULL;
+	self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
 	self->dispose_has_run = FALSE;
 
 	g_signal_connect_after (G_OBJECT (self->configs), "action_added",

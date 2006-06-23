@@ -43,6 +43,7 @@ struct _NautilusActions
 {
 	GObject __parent;
 	NautilusActionsConfigGconfReader* configs;
+	GSList* config_list;
 	gboolean dispose_has_run;
 };
 

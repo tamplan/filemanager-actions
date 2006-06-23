@@ -1,3 +1,10 @@
+2006-06-23  Frederic Ruaudel <grumz@grumz.net>
+
+	* plugin/nautilus-actions.c:
+	* plugin/nautilus-actions.h: Optimize the extension by updating
+	the config list only when they changed and not each time Nautilus
+	ask for the list of items.
+
 2006-06-16  Frederic Ruaudel <grumz@grumz.net>
 
 	* configure.in:
