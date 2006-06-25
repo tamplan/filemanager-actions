@@ -2,13 +2,14 @@
 # This file is distributed under the same license as the nautilus-actions package.
 # Copyright (C) 2006 Free Software Foundation, Inc.
 # Supranee Thirawatthanasuk <supranee@opentle.org>, 2006.
+# Theppitak Karoonboonyanan <thep@linux.thai.net>, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-06 07:33+0100\n"
-"PO-Revision-Date: 2006-02-07 17:53+0700\n"
+"POT-Creation-Date: 2006-06-25 19:59+0700\n"
+"PO-Revision-Date: 2006-06-25 21:59+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <l10n.opentle.org>\n"
 "MIME-Version: 1.0\n"
@@ -32,316 +33,365 @@ msgid "  "
 msgstr "  "
 
 #: ../nact/nautilus-actions-config.glade.h:3
+msgid "    "
+msgstr "    "
+
+#: ../nact/nautilus-actions-config.glade.h:4
 msgid "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
 msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
 
-#: ../nact/nautilus-actions-config.glade.h:5
+#: ../nact/nautilus-actions-config.glade.h:6
 #, no-c-format
 msgid "<b>%%</b>: a percent sign"
 msgstr "<b>%%</b>: เครื่องหมายเปอร์เซ็นต์"
 
-#: ../nact/nautilus-actions-config.glade.h:7
+#: ../nact/nautilus-actions-config.glade.h:8
 #, no-c-format
 msgid ""
 "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
 "full paths"
 msgstr ""
+"<b>%M</b>: รายการแฟ้มหรือโฟลเดอร์ที่ถูกเลือกในรูปพาธเต็ม คั่นด้วยช่องว่าง"
 
-#: ../nact/nautilus-actions-config.glade.h:9
+#: ../nact/nautilus-actions-config.glade.h:10
 #, no-c-format
 msgid "<b>%U</b>: username of the gnome-vfs URI"
 msgstr "<b>%U</b>: ชื่อผู้ใช้ของ URI ของ gnome-vfs"
 
-#: ../nact/nautilus-actions-config.glade.h:11
+#: ../nact/nautilus-actions-config.glade.h:12
 #, no-c-format
 msgid "<b>%d</b>: base folder of the selected file(s)"
-msgstr "<b>%d</b>: โฟลเดอร์พื้นฐานของแฟ้มที่เลือก"
+msgstr "<b>%d</b>: โฟลเดอร์ที่เก็บของแฟ้มที่เลือก"
 
-#: ../nact/nautilus-actions-config.glade.h:13
+#: ../nact/nautilus-actions-config.glade.h:14
 #, no-c-format
-msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgid ""
+"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
 msgstr ""
+"<b>%f</b>: ชื่อแฟ้มที่ถูกเลือก หรือแฟ้มแรกถ้ามีการเลือกหลายแฟ้ม"
 
-#: ../nact/nautilus-actions-config.glade.h:15
+#: ../nact/nautilus-actions-config.glade.h:16
 #, no-c-format
 msgid "<b>%h</b>: hostname of the gnome-vfs URI"
 msgstr "<b>%h</b>: ชื่อโฮสต์ของ URI ของ gnome-vfs"
 
-#: ../nact/nautilus-actions-config.glade.h:17
+#: ../nact/nautilus-actions-config.glade.h:18
 #, no-c-format
 msgid ""
 "<b>%m</b>: space-separated list of the basenames of the selected\n"
 "file(s)/folder(s)"
 msgstr ""
+"<b>%m</b>: รายการชื่อโฟลเดอร์ที่เก็บของแฟ้มหรือโฟลเดอร์ที่ถูกเลือก คั่นด้วยช่องว่าง"
 
-#: ../nact/nautilus-actions-config.glade.h:20
+#: ../nact/nautilus-actions-config.glade.h:21
 #, no-c-format
 msgid "<b>%s</b>: scheme of the gnome-vfs URI"
 msgstr "<b>%s</b>: scheme ของ URI ของ gnome-vfs"
 
-#: ../nact/nautilus-actions-config.glade.h:22
+#: ../nact/nautilus-actions-config.glade.h:23
 #, no-c-format
 msgid "<b>%u</b>: gnome-vfs URI"
 msgstr "<b>%u</b>: URI ของ gnome-vfs"
 
-#: ../nact/nautilus-actions-config.glade.h:23
+#: ../nact/nautilus-actions-config.glade.h:24
 msgid "<b>Action</b>"
 msgstr "<b>ปฏิบัติการ</b>"
 
-#: ../nact/nautilus-actions-config.glade.h:24
+#: ../nact/nautilus-actions-config.glade.h:25
+msgid "<b>Appears if file matches</b>"
+msgstr "<b>ปรากฏถ้าแฟ้มตรงรูปแบบ</b>"
+
+#: ../nact/nautilus-actions-config.glade.h:26
 msgid "<b>Appears if scheme is in this list</b>"
 msgstr "<b>ปรากฏถ้า scheme อยู่ในรายการนี้</b>"
 
-#: ../nact/nautilus-actions-config.glade.h:25
-msgid "<b>Appears if selection contains</b>"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:26
-msgid "<b>File Pattern</b>"
-msgstr ""
-
 #: ../nact/nautilus-actions-config.glade.h:27
+msgid "<b>Appears if selection contains</b>"
+msgstr "<b>ปรากฏถ้ารายการที่เลือกมี</b>"
+
+#: ../nact/nautilus-actions-config.glade.h:28
 msgid "<b>Nautilus Menu Item</b>"
 msgstr "<b>รายการเมนูของ Nautilus</b>"
 
-#: ../nact/nautilus-actions-config.glade.h:29
+#: ../nact/nautilus-actions-config.glade.h:30
 #, no-c-format
 msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
 msgstr "<i><b><span size=\"small\">เช่น %s</span></b></i>"
 
-#: ../nact/nautilus-actions-config.glade.h:30
+#: ../nact/nautilus-actions-config.glade.h:31
 msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
 msgstr "<span size=\"larger\"><b>คำบรรยายพารามิเตอร์</b></span>"
 
-#: ../nact/nautilus-actions-config.glade.h:31
-msgid ""
-"A string with wildcards (? or *) that will be used to match the files. You "
-"can match several file patterns by separating them with a semi-colon (;)."
-msgstr ""
-
 #: ../nact/nautilus-actions-config.glade.h:32
-msgid "Appears if selection has multiple files or folders"
-msgstr "ปรากฏถ้าการเลือกมีหลายแฟ้มหรือโฟลเดอร์"
+msgid ""
+"A string with wildcards (? or *) that will be used to match the filenames. "
+"You can set several filename patterns by separating them with a semi-colon "
+"(;)."
+msgstr ""
+"สตริงที่มี wildcard (? หรือ *) ซึ่งจะใช้ค้นหาชื่อแฟ้มที่ตรงกัน "
+"คุณสามารถกำหนดรูปแบบชื่อแฟ้มหลายรายการได้ โดยคั่นด้วยอัฒภาค (;)"
 
 #: ../nact/nautilus-actions-config.glade.h:33
+msgid ""
+"A string with wildcards (? or *) that will be used to match the mimetypes of "
+"files. You can set several mimetype patterns by separating them with a semi-"
+"colon (;)."
+msgstr ""
+"สตริงที่มี wildcard (? หรือ *) ซึ่งจะใช้ค้นหาชนิด MIME ที่ตรงกันของแฟ้ม "
+"คุณสามารถกำหนดรูปแบบชนิด MIME หลายรายการได้ โดยคั่นด้วยอัฒภาค (;)"
+
+#: ../nact/nautilus-actions-config.glade.h:34
+msgid "Advanced Conditions"
+msgstr "เงื่อนไขขั้นสูง"
+
+#: ../nact/nautilus-actions-config.glade.h:35
+msgid "Appears if selection has multiple files or folders"
+msgstr "ปรากฏถ้าสิ่งที่เลือกมีหลายแฟ้มหรือโฟลเดอร์"
+
+#: ../nact/nautilus-actions-config.glade.h:36
 msgid "Automatic"
 msgstr "อัตโนมัติ"
 
-#: ../nact/nautilus-actions-config.glade.h:34
-msgid "Both"
-msgstr "ทั้งคู่"
-
-#: ../nact/nautilus-actions-config.glade.h:35
-msgid ""
-"Check this box if you want to get back all your configurations from the "
-"version of Nautilus-actions 0.7.1 or lesser."
-msgstr ""
-"กากล่องนี้ถ้าคุณต้องการเรียกคืนค่าตั้งทั้งหมดจาก Nautilus-actions ตั้งแต่รุ่น 0.7.1 ลงไป"
-
-#: ../nact/nautilus-actions-config.glade.h:36
-msgid "Click to add a new scheme."
-msgstr "คลิกเพื่อเพิ่ม scheme ใหม่"
-
 #: ../nact/nautilus-actions-config.glade.h:37
-msgid "Click to choose a command from the file chooser dialog."
-msgstr "คลิกเพื่อเลือกคำสั่งจากกล่องโต้ตอบเลือกแฟ้ม"
+msgid "Both"
+msgstr "ทั้งสองอย่าง"
 
 #: ../nact/nautilus-actions-config.glade.h:38
 msgid ""
-"Click to choose a custom icon from a file instead of a predefined icon from "
-"the drop-down list."
-msgstr ""
+"Check this box if you want to get back all your configurations from the "
+"version of Nautilus-actions 0.7.1 or lesser."
+msgstr "กากล่องนี้ถ้าคุณต้องการเรียกคืนค่าตั้งทั้งหมดจาก Nautilus-actions ตั้งแต่รุ่น 0.7.1 ลงไป"
 
 #: ../nact/nautilus-actions-config.glade.h:39
+msgid "Click to add a new scheme."
+msgstr "คลิกเพื่อเพิ่ม scheme ใหม่"
+
+#: ../nact/nautilus-actions-config.glade.h:40
+msgid "Click to choose a command from the file chooser dialog."
+msgstr "คลิกเพื่อเลือกคำสั่งจากกล่องโต้ตอบเลือกแฟ้ม"
+
+#: ../nact/nautilus-actions-config.glade.h:41
+msgid ""
+"Click to choose a custom icon from a file instead of a predefined icon from "
+"the drop-down list."
+msgstr "คลิกเพื่อเลือกไอคอนกำหนดเองจากแฟ้ม แทนไอคอนที่กำหนดมาให้ในรายการ"
+
+#: ../nact/nautilus-actions-config.glade.h:42
 msgid "Click to remove the selected scheme."
 msgstr "คลิกเพื่อลบ scheme ที่เลือกออก"
 
-#: ../nact/nautilus-actions-config.glade.h:40
-msgid "Click to see the list of special tokens you can use in the parameter field."
-msgstr "คลิกเพื่อดูรายการโทเคนพิเศษที่คุณสามารถใช้ได้ในเขตข้อมูลพารามิเตอร์"
+#: ../nact/nautilus-actions-config.glade.h:43
+msgid ""
+"Click to see the list of special tokens you can use in the parameter field."
+msgstr "คลิกเพื่อดูรายการโทเคนพิเศษที่คุณสามารถใช้ได้ในช่องพารามิเตอร์"
 
-#: ../nact/nautilus-actions-config.glade.h:41
+#: ../nact/nautilus-actions-config.glade.h:44
 msgid "Conditions"
 msgstr "เงื่อนไข"
 
-#: ../nact/nautilus-actions-config.glade.h:42
+#: ../nact/nautilus-actions-config.glade.h:45
 msgid "Create a copy of the selected action."
 msgstr "สร้างสำเนาของการปฏิบัติการที่เลือก"
 
-#: ../nact/nautilus-actions-config.glade.h:43
-msgid "Delete the action without any confirmation nor the possibility to restore it."
-msgstr ""
+#: ../nact/nautilus-actions-config.glade.h:46
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
+msgstr "ลบปฏิบัติการโดยไม่ต้องถามย้ำหรือเตรียมสำรองเพื่อการเรียกคืน"
 
-#: ../nact/nautilus-actions-config.glade.h:44
+#: ../nact/nautilus-actions-config.glade.h:47
 msgid "Export existing configs"
 msgstr "ส่งออกค่าตั้งที่มีอยู่"
 
-#: ../nact/nautilus-actions-config.glade.h:45
+#: ../nact/nautilus-actions-config.glade.h:48
 msgid "File to Import:"
 msgstr "แฟ้มที่จะนำเข้า:"
 
-#: ../nact/nautilus-actions-config.glade.h:46
+#: ../nact/nautilus-actions-config.glade.h:49
+msgid "Filenames:"
+msgstr "ชื่อแฟ้ม:"
+
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "GConf schema description file (Nautilus-actions v1.x and later)"
 msgstr "แฟ้มคำอธิบาย schema ของ GConf (Nautilus-actions v1.x ขึ้นไป)"
 
-#: ../nact/nautilus-actions-config.glade.h:47
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "Icon:"
 msgstr "ไอคอน:"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:52
+msgid ""
+"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
+"will not match photo.JPG)"
+msgstr ""
+"ถ้าเลือก รูปแบบชื่อแฟ้มจะถูกใช้ค้นหาแบบตัวพิมพ์ใหญ่-เล็กตรงกัน (เช่น *.jpg จะไม่ถือว่า "
+"photo.JPG ตรงรูปแบบ)"
+
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "Import all my old configs"
 msgstr "นำเข้าค่าตั้งเก่าทั้งหมดของฉัน"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Import new configurations"
 msgstr "นำเข้าค่าตั้งใหม่"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid "Import/Export"
 msgstr "นำเข้า/ส่งออก"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Import/Export Settings"
 msgstr "นำเข้า/ส่งออกค่าตั้ง"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Label of the menu item in the Nautilus popup menu."
 msgstr "ป้ายชื่อของรายการเมนูในเมนูผุดขึ้นของ Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid "Label:"
 msgstr "ป้ายชื่อ:"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
 msgstr "จัดการการนำเข้าของค่าตั้งปฏิบัติการภายนอก และการส่งออกของปฏิบัติการที่มีอยู่"
 
-#: ../nact/nautilus-actions-config.glade.h:55
-msgid "Menu Item & Action"
-msgstr ""
+#: ../nact/nautilus-actions-config.glade.h:60
+msgid "Match case"
+msgstr "ตัวพิมพ์ใหญ่-เล็กตรงกัน"
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:61
+msgid "Menu Item & Action"
+msgstr "รายการเมนู & ปฏิบัติการ"
+
+#: ../nact/nautilus-actions-config.glade.h:62
+msgid "Mimetypes:"
+msgstr "ชนิด MIME:"
+
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
 msgstr ""
+"เครื่องมือตั้งค่าปฏิบัติการของ Nautilus\n"
+"โปรแกรมสำหรับตั้งค่าส่วนขยายปฏิบัติการของ Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:65
 msgid "Nautilus Action Editor"
 msgstr "เครื่อมือแก้ไขปฏิบัติการของ Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid "Nautilus Actions"
 msgstr "ปฏิบัติการ Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:67
 msgid "Old XML config file (Nautilus-actions v0.x)"
 msgstr "แฟ้มค่าตั้ง XML เก่า (Nautilus-actions v0.x)"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid "Only files"
 msgstr "แฟ้มเท่านั้น"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Only folders"
 msgstr "โฟลเดอร์เท่านั้น"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
 msgstr ""
+"พารามิเตอร์ที่จะส่งให้กับโปรแกรม คลิกที่ปุ่ม 'อธิบาย' เพื่อดูโทเคนสำหรับตัวแปรต่างๆ ที่สามารถใช้ได้"
 
-#: ../nact/nautilus-actions-config.glade.h:64
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Parameters:"
 msgstr "พารามิเตอร์:"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Path:"
 msgstr "พาธ:"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid "Project Website"
 msgstr "เว็บไซต์ของโครงการ"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Save in Folder:"
 msgstr "บันทึกในโฟลเดอร์:"
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
 msgstr "เลือกค่าตั้งที่คุณต้องการส่งออก ใช้คีย์ Shift หรือ Ctrl เพื่อเลือกมากกว่าหนึ่งรายการ"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid "Select the configurations you want to export:"
 msgstr "เลือกค่าตั้งที่คุณต้องการส่งออก:"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:77
 msgid "Select the file you want to import."
 msgstr "เลือกแฟ้มที่คุณต้องการนำเข้า"
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:78
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
 msgstr "เลือกโฟลเดอร์ที่ต้องการใช้เก็บค่าตั้งของคุณ โฟลเดอร์นี้จะต้องมีอยู่ก่อน"
 
-#: ../nact/nautilus-actions-config.glade.h:72
+#: ../nact/nautilus-actions-config.glade.h:79
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add a new scheme by clicking on the '+' button."
 msgstr ""
-"เลือกชนิดของแฟ้มที่คุณต้องการให้ปฏิบัติการของคุณปรากฏ ถ้าคุณไม่ทราบว่าจะเลือกอะไร "
-"พยายามเลือก 'แฟ้ม' ซึ่งเป็นตัวเลือกปกติโดยส่วนใหญ่ คุณสามารถเพิ่ม scheme ใหม่โดยคลิกที่ปุ่ม '+'"
+"เลือกชนิดของแฟ้มที่คุณต้องการให้ปฏิบัติการของคุณปรากฏ ถ้าคุณไม่ทราบว่าจะเลือกอะไร ให้ลองเลือก "
+"'file' ซึ่งเป็นตัวเลือกปกติโดยส่วนใหญ่ คุณสามารถเพิ่ม scheme ใหม่โดยคลิกที่ปุ่ม '+'"
 
-#: ../nact/nautilus-actions-config.glade.h:73
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
-msgstr ""
+msgstr "คำสั่งที่จะเรียกเมื่อเลือกปฏิบัติการในเมนูผุดขึ้นของ Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:81
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr "ซอฟต์แวร์นี้อนุญาตให้ใช้ภายใต้เงื่อนไข GNU Genaral Public License (GPL)"
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgstr "คำแนะนำเครื่องมือของรายการเมนูที่จะปรากฏที่แถบสถานะ Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid "Tooltip:"
 msgstr "คำแนะนำเครื่องมือ:"
 
-#: ../nact/nautilus-actions-config.glade.h:77
+#: ../nact/nautilus-actions-config.glade.h:84
 msgid "Type of configuration:"
 msgstr "ชนิดของค่าตั้ง:"
 
-#: ../nact/nautilus-actions-config.glade.h:78
+#: ../nact/nautilus-actions-config.glade.h:85
 msgid "_Browse"
 msgstr "เ_รียกดู"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:80
+#: ../nact/nautilus-actions-config.glade.h:87
 msgid "translator-credits"
 msgstr ""
-"Supranee Thirawatthanasuk <supranee@opentle.org>"
+"Supranee Thirawatthanasuk <supranee@opentle.org>\n"
+"Theppitak Karoonboonyanan <thep@linux.thai.net>"
 
 #. create columns on the tree view
-#: ../nact/nact.c:245 ../nact/nact-import-export.c:179
+#: ../nact/nact.c:254 ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "ไอคอน"
 
-#: ../nact/nact.c:250 ../nact/nact-import-export.c:184
+#: ../nact/nact.c:259 ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "ป้ายชื่อ"
 
-#: ../nact/nact.c:270 ../nact/nact-editor.c:675
-#: ../nact/nact-import-export.c:346
+#: ../nact/nact.c:279 ../nact/nact-editor.c:692
+#: ../nact/nact-import-export.c:364
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "ไม่สามารถโหลดอินเทอร์เฟซสำหรับเครื่องมือกำหนดค่าปฏิบัติการของ Nautilus"
 
@@ -352,41 +402,41 @@ msgstr "/พาธ/ไปยัง"
 
 #: ../nact/nact-utils.c:158 ../nact/nact-utils.c:160
 msgid "file1.txt"
-msgstr ""
+msgstr "file1.txt"
 
 #: ../nact/nact-utils.c:158
 msgid "file2.txt"
-msgstr ""
+msgstr "file2.txt"
 
 #: ../nact/nact-utils.c:159 ../nact/nact-utils.c:160
 msgid "folder1"
-msgstr ""
+msgstr "folder1"
 
 #: ../nact/nact-utils.c:159
 msgid "folder2"
-msgstr ""
+msgstr "folder2"
 
 #: ../nact/nact-utils.c:162
 msgid "test.example.net"
-msgstr ""
+msgstr "test.example.net"
 
 #: ../nact/nact-utils.c:163
 msgid "file.txt"
-msgstr ""
+msgstr "file.txt"
 
 #: ../nact/nact-utils.c:164
 msgid "folder"
-msgstr ""
+msgstr "folder"
 
 #. i18n notes: when no icon is selected in the drop-down list
 #: ../nact/nact-editor.c:252
 msgid "None"
-msgstr ""
+msgstr "ไม่ใช้"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
 #: ../nact/nact-editor.c:438
 msgid "new-scheme"
-msgstr ""
+msgstr "new-scheme"
 
 #: ../nact/nact-editor.c:439
 msgid "New Scheme Description"
@@ -400,15 +450,15 @@ msgstr "Scheme"
 msgid "Description"
 msgstr "คำอธิบาย"
 
-#: ../nact/nact-editor.c:691
+#: ../nact/nact-editor.c:708
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "ไอคอนของรายการเมนูในเมนูผุดขึ้นของ Nautilus"
 
-#: ../nact/nact-editor.c:719
+#: ../nact/nact-editor.c:742
 msgid "Add a New Action"
 msgstr "เพิ่มปฏิบัติการใหม่"
 
-#: ../nact/nact-editor.c:723
+#: ../nact/nact-editor.c:746
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "แก้ไขปฏิบัติการ \"%s\""
@@ -418,35 +468,35 @@ msgstr "แก้ไขปฏิบัติการ \"%s\""
 #: ../nact/nact-prefs.c:164
 #, c-format
 msgid "%sLocal Files"
-msgstr "แฟ้ม %sLocal"
+msgstr "%sแฟ้มในเครื่อง"
 
 #. i18n notes : description of 'sftp' scheme
 #: ../nact/nact-prefs.c:166
 #, c-format
 msgid "%sSSH Files"
-msgstr "แฟ้ม %sSSH"
+msgstr "%sแฟ้มผ่าน SSH"
 
 #. i18n notes : description of 'smb' scheme
 #: ../nact/nact-prefs.c:168
 #, c-format
 msgid "%sWindows Files"
-msgstr "แฟ้ม %sWindows"
+msgstr "%sแฟ้มในเครือข่ายวินโดวส์"
 
 #. i18n notes : description of 'ftp' scheme
 #: ../nact/nact-prefs.c:170
 #, c-format
 msgid "%sFTP Files"
-msgstr "แฟ้ม %sFTP"
+msgstr "%sแฟ้มผ่าน FTP"
 
 #. i18n notes : description of 'dav' scheme
 #: ../nact/nact-prefs.c:172
 #, c-format
 msgid "%sWebdav Files"
-msgstr "แฟ้ม %sWebdav"
+msgstr "%sแฟ้มผ่าน Webdav"
 
 #: ../utils/nautilus-actions-convert.c:41
 msgid "The old XML config file to convert"
-msgstr ""
+msgstr "แฟ้มค่าตั้ง XML แบบเก่าที่จะแปลง"
 
 #: ../utils/nautilus-actions-convert.c:41
 #: ../utils/nautilus-actions-convert.c:42
@@ -455,30 +505,34 @@ msgstr "FILE"
 
 #: ../utils/nautilus-actions-convert.c:42
 msgid "The name of the newly-converted GConf schema file"
-msgstr ""
+msgstr "ชื่อแฟ้ม schema ของ GConf ที่แปลงใหม่"
 
 #: ../utils/nautilus-actions-convert.c:43
 msgid "Convert all old XML config files from previous installations [default]"
-msgstr "แปลงแฟ้มกำหนดค่า XML เก่าทั้งหมดจากการติดตั้งก่อนหน้า [ปริยาย]"
+msgstr "แปลงแฟ้มค่าตั้ง XML แบบเก่าทั้งหมดจากการติดตั้งก่อนหน้า [ปริยาย]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid ""
 "The folder where the new GConf schema files will be saved if option -a is "
 "set [default=/tmp]"
 msgstr ""
+"โฟลเดอร์ที่จะใช้บันทึกแฟ้ม schema ของ GConf ถ้าตัวเลือก -a ถูกเลือก [ปริยาย=/tmp]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid "DIR"
-msgstr ""
+msgstr "DIR"
 
 #: ../utils/nautilus-actions-convert.c:77
-#: ../utils/nautilus-actions-new-config.c:95
+#: ../utils/nautilus-actions-new-config.c:100
 #, c-format
 msgid ""
 "Syntax error:\n"
 "\t- %s\n"
 "Try %s --help\n"
 msgstr ""
+"ไวยากรณ์ผิดพลาด:\n"
+"\t- %s\n"
+"ลองเรียก %s --help\n"
 
 #: ../utils/nautilus-actions-convert.c:83
 #, c-format
@@ -487,6 +541,9 @@ msgid ""
 "\tOptions -i and -o are mutually exclusive with option -a\n"
 "Try %s --help\n"
 msgstr ""
+"ไวยากรณ์ผิดพลาด:\n"
+"\tตัวเลือก -i และ -o ไม่สามารถใช้ร่วมกับตัวเลือก -a ได้\n"
+"ลองเรียก %s --help\n"
 
 #: ../utils/nautilus-actions-convert.c:89
 #, c-format
@@ -495,6 +552,9 @@ msgid ""
 "\tOption -i is mandatory when using option -o\n"
 "Try %s --help\n"
 msgstr ""
+"ไวยากรณ์ผิดพลาด:\n"
+"\tจำเป็นต้องมีตัวเลือก -i เมื่อใช้ตัวเลือก -o\n"
+"ลองเรียก %s --help\n"
 
 #: ../utils/nautilus-actions-convert.c:101
 #, c-format
@@ -502,6 +562,8 @@ msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
 msgstr ""
+"ผิดพลาด:\n"
+"\t- ไม่สามารถแจง %s\n"
 
 #: ../utils/nautilus-actions-convert.c:115
 #, c-format
@@ -509,110 +571,124 @@ msgid "Converting %s..."
 msgstr "กำลังแปลง %s..."
 
 #: ../utils/nautilus-actions-convert.c:135
-#: ../utils/nautilus-actions-new-config.c:152
+#: ../utils/nautilus-actions-new-config.c:169
 #, c-format
 msgid " Failed: Can't create %s: %s\n"
 msgstr "ล้มเหลว: ไม่สามารถสร้าง %s: %s\n"
 
 #: ../utils/nautilus-actions-convert.c:143
-#: ../utils/nautilus-actions-new-config.c:160
+#: ../utils/nautilus-actions-new-config.c:177
 #, c-format
 msgid "  OK, saved in %s\n"
 msgstr "  เรียบร้อย บันทึกใน %s\n"
 
 #: ../utils/nautilus-actions-convert.c:148
-#: ../utils/nautilus-actions-new-config.c:165
+#: ../utils/nautilus-actions-new-config.c:182
 #, c-format
 msgid "  Failed\n"
 msgstr "  ล้มเหลว\n"
 
 #. GConf description strings :
-#: ../utils/nautilus-actions-new-config.c:48
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:67
+#: ../utils/nautilus-actions-new-config.c:50
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
 msgid "The label of the menu item"
 msgstr "ป้ายชื่อของรายการเมนู"
 
-#: ../utils/nautilus-actions-new-config.c:48
+#: ../utils/nautilus-actions-new-config.c:50
 msgid "LABEL"
 msgstr "LABEL"
 
-#: ../utils/nautilus-actions-new-config.c:49
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
+#: ../utils/nautilus-actions-new-config.c:51
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
 msgid "The tooltip of the menu item"
 msgstr "คำแนะนำเครื่องมือของรายการเมนู"
 
-#: ../utils/nautilus-actions-new-config.c:49
+#: ../utils/nautilus-actions-new-config.c:51
 msgid "TOOLTIP"
 msgstr "TOOLTIP"
 
-#: ../utils/nautilus-actions-new-config.c:50
+#: ../utils/nautilus-actions-new-config.c:52
 msgid "The icon of the menu item (filename or GTK stock ID)"
 msgstr "ไอคอนของรายการเมนู (ชื่อแฟ้ม หรือชื่อไอคอนสำเร็จรูป GTK)"
 
-#: ../utils/nautilus-actions-new-config.c:50
+#: ../utils/nautilus-actions-new-config.c:52
 msgid "ICON"
 msgstr "ICON"
 
-#: ../utils/nautilus-actions-new-config.c:51
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
+#: ../utils/nautilus-actions-new-config.c:53
+#: ../utils/nautilus-actions-new-config.c:56
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
 msgid "The path of the command"
 msgstr "พาธของคำสั่ง"
 
-#: ../utils/nautilus-actions-new-config.c:51
-#: ../utils/nautilus-actions-new-config.c:58
+#: ../utils/nautilus-actions-new-config.c:53
+#: ../utils/nautilus-actions-new-config.c:56
+#: ../utils/nautilus-actions-new-config.c:62
 msgid "PATH"
 msgstr "PATH"
 
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
+#: ../utils/nautilus-actions-new-config.c:54
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
 msgid "The parameters of the command"
 msgstr "พารามิเตอร์ของคำสั่ง"
 
-#: ../utils/nautilus-actions-new-config.c:52
+#: ../utils/nautilus-actions-new-config.c:54
 msgid "PARAMS"
 msgstr "PARAMS"
 
-#: ../utils/nautilus-actions-new-config.c:53
+#: ../utils/nautilus-actions-new-config.c:55
 msgid ""
 "A pattern to match selected files against. May include wildcards (* or ?) "
 "(you must set one option for each pattern you need)"
 msgstr ""
+"รูปแบบที่จะใช้ค้นหาแฟ้ม อาจใช้ wildcard (* หรือ ?) ได้ (คุณต้องกำหนดตัวเลือกกำกับทุกๆ "
+"รูปแบบที่คุณใช้)"
 
-#: ../utils/nautilus-actions-new-config.c:53
+#: ../utils/nautilus-actions-new-config.c:55
+#: ../utils/nautilus-actions-new-config.c:57
 msgid "EXPR"
-msgstr ""
+msgstr "EXPR"
 
-#: ../utils/nautilus-actions-new-config.c:54
+#: ../utils/nautilus-actions-new-config.c:57
+msgid ""
+"A pattern to match selected files' mimetype against. May include wildcards "
+"(* or ?) (you must set one option for each pattern you need)"
+msgstr ""
+"รูปแบบที่จะใช้ค้นหาชนิด MIME ของแฟ้ม อาจใช้ wildcard (* หรือ ?) ได้ "
+"(คุณต้องกำหนดตัวเลือกกำกับทุกๆ รูปแบบที่คุณใช้)"
+
+#: ../utils/nautilus-actions-new-config.c:58
 msgid "Set it if the selection can contain files"
 msgstr "กำหนดถ้าการเลือกสามารถมีแฟ้มได้"
 
-#: ../utils/nautilus-actions-new-config.c:55
+#: ../utils/nautilus-actions-new-config.c:59
 msgid "Set it if the selection can contain folders"
 msgstr "กำหนดถ้าการเลือกสามารถมีโฟลเดอร์ได้"
 
-#: ../utils/nautilus-actions-new-config.c:56
+#: ../utils/nautilus-actions-new-config.c:60
 msgid "Set it if the selection can have several items"
-msgstr "กำหนดถ้าการเลือกสามารถมีหลายๆ รายการได้"
+msgstr "กำหนดถ้าสิ่งที่เลือกสามารถมีหลายๆ รายการได้"
 
-#: ../utils/nautilus-actions-new-config.c:57
+#: ../utils/nautilus-actions-new-config.c:61
 msgid ""
 "A GnomeVFS scheme where the selected files should be located (you must set "
 "it for each scheme you need)"
 msgstr ""
+"scheme ของ GnomeVFS ที่ระบุตำแหน่งของแฟ้มที่เลือก (คุณต้องกำหนดตัวเลือกกำกับทุกๆ "
+"รูปแบบที่คุณใช้)"
 
-#: ../utils/nautilus-actions-new-config.c:57
+#: ../utils/nautilus-actions-new-config.c:61
 msgid "SCHEME"
 msgstr "SCHEME"
 
-#: ../utils/nautilus-actions-new-config.c:58
+#: ../utils/nautilus-actions-new-config.c:62
 msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
 msgstr ""
-"พาธที่จะบันทึกแฟ้มนิยาม schema ของ GConf ใหม่"
-"[ค่าปริยาย: /tmp/config_UUID.schemas]"
+"พาธที่จะบันทึกแฟ้มข้อกำหนด schema ของ GConf ใหม่ [ค่าปริยาย: /tmp/config_UUID.schemas]"
 
-#: ../utils/nautilus-actions-new-config.c:133
+#: ../utils/nautilus-actions-new-config.c:150
 #, c-format
 msgid "Creating %s..."
 msgstr "กำลังสร้าง %s..."
@@ -627,38 +703,42 @@ msgstr "ไม่สามารถเขียนข้อมูลในแฟ
 msgid "Can't open file %s for writing\n"
 msgstr "ไมสามารถเปิดแฟ้ม %s สำหรับเขียน\n"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:68
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
 msgstr ""
+"ป้ายชื่อของรายการเมนูที่จะปรากฏในเมนูผุดขึ้นของ Nautilus "
+"เมื่อสิ่งที่เลือกตรงกับเงื่อนไขการปรากฏที่ตั้งไว้"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
 msgstr ""
 "คำแนะนำเครื่องมือของรายการเมนูที่จะปรากฏในแถบสถานะ Nautilus "
-"เมื่อผู้ใช้ใช้เมาส์ชี้ไปที่รายการเมนูผุดขึ้นของ Nautilus"
+"เมื่อผู้ใช้ชี้เมาส์ไปที่รายการเมนูผุดขึ้นของ Nautilus"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
 msgid "The icon of the menu item"
 msgstr "ไอคอนของรายการเมนู"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
 msgstr ""
+"ไอคอนของรายการเมนูที่จะปรากฏข้างป้ายชื่อในเมนูผุดขึ้นของ Nautilus "
+"เมื่อสิ่งที่เลือกตรงกับเงื่อนไขการปรากฏที่ตั้งไว้"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
 msgstr "พาธของคำสั่งจะเริ่มเมื่อผู้ใช้เลือกรายการเมนูในเมนูผุดขึ้นของ Nautilus"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
 "in the Nautilus popup menu.\n"
@@ -677,20 +757,63 @@ msgid ""
 "%U: username of the :%s/GnomeVFS URI\n"
 "%%: a percent sign"
 msgstr ""
+"พารามิเตอร์ของคำสั่งที่จะเรียกเมื่อผู้ใช้เลือกรายการเมนูในเมนูผุดขึ้นของ Nautilus\n"
+"\n"
+"พารามิเตอร์สามารถมีโทเคนพิเศษ ซึ่งสามารถแทนที่ได้ด้วยข้อมูลของ Nautilus ก่อนที่จะเรียกคำสั่ง:\n"
+"\n"
+"%d: โฟลเดอร์ที่เก็บของแฟ้มที่เลือก\n"
+"%f: ชื่อแฟ้มที่ถูกเลือก หรือแฟ้มแรกถ้ามีการเลือกหลายแฟ้ม\n"
+"%m: รายการชื่อโฟลเดอร์ที่เก็บของแฟ้มหรือโฟลเดอร์ที่ถูกเลือก คั่นด้วยช่องว่าง\n"
+"%M: รายการแฟ้มหรือโฟลเดอร์ที่ถูกเลือกในรูปพาธเต็ม คั่นด้วยช่องว่าง\n"
+"%u: URI ของ GnomeVFS\n"
+"%s: scheme ของ URI ของ GnomeVFS\n"
+"%h: ชื่อโฮสต์ของ URI ของ GnomeVFS\n"
+"%U: ชื่อผู้ใช้ของ URI ของ GnomeVFS\n"
+"%%: เครื่องหมายเปอร์เซ็นต์"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
 msgid "The list of pattern to match the selected file(s)/folder(s)"
-msgstr ""
+msgstr "รายการรูปแบบที่ใช้ค้นหาแฟ้มหรือโฟลเดอร์"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
 msgid ""
-"A list of strings with joker '*' or '?' to match the selected file(s)/folder"
-"(s). Each selected items must match at least one of the patterns for the "
-"action to appear"
+"A list of strings with joker '*' or '?' to match the name of the selected "
+"file(s)/folder(s). Each selected items must match at least one of the "
+"filename patterns for the action to appear"
 msgstr ""
+"รายการของสตริงที่มีอักขระพิเศษ '*' หรือ '?' ที่ใช้ค้นหาชื่อของแฟ้มหรือโฟลเดอร์ รูปแบบต่างๆ "
+"ดังกล่าวจะต้องมีชื่อแฟ้มอย่างน้อยหนึ่งชื่อที่ตรงกัน เพื่อจะให้ปฏิบัติการปรากฏ"
+
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
+msgid ""
+"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgstr "'true' ถ้ารูปแบบแฟ้มต้องมีตัวพิมพ์ใหญ่-เล็กตรงกัน หรือ 'false' ถ้าไม่ต้อง"
+
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
+msgid ""
+"If you need to match a filename in a case-sensitive manner, set this key to "
+"'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
+"'false'"
+msgstr ""
+"ถ้าคุณต้องการค้นหาชื่อแฟ้มในแบบตัวพิมพ์ใหญ่-เล็กตรงกัน ให้กำหนดคีย์นี้เป็น 'true' "
+"แต่ถ้าคุณต้องการให้รูปแบบอย่าง '*.jpg' รวมแฟ้ม 'photo.JPG' ด้วย ก็ให้กำหนดเป็น 'false'"
+
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
+msgid "The list of patterns to match the mimetypes of the selected file(s)"
+msgstr "รายการรูปแบบที่ใช้ค้นหาชนิด MIME ของแฟ้มหรือโฟลเดอร์"
+
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
+msgid ""
+"A list of strings with joker '*' or '?' to match the mimetypes of the "
+"selected file(s). Each selected items must match at least one of the "
+"mimetype patterns for the action to appear"
+msgstr ""
+"รายการของสตริงที่มีอักขระพิเศษ '*' หรือ '?' ที่ใช้ค้นหาชนิด MIME ของแฟ้มหรือโฟลเดอร์ "
+"รูปแบบต่างๆ ดังกล่าวจะต้องมีชนิด MIME ของแฟ้มอย่างน้อยหนึ่งรายการที่ตรงกัน "
+"เพื่อจะให้ปฏิบัติการปรากฏ"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
 msgid ""
 "The valid combinations are:\n"
 "\n"
@@ -700,39 +823,47 @@ msgid ""
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
+"เงื่อนไขที่เป็นไปได้คือ:\n"
+"\n"
+"isfile=TRUE และ isdir=FALSE: สิ่งที่เลือกจะมีแต่แฟ้มล้วนๆ\n"
+"isfile=FALSE และ isdir=TRUE: สิ่งที่เลือกจะมีแต่โฟลเดอร์ล้วนๆ\n"
+"isfile=TRUE และ isdir=TRUE': สิ่งที่เลือกอาจมีทั้งแฟ้มและโฟลเดอร์ได้\n"
+"isfile=FALSE และ isdir=FALSE: เป็นเงื่อนไขที่ใช้การไม่ได้ (ปฏิบัติการของคุณจะไม่มีทางปรากฏ)"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr ""
+msgstr "'true' ถ้าสิ่งที่เลือกสามารถมีแฟ้มได้ หรือ 'false' ถ้าไม่ต้องการ"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
 msgid "This setting is tied in with the 'isdir' setting. "
-msgstr ""
+msgstr "ค่าตั้งนี้ผูกติดกับค่า 'isdir'"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr ""
+msgstr "'true' ถ้าสิ่งที่เลือกสามารถมีโฟลเดอร์ได้ หรือ 'false' ถ้าไม่ต้องการ"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "This setting is tied in with the 'isfile' setting. "
-msgstr ""
+msgstr "ค่าตั้งนี้ผูกติดกับค่า 'isfile'"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
 msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr ""
+msgstr "'true' ถ้าสิ่งที่เลือกสามารถมีหลายรายการได้ หรือ 'false' ถ้าไม่ได้"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
 msgid ""
 "If you need one or more files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set 'false'"
 msgstr ""
+"ถ้าคุณต้องการให้สิ่งที่เลือกมีแฟ้มหรือโฟลเดอร์มากกว่าหนึ่งรายการได้ ให้กำหนดคีย์นี้เป็น 'true' "
+"แต่ถ้าคุณต้องการเพียงแค่แฟ้มหรือโฟลเดอร์เดียว ให้กำหนดเป็น 'false'"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
 msgid "The list of GnomeVFS schemes where the selected files should be located"
-msgstr ""
+msgstr "รายการ scheme ของ GnomeVFS ที่ระบุตำแหน่งของแฟ้มที่เลือก"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
 msgid ""
 "Defines the list of valid GnomeVFS schemes to be matched against the "
 "selected items. The GnomeVFS scheme is the protocol used to access the "
@@ -752,14 +883,30 @@ msgid ""
 "\n"
 "All GnomeVFS schemes used by Nautilus can be used here."
 msgstr ""
+"กำหนดรายการของ scheme ของ GnomeVFS ที่จะใช้เป็นแหล่งค้นหาด้วยรูปแบบที่กำหนด;  schema "
+"ของ GnomeVFS เป็นโพรโทคอลที่ใช้สำหรับเข้าถึงแฟ้ม คำหลักที่จะใช้ คือคำที่ใช้ใน URI ของ "
+"GnomeVFS\n"
+"\n"
+"ตัวอย่างของ URI ของ GnomeVFS เช่น:\n"
+"file:///tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt\n"
+"\n"
+"scheme ที่พบบ่อยที่สุดคือ:\n"
+"\n"
+"'file': แฟ้มในเครื่อง\n"
+"'sftp': แฟ้มที่เข้าถึงผ่าน SSH\n"
+"'ftp': แฟ้มที่เข้าถึงผ่าน FTP\n"
+"'smb': แฟ้มที่เข้าถึงผ่าน Samba (การเปิดใช้ร่วมของวินโดวส์)\n"
+"'dav': แฟ้มที่เข้าถึงผ่าน WebDav\n"
+"\n"
+"scheme ของ GnomeVFS ทั้งหมดที่ใช้กับ Nautilus สามารถใช้ได้ที่นี่"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
 msgid "The version of the configuration format"
 msgstr "รุ่นของรูปแบบค่าตั้ง"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
-msgstr ""
-
+msgstr "รุ่นของรูปแบบค่าตั้ง ซึ่งจะใช้จัดการความเข้ากันได้กับรุ่นเก่า"
