@@ -1,5 +1,10 @@
 2006-06-26  Frederic Ruaudel <grumz@grumz.net>
 
+	* nact/nact-editor.c:
+	* nact/nact-utils.c: Find a better way to fix pango parsing
+	problem for xml special chars with the glib function 
+	g_markup_printf_escaped ().
+
 	* nact/nautilus-actions-config.glade:
 	* nact/nact-editor.c:
 	* nact/nact-import-export.c:
