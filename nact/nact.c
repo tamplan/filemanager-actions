@@ -75,7 +75,10 @@ void nact_fill_actions_list (GtkWidget *list)
 				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
 				icon = gdk_pixbuf_new_from_file_at_size (action->icon, width, height, &error);
 				if (error)
+				{
 					icon = NULL;
+					g_error_free (error);
+				}
 			}
 		}
 		gtk_list_store_append (model, &iter);

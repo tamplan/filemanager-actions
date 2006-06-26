@@ -301,6 +301,8 @@ static void preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data)
 			if (error)
 			{
 				icon = NULL;
+				g_warning (error->message);
+				g_error_free (error);
 			}
 			gtk_image_set_from_pixbuf (GTK_IMAGE (image), icon);
 		}

@@ -1,9 +1,16 @@
 2006-06-26  Frederic Ruaudel <grumz@grumz.net>
 
+	* utils/nautilus-actions-convert.c:
+	* utils/nautilus-actions-new-config.c:
+	* nact/nact-editor.c:
+	* nact/nact.c: Free GError values after their usage with
+	g_error_free().
+
 	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
 	Fix the problem with the "Export" function
 	when one of an action's settings contains a xml special char (&, 
 	<, >, ...) (Bug #345143)
+
 	* nact/nact-utils.c: Fix the problem with pango parsing when trying
 	to render the parameter's example string when it contains an xml
 	special char (&, <, >, ...).

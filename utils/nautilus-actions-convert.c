@@ -75,6 +75,7 @@ int main (int argc, char** argv)
 	if (error != NULL)
 	{
 		fprintf (stderr, _("Syntax error:\n\t- %s\nTry %s --help\n"), error->message, g_get_prgname ());
+		g_error_free (error);
 		exit (EXIT_FAILURE);
 	}
 
@@ -133,6 +134,7 @@ int main (int argc, char** argv)
 				if (!success)
 				{
 					printf (_(" Failed: Can't create %s: %s\n"), output_file, error->message);
+					g_error_free (error);
 				}
 				g_free (path);
 				path = output_file;
