@@ -1,5 +1,17 @@
 2006-06-26  Frederic Ruaudel <grumz@grumz.net>
 
+	* nact/nautilus-actions-config.glade:
+	* nact/nact-editor.c:
+	* nact/nact-import-export.c:
+	* nact/nact-utils.c:
+	* nact/nact-utils.h:
+	* nact/nact.c:
+	* nact/nact.h: Move nautilus_actions_display_error() function
+	in nact-utils.c, change their old call with g_error() as it was
+	used to display Glade parsing error and define it to display a 
+	Gtk error dialog to the user. Then add some error handling in
+	the import and icon loading part.
+
 	* nact/nact-editor.c: Fix the icon preview. When the string
 	was invalid, the icon widget wasn't hidden so it shows the last
 	valid icon rendered. Now the icon is correctly hidden.

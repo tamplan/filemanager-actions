@@ -282,6 +282,7 @@ static void preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data)
 	const gchar* icon_name = gtk_entry_get_text (icon_entry);
 	GtkStockItem stock_item;
 	GdkPixbuf* icon = NULL;
+	gchar* error_msg;
 
 	if (icon_name && strlen (icon_name) > 0)
 	{
@@ -303,7 +304,10 @@ static void preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data)
 			if (error)
 			{
 				icon = NULL;
-				g_warning (error->message);
+				
+				error_msg = g_strdup_printf ("Can't load icon from file %s !", icon_name);
+				nautilus_actions_display_error (error_msg,  error->message);
+				g_free (error_msg);
 				g_error_free (error);
 			}
 			gtk_image_set_from_pixbuf (GTK_IMAGE (image), icon);
@@ -697,7 +701,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		/* load the GUI */
 		gui = nact_get_glade_xml_object (GLADE_EDIT_DIALOG_WIDGET);
 		if (!gui) {
-			nautilus_actions_display_error (_("Could not load interface for Nautilus Actions Config Tool"));
+			g_error (_("Could not load interface for Nautilus Actions Config Tool"));
 			return FALSE;
 		}
 

@@ -92,11 +92,6 @@ void nact_fill_actions_list (GtkWidget *list)
 	nautilus_actions_config_free_actions_list (actions);
 }
 
-void 
-nautilus_actions_display_error (const gchar *msg)
-{
-}
-
 void
 add_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
@@ -279,7 +274,7 @@ init_dialog (void)
 	GtkWidget* nact_edit_button;
 	GladeXML *gui = nact_get_glade_xml_object (GLADE_MAIN_WIDGET);
 	if (!gui) {
-		nautilus_actions_display_error (_("Could not load interface for Nautilus Actions Config Tool"));
+		g_error (_("Could not load interface for Nautilus Actions Config Tool"));
 		exit (1);
 	}
 

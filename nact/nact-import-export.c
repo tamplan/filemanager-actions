@@ -204,6 +204,7 @@ gboolean nact_import_actions (void)
 	NautilusActionsConfigSchemaReader *schema_reader;
 	NautilusActionsConfigXml* xml_reader;
 	NautilusActionsConfig* generic_reader = NULL;
+	gchar* error_message;
 	const gchar* file_path = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("ImportEntry",
 																			GLADE_IM_EX_PORT_DIALOG_WIDGET)));
 
@@ -230,7 +231,9 @@ gboolean nact_import_actions (void)
 			else
 			{
 				// TODO: Handle error
-				g_warning ("Can't parse file '%s' with xml reader !", file_path);
+				error_message = g_strdup_printf (_("Can't parse file '%s' as old XML config file !"), file_path);
+				nautilus_actions_display_error (error_message, "");
+				g_free (error_message);
 			}
 		}
 		else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("GConfRadioButton", 
@@ -243,7 +246,9 @@ gboolean nact_import_actions (void)
 			else
 			{
 				// TODO: Handle error
-				g_warning ("Can't parse file '%s' with gconf schema reader !", file_path);
+				error_message = g_strdup_printf (_("Can't parse file '%s' as GConf schema description file !"), file_path);
+				nautilus_actions_display_error (error_message, "");
+				g_free (error_message);
 			}
 		}
 		else /* Automatic detection asked */
@@ -259,7 +264,9 @@ gboolean nact_import_actions (void)
 			else
 			{
 				// TODO: Handle error
-				g_warning ("Can't parse file '%s' with xml reader nor gconf schema reader !", file_path);
+				error_message = g_strdup_printf (_("Can't parse file '%s' !"), file_path);
+				nautilus_actions_display_error (error_message, "");
+				g_free (error_message);
 			}
 		}
 	}
@@ -278,7 +285,10 @@ gboolean nact_import_actions (void)
 			else
 			{
 				// TODO: better error handling
-				g_warning ("Action '%s' importation failed !", action->label);
+				// i18n notes: %s is the label of the action (eg, 'Mount ISO')
+				error_message = g_strdup_printf (_("Action '%s' importation failed !"), action->label);
+				nautilus_actions_display_error (error_message, "");
+				g_free (error_message);
 			}
 		}
 	}
@@ -361,7 +371,7 @@ gboolean nact_import_export_actions (void)
 		/* load the GUI */
 		GladeXML* gui = nact_get_glade_xml_object (GLADE_IM_EX_PORT_DIALOG_WIDGET);
 		if (!gui) {
-			nautilus_actions_display_error (_("Could not load interface for Nautilus Actions Config Tool"));
+			g_error (_("Could not load interface for Nautilus Actions Config Tool"));
 			return FALSE;
 		}
 		

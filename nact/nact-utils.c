@@ -84,6 +84,34 @@ void nact_destroy_glade_objects ()
 	g_hash_table_destroy (glade_object_hash);
 }
 
+void nautilus_actions_display_error (const gchar *primary_msg, const gchar* secondary_msg)
+{
+	const gchar label_text_template[] = "<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s";
+   GladeXML *gui;
+   GtkWidget *error_dialog;
+	GtkWidget *error_label;
+	gchar* tmp;
+
+   gui = nact_get_glade_xml_object (GLADE_ERROR_DIALOG_WIDGET);
+   if (!gui)
+	{
+      return;
+	}
+
+   error_dialog = nact_get_glade_widget_from ("ErrorDialog", GLADE_ERROR_DIALOG_WIDGET);
+	
+	error_label = nact_get_glade_widget_from ("ErrorLabel", GLADE_ERROR_DIALOG_WIDGET);
+
+	tmp = g_markup_printf_escaped (label_text_template, primary_msg, secondary_msg);
+	gtk_label_set_markup (GTK_LABEL (error_label), tmp);
+	g_free (tmp);
+
+   gtk_dialog_run (GTK_DIALOG (error_dialog));
+
+   gtk_widget_hide (error_dialog);
+   g_object_unref (gui);
+}
+
 gboolean nact_utils_get_action_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path, 
 													  GtkTreeIter* iter, gpointer data)
 {
