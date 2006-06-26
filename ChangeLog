@@ -1,3 +1,13 @@
+2006-06-26  Frederic Ruaudel <grumz@grumz.net>
+
+	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
+	Fix the problem with the "Export" function
+	when one of an action's settings contains a xml special char (&, 
+	<, >, ...) (Bug #345143)
+	* nact/nact-utils.c: Fix the problem with pango parsing when trying
+	to render the parameter's example string when it contains an xml
+	special char (&, <, >, ...).
+
 2006-06-23  Frederic Ruaudel <grumz@grumz.net>
 
 	* plugin/nautilus-actions.c:
