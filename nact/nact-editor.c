@@ -288,6 +288,8 @@ static void preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data)
 		if (gtk_stock_lookup (icon_name, &stock_item))
 		{
 			gtk_image_set_from_stock (GTK_IMAGE (image), icon_name, GTK_ICON_SIZE_MENU);
+
+			gtk_widget_show (image);
 		}
 		else if (g_file_test (icon_name, G_FILE_TEST_EXISTS) && 
 					g_file_test (icon_name, G_FILE_TEST_IS_REGULAR))
@@ -305,9 +307,13 @@ static void preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data)
 				g_error_free (error);
 			}
 			gtk_image_set_from_pixbuf (GTK_IMAGE (image), icon);
+			
+			gtk_widget_show (image);
 		}
-
-		gtk_widget_show (image);
+		else
+		{
+			gtk_widget_hide (image);
+		}
 	}
 	else
 	{

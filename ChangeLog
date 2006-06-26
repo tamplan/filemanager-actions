@@ -1,5 +1,9 @@
 2006-06-26  Frederic Ruaudel <grumz@grumz.net>
 
+	* nact/nact-editor.c: Fix the icon preview. When the string
+	was invalid, the icon widget wasn't hidden so it shows the last
+	valid icon rendered. Now the icon is correctly hidden.
+
 	* utils/nautilus-actions-convert.c:
 	* utils/nautilus-actions-new-config.c:
 	* nact/nact-editor.c:
