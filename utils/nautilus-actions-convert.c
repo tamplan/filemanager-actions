@@ -97,9 +97,10 @@ int main (int argc, char** argv)
 
 	if (input_file)
 	{
-		if (!nautilus_actions_config_xml_parse_file (xml_configs, input_file))
+		if (!nautilus_actions_config_xml_parse_file (xml_configs, input_file, &error))
 		{
-			fprintf (stderr, _("Error:\n\t- Can't parse %s\n"), input_file);
+			fprintf (stderr, _("Error:\n\t- Can't parse %s\n%s\n"), input_file, error->message);
+			g_error_free (error);
 			exit (EXIT_FAILURE);
 		}
 	}
@@ -114,7 +115,7 @@ int main (int argc, char** argv)
 	{
 		NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)(iter->data);
 		printf (_("Converting %s..."), action->label);
-		if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_configs), action))
+		if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_configs), action, &error))
 		{
 			success = TRUE;
 			path = nautilus_actions_config_schema_writer_get_saved_filename (schema_configs, action->uuid);
@@ -147,7 +148,8 @@ int main (int argc, char** argv)
 		}
 		else
 		{
-			printf (_("  Failed\n"));
+			printf (_(" Failed: %s\n"), error->message);
+			g_error_free (error);
 		}
 	}
 

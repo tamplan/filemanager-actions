@@ -31,6 +31,14 @@
 
 G_BEGIN_DECLS
 
+// Error Data
+#define NAUTILUS_ACTIONS_SCHEMA_READER_ERROR g_quark_from_string ("nautilus_actions_config_schema_reader")
+
+typedef enum
+{
+	NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED
+} NautilusActionsSchemaReaderError;
+
 #define NAUTILUS_ACTIONS_TYPE_CONFIG_SCHEMA_READER            (nautilus_actions_config_schema_reader_get_type())
 #define NAUTILUS_ACTIONS_CONFIG_SCHEMA_READER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, NAUTILUS_ACTIONS_TYPE_CONFIG_SCHEMA_READER, NautilusActionsConfigSchemaReader))
 #define NAUTILUS_ACTIONS_CONFIG_SCHEMA_READER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, NAUTILUS_ACTIONS_TYPE_CONFIG_SCHEMA_READER, NautilusActionsConfigSchemaReaderClass))
@@ -52,7 +60,7 @@ struct _NautilusActionsConfigSchemaReaderClass {
 
 GType                        nautilus_actions_config_schema_reader_get_type (void);
 NautilusActionsConfigSchemaReader  *nautilus_actions_config_schema_reader_get (void);
-gboolean nautilus_actions_config_schema_reader_parse_file (NautilusActionsConfigSchemaReader* config, const gchar* filename);
+gboolean nautilus_actions_config_schema_reader_parse_file (NautilusActionsConfigSchemaReader* config, const gchar* filename, GError** error);
 
 G_END_DECLS
 

@@ -203,7 +203,7 @@ actions_changed_cb (GConfClient *client,
 
 		if (is_new)
 		{
-			nautilus_actions_config_add_action (config, action);
+			nautilus_actions_config_add_action (config, action, NULL);
 			nautilus_actions_config_action_free (action);
 		}
 		else

@@ -134,6 +134,8 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkTreeIter iter;
 	GtkWidget *nact_actions_list;
 	GtkTreeModel* model;
+	GError* error = NULL;
+	gchar* tmp;
 
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
 
@@ -151,9 +153,17 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 		new_action = nautilus_actions_config_action_dup_new (action);
 		if (new_action) 
 		{
-			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), new_action))
+			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), new_action, &error))
 			{
 				nact_fill_actions_list (nact_actions_list);
+			}
+			else
+			{
+				// i18n notes: will be displayed in a dialog
+				tmp = g_strdup_printf (_("Can't duplicate action '%s' !"), action->label);
+				nautilus_actions_display_error (tmp, error->message);
+				g_error_free (error);
+				g_free (tmp);
 			}
 		}
 

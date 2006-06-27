@@ -439,7 +439,7 @@ static gboolean nautilus_actions_config_xml_action_fill_menu_item (NautilusActio
 	return retv;
 }
 
-static gboolean nautilus_actions_config_xml_action_fill (NautilusActionsConfigAction* action, xmlNode* config_node)
+static gboolean nautilus_actions_config_xml_action_fill (NautilusActionsConfigAction* action, xmlNode* config_node, GError** error)
 {
 	xmlNode *iter;
 	gboolean retv = FALSE;
@@ -479,12 +479,28 @@ static gboolean nautilus_actions_config_xml_action_fill (NautilusActionsConfigAc
 	{
 		retv = TRUE;
 	}
+	else if (!test_ok)
+	{
+		// i18n notes: will be displayed in an error dialog
+		g_set_error (error, NAUTILUS_ACTIONS_XML_ERROR, NAUTILUS_ACTIONS_XML_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (Bad test section)"));
+
+	}
+	else if (!command_ok)
+	{
+		// i18n notes: will be displayed in an error dialog
+		g_set_error (error, NAUTILUS_ACTIONS_XML_ERROR, NAUTILUS_ACTIONS_XML_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (Bad command section)"));
+	}
+	else if (!menu_item_ok)
+	{
+		// i18n notes: will be displayed in an error dialog
+		g_set_error (error, NAUTILUS_ACTIONS_XML_ERROR, NAUTILUS_ACTIONS_XML_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (Bad menu item section)"));
+	}
 
 	return retv;
 }
 
 gboolean
-nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const gchar* filename)
+nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const gchar* filename, GError** error)
 {
 	xmlDoc *doc = NULL;
 	xmlNode *root_node;
@@ -494,6 +510,10 @@ nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const 
 	uuid_t uuid;
 	gchar uuid_str[64];
 	gboolean retv = FALSE;
+	gboolean no_error = TRUE;
+	xmlError* xml_error = NULL;
+
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	doc = xmlParseFile (filename);
 	if (doc != NULL)
@@ -505,41 +525,64 @@ nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const 
 		{
 			version = xmlGetProp (root_node, BAD_CAST ACTION_VERSION);
 			
-			for (iter = root_node->children; iter; iter = iter->next)
+			iter = root_node->children;
+			while (iter && no_error)
 			{
 				xmlChar *config_name;
 
-				if (iter->type == XML_ELEMENT_NODE &&
-					g_ascii_strncasecmp ((gchar*)iter->name, 
+				if (iter->type == XML_ELEMENT_NODE)
+				{
+					if (g_ascii_strncasecmp ((gchar*)iter->name, 
 												ACTION_ACTION, 
 												strlen (ACTION_ACTION)) == 0)
-				{
-					config_name = xmlGetProp (iter, BAD_CAST ACTION_ACTION_NAME);
-					if (config_name != NULL)
 					{
-						action = nautilus_actions_config_action_new ();
-						action->version = (char*)xmlStrdup (version);
-						uuid_generate (uuid);
-						uuid_unparse (uuid, uuid_str);
-						action->uuid = g_strdup (uuid_str);
-						if (nautilus_actions_config_xml_action_fill (action, iter))
+						config_name = xmlGetProp (iter, BAD_CAST ACTION_ACTION_NAME);
+						if (config_name != NULL)
 						{
-							g_hash_table_insert (NAUTILUS_ACTIONS_CONFIG (config)->actions, g_strdup (action->uuid), action);
-							retv = TRUE;
+							action = nautilus_actions_config_action_new ();
+							action->version = (char*)xmlStrdup (version);
+							uuid_generate (uuid);
+							uuid_unparse (uuid, uuid_str);
+							action->uuid = g_strdup (uuid_str);
+							if (nautilus_actions_config_xml_action_fill (action, iter, error))
+							{
+								g_hash_table_insert (NAUTILUS_ACTIONS_CONFIG (config)->actions, g_strdup (action->uuid), action);
+								retv = TRUE;
+							}
+							else
+							{
+								nautilus_actions_config_action_free (action);
+								no_error = FALSE;
+							}
+							xmlFree (config_name);
 						}
-						else
-						{
-							nautilus_actions_config_action_free (action);
-						}
-						xmlFree (config_name);
 					}
+               else
+               {
+                  // i18n notes: will be displayed in an error dialog
+                  g_set_error (error, NAUTILUS_ACTIONS_XML_ERROR, NAUTILUS_ACTIONS_XML_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (found <%s> element instead of <%s>)"), (gchar*)iter->name, ACTION_ACTION);
+                  no_error = FALSE;
+               }
 				}
+				iter = iter->next;
 			}
 			xmlFree (version);
 		}
+      else
+      {
+         // i18n notes: will be displayed in an error dialog
+         g_set_error (error, NAUTILUS_ACTIONS_XML_ERROR, NAUTILUS_ACTIONS_XML_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (root node is <%s> instead of <%s>)"), (gchar*)iter->name, ACTION_ROOT);
+      }
+
 
 		xmlFreeDoc(doc);
 	}
+   else
+   {
+      xml_error = xmlGetLastError ();
+      g_set_error (error, NAUTILUS_ACTIONS_XML_ERROR, NAUTILUS_ACTIONS_XML_ERROR_FAILED, "%s", xml_error->message);
+      xmlResetError ((xmlErrorPtr)xml_error);
+   }
 
 	xmlCleanupParser();
 
@@ -556,7 +599,7 @@ void nautilus_actions_config_xml_load_list (NautilusActionsConfigXml* config)
 	for (iter = config_files; iter; iter = iter->next)
 	{
 		gchar* filename = (gchar*)iter->data;
-		nautilus_actions_config_xml_parse_file (config, filename);
+		nautilus_actions_config_xml_parse_file (config, filename, NULL);
 	}
 
 	nautilus_actions_config_xml_free_config_files (config_files);

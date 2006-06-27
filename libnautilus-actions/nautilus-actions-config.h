@@ -26,8 +26,18 @@
 
 #include <glib/glist.h>
 #include <glib-object.h>
+#include <glib.h>
 
 G_BEGIN_DECLS
+
+// Error data
+#define NAUTILUS_ACTIONS_CONFIG_ERROR g_quark_from_string ("nautilus_actions_config")
+
+typedef enum
+{
+   NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED
+} NautilusActionsConfigError;
+
 
 #define NAUTILUS_ACTIONS_TYPE_CONFIG            (nautilus_actions_config_get_type())
 #define NAUTILUS_ACTIONS_CONFIG(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, NAUTILUS_ACTIONS_TYPE_CONFIG, NautilusActionsConfig))
@@ -83,7 +93,7 @@ NautilusActionsConfigAction *nautilus_actions_config_get_action (NautilusActions
 GSList                      *nautilus_actions_config_get_actions (NautilusActionsConfig *config);
 void                         nautilus_actions_config_free_actions_list (GSList *list);
 gboolean                     nautilus_actions_config_add_action (NautilusActionsConfig *config,
-								 NautilusActionsConfigAction *action);
+								 NautilusActionsConfigAction *action, GError** error);
 gboolean                     nautilus_actions_config_update_action (NautilusActionsConfig *config,
 								    NautilusActionsConfigAction *action);
 gboolean                     nautilus_actions_config_remove_action (NautilusActionsConfig *config,

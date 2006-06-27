@@ -26,10 +26,26 @@
 
 #include <glib/glist.h>
 #include <glib-object.h>
+#include <glib.h>
 #include <gconf/gconf-client.h>
 #include "nautilus-actions-config.h"
+#include <glib/gi18n.h>
+
+#ifdef N_
+#undef N_
+#endif
+#define N_(String) String
 
 G_BEGIN_DECLS
+
+// Error data
+#define NAUTILUS_ACTIONS_XML_ERROR g_quark_from_string ("nautilus_actions_config_xml")
+
+typedef enum
+{
+   NAUTILUS_ACTIONS_XML_ERROR_FAILED
+} NautilusActionsXmlError;
+
 
 #define NAUTILUS_ACTIONS_TYPE_CONFIG_XML            (nautilus_actions_config_xml_get_type())
 #define NAUTILUS_ACTIONS_CONFIG_XML(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, NAUTILUS_ACTIONS_TYPE_CONFIG_XML, NautilusActionsConfigXml))
@@ -52,7 +68,7 @@ struct _NautilusActionsConfigXmlClass {
 
 GType                        nautilus_actions_config_xml_get_type (void);
 NautilusActionsConfigXml       *nautilus_actions_config_xml_get (void);
-gboolean nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const gchar* filename);
+gboolean nautilus_actions_config_xml_parse_file (NautilusActionsConfigXml* config, const gchar* filename, GError** error);
 void nautilus_actions_config_xml_load_list (NautilusActionsConfigXml* config);
 
 G_END_DECLS

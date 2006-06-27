@@ -862,9 +862,14 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		g_slist_free (list);
 
 		if (is_new)
-			ret = nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), action);
+		{
+			// TODO: If necessary deal with the GError returned
+			ret = nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), action, NULL);
+		}
 		else
+		{
 			ret = nautilus_actions_config_update_action (NAUTILUS_ACTIONS_CONFIG (config), action);
+		}
 		break;
 	case GTK_RESPONSE_DELETE_EVENT:
 	case GTK_RESPONSE_CANCEL :

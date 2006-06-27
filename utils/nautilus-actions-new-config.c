@@ -149,7 +149,7 @@ int main (int argc, char** argv)
 	g_object_set (G_OBJECT (schema_configs), "save-path", "/tmp", NULL);
 
 	printf (_("Creating %s..."), action->label);
-	if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_configs), action))
+	if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_configs), action, &error))
 	{
 		success = TRUE;
 		path = nautilus_actions_config_schema_writer_get_saved_filename (schema_configs, action->uuid);
@@ -181,7 +181,8 @@ int main (int argc, char** argv)
 	}
 	else
 	{
-		printf (_("  Failed\n"));
+		printf (_(" Failed: %s\n"), error->message);
+		g_error_free (error);
 	}
 
 	nautilus_actions_config_action_free (action);

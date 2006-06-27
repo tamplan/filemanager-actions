@@ -205,6 +205,7 @@ gboolean nact_import_actions (void)
 	NautilusActionsConfigXml* xml_reader;
 	NautilusActionsConfig* generic_reader = NULL;
 	gchar* error_message;
+	GError* error = NULL;
 	const gchar* file_path = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("ImportEntry",
 																			GLADE_IM_EX_PORT_DIALOG_WIDGET)));
 
@@ -224,48 +225,50 @@ gboolean nact_import_actions (void)
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("XMLRadioButton", 
 																			GLADE_IM_EX_PORT_DIALOG_WIDGET))))
 		{
-			if (nautilus_actions_config_xml_parse_file (xml_reader, file_path))
+			if (nautilus_actions_config_xml_parse_file (xml_reader, file_path, &error))
 			{
 				generic_reader = NAUTILUS_ACTIONS_CONFIG (xml_reader);
 			}
 			else
 			{
-				// TODO: Handle error
 				error_message = g_strdup_printf (_("Can't parse file '%s' as old XML config file !"), file_path);
-				nautilus_actions_display_error (error_message, "");
+				nautilus_actions_display_error (error_message, error->message);
+				g_error_free (error);
 				g_free (error_message);
 			}
 		}
 		else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("GConfRadioButton", 
 																			GLADE_IM_EX_PORT_DIALOG_WIDGET))))
 		{
-			if (nautilus_actions_config_schema_reader_parse_file (schema_reader, file_path))
+			if (nautilus_actions_config_schema_reader_parse_file (schema_reader, file_path, &error))
 			{
 				generic_reader = NAUTILUS_ACTIONS_CONFIG (schema_reader);
 			}
 			else
 			{
-				// TODO: Handle error
 				error_message = g_strdup_printf (_("Can't parse file '%s' as GConf schema description file !"), file_path);
-				nautilus_actions_display_error (error_message, "");
+				nautilus_actions_display_error (error_message, error->message);
+				g_error_free (error);
 				g_free (error_message);
 			}
 		}
 		else /* Automatic detection asked */
 		{
-			if (nautilus_actions_config_xml_parse_file (xml_reader, file_path))
+			//--> we are ignoring the first error because if it fails here it will not in the next 
+			// or if both fails, we kept the current GConf config format as the most important
+			if (nautilus_actions_config_xml_parse_file (xml_reader, file_path, NULL))
 			{
 				generic_reader = NAUTILUS_ACTIONS_CONFIG (xml_reader);
 			}
-			else if (nautilus_actions_config_schema_reader_parse_file (schema_reader, file_path))
+			else if (nautilus_actions_config_schema_reader_parse_file (schema_reader, file_path, &error))
 			{
 				generic_reader = NAUTILUS_ACTIONS_CONFIG (schema_reader);
 			}
 			else
 			{
-				// TODO: Handle error
 				error_message = g_strdup_printf (_("Can't parse file '%s' !"), file_path);
-				nautilus_actions_display_error (error_message, "");
+				nautilus_actions_display_error (error_message, error->message);
+				g_error_free (error);
 				g_free (error_message);
 			}
 		}
@@ -278,16 +281,16 @@ gboolean nact_import_actions (void)
 		for (iter = actions; iter; iter = iter->next)
 		{
 			NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)(iter->data);
-			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), action))
+			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), action, &error))
 			{
 				retv = TRUE;
 			}
 			else
 			{
-				// TODO: better error handling
 				// i18n notes: %s is the label of the action (eg, 'Mount ISO')
 				error_message = g_strdup_printf (_("Action '%s' importation failed !"), action->label);
-				nautilus_actions_display_error (error_message, "");
+				nautilus_actions_display_error (error_message, error->message);
+				g_error_free (error);
 				g_free (error_message);
 			}
 		}
@@ -329,7 +332,8 @@ gboolean nact_export_actions (void)
 			gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
 			action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_writer), action))
+			// TODO: Better error handling: deal with the GError param
+			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_writer), action, NULL))
 			{
 				nautilus_actions_config_schema_writer_get_saved_filename (schema_writer, action->uuid);
 			}

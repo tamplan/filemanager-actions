@@ -186,18 +186,28 @@ static gchar* get_new_uuid (void)
 }
 
 gboolean
-nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActionsConfigAction *action)
+nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActionsConfigAction *action, GError** error)
 {
 	gboolean retv = FALSE;
-	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG (config), FALSE);
-	g_return_val_if_fail (action != NULL, FALSE);
+	NautilusActionsConfigAction* found_action;
+	
+	g_assert (NAUTILUS_ACTIONS_IS_CONFIG (config));
+	g_assert (action != NULL);
 
-	if (action->uuid != NULL) {
-		if (g_hash_table_lookup (config->actions, action->uuid)) 
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	if (action->uuid != NULL) 
+	{
+		found_action = (NautilusActionsConfigAction*)g_hash_table_lookup (config->actions, action->uuid);
+		if (found_action != NULL) 
 		{
+			// i18n notes: will be displayed in an error dialog
+			g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("The action '%s' already exists with the name '%s', please first remove the existing one before trying to add this one"), action->label, found_action->label);
 			return FALSE;
 		}
-	} else {
+	} 
+	else 
+	{
 		action->uuid = get_new_uuid ();
 	}
 
@@ -205,6 +215,11 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 	{
 		g_signal_emit (config, signals[ACTION_ADDED], 0, action);
 		retv = TRUE;
+	}
+	else
+	{
+		// i18n notes: will be displayed in an error dialog
+		g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("Can't save action '%s'"), action->label);
 	}
 	
 	return retv;
