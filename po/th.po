@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-27 12:41+0700\n"
-"PO-Revision-Date: 2006-06-27 12:47+0700\n"
+"POT-Creation-Date: 2006-06-28 23:02+0700\n"
+"PO-Revision-Date: 2006-06-28 23:07+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <l10n.opentle.org>\n"
 "MIME-Version: 1.0\n"
@@ -388,17 +388,22 @@ msgstr ""
 "Supranee Thirawatthanasuk <supranee@opentle.org>\n"
 "Theppitak Karoonboonyanan <thep@linux.thai.net>"
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact.c:163
+msgid "Can't duplicate action '%s' !"
+msgstr "ไม่สามารถทำซ้ำปฏิบัติการ '%s'!"
+
 #. create columns on the tree view
-#: ../nact/nact.c:252 ../nact/nact-import-export.c:179
+#: ../nact/nact.c:262 ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "ไอคอน"
 
-#: ../nact/nact.c:257 ../nact/nact-import-export.c:184
+#: ../nact/nact.c:267 ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "ป้ายชื่อ"
 
-#: ../nact/nact.c:277 ../nact/nact-editor.c:705
-#: ../nact/nact-import-export.c:374
+#: ../nact/nact.c:287 ../nact/nact-editor.c:705
+#: ../nact/nact-import-export.c:378
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "ไม่สามารถโหลดอินเทอร์เฟซสำหรับเครื่องมือกำหนดค่าปฏิบัติการของ Nautilus"
 
@@ -470,27 +475,23 @@ msgstr "เพิ่มปฏิบัติการใหม่"
 msgid "Edit Action \"%s\""
 msgstr "แก้ไขปฏิบัติการ \"%s\""
 
-#. TODO: Handle error
 #: ../nact/nact-import-export.c:234
 #, c-format
 msgid "Can't parse file '%s' as old XML config file !"
 msgstr "ไม่สามารถแจงแฟ้ม '%s' ในแบบแฟ้มค่าตั้ง XML แบบเก่า!"
 
-#. TODO: Handle error
 #: ../nact/nact-import-export.c:249
 #, c-format
 msgid "Can't parse file '%s' as GConf schema description file !"
 msgstr "ไม่สามารถแจงแฟ้ม '%s' ในแบบแฟ้มบรรยาย schema ของ GConf!"
 
-#. TODO: Handle error
-#: ../nact/nact-import-export.c:267
+#: ../nact/nact-import-export.c:269
 #, c-format
 msgid "Can't parse file '%s' !"
-msgstr "ไมสามารถแจงแฟ้ม '%s'!"
+msgstr "ไม่สามารถแจงแฟ้ม '%s'!"
 
-#. TODO: better error handling
 #. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:289
+#: ../nact/nact-import-export.c:291
 #, c-format
 msgid "Action '%s' importation failed !"
 msgstr "นำเข้าปฏิบัติการ '%s' ไม่สำเร็จ!"
@@ -588,36 +589,36 @@ msgstr ""
 "ลองเรียก %s --help\n"
 
 #: ../utils/nautilus-actions-convert.c:102
-#, c-format
 msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
+"%s\n"
 msgstr ""
 "ผิดพลาด:\n"
 "\t- ไม่สามารถแจง %s\n"
+"%s\n"
 
-#: ../utils/nautilus-actions-convert.c:116
+#: ../utils/nautilus-actions-convert.c:117
 #, c-format
 msgid "Converting %s..."
 msgstr "กำลังแปลง %s..."
 
-#: ../utils/nautilus-actions-convert.c:136
+#: ../utils/nautilus-actions-convert.c:137
 #: ../utils/nautilus-actions-new-config.c:170
 #, c-format
 msgid " Failed: Can't create %s: %s\n"
-msgstr "ล้มเหลว: ไม่สามารถสร้าง %s: %s\n"
+msgstr " ล้มเหลว: ไม่สามารถสร้าง %s: %s\n"
 
-#: ../utils/nautilus-actions-convert.c:145
+#: ../utils/nautilus-actions-convert.c:146
 #: ../utils/nautilus-actions-new-config.c:179
 #, c-format
 msgid "  OK, saved in %s\n"
 msgstr "  เรียบร้อย บันทึกใน %s\n"
 
-#: ../utils/nautilus-actions-convert.c:150
+#: ../utils/nautilus-actions-convert.c:151
 #: ../utils/nautilus-actions-new-config.c:184
-#, c-format
-msgid "  Failed\n"
-msgstr "  ล้มเหลว\n"
+msgid " Failed: %s\n"
+msgstr " ล้มเหลว: %s\n"
 
 #. GConf description strings :
 #: ../utils/nautilus-actions-new-config.c:50
@@ -732,7 +733,7 @@ msgstr "ไม่สามารถเขียนข้อมูลในแฟ
 #: ../utils/nautilus-actions-tools-utils.c:54
 #, c-format
 msgid "Can't open file %s for writing\n"
-msgstr "ไมสามารถเปิดแฟ้ม %s สำหรับเขียน\n"
+msgstr "ไม่สามารถเปิดแฟ้ม %s สำหรับเขียน\n"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
 msgid ""
