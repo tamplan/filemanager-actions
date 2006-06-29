@@ -9,3 +9,6 @@ utils/nautilus-actions-convert.c
 utils/nautilus-actions-new-config.c
 utils/nautilus-actions-tools-utils.c
 libnautilus-actions/nautilus-actions-config-gconf-private.h
+libnautilus-actions/nautilus-actions-config.c
+libnautilus-actions/nautilus-actions-config-xml.c
+libnautilus-actions/nautilus-actions-config-schema-reader.c

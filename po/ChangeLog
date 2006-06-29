@@ -1,10 +1,14 @@
+2006-06-29  Frederic Ruaudel <grumz@grumz.net>
+
+	* POTFILES.in: Add new files containing translatable strings
+
 2006-06-28  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
 	* th.po: Updated Thai translation.
 
 2006-06-27  Daniel Nylander  <po@danielnylander.se>
 
-        * sv.po: Updated Swedish translation.
+	* sv.po: Updated Swedish translation.
 	
 2006-06-27  Theppitak Karoonboonyanan  <thep@linux.thai.net>
 
@@ -44,7 +48,7 @@
 
 2006-05-08  Daniel Nylander  <po@danielnylander.se>
 
-        * sv.po: Updated Swedish translation.
+	* sv.po: Updated Swedish translation.
 	
 2006-04-30  Josep Puigdemont Casamajó  <josep.puigdemont@gmail.com>
 
@@ -161,7 +165,7 @@
 
 2006-02-01  Ankit Patel  <ankit644@yahoo.com>
 
-        * gu.po: Updated Gujarati Translation.
+	* gu.po: Updated Gujarati Translation.
 
 2006-02-01  Clytie Siddall <clytie@riverland.net.au>
 
@@ -198,7 +202,7 @@
 
 2006-01-28  Lukas Novotny  <lukasnov@cvs.gnome.org>
 
-        * cs.po: Updated Czech translation.
+	* cs.po: Updated Czech translation.
 
 2006-01-27  Chao-Hsiung Liao  <j_h_liau@yahoo.com.tw>
 
@@ -207,7 +211,7 @@
 
 2006-01-26  Lukas Novotny  <lukasnov@cvs.gnome.org>
 
-        * cs.po: Added Czech translation.
+	* cs.po: Added Czech translation.
 
 2006-01-22  Raphael Higino  <raphaelh@cvs.gnome.org>
 

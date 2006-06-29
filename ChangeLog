@@ -1,3 +1,7 @@
+2006-06-29  Frederic Ruaudel <grumz@grumz.net>
+
+	* po/POTFILES.in: Add new files containing translatable strings
+
 2006-06-27  Frederic Ruaudel <grumz@grumz.net>
 
 	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
