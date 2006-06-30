@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-28 23:02+0700\n"
-"PO-Revision-Date: 2006-06-28 23:07+0700\n"
+"POT-Creation-Date: 2006-06-30 19:08+0700\n"
+"PO-Revision-Date: 2006-06-30 19:16+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <l10n.opentle.org>\n"
 "MIME-Version: 1.0\n"
@@ -390,6 +390,7 @@ msgstr ""
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact.c:163
+#, c-format
 msgid "Can't duplicate action '%s' !"
 msgstr "ไม่สามารถทำซ้ำปฏิบัติการ '%s'!"
 
@@ -589,6 +590,7 @@ msgstr ""
 "ลองเรียก %s --help\n"
 
 #: ../utils/nautilus-actions-convert.c:102
+#, c-format
 msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
@@ -617,6 +619,7 @@ msgstr "  เรียบร้อย บันทึกใน %s\n"
 
 #: ../utils/nautilus-actions-convert.c:151
 #: ../utils/nautilus-actions-new-config.c:184
+#, c-format
 msgid " Failed: %s\n"
 msgstr " ล้มเหลว: %s\n"
 
@@ -942,3 +945,85 @@ msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
 msgstr "รุ่นของรูปแบบค่าตั้ง ซึ่งจะใช้จัดการความเข้ากันได้กับรุ่นเก่า"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:205
+#, c-format
+msgid ""
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
+msgstr ""
+"มีปฏิบัติการ '%s' อยู่ก่อนแล้วในชื่อ '%s' กรุณาลบปฏิบัติการที่มีอยู่ก่อน ก่อนที่จะเพิ่มรายการนี้"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:222
+#, c-format
+msgid "Can't save action '%s'"
+msgstr "ไม่สามารถบันทึกปฏิบัติการ '%s'"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:485
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad test section)"
+msgstr ""
+"แฟ้ม XML นี้ไม่ใช่แฟ้มค่าตั้ง Nautilus-action ที่ใช้การได้ (หัวข้อเงื่อนไขทดสอบผิดพลาด)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:491
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad command "
+"section)"
+msgstr ""
+"แฟ้ม XML นี้ไม่ใช่แฟ้มค่าตั้ง Nautilus-action ที่ใช้การได้ (หัวข้อคำสั่งผิดพลาด)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:496
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad menu item "
+"section)"
+msgstr ""
+"แฟ้ม XML นี้ไม่ใช่แฟ้มค่าตั้ง Nautilus-action ที่ใช้การได้ (หัวข้อรายการเมนูผิดพลาด)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:563
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:374
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:533
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (found <%s> "
+"element instead of <%s>)"
+msgstr ""
+"แฟ้ม XML นี้ไม่ใช่แฟ้มค่าตั้ง Nautilus-action ที่ใช้การได้ (พบอิลิเมนต์ <%s> แทนที่จะเป็น <%s>)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:574
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:543
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
+"instead of <%s>)"
+msgstr ""
+"แฟ้ม XML นี้ไม่ใช่แฟ้มค่าตั้ง Nautilus-action ที่ใช้การได้ (โหนดรากเป็น <%s> แทนที่จะเป็น <%s>)"
+
+#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
+msgid ","
+msgstr ", "
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:461
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
+"s)"
+msgstr ""
+"แฟ้ม XML นี้ไม่ใช่แฟ้มค่าตั้ง Nautilus-action ที่ใช้การได้ (ขาดคีย์: %s)"
+
+#. No error occured but we have not found the "version" gconf key
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:469
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key : %s)"
+msgstr ""
+"แฟ้ม XML นี้ไม่ใช่แฟ้มค่าตั้ง Nautilus-action ที่ใช้การได้ (ขาดคีย์: %s)"
