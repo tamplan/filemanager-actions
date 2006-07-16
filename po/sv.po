@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-27 04:38+0200\n"
-"PO-Revision-Date: 2006-06-27 08:51+0100\n"
+"POT-Creation-Date: 2006-07-16 04:59+0200\n"
+"PO-Revision-Date: 2006-07-16 17:46+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -349,20 +349,26 @@ msgstr ""
 "Daniel Nylander\n"
 "Skicka synpunkter på översättningen till tp-sv@listor.tp-sv.se"
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact.c:163
+#, c-format
+msgid "Can't duplicate action '%s' !"
+msgstr "Kan inte dubblera åtgärden \"%s\"!"
+
 #. create columns on the tree view
-#: ../nact/nact.c:252
+#: ../nact/nact.c:262
 #: ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "Ikon"
 
-#: ../nact/nact.c:257
+#: ../nact/nact.c:267
 #: ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "Etikett"
 
-#: ../nact/nact.c:277
+#: ../nact/nact.c:287
 #: ../nact/nact-editor.c:705
-#: ../nact/nact-import-export.c:374
+#: ../nact/nact-import-export.c:378
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Kunde inte läsa in gränssnitt för konfigurationsverktyget för Nautilus-åtgärder"
 
@@ -436,27 +442,23 @@ msgstr "Lägg till en ny åtgärd"
 msgid "Edit Action \"%s\""
 msgstr "Redigera åtgärden \"%s\""
 
-#. TODO: Handle error
 #: ../nact/nact-import-export.c:234
 #, c-format
 msgid "Can't parse file '%s' as old XML config file !"
 msgstr "Kan inte tolka filen \"%s\" som gammal XML-konfigurationsfil!"
 
-#. TODO: Handle error
 #: ../nact/nact-import-export.c:249
 #, c-format
 msgid "Can't parse file '%s' as GConf schema description file !"
 msgstr "Kan inte tolka filen \"%s\" som GConf-schemabeskrivningsfil!"
 
-#. TODO: Handle error
-#: ../nact/nact-import-export.c:267
+#: ../nact/nact-import-export.c:269
 #, c-format
 msgid "Can't parse file '%s' !"
 msgstr "Kan inte tolka filen \"%s\"!"
 
-#. TODO: better error handling
 #. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:289
+#: ../nact/nact-import-export.c:291
 #, c-format
 msgid "Action '%s' importation failed !"
 msgstr "Importering av åtgärden \"%s\" misslyckades!"
@@ -556,32 +558,34 @@ msgstr ""
 msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
+"%s\n"
 msgstr ""
 "Fel:\n"
 "\t- Kan inte tolka %s\n"
+"%s\n"
 
-#: ../utils/nautilus-actions-convert.c:116
+#: ../utils/nautilus-actions-convert.c:117
 #, c-format
 msgid "Converting %s..."
 msgstr "Konverterar %s..."
 
-#: ../utils/nautilus-actions-convert.c:136
+#: ../utils/nautilus-actions-convert.c:137
 #: ../utils/nautilus-actions-new-config.c:170
 #, c-format
 msgid " Failed: Can't create %s: %s\n"
 msgstr " Misslyckades: Kan inte skapa %s: %s\n"
 
-#: ../utils/nautilus-actions-convert.c:145
+#: ../utils/nautilus-actions-convert.c:146
 #: ../utils/nautilus-actions-new-config.c:179
 #, c-format
 msgid "  OK, saved in %s\n"
 msgstr "  OK, sparad i %s\n"
 
-#: ../utils/nautilus-actions-convert.c:150
+#: ../utils/nautilus-actions-convert.c:151
 #: ../utils/nautilus-actions-new-config.c:184
 #, c-format
-msgid "  Failed\n"
-msgstr "  Misslyckades\n"
+msgid " Failed: %s\n"
+msgstr " Misslyckades: %s\n"
 
 #. GConf description strings :
 #: ../utils/nautilus-actions-new-config.c:50
@@ -845,6 +849,66 @@ msgstr "Versionen på konfigurationsformatet"
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
 msgid "The version of the configuration format that will be used to manage backward compatibility"
 msgstr "Versionen på konfigurationsformatet som ska användas för att hantera bakåtkompatibilitet"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:205
+#, c-format
+msgid "The action '%s' already exists with the name '%s', please first remove the existing one before trying to add this one"
+msgstr "Åtgärden \"%s\" finns redan med namnet \"%s\", ta bort den existerande först före du försöker att lägga till den nya"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:222
+#, c-format
+msgid "Can't save action '%s'"
+msgstr "Kan inte spara åtgärden \"%s\""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:485
+msgid "This XML file is not a valid Nautilus-actions config file (Bad test section)"
+msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (felaktig testsektion)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:491
+msgid "This XML file is not a valid Nautilus-actions config file (Bad command section)"
+msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (felaktig kommandosektion)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:496
+msgid "This XML file is not a valid Nautilus-actions config file (Bad menu item section)"
+msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (felaktig menypostsektion)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:563
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:374
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:533
+#, c-format
+msgid "This XML file is not a valid Nautilus-actions config file (found <%s> element instead of <%s>)"
+msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (hittade elementet <%s> istället för <%s>)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:574
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:543
+#, c-format
+msgid "This XML file is not a valid Nautilus-actions config file (root node is <%s> instead of <%s>)"
+msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (rotnod är <%s> istället för <%s>)"
+
+#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
+msgid ","
+msgstr ","
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:461
+#, c-format
+msgid "This XML file is not a valid Nautilus-actions config file (missing key(s) : %s)"
+msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (saknar nycklar: %s)"
+
+#. No error occured but we have not found the "version" gconf key
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:469
+#, c-format
+msgid "This XML file is not a valid Nautilus-actions config file (missing key : %s)"
+msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (saknar nyckel: %s)"
 
 #~ msgid "<b>File Pattern</b>"
 #~ msgstr "<b>Filmönster</b>"
