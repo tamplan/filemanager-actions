@@ -1,3 +1,11 @@
+2006-07-18  Frederic Ruaudel <grumz@grumz.net>
+
+	* plugin/nautilus-actions-utils.c: Change the creation of the %M
+	parameter list by getting the base folder of each file instead of just
+	the one of the first file for each. This is to deal with SavedSearch folder
+	in nautilus >= 2.14 which can have file from different folder gathered in the
+	same nautilus window. (Bug reported by David Winick)
+
 2006-06-29  Frederic Ruaudel <grumz@grumz.net>
 
 	* po/POTFILES.in: Add new files containing translatable strings

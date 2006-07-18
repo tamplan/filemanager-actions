@@ -91,6 +91,11 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 		for (file_iter = files->next; file_iter; file_iter = file_iter->next)
 		{
 			gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo*)file_iter->data);
+			gchar* tmp_uri = nautilus_file_info_get_uri ((NautilusFileInfo*)file_iter->data);
+			GnomeVFSURI* tmp_gvfs_uri = gnome_vfs_uri_new (tmp_uri);
+			tmp = gnome_vfs_uri_extract_dirname (tmp_gvfs_uri);
+			gchar* tmp_dirname = (gchar*)gnome_vfs_unescape_string ((const gchar*)tmp, "");
+			g_free (tmp);
 			
 			if (!tmp_filename)
 			{
@@ -100,7 +105,7 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 			gchar* quoted_tmp_filename = g_shell_quote (tmp_filename);
 			g_string_append_printf (tmp_file_list, " %s", quoted_tmp_filename);
 
-			tmp = g_build_path ("/", dirname, tmp_filename, NULL);
+			tmp = g_build_path ("/", tmp_dirname, tmp_filename, NULL);
 			tmp2 = g_shell_quote (tmp);
 			g_string_append_printf (tmp_path_file_list, " %s", tmp2);
 			
@@ -108,6 +113,9 @@ gchar* nautilus_actions_utils_parse_parameter (const gchar* param_template, GLis
 			g_free (tmp);
 			g_free (tmp_filename);
 			g_free (quoted_tmp_filename);
+			g_free (tmp_dirname);
+			g_free (tmp_uri);
+			gnome_vfs_uri_unref (tmp_gvfs_uri);
 		}
 		file_list = g_string_free (tmp_file_list, FALSE);
 		path_file_list = g_string_free (tmp_path_file_list, FALSE);
