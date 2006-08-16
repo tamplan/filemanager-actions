@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-14 19:51+0300\n"
-"PO-Revision-Date: 2006-04-14 19:55:00+0300\n"
+"POT-Creation-Date: 2006-08-16 13:15+0300\n"
+"PO-Revision-Date: 2006-08-16 13:18+0300\n"
 "Last-Translator: Ilkka Tuohela <hile@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -125,6 +125,17 @@ msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
 msgstr "<span size=\"larger\"><b>Parametrien kuvaus</b></span>"
 
 #: ../nact/nautilus-actions-config.glade.h:32
+msgid ""
+"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
+"\n"
+"place secondary text here"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">laita tähän ensisijainen teksti</span>\n"
+"\n"
+"laita tähän toissijainen teksti"
+
+
+#: ../nact/nautilus-actions-config.glade.h:35
 #, fuzzy
 msgid ""
 "A string with wildcards (? or *) that will be used to match the filenames. "
@@ -134,7 +145,7 @@ msgstr ""
 "Merkkijono jokerimerkeillä (? tai *), jota käytetään valitsemaan tiedostot. "
 "Voit käyttää useaa tiedostomallia erottamalla ne puolipisteellä (;)"
 
-#: ../nact/nautilus-actions-config.glade.h:33
+#: ../nact/nautilus-actions-config.glade.h:36
 #, fuzzy
 msgid ""
 "A string with wildcards (? or *) that will be used to match the mimetypes of "
@@ -144,24 +155,24 @@ msgstr ""
 "Merkkijono jokerimerkeillä (? tai *), jota käytetään valitsemaan tiedostot. "
 "Voit käyttää useaa tiedostomallia erottamalla ne puolipisteellä (;)"
 
-#: ../nact/nautilus-actions-config.glade.h:34
+#: ../nact/nautilus-actions-config.glade.h:37
 #, fuzzy
 msgid "Advanced Conditions"
 msgstr "Ehdot"
 
-#: ../nact/nautilus-actions-config.glade.h:35
+#: ../nact/nautilus-actions-config.glade.h:38
 msgid "Appears if selection has multiple files or folders"
 msgstr "Näytetään jos valinnassa on useita tiedostoja tai kansioita:"
 
-#: ../nact/nautilus-actions-config.glade.h:36
+#: ../nact/nautilus-actions-config.glade.h:39
 msgid "Automatic"
 msgstr "Automaattinen"
 
-#: ../nact/nautilus-actions-config.glade.h:37
+#: ../nact/nautilus-actions-config.glade.h:40
 msgid "Both"
 msgstr "Molemmat"
 
-#: ../nact/nautilus-actions-config.glade.h:38
+#: ../nact/nautilus-actions-config.glade.h:41
 msgid ""
 "Check this box if you want to get back all your configurations from the "
 "version of Nautilus-actions 0.7.1 or lesser."
@@ -169,15 +180,15 @@ msgstr ""
 "Valitse tämä, jos haluat palauttaa kaikki määrittelysi nautilus-actions "
 "versiosta 0.7.1 tai aikaisemmasta."
 
-#: ../nact/nautilus-actions-config.glade.h:39
+#: ../nact/nautilus-actions-config.glade.h:42
 msgid "Click to add a new scheme."
 msgstr "Lisää uusi järjestelmä napsauttamalla tästä."
 
-#: ../nact/nautilus-actions-config.glade.h:40
+#: ../nact/nautilus-actions-config.glade.h:43
 msgid "Click to choose a command from the file chooser dialog."
 msgstr "Valitse komento tiedostonvalitsimesta napsauttamalla tästä."
 
-#: ../nact/nautilus-actions-config.glade.h:41
+#: ../nact/nautilus-actions-config.glade.h:44
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list."
@@ -185,53 +196,53 @@ msgstr ""
 "Napsauta tästä, jos haluat valita oman kuvakkeen esimääritellyn "
 "pudotuslistan kuvakkeen sijasta."
 
-#: ../nact/nautilus-actions-config.glade.h:42
+#: ../nact/nautilus-actions-config.glade.h:45
 msgid "Click to remove the selected scheme."
 msgstr "Poista valittu järjestelmä napsauttamalla tästä."
 
-#: ../nact/nautilus-actions-config.glade.h:43
+#: ../nact/nautilus-actions-config.glade.h:46
 msgid ""
 "Click to see the list of special tokens you can use in the parameter field."
 msgstr ""
 "Napsauta tästä, jos haluat nähdä listan erikoismerkeistä, joita voit käyttää "
 "parametrikentässä."
 
-#: ../nact/nautilus-actions-config.glade.h:44
+#: ../nact/nautilus-actions-config.glade.h:47
 msgid "Conditions"
 msgstr "Ehdot"
 
-#: ../nact/nautilus-actions-config.glade.h:45
+#: ../nact/nautilus-actions-config.glade.h:48
 msgid "Create a copy of the selected action."
 msgstr "Kopioi valittu toiminto."
 
-#: ../nact/nautilus-actions-config.glade.h:46
+#: ../nact/nautilus-actions-config.glade.h:49
 msgid ""
 "Delete the action without any confirmation nor the possibility to restore it."
 msgstr ""
 "Poista toiminto ilman vahvistusta tai mahdollisuutta palauttaa toimintoa."
 
-#: ../nact/nautilus-actions-config.glade.h:47
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "Export existing configs"
 msgstr "Vie olemassaolevat asetukset"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "File to Import:"
 msgstr "Tuotava tiedosto:"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:52
 msgid "Filenames:"
 msgstr "Tiedostonimet:"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "GConf schema description file (Nautilus-actions v1.x and later)"
 msgstr ""
 "GConf-järjestelmän kuvaustiedosto (nautilus-actions versio 1.0 ja uudemmat)"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Icon:"
 msgstr "Kuvake:"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid ""
 "If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
 "will not match photo.JPG)"
@@ -239,49 +250,49 @@ msgstr ""
 "Jos valittu, tiedostonimien mallit erottelevat pienet ja suuret merkit, esim "
 "*.jpg ei täsmää tiedostoon photo.JPG)"
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Import all my old configs"
 msgstr "Tuo kaikki vanhat asetukseni"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Import new configurations"
 msgstr "tUo uusia asetuksia"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid "Import/Export"
 msgstr "Tuo/Vie"
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "Import/Export Settings"
 msgstr "Tuo ja vie asetuksia"
 
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "Label of the menu item in the Nautilus popup menu."
 msgstr "Valikon kohdan nimi Nautiluksen ponnahdusvalikossa"
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "Label:"
 msgstr "Nimi:"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
 msgstr "Tuo ulkoisia toimintojen asetuksia ja vie olemassaolevia toimintoja."
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "Match case"
 msgstr "Erottele kirjainkoot"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:64
 msgid "Menu Item & Action"
 msgstr "Valikon kohta ja tehtävä"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:65
 msgid "Mimetypes:"
 msgstr "MIME-tyypit:"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -289,27 +300,27 @@ msgstr ""
 "Nautiluksen lisätoimintojen asetustyökalu\n"
 "Ohjelma Nautiluksen lisätoiminnot-laajennoksen ohjaamiseen"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid "Nautilus Action Editor"
 msgstr "Nautiluksen lisätoiminnon muokkain"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Nautilus Actions"
 msgstr "Nautiluksen lisätoiminnot"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid "Old XML config file (Nautilus-actions v0.x)"
 msgstr "Vanha XML-asetustiedosto (nautilus-actions versio 0.x)"
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Only files"
 msgstr "Vain tiedostot"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Only folders"
 msgstr "Vain kansiot"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
@@ -317,23 +328,23 @@ msgstr ""
 "Ohjelmalle välitettävät parametrit. Napsauta \"Kuvaus\"-painiketta, jos "
 "haluat nähdä eri vaihtoehdot."
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Parameters:"
 msgstr "Parametrit:"
 
-#: ../nact/nautilus-actions-config.glade.h:72
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid "Path:"
 msgstr "Polku:"
 
-#: ../nact/nautilus-actions-config.glade.h:73
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid "Project Website"
 msgstr "Projektin WWW-sivut"
 
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:77
 msgid "Save in Folder:"
 msgstr "Tallenna kansioon:"
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:78
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
@@ -341,15 +352,15 @@ msgstr ""
 "Valitse asetustiedostot, jotka haluat viedä. Käytä Shift- ja Ctrl-näppäimiä, "
 "jos haluat valita useita."
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:79
 msgid "Select the configurations you want to export:"
 msgstr "Valitse asetustiedostot, jotka haluat viedä:"
 
-#: ../nact/nautilus-actions-config.glade.h:77
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid "Select the file you want to import."
 msgstr "Valitse asetustiedosto, jonka haluat tuoda."
 
-#: ../nact/nautilus-actions-config.glade.h:78
+#: ../nact/nautilus-actions-config.glade.h:81
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
@@ -357,7 +368,7 @@ msgstr ""
 "Valitse kansio, johon haluat tallentaa asetuksesi. Tämän kansion täytyy olla "
 "olemassa."
 
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
@@ -367,124 +378,151 @@ msgstr ""
 "tiedä mitä valita, kokeile valita vain \"tiedosto\", joka on yleisin "
 "valinta. Voit lisätä uuden järjestelmän \"+\"-painikkeesta"
 
-#: ../nact/nautilus-actions-config.glade.h:80
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
 msgstr ""
 "Suoritettava komento, kun toiminto valitaan Nautiluksen ponnahdusvalikosta."
 
-#: ../nact/nautilus-actions-config.glade.h:81
+#: ../nact/nautilus-actions-config.glade.h:84
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr ""
 "Tämä ohjelma on lisensoitu GNU General Public License (GPL)-lisenssillä"
 
-#: ../nact/nautilus-actions-config.glade.h:82
+#: ../nact/nautilus-actions-config.glade.h:85
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgstr "Nautiluksen tilarivilla näytettävä vinkki."
 
-#: ../nact/nautilus-actions-config.glade.h:83
+#: ../nact/nautilus-actions-config.glade.h:86
 msgid "Tooltip:"
 msgstr "Vinkki:"
 
-#: ../nact/nautilus-actions-config.glade.h:84
+#: ../nact/nautilus-actions-config.glade.h:87
 msgid "Type of configuration:"
 msgstr "Asetusten tyyppi:"
 
-#: ../nact/nautilus-actions-config.glade.h:85
+#: ../nact/nautilus-actions-config.glade.h:88
 msgid "_Browse"
 msgstr "_Selaa"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:87
+#: ../nact/nautilus-actions-config.glade.h:90
 msgid "translator-credits"
 msgstr ""
 "Ilkka Tuohela, 2005\n"
 "\n"
 "http://www.gnome.fi/"
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact.c:163
+#, c-format
+msgid "Can't duplicate action '%s' !"
+msgstr "Toimintoa \"%s\" ei voi kopioida!"
+
 #. create columns on the tree view
-#: ../nact/nact.c:254 ../nact/nact-import-export.c:179
+#: ../nact/nact.c:262 ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "Kuvake"
 
-#: ../nact/nact.c:259 ../nact/nact-import-export.c:184
+#: ../nact/nact.c:267 ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "Nimi"
 
-#: ../nact/nact.c:279 ../nact/nact-editor.c:675
-#: ../nact/nact-import-export.c:346
+#: ../nact/nact.c:287 ../nact/nact-editor.c:705
+#: ../nact/nact-import-export.c:378
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr ""
 "Nautiluksen lisätoimintojen asetustyökalun käyttöliittymää ei voi ladata"
 
 #. i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:157
+#: ../nact/nact-utils.c:185
 msgid "/path/to"
 msgstr "/polku/paikkaan"
 
-#: ../nact/nact-utils.c:158 ../nact/nact-utils.c:160
+#: ../nact/nact-utils.c:186 ../nact/nact-utils.c:188
 msgid "file1.txt"
 msgstr "tiedosto1.txt"
 
-#: ../nact/nact-utils.c:158
+#: ../nact/nact-utils.c:186
 msgid "file2.txt"
 msgstr "tiedosto2.txt"
 
-#: ../nact/nact-utils.c:159 ../nact/nact-utils.c:160
+#: ../nact/nact-utils.c:187 ../nact/nact-utils.c:188
 msgid "folder1"
 msgstr "kansio1"
 
-#: ../nact/nact-utils.c:159
+#: ../nact/nact-utils.c:187
 msgid "folder2"
 msgstr "kansio2"
 
-#: ../nact/nact-utils.c:162
+#: ../nact/nact-utils.c:190
 msgid "test.example.net"
 msgstr "testi.esimerkki.net"
 
-#: ../nact/nact-utils.c:163
+#: ../nact/nact-utils.c:191
 msgid "file.txt"
 msgstr "tiedosto.txt"
 
-#: ../nact/nact-utils.c:164
+#: ../nact/nact-utils.c:192
 msgid "folder"
 msgstr "kansio"
 
 #. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:252
+#: ../nact/nact-editor.c:253
 msgid "None"
 msgstr "Ei mitään"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-editor.c:438
+#: ../nact/nact-editor.c:451
 msgid "new-scheme"
 msgstr "uusi-järjestelmä"
 
-#: ../nact/nact-editor.c:439
+#: ../nact/nact-editor.c:452
 msgid "New Scheme Description"
 msgstr "Uuden järjestelmän kuvaus"
 
-#: ../nact/nact-editor.c:525
+#: ../nact/nact-editor.c:538
 msgid "Scheme"
 msgstr "Skeema"
 
-#: ../nact/nact-editor.c:537
+#: ../nact/nact-editor.c:550
 msgid "Description"
 msgstr "Kuvaus"
 
-#: ../nact/nact-editor.c:691
+#: ../nact/nact-editor.c:721
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "Nautiluksen ponnahdusvalikon kohdan kuvake"
 
-#: ../nact/nact-editor.c:725
+#: ../nact/nact-editor.c:755
 msgid "Add a New Action"
 msgstr "Lisää uusi toiminto"
 
-#: ../nact/nact-editor.c:729
+#: ../nact/nact-editor.c:759
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "Muokkaa toimintoa \"%s\""
+
+#: ../nact/nact-import-export.c:234
+#, c-format
+msgid "Can't parse file '%s' as old XML config file !"
+msgstr "Tiedostoa \"%s\" ei voi tulkita vanhamalliseksi XML-asetustiedostoksi!"
+
+#: ../nact/nact-import-export.c:249
+#, c-format
+msgid "Can't parse file '%s' as GConf schema description file !"
+msgstr "Tiedostoa \"%s\" ei voi tulkita GConfin skeemakuvaustiedostoksi!"
+
+#: ../nact/nact-import-export.c:269
+#, c-format
+msgid "Can't parse file '%s' !"
+msgstr "Tiedostoa %s ei voida tulkita!"
+
+#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
+#: ../nact/nact-import-export.c:291
+#, c-format
+msgid "Action '%s' importation failed !"
+msgstr "Toiminnon \"%s\" tuonti epäonnistui!"
 
 #. initialize the default schemes
 #. i18n notes : description of 'file' scheme
@@ -548,7 +586,7 @@ msgid "DIR"
 msgstr "HAKEMISTO"
 
 #: ../utils/nautilus-actions-convert.c:77
-#: ../utils/nautilus-actions-new-config.c:95
+#: ../utils/nautilus-actions-new-config.c:100
 #, c-format
 msgid ""
 "Syntax error:\n"
@@ -559,7 +597,7 @@ msgstr ""
 "\t- %s\n"
 "Kokeile %s --help\n"
 
-#: ../utils/nautilus-actions-convert.c:83
+#: ../utils/nautilus-actions-convert.c:84
 #, c-format
 msgid ""
 "Syntax error:\n"
@@ -571,7 +609,7 @@ msgstr ""
 "kanssa\n"
 "Kokeile %s --help\n"
 
-#: ../utils/nautilus-actions-convert.c:89
+#: ../utils/nautilus-actions-convert.c:90
 #, c-format
 msgid ""
 "Syntax error:\n"
@@ -582,85 +620,89 @@ msgstr ""
 "\tValitsin -i on pakollinen käytettäessä valitsinta -o\n"
 "Kokeile %s --help\n"
 
-#: ../utils/nautilus-actions-convert.c:101
+#: ../utils/nautilus-actions-convert.c:102
 #, c-format
 msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
+"%s\n"
 msgstr ""
 "Virhe:\n"
 "\t- Ei voida tulkita arvoa %s\n"
+"%s\n"
 
-#: ../utils/nautilus-actions-convert.c:115
+#: ../utils/nautilus-actions-convert.c:117
 #, c-format
 msgid "Converting %s..."
 msgstr "Muunnetaan %s..."
 
-#: ../utils/nautilus-actions-convert.c:135
-#: ../utils/nautilus-actions-new-config.c:152
+#: ../utils/nautilus-actions-convert.c:137
+#: ../utils/nautilus-actions-new-config.c:170
 #, c-format
 msgid " Failed: Can't create %s: %s\n"
 msgstr "Epäonnistui: Ei voida luoda %s: %s\n"
 
-#: ../utils/nautilus-actions-convert.c:143
-#: ../utils/nautilus-actions-new-config.c:160
+#: ../utils/nautilus-actions-convert.c:146
+#: ../utils/nautilus-actions-new-config.c:179
 #, c-format
 msgid "  OK, saved in %s\n"
 msgstr "  Ok, tallenttu kohteeseen %s\n"
 
-#: ../utils/nautilus-actions-convert.c:148
-#: ../utils/nautilus-actions-new-config.c:165
-#, c-format
-msgid "  Failed\n"
-msgstr "  Epäonnistui\n"
+#: ../utils/nautilus-actions-convert.c:151
+#: ../utils/nautilus-actions-new-config.c:184
+#,  c-format
+msgid " Failed: %s\n"
+msgstr "  Epäonnistui: %s\n"
 
 #. GConf description strings :
-#: ../utils/nautilus-actions-new-config.c:48
+#: ../utils/nautilus-actions-new-config.c:50
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
 msgid "The label of the menu item"
 msgstr "Valikon kohdan nimi"
 
-#: ../utils/nautilus-actions-new-config.c:48
+#: ../utils/nautilus-actions-new-config.c:50
 msgid "LABEL"
 msgstr "OTSIKKO"
 
-#: ../utils/nautilus-actions-new-config.c:49
+#: ../utils/nautilus-actions-new-config.c:51
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
 msgid "The tooltip of the menu item"
 msgstr "Valikon kohdan vinkki"
 
-#: ../utils/nautilus-actions-new-config.c:49
+#: ../utils/nautilus-actions-new-config.c:51
 msgid "TOOLTIP"
 msgstr "OPASTE"
 
-#: ../utils/nautilus-actions-new-config.c:50
+#: ../utils/nautilus-actions-new-config.c:52
 msgid "The icon of the menu item (filename or GTK stock ID)"
 msgstr "Valikon kohdan kuvake (tiedostonimi tai Gtk-tunniste)"
 
-#: ../utils/nautilus-actions-new-config.c:50
+#: ../utils/nautilus-actions-new-config.c:52
 msgid "ICON"
 msgstr "KUVAKE"
 
-#: ../utils/nautilus-actions-new-config.c:51
+#: ../utils/nautilus-actions-new-config.c:53
+#: ../utils/nautilus-actions-new-config.c:56
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
 msgid "The path of the command"
 msgstr "Polku komentoon"
 
-#: ../utils/nautilus-actions-new-config.c:51
-#: ../utils/nautilus-actions-new-config.c:58
+#: ../utils/nautilus-actions-new-config.c:53
+#: ../utils/nautilus-actions-new-config.c:56
+#: ../utils/nautilus-actions-new-config.c:62
 msgid "PATH"
 msgstr "POLKU"
 
-#: ../utils/nautilus-actions-new-config.c:52
+#: ../utils/nautilus-actions-new-config.c:54
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
 msgid "The parameters of the command"
 msgstr "Komennon parametrit"
 
-#: ../utils/nautilus-actions-new-config.c:52
+#: ../utils/nautilus-actions-new-config.c:54
 msgid "PARAMS"
 msgstr "PARAMETRIT"
 
-#: ../utils/nautilus-actions-new-config.c:53
+#: ../utils/nautilus-actions-new-config.c:55
 msgid ""
 "A pattern to match selected files against. May include wildcards (* or ?) "
 "(you must set one option for each pattern you need)"
@@ -668,23 +710,33 @@ msgstr ""
 "Malli, jonka avulla valituista tiedostoista etsitään vastaavia. Voit lisätä "
 "jokerimerkkejä (? tai *), mutta ne täytyy lisätä joka mallille erikseen."
 
-#: ../utils/nautilus-actions-new-config.c:53
+#: ../utils/nautilus-actions-new-config.c:55
+#: ../utils/nautilus-actions-new-config.c:57
 msgid "EXPR"
 msgstr "LAUSEKE"
 
-#: ../utils/nautilus-actions-new-config.c:54
+#: ../utils/nautilus-actions-new-config.c:57
+#, fuzzy
+msgid ""
+"A pattern to match selected files' mimetype against. May include wildcards "
+"(* or ?) (you must set one option for each pattern you need)"
+msgstr ""
+"Malli, jonka avulla valituista tiedostoista etsitään vastaavia. Voit lisätä "
+"jokerimerkkejä (? tai *), mutta ne täytyy lisätä joka mallille erikseen."
+
+#: ../utils/nautilus-actions-new-config.c:58
 msgid "Set it if the selection can contain files"
 msgstr "Aseta, jos valinta voi sisältää tiedostoja"
 
-#: ../utils/nautilus-actions-new-config.c:55
+#: ../utils/nautilus-actions-new-config.c:59
 msgid "Set it if the selection can contain folders"
 msgstr "Aseta, jos valinta voi sisältää kansioita"
 
-#: ../utils/nautilus-actions-new-config.c:56
+#: ../utils/nautilus-actions-new-config.c:60
 msgid "Set it if the selection can have several items"
 msgstr "Aseta, jos valinta voi sisältää useita kohtia"
 
-#: ../utils/nautilus-actions-new-config.c:57
+#: ../utils/nautilus-actions-new-config.c:61
 msgid ""
 "A GnomeVFS scheme where the selected files should be located (you must set "
 "it for each scheme you need)"
@@ -692,11 +744,11 @@ msgstr ""
 "GnomeVFS-järjestelmä, jossa valitut tiedostot ovat. Tämä täytyy asettaa "
 "erikseen jokaiselle järjestelmälle joita tarvitset."
 
-#: ../utils/nautilus-actions-new-config.c:57
+#: ../utils/nautilus-actions-new-config.c:61
 msgid "SCHEME"
 msgstr "JÄRJESTELMÄ"
 
-#: ../utils/nautilus-actions-new-config.c:58
+#: ../utils/nautilus-actions-new-config.c:62
 msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
@@ -704,7 +756,7 @@ msgstr ""
 "Polku tiedostoon, johon uusi GConf-järjestelmän määrittelytiedosto "
 "tallennetaan. [oletus: /tmp/config_UUID.schemas]"
 
-#: ../utils/nautilus-actions-new-config.c:133
+#: ../utils/nautilus-actions-new-config.c:151
 #, c-format
 msgid "Creating %s..."
 msgstr "Luodaan %s..."
@@ -814,8 +866,8 @@ msgstr "'true', jos valinta voi sisältää useita kohtia, 'false' muuten"
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 #, fuzzy
 msgid ""
-"If you need to mach a filename in a case sensitive manner, set this key to "
-"'true'. If you want that for example '*.jpg' match also 'photo.JPG', set "
+"If you need to match a filename in a case-sensitive manner, set this key to "
+"'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
 "'false'"
 msgstr ""
 "Jos haluat valita yhden tai useamman tiedoston tai kansion, aseta tämän "
@@ -824,7 +876,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 #, fuzzy
-msgid "The list of pattern to match the mimetypes of the selected file(s)"
+msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr "Lista malleista, joihin valittuja tiedostoja ja kansioita verrataan"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
@@ -944,6 +996,80 @@ msgstr ""
 "Asetustiedoston kaavan versio, jonka avulla hallitaan yhteensopivuutta eri "
 "versioiden välillä"
 
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:205
+#, c-format
+msgid ""
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
+msgstr ""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:222
+#, c-format
+msgid "Can't save action '%s'"
+msgstr "Toimintoa \"%s\" ei voi tallentaa"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:485
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad test section)"
+msgstr ""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:491
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad command "
+"section)"
+msgstr ""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:496
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad menu item "
+"section)"
+msgstr ""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:563
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:374
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:533
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (found <%s> "
+"element instead of <%s>)"
+msgstr ""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:574
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:543
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
+"instead of <%s>)"
+msgstr ""
+
+#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
+msgid ","
+msgstr ","
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:461
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
+"s)"
+msgstr ""
+
+#. No error occured but we have not found the "version" gconf key
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:469
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key : %s)"
+msgstr ""
+
 #~ msgid "<b>File Pattern</b>"
 #~ msgstr "<b>Tiedostomalli</b>"
 
@@ -973,9 +1099,6 @@ msgstr ""
 #~ "(windowsin levyjaot) haettaville tiedostoille, \"dav\" WebDav-osoitteesta "
 #~ "haettaville tiedostoille. Mitä tahansa nautiluksen tukemaa GnomeVFS-"
 #~ "järjestelmää voidaan käyttää tässä."
-
-#~ msgid "Manage Actions"
-#~ msgstr "Hallitse lisätoimintoja"
 
 #~ msgid "Manage your actions using NACT, the configuration tool"
 #~ msgstr "Hallitse lisätehtäviä käyttäen NACT-asetustyökalua"
