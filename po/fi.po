@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-16 13:15+0300\n"
-"PO-Revision-Date: 2006-08-16 13:18+0300\n"
+"POT-Creation-Date: 2006-08-17 07:20+0300\n"
+"PO-Revision-Date: 2006-08-17 07:31+0300\n"
 "Last-Translator: Ilkka Tuohela <hile@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -130,35 +130,32 @@ msgid ""
 "\n"
 "place secondary text here"
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">laita tähän ensisijainen teksti</span>\n"
+"<span weight=\"bold\" size=\"larger\">laita tähän ensisijainen teksti</"
+"span>\n"
 "\n"
 "laita tähän toissijainen teksti"
 
-
 #: ../nact/nautilus-actions-config.glade.h:35
-#, fuzzy
 msgid ""
 "A string with wildcards (? or *) that will be used to match the filenames. "
 "You can set several filename patterns by separating them with a semi-colon "
 "(;)."
 msgstr ""
 "Merkkijono jokerimerkeillä (? tai *), jota käytetään valitsemaan tiedostot. "
-"Voit käyttää useaa tiedostomallia erottamalla ne puolipisteellä (;)"
+"Voit käyttää useita tiedostomalleja erottamalla ne puolipisteellä (;)."
 
 #: ../nact/nautilus-actions-config.glade.h:36
-#, fuzzy
 msgid ""
 "A string with wildcards (? or *) that will be used to match the mimetypes of "
 "files. You can set several mimetype patterns by separating them with a semi-"
 "colon (;)."
 msgstr ""
 "Merkkijono jokerimerkeillä (? tai *), jota käytetään valitsemaan tiedostot. "
-"Voit käyttää useaa tiedostomallia erottamalla ne puolipisteellä (;)"
+"Voit käyttää useita tiedostomalleja erottamalla ne puolipisteellä (;)."
 
 #: ../nact/nautilus-actions-config.glade.h:37
-#, fuzzy
 msgid "Advanced Conditions"
-msgstr "Ehdot"
+msgstr "Lisäehdot"
 
 #: ../nact/nautilus-actions-config.glade.h:38
 msgid "Appears if selection has multiple files or folders"
@@ -650,7 +647,7 @@ msgstr "  Ok, tallenttu kohteeseen %s\n"
 
 #: ../utils/nautilus-actions-convert.c:151
 #: ../utils/nautilus-actions-new-config.c:184
-#,  c-format
+#, c-format
 msgid " Failed: %s\n"
 msgstr "  Epäonnistui: %s\n"
 
@@ -716,13 +713,12 @@ msgid "EXPR"
 msgstr "LAUSEKE"
 
 #: ../utils/nautilus-actions-new-config.c:57
-#, fuzzy
 msgid ""
 "A pattern to match selected files' mimetype against. May include wildcards "
 "(* or ?) (you must set one option for each pattern you need)"
 msgstr ""
-"Malli, jonka avulla valituista tiedostoista etsitään vastaavia. Voit lisätä "
-"jokerimerkkejä (? tai *), mutta ne täytyy lisätä joka mallille erikseen."
+"Malli, johon tiedoston MIME-tyyppiä verrataan. Voi sisältää "
+"jokerimerkkejä (? tai *). Kullekin mallille täytyy asettaa oma valitsimensa."
 
 #: ../utils/nautilus-actions-new-config.c:58
 msgid "Set it if the selection can contain files"
@@ -847,48 +843,44 @@ msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr "Lista malleista, joihin valittuja tiedostoja ja kansioita verrataan"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
-#, fuzzy
 msgid ""
 "A list of strings with joker '*' or '?' to match the name of the selected "
 "file(s)/folder(s). Each selected items must match at least one of the "
 "filename patterns for the action to appear"
 msgstr ""
 "Lista jokerimerkin \"*\" tai \"?\" sisältävistä merkkijonoista, joilla "
-"valitaan tiedostot tai kansio. Jokaisen valitun kohdan tulee vastata "
-"vähintään yhtä mallia, jotta toiminto näytetään"
+"valitaan tiedostot tai kansiot. Jokaisen valitun kohdan tulee vastata "
+"vähintään yhtä nimimallia, jotta toiminto näytetään"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
-#, fuzzy
 msgid ""
 "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr "'true', jos valinta voi sisältää useita kohtia, 'false' muuten"
+msgstr ""
+"'true', jos tiedostonimimalleissa kirjainkoko on merkitsevä, 'false' muuten"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
-#, fuzzy
 msgid ""
 "If you need to match a filename in a case-sensitive manner, set this key to "
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
 "'false'"
 msgstr ""
-"Jos haluat valita yhden tai useamman tiedoston tai kansion, aseta tämän "
-"avaimen arvoksi \"true\". Jos haluat vain yhden tiedoston tai kansion, aseta "
-"arvoksi \"false\"."
+"Jos haluat mallin vastaavan tiedostonimiä siten, että isot ja pienet kirjaimet "
+"huomioidaan, aseta tämä arvoon 'true'. Jos haluat ettei kirjainkoko merkitse, "
+"esimerkiksi että malli '*.jpg' täsmää nimeen 'photo.JPG', aseta arvoksi 'false'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
-#, fuzzy
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
-msgstr "Lista malleista, joihin valittuja tiedostoja ja kansioita verrataan"
+msgstr "Lista malleista, joihin valittejen tiedostojen MIME-tyyppiä verrataan"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
-#, fuzzy
 msgid ""
 "A list of strings with joker '*' or '?' to match the mimetypes of the "
 "selected file(s). Each selected items must match at least one of the "
 "mimetype patterns for the action to appear"
 msgstr ""
-"Lista jokerimerkin \"*\" tai \"?\" sisältävistä merkkijonoista, joilla "
-"valitaan tiedostot tai kansio. Jokaisen valitun kohdan tulee vastata "
-"vähintään yhtä mallia, jotta toiminto näytetään"
+"Lista jokerimerkin \"*\" tai \"?\" sisältävistä merkkijonoista, joihin "
+"valittujen tiedostojen MIME-tyyppiä verrataan. Valittujen tiedostojen "
+"tulee vastata vähintään yhtä mallia, jotta toiminto näytetään"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
@@ -1003,6 +995,8 @@ msgid ""
 "The action '%s' already exists with the name '%s', please first remove the "
 "existing one before trying to add this one"
 msgstr ""
+"Toiminto \"%s\" on jo määritelty nimellä \"%s\", poista aikaisempi toiminto "
+"ennen uuden toiminnon lisäämistä"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:222
@@ -1015,6 +1009,8 @@ msgstr "Toimintoa \"%s\" ei voi tallentaa"
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (Bad test section)"
 msgstr ""
+"XML-tiedosto ei ole kelvollinen nautilus-actions-asetustiedosto "
+"(virheellinen testiosio)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:491
@@ -1022,6 +1018,8 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (Bad command "
 "section)"
 msgstr ""
+"XML-tiedosto ei ole kelvollinen nautilus-actions-asetustiedosto "
+"(virheellinen komento-osio)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:496
@@ -1029,6 +1027,8 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (Bad menu item "
 "section)"
 msgstr ""
+"XML-tiedosto ei ole kelvollinen nautilus-actions-asetustiedosto "
+"(virheellinen valikon kohta -osio)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:563
@@ -1039,6 +1039,8 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (found <%s> "
 "element instead of <%s>)"
 msgstr ""
+"XML-tiedosto ei ole kelvollinen nautilus-actions-asetustiedosto "
+"(löytyi alkio <%s>, pitäisi olla <%s>)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:574
@@ -1048,6 +1050,8 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
 "instead of <%s>)"
 msgstr ""
+"XML-tiedosto ei ole kelvollinen nautilus-actions-asetustiedosto "
+"juurisolmu on <%s>, pitäisi olla <%s>)"
 
 #. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
@@ -1061,6 +1065,8 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
 "s)"
 msgstr ""
+"XML-tiedosto ei ole kelvollinen nautilus-actions-asetustiedosto "
+"(avaimia puuttuu: %s)"
 
 #. No error occured but we have not found the "version" gconf key
 #. i18n notes: will be displayed in an error dialog
@@ -1069,6 +1075,8 @@ msgstr ""
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key : %s)"
 msgstr ""
+"XML-tiedosto ei ole kelvollinen nautilus-actions-asetustiedosto "
+"(avain puuttuu: %s)"
 
 #~ msgid "<b>File Pattern</b>"
 #~ msgstr "<b>Tiedostomalli</b>"
