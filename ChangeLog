@@ -1,4 +1,4 @@
-2006-07-18  Frederic Ruaudel <grumz@grumz.net>
+2006-07-18  Frederic Ruaudel <grumz@grumz.net> 1.4
 
 	* plugin/nautilus-actions-utils.c: Change the creation of the %M
 	parameter list by getting the base folder of each file instead of just
