@@ -6,15 +6,15 @@ msgid ""
 ""
 msgstr "Project-Id-Version: nautilus-actions Gnome HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-26 04:24+0200\n"
-"PO-Revision-Date: 2006-05-26 21:22+0930\n"
+"POT-Creation-Date: 2006-08-26 13:36+0200\n"
+"PO-Revision-Date: 2006-08-26 22:18+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: LocFactoryEditor 1.6b36\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: LocFactoryEditor 1.6fc1\n"
 
 #: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
@@ -22,7 +22,7 @@ msgstr "Thêm mục vào trình đơn bật lên Nautilus"
 
 #: ../nact/nact.desktop.in.h:2
 msgid "Nautilus Actions Configuration"
-msgstr "Cấu hình Hành động Nautilus"
+msgstr "Cấu hình hành động Nautilus"
 
 #: ../nact/nautilus-actions-config.glade.h:1
 msgid " "
@@ -38,7 +38,7 @@ msgstr "    "
 
 #: ../nact/nautilus-actions-config.glade.h:4
 msgid "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
-msgstr "Bản quyền © năm 2005 Frederic Ruaudel <grumz@grumz.net>"
+msgstr "Tác quyền © năm 2005 của Frederic Ruaudel <grumz@grumz.net>"
 
 #: ../nact/nautilus-actions-config.glade.h:6
 #, no-c-format
@@ -50,8 +50,7 @@ msgstr "<b>%%</b>: dấu phần trăm"
 msgid ""
 "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
 "full paths"
-msgstr "<b>%M</b> : danh sách những tập tin/thư mục đã chọn với toàn đường dẫn, định "
-"giới bằng dấu cách."
+msgstr "<b>%M</b> : danh sách những tập tin/thư mục đã chọn với toàn đường dẫn, định giới bằng dấu cách."
 
 #: ../nact/nautilus-actions-config.glade.h:10
 #, no-c-format
@@ -61,13 +60,13 @@ msgstr "<b>%U</b> : tên người dùng của URI gnome-vfs"
 #: ../nact/nautilus-actions-config.glade.h:12
 #, no-c-format
 msgid "<b>%d</b>: base folder of the selected file(s)"
-msgstr "<b>%d</b> : thư mục cơ bản của tập tin đã chọn"
+msgstr "<b>%d</b> : thư mục cơ bản của những tập tin đã chọn"
 
 #: ../nact/nautilus-actions-config.glade.h:14
 #, no-c-format
 msgid ""
 "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
-msgstr "<b>%f</b> : tên tập tin đã chọn hay tên tập tin thứ nhất nếu đã chọn nhiều"
+msgstr "<b>%f</b> : tên của tập tin đã chọn (hay tên của tập tin thứ nhất nếu có nhiều tập tin đã chọn)"
 
 #: ../nact/nautilus-actions-config.glade.h:16
 #, no-c-format
@@ -79,8 +78,7 @@ msgstr "<b>%h</b> : tên máy của URI gnome-vfs"
 msgid ""
 "<b>%m</b>: space-separated list of the basenames of the selected\n"
 "file(s)/folder(s)"
-msgstr "<b>%m</b> : danh sách tên cơ bản của những tập tin/thư mục đã chọn, định "
-"giới bằng dấu cách."
+msgstr "<b>%m</b> : danh sách tên cơ bản của những tập tin/thư mục đã chọn, định giới bằng dấu cách."
 
 #: ../nact/nautilus-actions-config.glade.h:21
 #, no-c-format
@@ -102,7 +100,7 @@ msgstr "<b>Xuất hiện nếu tập tin khớp được</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:26
 msgid "<b>Appears if scheme is in this list</b>"
-msgstr "<b>Xuất hiện nếu lược đồ có trong danh sách này</b>"
+msgstr "<b>Xuất hiện nếu lược đồ nằm trong danh sách này</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:27
 msgid "<b>Appears if selection contains</b>"
@@ -123,351 +121,381 @@ msgstr "<span size=\"larger\"><b>Chú giải tham số</b></span>"
 
 #: ../nact/nautilus-actions-config.glade.h:32
 msgid ""
+"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
+"\n"
+"place secondary text here"
+msgstr "<span weight=\"bold\" size=\"larger\">để đoạn chính vào đây</span>\n"
+"\n"
+"để đoạn phụ vào đây"
+
+#: ../nact/nautilus-actions-config.glade.h:35
+msgid ""
 "A string with wildcards (? or *) that will be used to match the filenames. "
 "You can set several filename patterns by separating them with a semi-colon "
 "(;)."
-msgstr "Chuỗi có ký tự đặc biệt « ? » hay « * » sẽ được dùng để khớp những tập tin. "
-"Bạn có thể khớp nhiều mẫu tên tập tin định giới bằng dấu chấm phẩy « ; »."
+msgstr "Chuỗi có ký tự đặc biệt (« ? » hay « * ») sẽ được dùng để khớp những tập tin. "
+"Bạn có khả năng khớp nhiều mẫu tên tập tin định giới bằng dấu chấm phẩy « ; »."
 
-#: ../nact/nautilus-actions-config.glade.h:33
+#: ../nact/nautilus-actions-config.glade.h:36
 msgid ""
 "A string with wildcards (? or *) that will be used to match the mimetypes of "
 "files. You can set several mimetype patterns by separating them with a semi-"
 "colon (;)."
-msgstr "Chuỗi có ký tự đặc biệt « ? » hay « * » sẽ được dùng để khớp kiểu MIME của "
-"những tin. Bạn có thể khớp nhiều mẫu kiểu MIME định giới bằng dấu chấm phẩy "
+msgstr "Chuỗi có ký tự đặc biệt (« ? » hay « * ») sẽ được dùng để khớp kiểu MIME của "
+"những tin. Bạn có khả năng khớp nhiều mẫu kiểu MIME định giới bằng dấu chấm phẩy "
 "« ; »."
 
-#: ../nact/nautilus-actions-config.glade.h:34
+#: ../nact/nautilus-actions-config.glade.h:37
 msgid "Advanced Conditions"
 msgstr "Điều kiện cấp cao"
 
-#: ../nact/nautilus-actions-config.glade.h:35
+#: ../nact/nautilus-actions-config.glade.h:38
 msgid "Appears if selection has multiple files or folders"
 msgstr "Xuất hiện nếu vùng chọn có nhiều tập tin hay thư mục"
 
-#: ../nact/nautilus-actions-config.glade.h:36
+#: ../nact/nautilus-actions-config.glade.h:39
 msgid "Automatic"
 msgstr "Tự động"
 
-#: ../nact/nautilus-actions-config.glade.h:37
+#: ../nact/nautilus-actions-config.glade.h:40
 msgid "Both"
 msgstr "Cả hai"
 
-#: ../nact/nautilus-actions-config.glade.h:38
+#: ../nact/nautilus-actions-config.glade.h:41
 msgid ""
 "Check this box if you want to get back all your configurations from the "
 "version of Nautilus-actions 0.7.1 or lesser."
 msgstr "Hãy đánh dấu trong hộp này nếu bạn muốn nhận lại các cấu hình từ phiên bản "
 "Nautilus-actions 0.7.1 hay trước."
 
-#: ../nact/nautilus-actions-config.glade.h:39
+#: ../nact/nautilus-actions-config.glade.h:42
 msgid "Click to add a new scheme."
-msgstr "Nhấn để thêm lược đồ mới"
+msgstr "Nhấn để thêm một lược đồ mới."
 
-#: ../nact/nautilus-actions-config.glade.h:40
+#: ../nact/nautilus-actions-config.glade.h:43
 msgid "Click to choose a command from the file chooser dialog."
-msgstr "Nhấn để chọn lệnh từ hộp thoại bộ chọn tập tin"
+msgstr "Nhấn để chọn một lệnh từ hộp thoại chọn tập tin."
 
-#: ../nact/nautilus-actions-config.glade.h:41
+#: ../nact/nautilus-actions-config.glade.h:44
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list."
-msgstr "Nhấn để chọn biểu tượng riêng từ tập tin thay vào biểu tượng định sẵn từ "
-"danh sách thả xuống"
-
-#: ../nact/nautilus-actions-config.glade.h:42
-msgid "Click to remove the selected scheme."
-msgstr "Nhấn để gỡ bỏ lược đồ đã chọn"
-
-#: ../nact/nautilus-actions-config.glade.h:43
-msgid ""
-"Click to see the list of special tokens you can use in the parameter field."
-msgstr "Nhấn để xem danh sách các hiệu bài đặc biệt có thể gõ vào trường tham số"
-
-#: ../nact/nautilus-actions-config.glade.h:44
-msgid "Conditions"
-msgstr "Điều kiện"
+msgstr "Nhấn để chọn một biểu tượng riêng từ tập tin thay cho một biểu tượng định sẵn từ danh sách thả xuống."
 
 #: ../nact/nautilus-actions-config.glade.h:45
-msgid "Create a copy of the selected action."
-msgstr "Tạo một bản sao của hành động đã chọn."
+msgid "Click to remove the selected scheme."
+msgstr "Nhấn để gỡ bỏ lược đồ đã chọn."
 
 #: ../nact/nautilus-actions-config.glade.h:46
 msgid ""
-"Delete the action without any confirmation nor the possibility to restore it."
-msgstr "Xóa bỏ hành động, không cần xác định, cũng không thể phục hồi nó."
+"Click to see the list of special tokens you can use in the parameter field."
+msgstr "Nhấn để xem danh sách các hiệu bài đặc biệt có thể gõ vào trường tham số."
 
 #: ../nact/nautilus-actions-config.glade.h:47
+msgid "Conditions"
+msgstr "Điều kiện"
+
+#: ../nact/nautilus-actions-config.glade.h:48
+msgid "Create a copy of the selected action."
+msgstr "Tạo một bản sao của hành động đã chọn."
+
+#: ../nact/nautilus-actions-config.glade.h:49
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
+msgstr "Xóa bỏ hành động, không cần xác nhận, cũng không thể phục hồi nó."
+
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "Export existing configs"
 msgstr "Xuất cấu hình đã có"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "File to Import:"
 msgstr "Tập tin cần nhập:"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:52
 msgid "Filenames:"
 msgstr "Tên tập tin:"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "GConf schema description file (Nautilus-actions v1.x and later)"
 msgstr "Tập tin diễn tả giản đồ GConf (Nautilus-actions phiên bản 1.x và sau)"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Icon:"
 msgstr "Hình:"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid ""
 "If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
 "will not match photo.JPG)"
 msgstr "Nếu chọn, việc khớp mẫu tên tập tin sẽ phân biệt chữ hoa/thường (v.d. « *."
 "jpg » sẽ không khớp được với « ảnh_chụp.JPG »."
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Import all my old configs"
 msgstr "Nhập mọi cấu hình cũ của tôi"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Import new configurations"
 msgstr "Nhập cấu hình mới"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid "Import/Export"
 msgstr "Nhập/Xuất"
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "Import/Export Settings"
 msgstr "Thiết lập Nhập/Xuất"
 
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "Label of the menu item in the Nautilus popup menu."
-msgstr "Nhãn của mục trình đơn trong trình đơn bật lên Nautilus."
+msgstr "Nhãn của mục trình đơn nằm trong trình đơn bật lên Nautilus."
 
 # Type: text
 # Description
 # label of file system
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "Label:"
 msgstr "Nhãn:"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
-msgstr "Quản lý việc nhập các cấu hình hành động bên ngoài và việc xuất các hành "
-"động tồn tại."
+msgstr "Quản lý việc nhập các cấu hình hành động bên ngoài và việc xuất các hành động tồn tại."
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "Match case"
 msgstr "Phân biệt hoa/thường"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:64
 msgid "Menu Item & Action"
 msgstr "Mục trình đơn và hành động"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:65
 msgid "Mimetypes:"
 msgstr "Kiểu MIME:"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
-msgstr "Công cụ Cấu hình Hành động Nautilus\n"
-"Ứng dụng cần cấu hình phần mở rộng Hành động Nautilus"
+msgstr "Công cụ cấu hình hành động Nautilus\n"
+"Ứng dụng cần cấu hình phần mở rộng hành động Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid "Nautilus Action Editor"
-msgstr "Bộ sửa đổi hành động Nautilus"
+msgstr "Bộ sửa hành động Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Nautilus Actions"
 msgstr "Hành động Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid "Old XML config file (Nautilus-actions v0.x)"
 msgstr "Tập tin cấu hình XML cũ (Nautilus-actions phiên bản 0.x)"
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Only files"
 msgstr "Chỉ tập tin"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Only folders"
 msgstr "Chỉ thư mục"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
-msgstr "Các tham số sẽ được gởi cho chương trình. Hãy nhấn vào cái nút « Chú giải » "
-"để xem những hiệu bài thay thế khác nhau."
+msgstr "Các tham số sẽ được gởi cho chương trình. Hãy nhấn vào cái nút « Chú giải » để xem những hiệu bài thay thế khác nhau."
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Parameters:"
-msgstr "Tham số:"
+msgstr "Tham số :"
 
-#: ../nact/nautilus-actions-config.glade.h:72
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid "Path:"
 msgstr "Đường dẫn:"
 
-#: ../nact/nautilus-actions-config.glade.h:73
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid "Project Website"
 msgstr "Nơi Mạng của Dự án"
 
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:77
 msgid "Save in Folder:"
 msgstr "Lưu vào thư mục:"
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:78
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
-msgstr "Hãy chọn những cấu hình cần xuất. Hãy sử dụng phím Shift hay Ctrl để chọn "
-"nhiều điều."
+msgstr "Hãy chọn những cấu hình cần xuất. Dùng phím Shift hay Ctrl để chọn nhiều điều."
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:79
 msgid "Select the configurations you want to export:"
 msgstr "Chọn những cấu hình cần xuất:"
 
-#: ../nact/nautilus-actions-config.glade.h:77
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid "Select the file you want to import."
 msgstr "Chọn tập tin cần nhập."
 
-#: ../nact/nautilus-actions-config.glade.h:78
+#: ../nact/nautilus-actions-config.glade.h:81
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
-msgstr "Hãy chọn thư mục nơi bạn muốn lưu cấu hình. Thư mục này phải tồn tại."
+msgstr "Hãy chọn thư mục vào đó bạn muốn lưu cấu hình. Thư mục này phải tồn tại."
 
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add a new scheme by clicking on the '+' button."
-msgstr "Hãy chọn kiểu tập tin nơi bạn muốn hành động xuất hiện. Nếu bạn chưa biết "
-"nên chọn gì, thử chọn chỉ « tập tin » mà là sự chọn thường nhất. Có thể thêm "
-"lược đồ mới bằng cách nhấn vào cái nút « + »."
+msgstr "Hãy chọn kiểu tập tin nơi bạn muốn hành động xuất hiện. Nếu bạn chưa biết nên chọn gì, thử chọn chỉ « tập tin », sự chọn thường nhất. Có thể thêm lược đồ mới bằng cách nhấn vào cái nút dấu cộng « + »."
 
-#: ../nact/nautilus-actions-config.glade.h:80
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
 msgstr "Lệnh sẽ được khởi chạy khi chọn hành động trong trình đơn bật lên Nautilus."
 
-#: ../nact/nautilus-actions-config.glade.h:81
-msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr "Phần mềm này được phát hành với điều kiện của Quyền Công Chung Gnu (GPL)."
-
-#: ../nact/nautilus-actions-config.glade.h:82
-msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr "Mẹo công cụ của mục trình đơn sẽ xuất hiện trong thanh trạng thái Nautilus."
-
-#: ../nact/nautilus-actions-config.glade.h:83
-msgid "Tooltip:"
-msgstr "Mẹo công cụ:"
-
 #: ../nact/nautilus-actions-config.glade.h:84
-msgid "Type of configuration:"
-msgstr "Kiểu cấu hinh:"
+msgid "This software is licensed under the GNU Genaral Public License (GPL)"
+msgstr "Phần mềm này được cấp dưới Giấy Phép Công Cộng Gnu (GPL)."
 
 #: ../nact/nautilus-actions-config.glade.h:85
+msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
+msgstr "Mẹo công cụ của mục trình đơn sẽ xuất hiện trên thanh trạng thái Nautilus."
+
+#: ../nact/nautilus-actions-config.glade.h:86
+msgid "Tooltip:"
+msgstr "Mẹo công cụ :"
+
+#: ../nact/nautilus-actions-config.glade.h:87
+msgid "Type of configuration:"
+msgstr "Kiểu cấu hình:"
+
+#: ../nact/nautilus-actions-config.glade.h:88
 msgid "_Browse"
 msgstr "_Duyệt"
 
 #.TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:87
+#: ../nact/nautilus-actions-config.glade.h:90
 msgid "translator-credits"
 msgstr "Nhóm Việt hóa Gnome <gnomevi-list@lists.sourceforge.net>"
 
+#.i18n notes: will be displayed in a dialog
+#: ../nact/nact.c:163
+#, c-format
+msgid "Can't duplicate action '%s' !"
+msgstr "Không thể nhân đôi hành động « %s » !"
+
 #.create columns on the tree view
-#: ../nact/nact.c:254
+#: ../nact/nact.c:262
 #: ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "Hình"
 
-#: ../nact/nact.c:259
+#: ../nact/nact.c:267
 #: ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "Nhãn"
 
-#: ../nact/nact.c:279
-#: ../nact/nact-editor.c:692
-#: ../nact/nact-import-export.c:364
+#: ../nact/nact.c:287
+#: ../nact/nact-editor.c:705
+#: ../nact/nact-import-export.c:378
 msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr "Không thể tải giao diện cho Công cụ Cấu hình Hành động Nautilus"
+msgstr "Không thể tải giao diện cho Công Cụ Cấu Hình Hành Động Nautilus"
 
 #.i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:157
+#: ../nact/nact-utils.c:185
 msgid "/path/to"
 msgstr "/đường_dẫn/đến"
 
-#: ../nact/nact-utils.c:158
-#: ../nact/nact-utils.c:160
+#: ../nact/nact-utils.c:186
+#: ../nact/nact-utils.c:188
 msgid "file1.txt"
 msgstr "tập_tin1.txt"
 
-#: ../nact/nact-utils.c:158
+#: ../nact/nact-utils.c:186
 msgid "file2.txt"
 msgstr "tập_tin2.txt"
 
-#: ../nact/nact-utils.c:159
-#: ../nact/nact-utils.c:160
+#: ../nact/nact-utils.c:187
+#: ../nact/nact-utils.c:188
 msgid "folder1"
 msgstr "thư_mục1"
 
-#: ../nact/nact-utils.c:159
+#: ../nact/nact-utils.c:187
 msgid "folder2"
 msgstr "thư_mục2"
 
-#: ../nact/nact-utils.c:162
+#: ../nact/nact-utils.c:190
 msgid "test.example.net"
 msgstr "thử.ví_dụ.net"
 
-#: ../nact/nact-utils.c:163
+#: ../nact/nact-utils.c:191
 msgid "file.txt"
 msgstr "tập_tin.txt"
 
-#: ../nact/nact-utils.c:164
+#: ../nact/nact-utils.c:192
 msgid "folder"
 msgstr "thư mục"
 
 #.i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:252
+#: ../nact/nact-editor.c:253
 msgid "None"
 msgstr "Không có"
 
 #.i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-editor.c:438
+#: ../nact/nact-editor.c:451
 msgid "new-scheme"
 msgstr "lược-đồ-mới"
 
-#: ../nact/nact-editor.c:439
+#: ../nact/nact-editor.c:452
 msgid "New Scheme Description"
-msgstr "Mô tả Lược đồ Mới"
+msgstr "Mô tả lược đồ mới"
 
-#: ../nact/nact-editor.c:525
+#: ../nact/nact-editor.c:538
 msgid "Scheme"
 msgstr "Lược đồ"
 
-#: ../nact/nact-editor.c:537
+#: ../nact/nact-editor.c:550
 msgid "Description"
 msgstr "Mô tả"
 
-#: ../nact/nact-editor.c:708
+#: ../nact/nact-editor.c:721
 msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr "Biểu tượng của mục trình đơn trong trình đơn bật lên Nautilus"
+msgstr "Biểu tượng của mục trình đơn nằm trong trình đơn bật lên Nautilus"
 
-#: ../nact/nact-editor.c:742
+#: ../nact/nact-editor.c:755
 msgid "Add a New Action"
 msgstr "Thêm hành động mới"
 
-#: ../nact/nact-editor.c:746
+#: ../nact/nact-editor.c:759
 #, c-format
 msgid "Edit Action \"%s\""
-msgstr "Sửa đổi hành động « %s »"
+msgstr "Sửa hành động « %s »"
+
+#: ../nact/nact-import-export.c:234
+#, c-format
+msgid "Can't parse file '%s' as old XML config file !"
+msgstr "Không thể phân tách tập tin « %s » dạng tập tin cấu hình XML cũ !"
+
+#: ../nact/nact-import-export.c:249
+#, c-format
+msgid "Can't parse file '%s' as GConf schema description file !"
+msgstr "Không thể phân tách tập tin « %s » dạng tập tin mô tả giải đồ GConf !"
+
+#: ../nact/nact-import-export.c:269
+#, c-format
+msgid "Can't parse file '%s' !"
+msgstr "Không thể phân tách tập tin « %s » !"
+
+#.i18n notes: %s is the label of the action (eg, 'Mount ISO')
+#: ../nact/nact-import-export.c:291
+#, c-format
+msgid "Action '%s' importation failed !"
+msgstr "Lỗi nhập hành động « %s » !"
 
 #.initialize the default schemes
 #.i18n notes : description of 'file' scheme
@@ -515,14 +543,13 @@ msgstr "Tên của tập tin giản đồ GConf mới được chuyển đổi"
 
 #: ../utils/nautilus-actions-convert.c:43
 msgid "Convert all old XML config files from previous installations [default]"
-msgstr "Chuyển đổi mọi tập tin cấu hình XML cũ từ bản cài đặt trước nào [mặc định]"
+msgstr "Chuyển đổi mọi tập tin cấu hình XML cũ từ bản cài đặt trước [mặc định]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid ""
 "The folder where the new GConf schema files will be saved if option -a is "
 "set [default=/tmp]"
-msgstr "Thư mục nơi những tập tin giản đồ GConf mới sẽ được kưu nếu tùy chọn « -a » "
-"được lập [mặc định=/tmp]"
+msgstr "Thư mục vào đó những tập tin giản đồ GConf mới sẽ được lưu nếu tùy chọn « -a » được đặt [mặc định=/tmp]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid "DIR"
@@ -539,7 +566,7 @@ msgstr "Lỗi cú pháp:\n"
 "\t- %s\n"
 "Hãy chạy lệnh « %s --help » (trợ giúp)\n"
 
-#: ../utils/nautilus-actions-convert.c:83
+#: ../utils/nautilus-actions-convert.c:84
 #, c-format
 msgid ""
 "Syntax error:\n"
@@ -549,7 +576,7 @@ msgstr "Lỗi cú pháp:\n"
 "\ttùy chọn « -i » và « -o » loại từ lẫn nhau với tùy chọn « -a »\n"
 "Hãy chạy lệnh « %s --help » (trợ giúp)\n"
 
-#: ../utils/nautilus-actions-convert.c:89
+#: ../utils/nautilus-actions-convert.c:90
 #, c-format
 msgid ""
 "Syntax error:\n"
@@ -559,36 +586,38 @@ msgstr "Lỗi cú pháp\n"
 "\ttùy chọn « -i » bắt buộc khi dùng tùy chọn « -o »\n"
 "Hãy chạy lệnh « %s --help » (trợ giúp)\n"
 
-#: ../utils/nautilus-actions-convert.c:101
+#: ../utils/nautilus-actions-convert.c:102
 #, c-format
 msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
+"%s\n"
 msgstr "Lỗi: \n"
 "\tKhông thể phân tách %s\n"
+"%s\n"
 
-#: ../utils/nautilus-actions-convert.c:115
+#: ../utils/nautilus-actions-convert.c:117
 #, c-format
 msgid "Converting %s..."
 msgstr "Đang chuyển đổi %s..."
 
-#: ../utils/nautilus-actions-convert.c:135
-#: ../utils/nautilus-actions-new-config.c:169
+#: ../utils/nautilus-actions-convert.c:137
+#: ../utils/nautilus-actions-new-config.c:170
 #, c-format
 msgid " Failed: Can't create %s: %s\n"
 msgstr " Bị lỗi: không thể tạo %s: %s\n"
 
-#: ../utils/nautilus-actions-convert.c:143
-#: ../utils/nautilus-actions-new-config.c:177
+#: ../utils/nautilus-actions-convert.c:146
+#: ../utils/nautilus-actions-new-config.c:179
 #, c-format
 msgid "  OK, saved in %s\n"
-msgstr "  Được, đã lưu được vào %s\n"
+msgstr "  Được, đã lưu vào %s\n"
 
-#: ../utils/nautilus-actions-convert.c:148
-#: ../utils/nautilus-actions-new-config.c:182
+#: ../utils/nautilus-actions-convert.c:151
+#: ../utils/nautilus-actions-new-config.c:184
 #, c-format
-msgid "  Failed\n"
-msgstr "  Bị lỗi\n"
+msgid " Failed: %s\n"
+msgstr " Bị lỗi: %s\n"
 
 #.GConf description strings :
 #: ../utils/nautilus-actions-new-config.c:50
@@ -632,18 +661,17 @@ msgstr "ĐƯỜNG DẪN"
 #: ../utils/nautilus-actions-new-config.c:54
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
 msgid "The parameters of the command"
-msgstr "Tham số của lệnh"
+msgstr "Các tham số của lệnh"
 
 #: ../utils/nautilus-actions-new-config.c:54
 msgid "PARAMS"
-msgstr "THAM_SỐ"
+msgstr "THAM SỐ"
 
 #: ../utils/nautilus-actions-new-config.c:55
 msgid ""
 "A pattern to match selected files against. May include wildcards (* or ?) "
 "(you must set one option for each pattern you need)"
-msgstr "Mẫu để khớp tập tin đã chọn, có thể thêm ký tự đặc biệt « ? » hay « * "
-"» (phải lập một tùy chọn cho mỗi mẫu cần thiết)"
+msgstr "Mẫu với đó cần khớp những tập tin đã chọn, có thể thêm ký tự đặc biệt (« ? » hay « * ») (phải đặt một tùy chọn cho mỗi mẫu cần thiết)"
 
 #: ../utils/nautilus-actions-new-config.c:55
 #: ../utils/nautilus-actions-new-config.c:57
@@ -654,26 +682,26 @@ msgstr "BTHỨC"
 msgid ""
 "A pattern to match selected files' mimetype against. May include wildcards "
 "(* or ?) (you must set one option for each pattern you need)"
-msgstr "Mẫu để khớp kiểu MIME của tập tin đã chọn, có thể thêm ký tự đặc biệt « ? » hay « * » (phải lập một tùy chọn cho mỗi mẫu cần thiết)"
+msgstr "Mẫu với đó cần khớp kiểu MIME của những tập tin đã chọn, có thể thêm ký tự đặc biệt (« ? » "
+"hay « * ») (phải đặt một tùy chọn cho mỗi mẫu cần thiết)"
 
 #: ../utils/nautilus-actions-new-config.c:58
 msgid "Set it if the selection can contain files"
-msgstr "Lập nếu vùng chọn có thể chứa tập tin"
+msgstr "Đặt nó nếu vùng chọn có khả năng chứa tập tin"
 
 #: ../utils/nautilus-actions-new-config.c:59
 msgid "Set it if the selection can contain folders"
-msgstr "Lập nếu vùng chọn có thể chứa thư mục"
+msgstr "Đặt nó nếu vùng chọn có khả năng chứa thư mục"
 
 #: ../utils/nautilus-actions-new-config.c:60
 msgid "Set it if the selection can have several items"
-msgstr "Lập nếu vùng chọn có thể chứa vài mục"
+msgstr "Đặt nó nếu vùng chọn có khả năng chứa vài mục"
 
 #: ../utils/nautilus-actions-new-config.c:61
 msgid ""
 "A GnomeVFS scheme where the selected files should be located (you must set "
 "it for each scheme you need)"
-msgstr "Lược đồ GnomeVFS nơi cần định vị những tập tin đã chọn (phải lập cho mỗi "
-"lược đồ cần thiết)"
+msgstr "Lược đồ GnomeVFS nơi cần định vị những tập tin đã chọn (phải đặt nó cho mỗi lược đồ cần thiết)"
 
 #: ../utils/nautilus-actions-new-config.c:61
 msgid "SCHEME"
@@ -683,10 +711,9 @@ msgstr "LƯỢC ĐỒ"
 msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
-msgstr "Đường dẫn của tập tin nơi cần lưu tập tin diễn tả giản đồ GConf mới [mặc "
-"định: </tmp/config_UUID.schemas>]"
+msgstr "Đường dẫn của tập tin vào đó cần lưu tập tin mô tả giản đồ GConf mới [mặc định: </tmp/config_UUID.schemas>]"
 
-#: ../utils/nautilus-actions-new-config.c:150
+#: ../utils/nautilus-actions-new-config.c:151
 #, c-format
 msgid "Creating %s..."
 msgstr "Đang tạo %s..."
@@ -705,15 +732,13 @@ msgstr "Không thể mở tập tin « %s » để ghi\n"
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
-msgstr "Nhãn của mục trình đơn, sẽ xuất hiện ở cạnh nhãn trong trình đơn bật lên "
-"Nautilus khi vùng chọn khớp với thiết lập điều kiện xuất hiện"
+msgstr "Nhãn của mục trình đơn sẽ xuất hiện trong trình đơn bật lên Nautilus khi vùng chọn khớp với thiết lập điều kiện xuất hiện"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
-msgstr "Mẹo công cụ của mục trình đơn sẽ xuất hiện trong thanh trạng thái khi người "
-"dùng chỉ con chuột đến mục trình đơn bật lệnh Nautilus"
+msgstr "Mẹo công cụ của mục trình đơn sẽ xuất hiện trên thanh trạng thái khi người dùng chỉ con chuột tới mục trình đơn bật lên Nautilus"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
 msgid "The icon of the menu item"
@@ -723,15 +748,13 @@ msgstr "Biểu tượng của mục trình đơn"
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
-msgstr "Biểu tượng của mục trình đơn, sẽ xuất hiện ở cạnh nhãn trong trình đơn bật "
-"lên Nautilus khi vùng chọn khớp với thiết lập điều kiện xuất hiện"
+msgstr "Biểu tượng của mục trình đơn sẽ xuất hiện ở cạnh nhãn trong trình đơn bật lên Nautilus khi vùng chọn khớp với thiết lập điều kiện xuất hiện"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
-msgstr "Đường dẫn của lệnh cần chạy khi người dùng chọn mục trình đơn trong trình "
-"đơn bật lện Nautilus"
+msgstr "Đường dẫn của lệnh cần chạy khi người dùng chọn mục trình đơn trong trình đơn bật lên Nautilus"
 
 #.i18n notes : Sorry for this long paragraph, will try to fix it the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
@@ -752,18 +775,17 @@ msgid ""
 "%h: hostname of the GnomeVFS URI\n"
 "%U: username of the :%s/GnomeVFS URI\n"
 "%%: a percent sign"
-msgstr "Những tham số của lệnh cần chạy khi người dùng chọn mục trình đơn trong "
-"trình đơn bật lên Nautilus.\n"
+msgstr "Những tham số của lệnh cần chạy khi người dùng chọn mục trình đơn nằm trong trình đơn bật lên Nautilus.\n"
 "\n"
-"Những tham số có thể chứa một số hiệu bài đặc biệt, mà được thay thế bằng "
+"Những tham số có khả năng chứa một số hiệu bài đặc biệt, mà được thay thế bằng "
 "thông tin Nautilus trước khi khởi chạy lệnh:\n"
 "\n"
 " • %d\tthư mục cơ bản của tập tin đã chọn\n"
-" • %f\t\ttên của tập tin đã chọn, hay điều thứ nhất nếu có nhiều tập tin\n"
-" • %m\tdanh sách tên cơ bản của các tập tin/thư mục, định giới bằng dấu "
-"cách\n"
-" • %M\tdanh sách những tập tin/thư mục đã chọn với toàn đường dẫn định giới "
-"bằng dấu cách\n"
+" • %f\t\ttên của tập tin đã chọn (hay điều thứ nhất nếu có nhiều tập tin)\n"
+" • %m\tdanh sách các tên cơ bản của các những tập tin/thư mục,\n"
+"		định giới bằng dấu cách\n"
+" • %M\tdanh sách những tập tin/thư mục đã chọn với toàn đường dẫn\n"
+"		định giới bằng dấu cách\n"
 " • %u\tURI Gnome-VFS\n"
 " • %s\tlược đồ của URI Gnome-VFS\n"
 " • %h\ttên máy của URI Gnome-VFS\n"
@@ -779,22 +801,20 @@ msgid ""
 "A list of strings with joker '*' or '?' to match the name of the selected "
 "file(s)/folder(s). Each selected items must match at least one of the "
 "filename patterns for the action to appear"
-msgstr "Danh sách chuỗi chứa ký tự đặc biệt « ? » hay « * » để khớp tên tập tin/thư "
-"mục đã chọn. Mỗi mục đã chọn phải khớp với ít nhất một mẫu, để gây ra hành "
+msgstr "Danh sách các chuỗi chứa ký tự đặc biệt « ? » hay « * » để khớp với tên của những tập tin/thư mục đã chọn. Mỗi mục đã chọn phải khớp với ít nhất một mẫu, để gây ra hành "
 "động xuất hiện."
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid ""
 "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr "« true » (đúng) nếu mẫu tên tập tin phải phân biệt chữ hoa/thường; không thì "
-"« false » (không đúng)"
+msgstr "« true » (đúng) nếu mẫu tên tập tin phải phân biệt chữ hoa/thường; không thì « false » (không đúng)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid ""
 "If you need to match a filename in a case-sensitive manner, set this key to "
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
 "'false'"
-msgstr "Nếu bạn cần khớp tên tập tin bằng cách phân biệt chữ hoa/thường, hãy đặt khóa này là « true » (đúng). Nếu bạn cũng muốn, lấy thí dụ, « *.jpg » khớp với « ảnh_chụp.JPG », hãy đặt « false » (không đúng)."
+msgstr "Nếu bạn cần khớp với tên tập tin bằng cách phân biệt chữ hoa/thường, hãy đặt khóa này là « true » (đúng). Nếu bạn cũng muốn, chẳng hạn, « *.jpg » khớp với « ảnh_chụp.JPG », hãy đặt « false » (sai)."
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
@@ -805,9 +825,7 @@ msgid ""
 "A list of strings with joker '*' or '?' to match the mimetypes of the "
 "selected file(s). Each selected items must match at least one of the "
 "mimetype patterns for the action to appear"
-msgstr "Danh sách chuỗi chứa ký tự đặc biệt « ? » hay « * » để khớp kiểu MIME của "
-"những tập tinđã chọn. Mỗi mục đã chọn phải khớp với ít nhất một mẫu kiểu "
-"MIME, để gây ra hành động xuất hiện."
+msgstr "Danh sách các chuỗi chứa ký tự đặc biệt « ? » hay « * » để khớp với kiểu MIME của những tập tin đã chọn. Mỗi mục đã chọn phải khớp với ít nhất một mẫu kiểu MIME, để gây ra hành động xuất hiện."
 
 #.i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
@@ -819,7 +837,7 @@ msgid ""
 "isfile=TRUE and isdir=TRUE': the selection may hold both files and folders\n"
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
-msgstr "Những tổ hợp đúng:\n"
+msgstr "Những tổ hợp hợp lệ:\n"
 "\n"
 "isfile\t\tisdir\n"
 "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -835,8 +853,7 @@ msgstr "Những tổ hợp đúng:\n"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr "« true » (đúng) nếu vùng chọn có thể chứa tập tin, không thì « false "
-"» (không đúng)"
+msgstr "« true » (đúng) nếu vùng chọn có khả năng chứa tập tin, không thì « false » (sai)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
 msgid "This setting is tied in with the 'isdir' setting. "
@@ -844,8 +861,7 @@ msgstr "Thiết lập này liên quan đến thiết lập « isdir » (là thư
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr "« true » (đúng) nếu vùng chọn có thể chứa thư mục, không thì « false "
-"» (không đúng)"
+msgstr "« true » (đúng) nếu vùng chọn có khả năng chứa thư mục, không thì « false » (sai)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "This setting is tied in with the 'isfile' setting. "
@@ -853,16 +869,13 @@ msgstr "Thiết lập này liên quan đến thiết lập « isfile » (là t�
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
 msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr "« true » (đúng) nếu vùng chọn có thể chứa vài mục; không thì « false "
-"» (không đúng)"
+msgstr "« true » (đúng) nếu vùng chọn có khả năng chứa vài mục; không thì « false » (sai)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
 msgid ""
 "If you need one or more files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set 'false'"
-msgstr "Nếu bạn cần chọn một hay nhiều tập tin hay thư mục, hãy đặt khóa này là « "
-"true » (đúng). Nếu bạn muốn chỉ một tập tin hay thư mục, hãy đặt « false "
-"» (không đúng)."
+msgstr "Nếu bạn cần chọn một hay nhiều tập tin hay thư mục, hãy đặt khóa này là « true » (đúng). Còn nếu bạn muốn chỉ một tập tin hay thư mục, hãy đặt « false » (sai)."
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
 msgid "The list of GnomeVFS schemes where the selected files should be located"
@@ -888,11 +901,10 @@ msgid ""
 "'dav': files accessed via WebDav\n"
 "\n"
 "All GnomeVFS schemes used by Nautilus can be used here."
-msgstr "Định nghĩa danh sách lược đồ GnomeVFS hợp lệ để khớp những mục đã chọn. Lược "
-"đồ GnomeVFS là giao thức được dùng để truy cập những tập tin. Từ khóa cần "
-"dùng là điều dùng trong URI GnomeVFS.\n"
+msgstr "Định nghĩa danh sách các lược đồ GnomeVFS hợp lệ để khớp với những mục đã chọn. Lược "
+"đồ GnomeVFS là giao thức dùng để truy cập những tập tin. Từ khóa cần dùng là điều dùng trong URI GnomeVFS.\n"
 "\n"
-"Hai thí dụ của URI GnomeVFS:\n"
+"Hai thí dụ URI GnomeVFS:\n"
 "\t<file:///tmp/phu.txt>\n"
 "\t<sftp:///root@thử.ví_dụ.net/tmp/phu.txt>).\n"
 "\n"
@@ -904,7 +916,7 @@ msgstr "Định nghĩa danh sách lược đồ GnomeVFS hợp lệ để khớp
 " • smb\t— tập tin được truy cập bằng Samba (chia sẻ Windows)\n"
 " • dav\t— tập tin được truy cập bằng WebDav.\n"
 "\n"
-"Ở đây có thể sử dụng mọi lược đồ GnomeVFS do Nautilus dùng."
+"Ở đây có khả năng sử dụng mọi lược đồ GnomeVFS được Nautilus dùng."
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
 msgid "The version of the configuration format"
@@ -914,5 +926,78 @@ msgstr "Phiên bản của khuôn dạng cấu hình"
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
-msgstr "Phiên bản của khuôn dạng cấu hình sẽ được dùng để quản lý cách tương thích "
-"ngược"
+msgstr "Phiên bản của khuôn dạng cấu hình sẽ được dùng để quản lý khả năng tương thích ngược"
+
+#.i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:205
+#, c-format
+msgid ""
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
+msgstr "Hành động « %s » tên « %s » đã có : hãy gỡ bỏ điều tồn tại trước khi thử thêm điều này"
+
+#.i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:222
+#, c-format
+msgid "Can't save action '%s'"
+msgstr "Không thể lưu hành động « %s »"
+
+#.i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:485
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad test section)"
+msgstr "Tập tin XML này không phải là một tập tin cấu hình Nautilus-actions (phần thử sai)"
+
+#.i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:491
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad command "
+"section)"
+msgstr "Tập tin XML này không phải là một tập tin cấu hình Nautilus-actions (phần lệnh sai)"
+
+#.i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:496
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad menu item "
+"section)"
+msgstr "Tập tin XML này không phải là một tập tin cấu hình Nautilus-actions (phần mục trình đơn sai)"
+
+#.i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:563
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:374
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:533
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (found <%s> "
+"element instead of <%s>)"
+msgstr "Tập tin XML này không phải là một tập tin cấu hình Nautilus-actions (tìm yếu tố <%s> thay cho <%s>)"
+
+#.i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:574
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:543
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
+"instead of <%s>)"
+msgstr "Tập tin XML này không phải là một tập tin cấu hình Nautilus-actions (nút gốc là <%s> thay cho <%s>)"
+
+#.i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
+msgid ","
+msgstr ", "
+
+#.i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:461
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
+"s)"
+msgstr "Tập tin XML này không phải là một tập tin cấu hình Nautilus-actions (các khoá còn thiếu : %s)"
+
+#.No error occured but we have not found the "version" gconf key
+#.i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:469
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key : %s)"
+msgstr "Tập tin XML này không phải là một tập tin cấu hình Nautilus-actions (khoá còn thiếu : %s)"
