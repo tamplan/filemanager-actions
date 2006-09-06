@@ -192,8 +192,8 @@ msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list."
 msgstr ""
-"Feu clic per escollir una icona personalitzada d'un fitxer, enlloc de les "
-"icones preestablertes d'una llista desplegable."
+"Feu clic per escollir una icona personalitzada d'un fitxer, en comptes de "
+"les icones preestablertes d'una llista desplegable."
 
 #: ../nact/nautilus-actions-config.glade.h:45
 msgid "Click to remove the selected scheme."
@@ -1063,7 +1063,7 @@ msgid ""
 "element instead of <%s>)"
 msgstr ""
 "Aquest fitxer XML no és un fitxer de configuració Nautilus-actions vàlid "
-"(s'ha trobat l'element <%s> enlloc de <%s>)"
+"(s'ha trobat l'element <%s> en comptes de <%s>)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:574
@@ -1074,7 +1074,7 @@ msgid ""
 "instead of <%s>)"
 msgstr ""
 "Aquest fitxer XML no és un fitxer de configuració Nautilus-actions vàlid (el "
-"node arrel és <%s> enlloc de <%s>)"
+"node arrel és <%s> en comptes de <%s>)"
 
 #. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
