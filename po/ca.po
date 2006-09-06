@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-30 21:44+0200\n"
-"PO-Revision-Date: 2006-04-29 13:06+0200\n"
+"POT-Creation-Date: 2006-09-06 17:09+0200\n"
+"PO-Revision-Date: 2006-09-06 17:17+0200\n"
 "Last-Translator: josep <josep.puigdemont@gmail.com>\n"
 "Language-Team: Catalan\n"
 "MIME-Version: 1.0\n"
@@ -128,6 +128,16 @@ msgstr "<span size=\"larger\"><b>Llegenda del paràmetre</b></span>"
 
 #: ../nact/nautilus-actions-config.glade.h:32
 msgid ""
+"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
+"\n"
+"place secondary text here"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">poseu el text primari aquí</span>\n"
+"\n"
+"poseu el text secundari aquí"
+
+#: ../nact/nautilus-actions-config.glade.h:35
+msgid ""
 "A string with wildcards (? or *) that will be used to match the filenames. "
 "You can set several filename patterns by separating them with a semi-colon "
 "(;)."
@@ -135,7 +145,7 @@ msgstr ""
 "Una cadena amb comodins (? o *) que s'utilitzarà per a fer coincidir noms de "
 "fitxer. Podeu establir diferents patrons separant-los per punts i comes (;)."
 
-#: ../nact/nautilus-actions-config.glade.h:33
+#: ../nact/nautilus-actions-config.glade.h:36
 msgid ""
 "A string with wildcards (? or *) that will be used to match the mimetypes of "
 "files. You can set several mimetype patterns by separating them with a semi-"
@@ -145,23 +155,23 @@ msgstr ""
 "mime de fitxers. Podeu establir diferents patrons separant-los per punts i "
 "comes (;)."
 
-#: ../nact/nautilus-actions-config.glade.h:34
+#: ../nact/nautilus-actions-config.glade.h:37
 msgid "Advanced Conditions"
 msgstr "Condicions avançades"
 
-#: ../nact/nautilus-actions-config.glade.h:35
+#: ../nact/nautilus-actions-config.glade.h:38
 msgid "Appears if selection has multiple files or folders"
 msgstr "Apareix si la selecció té diversos fitxers o carpetes"
 
-#: ../nact/nautilus-actions-config.glade.h:36
+#: ../nact/nautilus-actions-config.glade.h:39
 msgid "Automatic"
 msgstr "Automàtic"
 
-#: ../nact/nautilus-actions-config.glade.h:37
+#: ../nact/nautilus-actions-config.glade.h:40
 msgid "Both"
 msgstr "Ambdós"
 
-#: ../nact/nautilus-actions-config.glade.h:38
+#: ../nact/nautilus-actions-config.glade.h:41
 msgid ""
 "Check this box if you want to get back all your configurations from the "
 "version of Nautilus-actions 0.7.1 or lesser."
@@ -169,15 +179,15 @@ msgstr ""
 "Activeu aquest quadre de verificació si voleu obtenir les vostres "
 "configuracions de la versió 0.7.1 o anterior del Nautilus-actions."
 
-#: ../nact/nautilus-actions-config.glade.h:39
+#: ../nact/nautilus-actions-config.glade.h:42
 msgid "Click to add a new scheme."
 msgstr "Feu clic per afegir un esquema nou."
 
-#: ../nact/nautilus-actions-config.glade.h:40
+#: ../nact/nautilus-actions-config.glade.h:43
 msgid "Click to choose a command from the file chooser dialog."
 msgstr "Feu clic per escollir una ordre del diàleg per a escollir fitxers."
 
-#: ../nact/nautilus-actions-config.glade.h:41
+#: ../nact/nautilus-actions-config.glade.h:44
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list."
@@ -185,55 +195,55 @@ msgstr ""
 "Feu clic per escollir una icona personalitzada d'un fitxer, enlloc de les "
 "icones preestablertes d'una llista desplegable."
 
-#: ../nact/nautilus-actions-config.glade.h:42
+#: ../nact/nautilus-actions-config.glade.h:45
 msgid "Click to remove the selected scheme."
 msgstr "Feu clic per suprimir l'esquema seleccionat."
 
-#: ../nact/nautilus-actions-config.glade.h:43
+#: ../nact/nautilus-actions-config.glade.h:46
 msgid ""
 "Click to see the list of special tokens you can use in the parameter field."
 msgstr ""
 "Feu clic per veure una llista d'elements que podeu utilitzar en el camp per "
 "a paràmetres."
 
-#: ../nact/nautilus-actions-config.glade.h:44
+#: ../nact/nautilus-actions-config.glade.h:47
 msgid "Conditions"
 msgstr "Condicions"
 
-#: ../nact/nautilus-actions-config.glade.h:45
+#: ../nact/nautilus-actions-config.glade.h:48
 msgid "Create a copy of the selected action."
 msgstr "Crea una còpia de l'acció seleccionada."
 
-#: ../nact/nautilus-actions-config.glade.h:46
+#: ../nact/nautilus-actions-config.glade.h:49
 msgid ""
 "Delete the action without any confirmation nor the possibility to restore it."
 msgstr ""
 "Suprimeix l'acció sense demanar confirmació ni que sigui possible restaurar-"
 "la."
 
-#: ../nact/nautilus-actions-config.glade.h:47
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "Export existing configs"
 msgstr "Exporta les configuracions existents"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "File to Import:"
 msgstr "Fitxer a importar:"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:52
 msgid "Filenames:"
 msgstr "Noms de fitxer:"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "GConf schema description file (Nautilus-actions v1.x and later)"
 msgstr ""
 "Fitxer de descripció de l'esquema del GConf (Versió 1.x o posterior del "
 "Nautilus-actions)"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Icon:"
 msgstr "Icona:"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid ""
 "If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
 "will not match photo.JPG)"
@@ -241,31 +251,31 @@ msgstr ""
 "Si se selecciona, els patrons dels noms de fitxer distingiran entre "
 "majúscules i minúscules (p.ex., *.jpg no coincidirà amb foto.JPG)"
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Import all my old configs"
 msgstr "Importa totes les meves configuracions antigues"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Import new configurations"
 msgstr "Importa noves configuracions"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid "Import/Export"
 msgstr "Importa/Exporta"
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "Import/Export Settings"
 msgstr "Importa/Exporta paràmetres"
 
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "Label of the menu item in the Nautilus popup menu."
 msgstr "Etiqueta de l'element del menú emergent del Nautilus."
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "Label:"
 msgstr "Etiqueta:"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
@@ -273,19 +283,19 @@ msgstr ""
 "Gestiona la importació de configuracions d'accions exteriors, i l'exportació "
 "d'accions existents."
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "Match case"
 msgstr "Distingeix entre majúscules i minúscules"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:64
 msgid "Menu Item & Action"
 msgstr "Element del menú i acció"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:65
 msgid "Mimetypes:"
 msgstr "Tipus mime:"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -293,27 +303,27 @@ msgstr ""
 "Eina de configuració de les accions del Nautilus\n"
 "Una aplicació per a configurar l'extensió Nautilus Actions"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid "Nautilus Action Editor"
 msgstr "Editor d'accions del Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Nautilus Actions"
 msgstr "Accions del Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid "Old XML config file (Nautilus-actions v0.x)"
 msgstr "Fitxer de configuració XML antic (Nautilus-actions v0.x)"
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Only files"
 msgstr "Només fitxers"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Only folders"
 msgstr "Només carpetes"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
@@ -321,23 +331,23 @@ msgstr ""
 "Paràmetres que es passaran al programa. Feu clic al botó «Llegenda» per "
 "veure els diferents elements de substitució."
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Parameters:"
 msgstr "Paràmetres:"
 
-#: ../nact/nautilus-actions-config.glade.h:72
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid "Path:"
 msgstr "Camí:"
 
-#: ../nact/nautilus-actions-config.glade.h:73
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid "Project Website"
 msgstr "Pàgina web del projecte"
 
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:77
 msgid "Save in Folder:"
 msgstr "Desa a la carpeta:"
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:78
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
@@ -345,15 +355,15 @@ msgstr ""
 "Seleccioneu les configuracions que vulgueu exportar. Utilitzeu la tecla de "
 "majúscules o de control per a fer seleccions múltiples."
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:79
 msgid "Select the configurations you want to export:"
 msgstr "Seleccioneu les configuracions que vulgueu exportar:"
 
-#: ../nact/nautilus-actions-config.glade.h:77
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid "Select the file you want to import."
 msgstr "Seleccioneu el fitxer que vulgueu importar."
 
-#: ../nact/nautilus-actions-config.glade.h:78
+#: ../nact/nautilus-actions-config.glade.h:81
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
@@ -361,7 +371,7 @@ msgstr ""
 "Seleccioneu la carpeta on vulgueu desar la vostra configuració. La carpeta "
 "ha d'existir."
 
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
@@ -371,7 +381,7 @@ msgstr ""
 "què escollir, intenteu seleccionar només «fitxer», que és l'opció més "
 "comuna. Podeu afegir un esquema nou fent clic al botó «+»."
 
-#: ../nact/nautilus-actions-config.glade.h:80
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
@@ -379,116 +389,147 @@ msgstr ""
 "L'ordre que s'executarà en seleccionar l'acció del Nautilus del menú "
 "emergent."
 
-#: ../nact/nautilus-actions-config.glade.h:81
+#: ../nact/nautilus-actions-config.glade.h:84
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr "Aquest programa està sota la Llicència Pública General GNU (GPL)"
 
-#: ../nact/nautilus-actions-config.glade.h:82
+#: ../nact/nautilus-actions-config.glade.h:85
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgstr ""
 "Rètol indicador de funció de l'element del menú que apareixerà a la barra "
 "d'estat del Nautilus."
 
-#: ../nact/nautilus-actions-config.glade.h:83
+#: ../nact/nautilus-actions-config.glade.h:86
 msgid "Tooltip:"
 msgstr "Rètol indicador de funció:"
 
-#: ../nact/nautilus-actions-config.glade.h:84
+#: ../nact/nautilus-actions-config.glade.h:87
 msgid "Type of configuration:"
 msgstr "Tipus de configuració:"
 
-#: ../nact/nautilus-actions-config.glade.h:85
+#: ../nact/nautilus-actions-config.glade.h:88
 msgid "_Browse"
 msgstr "_Navega"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:87
+#: ../nact/nautilus-actions-config.glade.h:90
 msgid "translator-credits"
 msgstr "Josep Puigdemont Casamajó <josep.puigdemont@gmail.com>"
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact.c:163
+#, c-format
+msgid "Can't duplicate action '%s' !"
+msgstr "No es pot duplicar l'acció «%s»!"
+
 #. create columns on the tree view
-#: ../nact/nact.c:254 ../nact/nact-import-export.c:179
+#: ../nact/nact.c:262 ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "Icona"
 
-#: ../nact/nact.c:259 ../nact/nact-import-export.c:184
+#: ../nact/nact.c:267 ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "Etiqueta"
 
-#: ../nact/nact.c:279 ../nact/nact-editor.c:692
-#: ../nact/nact-import-export.c:364
+#: ../nact/nact.c:287 ../nact/nact-editor.c:705
+#: ../nact/nact-import-export.c:378
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr ""
 "No s'ha pogut carregar la interfície per a l'eina de configuració de les "
 "accions del Nautilus"
 
 #. i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:157
+#: ../nact/nact-utils.c:185
 msgid "/path/to"
 msgstr "/camí/a"
 
-#: ../nact/nact-utils.c:158 ../nact/nact-utils.c:160
+#: ../nact/nact-utils.c:186 ../nact/nact-utils.c:188
 msgid "file1.txt"
 msgstr "fitxer1.txt"
 
-#: ../nact/nact-utils.c:158
+#: ../nact/nact-utils.c:186
 msgid "file2.txt"
 msgstr "fitxer2.txt"
 
-#: ../nact/nact-utils.c:159 ../nact/nact-utils.c:160
+#: ../nact/nact-utils.c:187 ../nact/nact-utils.c:188
 msgid "folder1"
 msgstr "carpeta1"
 
-#: ../nact/nact-utils.c:159
+#: ../nact/nact-utils.c:187
 msgid "folder2"
 msgstr "carpeta2"
 
-#: ../nact/nact-utils.c:162
+#: ../nact/nact-utils.c:190
 msgid "test.example.net"
 msgstr "test.example.net"
 
-#: ../nact/nact-utils.c:163
+#: ../nact/nact-utils.c:191
 msgid "file.txt"
 msgstr "fitxer.txt"
 
-#: ../nact/nact-utils.c:164
+#: ../nact/nact-utils.c:192
 msgid "folder"
 msgstr "carpeta"
 
 #. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:252
+#: ../nact/nact-editor.c:253
 msgid "None"
 msgstr "Cap"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-editor.c:438
+#: ../nact/nact-editor.c:451
 msgid "new-scheme"
 msgstr "esquema-nou"
 
-#: ../nact/nact-editor.c:439
+#: ../nact/nact-editor.c:452
 msgid "New Scheme Description"
 msgstr "Descripció de l'esquema nou"
 
-#: ../nact/nact-editor.c:525
+#: ../nact/nact-editor.c:538
 msgid "Scheme"
 msgstr "Esquema"
 
-#: ../nact/nact-editor.c:537
+#: ../nact/nact-editor.c:550
 msgid "Description"
 msgstr "Descripció"
 
-#: ../nact/nact-editor.c:708
+#: ../nact/nact-editor.c:721
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "Icona de l'element del menú en el menú emergent del Nautilus"
 
-#: ../nact/nact-editor.c:742
+#: ../nact/nact-editor.c:755
 msgid "Add a New Action"
 msgstr "Afegeix una acció nova"
 
-#: ../nact/nact-editor.c:746
+#: ../nact/nact-editor.c:759
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "Edita l'acció «%s»"
+
+#: ../nact/nact-import-export.c:234
+#, c-format
+msgid "Can't parse file '%s' as old XML config file !"
+msgstr ""
+"No s'ha pogut analitzar el fitxer «%s» com a fitxer de configuració XML "
+"antic."
+
+#: ../nact/nact-import-export.c:249
+#, c-format
+msgid "Can't parse file '%s' as GConf schema description file !"
+msgstr ""
+"No s'ha pogut analitzar el fitxer «%s» com a fitxer de descripció d'esquema "
+"GConf."
+
+#: ../nact/nact-import-export.c:269
+#, c-format
+msgid "Can't parse file '%s' !"
+msgstr "No es pot analitzar el fitxer «%s»!"
+
+#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
+#: ../nact/nact-import-export.c:291
+#, c-format
+msgid "Action '%s' importation failed !"
+msgstr "Ha fallat la importació de l'acció «%s»."
 
 #. initialize the default schemes
 #. i18n notes : description of 'file' scheme
@@ -564,7 +605,7 @@ msgstr ""
 "\t- %s\n"
 "Proveu %s --help\n"
 
-#: ../utils/nautilus-actions-convert.c:83
+#: ../utils/nautilus-actions-convert.c:84
 #, c-format
 msgid ""
 "Syntax error:\n"
@@ -575,7 +616,7 @@ msgstr ""
 "\tLes opcions -i i -o s'exclouen mútuament amb l'opció -a\n"
 "Proveu %s --help\n"
 
-#: ../utils/nautilus-actions-convert.c:89
+#: ../utils/nautilus-actions-convert.c:90
 #, c-format
 msgid ""
 "Syntax error:\n"
@@ -586,37 +627,39 @@ msgstr ""
 "\tL'opció -i és obligatòria quan utilitzeu l'opció -o\n"
 "Proveu %s --help\n"
 
-#: ../utils/nautilus-actions-convert.c:101
+#: ../utils/nautilus-actions-convert.c:102
 #, c-format
 msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
+"%s\n"
 msgstr ""
-"Error de sintaxi:\n"
+"Error:\n"
 "\t- No es pot analitzar %s\n"
+"%s\n"
 
-#: ../utils/nautilus-actions-convert.c:115
+#: ../utils/nautilus-actions-convert.c:117
 #, c-format
 msgid "Converting %s..."
 msgstr "S'està convertint %s..."
 
-#: ../utils/nautilus-actions-convert.c:135
-#: ../utils/nautilus-actions-new-config.c:169
+#: ../utils/nautilus-actions-convert.c:137
+#: ../utils/nautilus-actions-new-config.c:170
 #, c-format
 msgid " Failed: Can't create %s: %s\n"
 msgstr " Ha fallat: No es pot crear %s: %s\n"
 
-#: ../utils/nautilus-actions-convert.c:143
-#: ../utils/nautilus-actions-new-config.c:177
+#: ../utils/nautilus-actions-convert.c:146
+#: ../utils/nautilus-actions-new-config.c:179
 #, c-format
 msgid "  OK, saved in %s\n"
 msgstr "  S'ha desat a %s\n"
 
-#: ../utils/nautilus-actions-convert.c:148
-#: ../utils/nautilus-actions-new-config.c:182
+#: ../utils/nautilus-actions-convert.c:151
+#: ../utils/nautilus-actions-new-config.c:184
 #, c-format
-msgid "  Failed\n"
-msgstr "  Ha fallat\n"
+msgid " Failed: %s\n"
+msgstr " Ha fallat: %s\n"
 
 #. GConf description strings :
 #: ../utils/nautilus-actions-new-config.c:50
@@ -720,7 +763,7 @@ msgstr ""
 "El camí del fitxer on desar el nou fitxer de definicions de l'esquema del "
 "GConf [predeterminat: /tmp/config_UUID.schemas]"
 
-#: ../utils/nautilus-actions-new-config.c:150
+#: ../utils/nautilus-actions-new-config.c:151
 #, c-format
 msgid "Creating %s..."
 msgstr "S'està creant %s..."
@@ -968,6 +1011,96 @@ msgstr ""
 "La versió del format de configuració que es farà servir per a gestionar la "
 "compatibilitat amb versions anteriors"
 
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:205
+#, c-format
+msgid ""
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
+msgstr ""
+"L'acció «%s» ja existeix amb el nom «%s», suprimiu primer la que existeix, i "
+"torneu a intentar afegir aquesta"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:222
+#, c-format
+msgid "Can't save action '%s'"
+msgstr "No s'ha pogut desar l'acció «%s»"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:485
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad test section)"
+msgstr ""
+"Aquest fitxer XML no és un fitxer de configuració Nautilus-actions vàlid "
+"(secció de test equivocada)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:491
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad command "
+"section)"
+msgstr ""
+"Aquest fitxer XML no és un fitxer de configuració Nautilus-actions vàlid "
+"(secció d'ordres equivocada)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:496
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad menu item "
+"section)"
+msgstr ""
+"Aquest fitxer XML no és un fitxer de configuració Nautilus-actions vàlid "
+"(secció d'elements de menú equivocada)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:563
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:374
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:533
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (found <%s> "
+"element instead of <%s>)"
+msgstr ""
+"Aquest fitxer XML no és un fitxer de configuració Nautilus-actions vàlid "
+"(s'ha trobat l'element <%s> enlloc de <%s>)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:574
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:543
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
+"instead of <%s>)"
+msgstr ""
+"Aquest fitxer XML no és un fitxer de configuració Nautilus-actions vàlid (el "
+"node arrel és <%s> enlloc de <%s>)"
+
+#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
+msgid ","
+msgstr ","
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:461
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
+"s)"
+msgstr ""
+"Aquest fitxer XML no és un fitxer de configuració Nautilus-actions vàlid "
+"(manquen les claus: %s)"
+
+#. No error occured but we have not found the "version" gconf key
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:469
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key : %s)"
+msgstr ""
+"Aquest fitxer XML no és un fitxer de configuració Nautilus-actions vàlid "
+"(manca la clau: %s)"
+
 #~ msgid "<b>File Pattern</b>"
 #~ msgstr "<b>Patró de fitxer</b>"
 
@@ -998,9 +1131,6 @@ msgstr ""
 #~ "fitxers accedits via FTP 'smb' : fitxers accedits via Samba (recursos "
 #~ "compartits Windows) 'dav' : fitxers accedits via WebDAV Es poden "
 #~ "utilitzar tots els esquemes GnomeVFS que utilitzi el Nautilus."
-
-#~ msgid "Manage Actions"
-#~ msgstr "Gestioneu les accions"
 
 #~ msgid "Manage your actions using NACT, the configuration tool"
 #~ msgstr "Gestioneu les accions utilitzant el NACT, l'eina de configuració"
