@@ -1,3 +1,9 @@
+2006-09-12  Frederic Ruaudel <grumz@grumz.net>
+
+	* nact/nautilus-actions-config.glade: Fix problem with "duplicate"
+	button sensitiveness when running Nact without any action configured.
+	(Bug #355451 - apply patch from Deji Akingunola)
+
 2006-07-18  Frederic Ruaudel <grumz@grumz.net> 1.4
 
 	* plugin/nautilus-actions-utils.c: Change the creation of the %M

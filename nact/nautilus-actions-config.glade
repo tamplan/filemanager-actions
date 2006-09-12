@@ -537,6 +537,7 @@ file(s)/folder(s)</property>
 	      <child>
 		<widget class="GtkButton" id="DuplicateActionButton">
 		  <property name="visible">True</property>
+		  <property name="sensitive">False</property>
 		  <property name="tooltip" translatable="yes">Create a copy of the selected action.</property>
 		  <property name="can_default">True</property>
 		  <property name="can_focus">True</property>
