@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-06 17:09+0200\n"
-"PO-Revision-Date: 2006-09-06 17:17+0200\n"
+"POT-Creation-Date: 2006-09-13 00:50+0200\n"
+"PO-Revision-Date: 2006-09-13 00:51+0200\n"
 "Last-Translator: josep <josep.puigdemont@gmail.com>\n"
 "Language-Team: Catalan\n"
 "MIME-Version: 1.0\n"
@@ -193,7 +193,7 @@ msgid ""
 "the drop-down list."
 msgstr ""
 "Feu clic per escollir una icona personalitzada d'un fitxer, en comptes de "
-"les icones preestablertes d'una llista desplegable."
+"les icones preestablertes de la llista desplegable."
 
 #: ../nact/nautilus-actions-config.glade.h:45
 msgid "Click to remove the selected scheme."
@@ -420,7 +420,7 @@ msgstr "Josep Puigdemont Casamajó <josep.puigdemont@gmail.com>"
 #: ../nact/nact.c:163
 #, c-format
 msgid "Can't duplicate action '%s' !"
-msgstr "No es pot duplicar l'acció «%s»!"
+msgstr "No es pot duplicar l'acció «%s»."
 
 #. create columns on the tree view
 #: ../nact/nact.c:262 ../nact/nact-import-export.c:179
@@ -432,7 +432,7 @@ msgid "Label"
 msgstr "Etiqueta"
 
 #: ../nact/nact.c:287 ../nact/nact-editor.c:705
-#: ../nact/nact-import-export.c:378
+#: ../nact/nact-import-export.c:380
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr ""
 "No s'ha pogut carregar la interfície per a l'eina de configuració de les "
@@ -506,27 +506,27 @@ msgstr "Afegeix una acció nova"
 msgid "Edit Action \"%s\""
 msgstr "Edita l'acció «%s»"
 
-#: ../nact/nact-import-export.c:234
+#: ../nact/nact-import-export.c:236
 #, c-format
 msgid "Can't parse file '%s' as old XML config file !"
 msgstr ""
 "No s'ha pogut analitzar el fitxer «%s» com a fitxer de configuració XML "
 "antic."
 
-#: ../nact/nact-import-export.c:249
+#: ../nact/nact-import-export.c:251
 #, c-format
 msgid "Can't parse file '%s' as GConf schema description file !"
 msgstr ""
 "No s'ha pogut analitzar el fitxer «%s» com a fitxer de descripció d'esquema "
 "GConf."
 
-#: ../nact/nact-import-export.c:269
+#: ../nact/nact-import-export.c:271
 #, c-format
 msgid "Can't parse file '%s' !"
-msgstr "No es pot analitzar el fitxer «%s»!"
+msgstr "No es pot analitzar el fitxer «%s»."
 
 #. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:291
+#: ../nact/nact-import-export.c:293
 #, c-format
 msgid "Action '%s' importation failed !"
 msgstr "Ha fallat la importació de l'acció «%s»."
