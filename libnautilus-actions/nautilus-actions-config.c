@@ -282,6 +282,38 @@ nautilus_actions_config_remove_action (NautilusActionsConfig *config, const gcha
 	return retv;
 }
 
+static gboolean
+clear_actions_hashtable (gchar *uuid, NautilusActionsConfigAction *action, NautilusActionsConfig *config)
+{
+	gboolean retv = FALSE;
+	
+	if (NAUTILUS_ACTIONS_CONFIG_GET_CLASS(config)->remove_action (config, action))
+	{
+		retv = TRUE;
+	}
+
+	return retv;
+}
+
+gboolean
+nautilus_actions_config_clear (NautilusActionsConfig *config)
+{
+	gboolean retv = FALSE;
+
+	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG (config), FALSE);
+	g_return_val_if_fail (config->actions != NULL, FALSE);
+
+	int nb_actions = g_hash_table_size (config->actions);
+	int nb_actions_removed = g_hash_table_foreach_remove (config->actions, (GHRFunc)clear_actions_hashtable, config);
+
+	if (nb_actions_removed == nb_actions)
+	{
+		retv = TRUE;
+	}
+	
+	return retv;
+}
+
 static void nautilus_actions_config_action_removed_default_handler (NautilusActionsConfig* config, 
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)

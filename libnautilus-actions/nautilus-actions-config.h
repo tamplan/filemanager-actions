@@ -27,6 +27,8 @@
 #include <glib/glist.h>
 #include <glib-object.h>
 #include <glib.h>
+#include <stdio.h>
+#include <string.h>
 
 G_BEGIN_DECLS
 
@@ -91,6 +93,7 @@ GType                        nautilus_actions_config_get_type (void);
 
 NautilusActionsConfigAction *nautilus_actions_config_get_action (NautilusActionsConfig *config, const gchar *uuid);
 GSList                      *nautilus_actions_config_get_actions (NautilusActionsConfig *config);
+/* function to free a list returned by nautilus_actions_config_get_actions () */
 void                         nautilus_actions_config_free_actions_list (GSList *list);
 gboolean                     nautilus_actions_config_add_action (NautilusActionsConfig *config,
 								 NautilusActionsConfigAction *action, GError** error);
@@ -98,6 +101,8 @@ gboolean                     nautilus_actions_config_update_action (NautilusActi
 								    NautilusActionsConfigAction *action);
 gboolean                     nautilus_actions_config_remove_action (NautilusActionsConfig *config,
 								    const gchar *label);
+/* function to clear the actions list stored in the nautilus_actions_config object */
+gboolean							  nautilus_actions_config_clear (NautilusActionsConfig *config);
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void);
 NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void);

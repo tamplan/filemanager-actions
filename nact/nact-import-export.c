@@ -211,7 +211,9 @@ gboolean nact_import_actions (void)
 
 	config = nautilus_actions_config_gconf_writer_get ();
 	schema_reader = nautilus_actions_config_schema_reader_get ();
+	nautilus_actions_config_clear (schema_reader);
 	xml_reader = nautilus_actions_config_xml_get ();
+	nautilus_actions_config_clear (xml_reader);
 
 	check_button = nact_get_glade_widget_from ("ImportAllCheckButton", GLADE_IM_EX_PORT_DIALOG_WIDGET);
 
