@@ -1,5 +1,11 @@
 2006-09-12  Frederic Ruaudel <grumz@grumz.net>
 
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h:
+	* nact/nact-import-export.c: Fixed problem with subsequent schema 
+	importation which seems to fails with an "already existing config" 
+	error (Bug #354623)
+
 	* nact/nautilus-actions-config.glade: Fix problem with "duplicate"
 	button sensitiveness when running Nact without any action configured.
 	(Bug #355451 - apply patch from Deji Akingunola)
