@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNOME.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-29 05:10+0200\n"
-"PO-Revision-Date: 2006-08-29 14:36+0200\n"
+"POT-Creation-Date: 2006-10-11 04:50+0200\n"
+"PO-Revision-Date: 2006-10-11 12:56+0200\n"
 "Last-Translator: Tino Meinen <a.t.meinen@chello.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -444,7 +444,7 @@ msgid "Label"
 msgstr "Label"
 
 #: ../nact/nact.c:287 ../nact/nact-editor.c:705
-#: ../nact/nact-import-export.c:378
+#: ../nact/nact-import-export.c:380
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr ""
 "Kon de interface voor het Nautilus-actions configuratieprogramma niet laden"
@@ -518,25 +518,25 @@ msgstr "Een nieuwe actie toevoegen"
 msgid "Edit Action \"%s\""
 msgstr "Actie \"%s\" bewerken"
 
-#: ../nact/nact-import-export.c:234
+#: ../nact/nact-import-export.c:236
 #, c-format
 msgid "Can't parse file '%s' as old XML config file !"
 msgstr "Kan bestand ‘%s’ niet als een oud XML-configuratiebestand verwerken!"
 
-#: ../nact/nact-import-export.c:249
+#: ../nact/nact-import-export.c:251
 #, c-format
 msgid "Can't parse file '%s' as GConf schema description file !"
 msgstr "Kan bestand ‘%s’ niet als een GConf-schemabestand verwerken!"
 
 # ontleden/verwerken
-#: ../nact/nact-import-export.c:269
+#: ../nact/nact-import-export.c:271
 #, c-format
 msgid "Can't parse file '%s' !"
 msgstr "Kan bestand ‘%s’ niet verwerken!"
 
 # import van actie %s/
 #. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:291
+#: ../nact/nact-import-export.c:293
 #, c-format
 msgid "Action '%s' importation failed !"
 msgstr "Actie ‘%s’ import is mislukt!"
@@ -740,7 +740,10 @@ msgstr "UITDRUKKING"
 msgid ""
 "A pattern to match selected files' mimetype against. May include wildcards "
 "(* or ?) (you must set one option for each pattern you need)"
-msgstr "Een patroon dat met het mimetype van de geselecteerde bestanden overeenkomt. Jokers (? of *) mogen worden gebruikt (moet wel voor elk patroon afzonderlijk worden ingesteld)"
+msgstr ""
+"Een patroon dat met het mimetype van de geselecteerde bestanden overeenkomt. "
+"Jokers (? of *) mogen worden gebruikt (moet wel voor elk patroon "
+"afzonderlijk worden ingesteld)"
 
 #: ../utils/nautilus-actions-new-config.c:58
 msgid "Set it if the selection can contain files"
@@ -879,20 +882,29 @@ msgid ""
 "A list of strings with joker '*' or '?' to match the name of the selected "
 "file(s)/folder(s). Each selected items must match at least one of the "
 "filename patterns for the action to appear"
-msgstr "Een lijst met tekenreeksen met een joker als: '*' of '?' waarmee naar de geslecteerde bestand(en)/map(pen) gezocht wordt. Elk geselecteerd item moet met tenminste een van de patronen overeenkomen voordat de actie getoond wordt."
+msgstr ""
+"Een lijst met tekenreeksen met een joker als: '*' of '?' waarmee naar de "
+"geslecteerde bestand(en)/map(pen) gezocht wordt. Elk geselecteerd item moet "
+"met tenminste een van de patronen overeenkomen voordat de actie getoond "
+"wordt."
 
 # wanneer/als (niet indien)
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid ""
 "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr "'true' als de bestandsnaampatronen hoofdlettergevoelig moeten zijn, 'false' als dat niet nodig is"
+msgstr ""
+"'true' als de bestandsnaampatronen hoofdlettergevoelig moeten zijn, 'false' "
+"als dat niet nodig is"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid ""
 "If you need to match a filename in a case-sensitive manner, set this key to "
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
 "'false'"
-msgstr "Indien u hoofdlettergevoelig naar een bestandsnaam wilt zoeken, stelt u dit in op 'true'. Indien u ook wilt dat bijvoorbeeld '*.jpg' overeenkomt met een bestand als 'foto.JPG', stelt u dit in op 'false'"
+msgstr ""
+"Indien u hoofdlettergevoelig naar een bestandsnaam wilt zoeken, stelt u dit "
+"in op 'true'. Indien u ook wilt dat bijvoorbeeld '*.jpg' overeenkomt met een "
+"bestand als 'foto.JPG', stelt u dit in op 'false'"
 
 # die met de geselecteerde bestand(en)/map(pen) overeenkomen
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
@@ -904,7 +916,11 @@ msgid ""
 "A list of strings with joker '*' or '?' to match the mimetypes of the "
 "selected file(s). Each selected items must match at least one of the "
 "mimetype patterns for the action to appear"
-msgstr "Een lijst met tekenreeksen met een joker als: ‘*’ of ‘?’ waarmee naar het mimetype van de geslecteerde bestand(en) gezocht wordt. Elk geselecteerd item moet met tenminste een van de patronen overeenkomen voordat de actie getoond wordt."
+msgstr ""
+"Een lijst met tekenreeksen met een joker als: ‘*’ of ‘?’ waarmee naar het "
+"mimetype van de geslecteerde bestand(en) gezocht wordt. Elk geselecteerd "
+"item moet met tenminste een van de patronen overeenkomen voordat de actie "
+"getoond wordt."
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
@@ -1025,7 +1041,9 @@ msgstr ""
 msgid ""
 "The action '%s' already exists with the name '%s', please first remove the "
 "existing one before trying to add this one"
-msgstr "De actie ‘%s’ bestaat al onder de naam ‘%s’. Verwijder eerst de bestaande voordat u deze probeert toe te voegen."
+msgstr ""
+"De actie ‘%s’ bestaat al onder de naam ‘%s’. Verwijder eerst de bestaande "
+"voordat u deze probeert toe te voegen."
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:222
@@ -1037,21 +1055,27 @@ msgstr "Kan actie ‘%s’ niet opslaan"
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:485
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (Bad test section)"
-msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (foutieve test-sectie)"
+msgstr ""
+"Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (foutieve "
+"test-sectie)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:491
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (Bad command "
 "section)"
-msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (foutieve opdracht-sectie)"
+msgstr ""
+"Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (foutieve "
+"opdracht-sectie)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:496
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (Bad menu item "
 "section)"
-msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (foutieve menu-item sectie)"
+msgstr ""
+"Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (foutieve "
+"menu-item sectie)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:563
@@ -1061,7 +1085,9 @@ msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (fout
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (found <%s> "
 "element instead of <%s>)"
-msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (<%s>-element aangetroffen in plaats van <%s>)"
+msgstr ""
+"Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (<%s>-"
+"element aangetroffen in plaats van <%s>)"
 
 # basis-knoop/root-node
 #. i18n notes: will be displayed in an error dialog
@@ -1071,12 +1097,14 @@ msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (<%s>
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
 "instead of <%s>)"
-msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (root-node is <%s> in plaats van <%s>)"
+msgstr ""
+"Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (root-"
+"node is <%s> in plaats van <%s>)"
 
 #. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
 msgid ","
-msgstr ""
+msgstr ", "
 
 # sleutels/trefwoorden
 #. i18n notes: will be displayed in an error dialog
@@ -1085,7 +1113,9 @@ msgstr ""
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
 "s)"
-msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (ontbrekende sleutel(s): %s)"
+msgstr ""
+"Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand "
+"(ontbrekende sleutel(s): %s)"
 
 #. No error occured but we have not found the "version" gconf key
 #. i18n notes: will be displayed in an error dialog
@@ -1093,7 +1123,9 @@ msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (ontb
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key : %s)"
-msgstr "Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand (ontbrekende sleutel: %s)"
+msgstr ""
+"Dit XML-bestand is geen geldig Nautilus-acties configuratiebestand "
+"(ontbrekende sleutel: %s)"
 
 #~ msgid "<b>File Pattern</b>"
 #~ msgstr "<b>Bestandspatroon</b>"
