@@ -1,3 +1,19 @@
+2006-11-13  Frederic Ruaudel <grumz@grumz.net>
+
+	* icons/16x16/nautilus-actions.svg:
+	* icons/22x22/nautilus-actions.svg:
+	* icons/scalable/nautilus-actions.svg: Icons relicencing
+	from CC-by-SA to GPL for compatibility with n-a license.
+	(thanks to Ulisse Perusin)
+
+	* icons/Makefile.am:
+	* icons/32x32/Makefile.am:
+	* icons/32x32/Makefile.in:
+	* icons/32x32/nautilus-actions.png:
+	* icons/32x32/nautilus-actions.svg: Adding 32x32 format
+	according to the new Tango and GIT standards (thanks to Ulisse
+	Perusin)
+
 2006-09-12  Frederic Ruaudel <grumz@grumz.net>
 
 	* libnautilus-actions/nautilus-actions-config.c:
