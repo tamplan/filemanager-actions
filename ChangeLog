@@ -1,3 +1,9 @@
+2006-11-24  Frederic Ruaudel <grumz@grumz.net>
+
+	* utils/Makefile.am: Fix Bug #378890 by applying patch submited
+	by Fryderyk Dziarmagowski <freetz@gmx.net>. Now it's possible
+	to compile n-a with --as-needed passed to LDFLAGS.
+
 2006-11-13  Frederic Ruaudel <grumz@grumz.net>
 
 	* icons/16x16/nautilus-actions.svg:
