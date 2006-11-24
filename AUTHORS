@@ -16,6 +16,10 @@ Ed Catmur <ed@catmur.co.uk> :
 Kasys : 
 - Makefile patch to build on 64bits arch
 
+Fryderyk Dziarmagowski <freetz@gmx.net> :
+- Fix compilation problem when using --as-needed passed
+to LDFLAGS (Bug #378890).
+
 == Artwork ==
 
 Ulisse Perusin <uli.peru@gmail.com> :
