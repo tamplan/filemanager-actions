@@ -7,12 +7,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-torrent\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-14 07:18+0100\n"
+"POT-Creation-Date: 2007-01-23 21:18+0000\n"
 "PO-Revision-Date: 2006-09-14 19:31-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: en_GB <en@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -47,8 +47,12 @@ msgstr "<b>%%</b>: a percent sign"
 
 #: ../nact/nautilus-actions-config.glade.h:8
 #, no-c-format
-msgid "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their full paths"
-msgstr "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their full paths"
+msgid ""
+"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
+"full paths"
+msgstr ""
+"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
+"full paths"
 
 #: ../nact/nautilus-actions-config.glade.h:10
 #, no-c-format
@@ -62,8 +66,10 @@ msgstr "<b>%d</b>: base folder of the selected file(s)"
 
 #: ../nact/nautilus-actions-config.glade.h:14
 #, no-c-format
-msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
-msgstr "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgid ""
+"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgstr ""
+"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
 
 #: ../nact/nautilus-actions-config.glade.h:16
 #, no-c-format
@@ -129,12 +135,24 @@ msgstr ""
 "place secondary text here"
 
 #: ../nact/nautilus-actions-config.glade.h:35
-msgid "A string with wildcards (? or *) that will be used to match the filenames. You can set several filename patterns by separating them with a semi-colon (;)."
-msgstr "A string with wildcards (? or *) that will be used to match the filenames. You can set several filename patterns by separating them with a semi-colon (;)."
+msgid ""
+"A string with wildcards (? or *) that will be used to match the filenames. "
+"You can set several filename patterns by separating them with a semi-colon "
+"(;)."
+msgstr ""
+"A string with wildcards (? or *) that will be used to match the filenames. "
+"You can set several filename patterns by separating them with a semi-colon "
+"(;)."
 
 #: ../nact/nautilus-actions-config.glade.h:36
-msgid "A string with wildcards (? or *) that will be used to match the mimetypes of files. You can set several mimetype patterns by separating them with a semi-colon (;)."
-msgstr "A string with wildcards (? or *) that will be used to match the mimetypes of files. You can set several mimetype patterns by separating them with a semi-colon (;)."
+msgid ""
+"A string with wildcards (? or *) that will be used to match the mimetypes of "
+"files. You can set several mimetype patterns by separating them with a semi-"
+"colon (;)."
+msgstr ""
+"A string with wildcards (? or *) that will be used to match the mimetypes of "
+"files. You can set several mimetype patterns by separating them with a semi-"
+"colon (;)."
 
 #: ../nact/nautilus-actions-config.glade.h:37
 msgid "Advanced Conditions"
@@ -153,8 +171,12 @@ msgid "Both"
 msgstr "Both"
 
 #: ../nact/nautilus-actions-config.glade.h:41
-msgid "Check this box if you want to get back all your configurations from the version of Nautilus-actions 0.7.1 or lesser."
-msgstr "Check this box if you want to get back all your configurations from the version of Nautilus-actions 0.7.1 or lesser."
+msgid ""
+"Check this box if you want to get back all your configurations from the "
+"version of Nautilus-actions 0.7.1 or lesser."
+msgstr ""
+"Check this box if you want to get back all your configurations from the "
+"version of Nautilus-actions 0.7.1 or lesser."
 
 #: ../nact/nautilus-actions-config.glade.h:42
 msgid "Click to add a new scheme."
@@ -165,16 +187,22 @@ msgid "Click to choose a command from the file chooser dialog."
 msgstr "Click to choose a command from the file chooser dialogue."
 
 #: ../nact/nautilus-actions-config.glade.h:44
-msgid "Click to choose a custom icon from a file instead of a predefined icon from the drop-down list."
-msgstr "Click to choose a custom icon from a file instead of a predefined icon from the drop-down list."
+msgid ""
+"Click to choose a custom icon from a file instead of a predefined icon from "
+"the drop-down list."
+msgstr ""
+"Click to choose a custom icon from a file instead of a predefined icon from "
+"the drop-down list."
 
 #: ../nact/nautilus-actions-config.glade.h:45
 msgid "Click to remove the selected scheme."
 msgstr "Click to remove the selected scheme."
 
 #: ../nact/nautilus-actions-config.glade.h:46
-msgid "Click to see the list of special tokens you can use in the parameter field."
-msgstr "Click to see the list of special tokens you can use in the parameter field."
+msgid ""
+"Click to see the list of special tokens you can use in the parameter field."
+msgstr ""
+"Click to see the list of special tokens you can use in the parameter field."
 
 #: ../nact/nautilus-actions-config.glade.h:47
 msgid "Conditions"
@@ -185,8 +213,10 @@ msgid "Create a copy of the selected action."
 msgstr "Create a copy of the selected action."
 
 #: ../nact/nautilus-actions-config.glade.h:49
-msgid "Delete the action without any confirmation nor the possibility to restore it."
-msgstr "Delete the action without any confirmation nor the possibility to restore it."
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
+msgstr ""
+"Delete the action without any confirmation nor the possibility to restore it."
 
 #: ../nact/nautilus-actions-config.glade.h:50
 msgid "Export existing configs"
@@ -209,8 +239,12 @@ msgid "Icon:"
 msgstr "Icon:"
 
 #: ../nact/nautilus-actions-config.glade.h:55
-msgid "If selected, the filename patterns will be matched case sensitive (eg, *.jpg will not match photo.JPG)"
-msgstr "If selected, the filename patterns will be matched case sensitive (eg, *.jpg will not match photo.JPG)"
+msgid ""
+"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
+"will not match photo.JPG)"
+msgstr ""
+"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
+"will not match photo.JPG)"
 
 #: ../nact/nautilus-actions-config.glade.h:56
 msgid "Import all my old configs"
@@ -237,8 +271,12 @@ msgid "Label:"
 msgstr "Label:"
 
 #: ../nact/nautilus-actions-config.glade.h:62
-msgid "Manage importation of external action configurations and exportation of existing actions."
-msgstr "Manage importation of external action configurations and exportation of existing actions."
+msgid ""
+"Manage importation of external action configurations and exportation of "
+"existing actions."
+msgstr ""
+"Manage importation of external action configurations and exportation of "
+"existing actions."
 
 #: ../nact/nautilus-actions-config.glade.h:63
 msgid "Match case"
@@ -281,8 +319,12 @@ msgid "Only folders"
 msgstr "Only folders"
 
 #: ../nact/nautilus-actions-config.glade.h:73
-msgid "Parameters that will be sent to the program. Click on the 'Legend' button to see the different replacement tokens."
-msgstr "Parameters that will be sent to the program. Click on the 'Legend' button to see the different replacement tokens."
+msgid ""
+"Parameters that will be sent to the program. Click on the 'Legend' button to "
+"see the different replacement tokens."
+msgstr ""
+"Parameters that will be sent to the program. Click on the 'Legend' button to "
+"see the different replacement tokens."
 
 #: ../nact/nautilus-actions-config.glade.h:74
 msgid "Parameters:"
@@ -301,8 +343,12 @@ msgid "Save in Folder:"
 msgstr "Save in Folder:"
 
 #: ../nact/nautilus-actions-config.glade.h:78
-msgid "Select the configurations you want to export. Use Shift or Ctrl key to select more than one."
-msgstr "Select the configurations you want to export. Use Shift or Ctrl key to select more than one."
+msgid ""
+"Select the configurations you want to export. Use Shift or Ctrl key to "
+"select more than one."
+msgstr ""
+"Select the configurations you want to export. Use Shift or Ctrl key to "
+"select more than one."
 
 #: ../nact/nautilus-actions-config.glade.h:79
 msgid "Select the configurations you want to export:"
@@ -313,16 +359,30 @@ msgid "Select the file you want to import."
 msgstr "Select the file you want to import."
 
 #: ../nact/nautilus-actions-config.glade.h:81
-msgid "Select the folder you want your config to be saved in. This folder must exist."
-msgstr "Select the folder you want your config to be saved in. This folder must exist."
+msgid ""
+"Select the folder you want your config to be saved in. This folder must "
+"exist."
+msgstr ""
+"Select the folder you want your config to be saved in. This folder must "
+"exist."
 
 #: ../nact/nautilus-actions-config.glade.h:82
-msgid "Select the kind of files where you want your action to appear. If you don't know what to choose, try selecting just 'file' which is the most common choice. You can add a new scheme by clicking on the '+' button."
-msgstr "Select the kind of files where you want your action to appear. If you don't know what to choose, try selecting just 'file' which is the most common choice. You can add a new scheme by clicking on the '+' button."
+msgid ""
+"Select the kind of files where you want your action to appear. If you don't "
+"know what to choose, try selecting just 'file' which is the most common "
+"choice. You can add a new scheme by clicking on the '+' button."
+msgstr ""
+"Select the kind of files where you want your action to appear. If you don't "
+"know what to choose, try selecting just 'file' which is the most common "
+"choice. You can add a new scheme by clicking on the '+' button."
 
 #: ../nact/nautilus-actions-config.glade.h:83
-msgid "The command that will be launched by selecting the action in Nautilus popup menu."
-msgstr "The command that will be launched by selecting the action in Nautilus popup menu."
+msgid ""
+"The command that will be launched by selecting the action in Nautilus popup "
+"menu."
+msgstr ""
+"The command that will be launched by selecting the action in Nautilus popup "
+"menu."
 
 #: ../nact/nautilus-actions-config.glade.h:84
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
@@ -356,18 +416,15 @@ msgid "Can't duplicate action '%s' !"
 msgstr "Can't duplicate action '%s' !"
 
 #. create columns on the tree view
-#: ../nact/nact.c:262
-#: ../nact/nact-import-export.c:179
+#: ../nact/nact.c:262 ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "Icon"
 
-#: ../nact/nact.c:267
-#: ../nact/nact-import-export.c:184
+#: ../nact/nact.c:267 ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "Label"
 
-#: ../nact/nact.c:287
-#: ../nact/nact-editor.c:705
+#: ../nact/nact.c:287 ../nact/nact-editor.c:705
 #: ../nact/nact-import-export.c:380
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Could not load interface for Nautilus Actions Config Tool"
@@ -377,8 +434,7 @@ msgstr "Could not load interface for Nautilus Actions Config Tool"
 msgid "/path/to"
 msgstr "/path/to"
 
-#: ../nact/nact-utils.c:186
-#: ../nact/nact-utils.c:188
+#: ../nact/nact-utils.c:186 ../nact/nact-utils.c:188
 msgid "file1.txt"
 msgstr "file1.txt"
 
@@ -386,8 +442,7 @@ msgstr "file1.txt"
 msgid "file2.txt"
 msgstr "file2.txt"
 
-#: ../nact/nact-utils.c:187
-#: ../nact/nact-utils.c:188
+#: ../nact/nact-utils.c:187 ../nact/nact-utils.c:188
 msgid "folder1"
 msgstr "folder1"
 
@@ -512,8 +567,12 @@ msgid "Convert all old XML config files from previous installations [default]"
 msgstr "Convert all old XML config files from previous installations [default]"
 
 #: ../utils/nautilus-actions-convert.c:44
-msgid "The folder where the new GConf schema files will be saved if option -a is set [default=/tmp]"
-msgstr "The folder where the new GConf schema files will be saved if option -a is set [default=/tmp]"
+msgid ""
+"The folder where the new GConf schema files will be saved if option -a is "
+"set [default=/tmp]"
+msgstr ""
+"The folder where the new GConf schema files will be saved if option -a is "
+"set [default=/tmp]"
 
 #: ../utils/nautilus-actions-convert.c:44
 msgid "DIR"
@@ -636,8 +695,12 @@ msgid "PARAMS"
 msgstr "PARAMS"
 
 #: ../utils/nautilus-actions-new-config.c:55
-msgid "A pattern to match selected files against. May include wildcards (* or ?) (you must set one option for each pattern you need)"
-msgstr "A pattern to match selected files against. May include wildcards (* or ?) (you must set one option for each pattern you need)"
+msgid ""
+"A pattern to match selected files against. May include wildcards (* or ?) "
+"(you must set one option for each pattern you need)"
+msgstr ""
+"A pattern to match selected files against. May include wildcards (* or ?) "
+"(you must set one option for each pattern you need)"
 
 #: ../utils/nautilus-actions-new-config.c:55
 #: ../utils/nautilus-actions-new-config.c:57
@@ -645,8 +708,12 @@ msgid "EXPR"
 msgstr "EXPR"
 
 #: ../utils/nautilus-actions-new-config.c:57
-msgid "A pattern to match selected files' mimetype against. May include wildcards (* or ?) (you must set one option for each pattern you need)"
-msgstr "A pattern to match selected files' mimetype against. May include wildcards (* or ?) (you must set one option for each pattern you need)"
+msgid ""
+"A pattern to match selected files' mimetype against. May include wildcards "
+"(* or ?) (you must set one option for each pattern you need)"
+msgstr ""
+"A pattern to match selected files' mimetype against. May include wildcards "
+"(* or ?) (you must set one option for each pattern you need)"
 
 #: ../utils/nautilus-actions-new-config.c:58
 msgid "Set it if the selection can contain files"
@@ -661,16 +728,24 @@ msgid "Set it if the selection can have several items"
 msgstr "Set it if the selection can have several items"
 
 #: ../utils/nautilus-actions-new-config.c:61
-msgid "A GnomeVFS scheme where the selected files should be located (you must set it for each scheme you need)"
-msgstr "A GnomeVFS scheme where the selected files should be located (you must set it for each scheme you need)"
+msgid ""
+"A GnomeVFS scheme where the selected files should be located (you must set "
+"it for each scheme you need)"
+msgstr ""
+"A GnomeVFS scheme where the selected files should be located (you must set "
+"it for each scheme you need)"
 
 #: ../utils/nautilus-actions-new-config.c:61
 msgid "SCHEME"
 msgstr "SCHEME"
 
 #: ../utils/nautilus-actions-new-config.c:62
-msgid "The path of the file where to save the new GConf schema definition file [default: /tmp/config_UUID.schemas]"
-msgstr "The path of the file where to save the new GConf schema definition file [default: /tmp/config_UUID.schemas]"
+msgid ""
+"The path of the file where to save the new GConf schema definition file "
+"[default: /tmp/config_UUID.schemas]"
+msgstr ""
+"The path of the file where to save the new GConf schema definition file "
+"[default: /tmp/config_UUID.schemas]"
 
 #: ../utils/nautilus-actions-new-config.c:151
 #, c-format
@@ -688,50 +763,72 @@ msgid "Can't open file %s for writing\n"
 msgstr "Can't open file %s for writing\n"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
-msgid "The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings"
-msgstr "The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings"
+msgid ""
+"The label of the menu item that will appear in the Nautilus popup menu when "
+"the selection matches the appearance condition settings"
+msgstr ""
+"The label of the menu item that will appear in the Nautilus popup menu when "
+"the selection matches the appearance condition settings"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
-msgid "The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse"
-msgstr "The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse"
+msgid ""
+"The tooltip of the menu item that will appear in the Nautilus statusbar when "
+"the user points to the Nautilus popup menu item with his/her mouse"
+msgstr ""
+"The tooltip of the menu item that will appear in the Nautilus statusbar when "
+"the user points to the Nautilus popup menu item with his/her mouse"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
 msgid "The icon of the menu item"
 msgstr "The icon of the menu item"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
-msgid "The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings"
-msgstr "The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings"
+msgid ""
+"The icon of the menu item that will appear next to the label in the Nautilus "
+"popup menu when the selection matches the appearance conditions settings"
+msgstr ""
+"The icon of the menu item that will appear next to the label in the Nautilus "
+"popup menu when the selection matches the appearance conditions settings"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
-msgid "The path of the command to start when the user select the menu item in the Nautilus popup menu"
-msgstr "The path of the command to start when the user select the menu item in the Nautilus popup menu"
+msgid ""
+"The path of the command to start when the user select the menu item in the "
+"Nautilus popup menu"
+msgstr ""
+"The path of the command to start when the user select the menu item in the "
+"Nautilus popup menu"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
 msgid ""
-"The parameters of the command to start when the user selects the menu item in the Nautilus popup menu.\n"
+"The parameters of the command to start when the user selects the menu item "
+"in the Nautilus popup menu.\n"
 "\n"
-"The parameters can contain some special tokens which are replaced by Nautilus information before starting the command:\n"
+"The parameters can contain some special tokens which are replaced by "
+"Nautilus information before starting the command:\n"
 "\n"
 "%d: base folder of the selected file(s)\n"
 "%f: the name of the selected file or the first one if many are selected\n"
 "%m: space-separated list of the basenames of the selected file(s)/folder(s)\n"
-"%M: space-separated list of the selected file(s)/folder(s), with their full paths\n"
+"%M: space-separated list of the selected file(s)/folder(s), with their full "
+"paths\n"
 "%u: GnomeVFS URI\n"
 "%s: scheme of the GnomeVFS URI\n"
 "%h: hostname of the GnomeVFS URI\n"
 "%U: username of the :%s/GnomeVFS URI\n"
 "%%: a percent sign"
 msgstr ""
-"The parameters of the command to start when the user selects the menu item in the Nautilus popup menu.\n"
+"The parameters of the command to start when the user selects the menu item "
+"in the Nautilus popup menu.\n"
 "\n"
-"The parameters can contain some special tokens which are replaced by Nautilus information before starting the command:\n"
+"The parameters can contain some special tokens which are replaced by "
+"Nautilus information before starting the command:\n"
 "\n"
 "%d: base folder of the selected file(s)\n"
 "%f: the name of the selected file or the first one if many are selected\n"
 "%m: space-separated list of the basenames of the selected file(s)/folder(s)\n"
-"%M: space-separated list of the selected file(s)/folder(s), with their full paths\n"
+"%M: space-separated list of the selected file(s)/folder(s), with their full "
+"paths\n"
 "%u: GnomeVFS URI\n"
 "%s: scheme of the GnomeVFS URI\n"
 "%h: hostname of the GnomeVFS URI\n"
@@ -743,24 +840,44 @@ msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr "The list of pattern to match the selected file(s)/folder(s)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
-msgid "A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear"
-msgstr "A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear"
+msgid ""
+"A list of strings with joker '*' or '?' to match the name of the selected "
+"file(s)/folder(s). Each selected items must match at least one of the "
+"filename patterns for the action to appear"
+msgstr ""
+"A list of strings with joker '*' or '?' to match the name of the selected "
+"file(s)/folder(s). Each selected items must match at least one of the "
+"filename patterns for the action to appear"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
-msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgid ""
+"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgstr ""
+"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
-msgid "If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'"
-msgstr "If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'"
+msgid ""
+"If you need to match a filename in a case-sensitive manner, set this key to "
+"'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
+"'false'"
+msgstr ""
+"If you need to match a filename in a case-sensitive manner, set this key to "
+"'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
+"'false'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr "The list of patterns to match the mimetypes of the selected file(s)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
-msgid "A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear"
-msgstr "A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear"
+msgid ""
+"A list of strings with joker '*' or '?' to match the mimetypes of the "
+"selected file(s). Each selected items must match at least one of the "
+"mimetype patterns for the action to appear"
+msgstr ""
+"A list of strings with joker '*' or '?' to match the mimetypes of the "
+"selected file(s). Each selected items must match at least one of the "
+"mimetype patterns for the action to appear"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
@@ -770,14 +887,16 @@ msgid ""
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
 "isfile=TRUE and isdir=TRUE': the selection may hold both files and folders\n"
-"isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)"
+"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
+"configuration will never appear)"
 msgstr ""
 "The valid combinations are:\n"
 "\n"
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
 "isfile=TRUE and isdir=TRUE': the selection may hold both files and folders\n"
-"isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)"
+"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
+"configuration will never appear)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid "'true' if the selection can have files, 'false' otherwise"
@@ -800,17 +919,24 @@ msgid "'true' if the selection can have several items, 'false' otherwise"
 msgstr "'true' if the selection can have several items, 'false' otherwise"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
-msgid "If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'"
-msgstr "If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'"
+msgid ""
+"If you need one or more files or folders to be selected, set this key to "
+"'true'. If you want just one file or folder, set 'false'"
+msgstr ""
+"If you need one or more files or folders to be selected, set this key to "
+"'true'. If you want just one file or folder, set 'false'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
 msgid "The list of GnomeVFS schemes where the selected files should be located"
-msgstr "The list of GnomeVFS schemes where the selected files should be located"
+msgstr ""
+"The list of GnomeVFS schemes where the selected files should be located"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
 msgid ""
-"Defines the list of valid GnomeVFS schemes to be matched against the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one used in the GnomeVFS URI.\n"
+"Defines the list of valid GnomeVFS schemes to be matched against the "
+"selected items. The GnomeVFS scheme is the protocol used to access the "
+"files. The keyword to use is the one used in the GnomeVFS URI.\n"
 "\n"
 "Examples of GnomeVFS URI include: \n"
 "file:///tmp/foo.txt\n"
@@ -826,7 +952,9 @@ msgid ""
 "\n"
 "All GnomeVFS schemes used by Nautilus can be used here."
 msgstr ""
-"Defines the list of valid GnomeVFS schemes to be matched against the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one used in the GnomeVFS URI.\n"
+"Defines the list of valid GnomeVFS schemes to be matched against the "
+"selected items. The GnomeVFS scheme is the protocol used to access the "
+"files. The keyword to use is the one used in the GnomeVFS URI.\n"
 "\n"
 "Examples of GnomeVFS URI include: \n"
 "file:///tmp/foo.txt\n"
@@ -847,14 +975,22 @@ msgid "The version of the configuration format"
 msgstr "The version of the configuration format"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
-msgid "The version of the configuration format that will be used to manage backward compatibility"
-msgstr "The version of the configuration format that will be used to manage backward compatibility"
+msgid ""
+"The version of the configuration format that will be used to manage backward "
+"compatibility"
+msgstr ""
+"The version of the configuration format that will be used to manage backward "
+"compatibility"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:205
 #, c-format
-msgid "The action '%s' already exists with the name '%s', please first remove the existing one before trying to add this one"
-msgstr "The action '%s' already exists with the name '%s', please first remove the existing one before trying to add this one"
+msgid ""
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
+msgstr ""
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:222
@@ -864,33 +1000,51 @@ msgstr "Can't save action '%s'"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:485
-msgid "This XML file is not a valid Nautilus-actions config file (Bad test section)"
-msgstr "This XML file is not a valid Nautilus-actions config file (Bad test section)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad test section)"
+msgstr ""
+"This XML file is not a valid Nautilus-actions config file (Bad test section)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:491
-msgid "This XML file is not a valid Nautilus-actions config file (Bad command section)"
-msgstr "This XML file is not a valid Nautilus-actions config file (Bad command section)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad command "
+"section)"
+msgstr ""
+"This XML file is not a valid Nautilus-actions config file (Bad command "
+"section)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:496
-msgid "This XML file is not a valid Nautilus-actions config file (Bad menu item section)"
-msgstr "This XML file is not a valid Nautilus-actions config file (Bad menu item section)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad menu item "
+"section)"
+msgstr ""
+"This XML file is not a valid Nautilus-actions config file (Bad menu item "
+"section)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:563
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:374
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:533
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (found <%s> element instead of <%s>)"
-msgstr "This XML file is not a valid Nautilus-actions config file (found <%s> element instead of <%s>)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (found <%s> "
+"element instead of <%s>)"
+msgstr ""
+"This XML file is not a valid Nautilus-actions config file (found <%s> "
+"element instead of <%s>)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:574
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:543
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (root node is <%s> instead of <%s>)"
-msgstr "This XML file is not a valid Nautilus-actions config file (root node is <%s> instead of <%s>)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
+"instead of <%s>)"
+msgstr ""
+"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
+"instead of <%s>)"
 
 #. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
@@ -900,13 +1054,18 @@ msgstr ","
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:461
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key(s) : %s)"
-msgstr "This XML file is not a valid Nautilus-actions config file (missing key(s) : %s)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
+"s)"
+msgstr ""
+"This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
+"s)"
 
 #. No error occured but we have not found the "version" gconf key
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:469
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key : %s)"
-msgstr "This XML file is not a valid Nautilus-actions config file (missing key : %s)"
-
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key : %s)"
+msgstr ""
+"This XML file is not a valid Nautilus-actions config file (missing key : %s)"
