@@ -5,27 +5,28 @@
 # Amanpreet Singh Alam <amanpreetalam@yahoo.com>, 2005.
 # Amanpreet Singh Alam <aalam@redhat.com>, 2006.
 # A S Alam <apbrar@gmail.com>, 2006.
+# A S Alam <aalam@users.sf.net>, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-20 04:34+0200\n"
-"PO-Revision-Date: 2006-06-20 08:55+0530\n"
-"Last-Translator: A S Alam <apbrar@gmail.com>\n"
+"POT-Creation-Date: 2007-01-02 04:03+0000\n"
+"PO-Revision-Date: 2007-02-08 06:27+0530\n"
+"Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi <fedora-trans-pa@redhat.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.2\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
-msgstr "ਨਾਟੀਲਸ ਪਾਪਅੱਪ ਮੇਨੂ ਵਿੱਚ ਇਕਾਈਆਂ ਜੋੜੋ"
+msgstr "ਨਟੀਲਸ ਪਾਪਅੱਪ ਮੇਨੂ ਵਿੱਚ ਇਕਾਈਆਂ ਜੋੜੋ"
 
 #: ../nact/nact.desktop.in.h:2
 msgid "Nautilus Actions Configuration"
-msgstr "ਨਟਾਲਿਸ ਕਾਰਵਾਈ ਸੰਰਚਨਾ"
+msgstr "ਨਟੀਲਸ ਕਾਰਵਾਈ ਸੰਰਚਨਾ"
 
 #: ../nact/nautilus-actions-config.glade.h:1
 msgid " "
@@ -110,7 +111,7 @@ msgstr "<b>ਜੇਕਰ ਚੋਣ ਹੋਵੇ ਤਾਂ ਵੇਖਾਓ</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:28
 msgid "<b>Nautilus Menu Item</b>"
-msgstr "<b>ਨਟਾਲਿਸ ਮੇਨੂ ਇਕਾਈ</b>"
+msgstr "<b>ਨਟੀਲਸ ਮੇਨੂ ਇਕਾਈ</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:30
 #, no-c-format
@@ -123,35 +124,45 @@ msgstr "<span size=\"larger\"><b>ਮੁੱਲ ਸੰਕੇਤ</b></span>"
 
 #: ../nact/nautilus-actions-config.glade.h:32
 msgid ""
+"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
+"\n"
+"place secondary text here"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">ਪ੍ਰਾਇਮਰੀ ਪਾਠ ਇੱਥੇ ਦਿਓ</span>\n"
+"\n"
+"ਸੈਕੰਡਰੀ ਪਾਠ ਇੱਥ ਲਿਖੋ"
+
+#: ../nact/nautilus-actions-config.glade.h:35
+msgid ""
 "A string with wildcards (? or *) that will be used to match the filenames. "
 "You can set several filename patterns by separating them with a semi-colon "
 "(;)."
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:33
+#: ../nact/nautilus-actions-config.glade.h:36
 msgid ""
 "A string with wildcards (? or *) that will be used to match the mimetypes of "
 "files. You can set several mimetype patterns by separating them with a semi-"
 "colon (;)."
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:34
+#: ../nact/nautilus-actions-config.glade.h:37
 msgid "Advanced Conditions"
 msgstr "ਤਕਨੀਕੀ ਸ਼ਰਤਾਂ"
 
-#: ../nact/nautilus-actions-config.glade.h:35
+#: ../nact/nautilus-actions-config.glade.h:38
 msgid "Appears if selection has multiple files or folders"
 msgstr "ਵੇਖਾਓ, ਜੇਕਰ ਕਈ ਫਾਇਲਾਂ ਜਾਂ ਫੋਲਡਰ ਦੀ ਚੋਣ ਹੋਵੇ"
 
-#: ../nact/nautilus-actions-config.glade.h:36
+#: ../nact/nautilus-actions-config.glade.h:39
 msgid "Automatic"
-msgstr "ਸਵੈ-ਚਾਲਤ"
+msgstr "ਆਟੋਮੈਟਿਕ"
 
-#: ../nact/nautilus-actions-config.glade.h:37
+#: ../nact/nautilus-actions-config.glade.h:40
 msgid "Both"
 msgstr "ਦੋਵੇਂ"
 
-#: ../nact/nautilus-actions-config.glade.h:38
+#: ../nact/nautilus-actions-config.glade.h:41
 msgid ""
 "Check this box if you want to get back all your configurations from the "
 "version of Nautilus-actions 0.7.1 or lesser."
@@ -159,109 +170,109 @@ msgstr ""
 "ਇਹ ਬਕਸੇ ਦੀ ਚੋਣ ਕਰੋ, ਜੇਕਰ ਤੁਸੀਂ ਨਟੀਲਸ 0.7.1 ਜਾਂ ਪੁਰਾਣੇ ਵਰਜਨ ਤੋਂ ਆਪਣੀ ਸਾਰੀ ਸੰਰਚਨਾ ਵਾਪਸ "
 "ਪ੍ਰਾਪਤ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ।"
 
-#: ../nact/nautilus-actions-config.glade.h:39
+#: ../nact/nautilus-actions-config.glade.h:42
 msgid "Click to add a new scheme."
 msgstr "ਇੱਕ ਨਵੀਂ ਸਕੀਮ ਜੋੜਨ ਲਈ ਦਬਾਓ।"
 
-#: ../nact/nautilus-actions-config.glade.h:40
+#: ../nact/nautilus-actions-config.glade.h:43
 msgid "Click to choose a command from the file chooser dialog."
 msgstr "ਇੱਕ ਫਾਇਲ ਚੋਣਕਾਰ ਵਾਰਤਾਲਾਪ ਤੋਂ ਇੱਕ ਕਮਾਂਡ ਚੁਣਨ ਲਈ ਦਬਾਓ।"
 
-#: ../nact/nautilus-actions-config.glade.h:41
+#: ../nact/nautilus-actions-config.glade.h:44
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list."
 msgstr "ਲਟਕਦੀ ਸੂਚੀ ਵਿੱਚੋਂ ਇੱਕ ਫਾਇਲ ਲਈ ਪਹਿਲਾਂ ਦਿੱਤੇ ਆਈਕਾਨ ਦੀ ਬਜਾਏ ਪਸੰਦ ਦਾ ਆਈਕਾਨ ਚੁਣਨ ਲਈ ਦਬਾਓ।"
 
-#: ../nact/nautilus-actions-config.glade.h:42
+#: ../nact/nautilus-actions-config.glade.h:45
 msgid "Click to remove the selected scheme."
 msgstr "ਚੁਣੀ ਸਕੀਮ ਹਟਾਉਣ ਲਈ ਦਬਾਓ।"
 
-#: ../nact/nautilus-actions-config.glade.h:43
+#: ../nact/nautilus-actions-config.glade.h:46
 msgid "Click to see the list of special tokens you can use in the parameter field."
 msgstr "ਮੁੱਲ ਖੇਤਰ ਵਿੱਚ ਤੁਹਾਡੇ ਵਲੋਂ ਵਰਤੇ ਜਾ ਸਕਣ ਵਾਲੇ ਖਾਸ ਟੋਕਨਾਂ ਦੀ ਸੂਚੀ ਵੇਖਣ ਲਈ ਦਬਾਓ।"
 
-#: ../nact/nautilus-actions-config.glade.h:44
+#: ../nact/nautilus-actions-config.glade.h:47
 msgid "Conditions"
 msgstr "ਸ਼ਰਤਾਂ"
 
-#: ../nact/nautilus-actions-config.glade.h:45
+#: ../nact/nautilus-actions-config.glade.h:48
 msgid "Create a copy of the selected action."
 msgstr "ਚੁਣੀ ਕਾਰਵਾਈ ਦੀ ਨਕਲ ਬਣਾਓ।"
 
-#: ../nact/nautilus-actions-config.glade.h:46
+#: ../nact/nautilus-actions-config.glade.h:49
 msgid "Delete the action without any confirmation nor the possibility to restore it."
 msgstr "ਕਾਰਵਾਈ ਨੂੰ ਬਿਨਾਂ ਪੁਸ਼ਟੀ ਜਾਂ ਮੁੜ-ਪ੍ਰਾਪਤ ਕਰਨ ਦੀ ਸੰਭਵਨਾ ਤੋਂ ਬਿਨਾਂ ਹਟਾਓ"
 
-#: ../nact/nautilus-actions-config.glade.h:47
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "Export existing configs"
 msgstr "ਮੌਜੂਦਾ ਸੰਰਚਨਾ ਨਿਰਯਾਤ"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "File to Import:"
 msgstr "ਅਯਾਤ ਕਰਨ ਲਈ ਫਾਇਲ:"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:52
 msgid "Filenames:"
 msgstr "ਫਾਇਲ ਨਾਂ:"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "GConf schema description file (Nautilus-actions v1.x and later)"
 msgstr "GConf ਸਕੀਮ ਵੇਰਵਾ ਫਾਇਲ (ਨਟੀਲਸ-ਕਾਰਵਾਈ ਵਰਜਨ 1.x ਜਾਂ ਨਵਾਂ)"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Icon:"
 msgstr "ਆਈਕਾਨ:"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid ""
 "If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
 "will not match photo.JPG)"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Import all my old configs"
 msgstr "ਮੇਰੀ ਸਭ ਪੁਰਾਣੀ ਸੰਰਚਨਾ ਅਯਾਤ"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Import new configurations"
 msgstr "ਨਵੀਂ ਸੰਰਚਨਾ ਅਯਾਤ"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid "Import/Export"
 msgstr "ਅਯਾਤ/ਨਿਰਯਾਤ"
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "Import/Export Settings"
 msgstr "ਅਯਾਤ/ਨਿਰਯਾਤ ਸਥਾਪਨ"
 
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "Label of the menu item in the Nautilus popup menu."
 msgstr "ਨਟੀਲਸ ਪੋਪਅੱਪ ਮੇਨੂ ਵਿੱਚ ਮੇਨੂ ਇਕਾਈ ਦਾ ਲੇਬਲ ਹੈ।"
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "Label:"
 msgstr "ਲੇਬਲ:"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "Match case"
 msgstr "ਮਿਲਾਨ ਹਾਲਤ"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:64
 msgid "Menu Item & Action"
 msgstr "ਮੇਨ ਇਕਾਈ ਅਤੇ ਕਾਰਵਾਈ"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:65
 msgid "Mimetypes:"
 msgstr "Mime ਕਿਸਮ:"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -269,189 +280,214 @@ msgstr ""
 "ਨਟੀਲਸ ਕਾਰਵਾਈ ਸੰਰਚਨਾ ਸੰਦ\n"
 "ਨਟੀਲਸ ਕਾਰਵਾਈਆਂ ਸੰਰਚਨਾ ਲਈ ਕਾਰਜ"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid "Nautilus Action Editor"
-msgstr "ਨਾਟੀਲਸ ਕਾਰਵਾਈ ਸੰਪਾਦਕ"
+msgstr "ਨਟੀਲਸ ਕਾਰਵਾਈ ਸੰਪਾਦਕ"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Nautilus Actions"
-msgstr "ਨਾਟੀਲਸ ਕਾਰਵਾਈ"
+msgstr "ਨਟੀਲਸ ਕਾਰਵਾਈ"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid "Old XML config file (Nautilus-actions v0.x)"
 msgstr "ਪੁਰਾਣੀ XML ਸੰਰਚਨਾ ਫਾਇਲ (ਨਟੀਲਸ-ਕਾਰਵਾਈ ਵਰਜਨ 0.x)"
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Only files"
 msgstr "ਸਿਰਫ਼ ਫਾਇਲਾਂ"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Only folders"
 msgstr "ਸਿਰਫ਼ ਫੋਲਡਰ"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
 msgstr "ਮੁੱਲ, ਜੋ ਕਿ ਪਰੋਗਰਾਮ ਨੂੰ ਭੇਜੇ ਜਾਣਗੇ। ਵੱਖਰੇ ਬਦਲਵੇਂ ਟੋਕਨ ਵੇਖਣ ਲਈ 'ਸੰਕੇਤ' ਬਟਨ ਨੂੰ ਦਬਾਓ।"
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Parameters:"
 msgstr "ਮੁੱਲ:"
 
-#: ../nact/nautilus-actions-config.glade.h:72
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid "Path:"
 msgstr "ਮਾਰਗ:"
 
-#: ../nact/nautilus-actions-config.glade.h:73
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid "Project Website"
 msgstr "ਪਰੋਜੈੱਕਟ ਵੈੱਬਸਾਇਟ"
 
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:77
 msgid "Save in Folder:"
 msgstr "ਫੋਲਡਰ ਵਿੱਚ ਸੰਭਾਲੋ:"
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:78
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
 msgstr "ਆਪਣੀ ਨਿਰਯਾਤ ਕੀਤੀ ਜਾਣ ਵਾਲੀ ਸੰਰਚਨਾ ਦੀ ਚੋਣ ਕਰੋ। Shift ਜਾਂ Ctrl ਸਵਿੱਚ ਕਈਆਂ ਦੀ ਚੋਣ ਕਰੋ।"
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:79
 msgid "Select the configurations you want to export:"
 msgstr "ਆਪਣੀ ਸੰਰਚਨਾ ਦੀ ਚੋਣ ਕਰੋ, ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਨਿਰਯਾਤ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ:"
 
-#: ../nact/nautilus-actions-config.glade.h:77
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid "Select the file you want to import."
 msgstr "ਆਯਾਤ ਕੀਤੀਆਂ ਜਾਣ ਵਾਲੀਆਂ ਫਾਇਲਾਂ ਦੀ ਚੋਣ ਕਰੋ।"
 
-#: ../nact/nautilus-actions-config.glade.h:78
+#: ../nact/nautilus-actions-config.glade.h:81
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
-msgstr ""
-"ਫੋਲਡਰ ਦੀ ਚੋਣ ਕਰੋ, ਜਿਸ ਵਿੱਚ ਤੁਸੀਂ ਸੰਰਚਨਾ ਨੂੰ ਸੰਭਾਲਣਾ ਚਾਹੁੰਦੇ ਹੋ। ਇਹ ਫੋਲਡਰ "
-"ਮੌਜੂਦ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।"
+msgstr "ਫੋਲਡਰ ਦੀ ਚੋਣ ਕਰੋ, ਜਿਸ ਵਿੱਚ ਤੁਸੀਂ ਸੰਰਚਨਾ ਨੂੰ ਸੰਭਾਲਣਾ ਚਾਹੁੰਦੇ ਹੋ। ਇਹ ਫੋਲਡਰ ਮੌਜੂਦ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।"
 
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add a new scheme by clicking on the '+' button."
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:80
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
 msgstr "ਕਮਾਂਡ, ਜੋ ਕਿ ਨਟੀਲਸ ਪੋਪਅੱਪ ਮੇਨੂ ਵੱਚ ਕਾਰਵਾਈ ਦੀ ਚੋਣ ਨਾਲ ਚੱਲੇਗੀ।"
 
-#: ../nact/nautilus-actions-config.glade.h:81
+#: ../nact/nautilus-actions-config.glade.h:84
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr "ਇਹ ਸਾਫਟਵੇਅਰ GNU ਜਨਰਲ ਪਬਲਿਕ ਲਾਈਸੈਂਸ (GPL) ਦੇ ਅਧੀਨ ਜਾਰੀ ਕੀਤਾ ਗਿਆ ਹੈ।"
 
-#: ../nact/nautilus-actions-config.glade.h:82
+#: ../nact/nautilus-actions-config.glade.h:85
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgstr "ਮੇਨੂ-ਇਕਾਈ ਦਾ ਸੰਦ-ਸੰਕੇਤ, ਜੋ ਕਿ ਨਟੀਲਸ ਹਾਲਤ-ਪੱਟੀ ਵਿੱਚ ਦਿੱਸੇਗਾ।"
 
-#: ../nact/nautilus-actions-config.glade.h:83
+#: ../nact/nautilus-actions-config.glade.h:86
 msgid "Tooltip:"
 msgstr "ਸੰਦ-ਸੰਕੇਤ:"
 
-#: ../nact/nautilus-actions-config.glade.h:84
+#: ../nact/nautilus-actions-config.glade.h:87
 msgid "Type of configuration:"
 msgstr "ਸੰਰਚਨਾ ਦੀ ਕਿਸਮ: "
 
-#: ../nact/nautilus-actions-config.glade.h:85
+#: ../nact/nautilus-actions-config.glade.h:88
 msgid "_Browse"
 msgstr "ਝਲਕ(_B)"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:87
+#: ../nact/nautilus-actions-config.glade.h:90
 msgid "translator-credits"
 msgstr "ਅਮਨਪਰੀਤ ਸਿੰਘ ਆਲਮ"
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact.c:163
+#, c-format
+msgid "Can't duplicate action '%s' !"
+msgstr ""
+
 #. create columns on the tree view
-#: ../nact/nact.c:254 ../nact/nact-import-export.c:179
+#: ../nact/nact.c:262 ../nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "ਆਈਕਾਨ"
 
-#: ../nact/nact.c:259 ../nact/nact-import-export.c:184
+#: ../nact/nact.c:267 ../nact/nact-import-export.c:184
 msgid "Label"
 msgstr "ਲੇਬਲ"
 
-#: ../nact/nact.c:279 ../nact/nact-editor.c:692
-#: ../nact/nact-import-export.c:364
+#: ../nact/nact.c:287 ../nact/nact-editor.c:705
+#: ../nact/nact-import-export.c:380
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "ਨਟੀਲਸ ਕਾਰਵਾਈ ਸੰਰਚਨਾ ਸੰਦ ਲਈ ਇੰਟਰਫੇਸ ਲੋਡ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ"
 
 #. i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:157
+#: ../nact/nact-utils.c:185
 msgid "/path/to"
 msgstr "/path/to"
 
-#: ../nact/nact-utils.c:158 ../nact/nact-utils.c:160
+#: ../nact/nact-utils.c:186 ../nact/nact-utils.c:188
 msgid "file1.txt"
 msgstr "file1.txt"
 
-#: ../nact/nact-utils.c:158
+#: ../nact/nact-utils.c:186
 msgid "file2.txt"
 msgstr "file2.txt"
 
-#: ../nact/nact-utils.c:159 ../nact/nact-utils.c:160
+#: ../nact/nact-utils.c:187 ../nact/nact-utils.c:188
 msgid "folder1"
 msgstr "folder1"
 
-#: ../nact/nact-utils.c:159
+#: ../nact/nact-utils.c:187
 msgid "folder2"
 msgstr "folder2"
 
-#: ../nact/nact-utils.c:162
+#: ../nact/nact-utils.c:190
 msgid "test.example.net"
 msgstr "test.example.net"
 
-#: ../nact/nact-utils.c:163
+#: ../nact/nact-utils.c:191
 msgid "file.txt"
 msgstr "file.txt"
 
-#: ../nact/nact-utils.c:164
+#: ../nact/nact-utils.c:192
 msgid "folder"
 msgstr "ਫੋਲਡਰ"
 
 #. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:252
+#: ../nact/nact-editor.c:253
 msgid "None"
 msgstr "ਕੋਈ ਨਹੀਂ"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-editor.c:438
+#: ../nact/nact-editor.c:451
 msgid "new-scheme"
 msgstr "ਨਵੀਂ ਸਕੀਮ"
 
-#: ../nact/nact-editor.c:439
+#: ../nact/nact-editor.c:452
 msgid "New Scheme Description"
 msgstr "ਨਵੀਂ ਸਕੀਮ ਦਾ ਵੇਰਵਾ"
 
-#: ../nact/nact-editor.c:525
+#: ../nact/nact-editor.c:538
 msgid "Scheme"
 msgstr "ਸਕੀਮ"
 
-#: ../nact/nact-editor.c:537
+#: ../nact/nact-editor.c:550
 msgid "Description"
 msgstr "ਵੇਰਵਾ"
 
-#: ../nact/nact-editor.c:708
+#: ../nact/nact-editor.c:721
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "ਨਟੀਲਸ ਪੋਪਅੱਪ ਮੇਨੂ ਵਿੱਚ ਮੇਨੂ ਇਕਾਈ ਦਾ ਆਈਕਾਨ"
 
-#: ../nact/nact-editor.c:742
+#: ../nact/nact-editor.c:755
 msgid "Add a New Action"
 msgstr "ਇੱਕ ਨਵੀਂ ਕਾਰਵਾਈ ਸ਼ਾਮਲ"
 
-#: ../nact/nact-editor.c:746
+#: ../nact/nact-editor.c:759
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "ਕਾਰਵਾਈ \"%s\" ਸੋਧ"
+
+#: ../nact/nact-import-export.c:236
+#, c-format
+msgid "Can't parse file '%s' as old XML config file !"
+msgstr ""
+
+#: ../nact/nact-import-export.c:251
+#, c-format
+msgid "Can't parse file '%s' as GConf schema description file !"
+msgstr ""
+
+#: ../nact/nact-import-export.c:271
+#, c-format
+msgid "Can't parse file '%s' !"
+msgstr "ਫਾਇਲ '%s' ਨੂੰ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ!"
+
+#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
+#: ../nact/nact-import-export.c:293
+#, c-format
+msgid "Action '%s' importation failed !"
+msgstr "ਕਾਰਵਾਈ '%s' ਲਿਆਉਣ ਫੇਲ੍ਹ ਹੋਈ !"
 
 #. initialize the default schemes
 #. i18n notes : description of 'file' scheme
@@ -523,7 +559,7 @@ msgstr ""
 "\t- %s\n"
 "%s --help ਨਾਲ ਕੋਸ਼ਿਸ਼ ਕਰੋ\n"
 
-#: ../utils/nautilus-actions-convert.c:83
+#: ../utils/nautilus-actions-convert.c:84
 #, c-format
 msgid ""
 "Syntax error:\n"
@@ -534,7 +570,7 @@ msgstr ""
 "\tਚੋਣ -i ਅਤੇ -o ਨੂੰ ਖਾਸ ਤੌਰ ਉੱਤੇ ਚੋਣ -a ਨਾਲ ਹੀ ਵਰਤਣਾ ਚਾਹੀਦਾ ਹੈ\n"
 "%s --help ਨਾਲ ਕੋਸ਼ਿਸ਼ ਕਰੋ\n"
 
-#: ../utils/nautilus-actions-convert.c:89
+#: ../utils/nautilus-actions-convert.c:90
 #, c-format
 msgid ""
 "Syntax error:\n"
@@ -545,37 +581,39 @@ msgstr ""
 "\tਚੋਣ -i ਲਾਜ਼ਮੀ ਹੈ, ਜਦੋਂ ਵੀ -o ਚੋਣ ਵਰਤੀ ਜਾਵੇ\n"
 "%s --help ਨਾਲ ਕੋਸ਼ਿਸ਼ ਕਰੋ\n"
 
-#: ../utils/nautilus-actions-convert.c:101
+#: ../utils/nautilus-actions-convert.c:102
 #, c-format
 msgid ""
 "Error:\n"
 "\t- Can't parse %s\n"
+"%s\n"
 msgstr ""
 "ਗਲਤੀ:\n"
-"\t- %s ਨੂੰ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ\n"
+"\t- %s ਪਾਰਸ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕੀ\n"
+"%s\n"
 
-#: ../utils/nautilus-actions-convert.c:115
+#: ../utils/nautilus-actions-convert.c:117
 #, c-format
 msgid "Converting %s..."
 msgstr "%s ਤਬਦੀਲ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
 
-#: ../utils/nautilus-actions-convert.c:135
-#: ../utils/nautilus-actions-new-config.c:169
+#: ../utils/nautilus-actions-convert.c:137
+#: ../utils/nautilus-actions-new-config.c:170
 #, c-format
 msgid " Failed: Can't create %s: %s\n"
 msgstr " ਅਸਫ਼ਲ: %s ਬਣਾਈ ਨਹੀਂ ਜਾ ਸਕੀ : %s\n"
 
-#: ../utils/nautilus-actions-convert.c:143
-#: ../utils/nautilus-actions-new-config.c:177
+#: ../utils/nautilus-actions-convert.c:146
+#: ../utils/nautilus-actions-new-config.c:179
 #, c-format
 msgid "  OK, saved in %s\n"
 msgstr "  ਠੀਕ ਹੈ, %s ਵਿੱਚ ਸੰਭਾਲੀ\n"
 
-#: ../utils/nautilus-actions-convert.c:148
-#: ../utils/nautilus-actions-new-config.c:182
+#: ../utils/nautilus-actions-convert.c:151
+#: ../utils/nautilus-actions-new-config.c:184
 #, c-format
-msgid "  Failed\n"
-msgstr "  ਅਸਫ਼ਲ\n"
+msgid " Failed: %s\n"
+msgstr " ਫੇਲ੍ਹ: %s\n"
 
 #. GConf description strings :
 #: ../utils/nautilus-actions-new-config.c:50
@@ -626,13 +664,12 @@ msgid "PARAMS"
 msgstr "ਮੁੱਲ"
 
 #: ../utils/nautilus-actions-new-config.c:55
-#, fuzzy
 msgid ""
 "A pattern to match selected files against. May include wildcards (* or ?) "
 "(you must set one option for each pattern you need)"
 msgstr ""
-"ਇੱਕ ਗਨੋਮ-VFS ਸਕੀਮ, ਜਿੱਥੇ ਚੁਣੀਆਂ ਫਾਇਲਾਂ ਨੂੰ ਰੱਖਿਆ ਜਾਵੇ (ਤੁਹਾਨੂੰ ਲੋੜੀਦੀ ਹਰੇਕ ਸਕੀਮ ਲਈ ਇਹ ਚੋਣ "
-"ਕਰਨੀ ਪਵੇਗੀ)"
+"ਚੁਣੀਆਂ ਫਾਇਲਾਂ ਮਿਲਾਉਣ ਲਈ ਇੱਕ ਪੈਟਰਨ ਹੈ। ਵਾਇਲਡ ਕਾਰਡ ਸ਼ਾਮਿਲ ਕੀਤੇ "
+"ਜਾ ਸਕਦੇ ਹਨ (* ਜਾਂ ?) (ਤੁਹਾਨੂੰ ਹਰੇਕ ਲੋੜੀਦੇ ਪੈਟਰਨ ਲਈ ਇੱਕ ਚੋਣ ਕਰਨੀ ਪਵੇਗੀ)"
 
 #: ../utils/nautilus-actions-new-config.c:55
 #: ../utils/nautilus-actions-new-config.c:57
@@ -677,7 +714,7 @@ msgstr ""
 "ਫਾਇਲ ਲਈ ਮਾਰਗ, ਜਿੱਥੇ ਕਿ ਨਵੀਂ GConf ਸਕੀਮ ਪਰਿਭਾਸ਼ਾ ਫਾਇਲ ਨੂੰ ਸੰਭਾਲਿਆ ਜਾਂਦਾ ਹੈ [ਮੂਲ: /tmp/"
 "config_UUID.schemas]"
 
-#: ../utils/nautilus-actions-new-config.c:150
+#: ../utils/nautilus-actions-new-config.c:151
 #, c-format
 msgid "Creating %s..."
 msgstr "%s ਬਣਾਈ ਜਾ ਰਹੀ ਹੈ..."
@@ -776,7 +813,6 @@ msgstr ""
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
-#, fuzzy
 msgid ""
 "The valid combinations are:\n"
 "\n"
@@ -788,10 +824,10 @@ msgid ""
 msgstr ""
 "ਹੇਠਾਂ ਕੁਝ ਠੀਕ ਜੋੜ ਦਿੱਤੇ ਗਏ ਹਨ :\n"
 "\n"
-"- 'isfile' 'ਸੱਚ' ਅਤੇ 'isdir' 'ਝੂਠ' : ਚੋਣ ਵਿੱਚ ਸਿਰਫ਼ ਫਾਇਲਾਂ ਹੀ ਹਨ\n"
-"- 'isfile' 'ਝੂਠ' ਅਤੇ 'isdir' 'ਸੱਚ' : ਚੋਣ ਵਿੱਚ ਇੱਕਲੇ ਫੋਲਡਰ ਹੀ ਹਨ\n"
-"- 'isfile' 'ਸੱਚ' ਅਤੇ 'isdir' 'ਸੱਚ' : ਚੋਣ ਵਿੱਚ ਫਾਇਲਾਂ ਅਤੇ ਫੋਲਡਰ ਦੋਵੇਂ ਹੋ ਸਕਦੇ ਹਨ\n"
-"- 'isfile' 'ਝੂਠ' ਅਤੇ 'isdir' 'ਝੂਠ' : ਗਲਤ ਜੋੜ"
+"isfile=TRUE and isdir=FALSE: ਚੋਣ ਵਿੱਚ ਸਿਰਫ਼ ਫਾਇਲਾਂ ਹੀ ਹਨ\n"
+"isfile=FALSE and isdir=TRUE: ਚੋਣ ਵਿੱਚ ਇੱਕਲੇ ਫੋਲਡਰ ਹੀ ਹਨ\n"
+"isfile=TRUE and isdir=TRUE': ਚੋਣ ਵਿੱਚ ਫਾਇਲਾਂ ਅਤੇ ਫੋਲਡਰ ਦੋਵੇਂ ਹੋ ਸਕਦੇ ਹਨ\n"
+"isfile=FALSE and isdir=FALSE: ਇਹ ਗਲਤ ਸੰਯੋਗ ਹੈ (ਤੁਹਾਡੀ ਸੰਰਚਨਾ ਕਦੇ ਵੀ ਨਹੀਂ ਹੋ ਸਕਦੀ।"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid "'true' if the selection can have files, 'false' otherwise"
@@ -872,4 +908,79 @@ msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
 msgstr "ਸੰਰਚਨਾ ਫਾਰਮੈਟ ਦਾ ਵਰਜਨ, ਜੋ ਕਿ ਬੈਕਵਰਡ ਅਨੁਕੂਲਤਾ ਰੱਖਣ ਲਈ ਵਰਤਿਆ ਜਾਵੇਗਾ"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:205
+#, c-format
+msgid ""
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
+msgstr ""
+"ਕਾਰਵਾਈ '%s' ਪਹਿਲਾਂ ਹੀ '%s' ਨਾਂ ਨਾਲ ਮੌਜੂਦ ਹੈ, ਇਸ ਨੂੰ ਜੋੜਨ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਤੋਂ "
+"ਪਹਿਲਾਂ ਮੌਜੂਦਾ ਨੂੰ ਹਟਾਓ ਜੀ।"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config.c:222
+#, c-format
+msgid "Can't save action '%s'"
+msgstr "ਕਾਰਵਾਈ '%s' ਸੰਭਾਲੀ ਨਹੀਂ ਜਾ ਸਕਦੀ"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:485
+msgid "This XML file is not a valid Nautilus-actions config file (Bad test section)"
+msgstr ""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:491
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad command "
+"section)"
+msgstr ""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:496
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (Bad menu item "
+"section)"
+msgstr ""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:563
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:374
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:533
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (found <%s> "
+"element instead of <%s>)"
+msgstr ""
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-xml.c:574
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:543
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
+"instead of <%s>)"
+msgstr ""
+
+#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
+#, fuzzy
+msgid ","
+msgstr ","
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:461
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
+"s)"
+msgstr ""
+
+#. No error occured but we have not found the "version" gconf key
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:469
+#, c-format
+msgid "This XML file is not a valid Nautilus-actions config file (missing key : %s)"
+msgstr ""
 
