@@ -20,6 +20,9 @@ Fryderyk Dziarmagowski <freetz@gmx.net> :
 - Fix compilation problem when using --as-needed passed
 to LDFLAGS (Bug #378890).
 
+Christopher Taylor <christophth@tiscali.it> :
+- Fix compilation error (Bug #413834)
+
 == Artwork ==
 
 Ulisse Perusin <uli.peru@gmail.com> :

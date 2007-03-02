@@ -1,3 +1,9 @@
+2007-03-02  Frederic Ruaudel <grumz@grumz.net>
+
+	* configure.in: Fix Bug #413834 by applying patch submited
+	by christopher taylor <christophth@tiscali.it>. Now the new 32x32
+	pixmap compile correctly.
+
 2006-11-24  Frederic Ruaudel <grumz@grumz.net>
 
 	* utils/Makefile.am: Fix Bug #378890 by applying patch submited
