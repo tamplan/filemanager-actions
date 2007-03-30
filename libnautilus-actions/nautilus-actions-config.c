@@ -325,6 +325,76 @@ static void nautilus_actions_config_action_removed_default_handler (NautilusActi
 	}
 }
 
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new (void)
+{
+	return g_new0 (NautilusActionsConfigActionProfile, 1);
+}
+
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_default (void)
+{
+	NautilusActionsConfigActionProfile* new_action_profile = nautilus_actions_config_action_profile_new();
+	//--> Set some good default values
+	new_action_profile->path = g_strdup ("");
+	new_action_profile->parameters = g_strdup ("");
+	new_action_profile->basenames = NULL;
+	new_action_profile->basenames = g_slist_append (new_action_profile->basenames, g_strdup ("*"));
+	new_action_profile->match_case = TRUE;
+	new_action_profile->mimetypes = NULL;
+	new_action_profile->mimetypes = g_slist_append (new_action_profile->mimetypes, g_strdup ("*/*"));
+	new_action_profile->is_file = TRUE;
+	new_action_profile->is_dir = FALSE;
+	new_action_profile->accept_multiple_files = FALSE;
+	new_action_profile->schemes = NULL;
+	new_action_profile->schemes = g_slist_append (new_action_profile->schemes, g_strdup ("file"));
+	
+	return new_action_profile;
+}
+
+gboolean
+nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action, 
+									 							gchar* profile_name)
+{
+	gboolean retv = FALSE;
+
+	if (g_hash_table_lookup (action->profiles, profile_name) != NULL)
+	{
+		retv = TRUE;
+	}
+
+	return retv;
+}
+
+NautilusActionsConfigActionProfile*
+nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
+									 						gchar* profile_name)
+{
+	return g_hash_table_lookup (action->profiles, profile_name);
+}
+
+void
+nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
+									 gchar* profile_name,
+								 	 NautilusActionsConfigActionProfile* profile)
+{
+	g_hash_table_insert (action->profiles, g_strdup (profile_name), profile);
+}
+
+void
+nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *action, 
+									 gchar* profile_name,
+								 	 NautilusActionsConfigActionProfile* profile)
+{
+	//--> the old value is freed by the function
+	g_hash_table_replace (action->profiles, g_strdup (profile_name), profile);
+}
+
+gboolean
+nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action, 
+									 gchar* profile_name)
+{
+	g_hash_table_remove (action->profiles, profile_name);
+}
+
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void)
 {
 	return g_new0 (NautilusActionsConfigAction, 1);
@@ -339,18 +409,10 @@ NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void)
 	new_action->label = g_strdup ("");
 	new_action->tooltip = g_strdup ("");
 	new_action->icon = g_strdup ("");
-	new_action->path = g_strdup ("");
-	new_action->parameters = g_strdup ("");
-	new_action->basenames = NULL;
-	new_action->basenames = g_slist_append (new_action->basenames, g_strdup ("*"));
-	new_action->match_case = TRUE;
-	new_action->mimetypes = NULL;
-	new_action->mimetypes = g_slist_append (new_action->mimetypes, g_strdup ("*/*"));
-	new_action->is_file = TRUE;
-	new_action->is_dir = FALSE;
-	new_action->accept_multiple_files = FALSE;
-	new_action->schemes = NULL;
-	new_action->schemes = g_slist_append (new_action->schemes, g_strdup ("file"));
+	new_action->profiles = g_hash_table_new_full (g_str_hash, g_str_equal,
+						 (GDestroyNotify) g_free,
+						 (GDestroyNotify) nautilus_actions_config_action_profile_free);
+	g_hash_table_insert (new_action->profiles, g_strdup (NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME), nautilus_actions_config_action_profile_new_default ());
 	new_action->version = g_strdup (NAUTILUS_ACTIONS_CONFIG_VERSION);
 	
 	return new_action;
@@ -405,23 +467,23 @@ nautilus_actions_config_action_set_icon (NautilusActionsConfigAction *action, co
 }
 
 void
-nautilus_actions_config_action_set_path (NautilusActionsConfigAction *action, const gchar *path)
+nautilus_actions_config_action_profile_set_path (NautilusActionsConfigActionProfile *action_profile, const gchar *path)
 {
-	g_return_if_fail (action != NULL);
+	g_return_if_fail (action_profile != NULL);
 
-	if (action->path)
-		g_free (action->path);
-	action->path = g_strdup (path);
+	if (action_profile->path)
+		g_free (action_profile->path);
+	action_profile->path = g_strdup (path);
 }
 
 void
-nautilus_actions_config_action_set_parameters (NautilusActionsConfigAction *action, const gchar *parameters)
+nautilus_actions_config_action_profile_set_parameters (NautilusActionsConfigActionProfile *action_profile, const gchar *parameters)
 {
-	g_return_if_fail (action != NULL);
+	g_return_if_fail (action_profile != NULL);
 
-	if (action->parameters)
-		g_free (action->parameters);
-	action->parameters = g_strdup (parameters);
+	if (action_profile->parameters)
+		g_free (action_profile->parameters);
+	action_profile->parameters = g_strdup (parameters);
 }
 
 static void 
@@ -438,36 +500,150 @@ copy_list_strdown (gchar* data, GSList** list)
 }
 
 void
-nautilus_actions_config_action_set_basenames (NautilusActionsConfigAction *action, GSList *basenames)
+nautilus_actions_config_action_profile_set_basenames (NautilusActionsConfigActionProfile *action_profile, GSList *basenames)
 {
-	g_return_if_fail (action != NULL);
+	g_return_if_fail (action_profile != NULL);
 
-	g_slist_foreach (action->basenames, (GFunc) g_free, NULL);
-	g_slist_free (action->basenames);
-	action->basenames = NULL;
-	g_slist_foreach (basenames, (GFunc) copy_list, &(action->basenames));
+	g_slist_foreach (action_profile->basenames, (GFunc) g_free, NULL);
+	g_slist_free (action_profile->basenames);
+	action_profile->basenames = NULL;
+	g_slist_foreach (basenames, (GFunc) copy_list, &(action_profile->basenames));
 }
 
-void nautilus_actions_config_action_set_mimetypes (NautilusActionsConfigAction *action, GSList *mimetypes)
+void nautilus_actions_config_action_profile_set_mimetypes (NautilusActionsConfigActionProfile *action_profile, GSList *mimetypes)
 {
-	g_return_if_fail (action != NULL);
+	g_return_if_fail (action_profile != NULL);
 
-	g_slist_foreach (action->mimetypes, (GFunc) g_free, NULL);
-	g_slist_free (action->mimetypes);
-	action->mimetypes = NULL;
-	g_slist_foreach (mimetypes, (GFunc) copy_list_strdown, &(action->mimetypes));
+	g_slist_foreach (action_profile->mimetypes, (GFunc) g_free, NULL);
+	g_slist_free (action_profile->mimetypes);
+	action_profile->mimetypes = NULL;
+	g_slist_foreach (mimetypes, (GFunc) copy_list_strdown, &(action_profile->mimetypes));
 }
 
 
 void
-nautilus_actions_config_action_set_schemes (NautilusActionsConfigAction *action, GSList *schemes)
+nautilus_actions_config_action_profile_set_schemes (NautilusActionsConfigActionProfile *action_profile, GSList *schemes)
 {
-	g_return_if_fail (action != NULL);
+	g_return_if_fail (action_profile != NULL);
 
-	g_slist_foreach (action->schemes, (GFunc) g_free, NULL);
-	g_slist_free (action->schemes);
-	action->schemes = NULL;
-	g_slist_foreach (schemes, (GFunc) copy_list_strdown, &(action->schemes));
+	g_slist_foreach (action_profile->schemes, (GFunc) g_free, NULL);
+	g_slist_free (action_profile->schemes);
+	action_profile->schemes = NULL;
+	g_slist_foreach (schemes, (GFunc) copy_list_strdown, &(action_profile->schemes));
+}
+
+NautilusActionsConfigActionProfile* nautilus_actions_config_action_profile_dup (NautilusActionsConfigActionProfile *action_profile)
+{
+	NautilusActionsConfigActionProfile* new_action_profile = NULL;
+	gboolean success = TRUE;
+	GSList* iter;
+
+	if (action_profile != NULL)
+	{
+		new_action_profile = nautilus_actions_config_action_profile_new ();
+
+		if (action_profile->path) {
+			new_action_profile->path = g_strdup (action_profile->path);
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action_profile->parameters && success) {
+			new_action_profile->parameters = g_strdup (action_profile->parameters);
+		}
+		else
+		{
+			success = FALSE;
+		}
+
+		if (action->basenames && success) {
+			for (iter = action_profile->basenames; iter; iter = iter->next)
+			{
+				new_action_profile->basenames = g_slist_append (new_action_profile->basenames, g_strdup ((gchar*)iter->data));
+			}
+		}
+		
+		new_action_profile->match_case = action_profile->match_case;
+
+		if (action_profile->mimetypes && success) {
+			for (iter = action_profile->mimetypes; iter; iter = iter->next)
+			{
+				new_action_profile->mimetypes = g_slist_append (new_action_profile->mimetypes, g_strdup ((gchar*)iter->data));
+			}
+		}
+
+		new_action_profile->is_file = action_profile->is_file;
+		new_action_profile->is_dir = action_profile->is_dir;
+		new_action_profile->accept_multiple_files = action_profile->accept_multiple_files;
+
+		if (action_profile->schemes && success) {
+			for (iter = action_profile->schemes; iter; iter = iter->next)
+			{
+				new_action_profile->schemes = g_slist_append (new_action_profile->schemes, g_strdup ((gchar*)iter->data));
+			}
+		}
+
+	}
+	else
+	{
+		success = FALSE;
+	}
+
+	if (!success)
+	{
+		nautilus_actions_config_action_profile_free (new_action_profile);
+		new_action_profile = NULL;
+	}
+
+	return new_action_profile;
+}
+
+void
+nautilus_actions_config_action_profile_free (NautilusActionsConfigActionProfile *action_profile)
+{
+	if (action_profile != NULL)
+	{
+		if (action_profile->path) {
+			g_free (action_profile->path);
+			action_profile->path = NULL;
+		}
+
+		if (action_profile->parameters) {
+			g_free (action_profile->parameters);
+			action_profile->parameters = NULL;
+		}
+
+		if (action_profile->basenames) {
+			g_slist_foreach (action_profile->basenames, (GFunc) g_free, NULL);
+			g_slist_free (action_profile->basenames);
+			action_profile->basenames = NULL;
+		}
+
+		if (action_profile->mimetypes) {
+			g_slist_foreach (action_profile->mimetypes, (GFunc) g_free, NULL);
+			g_slist_free (action_profile->mimetypes);
+			action_profile->mimetypes = NULL;
+		}
+
+		if (action_profile->schemes) {
+			g_slist_foreach (action_profile->schemes, (GFunc) g_free, NULL);
+			g_slist_free (action_profile->schemes);
+			action_profile->schemes = NULL;
+		}
+
+		g_free (action_profile);
+		action_profile = NULL;
+	}
+}
+
+static void duplicate_profile_hash_values (gchar* profile_name, NautilusActionsConfigActionProfile* action_profile, NautilusActionsConfigAction** new_action)
+{
+	if (new_action != NULL && (*new_action) != NULL && action_profile != NULL)
+	{
+		g_hash_table_insert ((*new_action)->profiles, g_strdup (profile_name), nautilus_actions_config_action_profile_dup (action_profile));
+	}
 }
 
 NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActionsConfigAction *action)
@@ -519,47 +695,11 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 			success = FALSE;
 		}
 
-		if (action->path && success) {
-			new_action->path = g_strdup (action->path);
-		}
-		else
-		{
-			success = FALSE;
-		}
-
-		if (action->parameters && success) {
-			new_action->parameters = g_strdup (action->parameters);
-		}
-		else
-		{
-			success = FALSE;
-		}
-
-		if (action->basenames && success) {
-			for (iter = action->basenames; iter; iter = iter->next)
-			{
-				new_action->basenames = g_slist_append (new_action->basenames, g_strdup ((gchar*)iter->data));
-			}
-		}
-		
-		new_action->match_case = action->match_case;
-
-		if (action->mimetypes && success) {
-			for (iter = action->mimetypes; iter; iter = iter->next)
-			{
-				new_action->mimetypes = g_slist_append (new_action->mimetypes, g_strdup ((gchar*)iter->data));
-			}
-		}
-
-		new_action->is_file = action->is_file;
-		new_action->is_dir = action->is_dir;
-		new_action->accept_multiple_files = action->accept_multiple_files;
-
-		if (action->schemes && success) {
-			for (iter = action->schemes; iter; iter = iter->next)
-			{
-				new_action->schemes = g_slist_append (new_action->schemes, g_strdup ((gchar*)iter->data));
-			}
+		if (action->profiles && success) {
+			new_action->profiles = g_hash_table_new_full (g_str_hash, g_str_equal,
+						 (GDestroyNotify) g_free,
+						 (GDestroyNotify) nautilus_actions_config_action_profile_free);
+			g_hash_table_foreach (action->profiles, (GHFunc) duplicate_profile_hash_values, &new_action);
 		}
 
 		if (action->version && success) {
@@ -628,32 +768,9 @@ nautilus_actions_config_action_free (NautilusActionsConfigAction *action)
 			action->icon = NULL;
 		}
 
-		if (action->path) {
-			g_free (action->path);
-			action->path = NULL;
-		}
-
-		if (action->parameters) {
-			g_free (action->parameters);
-			action->parameters = NULL;
-		}
-
-		if (action->basenames) {
-			g_slist_foreach (action->basenames, (GFunc) g_free, NULL);
-			g_slist_free (action->basenames);
-			action->basenames = NULL;
-		}
-
-		if (action->mimetypes) {
-			g_slist_foreach (action->mimetypes, (GFunc) g_free, NULL);
-			g_slist_free (action->mimetypes);
-			action->mimetypes = NULL;
-		}
-
-		if (action->schemes) {
-			g_slist_foreach (action->schemes, (GFunc) g_free, NULL);
-			g_slist_free (action->schemes);
-			action->schemes = NULL;
+		if (action->profiles) {
+			g_hash_table_destroy (action->profiles);
+			action->profiles = NULL;
 		}
 
 		if (action->version) {

@@ -48,12 +48,10 @@ typedef enum
 #define NAUTILUS_ACTIONS_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), NAUTILUS_ACTIONS_TYPE_CONFIG))
 #define NAUTILUS_ACTIONS_CONFIG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), NAUTILUS_ACTIONS_TYPE_CONFIG, NautilusActionsConfigClass))
 
+// default profile name
+#define NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME "main"
+
 typedef struct {
-	gchar *conf_section;
-	gchar *uuid;
-	gchar *label;
-	gchar *tooltip;
-	gchar *icon;
 	gchar *path;
 	gchar *parameters;
 	gboolean match_case;
@@ -63,6 +61,15 @@ typedef struct {
 	gboolean is_file;
 	gboolean accept_multiple_files;
 	GSList *schemes;
+} NautilusActionsConfigActionProfile;
+
+typedef struct {
+	gchar *conf_section;
+	gchar *uuid;
+	gchar *label;
+	gchar *tooltip;
+	gchar *icon;
+	GHashTable *profiles; // Hash of NautilusActionsConfigActionProfile*
 	gchar *version;
 } NautilusActionsConfigAction;
 
@@ -102,10 +109,26 @@ gboolean                     nautilus_actions_config_update_action (NautilusActi
 gboolean                     nautilus_actions_config_remove_action (NautilusActionsConfig *config,
 								    const gchar *label);
 /* function to clear the actions list stored in the nautilus_actions_config object */
-gboolean							  nautilus_actions_config_clear (NautilusActionsConfig *config);
+gboolean		     nautilus_actions_config_clear (NautilusActionsConfig *config);
+
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new (void);
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_default (void);
+gboolean                     nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action, 
+									 gchar* profile_name);
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
+									 gchar* profile_name);
+void                         nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
+									 gchar* profile_name,
+								 	 NautilusActionsConfigActionProfile* profile);
+void                         nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *action, 
+									 gchar* profile_name,
+								 	 NautilusActionsConfigActionProfile* profile);
+gboolean                     nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action, 
+									 gchar* profile_name);
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void);
 NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void);
+
 void                         nautilus_actions_config_action_set_uuid (NautilusActionsConfigAction *action,
 								       const gchar *uuid);
 void                         nautilus_actions_config_action_set_label (NautilusActionsConfigAction *action,
@@ -114,21 +137,24 @@ void                         nautilus_actions_config_action_set_tooltip (Nautilu
 									 const gchar *tooltip);
 void                         nautilus_actions_config_action_set_icon (NautilusActionsConfigAction *action,
 									 const gchar *icon);
-void                         nautilus_actions_config_action_set_path (NautilusActionsConfigAction *action,
+void                         nautilus_actions_config_action_profile_set_path (NautilusActionsConfigActionProfile *action_profile,
 								      const gchar *path);
-void                         nautilus_actions_config_action_set_parameters (NautilusActionsConfigAction *action,
+void                         nautilus_actions_config_action_profile_set_parameters (NautilusActionsConfigActionProfile *action_profile,
 									    const gchar *parameters);
-void                         nautilus_actions_config_action_set_basenames (NautilusActionsConfigAction *action, 
+void                         nautilus_actions_config_action_profile_set_basenames (NautilusActionsConfigActionProfile *action_profile, 
 										 GSList *basenames);
-void                         nautilus_actions_config_action_set_mimetypes (NautilusActionsConfigAction *action, 
+void                         nautilus_actions_config_action_profile_set_mimetypes (NautilusActionsConfigActionProfile *action_profile, 
 										 GSList *mimetypes);
-void                         nautilus_actions_config_action_set_schemes (NautilusActionsConfigAction *action, 
+void                         nautilus_actions_config_action_profile_set_schemes (NautilusActionsConfigAction *action_profile, 
 										 GSList *schemes);
 
-#define nautilus_actions_config_action_set_match_case(action, b) { if ((action)) (action)->match_case = b; }
-#define nautilus_actions_config_action_set_is_dir(action, b) { if ((action)) (action)->is_dir = b; }
-#define nautilus_actions_config_action_set_is_file(action, b) { if ((action)) (action)->is_file = b; }
-#define nautilus_actions_config_action_set_accept_multiple(action, b) { if ((action)) (action)->accept_multiple_files = b; }
+#define nautilus_actions_config_action_profile_set_match_case(action_profile, b) { if ((action_profile)) (action_profile)->match_case = b; }
+#define nautilus_actions_config_action_profile_set_is_dir(action_profile, b) { if ((action_profile)) (action_profile)->is_dir = b; }
+#define nautilus_actions_config_action_profile_set_is_file(action_profile, b) { if ((action_profile)) (action_profile)->is_file = b; }
+#define nautilus_actions_config_action_profile_set_accept_multiple(action_profile, b) { if ((action_profile)) (action_profile)->accept_multiple_files = b; }
+
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_dup (NautilusActionsConfigActionProfile *action_profile);
+void                         nautilus_actions_config_action_profile_free (NautilusActionsConfigActionProfile *action_profile);
 
 NautilusActionsConfigAction *nautilus_actions_config_action_dup (NautilusActionsConfigAction *action);
 NautilusActionsConfigAction *nautilus_actions_config_action_dup_new (NautilusActionsConfigAction *action);

@@ -1,3 +1,18 @@
+2007-03-30  Frederic Ruaudel <grumz@grumz.net>
+	* configure.in: Starting V2.x developpement version. Stable version
+	is now in nautilus-actions-1.x-maintenance branch. Update the version 
+	numbers.
+
+	* libnautilus-actions/nautilus-actions-config.h:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-writer.c: Start to
+	implement the profile system in the action config, to be able to handle 
+	multiple conditions/parameters for the same item name (eg. Open in terminal,
+	on files, on folders, on desktop).
+
 2007-03-02  Frederic Ruaudel <grumz@grumz.net>
 
 	* configure.in: Fix Bug #413834 by applying patch submited

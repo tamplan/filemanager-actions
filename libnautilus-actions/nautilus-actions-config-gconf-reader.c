@@ -87,12 +87,33 @@ nautilus_actions_config_gconf_reader_class_init (NautilusActionsConfigGconfReade
 	config_class->remove_action = remove_action;
 }
 
+static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* uuid)
+{
+	gchar* prefix = g_strdup_printf ("%s/%s/%s", ACTIONS_CONFIG_DIR, uuid, ACTIONS_PROFILE_PREFIX);
+	gchar* profile_name = NULL;
+
+	if (g_str_has_prefix (key, prefix))
+	{
+	
+		profile_name = g_strdup (key + strlen (prefix));
+		gchar* pos = g_strrstr (profile_name, "/");
+		if (pos != NULL)
+		{
+			*pos = '\0';
+		}
+	}
+
+	g_free (prefix);
+
+	return profile_name;
+}
+
 static gchar* get_action_uuid_from_key (const gchar* key)
 {
 	g_return_val_if_fail (g_str_has_prefix (key, ACTIONS_CONFIG_DIR), NULL);
 	
 	gchar* uuid = g_strdup (key + strlen (ACTIONS_CONFIG_DIR "/"));
-	gchar* pos = g_strrstr (uuid, "/");
+	gchar* pos = g_strstr_len (uuid, strlen (uuid), "/");
 	if (pos != NULL)
 	{
 		*pos = '\0';
@@ -117,10 +138,16 @@ actions_changed_cb (GConfClient *client,
 	const char* key = gconf_entry_get_key (entry);
 	GConfValue* value = gconf_entry_get_value (entry);
 	gchar* uuid = get_action_uuid_from_key (key);
-	GSList* list;
+	GSList* list = NULL;
 	gboolean is_new = FALSE;
+	gchar* profile_name = get_action_profile_name_from_key (key, uuid);
+	if (!profile_name)
+	{
+		profile_name = g_strdup (NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
+	}
 
 	NautilusActionsConfigAction *action = nautilus_actions_config_get_action (config, uuid);
+	NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
 
 	if (action == NULL && value != NULL)
 	{
@@ -154,49 +181,49 @@ actions_changed_cb (GConfClient *client,
 		}
 		else if (g_str_has_suffix (key, ACTION_PATH_ENTRY))
 		{
-			nautilus_actions_config_action_set_path (action, gconf_value_get_string (value));
+			nautilus_actions_config_action_profile_set_path (action_profile, gconf_value_get_string (value));
 		}
 		else if (g_str_has_suffix (key, ACTION_PARAMS_ENTRY))
 		{
-			nautilus_actions_config_action_set_parameters (action, gconf_value_get_string (value));
+			nautilus_actions_config_action_profile_set_parameters (action_profile, gconf_value_get_string (value));
 		}
 		else if (g_str_has_suffix (key, ACTION_BASENAMES_ENTRY))
 		{
 			list = NULL;
 			g_slist_foreach (gconf_value_get_list (value), (GFunc) copy_list, &list);
-			nautilus_actions_config_action_set_basenames (action, list);
+			nautilus_actions_config_action_profile_set_basenames (action_profile, list);
 			g_slist_foreach (list, (GFunc)g_free, NULL);
 			g_slist_free (list);
 		}
 		else if (g_str_has_suffix (key, ACTION_MATCHCASE_ENTRY))
 		{
-			nautilus_actions_config_action_set_match_case (action, gconf_value_get_bool (value));
+			nautilus_actions_config_action_profile_set_match_case (action_profile, gconf_value_get_bool (value));
 		}
 		else if (g_str_has_suffix (key, ACTION_MIMETYPES_ENTRY))
 		{
 			list = NULL;
 			g_slist_foreach (gconf_value_get_list (value), (GFunc) copy_list, &list);
-			nautilus_actions_config_action_set_mimetypes (action, list);
+			nautilus_actions_config_action_profile_set_mimetypes (action_profile, list);
 			g_slist_foreach (list, (GFunc)g_free, NULL);
 			g_slist_free (list);
 		}
 		else if (g_str_has_suffix (key, ACTION_ISFILE_ENTRY))
 		{
-			nautilus_actions_config_action_set_is_file (action, gconf_value_get_bool (value));
+			nautilus_actions_config_action_profile_set_is_file (action_profile, gconf_value_get_bool (value));
 		}
 		else if (g_str_has_suffix (key, ACTION_ISDIR_ENTRY))
 		{
-			nautilus_actions_config_action_set_is_dir (action, gconf_value_get_bool (value));
+			nautilus_actions_config_action_profile_set_is_dir (action_profile, gconf_value_get_bool (value));
 		}
 		else if (g_str_has_suffix (key, ACTION_MULTIPLE_ENTRY))
 		{
-			nautilus_actions_config_action_set_accept_multiple (action, gconf_value_get_bool (value));
+			nautilus_actions_config_action_profile_set_accept_multiple (action_profile, gconf_value_get_bool (value));
 		}
 		else if (g_str_has_suffix (key, ACTION_SCHEMES_ENTRY))
 		{
 			list = NULL;
 			g_slist_foreach (gconf_value_get_list (value), (GFunc) copy_list, &list);
-			nautilus_actions_config_action_set_schemes (action, list);
+			nautilus_actions_config_action_profile_set_schemes (action_profile, list);
 			g_slist_foreach (list, (GFunc)g_free, NULL);
 			g_slist_free (list);
 		}
@@ -212,6 +239,7 @@ actions_changed_cb (GConfClient *client,
 		}
 	}
 
+	g_free (profile_name);
 	g_free (uuid);
 }
 

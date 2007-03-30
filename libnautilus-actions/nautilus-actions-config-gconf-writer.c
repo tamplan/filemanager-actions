@@ -35,6 +35,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 
 	NautilusActionsConfigGconf* config = NAUTILUS_ACTIONS_CONFIG_GCONF (self);
 	gchar *key;
+	GSList* iter;
 
 	g_free (action->conf_section);
 	action->conf_section = g_strdup_printf ("%s/%s", ACTIONS_CONFIG_DIR, action->uuid);
@@ -57,41 +58,84 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	gconf_client_set_string (config->conf_client, key, action->icon, NULL);
 	g_free (key);
 
-	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_PATH_ENTRY);
-	gconf_client_set_string (config->conf_client, key, action->path, NULL);
+	// Unset old 1.x keys (if needed)
+	key = g_strdup_printf ("%s/%s/%s", action->conf_section, ACTION_PATH_ENTRY);
+	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_PARAMS_ENTRY);
-	gconf_client_set_string (config->conf_client, key, action->parameters, NULL);
+	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_BASENAMES_ENTRY);
-	gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->basenames, NULL);
+	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_MATCHCASE_ENTRY);
-	gconf_client_set_bool (config->conf_client, key, action->match_case, NULL);
+	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_MIMETYPES_ENTRY);
-	gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->mimetypes, NULL);
+	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_ISFILE_ENTRY);
-	gconf_client_set_bool (config->conf_client, key, action->is_file, NULL);
+	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_ISDIR_ENTRY);
-	gconf_client_set_bool (config->conf_client, key, action->is_dir, NULL);
+	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_MULTIPLE_ENTRY);
-	gconf_client_set_bool (config->conf_client, key, action->accept_multiple_files, NULL);
+	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_SCHEMES_ENTRY);
-	gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->schemes, NULL);
+	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
+
+	// Set new keys in 2.x format
+	for (iter = action->profiles; iter; iter = iter->next)
+	{
+		gchar* profile_name = (gchar*)iter->data;
+
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_PATH_ENTRY);
+		gconf_client_set_string (config->conf_client, key, action->path, NULL);
+		g_free (key);
+
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_PARAMS_ENTRY);
+		gconf_client_set_string (config->conf_client, key, action->parameters, NULL);
+		g_free (key);
+
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_BASENAMES_ENTRY);
+		gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->basenames, NULL);
+		g_free (key);
+
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_MATCHCASE_ENTRY);
+		gconf_client_set_bool (config->conf_client, key, action->match_case, NULL);
+		g_free (key);
+
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_MIMETYPES_ENTRY);
+		gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->mimetypes, NULL);
+		g_free (key);
+
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_ISFILE_ENTRY);
+		gconf_client_set_bool (config->conf_client, key, action->is_file, NULL);
+		g_free (key);
+
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_ISDIR_ENTRY);
+		gconf_client_set_bool (config->conf_client, key, action->is_dir, NULL);
+		g_free (key);
+
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_MULTIPLE_ENTRY);
+		gconf_client_set_bool (config->conf_client, key, action->accept_multiple_files, NULL);
+		g_free (key);
+
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_SCHEMES_ENTRY);
+		gconf_client_set_list (config->conf_client, key, GCONF_VALUE_STRING, action->schemes, NULL);
+		g_free (key);
+	}
 
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_VERSION_ENTRY);
 	gconf_client_set_string (config->conf_client, key, action->version, NULL);
