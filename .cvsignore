@@ -18,3 +18,4 @@ ltmain.sh
 missing
 mkinstalldirs
 stamp-h1
+*.swp
