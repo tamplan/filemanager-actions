@@ -17,7 +17,5 @@ libnautilus_actions_la_SOURCES = 	\
 	nautilus-actions-config-schema-writer.c \
 	nautilus-actions-config-schema-writer.h \
 	nautilus-actions-config-schema-reader.c \
-	nautilus-actions-config-schema-reader.h \
-	nautilus-actions-config-xml.c	\
-	nautilus-actions-config-xml.h
+	nautilus-actions-config-schema-reader.h 
 libnautilus_actions_la_LIBADD = -lxml2 -luuid

@@ -1,4 +1,9 @@
 2007-04-03  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-xml.c:
+	* libnautilus-actions/nautilus-actions-config-xml.h:
+	* libnautilus-actions/Makefile.am: Remove old 0.x n-a XML file 
+	format support.
+
 	* libnautilus-actions/nautilus-actions-config-gconf.c:
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
 	* libnautilus-actions/nautilus-actions-config-gconf-writer.c:
