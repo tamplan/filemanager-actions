@@ -48,12 +48,45 @@ typedef enum {
 	ACTION_VERSION_TYPE
 } ActionFieldType;
 
+typedef struct {
+	gboolean is_path_ok,
+	gboolean is_params_ok,
+	gboolean is_basenames_ok,
+	gboolean is_matchcase_ok,
+	gboolean is_mimetypes_ok,
+	gboolean is_isfile_ok,
+	gboolean is_isdir_ok,
+	gboolean is_multiple_ok,
+	gboolean is_schemes_ok
+} ProfileChecking;
+
+static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* uuid)
+{
+	gchar* prefix = g_strdup_printf ("%s/%s/%s", ACTIONS_CONFIG_DIR, uuid, ACTIONS_PROFILE_PREFIX);
+	gchar* profile_name = NULL;
+
+	if (g_str_has_prefix (key, prefix))
+	{
+	
+		profile_name = g_strdup (key + strlen (prefix));
+		gchar* pos = g_strrstr (profile_name, "/");
+		if (pos != NULL)
+		{
+			*pos = '\0';
+		}
+	}
+
+	g_free (prefix);
+
+	return profile_name;
+}
+
 static gchar* get_action_uuid_from_key (const gchar* key)
 {
 	g_return_val_if_fail (g_str_has_prefix (key, ACTIONS_CONFIG_DIR), NULL);
 	
 	gchar* uuid = g_strdup (key + strlen (ACTIONS_CONFIG_DIR "/"));
-	gchar* pos = g_strrstr (uuid, "/");
+	gchar* pos = g_strstr_len (uuid, strlen (uuid), "/");
 	if (pos != NULL)
 	{
 		*pos = '\0';
@@ -62,6 +95,189 @@ static gchar* get_action_uuid_from_key (const gchar* key)
 	return uuid;
 }
 	
+static ProfileChecking* nautilus_actions_config_schema_reader_profile_checking_new ()
+{
+	ProfileChecking* check = g_new0 (ProfileChecking, 1);
+	check->is_path_ok = FALSE;
+	check->is_params_ok = FALSE;
+	check->is_basenames_ok = FALSE;
+	check->is_matchcase_ok = FALSE;
+	check->is_mimetypes_ok = FALSE;
+	check->is_isfile_ok = FALSE;
+	check->is_isdir_ok = FALSE;
+	check->is_multiple_ok = FALSE;
+	check->is_schemes_ok = FALSE;
+
+	return check;
+}
+
+static void nautilus_actions_config_schema_reader_profile_checking_add_validation (GHashTable* profile_check_list, const gchar* profile_name, ActionFieldType type_checked)
+{
+	ProfileChecking* check = g_hash_table_lookup (profile_check_list, profile_name);
+	if (!check)
+	{
+		check = nautilus_actions_config_schema_reader_profile_checking_new ();
+		g_hash_table_insert (profile_check_list, g_strdup (profile_name), check);
+	}
+
+	switch (type_checked)
+	{
+		case ACTION_PATH_TYPE:
+			check->is_path_ok = TRUE;
+			break;
+		case ACTION_PARAMS_TYPE:
+			check->is_params_ok = TRUE;
+			break;
+		case ACTION_BASENAMES_TYPE:
+			check->is_basenames_ok = TRUE;
+			break;
+		case ACTION_MATCHCASE_TYPE:
+			check->is_matchcase_ok = TRUE;
+			break;
+		case ACTION_MIMETYPES_TYPE:
+			check->is_mimetypes_ok = TRUE;
+			break;
+		case ACTION_ISFILE_TYPE:
+			check->is_isfile_ok = TRUE;
+			break;
+		case ACTION_ISDIR_TYPE:
+			check->is_isdir_ok = TRUE;
+			break;
+		case ACTION_MULTIPLE_TYPE:
+			check->is_multiple_ok = TRUE;
+			break;
+		case ACTION_SCHEMES_TYPE:
+			check->is_schemes_ok = TRUE;
+			break;
+		default:
+			break;
+	}
+}
+
+static void get_hash_keys (gchar* key, gchar* value, GSList* list)
+{
+	list = g_slist_append (list, key);
+}
+
+static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GHashTable* profile_check_list, const gchar* version, gchar** error_message)
+{
+	gboolean retv = FALSE;
+	GSList* profile_list = NULL;
+	GSList* iter;
+	gchar* tmp;
+	gchar* list_separator;
+	GString* missing_keys;
+	GString* error_message_str;
+	ProfileChecking* check = NULL;
+
+	// i18n notes: will be displayed in an error dialog concatenated to another error message
+	error_message_str = g_string_new (_(" and some profiles are incomplete: "));
+	g_hash_table_foreach (profile_check_list, (GHFunc)get_hash_keys, profile_list);
+
+	// Check if the default profile has been found in the xml file, if not remove 
+	//  it (added automatically by nautilus_actions_config_action_new_default() function)
+	check = g_hash_table_lookup (profile_check_list, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
+	if (!check->is_schemes_ok && !check->is_multiple_ok && 
+			!check->is_matchcase_ok && !check->is_mimetypes_ok &&
+			!check->is_isdir_ok && !check->is_isfile_ok && !check->is_basenames_ok && 
+			!check->is_params_ok && !check->is_path_ok)
+	{
+		g_hash_table_remove (profile_check_list, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
+	}
+
+	// i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+	list_separator = g_strdup (_(","));
+
+	for (iter = profile_list; iter; iter = iter->next)
+	{
+		gchar* profile_name = (gchar*)iter->data;
+		check = g_hash_table_lookup (profile_check_list, profile_name);
+		if (g_ascii_strcasecmp (version, "1.0") == 0 && 
+				check->is_schemes_ok && check->is_multiple_ok && 
+				check->is_isdir_ok && check->is_isfile_ok && check->is_basenames_ok && 
+				check->is_params_ok && check->is_path_ok)
+		{
+
+			retv = TRUE;
+		}
+		//else if (g_ascii_strcasecmp (version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 && 
+		else if (g_ascii_strcasecmp (version, "1.1") >= 0 && 
+				check->is_schemes_ok && check->is_multiple_ok && 
+				check->is_matchcase_ok && check->is_mimetypes_ok &&
+				check->is_isdir_ok && check->is_isfile_ok && check->is_basenames_ok && 
+				check->is_params_ok && check->is_path_ok)
+		{
+			retv = TRUE;
+		}
+		else
+		{
+			missing_keys = g_string_new ("");
+			if (!check->is_schemes_ok)
+			{
+				g_string_append_printf (missing_keys , "%s%s", ACTION_SCHEMES_ENTRY, list_separator);
+			}
+			if (!check->is_multiple_ok)
+			{
+				g_string_append_printf (missing_keys , "%s%s", ACTION_MULTIPLE_ENTRY, list_separator);
+			}
+			if (!check->is_isdir_ok)
+			{
+				g_string_append_printf (missing_keys , "%s%s", ACTION_ISDIR_ENTRY, list_separator);
+			}
+			if (!check->is_isfile_ok)
+			{
+				g_string_append_printf (missing_keys , "%s%s", ACTION_ISFILE_ENTRY, list_separator);
+			}
+			if (!check->is_basenames_ok)
+			{
+				g_string_append_printf (missing_keys , "%s%s", ACTION_BASENAMES_ENTRY, list_separator);
+			}
+			if (!check->is_params_ok)
+			{
+				g_string_append_printf (missing_keys , "%s%s", ACTION_PARAMS_ENTRY, list_separator);
+			}
+			if (!check->is_path_ok)
+			{
+				g_string_append_printf (missing_keys , "%s%s", ACTION_PATH_ENTRY, list_separator);
+			}
+			//if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0)
+			if (g_ascii_strcasecmp (version, "1.1") >= 0)
+			{
+				if (!check->is_matchcase_ok)
+				{
+					g_string_append_printf (missing_keys , "%s%s", ACTION_MATCHCASE_ENTRY, list_separator);
+				}
+				if (!check->is_mimetypes_ok)
+				{
+					g_string_append_printf (missing_keys , "%s%s", ACTION_MIMETYPES_ENTRY, list_separator);
+				}
+			}
+			// Remove the last separator
+			g_string_truncate (missing_keys, (missing_keys->len - strlen (list_separator)));
+
+			tmp = g_string_free (missing_keys, FALSE);
+
+			// i18n notes: will be displayed in an error dialog concatenated to another error message
+			g_string_append_printf (error_message_str, _("%s (missing key(s): %s)%s"), profile_name, tmp, list_separator);
+			g_free (tmp);
+		}
+	}
+	g_slist_free (profile_list);
+
+	// Remove the last separator
+	g_string_truncate (error_message_str, (error_message_str->len - strlen (list_separator)));
+
+	tmp = g_string_free (error_message_str, FALSE);
+
+	if (!retv)
+	{
+		*error_message = g_strdup (tmp);
+	}
+	g_free (tmp);
+
+	return retv;
+}
+
 static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key_locale (xmlNode *config_node, gchar** value)
 {
 	gboolean retv = FALSE;
@@ -82,18 +298,18 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key_lo
 	return retv;
 }
 
-static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (xmlNode *config_node, ActionFieldType* type, gchar** value, gchar** uuid, gboolean get_uuid)
+static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (xmlNode *config_node, ActionFieldType* type, gchar** value, gchar** uuid, gboolean get_uuid, gchar** profile_name)
 {
 	gboolean retv = FALSE;
 	xmlNode* iter;
 	gboolean is_key_ok = FALSE;
-//	gboolean is_type_ok = FALSE;
 	gboolean is_default_value_ok = FALSE;
 	
 	*type = ACTION_NONE_TYPE;
 	for (iter = config_node->children; iter; iter = iter->next)
 	{
 		char *text;
+		gchar* uuid_tmp;
 
 		if (!is_key_ok && iter->type == XML_ELEMENT_NODE &&
 				g_ascii_strncasecmp ((gchar*)iter->name, 
@@ -102,10 +318,15 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 		{
 			text = (char*)xmlNodeGetContent (iter);
 
+
+			uuid_tmp = get_action_uuid_from_key (text);
 			if (get_uuid)
 			{
-				*uuid = get_action_uuid_from_key (text);
+				*uuid = g_strdup (uuid_tmp);
 			}
+
+			*profile_name = get_action_profile_name_from_key (text, uuid_tmp);
+			g_free (uuid_tmp);
 
 			if (g_str_has_suffix (text, ACTION_LABEL_ENTRY))
 			{
@@ -257,21 +478,17 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 	gboolean is_label_ok = FALSE;
 	gboolean is_tooltip_ok = FALSE;
 	gboolean is_icon_ok = FALSE;
-	gboolean is_path_ok = FALSE;
-	gboolean is_params_ok = FALSE;
-	gboolean is_basenames_ok = FALSE;
-	gboolean is_matchcase_ok = FALSE;
-	gboolean is_mimetypes_ok = FALSE;
-	gboolean is_isfile_ok = FALSE;
-	gboolean is_isdir_ok = FALSE;
-	gboolean is_multiple_ok = FALSE;
-	gboolean is_schemes_ok = FALSE;
+	gboolean is_profiles_ok = FALSE;
 	gboolean is_version_ok = FALSE;
 	ActionFieldType type;
 	GSList* list = NULL;
 	gchar* tmp;
 	gchar* list_separator;
+	gchar* error_msg = NULL;
 	GString* missing_keys;
+	GHashTable* profile_check_list = g_hash_table_new_full (g_str_hash, g_str_equal,
+						 (GDestroyNotify) g_free,
+						 (GDestroyNotify) g_free);
 
 	for (iter = config_node->children; iter; iter = iter->next)
 	{
@@ -284,14 +501,21 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			{
 				gchar* value;
 				gchar* uuid = NULL;
+				gchar* profile_name = NULL;
 
-				if (nautilus_actions_config_schema_reader_action_parse_schema_key (iter, &type, &value, &uuid, (action->uuid == NULL)))
+				if (nautilus_actions_config_schema_reader_action_parse_schema_key (iter, &type, &value, &uuid, (action->uuid == NULL), &profile_name))
 				{
+					NautilusActionsConfigActionProfile* action_profile = NULL;
 
 					if (!action->uuid)
 					{
 						nautilus_actions_config_action_set_uuid (action, uuid);
 						g_free (uuid);
+					}
+
+					if (!profile_name)
+					{
+						profile_name = g_strdup (NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
 					}
 
 					switch (type)
@@ -309,47 +533,56 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 							nautilus_actions_config_action_set_icon (action, value);
 							break;
 						case ACTION_PATH_TYPE:
-							is_path_ok = TRUE;
-							nautilus_actions_config_action_set_path (action, value);
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
+							nautilus_actions_config_action_profile_set_path (action_profile, value);
 							break;
 						case ACTION_PARAMS_TYPE:
-							is_params_ok = TRUE;
-							nautilus_actions_config_action_set_parameters (action, value);
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
+							nautilus_actions_config_action_profile_set_parameters (action_profile, value);
 							break;
 						case ACTION_BASENAMES_TYPE:
-							is_basenames_ok = TRUE;
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
 							list = schema_string_to_gslist (value);
-							nautilus_actions_config_action_set_basenames (action, list);
+							nautilus_actions_config_action_profile_set_basenames (action_profile, list);
 							g_slist_foreach (list, (GFunc)g_free, NULL);
 							g_slist_free (list);
 							break;
 						case ACTION_MATCHCASE_TYPE:
-							is_matchcase_ok = TRUE;
-							nautilus_actions_config_action_set_match_case (action, schema_string_to_bool (value));
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
+							nautilus_actions_config_action_profile_set_match_case (action_profile, schema_string_to_bool (value));
 							break;
 						case ACTION_MIMETYPES_TYPE:
-							is_mimetypes_ok = TRUE;
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
 							list = schema_string_to_gslist (value);
-							nautilus_actions_config_action_set_mimetypes (action, list);
+							nautilus_actions_config_action_profile_set_mimetypes (action_profile, list);
 							g_slist_foreach (list, (GFunc)g_free, NULL);
 							g_slist_free (list);
 							break;
 						case ACTION_ISFILE_TYPE:
-							is_isfile_ok = TRUE;
-							nautilus_actions_config_action_set_is_file (action, schema_string_to_bool (value));
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
+							nautilus_actions_config_action_profile_set_is_file (action_profile, schema_string_to_bool (value));
 							break;
 						case ACTION_ISDIR_TYPE:
-							is_isdir_ok = TRUE;
-							nautilus_actions_config_action_set_is_dir (action, schema_string_to_bool (value));
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
+							nautilus_actions_config_action_profile_set_is_dir (action_profile, schema_string_to_bool (value));
 							break;
 						case ACTION_MULTIPLE_TYPE:
-							is_multiple_ok = TRUE;
-							nautilus_actions_config_action_set_accept_multiple (action, schema_string_to_bool (value));
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
+							nautilus_actions_config_action_profile_set_accept_multiple (action_profile, schema_string_to_bool (value));
 							break;
 						case ACTION_SCHEMES_TYPE:
-							is_schemes_ok = TRUE;
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
 							list = schema_string_to_gslist (value);
-							nautilus_actions_config_action_set_schemes (action, list);
+							nautilus_actions_config_action_profile_set_schemes (action_profile, list);
 							g_slist_foreach (list, (GFunc)g_free, NULL);
 							g_slist_free (list);
 							break;
@@ -367,6 +600,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 
 					g_free (value);
 				}	
+				g_free (profile_name);
 			}
 			else
 			{
@@ -378,20 +612,16 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		
 	if (is_version_ok)
 	{
+		is_profiles_ok = nautilus_actions_config_schema_reader_profile_checking_check (profile_check_list, action->version, &error_msg);
 		if (g_ascii_strcasecmp (action->version, "1.0") == 0 && 
-				is_schemes_ok && is_multiple_ok && 
-				is_isdir_ok && is_isfile_ok && is_basenames_ok && 
-				is_params_ok && is_path_ok && is_icon_ok && 
+				is_profiles_ok && is_icon_ok && 
 				is_tooltip_ok && is_label_ok)
 		{
 
 			retv = TRUE;
 		}
 		else if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 && 
-				is_schemes_ok && is_multiple_ok && 
-				is_matchcase_ok && is_mimetypes_ok &&
-				is_isdir_ok && is_isfile_ok && is_basenames_ok && 
-				is_params_ok && is_path_ok && is_icon_ok && 
+				is_profiles_ok && is_icon_ok && 
 				is_tooltip_ok && is_label_ok)
 		{
 			retv = TRUE;
@@ -401,34 +631,6 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			missing_keys = g_string_new ("");
 			// i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 			list_separator = g_strdup (_(","));
-			if (!is_schemes_ok)
-			{
-				g_string_append_printf (missing_keys , "%s%s", ACTION_SCHEMES_ENTRY, list_separator);
-			}
-			if (!is_multiple_ok)
-			{
-				g_string_append_printf (missing_keys , "%s%s", ACTION_SCHEMES_ENTRY, list_separator);
-			}
-			if (!is_isdir_ok)
-			{
-				g_string_append_printf (missing_keys , "%s%s", ACTION_ISDIR_ENTRY, list_separator);
-			}
-			if (!is_isfile_ok)
-			{
-				g_string_append_printf (missing_keys , "%s%s", ACTION_ISFILE_ENTRY, list_separator);
-			}
-			if (!is_basenames_ok)
-			{
-				g_string_append_printf (missing_keys , "%s%s", ACTION_BASENAMES_ENTRY, list_separator);
-			}
-			if (!is_params_ok)
-			{
-				g_string_append_printf (missing_keys , "%s%s", ACTION_PARAMS_ENTRY, list_separator);
-			}
-			if (!is_path_ok)
-			{
-				g_string_append_printf (missing_keys , "%s%s", ACTION_PATH_ENTRY, list_separator);
-			}
 			if (!is_icon_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_ICON_ENTRY, list_separator);
@@ -441,32 +643,26 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_LABEL_ENTRY, list_separator);
 			}
-			if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0)
-			{
-				if (!is_matchcase_ok)
-				{
-					g_string_append_printf (missing_keys , "%s%s", ACTION_MATCHCASE_ENTRY, list_separator);
-				}
-				if (!is_mimetypes_ok)
-				{
-					g_string_append_printf (missing_keys , "%s%s", ACTION_MIMETYPES_ENTRY, list_separator);
-				}
-			}
 			// Remove the last separator
 			g_string_truncate (missing_keys, (missing_keys->len - strlen (list_separator)));
 
 			tmp = g_string_free (missing_keys, FALSE);
+			if (!error_msg)
+			{
+				error_msg = g_strdup ("");
+			}
 
 			// i18n notes: will be displayed in an error dialog
-			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (missing key(s) : %s)"), tmp);
+			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (missing key(s): %s)%s"), tmp, error_msg);
 			g_free (tmp);
 		}
+		g_free (error_msg);
 	}
 	else if (error != NULL && *error != NULL)
 	{
 		// No error occured but we have not found the "version" gconf key
 		// i18n notes: will be displayed in an error dialog
-		g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (missing key : %s)"), ACTION_VERSION_ENTRY);
+		g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (missing key: %s)"), ACTION_VERSION_ENTRY);
 	}
 
 	/*

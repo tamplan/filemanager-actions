@@ -371,6 +371,20 @@ nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action,
 	return g_hash_table_lookup (action->profiles, profile_name);
 }
 
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action, 
+									 gchar* profile_name)
+{
+	NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
+
+	if (!action_profile)
+	{
+		action_profile = nautilus_actions_config_action_profile_new_default ();
+		nautilus_actions_config_action_add_profile (action, profile_name, action_profile);
+	}
+
+	return action_profile;
+}
+
 void
 nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
 									 gchar* profile_name,
