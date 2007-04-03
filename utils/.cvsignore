@@ -3,3 +3,6 @@ Makefile.in
 nautilus-actions-convert
 nautilus-actions-new-config
 *.swp
+.deps
+.libs
+*.loT
