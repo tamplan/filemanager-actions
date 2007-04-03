@@ -352,7 +352,7 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_d
 
 gboolean
 nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action, 
-									 							gchar* profile_name)
+									 							const gchar* profile_name)
 {
 	gboolean retv = FALSE;
 
@@ -366,13 +366,13 @@ nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *acti
 
 NautilusActionsConfigActionProfile*
 nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
-									 						gchar* profile_name)
+									 						const gchar* profile_name)
 {
 	return g_hash_table_lookup (action->profiles, profile_name);
 }
 
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action, 
-									 gchar* profile_name)
+									 const gchar* profile_name)
 {
 	NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
 
@@ -387,7 +387,7 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create
 
 void
 nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
-									 gchar* profile_name,
+									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile)
 {
 	g_hash_table_insert (action->profiles, g_strdup (profile_name), profile);
@@ -395,7 +395,7 @@ nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action,
 
 void
 nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *action, 
-									 gchar* profile_name,
+									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile)
 {
 	//--> the old value is freed by the function
@@ -404,7 +404,7 @@ nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *act
 
 gboolean
 nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action, 
-									 gchar* profile_name)
+									 const gchar* profile_name)
 {
 	g_hash_table_remove (action->profiles, profile_name);
 }
@@ -572,7 +572,7 @@ NautilusActionsConfigActionProfile* nautilus_actions_config_action_profile_dup (
 			success = FALSE;
 		}
 
-		if (action->basenames && success) {
+		if (action_profile->basenames && success) {
 			for (iter = action_profile->basenames; iter; iter = iter->next)
 			{
 				new_action_profile->basenames = g_slist_append (new_action_profile->basenames, g_strdup ((gchar*)iter->data));

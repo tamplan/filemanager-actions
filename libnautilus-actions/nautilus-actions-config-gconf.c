@@ -66,13 +66,24 @@ nautilus_actions_config_gconf_class_init (NautilusActionsConfigGconfClass *klass
 }
 
 static gchar *
-get_action_profile_dir (const gchar *parent_dir, const gchar *profile_name)
+get_action_profile_name (const gchar *parent_dir, const gchar *profile_dir)
 {
-	gchar *dir;
+	gchar* prefix = g_strdup_printf ("%s/%s", parent_dir, ACTIONS_PROFILE_PREFIX);
+	gchar* profile_name = NULL;
 
-	dir = g_strdup_printf ("%s/%s%s", parent_dir, ACTIONS_PROFILE_PREFIX, profile_name);
+	if (g_str_has_prefix (profile_dir, prefix))
+	{
+		profile_name = g_strdup (profile_dir + strlen (prefix));
+		gchar* pos = g_strrstr (profile_name, "/");
+		if (pos != NULL)
+		{
+			*pos = '\0';
+		}
+	}
 
-	return dir;
+	g_free (prefix);
+
+	return profile_name;
 }
 
 static gboolean
@@ -134,6 +145,9 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 	GSList* node;
 	GSList* iter;
 	GSList* profile_list = NULL;
+	gchar* profile_dir;
+	gchar* profile_name;
+	NautilusActionsConfigActionProfile* action_profile;
 	config->conf_client = gconf_client_get_default ();
 
 	/* load all defined actions */
@@ -142,49 +156,56 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 	for (node = list; node != NULL; node = node->next) {
 		NautilusActionsConfigAction *action = nautilus_actions_config_action_new ();
 
-		action->conf_section = node->data;
-		action->label = get_action_string_value (config->conf_client, node->data, ACTION_LABEL_ENTRY);
+		action->conf_section = (gchar*)node->data;
+		action->label = get_action_string_value (config->conf_client, (gchar*)node->data, ACTION_LABEL_ENTRY);
 		if (!action->label) {
 			nautilus_actions_config_action_free (action);
 			continue;
 		}
 
 		action->uuid = g_path_get_basename (action->conf_section); // Get the last part of the config section dir
-		action->tooltip = get_action_string_value (config->conf_client, node->data, ACTION_TOOLTIP_ENTRY);
-		action->icon = get_action_string_value (config->conf_client, node->data, ACTION_ICON_ENTRY);
-		action->version = get_action_string_value (config->conf_client, node->data, ACTION_VERSION_ENTRY);
+		action->tooltip = get_action_string_value (config->conf_client, (gchar*)node->data, ACTION_TOOLTIP_ENTRY);
+		action->icon = get_action_string_value (config->conf_client, (gchar*)node->data, ACTION_ICON_ENTRY);
+		action->version = get_action_string_value (config->conf_client, (gchar*)node->data, ACTION_VERSION_ENTRY);
 
 		if (g_ascii_strcasecmp (action->version, "2.0") < 0)
 		{
+			action_profile = nautilus_actions_config_action_profile_new ();
+
 			//--> manage backward compatibility
-			action->path = get_action_string_value (config->conf_client, node->data, ACTION_PATH_ENTRY);
-			action->parameters = get_action_string_value (config->conf_client, node->data, ACTION_PARAMS_ENTRY);
-			action->basenames = get_action_list_value (config->conf_client, node->data, ACTION_BASENAMES_ENTRY);
-			action->match_case = get_action_bool_value (config->conf_client, node->data, ACTION_MATCHCASE_ENTRY);
-			action->mimetypes = get_action_list_value (config->conf_client, node->data, ACTION_MIMETYPES_ENTRY);
-			action->is_file = get_action_bool_value (config->conf_client, node->data, ACTION_ISFILE_ENTRY);
-			action->is_dir = get_action_bool_value (config->conf_client, node->data, ACTION_ISDIR_ENTRY);
-			action->accept_multiple_files = get_action_bool_value (config->conf_client, node->data, ACTION_MULTIPLE_ENTRY);
-			action->schemes = get_action_list_value (config->conf_client, node->data, ACTION_SCHEMES_ENTRY);
+			action_profile->path = get_action_string_value (config->conf_client, (gchar*)node->data, ACTION_PATH_ENTRY);
+			action_profile->parameters = get_action_string_value (config->conf_client, (gchar*)node->data, ACTION_PARAMS_ENTRY);
+			action_profile->basenames = get_action_list_value (config->conf_client, (gchar*)node->data, ACTION_BASENAMES_ENTRY);
+			action_profile->match_case = get_action_bool_value (config->conf_client, (gchar*)node->data, ACTION_MATCHCASE_ENTRY);
+			action_profile->mimetypes = get_action_list_value (config->conf_client, (gchar*)node->data, ACTION_MIMETYPES_ENTRY);
+			action_profile->is_file = get_action_bool_value (config->conf_client, (gchar*)node->data, ACTION_ISFILE_ENTRY);
+			action_profile->is_dir = get_action_bool_value (config->conf_client, (gchar*)node->data, ACTION_ISDIR_ENTRY);
+			action_profile->accept_multiple_files = get_action_bool_value (config->conf_client, (gchar*)node->data, ACTION_MULTIPLE_ENTRY);
+			action_profile->schemes = get_action_list_value (config->conf_client, (gchar*)node->data, ACTION_SCHEMES_ENTRY);
 
 			if (g_ascii_strcasecmp (action->version, "1.0") == 0)
 			{
-				action->match_case = TRUE;
-				action->mimetypes = g_slist_append (action->mimetypes, g_strdup ("*/*"));
+				action_profile->match_case = TRUE;
+				action_profile->mimetypes = g_slist_append (action_profile->mimetypes, g_strdup ("*/*"));
 			}
 			else
 			{
-				action->mimetypes = get_action_list_value (config->conf_client, node->data, ACTION_MIMETYPES_ENTRY);
-				action->match_case = get_action_bool_value (config->conf_client, node->data, ACTION_MATCHCASE_ENTRY);
+				action_profile->mimetypes = get_action_list_value (config->conf_client, (gchar*)node->data, ACTION_MIMETYPES_ENTRY);
+				action_profile->match_case = get_action_bool_value (config->conf_client, (gchar*)node->data, ACTION_MATCHCASE_ENTRY);
 			}
+
+			nautilus_actions_config_action_add_profile (action, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME, action_profile);
 		}
 		else
 		{
-			profile_list = get_action_list_value (config->conf_client, node->data, ACTION_PROFILES_ENTRY);
+			/* load all defined profiles */
+			profile_list = gconf_client_all_dirs (config->conf_client, (gchar*)node->data, NULL);
+
 			for (iter = profile_list; iter; iter = iter->next)
 			{
-				gchar* profile_dir = get_action_profile_dir (node->data, (gchar*)iter->data);
-				NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_profile_new ();
+				profile_dir = (gchar*)iter->data;
+				profile_name = get_action_profile_name ((gchar*)node->data, (gchar*)iter->data);
+				action_profile = nautilus_actions_config_action_profile_new ();
 
 				action_profile->path = get_action_string_value (config->conf_client, profile_dir, ACTION_PATH_ENTRY);
 				action_profile->parameters = get_action_string_value (config->conf_client, profile_dir, ACTION_PARAMS_ENTRY);
@@ -196,8 +217,9 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 				action_profile->accept_multiple_files = get_action_bool_value (config->conf_client, profile_dir, ACTION_MULTIPLE_ENTRY);
 				action_profile->schemes = get_action_list_value (config->conf_client, profile_dir, ACTION_SCHEMES_ENTRY);
 
-				nautilus_actions_config_action_add_profile (action, (gchar*)iter->data, action_profile);
+				nautilus_actions_config_action_add_profile (action, profile_name, action_profile);
 
+				g_free (profile_name);
 				g_free (profile_dir);
 			}
 
@@ -206,6 +228,9 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 
 		/* add the new action to the hash table */
 		g_hash_table_insert (NAUTILUS_ACTIONS_CONFIG (config)->actions, g_strdup (action->uuid), action);
+
+		// Free the gconf dir string once used
+		g_free (node->data);
 	}
 
 	g_slist_free (list);

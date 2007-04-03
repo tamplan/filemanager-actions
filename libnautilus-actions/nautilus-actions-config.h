@@ -114,19 +114,19 @@ gboolean		     nautilus_actions_config_clear (NautilusActionsConfig *config);
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new (void);
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_default (void);
 gboolean                     nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action, 
-									 gchar* profile_name);
+									 const gchar* profile_name);
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
-									 gchar* profile_name);
+									 const gchar* profile_name);
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action, 
-									 gchar* profile_name);
+									 const gchar* profile_name);
 void                         nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
-									 gchar* profile_name,
+									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile);
 void                         nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *action, 
-									 gchar* profile_name,
+									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile);
 gboolean                     nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action, 
-									 gchar* profile_name);
+									 const gchar* profile_name);
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void);
 NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void);
@@ -147,7 +147,7 @@ void                         nautilus_actions_config_action_profile_set_basename
 										 GSList *basenames);
 void                         nautilus_actions_config_action_profile_set_mimetypes (NautilusActionsConfigActionProfile *action_profile, 
 										 GSList *mimetypes);
-void                         nautilus_actions_config_action_profile_set_schemes (NautilusActionsConfigAction *action_profile, 
+void                         nautilus_actions_config_action_profile_set_schemes (NautilusActionsConfigActionProfile *action_profile, 
 										 GSList *schemes);
 
 #define nautilus_actions_config_action_profile_set_match_case(action_profile, b) { if ((action_profile)) (action_profile)->match_case = b; }

@@ -49,15 +49,15 @@ typedef enum {
 } ActionFieldType;
 
 typedef struct {
-	gboolean is_path_ok,
-	gboolean is_params_ok,
-	gboolean is_basenames_ok,
-	gboolean is_matchcase_ok,
-	gboolean is_mimetypes_ok,
-	gboolean is_isfile_ok,
-	gboolean is_isdir_ok,
-	gboolean is_multiple_ok,
-	gboolean is_schemes_ok
+	gboolean is_path_ok;
+	gboolean is_params_ok;
+	gboolean is_basenames_ok;
+	gboolean is_matchcase_ok;
+	gboolean is_mimetypes_ok;
+	gboolean is_isfile_ok;
+	gboolean is_isdir_ok;
+	gboolean is_multiple_ok;
+	gboolean is_schemes_ok;
 } ProfileChecking;
 
 static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* uuid)

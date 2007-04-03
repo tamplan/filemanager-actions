@@ -1,4 +1,12 @@
 2007-04-03  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-writer.c:
+	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h: Fix compilation error
+	following the big "profile feature" rewrite in libnautilus-actions.
+
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h: Remove
 	infos about a new schema key "profiles" which is not needed anymore.
 

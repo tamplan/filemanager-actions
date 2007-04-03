@@ -216,58 +216,61 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	for (iter = profile_list; iter; iter = iter->next)
 	{
 		gchar* profile_name = (gchar*)iter->data;
+		gchar* profile_dir = g_strdup_printf ("%s%s", ACTIONS_PROFILE_PREFIX, profile_name);
 		NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
 	
 		//--> Command entries : path
-		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_name, ACTION_PATH_ENTRY, NULL);
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_PATH_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "string", action_profile->path, ACTION_PATH_DESC_SHORT, ACTION_PATH_DESC_LONG, FALSE);
 		xmlFree (content);
 
 		//--> Command entries : parameters
-		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_name, ACTION_PARAMS_ENTRY, NULL);
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_PARAMS_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "string", action_profile->parameters, ACTION_PARAMS_DESC_SHORT, ACTION_PARAMS_DESC_LONG, FALSE);
 		xmlFree (content);
 
 		//--> Test entries : basenames
-		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_name, ACTION_BASENAMES_ENTRY, NULL);
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_BASENAMES_ENTRY, NULL);
 		str_list = BAD_CAST gslist_to_schema_string (action_profile->basenames);
 		create_schema_entry (doc, list_node, content, "list", (char*)str_list, ACTION_BASENAMES_DESC_SHORT, ACTION_BASENAMES_DESC_LONG, FALSE);
 		xmlFree (str_list);
 		xmlFree (content);
 
 		//--> test entries : match_case
-		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_name, ACTION_MATCHCASE_ENTRY, NULL);
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_MATCHCASE_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "bool", bool_to_schema_string (action_profile->match_case), ACTION_MATCHCASE_DESC_SHORT, ACTION_MATCHCASE_DESC_LONG, FALSE);
 		xmlFree (content);
 
 		//--> Test entries : mimetypes
-		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_name, ACTION_MIMETYPES_ENTRY, NULL);
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_MIMETYPES_ENTRY, NULL);
 		str_list = BAD_CAST gslist_to_schema_string (action_profile->mimetypes);
 		create_schema_entry (doc, list_node, content, "list", (char*)str_list, ACTION_MIMETYPES_DESC_SHORT, ACTION_MIMETYPES_DESC_LONG, FALSE);
 		xmlFree (str_list);
 		xmlFree (content);
 				
 		//--> test entries : is_file
-		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_name, ACTION_ISFILE_ENTRY, NULL);
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_ISFILE_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "bool", bool_to_schema_string (action_profile->is_file), ACTION_ISFILE_DESC_SHORT, _(ACTION_ISFILE_DESC_LONG), FALSE);
 		xmlFree (content);
 
 		//--> test entries : is_dir
-		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_name, ACTION_ISDIR_ENTRY, NULL);
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_ISDIR_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "bool", bool_to_schema_string (action_profile->is_dir), ACTION_ISDIR_DESC_SHORT, _(ACTION_ISDIR_DESC_LONG), FALSE);
 		xmlFree (content);
 
 		//--> test entries : accept-multiple-files
-		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_name, ACTION_MULTIPLE_ENTRY, NULL);
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_MULTIPLE_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "bool", bool_to_schema_string (action_profile->accept_multiple_files), ACTION_MULTIPLE_DESC_SHORT, ACTION_MULTIPLE_DESC_LONG, FALSE);
 		xmlFree (content);
 
 		//--> test entries : schemes
-		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_name, ACTION_SCHEMES_ENTRY, NULL);
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_SCHEMES_ENTRY, NULL);
 		str_list = BAD_CAST gslist_to_schema_string (action_profile->schemes);
 		create_schema_entry (doc, list_node, content, "list", (char*)str_list, ACTION_SCHEMES_DESC_SHORT, ACTION_SCHEMES_DESC_LONG, FALSE);
 		xmlFree (str_list);
 		xmlFree (content);
+
+		g_free (profile_dir);
 	}
 	g_slist_free (profile_list);
 
