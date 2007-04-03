@@ -1,3 +1,8 @@
+2007-04-03  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c: Fix 
+	a copy/paste error in the missing keys checking when generating the 
+	error message.
+
 2007-03-02  Frederic Ruaudel <grumz@grumz.net>
 
 	* configure.in: Fix Bug #413834 by applying patch submited
