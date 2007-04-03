@@ -63,7 +63,6 @@
 #define ACTION_MULTIPLE_ENTRY  "accept-multiple-files"
 #define ACTION_SCHEMES_ENTRY   "schemes"
 #define ACTION_VERSION_ENTRY   "version"
-#define ACTION_PROFILES_ENTRY  "profiles"
 
 // GConf description strings :
 
@@ -98,5 +97,3 @@
 #define ACTION_SCHEMES_DESC_LONG		_("Defines the list of valid GnomeVFS schemes to be matched against the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one used in the GnomeVFS URI.\n\nExamples of GnomeVFS URI include: \nfile:///tmp/foo.txt\nsftp:///root@test.example.net/tmp/foo.txt\n\nThe most common schemes are:\n\n'file': local files\n'sftp': files accessed via SSH\n'ftp': files accessed via FTP\n'smb': files accessed via Samba (Windows share)\n'dav': files accessed via WebDav\n\nAll GnomeVFS schemes used by Nautilus can be used here.")
 #define ACTION_VERSION_DESC_SHORT	_("The version of the configuration format")
 #define ACTION_VERSION_DESC_LONG		_("The version of the configuration format that will be used to manage backward compatibility")
-#define ACTION_PROFILES_DESC_SHORT	_("The list of profile's names for this action")
-#define ACTION_PROFILES_DESC_LONG	_("The list of profile's names defined for this action which will be used internally to find back their schemas keys")

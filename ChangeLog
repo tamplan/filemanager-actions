@@ -1,10 +1,14 @@
 2007-04-03  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h: Remove
+	infos about a new schema key "profiles" which is not needed anymore.
+
+	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
 	* libnautilus-actions/nautilus-actions-config.c:
 	* libnautilus-actions/nautilus-actions-config.h: Continue to
 	implement the profile system in the action config, to be able to handle 
-	multiple conditions/parameters for the same item name (eg. Open in terminal,
-	on files, on folders, on desktop).
+	multiple conditions/parameters for the same item name (eg. Open in 
+	terminal, on files, on folders, on desktop).
 
 2007-03-30  Frederic Ruaudel <grumz@grumz.net>
 	* configure.in: Starting V2.x developpement version. Stable version
