@@ -407,7 +407,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			}
 			if (!is_multiple_ok)
 			{
-				g_string_append_printf (missing_keys , "%s%s", ACTION_SCHEMES_ENTRY, list_separator);
+				g_string_append_printf (missing_keys , "%s%s", ACTION_MULTIPLE_ENTRY, list_separator);
 			}
 			if (!is_isdir_ok)
 			{
