@@ -50,7 +50,7 @@ static int nautilus_actions_test_check_scheme (GSList* schemes2test, NautilusFil
 	return retv;
 }
 
-gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GList* files)
+gboolean nautilus_actions_test_validate (NautilusActionsConfigActionProfile *action_profile, GList* files)
 {
 	gboolean retv = FALSE;
 	gboolean test_multiple_file = FALSE;
@@ -72,8 +72,8 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	gboolean basename_match_ok = FALSE;
 	gboolean mimetype_match_ok = FALSE;
 
-	if (action->basenames && action->basenames->next != NULL && 
-			g_ascii_strcasecmp ((gchar*)(action->basenames->data), "*") == 0)
+	if (action_profile->basenames && action_profile->basenames->next != NULL && 
+			g_ascii_strcasecmp ((gchar*)(action_profile->basenames->data), "*") == 0)
 	{
 		// if the only pattern is '*' then all files will match, so it is not 
 		// necessary to make the test for each of them
@@ -81,10 +81,10 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	}
 	else
 	{
-		for (iter = action->basenames; iter; iter = iter->next)
+		for (iter = action_profile->basenames; iter; iter = iter->next)
 		{
 			gchar* tmp_pattern = (gchar*)iter->data;
-			if (!action->match_case)
+			if (!action_profile->match_case)
 			{
 				//--> if case-insensitive asked, lower all the string since the pattern matching function 
 				// don't manage it itself.
@@ -93,16 +93,16 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 			
 			glob_patterns = g_list_append (glob_patterns, g_pattern_spec_new (tmp_pattern));
 			
-			if (!action->match_case)
+			if (!action_profile->match_case)
 			{
 				g_free (tmp_pattern);
 			}
 		}
 	}
 	
-	if (action->mimetypes && action->mimetypes->next != NULL && 
-			(g_ascii_strcasecmp ((gchar*)(action->mimetypes->data), "*") == 0 || 
-			 g_ascii_strcasecmp ((gchar*)(action->mimetypes->data), "*/*") == 0))
+	if (action_profile->mimetypes && action_profile->mimetypes->next != NULL && 
+			(g_ascii_strcasecmp ((gchar*)(action_profile->mimetypes->data), "*") == 0 || 
+			 g_ascii_strcasecmp ((gchar*)(action_profile->mimetypes->data), "*/*") == 0))
 	{
 		// if the only pattern is '*' or */* then all mimetypes will match, so it is not 
 		// necessary to make the test for each of them
@@ -110,7 +110,7 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 	}
 	else
 	{
-		for (iter = action->mimetypes; iter; iter = iter->next)
+		for (iter = action_profile->mimetypes; iter; iter = iter->next)
 		{
 			glob_mime_patterns = g_list_append (glob_mime_patterns, g_pattern_spec_new ((gchar*)iter->data));
 		}
@@ -124,7 +124,7 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 		{
 			gchar* tmp_mimetype = nautilus_file_info_get_mime_type ((NautilusFileInfo *)iter1->data);
 
-			if (!action->match_case)
+			if (!action_profile->match_case)
 			{
 				//--> if case-insensitive asked, lower all the string since the pattern matching function 
 				// don't manage it itself.
@@ -147,7 +147,7 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 				file_count++;
 			}
 
-			scheme_ok_count += nautilus_actions_test_check_scheme (action->schemes, (NautilusFileInfo*)iter1->data);
+			scheme_ok_count += nautilus_actions_test_check_scheme (action_profile->schemes, (NautilusFileInfo*)iter1->data);
 
 			if (!test_basename) // if it is already ok, skip the test to improve performance
 			{
@@ -195,30 +195,30 @@ gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GL
 		total_count++;
 	}
 
-	if ((files != NULL) && (files->next == NULL) && (!action->accept_multiple_files))
+	if ((files != NULL) && (files->next == NULL) && (!action_profile->accept_multiple_files))
 	{
 		test_multiple_file = TRUE;
 	}
-	else if (action->accept_multiple_files)
+	else if (action_profile->accept_multiple_files)
 	{
 		test_multiple_file = TRUE;
 	}
 
-	if (action->is_dir && action->is_file)
+	if (action_profile->is_dir && action_profile->is_file)
 	{
 		if (dir_count > 0 || file_count > 0)
 		{
 			test_file_type = TRUE;
 		}
 	}
-	else if (action->is_dir && !action->is_file)
+	else if (action_profile->is_dir && !action_profile->is_file)
 	{
 		if (file_count == 0)
 		{
 			test_file_type = TRUE;
 		}
 	}
-	else if (!action->is_dir && action->is_file)
+	else if (!action_profile->is_dir && action_profile->is_file)
 	{
 		if (dir_count == 0)
 		{

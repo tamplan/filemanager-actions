@@ -28,7 +28,7 @@
 
 G_BEGIN_DECLS
 
-gboolean nautilus_actions_test_validate (NautilusActionsConfigAction *action, GList* files);
+gboolean nautilus_actions_test_validate (NautilusActionsConfigActionProfile *action_profile, GList* files);
 
 G_END_DECLS
 

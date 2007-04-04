@@ -51,7 +51,7 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
 }
 #endif
 
-static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsConfigAction *action)
+static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile)
 {
 	GList *files;
 	GString *cmd;
@@ -59,9 +59,9 @@ static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsCon
 
 	files = (GList*)g_object_get_data (G_OBJECT (item), "files");
 
-	cmd = g_string_new (action->path);
+	cmd = g_string_new (action_profile->path);
 
-	param = nautilus_actions_utils_parse_parameter (action->parameters, files);
+	param = nautilus_actions_utils_parse_parameter (action_profile->parameters, files);
 	
 	if (param != NULL)
 	{
@@ -92,11 +92,12 @@ static const gchar* get_verified_icon_name (const gchar* icon_name)
 	return icon_name;
 }
 
-static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfigAction *action, GList *files)
+static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfigAction *action, GList *files, NautilusActionsConfigActionProfile* action_profile)
 {
 	NautilusMenuItem *item;
 	gchar* name;
 	const gchar* icon_name = get_verified_icon_name (g_strstrip (action->icon));
+	NautilusActionsConfigActionProfile* action_profile4menu = nautilus_actions_config_action_profile_dup (action_profile);
 
 	name = g_strdup_printf ("NautilusActions::%s", action->uuid);
 	
@@ -108,8 +109,8 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 	g_signal_connect_data (item, 
 				"activate", 
 				G_CALLBACK (nautilus_actions_execute),
-				action, 
-				(GClosureNotify)nautilus_actions_config_action_free, 
+				action_profile4menu, 
+				(GClosureNotify)nautilus_actions_config_action_profile_free, 
 				0);
 
 	g_object_set_data_full (G_OBJECT (item),
@@ -123,12 +124,21 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 	return item;
 }
 
+static void get_hash_keys (gchar* key, gchar* value, GSList* list)
+{
+	list = g_slist_append (list, key);
+}
+
 static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, GtkWidget *window, GList *files)
 {
 	GList *items = NULL;
 	GSList *iter;
 	NautilusMenuItem *item;
 	NautilusActions* self = NAUTILUS_ACTIONS (provider);
+	gchar* profile_name = NULL;
+	GSList* profile_list = NULL;
+	GSList* iter2;
+	gboolean found;
 
 	g_return_val_if_fail (NAUTILUS_IS_ACTIONS (self), NULL);
 
@@ -137,19 +147,28 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 		for (iter = self->config_list; iter; iter = iter->next)
 		{
 			/* Foreach configured action, check if we add a menu item */
-			NautilusActionsConfigAction *action = nautilus_actions_config_action_dup ((NautilusActionsConfigAction*)iter->data);
+			NautilusActionsConfigAction *action = (NautilusActionsConfigAction*)iter->data;
 
-			if (nautilus_actions_test_validate (action, files))
+			/* Retrieve all profile name */
+			g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, profile_list);
+			
+			iter2 = profile_list;
+			found = FALSE;
+			while (iter2 && !found)
 			{
-				item = nautilus_actions_create_menu_item (action, files);
-				items = g_list_append (items, item);
-			}
-			else
-			{
-				nautilus_actions_config_action_free (action);
+				profile_name = (gchar*)iter2->data;
+				NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
+
+				if (nautilus_actions_test_validate (action_profile, files))
+				{
+					item = nautilus_actions_create_menu_item (action, files, action_profile);
+					items = g_list_append (items, item);
+					found = TRUE;
+				}
+
+				iter2 = iter2->next;
 			}
 		}
-
 	}
 	
 	return items;

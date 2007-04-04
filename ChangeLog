@@ -1,3 +1,10 @@
+2007-04-04  Frederic Ruaudel <grumz@grumz.net>
+	* plugin/nautilus-actions-test.c:
+	* plugin/nautilus-actions-test.h:
+	* plugin/nautilus-actions.c: Implement the "profile" feature into
+	the nautilus extension part. For each action it checks for the
+	first profile which validate the conditions.
+
 2007-04-03  Frederic Ruaudel <grumz@grumz.net>
 	* libnautilus-actions/nautilus-actions-config-xml.c:
 	* libnautilus-actions/nautilus-actions-config-xml.h:
@@ -23,7 +30,7 @@
 	multiple conditions/parameters for the same item name (eg. Open in 
 	terminal, on files, on folders, on desktop).
 
-2007-03-30  Frederic Ruaudel <grumz@grumz.net>
+2007-03-30  Frederic Ruaudel <grumz@grumz.net> - branch to 2.x
 	* configure.in: Starting V2.x developpement version. Stable version
 	is now in nautilus-actions-1.x-maintenance branch. Update the version 
 	numbers.
@@ -38,7 +45,7 @@
 	multiple conditions/parameters for the same item name (eg. Open in terminal,
 	on files, on folders, on desktop).
 
-2007-03-02  Frederic Ruaudel <grumz@grumz.net>
+2007-03-02  Frederic Ruaudel <grumz@grumz.net> 
 
 	* configure.in: Fix Bug #413834 by applying patch submited
 	by christopher taylor <christophth@tiscali.it>. Now the new 32x32
