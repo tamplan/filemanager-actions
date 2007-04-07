@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.ar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-11-17 21:17+0000\n"
-"PO-Revision-Date: 2006-11-17 23:55+0100\n"
-"Last-Translator: Djihed Afifi <djihed@gmail.com>\n"
+"PO-Revision-Date: 2007-04-06 21:11+0200\n"
+"Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <support@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr "أضف عناصر لقائمة ناوتلس المنبثقة"
 
 #: ../nact/nact.desktop.in.h:2
 msgid "Nautilus Actions Configuration"
-msgstr "إعداد أعمال ناوتلس"
+msgstr "إعداد إجرائات ناوتلس"
 
 #: ../nact/nautilus-actions-config.glade.h:1
 msgid " "
@@ -184,15 +184,15 @@ msgstr "حالات"
 
 #: ../nact/nautilus-actions-config.glade.h:48
 msgid "Create a copy of the selected action."
-msgstr "انشيء نسخة من العمل المحدد."
+msgstr "انشيء نسخة من الإجراء المحدد."
 
 #: ../nact/nautilus-actions-config.glade.h:49
 msgid "Delete the action without any confirmation nor the possibility to restore it."
-msgstr "احذف العمل بدون أي تأكيد أو احتمالية لاسترجاعه."
+msgstr "احذف الإجراء بدون أي تأكيد أو احتمالية لاسترجاعه."
 
 #: ../nact/nautilus-actions-config.glade.h:50
 msgid "Export existing configs"
-msgstr "صدر الإعدادات الموجودة"
+msgstr "صدِّر الإعدادات الموجودة"
 
 #: ../nact/nautilus-actions-config.glade.h:51
 msgid "File to Import:"
@@ -227,9 +227,8 @@ msgid "Import/Export"
 msgstr "استورد/صدّر"
 
 #: ../nact/nautilus-actions-config.glade.h:59
-#, fuzzy
 msgid "Import/Export Settings"
-msgstr "_استيراد تعيينات الميزة..."
+msgstr "استورد/صدِّر الإعدادات"
 
 #: ../nact/nautilus-actions-config.glade.h:60
 msgid "Label of the menu item in the Nautilus popup menu."
@@ -241,7 +240,7 @@ msgstr "عنوان:"
 
 #: ../nact/nautilus-actions-config.glade.h:62
 msgid "Manage importation of external action configurations and exportation of existing actions."
-msgstr "أدر استيراد اعدادات عمل خارجية وتصدير الأعمال الموجودة مسبقا."
+msgstr "أدر استيراد اعدادات إجراء خارجية وتصدير الإجراءات الموجودة مسبقا."
 
 #: ../nact/nautilus-actions-config.glade.h:63
 msgid "Match case"
@@ -249,7 +248,7 @@ msgstr "طابق الحالة"
 
 #: ../nact/nautilus-actions-config.glade.h:64
 msgid "Menu Item & Action"
-msgstr "عنصر قائمة و عمل"
+msgstr "عنصر قائمة و إجراء"
 
 #: ../nact/nautilus-actions-config.glade.h:65
 msgid "Mimetypes:"
@@ -260,16 +259,16 @@ msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
 msgstr ""
-"أداة اعداد أعمال ناوتلس\n"
-"تطبيق لإعداد امتداد أعمال ناوتلس"
+"أداة اعداد إجراءات ناوتلس\n"
+"تطبيق لإعداد امتداد إجراءات ناوتلس"
 
 #: ../nact/nautilus-actions-config.glade.h:68
 msgid "Nautilus Action Editor"
-msgstr "محرر أعمال ناوتلس"
+msgstr "محرر إجراءات ناوتلس"
 
 #: ../nact/nautilus-actions-config.glade.h:69
 msgid "Nautilus Actions"
-msgstr "أعمال ناوتلس"
+msgstr "إجراءات ناوتلس"
 
 #: ../nact/nautilus-actions-config.glade.h:70
 msgid "Old XML config file (Nautilus-actions v0.x)"
@@ -327,7 +326,7 @@ msgstr "اختر نوع الملفات حيث ترغب في ظهور أعمال�
 
 #: ../nact/nautilus-actions-config.glade.h:83
 msgid "The command that will be launched by selecting the action in Nautilus popup menu."
-msgstr "الأمر الذي سيُطْلَق عند اختيار العمل من قائمة ناوتلس المنبثقة."
+msgstr "الأمر الذي سيُطْلَق عند اختيار الإجراء من قائمة ناوتلس المنبثقة."
 
 #: ../nact/nautilus-actions-config.glade.h:84
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
@@ -335,12 +334,11 @@ msgstr "هذه البرمجيات مرخصة تحت رخصة جنو العموم
 
 #: ../nact/nautilus-actions-config.glade.h:85
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr ""
+msgstr "تلميحة عنصر القائمة التي ستظهر في شريط حالة نوتلس."
 
 #: ../nact/nautilus-actions-config.glade.h:86
-#, fuzzy
 msgid "Tooltip:"
-msgstr "التّلميحة"
+msgstr "التّلميحة:"
 
 #: ../nact/nautilus-actions-config.glade.h:87
 msgid "Type of configuration:"
@@ -353,13 +351,15 @@ msgstr "_تصفح"
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../nact/nautilus-actions-config.glade.h:90
 msgid "translator-credits"
-msgstr "خالد حسني <khaledhosny@eglug.org>"
+msgstr ""
+"فريق عربآيز للترجمة http://www.arabeyes.org :\n"
+"خالد حسني\t<khaledhosny@eglug.org>"
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact.c:163
-#, fuzzy, c-format
+#, c-format
 msgid "Can't duplicate action '%s' !"
-msgstr "تراجع عن العمل الأخير"
+msgstr "تعذر تكرار الإجراء '%s' !"
 
 #. create columns on the tree view
 #: ../nact/nact.c:262
@@ -376,43 +376,38 @@ msgstr "عنوان"
 #: ../nact/nact-editor.c:705
 #: ../nact/nact-import-export.c:380
 msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr "تعذّر تحميل واجهة أداة إعداد أعمال ناوتلس"
+msgstr "تعذّر تحميل واجهة أداة إعداد إجراءات ناوتلس"
 
 #. i18n notes: example strings for the command preview
 #: ../nact/nact-utils.c:185
-#, fuzzy
 msgid "/path/to"
-msgstr "المسار إلى الملف"
+msgstr "/path/to"
 
 #: ../nact/nact-utils.c:186
 #: ../nact/nact-utils.c:188
-#, fuzzy
 msgid "file1.txt"
-msgstr "-bugreport.txt"
+msgstr "file1.txt"
 
 #: ../nact/nact-utils.c:186
-#, fuzzy
 msgid "file2.txt"
-msgstr "-bugreport.txt"
+msgstr "file2.txt"
 
 #: ../nact/nact-utils.c:187
 #: ../nact/nact-utils.c:188
 msgid "folder1"
-msgstr ""
+msgstr "مجلد1"
 
 #: ../nact/nact-utils.c:187
 msgid "folder2"
-msgstr ""
+msgstr "مجلد2"
 
 #: ../nact/nact-utils.c:190
-#, fuzzy
 msgid "test.example.net"
-msgstr "AMPR·NET/ROM"
+msgstr "test.example.net"
 
 #: ../nact/nact-utils.c:191
-#, fuzzy
 msgid "file.txt"
-msgstr "-bugreport.txt"
+msgstr "file.txt"
 
 #: ../nact/nact-utils.c:192
 msgid "folder"
@@ -449,7 +444,7 @@ msgstr "أيقونة لعنصر القائمة في قائمة ناوتلس ال
 
 #: ../nact/nact-editor.c:755
 msgid "Add a New Action"
-msgstr "أضف عمل جديد"
+msgstr "أضف إجراء جديد"
 
 #: ../nact/nact-editor.c:759
 #, c-format
@@ -459,7 +454,7 @@ msgstr "حرّر العمل \"%s\""
 #: ../nact/nact-import-export.c:236
 #, c-format
 msgid "Can't parse file '%s' as old XML config file !"
-msgstr ""
+msgstr "تعذر تحليل '%s' كملف XML إعدادات قديم !"
 
 #: ../nact/nact-import-export.c:251
 #, c-format
@@ -467,9 +462,9 @@ msgid "Can't parse file '%s' as GConf schema description file !"
 msgstr ""
 
 #: ../nact/nact-import-export.c:271
-#, fuzzy, c-format
+#, c-format
 msgid "Can't parse file '%s' !"
-msgstr "لا يمكن حفظ الملف: %s\n"
+msgstr "تعذّر تحليل الملف '%s' !"
 
 #. i18n notes: %s is the label of the action (eg, 'Mount ISO')
 #: ../nact/nact-import-export.c:293
@@ -569,7 +564,7 @@ msgstr "لا يمكن اعراب سلسلة اللون."
 #: ../utils/nautilus-actions-convert.c:117
 #, c-format
 msgid "Converting %s..."
-msgstr "جاري تحويل %s..."
+msgstr "يجري تحويل %s..."
 
 #: ../utils/nautilus-actions-convert.c:137
 #: ../utils/nautilus-actions-new-config.c:170
@@ -601,23 +596,20 @@ msgstr "LABEL"
 
 #: ../utils/nautilus-actions-new-config.c:51
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
-#, fuzzy
 msgid "The tooltip of the menu item"
-msgstr "خصائص عنصر القائمة"
+msgstr "تلميجة عنصر القائمة"
 
 #: ../utils/nautilus-actions-new-config.c:51
-#, fuzzy
 msgid "TOOLTIP"
-msgstr "التّلميحة"
+msgstr "TOOLTIP"
 
 #: ../utils/nautilus-actions-new-config.c:52
 msgid "The icon of the menu item (filename or GTK stock ID)"
-msgstr ""
+msgstr "أيقونة عنصر القائمة (اسم ملف أو معرّف مكدس GTK)"
 
 #: ../utils/nautilus-actions-new-config.c:52
-#, fuzzy
 msgid "ICON"
-msgstr "أيقونة"
+msgstr "ICON"
 
 #: ../utils/nautilus-actions-new-config.c:53
 #: ../utils/nautilus-actions-new-config.c:56
@@ -628,9 +620,8 @@ msgstr "مسار الأمر"
 #: ../utils/nautilus-actions-new-config.c:53
 #: ../utils/nautilus-actions-new-config.c:56
 #: ../utils/nautilus-actions-new-config.c:62
-#, fuzzy
 msgid "PATH"
-msgstr "المسار"
+msgstr "PATH"
 
 #: ../utils/nautilus-actions-new-config.c:54
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
@@ -639,17 +630,16 @@ msgstr "معاملات الأمر"
 
 #: ../utils/nautilus-actions-new-config.c:54
 msgid "PARAMS"
-msgstr ""
+msgstr "PARAMS"
 
 #: ../utils/nautilus-actions-new-config.c:55
-#, fuzzy
 msgid "A pattern to match selected files against. May include wildcards (* or ?) (you must set one option for each pattern you need)"
-msgstr "نمط لمطابقة الملفات المحددة به. يمكن أن يحتوي رموز التعميم (* أو ?) (يجب أن تحدد خيارا واحدا لكل نمط تريده)"
+msgstr "نمط لمطابقة الملفات المحددة به. يمكن أن يحتوي رموز تعميم (* أو ?) (يجب أن تحدد خيارا واحدا لكل نمط تريده)"
 
 #: ../utils/nautilus-actions-new-config.c:55
 #: ../utils/nautilus-actions-new-config.c:57
 msgid "EXPR"
-msgstr ""
+msgstr "EXPR"
 
 #: ../utils/nautilus-actions-new-config.c:57
 msgid "A pattern to match selected files' mimetype against. May include wildcards (* or ?) (you must set one option for each pattern you need)"
@@ -672,9 +662,8 @@ msgid "A GnomeVFS scheme where the selected files should be located (you must se
 msgstr ""
 
 #: ../utils/nautilus-actions-new-config.c:61
-#, fuzzy
 msgid "SCHEME"
-msgstr "مخطط"
+msgstr "SCHEME"
 
 #: ../utils/nautilus-actions-new-config.c:62
 msgid "The path of the file where to save the new GConf schema definition file [default: /tmp/config_UUID.schemas]"
@@ -683,7 +672,7 @@ msgstr ""
 #: ../utils/nautilus-actions-new-config.c:151
 #, c-format
 msgid "Creating %s..."
-msgstr "جارى إنشاء %s..."
+msgstr "يجري إنشاء %s..."
 
 #: ../utils/nautilus-actions-tools-utils.c:48
 #, c-format
@@ -696,7 +685,6 @@ msgid "Can't open file %s for writing\n"
 msgstr "تعذّر فتح الملف %s للكتابة\n"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
-#, fuzzy
 msgid "The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings"
 msgstr "عنوان عنصر القائمة الذي سيظهر في قائمة ناوتلس المنبثقة عندما يطابق التحديد اعدادات حالة الظهور"
 
@@ -744,7 +732,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr "'true' اذا كان على نمط اسم الملف أن يكون حساسا لحالة الحرف، 'false' ماعدا ذلك "
+msgstr "'صحيح' اذا كان على نمط اسم الملف أن يكون حساسا لحالة الحرف، 'خطأ' ماعدا ذلك "
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid "If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'"
@@ -818,9 +806,8 @@ msgid ""
 msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
-#, fuzzy
 msgid "The version of the configuration format"
-msgstr "تهيئة توقيع غير مدعومة"
+msgstr "إصدارة تنسيق الإعدادات"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
 msgid "The version of the configuration format that will be used to manage backward compatibility"
@@ -834,9 +821,9 @@ msgstr ""
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:222
-#, fuzzy, c-format
+#, c-format
 msgid "Can't save action '%s'"
-msgstr "لا يمكن حفظ الملف: %s\n"
+msgstr "لا يمكن حفظ الإجراء '%s'"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-xml.c:485
