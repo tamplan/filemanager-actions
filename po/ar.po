@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.ar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-11-17 21:17+0000\n"
-"PO-Revision-Date: 2007-04-06 21:11+0200\n"
+"PO-Revision-Date: 2007-04-07 12:46+0200\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <support@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -82,7 +82,7 @@ msgstr ""
 #: ../nact/nautilus-actions-config.glade.h:21
 #, no-c-format
 msgid "<b>%s</b>: scheme of the gnome-vfs URI"
-msgstr ""
+msgstr "<b>%s</b>: مخطط لـ gnome-vfs URI"
 
 #: ../nact/nautilus-actions-config.glade.h:23
 #, fuzzy, no-c-format
@@ -99,7 +99,7 @@ msgstr "<b>يَظهَر إذا تطابق الملف</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:26
 msgid "<b>Appears if scheme is in this list</b>"
-msgstr ""
+msgstr "<b>يظهر إذا كان المخطط في القائمة</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:27
 msgid "<b>Appears if selection contains</b>"
@@ -116,7 +116,7 @@ msgstr "<i><b><span size=\"small\">مثل، %s</span></b></i>"
 
 #: ../nact/nautilus-actions-config.glade.h:31
 msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
-msgstr ""
+msgstr "<span size=\"larger\"><b>وصف المعامل</b></span>"
 
 #: ../nact/nautilus-actions-config.glade.h:32
 msgid ""
@@ -157,9 +157,8 @@ msgid "Check this box if you want to get back all your configurations from the v
 msgstr "علّم على هذا الصندوق إذا أردت إستعادة كل إعداداتك من الإصدارة 0.7.1 أو أقل من Nautilus-actions."
 
 #: ../nact/nautilus-actions-config.glade.h:42
-#, fuzzy
 msgid "Click to add a new scheme."
-msgstr "نقر لإضافة لوحة جديدة"
+msgstr "انقر لإضافة مخطط جديد."
 
 #: ../nact/nautilus-actions-config.glade.h:43
 msgid "Click to choose a command from the file chooser dialog."
@@ -459,7 +458,7 @@ msgstr "تعذر تحليل '%s' كملف XML إعدادات قديم !"
 #: ../nact/nact-import-export.c:251
 #, c-format
 msgid "Can't parse file '%s' as GConf schema description file !"
-msgstr ""
+msgstr "تعذر تحليل الملف '%s' كملف وصف مخطط GConf !"
 
 #: ../nact/nact-import-export.c:271
 #, c-format
