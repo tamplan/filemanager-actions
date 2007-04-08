@@ -1,20 +1,20 @@
 # French translations for nautilus-actions package
-# Copyright (C) 2005-2006 The Free SOftware Foundation, Inc.
+# Copyright (C) 2005-2007 The Free Software Foundation, Inc.
 # This file is distributed under the same license as the nautilus-actions package.
 #
 # Frederic Ruaudel <grumz@grumz.net>, 2005.
 # Christophe Bliard <christophe.bliard@trux.info>, 2006.
 # Laurent Richard <laurent.richard@ael.be>, 2006.
 # Damien Durand <splinux@fedoraproject.org>, 2006.
-# Claude Paroz <paroz@email.ch>, 2006.
+# Claude Paroz <claude@2xlibre.net>, 2006-2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions 1.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-01 15:05+0200\n"
-"PO-Revision-Date: 2006-10-01 15:00+0200\n"
-"Last-Translator: Claude Paroz <paroz@email.ch>\n"
+"POT-Creation-Date: 2007-04-08 22:39+0200\n"
+"PO-Revision-Date: 2007-04-08 22:50+0200\n"
+"Last-Translator: Claude Paroz <claude@2xlibre.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -272,11 +272,11 @@ msgstr "Paramètres d'importation/exportation"
 
 #: ../nact/nautilus-actions-config.glade.h:60
 msgid "Label of the menu item in the Nautilus popup menu."
-msgstr "Libéllé de l'entrée de menu dans le menu contextuel de Nautilus."
+msgstr "Libellé de l'entrée de menu dans le menu contextuel de Nautilus."
 
 #: ../nact/nautilus-actions-config.glade.h:61
 msgid "Label:"
-msgstr "Libéllé :"
+msgstr "Libellé :"
 
 #: ../nact/nautilus-actions-config.glade.h:62
 msgid ""
@@ -303,7 +303,7 @@ msgid ""
 "Nautilus Action Configuration Tool\n"
 "Application to configure Nautilus Action extension"
 msgstr ""
-"Outil de Configuration des actions de Nautilus\n"
+"Outil de configuration des actions de Nautilus\n"
 "Cette application sert à configurer l'extension Nautilus Actions"
 
 #: ../nact/nautilus-actions-config.glade.h:68
@@ -380,10 +380,10 @@ msgid ""
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add a new scheme by clicking on the '+' button."
 msgstr ""
-"Sélectionnez le genre de fichiers où votre action apparaîtra. Si ne savez "
-"pas quoi choisir, essayez de sélectionner juste « file » qui est le choix le "
-"plus courant. Vous pouvez ajouter un nouveau protocole en cliquant sur le "
-"bouton « + »."
+"Sélectionnez le genre de fichiers où votre action apparaîtra. Si vous ne "
+"savez pas quoi choisir, essayez de sélectionner juste « file » qui est le "
+"choix le plus courant. Vous pouvez ajouter un nouveau protocole en cliquant "
+"sur le bouton « + »."
 
 #: ../nact/nautilus-actions-config.glade.h:83
 msgid ""
@@ -421,7 +421,8 @@ msgstr ""
 "Christophe Bliard <christophe.bliard@trux.info>\n"
 "Laurent Richard <laurent.richard@ael.be>\n"
 "Emmanuel Andry <eandry@free.fr>\n"
-"Damien Durand <splinux@fedoraproject.org>"
+"Damien Durand <splinux@fedoraproject.org>\n"
+"Claude Paroz <claude@2xlibre.net>"
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact.c:163
@@ -670,7 +671,7 @@ msgstr " Échec : %s\n"
 
 #. GConf description strings :
 #: ../utils/nautilus-actions-new-config.c:50
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
 msgid "The label of the menu item"
 msgstr "Le libellé de l'entrée de menu"
 
@@ -679,7 +680,7 @@ msgid "LABEL"
 msgstr "LIBELLÉ"
 
 #: ../utils/nautilus-actions-new-config.c:51
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
 msgid "The tooltip of the menu item"
 msgstr "L'infobulle de l'entrée de menu"
 
@@ -697,7 +698,7 @@ msgstr "ICÔNE"
 
 #: ../utils/nautilus-actions-new-config.c:53
 #: ../utils/nautilus-actions-new-config.c:56
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
 msgid "The path of the command"
 msgstr "Le chemin de la commande"
 
@@ -708,7 +709,7 @@ msgid "PATH"
 msgstr "CHEMIN"
 
 #: ../utils/nautilus-actions-new-config.c:54
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
 msgid "The parameters of the command"
 msgstr "Les paramètres de la commande"
 
@@ -786,7 +787,7 @@ msgstr "Impossible d'écrire les données dans le fichier %s\n"
 msgid "Can't open file %s for writing\n"
 msgstr "Impossible d'ouvrir le fichier %s en écriture\n"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
@@ -794,7 +795,7 @@ msgstr ""
 "Le libellé de l'entrée de menu apparaissant dans le menu contextuel de "
 "Nautilus quand la sélection correspond aux conditions d'affichage"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
@@ -803,11 +804,11 @@ msgstr ""
 "Nautilus quand l'utilisateur pointe sa souris sur l'entrée du menu "
 "contextuel de Nautilus"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
 msgid "The icon of the menu item"
 msgstr "L'icône de l'entrée de menu"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
@@ -816,7 +817,7 @@ msgstr ""
 "contextuel de Nautilus quand la sélection correspond aux conditions "
 "d'affichage"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
@@ -825,7 +826,7 @@ msgstr ""
 "de menu dans le menu contextuel de Nautilus"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
 "in the Nautilus popup menu.\n"
@@ -863,12 +864,12 @@ msgstr ""
 "%U : le nom de l'utilisateur présent dans l'URI gnome-vfs ;\n"
 "%% : le signe pourcent"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr ""
 "La liste des motifs de correspondance des fichiers/dossiers sélectionnés"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid ""
 "A list of strings with joker '*' or '?' to match the name of the selected "
 "file(s)/folder(s). Each selected items must match at least one of the "
@@ -878,14 +879,14 @@ msgstr ""
 "correspondre le(s) fichier(s)/dossier(s). Tous les éléments sélectionnés "
 "doivent correspondre avec au moins un des motifs pour que l'action apparaisse"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid ""
 "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr ""
 "« vrai » si le motif de correspondance du nom de fichier respecte la casse, "
 "« faux » sinon"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid ""
 "If you need to match a filename in a case-sensitive manner, set this key to "
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
@@ -895,13 +896,13 @@ msgstr ""
 "casse, positionnez cette clé à « vrai ». Si vous voulez que « *.jpg » puisse "
 "aussi correspondre à « photo.JPG », positionnez à « faux »"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr ""
 "La liste des motifs de correspondance des types Mime des fichiers/dossiers "
 "sélectionnés"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
 msgid ""
 "A list of strings with joker '*' or '?' to match the mimetypes of the "
 "selected file(s). Each selected items must match at least one of the "
@@ -913,7 +914,7 @@ msgstr ""
 "des motifs pour que l'action apparaisse"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid ""
 "The valid combinations are:\n"
 "\n"
@@ -934,27 +935,27 @@ msgstr ""
 "isfile=FAUX et isdir=FAUX : combinaison invalide (votre configuration ne "
 "s'affichera jamais)"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
 msgid "'true' if the selection can have files, 'false' otherwise"
 msgstr "« vrai » si la sélection peut contenir des fichiers, « faux » sinon"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
 msgid "This setting is tied in with the 'isdir' setting. "
 msgstr "Ce paramètre est lié au paramètre « isdir »."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "'true' if the selection can have folders, 'false' otherwise"
 msgstr "« vrai » si la sélection peut contenir des dossiers, « faux » sinon"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
 msgid "This setting is tied in with the 'isfile' setting. "
 msgstr "Ce paramètre est lié avec celui de « isfile »"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
 msgid "'true' if the selection can have several items, 'false' otherwise"
 msgstr "« vrai » si la sélection contient plusieurs éléments, « faux » sinon"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
 msgid ""
 "If you need one or more files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set 'false'"
@@ -963,14 +964,14 @@ msgstr ""
 "positionnez cette clé à « vrai ». Si vous désirez uniquement un fichier ou "
 "dossier, positionnez à « faux »"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:95
 msgid "The list of GnomeVFS schemes where the selected files should be located"
 msgstr ""
 "La liste des protocoles GnomeVFS où les fichiers sélectionnés devraient se "
 "trouver"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
 msgid ""
 "Defines the list of valid GnomeVFS schemes to be matched against the "
 "selected items. The GnomeVFS scheme is the protocol used to access the "
@@ -1009,11 +1010,11 @@ msgstr ""
 "\n"
 "Tous les protocoles GnomeVFS utilisés par Nautilus peuvent être utilisés ici."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
 msgid "The version of the configuration format"
 msgstr "La version du format de configuration"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:99
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
@@ -1037,36 +1038,26 @@ msgstr ""
 msgid "Can't save action '%s'"
 msgstr "Impossible d'enregistrer l'action « %s »"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:485
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (Bad test section)"
-msgstr ""
-"Ce fichier XML n'est pas un fichier de configuration Nautilus-actions valide "
-"(mauvaise section de test)"
+#. i18n notes: will be displayed in an error dialog concatenated to another error message
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:174
+msgid " and some profiles are incomplete: "
+msgstr " et certains profils sont incomplets : "
+
+#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:189
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:633
+msgid ","
+msgstr ", "
+
+#. i18n notes: will be displayed in an error dialog concatenated to another error message
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:261
+#, c-format
+msgid "%s (missing key(s): %s)%s"
+msgstr "%s (clé(s) manquantes(s) : %s)%s"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:491
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (Bad command "
-"section)"
-msgstr ""
-"Ce fichier XML n'est pas un fichier de configuration Nautilus-actions valide "
-"(mauvaise section de commande)"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:496
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (Bad menu item "
-"section)"
-msgstr ""
-"Ce fichier XML n'est pas un fichier de configuration Nautilus-actions valide "
-"(mauvaise section d'entrée de menu)"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:563
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:374
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:533
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:608
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:729
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (found <%s> "
@@ -1076,8 +1067,27 @@ msgstr ""
 "(élément <%s> trouvé au lieu de <%s>)"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:574
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:543
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:656
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key(s): %"
+"s)%s"
+msgstr ""
+"Ce fichier XML n'est pas un fichier de configuration Nautilus-actions valide "
+"(clé(s) manquante(s) : %s)%s"
+
+#. No error occured but we have not found the "version" gconf key
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:665
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgstr ""
+"Ce fichier XML n'est pas un fichier de configuration Nautilus-actions valide "
+"(clé manquante : %s)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:739
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
@@ -1086,27 +1096,33 @@ msgstr ""
 "Ce fichier XML n'est pas un fichier de configuration Nautilus-actions valide "
 "(le noeud racine est <%s> au lieu de <%s>)"
 
-#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
-msgid ","
-msgstr ", "
+#~ msgid "The list of profile's names for this action"
+#~ msgstr "La liste des noms de profils pour cette action"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:461
-#, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key(s) : %"
-"s)"
-msgstr ""
-"Ce fichier XML n'est pas un fichier de configuration Nautilus-actions valide "
-"(clé(s) manquante(s) : %s)"
+#~ msgid ""
+#~ "The list of profile's names defined for this action which will be used "
+#~ "internally to find back their schemas keys"
+#~ msgstr ""
+#~ "La liste des noms de profils définis pour cette action et qui seront "
+#~ "utilisés en interne pour retrouver leurs clés de schéma"
 
-#. No error occured but we have not found the "version" gconf key
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:469
-#, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key : %s)"
-msgstr ""
-"Ce fichier XML n'est pas un fichier de configuration Nautilus-actions valide "
-"(clé manquante : %s)"
+#~ msgid ""
+#~ "This XML file is not a valid Nautilus-actions config file (Bad test "
+#~ "section)"
+#~ msgstr ""
+#~ "Ce fichier XML n'est pas un fichier de configuration Nautilus-actions "
+#~ "valide (mauvaise section de test)"
+
+#~ msgid ""
+#~ "This XML file is not a valid Nautilus-actions config file (Bad command "
+#~ "section)"
+#~ msgstr ""
+#~ "Ce fichier XML n'est pas un fichier de configuration Nautilus-actions "
+#~ "valide (mauvaise section de commande)"
+
+#~ msgid ""
+#~ "This XML file is not a valid Nautilus-actions config file (Bad menu item "
+#~ "section)"
+#~ msgstr ""
+#~ "Ce fichier XML n'est pas un fichier de configuration Nautilus-actions "
+#~ "valide (mauvaise section d'entrée de menu)"

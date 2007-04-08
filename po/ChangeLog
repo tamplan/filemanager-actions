@@ -1,3 +1,8 @@
+2007-04-08  Claude Paroz  <claude@2xlibre.net>
+
+	* POTFILES.in: Removed old file.
+	* fr.po: Updated French translation.
+
 2007-04-7  Djihed Afifi <djihed@gmail.com> 
 
 	* ar.po: Updated Arabic Translation by Khaled Hosny.
