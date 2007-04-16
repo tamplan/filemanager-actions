@@ -1,13 +1,13 @@
 # Swedish translation of nautilus-actions
-# Copyright (C) 2006 Free Software Foundation, Inc.
-# Daniel Nylander <po@danielnylander.se>, 2006.
+# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+# Daniel Nylander <po@danielnylander.se>, 2006, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-16 04:59+0200\n"
-"PO-Revision-Date: 2006-07-16 17:46+0100\n"
+"POT-Creation-Date: 2007-04-08 21:48+0100\n"
+"PO-Revision-Date: 2007-04-16 18:59+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -368,7 +368,7 @@ msgstr "Etikett"
 
 #: ../nact/nact.c:287
 #: ../nact/nact-editor.c:705
-#: ../nact/nact-import-export.c:378
+#: ../nact/nact-import-export.c:380
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Kunde inte läsa in gränssnitt för konfigurationsverktyget för Nautilus-åtgärder"
 
@@ -442,23 +442,23 @@ msgstr "Lägg till en ny åtgärd"
 msgid "Edit Action \"%s\""
 msgstr "Redigera åtgärden \"%s\""
 
-#: ../nact/nact-import-export.c:234
+#: ../nact/nact-import-export.c:236
 #, c-format
 msgid "Can't parse file '%s' as old XML config file !"
 msgstr "Kan inte tolka filen \"%s\" som gammal XML-konfigurationsfil!"
 
-#: ../nact/nact-import-export.c:249
+#: ../nact/nact-import-export.c:251
 #, c-format
 msgid "Can't parse file '%s' as GConf schema description file !"
 msgstr "Kan inte tolka filen \"%s\" som GConf-schemabeskrivningsfil!"
 
-#: ../nact/nact-import-export.c:269
+#: ../nact/nact-import-export.c:271
 #, c-format
 msgid "Can't parse file '%s' !"
 msgstr "Kan inte tolka filen \"%s\"!"
 
 #. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:291
+#: ../nact/nact-import-export.c:293
 #, c-format
 msgid "Action '%s' importation failed !"
 msgstr "Importering av åtgärden \"%s\" misslyckades!"
@@ -589,7 +589,7 @@ msgstr " Misslyckades: %s\n"
 
 #. GConf description strings :
 #: ../utils/nautilus-actions-new-config.c:50
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:69
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
 msgid "The label of the menu item"
 msgstr "Etiketten på menyposten"
 
@@ -598,7 +598,7 @@ msgid "LABEL"
 msgstr "ETIKETT"
 
 #: ../utils/nautilus-actions-new-config.c:51
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
 msgid "The tooltip of the menu item"
 msgstr "Verktygstipset för menyposten"
 
@@ -616,7 +616,7 @@ msgstr "IKON"
 
 #: ../utils/nautilus-actions-new-config.c:53
 #: ../utils/nautilus-actions-new-config.c:56
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
 msgid "The path of the command"
 msgstr "Sökvägen till kommandot"
 
@@ -627,7 +627,7 @@ msgid "PATH"
 msgstr "SÖKVÄG"
 
 #: ../utils/nautilus-actions-new-config.c:54
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
 msgid "The parameters of the command"
 msgstr "Parametrar till kommandot"
 
@@ -687,28 +687,28 @@ msgstr "Kan inte skriva data till filen %s\n"
 msgid "Can't open file %s for writing\n"
 msgstr "Kan inte öppna filen %s för skrivning\n"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:70
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:71
 msgid "The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings"
 msgstr "Etiketten på menyposten som ska visas i Nautilus popupmeny när markeringen matchar inställningarna för villkoret"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
 msgid "The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse"
 msgstr "Verktygstipset för menyposten som ska visas i Nautilus statusrad när användaren pekar på Nautiltus popupmenypost med sin mus"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
 msgid "The icon of the menu item"
 msgstr "Ikonen för menyposten"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
 msgid "The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings"
 msgstr "Ikonen för menyposten som ska visas bredvid etiketten i Nautilus popupmeny när markeringen matchar inställningarna för villkoren"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
 msgid "The path of the command to start when the user select the menu item in the Nautilus popup menu"
 msgstr "Sökvägen för kommandot att starta när användaren väljer menyposten i Nautilus popupmeny"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
 msgid ""
 "The parameters of the command to start when the user selects the menu item in the Nautilus popup menu.\n"
 "\n"
@@ -738,32 +738,32 @@ msgstr ""
 "%U: användarnamn för :%s/GnomeVFS URI\n"
 "%%: ett procenttecken"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr "Listan på mönster för att matcha de markerade filerna/mapparna"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid "A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear"
 msgstr "En lista på strängar med jokertecknen \"*\" eller \"?\" för att matcha namnet på de markerade filerna/mapparna. Varje markerad post måste matcha åtminstone ett av filnamnsmönstren för att åtgärden ska visas"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr "\"true\" om filnamnsmönstren ska vara skiftlägeskänsliga, \"false\" om inte"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'"
 msgstr "Om du behöver matcha ett filnamn efter gemener och versaler, ställ in denna nyckel till \"true\". Om du vill att, till exempel \"*.jpg\" ska matcha \"photo.JPG\", ställ in till \"false\""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr "Listan på mönster för att matcha mimetyperna på de markerade filerna"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
 msgid "A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear"
 msgstr "En lista på strängar med jokertecknen \"*\" eller \"?\" för att matcha mimetyperna på de markerade filerna. Varje markerad post måste matcha åtminstone ett av mimetypsmönstren för att åtgärden ska visas"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid ""
 "The valid combinations are:\n"
 "\n"
@@ -779,36 +779,36 @@ msgstr ""
 "isfile=TRUE och isdir=TRUE: markeringen kan innehålla både filer och mappar\n"
 "isfile=FALSE och isdir=FALSE: detta är en ogiltig kombination (din konfiguration kommer altid att visas)"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
 msgid "'true' if the selection can have files, 'false' otherwise"
 msgstr "\"true\" om markeringen kan innehålla filer, \"false\" om inte"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
 msgid "This setting is tied in with the 'isdir' setting. "
 msgstr "Denna inställning är sammanknuten med inställningen för \"isdir\". "
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "'true' if the selection can have folders, 'false' otherwise"
 msgstr "\"true\" om markeringen kan innehålla mappar, \"false\" om inte"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
 msgid "This setting is tied in with the 'isfile' setting. "
 msgstr "Denna inställning är sammanknuten med inställningen för \"isfile\". "
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
 msgid "'true' if the selection can have several items, 'false' otherwise"
 msgstr "\"true\" om markeringen kan innehålla flera poster, \"false\" om inte"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
 msgid "If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'"
 msgstr "Om du behöver markera en eller flera filer eller mappar, ställ in denna nyckel till \"true\". Om du bara vill ha en fil eller mapp, ställ in till \"false\""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:95
 msgid "The list of GnomeVFS schemes where the selected files should be located"
 msgstr "Listan på GnomeVFS-scheman där de markerade filerna ska finnas"
 
 #. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
 msgid ""
 "Defines the list of valid GnomeVFS schemes to be matched against the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one used in the GnomeVFS URI.\n"
 "\n"
@@ -842,11 +842,11 @@ msgstr ""
 "\n"
 "Alla GnomeVFS-scheman som används av Nautilus kan användas här."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
 msgid "The version of the configuration format"
 msgstr "Versionen på konfigurationsformatet"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:99
 msgid "The version of the configuration format that will be used to manage backward compatibility"
 msgstr "Versionen på konfigurationsformatet som ska användas för att hantera bakåtkompatibilitet"
 
@@ -862,54 +862,67 @@ msgstr "Åtgärden \"%s\" finns redan med namnet \"%s\", ta bort den existerande
 msgid "Can't save action '%s'"
 msgstr "Kan inte spara åtgärden \"%s\""
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:485
-msgid "This XML file is not a valid Nautilus-actions config file (Bad test section)"
-msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (felaktig testsektion)"
+#. i18n notes: will be displayed in an error dialog concatenated to another error message
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:174
+msgid " and some profiles are incomplete: "
+msgstr " och några profiler är inte kompletta: "
+
+#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:189
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:633
+msgid ","
+msgstr ","
+
+#. i18n notes: will be displayed in an error dialog concatenated to another error message
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:261
+#, c-format
+msgid "%s (missing key(s): %s)%s"
+msgstr "%s (saknade nycklar: %s)%s"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:491
-msgid "This XML file is not a valid Nautilus-actions config file (Bad command section)"
-msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (felaktig kommandosektion)"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:496
-msgid "This XML file is not a valid Nautilus-actions config file (Bad menu item section)"
-msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (felaktig menypostsektion)"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:563
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:374
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:533
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:608
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:729
 #, c-format
 msgid "This XML file is not a valid Nautilus-actions config file (found <%s> element instead of <%s>)"
 msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (hittade elementet <%s> istället för <%s>)"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-xml.c:574
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:543
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:656
+#, c-format
+msgid "This XML file is not a valid Nautilus-actions config file (missing key(s): %s)%s"
+msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (saknar nycklar: %s)%s"
+
+#. No error occured but we have not found the "version" gconf key
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:665
+#, c-format
+msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (saknar nyckel: %s)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:739
 #, c-format
 msgid "This XML file is not a valid Nautilus-actions config file (root node is <%s> instead of <%s>)"
 msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (rotnod är <%s> istället för <%s>)"
 
-#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:403
-msgid ","
-msgstr ","
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:461
-#, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key(s) : %s)"
-msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (saknar nycklar: %s)"
-
-#. No error occured but we have not found the "version" gconf key
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:469
-#, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key : %s)"
-msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions (saknar nyckel: %s)"
-
+#~ msgid ""
+#~ "This XML file is not a valid Nautilus-actions config file (Bad test "
+#~ "section)"
+#~ msgstr ""
+#~ "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions "
+#~ "(felaktig testsektion)"
+#~ msgid ""
+#~ "This XML file is not a valid Nautilus-actions config file (Bad command "
+#~ "section)"
+#~ msgstr ""
+#~ "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions "
+#~ "(felaktig kommandosektion)"
+#~ msgid ""
+#~ "This XML file is not a valid Nautilus-actions config file (Bad menu item "
+#~ "section)"
+#~ msgstr ""
+#~ "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-actions "
+#~ "(felaktig menypostsektion)"
 #~ msgid "<b>File Pattern</b>"
 #~ msgstr "<b>Filmönster</b>"
 
