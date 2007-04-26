@@ -1,3 +1,7 @@
+2007-04-24 Brian Pepple <bpepple@fedoraproject.org>
+	* icons/Makefile.am (update-icon-cache): fix gtk-update-icon-cache for
+	uninstall-hook (Bug #433078).
+
 2007-04-03  Frederic Ruaudel <grumz@grumz.net>
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c: Fix 
 	a copy/paste error in the missing keys checking when generating the 
