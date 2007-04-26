@@ -1,3 +1,11 @@
+2007-04-24 Brian Pepple <bpepple@fedoraproject.org>
+	* icons/Makefile.am (update-icon-cache): fix gtk-update-icon-cache for
+	uninstall-hook (Bug #433078).
+
+2007-04-10  Frederic Ruaudel <grumz@grumz.net>
+	* po/POTFILES.in: Remove old xml format parser file from pot
+	files (Bug #427301)
+
 2007-04-04  Frederic Ruaudel <grumz@grumz.net>
 	* plugin/nautilus-actions-test.c:
 	* plugin/nautilus-actions-test.h:
