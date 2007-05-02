@@ -23,6 +23,9 @@ to LDFLAGS (Bug #378890).
 Christopher Taylor <christophth@tiscali.it> :
 - Fix compilation error (Bug #413834)
 
+Brian Pepple <bpepple@fedoraproject.org> :
+- Fix problem with icon update during uninstall process
+
 == Artwork ==
 
 Ulisse Perusin <uli.peru@gmail.com> :
@@ -55,8 +58,11 @@ Jovan Naumovski  <jovan@lugola.net>
 Kjartan Maraas  <kmaraas@gnome.org>
 Lasse Bang Mikkelsen  <lbm@fatalerror.dk>
 Leonid Kanter <leon@asplinux.ru>
+Licio Fernando <liciofernando@gmail.com>
 Lukas Novotny  <lukasnov@cvs.gnome.org>
 Mario Izquierdo <mariodebian@gmail.com>
+Og Maciel <ogmaciel@ubuntu.com>
+Pedro Vaz de Mello de Medeiros <pedrovmm@gmail.com>
 Pema Geyleg  <pgeyleg@gmail.com>
 Raivis Dejus  <orvils@gmail.com>
 Raphael Higino  <raphaelh@cvs.gnome.org>
@@ -68,4 +74,5 @@ Tino Meinen <a.t.meinen@chello.nl>
 Valek Filippov <frob@df.ru>
 Vincent van Adrighem  <adrighem@gnome.org>
 Yair Hershkovitz <yairhr@gmail.com>
+Yangka <yanang_ka@hotmail.com>
 Žygimantas Beručka  <zygis@gnome.org>
