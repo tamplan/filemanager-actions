@@ -162,6 +162,7 @@ static void get_hash_keys (gchar* key, gchar* value, GSList* list)
 static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GHashTable* profile_check_list, const gchar* version, gchar** error_message)
 {
 	gboolean retv = FALSE;
+	int count;
 	GSList* profile_list = NULL;
 	GSList* iter;
 	gchar* tmp;
@@ -212,33 +213,41 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 		else
 		{
 			missing_keys = g_string_new ("");
+			count = 0;
 			if (!check->is_schemes_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_SCHEMES_ENTRY, list_separator);
+				count++;
 			}
 			if (!check->is_multiple_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_MULTIPLE_ENTRY, list_separator);
+				count++;
 			}
 			if (!check->is_isdir_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_ISDIR_ENTRY, list_separator);
+				count++;
 			}
 			if (!check->is_isfile_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_ISFILE_ENTRY, list_separator);
+				count++;
 			}
 			if (!check->is_basenames_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_BASENAMES_ENTRY, list_separator);
+				count++;
 			}
 			if (!check->is_params_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_PARAMS_ENTRY, list_separator);
+				count++;
 			}
 			if (!check->is_path_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_PATH_ENTRY, list_separator);
+				count++;
 			}
 			//if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0)
 			if (g_ascii_strcasecmp (version, "1.1") >= 0)
@@ -246,10 +255,12 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 				if (!check->is_matchcase_ok)
 				{
 					g_string_append_printf (missing_keys , "%s%s", ACTION_MATCHCASE_ENTRY, list_separator);
+					count++;
 				}
 				if (!check->is_mimetypes_ok)
 				{
 					g_string_append_printf (missing_keys , "%s%s", ACTION_MIMETYPES_ENTRY, list_separator);
+					count++;
 				}
 			}
 			// Remove the last separator
@@ -258,7 +269,7 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 			tmp = g_string_free (missing_keys, FALSE);
 
 			// i18n notes: will be displayed in an error dialog concatenated to another error message
-			g_string_append_printf (error_message_str, _("%s (missing key(s): %s)%s"), profile_name, tmp, list_separator);
+			g_string_append_printf (error_message_str, ngettext ("%s (one missing key: %s)%s", "%s (missing keys: %s)%s", count), profile_name, tmp, list_separator);
 			g_free (tmp);
 		}
 	}
@@ -486,6 +497,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 	gchar* list_separator;
 	gchar* error_msg = NULL;
 	GString* missing_keys;
+	int count;
 	GHashTable* profile_check_list = g_hash_table_new_full (g_str_hash, g_str_equal,
 						 (GDestroyNotify) g_free,
 						 (GDestroyNotify) g_free);
@@ -629,19 +641,23 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		else
 		{
 			missing_keys = g_string_new ("");
+			count = 0;
 			// i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 			list_separator = g_strdup (_(","));
 			if (!is_icon_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_ICON_ENTRY, list_separator);
+				count++;
 			}
 			if (!is_tooltip_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_TOOLTIP_ENTRY, list_separator);
+				count++;
 			}
 			if (!is_label_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_LABEL_ENTRY, list_separator);
+				count++;
 			}
 			// Remove the last separator
 			g_string_truncate (missing_keys, (missing_keys->len - strlen (list_separator)));
@@ -653,7 +669,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			}
 
 			// i18n notes: will be displayed in an error dialog
-			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (missing key(s): %s)%s"), tmp, error_msg);
+			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, ngettext ("This XML file is not a valid Nautilus-actions config file (missing key: %s)%s", "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%s", count), tmp, error_msg);
 			g_free (tmp);
 		}
 		g_free (error_msg);

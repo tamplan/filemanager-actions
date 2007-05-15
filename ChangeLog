@@ -1,3 +1,7 @@
+2007-05-15  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c: Fix bad
+	plural forms by using ngettext to ease i18n (Bug #436375).
+
 2007-04-24 Brian Pepple <bpepple@fedoraproject.org>
 	* icons/Makefile.am (update-icon-cache): fix gtk-update-icon-cache for
 	uninstall-hook (Bug #433078).
