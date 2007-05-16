@@ -18,7 +18,7 @@
   <property name="focus_on_map">True</property>
   <property name="urgency_hint">False</property>
   <property name="has_separator">True</property>
-  <signal name="delete_event" handler="ActionDialogClose" last_modification_time="Tue, 16 Aug 2005 09:02:25 GMT"/>
+  <signal name="delete_event" handler="gtk_widget_hide" last_modification_time="Wed, 16 May 2007 13:43:36 GMT"/>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox1">
@@ -41,7 +41,7 @@
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-7</property>
-	      <signal name="clicked" handler="ActionClose" last_modification_time="Tue, 16 Aug 2005 09:00:57 GMT"/>
+	      <signal name="clicked" handler="gtk_widget_hide" last_modification_time="Wed, 16 May 2007 13:43:08 GMT"/>
 	    </widget>
 	  </child>
 	</widget>
@@ -827,7 +827,7 @@ file(s)/folder(s)</property>
 		      <property name="spacing">6</property>
 
 		      <child>
-			<widget class="GtkLabel" id="LabelAlign4">
+			<widget class="GtkLabel" id="ALabelAlign4">
 			  <property name="visible">True</property>
 			  <property name="label" translatable="yes">Path:</property>
 			  <property name="use_underline">False</property>
@@ -905,7 +905,7 @@ file(s)/folder(s)</property>
 		      <property name="spacing">6</property>
 
 		      <child>
-			<widget class="GtkLabel" id="LabelAlign5">
+			<widget class="GtkLabel" id="ALabelAlign5">
 			  <property name="visible">True</property>
 			  <property name="label" translatable="yes">Parameters:</property>
 			  <property name="use_underline">False</property>
