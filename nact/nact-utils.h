@@ -33,6 +33,7 @@
 #define GLADE_FOLDERCHOOSER_DIALOG_WIDGET "FolderChooserDialog"
 #define GLADE_IM_EX_PORT_DIALOG_WIDGET "ImportExportDialog"
 #define GLADE_ERROR_DIALOG_WIDGET "ErrorDialog"
+#define GLADE_ABOUT_DIALOG_WIDGET "AboutDialog"
 
 enum {
 	SCHEMES_CHECKBOX_COLUMN = 0,

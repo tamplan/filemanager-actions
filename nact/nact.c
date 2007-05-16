@@ -208,6 +208,8 @@ void im_export_button_clicked_cb (GtkButton *button, gpointer user_data)
 void
 dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 {
+	GtkWidget* nact_about_dialog;
+
 	switch (response_id) {
 	case GTK_RESPONSE_NONE :
 	case GTK_RESPONSE_DELETE_EVENT :
@@ -221,6 +223,13 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 		gtk_main_quit ();
 		break;
 	case GTK_RESPONSE_HELP :
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 6))
+		nact_about_dialog = nact_get_glade_widget_from ("AboutDialog", GLADE_ABOUT_DIALOG_WIDGET);
+		gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (nact_about_dialog), NAUTILUS_ACTIONS_CONFIG_VERSION);
+		gtk_about_dialog_set_logo_icon_name (GTK_ABOUT_DIALOG (nact_about_dialog), "nautilus-actions");
+		gtk_dialog_run (GTK_DIALOG (nact_about_dialog));
+		gtk_widget_hide (nact_about_dialog);
+#endif
 		break;
 	}
 }
@@ -282,6 +291,7 @@ init_dialog (void)
 	GtkWidget *nact_dialog;
 	GtkWidget *nact_actions_list;
 	GtkWidget* nact_edit_button;
+	GtkWidget* nact_about_button;
 	GladeXML *gui = nact_get_glade_xml_object (GLADE_MAIN_WIDGET);
 	if (!gui) {
 		g_error (_("Could not load interface for Nautilus Actions Config Tool"));
@@ -315,6 +325,12 @@ init_dialog (void)
 	gtk_button_set_use_stock (GTK_BUTTON (nact_edit_button), FALSE);
 	gtk_button_set_use_underline (GTK_BUTTON (nact_edit_button), TRUE);
 	gtk_button_set_label (GTK_BUTTON (nact_edit_button), "_Edit");
+#endif
+
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 6))	
+	/* Add about dialog for GTK+ >= 2.6 */
+	nact_about_button = nact_get_glade_widget ("AboutButton");
+	gtk_widget_show (nact_about_button);
 #endif
 
 	/* display the dialog */

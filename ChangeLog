@@ -1,4 +1,11 @@
 2007-05-16  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nautilus-actions-config.glade: Update About dialog info
+	and refactor the interface to take care of the future "profiles"
+	feature.
+
+	* nact/nact-utils.h:
+	* nact/nact.c: Add about dialog when compiling with GTK+ >= 2.6
+
 	* po/POTFILES.in: Remove obsolete convertion program code file
 	from pot files.
 
