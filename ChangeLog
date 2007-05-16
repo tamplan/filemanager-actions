@@ -1,4 +1,7 @@
 2007-05-16  Frederic Ruaudel <grumz@grumz.net>
+	* po/POTFILES.in: Remove obsolete convertion program code file
+	from pot files.
+
 	* libnautilus-actions/nautilus-actions-config.c: Change the get
 	profile function to get the default one when NULL is passed as 
 	parameter to profile_name.
