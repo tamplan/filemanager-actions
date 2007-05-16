@@ -696,6 +696,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	GtkWidget *only_files, *only_folders, *both, *accept_multiple;
 	gint width, height, x, y;
 	GtkTreeModel* scheme_model;
+	NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, NULL);
 
 	if (!init)
 	{
@@ -783,36 +784,36 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_entry_set_text (GTK_ENTRY (GTK_BIN (menu_icon)->child), action->icon);
 	
 	command_path = nact_get_glade_widget_from ("CommandPathEntry", GLADE_EDIT_DIALOG_WIDGET);
-	gtk_entry_set_text (GTK_ENTRY (command_path), action->path);
+	gtk_entry_set_text (GTK_ENTRY (command_path), action_profile->path);
 
 	command_params = nact_get_glade_widget_from ("CommandParamsEntry", GLADE_EDIT_DIALOG_WIDGET);
-	gtk_entry_set_text (GTK_ENTRY (command_params), action->parameters);
+	gtk_entry_set_text (GTK_ENTRY (command_params), action_profile->parameters);
 
 	test_patterns = nact_get_glade_widget_from ("PatternEntry", GLADE_EDIT_DIALOG_WIDGET);
-	set_action_match_string_list (GTK_ENTRY (test_patterns), action->basenames, "*");
+	set_action_match_string_list (GTK_ENTRY (test_patterns), action_profile->basenames, "*");
 
 	match_case = nact_get_glade_widget_from ("MatchCaseButton", GLADE_EDIT_DIALOG_WIDGET);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (match_case), action->match_case);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (match_case), action_profile->match_case);
 
 	test_mimetypes = nact_get_glade_widget_from ("MimeTypeEntry", GLADE_EDIT_DIALOG_WIDGET);
-	set_action_match_string_list (GTK_ENTRY (test_mimetypes), action->mimetypes, "*/*");
+	set_action_match_string_list (GTK_ENTRY (test_mimetypes), action_profile->mimetypes, "*/*");
 
 	only_folders = nact_get_glade_widget_from ("OnlyFoldersButton", GLADE_EDIT_DIALOG_WIDGET);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action->is_dir);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action_profile->is_dir);
 
 	only_files = nact_get_glade_widget_from ("OnlyFilesButton", GLADE_EDIT_DIALOG_WIDGET);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_files), action->is_file);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_files), action_profile->is_file);
 
 	both = nact_get_glade_widget_from ("BothButton", GLADE_EDIT_DIALOG_WIDGET);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (both), action->is_file && action->is_dir);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (both), action_profile->is_file && action_profile->is_dir);
 
 	accept_multiple = nact_get_glade_widget_from ("AcceptMultipleButton", GLADE_EDIT_DIALOG_WIDGET);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (accept_multiple), action->accept_multiple_files);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (accept_multiple), action_profile->accept_multiple_files);
 
 	scheme_listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_DIALOG_WIDGET);
 	scheme_model = gtk_tree_view_get_model (GTK_TREE_VIEW (scheme_listview));
 	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)reset_schemes_list, NULL);
-	g_slist_foreach (action->schemes, (GFunc)set_action_schemes, scheme_model);
+	g_slist_foreach (action_profile->schemes, (GFunc)set_action_schemes, scheme_model);
 
 	update_example_label ();
 
@@ -825,39 +826,39 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		nautilus_actions_config_action_set_label (action, label);
 		nautilus_actions_config_action_set_tooltip (action, gtk_entry_get_text (GTK_ENTRY (menu_tooltip)));
 		nautilus_actions_config_action_set_icon (action, gtk_entry_get_text (GTK_ENTRY (GTK_BIN (menu_icon)->child)));
-		nautilus_actions_config_action_set_path (action, gtk_entry_get_text (GTK_ENTRY (command_path)));
-		nautilus_actions_config_action_set_parameters (action, gtk_entry_get_text (GTK_ENTRY (command_params)));
+		nautilus_actions_config_action_profile_set_path (action_profile, gtk_entry_get_text (GTK_ENTRY (command_path)));
+		nautilus_actions_config_action_profile_set_parameters (action_profile, gtk_entry_get_text (GTK_ENTRY (command_params)));
 
 		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_patterns)), "*");
-		nautilus_actions_config_action_set_basenames (action, list);
+		nautilus_actions_config_action_profile_set_basenames (action_profile, list);
 		g_slist_foreach (list, (GFunc) g_free, NULL);
 		g_slist_free (list);
 
-		nautilus_actions_config_action_set_match_case (
-			action, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (match_case)));
+		nautilus_actions_config_action_profile_set_match_case (
+			action_profile, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (match_case)));
 		
 		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_mimetypes)), "*/*");
-		nautilus_actions_config_action_set_mimetypes (action, list);
+		nautilus_actions_config_action_profile_set_mimetypes (action_profile, list);
 		g_slist_foreach (list, (GFunc) g_free, NULL);
 		g_slist_free (list);
 
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (only_files))) {
-			nautilus_actions_config_action_set_is_file (action, TRUE);
-			nautilus_actions_config_action_set_is_dir (action, FALSE);
+			nautilus_actions_config_action_profile_set_is_file (action_profile, TRUE);
+			nautilus_actions_config_action_profile_set_is_dir (action_profile, FALSE);
 		} else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (only_folders))) {
-			nautilus_actions_config_action_set_is_file (action, FALSE);
-			nautilus_actions_config_action_set_is_dir (action, TRUE);
+			nautilus_actions_config_action_profile_set_is_file (action_profile, FALSE);
+			nautilus_actions_config_action_profile_set_is_dir (action_profile, TRUE);
 		} else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (both))) {
-			nautilus_actions_config_action_set_is_file (action, TRUE);
-			nautilus_actions_config_action_set_is_dir (action, TRUE);
+			nautilus_actions_config_action_profile_set_is_file (action_profile, TRUE);
+			nautilus_actions_config_action_profile_set_is_dir (action_profile, TRUE);
 		}
 
-		nautilus_actions_config_action_set_accept_multiple (
-			action, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (accept_multiple)));
+		nautilus_actions_config_action_profile_set_accept_multiple (
+			action_profile, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (accept_multiple)));
 
 		list = NULL;
 		gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)nact_utils_get_action_schemes_list, &list);
-		nautilus_actions_config_action_set_schemes (action, list);
+		nautilus_actions_config_action_profile_set_schemes (action_profile, list);
 		g_slist_foreach (list, (GFunc) g_free, NULL);
 		g_slist_free (list);
 

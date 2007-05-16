@@ -31,7 +31,6 @@
 #include <libnautilus-actions/nautilus-actions-config-schema-reader.h>
 #include <libnautilus-actions/nautilus-actions-config-schema-writer.h>
 #include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
-#include <libnautilus-actions/nautilus-actions-config-xml.h>
 #include "nact-utils.h"
 #include "nact-import-export.h"
 #include "nact-prefs.h"
@@ -198,6 +197,8 @@ static void nact_setup_actions_list (GtkWidget *list)
 gboolean nact_import_actions (void)
 {
 	gboolean retv = FALSE;
+/* FIXME: Remove backward compat with XML config format file
+
 	GtkWidget* check_button;
 	GSList* iter;
 	NautilusActionsConfigGconfWriter *config;
@@ -254,7 +255,7 @@ gboolean nact_import_actions (void)
 				g_free (error_message);
 			}
 		}
-		else /* Automatic detection asked */
+		else // Automatic detection asked 
 		{
 			//--> we are ignoring the first error because if it fails here it will not in the next 
 			// or if both fails, we kept the current GConf config format as the most important
@@ -297,7 +298,7 @@ gboolean nact_import_actions (void)
 			}
 		}
 	}
-
+*/
 	return retv;
 }
 

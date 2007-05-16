@@ -27,7 +27,6 @@
 #include <glib/gstdio.h>
 #include <unistd.h>
 #include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-xml.h>
 #include <libnautilus-actions/nautilus-actions-config-schema-writer.h>
 #include "nautilus-actions-tools-utils.h"
 
@@ -73,6 +72,7 @@ int main (int argc, char** argv)
 	gchar* contents = NULL;
 	gsize length = 0;
 	NautilusActionsConfigAction* action;
+	NautilusActionsConfigActionProfile* action_profile;
 	GSList* basenames = NULL;
 	GSList* mimetypes_list = NULL;
 	GSList* schemes_list = NULL;
@@ -103,11 +103,12 @@ int main (int argc, char** argv)
 	}
 
 	action = nautilus_actions_config_action_new_default ();
+	action_profile = nautilus_actions_config_action_get_profile (action, NULL);
 	nautilus_actions_config_action_set_label (action, label);
 	nautilus_actions_config_action_set_tooltip (action, tooltip);
 	nautilus_actions_config_action_set_icon (action, icon);
-	nautilus_actions_config_action_set_path (action, command);
-	nautilus_actions_config_action_set_parameters (action, params);
+	nautilus_actions_config_action_profile_set_path (action_profile, command);
+	nautilus_actions_config_action_profile_set_parameters (action_profile, params);
 
 	i = 0;
 	while (matches != NULL && matches[i] != NULL)
@@ -115,11 +116,11 @@ int main (int argc, char** argv)
 		basenames = g_slist_append (basenames, g_strdup (matches[i]));
 		i++;
 	}
-	nautilus_actions_config_action_set_basenames (action, basenames);
+	nautilus_actions_config_action_profile_set_basenames (action_profile, basenames);
 	g_slist_foreach (basenames, (GFunc) g_free, NULL);
 	g_slist_free (basenames);
 	
-	nautilus_actions_config_action_set_match_case (action, match_case);
+	nautilus_actions_config_action_profile_set_match_case (action_profile, match_case);
 
 	i = 0;
 	while (mimetypes != NULL && mimetypes[i] != NULL)
@@ -127,13 +128,13 @@ int main (int argc, char** argv)
 		mimetypes_list = g_slist_append (mimetypes_list, g_strdup (mimetypes[i]));
 		i++;
 	}
-	nautilus_actions_config_action_set_mimetypes (action, mimetypes_list);
+	nautilus_actions_config_action_profile_set_mimetypes (action_profile, mimetypes_list);
 	g_slist_foreach (mimetypes_list, (GFunc) g_free, NULL);
 	g_slist_free (mimetypes_list);
 
-	nautilus_actions_config_action_set_is_file (action, isfile);
-	nautilus_actions_config_action_set_is_dir (action, isdir);
-	nautilus_actions_config_action_set_accept_multiple (action, accept_multiple_files);
+	nautilus_actions_config_action_profile_set_is_file (action_profile, isfile);
+	nautilus_actions_config_action_profile_set_is_dir (action_profile, isdir);
+	nautilus_actions_config_action_profile_set_accept_multiple (action_profile, accept_multiple_files);
 
 	i = 0;
 	while (schemes != NULL && schemes[i] != NULL)
@@ -141,7 +142,7 @@ int main (int argc, char** argv)
 		schemes_list = g_slist_append (schemes_list, g_strdup (schemes[i]));
 		i++;
 	}
-	nautilus_actions_config_action_set_schemes (action, schemes_list);
+	nautilus_actions_config_action_profile_set_schemes (action_profile, schemes_list);
 	g_slist_foreach (schemes_list, (GFunc) g_free, NULL);
 	g_slist_free (schemes_list);
 

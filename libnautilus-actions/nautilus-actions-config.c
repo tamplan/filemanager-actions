@@ -368,7 +368,14 @@ NautilusActionsConfigActionProfile*
 nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
 									 						const gchar* profile_name)
 {
-	return g_hash_table_lookup (action->profiles, profile_name);
+	if (profile_name != NULL)
+	{
+		return g_hash_table_lookup (action->profiles, profile_name);
+	}
+	else
+	{
+		return g_hash_table_lookup (action->profiles, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
+	}
 }
 
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action, 

@@ -1,3 +1,20 @@
+2007-05-16  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config.c: Change the get
+	profile function to get the default one when NULL is passed as 
+	parameter to profile_name.
+
+	* nact/nact-import-export.c: Remove import code to make Nact 
+	compile (due to XML format backward compatibility removal).
+
+	* nact/nact-editor.c:
+	* utils/nautilus-actions-new-config.c: Fix code to deal with the 
+	new profile support (only default profile supported)
+
+	* utils/Makefile.am:
+	* utils/nautilus-actions-convert.c: Remove this useless program
+	since backward compat with 0.x xml config file format is not supported 
+	anymore.
+
 2007-05-15  Frederic Ruaudel <grumz@grumz.net>
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c: Fix bad
 	plural forms by using ngettext to ease i18n (Bug #436375).
