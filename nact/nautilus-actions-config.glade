@@ -3119,7 +3119,7 @@ place secondary text here</property>
   <property name="destroy_with_parent">False</property>
   <property name="name">NACT</property>
   <property name="copyright" translatable="yes">(C) 2005-2007 Frederic Ruaudel &lt;grumz@grumz.net&gt;</property>
-  <property name="comments" translatable="yes">Nautilus Action Configuration Tool
+  <property name="comments" translatable="yes">Nautilus Actions Configuration Tool
 Application to configure Nautilus Action extension</property>
   <property name="license" translatable="yes">This software is licensed under the GNU Genaral Public License (GPL)</property>
   <property name="wrap_license">False</property>
