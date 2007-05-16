@@ -225,7 +225,7 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 	case GTK_RESPONSE_HELP :
 #if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 6))
 		nact_about_dialog = nact_get_glade_widget_from ("AboutDialog", GLADE_ABOUT_DIALOG_WIDGET);
-		gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (nact_about_dialog), NAUTILUS_ACTIONS_CONFIG_VERSION);
+		gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (nact_about_dialog), PACKAGE_VERSION);
 		gtk_about_dialog_set_logo_icon_name (GTK_ABOUT_DIALOG (nact_about_dialog), "nautilus-actions");
 		gtk_dialog_run (GTK_DIALOG (nact_about_dialog));
 		gtk_widget_hide (nact_about_dialog);
