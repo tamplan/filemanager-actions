@@ -2945,7 +2945,7 @@ place secondary text here</property>
 		  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
 
 		  <child>
-		    <widget class="GtkTreeView" id="treeview1">
+		    <widget class="GtkTreeView" id="ProfilesList">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="headers_visible">False</property>
@@ -2972,7 +2972,7 @@ place secondary text here</property>
 		  <property name="spacing">3</property>
 
 		  <child>
-		    <widget class="GtkButton" id="button14">
+		    <widget class="GtkButton" id="AddProfileButton">
 		      <property name="visible">True</property>
 		      <property name="can_default">True</property>
 		      <property name="can_focus">True</property>
@@ -2985,7 +2985,7 @@ place secondary text here</property>
 		  </child>
 
 		  <child>
-		    <widget class="GtkButton" id="button15">
+		    <widget class="GtkButton" id="EditProfileButton">
 		      <property name="visible">True</property>
 		      <property name="sensitive">False</property>
 		      <property name="can_default">True</property>
@@ -2999,7 +2999,7 @@ place secondary text here</property>
 		  </child>
 
 		  <child>
-		    <widget class="GtkButton" id="button16">
+		    <widget class="GtkButton" id="DuplicateProfileButton">
 		      <property name="visible">True</property>
 		      <property name="sensitive">False</property>
 		      <property name="tooltip" translatable="yes">Create a copy of the selected action.</property>
@@ -3076,7 +3076,7 @@ place secondary text here</property>
 		  </child>
 
 		  <child>
-		    <widget class="GtkButton" id="button17">
+		    <widget class="GtkButton" id="DeleteProfileButton">
 		      <property name="visible">True</property>
 		      <property name="sensitive">False</property>
 		      <property name="tooltip" translatable="yes">Delete the action without any confirmation nor the possibility to restore it.</property>
@@ -3116,7 +3116,7 @@ place secondary text here</property>
 </widget>
 
 <widget class="GtkAboutDialog" id="AboutDialog">
-  <property name="destroy_with_parent">True</property>
+  <property name="destroy_with_parent">False</property>
   <property name="name">NACT</property>
   <property name="copyright" translatable="yes">(C) 2005-2007 Frederic Ruaudel &lt;grumz@grumz.net&gt;</property>
   <property name="comments" translatable="yes">Nautilus Action Configuration Tool
