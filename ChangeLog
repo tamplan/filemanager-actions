@@ -1,4 +1,7 @@
 2007-05-17  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nautilus-actions-config.glade: Update callback func names of the
+	profiles edition button.
+
 	* libnautilus-actions/nautilus-actions-config.c: Fix a bug when trying
 	to add a new profile to an uninitialized actions'profiles hash.
 
