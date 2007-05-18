@@ -397,6 +397,14 @@ nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile)
 {
+
+	g_print ("hashbug1");
+	if (!action->profiles)
+	{
+		action->profiles = g_hash_table_new_full (g_str_hash, g_str_equal,
+						 (GDestroyNotify) g_free,
+						 (GDestroyNotify) nautilus_actions_config_action_profile_free);
+	}
 	g_hash_table_insert (action->profiles, g_strdup (profile_name), profile);
 }
 
