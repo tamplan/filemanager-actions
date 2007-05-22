@@ -89,7 +89,10 @@ field_changed_cb (GObject *object, gpointer user_data)
 	GtkWidget* menu_label = nact_get_glade_widget_from ("MenuLabelEntry", GLADE_EDIT_DIALOG_WIDGET);
 	const gchar *label = gtk_entry_get_text (GTK_ENTRY (menu_label));
 
+	/* FIXME: this must be deported to EditProfileDialog
+
 	update_example_label ();
+	*/
 
 	if (label && strlen (label) > 0)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, TRUE);
@@ -182,20 +185,24 @@ void
 legend_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkWidget* editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
-	GladeXML *gui;
+	//GladeXML *gui;
 	GtkWidget *legend_dialog;
 
+	/*
 	gui = nact_get_glade_xml_object ("LegendDialog");
 	if (!gui)
 		return;
+	*/
 
 	legend_dialog = nact_get_glade_widget_from ("LegendDialog", GLADE_LEGEND_DIALOG_WIDGET);
 	gtk_window_set_transient_for (GTK_WINDOW (legend_dialog), GTK_WINDOW (editor));
 
-	gtk_dialog_run (GTK_DIALOG (legend_dialog));
-
+	//gtk_dialog_run (GTK_DIALOG (legend_dialog));
+	gtk_widget_show (legend_dialog);
+/*
 	gtk_widget_hide (legend_dialog);
 	g_object_unref (gui);
+*/
 }
 
 static gint sort_stock_ids (gconstpointer a, gconstpointer b)
@@ -676,6 +683,197 @@ static GSList* get_action_match_string_list (const gchar* patterns, const gchar*
 	return list;
 }
 
+static void get_profiles_names (gchar* key, gchar* value, GSList** list)
+{
+	*list = g_slist_append (*list, key);
+}
+
+void nact_editor_fill_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action)
+{
+	GSList *profiles = NULL, *l;
+	GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model (GTK_TREE_VIEW (list)));
+
+	gtk_list_store_clear (model);
+
+	g_hash_table_foreach (action->profiles, (GHFunc)get_profiles_names, &profiles);
+	profiles = g_slist_sort (profiles, (GCompareFunc)g_utf8_collate);
+	for (l = profiles; l != NULL; l = l->next) 
+	{
+		GtkTreeIter iter;
+		gchar* profile_name = (gchar*)l->data;
+
+		gtk_list_store_append (model, &iter);
+		gtk_list_store_set (model, &iter, 
+				    PROFILE_LABEL_COLUMN, profile_name,
+				    -1);
+	}
+}
+
+void
+add_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
+{
+	GtkWidget* profile_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
+	NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)g_object_get_data (G_OBJECT (profile_list), "action");
+
+	printf ("Action label : %s\n", action->label);
+	/* FIXME: this must be adapted to profile edition
+
+	if (nact_profile_editor_new_profile ())
+	{
+		nact_editor_fill_profiles_list (nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET), FIND_A_WAY_TO_GET_THE_ACTION_OBJECT);
+	}
+	*/
+}
+
+void
+edit_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
+{
+	/* FIXME: this must be adapted to profile edition
+
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	GtkWidget *nact_actions_list;
+	GtkTreeModel* model;
+
+	nact_actions_list = nact_get_glade_widget ("ActionsList");
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		gchar *uuid;
+		NautilusActionsConfigAction *action;
+
+		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
+
+		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
+		if (action) {
+			if (nact_editor_edit_action (action))
+				nact_fill_actions_list (nact_actions_list);
+		}
+
+		g_free (uuid);
+	}
+	*/
+}
+
+void
+duplicate_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
+{
+	/* FIXME: this must be adapted to profile edition
+
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	GtkWidget *nact_actions_list;
+	GtkTreeModel* model;
+	GError* error = NULL;
+	gchar* tmp;
+
+	nact_actions_list = nact_get_glade_widget ("ActionsList");
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) 
+	{
+		gchar *uuid;
+		NautilusActionsConfigAction *action;
+		NautilusActionsConfigAction* new_action;
+
+		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
+
+		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
+		new_action = nautilus_actions_config_action_dup_new (action);
+		if (new_action) 
+		{
+			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), new_action, &error))
+			{
+				nact_fill_actions_list (nact_actions_list);
+			}
+			else
+			{
+				// i18n notes: will be displayed in a dialog
+				tmp = g_strdup_printf (_("Can't duplicate action '%s' !"), action->label);
+				nautilus_actions_display_error (tmp, error->message);
+				g_error_free (error);
+				g_free (tmp);
+			}
+		}
+
+		g_free (uuid);
+	}
+	*/
+}
+
+void
+delete_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
+{
+	/* FIXME: this must be adapted to profile edition
+
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	GtkWidget *nact_actions_list;
+	GtkTreeModel* model;
+
+	nact_actions_list = nact_get_glade_widget ("ActionsList");
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		gchar *uuid;
+
+		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
+		nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
+		nact_fill_actions_list (nact_actions_list);
+
+		g_free (uuid);
+	}
+	*/
+}
+
+static void
+profile_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
+{
+	GtkWidget *nact_prof_edit_button;
+	GtkWidget *nact_prof_delete_button;
+	GtkWidget *nact_prof_duplicate_button;
+	
+	nact_prof_edit_button = nact_get_glade_widget_from ("EditProfileButton", GLADE_EDIT_DIALOG_WIDGET);
+	nact_prof_delete_button = nact_get_glade_widget_from ("DeleteProfileButton", GLADE_EDIT_DIALOG_WIDGET);
+	nact_prof_duplicate_button = nact_get_glade_widget_from ("DuplicateProfileButton", GLADE_EDIT_DIALOG_WIDGET);
+
+	if (gtk_tree_selection_count_selected_rows (selection) > 0) {
+		gtk_widget_set_sensitive (nact_prof_edit_button, TRUE);
+		gtk_widget_set_sensitive (nact_prof_delete_button, TRUE);
+		gtk_widget_set_sensitive (nact_prof_duplicate_button, TRUE);
+	} else {
+		gtk_widget_set_sensitive (nact_prof_edit_button, FALSE);
+		gtk_widget_set_sensitive (nact_prof_delete_button, FALSE);
+		gtk_widget_set_sensitive (nact_prof_duplicate_button, FALSE);
+	}
+}
+
+static void nact_editor_setup_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action)
+{
+	GtkListStore *model;
+	GtkTreeViewColumn *column;
+
+	/* create the model */
+	model = gtk_list_store_new (N_PROF_COLUMN, G_TYPE_STRING);
+	gtk_tree_view_set_model (GTK_TREE_VIEW (list), GTK_TREE_MODEL (model));
+	nact_editor_fill_profiles_list (list, action);
+	g_object_unref (model);
+
+	/* create columns on the tree view */
+	column = gtk_tree_view_column_new_with_attributes (_("Profile Name"),
+							   gtk_cell_renderer_text_new (),
+							   "text", PROFILE_LABEL_COLUMN, NULL);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (list), column);
+
+	/* set up selection */
+	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (list))), "changed",
+			  G_CALLBACK (profile_list_selection_changed_cb), NULL);
+
+}
+
 static gboolean
 open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 {
@@ -691,7 +889,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	GtkSizeGroup* label_size_group;
 	GtkSizeGroup* button_size_group;
 	GtkWidget *menu_icon, *scheme_listview;
-	GtkWidget *menu_label, *menu_tooltip;
+	GtkWidget *menu_label, *menu_tooltip, *menu_profiles_list;
 	GtkWidget *command_path, *command_params, *test_patterns, *match_case, *test_mimetypes;
 	GtkWidget *only_files, *only_folders, *both, *accept_multiple;
 	gint width, height, x, y;
@@ -707,11 +905,16 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 			return FALSE;
 		}
 
+		/* FIXME: this must be deported to EditProfileDialog
+
 		create_schemes_selection_list ();
+		*/
 
 		glade_xml_signal_autoconnect(gui);
 
 		menu_icon = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
+
+		g_assert (menu_icon != NULL);
 
 		g_signal_connect (G_OBJECT (GTK_BIN (menu_icon)->child), "changed",
 							   G_CALLBACK (preview_icon_changed_cb), NULL);
@@ -728,6 +931,12 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		{
 			gtk_size_group_add_widget (label_size_group, GTK_WIDGET (iter->data));
 		}
+
+		menu_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
+		nact_editor_setup_profiles_list (menu_profiles_list, action);
+
+		/* FIXME: this must be deported to EditProfileDialog
+
 		aligned_widgets = nact_get_glade_widget_prefix_from ("CLabelAlign", GLADE_EDIT_DIALOG_WIDGET);
 		label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 		for (iter = aligned_widgets; iter; iter = iter->next)
@@ -744,6 +953,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		gtk_size_group_add_widget (button_size_group, 
 											nact_get_glade_widget_from ("LegendButton", 
 																		GLADE_EDIT_DIALOG_WIDGET));
+		*/
 		/* free memory */
 		g_object_unref (gui);
 		init = TRUE;
@@ -783,6 +993,16 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	menu_icon = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_entry_set_text (GTK_ENTRY (GTK_BIN (menu_icon)->child), action->icon);
 	
+	menu_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
+	nact_editor_fill_profiles_list (menu_profiles_list, action);
+
+	/* remove any old reference and reference the new action in the list */
+	g_print ("update action in the profile list\n");
+	g_object_steal_data (G_OBJECT (menu_profiles_list), "action");
+	g_object_set_data (G_OBJECT (menu_profiles_list), "action", action);
+
+	/* FIXME: this must be deported to EditProfileDialog
+
 	command_path = nact_get_glade_widget_from ("CommandPathEntry", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_entry_set_text (GTK_ENTRY (command_path), action_profile->path);
 
@@ -796,8 +1016,9 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (match_case), action_profile->match_case);
 
 	test_mimetypes = nact_get_glade_widget_from ("MimeTypeEntry", GLADE_EDIT_DIALOG_WIDGET);
-	set_action_match_string_list (GTK_ENTRY (test_mimetypes), action_profile->mimetypes, "*/*");
-
+	*/
+	//set_action_match_string_list (GTK_ENTRY (test_mimetypes), action_profile->mimetypes, "*/*");
+	/*
 	only_folders = nact_get_glade_widget_from ("OnlyFoldersButton", GLADE_EDIT_DIALOG_WIDGET);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action_profile->is_dir);
 
@@ -815,7 +1036,10 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)reset_schemes_list, NULL);
 	g_slist_foreach (action_profile->schemes, (GFunc)set_action_schemes, scheme_model);
 
+	*/
+	/* FIXME: this must be deported to EditProfileDialog
 	update_example_label ();
+	*/
 
 	/* run the dialog */
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);

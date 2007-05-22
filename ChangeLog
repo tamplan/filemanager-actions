@@ -1,3 +1,9 @@
+2007-05-22  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nact-editor.h:
+	* nact/nact-editor.c: Try to set the legend dialog as non-modal (Bug 
+	#337542). Start to implement the profile management gui part.
+	Comment obsolete code to make Nact run for the tests.
+
 2007-05-17  Frederic Ruaudel <grumz@grumz.net>
 	* nact/nautilus-actions-config.glade: Update callback func names of the
 	profiles edition button.

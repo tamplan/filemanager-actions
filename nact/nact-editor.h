@@ -27,7 +27,13 @@
 #include <libnautilus-actions/nautilus-actions-config.h>
 #include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
 
+enum {
+	PROFILE_LABEL_COLUMN = 0,
+	N_PROF_COLUMN
+};
+
 gboolean nact_editor_new_action (void);
 gboolean nact_editor_edit_action (NautilusActionsConfigAction *action);
+void nact_editor_fill_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action);
 
 #endif
