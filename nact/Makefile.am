@@ -14,6 +14,8 @@ nautilus_actions_config_SOURCES =	\
 	nact-prefs.h		\
 	nact-import-export.c \
 	nact-import-export.h \
+	nact-profile-editor.c		\
+	nact-profile-editor.h			\
 	nact-editor.c			\
 	nact-editor.h
 nautilus_actions_config_LDADD =						\

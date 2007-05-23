@@ -1,3 +1,15 @@
+2007-05-23  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nact-editor.c: Move profile edition code to the new files
+	nact/nact-profile-editor.[ch].
+
+	* nact/nact-profile-editor.c:
+	* nact/nact-profile-editor.h: Create these new files to manage
+	profile edition code.
+
+	* nact/Makefile.am: Add nact/nact-profile-editor.[ch] to the list of 
+	file to compile for nact.
+
+
 2007-05-22  Frederic Ruaudel <grumz@grumz.net>
 	* nact/nact-editor.h:
 	* nact/nact-editor.c: Try to set the legend dialog as non-modal (Bug 
