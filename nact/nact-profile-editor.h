@@ -26,7 +26,7 @@
 #include <libnautilus-actions/nautilus-actions-config.h>
 #include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
 
-gboolean nact_profile_editor_new_profile (gchar* profile_name);
-gboolean nact_profile_editor_edit_profile (NautilusActionsConfigAction *action, gchar* profile_name);
+gboolean nact_profile_editor_new_profile (NautilusActionsConfigAction* action);
+gboolean nact_profile_editor_edit_profile (NautilusActionsConfigAction *action, gchar* profile_name, NautilusActionsConfigActionProfile* action_profile);
 
 #endif

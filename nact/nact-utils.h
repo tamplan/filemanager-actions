@@ -28,6 +28,7 @@
 
 #define GLADE_MAIN_WIDGET "ActionsDialog"
 #define GLADE_EDIT_DIALOG_WIDGET "EditActionDialog"
+#define GLADE_EDIT_PROFILE_DIALOG_WIDGET "EditProfileDialog"
 #define GLADE_LEGEND_DIALOG_WIDGET "LegendDialog"
 #define GLADE_FILECHOOSER_DIALOG_WIDGET "FileChooserDialog"
 #define GLADE_FOLDERCHOOSER_DIALOG_WIDGET "FolderChooserDialog"

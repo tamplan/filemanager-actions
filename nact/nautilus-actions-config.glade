@@ -864,7 +864,7 @@ file(s)/folder(s)</property>
 			  <property name="invisible_char">*</property>
 			  <property name="activates_default">False</property>
 			  <property name="width_chars">10</property>
-			  <signal name="changed" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:38:47 GMT"/>
+			  <signal name="changed" handler="profile_field_changed_cb" last_modification_time="Thu, 24 May 2007 12:17:44 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -942,7 +942,7 @@ file(s)/folder(s)</property>
 			  <property name="invisible_char">*</property>
 			  <property name="activates_default">False</property>
 			  <property name="width_chars">10</property>
-			  <signal name="changed" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:38:58 GMT"/>
+			  <signal name="changed" handler="profile_field_changed_cb" last_modification_time="Thu, 24 May 2007 12:17:54 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -1219,7 +1219,7 @@ file(s)/folder(s)</property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char">*</property>
 			  <property name="activates_default">False</property>
-			  <signal name="changed" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:39:10 GMT"/>
+			  <signal name="changed" handler="profile_field_changed_cb" last_modification_time="Thu, 24 May 2007 12:18:05 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -1278,7 +1278,7 @@ file(s)/folder(s)</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="field_changed_cb" last_modification_time="Thu, 13 Apr 2006 11:32:41 GMT"/>
+			  <signal name="toggled" handler="profile_field_changed_cb" last_modification_time="Thu, 24 May 2007 12:18:23 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -1337,7 +1337,7 @@ file(s)/folder(s)</property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char">*</property>
 			  <property name="activates_default">False</property>
-			  <signal name="changed" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:39:10 GMT"/>
+			  <signal name="changed" handler="profile_field_changed_cb" last_modification_time="Thu, 24 May 2007 12:18:14 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -1402,7 +1402,7 @@ file(s)/folder(s)</property>
 		      <property name="active">False</property>
 		      <property name="inconsistent">False</property>
 		      <property name="draw_indicator">True</property>
-		      <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:40:58 GMT"/>
+		      <signal name="toggled" handler="profile_field_changed_cb" last_modification_time="Thu, 24 May 2007 12:18:30 GMT"/>
 		    </widget>
 		    <packing>
 		      <property name="padding">0</property>
@@ -1423,7 +1423,7 @@ file(s)/folder(s)</property>
 		      <property name="inconsistent">False</property>
 		      <property name="draw_indicator">True</property>
 		      <property name="group">OnlyFilesButton</property>
-		      <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:50:07 GMT"/>
+		      <signal name="toggled" handler="profile_field_changed_cb" last_modification_time="Thu, 24 May 2007 12:18:39 GMT"/>
 		    </widget>
 		    <packing>
 		      <property name="padding">0</property>
@@ -1444,7 +1444,7 @@ file(s)/folder(s)</property>
 		      <property name="inconsistent">False</property>
 		      <property name="draw_indicator">True</property>
 		      <property name="group">OnlyFilesButton</property>
-		      <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:41:20 GMT"/>
+		      <signal name="toggled" handler="profile_field_changed_cb" last_modification_time="Thu, 24 May 2007 12:18:57 GMT"/>
 		    </widget>
 		    <packing>
 		      <property name="padding">0</property>
@@ -1471,7 +1471,7 @@ file(s)/folder(s)</property>
 		  <property name="active">False</property>
 		  <property name="inconsistent">False</property>
 		  <property name="draw_indicator">True</property>
-		  <signal name="toggled" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:41:39 GMT"/>
+		  <signal name="toggled" handler="profile_field_changed_cb" last_modification_time="Thu, 24 May 2007 12:19:05 GMT"/>
 		</widget>
 		<packing>
 		  <property name="padding">0</property>

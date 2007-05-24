@@ -364,6 +364,45 @@ nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *acti
 	return retv;
 }
 
+static void get_profiles_names (gchar* key, gchar* value, GSList** list)
+{
+	*list = g_slist_append (*list, g_strdup (key));
+}
+
+GSList*
+nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigAction *action) 
+{
+	GSList* profile_names = NULL;
+	g_hash_table_foreach (action->profiles, (GHFunc)get_profiles_names, &profile_names);
+
+	return profile_names; // The returned list must be freed with all its elements after usage !!
+}
+
+gchar*
+nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action)
+{
+	gchar* new_profile_name;
+	GSList* profile_names = nautilus_actions_config_action_get_all_profile_names (action);
+	int count = g_slist_length (profile_names);
+	gboolean found = FALSE;
+
+	while (!found)
+	{
+		new_profile_name = g_strdup_printf (NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_NAME, count);
+		if (!nautilus_actions_config_action_profile_exists (action, new_profile_name))
+		{
+			found = TRUE;
+		}
+		else
+		{
+			g_free (new_profile_name);
+			count++;
+		}
+	}
+
+	return new_profile_name;
+}
+
 NautilusActionsConfigActionProfile*
 nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
 									 						const gchar* profile_name)
@@ -420,7 +459,7 @@ gboolean
 nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name)
 {
-	g_hash_table_remove (action->profiles, profile_name);
+	return g_hash_table_remove (action->profiles, profile_name);
 }
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void)

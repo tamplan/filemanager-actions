@@ -48,8 +48,10 @@ typedef enum
 #define NAUTILUS_ACTIONS_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), NAUTILUS_ACTIONS_TYPE_CONFIG))
 #define NAUTILUS_ACTIONS_CONFIG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), NAUTILUS_ACTIONS_TYPE_CONFIG, NautilusActionsConfigClass))
 
-// default profile name
-#define NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME "main"
+// i18n notes : default profile name displayed in the profile list in the action edition dialog (please keep the string lowercase if possible)
+#define NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME _("main")
+// i18n notes : default profile name displayed in the profile list in the action edition dialog when more than one profile is created (incremented each time) (please keep the string lowercase if possible)
+#define NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_NAME _("profile%d")
 
 typedef struct {
 	gchar *path;
@@ -115,6 +117,8 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new (
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_default (void);
 gboolean                     nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name);
+GSList				*nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigAction *action); 
+gchar 				*nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action); 
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name);
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action, 

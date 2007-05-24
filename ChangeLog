@@ -1,3 +1,18 @@
+2007-05-24  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nautilus-actions-config.glade: Update the callbacks of all
+	the profile editor dialog field.
+
+	* nact/nact-profile-editor.c:
+	* nact/nact-profile-editor.h:
+	* nact/nact-editor.c:
+	* nact/nact-utils.c:
+	* nact/nact-utils.h: Implement addition and edition of the profile
+	in Nact.
+
+	* libnautilus-actions/nautilus-actions-config.h:
+	* libnautilus-actions/nautilus-actions-config.c: Add functions to
+	manage profiles more easily.
+
 2007-05-23  Frederic Ruaudel <grumz@grumz.net>
 	* nact/nact-editor.c: Move profile edition code to the new files
 	nact/nact-profile-editor.[ch].
