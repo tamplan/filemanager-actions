@@ -276,8 +276,6 @@ cell_edited (GtkTreeModel		   *model,
              const gchar         *new_text,
 				 gint 					column)
 {
-	/* FIXME: Update code to make profile name editable ??
-
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
 	GtkTreeIter iter;
 	gchar* old_text;
@@ -295,7 +293,44 @@ cell_edited (GtkTreeModel		   *model,
 	gtk_tree_path_free (path);
 
 	return toggle_state;
-	*/
+}
+
+static void
+profile_name_edited_cb (GtkCellRendererText *cell,
+             const gchar         *path_string,
+             const gchar         *new_profile_name,
+             gpointer             data)
+{
+	GtkWidget* profile_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
+	NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)g_object_get_data (G_OBJECT (profile_list), "action");
+	GtkTreeModel* model = GTK_TREE_MODEL (data);
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+	GtkTreeIter iter;
+	GError* error = NULL;
+	gchar* tmp;
+	gchar* old_profile_name;
+
+	gtk_tree_model_get_iter (model, &iter, path);
+
+	gtk_tree_model_get (model, &iter, PROFILE_LABEL_COLUMN, &old_profile_name, -1);
+
+	if (nautilus_actions_config_action_rename_profile (action, old_profile_name, new_profile_name, &error))
+	{
+		gtk_list_store_set (GTK_LIST_STORE (model), &iter, PROFILE_LABEL_COLUMN,
+								  g_strdup (new_profile_name), -1);
+	
+		field_changed_cb (G_OBJECT (cell), NULL);
+	}
+	else
+	{
+		// i18n notes: will be displayed in a dialog
+		tmp = g_strdup_printf (_("Can't rename action's profile '%s' into '%s' !"), old_profile_name, new_profile_name);
+		nautilus_actions_display_error (tmp, error->message);
+		g_error_free (error);
+		g_free (tmp);
+	}
+	g_free (old_profile_name);
+	gtk_tree_path_free (path);
 }
 
 void nact_editor_fill_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action)
@@ -493,6 +528,7 @@ static void nact_editor_setup_profiles_list (GtkWidget *list, NautilusActionsCon
 {
 	GtkListStore *model;
 	GtkTreeViewColumn *column;
+	GtkCellRenderer* text_cell;
 
 	/* create the model */
 	model = gtk_list_store_new (N_PROF_COLUMN, G_TYPE_STRING);
@@ -501,8 +537,16 @@ static void nact_editor_setup_profiles_list (GtkWidget *list, NautilusActionsCon
 	g_object_unref (model);
 
 	/* create columns on the tree view */
+	text_cell = gtk_cell_renderer_text_new ();
+
+	g_object_set (G_OBJECT (text_cell), "editable", TRUE, NULL);
+
+	g_signal_connect (G_OBJECT (text_cell), "edited",
+							G_CALLBACK (profile_name_edited_cb), 
+							gtk_tree_view_get_model (GTK_TREE_VIEW (list)));
+
 	column = gtk_tree_view_column_new_with_attributes (_("Profile Name"),
-							   gtk_cell_renderer_text_new (),
+							   text_cell,
 							   "text", PROFILE_LABEL_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (list), column);
 

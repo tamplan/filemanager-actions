@@ -132,6 +132,10 @@ void                         nautilus_actions_config_action_replace_profile (Nau
 								 	 NautilusActionsConfigActionProfile* profile);
 gboolean                     nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name);
+gboolean                     nautilus_actions_config_action_rename_profile (NautilusActionsConfigAction *action, 
+									 const gchar* old_profile_name,
+								 	 const gchar* new_profile_name,
+									 GError** error);
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void);
 NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void);

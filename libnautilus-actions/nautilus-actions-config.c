@@ -476,6 +476,48 @@ nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *acti
 	return g_hash_table_remove (action->profiles, profile_name);
 }
 
+gboolean                     nautilus_actions_config_action_rename_profile (NautilusActionsConfigAction *action, 
+									 const gchar* old_profile_name,
+								 	 const gchar* new_profile_name,
+									 GError** error)
+{
+	gboolean ret = FALSE;
+	gchar* old_key;
+	NautilusActionsConfigActionProfile* action_profile;
+	g_assert (action != NULL);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	// get the current profile
+	if (g_hash_table_lookup_extended (action->profiles, old_profile_name, &old_key, &action_profile))
+	{
+		// try to associate the profile to the new name
+		if (nautilus_actions_config_action_add_profile (action, new_profile_name, action_profile, error))
+		{
+			// if it has worked, we remove the old entry without freeing the profile which is now assigned to the new key
+			if (g_hash_table_steal (action->profiles, old_profile_name))
+			{
+				ret = TRUE;
+
+				// we manually free the old key
+				g_free (old_key);
+			}
+			else
+			{
+				// i18n notes: will be displayed in an error dialog
+				g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("Can't removed the old profile '%s'"), old_profile_name);
+			}
+		}
+	}
+	else
+	{
+			// i18n notes: will be displayed in an error dialog
+			g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("Can't find profile named '%s'"), old_profile_name);
+	}
+
+	return ret;
+}
+
+
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void)
 {
 	return g_new0 (NautilusActionsConfigAction, 1);
