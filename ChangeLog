@@ -1,3 +1,13 @@
+2007-05-25  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h:
+	* nact/nact-editor.c: Change the definition of the function 
+	nautilus_actions_config_action_add_profile () to manage error
+	when the profile name already exists.
+
+	* nact/nact-profile-editor.c: Implement duplication of a profile
+
 2007-05-24  Frederic Ruaudel <grumz@grumz.net>
 	* nact/nautilus-actions-config.glade: Update the callbacks of all
 	the profile editor dialog field.
