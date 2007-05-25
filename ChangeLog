@@ -1,4 +1,9 @@
 2007-05-25  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nautilus-actions-config.glade:
+	* nact/nact-profile-editor.c: Fix the problem which make the legend 
+	dialog modal (Bug #337542) by changing the Legend button into a 
+	toggle button. The Legend dialog can't be closed directly.
+
 	* nact/nact-editor.c: Implement renaming of a profile
 
 	* libnautilus-actions/nautilus-actions-config.c:

@@ -110,28 +110,39 @@ void path_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
 	}		
 }
 
-void
-legend_button_clicked_cb (GtkButton *button, gpointer user_data)
+static void 
+show_legend_dialog ()
 {
 	GtkWidget* editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
-	//GladeXML *gui;
-	GtkWidget *legend_dialog;
-
-	/*
-	gui = nact_get_glade_xml_object ("LegendDialog");
-	if (!gui)
-		return;
-	*/
-
-	legend_dialog = nact_get_glade_widget_from ("LegendDialog", GLADE_LEGEND_DIALOG_WIDGET);
+	GtkWidget *legend_dialog = nact_get_glade_widget_from ("LegendDialog", GLADE_LEGEND_DIALOG_WIDGET);
+	gtk_window_set_deletable (GTK_WINDOW (legend_dialog), FALSE);
 	gtk_window_set_transient_for (GTK_WINDOW (legend_dialog), GTK_WINDOW (editor));
-
-	//gtk_dialog_run (GTK_DIALOG (legend_dialog));
 	gtk_widget_show (legend_dialog);
-/*
+}
+
+static void 
+hide_legend_dialog ()
+{
+	GtkWidget *legend_dialog = nact_get_glade_widget_from ("LegendDialog", GLADE_LEGEND_DIALOG_WIDGET);
+	GtkWidget *legend_button = nact_get_glade_widget_from ("LegendButton", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
 	gtk_widget_hide (legend_dialog);
-	g_object_unref (gui);
-*/
+
+	// Set the legend button state consistent for when the dialog is hidden 
+	// by another mean (eg. close the edit profile dialog)
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (legend_button), FALSE);
+}
+
+void
+legend_button_toggled_cb (GtkToggleButton *button, gpointer user_data)
+{
+	if (gtk_toggle_button_get_active (button))
+	{
+		show_legend_dialog ();
+	}
+	else
+	{
+		hide_legend_dialog ();
+	}
 }
 
 static void scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer,
@@ -583,7 +594,6 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 
 	// run the dialog 
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
-	g_print ("toto49\n");
 	switch (gtk_dialog_run (GTK_DIALOG (editor))) {
 	case GTK_RESPONSE_OK :
 		nautilus_actions_config_action_profile_set_path (action_profile, gtk_entry_get_text (GTK_ENTRY (command_path)));
@@ -655,6 +665,7 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 	nact_prefs_set_edit_dialog_position (GTK_WINDOW (editor));
 	*/
 
+	hide_legend_dialog ();
 	gtk_widget_hide (editor);
 	
 	return ret;
