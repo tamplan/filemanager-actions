@@ -420,7 +420,7 @@ duplicate_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 		{
 			// i18n notes: will be displayed in a dialog
 			tmp = g_strdup_printf (_("Can't duplicate action's profile '%s' !"), profile_name);
-			nautilus_actions_display_error (tmp, "duplication failed");
+			nautilus_actions_display_error (tmp, "");
 			g_free (tmp);
 		}
 
@@ -433,27 +433,38 @@ duplicate_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 void
 delete_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
-	/* FIXME: this must be adapted to profile edition
-
 	GtkTreeSelection *selection;
+	gchar* tmp;
 	GtkTreeIter iter;
-	GtkWidget *nact_actions_list;
 	GtkTreeModel* model;
+	GtkWidget *nact_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
+	NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)g_object_get_data (G_OBJECT (nact_profiles_list), "action");
 
-	nact_actions_list = nact_get_glade_widget ("ActionsList");
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_profiles_list));
 
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) 
+	{
+		gchar *profile_name;
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		gchar *uuid;
+		gtk_tree_model_get (model, &iter, PROFILE_LABEL_COLUMN, &profile_name, -1);
 
-		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
-		nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-		nact_fill_actions_list (nact_actions_list);
+		printf ("profile_name : %s\n", profile_name);
 
-		g_free (uuid);
+		if (nautilus_actions_config_action_remove_profile (action, profile_name))
+		{
+			nact_editor_fill_profiles_list (nact_profiles_list, action);
+			field_changed_cb (G_OBJECT (nact_profiles_list), NULL);
+		}
+		else
+		{
+			// i18n notes: will be displayed in a dialog
+			tmp = g_strdup_printf (_("Can't delete action's profile '%s' !"), profile_name);
+			nautilus_actions_display_error (tmp, "");
+			g_free (tmp);
+		}
+
+		g_free (profile_name);
 	}
-	*/
 }
 
 static void

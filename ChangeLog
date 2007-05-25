@@ -1,4 +1,6 @@
 2007-05-25  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nact-editor.c: implement deletion of a profile
+
 	* libnautilus-actions/nautilus-actions-config-gconf.c:
 	* libnautilus-actions/nautilus-actions-config.c:
 	* libnautilus-actions/nautilus-actions-config.h:
