@@ -123,9 +123,10 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_profile (
 									 const gchar* profile_name);
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name);
-void                         nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
+gboolean                     nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name,
-								 	 NautilusActionsConfigActionProfile* profile);
+								 	 NautilusActionsConfigActionProfile* profile,
+									 GError** error);
 void                         nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile);

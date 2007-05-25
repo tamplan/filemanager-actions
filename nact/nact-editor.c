@@ -374,48 +374,60 @@ edit_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 void
 duplicate_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
-	/* FIXME: this must be adapted to profile edition
-
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
-	GtkWidget *nact_actions_list;
 	GtkTreeModel* model;
 	GError* error = NULL;
 	gchar* tmp;
+	GtkWidget *nact_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
+	NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)g_object_get_data (G_OBJECT (nact_profiles_list), "action");
 
-	nact_actions_list = nact_get_glade_widget ("ActionsList");
-
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_profiles_list));
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) 
 	{
-		gchar *uuid;
-		NautilusActionsConfigAction *action;
-		NautilusActionsConfigAction* new_action;
+		gchar* profile_name;
+		gchar* new_profile_name;
+		NautilusActionsConfigActionProfile* action_profile;
+		NautilusActionsConfigActionProfile* new_action_profile;
 
-		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
+		gtk_tree_model_get (model, &iter, PROFILE_LABEL_COLUMN, &profile_name, -1);
 
-		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-		new_action = nautilus_actions_config_action_dup_new (action);
-		if (new_action) 
+		printf ("profile_name : %s\n", profile_name);
+
+		action_profile = nautilus_actions_config_action_profile_dup (nautilus_actions_config_action_get_profile (action, profile_name));
+		new_action_profile = nautilus_actions_config_action_profile_dup (action_profile);
+
+		// i18n notes: this is the default name of a profile duplicate
+		new_profile_name = g_strdup_printf (_("%s_copy"), profile_name);
+		if (action && new_action_profile) 
 		{
-			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), new_action, &error))
+			if (nautilus_actions_config_action_add_profile (action, new_profile_name, new_action_profile, &error))
 			{
-				nact_fill_actions_list (nact_actions_list);
+				nact_editor_fill_profiles_list (nact_profiles_list, action);
+				field_changed_cb (G_OBJECT (nact_profiles_list), NULL);
 			}
 			else
 			{
 				// i18n notes: will be displayed in a dialog
-				tmp = g_strdup_printf (_("Can't duplicate action '%s' !"), action->label);
+				tmp = g_strdup_printf (_("Can't duplicate action's profile '%s' !"), profile_name);
 				nautilus_actions_display_error (tmp, error->message);
 				g_error_free (error);
 				g_free (tmp);
 			}
 		}
+		else
+		{
+			// i18n notes: will be displayed in a dialog
+			tmp = g_strdup_printf (_("Can't duplicate action's profile '%s' !"), profile_name);
+			nautilus_actions_display_error (tmp, "duplication failed");
+			g_free (tmp);
+		}
 
-		g_free (uuid);
+
+		g_free (new_profile_name);
+		g_free (profile_name);
 	}
-	*/
 }
 
 void

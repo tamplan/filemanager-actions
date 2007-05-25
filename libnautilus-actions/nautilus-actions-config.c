@@ -425,17 +425,21 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create
 	if (!action_profile)
 	{
 		action_profile = nautilus_actions_config_action_profile_new_default ();
-		nautilus_actions_config_action_add_profile (action, profile_name, action_profile);
+		nautilus_actions_config_action_add_profile (action, profile_name, action_profile, NULL);
 	}
 
 	return action_profile;
 }
 
-void
+gboolean
 nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name,
-								 	 NautilusActionsConfigActionProfile* profile)
+								 	 NautilusActionsConfigActionProfile* profile,
+									 GError** error)
 {
+	g_assert (action != NULL);
+	g_assert (profile != NULL);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
 	if (!action->profiles)
 	{
@@ -443,7 +447,17 @@ nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action,
 						 (GDestroyNotify) g_free,
 						 (GDestroyNotify) nautilus_actions_config_action_profile_free);
 	}
+
+	if (nautilus_actions_config_action_profile_exists (action, profile_name))
+	{
+			// i18n notes: will be displayed in an error dialog
+			g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("A profile already exists with the name '%s', please first remove or rename the existing one before trying to add this one"), profile_name);
+			return FALSE;
+	}
+
 	g_hash_table_insert (action->profiles, g_strdup (profile_name), profile);
+
+	return TRUE;
 }
 
 void

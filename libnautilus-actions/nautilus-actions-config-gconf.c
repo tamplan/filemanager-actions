@@ -194,7 +194,7 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 				action_profile->match_case = get_action_bool_value (config->conf_client, (gchar*)node->data, ACTION_MATCHCASE_ENTRY);
 			}
 
-			nautilus_actions_config_action_add_profile (action, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME, action_profile);
+			nautilus_actions_config_action_add_profile (action, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME, action_profile, NULL);
 		}
 		else
 		{
@@ -217,7 +217,7 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 				action_profile->accept_multiple_files = get_action_bool_value (config->conf_client, profile_dir, ACTION_MULTIPLE_ENTRY);
 				action_profile->schemes = get_action_list_value (config->conf_client, profile_dir, ACTION_SCHEMES_ENTRY);
 
-				nautilus_actions_config_action_add_profile (action, profile_name, action_profile);
+				nautilus_actions_config_action_add_profile (action, profile_name, action_profile, NULL);
 
 				g_free (profile_name);
 				g_free (profile_dir);

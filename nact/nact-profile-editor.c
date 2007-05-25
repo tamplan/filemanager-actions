@@ -624,13 +624,13 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 
 		if (is_new)
 		{
-			nautilus_actions_config_action_add_profile (action, profile_name, action_profile);
+			ret = nautilus_actions_config_action_add_profile (action, profile_name, action_profile, NULL);
 		}
 		else
 		{
 			nautilus_actions_config_action_replace_profile (action, profile_name, action_profile);
+			ret = TRUE;
 		}
-		ret = TRUE;
 		break;
 	case GTK_RESPONSE_DELETE_EVENT:
 	case GTK_RESPONSE_CANCEL :
