@@ -1,3 +1,11 @@
+2007-05-30  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nautilus-actions-config.glade:
+	* nact/nact-editor.c: Replace the "duplicate" profile button by
+	a "copy" and a "paste" button, so it is now possible to copy a 
+	profile from one action to another.
+
+	* nact/nact-editor.c: Update the "save action" code
+
 2007-05-25  Frederic Ruaudel <grumz@grumz.net>
 	* nact/nautilus-actions-config.glade:
 	* nact/nact-profile-editor.c: Fix the problem which make the legend 
