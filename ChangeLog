@@ -1,4 +1,10 @@
 2007-05-30  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nact-editor.c:
+	* nact/nact.c: Fix some missing/buggy resources freeing.
+
+	* libnautilus-actions/nautilus-actions-config-gconf-writer.c:
+	Fix action profile saving in GConf.
+
 	* nact/nautilus-actions-config.glade:
 	* nact/nact-editor.c: Replace the "duplicate" profile button by
 	a "copy" and a "paste" button, so it is now possible to copy a 

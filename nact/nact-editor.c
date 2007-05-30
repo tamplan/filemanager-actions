@@ -716,6 +716,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		{
 			ret = nautilus_actions_config_update_action (NAUTILUS_ACTIONS_CONFIG (config), action);
 		}
+		g_object_unref (config);
 		break;
 	case GTK_RESPONSE_DELETE_EVENT:
 	case GTK_RESPONSE_CANCEL :

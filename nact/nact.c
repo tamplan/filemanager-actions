@@ -209,17 +209,24 @@ void
 dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 {
 	GtkWidget* nact_about_dialog;
+	GtkWidget *nact_prof_paste_button = nact_get_glade_widget_from ("PasteProfileButton", GLADE_EDIT_DIALOG_WIDGET);
 
 	switch (response_id) {
 	case GTK_RESPONSE_NONE :
 	case GTK_RESPONSE_DELETE_EVENT :
 	case GTK_RESPONSE_CLOSE :
+		// Free any profile in the clipboard
+		g_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile_name"));
+		nautilus_actions_config_action_profile_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile"));
+
+		/* FIXME : update pref settings
 		nact_prefs_set_main_dialog_size (GTK_WINDOW (dialog));
 		nact_prefs_set_main_dialog_position (GTK_WINDOW (dialog));
 		nact_prefs_save_preferences ();
+		*/
+
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		nact_destroy_glade_objects ();
-		g_object_unref (config);
 		gtk_main_quit ();
 		break;
 	case GTK_RESPONSE_HELP :

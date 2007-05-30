@@ -28,11 +28,6 @@
 
 static GObjectClass *parent_class = NULL;
 
-static void get_hash_keys (gchar* key, gchar* value, GSList* list)
-{
-	list = g_slist_append (list, key);
-}
-
 static gboolean
 save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 {
@@ -65,7 +60,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	g_free (key);
 
 	// Unset old 1.x keys (if needed)
-	key = g_strdup_printf ("%s/%s/%s", action->conf_section, ACTION_PATH_ENTRY);
+	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_PATH_ENTRY);
 	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
@@ -102,7 +97,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	g_free (key);
 
 	// Set new keys in 2.x format
-	g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, profile_list);
+	profile_list = nautilus_actions_config_action_get_all_profile_names (action);
 
 	for (iter = profile_list; iter; iter = iter->next)
 	{
