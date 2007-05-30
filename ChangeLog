@@ -1,4 +1,6 @@
 2007-05-30  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
 	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
 	* libnautilus-actions/nautilus-actions-config-gconf.c:
 	* libnautilus-actions/nautilus-actions-config.c:

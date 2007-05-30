@@ -218,6 +218,11 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 		gchar* profile_name = (gchar*)iter->data;
 		gchar* profile_dir = g_strdup_printf ("%s%s", ACTIONS_PROFILE_PREFIX, profile_name);
 		NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
+
+		//--> Profile entries : desc-name
+		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_PROFILE_DESC_NAME_ENTRY, NULL);
+		create_schema_entry (doc, list_node, content, "string", action_profile->desc_name, ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, FALSE);
+		xmlFree (content);
 	
 		//--> Command entries : path
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_PATH_ENTRY, NULL);

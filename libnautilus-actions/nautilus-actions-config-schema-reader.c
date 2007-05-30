@@ -45,10 +45,12 @@ typedef enum {
 	ACTION_ISDIR_TYPE,
 	ACTION_MULTIPLE_TYPE,
 	ACTION_SCHEMES_TYPE,
-	ACTION_VERSION_TYPE
+	ACTION_VERSION_TYPE,
+	ACTION_PROFILE_NAME_DESC_TYPE
 } ActionFieldType;
 
 typedef struct {
+	gboolean is_desc_name_ok;
 	gboolean is_path_ok;
 	gboolean is_params_ok;
 	gboolean is_basenames_ok;
@@ -98,6 +100,7 @@ static gchar* get_action_uuid_from_key (const gchar* key)
 static ProfileChecking* nautilus_actions_config_schema_reader_profile_checking_new ()
 {
 	ProfileChecking* check = g_new0 (ProfileChecking, 1);
+	check->is_desc_name_ok = FALSE;
 	check->is_path_ok = FALSE;
 	check->is_params_ok = FALSE;
 	check->is_basenames_ok = FALSE;
@@ -122,6 +125,9 @@ static void nautilus_actions_config_schema_reader_profile_checking_add_validatio
 
 	switch (type_checked)
 	{
+		case ACTION_PROFILE_NAME_DESC_TYPE:
+			check->is_desc_name_ok = TRUE;
+			break;
 		case ACTION_PATH_TYPE:
 			check->is_path_ok = TRUE;
 			break;
@@ -191,6 +197,7 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 
 	for (iter = profile_list; iter; iter = iter->next)
 	{
+		gboolean local_retv = FALSE;
 		gchar* profile_name = (gchar*)iter->data;
 		check = g_hash_table_lookup (profile_check_list, profile_name);
 		if (g_ascii_strcasecmp (version, "1.0") == 0 && 
@@ -199,7 +206,7 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 				check->is_params_ok && check->is_path_ok)
 		{
 
-			retv = TRUE;
+			local_retv = TRUE;
 		}
 		//else if (g_ascii_strcasecmp (version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 && 
 		else if (g_ascii_strcasecmp (version, "1.1") >= 0 && 
@@ -208,7 +215,7 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 				check->is_isdir_ok && check->is_isfile_ok && check->is_basenames_ok && 
 				check->is_params_ok && check->is_path_ok)
 		{
-			retv = TRUE;
+			local_retv = TRUE;
 		}
 		else
 		{
@@ -272,6 +279,8 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 			g_string_append_printf (error_message_str, ngettext ("%s (one missing key: %s)%s", "%s (missing keys: %s)%s", count), profile_name, tmp, list_separator);
 			g_free (tmp);
 		}
+
+		retv = (retv && local_retv);
 	}
 	g_slist_free (profile_list);
 
@@ -350,6 +359,10 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 			else if (g_str_has_suffix (text, ACTION_ICON_ENTRY))
 			{
 				*type = ACTION_ICON_TYPE;
+			}
+			else if (g_str_has_suffix (text, ACTION_PROFILE_DESC_NAME_ENTRY))
+			{
+				*type = ACTION_PROFILE_NAME_DESC_TYPE;
 			}
 			else if (g_str_has_suffix (text, ACTION_PATH_ENTRY))
 			{
@@ -514,10 +527,11 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 				gchar* value;
 				gchar* uuid = NULL;
 				gchar* profile_name = NULL;
+				NautilusActionsConfigActionProfile* action_profile = NULL;
 
 				if (nautilus_actions_config_schema_reader_action_parse_schema_key (iter, &type, &value, &uuid, (action->uuid == NULL), &profile_name))
 				{
-					NautilusActionsConfigActionProfile* action_profile = NULL;
+					action_profile = NULL;
 
 					if (!action->uuid)
 					{
@@ -543,6 +557,11 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 						case ACTION_ICON_TYPE:
 							is_icon_ok = TRUE;
 							nautilus_actions_config_action_set_icon (action, value);
+							break;
+						case ACTION_PROFILE_NAME_DESC_TYPE:
+							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
+							action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
+							nautilus_actions_config_action_profile_set_desc_name (action_profile, value);
 							break;
 						case ACTION_PATH_TYPE:
 							nautilus_actions_config_schema_reader_profile_checking_add_validation (profile_check_list, profile_name, type);
@@ -612,6 +631,13 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 
 					g_free (value);
 				}	
+
+				action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
+				if (action_profile->desc_name == NULL)
+				{
+					// if the profile descriptiv name is not set, set it to the profile name
+					nautilus_actions_config_action_profile_set_desc_name (action_profile, profile_name);
+				}
 				g_free (profile_name);
 			}
 			else
