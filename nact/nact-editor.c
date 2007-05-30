@@ -407,15 +407,17 @@ edit_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 }
 
 void
-duplicate_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
+copy_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
 	GtkTreeModel* model;
 	GError* error = NULL;
 	gchar* tmp;
+	GtkWidget *nact_prof_paste_button;
 	GtkWidget *nact_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
 	NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)g_object_get_data (G_OBJECT (nact_profiles_list), "action");
+	nact_prof_paste_button = nact_get_glade_widget_from ("PasteProfileButton", GLADE_EDIT_DIALOG_WIDGET);
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_profiles_list));
 
@@ -433,36 +435,74 @@ duplicate_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 		action_profile = nautilus_actions_config_action_profile_dup (nautilus_actions_config_action_get_profile (action, profile_name));
 		new_action_profile = nautilus_actions_config_action_profile_dup (action_profile);
 
-		// i18n notes: this is the default name of a profile duplicate
+		// i18n notes: this is the default name of a copied profile 
 		new_profile_name = g_strdup_printf (_("%s_copy"), profile_name);
 		if (action && new_action_profile) 
 		{
-			if (nautilus_actions_config_action_add_profile (action, new_profile_name, new_action_profile, &error))
-			{
-				nact_editor_fill_profiles_list (nact_profiles_list, action);
-				field_changed_cb (G_OBJECT (nact_profiles_list), NULL);
-			}
-			else
-			{
-				// i18n notes: will be displayed in a dialog
-				tmp = g_strdup_printf (_("Can't duplicate action's profile '%s' !"), profile_name);
-				nautilus_actions_display_error (tmp, error->message);
-				g_error_free (error);
-				g_free (tmp);
-			}
+			// Remove and free any existing data
+			g_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile_name"));
+			nautilus_actions_config_action_profile_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile"));
+
+			g_object_set_data (G_OBJECT (nact_prof_paste_button), "profile_name", new_profile_name);
+			g_object_set_data (G_OBJECT (nact_prof_paste_button), "profile", new_action_profile);
+			gtk_widget_set_sensitive (nact_prof_paste_button, TRUE);
+
 		}
 		else
 		{
 			// i18n notes: will be displayed in a dialog
-			tmp = g_strdup_printf (_("Can't duplicate action's profile '%s' !"), profile_name);
+			tmp = g_strdup_printf (_("Can't copy action's profile '%s' !"), profile_name);
 			nautilus_actions_display_error (tmp, "");
 			g_free (tmp);
 		}
 
-
-		g_free (new_profile_name);
 		g_free (profile_name);
 	}
+
+}
+
+void
+paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
+{
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	GtkTreeModel* model;
+	GError* error = NULL;
+	gchar* tmp;
+	GtkWidget *nact_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
+	NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)g_object_get_data (G_OBJECT (nact_profiles_list), "action");
+	GtkWidget *nact_prof_paste_button = nact_get_glade_widget_from ("PasteProfileButton", GLADE_EDIT_DIALOG_WIDGET);
+	gchar* profile_name = (gchar*)g_object_get_data (G_OBJECT (nact_prof_paste_button), "profile_name");
+	NautilusActionsConfigActionProfile* action_profile = (NautilusActionsConfigActionProfile*)g_object_get_data (G_OBJECT (nact_prof_paste_button), "profile");
+
+	printf ("profile_name : %s\n", profile_name);
+
+	NautilusActionsConfigActionProfile* new_action_profile = nautilus_actions_config_action_profile_dup (action_profile);
+
+	if (action && new_action_profile) 
+	{
+		if (nautilus_actions_config_action_add_profile (action, profile_name, new_action_profile, &error))
+		{
+			nact_editor_fill_profiles_list (nact_profiles_list, action);
+			field_changed_cb (G_OBJECT (nact_profiles_list), NULL);
+		}
+		else
+		{
+			// i18n notes: will be displayed in a dialog
+			tmp = g_strdup_printf (_("Can't paste action's profile '%s' !"), profile_name);
+			nautilus_actions_display_error (tmp, error->message);
+			g_error_free (error);
+			g_free (tmp);
+		}
+	}
+	else
+	{
+		// i18n notes: will be displayed in a dialog
+		tmp = g_strdup_printf (_("Can't paste action's profile '%s' !"), profile_name);
+		nautilus_actions_display_error (tmp, "");
+		g_free (tmp);
+	}
+
 }
 
 void
@@ -507,20 +547,20 @@ profile_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_da
 {
 	GtkWidget *nact_prof_edit_button;
 	GtkWidget *nact_prof_delete_button;
-	GtkWidget *nact_prof_duplicate_button;
-	
+	GtkWidget *nact_prof_copy_button;
+
 	nact_prof_edit_button = nact_get_glade_widget_from ("EditProfileButton", GLADE_EDIT_DIALOG_WIDGET);
 	nact_prof_delete_button = nact_get_glade_widget_from ("DeleteProfileButton", GLADE_EDIT_DIALOG_WIDGET);
-	nact_prof_duplicate_button = nact_get_glade_widget_from ("DuplicateProfileButton", GLADE_EDIT_DIALOG_WIDGET);
+	nact_prof_copy_button = nact_get_glade_widget_from ("CopyProfileButton", GLADE_EDIT_DIALOG_WIDGET);
 
 	if (gtk_tree_selection_count_selected_rows (selection) > 0) {
 		gtk_widget_set_sensitive (nact_prof_edit_button, TRUE);
 		gtk_widget_set_sensitive (nact_prof_delete_button, TRUE);
-		gtk_widget_set_sensitive (nact_prof_duplicate_button, TRUE);
+		gtk_widget_set_sensitive (nact_prof_copy_button, TRUE);
 	} else {
 		gtk_widget_set_sensitive (nact_prof_edit_button, FALSE);
 		gtk_widget_set_sensitive (nact_prof_delete_button, FALSE);
-		gtk_widget_set_sensitive (nact_prof_duplicate_button, FALSE);
+		gtk_widget_set_sensitive (nact_prof_copy_button, FALSE);
 	}
 }
 
@@ -662,49 +702,11 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	switch (gtk_dialog_run (GTK_DIALOG (editor))) {
 	case GTK_RESPONSE_OK :
 		config = nautilus_actions_config_gconf_writer_get ();
-		/* FIXME: Update code for profile editing management
 
 		label = (gchar*)gtk_entry_get_text (GTK_ENTRY (menu_label));
 		nautilus_actions_config_action_set_label (action, label);
 		nautilus_actions_config_action_set_tooltip (action, gtk_entry_get_text (GTK_ENTRY (menu_tooltip)));
 		nautilus_actions_config_action_set_icon (action, gtk_entry_get_text (GTK_ENTRY (GTK_BIN (menu_icon)->child)));
-		nautilus_actions_config_action_profile_set_path (action_profile, gtk_entry_get_text (GTK_ENTRY (command_path)));
-		nautilus_actions_config_action_profile_set_parameters (action_profile, gtk_entry_get_text (GTK_ENTRY (command_params)));
-
-		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_patterns)), "*");
-		nautilus_actions_config_action_profile_set_basenames (action_profile, list);
-		g_slist_foreach (list, (GFunc) g_free, NULL);
-		g_slist_free (list);
-
-		nautilus_actions_config_action_profile_set_match_case (
-			action_profile, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (match_case)));
-		*/
-		//list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_mimetypes)), "*/*");
-		/*
-		nautilus_actions_config_action_profile_set_mimetypes (action_profile, list);
-		g_slist_foreach (list, (GFunc) g_free, NULL);
-		g_slist_free (list);
-
-		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (only_files))) {
-			nautilus_actions_config_action_profile_set_is_file (action_profile, TRUE);
-			nautilus_actions_config_action_profile_set_is_dir (action_profile, FALSE);
-		} else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (only_folders))) {
-			nautilus_actions_config_action_profile_set_is_file (action_profile, FALSE);
-			nautilus_actions_config_action_profile_set_is_dir (action_profile, TRUE);
-		} else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (both))) {
-			nautilus_actions_config_action_profile_set_is_file (action_profile, TRUE);
-			nautilus_actions_config_action_profile_set_is_dir (action_profile, TRUE);
-		}
-
-		nautilus_actions_config_action_profile_set_accept_multiple (
-			action_profile, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (accept_multiple)));
-
-		list = NULL;
-		gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)nact_utils_get_action_schemes_list, &list);
-		nautilus_actions_config_action_profile_set_schemes (action_profile, list);
-		g_slist_foreach (list, (GFunc) g_free, NULL);
-		g_slist_free (list);
-
 		if (is_new)
 		{
 			// TODO: If necessary deal with the GError returned
@@ -714,7 +716,6 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		{
 			ret = nautilus_actions_config_update_action (NAUTILUS_ACTIONS_CONFIG (config), action);
 		}
-		*/
 		break;
 	case GTK_RESPONSE_DELETE_EVENT:
 	case GTK_RESPONSE_CANCEL :
