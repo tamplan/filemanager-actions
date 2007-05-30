@@ -50,19 +50,20 @@
 #define NA_GCONF_XML_SCHEMA_LIST_TYPE	"list_type"
 
 // GConf key names :
-#define ACTION_LABEL_ENTRY     "label"
-#define ACTION_TOOLTIP_ENTRY   "tooltip"
-#define ACTION_ICON_ENTRY      "icon"
-#define ACTION_PATH_ENTRY      "path"
-#define ACTION_PARAMS_ENTRY    "parameters"
-#define ACTION_BASENAMES_ENTRY "basenames"
-#define ACTION_MATCHCASE_ENTRY "matchcase"
-#define ACTION_MIMETYPES_ENTRY "mimetypes"
-#define ACTION_ISFILE_ENTRY    "isfile"
-#define ACTION_ISDIR_ENTRY     "isdir"
-#define ACTION_MULTIPLE_ENTRY  "accept-multiple-files"
-#define ACTION_SCHEMES_ENTRY   "schemes"
-#define ACTION_VERSION_ENTRY   "version"
+#define ACTION_LABEL_ENTRY     		"label"
+#define ACTION_TOOLTIP_ENTRY   		"tooltip"
+#define ACTION_ICON_ENTRY      		"icon"
+#define ACTION_PROFILE_DESC_NAME_ENTRY	"desc-name"
+#define ACTION_PATH_ENTRY      		"path"
+#define ACTION_PARAMS_ENTRY    		"parameters"
+#define ACTION_BASENAMES_ENTRY 		"basenames"
+#define ACTION_MATCHCASE_ENTRY 		"matchcase"
+#define ACTION_MIMETYPES_ENTRY 		"mimetypes"
+#define ACTION_ISFILE_ENTRY    		"isfile"
+#define ACTION_ISDIR_ENTRY     		"isdir"
+#define ACTION_MULTIPLE_ENTRY  		"accept-multiple-files"
+#define ACTION_SCHEMES_ENTRY   		"schemes"
+#define ACTION_VERSION_ENTRY   		"version"
 
 // GConf description strings :
 
@@ -73,6 +74,8 @@
 #define ACTION_TOOLTIP_DESC_LONG		_("The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse")
 #define ACTION_ICON_DESC_SHORT	_("The icon of the menu item")
 #define ACTION_ICON_DESC_LONG		_("The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings")
+#define ACTION_PROFILE_NAME_DESC_SHORT	_("A description name of the profile")
+#define ACTION_PROFILE_NAME_DESC_LONG	_("The field is here to give the user a human readable name for a profile in the Nact interface. If not set there will be a default auto generated string set by default")
 #define ACTION_PATH_DESC_SHORT		_("The path of the command")
 #define ACTION_PATH_DESC_LONG			_("The path of the command to start when the user select the menu item in the Nautilus popup menu")
 #define ACTION_PARAMS_DESC_SHORT		_("The parameters of the command")

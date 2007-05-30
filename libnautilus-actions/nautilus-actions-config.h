@@ -48,12 +48,15 @@ typedef enum
 #define NAUTILUS_ACTIONS_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), NAUTILUS_ACTIONS_TYPE_CONFIG))
 #define NAUTILUS_ACTIONS_CONFIG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), NAUTILUS_ACTIONS_TYPE_CONFIG, NautilusActionsConfigClass))
 
-// i18n notes : default profile name displayed in the profile list in the action edition dialog (please keep the string lowercase if possible)
-#define NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME _("main")
+// i18n notes : default profile name displayed in the profile list in the action edition dialog
+#define NAUTILUS_ACTIONS_DEFAULT_PROFILE_DESC_NAME _("Main")
+#define NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME "main"
 // i18n notes : default profile name displayed in the profile list in the action edition dialog when more than one profile is created (incremented each time) (please keep the string lowercase if possible)
-#define NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_NAME _("profile%d")
+#define NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_DESC_NAME _("Profile %d")
+#define NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_NAME "profile%d"
 
 typedef struct {
+	gchar *desc_name;
 	gchar *path;
 	gchar *parameters;
 	gboolean match_case;
@@ -118,7 +121,9 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_d
 gboolean                     nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name);
 GSList				*nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigAction *action); 
-gchar 				*nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action); 
+void				 nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action, 
+									gchar** new_profile_name, 
+									gchar** new_profile_desc_name);
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
 									 const gchar* profile_name);
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action, 
@@ -148,6 +153,8 @@ void                         nautilus_actions_config_action_set_tooltip (Nautilu
 									 const gchar *tooltip);
 void                         nautilus_actions_config_action_set_icon (NautilusActionsConfigAction *action,
 									 const gchar *icon);
+void                         nautilus_actions_config_action_profile_set_desc_name (NautilusActionsConfigActionProfile *action_profile,
+								      const gchar *desc_name);
 void                         nautilus_actions_config_action_profile_set_path (NautilusActionsConfigActionProfile *action_profile,
 								      const gchar *path);
 void                         nautilus_actions_config_action_profile_set_parameters (NautilusActionsConfigActionProfile *action_profile,

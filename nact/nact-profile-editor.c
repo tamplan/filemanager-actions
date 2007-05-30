@@ -117,6 +117,7 @@ show_legend_dialog ()
 	GtkWidget *legend_dialog = nact_get_glade_widget_from ("LegendDialog", GLADE_LEGEND_DIALOG_WIDGET);
 	gtk_window_set_deletable (GTK_WINDOW (legend_dialog), FALSE);
 	gtk_window_set_transient_for (GTK_WINDOW (legend_dialog), GTK_WINDOW (editor));
+	// TODO: Get back the last position saved !!
 	gtk_widget_show (legend_dialog);
 }
 
@@ -126,6 +127,7 @@ hide_legend_dialog ()
 	GtkWidget *legend_dialog = nact_get_glade_widget_from ("LegendDialog", GLADE_LEGEND_DIALOG_WIDGET);
 	GtkWidget *legend_button = nact_get_glade_widget_from ("LegendButton", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
 	gtk_widget_hide (legend_dialog);
+	// TODO: Save the current position !!
 
 	// Set the legend button state consistent for when the dialog is hidden 
 	// by another mean (eg. close the edit profile dialog)
@@ -676,12 +678,15 @@ nact_profile_editor_new_profile (NautilusActionsConfigAction* action)
 {
 	gboolean val = FALSE;
 	gchar* new_profile_name;
-	new_profile_name = nautilus_actions_config_action_get_new_default_profile_name (action);
+	gchar* new_profile_desc_name;
+	nautilus_actions_config_action_get_new_default_profile_name (action, &new_profile_name, &new_profile_desc_name);
 	NautilusActionsConfigActionProfile *action_profile = nautilus_actions_config_action_profile_new_default ();
+	nautilus_actions_config_action_profile_set_desc_name (action_profile, new_profile_desc_name);
 
-	printf ("Profile Name : %s\n", new_profile_name);
+	printf ("Profile Name : %s (%s)\n", new_profile_desc_name, new_profile_name);
 	val = open_profile_editor (action, new_profile_name, action_profile, TRUE);
 	g_free (new_profile_name);
+	g_free (new_profile_desc_name);
 
 	return val;
 }

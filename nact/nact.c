@@ -216,7 +216,6 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 	case GTK_RESPONSE_DELETE_EVENT :
 	case GTK_RESPONSE_CLOSE :
 		// Free any profile in the clipboard
-		g_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile_name"));
 		nautilus_actions_config_action_profile_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile"));
 
 		/* FIXME : update pref settings

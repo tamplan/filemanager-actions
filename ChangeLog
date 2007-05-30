@@ -1,4 +1,17 @@
 2007-05-30  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-writer.c:
+	* libnautilus-actions/nautilus-actions-config.h:
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* nact/nact-profile-editor.c:
+	* nact/nact-editor.c:
+	* nact/nact-editor.h:
+	* nact/nact.c: Change the way the profile names are managed to add
+	the existence of a description name for better readability in Nact.
+	It allows the use of UTF8 names in the profiles list.
+
 	* nact/nact-editor.c:
 	* nact/nact.c: Fix some missing/buggy resources freeing.
 

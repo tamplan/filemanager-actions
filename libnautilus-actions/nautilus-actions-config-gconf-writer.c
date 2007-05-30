@@ -104,6 +104,10 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 		gchar* profile_name = (gchar*)iter->data;
 		NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
 
+		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_PROFILE_DESC_NAME_ENTRY);
+		gconf_client_set_string (config->conf_client, key, action_profile->desc_name, NULL);
+		g_free (key);
+
 		key = g_strdup_printf ("%s/%s%s/%s", action->conf_section, ACTIONS_PROFILE_PREFIX, profile_name, ACTION_PATH_ENTRY);
 		gconf_client_set_string (config->conf_client, key, action_profile->path, NULL);
 		g_free (key);

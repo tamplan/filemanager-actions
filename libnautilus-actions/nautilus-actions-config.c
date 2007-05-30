@@ -334,6 +334,7 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_d
 {
 	NautilusActionsConfigActionProfile* new_action_profile = nautilus_actions_config_action_profile_new();
 	//--> Set some good default values
+	new_action_profile->desc_name = g_strdup (NAUTILUS_ACTIONS_DEFAULT_PROFILE_DESC_NAME);
 	new_action_profile->path = g_strdup ("");
 	new_action_profile->parameters = g_strdup ("");
 	new_action_profile->basenames = NULL;
@@ -378,29 +379,30 @@ nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigActio
 	return profile_names; // The returned list must be freed with all its elements after usage !!
 }
 
-gchar*
-nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action)
+void
+nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action, gchar** new_profile_name, gchar** new_profile_desc_name)
 {
-	gchar* new_profile_name;
 	GSList* profile_names = nautilus_actions_config_action_get_all_profile_names (action);
 	int count = g_slist_length (profile_names);
 	gboolean found = FALSE;
 
 	while (!found)
 	{
-		new_profile_name = g_strdup_printf (NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_NAME, count);
-		if (!nautilus_actions_config_action_profile_exists (action, new_profile_name))
+		*new_profile_name = g_strdup_printf (NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_NAME, count);
+		if (!nautilus_actions_config_action_profile_exists (action, *new_profile_name))
 		{
+			if (new_profile_desc_name != NULL)
+			{
+				*new_profile_desc_name = g_strdup_printf (NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_DESC_NAME, count);
+			}
 			found = TRUE;
 		}
 		else
 		{
-			g_free (new_profile_name);
+			g_free (*new_profile_name);
 			count++;
 		}
 	}
-
-	return new_profile_name;
 }
 
 NautilusActionsConfigActionProfile*
@@ -476,6 +478,7 @@ nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *acti
 	return g_hash_table_remove (action->profiles, profile_name);
 }
 
+/* Obsolete function (not used anymore) */
 gboolean                     nautilus_actions_config_action_rename_profile (NautilusActionsConfigAction *action, 
 									 const gchar* old_profile_name,
 								 	 const gchar* new_profile_name,
@@ -590,6 +593,19 @@ nautilus_actions_config_action_set_icon (NautilusActionsConfigAction *action, co
 }
 
 void
+nautilus_actions_config_action_profile_set_desc_name (NautilusActionsConfigActionProfile *action_profile, const gchar *desc_name)
+{
+	g_return_if_fail (action_profile != NULL);
+
+	if (action_profile->desc_name)
+	{
+		g_free (action_profile->desc_name);
+	}
+
+	action_profile->desc_name = g_strdup (desc_name);
+}
+
+void
 nautilus_actions_config_action_profile_set_path (NautilusActionsConfigActionProfile *action_profile, const gchar *path)
 {
 	g_return_if_fail (action_profile != NULL);
@@ -665,6 +681,15 @@ NautilusActionsConfigActionProfile* nautilus_actions_config_action_profile_dup (
 	{
 		new_action_profile = nautilus_actions_config_action_profile_new ();
 
+		if (action_profile->desc_name) 
+		{
+			new_action_profile->desc_name = g_strdup (action_profile->desc_name);
+		}
+		else
+		{
+			success = FALSE;
+		}
+
 		if (action_profile->path) {
 			new_action_profile->path = g_strdup (action_profile->path);
 		}
@@ -728,6 +753,12 @@ nautilus_actions_config_action_profile_free (NautilusActionsConfigActionProfile 
 {
 	if (action_profile != NULL)
 	{
+		if (action_profile->desc_name) 
+		{
+			g_free (action_profile->desc_name);
+			action_profile->desc_name = NULL;
+		}
+
 		if (action_profile->path) {
 			g_free (action_profile->path);
 			action_profile->path = NULL;

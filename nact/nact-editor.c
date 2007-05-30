@@ -298,7 +298,7 @@ cell_edited (GtkTreeModel		   *model,
 static void
 profile_name_edited_cb (GtkCellRendererText *cell,
              const gchar         *path_string,
-             const gchar         *new_profile_name,
+             const gchar         *new_profile_desc_name,
              gpointer             data)
 {
 	GtkWidget* profile_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
@@ -308,28 +308,20 @@ profile_name_edited_cb (GtkCellRendererText *cell,
 	GtkTreeIter iter;
 	GError* error = NULL;
 	gchar* tmp;
-	gchar* old_profile_name;
+	gchar* profile_name;
+	NautilusActionsConfigActionProfile* action_profile;
 
 	gtk_tree_model_get_iter (model, &iter, path);
 
-	gtk_tree_model_get (model, &iter, PROFILE_LABEL_COLUMN, &old_profile_name, -1);
+	gtk_tree_model_get (model, &iter, PROFILE_LABEL_COLUMN, &profile_name, -1);
+	action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
 
-	if (nautilus_actions_config_action_rename_profile (action, old_profile_name, new_profile_name, &error))
-	{
-		gtk_list_store_set (GTK_LIST_STORE (model), &iter, PROFILE_LABEL_COLUMN,
-								  g_strdup (new_profile_name), -1);
+	nautilus_actions_config_action_profile_set_desc_name (action_profile, new_profile_desc_name);
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter, PROFILE_DESC_LABEL_COLUMN,
+								  g_strdup (new_profile_desc_name), -1);
 	
-		field_changed_cb (G_OBJECT (cell), NULL);
-	}
-	else
-	{
-		// i18n notes: will be displayed in a dialog
-		tmp = g_strdup_printf (_("Can't rename action's profile '%s' into '%s' !"), old_profile_name, new_profile_name);
-		nautilus_actions_display_error (tmp, error->message);
-		g_error_free (error);
-		g_free (tmp);
-	}
-	g_free (old_profile_name);
+	field_changed_cb (G_OBJECT (cell), NULL);
+	g_free (profile_name);
 	gtk_tree_path_free (path);
 }
 
@@ -346,10 +338,18 @@ void nact_editor_fill_profiles_list (GtkWidget *list, NautilusActionsConfigActio
 	{
 		GtkTreeIter iter;
 		gchar* profile_name = (gchar*)l->data;
+		NautilusActionsConfigActionProfile* profile = nautilus_actions_config_action_get_profile (action, profile_name);
+		gchar* profile_desc_name = profile_name;
+
+		if (profile->desc_name != NULL && strlen (profile->desc_name) > 0)
+		{
+			profile_desc_name = profile->desc_name;
+		}
 
 		gtk_list_store_append (model, &iter);
 		gtk_list_store_set (model, &iter, 
 				    PROFILE_LABEL_COLUMN, profile_name,
+					 PROFILE_DESC_LABEL_COLUMN, profile_desc_name,
 				    -1);
 	}
 
@@ -424,7 +424,6 @@ copy_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) 
 	{
 		gchar* profile_name;
-		gchar* new_profile_name;
 		NautilusActionsConfigActionProfile* action_profile;
 		NautilusActionsConfigActionProfile* new_action_profile;
 
@@ -435,15 +434,11 @@ copy_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 		action_profile = nautilus_actions_config_action_profile_dup (nautilus_actions_config_action_get_profile (action, profile_name));
 		new_action_profile = nautilus_actions_config_action_profile_dup (action_profile);
 
-		// i18n notes: this is the default name of a copied profile 
-		new_profile_name = g_strdup_printf (_("%s_copy"), profile_name);
 		if (action && new_action_profile) 
 		{
 			// Remove and free any existing data
-			g_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile_name"));
 			nautilus_actions_config_action_profile_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile"));
 
-			g_object_set_data (G_OBJECT (nact_prof_paste_button), "profile_name", new_profile_name);
 			g_object_set_data (G_OBJECT (nact_prof_paste_button), "profile", new_action_profile);
 			gtk_widget_set_sensitive (nact_prof_paste_button, TRUE);
 
@@ -469,19 +464,26 @@ paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkTreeModel* model;
 	GError* error = NULL;
 	gchar* tmp;
+	gchar* new_profile_name;
 	GtkWidget *nact_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
 	NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)g_object_get_data (G_OBJECT (nact_profiles_list), "action");
 	GtkWidget *nact_prof_paste_button = nact_get_glade_widget_from ("PasteProfileButton", GLADE_EDIT_DIALOG_WIDGET);
-	gchar* profile_name = (gchar*)g_object_get_data (G_OBJECT (nact_prof_paste_button), "profile_name");
 	NautilusActionsConfigActionProfile* action_profile = (NautilusActionsConfigActionProfile*)g_object_get_data (G_OBJECT (nact_prof_paste_button), "profile");
 
-	printf ("profile_name : %s\n", profile_name);
+	printf ("profile_name : %s\n", action_profile->desc_name);
+
+	// i18n notes: this is the default name of a copied profile 
+	gchar* new_profile_desc_name = g_strdup_printf (_("%s Copy"), action_profile->desc_name);
+
+	// Get a new uniq profile key name but not a new desc name because we already have it.
+	nautilus_actions_config_action_get_new_default_profile_name (action, &new_profile_name, NULL);
 
 	NautilusActionsConfigActionProfile* new_action_profile = nautilus_actions_config_action_profile_dup (action_profile);
+	nautilus_actions_config_action_profile_set_desc_name (new_action_profile, new_profile_desc_name);
 
 	if (action && new_action_profile) 
 	{
-		if (nautilus_actions_config_action_add_profile (action, profile_name, new_action_profile, &error))
+		if (nautilus_actions_config_action_add_profile (action, new_profile_name, new_action_profile, &error))
 		{
 			nact_editor_fill_profiles_list (nact_profiles_list, action);
 			field_changed_cb (G_OBJECT (nact_profiles_list), NULL);
@@ -489,7 +491,7 @@ paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 		else
 		{
 			// i18n notes: will be displayed in a dialog
-			tmp = g_strdup_printf (_("Can't paste action's profile '%s' !"), profile_name);
+			tmp = g_strdup_printf (_("Can't paste action's profile '%s' !"), new_profile_desc_name);
 			nautilus_actions_display_error (tmp, error->message);
 			g_error_free (error);
 			g_free (tmp);
@@ -498,7 +500,7 @@ paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 	else
 	{
 		// i18n notes: will be displayed in a dialog
-		tmp = g_strdup_printf (_("Can't paste action's profile '%s' !"), profile_name);
+		tmp = g_strdup_printf (_("Can't paste action's profile '%s' !"), new_profile_desc_name);
 		nautilus_actions_display_error (tmp, "");
 		g_free (tmp);
 	}
@@ -571,7 +573,7 @@ static void nact_editor_setup_profiles_list (GtkWidget *list, NautilusActionsCon
 	GtkCellRenderer* text_cell;
 
 	/* create the model */
-	model = gtk_list_store_new (N_PROF_COLUMN, G_TYPE_STRING);
+	model = gtk_list_store_new (N_PROF_COLUMN, G_TYPE_STRING, G_TYPE_STRING);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (list), GTK_TREE_MODEL (model));
 	nact_editor_fill_profiles_list (list, action);
 	g_object_unref (model);
@@ -587,7 +589,7 @@ static void nact_editor_setup_profiles_list (GtkWidget *list, NautilusActionsCon
 
 	column = gtk_tree_view_column_new_with_attributes (_("Profile Name"),
 							   text_cell,
-							   "text", PROFILE_LABEL_COLUMN, NULL);
+							   "text", PROFILE_DESC_LABEL_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (list), column);
 
 	/* set up selection */

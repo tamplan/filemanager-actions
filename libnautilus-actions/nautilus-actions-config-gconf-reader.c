@@ -148,6 +148,7 @@ actions_changed_cb (GConfClient *client,
 
 	NautilusActionsConfigAction *action = nautilus_actions_config_get_action (config, uuid);
 	NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
+	nautilus_actions_config_action_profile_set_desc_name (action_profile, profile_name);
 
 	if (action == NULL && value != NULL)
 	{
@@ -178,6 +179,10 @@ actions_changed_cb (GConfClient *client,
 		else if (g_str_has_suffix (key, ACTION_ICON_ENTRY))
 		{
 			nautilus_actions_config_action_set_icon (action, gconf_value_get_string (value));
+		}
+		else if (g_str_has_suffix (key, ACTION_PROFILE_DESC_NAME_ENTRY))
+		{
+			nautilus_actions_config_action_profile_set_desc_name (action_profile, gconf_value_get_string (value));
 		}
 		else if (g_str_has_suffix (key, ACTION_PATH_ENTRY))
 		{
