@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-31 03:30+0100\n"
-"PO-Revision-Date: 2007-06-07 22:26+0200\n"
+"POT-Creation-Date: 2007-06-08 03:32+0100\n"
+"PO-Revision-Date: 2007-06-17 16:27+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -217,7 +217,9 @@ msgstr ""
 msgid ""
 "Click to toggle the display of the list of special tokens you can use in the "
 "parameter field."
-msgstr "Pulse para ver la lista de tokens especiales que puede usar en el campo de parámetros."
+msgstr ""
+"Pulse para ver la lista de tokens especiales que puede usar en el campo de "
+"parámetros."
 
 #: ../nact/nautilus-actions-config.glade.h:50
 msgid "Conditions"
@@ -743,7 +745,7 @@ msgid ""
 "The field is here to give the user a human readable name for a profile in "
 "the Nact interface. If not set there will be a default auto generated string "
 "set by default"
-msgstr ""
+msgstr "El campo está aquí para dar al usuario un nombre legible por humanos para un perfil en el interfaz de Acciones de Nautilus. Si no se establece allí, se generará automáticamente una cadena predeterminada"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
 msgid ""
@@ -967,7 +969,9 @@ msgstr "No es posible guardar la acción «%s»"
 msgid ""
 "A profile already exists with the name '%s', please first remove or rename "
 "the existing one before trying to add this one"
-msgstr "Ya existe un perfil con el nombre «%s», quite o renombre el existente antes de intentar añadir éste otr."
+msgstr ""
+"Ya existe un perfil con el nombre «%s», quite o renombre el existente antes "
+"de intentar añadir éste otr."
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:510
@@ -1018,8 +1022,12 @@ msgid "This XML file is not a valid Nautilus-actions config file (missing key: %
 msgid_plural ""
 "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
 "s"
-msgstr[0] "Este archivo XML no es un archivo válido de configuración de Nautilus-actions (falta la clave: %s)%s"
-msgstr[1] "Este archivo XML no es un archivo válido de configuración de Nautilus-actions (faltan las claves: %s)%s"
+msgstr[0] ""
+"Este archivo XML no es un archivo válido de configuración de Nautilus-"
+"actions (falta la clave: %s)%s"
+msgstr[1] ""
+"Este archivo XML no es un archivo válido de configuración de Nautilus-"
+"actions (faltan las claves: %s)%s"
 
 #. No error occured but we have not found the "version" gconf key
 #. i18n notes: will be displayed in an error dialog
