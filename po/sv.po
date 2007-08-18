@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-31 03:30+0100\n"
-"PO-Revision-Date: 2007-06-01 17:26+0100\n"
+"POT-Creation-Date: 2007-08-18 23:33+0200\n"
+"PO-Revision-Date: 2007-08-18 23:34+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -384,6 +384,7 @@ msgstr "Etikett"
 #: ../nact/nact.c:303
 #: ../nact/nact-editor.c:627
 #: ../nact/nact-import-export.c:381
+#: ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Kunde inte läsa in gränssnitt för konfigurationsverktyget för Nautilus-åtgärder"
 
@@ -499,6 +500,32 @@ msgstr "%sFTP-filer"
 #, c-format
 msgid "%sWebdav Files"
 msgstr "%sWebdav-filer"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../nact/nact-profile-editor.c:243
+msgid "new-scheme"
+msgstr "nytt-schema"
+
+#: ../nact/nact-profile-editor.c:244
+msgid "New Scheme Description"
+msgstr "Beskrivning av nytt schema"
+
+#: ../nact/nact-profile-editor.c:329
+msgid "Scheme"
+msgstr "Schema"
+
+#: ../nact/nact-profile-editor.c:341
+msgid "Description"
+msgstr "Beskrivning"
+
+#: ../nact/nact-profile-editor.c:532
+msgid "Add a New Profile"
+msgstr "Lägg till en ny profil"
+
+#: ../nact/nact-profile-editor.c:536
+#, c-format
+msgid "Edit Profile \"%s\""
+msgstr "Redigera profilen \"%s\""
 
 #. GConf description strings :
 #: ../utils/nautilus-actions-new-config.c:49
@@ -880,14 +907,6 @@ msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-åtgär
 #~ msgstr ""
 #~ "Daniel Nylander\n"
 #~ "Skicka synpunkter på översättningen till tp-sv@listor.tp-sv.se"
-#~ msgid "new-scheme"
-#~ msgstr "nytt-schema"
-#~ msgid "New Scheme Description"
-#~ msgstr "Beskrivning av nytt schema"
-#~ msgid "Scheme"
-#~ msgstr "Schema"
-#~ msgid "Description"
-#~ msgstr "Beskrivning"
 #~ msgid "Can't parse file '%s' as old XML config file !"
 #~ msgstr "Kan inte tolka filen \"%s\" som gammal XML-konfigurationsfil!"
 #~ msgid "Can't parse file '%s' as GConf schema description file !"
