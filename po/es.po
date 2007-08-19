@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-08 03:32+0100\n"
-"PO-Revision-Date: 2007-06-17 16:27+0200\n"
+"POT-Creation-Date: 2007-08-16 19:33+0100\n"
+"PO-Revision-Date: 2007-08-19 11:51+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -446,7 +446,7 @@ msgid "Label"
 msgstr "Etiqueta"
 
 #: ../nact/nact.c:303 ../nact/nact-editor.c:627
-#: ../nact/nact-import-export.c:381
+#: ../nact/nact-import-export.c:381 ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr ""
 "No se pudo cargar el interfaz para la  Herramienta de configuración de "
@@ -561,6 +561,32 @@ msgstr "Archivos FTP %s"
 #, c-format
 msgid "%sWebdav Files"
 msgstr "Archivos Webdav %s"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../nact/nact-profile-editor.c:243
+msgid "new-scheme"
+msgstr "nuevo-esquema"
+
+#: ../nact/nact-profile-editor.c:244
+msgid "New Scheme Description"
+msgstr "Nueva descripción de esquema"
+
+#: ../nact/nact-profile-editor.c:329
+msgid "Scheme"
+msgstr "Esquema"
+
+#: ../nact/nact-profile-editor.c:341
+msgid "Description"
+msgstr "Descripción"
+
+#: ../nact/nact-profile-editor.c:532
+msgid "Add a New Profile"
+msgstr "Añadir un perfil nuevo"
+
+#: ../nact/nact-profile-editor.c:536
+#, c-format
+msgid "Edit Profile \"%s\""
+msgstr "Editar el perfil «%s»"
 
 #. GConf description strings :
 #: ../utils/nautilus-actions-new-config.c:49
@@ -745,7 +771,10 @@ msgid ""
 "The field is here to give the user a human readable name for a profile in "
 "the Nact interface. If not set there will be a default auto generated string "
 "set by default"
-msgstr "El campo está aquí para dar al usuario un nombre legible por humanos para un perfil en el interfaz de Acciones de Nautilus. Si no se establece allí, se generará automáticamente una cadena predeterminada"
+msgstr ""
+"El campo está aquí para dar al usuario un nombre legible por humanos para un "
+"perfil en el interfaz de Acciones de Nautilus. Si no se establece allí, se "
+"generará automáticamente una cadena predeterminada"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
 msgid ""
