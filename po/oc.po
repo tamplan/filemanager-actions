@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: nautilus-actions 1.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-05-31 03:30+0100\n"
-"PO-Revision-Date: 2007-07-29 15:10+0200\n"
+"PO-Revision-Date: 2007-08-20 18:49+0200\n"
 "Last-Translator: Yannig MARCHEGAY <yannig@marchegay.org>\n"
 "Language-Team: Occitan (post 1500) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr "    "
 
 #: ../nact/nautilus-actions-config.glade.h:4
 msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
-msgstr ""
+msgstr "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
 
 #: ../nact/nautilus-actions-config.glade.h:6
 #, no-c-format
@@ -219,7 +219,7 @@ msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:54
 msgid "File to Import:"
-msgstr ""
+msgstr "Fichièr d'importar :"
 
 #: ../nact/nautilus-actions-config.glade.h:55
 msgid "Filenames:"
@@ -626,7 +626,7 @@ msgstr ""
 #: ../utils/nautilus-actions-new-config.c:152
 #, c-format
 msgid "Creating %s..."
-msgstr ""
+msgstr "Creacion de %s..."
 
 #: ../utils/nautilus-actions-new-config.c:171
 #, c-format
