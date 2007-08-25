@@ -2,6 +2,10 @@
 
 	* fi.po: Updated Finnish translation.
 
+2007-08-20  Yannig MARCHEGAY <yannig@marchegay.org>
+
+	* oc.po: Updated Occitan translation.
+
 2007-08-19  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
 	* es.po: Updated Spanish translation
@@ -25,16 +29,20 @@
 
 2007-06-17  Jorge Gonzalez <jorgegonz@svn.gnome.org>
 
-        * es.po: Updated Spanish translation
+	* es.po: Updated Spanish translation
 
 2007-06-07  Jorge Gonzalez <jorgegonz@svn.gnome.org>
 
-        * es.po: Updated Spanish translation 
+	* es.po: Updated Spanish translation 
 
 2007-06-01  Daniel Nylander  <po@danielnylander.se>
 
 	* sv.po: Updated Swedish translation.
-	
+
+2007-05-31  Yannig MARCHEGAY <yannig@marchegay.org>
+
+	* oc.po: Added Occitan translation.
+
 2007-05-16  David Lodge <dave@cirt.net>
 
 	* en_GB.po: Updated British English translation
