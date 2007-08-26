@@ -1,3 +1,11 @@
+2007-08-26  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* nact/nautilus-actions-config.glade:
+	* nact/nact-editor.c:
+	* nact/nact.c: Fix grammar and syntax error in translatable string. 
+	Make GnomeVFS syntax homogeneous. Remove formating string in glade
+	from translation (space only strings). Add some i18n notes.
+
 2007-05-30  Frederic Ruaudel <grumz@grumz.net>
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
 	* libnautilus-actions/nautilus-actions-config-schema-writer.c:

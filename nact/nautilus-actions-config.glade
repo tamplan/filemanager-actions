@@ -3,139 +3,6 @@
 
 <glade-interface>
 
-<widget class="GtkDialog" id="LegendDialog2">
-  <property name="title" translatable="yes"></property>
-  <property name="type">GTK_WINDOW_POPUP</property>
-  <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-  <property name="modal">False</property>
-  <property name="resizable">False</property>
-  <property name="destroy_with_parent">False</property>
-  <property name="decorated">True</property>
-  <property name="skip_taskbar_hint">False</property>
-  <property name="skip_pager_hint">False</property>
-  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
-  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
-  <property name="focus_on_map">True</property>
-  <property name="urgency_hint">False</property>
-  <property name="has_separator">True</property>
-  <signal name="delete_event" handler="gtk_widget_hide" last_modification_time="Wed, 16 May 2007 13:43:36 GMT"/>
-
-  <child internal-child="vbox">
-    <widget class="GtkVBox" id="dialog-vbox1">
-      <property name="visible">True</property>
-      <property name="homogeneous">False</property>
-      <property name="spacing">0</property>
-
-      <child internal-child="action_area">
-	<widget class="GtkHButtonBox" id="dialog-action_area1">
-	  <property name="visible">True</property>
-	  <property name="layout_style">GTK_BUTTONBOX_END</property>
-
-	  <child>
-	    <widget class="GtkButton" id="closebutton1">
-	      <property name="visible">True</property>
-	      <property name="can_default">True</property>
-	      <property name="can_focus">True</property>
-	      <property name="label">gtk-close</property>
-	      <property name="use_stock">True</property>
-	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
-	      <property name="response_id">-7</property>
-	      <signal name="clicked" handler="gtk_widget_hide" last_modification_time="Wed, 16 May 2007 13:43:08 GMT"/>
-	    </widget>
-	  </child>
-	</widget>
-	<packing>
-	  <property name="padding">0</property>
-	  <property name="expand">False</property>
-	  <property name="fill">True</property>
-	  <property name="pack_type">GTK_PACK_END</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkButton" id="LegendButton">
-	  <property name="visible">True</property>
-	  <property name="tooltip" translatable="yes">Click to see the list of special tokens you can use in the parameter field.</property>
-	  <property name="can_focus">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <signal name="clicked" handler="legend_button_clicked_cb" last_modification_time="Fri, 21 Oct 2005 07:42:47 GMT"/>
-
-	  <child>
-	    <widget class="GtkAlignment" id="alignment12">
-	      <property name="visible">True</property>
-	      <property name="xalign">0.5</property>
-	      <property name="yalign">0.5</property>
-	      <property name="xscale">0</property>
-	      <property name="yscale">0</property>
-	      <property name="top_padding">0</property>
-	      <property name="bottom_padding">0</property>
-	      <property name="left_padding">0</property>
-	      <property name="right_padding">0</property>
-
-	      <child>
-		<widget class="GtkHBox" id="hbox47">
-		  <property name="visible">True</property>
-		  <property name="homogeneous">False</property>
-		  <property name="spacing">2</property>
-
-		  <child>
-		    <widget class="GtkImage" id="image19">
-		      <property name="visible">True</property>
-		      <property name="stock">gtk-help</property>
-		      <property name="icon_size">4</property>
-		      <property name="xalign">0.5</property>
-		      <property name="yalign">0.5</property>
-		      <property name="xpad">0</property>
-		      <property name="ypad">0</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">False</property>
-		      <property name="fill">False</property>
-		    </packing>
-		  </child>
-
-		  <child>
-		    <widget class="GtkLabel" id="label137">
-		      <property name="visible">True</property>
-		      <property name="label">_Legend</property>
-		      <property name="use_underline">True</property>
-		      <property name="use_markup">False</property>
-		      <property name="justify">GTK_JUSTIFY_LEFT</property>
-		      <property name="wrap">False</property>
-		      <property name="selectable">False</property>
-		      <property name="xalign">0.5</property>
-		      <property name="yalign">0.5</property>
-		      <property name="xpad">0</property>
-		      <property name="ypad">0</property>
-		      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-		      <property name="width_chars">-1</property>
-		      <property name="single_line_mode">False</property>
-		      <property name="angle">0</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">False</property>
-		      <property name="fill">False</property>
-		    </packing>
-		  </child>
-		</widget>
-	      </child>
-	    </widget>
-	  </child>
-	</widget>
-	<packing>
-	  <property name="padding">0</property>
-	  <property name="expand">False</property>
-	  <property name="fill">False</property>
-	</packing>
-      </child>
-    </widget>
-  </child>
-</widget>
-
 <widget class="GtkDialog" id="ActionsDialog">
   <property name="title" translatable="yes">Nautilus Actions</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
@@ -801,7 +668,7 @@
 		      <child>
 			<widget class="GtkLabel" id="LabelAlign6">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">  </property>
+			  <property name="label">  </property>
 			  <property name="use_underline">False</property>
 			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -998,7 +865,7 @@
 		      <child>
 			<widget class="GtkLabel" id="label146">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">    </property>
+			  <property name="label">    </property>
 			  <property name="use_underline">False</property>
 			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1657,27 +1524,6 @@
 			  <property name="spacing">12</property>
 
 			  <child>
-			    <widget class="GtkCheckButton" id="ImportAllCheckButton">
-			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Check this box if you want to get back all your configurations from the version of Nautilus-actions 0.7.1 or lesser.</property>
-			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Import all my old configs</property>
-			      <property name="use_underline">True</property>
-			      <property name="relief">GTK_RELIEF_NORMAL</property>
-			      <property name="focus_on_click">True</property>
-			      <property name="active">False</property>
-			      <property name="inconsistent">False</property>
-			      <property name="draw_indicator">True</property>
-			      <signal name="toggled" handler="import_all_config_toggled_cb" last_modification_time="Thu, 17 Nov 2005 14:49:24 GMT"/>
-			    </widget>
-			    <packing>
-			      <property name="padding">0</property>
-			      <property name="expand">False</property>
-			      <property name="fill">False</property>
-			    </packing>
-			  </child>
-
-			  <child>
 			    <widget class="GtkHBox" id="FileHBox">
 			      <property name="visible">True</property>
 			      <property name="homogeneous">False</property>
@@ -1749,155 +1595,6 @@
 			      <property name="padding">0</property>
 			      <property name="expand">True</property>
 			      <property name="fill">True</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkVBox" id="TypeConfigVBox">
-			      <property name="visible">True</property>
-			      <property name="homogeneous">False</property>
-			      <property name="spacing">6</property>
-
-			      <child>
-				<widget class="GtkLabel" id="label61">
-				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Type of configuration:</property>
-				  <property name="use_underline">False</property>
-				  <property name="use_markup">False</property>
-				  <property name="justify">GTK_JUSTIFY_LEFT</property>
-				  <property name="wrap">False</property>
-				  <property name="selectable">False</property>
-				  <property name="xalign">0</property>
-				  <property name="yalign">0.5</property>
-				  <property name="xpad">0</property>
-				  <property name="ypad">0</property>
-				  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-				  <property name="width_chars">-1</property>
-				  <property name="single_line_mode">False</property>
-				  <property name="angle">0</property>
-				</widget>
-				<packing>
-				  <property name="padding">0</property>
-				  <property name="expand">False</property>
-				  <property name="fill">False</property>
-				</packing>
-			      </child>
-
-			      <child>
-				<widget class="GtkHBox" id="hbox45">
-				  <property name="visible">True</property>
-				  <property name="homogeneous">False</property>
-				  <property name="spacing">0</property>
-
-				  <child>
-				    <widget class="GtkLabel" id="label62">
-				      <property name="width_request">12</property>
-				      <property name="visible">True</property>
-				      <property name="label" translatable="yes"> </property>
-				      <property name="use_underline">False</property>
-				      <property name="use_markup">False</property>
-				      <property name="justify">GTK_JUSTIFY_LEFT</property>
-				      <property name="wrap">False</property>
-				      <property name="selectable">False</property>
-				      <property name="xalign">0.5</property>
-				      <property name="yalign">0.5</property>
-				      <property name="xpad">0</property>
-				      <property name="ypad">0</property>
-				      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-				      <property name="width_chars">-1</property>
-				      <property name="single_line_mode">False</property>
-				      <property name="angle">0</property>
-				    </widget>
-				    <packing>
-				      <property name="padding">0</property>
-				      <property name="expand">False</property>
-				      <property name="fill">False</property>
-				    </packing>
-				  </child>
-
-				  <child>
-				    <widget class="GtkVBox" id="vbox354">
-				      <property name="visible">True</property>
-				      <property name="homogeneous">False</property>
-				      <property name="spacing">6</property>
-
-				      <child>
-					<widget class="GtkRadioButton" id="AutoRadioButton">
-					  <property name="visible">True</property>
-					  <property name="can_focus">True</property>
-					  <property name="label" translatable="yes">Automatic</property>
-					  <property name="use_underline">True</property>
-					  <property name="relief">GTK_RELIEF_NORMAL</property>
-					  <property name="focus_on_click">True</property>
-					  <property name="active">False</property>
-					  <property name="inconsistent">False</property>
-					  <property name="draw_indicator">True</property>
-					</widget>
-					<packing>
-					  <property name="padding">0</property>
-					  <property name="expand">False</property>
-					  <property name="fill">False</property>
-					</packing>
-				      </child>
-
-				      <child>
-					<widget class="GtkRadioButton" id="GConfRadioButton">
-					  <property name="visible">True</property>
-					  <property name="can_focus">True</property>
-					  <property name="label" translatable="yes">GConf schema description file (Nautilus-actions v1.x and later)</property>
-					  <property name="use_underline">True</property>
-					  <property name="relief">GTK_RELIEF_NORMAL</property>
-					  <property name="focus_on_click">True</property>
-					  <property name="active">False</property>
-					  <property name="inconsistent">False</property>
-					  <property name="draw_indicator">True</property>
-					  <property name="group">AutoRadioButton</property>
-					</widget>
-					<packing>
-					  <property name="padding">0</property>
-					  <property name="expand">False</property>
-					  <property name="fill">False</property>
-					</packing>
-				      </child>
-
-				      <child>
-					<widget class="GtkRadioButton" id="XMLRadioButton">
-					  <property name="visible">True</property>
-					  <property name="can_focus">True</property>
-					  <property name="label" translatable="yes">Old XML config file (Nautilus-actions v0.x)</property>
-					  <property name="use_underline">True</property>
-					  <property name="relief">GTK_RELIEF_NORMAL</property>
-					  <property name="focus_on_click">True</property>
-					  <property name="active">False</property>
-					  <property name="inconsistent">False</property>
-					  <property name="draw_indicator">True</property>
-					  <property name="group">AutoRadioButton</property>
-					</widget>
-					<packing>
-					  <property name="padding">0</property>
-					  <property name="expand">False</property>
-					  <property name="fill">False</property>
-					</packing>
-				      </child>
-				    </widget>
-				    <packing>
-				      <property name="padding">0</property>
-				      <property name="expand">True</property>
-				      <property name="fill">True</property>
-				    </packing>
-				  </child>
-				</widget>
-				<packing>
-				  <property name="padding">0</property>
-				  <property name="expand">True</property>
-				  <property name="fill">True</property>
-				</packing>
-			      </child>
-			    </widget>
-			    <packing>
-			      <property name="padding">0</property>
-			      <property name="expand">False</property>
-			      <property name="fill">False</property>
 			    </packing>
 			  </child>
 			</widget>
@@ -2836,7 +2533,7 @@ Application to configure Nautilus Action extension</property>
 Rodrigo Moya &lt;rodrigo@novell.com&gt;
 </property>
   <property name="artists">Ulisse Perusin &lt;uli.peru@gmail.com&gt; </property>
-  <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">The GNOME Translation Project &lt;gnome-i18n@gnome.org&gt;gnome-i18n@gnome.org</property>
+  <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">The GNOME Translation Project &lt;gnome-i18n@gnome.org&gt;</property>
 </widget>
 
 <widget class="GtkWindow" id="LegendDialog">
@@ -2936,7 +2633,7 @@ Rodrigo Moya &lt;rodrigo@novell.com&gt;
 	  <child>
 	    <widget class="GtkLabel" id="label15">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt;: gnome-vfs URI</property>
+	      <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt;: GnomeVFS URI</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">True</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2961,7 +2658,7 @@ Rodrigo Moya &lt;rodrigo@novell.com&gt;
 	  <child>
 	    <widget class="GtkLabel" id="label18">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt;: hostname of the gnome-vfs URI</property>
+	      <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt;: hostname of the GnomeVFS URI</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">True</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -3011,7 +2708,7 @@ Rodrigo Moya &lt;rodrigo@novell.com&gt;
 	  <child>
 	    <widget class="GtkLabel" id="label16">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt;: scheme of the gnome-vfs URI</property>
+	      <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt;: scheme of the GnomeVFS URI</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">True</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -3061,7 +2758,7 @@ Rodrigo Moya &lt;rodrigo@novell.com&gt;
 	  <child>
 	    <widget class="GtkLabel" id="label20">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt;: username of the gnome-vfs URI</property>
+	      <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt;: username of the GnomeVFS URI</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">True</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>

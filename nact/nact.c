@@ -160,7 +160,7 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 			else
 			{
 				// i18n notes: will be displayed in a dialog
-				tmp = g_strdup_printf (_("Can't duplicate action '%s' !"), action->label);
+				tmp = g_strdup_printf (_("Can't duplicate action '%s'!"), action->label);
 				nautilus_actions_display_error (tmp, error->message);
 				g_error_free (error);
 				g_free (tmp);

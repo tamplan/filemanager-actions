@@ -446,7 +446,7 @@ copy_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 		else
 		{
 			// i18n notes: will be displayed in a dialog
-			tmp = g_strdup_printf (_("Can't copy action's profile '%s' !"), profile_name);
+			tmp = g_strdup_printf (_("Can't copy action's profile '%s'!"), profile_name);
 			nautilus_actions_display_error (tmp, "");
 			g_free (tmp);
 		}
@@ -491,7 +491,7 @@ paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 		else
 		{
 			// i18n notes: will be displayed in a dialog
-			tmp = g_strdup_printf (_("Can't paste action's profile '%s' !"), new_profile_desc_name);
+			tmp = g_strdup_printf (_("Can't paste action's profile '%s'!"), new_profile_desc_name);
 			nautilus_actions_display_error (tmp, error->message);
 			g_error_free (error);
 			g_free (tmp);
@@ -535,7 +535,7 @@ delete_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 		else
 		{
 			// i18n notes: will be displayed in a dialog
-			tmp = g_strdup_printf (_("Can't delete action's profile '%s' !"), profile_name);
+			tmp = g_strdup_printf (_("Can't delete action's profile '%s'!"), profile_name);
 			nautilus_actions_display_error (tmp, "");
 			g_free (tmp);
 		}
