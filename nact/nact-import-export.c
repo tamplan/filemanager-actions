@@ -52,22 +52,6 @@ void mode_toggled_cb (GtkWidget* widget, gpointer user_data)
 	}
 }
 
-void import_all_config_toggled_cb (GtkWidget* check_button, gpointer data) 
-{
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_button)))
-	{
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("XMLRadioButton", 
-																			GLADE_IM_EX_PORT_DIALOG_WIDGET)), TRUE);
-		gtk_widget_set_sensitive (nact_get_glade_widget_from ("FileHBox", GLADE_IM_EX_PORT_DIALOG_WIDGET), FALSE);
-		gtk_widget_set_sensitive (nact_get_glade_widget_from ("TypeConfigVBox", GLADE_IM_EX_PORT_DIALOG_WIDGET), FALSE);
-	}
-	else
-	{
-		gtk_widget_set_sensitive (nact_get_glade_widget_from ("FileHBox", GLADE_IM_EX_PORT_DIALOG_WIDGET), TRUE);
-		gtk_widget_set_sensitive (nact_get_glade_widget_from ("TypeConfigVBox", GLADE_IM_EX_PORT_DIALOG_WIDGET), TRUE);
-	}
-}
-
 void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 {
 	gchar* last_dir;
@@ -197,13 +181,9 @@ static void nact_setup_actions_list (GtkWidget *list)
 gboolean nact_import_actions (void)
 {
 	gboolean retv = FALSE;
-/* FIXME: Remove backward compat with XML config format file
-
-	GtkWidget* check_button;
 	GSList* iter;
 	NautilusActionsConfigGconfWriter *config;
 	NautilusActionsConfigSchemaReader *schema_reader;
-	NautilusActionsConfigXml* xml_reader;
 	NautilusActionsConfig* generic_reader = NULL;
 	gchar* error_message;
 	GError* error = NULL;
@@ -213,67 +193,19 @@ gboolean nact_import_actions (void)
 	config = nautilus_actions_config_gconf_writer_get ();
 	schema_reader = nautilus_actions_config_schema_reader_get ();
 	nautilus_actions_config_clear (schema_reader);
-	xml_reader = nautilus_actions_config_xml_get ();
-	nautilus_actions_config_clear (xml_reader);
 
-	check_button = nact_get_glade_widget_from ("ImportAllCheckButton", GLADE_IM_EX_PORT_DIALOG_WIDGET);
-
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_button)))
+	if (file_path != NULL && strlen (file_path) > 0)
 	{
-		nautilus_actions_config_xml_load_list (xml_reader);
-		generic_reader = NAUTILUS_ACTIONS_CONFIG (xml_reader);
-	}
-	else if (file_path != NULL && strlen (file_path) > 0)
-	{
-		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("XMLRadioButton", 
-																			GLADE_IM_EX_PORT_DIALOG_WIDGET))))
+		if (nautilus_actions_config_schema_reader_parse_file (schema_reader, file_path, &error))
 		{
-			if (nautilus_actions_config_xml_parse_file (xml_reader, file_path, &error))
-			{
-				generic_reader = NAUTILUS_ACTIONS_CONFIG (xml_reader);
-			}
-			else
-			{
-				error_message = g_strdup_printf (_("Can't parse file '%s' as old XML config file !"), file_path);
-				nautilus_actions_display_error (error_message, error->message);
-				g_error_free (error);
-				g_free (error_message);
-			}
+			generic_reader = NAUTILUS_ACTIONS_CONFIG (schema_reader);
 		}
-		else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("GConfRadioButton", 
-																			GLADE_IM_EX_PORT_DIALOG_WIDGET))))
+		else
 		{
-			if (nautilus_actions_config_schema_reader_parse_file (schema_reader, file_path, &error))
-			{
-				generic_reader = NAUTILUS_ACTIONS_CONFIG (schema_reader);
-			}
-			else
-			{
-				error_message = g_strdup_printf (_("Can't parse file '%s' as GConf schema description file !"), file_path);
-				nautilus_actions_display_error (error_message, error->message);
-				g_error_free (error);
-				g_free (error_message);
-			}
-		}
-		else // Automatic detection asked 
-		{
-			//--> we are ignoring the first error because if it fails here it will not in the next 
-			// or if both fails, we kept the current GConf config format as the most important
-			if (nautilus_actions_config_xml_parse_file (xml_reader, file_path, NULL))
-			{
-				generic_reader = NAUTILUS_ACTIONS_CONFIG (xml_reader);
-			}
-			else if (nautilus_actions_config_schema_reader_parse_file (schema_reader, file_path, &error))
-			{
-				generic_reader = NAUTILUS_ACTIONS_CONFIG (schema_reader);
-			}
-			else
-			{
-				error_message = g_strdup_printf (_("Can't parse file '%s' !"), file_path);
-				nautilus_actions_display_error (error_message, error->message);
-				g_error_free (error);
-				g_free (error_message);
-			}
+			error_message = g_strdup_printf (_("Can't parse file '%s' as GConf schema description file!"), file_path);
+			nautilus_actions_display_error (error_message, error->message);
+			g_error_free (error);
+			g_free (error_message);
 		}
 	}
 
@@ -291,14 +223,13 @@ gboolean nact_import_actions (void)
 			else
 			{
 				// i18n notes: %s is the label of the action (eg, 'Mount ISO')
-				error_message = g_strdup_printf (_("Action '%s' importation failed !"), action->label);
+				error_message = g_strdup_printf (_("Action '%s' importation failed!"), action->label);
 				nautilus_actions_display_error (error_message, error->message);
 				g_error_free (error);
 				g_free (error_message);
 			}
 		}
 	}
-*/
 	return retv;
 }
 

@@ -1,4 +1,7 @@
 2007-08-26  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nact-import-export.c: Remove the import option for 
+	old xml config file format.
+
 	* nact/nautilus-actions-config.glade: Fix bug when clicking the About
 	button for the first time, both the about and the edit action dialog 
 	appears.
