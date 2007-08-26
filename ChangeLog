@@ -1,4 +1,7 @@
 2007-08-26  Frederic Ruaudel <grumz@grumz.net>
+	* nact/nautilus-actions-config.glade: Remove the import option for 
+	old xml config file format.
+
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
 	* nact/nautilus-actions-config.glade:
 	* nact/nact-editor.c:
