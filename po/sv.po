@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-18 23:33+0200\n"
-"PO-Revision-Date: 2007-08-18 23:34+0100\n"
+"POT-Creation-Date: 2007-08-29 23:34+0200\n"
+"PO-Revision-Date: 2007-08-29 23:37+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -24,52 +24,40 @@ msgid "Nautilus Actions Configuration"
 msgstr "Konfiguration av Nautilus-åtgärder"
 
 #: ../nact/nautilus-actions-config.glade.h:1
-msgid " "
-msgstr " "
-
-#: ../nact/nautilus-actions-config.glade.h:2
-msgid "  "
-msgstr "  "
-
-#: ../nact/nautilus-actions-config.glade.h:3
-msgid "    "
-msgstr "    "
-
-#: ../nact/nautilus-actions-config.glade.h:4
 msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
 msgstr "© 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
 
-#: ../nact/nautilus-actions-config.glade.h:6
+#: ../nact/nautilus-actions-config.glade.h:3
 #, no-c-format
 msgid "<b>%%</b>: a percent sign"
 msgstr "<b>%%</b>: ett procenttecken"
 
-#: ../nact/nautilus-actions-config.glade.h:8
+#: ../nact/nautilus-actions-config.glade.h:5
 #, no-c-format
 msgid "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their full paths"
 msgstr "<b>%M</b>: blankstegsseparerad lista på de markerade filerna/mapparna med sina fullständiga sökvägar"
 
-#: ../nact/nautilus-actions-config.glade.h:10
+#: ../nact/nautilus-actions-config.glade.h:7
 #, no-c-format
-msgid "<b>%U</b>: username of the gnome-vfs URI"
-msgstr "<b>%U</b>: användarnamn för gnome-vfs URI"
+msgid "<b>%U</b>: username of the GnomeVFS URI"
+msgstr "<b>%U</b>: användarnamn för GnomeVFS URI"
 
-#: ../nact/nautilus-actions-config.glade.h:12
+#: ../nact/nautilus-actions-config.glade.h:9
 #, no-c-format
 msgid "<b>%d</b>: base folder of the selected file(s)"
 msgstr "<b>%d</b>: basmapp för de markerade filerna"
 
-#: ../nact/nautilus-actions-config.glade.h:14
+#: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
 msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
 msgstr "<b>%f</b>: namnet på den markerade filen eller den första om flera är markerade"
 
-#: ../nact/nautilus-actions-config.glade.h:16
+#: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
-msgid "<b>%h</b>: hostname of the gnome-vfs URI"
-msgstr "<b>%h</b>: värdnamn för gnome-vfs URI"
+msgid "<b>%h</b>: hostname of the GnomeVFS URI"
+msgstr "<b>%h</b>: värdnamn för GnomeVFS URI"
 
-#: ../nact/nautilus-actions-config.glade.h:18
+#: ../nact/nautilus-actions-config.glade.h:15
 #, no-c-format
 msgid ""
 "<b>%m</b>: space-separated list of the basenames of the selected\n"
@@ -78,50 +66,50 @@ msgstr ""
 "<b>%m</b>: blankstegsseparerad lista på basnamnen för de markerade\n"
 "filerna/mapparna"
 
+#: ../nact/nautilus-actions-config.glade.h:18
+#, no-c-format
+msgid "<b>%s</b>: scheme of the GnomeVFS URI"
+msgstr "<b>%s</b>: schema för GnomeVFS URI"
+
+#: ../nact/nautilus-actions-config.glade.h:20
+#, no-c-format
+msgid "<b>%u</b>: GnomeVFS URI"
+msgstr "<b>%u</b>: GnomeVFS URI"
+
 #: ../nact/nautilus-actions-config.glade.h:21
-#, no-c-format
-msgid "<b>%s</b>: scheme of the gnome-vfs URI"
-msgstr "<b>%s</b>: schema för gnome-vfs URI"
-
-#: ../nact/nautilus-actions-config.glade.h:23
-#, no-c-format
-msgid "<b>%u</b>: gnome-vfs URI"
-msgstr "<b>%u</b>: gnome-vfs URI"
-
-#: ../nact/nautilus-actions-config.glade.h:24
 msgid "<b>Action</b>"
 msgstr "<b>Åtgärd</b>"
 
-#: ../nact/nautilus-actions-config.glade.h:25
+#: ../nact/nautilus-actions-config.glade.h:22
 msgid "<b>Appears if file matches</b>"
 msgstr "<b>Visas om filen matchar</b>"
 
-#: ../nact/nautilus-actions-config.glade.h:26
+#: ../nact/nautilus-actions-config.glade.h:23
 msgid "<b>Appears if scheme is in this list</b>"
 msgstr "<b>Visas om schemat finns i denna lista</b>"
 
-#: ../nact/nautilus-actions-config.glade.h:27
+#: ../nact/nautilus-actions-config.glade.h:24
 msgid "<b>Appears if selection contains</b>"
 msgstr "<b>Visas om markeringen innehåller</b>"
 
-#: ../nact/nautilus-actions-config.glade.h:28
+#: ../nact/nautilus-actions-config.glade.h:25
 msgid "<b>Nautilus Menu Item</b>"
 msgstr "<b>Nautilus-menypost</b>"
 
-#: ../nact/nautilus-actions-config.glade.h:29
+#: ../nact/nautilus-actions-config.glade.h:26
 msgid "<b>Profiles</b>"
 msgstr "<b>Profiler</b>"
 
-#: ../nact/nautilus-actions-config.glade.h:31
+#: ../nact/nautilus-actions-config.glade.h:28
 #, no-c-format
 msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
 msgstr "<i><b><span size=\"small\">exempelvis, %s</span></b></i>"
 
-#: ../nact/nautilus-actions-config.glade.h:32
+#: ../nact/nautilus-actions-config.glade.h:29
 msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
 msgstr "<span size=\"larger\"><b>Parameterförklaring</b></span>"
 
-#: ../nact/nautilus-actions-config.glade.h:33
+#: ../nact/nautilus-actions-config.glade.h:30
 msgid ""
 "<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
 "\n"
@@ -131,147 +119,127 @@ msgstr ""
 "\n"
 "placera sekundär text här"
 
-#: ../nact/nautilus-actions-config.glade.h:36
+#: ../nact/nautilus-actions-config.glade.h:33
 msgid "A string with wildcards (? or *) that will be used to match the filenames. You can set several filename patterns by separating them with a semi-colon (;)."
 msgstr "En sträng med jokertecken (? eller *) som kommer att användas för att matcha filnamnen. Du kan matcha flera filnamnsmönster genom att separera dem med ett semikolon (;)."
 
-#: ../nact/nautilus-actions-config.glade.h:37
+#: ../nact/nautilus-actions-config.glade.h:34
 msgid "A string with wildcards (? or *) that will be used to match the mimetypes of files. You can set several mimetype patterns by separating them with a semi-colon (;)."
 msgstr "En sträng med jokertecken (? eller *) som kommer att användas för att matcha filernas mimetyper. Du kan matcha flera mimetypsmönster genom att separera dem med ett semikolon (;)."
 
-#: ../nact/nautilus-actions-config.glade.h:38
+#: ../nact/nautilus-actions-config.glade.h:35
 msgid "Action"
 msgstr "Åtgärd"
 
-#: ../nact/nautilus-actions-config.glade.h:39
+#: ../nact/nautilus-actions-config.glade.h:36
 msgid "Advanced Conditions"
 msgstr "Avancerade villkor"
 
-#: ../nact/nautilus-actions-config.glade.h:40
+#: ../nact/nautilus-actions-config.glade.h:37
 msgid "Appears if selection has multiple files or folders"
 msgstr "Visas om markeringen har flera filer eller mappar"
 
-#: ../nact/nautilus-actions-config.glade.h:41
-msgid "Automatic"
-msgstr "Automatisk"
-
-#: ../nact/nautilus-actions-config.glade.h:42
+#: ../nact/nautilus-actions-config.glade.h:38
 msgid "Both"
 msgstr "Båda"
 
-#: ../nact/nautilus-actions-config.glade.h:43
-msgid "Check this box if you want to get back all your configurations from the version of Nautilus-actions 0.7.1 or lesser."
-msgstr "Kryssa denna ruta om du vill använda alla dina konfigurationer från Nautilus-åtgärder version 0.7.1 eller tidigare."
-
-#: ../nact/nautilus-actions-config.glade.h:44
+#: ../nact/nautilus-actions-config.glade.h:39
 msgid "Click to add a new scheme."
 msgstr "Klicka för att lägga till ett nytt schema."
 
-#: ../nact/nautilus-actions-config.glade.h:45
+#: ../nact/nautilus-actions-config.glade.h:40
 msgid "Click to choose a command from the file chooser dialog."
 msgstr "Klicka för att välja ett kommando från filväljardialogen."
 
-#: ../nact/nautilus-actions-config.glade.h:46
+#: ../nact/nautilus-actions-config.glade.h:41
 msgid "Click to choose a custom icon from a file instead of a predefined icon from the drop-down list."
 msgstr "Klicka för att välja en anpassad ikon från en fil istället för en fördefinierad ikon från rullgardinslistan."
 
-#: ../nact/nautilus-actions-config.glade.h:47
+#: ../nact/nautilus-actions-config.glade.h:42
 msgid "Click to remove the selected scheme."
 msgstr "Klicka för att ta bort markerat schema."
 
-#: ../nact/nautilus-actions-config.glade.h:48
-msgid "Click to see the list of special tokens you can use in the parameter field."
-msgstr "Klicka för att se listan på speciella symboler som du kan använda i parameterfältet."
-
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:43
 msgid "Click to toggle the display of the list of special tokens you can use in the parameter field."
 msgstr "Klicka för att växla visning av listan över speciella symboler som du kan använda i parameterfältet."
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:44
 msgid "Conditions"
 msgstr "Villkor"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:45
 msgid "Create a copy of the selected action."
 msgstr "Skapa en kopia av markerad åtgärd."
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:46
 msgid "Delete the action without any confirmation nor the possibility to restore it."
 msgstr "Ta bort åtgärden utan någon bekräftelse eller möjligheten att återhämta den."
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:47
 msgid "Export existing configs"
 msgstr "Exportera existerande konfigurationer"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:48
 msgid "File to Import:"
 msgstr "Fil att importera:"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:49
 msgid "Filenames:"
 msgstr "Filnamn:"
 
-#: ../nact/nautilus-actions-config.glade.h:56
-msgid "GConf schema description file (Nautilus-actions v1.x and later)"
-msgstr "Beskrivningsfil för GConf-schema (Nautilus-åtgärder v1.x och senare)"
-
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "Icon:"
 msgstr "Ikon:"
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "If selected, the filename patterns will be matched case sensitive (eg, *.jpg will not match photo.JPG)"
 msgstr "Om denna väljs kommer filnamnsmönstren att matchas mot versaler och gemener (exempel: *.jpg kommer inte att matcha photo.JPG)"
 
-#: ../nact/nautilus-actions-config.glade.h:59
-msgid "Import all my old configs"
-msgstr "Importera alla mina gamla konfigurationer"
-
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:52
 msgid "Import new configurations"
 msgstr "Importera nya konfigurationer"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "Import/Export"
 msgstr "Importera/Exportera"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Import/Export Settings"
 msgstr "Inställningar för import/export"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid "Label of the menu item in the Nautilus popup menu."
 msgstr "Etikett på menyposten i Nautilus popupmeny."
 
-#: ../nact/nautilus-actions-config.glade.h:64
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Label:"
 msgstr "Etikett:"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Manage importation of external action configurations and exportation of existing actions."
 msgstr "Hantera importering av externa åtgärdskonfigurationer och exportering av existerande åtgärder."
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid "Match case"
 msgstr "Gör skillnad på gemen/VERSAL"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "Mimetypes:"
 msgstr "Mimetyper:"
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "Nautilus Action Editor"
 msgstr "Redigerare för Nautilus-åtgärder"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "Nautilus Action Profile Editor"
 msgstr "Profilredigerare för Nautilus-åtgärder"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid "Nautilus Actions"
 msgstr "Nautilus-åtgärder"
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid ""
 "Nautilus Actions Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -279,111 +247,103 @@ msgstr ""
 "Konfigurationsverktyg för Nautilus-åtgärder\n"
 "Program för att konfigurera Nautilus åtgärdsutökning"
 
-#: ../nact/nautilus-actions-config.glade.h:73
-msgid "Old XML config file (Nautilus-actions v0.x)"
-msgstr "Gammal XML-konfigurationsfil (Nautilus-åtgärder v0.x)"
-
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:65
 msgid "Only files"
 msgstr "Endast filer"
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid "Only folders"
 msgstr "Endast mappar"
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:67
 msgid "Parameters that will be sent to the program. Click on the 'Legend' button to see the different replacement tokens."
 msgstr "Parametrar som kommer att skickas till programmet. Klicka på \"Förklaring\"-knappen för att se de olika ersättningsbara symbolerna."
 
-#: ../nact/nautilus-actions-config.glade.h:77
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid "Parameters:"
 msgstr "Parametrar:"
 
-#: ../nact/nautilus-actions-config.glade.h:78
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Path:"
 msgstr "Sökväg:"
 
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid "Project Website"
 msgstr "Projektets webbsida"
 
-#: ../nact/nautilus-actions-config.glade.h:80
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Save in Folder:"
 msgstr "Spara i mapp:"
 
-#: ../nact/nautilus-actions-config.glade.h:81
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Select the configurations you want to export. Use Shift or Ctrl key to select more than one."
 msgstr "Välj de konfigurationer du vill exportera. Använd Shift- eller Ctrl-tangenten för att välja fler än en."
 
-#: ../nact/nautilus-actions-config.glade.h:82
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid "Select the configurations you want to export:"
 msgstr "Välj de konfigurationer du vill exportera:"
 
-#: ../nact/nautilus-actions-config.glade.h:83
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Select the file you want to import."
 msgstr "Välj den fil du vill importera."
 
-#: ../nact/nautilus-actions-config.glade.h:84
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid "Select the folder you want your config to be saved in. This folder must exist."
 msgstr "Välj den mapp du vill att din konfiguration ska sparas i. Denna mapp måste existera."
 
-#: ../nact/nautilus-actions-config.glade.h:85
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid "Select the kind of files where you want your action to appear. If you don't know what to choose, try selecting just 'file' which is the most common choice. You can add a new scheme by clicking on the '+' button."
 msgstr "Välj den sorts filer där du vill att din åtgärd ska visas. Om du inte vet vad du ska välja, prova att välja bara \"file\" som är det mest vanliga valet. Du kan lägga till ett nytt schema genom att klicka på \"+\"-knappen."
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:87
-msgid "The GNOME Translation Project <gnome-i18n@gnome.org>gnome-i18n@gnome.org"
-msgstr "GNOME Translation Project <gnome-i18n@gnome.org>gnome-i18n@gnome.org"
+#: ../nact/nautilus-actions-config.glade.h:78
+msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
+msgstr "The GNOME Translation Project <gnome-i18n@gnome.org>"
 
-#: ../nact/nautilus-actions-config.glade.h:88
+#: ../nact/nautilus-actions-config.glade.h:79
 msgid "The command that will be launched by selecting the action in Nautilus popup menu."
 msgstr "Kommandot som ska startas genom att välja åtgärden i Nautilus popupmeny."
 
-#: ../nact/nautilus-actions-config.glade.h:89
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr "Denna programvara är licensierad under GNU General Public License (GPL)"
 
-#: ../nact/nautilus-actions-config.glade.h:90
+#: ../nact/nautilus-actions-config.glade.h:81
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgstr "Verktygstips för menyposten som kommer att visas i Nautilus statusrad."
 
-#: ../nact/nautilus-actions-config.glade.h:91
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid "Tooltip:"
 msgstr "Verktygstips:"
 
-#: ../nact/nautilus-actions-config.glade.h:92
-msgid "Type of configuration:"
-msgstr "Typ av konfiguration:"
-
-#: ../nact/nautilus-actions-config.glade.h:93
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid "_Browse"
 msgstr "_Bläddra"
 
-#: ../nact/nautilus-actions-config.glade.h:94
+#: ../nact/nautilus-actions-config.glade.h:84
 msgid "_Legend"
 msgstr "_Förklaring"
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact.c:163
 #, c-format
-msgid "Can't duplicate action '%s' !"
-msgstr "Kan inte dubblera åtgärden \"%s\"!"
+msgid "Can't duplicate action '%s'!"
+msgstr "Kan inte duplicera åtgärden \"%s\"!"
 
 #. create columns on the tree view
 #: ../nact/nact.c:277
-#: ../nact/nact-import-export.c:178
+#: ../nact/nact-import-export.c:162
 msgid "Icon"
 msgstr "Ikon"
 
 #: ../nact/nact.c:282
-#: ../nact/nact-import-export.c:183
+#: ../nact/nact-import-export.c:167
 msgid "Label"
 msgstr "Etikett"
 
 #: ../nact/nact.c:303
 #: ../nact/nact-editor.c:627
-#: ../nact/nact-import-export.c:381
+#: ../nact/nact-import-export.c:312
 #: ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Kunde inte läsa in gränssnitt för konfigurationsverktyget för Nautilus-åtgärder"
@@ -431,7 +391,7 @@ msgstr "Ingen"
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact-editor.c:449
 #, c-format
-msgid "Can't copy action's profile '%s' !"
+msgid "Can't copy action's profile '%s'!"
 msgstr "Kan inte kopiera åtgärdens profil \"%s\"!"
 
 #. i18n notes: this is the default name of a copied profile
@@ -442,6 +402,11 @@ msgstr "Kopia av %s"
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact-editor.c:494
+#, c-format
+msgid "Can't paste action's profile '%s'!"
+msgstr "Kan inte klistra in åtgärdens profil \"%s\"!"
+
+#. i18n notes: will be displayed in a dialog
 #: ../nact/nact-editor.c:503
 #, c-format
 msgid "Can't paste action's profile '%s' !"
@@ -450,7 +415,7 @@ msgstr "Kan inte klistra in åtgärdens profil \"%s\"!"
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact-editor.c:538
 #, c-format
-msgid "Can't delete action's profile '%s' !"
+msgid "Can't delete action's profile '%s'!"
 msgstr "Kan inte ta bort åtgärdens profil \"%s\"!"
 
 #: ../nact/nact-editor.c:590
@@ -469,6 +434,17 @@ msgstr "Lägg till en ny åtgärd"
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "Redigera åtgärden \"%s\""
+
+#: ../nact/nact-import-export.c:205
+#, c-format
+msgid "Can't parse file '%s' as GConf schema description file!"
+msgstr "Kan inte tolka filen \"%s\" som en schemabeskrivningsfil för GConf!"
+
+#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
+#: ../nact/nact-import-export.c:226
+#, c-format
+msgid "Action '%s' importation failed!"
+msgstr "Importering av åtgärden \"%s\" misslyckades!"
 
 #. initialize the default schemes
 #. i18n notes : description of 'file' scheme
@@ -681,8 +657,7 @@ msgstr "Fältet finns här för att ge användaren en mänskligt läsbart namn f
 msgid "The path of the command to start when the user select the menu item in the Nautilus popup menu"
 msgstr "Sökvägen för kommandot att starta när användaren väljer menyposten i Nautilus popupmeny"
 
-#. i18n notes : Sorry for this long paragraph, will try to fix it the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid ""
 "The parameters of the command to start when the user selects the menu item in the Nautilus popup menu.\n"
 "\n"
@@ -695,10 +670,10 @@ msgid ""
 "%u: GnomeVFS URI\n"
 "%s: scheme of the GnomeVFS URI\n"
 "%h: hostname of the GnomeVFS URI\n"
-"%U: username of the :%s/GnomeVFS URI\n"
+"%U: username of the GnomeVFS URI\n"
 "%%: a percent sign"
 msgstr ""
-"Parametrar för kommandot som ska startas när användaren väljer menyposten i Nautilus popupmeny.\n"
+"Parametrar för kommandot som ska startas när användaren väljer menyobjektet i Nautilus popupmeny.\n"
 "\n"
 "Parametrar kan innehålla vissa specialsymboler som ersätts med Nautilus-information före kommandot startas:\n"
 "\n"
@@ -709,35 +684,34 @@ msgstr ""
 "%u: GnomeVFS URI\n"
 "%s: schema för GnomeVFS URI\n"
 "%h: värdnamn för GnomeVFS URI\n"
-"%U: användarnamn för :%s/GnomeVFS URI\n"
+"%U: användarnamn för GnomeVFS URI\n"
 "%%: ett procenttecken"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr "Listan på mönster för att matcha de markerade filerna/mapparna"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear"
 msgstr "En lista på strängar med jokertecknen \"*\" eller \"?\" för att matcha namnet på de markerade filerna/mapparna. Varje markerad post måste matcha åtminstone ett av filnamnsmönstren för att åtgärden ska visas"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
 msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr "\"true\" om filnamnsmönstren ska vara skiftlägeskänsliga, \"false\" om inte"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
 msgid "If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'"
 msgstr "Om du behöver matcha ett filnamn efter gemener och versaler, ställ in denna nyckel till \"true\". Om du vill att, till exempel \"*.jpg\" ska matcha \"photo.JPG\", ställ in till \"false\""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr "Listan på mönster för att matcha mimetyperna på de markerade filerna"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid "A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear"
 msgstr "En lista på strängar med jokertecknen \"*\" eller \"?\" för att matcha mimetyperna på de markerade filerna. Varje markerad post måste matcha åtminstone ett av mimetypsmönstren för att åtgärden ska visas"
 
-#. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
 msgid ""
 "The valid combinations are:\n"
 "\n"
@@ -753,18 +727,20 @@ msgstr ""
 "isfile=TRUE och isdir=TRUE: markeringen kan innehålla både filer och mappar\n"
 "isfile=FALSE och isdir=FALSE: detta är en ogiltig kombination (din konfiguration kommer altid att visas)"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
 msgid "'true' if the selection can have files, 'false' otherwise"
 msgstr "\"true\" om markeringen kan innehålla filer, \"false\" om inte"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
+#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
 msgid "This setting is tied in with the 'isdir' setting. "
 msgstr "Denna inställning är sammanknuten med inställningen för \"isdir\". "
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
 msgid "'true' if the selection can have folders, 'false' otherwise"
 msgstr "\"true\" om markeringen kan innehålla mappar, \"false\" om inte"
 
+#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:95
 msgid "This setting is tied in with the 'isfile' setting. "
 msgstr "Denna inställning är sammanknuten med inställningen för \"isfile\". "
@@ -781,8 +757,7 @@ msgstr "Om du behöver markera en eller flera filer eller mappar, ställ in denn
 msgid "The list of GnomeVFS schemes where the selected files should be located"
 msgstr "Listan på GnomeVFS-scheman där de markerade filerna ska finnas"
 
-#. i18n notes : Sorry for this long paragraph, will try to fix it in the next release
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:100
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:99
 msgid ""
 "Defines the list of valid GnomeVFS schemes to be matched against the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one used in the GnomeVFS URI.\n"
 "\n"
@@ -816,11 +791,11 @@ msgstr ""
 "\n"
 "Alla GnomeVFS-scheman som används av Nautilus kan användas här."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:101
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:100
 msgid "The version of the configuration format"
 msgstr "Versionen på konfigurationsformatet"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:102
+#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:101
 msgid "The version of the configuration format that will be used to manage backward compatibility"
 msgstr "Versionen på konfigurationsformatet som ska användas för att hantera bakåtkompatibilitet"
 
@@ -901,6 +876,35 @@ msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-åtgär
 msgid "This XML file is not a valid Nautilus-actions config file (root node is <%s> instead of <%s>)"
 msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-åtgärder (rotnod är <%s> istället för <%s>)"
 
+#~ msgid " "
+#~ msgstr " "
+#~ msgid "  "
+#~ msgstr "  "
+#~ msgid "    "
+#~ msgstr "    "
+#~ msgid "Automatic"
+#~ msgstr "Automatisk"
+#~ msgid ""
+#~ "Check this box if you want to get back all your configurations from the "
+#~ "version of Nautilus-actions 0.7.1 or lesser."
+#~ msgstr ""
+#~ "Kryssa denna ruta om du vill använda alla dina konfigurationer från "
+#~ "Nautilus-åtgärder version 0.7.1 eller tidigare."
+#~ msgid ""
+#~ "Click to see the list of special tokens you can use in the parameter "
+#~ "field."
+#~ msgstr ""
+#~ "Klicka för att se listan på speciella symboler som du kan använda i "
+#~ "parameterfältet."
+#~ msgid "GConf schema description file (Nautilus-actions v1.x and later)"
+#~ msgstr ""
+#~ "Beskrivningsfil för GConf-schema (Nautilus-åtgärder v1.x och senare)"
+#~ msgid "Import all my old configs"
+#~ msgstr "Importera alla mina gamla konfigurationer"
+#~ msgid "Old XML config file (Nautilus-actions v0.x)"
+#~ msgstr "Gammal XML-konfigurationsfil (Nautilus-åtgärder v0.x)"
+#~ msgid "Type of configuration:"
+#~ msgstr "Typ av konfiguration:"
 #~ msgid "Menu Item & Action"
 #~ msgstr "Menypost & åtgärd"
 #~ msgid "translator-credits"
@@ -909,10 +913,6 @@ msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-åtgär
 #~ "Skicka synpunkter på översättningen till tp-sv@listor.tp-sv.se"
 #~ msgid "Can't parse file '%s' as old XML config file !"
 #~ msgstr "Kan inte tolka filen \"%s\" som gammal XML-konfigurationsfil!"
-#~ msgid "Can't parse file '%s' as GConf schema description file !"
-#~ msgstr "Kan inte tolka filen \"%s\" som GConf-schemabeskrivningsfil!"
-#~ msgid "Action '%s' importation failed !"
-#~ msgstr "Importering av åtgärden \"%s\" misslyckades!"
 #~ msgid "The old XML config file to convert"
 #~ msgstr "Den gamla XML-konfigurationsfilen som ska konverteras"
 #~ msgid "FILE"
