@@ -162,9 +162,9 @@ static const gchar* bool_to_schema_string (gboolean bool_value)
 	return "false";
 }
 
-static void get_hash_keys (gchar* key, gchar* value, GSList* list)
+static void get_hash_keys (gchar* key, gchar* value, GSList** list)
 {
-	list = g_slist_append (list, key);
+	*list = g_slist_append (*list, key);
 }
 
 static gboolean
@@ -211,7 +211,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	create_schema_entry (doc, list_node, content, "string", action->icon, ACTION_ICON_DESC_SHORT, ACTION_ICON_DESC_LONG, FALSE);
 	xmlFree (content);
 
-	g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, profile_list);
+	g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, &profile_list);
 
 	for (iter = profile_list; iter; iter = iter->next)
 	{
@@ -278,6 +278,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 		g_free (profile_dir);
 	}
 	g_slist_free (profile_list);
+
 
 	//--> general entry : version
 	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_VERSION_ENTRY, NULL);

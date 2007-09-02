@@ -160,9 +160,9 @@ static void nautilus_actions_config_schema_reader_profile_checking_add_validatio
 	}
 }
 
-static void get_hash_keys (gchar* key, gchar* value, GSList* list)
+static void get_hash_keys (gchar* key, gchar* value, GSList** list)
 {
-	list = g_slist_append (list, key);
+	*list = g_slist_append (*list, key);
 }
 
 static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GHashTable* profile_check_list, const gchar* version, gchar** error_message)
@@ -179,7 +179,7 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 
 	// i18n notes: will be displayed in an error dialog concatenated to another error message
 	error_message_str = g_string_new (_(" and some profiles are incomplete: "));
-	g_hash_table_foreach (profile_check_list, (GHFunc)get_hash_keys, profile_list);
+	g_hash_table_foreach (profile_check_list, (GHFunc)get_hash_keys, &profile_list);
 
 	// Check if the default profile has been found in the xml file, if not remove 
 	//  it (added automatically by nautilus_actions_config_action_new_default() function)

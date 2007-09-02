@@ -124,9 +124,9 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 	return item;
 }
 
-static void get_hash_keys (gchar* key, gchar* value, GSList* list)
+static void get_hash_keys (gchar* key, gchar* value, GSList** list)
 {
-	list = g_slist_append (list, key);
+	*list = g_slist_append (*list, key);
 }
 
 static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, GtkWidget *window, GList *files)
@@ -150,7 +150,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 			NautilusActionsConfigAction *action = (NautilusActionsConfigAction*)iter->data;
 
 			/* Retrieve all profile name */
-			g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, profile_list);
+			g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, &profile_list);
 			
 			iter2 = profile_list;
 			found = FALSE;
