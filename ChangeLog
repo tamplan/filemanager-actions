@@ -1,4 +1,9 @@
 2007-09-02  Frederic Ruaudel <grumz@grumz.net>
+	* utils/nautilus-actions-check-actions-change.c:
+	* utils/Makefile.am: Add an utility tool to check the functionnality
+	and ease debug of the GConf Reader system used in the Nautilus 
+	extension.
+
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
 	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
 	* plugin/nautilus-actions.c: Fix the function to get hash keys
