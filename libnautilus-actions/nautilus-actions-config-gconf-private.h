@@ -32,6 +32,7 @@
 // GConf general information
 #define ACTIONS_SCHEMA_PREFIX  "/schemas"
 #define ACTIONS_CONFIG_DIR     NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
+#define ACTIONS_CONFIG_NOTIFY_KEY     ACTIONS_CONFIG_DIR "/action_change_state"
 #define ACTIONS_SCHEMA_OWNER	 "nautilus-actions"
 #define ACTIONS_PROFILE_PREFIX   "profile-"
 

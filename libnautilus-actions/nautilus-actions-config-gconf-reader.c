@@ -108,20 +108,6 @@ static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* u
 	return profile_name;
 }
 
-static gchar* get_action_uuid_from_key (const gchar* key)
-{
-	g_return_val_if_fail (g_str_has_prefix (key, ACTIONS_CONFIG_DIR), NULL);
-	
-	gchar* uuid = g_strdup (key + strlen (ACTIONS_CONFIG_DIR "/"));
-	gchar* pos = g_strstr_len (uuid, strlen (uuid), "/");
-	if (pos != NULL)
-	{
-		*pos = '\0';
-	}
-
-	return uuid;
-}
-
 static void
 copy_list (GConfValue* value, GSList** list)
 {
@@ -135,117 +121,50 @@ actions_changed_cb (GConfClient *client,
 		    gpointer user_data)
 {
 	NautilusActionsConfig *config = NAUTILUS_ACTIONS_CONFIG (user_data);
-	const char* key = gconf_entry_get_key (entry);
+
+
+	/* The Key value format is XXX:YYYY-YYYY-... where XXX is an number incremented to make key 
+	 * effectively changed each time and YYYY-YYYY-... is the modified uuid */
 	GConfValue* value = gconf_entry_get_value (entry);
-	gchar* uuid = get_action_uuid_from_key (key);
-	GSList* list = NULL;
-	gboolean is_new = FALSE;
-	gchar* profile_name = get_action_profile_name_from_key (key, uuid);
-	if (!profile_name)
-	{
-		profile_name = g_strdup (NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
-	}
+	gchar* notify_value = gconf_value_get_string (value); 
+	gchar* uuid = notify_value + 4; 
 
-	NautilusActionsConfigAction *action = nautilus_actions_config_get_action (config, uuid);
-	NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
-	nautilus_actions_config_action_profile_set_desc_name (action_profile, profile_name);
+	// Get the modified action from the internal list if any //
+	NautilusActionsConfigAction *old_action = nautilus_actions_config_get_action (config, uuid);
 
-	if (action == NULL && value != NULL)
-	{
-		/* new action */
-		action = nautilus_actions_config_action_new_default ();
-		nautilus_actions_config_action_set_uuid (action, uuid);
-		is_new = TRUE;
-	}
+	// Get the new version from GConf if any
+	NautilusActionsConfigAction *new_action = nautilus_actions_config_gconf_get_action (NAUTILUS_ACTIONS_CONFIG_GCONF (config), uuid);
 
-	if (value == NULL)
+	// If modified action is unknown internally
+	if (old_action == NULL)
 	{
-		if (action != NULL)
+		if (new_action != NULL)
 		{
-			/* delete action if not already done */
-			nautilus_actions_config_remove_action (config, uuid);
+			// new action //
+			nautilus_actions_config_add_action (config, new_action, NULL);
+		}
+		else
+		{
+			// This case should not happen
+			g_assert_not_reached ();
 		}
 	}
 	else
 	{
-		if (g_str_has_suffix (key, ACTION_LABEL_ENTRY))
+		if (new_action != NULL)
 		{
-			nautilus_actions_config_action_set_label (action, gconf_value_get_string (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_TOOLTIP_ENTRY))
-		{
-			nautilus_actions_config_action_set_tooltip (action, gconf_value_get_string (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_ICON_ENTRY))
-		{
-			nautilus_actions_config_action_set_icon (action, gconf_value_get_string (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_PROFILE_DESC_NAME_ENTRY))
-		{
-			nautilus_actions_config_action_profile_set_desc_name (action_profile, gconf_value_get_string (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_PATH_ENTRY))
-		{
-			nautilus_actions_config_action_profile_set_path (action_profile, gconf_value_get_string (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_PARAMS_ENTRY))
-		{
-			nautilus_actions_config_action_profile_set_parameters (action_profile, gconf_value_get_string (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_BASENAMES_ENTRY))
-		{
-			list = NULL;
-			g_slist_foreach (gconf_value_get_list (value), (GFunc) copy_list, &list);
-			nautilus_actions_config_action_profile_set_basenames (action_profile, list);
-			g_slist_foreach (list, (GFunc)g_free, NULL);
-			g_slist_free (list);
-		}
-		else if (g_str_has_suffix (key, ACTION_MATCHCASE_ENTRY))
-		{
-			nautilus_actions_config_action_profile_set_match_case (action_profile, gconf_value_get_bool (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_MIMETYPES_ENTRY))
-		{
-			list = NULL;
-			g_slist_foreach (gconf_value_get_list (value), (GFunc) copy_list, &list);
-			nautilus_actions_config_action_profile_set_mimetypes (action_profile, list);
-			g_slist_foreach (list, (GFunc)g_free, NULL);
-			g_slist_free (list);
-		}
-		else if (g_str_has_suffix (key, ACTION_ISFILE_ENTRY))
-		{
-			nautilus_actions_config_action_profile_set_is_file (action_profile, gconf_value_get_bool (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_ISDIR_ENTRY))
-		{
-			nautilus_actions_config_action_profile_set_is_dir (action_profile, gconf_value_get_bool (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_MULTIPLE_ENTRY))
-		{
-			nautilus_actions_config_action_profile_set_accept_multiple (action_profile, gconf_value_get_bool (value));
-		}
-		else if (g_str_has_suffix (key, ACTION_SCHEMES_ENTRY))
-		{
-			list = NULL;
-			g_slist_foreach (gconf_value_get_list (value), (GFunc) copy_list, &list);
-			nautilus_actions_config_action_profile_set_schemes (action_profile, list);
-			g_slist_foreach (list, (GFunc)g_free, NULL);
-			g_slist_free (list);
-		}
-
-		if (is_new)
-		{
-			nautilus_actions_config_add_action (config, action, NULL);
-			nautilus_actions_config_action_free (action);
+			// action modified //
+			nautilus_actions_config_update_action (config, new_action);
 		}
 		else
 		{
-			nautilus_actions_config_update_action (config, action);
+			// action removed //
+			nautilus_actions_config_remove_action (config, uuid);
 		}
 	}
 
-	g_free (profile_name);
-	g_free (uuid);
+	// Add & change handler duplicate actions before adding them, so we can free the new action
+	nautilus_actions_config_action_free (new_action);
 }
 
 static void
@@ -254,7 +173,7 @@ nautilus_actions_config_gconf_reader_init (NautilusActionsConfigGconfReader *con
 	/* install notification callbacks */
 	gconf_client_add_dir (NAUTILUS_ACTIONS_CONFIG_GCONF (config)->conf_client, ACTIONS_CONFIG_DIR, GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);
 	config->actions_notify_id = gconf_client_notify_add (NAUTILUS_ACTIONS_CONFIG_GCONF (config)->conf_client, 
-							     ACTIONS_CONFIG_DIR,
+							     ACTIONS_CONFIG_NOTIFY_KEY,
 							     (GConfClientNotifyFunc) actions_changed_cb, config,
 							     NULL, NULL);
 }

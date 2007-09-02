@@ -28,6 +28,32 @@
 
 static GObjectClass *parent_class = NULL;
 
+static void
+nautilus_actions_config_gconf_notify_readers (GConfClient *client, const gchar* uuid)
+{
+	/* The Key value format is XXX:YYYY-YYYY-... where XXX is an number incremented to make key 
+	 * effectively changed each time and YYYY-YYYY-... is the modified uuid */
+
+	int new_incr = 0;
+	gchar* current_val = gconf_client_get_string (client, ACTIONS_CONFIG_NOTIFY_KEY, NULL);
+	if (current_val != NULL)
+	{
+		gchar* current_uuid = current_val + 4;
+		if (g_ascii_strcasecmp (current_uuid, uuid) == 0)
+		{
+			/* if uuids are equal, we increment the prefix number */
+			new_incr = (int)g_ascii_strtoull (current_val, NULL, 10);
+			new_incr++;
+		}
+	}
+
+	gchar* new_val = g_strdup_printf ("%03d:%s", new_incr, uuid);
+	gconf_client_set_string (client, ACTIONS_CONFIG_NOTIFY_KEY, new_val, NULL);
+
+	g_free (new_val);
+	g_free (current_val);
+}
+
 static gboolean
 save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 {
@@ -149,17 +175,25 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	gconf_client_set_string (config->conf_client, key, action->version, NULL);
 	g_free (key);
 
+	// Send notification to GConf Readers
+	nautilus_actions_config_gconf_notify_readers (config->conf_client, action->uuid);
 	return TRUE;
 }
 
 static gboolean
 remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
 {
+	gboolean retv;
+
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_GCONF_WRITER (self), FALSE);
 
 	NautilusActionsConfigGconf* config = NAUTILUS_ACTIONS_CONFIG_GCONF (self);
 
-	return gconf_client_recursive_unset (config->conf_client, action->conf_section, 0, NULL);
+	retv = gconf_client_recursive_unset (config->conf_client, action->conf_section, 0, NULL);
+	
+	// Send notification to GConf Readers
+	nautilus_actions_config_gconf_notify_readers (config->conf_client, action->uuid);
+	return retv;
 }
 
 static void

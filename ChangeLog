@@ -1,4 +1,13 @@
 2007-09-02  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.h:
+	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-writer.c:
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	* libnautilus-actions/nautilus-actions-config-gconf.h:
+	* libnautilus-actions/nautilus-actions-config-gconf.c:
+	* libnautilus-actions/nautilus-actions-config.c: Fix and cleaned
+	the GConf and internal signal callbacks notification system.
+
 	* utils/nautilus-actions-check-actions-change.c:
 	* utils/Makefile.am: Add an utility tool to check the functionnality
 	and ease debug of the GConf Reader system used in the Nautilus 

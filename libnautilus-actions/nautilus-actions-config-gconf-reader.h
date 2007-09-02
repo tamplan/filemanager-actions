@@ -42,14 +42,14 @@ typedef struct _NautilusActionsConfigGconfReader NautilusActionsConfigGconfReade
 typedef struct _NautilusActionsConfigGconfReaderClass NautilusActionsConfigGconfReaderClass;
 
 struct _NautilusActionsConfigGconfReader {
-	NautilusActionsConfig parent;
+	NautilusActionsConfigGconf parent;
 
 	/* Private data, don't access */
 	guint actions_notify_id;
 };
 
 struct _NautilusActionsConfigGconfReaderClass {
-	NautilusActionsConfigClass parent_class;
+	NautilusActionsConfigGconfClass parent_class;
 
 };
 

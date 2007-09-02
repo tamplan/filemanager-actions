@@ -141,7 +141,7 @@ add_hash_action_to_list (gpointer key, gpointer value, gpointer user_data)
 	GSList **list = user_data;
 
 	NautilusActionsConfigAction* action_copy = nautilus_actions_config_action_dup ((NautilusActionsConfigAction*)value);
-	
+
 	if (action_copy != NULL)
 	{
 		(*list) = g_slist_append ((*list), action_copy);
@@ -259,6 +259,20 @@ static void nautilus_actions_config_action_changed_default_handler (NautilusActi
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)
 {
+	NautilusActionsConfigAction* action_copy = nautilus_actions_config_action_dup (action);
+	if (g_hash_table_remove (config->actions, action->uuid))
+	{
+		if (action_copy)
+		{
+			g_hash_table_insert (config->actions, g_strdup (action_copy->uuid), action_copy);
+		}
+	}
+	else
+	{
+		g_signal_stop_emission (config, signals[ACTION_REMOVED], 0);
+		g_print ("Error: can't remove action => stop signal emission\n");
+		nautilus_actions_config_action_free (action_copy);
+	}
 }
 
 gboolean

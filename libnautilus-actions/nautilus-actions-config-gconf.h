@@ -56,6 +56,9 @@ struct _NautilusActionsConfigGconfClass {
 GType                        nautilus_actions_config_gconf_get_type (void);
 NautilusActionsConfigGconf       *nautilus_actions_config_gconf_get (void);
 
+/* Get an action from GConf using its uuid as index */
+NautilusActionsConfigAction* nautilus_actions_config_gconf_get_action (NautilusActionsConfigGconf* config, const gchar* uuid);
+
 G_END_DECLS
 
 #endif
