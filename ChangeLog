@@ -1,7 +1,4 @@
 2007-09-02  Frederic Ruaudel <grumz@grumz.net>
-	* nact/nact-import-export.c: Use GConf reader instead of GConf 
-	writer to read config in the export function.
-
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
 	* libnautilus-actions/nautilus-actions-config-schema-writer.c:
 	* plugin/nautilus-actions.c: Fix the function to get hash keys

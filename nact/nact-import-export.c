@@ -30,7 +30,6 @@
 #include <libnautilus-actions/nautilus-actions-config.h>
 #include <libnautilus-actions/nautilus-actions-config-schema-reader.h>
 #include <libnautilus-actions/nautilus-actions-config-schema-writer.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf-reader.h>
 #include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
 #include "nact-utils.h"
 #include "nact-import-export.h"
@@ -243,12 +242,12 @@ gboolean nact_export_actions (void)
 	GtkWidget *nact_actions_list;
 	GtkTreeModel* model;
 	GList* selection_list = NULL;
-	NautilusActionsConfigGconfReader *config;
+	NautilusActionsConfigGconfWriter *config;
 	NautilusActionsConfigSchemaWriter *schema_writer;
 	const gchar* save_path = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("ExportEntry",
 																			GLADE_IM_EX_PORT_DIALOG_WIDGET)));
 
-	config = nautilus_actions_config_gconf_reader_get ();
+	config = nautilus_actions_config_gconf_writer_get ();
 	schema_writer = nautilus_actions_config_schema_writer_get ();
 	g_object_set (G_OBJECT (schema_writer), "save-path", save_path, NULL);
 	nact_actions_list = nact_get_glade_widget_from ("ExportTreeView", GLADE_IM_EX_PORT_DIALOG_WIDGET);
