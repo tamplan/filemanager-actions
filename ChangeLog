@@ -1,3 +1,14 @@
+2007-09-05  Frederic Ruaudel <grumz@grumz.net>
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	Fix a crash when trying to import a config without "Main" profile
+
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	Fix problem with the profile parsing check.
+
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	Add an error message when trying to import a config file more
+	recent than the current version of n-a can deal with.
+
 2007-09-02  Frederic Ruaudel <grumz@grumz.net>
 	* libnautilus-actions/nautilus-actions-config-gconf-reader.h:
 	* libnautilus-actions/nautilus-actions-config-gconf-reader.c:

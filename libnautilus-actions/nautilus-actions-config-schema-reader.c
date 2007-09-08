@@ -79,6 +79,7 @@ static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* u
 	}
 
 	g_free (prefix);
+	printf ("Profile name: <%s>\n", profile_name);
 
 	return profile_name;
 }
@@ -162,13 +163,14 @@ static void nautilus_actions_config_schema_reader_profile_checking_add_validatio
 
 static void get_hash_keys (gchar* key, gchar* value, GSList** list)
 {
+	printf ("key: <%s>\n", key);
 	*list = g_slist_append (*list, key);
 }
 
 static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GHashTable* profile_check_list, const gchar* version, gchar** error_message)
 {
 	gboolean retv = FALSE;
-	int count;
+	int count = 0;
 	GSList* profile_list = NULL;
 	GSList* iter;
 	gchar* tmp;
@@ -177,29 +179,51 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 	GString* error_message_str;
 	ProfileChecking* check = NULL;
 
+	printf ("test check 1\n");
 	// i18n notes: will be displayed in an error dialog concatenated to another error message
 	error_message_str = g_string_new (_(" and some profiles are incomplete: "));
 	g_hash_table_foreach (profile_check_list, (GHFunc)get_hash_keys, &profile_list);
+	printf ("test check 2\n");
 
 	// Check if the default profile has been found in the xml file, if not remove 
 	//  it (added automatically by nautilus_actions_config_action_new_default() function)
 	check = g_hash_table_lookup (profile_check_list, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
-	if (!check->is_schemes_ok && !check->is_multiple_ok && 
+
+	printf ("test check 3 : <%p>\n", check);
+	if (check == NULL || (!check->is_schemes_ok && !check->is_multiple_ok && 
 			!check->is_matchcase_ok && !check->is_mimetypes_ok &&
 			!check->is_isdir_ok && !check->is_isfile_ok && !check->is_basenames_ok && 
-			!check->is_params_ok && !check->is_path_ok)
+			!check->is_params_ok && !check->is_path_ok))
 	{
+		printf ("test 1\n");
 		g_hash_table_remove (profile_check_list, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
 	}
 
+	printf ("test check 4\n");
 	// i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 	list_separator = g_strdup (_(","));
+
+	printf ("test check 5\n");
+	if (g_slist_length (profile_list) >= 1)
+	{
+		// There is at least one profile to check so we'll enter the next loop and 
+		// so we set the return val to TRUE to make the local check works
+		retv = TRUE;
+	}
 
 	for (iter = profile_list; iter; iter = iter->next)
 	{
 		gboolean local_retv = FALSE;
 		gchar* profile_name = (gchar*)iter->data;
+		printf ("test 2 (%s)\n", profile_name);
 		check = g_hash_table_lookup (profile_check_list, profile_name);
+		
+
+		printf ("version <%s>, sh: %d, mul: %d, mat:%d, mim:%d, dir:%d, fil:%d, bas:%d, par:%d, path:%d, check ver: %d\n", version, check->is_schemes_ok , check->is_multiple_ok , 
+				check->is_matchcase_ok , check->is_mimetypes_ok ,
+				check->is_isdir_ok , check->is_isfile_ok , check->is_basenames_ok , 
+				check->is_params_ok , check->is_path_ok, (g_ascii_strcasecmp (version, "1.1") >= 0));
+
 		if (g_ascii_strcasecmp (version, "1.0") == 0 && 
 				check->is_schemes_ok && check->is_multiple_ok && 
 				check->is_isdir_ok && check->is_isfile_ok && check->is_basenames_ok && 
@@ -219,8 +243,8 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 		}
 		else
 		{
+			printf ("error prof 1 (%s)\n", profile_name);
 			missing_keys = g_string_new ("");
-			count = 0;
 			if (!check->is_schemes_ok)
 			{
 				g_string_append_printf (missing_keys , "%s%s", ACTION_SCHEMES_ENTRY, list_separator);
@@ -280,7 +304,9 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 			g_free (tmp);
 		}
 
+		printf ("b: retv %d local: %d\n", retv, local_retv); 
 		retv = (retv && local_retv);
+		printf ("a: retv %d local: %d\n", retv, local_retv); 
 	}
 	g_slist_free (profile_list);
 
@@ -288,6 +314,8 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 	g_string_truncate (error_message_str, (error_message_str->len - strlen (list_separator)));
 
 	tmp = g_string_free (error_message_str, FALSE);
+
+	printf ("error prof 2 (count %d)\n", count);
 
 	if (!retv)
 	{
@@ -429,6 +457,8 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 		}
 	}
 
+	printf ("test parse 1\n");
+
 	if (is_default_value_ok && is_key_ok)
 	{
 		retv = TRUE;
@@ -544,6 +574,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 						profile_name = g_strdup (NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
 					}
 
+					printf ("test parse 2\n");
 					switch (type)
 					{
 						case ACTION_LABEL_TYPE:
@@ -618,27 +649,32 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 							g_slist_free (list);
 							break;
 						case ACTION_VERSION_TYPE:
-							is_version_ok = TRUE;
 							if (action->version)
 							{
 								g_free (action->version);
 							}
 							action->version = g_strdup (value);
+							is_version_ok = TRUE;
 							break;
 						default:
 							break;
 					}
 
+					printf ("test parse 3\n");
 					g_free (value);
+					printf ("test parse 4\n");
 				}	
 
+				printf ("test parse 5\n");
 				action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
 				if (action_profile->desc_name == NULL)
 				{
 					// if the profile descriptiv name is not set, set it to the profile name
 					nautilus_actions_config_action_profile_set_desc_name (action_profile, profile_name);
 				}
+				printf ("test parse 6\n");
 				g_free (profile_name);
+				printf ("test parse 7\n");
 			}
 			else
 			{
@@ -648,10 +684,18 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		}
 	}
 		
+	printf ("test parse 8\n");
 	if (is_version_ok)
 	{
+		printf ("test parse 9\n");
 		is_profiles_ok = nautilus_actions_config_schema_reader_profile_checking_check (profile_check_list, action->version, &error_msg);
-		if (g_ascii_strcasecmp (action->version, "1.0") == 0 && 
+		printf ("test parse 10\n");
+		if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) > 0)
+		{
+			// if the version of the file is greater than the current one, we reject the file
+			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This config file is more recent than this version of Nautilus-actions can support. Please upgrade Nautilus-actions to the lastest version if you want to be able to import it (File version: %s (max supported version : %s))"), action->version, NAUTILUS_ACTIONS_CONFIG_VERSION);
+		}
+		else if (g_ascii_strcasecmp (action->version, "1.0") == 0 && 
 				is_profiles_ok && is_icon_ok && 
 				is_tooltip_ok && is_label_ok)
 		{
@@ -668,6 +712,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		{
 			missing_keys = g_string_new ("");
 			count = 0;
+			printf ("error 1\n");
 			// i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 			list_separator = g_strdup (_(","));
 			if (!is_icon_ok)
@@ -687,6 +732,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			}
 			// Remove the last separator
 			g_string_truncate (missing_keys, (missing_keys->len - strlen (list_separator)));
+			printf ("error 2 (count: %d)\n", count);
 
 			tmp = g_string_free (missing_keys, FALSE);
 			if (!error_msg)
