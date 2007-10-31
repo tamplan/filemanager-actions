@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-07 19:04+0300\n"
+"POT-Creation-Date: 2007-10-31 17:56+0300\n"
 "PO-Revision-Date: 2006-08-17 07:31+0300\n"
 "Last-Translator: Ilkka Tuohela <hile@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
@@ -350,9 +350,7 @@ msgstr ""
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../nact/nautilus-actions-config.glade.h:78
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr ""
-"Ilkka Tuohela, 2007."
-"Gnomen suomentajaryhmä"
+msgstr "Ilkka Tuohela, 2007.Gnomen suomentajaryhmä"
 
 #: ../nact/nautilus-actions-config.glade.h:79
 msgid ""
@@ -455,7 +453,7 @@ msgstr "%s-kopio"
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact-editor.c:494
-#,  c-format
+#, c-format
 msgid "Can't paste action's profile '%s'!"
 msgstr "Toiminnon profiilia %s ei voi liittää!"
 
@@ -642,8 +640,8 @@ msgid ""
 "A GnomeVFS scheme where the selected files should be located (you must set "
 "it for each scheme you need)"
 msgstr ""
-"GnomeVFS-malli, jossa valitut tiedostot ovat. Tämä täytyy asettaa "
-"erikseen jokaiselle mallille joita tarvitset."
+"GnomeVFS-malli, jossa valitut tiedostot ovat. Tämä täytyy asettaa erikseen "
+"jokaiselle mallille joita tarvitset."
 
 #: ../utils/nautilus-actions-new-config.c:60
 msgid "SCHEME"
@@ -654,8 +652,8 @@ msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
 msgstr ""
-"Polku tiedostoon, johon uusi GConf-mallin kuvaustiedosto "
-"tallennetaan. [oletus: /tmp/config_UUID.schemas]"
+"Polku tiedostoon, johon uusi GConf-mallin kuvaustiedosto tallennetaan. "
+"[oletus: /tmp/config_UUID.schemas]"
 
 #: ../utils/nautilus-actions-new-config.c:100
 #, c-format
@@ -815,7 +813,8 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
-msgstr "Luettelo malleista, joihin valittejen tiedostojen MIME-tyyppiä verrataan"
+msgstr ""
+"Luettelo malleista, joihin valittejen tiedostojen MIME-tyyppiä verrataan"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
 msgid ""
@@ -904,8 +903,8 @@ msgid ""
 msgstr ""
 "Määrittelee luettelon kelvollisista GnomeVFS-malleista, joihin valittuja "
 "kohtia verrataan. GnomeVFS-malli on tiedoston käsittelyyn käytetty "
-"protokolla. Käytettävä avainsana tulee olla sama jota käytetään GnomeVFS-"
-"URI:ssa.\n"
+"protokolla. Käytettävä avainsana tulee olla sama jota käytetään GnomeVFS-URI:"
+"ssa.\n"
 "\n"
 "Esimerkkejä GnomeVFS-URI:sta:\n"
 "file:///tmp/foo.txt\n"
@@ -972,18 +971,18 @@ msgid "Can't find profile named '%s'"
 msgstr "Profiilia \"%s\" ei löydy"
 
 #. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:181
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:184
 msgid " and some profiles are incomplete: "
 msgstr "ja osa profiileista on vajaita:"
 
 #. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:196
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:672
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:204
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:717
 msgid ","
 msgstr ","
 
 #. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:279
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:303
 #, c-format
 msgid "%s (one missing key: %s)%s"
 msgid_plural "%s (missing keys: %s)%s"
@@ -991,8 +990,8 @@ msgstr[0] "%s (puuttuva avain: %s)%s"
 msgstr[1] "%s (puuttuvat avaimet: %s)%s"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:646
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:771
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:682
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:817
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (found <%s> "
@@ -1001,8 +1000,20 @@ msgstr ""
 "XML-tiedosto ei ole kelvollinen nautilus-actions-asetustiedosto (löytyi "
 "alkio <%s>, pitäisi olla <%s>)"
 
+#. if the version of the file is greater than the current one, we reject the file
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
+#, c-format
+msgid ""
+"This config file is more recent than this version of Nautilus-actions can "
+"support. Please upgrade Nautilus-actions to the lastest version if you want "
+"to be able to import it (File version: %s (max supported version : %s))"
+msgstr ""
+"Tämä asetustiedosto on uudempi, kuin tämä nautilus-actions -versio voi "
+"tukea. Päivitä nautilus-actions uusimpaan versioon, jos haluat tuoda tämän "
+"tiedoston. (Tiedoston versio: %s, suurin tuettu versio: %s)"
+
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:698
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
@@ -1018,7 +1029,7 @@ msgstr[1] ""
 
 #. No error occured but we have not found the "version" gconf key
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:707
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
@@ -1027,7 +1038,7 @@ msgstr ""
 "avain: %s)"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:781
+#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:827
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
@@ -1035,4 +1046,3 @@ msgid ""
 msgstr ""
 "XML-tiedosto ei ole kelvollinen nautilus-actions-asetustiedosto juurisolmu "
 "on <%s>, pitäisi olla <%s>)"
-
