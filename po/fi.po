@@ -22,7 +22,7 @@ msgstr "Lisää kohtia nautiluksen ponnahdusvalikkoon"
 
 #: ../nact/nact.desktop.in.h:2
 msgid "Nautilus Actions Configuration"
-msgstr "Nautiluksen lisätoimintojen muokkain"
+msgstr "Nautiluksen lisätoiminnot"
 
 #: ../nact/nautilus-actions-config.glade.h:1
 msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
@@ -229,7 +229,7 @@ msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:52
 msgid "Import new configurations"
-msgstr "tUo uusia asetuksia"
+msgstr "Tuo uusia määrittelyjä"
 
 #: ../nact/nautilus-actions-config.glade.h:53
 msgid "Import/Export"
