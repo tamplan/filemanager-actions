@@ -1,21 +1,24 @@
+# translation of oc.po to Occitan
 # Occitan translations for nautilus-actions package
 # Copyright (C) 2005-2007 The Free Software Foundation, Inc.
 # This file is distributed under the same license as the nautilus-actions package.
 #
 # Yannig MARCHEGAY (yannig@marchegay.org) - 2006-2007
 #
+# Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: nautilus-actions 1.4\n"
+"Project-Id-Version: oc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-13 17:50+0200\n"
-"PO-Revision-Date: 2007-10-13 22:40+0200\n"
-"Last-Translator: Yannig MARCHEGAY <yannig@marchegay.org>\n"
-"Language-Team: Occitan (post 1500) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
+"PO-Revision-Date: 2007-11-20 14:32+0100\n"
+"Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
+"Language-Team: Occitan <ubuntu-l10n-oci@lists.ubuntu.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
@@ -55,10 +58,8 @@ msgstr "<b>%d</b> : repertòri de basa del(s) fichièr(s) seleccionat(s)"
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
-msgid ""
-"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
-msgstr ""
-"<b>%f</b> : lo nom del fichièr seleccionat o del primièr se n'i a mai d'un"
+msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgstr "<b>%f</b> : lo nom del fichièr seleccionat o del primièr se n'i a mai d'un"
 
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
@@ -187,8 +188,7 @@ msgid "Create a copy of the selected action."
 msgstr "Crear una còpia de l'accion seleccionada."
 
 #: ../nact/nautilus-actions-config.glade.h:46
-msgid ""
-"Delete the action without any confirmation nor the possibility to restore it."
+msgid "Delete the action without any confirmation nor the possibility to restore it."
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:47
@@ -443,7 +443,7 @@ msgstr ""
 
 #: ../nact/nact-editor.c:590
 msgid "Profile Name"
-msgstr "Nom de perfil"
+msgstr "Nom del perfil :"
 
 #: ../nact/nact-editor.c:643
 msgid "Icon of the menu item in the Nautilus popup menu"
@@ -728,8 +728,7 @@ msgid ""
 msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid ""
-"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
@@ -906,8 +905,7 @@ msgstr ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
 #, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr ""
 
 #. i18n notes: will be displayed in an error dialog
@@ -918,14 +916,3 @@ msgid ""
 "instead of <%s>)"
 msgstr ""
 
-#~ msgid " "
-#~ msgstr " "
-
-#~ msgid "  "
-#~ msgstr "  "
-
-#~ msgid "    "
-#~ msgstr "    "
-
-#~ msgid "Automatic"
-#~ msgstr "Automatic"
