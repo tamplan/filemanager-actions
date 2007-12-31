@@ -1,24 +1,21 @@
-# translation of oc.po to Occitan
+# Translation of oc.po to Occitan
 # Occitan translations for nautilus-actions package
 # Copyright (C) 2005-2007 The Free Software Foundation, Inc.
 # This file is distributed under the same license as the nautilus-actions package.
-#
-# Yannig MARCHEGAY (yannig@marchegay.org) - 2006-2007
 #
 # Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: oc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-13 17:50+0200\n"
-"PO-Revision-Date: 2007-11-20 14:32+0100\n"
+"POT-Creation-Date: 2007-12-27 13:30+0100\n"
+"PO-Revision-Date: 2007-12-30 19:56+0100\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan <ubuntu-l10n-oci@lists.ubuntu.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);"
-"X-Generator: KBabel 1.11.4\n"
 
 #: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
@@ -43,8 +40,8 @@ msgid ""
 "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
 "full paths"
 msgstr ""
-"<b>%M</b> : tièra separada per d'espacis del(s) fichièr(s)/repertòri(s) amb lors "
-"camins complets"
+"<b>%M</b> : tièra separada per d'espacis del(s) fichièr(s)/repertòri(s) amb "
+"lors camins complets"
 
 #: ../nact/nautilus-actions-config.glade.h:7
 #, no-c-format
@@ -58,8 +55,10 @@ msgstr "<b>%d</b> : repertòri de basa del(s) fichièr(s) seleccionat(s)"
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
-msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
-msgstr "<b>%f</b> : lo nom del fichièr seleccionat o del primièr se n'i a mai d'un"
+msgid ""
+"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgstr ""
+"<b>%f</b> : lo nom del fichièr seleccionat o del primièr se n'i a mai d'un"
 
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
@@ -188,7 +187,8 @@ msgid "Create a copy of the selected action."
 msgstr "Crear una còpia de l'accion seleccionada."
 
 #: ../nact/nautilus-actions-config.glade.h:46
-msgid "Delete the action without any confirmation nor the possibility to restore it."
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:47
@@ -289,7 +289,7 @@ msgstr "Camin:"
 
 #: ../nact/nautilus-actions-config.glade.h:70
 msgid "Project Website"
-msgstr ""
+msgstr "Sit web del projècte"
 
 #: ../nact/nautilus-actions-config.glade.h:71
 msgid "Save in Folder:"
@@ -300,20 +300,24 @@ msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
 msgstr ""
+"Seleccionatz las configuracions que volètz exportar. Utilizar la clau "
+"Maj o Ctrl per ne seleccionar mai d'una."
 
 #: ../nact/nautilus-actions-config.glade.h:73
 msgid "Select the configurations you want to export:"
-msgstr ""
+msgstr "Seleccionatz las configuracions que volètz exportar :"
 
 #: ../nact/nautilus-actions-config.glade.h:74
 msgid "Select the file you want to import."
-msgstr ""
+msgstr "Seleccionatz lo fichièr que volètz importar."
 
 #: ../nact/nautilus-actions-config.glade.h:75
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
 msgstr ""
+"Seleccionatz lo repertòri ont volètz enregistrar vòstra configuracion. "
+"Aqueste repertòri deu existir."
 
 #: ../nact/nautilus-actions-config.glade.h:76
 msgid ""
@@ -325,7 +329,7 @@ msgstr ""
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../nact/nautilus-actions-config.glade.h:78
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr ""
+msgstr "Lo projècte de revirada de GNOME <gnome-i18n@gnome.org>"
 
 #: ../nact/nautilus-actions-config.glade.h:79
 msgid ""
@@ -347,17 +351,17 @@ msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:83
 msgid "_Browse"
-msgstr ""
+msgstr "_Explorar"
 
 #: ../nact/nautilus-actions-config.glade.h:84
 msgid "_Legend"
-msgstr ""
+msgstr "_Legenda"
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact.c:163
 #, c-format
 msgid "Can't duplicate action '%s'!"
-msgstr ""
+msgstr "Impossible de duplicar l'accion '%s' !"
 
 #. create columns on the tree view
 #: ../nact/nact.c:277 ../nact/nact-import-export.c:162
@@ -371,7 +375,7 @@ msgstr "Etiqueta"
 #: ../nact/nact.c:303 ../nact/nact-editor.c:627
 #: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr ""
+msgstr "Impossible de cargar l'interfaç de l'esplech de configuracion de las accions de Nautilus"
 
 #. i18n notes: example strings for the command preview
 #: ../nact/nact-utils.c:185
@@ -396,7 +400,7 @@ msgstr "repertòri2"
 
 #: ../nact/nact-utils.c:190
 msgid "test.example.net"
-msgstr ""
+msgstr "test.exemple.net"
 
 #: ../nact/nact-utils.c:191
 msgid "file.txt"
@@ -415,39 +419,39 @@ msgstr "Pas cap"
 #: ../nact/nact-editor.c:449
 #, c-format
 msgid "Can't copy action's profile '%s'!"
-msgstr ""
+msgstr "Impossible de copiar lo perfil de l'accion '%s' !"
 
 #. i18n notes: this is the default name of a copied profile
 #: ../nact/nact-editor.c:476
 #, c-format
 msgid "%s Copy"
-msgstr ""
+msgstr "%s - còpia"
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact-editor.c:494
 #, c-format
 msgid "Can't paste action's profile '%s'!"
-msgstr ""
+msgstr "Impossible de pegar lo perfil de l'accion '%s' !"
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact-editor.c:503
 #, c-format
 msgid "Can't paste action's profile '%s' !"
-msgstr ""
+msgstr "Impossible de pegar lo perfil de l'accion '%s' !"
 
 #. i18n notes: will be displayed in a dialog
 #: ../nact/nact-editor.c:538
 #, c-format
 msgid "Can't delete action's profile '%s'!"
-msgstr ""
+msgstr "Impossible de suprimir lo perfil de l'accion '%s' !"
 
 #: ../nact/nact-editor.c:590
 msgid "Profile Name"
-msgstr "Nom del perfil :"
+msgstr "Nom del perfil"
 
 #: ../nact/nact-editor.c:643
 msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr ""
+msgstr "Icòna de l'element de menut dins lo menut contextual de Nautilus"
 
 #: ../nact/nact-editor.c:665
 msgid "Add a New Action"
@@ -456,7 +460,7 @@ msgstr "Apondre una accion novèla"
 #: ../nact/nact-editor.c:669
 #, c-format
 msgid "Edit Action \"%s\""
-msgstr ""
+msgstr "Modificar l'accion \"%s\""
 
 #: ../nact/nact-import-export.c:205
 #, c-format
@@ -467,38 +471,38 @@ msgstr ""
 #: ../nact/nact-import-export.c:226
 #, c-format
 msgid "Action '%s' importation failed!"
-msgstr ""
+msgstr "L'accion d'importacion '%s' a pas capitat !"
 
 #. initialize the default schemes
 #. i18n notes : description of 'file' scheme
 #: ../nact/nact-prefs.c:164
 #, c-format
 msgid "%sLocal Files"
-msgstr ""
+msgstr "%sFichièrs locals"
 
 #. i18n notes : description of 'sftp' scheme
 #: ../nact/nact-prefs.c:166
 #, c-format
 msgid "%sSSH Files"
-msgstr ""
+msgstr "%sFichièrs SSH"
 
 #. i18n notes : description of 'smb' scheme
 #: ../nact/nact-prefs.c:168
 #, c-format
 msgid "%sWindows Files"
-msgstr ""
+msgstr "%sFichièrs Windows"
 
 #. i18n notes : description of 'ftp' scheme
 #: ../nact/nact-prefs.c:170
 #, c-format
 msgid "%sFTP Files"
-msgstr ""
+msgstr "%sFichièrs FTP"
 
 #. i18n notes : description of 'dav' scheme
 #: ../nact/nact-prefs.c:172
 #, c-format
 msgid "%sWebdav Files"
-msgstr ""
+msgstr "%sFichièrs Webdav"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
 #: ../nact/nact-profile-editor.c:243
@@ -530,7 +534,7 @@ msgstr "Modificar lo perfil \"%s\""
 #: ../utils/nautilus-actions-new-config.c:49
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
 msgid "The label of the menu item"
-msgstr ""
+msgstr "L'etiqueta de l'element de menut"
 
 #: ../utils/nautilus-actions-new-config.c:49
 msgid "LABEL"
@@ -557,7 +561,7 @@ msgstr "ICÒNA"
 #: ../utils/nautilus-actions-new-config.c:55
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
 msgid "The path of the command"
-msgstr ""
+msgstr "Lo camin de la comanda"
 
 #: ../utils/nautilus-actions-new-config.c:52
 #: ../utils/nautilus-actions-new-config.c:55
@@ -568,7 +572,7 @@ msgstr "CAMIN"
 #: ../utils/nautilus-actions-new-config.c:53
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
 msgid "The parameters of the command"
-msgstr ""
+msgstr "Los paramètres de la comanda"
 
 #: ../utils/nautilus-actions-new-config.c:53
 msgid "PARAMS"
@@ -593,15 +597,15 @@ msgstr ""
 
 #: ../utils/nautilus-actions-new-config.c:57
 msgid "Set it if the selection can contain files"
-msgstr ""
+msgstr "Definir se la seleccion pòt contene de fichièrs"
 
 #: ../utils/nautilus-actions-new-config.c:58
 msgid "Set it if the selection can contain folders"
-msgstr ""
+msgstr "Definir se la seleccion pòt contene de repertòris"
 
 #: ../utils/nautilus-actions-new-config.c:59
 msgid "Set it if the selection can have several items"
-msgstr ""
+msgstr "Definir se la seleccion pòt aver mai d'un element"
 
 #: ../utils/nautilus-actions-new-config.c:60
 msgid ""
@@ -626,6 +630,9 @@ msgid ""
 "\t- %s\n"
 "Try %s --help\n"
 msgstr ""
+"Error de sintaxi :\n"
+"\t- %s\n"
+"Ensajatz %s --help\n"
 
 #: ../utils/nautilus-actions-new-config.c:152
 #, c-format
@@ -640,7 +647,7 @@ msgstr ""
 #: ../utils/nautilus-actions-new-config.c:180
 #, c-format
 msgid "  OK, saved in %s\n"
-msgstr ""
+msgstr "  D'acòrdi, enregistrat dins %s\n"
 
 #: ../utils/nautilus-actions-new-config.c:185
 #, c-format
@@ -655,7 +662,7 @@ msgstr "Impossible d'escriure de donadas dins lo fichièr %s\n"
 #: ../utils/nautilus-actions-tools-utils.c:54
 #, c-format
 msgid "Can't open file %s for writing\n"
-msgstr ""
+msgstr "Impossible de dobrir lo fichièr %s en escritura\n"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
 msgid ""
@@ -671,7 +678,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
 msgid "The icon of the menu item"
-msgstr ""
+msgstr "L'icòna de l'element de menut"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
 msgid ""
@@ -681,7 +688,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
 msgid "A description name of the profile"
-msgstr ""
+msgstr "Un nom de descripcion del perfil"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
 msgid ""
@@ -728,7 +735,8 @@ msgid ""
 msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgid ""
+"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
@@ -762,7 +770,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr ""
+msgstr "'verai' se la seleccion a de fichièrs ; si que non, 'fals'"
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
@@ -771,7 +779,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr ""
+msgstr "'verai' se la seleccion a de repertòris ; si que non, 'fals'"
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
@@ -780,7 +788,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
 msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr ""
+msgstr "'verai' se la seleccion a mai d'un element ; si que non, 'fals'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
 msgid ""
@@ -830,6 +838,8 @@ msgid ""
 "The action '%s' already exists with the name '%s', please first remove the "
 "existing one before trying to add this one"
 msgstr ""
+"L'accion '%s' existís ja jos lo nom '%s' ; suprimissètz primièr l'existenta "
+"abans d'ensajar d'apondre aquesta"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:222
@@ -855,12 +865,12 @@ msgstr ""
 #: ../libnautilus-actions/nautilus-actions-config.c:531
 #, c-format
 msgid "Can't find profile named '%s'"
-msgstr ""
+msgstr "Impossible de trobar un perfil que s'apèla '%s'"
 
 #. i18n notes: will be displayed in an error dialog concatenated to another error message
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:184
 msgid " and some profiles are incomplete: "
-msgstr ""
+msgstr " e de perfils son incomplets : "
 
 #. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:204
@@ -905,7 +915,8 @@ msgstr ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr ""
 
 #. i18n notes: will be displayed in an error dialog
