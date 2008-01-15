@@ -1,13 +1,13 @@
 # Swedish translation of nautilus-actions
-# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
-# Daniel Nylander <po@danielnylander.se>, 2006, 2007.
+# Copyright (C) 2006, 2007, 2008 Free Software Foundation, Inc.
+# Daniel Nylander <po@danielnylander.se>, 2006, 2007, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-10 20:02+0200\n"
-"PO-Revision-Date: 2007-09-10 20:03+0100\n"
+"POT-Creation-Date: 2008-01-15 01:39+0100\n"
+"PO-Revision-Date: 2008-01-15 01:41+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -94,7 +94,7 @@ msgstr "<b>Visas om markeringen innehåller</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:25
 msgid "<b>Nautilus Menu Item</b>"
-msgstr "<b>Nautilus-menypost</b>"
+msgstr "<b>Nautilus-menyobjekt</b>"
 
 #: ../nact/nautilus-actions-config.glade.h:26
 msgid "<b>Profiles</b>"
@@ -209,7 +209,7 @@ msgstr "Inställningar för import/export"
 
 #: ../nact/nautilus-actions-config.glade.h:55
 msgid "Label of the menu item in the Nautilus popup menu."
-msgstr "Etikett på menyposten i Nautilus popupmeny."
+msgstr "Etikett på menyobjektet i Nautilus popupmeny."
 
 #: ../nact/nautilus-actions-config.glade.h:56
 msgid "Label:"
@@ -310,7 +310,7 @@ msgstr "Denna programvara är licensierad under GNU General Public License (GPL)
 
 #: ../nact/nautilus-actions-config.glade.h:81
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr "Verktygstips för menyposten som kommer att visas i Nautilus statusrad."
+msgstr "Verktygstips för menyobjektet som kommer att visas i Nautilus statusrad."
 
 #: ../nact/nautilus-actions-config.glade.h:82
 msgid "Tooltip:"
@@ -424,7 +424,7 @@ msgstr "Profilnamn"
 
 #: ../nact/nact-editor.c:643
 msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr "Ikon för menyposten i Nautilus popupmeny"
+msgstr "Ikon för menyobjektet i Nautilus popupmeny"
 
 #: ../nact/nact-editor.c:665
 msgid "Add a New Action"
@@ -507,7 +507,7 @@ msgstr "Redigera profilen \"%s\""
 #: ../utils/nautilus-actions-new-config.c:49
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
 msgid "The label of the menu item"
-msgstr "Etiketten på menyposten"
+msgstr "Etiketten på menyobjektet"
 
 #: ../utils/nautilus-actions-new-config.c:49
 msgid "LABEL"
@@ -516,7 +516,7 @@ msgstr "ETIKETT"
 #: ../utils/nautilus-actions-new-config.c:50
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
 msgid "The tooltip of the menu item"
-msgstr "Verktygstipset för menyposten"
+msgstr "Verktygstipset för menyobjektet"
 
 #: ../utils/nautilus-actions-new-config.c:50
 msgid "TOOLTIP"
@@ -524,7 +524,7 @@ msgstr "VERKTYGSTIPS"
 
 #: ../utils/nautilus-actions-new-config.c:51
 msgid "The icon of the menu item (filename or GTK stock ID)"
-msgstr "Ikonen för menyposten (filnamn eller GTK-stock-id)"
+msgstr "Ikonen för menyobjektet (filnamn eller GTK-standard-id)"
 
 #: ../utils/nautilus-actions-new-config.c:51
 msgid "ICON"
@@ -631,19 +631,19 @@ msgstr "Kan inte öppna filen %s för skrivning\n"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
 msgid "The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings"
-msgstr "Etiketten på menyposten som ska visas i Nautilus popupmeny när markeringen matchar inställningarna för villkoret"
+msgstr "Etiketten på menyobjektet som ska visas i Nautilus popupmeny när markeringen matchar inställningarna för utseendevillkoret"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
 msgid "The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse"
-msgstr "Verktygstipset för menyposten som ska visas i Nautilus statusrad när användaren pekar på Nautiltus popupmenypost med sin mus"
+msgstr "Verktygstipset för menyobjektet som ska visas i Nautilus statusrad när användaren pekar på Nautiltus popupmenyobjekt med muspekaren"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
 msgid "The icon of the menu item"
-msgstr "Ikonen för menyposten"
+msgstr "Ikonen för menyobjektet"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
 msgid "The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings"
-msgstr "Ikonen för menyposten som ska visas bredvid etiketten i Nautilus popupmeny när markeringen matchar inställningarna för villkoren"
+msgstr "Ikonen för menyobjektet som ska visas bredvid etiketten i Nautilus popupmeny när markeringen matchar inställningarna för utseendevillkoren"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
 msgid "A description name of the profile"
@@ -655,7 +655,7 @@ msgstr "Fältet finns här för att ge användaren en mänskligt läsbart namn f
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
 msgid "The path of the command to start when the user select the menu item in the Nautilus popup menu"
-msgstr "Sökvägen för kommandot att starta när användaren väljer menyposten i Nautilus popupmeny"
+msgstr "Sökvägen för kommandot att starta när användaren väljer menyobjektet i Nautilus popupmeny"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid ""
