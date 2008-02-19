@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: oc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-27 13:30+0100\n"
+"POT-Creation-Date: 2008-02-19 20:26+0100\n"
 "PO-Revision-Date: 2007-12-30 19:56+0100\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan <ubuntu-l10n-oci@lists.ubuntu.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
@@ -300,8 +300,8 @@ msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
 msgstr ""
-"Seleccionatz las configuracions que volètz exportar. Utilizar la clau "
-"Maj o Ctrl per ne seleccionar mai d'una."
+"Seleccionatz las configuracions que volètz exportar. Utilizar la clau Maj o "
+"Ctrl per ne seleccionar mai d'una."
 
 #: ../nact/nautilus-actions-config.glade.h:73
 msgid "Select the configurations you want to export:"
@@ -375,7 +375,9 @@ msgstr "Etiqueta"
 #: ../nact/nact.c:303 ../nact/nact-editor.c:627
 #: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr "Impossible de cargar l'interfaç de l'esplech de configuracion de las accions de Nautilus"
+msgstr ""
+"Impossible de cargar l'interfaç de l'esplech de configuracion de las accions "
+"de Nautilus"
 
 #. i18n notes: example strings for the command preview
 #: ../nact/nact-utils.c:185
@@ -882,7 +884,9 @@ msgstr ","
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:303
 #, c-format
 msgid "%s (one missing key: %s)%s"
-msgstr ""
+msgid_plural "%s (missing keys: %s)%s"
+msgstr[0] ""
+msgstr[1] ""
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:682
@@ -907,9 +911,11 @@ msgstr ""
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
+msgid_plural ""
 "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
 "s"
-msgstr ""
+msgstr[0] ""
+msgstr[1] ""
 
 #. No error occured but we have not found the "version" gconf key
 #. i18n notes: will be displayed in an error dialog
@@ -926,4 +932,3 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
 "instead of <%s>)"
 msgstr ""
-
