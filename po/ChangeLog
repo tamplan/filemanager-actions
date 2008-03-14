@@ -1,3 +1,8 @@
+2008-03-14  Andre Klapper  <a9016009@gmx.de>
+
+	* LINGUAS: Added missing Macedonian (mk) and Russian (ru)
+	to the list of available languages.
+
 2008-03-09  Philip Withnall  <pwithnall@svn.gnome.org>
 
 	* en_GB.po: Updated British English translation.
