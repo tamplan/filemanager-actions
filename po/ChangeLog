@@ -1,3 +1,9 @@
+2008-03-19 Kostas Papadimas <pkst@gnome.org>
+
+	* el.po: Added Greek Translation by Giannis Katsampipis
+	* LINGUAS: Added Greek (el) to list.
+
+
 2008-03-15  Andre Klapper  <a9016009@gmx.de>
 
 	* de.po: Updated German translation.
