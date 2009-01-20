@@ -2,13 +2,14 @@
 #
 # Mario Izquierdo <mariodebian@gmail.com>, 2005.
 # Francisco Javier F. Serrador <serrador@cvs.gnome.org>, 2005, 2006.
-# Jorge González <jorgegonz@svn.gnome.org>, 2007.
+# Jorge González <jorgegonz@svn.gnome.org>, 200, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-09 03:35+0100\n"
-"PO-Revision-Date: 2007-09-26 12:09+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=nautilus-actions&component=general\n"
+"POT-Creation-Date: 2009-01-20 06:31+0000\n"
+"PO-Revision-Date: 2009-01-20 16:51+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +56,8 @@ msgstr "<b>%d</b>: carpeta base de los archivo(s) seleccionado(s)"
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
-msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgid ""
+"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
 msgstr ""
 "<b>%f</b>: el nombre del archivo seleccionado o el 1º si hay varios "
 "seleccionados"
@@ -200,26 +202,32 @@ msgid "Create a copy of the selected action."
 msgstr "Crea una copia de la acción seleccionada."
 
 #: ../nact/nautilus-actions-config.glade.h:46
-msgid "Delete the action without any confirmation nor the possibility to restore it."
-msgstr "Borra la acción sin ninguna confirmación o la posibilidad de restaurarla."
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
+msgstr ""
+"Borra la acción sin ninguna confirmación o la posibilidad de restaurarla."
 
 #: ../nact/nautilus-actions-config.glade.h:47
+msgid "Duplicate"
+msgstr "Duplicar"
+
+#: ../nact/nautilus-actions-config.glade.h:48
 msgid "Export existing configs"
 msgstr "Exportar configuraciones existentes"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:49
 msgid "File to Import:"
 msgstr "Archivo para importar:"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "Filenames:"
 msgstr "Nombres de archivo:"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "Icon:"
 msgstr "Icono:"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:52
 msgid ""
 "If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
 "will not match photo.JPG)"
@@ -227,27 +235,27 @@ msgstr ""
 "Si está seleccionado, los patrones de nombres de archivo se harán coincidir "
 "sin discriminar capitalización (ej: *.jpg no coincidirá con foto.JPG)"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "Import new configurations"
 msgstr "Importar configuraciones nuevas"
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Import/Export"
 msgstr "Importar/Exportar"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid "Import/Export Settings"
 msgstr "Importar/Exportar configuración"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Label of the menu item in the Nautilus popup menu."
 msgstr "Etiqueta del elemento del menú en el menú contextual de Nautilus."
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Label:"
 msgstr "Etiqueta:"
 
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
@@ -255,27 +263,27 @@ msgstr ""
 "Gestiona la importación de configuraciones externas de acciones y la "
 "exportación de acciones existentes."
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "Match case"
 msgstr "Coincidir con capitalización"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "Mimetypes:"
 msgstr "Tipos MIME:"
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "Nautilus Action Editor"
 msgstr "Editor de acciones de Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid "Nautilus Action Profile Editor"
 msgstr "Editor de perfiles de las acciones de Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "Nautilus Actions"
 msgstr "Acciones de Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:64
 msgid ""
 "Nautilus Actions Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -283,15 +291,15 @@ msgstr ""
 "Herramienta de configuración de acciones de Nautilus\n"
 "Aplicación para configurar la extensión  Acciones de Nautilus"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid "Only files"
 msgstr "Sólo archivos"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:67
 msgid "Only folders"
 msgstr "Sólo carpetas"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
@@ -299,23 +307,23 @@ msgstr ""
 "Parámetros que se enviarán al programa. Pulse en el botón «Leyenda» para ver "
 "los diferentes tokens de reemplazo."
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Parameters:"
 msgstr "Parámetros:"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid "Path:"
 msgstr "Ruta:"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Project Website"
 msgstr "Sitio web del proyecto"
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Save in Folder:"
 msgstr "Guardar en la carpeta:"
 
-#: ../nact/nautilus-actions-config.glade.h:72
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
@@ -323,15 +331,15 @@ msgstr ""
 "Seleccione las configuraciones que quiere exportar. Use Mayús o Ctrl para "
 "seleccionar más de una."
 
-#: ../nact/nautilus-actions-config.glade.h:73
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Select the configurations you want to export:"
 msgstr "Seleccione las configuraciones que quiere exportar:"
 
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid "Select the file you want to import."
 msgstr "Seleccione el archivo quiera importar."
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
@@ -339,7 +347,7 @@ msgstr ""
 "Seleccione la carpeta que donde quiere guardar su configuración. Esta "
 "carpeta debe existir."
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:77
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
@@ -350,11 +358,11 @@ msgstr ""
 "común. Puede añadir un esquema nuevo pulsando en el botón «+»."
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:78
-msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007"
-
 #: ../nact/nautilus-actions-config.glade.h:79
+msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
+msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007-2009"
+
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
@@ -362,25 +370,26 @@ msgstr ""
 "El comando que se lanzará cuando se seleccione la acción en el menú de "
 "Nautilus."
 
-#: ../nact/nautilus-actions-config.glade.h:80
-msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr "Este software se licencia bajo la Licencia Pública General de GNU (GPL)"
-
 #: ../nact/nautilus-actions-config.glade.h:81
+msgid "This software is licensed under the GNU Genaral Public License (GPL)"
+msgstr ""
+"Este software se licencia bajo la Licencia Pública General de GNU (GPL)"
+
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgstr ""
 "Consejo del elemento del menú que aparecerá en la barra de estado de "
 "Nautilus."
 
-#: ../nact/nautilus-actions-config.glade.h:82
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid "Tooltip:"
 msgstr "Consejo:"
 
-#: ../nact/nautilus-actions-config.glade.h:83
+#: ../nact/nautilus-actions-config.glade.h:84
 msgid "_Browse"
 msgstr "_Examinar"
 
-#: ../nact/nautilus-actions-config.glade.h:84
+#: ../nact/nautilus-actions-config.glade.h:85
 msgid "_Legend"
 msgstr "_Leyenda"
 
@@ -495,8 +504,8 @@ msgstr "Editar acción «%s»"
 #, c-format
 msgid "Can't parse file '%s' as GConf schema description file!"
 msgstr ""
-"No se puede analizar el archivo «%s» como un archivo de descipción de "
-"esquema de GConf"
+"No se puede analizar el archivo «%s» como un archivo de descipción de esquema "
+"de GConf"
 
 #. i18n notes: %s is the label of the action (eg, 'Mount ISO')
 #: ../nact/nact-import-export.c:226
@@ -797,7 +806,8 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "The list of pattern to match the selected file(s)/folder(s)"
-msgstr "La lista de patrones con la que coincidir los archivos/carpetas seleccionados"
+msgstr ""
+"La lista de patrones con la que coincidir los archivos/carpetas seleccionados"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
 msgid ""
@@ -810,7 +820,8 @@ msgstr ""
 "con uno de los patrones para que aparezca la acción"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgid ""
+"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr ""
 "«True» si la los patrones del nombre del archivo deben discriminar según la "
 "capitalización, «false» en otro caso"
@@ -822,8 +833,8 @@ msgid ""
 "'false'"
 msgstr ""
 "Si necesita que hacer coincidir un nombre de archivo discriminando según "
-"capitalización, ponga a «true» esta clave. Si quiere, por ejemplo que «*."
-"jpg» coincida con «foto.JPG», póngala a «false»"
+"capitalización, ponga a «true» esta clave. Si quiere, por ejemplo que «*.jpg» "
+"coincida con «foto.JPG», póngala a «false»"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
@@ -837,10 +848,9 @@ msgid ""
 "selected file(s). Each selected items must match at least one of the "
 "mimetype patterns for the action to appear"
 msgstr ""
-"Una lista de cadenas con comodines «*» o «?» para coincidir con los tipos "
-"MIME de los archivos seleccionados. Cada elemento seleccionado debe "
-"coincidir al menos con uno de los patrones de tipos MIME para que aparezca "
-"la acción"
+"Una lista de cadenas con comodines «*» o «?» para coincidir con los tipos MIME "
+"de los archivos seleccionados. Cada elemento seleccionado debe coincidir al "
+"menos con uno de los patrones de tipos MIME para que aparezca la acción"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
 msgid ""
@@ -1024,14 +1034,15 @@ msgid ""
 "support. Please upgrade Nautilus-actions to the lastest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
-"Este archivo de configuración es más reciente que lo que esta versión de Nautilus-actions "
-"soporta. Si quiere importarlo actualice Nautilus-actions a la última versión. (Versión del "
-"archivo: %s (máxima versión soportada: %s))"
+"Este archivo de configuración es más reciente que lo que esta versión de "
+"Nautilus-actions soporta. Si quiere importarlo actualice Nautilus-actions a "
+"la última versión. (Versión del archivo: %s (máxima versión soportada: %s))"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
 msgid_plural ""
 "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
 "s"
@@ -1046,7 +1057,8 @@ msgstr[1] ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr ""
 "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 "actions (falta la clave: %s)"
@@ -1060,4 +1072,3 @@ msgid ""
 msgstr ""
 "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 "actions (el nodo raíz es <%s> en vez de <%s>)"
-
