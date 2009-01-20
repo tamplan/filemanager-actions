@@ -1,3 +1,8 @@
+2009-01-20  Stéphane Raimbault  <stephane.raimbault@gmail.com>
+
+	* nact/nautilus-actions-config.glade: Marked 'Duplicate' string
+	for translation. Fixes #568366.
+
 2007-09-05  Frederic Ruaudel <grumz@grumz.net>
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
 	Fix a crash when trying to import a config without "Main" profile
