@@ -1,5 +1,10 @@
 2009-03-02  Milo Casagrande <milo@ubuntu.com>
 
+	* mr.po: Added Marathi translation
+	* LINGUAS: Added Marathi locale mr
+
+2009-03-02  Milo Casagrande <milo@ubuntu.com>
+
 	* it.po: Added Italian translation
 	* LINGUAS: Added Italian translation
 
