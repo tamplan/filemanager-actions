@@ -1,20 +1,20 @@
-# translation of nautilus-actions.HEAD.eu.po to Basque
+# translation of eu.po to Basque
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2008.
+# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2008, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: nautilus-actions.HEAD\n"
+"Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-16 14:53+0100\n"
-"PO-Revision-Date: 2008-02-16 14:52+0100\n"
+"POT-Creation-Date: 2009-03-16 13:55+0100\n"
+"PO-Revision-Date: 2009-03-16 13:56+0100\n"
 "Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Language-Team: Basque <itzulpena@euskalgnu.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
 #: ../nact/nact.desktop.in.h:1
@@ -55,8 +55,7 @@ msgstr "<b>%d</b>: hautatutako fitxategien oinarrizko karpeta"
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
-msgid ""
-"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
 msgstr ""
 "<b>%f</b>: hautatutako fitxategiaren izena, edo aurrenekoa hainbat hautatuta "
 "egonez gero"
@@ -204,28 +203,30 @@ msgid "Create a copy of the selected action."
 msgstr "Sortu hautatutako ekintzaren kopia."
 
 #: ../nact/nautilus-actions-config.glade.h:46
-msgid ""
-"Delete the action without any confirmation nor the possibility to restore it."
-msgstr ""
-"Ekintza ezabatu berrespena eskatu gabe edo leheneratzeko aukerarik izan gabe."
+msgid "Delete the action without any confirmation nor the possibility to restore it."
+msgstr "Ekintza ezabatu berrespena eskatu gabe edo leheneratzeko aukerarik izan gabe."
 
 #: ../nact/nautilus-actions-config.glade.h:47
+msgid "Duplicate"
+msgstr "Bikoiztu"
+
+#: ../nact/nautilus-actions-config.glade.h:48
 msgid "Export existing configs"
 msgstr "Esportatu existitzen diren konfigurazioak"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:49
 msgid "File to Import:"
 msgstr "Fitxategia inportatzeko:"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "Filenames:"
 msgstr "Fitxategi-izenak:"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "Icon:"
 msgstr "Ikonoa:"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:52
 msgid ""
 "If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
 "will not match photo.JPG)"
@@ -234,27 +235,27 @@ msgstr ""
 "minuskulak desberdindu egingo dira (adib., *.jpg ez da bat etorriko "
 "'argazkia.JPG' fitxategi-izenarekin)"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "Import new configurations"
 msgstr "Inportatu konfigurazio berriak"
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Import/Export"
 msgstr "Inportatu/Esportatu"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid "Import/Export Settings"
 msgstr "Inportatu/Esportatu ezarpenak"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Label of the menu item in the Nautilus popup menu."
 msgstr "Menuko elementuaren etiketa Nautilus-en laster-menuan."
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Label:"
 msgstr "Etiketa:"
 
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
@@ -262,27 +263,27 @@ msgstr ""
 "Kudeatu kanpoko ekintzen konfigurazioak inportatzea eta esportatzea "
 "(existitzen diren ekintzenak)."
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "Match case"
 msgstr "Bat etorri maiuskulekin/minuskulekin"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "Mimetypes:"
 msgstr "MIME motak:"
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "Nautilus Action Editor"
 msgstr "Nautilus-eko ekintzen editorea"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid "Nautilus Action Profile Editor"
 msgstr "Nautilus-eko ekintzen profilen editorea"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "Nautilus Actions"
 msgstr "Nautilus-eko ekintzak"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:64
 msgid ""
 "Nautilus Actions Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -290,15 +291,15 @@ msgstr ""
 "Nautilus-eko ekintzak konfiguratzeko tresna\n"
 "'Nautilus-eko ekintzak' hedapena konfiguratzeko aplikazioa"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid "Only files"
 msgstr "Fitxategiak soilik"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:67
 msgid "Only folders"
 msgstr "Karpetak soilik"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
@@ -306,23 +307,23 @@ msgstr ""
 "Programari bidaliko zaizkion parametroak. Egin klik 'Legenda' botoian "
 "ordezko token desberdinak ikusteko."
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Parameters:"
 msgstr "Parametroak:"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid "Path:"
 msgstr "Bide-izena:"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Project Website"
 msgstr "Proiektuaren web gunea"
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Save in Folder:"
 msgstr "Gorde karpetan:"
 
-#: ../nact/nautilus-actions-config.glade.h:72
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
@@ -330,15 +331,15 @@ msgstr ""
 "Esportatzea nahi dituzun konfigurazioak hautatu. Erabili Maius edo Kontrol "
 "tekla bat baino gehiago hautatzeko."
 
-#: ../nact/nautilus-actions-config.glade.h:73
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Select the configurations you want to export:"
 msgstr "Hautatu konfigurazioak esportatzeko:"
 
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid "Select the file you want to import."
 msgstr "Hautatu fitxategia inportatzeko."
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
@@ -346,7 +347,7 @@ msgstr ""
 "Hautatu karpeta, bertan zure konfigurazioa gordetzeko. Karpeta honek "
 "existitu egin behar du."
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:77
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
@@ -357,35 +358,35 @@ msgstr ""
 "baita). Eskema berria gehitu dezakezu '+' botoian klik eginez."
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:78
+#: ../nact/nautilus-actions-config.glade.h:79
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
 msgstr "Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>"
 
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
 msgstr "Abiaraziko den komandoa Nautilus-en laster-menuko ekintza hautatzean."
 
-#: ../nact/nautilus-actions-config.glade.h:80
+#: ../nact/nautilus-actions-config.glade.h:81
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr ""
 "Software hau GNU Lizentzia Publiko Orokorraren (GPL) baldintzen arabera "
 "ematen da."
 
-#: ../nact/nautilus-actions-config.glade.h:81
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgstr "Menuko elementuaren argibidea Nautilus-eko egoera-barran agertzeko."
 
-#: ../nact/nautilus-actions-config.glade.h:82
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid "Tooltip:"
 msgstr "Argibidea:"
 
-#: ../nact/nautilus-actions-config.glade.h:83
+#: ../nact/nautilus-actions-config.glade.h:84
 msgid "_Browse"
 msgstr "_Arakatu"
 
-#: ../nact/nautilus-actions-config.glade.h:84
+#: ../nact/nautilus-actions-config.glade.h:85
 msgid "_Legend"
 msgstr "_Legenda"
 
@@ -812,8 +813,7 @@ msgstr ""
 "izenaren ereduetariko batekin bat etorri behar du gutxienez agertzeko"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid ""
-"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr ""
 "'true' (egia) fitxategi-izenen ereduek maiuskulak eta minuskulak bereiztu "
 "behar badute, bestela 'false' (faltsua)"
@@ -875,8 +875,7 @@ msgstr "Ezarpen hau 'isdir' ezarpenarekin lotuta dago. "
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr ""
-"'true' (egia) hautapenak karpetak eduki baditzake, bestela 'false' (faltsua)"
+msgstr "'true' (egia) hautapenak karpetak eduki baditzake, bestela 'false' (faltsua)"
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
@@ -1038,8 +1037,7 @@ msgstr ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
 #, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
+msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
 msgid_plural ""
 "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
 "s"
@@ -1054,8 +1052,7 @@ msgstr[1] ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
 #, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr ""
 "XML fitxategi hau ez da baliozko Nautilus-eko ekintzen konfigurazio-"
 "fitxategia (gakoa falta zaio: %s)"
@@ -1069,3 +1066,4 @@ msgid ""
 msgstr ""
 "XML fitxategi hau ez da baliozko Nautilus-eko ekintzen konfigurazio-"
 "fitxategia (erroko nodoa %s da %s ordez)"
+
