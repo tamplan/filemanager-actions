@@ -1,3 +1,7 @@
+2009-04-12  Christian Persch  <chpe@gnome.org>
+
+	* po/LINGUAS: Fix the build by removing extra newline.
+
 2009-01-20  Stéphane Raimbault  <stephane.raimbault@gmail.com>
 
 	* nact/nautilus-actions-config.glade: Marked 'Duplicate' string
