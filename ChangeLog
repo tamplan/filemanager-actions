@@ -1,3 +1,10 @@
+2009-04-13  Christian Persch  <chpe@gnome.org>
+
+	* autogen.sh:
+	* configure.in:
+	* po/LINGUAS: Use newer intltool so the recent build break doesn't
+	occur again.
+
 2009-04-12  Christian Persch  <chpe@gnome.org>
 
 	* po/LINGUAS: Fix the build by removing extra newline.

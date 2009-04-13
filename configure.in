@@ -106,18 +106,13 @@ dnl **** GConf support ***
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
 AM_GCONF_SOURCE_2
 
-# List of supported languages has been moved into po/LINGUAS to make
-# translators' life easier :)
-# More info here : http://live.gnome.org/GnomeGoals/PoLinguas
-AC_SUBST([CONFIG_STATUS_DEPENDENCIES],['$(top_srcdir)/po/LINGUAS'])
-ALL_LINGUAS="`grep -v '^#' "$srcdir/po/LINGUAS"`"
-
 GETTEXT_PACKAGE=nautilus-actions
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [GetText Package])
                                                                                
 AM_GLIB_GNU_GETTEXT
-AC_PROG_INTLTOOL
+
+IT_PROG_INTLTOOL([0.35.5])
 
 if test "x${exec_prefix}" = "xNONE"; then
 	if test "x${prefix}" = "xNONE"; then
