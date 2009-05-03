@@ -5,7 +5,13 @@
          xmlns="http://usefulinc.com/ns/doap#">
 
   <name xml:lang="en">Nautilus-Actions</name>
-  <shortdesc xml:lang="en"></shortdesc>
+  <shortdesc xml:lang="en">Nautilus-actions is an extension for nautilus
+    which allow to add arbitrary program to launch through the nautilus
+    popup menu of selected files.
+    Each time you right-click on one or several selected files in nautilus,
+    nautilus-actions will look at its configured actions to see if a program
+    has been setup for this selection. If it is the case, it will add an item
+    in the menu that allow you to execute the program on the selected files.</shortdesc>
   <homepage rdf:resource="http://www.nautilus-actions.net" />
   <mailing-list rdf:resource="http://pwi.dyndns.biz/mailman/listinfo/nautilus-actions-dev" />
 
