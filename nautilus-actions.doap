@@ -1,0 +1,18 @@
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name xml:lang="en">Nautilus-Actions</name>
+  <shortdesc xml:lang="en"></shortdesc>
+  <homepage rdf:resource="http://www.nautilus-actions.net" />
+  <mailing-list rdf:resource="http://pwi.dyndns.biz/mailman/listinfo/nautilus-actions-dev" />
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Pierre Wieser</foaf:name>
+      <gnome:userid>pwieser</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+</Project>
