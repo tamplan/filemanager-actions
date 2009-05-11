@@ -1,8 +1,0 @@
-Makefile
-Makefile.in
-nact.desktop
-nautilus-actions-config
-nautilus-actions-config.glade?*
-*.swp
-.deps
-.libs
