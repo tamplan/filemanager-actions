@@ -1,3 +1,8 @@
+2009-05-12 Bruce van der Kooij <brucevdkooij@gmail.com>
+
+	* plugin/nautilus-actions.c: call gnome_vfs_init at class
+	initialization. Fixes #574919.
+
 2009-05-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions.doap: Update short description.
