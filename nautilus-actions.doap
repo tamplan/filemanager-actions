@@ -5,19 +5,27 @@
          xmlns="http://usefulinc.com/ns/doap#">
 
   <name xml:lang="en">Nautilus-Actions</name>
-  <shortdesc xml:lang="en">Nautilus-actions is an extension for nautilus
+
+  <category rdf:resource="http://api.gnome.org/doap-extensions#desktop" />
+
+  <shortdesc xml:lang="en">Nautilus extension which offers user configurable context menu actions</shortdesc>
+
+  <description xml:lang="en">
+    Nautilus-actions is an extension for nautilus
     which allow to add arbitrary program to launch through the nautilus
     popup menu of selected files.
-    Each time you right-click on one or several selected files in nautilus,
-    nautilus-actions will look at its configured actions to see if a program
-    has been setup for this selection. If it is the case, it will add an item
-    in the menu that allow you to execute the program on the selected files.</shortdesc>
-  <homepage rdf:resource="http://www.nautilus-actions.net" />
+  </description>
+
+  <homepage rdf:resource="http://www.nautilus-actions.org" />
+
+  <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=nautilus-actions" />
+
   <mailing-list rdf:resource="http://pwi.dyndns.biz/mailman/listinfo/nautilus-actions-dev" />
 
   <maintainer>
     <foaf:Person>
       <foaf:name>Pierre Wieser</foaf:name>
+      <foaf:mbox rdf:resource="mailto:pwieser@trychlos.org" />
       <gnome:userid>pwieser</gnome:userid>
     </foaf:Person>
   </maintainer>
