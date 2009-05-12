@@ -38,7 +38,7 @@
 static GObjectClass *parent_class = NULL;
 static GType actions_type = 0;
 
-GType nautilus_actions_get_type (void) 
+GType nautilus_actions_get_type (void)
 {
 	return actions_type;
 }
@@ -62,7 +62,7 @@ static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsCon
 	cmd = g_string_new (action_profile->path);
 
 	param = nautilus_actions_utils_parse_parameter (action_profile->parameters, files);
-	
+
 	if (param != NULL)
 	{
 		g_string_append_printf (cmd, " %s", param);
@@ -70,7 +70,7 @@ static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsCon
 	}
 
 	g_spawn_command_line_async (cmd->str, NULL);
-	
+
 	g_string_free (cmd, TRUE);
 
 }
@@ -100,27 +100,27 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 	NautilusActionsConfigActionProfile* action_profile4menu = nautilus_actions_config_action_profile_dup (action_profile);
 
 	name = g_strdup_printf ("NautilusActions::%s", action->uuid);
-	
-	item = nautilus_menu_item_new (name, 
-				action->label, 
-				action->tooltip, 
+
+	item = nautilus_menu_item_new (name,
+				action->label,
+				action->tooltip,
 				icon_name);
 
-	g_signal_connect_data (item, 
-				"activate", 
+	g_signal_connect_data (item,
+				"activate",
 				G_CALLBACK (nautilus_actions_execute),
-				action_profile4menu, 
-				(GClosureNotify)nautilus_actions_config_action_profile_free, 
+				action_profile4menu,
+				(GClosureNotify)nautilus_actions_config_action_profile_free,
 				0);
 
 	g_object_set_data_full (G_OBJECT (item),
 			"files",
 			nautilus_file_info_list_copy (files),
 			(GDestroyNotify) nautilus_file_info_list_free);
-	
-	
+
+
 	g_free (name);
-	
+
 	return item;
 }
 
@@ -151,7 +151,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 
 			/* Retrieve all profile name */
 			g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, &profile_list);
-			
+
 			iter2 = profile_list;
 			found = FALSE;
 			while (iter2 && !found)
@@ -170,7 +170,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 			}
 		}
 	}
-	
+
 	return items;
 }
 
@@ -182,14 +182,14 @@ static GList *nautilus_actions_get_background_items (NautilusMenuProvider *provi
 	files = g_list_append (files, current_folder);
 	items = nautilus_actions_get_file_items (provider, window, files);
 	g_list_free (files);
-	
+
 	return items;
 }
 
 static void nautilus_actions_instance_dispose (GObject *obj)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (obj);
-	
+
 	if (!self->dispose_has_run)
 	{
 		self->dispose_has_run = TRUE;
@@ -201,12 +201,12 @@ static void nautilus_actions_instance_dispose (GObject *obj)
 	}
 }
 
-static void nautilus_actions_action_changed_handler (NautilusActionsConfig* config, 
+static void nautilus_actions_action_changed_handler (NautilusActionsConfig* config,
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)
 {
 	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
-	
+
 	g_return_if_fail (NAUTILUS_IS_ACTIONS (self));
 
 	if (!self->dispose_has_run)
@@ -236,8 +236,21 @@ static void nautilus_actions_class_init (NautilusActionsClass *actions_class)
 
 static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer klass)
 {
+	// Patch from Bruce van der Kooij <brucevdkooij@gmail.com>
+	//
+	// TODO: GnomeVFS needs to be initialized before gnome_vfs methods
+	// can be used. Since GnomeVFS has been deprecated it would be
+	// a good idea to rewrite this extension to use equivelant methods
+	// from GIO/GVFS.
+	//
+	// plugins/nautilus-actions-utils.c:nautilus_actions_utils_parse_parameter
+	// is the only function that makes use of gnome_vfs methods.
+	//
+	// See: Bug #574919
+	gnome_vfs_init ();
+
 	NautilusActions* self = NAUTILUS_ACTIONS (instance);
-	
+
 	self->configs = NULL;
 	self->configs = nautilus_actions_config_gconf_reader_get ();
 	self->config_list = NULL;
@@ -294,4 +307,4 @@ void nautilus_actions_register_type (GTypeModule *module)
 								&menu_provider_iface_info);
 }
 
-// vim:ts=3:sw=3:tw=1024:cin
+// vim:ts=4:sw=4:tw=1024:cin

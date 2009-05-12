@@ -1,3 +1,8 @@
+2009-05-12 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions.doap: Update short description.
+	* MAINTAINERS: Update to point to nautilus-actions.doap.
+
 2009-04-13  Christian Persch  <chpe@gnome.org>
 
 	* autogen.sh:
@@ -13,6 +18,10 @@
 
 	* nact/nautilus-actions-config.glade: Marked 'Duplicate' string
 	for translation. Fixes #568366.
+
+2007-09-21 Olav Vitters <ovitters@src.gnome.org>
+
+	* MAINTAINERS: correct userid.
 
 2007-09-05  Frederic Ruaudel <grumz@grumz.net>
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c:

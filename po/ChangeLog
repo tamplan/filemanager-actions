@@ -2,6 +2,10 @@
 
 	* de.po: Updated German translation
 
+2009-03-19 Amanpreet Singh Alam <aman@src.gnome.org>
+
+	* pa.po: Updating Punjabi Translation
+
 2009-03-16  Inaki Larranaga Murgoitio  <dooteo@euskalgnu.org>
 
 	* eu.po: Updated Basque translation.
@@ -55,7 +59,6 @@
 	* el.po: Added Greek Translation by Giannis Katsampipis
 	* LINGUAS: Added Greek (el) to list.
 
-
 2008-03-15  Andre Klapper  <a9016009@gmx.de>
 
 	* de.po: Updated German translation.
@@ -69,11 +72,19 @@
 
 	* en_GB.po: Updated British English translation.
 
+2008-03-08 Yannig MARCHEGAY <ymarcheg@src.gnome.org>
+
+	* oc.po: Updated Occitan translation.
+
 2008-02-23  Duarte Loreto <happyguy_pt@hotmail.com>
 
 	* pt.po: Added Portuguese translation by António Lima
 	<amrlima@gmail.com>.
 	* LINGUAS: Added Portuguese (pt) to list.
+
+2008-02-19 Yannig MARCHEGAY <ymarcheg@src.gnome.org>
+
+	* oc.po: Updated Occitan translation.
 
 2008-02-16  Inaki Larranaga Murgoitio  <dooteo@euskalgnu.org>
 
@@ -97,6 +108,10 @@
 
 	* fr.po: Updated French translation.
 
+2007-11-20  Yannig Marchegay <yannig@marchegay.org>
+
+	* oc.po: Updated Occitan translation.
+
 2007-11-11  Ilkka Tuohela  <hile@iki.fi>
 
 	* fi.po: Updated Finnish translation.
@@ -109,9 +124,13 @@
 
 	* fi.po: Updated Finnish translation.
 
+2007-10-13  Yannig MARCHEGAY <ymarcheg@src.gnome.org>
+
+	* oc.po: Updated Occitan translation.
+
 2007-09-26  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
-        * es.po: Updated Spanish translation
+	* es.po: Updated Spanish translation
 
 2007-09-17  Jonh Wendell  <jwendell@gnome.org>
 

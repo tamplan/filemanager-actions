@@ -1,9 +1,13 @@
 Frederic Ruaudel <grumz@grumz.net>
 Rodrigo Moya <rodrigo@novell.com>
+Pierre Wieser <pwieser@trychlos.org>
 
 based on nautilus-sendto module from Roberto Majadas <roberto.majadas@hispalinux.es>
 
 == Contributors ==
+
+Bruce van der Kooij <brucevdkooij@gmail.com> :
+- Patch to initialize GnomeVFS stuff waiting for migration to GVFS
 
 Tom Parker <nautilus-actions@tevp.net> : 
 - Patch to add actions in the background popup menu of Nautilus's windows. 

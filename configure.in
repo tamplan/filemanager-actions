@@ -1,6 +1,6 @@
 AC_PREREQ(2.52)
 
-AC_INIT(nautilus-actions, 1.9b, http://www.grumz.net)
+AC_INIT(nautilus-actions, 1.10, http://www.nautilus-actions.org)
 AM_CONFIG_HEADER(config.h)
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
