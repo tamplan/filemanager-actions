@@ -521,7 +521,7 @@ gboolean                     nautilus_actions_config_action_rename_profile (Naut
 			else
 			{
 				// i18n notes: will be displayed in an error dialog
-				g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("Can't removed the old profile '%s'"), old_profile_name);
+				g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("Can't remove the old profile '%s'"), old_profile_name);
 			}
 		}
 	}

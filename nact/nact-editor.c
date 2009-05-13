@@ -470,6 +470,9 @@ paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkWidget *nact_prof_paste_button = nact_get_glade_widget_from ("PasteProfileButton", GLADE_EDIT_DIALOG_WIDGET);
 	NautilusActionsConfigActionProfile* action_profile = (NautilusActionsConfigActionProfile*)g_object_get_data (G_OBJECT (nact_prof_paste_button), "profile");
 
+	/* i18n notes: will be displayed in a dialog */
+	const gchar *cantpaste = _( "Can't paste action's profile '%s'!" );
+
 	printf ("profile_name : %s\n", action_profile->desc_name);
 
 	// i18n notes: this is the default name of a copied profile 
@@ -490,8 +493,7 @@ paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 		}
 		else
 		{
-			// i18n notes: will be displayed in a dialog
-			tmp = g_strdup_printf (_("Can't paste action's profile '%s'!"), new_profile_desc_name);
+			tmp = g_strdup_printf ( cantpaste, new_profile_desc_name);
 			nautilus_actions_display_error (tmp, error->message);
 			g_error_free (error);
 			g_free (tmp);
@@ -499,8 +501,7 @@ paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 	}
 	else
 	{
-		// i18n notes: will be displayed in a dialog
-		tmp = g_strdup_printf (_("Can't paste action's profile '%s' !"), new_profile_desc_name);
+		tmp = g_strdup_printf ( cantpaste, new_profile_desc_name);
 		nautilus_actions_display_error (tmp, "");
 		g_free (tmp);
 	}
@@ -761,5 +762,3 @@ nact_editor_edit_action (NautilusActionsConfigAction *action)
 {
 	return open_editor (action, FALSE);
 }
-
-// vim:ts=3:sw=3:tw=1024:cin

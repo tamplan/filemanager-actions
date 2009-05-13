@@ -693,7 +693,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) > 0)
 		{
 			// if the version of the file is greater than the current one, we reject the file
-			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This config file is more recent than this version of Nautilus-actions can support. Please upgrade Nautilus-actions to the lastest version if you want to be able to import it (File version: %s (max supported version : %s))"), action->version, NAUTILUS_ACTIONS_CONFIG_VERSION);
+			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This config file is more recent than this version of Nautilus-actions can support. Please upgrade Nautilus-actions to the latest version if you want to be able to import it (File version: %s (max supported version : %s))"), action->version, NAUTILUS_ACTIONS_CONFIG_VERSION);
 		}
 		else if (g_ascii_strcasecmp (action->version, "1.0") == 0 && 
 				is_profiles_ok && is_icon_ok && 

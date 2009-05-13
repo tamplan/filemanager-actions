@@ -1,3 +1,14 @@
+2009-05-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* nact/nact-editor.c:
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
+	Fix typos. Fixes #522605 reported by Andre Klapper <a9016009%40gmx.de>
+
+	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
+	Remove a quote. Fixes #573365 reported by Sergej
+	<sergio.durzu@ildeposito.org>.
+
 2009-05-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* ChangeLog, ChangeLog-2008:
