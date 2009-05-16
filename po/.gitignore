@@ -3,4 +3,5 @@ Makefile.in.in
 POTFILES
 stamp-it
 *.gmo
+messages.mo
 nautilus-actions.pot
