@@ -1,24 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
- *  Frederic Ruaudel (grumz@grumz.net)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-16 fix compilation warnings
  */
 
 #include <config.h>
@@ -38,9 +46,21 @@
 #include "nact-import-export.h"
 #include "nact-prefs.h"
 
+static gint actions_list_sort_by_label (gconstpointer a1, gconstpointer a2);
+/*
+static void add_button_clicked_cb (GtkButton *button, gpointer user_data);
+static void edit_button_clicked_cb (GtkButton *button, gpointer user_data);
+static void duplicate_button_clicked_cb (GtkButton *button, gpointer user_data);
+static void delete_button_clicked_cb (GtkButton *button, gpointer user_data);
+static void im_export_button_clicked_cb (GtkButton *button, gpointer user_data);
+static void dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data);
+*/
+static void list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data);
+
 static NautilusActionsConfigGconfWriter *config = NULL;
 
-gint actions_list_sort_by_label (gconstpointer a1, gconstpointer a2)
+static gint
+actions_list_sort_by_label (gconstpointer a1, gconstpointer a2)
 {
 	NautilusActionsConfigAction* action1 = (NautilusActionsConfigAction*)a1;
 	NautilusActionsConfigAction* action2 = (NautilusActionsConfigAction*)a2;
@@ -71,7 +91,7 @@ void nact_fill_actions_list (GtkWidget *list)
 				gint width;
 				gint height;
 				GError* error = NULL;
-				
+
 				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
 				icon = gdk_pixbuf_new_from_file_at_size (action->icon, width, height, &error);
 				if (error)
@@ -82,8 +102,8 @@ void nact_fill_actions_list (GtkWidget *list)
 			}
 		}
 		gtk_list_store_append (model, &iter);
-		gtk_list_store_set (model, &iter, 
-				    MENU_ICON_COLUMN, icon, 
+		gtk_list_store_set (model, &iter,
+				    MENU_ICON_COLUMN, icon,
 				    MENU_LABEL_COLUMN, action->label,
 				    UUID_COLUMN, action->uuid,
 				    -1);
@@ -92,14 +112,17 @@ void nact_fill_actions_list (GtkWidget *list)
 	nautilus_actions_config_free_actions_list (actions);
 }
 
-void
+/*
+static void
 add_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	if (nact_editor_new_action ())
 		nact_fill_actions_list (nact_get_glade_widget ("ActionsList"));
 }
+*/
 
-void
+/*
+static void
 edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
@@ -126,8 +149,10 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 		g_free (uuid);
 	}
 }
+*/
 
-void
+/*
+static void
 duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
@@ -141,7 +166,7 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) 
+	if (gtk_tree_selection_get_selected (selection, &model, &iter))
 	{
 		gchar *uuid;
 		NautilusActionsConfigAction *action;
@@ -151,7 +176,7 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
 		new_action = nautilus_actions_config_action_dup_new (action);
-		if (new_action) 
+		if (new_action)
 		{
 			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), new_action, &error))
 			{
@@ -170,8 +195,10 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 		g_free (uuid);
 	}
 }
+*/
 
-void
+/*
+static void
 delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
@@ -193,8 +220,11 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 		g_free (uuid);
 	}
 }
+*/
 
-void im_export_button_clicked_cb (GtkButton *button, gpointer user_data)
+/*
+static void
+im_export_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkWidget *nact_actions_list;
 
@@ -204,8 +234,10 @@ void im_export_button_clicked_cb (GtkButton *button, gpointer user_data)
 		nact_fill_actions_list (nact_actions_list);
 	}
 }
+*/
 
-void
+/*
+static void
 dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 {
 	GtkWidget* nact_about_dialog;
@@ -218,11 +250,11 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 		// Free any profile in the clipboard
 		nautilus_actions_config_action_profile_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile"));
 
-		/* FIXME : update pref settings
+		/ * FIXME : update pref settings
 		nact_prefs_set_main_dialog_size (GTK_WINDOW (dialog));
 		nact_prefs_set_main_dialog_position (GTK_WINDOW (dialog));
 		nact_prefs_save_preferences ();
-		*/
+		* /
 
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		nact_destroy_glade_objects ();
@@ -239,6 +271,7 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 		break;
 	}
 }
+*/
 
 static void
 list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
@@ -246,7 +279,7 @@ list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
 	GtkWidget *nact_edit_button;
 	GtkWidget *nact_delete_button;
 	GtkWidget *nact_duplicate_button;
-	
+
 	nact_edit_button = nact_get_glade_widget ("EditActionButton");
 	nact_delete_button = nact_get_glade_widget ("DeleteActionButton");
 	nact_duplicate_button = nact_get_glade_widget ("DuplicateActionButton");
@@ -296,7 +329,7 @@ init_dialog (void)
 	gint width, height, x, y;
 	GtkWidget *nact_dialog;
 	GtkWidget *nact_actions_list;
-	GtkWidget* nact_edit_button;
+	/*GtkWidget* nact_edit_button;*/
 	GtkWidget* nact_about_button;
 	GladeXML *gui = nact_get_glade_xml_object (GLADE_MAIN_WIDGET);
 	if (!gui) {
@@ -315,7 +348,7 @@ init_dialog (void)
 	gtk_window_get_default_size (GTK_WINDOW (nact_dialog), &width, &height);
 	/* Override with preferred one, if any */
 	nact_prefs_get_main_dialog_size (&width, &height);
-	
+
 	gtk_window_resize (GTK_WINDOW (nact_dialog), width, height);
 
 	/* Get the default position */
@@ -325,7 +358,7 @@ init_dialog (void)
 
 	gtk_window_move (GTK_WINDOW (nact_dialog), x, y);
 
-#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION == 4))	
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION == 4))
 	/* Fix a stock icon bug with GTK+ 2.4 */
 	nact_edit_button = nact_get_glade_widget ("EditActionButton");
 	gtk_button_set_use_stock (GTK_BUTTON (nact_edit_button), FALSE);
@@ -333,7 +366,7 @@ init_dialog (void)
 	gtk_button_set_label (GTK_BUTTON (nact_edit_button), "_Edit");
 #endif
 
-#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 6))	
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 6))
 	/* Add about dialog for GTK+ >= 2.6 */
 	nact_about_button = nact_get_glade_widget ("AboutButton");
 	gtk_widget_show (nact_about_button);
@@ -369,5 +402,3 @@ main (int argc, char *argv[])
 	gtk_main ();
 	return 0;
 }
-
-// vim:ts=3:sw=3:tw=1024:cin

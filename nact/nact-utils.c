@@ -1,23 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *  Frederic Ruaudel (grumz@grumz.net)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-16 fix compilation warnings
  */
 
 #include <config.h>
@@ -98,7 +107,7 @@ void nautilus_actions_display_error (const gchar *primary_msg, const gchar* seco
 	}
 
    error_dialog = nact_get_glade_widget_from ("ErrorDialog", GLADE_ERROR_DIALOG_WIDGET);
-	
+
 	error_label = nact_get_glade_widget_from ("ErrorLabel", GLADE_ERROR_DIALOG_WIDGET);
 
 	tmp = g_markup_printf_escaped (label_text_template, primary_msg, secondary_msg);
@@ -111,14 +120,14 @@ void nautilus_actions_display_error (const gchar *primary_msg, const gchar* seco
    g_object_unref (gui);
 }
 
-gboolean nact_utils_get_action_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path, 
+gboolean nact_utils_get_action_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path,
 													  GtkTreeIter* iter, gpointer data)
 {
 	GSList** list = data;
 	gboolean toggle_state;
 	gchar* scheme;
 
-	gtk_tree_model_get (scheme_model, iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state, 
+	gtk_tree_model_get (scheme_model, iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state,
 														 SCHEMES_KEYWORD_COLUMN, &scheme, -1);
 
 	if (toggle_state)
@@ -149,7 +158,7 @@ static gchar* nact_utils_joinv (const gchar* start, const gchar* separator, gcha
 	{
 		tmp_string = g_string_append (tmp_string, _(list[0]));
 	}
-	
+
 	for (i = 1; list[i] != NULL; i++)
 	{
 		if (separator)
@@ -166,7 +175,7 @@ gchar* nact_utils_parse_parameter (void)
 {
 	/*
 	 * Valid parameters :
-	 * 
+	 *
 	 * %u : gnome-vfs URI
 	 * %d : base dir of the selected file(s)/folder(s)
 	 * %f : the name of the selected file/folder or the 1st one if many are selected
@@ -180,7 +189,7 @@ gchar* nact_utils_parse_parameter (void)
 	 */
 	gchar* retv = NULL;
 	GString* tmp_string = g_string_new ("");
-	
+
 	/* i18n notes: example strings for the command preview */
 	gchar* ex_path = _("/path/to");
 	gchar* ex_files[] = { N_("file1.txt"), N_("file2.txt"), NULL };
@@ -190,13 +199,13 @@ gchar* nact_utils_parse_parameter (void)
 	gchar* ex_host_default = _("test.example.net");
 	gchar* ex_one_file = _("file.txt");
 	gchar* ex_one_dir = _("folder");
-	gchar* ex_one;
-	gchar* ex_list;
-	gchar* ex_path_list;
+	gchar* ex_one = NULL;
+	gchar* ex_list = NULL;
+	gchar* ex_path_list = NULL;
 	gchar* ex_scheme;
 	gchar* ex_host;
 
-	const gchar* param_template = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("CommandParamsEntry", 
+	const gchar* param_template = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("CommandParamsEntry",
 																										GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
 	gchar* iter = g_strdup (param_template);
 	gchar* old_iter = iter;
@@ -205,25 +214,25 @@ gchar* nact_utils_parse_parameter (void)
 	gchar* start;
 	GSList* scheme_list = NULL;
 
-	const gchar* command = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("CommandPathEntry", 
+	const gchar* command = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("CommandPathEntry",
 																								GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
 
 	g_string_append_printf (tmp_string, "%s ", command);
 
-	gboolean is_file = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("OnlyFilesButton", 
+	gboolean is_file = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("OnlyFilesButton",
 																												GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
-	gboolean is_dir = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("OnlyFoldersButton", 
+	gboolean is_dir = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("OnlyFoldersButton",
 																												GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("BothButton", 
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("BothButton",
 																							GLADE_EDIT_PROFILE_DIALOG_WIDGET))))
 	{
 		is_file = TRUE;
 		is_dir = TRUE;
 	}
-	gboolean accept_multiple = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("AcceptMultipleButton", 
+	gboolean accept_multiple = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("AcceptMultipleButton",
 																															GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
-	
-	GtkTreeModel* scheme_model = gtk_tree_view_get_model (GTK_TREE_VIEW (nact_get_glade_widget_from ("SchemesTreeView", 
+
+	GtkTreeModel* scheme_model = gtk_tree_view_get_model (GTK_TREE_VIEW (nact_get_glade_widget_from ("SchemesTreeView",
 																													GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
 	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)nact_utils_get_action_schemes_list, &scheme_list);
 
@@ -265,7 +274,7 @@ gchar* nact_utils_parse_parameter (void)
 	}
 	g_free (start);
 	g_free (separator);
-	
+
 	if (scheme_list != NULL)
 	{
 		ex_scheme = (gchar*)scheme_list->data;
@@ -291,7 +300,7 @@ gchar* nact_utils_parse_parameter (void)
 		ex_scheme = ex_scheme_default;
 		ex_host = "";
 	}
-	
+
 	while ((iter = g_strstr_len (iter, strlen (iter), "%")))
 	{
 		tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter) - strlen (iter));
@@ -331,14 +340,12 @@ gchar* nact_utils_parse_parameter (void)
 		old_iter = iter; // store the new start of the string
 	}
 	tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter));
-	
+
 	g_free (ex_list);
 	g_free (ex_path_list);
 	g_free (iter);
 
 	retv = g_string_free (tmp_string, FALSE); // return the content of the GString
-	
+
 	return retv;
 }
-
-// vim:ts=3:sw=3:tw=1024:cin

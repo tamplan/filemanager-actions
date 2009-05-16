@@ -1,24 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *  Frederic Ruaudel (grumz@grumz.net)
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-16 fix compilation warnings
  */
 
 #include <config.h>
@@ -69,7 +77,7 @@ static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* u
 
 	if (g_str_has_prefix (key, prefix))
 	{
-	
+
 		profile_name = g_strdup (key + strlen (prefix));
 		gchar* pos = g_strrstr (profile_name, "/");
 		if (pos != NULL)
@@ -87,7 +95,7 @@ static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* u
 static gchar* get_action_uuid_from_key (const gchar* key)
 {
 	g_return_val_if_fail (g_str_has_prefix (key, ACTIONS_CONFIG_DIR), NULL);
-	
+
 	gchar* uuid = g_strdup (key + strlen (ACTIONS_CONFIG_DIR "/"));
 	gchar* pos = g_strstr_len (uuid, strlen (uuid), "/");
 	if (pos != NULL)
@@ -97,7 +105,7 @@ static gchar* get_action_uuid_from_key (const gchar* key)
 
 	return uuid;
 }
-	
+
 static ProfileChecking* nautilus_actions_config_schema_reader_profile_checking_new ()
 {
 	ProfileChecking* check = g_new0 (ProfileChecking, 1);
@@ -185,14 +193,14 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 	g_hash_table_foreach (profile_check_list, (GHFunc)get_hash_keys, &profile_list);
 	printf ("test check 2\n");
 
-	// Check if the default profile has been found in the xml file, if not remove 
+	// Check if the default profile has been found in the xml file, if not remove
 	//  it (added automatically by nautilus_actions_config_action_new_default() function)
 	check = g_hash_table_lookup (profile_check_list, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
 
 	printf ("test check 3 : <%p>\n", check);
-	if (check == NULL || (!check->is_schemes_ok && !check->is_multiple_ok && 
+	if (check == NULL || (!check->is_schemes_ok && !check->is_multiple_ok &&
 			!check->is_matchcase_ok && !check->is_mimetypes_ok &&
-			!check->is_isdir_ok && !check->is_isfile_ok && !check->is_basenames_ok && 
+			!check->is_isdir_ok && !check->is_isfile_ok && !check->is_basenames_ok &&
 			!check->is_params_ok && !check->is_path_ok))
 	{
 		printf ("test 1\n");
@@ -206,7 +214,7 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 	printf ("test check 5\n");
 	if (g_slist_length (profile_list) >= 1)
 	{
-		// There is at least one profile to check so we'll enter the next loop and 
+		// There is at least one profile to check so we'll enter the next loop and
 		// so we set the return val to TRUE to make the local check works
 		retv = TRUE;
 	}
@@ -217,26 +225,26 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 		gchar* profile_name = (gchar*)iter->data;
 		printf ("test 2 (%s)\n", profile_name);
 		check = g_hash_table_lookup (profile_check_list, profile_name);
-		
 
-		printf ("version <%s>, sh: %d, mul: %d, mat:%d, mim:%d, dir:%d, fil:%d, bas:%d, par:%d, path:%d, check ver: %d\n", version, check->is_schemes_ok , check->is_multiple_ok , 
+
+		printf ("version <%s>, sh: %d, mul: %d, mat:%d, mim:%d, dir:%d, fil:%d, bas:%d, par:%d, path:%d, check ver: %d\n", version, check->is_schemes_ok , check->is_multiple_ok ,
 				check->is_matchcase_ok , check->is_mimetypes_ok ,
-				check->is_isdir_ok , check->is_isfile_ok , check->is_basenames_ok , 
+				check->is_isdir_ok , check->is_isfile_ok , check->is_basenames_ok ,
 				check->is_params_ok , check->is_path_ok, (g_ascii_strcasecmp (version, "1.1") >= 0));
 
-		if (g_ascii_strcasecmp (version, "1.0") == 0 && 
-				check->is_schemes_ok && check->is_multiple_ok && 
-				check->is_isdir_ok && check->is_isfile_ok && check->is_basenames_ok && 
+		if (g_ascii_strcasecmp (version, "1.0") == 0 &&
+				check->is_schemes_ok && check->is_multiple_ok &&
+				check->is_isdir_ok && check->is_isfile_ok && check->is_basenames_ok &&
 				check->is_params_ok && check->is_path_ok)
 		{
 
 			local_retv = TRUE;
 		}
-		//else if (g_ascii_strcasecmp (version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 && 
-		else if (g_ascii_strcasecmp (version, "1.1") >= 0 && 
-				check->is_schemes_ok && check->is_multiple_ok && 
+		//else if (g_ascii_strcasecmp (version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 &&
+		else if (g_ascii_strcasecmp (version, "1.1") >= 0 &&
+				check->is_schemes_ok && check->is_multiple_ok &&
 				check->is_matchcase_ok && check->is_mimetypes_ok &&
-				check->is_isdir_ok && check->is_isfile_ok && check->is_basenames_ok && 
+				check->is_isdir_ok && check->is_isfile_ok && check->is_basenames_ok &&
 				check->is_params_ok && check->is_path_ok)
 		{
 			local_retv = TRUE;
@@ -304,9 +312,9 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 			g_free (tmp);
 		}
 
-		printf ("b: retv %d local: %d\n", retv, local_retv); 
+		printf ("b: retv %d local: %d\n", retv, local_retv);
 		retv = (retv && local_retv);
-		printf ("a: retv %d local: %d\n", retv, local_retv); 
+		printf ("a: retv %d local: %d\n", retv, local_retv);
 	}
 	g_slist_free (profile_list);
 
@@ -330,11 +338,11 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key_lo
 {
 	gboolean retv = FALSE;
 	xmlNode* iter;
-	
+
 	for (iter = config_node->children; iter; iter = iter->next)
 	{
 		if (!retv && iter->type == XML_ELEMENT_NODE &&
-				g_ascii_strncasecmp ((gchar*)iter->name, 
+				g_ascii_strncasecmp ((gchar*)iter->name,
 								NA_GCONF_XML_SCHEMA_DFT,
 								strlen (NA_GCONF_XML_SCHEMA_DFT)) == 0)
 		{
@@ -352,7 +360,7 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 	xmlNode* iter;
 	gboolean is_key_ok = FALSE;
 	gboolean is_default_value_ok = FALSE;
-	
+
 	*type = ACTION_NONE_TYPE;
 	for (iter = config_node->children; iter; iter = iter->next)
 	{
@@ -360,7 +368,7 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 		gchar* uuid_tmp;
 
 		if (!is_key_ok && iter->type == XML_ELEMENT_NODE &&
-				g_ascii_strncasecmp ((gchar*)iter->name, 
+				g_ascii_strncasecmp ((gchar*)iter->name,
 								NA_GCONF_XML_SCHEMA_APPLYTO,
 								strlen (NA_GCONF_XML_SCHEMA_APPLYTO)) == 0)
 		{
@@ -440,7 +448,7 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 			xmlFree (text);
 		}
 		else if (!is_default_value_ok && iter->type == XML_ELEMENT_NODE &&
-				g_ascii_strncasecmp ((gchar*)iter->name, 
+				g_ascii_strncasecmp ((gchar*)iter->name,
 								NA_GCONF_XML_SCHEMA_DFT,
 								strlen (NA_GCONF_XML_SCHEMA_DFT)) == 0)
 		{
@@ -448,7 +456,7 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 			is_default_value_ok = TRUE;
 		}
 		else if (!is_default_value_ok && iter->type == XML_ELEMENT_NODE &&
-				g_ascii_strncasecmp ((gchar*)iter->name, 
+				g_ascii_strncasecmp ((gchar*)iter->name,
 								NA_GCONF_XML_SCHEMA_LOCALE,
 								strlen (NA_GCONF_XML_SCHEMA_LOCALE)) == 0)
 		{
@@ -463,7 +471,7 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 	{
 		retv = TRUE;
 	}
-	
+
 	return retv;
 }
 
@@ -475,7 +483,7 @@ static GSList* schema_string_to_gslist (const gchar* str_list_value)
 	gchar* str_list = NULL;
 	gchar** str_list_splited = NULL;
 	int i;
-	
+
 	//--> First remove the brackets []
 	while (*ptr != '[')
 	{
@@ -510,8 +518,8 @@ static GSList* schema_string_to_gslist (const gchar* str_list_value)
 		}
 		g_strfreev (str_list_splited);
 	}
-	
-	return list;	
+
+	return list;
 }
 
 static gboolean schema_string_to_bool (const gchar* str_bool_value)
@@ -550,11 +558,11 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		type = ACTION_NONE_TYPE;
 		if (iter->type == XML_ELEMENT_NODE)
 		{
-			if (g_ascii_strncasecmp ((gchar*)iter->name, 
+			if (g_ascii_strncasecmp ((gchar*)iter->name,
 											NA_GCONF_XML_SCHEMA_ENTRY,
 											strlen (NA_GCONF_XML_SCHEMA_ENTRY)) == 0)
 			{
-				gchar* value;
+				gchar* value = NULL;
 				gchar* uuid = NULL;
 				gchar* profile_name = NULL;
 				NautilusActionsConfigActionProfile* action_profile = NULL;
@@ -663,7 +671,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 					printf ("test parse 3\n");
 					g_free (value);
 					printf ("test parse 4\n");
-				}	
+				}
 
 				printf ("test parse 5\n");
 				action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
@@ -683,7 +691,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			}
 		}
 	}
-		
+
 	printf ("test parse 8\n");
 	if (is_version_ok)
 	{
@@ -695,15 +703,15 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			// if the version of the file is greater than the current one, we reject the file
 			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This config file is more recent than this version of Nautilus-actions can support. Please upgrade Nautilus-actions to the latest version if you want to be able to import it (File version: %s (max supported version : %s))"), action->version, NAUTILUS_ACTIONS_CONFIG_VERSION);
 		}
-		else if (g_ascii_strcasecmp (action->version, "1.0") == 0 && 
-				is_profiles_ok && is_icon_ok && 
+		else if (g_ascii_strcasecmp (action->version, "1.0") == 0 &&
+				is_profiles_ok && is_icon_ok &&
 				is_tooltip_ok && is_label_ok)
 		{
 
 			retv = TRUE;
 		}
-		else if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 && 
-				is_profiles_ok && is_icon_ok && 
+		else if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 &&
+				is_profiles_ok && is_icon_ok &&
 				is_tooltip_ok && is_label_ok)
 		{
 			retv = TRUE;
@@ -755,10 +763,10 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 
 	/*
 	g_warning ("schemes : %d, multiple : %d, match_case : %d, mimetypes : %d, isdir : %d, isfile : %d, basenames : %d, param : %d, path : %d, icon : %d, tooltip : %d, label : %d, TRUE: %d, version: %s",
-				is_schemes_ok ,  is_multiple_ok ,  
-				is_matchcase_ok ,  is_mimetypes_ok , 
-				is_isdir_ok ,  is_isfile_ok ,  is_basenames_ok ,  
-				is_params_ok ,  is_path_ok ,  is_icon_ok ,  
+				is_schemes_ok ,  is_multiple_ok ,
+				is_matchcase_ok ,  is_mimetypes_ok ,
+				is_isdir_ok ,  is_isfile_ok ,  is_basenames_ok ,
+				is_params_ok ,  is_path_ok ,  is_icon_ok ,
 				is_tooltip_ok ,  is_label_ok, TRUE, action->version);
 	*/
 	return retv;
@@ -768,7 +776,7 @@ gboolean nautilus_actions_config_schema_reader_parse_file (NautilusActionsConfig
 {
 	xmlDoc* doc = NULL;
 	xmlNode* root_node;
-	xmlNode* iter;
+	xmlNode* iter = NULL;
 	NautilusActionsConfigAction *action;
 	gboolean retv = FALSE;
 	xmlError* xml_error = NULL;
@@ -780,8 +788,8 @@ gboolean nautilus_actions_config_schema_reader_parse_file (NautilusActionsConfig
 	if (doc != NULL)
 	{
 		root_node = xmlDocGetRootElement (doc);
-		if (g_ascii_strncasecmp ((gchar*)root_node->name, 
-										NA_GCONF_XML_ROOT, 
+		if (g_ascii_strncasecmp ((gchar*)root_node->name,
+										NA_GCONF_XML_ROOT,
 										strlen (NA_GCONF_XML_ROOT)) == 0)
 		{
 			iter = root_node->children;
@@ -789,9 +797,9 @@ gboolean nautilus_actions_config_schema_reader_parse_file (NautilusActionsConfig
 			{
 				if (iter->type == XML_ELEMENT_NODE)
 				{
-					
-					if (g_ascii_strncasecmp ((gchar*)iter->name, 
-												NA_GCONF_XML_SCHEMA_LIST, 
+
+					if (g_ascii_strncasecmp ((gchar*)iter->name,
+												NA_GCONF_XML_SCHEMA_LIST,
 												strlen (NA_GCONF_XML_SCHEMA_LIST)) == 0)
 					{
 						action = nautilus_actions_config_action_new_default ();
@@ -836,7 +844,7 @@ gboolean nautilus_actions_config_schema_reader_parse_file (NautilusActionsConfig
 	}
 
 	xmlCleanupParser ();
-	
+
 	return retv;
 }
 
@@ -847,7 +855,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_SCHEMA_READER (self), FALSE);
 
 //	NautilusActionsConfigSchemaReader* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_READER (self);
-	
+
 	return retv;
 }
 
@@ -927,5 +935,3 @@ nautilus_actions_config_schema_reader_get (void)
 
 	return NAUTILUS_ACTIONS_CONFIG_SCHEMA_READER (g_object_ref (G_OBJECT (config)));
 }
-
-// vim:ts=3:sw=3:tw=1024:cin

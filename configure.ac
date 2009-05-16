@@ -55,6 +55,7 @@ AC_CONFIG_FILES([
 
 AC_CONFIG_MACRO_DIR([m4])
 
+# pwi 2009-05-15 disabled as useless or badly explained
 #AC_SUBST(ACLOCAL_AMFLAGS, "$ACLOCAL_FLAGS")
 
 # don't agree with maintainer mode use
@@ -75,7 +76,7 @@ AC_PROG_MAKE_SET
 # Gnome stuff
 GNOME_COMMON_INIT
 GNOME_MAINTAINER_MODE_DEFINES
-GNOME_COMPILE_WARNINGS
+GNOME_COMPILE_WARNINGS([error])
 AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} ${DISABLE_DEPRECATED}"])
 AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} ${WARN_CFLAGS}"])
 
@@ -149,6 +150,7 @@ NACT_COMMANDLINE_TOOLS
 AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)
 AC_CHECK_FUNCS(nautilus_menu_provider_emit_items_updated_signal)
 
+# pwi 2009-05-15 disabled as useless or badly explained
 #if test "x${exec_prefix}" = "xNONE"; then
 #	if test "x${prefix}" = "xNONE"; then
 #		if test "x${bindir}" = "xNONE"; then

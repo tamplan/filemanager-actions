@@ -1,24 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *  Frederic Ruaudel (grumz@grumz.net)
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-16 fix compilation warnings
  */
 
 #include <config.h>
@@ -36,6 +44,10 @@
 #include "nact-prefs.h"
 #include "nact.h"
 
+static gboolean nact_import_actions (void);
+static gboolean nact_export_actions (void);
+
+/*
 void mode_toggled_cb (GtkWidget* widget, gpointer user_data)
 {
 	GtkWidget* import_radio = nact_get_glade_widget_from ("ImportRadioButton", GLADE_IM_EX_PORT_DIALOG_WIDGET);
@@ -51,7 +63,9 @@ void mode_toggled_cb (GtkWidget* widget, gpointer user_data)
 		gtk_widget_set_sensitive (nact_get_glade_widget_from ("ImportVBox", GLADE_IM_EX_PORT_DIALOG_WIDGET), FALSE);
 	}
 }
+*/
 
+/*
 void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 {
 	gchar* last_dir;
@@ -65,7 +79,7 @@ void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 	{
 		set_current_location = gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (filechooser), filename);
 	}
-	
+
 	if (!set_current_location)
 	{
 		last_dir = nact_prefs_get_import_last_browsed_dir ();
@@ -73,7 +87,7 @@ void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 		g_free (last_dir);
 	}
 
-	switch (gtk_dialog_run (GTK_DIALOG (filechooser))) 
+	switch (gtk_dialog_run (GTK_DIALOG (filechooser)))
 	{
 		case GTK_RESPONSE_OK :
 			last_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (filechooser));
@@ -86,10 +100,12 @@ void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 		case GTK_RESPONSE_CANCEL:
 		case GTK_RESPONSE_DELETE_EVENT:
 			gtk_widget_hide (filechooser);
-	}	
+	}
 }
+*/
 
-void export_browse_button_clicked_cb (GtkWidget* widget, gpointer data) 
+/*
+void export_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 {
 	gchar* last_dir;
 	gchar* foldername;
@@ -102,7 +118,7 @@ void export_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 	{
 		set_current_location = gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (folderchooser), foldername);
 	}
-	
+
 	if (!set_current_location)
 	{
 		last_dir = nact_prefs_get_export_last_browsed_dir ();
@@ -110,7 +126,7 @@ void export_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 		g_free (last_dir);
 	}
 
-	switch (gtk_dialog_run (GTK_DIALOG (folderchooser))) 
+	switch (gtk_dialog_run (GTK_DIALOG (folderchooser)))
 	{
 		case GTK_RESPONSE_OK :
 			last_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (folderchooser));
@@ -123,9 +139,9 @@ void export_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 		case GTK_RESPONSE_CANCEL:
 		case GTK_RESPONSE_DELETE_EVENT:
 			gtk_widget_hide (folderchooser);
-	}	
+	}
 }
-
+*/
 
 static void
 list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
@@ -133,7 +149,7 @@ list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
 /*
 	GtkWidget *nact_edit_button;
 	GtkWidget *nact_delete_button;
-	
+
 	nact_edit_button = nact_get_glade_widget ("EditActionButton");
 	nact_delete_button = nact_get_glade_widget ("DeleteActionButton");
 
@@ -171,14 +187,15 @@ static void nact_setup_actions_list (GtkWidget *list)
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (list));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
-	
+
 	/* set up selection */
 	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (list))), "changed",
 			  G_CALLBACK (list_selection_changed_cb), NULL);
 
 }
 
-gboolean nact_import_actions (void)
+static gboolean
+nact_import_actions (void)
 {
 	gboolean retv = FALSE;
 	GSList* iter;
@@ -192,7 +209,7 @@ gboolean nact_import_actions (void)
 
 	config = nautilus_actions_config_gconf_writer_get ();
 	schema_reader = nautilus_actions_config_schema_reader_get ();
-	nautilus_actions_config_clear (schema_reader);
+	nautilus_actions_config_clear(( NautilusActionsConfig * ) schema_reader );
 
 	if (file_path != NULL && strlen (file_path) > 0)
 	{
@@ -233,7 +250,8 @@ gboolean nact_import_actions (void)
 	return retv;
 }
 
-gboolean nact_export_actions (void)
+static gboolean
+nact_export_actions (void)
 {
 	gboolean retv = FALSE;
 	GtkTreeSelection *selection;
@@ -279,7 +297,7 @@ gboolean nact_export_actions (void)
 		g_list_free (selection_list);
 		retv = TRUE;
 	}
-	
+
 	if (retv)
 	{
 		gchar* command = g_strdup_printf ("nautilus %s", save_path);
@@ -312,12 +330,12 @@ gboolean nact_import_export_actions (void)
 			g_error (_("Could not load interface for Nautilus Actions Config Tool"));
 			return FALSE;
 		}
-		
+
 		glade_xml_signal_autoconnect (gui);
 
 		nact_action_list_tree = nact_get_glade_widget_from ("ExportTreeView", GLADE_IM_EX_PORT_DIALOG_WIDGET);
 		nact_setup_actions_list (nact_action_list_tree);
-		
+
 		aligned_widgets = nact_get_glade_widget_prefix_from ("IELabelAlign", GLADE_IM_EX_PORT_DIALOG_WIDGET);
 		label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 		for (iter = aligned_widgets; iter; iter = iter->next)
@@ -325,11 +343,11 @@ gboolean nact_import_export_actions (void)
 			gtk_size_group_add_widget (label_size_group, GTK_WIDGET (iter->data));
 		}
 		button_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-		gtk_size_group_add_widget (button_size_group, 
-											nact_get_glade_widget_from ("ImportBrowseButton", 
+		gtk_size_group_add_widget (button_size_group,
+											nact_get_glade_widget_from ("ImportBrowseButton",
 																		GLADE_IM_EX_PORT_DIALOG_WIDGET));
-		gtk_size_group_add_widget (button_size_group, 
-											nact_get_glade_widget_from ("ExportBrowseButton", 
+		gtk_size_group_add_widget (button_size_group,
+											nact_get_glade_widget_from ("ExportBrowseButton",
 																		GLADE_IM_EX_PORT_DIALOG_WIDGET));
 		/* free memory */
 		g_object_unref (gui);
@@ -345,10 +363,10 @@ gboolean nact_import_export_actions (void)
 
 	/* Get the default dialog size */
 	gtk_window_get_default_size (GTK_WINDOW (import_export_dialog), &width, &height);
-	
+
 	/* Override with preferred one, if any */
 	nact_prefs_get_im_ex_dialog_size (&width, &height);
-	
+
 	gtk_window_resize (GTK_WINDOW (import_export_dialog), width, height);
 
 	if (nact_prefs_get_im_ex_dialog_position (&x, &y))
@@ -358,10 +376,10 @@ gboolean nact_import_export_actions (void)
 
 	last_dir = nact_prefs_get_export_last_browsed_dir ();
 	gtk_entry_set_text (GTK_ENTRY (nact_get_glade_widget_from ("ExportEntry", GLADE_IM_EX_PORT_DIALOG_WIDGET)), last_dir);
-	gtk_entry_select_region (GTK_ENTRY (nact_get_glade_widget_from ("ExportEntry", GLADE_IM_EX_PORT_DIALOG_WIDGET)), 0, -1);
-	
+	gtk_editable_select_region (GTK_EDITABLE (nact_get_glade_widget_from ("ExportEntry", GLADE_IM_EX_PORT_DIALOG_WIDGET)), 0, -1);
+
 	/* run the dialog */
-	switch (gtk_dialog_run (GTK_DIALOG (import_export_dialog))) 
+	switch (gtk_dialog_run (GTK_DIALOG (import_export_dialog)))
 	{
 		case GTK_RESPONSE_OK :
 			if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (import_radio)))
@@ -388,5 +406,3 @@ gboolean nact_import_export_actions (void)
 
 	return retv;
 }
-
-// vim:ts=3:sw=3:tw=1024:cin

@@ -48,6 +48,7 @@ AC_DEFUN([NACT_COMMANDLINE_TOOLS],[
 		
 		PKG_CHECK_MODULES([NAUTILUS_ACTIONS_UTILS], \
 			glib-2.0	>= ${GLIB_REQUIRED}		\
+			gtk+-2.0	>= ${GTK_REQUIRED}		\
 			gthread-2.0	>= ${GLIB_REQUIRED}		\
 			gmodule-2.0	>= ${GLIB_REQUIRED}		\
 			gconf-2.0	>= ${GCONF_REQUIRED}	\

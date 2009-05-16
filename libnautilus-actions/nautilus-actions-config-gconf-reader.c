@@ -1,24 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *  Frederic Ruaudel (grumz@grumz.net)
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-16 fix compilation warnings
  */
 
 #include <config.h>
@@ -87,6 +95,7 @@ nautilus_actions_config_gconf_reader_class_init (NautilusActionsConfigGconfReade
 	config_class->remove_action = remove_action;
 }
 
+/*
 static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* uuid)
 {
 	gchar* prefix = g_strdup_printf ("%s/%s/%s", ACTIONS_CONFIG_DIR, uuid, ACTIONS_PROFILE_PREFIX);
@@ -94,7 +103,7 @@ static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* u
 
 	if (g_str_has_prefix (key, prefix))
 	{
-	
+
 		profile_name = g_strdup (key + strlen (prefix));
 		gchar* pos = g_strrstr (profile_name, "/");
 		if (pos != NULL)
@@ -107,12 +116,15 @@ static gchar* get_action_profile_name_from_key (const gchar* key, const gchar* u
 
 	return profile_name;
 }
+*/
 
+/*
 static void
 copy_list (GConfValue* value, GSList** list)
 {
 	   (*list) = g_slist_append ((*list), g_strdup (gconf_value_get_string (value)));
 }
+*/
 
 static void
 actions_changed_cb (GConfClient *client,
@@ -123,11 +135,11 @@ actions_changed_cb (GConfClient *client,
 	NautilusActionsConfig *config = NAUTILUS_ACTIONS_CONFIG (user_data);
 
 
-	/* The Key value format is XXX:YYYY-YYYY-... where XXX is an number incremented to make key 
+	/* The Key value format is XXX:YYYY-YYYY-... where XXX is an number incremented to make key
 	 * effectively changed each time and YYYY-YYYY-... is the modified uuid */
-	GConfValue* value = gconf_entry_get_value (entry);
-	gchar* notify_value = gconf_value_get_string (value); 
-	gchar* uuid = notify_value + 4; 
+	const GConfValue* value = gconf_entry_get_value (entry);
+	const gchar* notify_value = gconf_value_get_string (value);
+	const gchar* uuid = notify_value + 4;
 
 	// Get the modified action from the internal list if any //
 	NautilusActionsConfigAction *old_action = nautilus_actions_config_get_action (config, uuid);
@@ -172,7 +184,7 @@ nautilus_actions_config_gconf_reader_init (NautilusActionsConfigGconfReader *con
 {
 	/* install notification callbacks */
 	gconf_client_add_dir (NAUTILUS_ACTIONS_CONFIG_GCONF (config)->conf_client, ACTIONS_CONFIG_DIR, GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);
-	config->actions_notify_id = gconf_client_notify_add (NAUTILUS_ACTIONS_CONFIG_GCONF (config)->conf_client, 
+	config->actions_notify_id = gconf_client_notify_add (NAUTILUS_ACTIONS_CONFIG_GCONF (config)->conf_client,
 							     ACTIONS_CONFIG_NOTIFY_KEY,
 							     (GConfClientNotifyFunc) actions_changed_cb, config,
 							     NULL, NULL);
@@ -212,4 +224,3 @@ nautilus_actions_config_gconf_reader_get (void)
 
 	return NAUTILUS_ACTIONS_CONFIG_GCONF_READER (g_object_ref (G_OBJECT (config)));
 }
-// vim:ts=3:sw=3:tw=1024:cin

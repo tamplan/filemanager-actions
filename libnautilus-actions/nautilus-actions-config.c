@@ -1,24 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
- *  Frederic Ruaudel (grumz@grumz.net)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-16 fix compilation warnings
  */
 
 #include <config.h>
@@ -27,22 +35,22 @@
 #include "nautilus-actions-config-gconf-private.h"
 
 enum {
-        ACTION_ADDED,
-        ACTION_CHANGED,
-        ACTION_REMOVED,
-        LAST_SIGNAL
+	ACTION_ADDED,
+	ACTION_CHANGED,
+	ACTION_REMOVED,
+	LAST_SIGNAL
 };
 
 static GObjectClass *parent_class = NULL;
 static gint signals[LAST_SIGNAL] = { 0 };
 
-static void nautilus_actions_config_action_removed_default_handler (NautilusActionsConfig* config, 
+static void nautilus_actions_config_action_removed_default_handler (NautilusActionsConfig* config,
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data);
-static void nautilus_actions_config_action_changed_default_handler (NautilusActionsConfig* config, 
+static void nautilus_actions_config_action_changed_default_handler (NautilusActionsConfig* config,
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data);
-static void nautilus_actions_config_action_added_default_handler (NautilusActionsConfig* config, 
+static void nautilus_actions_config_action_added_default_handler (NautilusActionsConfig* config,
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data);
 
@@ -190,23 +198,23 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 {
 	gboolean retv = FALSE;
 	NautilusActionsConfigAction* found_action;
-	
+
 	g_assert (NAUTILUS_ACTIONS_IS_CONFIG (config));
 	g_assert (action != NULL);
 
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
-	if (action->uuid != NULL) 
+	if (action->uuid != NULL)
 	{
 		found_action = (NautilusActionsConfigAction*)g_hash_table_lookup (config->actions, action->uuid);
-		if (found_action != NULL) 
+		if (found_action != NULL)
 		{
 			// i18n notes: will be displayed in an error dialog
 			g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("The action '%s' already exists with the name '%s', please first remove the existing one before trying to add this one"), action->label, found_action->label);
 			return FALSE;
 		}
-	} 
-	else 
+	}
+	else
 	{
 		action->uuid = get_new_uuid ();
 	}
@@ -221,11 +229,11 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 		// i18n notes: will be displayed in an error dialog
 		g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("Can't save action '%s'"), action->label);
 	}
-	
+
 	return retv;
 }
 
-static void nautilus_actions_config_action_added_default_handler (NautilusActionsConfig* config, 
+static void nautilus_actions_config_action_added_default_handler (NautilusActionsConfig* config,
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)
 {
@@ -251,11 +259,11 @@ nautilus_actions_config_update_action (NautilusActionsConfig *config, NautilusAc
 		g_signal_emit (config, signals[ACTION_CHANGED], 0, action);
 		retv = TRUE;
 	}
-	
+
 	return retv;
 }
 
-static void nautilus_actions_config_action_changed_default_handler (NautilusActionsConfig* config, 
+static void nautilus_actions_config_action_changed_default_handler (NautilusActionsConfig* config,
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)
 {
@@ -300,7 +308,7 @@ static gboolean
 clear_actions_hashtable (gchar *uuid, NautilusActionsConfigAction *action, NautilusActionsConfig *config)
 {
 	gboolean retv = FALSE;
-	
+
 	if (NAUTILUS_ACTIONS_CONFIG_GET_CLASS(config)->remove_action (config, action))
 	{
 		retv = TRUE;
@@ -324,11 +332,11 @@ nautilus_actions_config_clear (NautilusActionsConfig *config)
 	{
 		retv = TRUE;
 	}
-	
+
 	return retv;
 }
 
-static void nautilus_actions_config_action_removed_default_handler (NautilusActionsConfig* config, 
+static void nautilus_actions_config_action_removed_default_handler (NautilusActionsConfig* config,
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)
 {
@@ -361,12 +369,12 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_d
 	new_action_profile->accept_multiple_files = FALSE;
 	new_action_profile->schemes = NULL;
 	new_action_profile->schemes = g_slist_append (new_action_profile->schemes, g_strdup ("file"));
-	
+
 	return new_action_profile;
 }
 
 gboolean
-nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action, 
+nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action,
 									 							const gchar* profile_name)
 {
 	gboolean retv = FALSE;
@@ -385,7 +393,7 @@ static void get_profiles_names (gchar* key, gchar* value, GSList** list)
 }
 
 GSList*
-nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigAction *action) 
+nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigAction *action)
 {
 	GSList* profile_names = NULL;
 	g_hash_table_foreach (action->profiles, (GHFunc)get_profiles_names, &profile_names);
@@ -420,7 +428,7 @@ nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConf
 }
 
 NautilusActionsConfigActionProfile*
-nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
+nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action,
 									 						const gchar* profile_name)
 {
 	if (profile_name != NULL)
@@ -433,7 +441,7 @@ nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action,
 	}
 }
 
-NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action, 
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name)
 {
 	NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
@@ -448,7 +456,7 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create
 }
 
 gboolean
-nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
+nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile,
 									 GError** error)
@@ -477,7 +485,7 @@ nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action,
 }
 
 void
-nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *action, 
+nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile)
 {
@@ -486,14 +494,15 @@ nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *act
 }
 
 gboolean
-nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action, 
+nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name)
 {
 	return g_hash_table_remove (action->profiles, profile_name);
 }
 
 /* Obsolete function (not used anymore) */
-gboolean                     nautilus_actions_config_action_rename_profile (NautilusActionsConfigAction *action, 
+/*
+gboolean                     nautilus_actions_config_action_rename_profile (NautilusActionsConfigAction *action,
 									 const gchar* old_profile_name,
 								 	 const gchar* new_profile_name,
 									 GError** error)
@@ -533,7 +542,7 @@ gboolean                     nautilus_actions_config_action_rename_profile (Naut
 
 	return ret;
 }
-
+*/
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void)
 {
@@ -554,7 +563,7 @@ NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void)
 						 (GDestroyNotify) nautilus_actions_config_action_profile_free);
 	g_hash_table_insert (new_action->profiles, g_strdup (NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME), nautilus_actions_config_action_profile_new_default ());
 	new_action->version = g_strdup (NAUTILUS_ACTIONS_CONFIG_VERSION);
-	
+
 	return new_action;
 }
 
@@ -639,13 +648,13 @@ nautilus_actions_config_action_profile_set_parameters (NautilusActionsConfigActi
 	action_profile->parameters = g_strdup (parameters);
 }
 
-static void 
+static void
 copy_list (gchar* data, GSList** list)
 {
 	(*list) = g_slist_append ((*list), g_strdup (data));
 }
 
-static void 
+static void
 copy_list_strdown (gchar* data, GSList** list)
 {
 	// make sure that the elements are copied with their case lowered
@@ -695,7 +704,7 @@ NautilusActionsConfigActionProfile* nautilus_actions_config_action_profile_dup (
 	{
 		new_action_profile = nautilus_actions_config_action_profile_new ();
 
-		if (action_profile->desc_name) 
+		if (action_profile->desc_name)
 		{
 			new_action_profile->desc_name = g_strdup (action_profile->desc_name);
 		}
@@ -726,7 +735,7 @@ NautilusActionsConfigActionProfile* nautilus_actions_config_action_profile_dup (
 				new_action_profile->basenames = g_slist_append (new_action_profile->basenames, g_strdup ((gchar*)iter->data));
 			}
 		}
-		
+
 		new_action_profile->match_case = action_profile->match_case;
 
 		if (action_profile->mimetypes && success) {
@@ -767,7 +776,7 @@ nautilus_actions_config_action_profile_free (NautilusActionsConfigActionProfile 
 {
 	if (action_profile != NULL)
 	{
-		if (action_profile->desc_name) 
+		if (action_profile->desc_name)
 		{
 			g_free (action_profile->desc_name);
 			action_profile->desc_name = NULL;
@@ -818,7 +827,7 @@ NautilusActionsConfigAction* nautilus_actions_config_action_dup (NautilusActions
 {
 	NautilusActionsConfigAction* new_action = NULL;
 	gboolean success = TRUE;
-	GSList* iter;
+	/*GSList* iter;*/
 
 	if (action != NULL)
 	{
@@ -950,5 +959,3 @@ nautilus_actions_config_action_free (NautilusActionsConfigAction *action)
 		action = NULL;
 	}
 }
-
-// vim:ts=3:sw=3:tw=1024:cin
