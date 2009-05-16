@@ -29,3 +29,4 @@ stamp-h1
 *.la
 *.lo
 nautilus-actions-*.tar.gz
+config.h.in~

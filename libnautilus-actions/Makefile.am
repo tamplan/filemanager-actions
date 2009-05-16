@@ -29,7 +29,7 @@
 
 noinst_LTLIBRARIES = libnautilus-actions.la
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	$(NAUTILUS_ACTIONS_CFLAGS)
 

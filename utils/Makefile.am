@@ -31,7 +31,7 @@ bin_PROGRAMS = \
 	nautilus-actions-new-config					\
 	nautilus-actions-check-actions-change
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I $(top_srcdir)							\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	$(NAUTILUS_ACTIONS_UTILS_CFLAGS)

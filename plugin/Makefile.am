@@ -27,7 +27,7 @@
 #
 # pwi 2009-05-16 fix to make distcheck successfully
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I $(top_srcdir)									\
 	$(NAUTILUS_ACTIONS_CFLAGS)
 

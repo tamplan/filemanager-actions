@@ -1,5 +1,8 @@
 2009-05-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: created from configure.in
+	update all Makefile.am, replacing deprecated INCLUDES with AM_CPPFLAGS
+
 	* update po files
 
 	* Makefile.am: add DISTCLEANFILES,

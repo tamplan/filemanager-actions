@@ -30,7 +30,7 @@
 bin_PROGRAMS = \
 	nautilus-actions-config
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I $(top_srcdir)									\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DGLADEDIR=\""$(datadir)/nautilus-actions/nact"\"	\
