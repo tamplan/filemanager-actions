@@ -45,7 +45,7 @@ AC_DEFUN([NACT_NAUTILUS_EXTDIR],[
 
 AC_DEFUN([_AC_ARG_NACT_NAUTILUS_EXTDIR],[
 	AC_ARG_WITH(
-		[nact_nautilus_extdir],
+		[nautilus-extdir],
 		AC_HELP_STRING(
 			[--with-nautilus-extdir=DIR],
 			[nautilus plugins extension directory @<:@auto@:>@]

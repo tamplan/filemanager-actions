@@ -1,8 +1,8 @@
 # Nautilus Actions
 #
 # Copyright (C) 2005 The GNOME Foundation
-# Copyright (C) 2006, 2007, 2008 Frederic Ruaudel, Rodrigo Moya
-# Copyright (C) 2009 Pierre Wieser
+# Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+# Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
 #
 # This Program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -23,5 +23,6 @@
 #   Frederic Ruaudel <grumz@grumz.net>
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
+#   and many others (see AUTHORS)
 #
-# pwi 2009-05-15 creation
+# pwi 2009-05-16 creation

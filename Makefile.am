@@ -30,11 +30,12 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = \
+	icons				\
 	libnautilus-actions	\
 	plugin				\
+	m4					\
 	nact				\
 	po					\
-	icons				\
 	$(OPTIONAL_SUBDIR)
 
 # a foo directory so that make distcheck has a vpath which is prefixed

@@ -83,7 +83,7 @@ AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} ${WARN_CFLAGS}"])
 AM_PROG_LIBTOOL
 
 # localization
-# note that this version is also required for in autogen.sh
+# note that this same version is also required for in autogen.sh
 IT_PROG_INTLTOOL([0.35.5])
 GETTEXT_PACKAGE=${PACKAGE}
 AC_SUBST([GETTEXT_PACKAGE])

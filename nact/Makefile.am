@@ -25,12 +25,12 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   and many others (see AUTHORS)
 #
-# pwi 2009-05-16 fix to make distcheck successfully
+# pwi 2009-05-16 replace INCLUDES by AM_CPPFLAGS
 
 bin_PROGRAMS = \
 	nautilus-actions-config
 
-AM_CPPFLAGS = \
+AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DGLADEDIR=\""$(datadir)/nautilus-actions/nact"\"	\
