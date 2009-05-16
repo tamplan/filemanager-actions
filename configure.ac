@@ -39,18 +39,21 @@ AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_FILES([
 	Makefile
-	libnautilus-actions/Makefile
-	plugin/Makefile
-	nact/Makefile
-	utils/Makefile
 	icons/Makefile
 	icons/16x16/Makefile
 	icons/22x22/Makefile
 	icons/32x32/Makefile
 	icons/48x48/Makefile
 	icons/scalable/Makefile
+	libnautilus-actions/Makefile
+	m4/Makefile
+	nact/Makefile
+	plugin/Makefile
 	po/Makefile.in
+	utils/Makefile
 ])
+
+AC_CONFIG_MACRO_DIR([m4])
 
 #AC_SUBST(ACLOCAL_AMFLAGS, "$ACLOCAL_FLAGS")
 
@@ -63,9 +66,7 @@ AM_MAINTAINER_MODE
 AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
 AC_STDC_HEADERS
-
-# why ?
-#AM_DISABLE_STATIC
+AM_DISABLE_STATIC
 
 # other traditional tools
 AC_PROG_INSTALL
@@ -93,12 +94,12 @@ AM_GLIB_GNU_GETTEXT
 AC_PATH_PROG([GCONFTOOL],[gconftool-2])
 AM_GCONF_SOURCE_2
 
-AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
-if test "x$PKG_CONFIG" = "xno"; then
-        AC_MSG_ERROR([You need to install pkg-config])
-fi
-
 # these are the version as distributed with CentOS 4.x
+# - Gnome 2.8
+# - glib 2.4.7
+# - autoconf 2.59
+# - automake 1.9
+# - intltool 0.31
 #
 # note that requiring through pkg-config the version number of the
 # nautilus-extension library actually returns the version number of
@@ -118,6 +119,11 @@ GOBJECT_REQUIRED=2.4.0
 #AC_SUBST(GTK_REQUIRED)
 #AC_SUBST(GLADE_REQUIRED)
 
+AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+if test "${PKG_CONFIG}" = "no"; then
+	AC_MSG_ERROR([You need to install pkg-config])
+fi
+
 PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 	glib-2.0				>= ${GLIB_REQUIRED}			\
 	gthread-2.0				>= ${GLIB_REQUIRED}			\
@@ -132,49 +138,12 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
-AC_ARG_WITH(nautilus-extdir,
-[ AC_HELP_STRING([--with-nautilus-extdir=EXTDIR],
-					  [EXTDIR define the folder where nautilus stores its extentions plugins. [default=auto]])],
-[ NAUTILUS_EXTENSIONS_DIR=$withval ],
-[ NAUTILUS_EXTENSIONS_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension` ])
+# when working in a test environment, nautilus is typically installed in
+# a non-standard location ; lets specify this here
+NACT_NAUTILUS_EXTDIR
 
-AC_SUBST(NAUTILUS_EXTENSIONS_DIR)
-
-if test -z ${NAUTILUS_EXTENSIONS_DIR}; then
-	AC_MSG_ERROR([*** Can't determine nautilus extension folder, please use --with-nautilus-extdir options to define it manually ]);
-fi
-
-OPTIONAL_SUBDIR="utils"
-BUILD_COMMANDLINE_TOOL="yes"
-AC_ARG_ENABLE(commandline-tool,
-[  --enable-commandline-tool            define if command line tools must be build (disable it if you have GTK+ <= 2.4).
-                           [default=auto]],
-[ BUILD_COMMANDLINE_TOOL=$enableval ])
-if test "x$BUILD_COMMANDLINE_TOOL" = "xno"; then
-   OPTIONAL_SUBDIR=""
-fi
-$PKG_CONFIG glib-2.0 --max-version=2.4
-if test "x$?" = "x0"; then
-	OPTIONAL_SUBDIR=""
-fi
-AC_SUBST(OPTIONAL_SUBDIR)
-
-default_config_path=`eval echo $datadir/nautilus-actions`
-AC_DEFINE_UNQUOTED(DEFAULT_CONFIG_PATH, "$default_config_path", [Default system configuration path])
-$PKG_CONFIG glib-2.0 --atleast-version=2.8
-if test "x$?" = "x0"; then
-	AC_DEFINE_UNQUOTED(HAVE_GLIB_2_8, 1, [Version of the glib-2.0 library is at least 2.8])
-fi
-
-PKG_CHECK_MODULES(NAUTILUS_ACTIONS_UTILS,\
-	 glib-2.0 >= $GLIB_REQUIRED                \
-	 gthread-2.0 >= $GLIB_REQUIRED             \
-	 gmodule-2.0 >= $GLIB_REQUIRED		  \
-	 gconf-2.0 >= $GCONF_REQUIRED \
-	 gobject-2.0 >= $GOBJECT_REQUIRED \
-	 libxml-2.0 >= $LIBXML_REQUIRED)
-AC_SUBST(NAUTILUS_ACTIONS_UTILS_CFLAGS)
-AC_SUBST(NAUTILUS_ACTIONS_UTILS_LIBS)
+# building or not the commandline tools
+NACT_COMMANDLINE_TOOLS
 
 # Check for menu update function
 AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)

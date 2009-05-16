@@ -1,8 +1,8 @@
 # Nautilus Actions
 #
 # Copyright (C) 2005 The GNOME Foundation
-# Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
-# Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
+# Copyright (C) 2006, 2007, 2008 Frederic Ruaudel, Rodrigo Moya
+# Copyright (C) 2009 Pierre Wieser
 #
 # This Program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -23,31 +23,5 @@
 #   Frederic Ruaudel <grumz@grumz.net>
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
-#   and many others (see AUTHORS)
 #
-# pwi 2009-05-16 add distcheck_configure_flags and distcleanfiles
-
-ACLOCAL_AMFLAGS = -I m4
-
-SUBDIRS = \
-	libnautilus-actions	\
-	plugin				\
-	nact				\
-	po					\
-	icons				\
-	$(OPTIONAL_SUBDIR)
-
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
-DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
-
-EXTRA_DIST = \
-	intltool-extract.in	\
-	intltool-merge.in	\
-	intltool-update.in
-
-DISTCLEANFILES = \
-	intltool-extract	\
-	intltool-merge		\
-	intltool-update
+# pwi 2009-05-15 creation
