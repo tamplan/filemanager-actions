@@ -2,20 +2,20 @@
 # Copyright (C) 2007 THE nautilus-actions'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the nautilus-actions package.
 # Namhyung Kim <namhyung@gmail.com>, 2007.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-31 03:56+0000\n"
+"POT-Creation-Date: 2009-05-16 17:18+0200\n"
 "PO-Revision-Date: 2007-12-31 14:45+0900\n"
 "Last-Translator: Namhyung Kim <namhyung@gmail.com>\n"
 "Language-Team: GNOME Korea <gnome-kr-hackers@lists.kldp.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
@@ -39,8 +39,7 @@ msgstr "<b>%%</b>: 퍼센트 기호"
 msgid ""
 "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
 "full paths"
-msgstr ""
-"<b>%M</b>: 선택된 파일/폴더들의 전체 경로 목록 (공백으로 구분)"
+msgstr "<b>%M</b>: 선택된 파일/폴더들의 전체 경로 목록 (공백으로 구분)"
 
 #: ../nact/nautilus-actions-config.glade.h:7
 #, no-c-format
@@ -56,8 +55,7 @@ msgstr "<b>%d</b>: 선택된 파일들의 기본 폴더"
 #, no-c-format
 msgid ""
 "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
-msgstr ""
-"<b>%f</b>: 선택된 (첫 번째) 파일의 이름"
+msgstr "<b>%f</b>: 선택된 (첫 번째) 파일의 이름"
 
 #: ../nact/nautilus-actions-config.glade.h:13
 #, no-c-format
@@ -69,8 +67,7 @@ msgstr "<b>%h</b>: GnomeVFS URI의 호스트 이름"
 msgid ""
 "<b>%m</b>: space-separated list of the basenames of the selected\n"
 "file(s)/folder(s)"
-msgstr ""
-"<b>%m</b>: 선택된 파일/폴더들의 기본 이름 (공백으로 구분)"
+msgstr "<b>%m</b>: 선택된 파일/폴더들의 기본 이름 (공백으로 구분)"
 
 #: ../nact/nautilus-actions-config.glade.h:18
 #, no-c-format
@@ -131,8 +128,9 @@ msgid ""
 "You can set several filename patterns by separating them with a semi-colon "
 "(;)."
 msgstr ""
-"와일드 카드 (? 또는 *)가 포함된 문자열은 파일 이름과 일치시키는 데 사용될 것입니다."
-"여러 개의 파일 이름 패턴을 세미콜론(;)으로 구분하여 설정할 수 있습니다."
+"와일드 카드 (? 또는 *)가 포함된 문자열은 파일 이름과 일치시키는 데 사용될 것"
+"입니다.여러 개의 파일 이름 패턴을 세미콜론(;)으로 구분하여 설정할 수 있습니"
+"다."
 
 #: ../nact/nautilus-actions-config.glade.h:34
 msgid ""
@@ -140,8 +138,9 @@ msgid ""
 "files. You can set several mimetype patterns by separating them with a semi-"
 "colon (;)."
 msgstr ""
-"와일드 카드 (? 또는 *)가 포함된 문자열은 MIME 형식과 일치시키는 데 사용될 것입니다."
-"여러 개의 MIME 형식 패턴을 세미콜론(;)으로 구분하여 설정할 수 있습니다."
+"와일드 카드 (? 또는 *)가 포함된 문자열은 MIME 형식과 일치시키는 데 사용될 것"
+"입니다.여러 개의 MIME 형식 패턴을 세미콜론(;)으로 구분하여 설정할 수 있습니"
+"다."
 
 #: ../nact/nautilus-actions-config.glade.h:35
 msgid "Action"
@@ -172,8 +171,8 @@ msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list."
 msgstr ""
-"드롭다운 목록에서 미리 정의된 아이콘을 선택하지 않고 파일에서 사용자가 "
-"정의한 아이콘을 선택하려면 누릅니다."
+"드롭다운 목록에서 미리 정의된 아이콘을 선택하지 않고 파일에서 사용자가 정의"
+"한 아이콘을 선택하려면 누릅니다."
 
 #: ../nact/nautilus-actions-config.glade.h:42
 msgid "Click to remove the selected scheme."
@@ -184,8 +183,8 @@ msgid ""
 "Click to toggle the display of the list of special tokens you can use in the "
 "parameter field."
 msgstr ""
-"매개변수 필드에서 사용할 수 있는 특수한 토큰의 목록을 보이거나 숨기려면 "
-"누릅니다."
+"매개변수 필드에서 사용할 수 있는 특수한 토큰의 목록을 보이거나 숨기려면 누릅"
+"니다."
 
 #: ../nact/nautilus-actions-config.glade.h:44
 msgid "Conditions"
@@ -198,81 +197,84 @@ msgstr "선택된 동작의 복사본을 만듭니다."
 #: ../nact/nautilus-actions-config.glade.h:46
 msgid ""
 "Delete the action without any confirmation nor the possibility to restore it."
-msgstr ""
-"확인 절차가 없거나 복구시킬 수 없는 동작을 지웁니다."
+msgstr "확인 절차가 없거나 복구시킬 수 없는 동작을 지웁니다."
 
 #: ../nact/nautilus-actions-config.glade.h:47
+msgid "Duplicate"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:48
 msgid "Export existing configs"
 msgstr "기존의 설정 내보내기"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:49
 msgid "File to Import:"
 msgstr "가져올 파일:"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "Filenames:"
 msgstr "파일 이름:"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "Icon:"
 msgstr "아이콘:"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:52
 msgid ""
 "If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
 "will not match photo.JPG)"
 msgstr ""
-"이를 선택하면, 파일 이름 패턴의 대소문자를 구분할 것입니다 "
-"(예를 들어,*.jpg는 photo.JPG와 일치하지 않습니다)"
+"이를 선택하면, 파일 이름 패턴의 대소문자를 구분할 것입니다 (예를 들어,*.jpg"
+"는 photo.JPG와 일치하지 않습니다)"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "Import new configurations"
 msgstr "새 설정 가져오기"
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Import/Export"
 msgstr "가져오기/내보내기"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid "Import/Export Settings"
 msgstr "가져오기/내보내기 설정"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Label of the menu item in the Nautilus popup menu."
 msgstr "노틸러스 팝업 메뉴 내의 메뉴 항목의 레이블."
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Label:"
 msgstr "레이블:"
 
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
 msgstr ""
 "외부 동작 설정을 가져오거나, 기존의 동작 설정을 내보내는 작업을 관리합니다."
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "Match case"
 msgstr "대소문자 구분"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "Mimetypes:"
 msgstr "MIME 형식:"
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "Nautilus Action Editor"
 msgstr "노틸러스 동작 편집기"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid "Nautilus Action Profile Editor"
 msgstr "노틸러스 동작 프로파일 편집기"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "Nautilus Actions"
 msgstr "노틸러스 동작"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:64
 msgid ""
 "Nautilus Actions Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -280,100 +282,98 @@ msgstr ""
 "노틸러스 동작 설정 도구\n"
 "노틸러스 동작 확장 기능을 설정하는 프로그램"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid "Only files"
 msgstr "파일 만"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:67
 msgid "Only folders"
 msgstr "폴더 만"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
 msgstr ""
 "프로그램에 전달될 매개변수. 다른 대체 토큰을 보려면 '범례' 단추를 누릅니다."
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Parameters:"
 msgstr "매개변수:"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid "Path:"
 msgstr "경로:"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Project Website"
 msgstr "프로젝트 웹사이트"
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Save in Folder:"
 msgstr "폴더에 저장:"
 
-#: ../nact/nautilus-actions-config.glade.h:72
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
 msgstr ""
-"내보내고 싶은 설정을 선택합니다. 여러 개를 선택하려면 "
-"Shift 키 또는 Ctrl 키를 사용합니다."
+"내보내고 싶은 설정을 선택합니다. 여러 개를 선택하려면 Shift 키 또는 Ctrl 키"
+"를 사용합니다."
 
-#: ../nact/nautilus-actions-config.glade.h:73
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Select the configurations you want to export:"
 msgstr "내보내고 싶은 설정을 선택합니다:"
 
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid "Select the file you want to import."
 msgstr "가져오고 싶은 파일을 선택합니다."
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
 msgstr ""
-"설정 파일이 저장될 폴더를 선택합니다. 반드시 존재하는 폴더를 선택해야 "
-"합니다."
+"설정 파일이 저장될 폴더를 선택합니다. 반드시 존재하는 폴더를 선택해야 합니다."
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:77
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add a new scheme by clicking on the '+' button."
 msgstr ""
-"이 동작이 표시될 파일의 종류를 선택합니다. 만약 무엇을 선택해야 할 지 "
-"모른다면, 가장 일반적인 항목인 '파일'을 선택해 보십시오."
-"'+' 단추를 눌러 새로운 스킴을 더할 수 있습니다."
+"이 동작이 표시될 파일의 종류를 선택합니다. 만약 무엇을 선택해야 할 지 모른다"
+"면, 가장 일반적인 항목인 '파일'을 선택해 보십시오.'+' 단추를 눌러 새로운 스킴"
+"을 더할 수 있습니다."
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:78
+#: ../nact/nautilus-actions-config.glade.h:79
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
 msgstr "김남형 <namhyung@gmail.com>, 2007."
 
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
-msgstr ""
-"이 명령은 노틸러스 팝업 메뉴의 동작을 선택함으로써 실행될 것입니다."
+msgstr "이 명령은 노틸러스 팝업 메뉴의 동작을 선택함으로써 실행될 것입니다."
 
-#: ../nact/nautilus-actions-config.glade.h:80
+#: ../nact/nautilus-actions-config.glade.h:81
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr "이 소프트웨어는 GNU 일반 공중 사용 허가서 (GPL)의 규정을 따릅니다"
 
-#: ../nact/nautilus-actions-config.glade.h:81
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgstr "노틸러스 상태 표시줄에 표시될 메뉴 항목의 툴팁."
 
-#: ../nact/nautilus-actions-config.glade.h:82
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid "Tooltip:"
 msgstr "툴팁:"
 
-#: ../nact/nautilus-actions-config.glade.h:83
+#: ../nact/nautilus-actions-config.glade.h:84
 msgid "_Browse"
 msgstr "찾아보기(_B)"
 
-#: ../nact/nautilus-actions-config.glade.h:84
+#: ../nact/nautilus-actions-config.glade.h:85
 msgid "_Legend"
 msgstr "범례(_L)"
 
@@ -392,7 +392,7 @@ msgstr "아이콘"
 msgid "Label"
 msgstr "레이블"
 
-#: ../nact/nact.c:303 ../nact/nact-editor.c:627
+#: ../nact/nact.c:303 ../nact/nact-editor.c:628
 #: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "노틸러스 동작 설정 도구의 인터페이스를 불러올 수 없음"
@@ -441,43 +441,37 @@ msgstr "없음"
 msgid "Can't copy action's profile '%s'!"
 msgstr "동작 프로파일 '%s'을(를) 복사할 수 없음!"
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact-editor.c:474
+#, c-format
+msgid "Can't paste action's profile '%s'!"
+msgstr "동작 프로파일 '%s'을(를) 붙여 넣을 수 없음!"
+
 #. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:476
+#: ../nact/nact-editor.c:479
 #, c-format
 msgid "%s Copy"
 msgstr "%s의 사본"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:494
-#, c-format
-msgid "Can't paste action's profile '%s'!"
-msgstr "동작 프로파일 '%s'을(를) 붙여 넣을 수 없음!"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:503
-#, c-format
-msgid "Can't paste action's profile '%s' !"
-msgstr "동작 프로파일 '%s'을(를) 붙여 넣을 수 없음 !"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:538
+#: ../nact/nact-editor.c:539
 #, c-format
 msgid "Can't delete action's profile '%s'!"
 msgstr "동작 프로파일 '%s'을(를) 지울 수 없음!"
 
-#: ../nact/nact-editor.c:590
+#: ../nact/nact-editor.c:591
 msgid "Profile Name"
 msgstr "프로파일 이름"
 
-#: ../nact/nact-editor.c:643
+#: ../nact/nact-editor.c:644
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "노틸러스 팝업 메뉴 내의 메뉴 항목의 아이콘"
 
-#: ../nact/nact-editor.c:665
+#: ../nact/nact-editor.c:666
 msgid "Add a New Action"
 msgstr "새 동작 더하기"
 
-#: ../nact/nact-editor.c:669
+#: ../nact/nact-editor.c:670
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "\"%s\" 동작 편집"
@@ -603,8 +597,8 @@ msgid ""
 "A pattern to match selected files against. May include wildcards (* or ?) "
 "(you must set one option for each pattern you need)"
 msgstr ""
-"선택된 파일과 비교할 패턴. 와일드 카드 문자 (* 혹은 ?)를 포함할 수 있음 "
-"(필요한 각 패턴마다 한 가지 옵션 만을 선택해야 합니다)"
+"선택된 파일과 비교할 패턴. 와일드 카드 문자 (* 혹은 ?)를 포함할 수 있음 (필요"
+"한 각 패턴마다 한 가지 옵션 만을 선택해야 합니다)"
 
 #: ../utils/nautilus-actions-new-config.c:54
 #: ../utils/nautilus-actions-new-config.c:56
@@ -616,8 +610,8 @@ msgid ""
 "A pattern to match selected files' mimetype against. May include wildcards "
 "(* or ?) (you must set one option for each pattern you need)"
 msgstr ""
-"선택된 파일의 MIME 형식과 비교할 패턴. 와일드 카드 문자 (* 혹은 ?)를 포함할 수 있음 "
-"(필요한 각 패턴마다 한 가지 옵션 만을 선택해야 합니다)"
+"선택된 파일의 MIME 형식과 비교할 패턴. 와일드 카드 문자 (* 혹은 ?)를 포함할 "
+"수 있음 (필요한 각 패턴마다 한 가지 옵션 만을 선택해야 합니다)"
 
 #: ../utils/nautilus-actions-new-config.c:57
 msgid "Set it if the selection can contain files"
@@ -636,8 +630,7 @@ msgid ""
 "A GnomeVFS scheme where the selected files should be located (you must set "
 "it for each scheme you need)"
 msgstr ""
-"선택된 파일이 존재하는 GnomeVFS 스킴"
-"(필요한 각 스킴마다 선택해야 합니다)"
+"선택된 파일이 존재하는 GnomeVFS 스킴(필요한 각 스킴마다 선택해야 합니다)"
 
 #: ../utils/nautilus-actions-new-config.c:60
 msgid "SCHEME"
@@ -648,8 +641,8 @@ msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
 msgstr ""
-"새 GConf 스키마 설명 파일을 저장할 파일의 경로"
-"[기본값: /tmp/config_UUID.schemas]"
+"새 GConf 스키마 설명 파일을 저장할 파일의 경로[기본값: /tmp/config_UUID."
+"schemas]"
 
 #: ../utils/nautilus-actions-new-config.c:100
 #, c-format
@@ -697,15 +690,16 @@ msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
 msgstr ""
-"선택 사항이 표시 조건 설정과 일치할 때 노틸러스 팝업 메뉴에 나타날 메뉴 항목의 레이블"
+"선택 사항이 표시 조건 설정과 일치할 때 노틸러스 팝업 메뉴에 나타날 메뉴 항목"
+"의 레이블"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
 msgstr ""
-"사용자가 마우스로 노틸러스 팝업 메뉴 항목을 가리켰을 때 "
-"노틸러스 상태 표시줄에 나타날 메뉴 항목의 툴팁 문자열"
+"사용자가 마우스로 노틸러스 팝업 메뉴 항목을 가리켰을 때 노틸러스 상태 표시줄"
+"에 나타날 메뉴 항목의 툴팁 문자열"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
 msgid "The icon of the menu item"
@@ -716,8 +710,8 @@ msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
 msgstr ""
-"선택 사항이 표시 조건 설정과 일치할 때 "
-"노틸러스 팝업 메뉴의 레이블 옆에 표시될 메뉴 항목의 아이콘"
+"선택 사항이 표시 조건 설정과 일치할 때 노틸러스 팝업 메뉴의 레이블 옆에 표시"
+"될 메뉴 항목의 아이콘"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
 msgid "A description name of the profile"
@@ -729,9 +723,9 @@ msgid ""
 "the Nact interface. If not set there will be a default auto generated string "
 "set by default"
 msgstr ""
-"이 항목은 Nact 인터페이스의 프로파일에 대해 사람들이 읽기 편한 이름을 "
-"부여합니다. 만약 이 항목의 내용을 입력하지 않으면 기본적으로 "
-"자동 생성된 문자열이 설정될 것입니다"
+"이 항목은 Nact 인터페이스의 프로파일에 대해 사람들이 읽기 편한 이름을 부여합"
+"니다. 만약 이 항목의 내용을 입력하지 않으면 기본적으로 자동 생성된 문자열이 "
+"설정될 것입니다"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
 msgid ""
@@ -759,10 +753,11 @@ msgid ""
 "%U: username of the GnomeVFS URI\n"
 "%%: a percent sign"
 msgstr ""
-"사용자가 노틸러스 팝업 메뉴 내의 메뉴 항목을 선택했을 때 실행할 명령의 매개변수\n"
+"사용자가 노틸러스 팝업 메뉴 내의 메뉴 항목을 선택했을 때 실행할 명령의 매개변"
+"수\n"
 "\n"
-"매개변수는 명령을 수행하기 전에 노틸러스 정보로 변환될 수 있는 몇 가지 "
-"특수한 토큰을 포함할 수 있습니다:\n"
+"매개변수는 명령을 수행하기 전에 노틸러스 정보로 변환될 수 있는 몇 가지 특수"
+"한 토큰을 포함할 수 있습니다:\n"
 "\n"
 "%d: 선택된 파일들의 기본 폴더\n"
 "%f: 선택된 (첫 번째) 파일읠 이름\n"
@@ -784,14 +779,14 @@ msgid ""
 "file(s)/folder(s). Each selected items must match at least one of the "
 "filename patterns for the action to appear"
 msgstr ""
-"선택된 파일/폴더와 비교될 ('*' 혹은 '?'와 같은) 와일드 카드 문자를 포함한 문자열. "
-"동작이 보이려면 선택된 각 항목들은 파일 이름 패턴 중의 최소 하나 이상과 일치해야 합니다"
+"선택된 파일/폴더와 비교될 ('*' 혹은 '?'와 같은) 와일드 카드 문자를 포함한 문"
+"자열. 동작이 보이려면 선택된 각 항목들은 파일 이름 패턴 중의 최소 하나 이상"
+"과 일치해야 합니다"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
 msgid ""
 "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr ""
-"파일 이름 패턴이 대소문자를 구분하면 '참', 그렇지 않으면 '거짓'"
+msgstr "파일 이름 패턴이 대소문자를 구분하면 '참', 그렇지 않으면 '거짓'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
 msgid ""
@@ -800,7 +795,8 @@ msgid ""
 "'false'"
 msgstr ""
 "파일 이름을 비교할 때 대소문자를 구분해야 하면 이 키를 '참'으로 설정합니다. "
-"만약 예를 들어 '*.jpg\" 패턴을 'photo.JPG' 파일과 일치시려면 '거짓'으로 설정합니다."
+"만약 예를 들어 '*.jpg\" 패턴을 'photo.JPG' 파일과 일치시려면 '거짓'으로 설정"
+"합니다."
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
@@ -812,16 +808,18 @@ msgid ""
 "selected file(s). Each selected items must match at least one of the "
 "mimetype patterns for the action to appear"
 msgstr ""
-"선택된 파일의 MIME 형식과 비교될 ('*' 혹은 '?'와 같은) 와일드 카드 문자를 포함한 문자열. "
-"동작이 보이려면 선택된 각 항목들은 MIME 형식 패턴 중의 최소 하나 이상과 일치해야 합니다"
+"선택된 파일의 MIME 형식과 비교될 ('*' 혹은 '?'와 같은) 와일드 카드 문자를 포"
+"함한 문자열. 동작이 보이려면 선택된 각 항목들은 MIME 형식 패턴 중의 최소 하"
+"나 이상과 일치해야 합니다"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
+#, fuzzy
 msgid ""
 "The valid combinations are:\n"
 "\n"
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-"isfile=TRUE and isdir=TRUE': the selection may hold both files and folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
@@ -829,7 +827,8 @@ msgstr ""
 "\n"
 "isfile=TRUE, isdir=FALSE: 선택 사항에는 오직 파일 만이 포함될 것입니다\n"
 "isfile=FALSE, isdir=TRUE: 선택 사항에는 오직 폴더 만이 포함될 것입니다\n"
-"isfile=TRUE, isdir=TRUE': 선택 사항에는 파일과 폴더가 모두 포함될 수 있습니다\n"
+"isfile=TRUE, isdir=TRUE': 선택 사항에는 파일과 폴더가 모두 포함될 수 있습니"
+"다\n"
 "isfile=FALSE, isdir=FALSE: 잘못된 조합(이 설정은 절대 나타나지 않을 것입니다)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
@@ -886,9 +885,9 @@ msgid ""
 "\n"
 "All GnomeVFS schemes used by Nautilus can be used here."
 msgstr ""
-"선택된 항목들과 비교될 올바른 GnomeVFS 스킴의 목록을 정의합니다. "
-"GnomeVFS 스킴은 파일에 접근하기 위해 사용되는 프로토콜입니다. "
-"사용할 키워드는 GnomeVFS URI에서 사용되는 것입니다.\n"
+"선택된 항목들과 비교될 올바른 GnomeVFS 스킴의 목록을 정의합니다. GnomeVFS 스"
+"킴은 파일에 접근하기 위해 사용되는 프로토콜입니다. 사용할 키워드는 GnomeVFS "
+"URI에서 사용되는 것입니다.\n"
 "\n"
 "GnomeVFS URI의 예는 다음과 같은 것을 포함합니다: \n"
 "file:///tmp/foo.txt\n"
@@ -912,8 +911,7 @@ msgstr "설정 형식의 버전"
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
-msgstr ""
-"하위 호환성 관리를 위해 사용될 설정 형식의 버전"
+msgstr "하위 호환성 관리를 위해 사용될 설정 형식의 버전"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:205
@@ -922,8 +920,8 @@ msgid ""
 "The action '%s' already exists with the name '%s', please first remove the "
 "existing one before trying to add this one"
 msgstr ""
-"'%s' 동작은 '%s'(이)라는 이름으로 이미 존재합니다. 이것을 더하기 전에 먼저 "
-"기존의 것을 지워주십시오"
+"'%s' 동작은 '%s'(이)라는 이름으로 이미 존재합니다. 이것을 더하기 전에 먼저 기"
+"존의 것을 지워주십시오"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:222
@@ -938,13 +936,13 @@ msgid ""
 "A profile already exists with the name '%s', please first remove or rename "
 "the existing one before trying to add this one"
 msgstr ""
-"프로파일이 '%s'(이)라는 이름으로 이미 존재합니다. 이것을 더하기 전에 먼저 "
-"기존의 것을 지워주십시오"
+"프로파일이 '%s'(이)라는 이름으로 이미 존재합니다. 이것을 더하기 전에 먼저 기"
+"존의 것을 지워주십시오"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:524
-#, c-format
-msgid "Can't removed the old profile '%s'"
+#, fuzzy, c-format
+msgid "Can't remove the old profile '%s'"
 msgstr "예전 프로파일 '%s'을(를) 지울 수 없음"
 
 #. i18n notes: will be displayed in an error dialog
@@ -966,9 +964,10 @@ msgstr ","
 
 #. i18n notes: will be displayed in an error dialog concatenated to another error message
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:303
-#, c-format
+#, fuzzy, c-format
 msgid "%s (one missing key: %s)%s"
-msgstr "%s (설정되지 않은 키: %s)%s"
+msgid_plural "%s (missing keys: %s)%s"
+msgstr[0] "%s (설정되지 않은 키: %s)%s"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:682
@@ -978,31 +977,32 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (found <%s> "
 "element instead of <%s>)"
 msgstr ""
-"이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 "
-"(<%s> 발견 - <%s> 엘리먼트가 와야 함)"
+"이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (<%s> 발견 - <%s> 엘"
+"리먼트가 와야 함)"
 
 #. if the version of the file is greater than the current one, we reject the file
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "This config file is more recent than this version of Nautilus-actions can "
-"support. Please upgrade Nautilus-actions to the lastest version if you want "
+"support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
-"이 설정 파일은 노틸러스 동작에서 지원할 수 있는 버전보다 최신의 것입니다. "
-"이 파일을 가져오려면 노틸러스 동작을 최신 버전으로 업그레이드 하세요 "
-"(파일 버전: %s (최대 지원 버전 : %s))"
+"이 설정 파일은 노틸러스 동작에서 지원할 수 있는 버전보다 최신의 것입니다. 이 "
+"파일을 가져오려면 노틸러스 동작을 최신 버전으로 업그레이드 하세요 (파일 버"
+"전: %s (최대 지원 버전 : %s))"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
+msgid_plural ""
 "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
 "s"
-msgstr ""
-"이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (설정되지 않은 키: %s)%s"
-"이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (설정되지 않은 키: %s)%s"
+msgstr[0] ""
+"이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (설정되지 않은 키: %"
+"s)"
 
 #. No error occured but we have not found the "version" gconf key
 #. i18n notes: will be displayed in an error dialog
@@ -1011,7 +1011,8 @@ msgstr ""
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr ""
-"이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (설정되지 않은 키: %s)"
+"이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (설정되지 않은 키: %"
+"s)"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:827
@@ -1020,6 +1021,17 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
 "instead of <%s>)"
 msgstr ""
-"이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (루트 노트 <%s> - "
-"<%s>이(가) 와야함)"
+"이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (루트 노트 <%s> - <%"
+"s>이(가) 와야함)"
 
+#~ msgid "Can't paste action's profile '%s' !"
+#~ msgstr "동작 프로파일 '%s'을(를) 붙여 넣을 수 없음 !"
+
+#~ msgid ""
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
+#~ "s)%sThis XML file is not a valid Nautilus-actions config file (missing "
+#~ "keys: %s)%s"
+#~ msgstr ""
+#~ "이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (설정되지 않은 "
+#~ "키: %s)%s이 XML 파일은 올바른 노틸러스 동작 설정 파일이 아닙니다 (설정되"
+#~ "지 않은 키: %s)%s"

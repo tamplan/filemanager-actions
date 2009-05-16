@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-16 13:55+0100\n"
+"POT-Creation-Date: 2009-05-16 17:18+0200\n"
 "PO-Revision-Date: 2009-03-16 13:56+0100\n"
 "Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Language-Team: Basque <itzulpena@euskalgnu.org>\n"
@@ -55,7 +55,8 @@ msgstr "<b>%d</b>: hautatutako fitxategien oinarrizko karpeta"
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
-msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgid ""
+"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
 msgstr ""
 "<b>%f</b>: hautatutako fitxategiaren izena, edo aurrenekoa hainbat hautatuta "
 "egonez gero"
@@ -203,8 +204,10 @@ msgid "Create a copy of the selected action."
 msgstr "Sortu hautatutako ekintzaren kopia."
 
 #: ../nact/nautilus-actions-config.glade.h:46
-msgid "Delete the action without any confirmation nor the possibility to restore it."
-msgstr "Ekintza ezabatu berrespena eskatu gabe edo leheneratzeko aukerarik izan gabe."
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
+msgstr ""
+"Ekintza ezabatu berrespena eskatu gabe edo leheneratzeko aukerarik izan gabe."
 
 #: ../nact/nautilus-actions-config.glade.h:47
 msgid "Duplicate"
@@ -405,7 +408,7 @@ msgstr "Ikonoa"
 msgid "Label"
 msgstr "Etiketa"
 
-#: ../nact/nact.c:303 ../nact/nact-editor.c:627
+#: ../nact/nact.c:303 ../nact/nact-editor.c:628
 #: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr ""
@@ -456,43 +459,37 @@ msgstr "Bat ere ez"
 msgid "Can't copy action's profile '%s'!"
 msgstr "Ezin da ekintzaren '%s' profila kopiatu."
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact-editor.c:474
+#, c-format
+msgid "Can't paste action's profile '%s'!"
+msgstr "Ezin da ekintzaren '%s' profila itsatsi."
+
 #. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:476
+#: ../nact/nact-editor.c:479
 #, c-format
 msgid "%s Copy"
 msgstr "%s kopia"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:494
-#, c-format
-msgid "Can't paste action's profile '%s'!"
-msgstr "Ezin da ekintzaren '%s' profila itsatsi."
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:503
-#, c-format
-msgid "Can't paste action's profile '%s' !"
-msgstr "Ezin da ekintzaren '%s' profila itsatsi."
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:538
+#: ../nact/nact-editor.c:539
 #, c-format
 msgid "Can't delete action's profile '%s'!"
 msgstr "Ezin da ekintzaren '%s' profila ezabatu."
 
-#: ../nact/nact-editor.c:590
+#: ../nact/nact-editor.c:591
 msgid "Profile Name"
 msgstr "Profilaren izena"
 
-#: ../nact/nact-editor.c:643
+#: ../nact/nact-editor.c:644
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "Menuko elementuaren ikonoa (Nautilus-eko laster-menuan)"
 
-#: ../nact/nact-editor.c:665
+#: ../nact/nact-editor.c:666
 msgid "Add a New Action"
 msgstr "Gehitu ekintza berria"
 
-#: ../nact/nact-editor.c:669
+#: ../nact/nact-editor.c:670
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "Editatu \"%s\" ekintza"
@@ -813,7 +810,8 @@ msgstr ""
 "izenaren ereduetariko batekin bat etorri behar du gutxienez agertzeko"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgid ""
+"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr ""
 "'true' (egia) fitxategi-izenen ereduek maiuskulak eta minuskulak bereiztu "
 "behar badute, bestela 'false' (faltsua)"
@@ -844,12 +842,13 @@ msgstr ""
 "ereduetariko batekin bat etorri behar du gutxienez agertzeko"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
+#, fuzzy
 msgid ""
 "The valid combinations are:\n"
 "\n"
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-"isfile=TRUE and isdir=TRUE': the selection may hold both files and folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
@@ -875,7 +874,8 @@ msgstr "Ezarpen hau 'isdir' ezarpenarekin lotuta dago. "
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr "'true' (egia) hautapenak karpetak eduki baditzake, bestela 'false' (faltsua)"
+msgstr ""
+"'true' (egia) hautapenak karpetak eduki baditzake, bestela 'false' (faltsua)"
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
@@ -981,8 +981,8 @@ msgstr ""
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:524
-#, c-format
-msgid "Can't removed the old profile '%s'"
+#, fuzzy, c-format
+msgid "Can't remove the old profile '%s'"
 msgstr "Ezin da '%s' profila zaharra kendu"
 
 #. i18n notes: will be displayed in an error dialog
@@ -1023,10 +1023,10 @@ msgstr ""
 
 #. if the version of the file is greater than the current one, we reject the file
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "This config file is more recent than this version of Nautilus-actions can "
-"support. Please upgrade Nautilus-actions to the lastest version if you want "
+"support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
 "Konfigurazioko fitxategi hau Nautilus-eko ekintzen bertsio honek onartu "
@@ -1037,7 +1037,8 @@ msgstr ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
 msgid_plural ""
 "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
 "s"
@@ -1052,7 +1053,8 @@ msgstr[1] ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr ""
 "XML fitxategi hau ez da baliozko Nautilus-eko ekintzen konfigurazio-"
 "fitxategia (gakoa falta zaio: %s)"
@@ -1067,3 +1069,5 @@ msgstr ""
 "XML fitxategi hau ez da baliozko Nautilus-eko ekintzen konfigurazio-"
 "fitxategia (erroko nodoa %s da %s ordez)"
 
+#~ msgid "Can't paste action's profile '%s' !"
+#~ msgstr "Ezin da ekintzaren '%s' profila itsatsi."

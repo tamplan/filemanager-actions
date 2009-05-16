@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-01-20 06:31+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-16 17:18+0200\n"
 "PO-Revision-Date: 2009-03-19 07:16+0000\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi/Panjabi <punjab-l10n@list.sf.net>\n"
@@ -26,7 +26,6 @@ msgid "Nautilus Actions Configuration"
 msgstr "ਨਟੀਲਸ ਐਕਸ਼ਨ ਸੰਰਚਨਾ"
 
 #: ../nact/nautilus-actions-config.glade.h:1
-#| msgid "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
 msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
 msgstr "(C) ੨੦੦੫-੨੦੦੭ Frederic Ruaudel <grumz@grumz.net>"
 
@@ -42,8 +41,8 @@ msgid ""
 "full paths"
 msgstr "<b>%M</b> : ਚੁਣੀਆਂ ਫਾਇਲਾਂ/ਫੋਲਡਰਾਂ ਦੇ ਪੂਰੇ ਮਾਰਗ ਨਾਲ ਖਾਲੀ ਥਾਂ ਦੇਕੇ ਬਣਾਈ ਗਈ ਲਿਸਟ"
 
-#: ../nact/nautilus-actions-config.glade.h:7, no-c-format
-#| msgid "<b>%U</b>: username of the gnome-vfs URI"
+#: ../nact/nautilus-actions-config.glade.h:7
+#, no-c-format
 msgid "<b>%U</b>: username of the GnomeVFS URI"
 msgstr "<b>%U</b>: gnomeVFS URI ਲਈ ਯੂਜ਼ਰ ਨਾਂ"
 
@@ -54,11 +53,12 @@ msgstr "<b>%d</b>: ਚੁਣੀਆਂ ਫਾਇਲਾਂ ਲਈ ਅਧਾਰ ਫ
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
-msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgid ""
+"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
 msgstr "<b>%f</b>: ਚੁਣੀ ਫਾਇਲ ਦਾ ਨਾਂ ਅਤੇ ਜੇਕਰ ਕਈ ਚੁਣੀਆਂ ਗਈਆਂ ਹੋਣ ਤਾਂ ਪਹਿਲਾਂ"
 
-#: ../nact/nautilus-actions-config.glade.h:13, no-c-format
-#| msgid "<b>%h</b>: hostname of the gnome-vfs URI"
+#: ../nact/nautilus-actions-config.glade.h:13
+#, no-c-format
 msgid "<b>%h</b>: hostname of the GnomeVFS URI"
 msgstr "<b>%h</b>: GnomeVFS URI ਦਾ ਹੋਸਟ-ਨਾਂ"
 
@@ -69,13 +69,13 @@ msgid ""
 "file(s)/folder(s)"
 msgstr "<b>%M</b>: ਚੁਣੀਆਂ ਫਾਇਲਾਂ/ਫੋਲਡਰਾਂ ਦੇ ਪੂਰੇ ਮਾਰਗ ਨਾਲ ਖਾਲੀ ਥਾਂ ਦੇਕੇ ਬਣਾਈ ਗਈ ਸੂਚੀ"
 
-#: ../nact/nautilus-actions-config.glade.h:18, no-c-format
-#| msgid "<b>%s</b>: scheme of the gnome-vfs URI"
+#: ../nact/nautilus-actions-config.glade.h:18
+#, no-c-format
 msgid "<b>%s</b>: scheme of the GnomeVFS URI"
 msgstr "<b>%s</b>: GnomeVFS URI ਦੀ ਸਕੀਮ"
 
-#: ../nact/nautilus-actions-config.glade.h:20, no-c-format
-#| msgid "<b>%u</b>: gnome-vfs URI"
+#: ../nact/nautilus-actions-config.glade.h:20
+#, no-c-format
 msgid "<b>%u</b>: GnomeVFS URI"
 msgstr "<b>%u</b>: GnomeVFS URI"
 
@@ -137,7 +137,6 @@ msgid ""
 msgstr ""
 
 #: ../nact/nautilus-actions-config.glade.h:35
-#| msgid "<b>Action</b>"
 msgid "Action"
 msgstr "ਐਕਸ਼ਨ"
 
@@ -165,7 +164,8 @@ msgstr "ਇੱਕ ਫਾਇਲ ਚੋਣਕਾਰ ਡਾਈਲਾਗ ਤੋਂ �
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list."
-msgstr "ਲਟਕਦੀ ਸੂਚੀ ਵਿੱਚੋਂ ਇੱਕ ਫਾਇਲ ਲਈ ਪਹਿਲਾਂ ਦਿੱਤੇ ਆਈਕਾਨ ਦੀ ਬਜਾਏ ਪਸੰਦ ਦਾ ਆਈਕਾਨ ਚੁਣਨ ਲਈ ਦਬਾਓ।"
+msgstr ""
+"ਲਟਕਦੀ ਸੂਚੀ ਵਿੱਚੋਂ ਇੱਕ ਫਾਇਲ ਲਈ ਪਹਿਲਾਂ ਦਿੱਤੇ ਆਈਕਾਨ ਦੀ ਬਜਾਏ ਪਸੰਦ ਦਾ ਆਈਕਾਨ ਚੁਣਨ ਲਈ ਦਬਾਓ।"
 
 #: ../nact/nautilus-actions-config.glade.h:42
 msgid "Click to remove the selected scheme."
@@ -173,9 +173,6 @@ msgstr "ਚੁਣੀ ਸਕੀਮ ਹਟਾਉਣ ਲਈ ਦਬਾਓ।"
 
 #: ../nact/nautilus-actions-config.glade.h:43
 #, fuzzy
-#| msgid ""
-#| "Click to see the list of special tokens you can use in the parameter "
-#| "field."
 msgid ""
 "Click to toggle the display of the list of special tokens you can use in the "
 "parameter field."
@@ -190,7 +187,8 @@ msgid "Create a copy of the selected action."
 msgstr "ਚੁਣੀ ਕਾਰਵਾਈ ਦੀ ਨਕਲ ਬਣਾਓ।"
 
 #: ../nact/nautilus-actions-config.glade.h:46
-msgid "Delete the action without any confirmation nor the possibility to restore it."
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
 msgstr "ਕਾਰਵਾਈ ਨੂੰ ਬਿਨਾਂ ਪੁਸ਼ਟੀ ਜਾਂ ਮੁੜ-ਪ੍ਰਾਪਤ ਕਰਨ ਦੀ ਸੰਭਵਨਾ ਤੋਂ ਬਿਨਾਂ ਹਟਾਓ"
 
 #: ../nact/nautilus-actions-config.glade.h:47
@@ -258,7 +256,6 @@ msgid "Nautilus Action Editor"
 msgstr "ਨਟੀਲਸ ਕਾਰਵਾਈ ਸੰਪਾਦਕ"
 
 #: ../nact/nautilus-actions-config.glade.h:62
-#| msgid "Nautilus Action Editor"
 msgid "Nautilus Action Profile Editor"
 msgstr "ਨਟੀਲਸ ਐਕਸ਼ਨ ਪਰੋਫਾਇਲ ਐਡੀਟਰ"
 
@@ -267,9 +264,6 @@ msgid "Nautilus Actions"
 msgstr "ਨਟੀਲਸ ਕਾਰਵਾਈ"
 
 #: ../nact/nautilus-actions-config.glade.h:64
-#| msgid ""
-#| "Nautilus Action Configuration Tool\n"
-#| "Application to configure Nautilus Action extension"
 msgid ""
 "Nautilus Actions Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -311,7 +305,8 @@ msgstr "ਫੋਲਡਰ ਵਿੱਚ ਸੰਭਾਲੋ:"
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
-msgstr "ਆਪਣੀ ਨਿਰਯਾਤ ਕੀਤੀ ਜਾਣ ਵਾਲੀ ਸੰਰਚਨਾ ਦੀ ਚੋਣ ਕਰੋ। Shift ਜਾਂ Ctrl ਸਵਿੱਚ ਕਈਆਂ ਦੀ ਚੋਣ ਕਰੋ।"
+msgstr ""
+"ਆਪਣੀ ਨਿਰਯਾਤ ਕੀਤੀ ਜਾਣ ਵਾਲੀ ਸੰਰਚਨਾ ਦੀ ਚੋਣ ਕਰੋ। Shift ਜਾਂ Ctrl ਸਵਿੱਚ ਕਈਆਂ ਦੀ ਚੋਣ ਕਰੋ।"
 
 #: ../nact/nautilus-actions-config.glade.h:74
 msgid "Select the configurations you want to export:"
@@ -325,7 +320,8 @@ msgstr "ਆਯਾਤ ਕੀਤੀਆਂ ਜਾਣ ਵਾਲੀਆਂ ਫਾਇ�
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
-msgstr "ਫੋਲਡਰ ਦੀ ਚੋਣ ਕਰੋ, ਜਿਸ ਵਿੱਚ ਤੁਸੀਂ ਸੰਰਚਨਾ ਨੂੰ ਸੰਭਾਲਣਾ ਚਾਹੁੰਦੇ ਹੋ। ਇਹ ਫੋਲਡਰ ਮੌਜੂਦ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।"
+msgstr ""
+"ਫੋਲਡਰ ਦੀ ਚੋਣ ਕਰੋ, ਜਿਸ ਵਿੱਚ ਤੁਸੀਂ ਸੰਰਚਨਾ ਨੂੰ ਸੰਭਾਲਣਾ ਚਾਹੁੰਦੇ ਹੋ। ਇਹ ਫੋਲਡਰ ਮੌਜੂਦ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।"
 
 #: ../nact/nautilus-actions-config.glade.h:77
 msgid ""
@@ -366,8 +362,8 @@ msgid "_Legend"
 msgstr "ਸੰਕੇਤ(_L)"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact.c:163, c-format
-#| msgid "Can't save action '%s'"
+#: ../nact/nact.c:163
+#, c-format
 msgid "Can't duplicate action '%s'!"
 msgstr "ਐਕਸ਼ਨ '%s' ਡੁਪਲੀਕੇਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"
 
@@ -380,7 +376,7 @@ msgstr "ਆਈਕਾਨ"
 msgid "Label"
 msgstr "ਲੇਬਲ"
 
-#: ../nact/nact.c:303 ../nact/nact-editor.c:627
+#: ../nact/nact.c:303 ../nact/nact-editor.c:628
 #: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "ਨਟੀਲਸ ਕਾਰਵਾਈ ਸੰਰਚਨਾ ਸੰਦ ਲਈ ਇੰਟਰਫੇਸ ਲੋਡ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ"
@@ -424,48 +420,42 @@ msgid "None"
 msgstr "ਕੋਈ ਨਹੀਂ"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:449, c-format
-#| msgid "Can't parse file '%s' !"
+#: ../nact/nact-editor.c:449
+#, c-format
 msgid "Can't copy action's profile '%s'!"
 msgstr "ਪਰੋਫਾਇਲ '%s' ਦਾ ਐਕਸ਼ਨ ਕਾਪੀ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact-editor.c:474
+#, c-format
+msgid "Can't paste action's profile '%s'!"
+msgstr "ਪਰੋਫਾਇਲ '%s' ਦਾ ਐਕਸ਼ਨ ਚੇਪਿਆ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"
+
 #. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:476
+#: ../nact/nact-editor.c:479
 #, c-format
 msgid "%s Copy"
 msgstr "%s ਕਾਪੀ"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:494, c-format
-#| msgid "Can't parse file '%s' !"
-msgid "Can't paste action's profile '%s'!"
-msgstr "ਪਰੋਫਾਇਲ '%s' ਦਾ ਐਕਸ਼ਨ ਚੇਪਿਆ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:503, c-format
-#| msgid "Can't parse file '%s' !"
-msgid "Can't paste action's profile '%s' !"
-msgstr "ਪਰੋਫਾਇਲ '%s' ਦਾ ਐਕਸ਼ਨ ਚੇਪਿਆ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:538, c-format
-#| msgid "Can't write data in file %s\n"
+#: ../nact/nact-editor.c:539
+#, c-format
 msgid "Can't delete action's profile '%s'!"
 msgstr "ਪਰੋਫਾਇਲ '%s' ਦਾ ਐਕਸ਼ਨ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ!"
 
-#: ../nact/nact-editor.c:590
+#: ../nact/nact-editor.c:591
 msgid "Profile Name"
 msgstr "ਪਰੋਫਾਇਲ ਨਾਂ"
 
-#: ../nact/nact-editor.c:643
+#: ../nact/nact-editor.c:644
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "ਨਟੀਲਸ ਪੋਪਅੱਪ ਮੇਨੂ ਵਿੱਚ ਮੇਨੂ ਇਕਾਈ ਦਾ ਆਈਕਾਨ"
 
-#: ../nact/nact-editor.c:665
+#: ../nact/nact-editor.c:666
 msgid "Add a New Action"
 msgstr "ਇੱਕ ਨਵੀਂ ਕਾਰਵਾਈ ਸ਼ਾਮਲ"
 
-#: ../nact/nact-editor.c:669
+#: ../nact/nact-editor.c:670
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "ਕਾਰਵਾਈ \"%s\" ਸੋਧ"
@@ -476,8 +466,8 @@ msgid "Can't parse file '%s' as GConf schema description file!"
 msgstr "'%s' ਫਾਇਥ ਨੂੰ GConf ਸਕੀਮਾ ਵੇਰਵਾ ਫਾਇਲ ਵਜੋਂ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ!"
 
 #. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:226, c-format
-#| msgid "Action '%s' importation failed !"
+#: ../nact/nact-import-export.c:226
+#, c-format
 msgid "Action '%s' importation failed!"
 msgstr "ਐਕਸ਼ਨ '%s' ਇੰਪੋਰਟ ਕਰਨ ਲਈ ਫੇਲ੍ਹ!"
 
@@ -531,12 +521,11 @@ msgstr "ਵੇਰਵਾ"
 
 #: ../nact/nact-profile-editor.c:532
 #, fuzzy
-#| msgid "Add a New Action"
 msgid "Add a New Profile"
 msgstr "ਇੱਕ ਨਵੀਂ ਕਾਰਵਾਈ ਸ਼ਾਮਲ"
 
-#: ../nact/nact-profile-editor.c:536, c-format
-#| msgid "Edit Action \"%s\""
+#: ../nact/nact-profile-editor.c:536
+#, c-format
 msgid "Edit Profile \"%s\""
 msgstr "ਪਰੋਫਾਇਲ \"%s\" ਸੋਧ"
 
@@ -751,7 +740,8 @@ msgid ""
 msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgid ""
+"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr "'ਠੀਕ', ਜੇਕਰ ਚੋਣ ਫੋਲਡਰ ਹੈ, ਜੇਕਰ ਹੋਰ ਕੁਝ ਹੈ ਤਾਂ 'ਗਲਤ'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
@@ -773,12 +763,13 @@ msgid ""
 msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
+#, fuzzy
 msgid ""
 "The valid combinations are:\n"
 "\n"
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-"isfile=TRUE and isdir=TRUE': the selection may hold both files and folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
@@ -889,9 +880,6 @@ msgstr "ਕਾਰਵਾਈ '%s' ਸੰਭਾਲੀ ਨਹੀਂ ਜਾ ਸਕਦ
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:470
 #, fuzzy, c-format
-#| msgid ""
-#| "The action '%s' already exists with the name '%s', please first remove "
-#| "the existing one before trying to add this one"
 msgid ""
 "A profile already exists with the name '%s', please first remove or rename "
 "the existing one before trying to add this one"
@@ -902,14 +890,12 @@ msgstr ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:524
 #, fuzzy, c-format
-#| msgid "Can't parse file '%s' !"
-msgid "Can't removed the old profile '%s'"
+msgid "Can't remove the old profile '%s'"
 msgstr "ਫਾਇਲ '%s' ਨੂੰ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ!"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:531
 #, fuzzy, c-format
-#| msgid "Can't parse file '%s' !"
 msgid "Can't find profile named '%s'"
 msgstr "ਫਾਇਲ '%s' ਨੂੰ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ!"
 
@@ -946,14 +932,15 @@ msgstr ""
 #, c-format
 msgid ""
 "This config file is more recent than this version of Nautilus-actions can "
-"support. Please upgrade Nautilus-actions to the lastest version if you want "
+"support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
 msgid_plural ""
 "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
 "s"
@@ -964,7 +951,8 @@ msgstr[1] ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr ""
 
 #. i18n notes: will be displayed in an error dialog
@@ -974,6 +962,10 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
 "instead of <%s>)"
 msgstr ""
+
+#~| msgid "Can't parse file '%s' !"
+#~ msgid "Can't paste action's profile '%s' !"
+#~ msgstr "ਪਰੋਫਾਇਲ '%s' ਦਾ ਐਕਸ਼ਨ ਚੇਪਿਆ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"
 
 #~ msgid " "
 #~ msgstr " "

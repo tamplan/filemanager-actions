@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: el\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-20 10:26+0200\n"
+"POT-Creation-Date: 2009-05-16 17:18+0200\n"
 "PO-Revision-Date: 2008-03-20 10:30+0200\n"
 "Last-Translator: Kostas Papadimas <pkst@gnome.org>\n"
 "Language-Team: Greek <team@gnome.gr>\n"
@@ -61,7 +61,8 @@ msgstr "<b>%d</b>: βασικός φάκελος του/των επιλεγμέ�
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
-msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgid ""
+"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
 msgstr ""
 "<b>%f</b>: το όνομα του επιλεγμένου αρχείου ή του πρώτου αν έχουν επιλεγεί "
 "πολλά αρχεία"
@@ -177,7 +178,8 @@ msgstr "Κάντε κλικ για να προσθέσετε νέο σχήμα."
 
 #: ../nact/nautilus-actions-config.glade.h:40
 msgid "Click to choose a command from the file chooser dialog."
-msgstr "Κάντε κλικ για να επιλέξετε μια εντολή από το διάλογο επιλογής αρχείων."
+msgstr ""
+"Κάντε κλικ για να επιλέξετε μια εντολή από το διάλογο επιλογής αρχείων."
 
 #: ../nact/nautilus-actions-config.glade.h:41
 msgid ""
@@ -208,28 +210,33 @@ msgid "Create a copy of the selected action."
 msgstr "Δημιουργία αντιγράφου της επιλεγμένης ενέργειας."
 
 #: ../nact/nautilus-actions-config.glade.h:46
-msgid "Delete the action without any confirmation nor the possibility to restore it."
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
 msgstr ""
 "Αφαίρεση της ενέργειας χωρίς καθόλου εφαρμογή της ούτε πιθανότητα για "
 "επαναφορά της."
 
 #: ../nact/nautilus-actions-config.glade.h:47
+msgid "Duplicate"
+msgstr ""
+
+#: ../nact/nautilus-actions-config.glade.h:48
 msgid "Export existing configs"
 msgstr "Εξαγωγή τρεχόντων ρυθμίσεων"
 
-#: ../nact/nautilus-actions-config.glade.h:48
+#: ../nact/nautilus-actions-config.glade.h:49
 msgid "File to Import:"
 msgstr "Αρχείο για εισαγωγή:"
 
-#: ../nact/nautilus-actions-config.glade.h:49
+#: ../nact/nautilus-actions-config.glade.h:50
 msgid "Filenames:"
 msgstr "Ονόματα αρχείων:"
 
-#: ../nact/nautilus-actions-config.glade.h:50
+#: ../nact/nautilus-actions-config.glade.h:51
 msgid "Icon:"
 msgstr "Εικονίδιο:"
 
-#: ../nact/nautilus-actions-config.glade.h:51
+#: ../nact/nautilus-actions-config.glade.h:52
 msgid ""
 "If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
 "will not match photo.JPG)"
@@ -237,27 +244,27 @@ msgstr ""
 "Αν επιλεγεί, τα υποδείγματα των ονομάτων αρχείων θα κάνουν διάκριση πεζών/"
 "κεφαλαίων (π.χ. το *.jpg δεν θα αντιστοιχεί στη φωτογραφία.JPG)"
 
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../nact/nautilus-actions-config.glade.h:53
 msgid "Import new configurations"
 msgstr "Εισαγωγή νέων ρυθμίσεων"
 
-#: ../nact/nautilus-actions-config.glade.h:53
+#: ../nact/nautilus-actions-config.glade.h:54
 msgid "Import/Export"
 msgstr "Εισαγωγή/Εξαγωγή"
 
-#: ../nact/nautilus-actions-config.glade.h:54
+#: ../nact/nautilus-actions-config.glade.h:55
 msgid "Import/Export Settings"
 msgstr "Ρυθμίσεις εισαγωγής/εξαγωγής"
 
-#: ../nact/nautilus-actions-config.glade.h:55
+#: ../nact/nautilus-actions-config.glade.h:56
 msgid "Label of the menu item in the Nautilus popup menu."
 msgstr "Ετικέτα του αντικειμένου του μενού στο αναδυόμενο μενού του Ναυτίλου."
 
-#: ../nact/nautilus-actions-config.glade.h:56
+#: ../nact/nautilus-actions-config.glade.h:57
 msgid "Label:"
 msgstr "Ετικέτα:"
 
-#: ../nact/nautilus-actions-config.glade.h:57
+#: ../nact/nautilus-actions-config.glade.h:58
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
@@ -265,27 +272,27 @@ msgstr ""
 "Χειριστείτε την εισαγωγή των εξωτερικών ρυθμίσεων ενεργειών και της εξαγωγή "
 "των τρεχουσών ενεργειών."
 
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../nact/nautilus-actions-config.glade.h:59
 msgid "Match case"
 msgstr "Διάκριση πεζών/κεφαλαίων"
 
-#: ../nact/nautilus-actions-config.glade.h:59
+#: ../nact/nautilus-actions-config.glade.h:60
 msgid "Mimetypes:"
 msgstr "Τύποι mime:"
 
-#: ../nact/nautilus-actions-config.glade.h:60
+#: ../nact/nautilus-actions-config.glade.h:61
 msgid "Nautilus Action Editor"
 msgstr "Επεξεργαστής ενεργειών του Ναυτίλου"
 
-#: ../nact/nautilus-actions-config.glade.h:61
+#: ../nact/nautilus-actions-config.glade.h:62
 msgid "Nautilus Action Profile Editor"
 msgstr "Επεξεργαστής προφίλ ενεργειών του Ναυτίλου"
 
-#: ../nact/nautilus-actions-config.glade.h:62
+#: ../nact/nautilus-actions-config.glade.h:63
 msgid "Nautilus Actions"
 msgstr "Ενέργειες του Ναυτίλου"
 
-#: ../nact/nautilus-actions-config.glade.h:63
+#: ../nact/nautilus-actions-config.glade.h:64
 msgid ""
 "Nautilus Actions Configuration Tool\n"
 "Application to configure Nautilus Action extension"
@@ -293,15 +300,15 @@ msgstr ""
 "Εργαλείο ρυθμίσεων των ενεργειών του Ναυτίλου\n"
 "Εφαρμογή για να ρυθμίσετε την επέκταση των ενεργειών του Ναυτίλου"
 
-#: ../nact/nautilus-actions-config.glade.h:65
+#: ../nact/nautilus-actions-config.glade.h:66
 msgid "Only files"
 msgstr "Μόνο αρχεία"
 
-#: ../nact/nautilus-actions-config.glade.h:66
+#: ../nact/nautilus-actions-config.glade.h:67
 msgid "Only folders"
 msgstr "Μόνο φάκελοι"
 
-#: ../nact/nautilus-actions-config.glade.h:67
+#: ../nact/nautilus-actions-config.glade.h:68
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
@@ -309,23 +316,23 @@ msgstr ""
 "Οι παράμετροι που θα σταλούν στο πρόγραμμα. Κάντε κλικ στο κουμπί 'Λεζάντα' "
 "για να δείτε τα διαφορετικά αναγνωριστικά αντικατάστασης."
 
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../nact/nautilus-actions-config.glade.h:69
 msgid "Parameters:"
 msgstr "Παράμετροι:"
 
-#: ../nact/nautilus-actions-config.glade.h:69
+#: ../nact/nautilus-actions-config.glade.h:70
 msgid "Path:"
 msgstr "Μονοπάτι:"
 
-#: ../nact/nautilus-actions-config.glade.h:70
+#: ../nact/nautilus-actions-config.glade.h:71
 msgid "Project Website"
 msgstr "Ιστοσελίδα έργου"
 
-#: ../nact/nautilus-actions-config.glade.h:71
+#: ../nact/nautilus-actions-config.glade.h:72
 msgid "Save in Folder:"
 msgstr "Αποθήκευση στον φάκελο:"
 
-#: ../nact/nautilus-actions-config.glade.h:72
+#: ../nact/nautilus-actions-config.glade.h:73
 msgid ""
 "Select the configurations you want to export. Use Shift or Ctrl key to "
 "select more than one."
@@ -333,15 +340,15 @@ msgstr ""
 "Επιλέξτε των ρυθμίσεων που θέλετε να εξάγετε. Χρησιμοποιήστε τα πλήκτρο "
 "Shift ή το Ctrl για να επιλέξετε περισσότερες από μια."
 
-#: ../nact/nautilus-actions-config.glade.h:73
+#: ../nact/nautilus-actions-config.glade.h:74
 msgid "Select the configurations you want to export:"
 msgstr "Επιλέξτε τις ρυθμίσεις που θέλετε να εξάγετε:"
 
-#: ../nact/nautilus-actions-config.glade.h:74
+#: ../nact/nautilus-actions-config.glade.h:75
 msgid "Select the file you want to import."
 msgstr "Επιλέξτε το αρχείο που θέλετε να εισάγετε:"
 
-#: ../nact/nautilus-actions-config.glade.h:75
+#: ../nact/nautilus-actions-config.glade.h:76
 msgid ""
 "Select the folder you want your config to be saved in. This folder must "
 "exist."
@@ -349,7 +356,7 @@ msgstr ""
 "Επιλέξτε τον φάκελο στον οποίο θέλετε να αποθηκευτούν οι ρυθμίσεις σας. "
 "Αυτός ο φάκελος πρέπει να υπάρχει."
 
-#: ../nact/nautilus-actions-config.glade.h:76
+#: ../nact/nautilus-actions-config.glade.h:77
 msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
@@ -361,11 +368,11 @@ msgstr ""
 "κάνοντας κλικ με το ποντίκι σας στο κουμπί '+'."
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:78
+#: ../nact/nautilus-actions-config.glade.h:79
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
 msgstr "Ελληνική μεταφραστική ομάδα του Gnome <team@gnome.gr>"
 
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../nact/nautilus-actions-config.glade.h:80
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
@@ -373,25 +380,25 @@ msgstr ""
 "Η εντολή που θα εκτελεστεί επιλέγοντας την ενέργεια στο αναδυόμενο μενού του "
 "Ναυτίλου."
 
-#: ../nact/nautilus-actions-config.glade.h:80
+#: ../nact/nautilus-actions-config.glade.h:81
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 msgstr "Το λογισμικό κατέχει άδεια υπό την GNU Genaral Public License (GPL)"
 
-#: ../nact/nautilus-actions-config.glade.h:81
+#: ../nact/nautilus-actions-config.glade.h:82
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgstr ""
 "Συμβουλή οθόνης του αντικειμένου μενού που θα εμφανιστεί στη γραμμή "
 "κατάστασης του Ναυτίλου"
 
-#: ../nact/nautilus-actions-config.glade.h:82
+#: ../nact/nautilus-actions-config.glade.h:83
 msgid "Tooltip:"
 msgstr "Συμβουλή οθόνης:"
 
-#: ../nact/nautilus-actions-config.glade.h:83
+#: ../nact/nautilus-actions-config.glade.h:84
 msgid "_Browse"
 msgstr "_Περιήγηση"
 
-#: ../nact/nautilus-actions-config.glade.h:84
+#: ../nact/nautilus-actions-config.glade.h:85
 msgid "_Legend"
 msgstr "_Λεζάντα"
 
@@ -410,7 +417,7 @@ msgstr "Εικονίδιο"
 msgid "Label"
 msgstr "Ετικέτα"
 
-#: ../nact/nact.c:303 ../nact/nact-editor.c:627
+#: ../nact/nact.c:303 ../nact/nact-editor.c:628
 #: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr ""
@@ -461,43 +468,37 @@ msgstr "Δεν επιλέχτηκε κανένα"
 msgid "Can't copy action's profile '%s'!"
 msgstr "Δεν είναι δυνατή η αντιγραφή του προφίλ ενέργειας '%s'!"
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact-editor.c:474
+#, c-format
+msgid "Can't paste action's profile '%s'!"
+msgstr "Δεν είναι δυνατή η επικόλληση του προφίλ ενέργειας '%s'!"
+
 #. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:476
+#: ../nact/nact-editor.c:479
 #, c-format
 msgid "%s Copy"
 msgstr "Αντιγραφή %s"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:494
-#, c-format
-msgid "Can't paste action's profile '%s'!"
-msgstr "Δεν είναι δυνατή η επικόλληση του προφίλ ενέργειας '%s'!"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:503
-#, c-format
-msgid "Can't paste action's profile '%s' !"
-msgstr "Δεν είναι δυνατή η επικόλληση του προφίλ ενέργειας '%s' !"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:538
+#: ../nact/nact-editor.c:539
 #, c-format
 msgid "Can't delete action's profile '%s'!"
 msgstr "Δεν είναι δυνατή η διαγραφή του προφίλ ενέργειας '%s'!"
 
-#: ../nact/nact-editor.c:590
+#: ../nact/nact-editor.c:591
 msgid "Profile Name"
 msgstr "Όνομα προφίλ"
 
-#: ../nact/nact-editor.c:643
+#: ../nact/nact-editor.c:644
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "Εικονίδιο του αντικειμένου του μενού στο αναδυόμενο μενού του Ναυτίλου"
 
-#: ../nact/nact-editor.c:665
+#: ../nact/nact-editor.c:666
 msgid "Add a New Action"
 msgstr "Προσθήκη νέας ενέργειας"
 
-#: ../nact/nact-editor.c:669
+#: ../nact/nact-editor.c:670
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "Επεξεργασία της ενέργειας \"%s\""
@@ -593,7 +594,8 @@ msgstr "Συμβουλή οθόνης"
 
 #: ../utils/nautilus-actions-new-config.c:51
 msgid "The icon of the menu item (filename or GTK stock ID)"
-msgstr "Το εικονίδιο του αντικειμένου μενού (όνομα αρχείου ή GTK αποθηκευμένο ID)"
+msgstr ""
+"Το εικονίδιο του αντικειμένου μενού (όνομα αρχείου ή GTK αποθηκευμένο ID)"
 
 #: ../utils/nautilus-actions-new-config.c:51
 msgid "ICON"
@@ -806,7 +808,8 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid "The list of pattern to match the selected file(s)/folder(s)"
-msgstr "Η λίστα του υποδείγματος για να ταιριάξει τα επιλεγμένα αρχεία/φακέλους"
+msgstr ""
+"Η λίστα του υποδείγματος για να ταιριάξει τα επιλεγμένα αρχεία/φακέλους"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
 msgid ""
@@ -820,7 +823,8 @@ msgstr ""
 "ενέργεια που θα εμφανιστεί"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgid ""
+"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr ""
 "'αληθής' αν τα υποδείγματα των ονομάτων αρχείων πρέπει να κάνουν διάκριση "
 "πεζών και κεφαλαίων, αλλιώς 'ψευδής'"
@@ -854,12 +858,13 @@ msgstr ""
 "που θα εμφανιστεί"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
+#, fuzzy
 msgid ""
 "The valid combinations are:\n"
 "\n"
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-"isfile=TRUE and isdir=TRUE': the selection may hold both files and folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
@@ -892,7 +897,8 @@ msgstr "Αυτή η ρύθμιση συνδέεται με τη ρύθμιση '
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
 msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr "'αληθής' αν η επιλογή μπορεί να έχει διάφορα αντικείμενα, αλλιώς 'ψευδής'"
+msgstr ""
+"'αληθής' αν η επιλογή μπορεί να έχει διάφορα αντικείμενα, αλλιώς 'ψευδής'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
 msgid ""
@@ -905,7 +911,8 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:99
 msgid "The list of GnomeVFS schemes where the selected files should be located"
-msgstr "Η λίστα των GnomeVFS σχημάτων όπου τα επιλεγμένα αρχεία θα τοποθετούνται"
+msgstr ""
+"Η λίστα των GnomeVFS σχημάτων όπου τα επιλεγμένα αρχεία θα τοποθετούνται"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:100
 msgid ""
@@ -988,8 +995,8 @@ msgstr ""
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:524
-#, c-format
-msgid "Can't removed the old profile '%s'"
+#, fuzzy, c-format
+msgid "Can't remove the old profile '%s'"
 msgstr "Δεν είναι δυνατή η διαγραφή των παλαιών προφίλ '%s'"
 
 #. i18n notes: will be displayed in an error dialog
@@ -1030,10 +1037,10 @@ msgstr ""
 
 #. if the version of the file is greater than the current one, we reject the file
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "This config file is more recent than this version of Nautilus-actions can "
-"support. Please upgrade Nautilus-actions to the lastest version if you want "
+"support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
 "Το αρχείο ρυθμίσεων είναι πιο πρόσφατο από αυτή την έκδοση που υποστηρίζουν "
@@ -1044,7 +1051,8 @@ msgstr ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
 msgid_plural ""
 "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
 "s"
@@ -1059,7 +1067,8 @@ msgstr[1] ""
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
 #, c-format
-msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr ""
 "Αυτό το αρχείο τύπου XML δεν είναι ένα έγκυρο αρχείο ρυθμίσεων των ενεργειών "
 "του Ναυτίλου (λείπει το κλειδί: %s)"
@@ -1074,3 +1083,5 @@ msgstr ""
 "Αυτό το αρχείο τύπου XML δεν είναι ένα έγκυρο αρχείο ρυθμίσεων των ενεργειών "
 "του Ναυτίλου (ο ριζικός κόμβος είναι ο <%s> αντί για τον <%s>)"
 
+#~ msgid "Can't paste action's profile '%s' !"
+#~ msgstr "Δεν είναι δυνατή η επικόλληση του προφίλ ενέργειας '%s' !"

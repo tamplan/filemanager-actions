@@ -6,9 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautiuis-action 1.4.1\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-02-23 00:19+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-16 17:18+0200\n"
 "PO-Revision-Date: 2009-03-02 09:42+0100\n"
 "Last-Translator: Sergio Durzu <sergio.durzu@ildeposito.org>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -413,7 +412,7 @@ msgstr "Icona"
 msgid "Label"
 msgstr "Etichetta"
 
-#: ../nact/nact.c:303 ../nact/nact-editor.c:627
+#: ../nact/nact.c:303 ../nact/nact-editor.c:628
 #: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr ""
@@ -464,43 +463,37 @@ msgstr "Nessuno"
 msgid "Can't copy action's profile '%s'!"
 msgstr "Impossibile copiare il profilo dell'azione «%s»."
 
+#. i18n notes: will be displayed in a dialog
+#: ../nact/nact-editor.c:474
+#, c-format
+msgid "Can't paste action's profile '%s'!"
+msgstr "Impossibile incollare il profilo dell'azione «%s»."
+
 #. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:476
+#: ../nact/nact-editor.c:479
 #, c-format
 msgid "%s Copy"
 msgstr "Copia di %s"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:494
-#, c-format
-msgid "Can't paste action's profile '%s'!"
-msgstr "Impossibile incollare il profilo dell'azione «%s»."
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:503
-#, c-format
-msgid "Can't paste action's profile '%s' !"
-msgstr "Impossibile incollare il profilo dell'azione «%s»."
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:538
+#: ../nact/nact-editor.c:539
 #, c-format
 msgid "Can't delete action's profile '%s'!"
 msgstr "Impossibile eliminare il profilo dell'azione «%s»."
 
-#: ../nact/nact-editor.c:590
+#: ../nact/nact-editor.c:591
 msgid "Profile Name"
 msgstr "Nome del profilo"
 
-#: ../nact/nact-editor.c:643
+#: ../nact/nact-editor.c:644
 msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "Icona dell'elemento nel menù contestuale di Nautilus"
 
-#: ../nact/nact-editor.c:665
+#: ../nact/nact-editor.c:666
 msgid "Add a New Action"
 msgstr "Aggiungi una nuova azione"
 
-#: ../nact/nact-editor.c:669
+#: ../nact/nact-editor.c:670
 #, c-format
 msgid "Edit Action \"%s\""
 msgstr "Modifica l'azione «%s»"
@@ -702,7 +695,6 @@ msgstr " Errore: impossibile creare %s: %s\n"
 
 #: ../utils/nautilus-actions-new-config.c:180
 #, c-format
-#| msgid " OK, saved in %s\n"
 msgid "  OK, saved in %s\n"
 msgstr " Ok, salvato in %s\n"
 
@@ -864,12 +856,13 @@ msgstr ""
 "visualizzati"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
+#, fuzzy
 msgid ""
 "The valid combinations are:\n"
 "\n"
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-"isfile=TRUE and isdir=TRUE': the selection may hold both files and folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
@@ -1003,8 +996,8 @@ msgstr ""
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:524
-#, c-format
-msgid "Can't removed the old profile '%s'"
+#, fuzzy, c-format
+msgid "Can't remove the old profile '%s'"
 msgstr "Impossibile eliminare il vecchio profilo «%s»"
 
 #. i18n notes: will be displayed in an error dialog
@@ -1021,7 +1014,6 @@ msgstr " e alcuni profili sono incompleti: "
 #. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:204
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:717
-#| msgid ", "
 msgid ","
 msgstr ", "
 
@@ -1046,10 +1038,10 @@ msgstr ""
 
 #. if the version of the file is greater than the current one, we reject the file
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "This config file is more recent than this version of Nautilus-actions can "
-"support. Please upgrade Nautilus-actions to the lastest version if you want "
+"support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
 "Questo file di configurazione è più recente rispetto alla versione che "
@@ -1091,3 +1083,6 @@ msgid ""
 msgstr ""
 "Questo file XML non è valido come configurazione di un'azione di Nautilus "
 "(il nodo principale è <%s> invece di <%s>)"
+
+#~ msgid "Can't paste action's profile '%s' !"
+#~ msgstr "Impossibile incollare il profilo dell'azione «%s»."
