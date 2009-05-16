@@ -2,6 +2,19 @@
 
 	* update po files
 
+	* Makefile.am: add DISTCLEANFILES,
+	add DISTCHECK_CONFIGURE_FLAGS to be able to make distcheck successfully
+
+	* icons/16x16/Makefile.am:
+	* icons/22x22/Makefile.am:
+	* icons/32x32/Makefile.am:
+	* icons/48x48/Makefile.am:
+	* icons/scalable/Makefile.am:
+	* nact/Makefile.am:
+	* plugin/Makefile.am:
+	* utils/Makefile.am:
+	add EXTRA_DIST to be able to make distcheck successfully
+
 2009-05-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* nact/nact-editor.c:

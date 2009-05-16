@@ -28,3 +28,4 @@ stamp-h1
 *.o
 *.la
 *.lo
+nautilus-actions-*.tar.gz
