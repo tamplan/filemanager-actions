@@ -1,3 +1,13 @@
+2009-05-17 Pierre Wieser <pwieser@trychlos.org>
+
+	Make all sources ansi-compliant
+
+	* configure.ac: use NACT_GNOME_COMPILE_WARNINGS	(see #582860)
+
+	* m4/nact-compiler-flags: creation
+
+	* *.c, *.h: update almost all sources to be ansi-compliant
+
 2009-05-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: created from configure.in

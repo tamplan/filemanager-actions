@@ -27,6 +27,7 @@
  *   and many others (see AUTHORS)
  *
  * pwi 2009-05-16 fix compilation warnings
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -39,8 +40,8 @@ static void nautilus_actions_action_added_handler (NautilusActionsConfig* config
 																				gpointer user_data)
 {
 	printf ("Action added: <>\n");
-	//nautilus_actions_config_free_actions_list (self->config_list);
-	//self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
+	/*nautilus_actions_config_free_actions_list (self->config_list);*/
+	/*self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));*/
 }
 
 static void nautilus_actions_action_changed_handler (NautilusActionsConfig* config,
@@ -50,8 +51,8 @@ static void nautilus_actions_action_changed_handler (NautilusActionsConfig* conf
 	printf ("Action changed: <%s>\n", action->label);
 	NautilusActionsConfigAction *cur_action = nautilus_actions_config_get_action (config, action->uuid);
 	printf ("Action changed: cur <%s>\n", cur_action->label);
-	//nautilus_actions_config_free_actions_list (self->config_list);
-	//self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
+	/*nautilus_actions_config_free_actions_list (self->config_list);*/
+	/*self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));*/
 }
 
 static void nautilus_actions_action_removed_handler (NautilusActionsConfig* config,
@@ -59,8 +60,8 @@ static void nautilus_actions_action_removed_handler (NautilusActionsConfig* conf
 																				gpointer user_data)
 {
 	printf ("Action removed: <>\n");
-	//nautilus_actions_config_free_actions_list (self->config_list);
-	//self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
+	/*nautilus_actions_config_free_actions_list (self->config_list);*/
+	/*self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));*/
 }
 
 

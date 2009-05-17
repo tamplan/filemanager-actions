@@ -27,6 +27,7 @@
  *   and many others (see AUTHORS)
  *
  * pwi 2009-05-16 fix compilation warnings
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -239,7 +240,7 @@ nact_import_actions (void)
 			}
 			else
 			{
-				// i18n notes: %s is the label of the action (eg, 'Mount ISO')
+				/* i18n notes: %s is the label of the action (eg, 'Mount ISO') */
 				error_message = g_strdup_printf (_("Action '%s' importation failed!"), action->label);
 				nautilus_actions_display_error (error_message, error->message);
 				g_error_free (error);
@@ -284,10 +285,10 @@ nact_export_actions (void)
 			gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
 			action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-			// TODO: Better error handling: deal with the GError param
+			/* TODO: Better error handling: deal with the GError param */
 			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_writer), action, NULL))
 			{
-				//nautilus_actions_config_schema_writer_get_saved_filename (schema_writer, action->uuid);
+				/*nautilus_actions_config_schema_writer_get_saved_filename (schema_writer, action->uuid);*/
 			}
 
 			g_free (uuid);

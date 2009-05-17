@@ -1,24 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *  Frederic Ruaudel (grumz@grumz.net)
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -31,7 +39,7 @@ static GObjectClass *parent_class = NULL;
 static void
 nautilus_actions_config_gconf_notify_readers (GConfClient *client, const gchar* uuid)
 {
-	/* The Key value format is XXX:YYYY-YYYY-... where XXX is an number incremented to make key 
+	/* The Key value format is XXX:YYYY-YYYY-... where XXX is an number incremented to make key
 	 * effectively changed each time and YYYY-YYYY-... is the modified uuid */
 
 	int new_incr = 0;
@@ -85,7 +93,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	gconf_client_set_string (config->conf_client, key, action->icon, NULL);
 	g_free (key);
 
-	// Unset old 1.x keys (if needed)
+	/* Unset old 1.x keys (if needed) */
 	key = g_strdup_printf ("%s/%s", action->conf_section, ACTION_PATH_ENTRY);
 	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
@@ -122,7 +130,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	gconf_client_unset (config->conf_client, key, NULL);
 	g_free (key);
 
-	// Set new keys in 2.x format
+	/* Set new keys in 2.x format */
 	profile_list = nautilus_actions_config_action_get_all_profile_names (action);
 
 	for (iter = profile_list; iter; iter = iter->next)
@@ -175,7 +183,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	gconf_client_set_string (config->conf_client, key, action->version, NULL);
 	g_free (key);
 
-	// Send notification to GConf Readers
+	/* Send notification to GConf Readers */
 	nautilus_actions_config_gconf_notify_readers (config->conf_client, action->uuid);
 	return TRUE;
 }
@@ -190,8 +198,8 @@ remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
 	NautilusActionsConfigGconf* config = NAUTILUS_ACTIONS_CONFIG_GCONF (self);
 
 	retv = gconf_client_recursive_unset (config->conf_client, action->conf_section, 0, NULL);
-	
-	// Send notification to GConf Readers
+
+	/* Send notification to GConf Readers */
 	nautilus_actions_config_gconf_notify_readers (config->conf_client, action->uuid);
 	return retv;
 }
@@ -265,4 +273,3 @@ nautilus_actions_config_gconf_writer_get (void)
 
 	return NAUTILUS_ACTIONS_CONFIG_GCONF_WRITER (g_object_ref (G_OBJECT (config)));
 }
-// vim:ts=3:sw=3:tw=1024:cin

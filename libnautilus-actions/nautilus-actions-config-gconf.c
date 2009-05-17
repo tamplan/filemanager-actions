@@ -1,24 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *  Frederic Ruaudel (grumz@grumz.net)
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -62,7 +70,6 @@ nautilus_actions_config_gconf_class_init (NautilusActionsConfigGconfClass *klass
 
 	config_class->save_action = NULL;
 	config_class->remove_action = NULL;
-
 }
 
 static gchar *
@@ -139,9 +146,9 @@ actions_changed_cb (GConfClient *client,
 
 }*/
 
-NautilusActionsConfigAction* 
+NautilusActionsConfigAction*
 nautilus_actions_config_gconf_get_action (NautilusActionsConfigGconf* config, const gchar* uuid)
-{	
+{
 	g_assert (NAUTILUS_ACTIONS_IS_CONFIG_GCONF (config));
 
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_GCONF (config), NULL);
@@ -158,7 +165,7 @@ nautilus_actions_config_gconf_get_action (NautilusActionsConfigGconf* config, co
 	NautilusActionsConfigAction *action = nautilus_actions_config_action_new ();
 
 	stmp = get_action_string_value (config->conf_client, gconf_action_dir, ACTION_LABEL_ENTRY);
-	if (!stmp) 
+	if (!stmp)
 	{
 		nautilus_actions_config_action_free (action);
 		return NULL;
@@ -182,7 +189,7 @@ nautilus_actions_config_gconf_get_action (NautilusActionsConfigGconf* config, co
 	{
 		action_profile = nautilus_actions_config_action_profile_new ();
 
-		//--> manage backward compatibility
+		/* --> manage backward compatibility */
 		stmp = get_action_string_value (config->conf_client, gconf_action_dir, ACTION_PATH_ENTRY);
 		nautilus_actions_config_action_profile_set_path (action_profile, stmp);
 		g_free (stmp);
@@ -299,7 +306,7 @@ nautilus_actions_config_gconf_get_action (NautilusActionsConfigGconf* config, co
 static gchar* get_action_uuid_from_key (const gchar* key)
 {
 	g_return_val_if_fail (g_str_has_prefix (key, ACTIONS_CONFIG_DIR), NULL);
-	
+
 	gchar* uuid = g_strdup (key + strlen (ACTIONS_CONFIG_DIR "/"));
 	gchar* pos = g_strstr_len (uuid, strlen (uuid), "/");
 	if (pos != NULL)
@@ -314,14 +321,14 @@ static void
 nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, NautilusActionsConfigGconfClass *klass)
 {
 	GSList* node;
-	
+
 	g_type_init ();
 	config->conf_client = gconf_client_get_default ();
 
 	/* load all defined actions */
 	GSList* list = gconf_client_all_dirs (config->conf_client, ACTIONS_CONFIG_DIR, NULL);
 
-	for (node = list; node != NULL; node = node->next) 
+	for (node = list; node != NULL; node = node->next)
 	{
 		gchar* uuid = get_action_uuid_from_key ((gchar*)node->data);
 		NautilusActionsConfigAction *action = nautilus_actions_config_gconf_get_action (config, uuid);
@@ -332,7 +339,7 @@ nautilus_actions_config_gconf_init (NautilusActionsConfigGconf *config, Nautilus
 			g_hash_table_insert (NAUTILUS_ACTIONS_CONFIG (config)->actions, g_strdup (action->uuid), action);
 		}
 
-		// Free the gconf dir string once used
+		/* Free the gconf dir string once used */
 		g_free (node->data);
 	}
 
@@ -374,5 +381,3 @@ nautilus_actions_config_gconf_get (void)
 
 	return NAUTILUS_ACTIONS_CONFIG_GCONF (g_object_ref (G_OBJECT (config)));
 }
-
-// vim:ts=3:sw=3:tw=1024:cin

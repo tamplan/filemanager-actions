@@ -1,23 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *  Frederic Ruaudel (grumz@grumz.net)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -84,7 +93,7 @@ get_prefs_int_key (GConfClient *client, const gchar *key)
 	{
 		i = gconf_value_get_int (value);
 	}
-	
+
 	g_free (fullkey);
 
 	return i;
@@ -137,11 +146,11 @@ static void prefs_changed_cb (GConfClient *client,
 									 	GConfEntry *entry,
 									 	gpointer user_data)
 {
-	//NactPreferences* prefs = (NactPreferences*)user_data;
+	/*NactPreferences* prefs = (NactPreferences*)user_data;*/
 
 	if (user_data != NULL)
 	{
-		//g_print ("Key changed : %s\n", entry->key);
+		/*g_print ("Key changed : %s\n", entry->key);*/
 	}
 }
 
@@ -149,13 +158,13 @@ static NactPreferences* nact_prefs_get_preferences (void)
 {
 	static NactPreferences* prefs = NULL;
 	gchar* tmp;
-		
+
 	if (!prefs)
-	{	
+	{
 		prefs = g_new0 (NactPreferences, 1);
-		
+
 		prefs->client = gconf_client_get_default ();
-		
+
 		prefs->schemes = get_prefs_list_key (prefs->client, PREFS_SCHEMES);
 		if (!prefs->schemes)
 		{
@@ -203,21 +212,21 @@ static NactPreferences* nact_prefs_get_preferences (void)
 			tmp = g_strdup ("/tmp");
 		}
 		prefs->import_last_browsed_dir = tmp;
-		
+
 		tmp = get_prefs_string_key (prefs->client, PREFS_EXPORT_PATH);
 		if (!tmp)
 		{
 			tmp = g_strdup ("/tmp");
 		}
 		prefs->export_last_browsed_dir = tmp;
-	
+
 		gconf_client_add_dir (prefs->client, NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
 		prefs->prefs_notify_id = gconf_client_notify_add (prefs->client, NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR,
 									  (GConfClientNotifyFunc) prefs_changed_cb, prefs,
 									  NULL, NULL);
 	}
 
-	return prefs;	
+	return prefs;
 }
 
 static void
@@ -248,7 +257,7 @@ void nact_prefs_set_schemes_list (GSList* schemes)
 		g_slist_free (prefs->schemes);
 		prefs->schemes = NULL;
 	}
-	
+
 	g_slist_foreach (schemes, (GFunc)copy_to_list, &(prefs->schemes));
 }
 
@@ -471,8 +480,8 @@ static void nact_prefs_free_preferences (NactPreferences* prefs)
 		if (prefs->icon_last_browsed_dir)
 		{
 			g_free (prefs->icon_last_browsed_dir);
-		}	
-		
+		}
+
 		if (prefs->path_last_browsed_dir)
 		{
 			g_free (prefs->path_last_browsed_dir);
@@ -519,8 +528,6 @@ void nact_prefs_save_preferences (void)
 	set_prefs_string_key (prefs->client, PREFS_PATH_PATH, prefs->path_last_browsed_dir);
 	set_prefs_string_key (prefs->client, PREFS_IMPORT_PATH, prefs->import_last_browsed_dir);
 	set_prefs_string_key (prefs->client, PREFS_EXPORT_PATH, prefs->export_last_browsed_dir);
-	
+
 	nact_prefs_free_preferences (prefs);
 }
-
-// vim:ts=3:sw=3:tw=1024:cin

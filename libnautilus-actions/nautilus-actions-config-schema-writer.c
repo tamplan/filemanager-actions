@@ -1,24 +1,32 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *  Frederic Ruaudel (grumz@grumz.net)
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -52,28 +60,28 @@ static void nautilus_actions_config_schema_writer_set_property (GObject *object,
 {
 	NautilusActionsConfigSchemaWriter* self = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (object);
 
-	switch (property_id) 
+	switch (property_id)
 	{
 		case NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER_SAVE_PATH:
 			if (self->save_path)
 			{
 				g_free (self->save_path);
-			}	
+			}
 			self->save_path = g_value_dup_string (value);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 			break;
-	}		
+	}
 }
 
 static void nautilus_actions_config_schema_writer_get_property (GObject *object, guint property_id,
 																			GValue* value, GParamSpec *pspec)
 {
-	
+
 	NautilusActionsConfigSchemaWriter* self = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (object);
 
-	switch (property_id) 
+	switch (property_id)
 	{
 		case NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER_SAVE_PATH:
 			g_value_set_string (value, self->save_path);
@@ -81,12 +89,12 @@ static void nautilus_actions_config_schema_writer_get_property (GObject *object,
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 			break;
-	}		
+	}
 }
 
-static void create_schema_entry (xmlDocPtr doc, xmlNodePtr list_node, xmlChar* key_path, 
-											char* type, const char* value, 
-											char* short_desc, char* long_desc, 
+static void create_schema_entry (xmlDocPtr doc, xmlNodePtr list_node, xmlChar* key_path,
+											char* type, const char* value,
+											char* short_desc, char* long_desc,
 											gboolean is_l10n_value)
 {
 	xmlNodePtr schema_node = NULL;
@@ -111,20 +119,20 @@ static void create_schema_entry (xmlDocPtr doc, xmlNodePtr list_node, xmlChar* k
 	value_root_node = schema_node;
 	if (is_l10n_value)
 	{
-		// if the default value must be localized, put it in the <locale> element
+		/* if the default value must be localized, put it in the <locale> element */
 		value_root_node = locale_node;
 	}
-	// Encode special chars <, >, &, ...
+	/* Encode special chars <, >, &, ... */
 	encoded_content = xmlEncodeSpecialChars (doc, BAD_CAST value);
 	xmlNewChild (value_root_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_DFT, encoded_content);
 	xmlFree (encoded_content);
 
-	// Encode special chars <, >, &, ...
+	/* Encode special chars <, >, &, ... */
 	encoded_content = xmlEncodeSpecialChars (doc, BAD_CAST short_desc);
 	xmlNewChild (locale_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_SHORT, encoded_content);
 	xmlFree (encoded_content);
-	
-	// Encode special chars <, >, &, ...
+
+	/* Encode special chars <, >, &, ... */
 	encoded_content = xmlEncodeSpecialChars (doc, BAD_CAST long_desc);
 	xmlNewChild (locale_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_LONG, encoded_content);
 	xmlFree (encoded_content);
@@ -183,30 +191,30 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	GSList* profile_list = NULL;
 	GSList* iter;
 
-	// update the version on the action 
+	/* update the version on the action */
 	if (action->version)
 	{
 		g_free (action->version);
 	}
 	action->version = g_strdup (NAUTILUS_ACTIONS_CONFIG_VERSION);
 
-	// Create the GConf schema XML file and write it in the save_path folder
+	/* Create the GConf schema XML file and write it in the save_path folder */
 	doc = xmlNewDoc (BAD_CAST "1.0");
 	root_node = xmlNewNode (NULL, BAD_CAST NA_GCONF_XML_ROOT);
 	xmlDocSetRootElement (doc, root_node);
 	list_node = xmlNewChild (root_node, NULL, BAD_CAST NA_GCONF_XML_SCHEMA_LIST, NULL);
 
-	//--> Menu item entries : label
+	/* --> Menu item entries : label */
 	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_LABEL_ENTRY, NULL);
 	create_schema_entry (doc, list_node, content, "string", action->label, ACTION_LABEL_DESC_SHORT, ACTION_LABEL_DESC_LONG, TRUE);
 	xmlFree (content);
 
-	//--> Menu item entries : tooltip
+	/* --> Menu item entries : tooltip */
 	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_TOOLTIP_ENTRY, NULL);
 	create_schema_entry (doc, list_node, content, "string", action->tooltip, ACTION_TOOLTIP_DESC_SHORT, ACTION_TOOLTIP_DESC_LONG, TRUE);
 	xmlFree (content);
 
-	//--> Menu item entries : icon
+	/* --> Menu item entries : icon */
 	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_ICON_ENTRY, NULL);
 	create_schema_entry (doc, list_node, content, "string", action->icon, ACTION_ICON_DESC_SHORT, ACTION_ICON_DESC_LONG, FALSE);
 	xmlFree (content);
@@ -219,56 +227,56 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 		gchar* profile_dir = g_strdup_printf ("%s%s", ACTIONS_PROFILE_PREFIX, profile_name);
 		NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
 
-		//--> Profile entries : desc-name
+		/* --> Profile entries : desc-name */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_PROFILE_DESC_NAME_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "string", action_profile->desc_name, ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, FALSE);
 		xmlFree (content);
-	
-		//--> Command entries : path
+
+		/* --> Command entries : path */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_PATH_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "string", action_profile->path, ACTION_PATH_DESC_SHORT, ACTION_PATH_DESC_LONG, FALSE);
 		xmlFree (content);
 
-		//--> Command entries : parameters
+		/* --> Command entries : parameters */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_PARAMS_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "string", action_profile->parameters, ACTION_PARAMS_DESC_SHORT, ACTION_PARAMS_DESC_LONG, FALSE);
 		xmlFree (content);
 
-		//--> Test entries : basenames
+		/* --> Test entries : basenames */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_BASENAMES_ENTRY, NULL);
 		str_list = BAD_CAST gslist_to_schema_string (action_profile->basenames);
 		create_schema_entry (doc, list_node, content, "list", (char*)str_list, ACTION_BASENAMES_DESC_SHORT, ACTION_BASENAMES_DESC_LONG, FALSE);
 		xmlFree (str_list);
 		xmlFree (content);
 
-		//--> test entries : match_case
+		/* --> test entries : match_case */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_MATCHCASE_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "bool", bool_to_schema_string (action_profile->match_case), ACTION_MATCHCASE_DESC_SHORT, ACTION_MATCHCASE_DESC_LONG, FALSE);
 		xmlFree (content);
 
-		//--> Test entries : mimetypes
+		/* --> Test entries : mimetypes */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_MIMETYPES_ENTRY, NULL);
 		str_list = BAD_CAST gslist_to_schema_string (action_profile->mimetypes);
 		create_schema_entry (doc, list_node, content, "list", (char*)str_list, ACTION_MIMETYPES_DESC_SHORT, ACTION_MIMETYPES_DESC_LONG, FALSE);
 		xmlFree (str_list);
 		xmlFree (content);
-				
-		//--> test entries : is_file
+
+		/* --> test entries : is_file */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_ISFILE_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "bool", bool_to_schema_string (action_profile->is_file), ACTION_ISFILE_DESC_SHORT, _(ACTION_ISFILE_DESC_LONG), FALSE);
 		xmlFree (content);
 
-		//--> test entries : is_dir
+		/* --> test entries : is_dir */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_ISDIR_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "bool", bool_to_schema_string (action_profile->is_dir), ACTION_ISDIR_DESC_SHORT, _(ACTION_ISDIR_DESC_LONG), FALSE);
 		xmlFree (content);
 
-		//--> test entries : accept-multiple-files
+		/* --> test entries : accept-multiple-files */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_MULTIPLE_ENTRY, NULL);
 		create_schema_entry (doc, list_node, content, "bool", bool_to_schema_string (action_profile->accept_multiple_files), ACTION_MULTIPLE_DESC_SHORT, ACTION_MULTIPLE_DESC_LONG, FALSE);
 		xmlFree (content);
 
-		//--> test entries : schemes
+		/* --> test entries : schemes */
 		content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, profile_dir, ACTION_SCHEMES_ENTRY, NULL);
 		str_list = BAD_CAST gslist_to_schema_string (action_profile->schemes);
 		create_schema_entry (doc, list_node, content, "list", (char*)str_list, ACTION_SCHEMES_DESC_SHORT, ACTION_SCHEMES_DESC_LONG, FALSE);
@@ -280,12 +288,12 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	g_slist_free (profile_list);
 
 
-	//--> general entry : version
+	/* --> general entry : version */
 	content = BAD_CAST g_build_path ("/", ACTIONS_CONFIG_DIR, action->uuid, ACTION_VERSION_ENTRY, NULL);
 	create_schema_entry (doc, list_node, content, "string", action->version, ACTION_VERSION_DESC_SHORT, ACTION_VERSION_DESC_LONG, FALSE);
 	xmlFree (content);
 
-	// generate the filename name and save the schema into it
+	/* generate the filename name and save the schema into it */
 	path = nautilus_actions_config_schema_writer_get_saved_filename (config, action->uuid);
 	if (xmlSaveFormatFileEnc (path, doc, "UTF-8", 1) != -1)
 	{
@@ -295,7 +303,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 
 	xmlFreeDoc (doc);
 	xmlCleanupParser();
-	
+
 	return retv;
 }
 
@@ -304,7 +312,7 @@ remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
 {
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_SCHEMA_WRITER (self), FALSE);
 
-	//NautilusActionsConfigSchemaWriter* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (self);
+	/*NautilusActionsConfigSchemaWriter* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (self);*/
 
 	return TRUE;
 }
@@ -387,5 +395,3 @@ nautilus_actions_config_schema_writer_get (void)
 
 	return NAUTILUS_ACTIONS_CONFIG_SCHEMA_WRITER (g_object_ref (G_OBJECT (config)));
 }
-
-// vim:ts=3:sw=3:tw=1024:cin

@@ -27,6 +27,7 @@
  *   and many others (see AUTHORS)
  *
  * pwi 2009-05-16 fix compilation warnings
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -139,7 +140,7 @@ gboolean nact_utils_get_action_schemes_list (GtkTreeModel* scheme_model, GtkTree
 		g_free (scheme);
 	}
 
-	return FALSE; // Don't stop looping
+	return FALSE; /* Don't stop looping */
 }
 
 static gchar* nact_utils_joinv (const gchar* start, const gchar* separator, gchar** list)
@@ -306,38 +307,38 @@ gchar* nact_utils_parse_parameter (void)
 		tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter) - strlen (iter));
 		switch (iter[1])
 		{
-			case 'u': // gnome-vfs URI
+			case 'u': /* gnome-vfs URI */
 				tmp = g_strjoin (NULL, ex_scheme, "://", ex_path, "/", ex_one, NULL);
 				tmp_string = g_string_append (tmp_string, tmp);
 				g_free (tmp);
 				break;
-			case 'd': // base dir of the selected file(s)/folder(s)
+			case 'd': /* base dir of the selected file(s)/folder(s) */
 				tmp_string = g_string_append (tmp_string, ex_path);
 				break;
-			case 'f': // the basename of the selected file/folder or the 1st one if many are selected
+			case 'f': /* the basename of the selected file/folder or the 1st one if many are selected */
 				tmp_string = g_string_append (tmp_string, ex_one);
 				break;
-			case 'm': // list of the basename of the selected files/directories separated by space
+			case 'm': /* list of the basename of the selected files/directories separated by space */
 				tmp_string = g_string_append (tmp_string, ex_list);
 				break;
-			case 'M': // list of the selected files/directories with their complete path separated by space.
+			case 'M': /* list of the selected files/directories with their complete path separated by space. */
 				tmp_string = g_string_append (tmp_string, ex_path_list);
 				break;
-			case 's': // scheme of the gnome-vfs URI
+			case 's': /* scheme of the gnome-vfs URI */
 				tmp_string = g_string_append (tmp_string, ex_scheme);
 				break;
-			case 'h': // hostname of the gnome-vfs URI
+			case 'h': /* hostname of the gnome-vfs URI */
 				tmp_string = g_string_append (tmp_string, ex_host);
 				break;
-			case 'U': // username of the gnome-vfs URI
+			case 'U': /* username of the gnome-vfs URI */
 				tmp_string = g_string_append (tmp_string, "root");
 				break;
-			case '%': // a percent sign
+			case '%': /* a percent sign */
 				tmp_string = g_string_append_c (tmp_string, '%');
 				break;
 		}
-		iter+=2; // skip the % sign and the character after.
-		old_iter = iter; // store the new start of the string
+		iter+=2; /* skip the % sign and the character after. */
+		old_iter = iter; /* store the new start of the string */
 	}
 	tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter));
 
@@ -345,7 +346,7 @@ gchar* nact_utils_parse_parameter (void)
 	g_free (ex_path_list);
 	g_free (iter);
 
-	retv = g_string_free (tmp_string, FALSE); // return the content of the GString
+	retv = g_string_free (tmp_string, FALSE); /* return the content of the GString */
 
 	return retv;
 }

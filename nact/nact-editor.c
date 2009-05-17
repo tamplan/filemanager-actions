@@ -27,6 +27,7 @@
  *   and many others (see AUTHORS)
  *
  * pwi 2009-05-16 fix compilation warnings
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <string.h>
@@ -151,7 +152,7 @@ static gint sort_stock_ids (gconstpointer a, gconstpointer b)
 	{
 		label_a = strip_underscore (stock_item_a.label);
 		label_b = strip_underscore (stock_item_b.label);
-		//retv = g_ascii_strcasecmp (label_a, label_b);
+		/*retv = g_ascii_strcasecmp (label_a, label_b);*/
 		retv = g_utf8_collate (label_a, label_b);
 		g_free (label_a);
 		g_free (label_b);
@@ -166,7 +167,7 @@ static GtkTreeModel* create_stock_icon_model (void)
 	GSList* iter;
 	GtkListStore* model;
 	GtkTreeIter row;
-	//GtkWidget* window = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);
+	/*GtkWidget* window = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_DIALOG_WIDGET);*/
 	GtkStockItem stock_item;
 	gchar* label;
 
@@ -720,7 +721,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		nautilus_actions_config_action_set_icon (action, gtk_entry_get_text (GTK_ENTRY (GTK_BIN (menu_icon)->child)));
 		if (is_new)
 		{
-			// TODO: If necessary deal with the GError returned
+			/* TODO: If necessary deal with the GError returned */
 			ret = nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), action, NULL);
 		}
 		else

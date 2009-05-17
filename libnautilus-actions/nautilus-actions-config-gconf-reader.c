@@ -27,6 +27,7 @@
  *   and many others (see AUTHORS)
  *
  * pwi 2009-05-16 fix compilation warnings
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -141,23 +142,23 @@ actions_changed_cb (GConfClient *client,
 	const gchar* notify_value = gconf_value_get_string (value);
 	const gchar* uuid = notify_value + 4;
 
-	// Get the modified action from the internal list if any //
+	/* Get the modified action from the internal list if any */
 	NautilusActionsConfigAction *old_action = nautilus_actions_config_get_action (config, uuid);
 
-	// Get the new version from GConf if any
+	/* Get the new version from GConf if any */
 	NautilusActionsConfigAction *new_action = nautilus_actions_config_gconf_get_action (NAUTILUS_ACTIONS_CONFIG_GCONF (config), uuid);
 
-	// If modified action is unknown internally
+	/* If modified action is unknown internally */
 	if (old_action == NULL)
 	{
 		if (new_action != NULL)
 		{
-			// new action //
+			/* new action */
 			nautilus_actions_config_add_action (config, new_action, NULL);
 		}
 		else
 		{
-			// This case should not happen
+			/* This case should not happen */
 			g_assert_not_reached ();
 		}
 	}
@@ -165,17 +166,19 @@ actions_changed_cb (GConfClient *client,
 	{
 		if (new_action != NULL)
 		{
-			// action modified //
+			/* action modified */
 			nautilus_actions_config_update_action (config, new_action);
 		}
 		else
 		{
-			// action removed //
+			/* action removed */
 			nautilus_actions_config_remove_action (config, uuid);
 		}
 	}
 
-	// Add & change handler duplicate actions before adding them, so we can free the new action
+	/* Add & change handler duplicate actions before adding them,
+	 * so we can free the new action
+	 */
 	nautilus_actions_config_action_free (new_action);
 }
 

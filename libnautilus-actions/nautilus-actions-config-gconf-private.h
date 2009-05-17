@@ -1,42 +1,53 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *  Frederic Ruaudel (grumz@grumz.net)
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
 #include <glib/gi18n.h>
+
+#ifndef __NAUTILUS_ACTIONS_CONFIG_GCONF_PRIVATE_H__
+#define __NAUTILUS_ACTIONS_CONFIG_GCONF_PRIVATE_H__
 
 #ifdef N_
 #undef N_
 #endif
 #define N_(String) String
 
-// GConf general information
+/* GConf general information */
 #define ACTIONS_SCHEMA_PREFIX  "/schemas"
 #define ACTIONS_CONFIG_DIR     NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
 #define ACTIONS_CONFIG_NOTIFY_KEY     ACTIONS_CONFIG_DIR "/action_change_state"
 #define ACTIONS_SCHEMA_OWNER	 "nautilus-actions"
 #define ACTIONS_PROFILE_PREFIX   "profile-"
 
-// GConf XML element names
+/* GConf XML element names */
 #define NA_GCONF_XML_ROOT					"gconfschemafile"
 #define NA_GCONF_XML_SCHEMA_LIST			"schemalist"
 #define NA_GCONF_XML_SCHEMA_ENTRY		"schema"
@@ -50,7 +61,7 @@
 #define NA_GCONF_XML_SCHEMA_DFT			"default"
 #define NA_GCONF_XML_SCHEMA_LIST_TYPE	"list_type"
 
-// GConf key names :
+/* GConf key names : */
 #define ACTION_LABEL_ENTRY     		"label"
 #define ACTION_TOOLTIP_ENTRY   		"tooltip"
 #define ACTION_ICON_ENTRY      		"icon"
@@ -66,9 +77,7 @@
 #define ACTION_SCHEMES_ENTRY   		"schemes"
 #define ACTION_VERSION_ENTRY   		"version"
 
-// GConf description strings :
-
-
+/* GConf description strings : */
 #define ACTION_LABEL_DESC_SHORT		_("The label of the menu item")
 #define ACTION_LABEL_DESC_LONG		_("The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings")
 #define ACTION_TOOLTIP_DESC_SHORT	_("The tooltip of the menu item")
@@ -90,7 +99,7 @@
 #define ACTION_ISFILE_ISDIR_COMBINAITION_DESC_LONG N_("The valid combinations are:\n\nisfile=TRUE and isdir=FALSE: the selection may hold only files\nisfile=FALSE and isdir=TRUE: the selection may hold only folders\nisfile=TRUE and isdir=TRUE: the selection may hold both files and folders\nisfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)")
 #define ACTION_ISFILE_DESC_SHORT		_("'true' if the selection can have files, 'false' otherwise")
 /* i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string */
-#define ACTION_ISFILE_DESC_LONG		N_("This setting is tied in with the 'isdir' setting. ") ACTION_ISFILE_ISDIR_COMBINAITION_DESC_LONG 
+#define ACTION_ISFILE_DESC_LONG		N_("This setting is tied in with the 'isdir' setting. ") ACTION_ISFILE_ISDIR_COMBINAITION_DESC_LONG
 #define ACTION_ISDIR_DESC_SHORT		_("'true' if the selection can have folders, 'false' otherwise")
 /* i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string */
 #define ACTION_ISDIR_DESC_LONG		N_("This setting is tied in with the 'isfile' setting. ") ACTION_ISFILE_ISDIR_COMBINAITION_DESC_LONG
@@ -100,3 +109,5 @@
 #define ACTION_SCHEMES_DESC_LONG		_("Defines the list of valid GnomeVFS schemes to be matched against the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one used in the GnomeVFS URI.\n\nExamples of GnomeVFS URI include: \nfile:///tmp/foo.txt\nsftp:///root@test.example.net/tmp/foo.txt\n\nThe most common schemes are:\n\n'file': local files\n'sftp': files accessed via SSH\n'ftp': files accessed via FTP\n'smb': files accessed via Samba (Windows share)\n'dav': files accessed via WebDav\n\nAll GnomeVFS schemes used by Nautilus can be used here.")
 #define ACTION_VERSION_DESC_SHORT	_("The version of the configuration format")
 #define ACTION_VERSION_DESC_LONG		_("The version of the configuration format that will be used to manage backward compatibility")
+
+#endif /* __NAUTILUS_ACTIONS_CONFIG_GCONF_PRIVATE_H__ */

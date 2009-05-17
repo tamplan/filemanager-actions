@@ -1,28 +1,36 @@
-/* Nautilus Actions configuration tool
- * Copyright (C) 2005 The GNOME Foundation
+/*
+ * Nautilus Actions
  *
- * Authors:
- *	 Rodrigo Moya (rodrigo@gnome-db.org)
- *       Frederic Ruaudel (grumz@grumz.net)
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * This Program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
  * License along with this Library; see the file COPYING.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   and many others (see AUTHORS)
+ *
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
-#ifndef _NAUTILUS_ACTIONS_CONFIG_H_
-#define _NAUTILUS_ACTIONS_CONFIG_H_
+#ifndef __NAUTILUS_ACTIONS_CONFIG_H__
+#define __NAUTILUS_ACTIONS_CONFIG_H__
 
 #include <glib/glist.h>
 #include <glib-object.h>
@@ -32,14 +40,13 @@
 
 G_BEGIN_DECLS
 
-// Error data
+/* Error data */
 #define NAUTILUS_ACTIONS_CONFIG_ERROR g_quark_from_string ("nautilus_actions_config")
 
 typedef enum
 {
-   NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED
+	NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED
 } NautilusActionsConfigError;
-
 
 #define NAUTILUS_ACTIONS_TYPE_CONFIG            (nautilus_actions_config_get_type())
 #define NAUTILUS_ACTIONS_CONFIG(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, NAUTILUS_ACTIONS_TYPE_CONFIG, NautilusActionsConfig))
@@ -48,10 +55,16 @@ typedef enum
 #define NAUTILUS_ACTIONS_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), NAUTILUS_ACTIONS_TYPE_CONFIG))
 #define NAUTILUS_ACTIONS_CONFIG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), NAUTILUS_ACTIONS_TYPE_CONFIG, NautilusActionsConfigClass))
 
-// i18n notes : default profile name displayed in the profile list in the action edition dialog
+/* i18n notes : default profile name displayed in the profile list in
+ * the action edition dialog
+ */
 #define NAUTILUS_ACTIONS_DEFAULT_PROFILE_DESC_NAME _("Main")
 #define NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME "main"
-// i18n notes : default profile name displayed in the profile list in the action edition dialog when more than one profile is created (incremented each time) (please keep the string lowercase if possible)
+
+/* i18n notes : default profile name displayed in the profile list in
+ * the action edition dialog when more than one profile is created
+ * (incremented each time) (please keep the string lowercase if possible)
+ */
 #define NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_DESC_NAME _("Profile %d")
 #define NAUTILUS_ACTIONS_DEFAULT_OTHER_PROFILE_NAME "profile%d"
 
@@ -74,7 +87,7 @@ typedef struct {
 	gchar *label;
 	gchar *tooltip;
 	gchar *icon;
-	GHashTable *profiles; // Hash of NautilusActionsConfigActionProfile*
+	GHashTable *profiles; /* Hash of NautilusActionsConfigActionProfile* */
 	gchar *version;
 } NautilusActionsConfigAction;
 
@@ -96,15 +109,16 @@ struct _NautilusActionsConfigClass {
 	gboolean (* remove_action) (NautilusActionsConfig *config, NautilusActionsConfigAction *action);
 
 	/* Signals handler signature */
-        void (* action_added) (NautilusActionsConfig *config, NautilusActionsConfigAction *action, gpointer user_data);
-        void (* action_changed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action, gpointer user_data);
-        void (* action_removed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action, gpointer user_data);
+	void (* action_added) (NautilusActionsConfig *config, NautilusActionsConfigAction *action, gpointer user_data);
+	void (* action_changed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action, gpointer user_data);
+	void (* action_removed) (NautilusActionsConfig *config, NautilusActionsConfigAction *action, gpointer user_data);
 };
 
 GType                        nautilus_actions_config_get_type (void);
 
 NautilusActionsConfigAction *nautilus_actions_config_get_action (NautilusActionsConfig *config, const gchar *uuid);
 GSList                      *nautilus_actions_config_get_actions (NautilusActionsConfig *config);
+
 /* function to free a list returned by nautilus_actions_config_get_actions () */
 void                         nautilus_actions_config_free_actions_list (GSList *list);
 gboolean                     nautilus_actions_config_add_action (NautilusActionsConfig *config,
@@ -113,31 +127,32 @@ gboolean                     nautilus_actions_config_update_action (NautilusActi
 								    NautilusActionsConfigAction *action);
 gboolean                     nautilus_actions_config_remove_action (NautilusActionsConfig *config,
 								    const gchar *label);
+
 /* function to clear the actions list stored in the nautilus_actions_config object */
 gboolean		     nautilus_actions_config_clear (NautilusActionsConfig *config);
 
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new (void);
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_default (void);
-gboolean                     nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action, 
+gboolean                     nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action,
 									 const gchar* profile_name);
-GSList				*nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigAction *action); 
-void				 nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action, 
-									gchar** new_profile_name, 
+GSList				*nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigAction *action);
+void				 nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action,
+									gchar** new_profile_name,
 									gchar** new_profile_desc_name);
-NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action, 
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name);
-NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action, 
+NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name);
-gboolean                     nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action, 
+gboolean                     nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile,
 									 GError** error);
-void                         nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *action, 
+void                         nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile);
-gboolean                     nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action, 
+gboolean                     nautilus_actions_config_action_remove_profile (NautilusActionsConfigAction *action,
 									 const gchar* profile_name);
-gboolean                     nautilus_actions_config_action_rename_profile (NautilusActionsConfigAction *action, 
+gboolean                     nautilus_actions_config_action_rename_profile (NautilusActionsConfigAction *action,
 									 const gchar* old_profile_name,
 								 	 const gchar* new_profile_name,
 									 GError** error);
@@ -159,11 +174,11 @@ void                         nautilus_actions_config_action_profile_set_path (Na
 								      const gchar *path);
 void                         nautilus_actions_config_action_profile_set_parameters (NautilusActionsConfigActionProfile *action_profile,
 									    const gchar *parameters);
-void                         nautilus_actions_config_action_profile_set_basenames (NautilusActionsConfigActionProfile *action_profile, 
+void                         nautilus_actions_config_action_profile_set_basenames (NautilusActionsConfigActionProfile *action_profile,
 										 GSList *basenames);
-void                         nautilus_actions_config_action_profile_set_mimetypes (NautilusActionsConfigActionProfile *action_profile, 
+void                         nautilus_actions_config_action_profile_set_mimetypes (NautilusActionsConfigActionProfile *action_profile,
 										 GSList *mimetypes);
-void                         nautilus_actions_config_action_profile_set_schemes (NautilusActionsConfigActionProfile *action_profile, 
+void                         nautilus_actions_config_action_profile_set_schemes (NautilusActionsConfigActionProfile *action_profile,
 										 GSList *schemes);
 
 #define nautilus_actions_config_action_profile_set_match_case(action_profile, b) { if ((action_profile)) (action_profile)->match_case = b; }
@@ -180,4 +195,4 @@ void                         nautilus_actions_config_action_free (NautilusAction
 
 G_END_DECLS
 
-#endif
+#endif /* __NAUTILUS_ACTIONS_CONFIG_H__ */

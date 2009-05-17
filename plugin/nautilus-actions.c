@@ -27,6 +27,7 @@
  *   and many others (see AUTHORS)
  *
  * pwi 2009-05-16 fix compilation warnings
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -55,8 +56,9 @@ GType nautilus_actions_get_type (void)
 #ifndef HAVE_NAUTILUS_MENU_PROVIDER_EMIT_ITEMS_UPDATED_SIGNAL
 static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvider *provider)
 {
-	//--> fake function for backward compatibility
-	//-> do nothing
+	/* -> fake function for backward compatibility
+	 * -> do nothing
+	 */
 }
 #endif
 
@@ -229,7 +231,7 @@ static void nautilus_actions_action_changed_handler (NautilusActionsConfig* conf
 
 static void nautilus_actions_instance_finalize (GObject* obj)
 {
-	//NautilusActions* self = NAUTILUS_ACTIONS (obj);
+	/*NautilusActions* self = NAUTILUS_ACTIONS (obj);*/
 
 	/* Chain up to the parent class */
 	G_OBJECT_CLASS (parent_class)->finalize (obj);
@@ -245,17 +247,18 @@ static void nautilus_actions_class_init (NautilusActionsClass *actions_class)
 
 static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer klass)
 {
-	// Patch from Bruce van der Kooij <brucevdkooij@gmail.com>
-	//
-	// TODO: GnomeVFS needs to be initialized before gnome_vfs methods
-	// can be used. Since GnomeVFS has been deprecated it would be
-	// a good idea to rewrite this extension to use equivelant methods
-	// from GIO/GVFS.
-	//
-	// plugins/nautilus-actions-utils.c:nautilus_actions_utils_parse_parameter
-	// is the only function that makes use of gnome_vfs methods.
-	//
-	// See: Bug #574919
+	/* Patch from Bruce van der Kooij <brucevdkooij@gmail.com>
+	 *
+	 * TODO: GnomeVFS needs to be initialized before gnome_vfs methods
+	 * can be used. Since GnomeVFS has been deprecated it would be
+	 * a good idea to rewrite this extension to use equivelant methods
+	 * from GIO/GVFS.
+	 *
+	 * plugins/nautilus-actions-utils.c:nautilus_actions_utils_parse_parameter
+	 * is the only function that makes use of gnome_vfs methods.
+	 *
+	 * See: Bug #574919
+	 */
 	gnome_vfs_init ();
 
 	NautilusActions* self = NAUTILUS_ACTIONS (instance);

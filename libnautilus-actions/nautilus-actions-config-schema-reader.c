@@ -27,6 +27,7 @@
  *   and many others (see AUTHORS)
  *
  * pwi 2009-05-16 fix compilation warnings
+ * pwi 2009-05-17 make the source ansi-compliant
  */
 
 #include <config.h>
@@ -188,13 +189,17 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 	ProfileChecking* check = NULL;
 
 	printf ("test check 1\n");
-	// i18n notes: will be displayed in an error dialog concatenated to another error message
+	/* i18n notes: will be displayed in an error dialog concatenated
+	 * to another error message
+	 */
 	error_message_str = g_string_new (_(" and some profiles are incomplete: "));
 	g_hash_table_foreach (profile_check_list, (GHFunc)get_hash_keys, &profile_list);
 	printf ("test check 2\n");
 
-	// Check if the default profile has been found in the xml file, if not remove
-	//  it (added automatically by nautilus_actions_config_action_new_default() function)
+	/* Check if the default profile has been found in the xml file,
+	 * if not remove it (added automatically by nautilus_actions_config
+	 * action_new_default() function)
+	 */
 	check = g_hash_table_lookup (profile_check_list, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
 
 	printf ("test check 3 : <%p>\n", check);
@@ -208,14 +213,18 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 	}
 
 	printf ("test check 4\n");
-	// i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+	/* i18n notes: this is a list separator, it can have more than one
+	 * character (ie, in French it will be ", ")
+	 */
 	list_separator = g_strdup (_(","));
 
 	printf ("test check 5\n");
 	if (g_slist_length (profile_list) >= 1)
 	{
-		// There is at least one profile to check so we'll enter the next loop and
-		// so we set the return val to TRUE to make the local check works
+		/* There is at least one profile to check so we'll enter the
+		 * next loop and so we set the return val to TRUE to make the
+		 * local check works
+		 */
 		retv = TRUE;
 	}
 
@@ -240,7 +249,7 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 
 			local_retv = TRUE;
 		}
-		//else if (g_ascii_strcasecmp (version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 &&
+		/*else if (g_ascii_strcasecmp (version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0 &&*/
 		else if (g_ascii_strcasecmp (version, "1.1") >= 0 &&
 				check->is_schemes_ok && check->is_multiple_ok &&
 				check->is_matchcase_ok && check->is_mimetypes_ok &&
@@ -288,7 +297,7 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 				g_string_append_printf (missing_keys , "%s%s", ACTION_PATH_ENTRY, list_separator);
 				count++;
 			}
-			//if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0)
+			/*if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) == 0)*/
 			if (g_ascii_strcasecmp (version, "1.1") >= 0)
 			{
 				if (!check->is_matchcase_ok)
@@ -302,12 +311,14 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 					count++;
 				}
 			}
-			// Remove the last separator
+			/* Remove the last separator */
 			g_string_truncate (missing_keys, (missing_keys->len - strlen (list_separator)));
 
 			tmp = g_string_free (missing_keys, FALSE);
 
-			// i18n notes: will be displayed in an error dialog concatenated to another error message
+			/* i18n notes: will be displayed in an error dialog
+			 * concatenated to another error message
+			 */
 			g_string_append_printf (error_message_str, ngettext ("%s (one missing key: %s)%s", "%s (missing keys: %s)%s", count), profile_name, tmp, list_separator);
 			g_free (tmp);
 		}
@@ -318,7 +329,7 @@ static gboolean nautilus_actions_config_schema_reader_profile_checking_check (GH
 	}
 	g_slist_free (profile_list);
 
-	// Remove the last separator
+	/* Remove the last separator */
 	g_string_truncate (error_message_str, (error_message_str->len - strlen (list_separator)));
 
 	tmp = g_string_free (error_message_str, FALSE);
@@ -460,7 +471,7 @@ static gboolean nautilus_actions_config_schema_reader_action_parse_schema_key (x
 								NA_GCONF_XML_SCHEMA_LOCALE,
 								strlen (NA_GCONF_XML_SCHEMA_LOCALE)) == 0)
 		{
-			//--> FIXME: Manage $lang attribute (at the moment it only take the first found)
+			/* --> FIXME: Manage $lang attribute (at the moment it only take the first found) */
 			is_default_value_ok = nautilus_actions_config_schema_reader_action_parse_schema_key_locale (iter, value);
 		}
 	}
@@ -484,7 +495,7 @@ static GSList* schema_string_to_gslist (const gchar* str_list_value)
 	gchar** str_list_splited = NULL;
 	int i;
 
-	//--> First remove the brackets []
+	/* --> First remove the brackets [] */
 	while (*ptr != '[')
 	{
 		ptr++;
@@ -506,7 +517,7 @@ static GSList* schema_string_to_gslist (const gchar* str_list_value)
 		}
 	}
 
-	//--> split the result and fill the list
+	/* --> split the result and fill the list */
 	if (str_list != NULL)
 	{
 		str_list_splited = g_strsplit (str_list, ",", -1);
@@ -677,7 +688,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 				action_profile = nautilus_actions_config_action_get_or_create_profile (action, profile_name);
 				if (action_profile->desc_name == NULL)
 				{
-					// if the profile descriptiv name is not set, set it to the profile name
+					/* if the profile descriptiv name is not set, set it to the profile name */
 					nautilus_actions_config_action_profile_set_desc_name (action_profile, profile_name);
 				}
 				printf ("test parse 6\n");
@@ -686,7 +697,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			}
 			else
 			{
-				// i18n notes: will be displayed in an error dialog
+				/* i18n notes: will be displayed in an error dialog */
 				g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (found <%s> element instead of <%s>)"), (gchar*)iter->name, NA_GCONF_XML_SCHEMA_ENTRY);
 			}
 		}
@@ -700,7 +711,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 		printf ("test parse 10\n");
 		if (g_ascii_strcasecmp (action->version, NAUTILUS_ACTIONS_CONFIG_VERSION) > 0)
 		{
-			// if the version of the file is greater than the current one, we reject the file
+			/* if the version of the file is greater than the current one, we reject the file */
 			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This config file is more recent than this version of Nautilus-actions can support. Please upgrade Nautilus-actions to the latest version if you want to be able to import it (File version: %s (max supported version : %s))"), action->version, NAUTILUS_ACTIONS_CONFIG_VERSION);
 		}
 		else if (g_ascii_strcasecmp (action->version, "1.0") == 0 &&
@@ -721,7 +732,9 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 			missing_keys = g_string_new ("");
 			count = 0;
 			printf ("error 1\n");
-			// i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
+			/* i18n notes: this is a list separator, it can have more
+			 * than one character (ie, in French it will be ", ")
+			 */
 			list_separator = g_strdup (_(","));
 			if (!is_icon_ok)
 			{
@@ -738,7 +751,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 				g_string_append_printf (missing_keys , "%s%s", ACTION_LABEL_ENTRY, list_separator);
 				count++;
 			}
-			// Remove the last separator
+			/* Remove the last separator */
 			g_string_truncate (missing_keys, (missing_keys->len - strlen (list_separator)));
 			printf ("error 2 (count: %d)\n", count);
 
@@ -748,7 +761,7 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 				error_msg = g_strdup ("");
 			}
 
-			// i18n notes: will be displayed in an error dialog
+			/* i18n notes: will be displayed in an error dialog */
 			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, ngettext ("This XML file is not a valid Nautilus-actions config file (missing key: %s)%s", "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%s", count), tmp, error_msg);
 			g_free (tmp);
 		}
@@ -756,8 +769,8 @@ static gboolean nautilus_actions_config_schema_reader_action_fill (NautilusActio
 	}
 	else if (error != NULL && *error != NULL)
 	{
-		// No error occured but we have not found the "version" gconf key
-		// i18n notes: will be displayed in an error dialog
+		/* No error occured but we have not found the "version" gconf key */
+		/* i18n notes: will be displayed in an error dialog */
 		g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (missing key: %s)"), ACTION_VERSION_ENTRY);
 	}
 
@@ -821,7 +834,7 @@ gboolean nautilus_actions_config_schema_reader_parse_file (NautilusActionsConfig
 					}
 					else
 					{
-						// i18n notes: will be displayed in an error dialog
+						/* i18n notes: will be displayed in an error dialog */
 						g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (found <%s> element instead of <%s>)"), (gchar*)iter->name, NA_GCONF_XML_SCHEMA_LIST);
 						no_error = FALSE;
 					}
@@ -831,7 +844,7 @@ gboolean nautilus_actions_config_schema_reader_parse_file (NautilusActionsConfig
 		}
 		else
 		{
-			// i18n notes: will be displayed in an error dialog
+			/* i18n notes: will be displayed in an error dialog */
 			g_set_error (error, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR, NAUTILUS_ACTIONS_SCHEMA_READER_ERROR_FAILED, _("This XML file is not a valid Nautilus-actions config file (root node is <%s> instead of <%s>)"), (gchar*)iter->name, NA_GCONF_XML_ROOT);
 		}
 		xmlFreeDoc (doc);
@@ -854,7 +867,7 @@ save_action (NautilusActionsConfig *self, NautilusActionsConfigAction *action)
 	gboolean retv = TRUE;
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_SCHEMA_READER (self), FALSE);
 
-//	NautilusActionsConfigSchemaReader* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_READER (self);
+	/*NautilusActionsConfigSchemaReader* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_READER (self);*/
 
 	return retv;
 }
@@ -864,7 +877,7 @@ remove_action (NautilusActionsConfig *self, NautilusActionsConfigAction* action)
 {
 	g_return_val_if_fail (NAUTILUS_ACTIONS_IS_CONFIG_SCHEMA_READER (self), FALSE);
 
-//	NautilusActionsConfigSchemaReader* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_READER (self);
+	/*NautilusActionsConfigSchemaReader* config = NAUTILUS_ACTIONS_CONFIG_SCHEMA_READER (self);*/
 
 	return TRUE;
 }

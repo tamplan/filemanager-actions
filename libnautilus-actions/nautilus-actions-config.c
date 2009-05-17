@@ -209,7 +209,7 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 		found_action = (NautilusActionsConfigAction*)g_hash_table_lookup (config->actions, action->uuid);
 		if (found_action != NULL)
 		{
-			// i18n notes: will be displayed in an error dialog
+			/* i18n notes: will be displayed in an error dialog */
 			g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("The action '%s' already exists with the name '%s', please first remove the existing one before trying to add this one"), action->label, found_action->label);
 			return FALSE;
 		}
@@ -226,7 +226,7 @@ nautilus_actions_config_add_action (NautilusActionsConfig *config, NautilusActio
 	}
 	else
 	{
-		// i18n notes: will be displayed in an error dialog
+		/* i18n notes: will be displayed in an error dialog */
 		g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("Can't save action '%s'"), action->label);
 	}
 
@@ -355,7 +355,7 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new (
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_default (void)
 {
 	NautilusActionsConfigActionProfile* new_action_profile = nautilus_actions_config_action_profile_new();
-	//--> Set some good default values
+	/* --> Set some good default values */
 	new_action_profile->desc_name = g_strdup (NAUTILUS_ACTIONS_DEFAULT_PROFILE_DESC_NAME);
 	new_action_profile->path = g_strdup ("");
 	new_action_profile->parameters = g_strdup ("");
@@ -398,7 +398,7 @@ nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigActio
 	GSList* profile_names = NULL;
 	g_hash_table_foreach (action->profiles, (GHFunc)get_profiles_names, &profile_names);
 
-	return profile_names; // The returned list must be freed with all its elements after usage !!
+	return profile_names; /* The returned list must be freed with all its elements after usage !! */
 }
 
 void
@@ -474,7 +474,7 @@ nautilus_actions_config_action_add_profile (NautilusActionsConfigAction *action,
 
 	if (nautilus_actions_config_action_profile_exists (action, profile_name))
 	{
-			// i18n notes: will be displayed in an error dialog
+			/* i18n notes: will be displayed in an error dialog */
 			g_set_error (error, NAUTILUS_ACTIONS_CONFIG_ERROR, NAUTILUS_ACTIONS_CONFIG_ERROR_FAILED, _("A profile already exists with the name '%s', please first remove or rename the existing one before trying to add this one"), profile_name);
 			return FALSE;
 	}
@@ -489,7 +489,7 @@ nautilus_actions_config_action_replace_profile (NautilusActionsConfigAction *act
 									 const gchar* profile_name,
 								 	 NautilusActionsConfigActionProfile* profile)
 {
-	//--> the old value is freed by the function
+	/* --> the old value is freed by the function */
 	g_hash_table_replace (action->profiles, g_strdup (profile_name), profile);
 }
 
@@ -552,7 +552,7 @@ NautilusActionsConfigAction *nautilus_actions_config_action_new (void)
 NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void)
 {
 	NautilusActionsConfigAction* new_action = nautilus_actions_config_action_new();
-	//--> Set some good default values
+	/* --> Set some good default values */
 	new_action->conf_section = g_strdup ("");
 	new_action->uuid = get_new_uuid ();
 	new_action->label = g_strdup ("");
@@ -657,7 +657,7 @@ copy_list (gchar* data, GSList** list)
 static void
 copy_list_strdown (gchar* data, GSList** list)
 {
-	// make sure that the elements are copied with their case lowered
+	/* make sure that the elements are copied with their case lowered */
 	(*list) = g_slist_append ((*list), g_ascii_strdown (data, strlen (data)));
 }
 
