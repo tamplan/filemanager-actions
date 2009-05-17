@@ -29,7 +29,7 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([nautilus-actions],[1.10],[maintainer@nautilus-actions.org])
+AC_INIT([nautilus-actions],[1.10.0],[maintainer@nautilus-actions.org])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
 

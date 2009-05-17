@@ -43,4 +43,11 @@ enum {
 
 void nact_fill_actions_list (GtkWidget *list);
 
+void dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data);
+void add_button_clicked_cb (GtkButton *button, gpointer user_data);
+void delete_button_clicked_cb (GtkButton *button, gpointer user_data);
+void duplicate_button_clicked_cb (GtkButton *button, gpointer user_data);
+void edit_button_clicked_cb (GtkButton *button, gpointer user_data);
+void im_export_button_clicked_cb (GtkButton *button, gpointer user_data);
+
 #endif /* __NACT_H__ */

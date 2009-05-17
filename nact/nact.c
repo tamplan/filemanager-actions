@@ -48,14 +48,6 @@
 #include "nact-prefs.h"
 
 static gint actions_list_sort_by_label (gconstpointer a1, gconstpointer a2);
-/*
-static void add_button_clicked_cb (GtkButton *button, gpointer user_data);
-static void edit_button_clicked_cb (GtkButton *button, gpointer user_data);
-static void duplicate_button_clicked_cb (GtkButton *button, gpointer user_data);
-static void delete_button_clicked_cb (GtkButton *button, gpointer user_data);
-static void im_export_button_clicked_cb (GtkButton *button, gpointer user_data);
-static void dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data);
-*/
 static void list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data);
 
 static NautilusActionsConfigGconfWriter *config = NULL;
@@ -113,17 +105,14 @@ void nact_fill_actions_list (GtkWidget *list)
 	nautilus_actions_config_free_actions_list (actions);
 }
 
-/*
-static void
+void
 add_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	if (nact_editor_new_action ())
 		nact_fill_actions_list (nact_get_glade_widget ("ActionsList"));
 }
-*/
 
-/*
-static void
+void
 edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
@@ -150,10 +139,8 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 		g_free (uuid);
 	}
 }
-*/
 
-/*
-static void
+void
 duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
@@ -185,21 +172,18 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 			}
 			else
 			{
-				// i18n notes: will be displayed in a dialog
+				/* i18n notes: will be displayed in a dialog */
 				tmp = g_strdup_printf (_("Can't duplicate action '%s'!"), action->label);
 				nautilus_actions_display_error (tmp, error->message);
 				g_error_free (error);
 				g_free (tmp);
 			}
 		}
-
 		g_free (uuid);
 	}
 }
-*/
 
-/*
-static void
+void
 delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkTreeSelection *selection;
@@ -221,10 +205,8 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 		g_free (uuid);
 	}
 }
-*/
 
-/*
-static void
+void
 im_export_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	GtkWidget *nact_actions_list;
@@ -235,10 +217,8 @@ im_export_button_clicked_cb (GtkButton *button, gpointer user_data)
 		nact_fill_actions_list (nact_actions_list);
 	}
 }
-*/
 
-/*
-static void
+void
 dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 {
 	GtkWidget* nact_about_dialog;
@@ -248,14 +228,14 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 	case GTK_RESPONSE_NONE :
 	case GTK_RESPONSE_DELETE_EVENT :
 	case GTK_RESPONSE_CLOSE :
-		// Free any profile in the clipboard
+		/* Free any profile in the clipboard */
 		nautilus_actions_config_action_profile_free (g_object_steal_data (G_OBJECT (nact_prof_paste_button), "profile"));
 
-		/ * FIXME : update pref settings
+		/* FIXME : update pref settings
 		nact_prefs_set_main_dialog_size (GTK_WINDOW (dialog));
 		nact_prefs_set_main_dialog_position (GTK_WINDOW (dialog));
 		nact_prefs_save_preferences ();
-		* /
+		*/
 
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		nact_destroy_glade_objects ();
@@ -272,7 +252,6 @@ dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data)
 		break;
 	}
 }
-*/
 
 static void
 list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
