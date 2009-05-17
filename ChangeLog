@@ -1,5 +1,11 @@
 2009-05-17 Pierre Wieser <pwieser@trychlos.org>
 
+	Releasing 1.10.0
+
+	* configure.ac: update version number
+
+2009-05-17 Pierre Wieser <pwieser@trychlos.org>
+
 	Make all sources ansi-compliant
 
 	* configure.ac: use NACT_GNOME_COMPILE_WARNINGS	(see #582860)
