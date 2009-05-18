@@ -24,14 +24,12 @@
  *   Frederic Ruaudel <grumz@grumz.net>
  *   Rodrigo Moya <rodrigo@gnome-db.org>
  *   Pierre Wieser <pwieser@trychlos.org>
- *   and many others (see AUTHORS)
- *
- * pwi 2009-05-16 fix compilation warnings
- * pwi 2009-05-17 make the source ansi-compliant
+ *   ... and many others (see AUTHORS)
  */
 
 #include <config.h>
 #include <string.h>
+#include <syslog.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-file-info.h>
@@ -47,6 +45,9 @@
 
 static GObjectClass *parent_class = NULL;
 static GType actions_type = 0;
+static guint log_handler = 0;
+
+static void nact_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
 
 GType nautilus_actions_get_type (void)
 {
@@ -64,6 +65,9 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
 
 static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile)
 {
+	static const gchar *thisfn = "nautilus_actions_execute";
+	g_debug( "%s", thisfn );
+
 	GList *files;
 	GString *cmd;
 	gchar* param = NULL;
@@ -81,6 +85,7 @@ static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsCon
 	}
 
 	g_spawn_command_line_async (cmd->str, NULL);
+	g_debug( "%s: commande='%s'", thisfn, cmd->str );
 
 	g_string_free (cmd, TRUE);
 
@@ -105,6 +110,9 @@ static const gchar* get_verified_icon_name (const gchar* icon_name)
 
 static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfigAction *action, GList *files, NautilusActionsConfigActionProfile* action_profile)
 {
+	static const gchar *thisfn = "nautilus_actions_create_menu_item";
+	g_debug( "%s", thisfn );
+
 	NautilusMenuItem *item;
 	gchar* name;
 	const gchar* icon_name = get_verified_icon_name (g_strstrip (action->icon));
@@ -142,6 +150,9 @@ static void get_hash_keys (gchar* key, gchar* value, GSList** list)
 
 static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, GtkWidget *window, GList *files)
 {
+	static const gchar *thisfn = "nautilus_actions_get_file_items";
+	g_debug( "%s provider=%p, window=%p, files=%p, count=%d", thisfn, provider, window, files, g_list_length( files ));
+
 	GList *items = NULL;
 	GSList *iter;
 	NautilusMenuItem *item;
@@ -199,6 +210,9 @@ static GList *nautilus_actions_get_background_items (NautilusMenuProvider *provi
 
 static void nautilus_actions_instance_dispose (GObject *obj)
 {
+	static const gchar *thisfn = "nautilus_actions_instance_dispose";
+	g_debug( "%s: obj=%p", thisfn, obj );
+
 	NautilusActions* self = NAUTILUS_ACTIONS (obj);
 
 	if (!self->dispose_has_run)
@@ -216,6 +230,9 @@ static void nautilus_actions_action_changed_handler (NautilusActionsConfig* conf
 																				NautilusActionsConfigAction* action,
 																				gpointer user_data)
 {
+	static const gchar *thisfn = "nautilus_actions_action_changed_handler";
+	g_debug( "%s", thisfn );
+
 	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
 
 	g_return_if_fail (NAUTILUS_IS_ACTIONS (self));
@@ -231,27 +248,34 @@ static void nautilus_actions_action_changed_handler (NautilusActionsConfig* conf
 
 static void nautilus_actions_instance_finalize (GObject* obj)
 {
+	static const gchar *thisfn = "nautilus_actions_instance_finalize";
+	g_debug( "%s: obj=%p", thisfn, obj );
+
 	/*NautilusActions* self = NAUTILUS_ACTIONS (obj);*/
+
+	/* remove the log handler
+	 * almost useless as the process is nonetheless terminating at this time
+	 * but this is the beauty of the code...
+	 */
+	if( log_handler ){
+		g_log_remove_handler( G_LOG_DOMAIN, log_handler );
+		log_handler = 0;
+	}
 
 	/* Chain up to the parent class */
 	G_OBJECT_CLASS (parent_class)->finalize (obj);
 }
 
-static void nautilus_actions_class_init (NautilusActionsClass *actions_class)
-{
-	GObjectClass *gobject_class = G_OBJECT_CLASS (actions_class);
-
-	gobject_class->dispose = nautilus_actions_instance_dispose;
-	gobject_class->finalize = nautilus_actions_instance_finalize;
-}
-
 static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer klass)
 {
+	static const gchar *thisfn = "nautilus_actions_instance_init";
+	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+
 	/* Patch from Bruce van der Kooij <brucevdkooij@gmail.com>
 	 *
 	 * TODO: GnomeVFS needs to be initialized before gnome_vfs methods
 	 * can be used. Since GnomeVFS has been deprecated it would be
-	 * a good idea to rewrite this extension to use equivelant methods
+	 * a good idea to rewrite this extension to use equivalent methods
 	 * from GIO/GVFS.
 	 *
 	 * plugins/nautilus-actions-utils.c:nautilus_actions_utils_parse_parameter
@@ -284,12 +308,39 @@ static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer kl
 
 static void nautilus_actions_menu_provider_iface_init (NautilusMenuProviderIface *iface)
 {
+	static const gchar *thisfn = "nautilus_actions_menu_provider_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
 	iface->get_file_items = nautilus_actions_get_file_items;
 	iface->get_background_items = nautilus_actions_get_background_items;
 }
 
+static void nautilus_actions_class_init (NautilusActionsClass *actions_class)
+{
+	static const gchar *thisfn = "nautilus_actions_class_init";
+	g_debug( "%s: action_class=%p", thisfn, actions_class );
+
+	GObjectClass *gobject_class = G_OBJECT_CLASS (actions_class);
+
+	gobject_class->dispose = nautilus_actions_instance_dispose;
+	gobject_class->finalize = nautilus_actions_instance_finalize;
+}
+
 void nautilus_actions_register_type (GTypeModule *module)
 {
+	/* install a debug log handler
+	 * (if development mode and not already done)
+	 */
+#ifdef NACT_MAINTAINER_MODE
+	if( !log_handler ){
+		openlog( G_LOG_DOMAIN, LOG_PID, LOG_USER );
+		log_handler = g_log_set_handler( G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, nact_log_handler, NULL );
+	}
+#endif
+
+	static const gchar *thisfn = "nautilus_actions_register_type";
+	g_debug( "%s: module=%p", thisfn, module );
+
 	static const GTypeInfo info = {
 		sizeof (NautilusActionsClass),
 		(GBaseInitFunc) NULL,
@@ -317,4 +368,20 @@ void nautilus_actions_register_type (GTypeModule *module)
 								actions_type,
 								NAUTILUS_TYPE_MENU_PROVIDER,
 								&menu_provider_iface_info);
+}
+
+/*
+ * a log handler that we install when in development mode in order to be
+ * able to log plugin runtime
+ * TODO: add a debug flag in GConf, so that an advanced user could setup
+ * a given key and obtain a full log to send to Bugzilla..
+ * For now, is always install when compiled in maintainer mode, never else
+ */
+static void
+nact_log_handler( const gchar *log_domain,
+					GLogLevelFlags log_level,
+					const gchar *message,
+					gpointer user_data )
+{
+	syslog( LOG_USER | LOG_DEBUG, "%s", message );
 }

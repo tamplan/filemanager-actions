@@ -23,6 +23,4 @@
 #   Frederic Ruaudel <grumz@grumz.net>
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
-#   and many others (see AUTHORS)
-#
-# pwi 2009-05-16 creation
+#   ... and many others (see AUTHORS)

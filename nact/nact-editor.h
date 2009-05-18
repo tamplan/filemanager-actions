@@ -24,16 +24,13 @@
  *   Frederic Ruaudel <grumz@grumz.net>
  *   Rodrigo Moya <rodrigo@gnome-db.org>
  *   Pierre Wieser <pwieser@trychlos.org>
- *   and many others (see AUTHORS)
- *
- * pwi 2009-05-17 make the source ansi-compliant
+ *   ... and many others (see AUTHORS)
  */
 
 #ifndef __NACT_EDITOR_H__
 #define __NACT_EDITOR_H__
 
 #include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
 
 enum {
 	PROFILE_LABEL_COLUMN = 0,
@@ -41,8 +38,7 @@ enum {
 	N_PROF_COLUMN
 };
 
-gboolean nact_editor_new_action (void);
-gboolean nact_editor_edit_action (NautilusActionsConfigAction *action);
-void nact_editor_fill_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action);
+gboolean nact_editor_new_action(void );
+gboolean nact_editor_edit_action( NautilusActionsConfigAction* action );
 
 #endif /* __NACT_EDITOR_H__ */

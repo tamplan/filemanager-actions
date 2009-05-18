@@ -23,12 +23,11 @@
 #   Frederic Ruaudel <grumz@grumz.net>
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
-#   and many others (see AUTHORS)
-#
-# pwi 2009-05-16 replace INCLUDES by AM_CPPFLAGS
+#   ... and many others (see AUTHORS)
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
+	-DG_LOG_DOMAIN=\"NACT-Plugin\"						\
 	$(NAUTILUS_ACTIONS_CFLAGS)
 
 nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)

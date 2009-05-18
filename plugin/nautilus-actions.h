@@ -24,9 +24,7 @@
  *   Frederic Ruaudel <grumz@grumz.net>
  *   Rodrigo Moya <rodrigo@gnome-db.org>
  *   Pierre Wieser <pwieser@trychlos.org>
- *   and many others (see AUTHORS)
- *
- * pwi 2009-05-17 make the source ansi-compliant
+ *   ... and many others (see AUTHORS)
  */
 
 #ifndef __NAUTILUS_ACTIONS_H__
@@ -60,8 +58,8 @@ struct _NautilusActionsClass
 	GObjectClass __parent;
 };
 
-GType nautilus_actions_get_type (void);
-void nautilus_actions_register_type (GTypeModule *module);
+GType	nautilus_actions_get_type (void);
+void	nautilus_actions_register_type (GTypeModule *module);
 
 G_END_DECLS
 

@@ -24,10 +24,7 @@
  *   Frederic Ruaudel <grumz@grumz.net>
  *   Rodrigo Moya <rodrigo@gnome-db.org>
  *   Pierre Wieser <pwieser@trychlos.org>
- *   and many others (see AUTHORS)
- *
- * pwi 2009-05-16 fix compilation warnings
- * pwi 2009-05-17 make the source ansi-compliant
+ *   ... and many others (see AUTHORS)
  */
 
 #include <config.h>
@@ -45,11 +42,16 @@
 #include "nact-prefs.h"
 #include "nact.h"
 
+/* gui callback functions */
+void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data);
+void export_browse_button_clicked_cb (GtkWidget* widget, gpointer data);
+void mode_toggled_cb (GtkWidget* widget, gpointer user_data);
+
 static gboolean nact_import_actions (void);
 static gboolean nact_export_actions (void);
 
-/*
-void mode_toggled_cb (GtkWidget* widget, gpointer user_data)
+void
+mode_toggled_cb (GtkWidget* widget, gpointer user_data)
 {
 	GtkWidget* import_radio = nact_get_glade_widget_from ("ImportRadioButton", GLADE_IM_EX_PORT_DIALOG_WIDGET);
 
@@ -64,10 +66,9 @@ void mode_toggled_cb (GtkWidget* widget, gpointer user_data)
 		gtk_widget_set_sensitive (nact_get_glade_widget_from ("ImportVBox", GLADE_IM_EX_PORT_DIALOG_WIDGET), FALSE);
 	}
 }
-*/
 
-/*
-void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
+void
+import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 {
 	gchar* last_dir;
 	gchar* filename;
@@ -103,10 +104,9 @@ void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 			gtk_widget_hide (filechooser);
 	}
 }
-*/
 
-/*
-void export_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
+void
+export_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 {
 	gchar* last_dir;
 	gchar* foldername;
@@ -142,7 +142,6 @@ void export_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 			gtk_widget_hide (folderchooser);
 	}
 }
-*/
 
 static void
 list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)

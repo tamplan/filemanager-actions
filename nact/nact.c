@@ -24,10 +24,7 @@
  *   Frederic Ruaudel <grumz@grumz.net>
  *   Rodrigo Moya <rodrigo@gnome-db.org>
  *   Pierre Wieser <pwieser@trychlos.org>
- *   and many others (see AUTHORS)
- *
- * pwi 2009-05-16 fix compilation warnings
- * pwi 2009-05-17 make the source ansi-compliant
+ *   ... and many others (see AUTHORS)
  */
 
 #include <config.h>
@@ -47,8 +44,17 @@
 #include "nact-import-export.h"
 #include "nact-prefs.h"
 
+/* gui callback functions */
+void dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data);
+void add_button_clicked_cb (GtkButton *button, gpointer user_data);
+void delete_button_clicked_cb (GtkButton *button, gpointer user_data);
+void duplicate_button_clicked_cb (GtkButton *button, gpointer user_data);
+void edit_button_clicked_cb (GtkButton *button, gpointer user_data);
+void im_export_button_clicked_cb (GtkButton *button, gpointer user_data);
+
 static gint actions_list_sort_by_label (gconstpointer a1, gconstpointer a2);
 static void list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data);
+static void nact_fill_actions_list (GtkWidget *list);
 
 static NautilusActionsConfigGconfWriter *config = NULL;
 
@@ -61,7 +67,8 @@ actions_list_sort_by_label (gconstpointer a1, gconstpointer a2)
 	return g_utf8_collate (action1->label, action2->label);
 }
 
-void nact_fill_actions_list (GtkWidget *list)
+static void
+nact_fill_actions_list (GtkWidget *list)
 {
 	GSList *actions, *l;
 	GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model (GTK_TREE_VIEW (list)));

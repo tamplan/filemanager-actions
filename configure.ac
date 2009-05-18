@@ -23,14 +23,11 @@
 #   Frederic Ruaudel <grumz@grumz.net>
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
-#   and many others (see AUTHORS)
-#
-# pwi 2009-05-16 created from configure.in
+#   ... and many others (see AUTHORS)
 
 AC_PREREQ([2.53])
 
-# Caution: 1.11 is unstable/development version
-AC_INIT([nautilus-actions],[1.11],[maintainer@nautilus-actions.org])
+AC_INIT([nautilus-actions],[1.10.1],[maintainer@nautilus-actions.org])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
 
@@ -56,7 +53,7 @@ AC_CONFIG_FILES([
 
 AC_CONFIG_MACRO_DIR([m4])
 
-# pwi 2009-05-15 disabled as useless or badly explained
+# pwi 2009-05-15 disabled as GNOME_COMMON_INIT takes care if that
 #AC_SUBST(ACLOCAL_AMFLAGS, "$ACLOCAL_FLAGS")
 
 # don't agree with maintainer mode use
@@ -146,6 +143,9 @@ NACT_NAUTILUS_EXTDIR
 
 # building or not the commandline tools
 NACT_COMMANDLINE_TOOLS
+
+# define NACT_MAINTAINER_MODE variable
+NACT_IS_MAINTAINER_MODE
 
 # Check for menu update function
 AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)

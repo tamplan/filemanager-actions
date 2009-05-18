@@ -24,10 +24,7 @@
  *   Frederic Ruaudel <grumz@grumz.net>
  *   Rodrigo Moya <rodrigo@gnome-db.org>
  *   Pierre Wieser <pwieser@trychlos.org>
- *   and many others (see AUTHORS)
- *
- * pwi 2009-05-16 fix compilation warnings
- * pwi 2009-05-17 make the source ansi-compliant
+ *   ... and many others (see AUTHORS)
  */
 
 #include <string.h>
@@ -42,8 +39,16 @@
 #include "nact-prefs.h"
 #include "nact.h"
 
+/* gui callback functions */
+void profile_field_changed_cb (GObject *object, gpointer user_data);
+void path_browse_button_clicked_cb (GtkButton *button, gpointer user_data);
+void legend_button_toggled_cb (GtkToggleButton *button, gpointer user_data);
+void add_scheme_clicked (GtkWidget* widget, gpointer user_data);
+void remove_scheme_clicked (GtkWidget* widget, gpointer user_data);
+
 static void update_example_label (void);
-static void profile_field_changed_cb (GObject *object, gpointer user_data);
+static void show_legend_dialog( void );
+static void hide_legend_dialog( void );
 
 static void
 update_example_label (void)
@@ -67,7 +72,7 @@ update_example_label (void)
 	g_free (tmp);
 }
 
-static void
+void
 profile_field_changed_cb (GObject *object, gpointer user_data)
 {
 	GtkWidget* editor = nact_get_glade_widget_from ("EditProfileDialog", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
@@ -87,7 +92,8 @@ example_changed_cb (GObject *object, gpointer user_data)
 {
 }*/
 
-/*void path_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
+void
+path_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
 	gchar* last_dir;
 	gchar* filename;
@@ -122,18 +128,18 @@ example_changed_cb (GObject *object, gpointer user_data)
 		case GTK_RESPONSE_DELETE_EVENT:
 			gtk_widget_hide (filechooser);
 	}
-}*/
+}
 
-/*static void
+static void
 show_legend_dialog ()
 {
 	GtkWidget* editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
 	GtkWidget *legend_dialog = nact_get_glade_widget_from ("LegendDialog", GLADE_LEGEND_DIALOG_WIDGET);
 	gtk_window_set_deletable (GTK_WINDOW (legend_dialog), FALSE);
 	gtk_window_set_transient_for (GTK_WINDOW (legend_dialog), GTK_WINDOW (editor));
-	// TODO: Get back the last position saved !!
+	/* TODO: Get back the last position saved !! */
 	gtk_widget_show (legend_dialog);
-}*/
+}
 
 static void
 hide_legend_dialog ()
@@ -149,7 +155,7 @@ hide_legend_dialog ()
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (legend_button), FALSE);
 }
 
-/*void
+void
 legend_button_toggled_cb (GtkToggleButton *button, gpointer user_data)
 {
 	if (gtk_toggle_button_get_active (button))
@@ -160,7 +166,7 @@ legend_button_toggled_cb (GtkToggleButton *button, gpointer user_data)
 	{
 		hide_legend_dialog ();
 	}
-}*/
+}
 
 static void scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer,
 													  gchar *path_str,
@@ -246,7 +252,8 @@ scheme_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_dat
 	}
 }
 
-/*void add_scheme_clicked (GtkWidget* widget, gpointer user_data)
+void
+add_scheme_clicked (GtkWidget* widget, gpointer user_data)
 {
 	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
 	GtkTreeModel* model = gtk_tree_view_get_model (GTK_TREE_VIEW (listview));
@@ -254,12 +261,13 @@ scheme_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_dat
 
 	gtk_list_store_append (GTK_LIST_STORE (model), &row);
 	gtk_list_store_set (GTK_LIST_STORE (model), &row, SCHEMES_CHECKBOX_COLUMN, FALSE,
-												/ * i18n notes : scheme name set for a new entry in the scheme list * /
+												/* i18n notes : scheme name set for a new entry in the scheme list */
 												SCHEMES_KEYWORD_COLUMN, _("new-scheme"),
 												SCHEMES_DESC_COLUMN, _("New Scheme Description"), -1);
-}*/
+}
 
-/*void remove_scheme_clicked (GtkWidget* widget, gpointer user_data)
+void
+remove_scheme_clicked (GtkWidget* widget, gpointer user_data)
 {
 	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (listview));
@@ -282,7 +290,7 @@ scheme_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_dat
 
 		if (toggle_state)
 		{
-			//--> if column was checked, set the action has edited
+			/* --> if column was checked, set the action has edited */
 			profile_field_changed_cb (G_OBJECT (widget), NULL);
 			update_example_label ();
 		}
@@ -290,7 +298,7 @@ scheme_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_dat
 
 	g_list_foreach (selected_values_path, (GFunc)gtk_tree_path_free, NULL);
 	g_list_free (selected_values_path);
-}*/
+}
 
 static void create_schemes_selection_list (void)
 {
