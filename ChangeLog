@@ -1,3 +1,13 @@
+2009-05-18 Pierre Wieser <pwieser@trychlos.org>
+
+	Fix Glade regression I introduced myself when ansi-fying C sources !
+
+	* *.c, *.h: almost all sources files impacted
+
+	* m4/nact-maintainer-mode.m4: creation
+
+	* plugin/nautilus-actions.c: add debug mode to syslog
+
 2009-05-17 Pierre Wieser <pwieser@trychlos.org>
 
 	Releasing 1.10.0

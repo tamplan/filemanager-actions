@@ -53,7 +53,7 @@ AC_CONFIG_FILES([
 
 AC_CONFIG_MACRO_DIR([m4])
 
-# pwi 2009-05-15 disabled as GNOME_COMMON_INIT takes care if that
+# pwi 2009-05-15 disabled as GNOME_COMMON_INIT takes care of that
 #AC_SUBST(ACLOCAL_AMFLAGS, "$ACLOCAL_FLAGS")
 
 # don't agree with maintainer mode use
