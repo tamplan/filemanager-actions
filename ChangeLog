@@ -24,6 +24,23 @@
 	nautilus_actions_config_action_get_profiles_count,
 	nautilus_actions_config_action_dump: new functions.
 
+	* nact/nact-action-editor.c:
+	* nact/nact-action-editor.h: New files to be able to edit an action
+	without having to deal with the profile stuff.
+
+	* nact/nautilus-actions-config.glade:
+	Add EditActionDialogExt dialog.
+
+	* nact/Makefile.am:
+	* nact/nact-editor.c:
+	* nact/nact-editor.h:
+	* nact/nact-profile-editor.c:
+	* nact/nact-profile-editor.h:
+	* nact/nact-utils.c:
+	* nact/nact-utils.h:
+	* po/POTFILES.in:
+	* po/ChangeLog: Updated accordingly.
+
 2009-05-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Fix Glade regression I introduced myself when ansi-fying C sources !

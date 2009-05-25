@@ -121,6 +121,7 @@ void nautilus_actions_display_error (const gchar *primary_msg, const gchar* seco
 gboolean nact_utils_get_action_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path,
 													  GtkTreeIter* iter, gpointer data)
 {
+	static const char *thisfn = "nact_utils_get_action_schemes_list";
 	GSList** list = data;
 	gboolean toggle_state;
 	gchar* scheme;
@@ -130,6 +131,7 @@ gboolean nact_utils_get_action_schemes_list (GtkTreeModel* scheme_model, GtkTree
 
 	if (toggle_state)
 	{
+		g_debug( "%s: adding '%s' scheme", thisfn, scheme );
 		(*list) = g_slist_append ((*list), scheme);
 	}
 	else
@@ -169,7 +171,8 @@ static gchar* nact_utils_joinv (const gchar* start, const gchar* separator, gcha
 	return g_string_free (tmp_string, FALSE);
 }
 
-gchar* nact_utils_parse_parameter (void)
+gchar *
+nact_utils_parse_parameter( const gchar *dialog )
 {
 	/*
 	 * Valid parameters :
@@ -203,8 +206,7 @@ gchar* nact_utils_parse_parameter (void)
 	gchar* ex_scheme;
 	gchar* ex_host;
 
-	const gchar* param_template = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("CommandParamsEntry",
-																										GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
+	const gchar* param_template = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("CommandParamsEntry", dialog )));
 	gchar* iter = g_strdup (param_template);
 	gchar* old_iter = iter;
 	gchar* tmp;
@@ -212,26 +214,20 @@ gchar* nact_utils_parse_parameter (void)
 	gchar* start;
 	GSList* scheme_list = NULL;
 
-	const gchar* command = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("CommandPathEntry",
-																								GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
+	const gchar* command = gtk_entry_get_text (GTK_ENTRY (nact_get_glade_widget_from ("CommandPathEntry", dialog )));
 
 	g_string_append_printf (tmp_string, "%s ", command);
 
-	gboolean is_file = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("OnlyFilesButton",
-																												GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
-	gboolean is_dir = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("OnlyFoldersButton",
-																												GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("BothButton",
-																							GLADE_EDIT_PROFILE_DIALOG_WIDGET))))
+	gboolean is_file = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("OnlyFilesButton", dialog )));
+	gboolean is_dir = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("OnlyFoldersButton", dialog )));
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("BothButton", dialog ))))
 	{
 		is_file = TRUE;
 		is_dir = TRUE;
 	}
-	gboolean accept_multiple = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("AcceptMultipleButton",
-																															GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
+	gboolean accept_multiple = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nact_get_glade_widget_from ("AcceptMultipleButton", dialog )));
 
-	GtkTreeModel* scheme_model = gtk_tree_view_get_model (GTK_TREE_VIEW (nact_get_glade_widget_from ("SchemesTreeView",
-																													GLADE_EDIT_PROFILE_DIALOG_WIDGET)));
+	GtkTreeModel* scheme_model = gtk_tree_view_get_model (GTK_TREE_VIEW (nact_get_glade_widget_from ("SchemesTreeView", dialog )));
 	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)nact_utils_get_action_schemes_list, &scheme_list);
 
 	separator = g_strdup_printf (" %s/", ex_path);

@@ -43,20 +43,29 @@
 #include "nact-editor.h"
 #include "nact-import-export.h"
 #include "nact-prefs.h"
+#include "nact-action-editor.h"
 
 /* gui callback functions */
-void dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data);
-void add_button_clicked_cb (GtkButton *button, gpointer user_data);
-void delete_button_clicked_cb (GtkButton *button, gpointer user_data);
-void duplicate_button_clicked_cb (GtkButton *button, gpointer user_data);
-void edit_button_clicked_cb (GtkButton *button, gpointer user_data);
-void im_export_button_clicked_cb (GtkButton *button, gpointer user_data);
+void     dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data);
+void     add_button_clicked_cb (GtkButton *button, gpointer user_data);
+void     delete_button_clicked_cb (GtkButton *button, gpointer user_data);
+void     duplicate_button_clicked_cb (GtkButton *button, gpointer user_data);
+void     edit_button_clicked_cb (GtkButton *button, gpointer user_data);
+void     im_export_button_clicked_cb (GtkButton *button, gpointer user_data);
 
-static gint actions_list_sort_by_label (gconstpointer a1, gconstpointer a2);
-static void list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data);
-static void nact_fill_actions_list (GtkWidget *list);
+static gint  actions_list_sort_by_label (gconstpointer a1, gconstpointer a2);
+static guint get_profiles_count( const NautilusActionsConfigAction *action );
+static void  list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data);
+static void  fill_actions_list (GtkWidget *list);
+static void  setup_actions_list (GtkWidget *list);
 
 static NautilusActionsConfigGconfWriter *config = NULL;
+
+static guint
+get_profiles_count( const NautilusActionsConfigAction *action )
+{
+	return( nautilus_actions_config_action_get_profiles_count( action ));
+}
 
 static gint
 actions_list_sort_by_label (gconstpointer a1, gconstpointer a2)
@@ -68,7 +77,7 @@ actions_list_sort_by_label (gconstpointer a1, gconstpointer a2)
 }
 
 static void
-nact_fill_actions_list (GtkWidget *list)
+fill_actions_list (GtkWidget *list)
 {
 	GSList *actions, *l;
 	GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model (GTK_TREE_VIEW (list)));
@@ -112,13 +121,31 @@ nact_fill_actions_list (GtkWidget *list)
 	nautilus_actions_config_free_actions_list (actions);
 }
 
+/*
+ * creating a new action
+ * pwi 2009-05-19
+ * I don't want the profiles feature spread wide while I'm not convinced
+ * that it is useful and actually used.
+ * so the new action is silently created with a default profile name
+ */
 void
 add_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
-	if (nact_editor_new_action ())
-		nact_fill_actions_list (nact_get_glade_widget ("ActionsList"));
+	if( nact_action_editor_new())
+		fill_actions_list( nact_get_glade_widget( "ActionsList" ));
 }
 
+/*
+ * editing an existing action
+ * pwi 2009-05-19
+ * I don't want the profiles feature spread wide while I'm not convinced
+ * that it is useful and actually used.
+ * so :
+ * - if there is only one profile, the user will be directed to a dialog
+ *   box which includes all needed fields, but without any profile notion
+ * - if there are more than one profile, one can assume that the user has
+ *   found a use to the profiles, and let him edit them
+ */
 void
 edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
@@ -138,9 +165,15 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
 		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-		if (action) {
-			if (nact_editor_edit_action (action))
-				nact_fill_actions_list (nact_actions_list);
+		if( action ){
+			guint count = get_profiles_count( action );
+			if( count > 1 ){
+				if (nact_editor_edit_action (action))
+					fill_actions_list (nact_actions_list);
+			} else {
+				if( nact_action_editor_edit( action ))
+					fill_actions_list( nact_actions_list );
+			}
 		}
 
 		g_free (uuid);
@@ -175,7 +208,7 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 		{
 			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), new_action, &error))
 			{
-				nact_fill_actions_list (nact_actions_list);
+				fill_actions_list (nact_actions_list);
 			}
 			else
 			{
@@ -207,7 +240,7 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 		nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-		nact_fill_actions_list (nact_actions_list);
+		fill_actions_list (nact_actions_list);
 
 		g_free (uuid);
 	}
@@ -221,7 +254,7 @@ im_export_button_clicked_cb (GtkButton *button, gpointer user_data)
 	if (nact_import_export_actions ())
 	{
 		nact_actions_list = nact_get_glade_widget ("ActionsList");
-		nact_fill_actions_list (nact_actions_list);
+		fill_actions_list (nact_actions_list);
 	}
 }
 
@@ -282,7 +315,8 @@ list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
 	}
 }
 
-static void nact_setup_actions_list (GtkWidget *list)
+static void
+setup_actions_list (GtkWidget *list)
 {
 	GtkListStore *model;
 	GtkTreeViewColumn *column;
@@ -290,7 +324,7 @@ static void nact_setup_actions_list (GtkWidget *list)
 	/* create the model */
 	model = gtk_list_store_new (N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (list), GTK_TREE_MODEL (model));
-	nact_fill_actions_list (list);
+	fill_actions_list( list );
 	g_object_unref (model);
 
 	/* create columns on the tree view */
@@ -329,7 +363,7 @@ init_dialog (void)
 	nact_dialog = nact_get_glade_widget ("ActionsDialog");
 
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
-	nact_setup_actions_list (nact_actions_list);
+	setup_actions_list (nact_actions_list);
 
 	/* Get the default dialog size */
 	gtk_window_get_default_size (GTK_WINDOW (nact_dialog), &width, &height);

@@ -27,23 +27,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_EDITOR_H__
-#define __NACT_EDITOR_H__
+#ifndef __NACT_ACTION_EDITOR_H__
+#define __NACT_ACTION_EDITOR_H__
 
-#include <gtk/gtk.h>
 #include <libnautilus-actions/nautilus-actions-config.h>
 
-enum {
-	PROFILE_LABEL_COLUMN = 0,
-	PROFILE_DESC_LABEL_COLUMN,
-	N_PROF_COLUMN
-};
+gboolean nact_action_editor_new( void );
+gboolean nact_action_editor_edit( NautilusActionsConfigAction *action );
 
-gboolean nact_editor_new_action( void );
-gboolean nact_editor_edit_action( NautilusActionsConfigAction* action );
-
-void     nact_fill_menu_icon_combo_list_of( GtkComboBoxEntry* combo );
-void     nact_preview_icon_changed_cb( GtkEntry* icon_entry, gpointer user_data, const gchar *dialog );
-void     nact_icon_browse_button_clicked_cb( GtkButton *button, gpointer user_data, const gchar* dialog );
-
-#endif /* __NACT_EDITOR_H__ */
+#endif /* __NACT_ACTION_EDITOR_H__ */

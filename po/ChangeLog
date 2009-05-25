@@ -1,10 +1,14 @@
+2009-05-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* POTFILES.in: Add nact-action-editor.c source file.
+
 2009-04-13 Mario Blättermann <mariobl@svn.gnome.org>
 
-	* de.po: Updated German translation
+	* de.po: Updated German translation.
 
 2009-03-19 Amanpreet Singh Alam <aman@src.gnome.org>
 
-	* pa.po: Updating Punjabi Translation
+	* pa.po: Updating Punjabi translation.
 
 2009-03-16  Inaki Larranaga Murgoitio  <dooteo@euskalgnu.org>
 

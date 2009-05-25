@@ -3,6 +3,7 @@ nact/nautilus-actions-config.glade
 nact/nact.c
 nact/nact-utils.c
 nact/nact-editor.c
+nact/nact-action-editor.c
 nact/nact-import-export.c
 nact/nact-prefs.c
 nact/nact-profile-editor.c

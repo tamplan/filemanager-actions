@@ -30,10 +30,33 @@
 #ifndef __NACT_PROFILE_EDITOR_H__
 #define __NACT_PROFILE_EDITOR_H__
 
+#include <glib.h>
+#include <gtk/gtk.h>
 #include <libnautilus-actions/nautilus-actions-config.h>
 #include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
 
 gboolean nact_profile_editor_new_profile (NautilusActionsConfigAction* action);
 gboolean nact_profile_editor_edit_profile (NautilusActionsConfigAction *action, gchar* profile_name, NautilusActionsConfigActionProfile* action_profile);
+
+/* a structure to be passed as user data to schemes callbacks */
+typedef struct {
+	gchar  *dialog;
+	void ( *field_changed_cb )( GObject *object, gpointer user_data );
+	void ( *update_example_label )( void );
+	GtkWidget *listview;
+}
+	NactCallbackData;
+
+void     nact_add_scheme_clicked( GtkWidget* widget, gpointer user_data, const gchar *dialog );
+void     nact_create_schemes_selection_list( NactCallbackData *scheme_data );
+GSList * nact_get_action_match_string_list (const gchar* patterns, const gchar* default_string);
+void     nact_hide_legend_dialog( const gchar *dialog );
+void     nact_path_browse_button_clicked_cb( GtkButton *button, gpointer user_data, const gchar *dialog );
+void     nact_remove_scheme_clicked( GtkWidget* widget, gpointer user_data, const gchar *dialog );
+gboolean nact_reset_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, gpointer data);
+void     nact_set_action_match_string_list (GtkEntry* entry, GSList* basenames, const gchar* default_string);
+void     nact_set_action_schemes (gchar* action_scheme, GtkTreeModel* scheme_model);
+void     nact_show_legend_dialog( const gchar *dialog );
+void     nact_update_example_label( const gchar *dialog );
 
 #endif /* __NACT_PROFILE_EDITOR_H__ */

@@ -46,17 +46,26 @@ void legend_button_toggled_cb (GtkToggleButton *button, gpointer user_data);
 void add_scheme_clicked (GtkWidget* widget, gpointer user_data);
 void remove_scheme_clicked (GtkWidget* widget, gpointer user_data);
 
-static void update_example_label (void);
-static void show_legend_dialog( void );
-static void hide_legend_dialog( void );
+static void     update_example_label (void);
+static gboolean cell_edited (GtkTreeModel *model, const gchar *path_string, const gchar *new_text, gint column);
+static void     scheme_desc_edited_cb (GtkCellRendererText *cell, const gchar *path_string, const gchar *new_text, gpointer data);
+static void     scheme_edited_cb (GtkCellRendererText *cell, const gchar *path_string, const gchar *new_text, gpointer data);
+static void     scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer, gchar *path_str, gpointer user_data );
 
 static void
 update_example_label (void)
 {
-	GtkWidget* label_widget = nact_get_glade_widget_from ("LabelExample", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
+	nact_update_example_label( GLADE_EDIT_PROFILE_DIALOG_WIDGET );
+}
+
+void
+nact_update_example_label( const gchar *dialog )
+{
+	/*static const char *thisfn = "nact_update_example_label";*/
+	GtkWidget* label_widget = nact_get_glade_widget_from ("LabelExample", dialog );
 	static gboolean init = FALSE;
 	static gchar label_format_string[1024];
-	gchar* tmp = nact_utils_parse_parameter ();
+	gchar* tmp = nact_utils_parse_parameter( dialog );
 	gchar* ex_str;
 
 	if (!init)
@@ -95,10 +104,16 @@ example_changed_cb (GObject *object, gpointer user_data)
 void
 path_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
+	nact_path_browse_button_clicked_cb( button, user_data, GLADE_EDIT_PROFILE_DIALOG_WIDGET );
+}
+
+void
+nact_path_browse_button_clicked_cb (GtkButton *button, gpointer user_data, const gchar *dialog )
+{
 	gchar* last_dir;
 	gchar* filename;
 	GtkWidget* filechooser = nact_get_glade_widget_from ("FileChooserDialog", GLADE_FILECHOOSER_DIALOG_WIDGET);
-	GtkWidget* entry = nact_get_glade_widget_from ("CommandPathEntry", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
+	GtkWidget* entry = nact_get_glade_widget_from ("CommandPathEntry", dialog );
 	gboolean set_current_location = FALSE;
 
 	filename = (gchar*)gtk_entry_get_text (GTK_ENTRY (entry));
@@ -130,10 +145,10 @@ path_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
 	}
 }
 
-static void
-show_legend_dialog ()
+void
+nact_show_legend_dialog( const gchar *dialog )
 {
-	GtkWidget* editor = nact_get_glade_widget_from ("EditActionDialog", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
+	GtkWidget* editor = nact_get_glade_widget_from ("EditActionDialog", dialog );
 	GtkWidget *legend_dialog = nact_get_glade_widget_from ("LegendDialog", GLADE_LEGEND_DIALOG_WIDGET);
 	gtk_window_set_deletable (GTK_WINDOW (legend_dialog), FALSE);
 	gtk_window_set_transient_for (GTK_WINDOW (legend_dialog), GTK_WINDOW (editor));
@@ -141,11 +156,11 @@ show_legend_dialog ()
 	gtk_widget_show (legend_dialog);
 }
 
-static void
-hide_legend_dialog ()
+void
+nact_hide_legend_dialog( const gchar *dialog )
 {
 	GtkWidget *legend_dialog = nact_get_glade_widget_from ("LegendDialog", GLADE_LEGEND_DIALOG_WIDGET);
-	GtkWidget *legend_button = nact_get_glade_widget_from ("LegendButton", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
+	GtkWidget *legend_button = nact_get_glade_widget_from ("LegendButton", dialog );
 	gtk_widget_hide (legend_dialog);
 	/* TODO: Save the current position !! */
 
@@ -160,22 +175,30 @@ legend_button_toggled_cb (GtkToggleButton *button, gpointer user_data)
 {
 	if (gtk_toggle_button_get_active (button))
 	{
-		show_legend_dialog ();
+		nact_show_legend_dialog( GLADE_EDIT_PROFILE_DIALOG_WIDGET );
 	}
 	else
 	{
-		hide_legend_dialog ();
+		nact_hide_legend_dialog( GLADE_EDIT_PROFILE_DIALOG_WIDGET );
 	}
 }
 
-static void scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer,
+/*
+ * path_str is the index of the selected row, counted from zero
+ */
+static void
+scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer,
 													  gchar *path_str,
 													  gpointer user_data)
 {
+	static const char *thisfn = "scheme_selection_toggled_cb";
 	GtkTreeIter iter;
 	GtkTreePath* path;
 	gboolean toggle_state;
-	GtkTreeModel* model = GTK_TREE_MODEL (user_data);
+	NactCallbackData *scheme_data = ( NactCallbackData * ) user_data;
+	GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( scheme_data->listview ));
+	g_debug( "%s: cell_renderer=%p, path_str='%s', scheme_data=%p, dialog='%s', model=%p",
+			thisfn, cell_renderer, path_str, user_data, scheme_data->dialog, model );
 
 	path = gtk_tree_path_new_from_string (path_str);
 	gtk_tree_model_get_iter (model, &iter, path);
@@ -184,8 +207,8 @@ static void scheme_selection_toggled_cb (GtkCellRendererToggle *cell_renderer,
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter, SCHEMES_CHECKBOX_COLUMN, !toggle_state, -1);
 
 	/* --> Notice edition change */
-	profile_field_changed_cb (G_OBJECT (cell_renderer), NULL);
-	update_example_label ();
+	scheme_data->field_changed_cb (G_OBJECT (cell_renderer), NULL);
+	scheme_data->update_example_label ();
 
 	gtk_tree_path_free (path);
 }
@@ -221,12 +244,14 @@ scheme_edited_cb (GtkCellRendererText *cell,
              const gchar         *new_text,
              gpointer             data)
 {
-	GtkTreeModel* model = GTK_TREE_MODEL (data);
+	NactCallbackData *scheme_data = ( NactCallbackData * ) data;
+	GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( scheme_data->listview ));
+
 	if (cell_edited (model, path_string, new_text, SCHEMES_KEYWORD_COLUMN))
 	{
 		/* --> if column was checked, set the action has edited */
-		profile_field_changed_cb (G_OBJECT (cell), NULL);
-		update_example_label ();
+		scheme_data->field_changed_cb (G_OBJECT (cell), NULL);
+		scheme_data->update_example_label ();
 	}
 }
 
@@ -236,14 +261,16 @@ scheme_desc_edited_cb (GtkCellRendererText *cell,
              const gchar         *new_text,
              gpointer             data)
 {
-	GtkTreeModel* model = GTK_TREE_MODEL (data);
+	NactCallbackData *scheme_data = ( NactCallbackData * ) data;
+	GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( scheme_data->listview ));
 	cell_edited (model, path_string, new_text, SCHEMES_DESC_COLUMN);
 }
 
 static void
 scheme_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
 {
-	GtkWidget *delete_button = nact_get_glade_widget_from ("RemoveSchemeButton", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
+	NactCallbackData *scheme_data = ( NactCallbackData * ) user_data;
+	GtkWidget *delete_button = nact_get_glade_widget_from( "RemoveSchemeButton", scheme_data->dialog );
 
 	if (gtk_tree_selection_count_selected_rows (selection) > 0) {
 		gtk_widget_set_sensitive (delete_button, TRUE);
@@ -255,7 +282,13 @@ scheme_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_dat
 void
 add_scheme_clicked (GtkWidget* widget, gpointer user_data)
 {
-	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
+	nact_add_scheme_clicked( widget, user_data, GLADE_EDIT_PROFILE_DIALOG_WIDGET );
+}
+
+void
+nact_add_scheme_clicked (GtkWidget* widget, gpointer user_data, const gchar* dialog )
+{
+	GtkWidget* listview = nact_get_glade_widget_from( "SchemesTreeView", dialog );
 	GtkTreeModel* model = gtk_tree_view_get_model (GTK_TREE_VIEW (listview));
 	GtkTreeIter row;
 
@@ -269,7 +302,13 @@ add_scheme_clicked (GtkWidget* widget, gpointer user_data)
 void
 remove_scheme_clicked (GtkWidget* widget, gpointer user_data)
 {
-	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
+	nact_remove_scheme_clicked( widget, user_data, GLADE_EDIT_PROFILE_DIALOG_WIDGET );
+}
+
+void
+nact_remove_scheme_clicked (GtkWidget* widget, gpointer user_data, const gchar *dialog )
+{
+	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", dialog);
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (listview));
 	GtkTreeModel* model = gtk_tree_view_get_model (GTK_TREE_VIEW (listview));
 	GList* selected_values_path = NULL;
@@ -300,9 +339,13 @@ remove_scheme_clicked (GtkWidget* widget, gpointer user_data)
 	g_list_free (selected_values_path);
 }
 
-static void create_schemes_selection_list (void)
+void
+nact_create_schemes_selection_list( NactCallbackData *callback_data )
 {
-	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
+	static const char *thisfn = "nact_create_schemes_selection_list";
+	g_debug( "%s: callback_data=%p", thisfn, callback_data );
+
+	GtkWidget* listview = nact_get_glade_widget_from ("SchemesTreeView", callback_data->dialog );
 	GSList* iter;
 	GSList* schemes_list = nact_prefs_get_schemes_list ();
 	GtkListStore* model;
@@ -312,6 +355,8 @@ static void create_schemes_selection_list (void)
 	GtkCellRenderer* text_cell;
 
 	model = gtk_list_store_new (SCHEMES_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING);
+
+	callback_data->listview = listview;
 
 	for (iter = schemes_list; iter; iter = iter->next)
 	{
@@ -334,8 +379,7 @@ static void create_schemes_selection_list (void)
 	toggled_cell = gtk_cell_renderer_toggle_new ();
 
 	g_signal_connect (G_OBJECT (toggled_cell), "toggled",
-			  G_CALLBACK (scheme_selection_toggled_cb),
-			  gtk_tree_view_get_model (GTK_TREE_VIEW (listview)));
+			G_CALLBACK (scheme_selection_toggled_cb), callback_data );
 
 	column = gtk_tree_view_column_new_with_attributes ("",
 							   toggled_cell,
@@ -346,8 +390,7 @@ static void create_schemes_selection_list (void)
 	g_object_set (G_OBJECT (text_cell), "editable", TRUE, NULL);
 
 	g_signal_connect (G_OBJECT (text_cell), "edited",
-							G_CALLBACK (scheme_edited_cb),
-							gtk_tree_view_get_model (GTK_TREE_VIEW (listview)));
+			G_CALLBACK (scheme_edited_cb), callback_data );
 
 	column = gtk_tree_view_column_new_with_attributes (_("Scheme"),
 							   text_cell,
@@ -358,8 +401,7 @@ static void create_schemes_selection_list (void)
 	g_object_set (G_OBJECT (text_cell), "editable", TRUE, NULL);
 
 	g_signal_connect (G_OBJECT (text_cell), "edited",
-							G_CALLBACK (scheme_desc_edited_cb),
-							gtk_tree_view_get_model (GTK_TREE_VIEW (listview)));
+			G_CALLBACK (scheme_desc_edited_cb), callback_data );
 
 	column = gtk_tree_view_column_new_with_attributes (_("Description"),
 							   text_cell,
@@ -367,10 +409,11 @@ static void create_schemes_selection_list (void)
 	gtk_tree_view_append_column (GTK_TREE_VIEW (listview), column);
 
 	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (listview))), "changed",
-			  G_CALLBACK (scheme_list_selection_changed_cb), NULL);
+			  G_CALLBACK (scheme_list_selection_changed_cb), callback_data );
 }
 
-static gboolean reset_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path,
+gboolean
+nact_reset_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *path,
 											GtkTreeIter* iter, gpointer data)
 {
 	gtk_list_store_set (GTK_LIST_STORE (scheme_model), iter, SCHEMES_CHECKBOX_COLUMN, FALSE, -1);
@@ -399,7 +442,8 @@ static gboolean reset_schemes_list (GtkTreeModel* scheme_model, GtkTreePath *pat
 	return FALSE; // Don't stop looping
 }*/
 
-static void set_action_schemes (gchar* action_scheme, GtkTreeModel* scheme_model)
+void
+nact_set_action_schemes (gchar* action_scheme, GtkTreeModel* scheme_model)
 {
 	GtkTreeIter iter;
 	gboolean iter_ok = FALSE;
@@ -432,7 +476,8 @@ static void set_action_schemes (gchar* action_scheme, GtkTreeModel* scheme_model
 	}
 }
 
-static void set_action_match_string_list (GtkEntry* entry, GSList* basenames, const gchar* default_string)
+void
+nact_set_action_match_string_list (GtkEntry* entry, GSList* basenames, const gchar* default_string)
 {
 	GSList* iter;
 	gchar* entry_text;
@@ -460,7 +505,8 @@ static void set_action_match_string_list (GtkEntry* entry, GSList* basenames, co
 	gtk_entry_set_text (entry, entry_text);
 }
 
-static GSList* get_action_match_string_list (const gchar* patterns, const gchar* default_string)
+GSList*
+nact_get_action_match_string_list (const gchar* patterns, const gchar* default_string)
 {
 	gchar** tokens;
 	gchar** iter;
@@ -510,6 +556,7 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 	GtkWidget *only_files, *only_folders, *both, *accept_multiple;
 	gint width, height /*, x, y*/;
 	GtkTreeModel* scheme_model;
+	static NactCallbackData *scheme_data = NULL;
 
 	if (!init)
 	{
@@ -520,7 +567,11 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 			return FALSE;
 		}
 
-		create_schemes_selection_list ();
+		scheme_data = g_new0( NactCallbackData, 1 );
+		scheme_data->dialog = GLADE_EDIT_PROFILE_DIALOG_WIDGET;
+		scheme_data->field_changed_cb = profile_field_changed_cb;
+		scheme_data->update_example_label = update_example_label;
+		nact_create_schemes_selection_list ( scheme_data );
 
 		glade_xml_signal_autoconnect(gui);
 
@@ -539,7 +590,7 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 		}
 		button_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 		gtk_size_group_add_widget (button_size_group,
-											nact_get_glade_widget_from ("BrowseButton",
+											nact_get_glade_widget_from ("PathBrowseButton",
 																		GLADE_EDIT_PROFILE_DIALOG_WIDGET));
 		gtk_size_group_add_widget (button_size_group,
 											nact_get_glade_widget_from ("LegendButton",
@@ -579,25 +630,25 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 	*/
 
 	command_path = nact_get_glade_widget_from ("CommandPathEntry", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
-	printf ("path : %s\n", action_profile->path);
+	/*printf ("path : %s\n", action_profile->path);*/
 	gtk_entry_set_text (GTK_ENTRY (command_path), action_profile->path);
-	g_print ("toto42\n");
+	/*g_print ("toto42\n");*/
 
 	command_params = nact_get_glade_widget_from ("CommandParamsEntry", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
-	g_print ("toto43\n");
-	printf ("params : %s\n", action_profile->parameters);
+	/*g_print ("toto43\n");
+	printf ("params : %s\n", action_profile->parameters);*/
 	gtk_entry_set_text (GTK_ENTRY (command_params), action_profile->parameters);
-	g_print ("toto44\n");
+	/*g_print ("toto44\n");*/
 
 	test_patterns = nact_get_glade_widget_from ("PatternEntry", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
-	set_action_match_string_list (GTK_ENTRY (test_patterns), action_profile->basenames, "*");
+	nact_set_action_match_string_list (GTK_ENTRY (test_patterns), action_profile->basenames, "*");
 
 	match_case = nact_get_glade_widget_from ("MatchCaseButton", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (match_case), action_profile->match_case);
 
 	test_mimetypes = nact_get_glade_widget_from ("MimeTypeEntry", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
 
-	set_action_match_string_list (GTK_ENTRY (test_mimetypes), action_profile->mimetypes, "*/*");
+	nact_set_action_match_string_list (GTK_ENTRY (test_mimetypes), action_profile->mimetypes, "*/*");
 
 	only_folders = nact_get_glade_widget_from ("OnlyFoldersButton", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (only_folders), action_profile->is_dir);
@@ -613,8 +664,8 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 
 	scheme_listview = nact_get_glade_widget_from ("SchemesTreeView", GLADE_EDIT_PROFILE_DIALOG_WIDGET);
 	scheme_model = gtk_tree_view_get_model (GTK_TREE_VIEW (scheme_listview));
-	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc)reset_schemes_list, NULL);
-	g_slist_foreach (action_profile->schemes, (GFunc)set_action_schemes, scheme_model);
+	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc) nact_reset_schemes_list, NULL);
+	g_slist_foreach (action_profile->schemes, (GFunc) nact_set_action_schemes, scheme_model);
 
 	update_example_label ();
 
@@ -625,7 +676,7 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 		nautilus_actions_config_action_profile_set_path (action_profile, gtk_entry_get_text (GTK_ENTRY (command_path)));
 		nautilus_actions_config_action_profile_set_parameters (action_profile, gtk_entry_get_text (GTK_ENTRY (command_params)));
 
-		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_patterns)), "*");
+		list = nact_get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_patterns)), "*");
 		nautilus_actions_config_action_profile_set_basenames (action_profile, list);
 		g_slist_foreach (list, (GFunc) g_free, NULL);
 		g_slist_free (list);
@@ -633,7 +684,7 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 		nautilus_actions_config_action_profile_set_match_case (
 			action_profile, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (match_case)));
 
-		list = get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_mimetypes)), "*/*");
+		list = nact_get_action_match_string_list (gtk_entry_get_text (GTK_ENTRY (test_mimetypes)), "*/*");
 		nautilus_actions_config_action_profile_set_mimetypes (action_profile, list);
 		g_slist_foreach (list, (GFunc) g_free, NULL);
 		g_slist_free (list);
@@ -691,7 +742,7 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 	nact_prefs_set_edit_dialog_position (GTK_WINDOW (editor));
 	*/
 
-	hide_legend_dialog ();
+	nact_hide_legend_dialog( GLADE_EDIT_PROFILE_DIALOG_WIDGET );
 	gtk_widget_hide (editor);
 
 	return ret;
@@ -707,7 +758,7 @@ nact_profile_editor_new_profile (NautilusActionsConfigAction* action)
 	NautilusActionsConfigActionProfile *action_profile = nautilus_actions_config_action_profile_new_default ();
 	nautilus_actions_config_action_profile_set_desc_name (action_profile, new_profile_desc_name);
 
-	printf ("Profile Name : %s (%s)\n", new_profile_desc_name, new_profile_name);
+	/*printf ("Profile Name : %s (%s)\n", new_profile_desc_name, new_profile_name);*/
 	val = open_profile_editor (action, new_profile_name, action_profile, TRUE);
 	g_free (new_profile_name);
 	g_free (new_profile_desc_name);

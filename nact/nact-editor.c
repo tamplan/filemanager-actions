@@ -48,7 +48,10 @@ void add_prof_button_clicked_cb (GtkButton *button, gpointer user_data);
 void copy_prof_button_clicked_cb (GtkButton *button, gpointer user_data);
 void edit_prof_button_clicked_cb (GtkButton *button, gpointer user_data);
 
-static void nact_editor_fill_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action);
+static gchar *strip_underscore( const gchar *text );
+static void   preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data);
+static void   editor_fill_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action);
+static void   editor_setup_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action);
 
 enum {
 	ICON_STOCK_COLUMN = 0,
@@ -95,10 +98,16 @@ field_changed_cb (GObject *object, gpointer user_data)
 void
 icon_browse_button_clicked_cb (GtkButton *button, gpointer user_data)
 {
+	nact_icon_browse_button_clicked_cb( button, user_data, GLADE_EDIT_DIALOG_WIDGET );
+}
+
+void
+nact_icon_browse_button_clicked_cb( GtkButton *button, gpointer user_data, const gchar* dialog )
+{
 	gchar* last_dir;
 	gchar* filename;
 	GtkWidget* filechooser = nact_get_glade_widget_from ("FileChooserDialog", GLADE_FILECHOOSER_DIALOG_WIDGET);
-	GtkWidget* combo = nact_get_glade_widget_from ("MenuIconComboBoxEntry", GLADE_EDIT_DIALOG_WIDGET);
+	GtkWidget* combo = nact_get_glade_widget_from ("MenuIconComboBoxEntry", dialog );
 	gboolean set_current_location = FALSE;
 
 	filename = (gchar*)gtk_entry_get_text (GTK_ENTRY (GTK_BIN (combo)->child));
@@ -209,9 +218,16 @@ static GtkTreeModel* create_stock_icon_model (void)
 	return GTK_TREE_MODEL (model);
 }
 
-static void preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data)
+static void
+preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data)
 {
-	GtkWidget* image = nact_get_glade_widget_from ("IconImage", GLADE_EDIT_DIALOG_WIDGET);
+	nact_preview_icon_changed_cb( icon_entry, user_data, GLADE_EDIT_DIALOG_WIDGET );
+}
+
+void
+nact_preview_icon_changed_cb( GtkEntry* icon_entry, gpointer user_data, const gchar *dialog )
+{
+	GtkWidget* image = nact_get_glade_widget_from ("IconImage", dialog);
 	const gchar* icon_name = gtk_entry_get_text (icon_entry);
 	GtkStockItem stock_item;
 	GdkPixbuf* icon = NULL;
@@ -258,7 +274,8 @@ static void preview_icon_changed_cb (GtkEntry* icon_entry, gpointer user_data)
 	}
 }
 
-static void fill_menu_icon_combo_list_of (GtkComboBoxEntry* combo)
+void
+nact_fill_menu_icon_combo_list_of (GtkComboBoxEntry* combo)
 {
 	GtkCellRenderer *cell_renderer_pix;
 	GtkCellRenderer *cell_renderer_text;
@@ -343,7 +360,7 @@ profile_name_edited_cb (GtkCellRendererText *cell,
 }
 
 static void
-nact_editor_fill_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action)
+editor_fill_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action)
 {
 	GSList *profile_names = NULL, *l;
 	GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model (GTK_TREE_VIEW (list)));
@@ -380,11 +397,11 @@ add_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkWidget* profile_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
 	NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)g_object_get_data (G_OBJECT (profile_list), "action");
 
-	printf ("Action label : %s\n", action->label);
+	/*printf ("Action label : %s\n", action->label);*/
 
 	if (nact_profile_editor_new_profile (action))
 	{
-		nact_editor_fill_profiles_list (nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET), action);
+		editor_fill_profiles_list (nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET), action);
 		field_changed_cb (G_OBJECT (profile_list), NULL);
 	}
 }
@@ -398,7 +415,7 @@ edit_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkWidget *nact_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
 	NautilusActionsConfigAction* action = (NautilusActionsConfigAction*)g_object_get_data (G_OBJECT (nact_profiles_list), "action");
 
-	printf ("Action label : %s\n", action->label);
+	/*printf ("Action label : %s\n", action->label);*/
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_profiles_list));
 
@@ -415,7 +432,7 @@ edit_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 		{
 			if (nact_profile_editor_edit_profile (action, profile_name, action_profile))
 			{
-				nact_editor_fill_profiles_list (nact_profiles_list, action);
+				editor_fill_profiles_list (nact_profiles_list, action);
 				field_changed_cb (G_OBJECT (nact_profiles_list), NULL);
 			}
 		}
@@ -447,7 +464,7 @@ copy_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		gtk_tree_model_get (model, &iter, PROFILE_LABEL_COLUMN, &profile_name, -1);
 
-		printf ("profile_name : %s\n", profile_name);
+		/*printf ("profile_name : %s\n", profile_name);*/
 
 		action_profile = nautilus_actions_config_action_profile_dup (nautilus_actions_config_action_get_profile (action, profile_name));
 		new_action_profile = nautilus_actions_config_action_profile_dup (action_profile);
@@ -490,7 +507,7 @@ paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 	/* i18n notes: will be displayed in a dialog */
 	const gchar *cantpaste = _( "Can't paste action's profile '%s'!" );
 
-	printf ("profile_name : %s\n", action_profile->desc_name);
+	/*printf ("profile_name : %s\n", action_profile->desc_name);*/
 
 	/* i18n notes: this is the default name of a copied profile */
 	gchar* new_profile_desc_name = g_strdup_printf (_("%s Copy"), action_profile->desc_name);
@@ -505,7 +522,7 @@ paste_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 	{
 		if (nautilus_actions_config_action_add_profile (action, new_profile_name, new_action_profile, &error))
 		{
-			nact_editor_fill_profiles_list (nact_profiles_list, action);
+			editor_fill_profiles_list (nact_profiles_list, action);
 			field_changed_cb (G_OBJECT (nact_profiles_list), NULL);
 		}
 		else
@@ -546,7 +563,7 @@ delete_prof_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 		if (nautilus_actions_config_action_remove_profile (action, profile_name))
 		{
-			nact_editor_fill_profiles_list (nact_profiles_list, action);
+			editor_fill_profiles_list (nact_profiles_list, action);
 			field_changed_cb (G_OBJECT (nact_profiles_list), NULL);
 		}
 		else
@@ -583,7 +600,8 @@ profile_list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_da
 	}
 }
 
-static void nact_editor_setup_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action)
+static void
+editor_setup_profiles_list (GtkWidget *list, NautilusActionsConfigAction* action)
 {
 	GtkListStore *model;
 	GtkTreeViewColumn *column;
@@ -592,7 +610,7 @@ static void nact_editor_setup_profiles_list (GtkWidget *list, NautilusActionsCon
 	/* create the model */
 	model = gtk_list_store_new (N_PROF_COLUMN, G_TYPE_STRING, G_TYPE_STRING);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (list), GTK_TREE_MODEL (model));
-	nact_editor_fill_profiles_list (list, action);
+	editor_fill_profiles_list (list, action);
 	g_object_unref (model);
 
 	/* create columns on the tree view */
@@ -654,7 +672,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		g_signal_connect (G_OBJECT (GTK_BIN (menu_icon)->child), "changed",
 							   G_CALLBACK (preview_icon_changed_cb), NULL);
 
-		fill_menu_icon_combo_list_of (GTK_COMBO_BOX_ENTRY (menu_icon));
+		nact_fill_menu_icon_combo_list_of (GTK_COMBO_BOX_ENTRY (menu_icon));
 
 		/* TODO: replace deprecated gtk_tooltips_set_tip by its equivalent */
 		/*gtk_tooltips_set_tip (gtk_tooltips_new (), GTK_WIDGET (GTK_BIN (menu_icon)->child),
@@ -668,7 +686,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 		}
 
 		menu_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
-		nact_editor_setup_profiles_list (menu_profiles_list, action);
+		editor_setup_profiles_list (menu_profiles_list, action);
 
 		/* free memory */
 		g_object_unref (gui);
@@ -710,7 +728,7 @@ open_editor (NautilusActionsConfigAction *action, gboolean is_new)
 	gtk_entry_set_text (GTK_ENTRY (GTK_BIN (menu_icon)->child), action->icon);
 
 	menu_profiles_list = nact_get_glade_widget_from ("ProfilesList", GLADE_EDIT_DIALOG_WIDGET);
-	nact_editor_fill_profiles_list (menu_profiles_list, action);
+	editor_fill_profiles_list (menu_profiles_list, action);
 
 	/* remove any old reference and reference the new action in the list */
 	g_object_steal_data (G_OBJECT (menu_profiles_list), "action");
