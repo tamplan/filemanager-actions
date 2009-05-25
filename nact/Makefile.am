@@ -32,7 +32,8 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DGLADEDIR=\""$(datadir)/nautilus-actions/nact"\"	\
-	$(NAUTILUS_ACTIONS_CFLAGS)
+	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	$(NULL)
 
 nautilus_actions_config_SOURCES = \
 	nact.c												\
@@ -46,11 +47,13 @@ nautilus_actions_config_SOURCES = \
 	nact-profile-editor.c								\
 	nact-profile-editor.h								\
 	nact-editor.c										\
-	nact-editor.h
+	nact-editor.h										\
+	$(NULL)
 
 nautilus_actions_config_LDADD = \
 	$(top_builddir)/libnautilus-actions/libnautilus-actions.la	\
-	$(NAUTILUS_ACTIONS_LIBS)
+	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NULL)
 
 gladedir = $(datadir)/nautilus-actions/nact
 
@@ -73,4 +76,5 @@ DISTCLEANFILES = \
 
 EXTRA_DIST = \
 	$(Applications_in_files)							\
-	$(glade_DATA)
+	$(glade_DATA)										\
+	$(NULL)

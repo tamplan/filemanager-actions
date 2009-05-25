@@ -29,7 +29,8 @@ noinst_LTLIBRARIES = libnautilus-actions.la
 
 AM_CPPFLAGS += \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	$(NAUTILUS_ACTIONS_CFLAGS)
+	$(NAUTILUS_ACTIONS_CFLAGS)					\
+	$(NULL)
 
 libnautilus_actions_la_SOURCES = \
 	nautilus-actions-config.c					\
@@ -44,6 +45,7 @@ libnautilus_actions_la_SOURCES = \
 	nautilus-actions-config-schema-writer.c		\
 	nautilus-actions-config-schema-writer.h		\
 	nautilus-actions-config-schema-reader.c		\
-	nautilus-actions-config-schema-reader.h 
+	nautilus-actions-config-schema-reader.h		\
+	$(NULL) 
 
 libnautilus_actions_la_LIBADD = -lxml2 -luuid

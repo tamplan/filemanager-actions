@@ -4,6 +4,13 @@
 	* Makefile.am:
 	Reorganize install order so that plugin be installed last.
 
+	* icons/Makefile.am:
+	* libnautilus-actions/Makefile.am:
+	* nact/Makefile.am:
+	* plugin/Makefile.am:
+	* utils/Makefile.am:
+	Cleanup Makefile.am.
+
 2009-05-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Fix Glade regression I introduced myself when ansi-fying C sources !
