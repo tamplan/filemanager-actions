@@ -17,6 +17,13 @@
 	* libnautilus-actions/Makefile.am:
 	Define G_LOG_DOMAIN variable.
 
+	* libnautilus-actions/nautilus-actions-config.c:
+	* libnautilus-actions/nautilus-actions-config.h:
+	nautilus_actions_config_action_free_all_profile_names,
+	nautilus_actions_config_action_get_first_profile_name,
+	nautilus_actions_config_action_get_profiles_count,
+	nautilus_actions_config_action_dump: new functions.
+
 2009-05-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Fix Glade regression I introduced myself when ansi-fying C sources !

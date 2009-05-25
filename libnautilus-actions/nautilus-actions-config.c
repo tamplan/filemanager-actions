@@ -400,6 +400,28 @@ nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigActio
 }
 
 void
+nautilus_actions_config_action_free_all_profile_names( GSList *list )
+{
+	g_slist_free( list );
+}
+
+/*
+ * the returned string must be freed after used
+ */
+gchar *
+nautilus_actions_config_action_get_first_profile_name( const NautilusActionsConfigAction *action )
+{
+	gchar *name = NULL;
+	GList *list = g_hash_table_get_keys( action->profiles );
+	GList *first = g_list_first( list );
+	if( first ){
+		name = g_strdup(( gchar * ) first->data );
+	}
+	g_list_free( list );
+	return( name );
+}
+
+void
 nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action, gchar** new_profile_name, gchar** new_profile_desc_name)
 {
 	GSList* profile_names = nautilus_actions_config_action_get_all_profile_names (action);
@@ -437,6 +459,12 @@ nautilus_actions_config_action_get_profile (NautilusActionsConfigAction *action,
 	{
 		return g_hash_table_lookup (action->profiles, NAUTILUS_ACTIONS_DEFAULT_PROFILE_NAME);
 	}
+}
+
+guint
+nautilus_actions_config_action_get_profiles_count( const NautilusActionsConfigAction *action )
+{
+	return( action ? g_hash_table_size( action->profiles ) : 0 );
 }
 
 NautilusActionsConfigActionProfile *nautilus_actions_config_action_get_or_create_profile (NautilusActionsConfigAction *action,
@@ -955,5 +983,32 @@ nautilus_actions_config_action_free (NautilusActionsConfigAction *action)
 
 		g_free (action);
 		action = NULL;
+	}
+}
+
+static void
+dump_profile( gchar *key, NautilusActionsConfigActionProfile *profile, gchar *thisfn )
+{
+	g_debug( "%s: [%s]  desc_name='%s'", thisfn, key, profile->desc_name );
+	/*g_debug( "%s: [%s]  basenames='%s'", thisfn, key, profile->basenames );*/
+	/*g_debug( "%s: [%s]  mimetypes='%s'", thisfn, key, profile->mimetypes );*/
+	g_debug( "%s: [%s]       path='%s'", thisfn, key, profile->path );
+	g_debug( "%s: [%s] parameters='%s'", thisfn, key, profile->parameters );
+	/*g_debug( "%s: [%s]    schemes='%s'", thisfn, key, profile->schemes );*/
+}
+
+void
+nautilus_actions_config_action_dump( NautilusActionsConfigAction *action )
+{
+	static const char *thisfn = "nautilus_actions_config_action_dump";
+	if (action != NULL){
+		g_debug( "%s:         uuid='%s'", thisfn, action->uuid );
+		g_debug( "%s:        label='%s'", thisfn, action->label );
+		g_debug( "%s:      tooltip='%s'", thisfn, action->tooltip );
+		g_debug( "%s: conf_section='%s'", thisfn, action->conf_section );
+		g_debug( "%s:         icon='%s'", thisfn, action->icon );
+		g_debug( "%s:      version='%s'", thisfn, action->version );
+		g_debug( "%s: %d profile(s) at %p", thisfn, nautilus_actions_config_action_get_profiles_count( action ), action->profiles );
+		g_hash_table_foreach( action->profiles, ( GHFunc ) dump_profile, ( gpointer ) thisfn );
 	}
 }

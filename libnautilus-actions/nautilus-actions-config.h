@@ -134,6 +134,8 @@ NautilusActionsConfigActionProfile *nautilus_actions_config_action_profile_new_d
 gboolean                     nautilus_actions_config_action_profile_exists (NautilusActionsConfigAction *action,
 									 const gchar* profile_name);
 GSList				*nautilus_actions_config_action_get_all_profile_names (NautilusActionsConfigAction *action);
+void                 nautilus_actions_config_action_free_all_profile_names( GSList *list );
+gchar               *nautilus_actions_config_action_get_first_profile_name( const NautilusActionsConfigAction *action );
 void				 nautilus_actions_config_action_get_new_default_profile_name (NautilusActionsConfigAction *action,
 									gchar** new_profile_name,
 									gchar** new_profile_desc_name);
@@ -154,6 +156,8 @@ gboolean                     nautilus_actions_config_action_rename_profile (Naut
 									 const gchar* old_profile_name,
 								 	 const gchar* new_profile_name,
 									 GError** error);
+guint                        nautilus_actions_config_action_get_profiles_count( const NautilusActionsConfigAction *action );
+
 
 NautilusActionsConfigAction *nautilus_actions_config_action_new (void);
 NautilusActionsConfigAction *nautilus_actions_config_action_new_default (void);
@@ -190,6 +194,7 @@ void                         nautilus_actions_config_action_profile_free (Nautil
 NautilusActionsConfigAction *nautilus_actions_config_action_dup (NautilusActionsConfigAction *action);
 NautilusActionsConfigAction *nautilus_actions_config_action_dup_new (NautilusActionsConfigAction *action);
 void                         nautilus_actions_config_action_free (NautilusActionsConfigAction *action);
+void                         nautilus_actions_config_action_dump (NautilusActionsConfigAction *action);
 
 G_END_DECLS
 
