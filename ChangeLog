@@ -1,38 +1,44 @@
+2009-05-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac:
+	* Makefile.am:
+	Reorganize install order so that plugin be installed last.
+
 2009-05-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Fix Glade regression I introduced myself when ansi-fying C sources !
 
-	* *.c, *.h: almost all sources files impacted
+	* *.c, *.h: Almost all sources files impacted.
 
-	* m4/nact-maintainer-mode.m4: creation
+	* m4/nact-maintainer-mode.m4: Creation.
 
-	* plugin/nautilus-actions.c: add debug mode to syslog
+	* plugin/nautilus-actions.c: Add debug mode to syslog.
 
 2009-05-17 Pierre Wieser <pwieser@trychlos.org>
 
 	Releasing 1.10.0
 
-	* configure.ac: update version number
+	* configure.ac: Update version number.
 
 2009-05-17 Pierre Wieser <pwieser@trychlos.org>
 
 	Make all sources ansi-compliant
 
-	* configure.ac: use NACT_GNOME_COMPILE_WARNINGS	(see #582860)
+	* configure.ac: Use NACT_GNOME_COMPILE_WARNINGS	(see #582860).
 
-	* m4/nact-compiler-flags: creation
+	* m4/nact-compiler-flags: Creation.
 
-	* *.c, *.h: update almost all sources to be ansi-compliant
+	* *.c, *.h: Update almost all sources to be ansi-compliant.
 
 2009-05-16 Pierre Wieser <pwieser@trychlos.org>
 
-	* configure.ac: created from configure.in
-	update all Makefile.am, replacing deprecated INCLUDES with AM_CPPFLAGS
+	* configure.ac: Created from configure.in,
+	update all Makefile.am, replacing deprecated INCLUDES with AM_CPPFLAGS.
 
 	* update po files
 
-	* Makefile.am: add DISTCLEANFILES,
-	add DISTCHECK_CONFIGURE_FLAGS to be able to make distcheck successfully
+	* Makefile.am: Add DISTCLEANFILES,
+	add DISTCHECK_CONFIGURE_FLAGS to be able to make distcheck successfully.
 
 	* icons/16x16/Makefile.am:
 	* icons/22x22/Makefile.am:
@@ -42,14 +48,14 @@
 	* nact/Makefile.am:
 	* plugin/Makefile.am:
 	* utils/Makefile.am:
-	add EXTRA_DIST to be able to make distcheck successfully
+	Add EXTRA_DIST to be able to make distcheck successfully.
 
 2009-05-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* nact/nact-editor.c:
 	* libnautilus-actions/nautilus-actions-config.c:
 	* libnautilus-actions/nautilus-actions-config-schema-reader.c:
-	Fix typos. Fixes #522605 reported by Andre Klapper <a9016009%40gmx.de>
+	Fix typos. Fixes #522605 reported by Andre Klapper <a9016009%40gmx.de>.
 
 	* libnautilus-actions/nautilus-actions-config-gconf-private.h:
 	Remove a quote. Fixes #573365 reported by Sergej
@@ -58,12 +64,12 @@
 2009-05-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* ChangeLog, ChangeLog-2008:
-	split enormeous ChangeLog, only keeping recent history
+	Split enormeous ChangeLog, only keeping recent history.
 
 2009-05-12 Bruce van der Kooij <brucevdkooij@gmail.com>
 
-	* plugin/nautilus-actions.c: call gnome_vfs_init at class
-	initialization. Fixes #574919.
+	* plugin/nautilus-actions.c:
+	Call gnome_vfs_init at class initialization. Fixes #574919.
 
 2009-05-12 Pierre Wieser <pwieser@trychlos.org>
 
@@ -74,8 +80,8 @@
 
 	* autogen.sh:
 	* configure.in:
-	* po/LINGUAS: Use newer intltool so the recent build break doesn't
-	occur again.
+	* po/LINGUAS:
+	Use newer intltool so the recent build break doesn't occur again.
 
 2009-04-12  Christian Persch  <chpe@gnome.org>
 
@@ -83,5 +89,5 @@
 
 2009-01-20  Stéphane Raimbault  <stephane.raimbault@gmail.com>
 
-	* nact/nautilus-actions-config.glade: Marked 'Duplicate' string
-	for translation. Fixes #568366.
+	* nact/nautilus-actions-config.glade:
+	Marked 'Duplicate' string for translation. Fixes #568366.

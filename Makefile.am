@@ -28,13 +28,14 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = \
-	icons				\
-	libnautilus-actions	\
-	plugin				\
-	m4					\
-	nact				\
-	po					\
-	$(OPTIONAL_SUBDIR)
+	m4							\
+	icons						\
+	po							\
+	libnautilus-actions			\
+	nact						\
+	$(OPTIONAL_SUBDIR)			\
+	plugin						\
+	$(NULL)
 
 # a foo directory so that make distcheck has a vpath which is prefixed
 # with a make variable, instead of hardcoded as returned by pkg-config
@@ -42,11 +43,13 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
 
 EXTRA_DIST = \
-	intltool-extract.in	\
-	intltool-merge.in	\
-	intltool-update.in
+	intltool-extract.in			\
+	intltool-merge.in			\
+	intltool-update.in			\
+	$(NULL)
 
 DISTCLEANFILES = \
-	intltool-extract	\
-	intltool-merge		\
-	intltool-update
+	intltool-extract			\
+	intltool-merge				\
+	intltool-update				\
+	$(NULL)

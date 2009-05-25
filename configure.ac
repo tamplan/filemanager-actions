@@ -37,18 +37,18 @@ AC_CONFIG_HEADERS([config.h])
 
 AC_CONFIG_FILES([
 	Makefile
+	m4/Makefile
 	icons/Makefile
 	icons/16x16/Makefile
 	icons/22x22/Makefile
 	icons/32x32/Makefile
 	icons/48x48/Makefile
 	icons/scalable/Makefile
-	libnautilus-actions/Makefile
-	m4/Makefile
-	nact/Makefile
-	plugin/Makefile
 	po/Makefile.in
+	libnautilus-actions/Makefile
+	nact/Makefile
 	utils/Makefile
+	plugin/Makefile
 ])
 
 AC_CONFIG_MACRO_DIR([m4])
