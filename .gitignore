@@ -29,5 +29,7 @@ stamp-h1
 *.o
 *.la
 *.lo
+*.bak
+*.gladep
 nautilus-actions-*.tar.gz
 config.h.in~

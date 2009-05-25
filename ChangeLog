@@ -11,6 +11,8 @@
 	* utils/Makefile.am:
 	Cleanup Makefile.am.
 
+	* .gitignore: Update to ignore Glade work files.
+
 2009-05-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Fix Glade regression I introduced myself when ansi-fying C sources !
