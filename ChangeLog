@@ -13,6 +13,10 @@
 
 	* .gitignore: Update to ignore Glade work files.
 
+	* plugin/Makefile.am:
+	* libnautilus-actions/Makefile.am:
+	Define G_LOG_DOMAIN variable.
+
 2009-05-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Fix Glade regression I introduced myself when ansi-fying C sources !

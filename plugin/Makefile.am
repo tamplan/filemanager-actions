@@ -27,7 +27,7 @@
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
-	-DG_LOG_DOMAIN=\"NACT-Plugin\"						\
+	-DG_LOG_DOMAIN=\"nact\"								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 

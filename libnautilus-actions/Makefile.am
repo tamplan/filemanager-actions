@@ -29,6 +29,7 @@ noinst_LTLIBRARIES = libnautilus-actions.la
 
 AM_CPPFLAGS += \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
+	-DG_LOG_DOMAIN=\"nact\"						\
 	$(NAUTILUS_ACTIONS_CFLAGS)					\
 	$(NULL)
 
