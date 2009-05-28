@@ -3454,7 +3454,6 @@ place secondary text here</property>
 		      <property name="add_tearoffs">False</property>
 		      <property name="has_frame">True</property>
 		      <property name="focus_on_click">True</property>
-		      <signal name="changed" handler="field_changed_cb" last_modification_time="Fri, 21 Oct 2005 07:38:35 GMT"/>
 		    </widget>
 		    <packing>
 		      <property name="padding">0</property>

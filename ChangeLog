@@ -7,6 +7,9 @@
 	* plugin/nautilus-actions.c (get_hash_keys):
 	Remove no more used function.
 
+	* nact/nautilus-actions-config.glade:
+	Remove (useless) 'field_changed_cb' handler from the menu icon.
+
 2009-05-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:
