@@ -143,10 +143,10 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 	return item;
 }
 
-static void get_hash_keys (gchar* key, gchar* value, GSList** list)
+/*static void get_hash_keys (gchar* key, gchar* value, GSList** list)
 {
 	*list = g_slist_append (*list, key);
-}
+}*/
 
 static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, GtkWidget *window, GList *files)
 {
@@ -164,6 +164,11 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 
 	g_return_val_if_fail (NAUTILUS_IS_ACTIONS (self), NULL);
 
+	/* no need to go further if there is no files in the list */
+	if( !g_list_length( files )){
+		return(( GList * ) NULL );
+	}
+
 	if (!self->dispose_has_run)
 	{
 		for (iter = self->config_list; iter; iter = iter->next)
@@ -172,7 +177,8 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 			NautilusActionsConfigAction *action = (NautilusActionsConfigAction*)iter->data;
 
 			/* Retrieve all profile name */
-			g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, &profile_list);
+			/*g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, &profile_list);*/
+			profile_list = nautilus_actions_config_action_get_all_profile_names( action );
 
 			iter2 = profile_list;
 			found = FALSE;
@@ -180,6 +186,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 			{
 				profile_name = (gchar*)iter2->data;
 				NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
+				g_debug( "%s: profile='%s' (%p)", thisfn, profile_name, action_profile );
 
 				if (nautilus_actions_test_validate (action_profile, files))
 				{
@@ -190,6 +197,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 
 				iter2 = iter2->next;
 			}
+			nautilus_actions_config_action_free_all_profile_names( profile_list );
 		}
 	}
 

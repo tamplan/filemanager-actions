@@ -1,3 +1,12 @@
+2009-05-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* plugin/nautilus-actions.c (nautilus_actions_get_file_items):
+	Fix iteration through profiles list.
+	Do not search through actions when the Nautilus-provided list is empty.
+
+	* plugin/nautilus-actions.c (get_hash_keys):
+	Remove no more used function.
+
 2009-05-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:
