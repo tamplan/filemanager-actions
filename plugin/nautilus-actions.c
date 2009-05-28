@@ -47,7 +47,9 @@ static GObjectClass *parent_class = NULL;
 static GType actions_type = 0;
 static guint log_handler = 0;
 
+#ifdef NACT_MAINTAINER_MODE
 static void nact_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
+#endif
 
 GType nautilus_actions_get_type (void)
 {
@@ -385,6 +387,7 @@ void nautilus_actions_register_type (GTypeModule *module)
  * a given key and obtain a full log to send to Bugzilla..
  * For now, is always install when compiled in maintainer mode, never else
  */
+#ifdef NACT_MAINTAINER_MODE
 static void
 nact_log_handler( const gchar *log_domain,
 					GLogLevelFlags log_level,
@@ -393,3 +396,4 @@ nact_log_handler( const gchar *log_domain,
 {
 	syslog( LOG_USER | LOG_DEBUG, "%s", message );
 }
+#endif

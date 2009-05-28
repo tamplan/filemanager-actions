@@ -30,10 +30,7 @@
 dnl define NACT_MAINTAINER_MODE
 
 AC_DEFUN([NACT_IS_MAINTAINER_MODE],[
-	NACT_MAINTAINER_MODE=
 	if test "${USE_MAINTAINER_MODE}" = "yes"; then
-		NACT_MAINTAINER_MODE=1
+		AC_DEFINE([NACT_MAINTAINER_MODE],[1],[Define to 1 if we are in maintainer mode])
 	fi
-	AC_SUBST([NACT_MAINTAINER_MODE])
-	AC_DEFINE_UNQUOTED([NACT_MAINTAINER_MODE],[${NACT_MAINTAINER_MODE}],[Define to 1 if we are in maintainer mode])
 ])

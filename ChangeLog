@@ -21,6 +21,10 @@
 	* nact/nact-profile-editor.c:
 	Enable the OK button as soon as required fields are filled.
 
+	* m4/nact-maintainer-mode.m4:
+	* plugin/nautilus-actions.c:
+	Only enable syslog'ed debug messages when in maintainer mode.
+
 2009-05-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:
