@@ -667,10 +667,10 @@ open_profile_editor (NautilusActionsConfigAction *action, gchar* profile_name, N
 	gtk_tree_model_foreach (scheme_model, (GtkTreeModelForeachFunc) nact_reset_schemes_list, NULL);
 	g_slist_foreach (action_profile->schemes, (GFunc) nact_set_action_schemes, scheme_model);
 
-	update_example_label ();
-
 	/* run the dialog */
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (editor), GTK_RESPONSE_OK, FALSE);
+	profile_field_changed_cb( NULL, NULL );
+
 	switch (gtk_dialog_run (GTK_DIALOG (editor))) {
 	case GTK_RESPONSE_OK :
 		nautilus_actions_config_action_profile_set_path (action_profile, gtk_entry_get_text (GTK_ENTRY (command_path)));

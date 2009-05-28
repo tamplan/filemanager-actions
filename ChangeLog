@@ -18,6 +18,9 @@
 	* nact/nautilus-actions-config.glade:
 	Double-click on an action opens the editor.
 
+	* nact/nact-profile-editor.c:
+	Enable the OK button as soon as required fields are filled.
+
 2009-05-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:
