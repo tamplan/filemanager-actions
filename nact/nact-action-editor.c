@@ -140,7 +140,7 @@ open_action_editor( NautilusActionsConfigAction *action, const gchar* profile_na
 	GtkSizeGroup* label_size_group;
 	GtkSizeGroup* button_size_group;
 	GtkWidget *scheme_listview;
-	GtkWidget *menu_label, *menu_tooltip, *menu_icon;
+	GtkWidget *menu_label, *menu_tooltip, *menu_icon, *menu_icon_name;
 	GtkWidget *command_path, *command_params, *test_patterns, *match_case, *test_mimetypes;
 	GtkWidget *only_files, *only_folders, *both, *accept_multiple;
 	gint width, height /*, x, y*/;
@@ -176,9 +176,14 @@ open_action_editor( NautilusActionsConfigAction *action, const gchar* profile_na
 
 		nact_fill_menu_icon_combo_list_of (GTK_COMBO_BOX_ENTRY (menu_icon));
 
-		/* TODO: replace deprecated gtk_tooltips_set_tip by its equivalent */
-		/*gtk_tooltips_set_tip (gtk_tooltips_new (), GTK_WIDGET (GTK_BIN (menu_icon)->child),
-									 _("Icon of the menu item in the Nautilus popup menu"), "");*/
+		menu_icon_name = GTK_WIDGET( GTK_BIN( menu_icon )->child );
+#if  ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 12))
+		gtk_tooltips_set_tip (gtk_tooltips_new (),
+				menu_icon_name, _( "Icon of the menu item in the Nautilus popup menu" );, "");
+#else
+		gtk_widget_set_tooltip_text(
+				menu_icon_name, _( "Icon of the menu item in the Nautilus popup menu" ));
+#endif /* Gtk+ 2.12 */
 
 		aligned_widgets = nact_get_glade_widget_prefix_from ("LabelAlign", GLADE_EDIT_ACTION_DIALOG_WIDGET);
 		label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);

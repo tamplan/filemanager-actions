@@ -10,6 +10,10 @@
 	* nact/nautilus-actions-config.glade:
 	Remove (useless) 'field_changed_cb' handler from the menu icon.
 
+	* nact/nact-editor.c:
+	* nact/nact-action-editor.c:
+	Restore tooltip display for the icon name depending on Gtk+ version.
+
 2009-05-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:
