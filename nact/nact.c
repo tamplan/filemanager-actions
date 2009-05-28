@@ -52,6 +52,7 @@ void     delete_button_clicked_cb (GtkButton *button, gpointer user_data);
 void     duplicate_button_clicked_cb (GtkButton *button, gpointer user_data);
 void     edit_button_clicked_cb (GtkButton *button, gpointer user_data);
 void     im_export_button_clicked_cb (GtkButton *button, gpointer user_data);
+gboolean on_ActionsList_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
 
 static gint  actions_list_sort_by_label (gconstpointer a1, gconstpointer a2);
 static guint get_profiles_count( const NautilusActionsConfigAction *action );
@@ -60,6 +61,17 @@ static void  fill_actions_list (GtkWidget *list);
 static void  setup_actions_list (GtkWidget *list);
 
 static NautilusActionsConfigGconfWriter *config = NULL;
+
+gboolean
+on_ActionsList_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data )
+{
+	if( event->type == GDK_2BUTTON_PRESS ){
+		edit_button_clicked_cb( NULL, NULL );
+		return( TRUE );
+	}
+	/* unmanaged event: let the framework do its job */
+	return( FALSE );
+}
 
 static guint
 get_profiles_count( const NautilusActionsConfigAction *action )

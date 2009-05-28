@@ -14,6 +14,10 @@
 	* nact/nact-action-editor.c:
 	Restore tooltip display for the icon name depending on Gtk+ version.
 
+	* nact/nact.c:
+	* nact/nautilus-actions-config.glade:
+	Double-click on an action opens the editor.
+
 2009-05-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:

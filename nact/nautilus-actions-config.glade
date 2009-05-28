@@ -86,6 +86,7 @@
 		<widget class="GtkTreeView" id="ActionsList">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
+		  <property name="events">GDK_BUTTON_PRESS_MASK</property>
 		  <property name="headers_visible">False</property>
 		  <property name="rules_hint">True</property>
 		  <property name="reorderable">False</property>
@@ -93,6 +94,7 @@
 		  <property name="fixed_height_mode">False</property>
 		  <property name="hover_selection">False</property>
 		  <property name="hover_expand">False</property>
+		  <signal name="button_press_event" handler="on_ActionsList_button_press_event" last_modification_time="Thu, 28 May 2009 17:11:36 GMT"/>
 		</widget>
 	      </child>
 	    </widget>
