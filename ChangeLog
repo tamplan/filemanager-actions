@@ -25,6 +25,9 @@
 	* plugin/nautilus-actions.c:
 	Only enable syslog'ed debug messages when in maintainer mode.
 
+	* libnautilus-actions/Makefile.am:
+	Remove trailing whitespace.
+
 2009-05-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:
