@@ -1,1 +1,5 @@
-cf. nautilus-actions.doap
+Nautilus-Actions
+
+  Nautilus-actions is an extension for Nautilus file manager which
+  allows the user to add arbitrary program to be launched through the
+  Nautilus file manager popup menu of selected files.

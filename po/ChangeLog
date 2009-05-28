@@ -2,6 +2,18 @@
 
 	* POTFILES.in: Add nact-action-editor.c source file.
 
+2009-05-25 A S Alam <aalam@users.sf.net>
+
+	* pa.po: Add Punjabi (Gurmukhi) Translation.
+
+2009-04-18 Mario Blättermann <mariobl@svn.gnome.org>
+
+	* de.po: Updated German translation.
+
+2009-04-17 Claude Paroz <claude@2xlibre.net>
+
+	* fr.po: Updated French translation.
+
 2009-04-13 Mario Blättermann <mariobl@svn.gnome.org>
 
 	* de.po: Updated German translation.

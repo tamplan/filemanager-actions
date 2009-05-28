@@ -1,6 +1,6 @@
-Version 1.10.0
+Version 1.10.1
 
-	Release date 2009-05-17
+	Release date 2009-05-29
 
 	Nota:
 		Last official release was 1.4.1 (05/2007) and is always available
@@ -53,6 +53,9 @@ Version 1.10.0
 	Various code enhancements
 	
 		All compilations warnings have been fixed, all code is now
-		fully ansi-compliant (Pierre Wieser)
+		fully ansi-compliant, though not (yet ?) pedantic (Pierre Wieser)
 
 		Introduce new intltool (Christian Persch)
+
+		Double-clicking on an action now directly opens the editor
+	
