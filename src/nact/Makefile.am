@@ -58,7 +58,7 @@ nautilus_actions_config_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)										\
 	$(NULL)
 
-gladedir = $(datadir)/nautilus-actions/nact
+gladedir = $(datadir)/nautilus-actions
 
 glade_DATA = nautilus-actions-config.glade
 

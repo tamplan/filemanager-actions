@@ -1,11 +1,15 @@
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
 	Move all sources directories under src/
+	Remove one directory level when installing Glade file
 
 	* configure.ac:
 	* Makefile.am:
 	Updated accordingly.
 	Build and install po/ directory after sources.
+
+	* src/nact/Makefile.am:
+	Remove one directory level when installing Glade file.
 
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
