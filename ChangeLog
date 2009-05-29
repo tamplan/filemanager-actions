@@ -2,6 +2,12 @@
 
 	Include a short application description in all source headers
 
+	* plugin/nautilus-module.c:
+	Renamed from plugin/nautilus-actions-module.c.
+
+	* plugin/Makefile.am:
+	Updated accordingly.
+
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:
