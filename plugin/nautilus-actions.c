@@ -30,7 +30,6 @@
 
 #include <config.h>
 #include <string.h>
-#include <syslog.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-file-info.h>
@@ -46,11 +45,6 @@
 
 static GObjectClass *parent_class = NULL;
 static GType actions_type = 0;
-static guint log_handler = 0;
-
-#ifdef NACT_MAINTAINER_MODE
-static void nact_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
-#endif
 
 GType nautilus_actions_get_type (void)
 {
@@ -264,15 +258,6 @@ static void nautilus_actions_instance_finalize (GObject* obj)
 
 	/*NautilusActions* self = NAUTILUS_ACTIONS (obj);*/
 
-	/* remove the log handler
-	 * almost useless as the process is nonetheless terminating at this time
-	 * but this is the beauty of the code...
-	 */
-	if( log_handler ){
-		g_log_remove_handler( G_LOG_DOMAIN, log_handler );
-		log_handler = 0;
-	}
-
 	/* Chain up to the parent class */
 	G_OBJECT_CLASS (parent_class)->finalize (obj);
 }
@@ -339,16 +324,6 @@ static void nautilus_actions_class_init (NautilusActionsClass *actions_class)
 
 void nautilus_actions_register_type (GTypeModule *module)
 {
-	/* install a debug log handler
-	 * (if development mode and not already done)
-	 */
-#ifdef NACT_MAINTAINER_MODE
-	if( !log_handler ){
-		openlog( G_LOG_DOMAIN, LOG_PID, LOG_USER );
-		log_handler = g_log_set_handler( G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, nact_log_handler, NULL );
-	}
-#endif
-
 	static const gchar *thisfn = "nautilus_actions_register_type";
 	g_debug( "%s: module=%p", thisfn, module );
 
@@ -380,21 +355,3 @@ void nautilus_actions_register_type (GTypeModule *module)
 								NAUTILUS_TYPE_MENU_PROVIDER,
 								&menu_provider_iface_info);
 }
-
-/*
- * a log handler that we install when in development mode in order to be
- * able to log plugin runtime
- * TODO: add a debug flag in GConf, so that an advanced user could setup
- * a given key and obtain a full log to send to Bugzilla..
- * For now, is always install when compiled in maintainer mode, never else
- */
-#ifdef NACT_MAINTAINER_MODE
-static void
-nact_log_handler( const gchar *log_domain,
-					GLogLevelFlags log_level,
-					const gchar *message,
-					gpointer user_data )
-{
-	syslog( LOG_USER | LOG_DEBUG, "%s", message );
-}
-#endif

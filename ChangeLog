@@ -5,6 +5,9 @@
 	* plugin/nautilus-module.c:
 	Renamed from plugin/nautilus-actions-module.c.
 
+	* plugin/nautilus-actions.c:
+	Move log handler to nautilus-module.c.
+
 	* plugin/Makefile.am:
 	Updated accordingly.
 
