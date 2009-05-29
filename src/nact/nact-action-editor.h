@@ -31,7 +31,7 @@
 #ifndef __NACT_ACTION_EDITOR_H__
 #define __NACT_ACTION_EDITOR_H__
 
-#include <libnautilus-actions/nautilus-actions-config.h>
+#include <common/nautilus-actions-config.h>
 
 gboolean nact_action_editor_new( void );
 gboolean nact_action_editor_edit( NautilusActionsConfigAction *action );

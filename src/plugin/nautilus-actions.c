@@ -38,8 +38,8 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 #include "nautilus-actions.h"
-#include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf-reader.h>
+#include <common/nautilus-actions-config.h>
+#include <common/nautilus-actions-config-gconf-reader.h>
 #include "nautilus-actions-test.h"
 #include "nautilus-actions-utils.h"
 

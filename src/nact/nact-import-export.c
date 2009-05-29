@@ -34,10 +34,10 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <glade/glade-xml.h>
-#include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-schema-reader.h>
-#include <libnautilus-actions/nautilus-actions-config-schema-writer.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
+#include <common/nautilus-actions-config.h>
+#include <common/nautilus-actions-config-schema-reader.h>
+#include <common/nautilus-actions-config-schema-writer.h>
+#include <common/nautilus-actions-config-gconf-writer.h>
 #include "nact-utils.h"
 #include "nact-import-export.h"
 #include "nact-prefs.h"

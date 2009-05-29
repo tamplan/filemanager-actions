@@ -49,6 +49,6 @@ libnautilus_actions_la_SOURCES = \
 libnautilus_actions_la_LDFLAGS = -module -avoid-version
 
 libnautilus_actions_la_LIBADD = \
-	$(top_builddir)/src/libnautilus-actions/libnautilus-actions.la	\
-	$(NAUTILUS_ACTIONS_LIBS)										\
+	$(top_builddir)/src/common/libnact.la				\
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)

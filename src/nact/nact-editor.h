@@ -32,7 +32,7 @@
 #define __NACT_EDITOR_H__
 
 #include <gtk/gtk.h>
-#include <libnautilus-actions/nautilus-actions-config.h>
+#include <common/nautilus-actions-config.h>
 
 enum {
 	PROFILE_LABEL_COLUMN = 0,

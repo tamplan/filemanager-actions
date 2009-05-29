@@ -32,7 +32,7 @@
 #define __NAUTILUS_ACTIONS_H__
 
 #include <glib-object.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf-reader.h>
+#include <common/nautilus-actions-config-gconf-reader.h>
 
 G_BEGIN_DECLS
 

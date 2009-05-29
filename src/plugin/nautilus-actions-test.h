@@ -31,7 +31,7 @@
 #ifndef __NAUTILUS_ACTIONS_TEST_H__
 #define __NAUTILUS_ACTIONS_TEST_H__
 
-#include <libnautilus-actions/nautilus-actions-config.h>
+#include <common/nautilus-actions-config.h>
 
 G_BEGIN_DECLS
 

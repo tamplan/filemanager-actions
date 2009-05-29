@@ -37,7 +37,7 @@
 #include <gtk/gtkentry.h>
 #include <gtk/gtktogglebutton.h>
 #include <glade/glade-xml.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
+#include <common/nautilus-actions-config-gconf-writer.h>
 #include "nact-editor.h"
 #include "nact-action-editor.h"
 #include "nact-profile-editor.h"

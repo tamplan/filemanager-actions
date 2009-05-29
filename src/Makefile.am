@@ -27,7 +27,7 @@
 #   ... and many others (see AUTHORS)
 
 SUBDIRS = \
-	libnautilus-actions			\
+	common						\
 	nact						\
 	$(OPTIONAL_SUBDIR)			\
 	plugin						\

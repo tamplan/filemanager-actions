@@ -33,8 +33,8 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
-#include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
+#include <common/nautilus-actions-config.h>
+#include <common/nautilus-actions-config-gconf-writer.h>
 
 gboolean nact_profile_editor_new_profile (NautilusActionsConfigAction* action);
 gboolean nact_profile_editor_edit_profile (NautilusActionsConfigAction *action, gchar* profile_name, NautilusActionsConfigActionProfile* action_profile);

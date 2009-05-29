@@ -47,7 +47,7 @@ AC_CONFIG_FILES([
 	icons/48x48/Makefile
 	icons/scalable/Makefile
 	src/Makefile
-	src/libnautilus-actions/Makefile
+	src/common/Makefile
 	src/nact/Makefile
 	src/utils/Makefile
 	src/plugin/Makefile

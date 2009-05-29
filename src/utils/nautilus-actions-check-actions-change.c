@@ -30,8 +30,8 @@
 
 #include <config.h>
 #include <gtk/gtk.h>
-#include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf-reader.h>
+#include <common/nautilus-actions-config.h>
+#include <common/nautilus-actions-config-gconf-reader.h>
 
 static void nautilus_actions_action_added_handler (NautilusActionsConfig* config,
 																				NautilusActionsConfigAction* action,

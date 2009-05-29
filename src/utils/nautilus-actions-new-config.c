@@ -34,8 +34,8 @@
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 #include <unistd.h>
-#include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-schema-writer.h>
+#include <common/nautilus-actions-config.h>
+#include <common/nautilus-actions-config-schema-writer.h>
 #include "nautilus-actions-tools-utils.h"
 
 static gchar* label = "";

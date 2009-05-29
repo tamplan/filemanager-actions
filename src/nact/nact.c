@@ -37,8 +37,8 @@
 #include <gtk/gtkmessagedialog.h>
 #include <gtk/gtktreeview.h>
 #include <glade/glade-xml.h>
-#include <libnautilus-actions/nautilus-actions-config.h>
-#include <libnautilus-actions/nautilus-actions-config-gconf-writer.h>
+#include <common/nautilus-actions-config.h>
+#include <common/nautilus-actions-config-gconf-writer.h>
 #include "nact-utils.h"
 #include "nact.h"
 #include "nact-editor.h"

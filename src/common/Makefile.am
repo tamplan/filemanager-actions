@@ -26,7 +26,7 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-noinst_LTLIBRARIES = libnautilus-actions.la
+noinst_LTLIBRARIES = libnact.la
 
 AM_CPPFLAGS += \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
@@ -34,7 +34,7 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)					\
 	$(NULL)
 
-libnautilus_actions_la_SOURCES = \
+libnact_la_SOURCES = \
 	nautilus-actions-config.c					\
 	nautilus-actions-config.h					\
 	nautilus-actions-config-gconf.c				\
@@ -50,4 +50,4 @@ libnautilus_actions_la_SOURCES = \
 	nautilus-actions-config-schema-reader.h		\
 	$(NULL)
 
-libnautilus_actions_la_LIBADD = -lxml2 -luuid
+libnact_la_LIBADD = -lxml2 -luuid
