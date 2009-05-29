@@ -54,8 +54,8 @@ nautilus_actions_config_SOURCES = \
 	$(NULL)
 
 nautilus_actions_config_LDADD = \
-	$(top_builddir)/libnautilus-actions/libnautilus-actions.la	\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(top_builddir)/src/libnautilus-actions/libnautilus-actions.la	\
+	$(NAUTILUS_ACTIONS_LIBS)										\
 	$(NULL)
 
 gladedir = $(datadir)/nautilus-actions/nact

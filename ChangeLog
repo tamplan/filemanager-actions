@@ -1,5 +1,14 @@
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
+	Move all sources directories under src/
+
+	* configure.ac:
+	* Makefile.am:
+	Updated accordingly.
+	Build and install po/ directory after sources.
+
+2009-05-29 Pierre Wieser <pwieser@trychlos.org>
+
 	Include a short application description in all source headers
 
 	* plugin/nautilus-module.c:

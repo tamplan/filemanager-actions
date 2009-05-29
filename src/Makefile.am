@@ -26,29 +26,9 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-AM_CPPFLAGS += \
-	-I $(top_srcdir)									\
-	-DG_LOG_DOMAIN=\"nact\"								\
-	$(NAUTILUS_ACTIONS_CFLAGS)							\
-	$(NULL)
-
-nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
-
-nautilus_extension_LTLIBRARIES = libnautilus-actions.la
-
-libnautilus_actions_la_SOURCES = \
-	nautilus-module.c									\
-	nautilus-actions.c									\
-	nautilus-actions.h									\
-	nautilus-actions-test.c								\
-	nautilus-actions-test.h								\
-	nautilus-actions-utils.c							\
-	nautilus-actions-utils.h							\
-	$(NULL)
-
-libnautilus_actions_la_LDFLAGS = -module -avoid-version
-
-libnautilus_actions_la_LIBADD = \
-	$(top_builddir)/libnautilus-actions/libnautilus-actions.la	\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+SUBDIRS = \
+	libnautilus-actions			\
+	nact						\
+	$(OPTIONAL_SUBDIR)			\
+	plugin						\
 	$(NULL)
