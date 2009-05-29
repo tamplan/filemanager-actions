@@ -1,6 +1,7 @@
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
-	Bump version number to unstable
+	* configure.ac:
+	Bump version number to 1.11 unstable.
 
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
