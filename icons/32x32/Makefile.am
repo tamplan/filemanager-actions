@@ -1,4 +1,5 @@
 # Nautilus Actions
+# A Nautilus extension which offers configurable context menu actions.
 #
 # Copyright (C) 2005 The GNOME Foundation
 # Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
