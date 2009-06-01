@@ -35,6 +35,11 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libnact_la_SOURCES = \
+	nact-gconf.c								\
+	nact-gconf.h								\
+	nact-gconf-keys.h							\
+	nact-storage.c								\
+	nact-storage.h								\
 	nautilus-actions-config.c					\
 	nautilus-actions-config.h					\
 	nautilus-actions-config-gconf.c				\

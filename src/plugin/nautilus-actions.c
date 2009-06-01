@@ -380,7 +380,7 @@ get_background_items( NautilusMenuProvider *provider, GtkWidget *window, Nautilu
 	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)", thisfn, provider, window, current_folder, uri );
 	g_free( uri );
 #endif
-	return(( GSList * ) NULL );
+	return(( GList * ) NULL );
 }
 
 static void

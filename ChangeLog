@@ -3,12 +3,19 @@
 	* configure.ac: Have a more funny package string.
 
 	* src/plugin/nautilus-module.c: Syslog at module initialization.
-	
+
 	* src/plugin/nautilus-actions.c:
 	* src/plugin/nautilus-actions.h:
 	Move NautilusActions object data members to a private area.
 	Add forward declarations of, remove prefix from, static functions.
 	Do nothing on get_background_items callback.
+
+	* nact-gconf.c:
+	* nact-gconf.h:
+	* nact-gconf-keys.h:
+	* nact-storage.c:
+	* nact-storage.h:
+	New files, prepare for a new object hierarchy (with shorter names).
 
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
