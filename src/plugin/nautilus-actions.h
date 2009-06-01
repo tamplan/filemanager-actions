@@ -31,36 +31,52 @@
 #ifndef __NAUTILUS_ACTIONS_H__
 #define __NAUTILUS_ACTIONS_H__
 
+/*
+ * NautilusActions class definition.
+ *
+ * There is only one NautilusActions object in the process.
+ *
+ * As a Nautilus extension, it is initialized when the module is loaded
+ * by the file manager at startup time.
+ *
+ * In the nautilus-actions-config UI, it is initialized when the program
+ * is loaded.
+ *
+ * The NautilusActions object maintains the list of currently defined
+ * actions in its private area.
+ */
+
 #include <glib-object.h>
-#include <common/nautilus-actions-config-gconf-reader.h>
 
 G_BEGIN_DECLS
 
-#define NAUTILUS_ACTIONS_TYPE  				(nautilus_actions_get_type ())
-#define NAUTILUS_ACTIONS(o)	 				(G_TYPE_CHECK_INSTANCE_CAST ((o), NAUTILUS_ACTIONS_TYPE, NautilusActions))
-#define NAUTILUS_ACTIONS_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass))
-#define NAUTILUS_IS_ACTIONS(o) 				(G_TYPE_CHECK_INSTANCE_TYPE ((o), NAUTILUS_ACTIONS_TYPE))
-#define NAUTILUS_IS_ACTIONS_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), NAUTILUS_ACTIONS_TYPE))
-#define NAUTILUS_ACTIONS_GET_CLASS(o)		(G_TYPE_INSTANCE_GET_CLASS ((obj), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass))
+#define NAUTILUS_ACTIONS_TYPE					( nautilus_actions_get_type())
+#define NAUTILUS_ACTIONS( object )				( G_TYPE_CHECK_INSTANCE_CAST(( object ), NAUTILUS_ACTIONS_TYPE, NautilusActions ))
+#define NAUTILUS_ACTIONS_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST(( klass ), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass ))
+#define NAUTILUS_IS_ACTIONS( object )			( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NAUTILUS_ACTIONS_TYPE ))
+#define NAUTILUS_IS_ACTIONS_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAUTILUS_ACTIONS_TYPE ))
+#define NAUTILUS_ACTIONS_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass ))
 
-typedef struct _NautilusActions	NautilusActions;
-typedef struct _NautilusActionsClass NautilusActionsClass;
+typedef struct NautilusActionsPrivate NautilusActionsPrivate;
 
-struct _NautilusActions
+typedef struct
 {
-	GObject __parent;
-	NautilusActionsConfigGconfReader* configs;
-	GSList* config_list;
-	gboolean dispose_has_run;
-};
+	GObject                 parent;
+	NautilusActionsPrivate *private;
+}
+	NautilusActions;
 
-struct _NautilusActionsClass
+typedef struct NautilusActionsClassPrivate NautilusActionsClassPrivate;
+
+typedef struct
 {
-	GObjectClass __parent;
-};
+	GObjectClass                 parent;
+	NautilusActionsClassPrivate *private;
+}
+	NautilusActionsClass;
 
-GType	nautilus_actions_get_type (void);
-void	nautilus_actions_register_type (GTypeModule *module);
+GType nautilus_actions_get_type( void );
+void  nautilus_actions_register_type( GTypeModule *module );
 
 G_END_DECLS
 

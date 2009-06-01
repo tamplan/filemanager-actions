@@ -28,7 +28,9 @@
  *   ... and many others (see AUTHORS)
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 #include <string.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
@@ -43,12 +45,175 @@
 #include "nautilus-actions-test.h"
 #include "nautilus-actions-utils.h"
 
-static GObjectClass *parent_class = NULL;
-static GType actions_type = 0;
+static GObjectClass *st_parent_class = NULL;
+static GType         st_actions_type = 0;
 
-GType nautilus_actions_get_type (void)
+static void   class_init( NautilusActionsClass *klass );
+static void   menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *object );
+static void   instance_finalize( GObject *object );
+static GList *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
+static GList *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
+static void   execute_action( NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile );
+static void   action_changed_handler( NautilusActionsConfig* config, NautilusActionsConfigAction* action, gpointer user_data );
+
+static const gchar      *get_verified_icon_name( const gchar* icon_name );
+static NautilusMenuItem *create_menu_item( NautilusActionsConfigAction *action, GList *files, NautilusActionsConfigActionProfile* action_profile );
+
+struct NautilusActionsPrivate {
+	gboolean  dispose_has_run;
+	NautilusActionsConfigGconfReader* configs;
+	GSList* config_list;
+};
+
+struct NautilusActionsClassPrivate {
+};
+
+GType
+nautilus_actions_get_type( void )
 {
-	return actions_type;
+	g_assert( st_actions_type );
+	return( st_actions_type );
+}
+
+void
+nautilus_actions_register_type( GTypeModule *module )
+{
+	static const gchar *thisfn = "nautilus_actions_register_type";
+	g_debug( "%s: module=%p", thisfn, module );
+
+	g_assert( st_actions_type == 0 );
+
+	static const GTypeInfo info = {
+		sizeof( NautilusActionsClass ),
+		( GBaseInitFunc ) NULL,
+		( GBaseFinalizeFunc ) NULL,
+		( GClassInitFunc ) class_init,
+		NULL,
+		NULL,
+		sizeof( NautilusActions ),
+		0,
+		( GInstanceInitFunc ) instance_init,
+	};
+
+	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NautilusActions", &info, 0 );
+
+	static const GInterfaceInfo menu_provider_iface_info = {
+		( GInterfaceInitFunc ) menu_provider_iface_init,
+		NULL,
+		NULL
+	};
+
+	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
+}
+
+static void
+class_init( NautilusActionsClass *klass )
+{
+	static const gchar *thisfn = "nautilus_actions_class_init";
+	g_debug( "%s: klass=%p", thisfn, klass );
+
+	GObjectClass *gobject_class = G_OBJECT_CLASS( klass );
+	gobject_class->dispose = instance_dispose;
+	gobject_class->finalize = instance_finalize;
+
+	st_parent_class = g_type_class_peek_parent( klass );
+
+	klass->private = g_new0( NautilusActionsClassPrivate, 1 );
+}
+
+static void
+menu_provider_iface_init( NautilusMenuProviderIface *iface )
+{
+	static const gchar *thisfn = "nautilus_actions_menu_provider_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->get_file_items = get_file_items;
+	iface->get_background_items = get_background_items;
+}
+
+static void
+instance_init( GTypeInstance *instance, gpointer klass )
+{
+	static const gchar *thisfn = "nautilus_actions_instance_init";
+	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+
+	g_assert( NAUTILUS_IS_ACTIONS( instance ));
+	NautilusActions *self = NAUTILUS_ACTIONS( instance );
+
+	/* Patch from Bruce van der Kooij <brucevdkooij@gmail.com>
+	 *
+	 * TODO: GnomeVFS needs to be initialized before gnome_vfs methods
+	 * can be used. Since GnomeVFS has been deprecated it would be
+	 * a good idea to rewrite this extension to use equivalent methods
+	 * from GIO/GVFS.
+	 *
+	 * plugins/nautilus-actions-utils.c:nautilus_actions_utils_parse_parameter
+	 * is the only function that makes use of gnome_vfs methods.
+	 *
+	 * See: Bug #574919
+	 */
+	gnome_vfs_init ();
+
+	self->private = g_new0( NautilusActionsPrivate, 1 );
+
+	self->private->configs = NULL;
+	self->private->configs = nautilus_actions_config_gconf_reader_get ();
+	self->private->config_list = NULL;
+	self->private->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->private->configs));
+	self->private->dispose_has_run = FALSE;
+
+	g_signal_connect_after(
+			G_OBJECT( self->private->configs ),
+			"action_added",
+			( GCallback ) action_changed_handler,
+			self
+	);
+	g_signal_connect_after(
+			G_OBJECT( self->private->configs ),
+			"action_changed",
+			( GCallback ) action_changed_handler,
+			self
+	);
+	g_signal_connect_after(
+			G_OBJECT( self->private->configs ),
+			"action_removed",
+			( GCallback ) action_changed_handler,
+			self
+	);
+}
+
+static void
+instance_dispose( GObject *object )
+{
+	static const gchar *thisfn = "nautilus_actions_instance_dispose";
+	g_debug( "%s: object=%p", thisfn, object );
+
+	g_assert( NAUTILUS_IS_ACTIONS( object ));
+	NautilusActions *self = NAUTILUS_ACTIONS( object );
+
+	if( !self->private->dispose_has_run ){
+		self->private->dispose_has_run = TRUE;
+
+		g_object_unref( self->private->configs );
+
+		/* chain up to the parent class */
+		G_OBJECT_CLASS( st_parent_class )->dispose( object );
+	}
+}
+
+static void
+instance_finalize( GObject *object )
+{
+	static const gchar *thisfn = "nautilus_actions_instance_finalize";
+	g_debug( "%s: object=%p", thisfn, object );
+
+	g_assert( NAUTILUS_IS_ACTIONS( object ));
+	/*NautilusActions* self = NAUTILUS_ACTIONS (obj);*/
+
+	/* chain up to the parent class */
+	G_OBJECT_CLASS( st_parent_class )->finalize( object );
 }
 
 #ifndef HAVE_NAUTILUS_MENU_PROVIDER_EMIT_ITEMS_UPDATED_SIGNAL
@@ -60,9 +225,10 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
 }
 #endif
 
-static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile)
+static void
+execute_action( NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile )
 {
-	static const gchar *thisfn = "nautilus_actions_execute";
+	static const gchar *thisfn = "nautilus_actions_execute_action";
 	g_debug( "%s", thisfn );
 
 	GList *files;
@@ -88,7 +254,8 @@ static void nautilus_actions_execute (NautilusMenuItem *item, NautilusActionsCon
 
 }
 
-static const gchar* get_verified_icon_name (const gchar* icon_name)
+static const gchar *
+get_verified_icon_name( const gchar* icon_name )
 {
 	if (icon_name[0] == '/')
 	{
@@ -105,7 +272,8 @@ static const gchar* get_verified_icon_name (const gchar* icon_name)
 	return icon_name;
 }
 
-static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfigAction *action, GList *files, NautilusActionsConfigActionProfile* action_profile)
+static NautilusMenuItem *
+create_menu_item( NautilusActionsConfigAction *action, GList *files, NautilusActionsConfigActionProfile* action_profile )
 {
 	static const gchar *thisfn = "nautilus_actions_create_menu_item";
 	g_debug( "%s", thisfn );
@@ -124,7 +292,7 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 
 	g_signal_connect_data (item,
 				"activate",
-				G_CALLBACK (nautilus_actions_execute),
+				G_CALLBACK (execute_action),
 				action_profile4menu,
 				(GClosureNotify)nautilus_actions_config_action_profile_free,
 				0);
@@ -140,12 +308,8 @@ static NautilusMenuItem *nautilus_actions_create_menu_item (NautilusActionsConfi
 	return item;
 }
 
-/*static void get_hash_keys (gchar* key, gchar* value, GSList** list)
-{
-	*list = g_slist_append (*list, key);
-}*/
-
-static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, GtkWidget *window, GList *files)
+static GList *
+get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_get_file_items";
 	g_debug( "%s provider=%p, window=%p, files=%p, count=%d", thisfn, provider, window, files, g_list_length( files ));
@@ -166,9 +330,9 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 		return(( GList * ) NULL );
 	}
 
-	if (!self->dispose_has_run)
+	if (!self->private->dispose_has_run)
 	{
-		for (iter = self->config_list; iter; iter = iter->next)
+		for (iter = self->private->config_list; iter; iter = iter->next)
 		{
 			/* Foreach configured action, check if we add a menu item */
 			NautilusActionsConfigAction *action = (NautilusActionsConfigAction*)iter->data;
@@ -187,7 +351,7 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 
 				if (nautilus_actions_test_validate (action_profile, files))
 				{
-					item = nautilus_actions_create_menu_item (action, files, action_profile);
+					item = create_menu_item (action, files, action_profile);
 					items = g_list_append (items, item);
 					found = TRUE;
 				}
@@ -201,39 +365,28 @@ static GList *nautilus_actions_get_file_items (NautilusMenuProvider *provider, G
 	return items;
 }
 
-static GList *nautilus_actions_get_background_items (NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder)
+/*
+ * this function is called when nautilus has to paint a folder background
+ * one of the first calls is with current_folder = 'x-nautilus-desktop:///'
+ * we have nothing to do here ; the function is left as a placeholder
+ * (and as an historic remainder)
+ */
+static GList *
+get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
 {
-	GList *items = NULL;
-	GList *files = NULL;
-
-	files = g_list_append (files, current_folder);
-	items = nautilus_actions_get_file_items (provider, window, files);
-	g_list_free (files);
-
-	return items;
+#ifdef NACT_MAINTAINER_MODE
+	static const gchar *thisfn = "nautilus_actions_get_background_items";
+	gchar *uri = nautilus_file_info_get_uri( current_folder );
+	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)", thisfn, provider, window, current_folder, uri );
+	g_free( uri );
+#endif
+	return(( GSList * ) NULL );
 }
 
-static void nautilus_actions_instance_dispose (GObject *obj)
-{
-	static const gchar *thisfn = "nautilus_actions_instance_dispose";
-	g_debug( "%s: obj=%p", thisfn, obj );
-
-	NautilusActions* self = NAUTILUS_ACTIONS (obj);
-
-	if (!self->dispose_has_run)
-	{
-		self->dispose_has_run = TRUE;
-
-		g_object_unref (self->configs);
-
-		/* Chain up to the parent class */
-		G_OBJECT_CLASS (parent_class)->dispose (obj);
-	}
-}
-
-static void nautilus_actions_action_changed_handler (NautilusActionsConfig* config,
-																				NautilusActionsConfigAction* action,
-																				gpointer user_data)
+static void
+action_changed_handler( NautilusActionsConfig* config,
+						NautilusActionsConfigAction* action,
+						gpointer user_data )
 {
 	static const gchar *thisfn = "nautilus_actions_action_changed_handler";
 	g_debug( "%s", thisfn );
@@ -242,116 +395,11 @@ static void nautilus_actions_action_changed_handler (NautilusActionsConfig* conf
 
 	g_return_if_fail (NAUTILUS_IS_ACTIONS (self));
 
-	if (!self->dispose_has_run)
+	if (!self->private->dispose_has_run)
 	{
 		nautilus_menu_provider_emit_items_updated_signal(( NautilusMenuProvider * ) self );
 
-		nautilus_actions_config_free_actions_list (self->config_list);
-		self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
+		nautilus_actions_config_free_actions_list (self->private->config_list);
+		self->private->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->private->configs));
 	}
-}
-
-static void nautilus_actions_instance_finalize (GObject* obj)
-{
-	static const gchar *thisfn = "nautilus_actions_instance_finalize";
-	g_debug( "%s: obj=%p", thisfn, obj );
-
-	/*NautilusActions* self = NAUTILUS_ACTIONS (obj);*/
-
-	/* Chain up to the parent class */
-	G_OBJECT_CLASS (parent_class)->finalize (obj);
-}
-
-static void nautilus_actions_instance_init (GTypeInstance *instance, gpointer klass)
-{
-	static const gchar *thisfn = "nautilus_actions_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
-
-	/* Patch from Bruce van der Kooij <brucevdkooij@gmail.com>
-	 *
-	 * TODO: GnomeVFS needs to be initialized before gnome_vfs methods
-	 * can be used. Since GnomeVFS has been deprecated it would be
-	 * a good idea to rewrite this extension to use equivalent methods
-	 * from GIO/GVFS.
-	 *
-	 * plugins/nautilus-actions-utils.c:nautilus_actions_utils_parse_parameter
-	 * is the only function that makes use of gnome_vfs methods.
-	 *
-	 * See: Bug #574919
-	 */
-	gnome_vfs_init ();
-
-	NautilusActions* self = NAUTILUS_ACTIONS (instance);
-
-	self->configs = NULL;
-	self->configs = nautilus_actions_config_gconf_reader_get ();
-	self->config_list = NULL;
-	self->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->configs));
-	self->dispose_has_run = FALSE;
-
-	g_signal_connect_after (G_OBJECT (self->configs), "action_added",
-									(GCallback)nautilus_actions_action_changed_handler,
-									self);
-	g_signal_connect_after (G_OBJECT (self->configs), "action_changed",
-									(GCallback)nautilus_actions_action_changed_handler,
-									self);
-	g_signal_connect_after (G_OBJECT (self->configs), "action_removed",
-									(GCallback)nautilus_actions_action_changed_handler,
-									self);
-
-	parent_class = g_type_class_peek_parent (klass);
-}
-
-static void nautilus_actions_menu_provider_iface_init (NautilusMenuProviderIface *iface)
-{
-	static const gchar *thisfn = "nautilus_actions_menu_provider_iface_init";
-	g_debug( "%s: iface=%p", thisfn, iface );
-
-	iface->get_file_items = nautilus_actions_get_file_items;
-	iface->get_background_items = nautilus_actions_get_background_items;
-}
-
-static void nautilus_actions_class_init (NautilusActionsClass *actions_class)
-{
-	static const gchar *thisfn = "nautilus_actions_class_init";
-	g_debug( "%s: action_class=%p", thisfn, actions_class );
-
-	GObjectClass *gobject_class = G_OBJECT_CLASS (actions_class);
-
-	gobject_class->dispose = nautilus_actions_instance_dispose;
-	gobject_class->finalize = nautilus_actions_instance_finalize;
-}
-
-void nautilus_actions_register_type (GTypeModule *module)
-{
-	static const gchar *thisfn = "nautilus_actions_register_type";
-	g_debug( "%s: module=%p", thisfn, module );
-
-	static const GTypeInfo info = {
-		sizeof (NautilusActionsClass),
-		(GBaseInitFunc) NULL,
-		(GBaseFinalizeFunc) NULL,
-		(GClassInitFunc) nautilus_actions_class_init,
-		NULL,
-		NULL,
-		sizeof (NautilusActions),
-		0,
-		(GInstanceInitFunc)nautilus_actions_instance_init,
-	};
-
-	static const GInterfaceInfo menu_provider_iface_info = {
-		(GInterfaceInitFunc) nautilus_actions_menu_provider_iface_init,
-		NULL,
-		NULL
-	};
-
-	actions_type = g_type_module_register_type (module,
-								G_TYPE_OBJECT,
-								"NautilusActions",
-								&info, 0);
-
-	g_type_module_add_interface (module,
-								actions_type,
-								NAUTILUS_TYPE_MENU_PROVIDER,
-								&menu_provider_iface_info);
 }

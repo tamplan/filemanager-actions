@@ -3,6 +3,12 @@
 	* configure.ac: Have a more funny package string.
 
 	* src/plugin/nautilus-module.c: Syslog at module initialization.
+	
+	* src/plugin/nautilus-actions.c:
+	* src/plugin/nautilus-actions.h:
+	Move NautilusActions object data members to a private area.
+	Add forward declarations of, remove prefix from, static functions.
+	Do nothing on get_background_items callback.
 
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
