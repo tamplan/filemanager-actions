@@ -53,6 +53,8 @@ libnact_la_SOURCES = \
 	nautilus-actions-config-schema-writer.h		\
 	nautilus-actions-config-schema-reader.c		\
 	nautilus-actions-config-schema-reader.h		\
+	uti-lists.c									\
+	uti-lists.h									\
 	$(NULL)
 
 libnact_la_LIBADD = -lxml2 -luuid
