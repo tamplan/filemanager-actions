@@ -36,6 +36,7 @@
 #include <string.h>
 #include "nact-gconf.h"
 #include "nact-gconf-keys.h"
+#include "uti-lists.h"
 
 static GConfClient *st_gconf = NULL;
 
@@ -43,7 +44,6 @@ static void     initialize( void );
 static gchar   *get_object_path( NactStorage *object );
 static gchar   *path_to_key( const gchar *path );
 static GSList  *load_subdirs( const gchar *path );
-static void     free_subdirs( GSList *list );
 static GSList  *load_keys_values( const gchar *path );
 static void     free_keys_values( GSList *list );
 static GSList  *duplicate_list( GSList *list );
@@ -116,7 +116,7 @@ load_subdirs( const gchar *path )
 		list_keys = g_slist_prepend( list_keys, key );
 	}
 
-	free_subdirs( list_path );
+	nactuti_free_string_list( list_path );
 
 	return( list_keys );
 }
@@ -136,20 +136,6 @@ nact_gconf_load_uuids( void )
 	return( load_subdirs( NACT_GCONF_CONFIG ));
 }
 
-static void
-free_subdirs( GSList *list )
-{
-	static const gchar *thisfn = "nact_gconf_free_subdirs";
-	g_debug( "%s: list=%p", thisfn, list );
-
-	GSList *key;
-	for( key = list ; key != NULL ; key = key->next ){
-		g_free(( gchar * ) key->data );
-	}
-
-	g_slist_free( list );
-}
-
 /**
  * Free a previously allocated list of UUIDs.
  *
@@ -160,8 +146,7 @@ nact_gconf_free_uuids( GSList *list )
 {
 	static const gchar *thisfn = "nact_gconf_free_uuids";
 	g_debug( "%s: list=%p", thisfn, list );
-
-	free_subdirs( list );
+	nactuti_free_string_list( list );
 }
 
 /*
@@ -340,4 +325,5 @@ nact_gconf_load_profile_properties( NactStorage *profile )
 void
 nact_gconf_free_profile_names( GSList *list )
 {
+	nactuti_free_string_list( list );
 }

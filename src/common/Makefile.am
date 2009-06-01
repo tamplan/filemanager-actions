@@ -35,6 +35,10 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libnact_la_SOURCES = \
+	nact-action.c								\
+	nact-action.h								\
+	nact-action-profile.c						\
+	nact-action-profile.h						\
 	nact-gconf.c								\
 	nact-gconf.h								\
 	nact-gconf-keys.h							\

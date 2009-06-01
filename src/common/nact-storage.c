@@ -93,13 +93,13 @@ class_init( NactStorageClass *klass )
 	static const gchar *thisfn = "nact_storage_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
+	st_parent_class = g_type_class_peek_parent( klass );
+
 	GObjectClass *object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
-
-	st_parent_class = g_type_class_peek_parent( klass );
 
 	GParamSpec *spec;
 	spec = g_param_spec_int(

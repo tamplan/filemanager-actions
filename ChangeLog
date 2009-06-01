@@ -10,12 +10,16 @@
 	Add forward declarations of, remove prefix from, static functions.
 	Do nothing on get_background_items callback.
 
+	* src/common/nact-action.c:
+	* src/common/nact-action.h:
+	* src/common/nact-action-profile.c:
+	* src/common/nact-action-profile.h:
 	* src/common/nact-gconf.c:
 	* src/common/nact-gconf.h:
 	* src/common/nact-gconf-keys.h:
 	* src/common/nact-storage.c:
 	* src/common/nact-storage.h:
-	New files, prepare for a new object hierarchy (with shorter names).
+	New files, preparing for a new object hierarchy (with shorter names).
 
 	* src/common/uti-lists.c:
 	* src/common/uti-lists.h:

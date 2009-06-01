@@ -114,11 +114,11 @@ class_init( NautilusActionsClass *klass )
 	static const gchar *thisfn = "nautilus_actions_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
+	st_parent_class = g_type_class_peek_parent( klass );
+
 	GObjectClass *gobject_class = G_OBJECT_CLASS( klass );
 	gobject_class->dispose = instance_dispose;
 	gobject_class->finalize = instance_finalize;
-
-	st_parent_class = g_type_class_peek_parent( klass );
 
 	klass->private = g_new0( NautilusActionsClassPrivate, 1 );
 }
