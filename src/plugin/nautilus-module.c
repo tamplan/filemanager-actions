@@ -56,6 +56,8 @@ static void nact_log_handler( const gchar *log_domain, GLogLevelFlags log_level,
 void
 nautilus_module_initialize( GTypeModule *module )
 {
+	syslog( LOG_USER | LOG_INFO, "%s initializing...", PACKAGE_STRING );
+
 #ifdef NACT_MAINTAINER_MODE
 	/*
 	 *  install a debug log handler
