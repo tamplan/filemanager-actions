@@ -39,9 +39,10 @@
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
-#include "nautilus-actions.h"
+#include <common/nact-action.h>
 #include <common/nautilus-actions-config.h>
 #include <common/nautilus-actions-config-gconf-reader.h>
+#include "nautilus-actions.h"
 #include "nautilus-actions-test.h"
 #include "nautilus-actions-utils.h"
 
@@ -63,6 +64,7 @@ static NautilusMenuItem *create_menu_item( NautilusActionsConfigAction *action, 
 
 struct NautilusActionsPrivate {
 	gboolean  dispose_has_run;
+	GSList   *actions;
 	NautilusActionsConfigGconfReader* configs;
 	GSList* config_list;
 };
@@ -158,6 +160,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 
+	self->private->actions = nact_action_load_actions();
 	self->private->configs = NULL;
 	self->private->configs = nautilus_actions_config_gconf_reader_get ();
 	self->private->config_list = NULL;

@@ -33,6 +33,7 @@
 #endif
 #include "nact-gconf.h"
 #include "nact-storage.h"
+#include "uti-lists.h"
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -47,14 +48,16 @@ static void    do_dump( const NactStorage *object );
 
 struct NactStoragePrivate {
 	gboolean dispose_has_run;
-	int      origin;
+	int      io_origin;
+	gpointer io_subsystem;
 };
 
 struct NactStorageClassPrivate {
 };
 
 enum {
-	PROP_ORIGIN = 1
+	PROP_ORIGIN = 1,
+	PROP_SUBSYSTEM
 };
 
 GType
@@ -103,11 +106,18 @@ class_init( NactStorageClass *klass )
 
 	GParamSpec *spec;
 	spec = g_param_spec_int(
-			"origin",
-			"origin",
+			PROP_ORIGIN_STR,
+			PROP_ORIGIN_STR,
 			"Internal identifiant of the storage subsystem", 0, ORIGIN_LAST, 0,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ORIGIN, spec );
+
+	spec = g_param_spec_pointer(
+			PROP_SUBSYSTEM_STR,
+			PROP_SUBSYSTEM_STR,
+			"Pointer to a private are for the I/O subsystem",
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_SUBSYSTEM, spec );
 
 	klass->private = g_new0( NactStorageClassPrivate, 1 );
 
@@ -117,13 +127,17 @@ class_init( NactStorageClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
+	/*static const gchar *thisfn = "nact_storage_instance_init";
+	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
+
 	g_assert( NACT_IS_STORAGE( instance ));
 	NactStorage *self = NACT_STORAGE( instance );
 
 	self->private = g_new0( NactStoragePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->origin = 0;
+	self->private->io_origin = 0;
+	self->private->io_subsystem = NULL;
 }
 
 static void
@@ -134,7 +148,14 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 	switch( property_id ){
 		case PROP_ORIGIN:
-			g_value_set_int( value, self->private->origin );
+			g_value_set_int( value, self->private->io_origin );
+			break;
+
+		/* returns the initially provided gpointer
+		 * the caller must not try to free or unref it
+		 */
+		case PROP_SUBSYSTEM:
+			g_value_set_pointer( value, self->private->io_subsystem );
 			break;
 
 		default:
@@ -146,12 +167,20 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
+	/*static const gchar *thisfn = "nact_storage_instance_set_property";*/
+
 	g_assert( NACT_IS_STORAGE( object ));
 	NactStorage *self = NACT_STORAGE( object );
 
 	switch( property_id ){
 		case PROP_ORIGIN:
-			self->private->origin = g_value_get_int( value );
+			self->private->io_origin = g_value_get_int( value );
+			/*g_debug( "%s: io_origin=%d", thisfn, self->private->io_origin );*/
+			break;
+
+		case PROP_SUBSYSTEM:
+			self->private->io_subsystem = g_value_get_pointer( value );
+			/*g_debug( "%s: io_subsystem=%p", thisfn, self->private->io_subsystem );*/
 			break;
 
 		default:
@@ -179,7 +208,18 @@ static void
 instance_finalize( GObject *object )
 {
 	g_assert( NACT_IS_STORAGE( object ));
-	/*NactStorage *self = ( NactStorage * ) object;*/
+	NactStorage *self = ( NactStorage * ) object;
+
+	gpointer io;
+	g_object_get( object, PROP_SUBSYSTEM_STR, &io, NULL );
+
+	switch( self->private->io_origin ){
+		case ORIGIN_GCONF:
+			nact_gconf_dispose( io );
+			break;
+		default:
+			break;
+	}
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){
@@ -190,8 +230,11 @@ instance_finalize( GObject *object )
 /**
  * Returns the id of the object as a newly allocated string.
  *
- * This is a pure virtual function, which has to be implemented by
- * the derived class.
+ * This is a virtual function, which may be implemented by the derived
+ * class.
+ *
+ * This class defaults to ask to the storage subsystem for an i/o id.
+ * Eventually returns an empty string.
  *
  * @object: object whose id is to be returned.
  *
@@ -211,7 +254,16 @@ do_dump( const NactStorage *object )
 
 	g_assert( NACT_IS_STORAGE( object ));
 
-	g_debug( "%s: origin=%d", thisfn, object->private->origin );
+	g_debug( "%s: origin=%d", thisfn, object->private->io_origin );
+
+	switch( object->private->io_origin ){
+		case ORIGIN_GCONF:
+			nact_gconf_dump( object->private->io_subsystem );
+			break;
+		default:
+			g_assert_not_reached();
+			break;
+	}
 }
 
 /**
@@ -230,45 +282,44 @@ nact_storage_dump( const NactStorage *object )
 	NACT_STORAGE_GET_CLASS( object )->do_dump( object );
 }
 
+/**
+ * Load all defined actions.
+ *
+ * Ask to each registered storage subsystem for its list of actions,
+ * then concatenates them in the returned list.
+ *
+ * @type: GObject type to allocate.
+ *
+ * The returned list is a GSList of NactStorage-derived GObjects.
+ */
 GSList *
-nact_storage_load_action_ids( void )
+nact_storage_load_actions( GType type )
 {
-	static const gchar *thisfn = "nact_storage_load_action_ids";
+	static const gchar *thisfn = "nact_storage_load_actions";
 	g_debug( "%s", thisfn );
-	return( nact_gconf_load_uuids());
-}
 
-gboolean
-nact_storage_load_action_properties( NactStorage *action )
-{
-	g_assert( NACT_IS_STORAGE( action ));
-	return( nact_gconf_load_action_properties( action ));
-}
+	GSList *actions = NULL;
 
-void
-nact_storage_free_action_ids( GSList *list )
-{
-	static const gchar *thisfn = "nact_storage_free_action_ids";
-	g_debug( "%s: list=%p", thisfn, list );
-	nact_gconf_free_uuids( list );
+	/* GConf storage subsystem */
+	GSList *list_gconf = nact_gconf_load_actions( type );
+	actions = g_slist_concat( actions, list_gconf );
+
+	return( actions );
 }
 
 GSList *
-nact_storage_load_profile_ids( NactStorage *action )
+nact_storage_load_profiles( NactStorage *action, GType type )
 {
 	g_assert( NACT_IS_STORAGE( action ));
-	return( nact_gconf_load_profile_names( action ));
-}
+	GSList *profiles = NULL;
 
-gboolean
-nact_storage_load_profile_properties( NactStorage *profile )
-{
-	g_assert( NACT_IS_STORAGE( profile ));
-	return( nact_gconf_load_profile_properties( profile ));
-}
-
-void
-nact_storage_free_profile_ids( GSList *list )
-{
-	return( nact_gconf_free_profile_names( list ));
+	switch( action->private->io_origin ){
+		case ORIGIN_GCONF:
+			profiles = nact_gconf_load_profiles( action, type );
+			break;
+		default:
+			g_assert_not_reached();
+			break;
+	}
+	return( profiles );
 }

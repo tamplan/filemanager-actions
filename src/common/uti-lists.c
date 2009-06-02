@@ -31,7 +31,40 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include <glib-object.h>
 #include "uti-lists.h"
+
+/**
+ * Free a GSList of GObjects.
+ *
+ * @list: the GSList to be freed.
+ */
+void
+nactuti_free_object_list( GSList *list )
+{
+	GSList *item;
+	for( item = list ; item != NULL ; item = item->next ){
+		g_object_unref( G_OBJECT( item->data ));
+	}
+	g_slist_free( list );
+}
+
+/**
+ * Duplicate a GSList of strings.
+ *
+ * @list: the GSList to be freed.
+ */
+GSList *
+nactuti_duplicate_string_list( GSList *list )
+{
+	GSList *duplist = NULL;
+	GSList *it;
+	for( it = list ; it != NULL ; it = it->next ){
+		gchar *dupstr = g_strdup(( gchar * ) it->data );
+		duplist = g_slist_prepend( duplist, dupstr );
+	}
+	return( duplist );
+}
 
 /**
  * Free a GSList of strings.

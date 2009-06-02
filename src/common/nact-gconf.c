@@ -38,15 +38,36 @@
 #include "nact-gconf-keys.h"
 #include "uti-lists.h"
 
+typedef struct {
+	gchar *key;
+	gchar *path;
+}
+	NactGConfIO;
+
 static GConfClient *st_gconf = NULL;
 
-static void     initialize( void );
-static gchar   *get_object_path( NactStorage *object );
-static gchar   *path_to_key( const gchar *path );
-static GSList  *load_subdirs( const gchar *path );
-static GSList  *load_keys_values( const gchar *path );
-static void     free_keys_values( GSList *list );
-static GSList  *duplicate_list( GSList *list );
+static void         free_keys_values( GSList *list );
+static void         initialize( void );
+static void         load_action_properties( NactStorage *action );
+static GSList      *load_items( const gchar *root, GType type );
+static GSList      *load_keys_values( const gchar *path );
+static GSList      *load_list_actions( GType type );
+static GSList      *load_list_profiles( NactStorage *action, GType type );
+static void         load_profile_properties( NactStorage *profile );
+static GSList      *load_subdirs( const gchar *path );
+static gchar       *path_to_key( const gchar *path );
+static NactGConfIO *path_to_struct( const gchar *path );
+
+static void
+free_keys_values( GSList *list )
+{
+	GSList *item;
+	for( item = list ; item != NULL ; item = item->next ){
+		GConfEntry *entry = ( GConfEntry * ) item->data;
+		gconf_entry_unref( entry );
+	}
+	g_slist_free( list );
+}
 
 /*
  * we have to initialize this early in the process as nautilus-actions
@@ -61,97 +82,33 @@ initialize( void )
 	st_gconf = gconf_client_get_default();
 }
 
-gchar *
-get_object_path( NactStorage *object )
+/*
+ * allocate the whole list of items under the specified dir.
+ * each item of the list is a NactStorage-derived initialized GObject
+ */
+static GSList *
+load_items( const gchar *root, GType type )
 {
-	g_assert( NACT_IS_STORAGE( object ));
+	GSList *items = NULL;
 
-	gchar *id = nact_storage_get_id( object );
-	gchar *path = g_strdup_printf( "%s/%s", NACT_GCONF_CONFIG, id );
-	g_free( id );
+	GSList *listpath = load_subdirs( root );
+	GSList *path;
+	for( path = listpath ; path != NULL ; path = path->next ){
 
-	return( path );
+		NactGConfIO *io = path_to_struct(( const gchar * ) path->data );
+
+		GObject *object = g_object_new(
+				type, PROP_ORIGIN_STR, ORIGIN_GCONF, PROP_SUBSYSTEM_STR, io, NULL  );
+
+		items = g_slist_prepend( items, object );
+	}
+	nactuti_free_string_list( listpath );
+
+	return( items );
 }
 
 /*
- * Returns a list of the keys which appear as subdirectories
- *
- * The returned list contains allocated strings. Each string is the
- * relative path of a subdirectory. You should g_free() each string
- * in the list, then g_slist_free() the list itself.
- */
-static gchar *
-path_to_key( const gchar *path )
-{
-	gchar **split = g_strsplit( path, "/", -1 );
-	guint count = g_strv_length( split );
-	gchar *key = g_strdup( split[count-1] );
-	g_strfreev( split );
-
-	return( key );
-}
-
-GSList *
-load_subdirs( const gchar *path )
-{
-	static const gchar *thisfn = "nact_gconf_load_subdirs";
-	g_debug( "%s: path=%s", thisfn, path );
-
-	if( !st_gconf ){
-		initialize();
-	}
-
-	GError *error = NULL;
-	GSList *list_path = gconf_client_all_dirs( st_gconf, path, &error );
-	if( error ){
-		g_error( "%s: %s", thisfn, error->message );
-		g_error_free( error );
-		return(( GSList * ) NULL );
-	}
-
-	GSList *list_keys = NULL;
-	GSList *item;
-	for( item = list_path ; item != NULL ; item = item->next ){
-		gchar *key = path_to_key(( gchar * ) item->data );
-		list_keys = g_slist_prepend( list_keys, key );
-	}
-
-	nactuti_free_string_list( list_path );
-
-	return( list_keys );
-}
-
-/**
- * Return the list of uuids.
- *
- * The list of UUIDs is returned as a GSList of newly allocation strings.
- * This list should be freed by calling nact_gconf_free_uuids.
- */
-GSList *
-nact_gconf_load_uuids( void )
-{
-	static const gchar *thisfn = "nact_gconf_load_uuids";
-	g_debug( "%s", thisfn );
-
-	return( load_subdirs( NACT_GCONF_CONFIG ));
-}
-
-/**
- * Free a previously allocated list of UUIDs.
- *
- * @list: list of UUIDs to be freed.
- */
-void
-nact_gconf_free_uuids( GSList *list )
-{
-	static const gchar *thisfn = "nact_gconf_free_uuids";
-	g_debug( "%s: list=%p", thisfn, list );
-	nactuti_free_string_list( list );
-}
-
-/*
- * Load all the key=value pairs of this key
- *
+ * load all the key=value pairs of this key (specified as a full path)
  * The list is not recursive, it contains only the immediate children of
  * path. To free the returned list, gconf_entry_free() each list element,
  * then g_slist_free() the list itself.
@@ -188,37 +145,98 @@ load_keys_values( const gchar *path )
 	return( list_keys );
 }
 
-static void
-free_keys_values( GSList *list )
+/*
+ * load the keys which are the subdirs of the given path
+ * returns a list of keys as full path
+ */
+GSList *
+load_subdirs( const gchar *path )
 {
-	GSList *item;
-	for( item = list ; item != NULL ; item = item->next ){
-		GConfEntry *entry = ( GConfEntry * ) item->data;
-		gconf_entry_unref( entry );
+	static const gchar *thisfn = "nact_gconf_load_subdirs";
+
+	if( !st_gconf ){
+		initialize();
 	}
-	g_slist_free( list );
+
+	GError *error = NULL;
+	GSList *list = gconf_client_all_dirs( st_gconf, path, &error );
+	if( error ){
+		g_error( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		return(( GSList * ) NULL );
+	}
+
+	return( list );
+}
+
+/*
+ * extract the key part (the last part) of a full path
+ * returns a newly allocated string which must be g_freed by the caller
+ */
+static gchar *
+path_to_key( const gchar *path )
+{
+	gchar **split = g_strsplit( path, "/", -1 );
+	guint count = g_strv_length( split );
+	gchar *key = g_strdup( split[count-1] );
+	g_strfreev( split );
+	return( key );
+}
+
+/*
+ * allocate a new NactGConfIO structure
+ * to be freed via nact_gconf_dispose
+ */
+static NactGConfIO *
+path_to_struct( const gchar *path )
+{
+	NactGConfIO *io = g_new0( NactGConfIO, 1 );
+	io->key = path_to_key( path );
+	io->path = g_strdup( path );
+	return( io );
+}
+
+/**
+ * to be called from NactStorage instance_finalize to free the allocated
+ * NactGConfIO structure.
+ */
+void
+nact_gconf_dispose( gpointer ptr )
+{
+	NactGConfIO *io = ( NactGConfIO * ) ptr;
+	g_free( io->key );
+	g_free( io->path );
+	g_free( io );
+}
+
+/**
+ * Dump the NactGConfIO structure.
+ *
+ * @pio: a gpointer to the NactGConfIO structure to be dumped.
+ */
+void
+nact_gconf_dump( gpointer pio )
+{
+	static const gchar *thisfn = "nact_gconf_dump";
+	NactGConfIO *io = ( NactGConfIO * ) pio;
+	g_debug( "%s: path='%s'", thisfn, io->path );
+	g_debug( "%s: key='%s'", thisfn, io->key );
 }
 
 /*
  * load the action properties from GConf repository and setup action
- * instance accordingly
+ * instance accordingly.
  */
-gboolean
-nact_gconf_load_action_properties( NactStorage *action )
+static void
+load_action_properties( NactStorage *action )
 {
-	g_object_set( G_OBJECT( action ), "origin", ORIG_GCONF, NULL );
+	g_assert( NACT_IS_STORAGE( action ));
 
-	gchar *path = get_object_path( action );
+	gpointer pio;
+	g_object_get( G_OBJECT( action ), PROP_SUBSYSTEM_STR, &pio, NULL );
+	NactGConfIO *io = ( NactGConfIO * ) pio;
 
-	g_object_set( G_OBJECT( action ), "gconf-path", path, NULL );
-
-	GSList *list = load_keys_values( path );
-
-	g_free( path );
-
-	if( !list ){
-		return( FALSE );
-	}
+	GSList *list = load_keys_values( io->path );
 
 	GSList *item;
 	for( item = list ; item != NULL ; item = item->next ){
@@ -236,59 +254,55 @@ nact_gconf_load_action_properties( NactStorage *action )
 	}
 
 	free_keys_values( list );
-
-	return( TRUE );
 }
 
-GSList *
-nact_gconf_load_profile_names( NactStorage *action )
+/*
+ * allocate the whole list of the actions
+ * each item of the list is an action GObject, with the NactStorage
+ * stuff being initialized
+ */
+static GSList *
+load_list_actions( GType type )
 {
-	gchar *path = get_object_path( action );
+	return( load_items( NACT_GCONF_CONFIG, type ));
+}
 
-	GSList *list = load_subdirs( path );
+/**
+ * Return the list of actions as NactStorage-initialized objects.
+ *
+ * @type: actual GObject type to be allocated.
+ */
+GSList *
+nact_gconf_load_actions( GType type )
+{
+	static const gchar *thisfn = "nact_gconf_load_actions";
+	g_debug( "%s", thisfn );
 
-	g_free( path );
+	GSList *list = load_list_actions( type );
+
+	GSList *it;
+	for( it = list ; it ; it = it->next ){
+		load_action_properties( NACT_STORAGE( it->data ));
+	}
 
 	return( list );
 }
 
-static GSList *
-duplicate_list( GSList *list )
+/*
+ * read the properties of the profile and fill-up the object accordingly.
+ */
+static void
+load_profile_properties( NactStorage *profile )
 {
-	GSList *newlist = NULL;
-	GSList *item;
-	for( item = list ; item != NULL ; item = item->next ){
-		gchar *value = g_strdup(( gchar * ) item->data );
-		g_debug( "duplicate '%s'", value );
-		newlist = g_slist_prepend( newlist, value );
-	}
-	return( newlist );
-}
+	GSList *listvalues, *iv, *strings;
 
-gboolean
-nact_gconf_load_profile_properties( NactStorage *profile )
-{
-	g_object_set( G_OBJECT( profile ), "origin", ORIG_GCONF, NULL );
+	g_assert( NACT_IS_STORAGE( profile ));
 
-	NactStorage *action;
-	g_object_get( G_OBJECT( profile ), "action", &action, NULL );
-	gchar *path_action = get_object_path( action );
+	gpointer pio;
+	g_object_get( G_OBJECT( profile ), PROP_SUBSYSTEM_STR, &pio, NULL );
+	NactGConfIO *io = ( NactGConfIO * ) pio;
 
-	gchar *profile_name;
-	g_object_get( G_OBJECT( profile ), "name", &profile_name, NULL );
-	gchar *profile_path = g_strdup_printf( "%s/%s", path_action, profile_name );
-	g_free( profile_name );
-	g_free( path_action );
-
-	g_object_set( G_OBJECT( profile ), "gconf-path", profile_path, NULL );
-
-	GSList *list = load_keys_values( profile_path );
-
-	g_free( profile_path );
-
-	if( !list ){
-		return( FALSE );
-	}
+	GSList *list = load_keys_values( io->path );
 
 	GSList *item;
 	for( item = list ; item != NULL ; item = item->next ){
@@ -309,7 +323,15 @@ nact_gconf_load_profile_properties( NactStorage *profile )
 				break;
 
 			case GCONF_VALUE_LIST:
-				g_object_set( G_OBJECT( profile ), key, duplicate_list( gconf_value_get_list( value )), NULL );
+				listvalues = gconf_value_get_list( value );
+				strings = NULL;
+				for( iv = listvalues ; iv != NULL ; iv = iv->next ){
+					/*g_debug( "get '%s'", gconf_value_get_string(( GConfValue * ) iv->data ));*/
+					strings = g_slist_prepend( strings,
+							( gpointer ) gconf_value_get_string(( GConfValue * ) iv->data ));
+				}
+				g_object_set( G_OBJECT( profile ), key, strings, NULL );
+				/*g_slist_free( strings );*/
 				break;
 
 			default:
@@ -318,12 +340,42 @@ nact_gconf_load_profile_properties( NactStorage *profile )
 	}
 
 	free_keys_values( list );
-
-	return( TRUE );
 }
 
-void
-nact_gconf_free_profile_names( GSList *list )
+/*
+ * allocate the whole list of the profile for the action
+ * each item of the list is a profile GObject, with the NactStorage
+ * stuff being initialized
+ */
+static GSList *
+load_list_profiles( NactStorage *action, GType type )
 {
-	nactuti_free_string_list( list );
+	gpointer pio;
+	g_object_get( G_OBJECT( action ), PROP_SUBSYSTEM_STR, &pio, NULL );
+	NactGConfIO *io = ( NactGConfIO * ) pio;
+
+	return( load_items( io->path, type ));
+}
+
+/**
+ * Return the list of profiles as NactStorage-initialized objects.
+ *
+ * @action: the action.
+ *
+ * @type: actual GObject type to be allocated.
+ */
+GSList *
+nact_gconf_load_profiles( NactStorage *action, GType type )
+{
+	static const gchar *thisfn = "nact_gconf_load_profiles";
+	g_debug( "%s", thisfn );
+
+	GSList *list = load_list_profiles( action, type );
+
+	GSList *it;
+	for( it = list ; it ; it = it->next ){
+		load_profile_properties( NACT_STORAGE( it->data ));
+	}
+
+	return( list );
 }

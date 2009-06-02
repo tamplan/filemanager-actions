@@ -34,6 +34,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <string.h>
 #include "nact-action-profile.h"
+#include "uti-lists.h"
 
 static NactStorageClass *st_parent_class = NULL;
 
@@ -47,7 +48,6 @@ static void   instance_finalize( GObject *object );
 static gchar *get_id( const NactStorage *profile );
 static void   do_dump( const NactStorage *profile );
 static void   do_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
-static void   free_string_list( GSList *list );
 static int    validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
 
 enum {
@@ -237,7 +237,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NactActionProfile* self = NACT_ACTION_PROFILE( instance );
 
 	self->private = g_new0( NactActionProfilePrivate, 1 );
-
 	self->private->dispose_has_run = FALSE;
 }
 
@@ -245,8 +244,9 @@ static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
 	g_assert( NACT_IS_ACTION_PROFILE( object ));
-
 	NactActionProfile *self = NACT_ACTION_PROFILE( object );
+
+	GSList *list;
 
 	switch( property_id ){
 		case PROP_ACTION:
@@ -274,7 +274,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 			break;
 
 		case PROP_BASENAMES:
-			g_value_set_pointer( value, self->private->basenames );
+			list = nactuti_duplicate_string_list( self->private->basenames );
+			g_value_set_pointer( value, list );
 			break;
 
 		case PROP_ISDIR:
@@ -290,11 +291,13 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 			break;
 
 		case PROP_MIMETYPES:
-			g_value_set_pointer( value, self->private->mimetypes );
+			list = nactuti_duplicate_string_list( self->private->mimetypes );
+			g_value_set_pointer( value, list );
 			break;
 
 		case PROP_SCHEMES:
-			g_value_set_pointer( value, self->private->schemes );
+			list = nactuti_duplicate_string_list( self->private->schemes );
+			g_value_set_pointer( value, list );
 			break;
 
 		default:
@@ -340,8 +343,8 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			break;
 
 		case PROP_BASENAMES:
-			free_string_list( self->private->basenames );
-			self->private->basenames = g_value_get_pointer( value );
+			nactuti_free_string_list( self->private->basenames );
+			self->private->basenames = nactuti_duplicate_string_list( g_value_get_pointer( value ));
 			break;
 
 		case PROP_ISDIR:
@@ -357,13 +360,13 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			break;
 
 		case PROP_MIMETYPES:
-			free_string_list( self->private->mimetypes );
-			self->private->mimetypes = g_value_get_pointer( value );
+			nactuti_free_string_list( self->private->mimetypes );
+			self->private->mimetypes = nactuti_duplicate_string_list( g_value_get_pointer( value ));
 			break;
 
 		case PROP_SCHEMES:
-			free_string_list( self->private->schemes );
-			self->private->schemes = g_value_get_pointer( value );
+			nactuti_free_string_list( self->private->schemes );
+			self->private->schemes = nactuti_duplicate_string_list( g_value_get_pointer( value ));
 			break;
 
 		default:
@@ -473,15 +476,6 @@ do_dump_list( const gchar *thisfn, const gchar *label, GSList *list )
 	g_string_append_printf( str, "]" );
 	g_debug( "%s:            %s=%s", thisfn, label, str->str );
 	g_string_free( str, TRUE );
-}
-
-static void
-free_string_list( GSList *list ){
-	GSList *item;
-	for( item = list ; item != NULL ; item = item->next ){
-		g_free(( gchar * ) item->data );
-	}
-	g_slist_free( list );
 }
 
 gchar *

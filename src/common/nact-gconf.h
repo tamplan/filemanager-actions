@@ -40,13 +40,12 @@
 
 G_BEGIN_DECLS
 
-GSList  *nact_gconf_load_uuids( void );
-gboolean nact_gconf_load_action_properties( NactStorage *action );
-void     nact_gconf_free_uuids( GSList *list );
+void     nact_gconf_dispose( gpointer io );
+void     nact_gconf_dump( gpointer io );
 
-GSList  *nact_gconf_load_profile_names( NactStorage *action );
-gboolean nact_gconf_load_profile_properties( NactStorage *profile );
-void     nact_gconf_free_profile_names( GSList *list );
+GSList  *nact_gconf_load_actions( GType type );
+
+GSList  *nact_gconf_load_profiles( NactStorage *action, GType type );
 
 G_END_DECLS
 

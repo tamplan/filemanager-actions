@@ -1,3 +1,28 @@
+2009-06-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/plugin/nautilus-actions.c:
+	* src/plugin/nautilus-actions.h:
+	Connect and load list of NactAction actions.
+
+	* src/common/nact-gconf.c:
+	* src/common/nact-gconf.h
+	(nact_gconf_dispose, nact_gconf_dump): New functions.
+
+	* src/common/uti-lists.c:
+	* src/common/util-lists.h
+	(nactuti_free_string_list, nactuti_duplicate_string_list):
+	New functions.
+
+	* src/common/nact-action.c:
+	* src/common/nact-action.h:
+	* src/common/nact-action-profile.c:
+	* src/common/nact-action-profile.h:
+	* src/common/nact-gconf.c:
+	* src/common/nact-gconf.h:
+	* src/common/nact-storage.c:
+	* src/common/nact-storage.h:
+	Updated accordingly.
+
 2009-06-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Have a more funny package string.

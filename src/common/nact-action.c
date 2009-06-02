@@ -45,10 +45,8 @@ static void        instance_dispose( GObject *object );
 static void        instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void        instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void        instance_finalize( GObject *object );
-static NactAction *new_action( const gchar *uuid );
 static gchar      *get_id( const NactStorage *action );
 static void        do_dump( const NactStorage *action );
-static NactAction *load_action( const gchar *uuid );
 
 enum {
 	PROP_UUID = 1,
@@ -169,15 +167,13 @@ class_init( NactActionClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_action_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+	/*static const gchar *thisfn = "nact_action_instance_init";
+	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
 
 	g_assert( NACT_IS_ACTION( instance ));
-
 	NactAction* self = NACT_ACTION( instance );
 
 	self->private = g_new0( NactActionPrivate, 1 );
-
 	self->private->dispose_has_run = FALSE;
 }
 
@@ -185,7 +181,6 @@ static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
 	g_assert( NACT_IS_ACTION( object ));
-
 	NactAction *self = NACT_ACTION( object );
 
 	switch( property_id ){
@@ -219,7 +214,6 @@ static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
 	g_assert( NACT_IS_ACTION( object ));
-
 	NactAction *self = NACT_ACTION( object );
 
 	switch( property_id ){
@@ -261,7 +255,6 @@ instance_dispose( GObject *object )
 	g_debug( "%s: object=%p", thisfn, object );
 
 	g_assert( NACT_IS_ACTION( object ));
-
 	NactAction *self = NACT_ACTION( object );
 
 	if( !self->private->dispose_has_run ){
@@ -285,7 +278,6 @@ instance_finalize( GObject *object )
 	g_debug( "%s: object=%p", thisfn, object );
 
 	g_assert( NACT_IS_ACTION( object ));
-
 	NactAction *self = ( NactAction * ) object;
 
 	g_free( self->private->uuid );
@@ -298,13 +290,6 @@ instance_finalize( GObject *object )
 	if((( GObjectClass * ) st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
-}
-
-static NactAction *
-new_action( const gchar *uuid )
-{
-	NactAction *action = g_object_new( NACT_ACTION_TYPE, "uuid", uuid, NULL );
-	return( action );
 }
 
 static gchar *
@@ -343,66 +328,16 @@ do_dump( const NactStorage *action )
 	}
 }
 
-/*
- * load action
+/**
+ * Allocate and return the list of defined actions.
  *
- * +- load_action_properties
+ * Delegate to NactStorage how to search for locations of actions. The
+ * class will ask for this to each registered storage subsystem (GConf
+ * only for now).
  *
- * +- load_profile_names
- *
- * +
- */
-static NactAction *
-load_action( const gchar *uuid )
-{
-	g_assert( uuid && strlen( uuid ));
-
-	NactAction *action = new_action( uuid );
-
-	if( !nact_storage_load_action_properties( NACT_STORAGE( action ))){
-		g_object_unref( action );
-		return( NULL );
-	}
-
-	GSList *list = nact_storage_load_profile_ids( NACT_STORAGE( action ));
-	if( !list ){
-		g_object_unref( action );
-		return( NULL );
-	}
-
-	GSList *profile_id;
-	for( profile_id = list ; profile_id != NULL ; profile_id = profile_id->next ){
-
-		NactActionProfile *profile_obj =
-			nact_action_profile_new( NACT_STORAGE( action), ( const gchar * ) profile_id->data );
-
-		if( !nact_storage_load_profile_properties( NACT_STORAGE( profile_obj ))){
-			g_object_unref( profile_obj );
-			g_object_unref( action );
-			return( NULL );
-		}
-
-		action->private->profiles = g_slist_prepend( action->private->profiles, profile_obj );
-	}
-
-	return( action );
-}
-
-/*
- * nautilus-actions_instance_init
- * +- nautilus_actions_load_list_actions
- *
- *    +- nact_action_load_actions
- *
- *       +- nact_action_load_uuids
- *       |  +- nact_storage_load_uuids
- *       |     retrieve all storage subsystems (gconf only for now)
- *       |     foreach subsystem, do
- *       |     +- nact_<subsystem>_load_uuids
- *       |
- *       + foreach uuid, do
- *         +- new NactAction
- *         +- load_action
+ * NactStorage concatenates received lists and return the result as a
+ * list of pre-initialized NactStorage (actually NactAction) objects,
+ * each of them being able to address its own location.
  */
 GSList *
 nact_action_load_actions( void )
@@ -410,25 +345,20 @@ nact_action_load_actions( void )
 	static gchar *thisfn = "nact_action_load_actions";
 	g_debug( "%s", thisfn );
 
-	GSList *actions = NULL;
-
-	/* we read a first list which contains the list of action keys */
-	GSList *list = nact_storage_load_action_ids();
-
-	/* for each item (uuid) of the list, we allocate a new NactAction
-	 * object and prepend it to the returned list
+	/* we read a first list which contains the list of actions
+	 * as NactStorage-initialized objects
 	 */
-	GSList *key;
-	for( key = list ; key != NULL ; key = key->next ){
-		NactAction *action_obj = load_action(( gchar *) key->data );
-		if( action_obj ){
-			nact_storage_dump( NACT_STORAGE( action_obj ));
-			actions = g_slist_prepend( actions, action_obj );
-		}
-	}
+	GSList *actions = nact_storage_load_actions( NACT_ACTION_TYPE );
 
-	/* eventually, free the list of action keys */
-	nact_storage_free_action_ids( list );
+	GSList *item;
+	for( item = actions ; item != NULL ; item = item->next ){
+
+		NactAction *obj = ( NactAction * ) item->data;
+		obj->private->profiles =
+				nact_storage_load_profiles(( NactStorage * ) obj, NACT_ACTION_PROFILE_TYPE );
+
+		nact_storage_dump( NACT_STORAGE( item->data ));
+	}
 
 	return( actions );
 }
@@ -516,6 +446,15 @@ nact_action_get_verified_icon_name( const NactAction *action )
 	return( icon_name );
 }
 
+/**
+ * Returns the list of profiles of the actions as a GSList of
+ * NactActionProfile GObjects.
+ *
+ * @action: the action whose profiles has to be retrieved.
+ *
+ * The returned pointer is owned by the @action object ; the caller
+ * should not try to free or unref it.
+ */
 GSList *
 nact_action_get_profiles( const NactAction *action )
 {

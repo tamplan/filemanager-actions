@@ -52,9 +52,13 @@ G_BEGIN_DECLS
 
 /* identifiers for various storage subsystems */
 enum {
-	ORIG_GCONF = 1,
+	ORIGIN_GCONF = 1,
 	ORIGIN_LAST
 };
+
+/* property names */
+#define PROP_ORIGIN_STR						"origin"
+#define PROP_SUBSYSTEM_STR					"subsystem"
 
 #define NACT_STORAGE_TYPE					( nact_storage_get_type())
 #define NACT_STORAGE( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_STORAGE_TYPE, NactStorage ))
@@ -89,13 +93,9 @@ gchar   *nact_storage_get_id( const NactStorage *object );
 
 void     nact_storage_dump( const NactStorage *object );
 
-GSList  *nact_storage_load_action_ids( void );
-gboolean nact_storage_load_action_properties( NactStorage *action );
-void     nact_storage_free_action_ids( GSList *list );
+GSList  *nact_storage_load_actions( GType type );
 
-GSList  *nact_storage_load_profile_ids( NactStorage *action );
-gboolean nact_storage_load_profile_properties( NactStorage *profile );
-void     nact_storage_free_profile_ids( GSList *list );
+GSList  *nact_storage_load_profiles( NactStorage *action, GType type );
 
 G_END_DECLS
 
