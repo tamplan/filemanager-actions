@@ -279,6 +279,7 @@ void
 nact_storage_dump( const NactStorage *object )
 {
 	g_assert( NACT_IS_STORAGE( object ));
+
 	NACT_STORAGE_GET_CLASS( object )->do_dump( object );
 }
 

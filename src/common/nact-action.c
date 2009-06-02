@@ -307,12 +307,11 @@ do_dump( const NactStorage *action )
 	static const gchar *thisfn = "nact_action_do_dump";
 
 	g_assert( NACT_IS_ACTION( action ));
+	NactAction *self = NACT_ACTION( action );
 
 	if( st_parent_class->do_dump ){
 		st_parent_class->do_dump( action );
 	}
-
-	NactAction *self = NACT_ACTION( action );
 
 	g_debug( "%s:    uuid='%s'", thisfn, self->private->uuid );
 	g_debug( "%s: version='%s'", thisfn, self->private->version );
@@ -459,6 +458,7 @@ GSList *
 nact_action_get_profiles( const NactAction *action )
 {
 	g_assert( NACT_IS_ACTION( action ));
+
 	return( action->private->profiles );
 }
 
@@ -466,6 +466,7 @@ guint
 nact_action_get_profiles_count( const NactAction *action )
 {
 	g_assert( NACT_IS_ACTION( action ));
+
 	return( g_slist_length( action->private->profiles ));
 }
 

@@ -233,7 +233,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
 
 	g_assert( NACT_IS_ACTION_PROFILE( instance ));
-
 	NactActionProfile* self = NACT_ACTION_PROFILE( instance );
 
 	self->private = g_new0( NactActionProfilePrivate, 1 );
@@ -310,7 +309,6 @@ static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
 	g_assert( NACT_IS_ACTION_PROFILE( object ));
-
 	NactActionProfile *self = NACT_ACTION_PROFILE( object );
 
 	switch( property_id ){
@@ -382,7 +380,6 @@ instance_dispose( GObject *object )
 	g_debug( "%s: object=%p", thisfn, object );
 
 	g_assert( NACT_IS_ACTION_PROFILE( object ));
-
 	NactActionProfile *self = NACT_ACTION_PROFILE( object );
 
 	if( !self->private->dispose_has_run ){
@@ -401,7 +398,6 @@ instance_finalize( GObject *object )
 	g_debug( "%s: object=%p", thisfn, object );
 
 	g_assert( NACT_IS_ACTION_PROFILE( object ));
-
 	NactActionProfile *self = ( NactActionProfile * ) object;
 
 	g_free( self->private->name );
@@ -441,12 +437,11 @@ do_dump( const NactStorage *object )
 	static const gchar *thisfn = "nact_action_profile_do_dump";
 
 	g_assert( NACT_IS_ACTION_PROFILE( object ));
+	NactActionProfile *self = NACT_ACTION_PROFILE( object );
 
 	if( st_parent_class->do_dump ){
 		st_parent_class->do_dump( object );
 	}
-
-	NactActionProfile *self = NACT_ACTION_PROFILE( object );
 
 	g_debug( "%s:         profile_name='%s'", thisfn, self->private->name );
 	g_debug( "%s:                label='%s'", thisfn, self->private->label );
