@@ -1,3 +1,8 @@
+2009-06-02  Manoj Kumar Giri <mgiri@redhat.com>
+
+	* or.po: Updated Oriya Translation.
+	* LINGUAS: Added Oriya into the List.
+
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* POTFILES.in:
