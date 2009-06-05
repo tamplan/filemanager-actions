@@ -1,4 +1,4 @@
-2009-06-02 Pierre Wieser <pwieser@trychlos.org>
+2009-06-05 Pierre Wieser <pwieser@trychlos.org>
 
 	Create a whole new object model, and defines some communication
 	interfaces.

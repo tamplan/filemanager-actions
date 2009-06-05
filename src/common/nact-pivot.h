@@ -71,7 +71,7 @@ GType      nact_pivot_get_type( void );
 
 NactPivot *nact_pivot_new( void );
 
-GSList    *nact_pivot_get_providers( const NactPivot *pivot, GType type );
+GSList    *nact_pivot_get_providers( GType type );
 
 G_END_DECLS
 
