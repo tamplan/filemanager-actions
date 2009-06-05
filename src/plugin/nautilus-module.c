@@ -31,8 +31,11 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <syslog.h>
+
 #include <libnautilus-extension/nautilus-extension-types.h>
+
 #include "nautilus-actions.h"
 
 static guint st_log_handler = 0;

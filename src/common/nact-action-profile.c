@@ -31,24 +31,40 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <libnautilus-extension/nautilus-file-info.h>
+
 #include <string.h>
+
+#include <libnautilus-extension/nautilus-file-info.h>
+
 #include "nact-action-profile.h"
+#include "nact-iio-client.h"
+#include "nact-iio-provider.h"
 #include "uti-lists.h"
 
-static NactStorageClass *st_parent_class = NULL;
+struct NactActionProfilePrivate {
+	gboolean  dispose_has_run;
 
-static GType  register_type( void );
-static void   class_init( NactActionProfileClass *klass );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *object );
-static void   instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void   instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void   instance_finalize( GObject *object );
-static gchar *get_id( const NactStorage *profile );
-static void   do_dump( const NactStorage *profile );
-static void   do_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
-static int    validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
+	/* the NactAction object
+	 */
+	gpointer  action;
+
+	/* profile properties
+	 */
+	gchar    *name;		/* GConf key = id */
+	gchar    *label;
+	gchar    *path;
+	gchar    *parameters;
+	gboolean  accept_multiple_files;
+	GSList   *basenames;
+	gboolean  is_dir;
+	gboolean  is_file;
+	gboolean  match_case;
+	GSList   *mimetypes;
+	GSList   *schemes;
+};
+
+struct NactActionProfileClassPrivate {
+};
 
 enum {
 	PROP_ACTION = 1,
@@ -65,30 +81,19 @@ enum {
 	PROP_SCHEMES
 };
 
-struct NactActionProfilePrivate {
-	gboolean  dispose_has_run;
+static NactObjectClass *st_parent_class = NULL;
 
-	/* the NactAction object
-	 */
-	gpointer  action;
+static GType register_type( void );
+static void  class_init( NactActionProfileClass *klass );
+static void  instance_init( GTypeInstance *instance, gpointer klass );
+static void  instance_dispose( GObject *object );
+static void  instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void  instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void  instance_finalize( GObject *object );
 
-	/* profile properties
-	 */
-	gchar    *name;
-	gchar    *label;
-	gchar    *path;
-	gchar    *parameters;
-	gboolean  accept_multiple_files;
-	GSList   *basenames;
-	gboolean  is_dir;
-	gboolean  is_file;
-	gboolean  match_case;
-	GSList   *mimetypes;
-	GSList   *schemes;
-};
-
-struct NactActionProfileClassPrivate {
-};
+static void  do_dump( const NactObject *profile );
+static void  do_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
+static int   validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
 
 GType
 nact_action_profile_get_type( void )
@@ -117,7 +122,7 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( NACT_STORAGE_TYPE, "NactActionProfile", &info, 0 ));
+	return( g_type_register_static( NACT_OBJECT_TYPE, "NactActionProfile", &info, 0 ));
 }
 
 static void
@@ -222,8 +227,7 @@ class_init( NactActionProfileClass *klass )
 
 	klass->private = g_new0( NactActionProfileClassPrivate, 1 );
 
-	NACT_STORAGE_CLASS( klass )->get_id = get_id;
-	NACT_STORAGE_CLASS( klass )->do_dump = do_dump;
+	NACT_OBJECT_CLASS( klass )->dump = do_dump;
 }
 
 static void
@@ -412,9 +416,9 @@ instance_finalize( GObject *object )
 }
 
 NactActionProfile *
-nact_action_profile_new( const NactStorage *action, const gchar *name )
+nact_action_profile_new( const NactObject *action, const gchar *name )
 {
-	g_assert( NACT_IS_STORAGE( action ));
+	g_assert( NACT_IS_OBJECT( action ));
 	g_assert( name && strlen( name ));
 
 	NactActionProfile *profile =
@@ -422,25 +426,31 @@ nact_action_profile_new( const NactStorage *action, const gchar *name )
 	return( profile );
 }
 
-static gchar *
-get_id( const NactStorage *profile )
+/**
+ * Load an action.
+ *
+ * @action: a NactAction previously allocated via nact_action_new.
+ */
+void
+nact_action_profile_load( NactObject *object )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
-	gchar *id;
-	g_object_get( G_OBJECT( profile ), "name", &id, NULL );
-	return( id );
+	g_assert( NACT_IS_ACTION_PROFILE( object ));
+
+	/*NactActionProfile *profile = NACT_ACTION_PROFILE( object );*/
+
+	nact_iio_provider_load_profile_properties( object );
 }
 
 static void
-do_dump( const NactStorage *object )
+do_dump( const NactObject *object )
 {
 	static const gchar *thisfn = "nact_action_profile_do_dump";
 
 	g_assert( NACT_IS_ACTION_PROFILE( object ));
 	NactActionProfile *self = NACT_ACTION_PROFILE( object );
 
-	if( st_parent_class->do_dump ){
-		st_parent_class->do_dump( object );
+	if( st_parent_class->dump ){
+		st_parent_class->dump( object );
 	}
 
 	g_debug( "%s:         profile_name='%s'", thisfn, self->private->name );
@@ -473,6 +483,43 @@ do_dump_list( const gchar *thisfn, const gchar *label, GSList *list )
 	g_string_free( str, TRUE );
 }
 
+/**
+ * Returns a pointer to the action for this profile.
+ */
+NactObject *
+nact_action_profile_get_action( const NactActionProfile *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	gpointer action;
+	g_object_get( G_OBJECT( profile ), "action", &action, NULL );
+
+	return( NACT_OBJECT( action ));
+}
+
+/**
+ * Returns the profile name.
+ *
+ * The returned string should be g_freed by the caller.
+ *
+ * The profile name is also the GConf-key of the profile.
+ */
+gchar *
+nact_action_profile_get_id( const NactActionProfile *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	gchar *id;
+	g_object_get( G_OBJECT( profile ), "name", &id, NULL );
+
+	return( id );
+}
+
+/**
+ * Returns the path of the command in the profile.
+ *
+ * The returned string should be g_freed by the caller.
+ */
 gchar *
 nact_action_profile_get_path( const NactActionProfile *profile )
 {
@@ -484,6 +531,11 @@ nact_action_profile_get_path( const NactActionProfile *profile )
 	return( path );
 }
 
+/**
+ * Returns the parameters of the command in the profile.
+ *
+ * The returned string should be g_freed by the caller.
+ */
 gchar *
 nact_action_profile_get_parameters( const NactActionProfile *profile )
 {

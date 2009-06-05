@@ -31,37 +31,25 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <string.h>
+
 #include "nact-action.h"
 #include "nact-action-profile.h"
+#include "nact-iio-client.h"
+#include "nact-iio-provider.h"
+#include "nact-io-client.h"
 #include "uti-lists.h"
-
-static NactStorageClass *st_parent_class = NULL;
-
-static GType       register_type( void );
-static void        class_init( NactActionClass *klass );
-static void        instance_init( GTypeInstance *instance, gpointer klass );
-static void        instance_dispose( GObject *object );
-static void        instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void        instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void        instance_finalize( GObject *object );
-static gchar      *get_id( const NactStorage *action );
-static void        do_dump( const NactStorage *action );
-
-enum {
-	PROP_UUID = 1,
-	PROP_VERSION,
-	PROP_LABEL,
-	PROP_TOOLTIP,
-	PROP_ICON
-};
 
 struct NactActionPrivate {
 	gboolean  dispose_has_run;
 
+	/* io client
+	 */
+	NactIOClient *io;
+
 	/* action properties
 	 */
-	gchar    *uuid;
 	gchar    *version;
 	gchar    *label;
 	gchar    *tooltip;
@@ -75,6 +63,48 @@ struct NactActionPrivate {
 
 struct NactActionClassPrivate {
 };
+
+enum {
+	PROP_VERSION = 1,
+	PROP_LABEL,
+	PROP_TOOLTIP,
+	PROP_ICON
+};
+
+static NactObjectClass *st_parent_class = NULL;
+
+static GType    register_type( void );
+static void     class_init( NactActionClass *klass );
+static void     iio_client_iface_init( NactIIOClientInterface *iface );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *object );
+static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void     instance_finalize( GObject *object );
+
+static void     free_profiles( NactAction *action );
+
+static GObject *do_get_io_client( const NactIIOClient *client );
+static void     do_dump( const NactObject *action );
+
+/**
+ * Allocate a new NactAction object.
+ *
+ * @provider: a gpointer to the instance which implements the storage
+ * subsystem for this action ; the @provider must implement the
+ * NactIIOProvider interface.
+ *
+ * @data: a gpointer to some data internal to the provider ; the
+ * provider may use it to store and retrieve its data on a per-object
+ * basis.
+ */
+NactAction *
+nact_action_new( gpointer provider, gpointer data )
+{
+	NactAction *action = g_object_new( NACT_ACTION_TYPE, NULL );
+	action->private->io = nact_io_client_new( provider, data );
+	return( action );
+}
 
 GType
 nact_action_get_type( void )
@@ -103,7 +133,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( NACT_STORAGE_TYPE, "NactAction", &info, 0 ));
+	GType type = g_type_register_static( NACT_OBJECT_TYPE, "NactAction", &info, 0 );
+
+	static const GInterfaceInfo iio_client_iface_info = {
+		( GInterfaceInitFunc ) iio_client_iface_init,
+		NULL,
+		NULL
+	};
+
+	g_type_add_interface_static( type, NACT_IIO_CLIENT_TYPE, &iio_client_iface_info );
+
+	return( type );
 }
 
 static void
@@ -123,13 +163,6 @@ class_init( NactActionClass *klass )
 	GParamSpec *spec;
 
 	/* the id of the object is marked as G_PARAM_CONSTRUCT_ONLY */
-	spec = g_param_spec_string(
-			"uuid",
-			"uuid",
-			"Globally unique identifier of the action", "",
-			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_UUID, spec );
-
 	spec = g_param_spec_string(
 			"version",
 			"version",
@@ -160,8 +193,16 @@ class_init( NactActionClass *klass )
 
 	klass->private = g_new0( NactActionClassPrivate, 1 );
 
-	NACT_STORAGE_CLASS( klass )->get_id = get_id;
-	NACT_STORAGE_CLASS( klass )->do_dump = do_dump;
+	NACT_OBJECT_CLASS( klass )->dump = do_dump;
+}
+
+static void
+iio_client_iface_init( NactIIOClientInterface *iface )
+{
+	static const gchar *thisfn = "nact_action_iio_client_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->get_io_client = do_get_io_client;
 }
 
 static void
@@ -184,10 +225,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	NactAction *self = NACT_ACTION( object );
 
 	switch( property_id ){
-		case PROP_UUID:
-			g_value_set_string( value, self->private->uuid );
-			break;
-
 		case PROP_VERSION:
 			g_value_set_string( value, self->private->version );
 			break;
@@ -217,11 +254,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	NactAction *self = NACT_ACTION( object );
 
 	switch( property_id ){
-		case PROP_UUID:
-			g_free( self->private->uuid );
-			self->private->uuid = g_value_dup_string( value );
-			break;
-
 		case PROP_VERSION:
 			g_free( self->private->version );
 			self->private->version = g_value_dup_string( value );
@@ -261,10 +293,14 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		GSList *item;
-		for( item = self->private->profiles ; item != NULL ; item = item->next ){
-			g_object_unref( NACT_ACTION_PROFILE( item->data ));
-		}
+		/* release the io_client object */
+		g_object_unref( self->private->io );
+
+		/* release the profiles */
+		free_profiles( self );
+
+		/* release the provider data */
+		nact_iio_provider_release_data( NACT_IIO_CLIENT( self ));
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( object );
@@ -280,7 +316,6 @@ instance_finalize( GObject *object )
 	g_assert( NACT_IS_ACTION( object ));
 	NactAction *self = ( NactAction * ) object;
 
-	g_free( self->private->uuid );
 	g_free( self->private->version );
 	g_free( self->private->label );
 	g_free( self->private->tooltip );
@@ -292,28 +327,58 @@ instance_finalize( GObject *object )
 	}
 }
 
-static gchar *
-get_id( const NactStorage *action )
+static void
+free_profiles( NactAction *action )
 {
 	g_assert( NACT_IS_ACTION( action ));
-	gchar *id;
-	g_object_get( G_OBJECT( action ), "uuid", &id, NULL );
-	return( id );
+
+	GSList *ip;
+	for( ip = action->private->profiles ; ip ; ip = ip->next ){
+		g_object_unref( NACT_ACTION_PROFILE( ip->data ));
+	}
+	g_slist_free( action->private->profiles );
+	action->private->profiles = NULL;
+}
+
+static GObject *
+do_get_io_client( const NactIIOClient *client )
+{
+	g_assert( NACT_IS_IIO_CLIENT( client ));
+	g_assert( NACT_IS_ACTION( client ));
+	NactAction *action = NACT_ACTION( client );
+	return( G_OBJECT( action->private->io ));
+}
+
+/**
+ * Load an action.
+ *
+ * @action: a NactAction previously allocated via nact_action_new.
+ */
+void
+nact_action_load( NactAction *action )
+{
+	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NACT_IS_IIO_CLIENT( action ));
+
+	nact_iio_provider_load_action_properties( NACT_IIO_CLIENT( action ));
+
+	action->private->profiles = nact_iio_provider_load_profiles( NACT_IIO_CLIENT( action ));
+
+	nact_object_dump( NACT_OBJECT( action ));
 }
 
 static void
-do_dump( const NactStorage *action )
+do_dump( const NactObject *action )
 {
 	static const gchar *thisfn = "nact_action_do_dump";
 
 	g_assert( NACT_IS_ACTION( action ));
 	NactAction *self = NACT_ACTION( action );
 
-	if( st_parent_class->do_dump ){
-		st_parent_class->do_dump( action );
+	if( st_parent_class->dump ){
+		st_parent_class->dump( action );
 	}
 
-	g_debug( "%s:    uuid='%s'", thisfn, self->private->uuid );
 	g_debug( "%s: version='%s'", thisfn, self->private->version );
 	g_debug( "%s:   label='%s'", thisfn, self->private->label );
 	g_debug( "%s: tooltip='%s'", thisfn, self->private->tooltip );
@@ -323,43 +388,8 @@ do_dump( const NactStorage *action )
 	g_debug( "%s: %d profile(s) at %p", thisfn, nact_action_get_profiles_count( self ), self->private->profiles );
 	GSList *item;
 	for( item = self->private->profiles ;	item != NULL ; item = item->next ){
-		nact_storage_dump(( const NactStorage * ) item->data );
+		nact_object_dump(( const NactObject * ) item->data );
 	}
-}
-
-/**
- * Allocate and return the list of defined actions.
- *
- * Delegate to NactStorage how to search for locations of actions. The
- * class will ask for this to each registered storage subsystem (GConf
- * only for now).
- *
- * NactStorage concatenates received lists and return the result as a
- * list of pre-initialized NactStorage (actually NactAction) objects,
- * each of them being able to address its own location.
- */
-GSList *
-nact_action_load_actions( void )
-{
-	static gchar *thisfn = "nact_action_load_actions";
-	g_debug( "%s", thisfn );
-
-	/* we read a first list which contains the list of actions
-	 * as NactStorage-initialized objects
-	 */
-	GSList *actions = nact_storage_load_actions( NACT_ACTION_TYPE );
-
-	GSList *item;
-	for( item = actions ; item != NULL ; item = item->next ){
-
-		NactAction *obj = ( NactAction * ) item->data;
-		obj->private->profiles =
-				nact_storage_load_profiles(( NactStorage * ) obj, NACT_ACTION_PROFILE_TYPE );
-
-		nact_storage_dump( NACT_STORAGE( item->data ));
-	}
-
-	return( actions );
 }
 
 /**
@@ -462,6 +492,18 @@ nact_action_get_profiles( const NactAction *action )
 	return( action->private->profiles );
 }
 
+/**
+ * Set the list of the profiles for the action.
+ */
+void
+nact_action_set_profiles( NactAction *action, GSList *list )
+{
+	g_assert( NACT_IS_ACTION( action ));
+
+	free_profiles( action );
+	action->private->profiles = list;
+}
+
 guint
 nact_action_get_profiles_count( const NactAction *action )
 {
@@ -495,7 +537,7 @@ nact_action_free_profile_ids( GSList *list )
 	nactuti_free_string_list( list );
 }
 
-NactActionProfile*
+NactObject*
 nact_action_get_profile( const NactAction *action, const gchar *profile_name )
 {
 	g_assert( NACT_IS_ACTION( action ));
@@ -514,5 +556,5 @@ nact_action_get_profile( const NactAction *action, const gchar *profile_name )
 		}
 		g_free( name );
 	}
-	return( found );
+	return( NACT_OBJECT( found ));
 }

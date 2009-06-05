@@ -36,13 +36,10 @@
  *
  * This is the class which maintains an action.
  *
- * Note that an action is globally identified by its uuid.
- *
- * NactAction class is derived from NactStorage which takes care of i/o.
+ * NactAction class is derived from NactObject.
  */
 
-#include "nact-storage.h"
-#include "nact-action-profile.h"
+#include "nact-object.h"
 
 G_BEGIN_DECLS
 
@@ -56,7 +53,7 @@ G_BEGIN_DECLS
 typedef struct NactActionPrivate NactActionPrivate;
 
 typedef struct {
-	NactStorage        parent;
+	NactObject         parent;
 	NactActionPrivate *private;
 }
 	NactAction;
@@ -64,26 +61,30 @@ typedef struct {
 typedef struct NactActionClassPrivate NactActionClassPrivate;
 
 typedef struct {
-	NactStorageClass        parent;
+	NactObjectClass         parent;
 	NactActionClassPrivate *private;
 }
 	NactActionClass;
 
-GType   nact_action_get_type( void );
+GType       nact_action_get_type( void );
 
-GSList *nact_action_load_actions( void );
+NactAction *nact_action_new( gpointer provider, gpointer data );
 
-gchar  *nact_action_get_uuid( const NactAction *action );
-gchar  *nact_action_get_label( const NactAction *action );
-gchar  *nact_action_get_tooltip( const NactAction *action );
-gchar  *nact_action_get_verified_icon_name( const NactAction *action );
+void        nact_action_load( NactAction *action );
 
-GSList *nact_action_get_profiles( const NactAction *action );
-guint   nact_action_get_profiles_count( const NactAction *action );
-GSList *nact_action_get_profile_ids( const NactAction *action );
-void    nact_action_free_profile_ids( GSList *list );
+gchar      *nact_action_get_uuid( const NactAction *action );
+gchar      *nact_action_get_label( const NactAction *action );
+gchar      *nact_action_get_tooltip( const NactAction *action );
+gchar      *nact_action_get_verified_icon_name( const NactAction *action );
 
-NactActionProfile *nact_action_get_profile( const NactAction *action, const gchar *name );
+GSList     *nact_action_get_profiles( const NactAction *action );
+void        nact_action_set_profiles( NactAction *action, GSList *list );
+
+guint       nact_action_get_profiles_count( const NactAction *action );
+GSList     *nact_action_get_profile_ids( const NactAction *action );
+void        nact_action_free_profile_ids( GSList *list );
+
+NactObject *nact_action_get_profile( const NactAction *action, const gchar *name );
 
 G_END_DECLS
 

@@ -32,6 +32,6 @@
 #define __NACT_GCONF_KEYS_H__
 
 /* GConf general information */
-#define NACT_GCONF_CONFIG		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
+#define NACT_GCONF_CONFIG_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
 
 #endif /* __NACT_GCONF_KEYS_H__ */

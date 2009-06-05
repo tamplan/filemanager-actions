@@ -42,8 +42,16 @@ libnact_la_SOURCES = \
 	nact-gconf.c								\
 	nact-gconf.h								\
 	nact-gconf-keys.h							\
-	nact-storage.c								\
-	nact-storage.h								\
+	nact-iio-client.c							\
+	nact-iio-client.h							\
+	nact-iio-provider.c							\
+	nact-iio-provider.h							\
+	nact-io-client.c							\
+	nact-io-client.h							\
+	nact-object.c								\
+	nact-object.h								\
+	nact-pivot.c								\
+	nact-pivot.h								\
 	nautilus-actions-config.c					\
 	nautilus-actions-config.h					\
 	nautilus-actions-config-gconf.c				\

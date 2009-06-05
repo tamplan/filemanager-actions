@@ -31,46 +31,55 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <string.h>
+
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-file-info.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
+
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
+
 #include <common/nact-action.h>
+#include <common/nact-pivot.h>
 #include <common/nautilus-actions-config.h>
 #include <common/nautilus-actions-config-gconf-reader.h>
 #include "nautilus-actions.h"
 #include "nautilus-actions-test.h"
 #include "nautilus-actions-utils.h"
 
-static GObjectClass *st_parent_class = NULL;
-static GType         st_actions_type = 0;
-
-static void   class_init( NautilusActionsClass *klass );
-static void   menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *object );
-static void   instance_finalize( GObject *object );
-static GList *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
-static GList *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
-static void   execute_action( NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile );
-static void   action_changed_handler( NautilusActionsConfig* config, NautilusActionsConfigAction* action, gpointer user_data );
-
-static const gchar      *get_verified_icon_name( const gchar* icon_name );
-static NautilusMenuItem *create_menu_item( NautilusActionsConfigAction *action, GList *files, NautilusActionsConfigActionProfile* action_profile );
-
 struct NautilusActionsPrivate {
-	gboolean  dispose_has_run;
-	GSList   *actions;
+	gboolean   dispose_has_run;
+
+	/* from nact-pivot */
+	NactPivot *pivot;
+
+	/* original */
 	NautilusActionsConfigGconfReader* configs;
 	GSList* config_list;
 };
 
 struct NautilusActionsClassPrivate {
 };
+
+static GObjectClass *st_parent_class = NULL;
+static GType         st_actions_type = 0;
+
+static void class_init( NautilusActionsClass *klass );
+static void menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static void instance_init( GTypeInstance *instance, gpointer klass );
+static void instance_dispose( GObject *object );
+static void instance_finalize( GObject *object );
+
+static void              action_changed_handler( NautilusActionsConfig* config, NautilusActionsConfigAction* action, gpointer user_data );
+static NautilusMenuItem *create_menu_item( NautilusActionsConfigAction *action, GList *files, NautilusActionsConfigActionProfile* action_profile );
+static void              execute_action( NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile );
+static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
+static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
+static const gchar      *get_verified_icon_name( const gchar* icon_name );
 
 GType
 nautilus_actions_get_type( void )
@@ -160,7 +169,9 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 
-	self->private->actions = nact_action_load_actions();
+	/* from nact-pivot */
+	self->private->pivot = nact_pivot_new();
+
 	self->private->configs = NULL;
 	self->private->configs = nautilus_actions_config_gconf_reader_get ();
 	self->private->config_list = NULL;
@@ -199,6 +210,7 @@ instance_dispose( GObject *object )
 	if( !self->private->dispose_has_run ){
 		self->private->dispose_has_run = TRUE;
 
+		g_object_unref( self->private->pivot );
 		g_object_unref( self->private->configs );
 
 		/* chain up to the parent class */
@@ -229,50 +241,24 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
 #endif
 
 static void
-execute_action( NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile )
+action_changed_handler( NautilusActionsConfig* config,
+						NautilusActionsConfigAction* action,
+						gpointer user_data )
 {
-	static const gchar *thisfn = "nautilus_actions_execute_action";
+	static const gchar *thisfn = "nautilus_actions_action_changed_handler";
 	g_debug( "%s", thisfn );
 
-	GList *files;
-	GString *cmd;
-	gchar* param = NULL;
+	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
 
-	files = (GList*)g_object_get_data (G_OBJECT (item), "files");
+	g_return_if_fail (NAUTILUS_IS_ACTIONS (self));
 
-	cmd = g_string_new (action_profile->path);
-
-	param = nautilus_actions_utils_parse_parameter (action_profile->parameters, files);
-
-	if (param != NULL)
+	if (!self->private->dispose_has_run)
 	{
-		g_string_append_printf (cmd, " %s", param);
-		g_free (param);
+		nautilus_menu_provider_emit_items_updated_signal(( NautilusMenuProvider * ) self );
+
+		nautilus_actions_config_free_actions_list (self->private->config_list);
+		self->private->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->private->configs));
 	}
-
-	g_spawn_command_line_async (cmd->str, NULL);
-	g_debug( "%s: commande='%s'", thisfn, cmd->str );
-
-	g_string_free (cmd, TRUE);
-
-}
-
-static const gchar *
-get_verified_icon_name( const gchar* icon_name )
-{
-	if (icon_name[0] == '/')
-	{
-		if (!g_file_test (icon_name, G_FILE_TEST_IS_REGULAR))
-		{
-			return NULL;
-		}
-	}
-	else if (strlen (icon_name) == 0)
-	{
-		return NULL;
-	}
-
-	return icon_name;
 }
 
 static NautilusMenuItem *
@@ -309,6 +295,53 @@ create_menu_item( NautilusActionsConfigAction *action, GList *files, NautilusAct
 	g_free (name);
 
 	return item;
+}
+
+static void
+execute_action( NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile )
+{
+	static const gchar *thisfn = "nautilus_actions_execute_action";
+	g_debug( "%s", thisfn );
+
+	GList *files;
+	GString *cmd;
+	gchar* param = NULL;
+
+	files = (GList*)g_object_get_data (G_OBJECT (item), "files");
+
+	cmd = g_string_new (action_profile->path);
+
+	param = nautilus_actions_utils_parse_parameter (action_profile->parameters, files);
+
+	if (param != NULL)
+	{
+		g_string_append_printf (cmd, " %s", param);
+		g_free (param);
+	}
+
+	g_spawn_command_line_async (cmd->str, NULL);
+	g_debug( "%s: commande='%s'", thisfn, cmd->str );
+
+	g_string_free (cmd, TRUE);
+
+}
+
+/*
+ * this function is called when nautilus has to paint a folder background
+ * one of the first calls is with current_folder = 'x-nautilus-desktop:///'
+ * we have nothing to do here ; the function is left as a placeholder
+ * (and as an historic remainder)
+ */
+static GList *
+get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
+{
+#ifdef NACT_MAINTAINER_MODE
+	static const gchar *thisfn = "nautilus_actions_get_background_items";
+	gchar *uri = nautilus_file_info_get_uri( current_folder );
+	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)", thisfn, provider, window, current_folder, uri );
+	g_free( uri );
+#endif
+	return(( GList * ) NULL );
 }
 
 static GList *
@@ -368,41 +401,20 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	return items;
 }
 
-/*
- * this function is called when nautilus has to paint a folder background
- * one of the first calls is with current_folder = 'x-nautilus-desktop:///'
- * we have nothing to do here ; the function is left as a placeholder
- * (and as an historic remainder)
- */
-static GList *
-get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
+static const gchar *
+get_verified_icon_name( const gchar* icon_name )
 {
-#ifdef NACT_MAINTAINER_MODE
-	static const gchar *thisfn = "nautilus_actions_get_background_items";
-	gchar *uri = nautilus_file_info_get_uri( current_folder );
-	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)", thisfn, provider, window, current_folder, uri );
-	g_free( uri );
-#endif
-	return(( GList * ) NULL );
-}
-
-static void
-action_changed_handler( NautilusActionsConfig* config,
-						NautilusActionsConfigAction* action,
-						gpointer user_data )
-{
-	static const gchar *thisfn = "nautilus_actions_action_changed_handler";
-	g_debug( "%s", thisfn );
-
-	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
-
-	g_return_if_fail (NAUTILUS_IS_ACTIONS (self));
-
-	if (!self->private->dispose_has_run)
+	if (icon_name[0] == '/')
 	{
-		nautilus_menu_provider_emit_items_updated_signal(( NautilusMenuProvider * ) self );
-
-		nautilus_actions_config_free_actions_list (self->private->config_list);
-		self->private->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->private->configs));
+		if (!g_file_test (icon_name, G_FILE_TEST_IS_REGULAR))
+		{
+			return NULL;
+		}
 	}
+	else if (strlen (icon_name) == 0)
+	{
+		return NULL;
+	}
+
+	return icon_name;
 }

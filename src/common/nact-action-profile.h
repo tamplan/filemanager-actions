@@ -38,10 +38,10 @@
  * definition of an action.
  *
  * As NactAction itself, NactActionProfile class is derived from
- * NactStorage which takes care of i/o.
+ * NactObject which takes care of i/o.
  */
 
-#include "nact-storage.h"
+#include "nact-object.h"
 
 G_BEGIN_DECLS
 
@@ -55,7 +55,7 @@ G_BEGIN_DECLS
 typedef struct NactActionProfilePrivate NactActionProfilePrivate;
 
 typedef struct {
-	NactStorage               parent;
+	NactObject                parent;
 	NactActionProfilePrivate *private;
 }
 	NactActionProfile;
@@ -63,15 +63,19 @@ typedef struct {
 typedef struct NactActionProfileClassPrivate NactActionProfileClassPrivate;
 
 typedef struct {
-	NactStorageClass               parent;
+	NactObjectClass                parent;
 	NactActionProfileClassPrivate *private;
 }
 	NactActionProfileClass;
 
 GType              nact_action_profile_get_type( void );
 
-NactActionProfile *nact_action_profile_new( const NactStorage *action, const gchar *name );
+NactActionProfile *nact_action_profile_new( const NactObject *action, const gchar *name );
 
+void               nact_action_profile_load( NactObject *profile );
+
+NactObject        *nact_action_profile_get_action( const NactActionProfile *profile );
+gchar             *nact_action_profile_get_id( const NactActionProfile *profile );
 gchar             *nact_action_profile_get_path( const NactActionProfile *profile );
 gchar             *nact_action_profile_get_parameters( const NactActionProfile *profile );
 

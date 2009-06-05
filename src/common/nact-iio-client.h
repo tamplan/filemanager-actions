@@ -28,46 +28,46 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_GCONF_H__
-#define __NACT_GCONF_H__
+#ifndef __NACT_IIO_CLIENT_H__
+#define __NACT_IIO_CLIENT_H__
 
 /*
- * NactGConf class definition.
+ * NactIIOClient interface definition.
  *
- * Implements the NactIIOProvider (I/O storage subsystem) interface.
+ * This is the NactAction base class.
+ *
+ * All objects which take advantage of an NactIIOProvider should
+ * implement this interface ; it will give them an easy access to
+ * NactIIOProvider data.
  */
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define NACT_GCONF_TYPE					( nact_gconf_get_type())
-#define NACT_GCONF( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_GCONF_TYPE, NactGConf ))
-#define NACT_GCONF_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_GCONF_TYPE, NactGConfClass ))
-#define NACT_IS_GCONF( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_GCONF_TYPE ))
-#define NACT_IS_GCONF_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_GCONF_TYPE ))
-#define NACT_GCONF_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_GCONF_TYPE, NactGConfClass ))
+#define NACT_IIO_CLIENT_TYPE					( nact_iio_client_get_type())
+#define NACT_IIO_CLIENT( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IIO_CLIENT_TYPE, NactIIOClient ))
+#define NACT_IS_IIO_CLIENT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IIO_CLIENT_TYPE ))
+#define NACT_IIO_CLIENT_GET_INTERFACE( object )	( G_TYPE_INSTANCE_GET_INTERFACE(( object ), NACT_IIO_CLIENT_TYPE, NactIIOClientInterface ))
 
-typedef struct NactGConfPrivate NactGConfPrivate;
+typedef struct NactIIOClient NactIIOClient;
 
-typedef struct {
-	GObject           parent;
-	NactGConfPrivate *private;
-}
-	NactGConf;
-
-typedef struct NactGConfClassPrivate NactGConfClassPrivate;
+typedef struct NactIIOClientInterfacePrivate NactIIOClientInterfacePrivate;
 
 typedef struct {
-	GObjectClass           parent;
-	NactGConfClassPrivate *private;
+	GTypeInterface                 parent;
+	NactIIOClientInterfacePrivate *private;
+
+	/* api */
+	GObject * ( *get_io_client )( const NactIIOClient *client );
 }
-	NactGConfClass;
+	NactIIOClientInterface;
 
-GType      nact_gconf_get_type( void );
+GType    nact_iio_client_get_type( void );
 
-NactGConf *nact_gconf_new( const GObject *pivot );
+gpointer nact_iio_client_get_provider_id( const NactIIOClient *client );
+gpointer nact_iio_client_get_provider_data( const NactIIOClient *client );
 
 G_END_DECLS
 
-#endif /* __NACT_GCONF_H__ */
+#endif /* __NACT_IIO_CLIENT_H__ */

@@ -1,5 +1,8 @@
 2009-06-02 Pierre Wieser <pwieser@trychlos.org>
 
+	Create a whole new object model, and defines some communication
+	interfaces.
+
 	* src/plugin/nautilus-actions.c:
 	* src/plugin/nautilus-actions.h:
 	Connect and load list of NactAction actions.
@@ -19,9 +22,15 @@
 	* src/common/nact-action-profile.h:
 	* src/common/nact-gconf.c:
 	* src/common/nact-gconf.h:
-	* src/common/nact-storage.c:
-	* src/common/nact-storage.h:
 	Updated accordingly.
+
+	* src/common/nact-iio-client.c:
+	* src/common/nact-iio-client.h:
+	* src/common/nact-iio-provider.c:
+	* src/common/nact-iio-provider.c:
+	* src/common/nact-io-client.c:
+	* src/common/nact-io-client.h:
+	New files.
 
 2009-06-01 Pierre Wieser <pwieser@trychlos.org>
 
