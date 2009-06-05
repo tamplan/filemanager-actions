@@ -35,6 +35,7 @@
 #include "nact-gconf.h"
 #include "nact-pivot.h"
 #include "nact-iio-provider.h"
+#include "uti-lists.h"
 
 struct NactPivotPrivate {
 	gboolean  dispose_has_run;
@@ -211,4 +212,32 @@ nact_pivot_get_providers( const NactPivot *pivot, GType type )
 	}
 
 	return( list );
+}
+
+/**
+ * Free a NactPivotValue structure and its content.
+ */
+void
+nact_pivot_free_pivot_value( NactPivotValue *value )
+{
+	if( value ){
+		switch( value->type ){
+
+			case NACT_PIVOT_STR:
+				g_free(( gchar * ) value->data );
+				break;
+
+			case NACT_PIVOT_BOOL:
+				break;
+
+			case NACT_PIVOT_STRLIST:
+				nactuti_free_string_list(( GSList * ) value->data );
+				break;
+
+			default:
+				g_assert_not_reached();
+				break;
+		}
+		g_free( value );
+	}
 }

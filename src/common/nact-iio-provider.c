@@ -205,7 +205,7 @@ nact_iio_provider_load_profiles( NactIIOClient *client )
 void
 nact_iio_provider_load_profile_properties( NactObject *profile )
 {
-	static const gchar *thisfn = "nact_iio_provider_load_action_properties";
+	static const gchar *thisfn = "nact_iio_provider_load_profile_properties";
 	g_debug( "%s", thisfn );
 
 	g_assert( NACT_IS_ACTION_PROFILE( profile ));

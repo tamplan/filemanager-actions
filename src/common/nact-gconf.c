@@ -68,31 +68,32 @@ enum {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType        register_type( void );
-static void         class_init( NactGConfClass *klass );
-static void         iio_provider_iface_init( NactIIOProviderInterface *iface );
-static void         instance_init( GTypeInstance *instance, gpointer klass );
-static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void         instance_dispose( GObject *object );
-static void         instance_finalize( GObject *object );
-static guint        install_gconf_watch( NactGConf *gconf );
-static void         remove_gconf_watch( NactGConf *gconf );
+static GType          register_type( void );
+static void           class_init( NactGConfClass *klass );
+static void           iio_provider_iface_init( NactIIOProviderInterface *iface );
+static void           instance_init( GTypeInstance *instance, gpointer klass );
+static void           instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void           instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void           instance_dispose( GObject *object );
+static void           instance_finalize( GObject *object );
+static guint          install_gconf_watch( NactGConf *gconf );
+static void           remove_gconf_watch( NactGConf *gconf );
 
-static void         actions_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
+static void           actions_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
 
-static void         free_keys_values( GSList *keys );
-static GSList      *load_keys_values( const NactGConf *gconf, const gchar *path );
-static GSList      *load_subdirs( const NactGConf *gconf, const gchar *path );
-static gchar       *path_to_key( const gchar *path );
-static NactGConfIO *path_to_struct( const gchar *path );
-static void         set_item_properties( NactObject *object, GSList *properties );
+static void           free_keys_values( GSList *keys );
+static GSList        *load_keys_values( const NactGConf *gconf, const gchar *path );
+static GSList        *load_subdirs( const NactGConf *gconf, const gchar *path );
+static gchar         *path_to_key( const gchar *path );
+static NactGConfIO   *path_to_struct( const gchar *path );
+static void           set_item_properties( NactObject *object, GSList *properties );
+static NactPivotValue *value_to_pivot( const GConfValue *value );
 
-static GSList      *do_load_actions( NactIIOProvider *provider );
-static void         do_load_action_properties( NactIIOClient *client );
-static GSList      *do_load_profiles( NactIIOClient *client );
-static void         do_load_profile_properties( NactObject *profile );
-static void         do_release_data( NactIIOClient *client );
+static GSList        *do_load_actions( NactIIOProvider *provider );
+static   void         do_load_action_properties( NactIIOClient *client );
+static GSList        *do_load_profiles( NactIIOClient *client );
+static void           do_load_profile_properties( NactObject *profile );
+static void           do_release_data( NactIIOClient *client );
 
 NactGConf *
 nact_gconf_new( const GObject *pivot )
@@ -279,7 +280,7 @@ install_gconf_watch( NactGConf *gconf )
 			gconf->private->gconf,
 			NACT_GCONF_CONFIG_PATH,
 			( GConfClientNotifyFunc ) actions_changed_cb,
-			gconf,
+			gconf->private->pivot,
 			NULL,
 			&error
 		);
@@ -328,6 +329,8 @@ remove_gconf_watch( NactGConf *gconf )
  * if the modification is made elsewhere (an action is imported as a
  * xml file in gconf, of gconf is directly edited), we'd have to rely
  * on the key of the value
+ *
+ * user_data is a ptr to NactPivot object.
  */
 static void
 actions_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data )
@@ -335,13 +338,24 @@ actions_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpoin
 	static const gchar *thisfn = "actions_changed_cb";
 	g_debug( "%s: client=%p, cnxnid=%u, entry=%p, user_data=%p", thisfn, client, cnxn_id, entry, user_data );
 
+	g_assert( NACT_IS_PIVOT( user_data ));
+
+	const GConfValue* value = gconf_entry_get_value( entry );
+	const gchar *path = gconf_entry_get_key( entry );
+	const gchar *subpath = path + strlen( NACT_GCONF_CONFIG_PATH ) + 1;
+
+	gchar **split = g_strsplit( subpath, "/", 2 );
+	gchar *key = g_strdup( split[0] );
+	g_strfreev( split );
+
+	/*nact_pivot_on_action_changed( NACT_PIVOT( user_data ), key, parm, value );*/
+	g_free( key );
+
 	/*NactGConf *gconf = NACT_GCONF( user_data );*/
 
 	/* The Key value format is XXX:YYYY-YYYY-... where XXX is an number incremented to make key
 	 * effectively changed each time and YYYY-YYYY-... is the modified uuid */
-	const GConfValue* value = gconf_entry_get_value (entry);
 	const gchar* notify_value = gconf_value_get_string (value);
-	const gchar *key = gconf_entry_get_key( entry );
 	g_debug( "%s: notify_value='%s', key='%s'", thisfn, notify_value, key );
 	/*const gchar* uuid = notify_value + 4;*/
 
@@ -485,41 +499,74 @@ set_item_properties( NactObject *object, GSList *properties )
 {
 	g_assert( NACT_IS_OBJECT( object ));
 
-	GSList *item, *listvalues, *iv, *strings;
-
+	GSList *item;
 	for( item = properties ; item != NULL ; item = item->next ){
 
 		GConfEntry *entry = ( GConfEntry * ) item->data;
-
 		const char *key = gconf_entry_get_key( entry );
-		GConfValue *value = gconf_entry_get_value( entry );
+		NactPivotValue *value = value_to_pivot( gconf_entry_get_value( entry ));
 
-		switch( value->type ){
+		if( value ){
+			switch( value->type ){
 
-			case GCONF_VALUE_STRING:
-				g_object_set( G_OBJECT( object ), key, gconf_value_get_string( value ), NULL );
-				break;
+				case NACT_PIVOT_STR:
+				case NACT_PIVOT_BOOL:
+				case NACT_PIVOT_STRLIST:
+					g_object_set( G_OBJECT( object ), key, value->data, NULL );
+					break;
 
-			case GCONF_VALUE_BOOL:
-				g_object_set( G_OBJECT( object ), key, gconf_value_get_bool( value ), NULL );
-				break;
-
-			case GCONF_VALUE_LIST:
-				listvalues = gconf_value_get_list( value );
-				strings = NULL;
-				for( iv = listvalues ; iv != NULL ; iv = iv->next ){
-					strings = g_slist_prepend( strings,
-							( gpointer ) gconf_value_get_string(( GConfValue * ) iv->data ));
-				}
-				g_object_set( G_OBJECT( object ), key, strings, NULL );
-				/*g_slist_free( strings );*/
-				break;
-
-			default:
-				g_assert_not_reached();
-				break;
+				default:
+					g_assert_not_reached();
+					break;
+			}
+			nact_pivot_free_pivot_value( value );
 		}
 	}
+}
+
+/*
+ * convert a GConfValue to our internal data type
+ */
+static NactPivotValue *
+value_to_pivot( const GConfValue *value )
+{
+	NactPivotValue *pivot_value = NULL;
+	GSList *listvalues, *iv, *strings;
+
+	switch( value->type ){
+
+		case GCONF_VALUE_STRING:
+			pivot_value = g_new0( NactPivotValue, 1 );
+			pivot_value->type = NACT_PIVOT_STR;
+			pivot_value->data = ( gpointer ) g_strdup( gconf_value_get_string( value ));
+			break;
+
+		case GCONF_VALUE_BOOL:
+			pivot_value = g_new0( NactPivotValue, 1 );
+			pivot_value->type = NACT_PIVOT_BOOL;
+			pivot_value->data = ( gpointer ) gconf_value_get_bool( value );
+			break;
+
+		case GCONF_VALUE_LIST:
+			listvalues = gconf_value_get_list( value );
+			strings = NULL;
+			for( iv = listvalues ; iv != NULL ; iv = iv->next ){
+				strings = g_slist_prepend( strings,
+						( gpointer ) gconf_value_get_string(( GConfValue * ) iv->data ));
+			}
+
+			pivot_value = g_new0( NactPivotValue, 1 );
+			pivot_value->type = NACT_PIVOT_STRLIST;
+			pivot_value->data = ( gpointer ) nactuti_duplicate_string_list( strings );
+			/*nactuti_free_string_list( strings );*/
+			break;
+
+		default:
+			g_assert_not_reached();
+			break;
+	}
+
+	return( pivot_value );
 }
 
 /*

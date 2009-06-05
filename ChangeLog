@@ -1,5 +1,20 @@
 2009-06-05 Pierre Wieser <pwieser@trychlos.org>
 
+	Create pivot data structure NactPivotValue
+
+	* src/common/nact-gconf.c (value_to_pivot):
+	New function.
+
+	* src/common/nact-iio-provider.c
+	(nact_iio_provider_load_profile_properties):
+	Fix thisfn typo.
+
+	* src/common/nact-pivot.c
+	* src/common/nact-pivot.h (nact_pivot_free_pivot_value):
+	New function.
+
+2009-06-04 Pierre Wieser <pwieser@trychlos.org>
+
 	Create a whole new object model, and defines some communication
 	interfaces.
 
