@@ -40,6 +40,7 @@
  */
 
 #include "nact-object.h"
+#include "nact-pivot.h"
 
 G_BEGIN_DECLS
 
@@ -68,9 +69,12 @@ typedef struct {
 
 GType       nact_action_get_type( void );
 
-NactAction *nact_action_new( gpointer provider, gpointer data );
+NactAction *nact_action_new( const gchar *uuid );
 
-void        nact_action_load( NactAction *action );
+NactAction *nact_action_create( const gchar *key, const gchar *parm, const NactPivotValue *value );
+void        nact_action_update( NactAction *action, const gchar *parm, const NactPivotValue *value );
+
+gboolean    nact_action_is_empty( const NactAction *action );
 
 gchar      *nact_action_get_uuid( const NactAction *action );
 gchar      *nact_action_get_label( const NactAction *action );

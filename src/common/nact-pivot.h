@@ -85,15 +85,17 @@ typedef struct {
 }
 	NactPivotClass;
 
-GType      nact_pivot_get_type( void );
+GType           nact_pivot_get_type( void );
 
-NactPivot *nact_pivot_new( void );
+NactPivot      *nact_pivot_new( void );
 
-GSList    *nact_pivot_get_providers( const NactPivot *pivot, GType type );
+GSList         *nact_pivot_get_providers( const NactPivot *pivot, GType type );
 
-void       nact_pivot_on_action_changed( NactPivot *pivot, const gchar *uuid, const gchar *parm, NactPivotValue *value );
+GObject        *nact_pivot_get_action( NactPivot *pivot, const gchar *uuid );
+void            nact_pivot_on_action_changed( NactPivot *pivot, const gchar *uuid, const gchar *parm, NactPivotValue *value );
 
-void       nact_pivot_free_pivot_value( NactPivotValue *value );
+NactPivotValue *nact_pivot_duplicate_pivot_value( const NactPivotValue *value );
+void            nact_pivot_free_pivot_value( NactPivotValue *value );
 
 G_END_DECLS
 

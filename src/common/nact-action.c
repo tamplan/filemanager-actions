@@ -36,20 +36,14 @@
 
 #include "nact-action.h"
 #include "nact-action-profile.h"
-#include "nact-iio-client.h"
-#include "nact-iio-provider.h"
-#include "nact-io-client.h"
 #include "uti-lists.h"
 
 struct NactActionPrivate {
 	gboolean  dispose_has_run;
 
-	/* io client
-	 */
-	NactIOClient *io;
-
 	/* action properties
 	 */
+	gchar    *uuid;
 	gchar    *version;
 	gchar    *label;
 	gchar    *tooltip;
@@ -65,17 +59,26 @@ struct NactActionClassPrivate {
 };
 
 enum {
-	PROP_VERSION = 1,
+	PROP_UUID = 1,
+	PROP_VERSION,
 	PROP_LABEL,
 	PROP_TOOLTIP,
 	PROP_ICON
 };
 
+/* please note that property names must have the same spelling as the
+ * NactIIOProvider parameters
+ */
+#define PROP_UUID_STR		"uuid"
+#define PROP_VERSION_STR	"version"
+#define PROP_LABEL_STR		"label"
+#define PROP_TOOLTIP_STR	"tooltip"
+#define PROP_ICON_STR		"icon"
+
 static NactObjectClass *st_parent_class = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactActionClass *klass );
-static void     iio_client_iface_init( NactIIOClientInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
@@ -84,7 +87,6 @@ static void     instance_finalize( GObject *object );
 
 static void     free_profiles( NactAction *action );
 
-static GObject *do_get_io_client( const NactIIOClient *client );
 static void     do_dump( const NactObject *action );
 
 /**
@@ -99,10 +101,9 @@ static void     do_dump( const NactObject *action );
  * basis.
  */
 NactAction *
-nact_action_new( gpointer provider, gpointer data )
+nact_action_new( const gchar *uuid )
 {
-	NactAction *action = g_object_new( NACT_ACTION_TYPE, NULL );
-	action->private->io = nact_io_client_new( provider, data );
+	NactAction *action = g_object_new( NACT_ACTION_TYPE, PROP_UUID_STR, uuid, NULL );
 	return( action );
 }
 
@@ -133,17 +134,7 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( NACT_OBJECT_TYPE, "NactAction", &info, 0 );
-
-	static const GInterfaceInfo iio_client_iface_info = {
-		( GInterfaceInitFunc ) iio_client_iface_init,
-		NULL,
-		NULL
-	};
-
-	g_type_add_interface_static( type, NACT_IIO_CLIENT_TYPE, &iio_client_iface_info );
-
-	return( type );
+	return( g_type_register_static( NACT_OBJECT_TYPE, "NactAction", &info, 0 ));
 }
 
 static void
@@ -164,29 +155,36 @@ class_init( NactActionClass *klass )
 
 	/* the id of the object is marked as G_PARAM_CONSTRUCT_ONLY */
 	spec = g_param_spec_string(
-			"version",
-			"version",
+			PROP_UUID_STR,
+			PROP_UUID_STR,
+			"Globally unique identifier (UUID) of the action", "",
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_UUID, spec );
+
+	spec = g_param_spec_string(
+			PROP_VERSION_STR,
+			PROP_VERSION_STR,
 			"Version of the schema", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_VERSION, spec );
 
 	spec = g_param_spec_string(
-			"label",
-			"label",
+			PROP_LABEL_STR,
+			PROP_LABEL_STR,
 			"Context menu displayable label", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_LABEL, spec );
 
 	spec = g_param_spec_string(
-			"tooltip",
-			"tooltip",
+			PROP_TOOLTIP_STR,
+			PROP_TOOLTIP_STR,
 			"Context menu tooltip", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_TOOLTIP, spec );
 
 	spec = g_param_spec_string(
-			"icon",
-			"icon",
+			PROP_ICON_STR,
+			PROP_ICON_STR,
 			"Context menu displayable icon", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ICON, spec );
@@ -194,15 +192,6 @@ class_init( NactActionClass *klass )
 	klass->private = g_new0( NactActionClassPrivate, 1 );
 
 	NACT_OBJECT_CLASS( klass )->dump = do_dump;
-}
-
-static void
-iio_client_iface_init( NactIIOClientInterface *iface )
-{
-	static const gchar *thisfn = "nact_action_iio_client_iface_init";
-	g_debug( "%s: iface=%p", thisfn, iface );
-
-	iface->get_io_client = do_get_io_client;
 }
 
 static void
@@ -225,6 +214,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	NactAction *self = NACT_ACTION( object );
 
 	switch( property_id ){
+		case PROP_UUID:
+			g_value_set_string( value, self->private->uuid );
+			break;
+
 		case PROP_VERSION:
 			g_value_set_string( value, self->private->version );
 			break;
@@ -254,6 +247,11 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	NactAction *self = NACT_ACTION( object );
 
 	switch( property_id ){
+		case PROP_UUID:
+			g_free( self->private->uuid );
+			self->private->uuid = g_value_dup_string( value );
+			break;
+
 		case PROP_VERSION:
 			g_free( self->private->version );
 			self->private->version = g_value_dup_string( value );
@@ -293,14 +291,8 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		/* release the io_client object */
-		g_object_unref( self->private->io );
-
 		/* release the profiles */
 		free_profiles( self );
-
-		/* release the provider data */
-		nact_iio_provider_release_data( NACT_IIO_CLIENT( self ));
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( object );
@@ -316,6 +308,7 @@ instance_finalize( GObject *object )
 	g_assert( NACT_IS_ACTION( object ));
 	NactAction *self = ( NactAction * ) object;
 
+	g_free( self->private->uuid );
 	g_free( self->private->version );
 	g_free( self->private->label );
 	g_free( self->private->tooltip );
@@ -340,31 +333,30 @@ free_profiles( NactAction *action )
 	action->private->profiles = NULL;
 }
 
-static GObject *
-do_get_io_client( const NactIIOClient *client )
+/**
+ * Create a new NactAction object, with the given parm and value.
+ *
+ * Note that the parm may actually be a profile's parm.
+ */
+NactAction *
+nact_action_create( const gchar *key, const gchar *parm, const NactPivotValue *value )
 {
-	g_assert( NACT_IS_IIO_CLIENT( client ));
-	g_assert( NACT_IS_ACTION( client ));
-	NactAction *action = NACT_ACTION( client );
-	return( G_OBJECT( action->private->io ));
+	static const gchar *thisfn = "nact_action_create";
+	g_debug( "%s: key='%s', parm='%s', value=%p", thisfn, key, parm, value );
+
+	NactAction *action = g_object_new( NACT_ACTION_TYPE, NULL );
+	nact_action_update( action, parm, value );
+	return( action );
 }
 
 /**
- * Load an action.
- *
- * @action: a NactAction previously allocated via nact_action_new.
+ * Update the given parameter of an action.
  */
 void
-nact_action_load( NactAction *action )
+nact_action_update( NactAction *action, const gchar *parm, const NactPivotValue *value )
 {
-	g_assert( NACT_IS_ACTION( action ));
-	g_assert( NACT_IS_IIO_CLIENT( action ));
-
-	nact_iio_provider_load_action_properties( NACT_IIO_CLIENT( action ));
-
-	action->private->profiles = nact_iio_provider_load_profiles( NACT_IIO_CLIENT( action ));
-
-	nact_object_dump( NACT_OBJECT( action ));
+	static const gchar *thisfn = "nact_action_update";
+	g_debug( "%s: action=%p, parm='%s', value=%p", thisfn, action, parm, value );
 }
 
 static void
@@ -379,6 +371,7 @@ do_dump( const NactObject *action )
 		st_parent_class->dump( action );
 	}
 
+	g_debug( "%s:    uuid='%s'", thisfn, self->private->uuid );
 	g_debug( "%s: version='%s'", thisfn, self->private->version );
 	g_debug( "%s:   label='%s'", thisfn, self->private->label );
 	g_debug( "%s: tooltip='%s'", thisfn, self->private->tooltip );
@@ -405,7 +398,7 @@ nact_action_get_uuid( const NactAction *action )
 	g_assert( NACT_IS_ACTION( action ));
 
 	gchar *uuid;
-	g_object_get( G_OBJECT( action ), "uuid", &uuid, NULL );
+	g_object_get( G_OBJECT( action ), PROP_UUID_STR, &uuid, NULL );
 
 	return( uuid );
 }
@@ -423,7 +416,7 @@ nact_action_get_label( const NactAction *action )
 	g_assert( NACT_IS_ACTION( action ));
 
 	gchar *label;
-	g_object_get( G_OBJECT( action ), "label", &label, NULL );
+	g_object_get( G_OBJECT( action ), PROP_LABEL_STR, &label, NULL );
 
 	return( label );
 }
@@ -441,7 +434,7 @@ nact_action_get_tooltip( const NactAction *action )
 	g_assert( NACT_IS_ACTION( action ));
 
 	gchar *tooltip;
-	g_object_get( G_OBJECT( action ), "tooltip", &tooltip, NULL );
+	g_object_get( G_OBJECT( action ), PROP_TOOLTIP_STR, &tooltip, NULL );
 
 	return( tooltip );
 }
@@ -460,7 +453,7 @@ nact_action_get_verified_icon_name( const NactAction *action )
 	g_assert( NACT_IS_ACTION( action ));
 
 	gchar *icon_name;
-	g_object_get( G_OBJECT( action ), "icon", &icon_name, NULL );
+	g_object_get( G_OBJECT( action ), PROP_ICON_STR, &icon_name, NULL );
 
 	if( icon_name[0] == '/' ){
 		if( !g_file_test( icon_name, G_FILE_TEST_IS_REGULAR )){

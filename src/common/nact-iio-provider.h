@@ -42,8 +42,7 @@
  * startup time (e.g. on the model of provider interfaces in Nautilus).
  */
 
-#include "nact-object.h"
-#include "nact-iio-client.h"
+#include "glib-object.h"
 
 G_BEGIN_DECLS
 
@@ -62,21 +61,12 @@ typedef struct {
 
 	/* i/o api */
 	GSList * ( *load_actions )( NactIIOProvider *instance );
-	void     ( *load_action_properties )( NactIIOClient *client );
-	GSList * ( *load_profiles )( NactIIOClient *client );
-	void     ( *load_profile_properties )( NactObject *profile );
-	void     ( *release_data )( NactIIOClient *client );
 }
 	NactIIOProviderInterface;
 
 GType   nact_iio_provider_get_type( void );
 
 GSList *nact_iio_provider_load_actions( const GObject *pivot );
-void    nact_iio_provider_load_action_properties( NactIIOClient *client );
-GSList *nact_iio_provider_load_profiles( NactIIOClient *client );
-void    nact_iio_provider_load_profile_properties( NactObject *profile );
-
-void    nact_iio_provider_release_data( NactIIOClient *client );
 
 G_END_DECLS
 

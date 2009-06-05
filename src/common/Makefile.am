@@ -42,12 +42,8 @@ libnact_la_SOURCES = \
 	nact-gconf.c								\
 	nact-gconf.h								\
 	nact-gconf-keys.h							\
-	nact-iio-client.c							\
-	nact-iio-client.h							\
 	nact-iio-provider.c							\
 	nact-iio-provider.h							\
-	nact-io-client.c							\
-	nact-io-client.h							\
 	nact-object.c								\
 	nact-object.h								\
 	nact-pivot.c								\

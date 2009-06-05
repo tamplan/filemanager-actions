@@ -36,9 +36,8 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
+#include "nact-action.h"
 #include "nact-action-profile.h"
-#include "nact-iio-client.h"
-#include "nact-iio-provider.h"
 #include "uti-lists.h"
 
 struct NactActionProfilePrivate {
@@ -50,7 +49,7 @@ struct NactActionProfilePrivate {
 
 	/* profile properties
 	 */
-	gchar    *name;		/* GConf key = id */
+	gchar    *name;
 	gchar    *label;
 	gchar    *path;
 	gchar    *parameters;
@@ -81,6 +80,22 @@ enum {
 	PROP_SCHEMES
 };
 
+/* please note that property names must have the same spelling as the
+ * NactIIOProvider parameters
+ */
+#define PROP_ACTION_STR					"action"
+#define PROP_PROFILE_NAME_STR			"name"
+#define PROP_LABEL_STR					"desc-name"
+#define PROP_PATH_STR					"path"
+#define PROP_PARAMETERS_STR				"parameters"
+#define PROP_ACCEPT_MULTIPLE_STR		"accept-multiple-files"
+#define PROP_BASENAMES_STR				"basenames"
+#define PROP_ISDIR_STR					"isdir"
+#define PROP_ISFILE_STR					"isfile"
+#define PROP_MATCHCASE_STR				"matchcase"
+#define PROP_MIMETYPES_STR				"mimetypes"
+#define PROP_SCHEMES_STR				"schemes"
+
 static NactObjectClass *st_parent_class = NULL;
 
 static GType register_type( void );
@@ -94,6 +109,20 @@ static void  instance_finalize( GObject *object );
 static void  do_dump( const NactObject *profile );
 static void  do_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
 static int   validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
+
+NactActionProfile *
+nact_action_profile_new( const NactObject *action, const gchar *name )
+{
+	g_assert( NACT_IS_ACTION( action ));
+	g_assert( name && strlen( name ));
+
+	NactActionProfile *profile =
+		g_object_new(
+				NACT_ACTION_PROFILE_TYPE,
+				PROP_ACTION_STR, action, PROP_PROFILE_NAME_STR, name, NULL );
+
+	return( profile );
+}
 
 GType
 nact_action_profile_get_type( void )
@@ -141,86 +170,86 @@ class_init( NactActionProfileClass *klass )
 
 	GParamSpec *spec;
 	spec = g_param_spec_pointer(
-			"action",
-			"action",
+			PROP_ACTION_STR,
+			PROP_ACTION_STR,
 			"The NactAction object",
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ACTION, spec );
 
 	/* the id of the object is marked as G_PARAM_CONSTRUCT_ONLY */
 	spec = g_param_spec_string(
-			"name",
-			"name",
+			PROP_PROFILE_NAME_STR,
+			PROP_PROFILE_NAME_STR,
 			"Internal profile's name", "",
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_PROFILE_NAME, spec );
 
 	spec = g_param_spec_string(
-			"desc-name",
-			"desc-name",
+			PROP_LABEL_STR,
+			PROP_LABEL_STR,
 			"Displayable profile's name", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_LABEL, spec );
 
 	spec = g_param_spec_string(
-			"path",
-			"path",
+			PROP_PATH_STR,
+			PROP_PATH_STR,
 			"Command path", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_PATH, spec );
 
 	spec = g_param_spec_string(
-			"parameters",
-			"parameters",
+			PROP_PARAMETERS_STR,
+			PROP_PARAMETERS_STR,
 			"Command parameters", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_PARAMETERS, spec );
 
 	spec = g_param_spec_boolean(
-			"accept-multiple-files",
-			"accept-multiple-files",
+			PROP_ACCEPT_MULTIPLE_STR,
+			PROP_ACCEPT_MULTIPLE_STR,
 			"Whether apply when multiple files may be selected", TRUE,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ACCEPT_MULTIPLE, spec );
 
 	spec = g_param_spec_pointer(
-			"basenames",
-			"basenames",
+			PROP_BASENAMES_STR,
+			PROP_BASENAMES_STR,
 			"Filenames mask",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_BASENAMES, spec );
 
 	spec = g_param_spec_boolean(
-			"isdir",
-			"isdir",
+			PROP_ISDIR_STR,
+			PROP_ISDIR_STR,
 			"Whether apply when a dir is selected", FALSE,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ISDIR, spec );
 
 	spec = g_param_spec_boolean(
-			"isfile",
-			"isfile",
+			PROP_ISFILE_STR,
+			PROP_ISFILE_STR,
 			"Whether apply when a file is selected", TRUE,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ISFILE, spec );
 
 	spec = g_param_spec_boolean(
-			"matchcase",
-			"matchcase",
+			PROP_MATCHCASE_STR,
+			PROP_MATCHCASE_STR,
 			"Whether the filenames are case sensitive", TRUE,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_MATCHCASE, spec );
 
 	spec = g_param_spec_pointer(
-			"mimetypes",
-			"mimetypes",
+			PROP_MIMETYPES_STR,
+			PROP_MIMETYPES_STR,
 			"List of selectable mimetypes",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_MIMETYPES, spec );
 
 	spec = g_param_spec_pointer(
-			"schemes",
-			"schemes",
+			PROP_SCHEMES_STR,
+			PROP_SCHEMES_STR,
 			"list of selectable schemes",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_SCHEMES, spec );
@@ -408,37 +437,14 @@ instance_finalize( GObject *object )
 	g_free( self->private->label );
 	g_free( self->private->path );
 	g_free( self->private->parameters );
+	nactuti_free_string_list( self->private->basenames );
+	nactuti_free_string_list( self->private->mimetypes );
+	nactuti_free_string_list( self->private->schemes );
 
 	/* chain call to parent class */
 	if((( GObjectClass * ) st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
-}
-
-NactActionProfile *
-nact_action_profile_new( const NactObject *action, const gchar *name )
-{
-	g_assert( NACT_IS_OBJECT( action ));
-	g_assert( name && strlen( name ));
-
-	NactActionProfile *profile =
-		g_object_new( NACT_ACTION_PROFILE_TYPE, "action", action, "name", name, NULL );
-	return( profile );
-}
-
-/**
- * Load an action.
- *
- * @action: a NactAction previously allocated via nact_action_new.
- */
-void
-nact_action_profile_load( NactObject *object )
-{
-	g_assert( NACT_IS_ACTION_PROFILE( object ));
-
-	/*NactActionProfile *profile = NACT_ACTION_PROFILE( object );*/
-
-	nact_iio_provider_load_profile_properties( object );
 }
 
 static void
@@ -492,7 +498,7 @@ nact_action_profile_get_action( const NactActionProfile *profile )
 	g_assert( NACT_IS_ACTION_PROFILE( profile ));
 
 	gpointer action;
-	g_object_get( G_OBJECT( profile ), "action", &action, NULL );
+	g_object_get( G_OBJECT( profile ), PROP_ACTION_STR, &action, NULL );
 
 	return( NACT_OBJECT( action ));
 }
@@ -505,14 +511,14 @@ nact_action_profile_get_action( const NactActionProfile *profile )
  * The profile name is also the GConf-key of the profile.
  */
 gchar *
-nact_action_profile_get_id( const NactActionProfile *profile )
+nact_action_profile_get_name( const NactActionProfile *profile )
 {
 	g_assert( NACT_IS_ACTION_PROFILE( profile ));
 
-	gchar *id;
-	g_object_get( G_OBJECT( profile ), "name", &id, NULL );
+	gchar *name;
+	g_object_get( G_OBJECT( profile ), PROP_PROFILE_NAME_STR, &name, NULL );
 
-	return( id );
+	return( name );
 }
 
 /**
@@ -526,7 +532,7 @@ nact_action_profile_get_path( const NactActionProfile *profile )
 	g_assert( NACT_IS_ACTION_PROFILE( profile ));
 
 	gchar *path;
-	g_object_get( G_OBJECT( profile ), "path", &path, NULL );
+	g_object_get( G_OBJECT( profile ), PROP_PATH_STR, &path, NULL );
 
 	return( path );
 }
@@ -542,7 +548,7 @@ nact_action_profile_get_parameters( const NactActionProfile *profile )
 	g_assert( NACT_IS_ACTION_PROFILE( profile ));
 
 	gchar *parameters;
-	g_object_get( G_OBJECT( profile ), "parameters", &parameters, NULL );
+	g_object_get( G_OBJECT( profile ), PROP_PARAMETERS_STR, &parameters, NULL );
 
 	return( parameters );
 }

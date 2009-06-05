@@ -1,3 +1,26 @@
+2009-06-06 Pierre Wieser <pwieser@trychlos.org>
+
+	Remove NactIIOClient interface.
+
+	* src/common/nact-iio-client.c:
+	* src/common/nact-iio-client.h:
+	* src/common/nact-io-client.c:
+	* src/common/nact-io-client.c:
+	Remove files.
+
+	* src/common/Makefile.am:
+	* src/common/nact-action-profile.c:
+	* src/common/nact-action-profile.h:
+	* src/common/nact-action.c:
+	* src/common/nact-action.h:
+	* src/common/nact-gconf.c:
+	* src/common/nact-gconf.h:
+	* src/common/nact-iio-provider.c:
+	* src/common/nact-iio-provider.h:
+	* src/common/nact-pivot.c:
+	* src/common/nact-pivot.h:
+	Updated accordingly.
+
 2009-06-05 Pierre Wieser <pwieser@trychlos.org>
 
 	Create pivot data structure NactPivotValue
