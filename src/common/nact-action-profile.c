@@ -38,7 +38,7 @@
 
 #include "nact-action.h"
 #include "nact-action-profile.h"
-#include "uti-lists.h"
+#include "nact-uti-lists.h"
 
 struct NactActionProfilePrivate {
 	gboolean  dispose_has_run;

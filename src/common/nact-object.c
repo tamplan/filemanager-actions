@@ -33,7 +33,7 @@
 #endif
 
 #include "nact-object.h"
-#include "uti-lists.h"
+#include "nact-uti-lists.h"
 
 struct NactObjectPrivate {
 	gboolean dispose_has_run;

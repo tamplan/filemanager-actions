@@ -42,7 +42,7 @@
 #include "nact-gconf.h"
 #include "nact-gconf-keys.h"
 #include "nact-iio-provider.h"
-#include "uti-lists.h"
+#include "nact-uti-lists.h"
 
 struct NactGConfPrivate {
 	gboolean     dispose_has_run;

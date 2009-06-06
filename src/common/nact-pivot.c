@@ -36,7 +36,7 @@
 #include "nact-gconf.h"
 #include "nact-pivot.h"
 #include "nact-iio-provider.h"
-#include "uti-lists.h"
+#include "nact-uti-lists.h"
 
 /* action_changed_cb send events which are stacked in a static GSList
  * we so hope to optimize updating the global list of actions

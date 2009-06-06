@@ -32,7 +32,7 @@ bin_PROGRAMS = \
 	$(NULL)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)							\
+	-I $(top_srcdir)/src						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	$(NAUTILUS_ACTIONS_UTILS_CFLAGS)			\
 	$(NULL)

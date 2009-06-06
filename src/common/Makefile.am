@@ -48,6 +48,8 @@ libnact_la_SOURCES = \
 	nact-object.h								\
 	nact-pivot.c								\
 	nact-pivot.h								\
+	nact-uti-lists.c							\
+	nact-uti-lists.h							\
 	nautilus-actions-config.c					\
 	nautilus-actions-config.h					\
 	nautilus-actions-config-gconf.c				\
@@ -61,8 +63,6 @@ libnact_la_SOURCES = \
 	nautilus-actions-config-schema-writer.h		\
 	nautilus-actions-config-schema-reader.c		\
 	nautilus-actions-config-schema-reader.h		\
-	uti-lists.c									\
-	uti-lists.h									\
 	$(NULL)
 
 libnact_la_LIBADD = -lxml2 -luuid

@@ -1,6 +1,8 @@
 2009-06-06 Pierre Wieser <pwieser@trychlos.org>
 
 	Remove NactIIOClient interface.
+	Fix make distcheck.
+	Fix Glade file adressing.
 
 	* src/common/nact-iio-client.c:
 	* src/common/nact-iio-client.h:
@@ -19,7 +21,13 @@
 	* src/common/nact-iio-provider.h:
 	* src/common/nact-pivot.c:
 	* src/common/nact-pivot.h:
+	* src/nact/Makefile.am:
+	* src/utils/Makefile.am:
 	Updated accordingly.
+
+	* src/common/nact-uti-lists.c:
+	* src/common/nact-uti-lists.h:
+	New files after renaming previous uti-lists.{c,h}.
 
 2009-06-05 Pierre Wieser <pwieser@trychlos.org>
 
