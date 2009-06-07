@@ -1,3 +1,19 @@
+2009-06-07 Pierre Wieser <pwieser@trychlos.org>
+
+	Install the notification system.
+
+	* src/common/nautilus-actions.c:
+	Define new message "notify_nautilus_of_action_changed".
+
+	* src/common/nact-pivot.c:
+	Define new message "notify_pivot_of_action_changed".
+
+	* src/common/nact-pivot.h:
+	Rename and update nactPivotValue structure to NactPivotNotify.
+
+	* src/common/gconf.c:
+	Send message to NactPivot on action changed.
+
 2009-06-06 Pierre Wieser <pwieser@trychlos.org>
 
 	Remove NactIIOClient interface.

@@ -38,6 +38,13 @@
 #include "nact-action-profile.h"
 #include "nact-uti-lists.h"
 
+/* private class data
+ */
+struct NactActionClassPrivate {
+};
+
+/* private instance data
+ */
 struct NactActionPrivate {
 	gboolean  dispose_has_run;
 
@@ -55,9 +62,10 @@ struct NactActionPrivate {
 	GSList   *profiles;
 };
 
-struct NactActionClassPrivate {
-};
-
+/* private instance properties
+ * please note that property names must have the same spelling as the
+ * NactIIOProvider parameters
+ */
 enum {
 	PROP_UUID = 1,
 	PROP_VERSION,
@@ -66,9 +74,6 @@ enum {
 	PROP_ICON
 };
 
-/* please note that property names must have the same spelling as the
- * NactIIOProvider parameters
- */
 #define PROP_UUID_STR		"uuid"
 #define PROP_VERSION_STR	"version"
 #define PROP_LABEL_STR		"label"
@@ -338,7 +343,7 @@ free_profiles( NactAction *action )
  *
  * Note that the parm may actually be a profile's parm.
  */
-NactAction *
+/*NactAction *
 nact_action_create( const gchar *key, const gchar *parm, const NactPivotValue *value )
 {
 	static const gchar *thisfn = "nact_action_create";
@@ -347,17 +352,17 @@ nact_action_create( const gchar *key, const gchar *parm, const NactPivotValue *v
 	NactAction *action = g_object_new( NACT_ACTION_TYPE, NULL );
 	nact_action_update( action, parm, value );
 	return( action );
-}
+}*/
 
 /**
  * Update the given parameter of an action.
  */
-void
+/*void
 nact_action_update( NactAction *action, const gchar *parm, const NactPivotValue *value )
 {
 	static const gchar *thisfn = "nact_action_update";
 	g_debug( "%s: action=%p, parm='%s', value=%p", thisfn, action, parm, value );
-}
+}*/
 
 static void
 do_dump( const NactObject *action )
@@ -383,6 +388,38 @@ do_dump( const NactObject *action )
 	for( item = self->private->profiles ;	item != NULL ; item = item->next ){
 		nact_object_dump(( const NactObject * ) item->data );
 	}
+}
+
+/**
+ * Check if the given action is empty, i.e. all its attributes are empty.
+ */
+gboolean
+nact_action_is_empty( const NactAction *action )
+{
+	g_assert( NACT_IS_ACTION( action ));
+
+	if( action->private->uuid && strlen( action->private->uuid )){
+		return( FALSE );
+	}
+	if( action->private->version && strlen( action->private->version )){
+		return( FALSE );
+	}
+	if( action->private->label && strlen( action->private->label )){
+		return( FALSE );
+	}
+	if( action->private->tooltip && strlen( action->private->tooltip )){
+		return( FALSE );
+	}
+	if( action->private->icon && strlen( action->private->icon )){
+		return( FALSE );
+	}
+	GSList *ip;
+	for( ip = action->private->profiles ; ip ; ip = ip->next ){
+		if( !nact_action_profile_is_empty( NACT_ACTION_PROFILE( ip->data ))){
+			return( FALSE );
+		}
+	}
+	return( TRUE );
 }
 
 /**

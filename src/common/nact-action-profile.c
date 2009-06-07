@@ -40,6 +40,13 @@
 #include "nact-action-profile.h"
 #include "nact-uti-lists.h"
 
+/* private class data
+ */
+struct NactActionProfileClassPrivate {
+};
+
+/* private instance data
+ */
 struct NactActionProfilePrivate {
 	gboolean  dispose_has_run;
 
@@ -62,9 +69,10 @@ struct NactActionProfilePrivate {
 	GSList   *schemes;
 };
 
-struct NactActionProfileClassPrivate {
-};
-
+/* private instance properties
+ * please note that property names must have the same spelling as the
+ * NactIIOProvider parameters
+ */
 enum {
 	PROP_ACTION = 1,
 	PROP_PROFILE_NAME,
@@ -80,9 +88,6 @@ enum {
 	PROP_SCHEMES
 };
 
-/* please note that property names must have the same spelling as the
- * NactIIOProvider parameters
- */
 #define PROP_ACTION_STR					"action"
 #define PROP_PROFILE_NAME_STR			"name"
 #define PROP_LABEL_STR					"desc-name"
@@ -487,6 +492,39 @@ do_dump_list( const gchar *thisfn, const gchar *label, GSList *list )
 	g_string_append_printf( str, "]" );
 	g_debug( "%s:            %s=%s", thisfn, label, str->str );
 	g_string_free( str, TRUE );
+}
+
+/*
+ * Check if the given profile is empty, i.e. all its attributes are
+ * empty.
+ */
+gboolean
+nact_action_profile_is_empty( const NactActionProfile *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	if( profile->private->name && strlen( profile->private->name )){
+		return( FALSE );
+	}
+	if( profile->private->label && strlen( profile->private->label )){
+		return( FALSE );
+	}
+	if( profile->private->path && strlen( profile->private->path )){
+		return( FALSE );
+	}
+	if( profile->private->parameters && strlen( profile->private->parameters )){
+		return( FALSE );
+	}
+	if( !nactuti_is_empty_string_list( profile->private->basenames )){
+		return( FALSE );
+	}
+	if( !nactuti_is_empty_string_list( profile->private->mimetypes )){
+		return( FALSE );
+	}
+	if( !nactuti_is_empty_string_list( profile->private->schemes )){
+		return( FALSE );
+	}
+	return( TRUE );
 }
 
 /**

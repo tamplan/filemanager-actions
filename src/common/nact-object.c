@@ -35,11 +35,15 @@
 #include "nact-object.h"
 #include "nact-uti-lists.h"
 
-struct NactObjectPrivate {
-	gboolean dispose_has_run;
+/* private class data
+ */
+struct NactObjectClassPrivate {
 };
 
-struct NactObjectClassPrivate {
+/* private instance data
+ */
+struct NactObjectPrivate {
+	gboolean dispose_has_run;
 };
 
 static GObjectClass *st_parent_class = NULL;

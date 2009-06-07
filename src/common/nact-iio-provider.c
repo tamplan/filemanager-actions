@@ -35,6 +35,8 @@
 #include "nact-iio-provider.h"
 #include "nact-pivot.h"
 
+/* private interface data
+ */
 struct NactIIOProviderInterfacePrivate {
 };
 

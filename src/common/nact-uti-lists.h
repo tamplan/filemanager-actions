@@ -41,6 +41,7 @@ G_BEGIN_DECLS
 
 void     nactuti_free_object_list( GSList *list );
 
+gboolean nactuti_is_empty_string_list( GSList *list );
 GSList  *nactuti_duplicate_string_list( GSList *list );
 void     nactuti_free_string_list( GSList *list );
 

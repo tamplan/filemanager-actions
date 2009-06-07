@@ -71,8 +71,8 @@ GType       nact_action_get_type( void );
 
 NactAction *nact_action_new( const gchar *uuid );
 
-NactAction *nact_action_create( const gchar *key, const gchar *parm, const NactPivotValue *value );
-void        nact_action_update( NactAction *action, const gchar *parm, const NactPivotValue *value );
+/*NactAction *nact_action_create( const gchar *key, const gchar *parm, const NactPivotValue *value );
+void        nact_action_update( NactAction *action, const gchar *parm, const NactPivotValue *value );*/
 
 gboolean    nact_action_is_empty( const NactAction *action );
 

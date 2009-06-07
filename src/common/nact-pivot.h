@@ -44,24 +44,6 @@
 
 G_BEGIN_DECLS
 
-/*
- * We would want have a sort of GConfValue, but which is not named with
- * GConf, in order to propose this same structure to other storage
- * subsystems.
- * We so define this, with only the data types we need.
- */
-enum {
-	NACT_PIVOT_STR = 1,
-	NACT_PIVOT_BOOL,
-	NACT_PIVOT_STRLIST
-};
-
-typedef struct {
-	guint    type;
-	gpointer data;
-}
-	NactPivotValue;
-
 #define NACT_PIVOT_TYPE					( nact_pivot_get_type())
 #define NACT_PIVOT( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_PIVOT_TYPE, NactPivot ))
 #define NACT_PIVOT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_PIVOT_TYPE, NactPivotClass ))
@@ -85,17 +67,33 @@ typedef struct {
 }
 	NactPivotClass;
 
-GType           nact_pivot_get_type( void );
+GType      nact_pivot_get_type( void );
 
-NactPivot      *nact_pivot_new( void );
+NactPivot *nact_pivot_new( const GObject *notified );
 
-GSList         *nact_pivot_get_providers( const NactPivot *pivot, GType type );
+GSList    *nact_pivot_get_providers( const NactPivot *pivot, GType type );
 
-GObject        *nact_pivot_get_action( NactPivot *pivot, const gchar *uuid );
-void            nact_pivot_on_action_changed( NactPivot *pivot, const gchar *uuid, const gchar *parm, NactPivotValue *value );
+GObject   *nact_pivot_get_action( NactPivot *pivot, const gchar *uuid );
 
-NactPivotValue *nact_pivot_duplicate_pivot_value( const NactPivotValue *value );
-void            nact_pivot_free_pivot_value( NactPivotValue *value );
+/*void       nact_pivot_on_action_changed( NactPivot *pivot, const gchar *uuid, const gchar *parm, NactPivotValue *value );*/
+
+/* data passed from the storage subsystem when an action is changed
+ */
+enum {
+	NACT_PIVOT_STR = 1,
+	NACT_PIVOT_BOOL,
+	NACT_PIVOT_STRLIST
+};
+
+typedef struct {
+	gchar   *uuid;
+	gchar   *parm;
+	guint    type;
+	gpointer data;
+}
+	NactPivotNotify;
+
+void       nact_pivot_free_notify( NactPivotNotify *data );
 
 G_END_DECLS
 

@@ -32,24 +32,27 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include "nact-action.h"
 #include "nact-gconf.h"
 #include "nact-pivot.h"
 #include "nact-iio-provider.h"
 #include "nact-uti-lists.h"
 
-/* action_changed_cb send events which are stacked in a static GSList
- * we so hope to optimize updating the global list of actions
+/* private class data
  */
-typedef struct {
-	gchar          *uuid;
-	gchar          *parm;
-	NactPivotValue *value;
-}
-	stackItem;
+struct NactPivotClassPrivate {
+};
 
+/* private instance data
+ */
 struct NactPivotPrivate {
 	gboolean  dispose_has_run;
+
+	/* instance to be notified of an action modification
+	 */
+	gpointer  notified;
 
 	/* list of interface providers
 	 * needs to be in the instance rather than in the class to be able
@@ -63,35 +66,48 @@ struct NactPivotPrivate {
 	GSList   *actions;
 };
 
-struct NactPivotClassPrivate {
+/* private instance properties
+ */
+enum {
+	PROP_NOTIFIED = 1
 };
 
+#define PROP_NOTIFIED_STR				"to-be-notified"
+
+/* signal definition
+ */
+enum {
+	ACTION_CHANGED,
+	LAST_SIGNAL
+};
+
+#define SIGNAL_ACTION_CHANGED_NAME		"notify_pivot_of_action_changed"
+
 static GObjectClass *st_parent_class = NULL;
-static GSList       *st_stack_events = NULL;
+static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 static GTimeVal      st_last_event;
 static guint         st_event_source_id = 0;
+static gint          st_timeout_usec = 500000;
 
 static GType       register_type( void );
 static void        class_init( NactPivotClass *klass );
 static void        instance_init( GTypeInstance *instance, gpointer klass );
 static GSList     *register_interface_providers( const NactPivot *pivot );
+static void        instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void        instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void        instance_dispose( GObject *object );
 static void        instance_finalize( GObject *object );
 
-static void        check_for_remove_action( NactPivot *pivot, NactAction *action );
-static gint        cmp_events( gconstpointer a, gconstpointer b );
-static void        free_stack_events( GSList *stack );
-static gboolean    on_action_changed_timeout( gpointer user_data );
-static stackItem  *stack_item_new( const gchar *uuid, const gchar *parm, const NactPivotValue *value );
-static void        stack_item_free( stackItem *item );
-static gulong      time_val_diff( const GTimeVal *recent, const GTimeVal *old );
-static void        update_actions( NactPivot *pivot, GSList *stack );
+static void        action_changed_handler( NactPivot *pivot, gpointer user_data );
+static void        update_action( GSList *actions, NactPivotNotify *notify );
 static NactAction *get_action( GSList *list, const gchar *uuid );
+static gboolean    on_action_changed_timeout( gpointer user_data );
+static gulong      time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 NactPivot *
-nact_pivot_new( void )
+nact_pivot_new( const GObject *target )
 {
-	return( g_object_new( NACT_PIVOT_TYPE, NULL ));
+	return( g_object_new( NACT_PIVOT_TYPE, PROP_NOTIFIED_STR, target, NULL ));
 }
 
 GType
@@ -135,8 +151,33 @@ class_init( NactPivotClass *klass )
 	GObjectClass *object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
+	object_class->set_property = instance_set_property;
+	object_class->get_property = instance_get_property;
+
+	GParamSpec *spec;
+	spec = g_param_spec_pointer(
+			PROP_NOTIFIED_STR,
+			PROP_NOTIFIED_STR,
+			"A pointer to a GObject which will receive action_changed notifications",
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_NOTIFIED, spec );
 
 	klass->private = g_new0( NactPivotClassPrivate, 1 );
+
+	/* see nautilus_actions_class_init for why we use this function
+	 */
+	st_signals[ ACTION_CHANGED ] = g_signal_new_class_handler(
+				SIGNAL_ACTION_CHANGED_NAME,
+				G_TYPE_FROM_CLASS( klass ),
+				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+				( GCallback ) action_changed_handler,
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER
+	);
 }
 
 static void
@@ -152,6 +193,40 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->dispose_has_run = FALSE;
 	self->private->providers = register_interface_providers( self );
 	self->private->actions = nact_iio_provider_load_actions( G_OBJECT( self ));
+}
+
+static void
+instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
+{
+	g_assert( NACT_IS_PIVOT( object ));
+	NactPivot *self = NACT_PIVOT( object );
+
+	switch( property_id ){
+		case PROP_NOTIFIED:
+			g_value_set_pointer( value, self->private->notified );
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+			break;
+	}
+}
+
+static void
+instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
+{
+	g_assert( NACT_IS_PIVOT( object ));
+	NactPivot *self = NACT_PIVOT( object );
+
+	switch( property_id ){
+		case PROP_NOTIFIED:
+			self->private->notified = g_value_get_pointer( value );
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+			break;
+	}
 }
 
 static GSList *
@@ -218,6 +293,13 @@ instance_finalize( GObject *object )
 
 /**
  * Returns the list of providers of the required interface.
+ *
+ * This function is called by interfaces API in order to find the
+ * list of providers registered for this given interface.
+ *
+ * @pivot: this instance.
+ *
+ * @type: the type of searched interface.
  */
 GSList *
 nact_pivot_get_providers( const NactPivot *pivot, GType type )
@@ -238,238 +320,45 @@ nact_pivot_get_providers( const NactPivot *pivot, GType type )
 	return( list );
 }
 
-/**
- * This function should be called when a storage subsystem detects that
- * a stored action has changed.
- * As a Nautilus extension, NactPivot will take care of updating menu
- * characteristics accordingly.
- *
- * @pivot: the NactPivot object.
- *
- * @uuid: identifiant of the action.
- *
- * @parm: the parameter path (e.g. "profile-main/path")
- *
- * @value: the new value as a NactPivotValue structure ; do not free it
- * here as it is the responsability of the allocater subsystem.
- *
- * Depending of the sort of update which occurs, we may receive many
- * notifications for the same action. We so stack the notifications and
- * start a one sec. timeout before updating the whole stack.
- */
-void
-nact_pivot_on_action_changed( NactPivot *pivot, const gchar *uuid, const gchar *parm, NactPivotValue *value )
+static void
+action_changed_handler( NactPivot *self, gpointer user_data  )
 {
-	static const gchar *thisfn = "nact_pivot_on_action_changed";
-	g_debug( "%s: pivot=%p, uuid='%s', parm='%s', value=%p", thisfn, pivot, uuid, parm, value );
+	/*static const gchar *thisfn = "nact_pivot_action_changed_handler";
+	g_debug( "%s: self=%p, data=%p", thisfn, self, user_data );*/
 
-	stackItem *item = ( stackItem * ) stack_item_new( uuid, parm, value );
-	st_stack_events = g_slist_prepend( st_stack_events, item );
+	g_assert( NACT_IS_PIVOT( self ));
+	g_assert( user_data );
+	if( self->private->dispose_has_run ){
+		return;
+	}
 
+	/* apply the change to the list of actions */
+	update_action( self->private->actions, ( NactPivotNotify * ) user_data );
+
+	/* set a timeout to notify nautilus at the end of the serie */
 	g_get_current_time( &st_last_event );
-
 	if( !st_event_source_id ){
-		st_event_source_id = g_timeout_add_seconds( 1, ( GSourceFunc ) on_action_changed_timeout, pivot );
-	}
-}
-
-/**
- * Duplicate a NactPivotValue structure and its content.
- */
-NactPivotValue *
-nact_pivot_duplicate_pivot_value( const NactPivotValue *value )
-{
-	if( !value ){
-		return(( NactPivotValue * ) NULL );
-	}
-
-	NactPivotValue *newvalue = g_new0( NactPivotValue, 1 );
-
-	switch( value->type ){
-
-		case NACT_PIVOT_STR:
-			newvalue->data = g_strdup(( gchar * ) value->data );
-			break;
-
-		case NACT_PIVOT_BOOL:
-			newvalue->data = value->data;
-			break;
-
-		case NACT_PIVOT_STRLIST:
-			newvalue->data = nactuti_duplicate_string_list(( GSList * ) value->data );
-			break;
-
-		default:
-			g_assert_not_reached();
-			break;
-	}
-
-	return( newvalue );
-}
-
-/**
- * Free a NactPivotValue structure and its content.
- */
-void
-nact_pivot_free_pivot_value( NactPivotValue *value )
-{
-	if( value ){
-		switch( value->type ){
-
-			case NACT_PIVOT_STR:
-				g_free(( gchar * ) value->data );
-				break;
-
-			case NACT_PIVOT_BOOL:
-				break;
-
-			case NACT_PIVOT_STRLIST:
-				nactuti_free_string_list(( GSList * ) value->data );
-				break;
-
-			default:
-				g_assert_not_reached();
-				break;
-		}
-		g_free( value );
+		st_event_source_id = g_timeout_add_seconds( 1, ( GSourceFunc ) on_action_changed_timeout, self );
 	}
 }
 
 static void
-check_for_remove_action( NactPivot *pivot, NactAction *action )
+update_action( GSList *actions, NactPivotNotify *notify )
 {
-	static const gchar *thisfn ="check_for_remove_action";
+	g_assert( notify );
+	if( notify->uuid && strlen( notify->uuid )){
 
-	g_assert( NACT_IS_PIVOT( pivot ));
-	g_assert( NACT_IS_ACTION( action ));
+		NactAction *action = get_action( actions, notify->uuid );
+		g_debug( "nact_pivot_update_action: uuid='%s', parm='%s', action=%p", notify->uuid, notify->parm, action );
+		if( !action ){
+			/* this is a creation */
 
-	if( nact_action_is_empty( action )){
-		g_debug( "%s: removing action %p", thisfn, action );
-		pivot->private->actions = g_slist_remove( pivot->private->actions, action );
-	}
-}
-
-/*
- * comparaison function between two stack items
- */
-static gint
-cmp_events( gconstpointer a, gconstpointer b )
-{
-	stackItem *sa = ( stackItem * ) a;
-	stackItem *sb = ( stackItem * ) b;
-	return( g_strcmp0( sa->uuid, sb->uuid ));
-}
-
-static void
-free_stack_events( GSList *stack )
-{
-	GSList *is;
-	for( is = stack ; is ; is = is->next ){
-		stack_item_free(( stackItem * ) is->data );
-	}
-	g_slist_free( stack );
-}
-
-/*
- * this timer is set when we receive the first event of a serie
- * we continue to loop until last event is at least one half of a
- * second old
- *
- * there is no race condition here as we are not multithreaded
- */
-static gboolean
-on_action_changed_timeout( gpointer user_data )
-{
-	static const gchar *thisfn = "on_action_changed_timeout";
-	GTimeVal now;
-
-	g_assert( NACT_IS_PIVOT( user_data ));
-
-	g_get_current_time( &now );
-	gulong diff = time_val_diff( &now, &st_last_event );
-	if( diff < 500000 ){
-		return( TRUE );
-	}
-
-	g_debug( "%s: treating stack with %d events", thisfn, g_slist_length( st_stack_events ));
-	update_actions( NACT_PIVOT( user_data ), st_stack_events );
-
-	st_event_source_id = 0;
-	free_stack_events( st_stack_events );
-	st_stack_events = NULL;
-	return( FALSE );
-}
-
-static stackItem *
-stack_item_new( const gchar *uuid, const gchar *parm, const NactPivotValue *value )
-{
-	stackItem *item = g_new0( stackItem, 1 );
-	item->uuid = g_strdup( uuid );
-	item->parm = g_strdup( parm );
-	item->value = nact_pivot_duplicate_pivot_value( value );
-	return( item );
-}
-
-static void
-stack_item_free( stackItem *item )
-{
-	g_free( item->uuid );
-	g_free( item->parm );
-	nact_pivot_free_pivot_value( item->value );
-	g_free( item );
-}
-
-/*
- * returns the difference in microseconds.
- */
-static gulong
-time_val_diff( const GTimeVal *recent, const GTimeVal *old )
-{
-	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
-	microsec += recent->tv_usec  - old->tv_usec;
-	return( microsec );
-}
-
-/*
- * iterate through the list of events, sorted by action id
- * on new action, add it to the list, creating the object
- * when all events have been treated, check to see if the action was
- * actually removed (all fields, including key, are blank or null)
- *
- * remove = key + parm=null and value=null
- */
-static void
-update_actions( NactPivot *pivot, GSList *stack )
-{
-	GSList *it;
-	NactAction *action = NULL;
-	gchar *previd = NULL;
-
-	GSList *sorted = g_slist_sort( stack, cmp_events );
-
-	for( it = sorted ; it ; it = it->next ){
-		stackItem *item = ( stackItem * ) it->data;
-
-		if( action && g_strcmp0( previd, item->uuid )){
-			g_assert( action && NACT_IS_ACTION( action ));
-			check_for_remove_action( pivot, action );
-			g_free( previd );
-		}
-		previd = g_strdup( item->uuid );
-		action = get_action( pivot->private->actions, item->uuid );
-
-		if( action ){
-			nact_action_update( action, item->parm, item->value );
 		} else {
-			action = nact_action_create( item->uuid, item->parm, item->value );
-			pivot->private->actions = g_slist_prepend( pivot->private->actions, action );
+			/* this is an update or a deletion */
 		}
 	}
-	if( action ){
-		g_assert( action && NACT_IS_ACTION( action ));
-		check_for_remove_action( pivot, action );
-		g_free( previd );
-	}
+
+	nact_pivot_free_notify( notify );
 }
 
 static NactAction *
@@ -496,4 +385,79 @@ nact_pivot_get_action( NactPivot *pivot, const gchar *uuid )
 {
 	g_assert( NACT_IS_PIVOT( pivot ));
 	return( G_OBJECT( get_action( pivot->private->actions, uuid )));
+}
+
+/*
+ * this timer is set when we receive the first event of a serie
+ * we continue to loop until last event is at least one half of a
+ * second old
+ *
+ * there is no race condition here as we are not multithreaded
+ * or .. is there ?
+ */
+static gboolean
+on_action_changed_timeout( gpointer user_data )
+{
+	/*static const gchar *thisfn = "nact_pivot_on_action_changed_timeout";
+	g_debug( "%s: pivot=%p", thisfn, user_data );*/
+
+	GTimeVal now;
+
+	g_assert( NACT_IS_PIVOT( user_data ));
+	NactPivot *pivot = NACT_PIVOT( user_data );
+
+	g_get_current_time( &now );
+	gulong diff = time_val_diff( &now, &st_last_event );
+	if( diff < st_timeout_usec ){
+		return( TRUE );
+	}
+
+	g_signal_emit_by_name( G_OBJECT( pivot->private->notified ), "notify_nautilus_of_action_changed" );
+	st_event_source_id = 0;
+
+	return( FALSE );
+}
+
+/*
+ * returns the difference in microseconds.
+ */
+static gulong
+time_val_diff( const GTimeVal *recent, const GTimeVal *old )
+{
+	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
+	microsec += recent->tv_usec  - old->tv_usec;
+	return( microsec );
+}
+
+/**
+ * Free a NactPivotValue structure and its content.
+ */
+void
+nact_pivot_free_notify( NactPivotNotify *npn )
+{
+	if( npn ){
+		if( npn->type ){
+			switch( npn->type ){
+
+				case NACT_PIVOT_STR:
+					g_free(( gchar * ) npn->data );
+					break;
+
+				case NACT_PIVOT_BOOL:
+					break;
+
+				case NACT_PIVOT_STRLIST:
+					nactuti_free_string_list(( GSList * ) npn->data );
+					break;
+
+				default:
+					g_debug( "nact_pivot_free_notify: uuid=%s, parm=%s, type=%d", npn->uuid, npn->parm, npn->type );
+					g_assert_not_reached();
+					break;
+			}
+		}
+		g_free( npn->uuid );
+		g_free( npn->parm );
+		g_free( npn );
+	}
 }
