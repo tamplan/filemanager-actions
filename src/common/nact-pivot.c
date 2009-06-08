@@ -451,12 +451,14 @@ nact_pivot_free_notify( NactPivotNotify *npn )
 					break;
 
 				default:
-					g_debug( "nact_pivot_free_notify: uuid=%s, parm=%s, type=%d", npn->uuid, npn->parm, npn->type );
+					g_debug( "nact_pivot_free_notify: uuid=%s, profile=%s, parm=%s, type=%d",
+							npn->uuid, npn->profile, npn->parm, npn->type );
 					g_assert_not_reached();
 					break;
 			}
 		}
 		g_free( npn->uuid );
+		g_free( npn->profile );
 		g_free( npn->parm );
 		g_free( npn );
 	}

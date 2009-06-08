@@ -1,5 +1,12 @@
 2009-06-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/nact-pivot.c:
+	* src/common/nact-pivot.h:
+	* src/common/nact-gconf.c:
+	Update the NactPivotNotify structure to handle profile name.
+
+2009-06-07 Pierre Wieser <pwieser@trychlos.org>
+
 	Install the notification system.
 
 	* src/common/nautilus-actions.c:

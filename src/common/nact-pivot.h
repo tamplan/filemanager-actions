@@ -87,6 +87,7 @@ enum {
 
 typedef struct {
 	gchar   *uuid;
+	gchar   *profile;
 	gchar   *parm;
 	guint    type;
 	gpointer data;

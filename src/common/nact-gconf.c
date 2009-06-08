@@ -468,16 +468,12 @@ set_item_properties( NactObject *object, GSList *properties )
 		NactPivotNotify *npn = entry_to_notify( entry );
 		if( npn ){
 
-			gchar **split = g_strsplit( npn->parm, "/", -1 );
-			gchar *parm = g_strdup( split[ g_strv_length( split ) -1 ] );
-			g_strfreev( split );
-
 			switch( npn->type ){
 
 				case NACT_PIVOT_STR:
 				case NACT_PIVOT_BOOL:
 				case NACT_PIVOT_STRLIST:
-					g_object_set( G_OBJECT( object ), parm, npn->data, NULL );
+					g_object_set( G_OBJECT( object ), npn->parm, npn->data, NULL );
 					break;
 
 				default:
@@ -485,13 +481,24 @@ set_item_properties( NactObject *object, GSList *properties )
 					break;
 			}
 			nact_pivot_free_notify( npn );
-			g_free( parm );
 		}
 	}
 }
 
 /*
  * convert a GConfEntry to a structure suitable to notify NactPivot
+ *
+ * when created or modified, the entry can be of the forms :
+ *  key/parm
+ *  key/profile/parm with a not null value
+ * but when removing an entry, it will be of the form :
+ *  key
+ *  key/parm
+ *  key/profile
+ *  key/profile/parm with a null value
+ * I don't know any way to choose between key/parm and key/profile
+ * as the entry no more exists in GConf and thus cannot be tested
+ * -> we will set this as key/parm, letting pivot try to interpret it
  */
 static NactPivotNotify *
 entry_to_notify( const GConfEntry *entry )
@@ -507,11 +514,14 @@ entry_to_notify( const GConfEntry *entry )
 	NactPivotNotify *npn = g_new0( NactPivotNotify, 1 );
 
 	const gchar *subpath = path + strlen( NACT_GCONF_CONFIG_PATH ) + 1;
-	gchar **split = g_strsplit( subpath, "/", 2 );
+	gchar **split = g_strsplit( subpath, "/", -1 );
 	/*g_debug( "%s: [0]=%s, [1]=%s", thisfn, split[0], split[1] );*/
 	npn->uuid = g_strdup( split[0] );
-	if( split[1] ){
+	if( g_strv_length( split ) == 2 ){
 		npn->parm = g_strdup( split[1] );
+	} else if( g_strv_length( split ) == 3 ){
+		npn->profile = g_strdup( split[1] );
+		npn->parm = g_strdup( split[2] );
 	}
 	g_strfreev( split );
 
