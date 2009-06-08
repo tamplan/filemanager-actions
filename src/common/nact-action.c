@@ -90,7 +90,8 @@ static void     instance_get_property( GObject *object, guint property_id, GValu
 static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void     instance_finalize( GObject *object );
 
-static void     free_profiles( NactAction *action );
+static void               free_profiles( NactAction *action );
+static NactActionProfile *get_profile( const NactAction *action, const gchar *profile_name );
 
 static void     do_dump( const NactObject *action );
 
@@ -393,7 +394,7 @@ do_dump( const NactObject *action )
 /**
  * Check if the given action is empty, i.e. all its attributes are empty.
  */
-gboolean
+/*gboolean
 nact_action_is_empty( const NactAction *action )
 {
 	g_assert( NACT_IS_ACTION( action ));
@@ -420,7 +421,7 @@ nact_action_is_empty( const NactAction *action )
 		}
 	}
 	return( TRUE );
-}
+}*/
 
 /**
  * Return the globally unique identifier (UUID) of the action.
@@ -567,8 +568,8 @@ nact_action_free_profile_ids( GSList *list )
 	nactuti_free_string_list( list );
 }
 
-NactObject*
-nact_action_get_profile( const NactAction *action, const gchar *profile_name )
+NactActionProfile *
+get_profile( const NactAction *action, const gchar *profile_name )
 {
 	g_assert( NACT_IS_ACTION( action ));
 	g_assert( profile_name && strlen( profile_name ));
@@ -586,5 +587,52 @@ nact_action_get_profile( const NactAction *action, const gchar *profile_name )
 		}
 		g_free( name );
 	}
-	return( NACT_OBJECT( found ));
+
+	return( found );
+}
+
+/**
+ * Does the given profile name exists ?
+ */
+gboolean
+nact_action_has_profile( const NactAction *action, const gchar *profile_name )
+{
+	g_assert( NACT_IS_ACTION( action ));
+	g_assert( profile_name && strlen( profile_name ));
+
+	return( get_profile( action, profile_name ) != NULL );
+}
+
+/**
+ * Returns the profile which has the given name.
+ * Create it if not found.
+ */
+NactObject *
+nact_action_get_profile( const NactAction *action, const gchar *profile_name )
+{
+	g_assert( NACT_IS_ACTION( action ));
+	g_assert( profile_name && strlen( profile_name ));
+
+	NactActionProfile *profile = get_profile( action, profile_name );
+	if( !profile ){
+		profile = nact_action_profile_new( NACT_OBJECT( action ), profile_name );
+		action->private->profiles = g_slist_prepend( action->private->profiles, profile );
+	}
+
+	return( NACT_OBJECT( profile ));
+}
+
+/**
+ * Remove a profile
+ */
+void
+nact_action_remove_profile( NactAction *action, const gchar *profile_name )
+{
+	g_assert( NACT_IS_ACTION( action ));
+	g_assert( profile_name && strlen( profile_name ));
+
+	NactActionProfile *profile = get_profile( action, profile_name );
+	if( profile ){
+		action->private->profiles = g_slist_remove( action->private->profiles, profile );
+	}
 }

@@ -99,7 +99,7 @@ static void        instance_dispose( GObject *object );
 static void        instance_finalize( GObject *object );
 
 static void        action_changed_handler( NactPivot *pivot, gpointer user_data );
-static void        update_action( GSList *actions, NactPivotNotify *notify );
+static void        free_actions( GSList *list );
 static NactAction *get_action( GSList *list, const gchar *uuid );
 static gboolean    on_action_changed_timeout( gpointer user_data );
 static gulong      time_val_diff( const GTimeVal *recent, const GTimeVal *old );
@@ -256,11 +256,7 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		/* release list of actions */
-		GSList *ia;
-		for( ia = self->private->actions ; ia ; ia = ia->next ){
-			g_object_unref( G_OBJECT( ia->data ));
-		}
-		g_slist_free( self->private->actions );
+		free_actions( self->private->actions );
 		self->private->actions = NULL;
 
 		/* chain up to the parent class */
@@ -320,6 +316,14 @@ nact_pivot_get_providers( const NactPivot *pivot, GType type )
 	return( list );
 }
 
+/*
+ * this handler is trigerred by IIOProviders when an action is changed
+ * in the underlying storage subsystems
+ * we don't care of updating our internal list with each and every
+ * atomic modification
+ * instead we wait for the end of notifications serie, and then reload
+ * the whole list of actions
+ */
 static void
 action_changed_handler( NactPivot *self, gpointer user_data  )
 {
@@ -332,9 +336,6 @@ action_changed_handler( NactPivot *self, gpointer user_data  )
 		return;
 	}
 
-	/* apply the change to the list of actions */
-	update_action( self->private->actions, ( NactPivotNotify * ) user_data );
-
 	/* set a timeout to notify nautilus at the end of the serie */
 	g_get_current_time( &st_last_event );
 	if( !st_event_source_id ){
@@ -343,22 +344,13 @@ action_changed_handler( NactPivot *self, gpointer user_data  )
 }
 
 static void
-update_action( GSList *actions, NactPivotNotify *notify )
+free_actions( GSList *list )
 {
-	g_assert( notify );
-	if( notify->uuid && strlen( notify->uuid )){
-
-		NactAction *action = get_action( actions, notify->uuid );
-		g_debug( "nact_pivot_update_action: uuid='%s', parm='%s', action=%p", notify->uuid, notify->parm, action );
-		if( !action ){
-			/* this is a creation */
-
-		} else {
-			/* this is an update or a deletion */
-		}
+	GSList *ia;
+	for( ia = list ; ia ; ia = ia->next ){
+		g_object_unref( NACT_ACTION( ia->data ));
 	}
-
-	nact_pivot_free_notify( notify );
+	g_slist_free( list );
 }
 
 static NactAction *
@@ -411,6 +403,9 @@ on_action_changed_timeout( gpointer user_data )
 	if( diff < st_timeout_usec ){
 		return( TRUE );
 	}
+
+	free_actions( pivot->private->actions );
+	pivot->private->actions = nact_iio_provider_load_actions( G_OBJECT( pivot ));
 
 	g_signal_emit_by_name( G_OBJECT( pivot->private->notified ), "notify_nautilus_of_action_changed" );
 	st_event_source_id = 0;

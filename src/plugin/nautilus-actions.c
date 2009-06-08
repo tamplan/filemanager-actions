@@ -469,9 +469,6 @@ action_changed_handler( NautilusActions *self, gpointer user_data )
 	if( !self->private->dispose_has_run ){
 
 		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
-
-		/*nautilus_actions_config_free_actions_list (self->private->config_list);
-		self->private->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->private->configs));*/
 	}
 }
 

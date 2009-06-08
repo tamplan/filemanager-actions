@@ -75,8 +75,6 @@ GSList    *nact_pivot_get_providers( const NactPivot *pivot, GType type );
 
 GObject   *nact_pivot_get_action( NactPivot *pivot, const gchar *uuid );
 
-/*void       nact_pivot_on_action_changed( NactPivot *pivot, const gchar *uuid, const gchar *parm, NactPivotValue *value );*/
-
 /* data passed from the storage subsystem when an action is changed
  */
 enum {

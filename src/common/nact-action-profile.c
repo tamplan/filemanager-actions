@@ -498,7 +498,7 @@ do_dump_list( const gchar *thisfn, const gchar *label, GSList *list )
  * Check if the given profile is empty, i.e. all its attributes are
  * empty.
  */
-gboolean
+/*gboolean
 nact_action_profile_is_empty( const NactActionProfile *profile )
 {
 	g_assert( NACT_IS_ACTION_PROFILE( profile ));
@@ -525,7 +525,7 @@ nact_action_profile_is_empty( const NactActionProfile *profile )
 		return( FALSE );
 	}
 	return( TRUE );
-}
+}*/
 
 /**
  * Returns a pointer to the action for this profile.

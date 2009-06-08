@@ -453,12 +453,12 @@ path_to_key( const gchar *path )
 
 /*
  * set the item properties into the object
- * as we make use of NactPivotNotify structure, 'uuid' field must be
- * read as the GConf key, i.e. the parameter name
+ * properties is a list of path to entry
  */
 static void
 set_item_properties( NactObject *object, GSList *properties )
 {
+	static const gchar *thisfn = "nact_gconf_set_item_properties";
 	g_assert( NACT_IS_OBJECT( object ));
 
 	GSList *item;
@@ -466,10 +466,9 @@ set_item_properties( NactObject *object, GSList *properties )
 
 		GConfEntry *entry = ( GConfEntry * ) item->data;
 		NactPivotNotify *npn = entry_to_notify( entry );
-		if( npn ){
+		if( npn->type ){
 
 			switch( npn->type ){
-
 				case NACT_PIVOT_STR:
 				case NACT_PIVOT_BOOL:
 				case NACT_PIVOT_STRLIST:
@@ -477,11 +476,14 @@ set_item_properties( NactObject *object, GSList *properties )
 					break;
 
 				default:
+					g_debug( "%s: uuid='%s', profile='%s', parm='%s', type=%d, data=%p",
+							thisfn, npn->uuid, npn->profile, npn->parm, npn->type, npn->data );
 					g_assert_not_reached();
 					break;
 			}
-			nact_pivot_free_notify( npn );
 		}
+
+		nact_pivot_free_notify( npn );
 	}
 }
 
