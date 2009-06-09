@@ -1007,12 +1007,9 @@ msgid ""
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
 
-# pwi 200905-15 sorry, but doesn't know (yet) how to fix
-# dz.po:1018: number of format specifications in 'msgid' and 'msgstr[1]' does not match
-# so commenting it for now
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
-#, c-format
+#, fuzzy, c-format
 #msgid ""
 #"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
 #msgid_plural ""

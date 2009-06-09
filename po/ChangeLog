@@ -1,7 +1,21 @@
+2009-06-09 Pierre Wieser <pwieser@trychlos.org>
+
+	* dz.po: Mark a string as 'fuzzy' (see
+	http://mail.gnome.org/archives/gnome-i18n/2009-May/msg00127.html
+	thread.
+
+2009-06-09 Sandeep Shedmake <sshedmak@redhat.com>
+
+	* mr.po: Updated Marathi translation.
+
 2009-06-02  Manoj Kumar Giri <mgiri@redhat.com>
 
 	* or.po: Updated Oriya Translation.
 	* LINGUAS: Added Oriya into the List.
+
+2009-06-01 Mario Blättermann <mariobl@gnome.org>
+
+	* de.po: Updated German translation.
 
 2009-05-29 Pierre Wieser <pwieser@trychlos.org>
 
