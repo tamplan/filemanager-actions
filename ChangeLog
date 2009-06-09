@@ -1,6 +1,6 @@
 2009-06-09 Pierre Wieser <pwieser@trychlos.org>
 
-	* configure.ac: Bump version number.
+	* configure.ac: Bump version number for 1.11.0 release.
 
 	* src/common/nact-action.c:
 	* src/common/nact-action.h

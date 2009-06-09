@@ -1,3 +1,29 @@
+Version 1.11.0 [unstable]
+
+	Release date 2009-06-09
+
+	This is the first intermediate release in the 1.11 serie.
+
+	It includes a full rewriting of the action/profile object
+	hierarchy, along with the system of change notification. It also
+	introduces the new NactIIOProvider interface.
+
+	The Nautilus plugin module, which actually takes care of selecting
+	actions which will be displayed by Nautilus in item context menu,
+	makes a full use of this new object hierarchy.
+
+	The nautilus-actions-config UI always uses the old one.
+
+	Bugfixes
+
+		#580378 reported by James Campos (context menu doesn't update)
+
+	New and updated translations
+
+		de (Mario Blättermann)
+		mr (Sandeep Shedmake)
+		or (Manoj Kumar Giri)
+
 Version 1.10.1
 
 	Release date 2009-05-29
