@@ -69,9 +69,30 @@ typedef struct {
 
 GType      nact_pivot_get_type( void );
 
-NactPivot *nact_pivot_new( void );
+NactPivot *nact_pivot_new( const GObject *notified );
 
-GSList    *nact_pivot_get_providers( GType type );
+GSList    *nact_pivot_get_providers( const NactPivot *pivot, GType type );
+
+GSList    *nact_pivot_get_actions( const NactPivot *pivot );
+
+/* data passed from the storage subsystem when an action is changed
+ */
+enum {
+	NACT_PIVOT_STR = 1,
+	NACT_PIVOT_BOOL,
+	NACT_PIVOT_STRLIST
+};
+
+typedef struct {
+	gchar   *uuid;
+	gchar   *profile;
+	gchar   *parm;
+	guint    type;
+	gpointer data;
+}
+	NactPivotNotify;
+
+void       nact_pivot_free_notify( NactPivotNotify *data );
 
 G_END_DECLS
 

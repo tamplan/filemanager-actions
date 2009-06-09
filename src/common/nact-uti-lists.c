@@ -28,15 +28,40 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_TEST_H__
-#define __NAUTILUS_ACTIONS_TEST_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include <glib-object.h>
+#include "nact-uti-lists.h"
 
-#include <common/nautilus-actions-config.h>
+/**
+ * Duplicates a GSList of strings.
+ *
+ * @list: the GSList to be duplicated.
+ */
+GSList *
+nactuti_duplicate_string_list( GSList *list )
+{
+	GSList *duplist = NULL;
+	GSList *it;
+	for( it = list ; it != NULL ; it = it->next ){
+		gchar *dupstr = g_strdup(( gchar * ) it->data );
+		duplist = g_slist_prepend( duplist, dupstr );
+	}
+	return( duplist );
+}
 
-G_BEGIN_DECLS
-
-gboolean nautilus_actions_test_validate (NautilusActionsConfigActionProfile *action_profile, GList* files);
-
-G_END_DECLS
-
-#endif /* __NAUTILUS_ACTIONS_TEST_H__ */
+/**
+ * Frees a GSList of strings.
+ *
+ * @list: the GSList to be freed.
+ */
+void
+nactuti_free_string_list( GSList *list )
+{
+	GSList *item;
+	for( item = list ; item != NULL ; item = item->next ){
+		g_free(( gchar * ) item->data );
+	}
+	g_slist_free( list );
+}

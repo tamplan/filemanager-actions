@@ -44,42 +44,61 @@
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
 #include <common/nact-action.h>
+#include <common/nact-action-profile.h>
 #include <common/nact-pivot.h>
-#include <common/nautilus-actions-config.h>
-#include <common/nautilus-actions-config-gconf-reader.h>
 #include "nautilus-actions.h"
-#include "nautilus-actions-test.h"
-#include "nautilus-actions-utils.h"
 
+/* private class data
+ */
+struct NautilusActionsClassPrivate {
+};
+
+/* private instance data
+ */
 struct NautilusActionsPrivate {
 	gboolean   dispose_has_run;
 
 	/* from nact-pivot */
 	NactPivot *pivot;
-
-	/* original */
-	NautilusActionsConfigGconfReader* configs;
-	GSList* config_list;
 };
 
-struct NautilusActionsClassPrivate {
+/* We have a double stage notification system :
+ *
+ * 1. when the storage subsystems detects a change on an action, it must
+ *    emit a signal to notify us of this change ; we so have to update
+ *    accordingly the list of actions we maintain
+ *
+ * 2. when we have successfully updated the list of actions, we have to
+ *    notify nautilus to update its contextual menu ; this is left to
+ *    NautilusActions class
+ *
+ * This same signal is then first emitted by the IIOProvider to the
+ * NactPivot object which handles it. When all modifications have been
+ * treated, NactPivot notifies NautilusActions which itself asks
+ * Nautilus for updating its menu
+ */
+enum {
+	ACTION_CHANGED,
+	LAST_SIGNAL
 };
+
+#define SIGNAL_ACTION_CHANGED_NAME		"notify_nautilus_of_action_changed"
 
 static GObjectClass *st_parent_class = NULL;
 static GType         st_actions_type = 0;
+static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 
-static void class_init( NautilusActionsClass *klass );
-static void menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static void instance_init( GTypeInstance *instance, gpointer klass );
-static void instance_dispose( GObject *object );
-static void instance_finalize( GObject *object );
+static void              class_init( NautilusActionsClass *klass );
+static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static void              instance_init( GTypeInstance *instance, gpointer klass );
+static void              instance_dispose( GObject *object );
+static void              instance_finalize( GObject *object );
 
-static void              action_changed_handler( NautilusActionsConfig* config, NautilusActionsConfigAction* action, gpointer user_data );
-static NautilusMenuItem *create_menu_item( NautilusActionsConfigAction *action, GList *files, NautilusActionsConfigActionProfile* action_profile );
-static void              execute_action( NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile );
 static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
-static const gchar      *get_verified_icon_name( const gchar* icon_name );
+static NautilusMenuItem *create_menu_item( NactAction *action, NactActionProfile *profile, GList *files );
+static void              execute_action( NautilusMenuItem *item, NactActionProfile *profile );
+static void              action_changed_handler( NautilusActions *instance, gpointer user_data );
 
 GType
 nautilus_actions_get_type( void )
@@ -132,6 +151,26 @@ class_init( NautilusActionsClass *klass )
 	gobject_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NautilusActionsClassPrivate, 1 );
+
+	/* we could have set a default handler here, which have been
+	 * avoided us to connect to the signal ; but a default handler is
+	 * addressed via a class structure offset, and thus cannot work
+	 * when defined in a private structure
+	 *
+	 * the previous point applies to g_signal_new ;
+	 * g_signal_new_class_handler let us specify a standard C callback
+	 */
+	st_signals[ ACTION_CHANGED ] = g_signal_new_class_handler(
+				SIGNAL_ACTION_CHANGED_NAME,
+				G_TYPE_FROM_CLASS( klass ),
+				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+				( GCallback ) action_changed_handler,
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__VOID,
+				G_TYPE_NONE,
+				0
+	);
 }
 
 static void
@@ -168,34 +207,22 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	gnome_vfs_init ();
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
-
-	/* from nact-pivot */
-	self->private->pivot = nact_pivot_new();
-
-	self->private->configs = NULL;
-	self->private->configs = nautilus_actions_config_gconf_reader_get ();
-	self->private->config_list = NULL;
-	self->private->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->private->configs));
 	self->private->dispose_has_run = FALSE;
 
-	g_signal_connect_after(
-			G_OBJECT( self->private->configs ),
-			"action_added",
+	/* from nact-pivot */
+	self->private->pivot = nact_pivot_new( G_OBJECT( self ));
+
+	/* see nautilus_actions_class_init for why we had to connect an
+	 * handler to our signal instead of relying on default handler
+	 * see also nautilus_actions_class_init for why g_signal_connect is
+	 * no more needed
+	 */
+	/*g_signal_connect(
+			G_OBJECT( self ),
+			SIGNAL_ACTION_CHANGED_NAME,
 			( GCallback ) action_changed_handler,
-			self
-	);
-	g_signal_connect_after(
-			G_OBJECT( self->private->configs ),
-			"action_changed",
-			( GCallback ) action_changed_handler,
-			self
-	);
-	g_signal_connect_after(
-			G_OBJECT( self->private->configs ),
-			"action_removed",
-			( GCallback ) action_changed_handler,
-			self
-	);
+			NULL
+	);*/
 }
 
 static void
@@ -211,7 +238,6 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		g_object_unref( self->private->pivot );
-		g_object_unref( self->private->configs );
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( object );
@@ -231,6 +257,14 @@ instance_finalize( GObject *object )
 	G_OBJECT_CLASS( st_parent_class )->finalize( object );
 }
 
+/*
+ * This function notifies Nautilus file manager that the context menu
+ * items may have changed, and that it should reload them.
+ *
+ * Patch has been provided by Frederic Ruaudel, the initial author of
+ * Nautilus-Actions, and applied on Nautilus 2.15.4 development branch
+ * on 2006-06-16. It was released with Nautilus 2.16.0
+ */
 #ifndef HAVE_NAUTILUS_MENU_PROVIDER_EMIT_ITEMS_UPDATED_SIGNAL
 static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvider *provider)
 {
@@ -239,92 +273,6 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
 	 */
 }
 #endif
-
-static void
-action_changed_handler( NautilusActionsConfig* config,
-						NautilusActionsConfigAction* action,
-						gpointer user_data )
-{
-	static const gchar *thisfn = "nautilus_actions_action_changed_handler";
-	g_debug( "%s", thisfn );
-
-	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
-
-	g_return_if_fail (NAUTILUS_IS_ACTIONS (self));
-
-	if (!self->private->dispose_has_run)
-	{
-		nautilus_menu_provider_emit_items_updated_signal(( NautilusMenuProvider * ) self );
-
-		nautilus_actions_config_free_actions_list (self->private->config_list);
-		self->private->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->private->configs));
-	}
-}
-
-static NautilusMenuItem *
-create_menu_item( NautilusActionsConfigAction *action, GList *files, NautilusActionsConfigActionProfile* action_profile )
-{
-	static const gchar *thisfn = "nautilus_actions_create_menu_item";
-	g_debug( "%s", thisfn );
-
-	NautilusMenuItem *item;
-	gchar* name;
-	const gchar* icon_name = get_verified_icon_name (g_strstrip (action->icon));
-	NautilusActionsConfigActionProfile* action_profile4menu = nautilus_actions_config_action_profile_dup (action_profile);
-
-	name = g_strdup_printf ("NautilusActions::%s", action->uuid);
-
-	item = nautilus_menu_item_new (name,
-				action->label,
-				action->tooltip,
-				icon_name);
-
-	g_signal_connect_data (item,
-				"activate",
-				G_CALLBACK (execute_action),
-				action_profile4menu,
-				(GClosureNotify)nautilus_actions_config_action_profile_free,
-				0);
-
-	g_object_set_data_full (G_OBJECT (item),
-			"files",
-			nautilus_file_info_list_copy (files),
-			(GDestroyNotify) nautilus_file_info_list_free);
-
-
-	g_free (name);
-
-	return item;
-}
-
-static void
-execute_action( NautilusMenuItem *item, NautilusActionsConfigActionProfile *action_profile )
-{
-	static const gchar *thisfn = "nautilus_actions_execute_action";
-	g_debug( "%s", thisfn );
-
-	GList *files;
-	GString *cmd;
-	gchar* param = NULL;
-
-	files = (GList*)g_object_get_data (G_OBJECT (item), "files");
-
-	cmd = g_string_new (action_profile->path);
-
-	param = nautilus_actions_utils_parse_parameter (action_profile->parameters, files);
-
-	if (param != NULL)
-	{
-		g_string_append_printf (cmd, " %s", param);
-		g_free (param);
-	}
-
-	g_spawn_command_line_async (cmd->str, NULL);
-	g_debug( "%s: commande='%s'", thisfn, cmd->str );
-
-	g_string_free (cmd, TRUE);
-
-}
 
 /*
  * this function is called when nautilus has to paint a folder background
@@ -351,70 +299,140 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	g_debug( "%s provider=%p, window=%p, files=%p, count=%d", thisfn, provider, window, files, g_list_length( files ));
 
 	GList *items = NULL;
-	GSList *iter;
+	GSList* profiles;
+	GSList *ia, *ip;
 	NautilusMenuItem *item;
-	NautilusActions* self = NAUTILUS_ACTIONS (provider);
-	gchar* profile_name = NULL;
-	GSList* profile_list = NULL;
-	GSList* iter2;
-	gboolean found;
+	GSList *actions = NULL;
+#ifdef NACT_MAINTAINER_MODE
+	gchar *debug_label;
+#endif
 
-	g_return_val_if_fail (NAUTILUS_IS_ACTIONS (self), NULL);
+	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
+	NautilusActions *self = NAUTILUS_ACTIONS( provider );
 
 	/* no need to go further if there is no files in the list */
 	if( !g_list_length( files )){
 		return(( GList * ) NULL );
 	}
 
-	if (!self->private->dispose_has_run)
-	{
-		for (iter = self->private->config_list; iter; iter = iter->next)
-		{
-			/* Foreach configured action, check if we add a menu item */
-			NautilusActionsConfigAction *action = (NautilusActionsConfigAction*)iter->data;
+	if( !self->private->dispose_has_run ){
+		actions = nact_pivot_get_actions( self->private->pivot );
 
-			/* Retrieve all profile name */
-			/*g_hash_table_foreach (action->profiles, (GHFunc)get_hash_keys, &profile_list);*/
-			profile_list = nautilus_actions_config_action_get_all_profile_names( action );
+		for( ia = actions ; ia ; ia = ia->next ){
 
-			iter2 = profile_list;
-			found = FALSE;
-			while (iter2 && !found)
-			{
-				profile_name = (gchar*)iter2->data;
-				NautilusActionsConfigActionProfile* action_profile = nautilus_actions_config_action_get_profile (action, profile_name);
-				g_debug( "%s: profile='%s' (%p)", thisfn, profile_name, action_profile );
+			NactAction *action = NACT_ACTION( ia->data );
 
-				if (nautilus_actions_test_validate (action_profile, files))
-				{
-					item = create_menu_item (action, files, action_profile);
-					items = g_list_append (items, item);
-					found = TRUE;
+#ifdef NACT_MAINTAINER_MODE
+			debug_label = nact_action_get_label( action );
+			g_debug( "%s: examining '%s' action", thisfn, debug_label );
+			g_free( debug_label );
+#endif
+
+			profiles = nact_action_get_profiles( action );
+
+			for( ip = profiles ; ip ; ip = ip->next ){
+
+				NactActionProfile *profile = NACT_ACTION_PROFILE( ip->data );
+
+#ifdef NACT_MAINTAINER_MODE
+				debug_label = nact_action_profile_get_label( profile );
+				g_debug( "%s: examining '%s' profile", thisfn, debug_label );
+				g_free( debug_label );
+#endif
+
+				if( nact_action_profile_is_candidate( profile, files )){
+					item = create_menu_item( action, profile, files );
+					items = g_list_append( items, item );
+					break;
 				}
-
-				iter2 = iter2->next;
 			}
-			nautilus_actions_config_action_free_all_profile_names( profile_list );
 		}
 	}
 
-	return items;
+	return( items );
 }
 
-static const gchar *
-get_verified_icon_name( const gchar* icon_name )
+static NautilusMenuItem *
+create_menu_item( NactAction *action, NactActionProfile *profile, GList *files )
 {
-	if (icon_name[0] == '/')
-	{
-		if (!g_file_test (icon_name, G_FILE_TEST_IS_REGULAR))
-		{
-			return NULL;
-		}
-	}
-	else if (strlen (icon_name) == 0)
-	{
-		return NULL;
+	static const gchar *thisfn = "nautilus_actions_create_menu_item";
+	g_debug( "%s", thisfn );
+
+	NautilusMenuItem *item;
+
+	gchar *uuid = nact_action_get_uuid( action );
+	gchar *name = g_strdup_printf( "NautilusActions::%s", uuid );
+	gchar *label = nact_action_get_label( action );
+	gchar *tooltip = nact_action_get_tooltip( action );
+	gchar* icon_name = nact_action_get_verified_icon_name( action );
+
+	NactActionProfile *dup4menu = nact_action_profile_copy( profile );
+
+	item = nautilus_menu_item_new( name, label, tooltip, icon_name );
+
+	g_signal_connect_data( item,
+				"activate",
+				G_CALLBACK( execute_action ),
+				dup4menu,
+				( GClosureNotify ) nact_action_profile_free,
+				0
+	);
+
+	g_object_set_data_full( G_OBJECT( item ),
+			"files",
+			nautilus_file_info_list_copy( files ),
+			( GDestroyNotify ) nautilus_file_info_list_free
+	);
+
+	g_free( icon_name );
+	g_free( tooltip );
+	g_free( label );
+	g_free( name );
+	g_free( uuid );
+
+	return( item );
+}
+
+static void
+execute_action( NautilusMenuItem *item, NactActionProfile *profile )
+{
+	static const gchar *thisfn = "nautilus_actions_execute_action";
+	g_debug( "%s: item=%p, profile=%p", thisfn, item, profile );
+
+	GList *files;
+	GString *cmd;
+	gchar *param, *path;
+
+	files = ( GList* ) g_object_get_data( G_OBJECT( item ), "files" );
+
+	path = nact_action_profile_get_path( profile );
+	cmd = g_string_new( path );
+
+	param = nact_action_profile_parse_parameters( profile, files );
+
+	if( param != NULL ){
+		g_string_append_printf( cmd, " %s", param );
+		g_free( param );
 	}
 
-	return icon_name;
+	g_debug( "%s: executing '%s'", thisfn, cmd->str );
+	g_spawn_command_line_async( cmd->str, NULL );
+
+	g_string_free (cmd, TRUE);
+	g_free( path );
+
+}
+
+static void
+action_changed_handler( NautilusActions *self, gpointer user_data )
+{
+	static const gchar *thisfn = "nautilus_actions_action_changed_handler";
+	g_debug( "%s: self=%p, user_data=%p", thisfn, self, user_data );
+
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( self ));
+
+	if( !self->private->dispose_has_run ){
+
+		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
+	}
 }

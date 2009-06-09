@@ -33,13 +33,17 @@
 #endif
 
 #include "nact-object.h"
-#include "uti-lists.h"
+#include "nact-uti-lists.h"
 
-struct NactObjectPrivate {
-	gboolean dispose_has_run;
+/* private class data
+ */
+struct NactObjectClassPrivate {
 };
 
-struct NactObjectClassPrivate {
+/* private instance data
+ */
+struct NactObjectPrivate {
+	gboolean dispose_has_run;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -49,7 +53,10 @@ static void    class_init( NactObjectClass *klass );
 static void    instance_init( GTypeInstance *instance, gpointer klass );
 static void    instance_dispose( GObject *object );
 static void    instance_finalize( GObject *object );
+
 static void    do_dump( const NactObject *object );
+static gchar  *do_get_id( const NactObject *object );
+static gchar  *do_get_label( const NactObject *object );
 
 GType
 nact_object_get_type( void )
@@ -96,6 +103,8 @@ class_init( NactObjectClass *klass )
 	klass->private = g_new0( NactObjectClassPrivate, 1 );
 
 	klass->dump = do_dump;
+	klass->get_id = do_get_id;
+	klass->get_label = do_get_label;
 }
 
 static void
@@ -162,4 +171,52 @@ nact_object_dump( const NactObject *object )
 	g_assert( NACT_IS_OBJECT( object ));
 
 	NACT_OBJECT_GET_CLASS( object )->dump( object );
+}
+
+static gchar *
+do_get_id( const NactObject *object )
+{
+	g_assert( NACT_IS_OBJECT( object ));
+	return(( gchar * ) NULL );
+}
+
+/**
+ * Returns the id of the object as new string.
+ *
+ * This is a virtual function which should be implemented by the
+ * derived class ; if not, this parent object returns NULL.
+ *
+ * @object: targeted NactObject object.
+ *
+ * The returned string should be g_freed by the caller.
+ */
+gchar *
+nact_object_get_id( const NactObject *object )
+{
+	g_assert( NACT_IS_OBJECT( object ));
+	return( NACT_OBJECT_GET_CLASS( object )->get_id( object ));
+}
+
+static gchar *
+do_get_label( const NactObject *object )
+{
+	g_assert( NACT_IS_OBJECT( object ));
+	return(( gchar * ) NULL );
+}
+
+/**
+ * Returns the label of the object as new string.
+ *
+ * This is a virtual function which should be implemented by the
+ * derived class ; if not, this parent object returns NULL.
+ *
+ * @object: targeted NactObject object.
+ *
+ * The returned string should be g_freed by the caller.
+ */
+gchar *
+nact_object_get_label( const NactObject *object )
+{
+	g_assert( NACT_IS_OBJECT( object ));
+	return( NACT_OBJECT_GET_CLASS( object )->get_label( object ));
 }

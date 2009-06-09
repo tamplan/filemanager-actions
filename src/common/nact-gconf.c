@@ -41,65 +41,60 @@
 #include "nact-action-profile.h"
 #include "nact-gconf.h"
 #include "nact-gconf-keys.h"
-#include "nact-iio-client.h"
 #include "nact-iio-provider.h"
-#include "nact-pivot.h"
-#include "uti-lists.h"
+#include "nact-uti-lists.h"
 
+/* private class data
+ */
+struct NactGConfClassPrivate {
+};
+
+/* private instance data
+ */
 struct NactGConfPrivate {
 	gboolean     dispose_has_run;
-	NactPivot   *pivot;
+
+	/* instance to be notified of an action modification
+	 */
+	gpointer  notified;
+
 	GConfClient *gconf;
 	guint        notify_id;
 };
 
-struct NactGConfClassPrivate {
-};
-
-typedef struct {
-	gchar *key;
-	gchar *path;
-}
-	NactGConfIO;
-
+/* private instance properties
+ */
 enum {
-	PROP_PIVOT = 1
+	PROP_NOTIFIED = 1
 };
+
+#define PROP_NOTIFIED_STR				"to-be-notified"
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType        register_type( void );
-static void         class_init( NactGConfClass *klass );
-static void         iio_provider_iface_init( NactIIOProviderInterface *iface );
-static void         instance_init( GTypeInstance *instance, gpointer klass );
-static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void         instance_dispose( GObject *object );
-static void         instance_finalize( GObject *object );
-static guint        install_gconf_watch( NactGConf *gconf );
-static void         remove_gconf_watch( NactGConf *gconf );
+static GType            register_type( void );
+static void             class_init( NactGConfClass *klass );
+static void             iio_provider_iface_init( NactIIOProviderInterface *iface );
+static void             instance_init( GTypeInstance *instance, gpointer klass );
+static void             instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void             instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void             instance_dispose( GObject *object );
+static void             instance_finalize( GObject *object );
 
-static void         actions_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
+static GSList          *do_load_actions( NactIIOProvider *provider );
+static void             load_action_properties( NactGConf *gconf, NactAction *action );
+static GSList          *load_profiles( NactGConf *gconf, NactAction *action );
+static void             load_profile_properties( NactGConf *gconf, NactActionProfile *profile );
+static GSList          *load_subdirs( const NactGConf *gconf, const gchar *path );
+static GSList          *load_keys_values( const NactGConf *gconf, const gchar *path );
+static void             free_keys_values( GSList *keys );
+static gchar           *path_to_key( const gchar *path );
+static void             set_item_properties( NactObject *object, GSList *properties );
+static NactPivotNotify *entry_to_notify( const GConfEntry *entry );
 
-static void         free_keys_values( GSList *keys );
-static GSList      *load_keys_values( const NactGConf *gconf, const gchar *path );
-static GSList      *load_subdirs( const NactGConf *gconf, const gchar *path );
-static gchar       *path_to_key( const gchar *path );
-static NactGConfIO *path_to_struct( const gchar *path );
-static void         set_item_properties( NactObject *object, GSList *properties );
-
-static GSList      *do_load_actions( NactIIOProvider *provider );
-static void         do_load_action_properties( NactIIOClient *client );
-static GSList      *do_load_profiles( NactIIOClient *client );
-static void         do_load_profile_properties( NactObject *profile );
-static void         do_release_data( NactIIOClient *client );
-
-NactGConf *
-nact_gconf_new( const GObject *pivot )
-{
-	g_assert( NACT_IS_PIVOT( pivot ));
-	return( g_object_new( NACT_GCONF_TYPE, "pivot", pivot, NULL ));
-}
+static guint            install_gconf_watch( NactGConf *gconf );
+static void             remove_gconf_watch( NactGConf *gconf );
+static void             action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
 
 GType
 nact_gconf_get_type( void )
@@ -157,11 +152,11 @@ class_init( NactGConfClass *klass )
 
 	GParamSpec *spec;
 	spec = g_param_spec_pointer(
-			"pivot",
-			"pivot",
-			"A pointer to NactPivot object",
+			PROP_NOTIFIED_STR,
+			PROP_NOTIFIED_STR,
+			"A pointer to a GObject which will receive action_changed notifications",
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_PIVOT, spec );
+	g_object_class_install_property( object_class, PROP_NOTIFIED, spec );
 
 	klass->private = g_new0( NactGConfClassPrivate, 1 );
 }
@@ -173,10 +168,6 @@ iio_provider_iface_init( NactIIOProviderInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, iface );
 
 	iface->load_actions = do_load_actions;
-	iface->load_action_properties = do_load_action_properties;
-	iface->load_profiles = do_load_profiles;
-	iface->load_profile_properties = do_load_profile_properties;
-	iface->release_data = do_release_data;
 }
 
 static void
@@ -202,8 +193,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	NactGConf *self = NACT_GCONF( object );
 
 	switch( property_id ){
-		case PROP_PIVOT:
-			g_value_set_pointer( value, self->private->pivot );
+		case PROP_NOTIFIED:
+			g_value_set_pointer( value, self->private->notified );
 			break;
 
 		default:
@@ -219,8 +210,8 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	NactGConf *self = NACT_GCONF( object );
 
 	switch( property_id ){
-		case PROP_PIVOT:
-			self->private->pivot = g_value_get_pointer( value );
+		case PROP_NOTIFIED:
+			self->private->notified = g_value_get_pointer( value );
 			break;
 
 		default:
@@ -260,10 +251,344 @@ instance_finalize( GObject *object )
 	}
 }
 
+/**
+ * Allocate a new GConf object.
+ *
+ * @handler: the GObject which is to be notified when an action is
+ * added, modified or removed in underlying GConf system.
+ *
+ * The object to be notified will receive a
+ * "notify_pivot_of_action_changed" message for each detected
+ * modification, with a pointer to a newly allocated NactPivotNotify
+ * structure describing the change.
+ */
+NactGConf *
+nact_gconf_new( const GObject *handler )
+{
+	return( g_object_new( NACT_GCONF_TYPE, PROP_NOTIFIED_STR, handler, NULL ));
+}
+
+/*
+ * NactIIOProviderInterface implementation
+ * load the list of actions and returns them as a GSList
+ */
+static GSList *
+do_load_actions( NactIIOProvider *provider )
+{
+	static const gchar *thisfn = "nacf_gconf_do_load_actions";
+	g_debug( "%s: provider=%p", thisfn, provider );
+
+	g_assert( NACT_IS_IIO_PROVIDER( provider ));
+	g_assert( NACT_IS_GCONF( provider ));
+	NactGConf *self = NACT_GCONF( provider );
+
+	GSList *items = NULL;
+	GSList *ip;
+	GSList *listpath = load_subdirs( self, NACT_GCONF_CONFIG_PATH );
+	GSList *profiles;
+
+	for( ip = listpath ; ip ; ip = ip->next ){
+
+		gchar *key = path_to_key(( const gchar * ) ip->data );
+
+		NactAction *action = nact_action_new( key );
+
+		load_action_properties( self, action );
+
+		profiles = load_profiles( self, action );
+		nact_action_set_profiles( action, profiles );
+		nact_action_free_profiles( profiles );
+
+#ifdef NACT_MAINTAINER_MODE
+		nact_object_dump( NACT_OBJECT( action ));
+#endif
+
+		items = g_slist_prepend( items, action );
+		g_free( key );
+	}
+
+	nactuti_free_string_list( listpath );
+
+	return( items );
+}
+
+/*
+ * load and set the properties of the specified action
+ */
+static void
+load_action_properties( NactGConf *gconf, NactAction *action )
+{
+	/*static const gchar *thisfn = "nacf_gconf_load_action_properties";
+	g_debug( "%s: gconf=%p, action=%p", thisfn, gconf, action );*/
+
+	g_assert( NACT_IS_GCONF( gconf ));
+	g_assert( NACT_IS_ACTION( action ));
+
+	gchar *uuid = nact_action_get_uuid( action );
+	gchar *path = g_strdup_printf( "%s/%s", NACT_GCONF_CONFIG_PATH, uuid );
+
+	GSList *properties = load_keys_values( gconf, path );
+
+	set_item_properties( NACT_OBJECT( action ), properties );
+
+	free_keys_values( properties );
+	g_free( uuid );
+	g_free( path );
+}
+
+/*
+ * load the list of profiles for an action and returns them as a GSList
+ */
+static GSList *
+load_profiles( NactGConf *gconf, NactAction *action )
+{
+	/*static const gchar *thisfn = "nacf_gconf_load_profiles";
+	g_debug( "%s: gconf=%p, action=%p", thisfn, gconf, action );*/
+
+	g_assert( NACT_IS_GCONF( gconf ));
+	g_assert( NACT_IS_ACTION( action ));
+
+	gchar *uuid = nact_action_get_uuid( action );
+	gchar *path = g_strdup_printf( "%s/%s", NACT_GCONF_CONFIG_PATH, uuid );
+
+	GSList *ip;
+	GSList *items = NULL;
+	GSList *listpath = load_subdirs( gconf, path );
+
+	for( ip = listpath ; ip ; ip = ip->next ){
+
+		gchar *key = path_to_key(( const gchar * ) ip->data );
+		NactActionProfile *profile = nact_action_profile_new( NACT_OBJECT( action ), key );
+		load_profile_properties( gconf, profile );
+
+		items = g_slist_prepend( items, profile );
+	}
+
+	nactuti_free_string_list( listpath );
+	g_free( path );
+	g_free( uuid );
+
+	return( items );
+}
+
+/*
+ * load and set the properties of the specified profile
+ */
+static void
+load_profile_properties( NactGConf *gconf, NactActionProfile *profile )
+{
+	/*static const gchar *thisfn = "nacf_gconf_load_profile_properties";
+	g_debug( "%s: gconf=%p, profile=%p", thisfn, gconf, profile );*/
+
+	g_assert( NACT_IS_GCONF( gconf ));
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	NactAction *action =
+		NACT_ACTION( nact_action_profile_get_action( NACT_ACTION_PROFILE( profile )));
+	g_assert( NACT_IS_ACTION( action ));
+
+	gchar *uuid = nact_action_get_uuid( action );
+	gchar *path = g_strdup_printf(
+			"%s/%s/%s", NACT_GCONF_CONFIG_PATH, uuid, nact_action_profile_get_name( profile ));
+
+	GSList *properties = load_keys_values( gconf, path );
+
+	set_item_properties( NACT_OBJECT( profile ), properties );
+
+	free_keys_values( properties );
+	g_free( path );
+	g_free( uuid );
+}
+
+/*
+ * load the keys which are the subdirs of the given path
+ * returns a list of keys as full path
+ */
+GSList *
+load_subdirs( const NactGConf *gconf, const gchar *path )
+{
+	static const gchar *thisfn = "nact_gconf_load_subdirs";
+
+	GError *error = NULL;
+	GSList *list = gconf_client_all_dirs( gconf->private->gconf, path, &error );
+	if( error ){
+		g_error( "%s: path=%s, error=%s", thisfn, path, error->message );
+		g_error_free( error );
+		return(( GSList * ) NULL );
+	}
+
+	return( list );
+}
+
+/*
+ * load all the key=value pairs of this key (specified as a full path)
+ * The list is not recursive, it contains only the immediate children of
+ * path.
+ * To free the returned list, call free_key_values
+ */
+static GSList *
+load_keys_values( const NactGConf *gconf, const gchar *path )
+{
+	static const gchar *thisfn = "nact_gconf_load_keys_values";
+
+	GError *error = NULL;
+	GSList *list_path = gconf_client_all_entries( gconf->private->gconf, path, &error );
+	if( error ){
+		g_error( "%s: path=%s, error=%s", thisfn, path, error->message );
+		g_error_free( error );
+		return(( GSList * ) NULL );
+	}
+
+	return( list_path );
+}
+
+static void
+free_keys_values( GSList *list )
+{
+	GSList *item;
+	for( item = list ; item != NULL ; item = item->next ){
+		GConfEntry *entry = ( GConfEntry * ) item->data;
+		gconf_entry_unref( entry );
+	}
+	g_slist_free( list );
+}
+
+/*
+ * extract the key part (the last part) of a full path
+ * returns a newly allocated string which must be g_freed by the caller
+ */
+static gchar *
+path_to_key( const gchar *path )
+{
+	gchar **split = g_strsplit( path, "/", -1 );
+	guint count = g_strv_length( split );
+	gchar *key = g_strdup( split[count-1] );
+	g_strfreev( split );
+	return( key );
+}
+
+/*
+ * set the item properties into the object
+ * properties is a list of path to entry
+ */
+static void
+set_item_properties( NactObject *object, GSList *properties )
+{
+	static const gchar *thisfn = "nact_gconf_set_item_properties";
+	g_assert( NACT_IS_OBJECT( object ));
+
+	GSList *item;
+	for( item = properties ; item != NULL ; item = item->next ){
+
+		GConfEntry *entry = ( GConfEntry * ) item->data;
+		NactPivotNotify *npn = entry_to_notify( entry );
+		if( npn->type ){
+
+			switch( npn->type ){
+				case NACT_PIVOT_STR:
+				case NACT_PIVOT_BOOL:
+				case NACT_PIVOT_STRLIST:
+					g_object_set( G_OBJECT( object ), npn->parm, npn->data, NULL );
+					break;
+
+				default:
+					g_debug( "%s: uuid='%s', profile='%s', parm='%s', type=%d, data=%p",
+							thisfn, npn->uuid, npn->profile, npn->parm, npn->type, npn->data );
+					g_assert_not_reached();
+					break;
+			}
+		}
+
+		nact_pivot_free_notify( npn );
+	}
+}
+
+/*
+ * convert a GConfEntry to a structure suitable to notify NactPivot
+ *
+ * when created or modified, the entry can be of the forms :
+ *  key/parm
+ *  key/profile/parm with a not null value
+ * but when removing an entry, it will be of the form :
+ *  key
+ *  key/parm
+ *  key/profile
+ *  key/profile/parm with a null value
+ *
+ * I don't know any way to choose between key/parm and key/profile
+ * as the entry no more exists in GConf and thus cannot be tested
+ * -> we will set this as key/parm, letting pivot try to interpret it
+ */
+static NactPivotNotify *
+entry_to_notify( const GConfEntry *entry )
+{
+	/*static const gchar *thisfn = "nact_gconf_entry_to_notify";*/
+	GSList *listvalues, *iv, *strings;
+
+	g_assert( entry );
+
+	const gchar *path = gconf_entry_get_key( entry );
+	g_assert( path );
+
+	NactPivotNotify *npn = g_new0( NactPivotNotify, 1 );
+
+	const gchar *subpath = path + strlen( NACT_GCONF_CONFIG_PATH ) + 1;
+	gchar **split = g_strsplit( subpath, "/", -1 );
+	/*g_debug( "%s: [0]=%s, [1]=%s", thisfn, split[0], split[1] );*/
+	npn->uuid = g_strdup( split[0] );
+	if( g_strv_length( split ) == 2 ){
+		npn->parm = g_strdup( split[1] );
+	} else if( g_strv_length( split ) == 3 ){
+		npn->profile = g_strdup( split[1] );
+		npn->parm = g_strdup( split[2] );
+	}
+	g_strfreev( split );
+
+	const GConfValue *value = gconf_entry_get_value( entry );
+	if( value ){
+		switch( value->type ){
+
+			case GCONF_VALUE_STRING:
+				npn->type = NACT_PIVOT_STR;
+				npn->data = ( gpointer ) g_strdup( gconf_value_get_string( value ));
+				break;
+
+			case GCONF_VALUE_BOOL:
+				npn->type = NACT_PIVOT_BOOL;
+				npn->data = ( gpointer ) gconf_value_get_bool( value );
+				break;
+
+			case GCONF_VALUE_LIST:
+				listvalues = gconf_value_get_list( value );
+				strings = NULL;
+				for( iv = listvalues ; iv != NULL ; iv = iv->next ){
+					strings = g_slist_prepend( strings,
+							( gpointer ) gconf_value_get_string(( GConfValue * ) iv->data ));
+				}
+
+				npn->type = NACT_PIVOT_STRLIST;
+				npn->data = ( gpointer ) nactuti_duplicate_string_list( strings );
+				/*nactuti_free_string_list( strings );*/
+				break;
+
+			default:
+				g_assert_not_reached();
+				break;
+		}
+	}
+	return( npn );
+}
+
+/*
+ * note that we need the NactPivot object in action_changed_cb handler
+ * but it is initialized as a construction property, and this watch is
+ * installed from instance_init, i.e. before properties are set..
+ * we so pass NactGConf pointer which is already valid at this time.
+ */
 static guint
 install_gconf_watch( NactGConf *gconf )
 {
-	static const gchar *thisfn = "install_gconf_watch";
+	static const gchar *thisfn = "nact_gconf_install_gconf_watch";
 	GError *error = NULL;
 
 	gconf_client_add_dir(
@@ -278,7 +603,7 @@ install_gconf_watch( NactGConf *gconf )
 		gconf_client_notify_add(
 			gconf->private->gconf,
 			NACT_GCONF_CONFIG_PATH,
-			( GConfClientNotifyFunc ) actions_changed_cb,
+			( GConfClientNotifyFunc ) action_changed_cb,
 			gconf,
 			NULL,
 			&error
@@ -295,7 +620,7 @@ install_gconf_watch( NactGConf *gconf )
 static void
 remove_gconf_watch( NactGConf *gconf )
 {
-	static const gchar *thisfn = "remove_gconf_watch";
+	static const gchar *thisfn = "nact_gconf_remove_gconf_watch";
 	GError *error = NULL;
 
 	if( gconf->private->notify_id ){
@@ -326,338 +651,18 @@ remove_gconf_watch( NactGConf *gconf )
  * but doesn't work if the modification is made from outside of the ui
  *
  * if the modification is made elsewhere (an action is imported as a
- * xml file in gconf, of gconf is directly edited), we'd have to rely
- * on the key of the value
+ * xml file in gconf, or gconf is directly edited), we'd have to rely
+ * only on the standard watch mechanism
  */
 static void
-actions_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data )
+action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data )
 {
-	static const gchar *thisfn = "actions_changed_cb";
-	g_debug( "%s: client=%p, cnxnid=%u, entry=%p, user_data=%p", thisfn, client, cnxn_id, entry, user_data );
+	/*static const gchar *thisfn = "action_changed_cb";
+	g_debug( "%s: client=%p, cnxnid=%u, entry=%p, user_data=%p", thisfn, client, cnxn_id, entry, user_data );*/
 
-	/*NactGConf *gconf = NACT_GCONF( user_data );*/
+	g_assert( NACT_IS_GCONF( user_data ));
+	NactGConf *gconf = NACT_GCONF( user_data );
 
-	/* The Key value format is XXX:YYYY-YYYY-... where XXX is an number incremented to make key
-	 * effectively changed each time and YYYY-YYYY-... is the modified uuid */
-	const GConfValue* value = gconf_entry_get_value (entry);
-	const gchar* notify_value = gconf_value_get_string (value);
-	const gchar *key = gconf_entry_get_key( entry );
-	g_debug( "%s: notify_value='%s', key='%s'", thisfn, notify_value, key );
-	/*const gchar* uuid = notify_value + 4;*/
-
-	/* Get the modified action from the internal list if any */
-	/*NautilusActionsConfigAction *old_action = nautilus_actions_config_get_action (config, uuid);*/
-
-	/* Get the new version from GConf if any */
-	/*NautilusActionsConfigAction *new_action = nautilus_actions_config_gconf_get_action (NAUTILUS_ACTIONS_CONFIG_GCONF (config), uuid);*/
-
-	/* If modified action is unknown internally */
-	/*if (old_action == NULL)
-	{
-		if (new_action != NULL)
-		{*/
-			/* new action */
-			/*nautilus_actions_config_add_action (config, new_action, NULL);
-		}
-		else
-		{*/
-			/* This case should not happen */
-			/*g_assert_not_reached ();
-		}
-	}
-	else
-	{
-		if (new_action != NULL)
-		{*/
-			/* action modified */
-			/*nautilus_actions_config_update_action (config, new_action);
-		}
-		else
-		{*/
-			/* action removed */
-			/*nautilus_actions_config_remove_action (config, uuid);
-		}
-	}*/
-
-	/* Add & change handler duplicate actions before adding them,
-	 * so we can free the new action
-	 */
-	/*nautilus_actions_config_action_free (new_action);*/
-}
-
-static void
-free_keys_values( GSList *list )
-{
-	GSList *item;
-	for( item = list ; item != NULL ; item = item->next ){
-		GConfEntry *entry = ( GConfEntry * ) item->data;
-		gconf_entry_unref( entry );
-	}
-	g_slist_free( list );
-}
-
-/*
- * load all the key=value pairs of this key (specified as a full path)
- * The list is not recursive, it contains only the immediate children of
- * path.
- * To free the returned hash table, call free_key_values
- */
-static GSList *
-load_keys_values( const NactGConf *gconf, const gchar *path )
-{
-	static const gchar *thisfn = "nact_gconf_load_keys_values";
-
-	GError *error = NULL;
-	GSList *list_path = gconf_client_all_entries( gconf->private->gconf, path, &error );
-	if( error ){
-		g_error( "%s: path=%s, error=%s", thisfn, path, error->message );
-		g_error_free( error );
-		return(( GSList * ) NULL );
-	}
-
-	GSList *list_keys = NULL;
-	GSList *item;
-	for( item = list_path ; item != NULL ; item = item->next ){
-		GConfEntry *entry = ( GConfEntry * ) item->data;
-		gchar *key = path_to_key( gconf_entry_get_key( entry ));
-		GConfEntry *entry_new = gconf_entry_new( key, gconf_entry_get_value( entry ));
-		g_free( key );
-		list_keys = g_slist_prepend( list_keys, entry_new );
-	}
-
-	free_keys_values( list_path );
-
-	return( list_keys );
-}
-
-/*
- * load the keys which are the subdirs of the given path
- * returns a list of keys as full path
- */
-GSList *
-load_subdirs( const NactGConf *gconf, const gchar *path )
-{
-	static const gchar *thisfn = "nact_gconf_load_subdirs";
-
-	GError *error = NULL;
-	GSList *list = gconf_client_all_dirs( gconf->private->gconf, path, &error );
-	if( error ){
-		g_error( "%s: path=%s, error=%s", thisfn, path, error->message );
-		g_error_free( error );
-		return(( GSList * ) NULL );
-	}
-
-	return( list );
-}
-
-/*
- * extract the key part (the last part) of a full path
- * returns a newly allocated string which must be g_freed by the caller
- */
-static gchar *
-path_to_key( const gchar *path )
-{
-	gchar **split = g_strsplit( path, "/", -1 );
-	guint count = g_strv_length( split );
-	gchar *key = g_strdup( split[count-1] );
-	g_strfreev( split );
-	return( key );
-}
-
-/*
- * allocate a new NactGConfIO structure
- * to be freed via nact_gconf_dispose
- */
-static NactGConfIO *
-path_to_struct( const gchar *path )
-{
-	NactGConfIO *io = g_new0( NactGConfIO, 1 );
-	io->key = path_to_key( path );
-	io->path = g_strdup( path );
-	return( io );
-}
-
-/*
- * set the item properties into the object
- */
-static void
-set_item_properties( NactObject *object, GSList *properties )
-{
-	g_assert( NACT_IS_OBJECT( object ));
-
-	GSList *item, *listvalues, *iv, *strings;
-
-	for( item = properties ; item != NULL ; item = item->next ){
-
-		GConfEntry *entry = ( GConfEntry * ) item->data;
-
-		const char *key = gconf_entry_get_key( entry );
-		GConfValue *value = gconf_entry_get_value( entry );
-
-		switch( value->type ){
-
-			case GCONF_VALUE_STRING:
-				g_object_set( G_OBJECT( object ), key, gconf_value_get_string( value ), NULL );
-				break;
-
-			case GCONF_VALUE_BOOL:
-				g_object_set( G_OBJECT( object ), key, gconf_value_get_bool( value ), NULL );
-				break;
-
-			case GCONF_VALUE_LIST:
-				listvalues = gconf_value_get_list( value );
-				strings = NULL;
-				for( iv = listvalues ; iv != NULL ; iv = iv->next ){
-					strings = g_slist_prepend( strings,
-							( gpointer ) gconf_value_get_string(( GConfValue * ) iv->data ));
-				}
-				g_object_set( G_OBJECT( object ), key, strings, NULL );
-				/*g_slist_free( strings );*/
-				break;
-
-			default:
-				g_assert_not_reached();
-				break;
-		}
-	}
-}
-
-/*
- * NactIIOProviderInterface implementation
- * load the list of actions and returns them as a GSList
- */
-static GSList *
-do_load_actions( NactIIOProvider *provider )
-{
-	static const gchar *thisfn = "nacf_gconf_do_load_actions";
-	g_debug( "%s: provider=%p", thisfn, provider );
-
-	g_assert( NACT_IS_IIO_PROVIDER( provider ));
-	g_assert( NACT_IS_GCONF( provider ));
-	NactGConf *self = NACT_GCONF( provider );
-
-	GSList *items = NULL;
-
-	GSList *listpath = load_subdirs( self, NACT_GCONF_CONFIG_PATH );
-	GSList *ip;
-	for( ip = listpath ; ip ; ip = ip->next ){
-
-		NactGConfIO *io = path_to_struct(( const gchar * ) ip->data );
-
-		NactAction *action = nact_action_new( self, io );
-		nact_action_load( action );
-
-		items = g_slist_prepend( items, action );
-	}
-	nactuti_free_string_list( listpath );
-
-	return( items );
-}
-
-/*
- * NactIIOProviderInterface implementation
- * load and set the properties of the specified action
- */
-static void
-do_load_action_properties( NactIIOClient *client )
-{
-	static const gchar *thisfn = "nacf_gconf_do_load_action_properties";
-	g_debug( "%s: client=%p", thisfn, client );
-
-	g_assert( NACT_IS_IIO_CLIENT( client ));
-	g_assert( NACT_IS_ACTION( client ));
-	NactAction *action = NACT_ACTION( client );
-
-	NactGConfIO *io = ( NactGConfIO * ) nact_iio_client_get_provider_data( client );
-	NactGConf *self = NACT_GCONF( nact_iio_client_get_provider_id( client ));
-
-	GSList *properties = load_keys_values( self, io->path );
-
-	set_item_properties( NACT_OBJECT( action ), properties );
-
-	free_keys_values( properties );
-}
-
-/*
- * NactIIOProviderInterface implementation
- * load the list of profiles for an action and returns them as a GSList
- */
-static GSList *
-do_load_profiles( NactIIOClient *client )
-{
-	static const gchar *thisfn = "nacf_gconf_do_load_profiles";
-	g_debug( "%s: client=%p", thisfn, client );
-
-	g_assert( NACT_IS_IIO_CLIENT( client ));
-	g_assert( NACT_IS_ACTION( client ));
-	NactAction *action = NACT_ACTION( client );
-
-	NactGConfIO *io = ( NactGConfIO * ) nact_iio_client_get_provider_data( client );
-	NactGConf *self = NACT_GCONF( nact_iio_client_get_provider_id( client ));
-
-	GSList *items = NULL;
-
-	GSList *listpath = load_subdirs( self, io->path );
-	GSList *ip;
-	for( ip = listpath ; ip ; ip = ip->next ){
-
-		gchar *key = path_to_key(( const gchar * ) ip->data );
-		NactActionProfile *profile = nact_action_profile_new( NACT_OBJECT( action ), key );
-		nact_action_profile_load( NACT_OBJECT( profile ));
-
-		items = g_slist_prepend( items, profile );
-	}
-	nactuti_free_string_list( listpath );
-
-	return( items );
-}
-
-/*
- * NactIIOProviderInterface implementation
- * load and set the properties of the specified profile
- */
-static void
-do_load_profile_properties( NactObject *profile )
-{
-	static const gchar *thisfn = "nacf_gconf_do_load_profile_properties";
-	g_debug( "%s: profile=%p", thisfn, profile );
-
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
-
-	NactAction *action =
-		NACT_ACTION( nact_action_profile_get_action( NACT_ACTION_PROFILE( profile )));
-
-	g_assert( NACT_IS_ACTION( action ));
-	g_assert( NACT_IS_IIO_CLIENT( action ));
-
-	NactIIOClient *client = NACT_IIO_CLIENT( action );
-
-	NactGConfIO *io = ( NactGConfIO * ) nact_iio_client_get_provider_data( client );
-	NactGConf *self = NACT_GCONF( nact_iio_client_get_provider_id( client ));
-
-	gchar *path = g_strdup_printf(
-			"%s/%s", io->path, nact_action_profile_get_id( NACT_ACTION_PROFILE( profile )));
-
-	GSList *properties = load_keys_values( self, path );
-
-	g_free( path );
-
-	set_item_properties( profile, properties );
-
-	free_keys_values( properties );
-}
-
-/*
- * NactIIOProviderInterface implementation
- */
-static void
-do_release_data( NactIIOClient *client )
-{
-	g_assert( NACT_IS_IIO_CLIENT( client ));
-
-	NactGConfIO *io = ( NactGConfIO * ) nact_iio_client_get_provider_data( client );
-
-	g_free( io->key );
-	g_free( io->path );
-	g_free( io );
+	NactPivotNotify *npn = entry_to_notify( entry );
+	g_signal_emit_by_name( gconf->private->notified, "notify_pivot_of_action_changed", npn );
 }

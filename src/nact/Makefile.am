@@ -29,10 +29,12 @@
 bin_PROGRAMS = \
 	nautilus-actions-config
 
+gladedir = $(datadir)/nautilus-actions
+
 AM_CPPFLAGS += \
-	-I $(top_srcdir)									\
+	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
-	-DGLADEDIR=\""$(datadir)/nautilus-actions/nact"\"	\
+	-DGLADEDIR=\"$(gladedir)\"							\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
@@ -57,8 +59,6 @@ nautilus_actions_config_LDADD = \
 	$(top_builddir)/src/common/libnact.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
-
-gladedir = $(datadir)/nautilus-actions
 
 glade_DATA = nautilus-actions-config.glade
 

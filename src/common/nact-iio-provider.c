@@ -32,11 +32,11 @@
 #include <config.h>
 #endif
 
-#include "nact-action.h"
-#include "nact-action-profile.h"
 #include "nact-iio-provider.h"
 #include "nact-pivot.h"
 
+/* private interface data
+ */
 struct NactIIOProviderInterfacePrivate {
 };
 
@@ -96,10 +96,6 @@ interface_base_init( NactIIOProviderInterface *klass )
 		klass->private = g_new0( NactIIOProviderInterfacePrivate, 1 );
 
 		klass->load_actions = NULL;
-		klass->load_action_properties = NULL;
-		klass->load_profiles = NULL;
-		klass->load_profile_properties = NULL;
-		klass->release_data = NULL;
 
 		initialized = TRUE;
 	}
@@ -121,9 +117,12 @@ interface_base_finalize( NactIIOProviderInterface *klass )
 }
 
 /**
- * Load the defined actions.
+ * Loads the actions defined in the system.
  *
- * Return a GSList of NactAction objects.
+ * @object: the pivot object which owns the list of registered
+ * interface providers.
+ *
+ * Returns a GSList of newly allocated NactAction objects.
  */
 GSList *
 nact_iio_provider_load_actions( const GObject *object )
@@ -152,88 +151,4 @@ nact_iio_provider_load_actions( const GObject *object )
 	}
 
 	return( actions );
-}
-
-/**
- * Load and set properties of the action.
- */
-void
-nact_iio_provider_load_action_properties( NactIIOClient *client )
-{
-	static const gchar *thisfn = "nact_iio_provider_load_action_properties";
-	g_debug( "%s: client=%p", thisfn, client );
-
-	g_assert( NACT_IS_IIO_CLIENT( client ));
-	g_assert( NACT_IS_ACTION( client ));
-
-	NactIIOProvider *provider = nact_iio_client_get_provider_id( client );
-
-	if( NACT_IIO_PROVIDER_GET_INTERFACE( provider )->load_action_properties ){
-		NACT_IIO_PROVIDER_GET_INTERFACE( provider )->load_action_properties( client );
-	}
-}
-
-/**
- * Load the defined profiles for the action.
- *
- * Return a GSList of NactActionProfile objects.
- */
-GSList *
-nact_iio_provider_load_profiles( NactIIOClient *client )
-{
-	static const gchar *thisfn = "nact_iio_provider_load_profiles";
-	g_debug( "%s: client=%p", thisfn, client );
-
-	g_assert( NACT_IS_IIO_CLIENT( client ));
-	g_assert( NACT_IS_ACTION( client ));
-
-	NactIIOProvider *provider = nact_iio_client_get_provider_id( client );
-
-	GSList *profiles = NULL;
-
-	if( NACT_IIO_PROVIDER_GET_INTERFACE( provider )->load_profiles ){
-		GSList *list = NACT_IIO_PROVIDER_GET_INTERFACE( provider )->load_profiles( client );
-		profiles = g_slist_concat( profiles, list );
-	}
-
-	return( profiles );
-}
-
-/**
- * Load and set properties of the profile.
- */
-void
-nact_iio_provider_load_profile_properties( NactObject *profile )
-{
-	static const gchar *thisfn = "nact_iio_provider_load_action_properties";
-	g_debug( "%s", thisfn );
-
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
-
-	NactIIOClient *client =
-		NACT_IIO_CLIENT( nact_action_profile_get_action( NACT_ACTION_PROFILE( profile )));
-
-	g_assert( NACT_IS_IIO_CLIENT( client ));
-	g_assert( NACT_IS_ACTION( client ));
-
-	NactIIOProvider *provider = nact_iio_client_get_provider_id( client );
-
-	if( NACT_IIO_PROVIDER_GET_INTERFACE( provider )->load_profile_properties ){
-		NACT_IIO_PROVIDER_GET_INTERFACE( provider )->load_profile_properties( profile );
-	}
-}
-
-/**
- * Called by nact_io_client_instance_dispose.
- */
-void
-nact_iio_provider_release_data( NactIIOClient *client )
-{
-	g_assert( NACT_IS_IIO_CLIENT( client ));
-
-	NactIIOProvider *provider = nact_iio_client_get_provider_id( client );
-
-	if( NACT_IIO_PROVIDER_GET_INTERFACE( provider )->release_data ){
-		NACT_IIO_PROVIDER_GET_INTERFACE( provider )->release_data( client );
-	}
 }

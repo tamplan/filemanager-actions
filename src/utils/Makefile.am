@@ -28,11 +28,10 @@
 
 bin_PROGRAMS = \
 	nautilus-actions-new-config					\
-	nautilus-actions-check-actions-change		\
 	$(NULL)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)							\
+	-I $(top_srcdir)/src						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	$(NAUTILUS_ACTIONS_UTILS_CFLAGS)			\
 	$(NULL)
@@ -46,12 +45,4 @@ nautilus_actions_new_config_SOURCES = \
 nautilus_actions_new_config_LDADD = \
 	$(top_builddir)/src/common/libnact.la		\
 	$(NAUTILUS_ACTIONS_UTILS_LIBS)				\
-	$(NULL)
-
-nautilus_actions_check_actions_change_SOURCES = \
-	nautilus-actions-check-actions-change.c
-
-nautilus_actions_check_actions_change_LDADD = \
-	$(top_builddir)/src/common/libnact.la		\
-	$(NAUTILUS_ACTIONS_LIBS)					\
 	$(NULL)

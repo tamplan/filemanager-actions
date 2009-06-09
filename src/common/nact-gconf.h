@@ -66,7 +66,7 @@ typedef struct {
 
 GType      nact_gconf_get_type( void );
 
-NactGConf *nact_gconf_new( const GObject *pivot );
+NactGConf *nact_gconf_new( const GObject *notified );
 
 G_END_DECLS
 

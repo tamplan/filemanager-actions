@@ -27,7 +27,7 @@
 #   ... and many others (see AUTHORS)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)									\
+	-I $(top_srcdir)/src								\
 	-DG_LOG_DOMAIN=\"nact\"								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
@@ -40,10 +40,6 @@ libnautilus_actions_la_SOURCES = \
 	nautilus-module.c									\
 	nautilus-actions.c									\
 	nautilus-actions.h									\
-	nautilus-actions-test.c								\
-	nautilus-actions-test.h								\
-	nautilus-actions-utils.c							\
-	nautilus-actions-utils.h							\
 	$(NULL)
 
 libnautilus_actions_la_LDFLAGS = -module -avoid-version

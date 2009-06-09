@@ -94,7 +94,7 @@ nautilus_actions_config_class_init (NautilusActionsConfigClass *klass)
 														NULL, NULL,
 														g_cclosure_marshal_VOID__POINTER,
 														G_TYPE_NONE, 1, G_TYPE_POINTER);
-	signals[ACTION_CHANGED] = g_signal_new ("action_changed",
+	signals[ACTION_CHANGED] = g_signal_new ("action_changed_old",
 														G_TYPE_FROM_CLASS (object_class),
 														G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
 														G_STRUCT_OFFSET (NautilusActionsConfigClass, action_changed),

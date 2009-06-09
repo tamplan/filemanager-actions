@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACTUTI_LISTS_H__
-#define __NACTUTI_LISTS_H__
+#ifndef __NACT_UTI_LISTS_H__
+#define __NACT_UTI_LISTS_H__
 
 /*
  * Some functions to ease the GSList list manipulations.
@@ -39,11 +39,10 @@
 
 G_BEGIN_DECLS
 
-void     nactuti_free_object_list( GSList *list );
-
 GSList  *nactuti_duplicate_string_list( GSList *list );
+
 void     nactuti_free_string_list( GSList *list );
 
 G_END_DECLS
 
-#endif /* __NACTUTI_LISTS_H__ */
+#endif /* __NACT_UTI_LISTS_H__ */

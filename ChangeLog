@@ -1,4 +1,133 @@
+2009-06-09 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Bump version number.
+
+	* src/common/nact-action.c:
+	* src/common/nact-action.h
+	(nact_action_get_profile_ids, nact_action_free_profile_ids,
+	 nact_action_has_profile, nact_action_get_profile,
+	 nact_action_free_profile):
+	Remove functions and cleanup the code.
+
+	* src/common/nact-action-profile.c:
+	* src/common/nact-action-profile.h
+	(nact_action_profile_load): Remove function and cleanup the code.
+
+	* src/common/nact-gconf.c:
+	* src/common/nact-iio-provider.c:
+	Cleanup the code, adding documentation to public functions.
+
+	* src/common/nact-object.c:
+	* src/common/nact-object.h
+	(nact_object_empty_property): Remove function and cleanup the code.
+
+	* src/common/nact-pivot.c:
+	* src/common/nact-pivot.h
+	(nact_pivot_get_action): Remove function and cleanup the code.
+
+	* src/common/nact-uti.c:
+	* src/common/nact-uti.h (nactuti_free_object_list): Remove function.
+
+	* src/plugin/nautilus-actions.c:
+	The plugin now uses the new object hierarchy to handle menu items.
+	Fix #580378 (context menu doesn't update) reported by James Campos.
+	Cleanup the code.
+
+	* src/plugin/nautilus-actions-test.c:
+	* src/plugin/nautilus-actions-test.h:
+	* src/plugin/nautilus-actions-utils.c:
+	* src/plugin/nautilus-actions-utils.h:
+	Removed files as functions are now integrated in NactActionProfile
+	class.
+
+	* src/utils/nautilus-check-actions-changed.c:
+	* src/utils/Makefile.am:
+	No more build useless nautilus-actions-check-actions-changed program.
+
+2009-06-08 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/nact-action-profile.c:
+	* src/common/nact-action-profile.h:
+	* src/common/nact-action.c:
+	* src/common/nact-action.h:
+	* src/common/nact-gconf.c:
+	* src/common/nact-object.c:
+	* src/common/nact-object.h:
+	* src/common/nact-pivot.c:
+	* src/common/nact-pivot.h:
+	* src/plugin/nautilus-actions.c:
+	Reload list of actions instead of trying to update each object.
+
+2009-06-07 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/nact-pivot.c:
+	* src/common/nact-pivot.h:
+	* src/common/nact-gconf.c:
+	Update the NactPivotNotify structure to handle profile name.
+
+2009-06-07 Pierre Wieser <pwieser@trychlos.org>
+
+	Install the notification system.
+
+	* src/common/nautilus-actions.c:
+	Define new message "notify_nautilus_of_action_changed".
+
+	* src/common/nact-pivot.c:
+	Define new message "notify_pivot_of_action_changed".
+
+	* src/common/nact-pivot.h:
+	Rename and update nactPivotValue structure to NactPivotNotify.
+
+	* src/common/gconf.c:
+	Send message to NactPivot on action changed.
+
+2009-06-06 Pierre Wieser <pwieser@trychlos.org>
+
+	Remove NactIIOClient interface.
+	Fix make distcheck.
+	Fix Glade file adressing.
+
+	* src/common/nact-iio-client.c:
+	* src/common/nact-iio-client.h:
+	* src/common/nact-io-client.c:
+	* src/common/nact-io-client.c:
+	Remove files.
+
+	* src/common/Makefile.am:
+	* src/common/nact-action-profile.c:
+	* src/common/nact-action-profile.h:
+	* src/common/nact-action.c:
+	* src/common/nact-action.h:
+	* src/common/nact-gconf.c:
+	* src/common/nact-gconf.h:
+	* src/common/nact-iio-provider.c:
+	* src/common/nact-iio-provider.h:
+	* src/common/nact-pivot.c:
+	* src/common/nact-pivot.h:
+	* src/nact/Makefile.am:
+	* src/utils/Makefile.am:
+	Updated accordingly.
+
+	* src/common/nact-uti-lists.c:
+	* src/common/nact-uti-lists.h:
+	New files after renaming previous uti-lists.{c,h}.
+
 2009-06-05 Pierre Wieser <pwieser@trychlos.org>
+
+	Create pivot data structure NactPivotValue
+
+	* src/common/nact-gconf.c (value_to_pivot):
+	New function.
+
+	* src/common/nact-iio-provider.c
+	(nact_iio_provider_load_profile_properties):
+	Fix thisfn typo.
+
+	* src/common/nact-pivot.c
+	* src/common/nact-pivot.h (nact_pivot_free_pivot_value):
+	New function.
+
+2009-06-04 Pierre Wieser <pwieser@trychlos.org>
 
 	Create a whole new object model, and defines some communication
 	interfaces.
