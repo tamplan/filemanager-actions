@@ -74,8 +74,6 @@ NactActionProfile *nact_action_profile_new( const NactObject *action, const gcha
 NactActionProfile *nact_action_profile_copy( const NactActionProfile *profile );
 void               nact_action_profile_free( NactActionProfile *profile );
 
-void               nact_action_profile_load( NactObject *profile );
-
 NactObject        *nact_action_profile_get_action( const NactActionProfile *profile );
 gchar             *nact_action_profile_get_name( const NactActionProfile *profile );
 gchar             *nact_action_profile_get_label( const NactActionProfile *profile );

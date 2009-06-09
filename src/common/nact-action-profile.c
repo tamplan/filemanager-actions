@@ -108,9 +108,9 @@ static NactObjectClass *st_parent_class = NULL;
 static GType  register_type( void );
 static void   class_init( NactActionProfileClass *klass );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *object );
 static void   instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void   instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
 static void   do_dump( const NactObject *profile );
@@ -118,58 +118,6 @@ static void   do_dump_list( const gchar *thisfn, const gchar *label, GSList *lis
 static gchar *do_get_id( const NactObject *object );
 static gchar *do_get_label( const NactObject *object );
 static int    validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
-
-NactActionProfile *
-nact_action_profile_new( const NactObject *action, const gchar *name )
-{
-	g_assert( NACT_IS_ACTION( action ));
-	g_assert( name && strlen( name ));
-
-	NactActionProfile *profile =
-		g_object_new(
-				NACT_ACTION_PROFILE_TYPE,
-				PROP_ACTION_STR, action, PROP_PROFILE_NAME_STR, name, NULL );
-
-	return( profile );
-}
-
-NactActionProfile *
-nact_action_profile_copy( const NactActionProfile *profile )
-{
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
-
-	NactActionProfile *new =
-		nact_action_profile_new( profile->private->action, profile->private->name );
-
-	g_object_set( G_OBJECT( new ),
-			PROP_LABEL_STR, profile->private->label,
-			PROP_PATH_STR, profile->private->path,
-			PROP_PARAMETERS_STR, profile->private->parameters,
-			PROP_ACCEPT_MULTIPLE_STR, profile->private->accept_multiple_files,
-			PROP_BASENAMES_STR, profile->private->basenames,
-			PROP_ISDIR_STR, profile->private->is_dir,
-			PROP_ISFILE_STR, profile->private->is_file,
-			PROP_MATCHCASE_STR, profile->private->match_case,
-			PROP_MIMETYPES_STR, profile->private->mimetypes,
-			PROP_SCHEMES_STR, profile->private->schemes,
-			NULL );
-
-	return( new );
-}
-
-void
-nact_action_profile_free( NactActionProfile *profile )
-{
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
-
-	g_free( profile->private->name );
-	g_free( profile->private->label );
-	g_free( profile->private->path );
-	g_free( profile->private->parameters );
-	nactuti_free_string_list( profile->private->basenames );
-	nactuti_free_string_list( profile->private->mimetypes );
-	nactuti_free_string_list( profile->private->schemes );
-}
 
 GType
 nact_action_profile_get_type( void )
@@ -490,6 +438,82 @@ instance_finalize( GObject *object )
 	}
 }
 
+/**
+ * Allocates a new profile for an action.
+ *
+ * @action: the action to which the profile must be attached.
+ *
+ * @name: the internal name (identifier) of the profile.
+ *
+ * Returns the newly allocated NactActionProfile object.
+ */
+NactActionProfile *
+nact_action_profile_new( const NactObject *action, const gchar *name )
+{
+	g_assert( NACT_IS_ACTION( action ));
+	g_assert( name && strlen( name ));
+
+	NactActionProfile *profile =
+		g_object_new(
+				NACT_ACTION_PROFILE_TYPE,
+				PROP_ACTION_STR, action, PROP_PROFILE_NAME_STR, name, NULL );
+
+	return( profile );
+}
+
+/**
+ * Duplicates a profile.
+ *
+ * @profile: the profile to be duplicated.
+ *
+ * Returns the newly allocated NactActionProfile object.
+ *
+ * Note the duplicated profile has the same internal name (identifier)
+ * as the initial one, and thus cannot be attached to the same action.
+ */
+NactActionProfile *
+nact_action_profile_copy( const NactActionProfile *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	NactActionProfile *new =
+		nact_action_profile_new( profile->private->action, profile->private->name );
+
+	g_object_set( G_OBJECT( new ),
+			PROP_LABEL_STR, profile->private->label,
+			PROP_PATH_STR, profile->private->path,
+			PROP_PARAMETERS_STR, profile->private->parameters,
+			PROP_ACCEPT_MULTIPLE_STR, profile->private->accept_multiple_files,
+			PROP_BASENAMES_STR, profile->private->basenames,
+			PROP_ISDIR_STR, profile->private->is_dir,
+			PROP_ISFILE_STR, profile->private->is_file,
+			PROP_MATCHCASE_STR, profile->private->match_case,
+			PROP_MIMETYPES_STR, profile->private->mimetypes,
+			PROP_SCHEMES_STR, profile->private->schemes,
+			NULL );
+
+	return( new );
+}
+
+/**
+ * Frees a profile.
+ *
+ * @profile: the NactActionProfile object to be freed.
+ */
+void
+nact_action_profile_free( NactActionProfile *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	g_free( profile->private->name );
+	g_free( profile->private->label );
+	g_free( profile->private->path );
+	g_free( profile->private->parameters );
+	nactuti_free_string_list( profile->private->basenames );
+	nactuti_free_string_list( profile->private->mimetypes );
+	nactuti_free_string_list( profile->private->schemes );
+}
+
 static void
 do_dump( const NactObject *object )
 {
@@ -544,7 +568,7 @@ do_get_id( const NactObject *profile )
 }
 
 /**
- * Return the internal id (name) of the profile.
+ * Returns the internal name (identifier) of the profile.
  *
  * @action: an NactActionProfile object.
  *
@@ -569,7 +593,7 @@ do_get_label( const NactObject *profile )
 }
 
 /**
- * Return the descriptive name (label) of the profile.
+ * Returns the descriptive name (label) of the profile.
  *
  * @action: an NactAction object.
  *
@@ -582,41 +606,14 @@ nact_action_profile_get_label( const NactActionProfile *profile )
 	return( nact_object_get_label( NACT_OBJECT( profile )));
 }
 
-/*
- * Check if the given profile is empty, i.e. all its attributes are
- * empty.
- */
-/*gboolean
-nact_action_profile_is_empty( const NactActionProfile *profile )
-{
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
-
-	if( profile->private->name && strlen( profile->private->name )){
-		return( FALSE );
-	}
-	if( profile->private->label && strlen( profile->private->label )){
-		return( FALSE );
-	}
-	if( profile->private->path && strlen( profile->private->path )){
-		return( FALSE );
-	}
-	if( profile->private->parameters && strlen( profile->private->parameters )){
-		return( FALSE );
-	}
-	if( !nactuti_is_empty_string_list( profile->private->basenames )){
-		return( FALSE );
-	}
-	if( !nactuti_is_empty_string_list( profile->private->mimetypes )){
-		return( FALSE );
-	}
-	if( !nactuti_is_empty_string_list( profile->private->schemes )){
-		return( FALSE );
-	}
-	return( TRUE );
-}*/
-
 /**
  * Returns a pointer to the action for this profile.
+ *
+ * @profile: the NactActionProfile object whose parent action is to be
+ * retrieved.
+ *
+ * Note that the returned NactNaction is owned by the profile. The
+ * caller should not try to free or unref it.
  */
 NactObject *
 nact_action_profile_get_action( const NactActionProfile *profile )
@@ -631,6 +628,9 @@ nact_action_profile_get_action( const NactActionProfile *profile )
 
 /**
  * Returns the path of the command in the profile.
+ *
+ * @profile: the NactActionProfile object whose command path is to be
+ * retrieved.
  *
  * The returned string should be g_freed by the caller.
  */
@@ -647,6 +647,9 @@ nact_action_profile_get_path( const NactActionProfile *profile )
 
 /**
  * Returns the parameters of the command in the profile.
+ *
+ * @profile: the NactActionProfile object whose command parameters are
+ * to be retrieved.
  *
  * The returned string should be g_freed by the caller.
  */
@@ -686,6 +689,15 @@ validate_schemes( GSList* schemes2test, NautilusFileInfo* file )
 	return retv;
 }
 
+/**
+ * Determines if the given profile is candidate to be displayed in the
+ * Nautilus context menu, regarding the list of currently selected
+ * items.
+ *
+ * @profile: the profile to be examined.
+ *
+ * @files: the list currently selected items, as provided by Nautilus.
+ */
 gboolean
 nact_action_profile_is_candidate( const NactActionProfile *profile, GList* files )
 {
@@ -904,8 +916,14 @@ nact_action_profile_is_candidate( const NactActionProfile *profile, GList* files
 	return retv;
 }
 
-/*
- * Valid parameters :
+/**
+ * Expands the parameters path, in function of the found tokens.
+ *
+ * @profile: the selected profile.
+ *
+ * @files: the list of currently selected items, as provided by Nautilus.
+ *
+ * Valid parameters are :
  *
  * %u : gnome-vfs URI
  * %d : base dir of the selected file(s)/folder(s)

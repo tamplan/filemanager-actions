@@ -81,12 +81,6 @@ void        nact_action_set_profiles( NactAction *action, GSList *list );
 void        nact_action_free_profiles( GSList *list );
 
 guint       nact_action_get_profiles_count( const NactAction *action );
-GSList     *nact_action_get_profile_ids( const NactAction *action );
-void        nact_action_free_profile_ids( GSList *list );
-
-gboolean    nact_action_has_profile( const NactAction *action, const gchar *name );
-NactObject *nact_action_get_profile( const NactAction *action, const gchar *name );
-void        nact_action_remove_profile( NactAction *action, const gchar *name );
 
 G_END_DECLS
 

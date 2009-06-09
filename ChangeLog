@@ -1,9 +1,16 @@
 2009-06-09 Pierre Wieser <pwieser@trychlos.org>
 
-	* src/common/nact-action-profile.c:
-	* src/common/nact-action-profile.h:
 	* src/common/nact-action.c:
-	* src/common/nact-action.h:
+	* src/common/nact-action.h
+	(nact_action_get_profile_ids, nact_action_free_profile_ids,
+	 nact_action_has_profile, nact_action_get_profile,
+	 nact_action_free_profile):
+	Remove functions and cleanup the code.
+
+	* src/common/nact-action-profile.c:
+	* src/common/nact-action-profile.h
+	(nact_action_profile_load): Remove function and cleanup the code.
+
 	* src/common/nact-gconf.c:
 	* src/common/nact-object.c:
 	* src/common/nact-object.h:

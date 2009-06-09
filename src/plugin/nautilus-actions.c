@@ -329,8 +329,10 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	GSList* profiles;
 	GSList *ia, *ip;
 	NautilusMenuItem *item;
-	gchar *debug_label;
 	GSList *actions = NULL;
+#ifdef NACT_MAINTAINER_MODE
+	gchar *debug_label;
+#endif
 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 	NautilusActions *self = NAUTILUS_ACTIONS( provider );

@@ -82,38 +82,19 @@ enum {
 
 static NactObjectClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NactActionClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_dispose( GObject *object );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void     instance_finalize( GObject *object );
+static GType  register_type( void );
+static void   class_init( NactActionClass *klass );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void   instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void   instance_dispose( GObject *object );
+static void   instance_finalize( GObject *object );
 
-static void               free_profiles( NactAction *action );
-static NactActionProfile *get_profile( const NactAction *action, const gchar *profile_name );
+static void   do_dump( const NactObject *action );
+static gchar *do_get_id( const NactObject *action );
+static gchar *do_get_label( const NactObject *action );
 
-static void     do_dump( const NactObject *action );
-static gchar   *do_get_id( const NactObject *action );
-static gchar   *do_get_label( const NactObject *action );
-
-/**
- * Allocate a new NactAction object.
- *
- * @provider: a gpointer to the instance which implements the storage
- * subsystem for this action ; the @provider must implement the
- * NactIIOProvider interface.
- *
- * @data: a gpointer to some data internal to the provider ; the
- * provider may use it to store and retrieve its data on a per-object
- * basis.
- */
-NactAction *
-nact_action_new( const gchar *uuid )
-{
-	NactAction *action = g_object_new( NACT_ACTION_TYPE, PROP_UUID_STR, uuid, NULL );
-	return( action );
-}
+static void   free_profiles( NactAction *action );
 
 GType
 nact_action_get_type( void )
@@ -330,24 +311,18 @@ instance_finalize( GObject *object )
 	}
 }
 
-static void
-free_profiles( NactAction *action )
+/**
+ * Allocates a new NactAction object.
+ *
+ * @uuid: the globally unique identifier (UUID) of the action.
+ *
+ * Return a newly allocated NactAction object.
+ */
+NactAction *
+nact_action_new( const gchar *uuid )
 {
-	g_assert( NACT_IS_ACTION( action ));
-
-	nact_action_free_profiles( action->private->profiles );
-
-	action->private->profiles = NULL;
-}
-
-void
-nact_action_free_profiles( GSList * list )
-{
-	GSList *ip;
-	for( ip = list ; ip ; ip = ip->next ){
-		g_object_unref( NACT_ACTION_PROFILE( ip->data ));
-	}
-	g_slist_free( list );
+	NactAction *action = g_object_new( NACT_ACTION_TYPE, PROP_UUID_STR, uuid, NULL );
+	return( action );
 }
 
 static void
@@ -388,7 +363,7 @@ do_get_id( const NactObject *action )
 }
 
 /**
- * Return the globally unique identifier (UUID) of the action.
+ * Returns the globally unique identifier (UUID) of the action.
  *
  * @action: an NactAction object.
  *
@@ -413,7 +388,7 @@ do_get_label( const NactObject *action )
 }
 
 /**
- * Return the label of the action.
+ * Returns the label of the action.
  *
  * @action: an NactAction object.
  *
@@ -427,7 +402,8 @@ nact_action_get_label( const NactAction *action )
 }
 
 /**
- * Return the tooltip attached to the context menu item for the action.
+ * Returns the tooltip attached to the context menu item for the
+ * action.
  *
  * @action: an NactAction object.
  *
@@ -445,12 +421,12 @@ nact_action_get_tooltip( const NactAction *action )
 }
 
 /**
- * Return the icon name attached to the context menu item for the
+ * Returns the icon name attached to the context menu item for the
  * action.
  *
  * @action: an NactAction object.
  *
- * When not null, the returned string must be g_free by the caller.
+ * When not NULL, the returned string must be g_free by the caller.
  */
 gchar *
 nact_action_get_verified_icon_name( const NactAction *action )
@@ -492,6 +468,14 @@ nact_action_get_profiles( const NactAction *action )
 
 /**
  * Set the list of the profiles for the action.
+ *
+ * @action: the action whose profiles has to be retrieved.
+ *
+ * @list: a list of NactActionProfile objects to be installed in the
+ * action.
+ *
+ * The provided list is copied to the action, and thus can then be
+ * safely freed (see nact_action_free_profiles) by the caller.
  */
 void
 nact_action_set_profiles( NactAction *action, GSList *list )
@@ -508,6 +492,11 @@ nact_action_set_profiles( NactAction *action, GSList *list )
 	}
 }
 
+/**
+ * Returns the number of profiles which are defined for the action.
+ *
+ * @action: the action whose profiles has to be retrieved.
+ */
 guint
 nact_action_get_profiles_count( const NactAction *action )
 {
@@ -516,96 +505,27 @@ nact_action_get_profiles_count( const NactAction *action )
 	return( g_slist_length( action->private->profiles ));
 }
 
-GSList *
-nact_action_get_profile_ids( const NactAction *action )
-{
-	GSList *item;
-	GSList *profile_names = NULL;
-	gchar *name;
-	NactActionProfile *profile;
-
-	g_assert( NACT_IS_ACTION( action ));
-
-	for( item = action->private->profiles ; item != NULL ; item = item->next ){
-		profile = ( NactActionProfile * ) item->data;
-		g_object_get( G_OBJECT( profile ), "name", &name, NULL );
-		profile_names = g_slist_prepend( profile_names, name );
-	}
-
-	return( profile_names );
-}
-
-void
-nact_action_free_profile_ids( GSList *list )
-{
-	nactuti_free_string_list( list );
-}
-
-NactActionProfile *
-get_profile( const NactAction *action, const gchar *profile_name )
+static void
+free_profiles( NactAction *action )
 {
 	g_assert( NACT_IS_ACTION( action ));
-	g_assert( profile_name && strlen( profile_name ));
 
-	GSList *item;
-	NactActionProfile *profile;
-	NactActionProfile *found = NULL;
-	gchar *name;
+	nact_action_free_profiles( action->private->profiles );
 
-	for( item = action->private->profiles ; item != NULL && found == NULL ; item = item->next ){
-		profile = NACT_ACTION_PROFILE( item->data );
-		g_object_get( G_OBJECT( profile ), "name", &name, NULL );
-		if( !g_strcmp0( name, profile_name )){
-			found = profile;
-		}
-		g_free( name );
-	}
-
-	return( found );
+	action->private->profiles = NULL;
 }
 
 /**
- * Does the given profile name exists ?
- */
-gboolean
-nact_action_has_profile( const NactAction *action, const gchar *profile_name )
-{
-	g_assert( NACT_IS_ACTION( action ));
-	g_assert( profile_name && strlen( profile_name ));
-
-	return( get_profile( action, profile_name ) != NULL );
-}
-
-/**
- * Returns the profile which has the given name.
- * Create it if not found.
- */
-NactObject *
-nact_action_get_profile( const NactAction *action, const gchar *profile_name )
-{
-	g_assert( NACT_IS_ACTION( action ));
-	g_assert( profile_name && strlen( profile_name ));
-
-	NactActionProfile *profile = get_profile( action, profile_name );
-	if( !profile ){
-		profile = nact_action_profile_new( NACT_OBJECT( action ), profile_name );
-		action->private->profiles = g_slist_prepend( action->private->profiles, profile );
-	}
-
-	return( NACT_OBJECT( profile ));
-}
-
-/**
- * Remove a profile
+ * Frees a profiles list.
+ *
+ * @list: a list of NactActionProfile objects.
  */
 void
-nact_action_remove_profile( NactAction *action, const gchar *profile_name )
+nact_action_free_profiles( GSList * list )
 {
-	g_assert( NACT_IS_ACTION( action ));
-	g_assert( profile_name && strlen( profile_name ));
-
-	NactActionProfile *profile = get_profile( action, profile_name );
-	if( profile ){
-		action->private->profiles = g_slist_remove( action->private->profiles, profile );
+	GSList *ip;
+	for( ip = list ; ip ; ip = ip->next ){
+		g_object_unref( NACT_ACTION_PROFILE( ip->data ));
 	}
+	g_slist_free( list );
 }
