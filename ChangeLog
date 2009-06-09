@@ -29,6 +29,7 @@
 	* src/plugin/nautilus-actions.c:
 	The plugin now uses the new object hierarchy to handle menu items.
 	Fix #580378 (context menu doesn't update) reported by James Campos.
+	Cleanup the code.
 
 2009-06-08 Pierre Wieser <pwieser@trychlos.org>
 

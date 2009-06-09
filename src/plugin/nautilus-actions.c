@@ -46,11 +46,7 @@
 #include <common/nact-action.h>
 #include <common/nact-action-profile.h>
 #include <common/nact-pivot.h>
-#include <common/nautilus-actions-config.h>
-#include <common/nautilus-actions-config-gconf-reader.h>
 #include "nautilus-actions.h"
-/*#include "nautilus-actions-test.h"
-#include "nautilus-actions-utils.h"*/
 
 /* private class data
  */
@@ -64,10 +60,6 @@ struct NautilusActionsPrivate {
 
 	/* from nact-pivot */
 	NactPivot *pivot;
-
-	/* original */
-	NautilusActionsConfigGconfReader* configs;
-	GSList* config_list;
 };
 
 /* We have a double stage notification system :
@@ -96,19 +88,17 @@ static GObjectClass *st_parent_class = NULL;
 static GType         st_actions_type = 0;
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 
-static void class_init( NautilusActionsClass *klass );
-static void menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static void instance_init( GTypeInstance *instance, gpointer klass );
-static void instance_dispose( GObject *object );
-static void instance_finalize( GObject *object );
+static void              class_init( NautilusActionsClass *klass );
+static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static void              instance_init( GTypeInstance *instance, gpointer klass );
+static void              instance_dispose( GObject *object );
+static void              instance_finalize( GObject *object );
 
 static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
-/*static const gchar      *get_verified_icon_name( const gchar* icon_name );*/
 static NautilusMenuItem *create_menu_item( NactAction *action, NactActionProfile *profile, GList *files );
 static void              execute_action( NautilusMenuItem *item, NactActionProfile *profile );
 static void              action_changed_handler( NautilusActions *instance, gpointer user_data );
-/*static void              action_changed_handler_old( NautilusActionsConfig* config, NautilusActionsConfigAction* action, gpointer user_data );*/
 
 GType
 nautilus_actions_get_type( void )
@@ -167,7 +157,7 @@ class_init( NautilusActionsClass *klass )
 	 * addressed via a class structure offset, and thus cannot work
 	 * when defined in a private structure
 	 *
-	 * the previous point applies to g_signal_new
+	 * the previous point applies to g_signal_new ;
 	 * g_signal_new_class_handler let us specify a standard C callback
 	 */
 	st_signals[ ACTION_CHANGED ] = g_signal_new_class_handler(
@@ -222,7 +212,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	/* from nact-pivot */
 	self->private->pivot = nact_pivot_new( G_OBJECT( self ));
 
-	/* see nautilus_actions_class_init for why we have to connect an
+	/* see nautilus_actions_class_init for why we had to connect an
 	 * handler to our signal instead of relying on default handler
 	 * see also nautilus_actions_class_init for why g_signal_connect is
 	 * no more needed
@@ -232,30 +222,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			SIGNAL_ACTION_CHANGED_NAME,
 			( GCallback ) action_changed_handler,
 			NULL
-	);*/
-
-	/*self->private->configs = NULL;
-	self->private->configs = nautilus_actions_config_gconf_reader_get ();
-	self->private->config_list = NULL;
-	self->private->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->private->configs));
-
-	g_signal_connect_after(
-			G_OBJECT( self->private->configs ),
-			"action_added",
-			( GCallback ) action_changed_handler_old,
-			self
-	);
-	g_signal_connect_after(
-			G_OBJECT( self->private->configs ),
-			"action_changed_old",
-			( GCallback ) action_changed_handler_old,
-			self
-	);
-	g_signal_connect_after(
-			G_OBJECT( self->private->configs ),
-			"action_removed",
-			( GCallback ) action_changed_handler_old,
-			self
 	);*/
 }
 
@@ -367,7 +333,6 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 				g_free( debug_label );
 #endif
 
-				/*if( nautilus_actions_test_validate( profile, files )){*/
 				if( nact_action_profile_is_candidate( profile, files )){
 					item = create_menu_item( action, profile, files );
 					items = g_list_append( items, item );
@@ -379,24 +344,6 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 	return( items );
 }
-
-/*static const gchar *
-get_verified_icon_name( const gchar* icon_name )
-{
-	if (icon_name[0] == '/')
-	{
-		if (!g_file_test (icon_name, G_FILE_TEST_IS_REGULAR))
-		{
-			return NULL;
-		}
-	}
-	else if (strlen (icon_name) == 0)
-	{
-		return NULL;
-	}
-
-	return icon_name;
-}*/
 
 static NautilusMenuItem *
 create_menu_item( NactAction *action, NactActionProfile *profile, GList *files )
@@ -454,7 +401,6 @@ execute_action( NautilusMenuItem *item, NactActionProfile *profile )
 	path = nact_action_profile_get_path( profile );
 	cmd = g_string_new( path );
 
-	/*param = nautilus_actions_utils_parse_parameter (action_profile->parameters, files);*/
 	param = nact_action_profile_parse_parameters( profile, files );
 
 	if( param != NULL ){
@@ -483,24 +429,3 @@ action_changed_handler( NautilusActions *self, gpointer user_data )
 		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
 	}
 }
-
-/*static void
-action_changed_handler_old( NautilusActionsConfig* config,
-						NautilusActionsConfigAction* action,
-						gpointer user_data )
-{
-	static const gchar *thisfn = "nautilus_actions_action_changed_handler_old";
-	g_debug( "%s", thisfn );
-
-	NautilusActions* self = NAUTILUS_ACTIONS (user_data);
-
-	g_return_if_fail (NAUTILUS_IS_ACTIONS (self));
-
-	if (!self->private->dispose_has_run)
-	{
-		nautilus_menu_provider_emit_items_updated_signal(( NautilusMenuProvider * ) self );
-
-		nautilus_actions_config_free_actions_list (self->private->config_list);
-		self->private->config_list = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (self->private->configs));
-	}
-}*/
