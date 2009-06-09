@@ -100,15 +100,8 @@ static void        instance_finalize( GObject *object );
 
 static void        free_actions( GSList *list );
 static void        action_changed_handler( NactPivot *pivot, gpointer user_data );
-static NactAction *get_action( GSList *list, const gchar *uuid );
 static gboolean    on_action_changed_timeout( gpointer user_data );
 static gulong      time_val_diff( const GTimeVal *recent, const GTimeVal *old );
-
-NactPivot *
-nact_pivot_new( const GObject *target )
-{
-	return( g_object_new( NACT_PIVOT_TYPE, PROP_NOTIFIED_STR, target, NULL ));
-}
 
 GType
 nact_pivot_get_type( void )
@@ -195,6 +188,19 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->actions = nact_iio_provider_load_actions( G_OBJECT( self ));
 }
 
+static GSList *
+register_interface_providers( const NactPivot *pivot )
+{
+	static const gchar *thisfn = "nact_pivot_register_interface_providers";
+	g_debug( "%s", thisfn );
+
+	GSList *list = NULL;
+
+	list = g_slist_prepend( list, nact_gconf_new( G_OBJECT( pivot )));
+
+	return( list );
+}
+
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
@@ -227,19 +233,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 			break;
 	}
-}
-
-static GSList *
-register_interface_providers( const NactPivot *pivot )
-{
-	static const gchar *thisfn = "nact_pivot_register_interface_providers";
-	g_debug( "%s", thisfn );
-
-	GSList *list = NULL;
-
-	list = g_slist_prepend( list, nact_gconf_new( G_OBJECT( pivot )));
-
-	return( list );
 }
 
 static void
@@ -287,14 +280,20 @@ instance_finalize( GObject *object )
 	}
 }
 
-static void
-free_actions( GSList *list )
+/**
+ * Allocates a new NactPivot object.
+ *
+ * @target: the GObject which will handled Nautilus notification, and
+ * should be notified when an actions is added, modified or removed in
+ * one of the underlying storage subsystems.
+ *
+ * The target object will receive a "notify_nautilus_of_action_changed"
+ * message, without any parameter.
+ */
+NactPivot *
+nact_pivot_new( const GObject *target )
 {
-	GSList *ia;
-	for( ia = list ; ia ; ia = ia->next ){
-		g_object_unref( NACT_ACTION( ia->data ));
-	}
-	g_slist_free( list );
+	return( g_object_new( NACT_PIVOT_TYPE, PROP_NOTIFIED_STR, target, NULL ));
 }
 
 /**
@@ -336,6 +335,16 @@ nact_pivot_get_actions( const NactPivot *pivot )
 	return( pivot->private->actions );
 }
 
+static void
+free_actions( GSList *list )
+{
+	GSList *ia;
+	for( ia = list ; ia ; ia = ia->next ){
+		g_object_unref( NACT_ACTION( ia->data ));
+	}
+	g_slist_free( list );
+}
+
 /*
  * this handler is trigerred by IIOProviders when an action is changed
  * in the underlying storage subsystems
@@ -361,32 +370,6 @@ action_changed_handler( NactPivot *self, gpointer user_data  )
 	if( !st_event_source_id ){
 		st_event_source_id = g_timeout_add_seconds( 1, ( GSourceFunc ) on_action_changed_timeout, self );
 	}
-}
-
-static NactAction *
-get_action( GSList *list, const gchar *uuid )
-{
-	NactAction *found = NULL;
-	GSList *ia;
-	for( ia = list ; ia && !found ; ia = ia->next ){
-		NactAction *action = ( NactAction * ) ia->data;
-		gchar *id = nact_action_get_uuid( action );
-		if( !g_strcmp0( id, uuid )){
-			found = action;
-		}
-		g_free( id );
-	}
-	return( found );
-}
-
-/**
- * Returns the searched NactAction, or NULL.
- */
-GObject *
-nact_pivot_get_action( NactPivot *pivot, const gchar *uuid )
-{
-	g_assert( NACT_IS_PIVOT( pivot ));
-	return( G_OBJECT( get_action( pivot->private->actions, uuid )));
 }
 
 /*
