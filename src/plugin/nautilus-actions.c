@@ -238,7 +238,6 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		g_object_unref( self->private->pivot );
-		g_object_unref( self->private->configs );
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( object );
