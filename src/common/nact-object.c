@@ -55,7 +55,6 @@ static void    instance_dispose( GObject *object );
 static void    instance_finalize( GObject *object );
 
 static void    do_dump( const NactObject *object );
-static void    do_empty_property( NactObject *object, const gchar *property );
 static gchar  *do_get_id( const NactObject *object );
 static gchar  *do_get_label( const NactObject *object );
 
@@ -104,7 +103,6 @@ class_init( NactObjectClass *klass )
 	klass->private = g_new0( NactObjectClassPrivate, 1 );
 
 	klass->dump = do_dump;
-	klass->empty_property = do_empty_property;
 	klass->get_id = do_get_id;
 	klass->get_label = do_get_label;
 }
@@ -173,37 +171,6 @@ nact_object_dump( const NactObject *object )
 	g_assert( NACT_IS_OBJECT( object ));
 
 	NACT_OBJECT_GET_CLASS( object )->dump( object );
-}
-
-static void
-do_empty_property( NactObject *object, const gchar *property )
-{
-	/*static const char *thisfn = "nact_object_do_empty_property";*/
-	g_assert( NACT_IS_OBJECT( object ));
-
-	GParamSpec *spec;
-	spec = g_object_class_find_property( G_OBJECT_GET_CLASS( object ), property );
-	if( spec ){
-		g_object_set( G_OBJECT( object ), property, NULL );
-	}
-}
-
-/**
- * Empty a property.
- *
- * This is a virtual function which may be implemented by the derived
- * class ; the derived class may also call its parent class to get a
- * empty_property of parent object.
- *
- * @object: object whose property is to be emptied.
- *
- * @property: the name of the property.
- */
-void
-nact_object_empty_property( NactObject *object, const gchar *property )
-{
-	g_assert( NACT_IS_OBJECT( object ));
-	NACT_OBJECT_GET_CLASS( object )->empty_property( object, property );
 }
 
 static gchar *

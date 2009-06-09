@@ -68,7 +68,6 @@ typedef struct {
 
 	/* virtual public functions */
 	void    ( *dump )( const NactObject *object );
-	void    ( *empty_property )( NactObject *object, const gchar *property );
 	gchar * ( *get_id )( const NactObject *object );
 	gchar * ( *get_label )( const NactObject *object );
 }
@@ -77,7 +76,6 @@ typedef struct {
 GType    nact_object_get_type( void );
 
 void     nact_object_dump( const NactObject *object );
-void     nact_object_empty_property( NactObject *object, const gchar *property );
 gchar   *nact_object_get_id( const NactObject *object );
 gchar   *nact_object_get_label( const NactObject *object );
 
