@@ -117,9 +117,12 @@ interface_base_finalize( NactIIOProviderInterface *klass )
 }
 
 /**
- * Load the defined actions.
+ * Loads the actions defined in the system.
  *
- * Return a GSList of NactAction objects.
+ * @object: the pivot object which owns the list of registered
+ * interface providers.
+ *
+ * Returns a GSList of newly allocated NactAction objects.
  */
 GSList *
 nact_iio_provider_load_actions( const GObject *object )
