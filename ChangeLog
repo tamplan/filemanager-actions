@@ -38,6 +38,10 @@
 	Removed files as functions are now integrated in NactActionProfile
 	class.
 
+	* src/utils/nautilus-check-actions-changed.c:
+	* src/utils/Makefile.am:
+	No more build useless nautilus-actions-check-actions-changed program.
+
 2009-06-08 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/nact-action-profile.c:
