@@ -94,6 +94,8 @@ static void               free_profiles( NactAction *action );
 static NactActionProfile *get_profile( const NactAction *action, const gchar *profile_name );
 
 static void     do_dump( const NactObject *action );
+static gchar   *do_get_id( const NactObject *action );
+static gchar   *do_get_label( const NactObject *action );
 
 /**
  * Allocate a new NactAction object.
@@ -198,6 +200,8 @@ class_init( NactActionClass *klass )
 	klass->private = g_new0( NactActionClassPrivate, 1 );
 
 	NACT_OBJECT_CLASS( klass )->dump = do_dump;
+	NACT_OBJECT_CLASS( klass )->get_id = do_get_id;
+	NACT_OBJECT_CLASS( klass )->get_label = do_get_label;
 }
 
 static void
@@ -331,39 +335,20 @@ free_profiles( NactAction *action )
 {
 	g_assert( NACT_IS_ACTION( action ));
 
-	GSList *ip;
-	for( ip = action->private->profiles ; ip ; ip = ip->next ){
-		g_object_unref( NACT_ACTION_PROFILE( ip->data ));
-	}
-	g_slist_free( action->private->profiles );
+	nact_action_free_profiles( action->private->profiles );
+
 	action->private->profiles = NULL;
 }
 
-/**
- * Create a new NactAction object, with the given parm and value.
- *
- * Note that the parm may actually be a profile's parm.
- */
-/*NactAction *
-nact_action_create( const gchar *key, const gchar *parm, const NactPivotValue *value )
+void
+nact_action_free_profiles( GSList * list )
 {
-	static const gchar *thisfn = "nact_action_create";
-	g_debug( "%s: key='%s', parm='%s', value=%p", thisfn, key, parm, value );
-
-	NactAction *action = g_object_new( NACT_ACTION_TYPE, NULL );
-	nact_action_update( action, parm, value );
-	return( action );
-}*/
-
-/**
- * Update the given parameter of an action.
- */
-/*void
-nact_action_update( NactAction *action, const gchar *parm, const NactPivotValue *value )
-{
-	static const gchar *thisfn = "nact_action_update";
-	g_debug( "%s: action=%p, parm='%s', value=%p", thisfn, action, parm, value );
-}*/
+	GSList *ip;
+	for( ip = list ; ip ; ip = ip->next ){
+		g_object_unref( NACT_ACTION_PROFILE( ip->data ));
+	}
+	g_slist_free( list );
+}
 
 static void
 do_dump( const NactObject *action )
@@ -391,47 +376,8 @@ do_dump( const NactObject *action )
 	}
 }
 
-/**
- * Check if the given action is empty, i.e. all its attributes are empty.
- */
-/*gboolean
-nact_action_is_empty( const NactAction *action )
-{
-	g_assert( NACT_IS_ACTION( action ));
-
-	if( action->private->uuid && strlen( action->private->uuid )){
-		return( FALSE );
-	}
-	if( action->private->version && strlen( action->private->version )){
-		return( FALSE );
-	}
-	if( action->private->label && strlen( action->private->label )){
-		return( FALSE );
-	}
-	if( action->private->tooltip && strlen( action->private->tooltip )){
-		return( FALSE );
-	}
-	if( action->private->icon && strlen( action->private->icon )){
-		return( FALSE );
-	}
-	GSList *ip;
-	for( ip = action->private->profiles ; ip ; ip = ip->next ){
-		if( !nact_action_profile_is_empty( NACT_ACTION_PROFILE( ip->data ))){
-			return( FALSE );
-		}
-	}
-	return( TRUE );
-}*/
-
-/**
- * Return the globally unique identifier (UUID) of the action.
- *
- * @action: an NactAction object.
- *
- * The returned string must be g_free by the caller.
- */
-gchar *
-nact_action_get_uuid( const NactAction *action )
+static gchar *
+do_get_id( const NactObject *action )
 {
 	g_assert( NACT_IS_ACTION( action ));
 
@@ -442,14 +388,21 @@ nact_action_get_uuid( const NactAction *action )
 }
 
 /**
- * Return the label of the context menu item for the action.
+ * Return the globally unique identifier (UUID) of the action.
  *
  * @action: an NactAction object.
  *
- * The returned string must be g_free by the caller.
+ * The returned string must be g_freed by the caller.
  */
 gchar *
-nact_action_get_label( const NactAction *action )
+nact_action_get_uuid( const NactAction *action )
+{
+	g_assert( NACT_IS_ACTION( action ));
+	return( nact_object_get_id( NACT_OBJECT( action )));
+}
+
+static gchar *
+do_get_label( const NactObject *action )
 {
 	g_assert( NACT_IS_ACTION( action ));
 
@@ -460,11 +413,25 @@ nact_action_get_label( const NactAction *action )
 }
 
 /**
+ * Return the label of the action.
+ *
+ * @action: an NactAction object.
+ *
+ * The returned string must be g_freed by the caller.
+ */
+gchar *
+nact_action_get_label( const NactAction *action )
+{
+	g_assert( NACT_IS_ACTION( action ));
+	return( nact_object_get_label( NACT_OBJECT( action )));
+}
+
+/**
  * Return the tooltip attached to the context menu item for the action.
  *
  * @action: an NactAction object.
  *
- * The returned string must be g_free by the caller.
+ * The returned string must be g_freed by the caller.
  */
 gchar *
 nact_action_get_tooltip( const NactAction *action )
@@ -532,7 +499,13 @@ nact_action_set_profiles( NactAction *action, GSList *list )
 	g_assert( NACT_IS_ACTION( action ));
 
 	free_profiles( action );
-	action->private->profiles = list;
+	GSList *ip;
+	for( ip = list ; ip ; ip = ip->next ){
+		action->private->profiles = g_slist_prepend(
+							action->private->profiles,
+							nact_action_profile_copy( NACT_ACTION_PROFILE( ip->data ))
+		);
+	}
 }
 
 guint

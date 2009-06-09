@@ -34,6 +34,8 @@
 
 #include <string.h>
 
+#include <libgnomevfs/gnome-vfs.h>
+
 #include <libnautilus-extension/nautilus-file-info.h>
 
 #include "nact-action.h"
@@ -103,17 +105,19 @@ enum {
 
 static NactObjectClass *st_parent_class = NULL;
 
-static GType register_type( void );
-static void  class_init( NactActionProfileClass *klass );
-static void  instance_init( GTypeInstance *instance, gpointer klass );
-static void  instance_dispose( GObject *object );
-static void  instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void  instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void  instance_finalize( GObject *object );
+static GType  register_type( void );
+static void   class_init( NactActionProfileClass *klass );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *object );
+static void   instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void   instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void   instance_finalize( GObject *object );
 
-static void  do_dump( const NactObject *profile );
-static void  do_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
-static int   validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
+static void   do_dump( const NactObject *profile );
+static void   do_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
+static gchar *do_get_id( const NactObject *object );
+static gchar *do_get_label( const NactObject *object );
+static int    validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
 
 NactActionProfile *
 nact_action_profile_new( const NactObject *action, const gchar *name )
@@ -127,6 +131,44 @@ nact_action_profile_new( const NactObject *action, const gchar *name )
 				PROP_ACTION_STR, action, PROP_PROFILE_NAME_STR, name, NULL );
 
 	return( profile );
+}
+
+NactActionProfile *
+nact_action_profile_copy( const NactActionProfile *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	NactActionProfile *new =
+		nact_action_profile_new( profile->private->action, profile->private->name );
+
+	g_object_set( G_OBJECT( new ),
+			PROP_LABEL_STR, profile->private->label,
+			PROP_PATH_STR, profile->private->path,
+			PROP_PARAMETERS_STR, profile->private->parameters,
+			PROP_ACCEPT_MULTIPLE_STR, profile->private->accept_multiple_files,
+			PROP_BASENAMES_STR, profile->private->basenames,
+			PROP_ISDIR_STR, profile->private->is_dir,
+			PROP_ISFILE_STR, profile->private->is_file,
+			PROP_MATCHCASE_STR, profile->private->match_case,
+			PROP_MIMETYPES_STR, profile->private->mimetypes,
+			PROP_SCHEMES_STR, profile->private->schemes,
+			NULL );
+
+	return( new );
+}
+
+void
+nact_action_profile_free( NactActionProfile *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	g_free( profile->private->name );
+	g_free( profile->private->label );
+	g_free( profile->private->path );
+	g_free( profile->private->parameters );
+	nactuti_free_string_list( profile->private->basenames );
+	nactuti_free_string_list( profile->private->mimetypes );
+	nactuti_free_string_list( profile->private->schemes );
 }
 
 GType
@@ -262,6 +304,8 @@ class_init( NactActionProfileClass *klass )
 	klass->private = g_new0( NactActionProfileClassPrivate, 1 );
 
 	NACT_OBJECT_CLASS( klass )->dump = do_dump;
+	NACT_OBJECT_CLASS( klass )->get_id = do_get_id;
+	NACT_OBJECT_CLASS( klass )->get_label = do_get_label;
 }
 
 static void
@@ -438,13 +482,7 @@ instance_finalize( GObject *object )
 	g_assert( NACT_IS_ACTION_PROFILE( object ));
 	NactActionProfile *self = ( NactActionProfile * ) object;
 
-	g_free( self->private->name );
-	g_free( self->private->label );
-	g_free( self->private->path );
-	g_free( self->private->parameters );
-	nactuti_free_string_list( self->private->basenames );
-	nactuti_free_string_list( self->private->mimetypes );
-	nactuti_free_string_list( self->private->schemes );
+	nact_action_profile_free( self );
 
 	/* chain call to parent class */
 	if((( GObjectClass * ) st_parent_class )->finalize ){
@@ -494,6 +532,56 @@ do_dump_list( const gchar *thisfn, const gchar *label, GSList *list )
 	g_string_free( str, TRUE );
 }
 
+static gchar *
+do_get_id( const NactObject *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	gchar *name;
+	g_object_get( G_OBJECT( profile ), PROP_PROFILE_NAME_STR, &name, NULL );
+
+	return( name );
+}
+
+/**
+ * Return the internal id (name) of the profile.
+ *
+ * @action: an NactActionProfile object.
+ *
+ * The returned string must be g_freed by the caller.
+ */
+gchar *
+nact_action_profile_get_name( const NactActionProfile *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+	return( nact_object_get_id( NACT_OBJECT( profile )));
+}
+
+static gchar *
+do_get_label( const NactObject *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+
+	gchar *label;
+	g_object_get( G_OBJECT( profile ), PROP_LABEL_STR, &label, NULL );
+
+	return( label );
+}
+
+/**
+ * Return the descriptive name (label) of the profile.
+ *
+ * @action: an NactAction object.
+ *
+ * The returned string must be g_freed by the caller.
+ */
+gchar *
+nact_action_profile_get_label( const NactActionProfile *profile )
+{
+	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+	return( nact_object_get_label( NACT_OBJECT( profile )));
+}
+
 /*
  * Check if the given profile is empty, i.e. all its attributes are
  * empty.
@@ -539,24 +627,6 @@ nact_action_profile_get_action( const NactActionProfile *profile )
 	g_object_get( G_OBJECT( profile ), PROP_ACTION_STR, &action, NULL );
 
 	return( NACT_OBJECT( action ));
-}
-
-/**
- * Returns the profile name.
- *
- * The returned string should be g_freed by the caller.
- *
- * The profile name is also the GConf-key of the profile.
- */
-gchar *
-nact_action_profile_get_name( const NactActionProfile *profile )
-{
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
-
-	gchar *name;
-	g_object_get( G_OBJECT( profile ), PROP_PROFILE_NAME_STR, &name, NULL );
-
-	return( name );
 }
 
 /**
@@ -617,7 +687,7 @@ validate_schemes( GSList* schemes2test, NautilusFileInfo* file )
 }
 
 gboolean
-nact_action_profile_validate( const NactActionProfile *profile, GList* files )
+nact_action_profile_is_candidate( const NactActionProfile *profile, GList* files )
 {
 	gboolean retv = FALSE;
 	gboolean test_multiple_file = FALSE;
@@ -830,6 +900,156 @@ nact_action_profile_validate( const NactActionProfile *profile, GList* files )
 	g_list_free (glob_patterns);
 	g_list_foreach (glob_mime_patterns, (GFunc) g_pattern_spec_free, NULL);
 	g_list_free (glob_mime_patterns);
+
+	return retv;
+}
+
+/*
+ * Valid parameters :
+ *
+ * %u : gnome-vfs URI
+ * %d : base dir of the selected file(s)/folder(s)
+ * %f : the name of the selected file/folder or the 1st one if many are selected
+ * %m : list of the basename of the selected files/directories separated by space.
+ * %M : list of the selected files/directories with their complete path separated by space.
+ * %s : scheme of the gnome-vfs URI
+ * %h : hostname of the gnome-vfs URI
+ * %U : username of the gnome-vfs URI
+ * %% : a percent sign
+ */
+gchar *
+nact_action_profile_parse_parameters( const NactActionProfile *profile, GList* files )
+{
+	gchar* retv = NULL;
+	g_return_val_if_fail( NACT_IS_ACTION_PROFILE( profile ), NULL );
+
+	if (files != NULL){
+		const gchar *param_template = profile->private->parameters;
+		GString* tmp_string = g_string_new ("");
+		gchar* iter = g_strdup (param_template);
+		gchar* old_iter = iter;
+		/*int current_len = strlen (iter);*/
+		gchar* uri = nautilus_file_info_get_uri ((NautilusFileInfo*)files->data);
+		GnomeVFSURI* gvfs_uri = gnome_vfs_uri_new (uri);
+		gchar* filename;
+		gchar* dirname;
+		gchar* scheme = nautilus_file_info_get_uri_scheme ((NautilusFileInfo*)files->data);
+		gchar* hostname = g_strdup (gnome_vfs_uri_get_host_name (gvfs_uri));
+		gchar* username = g_strdup (gnome_vfs_uri_get_user_name (gvfs_uri));
+		gchar* file_list;
+		gchar* path_file_list;
+		GList* file_iter = NULL;
+		GString* tmp_file_list;
+		GString* tmp_path_file_list;
+		gchar* tmp;
+		gchar* tmp2;
+
+		tmp = gnome_vfs_uri_extract_dirname (gvfs_uri);
+		dirname = (gchar*)gnome_vfs_unescape_string ((const gchar*)tmp, "");
+		g_free (tmp);
+
+		tmp = nautilus_file_info_get_name ((NautilusFileInfo*)files->data);
+		if (!tmp)
+		{
+			tmp = g_strdup ("");
+		}
+
+		filename = g_shell_quote (tmp);
+		tmp2 = g_build_path ("/", dirname, tmp, NULL);
+		g_free (tmp);
+		tmp_file_list = g_string_new (filename);
+		tmp = g_shell_quote (tmp2);
+		tmp_path_file_list = g_string_new (tmp);
+		g_free (tmp2);
+		g_free (tmp);
+
+		/* We already have the first item, so we start with the next one if any */
+		for (file_iter = files->next; file_iter; file_iter = file_iter->next)
+		{
+			gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo*)file_iter->data);
+			gchar* tmp_uri = nautilus_file_info_get_uri ((NautilusFileInfo*)file_iter->data);
+			GnomeVFSURI* tmp_gvfs_uri = gnome_vfs_uri_new (tmp_uri);
+			tmp = gnome_vfs_uri_extract_dirname (tmp_gvfs_uri);
+			gchar* tmp_dirname = (gchar*)gnome_vfs_unescape_string ((const gchar*)tmp, "");
+			g_free (tmp);
+
+			if (!tmp_filename)
+			{
+				tmp_filename = g_strdup ("");
+			}
+
+			gchar* quoted_tmp_filename = g_shell_quote (tmp_filename);
+			g_string_append_printf (tmp_file_list, " %s", quoted_tmp_filename);
+
+			tmp = g_build_path ("/", tmp_dirname, tmp_filename, NULL);
+			tmp2 = g_shell_quote (tmp);
+			g_string_append_printf (tmp_path_file_list, " %s", tmp2);
+
+			g_free (tmp2);
+			g_free (tmp);
+			g_free (tmp_filename);
+			g_free (quoted_tmp_filename);
+			g_free (tmp_dirname);
+			g_free (tmp_uri);
+			gnome_vfs_uri_unref (tmp_gvfs_uri);
+		}
+		file_list = g_string_free (tmp_file_list, FALSE);
+		path_file_list = g_string_free (tmp_path_file_list, FALSE);
+
+
+		while ((iter = g_strstr_len (iter, strlen (iter), "%")))
+		{
+			tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter) - strlen (iter));
+			switch (iter[1])
+			{
+				case 'u': /* gnome-vfs URI */
+					tmp_string = g_string_append (tmp_string, uri);
+					break;
+				case 'd': /* base dir of the selected file(s)/folder(s) */
+					tmp = g_shell_quote (dirname);
+					tmp_string = g_string_append (tmp_string, tmp);
+					g_free (tmp);
+					break;
+				case 'f': /* the basename of the selected file/folder or the 1st one if many are selected */
+					tmp_string = g_string_append (tmp_string, filename);
+					break;
+				case 'm': /* list of the basename of the selected files/directories separated by space */
+					tmp_string = g_string_append (tmp_string, file_list);
+					break;
+	 			case 'M': /* list of the selected files/directories with their complete path separated by space. */
+					tmp_string = g_string_append (tmp_string, path_file_list);
+					break;
+				case 's': /* scheme of the gnome-vfs URI */
+					tmp_string = g_string_append (tmp_string, scheme);
+					break;
+				case 'h': /* hostname of the gnome-vfs URI */
+					tmp_string = g_string_append (tmp_string, hostname);
+					break;
+				case 'U': /* username of the gnome-vfs URI */
+					tmp_string = g_string_append (tmp_string, username);
+					break;
+				case '%': /* a percent sign */
+					tmp_string = g_string_append_c (tmp_string, '%');
+					break;
+			}
+			iter+=2; /* skip the % sign and the character after. */
+			old_iter = iter; /* store the new start of the string */
+		}
+		tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter));
+
+		g_free (uri);
+		g_free (dirname);
+		g_free (filename);
+		g_free (file_list);
+		g_free (path_file_list);
+		g_free (scheme);
+		g_free (hostname);
+		g_free (username);
+		g_free (iter);
+		gnome_vfs_uri_unref (gvfs_uri);
+
+		retv = g_string_free (tmp_string, FALSE); /* return the content of the GString */
+	}
 
 	return retv;
 }

@@ -56,6 +56,8 @@ static void    instance_finalize( GObject *object );
 
 static void    do_dump( const NactObject *object );
 static void    do_empty_property( NactObject *object, const gchar *property );
+static gchar  *do_get_id( const NactObject *object );
+static gchar  *do_get_label( const NactObject *object );
 
 GType
 nact_object_get_type( void )
@@ -103,6 +105,8 @@ class_init( NactObjectClass *klass )
 
 	klass->dump = do_dump;
 	klass->empty_property = do_empty_property;
+	klass->get_id = do_get_id;
+	klass->get_label = do_get_label;
 }
 
 static void
@@ -199,6 +203,53 @@ void
 nact_object_empty_property( NactObject *object, const gchar *property )
 {
 	g_assert( NACT_IS_OBJECT( object ));
-
 	NACT_OBJECT_GET_CLASS( object )->empty_property( object, property );
+}
+
+static gchar *
+do_get_id( const NactObject *object )
+{
+	g_assert( NACT_IS_OBJECT( object ));
+	return(( gchar * ) NULL );
+}
+
+/**
+ * Returns the id of the object as new string.
+ *
+ * This is a virtual function which should be implemented by the
+ * derived class ; if not, this parent object returns NULL.
+ *
+ * @object: targeted NactObject object.
+ *
+ * The returned string should be g_freed by the caller.
+ */
+gchar *
+nact_object_get_id( const NactObject *object )
+{
+	g_assert( NACT_IS_OBJECT( object ));
+	return( NACT_OBJECT_GET_CLASS( object )->get_id( object ));
+}
+
+static gchar *
+do_get_label( const NactObject *object )
+{
+	g_assert( NACT_IS_OBJECT( object ));
+	return(( gchar * ) NULL );
+}
+
+/**
+ * Returns the label of the object as new string.
+ *
+ * This is a virtual function which should be implemented by the
+ * derived class ; if not, this parent object returns NULL.
+ *
+ * @object: targeted NactObject object.
+ *
+ * The returned string should be g_freed by the caller.
+ */
+gchar *
+nact_object_get_label( const NactObject *object )
+{
+	g_assert( NACT_IS_OBJECT( object ));
+	return( NACT_OBJECT_GET_CLASS( object )->get_label( object ));
 }

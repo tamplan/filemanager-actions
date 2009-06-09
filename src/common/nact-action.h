@@ -71,10 +71,6 @@ GType       nact_action_get_type( void );
 
 NactAction *nact_action_new( const gchar *uuid );
 
-/*NactAction *nact_action_create( const gchar *key, const gchar *parm, const NactPivotValue *value );
-void        nact_action_update( NactAction *action, const gchar *parm, const NactPivotValue *value );
-gboolean    nact_action_is_empty( const NactAction *action );*/
-
 gchar      *nact_action_get_uuid( const NactAction *action );
 gchar      *nact_action_get_label( const NactAction *action );
 gchar      *nact_action_get_tooltip( const NactAction *action );
@@ -82,6 +78,7 @@ gchar      *nact_action_get_verified_icon_name( const NactAction *action );
 
 GSList     *nact_action_get_profiles( const NactAction *action );
 void        nact_action_set_profiles( NactAction *action, GSList *list );
+void        nact_action_free_profiles( GSList *list );
 
 guint       nact_action_get_profiles_count( const NactAction *action );
 GSList     *nact_action_get_profile_ids( const NactAction *action );

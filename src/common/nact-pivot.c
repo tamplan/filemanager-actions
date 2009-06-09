@@ -98,8 +98,8 @@ static void        instance_set_property( GObject *object, guint property_id, co
 static void        instance_dispose( GObject *object );
 static void        instance_finalize( GObject *object );
 
-static void        action_changed_handler( NactPivot *pivot, gpointer user_data );
 static void        free_actions( GSList *list );
+static void        action_changed_handler( NactPivot *pivot, gpointer user_data );
 static NactAction *get_action( GSList *list, const gchar *uuid );
 static gboolean    on_action_changed_timeout( gpointer user_data );
 static gulong      time_val_diff( const GTimeVal *recent, const GTimeVal *old );
@@ -287,6 +287,16 @@ instance_finalize( GObject *object )
 	}
 }
 
+static void
+free_actions( GSList *list )
+{
+	GSList *ia;
+	for( ia = list ; ia ; ia = ia->next ){
+		g_object_unref( NACT_ACTION( ia->data ));
+	}
+	g_slist_free( list );
+}
+
 /**
  * Returns the list of providers of the required interface.
  *
@@ -316,6 +326,16 @@ nact_pivot_get_providers( const NactPivot *pivot, GType type )
 	return( list );
 }
 
+/**
+ * Return the list of actions.
+ */
+GSList *
+nact_pivot_get_actions( const NactPivot *pivot )
+{
+	g_assert( NACT_IS_PIVOT( pivot ));
+	return( pivot->private->actions );
+}
+
 /*
  * this handler is trigerred by IIOProviders when an action is changed
  * in the underlying storage subsystems
@@ -341,16 +361,6 @@ action_changed_handler( NactPivot *self, gpointer user_data  )
 	if( !st_event_source_id ){
 		st_event_source_id = g_timeout_add_seconds( 1, ( GSourceFunc ) on_action_changed_timeout, self );
 	}
-}
-
-static void
-free_actions( GSList *list )
-{
-	GSList *ia;
-	for( ia = list ; ia ; ia = ia->next ){
-		g_object_unref( NACT_ACTION( ia->data ));
-	}
-	g_slist_free( list );
 }
 
 static NactAction *

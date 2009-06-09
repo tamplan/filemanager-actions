@@ -71,17 +71,19 @@ typedef struct {
 GType              nact_action_profile_get_type( void );
 
 NactActionProfile *nact_action_profile_new( const NactObject *action, const gchar *name );
+NactActionProfile *nact_action_profile_copy( const NactActionProfile *profile );
+void               nact_action_profile_free( NactActionProfile *profile );
 
 void               nact_action_profile_load( NactObject *profile );
 
-/*gboolean           nact_action_profile_is_empty( const NactActionProfile *profile );*/
-
 NactObject        *nact_action_profile_get_action( const NactActionProfile *profile );
 gchar             *nact_action_profile_get_name( const NactActionProfile *profile );
+gchar             *nact_action_profile_get_label( const NactActionProfile *profile );
 gchar             *nact_action_profile_get_path( const NactActionProfile *profile );
 gchar             *nact_action_profile_get_parameters( const NactActionProfile *profile );
 
-gboolean           nact_action_profile_validate( const NactActionProfile *profile, GList *files );
+gboolean           nact_action_profile_is_candidate( const NactActionProfile *profile, GList *files );
+gchar             *nact_action_profile_parse_parameters( const NactActionProfile *profile, GList *files );
 
 G_END_DECLS
 

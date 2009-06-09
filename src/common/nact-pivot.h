@@ -73,6 +73,7 @@ NactPivot *nact_pivot_new( const GObject *notified );
 
 GSList    *nact_pivot_get_providers( const NactPivot *pivot, GType type );
 
+GSList    *nact_pivot_get_actions( const NactPivot *pivot );
 GObject   *nact_pivot_get_action( NactPivot *pivot, const gchar *uuid );
 
 /* data passed from the storage subsystem when an action is changed

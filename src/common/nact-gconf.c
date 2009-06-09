@@ -274,6 +274,7 @@ do_load_actions( NactIIOProvider *provider )
 	GSList *items = NULL;
 	GSList *ip;
 	GSList *listpath = load_subdirs( self, NACT_GCONF_CONFIG_PATH );
+	GSList *profiles;
 
 	for( ip = listpath ; ip ; ip = ip->next ){
 
@@ -281,7 +282,9 @@ do_load_actions( NactIIOProvider *provider )
 
 		NactAction *action = nact_action_new( key );
 		load_action_properties( self, action );
-		nact_action_set_profiles( action, load_profiles( self, action ));
+		profiles = load_profiles( self, action );
+		nact_action_set_profiles( action, profiles );
+		nact_action_free_profiles( profiles );
 
 #ifdef NACT_MAINTAINER_MODE
 		nact_object_dump( NACT_OBJECT( action ));
