@@ -35,24 +35,9 @@
 #include "nact-uti-lists.h"
 
 /**
- * Free a GSList of GObjects.
+ * Duplicates a GSList of strings.
  *
- * @list: the GSList to be freed.
- */
-void
-nactuti_free_object_list( GSList *list )
-{
-	GSList *item;
-	for( item = list ; item != NULL ; item = item->next ){
-		g_object_unref( G_OBJECT( item->data ));
-	}
-	g_slist_free( list );
-}
-
-/**
- * Duplicate a GSList of strings.
- *
- * @list: the GSList to be freed.
+ * @list: the GSList to be duplicated.
  */
 GSList *
 nactuti_duplicate_string_list( GSList *list )
@@ -67,7 +52,7 @@ nactuti_duplicate_string_list( GSList *list )
 }
 
 /**
- * Free a GSList of strings.
+ * Frees a GSList of strings.
  *
  * @list: the GSList to be freed.
  */

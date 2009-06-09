@@ -23,6 +23,9 @@
 	* src/common/nact-pivot.h
 	(nact_pivot_get_action): Remove function and cleanup the code.
 
+	* src/common/nact-uti.c:
+	* src/common/nact-uti.h (nactuti_free_object_list): Remove function.
+
 	* src/plugin/nautilus-actions.c:
 	The plugin now uses the new object hierarchy to handle menu items.
 	Fix #580378 (context menu doesn't update) reported by James Campos.
