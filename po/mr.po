@@ -1,14 +1,14 @@
-# translation of nautilus-actions.HEAD.po to marathi
+# translation of mr.po to marathi
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Sandeep Shedmake <sandeep.shedmake@gmail.com>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: nautilus-actions.HEAD\n"
+"Project-Id-Version: mr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-16 17:18+0200\n"
-"PO-Revision-Date: 2009-03-03 18:26+0530\n"
+"PO-Revision-Date: 2009-06-09 17:20+0530\n"
 "Last-Translator: Sandeep Shedmake <sandeep.shedmake@gmail.com>\n"
 "Language-Team: marathi\n"
 "MIME-Version: 1.0\n"
@@ -53,8 +53,7 @@ msgstr "<b>%d</b>: निवडलेले फाइलचे मुख्य �
 
 #: ../nact/nautilus-actions-config.glade.h:11
 #, no-c-format
-msgid ""
-"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
 msgstr "<b>%f</b>: निवडलेले फाइलचे नाव किंवा निवडलेले पैकी पहिल्याचे नाव"
 
 #: ../nact/nautilus-actions-config.glade.h:13
@@ -182,8 +181,7 @@ msgstr "निवडलेली योजना काढूण टाकण्
 msgid ""
 "Click to toggle the display of the list of special tokens you can use in the "
 "parameter field."
-msgstr ""
-"बाब क्षेत्र अंतर्गत वापरण्याजोगी विशेष टोकन यादीचे प्रदर्शन बदलविण्याकरीता क्लिक करा."
+msgstr "बाब क्षेत्र अंतर्गत वापरण्याजोगी विशेष टोकन यादीचे प्रदर्शन बदलविण्याकरीता क्लिक करा."
 
 #: ../nact/nautilus-actions-config.glade.h:44
 msgid "Conditions"
@@ -194,8 +192,7 @@ msgid "Create a copy of the selected action."
 msgstr "निवडलेले कृतीचे प्रत बनवा."
 
 #: ../nact/nautilus-actions-config.glade.h:46
-msgid ""
-"Delete the action without any confirmation nor the possibility to restore it."
+msgid "Delete the action without any confirmation nor the possibility to restore it."
 msgstr "विना निश्चितता किंवा पूर्वस्थितीत आणण्याच्या संभावना विना कृती नष्ट करा."
 
 #: ../nact/nautilus-actions-config.glade.h:47
@@ -250,8 +247,7 @@ msgstr "लेबल:"
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
-msgstr ""
-"बाहेरील कृती संयोजना आयात करणे व अस्तित्वातील कृतीचे स्वरूप बदलविणे व्यवस्थापीत करा."
+msgstr "बाहेरील कृती संयोजना आयात करणे व अस्तित्वातील कृतीचे स्वरूप बदलविणे व्यवस्थापीत करा."
 
 #: ../nact/nautilus-actions-config.glade.h:59
 msgid "Match case"
@@ -358,7 +354,7 @@ msgstr "Nautilus पॉपअप मेन्यू अंतर्गत कृ
 
 #: ../nact/nautilus-actions-config.glade.h:81
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr "This software is licensed under the GNU Genaral Public License (GPL)"
+msgstr "या सॉफ्टेवअरचा परवाना GNU Genaral Public License (GPL) नुरूप आहे"
 
 #: ../nact/nautilus-actions-config.glade.h:82
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
@@ -640,9 +636,7 @@ msgstr "SCHEME"
 msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
-msgstr ""
-"नवीन GConf योजना वर्णन फाइल साठवण्याकरीता फाइलचे मार्ग[मुलभूत: /tmp/config_UUID."
-"schemas]"
+msgstr "नवीन GConf योजना वर्णन फाइल साठवण्याकरीता फाइलचे मार्ग [मुलभूत: /tmp/config_UUID.schemas]"
 
 #: ../utils/nautilus-actions-new-config.c:100
 #, c-format
@@ -780,8 +774,7 @@ msgstr ""
 "निवडलेले घटकाची कृती प्रदर्शित करण्याकरीता किमान एक फाइलनाव रचनाशी जुळले पाहिजे"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid ""
-"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr "फाइलनाव रचना केस संवेदनशील असल्यास 'true', नाहीतर 'false'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
@@ -808,7 +801,6 @@ msgstr ""
 "घटकाची कृती प्रदर्शित करण्याकरीता किमान एक फाइलनाव रचनाशी जुळले पाहिजे"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
-#, fuzzy
 msgid ""
 "The valid combinations are:\n"
 "\n"
@@ -820,11 +812,11 @@ msgid ""
 msgstr ""
 "वैध जोडणी खालिल नुरूप आहे:\n"
 "\n"
-"isfile=TRUE व isdir=FALSE: निवड अंतर्गत फक्त फाइलस् आढळतील\n"
-"isfile=FALSE and isdir=TRUE: निवड अंतर्गत फक्त फोल्डर्स् आढळतील\n"
-"isfile=TRUE and isdir=TRUE': निवड अंतर्गत दोन्ही फाइलस् व फोल्डर्स् आढळतील\n"
-"isfile=FALSE and isdir=FALSE: ही अवैध जोडणी आहे (तुमची संयोजना कधिच प्रदर्शित "
-"होणार नाही)"
+"isfile=TRUE व isdir=FALSE: नीवड मध्ये फक्त फाइल आढळतील\n"
+"isfile=FALSE व isdir=TRUE: नीवड मध्ये फक्त फोल्डर आढळतील\n"
+"isfile=TRUE व isdir=TRUE': नीवड मध्ये दोन्ही फाइल व फोल्डर आढळतील\n"
+"isfile=FALSE व isdir=FALSE: ही अवैध जोडणी आहे (तुमची संयोजना प्रदर्शित "
+"करणे अशक्य)"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "'true' if the selection can have files, 'false' otherwise"
@@ -936,7 +928,7 @@ msgstr ""
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config.c:524
-#, fuzzy, c-format
+#, c-format
 msgid "Can't remove the old profile '%s'"
 msgstr "जुणी संक्षिप्त माहिती '%s' काढूण टाकणे अशक्य"
 
@@ -972,26 +964,24 @@ msgstr[1] "%s (किज् आढळले नाही: %s)%s"
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (found <%s> "
 "element instead of <%s>)"
-msgstr ""
-"ही XML फाइल वैध Nautilus-कृती संयोजना फाइल नाही (<%s> घटक आढळले, <%s> ऐवजी)"
+msgstr "ही XML फाइल वैध Nautilus-कृती संयोजना फाइल नाही (<%s> घटक आढळले, <%s> ऐवजी)"
 
 #. if the version of the file is greater than the current one, we reject the file
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "This config file is more recent than this version of Nautilus-actions can "
 "support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
-"ही config फाइल Nautilus-कृती च्या या आवृत्ती पेक्षा जास्त अलिकडील आहे. आयात करायचे "
-"असल्यास कृपया Nautilus-कृती ला सर्वात अलिकडील आवृत्तीशी सुधारीत करा (फाइल आवृत्ती: %s "
+"ही config फाइल Nautilus-actions च्या या आवृत्ती पेक्षा जास्त अलिकडील आहे. आयात करायचे "
+"असल्यास कृपया Nautilus-actions ला सर्वात अलिकडील आवृत्तीशी सुधारीत करा (फाइल आवृत्ती: %s "
 "(कमाल समर्थीत आवृत्ती : %s))"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
 #, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
+msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
 msgid_plural ""
 "This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
 "s"
@@ -1002,8 +992,7 @@ msgstr[1] "ही XML फाइल वैध Nautilus-कृती संयो�
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
 #, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr "ही XML फाइल वैध Nautilus-कृती संयोजना फाइल नाही (कि आढळली नाही: %s)"
 
 #. i18n notes: will be displayed in an error dialog
@@ -1012,8 +1001,5 @@ msgstr "ही XML फाइल वैध Nautilus-कृती संयोज�
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
 "instead of <%s>)"
-msgstr ""
-"ही XML फाइल वैध Nautilus-कृती संयोजना फाइल नाही (रूट नोड <%s> आहे, <%s> ऐवजी)"
+msgstr "ही XML फाइल वैध Nautilus-कृती संयोजना फाइल नाही (रूट नोड <%s> आहे, <%s> ऐवजी)"
 
-#~ msgid "Can't paste action's profile '%s' !"
-#~ msgstr "कृतीचे संक्षिप्त माहिती '%s' चिकटवणे शक्य नाही!"
