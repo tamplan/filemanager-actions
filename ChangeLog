@@ -12,6 +12,8 @@
 	(nact_action_profile_load): Remove function and cleanup the code.
 
 	* src/common/nact-gconf.c:
+	Cleanup the code, adding documentation to public functions.
+
 	* src/common/nact-object.c:
 	* src/common/nact-object.h:
 	* src/common/nact-pivot.c:

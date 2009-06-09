@@ -96,12 +96,6 @@ static guint            install_gconf_watch( NactGConf *gconf );
 static void             remove_gconf_watch( NactGConf *gconf );
 static void             action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
 
-NactGConf *
-nact_gconf_new( const GObject *handler )
-{
-	return( g_object_new( NACT_GCONF_TYPE, PROP_NOTIFIED_STR, handler, NULL ));
-}
-
 GType
 nact_gconf_get_type( void )
 {
@@ -257,6 +251,23 @@ instance_finalize( GObject *object )
 	}
 }
 
+/**
+ * Allocate a new GConf object.
+ *
+ * @handler: the GObject which is to be notified when an action is
+ * added, modified or removed in underlying GConf system.
+ *
+ * The object to be notified will receive a
+ * "notify_pivot_of_action_changed" message for each detected
+ * modification, with a pointer to a newly allocated NactPivotNotify
+ * structure describing the change.
+ */
+NactGConf *
+nact_gconf_new( const GObject *handler )
+{
+	return( g_object_new( NACT_GCONF_TYPE, PROP_NOTIFIED_STR, handler, NULL ));
+}
+
 /*
  * NactIIOProviderInterface implementation
  * load the list of actions and returns them as a GSList
@@ -281,7 +292,9 @@ do_load_actions( NactIIOProvider *provider )
 		gchar *key = path_to_key(( const gchar * ) ip->data );
 
 		NactAction *action = nact_action_new( key );
+
 		load_action_properties( self, action );
+
 		profiles = load_profiles( self, action );
 		nact_action_set_profiles( action, profiles );
 		nact_action_free_profiles( profiles );
@@ -501,6 +514,7 @@ set_item_properties( NactObject *object, GSList *properties )
  *  key/parm
  *  key/profile
  *  key/profile/parm with a null value
+ *
  * I don't know any way to choose between key/parm and key/profile
  * as the entry no more exists in GConf and thus cannot be tested
  * -> we will set this as key/parm, letting pivot try to interpret it
