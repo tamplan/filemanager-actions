@@ -1,5 +1,7 @@
 2009-06-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump version number.
+
 	* src/common/nact-action.c:
 	* src/common/nact-action.h
 	(nact_action_get_profile_ids, nact_action_free_profile_ids,

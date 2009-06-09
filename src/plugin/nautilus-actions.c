@@ -257,6 +257,14 @@ instance_finalize( GObject *object )
 	G_OBJECT_CLASS( st_parent_class )->finalize( object );
 }
 
+/*
+ * This function notifies Nautilus file manager that the context menu
+ * items may have changed, and that it should reload them.
+ *
+ * Patch has been provided by Frederic Ruaudel, the initial author of
+ * Nautilus-Actions, and applied on Nautilus 2.15.4 development branch
+ * on 2006-06-16. It was released with Nautilus 2.16.0
+ */
 #ifndef HAVE_NAUTILUS_MENU_PROVIDER_EMIT_ITEMS_UPDATED_SIGNAL
 static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvider *provider)
 {
