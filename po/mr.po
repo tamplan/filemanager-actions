@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mr\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-16 17:18+0200\n"
-"PO-Revision-Date: 2009-06-09 17:20+0530\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
+"POT-Creation-Date: 2009-06-09 11:55+0000\n"
+"PO-Revision-Date: 2009-06-09 17:34+0530\n"
 "Last-Translator: Sandeep Shedmake <sandeep.shedmake@gmail.com>\n"
 "Language-Team: marathi\n"
 "MIME-Version: 1.0\n"
@@ -17,669 +17,39 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../nact/nact.desktop.in.h:1
-msgid "Add items to the Nautilus popup menu"
-msgstr "Nautilus पॉपअप मेन्यू अंतर्गत घटक समावेष करा"
-
-#: ../nact/nact.desktop.in.h:2
-msgid "Nautilus Actions Configuration"
-msgstr "Nautilus कृती संयोजना"
-
-#: ../nact/nautilus-actions-config.glade.h:1
-msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
-msgstr "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
-
-#: ../nact/nautilus-actions-config.glade.h:3
-#, no-c-format
-msgid "<b>%%</b>: a percent sign"
-msgstr "<b>%%</b>: टक्केवारी स्वाक्षरी"
-
-#: ../nact/nautilus-actions-config.glade.h:5
-#, no-c-format
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config.c:212
+#, c-format
 msgid ""
-"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
-"full paths"
-msgstr "<b>%M</b>: निवडलेले फाइल/फोल्डरचे जागा-विभागजीत यादी व त्याचे पूर्णतया मार्ग"
-
-#: ../nact/nautilus-actions-config.glade.h:7
-#, no-c-format
-msgid "<b>%U</b>: username of the GnomeVFS URI"
-msgstr "<b>%U</b>: GnomeVFS URI चे वापरकर्ता नाव"
-
-#: ../nact/nautilus-actions-config.glade.h:9
-#, no-c-format
-msgid "<b>%d</b>: base folder of the selected file(s)"
-msgstr "<b>%d</b>: निवडलेले फाइलचे मुख्य फोल्डर"
-
-#: ../nact/nautilus-actions-config.glade.h:11
-#, no-c-format
-msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
-msgstr "<b>%f</b>: निवडलेले फाइलचे नाव किंवा निवडलेले पैकी पहिल्याचे नाव"
-
-#: ../nact/nautilus-actions-config.glade.h:13
-#, no-c-format
-msgid "<b>%h</b>: hostname of the GnomeVFS URI"
-msgstr "<b>%h</b>: GnomeVFS URI चे यजमाननाव"
-
-#: ../nact/nautilus-actions-config.glade.h:15
-#, no-c-format
-msgid ""
-"<b>%m</b>: space-separated list of the basenames of the selected\n"
-"file(s)/folder(s)"
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
 msgstr ""
-"<b>%m</b>: निवडलेले फाइल/फोल्डरचे जागा-विभाजीत\n"
-"मुळनावांची यादी"
+"कृती '%s' आधिपासूनच नाव '%s' सह अस्तित्वात आहे, कृपया या कृतीचे समावेषण करण्यापूर्वी "
+"अस्तित्वातील कृती काढूण टाका"
 
-#: ../nact/nautilus-actions-config.glade.h:18
-#, no-c-format
-msgid "<b>%s</b>: scheme of the GnomeVFS URI"
-msgstr "<b>%s</b>: GnomeVFS URI ची योजना"
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config.c:229
+#, c-format
+msgid "Can't save action '%s'"
+msgstr "कृती '%s' साठवू शकले नाही"
 
-#: ../nact/nautilus-actions-config.glade.h:20
-#, no-c-format
-msgid "<b>%u</b>: GnomeVFS URI"
-msgstr "<b>%u</b>: GnomeVFS URI"
-
-#: ../nact/nautilus-actions-config.glade.h:21
-msgid "<b>Action</b>"
-msgstr "<b>कृती</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:22
-msgid "<b>Appears if file matches</b>"
-msgstr "<b>फाइल जुळवणी आढळल्यास प्रदर्शीत होते</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:23
-msgid "<b>Appears if scheme is in this list</b>"
-msgstr "<b>योजना या यादीत आढळल्यास प्रदर्शित होते</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:24
-msgid "<b>Appears if selection contains</b>"
-msgstr "<b>निवड अंतर्गत खालिल समावेष असल्यास प्रदर्शित होते</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:25
-msgid "<b>Nautilus Menu Item</b>"
-msgstr "<b>Nautilus मेन्यू घटक</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:26
-msgid "<b>Profiles</b>"
-msgstr "<b>संक्षिप्त माहिती</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:28
-#, no-c-format
-msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
-msgstr "<i><b><span size=\"small\">उ.दा., %s</span></b></i>"
-
-#: ../nact/nautilus-actions-config.glade.h:29
-msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
-msgstr "<span size=\"larger\"><b>बाब निर्देशक</b></span>"
-
-#: ../nact/nautilus-actions-config.glade.h:30
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config.c:505
+#, c-format
 msgid ""
-"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
-"\n"
-"place secondary text here"
+"A profile already exists with the name '%s', please first remove or rename "
+"the existing one before trying to add this one"
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">प्राथमिक पाठ्य येथे स्थापीत करा</span>\n"
-"\n"
-"द्वितीय पाठ्य येथे स्थापीत करा"
-
-#: ../nact/nautilus-actions-config.glade.h:33
-msgid ""
-"A string with wildcards (? or *) that will be used to match the filenames. "
-"You can set several filename patterns by separating them with a semi-colon "
-"(;)."
-msgstr ""
-"फाइलनावशी जुळवणी स्थापीत करण्याकरीता वाइल्डकार्डस् (? or *) सह सक्षम अक्षरमाळा. तुम्ही "
-"अर्ध-विराम (;) द्वारे विभाजीत विविध फाइलनाव रचना निश्चित करू शकता."
-
-#: ../nact/nautilus-actions-config.glade.h:34
-msgid ""
-"A string with wildcards (? or *) that will be used to match the mimetypes of "
-"files. You can set several mimetype patterns by separating them with a semi-"
-"colon (;)."
-msgstr ""
-"फाइलचे माईम प्रकारशी जुळवणी स्थापीत करण्याकरीता वाइल्डकार्डस् (? or *) सह सक्षम "
-"अक्षरमाळा. तुम्ही अर्ध-विराम (;) द्वारे विभाजीत विविध माईम रचना निश्चित करू शकता."
-
-#: ../nact/nautilus-actions-config.glade.h:35
-msgid "Action"
-msgstr "कृती"
-
-#: ../nact/nautilus-actions-config.glade.h:36
-msgid "Advanced Conditions"
-msgstr "प्रगत अटी"
-
-#: ../nact/nautilus-actions-config.glade.h:37
-msgid "Appears if selection has multiple files or folders"
-msgstr "निवड अंतर्गत बहु फाइल किंवा फोल्डर आढळल्यास प्रदर्शित होते"
-
-#: ../nact/nautilus-actions-config.glade.h:38
-msgid "Both"
-msgstr "दोन्ही"
-
-#: ../nact/nautilus-actions-config.glade.h:39
-msgid "Click to add a new scheme."
-msgstr "नविन योजना समावेष करण्याकरीता क्लिक करा."
-
-#: ../nact/nautilus-actions-config.glade.h:40
-msgid "Click to choose a command from the file chooser dialog."
-msgstr "फाइल निवडकर्ता संवाद पासून आदेश निवडण्याकरीता क्लिक करा."
-
-#: ../nact/nautilus-actions-config.glade.h:41
-msgid ""
-"Click to choose a custom icon from a file instead of a predefined icon from "
-"the drop-down list."
-msgstr ""
-"ड्रॉप-डाऊन यादी पासून पूर्वनिश्चित चिन्हा ऐवजी फाइल पासून स्वपसंतीचे चिन्ह निवडण्याकरीता "
-"क्लिक करा."
-
-#: ../nact/nautilus-actions-config.glade.h:42
-msgid "Click to remove the selected scheme."
-msgstr "निवडलेली योजना काढूण टाकण्याकरीता क्लिक करा."
-
-#: ../nact/nautilus-actions-config.glade.h:43
-msgid ""
-"Click to toggle the display of the list of special tokens you can use in the "
-"parameter field."
-msgstr "बाब क्षेत्र अंतर्गत वापरण्याजोगी विशेष टोकन यादीचे प्रदर्शन बदलविण्याकरीता क्लिक करा."
-
-#: ../nact/nautilus-actions-config.glade.h:44
-msgid "Conditions"
-msgstr "अटी"
-
-#: ../nact/nautilus-actions-config.glade.h:45
-msgid "Create a copy of the selected action."
-msgstr "निवडलेले कृतीचे प्रत बनवा."
-
-#: ../nact/nautilus-actions-config.glade.h:46
-msgid "Delete the action without any confirmation nor the possibility to restore it."
-msgstr "विना निश्चितता किंवा पूर्वस्थितीत आणण्याच्या संभावना विना कृती नष्ट करा."
-
-#: ../nact/nautilus-actions-config.glade.h:47
-msgid "Duplicate"
-msgstr "हुबेबुब"
-
-#: ../nact/nautilus-actions-config.glade.h:48
-msgid "Export existing configs"
-msgstr "अस्तित्वातील संयोजनाचे स्वरूप बदला"
-
-#: ../nact/nautilus-actions-config.glade.h:49
-msgid "File to Import:"
-msgstr "आयात करण्याजोगी फाइल:"
-
-#: ../nact/nautilus-actions-config.glade.h:50
-msgid "Filenames:"
-msgstr "फाइलनाव:"
-
-#: ../nact/nautilus-actions-config.glade.h:51
-msgid "Icon:"
-msgstr "चिन्ह:"
-
-#: ../nact/nautilus-actions-config.glade.h:52
-msgid ""
-"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
-"will not match photo.JPG)"
-msgstr ""
-"निवडल्यास, फाइलनाव रचाना केस संवेदन नुरूप जुळविले जातिल (उदा, *.jpg व photo.JPG "
-"समजुळवणी होत नाही)"
-
-#: ../nact/nautilus-actions-config.glade.h:53
-msgid "Import new configurations"
-msgstr "नविन संयोजना आयात करा"
-
-#: ../nact/nautilus-actions-config.glade.h:54
-msgid "Import/Export"
-msgstr "आयात करा/स्वरूप बदला"
-
-#: ../nact/nautilus-actions-config.glade.h:55
-msgid "Import/Export Settings"
-msgstr "आयात करा/स्वरूप बदला संयोजना"
-
-#: ../nact/nautilus-actions-config.glade.h:56
-msgid "Label of the menu item in the Nautilus popup menu."
-msgstr "Nautilus पॉपअप मेन्यू अंतर्गत मेन्यू घटकाचे लेबल."
-
-#: ../nact/nautilus-actions-config.glade.h:57
-msgid "Label:"
-msgstr "लेबल:"
-
-#: ../nact/nautilus-actions-config.glade.h:58
-msgid ""
-"Manage importation of external action configurations and exportation of "
-"existing actions."
-msgstr "बाहेरील कृती संयोजना आयात करणे व अस्तित्वातील कृतीचे स्वरूप बदलविणे व्यवस्थापीत करा."
-
-#: ../nact/nautilus-actions-config.glade.h:59
-msgid "Match case"
-msgstr "केस जुळवा"
-
-#: ../nact/nautilus-actions-config.glade.h:60
-msgid "Mimetypes:"
-msgstr "Mime प्रकार:"
-
-#: ../nact/nautilus-actions-config.glade.h:61
-msgid "Nautilus Action Editor"
-msgstr "Nautilus कृती संपादक"
-
-#: ../nact/nautilus-actions-config.glade.h:62
-msgid "Nautilus Action Profile Editor"
-msgstr "Nautilus कृती संक्षिप्त माहिती संपादक"
-
-#: ../nact/nautilus-actions-config.glade.h:63
-msgid "Nautilus Actions"
-msgstr "Nautilus कृती"
-
-#: ../nact/nautilus-actions-config.glade.h:64
-msgid ""
-"Nautilus Actions Configuration Tool\n"
-"Application to configure Nautilus Action extension"
-msgstr ""
-"Nautilus कृती संयोजना साधन\n"
-"Nautilus कृती विस्तारण संयोजीत करण्याकरीता अनुप्रयोग"
-
-#: ../nact/nautilus-actions-config.glade.h:66
-msgid "Only files"
-msgstr "फक्त फाइलस्"
-
-#: ../nact/nautilus-actions-config.glade.h:67
-msgid "Only folders"
-msgstr "फक्त फोल्डरस्"
-
-#: ../nact/nautilus-actions-config.glade.h:68
-msgid ""
-"Parameters that will be sent to the program. Click on the 'Legend' button to "
-"see the different replacement tokens."
-msgstr ""
-"कार्यक्रम करीता पाठविण्याजोगी बाब. 'लेजेन्ड' बटणावर क्लिक करून विविध बदलविण्याजोगी "
-"टोकन पहा."
-
-#: ../nact/nautilus-actions-config.glade.h:69
-msgid "Parameters:"
-msgstr "बाब:"
-
-#: ../nact/nautilus-actions-config.glade.h:70
-msgid "Path:"
-msgstr "मार्ग:"
-
-#: ../nact/nautilus-actions-config.glade.h:71
-msgid "Project Website"
-msgstr "प्रकल्प संकेतस्थळ"
-
-#: ../nact/nautilus-actions-config.glade.h:72
-msgid "Save in Folder:"
-msgstr "फोल्डर अंतर्गत साठवा:"
-
-#: ../nact/nautilus-actions-config.glade.h:73
-msgid ""
-"Select the configurations you want to export. Use Shift or Ctrl key to "
-"select more than one."
-msgstr ""
-"स्वरूप बदलविण्याजोगी संयोजना निवडा. एकापेक्षा जास्त निवडण्याकरीता Shift किंवा Ctrl कि "
-"वापरा."
-
-#: ../nact/nautilus-actions-config.glade.h:74
-msgid "Select the configurations you want to export:"
-msgstr "स्वरूप बदलविण्याजोगी संयोजना निवडा:"
-
-#: ../nact/nautilus-actions-config.glade.h:75
-msgid "Select the file you want to import."
-msgstr "आयात करण्याजोगी फाइल निवडा."
-
-#: ../nact/nautilus-actions-config.glade.h:76
-msgid ""
-"Select the folder you want your config to be saved in. This folder must "
-"exist."
-msgstr "संयोजना साठविण्याकरीता फोल्डरची निवड करा. फोल्डर अस्तित्वात असायला हवे."
-
-#: ../nact/nautilus-actions-config.glade.h:77
-msgid ""
-"Select the kind of files where you want your action to appear. If you don't "
-"know what to choose, try selecting just 'file' which is the most common "
-"choice. You can add a new scheme by clicking on the '+' button."
-msgstr ""
-"कृती ठराविक ठिकाणी दर्शविण्याकरीता फाइल प्रकार निवडा. काय निवडायचे ते माहित "
-"नसल्यास, फक्त 'file' निवडण्याचा प्रयत्न करा जे सर्वात जास्त वापरलेले पर्याय आहे. नवीन "
-"योजना '+' बटण वर क्लिक केल्याने समावेष केले जाऊ शकते."
-
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:79
-msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr "Sandeep Shedmake"
-
-#: ../nact/nautilus-actions-config.glade.h:80
-msgid ""
-"The command that will be launched by selecting the action in Nautilus popup "
-"menu."
-msgstr "Nautilus पॉपअप मेन्यू अंतर्गत कृती निवडल्यामुळे दाखल होणारे आदेश."
-
-#: ../nact/nautilus-actions-config.glade.h:81
-msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr "या सॉफ्टेवअरचा परवाना GNU Genaral Public License (GPL) नुरूप आहे"
-
-#: ../nact/nautilus-actions-config.glade.h:82
-msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr "Nautilus स्थितीपट्टी अंतर्गत प्रदर्शित होणारे मेन्यू घटकाचे टूलटिप."
-
-#: ../nact/nautilus-actions-config.glade.h:83
-msgid "Tooltip:"
-msgstr "टूलटिप:"
-
-#: ../nact/nautilus-actions-config.glade.h:84
-msgid "_Browse"
-msgstr "तपासणी करा (_B)"
-
-#: ../nact/nautilus-actions-config.glade.h:85
-msgid "_Legend"
-msgstr "निर्देशक (_L)"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact.c:163
-#, c-format
-msgid "Can't duplicate action '%s'!"
-msgstr "कृती '%s' हुबेहुब करू शकत नाही!"
-
-#. create columns on the tree view
-#: ../nact/nact.c:277 ../nact/nact-import-export.c:162
-msgid "Icon"
-msgstr "चिन्ह"
-
-#: ../nact/nact.c:282 ../nact/nact-import-export.c:167
-msgid "Label"
-msgstr "लेबल"
-
-#: ../nact/nact.c:303 ../nact/nact-editor.c:628
-#: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
-msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr "Nautilus कृती संयोजना साधन करीता संवाद दाखल करू शकत नाही"
-
-#. i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:185
-msgid "/path/to"
-msgstr "/path/to"
-
-#: ../nact/nact-utils.c:186 ../nact/nact-utils.c:188
-msgid "file1.txt"
-msgstr "file1.txt"
-
-#: ../nact/nact-utils.c:186
-msgid "file2.txt"
-msgstr "file2.txt"
-
-#: ../nact/nact-utils.c:187 ../nact/nact-utils.c:188
-msgid "folder1"
-msgstr "folder1"
-
-#: ../nact/nact-utils.c:187
-msgid "folder2"
-msgstr "folder2"
-
-#: ../nact/nact-utils.c:190
-msgid "test.example.net"
-msgstr "test.example.net"
-
-#: ../nact/nact-utils.c:191
-msgid "file.txt"
-msgstr "file.txt"
-
-#: ../nact/nact-utils.c:192
-msgid "folder"
-msgstr "फोल्डर"
-
-#. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:168
-msgid "None"
-msgstr "काहिच नाही"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:449
-#, c-format
-msgid "Can't copy action's profile '%s'!"
-msgstr "कृतीची संक्षिप्त माहिती '%s' प्रतिकृत करणे शक्य नाही!"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:474
-#, c-format
-msgid "Can't paste action's profile '%s'!"
-msgstr "कृतीचे संक्षिप्त माहिती '%s' चिकटवणे शक्य नाही!"
-
-#. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:479
-#, c-format
-msgid "%s Copy"
-msgstr "%s प्रत बनवा"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:539
-#, c-format
-msgid "Can't delete action's profile '%s'!"
-msgstr "कृतीचे संक्षिप्त माहिती '%s' नष्ट करणे शक्य नाही!"
-
-#: ../nact/nact-editor.c:591
-msgid "Profile Name"
-msgstr "संक्षिप्त माहिती नाव"
-
-#: ../nact/nact-editor.c:644
-msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr "Nautilus पॉपअप मेन्यू अंतर्गत मेन्यू घटकाचे चिन्ह"
-
-#: ../nact/nact-editor.c:666
-msgid "Add a New Action"
-msgstr "नवीन कृती समावेष करा"
-
-#: ../nact/nact-editor.c:670
-#, c-format
-msgid "Edit Action \"%s\""
-msgstr "कृती \"%s\" संपादीत करा"
-
-#: ../nact/nact-import-export.c:205
-#, c-format
-msgid "Can't parse file '%s' as GConf schema description file!"
-msgstr "फाइल '%s' यांस GConf योजना वर्णन फाइल नुरूप वाचले जाऊ शकत नाही!"
-
-#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:226
-#, c-format
-msgid "Action '%s' importation failed!"
-msgstr "कृती '%s' आयात करणे अपयशी!"
-
-#. initialize the default schemes
-#. i18n notes : description of 'file' scheme
-#: ../nact/nact-prefs.c:164
-#, c-format
-msgid "%sLocal Files"
-msgstr "%s स्थानीय फाइलस्"
-
-#. i18n notes : description of 'sftp' scheme
-#: ../nact/nact-prefs.c:166
-#, c-format
-msgid "%sSSH Files"
-msgstr "%sSSH फाइलस्"
-
-#. i18n notes : description of 'smb' scheme
-#: ../nact/nact-prefs.c:168
-#, c-format
-msgid "%sWindows Files"
-msgstr "%sWindows फाइलस्"
-
-#. i18n notes : description of 'ftp' scheme
-#: ../nact/nact-prefs.c:170
-#, c-format
-msgid "%sFTP Files"
-msgstr "%sFTP फाइलस्"
-
-#. i18n notes : description of 'dav' scheme
-#: ../nact/nact-prefs.c:172
-#, c-format
-msgid "%sWebdav Files"
-msgstr "%sWebdav फाइलस्"
-
-#. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-profile-editor.c:243
-msgid "new-scheme"
-msgstr "नवीन-योजना"
-
-#: ../nact/nact-profile-editor.c:244
-msgid "New Scheme Description"
-msgstr "नवीन योजना वर्णन"
-
-#: ../nact/nact-profile-editor.c:329
-msgid "Scheme"
-msgstr "योजना"
-
-#: ../nact/nact-profile-editor.c:341
-msgid "Description"
-msgstr "वर्णन"
-
-#: ../nact/nact-profile-editor.c:532
-msgid "Add a New Profile"
-msgstr "नवीन संक्षिप्त माहिती समावेष करा"
-
-#: ../nact/nact-profile-editor.c:536
-#, c-format
-msgid "Edit Profile \"%s\""
-msgstr "संक्षिप्त माहिती \"%s\" संपादीत करा"
+"संक्षिप्त माहिती आधिपासूनच नाव '%s' सह अस्तित्वात आहे, कृपया याचे समावेषण करण्यापूर्वी "
+"अस्तित्वातील कृती काढूण टाका"
 
 #. GConf description strings :
-#: ../utils/nautilus-actions-new-config.c:49
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
+#: ../src/common/nautilus-actions-config-gconf-private.h:80
+#: ../src/utils/nautilus-actions-new-config.c:57
 msgid "The label of the menu item"
 msgstr "मेन्यू घटकाचे लेबल"
 
-#: ../utils/nautilus-actions-new-config.c:49
-msgid "LABEL"
-msgstr "LABEL"
-
-#: ../utils/nautilus-actions-new-config.c:50
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
-msgid "The tooltip of the menu item"
-msgstr "मेन्यू घटाचे टूलटिप"
-
-#: ../utils/nautilus-actions-new-config.c:50
-msgid "TOOLTIP"
-msgstr "TOOLTIP"
-
-#: ../utils/nautilus-actions-new-config.c:51
-msgid "The icon of the menu item (filename or GTK stock ID)"
-msgstr "मेन्यू घटकाचे चिन्ह (फाइलनाव किंवा GTK स्टॉक ID)"
-
-#: ../utils/nautilus-actions-new-config.c:51
-msgid "ICON"
-msgstr "ICON"
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
-msgid "The path of the command"
-msgstr "आदेशचा मार्ग"
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../utils/nautilus-actions-new-config.c:61
-msgid "PATH"
-msgstr "PATH"
-
-#: ../utils/nautilus-actions-new-config.c:53
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
-msgid "The parameters of the command"
-msgstr "आदेशचे बाब"
-
-#: ../utils/nautilus-actions-new-config.c:53
-msgid "PARAMS"
-msgstr "PARAMS"
-
-#: ../utils/nautilus-actions-new-config.c:54
-msgid ""
-"A pattern to match selected files against. May include wildcards (* or ?) "
-"(you must set one option for each pattern you need)"
-msgstr ""
-"निवडलेल्या फाइल या विरूद्ध जुळवणिण्याकरीता रचना. वाइल्डकार्डचे समावेषण असू शकते (* "
-"किंवा ?) (आवश्यक प्रत्येक रचना करीता तुम्ही एक पर्याय निश्चित केले पाहिजे)"
-
-#: ../utils/nautilus-actions-new-config.c:54
-#: ../utils/nautilus-actions-new-config.c:56
-msgid "EXPR"
-msgstr "EXPR"
-
-#: ../utils/nautilus-actions-new-config.c:56
-msgid ""
-"A pattern to match selected files' mimetype against. May include wildcards "
-"(* or ?) (you must set one option for each pattern you need)"
-msgstr ""
-"निवडलेल्या फाइलचे माइम प्रकार जुळवणिण्याकरीता रचना. वाइल्डकार्डचे समावेषण असू शकते (* "
-"किंवा ?) (आवश्यक प्रत्येक रचना करीता तुम्ही एक पर्याय निश्चित केले पाहिजे)"
-
-#: ../utils/nautilus-actions-new-config.c:57
-msgid "Set it if the selection can contain files"
-msgstr "निवड अंतर्गत फाइल समावेष होत असल्यावरच निश्चित करा"
-
-#: ../utils/nautilus-actions-new-config.c:58
-msgid "Set it if the selection can contain folders"
-msgstr "निवड अंतर्गत फोल्डरर्स समावेष होत असल्यावरच निश्चित करा"
-
-#: ../utils/nautilus-actions-new-config.c:59
-msgid "Set it if the selection can have several items"
-msgstr "विविध घटक निवडायचे असल्यावरच निश्चित करा"
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid ""
-"A GnomeVFS scheme where the selected files should be located (you must set "
-"it for each scheme you need)"
-msgstr ""
-"GnomeVFS योजना जेथे निवडलेले फाइलस् स्थापीत करायला हवे (आवश्यक प्रत्येक योजना करीता "
-"तुम्ही निश्चित करायला हवे)"
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid "SCHEME"
-msgstr "SCHEME"
-
-#: ../utils/nautilus-actions-new-config.c:61
-msgid ""
-"The path of the file where to save the new GConf schema definition file "
-"[default: /tmp/config_UUID.schemas]"
-msgstr "नवीन GConf योजना वर्णन फाइल साठवण्याकरीता फाइलचे मार्ग [मुलभूत: /tmp/config_UUID.schemas]"
-
-#: ../utils/nautilus-actions-new-config.c:100
-#, c-format
-msgid ""
-"Syntax error:\n"
-"\t- %s\n"
-"Try %s --help\n"
-msgstr ""
-"व्याकरण त्रुटी:\n"
-"\t- %s\n"
-"%s --help वापरून पहा\n"
-
-#: ../utils/nautilus-actions-new-config.c:152
-#, c-format
-msgid "Creating %s..."
-msgstr "%s बनवत आहे..."
-
-#: ../utils/nautilus-actions-new-config.c:171
-#, c-format
-msgid " Failed: Can't create %s: %s\n"
-msgstr " अपयशी: %s बनवू शकत नाही: %s\n"
-
-#: ../utils/nautilus-actions-new-config.c:180
-#, c-format
-msgid "  OK, saved in %s\n"
-msgstr "  OK, %s अंतर्गत साठविले\n"
-
-#: ../utils/nautilus-actions-new-config.c:185
-#, c-format
-msgid " Failed: %s\n"
-msgstr " अपयशी: %s\n"
-
-#: ../utils/nautilus-actions-tools-utils.c:48
-#, c-format
-msgid "Can't write data in file %s\n"
-msgstr "फाइल %s अंतर्गत माहिती लिहणे अशक्य\n"
-
-#: ../utils/nautilus-actions-tools-utils.c:54
-#, c-format
-msgid "Can't open file %s for writing\n"
-msgstr "लिहीण्याकरीता फाइल %s उघडणे अशक्य\n"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
+#: ../src/common/nautilus-actions-config-gconf-private.h:81
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
@@ -687,7 +57,12 @@ msgstr ""
 "प्रदर्शन अटी संयोजना नुरूप निवड जुळत असल्यास Nautilus पॉपअप मेन्यू अंतर्गत प्रदर्शित होणारे "
 "मेन्यू घटकाचे लेबल"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
+#: ../src/common/nautilus-actions-config-gconf-private.h:82
+#: ../src/utils/nautilus-actions-new-config.c:58
+msgid "The tooltip of the menu item"
+msgstr "मेन्यू घटाचे टूलटिप"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:83
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
@@ -695,11 +70,11 @@ msgstr ""
 "वापरकर्ता माउसशी Nautilus पॉपअप मेन्यू घटक निर्देशीत करत असल्यास Nautilus स्थितीपट्टी "
 "अंतर्गत प्रदर्शीत होणारे मेन्यू घटकाचे टूलटिप"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
+#: ../src/common/nautilus-actions-config-gconf-private.h:84
 msgid "The icon of the menu item"
 msgstr "मेन्यू घटाचे चिन्ह"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
+#: ../src/common/nautilus-actions-config-gconf-private.h:85
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
@@ -707,11 +82,11 @@ msgstr ""
 "निवड प्रदर्शन अटी संयोजना सह जुळत असल्यास Nautilus पॉपअप मेन्यू अंतर्गत प्रदर्शित होणारे "
 "लेबेलच्या बाजूस मेन्यू घटकाचे चिन्ह"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
+#: ../src/common/nautilus-actions-config-gconf-private.h:86
 msgid "A description name of the profile"
 msgstr "संक्षिप्त माहितीचे वर्णन नाव"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
+#: ../src/common/nautilus-actions-config-gconf-private.h:87
 msgid ""
 "The field is here to give the user a human readable name for a profile in "
 "the Nact interface. If not set there will be a default auto generated string "
@@ -720,13 +95,24 @@ msgstr ""
 "Nact संवाद अंतर्गत संक्षिप्त माहिती करीता वापरकर्त्याला वाचनजोगी नाव देण्याकरीता हे "
 "क्षेत्र वापरा. निश्चित केले नसल्यास मुलभूत स्व निर्मीत अक्षमाळा निश्चित केले जाते"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
+#: ../src/common/nautilus-actions-config-gconf-private.h:88
+#: ../src/utils/nautilus-actions-new-config.c:60
+#: ../src/utils/nautilus-actions-new-config.c:63
+msgid "The path of the command"
+msgstr "आदेशचा मार्ग"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:89
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
 msgstr "Nautilus पॉपअप मेन्यू अंतर्गत वापरकर्ता मेन्यू घटक स्वीकारतो तेव्हा आदेशचा मार्ग"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
+#: ../src/common/nautilus-actions-config-gconf-private.h:90
+#: ../src/utils/nautilus-actions-new-config.c:61
+msgid "The parameters of the command"
+msgstr "आदेशचे बाब"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:91
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
 "in the Nautilus popup menu.\n"
@@ -760,11 +146,11 @@ msgstr ""
 "%U: GnomeVFS URI चे वापरकर्तानाव\n"
 "%%: टक्केवारी चिन्ह"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
+#: ../src/common/nautilus-actions-config-gconf-private.h:92
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr "निवडलेले फाइल/फोल्डर शी जुळवणी स्थापीत करण्याकरीता रचनाची यादी"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
+#: ../src/common/nautilus-actions-config-gconf-private.h:93
 msgid ""
 "A list of strings with joker '*' or '?' to match the name of the selected "
 "file(s)/folder(s). Each selected items must match at least one of the "
@@ -773,11 +159,11 @@ msgstr ""
 "निवडलेले फाइल/फोल्डरचे नाव जुळविण्याकरीता '*' किंवा '?' सह अक्षरमाळा यादी. प्रत्येक "
 "निवडलेले घटकाची कृती प्रदर्शित करण्याकरीता किमान एक फाइलनाव रचनाशी जुळले पाहिजे"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
+#: ../src/common/nautilus-actions-config-gconf-private.h:94
 msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr "फाइलनाव रचना केस संवेदनशील असल्यास 'true', नाहीतर 'false'"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
+#: ../src/common/nautilus-actions-config-gconf-private.h:95
 msgid ""
 "If you need to match a filename in a case-sensitive manner, set this key to "
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
@@ -787,11 +173,11 @@ msgstr ""
 "तुम्हाला, उदाहरणार्थ '*.jpg' यांस 'photo.JPG' सह जुळवायचे असल्यास, 'false' असे "
 "निश्चित करा"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
+#: ../src/common/nautilus-actions-config-gconf-private.h:96
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr "निवडलेले फाइलचे माइम प्रकार जुळविण्याकरीत रचनाची यादी"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
+#: ../src/common/nautilus-actions-config-gconf-private.h:97
 msgid ""
 "A list of strings with joker '*' or '?' to match the mimetypes of the "
 "selected file(s). Each selected items must match at least one of the "
@@ -800,7 +186,7 @@ msgstr ""
 "निवडलेले फाइलचे नाव जुळविण्याकरीता '*' किंवा '?' सह अक्षरमाळा यादी. प्रत्येक निवडलेले "
 "घटकाची कृती प्रदर्शित करण्याकरीता किमान एक फाइलनाव रचनाशी जुळले पाहिजे"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
+#: ../src/common/nautilus-actions-config-gconf-private.h:98
 msgid ""
 "The valid combinations are:\n"
 "\n"
@@ -815,32 +201,31 @@ msgstr ""
 "isfile=TRUE व isdir=FALSE: नीवड मध्ये फक्त फाइल आढळतील\n"
 "isfile=FALSE व isdir=TRUE: नीवड मध्ये फक्त फोल्डर आढळतील\n"
 "isfile=TRUE व isdir=TRUE': नीवड मध्ये दोन्ही फाइल व फोल्डर आढळतील\n"
-"isfile=FALSE व isdir=FALSE: ही अवैध जोडणी आहे (तुमची संयोजना प्रदर्शित "
-"करणे अशक्य)"
+"isfile=FALSE व isdir=FALSE: ही अवैध जोडणी आहे (तुमची संयोजना प्रदर्शित करणे अशक्य)"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
+#: ../src/common/nautilus-actions-config-gconf-private.h:99
 msgid "'true' if the selection can have files, 'false' otherwise"
 msgstr "निवड अंतर्गत फाइलस् आढळल्यास 'true', नाहीतर 'false'"
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
+#: ../src/common/nautilus-actions-config-gconf-private.h:101
 msgid "This setting is tied in with the 'isdir' setting. "
 msgstr "हा संयोजना 'isdir' संयोजनासह संलग्न आहे. "
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
+#: ../src/common/nautilus-actions-config-gconf-private.h:102
 msgid "'true' if the selection can have folders, 'false' otherwise"
 msgstr "निवड अंतर्गत फोल्डर्स् आढळल्यास 'true', नाहीतर 'false'"
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
+#: ../src/common/nautilus-actions-config-gconf-private.h:104
 msgid "This setting is tied in with the 'isfile' setting. "
 msgstr "हा संयोजना 'isfile' संयोजनासह संलग्न आहे. "
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
+#: ../src/common/nautilus-actions-config-gconf-private.h:105
 msgid "'true' if the selection can have several items, 'false' otherwise"
 msgstr "निवड अंतर्गत अनेक घटक आढळल्यास 'true', नाहीतर 'false'"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
+#: ../src/common/nautilus-actions-config-gconf-private.h:106
 msgid ""
 "If you need one or more files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set 'false'"
@@ -848,11 +233,11 @@ msgstr ""
 "एक किंवा त्यापेक्षा जास्त फाइलस् किंवा फोल्डर्स् निवडायचे असल्यास, या कि ला 'true' असे "
 "निश्चित करा. एक फाइल किंवा फोल्डर निश्चित करायचे असल्यास, 'false' निश्चित करा"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:99
+#: ../src/common/nautilus-actions-config-gconf-private.h:107
 msgid "The list of GnomeVFS schemes where the selected files should be located"
 msgstr "निवडलेली फाइल स्थापीत करण्याकरीता GnomeVFS योजनाची यादी"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:100
+#: ../src/common/nautilus-actions-config-gconf-private.h:108
 msgid ""
 "Defines the list of valid GnomeVFS schemes to be matched against the "
 "selected items. The GnomeVFS scheme is the protocol used to access the "
@@ -890,67 +275,38 @@ msgstr ""
 "\n"
 "Nautilus द्वारे वापरले गेलेले सर्व GnomeVFS योजना येथे वापरले जातिल."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:101
+#: ../src/common/nautilus-actions-config-gconf-private.h:109
 msgid "The version of the configuration format"
 msgstr "संयोजना स्वरूपची आवृत्ती"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:102
+#: ../src/common/nautilus-actions-config-gconf-private.h:110
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
 msgstr "बॅकवर्ड सहत्वता व्यवस्थापीत करण्याकरीता वापरण्याजोगी संयोजना स्वरूपची आवृत्ती"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:205
-#, c-format
-msgid ""
-"The action '%s' already exists with the name '%s', please first remove the "
-"existing one before trying to add this one"
-msgstr ""
-"कृती '%s' आधिपासूनच नाव '%s' सह अस्तित्वात आहे, कृपया या कृतीचे समावेषण करण्यापूर्वी "
-"अस्तित्वातील कृती काढूण टाका"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:222
-#, c-format
-msgid "Can't save action '%s'"
-msgstr "कृती '%s' साठवू शकले नाही"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:470
-#, c-format
-msgid ""
-"A profile already exists with the name '%s', please first remove or rename "
-"the existing one before trying to add this one"
-msgstr ""
-"संक्षिप्त माहिती आधिपासूनच नाव '%s' सह अस्तित्वात आहे, कृपया याचे समावेषण करण्यापूर्वी "
-"अस्तित्वातील कृती काढूण टाका"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:524
-#, c-format
-msgid "Can't remove the old profile '%s'"
-msgstr "जुणी संक्षिप्त माहिती '%s' काढूण टाकणे अशक्य"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:531
-#, c-format
-msgid "Can't find profile named '%s'"
-msgstr "'%s' नामांकीत संक्षिप्त माहिती शोधणे अशक्य"
-
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:184
+#. i18n notes: will be displayed in an error dialog concatenated
+#. * to another error message
+#.
+#: ../src/common/nautilus-actions-config-schema-reader.c:193
 msgid " and some profiles are incomplete: "
 msgstr " व काहिक संक्षिप्त माहिती अपूर्ण आहेत: "
 
-#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:204
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:717
+#. i18n notes: this is a list separator, it can have more than one
+#. * character (ie, in French it will be ", ")
+#.
+#. i18n notes: this is a list separator, it can have more
+#. * than one character (ie, in French it will be ", ")
+#.
+#: ../src/common/nautilus-actions-config-schema-reader.c:217
+#: ../src/common/nautilus-actions-config-schema-reader.c:736
 msgid ","
 msgstr ","
 
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:303
+#. i18n notes: will be displayed in an error dialog
+#. * concatenated to another error message
+#.
+#: ../src/common/nautilus-actions-config-schema-reader.c:320
 #, c-format
 msgid "%s (one missing key: %s)%s"
 msgid_plural "%s (missing keys: %s)%s"
@@ -958,8 +314,8 @@ msgstr[0] "%s (एक कि आढळली नाही: %s)%s"
 msgstr[1] "%s (किज् आढळले नाही: %s)%s"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:682
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:817
+#: ../src/common/nautilus-actions-config-schema-reader.c:699
+#: ../src/common/nautilus-actions-config-schema-reader.c:836
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (found <%s> "
@@ -967,19 +323,19 @@ msgid ""
 msgstr "ही XML फाइल वैध Nautilus-कृती संयोजना फाइल नाही (<%s> घटक आढळले, <%s> ऐवजी)"
 
 #. if the version of the file is greater than the current one, we reject the file
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
+#: ../src/common/nautilus-actions-config-schema-reader.c:713
 #, c-format
 msgid ""
 "This config file is more recent than this version of Nautilus-actions can "
 "support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
-"ही config फाइल Nautilus-actions च्या या आवृत्ती पेक्षा जास्त अलिकडील आहे. आयात करायचे "
-"असल्यास कृपया Nautilus-actions ला सर्वात अलिकडील आवृत्तीशी सुधारीत करा (फाइल आवृत्ती: %s "
-"(कमाल समर्थीत आवृत्ती : %s))"
+"ही config फाइल Nautilus-actions च्या या आवृत्ती पेक्षा जास्त अलिकडील आहे. आयात "
+"करायचे असल्यास कृपया Nautilus-actions ला सर्वात अलिकडील आवृत्तीशी सुधारीत करा (फाइल "
+"आवृत्ती: %s (कमाल समर्थीत आवृत्ती : %s))"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
+#: ../src/common/nautilus-actions-config-schema-reader.c:763
 #, c-format
 msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
 msgid_plural ""
@@ -990,16 +346,678 @@ msgstr[1] "ही XML फाइल वैध Nautilus-कृती संयो�
 
 #. No error occured but we have not found the "version" gconf key
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
+#: ../src/common/nautilus-actions-config-schema-reader.c:772
 #, c-format
 msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr "ही XML फाइल वैध Nautilus-कृती संयोजना फाइल नाही (कि आढळली नाही: %s)"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:827
+#: ../src/common/nautilus-actions-config-schema-reader.c:846
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
 "instead of <%s>)"
 msgstr "ही XML फाइल वैध Nautilus-कृती संयोजना फाइल नाही (रूट नोड <%s> आहे, <%s> ऐवजी)"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact.c:229
+#, c-format
+msgid "Can't duplicate action '%s'!"
+msgstr "कृती '%s' हुबेहुब करू शकत नाही!"
+
+#. create columns on the tree view
+#: ../src/nact/nact.c:344 ../src/nact/nact-import-export.c:179
+msgid "Icon"
+msgstr "चिन्ह"
+
+#: ../src/nact/nact.c:349 ../src/nact/nact-import-export.c:184
+msgid "Label"
+msgstr "लेबल"
+
+#: ../src/nact/nact.c:370 ../src/nact/nact-action-editor.c:161
+#: ../src/nact/nact-editor.c:663 ../src/nact/nact-import-export.c:331
+#: ../src/nact/nact-profile-editor.c:567
+msgid "Could not load interface for Nautilus Actions Config Tool"
+msgstr "Nautilus कृती संयोजना साधन करीता संवाद दाखल करू शकत नाही"
+
+#: ../src/nact/nact.desktop.in.h:1
+msgid "Add items to the Nautilus popup menu"
+msgstr "Nautilus पॉपअप मेन्यू अंतर्गत घटक समावेष करा"
+
+#: ../src/nact/nact.desktop.in.h:2
+msgid "Nautilus Actions Configuration"
+msgstr "Nautilus कृती संयोजना"
+
+#: ../src/nact/nact-action-editor.c:186 ../src/nact/nact-action-editor.c:189
+#: ../src/nact/nact-editor.c:681 ../src/nact/nact-editor.c:684
+msgid "Icon of the menu item in the Nautilus popup menu"
+msgstr "Nautilus पॉपअप मेन्यू अंतर्गत मेन्यू घटकाचे चिन्ह"
+
+#: ../src/nact/nact-action-editor.c:230
+#| msgid "Add a New Action"
+msgid "Add a new action"
+msgstr "नवीन कृती समावेष करा"
+
+#: ../src/nact/nact-action-editor.c:234
+#, c-format
+#| msgid "Edit Action \"%s\""
+msgid "Edit action \"%s\""
+msgstr "कृती \"%s\" संपादीत करा"
+
+#. i18n notes: when no icon is selected in the drop-down list
+#: ../src/nact/nact-editor.c:195
+msgid "None"
+msgstr "काहिच नाही"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact-editor.c:485
+#, c-format
+msgid "Can't copy action's profile '%s'!"
+msgstr "कृतीची संक्षिप्त माहिती '%s' प्रतिकृत करणे शक्य नाही!"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact-editor.c:509
+#, c-format
+msgid "Can't paste action's profile '%s'!"
+msgstr "कृतीचे संक्षिप्त माहिती '%s' चिकटवणे शक्य नाही!"
+
+#. printf ("profile_name : %s\n", action_profile->desc_name);
+#. i18n notes: this is the default name of a copied profile
+#: ../src/nact/nact-editor.c:514
+#, c-format
+msgid "%s Copy"
+msgstr "%s प्रत बनवा"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact-editor.c:573
+#, c-format
+msgid "Can't delete action's profile '%s'!"
+msgstr "कृतीचे संक्षिप्त माहिती '%s' नष्ट करणे शक्य नाही!"
+
+#: ../src/nact/nact-editor.c:626
+msgid "Profile Name"
+msgstr "संक्षिप्त माहिती नाव"
+
+#: ../src/nact/nact-editor.c:706
+msgid "Add a New Action"
+msgstr "नवीन कृती समावेष करा"
+
+#: ../src/nact/nact-editor.c:710
+#, c-format
+msgid "Edit Action \"%s\""
+msgstr "कृती \"%s\" संपादीत करा"
+
+#: ../src/nact/nact-import-export.c:223
+#, c-format
+msgid "Can't parse file '%s' as GConf schema description file!"
+msgstr "फाइल '%s' यांस GConf योजना वर्णन फाइल नुरूप वाचले जाऊ शकत नाही!"
+
+#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
+#: ../src/nact/nact-import-export.c:244
+#, c-format
+msgid "Action '%s' importation failed!"
+msgstr "कृती '%s' आयात करणे अपयशी!"
+
+#. initialize the default schemes
+#. i18n notes : description of 'file' scheme
+#: ../src/nact/nact-prefs.c:172
+#, c-format
+msgid "%sLocal Files"
+msgstr "%s स्थानीय फाइलस्"
+
+#. i18n notes : description of 'sftp' scheme
+#: ../src/nact/nact-prefs.c:174
+#, c-format
+msgid "%sSSH Files"
+msgstr "%sSSH फाइलस्"
+
+#. i18n notes : description of 'smb' scheme
+#: ../src/nact/nact-prefs.c:176
+#, c-format
+msgid "%sWindows Files"
+msgstr "%sWindows फाइलस्"
+
+#. i18n notes : description of 'ftp' scheme
+#: ../src/nact/nact-prefs.c:178
+#, c-format
+msgid "%sFTP Files"
+msgstr "%sFTP फाइलस्"
+
+#. i18n notes : description of 'dav' scheme
+#: ../src/nact/nact-prefs.c:180
+#, c-format
+msgid "%sWebdav Files"
+msgstr "%sWebdav फाइलस्"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../src/nact/nact-profile-editor.c:299
+msgid "new-scheme"
+msgstr "नवीन-योजना"
+
+#: ../src/nact/nact-profile-editor.c:300
+msgid "New Scheme Description"
+msgstr "नवीन योजना वर्णन"
+
+#: ../src/nact/nact-profile-editor.c:396
+msgid "Scheme"
+msgstr "योजना"
+
+#: ../src/nact/nact-profile-editor.c:407
+msgid "Description"
+msgstr "वर्णन"
+
+#: ../src/nact/nact-profile-editor.c:608
+msgid "Add a New Profile"
+msgstr "नवीन संक्षिप्त माहिती समावेष करा"
+
+#: ../src/nact/nact-profile-editor.c:612
+#, c-format
+msgid "Edit Profile \"%s\""
+msgstr "संक्षिप्त माहिती \"%s\" संपादीत करा"
+
+#. i18n notes: example strings for the command preview
+#: ../src/nact/nact-utils.c:196
+msgid "/path/to"
+msgstr "/path/to"
+
+#: ../src/nact/nact-utils.c:197 ../src/nact/nact-utils.c:199
+msgid "file1.txt"
+msgstr "file1.txt"
+
+#: ../src/nact/nact-utils.c:197
+msgid "file2.txt"
+msgstr "file2.txt"
+
+#: ../src/nact/nact-utils.c:198 ../src/nact/nact-utils.c:199
+msgid "folder1"
+msgstr "folder1"
+
+#: ../src/nact/nact-utils.c:198
+msgid "folder2"
+msgstr "folder2"
+
+#: ../src/nact/nact-utils.c:201
+msgid "test.example.net"
+msgstr "test.example.net"
+
+#: ../src/nact/nact-utils.c:202
+msgid "file.txt"
+msgstr "file.txt"
+
+#: ../src/nact/nact-utils.c:203
+msgid "folder"
+msgstr "फोल्डर"
+
+#: ../src/nact/nautilus-actions-config.glade.h:1
+#| msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
+msgid ""
+"(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"(C) 2009 Pierre Wieser <pwieser@trychlos.org>"
+msgstr ""
+"(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"(C) 2009 Pierre Wieser <pwieser@trychlos.org>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:4
+#, no-c-format
+msgid "<b>%%</b>: a percent sign"
+msgstr "<b>%%</b>: टक्केवारी स्वाक्षरी"
+
+#: ../src/nact/nautilus-actions-config.glade.h:6
+#, no-c-format
+msgid ""
+"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
+"full paths"
+msgstr "<b>%M</b>: निवडलेले फाइल/फोल्डरचे जागा-विभागजीत यादी व त्याचे पूर्णतया मार्ग"
+
+#: ../src/nact/nautilus-actions-config.glade.h:8
+#, no-c-format
+msgid "<b>%U</b>: username of the GnomeVFS URI"
+msgstr "<b>%U</b>: GnomeVFS URI चे वापरकर्ता नाव"
+
+#: ../src/nact/nautilus-actions-config.glade.h:10
+#, no-c-format
+msgid "<b>%d</b>: base folder of the selected file(s)"
+msgstr "<b>%d</b>: निवडलेले फाइलचे मुख्य फोल्डर"
+
+#: ../src/nact/nautilus-actions-config.glade.h:12
+#, no-c-format
+msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgstr "<b>%f</b>: निवडलेले फाइलचे नाव किंवा निवडलेले पैकी पहिल्याचे नाव"
+
+#: ../src/nact/nautilus-actions-config.glade.h:14
+#, no-c-format
+msgid "<b>%h</b>: hostname of the GnomeVFS URI"
+msgstr "<b>%h</b>: GnomeVFS URI चे यजमाननाव"
+
+#: ../src/nact/nautilus-actions-config.glade.h:16
+#, no-c-format
+msgid ""
+"<b>%m</b>: space-separated list of the basenames of the selected\n"
+"file(s)/folder(s)"
+msgstr ""
+"<b>%m</b>: निवडलेले फाइल/फोल्डरचे जागा-विभाजीत\n"
+"मुळनावांची यादी"
+
+#: ../src/nact/nautilus-actions-config.glade.h:19
+#, no-c-format
+msgid "<b>%s</b>: scheme of the GnomeVFS URI"
+msgstr "<b>%s</b>: GnomeVFS URI ची योजना"
+
+#: ../src/nact/nautilus-actions-config.glade.h:21
+#, no-c-format
+msgid "<b>%u</b>: GnomeVFS URI"
+msgstr "<b>%u</b>: GnomeVFS URI"
+
+#: ../src/nact/nautilus-actions-config.glade.h:22
+msgid "<b>Action</b>"
+msgstr "<b>कृती</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:23
+msgid "<b>Appears if file matches</b>"
+msgstr "<b>फाइल जुळवणी आढळल्यास प्रदर्शीत होते</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:24
+msgid "<b>Appears if scheme is in this list</b>"
+msgstr "<b>योजना या यादीत आढळल्यास प्रदर्शित होते</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:25
+msgid "<b>Appears if selection contains</b>"
+msgstr "<b>निवड अंतर्गत खालिल समावेष असल्यास प्रदर्शित होते</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:26
+msgid "<b>Nautilus Menu Item</b>"
+msgstr "<b>Nautilus मेन्यू घटक</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:27
+msgid "<b>Profiles</b>"
+msgstr "<b>संक्षिप्त माहिती</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:29
+#, no-c-format
+msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
+msgstr "<i><b><span size=\"small\">उ.दा., %s</span></b></i>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:30
+msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
+msgstr "<span size=\"larger\"><b>बाब निर्देशक</b></span>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:31
+msgid ""
+"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
+"\n"
+"place secondary text here"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">प्राथमिक पाठ्य येथे स्थापीत करा</span>\n"
+"\n"
+"द्वितीय पाठ्य येथे स्थापीत करा"
+
+#: ../src/nact/nautilus-actions-config.glade.h:34
+msgid ""
+"A string with wildcards (? or *) that will be used to match the filenames. "
+"You can set several filename patterns by separating them with a semi-colon "
+"(;)."
+msgstr ""
+"फाइलनावशी जुळवणी स्थापीत करण्याकरीता वाइल्डकार्डस् (? or *) सह सक्षम अक्षरमाळा. तुम्ही "
+"अर्ध-विराम (;) द्वारे विभाजीत विविध फाइलनाव रचना निश्चित करू शकता."
+
+#: ../src/nact/nautilus-actions-config.glade.h:35
+msgid ""
+"A string with wildcards (? or *) that will be used to match the mimetypes of "
+"files. You can set several mimetype patterns by separating them with a semi-"
+"colon (;)."
+msgstr ""
+"फाइलचे माईम प्रकारशी जुळवणी स्थापीत करण्याकरीता वाइल्डकार्डस् (? or *) सह सक्षम "
+"अक्षरमाळा. तुम्ही अर्ध-विराम (;) द्वारे विभाजीत विविध माईम रचना निश्चित करू शकता."
+
+#: ../src/nact/nautilus-actions-config.glade.h:36
+msgid "Action"
+msgstr "कृती"
+
+#: ../src/nact/nautilus-actions-config.glade.h:37
+msgid "Advanced Conditions"
+msgstr "प्रगत अटी"
+
+#: ../src/nact/nautilus-actions-config.glade.h:38
+msgid "Appears if selection has multiple files or folders"
+msgstr "निवड अंतर्गत बहु फाइल किंवा फोल्डर आढळल्यास प्रदर्शित होते"
+
+#: ../src/nact/nautilus-actions-config.glade.h:39
+msgid "Both"
+msgstr "दोन्ही"
+
+#: ../src/nact/nautilus-actions-config.glade.h:40
+msgid "Click to add a new scheme."
+msgstr "नविन योजना समावेष करण्याकरीता क्लिक करा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:41
+msgid "Click to choose a command from the file chooser dialog."
+msgstr "फाइल निवडकर्ता संवाद पासून आदेश निवडण्याकरीता क्लिक करा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:42
+msgid ""
+"Click to choose a custom icon from a file instead of a predefined icon from "
+"the drop-down list."
+msgstr ""
+"ड्रॉप-डाऊन यादी पासून पूर्वनिश्चित चिन्हा ऐवजी फाइल पासून स्वपसंतीचे चिन्ह निवडण्याकरीता "
+"क्लिक करा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:43
+msgid "Click to remove the selected scheme."
+msgstr "निवडलेली योजना काढूण टाकण्याकरीता क्लिक करा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:44
+msgid ""
+"Click to toggle the display of the list of special tokens you can use in the "
+"parameter field."
+msgstr "बाब क्षेत्र अंतर्गत वापरण्याजोगी विशेष टोकन यादीचे प्रदर्शन बदलविण्याकरीता क्लिक करा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:45
+msgid "Conditions"
+msgstr "अटी"
+
+#: ../src/nact/nautilus-actions-config.glade.h:46
+msgid "Create a copy of the selected action."
+msgstr "निवडलेले कृतीचे प्रत बनवा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:47
+msgid "Delete the action without any confirmation nor the possibility to restore it."
+msgstr "विना निश्चितता किंवा पूर्वस्थितीत आणण्याच्या संभावना विना कृती नष्ट करा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:48
+msgid "Duplicate"
+msgstr "हुबेबुब"
+
+#: ../src/nact/nautilus-actions-config.glade.h:49
+msgid "Export existing configs"
+msgstr "अस्तित्वातील संयोजनाचे स्वरूप बदला"
+
+#: ../src/nact/nautilus-actions-config.glade.h:50
+msgid "File to Import:"
+msgstr "आयात करण्याजोगी फाइल:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:51
+msgid "Filenames:"
+msgstr "फाइलनाव:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:52
+msgid "Icon:"
+msgstr "चिन्ह:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:53
+msgid ""
+"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
+"will not match photo.JPG)"
+msgstr ""
+"निवडल्यास, फाइलनाव रचाना केस संवेदन नुरूप जुळविले जातिल (उदा, *.jpg व photo.JPG "
+"समजुळवणी होत नाही)"
+
+#: ../src/nact/nautilus-actions-config.glade.h:54
+msgid "Import new configurations"
+msgstr "नविन संयोजना आयात करा"
+
+#: ../src/nact/nautilus-actions-config.glade.h:55
+msgid "Import/Export"
+msgstr "आयात करा/स्वरूप बदला"
+
+#: ../src/nact/nautilus-actions-config.glade.h:56
+msgid "Import/Export Settings"
+msgstr "आयात करा/स्वरूप बदला संयोजना"
+
+#: ../src/nact/nautilus-actions-config.glade.h:57
+msgid "Label of the menu item in the Nautilus popup menu."
+msgstr "Nautilus पॉपअप मेन्यू अंतर्गत मेन्यू घटकाचे लेबल."
+
+#: ../src/nact/nautilus-actions-config.glade.h:58
+msgid "Label:"
+msgstr "लेबल:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:59
+msgid ""
+"Manage importation of external action configurations and exportation of "
+"existing actions."
+msgstr "बाहेरील कृती संयोजना आयात करणे व अस्तित्वातील कृतीचे स्वरूप बदलविणे व्यवस्थापीत करा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:60
+msgid "Match case"
+msgstr "केस जुळवा"
+
+#: ../src/nact/nautilus-actions-config.glade.h:61
+msgid "Mimetypes:"
+msgstr "Mime प्रकार:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:62
+msgid "Nautilus Action Editor"
+msgstr "Nautilus कृती संपादक"
+
+#: ../src/nact/nautilus-actions-config.glade.h:63
+msgid "Nautilus Action Profile Editor"
+msgstr "Nautilus कृती संक्षिप्त माहिती संपादक"
+
+#: ../src/nact/nautilus-actions-config.glade.h:64
+msgid "Nautilus Actions"
+msgstr "Nautilus कृती"
+
+#: ../src/nact/nautilus-actions-config.glade.h:65
+msgid ""
+"Nautilus Actions Configuration Tool\n"
+"Application to configure Nautilus Action extension"
+msgstr ""
+"Nautilus कृती संयोजना साधन\n"
+"Nautilus कृती विस्तारण संयोजीत करण्याकरीता अनुप्रयोग"
+
+#: ../src/nact/nautilus-actions-config.glade.h:67
+msgid "Only files"
+msgstr "फक्त फाइलस्"
+
+#: ../src/nact/nautilus-actions-config.glade.h:68
+msgid "Only folders"
+msgstr "फक्त फोल्डरस्"
+
+#: ../src/nact/nautilus-actions-config.glade.h:69
+msgid ""
+"Parameters that will be sent to the program. Click on the 'Legend' button to "
+"see the different replacement tokens."
+msgstr ""
+"कार्यक्रम करीता पाठविण्याजोगी बाब. 'लेजेन्ड' बटणावर क्लिक करून विविध बदलविण्याजोगी "
+"टोकन पहा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:70
+msgid "Parameters:"
+msgstr "बाब:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:71
+msgid "Path:"
+msgstr "मार्ग:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:72
+#| msgid "Project Website"
+msgid "Project website"
+msgstr "प्रकल्प संकेतस्थळ"
+
+#: ../src/nact/nautilus-actions-config.glade.h:73
+msgid "Save in Folder:"
+msgstr "फोल्डर अंतर्गत साठवा:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:74
+msgid ""
+"Select the configurations you want to export. Use Shift or Ctrl key to "
+"select more than one."
+msgstr ""
+"स्वरूप बदलविण्याजोगी संयोजना निवडा. एकापेक्षा जास्त निवडण्याकरीता Shift किंवा Ctrl कि "
+"वापरा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:75
+msgid "Select the configurations you want to export:"
+msgstr "स्वरूप बदलविण्याजोगी संयोजना निवडा:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:76
+msgid "Select the file you want to import."
+msgstr "आयात करण्याजोगी फाइल निवडा."
+
+#: ../src/nact/nautilus-actions-config.glade.h:77
+msgid ""
+"Select the folder you want your config to be saved in. This folder must "
+"exist."
+msgstr "संयोजना साठविण्याकरीता फोल्डरची निवड करा. फोल्डर अस्तित्वात असायला हवे."
+
+#: ../src/nact/nautilus-actions-config.glade.h:78
+msgid ""
+"Select the kind of files where you want your action to appear. If you don't "
+"know what to choose, try selecting just 'file' which is the most common "
+"choice. You can add a new scheme by clicking on the '+' button."
+msgstr ""
+"कृती ठराविक ठिकाणी दर्शविण्याकरीता फाइल प्रकार निवडा. काय निवडायचे ते माहित "
+"नसल्यास, फक्त 'file' निवडण्याचा प्रयत्न करा जे सर्वात जास्त वापरलेले पर्याय आहे. नवीन "
+"योजना '+' बटण वर क्लिक केल्याने समावेष केले जाऊ शकते."
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../src/nact/nautilus-actions-config.glade.h:80
+msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
+msgstr "Sandeep Shedmake"
+
+#: ../src/nact/nautilus-actions-config.glade.h:81
+msgid ""
+"The command that will be launched by selecting the action in Nautilus popup "
+"menu."
+msgstr "Nautilus पॉपअप मेन्यू अंतर्गत कृती निवडल्यामुळे दाखल होणारे आदेश."
+
+#: ../src/nact/nautilus-actions-config.glade.h:82
+msgid "This software is licensed under the GNU Genaral Public License (GPL)"
+msgstr "या सॉफ्टेवअरचा परवाना GNU Genaral Public License (GPL) नुरूप आहे"
+
+#: ../src/nact/nautilus-actions-config.glade.h:83
+msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
+msgstr "Nautilus स्थितीपट्टी अंतर्गत प्रदर्शित होणारे मेन्यू घटकाचे टूलटिप."
+
+#: ../src/nact/nautilus-actions-config.glade.h:84
+msgid "Tooltip:"
+msgstr "टूलटिप:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:85
+msgid "_Browse"
+msgstr "तपासणी करा (_B)"
+
+#: ../src/nact/nautilus-actions-config.glade.h:86
+msgid "_Legend"
+msgstr "निर्देशक (_L)"
+
+#: ../src/utils/nautilus-actions-new-config.c:57
+msgid "LABEL"
+msgstr "LABEL"
+
+#: ../src/utils/nautilus-actions-new-config.c:58
+msgid "TOOLTIP"
+msgstr "TOOLTIP"
+
+#: ../src/utils/nautilus-actions-new-config.c:59
+msgid "The icon of the menu item (filename or GTK stock ID)"
+msgstr "मेन्यू घटकाचे चिन्ह (फाइलनाव किंवा GTK स्टॉक ID)"
+
+#: ../src/utils/nautilus-actions-new-config.c:59
+msgid "ICON"
+msgstr "ICON"
+
+#: ../src/utils/nautilus-actions-new-config.c:60
+#: ../src/utils/nautilus-actions-new-config.c:63
+#: ../src/utils/nautilus-actions-new-config.c:69
+msgid "PATH"
+msgstr "PATH"
+
+#: ../src/utils/nautilus-actions-new-config.c:61
+msgid "PARAMS"
+msgstr "PARAMS"
+
+#: ../src/utils/nautilus-actions-new-config.c:62
+msgid ""
+"A pattern to match selected files against. May include wildcards (* or ?) "
+"(you must set one option for each pattern you need)"
+msgstr ""
+"निवडलेल्या फाइल या विरूद्ध जुळवणिण्याकरीता रचना. वाइल्डकार्डचे समावेषण असू शकते (* "
+"किंवा ?) (आवश्यक प्रत्येक रचना करीता तुम्ही एक पर्याय निश्चित केले पाहिजे)"
+
+#: ../src/utils/nautilus-actions-new-config.c:62
+#: ../src/utils/nautilus-actions-new-config.c:64
+msgid "EXPR"
+msgstr "EXPR"
+
+#: ../src/utils/nautilus-actions-new-config.c:64
+msgid ""
+"A pattern to match selected files' mimetype against. May include wildcards "
+"(* or ?) (you must set one option for each pattern you need)"
+msgstr ""
+"निवडलेल्या फाइलचे माइम प्रकार जुळवणिण्याकरीता रचना. वाइल्डकार्डचे समावेषण असू शकते (* "
+"किंवा ?) (आवश्यक प्रत्येक रचना करीता तुम्ही एक पर्याय निश्चित केले पाहिजे)"
+
+#: ../src/utils/nautilus-actions-new-config.c:65
+msgid "Set it if the selection can contain files"
+msgstr "निवड अंतर्गत फाइल समावेष होत असल्यावरच निश्चित करा"
+
+#: ../src/utils/nautilus-actions-new-config.c:66
+msgid "Set it if the selection can contain folders"
+msgstr "निवड अंतर्गत फोल्डरर्स समावेष होत असल्यावरच निश्चित करा"
+
+#: ../src/utils/nautilus-actions-new-config.c:67
+msgid "Set it if the selection can have several items"
+msgstr "विविध घटक निवडायचे असल्यावरच निश्चित करा"
+
+#: ../src/utils/nautilus-actions-new-config.c:68
+msgid ""
+"A GnomeVFS scheme where the selected files should be located (you must set "
+"it for each scheme you need)"
+msgstr ""
+"GnomeVFS योजना जेथे निवडलेले फाइलस् स्थापीत करायला हवे (आवश्यक प्रत्येक योजना करीता "
+"तुम्ही निश्चित करायला हवे)"
+
+#: ../src/utils/nautilus-actions-new-config.c:68
+msgid "SCHEME"
+msgstr "SCHEME"
+
+#: ../src/utils/nautilus-actions-new-config.c:69
+msgid ""
+"The path of the file where to save the new GConf schema definition file "
+"[default: /tmp/config_UUID.schemas]"
+msgstr ""
+"नवीन GConf योजना वर्णन फाइल साठवण्याकरीता फाइलचे मार्ग [मुलभूत: /tmp/config_UUID."
+"schemas]"
+
+#: ../src/utils/nautilus-actions-new-config.c:108
+#, c-format
+msgid ""
+"Syntax error:\n"
+"\t- %s\n"
+"Try %s --help\n"
+msgstr ""
+"व्याकरण त्रुटी:\n"
+"\t- %s\n"
+"%s --help वापरून पहा\n"
+
+#: ../src/utils/nautilus-actions-new-config.c:160
+#, c-format
+msgid "Creating %s..."
+msgstr "%s बनवत आहे..."
+
+#: ../src/utils/nautilus-actions-new-config.c:179
+#, c-format
+msgid " Failed: Can't create %s: %s\n"
+msgstr " अपयशी: %s बनवू शकत नाही: %s\n"
+
+#: ../src/utils/nautilus-actions-new-config.c:188
+#, c-format
+msgid "  OK, saved in %s\n"
+msgstr "  OK, %s अंतर्गत साठविले\n"
+
+#: ../src/utils/nautilus-actions-new-config.c:193
+#, c-format
+msgid " Failed: %s\n"
+msgstr " अपयशी: %s\n"
+
+#: ../src/utils/nautilus-actions-tools-utils.c:57
+#, c-format
+msgid "Can't write data in file %s\n"
+msgstr "फाइल %s अंतर्गत माहिती लिहणे अशक्य\n"
+
+#: ../src/utils/nautilus-actions-tools-utils.c:63
+#, c-format
+msgid "Can't open file %s for writing\n"
+msgstr "लिहीण्याकरीता फाइल %s उघडणे अशक्य\n"
 
