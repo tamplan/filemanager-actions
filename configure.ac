@@ -108,7 +108,7 @@ AM_GCONF_SOURCE_2
 # nautilus itself (e.g. 2.24.2) instead of the library version info
 # (1.1.0) ; for the usual final user, this is very analog to requiring
 # a whole gnome version
-GLIB_REQUIRED=2.4.0
+GLIB_REQUIRED=2.16.0
 GTK_REQUIRED=2.4.0
 GLADE_REQUIRED=2.4.0
 GNOME_REQUIRED=2.7.0

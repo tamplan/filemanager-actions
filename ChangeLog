@@ -1,6 +1,8 @@
 2009-06-10 Pierre Wieser <pwieser@trychlos.org>
 
-	* configure.ac: Bump version number.
+	* configure.ac:
+	Bump version number.
+	Update required Glib version to make sure to have GIO.
 
 	* src/common/nact-action-profile.c (nact_action_profile_free):
 	Fix disallocation of the profile by calling g_object_unref.
