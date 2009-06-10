@@ -2,6 +2,9 @@
 
 	* configure.ac: Bump version number.
 
+	* src/common/nact-action-profile.c (nact_action_profile_free):
+	Fix disallocation of the profile by calling g_object_unref.
+
 2009-06-09 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump version number for 1.11.0 release.
