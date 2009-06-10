@@ -35,9 +35,6 @@
 #include <string.h>
 
 #include <libgnomevfs/gnome-vfs.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#include <libgnomevfs/gnome-vfs-file-info.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
 
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
@@ -199,7 +196,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	 * a good idea to rewrite this extension to use equivalent methods
 	 * from GIO/GVFS.
 	 *
-	 * plugins/nautilus-actions-utils.c:nautilus_actions_utils_parse_parameter
+	 * src/common/nact-action-profile.c:nact_action_profile_parse_parameters
 	 * is the only function that makes use of gnome_vfs methods.
 	 *
 	 * See: Bug #574919

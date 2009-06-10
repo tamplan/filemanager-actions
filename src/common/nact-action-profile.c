@@ -430,13 +430,13 @@ instance_finalize( GObject *object )
 	g_assert( NACT_IS_ACTION_PROFILE( object ));
 	NactActionProfile *self = ( NactActionProfile * ) object;
 
-	g_free( profile->private->name );
-	g_free( profile->private->label );
-	g_free( profile->private->path );
-	g_free( profile->private->parameters );
-	nactuti_free_string_list( profile->private->basenames );
-	nactuti_free_string_list( profile->private->mimetypes );
-	nactuti_free_string_list( profile->private->schemes );
+	g_free( self->private->name );
+	g_free( self->private->label );
+	g_free( self->private->path );
+	g_free( self->private->parameters );
+	nactuti_free_string_list( self->private->basenames );
+	nactuti_free_string_list( self->private->mimetypes );
+	nactuti_free_string_list( self->private->schemes );
 
 	/* chain call to parent class */
 	if((( GObjectClass * ) st_parent_class )->finalize ){
