@@ -34,8 +34,6 @@
 
 #include <string.h>
 
-#include <libgnomevfs/gnome-vfs.h>
-
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
@@ -188,20 +186,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	g_assert( NAUTILUS_IS_ACTIONS( instance ));
 	NautilusActions *self = NAUTILUS_ACTIONS( instance );
-
-	/* Patch from Bruce van der Kooij <brucevdkooij@gmail.com>
-	 *
-	 * TODO: GnomeVFS needs to be initialized before gnome_vfs methods
-	 * can be used. Since GnomeVFS has been deprecated it would be
-	 * a good idea to rewrite this extension to use equivalent methods
-	 * from GIO/GVFS.
-	 *
-	 * src/common/nact-action-profile.c:nact_action_profile_parse_parameters
-	 * is the only function that makes use of gnome_vfs methods.
-	 *
-	 * See: Bug #574919
-	 */
-	gnome_vfs_init ();
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 	self->private->dispose_has_run = FALSE;

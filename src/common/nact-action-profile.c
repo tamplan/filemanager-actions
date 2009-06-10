@@ -940,6 +940,20 @@ nact_action_profile_parse_parameters( const NactActionProfile *profile, GList* f
 	gchar* retv = NULL;
 	g_return_val_if_fail( NACT_IS_ACTION_PROFILE( profile ), NULL );
 
+	/* Patch from Bruce van der Kooij <brucevdkooij@gmail.com>
+	 *
+	 * TODO: GnomeVFS needs to be initialized before gnome_vfs methods
+	 * can be used. Since GnomeVFS has been deprecated it would be
+	 * a good idea to rewrite this extension to use equivalent methods
+	 * from GIO/GVFS.
+	 *
+	 * src/common/nact-action-profile.c:nact_action_profile_parse_parameters
+	 * is the only function that makes use of gnome_vfs methods.
+	 *
+	 * See: Bug #574919
+	 */
+	gnome_vfs_init ();
+
 	if (files != NULL){
 		const gchar *param_template = profile->private->parameters;
 		GString* tmp_string = g_string_new ("");
