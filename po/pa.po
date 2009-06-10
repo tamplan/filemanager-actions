@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
 "cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-05-18 20:43+0000\n"
-"PO-Revision-Date: 2009-05-25 18:20+0530\n"
+"POT-Creation-Date: 2009-05-28 21:47+0000\n"
+"PO-Revision-Date: 2009-06-10 06:32+0530\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,6 @@ msgid "Nautilus Actions Configuration"
 msgstr "ਨਟੀਲਸ ਐਕਸ਼ਨ ਸੰਰਚਨਾ"
 
 #: ../nact/nautilus-actions-config.glade.h:1
-#| msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
 msgid ""
 "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
 "(C) 2009 Pierre Wieser <pwieser@trychlos.org>"
@@ -176,7 +175,6 @@ msgid "Click to remove the selected scheme."
 msgstr "ਚੁਣੀ ਸਕੀਮ ਹਟਾਉਣ ਲਈ ਦਬਾਓ।"
 
 #: ../nact/nautilus-actions-config.glade.h:44
-#, fuzzy
 msgid ""
 "Click to toggle the display of the list of special tokens you can use in the "
 "parameter field."
@@ -297,7 +295,6 @@ msgid "Path:"
 msgstr "ਮਾਰਗ:"
 
 #: ../nact/nautilus-actions-config.glade.h:72
-#| msgid "Project Website"
 msgid "Project website"
 msgstr "ਪਰੋਜੈੱਕਟ ਵੈੱਬਸਾਇਟ"
 
@@ -365,104 +362,121 @@ msgid "_Legend"
 msgstr "ਸੰਕੇਤ(_L)"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact.c:183
+#: ../nact/nact.c:228
 #, c-format
 msgid "Can't duplicate action '%s'!"
 msgstr "ਐਕਸ਼ਨ '%s' ਡੁਪਲੀਕੇਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"
 
 #. create columns on the tree view
-#: ../nact/nact.c:297 ../nact/nact-import-export.c:178
+#: ../nact/nact.c:343 ../nact/nact-import-export.c:178
 msgid "Icon"
 msgstr "ਆਈਕਾਨ"
 
-#: ../nact/nact.c:302 ../nact/nact-import-export.c:183
+#: ../nact/nact.c:348 ../nact/nact-import-export.c:183
 msgid "Label"
 msgstr "ਲੇਬਲ"
 
-#: ../nact/nact.c:323 ../nact/nact-editor.c:644
-#: ../nact/nact-import-export.c:330 ../nact/nact-profile-editor.c:519
+#: ../nact/nact.c:369 ../nact/nact-editor.c:662
+#: ../nact/nact-action-editor.c:157 ../nact/nact-import-export.c:330
+#: ../nact/nact-profile-editor.c:566
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "ਨਟੀਲਸ ਕਾਰਵਾਈ ਸੰਰਚਨਾ ਸੰਦ ਲਈ ਇੰਟਰਫੇਸ ਲੋਡ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ"
 
 #. i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:192
+#: ../nact/nact-utils.c:195
 msgid "/path/to"
 msgstr "/path/to"
 
-#: ../nact/nact-utils.c:193 ../nact/nact-utils.c:195
+#: ../nact/nact-utils.c:196 ../nact/nact-utils.c:198
 msgid "file1.txt"
 msgstr "file1.txt"
 
-#: ../nact/nact-utils.c:193
+#: ../nact/nact-utils.c:196
 msgid "file2.txt"
 msgstr "file2.txt"
 
-#: ../nact/nact-utils.c:194 ../nact/nact-utils.c:195
+#: ../nact/nact-utils.c:197 ../nact/nact-utils.c:198
 msgid "folder1"
 msgstr "folder1"
 
-#: ../nact/nact-utils.c:194
+#: ../nact/nact-utils.c:197
 msgid "folder2"
 msgstr "folder2"
 
-#: ../nact/nact-utils.c:197
+#: ../nact/nact-utils.c:200
 msgid "test.example.net"
 msgstr "test.example.net"
 
-#: ../nact/nact-utils.c:198
+#: ../nact/nact-utils.c:201
 msgid "file.txt"
 msgstr "file.txt"
 
-#: ../nact/nact-utils.c:199
+#: ../nact/nact-utils.c:202
 msgid "folder"
 msgstr "ਫੋਲਡਰ"
 
 #. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:185
+#: ../nact/nact-editor.c:194
 msgid "None"
 msgstr "ਕੋਈ ਨਹੀਂ"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:467
+#: ../nact/nact-editor.c:484
 #, c-format
 msgid "Can't copy action's profile '%s'!"
 msgstr "ਪਰੋਫਾਇਲ '%s' ਦਾ ਐਕਸ਼ਨ ਕਾਪੀ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:491
+#: ../nact/nact-editor.c:508
 #, c-format
 msgid "Can't paste action's profile '%s'!"
 msgstr "ਪਰੋਫਾਇਲ '%s' ਦਾ ਐਕਸ਼ਨ ਚੇਪਿਆ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"
 
+#. printf ("profile_name : %s\n", action_profile->desc_name);
 #. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:496
+#: ../nact/nact-editor.c:513
 #, c-format
 msgid "%s Copy"
 msgstr "%s ਕਾਪੀ"
 
 #. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:555
+#: ../nact/nact-editor.c:572
 #, c-format
 msgid "Can't delete action's profile '%s'!"
 msgstr "ਪਰੋਫਾਇਲ '%s' ਦਾ ਐਕਸ਼ਨ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ!"
 
-#: ../nact/nact-editor.c:607
+#: ../nact/nact-editor.c:625
 msgid "Profile Name"
 msgstr "ਪਰੋਫਾਇਲ ਨਾਂ"
 
-#: ../nact/nact-editor.c:682
+#: ../nact/nact-editor.c:680 ../nact/nact-editor.c:683
+#: ../nact/nact-action-editor.c:182 ../nact/nact-action-editor.c:185
+msgid "Icon of the menu item in the Nautilus popup menu"
+msgstr "ਨਟੀਲਸ ਪੋਪਅੱਪ ਮੇਨੂ ਵਿੱਚ ਮੇਨੂ ਇਕਾਈ ਦਾ ਆਈਕਾਨ"
+
+#: ../nact/nact-editor.c:705
 msgid "Add a New Action"
 msgstr "ਇੱਕ ਨਵੀਂ ਕਾਰਵਾਈ ਸ਼ਾਮਲ"
 
-#: ../nact/nact-editor.c:686
+#: ../nact/nact-editor.c:709
 #, c-format
 msgid "Edit Action \"%s\""
+msgstr "ਕਾਰਵਾਈ \"%s\" ਸੋਧ"
+
+#: ../nact/nact-action-editor.c:226
+#| msgid "Add a New Action"
+msgid "Add a new action"
+msgstr "ਇੱਕ ਨਵੀਂ ਕਾਰਵਾਈ ਸ਼ਾਮਲ"
+
+#: ../nact/nact-action-editor.c:230, c-format
+#| msgid "Edit Action \"%s\""
+msgid "Edit action \"%s\""
 msgstr "ਕਾਰਵਾਈ \"%s\" ਸੋਧ"
 
 #: ../nact/nact-import-export.c:222
 #, c-format
 msgid "Can't parse file '%s' as GConf schema description file!"
-msgstr "'%s' ਫਾਇਥ ਨੂੰ GConf ਸਕੀਮਾ ਵੇਰਵਾ ਫਾਇਲ ਵਜੋਂ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ!"
+msgstr "'%s' ਫਾਇਲ ਨੂੰ GConf ਸਕੀਮਾ ਵੇਰਵਾ ਫਾਇਲ ਵਜੋਂ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ!"
 
 #. i18n notes: %s is the label of the action (eg, 'Mount ISO')
 #: ../nact/nact-import-export.c:243
@@ -502,27 +516,27 @@ msgid "%sWebdav Files"
 msgstr "%sWebdav ਫਾਇਲਾਂ"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-profile-editor.c:265
+#: ../nact/nact-profile-editor.c:298
 msgid "new-scheme"
 msgstr "ਨਵੀਂ ਸਕੀਮ"
 
-#: ../nact/nact-profile-editor.c:266
+#: ../nact/nact-profile-editor.c:299
 msgid "New Scheme Description"
 msgstr "ਨਵੀਂ ਸਕੀਮ ਦਾ ਵੇਰਵਾ"
 
-#: ../nact/nact-profile-editor.c:352
+#: ../nact/nact-profile-editor.c:395
 msgid "Scheme"
 msgstr "ਸਕੀਮ"
 
-#: ../nact/nact-profile-editor.c:364
+#: ../nact/nact-profile-editor.c:406
 msgid "Description"
 msgstr "ਵੇਰਵਾ"
 
-#: ../nact/nact-profile-editor.c:556
+#: ../nact/nact-profile-editor.c:607
 msgid "Add a New Profile"
 msgstr "ਇੱਕ ਨਵਾਂ ਪਰੋਫਾਇਲ ਸ਼ਾਮਲ"
 
-#: ../nact/nact-profile-editor.c:560
+#: ../nact/nact-profile-editor.c:611
 #, c-format
 msgid "Edit Profile \"%s\""
 msgstr "ਪਰੋਫਾਇਲ \"%s\" ਸੋਧ"
@@ -531,7 +545,7 @@ msgstr "ਪਰੋਫਾਇਲ \"%s\" ਸੋਧ"
 #: ../utils/nautilus-actions-new-config.c:56
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
 msgid "The label of the menu item"
-msgstr "ਮੇਨੂ ਇਕਾਈ ਦਾ ਲੇਬਲ"
+msgstr "ਮੇਨੂ ਆਈਟਮ ਦਾ ਲੇਬਲ"
 
 #: ../utils/nautilus-actions-new-config.c:56
 msgid "LABEL"
@@ -544,11 +558,11 @@ msgstr "ਮੇਨੂ ਆਈਟਮ ਦਾ ਟੂਲ-ਟਿੱਪ"
 
 #: ../utils/nautilus-actions-new-config.c:57
 msgid "TOOLTIP"
-msgstr "ਸੰਦ-ਸੰਕੇਤ"
+msgstr "ਟੂਲ-ਟਿੱਪ"
 
 #: ../utils/nautilus-actions-new-config.c:58
 msgid "The icon of the menu item (filename or GTK stock ID)"
-msgstr "ਮੇਨੂ ਇਕਾਈ ਦਾ ਆਈਕਾਨ (ਫਾਇਲ ਨਾਂ ਜਾਂ GTK ਸਟਾਕ ID)"
+msgstr "ਮੇਨੂ ਆਈਟਮ ਦਾ ਆਈਕਾਨ (ਫਾਇਲ ਨਾਂ ਜਾਂ GTK ਸਟਾਕ ID)"
 
 #: ../utils/nautilus-actions-new-config.c:58
 msgid "ICON"
@@ -604,7 +618,7 @@ msgstr "ਇਹ ਦਿਓ, ਜੇਕਰ ਚੋਣ ਵਿੱਚ ਫੋਲਡਰ �
 
 #: ../utils/nautilus-actions-new-config.c:66
 msgid "Set it if the selection can have several items"
-msgstr "ਇਹ ਦਿਓ, ਜੇਕਰ ਚੋਣ ਵਿੱਚ ਕਈ ਇਕਾਈਆਂ ਹੋਣ"
+msgstr "ਇਹ ਦਿਓ, ਜੇਕਰ ਚੋਣ ਵਿੱਚ ਕਈ ਆਈਟਮਾਂ ਹੋਣ"
 
 #: ../utils/nautilus-actions-new-config.c:67
 msgid ""
@@ -623,7 +637,7 @@ msgid ""
 "The path of the file where to save the new GConf schema definition file "
 "[default: /tmp/config_UUID.schemas]"
 msgstr ""
-"ਫਾਇਲ ਲਈ ਮਾਰਗ, ਜਿੱਥੇ ਕਿ ਨਵੀਂ GConf ਸਕੀਮ ਪਰਿਭਾਸ਼ਾ ਫਾਇਲ ਨੂੰ ਸੰਭਾਲਿਆ ਜਾਂਦਾ ਹੈ [ਮੂਲ: /tmp/"
+"ਫਾਇਲ ਲਈ ਮਾਰਗ, ਜਿੱਥੇ ਕਿ ਨਵੀਂ GConf ਸਕੀਮ ਪਰਿਭਾਸ਼ਾ ਫਾਇਲ ਨੂੰ ਸੰਭਾਲਿਆ ਜਾਂਦਾ ਹੈ [ਡਿਫਾਲਟ: /tmp/"
 "config_UUID.schemas]"
 
 #: ../utils/nautilus-actions-new-config.c:107
@@ -681,7 +695,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
 msgid "The icon of the menu item"
-msgstr "ਮੇਨੂ ਇਕਾਈ ਦਾ ਆਈਕਾਨ"
+msgstr "ਮੇਨੂ ਆਈਟਮ ਦਾ ਆਈਕਾਨ"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
 msgid ""
@@ -728,7 +742,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
 msgid "The list of pattern to match the selected file(s)/folder(s)"
-msgstr "ਚੁਣੀਆਂ ਫਾਇਲਾਂ/ਫੋਲਡਰਾਂ ਨੂੰ ਮਿਲਾਉਣ ਲਈ ਤਰਤੀਬਾਂ ਦੀ ਸੂਚੀ"
+msgstr "ਚੁਣੀਆਂ ਫਾਇਲਾਂ/ਫੋਲਡਰਾਂ ਨੂੰ ਮਿਲਾਉਣ ਲਈ ਪੈਟਰਨ ਦੀ ਲਿਸਟ"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:92
 msgid ""
@@ -750,7 +764,7 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:95
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
-msgstr "ਚੁਣੀਆਂ ਫਾਇਲਾਂ ਨਾਲ ਰਲਦੇ ਪੈਟਰਨਾਂ ਦੀ ਸੂਚੀ"
+msgstr "ਚੁਣੀਆਂ ਫਾਇਲਾਂ ਨਾਲ ਰਲਦੇ ਪੈਟਰਨਾਂ ਦੀ ਲਿਸਟ"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
 msgid ""
@@ -784,7 +798,7 @@ msgstr "'ਸੱਚ', ਜੇਕਰ ਚੋਣ ਫਾਇਲਾਂ ਹਨ,ਜੇਕ�
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:100
 msgid "This setting is tied in with the 'isdir' setting. "
-msgstr "ਇਹ ਸਥਾਪਨ 'isdir' ਸਥਾਪਨ ਨਾਲ ਜੁੜੀ ਹੋਈ ਹੈ। "
+msgstr "ਇਹ ਸੈਟਿੰਗ 'isdir' ਸੈਟਿੰਗ ਨਾਲ ਜੁੜੀ ਹੋਈ ਹੈ। "
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:101
 msgid "'true' if the selection can have folders, 'false' otherwise"
@@ -793,11 +807,11 @@ msgstr "'ਸੱਚ', ਜੇਕਰ ਚੋਣ ਫੋਲਡਰ ਹੈ,ਜੇਕਰ 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:103
 msgid "This setting is tied in with the 'isfile' setting. "
-msgstr "ਇਹ ਸਥਾਪਨ 'isfile' ਸਥਾਪਨ ਨਾਲ ਜੁੜਿਆ ਹੋਇਆ ਹੈ। "
+msgstr "ਇਹ ਸੈਟਿੰਗ 'isfile'  ਸੈਟਿੰਗ ਨਾਲ ਜੁੜਿਆ ਹੋਇਆ ਹੈ। "
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:104
 msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr "ਜੇਕਰ ਕਈ ਇਕਾਈਆਂ ਦੀ ਚੋਣ ਕਰਨੀ ਹੈ ਤਾਂ 'ਸਹੀਂ', ਨਹੀਂ ਤਾਂ 'ਗਲਤ'"
+msgstr "ਜੇਕਰ ਕਈ ਆਈਟਮਾਂ ਦੀ ਚੋਣ ਕਰਨੀ ਹੈ ਤਾਂ 'ਸਹੀਂ', ਨਹੀਂ ਤਾਂ 'ਗਲਤ'"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:105
 msgid ""
@@ -807,10 +821,9 @@ msgstr ""
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:106
 msgid "The list of GnomeVFS schemes where the selected files should be located"
-msgstr "ਗਨੋਮ-VFS ਦੀ ਸੂਚੀ ਹੈ, ਜਿੱਥੇ ਕਿ ਚੁਣੀਆਂ ਫਾਇਲਾਂ ਨੂੰ ਰੱਖਿਆ ਜਾਵੇ"
+msgstr "ਗਨੋਮ-VFS ਦੀ ਲਿਸਟ ਹੈ, ਜਿੱਥੇ ਕਿ ਚੁਣੀਆਂ ਫਾਇਲਾਂ ਨੂੰ ਰੱਖਿਆ ਜਾਵੇ"
 
 #: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:107
-#, fuzzy
 msgid ""
 "Defines the list of valid GnomeVFS schemes to be matched against the "
 "selected items. The GnomeVFS scheme is the protocol used to access the "
@@ -875,13 +888,12 @@ msgid "Can't save action '%s'"
 msgstr "ਕਾਰਵਾਈ '%s' ਸੰਭਾਲੀ ਨਹੀਂ ਜਾ ਸਕਦੀ"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:476
-#, fuzzy, c-format
+#: ../libnautilus-actions/nautilus-actions-config.c:504, c-format
 msgid ""
 "A profile already exists with the name '%s', please first remove or rename "
 "the existing one before trying to add this one"
 msgstr ""
-"ਕਾਰਵਾਈ '%s' ਪਹਿਲਾਂ ਹੀ '%s' ਨਾਂ ਨਾਲ ਮੌਜੂਦ ਹੈ, ਇਸ ਨੂੰ ਜੋੜਨ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਮੌਜੂਦਾ ਨੂੰ "
+"ਪਰੋਫਾਇਲ ਪਹਿਲਾਂ ਹੀ '%s' ਨਾਂ ਨਾਲ ਮੌਜੂਦ ਹੈ, ਇਸ ਨੂੰ ਜੋੜਨ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਮੌਜੂਦਾ ਨੂੰ "
 "ਹਟਾਓ ਜੀ।"
 
 #. i18n notes: will be displayed in an error dialog concatenated
@@ -909,8 +921,8 @@ msgstr ","
 #, c-format
 msgid "%s (one missing key: %s)%s"
 msgid_plural "%s (missing keys: %s)%s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s (ਇੱਕ ਕੁੰਜੀ ਗੁੰਮ: %s)%s"
+msgstr[1] "%s (ਗੁੰਮ ਕੁੰਜੀਆਂ: %s)%s"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:698
@@ -954,9 +966,6 @@ msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
 "instead of <%s>)"
 msgstr ""
-
-#~ msgid "Icon of the menu item in the Nautilus popup menu"
-#~ msgstr "ਨਟੀਲਸ ਪੋਪਅੱਪ ਮੇਨੂ ਵਿੱਚ ਮੇਨੂ ਇਕਾਈ ਦਾ ਆਈਕਾਨ"
 
 #, fuzzy
 #~ msgid "Can't remove the old profile '%s'"
