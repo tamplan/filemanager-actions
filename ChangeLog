@@ -1,3 +1,7 @@
+2009-06-10 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Bump version number.
+
 2009-06-09 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump version number for 1.11.0 release.
