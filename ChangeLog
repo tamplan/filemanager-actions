@@ -6,7 +6,7 @@
 	Fix disallocation of the profile by calling g_object_unref.
 
 	* src/common/nact-action-profile.c:
-	This is now the only file which makes use of gnome_vfs subsystem.
+	Remove all gnome-vfs code.
 
 	* src/plugin/nautilus-actions.c:
 	Move gnome_vfs_init call to nact_action_profile_parse_parameters.

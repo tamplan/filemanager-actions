@@ -34,8 +34,6 @@
 
 #include <string.h>
 
-#include <libgnomevfs/gnome-vfs.h>
-
 #include <libnautilus-extension/nautilus-file-info.h>
 
 #include "nact-action.h"
@@ -924,163 +922,164 @@ nact_action_profile_is_candidate( const NactActionProfile *profile, GList* files
  *
  * Valid parameters are :
  *
- * %u : gnome-vfs URI
- * %d : base dir of the selected file(s)/folder(s)
- * %f : the name of the selected file/folder or the 1st one if many are selected
+ * %d : base dir of the (first) selected file(s)/folder(s)
+ * %f : the name of the (first) selected file/folder
+ * %h : hostname of the (first) GVfs URI
  * %m : list of the basename of the selected files/directories separated by space.
  * %M : list of the selected files/directories with their complete path separated by space.
- * %s : scheme of the gnome-vfs URI
- * %h : hostname of the gnome-vfs URI
- * %U : username of the gnome-vfs URI
+ * %s : scheme of the (first) GVfs URI
+ * %u : (first) GVfs URI
+ * %U : username of the (first) GVfs URI
  * %% : a percent sign
  */
 gchar *
 nact_action_profile_parse_parameters( const NactActionProfile *profile, GList* files )
 {
-	gchar* retv = NULL;
+	gchar *parsed = NULL;
+	GString *string;
+	GList *ifi;
+	gboolean first;
+	gchar *iuri, *ipath, *ibname;
+	GFile *iloc;
+	gchar *uri = NULL;
+	gchar *scheme = NULL;
+	gchar *dirname = NULL;
+	gchar *filename = NULL;
+	gchar *hostname = NULL;
+	gchar *username = NULL;
+	GString *basename_list, *pathname_list;
+	gchar *tmp;
+
 	g_return_val_if_fail( NACT_IS_ACTION_PROFILE( profile ), NULL );
 
-	/* Patch from Bruce van der Kooij <brucevdkooij@gmail.com>
-	 *
-	 * TODO: GnomeVFS needs to be initialized before gnome_vfs methods
-	 * can be used. Since GnomeVFS has been deprecated it would be
-	 * a good idea to rewrite this extension to use equivalent methods
-	 * from GIO/GVFS.
-	 *
-	 * src/common/nact-action-profile.c:nact_action_profile_parse_parameters
-	 * is the only function that makes use of gnome_vfs methods.
-	 *
-	 * See: Bug #574919
-	 */
-	gnome_vfs_init ();
+	string = g_string_new( "" );
+	basename_list = g_string_new( "" );
+	pathname_list = g_string_new( "" );
+	first = TRUE;
 
-	if (files != NULL){
-		const gchar *param_template = profile->private->parameters;
-		GString* tmp_string = g_string_new ("");
-		gchar* iter = g_strdup (param_template);
-		gchar* old_iter = iter;
-		/*int current_len = strlen (iter);*/
-		gchar* uri = nautilus_file_info_get_uri ((NautilusFileInfo*)files->data);
-		GnomeVFSURI* gvfs_uri = gnome_vfs_uri_new (uri);
-		gchar* filename;
-		gchar* dirname;
-		gchar* scheme = nautilus_file_info_get_uri_scheme ((NautilusFileInfo*)files->data);
-		gchar* hostname = g_strdup (gnome_vfs_uri_get_host_name (gvfs_uri));
-		gchar* username = g_strdup (gnome_vfs_uri_get_user_name (gvfs_uri));
-		gchar* file_list;
-		gchar* path_file_list;
-		GList* file_iter = NULL;
-		GString* tmp_file_list;
-		GString* tmp_path_file_list;
-		gchar* tmp;
-		gchar* tmp2;
+	for( ifi = files ; ifi ; ifi = ifi->next ){
 
-		tmp = gnome_vfs_uri_extract_dirname (gvfs_uri);
-		dirname = (gchar*)gnome_vfs_unescape_string ((const gchar*)tmp, "");
-		g_free (tmp);
+		iuri = nautilus_file_info_get_uri(( NautilusFileInfo * ) ifi->data );
+		iloc = nautilus_file_info_get_location(( NautilusFileInfo * ) ifi->data );
+		ipath = g_file_get_path( iloc );
+		ibname = g_file_get_basename( iloc );
 
-		tmp = nautilus_file_info_get_name ((NautilusFileInfo*)files->data);
-		if (!tmp)
-		{
-			tmp = g_strdup ("");
+		if( first ){
+
+			uri = g_strdup( iuri );
+			dirname = g_path_get_dirname( ipath );
+			scheme = nautilus_file_info_get_uri_scheme(( NautilusFileInfo * ) ifi->data );
+			filename = g_strdup( ibname );
+
+			/*hostname = g_strdup( gnome_vfs_uri_get_host_name( gvfs_uri ));
+			username = g_strdup( gnome_vfs_uri_get_user_name( gvfs_uri ));*/
+			/* TODO
+			 * pwi 2009-06-10
+			 * don't know how to get hostname or username from GFile uri
+			 */
+			hostname = NULL;
+			username = NULL;
+
+			first = FALSE;
 		}
 
-		filename = g_shell_quote (tmp);
-		tmp2 = g_build_path ("/", dirname, tmp, NULL);
-		g_free (tmp);
-		tmp_file_list = g_string_new (filename);
-		tmp = g_shell_quote (tmp2);
-		tmp_path_file_list = g_string_new (tmp);
-		g_free (tmp2);
-		g_free (tmp);
+		tmp = g_shell_quote( ibname );
 
-		/* We already have the first item, so we start with the next one if any */
-		for (file_iter = files->next; file_iter; file_iter = file_iter->next)
-		{
-			gchar* tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo*)file_iter->data);
-			gchar* tmp_uri = nautilus_file_info_get_uri ((NautilusFileInfo*)file_iter->data);
-			GnomeVFSURI* tmp_gvfs_uri = gnome_vfs_uri_new (tmp_uri);
-			tmp = gnome_vfs_uri_extract_dirname (tmp_gvfs_uri);
-			gchar* tmp_dirname = (gchar*)gnome_vfs_unescape_string ((const gchar*)tmp, "");
-			g_free (tmp);
+		g_string_append_printf( basename_list, " %s", tmp );
+		g_free( tmp );
 
-			if (!tmp_filename)
-			{
-				tmp_filename = g_strdup ("");
-			}
+		tmp = g_shell_quote( ipath );
+		g_string_append_printf( pathname_list, " %s", tmp );
+		g_free( tmp );
 
-			gchar* quoted_tmp_filename = g_shell_quote (tmp_filename);
-			g_string_append_printf (tmp_file_list, " %s", quoted_tmp_filename);
-
-			tmp = g_build_path ("/", tmp_dirname, tmp_filename, NULL);
-			tmp2 = g_shell_quote (tmp);
-			g_string_append_printf (tmp_path_file_list, " %s", tmp2);
-
-			g_free (tmp2);
-			g_free (tmp);
-			g_free (tmp_filename);
-			g_free (quoted_tmp_filename);
-			g_free (tmp_dirname);
-			g_free (tmp_uri);
-			gnome_vfs_uri_unref (tmp_gvfs_uri);
-		}
-		file_list = g_string_free (tmp_file_list, FALSE);
-		path_file_list = g_string_free (tmp_path_file_list, FALSE);
-
-
-		while ((iter = g_strstr_len (iter, strlen (iter), "%")))
-		{
-			tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter) - strlen (iter));
-			switch (iter[1])
-			{
-				case 'u': /* gnome-vfs URI */
-					tmp_string = g_string_append (tmp_string, uri);
-					break;
-				case 'd': /* base dir of the selected file(s)/folder(s) */
-					tmp = g_shell_quote (dirname);
-					tmp_string = g_string_append (tmp_string, tmp);
-					g_free (tmp);
-					break;
-				case 'f': /* the basename of the selected file/folder or the 1st one if many are selected */
-					tmp_string = g_string_append (tmp_string, filename);
-					break;
-				case 'm': /* list of the basename of the selected files/directories separated by space */
-					tmp_string = g_string_append (tmp_string, file_list);
-					break;
-	 			case 'M': /* list of the selected files/directories with their complete path separated by space. */
-					tmp_string = g_string_append (tmp_string, path_file_list);
-					break;
-				case 's': /* scheme of the gnome-vfs URI */
-					tmp_string = g_string_append (tmp_string, scheme);
-					break;
-				case 'h': /* hostname of the gnome-vfs URI */
-					tmp_string = g_string_append (tmp_string, hostname);
-					break;
-				case 'U': /* username of the gnome-vfs URI */
-					tmp_string = g_string_append (tmp_string, username);
-					break;
-				case '%': /* a percent sign */
-					tmp_string = g_string_append_c (tmp_string, '%');
-					break;
-			}
-			iter+=2; /* skip the % sign and the character after. */
-			old_iter = iter; /* store the new start of the string */
-		}
-		tmp_string = g_string_append_len (tmp_string, old_iter, strlen (old_iter));
-
-		g_free (uri);
-		g_free (dirname);
-		g_free (filename);
-		g_free (file_list);
-		g_free (path_file_list);
-		g_free (scheme);
-		g_free (hostname);
-		g_free (username);
-		g_free (iter);
-		gnome_vfs_uri_unref (gvfs_uri);
-
-		retv = g_string_free (tmp_string, FALSE); /* return the content of the GString */
+		g_free( ibname );
+		g_free( ipath );
+		g_object_unref( iloc );
+		g_free( iuri );
 	}
 
-	return retv;
+	gchar *iter = g_strdup( profile->private->parameters );
+	gchar *old_iter = iter;
+
+	while(( iter = g_strstr_len( iter, strlen( iter ), "%" ))){
+
+		string = g_string_append_len( string, old_iter, strlen( old_iter ) - strlen( iter ));
+		switch( iter[1] ){
+
+			/* base dir of the (first) selected item
+			 */
+			case 'd':
+				tmp = g_shell_quote( dirname );
+				string = g_string_append( string, tmp );
+				g_free( tmp );
+				break;
+
+			/* basename of the (first) selected item
+			 */
+			case 'f':
+				tmp = g_shell_quote( filename );
+				string = g_string_append( string, tmp );
+				g_free( tmp );
+				break;
+
+			/* hostname of the (first) GVfs URI
+			 */
+			case 'h':
+				string = g_string_append( string, hostname );
+				break;
+
+			/* space-separated list of the basenames
+			 */
+			case 'm':
+				string = g_string_append( string, basename_list->str );
+				break;
+
+			/* space-separated list of full pathnames
+			 */
+			case 'M':
+				string = g_string_append( string, pathname_list->str );
+				break;
+
+			/* scheme of the (first) GVfs URI
+			 */
+			case 's':
+				string = g_string_append( string, scheme );
+				break;
+
+			/* GVfs URI of the first item
+			 */
+			case 'u':
+				string = g_string_append( string, uri );
+				break;
+
+			/* username of the (first) GVfs URI
+			 */
+			case 'U':
+				string = g_string_append( string, username );
+				break;
+
+			/* a percent sign
+			 */
+			case '%':
+				string = g_string_append_c( string, '%' );
+				break;
+		}
+
+		iter += 2;			/* skip the % sign and the character after */
+		old_iter = iter;	/* store the new start of the string */
+	}
+
+	string = g_string_append_len( string, old_iter, strlen( old_iter ));
+
+	g_free( uri );
+	g_free( dirname );
+	g_free( scheme );
+	g_free( hostname );
+	g_free( username );
+	g_free( iter );
+	g_string_free( basename_list, TRUE );
+	g_string_free( pathname_list, TRUE );
+
+	parsed = g_string_free( string, FALSE );
+	return( parsed );
 }
