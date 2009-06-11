@@ -1,5 +1,8 @@
 2009-06-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/nact-pivot.c:
+	* src/common/nact-pivot.h: Fix comment typo.
+
 	* src/nact/nact.c:
 	* src/nact/nact.h:
 	Externalize main function in nact-main.c.
