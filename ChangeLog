@@ -1,3 +1,14 @@
+2009-06-11 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact.c:
+	* src/nact/nact.h:
+	Externalize main function in nact-main.c.
+	init_dialog becomes public as nact_init_dialog.
+
+	* src/nact/nact-main.c: New file.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
 2009-06-10 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:

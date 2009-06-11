@@ -357,14 +357,17 @@ setup_actions_list (GtkWidget *list)
 
 }
 
-static void
-init_dialog (void)
+/*static */void
+nact_init_dialog (void)
 {
 	gint width, height, x, y;
 	GtkWidget *nact_dialog;
 	GtkWidget *nact_actions_list;
 	/*GtkWidget* nact_edit_button;*/
 	GtkWidget* nact_about_button;
+
+	config = nautilus_actions_config_gconf_writer_get ();
+
 	GladeXML *gui = nact_get_glade_xml_object (GLADE_MAIN_WIDGET);
 	if (!gui) {
 		g_error (_("Could not load interface for Nautilus Actions Config Tool"));
@@ -411,11 +414,11 @@ init_dialog (void)
 	g_object_unref (gui);
 }
 
-int
+/*int
 main (int argc, char *argv[])
-{
+{*/
 	/* initialize application */
-#ifdef ENABLE_NLS
+/*#ifdef ENABLE_NLS
         bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
 # ifdef HAVE_BIND_TEXTDOMAIN_CODESET
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -427,12 +430,12 @@ main (int argc, char *argv[])
 
 	config = nautilus_actions_config_gconf_writer_get ();
 	g_set_application_name (PACKAGE);
-	gtk_window_set_default_icon_name (PACKAGE);
+	gtk_window_set_default_icon_name (PACKAGE);*/
 
 	/* create main dialog */
-	init_dialog ();
+	/*init_dialog ();*/
 
 	/* run the application */
-	gtk_main ();
+	/*gtk_main ();
 	return 0;
-}
+}*/

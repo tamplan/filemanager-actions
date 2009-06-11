@@ -28,16 +28,38 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_H__
-#define __NACT_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-enum {
-	MENU_ICON_COLUMN = 0,
-	MENU_LABEL_COLUMN,
-	UUID_COLUMN,
-	N_COLUMN
-};
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
-void nact_init_dialog( void );
+#include <common/nautilus-actions-config-gconf-writer.h>
 
-#endif /* __NACT_H__ */
+#include "nact.h"
+
+int
+main( int argc, char *argv[] )
+{
+	/* initialize application */
+#ifdef ENABLE_NLS
+        bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+# ifdef HAVE_BIND_TEXTDOMAIN_CODESET
+        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+# endif
+        textdomain (GETTEXT_PACKAGE);
+#endif
+
+	gtk_init (&argc, &argv);
+
+	g_set_application_name (PACKAGE);
+	gtk_window_set_default_icon_name (PACKAGE);
+
+	/* create main dialog */
+	nact_init_dialog ();
+
+	/* run the application */
+	gtk_main ();
+	return 0;
+}

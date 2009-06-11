@@ -41,6 +41,7 @@ AM_CPPFLAGS += \
 nautilus_actions_config_SOURCES = \
 	nact.c												\
 	nact.h												\
+	nact-main.c											\
 	nact-utils.c										\
 	nact-utils.h										\
 	nact-prefs.c										\
