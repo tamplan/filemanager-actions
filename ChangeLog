@@ -8,6 +8,9 @@
 	Externalize main function in nact-main.c.
 	init_dialog becomes public as nact_init_dialog.
 
+	* src/nact/nact-application.c:
+	* src/nact/nact-application.h: New NactApplication class.
+
 	* src/nact/nact-main.c: New file.
 
 	* src/nact/Makefile.am: Updated accordingly.
