@@ -32,34 +32,16 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
-
-#include <common/nautilus-actions-config-gconf-writer.h>
-
-#include "nact.h"
+#include "nact-application.h"
 
 int
 main( int argc, char *argv[] )
 {
-	/* initialize application */
-#ifdef ENABLE_NLS
-        bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
-# ifdef HAVE_BIND_TEXTDOMAIN_CODESET
-        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-# endif
-        textdomain (GETTEXT_PACKAGE);
-#endif
+	NactApplication *app = nact_application_new_with_args( argc, argv );
 
-	gtk_init (&argc, &argv);
+	int ret = nact_application_run( app );
 
-	g_set_application_name (PACKAGE);
-	gtk_window_set_default_icon_name (PACKAGE);
+	g_object_unref( app );
 
-	/* create main dialog */
-	nact_init_dialog ();
-
-	/* run the application */
-	gtk_main ();
-	return 0;
+	return( ret );
 }

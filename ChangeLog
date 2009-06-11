@@ -10,6 +10,7 @@
 
 	* src/nact/nact-application.c:
 	* src/nact/nact-application.h: New NactApplication class.
+	Initialization stuff goes to nact-application.c:startup_appli().
 
 	* src/nact/nact-main.c: New file.
 

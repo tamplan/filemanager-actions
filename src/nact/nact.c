@@ -413,29 +413,3 @@ nact_init_dialog (void)
 	gtk_widget_show (nact_dialog);
 	g_object_unref (gui);
 }
-
-/*int
-main (int argc, char *argv[])
-{*/
-	/* initialize application */
-/*#ifdef ENABLE_NLS
-        bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
-# ifdef HAVE_BIND_TEXTDOMAIN_CODESET
-        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-# endif
-        textdomain (GETTEXT_PACKAGE);
-#endif
-
-	gtk_init (&argc, &argv);
-
-	config = nautilus_actions_config_gconf_writer_get ();
-	g_set_application_name (PACKAGE);
-	gtk_window_set_default_icon_name (PACKAGE);*/
-
-	/* create main dialog */
-	/*init_dialog ();*/
-
-	/* run the application */
-	/*gtk_main ();
-	return 0;
-}*/
