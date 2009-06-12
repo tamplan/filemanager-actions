@@ -32,11 +32,17 @@
 #include <config.h>
 #endif
 
+#include <gtk/gtk.h>
+
 #include "nact-application.h"
 
 int
 main( int argc, char *argv[] )
 {
+	/* need to gtk_init before unique_app_new (see Bug #585536)
+	 */
+	gtk_init( &argc, &argv );
+
 	NactApplication *app = nact_application_new_with_args( argc, argv );
 
 	int ret = nact_application_run( app );

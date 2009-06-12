@@ -1,3 +1,21 @@
+2009-06-12 Pierre Wieser <pwieser@trychlos.org>
+
+	Fix #353198 – Single window mode for Nact.
+
+	* configure.ac:
+	Add libunique dependancy.
+	Cleanup the code.
+
+	* src/nact/nact.c:
+	* src/nact/nact.h(nact_init_dialog):
+	Return the newly created GtkWindow.
+
+	* src/nact/nact-main.c (main):
+	Call gtk_init at the very beginning of the program.
+
+	* src/nact/nact-application.c:
+	Check for already running instance, and display a message if any.
+
 2009-06-11 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/nact-pivot.c:

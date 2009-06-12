@@ -67,7 +67,7 @@ typedef struct {
 GType            nact_application_get_type( void );
 
 NactApplication *nact_application_new( void );
-NactApplication *nact_application_new_with_args( int argc, char *argv[] );
+NactApplication *nact_application_new_with_args( int argc, char **argv );
 
 int              nact_application_run( NactApplication *application );
 

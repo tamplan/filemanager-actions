@@ -117,10 +117,6 @@ GCONF_REQUIRED=2.8.0
 LIBXML_REQUIRED=2.6.0
 GOBJECT_REQUIRED=2.4.0
 
-#AC_SUBST(GLIB_REQUIRED)
-#AC_SUBST(GTK_REQUIRED)
-#AC_SUBST(GLADE_REQUIRED)
-
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 if test "${PKG_CONFIG}" = "no"; then
 	AC_MSG_ERROR([You need to install pkg-config])
@@ -136,7 +132,9 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 	libgnomeui-2.0			>= ${GNOME_REQUIRED}		\
 	gconf-2.0				>= ${GCONF_REQUIRED}		\
 	libnautilus-extension	>= ${NAUTILUS_EXTENSION}	\
-	uuid)
+	uuid												\
+	unique-1.0
+)
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
@@ -153,34 +151,6 @@ NACT_IS_MAINTAINER_MODE
 # Check for menu update function
 AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)
 AC_CHECK_FUNCS(nautilus_menu_provider_emit_items_updated_signal)
-
-# pwi 2009-05-15 disabled as useless or badly explained
-#if test "x${exec_prefix}" = "xNONE"; then
-#	if test "x${prefix}" = "xNONE"; then
-#		if test "x${bindir}" = "xNONE"; then
-#			BINDIR=`eval echo $ac_default_prefix/bin`
-#		else
-#			BINDIR=`eval echo $bindir`
-#		fi
-#	else
-#		BINDIR=`eval echo $prefix/bin`
-#	fi
-#else
-#	BINDIR=`eval echo $bindir`
-#fi
-#AC_SUBST(BINDIR)
-#	
-#if test "x${prefix}" = "xNONE"; then
-#  DATADIR="${ac_default_prefix}/${DATADIRNAME}" 
-#  LOCALEDIR="${DATADIR}/locale"
-#  AC_DEFINE_UNQUOTED(LOCALEDIR, "${LOCALEDIR}", [Locale dir])
-#else
-#  DATADIR="${prefix}/${DATADIRNAME}"
-#  LOCALEDIR="${DATADIR}/locale"
-#  AC_DEFINE_UNQUOTED(LOCALEDIR, "${LOCALEDIR}", [Locale dir])
-#fi
-#AC_SUBST(DATADIR)
-#AC_SUBST(LOCALEDIR)
 
 AC_DEFINE_UNQUOTED(NAUTILUS_ACTIONS_CONFIG_VERSION, "2.0", [Version of the configuration format])
 AC_DEFINE_UNQUOTED(NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, "/apps/nautilus-actions", [GConf base dir where all config will be stored])

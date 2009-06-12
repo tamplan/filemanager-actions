@@ -27,7 +27,8 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
-	nautilus-actions-config
+	nautilus-actions-config								\
+	$(NULL)
 
 gladedir = $(datadir)/nautilus-actions
 

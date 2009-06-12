@@ -31,6 +31,10 @@
 #ifndef __NACT_H__
 #define __NACT_H__
 
+#include <gtk/gtk.h>
+
+G_BEGIN_DECLS
+
 enum {
 	MENU_ICON_COLUMN = 0,
 	MENU_LABEL_COLUMN,
@@ -38,6 +42,8 @@ enum {
 	N_COLUMN
 };
 
-void nact_init_dialog( void );
+GtkWindow *nact_init_dialog( void );
+
+G_END_DECLS
 
 #endif /* __NACT_H__ */

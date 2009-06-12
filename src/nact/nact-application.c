@@ -34,6 +34,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <unique/unique.h>
 
 #include "nact.h"
 #include "nact-application.h"
@@ -46,9 +47,11 @@ struct NactApplicationClassPrivate {
 /* private instance data
  */
 struct NactApplicationPrivate {
-	gboolean dispose_has_run;
-	int      argc;
-	gpointer argv;
+	gboolean   dispose_has_run;
+	int        argc;
+	gpointer   argv;
+	UniqueApp *unique;
+	GtkWindow *main;
 };
 
 /* private instance properties
@@ -63,18 +66,21 @@ enum {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NactApplicationClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void     instance_dispose( GObject *application );
-static void     instance_finalize( GObject *application );
+static GType          register_type( void );
+static void           class_init( NactApplicationClass *klass );
+static void           instance_init( GTypeInstance *instance, gpointer klass );
+static void           instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void           instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void           instance_dispose( GObject *application );
+static void           instance_finalize( GObject *application );
 
-static void     initialize_i18n( NactApplication *application );
-static gboolean startup_appli( NactApplication *application );
-static int      run_appli( NactApplication *application );
-static void     finish_appli( NactApplication *application );
+/*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
+static void           warn_other_instance( NactApplication *application );
+static gboolean       check_for_unique_app( NactApplication *application );
+static void           initialize_i18n( NactApplication *application );
+static gboolean       startup_appli( NactApplication *application );
+static int            run_appli( NactApplication *application );
+static void           finish_appli( NactApplication *application );
 
 GType
 nact_application_get_type( void )
@@ -93,8 +99,6 @@ register_type( void )
 {
 	static const gchar *thisfn = "nact_application_register_type";
 	g_debug( "%s", thisfn );
-
-	g_type_init();
 
 	static GTypeInfo info = {
 		sizeof( NactApplicationClass ),
@@ -122,8 +126,8 @@ class_init( NactApplicationClass *klass )
 	GObjectClass *object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
+	object_class->set_property = instance_set_property;
 
 	GParamSpec *spec;
 	spec = g_param_spec_int(
@@ -155,6 +159,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactApplicationPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+
+	self->private->unique = unique_app_new( "org.nautilus-actions.Config", NULL );
 }
 
 static void
@@ -212,6 +218,8 @@ instance_dispose( GObject *application )
 
 		self->private->dispose_has_run = TRUE;
 
+		g_object_unref( self->private->unique );
+
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( application );
 	}
@@ -249,9 +257,81 @@ nact_application_new( void )
  * @argv: command-line arguments.
  */
 NactApplication *
-nact_application_new_with_args( int argc, char *argv[] )
+nact_application_new_with_args( int argc, char **argv )
 {
 	return( g_object_new( NACT_APPLICATION_TYPE, PROP_ARGC_STR, argc, PROP_ARGV_STR, argv, NULL ));
+}
+
+/*static UniqueResponse
+on_unique_message_received(
+		UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_application_check_for_unique_app";
+	UniqueResponse resp = UNIQUE_RESPONSE_OK;
+
+	switch( command ){
+		case UNIQUE_ACTIVATE:
+			g_debug( "%s: received message UNIQUE_ACTIVATE", thisfn );
+			break;
+		default:
+			resp = UNIQUE_RESPONSE_PASSTHROUGH;
+			break;
+	}
+
+	return( resp );
+}*/
+
+static void
+warn_other_instance( NactApplication *application )
+{
+	g_assert( NACT_IS_APPLICATION( application ));
+
+	GtkWidget *dialog = gtk_message_dialog_new_with_markup(
+			NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+			_( "<b>Another instance of Nautilus Actions Configurator is already running.</b>\n\nPlease switch back to it." ));
+
+	g_object_set( G_OBJECT( dialog ) , "title", _( "Nautilus Actions" ), NULL );
+
+	gtk_dialog_run( GTK_DIALOG( dialog ));
+	gtk_widget_destroy( dialog );
+}
+
+/*
+ * returns TRUE if we are the first instance
+ */
+static gboolean
+check_for_unique_app( NactApplication *application )
+{
+	gboolean is_first = TRUE;
+
+	g_assert( NACT_IS_APPLICATION( application ));
+
+	if( unique_app_is_running( application->private->unique )){
+
+		is_first = FALSE;
+
+		unique_app_send_message( application->private->unique, UNIQUE_ACTIVATE, NULL );
+
+		/* the screen is not actually modified, nor the main window is
+		 * switched back to the current screen ; the icon in the deskbar
+		 * applet is just highlighted
+		 * so a message is not too much !
+		 */
+		warn_other_instance( application );
+
+	/* default from libunique is actually to activate the first window
+	 * so we rely on the default..
+	 */
+	/*} else {
+		g_signal_connect(
+				application->private->unique,
+				"message-received",
+				G_CALLBACK( on_unique_message_received ),
+				application
+		);*/
+	}
+
+	return( is_first );
 }
 
 static void
@@ -269,21 +349,15 @@ initialize_i18n( NactApplication *application )
 static gboolean
 startup_appli( NactApplication *application )
 {
-	int argc;
-	char **argv;
-	int ret = TRUE;
+	int ret;
 
 	initialize_i18n( application );
 
-	argc = application->private->argc;
-	argv = ( char ** ) application->private->argv;
-	gtk_init( &argc, &argv );
-
 	g_set_application_name( PACKAGE );
+
 	gtk_window_set_default_icon_name( PACKAGE );
 
-	/* create main dialog */
-	nact_init_dialog ();
+	ret = check_for_unique_app( application );
 
 	return( ret );
 }
@@ -292,6 +366,9 @@ static int
 run_appli( NactApplication *application )
 {
 	int code = 0;
+
+	application->private->main = nact_init_dialog();
+	unique_app_watch_window( application->private->unique, application->private->main );
 
 	gtk_main();
 

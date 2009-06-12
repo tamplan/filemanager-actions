@@ -357,7 +357,7 @@ setup_actions_list (GtkWidget *list)
 
 }
 
-/*static */void
+GtkWindow *
 nact_init_dialog (void)
 {
 	gint width, height, x, y;
@@ -412,4 +412,6 @@ nact_init_dialog (void)
 	/* display the dialog */
 	gtk_widget_show (nact_dialog);
 	g_object_unref (gui);
+
+	return( GTK_WINDOW( nact_dialog ));
 }
