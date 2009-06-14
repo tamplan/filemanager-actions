@@ -290,6 +290,7 @@ warn_other_instance( NactApplication *application )
 			NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
 			_( "<b>Another instance of Nautilus Actions Configurator is already running.</b>\n\nPlease switch back to it." ));
 
+	/* i18n: window title */
 	g_object_set( G_OBJECT( dialog ) , "title", _( "Nautilus Actions" ), NULL );
 
 	gtk_dialog_run( GTK_DIALOG( dialog ));
