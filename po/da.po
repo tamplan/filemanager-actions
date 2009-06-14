@@ -1,8 +1,9 @@
 # Danish translation of nautilus-actions.
-# Copyright (C) 2005-07 Free Software Foundation, Inc.
+# Copyright (C) 2005-09 Free Software Foundation, Inc.
 # This file is distributed under the same license as the nautilus-actions package.
 # Lasse Bang Mikkelsen <lbm@fatalerror.dk>, 2005, 06.
 # Peter Bach <bach.peter@gmail.com>, 2007.
+# Mads Lundby <lundbymads@gmail.com>, 2009.
 #
 # Konventioner:
 #   scheme = type
@@ -11,702 +12,48 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-16 17:18+0200\n"
-"PO-Revision-Date: 2007-02-23 14:50+0200\n"
-"Last-Translator: Peter Bach <bach.peter@gmail.com>\n"
+"POT-Creation-Date: 2009-06-14 23:08+0200\n"
+"PO-Revision-Date: 2009-06-14 00:41+0100\n"
+"Last-Translator: Mads Lundby <lundbymads@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: ../nact/nact.desktop.in.h:1
-msgid "Add items to the Nautilus popup menu"
-msgstr "Tilføj menupunkter til Nautilus pop op-menuen"
-
-#: ../nact/nact.desktop.in.h:2
-msgid "Nautilus Actions Configuration"
-msgstr "Konfiguration af Nautilus-handlinger"
-
-#: ../nact/nautilus-actions-config.glade.h:1
-#, fuzzy
-msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
-msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
-
-#: ../nact/nautilus-actions-config.glade.h:3
-#, no-c-format
-msgid "<b>%%</b>: a percent sign"
-msgstr "<b>%%</b>: et procent-tegn"
-
-#: ../nact/nautilus-actions-config.glade.h:5
-#, no-c-format
-msgid ""
-"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
-"full paths"
-msgstr ""
-"<b>%M</b>: liste over de valgte filer/mapper med deres komplette sti, "
-"separeret med mellemrum"
-
-#: ../nact/nautilus-actions-config.glade.h:7
-#, fuzzy, no-c-format
-msgid "<b>%U</b>: username of the GnomeVFS URI"
-msgstr "<b>%U</b>: brugernavn til gnome-vfs-URI"
-
-#: ../nact/nautilus-actions-config.glade.h:9
-#, no-c-format
-msgid "<b>%d</b>: base folder of the selected file(s)"
-msgstr "<b>%d</b>: grundmappe til de valgte filer"
-
-#: ../nact/nautilus-actions-config.glade.h:11
-#, no-c-format
-msgid ""
-"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
-msgstr ""
-"<b>%f</b>: navnet på den valgte fil eller den første, hvis flere er valgt"
-
-#: ../nact/nautilus-actions-config.glade.h:13
-#, fuzzy, no-c-format
-msgid "<b>%h</b>: hostname of the GnomeVFS URI"
-msgstr "<b>%h</b>: værtsnavn til gnome-vfs-URI"
-
-#: ../nact/nautilus-actions-config.glade.h:15
-#, no-c-format
-msgid ""
-"<b>%m</b>: space-separated list of the basenames of the selected\n"
-"file(s)/folder(s)"
-msgstr ""
-"<b>%m</b>: liste over grundnavne på de valgte filer/mapper, separeret med "
-"mellemrum"
-
-#: ../nact/nautilus-actions-config.glade.h:18
-#, fuzzy, no-c-format
-msgid "<b>%s</b>: scheme of the GnomeVFS URI"
-msgstr "<b>%s</b>: type på gnome-vfs-URI"
-
-#: ../nact/nautilus-actions-config.glade.h:20
-#, fuzzy, no-c-format
-msgid "<b>%u</b>: GnomeVFS URI"
-msgstr "<b>%u</b>: gnome-vfs-URI"
-
-#: ../nact/nautilus-actions-config.glade.h:21
-msgid "<b>Action</b>"
-msgstr "<b>Handling</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:22
-msgid "<b>Appears if file matches</b>"
-msgstr "<b>Vises hvis fil passer</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:23
-msgid "<b>Appears if scheme is in this list</b>"
-msgstr "<b>Vises hvis type findes i denne liste:</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:24
-msgid "<b>Appears if selection contains</b>"
-msgstr "<b>Vises hvis valg indeholder:</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:25
-msgid "<b>Nautilus Menu Item</b>"
-msgstr "<b>Nautilus-menupunkt</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:26
-msgid "<b>Profiles</b>"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:28
-#, no-c-format
-msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
-msgstr "<i><b><span size=\"small\">fx, %s</span></b></i>"
-
-#: ../nact/nautilus-actions-config.glade.h:29
-msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
-msgstr "<span size=\"larger\"><b>Parameter-beskrivelser</b></span>"
-
-#: ../nact/nautilus-actions-config.glade.h:30
-msgid ""
-"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
-"\n"
-"place secondary text here"
-msgstr ""
-"<span weight=\"bold\" size=\"larger\">placér primær tekst her</span>\n"
-"\n"
-"placér sekundær tekst her"
-
-#: ../nact/nautilus-actions-config.glade.h:33
-msgid ""
-"A string with wildcards (? or *) that will be used to match the filenames. "
-"You can set several filename patterns by separating them with a semi-colon "
-"(;)."
-msgstr ""
-"En streng med jokere (? eller *), som bruges til at sammenligne filnavnene. "
-"Du kan sætte flere filmønstre ved at separere dem med et semikolon (;)."
-
-#: ../nact/nautilus-actions-config.glade.h:34
-msgid ""
-"A string with wildcards (? or *) that will be used to match the mimetypes of "
-"files. You can set several mimetype patterns by separating them with a semi-"
-"colon (;)."
-msgstr ""
-"En streng med jokere (? eller *), som bruges til at sammenligne mime-typerne "
-"på filerne. Du kan sætte flere mime-typer ved at separere dem med et "
-"semikolon (;)."
-
-#: ../nact/nautilus-actions-config.glade.h:35
-#, fuzzy
-msgid "Action"
-msgstr "<b>Handling</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:36
-msgid "Advanced Conditions"
-msgstr "Avancerede betingelser"
-
-#: ../nact/nautilus-actions-config.glade.h:37
-msgid "Appears if selection has multiple files or folders"
-msgstr "Vises hvis valg indeholder flere filer eller mapper"
-
-#: ../nact/nautilus-actions-config.glade.h:38
-msgid "Both"
-msgstr "Begge"
-
-#: ../nact/nautilus-actions-config.glade.h:39
-msgid "Click to add a new scheme."
-msgstr "Klik for at tilføje en ny type."
-
-#: ../nact/nautilus-actions-config.glade.h:40
-msgid "Click to choose a command from the file chooser dialog."
-msgstr "Klik for at vælge en kommando fra filvælger-vinduet."
-
-#: ../nact/nautilus-actions-config.glade.h:41
-msgid ""
-"Click to choose a custom icon from a file instead of a predefined icon from "
-"the drop-down list."
-msgstr ""
-"Klik for at vælge et brugerdefineret ikon fra en fil, i stedet for et "
-"prædefineret ikon fra rullegardinet."
-
-#: ../nact/nautilus-actions-config.glade.h:42
-msgid "Click to remove the selected scheme."
-msgstr "Klik for at fjerne den valgte type."
-
-#: ../nact/nautilus-actions-config.glade.h:43
-#, fuzzy
-msgid ""
-"Click to toggle the display of the list of special tokens you can use in the "
-"parameter field."
-msgstr ""
-"Klik for at se en liste med specielle symboler, som du kan bruge i parameter-"
-"feltet."
-
-#: ../nact/nautilus-actions-config.glade.h:44
-msgid "Conditions"
-msgstr "Krav"
-
-#: ../nact/nautilus-actions-config.glade.h:45
-msgid "Create a copy of the selected action."
-msgstr "Opret en kopi af den valgte handling."
-
-#: ../nact/nautilus-actions-config.glade.h:46
-msgid ""
-"Delete the action without any confirmation nor the possibility to restore it."
-msgstr ""
-"Slet handlingen uden bekræftelse og ej heller muligheden for at genskabe den."
-
-#: ../nact/nautilus-actions-config.glade.h:47
-msgid "Duplicate"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:48
-msgid "Export existing configs"
-msgstr "Eksportér eksisterende konfigurationer"
-
-#: ../nact/nautilus-actions-config.glade.h:49
-msgid "File to Import:"
-msgstr "Fil til import:"
-
-#: ../nact/nautilus-actions-config.glade.h:50
-msgid "Filenames:"
-msgstr "Filnavne:"
-
-#: ../nact/nautilus-actions-config.glade.h:51
-msgid "Icon:"
-msgstr "Ikon:"
-
-#: ../nact/nautilus-actions-config.glade.h:52
-msgid ""
-"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
-"will not match photo.JPG)"
-msgstr ""
-"Hvis valgt vil filnavnmønstrene blive tilpasset versalfølsom (fx. *.jpg vil "
-"ikke passe som foto.JPG)"
-
-#: ../nact/nautilus-actions-config.glade.h:53
-msgid "Import new configurations"
-msgstr "Importér nye konfigurationer"
-
-#: ../nact/nautilus-actions-config.glade.h:54
-msgid "Import/Export"
-msgstr "Import/eksport"
-
-#: ../nact/nautilus-actions-config.glade.h:55
-msgid "Import/Export Settings"
-msgstr "Opsætning af import/eksport"
-
-#: ../nact/nautilus-actions-config.glade.h:56
-msgid "Label of the menu item in the Nautilus popup menu."
-msgstr "Etiket til menupunktet i Nautilus pop op-menuen."
-
-#: ../nact/nautilus-actions-config.glade.h:57
-msgid "Label:"
-msgstr "Etiket:"
-
-#: ../nact/nautilus-actions-config.glade.h:58
-msgid ""
-"Manage importation of external action configurations and exportation of "
-"existing actions."
-msgstr ""
-"Håndtér importen af eksterne handlings-konfigurationer og eksporten af "
-"eksisterende handlinger."
-
-#: ../nact/nautilus-actions-config.glade.h:59
-msgid "Match case"
-msgstr "Passende sag"
-
-#: ../nact/nautilus-actions-config.glade.h:60
-msgid "Mimetypes:"
-msgstr "Mime-typer:"
-
-#: ../nact/nautilus-actions-config.glade.h:61
-msgid "Nautilus Action Editor"
-msgstr "Redigering af Nautilus-handlinger"
-
-#: ../nact/nautilus-actions-config.glade.h:62
-#, fuzzy
-msgid "Nautilus Action Profile Editor"
-msgstr "Redigering af Nautilus-handlinger"
-
-#: ../nact/nautilus-actions-config.glade.h:63
-msgid "Nautilus Actions"
-msgstr "Nautilus-handlinger"
-
-#: ../nact/nautilus-actions-config.glade.h:64
-#, fuzzy
-msgid ""
-"Nautilus Actions Configuration Tool\n"
-"Application to configure Nautilus Action extension"
-msgstr ""
-"Konfiguration af Nautilus-handlinger\n"
-"Program til konfiguration af Nautilus handlings-udvidelse"
-
-#: ../nact/nautilus-actions-config.glade.h:66
-msgid "Only files"
-msgstr "Kun filer"
-
-#: ../nact/nautilus-actions-config.glade.h:67
-msgid "Only folders"
-msgstr "Kun mapper"
-
-#: ../nact/nautilus-actions-config.glade.h:68
-msgid ""
-"Parameters that will be sent to the program. Click on the 'Legend' button to "
-"see the different replacement tokens."
-msgstr ""
-"Parametre som sendes til programmet. Klik på beskrivelses-knappen for at se "
-"de forskellige erstatnings-symboler."
-
-#: ../nact/nautilus-actions-config.glade.h:69
-msgid "Parameters:"
-msgstr "Parametre:"
-
-#: ../nact/nautilus-actions-config.glade.h:70
-msgid "Path:"
-msgstr "Sti:"
-
-#: ../nact/nautilus-actions-config.glade.h:71
-msgid "Project Website"
-msgstr "Projekt-netsted"
-
-#: ../nact/nautilus-actions-config.glade.h:72
-msgid "Save in Folder:"
-msgstr "Gem i mappe:"
-
-#: ../nact/nautilus-actions-config.glade.h:73
-msgid ""
-"Select the configurations you want to export. Use Shift or Ctrl key to "
-"select more than one."
-msgstr ""
-"Vælg de konfigurationer du ønsker at eksportere. Brug skift- eller ctrl-"
-"tasten til at vælge flere."
-
-#: ../nact/nautilus-actions-config.glade.h:74
-msgid "Select the configurations you want to export:"
-msgstr "Vælg de konfigurationer du vil eksportere:"
-
-#: ../nact/nautilus-actions-config.glade.h:75
-msgid "Select the file you want to import."
-msgstr "Vælg den fil du ønsker at importere."
-
-#: ../nact/nautilus-actions-config.glade.h:76
-msgid ""
-"Select the folder you want your config to be saved in. This folder must "
-"exist."
-msgstr ""
-"Vælg en mappe hvori du ønsker at gemme din konfiguration. Denne mappe skal "
-"eksistere."
-
-#: ../nact/nautilus-actions-config.glade.h:77
-msgid ""
-"Select the kind of files where you want your action to appear. If you don't "
-"know what to choose, try selecting just 'file' which is the most common "
-"choice. You can add a new scheme by clicking on the '+' button."
-msgstr ""
-"Vælg den type filer hvor du ønsker dine handlinger skal vises. Hvis du ikke "
-"ved hvad du skal vælge, prøv at vælge 'file' som er det mest almindelige "
-"valg. Du kan tilføje en ny type ved at klikke på '+' knappen."
-
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:79
-msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:80
-msgid ""
-"The command that will be launched by selecting the action in Nautilus popup "
-"menu."
-msgstr ""
-"Kommandoen som vil blive kørt når handlingen vælges i Nautilus pop op-menuen."
-
-#: ../nact/nautilus-actions-config.glade.h:81
-msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr "Dette program er licenseret under GNU General Public License (GPL)"
-
-#: ../nact/nautilus-actions-config.glade.h:82
-msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr "Værktøjstip på menupunktet som vil vises i Nautilus statusbjælken."
-
-#: ../nact/nautilus-actions-config.glade.h:83
-msgid "Tooltip:"
-msgstr "Værktøjstip:"
-
-#: ../nact/nautilus-actions-config.glade.h:84
-msgid "_Browse"
-msgstr "_Gennemse"
-
-#: ../nact/nautilus-actions-config.glade.h:85
-msgid "_Legend"
-msgstr ""
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact.c:163
-#, fuzzy, c-format
-msgid "Can't duplicate action '%s'!"
-msgstr "Kan ikke duplikere handling \"%s\" !"
-
-#. create columns on the tree view
-#: ../nact/nact.c:277 ../nact/nact-import-export.c:162
-msgid "Icon"
-msgstr "Ikon"
-
-#: ../nact/nact.c:282 ../nact/nact-import-export.c:167
-msgid "Label"
-msgstr "Etiket"
-
-#: ../nact/nact.c:303 ../nact/nact-editor.c:628
-#: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
-msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr ""
-"Kunne ikke indlæse grænseflade til konfiguration af Nautilus-handlinger"
-
-#. i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:185
-msgid "/path/to"
-msgstr "/sti/til"
-
-#: ../nact/nact-utils.c:186 ../nact/nact-utils.c:188
-msgid "file1.txt"
-msgstr "fil1.txt"
-
-#: ../nact/nact-utils.c:186
-msgid "file2.txt"
-msgstr "fil2.txt"
-
-#: ../nact/nact-utils.c:187 ../nact/nact-utils.c:188
-msgid "folder1"
-msgstr "mappe1"
-
-#: ../nact/nact-utils.c:187
-msgid "folder2"
-msgstr "mappe2"
-
-#: ../nact/nact-utils.c:190
-msgid "test.example.net"
-msgstr "test.eksempel.dk"
-
-#: ../nact/nact-utils.c:191
-msgid "file.txt"
-msgstr "fil.txt"
-
-#: ../nact/nact-utils.c:192
-msgid "folder"
-msgstr "mappe"
-
-#. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:168
-msgid "None"
-msgstr "Intet"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:449
-#, fuzzy, c-format
-msgid "Can't copy action's profile '%s'!"
-msgstr "Kan ikke fortolke fil \"%s\" !"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:474
-#, fuzzy, c-format
-msgid "Can't paste action's profile '%s'!"
-msgstr "Kan ikke fortolke fil \"%s\" !"
-
-#. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:479
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config.c:212
 #, c-format
-msgid "%s Copy"
+msgid ""
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
 msgstr ""
+"Handlingen \"%s\" eksisterer allerede med navnet \"%s\". Fjern venligst den "
+"eksisterende før du prøver at tilføje denne her"
 
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:539
-#, fuzzy, c-format
-msgid "Can't delete action's profile '%s'!"
-msgstr "Kan ikke duplikere handling \"%s\" !"
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config.c:229
+#, c-format
+msgid "Can't save action '%s'"
+msgstr "Kan ikke gemme handlingen \"%s\""
 
-#: ../nact/nact-editor.c:591
-msgid "Profile Name"
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config.c:505
+#, c-format
+msgid ""
+"A profile already exists with the name '%s', please first remove or rename "
+"the existing one before trying to add this one"
 msgstr ""
-
-#: ../nact/nact-editor.c:644
-msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr "Ikon til menupunktet i Nautilus pop op-menuen"
-
-#: ../nact/nact-editor.c:666
-msgid "Add a New Action"
-msgstr "Tilføj ny handling"
-
-#: ../nact/nact-editor.c:670
-#, c-format
-msgid "Edit Action \"%s\""
-msgstr "Redigér handling \"%s\""
-
-#: ../nact/nact-import-export.c:205
-#, fuzzy, c-format
-msgid "Can't parse file '%s' as GConf schema description file!"
-msgstr "Kan ikke fortolke fil \"%s\" som GConf-skema-beskrivelsesfil !"
-
-#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:226
-#, fuzzy, c-format
-msgid "Action '%s' importation failed!"
-msgstr "Handling \"%s\"-import mislykkedes !"
-
-#. initialize the default schemes
-#. i18n notes : description of 'file' scheme
-#: ../nact/nact-prefs.c:164
-#, c-format
-msgid "%sLocal Files"
-msgstr "%sLokale filer"
-
-#. i18n notes : description of 'sftp' scheme
-#: ../nact/nact-prefs.c:166
-#, c-format
-msgid "%sSSH Files"
-msgstr "%sSSH-filer"
-
-#. i18n notes : description of 'smb' scheme
-#: ../nact/nact-prefs.c:168
-#, c-format
-msgid "%sWindows Files"
-msgstr "%sWindows-filer"
-
-#. i18n notes : description of 'ftp' scheme
-#: ../nact/nact-prefs.c:170
-#, c-format
-msgid "%sFTP Files"
-msgstr "%sFTP-filer"
-
-#. i18n notes : description of 'dav' scheme
-#: ../nact/nact-prefs.c:172
-#, c-format
-msgid "%sWebdav Files"
-msgstr "%sWebDAV-filer"
-
-#. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-profile-editor.c:243
-msgid "new-scheme"
-msgstr "ny-type"
-
-#: ../nact/nact-profile-editor.c:244
-msgid "New Scheme Description"
-msgstr "Beskrivelse på ny type"
-
-#: ../nact/nact-profile-editor.c:329
-msgid "Scheme"
-msgstr "Type"
-
-#: ../nact/nact-profile-editor.c:341
-msgid "Description"
-msgstr "Beskrivelse"
-
-#: ../nact/nact-profile-editor.c:532
-#, fuzzy
-msgid "Add a New Profile"
-msgstr "Tilføj ny handling"
-
-#: ../nact/nact-profile-editor.c:536
-#, fuzzy, c-format
-msgid "Edit Profile \"%s\""
-msgstr "Redigér handling \"%s\""
+"En profil med navnet \"%s\" eksisterer allerede. Fjern eller omdøb venligst "
+"den eksisterende profil, før du forsøger at tilføje denne her"
 
 #. GConf description strings :
-#: ../utils/nautilus-actions-new-config.c:49
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
+#: ../src/common/nautilus-actions-config-gconf-private.h:80
+#: ../src/utils/nautilus-actions-new-config.c:57
 msgid "The label of the menu item"
 msgstr "Etiketten til menupuntet"
 
-#: ../utils/nautilus-actions-new-config.c:49
-msgid "LABEL"
-msgstr "ETIKET"
-
-#: ../utils/nautilus-actions-new-config.c:50
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
-msgid "The tooltip of the menu item"
-msgstr "Værktøjstippet til menupunktet"
-
-#: ../utils/nautilus-actions-new-config.c:50
-msgid "TOOLTIP"
-msgstr "VÆRKTØJSTIP"
-
-#: ../utils/nautilus-actions-new-config.c:51
-msgid "The icon of the menu item (filename or GTK stock ID)"
-msgstr "Ikonet til menupunktet (filnavn eller GTK standard-id)"
-
-#: ../utils/nautilus-actions-new-config.c:51
-msgid "ICON"
-msgstr "IKON"
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
-msgid "The path of the command"
-msgstr "Stien til kommandoen"
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../utils/nautilus-actions-new-config.c:61
-msgid "PATH"
-msgstr "STI"
-
-#: ../utils/nautilus-actions-new-config.c:53
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
-msgid "The parameters of the command"
-msgstr "Parametrene til kommandoen"
-
-#: ../utils/nautilus-actions-new-config.c:53
-msgid "PARAMS"
-msgstr "PARAMETRE"
-
-#: ../utils/nautilus-actions-new-config.c:54
-msgid ""
-"A pattern to match selected files against. May include wildcards (* or ?) "
-"(you must set one option for each pattern you need)"
-msgstr ""
-"Et mønster til sammenligning af valgte filer, med mulighed for at tilføje "
-"jokere (? eller *) (du skal angive mindst én valgmulighed for hvert mønster)"
-
-#: ../utils/nautilus-actions-new-config.c:54
-#: ../utils/nautilus-actions-new-config.c:56
-msgid "EXPR"
-msgstr "UDTRYK"
-
-#: ../utils/nautilus-actions-new-config.c:56
-msgid ""
-"A pattern to match selected files' mimetype against. May include wildcards "
-"(* or ?) (you must set one option for each pattern you need)"
-msgstr ""
-"Et mønster til sammenligning af valgte filer mod mime-type, med mulighed for "
-"at tilføje jokere (? eller *) (du skal angive mindst én valgmulighed for "
-"hvert mønster)"
-
-#: ../utils/nautilus-actions-new-config.c:57
-msgid "Set it if the selection can contain files"
-msgstr "Angiv hvis valget kan indeholde filer"
-
-#: ../utils/nautilus-actions-new-config.c:58
-msgid "Set it if the selection can contain folders"
-msgstr "Angiv hvis valget kan indeholde mapper"
-
-#: ../utils/nautilus-actions-new-config.c:59
-msgid "Set it if the selection can have several items"
-msgstr "Angiv hvis valget kan indeholde flere elementer"
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid ""
-"A GnomeVFS scheme where the selected files should be located (you must set "
-"it for each scheme you need)"
-msgstr ""
-"En GnomeVFS type, hvor de valgte filer kan findes (du skal angive det for "
-"hver type)"
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid "SCHEME"
-msgstr "TYPE"
-
-#: ../utils/nautilus-actions-new-config.c:61
-msgid ""
-"The path of the file where to save the new GConf schema definition file "
-"[default: /tmp/config_UUID.schemas]"
-msgstr ""
-"Stien til filen hvor du gemmer den nye GConf-skema [standard: /tmp/"
-"config_UUID.schemas]"
-
-#: ../utils/nautilus-actions-new-config.c:100
-#, c-format
-msgid ""
-"Syntax error:\n"
-"\t- %s\n"
-"Try %s --help\n"
-msgstr ""
-"Syntaksfejl:\n"
-"\t- %s\n"
-"Prøv %s --help\n"
-
-#: ../utils/nautilus-actions-new-config.c:152
-#, c-format
-msgid "Creating %s..."
-msgstr "Opretter %s..."
-
-#: ../utils/nautilus-actions-new-config.c:171
-#, c-format
-msgid " Failed: Can't create %s: %s\n"
-msgstr " Fejlet: Kan ikke oprette %s: %s\n"
-
-#: ../utils/nautilus-actions-new-config.c:180
-#, c-format
-msgid "  OK, saved in %s\n"
-msgstr "  O.k., gemt i %s\n"
-
-#: ../utils/nautilus-actions-new-config.c:185
-#, c-format
-msgid " Failed: %s\n"
-msgstr " Fejlede: %s\n"
-
-#: ../utils/nautilus-actions-tools-utils.c:48
-#, c-format
-msgid "Can't write data in file %s\n"
-msgstr "Kan ikke skrive data til filen %s\n"
-
-#: ../utils/nautilus-actions-tools-utils.c:54
-#, c-format
-msgid "Can't open file %s for writing\n"
-msgstr "Kan ikke åbne filen %s til skrivning\n"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
+#: ../src/common/nautilus-actions-config-gconf-private.h:81
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
@@ -714,7 +61,12 @@ msgstr ""
 "Etiketten til menupunktet som vises i Nautilus pop op-menuen, når valget "
 "matcher visnings-kravene"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
+#: ../src/common/nautilus-actions-config-gconf-private.h:82
+#: ../src/utils/nautilus-actions-new-config.c:58
+msgid "The tooltip of the menu item"
+msgstr "Værktøjstippet til menupunktet"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:83
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
@@ -722,11 +74,11 @@ msgstr ""
 "Værktøjstippet til menupunktet som vises i Nautilus statusbjælken, når "
 "brugeren peger på menupunktet i Nautilus pop op-menuen"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
+#: ../src/common/nautilus-actions-config-gconf-private.h:84
 msgid "The icon of the menu item"
 msgstr "Ikonet til menupunktet"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
+#: ../src/common/nautilus-actions-config-gconf-private.h:85
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
@@ -734,18 +86,27 @@ msgstr ""
 "Ikonet til menupunktet som vises ved siden af etiketten i Nautilus pop op-"
 "menuen, når valget matcher visnings-kravene"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
+#: ../src/common/nautilus-actions-config-gconf-private.h:86
 msgid "A description name of the profile"
-msgstr ""
+msgstr "Et beskrivende navn til profilen"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
+#: ../src/common/nautilus-actions-config-gconf-private.h:87
 msgid ""
 "The field is here to give the user a human readable name for a profile in "
 "the Nact interface. If not set there will be a default auto generated string "
 "set by default"
 msgstr ""
+"Feltets formål er at give brugeren et læsevenligt navn til profilen i Nact-"
+"grænsefladen. Hvis ikke angivet vil en automatisk genereret standardstreng "
+"blive sat som standard"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
+#: ../src/common/nautilus-actions-config-gconf-private.h:88
+#: ../src/utils/nautilus-actions-new-config.c:60
+#: ../src/utils/nautilus-actions-new-config.c:63
+msgid "The path of the command"
+msgstr "Stien til kommandoen"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:89
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
@@ -753,8 +114,12 @@ msgstr ""
 "Stien til kommandoen som køres når brugeren vælger menupunktet i Nautilus "
 "pop op-menuen"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
-#, fuzzy
+#: ../src/common/nautilus-actions-config-gconf-private.h:90
+#: ../src/utils/nautilus-actions-new-config.c:61
+msgid "The parameters of the command"
+msgstr "Parametrene til kommandoen"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:91
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
 "in the Nautilus popup menu.\n"
@@ -776,66 +141,66 @@ msgstr ""
 "Parametrene til kommandoen som køres når brugeren vælger menupunktet i "
 "Nautilus pop op-menuen.\n"
 "\n"
-"Parametrene kan indeholde specielle symboler som erstattes med informationer "
-"fra Nautilus inden kommandoen køres:\n"
+"Parametrene kan indeholde specielle symboler, som erstattes med "
+"informationer fra Nautilus, inden kommandoen køres:\n"
 "\n"
 "%d: grundmappe til de valgte filer\n"
 "%f: navnet på den valgte fil eller den første, hvis flere er valgt\n"
-"%m: liste over grundnavne på de valgte filer/mapper, separeret med "
-"mellemrum\n"
-"%M: liste over de valgte filer/mapper med deres komplette sti, separeret med "
+"%m: liste over grundnavne på de valgte filer/mapper, adskilt af mellemrum\n"
+"%M: liste over de valgte filer/mapper med deres komplette sti, adskilt af "
 "mellemrum\n"
 "%u: GnomeVFS URI\n"
 "%s: type på GnomeVFS URI\n"
 "%h: værtsnavn til GnomeVFS URI\n"
-"%U: brugernavn til :%s/GnomeVFS URI\n"
-"%%: et procent-tegn"
+"%U: brugernavn til GnomeVFS URI\n"
+"%%: et procenttegn"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
+#: ../src/common/nautilus-actions-config-gconf-private.h:92
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr "Listen over mønstre som de valgte filer/mapper skal matche"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
+#: ../src/common/nautilus-actions-config-gconf-private.h:93
 msgid ""
 "A list of strings with joker '*' or '?' to match the name of the selected "
 "file(s)/folder(s). Each selected items must match at least one of the "
 "filename patterns for the action to appear"
 msgstr ""
-"En liste over strenge med jokeren '*' eller '?' til at sammenligne de valgte "
-"filer/mapper. Hvert valgt element skal matche mindst ét mønster, for at "
-"handlingen vises"
+"En liste over strenge med joker \"*\" eller \"?\" til at sammenligne de "
+"valgte filer/mapper. Hvert valgt element skal matche mindst ét mønster, for "
+"at handlingen vises"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
+#: ../src/common/nautilus-actions-config-gconf-private.h:94
 msgid ""
 "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr "'sand' hvis filnavnemønstrene skal være versalfølsomme, modsat 'falsk'"
+msgstr ""
+"\"sand\" hvis filnavnemønstrene skal være versalfølsomme, modsat \"falsk\""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
+#: ../src/common/nautilus-actions-config-gconf-private.h:95
 msgid ""
 "If you need to match a filename in a case-sensitive manner, set this key to "
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
 "'false'"
 msgstr ""
-"Hvis du har brug for at sammenligne et versalfølsomt filnavn, sæt denne "
-"nøgle til 'sand'. Hvis du også vil sammenligne fx. '*.jpg' med 'foto.JPG', "
-"sæt til 'falsk'"
+"Sæt denne nøgle til \"sand\", hvis du har brug for at sammenligne et "
+"versalfølsomt filnavn. Hvis du også vil sammenligne fx. \"*.jpg\" med \"foto."
+"JPG\", sæt til \"falsk\""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
+#: ../src/common/nautilus-actions-config-gconf-private.h:96
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
-msgstr "Listen over mønstre som sammenligner mime-typerne af de valgte filer."
+msgstr ""
+"Listen over mønstre, som bruges til at bestemme de valgte filers MIME-typer."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
+#: ../src/common/nautilus-actions-config-gconf-private.h:97
 msgid ""
 "A list of strings with joker '*' or '?' to match the mimetypes of the "
 "selected file(s). Each selected items must match at least one of the "
 "mimetype patterns for the action to appear"
 msgstr ""
-"En liste over strenge med jokeren '*' eller '?' til at sammenligne mime-"
-"typerne af de valgte filer/mapper. Hvert valgt element skal matche mindst ét "
-"af mime-typemønstrene, for at handlingen vises"
+"En liste over strenge med joker \"*\" eller \"?\" til at bestemme de valgte "
+"filer/mappers MIME-typer. Hvert valgt element skal matche mindst ét af mime-"
+"typemønstrene, for at handlingen vises"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
-#, fuzzy
+#: ../src/common/nautilus-actions-config-gconf-private.h:98
 msgid ""
 "The valid combinations are:\n"
 "\n"
@@ -845,49 +210,50 @@ msgid ""
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
-"De gyldige kombinationer er:\n"
+"Disse kombinationer er gyldige:\n"
 "\n"
-"isfile=SAND og isdir=FALSK: valget må kun indeholde filer\n"
-"isfile=FALSK og isdir=SAND: valget må kun indeholde mapper\n"
-"isfile=SAND og isdir=SAND: valget kan indeholde både filer og mapper\n"
-"isfile=FALSK og isdir=FALSK: ugyldig kombination (din konfiguration vil "
-"aldrig vises)"
+"isfile=SAND og isdir=FALSK: udvalg må kun indeholde filer\n"
+"isfile=FALSK og isdir=SAND: udvalg må kun indeholde mapper\n"
+"isfile=SAND og isdir=SAND: udvalg kan indeholde både filer og mapper\n"
+"isfile=FALSK og isdir=FALSK: dette er en ugyldig kombination (din "
+"konfiguration vil aldrig blive vist)"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
+#: ../src/common/nautilus-actions-config-gconf-private.h:99
 msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr "'sand' hvis valget kan indeholde filer, ellers 'falsk'"
+msgstr "\"sand\" hvis valget kan indeholde filer, ellers \"falsk\""
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
+#: ../src/common/nautilus-actions-config-gconf-private.h:101
 msgid "This setting is tied in with the 'isdir' setting. "
-msgstr "Denne indstilling er sammensat med 'isdir' indstillingen. "
+msgstr "Denne indstilling er sammensat med \"isdir\" indstillingen. "
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
+#: ../src/common/nautilus-actions-config-gconf-private.h:102
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr "'sand' hvis valget kan indeholde mapper, ellers 'falsk'"
+msgstr "\"sand\" hvis valget kan indeholde mapper, ellers \"falsk\""
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
+#: ../src/common/nautilus-actions-config-gconf-private.h:104
 msgid "This setting is tied in with the 'isfile' setting. "
-msgstr "Denne indstilling er sammensat med 'isfile' indstillingen. "
+msgstr "Denne indstilling er sammensat med \"isfile\"-indstillingen. "
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
+#: ../src/common/nautilus-actions-config-gconf-private.h:105
 msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr "'sand' hvis valget kan have flere elementer, ellers 'falsk'"
+msgstr "\"sand\" hvis valget kan have flere elementer, ellers \"falsk\""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
+#: ../src/common/nautilus-actions-config-gconf-private.h:106
 msgid ""
 "If you need one or more files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set 'false'"
 msgstr ""
-"Hvis du har brug for en eller flere filer/mapper er valgt, sæt denne nøgle "
-"til 'sand'. Hvis du kun har brug for én fil eller mappe, sæt den til 'falsk'"
+"Sæt denne nøgle til \"sand\", hvis du har brug for at vælge en eller flere "
+"filer/mapper. Hvis du kun har brug for én fil eller mappe, sæt den til "
+"\"falsk\""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:99
+#: ../src/common/nautilus-actions-config-gconf-private.h:107
 msgid "The list of GnomeVFS schemes where the selected files should be located"
 msgstr "Listen over GnomeVFS typer, hvor de valgte filer skal findes"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:100
+#: ../src/common/nautilus-actions-config-gconf-private.h:108
 msgid ""
 "Defines the list of valid GnomeVFS schemes to be matched against the "
 "selected items. The GnomeVFS scheme is the protocol used to access the "
@@ -925,11 +291,11 @@ msgstr ""
 "\n"
 "Alle GnomeVFS typer brugt af Nautilus kan bruges her."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:101
+#: ../src/common/nautilus-actions-config-gconf-private.h:109
 msgid "The version of the configuration format"
 msgstr "Versionen på konfigurations-formatet"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:102
+#: ../src/common/nautilus-actions-config-gconf-private.h:110
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
@@ -937,66 +303,38 @@ msgstr ""
 "Versionen på konfigurations-formatet som bruges til håndtering af bagud-"
 "kompatiblitet"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:205
-#, c-format
-msgid ""
-"The action '%s' already exists with the name '%s', please first remove the "
-"existing one before trying to add this one"
-msgstr ""
-"Handlingen \"%s\" eksisterer allerede med navnet \"%s\". Fjern venligst den "
-"eksisterende før du prøver at tilføje denne her"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:222
-#, c-format
-msgid "Can't save action '%s'"
-msgstr "Kan ikke gemme handlingen \"%s\""
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:470
-#, fuzzy, c-format
-msgid ""
-"A profile already exists with the name '%s', please first remove or rename "
-"the existing one before trying to add this one"
-msgstr ""
-"Handlingen \"%s\" eksisterer allerede med navnet \"%s\". Fjern venligst den "
-"eksisterende før du prøver at tilføje denne her"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:524
-#, fuzzy, c-format
-msgid "Can't remove the old profile '%s'"
-msgstr "Kan ikke fortolke fil \"%s\" !"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:531
-#, fuzzy, c-format
-msgid "Can't find profile named '%s'"
-msgstr "Kan ikke fortolke fil \"%s\" !"
-
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:184
+#. i18n notes: will be displayed in an error dialog concatenated
+#. * to another error message
+#.
+#: ../src/common/nautilus-actions-config-schema-reader.c:193
 msgid " and some profiles are incomplete: "
-msgstr ""
+msgstr " og nogle profiler er mangelfulde: "
 
-#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:204
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:717
+#. i18n notes: this is a list separator, it can have more than one
+#. * character (ie, in French it will be ", ")
+#.
+#. i18n notes: this is a list separator, it can have more
+#. * than one character (ie, in French it will be ", ")
+#.
+#: ../src/common/nautilus-actions-config-schema-reader.c:217
+#: ../src/common/nautilus-actions-config-schema-reader.c:736
 msgid ","
 msgstr ","
 
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:303
+# Oversat til "nøgle" på tysk og svensk
+#. i18n notes: will be displayed in an error dialog
+#. * concatenated to another error message
+#.
+#: ../src/common/nautilus-actions-config-schema-reader.c:320
 #, c-format
 msgid "%s (one missing key: %s)%s"
 msgid_plural "%s (missing keys: %s)%s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s (en manglende nøgle: %s)%s"
+msgstr[1] "%s (Manglende nøgler: %s)%s"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:682
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:817
+#: ../src/common/nautilus-actions-config-schema-reader.c:699
+#: ../src/common/nautilus-actions-config-schema-reader.c:836
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (found <%s> "
@@ -1006,17 +344,21 @@ msgstr ""
 "%s> i stedet for <%s>)"
 
 #. if the version of the file is greater than the current one, we reject the file
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
+#: ../src/common/nautilus-actions-config-schema-reader.c:713
 #, c-format
 msgid ""
 "This config file is more recent than this version of Nautilus-actions can "
 "support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
+"Denne konfigurationsfil er nyere, end denne version af Nautilus-handlinger "
+"(Nautilus-actions) understøtter. Opgradér venligst Nautilus-handlinger til "
+"den seneste version, hvis du ønsker at kunne importere den (Filversion: %s "
+"(maks. understøttet version : %s))"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
-#, fuzzy, c-format
+#: ../src/common/nautilus-actions-config-schema-reader.c:763
+#, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
 msgid_plural ""
@@ -1024,15 +366,15 @@ msgid_plural ""
 "s"
 msgstr[0] ""
 "Denne XML-fil er ikke en gyldig Nautilus-handlingskonfigurationsfil (mangler "
-"nøgle : %s)"
+"nøgle: %s)%s"
 msgstr[1] ""
 "Denne XML-fil er ikke en gyldig Nautilus-handlingskonfigurationsfil (mangler "
-"nøgle : %s)"
+"nøgler: %s)%s"
 
 #. No error occured but we have not found the "version" gconf key
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
-#, fuzzy, c-format
+#: ../src/common/nautilus-actions-config-schema-reader.c:772
+#, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
 msgstr ""
@@ -1040,7 +382,7 @@ msgstr ""
 "nøgle : %s)"
 
 #. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:827
+#: ../src/common/nautilus-actions-config-schema-reader.c:846
 #, c-format
 msgid ""
 "This XML file is not a valid Nautilus-actions config file (root node is <%s> "
@@ -1048,6 +390,701 @@ msgid ""
 msgstr ""
 "Denne XML-fil er ikke en gyldig Nautilus-handlingskonfigurationsfil (root "
 "knude er <%s> i stedet for <%s>)"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact.c:229
+#, c-format
+msgid "Can't duplicate action '%s'!"
+msgstr "Kan ikke duplikere handling \"%s\"!"
+
+#. create columns on the tree view
+#: ../src/nact/nact.c:344 ../src/nact/nact-import-export.c:179
+msgid "Icon"
+msgstr "Ikon"
+
+#: ../src/nact/nact.c:349 ../src/nact/nact-import-export.c:184
+msgid "Label"
+msgstr "Etiket"
+
+#: ../src/nact/nact.c:373 ../src/nact/nact-action-editor.c:161
+#: ../src/nact/nact-editor.c:663 ../src/nact/nact-import-export.c:331
+#: ../src/nact/nact-profile-editor.c:567
+msgid "Could not load interface for Nautilus Actions Config Tool"
+msgstr ""
+"Kunne ikke indlæse grænseflade til konfiguration af Nautilus-handlinger"
+
+#: ../src/nact/nact-application.c:291
+msgid ""
+"<b>Another instance of Nautilus Actions Configurator is already running.</"
+"b>\n"
+"\n"
+"Please switch back to it."
+msgstr ""
+
+#. i18n: window title
+#: ../src/nact/nact-application.c:294
+#: ../src/nact/nautilus-actions-config.glade.h:64
+msgid "Nautilus Actions"
+msgstr "Nautilus-handlinger"
+
+#: ../src/nact/nact.desktop.in.h:1
+msgid "Add items to the Nautilus popup menu"
+msgstr "Tilføj menupunkter til Nautilus pop op-menuen"
+
+#: ../src/nact/nact.desktop.in.h:2
+msgid "Nautilus Actions Configuration"
+msgstr "Konfiguration af Nautilus-handlinger"
+
+#: ../src/nact/nact-action-editor.c:186 ../src/nact/nact-action-editor.c:189
+#: ../src/nact/nact-editor.c:681 ../src/nact/nact-editor.c:684
+msgid "Icon of the menu item in the Nautilus popup menu"
+msgstr "Ikon til menupunktet i Nautilus pop op-menuen"
+
+#: ../src/nact/nact-action-editor.c:230
+msgid "Add a new action"
+msgstr "Tilføj en ny handling"
+
+#: ../src/nact/nact-action-editor.c:234
+#, c-format
+msgid "Edit action \"%s\""
+msgstr "Redigér handling \"%s\""
+
+#. i18n notes: when no icon is selected in the drop-down list
+#: ../src/nact/nact-editor.c:195
+msgid "None"
+msgstr "Intet"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact-editor.c:485
+#, c-format
+msgid "Can't copy action's profile '%s'!"
+msgstr "Kan ikke kopiere handlingsprofil \"%s\"!"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact-editor.c:509
+#, c-format
+msgid "Can't paste action's profile '%s'!"
+msgstr "Kan ikke indsætte handlingsprofil \"%s\"!"
+
+#. printf ("profile_name : %s\n", action_profile->desc_name);
+#. i18n notes: this is the default name of a copied profile
+#: ../src/nact/nact-editor.c:514
+#, c-format
+msgid "%s Copy"
+msgstr "%s-kopi"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact-editor.c:573
+#, c-format
+msgid "Can't delete action's profile '%s'!"
+msgstr "Kan ikke slette handlingsprofil \"%s\"!"
+
+#: ../src/nact/nact-editor.c:626
+msgid "Profile Name"
+msgstr "Profilnavn"
+
+#: ../src/nact/nact-editor.c:706
+msgid "Add a New Action"
+msgstr "Tilføj ny handling"
+
+#: ../src/nact/nact-editor.c:710
+#, c-format
+msgid "Edit Action \"%s\""
+msgstr "Redigér handling \"%s\""
+
+#: ../src/nact/nact-import-export.c:223
+#, c-format
+msgid "Can't parse file '%s' as GConf schema description file!"
+msgstr "Kan ikke fortolke fil \"%s\" som GConf-skema-beskrivelsesfil!"
+
+#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
+#: ../src/nact/nact-import-export.c:244
+#, c-format
+msgid "Action '%s' importation failed!"
+msgstr "Handling \"%s\"-import fejlede!"
+
+#. initialize the default schemes
+#. i18n notes : description of 'file' scheme
+#: ../src/nact/nact-prefs.c:172
+#, c-format
+msgid "%sLocal Files"
+msgstr "%sLokale filer"
+
+#. i18n notes : description of 'sftp' scheme
+#: ../src/nact/nact-prefs.c:174
+#, c-format
+msgid "%sSSH Files"
+msgstr "%sSSH-filer"
+
+#. i18n notes : description of 'smb' scheme
+#: ../src/nact/nact-prefs.c:176
+#, c-format
+msgid "%sWindows Files"
+msgstr "%sWindows-filer"
+
+#. i18n notes : description of 'ftp' scheme
+#: ../src/nact/nact-prefs.c:178
+#, c-format
+msgid "%sFTP Files"
+msgstr "%sFTP-filer"
+
+#. i18n notes : description of 'dav' scheme
+#: ../src/nact/nact-prefs.c:180
+#, c-format
+msgid "%sWebdav Files"
+msgstr "%sWebDAV-filer"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../src/nact/nact-profile-editor.c:299
+msgid "new-scheme"
+msgstr "ny-type"
+
+#: ../src/nact/nact-profile-editor.c:300
+msgid "New Scheme Description"
+msgstr "Beskrivelse på ny type"
+
+#: ../src/nact/nact-profile-editor.c:396
+msgid "Scheme"
+msgstr "Type"
+
+#: ../src/nact/nact-profile-editor.c:407
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: ../src/nact/nact-profile-editor.c:608
+msgid "Add a New Profile"
+msgstr "Tilføj en ny profil"
+
+#: ../src/nact/nact-profile-editor.c:612
+#, c-format
+msgid "Edit Profile \"%s\""
+msgstr "Redigér profil \"%s\""
+
+#. i18n notes: example strings for the command preview
+#: ../src/nact/nact-utils.c:196
+msgid "/path/to"
+msgstr "/sti/til"
+
+#: ../src/nact/nact-utils.c:197 ../src/nact/nact-utils.c:199
+msgid "file1.txt"
+msgstr "fil1.txt"
+
+#: ../src/nact/nact-utils.c:197
+msgid "file2.txt"
+msgstr "fil2.txt"
+
+#: ../src/nact/nact-utils.c:198 ../src/nact/nact-utils.c:199
+msgid "folder1"
+msgstr "mappe1"
+
+#: ../src/nact/nact-utils.c:198
+msgid "folder2"
+msgstr "mappe2"
+
+#: ../src/nact/nact-utils.c:201
+msgid "test.example.net"
+msgstr "test.eksempel.dk"
+
+#: ../src/nact/nact-utils.c:202
+msgid "file.txt"
+msgstr "fil.txt"
+
+#: ../src/nact/nact-utils.c:203
+msgid "folder"
+msgstr "mappe"
+
+#: ../src/nact/nautilus-actions-config.glade.h:1
+msgid ""
+"(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"(C) 2009 Pierre Wieser <pwieser@trychlos.org>"
+msgstr ""
+"(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"(C) 2009 Pierre Wieser <pwieser@trychlos.org>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:4
+#, no-c-format
+msgid "<b>%%</b>: a percent sign"
+msgstr "<b>%%</b>: et procenttegn"
+
+#: ../src/nact/nautilus-actions-config.glade.h:6
+#, no-c-format
+msgid ""
+"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
+"full paths"
+msgstr ""
+"<b>%M</b>: liste over de(n) valgte fil(er)/mappe(r) med deres komplette sti, "
+"adskilt af mellemrum"
+
+#: ../src/nact/nautilus-actions-config.glade.h:8
+#, no-c-format
+msgid "<b>%U</b>: username of the GnomeVFS URI"
+msgstr "<b>%U</b>: brugernavn til GnomeVFS URI"
+
+#: ../src/nact/nautilus-actions-config.glade.h:10
+#, no-c-format
+msgid "<b>%d</b>: base folder of the selected file(s)"
+msgstr "<b>%d</b>: grundmappe til de valgte filer"
+
+#: ../src/nact/nautilus-actions-config.glade.h:12
+#, no-c-format
+msgid ""
+"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgstr ""
+"<b>%f</b>: navnet på den valgte fil eller den første, hvis flere er valgt"
+
+#: ../src/nact/nautilus-actions-config.glade.h:14
+#, no-c-format
+msgid "<b>%h</b>: hostname of the GnomeVFS URI"
+msgstr "<b>%h</b>: værtsnavn til GnomeVFS URI"
+
+#: ../src/nact/nautilus-actions-config.glade.h:16
+#, no-c-format
+msgid ""
+"<b>%m</b>: space-separated list of the basenames of the selected\n"
+"file(s)/folder(s)"
+msgstr ""
+"<b>%m</b>: liste over grundnavne på de valgte filer/mapper,\n"
+"adskilt af mellemrum"
+
+#: ../src/nact/nautilus-actions-config.glade.h:19
+#, no-c-format
+msgid "<b>%s</b>: scheme of the GnomeVFS URI"
+msgstr "<b>%s</b>: type på GnomeVFS URI"
+
+#: ../src/nact/nautilus-actions-config.glade.h:21
+#, no-c-format
+msgid "<b>%u</b>: GnomeVFS URI"
+msgstr "<b>%u</b>: GnomeVFS URI"
+
+#: ../src/nact/nautilus-actions-config.glade.h:22
+msgid "<b>Action</b>"
+msgstr "<b>Handling</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:23
+msgid "<b>Appears if file matches</b>"
+msgstr "<b>Vises hvis fil passer</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:24
+msgid "<b>Appears if scheme is in this list</b>"
+msgstr "<b>Vises hvis type findes i denne liste:</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:25
+msgid "<b>Appears if selection contains</b>"
+msgstr "<b>Vises hvis valg indeholder:</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:26
+msgid "<b>Nautilus Menu Item</b>"
+msgstr "<b>Nautilus-menupunkt</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:27
+msgid "<b>Profiles</b>"
+msgstr "<b>Profiler</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:29
+#, no-c-format
+msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
+msgstr "<i><b><span size=\"small\">fx, %s</span></b></i>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:30
+msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
+msgstr "<span size=\"larger\"><b>Parameterbeskrivelse</b></span>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:31
+msgid ""
+"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
+"\n"
+"place secondary text here"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">placér primær tekst her</span>\n"
+"\n"
+"placér sekundær tekst her"
+
+#: ../src/nact/nautilus-actions-config.glade.h:34
+msgid ""
+"A string with wildcards (? or *) that will be used to match the filenames. "
+"You can set several filename patterns by separating them with a semi-colon "
+"(;)."
+msgstr ""
+"En streng med jokertegn (? eller *), som bruges til at sammenligne "
+"filnavnene. Du kan angive flere filmønstre adskilt af semikolon (;)."
+
+#: ../src/nact/nautilus-actions-config.glade.h:35
+msgid ""
+"A string with wildcards (? or *) that will be used to match the mimetypes of "
+"files. You can set several mimetype patterns by separating them with a semi-"
+"colon (;)."
+msgstr ""
+"En streng med jokertegn (? eller *), som bruges til at bestemme filers MIME-"
+"typer. Du kan angive flere MIME-type-mønstre adskilt af semikolon (;)."
+
+#: ../src/nact/nautilus-actions-config.glade.h:36
+msgid "Action"
+msgstr "Handling"
+
+#: ../src/nact/nautilus-actions-config.glade.h:37
+msgid "Advanced Conditions"
+msgstr "Avancerede betingelser"
+
+#: ../src/nact/nautilus-actions-config.glade.h:38
+msgid "Appears if selection has multiple files or folders"
+msgstr "Vises hvis valg indeholder flere filer eller mapper"
+
+#: ../src/nact/nautilus-actions-config.glade.h:39
+msgid "Both"
+msgstr "Begge"
+
+#: ../src/nact/nautilus-actions-config.glade.h:40
+msgid "Click to add a new scheme."
+msgstr "Klik for at tilføje en ny type."
+
+#: ../src/nact/nautilus-actions-config.glade.h:41
+msgid "Click to choose a command from the file chooser dialog."
+msgstr "Klik for at vælge en kommando fra filvælger-vinduet."
+
+#: ../src/nact/nautilus-actions-config.glade.h:42
+msgid ""
+"Click to choose a custom icon from a file instead of a predefined icon from "
+"the drop-down list."
+msgstr ""
+"Klik for at vælge et brugerdefineret ikon fra en fil, i stedet for et "
+"prædefineret ikon fra rullegardinet."
+
+#: ../src/nact/nautilus-actions-config.glade.h:43
+msgid "Click to remove the selected scheme."
+msgstr "Klik for at fjerne den valgte type."
+
+#: ../src/nact/nautilus-actions-config.glade.h:44
+msgid ""
+"Click to toggle the display of the list of special tokens you can use in the "
+"parameter field."
+msgstr ""
+"Klik for at slå visning af en en liste med specielle symboler, som du kan "
+"bruge i parameterfeltet til/fra."
+
+#: ../src/nact/nautilus-actions-config.glade.h:45
+msgid "Conditions"
+msgstr "Krav"
+
+#: ../src/nact/nautilus-actions-config.glade.h:46
+msgid "Create a copy of the selected action."
+msgstr "Opret en kopi af den valgte handling."
+
+#: ../src/nact/nautilus-actions-config.glade.h:47
+msgid ""
+"Delete the action without any confirmation nor the possibility to restore it."
+msgstr ""
+"Slet handlingen uden bekræftelse og ej heller muligheden for at genskabe den."
+
+#: ../src/nact/nautilus-actions-config.glade.h:48
+msgid "Duplicate"
+msgstr "Duplikering"
+
+#: ../src/nact/nautilus-actions-config.glade.h:49
+msgid "Export existing configs"
+msgstr "Eksportér eksisterende konfigurationer"
+
+#: ../src/nact/nautilus-actions-config.glade.h:50
+msgid "File to Import:"
+msgstr "Fil til import:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:51
+msgid "Filenames:"
+msgstr "Filnavne:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:52
+msgid "Icon:"
+msgstr "Ikon:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:53
+msgid ""
+"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
+"will not match photo.JPG)"
+msgstr ""
+"Hvis valgt vil filnavnmønstrene blive tilpasset versalfølsom (fx. *.jpg vil "
+"ikke passe som foto.JPG)"
+
+#: ../src/nact/nautilus-actions-config.glade.h:54
+msgid "Import new configurations"
+msgstr "Importér nye konfigurationer"
+
+#: ../src/nact/nautilus-actions-config.glade.h:55
+msgid "Import/Export"
+msgstr "Import/eksport"
+
+#: ../src/nact/nautilus-actions-config.glade.h:56
+msgid "Import/Export Settings"
+msgstr "Opsætning af import/eksport"
+
+#: ../src/nact/nautilus-actions-config.glade.h:57
+msgid "Label of the menu item in the Nautilus popup menu."
+msgstr "Etiket til menupunktet i Nautilus pop op-menuen."
+
+#: ../src/nact/nautilus-actions-config.glade.h:58
+msgid "Label:"
+msgstr "Etiket:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:59
+msgid ""
+"Manage importation of external action configurations and exportation of "
+"existing actions."
+msgstr ""
+"Håndtér importen af eksterne handlings-konfigurationer og eksporten af "
+"eksisterende handlinger."
+
+#: ../src/nact/nautilus-actions-config.glade.h:60
+msgid "Match case"
+msgstr "Passende sag"
+
+#: ../src/nact/nautilus-actions-config.glade.h:61
+msgid "Mimetypes:"
+msgstr "MIME-typer:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:62
+msgid "Nautilus Action Editor"
+msgstr "Redigering af Nautilus-handlinger"
+
+#: ../src/nact/nautilus-actions-config.glade.h:63
+msgid "Nautilus Action Profile Editor"
+msgstr "Redigering af Nautilus-handlingsprofil"
+
+#: ../src/nact/nautilus-actions-config.glade.h:65
+msgid ""
+"Nautilus Actions Configuration Tool\n"
+"Application to configure Nautilus Action extension"
+msgstr ""
+"Værktøj til konfiguration af Nautilus-handlinger\n"
+"Program til konfiguration af Nautilus-handlings-udvidelsen"
+
+#: ../src/nact/nautilus-actions-config.glade.h:67
+msgid "Only files"
+msgstr "Kun filer"
+
+#: ../src/nact/nautilus-actions-config.glade.h:68
+msgid "Only folders"
+msgstr "Kun mapper"
+
+#: ../src/nact/nautilus-actions-config.glade.h:69
+msgid ""
+"Parameters that will be sent to the program. Click on the 'Legend' button to "
+"see the different replacement tokens."
+msgstr ""
+"Parametre som sendes til programmet. Klik på \"Beskrivelse\"-knappen for at "
+"se de forskellige erstatnings-symboler."
+
+#: ../src/nact/nautilus-actions-config.glade.h:70
+msgid "Parameters:"
+msgstr "Parametre:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:71
+msgid "Path:"
+msgstr "Sti:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:72
+msgid "Project website"
+msgstr "Projektets websted"
+
+#: ../src/nact/nautilus-actions-config.glade.h:73
+msgid "Save in Folder:"
+msgstr "Gem i mappe:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:74
+msgid ""
+"Select the configurations you want to export. Use Shift or Ctrl key to "
+"select more than one."
+msgstr ""
+"Vælg de konfigurationer du ønsker at eksportere. Brug skift- eller ctrl-"
+"tasten til at vælge flere."
+
+#: ../src/nact/nautilus-actions-config.glade.h:75
+msgid "Select the configurations you want to export:"
+msgstr "Vælg de konfigurationer du vil eksportere:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:76
+msgid "Select the file you want to import."
+msgstr "Vælg den fil du ønsker at importere."
+
+#: ../src/nact/nautilus-actions-config.glade.h:77
+msgid ""
+"Select the folder you want your config to be saved in. This folder must "
+"exist."
+msgstr ""
+"Vælg en mappe hvori du ønsker at gemme din konfiguration. Denne mappe skal "
+"eksistere."
+
+#: ../src/nact/nautilus-actions-config.glade.h:78
+msgid ""
+"Select the kind of files where you want your action to appear. If you don't "
+"know what to choose, try selecting just 'file' which is the most common "
+"choice. You can add a new scheme by clicking on the '+' button."
+msgstr ""
+"Vælg den type filer hvor du ønsker dine handlinger skal vises. Hvis du ikke "
+"ved hvad du skal vælge, prøv at vælge \"file\" som er det mest almindelige "
+"valg. Du kan tilføje en ny type ved at klikke på \"+\" knappen."
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../src/nact/nautilus-actions-config.glade.h:80
+msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
+msgstr ""
+"Lasse Bang Mikkelsen\n"
+"Peter Bach\n"
+"Mads Lundby"
+
+#: ../src/nact/nautilus-actions-config.glade.h:81
+msgid ""
+"The command that will be launched by selecting the action in Nautilus popup "
+"menu."
+msgstr ""
+"Kommandoen som vil blive kørt når handlingen vælges i Nautilus pop op-menuen."
+
+#: ../src/nact/nautilus-actions-config.glade.h:82
+msgid "This software is licensed under the GNU Genaral Public License (GPL)"
+msgstr "Dette program er licenseret under GNU General Public License (GPL)"
+
+#: ../src/nact/nautilus-actions-config.glade.h:83
+msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
+msgstr "Værktøjstip på menupunktet som vil vises i Nautilus statusbjælken."
+
+#: ../src/nact/nautilus-actions-config.glade.h:84
+msgid "Tooltip:"
+msgstr "Værktøjstip:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:85
+msgid "_Browse"
+msgstr "_Gennemse"
+
+#: ../src/nact/nautilus-actions-config.glade.h:86
+msgid "_Legend"
+msgstr "_Beskrivelse"
+
+#: ../src/utils/nautilus-actions-new-config.c:57
+msgid "LABEL"
+msgstr "ETIKET"
+
+#: ../src/utils/nautilus-actions-new-config.c:58
+msgid "TOOLTIP"
+msgstr "VÆRKTØJSTIP"
+
+#: ../src/utils/nautilus-actions-new-config.c:59
+msgid "The icon of the menu item (filename or GTK stock ID)"
+msgstr "Ikonet til menupunktet (filnavn eller GTK standard-id)"
+
+#: ../src/utils/nautilus-actions-new-config.c:59
+msgid "ICON"
+msgstr "IKON"
+
+#: ../src/utils/nautilus-actions-new-config.c:60
+#: ../src/utils/nautilus-actions-new-config.c:63
+#: ../src/utils/nautilus-actions-new-config.c:69
+msgid "PATH"
+msgstr "STI"
+
+#: ../src/utils/nautilus-actions-new-config.c:61
+msgid "PARAMS"
+msgstr "PARAMETRE"
+
+#: ../src/utils/nautilus-actions-new-config.c:62
+msgid ""
+"A pattern to match selected files against. May include wildcards (* or ?) "
+"(you must set one option for each pattern you need)"
+msgstr ""
+"Et mønster til sammenligning af valgte filer, med mulighed for at tilføje "
+"jokertegn (? eller *) (du skal angive mindst én valgmulighed for hvert "
+"mønster)"
+
+#: ../src/utils/nautilus-actions-new-config.c:62
+#: ../src/utils/nautilus-actions-new-config.c:64
+msgid "EXPR"
+msgstr "UDTRYK"
+
+#: ../src/utils/nautilus-actions-new-config.c:64
+msgid ""
+"A pattern to match selected files' mimetype against. May include wildcards "
+"(* or ?) (you must set one option for each pattern you need)"
+msgstr ""
+"Et mønster til at bestemme valgte filers MIME-type imod, med mulighed for "
+"jokertegn (? eller *) (du skal angive mindst én valgmulighed for hvert "
+"mønster)"
+
+#: ../src/utils/nautilus-actions-new-config.c:65
+msgid "Set it if the selection can contain files"
+msgstr "Angiv hvis valget kan indeholde filer"
+
+#: ../src/utils/nautilus-actions-new-config.c:66
+msgid "Set it if the selection can contain folders"
+msgstr "Angiv hvis valget kan indeholde mapper"
+
+#: ../src/utils/nautilus-actions-new-config.c:67
+msgid "Set it if the selection can have several items"
+msgstr "Angiv hvis valget kan indeholde flere elementer"
+
+#: ../src/utils/nautilus-actions-new-config.c:68
+msgid ""
+"A GnomeVFS scheme where the selected files should be located (you must set "
+"it for each scheme you need)"
+msgstr ""
+"En GnomeVFS type, hvor de valgte filer kan findes (du skal angive det for "
+"hver type)"
+
+#: ../src/utils/nautilus-actions-new-config.c:68
+msgid "SCHEME"
+msgstr "TYPE"
+
+#: ../src/utils/nautilus-actions-new-config.c:69
+msgid ""
+"The path of the file where to save the new GConf schema definition file "
+"[default: /tmp/config_UUID.schemas]"
+msgstr ""
+"Stien til filen hvor du gemmer den nye GConf-skema [standard: /tmp/"
+"config_UUID.schemas]"
+
+#: ../src/utils/nautilus-actions-new-config.c:108
+#, c-format
+msgid ""
+"Syntax error:\n"
+"\t- %s\n"
+"Try %s --help\n"
+msgstr ""
+"Syntaksfejl:\n"
+"\t- %s\n"
+"Prøv %s --help\n"
+
+#: ../src/utils/nautilus-actions-new-config.c:160
+#, c-format
+msgid "Creating %s..."
+msgstr "Opretter %s..."
+
+#: ../src/utils/nautilus-actions-new-config.c:179
+#, c-format
+msgid " Failed: Can't create %s: %s\n"
+msgstr " Fejlet: Kan ikke oprette %s: %s\n"
+
+#: ../src/utils/nautilus-actions-new-config.c:188
+#, c-format
+msgid "  OK, saved in %s\n"
+msgstr "  O.k., gemt i %s\n"
+
+#: ../src/utils/nautilus-actions-new-config.c:193
+#, c-format
+msgid " Failed: %s\n"
+msgstr " Fejlede: %s\n"
+
+#: ../src/utils/nautilus-actions-tools-utils.c:57
+#, c-format
+msgid "Can't write data in file %s\n"
+msgstr "Kan ikke skrive data til filen %s\n"
+
+#: ../src/utils/nautilus-actions-tools-utils.c:63
+#, c-format
+msgid "Can't open file %s for writing\n"
+msgstr "Kan ikke åbne filen %s til skrivning\n"
+
+#, fuzzy
+#~ msgid "Can't remove the old profile '%s'"
+#~ msgstr "Kan ikke fortolke fil \"%s\" !"
+
+#, fuzzy
+#~ msgid "Can't find profile named '%s'"
+#~ msgstr "Kan ikke fortolke fil \"%s\" !"
 
 #~ msgid " "
 #~ msgstr " "
