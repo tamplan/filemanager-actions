@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mr\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-06-09 11:55+0000\n"
-"PO-Revision-Date: 2009-06-09 17:34+0530\n"
+"POT-Creation-Date: 2009-06-14 13:58+0000\n"
+"PO-Revision-Date: 2009-06-15 14:44+0530\n"
 "Last-Translator: Sandeep Shedmake <sandeep.shedmake@gmail.com>\n"
 "Language-Team: marathi\n"
 "MIME-Version: 1.0\n"
@@ -374,11 +374,29 @@ msgstr "चिन्ह"
 msgid "Label"
 msgstr "लेबल"
 
-#: ../src/nact/nact.c:370 ../src/nact/nact-action-editor.c:161
+#: ../src/nact/nact.c:373 ../src/nact/nact-action-editor.c:161
 #: ../src/nact/nact-editor.c:663 ../src/nact/nact-import-export.c:331
 #: ../src/nact/nact-profile-editor.c:567
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Nautilus कृती संयोजना साधन करीता संवाद दाखल करू शकत नाही"
+
+#: ../src/nact/nact-application.c:291
+msgid ""
+"<b>Another instance of Nautilus Actions Configurator is already running.</"
+"b>\n"
+"\n"
+"Please switch back to it."
+msgstr ""
+"<b>Nautilus Actions Configurator ची आणखी घटना आधिपासूनच कार्यरत आहे.</"
+"b>\n"
+"\n"
+"कृपया त्याकडे पुन्हा जा."
+
+#. i18n: window title
+#: ../src/nact/nact-application.c:294
+#: ../src/nact/nautilus-actions-config.glade.h:64
+msgid "Nautilus Actions"
+msgstr "Nautilus कृती"
 
 #: ../src/nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
@@ -394,13 +412,11 @@ msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "Nautilus पॉपअप मेन्यू अंतर्गत मेन्यू घटकाचे चिन्ह"
 
 #: ../src/nact/nact-action-editor.c:230
-#| msgid "Add a New Action"
 msgid "Add a new action"
 msgstr "नवीन कृती समावेष करा"
 
 #: ../src/nact/nact-action-editor.c:234
 #, c-format
-#| msgid "Edit Action \"%s\""
 msgid "Edit action \"%s\""
 msgstr "कृती \"%s\" संपादीत करा"
 
@@ -549,7 +565,6 @@ msgid "folder"
 msgstr "फोल्डर"
 
 #: ../src/nact/nautilus-actions-config.glade.h:1
-#| msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
 msgid ""
 "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
 "(C) 2009 Pierre Wieser <pwieser@trychlos.org>"
@@ -793,10 +808,6 @@ msgstr "Nautilus कृती संपादक"
 msgid "Nautilus Action Profile Editor"
 msgstr "Nautilus कृती संक्षिप्त माहिती संपादक"
 
-#: ../src/nact/nautilus-actions-config.glade.h:64
-msgid "Nautilus Actions"
-msgstr "Nautilus कृती"
-
 #: ../src/nact/nautilus-actions-config.glade.h:65
 msgid ""
 "Nautilus Actions Configuration Tool\n"
@@ -830,7 +841,6 @@ msgid "Path:"
 msgstr "मार्ग:"
 
 #: ../src/nact/nautilus-actions-config.glade.h:72
-#| msgid "Project Website"
 msgid "Project website"
 msgstr "प्रकल्प संकेतस्थळ"
 
