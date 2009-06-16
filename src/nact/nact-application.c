@@ -285,16 +285,22 @@ static void
 warn_other_instance( NactApplication *application )
 {
 	g_assert( NACT_IS_APPLICATION( application ));
+	gchar *msg;
+
+	msg = g_strdup_printf( "<b>%s</b>\n\n%s",
+			_( "Another instance of Nautilus Actions Configurator is already running." ),
+			_( "Please switch back to it." ));
 
 	GtkWidget *dialog = gtk_message_dialog_new_with_markup(
-			NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
-			_( "<b>Another instance of Nautilus Actions Configurator is already running.</b>\n\nPlease switch back to it." ));
+			NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, msg );
 
 	/* i18n: window title */
 	g_object_set( G_OBJECT( dialog ) , "title", _( "Nautilus Actions" ), NULL );
 
 	gtk_dialog_run( GTK_DIALOG( dialog ));
+
 	gtk_widget_destroy( dialog );
+	g_free( msg );
 }
 
 /*

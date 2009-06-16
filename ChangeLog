@@ -1,6 +1,9 @@
 2009-06-14 Pierre Wieser <pwieser@trychlos.org>
 
-	* po/POTFILES.in: Add src/nact-nact-application.c.
+	* po/POTFILES.in: Add src/nact-application.c.
+
+	* src/nact/nact-application.c:
+	Fix error message to not embed markup.
 
 2009-06-12 Pierre Wieser <pwieser@trychlos.org>
 
