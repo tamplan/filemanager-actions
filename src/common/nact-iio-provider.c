@@ -32,6 +32,10 @@
 #include <config.h>
 #endif
 
+#include <glib.h>
+
+#include "nact-action.h"
+#include "nact-action-profile.h"
 #include "nact-iio-provider.h"
 #include "nact-pivot.h"
 
@@ -151,4 +155,47 @@ nact_iio_provider_load_actions( const GObject *object )
 	}
 
 	return( actions );
+}
+
+/**
+ * Writes an action to a willing-to storage subsystem.
+ *
+ * @obj_pivot: the pivot object which owns the list of registered
+ * interface providers.
+ *
+ * @obj_action: the action to be written.
+ *
+ * @message: the I/O provider can allocate and store here an error
+ * message.
+ *
+ * Returns TRUE if the write is successfull, FALSE else.
+ */
+gboolean
+nact_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_action, gchar **message )
+{
+	static const gchar *thisfn = "nact_iio_provider_write_action";
+	g_debug( "%s", thisfn );
+
+	g_assert( NACT_IS_PIVOT( obj_pivot ));
+	NactPivot *pivot = NACT_PIVOT( obj_pivot );
+
+	g_assert( NACT_IS_ACTION( obj_action ));
+
+	gboolean ret = TRUE;
+	GSList *ip;
+	NactIIOProvider *instance;
+
+	GSList *providers = nact_pivot_get_providers( pivot, NACT_IIO_PROVIDER_TYPE );
+
+	for( ip = providers ; ip ; ip = ip->next ){
+
+		instance = NACT_IIO_PROVIDER( ip->data );
+
+		/*if( NACT_IIO_PROVIDER_GET_INTERFACE( instance )->write_action ){
+			list = NACT_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions( instance );
+			actions = g_slist_concat( actions, list );
+		}*/
+	}
+
+	return( ret );
 }

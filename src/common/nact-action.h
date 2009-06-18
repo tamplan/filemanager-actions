@@ -70,11 +70,16 @@ typedef struct {
 GType       nact_action_get_type( void );
 
 NactAction *nact_action_new( const gchar *uuid );
+NactAction *nact_action_duplicate( const NactAction *action );
 
 gchar      *nact_action_get_uuid( const NactAction *action );
+gchar      *nact_action_get_version( const NactAction *action );
 gchar      *nact_action_get_label( const NactAction *action );
 gchar      *nact_action_get_tooltip( const NactAction *action );
+gchar      *nact_action_get_icon( const NactAction *action );
 gchar      *nact_action_get_verified_icon_name( const NactAction *action );
+
+void        nact_action_set_new_uuid( NactAction *action );
 
 GSList     *nact_action_get_profiles( const NactAction *action );
 void        nact_action_set_profiles( NactAction *action, GSList *list );

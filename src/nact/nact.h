@@ -31,6 +31,7 @@
 #ifndef __NACT_H__
 #define __NACT_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -42,7 +43,7 @@ enum {
 	N_COLUMN
 };
 
-GtkWindow *nact_init_dialog( void );
+GtkWindow *nact_init_dialog( GObject *application );
 
 G_END_DECLS
 

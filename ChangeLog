@@ -1,3 +1,27 @@
+2009-06-18 Pierre Wieser <pwieser@trychlos.org>
+
+	Begin with porting NACT to new object hierarchy.
+
+	* src/common/nact-action.c:
+	* src/common/nact-action.h (nact_action_duplicate,
+	nact_action_get_version, nact_action_get_icon,
+	nact_action_set_new_uuid): New functions.
+
+	* src/common/nact-iio-provider.c:
+	* src/common/nact-iio-provider.h (+nact_iio_provider_write_action):
+	New function.
+
+	* src/common/nact-pivot.c:
+	* src/common/nact-pivot.h (nact_pivot_get_label_sorted_actions,
+	nact_pivot_get_action, nact_pivot_add_action):
+	New functions.
+
+	* src/nact/base-application.c:
+	* src/nact/base-application.h: New base class.
+
+	* src/nact/nact-application.c:
+	* src/nact/nact-application.h: Updated accordingly.
+
 2009-06-14 Pierre Wieser <pwieser@trychlos.org>
 
 	* po/POTFILES.in: Add src/nact-application.c.

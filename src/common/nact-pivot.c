@@ -33,6 +33,7 @@
 #endif
 
 #include <string.h>
+#include <uuid/uuid.h>
 
 #include "nact-action.h"
 #include "nact-gconf.h"
@@ -99,6 +100,7 @@ static void        instance_dispose( GObject *object );
 static void        instance_finalize( GObject *object );
 
 static void        free_actions( GSList *list );
+static gint        sort_actions_by_label( gconstpointer a1, gconstpointer a2 );
 static void        action_changed_handler( NactPivot *pivot, gpointer user_data );
 static gboolean    on_action_changed_timeout( gpointer user_data );
 static gulong      time_val_diff( const GTimeVal *recent, const GTimeVal *old );
@@ -326,7 +328,28 @@ nact_pivot_get_providers( const NactPivot *pivot, GType type )
 }
 
 /**
+ * Return the list of actions, sorted by label.
+ *
+ * @pivot: this NactPivot object.
+ *
+ * The returned list is owned by this NactPivot object, and should not
+ * be freed, nor unref by the caller.
+ */
+GSList *
+nact_pivot_get_label_sorted_actions( const NactPivot *pivot )
+{
+	g_assert( NACT_IS_PIVOT( pivot ));
+	GSList *sorted = g_slist_sort( pivot->private->actions, ( GCompareFunc ) sort_actions_by_label );
+	return( sorted );
+}
+
+/**
  * Return the list of actions.
+ *
+ * @pivot: this NactPivot object.
+ *
+ * The returned list is owned by this NactPivot object, and should not
+ * be freed, nor unref by the caller.
  */
 GSList *
 nact_pivot_get_actions( const NactPivot *pivot )
@@ -343,6 +366,82 @@ free_actions( GSList *list )
 		g_object_unref( NACT_ACTION( ia->data ));
 	}
 	g_slist_free( list );
+}
+
+static gint
+sort_actions_by_label( gconstpointer a1, gconstpointer a2 )
+{
+	NactAction *action1 = NACT_ACTION( a1 );
+	gchar *label1 = nact_action_get_label( action1 );
+
+	NactAction *action2 = NACT_ACTION( a2 );
+	gchar *label2 = nact_action_get_label( action2 );
+
+	gint ret = g_utf8_collate( label1, label2 );
+
+	g_free( label1 );
+	g_free( label2 );
+
+	return( ret );
+}
+
+/**
+ * Return the specified action.
+ *
+ * @pivot: this NactPivot object.
+ *
+ * @uuid: required globally unique identifier (uuid).
+ *
+ * Returns the specified NactAction object, or NULL if not found.
+ *
+ * The returned pointer is owned by NactPivot, and should not be freed
+ * nor unref by the caller.
+ */
+GObject *
+nact_pivot_get_action( NactPivot *pivot, const gchar *uuid )
+{
+	GSList *ia;
+	NactAction *act;
+	GObject *found = NULL;
+	uuid_t uua, uub;
+	gchar *uuid_act;
+
+	g_assert( NACT_IS_PIVOT( pivot ));
+
+	uuid_parse( uuid, uua );
+	for( ia = pivot->private->actions ; ia ; ia = ia->next ){
+		act = NACT_ACTION( ia->data );
+		uuid_act = nact_action_get_uuid( act );
+		uuid_parse( uuid_act, uub );
+		g_free( uuid_act );
+		if( !uuid_compare( uua, uub )){
+			found = G_OBJECT( act );
+			break;
+		}
+	}
+
+	return( found );
+}
+
+/**
+ * Write an action.
+ *
+ * @pivot: this NactPivot object.
+ *
+ * @action: action to be written by the storage subsystem.
+ *
+ * @message: the I/O provider can allocate and store here an error
+ * message.
+ *
+ * Returns TRUE if the write is successfull, FALSE else.
+ */
+gboolean
+nact_pivot_add_action( NactPivot *pivot, const GObject *action, gchar **message )
+{
+	g_assert( NACT_IS_PIVOT( pivot ));
+	g_assert( NACT_IS_ACTION( action ));
+	g_assert( message );
+	return( nact_iio_provider_write_action( G_OBJECT( pivot ), action, message ));
 }
 
 /*

@@ -40,6 +40,8 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 nautilus_actions_config_SOURCES = \
+	base-application.c									\
+	base-application.h									\
 	nact.c												\
 	nact.h												\
 	nact-application.c									\

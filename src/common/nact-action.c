@@ -33,6 +33,7 @@
 #endif
 
 #include <string.h>
+#include <uuid/uuid.h>
 
 #include "nact-action.h"
 #include "nact-action-profile.h"
@@ -325,6 +326,39 @@ nact_action_new( const gchar *uuid )
 	return( action );
 }
 
+/**
+ * Allocates a new NactAction object, and initializes it as an exact
+ * copy of the specified action.
+ *
+ * @action: the action to be duplicated.
+ *
+ * Return a newly allocated NactAction object.
+ *
+ * Please note than "an exact copy" here means that the newly allocated
+ * returned object has the _same_ UUID than the original one.
+ */
+NactAction *
+nact_action_duplicate( const NactAction *action )
+{
+	g_assert( NACT_IS_ACTION( action ));
+
+	gchar *uuid = do_get_id( NACT_OBJECT( action ));
+	NactAction *duplicate = g_object_new( NACT_ACTION_TYPE, PROP_UUID_STR, uuid, NULL );
+	g_free( uuid );
+
+	duplicate->private->version = g_strdup( action->private->version );
+	duplicate->private->label = g_strdup( action->private->label );
+	duplicate->private->tooltip = g_strdup( action->private->tooltip );
+	duplicate->private->icon = g_strdup( action->private->icon );
+
+	GSList *ip;
+	for( ip = action->private->profiles ; ip ; ip = ip->next ){
+
+	}
+
+	return( duplicate );
+}
+
 static void
 do_dump( const NactObject *action )
 {
@@ -376,6 +410,28 @@ nact_action_get_uuid( const NactAction *action )
 	return( nact_object_get_id( NACT_OBJECT( action )));
 }
 
+/**
+ * Returns the version attached to the action.
+ *
+ * @action: an NactAction object.
+ *
+ * The returned string must be g_freed by the caller.
+ *
+ * The version is always upgraded to the latest when the action is
+ * readen from the I/O provider. So we could assert here that the
+ * returned version is also the latest.
+ */
+gchar *
+nact_action_get_version( const NactAction *action )
+{
+	g_assert( NACT_IS_ACTION( action ));
+
+	gchar *version;
+	g_object_get( G_OBJECT( action ), PROP_VERSION_STR, &version, NULL );
+
+	return( version );
+}
+
 static gchar *
 do_get_label( const NactObject *action )
 {
@@ -421,6 +477,25 @@ nact_action_get_tooltip( const NactAction *action )
 }
 
 /**
+ * Returns the name of the icon attached to the context menu item for
+ * the action.
+ *
+ * @action: an NactAction object.
+ *
+ * The returned string must be g_freed by the caller.
+ */
+gchar *
+nact_action_get_icon( const NactAction *action )
+{
+	g_assert( NACT_IS_ACTION( action ));
+
+	gchar *icon;
+	g_object_get( G_OBJECT( action ), PROP_ICON_STR, &icon, NULL );
+
+	return( icon );
+}
+
+/**
  * Returns the icon name attached to the context menu item for the
  * action.
  *
@@ -447,6 +522,24 @@ nact_action_get_verified_icon_name( const NactAction *action )
 	}
 
 	return( icon_name );
+}
+
+/**
+ * Set a new UUID for the action.
+ *
+ * @action: action whose UUID is to be set.
+ */
+void
+nact_action_set_new_uuid( NactAction *action )
+{
+	g_assert( NACT_IS_ACTION( action ));
+	uuid_t uuid;
+	gchar uuid_str[64];
+
+	uuid_generate( uuid );
+	uuid_unparse_lower( uuid, uuid_str );
+
+	g_object_set( G_OBJECT( action ), PROP_UUID_STR, uuid_str, NULL );
 }
 
 /**
