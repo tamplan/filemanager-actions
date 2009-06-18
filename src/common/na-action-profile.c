@@ -36,21 +36,21 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
-#include "nact-action.h"
-#include "nact-action-profile.h"
-#include "nact-uti-lists.h"
+#include "na-action.h"
+#include "na-action-profile.h"
+#include "na-utils.h"
 
 /* private class data
  */
-struct NactActionProfileClassPrivate {
+struct NAActionProfileClassPrivate {
 };
 
 /* private instance data
  */
-struct NactActionProfilePrivate {
+struct NAActionProfilePrivate {
 	gboolean  dispose_has_run;
 
-	/* the NactAction object
+	/* the NAAction object
 	 */
 	gpointer  action;
 
@@ -101,24 +101,24 @@ enum {
 #define PROP_MIMETYPES_STR				"mimetypes"
 #define PROP_SCHEMES_STR				"schemes"
 
-static NactObjectClass *st_parent_class = NULL;
+static NAObjectClass *st_parent_class = NULL;
 
 static GType  register_type( void );
-static void   class_init( NactActionProfileClass *klass );
+static void   class_init( NAActionProfileClass *klass );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void   instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
-static void   do_dump( const NactObject *profile );
+static void   do_dump( const NAObject *profile );
 static void   do_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
-static gchar *do_get_id( const NactObject *object );
-static gchar *do_get_label( const NactObject *object );
+static gchar *do_get_id( const NAObject *object );
+static gchar *do_get_label( const NAObject *object );
 static int    validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
 
 GType
-nact_action_profile_get_type( void )
+na_action_profile_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -133,24 +133,24 @@ static GType
 register_type( void )
 {
 	static GTypeInfo info = {
-		sizeof( NactActionProfileClass ),
+		sizeof( NAActionProfileClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactActionProfile ),
+		sizeof( NAActionProfile ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( NACT_OBJECT_TYPE, "NactActionProfile", &info, 0 ));
+	return( g_type_register_static( NA_OBJECT_TYPE, "NAActionProfile", &info, 0 ));
 }
 
 static void
-class_init( NactActionProfileClass *klass )
+class_init( NAActionProfileClass *klass )
 {
-	static const gchar *thisfn = "nact_action_profile_class_init";
+	static const gchar *thisfn = "na_action_profile_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
@@ -165,7 +165,7 @@ class_init( NactActionProfileClass *klass )
 	spec = g_param_spec_pointer(
 			PROP_ACTION_STR,
 			PROP_ACTION_STR,
-			"The NactAction object",
+			"The NAAction object",
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ACTION, spec );
 
@@ -247,31 +247,31 @@ class_init( NactActionProfileClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_SCHEMES, spec );
 
-	klass->private = g_new0( NactActionProfileClassPrivate, 1 );
+	klass->private = g_new0( NAActionProfileClassPrivate, 1 );
 
-	NACT_OBJECT_CLASS( klass )->dump = do_dump;
-	NACT_OBJECT_CLASS( klass )->get_id = do_get_id;
-	NACT_OBJECT_CLASS( klass )->get_label = do_get_label;
+	NA_OBJECT_CLASS( klass )->dump = do_dump;
+	NA_OBJECT_CLASS( klass )->get_id = do_get_id;
+	NA_OBJECT_CLASS( klass )->get_label = do_get_label;
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_action_profile_instance_init";
+	static const gchar *thisfn = "na_action_profile_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
 
-	g_assert( NACT_IS_ACTION_PROFILE( instance ));
-	NactActionProfile* self = NACT_ACTION_PROFILE( instance );
+	g_assert( NA_IS_ACTION_PROFILE( instance ));
+	NAActionProfile* self = NA_ACTION_PROFILE( instance );
 
-	self->private = g_new0( NactActionProfilePrivate, 1 );
+	self->private = g_new0( NAActionProfilePrivate, 1 );
 	self->private->dispose_has_run = FALSE;
 }
 
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( object ));
-	NactActionProfile *self = NACT_ACTION_PROFILE( object );
+	g_assert( NA_IS_ACTION_PROFILE( object ));
+	NAActionProfile *self = NA_ACTION_PROFILE( object );
 
 	GSList *list;
 
@@ -301,7 +301,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 			break;
 
 		case PROP_BASENAMES:
-			list = nactuti_duplicate_string_list( self->private->basenames );
+			list = na_utils_duplicate_string_list( self->private->basenames );
 			g_value_set_pointer( value, list );
 			break;
 
@@ -318,12 +318,12 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 			break;
 
 		case PROP_MIMETYPES:
-			list = nactuti_duplicate_string_list( self->private->mimetypes );
+			list = na_utils_duplicate_string_list( self->private->mimetypes );
 			g_value_set_pointer( value, list );
 			break;
 
 		case PROP_SCHEMES:
-			list = nactuti_duplicate_string_list( self->private->schemes );
+			list = na_utils_duplicate_string_list( self->private->schemes );
 			g_value_set_pointer( value, list );
 			break;
 
@@ -336,8 +336,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( object ));
-	NactActionProfile *self = NACT_ACTION_PROFILE( object );
+	g_assert( NA_IS_ACTION_PROFILE( object ));
+	NAActionProfile *self = NA_ACTION_PROFILE( object );
 
 	switch( property_id ){
 		case PROP_ACTION:
@@ -369,8 +369,8 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			break;
 
 		case PROP_BASENAMES:
-			nactuti_free_string_list( self->private->basenames );
-			self->private->basenames = nactuti_duplicate_string_list( g_value_get_pointer( value ));
+			na_utils_free_string_list( self->private->basenames );
+			self->private->basenames = na_utils_duplicate_string_list( g_value_get_pointer( value ));
 			break;
 
 		case PROP_ISDIR:
@@ -386,13 +386,13 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			break;
 
 		case PROP_MIMETYPES:
-			nactuti_free_string_list( self->private->mimetypes );
-			self->private->mimetypes = nactuti_duplicate_string_list( g_value_get_pointer( value ));
+			na_utils_free_string_list( self->private->mimetypes );
+			self->private->mimetypes = na_utils_duplicate_string_list( g_value_get_pointer( value ));
 			break;
 
 		case PROP_SCHEMES:
-			nactuti_free_string_list( self->private->schemes );
-			self->private->schemes = nactuti_duplicate_string_list( g_value_get_pointer( value ));
+			na_utils_free_string_list( self->private->schemes );
+			self->private->schemes = na_utils_duplicate_string_list( g_value_get_pointer( value ));
 			break;
 
 		default:
@@ -404,11 +404,11 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nact_action_profile_instance_dispose";
+	static const gchar *thisfn = "na_action_profile_instance_dispose";
 	g_debug( "%s: object=%p", thisfn, object );
 
-	g_assert( NACT_IS_ACTION_PROFILE( object ));
-	NactActionProfile *self = NACT_ACTION_PROFILE( object );
+	g_assert( NA_IS_ACTION_PROFILE( object ));
+	NAActionProfile *self = NA_ACTION_PROFILE( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -422,19 +422,19 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "nact_action_profile_instance_finalize";
+	static const gchar *thisfn = "na_action_profile_instance_finalize";
 	g_debug( "%s: object=%p", thisfn, object );
 
-	g_assert( NACT_IS_ACTION_PROFILE( object ));
-	NactActionProfile *self = ( NactActionProfile * ) object;
+	g_assert( NA_IS_ACTION_PROFILE( object ));
+	NAActionProfile *self = ( NAActionProfile * ) object;
 
 	g_free( self->private->name );
 	g_free( self->private->label );
 	g_free( self->private->path );
 	g_free( self->private->parameters );
-	nactuti_free_string_list( self->private->basenames );
-	nactuti_free_string_list( self->private->mimetypes );
-	nactuti_free_string_list( self->private->schemes );
+	na_utils_free_string_list( self->private->basenames );
+	na_utils_free_string_list( self->private->mimetypes );
+	na_utils_free_string_list( self->private->schemes );
 
 	/* chain call to parent class */
 	if((( GObjectClass * ) st_parent_class )->finalize ){
@@ -449,17 +449,17 @@ instance_finalize( GObject *object )
  *
  * @name: the internal name (identifier) of the profile.
  *
- * Returns the newly allocated NactActionProfile object.
+ * Returns the newly allocated NAActionProfile object.
  */
-NactActionProfile *
-nact_action_profile_new( const NactObject *action, const gchar *name )
+NAActionProfile *
+na_action_profile_new( const NAObject *action, const gchar *name )
 {
-	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION( action ));
 	g_assert( name && strlen( name ));
 
-	NactActionProfile *profile =
+	NAActionProfile *profile =
 		g_object_new(
-				NACT_ACTION_PROFILE_TYPE,
+				NA_ACTION_PROFILE_TYPE,
 				PROP_ACTION_STR, action, PROP_PROFILE_NAME_STR, name, NULL );
 
 	return( profile );
@@ -470,18 +470,18 @@ nact_action_profile_new( const NactObject *action, const gchar *name )
  *
  * @profile: the profile to be duplicated.
  *
- * Returns the newly allocated NactActionProfile object.
+ * Returns the newly allocated NAActionProfile object.
  *
  * Note the duplicated profile has the same internal name (identifier)
  * as the initial one, and thus cannot be attached to the same action.
  */
-NactActionProfile *
-nact_action_profile_copy( const NactActionProfile *profile )
+NAActionProfile *
+na_action_profile_copy( const NAActionProfile *profile )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
-	NactActionProfile *new =
-		nact_action_profile_new( profile->private->action, profile->private->name );
+	NAActionProfile *new =
+		na_action_profile_new( profile->private->action, profile->private->name );
 
 	g_object_set( G_OBJECT( new ),
 			PROP_LABEL_STR, profile->private->label,
@@ -502,22 +502,22 @@ nact_action_profile_copy( const NactActionProfile *profile )
 /**
  * Frees a profile.
  *
- * @profile: the NactActionProfile object to be freed.
+ * @profile: the NAActionProfile object to be freed.
  */
 void
-nact_action_profile_free( NactActionProfile *profile )
+na_action_profile_free( NAActionProfile *profile )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
 	g_object_unref( profile );
 }
 
 static void
-do_dump( const NactObject *object )
+do_dump( const NAObject *object )
 {
-	static const gchar *thisfn = "nact_action_profile_do_dump";
+	static const gchar *thisfn = "na_action_profile_do_dump";
 
-	g_assert( NACT_IS_ACTION_PROFILE( object ));
-	NactActionProfile *self = NACT_ACTION_PROFILE( object );
+	g_assert( NA_IS_ACTION_PROFILE( object ));
+	NAActionProfile *self = NA_ACTION_PROFILE( object );
 
 	if( st_parent_class->dump ){
 		st_parent_class->dump( object );
@@ -554,9 +554,9 @@ do_dump_list( const gchar *thisfn, const gchar *label, GSList *list )
 }
 
 static gchar *
-do_get_id( const NactObject *profile )
+do_get_id( const NAObject *profile )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
 	gchar *name;
 	g_object_get( G_OBJECT( profile ), PROP_PROFILE_NAME_STR, &name, NULL );
@@ -567,21 +567,21 @@ do_get_id( const NactObject *profile )
 /**
  * Returns the internal name (identifier) of the profile.
  *
- * @action: an NactActionProfile object.
+ * @action: an NAActionProfile object.
  *
  * The returned string must be g_freed by the caller.
  */
 gchar *
-nact_action_profile_get_name( const NactActionProfile *profile )
+na_action_profile_get_name( const NAActionProfile *profile )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
-	return( nact_object_get_id( NACT_OBJECT( profile )));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
+	return( na_object_get_id( NA_OBJECT( profile )));
 }
 
 static gchar *
-do_get_label( const NactObject *profile )
+do_get_label( const NAObject *profile )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
 	gchar *label;
 	g_object_get( G_OBJECT( profile ), PROP_LABEL_STR, &label, NULL );
@@ -592,49 +592,49 @@ do_get_label( const NactObject *profile )
 /**
  * Returns the descriptive name (label) of the profile.
  *
- * @action: an NactAction object.
+ * @action: an NAAction object.
  *
  * The returned string must be g_freed by the caller.
  */
 gchar *
-nact_action_profile_get_label( const NactActionProfile *profile )
+na_action_profile_get_label( const NAActionProfile *profile )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
-	return( nact_object_get_label( NACT_OBJECT( profile )));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
+	return( na_object_get_label( NA_OBJECT( profile )));
 }
 
 /**
  * Returns a pointer to the action for this profile.
  *
- * @profile: the NactActionProfile object whose parent action is to be
+ * @profile: the NAActionProfile object whose parent action is to be
  * retrieved.
  *
  * Note that the returned NactNaction is owned by the profile. The
  * caller should not try to free or unref it.
  */
-NactObject *
-nact_action_profile_get_action( const NactActionProfile *profile )
+NAObject *
+na_action_profile_get_action( const NAActionProfile *profile )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
 	gpointer action;
 	g_object_get( G_OBJECT( profile ), PROP_ACTION_STR, &action, NULL );
 
-	return( NACT_OBJECT( action ));
+	return( NA_OBJECT( action ));
 }
 
 /**
  * Returns the path of the command in the profile.
  *
- * @profile: the NactActionProfile object whose command path is to be
+ * @profile: the NAActionProfile object whose command path is to be
  * retrieved.
  *
  * The returned string should be g_freed by the caller.
  */
 gchar *
-nact_action_profile_get_path( const NactActionProfile *profile )
+na_action_profile_get_path( const NAActionProfile *profile )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
 	gchar *path;
 	g_object_get( G_OBJECT( profile ), PROP_PATH_STR, &path, NULL );
@@ -645,15 +645,15 @@ nact_action_profile_get_path( const NactActionProfile *profile )
 /**
  * Returns the parameters of the command in the profile.
  *
- * @profile: the NactActionProfile object whose command parameters are
+ * @profile: the NAActionProfile object whose command parameters are
  * to be retrieved.
  *
  * The returned string should be g_freed by the caller.
  */
 gchar *
-nact_action_profile_get_parameters( const NactActionProfile *profile )
+na_action_profile_get_parameters( const NAActionProfile *profile )
 {
-	g_assert( NACT_IS_ACTION_PROFILE( profile ));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
 	gchar *parameters;
 	g_object_get( G_OBJECT( profile ), PROP_PARAMETERS_STR, &parameters, NULL );
@@ -696,7 +696,7 @@ validate_schemes( GSList* schemes2test, NautilusFileInfo* file )
  * @files: the list currently selected items, as provided by Nautilus.
  */
 gboolean
-nact_action_profile_is_candidate( const NactActionProfile *profile, GList* files )
+na_action_profile_is_candidate( const NAActionProfile *profile, GList* files )
 {
 	gboolean retv = FALSE;
 	gboolean test_multiple_file = FALSE;
@@ -933,7 +933,7 @@ nact_action_profile_is_candidate( const NactActionProfile *profile, GList* files
  * %% : a percent sign
  */
 gchar *
-nact_action_profile_parse_parameters( const NactActionProfile *profile, GList* files )
+na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files )
 {
 	gchar *parsed = NULL;
 	GString *string;
@@ -950,7 +950,7 @@ nact_action_profile_parse_parameters( const NactActionProfile *profile, GList* f
 	GString *basename_list, *pathname_list;
 	gchar *tmp;
 
-	g_return_val_if_fail( NACT_IS_ACTION_PROFILE( profile ), NULL );
+	g_return_val_if_fail( NA_IS_ACTION_PROFILE( profile ), NULL );
 
 	string = g_string_new( "" );
 	basename_list = g_string_new( "" );

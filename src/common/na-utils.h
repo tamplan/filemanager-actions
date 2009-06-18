@@ -28,46 +28,21 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_GCONF_H__
-#define __NACT_GCONF_H__
+#ifndef __NA_UTILS_H__
+#define __NA_UTILS_H__
 
-/*
- * NactGConf class definition.
- *
- * Implements the NactIIOProvider (I/O storage subsystem) interface.
- */
-
-#include <glib-object.h>
+#include <glib.h>
 
 G_BEGIN_DECLS
 
-#define NACT_GCONF_TYPE					( nact_gconf_get_type())
-#define NACT_GCONF( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_GCONF_TYPE, NactGConf ))
-#define NACT_GCONF_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_GCONF_TYPE, NactGConfClass ))
-#define NACT_IS_GCONF( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_GCONF_TYPE ))
-#define NACT_IS_GCONF_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_GCONF_TYPE ))
-#define NACT_GCONF_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_GCONF_TYPE, NactGConfClass ))
+/*
+ * Some functions to ease the GSList list manipulations.
+ */
 
-typedef struct NactGConfPrivate NactGConfPrivate;
+GSList  *na_utils_duplicate_string_list( GSList *list );
 
-typedef struct {
-	GObject           parent;
-	NactGConfPrivate *private;
-}
-	NactGConf;
-
-typedef struct NactGConfClassPrivate NactGConfClassPrivate;
-
-typedef struct {
-	GObjectClass           parent;
-	NactGConfClassPrivate *private;
-}
-	NactGConfClass;
-
-GType      nact_gconf_get_type( void );
-
-NactGConf *nact_gconf_new( const GObject *notified );
+void     na_utils_free_string_list( GSList *list );
 
 G_END_DECLS
 
-#endif /* __NACT_GCONF_H__ */
+#endif /* __NA_UTILS_H__ */

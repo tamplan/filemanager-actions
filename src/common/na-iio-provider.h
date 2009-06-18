@@ -28,11 +28,11 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_IIO_PROVIDER_H__
-#define __NACT_IIO_PROVIDER_H__
+#ifndef __NA_IIO_PROVIDER_H__
+#define __NA_IIO_PROVIDER_H__
 
 /*
- * NactIIOProvider interface definition.
+ * NAIIOProvider interface definition.
  *
  * This is the API all storage subsystems should implement in order to
  * provide i/o resources to NautilusActions.
@@ -46,30 +46,30 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IIO_PROVIDER_TYPE						( nact_iio_provider_get_type())
-#define NACT_IIO_PROVIDER( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IIO_PROVIDER_TYPE, NactIIOProvider ))
-#define NACT_IS_IIO_PROVIDER( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IIO_PROVIDER_TYPE ))
-#define NACT_IIO_PROVIDER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IIO_PROVIDER_TYPE, NactIIOProviderInterface ))
+#define NA_IIO_PROVIDER_TYPE						( na_iio_provider_get_type())
+#define NA_IIO_PROVIDER( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IIO_PROVIDER_TYPE, NAIIOProvider ))
+#define NA_IS_IIO_PROVIDER( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IIO_PROVIDER_TYPE ))
+#define NA_IIO_PROVIDER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIO_PROVIDER_TYPE, NAIIOProviderInterface ))
 
-typedef struct NactIIOProvider NactIIOProvider;
+typedef struct NAIIOProvider NAIIOProvider;
 
-typedef struct NactIIOProviderInterfacePrivate NactIIOProviderInterfacePrivate;
+typedef struct NAIIOProviderInterfacePrivate NAIIOProviderInterfacePrivate;
 
 typedef struct {
-	GTypeInterface                   parent;
-	NactIIOProviderInterfacePrivate *private;
+	GTypeInterface                 parent;
+	NAIIOProviderInterfacePrivate *private;
 
 	/* i/o api */
-	GSList * ( *load_actions )( NactIIOProvider *instance );
-	gboolean ( *write_action )( NactIIOProvider *instance, const GObject *action, gchar **message );
+	GSList * ( *load_actions )( NAIIOProvider *instance );
+	gboolean ( *write_action )( NAIIOProvider *instance, const GObject *action, gchar **message );
 }
-	NactIIOProviderInterface;
+	NAIIOProviderInterface;
 
-GType    nact_iio_provider_get_type( void );
+GType    na_iio_provider_get_type( void );
 
-GSList  *nact_iio_provider_load_actions( const GObject *pivot );
-gboolean nact_iio_provider_write_action( const GObject *pivot, const GObject *action, gchar **message );
+GSList  *na_iio_provider_load_actions( const GObject *pivot );
+gboolean na_iio_provider_write_action( const GObject *pivot, const GObject *action, gchar **message );
 
 G_END_DECLS
 
-#endif /* __NACT_IIO_PROVIDER_H__ */
+#endif /* __NA_IIO_PROVIDER_H__ */

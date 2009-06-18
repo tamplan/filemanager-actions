@@ -42,9 +42,9 @@
 #include <gtk/gtktreeview.h>
 #include <glade/glade-xml.h>
 
-#include <common/nact-action.h>
-#include <common/nact-action-profile.h>
-#include <common/nact-pivot.h>
+#include <common/na-action.h>
+#include <common/na-action-profile.h>
+#include <common/na-pivot.h>
 #include <common/nautilus-actions-config.h>
 #include <common/nautilus-actions-config-gconf-writer.h>
 
@@ -66,7 +66,7 @@ void     im_export_button_clicked_cb (GtkButton *button, gpointer user_data);
 gboolean on_ActionsList_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
 
 static NactApplication *st_application = NULL;
-static NactPivot       *st_pivot = NULL;
+static NAPivot         *st_pivot = NULL;
 
 static void  list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data);
 static void  fill_actions_list( GtkWidget *list );
@@ -91,21 +91,21 @@ fill_actions_list (GtkWidget *list)
 
 	gtk_list_store_clear (model);
 
-	actions = nact_pivot_get_label_sorted_actions( st_pivot );
+	actions = na_pivot_get_label_sorted_actions( st_pivot );
 
 	for( l = actions ; l != NULL ; l = l->next ){
 		GtkTreeIter iter;
 		GtkStockItem item;
 		GdkPixbuf* icon = NULL;
 
-		NactAction *action = NACT_ACTION( l->data );
-		gchar *uuid = nact_action_get_uuid( action );
-		gchar *label = nact_action_get_label( action );
-		gchar *iconname = nact_action_get_icon( action );
+		NAAction *action = NA_ACTION( l->data );
+		gchar *uuid = na_action_get_uuid( action );
+		gchar *label = na_action_get_label( action );
+		gchar *iconname = na_action_get_icon( action );
 
 		/* TODO: use the same algorythm than Nautilus to find and
-		 * display an icon + move the code to NactAction class +
-		 * remove nact_action_get_verified_icon_name
+		 * display an icon + move the code to NAAction class +
+		 * remove na_action_get_verified_icon_name
 		 */
 		if( icon ){
 			if( gtk_stock_lookup( iconname, &item )){
@@ -180,14 +180,14 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gchar *uuid;
-		NactAction *action;
+		NAAction *action;
 
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
-		action = NACT_ACTION( nact_pivot_get_action( st_pivot, uuid ));
+		action = NA_ACTION( na_pivot_get_action( st_pivot, uuid ));
 
 		if( action ){
-			guint count = nact_action_get_profiles_count( action );
+			guint count = na_action_get_profiles_count( action );
 			if( count > 1 ){
 				if (nact_editor_edit_action (( NautilusActionsConfigAction *) action))
 					fill_actions_list (nact_actions_list);
@@ -218,21 +218,21 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 	if (gtk_tree_selection_get_selected (selection, &model, &iter))
 	{
 		gchar *uuid;
-		NactAction *action;
-		NactAction* new_action;
+		NAAction *action;
+		NAAction* new_action;
 
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
-		action = NACT_ACTION( nact_pivot_get_action( st_pivot, uuid ));
-		new_action = nact_action_duplicate( action );
-		nact_action_set_new_uuid( new_action );
+		action = NA_ACTION( na_pivot_get_action( st_pivot, uuid ));
+		new_action = na_action_duplicate( action );
+		na_action_set_new_uuid( new_action );
 
 		/*if( nautilus_actions_config_add_action( NAUTILUS_ACTIONS_CONFIG (config), new_action, &error )){*/
-		if( nact_pivot_add_action( st_pivot, G_OBJECT( new_action ), &error )){
+		if( na_pivot_write_action( st_pivot, G_OBJECT( new_action ), &error )){
 			fill_actions_list (nact_actions_list);
 		} else {
 			/* i18n notes: will be displayed in a dialog */
-			label = nact_action_get_label( action );
+			label = na_action_get_label( action );
 			tmp = g_strdup_printf (_("Can't duplicate action '%s'!"), label);
 			nautilus_actions_display_error( tmp, error );
 			g_free( error );
@@ -378,7 +378,7 @@ nact_init_dialog( GObject *application )
 	st_application = NACT_APPLICATION( application );
 
 	g_object_get( G_OBJECT( st_application ), "pivot", &st_pivot, NULL );
-	g_assert( NACT_IS_PIVOT( st_pivot ));
+	g_assert( NA_IS_PIVOT( st_pivot ));
 
 	/*config = nautilus_actions_config_gconf_writer_get ();*/
 

@@ -28,40 +28,10 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-#include <glib-object.h>
-#include "nact-uti-lists.h"
+#ifndef __NA_GCONF_KEYS_H__
+#define __NA_GCONF_KEYS_H__
 
-/**
- * Duplicates a GSList of strings.
- *
- * @list: the GSList to be duplicated.
- */
-GSList *
-nactuti_duplicate_string_list( GSList *list )
-{
-	GSList *duplist = NULL;
-	GSList *it;
-	for( it = list ; it != NULL ; it = it->next ){
-		gchar *dupstr = g_strdup(( gchar * ) it->data );
-		duplist = g_slist_prepend( duplist, dupstr );
-	}
-	return( duplist );
-}
+/* GConf general information */
+#define NA_GCONF_CONFIG_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
 
-/**
- * Frees a GSList of strings.
- *
- * @list: the GSList to be freed.
- */
-void
-nactuti_free_string_list( GSList *list )
-{
-	GSList *item;
-	for( item = list ; item != NULL ; item = item->next ){
-		g_free(( gchar * ) item->data );
-	}
-	g_slist_free( list );
-}
+#endif /* __NA_GCONF_KEYS_H__ */

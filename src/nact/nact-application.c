@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include <common/nact-pivot.h>
+#include <common/na-pivot.h>
 #include "nact.h"
 #include "nact-application.h"
 
@@ -47,8 +47,8 @@ struct NactApplicationClassPrivate {
 /* private instance data
  */
 struct NactApplicationPrivate {
-	gboolean   dispose_has_run;
-	NactPivot *pivot;
+	gboolean dispose_has_run;
+	NAPivot *pivot;
 };
 
 /* private instance properties
@@ -125,7 +125,7 @@ class_init( NactApplicationClass *klass )
 	spec = g_param_spec_pointer(
 			PROP_PIVOT_STR,
 			PROP_PIVOT_STR,
-			"NactPivot object pointer",
+			"NAPivot object pointer",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_PIVOT, spec );
 
@@ -281,7 +281,7 @@ run_appli( NactApplication *application )
 {
 	int code = 0;
 
-	g_object_set( G_OBJECT( application ), PROP_PIVOT_STR, nact_pivot_new( NULL ), NULL );
+	g_object_set( G_OBJECT( application ), PROP_PIVOT_STR, na_pivot_new( NULL ), NULL );
 
 	g_object_set( G_OBJECT( application ), PROP_MAINWINDOW_STR, nact_init_dialog( G_OBJECT( application ), NULL );
 

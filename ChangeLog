@@ -1,3 +1,23 @@
+2009-06-19 Pierre Wieser <pwieser@trychlos.org>
+
+	Getting NA (Nautilus Actions) as common objects prefix.
+
+	* src/common/na-action.c:
+	* src/common/na-action.h:
+	* src/common/na-action-profile.c:
+	* src/common/na-action-profile.h:
+	* src/common/na-gconf.c:
+	* src/common/na-gconf.h:
+	* src/common/na-gconf-keys.h:
+	* src/common/na-iio-provider.c:
+	* src/common/na-iio-provider.h:
+	* src/common/na-object.c:
+	* src/common/na-object.h:
+	* src/common/na-pivot.c:
+	* src/common/na-pivot.h:
+	* src/common/na-utils.c:
+	* src/common/na-utils.h: Renamed and updated accordingly.
+
 2009-06-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Begin with porting NACT to new object hierarchy.

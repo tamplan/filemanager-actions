@@ -38,9 +38,10 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
-#include <common/nact-action.h>
-#include <common/nact-action-profile.h>
-#include <common/nact-pivot.h>
+#include <common/na-action.h>
+#include <common/na-action-profile.h>
+#include <common/na-pivot.h>
+
 #include "nautilus-actions.h"
 
 /* private class data
@@ -51,10 +52,10 @@ struct NautilusActionsClassPrivate {
 /* private instance data
  */
 struct NautilusActionsPrivate {
-	gboolean   dispose_has_run;
+	gboolean dispose_has_run;
 
-	/* from nact-pivot */
-	NactPivot *pivot;
+	/* from na-pivot */
+	NAPivot *pivot;
 };
 
 /* We have a double stage notification system :
@@ -68,8 +69,8 @@ struct NautilusActionsPrivate {
  *    NautilusActions class
  *
  * This same signal is then first emitted by the IIOProvider to the
- * NactPivot object which handles it. When all modifications have been
- * treated, NactPivot notifies NautilusActions which itself asks
+ * NAPivot object which handles it. When all modifications have been
+ * treated, NAPivot notifies NautilusActions which itself asks
  * Nautilus for updating its menu
  */
 enum {
@@ -91,8 +92,8 @@ static void              instance_finalize( GObject *object );
 
 static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
-static NautilusMenuItem *create_menu_item( NactAction *action, NactActionProfile *profile, GList *files );
-static void              execute_action( NautilusMenuItem *item, NactActionProfile *profile );
+static NautilusMenuItem *create_menu_item( NAAction *action, NAActionProfile *profile, GList *files );
+static void              execute_action( NautilusMenuItem *item, NAActionProfile *profile );
 static void              action_changed_handler( NautilusActions *instance, gpointer user_data );
 
 GType
@@ -190,8 +191,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
 
-	/* from nact-pivot */
-	self->private->pivot = nact_pivot_new( G_OBJECT( self ));
+	/* from na-pivot */
+	self->private->pivot = na_pivot_new( G_OBJECT( self ));
 
 	/* see nautilus_actions_class_init for why we had to connect an
 	 * handler to our signal instead of relying on default handler
@@ -297,31 +298,31 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	}
 
 	if( !self->private->dispose_has_run ){
-		actions = nact_pivot_get_actions( self->private->pivot );
+		actions = na_pivot_get_actions( self->private->pivot );
 
 		for( ia = actions ; ia ; ia = ia->next ){
 
-			NactAction *action = NACT_ACTION( ia->data );
+			NAAction *action = NA_ACTION( ia->data );
 
 #ifdef NACT_MAINTAINER_MODE
-			debug_label = nact_action_get_label( action );
+			debug_label = na_action_get_label( action );
 			g_debug( "%s: examining '%s' action", thisfn, debug_label );
 			g_free( debug_label );
 #endif
 
-			profiles = nact_action_get_profiles( action );
+			profiles = na_action_get_profiles( action );
 
 			for( ip = profiles ; ip ; ip = ip->next ){
 
-				NactActionProfile *profile = NACT_ACTION_PROFILE( ip->data );
+				NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
 
 #ifdef NACT_MAINTAINER_MODE
-				debug_label = nact_action_profile_get_label( profile );
+				debug_label = na_action_profile_get_label( profile );
 				g_debug( "%s: examining '%s' profile", thisfn, debug_label );
 				g_free( debug_label );
 #endif
 
-				if( nact_action_profile_is_candidate( profile, files )){
+				if( na_action_profile_is_candidate( profile, files )){
 					item = create_menu_item( action, profile, files );
 					items = g_list_append( items, item );
 					break;
@@ -334,20 +335,20 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 }
 
 static NautilusMenuItem *
-create_menu_item( NactAction *action, NactActionProfile *profile, GList *files )
+create_menu_item( NAAction *action, NAActionProfile *profile, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_create_menu_item";
 	g_debug( "%s", thisfn );
 
 	NautilusMenuItem *item;
 
-	gchar *uuid = nact_action_get_uuid( action );
+	gchar *uuid = na_action_get_uuid( action );
 	gchar *name = g_strdup_printf( "NautilusActions::%s", uuid );
-	gchar *label = nact_action_get_label( action );
-	gchar *tooltip = nact_action_get_tooltip( action );
-	gchar* icon_name = nact_action_get_verified_icon_name( action );
+	gchar *label = na_action_get_label( action );
+	gchar *tooltip = na_action_get_tooltip( action );
+	gchar* icon_name = na_action_get_verified_icon_name( action );
 
-	NactActionProfile *dup4menu = nact_action_profile_copy( profile );
+	NAActionProfile *dup4menu = na_action_profile_copy( profile );
 
 	item = nautilus_menu_item_new( name, label, tooltip, icon_name );
 
@@ -355,7 +356,7 @@ create_menu_item( NactAction *action, NactActionProfile *profile, GList *files )
 				"activate",
 				G_CALLBACK( execute_action ),
 				dup4menu,
-				( GClosureNotify ) nact_action_profile_free,
+				( GClosureNotify ) na_action_profile_free,
 				0
 	);
 
@@ -375,7 +376,7 @@ create_menu_item( NactAction *action, NactActionProfile *profile, GList *files )
 }
 
 static void
-execute_action( NautilusMenuItem *item, NactActionProfile *profile )
+execute_action( NautilusMenuItem *item, NAActionProfile *profile )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action";
 	g_debug( "%s: item=%p, profile=%p", thisfn, item, profile );
@@ -386,10 +387,10 @@ execute_action( NautilusMenuItem *item, NactActionProfile *profile )
 
 	files = ( GList* ) g_object_get_data( G_OBJECT( item ), "files" );
 
-	path = nact_action_profile_get_path( profile );
+	path = na_action_profile_get_path( profile );
 	cmd = g_string_new( path );
 
-	param = nact_action_profile_parse_parameters( profile, files );
+	param = na_action_profile_parse_parameters( profile, files );
 
 	if( param != NULL ){
 		g_string_append_printf( cmd, " %s", param );

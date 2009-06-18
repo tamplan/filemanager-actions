@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_PIVOT_H__
-#define __NACT_PIVOT_H__
+#ifndef __NA_PIVOT_H__
+#define __NA_PIVOT_H__
 
 /*
- * NactPivot class definition.
+ * NAPivot class definition.
  *
- * A consuming program should allocate one new NactPivot object in its
+ * A consuming program should allocate one new NAPivot object in its
  * startup phase. The class takes care of declaring the I/O interface,
  * while registering the known providers. The object will then load
  * itself the existing list of actions.
@@ -44,48 +44,48 @@
 
 G_BEGIN_DECLS
 
-#define NACT_PIVOT_TYPE					( nact_pivot_get_type())
-#define NACT_PIVOT( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_PIVOT_TYPE, NactPivot ))
-#define NACT_PIVOT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_PIVOT_TYPE, NactPivotClass ))
-#define NACT_IS_PIVOT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_PIVOT_TYPE ))
-#define NACT_IS_PIVOT_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_PIVOT_TYPE ))
-#define NACT_PIVOT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_PIVOT_TYPE, NactPivotClass ))
+#define NA_PIVOT_TYPE					( na_pivot_get_type())
+#define NA_PIVOT( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_PIVOT_TYPE, NAPivot ))
+#define NA_PIVOT_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NA_PIVOT_TYPE, NAPivotClass ))
+#define NA_IS_PIVOT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_PIVOT_TYPE ))
+#define NA_IS_PIVOT_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_PIVOT_TYPE ))
+#define NA_PIVOT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_PIVOT_TYPE, NAPivotClass ))
 
-typedef struct NactPivotPrivate NactPivotPrivate;
-
-typedef struct {
-	GObject           parent;
-	NactPivotPrivate *private;
-}
-	NactPivot;
-
-typedef struct NactPivotClassPrivate NactPivotClassPrivate;
+typedef struct NAPivotPrivate NAPivotPrivate;
 
 typedef struct {
-	GObjectClass           parent;
-	NactPivotClassPrivate *private;
+	GObject         parent;
+	NAPivotPrivate *private;
 }
-	NactPivotClass;
+	NAPivot;
 
-GType      nact_pivot_get_type( void );
+typedef struct NAPivotClassPrivate NAPivotClassPrivate;
 
-NactPivot *nact_pivot_new( const GObject *notified );
+typedef struct {
+	GObjectClass         parent;
+	NAPivotClassPrivate *private;
+}
+	NAPivotClass;
 
-GSList    *nact_pivot_get_providers( const NactPivot *pivot, GType type );
+GType    na_pivot_get_type( void );
 
-GSList    *nact_pivot_get_label_sorted_actions( const NactPivot *pivot );
-GSList    *nact_pivot_get_actions( const NactPivot *pivot );
+NAPivot *na_pivot_new( const GObject *notified );
 
-GObject   *nact_pivot_get_action( NactPivot *pivot, const gchar *uuid );
+GSList  *na_pivot_get_providers( const NAPivot *pivot, GType type );
 
-gboolean   nact_pivot_add_action( NactPivot *pivot, const GObject *action, gchar **message );
+GSList  *na_pivot_get_label_sorted_actions( const NAPivot *pivot );
+GSList  *na_pivot_get_actions( const NAPivot *pivot );
+
+GObject *na_pivot_get_action( NAPivot *pivot, const gchar *uuid );
+
+gboolean na_pivot_write_action( NAPivot *pivot, const GObject *action, gchar **message );
 
 /* data passed from the storage subsystem when an action is changed
  */
 enum {
-	NACT_PIVOT_STR = 1,
-	NACT_PIVOT_BOOL,
-	NACT_PIVOT_STRLIST
+	NA_PIVOT_STR = 1,
+	NA_PIVOT_BOOL,
+	NA_PIVOT_STRLIST
 };
 
 typedef struct {
@@ -95,10 +95,10 @@ typedef struct {
 	guint    type;
 	gpointer data;
 }
-	NactPivotNotify;
+	NAPivotNotify;
 
-void       nact_pivot_free_notify( NactPivotNotify *data );
+void       na_pivot_free_notify( NAPivotNotify *data );
 
 G_END_DECLS
 
-#endif /* __NACT_PIVOT_H__ */
+#endif /* __NA_PIVOT_H__ */

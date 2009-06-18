@@ -35,21 +35,21 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libnact_la_SOURCES = \
-	nact-action.c								\
-	nact-action.h								\
-	nact-action-profile.c						\
-	nact-action-profile.h						\
-	nact-gconf.c								\
-	nact-gconf.h								\
-	nact-gconf-keys.h							\
-	nact-iio-provider.c							\
-	nact-iio-provider.h							\
-	nact-object.c								\
-	nact-object.h								\
-	nact-pivot.c								\
-	nact-pivot.h								\
-	nact-uti-lists.c							\
-	nact-uti-lists.h							\
+	na-action.c									\
+	na-action.h									\
+	na-action-profile.c							\
+	na-action-profile.h							\
+	na-gconf.c									\
+	na-gconf.h									\
+	na-gconf-keys.h								\
+	na-iio-provider.c							\
+	na-iio-provider.h							\
+	na-object.c									\
+	na-object.h									\
+	na-pivot.c									\
+	na-pivot.h									\
+	na-utils.c									\
+	na-utils.h									\
 	nautilus-actions-config.c					\
 	nautilus-actions-config.h					\
 	nautilus-actions-config-gconf.c				\
