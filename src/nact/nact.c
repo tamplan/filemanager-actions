@@ -28,8 +28,12 @@
  *   ... and many others (see AUTHORS)
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
 #include <stdlib.h>
+
 #include <glib/gi18n.h>
 #include <gtk/gtkbutton.h>
 #include <gtk/gtkliststore.h>
@@ -37,14 +41,20 @@
 #include <gtk/gtkmessagedialog.h>
 #include <gtk/gtktreeview.h>
 #include <glade/glade-xml.h>
+
+#include <common/na-action.h>
+#include <common/na-action-profile.h>
+#include <common/na-pivot.h>
 #include <common/nautilus-actions-config.h>
 #include <common/nautilus-actions-config-gconf-writer.h>
-#include "nact-utils.h"
+
 #include "nact.h"
+#include "nact-application.h"
 #include "nact-editor.h"
 #include "nact-import-export.h"
 #include "nact-prefs.h"
 #include "nact-action-editor.h"
+#include "nact-utils.h"
 
 /* gui callback functions */
 void     dialog_response_cb (GtkDialog *dialog, gint response_id, gpointer user_data);
@@ -55,13 +65,12 @@ void     edit_button_clicked_cb (GtkButton *button, gpointer user_data);
 void     im_export_button_clicked_cb (GtkButton *button, gpointer user_data);
 gboolean on_ActionsList_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
 
-static gint  actions_list_sort_by_label (gconstpointer a1, gconstpointer a2);
-static guint get_profiles_count( const NautilusActionsConfigAction *action );
-static void  list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data);
-static void  fill_actions_list (GtkWidget *list);
-static void  setup_actions_list (GtkWidget *list);
+static NactApplication *st_application = NULL;
+static NAPivot         *st_pivot = NULL;
 
-static NautilusActionsConfigGconfWriter *config = NULL;
+static void  list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data);
+static void  fill_actions_list( GtkWidget *list );
+static void  setup_actions_list( GtkWidget *list );
 
 gboolean
 on_ActionsList_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data )
@@ -74,21 +83,6 @@ on_ActionsList_button_press_event( GtkWidget *widget, GdkEventButton *event, gpo
 	return( FALSE );
 }
 
-static guint
-get_profiles_count( const NautilusActionsConfigAction *action )
-{
-	return( nautilus_actions_config_action_get_profiles_count( action ));
-}
-
-static gint
-actions_list_sort_by_label (gconstpointer a1, gconstpointer a2)
-{
-	NautilusActionsConfigAction* action1 = (NautilusActionsConfigAction*)a1;
-	NautilusActionsConfigAction* action2 = (NautilusActionsConfigAction*)a2;
-
-	return g_utf8_collate (action1->label, action2->label);
-}
-
 static void
 fill_actions_list (GtkWidget *list)
 {
@@ -97,25 +91,34 @@ fill_actions_list (GtkWidget *list)
 
 	gtk_list_store_clear (model);
 
-	actions = nautilus_actions_config_get_actions (NAUTILUS_ACTIONS_CONFIG (config));
-	actions = g_slist_sort (actions, (GCompareFunc)actions_list_sort_by_label);
-	for (l = actions; l != NULL; l = l->next) {
+	actions = na_pivot_get_label_sorted_actions( st_pivot );
+
+	for( l = actions ; l != NULL ; l = l->next ){
 		GtkTreeIter iter;
 		GtkStockItem item;
 		GdkPixbuf* icon = NULL;
-		NautilusActionsConfigAction *action = l->data;
 
-		if (action->icon != NULL) {
-			if (gtk_stock_lookup (action->icon, &item)) {
-				icon = gtk_widget_render_icon (list, action->icon, GTK_ICON_SIZE_MENU, NULL);
-			} else if (g_file_test (action->icon, G_FILE_TEST_EXISTS)
-				   && g_file_test (action->icon, G_FILE_TEST_IS_REGULAR)) {
+		NAAction *action = NA_ACTION( l->data );
+		gchar *uuid = na_action_get_uuid( action );
+		gchar *label = na_action_get_label( action );
+		gchar *iconname = na_action_get_icon( action );
+
+		/* TODO: use the same algorythm than Nautilus to find and
+		 * display an icon + move the code to NAAction class +
+		 * remove na_action_get_verified_icon_name
+		 */
+		if( icon ){
+			if( gtk_stock_lookup( iconname, &item )){
+				icon = gtk_widget_render_icon( list, iconname, GTK_ICON_SIZE_MENU, NULL );
+
+			} else if( g_file_test( iconname, G_FILE_TEST_EXISTS )
+				   && g_file_test( iconname, G_FILE_TEST_IS_REGULAR )){
 				gint width;
 				gint height;
 				GError* error = NULL;
 
 				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
-				icon = gdk_pixbuf_new_from_file_at_size (action->icon, width, height, &error);
+				icon = gdk_pixbuf_new_from_file_at_size( iconname, width, height, &error );
 				if (error)
 				{
 					icon = NULL;
@@ -126,9 +129,13 @@ fill_actions_list (GtkWidget *list)
 		gtk_list_store_append (model, &iter);
 		gtk_list_store_set (model, &iter,
 				    MENU_ICON_COLUMN, icon,
-				    MENU_LABEL_COLUMN, action->label,
-				    UUID_COLUMN, action->uuid,
+				    MENU_LABEL_COLUMN, label,
+				    UUID_COLUMN, uuid,
 				    -1);
+
+		g_free( iconname );
+		g_free( label );
+		g_free( uuid );
 	}
 
 	nautilus_actions_config_free_actions_list (actions);
@@ -173,18 +180,19 @@ edit_button_clicked_cb (GtkButton *button, gpointer user_data)
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gchar *uuid;
-		NautilusActionsConfigAction *action;
+		NAAction *action;
 
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
-		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
+		action = NA_ACTION( na_pivot_get_action( st_pivot, uuid ));
+
 		if( action ){
-			guint count = get_profiles_count( action );
+			guint count = na_action_get_profiles_count( action );
 			if( count > 1 ){
-				if (nact_editor_edit_action (action))
+				if (nact_editor_edit_action (( NautilusActionsConfigAction *) action))
 					fill_actions_list (nact_actions_list);
 			} else {
-				if( nact_action_editor_edit( action ))
+				if( nact_action_editor_edit( ( NautilusActionsConfigAction *) action ))
 					fill_actions_list( nact_actions_list );
 			}
 		}
@@ -200,8 +208,8 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 	GtkTreeIter iter;
 	GtkWidget *nact_actions_list;
 	GtkTreeModel* model;
-	GError* error = NULL;
-	gchar* tmp;
+	gchar *error = NULL;
+	gchar *tmp, *label;
 
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
 
@@ -210,29 +218,29 @@ duplicate_button_clicked_cb (GtkButton *button, gpointer user_data)
 	if (gtk_tree_selection_get_selected (selection, &model, &iter))
 	{
 		gchar *uuid;
-		NautilusActionsConfigAction *action;
-		NautilusActionsConfigAction* new_action;
+		NAAction *action;
+		NAAction* new_action;
 
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
-		action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-		new_action = nautilus_actions_config_action_dup_new (action);
-		if (new_action)
-		{
-			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (config), new_action, &error))
-			{
-				fill_actions_list (nact_actions_list);
-			}
-			else
-			{
-				/* i18n notes: will be displayed in a dialog */
-				tmp = g_strdup_printf (_("Can't duplicate action '%s'!"), action->label);
-				nautilus_actions_display_error (tmp, error->message);
-				g_error_free (error);
-				g_free (tmp);
-			}
+		action = NA_ACTION( na_pivot_get_action( st_pivot, uuid ));
+		new_action = na_action_duplicate( action );
+		na_action_set_new_uuid( new_action );
+
+		/*if( nautilus_actions_config_add_action( NAUTILUS_ACTIONS_CONFIG (config), new_action, &error )){*/
+		if( na_pivot_write_action( st_pivot, G_OBJECT( new_action ), &error )){
+			fill_actions_list (nact_actions_list);
+		} else {
+			/* i18n notes: will be displayed in a dialog */
+			label = na_action_get_label( action );
+			tmp = g_strdup_printf (_("Can't duplicate action '%s'!"), label);
+			nautilus_actions_display_error( tmp, error );
+			g_free( error );
+			g_free( label );
+			g_free( tmp );
 		}
-		g_free (uuid);
+
+		g_free( uuid );
 	}
 }
 
@@ -252,7 +260,7 @@ delete_button_clicked_cb (GtkButton *button, gpointer user_data)
 		gchar *uuid;
 
 		gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
-		nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
+		/*nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);*/
 		fill_actions_list (nact_actions_list);
 
 		g_free (uuid);
@@ -358,7 +366,7 @@ setup_actions_list (GtkWidget *list)
 }
 
 GtkWindow *
-nact_init_dialog (void)
+nact_init_dialog( GObject *application )
 {
 	gint width, height, x, y;
 	GtkWidget *nact_dialog;
@@ -366,7 +374,13 @@ nact_init_dialog (void)
 	/*GtkWidget* nact_edit_button;*/
 	GtkWidget* nact_about_button;
 
-	config = nautilus_actions_config_gconf_writer_get ();
+	g_assert( NACT_IS_APPLICATION( application ));
+	st_application = NACT_APPLICATION( application );
+
+	g_object_get( G_OBJECT( st_application ), "pivot", &st_pivot, NULL );
+	g_assert( NA_IS_PIVOT( st_pivot ));
+
+	/*config = nautilus_actions_config_gconf_writer_get ();*/
 
 	GladeXML *gui = nact_get_glade_xml_object (GLADE_MAIN_WIDGET);
 	if (!gui) {
@@ -379,7 +393,7 @@ nact_init_dialog (void)
 	nact_dialog = nact_get_glade_widget ("ActionsDialog");
 
 	nact_actions_list = nact_get_glade_widget ("ActionsList");
-	setup_actions_list (nact_actions_list);
+	setup_actions_list( nact_actions_list );
 
 	/* Get the default dialog size */
 	gtk_window_get_default_size (GTK_WINDOW (nact_dialog), &width, &height);

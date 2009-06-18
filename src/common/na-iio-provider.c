@@ -32,23 +32,27 @@
 #include <config.h>
 #endif
 
-#include "nact-iio-provider.h"
-#include "nact-pivot.h"
+#include <glib.h>
+
+#include "na-action.h"
+#include "na-action-profile.h"
+#include "na-iio-provider.h"
+#include "na-pivot.h"
 
 /* private interface data
  */
-struct NactIIOProviderInterfacePrivate {
+struct NAIIOProviderInterfacePrivate {
 };
 
 static GType register_type( void );
-static void  interface_base_init( NactIIOProviderInterface *klass );
-static void  interface_base_finalize( NactIIOProviderInterface *klass );
+static void  interface_base_init( NAIIOProviderInterface *klass );
+static void  interface_base_finalize( NAIIOProviderInterface *klass );
 
 /**
  * Registers the GType of this interface.
  */
 GType
-nact_iio_provider_get_type( void )
+na_iio_provider_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -62,11 +66,11 @@ nact_iio_provider_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_iio_provider_register_type";
+	static const gchar *thisfn = "na_iio_provider_register_type";
 	g_debug( "%s", thisfn );
 
 	static const GTypeInfo info = {
-		sizeof( NactIIOProviderInterface ),
+		sizeof( NAIIOProviderInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -77,7 +81,7 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIIOProvider", &info, 0 );
+	GType type = g_type_register_static( G_TYPE_INTERFACE, "NAIIOProvider", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -85,15 +89,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIIOProviderInterface *klass )
+interface_base_init( NAIIOProviderInterface *klass )
 {
-	static const gchar *thisfn = "nact_iio_provider_interface_base_init";
+	static const gchar *thisfn = "na_iio_provider_interface_base_init";
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
 		g_debug( "%s: klass=%p", thisfn, klass );
 
-		klass->private = g_new0( NactIIOProviderInterfacePrivate, 1 );
+		klass->private = g_new0( NAIIOProviderInterfacePrivate, 1 );
 
 		klass->load_actions = NULL;
 
@@ -102,9 +106,9 @@ interface_base_init( NactIIOProviderInterface *klass )
 }
 
 static void
-interface_base_finalize( NactIIOProviderInterface *klass )
+interface_base_finalize( NAIIOProviderInterface *klass )
 {
-	static const gchar *thisfn = "nact_iio_provider_interface_base_finalize";
+	static const gchar *thisfn = "na_iio_provider_interface_base_finalize";
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
@@ -122,33 +126,76 @@ interface_base_finalize( NactIIOProviderInterface *klass )
  * @object: the pivot object which owns the list of registered
  * interface providers.
  *
- * Returns a GSList of newly allocated NactAction objects.
+ * Returns a GSList of newly allocated NAAction objects.
  */
 GSList *
-nact_iio_provider_load_actions( const GObject *object )
+na_iio_provider_load_actions( const GObject *object )
 {
-	static const gchar *thisfn = "nact_iio_provider_load_actions";
+	static const gchar *thisfn = "na_iio_provider_load_actions";
 	g_debug( "%s", thisfn );
 
-	g_assert( NACT_IS_PIVOT( object ));
-	NactPivot *pivot = NACT_PIVOT( object );
+	g_assert( NA_IS_PIVOT( object ));
+	NAPivot *pivot = NA_PIVOT( object );
 
 	GSList *actions = NULL;
 	GSList *ip;
 	GSList *list;
-	NactIIOProvider *instance;
+	NAIIOProvider *instance;
 
-	GSList *providers = nact_pivot_get_providers( pivot, NACT_IIO_PROVIDER_TYPE );
+	GSList *providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
 
 	for( ip = providers ; ip ; ip = ip->next ){
 
-		instance = NACT_IIO_PROVIDER( ip->data );
+		instance = NA_IIO_PROVIDER( ip->data );
 
-		if( NACT_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions ){
-			list = NACT_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions( instance );
+		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions ){
+			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions( instance );
 			actions = g_slist_concat( actions, list );
 		}
 	}
 
 	return( actions );
+}
+
+/**
+ * Writes an action to a willing-to storage subsystem.
+ *
+ * @obj_pivot: the pivot object which owns the list of registered
+ * interface providers.
+ *
+ * @obj_action: the action to be written.
+ *
+ * @message: the I/O provider can allocate and store here an error
+ * message.
+ *
+ * Returns TRUE if the write is successfull, FALSE else.
+ */
+gboolean
+na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_action, gchar **message )
+{
+	static const gchar *thisfn = "na_iio_provider_write_action";
+	g_debug( "%s", thisfn );
+
+	g_assert( NA_IS_PIVOT( obj_pivot ));
+	NAPivot *pivot = NA_PIVOT( obj_pivot );
+
+	g_assert( NA_IS_ACTION( obj_action ));
+
+	gboolean ret = TRUE;
+	GSList *ip;
+	NAIIOProvider *instance;
+
+	GSList *providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+
+	for( ip = providers ; ip ; ip = ip->next ){
+
+		instance = NA_IIO_PROVIDER( ip->data );
+
+		/*if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action ){
+			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions( instance );
+			actions = g_slist_concat( actions, list );
+		}*/
+	}
+
+	return( ret );
 }

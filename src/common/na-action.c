@@ -33,19 +33,20 @@
 #endif
 
 #include <string.h>
+#include <uuid/uuid.h>
 
-#include "nact-action.h"
-#include "nact-action-profile.h"
-#include "nact-uti-lists.h"
+#include "na-action.h"
+#include "na-action-profile.h"
+#include "na-utils.h"
 
 /* private class data
  */
-struct NactActionClassPrivate {
+struct NAActionClassPrivate {
 };
 
 /* private instance data
  */
-struct NactActionPrivate {
+struct NAActionPrivate {
 	gboolean  dispose_has_run;
 
 	/* action properties
@@ -56,7 +57,7 @@ struct NactActionPrivate {
 	gchar    *tooltip;
 	gchar    *icon;
 
-	/* list of action's profiles as NactActionProfile objects
+	/* list of action's profiles as NAActionProfile objects
 	 *  (thanks, Frederic ;-))
 	 */
 	GSList   *profiles;
@@ -80,24 +81,24 @@ enum {
 #define PROP_TOOLTIP_STR	"tooltip"
 #define PROP_ICON_STR		"icon"
 
-static NactObjectClass *st_parent_class = NULL;
+static NAObjectClass *st_parent_class = NULL;
 
 static GType  register_type( void );
-static void   class_init( NactActionClass *klass );
+static void   class_init( NAActionClass *klass );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void   instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
-static void   do_dump( const NactObject *action );
-static gchar *do_get_id( const NactObject *action );
-static gchar *do_get_label( const NactObject *action );
+static void   do_dump( const NAObject *action );
+static gchar *do_get_id( const NAObject *action );
+static gchar *do_get_label( const NAObject *action );
 
-static void   free_profiles( NactAction *action );
+static void   free_profiles( NAAction *action );
 
 GType
-nact_action_get_type( void )
+na_action_get_type( void )
 {
 	static GType action_type = 0;
 
@@ -112,24 +113,24 @@ static GType
 register_type( void )
 {
 	static GTypeInfo info = {
-		sizeof( NactActionClass ),
+		sizeof( NAActionClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactAction ),
+		sizeof( NAAction ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( NACT_OBJECT_TYPE, "NactAction", &info, 0 ));
+	return( g_type_register_static( NA_OBJECT_TYPE, "NAAction", &info, 0 ));
 }
 
 static void
-class_init( NactActionClass *klass )
+class_init( NAActionClass *klass )
 {
-	static const gchar *thisfn = "nact_action_class_init";
+	static const gchar *thisfn = "na_action_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
@@ -178,31 +179,31 @@ class_init( NactActionClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ICON, spec );
 
-	klass->private = g_new0( NactActionClassPrivate, 1 );
+	klass->private = g_new0( NAActionClassPrivate, 1 );
 
-	NACT_OBJECT_CLASS( klass )->dump = do_dump;
-	NACT_OBJECT_CLASS( klass )->get_id = do_get_id;
-	NACT_OBJECT_CLASS( klass )->get_label = do_get_label;
+	NA_OBJECT_CLASS( klass )->dump = do_dump;
+	NA_OBJECT_CLASS( klass )->get_id = do_get_id;
+	NA_OBJECT_CLASS( klass )->get_label = do_get_label;
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	/*static const gchar *thisfn = "nact_action_instance_init";
+	/*static const gchar *thisfn = "na_action_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
 
-	g_assert( NACT_IS_ACTION( instance ));
-	NactAction* self = NACT_ACTION( instance );
+	g_assert( NA_IS_ACTION( instance ));
+	NAAction* self = NA_ACTION( instance );
 
-	self->private = g_new0( NactActionPrivate, 1 );
+	self->private = g_new0( NAActionPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
 }
 
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	g_assert( NACT_IS_ACTION( object ));
-	NactAction *self = NACT_ACTION( object );
+	g_assert( NA_IS_ACTION( object ));
+	NAAction *self = NA_ACTION( object );
 
 	switch( property_id ){
 		case PROP_UUID:
@@ -234,8 +235,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	g_assert( NACT_IS_ACTION( object ));
-	NactAction *self = NACT_ACTION( object );
+	g_assert( NA_IS_ACTION( object ));
+	NAAction *self = NA_ACTION( object );
 
 	switch( property_id ){
 		case PROP_UUID:
@@ -272,11 +273,11 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nact_action_instance_dispose";
+	static const gchar *thisfn = "na_action_instance_dispose";
 	g_debug( "%s: object=%p", thisfn, object );
 
-	g_assert( NACT_IS_ACTION( object ));
-	NactAction *self = NACT_ACTION( object );
+	g_assert( NA_IS_ACTION( object ));
+	NAAction *self = NA_ACTION( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -293,11 +294,11 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "nact_action_instance_finalize";
+	static const gchar *thisfn = "na_action_instance_finalize";
 	g_debug( "%s: object=%p", thisfn, object );
 
-	g_assert( NACT_IS_ACTION( object ));
-	NactAction *self = ( NactAction * ) object;
+	g_assert( NA_IS_ACTION( object ));
+	NAAction *self = ( NAAction * ) object;
 
 	g_free( self->private->uuid );
 	g_free( self->private->version );
@@ -312,26 +313,59 @@ instance_finalize( GObject *object )
 }
 
 /**
- * Allocates a new NactAction object.
+ * Allocates a new NAAction object.
  *
  * @uuid: the globally unique identifier (UUID) of the action.
  *
- * Return a newly allocated NactAction object.
+ * Return a newly allocated NAAction object.
  */
-NactAction *
-nact_action_new( const gchar *uuid )
+NAAction *
+na_action_new( const gchar *uuid )
 {
-	NactAction *action = g_object_new( NACT_ACTION_TYPE, PROP_UUID_STR, uuid, NULL );
+	NAAction *action = g_object_new( NA_ACTION_TYPE, PROP_UUID_STR, uuid, NULL );
 	return( action );
 }
 
-static void
-do_dump( const NactObject *action )
+/**
+ * Allocates a new NAAction object, and initializes it as an exact
+ * copy of the specified action.
+ *
+ * @action: the action to be duplicated.
+ *
+ * Return a newly allocated NAAction object.
+ *
+ * Please note than "an exact copy" here means that the newly allocated
+ * returned object has the _same_ UUID than the original one.
+ */
+NAAction *
+na_action_duplicate( const NAAction *action )
 {
-	static const gchar *thisfn = "nact_action_do_dump";
+	g_assert( NA_IS_ACTION( action ));
 
-	g_assert( NACT_IS_ACTION( action ));
-	NactAction *self = NACT_ACTION( action );
+	gchar *uuid = do_get_id( NA_OBJECT( action ));
+	NAAction *duplicate = g_object_new( NA_ACTION_TYPE, PROP_UUID_STR, uuid, NULL );
+	g_free( uuid );
+
+	duplicate->private->version = g_strdup( action->private->version );
+	duplicate->private->label = g_strdup( action->private->label );
+	duplicate->private->tooltip = g_strdup( action->private->tooltip );
+	duplicate->private->icon = g_strdup( action->private->icon );
+
+	GSList *ip;
+	for( ip = action->private->profiles ; ip ; ip = ip->next ){
+
+	}
+
+	return( duplicate );
+}
+
+static void
+do_dump( const NAObject *action )
+{
+	static const gchar *thisfn = "na_action_do_dump";
+
+	g_assert( NA_IS_ACTION( action ));
+	NAAction *self = NA_ACTION( action );
 
 	if( st_parent_class->dump ){
 		st_parent_class->dump( action );
@@ -344,17 +378,17 @@ do_dump( const NactObject *action )
 	g_debug( "%s:    icon='%s'", thisfn, self->private->icon );
 
 	/* dump profiles */
-	g_debug( "%s: %d profile(s) at %p", thisfn, nact_action_get_profiles_count( self ), self->private->profiles );
+	g_debug( "%s: %d profile(s) at %p", thisfn, na_action_get_profiles_count( self ), self->private->profiles );
 	GSList *item;
 	for( item = self->private->profiles ;	item != NULL ; item = item->next ){
-		nact_object_dump(( const NactObject * ) item->data );
+		na_object_dump(( const NAObject * ) item->data );
 	}
 }
 
 static gchar *
-do_get_id( const NactObject *action )
+do_get_id( const NAObject *action )
 {
-	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION( action ));
 
 	gchar *uuid;
 	g_object_get( G_OBJECT( action ), PROP_UUID_STR, &uuid, NULL );
@@ -365,21 +399,43 @@ do_get_id( const NactObject *action )
 /**
  * Returns the globally unique identifier (UUID) of the action.
  *
- * @action: an NactAction object.
+ * @action: an NAAction object.
  *
  * The returned string must be g_freed by the caller.
  */
 gchar *
-nact_action_get_uuid( const NactAction *action )
+na_action_get_uuid( const NAAction *action )
 {
-	g_assert( NACT_IS_ACTION( action ));
-	return( nact_object_get_id( NACT_OBJECT( action )));
+	g_assert( NA_IS_ACTION( action ));
+	return( na_object_get_id( NA_OBJECT( action )));
+}
+
+/**
+ * Returns the version attached to the action.
+ *
+ * @action: an NAAction object.
+ *
+ * The returned string must be g_freed by the caller.
+ *
+ * The version is always upgraded to the latest when the action is
+ * readen from the I/O provider. So we could assert here that the
+ * returned version is also the latest.
+ */
+gchar *
+na_action_get_version( const NAAction *action )
+{
+	g_assert( NA_IS_ACTION( action ));
+
+	gchar *version;
+	g_object_get( G_OBJECT( action ), PROP_VERSION_STR, &version, NULL );
+
+	return( version );
 }
 
 static gchar *
-do_get_label( const NactObject *action )
+do_get_label( const NAObject *action )
 {
-	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION( action ));
 
 	gchar *label;
 	g_object_get( G_OBJECT( action ), PROP_LABEL_STR, &label, NULL );
@@ -390,29 +446,29 @@ do_get_label( const NactObject *action )
 /**
  * Returns the label of the action.
  *
- * @action: an NactAction object.
+ * @action: an NAAction object.
  *
  * The returned string must be g_freed by the caller.
  */
 gchar *
-nact_action_get_label( const NactAction *action )
+na_action_get_label( const NAAction *action )
 {
-	g_assert( NACT_IS_ACTION( action ));
-	return( nact_object_get_label( NACT_OBJECT( action )));
+	g_assert( NA_IS_ACTION( action ));
+	return( na_object_get_label( NA_OBJECT( action )));
 }
 
 /**
  * Returns the tooltip attached to the context menu item for the
  * action.
  *
- * @action: an NactAction object.
+ * @action: an NAAction object.
  *
  * The returned string must be g_freed by the caller.
  */
 gchar *
-nact_action_get_tooltip( const NactAction *action )
+na_action_get_tooltip( const NAAction *action )
 {
-	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION( action ));
 
 	gchar *tooltip;
 	g_object_get( G_OBJECT( action ), PROP_TOOLTIP_STR, &tooltip, NULL );
@@ -421,17 +477,36 @@ nact_action_get_tooltip( const NactAction *action )
 }
 
 /**
+ * Returns the name of the icon attached to the context menu item for
+ * the action.
+ *
+ * @action: an NAAction object.
+ *
+ * The returned string must be g_freed by the caller.
+ */
+gchar *
+na_action_get_icon( const NAAction *action )
+{
+	g_assert( NA_IS_ACTION( action ));
+
+	gchar *icon;
+	g_object_get( G_OBJECT( action ), PROP_ICON_STR, &icon, NULL );
+
+	return( icon );
+}
+
+/**
  * Returns the icon name attached to the context menu item for the
  * action.
  *
- * @action: an NactAction object.
+ * @action: an NAAction object.
  *
  * When not NULL, the returned string must be g_free by the caller.
  */
 gchar *
-nact_action_get_verified_icon_name( const NactAction *action )
+na_action_get_verified_icon_name( const NAAction *action )
 {
-	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION( action ));
 
 	gchar *icon_name;
 	g_object_get( G_OBJECT( action ), PROP_ICON_STR, &icon_name, NULL );
@@ -450,8 +525,26 @@ nact_action_get_verified_icon_name( const NactAction *action )
 }
 
 /**
+ * Set a new UUID for the action.
+ *
+ * @action: action whose UUID is to be set.
+ */
+void
+na_action_set_new_uuid( NAAction *action )
+{
+	g_assert( NA_IS_ACTION( action ));
+	uuid_t uuid;
+	gchar uuid_str[64];
+
+	uuid_generate( uuid );
+	uuid_unparse_lower( uuid, uuid_str );
+
+	g_object_set( G_OBJECT( action ), PROP_UUID_STR, uuid_str, NULL );
+}
+
+/**
  * Returns the list of profiles of the actions as a GSList of
- * NactActionProfile GObjects.
+ * NAActionProfile GObjects.
  *
  * @action: the action whose profiles has to be retrieved.
  *
@@ -459,9 +552,9 @@ nact_action_get_verified_icon_name( const NactAction *action )
  * should not try to free or unref it.
  */
 GSList *
-nact_action_get_profiles( const NactAction *action )
+na_action_get_profiles( const NAAction *action )
 {
-	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION( action ));
 
 	return( action->private->profiles );
 }
@@ -471,23 +564,23 @@ nact_action_get_profiles( const NactAction *action )
  *
  * @action: the action whose profiles has to be retrieved.
  *
- * @list: a list of NactActionProfile objects to be installed in the
+ * @list: a list of NAActionProfile objects to be installed in the
  * action.
  *
  * The provided list is copied to the action, and thus can then be
- * safely freed (see nact_action_free_profiles) by the caller.
+ * safely freed (see na_action_free_profiles) by the caller.
  */
 void
-nact_action_set_profiles( NactAction *action, GSList *list )
+na_action_set_profiles( NAAction *action, GSList *list )
 {
-	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION( action ));
 
 	free_profiles( action );
 	GSList *ip;
 	for( ip = list ; ip ; ip = ip->next ){
 		action->private->profiles = g_slist_prepend(
 							action->private->profiles,
-							nact_action_profile_copy( NACT_ACTION_PROFILE( ip->data ))
+							na_action_profile_copy( NA_ACTION_PROFILE( ip->data ))
 		);
 	}
 }
@@ -498,19 +591,19 @@ nact_action_set_profiles( NactAction *action, GSList *list )
  * @action: the action whose profiles has to be retrieved.
  */
 guint
-nact_action_get_profiles_count( const NactAction *action )
+na_action_get_profiles_count( const NAAction *action )
 {
-	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION( action ));
 
 	return( g_slist_length( action->private->profiles ));
 }
 
 static void
-free_profiles( NactAction *action )
+free_profiles( NAAction *action )
 {
-	g_assert( NACT_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION( action ));
 
-	nact_action_free_profiles( action->private->profiles );
+	na_action_free_profiles( action->private->profiles );
 
 	action->private->profiles = NULL;
 }
@@ -518,14 +611,14 @@ free_profiles( NactAction *action )
 /**
  * Frees a profiles list.
  *
- * @list: a list of NactActionProfile objects.
+ * @list: a list of NAActionProfile objects.
  */
 void
-nact_action_free_profiles( GSList * list )
+na_action_free_profiles( GSList * list )
 {
 	GSList *ip;
 	for( ip = list ; ip ; ip = ip->next ){
-		g_object_unref( NACT_ACTION_PROFILE( ip->data ));
+		g_object_unref( NA_ACTION_PROFILE( ip->data ));
 	}
 	g_slist_free( list );
 }

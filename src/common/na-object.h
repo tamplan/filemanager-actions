@@ -28,11 +28,11 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_OBJECT_H__
-#define __NACT_OBJECT_H__
+#ifndef __NA_OBJECT_H__
+#define __NA_OBJECT_H__
 
 /*
- * NactObject class definition.
+ * NAObject class definition.
  *
  * This is the base class for NactAction and NactActionProfile.
  *
@@ -45,40 +45,40 @@
 
 G_BEGIN_DECLS
 
-#define NACT_OBJECT_TYPE				( nact_object_get_type())
-#define NACT_OBJECT( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_OBJECT_TYPE, NactObject ))
-#define NACT_OBJECT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_OBJECT_TYPE, NactObjectClass ))
-#define NACT_IS_OBJECT( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_OBJECT_TYPE ))
-#define NACT_IS_OBJECT_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_OBJECT_TYPE ))
-#define NACT_OBJECT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_OBJECT_TYPE, NactObjectClass ))
+#define NA_OBJECT_TYPE					( na_object_get_type())
+#define NA_OBJECT( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_TYPE, NAObject ))
+#define NA_OBJECT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_TYPE, NAObjectClass ))
+#define NA_IS_OBJECT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_TYPE ))
+#define NA_IS_OBJECT_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_TYPE ))
+#define NA_OBJECT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_TYPE, NAObjectClass ))
 
-typedef struct NactObjectPrivate NactObjectPrivate;
+typedef struct NAObjectPrivate NAObjectPrivate;
 
 typedef struct {
-	GObject            parent;
-	NactObjectPrivate *private;
+	GObject          parent;
+	NAObjectPrivate *private;
 }
-	NactObject;
+	NAObject;
 
-typedef struct NactObjectClassPrivate NactObjectClassPrivate;
+typedef struct NAObjectClassPrivate NAObjectClassPrivate;
 
 typedef struct {
-	GObjectClass            parent;
-	NactObjectClassPrivate *private;
+	GObjectClass          parent;
+	NAObjectClassPrivate *private;
 
 	/* virtual public functions */
-	void    ( *dump )( const NactObject *object );
-	gchar * ( *get_id )( const NactObject *object );
-	gchar * ( *get_label )( const NactObject *object );
+	void    ( *dump )     ( const NAObject *object );
+	gchar * ( *get_id )   ( const NAObject *object );
+	gchar * ( *get_label )( const NAObject *object );
 }
-	NactObjectClass;
+	NAObjectClass;
 
-GType    nact_object_get_type( void );
+GType    na_object_get_type( void );
 
-void     nact_object_dump( const NactObject *object );
-gchar   *nact_object_get_id( const NactObject *object );
-gchar   *nact_object_get_label( const NactObject *object );
+void     na_object_dump( const NAObject *object );
+gchar   *na_object_get_id( const NAObject *object );
+gchar   *na_object_get_label( const NAObject *object );
 
 G_END_DECLS
 
-#endif /* __NACT_OBJECT_H__ */
+#endif /* __NA_OBJECT_H__ */

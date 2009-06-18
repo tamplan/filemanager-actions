@@ -37,7 +37,7 @@
  * This is the main class for UI programs.
  */
 
-#include <glib-object.h>
+#include "base-application.h"
 
 G_BEGIN_DECLS
 
@@ -51,7 +51,7 @@ G_BEGIN_DECLS
 typedef struct NactApplicationPrivate NactApplicationPrivate;
 
 typedef struct {
-	GObject                 parent;
+	BaseApplication         parent;
 	NactApplicationPrivate *private;
 }
 	NactApplication;
@@ -59,17 +59,14 @@ typedef struct {
 typedef struct NactApplicationClassPrivate NactApplicationClassPrivate;
 
 typedef struct {
-	GObjectClass                 parent;
+	BaseApplicationClass         parent;
 	NactApplicationClassPrivate *private;
 }
 	NactApplicationClass;
 
 GType            nact_application_get_type( void );
 
-NactApplication *nact_application_new( void );
 NactApplication *nact_application_new_with_args( int argc, char **argv );
-
-int              nact_application_run( NactApplication *application );
 
 G_END_DECLS
 

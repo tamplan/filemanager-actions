@@ -33,21 +33,22 @@
 #endif
 
 #include <string.h>
+#include <uuid/uuid.h>
 
-#include "nact-action.h"
-#include "nact-gconf.h"
-#include "nact-pivot.h"
-#include "nact-iio-provider.h"
-#include "nact-uti-lists.h"
+#include "na-action.h"
+#include "na-gconf.h"
+#include "na-pivot.h"
+#include "na-iio-provider.h"
+#include "na-utils.h"
 
 /* private class data
  */
-struct NactPivotClassPrivate {
+struct NAPivotClassPrivate {
 };
 
 /* private instance data
  */
-struct NactPivotPrivate {
+struct NAPivotPrivate {
 	gboolean  dispose_has_run;
 
 	/* instance to be notified of an action modification
@@ -56,7 +57,7 @@ struct NactPivotPrivate {
 
 	/* list of interface providers
 	 * needs to be in the instance rather than in the class to be able
-	 * to pass NactPivot object to the IO provider, so that the later
+	 * to pass NAPivot object to the IO provider, so that the later
 	 * is able to have access to the former (and its list of actions)
 	 */
 	GSList   *providers;
@@ -89,22 +90,23 @@ static GTimeVal      st_last_event;
 static guint         st_event_source_id = 0;
 static gint          st_timeout_usec = 500000;
 
-static GType       register_type( void );
-static void        class_init( NactPivotClass *klass );
-static void        instance_init( GTypeInstance *instance, gpointer klass );
-static GSList     *register_interface_providers( const NactPivot *pivot );
-static void        instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void        instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void        instance_dispose( GObject *object );
-static void        instance_finalize( GObject *object );
+static GType    register_type( void );
+static void     class_init( NAPivotClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static GSList  *register_interface_providers( const NAPivot *pivot );
+static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
 
-static void        free_actions( GSList *list );
-static void        action_changed_handler( NactPivot *pivot, gpointer user_data );
-static gboolean    on_action_changed_timeout( gpointer user_data );
-static gulong      time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+static void     free_actions( GSList *list );
+static gint     sort_actions_by_label( gconstpointer a1, gconstpointer a2 );
+static void     action_changed_handler( NAPivot *pivot, gpointer user_data );
+static gboolean on_action_changed_timeout( gpointer user_data );
+static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 GType
-nact_pivot_get_type( void )
+na_pivot_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -119,24 +121,24 @@ static GType
 register_type( void )
 {
 	static GTypeInfo info = {
-		sizeof( NactPivotClass ),
+		sizeof( NAPivotClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactPivot ),
+		sizeof( NAPivot ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( G_TYPE_OBJECT, "NactPivot", &info, 0 ));
+	return( g_type_register_static( G_TYPE_OBJECT, "NAPivot", &info, 0 ));
 }
 
 static void
-class_init( NactPivotClass *klass )
+class_init( NAPivotClass *klass )
 {
-	static const gchar *thisfn = "nact_pivot_class_init";
+	static const gchar *thisfn = "na_pivot_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
@@ -155,7 +157,7 @@ class_init( NactPivotClass *klass )
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_NOTIFIED, spec );
 
-	klass->private = g_new0( NactPivotClassPrivate, 1 );
+	klass->private = g_new0( NAPivotClassPrivate, 1 );
 
 	/* see nautilus_actions_class_init for why we use this function
 	 */
@@ -176,27 +178,27 @@ class_init( NactPivotClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_pivot_instance_init";
+	static const gchar *thisfn = "na_pivot_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
 
-	g_assert( NACT_IS_PIVOT( instance ));
-	NactPivot* self = NACT_PIVOT( instance );
+	g_assert( NA_IS_PIVOT( instance ));
+	NAPivot* self = NA_PIVOT( instance );
 
-	self->private = g_new0( NactPivotPrivate, 1 );
+	self->private = g_new0( NAPivotPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
 	self->private->providers = register_interface_providers( self );
-	self->private->actions = nact_iio_provider_load_actions( G_OBJECT( self ));
+	self->private->actions = na_iio_provider_load_actions( G_OBJECT( self ));
 }
 
 static GSList *
-register_interface_providers( const NactPivot *pivot )
+register_interface_providers( const NAPivot *pivot )
 {
-	static const gchar *thisfn = "nact_pivot_register_interface_providers";
+	static const gchar *thisfn = "na_pivot_register_interface_providers";
 	g_debug( "%s", thisfn );
 
 	GSList *list = NULL;
 
-	list = g_slist_prepend( list, nact_gconf_new( G_OBJECT( pivot )));
+	list = g_slist_prepend( list, na_gconf_new( G_OBJECT( pivot )));
 
 	return( list );
 }
@@ -204,8 +206,8 @@ register_interface_providers( const NactPivot *pivot )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	g_assert( NACT_IS_PIVOT( object ));
-	NactPivot *self = NACT_PIVOT( object );
+	g_assert( NA_IS_PIVOT( object ));
+	NAPivot *self = NA_PIVOT( object );
 
 	switch( property_id ){
 		case PROP_NOTIFIED:
@@ -221,8 +223,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	g_assert( NACT_IS_PIVOT( object ));
-	NactPivot *self = NACT_PIVOT( object );
+	g_assert( NA_IS_PIVOT( object ));
+	NAPivot *self = NA_PIVOT( object );
 
 	switch( property_id ){
 		case PROP_NOTIFIED:
@@ -238,11 +240,11 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nact_pivot_instance_dispose";
+	static const gchar *thisfn = "na_pivot_instance_dispose";
 	g_debug( "%s: object=%p", thisfn, object );
 
-	g_assert( NACT_IS_PIVOT( object ));
-	NactPivot *self = NACT_PIVOT( object );
+	g_assert( NA_IS_PIVOT( object ));
+	NAPivot *self = NA_PIVOT( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -260,11 +262,11 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "nact_pivot_instance_finalize";
+	static const gchar *thisfn = "na_pivot_instance_finalize";
 	g_debug( "%s: object=%p", thisfn, object );
 
-	g_assert( NACT_IS_PIVOT( object ));
-	NactPivot *self = ( NactPivot * ) object;
+	g_assert( NA_IS_PIVOT( object ));
+	NAPivot *self = ( NAPivot * ) object;
 
 	/* release the interface providers */
 	GSList *ip;
@@ -281,7 +283,7 @@ instance_finalize( GObject *object )
 }
 
 /**
- * Allocates a new NactPivot object.
+ * Allocates a new NAPivot object.
  *
  * @target: the GObject which will handled Nautilus notification, and
  * should be notified when an actions is added, modified or removed in
@@ -290,10 +292,10 @@ instance_finalize( GObject *object )
  * The target object will receive a "notify_nautilus_of_action_changed"
  * message, without any parameter.
  */
-NactPivot *
-nact_pivot_new( const GObject *target )
+NAPivot *
+na_pivot_new( const GObject *target )
 {
-	return( g_object_new( NACT_PIVOT_TYPE, PROP_NOTIFIED_STR, target, NULL ));
+	return( g_object_new( NA_PIVOT_TYPE, PROP_NOTIFIED_STR, target, NULL ));
 }
 
 /**
@@ -307,12 +309,12 @@ nact_pivot_new( const GObject *target )
  * @type: the type of searched interface.
  */
 GSList *
-nact_pivot_get_providers( const NactPivot *pivot, GType type )
+na_pivot_get_providers( const NAPivot *pivot, GType type )
 {
-	static const gchar *thisfn = "nact_pivot_get_providers";
+	static const gchar *thisfn = "na_pivot_get_providers";
 	g_debug( "%s", thisfn );
 
-	g_assert( NACT_IS_PIVOT( pivot ));
+	g_assert( NA_IS_PIVOT( pivot ));
 
 	GSList *list = NULL;
 	GSList *ip;
@@ -326,12 +328,33 @@ nact_pivot_get_providers( const NactPivot *pivot, GType type )
 }
 
 /**
- * Return the list of actions.
+ * Return the list of actions, sorted by label.
+ *
+ * @pivot: this NAPivot object.
+ *
+ * The returned list is owned by this NAPivot object, and should not
+ * be freed, nor unref by the caller.
  */
 GSList *
-nact_pivot_get_actions( const NactPivot *pivot )
+na_pivot_get_label_sorted_actions( const NAPivot *pivot )
 {
-	g_assert( NACT_IS_PIVOT( pivot ));
+	g_assert( NA_IS_PIVOT( pivot ));
+	GSList *sorted = g_slist_sort( pivot->private->actions, ( GCompareFunc ) sort_actions_by_label );
+	return( sorted );
+}
+
+/**
+ * Return the list of actions.
+ *
+ * @pivot: this NAPivot object.
+ *
+ * The returned list is owned by this NAPivot object, and should not
+ * be freed, nor unref by the caller.
+ */
+GSList *
+na_pivot_get_actions( const NAPivot *pivot )
+{
+	g_assert( NA_IS_PIVOT( pivot ));
 	return( pivot->private->actions );
 }
 
@@ -340,9 +363,85 @@ free_actions( GSList *list )
 {
 	GSList *ia;
 	for( ia = list ; ia ; ia = ia->next ){
-		g_object_unref( NACT_ACTION( ia->data ));
+		g_object_unref( NA_ACTION( ia->data ));
 	}
 	g_slist_free( list );
+}
+
+static gint
+sort_actions_by_label( gconstpointer a1, gconstpointer a2 )
+{
+	NAAction *action1 = NA_ACTION( a1 );
+	gchar *label1 = na_action_get_label( action1 );
+
+	NAAction *action2 = NA_ACTION( a2 );
+	gchar *label2 = na_action_get_label( action2 );
+
+	gint ret = g_utf8_collate( label1, label2 );
+
+	g_free( label1 );
+	g_free( label2 );
+
+	return( ret );
+}
+
+/**
+ * Return the specified action.
+ *
+ * @pivot: this NAPivot object.
+ *
+ * @uuid: required globally unique identifier (uuid).
+ *
+ * Returns the specified NAAction object, or NULL if not found.
+ *
+ * The returned pointer is owned by NAPivot, and should not be freed
+ * nor unref by the caller.
+ */
+GObject *
+na_pivot_get_action( NAPivot *pivot, const gchar *uuid )
+{
+	GSList *ia;
+	NAAction *act;
+	GObject *found = NULL;
+	uuid_t uua, uub;
+	gchar *uuid_act;
+
+	g_assert( NA_IS_PIVOT( pivot ));
+
+	uuid_parse( uuid, uua );
+	for( ia = pivot->private->actions ; ia ; ia = ia->next ){
+		act = NA_ACTION( ia->data );
+		uuid_act = na_action_get_uuid( act );
+		uuid_parse( uuid_act, uub );
+		g_free( uuid_act );
+		if( !uuid_compare( uua, uub )){
+			found = G_OBJECT( act );
+			break;
+		}
+	}
+
+	return( found );
+}
+
+/**
+ * Write an action.
+ *
+ * @pivot: this NAPivot object.
+ *
+ * @action: action to be written by the storage subsystem.
+ *
+ * @message: the I/O provider can allocate and store here an error
+ * message.
+ *
+ * Returns TRUE if the write is successfull, FALSE else.
+ */
+gboolean
+na_pivot_write_action( NAPivot *pivot, const GObject *action, gchar **message )
+{
+	g_assert( NA_IS_PIVOT( pivot ));
+	g_assert( NA_IS_ACTION( action ));
+	g_assert( message );
+	return( na_iio_provider_write_action( G_OBJECT( pivot ), action, message ));
 }
 
 /*
@@ -354,12 +453,12 @@ free_actions( GSList *list )
  * the whole list of actions
  */
 static void
-action_changed_handler( NactPivot *self, gpointer user_data  )
+action_changed_handler( NAPivot *self, gpointer user_data  )
 {
-	/*static const gchar *thisfn = "nact_pivot_action_changed_handler";
+	/*static const gchar *thisfn = "na_pivot_action_changed_handler";
 	g_debug( "%s: self=%p, data=%p", thisfn, self, user_data );*/
 
-	g_assert( NACT_IS_PIVOT( self ));
+	g_assert( NA_IS_PIVOT( self ));
 	g_assert( user_data );
 	if( self->private->dispose_has_run ){
 		return;
@@ -383,13 +482,13 @@ action_changed_handler( NactPivot *self, gpointer user_data  )
 static gboolean
 on_action_changed_timeout( gpointer user_data )
 {
-	/*static const gchar *thisfn = "nact_pivot_on_action_changed_timeout";
+	/*static const gchar *thisfn = "na_pivot_on_action_changed_timeout";
 	g_debug( "%s: pivot=%p", thisfn, user_data );*/
 
 	GTimeVal now;
 
-	g_assert( NACT_IS_PIVOT( user_data ));
-	NactPivot *pivot = NACT_PIVOT( user_data );
+	g_assert( NA_IS_PIVOT( user_data ));
+	NAPivot *pivot = NA_PIVOT( user_data );
 
 	g_get_current_time( &now );
 	gulong diff = time_val_diff( &now, &st_last_event );
@@ -398,7 +497,7 @@ on_action_changed_timeout( gpointer user_data )
 	}
 
 	free_actions( pivot->private->actions );
-	pivot->private->actions = nact_iio_provider_load_actions( G_OBJECT( pivot ));
+	pivot->private->actions = na_iio_provider_load_actions( G_OBJECT( pivot ));
 
 	g_signal_emit_by_name( G_OBJECT( pivot->private->notified ), "notify_nautilus_of_action_changed" );
 	st_event_source_id = 0;
@@ -418,28 +517,28 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
 }
 
 /**
- * Free a NactPivotValue structure and its content.
+ * Free a NAPivotValue structure and its content.
  */
 void
-nact_pivot_free_notify( NactPivotNotify *npn )
+na_pivot_free_notify( NAPivotNotify *npn )
 {
 	if( npn ){
 		if( npn->type ){
 			switch( npn->type ){
 
-				case NACT_PIVOT_STR:
+				case NA_PIVOT_STR:
 					g_free(( gchar * ) npn->data );
 					break;
 
-				case NACT_PIVOT_BOOL:
+				case NA_PIVOT_BOOL:
 					break;
 
-				case NACT_PIVOT_STRLIST:
-					nactuti_free_string_list(( GSList * ) npn->data );
+				case NA_PIVOT_STRLIST:
+					na_utils_free_string_list(( GSList * ) npn->data );
 					break;
 
 				default:
-					g_debug( "nact_pivot_free_notify: uuid=%s, profile=%s, parm=%s, type=%d",
+					g_debug( "na_pivot_free_notify: uuid=%s, profile=%s, parm=%s, type=%d",
 							npn->uuid, npn->profile, npn->parm, npn->type );
 					g_assert_not_reached();
 					break;

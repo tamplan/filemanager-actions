@@ -32,34 +32,33 @@
 #include <config.h>
 #endif
 
-#include "nact-object.h"
-#include "nact-uti-lists.h"
+#include "na-object.h"
 
 /* private class data
  */
-struct NactObjectClassPrivate {
+struct NAObjectClassPrivate {
 };
 
 /* private instance data
  */
-struct NactObjectPrivate {
+struct NAObjectPrivate {
 	gboolean dispose_has_run;
 };
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType   register_type( void );
-static void    class_init( NactObjectClass *klass );
-static void    instance_init( GTypeInstance *instance, gpointer klass );
-static void    instance_dispose( GObject *object );
-static void    instance_finalize( GObject *object );
+static GType  register_type( void );
+static void   class_init( NAObjectClass *klass );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *object );
+static void   instance_finalize( GObject *object );
 
-static void    do_dump( const NactObject *object );
-static gchar  *do_get_id( const NactObject *object );
-static gchar  *do_get_label( const NactObject *object );
+static void   do_dump( const NAObject *object );
+static gchar *do_get_id( const NAObject *object );
+static gchar *do_get_label( const NAObject *object );
 
 GType
-nact_object_get_type( void )
+na_object_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -74,24 +73,24 @@ static GType
 register_type( void )
 {
 	static GTypeInfo info = {
-		sizeof( NactObjectClass ),
+		sizeof( NAObjectClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactObject ),
+		sizeof( NAObject ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( G_TYPE_OBJECT, "NactObject", &info, 0 ));
+	return( g_type_register_static( G_TYPE_OBJECT, "NAObject", &info, 0 ));
 }
 
 static void
-class_init( NactObjectClass *klass )
+class_init( NAObjectClass *klass )
 {
-	static const gchar *thisfn = "nact_object_class_init";
+	static const gchar *thisfn = "na_object_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
@@ -100,7 +99,7 @@ class_init( NactObjectClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NactObjectClassPrivate, 1 );
+	klass->private = g_new0( NAObjectClassPrivate, 1 );
 
 	klass->dump = do_dump;
 	klass->get_id = do_get_id;
@@ -110,13 +109,13 @@ class_init( NactObjectClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	/*static const gchar *thisfn = "nact_object_instance_init";
+	/*static const gchar *thisfn = "na_object_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
 
-	g_assert( NACT_IS_OBJECT( instance ));
-	NactObject *self = NACT_OBJECT( instance );
+	g_assert( NA_IS_OBJECT( instance ));
+	NAObject *self = NA_OBJECT( instance );
 
-	self->private = g_new0( NactObjectPrivate, 1 );
+	self->private = g_new0( NAObjectPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -124,8 +123,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	g_assert( NACT_IS_OBJECT( object ));
-	NactObject *self = NACT_OBJECT( object );
+	g_assert( NA_IS_OBJECT( object ));
+	NAObject *self = NA_OBJECT( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -139,8 +138,8 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	g_assert( NACT_IS_OBJECT( object ));
-	/*NactObject *self = ( NactObject * ) object;*/
+	g_assert( NA_IS_OBJECT( object ));
+	/*NAObject *self = ( NAObject * ) object;*/
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){
@@ -149,10 +148,10 @@ instance_finalize( GObject *object )
 }
 
 static void
-do_dump( const NactObject *object )
+do_dump( const NAObject *object )
 {
-	static const char *thisfn = "nact_object_do_dump";
-	g_assert( NACT_IS_OBJECT( object ));
+	static const char *thisfn = "na_object_do_dump";
+	g_assert( NA_IS_OBJECT( object ));
 	g_debug( "%s: object=%p", thisfn, object );
 }
 
@@ -166,17 +165,17 @@ do_dump( const NactObject *object )
  * @object: object to be dumped.
  */
 void
-nact_object_dump( const NactObject *object )
+na_object_dump( const NAObject *object )
 {
-	g_assert( NACT_IS_OBJECT( object ));
+	g_assert( NA_IS_OBJECT( object ));
 
-	NACT_OBJECT_GET_CLASS( object )->dump( object );
+	NA_OBJECT_GET_CLASS( object )->dump( object );
 }
 
 static gchar *
-do_get_id( const NactObject *object )
+do_get_id( const NAObject *object )
 {
-	g_assert( NACT_IS_OBJECT( object ));
+	g_assert( NA_IS_OBJECT( object ));
 	return(( gchar * ) NULL );
 }
 
@@ -186,21 +185,21 @@ do_get_id( const NactObject *object )
  * This is a virtual function which should be implemented by the
  * derived class ; if not, this parent object returns NULL.
  *
- * @object: targeted NactObject object.
+ * @object: targeted NAObject object.
  *
  * The returned string should be g_freed by the caller.
  */
 gchar *
-nact_object_get_id( const NactObject *object )
+na_object_get_id( const NAObject *object )
 {
-	g_assert( NACT_IS_OBJECT( object ));
-	return( NACT_OBJECT_GET_CLASS( object )->get_id( object ));
+	g_assert( NA_IS_OBJECT( object ));
+	return( NA_OBJECT_GET_CLASS( object )->get_id( object ));
 }
 
 static gchar *
-do_get_label( const NactObject *object )
+do_get_label( const NAObject *object )
 {
-	g_assert( NACT_IS_OBJECT( object ));
+	g_assert( NA_IS_OBJECT( object ));
 	return(( gchar * ) NULL );
 }
 
@@ -210,13 +209,13 @@ do_get_label( const NactObject *object )
  * This is a virtual function which should be implemented by the
  * derived class ; if not, this parent object returns NULL.
  *
- * @object: targeted NactObject object.
+ * @object: targeted NAObject object.
  *
  * The returned string should be g_freed by the caller.
  */
 gchar *
-nact_object_get_label( const NactObject *object )
+na_object_get_label( const NAObject *object )
 {
-	g_assert( NACT_IS_OBJECT( object ));
-	return( NACT_OBJECT_GET_CLASS( object )->get_label( object ));
+	g_assert( NA_IS_OBJECT( object ));
+	return( NA_OBJECT_GET_CLASS( object )->get_label( object ));
 }

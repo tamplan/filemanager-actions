@@ -39,13 +39,9 @@
 int
 main( int argc, char *argv[] )
 {
-	/* need to gtk_init before unique_app_new (see Bug #585536)
-	 */
-	gtk_init( &argc, &argv );
-
 	NactApplication *app = nact_application_new_with_args( argc, argv );
 
-	int ret = nact_application_run( app );
+	int ret = base_application_run( BASE_APPLICATION( app ));
 
 	g_object_unref( app );
 

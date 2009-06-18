@@ -28,21 +28,40 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_UTI_LISTS_H__
-#define __NACT_UTI_LISTS_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include <glib-object.h>
+#include "na-utils.h"
 
-/*
- * Some functions to ease the GSList list manipulations.
+/**
+ * Duplicates a GSList of strings.
+ *
+ * @list: the GSList to be duplicated.
  */
+GSList *
+na_utils_duplicate_string_list( GSList *list )
+{
+	GSList *duplist = NULL;
+	GSList *it;
+	for( it = list ; it != NULL ; it = it->next ){
+		gchar *dupstr = g_strdup(( gchar * ) it->data );
+		duplist = g_slist_prepend( duplist, dupstr );
+	}
+	return( duplist );
+}
 
-#include <glib.h>
-
-G_BEGIN_DECLS
-
-GSList  *nactuti_duplicate_string_list( GSList *list );
-
-void     nactuti_free_string_list( GSList *list );
-
-G_END_DECLS
-
-#endif /* __NACT_UTI_LISTS_H__ */
+/**
+ * Frees a GSList of strings.
+ *
+ * @list: the GSList to be freed.
+ */
+void
+na_utils_free_string_list( GSList *list )
+{
+	GSList *item;
+	for( item = list ; item != NULL ; item = item->next ){
+		g_free(( gchar * ) item->data );
+	}
+	g_slist_free( list );
+}

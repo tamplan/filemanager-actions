@@ -28,10 +28,46 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_GCONF_KEYS_H__
-#define __NACT_GCONF_KEYS_H__
+#ifndef __NA_GCONF_H__
+#define __NA_GCONF_H__
 
-/* GConf general information */
-#define NACT_GCONF_CONFIG_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
+/*
+ * NAGConf class definition.
+ *
+ * Implements the NactIIOProvider (I/O storage subsystem) interface.
+ */
 
-#endif /* __NACT_GCONF_KEYS_H__ */
+#include <glib-object.h>
+
+G_BEGIN_DECLS
+
+#define NA_GCONF_TYPE					( na_gconf_get_type())
+#define NA_GCONF( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_GCONF_TYPE, NAGConf ))
+#define NA_GCONF_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NA_GCONF_TYPE, NAGConfClass ))
+#define NA_IS_GCONF( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_GCONF_TYPE ))
+#define NA_IS_GCONF_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_GCONF_TYPE ))
+#define NA_GCONF_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_GCONF_TYPE, NAGConfClass ))
+
+typedef struct NAGConfPrivate NAGConfPrivate;
+
+typedef struct {
+	GObject         parent;
+	NAGConfPrivate *private;
+}
+	NAGConf;
+
+typedef struct NAGConfClassPrivate NAGConfClassPrivate;
+
+typedef struct {
+	GObjectClass         parent;
+	NAGConfClassPrivate *private;
+}
+	NAGConfClass;
+
+GType    na_gconf_get_type( void );
+
+NAGConf *na_gconf_new( const GObject *notified );
+
+G_END_DECLS
+
+#endif /* __NA_GCONF_H__ */
