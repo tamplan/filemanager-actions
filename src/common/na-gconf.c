@@ -299,10 +299,6 @@ do_read_actions( NAIIOProvider *provider )
 		na_action_set_profiles( action, profiles );
 		na_action_free_profiles( profiles );
 
-#ifdef NACT_MAINTAINER_MODE
-		na_object_dump( NA_OBJECT( action ));
-#endif
-
 		items = g_slist_prepend( items, action );
 		g_free( key );
 	}

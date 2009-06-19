@@ -64,23 +64,34 @@ typedef struct {
 	BaseApplicationClassPrivate *private;
 
 	/* virtual functions */
-	int      ( *run )                         ( BaseApplication *appli );
-	void     ( *initialize )                  ( BaseApplication *appli );
-	void     ( *initialize_i18n )             ( BaseApplication *appli );
-	void     ( *initialize_gtk )              ( BaseApplication *appli );
-	void     ( *initialize_application_name ) ( BaseApplication *appli );
-	void     ( *initialize_icon_name )        ( BaseApplication *appli );
-	void     ( *initialize_unique )           ( BaseApplication *appli );
-	gboolean ( *is_willing_to_run )           ( BaseApplication *appli );
-	void     ( *advertise_willing_to_run )    ( BaseApplication *appli );
-	void     ( *advertise_not_willing_to_run )( BaseApplication *appli );
-	void     ( *start )                       ( BaseApplication *appli );
-	int      ( *finish )                      ( BaseApplication *appli );
-	gchar  * ( *get_unique_name )             ( BaseApplication *appli );
-	gchar  * ( *get_application_name )        ( BaseApplication *appli );
-	gchar  * ( *get_icon_name )               ( BaseApplication *appli );
+	int       ( *run )                         ( BaseApplication *appli );
+	void      ( *initialize )                  ( BaseApplication *appli );
+	void      ( *initialize_i18n )             ( BaseApplication *appli );
+	void      ( *initialize_gtk )              ( BaseApplication *appli );
+	void      ( *initialize_application_name ) ( BaseApplication *appli );
+	void      ( *initialize_icon_name )        ( BaseApplication *appli );
+	void      ( *initialize_unique )           ( BaseApplication *appli );
+	gboolean  ( *is_willing_to_run )           ( BaseApplication *appli );
+	void      ( *advertise_willing_to_run )    ( BaseApplication *appli );
+	void      ( *advertise_not_willing_to_run )( BaseApplication *appli );
+	void      ( *start )                       ( BaseApplication *appli );
+	int       ( *finish )                      ( BaseApplication *appli );
+	gchar   * ( *get_unique_name )             ( BaseApplication *appli );
+	gchar   * ( *get_application_name )        ( BaseApplication *appli );
+	gchar   * ( *get_icon_name )               ( BaseApplication *appli );
+	GObject * ( *get_main_window )             ( BaseApplication *appli );
 }
 	BaseApplicationClass;
+
+/* instance properties
+ */
+#define PROP_APPLICATION_ARGC_STR				"argc"
+#define PROP_APPLICATION_ARGV_STR				"argv"
+#define PROP_APPLICATION_UNIQUE_NAME_STR		"unique-name"
+#define PROP_APPLICATION_UNIQUE_APP_STR			"unique-app"
+#define PROP_APPLICATION_MAIN_WINDOW_STR		"main-window"
+#define PROP_APPLICATION_NAME_STR				"application-name"
+#define PROP_APPLICATION_ICON_NAME_STR			"icon-name"
 
 GType            base_application_get_type( void );
 
@@ -89,7 +100,7 @@ BaseApplication *base_application_new_with_args( int argc, char **argv );
 
 int              base_application_run( BaseApplication *application );
 
-void             base_application_error_dlg( BaseApplication *application, GtkMessageType type, gchar *primary, gchar *secondary );
+void             base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary );
 
 G_END_DECLS
 

@@ -24,6 +24,25 @@
 	* src/common/na-pivot.c:
 	na_iio_provider_load_actions renamed to na_iio_provider_read_actions.
 
+	* src/nact/base-window.c:
+	* src/nact/base-window.h:
+	Define and implement new class BaseWindow.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h:
+	Define and implement new interface NactIActionsList.
+
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h:
+	Define and implement new class NactWindow.
+
+	* src/nact/nact-wnd-actions.c:
+	* src/nact/nact-wnd-actions.h:
+	Define and implement new class NactWndActions.
+
+	* src/common/Makefile.am:
+	Updated accordingly.
+
 2009-06-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Begin with porting NACT to new object hierarchy.

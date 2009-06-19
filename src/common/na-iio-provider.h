@@ -42,7 +42,7 @@
  * startup time (e.g. on the model of provider interfaces in Nautilus).
  */
 
-#include "glib-object.h"
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 

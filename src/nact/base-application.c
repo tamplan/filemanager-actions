@@ -37,6 +37,7 @@
 #include <unique/unique.h>
 
 #include "base-application.h"
+#include "base-window.h"
 
 /* private class data
  */
@@ -46,35 +47,27 @@ struct BaseApplicationClassPrivate {
 /* private instance data
  */
 struct BaseApplicationPrivate {
-	gboolean   dispose_has_run;
-	int        argc;
-	gpointer   argv;
-	gchar     *unique_name;
-	UniqueApp *unique_app;
-	gchar     *application_name;
-	gchar     *icon_name;
-	GtkWindow *main_window;
+	gboolean    dispose_has_run;
+	int         argc;
+	gpointer    argv;
+	gchar      *unique_name;
+	UniqueApp  *unique_app;
+	gchar      *application_name;
+	gchar      *icon_name;
+	BaseWindow *main_window;
 };
 
-/* private instance properties
+/* instance properties
  */
 enum {
-	PROP_ARGC = 1,
-	PROP_ARGV,
-	PROP_UNIQUE_NAME,
-	PROP_UNIQUE_APP,
-	PROP_MAIN_WINDOW,
+	PROP_APPLICATION_ARGC = 1,
+	PROP_APPLICATION_ARGV,
+	PROP_APPLICATION_UNIQUE_NAME,
+	PROP_APPLICATION_UNIQUE_APP,
+	PROP_APPLICATION_MAIN_WINDOW,
 	PROP_APPLICATION_NAME,
-	PROP_ICON_NAME
+	PROP_APPLICATION_ICON_NAME
 };
-
-#define PROP_ARGC_STR					"argc"
-#define PROP_ARGV_STR					"argv"
-#define PROP_UNIQUE_NAME_STR			"unique-name"
-#define PROP_UNIQUE_APP_STR				"unique-app"
-#define PROP_MAIN_WINDOW_STR			"main-window"
-#define PROP_APPLICATION_NAME_STR		"application-name"
-#define PROP_ICON_NAME_STR				"icon-name"
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -102,6 +95,7 @@ static int            v_finish( BaseApplication *application );
 static gchar         *v_get_unique_name( BaseApplication *application );
 static gchar         *v_get_application_name( BaseApplication *application );
 static gchar         *v_get_icon_name( BaseApplication *application );
+static GObject       *v_get_main_window( BaseApplication *application );
 
 static void           do_initialize( BaseApplication *application );
 static void           do_initialize_i18n( BaseApplication *application );
@@ -118,6 +112,7 @@ static int            do_finish( BaseApplication *application );
 static gchar         *do_get_unique_name( BaseApplication *application );
 static gchar         *do_get_application_name( BaseApplication *application );
 static gchar         *do_get_icon_name( BaseApplication *application );
+static GObject       *do_get_main_window( BaseApplication *application );
 
 /*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
 
@@ -172,39 +167,39 @@ class_init( BaseApplicationClass *klass )
 
 	GParamSpec *spec;
 	spec = g_param_spec_int(
-			PROP_ARGC_STR,
-			PROP_ARGC_STR,
+			PROP_APPLICATION_ARGC_STR,
+			PROP_APPLICATION_ARGC_STR,
 			"Command-line arguments count", 0, 65535, 0,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_ARGC, spec );
+	g_object_class_install_property( object_class, PROP_APPLICATION_ARGC, spec );
 
 	spec = g_param_spec_pointer(
-			PROP_ARGV_STR,
-			PROP_ARGV_STR,
+			PROP_APPLICATION_ARGV_STR,
+			PROP_APPLICATION_ARGV_STR,
 			"Command-line arguments",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_ARGV, spec );
+	g_object_class_install_property( object_class, PROP_APPLICATION_ARGV, spec );
 
 	spec = g_param_spec_string(
-			PROP_UNIQUE_NAME_STR,
-			PROP_UNIQUE_NAME_STR,
+			PROP_APPLICATION_UNIQUE_NAME_STR,
+			PROP_APPLICATION_UNIQUE_NAME_STR,
 			"DBUS name for unique application", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_UNIQUE_NAME, spec );
+	g_object_class_install_property( object_class, PROP_APPLICATION_UNIQUE_NAME, spec );
 
 	spec = g_param_spec_pointer(
-			PROP_UNIQUE_APP_STR,
-			PROP_UNIQUE_APP_STR,
+			PROP_APPLICATION_UNIQUE_APP_STR,
+			PROP_APPLICATION_UNIQUE_APP_STR,
 			"UniqueApp object pointer",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_UNIQUE_APP, spec );
+	g_object_class_install_property( object_class, PROP_APPLICATION_UNIQUE_APP, spec );
 
 	spec = g_param_spec_pointer(
-			PROP_MAIN_WINDOW_STR,
-			PROP_MAIN_WINDOW_STR,
-			"Main window widget",
+			PROP_APPLICATION_MAIN_WINDOW_STR,
+			PROP_APPLICATION_MAIN_WINDOW_STR,
+			"The BaseWindow object which encapsulates the main GtkWindow",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_MAIN_WINDOW, spec );
+	g_object_class_install_property( object_class, PROP_APPLICATION_MAIN_WINDOW, spec );
 
 	spec = g_param_spec_string(
 			PROP_APPLICATION_NAME_STR,
@@ -214,11 +209,11 @@ class_init( BaseApplicationClass *klass )
 	g_object_class_install_property( object_class, PROP_APPLICATION_NAME, spec );
 
 	spec = g_param_spec_string(
-			PROP_ICON_NAME_STR,
-			PROP_ICON_NAME_STR,
+			PROP_APPLICATION_ICON_NAME_STR,
+			PROP_APPLICATION_ICON_NAME_STR,
 			"Default themed icon name", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_ICON_NAME, spec );
+	g_object_class_install_property( object_class, PROP_APPLICATION_ICON_NAME, spec );
 
 	klass->private = g_new0( BaseApplicationClassPrivate, 1 );
 
@@ -237,6 +232,7 @@ class_init( BaseApplicationClass *klass )
 	klass->get_unique_name = do_get_unique_name;
 	klass->get_application_name = do_get_application_name;
 	klass->get_icon_name = do_get_icon_name;
+	klass->get_main_window = do_get_main_window;
 }
 
 static void
@@ -260,23 +256,23 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	BaseApplication *self = BASE_APPLICATION( object );
 
 	switch( property_id ){
-		case PROP_ARGC:
+		case PROP_APPLICATION_ARGC:
 			g_value_set_int( value, self->private->argc );
 			break;
 
-		case PROP_ARGV:
+		case PROP_APPLICATION_ARGV:
 			g_value_set_pointer( value, self->private->argv );
 			break;
 
-		case PROP_UNIQUE_NAME:
+		case PROP_APPLICATION_UNIQUE_NAME:
 			g_value_set_string( value, self->private->unique_name );
 			break;
 
-		case PROP_UNIQUE_APP:
+		case PROP_APPLICATION_UNIQUE_APP:
 			g_value_set_pointer( value, self->private->unique_app );
 			break;
 
-		case PROP_MAIN_WINDOW:
+		case PROP_APPLICATION_MAIN_WINDOW:
 			g_value_set_pointer( value, self->private->main_window );
 			break;
 
@@ -284,7 +280,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 			g_value_set_string( value, self->private->application_name );
 			break;
 
-		case PROP_ICON_NAME:
+		case PROP_APPLICATION_ICON_NAME:
 			g_value_set_string( value, self->private->icon_name );
 			break;
 
@@ -301,24 +297,24 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	BaseApplication *self = BASE_APPLICATION( object );
 
 	switch( property_id ){
-		case PROP_ARGC:
+		case PROP_APPLICATION_ARGC:
 			self->private->argc = g_value_get_int( value );
 			break;
 
-		case PROP_ARGV:
+		case PROP_APPLICATION_ARGV:
 			self->private->argv = g_value_get_pointer( value );
 			break;
 
-		case PROP_UNIQUE_NAME:
+		case PROP_APPLICATION_UNIQUE_NAME:
 			g_free( self->private->unique_name );
 			self->private->unique_name = g_value_dup_string( value );
 			break;
 
-		case PROP_UNIQUE_APP:
+		case PROP_APPLICATION_UNIQUE_APP:
 			self->private->unique_app = g_value_get_pointer( value );
 			break;
 
-		case PROP_MAIN_WINDOW:
+		case PROP_APPLICATION_MAIN_WINDOW:
 			self->private->main_window = g_value_get_pointer( value );
 			break;
 
@@ -327,7 +323,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			self->private->application_name = g_value_dup_string( value );
 			break;
 
-		case PROP_ICON_NAME:
+		case PROP_APPLICATION_ICON_NAME:
 			g_free( self->private->icon_name );
 			self->private->icon_name = g_value_dup_string( value );
 			break;
@@ -351,8 +347,12 @@ instance_dispose( GObject *application )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_object_unref( self->private->unique_app );
-		g_object_unref( self->private->main_window );
+		if( UNIQUE_IS_APP( self->private->unique_app )){
+			g_object_unref( self->private->unique_app );
+		}
+		if( GTK_IS_WINDOW( self->private->main_window )){
+			g_object_unref( self->private->main_window );
+		}
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( application );
@@ -397,7 +397,13 @@ base_application_new( void )
 BaseApplication *
 base_application_new_with_args( int argc, char **argv )
 {
-	return( g_object_new( BASE_APPLICATION_TYPE, PROP_ARGC_STR, argc, PROP_ARGV_STR, argv, NULL ));
+	return(
+			g_object_new(
+					BASE_APPLICATION_TYPE,
+					PROP_APPLICATION_ARGC_STR, argc,
+					PROP_APPLICATION_ARGV_STR, argv,
+					NULL )
+	);
 }
 
 /**
@@ -446,7 +452,6 @@ do_run( BaseApplication *application )
 	} else {
 
 		v_advertise_not_willing_to_run( application );
-
 	}
 
 	return( code );
@@ -582,12 +587,12 @@ v_get_unique_name( BaseApplication *application )
 	g_assert( BASE_IS_APPLICATION( application ));
 
 	gchar *name;
-	g_object_get( G_OBJECT( application ), PROP_UNIQUE_NAME_STR, &name, NULL );
+	g_object_get( G_OBJECT( application ), PROP_APPLICATION_UNIQUE_NAME_STR, &name, NULL );
 
 	if( !name || !strlen( name )){
 		name = BASE_APPLICATION_GET_CLASS( application )->get_unique_name( application );
 		if( name && strlen( name )){
-			g_object_set( G_OBJECT( application ), PROP_UNIQUE_NAME_STR, name, NULL );
+			g_object_set( G_OBJECT( application ), PROP_APPLICATION_UNIQUE_NAME_STR, name, NULL );
 		}
 	}
 
@@ -624,16 +629,27 @@ v_get_icon_name( BaseApplication *application )
 	g_assert( BASE_IS_APPLICATION( application ));
 
 	gchar *name;
-	g_object_get( G_OBJECT( application ), PROP_ICON_NAME_STR, &name, NULL );
+	g_object_get( G_OBJECT( application ), PROP_APPLICATION_ICON_NAME_STR, &name, NULL );
 
 	if( !name || !strlen( name )){
 		name = BASE_APPLICATION_GET_CLASS( application )->get_icon_name( application );
 		if( name && strlen( name )){
-			g_object_set( G_OBJECT( application ), PROP_ICON_NAME_STR, name, NULL );
+			g_object_set( G_OBJECT( application ), PROP_APPLICATION_ICON_NAME_STR, name, NULL );
 		}
 	}
 
 	return( name );
+}
+
+static GObject *
+v_get_main_window( BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_v_get_main_window";
+	g_debug( "%s: icon=%p", thisfn, application );
+
+	g_assert( BASE_IS_APPLICATION( application ));
+
+	return( BASE_APPLICATION_GET_CLASS( application )->get_main_window( application ));
 }
 
 static void
@@ -663,9 +679,9 @@ do_initialize_gtk( BaseApplication *application )
 {
 	int argc;
 	gpointer argv;
-	g_object_get( G_OBJECT( application ), PROP_ARGC_STR, &argc, PROP_ARGV_STR, &argv, NULL );
+	g_object_get( G_OBJECT( application ), PROP_APPLICATION_ARGC_STR, &argc, PROP_APPLICATION_ARGV_STR, &argv, NULL );
 	gtk_init( &argc, ( char *** ) &argv );
-	g_object_set( G_OBJECT( application ), PROP_ARGC_STR, argc, PROP_ARGV_STR, argv, NULL );
+	g_object_set( G_OBJECT( application ), PROP_APPLICATION_ARGC_STR, argc, PROP_APPLICATION_ARGV_STR, argv, NULL );
 }
 
 static void
@@ -755,14 +771,29 @@ do_advertise_not_willing_to_run( BaseApplication *application )
 
 }
 
+/*
+ * this should be typically called by the derived class after it has
+ * created the main window
+ */
 static void
 do_start( BaseApplication *application )
 {
-	if( application->private->unique_app && application->private->main_window ){
-		unique_app_watch_window( application->private->unique_app, application->private->main_window );
-	}
+	BaseWindow *window = BASE_WINDOW( v_get_main_window( application ));
 
-	gtk_main();
+	if( window ){
+		g_assert( BASE_IS_WINDOW( window ));
+
+		application->private->main_window = window;
+
+		base_window_init_window( window );
+
+		GtkWindow *wnd = base_window_get_toplevel_window( window );
+		if( application->private->unique_app ){
+			unique_app_watch_window( application->private->unique_app, wnd );
+		}
+
+		gtk_main();
+	}
 }
 
 static int
@@ -790,6 +821,12 @@ do_get_icon_name( BaseApplication *application )
 	return( NULL );
 }
 
+static GObject *
+do_get_main_window( BaseApplication *application )
+{
+	return( NULL );
+}
+
 /*static UniqueResponse
 on_unique_message_received(
 		UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data )
@@ -811,14 +848,16 @@ on_unique_message_received(
 
 void
 base_application_error_dlg(
-		BaseApplication *application, GtkMessageType type, gchar *primary, gchar *secondary )
+		BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary )
 {
 	g_assert( BASE_IS_APPLICATION( application ));
 
 	GtkWidget *dialog = gtk_message_dialog_new(
 			NULL, GTK_DIALOG_MODAL, type, GTK_BUTTONS_OK, primary );
 
-	gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), secondary );
+	if( secondary && strlen( secondary )){
+		gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), secondary );
+	}
 
 	const gchar *name = g_get_application_name();
 

@@ -154,6 +154,12 @@ na_iio_provider_read_actions( const GObject *object )
 		}
 	}
 
+#ifdef NACT_MAINTAINER_MODE
+	for( ip = actions ; ip ; ip = ip->next ){
+		na_object_dump( NA_OBJECT( ip->data ));
+	}
+#endif
+
 	return( actions );
 }
 
@@ -191,7 +197,8 @@ na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_actio
 
 		instance = NA_IIO_PROVIDER( ip->data );
 
-		/*if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action ){
+		/* TODO: write the action
+		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action ){
 			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions( instance );
 			actions = g_slist_concat( actions, list );
 		}*/

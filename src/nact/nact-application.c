@@ -36,8 +36,9 @@
 #include <gtk/gtk.h>
 
 #include <common/na-pivot.h>
-#include "nact.h"
+
 #include "nact-application.h"
+#include "nact-wnd-actions.h"
 
 /* private class data
  */
@@ -61,18 +62,20 @@ enum {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType  register_type( void );
-static void   class_init( NactApplicationClass *klass );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void   instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void   instance_dispose( GObject *application );
-static void   instance_finalize( GObject *application );
+static GType      register_type( void );
+static void       class_init( NactApplicationClass *klass );
+static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void       instance_dispose( GObject *application );
+static void       instance_finalize( GObject *application );
 
-static void   warn_other_instance( BaseApplication *application );
-static gchar *get_application_name( BaseApplication *application );
-static gchar *get_icon_name( BaseApplication *application );
-static gchar *get_unique_name( BaseApplication *application );
+static void       warn_other_instance( BaseApplication *application );
+static void       start( BaseApplication *application );
+static gchar     *get_application_name( BaseApplication *application );
+static gchar     *get_icon_name( BaseApplication *application );
+static gchar     *get_unique_name( BaseApplication *application );
+static GObject   *get_main_window( BaseApplication *application );
 
 GType
 nact_application_get_type( void )
@@ -134,9 +137,11 @@ class_init( NactApplicationClass *klass )
 	BaseApplicationClass *appli_class = BASE_APPLICATION_CLASS( klass );
 
 	appli_class->advertise_not_willing_to_run = warn_other_instance;
+	appli_class->start = start;
 	appli_class->get_application_name = get_application_name;
 	appli_class->get_icon_name = get_icon_name;
 	appli_class->get_unique_name = get_unique_name;
+	appli_class->get_main_window = get_main_window;
 }
 
 static void
@@ -232,7 +237,13 @@ instance_finalize( GObject *application )
 NactApplication *
 nact_application_new_with_args( int argc, char **argv )
 {
-	return( g_object_new( NACT_APPLICATION_TYPE, "argc", argc, "argv", argv, NULL ));
+	return(
+			g_object_new(
+					NACT_APPLICATION_TYPE,
+					PROP_APPLICATION_ARGC_STR, argc,
+					PROP_APPLICATION_ARGV_STR, argv,
+					NULL )
+	);
 }
 
 static void
@@ -245,6 +256,24 @@ warn_other_instance( BaseApplication *application )
 			GTK_MESSAGE_INFO,
 			_( "Another instance of Nautilus Actions Configurator is already running." ),
 			_( "Please switch back to it." ));
+}
+
+static void
+start( BaseApplication *application )
+{
+	static const gchar *thisfn = "nact_application_start";
+	g_debug( "%s: application=%p", thisfn, application );
+
+	g_assert( NACT_IS_APPLICATION( application ));
+	NactApplication *appli = NACT_APPLICATION( application );
+
+	/* TODO: be notified when the list of actions is changed elsewhere */
+	appli->private->pivot = na_pivot_new( NULL );
+
+	/* chain up to the parent class which takes care of registering
+	 * UniqueApp, and initializing and running the newly created window
+	 */
+	BASE_APPLICATION_CLASS( st_parent_class )->start( application );
 }
 
 static gchar *
@@ -276,18 +305,26 @@ get_unique_name( BaseApplication *application )
 	return( g_strdup( "org.nautilus-actions.ConfigurationTool" ));
 }
 
-/*static int
-run_appli( NactApplication *application )
+static GObject *
+get_main_window( BaseApplication *application )
 {
-	int code = 0;
+	static const gchar *thisfn = "nact_application_get_main_window";
+	g_debug( "%s: application=%p", thisfn, application );
 
-	g_object_set( G_OBJECT( application ), PROP_PIVOT_STR, na_pivot_new( NULL ), NULL );
+	return( G_OBJECT( nact_wnd_actions_new( G_OBJECT( application ))));
+}
 
-	g_object_set( G_OBJECT( application ), PROP_MAINWINDOW_STR, nact_init_dialog( G_OBJECT( application ), NULL );
-
-	unique_app_watch_window( application->private->unique, application->private->main );
-
-	gtk_main();
-
-	return( code );
-}*/
+/**
+ * Returns a pointer on the NAPivot object.
+ *
+ * @application: this NactApplication object.
+ *
+ * The returned pointer is owned by the NactApplication object.
+ * It should not be freed not unref by the caller.
+ */
+GObject *
+nact_application_get_pivot( NactApplication *application )
+{
+	g_assert( NACT_IS_APPLICATION( application ));
+	return( G_OBJECT( application->private->pivot ));
+}

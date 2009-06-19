@@ -41,7 +41,7 @@
 static guint st_log_handler = 0;
 
 #ifdef NACT_MAINTAINER_MODE
-static void nact_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
+static void na_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
 #endif
 
 /*
@@ -68,7 +68,7 @@ nautilus_module_initialize( GTypeModule *module )
 	 */
 	if( !st_log_handler ){
 		openlog( G_LOG_DOMAIN, LOG_PID, LOG_USER );
-		st_log_handler = g_log_set_handler( G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, nact_log_handler, NULL );
+		st_log_handler = g_log_set_handler( G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
 	}
 #endif
 
@@ -117,7 +117,7 @@ nautilus_module_shutdown( void )
  */
 #ifdef NACT_MAINTAINER_MODE
 static void
-nact_log_handler( const gchar *log_domain,
+na_log_handler( const gchar *log_domain,
 					GLogLevelFlags log_level,
 					const gchar *message,
 					gpointer user_data )

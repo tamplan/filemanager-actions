@@ -42,10 +42,12 @@ AM_CPPFLAGS += \
 nautilus_actions_config_SOURCES = \
 	base-application.c									\
 	base-application.h									\
-	nact.c												\
-	nact.h												\
+	base-window.c										\
+	base-window.h										\
 	nact-application.c									\
 	nact-application.h									\
+	nact-iactions-list.c								\
+	nact-iactions-list.h								\
 	nact-main.c											\
 	nact-utils.c										\
 	nact-utils.h										\
@@ -59,6 +61,10 @@ nautilus_actions_config_SOURCES = \
 	nact-editor.h										\
 	nact-action-editor.c								\
 	nact-action-editor.h								\
+	nact-window.c										\
+	nact-window.h										\
+	nact-wnd-actions.c									\
+	nact-wnd-actions.h									\
 	$(NULL)
 
 nautilus_actions_config_LDADD = \

@@ -68,6 +68,8 @@ GType            nact_application_get_type( void );
 
 NactApplication *nact_application_new_with_args( int argc, char **argv );
 
+GObject         *nact_application_get_pivot( NactApplication *application );
+
 G_END_DECLS
 
 #endif /* __NACT_APPLICATION_H__ */

@@ -99,7 +99,6 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
-static void     free_actions( GSList *list );
 static gint     sort_actions_by_label( gconstpointer a1, gconstpointer a2 );
 static void     action_changed_handler( NAPivot *pivot, gpointer user_data );
 static gboolean on_action_changed_timeout( gpointer user_data );
@@ -251,7 +250,7 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		/* release list of actions */
-		free_actions( self->private->actions );
+		na_pivot_free_actions( self->private->actions );
 		self->private->actions = NULL;
 
 		/* chain up to the parent class */
@@ -358,14 +357,19 @@ na_pivot_get_actions( const NAPivot *pivot )
 	return( pivot->private->actions );
 }
 
-static void
-free_actions( GSList *list )
+/**
+ * Free a list of actions.
+ *
+ * @list: the GSList of NAActions to be freed.
+ */
+void
+na_pivot_free_actions( GSList *actions )
 {
 	GSList *ia;
-	for( ia = list ; ia ; ia = ia->next ){
+	for( ia = actions ; ia ; ia = ia->next ){
 		g_object_unref( NA_ACTION( ia->data ));
 	}
-	g_slist_free( list );
+	g_slist_free( actions );
 }
 
 static gint
@@ -496,7 +500,7 @@ on_action_changed_timeout( gpointer user_data )
 		return( TRUE );
 	}
 
-	free_actions( pivot->private->actions );
+	na_pivot_free_actions( pivot->private->actions );
 	pivot->private->actions = na_iio_provider_read_actions( G_OBJECT( pivot ));
 
 	g_signal_emit_by_name( G_OBJECT( pivot->private->notified ), "notify_nautilus_of_action_changed" );

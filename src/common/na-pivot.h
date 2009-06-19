@@ -76,6 +76,8 @@ GSList  *na_pivot_get_providers( const NAPivot *pivot, GType type );
 GSList  *na_pivot_get_label_sorted_actions( const NAPivot *pivot );
 GSList  *na_pivot_get_actions( const NAPivot *pivot );
 
+void     na_pivot_free_actions( GSList *actions );
+
 GObject *na_pivot_get_action( NAPivot *pivot, const gchar *uuid );
 
 gboolean na_pivot_write_action( NAPivot *pivot, const GObject *action, gchar **message );
