@@ -60,14 +60,15 @@ typedef struct {
 	NAIIOProviderInterfacePrivate *private;
 
 	/* i/o api */
-	GSList * ( *load_actions )( NAIIOProvider *instance );
+	GSList * ( *read_actions )( NAIIOProvider *instance );
 	gboolean ( *write_action )( NAIIOProvider *instance, const GObject *action, gchar **message );
 }
 	NAIIOProviderInterface;
 
 GType    na_iio_provider_get_type( void );
 
-GSList  *na_iio_provider_load_actions( const GObject *pivot );
+GSList  *na_iio_provider_read_actions( const GObject *pivot );
+
 gboolean na_iio_provider_write_action( const GObject *pivot, const GObject *action, gchar **message );
 
 G_END_DECLS

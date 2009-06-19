@@ -81,7 +81,7 @@ static void             instance_set_property( GObject *object, guint property_i
 static void             instance_dispose( GObject *object );
 static void             instance_finalize( GObject *object );
 
-static GSList          *do_load_actions( NAIIOProvider *provider );
+static GSList          *do_read_actions( NAIIOProvider *provider );
 static void             load_action_properties( NAGConf *gconf, NAAction *action );
 static GSList          *load_profiles( NAGConf *gconf, NAAction *action );
 static void             load_profile_properties( NAGConf *gconf, NAActionProfile *profile );
@@ -167,7 +167,7 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	static const gchar *thisfn = "na_gconf_iio_provider_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
-	iface->load_actions = do_load_actions;
+	iface->read_actions = do_read_actions;
 }
 
 static void
@@ -273,9 +273,9 @@ na_gconf_new( const GObject *handler )
  * load the list of actions and returns them as a GSList
  */
 static GSList *
-do_load_actions( NAIIOProvider *provider )
+do_read_actions( NAIIOProvider *provider )
 {
-	static const gchar *thisfn = "nacf_gconf_do_load_actions";
+	static const gchar *thisfn = "nacf_gconf_do_read_actions";
 	g_debug( "%s: provider=%p", thisfn, provider );
 
 	g_assert( NA_IS_IIO_PROVIDER( provider ));

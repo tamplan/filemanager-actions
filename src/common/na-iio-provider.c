@@ -99,7 +99,7 @@ interface_base_init( NAIIOProviderInterface *klass )
 
 		klass->private = g_new0( NAIIOProviderInterfacePrivate, 1 );
 
-		klass->load_actions = NULL;
+		klass->read_actions = NULL;
 
 		initialized = TRUE;
 	}
@@ -129,9 +129,9 @@ interface_base_finalize( NAIIOProviderInterface *klass )
  * Returns a GSList of newly allocated NAAction objects.
  */
 GSList *
-na_iio_provider_load_actions( const GObject *object )
+na_iio_provider_read_actions( const GObject *object )
 {
-	static const gchar *thisfn = "na_iio_provider_load_actions";
+	static const gchar *thisfn = "na_iio_provider_read_actions";
 	g_debug( "%s", thisfn );
 
 	g_assert( NA_IS_PIVOT( object ));
@@ -148,8 +148,8 @@ na_iio_provider_load_actions( const GObject *object )
 
 		instance = NA_IIO_PROVIDER( ip->data );
 
-		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions ){
-			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions( instance );
+		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_actions ){
+			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_actions( instance );
 			actions = g_slist_concat( actions, list );
 		}
 	}

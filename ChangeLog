@@ -18,6 +18,12 @@
 	* src/common/na-utils.c:
 	* src/common/na-utils.h: Renamed and updated accordingly.
 
+	* src/common/na-iio-provider.c:
+	* src/common/na-iio-provider.h:
+	* src/common/na-gconf.c:
+	* src/common/na-pivot.c:
+	na_iio_provider_load_actions renamed to na_iio_provider_read_actions.
+
 2009-06-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Begin with porting NACT to new object hierarchy.

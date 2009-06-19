@@ -187,7 +187,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NAPivotPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
 	self->private->providers = register_interface_providers( self );
-	self->private->actions = na_iio_provider_load_actions( G_OBJECT( self ));
+	self->private->actions = na_iio_provider_read_actions( G_OBJECT( self ));
 }
 
 static GSList *
@@ -497,7 +497,7 @@ on_action_changed_timeout( gpointer user_data )
 	}
 
 	free_actions( pivot->private->actions );
-	pivot->private->actions = na_iio_provider_load_actions( G_OBJECT( pivot ));
+	pivot->private->actions = na_iio_provider_read_actions( G_OBJECT( pivot ));
 
 	g_signal_emit_by_name( G_OBJECT( pivot->private->notified ), "notify_nautilus_of_action_changed" );
 	st_event_source_id = 0;
