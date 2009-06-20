@@ -31,7 +31,25 @@
 #ifndef __NA_GCONF_KEYS_H__
 #define __NA_GCONF_KEYS_H__
 
-/* GConf general information */
+/* GConf general information
+ */
 #define NA_GCONF_CONFIG_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
+
+/* GConf key names
+ */
+#define ACTION_VERSION_ENTRY			"version"
+#define ACTION_LABEL_ENTRY				"label"
+#define ACTION_TOOLTIP_ENTRY			"tooltip"
+#define ACTION_ICON_ENTRY				"icon"
+#define ACTION_PROFILE_LABEL_ENTRY		"desc-name"
+#define ACTION_PATH_ENTRY				"path"
+#define ACTION_PARAMETERS_ENTRY			"parameters"
+#define ACTION_BASENAMES_ENTRY			"basenames"
+#define ACTION_MATCHCASE_ENTRY			"matchcase"
+#define ACTION_MIMETYPES_ENTRY			"mimetypes"
+#define ACTION_ISFILE_ENTRY				"isfile"
+#define ACTION_ISDIR_ENTRY				"isdir"
+#define ACTION_MULTIPLE_ENTRY			"accept-multiple-files"
+#define ACTION_SCHEMES_ENTRY			"schemes"
 
 #endif /* __NA_GCONF_KEYS_H__ */

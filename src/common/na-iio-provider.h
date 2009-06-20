@@ -60,8 +60,10 @@ typedef struct {
 	NAIIOProviderInterfacePrivate *private;
 
 	/* i/o api */
-	GSList * ( *read_actions )( NAIIOProvider *instance );
-	gboolean ( *write_action )( NAIIOProvider *instance, const GObject *action, gchar **message );
+	GSList * ( *read_actions )       ( NAIIOProvider *instance );
+	gboolean ( *is_writable )        ( NAIIOProvider *instance );
+	gboolean ( *is_willing_to_write )( NAIIOProvider *instance, const GObject *action );
+	guint    ( *write_action )       ( NAIIOProvider *instance, const GObject *action, gchar **message );
 }
 	NAIIOProviderInterface;
 
@@ -69,7 +71,16 @@ GType    na_iio_provider_get_type( void );
 
 GSList  *na_iio_provider_read_actions( const GObject *pivot );
 
-gboolean na_iio_provider_write_action( const GObject *pivot, const GObject *action, gchar **message );
+guint    na_iio_provider_write_action( const GObject *pivot, const GObject *action, gchar **message );
+
+/* return code of write_action function
+ */
+enum {
+	NA_IIO_PROVIDER_WRITE_OK = 0,
+	NA_IIO_PROVIDER_NOT_WRITABLE,
+	NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE,
+	NA_IIO_PROVIDER_WRITE_ERROR
+};
 
 G_END_DECLS
 

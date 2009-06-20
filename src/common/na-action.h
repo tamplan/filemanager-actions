@@ -67,6 +67,17 @@ typedef struct {
 }
 	NAActionClass;
 
+/* instance properties
+ * please note that property names must have the same spelling as the
+ * NactIIOProvider parameters
+ */
+#define PROP_ACTION_UUID_STR			"uuid"
+#define PROP_ACTION_VERSION_STR			"version"
+#define PROP_ACTION_LABEL_STR			"label"
+#define PROP_ACTION_TOOLTIP_STR			"tooltip"
+#define PROP_ACTION_ICON_STR			"icon"
+#define PROP_ACTION_READONLY_STR		"read-only"
+
 GType     na_action_get_type( void );
 
 NAAction *na_action_new( const gchar *uuid );
@@ -78,6 +89,7 @@ gchar    *na_action_get_label( const NAAction *action );
 gchar    *na_action_get_tooltip( const NAAction *action );
 gchar    *na_action_get_icon( const NAAction *action );
 gchar    *na_action_get_verified_icon_name( const NAAction *action );
+gboolean  na_action_is_readonly( const NAAction *action );
 
 void      na_action_set_new_uuid( NAAction *action );
 

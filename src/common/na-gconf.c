@@ -72,29 +72,50 @@ enum {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType            register_type( void );
-static void             class_init( NAGConfClass *klass );
-static void             iio_provider_iface_init( NAIIOProviderInterface *iface );
-static void             instance_init( GTypeInstance *instance, gpointer klass );
-static void             instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void             instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void             instance_dispose( GObject *object );
-static void             instance_finalize( GObject *object );
+static GType          register_type( void );
+static void           class_init( NAGConfClass *klass );
+static void           iio_provider_iface_init( NAIIOProviderInterface *iface );
+static void           instance_init( GTypeInstance *instance, gpointer klass );
+static void           instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void           instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void           instance_dispose( GObject *object );
+static void           instance_finalize( GObject *object );
 
-static GSList          *do_read_actions( NAIIOProvider *provider );
-static void             load_action_properties( NAGConf *gconf, NAAction *action );
-static GSList          *load_profiles( NAGConf *gconf, NAAction *action );
-static void             load_profile_properties( NAGConf *gconf, NAActionProfile *profile );
-static GSList          *load_subdirs( const NAGConf *gconf, const gchar *path );
-static GSList          *load_keys_values( const NAGConf *gconf, const gchar *path );
-static void             free_keys_values( GSList *keys );
-static gchar           *path_to_key( const gchar *path );
-static void             set_item_properties( NAObject *object, GSList *properties );
+static GSList        *do_read_actions( NAIIOProvider *provider );
+static gboolean       load_action( NAGConf *gconf, NAAction *action, const gchar *uuid );
+/*static void           load_action_properties( NAGConf *gconf, NAAction *action );*/
+static GSList        *load_profiles( NAGConf *gconf, NAAction *action );
+static void           load_profile_properties( NAGConf *gconf, NAActionProfile *profile );
+static GSList        *load_subdirs( const NAGConf *gconf, const gchar *path );
+static GSList        *load_keys_values( const NAGConf *gconf, const gchar *path );
+static void           free_keys_values( GSList *entries );
+static gchar         *path_to_key( const gchar *path );
+static void           set_item_properties( NAObject *object, GSList *properties );
+static gboolean       set_action_properties( NAGConf *gconf, NAAction *action, GSList *properties );
+static void           load_v1_properties( NAAction *action, const gchar *version, GSList *properties );
+static gchar         *search_for_str( GSList *properties, const gchar *profile, const gchar *key );
+static gboolean       search_for_bool( GSList *properties, const gchar *profile, const gchar *key );
+static GSList        *search_for_list( GSList *properties, const gchar *profile, const gchar *key );
+static GSList        *keys_to_notify( GSList *entries );
 static NAPivotNotify *entry_to_notify( const GConfEntry *entry );
+static void           free_list_notify( GSList *list );
+static gboolean       remove_v1_keys( NAGConf *gconf, const NAAction *action, gchar **message );
+static gboolean       remove_key( NAGConf *gconf, const gchar *uuid, const gchar *key, gchar **message );
 
-static guint            install_gconf_watch( NAGConf *gconf );
-static void             remove_gconf_watch( NAGConf *gconf );
-static void             action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
+static gboolean       do_is_writable( NAIIOProvider *provider );
+static gboolean       do_is_willing_to_write( NAIIOProvider *provider, const GObject *action );
+
+static guint          do_write_action( NAIIOProvider *provider, const GObject *action, gchar **message );
+static gboolean       write_v2_keys( NAGConf *gconf, const NAAction *action, gchar **message );
+static gboolean       write_str( NAGConf *gconf, const gchar *uuid, const gchar *key, gchar *value, gchar **message );
+static gboolean       write_str2( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, gchar **message );
+static gboolean       write_key( NAGConf *gconf, const gchar *path, const gchar *value, gchar **message );
+static gboolean       write_bool( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, gchar **message );
+static gboolean       write_list( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, gchar **message );
+
+static guint          install_gconf_watch( NAGConf *gconf );
+static void           remove_gconf_watch( NAGConf *gconf );
+static void           action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
 
 GType
 na_gconf_get_type( void )
@@ -168,6 +189,9 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, iface );
 
 	iface->read_actions = do_read_actions;
+	iface->is_writable = do_is_writable;
+	iface->is_willing_to_write = do_is_willing_to_write;
+	iface->write_action = do_write_action;
 }
 
 static void
@@ -271,6 +295,12 @@ na_gconf_new( const GObject *handler )
 /*
  * NAIIOProviderInterface implementation
  * load the list of actions and returns them as a GSList
+ *
+ * @provider: this NAGconf object, seen here as a I/O provider.
+ *
+ * Note that whatever be the version of the readen action, we convert
+ * it now to the latest available, possibly updating the GConf storage
+ * subsystem.
  */
 static GSList *
 do_read_actions( NAIIOProvider *provider )
@@ -285,7 +315,6 @@ do_read_actions( NAIIOProvider *provider )
 	GSList *items = NULL;
 	GSList *ip;
 	GSList *listpath = load_subdirs( self, NA_GCONF_CONFIG_PATH );
-	GSList *profiles;
 
 	for( ip = listpath ; ip ; ip = ip->next ){
 
@@ -293,13 +322,12 @@ do_read_actions( NAIIOProvider *provider )
 
 		NAAction *action = na_action_new( key );
 
-		load_action_properties( self, action );
+		if( load_action( self, action, key )){
+			items = g_slist_prepend( items, action );
 
-		profiles = load_profiles( self, action );
-		na_action_set_profiles( action, profiles );
-		na_action_free_profiles( profiles );
-
-		items = g_slist_prepend( items, action );
+		} else {
+			g_object_unref( action );
+		}
 
 		g_free( key );
 	}
@@ -311,12 +339,57 @@ do_read_actions( NAIIOProvider *provider )
 
 /*
  * load and set the properties of the specified action
+ * at least we must have a label, as all other entries can have
+ * suitable default values
+ *
+ * we have to deal with successive versions of action schema :
+ *
+ * - version = '1.0'
+ *   action+= uuid+label+tooltip+icon
+ *   action+= path+parameters+basenames+isdir+isfile+multiple+schemes
+ *
+ * - version > '1.0'
+ *   action+= matchcase+mimetypes
+ *
+ * - version = '2.0' which introduces the 'profile' notion
+ *   profile += name+label
  */
-static void
+static gboolean
+load_action( NAGConf *gconf, NAAction *action, const gchar *uuid )
+{
+	static const gchar *thisfn = "nacf_gconf_load_action";
+	g_debug( "%s: gconf=%p, action=%p, uuid=%s", thisfn, gconf, action, uuid );
+
+	g_assert( NA_IS_GCONF( gconf ));
+	g_assert( NA_IS_ACTION( action ));
+
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
+
+	GSList *entries = load_keys_values( gconf, path );
+	GSList *properties = keys_to_notify( entries );
+	free_keys_values( entries );
+
+	gboolean ok = set_action_properties( gconf, action, properties );
+
+	if( !gconf_client_key_is_writable( gconf->private->gconf, path, NULL )){
+		g_debug( "%s: %s key is not writable", thisfn, path );
+		gboolean readonly = TRUE;
+		g_object_set( G_OBJECT( action ), PROP_ACTION_READONLY_STR, readonly, NULL );
+	}
+
+	free_list_notify( properties );
+	g_free( path );
+	return( ok );
+}
+
+/*
+ * load and set the properties of the specified action
+ */
+/*static void
 load_action_properties( NAGConf *gconf, NAAction *action )
 {
-	/*static const gchar *thisfn = "nacf_gconf_load_action_properties";
-	g_debug( "%s: gconf=%p, action=%p", thisfn, gconf, action );*/
+	static const gchar *thisfn = "nacf_gconf_load_action_properties";
+	g_debug( "%s: gconf=%p, action=%p", thisfn, gconf, action );
 
 	g_assert( NA_IS_GCONF( gconf ));
 	g_assert( NA_IS_ACTION( action ));
@@ -331,7 +404,7 @@ load_action_properties( NAGConf *gconf, NAAction *action )
 	free_keys_values( properties );
 	g_free( uuid );
 	g_free( path );
-}
+}*/
 
 /*
  * load the list of profiles for an action and returns them as a GSList
@@ -401,7 +474,7 @@ load_profile_properties( NAGConf *gconf, NAActionProfile *profile )
  * load the keys which are the subdirs of the given path
  * returns a list of keys as full path
  */
-GSList *
+static GSList *
 load_subdirs( const NAGConf *gconf, const gchar *path )
 {
 	static const gchar *thisfn = "na_gconf_load_subdirs";
@@ -418,10 +491,10 @@ load_subdirs( const NAGConf *gconf, const gchar *path )
 }
 
 /*
- * load all the key=value pairs of this key (specified as a full path)
+ * load all the key=value pairs of this key (specified as a full path),
+ * returning them as a list of GConfEntry.
  * The list is not recursive, it contains only the immediate children of
- * path.
- * To free the returned list, call free_key_values
+ * path. To free the returned list, call free_key_values.
  */
 static GSList *
 load_keys_values( const NAGConf *gconf, const gchar *path )
@@ -501,11 +574,188 @@ set_item_properties( NAObject *object, GSList *properties )
 }
 
 /*
+ * set the item properties into the action, dealing with successive
+ * versions
+ */
+static gboolean
+set_action_properties( NAGConf *gconf, NAAction *action, GSList *properties )
+{
+	/*static const gchar *thisfn = "na_gconf_set_action_properties";*/
+
+	/* the last action version we handle here */
+	static const gchar *last_version = "2.0";
+
+	gchar *label = search_for_str( properties, NULL, ACTION_LABEL_ENTRY );
+	if( !label ){
+		return( FALSE );
+	}
+
+	gchar *version = search_for_str( properties, NULL, ACTION_VERSION_ENTRY );
+	gchar *tooltip = search_for_str( properties, NULL, ACTION_TOOLTIP_ENTRY );
+	gchar *icon = search_for_str( properties, NULL, ACTION_ICON_ENTRY );
+
+	g_object_set( G_OBJECT( action ),
+			PROP_ACTION_VERSION_STR, last_version,
+			PROP_ACTION_LABEL_STR, label,
+			PROP_ACTION_TOOLTIP_STR, tooltip,
+			PROP_ACTION_ICON_STR, icon,
+			NULL );
+
+	g_free( icon );
+	g_free( tooltip );
+	g_free( label );
+
+	if( g_ascii_strcasecmp( version, "2.0" ) < 0 ){
+
+		load_v1_properties( action, version, properties );
+
+		gchar *uuid = na_action_get_uuid( action );
+		gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
+		if( gconf_client_key_is_writable( gconf->private->gconf, path, NULL )){
+			remove_v1_keys( gconf, action, NULL );
+		}
+		g_free( path );
+		g_free( uuid );
+
+	} else {
+
+		GSList *profiles = load_profiles( gconf, action );
+		na_action_set_profiles( action, profiles );
+		na_action_free_profiles( profiles );
+	}
+
+	g_free( version );
+	return( TRUE );
+}
+
+/*
+ * only handle one profile, which is already loaded
+ * action+= path+parameters+basenames+isdir+isfile+multiple+schemes
+ */
+static void
+load_v1_properties( NAAction *action, const gchar *version, GSList *properties )
+{
+	GSList *profiles = NULL;
+	NAActionProfile *profile = na_action_profile_new( NA_OBJECT( action ), "default" );
+
+	gchar *path = search_for_str( properties, NULL, ACTION_PATH_ENTRY );
+	gchar *parameters = search_for_str( properties, NULL, ACTION_PARAMETERS_ENTRY );
+	GSList *basenames = search_for_list( properties, NULL, ACTION_BASENAMES_ENTRY );
+	gboolean isdir = search_for_bool( properties, NULL, ACTION_ISDIR_ENTRY );
+	gboolean isfile = search_for_bool( properties, NULL, ACTION_ISFILE_ENTRY );
+	gboolean multiple = search_for_bool( properties, NULL, ACTION_MULTIPLE_ENTRY );
+	GSList *schemes = search_for_list( properties, NULL, ACTION_SCHEMES_ENTRY );
+
+	g_object_set( G_OBJECT( profile ),
+			PROP_PROFILE_PATH_STR, path,
+			PROP_PROFILE_PARAMETERS_STR, parameters,
+			PROP_PROFILE_BASENAMES_STR, basenames,
+			PROP_PROFILE_ISDIR_STR, isdir,
+			PROP_PROFILE_ISFILE_STR, isfile,
+			PROP_PROFILE_ACCEPT_MULTIPLE_STR, multiple,
+			PROP_PROFILE_SCHEMES_STR, schemes,
+			NULL );
+
+	g_free( path );
+	g_free( parameters );
+	na_utils_free_string_list( basenames );
+	na_utils_free_string_list( schemes );
+
+	if( g_ascii_strcasecmp( version, "1.0" ) > 0 ){
+
+		/* handle matchcase+mimetypes
+		 * note that default values for 1.0 version have been set
+		 * in na_action_profile_instance_init
+		 */
+		gboolean matchcase = search_for_bool( properties, "", ACTION_MATCHCASE_ENTRY );
+		GSList *mimetypes = search_for_list( properties, "", ACTION_MIMETYPES_ENTRY );
+
+		g_object_set( G_OBJECT( profile ),
+				PROP_PROFILE_MATCHCASE_STR, matchcase,
+				PROP_PROFILE_MIMETYPES_STR, mimetypes,
+				NULL );
+
+		na_utils_free_string_list( mimetypes );
+	}
+
+	profiles = g_slist_prepend( profiles, profile );
+	na_action_set_profiles( action, profiles );
+	na_action_free_profiles( profiles );
+}
+
+static gchar *
+search_for_str( GSList *properties, const gchar *profile, const gchar *key )
+{
+	GSList *ip;
+	for( ip = properties ; ip ; ip = ip->next ){
+		NAPivotNotify *npn = ( NAPivotNotify * ) ip->data;
+		if( npn->type == NA_PIVOT_STR &&
+		  ( !profile || !g_ascii_strcasecmp( profile, npn->profile )) &&
+		    !g_ascii_strcasecmp( key, npn->parm )){
+				return( g_strdup(( gchar * ) npn->data ));
+		}
+	}
+	return(( gchar * ) NULL );
+}
+
+static gboolean
+search_for_bool( GSList *properties, const gchar *profile, const gchar *key )
+{
+	GSList *ip;
+	for( ip = properties ; ip ; ip = ip->next ){
+		NAPivotNotify *npn = ( NAPivotNotify * ) ip->data;
+		if( npn->type == NA_PIVOT_BOOL &&
+		  ( !profile || !g_ascii_strcasecmp( profile, npn->profile )) &&
+			!g_ascii_strcasecmp( key, npn->parm )){
+				return(( gboolean ) npn->data );
+		}
+	}
+	return( FALSE );
+}
+
+static GSList *
+search_for_list( GSList *properties, const gchar *profile, const gchar *key )
+{
+	GSList *ip;
+	for( ip = properties ; ip ; ip = ip->next ){
+		NAPivotNotify *npn = ( NAPivotNotify * ) ip->data;
+		if( npn->type == NA_PIVOT_STRLIST &&
+		  ( !profile || !g_ascii_strcasecmp( profile, npn->profile )) &&
+			!g_ascii_strcasecmp( key, npn->parm )){
+				return( na_utils_duplicate_string_list(( GSList * ) npn->data ));
+		}
+	}
+	return(( GSList * ) NULL );
+}
+
+/*
+ * load all the key=value pairs of this key (specified as a full path),
+ * returning them as a list of GConfEntry.
+ * The list is not recursive, it contains only the immediate children of
+ * path. To free the returned list, call free_key_values.
+ */
+static GSList *
+keys_to_notify( GSList *entries )
+{
+	GSList *item;
+	GSList *properties = NULL;
+
+	for( item = entries ; item ; item = item->next ){
+		GConfEntry *entry = ( GConfEntry * ) item->data;
+		NAPivotNotify *npn = entry_to_notify( entry );
+		properties = g_slist_prepend( properties, npn );
+	}
+
+	return( properties );
+}
+
+/*
  * convert a GConfEntry to a structure suitable to notify NAPivot
  *
  * when created or modified, the entry can be of the forms :
  *  key/parm
  *  key/profile/parm with a not null value
+ *
  * but when removing an entry, it will be of the form :
  *  key
  *  key/parm
@@ -574,6 +824,199 @@ entry_to_notify( const GConfEntry *entry )
 		}
 	}
 	return( npn );
+}
+
+static void
+free_list_notify( GSList *list )
+{
+	GSList *il;
+	for( il = list ; il ; il = il->next ){
+		na_pivot_free_notify(( NAPivotNotify *) il->data );
+	}
+}
+
+static gboolean
+remove_v1_keys( NAGConf *gconf, const NAAction *action, gchar **message )
+{
+	gchar *uuid = na_action_get_uuid( action );
+
+	gboolean ret =
+		remove_key( gconf, uuid, ACTION_PATH_ENTRY, message ) &&
+		remove_key( gconf, uuid, ACTION_PARAMETERS_ENTRY, message ) &&
+		remove_key( gconf, uuid, ACTION_BASENAMES_ENTRY, message ) &&
+		remove_key( gconf, uuid, ACTION_MATCHCASE_ENTRY, message ) &&
+		remove_key( gconf, uuid, ACTION_MIMETYPES_ENTRY, message ) &&
+		remove_key( gconf, uuid, ACTION_ISFILE_ENTRY, message ) &&
+		remove_key( gconf, uuid, ACTION_ISDIR_ENTRY, message ) &&
+		remove_key( gconf, uuid, ACTION_MULTIPLE_ENTRY, message ) &&
+		remove_key( gconf, uuid, ACTION_SCHEMES_ENTRY, message );
+
+	g_free( uuid );
+	return( ret );
+}
+
+static gboolean
+remove_key( NAGConf *gconf, const gchar *uuid, const gchar *key, gchar **message )
+{
+	gboolean ret = TRUE;
+	GError *error = NULL;
+
+	gchar *path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
+
+	if( !gconf_client_unset( gconf->private->gconf, path, &error )){
+		if( message ){
+			*message = g_strdup( error->message );
+		}
+		g_error_free( error );
+		ret = FALSE;
+	}
+
+	g_free( path );
+	return( ret );
+}
+
+static gboolean
+do_is_writable( NAIIOProvider *provider )
+{
+	return( TRUE );
+}
+
+static gboolean
+do_is_willing_to_write( NAIIOProvider *provider, const GObject *action )
+{
+	return( TRUE );
+}
+
+static guint
+do_write_action( NAIIOProvider *provider, const GObject *obj_action, gchar **message )
+{
+	static const gchar *thisfn = "nacf_gconf_do_write_action";
+	g_debug( "%s: provider=%p, action=%p, message=%p", thisfn, provider, obj_action, message );
+
+	g_assert( NA_IS_IIO_PROVIDER( provider ));
+	g_assert( NA_IS_GCONF( provider ));
+	NAGConf *self = NA_GCONF( provider );
+
+	message = NULL;
+
+	g_assert( NA_IS_ACTION( obj_action ));
+	NAAction *action = NA_ACTION( obj_action );
+
+	if( !write_v2_keys( self, action, message )){
+		return( NA_IIO_PROVIDER_WRITE_ERROR );
+	}
+
+	return( NA_IIO_PROVIDER_WRITE_OK );
+}
+
+static gboolean
+write_v2_keys( NAGConf *gconf, const NAAction *action, gchar **message )
+{
+	gchar *uuid = na_action_get_uuid( action );
+
+	gboolean ret =
+		write_str( gconf, uuid, ACTION_VERSION_ENTRY, na_action_get_version( action ), message ) &&
+		write_str( gconf, uuid, ACTION_LABEL_ENTRY, na_action_get_label( action ), message ) &&
+		write_str( gconf, uuid, ACTION_TOOLTIP_ENTRY, na_action_get_tooltip( action ), message ) &&
+		write_str( gconf, uuid, ACTION_ICON_ENTRY, na_action_get_icon( action ), message );
+
+	GSList *ip;
+	GSList *profiles = na_action_get_profiles( action );
+
+	for( ip = profiles ; ip && ret ; ip = ip->next ){
+
+		NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
+		gchar *name = na_action_profile_get_name( profile );
+
+		ret =
+			write_str2( gconf, uuid, name, ACTION_PROFILE_LABEL_ENTRY, na_action_profile_get_label( profile ), message ) &&
+			write_str2( gconf, uuid, name, ACTION_PATH_ENTRY, na_action_profile_get_path( profile ), message ) &&
+			write_str2( gconf, uuid, name, ACTION_PARAMETERS_ENTRY, na_action_profile_get_parameters( profile ), message ) &&
+			write_list( gconf, uuid, name, ACTION_BASENAMES_ENTRY, na_action_profile_get_basenames( profile ), message ) &&
+			write_bool( gconf, uuid, name, ACTION_MATCHCASE_ENTRY, na_action_profile_get_matchcase( profile ), message ) &&
+			write_list( gconf, uuid, name, ACTION_MIMETYPES_ENTRY, na_action_profile_get_mimetypes( profile ), message ) &&
+			write_bool( gconf, uuid, name, ACTION_ISFILE_ENTRY, na_action_profile_get_is_file( profile ), message ) &&
+			write_bool( gconf, uuid, name, ACTION_ISDIR_ENTRY, na_action_profile_get_is_dir( profile ), message ) &&
+			write_bool( gconf, uuid, name, ACTION_MULTIPLE_ENTRY, na_action_profile_get_multiple( profile ), message ) &&
+			write_list( gconf, uuid, name, ACTION_SCHEMES_ENTRY, na_action_profile_get_schemes( profile ), message );
+
+		g_free( name );
+	}
+
+	g_free( uuid );
+	return( ret );
+}
+
+static gboolean
+write_str( NAGConf *gconf, const gchar *uuid, const gchar *key, gchar *value, gchar **message )
+{
+	gchar *path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
+	gboolean ret = write_key( gconf, path, value, message );
+	g_free( value );
+	g_free( path );
+	return( ret );
+}
+
+static gboolean
+write_str2( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, gchar **message )
+{
+	gchar *path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
+	gboolean ret = write_key( gconf, path, value, message );
+	g_free( value );
+	g_free( path );
+	return( ret );
+}
+
+static gboolean
+write_key( NAGConf *gconf, const gchar *path, const gchar *value, gchar **message )
+{
+	gboolean ret = TRUE;
+	GError *error = NULL;
+
+	if( !gconf_client_set_string( gconf->private->gconf, path, value, &error )){
+		*message = g_strdup( error->message );
+		g_error_free( error );
+		ret = FALSE;
+	}
+
+	return( ret );
+}
+
+static gboolean
+write_bool( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, gchar **message )
+{
+	gboolean ret = TRUE;
+	GError *error = NULL;
+
+	gchar *path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
+
+	if( !gconf_client_set_bool( gconf->private->gconf, path, value, &error )){
+		*message = g_strdup( error->message );
+		g_error_free( error );
+		ret = FALSE;
+	}
+
+	g_free( path );
+	return( ret );
+}
+
+static gboolean
+write_list( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, gchar **message )
+{
+	gboolean ret = TRUE;
+	GError *error = NULL;
+
+	gchar *path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
+
+	if( !gconf_client_set_list( gconf->private->gconf, path, GCONF_VALUE_STRING, value, &error )){
+		*message = g_strdup( error->message );
+		g_error_free( error );
+		ret = FALSE;
+	}
+
+	na_utils_free_string_list( value );
+	g_free( path );
+	return( ret );
 }
 
 /*

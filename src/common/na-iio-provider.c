@@ -44,9 +44,12 @@
 struct NAIIOProviderInterfacePrivate {
 };
 
-static GType register_type( void );
-static void  interface_base_init( NAIIOProviderInterface *klass );
-static void  interface_base_finalize( NAIIOProviderInterface *klass );
+static GType    register_type( void );
+static void     interface_base_init( NAIIOProviderInterface *klass );
+static void     interface_base_finalize( NAIIOProviderInterface *klass );
+
+static gboolean do_is_writable( NAIIOProvider *instance );
+static gboolean do_is_willing_to_write( NAIIOProvider *instance, const GObject *action );
 
 /**
  * Registers the GType of this interface.
@@ -100,6 +103,9 @@ interface_base_init( NAIIOProviderInterface *klass )
 		klass->private = g_new0( NAIIOProviderInterfacePrivate, 1 );
 
 		klass->read_actions = NULL;
+		klass->is_writable = do_is_writable;
+		klass->is_willing_to_write = do_is_willing_to_write;
+		klass->write_action = NULL;
 
 		initialized = TRUE;
 	}
@@ -147,7 +153,6 @@ na_iio_provider_read_actions( const GObject *object )
 	for( ip = providers ; ip ; ip = ip->next ){
 
 		instance = NA_IIO_PROVIDER( ip->data );
-
 		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_actions ){
 
 			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_actions( instance );
@@ -182,7 +187,7 @@ na_iio_provider_read_actions( const GObject *object )
  *
  * Returns TRUE if the write is successfull, FALSE else.
  */
-gboolean
+guint
 na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_action, gchar **message )
 {
 	static const gchar *thisfn = "na_iio_provider_write_action";
@@ -193,7 +198,7 @@ na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_actio
 
 	g_assert( NA_IS_ACTION( obj_action ));
 
-	gboolean ret = TRUE;
+	guint ret = NA_IIO_PROVIDER_NOT_WRITABLE;
 	GSList *ip;
 	NAIIOProvider *instance;
 
@@ -202,13 +207,26 @@ na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_actio
 	for( ip = providers ; ip ; ip = ip->next ){
 
 		instance = NA_IIO_PROVIDER( ip->data );
-
-		/* TODO: write the action
 		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action ){
-			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->load_actions( instance );
-			actions = g_slist_concat( actions, list );
-		}*/
+
+			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action( instance, obj_action, message );
+			if( ret == NA_IIO_PROVIDER_WRITE_OK || ret == NA_IIO_PROVIDER_WRITE_ERROR ){
+				break;
+			}
+		}
 	}
 
 	return( ret );
+}
+
+static gboolean
+do_is_writable( NAIIOProvider *instance )
+{
+	return( FALSE );
+}
+
+static gboolean
+do_is_willing_to_write( NAIIOProvider *instance, const GObject *action )
+{
+	return( FALSE );
 }

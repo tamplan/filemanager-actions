@@ -61,25 +61,35 @@ struct NAActionPrivate {
 	 *  (thanks, Frederic ;-))
 	 */
 	GSList   *profiles;
+
+	/* dynamically set when reading the actions from the I/O storage
+	 * subsystem
+	 * defaults to FALSE unless a write has already returned an error
+	 */
+	gboolean  read_only;
 };
 
-/* private instance properties
+/* instance properties
  * please note that property names must have the same spelling as the
  * NactIIOProvider parameters
  */
 enum {
-	PROP_UUID = 1,
-	PROP_VERSION,
-	PROP_LABEL,
-	PROP_TOOLTIP,
-	PROP_ICON
+	PROP_ACTION_UUID = 1,
+	PROP_ACTION_VERSION,
+	PROP_ACTION_LABEL,
+	PROP_ACTION_TOOLTIP,
+	PROP_ACTION_ICON,
+	PROP_ACTION_READONLY
 };
 
-#define PROP_UUID_STR		"uuid"
-#define PROP_VERSION_STR	"version"
-#define PROP_LABEL_STR		"label"
-#define PROP_TOOLTIP_STR	"tooltip"
-#define PROP_ICON_STR		"icon"
+#define PROP_ACTION_UUID_STR		"uuid"
+#define PROP_ACTION_VERSION_STR		"version"
+#define PROP_ACTION_LABEL_STR		"label"
+#define PROP_ACTION_TOOLTIP_STR		"tooltip"
+#define PROP_ACTION_ICON_STR		"icon"
+#define PROP_ACTION_READONLY_STR	"read-only"
+
+#define NA_ACTION_LATEST_VERSION	"2.0"
 
 static NAObjectClass *st_parent_class = NULL;
 
@@ -145,39 +155,46 @@ class_init( NAActionClass *klass )
 
 	/* the id of the object is marked as G_PARAM_CONSTRUCT_ONLY */
 	spec = g_param_spec_string(
-			PROP_UUID_STR,
-			PROP_UUID_STR,
+			PROP_ACTION_UUID_STR,
+			PROP_ACTION_UUID_STR,
 			"Globally unique identifier (UUID) of the action", "",
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_UUID, spec );
+	g_object_class_install_property( object_class, PROP_ACTION_UUID, spec );
 
 	spec = g_param_spec_string(
-			PROP_VERSION_STR,
-			PROP_VERSION_STR,
+			PROP_ACTION_VERSION_STR,
+			PROP_ACTION_VERSION_STR,
 			"Version of the schema", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_VERSION, spec );
+	g_object_class_install_property( object_class, PROP_ACTION_VERSION, spec );
 
 	spec = g_param_spec_string(
-			PROP_LABEL_STR,
-			PROP_LABEL_STR,
+			PROP_ACTION_LABEL_STR,
+			PROP_ACTION_LABEL_STR,
 			"Context menu displayable label", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_LABEL, spec );
+	g_object_class_install_property( object_class, PROP_ACTION_LABEL, spec );
 
 	spec = g_param_spec_string(
-			PROP_TOOLTIP_STR,
-			PROP_TOOLTIP_STR,
+			PROP_ACTION_TOOLTIP_STR,
+			PROP_ACTION_TOOLTIP_STR,
 			"Context menu tooltip", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_TOOLTIP, spec );
+	g_object_class_install_property( object_class, PROP_ACTION_TOOLTIP, spec );
 
 	spec = g_param_spec_string(
-			PROP_ICON_STR,
-			PROP_ICON_STR,
+			PROP_ACTION_ICON_STR,
+			PROP_ACTION_ICON_STR,
 			"Context menu displayable icon", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_ICON, spec );
+	g_object_class_install_property( object_class, PROP_ACTION_ICON, spec );
+
+	spec = g_param_spec_boolean(
+			PROP_ACTION_READONLY_STR,
+			PROP_ACTION_READONLY_STR,
+			"Is this action only readable", FALSE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_ACTION_READONLY, spec );
 
 	klass->private = g_new0( NAActionClassPrivate, 1 );
 
@@ -196,7 +213,17 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NAAction* self = NA_ACTION( instance );
 
 	self->private = g_new0( NAActionPrivate, 1 );
+
 	self->private->dispose_has_run = FALSE;
+
+	/* initialize suitable default values, but for label which is
+	 * mandatory
+	 */
+	self->private->version = g_strdup( NA_ACTION_LATEST_VERSION );
+	self->private->label = NULL;
+	self->private->tooltip = NULL;
+	self->private->icon = NULL;
+	self->private->read_only = FALSE;
 }
 
 static void
@@ -206,24 +233,28 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	NAAction *self = NA_ACTION( object );
 
 	switch( property_id ){
-		case PROP_UUID:
+		case PROP_ACTION_UUID:
 			g_value_set_string( value, self->private->uuid );
 			break;
 
-		case PROP_VERSION:
+		case PROP_ACTION_VERSION:
 			g_value_set_string( value, self->private->version );
 			break;
 
-		case PROP_LABEL:
+		case PROP_ACTION_LABEL:
 			g_value_set_string( value, self->private->label );
 			break;
 
-		case PROP_TOOLTIP:
+		case PROP_ACTION_TOOLTIP:
 			g_value_set_string( value, self->private->tooltip );
 			break;
 
-		case PROP_ICON:
+		case PROP_ACTION_ICON:
 			g_value_set_string( value, self->private->icon );
+			break;
+
+		case PROP_ACTION_READONLY:
+			g_value_set_boolean( value, self->private->read_only );
 			break;
 
 		default:
@@ -239,29 +270,33 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	NAAction *self = NA_ACTION( object );
 
 	switch( property_id ){
-		case PROP_UUID:
+		case PROP_ACTION_UUID:
 			g_free( self->private->uuid );
 			self->private->uuid = g_value_dup_string( value );
 			break;
 
-		case PROP_VERSION:
+		case PROP_ACTION_VERSION:
 			g_free( self->private->version );
 			self->private->version = g_value_dup_string( value );
 			break;
 
-		case PROP_LABEL:
+		case PROP_ACTION_LABEL:
 			g_free( self->private->label );
 			self->private->label = g_value_dup_string( value );
 			break;
 
-		case PROP_TOOLTIP:
+		case PROP_ACTION_TOOLTIP:
 			g_free( self->private->tooltip );
 			self->private->tooltip = g_value_dup_string( value );
 			break;
 
-		case PROP_ICON:
+		case PROP_ACTION_ICON:
 			g_free( self->private->icon );
 			self->private->icon = g_value_dup_string( value );
+			break;
+
+		case PROP_ACTION_READONLY:
+			self->private->read_only = g_value_get_boolean( value );
 			break;
 
 		default:
@@ -322,7 +357,7 @@ instance_finalize( GObject *object )
 NAAction *
 na_action_new( const gchar *uuid )
 {
-	NAAction *action = g_object_new( NA_ACTION_TYPE, PROP_UUID_STR, uuid, NULL );
+	NAAction *action = g_object_new( NA_ACTION_TYPE, PROP_ACTION_UUID_STR, uuid, NULL );
 	return( action );
 }
 
@@ -343,17 +378,18 @@ na_action_duplicate( const NAAction *action )
 	g_assert( NA_IS_ACTION( action ));
 
 	gchar *uuid = do_get_id( NA_OBJECT( action ));
-	NAAction *duplicate = g_object_new( NA_ACTION_TYPE, PROP_UUID_STR, uuid, NULL );
+	NAAction *duplicate = g_object_new( NA_ACTION_TYPE, PROP_ACTION_UUID_STR, uuid, NULL );
 	g_free( uuid );
 
 	duplicate->private->version = g_strdup( action->private->version );
 	duplicate->private->label = g_strdup( action->private->label );
 	duplicate->private->tooltip = g_strdup( action->private->tooltip );
 	duplicate->private->icon = g_strdup( action->private->icon );
+	duplicate->private->read_only = action->private->read_only;
 
 	GSList *ip;
 	for( ip = action->private->profiles ; ip ; ip = ip->next ){
-
+		/* TODO: duplicate profile */
 	}
 
 	return( duplicate );
@@ -371,11 +407,12 @@ do_dump( const NAObject *action )
 		st_parent_class->dump( action );
 	}
 
-	g_debug( "%s:    uuid='%s'", thisfn, self->private->uuid );
-	g_debug( "%s: version='%s'", thisfn, self->private->version );
-	g_debug( "%s:   label='%s'", thisfn, self->private->label );
-	g_debug( "%s: tooltip='%s'", thisfn, self->private->tooltip );
-	g_debug( "%s:    icon='%s'", thisfn, self->private->icon );
+	g_debug( "%s:      uuid='%s'", thisfn, self->private->uuid );
+	g_debug( "%s:   version='%s'", thisfn, self->private->version );
+	g_debug( "%s:     label='%s'", thisfn, self->private->label );
+	g_debug( "%s:   tooltip='%s'", thisfn, self->private->tooltip );
+	g_debug( "%s:      icon='%s'", thisfn, self->private->icon );
+	g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
 
 	/* dump profiles */
 	g_debug( "%s: %d profile(s) at %p", thisfn, na_action_get_profiles_count( self ), self->private->profiles );
@@ -391,7 +428,7 @@ do_get_id( const NAObject *action )
 	g_assert( NA_IS_ACTION( action ));
 
 	gchar *uuid;
-	g_object_get( G_OBJECT( action ), PROP_UUID_STR, &uuid, NULL );
+	g_object_get( G_OBJECT( action ), PROP_ACTION_UUID_STR, &uuid, NULL );
 
 	return( uuid );
 }
@@ -427,7 +464,7 @@ na_action_get_version( const NAAction *action )
 	g_assert( NA_IS_ACTION( action ));
 
 	gchar *version;
-	g_object_get( G_OBJECT( action ), PROP_VERSION_STR, &version, NULL );
+	g_object_get( G_OBJECT( action ), PROP_ACTION_VERSION_STR, &version, NULL );
 
 	return( version );
 }
@@ -438,7 +475,7 @@ do_get_label( const NAObject *action )
 	g_assert( NA_IS_ACTION( action ));
 
 	gchar *label;
-	g_object_get( G_OBJECT( action ), PROP_LABEL_STR, &label, NULL );
+	g_object_get( G_OBJECT( action ), PROP_ACTION_LABEL_STR, &label, NULL );
 
 	return( label );
 }
@@ -471,7 +508,7 @@ na_action_get_tooltip( const NAAction *action )
 	g_assert( NA_IS_ACTION( action ));
 
 	gchar *tooltip;
-	g_object_get( G_OBJECT( action ), PROP_TOOLTIP_STR, &tooltip, NULL );
+	g_object_get( G_OBJECT( action ), PROP_ACTION_TOOLTIP_STR, &tooltip, NULL );
 
 	return( tooltip );
 }
@@ -490,7 +527,7 @@ na_action_get_icon( const NAAction *action )
 	g_assert( NA_IS_ACTION( action ));
 
 	gchar *icon;
-	g_object_get( G_OBJECT( action ), PROP_ICON_STR, &icon, NULL );
+	g_object_get( G_OBJECT( action ), PROP_ACTION_ICON_STR, &icon, NULL );
 
 	return( icon );
 }
@@ -509,7 +546,7 @@ na_action_get_verified_icon_name( const NAAction *action )
 	g_assert( NA_IS_ACTION( action ));
 
 	gchar *icon_name;
-	g_object_get( G_OBJECT( action ), PROP_ICON_STR, &icon_name, NULL );
+	g_object_get( G_OBJECT( action ), PROP_ACTION_ICON_STR, &icon_name, NULL );
 
 	if( icon_name[0] == '/' ){
 		if( !g_file_test( icon_name, G_FILE_TEST_IS_REGULAR )){
@@ -522,6 +559,19 @@ na_action_get_verified_icon_name( const NAAction *action )
 	}
 
 	return( icon_name );
+}
+
+/**
+ * Is the specified action only readable ?
+ * Or, in other words, may this action be edited and then saved ?
+ *
+ * @action: an NAAction object.
+ */
+gboolean
+na_action_is_readonly( const NAAction *action )
+{
+	g_assert( NA_IS_ACTION( action ));
+	return( action->private->read_only );
 }
 
 /**
@@ -539,7 +589,7 @@ na_action_set_new_uuid( NAAction *action )
 	uuid_generate( uuid );
 	uuid_unparse_lower( uuid, uuid_str );
 
-	g_object_set( G_OBJECT( action ), PROP_UUID_STR, uuid_str, NULL );
+	g_object_set( G_OBJECT( action ), PROP_ACTION_UUID_STR, uuid_str, NULL );
 }
 
 /**

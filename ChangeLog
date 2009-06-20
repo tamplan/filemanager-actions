@@ -1,5 +1,22 @@
 2009-06-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-gconf.c:
+	Implement loading of old versions.
+	Implement writing an action.
+
+	* src/common/na-action.c:
+	* src/common/na-action.h:
+	* src/common/na-gconf.c:
+	Add read-only attribute set when GConf key is not writable.
+
+	* src/common/na-action.c:
+	* src/common/na-action.h:
+	* src/common/na-action-profile.c:
+	* src/common/na-action-profile.h:
+	Object properties are renamed, and moved to include file.
+	Objects are created with suitable default values.
+	Finalize helper functions.
+
 	* src/common/na-iio-provider.c:
 	Record the provider in each NAAction object.
 

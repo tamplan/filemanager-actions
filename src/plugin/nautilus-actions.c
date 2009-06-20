@@ -278,7 +278,7 @@ static GList *
 get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_get_file_items";
-	g_debug( "%s provider=%p, window=%p, files=%p, count=%d", thisfn, provider, window, files, g_list_length( files ));
+	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d", thisfn, provider, window, files, g_list_length( files ));
 
 	GList *items = NULL;
 	GSList* profiles;

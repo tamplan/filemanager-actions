@@ -68,6 +68,23 @@ typedef struct {
 }
 	NAActionProfileClass;
 
+/* instance properties
+ * please note that property names must have the same spelling as the
+ * NactIIOProvider parameters
+ */
+#define PROP_PROFILE_ACTION_STR					"action"
+#define PROP_PROFILE_NAME_STR					"name"
+#define PROP_PROFILE_LABEL_STR					"desc-name"
+#define PROP_PROFILE_PATH_STR					"path"
+#define PROP_PROFILE_PARAMETERS_STR				"parameters"
+#define PROP_PROFILE_ACCEPT_MULTIPLE_STR		"accept-multiple-files"
+#define PROP_PROFILE_BASENAMES_STR				"basenames"
+#define PROP_PROFILE_ISDIR_STR					"isdir"
+#define PROP_PROFILE_ISFILE_STR					"isfile"
+#define PROP_PROFILE_MATCHCASE_STR				"matchcase"
+#define PROP_PROFILE_MIMETYPES_STR				"mimetypes"
+#define PROP_PROFILE_SCHEMES_STR				"schemes"
+
 GType            na_action_profile_get_type( void );
 
 NAActionProfile *na_action_profile_new( const NAObject *action, const gchar *name );
@@ -79,6 +96,13 @@ gchar           *na_action_profile_get_name( const NAActionProfile *profile );
 gchar           *na_action_profile_get_label( const NAActionProfile *profile );
 gchar           *na_action_profile_get_path( const NAActionProfile *profile );
 gchar           *na_action_profile_get_parameters( const NAActionProfile *profile );
+GSList          *na_action_profile_get_basenames( const NAActionProfile *profile );
+gboolean         na_action_profile_get_matchcase( const NAActionProfile *profile );
+GSList          *na_action_profile_get_mimetypes( const NAActionProfile *profile );
+gboolean         na_action_profile_get_is_dir( const NAActionProfile *profile );
+gboolean         na_action_profile_get_is_file( const NAActionProfile *profile );
+gboolean         na_action_profile_get_multiple( const NAActionProfile *profile );
+GSList          *na_action_profile_get_schemes( const NAActionProfile *profile );
 
 gboolean         na_action_profile_is_candidate( const NAActionProfile *profile, GList *files );
 gchar           *na_action_profile_parse_parameters( const NAActionProfile *profile, GList *files );
