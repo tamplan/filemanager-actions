@@ -300,6 +300,7 @@ do_read_actions( NAIIOProvider *provider )
 		na_action_free_profiles( profiles );
 
 		items = g_slist_prepend( items, action );
+
 		g_free( key );
 	}
 

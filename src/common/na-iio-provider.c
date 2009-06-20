@@ -138,7 +138,7 @@ na_iio_provider_read_actions( const GObject *object )
 	NAPivot *pivot = NA_PIVOT( object );
 
 	GSList *actions = NULL;
-	GSList *ip;
+	GSList *ip, *il;
 	GSList *list;
 	NAIIOProvider *instance;
 
@@ -149,7 +149,13 @@ na_iio_provider_read_actions( const GObject *object )
 		instance = NA_IIO_PROVIDER( ip->data );
 
 		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_actions ){
+
 			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_actions( instance );
+
+			for( il = list ; il ; il = il->next ){
+				g_object_set_data( G_OBJECT( il->data ), "provider", instance );
+			}
+
 			actions = g_slist_concat( actions, list );
 		}
 	}

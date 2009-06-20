@@ -1,3 +1,8 @@
+2009-06-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-iio-provider.c:
+	Record the provider in each NAAction object.
+
 2009-06-19 Pierre Wieser <pwieser@trychlos.org>
 
 	Getting NA (Nautilus Actions) as common objects prefix.
@@ -40,7 +45,7 @@
 	* src/nact/nact-wnd-actions.h:
 	Define and implement new class NactWndActions.
 
-	* src/common/Makefile.am:
+	* src/nact/Makefile.am:
 	Updated accordingly.
 
 2009-06-18 Pierre Wieser <pwieser@trychlos.org>
