@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mr\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-06-14 13:58+0000\n"
-"PO-Revision-Date: 2009-06-15 14:44+0530\n"
+"POT-Creation-Date: 2009-06-18 23:53+0000\n"
+"PO-Revision-Date: 2009-06-24 18:47+0530\n"
 "Last-Translator: Sandeep Shedmake <sandeep.shedmake@gmail.com>\n"
 "Language-Team: marathi\n"
 "MIME-Version: 1.0\n"
@@ -359,45 +359,61 @@ msgid ""
 "instead of <%s>)"
 msgstr "ही XML फाइल वैध Nautilus-कृती संयोजना फाइल नाही (रूट नोड <%s> आहे, <%s> ऐवजी)"
 
-#. i18n notes: will be displayed in a dialog
-#: ../src/nact/nact.c:229
+#: ../src/nact/nact.c:236
 #, c-format
 msgid "Can't duplicate action '%s'!"
 msgstr "कृती '%s' हुबेहुब करू शकत नाही!"
 
 #. create columns on the tree view
-#: ../src/nact/nact.c:344 ../src/nact/nact-import-export.c:179
+#: ../src/nact/nact.c:352 ../src/nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "चिन्ह"
 
-#: ../src/nact/nact.c:349 ../src/nact/nact-import-export.c:184
+#: ../src/nact/nact.c:357 ../src/nact/nact-import-export.c:184
 msgid "Label"
 msgstr "लेबल"
 
-#: ../src/nact/nact.c:373 ../src/nact/nact-action-editor.c:161
+#: ../src/nact/nact.c:387 ../src/nact/nact-action-editor.c:161
 #: ../src/nact/nact-editor.c:663 ../src/nact/nact-import-export.c:331
 #: ../src/nact/nact-profile-editor.c:567
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Nautilus कृती संयोजना साधन करीता संवाद दाखल करू शकत नाही"
 
-#: ../src/nact/nact-application.c:291
-msgid ""
-"<b>Another instance of Nautilus Actions Configurator is already running.</"
-"b>\n"
-"\n"
-"Please switch back to it."
-msgstr ""
-"<b>Nautilus Actions Configurator ची आणखी घटना आधिपासूनच कार्यरत आहे.</"
-"b>\n"
-"\n"
-"कृपया त्याकडे पुन्हा जा."
+#: ../src/nact/nact-application.c:246
+#| msgid ""
+#| "<b>Another instance of Nautilus Actions Configurator is already running.</"
+#| "b>\n"
+#| "\n"
+#| "Please switch back to it."
+msgid "Another instance of Nautilus Actions Configurator is already running."
+msgstr "Nautilus Actions Configurator आधिपासूनच कार्यरत आहे."
 
-#. i18n: window title
-#: ../src/nact/nact-application.c:294
-#: ../src/nact/nautilus-actions-config.glade.h:64
-msgid "Nautilus Actions"
-msgstr "Nautilus कृती"
+#: ../src/nact/nact-application.c:247
+msgid "Please switch back to it."
+msgstr "कृपया पुन्हा वापरून पहा."
 
+#. i18n: this is the application name, used in window title
+#.
+#: ../src/nact/nact-application.c:258
+#| msgid "Nautilus Actions Configuration"
+msgid "Nautilus Actions Configuration Tool"
+msgstr "Nautilus कृती संयोजना साधन"
+
+#. static int
+#. run_appli( NactApplication *application )
+#. {
+#. int code = 0;
+#.
+#. g_object_set( G_OBJECT( application ), PROP_PIVOT_STR, na_pivot_new( NULL ), NULL );
+#.
+#. g_object_set( G_OBJECT( application ), PROP_MAINWINDOW_STR, nact_init_dialog( G_OBJECT( application ), NULL );
+#.
+#. unique_app_watch_window( application->private->unique, application->private->main );
+#.
+#. gtk_main();
+#.
+#. return( code );
+#. }
 #: ../src/nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
 msgstr "Nautilus पॉपअप मेन्यू अंतर्गत घटक समावेष करा"
@@ -807,6 +823,10 @@ msgstr "Nautilus कृती संपादक"
 #: ../src/nact/nautilus-actions-config.glade.h:63
 msgid "Nautilus Action Profile Editor"
 msgstr "Nautilus कृती संक्षिप्त माहिती संपादक"
+
+#: ../src/nact/nautilus-actions-config.glade.h:64
+msgid "Nautilus Actions"
+msgstr "Nautilus कृती"
 
 #: ../src/nact/nautilus-actions-config.glade.h:65
 msgid ""
