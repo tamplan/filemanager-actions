@@ -73,6 +73,10 @@ GSList  *na_iio_provider_read_actions( const GObject *pivot );
 
 guint    na_iio_provider_write_action( const GObject *pivot, const GObject *action, gchar **message );
 
+/* modification notification message to NAPivot
+ */
+#define NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED		"notify_pivot_of_action_changed"
+
 /* return code of write_action function
  */
 enum {

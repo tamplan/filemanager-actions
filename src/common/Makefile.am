@@ -44,6 +44,8 @@ libnact_la_SOURCES = \
 	na-gconf-keys.h								\
 	na-iio-provider.c							\
 	na-iio-provider.h							\
+	na-ipivot-container.c						\
+	na-ipivot-container.h						\
 	na-object.c									\
 	na-object.h									\
 	na-pivot.c									\

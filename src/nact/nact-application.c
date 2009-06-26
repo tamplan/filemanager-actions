@@ -159,7 +159,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->dispose_has_run = FALSE;
 
-	/* TODO: be notified when the list of actions is changed elsewhere */
 	self->private->pivot = na_pivot_new( NULL );
 }
 
@@ -306,7 +305,11 @@ get_main_window( BaseApplication *application )
 	static const gchar *thisfn = "nact_application_get_main_window";
 	g_debug( "%s: application=%p", thisfn, application );
 
-	return( G_OBJECT( nact_main_window_new( G_OBJECT( application ))));
+	GObject *window = G_OBJECT( nact_main_window_new( G_OBJECT( application )));
+
+	na_pivot_add_notified( NA_PIVOT( nact_application_get_pivot( NACT_APPLICATION( application ))), window );
+
+	return( window );
 }
 
 /**

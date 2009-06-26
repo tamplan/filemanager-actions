@@ -39,6 +39,7 @@
 #include "na-gconf.h"
 #include "na-pivot.h"
 #include "na-iio-provider.h"
+#include "na-ipivot-container.h"
 #include "na-utils.h"
 
 /* private class data
@@ -49,40 +50,39 @@ struct NAPivotClassPrivate {
 /* private instance data
  */
 struct NAPivotPrivate {
-	gboolean  dispose_has_run;
+	gboolean dispose_has_run;
 
-	/* instance to be notified of an action modification
+	/* list of instances to be notified of an action modification
 	 */
-	gpointer  notified;
+	GSList  *notified;
 
 	/* list of interface providers
 	 * needs to be in the instance rather than in the class to be able
 	 * to pass NAPivot object to the IO provider, so that the later
 	 * is able to have access to the former (and its list of actions)
 	 */
-	GSList   *providers;
+	GSList  *providers;
 
 	/* list of actions
 	 */
-	GSList   *actions;
+	GSList  *actions;
 };
 
-/* private instance properties
- */
-enum {
-	PROP_NOTIFIED = 1
-};
-
-#define PROP_NOTIFIED_STR				"to-be-notified"
-
-/* signal definition
+/* We have a double stage notification system :
+ *
+ * 1. When the storage subsystems detects a change on an action, it
+ *    must emit the "notify_pivot_of_action_changed" signal to notify
+ *    NAPivot of this change ; when this signal is received, NAPivot
+ *    then updates accordingly the list of actions it maintains.
+ *
+ * 2. When NAPivot has successfully updated its list of actions, it has
+ *    to notify its consumers (its 'containers') in order they update
+ *    themselves.
  */
 enum {
 	ACTION_CHANGED,
 	LAST_SIGNAL
 };
-
-#define SIGNAL_ACTION_CHANGED_NAME		"notify_pivot_of_action_changed"
 
 static GObjectClass *st_parent_class = NULL;
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
@@ -94,13 +94,12 @@ static GType    register_type( void );
 static void     class_init( NAPivotClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static GSList  *register_interface_providers( const NAPivot *pivot );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void     instance_dispose( GObject *object );
+static void     free_containers( GSList *list );
 static void     instance_finalize( GObject *object );
 
 static void     action_changed_handler( NAPivot *pivot, gpointer user_data );
-static gboolean on_action_changed_timeout( gpointer user_data );
+static gboolean on_actions_changed_timeout( gpointer user_data );
 static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 GType
@@ -144,23 +143,15 @@ class_init( NAPivotClass *klass )
 	GObjectClass *object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-	object_class->set_property = instance_set_property;
-	object_class->get_property = instance_get_property;
-
-	GParamSpec *spec;
-	spec = g_param_spec_pointer(
-			PROP_NOTIFIED_STR,
-			PROP_NOTIFIED_STR,
-			"A pointer to a GObject which will receive action_changed notifications",
-			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_NOTIFIED, spec );
 
 	klass->private = g_new0( NAPivotClassPrivate, 1 );
 
-	/* see nautilus_actions_class_init for why we use this function
+	/* register the signal and its default handler
+	 * this signal should be sent by the IIOProviders when an actions
+	 * has changed in the underlying storage subsystem
 	 */
 	st_signals[ ACTION_CHANGED ] = g_signal_new_class_handler(
-				SIGNAL_ACTION_CHANGED_NAME,
+				NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED,
 				G_TYPE_FROM_CLASS( klass ),
 				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
 				( GCallback ) action_changed_handler,
@@ -202,40 +193,6 @@ register_interface_providers( const NAPivot *pivot )
 }
 
 static void
-instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
-{
-	g_assert( NA_IS_PIVOT( object ));
-	NAPivot *self = NA_PIVOT( object );
-
-	switch( property_id ){
-		case PROP_NOTIFIED:
-			g_value_set_pointer( value, self->private->notified );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}
-
-static void
-instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
-{
-	g_assert( NA_IS_PIVOT( object ));
-	NAPivot *self = NA_PIVOT( object );
-
-	switch( property_id ){
-		case PROP_NOTIFIED:
-			self->private->notified = g_value_get_pointer( value );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}
-
-static void
 instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "na_pivot_instance_dispose";
@@ -248,6 +205,9 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
+		/* release list of containers to be notified */
+		free_containers( self->private->notified );
+
 		/* release list of actions */
 		na_pivot_free_actions( self->private->actions );
 		self->private->actions = NULL;
@@ -255,6 +215,15 @@ instance_dispose( GObject *object )
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( object );
 	}
+}
+
+static void
+free_containers( GSList *containers )
+{
+	GSList *ic;
+	for( ic = containers ; ic ; ic = ic->next )
+		;
+	g_slist_free( containers );
 }
 
 static void
@@ -295,7 +264,13 @@ instance_finalize( GObject *object )
 NAPivot *
 na_pivot_new( const GObject *target )
 {
-	return( g_object_new( NA_PIVOT_TYPE, PROP_NOTIFIED_STR, target, NULL ));
+	NAPivot *pivot = g_object_new( NA_PIVOT_TYPE, NULL );
+
+	if( target ){
+		pivot->private->notified = g_slist_prepend( pivot->private->notified, ( gpointer ) target );
+	}
+
+	return( pivot );
 }
 
 /**
@@ -439,7 +414,7 @@ action_changed_handler( NAPivot *self, gpointer user_data  )
 	/* set a timeout to notify nautilus at the end of the serie */
 	g_get_current_time( &st_last_event );
 	if( !st_event_source_id ){
-		st_event_source_id = g_timeout_add_seconds( 1, ( GSourceFunc ) on_action_changed_timeout, self );
+		st_event_source_id = g_timeout_add_seconds( 1, ( GSourceFunc ) on_actions_changed_timeout, self );
 	}
 }
 
@@ -452,9 +427,9 @@ action_changed_handler( NAPivot *self, gpointer user_data  )
  * or .. is there ?
  */
 static gboolean
-on_action_changed_timeout( gpointer user_data )
+on_actions_changed_timeout( gpointer user_data )
 {
-	/*static const gchar *thisfn = "na_pivot_on_action_changed_timeout";
+	/*static const gchar *thisfn = "na_pivot_on_actions_changed_timeout";
 	g_debug( "%s: pivot=%p", thisfn, user_data );*/
 
 	GTimeVal now;
@@ -471,9 +446,12 @@ on_action_changed_timeout( gpointer user_data )
 	na_pivot_free_actions( pivot->private->actions );
 	pivot->private->actions = na_iio_provider_read_actions( G_OBJECT( pivot ));
 
-	g_signal_emit_by_name( G_OBJECT( pivot->private->notified ), "notify_nautilus_of_action_changed" );
-	st_event_source_id = 0;
+	GSList *ic;
+	for( ic = pivot->private->notified ; ic ; ic = ic->next ){
+		na_ipivot_container_notify( NA_IPIVOT_CONTAINER( ic->data ));
+	}
 
+	st_event_source_id = 0;
 	return( FALSE );
 }
 
@@ -521,4 +499,14 @@ na_pivot_free_notify( NAPivotNotify *npn )
 		g_free( npn->parm );
 		g_free( npn );
 	}
+}
+
+/**
+ * Records a container which has to be notified of a modification of
+ * the list of actions.
+ */
+void
+na_pivot_add_notified( NAPivot *pivot, GObject *container )
+{
+	pivot->private->notified = g_slist_prepend( pivot->private->notified, container );
 }

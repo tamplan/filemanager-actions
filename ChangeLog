@@ -1,6 +1,7 @@
 2009-06-26 Pierre Wieser <pwieser@trychlos.org>
 
 	Migration to GtkBuilder.
+	IPivotContainer interface definition.
 
 	* configure.ac:
 	Update Gtk+ dependancy to 2.12 to have gtk_builder functions.
@@ -13,11 +14,36 @@
 	* src/common/na-pivot.c
 	(instance_dispose): g_free( self->private ).
 
-	* src/common/na-pivot.c
-	(na_pivot_get_label_sorted_actions): Removed function.
+	* src/common/na-gconf.c:
+	Fix typo in comment.
 
 	* src/common/na-iio-provider.c:
 	Actions list is now automatically sorted by label.
+
+	* src/common/na-iio-provider.h:
+	Move signal definition here to be usable by providers.
+
+	* src/common/na-ipivot-container.c:
+	* src/common/na-ipivot-container.h: New files.
+
+	* src/common/na-pivot.c:
+	na_pivot_get_label_sorted_actions: Removed function.
+	na_pivot_add_notified, free_containers: New functions.
+	Remove PROP_NOTIFIED property.
+	Containers to be notified can be several to many, instead of
+	just only one.
+	Use NAIPivotContainer interface instead of sending a message.
+
+	* src/common/Makefile.am: Updated accordingly.
+
+	* src/nact/base-application.c:
+	* src/nact/base-application.h
+	(base_application_get_icon_name,
+	base_application_get_main_window, base_application_run):
+	New functions.
+
+	* src/nact/nact-application.c:
+	Records the main window to be notified of an action modification.
 
 	* src/nact/nact-wnd-actions.c:
 	* src/nact/nact-wnd-actions.h:
@@ -28,18 +54,18 @@
 	* src/nact/nact-action-profile.c:
 	* src/nact/nact-action-profile.h: New files.
 
-	* src/nact/Makefile.am: Updated accordingly.
+	* src/nact/nact-main-window.c:
+	Implements NAIPivotContainer interface.
 
-	* src/nact/base-application.c:
-	* src/nact/base-application.h
-	(base_application_get_icon_name,
-	base_application_get_main_window, base_application_run):
-	New functions.
+	* src/nact/Makefile.am: Updated accordingly.
 
 	* src/nact/base-window.c:
 	* src/nact/base-window.h:
 	Remove libglade stuff.
 	Create the structure for derived windows/dialogs.
+
+	* src/plugin/nautilus-actions.c:
+	Implements NAIPivotContainer interface.
 
 2009-06-20 Pierre Wieser <pwieser@trychlos.org>
 

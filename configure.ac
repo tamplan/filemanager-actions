@@ -127,6 +127,7 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 	gconf-2.0				>= ${GCONF_REQUIRED}		\
 	libnautilus-extension	>= ${NAUTILUS_EXTENSION}	\
 	uuid												\
+	libglade-2.0										\
 	unique-1.0
 )
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])

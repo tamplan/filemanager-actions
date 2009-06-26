@@ -41,6 +41,7 @@
 #include <common/na-action.h>
 #include <common/na-action-profile.h>
 #include <common/na-pivot.h>
+#include <common/na-ipivot-container.h>
 
 #include "nautilus-actions.h"
 
@@ -53,39 +54,15 @@ struct NautilusActionsClassPrivate {
  */
 struct NautilusActionsPrivate {
 	gboolean dispose_has_run;
-
-	/* from na-pivot */
 	NAPivot *pivot;
 };
 
-/* We have a double stage notification system :
- *
- * 1. when the storage subsystems detects a change on an action, it must
- *    emit a signal to notify us of this change ; we so have to update
- *    accordingly the list of actions we maintain
- *
- * 2. when we have successfully updated the list of actions, we have to
- *    notify nautilus to update its contextual menu ; this is left to
- *    NautilusActions class
- *
- * This same signal is then first emitted by the IIOProvider to the
- * NAPivot object which handles it. When all modifications have been
- * treated, NAPivot notifies NautilusActions which itself asks
- * Nautilus for updating its menu
- */
-enum {
-	ACTION_CHANGED,
-	LAST_SIGNAL
-};
-
-#define SIGNAL_ACTION_CHANGED_NAME		"notify_nautilus_of_action_changed"
-
 static GObjectClass *st_parent_class = NULL;
 static GType         st_actions_type = 0;
-static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 
 static void              class_init( NautilusActionsClass *klass );
 static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static void              pivot_container_iface_init( NAIPivotContainerInterface *iface );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
 static void              instance_dispose( GObject *object );
 static void              instance_finalize( GObject *object );
@@ -94,7 +71,7 @@ static GList            *get_background_items( NautilusMenuProvider *provider, G
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
 static NautilusMenuItem *create_menu_item( NAAction *action, NAActionProfile *profile, GList *files );
 static void              execute_action( NautilusMenuItem *item, NAActionProfile *profile );
-static void              action_changed_handler( NautilusActions *instance, gpointer user_data );
+static void              actions_changed_handler( NAIPivotContainer *instance, gpointer user_data );
 
 GType
 nautilus_actions_get_type( void )
@@ -123,6 +100,8 @@ nautilus_actions_register_type( GTypeModule *module )
 		( GInstanceInitFunc ) instance_init,
 	};
 
+	/* implements NautilusMenuItem interface
+	 */
 	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NautilusActions", &info, 0 );
 
 	static const GInterfaceInfo menu_provider_iface_info = {
@@ -132,6 +111,16 @@ nautilus_actions_register_type( GTypeModule *module )
 	};
 
 	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
+
+	/* implement IPivotContainer interface
+	 */
+	static const GInterfaceInfo pivot_container_iface_info = {
+		( GInterfaceInitFunc ) pivot_container_iface_init,
+		NULL,
+		NULL
+	};
+
+	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONTAINER_TYPE, &pivot_container_iface_info );
 }
 
 static void
@@ -147,26 +136,6 @@ class_init( NautilusActionsClass *klass )
 	gobject_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NautilusActionsClassPrivate, 1 );
-
-	/* we could have set a default handler here, which have been
-	 * avoided us to connect to the signal ; but a default handler is
-	 * addressed via a class structure offset, and thus cannot work
-	 * when defined in a private structure
-	 *
-	 * the previous point applies to g_signal_new ;
-	 * g_signal_new_class_handler let us specify a standard C callback
-	 */
-	st_signals[ ACTION_CHANGED ] = g_signal_new_class_handler(
-				SIGNAL_ACTION_CHANGED_NAME,
-				G_TYPE_FROM_CLASS( klass ),
-				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
-				( GCallback ) action_changed_handler,
-				NULL,
-				NULL,
-				g_cclosure_marshal_VOID__VOID,
-				G_TYPE_NONE,
-				0
-	);
 }
 
 static void
@@ -177,6 +146,15 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 
 	iface->get_file_items = get_file_items;
 	iface->get_background_items = get_background_items;
+}
+
+static void
+pivot_container_iface_init( NAIPivotContainerInterface *iface )
+{
+	static const gchar *thisfn = "nautilus_actions_pivot_container_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->on_actions_changed = actions_changed_handler;
 }
 
 static void
@@ -408,12 +386,13 @@ execute_action( NautilusMenuItem *item, NAActionProfile *profile )
 }
 
 static void
-action_changed_handler( NautilusActions *self, gpointer user_data )
+actions_changed_handler( NAIPivotContainer *instance, gpointer user_data )
 {
-	static const gchar *thisfn = "nautilus_actions_action_changed_handler";
-	g_debug( "%s: self=%p, user_data=%p", thisfn, self, user_data );
+	static const gchar *thisfn = "nautilus_actions_actions_changed_handler";
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, instance, user_data );
 
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( self ));
+	g_assert( NAUTILUS_IS_ACTIONS( instance ));
+	NautilusActions *self = NAUTILUS_ACTIONS( instance );
 
 	if( !self->private->dispose_has_run ){
 

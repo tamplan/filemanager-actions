@@ -40,6 +40,7 @@
 #include <common/na-action.h>
 #include <common/na-action-profile.h>
 #include <common/na-pivot.h>
+#include <common/na-ipivot-container.h>
 
 #include "nact-application.h"
 #include "nact-action-profile.h"
@@ -62,6 +63,7 @@ static GObjectClass *st_parent_class = NULL;
 static GType    register_type( void );
 static void     class_init( NactMainWindowClass *klass );
 static void     iactions_list_iface_init( NactIActionsListInterface *iface );
+static void     ipivot_container_iface_init( NAIPivotContainerInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
@@ -79,6 +81,8 @@ static void     on_duplicate_button_clicked( GtkButton *button, gpointer user_da
 static void     on_delete_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_import_export_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );
+
+static void     on_actions_changed( NAIPivotContainer *instance, gpointer user_data );
 
 /*static gint     count_actions( BaseWindow *window );*/
 
@@ -114,6 +118,8 @@ register_type( void )
 
 	GType type = g_type_register_static( NACT_WINDOW_TYPE, "NactMainWindow", &info, 0 );
 
+	/* implement IActionsList interface
+	 */
 	static const GInterfaceInfo iactions_list_iface_info = {
 		( GInterfaceInitFunc ) iactions_list_iface_init,
 		NULL,
@@ -121,6 +127,16 @@ register_type( void )
 	};
 
 	g_type_add_interface_static( type, NACT_IACTIONS_LIST_TYPE, &iactions_list_iface_info );
+
+	/* implement IPivotContainer interface
+	 */
+	static const GInterfaceInfo pivot_container_iface_info = {
+		( GInterfaceInitFunc ) ipivot_container_iface_init,
+		NULL,
+		NULL
+	};
+
+	g_type_add_interface_static( type, NA_IPIVOT_CONTAINER_TYPE, &pivot_container_iface_info );
 
 	return( type );
 }
@@ -154,6 +170,15 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	iface->init_widget = NULL;
 	iface->on_selection_changed = on_actions_list_selection_changed;
 	iface->on_double_click = on_actions_list_double_click;
+}
+
+static void
+ipivot_container_iface_init( NAIPivotContainerInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_ipivot_container_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->on_actions_changed = on_actions_changed;
 }
 
 static void
@@ -528,6 +553,20 @@ on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window )
 			nact_destroy_glade_objects ();
 			gtk_main_quit ();*/
 			break;
+	}
+}
+
+static void
+on_actions_changed( NAIPivotContainer *instance, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_main_window_on_actions_changed";
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, instance, user_data );
+
+	g_assert( NACT_IS_MAIN_WINDOW( instance ));
+	NactMainWindow *self = NACT_MAIN_WINDOW( instance );
+
+	if( !self->private->dispose_has_run ){
+		nact_iactions_list_fill( NACT_WINDOW( instance ));
 	}
 }
 

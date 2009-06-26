@@ -1083,7 +1083,7 @@ remove_gconf_watch( NAGConf *gconf )
  * if the modification is made from nautilus-actions-config ui, then
  * the callback is triggered several times (one time for each rewritten
  * property) as action/profile are edited as blocs of data ; in this
- * case, the ui takes care (aso of 1.10) of also writing at last a
+ * case, the ui takes care (as of of 1.10) of also writing at last a
  * particular key of the form xxx:yyyyyyyy-yyyy-yyyy-..., where :
  *    xxx is a sequential number (inside of the ui session)
  *    yyyyyyyy-yyyy-yyyy-... is the uuid of the involved action
@@ -1106,5 +1106,5 @@ action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpoint
 	NAGConf *gconf = NA_GCONF( user_data );
 
 	NAPivotNotify *npn = entry_to_notify( entry );
-	g_signal_emit_by_name( gconf->private->notified, "notify_pivot_of_action_changed", npn );
+	g_signal_emit_by_name( gconf->private->notified, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );
 }

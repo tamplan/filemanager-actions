@@ -100,6 +100,8 @@ typedef struct {
 
 void       na_pivot_free_notify( NAPivotNotify *data );
 
+void       na_pivot_add_notified( NAPivot *pivot, GObject *container );
+
 G_END_DECLS
 
 #endif /* __NA_PIVOT_H__ */
