@@ -48,8 +48,12 @@ nautilus_actions_config_SOURCES = \
 	nact-action-profile.h								\
 	nact-application.c									\
 	nact-application.h									\
+	nact-iaction-conditions.c							\
+	nact-iaction-conditions.h							\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
+	nact-imenu-item.c									\
+	nact-imenu-item.h									\
 	nact-main.c											\
 	nact-main-window.c									\
 	nact-main-window.h									\

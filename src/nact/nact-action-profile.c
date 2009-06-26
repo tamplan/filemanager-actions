@@ -36,6 +36,8 @@
 
 #include "nact-application.h"
 #include "nact-action-profile.h"
+#include "nact-iaction-conditions.h"
+#include "nact-imenu-item.h"
 #include "nact-main-window.h"
 
 /* private class data
@@ -54,6 +56,8 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType  register_type( void );
 static void   class_init( NactActionProfileClass *klass );
+static void   imenu_item_iface_init( NactIMenuItemInterface *iface );
+static void   iaction_conditions_iface_init( NactIActionConditionsInterface *iface );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *dialog );
 static void   instance_finalize( GObject *dialog );
@@ -96,6 +100,26 @@ register_type( void )
 
 	GType type = g_type_register_static( NACT_WINDOW_TYPE, "NactActionProfile", &info, 0 );
 
+	/* implement IMenuItem interface
+	 */
+	static const GInterfaceInfo imenu_item_iface_info = {
+		( GInterfaceInitFunc ) imenu_item_iface_init,
+		NULL,
+		NULL
+	};
+
+	g_type_add_interface_static( type, NACT_IMENU_ITEM_TYPE, &imenu_item_iface_info );
+
+	/* implement IActionConditions interface
+	 */
+	static const GInterfaceInfo iaction_conditions_iface_info = {
+		( GInterfaceInitFunc ) iaction_conditions_iface_init,
+		NULL,
+		NULL
+	};
+
+	g_type_add_interface_static( type, NACT_IACTION_CONDITIONS_TYPE, &iaction_conditions_iface_info );
+
 	return( type );
 }
 
@@ -119,6 +143,20 @@ class_init( NactActionProfileClass *klass )
 	base_class->on_init_widget = on_init_dialog;
 	base_class->on_dialog_response = on_dialog_response;
 	base_class->get_toplevel_name = do_get_dialog_name;
+}
+
+static void
+imenu_item_iface_init( NactIMenuItemInterface *iface )
+{
+	static const gchar *thisfn = "nact_action_profile_imenu_item_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+}
+
+static void
+iaction_conditions_iface_init( NactIActionConditionsInterface *iface )
+{
+	static const gchar *thisfn = "nact_action_profile_iaction_conditions_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
 }
 
 static void

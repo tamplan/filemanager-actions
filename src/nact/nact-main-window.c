@@ -382,9 +382,7 @@ on_add_button_clicked( GtkButton *button, gpointer user_data )
 	/* TODO: set the selection to the newly created action
 	 * or restore the previous selection
 	 */
-	if( nact_action_profile_run_editor( wndmain, NULL )){
-		nact_iactions_list_fill( wndmain );
-	}
+	nact_action_profile_run_editor( wndmain, NULL );
 }
 
 /*

@@ -2,6 +2,7 @@
 
 	Migration to GtkBuilder.
 	IPivotContainer interface definition.
+	IActionConditions and IMenuItem UI interface definitions.
 
 	* configure.ac:
 	Update Gtk+ dependancy to 2.12 to have gtk_builder functions.
@@ -51,18 +52,28 @@
 
 	* src/nact/nact-main-window.c:
 	* src/nact/nact-main-window.h:
+	New files.
+	Implement NAIPivotContainer interface.
+
 	* src/nact/nact-action-profile.c:
-	* src/nact/nact-action-profile.h: New files.
+	* src/nact/nact-action-profile.h:
+	New files.
+	Implement NactIMenuItem and NactIActionConditions interfaces.
 
 	* src/nact/nact-main-window.c:
 	Implements NAIPivotContainer interface.
-
-	* src/nact/Makefile.am: Updated accordingly.
 
 	* src/nact/base-window.c:
 	* src/nact/base-window.h:
 	Remove libglade stuff.
 	Create the structure for derived windows/dialogs.
+
+	* src/nact/iaction-conditions.c:
+	* src/nact/iaction-conditions.h:
+	* src/nact/imenu-item.c:
+	* src/nact/imenu-item.h: New interface files.
+
+	* src/nact/Makefile.am: Updated accordingly.
 
 	* src/plugin/nautilus-actions.c:
 	Implements NAIPivotContainer interface.
