@@ -35,7 +35,7 @@
  * NactWindow class definition.
  *
  * This class is derived from BaseWindow class.
- * It is a common base class for Nautilus Actions windows.
+ * It is a common base class for all Nautilus Actions window documents.
  */
 
 #include "base-window.h"
@@ -65,7 +65,9 @@ typedef struct {
 }
 	NactWindowClass;
 
-GType       nact_window_get_type( void );
+GType   nact_window_get_type( void );
+
+GSList *nact_window_get_actions( NactWindow *window );
 
 G_END_DECLS
 

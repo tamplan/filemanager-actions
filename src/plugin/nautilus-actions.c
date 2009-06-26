@@ -233,7 +233,9 @@ instance_finalize( GObject *object )
 	g_debug( "%s: object=%p", thisfn, object );
 
 	g_assert( NAUTILUS_IS_ACTIONS( object ));
-	/*NautilusActions* self = NAUTILUS_ACTIONS (obj);*/
+	NautilusActions* self = NAUTILUS_ACTIONS( object );
+
+	g_free( self->private );
 
 	/* chain up to the parent class */
 	G_OBJECT_CLASS( st_parent_class )->finalize( object );

@@ -71,14 +71,16 @@ typedef struct {
 	void      ( *initialize_application_name ) ( BaseApplication *appli );
 	void      ( *initialize_icon_name )        ( BaseApplication *appli );
 	void      ( *initialize_unique )           ( BaseApplication *appli );
+	void      ( *initialize_ui )               ( BaseApplication *appli );
 	gboolean  ( *is_willing_to_run )           ( BaseApplication *appli );
 	void      ( *advertise_willing_to_run )    ( BaseApplication *appli );
 	void      ( *advertise_not_willing_to_run )( BaseApplication *appli );
 	void      ( *start )                       ( BaseApplication *appli );
-	int       ( *finish )                      ( BaseApplication *appli );
+	void      ( *finish )                      ( BaseApplication *appli );
 	gchar   * ( *get_unique_name )             ( BaseApplication *appli );
 	gchar   * ( *get_application_name )        ( BaseApplication *appli );
 	gchar   * ( *get_icon_name )               ( BaseApplication *appli );
+	gchar   * ( *get_ui_filename )             ( BaseApplication *appli );
 	GObject * ( *get_main_window )             ( BaseApplication *appli );
 }
 	BaseApplicationClass;
@@ -89,18 +91,23 @@ typedef struct {
 #define PROP_APPLICATION_ARGV_STR				"argv"
 #define PROP_APPLICATION_UNIQUE_NAME_STR		"unique-name"
 #define PROP_APPLICATION_UNIQUE_APP_STR			"unique-app"
-#define PROP_APPLICATION_MAIN_WINDOW_STR		"main-window"
 #define PROP_APPLICATION_NAME_STR				"application-name"
 #define PROP_APPLICATION_ICON_NAME_STR			"icon-name"
+#define PROP_APPLICATION_CODE_STR				"code"
+#define PROP_APPLICATION_UI_XML_STR				"ui-xml"
+#define PROP_APPLICATION_UI_FILENAME_STR		"ui-filename"
+#define PROP_APPLICATION_MAIN_WINDOW_STR		"main-window"
 
-GType            base_application_get_type( void );
+GType      base_application_get_type( void );
 
-BaseApplication *base_application_new( void );
-BaseApplication *base_application_new_with_args( int argc, char **argv );
+int        base_application_run( BaseApplication *application );
 
-int              base_application_run( BaseApplication *application );
+gchar     *base_application_get_icon_name( BaseApplication *application );
+GObject   *base_application_get_main_window( BaseApplication *application );
 
-void             base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary );
+GtkWidget *base_application_get_widget( BaseApplication *application, const gchar *name );
+
+void       base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary );
 
 G_END_DECLS
 

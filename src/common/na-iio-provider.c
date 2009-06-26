@@ -51,6 +51,8 @@ static void     interface_base_finalize( NAIIOProviderInterface *klass );
 static gboolean do_is_writable( NAIIOProvider *instance );
 static gboolean do_is_willing_to_write( NAIIOProvider *instance, const GObject *action );
 
+static gint     sort_actions_by_label( gconstpointer a1, gconstpointer a2 );
+
 /**
  * Registers the GType of this interface.
  */
@@ -165,6 +167,8 @@ na_iio_provider_read_actions( const GObject *object )
 		}
 	}
 
+	actions = g_slist_sort( actions, ( GCompareFunc ) sort_actions_by_label );
+
 #ifdef NACT_MAINTAINER_MODE
 	for( ip = actions ; ip ; ip = ip->next ){
 		na_object_dump( NA_OBJECT( ip->data ));
@@ -229,4 +233,21 @@ static gboolean
 do_is_willing_to_write( NAIIOProvider *instance, const GObject *action )
 {
 	return( FALSE );
+}
+
+static gint
+sort_actions_by_label( gconstpointer a1, gconstpointer a2 )
+{
+	NAAction *action1 = NA_ACTION( a1 );
+	gchar *label1 = na_action_get_label( action1 );
+
+	NAAction *action2 = NA_ACTION( a2 );
+	gchar *label2 = na_action_get_label( action2 );
+
+	gint ret = g_utf8_collate( label1, label2 );
+
+	g_free( label1 );
+	g_free( label2 );
+
+	return( ret );
 }

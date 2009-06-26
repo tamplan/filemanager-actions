@@ -28,11 +28,11 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_WND_ACTIONS_H__
-#define __NACT_WND_ACTIONS_H__
+#ifndef __NACT_MAIN_WINDOW_H__
+#define __NACT_MAIN_WINDOW_H__
 
 /*
- * NactWndActions class definition.
+ * NactMainWindow class definition.
  *
  * This class is derived from NactWindow.
  * It encapsulates the "ActionsDialog" window.
@@ -42,33 +42,33 @@
 
 G_BEGIN_DECLS
 
-#define NACT_WND_ACTIONS_TYPE					( nact_wnd_actions_get_type())
-#define NACT_WND_ACTIONS( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_WND_ACTIONS_TYPE, NactWndActions ))
-#define NACT_WND_ACTIONS_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NACT_WND_ACTIONS_TYPE, NactWndActionsClass ))
-#define NACT_IS_WND_ACTIONS( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_WND_ACTIONS_TYPE ))
-#define NACT_IS_WND_ACTIONS_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_WND_ACTIONS_TYPE ))
-#define NACT_WND_ACTIONS_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_WND_ACTIONS_TYPE, NactWndActionsClass ))
+#define NACT_MAIN_WINDOW_TYPE					( nact_main_window_get_type())
+#define NACT_MAIN_WINDOW( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_MAIN_WINDOW_TYPE, NactMainWindow ))
+#define NACT_MAIN_WINDOW_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NACT_MAIN_WINDOW_TYPE, NactMainWindowClass ))
+#define NACT_IS_MAIN_WINDOW( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_MAIN_WINDOW_TYPE ))
+#define NACT_IS_MAIN_WINDOW_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_MAIN_WINDOW_TYPE ))
+#define NACT_MAIN_WINDOW_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_MAIN_WINDOW_TYPE, NactMainWindowClass ))
 
-typedef struct NactWndActionsPrivate NactWndActionsPrivate;
+typedef struct NactMainWindowPrivate NactMainWindowPrivate;
 
 typedef struct {
 	NactWindow             parent;
-	NactWndActionsPrivate *private;
+	NactMainWindowPrivate *private;
 }
-	NactWndActions;
+	NactMainWindow;
 
-typedef struct NactWndActionsClassPrivate NactWndActionsClassPrivate;
+typedef struct NactMainWindowClassPrivate NactMainWindowClassPrivate;
 
 typedef struct {
 	NactWindowClass             parent;
-	NactWndActionsClassPrivate *private;
+	NactMainWindowClassPrivate *private;
 }
-	NactWndActionsClass;
+	NactMainWindowClass;
 
-GType           nact_wnd_actions_get_type( void );
+GType           nact_main_window_get_type( void );
 
-NactWndActions *nact_wnd_actions_new( GObject *application );
+NactMainWindow *nact_main_window_new( GObject *application );
 
 G_END_DECLS
 
-#endif /* __NACT_WND_ACTIONS_H__ */
+#endif /* __NACT_MAIN_WINDOW_H__ */

@@ -341,6 +341,8 @@ instance_finalize( GObject *object )
 	g_free( self->private->tooltip );
 	g_free( self->private->icon );
 
+	g_free( self->private );
+
 	/* chain call to parent class */
 	if((( GObjectClass * ) st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );

@@ -73,7 +73,6 @@ NAPivot *na_pivot_new( const GObject *notified );
 
 GSList  *na_pivot_get_providers( const NAPivot *pivot, GType type );
 
-GSList  *na_pivot_get_label_sorted_actions( const NAPivot *pivot );
 GSList  *na_pivot_get_actions( const NAPivot *pivot );
 
 void     na_pivot_free_actions( GSList *actions );

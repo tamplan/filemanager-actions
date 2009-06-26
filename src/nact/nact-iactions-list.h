@@ -39,10 +39,9 @@
  * behaviour of the listbox.
  */
 
-#include <glib-object.h>
 #include <gtk/gtk.h>
 
-#include "base-window.h"
+#include "nact-window.h"
 
 G_BEGIN_DECLS
 
@@ -60,8 +59,8 @@ typedef struct {
 	NactIActionsListInterfacePrivate *private;
 
 	/* api */
-	void     ( *init_widget )          ( BaseWindow *window );
-	void     ( *fill_actions_list )    ( BaseWindow *window );
+	void     ( *init_widget )          ( NactWindow *window );
+	void     ( *fill_actions_list )    ( NactWindow *window );
 	void     ( *on_selection_changed ) ( GtkTreeSelection *selection, gpointer user_data );
 	gboolean ( *on_button_press_event )( GtkWidget *widget, GdkEventButton *event, gpointer data );
 	gboolean ( *on_double_click )      ( GtkWidget *widget, GdkEventButton *event, gpointer data );
@@ -70,8 +69,8 @@ typedef struct {
 
 GType nact_iactions_list_get_type( void );
 
-void  nact_iactions_list_init( BaseWindow *window );
-void  nact_iactions_list_fill( BaseWindow *window );
+void  nact_iactions_list_init( NactWindow *window );
+void  nact_iactions_list_fill( NactWindow *window );
 
 G_END_DECLS
 

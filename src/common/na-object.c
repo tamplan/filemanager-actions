@@ -139,7 +139,9 @@ static void
 instance_finalize( GObject *object )
 {
 	g_assert( NA_IS_OBJECT( object ));
-	/*NAObject *self = ( NAObject * ) object;*/
+	NAObject *self = ( NAObject * ) object;
+
+	g_free( self->private );
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){

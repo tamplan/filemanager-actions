@@ -96,21 +96,16 @@ AM_GLIB_GNU_GETTEXT
 AC_PATH_PROG([GCONFTOOL],[gconftool-2])
 AM_GCONF_SOURCE_2
 
-# these are the version as distributed with CentOS 4.x
-# - Gnome 2.8
-# - glib 2.4.7
-# - autoconf 2.59
-# - automake 1.9
-# - intltool 0.31
-#
 # note that requiring through pkg-config the version number of the
 # nautilus-extension library actually returns the version number of
 # nautilus itself (e.g. 2.24.2) instead of the library version info
 # (1.1.0) ; for the usual final user, this is very analog to requiring
 # a whole gnome version
+#
+# Gtk >= 2.12: GtkBuilder
+#
 GLIB_REQUIRED=2.16.0
-GTK_REQUIRED=2.4.0
-GLADE_REQUIRED=2.4.0
+GTK_REQUIRED=2.12.0
 GNOME_REQUIRED=2.7.0
 NAUTILUS_EXTENSION=2.8.0
 GCONF_REQUIRED=2.8.0
@@ -127,7 +122,6 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 	gthread-2.0				>= ${GLIB_REQUIRED}			\
 	gmodule-2.0				>= ${GLIB_REQUIRED}			\
 	gtk+-2.0				>= ${GTK_REQUIRED}			\
-	libglade-2.0			>= ${GLADE_REQUIRED}		\
 	libgnome-2.0			>= ${GNOME_REQUIRED}		\
 	libgnomeui-2.0			>= ${GNOME_REQUIRED}		\
 	gconf-2.0				>= ${GCONF_REQUIRED}		\

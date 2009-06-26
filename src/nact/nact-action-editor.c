@@ -43,7 +43,7 @@
 #include "nact-profile-editor.h"
 #include "nact-utils.h"
 #include "nact-prefs.h"
-#include "nact.h"
+#include "old-nact.h"
 
 enum {
 	ICON_STOCK_COLUMN = 0,

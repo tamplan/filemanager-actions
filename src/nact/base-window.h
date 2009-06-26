@@ -64,11 +64,13 @@ typedef struct {
 	BaseWindowClassPrivate *private;
 
 	/* virtual functions */
-	void        ( *init_window )        ( BaseWindow *window );
-	GtkWidget * ( *load_widget )        ( BaseWindow *window, const gchar *name );
+	void        ( *init )               ( BaseWindow *window );
+	void        ( *run )                ( BaseWindow *window );
+	void        ( *on_init_widget )     ( BaseWindow *window );
+	void        ( *on_dialog_response ) ( GtkDialog *dialog, gint code, BaseWindow *window );
+	GObject   * ( *get_application )    ( BaseWindow *window );
 	gchar     * ( *get_toplevel_name )  ( BaseWindow *window );
-	GtkWindow * ( *get_toplevel_window )( BaseWindow *window );
-	gchar *     ( *get_glade_file )     ( BaseWindow *window );
+	GtkWindow * ( *get_toplevel_widget )( BaseWindow *window );
 	GtkWidget * ( *get_widget )         ( BaseWindow *window, const gchar *name );
 }
 	BaseWindowClass;
@@ -77,22 +79,19 @@ typedef struct {
  */
 #define PROP_WINDOW_APPLICATION_STR			"application"
 #define PROP_WINDOW_TOPLEVEL_NAME_STR		"toplevel-name"
-#define PROP_WINDOW_TOPLEVEL_WINDOW_STR		"toplevel-window"
-#define PROP_WINDOW_GLADE_FILENAME_STR		"glade-filename"
+#define PROP_WINDOW_TOPLEVEL_WIDGET_STR		"toplevel-widget"
+#define PROP_WINDOW_INITIALIZED_STR			"is-initialized"
 
-GType       base_window_get_type( void );
+GType      base_window_get_type( void );
 
-BaseWindow *base_window_new( void );
+void       base_window_init( BaseWindow *window );
+void       base_window_run( BaseWindow *window );
 
-void        base_window_init_window( BaseWindow *window );
+GtkWindow *base_window_get_toplevel_widget( BaseWindow *window );
+GObject   *base_window_get_application( BaseWindow *window );
+GtkWidget *base_window_get_widget( BaseWindow *window, const gchar *name );
 
-GtkWidget  *base_window_load_widget( BaseWindow *window, const gchar *name );
-
-gchar      *base_window_get_toplevel_name( BaseWindow *window );
-GtkWindow  *base_window_get_toplevel_window( BaseWindow *window );
-GtkWidget  *base_window_get_widget( BaseWindow *window, const gchar *name );
-
-void        base_window_connect( BaseWindow *window, const gchar *widget, const gchar *signal, GCallback handler );
+void       base_window_connect( BaseWindow *window, const gchar *widget, const gchar *signal, GCallback handler );
 
 G_END_DECLS
 

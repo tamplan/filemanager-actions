@@ -267,7 +267,9 @@ static void
 instance_finalize( GObject *object )
 {
 	g_assert( NA_IS_GCONF( object ));
-	/*NAGConf *self = NA_GCONF( object );*/
+	NAGConf *self = NA_GCONF( object );
+
+	g_free( self->private );
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){

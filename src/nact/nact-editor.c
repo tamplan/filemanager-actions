@@ -38,7 +38,7 @@
 #include "nact-profile-editor.h"
 #include "nact-utils.h"
 #include "nact-prefs.h"
-#include "nact.h"
+#include "old-nact.h"
 
 /* gui callback functions */
 void icon_browse_button_clicked_cb (GtkButton *button, gpointer user_data);

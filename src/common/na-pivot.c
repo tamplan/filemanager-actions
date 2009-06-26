@@ -99,7 +99,6 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
-static gint     sort_actions_by_label( gconstpointer a1, gconstpointer a2 );
 static void     action_changed_handler( NAPivot *pivot, gpointer user_data );
 static gboolean on_action_changed_timeout( gpointer user_data );
 static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
@@ -275,6 +274,8 @@ instance_finalize( GObject *object )
 	g_slist_free( self->private->providers );
 	self->private->providers = NULL;
 
+	g_free( self->private );
+
 	/* chain call to parent class */
 	if((( GObjectClass * ) st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
@@ -327,22 +328,6 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 }
 
 /**
- * Return the list of actions, sorted by label.
- *
- * @pivot: this NAPivot object.
- *
- * The returned list is owned by this NAPivot object, and should not
- * be freed, nor unref by the caller.
- */
-GSList *
-na_pivot_get_label_sorted_actions( const NAPivot *pivot )
-{
-	g_assert( NA_IS_PIVOT( pivot ));
-	GSList *sorted = g_slist_sort( pivot->private->actions, ( GCompareFunc ) sort_actions_by_label );
-	return( sorted );
-}
-
-/**
  * Return the list of actions.
  *
  * @pivot: this NAPivot object.
@@ -370,23 +355,6 @@ na_pivot_free_actions( GSList *actions )
 		g_object_unref( NA_ACTION( ia->data ));
 	}
 	g_slist_free( actions );
-}
-
-static gint
-sort_actions_by_label( gconstpointer a1, gconstpointer a2 )
-{
-	NAAction *action1 = NA_ACTION( a1 );
-	gchar *label1 = na_action_get_label( action1 );
-
-	NAAction *action2 = NA_ACTION( a2 );
-	gchar *label2 = na_action_get_label( action2 );
-
-	gint ret = g_utf8_collate( label1, label2 );
-
-	g_free( label1 );
-	g_free( label2 );
-
-	return( ret );
 }
 
 /**

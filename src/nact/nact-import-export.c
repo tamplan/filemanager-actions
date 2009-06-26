@@ -41,7 +41,7 @@
 #include "nact-utils.h"
 #include "nact-import-export.h"
 #include "nact-prefs.h"
-#include "nact.h"
+#include "old-nact.h"
 
 /* gui callback functions */
 void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data);

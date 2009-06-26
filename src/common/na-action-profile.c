@@ -442,6 +442,8 @@ instance_finalize( GObject *object )
 	na_utils_free_string_list( self->private->mimetypes );
 	na_utils_free_string_list( self->private->schemes );
 
+	g_free( self->private );
+
 	/* chain call to parent class */
 	if((( GObjectClass * ) st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );

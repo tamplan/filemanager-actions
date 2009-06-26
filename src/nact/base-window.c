@@ -34,7 +34,6 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <glade/glade-xml.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -52,8 +51,8 @@ struct BaseWindowPrivate {
 	gboolean         dispose_has_run;
 	BaseApplication *application;
 	gchar           *toplevel_name;
-	GtkWindow       *toplevel_window;
-	gchar           *glade_fname;
+	GtkWindow       *toplevel_widget;
+	gboolean         initialized;
 };
 
 /* instance properties
@@ -61,8 +60,8 @@ struct BaseWindowPrivate {
 enum {
 	PROP_WINDOW_APPLICATION = 1,
 	PROP_WINDOW_TOPLEVEL_NAME,
-	PROP_WINDOW_TOPLEVEL_WINDOW,
-	PROP_WINDOW_GLADE_FILENAME
+	PROP_WINDOW_TOPLEVEL_WIDGET,
+	PROP_WINDOW_INITIALIZED
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -75,17 +74,20 @@ static void        instance_set_property( GObject *object, guint property_id, co
 static void        instance_dispose( GObject *application );
 static void        instance_finalize( GObject *application );
 
-static gchar      *v_get_glade_file( BaseWindow *window );
 static void        do_init_window( BaseWindow *window );
-static GtkWidget  *do_load_widget( BaseWindow *window, const gchar *name );
-static gchar      *do_get_toplevel_name( BaseWindow *window );
-static GtkWindow  *do_get_toplevel_window( BaseWindow *window );
-static gchar      *do_get_glade_file( BaseWindow *window );
+static void        do_run_window( BaseWindow *window );
+
+static gchar      *v_get_toplevel_name( BaseWindow *window );
+static void        v_init_widget( BaseWindow *window );
+static void        v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+
+static void        do_init_widget( BaseWindow *window );
+static void        do_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static GObject    *do_get_application( BaseWindow *window );
+static GtkWindow  *do_get_toplevel_widget( BaseWindow *window );
 static GtkWidget  *do_get_widget( BaseWindow *window, const gchar *name );
 
-static GHashTable *get_glade_hashtable( void );
-static GladeXML   *get_glade_xml_object( const gchar *glade_fname, const gchar *widget_name );
-static void        destroy_glade_objects( void );
+static gboolean    is_main_window( BaseWindow *window );
 
 GType
 base_window_get_type( void )
@@ -104,8 +106,6 @@ register_type( void )
 {
 	static const gchar *thisfn = "base_window_register_type";
 	g_debug( "%s", thisfn );
-
-	g_type_init();
 
 	static GTypeInfo info = {
 		sizeof( BaseWindowClass ),
@@ -152,26 +152,28 @@ class_init( BaseWindowClass *klass )
 	g_object_class_install_property( object_class, PROP_WINDOW_TOPLEVEL_NAME, spec );
 
 	spec = g_param_spec_pointer(
-			PROP_WINDOW_TOPLEVEL_WINDOW_STR,
-			PROP_WINDOW_TOPLEVEL_WINDOW_STR,
+			PROP_WINDOW_TOPLEVEL_WIDGET_STR,
+			PROP_WINDOW_TOPLEVEL_WIDGET_STR,
 			"The main GtkWindow attached to this object",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_WINDOW_TOPLEVEL_WINDOW, spec );
+	g_object_class_install_property( object_class, PROP_WINDOW_TOPLEVEL_WIDGET, spec );
 
-	spec = g_param_spec_string(
-			PROP_WINDOW_GLADE_FILENAME_STR,
-			PROP_WINDOW_GLADE_FILENAME_STR,
-			"Glade full pathname", "",
+	spec = g_param_spec_boolean(
+			PROP_WINDOW_INITIALIZED_STR,
+			PROP_WINDOW_INITIALIZED_STR,
+			"Has base_window_init be ran", FALSE,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_WINDOW_GLADE_FILENAME, spec );
+	g_object_class_install_property( object_class, PROP_WINDOW_INITIALIZED, spec );
 
 	klass->private = g_new0( BaseWindowClassPrivate, 1 );
 
-	klass->init_window = do_init_window;
-	klass->load_widget = do_load_widget;
-	klass->get_toplevel_name = do_get_toplevel_name;
-	klass->get_toplevel_window = do_get_toplevel_window;
-	klass->get_glade_file = do_get_glade_file;
+	klass->init = do_init_window;
+	klass->run = do_run_window;
+	klass->on_init_widget = do_init_widget;
+	klass->on_dialog_response = do_dialog_response;
+	klass->get_application = do_get_application;
+	klass->get_toplevel_name = NULL;
+	klass->get_toplevel_widget = do_get_toplevel_widget;
 	klass->get_widget = do_get_widget;
 }
 
@@ -204,12 +206,12 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 			g_value_set_string( value, self->private->toplevel_name );
 			break;
 
-		case PROP_WINDOW_TOPLEVEL_WINDOW:
-			g_value_set_pointer( value, self->private->toplevel_window );
+		case PROP_WINDOW_TOPLEVEL_WIDGET:
+			g_value_set_pointer( value, self->private->toplevel_widget );
 			break;
 
-		case PROP_WINDOW_GLADE_FILENAME:
-			g_value_set_string( value, self->private->glade_fname );
+		case PROP_WINDOW_INITIALIZED:
+			g_value_set_boolean( value, self->private->initialized );
 			break;
 
 		default:
@@ -234,13 +236,12 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			self->private->toplevel_name = g_value_dup_string( value );
 			break;
 
-		case PROP_WINDOW_TOPLEVEL_WINDOW:
-			self->private->toplevel_window = g_value_get_pointer( value );
+		case PROP_WINDOW_TOPLEVEL_WIDGET:
+			self->private->toplevel_widget = g_value_get_pointer( value );
 			break;
 
-		case PROP_WINDOW_GLADE_FILENAME:
-			g_free( self->private->glade_fname );
-			self->private->glade_fname = g_value_dup_string( value );
+		case PROP_WINDOW_INITIALIZED:
+			self->private->initialized = g_value_get_boolean( value );
 			break;
 
 		default:
@@ -262,9 +263,15 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
-		gtk_widget_destroy( GTK_WIDGET( self->private->toplevel_window ));
-		destroy_glade_objects();
-		gtk_main_quit ();
+		g_debug( "%s: gtk_main_level=%d", thisfn, gtk_main_level());
+		if( is_main_window( BASE_WINDOW( window ))){
+			gtk_main_quit ();
+			gtk_widget_destroy( GTK_WIDGET( self->private->toplevel_widget ));
+
+		} else {
+			gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_widget ));
+		}
+
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( window );
@@ -281,7 +288,8 @@ instance_finalize( GObject *window )
 	BaseWindow *self = ( BaseWindow * ) window;
 
 	g_free( self->private->toplevel_name );
-	g_free( self->private->glade_fname );
+
+	g_free( self->private );
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){
@@ -290,64 +298,59 @@ instance_finalize( GObject *window )
 }
 
 /**
- * Returns a newly allocated BaseWindow object.
+ * Initializes the window.
+ *
+ * @window: this BaseWindow object.
+ *
+ * This is a one-time initialization just after the BaseWindow has been
+ * allocated. For an every-time initialization, see base_window_run.
  */
-BaseWindow *
-base_window_new( void )
+void
+base_window_init( BaseWindow *window )
 {
-	return( g_object_new( BASE_WINDOW_TYPE, NULL ));
+	g_assert( BASE_IS_WINDOW( window ));
+
+	if( BASE_WINDOW_GET_CLASS( window )->init ){
+		BASE_WINDOW_GET_CLASS( window )->init( window );
+	}
 }
 
 /**
- * Initializes the window.
+ * Run the window.
  *
  * @window: this BaseWindow object.
  */
 void
-base_window_init_window( BaseWindow *window )
+base_window_run( BaseWindow *window )
 {
 	g_assert( BASE_IS_WINDOW( window ));
-	BASE_WINDOW_GET_CLASS( window )->init_window( window );
+	if( BASE_WINDOW_GET_CLASS( window )->run ){
+		BASE_WINDOW_GET_CLASS( window )->run( window );
+	}
 }
 
 /**
- * Loads the required widget from a glade file.
- * Uses preferences for sizing and positionning the window.
- *
- * @window: this BaseWindow object.
- *
- * @name: name of the widget
- */
-GtkWidget *
-base_window_load_widget( BaseWindow *window, const gchar *name )
-{
-	g_assert( BASE_IS_WINDOW( window ));
-	return( BASE_WINDOW_GET_CLASS( window )->load_widget( window, name ));
-}
-
-/**
- * Returns the internal name of the GtkWindow attached to this
- * BaseWindow object.
+ * Returns a pointer on the BaseApplication object.
  *
  * @window: this BaseWindow object.
  */
-gchar *
-base_window_get_toplevel_name( BaseWindow *window )
+GObject *
+base_window_get_application( BaseWindow *window )
 {
 	g_assert( BASE_IS_WINDOW( window ));
-	return( BASE_WINDOW_GET_CLASS( window )->get_toplevel_name( window ));
+	return( BASE_WINDOW_GET_CLASS( window )->get_application( window ));
 }
 
 /**
- * Returns the GtkWindow attached to this BaseWindow object.
+ * Returns the top-level GtkWindow attached to this BaseWindow object.
  *
  * @window: this BaseWindow object.
  */
 GtkWindow *
-base_window_get_toplevel_window( BaseWindow *window )
+base_window_get_toplevel_widget( BaseWindow *window )
 {
 	g_assert( BASE_IS_WINDOW( window ));
-	return( BASE_WINDOW_GET_CLASS( window )->get_toplevel_window( window ));
+	return( BASE_WINDOW_GET_CLASS( window )->get_toplevel_widget( window ));
 }
 
 /**
@@ -364,6 +367,86 @@ base_window_get_widget( BaseWindow *window, const gchar *name )
 	return( BASE_WINDOW_GET_CLASS( window )->get_widget( window, name ));
 }
 
+static gchar *
+v_get_toplevel_name( BaseWindow *window )
+{
+	g_assert( BASE_IS_WINDOW( window ));
+
+	gchar *name;
+	g_object_get( G_OBJECT( window ), PROP_WINDOW_TOPLEVEL_NAME_STR, &name, NULL );
+
+	if( !name || !strlen( name )){
+		name = BASE_WINDOW_GET_CLASS( window )->get_toplevel_name( window );
+		if( name && strlen( name )){
+			g_object_set( G_OBJECT( window ), PROP_WINDOW_TOPLEVEL_NAME_STR, name, NULL );
+		}
+	}
+
+	return( name );
+}
+
+static void
+v_init_widget( BaseWindow *window )
+{
+	g_assert( BASE_IS_WINDOW( window ));
+
+	if( window->private->toplevel_widget ){
+		if( BASE_WINDOW_GET_CLASS( window )->on_init_widget ){
+			BASE_WINDOW_GET_CLASS( window )->on_init_widget( window );
+		}
+	}
+}
+
+static void
+v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
+{
+	g_assert( BASE_IS_WINDOW( window ));
+
+	if( BASE_WINDOW_GET_CLASS( window )->on_dialog_response ){
+		BASE_WINDOW_GET_CLASS( window )->on_dialog_response( dialog, code, window );
+	}
+}
+
+static void
+do_init_window( BaseWindow *window )
+{
+	static const gchar *thisfn = "base_window_do_init_window";
+	g_debug( "%s: window=%p", thisfn, window );
+
+	g_assert( BASE_IS_WINDOW( window ));
+
+	gchar *widget_name = v_get_toplevel_name( window );
+	g_assert( widget_name && strlen( widget_name ));
+
+	GtkWidget *toplevel = base_window_get_widget( window, widget_name );
+	window->private->toplevel_widget = GTK_WINDOW( toplevel );
+
+	if( toplevel ){
+		g_assert( GTK_IS_WINDOW( toplevel ));
+		v_init_widget( window );
+		gtk_widget_show_all( toplevel );
+	}
+
+	g_free( widget_name );
+
+	window->private->initialized = TRUE;
+}
+
+static void
+do_init_widget( BaseWindow *window )
+{
+	static const gchar *thisfn = "base_window_do_init_widget";
+	g_debug( "%s: window=%p", thisfn, window );
+}
+
+
+static void
+do_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
+{
+	static const gchar *thisfn = "base_window_do_dialog_response";
+	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, dialog, code, window );
+}
+
 /**
  * Connects a signal to a handler, assuring that the BaseWindow pointer
  * is passed as user data.
@@ -375,125 +458,59 @@ base_window_connect( BaseWindow *window, const gchar *widget, const gchar *signa
 	g_signal_connect( G_OBJECT( target ), signal, handler, window );
 }
 
-static gchar *
-v_get_glade_file( BaseWindow *window )
-{
-	g_assert( BASE_IS_WINDOW( window ));
-
-	gchar *name;
-	g_object_get( G_OBJECT( window ), PROP_WINDOW_GLADE_FILENAME_STR, &name, NULL );
-
-	if( !name || !strlen( name )){
-		name = BASE_WINDOW_GET_CLASS( window )->get_glade_file( window );
-		if( name && strlen( name )){
-			g_object_set( G_OBJECT( window ), PROP_WINDOW_GLADE_FILENAME_STR, name, NULL );
-		}
-	}
-
-	return( name );
-}
-
 static void
-do_init_window( BaseWindow *window )
+do_run_window( BaseWindow *window )
 {
-	/* do nothing */
-}
-
-static GtkWidget *
-do_load_widget( BaseWindow *window, const gchar *name )
-{
-	GtkWidget *widget = NULL;
-
-	gchar *glade_file = v_get_glade_file( window );
-
-	if( glade_file && strlen( glade_file )){
-		GladeXML *xml = get_glade_xml_object( glade_file, name );
-		if( xml ){
-			glade_xml_signal_autoconnect( xml );
-			widget = glade_xml_get_widget( xml, name );
-			g_object_unref( xml );
-		}
+	if( !window->private->initialized ){
+		base_window_init( window );
 	}
 
-	if( widget ){
-		g_object_set( G_OBJECT( window ),
-				PROP_WINDOW_TOPLEVEL_NAME_STR, name,
-				PROP_WINDOW_TOPLEVEL_WINDOW_STR, widget,
-				NULL );
+	static const gchar *thisfn = "base_window_do_run_window";
+	g_debug( "%s: window=%p", thisfn, window );
 
-		g_object_set_data( G_OBJECT( widget ), "base-window", window );
+	GtkWidget *this_widget = GTK_WIDGET( window->private->toplevel_widget );
+
+	if( is_main_window( window )){
+		g_signal_connect( G_OBJECT( this_widget ), "response", G_CALLBACK( v_dialog_response ), window );
+		g_debug( "%s: starting gtk_main", thisfn );
+		gtk_main();
 
 	} else {
-		gchar *msg = g_strdup_printf( _( "Unable to load %s widget from %s glade file." ), name, glade_file );
-		base_application_error_dlg( window->private->application, GTK_MESSAGE_ERROR, msg, NULL );
-		g_free( msg );
-		exit( 1 );
+		g_debug( "%s: starting gtk_dialog_run", thisfn );
+		gint code = gtk_dialog_run( GTK_DIALOG( this_widget ));
+		v_dialog_response( GTK_DIALOG( this_widget ), code, window );
 	}
-
-	g_free( glade_file );
-	return( widget );
 }
 
-static gchar *
-do_get_toplevel_name( BaseWindow *window )
+static GObject *
+do_get_application( BaseWindow *window )
 {
-	return( g_strdup( window->private->toplevel_name ));
+	return( G_OBJECT( window->private->application ));
 }
 
 static GtkWindow *
-do_get_toplevel_window( BaseWindow *window )
+do_get_toplevel_widget( BaseWindow *window )
 {
-	return( window->private->toplevel_window );
-}
-
-static gchar *
-do_get_glade_file( BaseWindow *window )
-{
-	return( NULL );
+	return( window->private->toplevel_widget );
 }
 
 static GtkWidget *
 do_get_widget( BaseWindow *window, const gchar *name )
 {
-	gchar *glade_file = v_get_glade_file( window );
-	gchar *parent_name = base_window_get_toplevel_name( window );
-	GladeXML *xml = get_glade_xml_object( glade_file, parent_name );
-	GtkWidget *widget = glade_xml_get_widget( xml, name );
-	g_free( parent_name );
-	g_object_unref( xml );
-	return( widget );
+	g_assert( BASE_IS_WINDOW( window ));
+	return( base_application_get_widget( window->private->application, name ));
 }
 
-static GHashTable *
-get_glade_hashtable( void )
+static gboolean
+is_main_window( BaseWindow *window )
 {
-	static GHashTable* glade_hash = NULL;
+	BaseApplication *appli = window->private->application;
 
-	if( !glade_hash ){
-		glade_hash = g_hash_table_new_full( g_str_hash, g_str_equal, g_free, g_object_unref );
-	}
+	BaseWindow *main_window = BASE_WINDOW( base_application_get_main_window( appli ));
 
-	return( glade_hash );
-}
+	GtkWidget *main_widget = GTK_WIDGET( base_window_get_toplevel_widget( main_window ));
 
-static GladeXML *
-get_glade_xml_object( const gchar *glade_fname, const gchar *widget_name )
-{
-	GHashTable *glade_hash = get_glade_hashtable();
-	GladeXML *xml = NULL;
+	GtkWidget *this_widget = GTK_WIDGET( window->private->toplevel_widget );
 
-	xml = ( GladeXML * ) g_hash_table_lookup( glade_hash, widget_name );
-	if( !xml ){
-		xml = glade_xml_new( glade_fname, widget_name, NULL );
-		g_hash_table_insert( glade_hash, g_strdup( widget_name ), xml );
-	}
-
-	return( GLADE_XML( g_object_ref( xml )));
-}
-
-static void
-destroy_glade_objects( void )
-{
-	GHashTable *glade_hash = get_glade_hashtable();
-	g_hash_table_destroy( glade_hash );
+	return( main_widget == this_widget );
 }

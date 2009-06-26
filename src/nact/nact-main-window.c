@@ -35,72 +35,55 @@
 #include <stdlib.h>
 
 #include <glib/gi18n.h>
-#include <gtk/gtkbutton.h>
-#include <gtk/gtkliststore.h>
-#include <gtk/gtkmain.h>
-#include <gtk/gtkmessagedialog.h>
-#include <gtk/gtktreeview.h>
-#include <glade/glade-xml.h>
+#include <gtk/gtk.h>
 
 #include <common/na-action.h>
 #include <common/na-action-profile.h>
 #include <common/na-pivot.h>
 
 #include "nact-application.h"
-#include "nact-wnd-actions.h"
+#include "nact-action-profile.h"
+#include "nact-main-window.h"
 #include "nact-iactions-list.h"
-
-#include "nact-editor.h"
-#include "nact-import-export.h"
-#include "nact-prefs.h"
-#include "nact-action-editor.h"
-#include "nact-utils.h"
 
 /* private class data
  */
-struct NactWndActionsClassPrivate {
+struct NactMainWindowClassPrivate {
 };
 
 /* private instance data
  */
-struct NactWndActionsPrivate {
-	gboolean         dispose_has_run;
+struct NactMainWindowPrivate {
+	gboolean dispose_has_run;
 };
 
-static GObjectClass    *st_parent_class = NULL;
-
-/*static NactApplication *st_application = NULL;
-static NAPivot         *st_pivot = NULL;*/
+static GObjectClass *st_parent_class = NULL;
 
 static GType    register_type( void );
-static void     class_init( NactWndActionsClass *klass );
+static void     class_init( NactMainWindowClass *klass );
 static void     iactions_list_iface_init( NactIActionsListInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
-/*static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );*/
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
-static void     init_window( BaseWindow *window );
+static gchar   *get_toplevel_name( BaseWindow *window );
+static void     on_init_widget( BaseWindow *window );
+
 static void     on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
 
-#if(( GTK_MAJOR_VERSION == 2 ) && ( GTK_MINOR_VERSION == 4 ))
- static void   init_edit_button_widget( BaseWindow *window );
-#endif
-#if((( GTK_MAJOR_VERSION == 2 ) && ( GTK_MINOR_VERSION >= 6 )) || ( GTK_MAJOR_VERSION > 2 ))
- static void   init_about_button_widget( BaseWindow *window );
-#endif
-
+static void     on_about_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_add_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_edit_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_duplicate_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_delete_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_import_export_button_clicked( GtkButton *button, gpointer user_data );
-static void     on_dialog_response( GtkDialog *dialog, gint response_id, gpointer user_data );
+static void     on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );
+
+/*static gint     count_actions( BaseWindow *window );*/
 
 GType
-nact_wnd_actions_get_type( void )
+nact_main_window_get_type( void )
 {
 	static GType window_type = 0;
 
@@ -114,24 +97,22 @@ nact_wnd_actions_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_wnd_actions_register_type";
+	static const gchar *thisfn = "nact_main_window_register_type";
 	g_debug( "%s", thisfn );
 
-	g_type_init();
-
 	static GTypeInfo info = {
-		sizeof( NactWndActionsClass ),
+		sizeof( NactMainWindowClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactWndActions ),
+		sizeof( NactMainWindow ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( NACT_WINDOW_TYPE, "NactWndActions", &info, 0 );
+	GType type = g_type_register_static( NACT_WINDOW_TYPE, "NactMainWindow", &info, 0 );
 
 	static const GInterfaceInfo iactions_list_iface_info = {
 		( GInterfaceInitFunc ) iactions_list_iface_init,
@@ -145,9 +126,9 @@ register_type( void )
 }
 
 static void
-class_init( NactWndActionsClass *klass )
+class_init( NactMainWindowClass *klass )
 {
-	static const gchar *thisfn = "nact_wnd_actions_class_init";
+	static const gchar *thisfn = "nact_main_window_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
@@ -155,19 +136,19 @@ class_init( NactWndActionsClass *klass )
 	GObjectClass *object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-	/*object_class->get_property = instance_get_property;
-	object_class->set_property = instance_set_property;*/
 
-	klass->private = g_new0( NactWndActionsClassPrivate, 1 );
+	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
 	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
-	base_class->init_window = init_window;
+	base_class->on_init_widget = on_init_widget;
+	base_class->on_dialog_response = on_dialog_response;
+	base_class->get_toplevel_name = get_toplevel_name;
 }
 
 static void
 iactions_list_iface_init( NactIActionsListInterface *iface )
 {
-	static const gchar *thisfn = "nact_wnd_actions_iactions_list_iface_init";
+	static const gchar *thisfn = "nact_main_window_iactions_list_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
 	iface->init_widget = NULL;
@@ -178,110 +159,25 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_wnd_actions_instance_init";
+	static const gchar *thisfn = "nact_main_window_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
 
-	g_assert( NACT_IS_WND_ACTIONS( instance ));
-	NactWndActions *self = NACT_WND_ACTIONS( instance );
+	g_assert( NACT_IS_MAIN_WINDOW( instance ));
+	NactMainWindow *self = NACT_MAIN_WINDOW( instance );
 
-	self->private = g_new0( NactWndActionsPrivate, 1 );
+	self->private = g_new0( NactMainWindowPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
 
-/*static void
-instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
-{
-	g_assert( NACT_IS_WND_ACTIONS( object ));
-	NactWndActions *self = NACT_WND_ACTIONS( object );
-
-	switch( property_id ){
-		case PROP_ARGC:
-			g_value_set_int( value, self->private->argc );
-			break;
-
-		case PROP_ARGV:
-			g_value_set_pointer( value, self->private->argv );
-			break;
-
-		case PROP_UNIQUE_NAME:
-			g_value_set_string( value, self->private->unique_name );
-			break;
-
-		case PROP_UNIQUE_APP:
-			g_value_set_pointer( value, self->private->unique_app );
-			break;
-
-		case PROP_MAIN_WINDOW:
-			g_value_set_pointer( value, self->private->main_window );
-			break;
-
-		case PROP_DLG_NAME:
-			g_value_set_string( value, self->private->application_name );
-			break;
-
-		case PROP_ICON_NAME:
-			g_value_set_string( value, self->private->icon_name );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}
-
-static void
-instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
-{
-	g_assert( NACT_IS_WND_ACTIONS( object ));
-	NactWndActions *self = NACT_WND_ACTIONS( object );
-
-	switch( property_id ){
-		case PROP_ARGC:
-			self->private->argc = g_value_get_int( value );
-			break;
-
-		case PROP_ARGV:
-			self->private->argv = g_value_get_pointer( value );
-			break;
-
-		case PROP_UNIQUE_NAME:
-			g_free( self->private->unique_name );
-			self->private->unique_name = g_value_dup_string( value );
-			break;
-
-		case PROP_UNIQUE_APP:
-			self->private->unique_app = g_value_get_pointer( value );
-			break;
-
-		case PROP_MAIN_WINDOW:
-			self->private->main_window = g_value_get_pointer( value );
-			break;
-
-		case PROP_DLG_NAME:
-			g_free( self->private->application_name );
-			self->private->application_name = g_value_dup_string( value );
-			break;
-
-		case PROP_ICON_NAME:
-			g_free( self->private->icon_name );
-			self->private->icon_name = g_value_dup_string( value );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}*/
-
 static void
 instance_dispose( GObject *window )
 {
-	static const gchar *thisfn = "nact_wnd_actions_instance_dispose";
+	static const gchar *thisfn = "nact_main_window_instance_dispose";
 	g_debug( "%s: window=%p", thisfn, window );
 
-	g_assert( NACT_IS_WND_ACTIONS( window ));
-	NactWndActions *self = NACT_WND_ACTIONS( window );
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+	NactMainWindow *self = NACT_MAIN_WINDOW( window );
 
 	if( !self->private->dispose_has_run ){
 
@@ -295,11 +191,13 @@ instance_dispose( GObject *window )
 static void
 instance_finalize( GObject *window )
 {
-	static const gchar *thisfn = "nact_wnd_actions_instance_finalize";
+	static const gchar *thisfn = "nact_main_window_instance_finalize";
 	g_debug( "%s: window=%p", thisfn, window );
 
-	g_assert( NACT_IS_WND_ACTIONS( window ));
-	/*NactWndActions *self = ( NactWndActions * ) window;*/
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+	NactMainWindow *self = ( NactMainWindow * ) window;
+
+	g_free( self->private );
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){
@@ -308,76 +206,48 @@ instance_finalize( GObject *window )
 }
 
 /**
- * Returns a newly allocated NactWndActions object.
+ * Returns a newly allocated NactMainWindow object.
  */
-NactWndActions *
-nact_wnd_actions_new( GObject *application )
+NactMainWindow *
+nact_main_window_new( GObject *application )
 {
 	g_assert( NACT_IS_APPLICATION( application ));
 
-	return( g_object_new( NACT_WND_ACTIONS_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
+	return( g_object_new( NACT_MAIN_WINDOW_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
+}
+
+static gchar *
+get_toplevel_name( BaseWindow *window )
+{
+	return( g_strdup( "ActionsDialog" ));
 }
 
 static void
-init_window( BaseWindow *window )
+on_init_widget( BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_wnd_actions_init_window";
+	static const gchar *thisfn = "nact_main_window_init_widget";
 	g_debug( "%s: window=%p", thisfn, window );
 
-	g_assert( NACT_IS_WND_ACTIONS( window ));
-	/*NactWndActions *wnd = NACT_WND_ACTIONS( window );*/
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+	/*NactMainWindow *wnd = NACT_MAIN_WINDOW( window );*/
 
-	GtkWidget *dialog = base_window_load_widget( window, "ActionsDialog" );
+	nact_iactions_list_init( NACT_WINDOW( window ));
 
-	nact_iactions_list_init( window );
-
-#if(( GTK_MAJOR_VERSION == 2 ) && ( GTK_MINOR_VERSION == 4 ))
-	/* Fix a stock icon bug with GTK+ 2.4 */
-	init_edit_button_widget( window );
-#endif
-
-#if((( GTK_MAJOR_VERSION == 2 ) && ( GTK_MINOR_VERSION >= 6 )) || ( GTK_MAJOR_VERSION > 2 ))
-	/* Add about dialog for GTK+ >= 2.6 */
-	init_about_button_widget( window );
-#endif
-
+	base_window_connect( window, "AboutButton", "clicked", G_CALLBACK( on_about_button_clicked ));
 	base_window_connect( window, "AddActionButton", "clicked", G_CALLBACK( on_add_button_clicked ));
 	base_window_connect( window, "EditActionButton", "clicked", G_CALLBACK( on_edit_button_clicked ));
 	base_window_connect( window, "DuplicateActionButton", "clicked", G_CALLBACK( on_duplicate_button_clicked ));
 	base_window_connect( window, "DeleteActionButton", "clicked", G_CALLBACK( on_delete_button_clicked ));
 	base_window_connect( window, "ImExportButton", "clicked", G_CALLBACK( on_import_export_button_clicked ));
-
-	/* display the dialog */
-	g_signal_connect( G_OBJECT( dialog ), "response", G_CALLBACK( on_dialog_response ), window );
-	gtk_widget_show( dialog );
 }
-
-#if(( GTK_MAJOR_VERSION == 2 ) && ( GTK_MINOR_VERSION == 4 ))
-static void
-init_edit_button_widget( BaseWindow *window )
-{
-	/* Fix a stock icon bug with GTK+ 2.4 */
-	GtkWidget *button = base_window_get_widget( window, "EditActionButton" );
-	gtk_button_set_use_stock( GTK_BUTTON( button ), FALSE );
-	gtk_button_set_use_underline( GTK_BUTTON( button ), TRUE );
-	/* i18n: "Edit" action button label forced for Gtk 2.4 */
-	gtk_button_set_label( GTK_BUTTON( button ), _( "_Edit" ));
-}
-#endif
-
-#if((( GTK_MAJOR_VERSION == 2 ) && ( GTK_MINOR_VERSION >= 6 )) || ( GTK_MAJOR_VERSION > 2 ))
-static void
-init_about_button_widget( BaseWindow *window )
-{
-	/* Add about dialog for GTK+ >= 2.6 */
-	GtkWidget *button = base_window_get_widget( window, "AboutButton" );
-	gtk_widget_show( button );
-}
-#endif
 
 static void
 on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
 {
+	static const gchar *thisfn = "nact_main_window_on_actions_list_selection_changed";
+	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );
+
+	g_assert( BASE_IS_WINDOW( user_data ));
 	BaseWindow *window = BASE_WINDOW( user_data );
 
 	GtkWidget *edit_button = base_window_get_widget( window, "EditActionButton" );
@@ -399,6 +269,75 @@ on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer
 	return( TRUE );
 }
 
+/* TODO: make the website url and the mail addresses clickables
+ */
+static void
+on_about_button_clicked( GtkButton *button, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_main_window_on_about_button_clicked";
+	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
+
+	g_assert( BASE_IS_WINDOW( user_data ));
+	BaseWindow *wndmain = BASE_WINDOW( user_data );
+
+	BaseApplication *appli;
+	g_object_get( G_OBJECT( wndmain ), PROP_WINDOW_APPLICATION_STR, &appli, NULL );
+	gchar *icon_name = base_application_get_icon_name( appli );
+
+	static const gchar *artists[] = {
+		N_( "Ulisse Perusin <uli.peru@gmail.com>" ),
+		NULL
+	};
+
+	static const gchar *authors[] = {
+		N_( "Frederic Ruaudel <grumz@grumz.net>" ),
+		N_( "Rodrigo Moya <rodrigo@gnome-db.org>" ),
+		N_( "Pierre Wieser <pwieser@trychlos.org>" ),
+		NULL
+	};
+
+	static const gchar *documenters[] = {
+		NULL
+	};
+
+	static gchar *license[] = {
+		N_( "Nautilus Actions Configuration Tool is free software; you can "
+			"redistribute it and/or modify it under the terms of the GNU General "
+			"Public License as published by the Free Software Foundation; either "
+			"version 2 of the License, or (at your option) any later version." ),
+		N_( "Nautilus Actions Configuration Tool is distributed in the hope that it "
+			"will be useful, but WITHOUT ANY WARRANTY; without even the implied "
+			"warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See "
+			"the GNU General Public License for more details." ),
+		N_( "You should have received a copy of the GNU General Public License along "
+			"with Nautilus Actions Configuration Tool ; if not, write to the Free "
+			"Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
+			"MA 02110-1301, USA." ),
+		NULL
+	};
+	gchar *license_i18n = g_strjoinv( "\n\n", license );
+
+	GtkWidget *toplevel;
+	g_object_get( G_OBJECT( wndmain ), PROP_WINDOW_TOPLEVEL_WIDGET_STR, &toplevel, NULL );
+
+	gtk_show_about_dialog( GTK_WINDOW( toplevel ),
+			"artists", artists,
+			"authors", authors,
+			"comments", _( "A graphical tool to create and edit your Nautilus actions." ),
+			"copyright", _( "Copyright \xc2\xa9 2005-2007 Frederic Ruaudel <grumz@grumz.net>\nCopyright \xc2\xa9 2009 Pierre Wieser <pwieser@trychlos.org>" ),
+			"documenters", documenters,
+			"translator-credits", _( "The GNOME Translation Project <gnome-i18n@gnome.org>" ),
+			"license", license_i18n,
+			"wrap-license", TRUE,
+			"logo-icon-name", icon_name,
+			"version", PACKAGE_VERSION,
+			"website", "http://www.nautilus-actions.org",
+			NULL );
+
+	g_free( license_i18n );
+	g_free( icon_name );
+}
+
 /*
  * creating a new action
  * pwi 2009-05-19
@@ -409,11 +348,17 @@ on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer
 static void
 on_add_button_clicked( GtkButton *button, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_wnd_actions_on_add_button_clicked";
+	static const gchar *thisfn = "nact_main_window_on_add_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
-	if( nact_action_editor_new()){
-		nact_iactions_list_fill( BASE_WINDOW( user_data ));
+	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	NactWindow *wndmain = NACT_WINDOW( user_data );
+
+	/* TODO: set the selection to the newly created action
+	 * or restore the previous selection
+	 */
+	if( nact_action_profile_run_editor( wndmain, NULL )){
+		nact_iactions_list_fill( wndmain );
 	}
 }
 
@@ -431,7 +376,7 @@ on_add_button_clicked( GtkButton *button, gpointer user_data )
 static void
 on_edit_button_clicked( GtkButton *button, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_wnd_actions_on_edit_button_clicked";
+	static const gchar *thisfn = "nact_main_window_on_edit_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
 	/*GtkTreeSelection *selection;
@@ -472,7 +417,7 @@ on_edit_button_clicked( GtkButton *button, gpointer user_data )
 static void
 on_duplicate_button_clicked( GtkButton *button, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_wnd_actions_on_duplicate_button_clicked";
+	static const gchar *thisfn = "nact_main_window_on_duplicate_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
 	/*GtkTreeSelection *selection;
@@ -518,7 +463,7 @@ on_duplicate_button_clicked( GtkButton *button, gpointer user_data )
 static void
 on_delete_button_clicked( GtkButton *button, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_wnd_actions_on_delete_button_clicked";
+	static const gchar *thisfn = "nact_main_window_on_delete_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
 	/*GtkTreeSelection *selection;
@@ -544,7 +489,7 @@ on_delete_button_clicked( GtkButton *button, gpointer user_data )
 static void
 on_import_export_button_clicked( GtkButton *button, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_wnd_actions_on_import_export_button_clicked";
+	static const gchar *thisfn = "nact_main_window_on_import_export_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
 	/*GtkWidget *nact_actions_list;
@@ -557,12 +502,13 @@ on_import_export_button_clicked( GtkButton *button, gpointer user_data )
 }
 
 static void
-on_dialog_response( GtkDialog *dialog, gint response_id, gpointer user_data )
+on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window )
 {
-	GtkWidget *about_dialog;
-	BaseWindow *window;
+	static const gchar *thisfn = "nact_main_window_on_dialog_response";
+	g_debug( "%s: dialog=%p, response_id=%d, window=%p", thisfn, dialog, response_id, window );
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+
 	/*GtkWidget *paste_button = nact_get_glade_widget_from ("PasteProfileButton", GLADE_EDIT_DIALOG_WIDGET);*/
-	g_debug( "dialog_response_cb: response_id=%d", response_id );
 
 	switch( response_id ){
 		case GTK_RESPONSE_NONE:
@@ -577,21 +523,19 @@ on_dialog_response( GtkDialog *dialog, gint response_id, gpointer user_data )
 			nact_prefs_save_preferences ();
 			 */
 
-			window = BASE_WINDOW( g_object_get_data( G_OBJECT( dialog ), "base-window" ));
 			g_object_unref( window );
 			/*gtk_widget_destroy (GTK_WIDGET (dialog));
 			nact_destroy_glade_objects ();
 			gtk_main_quit ();*/
 			break;
-
-		case GTK_RESPONSE_HELP:
-#if((( GTK_MAJOR_VERSION == 2 ) && ( GTK_MINOR_VERSION >= 6 )) || ( GTK_MAJOR_VERSION > 2 ))
-			about_dialog = nact_get_glade_widget_from ("AboutDialog", GLADE_ABOUT_DIALOG_WIDGET);
-			gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (about_dialog), PACKAGE_VERSION);
-			gtk_about_dialog_set_logo_icon_name (GTK_ABOUT_DIALOG (about_dialog), "nautilus-actions");
-			gtk_dialog_run (GTK_DIALOG (about_dialog));
-			gtk_widget_hide (about_dialog);
-#endif
-			break;
 	}
 }
+
+/*static gint
+count_actions( BaseWindow *window )
+{
+	NactApplication *appli = NACT_APPLICATION( base_window_get_application( window ));
+	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( appli ));
+	GSList *actions = na_pivot_get_actions( pivot );
+	return( g_slist_length( actions ));
+}*/

@@ -56,10 +56,9 @@ static GType      register_type( void );
 static void       interface_base_init( NactIActionsListInterface *klass );
 static void       interface_base_finalize( NactIActionsListInterface *klass );
 
-static void       do_init_widget( BaseWindow *window );
-static void       do_fill_actions_list( BaseWindow *window );
-static NAPivot   *get_pivot( BaseWindow *window );
-static GtkWidget *get_actions_list( BaseWindow *window );
+static void       do_init_widget( NactWindow *window );
+static void       do_fill_actions_list( NactWindow *window );
+static GtkWidget *get_actions_list( NactWindow *window );
 
 static void       v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean   v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
@@ -138,7 +137,7 @@ interface_base_finalize( NactIActionsListInterface *klass )
  * Allocates and initializes the ActionsList widget.
  */
 void
-nact_iactions_list_init( BaseWindow *window )
+nact_iactions_list_init( NactWindow *window )
 {
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 
@@ -150,7 +149,7 @@ nact_iactions_list_init( BaseWindow *window )
 }
 
 void
-do_init_widget( BaseWindow *window )
+do_init_widget( NactWindow *window )
 {
 	GtkListStore *model;
 	GtkTreeViewColumn *column;
@@ -165,7 +164,7 @@ do_init_widget( BaseWindow *window )
 	nact_iactions_list_fill( window );
 	g_object_unref( model );
 
-	/* create columns on the tree view */
+	/* create visible columns on the tree view */
 	column = gtk_tree_view_column_new_with_attributes(
 			"icon", gtk_cell_renderer_pixbuf_new(), "pixbuf", IACTIONS_LIST_ICON_COLUMN, NULL );
 	gtk_tree_view_append_column( GTK_TREE_VIEW( widget ), column );
@@ -193,7 +192,7 @@ do_init_widget( BaseWindow *window )
  * Fill the listbox with current actions.
  */
 void
-nact_iactions_list_fill( BaseWindow *window )
+nact_iactions_list_fill( NactWindow *window )
 {
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 
@@ -205,23 +204,25 @@ nact_iactions_list_fill( BaseWindow *window )
 }
 
 static void
-do_fill_actions_list( BaseWindow *window )
+do_fill_actions_list( NactWindow *window )
 {
-	GSList *actions, *l;
+	static const gchar *thisfn = "nact_iactions_list_do_fill_actions_list";
+	g_debug( "%s: window=%p", thisfn, window );
 
 	GtkWidget *widget = get_actions_list( window );
 	GtkListStore *model = GTK_LIST_STORE( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
 	gtk_list_store_clear( model );
 
-	NAPivot *pivot = get_pivot( window );
-	actions = na_pivot_get_label_sorted_actions( pivot );
+	GSList *actions = nact_window_get_actions( window );
+	GSList *ia;
+	/*g_debug( "%s: actions has %d elements", thisfn, g_slist_length( actions ));*/
 
-	for( l = actions ; l != NULL ; l = l->next ){
+	for( ia = actions ; ia != NULL ; ia = ia->next ){
 		GtkTreeIter iter;
 		GtkStockItem item;
 		GdkPixbuf* icon = NULL;
 
-		NAAction *action = NA_ACTION( l->data );
+		NAAction *action = NA_ACTION( ia->data );
 		gchar *uuid = na_action_get_uuid( action );
 		gchar *label = na_action_get_label( action );
 		gchar *iconname = na_action_get_icon( action );
@@ -230,7 +231,7 @@ do_fill_actions_list( BaseWindow *window )
 		 * display an icon + move the code to NAAction class +
 		 * remove na_action_get_verified_icon_name
 		 */
-		if( icon ){
+		if( iconname ){
 			if( gtk_stock_lookup( iconname, &item )){
 				icon = gtk_widget_render_icon( widget, iconname, GTK_ICON_SIZE_MENU, NULL );
 
@@ -242,11 +243,11 @@ do_fill_actions_list( BaseWindow *window )
 
 				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
 				icon = gdk_pixbuf_new_from_file_at_size( iconname, width, height, &error );
-				if (error)
-				{
-					/* TODO: at least log an error */
+				if( error ){
+					g_warning( "%s: iconname=%s, error=%s", thisfn, iconname, error->message );
+					g_error_free( error );
+					error = NULL;
 					icon = NULL;
-					g_error_free (error);
 				}
 			}
 		}
@@ -261,22 +262,13 @@ do_fill_actions_list( BaseWindow *window )
 		g_free( label );
 		g_free( uuid );
 	}
-}
-
-static NAPivot *
-get_pivot( BaseWindow *window )
-{
-	NactApplication *application;
-	g_object_get( G_OBJECT( window ), PROP_WINDOW_APPLICATION_STR, &application, NULL );
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
-
-	return( NA_PIVOT( nact_application_get_pivot( application )));
+	/*g_debug( "%s: at end, actions has %d elements", thisfn, g_slist_length( actions ));*/
 }
 
 static GtkWidget *
-get_actions_list( BaseWindow *window )
+get_actions_list( NactWindow *window )
 {
-	return( base_window_get_widget( window, "ActionsList" ));
+	return( base_window_get_widget( BASE_WINDOW( window ), "ActionsList" ));
 }
 
 static void

@@ -38,7 +38,7 @@
 #include "nact-profile-editor.h"
 #include "nact-utils.h"
 #include "nact-prefs.h"
-#include "nact.h"
+#include "old-nact.h"
 
 /* gui callback functions */
 void profile_field_changed_cb (GObject *object, gpointer user_data);

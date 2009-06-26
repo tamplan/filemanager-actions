@@ -44,11 +44,15 @@ nautilus_actions_config_SOURCES = \
 	base-application.h									\
 	base-window.c										\
 	base-window.h										\
+	nact-action-profile.c								\
+	nact-action-profile.h								\
 	nact-application.c									\
 	nact-application.h									\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
 	nact-main.c											\
+	nact-main-window.c									\
+	nact-main-window.h									\
 	nact-utils.c										\
 	nact-utils.h										\
 	nact-prefs.c										\
@@ -63,8 +67,6 @@ nautilus_actions_config_SOURCES = \
 	nact-action-editor.h								\
 	nact-window.c										\
 	nact-window.h										\
-	nact-wnd-actions.c									\
-	nact-wnd-actions.h									\
 	$(NULL)
 
 nautilus_actions_config_LDADD = \
@@ -72,7 +74,7 @@ nautilus_actions_config_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-glade_DATA = nautilus-actions-config.glade
+glade_DATA = nautilus-actions-config.ui
 
 @INTLTOOL_DESKTOP_RULE@
 

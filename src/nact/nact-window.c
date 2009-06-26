@@ -34,9 +34,10 @@
 
 #include <glib.h>
 
-#include "nact-window.h"
+#include <common/na-pivot.h>
 
-#define GLADE_FILE				GLADEDIR "/nautilus-actions-config.glade"
+#include "nact-application.h"
+#include "nact-window.h"
 
 /* private class data
  */
@@ -46,21 +47,16 @@ struct NactWindowClassPrivate {
 /* private instance data
  */
 struct NactWindowPrivate {
-	gboolean   dispose_has_run;
+	gboolean dispose_has_run;
 };
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType  register_type( void );
-static void   class_init( NactWindowClass *klass );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-/*static void   instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void   instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );*/
-static void   instance_dispose( GObject *application );
-static void   instance_finalize( GObject *application );
-
-static void   init_window( BaseWindow *window );
-static gchar *get_glade_file( BaseWindow *window );
+static GType register_type( void );
+static void  class_init( NactWindowClass *klass );
+static void  instance_init( GTypeInstance *instance, gpointer klass );
+static void  instance_dispose( GObject *application );
+static void  instance_finalize( GObject *application );
 
 GType
 nact_window_get_type( void )
@@ -108,14 +104,8 @@ class_init( NactWindowClass *klass )
 	GObjectClass *object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-	/*object_class->get_property = instance_get_property;
-	object_class->set_property = instance_set_property;*/
 
 	klass->private = g_new0( NactWindowClassPrivate, 1 );
-
-	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
-	base_class->init_window = init_window;
-	base_class->get_glade_file = get_glade_file;
 }
 
 static void
@@ -131,91 +121,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->dispose_has_run = FALSE;
 }
-
-/*static void
-instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
-{
-	g_assert( NACT_IS_WINDOW( object ));
-	NactWindow *self = NACT_WINDOW( object );
-
-	switch( property_id ){
-		case PROP_ARGC:
-			g_value_set_int( value, self->private->argc );
-			break;
-
-		case PROP_ARGV:
-			g_value_set_pointer( value, self->private->argv );
-			break;
-
-		case PROP_UNIQUE_NAME:
-			g_value_set_string( value, self->private->unique_name );
-			break;
-
-		case PROP_UNIQUE_APP:
-			g_value_set_pointer( value, self->private->unique_app );
-			break;
-
-		case PROP_MAIN_WINDOW:
-			g_value_set_pointer( value, self->private->main_window );
-			break;
-
-		case PROP_DLG_NAME:
-			g_value_set_string( value, self->private->application_name );
-			break;
-
-		case PROP_ICON_NAME:
-			g_value_set_string( value, self->private->icon_name );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}
-
-static void
-instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
-{
-	g_assert( NACT_IS_WINDOW( object ));
-	NactWindow *self = NACT_WINDOW( object );
-
-	switch( property_id ){
-		case PROP_ARGC:
-			self->private->argc = g_value_get_int( value );
-			break;
-
-		case PROP_ARGV:
-			self->private->argv = g_value_get_pointer( value );
-			break;
-
-		case PROP_UNIQUE_NAME:
-			g_free( self->private->unique_name );
-			self->private->unique_name = g_value_dup_string( value );
-			break;
-
-		case PROP_UNIQUE_APP:
-			self->private->unique_app = g_value_get_pointer( value );
-			break;
-
-		case PROP_MAIN_WINDOW:
-			self->private->main_window = g_value_get_pointer( value );
-			break;
-
-		case PROP_DLG_NAME:
-			g_free( self->private->application_name );
-			self->private->application_name = g_value_dup_string( value );
-			break;
-
-		case PROP_ICON_NAME:
-			g_free( self->private->icon_name );
-			self->private->icon_name = g_value_dup_string( value );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}*/
 
 static void
 instance_dispose( GObject *window )
@@ -242,7 +147,9 @@ instance_finalize( GObject *window )
 	g_debug( "%s: window=%p", thisfn, window );
 
 	g_assert( NACT_IS_WINDOW( window ));
-	/*NactWindow *self = ( NactWindow * ) window;*/
+	NactWindow *self = ( NactWindow * ) window;
+
+	g_free( self->private );
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){
@@ -250,14 +157,19 @@ instance_finalize( GObject *window )
 	}
 }
 
-static void
-init_window( BaseWindow *window )
+/**
+ * Returns a pointer to the list of actions.
+ */
+GSList *
+nact_window_get_actions( NactWindow *window )
 {
-	/* do nothing */
-}
+	NactApplication *application;
+	g_object_get( G_OBJECT( window ), PROP_WINDOW_APPLICATION_STR, &application, NULL );
+	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
-static gchar *
-get_glade_file( BaseWindow *window )
-{
-	return( g_strdup( GLADE_FILE ));
+	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( application ));
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+
+	GSList *actions = na_pivot_get_actions( pivot );
+	return( actions );
 }

@@ -1,3 +1,46 @@
+2009-06-26 Pierre Wieser <pwieser@trychlos.org>
+
+	Migration to GtkBuilder.
+
+	* configure.ac:
+	Update Gtk+ dependancy to 2.12 to have gtk_builder functions.
+	Remove libglade dependancy.
+
+	* src/common/na-action-profile.c:
+	* src/common/na-action.c:
+	* src/common/na-gconf.c:
+	* src/common/na-object.c:
+	* src/common/na-pivot.c
+	(instance_dispose): g_free( self->private ).
+
+	* src/common/na-pivot.c
+	(na_pivot_get_label_sorted_actions): Removed function.
+
+	* src/common/na-iio-provider.c:
+	Actions list is now automatically sorted by label.
+
+	* src/nact/nact-wnd-actions.c:
+	* src/nact/nact-wnd-actions.h:
+	Renamed to nact-main-window.{c,h}.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h:
+	* src/nact/nact-action-profile.c:
+	* src/nact/nact-action-profile.h: New files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/base-application.c:
+	* src/nact/base-application.h
+	(base_application_get_icon_name,
+	base_application_get_main_window, base_application_run):
+	New functions.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h:
+	Remove libglade stuff.
+	Create the structure for derived windows/dialogs.
+
 2009-06-20 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-gconf.c:
