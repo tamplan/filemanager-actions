@@ -56,12 +56,13 @@ static GType      register_type( void );
 static void       interface_base_init( NactIActionsListInterface *klass );
 static void       interface_base_finalize( NactIActionsListInterface *klass );
 
-static void       do_init_widget( NactWindow *window );
-static void       do_fill_actions_list( NactWindow *window );
-static GtkWidget *get_actions_list( NactWindow *window );
-
 static void       v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean   v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
+
+static void       do_initial_load_widget( NactWindow *window );
+static void       do_runtime_init_widget( NactWindow *window );
+static void       do_fill_actions_list( NactWindow *window );
+static GtkWidget *get_actions_list_widget( NactWindow *window );
 
 GType
 nact_iactions_list_get_type( void )
@@ -111,7 +112,8 @@ interface_base_init( NactIActionsListInterface *klass )
 
 		klass->private = g_new0( NactIActionsListInterfacePrivate, 1 );
 
-		klass->init_widget = do_init_widget;
+		klass->initial_load_widget = do_initial_load_widget;
+		klass->runtime_init_widget = do_runtime_init_widget;
 		klass->on_selection_changed = NULL;
 
 		initialized = TRUE;
@@ -137,55 +139,30 @@ interface_base_finalize( NactIActionsListInterface *klass )
  * Allocates and initializes the ActionsList widget.
  */
 void
-nact_iactions_list_init( NactWindow *window )
+nact_iactions_list_initial_load( NactWindow *window )
 {
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 
-	if( NACT_IACTIONS_LIST_GET_INTERFACE( window )->init_widget ){
-		NACT_IACTIONS_LIST_GET_INTERFACE( window )->init_widget( window );
+	if( NACT_IACTIONS_LIST_GET_INTERFACE( window )->initial_load_widget ){
+		NACT_IACTIONS_LIST_GET_INTERFACE( window )->initial_load_widget( window );
 	} else {
-		do_init_widget( window );
+		do_initial_load_widget( window );
 	}
 }
 
+/**
+ * Allocates and initializes the ActionsList widget.
+ */
 void
-do_init_widget( NactWindow *window )
+nact_iactions_list_runtime_init( NactWindow *window )
 {
-	GtkListStore *model;
-	GtkTreeViewColumn *column;
+	g_assert( NACT_IS_IACTIONS_LIST( window ));
 
-	g_assert( BASE_IS_WINDOW( window ));
-
-	GtkWidget *widget = get_actions_list( window );
-
-	/* create the model */
-	model = gtk_list_store_new( IACTIONS_LIST_N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING );
-	gtk_tree_view_set_model( GTK_TREE_VIEW( widget ), GTK_TREE_MODEL( model ));
-	nact_iactions_list_fill( window );
-	g_object_unref( model );
-
-	/* create visible columns on the tree view */
-	column = gtk_tree_view_column_new_with_attributes(
-			"icon", gtk_cell_renderer_pixbuf_new(), "pixbuf", IACTIONS_LIST_ICON_COLUMN, NULL );
-	gtk_tree_view_append_column( GTK_TREE_VIEW( widget ), column );
-
-	column = gtk_tree_view_column_new_with_attributes(
-			"label", gtk_cell_renderer_text_new(), "text", IACTIONS_LIST_LABEL_COLUMN, NULL );
-	gtk_tree_view_append_column( GTK_TREE_VIEW( widget ), column );
-
-	/* set up selection */
-	g_signal_connect(
-			G_OBJECT( gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ))),
-			"changed",
-			G_CALLBACK( v_on_selection_changed ),
-			window );
-
-	/* catch double-click */
-	g_signal_connect(
-			G_OBJECT( widget ),
-			"button-press-event",
-			G_CALLBACK( v_on_button_press_event ),
-			window );
+	if( NACT_IACTIONS_LIST_GET_INTERFACE( window )->runtime_init_widget ){
+		NACT_IACTIONS_LIST_GET_INTERFACE( window )->runtime_init_widget( window );
+	} else {
+		do_runtime_init_widget( window );
+	}
 }
 
 /**
@@ -203,13 +180,131 @@ nact_iactions_list_fill( NactWindow *window )
 	}
 }
 
+/**
+ * Returns the currently selected action.
+ */
+GObject *
+nact_iactions_list_get_selected_action( NactWindow *window )
+{
+	GObject *action = NULL;
+
+	GtkWidget *list = get_actions_list_widget( window );
+	GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( list ));
+
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+
+	if( gtk_tree_selection_get_selected( selection, &model, &iter )){
+
+		gchar *uuid;
+		gtk_tree_model_get( model, &iter, IACTIONS_LIST_UUID_COLUMN, &uuid, -1 );
+		action = nact_window_get_action( window, uuid );
+		g_free (uuid);
+	}
+
+	return( action );
+}
+
+static void
+v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data )
+{
+	g_assert( NACT_IS_IACTIONS_LIST( user_data ));
+	g_assert( BASE_IS_WINDOW( user_data ));
+
+	NactIActionsList *instance = NACT_IACTIONS_LIST( user_data );
+
+	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_selection_changed ){
+		NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_selection_changed( selection, user_data );
+	}
+}
+
+static gboolean
+v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer user_data )
+{
+	/*static const gchar *thisfn = "nact_iactions_list_v_on_button_pres_event";
+	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );*/
+
+	g_assert( NACT_IS_IACTIONS_LIST( user_data ));
+	g_assert( NACT_IS_WINDOW( user_data ));
+
+	gboolean stop = FALSE;
+	NactIActionsList *instance = NACT_IACTIONS_LIST( user_data );
+
+	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_button_press_event ){
+		stop = NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_button_press_event( widget, event, user_data );
+	}
+
+	if( !stop ){
+		if( event->type == GDK_2BUTTON_PRESS ){
+			if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_double_click ){
+				stop = NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_double_click( widget, event, user_data );
+			}
+		}
+	}
+	return( stop );
+}
+
+void
+do_initial_load_widget( NactWindow *window )
+{
+	static const gchar *thisfn = "nact_iactions_list_do_initial_load_widget";
+	g_debug( "%s: window=%p", thisfn, window );
+
+	GtkListStore *model;
+	GtkTreeViewColumn *column;
+
+	g_assert( BASE_IS_WINDOW( window ));
+
+	GtkWidget *widget = get_actions_list_widget( window );
+
+	/* create the model */
+	model = gtk_list_store_new( IACTIONS_LIST_N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING );
+	gtk_tree_view_set_model( GTK_TREE_VIEW( widget ), GTK_TREE_MODEL( model ));
+	nact_iactions_list_fill( window );
+	g_object_unref( model );
+
+	/* create visible columns on the tree view */
+	column = gtk_tree_view_column_new_with_attributes(
+			"icon", gtk_cell_renderer_pixbuf_new(), "pixbuf", IACTIONS_LIST_ICON_COLUMN, NULL );
+	gtk_tree_view_append_column( GTK_TREE_VIEW( widget ), column );
+
+	column = gtk_tree_view_column_new_with_attributes(
+			"label", gtk_cell_renderer_text_new(), "text", IACTIONS_LIST_LABEL_COLUMN, NULL );
+	gtk_tree_view_append_column( GTK_TREE_VIEW( widget ), column );
+}
+
+void
+do_runtime_init_widget( NactWindow *window )
+{
+	static const gchar *thisfn = "nact_iactions_list_do_runtime_init_widget";
+	g_debug( "%s: window=%p", thisfn, window );
+
+	g_assert( BASE_IS_WINDOW( window ));
+
+	GtkWidget *widget = get_actions_list_widget( window );
+
+	/* set up selection */
+	g_signal_connect(
+			G_OBJECT( gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ))),
+			"changed",
+			G_CALLBACK( v_on_selection_changed ),
+			window );
+
+	/* catch double-click */
+	g_signal_connect(
+			G_OBJECT( widget ),
+			"button-press-event",
+			G_CALLBACK( v_on_button_press_event ),
+			window );
+}
+
 static void
 do_fill_actions_list( NactWindow *window )
 {
 	static const gchar *thisfn = "nact_iactions_list_do_fill_actions_list";
 	g_debug( "%s: window=%p", thisfn, window );
 
-	GtkWidget *widget = get_actions_list( window );
+	GtkWidget *widget = get_actions_list_widget( window );
 	GtkListStore *model = GTK_LIST_STORE( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
 	gtk_list_store_clear( model );
 
@@ -266,43 +361,7 @@ do_fill_actions_list( NactWindow *window )
 }
 
 static GtkWidget *
-get_actions_list( NactWindow *window )
+get_actions_list_widget( NactWindow *window )
 {
 	return( base_window_get_widget( BASE_WINDOW( window ), "ActionsList" ));
-}
-
-static void
-v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data )
-{
-	g_assert( NACT_IS_IACTIONS_LIST( user_data ));
-	g_assert( BASE_IS_WINDOW( user_data ));
-
-	NactIActionsList *instance = NACT_IACTIONS_LIST( user_data );
-
-	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_selection_changed ){
-		NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_selection_changed( selection, user_data );
-	}
-}
-
-static gboolean
-v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer user_data )
-{
-	g_assert( NACT_IS_IACTIONS_LIST( user_data ));
-	g_assert( BASE_IS_WINDOW( user_data ));
-
-	gboolean stop = FALSE;
-	NactIActionsList *instance = NACT_IACTIONS_LIST( user_data );
-
-	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_button_press_event ){
-		stop = NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_button_press_event( widget, event, user_data );
-	}
-
-	if( !stop ){
-		if( event->type == GDK_2BUTTON_PRESS ){
-			if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_double_click ){
-				stop = NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_double_click( widget, event, user_data );
-			}
-		}
-	}
-	return( stop );
 }

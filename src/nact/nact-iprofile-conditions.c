@@ -35,19 +35,19 @@
 #include <common/na-action.h>
 #include <common/na-action-profile.h>
 
-#include "nact-iaction-conditions.h"
+#include "nact-iprofile-conditions.h"
 
 /* private interface data
  */
-struct NactIActionConditionsInterfacePrivate {
+struct NactIProfileConditionsInterfacePrivate {
 };
 
 static GType      register_type( void );
-static void       interface_base_init( NactIActionConditionsInterface *klass );
-static void       interface_base_finalize( NactIActionConditionsInterface *klass );
+static void       interface_base_init( NactIProfileConditionsInterface *klass );
+static void       interface_base_finalize( NactIProfileConditionsInterface *klass );
 
 GType
-nact_iaction_conditions_get_type( void )
+nact_iprofile_conditions_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -61,11 +61,11 @@ nact_iaction_conditions_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_iaction_conditions_register_type";
+	static const gchar *thisfn = "nact_iprofile_conditions_register_type";
 	g_debug( "%s", thisfn );
 
 	static const GTypeInfo info = {
-		sizeof( NactIActionConditionsInterface ),
+		sizeof( NactIProfileConditionsInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -76,7 +76,7 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIActionConditions", &info, 0 );
+	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIProfileConditions", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -84,24 +84,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIActionConditionsInterface *klass )
+interface_base_init( NactIProfileConditionsInterface *klass )
 {
-	static const gchar *thisfn = "nact_iaction_conditions_interface_base_init";
+	static const gchar *thisfn = "nact_iprofile_conditions_interface_base_init";
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
 		g_debug( "%s: klass=%p", thisfn, klass );
 
-		klass->private = g_new0( NactIActionConditionsInterfacePrivate, 1 );
+		klass->private = g_new0( NactIProfileConditionsInterfacePrivate, 1 );
 
 		initialized = TRUE;
 	}
 }
 
 static void
-interface_base_finalize( NactIActionConditionsInterface *klass )
+interface_base_finalize( NactIProfileConditionsInterface *klass )
 {
-	static const gchar *thisfn = "nact_iaction_conditions_interface_base_finalize";
+	static const gchar *thisfn = "nact_iprofile_conditions_interface_base_finalize";
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
@@ -111,4 +111,24 @@ interface_base_finalize( NactIActionConditionsInterface *klass )
 
 		finalized = TRUE;
 	}
+}
+
+void
+nact_iprofile_conditions_initial_load( NactWindow *dialog, NAAction *action )
+{
+}
+
+void
+nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAAction *action )
+{
+}
+
+void
+nact_iprofile_conditions_all_widgets_showed( NactWindow *dialog )
+{
+	static const gchar *thisfn = "nact_iprofile_conditions_all_widgets_showed";
+	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( dialog ), "notebook2" ));
+	gtk_notebook_set_current_page( notebook, 0 );
 }

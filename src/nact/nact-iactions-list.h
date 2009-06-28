@@ -59,7 +59,8 @@ typedef struct {
 	NactIActionsListInterfacePrivate *private;
 
 	/* api */
-	void     ( *init_widget )          ( NactWindow *window );
+	void     ( *initial_load_widget )  ( NactWindow *window );
+	void     ( *runtime_init_widget )  ( NactWindow *window );
 	void     ( *fill_actions_list )    ( NactWindow *window );
 	void     ( *on_selection_changed ) ( GtkTreeSelection *selection, gpointer user_data );
 	gboolean ( *on_button_press_event )( GtkWidget *widget, GdkEventButton *event, gpointer data );
@@ -67,10 +68,12 @@ typedef struct {
 }
 	NactIActionsListInterface;
 
-GType nact_iactions_list_get_type( void );
+GType    nact_iactions_list_get_type( void );
 
-void  nact_iactions_list_init( NactWindow *window );
-void  nact_iactions_list_fill( NactWindow *window );
+void     nact_iactions_list_initial_load( NactWindow *window );
+void     nact_iactions_list_runtime_init( NactWindow *window );
+void     nact_iactions_list_fill( NactWindow *window );
+GObject *nact_iactions_list_get_selected_action( NactWindow *window );
 
 G_END_DECLS
 

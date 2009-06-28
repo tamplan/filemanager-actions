@@ -44,19 +44,23 @@ nautilus_actions_config_SOURCES = \
 	base-application.h									\
 	base-window.c										\
 	base-window.h										\
-	nact-action-profile.c								\
-	nact-action-profile.h								\
+	nact-action-conditions-editor.c						\
+	nact-action-conditions-editor.h						\
+	nact-action-profiles-editor.c						\
+	nact-action-profiles-editor.h						\
 	nact-application.c									\
 	nact-application.h									\
-	nact-iaction-conditions.c							\
-	nact-iaction-conditions.h							\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
 	nact-imenu-item.c									\
 	nact-imenu-item.h									\
+	nact-iprofile-conditions.c							\
+	nact-iprofile-conditions.h							\
 	nact-main.c											\
 	nact-main-window.c									\
 	nact-main-window.h									\
+	nact-profile-conditions-editor.c					\
+	nact-profile-conditions-editor.h					\
 	nact-utils.c										\
 	nact-utils.h										\
 	nact-prefs.c										\

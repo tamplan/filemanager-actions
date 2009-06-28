@@ -65,9 +65,15 @@ typedef struct {
 }
 	NactWindowClass;
 
-GType   nact_window_get_type( void );
+GType    nact_window_get_type( void );
 
-GSList *nact_window_get_actions( NactWindow *window );
+GObject *nact_window_get_pivot( NactWindow *window );
+
+GObject *nact_window_get_action( NactWindow *window, const gchar *uuid );
+
+GSList  *nact_window_get_actions( NactWindow *window );
+
+void     nact_window_on_signal_connected( NactWindow *window, gpointer instance, gulong handler_id );
 
 G_END_DECLS
 

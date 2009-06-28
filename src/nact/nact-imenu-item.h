@@ -34,12 +34,10 @@
 /*
  * NactIMenuItem interface definition.
  *
- * This interface defines some API against the ActionsList listbox.
- * Our NactWindow may implement it in order to personalize the
- * behaviour of the listbox.
+ * This interface implements the "Nautilus Menu Item" box.
  */
 
-#include <gtk/gtk.h>
+#include <common/na-action.h>
 
 #include "nact-window.h"
 
@@ -59,10 +57,14 @@ typedef struct {
 	NactIMenuItemInterfacePrivate *private;
 
 	/* api */
+	void ( *signal_connected )( NactWindow *window, gpointer instance, gulong handler_id );
 }
 	NactIMenuItemInterface;
 
 GType nact_imenu_item_get_type( void );
+
+void  nact_imenu_item_initial_load( NactWindow *dialog, NAAction *action );
+void  nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action );
 
 G_END_DECLS
 

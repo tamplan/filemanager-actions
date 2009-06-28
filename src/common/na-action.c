@@ -158,7 +158,7 @@ class_init( NAActionClass *klass )
 			PROP_ACTION_UUID_STR,
 			PROP_ACTION_UUID_STR,
 			"Globally unique identifier (UUID) of the action", "",
-			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ACTION_UUID, spec );
 
 	spec = g_param_spec_string(
@@ -220,9 +220,9 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	 * mandatory
 	 */
 	self->private->version = g_strdup( NA_ACTION_LATEST_VERSION );
-	self->private->label = NULL;
-	self->private->tooltip = NULL;
-	self->private->icon = NULL;
+	self->private->label = g_strdup( "" );
+	self->private->tooltip = g_strdup( "" );
+	self->private->icon = g_strdup( "" );
 	self->private->read_only = FALSE;
 }
 
@@ -352,7 +352,8 @@ instance_finalize( GObject *object )
 /**
  * Allocates a new NAAction object.
  *
- * @uuid: the globally unique identifier (UUID) of the action.
+ * @uuid: the globally unique identifier (UUID) of the action. If NULL,
+ * a new UUID is allocated for this action.
  *
  * Return a newly allocated NAAction object.
  */
@@ -360,6 +361,11 @@ NAAction *
 na_action_new( const gchar *uuid )
 {
 	NAAction *action = g_object_new( NA_ACTION_TYPE, PROP_ACTION_UUID_STR, uuid, NULL );
+
+	if( !uuid || !strlen( uuid )){
+		na_action_set_new_uuid( action );
+	}
+
 	return( action );
 }
 

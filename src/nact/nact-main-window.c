@@ -43,9 +43,10 @@
 #include <common/na-ipivot-container.h>
 
 #include "nact-application.h"
-#include "nact-action-profile.h"
-#include "nact-main-window.h"
+#include "nact-action-conditions-editor.h"
+#include "nact-action-profiles-editor.h"
 #include "nact-iactions-list.h"
+#include "nact-main-window.h"
 
 /* private class data
  */
@@ -69,7 +70,8 @@ static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
 static gchar   *get_toplevel_name( BaseWindow *window );
-static void     on_init_widget( BaseWindow *window );
+static void     on_initial_load_toplevel( BaseWindow *window );
+static void     on_runtime_init_toplevel( BaseWindow *window );
 
 static void     on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
@@ -156,8 +158,9 @@ class_init( NactMainWindowClass *klass )
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
 	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
-	base_class->on_init_widget = on_init_widget;
-	base_class->on_dialog_response = on_dialog_response;
+	base_class->initial_load_toplevel = on_initial_load_toplevel;
+	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
+	base_class->dialog_response = on_dialog_response;
 	base_class->get_toplevel_name = get_toplevel_name;
 }
 
@@ -167,7 +170,8 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	static const gchar *thisfn = "nact_main_window_iactions_list_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
-	iface->init_widget = NULL;
+	iface->initial_load_widget = NULL;
+	iface->runtime_init_widget = NULL;
 	iface->on_selection_changed = on_actions_list_selection_changed;
 	iface->on_double_click = on_actions_list_double_click;
 }
@@ -248,15 +252,27 @@ get_toplevel_name( BaseWindow *window )
 }
 
 static void
-on_init_widget( BaseWindow *window )
+on_initial_load_toplevel( BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_init_widget";
+	static const gchar *thisfn = "nact_main_window_on_initial_load_toplevel";
 	g_debug( "%s: window=%p", thisfn, window );
 
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	/*NactMainWindow *wnd = NACT_MAIN_WINDOW( window );*/
 
-	nact_iactions_list_init( NACT_WINDOW( window ));
+	nact_iactions_list_initial_load( NACT_WINDOW( window ));
+}
+
+static void
+on_runtime_init_toplevel( BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_on_runtime_init_toplevel";
+	g_debug( "%s: window=%p", thisfn, window );
+
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+	/*NactMainWindow *wnd = NACT_MAIN_WINDOW( window );*/
+
+	nact_iactions_list_runtime_init( NACT_WINDOW( window ));
 
 	base_window_connect( window, "AboutButton", "clicked", G_CALLBACK( on_about_button_clicked ));
 	base_window_connect( window, "AddActionButton", "clicked", G_CALLBACK( on_add_button_clicked ));
@@ -379,10 +395,11 @@ on_add_button_clicked( GtkButton *button, gpointer user_data )
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactWindow *wndmain = NACT_WINDOW( user_data );
 
+	nact_action_conditions_editor_run_editor( wndmain, NULL );
+
 	/* TODO: set the selection to the newly created action
 	 * or restore the previous selection
 	 */
-	nact_action_profile_run_editor( wndmain, NULL );
 }
 
 /*
@@ -402,39 +419,24 @@ on_edit_button_clicked( GtkButton *button, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_edit_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
-	/*GtkTreeSelection *selection;
-	GtkTreeIter iter;
-	GtkWidget *nact_actions_list;
-	GtkTreeModel* model;*/
+	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	NactWindow *wndmain = NACT_WINDOW( user_data );
 
-	/*NAAction *action = nact_iactions_list_get_selected_action( BASE_WINDOW( user_data ));*/
+	NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( wndmain ));
 
-	/*nact_actions_list = nact_get_glade_widget ("ActionsList");
+	if( action ){
+		guint count = na_action_get_profiles_count( action );
 
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+		if( count > 1 ){
+			nact_action_profiles_editor_run_editor( wndmain, action );
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		gchar *uuid;
-		NAAction *action;
+		} else {
+			nact_action_conditions_editor_run_editor( wndmain, action );
+		}
 
-		gtk_tree_model_get (model, &iter, IACTIONS_LIST_UUID_COLUMN, &uuid, -1);
-
-		action = NA_ACTION( na_pivot_get_action( st_pivot, uuid ));*/
-
-		/*NautilusActionsConfigAction *action;
-		if( action ){
-			guint count = na_action_get_profiles_count( action );
-			if( count > 1 ){
-				if (nact_editor_edit_action (( NautilusActionsConfigAction *) action))
-					fill_actions_list (nact_actions_list);
-			} else {
-				if( nact_action_editor_edit( ( NautilusActionsConfigAction *) action ))
-					fill_actions_list( nact_actions_list );
-			}
-		}*/
-
-		/*g_free (uuid);
-	}*/
+	} else {
+		g_assert_not_reached();
+	}
 }
 
 static void
@@ -443,44 +445,33 @@ on_duplicate_button_clicked( GtkButton *button, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_duplicate_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
-	/*GtkTreeSelection *selection;
-	GtkTreeIter iter;
-	GtkWidget *nact_actions_list;
-	GtkTreeModel* model;
-	gchar *error = NULL;
-	gchar *tmp, *label;
+	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	NactWindow *wndmain = NACT_WINDOW( user_data );
 
-	nact_actions_list = nact_get_glade_widget ("ActionsList");
+	NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( wndmain ));
 
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+	if( action ){
+		NAAction *duplicate = na_action_duplicate( action );
+		na_action_set_new_uuid( duplicate );
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter))
-	{
-		gchar *uuid;
-		NAAction *action;
-		NAAction* new_action;
+		gchar *msg = NULL;
+		NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( wndmain ));
+		if( !na_pivot_write_action( pivot, G_OBJECT( duplicate ), &msg )){
 
-		gtk_tree_model_get (model, &iter, IACTIONS_LIST_UUID_COLUMN, &uuid, -1);
-
-		action = NA_ACTION( na_pivot_get_action( st_pivot, uuid ));
-		new_action = na_action_duplicate( action );
-		na_action_set_new_uuid( new_action );*/
-
-		/*if( nautilus_actions_config_add_action( NAUTILUS_ACTIONS_CONFIG (config), new_action, &error )){*/
-		/*if( na_pivot_write_action( st_pivot, G_OBJECT( new_action ), &error )){
-			fill_actions_list (nact_actions_list);
-		} else {*/
-			/* i18n notes: will be displayed in a dialog */
-			/*label = na_action_get_label( action );
-			tmp = g_strdup_printf (_("Can't duplicate action '%s'!"), label);
-			nautilus_actions_display_error( tmp, error );
-			g_free( error );
+			BaseApplication *application;
+			g_object_get( G_OBJECT( wndmain ), PROP_WINDOW_APPLICATION_STR, &application, NULL );
+			g_assert( NACT_IS_APPLICATION( application ));
+			gchar *label = na_action_get_label( action );
+			gchar *first = g_strdup_printf( _( "Unable to duplicate \"%s\" action." ), label );
+			base_application_error_dlg( application, GTK_MESSAGE_ERROR, first, msg );
+			g_free( first );
 			g_free( label );
-			g_free( tmp );
+			g_free( msg );
 		}
 
-		g_free( uuid );
-	}*/
+	} else {
+		g_assert_not_reached();
+	}
 }
 
 static void

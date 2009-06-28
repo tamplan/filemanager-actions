@@ -1,3 +1,39 @@
+2009-06-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-action.c:
+	UUID no more a contruction only parameter.
+	NAAction is now initialized with suitable default values.
+
+	* src/nact/nact-action-conditions-editor.c:
+	* src/nact/nact-action-conditions-editor.h:
+	* src/nact/nact-action-profiles-editor.c:
+	* src/nact/nact-action-profiles-editor.h:
+	* src/nact/nact-profile-conditions-editor.c:
+	* src/nact/nact-profile-conditions-editor.h:
+	Definitive names for dialog management.
+
+	* src/nact/nact-iprofile-conditions.c:
+	* src/nact/nact-iprofile-conditions.h:
+	IActionConditions interface is renamed as IProfileConditions.
+
+	* src/nact/Makefile.am:
+	Updated accordingly.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h:
+	initial_load_toplevel, runtime_init_toplevel, all_widgets_showed:
+	new functions.
+	
+	* src/nact/nact-imenu-item.c:
+	signal_recorded: new function.
+
+	* src/nact/nact-main-window.c:
+	Implement initial_load_toplevel and runtime_init_toplevel
+	functions.
+
+	* src/nact/nact-window.c:
+	nact_window_on_signal_recorded: new function.
+
 2009-06-26 Pierre Wieser <pwieser@trychlos.org>
 
 	Migration to GtkBuilder.

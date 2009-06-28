@@ -319,7 +319,9 @@
                         <property name="visible">True</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GtkImage" id="IconImage"/>
+                          <object class="GtkImage" id="IconImage">
+                            <property name="icon-size">1</property>
+                          </object>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
@@ -329,6 +331,7 @@
                         <child>
                           <object class="GtkComboBoxEntry" id="MenuIconComboBoxEntry">
                             <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Icon of the menu item in the Nautilus popup menu.</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext1"/>
                               <attributes>
@@ -408,7 +411,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="tooltip_text" translatable="yes">Label of the menu item in the Nautilus popup menu.</property>
-                        <signal name="changed" handler="action_field_changed_cb"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>

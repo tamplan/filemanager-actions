@@ -28,11 +28,11 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_ACTION_PROFILE_H__
-#define __NACT_ACTION_PROFILE_H__
+#ifndef __NACT_ACTION_PROFILES_EDITOR_H__
+#define __NACT_ACTION_PROFILES_EDITOR_H__
 
 /*
- * NactActionProfile class definition.
+ * NactActionProfilesEditor class definition.
  *
  * This class is derived from NactWindow.
  * It encapsulates the "EditActionDialogExt" widget dialog.
@@ -42,33 +42,33 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ACTION_PROFILE_TYPE					( nact_action_profile_get_type())
-#define NACT_ACTION_PROFILE( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ACTION_PROFILE_TYPE, NactActionProfile ))
-#define NACT_ACTION_PROFILE_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ACTION_PROFILE_TYPE, NactActionProfileClass ))
-#define NACT_IS_ACTION_PROFILE( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ACTION_PROFILE_TYPE ))
-#define NACT_IS_ACTION_PROFILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ACTION_PROFILE_TYPE ))
-#define NACT_ACTION_PROFILE_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ACTION_PROFILE_TYPE, NactActionProfileClass ))
+#define NACT_ACTION_PROFILES_EDITOR_TYPE				( nact_action_profiles_editor_get_type())
+#define NACT_ACTION_PROFILES_EDITOR( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ACTION_PROFILES_EDITOR_TYPE, NactActionProfilesEditor ))
+#define NACT_ACTION_PROFILES_EDITOR_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ACTION_PROFILES_EDITOR_TYPE, NactActionProfilesEditorClass ))
+#define NACT_IS_ACTION_PROFILES_EDITOR( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ACTION_PROFILES_EDITOR_TYPE ))
+#define NACT_IS_ACTION_PROFILES_EDITOR_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ACTION_PROFILES_EDITOR_TYPE ))
+#define NACT_ACTION_PROFILES_EDITOR_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ACTION_PROFILES_EDITOR_TYPE, NactActionProfilesEditorClass ))
 
-typedef struct NactActionProfilePrivate NactActionProfilePrivate;
+typedef struct NactActionProfilesEditorPrivate NactActionProfilesEditorPrivate;
 
 typedef struct {
 	NactWindow                       parent;
-	NactActionProfilePrivate *private;
+	NactActionProfilesEditorPrivate *private;
 }
-	NactActionProfile;
+	NactActionProfilesEditor;
 
-typedef struct NactActionProfileClassPrivate NactActionProfileClassPrivate;
+typedef struct NactActionProfilesEditorClassPrivate NactActionProfilesEditorClassPrivate;
 
 typedef struct {
 	NactWindowClass                       parent;
-	NactActionProfileClassPrivate *private;
+	NactActionProfilesEditorClassPrivate *private;
 }
-	NactActionProfileClass;
+	NactActionProfilesEditorClass;
 
-GType    nact_action_profile_get_type( void );
+GType    nact_action_profiles_editor_get_type( void );
 
-gboolean nact_action_profile_run_editor( NactWindow *parent, gpointer user_data );
+gboolean nact_action_profiles_editor_run_editor( NactWindow *parent, gpointer user_data );
 
 G_END_DECLS
 
-#endif /* __NACT_ACTION_PROFILE_H__ */
+#endif /* __NACT_ACTION_PROFILES_EDITOR_H__ */

@@ -48,7 +48,16 @@ struct NactWindowClassPrivate {
  */
 struct NactWindowPrivate {
 	gboolean dispose_has_run;
+	GSList  *signals;
 };
+
+/* connected signal, to be disconnected at NactWindow dispose
+ */
+typedef struct {
+	gpointer instance;
+	gulong   handler_id;
+}
+	NactWindowRecordedSignal;
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -120,6 +129,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactWindowPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+	self->private->signals = NULL;
 }
 
 static void
@@ -134,6 +144,15 @@ instance_dispose( GObject *window )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
+
+		GSList *is;
+		for( is = self->private->signals ; is ; is = is->next ){
+			NactWindowRecordedSignal *str = ( NactWindowRecordedSignal * ) is->data;
+			g_signal_handler_disconnect( str->instance, str->handler_id );
+			g_debug( "%s: disconnecting signal handler %p:%lu", thisfn, str->instance, str->handler_id );
+			g_free( str );
+		}
+		g_slist_free( self->private->signals );
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( window );
@@ -160,16 +179,56 @@ instance_finalize( GObject *window )
 /**
  * Returns a pointer to the list of actions.
  */
-GSList *
-nact_window_get_actions( NactWindow *window )
+GObject *
+nact_window_get_pivot( NactWindow *window )
 {
 	NactApplication *application;
 	g_object_get( G_OBJECT( window ), PROP_WINDOW_APPLICATION_STR, &application, NULL );
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
-	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( application ));
+	GObject *pivot = nact_application_get_pivot( application );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+
+	return( pivot );
+}
+
+/**
+ * Returns a pointer to the specified action.
+ */
+GObject *
+nact_window_get_action( NactWindow *window, const gchar *uuid )
+{
+	NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( window ));
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+
+	GObject *action = na_pivot_get_action( pivot, uuid );
+	return( action );
+}
+
+/**
+ * Returns a pointer to the list of actions.
+ */
+GSList *
+nact_window_get_actions( NactWindow *window )
+{
+	NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( window ));
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	GSList *actions = na_pivot_get_actions( pivot );
 	return( actions );
+}
+
+/**
+ * Records a connected signal, to be disconnected at NactWindow dispose.
+ */
+void
+nact_window_on_signal_connected( NactWindow *window, gpointer instance, gulong handler_id )
+{
+	static const gchar *thisfn = "nact_window_on_signal_connected";
+	g_debug( "%s: window=%p, instance=%p, handler_id=%lu", thisfn, window, instance, handler_id );
+
+	NactWindowRecordedSignal *str = g_new0( NactWindowRecordedSignal, 1 );
+	str->instance = instance;
+	str->handler_id = handler_id;
+	window->private->signals = g_slist_prepend( window->private->signals, str );
 }

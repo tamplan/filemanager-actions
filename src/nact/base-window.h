@@ -64,14 +64,16 @@ typedef struct {
 	BaseWindowClassPrivate *private;
 
 	/* virtual functions */
-	void        ( *init )               ( BaseWindow *window );
-	void        ( *run )                ( BaseWindow *window );
-	void        ( *on_init_widget )     ( BaseWindow *window );
-	void        ( *on_dialog_response ) ( GtkDialog *dialog, gint code, BaseWindow *window );
-	GObject   * ( *get_application )    ( BaseWindow *window );
-	gchar     * ( *get_toplevel_name )  ( BaseWindow *window );
-	GtkWindow * ( *get_toplevel_widget )( BaseWindow *window );
-	GtkWidget * ( *get_widget )         ( BaseWindow *window, const gchar *name );
+	void        ( *init )                 ( BaseWindow *window );
+	void        ( *run )                  ( BaseWindow *window );
+	void        ( *initial_load_toplevel )( BaseWindow *window );
+	void        ( *runtime_init_toplevel )( BaseWindow *window );
+	void        ( *all_widgets_showed )   ( BaseWindow *window );
+	void        ( *dialog_response )      ( GtkDialog *dialog, gint code, BaseWindow *window );
+	GObject   * ( *get_application )      ( BaseWindow *window );
+	gchar     * ( *get_toplevel_name )    ( BaseWindow *window );
+	GtkWindow * ( *get_toplevel_widget )  ( BaseWindow *window );
+	GtkWidget * ( *get_widget )           ( BaseWindow *window, const gchar *name );
 }
 	BaseWindowClass;
 

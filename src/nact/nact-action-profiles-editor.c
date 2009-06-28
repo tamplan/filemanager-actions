@@ -32,44 +32,47 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include <common/na-action.h>
 
 #include "nact-application.h"
-#include "nact-action-profile.h"
-#include "nact-iaction-conditions.h"
+#include "nact-action-profiles-editor.h"
 #include "nact-imenu-item.h"
 #include "nact-main-window.h"
 
 /* private class data
  */
-struct NactActionProfileClassPrivate {
+struct NactActionProfilesEditorClassPrivate {
 };
 
 /* private instance data
  */
-struct NactActionProfilePrivate {
+struct NactActionProfilesEditorPrivate {
 	gboolean  dispose_has_run;
 	NAAction *action;
+	gboolean  is_new;
 };
 
 static GObjectClass *st_parent_class = NULL;
 
 static GType  register_type( void );
-static void   class_init( NactActionProfileClass *klass );
+static void   class_init( NactActionProfilesEditorClass *klass );
 static void   imenu_item_iface_init( NactIMenuItemInterface *iface );
-static void   iaction_conditions_iface_init( NactIActionConditionsInterface *iface );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *dialog );
 static void   instance_finalize( GObject *dialog );
 
-static NactActionProfile *action_profile_new( BaseApplication *application );
+static NactActionProfilesEditor *action_profiles_editor_new( BaseApplication *application );
 
 static gchar *do_get_dialog_name( BaseWindow *dialog );
-static void   on_init_dialog( BaseWindow *dialog );
+static void   on_initial_load_dialog( BaseWindow *dialog );
+static void   on_runtime_init_dialog( BaseWindow *dialog );
+static void   init_dialog_title( NactActionProfilesEditor *dialog );
 static void   on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 GType
-nact_action_profile_get_type( void )
+nact_action_profiles_editor_get_type( void )
 {
 	static GType dialog_type = 0;
 
@@ -83,22 +86,22 @@ nact_action_profile_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_action_profile_register_type";
+	static const gchar *thisfn = "nact_action_profiles_editor_register_type";
 	g_debug( "%s", thisfn );
 
 	static GTypeInfo info = {
-		sizeof( NactActionProfileClass ),
+		sizeof( NactActionProfilesEditorClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactActionProfile ),
+		sizeof( NactActionProfilesEditor ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( NACT_WINDOW_TYPE, "NactActionProfile", &info, 0 );
+	GType type = g_type_register_static( NACT_WINDOW_TYPE, "NactActionProfilesEditor", &info, 0 );
 
 	/* implement IMenuItem interface
 	 */
@@ -110,23 +113,13 @@ register_type( void )
 
 	g_type_add_interface_static( type, NACT_IMENU_ITEM_TYPE, &imenu_item_iface_info );
 
-	/* implement IActionConditions interface
-	 */
-	static const GInterfaceInfo iaction_conditions_iface_info = {
-		( GInterfaceInitFunc ) iaction_conditions_iface_init,
-		NULL,
-		NULL
-	};
-
-	g_type_add_interface_static( type, NACT_IACTION_CONDITIONS_TYPE, &iaction_conditions_iface_info );
-
 	return( type );
 }
 
 static void
-class_init( NactActionProfileClass *klass )
+class_init( NactActionProfilesEditorClass *klass )
 {
-	static const gchar *thisfn = "nact_action_profile_class_init";
+	static const gchar *thisfn = "nact_action_profiles_editor_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
@@ -134,138 +127,47 @@ class_init( NactActionProfileClass *klass )
 	GObjectClass *object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-	/*object_class->get_property = instance_get_property;
-	object_class->set_property = instance_set_property;*/
 
-	klass->private = g_new0( NactActionProfileClassPrivate, 1 );
+	klass->private = g_new0( NactActionProfilesEditorClassPrivate, 1 );
 
 	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
-	base_class->on_init_widget = on_init_dialog;
-	base_class->on_dialog_response = on_dialog_response;
+	base_class->initial_load_toplevel = on_initial_load_dialog;
+	base_class->runtime_init_toplevel = on_runtime_init_dialog;
+	base_class->dialog_response = on_dialog_response;
 	base_class->get_toplevel_name = do_get_dialog_name;
 }
 
 static void
 imenu_item_iface_init( NactIMenuItemInterface *iface )
 {
-	static const gchar *thisfn = "nact_action_profile_imenu_item_iface_init";
+	static const gchar *thisfn = "nact_action_profiles_editor_imenu_item_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
-}
 
-static void
-iaction_conditions_iface_init( NactIActionConditionsInterface *iface )
-{
-	static const gchar *thisfn = "nact_action_profile_iaction_conditions_iface_init";
-	g_debug( "%s: iface=%p", thisfn, iface );
+	iface->signal_connected = nact_window_on_signal_connected;
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_action_profile_instance_init";
+	static const gchar *thisfn = "nact_action_profiles_editor_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
 
-	g_assert( NACT_IS_ACTION_PROFILE( instance ));
-	NactActionProfile *self = NACT_ACTION_PROFILE( instance );
+	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( instance ));
+	NactActionProfilesEditor *self = NACT_ACTION_PROFILES_EDITOR( instance );
 
-	self->private = g_new0( NactActionProfilePrivate, 1 );
+	self->private = g_new0( NactActionProfilesEditorPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
 
-/*static void
-instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
-{
-	g_assert( NACT_IS_ACTION_PROFILE( object ));
-	NactActionProfile *self = NACT_ACTION_PROFILE( object );
-
-	switch( property_id ){
-		case PROP_ARGC:
-			g_value_set_int( value, self->private->argc );
-			break;
-
-		case PROP_ARGV:
-			g_value_set_pointer( value, self->private->argv );
-			break;
-
-		case PROP_UNIQUE_NAME:
-			g_value_set_string( value, self->private->unique_name );
-			break;
-
-		case PROP_UNIQUE_APP:
-			g_value_set_pointer( value, self->private->unique_app );
-			break;
-
-		case PROP_MAIN_WINDOW:
-			g_value_set_pointer( value, self->private->main_window );
-			break;
-
-		case PROP_DLG_NAME:
-			g_value_set_string( value, self->private->application_name );
-			break;
-
-		case PROP_ICON_NAME:
-			g_value_set_string( value, self->private->icon_name );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}
-
-static void
-instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
-{
-	g_assert( NACT_IS_ACTION_PROFILE( object ));
-	NactActionProfile *self = NACT_ACTION_PROFILE( object );
-
-	switch( property_id ){
-		case PROP_ARGC:
-			self->private->argc = g_value_get_int( value );
-			break;
-
-		case PROP_ARGV:
-			self->private->argv = g_value_get_pointer( value );
-			break;
-
-		case PROP_UNIQUE_NAME:
-			g_free( self->private->unique_name );
-			self->private->unique_name = g_value_dup_string( value );
-			break;
-
-		case PROP_UNIQUE_APP:
-			self->private->unique_app = g_value_get_pointer( value );
-			break;
-
-		case PROP_MAIN_WINDOW:
-			self->private->main_window = g_value_get_pointer( value );
-			break;
-
-		case PROP_DLG_NAME:
-			g_free( self->private->application_name );
-			self->private->application_name = g_value_dup_string( value );
-			break;
-
-		case PROP_ICON_NAME:
-			g_free( self->private->icon_name );
-			self->private->icon_name = g_value_dup_string( value );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}*/
-
 static void
 instance_dispose( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_action_profile_instance_dispose";
+	static const gchar *thisfn = "nact_action_profiles_editor_instance_dispose";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	g_assert( NACT_IS_ACTION_PROFILE( dialog ));
-	NactActionProfile *self = NACT_ACTION_PROFILE( dialog );
+	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( dialog ));
+	NactActionProfilesEditor *self = NACT_ACTION_PROFILES_EDITOR( dialog );
 
 	if( !self->private->dispose_has_run ){
 
@@ -279,11 +181,11 @@ instance_dispose( GObject *dialog )
 static void
 instance_finalize( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_action_profile_instance_finalize";
+	static const gchar *thisfn = "nact_action_profiles_editor_instance_finalize";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	g_assert( NACT_IS_ACTION_PROFILE( dialog ));
-	/*NactActionProfile *self = ( NactActionProfile * ) dialog;*/
+	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( dialog ));
+	/*NactActionProfilesEditor *self = ( NactActionProfilesEditor * ) dialog;*/
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){
@@ -292,15 +194,15 @@ instance_finalize( GObject *dialog )
 }
 
 /**
- * Returns a newly allocated NactActionProfile object.
+ * Returns a newly allocated NactActionProfilesEditor object.
  *
  * @parent: is the BaseWindow parent of this dialog (usually, the main
  * toplevel window of the application).
  */
-static NactActionProfile *
-action_profile_new( BaseApplication *application )
+static NactActionProfilesEditor *
+action_profiles_editor_new( BaseApplication *application )
 {
-	return( g_object_new( NACT_ACTION_PROFILE_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
+	return( g_object_new( NACT_ACTION_PROFILES_EDITOR_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
 }
 
 /**
@@ -316,44 +218,90 @@ action_profile_new( BaseApplication *application )
  * there has been no modification at all.
  */
 gboolean
-nact_action_profile_run_editor( NactWindow *parent, gpointer user_data )
+nact_action_profiles_editor_run_editor( NactWindow *parent, gpointer user_data )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( parent ));
 
 	BaseApplication *application = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
 	g_assert( NACT_IS_APPLICATION( application ));
 
-	NactActionProfile *dialog = action_profile_new( application );
+	NactActionProfilesEditor *dialog = action_profiles_editor_new( application );
 
 	g_assert( NA_IS_ACTION( user_data ) || !user_data );
-	dialog->private->action = NA_ACTION( user_data );
+	NAAction *action = NA_ACTION( user_data );
+
+	if( !action ){
+		dialog->private->action = na_action_new( NULL );
+		dialog->private->is_new = TRUE;
+
+	} else {
+		dialog->private->action = na_action_duplicate( action );
+		dialog->private->is_new = FALSE;
+	}
 
 	base_window_run( BASE_WINDOW( dialog ));
 
+	g_object_unref( dialog->private->action );
 	return( TRUE );
 }
 
 static gchar *
 do_get_dialog_name( BaseWindow *dialog )
 {
-	/*g_debug( "nact_action_profile_do_get_dialog_name" );*/
+	/*g_debug( "nact_action_profiles_editor_do_get_dialog_name" );*/
 	return( g_strdup( "EditActionDialogExt"));
 }
 
 static void
-on_init_dialog( BaseWindow *dialog )
+on_initial_load_dialog( BaseWindow *dialog )
 {
-	static const gchar *thisfn = "nact_action_profile_on_init_dialog";
+	static const gchar *thisfn = "nact_action_profiles_editor_on_initial_load_dialog";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( dialog ));
+	NactActionProfilesEditor *window = NACT_ACTION_PROFILES_EDITOR( dialog );
+
+	init_dialog_title( window );
+	nact_imenu_item_initial_load( NACT_WINDOW( window ), window->private->action );
+}
+
+static void
+on_runtime_init_dialog( BaseWindow *dialog )
+{
+	static const gchar *thisfn = "nact_action_profiles_editor_on_runtime_init_dialog";
+	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( dialog ));
+	NactActionProfilesEditor *window = NACT_ACTION_PROFILES_EDITOR( dialog );
+
+	init_dialog_title( window );
+	nact_imenu_item_runtime_init( NACT_WINDOW( window ), window->private->action );
+}
+
+static void
+init_dialog_title( NactActionProfilesEditor *dialog )
+{
+	GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( dialog ));
+
+	if( dialog->private->is_new ){
+		gtk_window_set_title( toplevel, _( "Adding a new action" ));
+
+	} else {
+		gchar *label = na_action_get_label( dialog->private->action );
+		gchar* title = g_strdup_printf( _( "Editing \"%s\" action" ), label );
+		gtk_window_set_title( toplevel, title );
+		g_free( label );
+		g_free( title );
+	}
 }
 
 static void
 on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_action_profile_on_dialog_response";
+	static const gchar *thisfn = "nact_action_profiles_editor_on_dialog_response";
 	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, dialog, code, window );
 
-	g_assert( NACT_IS_ACTION_PROFILE( window ));
+	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( window ));
 
 	switch( code ){
 		case GTK_RESPONSE_NONE:
