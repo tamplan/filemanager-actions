@@ -157,22 +157,22 @@ nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action )
 	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );
 
 	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuLabelEntry" );
+	record_signal( dialog, G_OBJECT( label_widget ), "changed", G_CALLBACK( on_label_changed ), dialog );
 	gchar *label = na_action_get_label( action );
 	gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 	g_free( label );
-	record_signal( dialog, G_OBJECT( label_widget ), "changed", G_CALLBACK( on_label_changed ), dialog );
 
 	GtkWidget *tooltip_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuTooltipEntry" );
+	record_signal( dialog, G_OBJECT( tooltip_widget ), "changed", G_CALLBACK( on_tooltip_changed ), dialog );
 	gchar *tooltip = na_action_get_tooltip( action );
 	gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
 	g_free( tooltip );
-	record_signal( dialog, G_OBJECT( tooltip_widget ), "changed", G_CALLBACK( on_tooltip_changed ), dialog );
 
 	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuIconComboBoxEntry" );
+	record_signal( dialog, G_OBJECT( GTK_BIN( icon_widget )->child ), "changed", G_CALLBACK( on_icon_changed ), dialog );
 	gchar *icon = na_action_get_icon( action );
 	gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
 	g_free( icon );
-	record_signal( dialog, G_OBJECT( GTK_BIN( icon_widget )->child ), "changed", G_CALLBACK( on_icon_changed ), dialog );
 }
 
 static void
@@ -304,24 +304,30 @@ on_tooltip_changed( GtkEntry *entry, gpointer user_data )
 static void
 on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 {
+	static const gchar *thisfn = "nact_imenu_item_on_icon_changed";
+
 	g_assert( NACT_IS_WINDOW( user_data ));
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
 	GtkWidget *image = base_window_get_widget( BASE_WINDOW( dialog ), "IconImage" );
+	g_assert( GTK_IS_WIDGET( image ));
 	const gchar *icon_name = gtk_entry_get_text( icon_entry );
+	g_debug( "%s: icon_name=%s", thisfn, icon_name );
+
 	GtkStockItem stock_item;
 	GdkPixbuf *icon = NULL;
-	gchar *error_msg;
 
 	if( icon_name && strlen( icon_name ) > 0 ){
 
 		/* TODO: code should be mutualized with those IActionsList */
 		if( gtk_stock_lookup( icon_name, &stock_item )){
+			g_debug( "%s: gtk_stock_lookup", thisfn );
 			gtk_image_set_from_stock( GTK_IMAGE( image ), icon_name, GTK_ICON_SIZE_MENU );
 			gtk_widget_show( image );
 
 		} else if( g_file_test( icon_name, G_FILE_TEST_EXISTS ) &&
 					g_file_test( icon_name, G_FILE_TEST_IS_REGULAR )){
+			g_debug( "%s: g_file_test", thisfn );
 			gint width;
 			gint height;
 			GError *error = NULL;
@@ -329,17 +335,15 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 			gtk_icon_size_lookup( GTK_ICON_SIZE_MENU, &width, &height );
 			icon = gdk_pixbuf_new_from_file_at_size( icon_name, width, height, &error );
 			if( error ){
+				g_warning( "%s: gdk_pixbuf_new_from_file_at_size:%s", thisfn, error->message );
 				icon = NULL;
-
-				error_msg = g_strdup_printf( "Can't load icon from file %s !", icon_name );
-				/*nautilus_actions_display_error (error_msg,  error->message);*/
-				g_free( error_msg );
 				g_error_free( error );
 			}
 			gtk_image_set_from_pixbuf( GTK_IMAGE( image ), icon );
 			gtk_widget_show( image );
-		}
-		else {
+
+		} else {
+			g_debug( "%s: not stock, nor file", thisfn );
 			gtk_widget_hide( image );
 		}
 	} else {

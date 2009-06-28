@@ -23,6 +23,9 @@
 	* src/nact/nact-profile-conditions-editor.h:
 	Definitive names for dialog management.
 
+	* src/nact/nact-imenu-item.c:
+	Connect the signal handler before setting the initial icon.
+
 	* src/nact/nact-iprofile-conditions.c:
 	* src/nact/nact-iprofile-conditions.h:
 	IActionConditions interface is renamed as IProfileConditions.
