@@ -54,11 +54,11 @@ struct NAGConfClassPrivate {
 struct NAGConfPrivate {
 	gboolean     dispose_has_run;
 
+	GConfClient *gconf;
+
 	/* instance to be notified of an action modification
 	 */
-	gpointer  notified;
-
-	GConfClient *gconf;
+	gpointer     notified;
 	guint        notify_id;
 };
 
@@ -106,6 +106,7 @@ static gboolean       do_is_writable( NAIIOProvider *provider );
 static gboolean       do_is_willing_to_write( NAIIOProvider *provider, const GObject *action );
 
 static guint          do_write_action( NAIIOProvider *provider, const GObject *action, gchar **message );
+static gboolean       key_is_writable( NAGConf *gconf, const gchar *path );
 static gboolean       write_v2_keys( NAGConf *gconf, const NAAction *action, gchar **message );
 static gboolean       write_str( NAGConf *gconf, const gchar *uuid, const gchar *key, gchar *value, gchar **message );
 static gboolean       write_str2( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, gchar **message );
@@ -114,7 +115,9 @@ static gboolean       write_bool( NAGConf *gconf, const gchar *uuid, const gchar
 static gboolean       write_list( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, gchar **message );
 
 static guint          install_gconf_watch( NAGConf *gconf );
+static void           install_gconf_watched_dir( NAGConf *gconf );
 static void           remove_gconf_watch( NAGConf *gconf );
+static void           remove_gconf_watched_dir( NAGConf *gconf );
 static void           action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
 
 GType
@@ -373,10 +376,8 @@ load_action( NAGConf *gconf, NAAction *action, const gchar *uuid )
 
 	gboolean ok = set_action_properties( gconf, action, properties );
 
-	if( !gconf_client_key_is_writable( gconf->private->gconf, path, NULL )){
-		g_debug( "%s: %s key is not writable", thisfn, path );
-		gboolean readonly = TRUE;
-		g_object_set( G_OBJECT( action ), PROP_ACTION_READONLY_STR, readonly, NULL );
+	if( !key_is_writable( gconf, path )){
+		g_object_set( G_OBJECT( action ), PROP_ACTION_READONLY_STR, TRUE, NULL );
 	}
 
 	free_list_notify( properties );
@@ -484,7 +485,7 @@ load_subdirs( const NAGConf *gconf, const gchar *path )
 	GError *error = NULL;
 	GSList *list = gconf_client_all_dirs( gconf->private->gconf, path, &error );
 	if( error ){
-		g_error( "%s: path=%s, error=%s", thisfn, path, error->message );
+		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
 		g_error_free( error );
 		return(( GSList * ) NULL );
 	}
@@ -506,7 +507,7 @@ load_keys_values( const NAGConf *gconf, const gchar *path )
 	GError *error = NULL;
 	GSList *list_path = gconf_client_all_entries( gconf->private->gconf, path, &error );
 	if( error ){
-		g_error( "%s: path=%s, error=%s", thisfn, path, error->message );
+		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
 		g_error_free( error );
 		return(( GSList * ) NULL );
 	}
@@ -911,6 +912,44 @@ do_write_action( NAIIOProvider *provider, const GObject *obj_action, gchar **mes
 	return( NA_IIO_PROVIDER_WRITE_OK );
 }
 
+/*
+ * gconf_client_key_is_writable doesn't work as I expect: it returns
+ * FALSE without error for our keys !
+ * So I have to actually try a fake write to the key to get the real
+ * writability status...
+ */
+static gboolean
+key_is_writable( NAGConf *gconf, const gchar *path )
+{
+	static const gchar *thisfn = "na_gconf_key_is_writable";
+	GError *error = NULL;
+
+	remove_gconf_watched_dir( gconf );
+
+	gboolean ret_gconf = gconf_client_key_is_writable( gconf->private->gconf, path, &error );
+	if( error ){
+		g_warning( "%s: gconf_client_key_is_writable: %s", thisfn, error->message );
+		g_error_free( error );
+		error = NULL;
+	}
+	gboolean ret_try = FALSE;
+	gchar *path_try = g_strdup_printf( "%s/%s", path, "fake_key" );
+	ret_try = gconf_client_set_string( gconf->private->gconf, path_try, "fake_value", &error );
+	if( error ){
+		g_warning( "%s: gconf_client_set_string: %s", thisfn, error->message );
+		g_error_free( error );
+		error = NULL;
+	}
+	if( ret_try ){
+		gconf_client_unset( gconf->private->gconf, path_try, NULL );
+	}
+	g_free( path_try );
+	g_debug( "%s: ret_gconf=%s, ret_try=%s", thisfn, ret_gconf ? "True":"False", ret_try ? "True":"False" );
+
+	install_gconf_watched_dir( gconf );
+	return( ret_try );
+}
+
 static gboolean
 write_v2_keys( NAGConf *gconf, const NAAction *action, gchar **message )
 {
@@ -1033,13 +1072,7 @@ install_gconf_watch( NAGConf *gconf )
 	static const gchar *thisfn = "na_gconf_install_gconf_watch";
 	GError *error = NULL;
 
-	gconf_client_add_dir(
-			gconf->private->gconf, NA_GCONF_CONFIG_PATH, GCONF_CLIENT_PRELOAD_RECURSIVE, &error );
-	if( error ){
-		g_error( "%s: error=%s", thisfn, error->message );
-		g_error_free( error );
-		return( 0 );
-	}
+	install_gconf_watched_dir( gconf );
 
 	guint notify_id =
 		gconf_client_notify_add(
@@ -1051,7 +1084,7 @@ install_gconf_watch( NAGConf *gconf )
 			&error
 		);
 	if( error ){
-		g_error( "%s: error=%s", thisfn, error->message );
+		g_warning( "%s: error=%s", thisfn, error->message );
 		g_error_free( error );
 		return( 0 );
 	}
@@ -1060,18 +1093,38 @@ install_gconf_watch( NAGConf *gconf )
 }
 
 static void
-remove_gconf_watch( NAGConf *gconf )
+install_gconf_watched_dir( NAGConf *gconf )
 {
-	static const gchar *thisfn = "na_gconf_remove_gconf_watch";
+	static const gchar *thisfn = "na_gconf_install_gconf_watched_dir";
 	GError *error = NULL;
 
+	gconf_client_add_dir(
+			gconf->private->gconf, NA_GCONF_CONFIG_PATH, GCONF_CLIENT_PRELOAD_RECURSIVE, &error );
+	if( error ){
+		g_warning( "%s: error=%s", thisfn, error->message );
+		g_error_free( error );
+	}
+}
+
+static void
+remove_gconf_watch( NAGConf *gconf )
+{
 	if( gconf->private->notify_id ){
 		gconf_client_notify_remove( gconf->private->gconf, gconf->private->notify_id );
 	}
 
+	remove_gconf_watched_dir( gconf );
+}
+
+static void
+remove_gconf_watched_dir( NAGConf *gconf )
+{
+	static const gchar *thisfn = "na_gconf_remove_gconf_watched_dir";
+	GError *error = NULL;
+
 	gconf_client_remove_dir( gconf->private->gconf, NA_GCONF_CONFIG_PATH, &error );
 	if( error ){
-		g_error( "%s: error=%s", thisfn, error->message );
+		g_warning( "%s: error=%s", thisfn, error->message );
 		g_error_free( error );
 	}
 }
@@ -1099,8 +1152,8 @@ remove_gconf_watch( NAGConf *gconf )
 static void
 action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data )
 {
-	/*static const gchar *thisfn = "action_changed_cb";
-	g_debug( "%s: client=%p, cnxnid=%u, entry=%p, user_data=%p", thisfn, client, cnxn_id, entry, user_data );*/
+	/*static const gchar *thisfn = "action_changed_cb";*/
+	/*g_debug( "%s: client=%p, cnxnid=%u, entry=%p, user_data=%p", thisfn, client, cnxn_id, entry, user_data );*/
 
 	g_assert( NA_IS_GCONF( user_data ));
 	NAGConf *gconf = NA_GCONF( user_data );

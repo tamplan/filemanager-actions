@@ -4,6 +4,9 @@
 	UUID no more a contruction only parameter.
 	NAAction is now initialized with suitable default values.
 
+	* src/na/na-gconf.c:
+	Fix test of writability status.
+
 	* src/nact/nact-action-conditions-editor.c:
 	* src/nact/nact-action-conditions-editor.h:
 	* src/nact/nact-action-profiles-editor.c:
