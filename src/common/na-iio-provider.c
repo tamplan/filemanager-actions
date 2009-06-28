@@ -203,19 +203,33 @@ na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_actio
 	g_assert( NA_IS_ACTION( obj_action ));
 
 	guint ret = NA_IIO_PROVIDER_NOT_WRITABLE;
-	GSList *ip;
-	NAIIOProvider *instance;
+	NAIIOProvider *instance = NA_IIO_PROVIDER( na_action_get_provider( NA_ACTION( obj_action )));
 
-	GSList *providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
-
-	for( ip = providers ; ip ; ip = ip->next ){
-
-		instance = NA_IIO_PROVIDER( ip->data );
+	/* try to write to the original provider of the action
+	 */
+	if( instance ){
+		g_assert( NA_IS_IIO_PROVIDER( instance ));
 		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action ){
-
 			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action( instance, obj_action, message );
-			if( ret == NA_IIO_PROVIDER_WRITE_OK || ret == NA_IIO_PROVIDER_WRITE_ERROR ){
-				break;
+		} else {
+			instance = NULL;
+		}
+	}
+
+	/* else, search for a provider which is willing to write the action
+	 */
+	if( !instance ){
+		GSList *providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+		GSList *ip;
+
+		for( ip = providers ; ip ; ip = ip->next ){
+			instance = NA_IIO_PROVIDER( ip->data );
+			if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action ){
+
+				ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action( instance, obj_action, message );
+				if( ret == NA_IIO_PROVIDER_WRITE_OK || ret == NA_IIO_PROVIDER_WRITE_ERROR ){
+					break;
+				}
 			}
 		}
 	}
@@ -252,6 +266,8 @@ na_iio_provider_delete_action( const GObject *obj_pivot, const GObject *obj_acti
 		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_action ){
 			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_action( instance, obj_action, message );
 		}
+	} else {
+		g_assert_not_reached();
 	}
 
 	return( ret );

@@ -57,16 +57,20 @@ static GType         register_type( void );
 static void          interface_base_init( NactIMenuItemInterface *klass );
 static void          interface_base_finalize( NactIMenuItemInterface *klass );
 
+static GObject      *v_get_edited_action( NactWindow *window );
+static void          v_update_dialog_title( NactWindow *window );
+static void          v_signal_connected( NactWindow *window, gpointer instance, gulong handler_id );
+
 static void          icon_combo_list_fill( GtkComboBoxEntry* combo );
 static GtkTreeModel *create_stock_icon_model( void );
 static gint          sort_stock_ids( gconstpointer a, gconstpointer b );
 static gchar        *strip_underscore( const gchar *text );
+
 static void          on_label_changed( GtkEntry *entry, gpointer user_data );
 static void          on_tooltip_changed( GtkEntry *entry, gpointer user_data );
 static void          on_icon_changed( GtkEntry *entry, gpointer user_data );
 
 static void          record_signal( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn, gpointer user_data );
-static void          v_signal_connected( NactWindow *window, gpointer instance, gulong handler_id );
 
 GType
 nact_imenu_item_get_type( void )
@@ -116,6 +120,8 @@ interface_base_init( NactIMenuItemInterface *klass )
 
 		klass->private = g_new0( NactIMenuItemInterfacePrivate, 1 );
 
+		klass->get_edited_action = NULL;
+		klass->update_dialog_title = NULL;
 		klass->signal_connected = NULL;
 
 		initialized = TRUE;
@@ -173,6 +179,45 @@ nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action )
 	gchar *icon = na_action_get_icon( action );
 	gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
 	g_free( icon );
+}
+
+void
+nact_imenu_item_all_widgets_showed( NactWindow *dialog )
+{
+	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuLabelEntry" );
+	gtk_widget_grab_focus( label_widget );
+}
+
+static GObject *
+v_get_edited_action( NactWindow *window )
+{
+	g_assert( NACT_IS_IMENU_ITEM( window ));
+
+	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->get_edited_action ){
+		return( NACT_IMENU_ITEM_GET_INTERFACE( window )->get_edited_action( window ));
+	}
+
+	return( NULL );
+}
+
+static void
+v_update_dialog_title( NactWindow *window )
+{
+	g_assert( NACT_IS_IMENU_ITEM( window ));
+
+	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->update_dialog_title ){
+		NACT_IMENU_ITEM_GET_INTERFACE( window )->update_dialog_title( window );
+	}
+}
+
+static void
+v_signal_connected( NactWindow *window, gpointer instance, gulong handler_id )
+{
+	g_assert( NACT_IS_IMENU_ITEM( window ));
+
+	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->signal_connected ){
+		NACT_IMENU_ITEM_GET_INTERFACE( window )->signal_connected( window, instance, handler_id );
+	}
 }
 
 static void
@@ -291,14 +336,24 @@ static void
 on_label_changed( GtkEntry *entry, gpointer user_data )
 {
 	g_assert( NACT_IS_WINDOW( user_data ));
-	/*NactWindow *dialog = NACT_WINDOW( user_data );*/
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
+	na_action_set_label( edited, gtk_entry_get_text( entry ));
+
+	v_update_dialog_title( dialog );
 }
 
 static void
 on_tooltip_changed( GtkEntry *entry, gpointer user_data )
 {
 	g_assert( NACT_IS_WINDOW( user_data ));
-	/*NactWindow *dialog = NACT_WINDOW( user_data );*/
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
+	na_action_set_tooltip( edited, gtk_entry_get_text( entry ));
+
+	v_update_dialog_title( dialog );
 }
 
 static void
@@ -349,6 +404,11 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 	} else {
 		gtk_widget_hide( image );
 	}
+
+	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
+	na_action_set_icon( edited, icon_name );
+
+	v_update_dialog_title( dialog );
 }
 
 static void
@@ -356,14 +416,4 @@ record_signal( NactWindow *window, GObject *instance, const gchar *signal, GCall
 {
 	gulong handler_id = g_signal_connect( instance, signal, fn, user_data );
 	v_signal_connected( window, instance, handler_id );
-}
-
-static void
-v_signal_connected( NactWindow *window, gpointer instance, gulong handler_id )
-{
-	g_assert( NACT_IS_IMENU_ITEM( window ));
-
-	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->signal_connected ){
-		NACT_IMENU_ITEM_GET_INTERFACE( window )->signal_connected( window, instance, handler_id );
-	}
 }

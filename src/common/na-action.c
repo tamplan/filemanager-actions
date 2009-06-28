@@ -652,7 +652,7 @@ na_action_set_new_uuid( NAAction *action )
 /**
  * Set a new label for the action.
  *
- * @action: action whose UUID is to be set.
+ * @action: action whose label is to be set.
  *
  * @label: new label.
  */
@@ -661,6 +661,58 @@ na_action_set_label( NAAction *action, const gchar *label )
 {
 	g_assert( NA_IS_ACTION( action ));
 	g_object_set( G_OBJECT( action ), PROP_ACTION_LABEL_STR, label, NULL );
+}
+
+/**
+ * Set a new tooltip for the action.
+ *
+ * @action: action whose tooltip is to be set.
+ *
+ * @tooltip: new tooltip.
+ */
+void
+na_action_set_tooltip( NAAction *action, const gchar *tooltip )
+{
+	g_assert( NA_IS_ACTION( action ));
+	g_object_set( G_OBJECT( action ), PROP_ACTION_TOOLTIP_STR, tooltip, NULL );
+}
+
+/**
+ * Set a new icon for the action.
+ *
+ * @action: action whose icon name is to be set.
+ *
+ * @icon: new icon name.
+ */
+void
+na_action_set_icon( NAAction *action, const gchar *icon )
+{
+	g_assert( NA_IS_ACTION( action ));
+	g_object_set( G_OBJECT( action ), PROP_ACTION_ICON_STR, icon, NULL );
+}
+
+/**
+ * Are the two actions the sames (excluding UUID) ?
+ *
+ * @first: first action to check.
+ *
+ * @second: second action to be compared to @first.
+ */
+gboolean
+na_action_are_equal( NAAction *first, NAAction *second )
+{
+	gboolean equal =
+		( g_utf8_collate( first->private->label, second->private->label ) == 0 ) &&
+		( g_utf8_collate( first->private->tooltip, second->private->tooltip ) == 0 ) &&
+		( g_utf8_collate( first->private->icon, second->private->icon ) == 0 );
+
+	if( equal ){
+		equal = ( g_slist_length( first->private->profiles ) == g_slist_length( second->private->profiles ));
+	}
+	if( equal ){
+		/* TODO: compare profiles */
+	}
+	return( equal );
 }
 
 /**

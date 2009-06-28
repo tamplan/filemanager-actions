@@ -378,6 +378,8 @@ on_about_button_clicked( GtkButton *button, gpointer user_data )
 
 	g_free( license_i18n );
 	g_free( icon_name );
+
+	/* TODO: reset focus to actions list */
 }
 
 /*
@@ -399,7 +401,7 @@ on_add_button_clicked( GtkButton *button, gpointer user_data )
 	nact_action_conditions_editor_run_editor( wndmain, NULL );
 
 	/* TODO: set the selection to the newly created action
-	 * or restore the previous selection */
+	 * or restore the previous selection - set focus to actions list */
 }
 
 /*
@@ -438,7 +440,8 @@ on_edit_button_clicked( GtkButton *button, gpointer user_data )
 		g_assert_not_reached();
 	}
 
-	/* TODO: reset the selection to the edited action */
+	/* TODO: reset the selection to the edited action
+	 * set focus to actions list */
 }
 
 static void
@@ -476,7 +479,8 @@ on_duplicate_button_clicked( GtkButton *button, gpointer user_data )
 		g_assert_not_reached();
 	}
 
-	/* TODO: set the selection to the newly created action */
+	/* TODO: set the selection to the newly created action
+	 * set focus to actions list */
 }
 
 static void
@@ -512,7 +516,7 @@ on_delete_button_clicked( GtkButton *button, gpointer user_data )
 		g_assert_not_reached();
 	}
 	/* TODO: set the selection to the previous action if any
-	 * or to the next one */
+	 * or to the next one - set focus to actions list */
 }
 
 static void

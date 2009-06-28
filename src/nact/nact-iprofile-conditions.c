@@ -42,9 +42,11 @@
 struct NactIProfileConditionsInterfacePrivate {
 };
 
-static GType      register_type( void );
-static void       interface_base_init( NactIProfileConditionsInterface *klass );
-static void       interface_base_finalize( NactIProfileConditionsInterface *klass );
+static GType    register_type( void );
+static void     interface_base_init( NactIProfileConditionsInterface *klass );
+static void     interface_base_finalize( NactIProfileConditionsInterface *klass );
+
+/*static GObject *v_get_edited_action( NactWindow *window );*/
 
 GType
 nact_iprofile_conditions_get_type( void )
@@ -123,12 +125,21 @@ nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAAction *action )
 {
 }
 
-void
+/*void
 nact_iprofile_conditions_all_widgets_showed( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_iprofile_conditions_all_widgets_showed";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
+}*/
 
-	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( dialog ), "notebook2" ));
-	gtk_notebook_set_current_page( notebook, 0 );
-}
+/*static GObject *
+v_get_edited_action( NactWindow *window )
+{
+	g_assert( NACT_IS_IPROFILE_CONDITIONS( window ));
+
+	if( NACT_IPROFILE_CONDITIONS_GET_INTERFACE( window )->get_edited_action ){
+		return( NACT_IPROFILE_CONDITIONS_GET_INTERFACE( window )->get_edited_action( window ));
+	}
+
+	return( NULL );
+}*/

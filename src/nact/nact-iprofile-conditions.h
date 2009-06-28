@@ -58,14 +58,15 @@ typedef struct {
 	NactIProfileConditionsInterfacePrivate *private;
 
 	/* api */
+	GObject * ( *get_edited_action )  ( NactWindow *window );
+	void      ( *signal_connected )   ( NactWindow *window, gpointer instance, gulong handler_id );
 }
 	NactIProfileConditionsInterface;
 
-GType nact_iprofile_conditions_get_type( void );
+GType    nact_iprofile_conditions_get_type( void );
 
-void  nact_iprofile_conditions_initial_load( NactWindow *dialog, NAAction *action );
-void  nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAAction *action );
-void  nact_iprofile_conditions_all_widgets_showed( NactWindow *dialog );
+void     nact_iprofile_conditions_initial_load( NactWindow *dialog, NAAction *action );
+void     nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAAction *action );
 
 G_END_DECLS
 

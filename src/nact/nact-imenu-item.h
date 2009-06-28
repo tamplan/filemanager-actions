@@ -57,14 +57,17 @@ typedef struct {
 	NactIMenuItemInterfacePrivate *private;
 
 	/* api */
-	void ( *signal_connected )( NactWindow *window, gpointer instance, gulong handler_id );
+	GObject * ( *get_edited_action )  ( NactWindow *window );
+	void      ( *update_dialog_title )( NactWindow *window );
+	void      ( *signal_connected )   ( NactWindow *window, gpointer instance, gulong handler_id );
 }
 	NactIMenuItemInterface;
 
-GType nact_imenu_item_get_type( void );
+GType    nact_imenu_item_get_type( void );
 
-void  nact_imenu_item_initial_load( NactWindow *dialog, NAAction *action );
-void  nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action );
+void     nact_imenu_item_initial_load( NactWindow *dialog, NAAction *action );
+void     nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action );
+void     nact_imenu_item_all_widgets_showed( NactWindow *dialog );
 
 G_END_DECLS
 

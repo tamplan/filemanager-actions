@@ -1,3 +1,20 @@
+2009-06-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-action.c:
+	* src/common/na-action.h:
+	na_action_set_tooltip, na_action_set_icon, na_action_are_equal:
+	new functions.
+
+	* src/common/na-iio-provider.c:
+	Fist try to write to initial provider.
+
+	* src/nact/nact-action-conditions-editor.c:
+	Update the dialog title if action has been modified.
+
+	* src/nact/nact-imenu-item.c:
+	* src/nact/nact-imenu-item.h:
+	get_edited_action, update_dialog_title: new functions.
+
 2009-06-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* po/POTFILES.in:
