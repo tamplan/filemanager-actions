@@ -206,8 +206,8 @@ class_init( NAActionClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	/*static const gchar *thisfn = "na_action_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
+	static const gchar *thisfn = "na_action_instance_init";
+	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
 
 	g_assert( NA_IS_ACTION( instance ));
 	NAAction* self = NA_ACTION( instance );
@@ -216,8 +216,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->dispose_has_run = FALSE;
 
-	/* initialize suitable default values, but for label which is
-	 * mandatory
+	/* initialize suitable default values
 	 */
 	self->private->version = g_strdup( NA_ACTION_LATEST_VERSION );
 	self->private->label = g_strdup( "" );
@@ -352,8 +351,8 @@ instance_finalize( GObject *object )
 /**
  * Allocates a new NAAction object.
  *
- * @uuid: the globally unique identifier (UUID) of the action. If NULL,
- * a new UUID is allocated for this action.
+ * @uuid: the globally unique identifier (UUID) of the action.
+ * If NULL, a new UUID is allocated for this action.
  *
  * Return a newly allocated NAAction object.
  */
@@ -365,6 +364,23 @@ na_action_new( const gchar *uuid )
 	if( !uuid || !strlen( uuid )){
 		na_action_set_new_uuid( action );
 	}
+
+	return( action );
+}
+
+/**
+ * Allocates a new NAAction object along with a default profile.
+ *
+ * Return a newly allocated NAAction object.
+ */
+NAAction *
+na_action_new_with_profile( void )
+{
+	NAAction *action = na_action_new( NULL );
+
+	NAActionProfile *profile = na_action_profile_new( NA_OBJECT( action ), NULL );
+
+	action->private->profiles = g_slist_prepend( action->private->profiles, profile );
 
 	return( action );
 }
@@ -397,7 +413,10 @@ na_action_duplicate( const NAAction *action )
 
 	GSList *ip;
 	for( ip = action->private->profiles ; ip ; ip = ip->next ){
-		/* TODO: duplicate profile */
+		duplicate->private->profiles =
+			g_slist_prepend(
+					duplicate->private->profiles,
+					na_action_profile_duplicate( NA_ACTION_PROFILE( ip->data )));
 	}
 
 	return( duplicate );
@@ -638,7 +657,7 @@ na_action_set_profiles( NAAction *action, GSList *list )
 	for( ip = list ; ip ; ip = ip->next ){
 		action->private->profiles = g_slist_prepend(
 							action->private->profiles,
-							na_action_profile_copy( NA_ACTION_PROFILE( ip->data ))
+							na_action_profile_duplicate( NA_ACTION_PROFILE( ip->data ))
 		);
 	}
 }

@@ -917,11 +917,26 @@ do_write_action( NAIIOProvider *provider, const GObject *obj_action, gchar **mes
  * FALSE without error for our keys !
  * So I have to actually try a fake write to the key to get the real
  * writability status...
+ *
+ * TODO: having a NAPivot as Nautilus extension and another NAPivot in
+ * the UI leads to a sort of notification loop: extension's pivot is
+ * not aware of UI's one, and so get notifications from GConf, reloads
+ * the list of actions, retrying to test the writability.
+ * In the meanwhile, UI's pivot has reauthorized notifications, and is
+ * notified of extension's pivot tests, and so on......
+ *
+ * -> Nautilus extension's pivot should not test for writability, as it
+ *    uses actions as read-only, reloading the whole list when one
+ *    action is modified ; this can break the loop
+ *
+ * -> the UI may use the pivot inside of Nautilus extension via a sort
+ *    of API, falling back to its own pivot, when the extension is not
+ *    present.
  */
 static gboolean
 key_is_writable( NAGConf *gconf, const gchar *path )
 {
-	static const gchar *thisfn = "na_gconf_key_is_writable";
+	/*static const gchar *thisfn = "na_gconf_key_is_writable";
 	GError *error = NULL;
 
 	remove_gconf_watched_dir( gconf );
@@ -947,7 +962,9 @@ key_is_writable( NAGConf *gconf, const gchar *path )
 	g_debug( "%s: ret_gconf=%s, ret_try=%s", thisfn, ret_gconf ? "True":"False", ret_try ? "True":"False" );
 
 	install_gconf_watched_dir( gconf );
-	return( ret_try );
+	return( ret_try );*/
+
+	return( TRUE );
 }
 
 static gboolean

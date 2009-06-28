@@ -1,11 +1,19 @@
 2009-06-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-action.c:
-	UUID no more a contruction only parameter.
+	* src/common/na-action.h:
+	UUID is no more a contruction only property.
 	NAAction is now initialized with suitable default values.
+	na_action_new_with_profile: new function.
+
+	* src/common/na-action-profile.c:
+	* src/common/na-action-profile.h:
+	Profile's name is no more a construction only property.
+	na_action_profile_copy function is renamed as
+	na_action_profile_duplicate.
 
 	* src/na/na-gconf.c:
-	Fix test of writability status.
+	Temporarily suspend test of writability status.
 
 	* src/nact/nact-action-conditions-editor.c:
 	* src/nact/nact-action-conditions-editor.h:

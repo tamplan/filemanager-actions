@@ -88,7 +88,7 @@ typedef struct {
 GType            na_action_profile_get_type( void );
 
 NAActionProfile *na_action_profile_new( const NAObject *action, const gchar *name );
-NAActionProfile *na_action_profile_copy( const NAActionProfile *profile );
+NAActionProfile *na_action_profile_duplicate( const NAActionProfile *profile );
 void             na_action_profile_free( NAActionProfile *profile );
 
 NAObject        *na_action_profile_get_action( const NAActionProfile *profile );

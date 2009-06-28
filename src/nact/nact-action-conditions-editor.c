@@ -179,6 +179,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactActionConditionsEditorPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+	self->private->action = NULL;
 }
 
 static void
@@ -194,6 +195,8 @@ instance_dispose( GObject *dialog )
 
 		self->private->dispose_has_run = TRUE;
 
+		g_object_unref( self->private->action );
+
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( dialog );
 	}
@@ -206,7 +209,9 @@ instance_finalize( GObject *dialog )
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
 	g_assert( NACT_IS_ACTION_CONDITIONS_EDITOR( dialog ));
-	/*NactActionConditionsEditor *self = ( NactActionConditionsEditor * ) dialog;*/
+	NactActionConditionsEditor *self = ( NactActionConditionsEditor * ) dialog;
+
+	g_free( self->private );
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){
@@ -241,6 +246,9 @@ action_conditions_editor_new( BaseApplication *application )
 gboolean
 nact_action_conditions_editor_run_editor( NactWindow *parent, gpointer user_data )
 {
+	static const gchar *thisfn = "nact_action_conditions_editor_run_editor";
+	g_debug( "%s: parent=%p, user_data=%p", thisfn, parent, user_data );
+
 	g_assert( NACT_IS_MAIN_WINDOW( parent ));
 
 	BaseApplication *application = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
@@ -252,7 +260,7 @@ nact_action_conditions_editor_run_editor( NactWindow *parent, gpointer user_data
 	NAAction *action = NA_ACTION( user_data );
 
 	if( !action ){
-		dialog->private->action = na_action_new( NULL );
+		dialog->private->action = na_action_new_with_profile();
 		dialog->private->is_new = TRUE;
 
 	} else {
@@ -262,7 +270,6 @@ nact_action_conditions_editor_run_editor( NactWindow *parent, gpointer user_data
 
 	base_window_run( BASE_WINDOW( dialog ));
 
-	g_object_unref( dialog->private->action );
 	return( TRUE );
 }
 

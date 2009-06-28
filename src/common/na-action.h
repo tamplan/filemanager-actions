@@ -81,6 +81,7 @@ typedef struct {
 GType     na_action_get_type( void );
 
 NAAction *na_action_new( const gchar *uuid );
+NAAction *na_action_new_with_profile( void );
 NAAction *na_action_duplicate( const NAAction *action );
 
 gchar    *na_action_get_uuid( const NAAction *action );

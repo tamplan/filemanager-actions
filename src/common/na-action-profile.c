@@ -162,7 +162,7 @@ class_init( NAActionProfileClass *klass )
 			PROP_PROFILE_NAME_STR,
 			PROP_PROFILE_NAME_STR,
 			"Internal profile's name", "",
-			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_PROFILE_NAME, spec );
 
 	spec = g_param_spec_string(
@@ -456,6 +456,8 @@ instance_finalize( GObject *object )
  * @action: the action to which the profile must be attached.
  *
  * @name: the internal name (identifier) of the profile.
+ * If NULL, the instance_init takes care of allocating a suitable
+ * default value.
  *
  * Returns the newly allocated NAActionProfile object.
  */
@@ -463,12 +465,14 @@ NAActionProfile *
 na_action_profile_new( const NAObject *action, const gchar *name )
 {
 	g_assert( NA_IS_ACTION( action ));
-	g_assert( name && strlen( name ));
 
 	NAActionProfile *profile =
 		g_object_new(
-				NA_ACTION_PROFILE_TYPE,
-				PROP_PROFILE_ACTION_STR, action, PROP_PROFILE_NAME_STR, name, NULL );
+				NA_ACTION_PROFILE_TYPE, PROP_PROFILE_ACTION_STR, action, NULL );
+
+	if( name && strlen( name )){
+		g_object_set( G_OBJECT( profile ), PROP_PROFILE_NAME_STR, name, NULL );
+	}
 
 	return( profile );
 }
@@ -484,7 +488,7 @@ na_action_profile_new( const NAObject *action, const gchar *name )
  * as the initial one, and thus cannot be attached to the same action.
  */
 NAActionProfile *
-na_action_profile_copy( const NAActionProfile *profile )
+na_action_profile_duplicate( const NAActionProfile *profile )
 {
 	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
