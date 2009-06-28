@@ -67,6 +67,11 @@ struct NAActionPrivate {
 	 * defaults to FALSE unless a write has already returned an error
 	 */
 	gboolean  read_only;
+
+	/* the original provider
+	 * required to be able to edit/delete the action
+	 */
+	gpointer  provider;
 };
 
 /* instance properties
@@ -79,15 +84,9 @@ enum {
 	PROP_ACTION_LABEL,
 	PROP_ACTION_TOOLTIP,
 	PROP_ACTION_ICON,
-	PROP_ACTION_READONLY
+	PROP_ACTION_READONLY,
+	PROP_ACTION_PROVIDER
 };
-
-#define PROP_ACTION_UUID_STR		"uuid"
-#define PROP_ACTION_VERSION_STR		"version"
-#define PROP_ACTION_LABEL_STR		"label"
-#define PROP_ACTION_TOOLTIP_STR		"tooltip"
-#define PROP_ACTION_ICON_STR		"icon"
-#define PROP_ACTION_READONLY_STR	"read-only"
 
 #define NA_ACTION_LATEST_VERSION	"2.0"
 
@@ -196,6 +195,13 @@ class_init( NAActionClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_ACTION_READONLY, spec );
 
+	spec = g_param_spec_pointer(
+			PROP_ACTION_PROVIDER_STR,
+			PROP_ACTION_PROVIDER_STR,
+			"Original provider",
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_ACTION_PROVIDER, spec );
+
 	klass->private = g_new0( NAActionClassPrivate, 1 );
 
 	NA_OBJECT_CLASS( klass )->dump = do_dump;
@@ -223,6 +229,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->tooltip = g_strdup( "" );
 	self->private->icon = g_strdup( "" );
 	self->private->read_only = FALSE;
+	self->private->provider = NULL;
 }
 
 static void
@@ -254,6 +261,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 		case PROP_ACTION_READONLY:
 			g_value_set_boolean( value, self->private->read_only );
+			break;
+
+		case PROP_ACTION_PROVIDER:
+			g_value_set_pointer( value, self->private->provider );
 			break;
 
 		default:
@@ -296,6 +307,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 		case PROP_ACTION_READONLY:
 			self->private->read_only = g_value_get_boolean( value );
+			break;
+
+		case PROP_ACTION_PROVIDER:
+			self->private->provider = g_value_get_pointer( value );
 			break;
 
 		default:
@@ -410,6 +425,7 @@ na_action_duplicate( const NAAction *action )
 	duplicate->private->tooltip = g_strdup( action->private->tooltip );
 	duplicate->private->icon = g_strdup( action->private->icon );
 	duplicate->private->read_only = action->private->read_only;
+	duplicate->private->provider = action->private->provider;
 
 	GSList *ip;
 	for( ip = action->private->profiles ; ip ; ip = ip->next ){
@@ -440,6 +456,7 @@ do_dump( const NAObject *action )
 	g_debug( "%s:   tooltip='%s'", thisfn, self->private->tooltip );
 	g_debug( "%s:      icon='%s'", thisfn, self->private->icon );
 	g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
+	g_debug( "%s:  provider=%p", thisfn, self->private->provider );
 
 	/* dump profiles */
 	g_debug( "%s: %d profile(s) at %p", thisfn, na_action_get_profiles_count( self ), self->private->profiles );
@@ -602,6 +619,19 @@ na_action_is_readonly( const NAAction *action )
 }
 
 /**
+ * Returns the initial provider of the action (or the last which has
+ * accepted a write).
+ *
+ * @action: an NAAction object.
+ */
+gpointer
+na_action_get_provider( const NAAction *action )
+{
+	g_assert( NA_IS_ACTION( action ));
+	return( action->private->provider );
+}
+
+/**
  * Set a new UUID for the action.
  *
  * @action: action whose UUID is to be set.
@@ -617,6 +647,20 @@ na_action_set_new_uuid( NAAction *action )
 	uuid_unparse_lower( uuid, uuid_str );
 
 	g_object_set( G_OBJECT( action ), PROP_ACTION_UUID_STR, uuid_str, NULL );
+}
+
+/**
+ * Set a new label for the action.
+ *
+ * @action: action whose UUID is to be set.
+ *
+ * @label: new label.
+ */
+void
+na_action_set_label( NAAction *action, const gchar *label )
+{
+	g_assert( NA_IS_ACTION( action ));
+	g_object_set( G_OBJECT( action ), PROP_ACTION_LABEL_STR, label, NULL );
 }
 
 /**

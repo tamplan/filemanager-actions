@@ -74,12 +74,11 @@ NAPivot *na_pivot_new( const GObject *notified );
 GSList  *na_pivot_get_providers( const NAPivot *pivot, GType type );
 
 GSList  *na_pivot_get_actions( const NAPivot *pivot );
-
 void     na_pivot_free_actions( GSList *actions );
 
 GObject *na_pivot_get_action( NAPivot *pivot, const gchar *uuid );
-
-gboolean na_pivot_write_action( NAPivot *pivot, const GObject *action, gchar **message );
+guint    na_pivot_write_action( NAPivot *pivot, const GObject *action, gchar **message );
+guint    na_pivot_delete_action( NAPivot *pivot, const GObject *action, gchar **message );
 
 /* data passed from the storage subsystem when an action is changed
  */

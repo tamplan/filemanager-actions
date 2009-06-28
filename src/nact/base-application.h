@@ -108,6 +108,7 @@ GObject   *base_application_get_main_window( BaseApplication *application );
 GtkWidget *base_application_get_widget( BaseApplication *application, const gchar *name );
 
 void       base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary );
+gboolean   base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *msg );
 
 G_END_DECLS
 

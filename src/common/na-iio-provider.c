@@ -189,7 +189,7 @@ na_iio_provider_read_actions( const GObject *object )
  * @message: the I/O provider can allocate and store here an error
  * message.
  *
- * Returns TRUE if the write is successfull, FALSE else.
+ * Returns the IIOProvider return code.
  */
 guint
 na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_action, gchar **message )
@@ -217,6 +217,40 @@ na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_actio
 			if( ret == NA_IIO_PROVIDER_WRITE_OK || ret == NA_IIO_PROVIDER_WRITE_ERROR ){
 				break;
 			}
+		}
+	}
+
+	return( ret );
+}
+
+/**
+ * Deletes an action from the storage subsystem.
+ *
+ * @obj_pivot: the pivot object which owns the list of registered
+ * interface providers.
+ *
+ * @obj_action: the action to be deleted.
+ *
+ * @message: the I/O provider can allocate and store here an error
+ * message.
+ *
+ * Returns the IIOProvider return code.
+ */
+guint
+na_iio_provider_delete_action( const GObject *obj_pivot, const GObject *obj_action, gchar **message )
+{
+	static const gchar *thisfn = "na_iio_provider_delete_action";
+	g_debug( "%s: pivot=%p, action=%p, message=%p", thisfn, obj_pivot, obj_action, message );
+
+	g_assert( NA_IS_ACTION( obj_action ));
+	guint ret = NA_IIO_PROVIDER_NOT_WRITABLE;
+
+	NAIIOProvider *instance = NA_IIO_PROVIDER( na_action_get_provider( NA_ACTION( obj_action )));
+	if( instance ){
+		g_assert( NA_IS_IIO_PROVIDER( instance ));
+
+		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_action ){
+			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_action( instance, obj_action, message );
 		}
 	}
 

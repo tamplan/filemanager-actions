@@ -592,3 +592,17 @@ is_main_window( BaseWindow *window )
 
 	return( main_widget == this_widget );
 }
+
+void
+base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary )
+{
+	g_assert( BASE_IS_WINDOW( window ));
+	base_application_error_dlg( window->private->application, type, primary, secondary );
+}
+
+gboolean
+base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *msg )
+{
+	g_assert( BASE_IS_WINDOW( window ));
+	return( base_application_yesno_dlg( window->private->application, type, msg ));
+}

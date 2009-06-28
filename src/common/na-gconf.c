@@ -106,6 +106,7 @@ static gboolean       do_is_writable( NAIIOProvider *provider );
 static gboolean       do_is_willing_to_write( NAIIOProvider *provider, const GObject *action );
 
 static guint          do_write_action( NAIIOProvider *provider, const GObject *action, gchar **message );
+static guint          do_delete_action( NAIIOProvider *provider, const GObject *action, gchar **message );
 static gboolean       key_is_writable( NAGConf *gconf, const gchar *path );
 static gboolean       write_v2_keys( NAGConf *gconf, const NAAction *action, gchar **message );
 static gboolean       write_str( NAGConf *gconf, const gchar *uuid, const gchar *key, gchar *value, gchar **message );
@@ -195,6 +196,7 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	iface->is_writable = do_is_writable;
 	iface->is_willing_to_write = do_is_willing_to_write;
 	iface->write_action = do_write_action;
+	iface->delete_action = do_delete_action;
 }
 
 static void
@@ -602,6 +604,7 @@ set_action_properties( NAGConf *gconf, NAAction *action, GSList *properties )
 			PROP_ACTION_LABEL_STR, label,
 			PROP_ACTION_TOOLTIP_STR, tooltip,
 			PROP_ACTION_ICON_STR, icon,
+			PROP_ACTION_PROVIDER_STR, gconf,
 			NULL );
 
 	g_free( icon );
@@ -909,7 +912,40 @@ do_write_action( NAIIOProvider *provider, const GObject *obj_action, gchar **mes
 		return( NA_IIO_PROVIDER_WRITE_ERROR );
 	}
 
+	g_object_set( G_OBJECT( action ), PROP_ACTION_PROVIDER_STR, provider, NULL );
+
 	return( NA_IIO_PROVIDER_WRITE_OK );
+}
+
+static guint
+do_delete_action( NAIIOProvider *provider, const GObject *obj_action, gchar **message )
+{
+	static const gchar *thisfn = "nacf_gconf_do_delete_action";
+	g_debug( "%s: provider=%p, action=%p, message=%p", thisfn, provider, obj_action, message );
+
+	g_assert( NA_IS_IIO_PROVIDER( provider ));
+	g_assert( NA_IS_GCONF( provider ));
+	NAGConf *self = NA_GCONF( provider );
+
+	message = NULL;
+	guint ret = NA_IIO_PROVIDER_WRITE_OK;
+
+	g_assert( NA_IS_ACTION( obj_action ));
+	NAAction *action = NA_ACTION( obj_action );
+
+	gchar *uuid = na_action_get_uuid( action );
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
+	GError *error = NULL;
+
+	if( !gconf_client_recursive_unset( self->private->gconf, path, 0, &error )){
+		*message = g_strdup( error->message );
+		g_error_free( error );
+		ret = NA_IIO_PROVIDER_WRITE_ERROR;
+	}
+
+	g_free( path );
+	g_free( uuid );
+	return( ret );
 }
 
 /*

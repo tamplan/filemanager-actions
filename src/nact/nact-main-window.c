@@ -40,6 +40,7 @@
 #include <common/na-action.h>
 #include <common/na-action-profile.h>
 #include <common/na-pivot.h>
+#include <common/na-iio-provider.h>
 #include <common/na-ipivot-container.h>
 
 #include "nact-application.h"
@@ -398,8 +399,7 @@ on_add_button_clicked( GtkButton *button, gpointer user_data )
 	nact_action_conditions_editor_run_editor( wndmain, NULL );
 
 	/* TODO: set the selection to the newly created action
-	 * or restore the previous selection
-	 */
+	 * or restore the previous selection */
 }
 
 /*
@@ -437,6 +437,8 @@ on_edit_button_clicked( GtkButton *button, gpointer user_data )
 	} else {
 		g_assert_not_reached();
 	}
+
+	/* TODO: reset the selection to the edited action */
 }
 
 static void
@@ -449,29 +451,32 @@ on_duplicate_button_clicked( GtkButton *button, gpointer user_data )
 	NactWindow *wndmain = NACT_WINDOW( user_data );
 
 	NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( wndmain ));
-
 	if( action ){
+
 		NAAction *duplicate = na_action_duplicate( action );
 		na_action_set_new_uuid( duplicate );
+		gchar *label = na_action_get_label( action );
+		gchar *label2 = g_strdup_printf( _( "Copy of %s"), label );
+		na_action_set_label( duplicate, label2 );
+		g_free( label2 );
 
 		gchar *msg = NULL;
 		NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( wndmain ));
-		if( !na_pivot_write_action( pivot, G_OBJECT( duplicate ), &msg )){
+		if( na_pivot_write_action( pivot, G_OBJECT( duplicate ), &msg ) != NA_IIO_PROVIDER_WRITE_OK ){
 
-			BaseApplication *application;
-			g_object_get( G_OBJECT( wndmain ), PROP_WINDOW_APPLICATION_STR, &application, NULL );
-			g_assert( NACT_IS_APPLICATION( application ));
-			gchar *label = na_action_get_label( action );
 			gchar *first = g_strdup_printf( _( "Unable to duplicate \"%s\" action." ), label );
-			base_application_error_dlg( application, GTK_MESSAGE_ERROR, first, msg );
+			base_window_error_dlg( BASE_WINDOW( wndmain ), GTK_MESSAGE_ERROR, first, msg );
 			g_free( first );
-			g_free( label );
 			g_free( msg );
 		}
+
+		g_free( label );
 
 	} else {
 		g_assert_not_reached();
 	}
+
+	/* TODO: set the selection to the newly created action */
 }
 
 static void
@@ -480,24 +485,34 @@ on_delete_button_clicked( GtkButton *button, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_delete_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
-	/*GtkTreeSelection *selection;
-	GtkTreeIter iter;
-	GtkWidget *nact_actions_list;
-	GtkTreeModel* model;
+	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	NactWindow *wndmain = NACT_WINDOW( user_data );
 
-	nact_actions_list = nact_get_glade_widget ("ActionsList");
+	NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( wndmain ));
+	if( action ){
 
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (nact_actions_list));
+		gchar *label = na_action_get_label( action );
+		gchar *sure = g_strdup_printf( _( "Are you sure you want to delete \"%s\" action ?" ), label );
+		if( base_window_yesno_dlg( BASE_WINDOW( wndmain ), GTK_MESSAGE_WARNING, sure )){
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		gchar *uuid;
+			gchar *msg = NULL;
+			NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( wndmain ));
+			if( na_pivot_delete_action( pivot, G_OBJECT( action ), &msg ) != NA_IIO_PROVIDER_WRITE_OK ){
 
-		gtk_tree_model_get (model, &iter, IACTIONS_LIST_UUID_COLUMN, &uuid, -1);*/
-		/*nautilus_actions_config_remove_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);*/
-		/*fill_actions_list (nact_actions_list);
+				gchar *first = g_strdup_printf( _( "Unable to delete \"%s\" action." ), label );
+				base_window_error_dlg( BASE_WINDOW( wndmain ), GTK_MESSAGE_ERROR, first, msg );
+				g_free( first );
+				g_free( msg );
+			}
+		}
+		g_free( sure );
+		g_free( label );
 
-		g_free (uuid);
-	}*/
+	} else {
+		g_assert_not_reached();
+	}
+	/* TODO: set the selection to the previous action if any
+	 * or to the next one */
 }
 
 static void

@@ -64,6 +64,7 @@ typedef struct {
 	gboolean ( *is_writable )        ( NAIIOProvider *instance );
 	gboolean ( *is_willing_to_write )( NAIIOProvider *instance, const GObject *action );
 	guint    ( *write_action )       ( NAIIOProvider *instance, const GObject *action, gchar **message );
+	guint    ( *delete_action )      ( NAIIOProvider *instance, const GObject *action, gchar **message );
 }
 	NAIIOProviderInterface;
 
@@ -72,6 +73,7 @@ GType    na_iio_provider_get_type( void );
 GSList  *na_iio_provider_read_actions( const GObject *pivot );
 
 guint    na_iio_provider_write_action( const GObject *pivot, const GObject *action, gchar **message );
+guint    na_iio_provider_delete_action( const GObject *pivot, const GObject *action, gchar **message );
 
 /* modification notification message to NAPivot
  */

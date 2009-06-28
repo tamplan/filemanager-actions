@@ -71,8 +71,6 @@ nautilus_actions_config_SOURCES = \
 	nact-profile-editor.h								\
 	nact-editor.c										\
 	nact-editor.h										\
-	nact-action-editor.c								\
-	nact-action-editor.h								\
 	nact-window.c										\
 	nact-window.h										\
 	$(NULL)

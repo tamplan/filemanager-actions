@@ -380,15 +380,36 @@ na_pivot_get_action( NAPivot *pivot, const gchar *uuid )
  * @message: the I/O provider can allocate and store here an error
  * message.
  *
- * Returns TRUE if the write is successfull, FALSE else.
+ * Returns the IIOProvider return code.
  */
-gboolean
+guint
 na_pivot_write_action( NAPivot *pivot, const GObject *action, gchar **message )
 {
 	g_assert( NA_IS_PIVOT( pivot ));
 	g_assert( NA_IS_ACTION( action ));
 	g_assert( message );
 	return( na_iio_provider_write_action( G_OBJECT( pivot ), action, message ));
+}
+
+/**
+ * Delete an action.
+ *
+ * @pivot: this NAPivot object.
+ *
+ * @action: action to be deleted from the storage subsystem.
+ *
+ * @message: the I/O provider can allocate and store here an error
+ * message.
+ *
+ * Returns the IIOProvider return code.
+ */
+guint
+na_pivot_delete_action( NAPivot *pivot, const GObject *action, gchar **message )
+{
+	g_assert( NA_IS_PIVOT( pivot ));
+	g_assert( NA_IS_ACTION( action ));
+	g_assert( message );
+	return( na_iio_provider_delete_action( G_OBJECT( pivot ), action, message ));
 }
 
 /*

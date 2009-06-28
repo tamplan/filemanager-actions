@@ -1,10 +1,15 @@
 2009-06-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in:
+	Replace src/nact/nact.c with src/nact/nact-main-window.c.
+	Replace src/nact/nautilus-actions-config.glade with
+	src/nact/nautilus-actions-config.ui.
+
 	* src/common/na-action.c:
 	* src/common/na-action.h:
 	UUID is no more a contruction only property.
 	NAAction is now initialized with suitable default values.
-	na_action_new_with_profile: new function.
+	na_action_new_with_profile, na_action_get_provider: new functions.
 
 	* src/common/na-action-profile.c:
 	* src/common/na-action-profile.h:
@@ -12,8 +17,12 @@
 	na_action_profile_copy function is renamed as
 	na_action_profile_duplicate.
 
-	* src/na/na-gconf.c:
+	* src/common/na-gconf.c:
 	Temporarily suspend test of writability status.
+	Record the last provider of an action.
+
+	* src/common/na-iio-provider.c:
+	delete_action: new function.
 
 	* src/nact/nact-action-conditions-editor.c:
 	* src/nact/nact-action-conditions-editor.h:

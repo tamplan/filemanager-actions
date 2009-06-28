@@ -1015,3 +1015,22 @@ base_application_error_dlg(
 
 	gtk_widget_destroy( dialog );
 }
+
+gboolean
+base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *msg )
+{
+	g_assert( BASE_IS_APPLICATION( application ));
+
+	GtkWidget *dialog = gtk_message_dialog_new(
+			NULL, GTK_DIALOG_MODAL, type, GTK_BUTTONS_YES_NO, msg );
+
+	const gchar *name = g_get_application_name();
+
+	g_object_set( G_OBJECT( dialog ) , "title", name, NULL );
+
+	gint result = gtk_dialog_run( GTK_DIALOG( dialog ));
+
+	gtk_widget_destroy( dialog );
+
+	return( result == GTK_RESPONSE_YES );
+}

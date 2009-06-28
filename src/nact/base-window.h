@@ -95,6 +95,9 @@ GtkWidget *base_window_get_widget( BaseWindow *window, const gchar *name );
 
 void       base_window_connect( BaseWindow *window, const gchar *widget, const gchar *signal, GCallback handler );
 
+void       base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );
+gboolean   base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *msg );
+
 G_END_DECLS
 
 #endif /* __BASE_WINDOW_H__ */
