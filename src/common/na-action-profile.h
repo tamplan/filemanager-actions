@@ -69,21 +69,19 @@ typedef struct {
 	NAActionProfileClass;
 
 /* instance properties
- * please note that property names must have the same spelling as the
- * NactIIOProvider parameters
  */
-#define PROP_PROFILE_ACTION_STR					"action"
-#define PROP_PROFILE_NAME_STR					"name"
-#define PROP_PROFILE_LABEL_STR					"desc-name"
-#define PROP_PROFILE_PATH_STR					"path"
-#define PROP_PROFILE_PARAMETERS_STR				"parameters"
-#define PROP_PROFILE_ACCEPT_MULTIPLE_STR		"accept-multiple-files"
-#define PROP_PROFILE_BASENAMES_STR				"basenames"
-#define PROP_PROFILE_ISDIR_STR					"isdir"
-#define PROP_PROFILE_ISFILE_STR					"isfile"
-#define PROP_PROFILE_MATCHCASE_STR				"matchcase"
-#define PROP_PROFILE_MIMETYPES_STR				"mimetypes"
-#define PROP_PROFILE_SCHEMES_STR				"schemes"
+#define PROP_PROFILE_ACTION_STR					"profile-action"
+#define PROP_PROFILE_NAME_STR					"profile-name"
+#define PROP_PROFILE_LABEL_STR					"profile-desc-name"
+#define PROP_PROFILE_PATH_STR					"profile-path"
+#define PROP_PROFILE_PARAMETERS_STR				"profile-parameters"
+#define PROP_PROFILE_ACCEPT_MULTIPLE_STR		"profile-accept-multiple-files"
+#define PROP_PROFILE_BASENAMES_STR				"profile-basenames"
+#define PROP_PROFILE_ISDIR_STR					"profile-isdir"
+#define PROP_PROFILE_ISFILE_STR					"profile-isfile"
+#define PROP_PROFILE_MATCHCASE_STR				"profile-matchcase"
+#define PROP_PROFILE_MIMETYPES_STR				"profile-mimetypes"
+#define PROP_PROFILE_SCHEMES_STR				"profile-schemes"
 
 GType            na_action_profile_get_type( void );
 
