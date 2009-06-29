@@ -2,13 +2,18 @@
 
 	* src/common/na-action.c:
 	* src/common/na-action.h (na_action_set_tooltip,
-	na_action_set_icon, na_action_are_equal): New functions.
+	na_action_set_icon, na_action_are_equal, na_action_get_profile):
+	New functions.
+
+	* src/common/na-action.c
 	(na_action_new_with_profile): Provides a default profile name.
 	(na_action_duplicate): Provides a pointer to the duplicated action.
+	(na_action_are_equal): Implements profiles comparison.
 
 	* src/common/na-action-profile.c:
 	* src/common/na-action-profile.h (na_action_profile_set_path,
-	na_action_profile_set_parameters, na_action_profile_set_basenames):
+	na_action_profile_set_parameters, na_action_profile_set_basenames,
+	na_action_profile_are_equal):
 	New functions.
 
 	* src/common/na-action-profile.c (na_action_profile_new):
@@ -18,8 +23,16 @@
 	* src/common/na-action-profile.h (na_action_profile_duplicate):
 	The duplicated profile points to the duplicated action.
 
+	* src/common/na-gconf.c:
+	Defines an association table between GConf keys and property
+	names.
+
 	* src/common/na-iio-provider.c:
 	Fist try to write to initial provider.
+
+	* src/common/na-utils.c:
+	* src/common/na-utils.h (na_utils_find_in_list,
+	na_utils_string_lists_are_equal): New functions.
 
 	* src/nact/base-application.c (display_dlg):
 	New mutualized function.
@@ -30,10 +43,16 @@
 
 	* src/nact/nact-action-conditions-editor.c:
 	Update the dialog title if action has been modified.
+	Have Close or Cancel/Save buttons depending on action status.
+	Only save an action which has a not empty label.
+	Implements PathBrowse button.
 
 	* src/nact/nact-imenu-item.c:
 	* src/nact/nact-imenu-item.h (get_edited_action,
-	update_dialog_title): New functions.
+	update_dialog_title, nact_imenu_item_has_label): New functions.
+
+	* src/nact/nact-imenu-item.c:
+	Implements IconBrowse button.
 
 2009-06-28 Pierre Wieser <pwieser@trychlos.org>
 

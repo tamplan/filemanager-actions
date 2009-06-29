@@ -70,6 +70,29 @@ enum {
 
 #define PROP_NOTIFIED_STR				"to-be-notified"
 
+/* correspondance table for association of GConf entry keys to action
+ * and profile properties
+ */
+typedef struct {
+	gchar *gconfkey;
+	gchar *property;
+}
+	KeyToPropertyStruct;
+
+static KeyToPropertyStruct st_key_property[] = {
+	{ ACTION_PROFILE_LABEL_ENTRY, PROP_PROFILE_LABEL_STR           },
+	{ ACTION_PATH_ENTRY         , PROP_PROFILE_PATH_STR            },
+	{ ACTION_PARAMETERS_ENTRY   , PROP_PROFILE_PARAMETERS_STR      },
+	{ ACTION_BASENAMES_ENTRY    , PROP_PROFILE_BASENAMES_STR       },
+	{ ACTION_MATCHCASE_ENTRY    , PROP_PROFILE_MATCHCASE_STR       },
+	{ ACTION_MIMETYPES_ENTRY    , PROP_PROFILE_MIMETYPES_STR       },
+	{ ACTION_ISFILE_ENTRY       , PROP_PROFILE_ISFILE_STR          },
+	{ ACTION_ISDIR_ENTRY        , PROP_PROFILE_ISDIR_STR           },
+	{ ACTION_MULTIPLE_ENTRY     , PROP_PROFILE_ACCEPT_MULTIPLE_STR },
+	{ ACTION_SCHEMES_ENTRY      , PROP_PROFILE_SCHEMES_STR         },
+	{                       NULL, NULL }
+};
+
 static GObjectClass *st_parent_class = NULL;
 
 static GType          register_type( void );
@@ -91,6 +114,7 @@ static GSList        *load_keys_values( const NAGConf *gconf, const gchar *path 
 static void           free_keys_values( GSList *entries );
 static gchar         *path_to_key( const gchar *path );
 static void           set_item_properties( NAObject *object, GSList *properties );
+static const gchar   *key_to_property( const gchar *key );
 static gboolean       set_action_properties( NAGConf *gconf, NAAction *action, GSList *properties );
 static void           load_v1_properties( NAAction *action, const gchar *version, GSList *properties );
 static gchar         *search_for_str( GSList *properties, const gchar *profile, const gchar *key );
@@ -558,24 +582,45 @@ set_item_properties( NAObject *object, GSList *properties )
 		GConfEntry *entry = ( GConfEntry * ) item->data;
 		NAPivotNotify *npn = entry_to_notify( entry );
 		if( npn->type ){
+			const gchar *property_str = key_to_property( npn->parm );
 
-			switch( npn->type ){
-				case NA_PIVOT_STR:
-				case NA_PIVOT_BOOL:
-				case NA_PIVOT_STRLIST:
-					g_object_set( G_OBJECT( object ), npn->parm, npn->data, NULL );
-					break;
+			if( property_str ){
+				switch( npn->type ){
+					case NA_PIVOT_STR:
+					case NA_PIVOT_BOOL:
+					case NA_PIVOT_STRLIST:
+						g_object_set( G_OBJECT( object ), property_str, npn->data, NULL );
+						break;
 
-				default:
-					g_debug( "%s: uuid='%s', profile='%s', parm='%s', type=%d, data=%p",
-							thisfn, npn->uuid, npn->profile, npn->parm, npn->type, npn->data );
-					g_assert_not_reached();
-					break;
+					default:
+						g_debug( "%s: uuid='%s', profile='%s', parm='%s', type=%d, data=%p",
+								thisfn, npn->uuid, npn->profile, npn->parm, npn->type, npn->data );
+						g_assert_not_reached();
+						break;
+				}
+			} else {
+				g_warning( "%s: no property found for %s GConf key", thisfn, npn->parm );
 			}
 		}
 
 		na_pivot_free_notify( npn );
 	}
+}
+
+static const gchar *
+key_to_property( const gchar *key )
+{
+	int i;
+	gchar *property = NULL;
+
+	for( i=0 ; st_key_property[i].gconfkey && !property ; ++i ){
+		if( !g_ascii_strcasecmp( st_key_property[i].gconfkey, key )){
+			property = st_key_property[i].property;
+			break;
+		}
+	}
+
+	return( property );
 }
 
 /*

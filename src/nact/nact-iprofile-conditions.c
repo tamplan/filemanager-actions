@@ -70,6 +70,7 @@ static void          create_schemes_selection_list( NactWindow *window );
 static GSList       *get_schemes_default_list( NactWindow *window );
 
 static void          on_path_changed( GtkEntry *entry, gpointer user_data );
+static void          on_path_browse( GtkButton *button, gpointer user_data );
 static void          on_parameters_changed( GtkEntry *entry, gpointer user_data );
 static void          on_basenames_changed( GtkEntry *entry, gpointer user_data );
 static void          on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, gpointer user_data );
@@ -162,12 +163,12 @@ nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAActionProfile *prof
 	GtkWidget *path_widget = base_window_get_widget( BASE_WINDOW( dialog ), "CommandPathEntry" );
 	nact_window_signal_connect( dialog, G_OBJECT( path_widget ), "changed", G_CALLBACK( on_path_changed ));
 	gchar *path = na_action_profile_get_path( profile );
+	g_debug( "%s: path=%s", thisfn, path );
 	gtk_entry_set_text( GTK_ENTRY( path_widget ), path );
 	g_free( path );
 
 	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "PathBrowseButton" );
-	/* TODO: implement path browse button */
-	gtk_widget_set_sensitive( button, FALSE );
+	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_path_browse ));
 
 	GtkWidget *parameters_widget = base_window_get_widget( BASE_WINDOW( dialog ), "CommandParamsEntry" );
 	nact_window_signal_connect( dialog, G_OBJECT( parameters_widget ), "changed", G_CALLBACK( on_parameters_changed ));
@@ -375,6 +376,7 @@ get_schemes_default_list( NactWindow *window )
 	return( list );
 }
 
+/* TODO: update label example when path or parameters changed */
 static void
 on_path_changed( GtkEntry *entry, gpointer user_data )
 {
@@ -385,6 +387,37 @@ on_path_changed( GtkEntry *entry, gpointer user_data )
 	na_action_profile_set_path( edited, gtk_entry_get_text( entry ));
 
 	v_field_modified( dialog );
+}
+
+/* TODO: keep trace of last browsed dir */
+static void
+on_path_browse( GtkButton *button, gpointer user_data )
+{
+	g_assert( NACT_IS_IPROFILE_CONDITIONS( user_data ));
+	gboolean set_current_location = FALSE;
+
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(
+			_( "Choosing a command" ),
+			NULL,
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			NULL
+			);
+
+	GtkWidget *path_widget = base_window_get_widget( BASE_WINDOW( user_data ), "CommandPathEntry" );
+	const gchar *path = gtk_entry_get_text( GTK_ENTRY( path_widget ));
+	if( path && strlen( path )){
+		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
+	}
+
+	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
+		gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
+		gtk_entry_set_text( GTK_ENTRY( path_widget ), filename );
+	    g_free (filename);
+	  }
+
+	gtk_widget_destroy( dialog );
 }
 
 static void

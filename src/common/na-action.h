@@ -99,6 +99,7 @@ void      na_action_set_icon( NAAction *action, const gchar *icon_name );
 
 gboolean  na_action_are_equal( NAAction *first, NAAction *second );
 
+GObject  *na_action_get_profile( const NAAction *action, const gchar *name );
 GSList   *na_action_get_profiles( const NAAction *action );
 void      na_action_set_profiles( NAAction *action, GSList *list );
 void      na_action_free_profiles( GSList *list );

@@ -102,6 +102,8 @@ gboolean         na_action_profile_get_is_file( const NAActionProfile *profile )
 gboolean         na_action_profile_get_multiple( const NAActionProfile *profile );
 GSList          *na_action_profile_get_schemes( const NAActionProfile *profile );
 
+gboolean         na_action_profile_are_equal( NAActionProfile *first, NAActionProfile *second );
+
 void             na_action_profile_set_path( NAActionProfile *profile, const gchar *path );
 void             na_action_profile_set_parameters( NAActionProfile *profile, const gchar *parameters );
 void             na_action_profile_set_basenames( NAActionProfile *profile, GSList *basenames );

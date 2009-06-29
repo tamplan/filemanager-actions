@@ -182,11 +182,26 @@ nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action )
 	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_icon_browse ));
 }
 
+/**
+ * A good place to set focus to the first visible field.
+ */
 void
 nact_imenu_item_all_widgets_showed( NactWindow *dialog )
 {
 	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuLabelEntry" );
 	gtk_widget_grab_focus( label_widget );
+}
+
+/**
+ * An action can only be written if it has at least a label.
+ * Returns TRUE if the label of the action is not empty.
+ */
+gboolean
+nact_imenu_item_has_label( NactWindow *window )
+{
+	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( window ), "MenuLabelEntry" );
+	const gchar *label = gtk_entry_get_text( GTK_ENTRY( label_widget ));
+	return( g_utf8_strlen( label, -1 ) > 0 );
 }
 
 static GObject *

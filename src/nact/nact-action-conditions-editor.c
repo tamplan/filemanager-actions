@@ -73,9 +73,8 @@ static void     on_initial_load_dialog( BaseWindow *dialog );
 static void     on_runtime_init_dialog( BaseWindow *dialog );
 static void     on_all_widgets_showed( BaseWindow *dialog );
 static void     setup_dialog_title( NactActionConditionsEditor *dialog, gboolean is_modified );
-static void     setup_buttons( NactActionConditionsEditor *dialog, gboolean is_modified );
+static void     setup_buttons( NactActionConditionsEditor *dialog, gboolean can_save );
 static void     on_modified_field( NactWindow *dialog );
-/*static void     on_save_button_clicked( GtkButton *button, gpointer user_data );*/
 static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 static GObject *get_edited_action( NactWindow *window );
@@ -325,11 +324,9 @@ on_runtime_init_dialog( BaseWindow *dialog )
 
 	nact_imenu_item_runtime_init( NACT_WINDOW( window ), window->private->edited );
 
+	/*na_object_dump( NA_OBJECT( window->private->edited ));*/
 	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited )->data );
 	nact_iprofile_conditions_runtime_init( NACT_WINDOW( window ), profile );
-
-	/*GtkWidget *button = base_window_get_widget( dialog, "SaveButton" );
-	nact_window_signal_connect( NACT_WINDOW( dialog ), G_OBJECT( button ), "clicked", G_CALLBACK( on_save_button_clicked ));*/
 }
 
 static void
@@ -361,35 +358,37 @@ setup_dialog_title( NactActionConditionsEditor *dialog, gboolean is_modified )
  * rationale:
  * while the action is not modified, only the cancel button is activated
  * when the action has been modified, we have a save and a cancel buttons
+ * + a label is mandatory to enable the save button
  */
 static void
-setup_buttons( NactActionConditionsEditor *dialog, gboolean is_modified )
+setup_buttons( NactActionConditionsEditor *dialog, gboolean can_save )
 {
 	GtkWidget *cancel_button = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
 	GtkWidget *close_button = gtk_button_new_from_stock( GTK_STOCK_CLOSE );
 	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "CancelButton" );
-	gtk_button_set_label( GTK_BUTTON( button ), is_modified ? _( "_Cancel" ) : _( "_Close" ));
-	gtk_button_set_image( GTK_BUTTON( button ), is_modified ? gtk_button_get_image( GTK_BUTTON( cancel_button )) : gtk_button_get_image( GTK_BUTTON( close_button )));
+	gtk_button_set_label( GTK_BUTTON( button ), can_save ? _( "_Cancel" ) : _( "_Close" ));
+	gtk_button_set_image( GTK_BUTTON( button ), can_save ? gtk_button_get_image( GTK_BUTTON( cancel_button )) : gtk_button_get_image( GTK_BUTTON( close_button )));
 	gtk_widget_destroy( cancel_button );
 	gtk_widget_destroy( close_button );
 
 	button = base_window_get_widget( BASE_WINDOW( dialog ), "SaveButton" );
-	gtk_widget_set_sensitive( button, is_modified );
+	gtk_widget_set_sensitive( button, can_save );
 }
 
 static void
 on_modified_field( NactWindow *window )
 {
-	static const gchar *thisfn = "nact_action_conditions_editor_on_modified_field";
+	/*static const gchar *thisfn = "nact_action_conditions_editor_on_modified_field";*/
 
 	g_assert( NACT_IS_ACTION_CONDITIONS_EDITOR( window ));
 	NactActionConditionsEditor *dialog = ( NACT_ACTION_CONDITIONS_EDITOR( window ));
 
 	gboolean is_modified = is_edited_modified( dialog );
-	g_debug( "%s: is_modified=%s", thisfn, is_modified ? "True":"False" );
-
+	/*g_debug( "%s: is_modified=%s", thisfn, is_modified ? "True":"False" );*/
 	setup_dialog_title( dialog, is_modified );
-	setup_buttons( dialog, is_modified );
+
+	gboolean can_save = is_modified && nact_imenu_item_has_label( window );
+	setup_buttons( dialog, can_save );
 }
 
 static void
@@ -403,15 +402,6 @@ on_all_widgets_showed( BaseWindow *dialog )
 
 	nact_imenu_item_all_widgets_showed( NACT_WINDOW( dialog ));
 }
-
-/*static void
-on_save_button_clicked( GtkButton *button, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_action_conditions_editor_on_save_button_clicked";
-	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
-
-	g_signal_stop_emission_by_name( user_data, "clicked" );
-}*/
 
 static gboolean
 on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )

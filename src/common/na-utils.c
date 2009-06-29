@@ -35,6 +35,61 @@
 #include "na-utils.h"
 
 /**
+ * Search for a string in a string list.
+ *
+ * @list: the GSList of strings to be searched.
+ *
+ * @str: the searched string.
+ *
+ * Returns TRUE if the string has been found in list.
+ */
+gboolean
+na_utils_find_in_list( GSList *list, const gchar *str )
+{
+	GSList *il;
+
+	for( il = list ; il ; il = il->next ){
+		const gchar *istr = ( const gchar * ) il->data;
+		if( !g_utf8_collate( str, istr )){
+			return( TRUE );
+		}
+	}
+
+	return( FALSE );
+}
+
+/**
+ * Compare two string lists.
+ *
+ * @first: a GSList of strings.
+ *
+ * @second: another GSList of strings to be compared with @first.
+ *
+ * Returns TRUE if the two lists have same content.
+ */
+gboolean
+na_utils_string_lists_are_equal( GSList *first, GSList *second )
+{
+	GSList *il;
+
+	for( il = first ; il ; il = il->next ){
+		const gchar *str = ( const gchar * ) il->data;
+		if( !na_utils_find_in_list( second, str )){
+			return( FALSE );
+		}
+	}
+
+	for( il = second ; il ; il = il->next ){
+		const gchar *str = ( const gchar * ) il->data;
+		if( !na_utils_find_in_list( first, str )){
+			return( FALSE );
+		}
+	}
+
+	return( TRUE );
+}
+
+/**
  * Duplicates a GSList of strings.
  *
  * @list: the GSList to be duplicated.

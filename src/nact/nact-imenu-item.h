@@ -68,6 +68,8 @@ void     nact_imenu_item_initial_load( NactWindow *dialog, NAAction *action );
 void     nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action );
 void     nact_imenu_item_all_widgets_showed( NactWindow *dialog );
 
+gboolean nact_imenu_item_has_label( NactWindow *window );
+
 G_END_DECLS
 
 #endif /* __NACT_IMENU_ITEM_H__ */

@@ -793,6 +793,42 @@ na_action_profile_get_schemes( const NAActionProfile *profile )
 	return( schemes );
 }
 
+/**
+ * Returns TRUE if the profile are the same, excluding action pointer.
+ *
+ * @first: a NAActionProfile.
+ *
+ * @second: another NAActionProfile, to be compared with @first.
+ */
+gboolean
+na_action_profile_are_equal( NAActionProfile *first, NAActionProfile *second )
+{
+	gboolean equal =
+		( g_utf8_collate( first->private->name, second->private->name ) == 0 ) &&
+		( g_utf8_collate( first->private->label, second->private->label ) == 0 ) &&
+		( g_utf8_collate( first->private->path, second->private->path ) == 0 ) &&
+		( g_utf8_collate( first->private->parameters, second->private->parameters ) == 0 );
+
+	if( equal ){
+		equal = (( first->private->accept_multiple_files && second->private->accept_multiple_files ) ||
+				( !first->private->accept_multiple_files && !second->private->accept_multiple_files ));
+	}
+	if( equal ){
+		equal = (( first->private->is_dir && second->private->is_dir ) ||
+				( !first->private->is_dir && !second->private->is_dir ));
+	}
+	if( equal ){
+		equal = (( first->private->is_file && second->private->is_file ) ||
+				( !first->private->is_file && !second->private->is_file ));
+	}
+	if( equal ){
+		equal = na_utils_string_lists_are_equal( first->private->basenames, second->private->basenames ) &&
+				na_utils_string_lists_are_equal( first->private->mimetypes, second->private->mimetypes ) &&
+				na_utils_string_lists_are_equal( first->private->schemes, second->private->schemes );
+	}
+	return( equal );
+}
+
 static int
 validate_schemes( GSList* schemes2test, NautilusFileInfo* file )
 {

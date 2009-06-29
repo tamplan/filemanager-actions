@@ -710,9 +710,63 @@ na_action_are_equal( NAAction *first, NAAction *second )
 		equal = ( g_slist_length( first->private->profiles ) == g_slist_length( second->private->profiles ));
 	}
 	if( equal ){
-		/* TODO: compare profiles */
+		GSList *ip;
+		for( ip = first->private->profiles ; ip && equal ; ip = ip->next ){
+			NAActionProfile *first_profile = NA_ACTION_PROFILE( ip->data );
+			gchar *first_name = na_action_profile_get_name( first_profile );
+			NAActionProfile *second_profile = NA_ACTION_PROFILE( na_action_get_profile( second, first_name ));
+			if( second_profile ){
+				equal = na_action_profile_are_equal( first_profile, second_profile );
+			} else {
+				equal = FALSE;
+			}
+			g_free( first_name );
+		}
+	}
+	if( equal ){
+		GSList *ip;
+		for( ip = second->private->profiles ; ip && equal ; ip = ip->next ){
+			NAActionProfile *second_profile = NA_ACTION_PROFILE( ip->data );
+			gchar *second_name = na_action_profile_get_name( second_profile );
+			NAActionProfile *first_profile = NA_ACTION_PROFILE( na_action_get_profile( first, second_name ));
+			if( first_profile ){
+				equal = na_action_profile_are_equal( first_profile, second_profile );
+			} else {
+				equal = FALSE;
+			}
+			g_free( second_name );
+		}
 	}
 	return( equal );
+}
+
+/**
+ * Returns the profile with the required name.
+ *
+ * @action: the action whose profiles has to be retrieved.
+ *
+ * @name: name of the required profile.
+ *
+ * The returned pointer is owned by the @action object ; the caller
+ * should not try to free or unref it.
+ */
+GObject *
+na_action_get_profile( const NAAction *action, const gchar *name )
+{
+	g_assert( NA_IS_ACTION( action ));
+	GObject *found = NULL;
+	GSList *ip;
+
+	for( ip = action->private->profiles ; ip && !found ; ip = ip->next ){
+		NAActionProfile *iprofile = NA_ACTION_PROFILE( ip->data );
+		gchar *iname = na_action_profile_get_name( iprofile );
+		if( !g_ascii_strcasecmp( name, iname )){
+			found = G_OBJECT( iprofile );
+		}
+		g_free( iname );
+	}
+
+	return( found );
 }
 
 /**
