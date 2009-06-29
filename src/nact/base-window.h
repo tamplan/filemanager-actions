@@ -69,7 +69,7 @@ typedef struct {
 	void        ( *initial_load_toplevel )( BaseWindow *window );
 	void        ( *runtime_init_toplevel )( BaseWindow *window );
 	void        ( *all_widgets_showed )   ( BaseWindow *window );
-	void        ( *dialog_response )      ( GtkDialog *dialog, gint code, BaseWindow *window );
+	gboolean    ( *dialog_response )      ( GtkDialog *dialog, gint code, BaseWindow *window );
 	GObject   * ( *get_application )      ( BaseWindow *window );
 	gchar     * ( *get_toplevel_name )    ( BaseWindow *window );
 	GtkWindow * ( *get_toplevel_widget )  ( BaseWindow *window );
@@ -96,7 +96,7 @@ GtkWidget *base_window_get_widget( BaseWindow *window, const gchar *name );
 void       base_window_connect( BaseWindow *window, const gchar *widget, const gchar *signal, GCallback handler );
 
 void       base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );
-gboolean   base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *msg );
+gboolean   base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second );
 
 G_END_DECLS
 

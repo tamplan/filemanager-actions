@@ -121,6 +121,8 @@ static gchar         *do_get_unique_name( BaseApplication *application );
 static gchar         *do_get_application_name( BaseApplication *application );
 static gchar         *do_get_icon_name( BaseApplication *application );
 
+static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
+
 /*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
 
 GType
@@ -998,31 +1000,26 @@ void
 base_application_error_dlg(
 		BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary )
 {
-	g_assert( BASE_IS_APPLICATION( application ));
-
-	GtkWidget *dialog = gtk_message_dialog_new(
-			NULL, GTK_DIALOG_MODAL, type, GTK_BUTTONS_OK, primary );
-
-	if( secondary && strlen( secondary )){
-		gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), secondary );
-	}
-
-	const gchar *name = g_get_application_name();
-
-	g_object_set( G_OBJECT( dialog ) , "title", name, NULL );
-
-	gtk_dialog_run( GTK_DIALOG( dialog ));
-
-	gtk_widget_destroy( dialog );
+	display_dlg( application, type, GTK_BUTTONS_OK, primary, secondary );
 }
 
 gboolean
-base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *msg )
+base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second )
+{
+	gint result = display_dlg( application, type, GTK_BUTTONS_YES_NO, first, second );
+	return( result == GTK_RESPONSE_YES );
+}
+
+static gint
+display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second )
 {
 	g_assert( BASE_IS_APPLICATION( application ));
 
-	GtkWidget *dialog = gtk_message_dialog_new(
-			NULL, GTK_DIALOG_MODAL, type, GTK_BUTTONS_YES_NO, msg );
+	GtkWidget *dialog = gtk_message_dialog_new( NULL, GTK_DIALOG_MODAL, type_message, type_buttons, first );
+
+	if( second && strlen( second )){
+		gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), second );
+	}
 
 	const gchar *name = g_get_application_name();
 
@@ -1032,5 +1029,5 @@ base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, c
 
 	gtk_widget_destroy( dialog );
 
-	return( result == GTK_RESPONSE_YES );
+	return( result );
 }

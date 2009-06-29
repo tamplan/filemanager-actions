@@ -456,8 +456,6 @@ instance_finalize( GObject *object )
  * @action: the action to which the profile must be attached.
  *
  * @name: the internal name (identifier) of the profile.
- * If NULL, the instance_init takes care of allocating a suitable
- * default value.
  *
  * Returns the newly allocated NAActionProfile object.
  */
@@ -465,14 +463,14 @@ NAActionProfile *
 na_action_profile_new( const NAObject *action, const gchar *name )
 {
 	g_assert( NA_IS_ACTION( action ));
+	g_assert( name && strlen( name ));
 
 	NAActionProfile *profile =
 		g_object_new(
-				NA_ACTION_PROFILE_TYPE, PROP_PROFILE_ACTION_STR, action, NULL );
-
-	if( name && strlen( name )){
-		g_object_set( G_OBJECT( profile ), PROP_PROFILE_NAME_STR, name, NULL );
-	}
+				NA_ACTION_PROFILE_TYPE,
+				PROP_PROFILE_ACTION_STR, action,
+				PROP_PROFILE_NAME_STR, name,
+				NULL );
 
 	return( profile );
 }
@@ -488,12 +486,12 @@ na_action_profile_new( const NAObject *action, const gchar *name )
  * as the initial one, and thus cannot be attached to the same action.
  */
 NAActionProfile *
-na_action_profile_duplicate( const NAActionProfile *profile )
+na_action_profile_duplicate( const NAAction *action, const NAActionProfile *profile )
 {
 	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
 	NAActionProfile *new =
-		na_action_profile_new( profile->private->action, profile->private->name );
+		na_action_profile_new( NA_OBJECT( action ), profile->private->name );
 
 	g_object_set( G_OBJECT( new ),
 			PROP_PROFILE_LABEL_STR, profile->private->label,
@@ -535,6 +533,7 @@ do_dump( const NAObject *object )
 		st_parent_class->dump( object );
 	}
 
+	g_debug( "%s:               action=%p", thisfn, self->private->action );
 	g_debug( "%s:         profile_name='%s'", thisfn, self->private->name );
 	g_debug( "%s:                label='%s'", thisfn, self->private->label );
 	g_debug( "%s:                 path='%s'", thisfn, self->private->path );
@@ -817,6 +816,45 @@ validate_schemes( GSList* schemes2test, NautilusFileInfo* file )
 	}
 
 	return retv;
+}
+
+/**
+ * Set the path of the command for this profile.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @path: path to be set.
+ */
+void
+na_action_profile_set_path( NAActionProfile *profile, const gchar *path )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_PATH_STR, path, NULL );
+}
+
+/**
+ * Set the parameters of the command for this profile.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @parameters: parameters to be set.
+ */
+void
+na_action_profile_set_parameters( NAActionProfile *profile, const gchar *parameters )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_PARAMETERS_STR, parameters, NULL );
+}
+
+/**
+ * Set the basenames on which this profile applies.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @basenames: list of basenames to be matched.
+ */
+void
+na_action_profile_set_basenames( NAActionProfile *profile, GSList *basenames )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_BASENAMES_STR, basenames, NULL );
 }
 
 /**
@@ -1106,10 +1144,7 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 
 			/*hostname = g_strdup( gnome_vfs_uri_get_host_name( gvfs_uri ));
 			username = g_strdup( gnome_vfs_uri_get_user_name( gvfs_uri ));*/
-			/* TODO
-			 * pwi 2009-06-10
-			 * don't know how to get hostname or username from GFile uri
-			 */
+			/* TODO get hostname or username from GFile uri */
 			hostname = NULL;
 			username = NULL;
 

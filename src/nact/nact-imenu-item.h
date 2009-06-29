@@ -57,9 +57,8 @@ typedef struct {
 	NactIMenuItemInterfacePrivate *private;
 
 	/* api */
-	GObject * ( *get_edited_action )  ( NactWindow *window );
-	void      ( *update_dialog_title )( NactWindow *window );
-	void      ( *signal_connected )   ( NactWindow *window, gpointer instance, gulong handler_id );
+	GObject * ( *get_edited_action )( NactWindow *window );
+	void      ( *field_modified )   ( NactWindow *window );
 }
 	NactIMenuItemInterface;
 

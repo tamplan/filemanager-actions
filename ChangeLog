@@ -1,19 +1,39 @@
 2009-06-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-action.c:
-	* src/common/na-action.h:
-	na_action_set_tooltip, na_action_set_icon, na_action_are_equal:
-	new functions.
+	* src/common/na-action.h (na_action_set_tooltip,
+	na_action_set_icon, na_action_are_equal): New functions.
+	(na_action_new_with_profile): Provides a default profile name.
+	(na_action_duplicate): Provides a pointer to the duplicated action.
+
+	* src/common/na-action-profile.c:
+	* src/common/na-action-profile.h (na_action_profile_set_path,
+	na_action_profile_set_parameters, na_action_profile_set_basenames):
+	New functions.
+
+	* src/common/na-action-profile.c (na_action_profile_new):
+	No more accept a NULL profile name.
+
+	* src/common/na-action-profile.c:
+	* src/common/na-action-profile.h (na_action_profile_duplicate):
+	The duplicated profile points to the duplicated action.
 
 	* src/common/na-iio-provider.c:
 	Fist try to write to initial provider.
+
+	* src/nact/base-application.c (display_dlg):
+	New mutualized function.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h (dialog_response):
+	Returns a boolean to let the user refuse the closing.
 
 	* src/nact/nact-action-conditions-editor.c:
 	Update the dialog title if action has been modified.
 
 	* src/nact/nact-imenu-item.c:
-	* src/nact/nact-imenu-item.h:
-	get_edited_action, update_dialog_title: new functions.
+	* src/nact/nact-imenu-item.h (get_edited_action,
+	update_dialog_title): New functions.
 
 2009-06-28 Pierre Wieser <pwieser@trychlos.org>
 

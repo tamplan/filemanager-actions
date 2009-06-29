@@ -33,8 +33,10 @@
 #endif
 
 #include <glib.h>
+#include <glib/gi18n.h>
 
 #include <common/na-pivot.h>
+#include <common/na-iio-provider.h>
 
 #include "nact-application.h"
 #include "nact-window.h"
@@ -206,6 +208,64 @@ nact_window_get_action( NactWindow *window, const gchar *uuid )
 }
 
 /**
+ * Saves a modified action to the I/O storage subsystem.
+ *
+ * @window: this NactWindow object.
+ *
+ * @action: the modified action.
+ */
+gboolean
+nact_window_save_action( NactWindow *window, const NAAction *action )
+{
+	NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( window ));
+	g_assert( NA_IS_PIVOT( pivot ));
+
+	na_object_dump( NA_OBJECT( action ));
+
+	gchar *msg = NULL;
+	guint ret = na_pivot_write_action( pivot, G_OBJECT( action ), &msg );
+	if( msg ){
+		base_window_error_dlg(
+				BASE_WINDOW( window ),
+				GTK_MESSAGE_WARNING, _( "An error has occured when trying to save the action" ), msg );
+		g_free( msg );
+	}
+
+	return( ret == NA_IIO_PROVIDER_WRITE_OK );
+}
+
+/**
+ * Emits a warning if the action has been modified.
+ *
+ * @window: this NactWindow object.
+ *
+ * @action: the modified action.
+ *
+ * Returns TRUE if the user confirms he wants to quit.
+ */
+gboolean
+nact_window_warn_action_modified( NactWindow *window, const NAAction *action )
+{
+	gchar *label = na_action_get_label( action );
+
+	gchar *first;
+	if( label && strlen( label )){
+		first = g_strdup_printf( _( "The action \"%s\" has been modified." ), label );
+	} else {
+		first = g_strdup( _( "The newly created action has been modified" ));
+	}
+	gchar *second = g_strdup( _( "Are you sure you want to quit without saving it ?" ));
+
+	gboolean ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+
+	g_free( second );
+	g_free( first );
+	g_free( label );
+
+	return( ok );
+}
+
+/**
  * Returns a pointer to the list of actions.
  */
 GSList *
@@ -222,13 +282,16 @@ nact_window_get_actions( NactWindow *window )
  * Records a connected signal, to be disconnected at NactWindow dispose.
  */
 void
-nact_window_on_signal_connected( NactWindow *window, gpointer instance, gulong handler_id )
+nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn )
 {
-	static const gchar *thisfn = "nact_window_on_signal_connected";
-	g_debug( "%s: window=%p, instance=%p, handler_id=%lu", thisfn, window, instance, handler_id );
+	static const gchar *thisfn = "nact_window_signal_connect";
+
+	gulong handler_id = g_signal_connect( instance, signal, fn, window );
 
 	NactWindowRecordedSignal *str = g_new0( NactWindowRecordedSignal, 1 );
 	str->instance = instance;
 	str->handler_id = handler_id;
 	window->private->signals = g_slist_prepend( window->private->signals, str );
+
+	g_debug( "%s: connecting signal handler %p:%lu", thisfn, instance, handler_id );
 }

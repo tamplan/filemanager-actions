@@ -58,8 +58,7 @@ static void          interface_base_init( NactIMenuItemInterface *klass );
 static void          interface_base_finalize( NactIMenuItemInterface *klass );
 
 static GObject      *v_get_edited_action( NactWindow *window );
-static void          v_update_dialog_title( NactWindow *window );
-static void          v_signal_connected( NactWindow *window, gpointer instance, gulong handler_id );
+static void          v_field_modified( NactWindow *window );
 
 static void          icon_combo_list_fill( GtkComboBoxEntry* combo );
 static GtkTreeModel *create_stock_icon_model( void );
@@ -69,8 +68,7 @@ static gchar        *strip_underscore( const gchar *text );
 static void          on_label_changed( GtkEntry *entry, gpointer user_data );
 static void          on_tooltip_changed( GtkEntry *entry, gpointer user_data );
 static void          on_icon_changed( GtkEntry *entry, gpointer user_data );
-
-static void          record_signal( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn, gpointer user_data );
+static void          on_icon_browse( GtkButton *button, gpointer user_data );
 
 GType
 nact_imenu_item_get_type( void )
@@ -121,8 +119,7 @@ interface_base_init( NactIMenuItemInterface *klass )
 		klass->private = g_new0( NactIMenuItemInterfacePrivate, 1 );
 
 		klass->get_edited_action = NULL;
-		klass->update_dialog_title = NULL;
-		klass->signal_connected = NULL;
+		klass->field_modified = NULL;
 
 		initialized = TRUE;
 	}
@@ -163,22 +160,26 @@ nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action )
 	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );
 
 	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuLabelEntry" );
-	record_signal( dialog, G_OBJECT( label_widget ), "changed", G_CALLBACK( on_label_changed ), dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( label_widget ), "changed", G_CALLBACK( on_label_changed ));
 	gchar *label = na_action_get_label( action );
 	gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 	g_free( label );
 
 	GtkWidget *tooltip_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuTooltipEntry" );
-	record_signal( dialog, G_OBJECT( tooltip_widget ), "changed", G_CALLBACK( on_tooltip_changed ), dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( tooltip_widget ), "changed", G_CALLBACK( on_tooltip_changed ));
 	gchar *tooltip = na_action_get_tooltip( action );
 	gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
 	g_free( tooltip );
 
 	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuIconComboBoxEntry" );
-	record_signal( dialog, G_OBJECT( GTK_BIN( icon_widget )->child ), "changed", G_CALLBACK( on_icon_changed ), dialog );
+	g_debug( "%s: icon_widget=%p, child=%p", thisfn, icon_widget, GTK_BIN( icon_widget )->child );
+	nact_window_signal_connect( dialog, G_OBJECT( GTK_BIN( icon_widget )->child ), "changed", G_CALLBACK( on_icon_changed ));
 	gchar *icon = na_action_get_icon( action );
 	gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
 	g_free( icon );
+
+	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "IconBrowseButton" );
+	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_icon_browse ));
 }
 
 void
@@ -201,22 +202,12 @@ v_get_edited_action( NactWindow *window )
 }
 
 static void
-v_update_dialog_title( NactWindow *window )
+v_field_modified( NactWindow *window )
 {
 	g_assert( NACT_IS_IMENU_ITEM( window ));
 
-	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->update_dialog_title ){
-		NACT_IMENU_ITEM_GET_INTERFACE( window )->update_dialog_title( window );
-	}
-}
-
-static void
-v_signal_connected( NactWindow *window, gpointer instance, gulong handler_id )
-{
-	g_assert( NACT_IS_IMENU_ITEM( window ));
-
-	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->signal_connected ){
-		NACT_IMENU_ITEM_GET_INTERFACE( window )->signal_connected( window, instance, handler_id );
+	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->field_modified ){
+		NACT_IMENU_ITEM_GET_INTERFACE( window )->field_modified( window );
 	}
 }
 
@@ -341,7 +332,7 @@ on_label_changed( GtkEntry *entry, gpointer user_data )
 	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
 	na_action_set_label( edited, gtk_entry_get_text( entry ));
 
-	v_update_dialog_title( dialog );
+	v_field_modified( dialog );
 }
 
 static void
@@ -353,7 +344,7 @@ on_tooltip_changed( GtkEntry *entry, gpointer user_data )
 	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
 	na_action_set_tooltip( edited, gtk_entry_get_text( entry ));
 
-	v_update_dialog_title( dialog );
+	v_field_modified( dialog );
 }
 
 static void
@@ -408,12 +399,30 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
 	na_action_set_icon( edited, icon_name );
 
-	v_update_dialog_title( dialog );
+	v_field_modified( dialog );
 }
 
+/* TODO: replace with a fds-compliant icon chooser */
 static void
-record_signal( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn, gpointer user_data )
+on_icon_browse( GtkButton *button, gpointer user_data )
 {
-	gulong handler_id = g_signal_connect( instance, signal, fn, user_data );
-	v_signal_connected( window, instance, handler_id );
+	g_assert( NACT_IS_IMENU_ITEM( user_data ));
+
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(
+			_( "Choosing an icon" ),
+			NULL,
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			NULL
+			);
+
+	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
+		gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
+		GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( user_data ), "MenuIconComboBoxEntry" );
+		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), filename );
+	    g_free (filename);
+	  }
+
+	gtk_widget_destroy( dialog );
 }

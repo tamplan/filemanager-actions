@@ -38,7 +38,7 @@
  * conditions for the action.
  */
 
-#include <common/na-action.h>
+#include <common/na-action-profile.h>
 
 #include "nact-window.h"
 
@@ -58,15 +58,15 @@ typedef struct {
 	NactIProfileConditionsInterfacePrivate *private;
 
 	/* api */
-	GObject * ( *get_edited_action )  ( NactWindow *window );
-	void      ( *signal_connected )   ( NactWindow *window, gpointer instance, gulong handler_id );
+	GObject * ( *get_edited_profile )( NactWindow *window );
+	void      ( *field_modified )    ( NactWindow *window );
 }
 	NactIProfileConditionsInterface;
 
 GType    nact_iprofile_conditions_get_type( void );
 
-void     nact_iprofile_conditions_initial_load( NactWindow *dialog, NAAction *action );
-void     nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAAction *action );
+void     nact_iprofile_conditions_initial_load( NactWindow *dialog, NAActionProfile *profile );
+void     nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAActionProfile *profile );
 
 G_END_DECLS
 

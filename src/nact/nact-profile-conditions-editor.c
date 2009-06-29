@@ -56,20 +56,20 @@ struct NactProfileConditionsEditorPrivate {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType  register_type( void );
-static void   class_init( NactProfileConditionsEditorClass *klass );
-static void   iprofile_conditions_iface_init( NactIProfileConditionsInterface *iface );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *dialog );
-static void   instance_finalize( GObject *dialog );
+static GType    register_type( void );
+static void     class_init( NactProfileConditionsEditorClass *klass );
+static void     iprofile_conditions_iface_init( NactIProfileConditionsInterface *iface );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *dialog );
+static void     instance_finalize( GObject *dialog );
 
 static NactProfileConditionsEditor *profile_conditions_editor_new( BaseApplication *application );
 
-static gchar *do_get_dialog_name( BaseWindow *dialog );
-static void   on_initial_load_dialog( BaseWindow *dialog );
-static void   on_runtime_init_dialog( BaseWindow *dialog );
-static void   init_dialog_title( NactProfileConditionsEditor *dialog );
-static void   on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static gchar   *do_get_dialog_name( BaseWindow *dialog );
+static void     on_initial_load_dialog( BaseWindow *dialog );
+static void     on_runtime_init_dialog( BaseWindow *dialog );
+static void     init_dialog_title( NactProfileConditionsEditor *dialog );
+static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 GType
 nact_profile_conditions_editor_get_type( void )
@@ -260,7 +260,7 @@ on_initial_load_dialog( BaseWindow *dialog )
 	NactProfileConditionsEditor *window = NACT_PROFILE_CONDITIONS_EDITOR( dialog );
 
 	init_dialog_title( window );
-	nact_iprofile_conditions_initial_load( NACT_WINDOW( window ), window->private->action );
+	/*nact_iprofile_conditions_initial_load( NACT_WINDOW( window ), window->private->action );*/
 }
 
 static void
@@ -273,7 +273,7 @@ on_runtime_init_dialog( BaseWindow *dialog )
 	NactProfileConditionsEditor *window = NACT_PROFILE_CONDITIONS_EDITOR( dialog );
 
 	init_dialog_title( window );
-	nact_iprofile_conditions_runtime_init( NACT_WINDOW( window ), window->private->action );
+	/*nact_iprofile_conditions_runtime_init( NACT_WINDOW( window ), window->private->action );*/
 }
 
 static void
@@ -293,7 +293,7 @@ init_dialog_title( NactProfileConditionsEditor *dialog )
 	}
 }
 
-static void
+static gboolean
 on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_profile_conditions_editor_on_dialog_response";
@@ -308,4 +308,6 @@ on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 			g_object_unref( window );
 			break;
 	}
+
+	return( TRUE );
 }

@@ -56,20 +56,20 @@ struct NactActionProfilesEditorPrivate {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType  register_type( void );
-static void   class_init( NactActionProfilesEditorClass *klass );
-static void   imenu_item_iface_init( NactIMenuItemInterface *iface );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *dialog );
-static void   instance_finalize( GObject *dialog );
+static GType    register_type( void );
+static void     class_init( NactActionProfilesEditorClass *klass );
+static void     imenu_item_iface_init( NactIMenuItemInterface *iface );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *dialog );
+static void     instance_finalize( GObject *dialog );
 
 static NactActionProfilesEditor *action_profiles_editor_new( BaseApplication *application );
 
-static gchar *do_get_dialog_name( BaseWindow *dialog );
-static void   on_initial_load_dialog( BaseWindow *dialog );
-static void   on_runtime_init_dialog( BaseWindow *dialog );
-static void   init_dialog_title( NactActionProfilesEditor *dialog );
-static void   on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static gchar   *do_get_dialog_name( BaseWindow *dialog );
+static void     on_initial_load_dialog( BaseWindow *dialog );
+static void     on_runtime_init_dialog( BaseWindow *dialog );
+static void     init_dialog_title( NactActionProfilesEditor *dialog );
+static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 GType
 nact_action_profiles_editor_get_type( void )
@@ -142,8 +142,6 @@ imenu_item_iface_init( NactIMenuItemInterface *iface )
 {
 	static const gchar *thisfn = "nact_action_profiles_editor_imenu_item_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
-
-	iface->signal_connected = nact_window_on_signal_connected;
 }
 
 static void
@@ -295,7 +293,7 @@ init_dialog_title( NactActionProfilesEditor *dialog )
 	}
 }
 
-static void
+static gboolean
 on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_action_profiles_editor_on_dialog_response";
@@ -310,4 +308,6 @@ on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 			g_object_unref( window );
 			break;
 	}
+
+	return( TRUE );
 }

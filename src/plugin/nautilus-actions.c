@@ -328,7 +328,7 @@ create_menu_item( NAAction *action, NAActionProfile *profile, GList *files )
 	gchar *tooltip = na_action_get_tooltip( action );
 	gchar* icon_name = na_action_get_verified_icon_name( action );
 
-	NAActionProfile *dup4menu = na_action_profile_duplicate( profile );
+	NAActionProfile *dup4menu = na_action_profile_duplicate( action, profile );
 
 	item = nautilus_menu_item_new( name, label, tooltip, icon_name );
 

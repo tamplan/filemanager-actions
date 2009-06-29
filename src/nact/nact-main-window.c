@@ -83,7 +83,7 @@ static void     on_edit_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_duplicate_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_delete_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_import_export_button_clicked( GtkButton *button, gpointer user_data );
-static void     on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );
+static gboolean on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );
 
 static void     on_actions_changed( NAIPivotContainer *instance, gpointer user_data );
 
@@ -497,7 +497,7 @@ on_delete_button_clicked( GtkButton *button, gpointer user_data )
 
 		gchar *label = na_action_get_label( action );
 		gchar *sure = g_strdup_printf( _( "Are you sure you want to delete \"%s\" action ?" ), label );
-		if( base_window_yesno_dlg( BASE_WINDOW( wndmain ), GTK_MESSAGE_WARNING, sure )){
+		if( base_window_yesno_dlg( BASE_WINDOW( wndmain ), GTK_MESSAGE_WARNING, sure, NULL )){
 
 			gchar *msg = NULL;
 			NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( wndmain ));
@@ -534,7 +534,7 @@ on_import_export_button_clicked( GtkButton *button, gpointer user_data )
 	}*/
 }
 
-static void
+static gboolean
 on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_on_dialog_response";
@@ -557,11 +557,14 @@ on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window )
 			 */
 
 			g_object_unref( window );
+			return( TRUE );
 			/*gtk_widget_destroy (GTK_WIDGET (dialog));
 			nact_destroy_glade_objects ();
 			gtk_main_quit ();*/
 			break;
 	}
+
+	return( FALSE );
 }
 
 static void

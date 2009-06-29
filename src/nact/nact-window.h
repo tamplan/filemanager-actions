@@ -38,6 +38,8 @@
  * It is a common base class for all Nautilus Actions window documents.
  */
 
+#include <common/na-action.h>
+
 #include "base-window.h"
 
 G_BEGIN_DECLS
@@ -70,10 +72,13 @@ GType    nact_window_get_type( void );
 GObject *nact_window_get_pivot( NactWindow *window );
 
 GObject *nact_window_get_action( NactWindow *window, const gchar *uuid );
+gboolean nact_window_save_action( NactWindow *window, const NAAction *action );
+
+gboolean nact_window_warn_action_modified( NactWindow *window, const NAAction *action );
 
 GSList  *nact_window_get_actions( NactWindow *window );
 
-void     nact_window_on_signal_connected( NactWindow *window, gpointer instance, gulong handler_id );
+void     nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn );
 
 G_END_DECLS
 

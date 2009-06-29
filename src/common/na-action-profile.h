@@ -88,7 +88,7 @@ typedef struct {
 GType            na_action_profile_get_type( void );
 
 NAActionProfile *na_action_profile_new( const NAObject *action, const gchar *name );
-NAActionProfile *na_action_profile_duplicate( const NAActionProfile *profile );
+NAActionProfile *na_action_profile_duplicate( const NAAction *action, const NAActionProfile *profile );
 void             na_action_profile_free( NAActionProfile *profile );
 
 NAObject        *na_action_profile_get_action( const NAActionProfile *profile );
@@ -103,6 +103,10 @@ gboolean         na_action_profile_get_is_dir( const NAActionProfile *profile );
 gboolean         na_action_profile_get_is_file( const NAActionProfile *profile );
 gboolean         na_action_profile_get_multiple( const NAActionProfile *profile );
 GSList          *na_action_profile_get_schemes( const NAActionProfile *profile );
+
+void             na_action_profile_set_path( NAActionProfile *profile, const gchar *path );
+void             na_action_profile_set_parameters( NAActionProfile *profile, const gchar *parameters );
+void             na_action_profile_set_basenames( NAActionProfile *profile, GSList *basenames );
 
 gboolean         na_action_profile_is_candidate( const NAActionProfile *profile, GList *files );
 gchar           *na_action_profile_parse_parameters( const NAActionProfile *profile, GList *files );

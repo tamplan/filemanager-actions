@@ -393,7 +393,7 @@ na_action_new_with_profile( void )
 {
 	NAAction *action = na_action_new( NULL );
 
-	NAActionProfile *profile = na_action_profile_new( NA_OBJECT( action ), NULL );
+	NAActionProfile *profile = na_action_profile_new( NA_OBJECT( action ), "default-profile" );
 
 	action->private->profiles = g_slist_prepend( action->private->profiles, profile );
 
@@ -432,7 +432,7 @@ na_action_duplicate( const NAAction *action )
 		duplicate->private->profiles =
 			g_slist_prepend(
 					duplicate->private->profiles,
-					na_action_profile_duplicate( NA_ACTION_PROFILE( ip->data )));
+					na_action_profile_duplicate( duplicate, NA_ACTION_PROFILE( ip->data )));
 	}
 
 	return( duplicate );
@@ -753,7 +753,7 @@ na_action_set_profiles( NAAction *action, GSList *list )
 	for( ip = list ; ip ; ip = ip->next ){
 		action->private->profiles = g_slist_prepend(
 							action->private->profiles,
-							na_action_profile_duplicate( NA_ACTION_PROFILE( ip->data ))
+							na_action_profile_duplicate( action, NA_ACTION_PROFILE( ip->data ))
 		);
 	}
 }

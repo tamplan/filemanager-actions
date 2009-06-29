@@ -66,33 +66,33 @@ enum {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType       register_type( void );
-static void        class_init( BaseWindowClass *klass );
-static void        instance_init( GTypeInstance *instance, gpointer klass );
-static void        instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void        instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void        instance_dispose( GObject *application );
-static void        instance_finalize( GObject *application );
+static GType      register_type( void );
+static void       class_init( BaseWindowClass *klass );
+static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void       instance_dispose( GObject *application );
+static void       instance_finalize( GObject *application );
 
-static gchar      *v_get_toplevel_name( BaseWindow *window );
-static void        v_initial_load_toplevel( BaseWindow *window );
-static void        v_runtime_init_toplevel( BaseWindow *window );
-static void        v_all_widgets_showed( BaseWindow *window );
-static void        v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static gchar     *v_get_toplevel_name( BaseWindow *window );
+static void       v_initial_load_toplevel( BaseWindow *window );
+static void       v_runtime_init_toplevel( BaseWindow *window );
+static void       v_all_widgets_showed( BaseWindow *window );
+static gboolean   v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
-static void        do_init_window( BaseWindow *window );
-static void        do_initial_load_toplevel( BaseWindow *window );
-static void        do_runtime_init_toplevel( BaseWindow *window );
-static void        do_all_widgets_showed( BaseWindow *window );
-static void        do_run_window( BaseWindow *window );
-static void        do_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
-static GObject    *do_get_application( BaseWindow *window );
-static GtkWindow  *do_get_toplevel_widget( BaseWindow *window );
-static GtkWidget  *do_get_widget( BaseWindow *window, const gchar *name );
+static void       do_init_window( BaseWindow *window );
+static void       do_initial_load_toplevel( BaseWindow *window );
+static void       do_runtime_init_toplevel( BaseWindow *window );
+static void       do_all_widgets_showed( BaseWindow *window );
+static void       do_run_window( BaseWindow *window );
+static gboolean   do_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static GObject   *do_get_application( BaseWindow *window );
+static GtkWindow *do_get_toplevel_widget( BaseWindow *window );
+static GtkWidget *do_get_widget( BaseWindow *window, const gchar *name );
 
-static gboolean    is_toplevel_initialized( BaseWindow *window );
-static void        set_toplevel_initialized( BaseWindow *window );
-static gboolean    is_main_window( BaseWindow *window );
+static gboolean   is_toplevel_initialized( BaseWindow *window );
+static void       set_toplevel_initialized( BaseWindow *window );
+static gboolean   is_main_window( BaseWindow *window );
 
 GType
 base_window_get_type( void )
@@ -443,14 +443,19 @@ v_all_widgets_showed( BaseWindow *window )
 	}
 }
 
-static void
+/*
+ * return TRUE to quit the dialog loop
+ */
+static gboolean
 v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
 	g_assert( BASE_IS_WINDOW( window ));
 
 	if( BASE_WINDOW_GET_CLASS( window )->dialog_response ){
-		BASE_WINDOW_GET_CLASS( window )->dialog_response( dialog, code, window );
+		return( BASE_WINDOW_GET_CLASS( window )->dialog_response( dialog, code, window ));
 	}
+
+	return( TRUE );
 }
 
 static void
@@ -524,16 +529,21 @@ do_run_window( BaseWindow *window )
 
 	} else {
 		g_debug( "%s: starting gtk_dialog_run", thisfn );
-		gint code = gtk_dialog_run( GTK_DIALOG( this_widget ));
-		v_dialog_response( GTK_DIALOG( this_widget ), code, window );
+		gint code;
+		do {
+			code = gtk_dialog_run( GTK_DIALOG( this_widget ));
+		}
+		while( !v_dialog_response( GTK_DIALOG( this_widget ), code, window ));
 	}
 }
 
-static void
+static gboolean
 do_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_do_dialog_response";
 	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, dialog, code, window );
+
+	return( TRUE );
 }
 
 static GObject *
@@ -601,8 +611,8 @@ base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *pri
 }
 
 gboolean
-base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *msg )
+base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second )
 {
 	g_assert( BASE_IS_WINDOW( window ));
-	return( base_application_yesno_dlg( window->private->application, type, msg ));
+	return( base_application_yesno_dlg( window->private->application, type, first, second ));
 }

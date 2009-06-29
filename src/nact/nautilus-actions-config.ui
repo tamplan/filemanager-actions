@@ -994,7 +994,7 @@
             <property name="visible">True</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="cancelbutton1">
+              <object class="GtkButton" id="CancelButton">
                 <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -1009,8 +1009,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="okbutton1">
-                <property name="label">gtk-ok</property>
+              <object class="GtkButton" id="SaveButton">
+                <property name="label">gtk-save</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
@@ -1033,8 +1033,8 @@
       </object>
     </child>
     <action-widgets>
-      <action-widget response="-6">cancelbutton1</action-widget>
-      <action-widget response="-5">okbutton1</action-widget>
+      <action-widget response="-6">CancelButton</action-widget>
+      <action-widget response="-5">SaveButton</action-widget>
     </action-widgets>
   </object>
 </interface>

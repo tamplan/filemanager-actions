@@ -71,13 +71,13 @@ typedef struct {
  * please note that property names must have the same spelling as the
  * NactIIOProvider parameters
  */
-#define PROP_ACTION_UUID_STR			"action-uuid"
-#define PROP_ACTION_VERSION_STR			"action-version"
-#define PROP_ACTION_LABEL_STR			"action-label"
-#define PROP_ACTION_TOOLTIP_STR			"action-tooltip"
-#define PROP_ACTION_ICON_STR			"action-icon"
-#define PROP_ACTION_READONLY_STR		"action-read-only"
-#define PROP_ACTION_PROVIDER_STR		"action-provider"
+#define PROP_ACTION_UUID_STR			"uuid"
+#define PROP_ACTION_VERSION_STR			"version"
+#define PROP_ACTION_LABEL_STR			"label"
+#define PROP_ACTION_TOOLTIP_STR			"tooltip"
+#define PROP_ACTION_ICON_STR			"icon"
+#define PROP_ACTION_READONLY_STR		"read-only"
+#define PROP_ACTION_PROVIDER_STR		"provider"
 
 GType     na_action_get_type( void );
 
