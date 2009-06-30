@@ -125,6 +125,27 @@ na_utils_free_string_list( GSList *list )
 }
 
 /**
+ * Removes a string from a GSList of strings.
+ *
+ * @list: the GSList to be updated.
+ *
+ * @text: string to remove.
+ */
+GSList *
+na_utils_remove_ascii_from_string_list( GSList *list, const gchar *text )
+{
+	GSList *il;
+	for( il = list ; il ; il = il->next ){
+		const gchar *istr = ( const gchar * ) il->data;
+		if( !g_ascii_strcasecmp( text, istr )){
+			list = g_slist_remove( list, ( gconstpointer ) istr );
+			return( list );
+		}
+	}
+	return( list );
+}
+
+/**
  * Concatenates a string list to a semi-colon-separated text.
  */
 gchar *

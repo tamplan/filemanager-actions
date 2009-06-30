@@ -949,6 +949,31 @@ na_action_profile_set_multiple( NAActionProfile *profile, gboolean multiple )
 }
 
 /**
+ * Set the status of a scheme relative to this profile.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @scheme: nae of the scheme.
+ *
+ * @selected: whether this scheme is candidate to this profile.
+ */
+void
+na_action_profile_set_scheme( NAActionProfile *profile, const gchar *scheme, gboolean selected )
+{
+	/*static const gchar *thisfn = "na_action_profile_set_scheme";*/
+
+	gboolean exist = na_utils_find_in_list( profile->private->schemes, scheme );
+	/*g_debug( "%s: scheme=%s exist=%s", thisfn, scheme, exist ? "True":"False" );*/
+
+	if( selected && !exist ){
+		profile->private->schemes = g_slist_prepend( profile->private->schemes, g_strdup( scheme ));
+	}
+	if( !selected && exist ){
+		profile->private->schemes = na_utils_remove_ascii_from_string_list( profile->private->schemes, scheme );
+	}
+}
+
+/**
  * Determines if the given profile is candidate to be displayed in the
  * Nautilus context menu, regarding the list of currently selected
  * items.

@@ -3,13 +3,13 @@
 	* src/common/na-action-profile.c:
 	* src/common/na-action-profile.h
 	(na_action_profile_set_matchcase, na_action_profile_set_mimetypes,
-	na_action_profile_set_isfiledir, na_action_profile_set_multiple):
-	New functions.
+	na_action_profile_set_isfiledir, na_action_profile_set_multiple,
+	na_action_profile_set_scheme): New functions.
 
 	* src/common/na-utils.c:
 	* src/common/na-utils.h (na_utils_gstring_joinv,
-	na_utils_string_list_to_text, na_utils_text_to_string_list):
-	New functions.
+	na_utils_string_list_to_text, na_utils_text_to_string_list,
+	na_utils_remove_ascii_from_string_list): New functions.
 
 	* src/nact/nact-action-conditions-editor.c:
 	Call _dispose functions when closing the window.
@@ -23,7 +23,7 @@
 	(nact_iprofile_conditions_dispose): New function.
 
 	* src/nact/nact-iprofile-conditions.c:
-	All first and second tabs are now implemented.
+	All three tabs are now implemented.
 
 	* src/nact/nact-utils.c:
 	* src/nact/nact-utils.h: Removed files.

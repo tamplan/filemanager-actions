@@ -111,6 +111,7 @@ void             na_action_profile_set_matchcase( NAActionProfile *profile, gboo
 void             na_action_profile_set_mimetypes( NAActionProfile *profile, GSList *mimetypes );
 void             na_action_profile_set_isfiledir( NAActionProfile *profile, gboolean isfile, gboolean isdir );
 void             na_action_profile_set_multiple( NAActionProfile *profile, gboolean multiple );
+void             na_action_profile_set_scheme( NAActionProfile *profile, const gchar *scheme, gboolean selected );
 
 gboolean         na_action_profile_is_candidate( const NAActionProfile *profile, GList *files );
 gchar           *na_action_profile_parse_parameters( const NAActionProfile *profile, GList *files );

@@ -901,12 +901,11 @@
                         <property name="visible">True</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GtkButton" id="button7">
+                          <object class="GtkButton" id="AddSchemeButton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
                             <property name="tooltip_text" translatable="yes">Click to add a new scheme.</property>
-                            <signal name="clicked" handler="action_add_scheme_clicked"/>
                             <child>
                               <object class="GtkImage" id="image16">
                                 <property name="visible">True</property>
@@ -928,7 +927,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
                             <property name="tooltip_text" translatable="yes">Click to remove the selected scheme.</property>
-                            <signal name="clicked" handler="action_remove_scheme_clicked"/>
                             <child>
                               <object class="GtkImage" id="image17">
                                 <property name="visible">True</property>
