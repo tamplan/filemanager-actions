@@ -61,11 +61,11 @@ struct NAActionProfilePrivate {
 	gchar    *label;
 	gchar    *path;
 	gchar    *parameters;
-	gboolean  accept_multiple_files;
 	GSList   *basenames;
+	gboolean  match_case;
 	gboolean  is_dir;
 	gboolean  is_file;
-	gboolean  match_case;
+	gboolean  accept_multiple_files;
 	GSList   *mimetypes;
 	GSList   *schemes;
 };
@@ -891,6 +891,61 @@ void
 na_action_profile_set_basenames( NAActionProfile *profile, GSList *basenames )
 {
 	g_object_set( G_OBJECT( profile ), PROP_PROFILE_BASENAMES_STR, basenames, NULL );
+}
+
+/**
+ * Set the 'match_case' flag, indicating if specified basename patterns
+ * are, or not, case sensitive.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @matchcase: TRUE if basename patterns are case sensitive.
+ */
+void
+na_action_profile_set_matchcase( NAActionProfile *profile, gboolean matchcase )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_MATCHCASE_STR, matchcase, NULL );
+}
+
+/**
+ * Set the mimetypes on which this profile applies.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @mimetypes: list of mimetypes to be matched.
+ */
+void
+na_action_profile_set_mimetypes( NAActionProfile *profile, GSList *mimetypes )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_MIMETYPES_STR, mimetypes, NULL );
+}
+
+/**
+ * Set the 'isfile' and 'isdir' flags on which this profile applies.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @isfile: the profile applies only to files.
+ *
+ * @isdir: the profile applies only to folders.
+ */
+void
+na_action_profile_set_isfiledir( NAActionProfile *profile, gboolean isfile, gboolean isdir )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_ISFILE_STR, isfile, PROP_PROFILE_ISDIR_STR, isdir, NULL );
+}
+
+/**
+ * Does this profile accept multiple selection ?
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @multiple: TRUE if it does.
+ */
+void
+na_action_profile_set_multiple( NAActionProfile *profile, gboolean multiple )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_ACCEPT_MULTIPLE_STR, multiple, NULL );
 }
 
 /**

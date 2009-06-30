@@ -72,17 +72,29 @@ static gchar        *parse_parameters( NactWindow *window );
 static void          on_legend_clicked( GtkButton *button, gpointer user_data );
 static void          show_legend_dialog( NactWindow *window );
 static void          hide_legend_dialog( NactWindow *window );
-static GtkWidget    *get_legend_button( NactWindow *window );
-static GtkWidget    *get_legend_dialog( NactWindow *window );
+static GtkButton    *get_legend_button( NactWindow *window );
+static GtkWindow    *get_legend_dialog( NactWindow *window );
 
 static void          on_basenames_changed( GtkEntry *entry, gpointer user_data );
+static GtkWidget    *get_basenames_widget( NactWindow *window );
+static void          on_matchcase_toggled( GtkToggleButton *button, gpointer user_data );
+static GtkButton    *get_matchcase_button( NactWindow *window );
+static void          on_mimetypes_changed( GtkEntry *entry, gpointer user_data );
+static GtkWidget    *get_mimetypes_widget( NactWindow *window );
+static void          on_isfiledir_toggled( GtkToggleButton *button, gpointer user_data );
+static void          get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
+static void          set_isfiledir( NactWindow *window, gboolean isfile, gboolean isdir );
+static GtkButton    *get_isfile_button( NactWindow *window );
+static GtkButton    *get_isdir_button( NactWindow *window );
+static GtkButton    *get_both_button( NactWindow *window );
+static void          on_multiple_toggled( GtkToggleButton *button, gpointer user_data );
+static GtkButton    *get_multiple_button( NactWindow *window );
+
 static void          on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, gpointer user_data );
 static void          on_scheme_keyword_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data );
 static void          on_scheme_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data );
 static void          on_scheme_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 
-static gchar        *basenames_to_text( GSList *basenames );
-static GSList       *text_to_basenames( const gchar *text );
 static GtkTreeView  *get_schemes_tree_view( NactWindow *window );
 static GtkTreeModel *get_schemes_tree_model( NactWindow *window );
 static void          create_schemes_selection_list( NactWindow *window );
@@ -186,21 +198,44 @@ nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAActionProfile *prof
 	gtk_entry_set_text( GTK_ENTRY( parameters_widget ), parameters );
 	g_free( parameters );
 
-	button = get_legend_button( dialog );
+	button = GTK_WIDGET( get_legend_button( dialog ));
 	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_legend_clicked ));
 
-	GtkWidget *basenames_widget = base_window_get_widget( BASE_WINDOW( dialog ), "PatternEntry" );
+	GtkWidget *basenames_widget = get_basenames_widget( dialog );
 	nact_window_signal_connect( dialog, G_OBJECT( basenames_widget ), "changed", G_CALLBACK( on_basenames_changed ));
 	GSList *basenames = na_action_profile_get_basenames( profile );
-	gchar *basenames_text = basenames_to_text( basenames );
+	gchar *basenames_text = na_utils_string_list_to_text( basenames );
 	gtk_entry_set_text( GTK_ENTRY( basenames_widget ), basenames_text );
 	g_free( basenames_text );
 	na_utils_free_string_list( basenames );
 
-	/* TODO: match case */
-	/* TODO: mime types */
-	/* TODO: file/dir */
-	/* TODO: multiple selection */
+	GtkButton *matchcase_button = get_matchcase_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( matchcase_button ), "toggled", G_CALLBACK( on_matchcase_toggled ));
+	gboolean matchcase = na_action_profile_get_matchcase( profile );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
+
+	GtkWidget *mimetypes_widget = get_mimetypes_widget( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( mimetypes_widget ), "changed", G_CALLBACK( on_mimetypes_changed ));
+	GSList *mimetypes = na_action_profile_get_mimetypes( profile );
+	gchar *mimetypes_text = na_utils_string_list_to_text( mimetypes );
+	gtk_entry_set_text( GTK_ENTRY( mimetypes_widget ), mimetypes_text );
+	g_free( mimetypes_text );
+	na_utils_free_string_list( mimetypes );
+
+	GtkButton *isfile_button = get_isfile_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( isfile_button ), "toggled", G_CALLBACK( on_isfiledir_toggled ));
+	GtkButton *isdir_button = get_isdir_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( isdir_button ), "toggled", G_CALLBACK( on_isfiledir_toggled ));
+	GtkButton *both_button = get_both_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( both_button ), "toggled", G_CALLBACK( on_isfiledir_toggled ));
+	gboolean isfile = na_action_profile_get_is_file( profile );
+	gboolean isdir = na_action_profile_get_is_dir( profile );
+	set_isfiledir( dialog, isfile, isdir );
+
+	GtkButton *multiple_button = get_multiple_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( multiple_button ), "toggled", G_CALLBACK( on_multiple_toggled ));
+	gboolean multiple = na_action_profile_get_multiple( profile );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( multiple_button ), multiple );
 
 	GtkTreeView *scheme_widget = get_schemes_tree_view( dialog );
 
@@ -392,12 +427,9 @@ parse_parameters( NactWindow *window )
 
 	g_string_append_printf( tmp_string, "%s ", command );
 
-	gboolean is_file = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OnlyFilesButton" )));
-	gboolean is_dir = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OnlyFoldersButton" )));
-	if (gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "BothButton" )))){
-		is_file = TRUE;
-		is_dir = TRUE;
-	}
+	gboolean is_file, is_dir;
+	get_isfiledir( window, &is_file, &is_dir );
+
 	gboolean accept_multiple = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AcceptMultipleButton" )));
 
 	GtkTreeModel* scheme_model = get_schemes_tree_model( window );
@@ -524,39 +556,39 @@ on_legend_clicked( GtkButton *button, gpointer user_data )
 static void
 show_legend_dialog( NactWindow *window )
 {
-	GtkWidget *legend_dialog = get_legend_dialog( window );
-	gtk_window_set_deletable( GTK_WINDOW( legend_dialog ), FALSE );
+	GtkWindow *legend_dialog = get_legend_dialog( window );
+	gtk_window_set_deletable( legend_dialog, FALSE );
 
 	GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
 	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
 
-	gtk_widget_show( legend_dialog );
+	gtk_widget_show( GTK_WIDGET( legend_dialog ));
 }
 
 /* TODO: save the current position */
 static void
 hide_legend_dialog( NactWindow *window )
 {
-	GtkWidget *legend_dialog = get_legend_dialog( window );
-	gtk_widget_hide( legend_dialog );
+	GtkWindow *legend_dialog = get_legend_dialog( window );
+	gtk_widget_hide( GTK_WIDGET( legend_dialog ));
 
 	/* set the legend button state consistent for when the dialog is
 	 * hidden by another mean (eg. close the edit profile dialog)
 	 */
-	GtkWidget *legend_button = get_legend_button( window );
+	GtkButton *legend_button = get_legend_button( window );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( legend_button ), FALSE );
 }
 
-static GtkWidget *
+static GtkButton *
 get_legend_button( NactWindow *window )
 {
-	return( base_window_get_widget( BASE_WINDOW( window ), "LegendButton" ));
+	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "LegendButton" )));
 }
 
-static GtkWidget *
+static GtkWindow *
 get_legend_dialog( NactWindow *window )
 {
-	return( base_window_get_widget( BASE_WINDOW( window ), "LegendDialog" ));
+	return( GTK_WINDOW( base_window_get_widget( BASE_WINDOW( window ), "LegendDialog" )));
 }
 
 static void
@@ -567,11 +599,145 @@ on_basenames_changed( GtkEntry *entry, gpointer user_data )
 
 	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
 	const gchar *text = gtk_entry_get_text( entry );
-	GSList *basenames = text_to_basenames( text );
+	GSList *basenames = na_utils_text_to_string_list( text );
 	na_action_profile_set_basenames( edited, basenames );
 	na_utils_free_string_list( basenames );
 
 	v_field_modified( dialog );
+}
+
+static GtkWidget *
+get_basenames_widget( NactWindow *window )
+{
+	return( base_window_get_widget( BASE_WINDOW( window ), "PatternEntry" ));
+}
+
+static void
+on_matchcase_toggled( GtkToggleButton *button, gpointer user_data )
+{
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+	gboolean matchcase = gtk_toggle_button_get_active( button );
+	na_action_profile_set_matchcase( edited, matchcase );
+
+	v_field_modified( dialog );
+}
+
+static GtkButton *
+get_matchcase_button( NactWindow *window )
+{
+	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "MatchCaseButton" )));
+}
+
+static void
+on_mimetypes_changed( GtkEntry *entry, gpointer user_data )
+{
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+	const gchar *text = gtk_entry_get_text( entry );
+	GSList *mimetypes = na_utils_text_to_string_list( text );
+	na_action_profile_set_mimetypes( edited, mimetypes );
+	na_utils_free_string_list( mimetypes );
+
+	v_field_modified( dialog );
+}
+
+static GtkWidget *
+get_mimetypes_widget( NactWindow *window )
+{
+	return( base_window_get_widget( BASE_WINDOW( window ), "MimeTypeEntry" ));
+}
+
+/*
+ * Note that this callback is triggered twice: first, for the
+ * deactivated button, then a second time for the newly activated one.
+ * I don't know what to do to be triggered only once..?
+ */
+static void
+on_isfiledir_toggled( GtkToggleButton *button, gpointer user_data )
+{
+	/*static const gchar *thisfn = "nact_iprofile_conditions_on_isfiledir_toggled";*/
+
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	gboolean isfile, isdir;
+	get_isfiledir( dialog, &isfile, &isdir );
+	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+	na_action_profile_set_isfiledir( edited, isfile, isdir );
+
+	v_field_modified( dialog );
+}
+
+static void
+get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir )
+{
+	g_assert( isfile );
+	g_assert( isdir );
+
+	gboolean both = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_both_button( window )));
+	if( both ){
+		*isfile = TRUE;
+		*isdir = TRUE;
+	} else {
+		*isfile = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_isfile_button( window )));
+		*isdir = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_isdir_button( window )));
+	}
+}
+
+static void
+set_isfiledir( NactWindow *window, gboolean isfile, gboolean isdir )
+{
+	if( isfile && isdir ){
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( get_both_button( window )), TRUE );
+
+	} else if( isfile ){
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( get_isfile_button( window )), TRUE );
+
+	} else if( isdir ){
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( get_isdir_button( window )), TRUE );
+	}
+}
+
+static GtkButton *
+get_isfile_button( NactWindow *window )
+{
+	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OnlyFilesButton" )));
+}
+
+static GtkButton *
+get_isdir_button( NactWindow *window )
+{
+	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OnlyFoldersButton" )));
+}
+
+static GtkButton *
+get_both_button( NactWindow *window )
+{
+	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "BothButton" )));
+}
+
+static void
+on_multiple_toggled( GtkToggleButton *button, gpointer user_data )
+{
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+	gboolean multiple = gtk_toggle_button_get_active( button );
+	na_action_profile_set_multiple( edited, multiple );
+
+	v_field_modified( dialog );
+}
+
+static GtkButton *
+get_multiple_button( NactWindow *window )
+{
+	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AcceptMultipleButton" )));
 }
 
 static void
@@ -632,56 +798,6 @@ on_scheme_list_selection_changed( GtkTreeSelection *selection, gpointer user_dat
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
 	v_field_modified( dialog );
-}
-
-static gchar *
-basenames_to_text( GSList *basenames )
-{
-	GSList *ib;
-	gchar *tmp;
-	gchar *text = g_strdup( "" );
-
-	for( ib = basenames ; ib ; ib = ib->next ){
-		if( strlen( text )){
-			tmp = g_strdup_printf( "%s; ", text );
-			g_free( text );
-			text = tmp;
-		}
-		tmp = g_strdup_printf( "%s%s", text, ( gchar * ) ib->data );
-		g_free( text );
-		text = tmp;
-	}
-
-	return( text );
-}
-
-static GSList *
-text_to_basenames( const gchar *text )
-{
-	GSList *basenames = NULL;
-	gchar **tokens, **iter;
-	gchar *tmp;
-	gchar *source = g_strdup( text );
-
-	tmp = g_strstrip( source );
-	if( !strlen( tmp )){
-		basenames = g_slist_append( basenames, g_strdup( "*" ));
-
-	} else {
-		tokens = g_strsplit( source, ";", -1 );
-		iter = tokens;
-
-		while( *iter ){
-			tmp = g_strstrip( *iter );
-			basenames = g_slist_append( basenames, g_strdup( tmp ));
-			iter++;
-		}
-
-		g_strfreev( tokens );
-	}
-
-	g_free( source );
-	return( basenames );
 }
 
 static GtkTreeView *

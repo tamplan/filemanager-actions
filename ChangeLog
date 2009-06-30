@@ -1,7 +1,15 @@
 2009-06-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-action-profile.c:
+	* src/common/na-action-profile.h
+	(na_action_profile_set_matchcase, na_action_profile_set_mimetypes,
+	na_action_profile_set_isfiledir, na_action_profile_set_multiple):
+	New functions.
+
 	* src/common/na-utils.c:
-	* src/common/na-utils.h (na_utils_gstring_joinv): New function.
+	* src/common/na-utils.h (na_utils_gstring_joinv,
+	na_utils_string_list_to_text, na_utils_text_to_string_list):
+	New functions.
 
 	* src/nact/nact-action-conditions-editor.c:
 	Call _dispose functions when closing the window.
@@ -15,13 +23,15 @@
 	(nact_iprofile_conditions_dispose): New function.
 
 	* src/nact/nact-iprofile-conditions.c:
-	All first tab is now implemented.
+	All first and second tabs are now implemented.
 
 	* src/nact/nact-utils.c:
 	* src/nact/nact-utils.h: Removed files.
 
 	* src/nact/nautilus-actions-config.ui:
 	Add LegendDialog window.
+	Remove all embedded action handlers (as I don't want pollute my
+	public namespace with these).
 
 2009-06-29 Pierre Wieser <pwieser@trychlos.org>
 

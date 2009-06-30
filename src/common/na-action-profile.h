@@ -75,11 +75,11 @@ typedef struct {
 #define PROP_PROFILE_LABEL_STR					"profile-desc-name"
 #define PROP_PROFILE_PATH_STR					"profile-path"
 #define PROP_PROFILE_PARAMETERS_STR				"profile-parameters"
-#define PROP_PROFILE_ACCEPT_MULTIPLE_STR		"profile-accept-multiple-files"
 #define PROP_PROFILE_BASENAMES_STR				"profile-basenames"
+#define PROP_PROFILE_MATCHCASE_STR				"profile-matchcase"
 #define PROP_PROFILE_ISDIR_STR					"profile-isdir"
 #define PROP_PROFILE_ISFILE_STR					"profile-isfile"
-#define PROP_PROFILE_MATCHCASE_STR				"profile-matchcase"
+#define PROP_PROFILE_ACCEPT_MULTIPLE_STR		"profile-accept-multiple-files"
 #define PROP_PROFILE_MIMETYPES_STR				"profile-mimetypes"
 #define PROP_PROFILE_SCHEMES_STR				"profile-schemes"
 
@@ -107,6 +107,10 @@ gboolean         na_action_profile_are_equal( NAActionProfile *first, NAActionPr
 void             na_action_profile_set_path( NAActionProfile *profile, const gchar *path );
 void             na_action_profile_set_parameters( NAActionProfile *profile, const gchar *parameters );
 void             na_action_profile_set_basenames( NAActionProfile *profile, GSList *basenames );
+void             na_action_profile_set_matchcase( NAActionProfile *profile, gboolean matchcase );
+void             na_action_profile_set_mimetypes( NAActionProfile *profile, GSList *mimetypes );
+void             na_action_profile_set_isfiledir( NAActionProfile *profile, gboolean isfile, gboolean isdir );
+void             na_action_profile_set_multiple( NAActionProfile *profile, gboolean multiple );
 
 gboolean         na_action_profile_is_candidate( const NAActionProfile *profile, GList *files );
 gchar           *na_action_profile_parse_parameters( const NAActionProfile *profile, GList *files );

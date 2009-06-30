@@ -31,7 +31,10 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <glib-object.h>
+#include <string.h>
+
 #include "na-utils.h"
 
 /**
@@ -119,6 +122,62 @@ na_utils_free_string_list( GSList *list )
 		g_free(( gchar * ) item->data );
 	}
 	g_slist_free( list );
+}
+
+/**
+ * Concatenates a string list to a semi-colon-separated text.
+ */
+gchar *
+na_utils_string_list_to_text( GSList *strlist )
+{
+	GSList *ib;
+	gchar *tmp;
+	gchar *text = g_strdup( "" );
+
+	for( ib = strlist ; ib ; ib = ib->next ){
+		if( strlen( text )){
+			tmp = g_strdup_printf( "%s; ", text );
+			g_free( text );
+			text = tmp;
+		}
+		tmp = g_strdup_printf( "%s%s", text, ( gchar * ) ib->data );
+		g_free( text );
+		text = tmp;
+	}
+
+	return( text );
+}
+
+/**
+ * Extracts a list of strings from a semi-colon-separated text.
+ */
+GSList *
+na_utils_text_to_string_list( const gchar *text )
+{
+	GSList *strlist = NULL;
+	gchar **tokens, **iter;
+	gchar *tmp;
+	gchar *source = g_strdup( text );
+
+	tmp = g_strstrip( source );
+	if( !strlen( tmp )){
+		strlist = g_slist_append( strlist, g_strdup( "*" ));
+
+	} else {
+		tokens = g_strsplit( source, ";", -1 );
+		iter = tokens;
+
+		while( *iter ){
+			tmp = g_strstrip( *iter );
+			strlist = g_slist_append( strlist, g_strdup( tmp ));
+			iter++;
+		}
+
+		g_strfreev( tokens );
+	}
+
+	g_free( source );
+	return( strlist );
 }
 
 /**

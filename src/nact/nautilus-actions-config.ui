@@ -351,7 +351,6 @@
                             <property name="receives_default">False</property>
                             <property name="tooltip_text" translatable="yes">Click to choose a custom icon from a file instead of a predefined icon from the drop-down list.</property>
                             <property name="use_underline">True</property>
-                            <signal name="clicked" handler="action_icon_browse_button_clicked_cb"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -464,7 +463,6 @@
                             <property name="can_focus">True</property>
                             <property name="tooltip_text" translatable="yes">The command that will be launched by selecting the action in Nautilus popup menu.</property>
                             <property name="width_chars">10</property>
-                            <signal name="changed" handler="action_field_changed_cb"/>
                           </object>
                           <packing>
                             <property name="position">1</property>
@@ -478,7 +476,6 @@
                             <property name="receives_default">False</property>
                             <property name="tooltip_text" translatable="yes">Click to choose a command from the file chooser dialog.</property>
                             <property name="use_underline">True</property>
-                            <signal name="clicked" handler="action_path_browse_button_clicked_cb"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -514,7 +511,6 @@
                             <property name="can_focus">True</property>
                             <property name="tooltip_text" translatable="yes">Parameters that will be sent to the program. Click on the 'Legend' button to see the different replacement tokens.</property>
                             <property name="width_chars">10</property>
-                            <signal name="changed" handler="action_field_changed_cb"/>
                           </object>
                           <packing>
                             <property name="position">1</property>
@@ -526,7 +522,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
                             <property name="tooltip_text" translatable="yes">Click to toggle the display of the list of special tokens you can use in the parameter field.</property>
-                            <signal name="toggled" handler="action_legend_button_toggled_cb"/>
                             <child>
                               <object class="GtkAlignment" id="alignment16">
                                 <property name="visible">True</property>
@@ -672,7 +667,6 @@
                             <property name="can_focus">True</property>
                             <property name="tooltip_text" translatable="yes">A string with wildcards (? or *) that will be used to match the filenames. You can set several filename patterns by separating them with a semi-colon (;).</property>
                             <property name="text">*</property>
-                            <signal name="changed" handler="action_field_changed_cb"/>
                           </object>
                           <packing>
                             <property name="position">1</property>
@@ -707,7 +701,6 @@
                             <property name="tooltip_text" translatable="yes">If selected, the filename patterns will be matched case sensitive (eg, *.jpg will not match photo.JPG)</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="action_field_changed_cb"/>
                           </object>
                           <packing>
                             <property name="position">1</property>
@@ -742,7 +735,6 @@
                             <property name="can_focus">True</property>
                             <property name="tooltip_text" translatable="yes">A string with wildcards (? or *) that will be used to match the mimetypes of files. You can set several mimetype patterns by separating them with a semi-colon (;).</property>
                             <property name="text">*/*</property>
-                            <signal name="changed" handler="action_field_changed_cb"/>
                           </object>
                           <packing>
                             <property name="position">1</property>
@@ -786,7 +778,6 @@
                         <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="action_field_changed_cb"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -803,7 +794,6 @@
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">OnlyFilesButton</property>
-                        <signal name="toggled" handler="action_field_changed_cb"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -820,7 +810,6 @@
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">OnlyFilesButton</property>
-                        <signal name="toggled" handler="action_field_changed_cb"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -842,7 +831,6 @@
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="action_field_changed_cb"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

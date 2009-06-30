@@ -39,12 +39,11 @@ G_BEGIN_DECLS
  * Some functions to ease the GSList list manipulations.
  */
 gboolean na_utils_find_in_list( GSList *list, const gchar *str );
-
 gboolean na_utils_string_lists_are_equal( GSList *first, GSList *second );
-
 GSList  *na_utils_duplicate_string_list( GSList *list );
-
 void     na_utils_free_string_list( GSList *list );
+gchar   *na_utils_string_list_to_text( GSList *list );
+GSList  *na_utils_text_to_string_list( const gchar *text );
 
 /*
  * Some functions for GString manipulations.
