@@ -60,15 +60,14 @@ static void          interface_base_finalize( NactIMenuItemInterface *klass );
 static GObject      *v_get_edited_action( NactWindow *window );
 static void          v_field_modified( NactWindow *window );
 
-static void          icon_combo_list_fill( GtkComboBoxEntry* combo );
-static GtkTreeModel *create_stock_icon_model( void );
-static gint          sort_stock_ids( gconstpointer a, gconstpointer b );
-static gchar        *strip_underscore( const gchar *text );
-
 static void          on_label_changed( GtkEntry *entry, gpointer user_data );
 static void          on_tooltip_changed( GtkEntry *entry, gpointer user_data );
 static void          on_icon_changed( GtkEntry *entry, gpointer user_data );
 static void          on_icon_browse( GtkButton *button, gpointer user_data );
+static void          icon_combo_list_fill( GtkComboBoxEntry* combo );
+static GtkTreeModel *create_stock_icon_model( void );
+static gint          sort_stock_ids( gconstpointer a, gconstpointer b );
+static gchar        *strip_underscore( const gchar *text );
 
 GType
 nact_imenu_item_get_type( void )
@@ -204,6 +203,11 @@ nact_imenu_item_has_label( NactWindow *window )
 	return( g_utf8_strlen( label, -1 ) > 0 );
 }
 
+void
+nact_imenu_item_dispose( NactWindow *dialog )
+{
+}
+
 static GObject *
 v_get_edited_action( NactWindow *window )
 {
@@ -224,6 +228,110 @@ v_field_modified( NactWindow *window )
 	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->field_modified ){
 		NACT_IMENU_ITEM_GET_INTERFACE( window )->field_modified( window );
 	}
+}
+
+static void
+on_label_changed( GtkEntry *entry, gpointer user_data )
+{
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
+	na_action_set_label( edited, gtk_entry_get_text( entry ));
+
+	v_field_modified( dialog );
+}
+
+static void
+on_tooltip_changed( GtkEntry *entry, gpointer user_data )
+{
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
+	na_action_set_tooltip( edited, gtk_entry_get_text( entry ));
+
+	v_field_modified( dialog );
+}
+
+static void
+on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_imenu_item_on_icon_changed";
+
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	GtkWidget *image = base_window_get_widget( BASE_WINDOW( dialog ), "IconImage" );
+	g_assert( GTK_IS_WIDGET( image ));
+	const gchar *icon_name = gtk_entry_get_text( icon_entry );
+	g_debug( "%s: icon_name=%s", thisfn, icon_name );
+
+	GtkStockItem stock_item;
+	GdkPixbuf *icon = NULL;
+
+	if( icon_name && strlen( icon_name ) > 0 ){
+
+		/* TODO: code should be mutualized with those IActionsList */
+		if( gtk_stock_lookup( icon_name, &stock_item )){
+			g_debug( "%s: gtk_stock_lookup", thisfn );
+			gtk_image_set_from_stock( GTK_IMAGE( image ), icon_name, GTK_ICON_SIZE_MENU );
+			gtk_widget_show( image );
+
+		} else if( g_file_test( icon_name, G_FILE_TEST_EXISTS ) &&
+					g_file_test( icon_name, G_FILE_TEST_IS_REGULAR )){
+			g_debug( "%s: g_file_test", thisfn );
+			gint width;
+			gint height;
+			GError *error = NULL;
+
+			gtk_icon_size_lookup( GTK_ICON_SIZE_MENU, &width, &height );
+			icon = gdk_pixbuf_new_from_file_at_size( icon_name, width, height, &error );
+			if( error ){
+				g_warning( "%s: gdk_pixbuf_new_from_file_at_size:%s", thisfn, error->message );
+				icon = NULL;
+				g_error_free( error );
+			}
+			gtk_image_set_from_pixbuf( GTK_IMAGE( image ), icon );
+			gtk_widget_show( image );
+
+		} else {
+			g_debug( "%s: not stock, nor file", thisfn );
+			gtk_widget_hide( image );
+		}
+	} else {
+		gtk_widget_hide( image );
+	}
+
+	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
+	na_action_set_icon( edited, icon_name );
+
+	v_field_modified( dialog );
+}
+
+/* TODO: replace with a fds-compliant icon chooser */
+static void
+on_icon_browse( GtkButton *button, gpointer user_data )
+{
+	g_assert( NACT_IS_IMENU_ITEM( user_data ));
+
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(
+			_( "Choosing an icon" ),
+			NULL,
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			NULL
+			);
+
+	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
+		gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
+		GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( user_data ), "MenuIconComboBoxEntry" );
+		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), filename );
+	    g_free (filename);
+	  }
+
+	gtk_widget_destroy( dialog );
 }
 
 static void
@@ -336,108 +444,4 @@ strip_underscore( const gchar *text )
 	*q = '\0';
 
 	return( result );
-}
-
-static void
-on_label_changed( GtkEntry *entry, gpointer user_data )
-{
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
-	na_action_set_label( edited, gtk_entry_get_text( entry ));
-
-	v_field_modified( dialog );
-}
-
-static void
-on_tooltip_changed( GtkEntry *entry, gpointer user_data )
-{
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
-	na_action_set_tooltip( edited, gtk_entry_get_text( entry ));
-
-	v_field_modified( dialog );
-}
-
-static void
-on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_imenu_item_on_icon_changed";
-
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	GtkWidget *image = base_window_get_widget( BASE_WINDOW( dialog ), "IconImage" );
-	g_assert( GTK_IS_WIDGET( image ));
-	const gchar *icon_name = gtk_entry_get_text( icon_entry );
-	g_debug( "%s: icon_name=%s", thisfn, icon_name );
-
-	GtkStockItem stock_item;
-	GdkPixbuf *icon = NULL;
-
-	if( icon_name && strlen( icon_name ) > 0 ){
-
-		/* TODO: code should be mutualized with those IActionsList */
-		if( gtk_stock_lookup( icon_name, &stock_item )){
-			g_debug( "%s: gtk_stock_lookup", thisfn );
-			gtk_image_set_from_stock( GTK_IMAGE( image ), icon_name, GTK_ICON_SIZE_MENU );
-			gtk_widget_show( image );
-
-		} else if( g_file_test( icon_name, G_FILE_TEST_EXISTS ) &&
-					g_file_test( icon_name, G_FILE_TEST_IS_REGULAR )){
-			g_debug( "%s: g_file_test", thisfn );
-			gint width;
-			gint height;
-			GError *error = NULL;
-
-			gtk_icon_size_lookup( GTK_ICON_SIZE_MENU, &width, &height );
-			icon = gdk_pixbuf_new_from_file_at_size( icon_name, width, height, &error );
-			if( error ){
-				g_warning( "%s: gdk_pixbuf_new_from_file_at_size:%s", thisfn, error->message );
-				icon = NULL;
-				g_error_free( error );
-			}
-			gtk_image_set_from_pixbuf( GTK_IMAGE( image ), icon );
-			gtk_widget_show( image );
-
-		} else {
-			g_debug( "%s: not stock, nor file", thisfn );
-			gtk_widget_hide( image );
-		}
-	} else {
-		gtk_widget_hide( image );
-	}
-
-	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
-	na_action_set_icon( edited, icon_name );
-
-	v_field_modified( dialog );
-}
-
-/* TODO: replace with a fds-compliant icon chooser */
-static void
-on_icon_browse( GtkButton *button, gpointer user_data )
-{
-	g_assert( NACT_IS_IMENU_ITEM( user_data ));
-
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(
-			_( "Choosing an icon" ),
-			NULL,
-			GTK_FILE_CHOOSER_ACTION_OPEN,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-			NULL
-			);
-
-	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
-		gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
-		GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( user_data ), "MenuIconComboBoxEntry" );
-		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), filename );
-	    g_free (filename);
-	  }
-
-	gtk_widget_destroy( dialog );
 }

@@ -38,20 +38,20 @@
 #include <common/nautilus-actions-config-schema-reader.h>
 #include <common/nautilus-actions-config-schema-writer.h>
 #include <common/nautilus-actions-config-gconf-writer.h>
-#include "nact-utils.h"
+/*#include "nact-utils.h"*/
 #include "nact-import-export.h"
 #include "nact-prefs.h"
 #include "old-nact.h"
 
 /* gui callback functions */
-void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data);
+/*void import_browse_button_clicked_cb (GtkWidget* widget, gpointer data);
 void export_browse_button_clicked_cb (GtkWidget* widget, gpointer data);
 void mode_toggled_cb (GtkWidget* widget, gpointer user_data);
 
 static gboolean nact_import_actions (void);
-static gboolean nact_export_actions (void);
+static gboolean nact_export_actions (void);*/
 
-void
+/*void
 mode_toggled_cb (GtkWidget* widget, gpointer user_data)
 {
 	GtkWidget* import_radio = nact_get_glade_widget_from ("ImportRadioButton", GLADE_IM_EX_PORT_DIALOG_WIDGET);
@@ -66,9 +66,9 @@ mode_toggled_cb (GtkWidget* widget, gpointer user_data)
 		gtk_widget_set_sensitive (nact_get_glade_widget_from ("ExportVBox", GLADE_IM_EX_PORT_DIALOG_WIDGET), TRUE);
 		gtk_widget_set_sensitive (nact_get_glade_widget_from ("ImportVBox", GLADE_IM_EX_PORT_DIALOG_WIDGET), FALSE);
 	}
-}
+}*/
 
-void
+/*void
 import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 {
 	gchar* last_dir;
@@ -104,9 +104,9 @@ import_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 		case GTK_RESPONSE_DELETE_EVENT:
 			gtk_widget_hide (filechooser);
 	}
-}
+}*/
 
-void
+/*void
 export_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 {
 	gchar* last_dir;
@@ -142,12 +142,11 @@ export_browse_button_clicked_cb (GtkWidget* widget, gpointer data)
 		case GTK_RESPONSE_DELETE_EVENT:
 			gtk_widget_hide (folderchooser);
 	}
-}
+}*/
 
-static void
+/*static void
 list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
 {
-/*
 	GtkWidget *nact_edit_button;
 	GtkWidget *nact_delete_button;
 
@@ -161,22 +160,21 @@ list_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
 		gtk_widget_set_sensitive (nact_edit_button, FALSE);
 		gtk_widget_set_sensitive (nact_delete_button, FALSE);
 	}
-*/
-}
+}*/
 
-static void nact_setup_actions_list (GtkWidget *list)
+/*static void nact_setup_actions_list (GtkWidget *list)
 {
 	GtkTreeViewColumn *column;
 	GtkTreeSelection* selection;
 	GtkTreeModel* nact_action_list_model;
 
-	/* Get the model from the main list */
-	nact_action_list_model = gtk_tree_view_get_model (GTK_TREE_VIEW (nact_get_glade_widget ("ActionsList")));
+	*//* Get the model from the main list */
+	/*nact_action_list_model = gtk_tree_view_get_model (GTK_TREE_VIEW (nact_get_glade_widget ("ActionsList")));
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (list), nact_action_list_model);
-
+*/
 	/* create columns on the tree view */
-	column = gtk_tree_view_column_new_with_attributes (_("Icon"),
+	/*column = gtk_tree_view_column_new_with_attributes (_("Icon"),
 							   gtk_cell_renderer_pixbuf_new (),
 							   "pixbuf", MENU_ICON_COLUMN, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (list), column);
@@ -188,14 +186,13 @@ static void nact_setup_actions_list (GtkWidget *list)
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (list));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
-
+*/
 	/* set up selection */
-	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (list))), "changed",
+	/*g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (list))), "changed",
 			  G_CALLBACK (list_selection_changed_cb), NULL);
+}*/
 
-}
-
-static gboolean
+/*static gboolean
 nact_import_actions (void)
 {
 	gboolean retv = FALSE;
@@ -239,9 +236,9 @@ nact_import_actions (void)
 				retv = TRUE;
 			}
 			else
-			{
+			{*/
 				/* i18n notes: %s is the label of the action (eg, 'Mount ISO') */
-				error_message = g_strdup_printf (_("Action '%s' importation failed!"), action->label);
+				/*error_message = g_strdup_printf (_("Action '%s' importation failed!"), action->label);
 				nautilus_actions_display_error (error_message, error->message);
 				g_error_free (error);
 				g_free (error_message);
@@ -249,9 +246,9 @@ nact_import_actions (void)
 		}
 	}
 	return retv;
-}
+}*/
 
-static gboolean
+/*static gboolean
 nact_export_actions (void)
 {
 	gboolean retv = FALSE;
@@ -285,11 +282,11 @@ nact_export_actions (void)
 			gtk_tree_model_get (model, &iter, UUID_COLUMN, &uuid, -1);
 
 			action = nautilus_actions_config_get_action (NAUTILUS_ACTIONS_CONFIG (config), uuid);
-			/* TODO: Better error handling: deal with the GError param */
-			if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_writer), action, NULL))
-			{
+			*//* TODO: Better error handling: deal with the GError param */
+			/*if (nautilus_actions_config_add_action (NAUTILUS_ACTIONS_CONFIG (schema_writer), action, NULL))
+			{*/
 				/*nautilus_actions_config_schema_writer_get_saved_filename (schema_writer, action->uuid);*/
-			}
+			/*}
 
 			g_free (uuid);
 		}
@@ -306,13 +303,12 @@ nact_export_actions (void)
 	}
 
 	return retv;
-}
+}*/
 
 gboolean nact_import_export_actions (void)
 {
-	static gboolean init = FALSE;
 	gboolean retv = FALSE;
-	GtkWidget* nact_action_list_tree;
+	/*GtkWidget* nact_action_list_tree;
 	GtkWidget* import_export_dialog;
 	GtkWidget* import_radio;
 	GtkTreeSelection *selection;
@@ -322,11 +318,12 @@ gboolean nact_import_export_actions (void)
 	GtkSizeGroup* button_size_group;
 	gint width, height, x, y;
 	gchar* last_dir;
+	static gboolean init = FALSE;
 
 	if (!init)
-	{
+	{*/
 		/* load the GUI */
-		GladeXML* gui = nact_get_glade_xml_object (GLADE_IM_EX_PORT_DIALOG_WIDGET);
+		/*GladeXML* gui = nact_get_glade_xml_object (GLADE_IM_EX_PORT_DIALOG_WIDGET);
 		if (!gui) {
 			g_error (_("Could not load interface for Nautilus Actions Config Tool"));
 			return FALSE;
@@ -350,8 +347,8 @@ gboolean nact_import_export_actions (void)
 		gtk_size_group_add_widget (button_size_group,
 											nact_get_glade_widget_from ("ExportBrowseButton",
 																		GLADE_IM_EX_PORT_DIALOG_WIDGET));
-		/* free memory */
-		g_object_unref (gui);
+		*//* free memory */
+		/*g_object_unref (gui);
 		init = TRUE;
 	}
 	nact_action_list_tree = nact_get_glade_widget_from ("ExportTreeView", GLADE_IM_EX_PORT_DIALOG_WIDGET);
@@ -361,12 +358,12 @@ gboolean nact_import_export_actions (void)
 	import_export_dialog = nact_get_glade_widget_from (GLADE_IM_EX_PORT_DIALOG_WIDGET, GLADE_IM_EX_PORT_DIALOG_WIDGET);
 
 	import_radio = nact_get_glade_widget_from ("ImportRadioButton", GLADE_IM_EX_PORT_DIALOG_WIDGET);
-
+*/
 	/* Get the default dialog size */
-	gtk_window_get_default_size (GTK_WINDOW (import_export_dialog), &width, &height);
-
+	/*gtk_window_get_default_size (GTK_WINDOW (import_export_dialog), &width, &height);
+*/
 	/* Override with preferred one, if any */
-	nact_prefs_get_im_ex_dialog_size (&width, &height);
+	/*nact_prefs_get_im_ex_dialog_size (&width, &height);
 
 	gtk_window_resize (GTK_WINDOW (import_export_dialog), width, height);
 
@@ -378,20 +375,20 @@ gboolean nact_import_export_actions (void)
 	last_dir = nact_prefs_get_export_last_browsed_dir ();
 	gtk_entry_set_text (GTK_ENTRY (nact_get_glade_widget_from ("ExportEntry", GLADE_IM_EX_PORT_DIALOG_WIDGET)), last_dir);
 	gtk_editable_select_region (GTK_EDITABLE (nact_get_glade_widget_from ("ExportEntry", GLADE_IM_EX_PORT_DIALOG_WIDGET)), 0, -1);
-
+*/
 	/* run the dialog */
-	switch (gtk_dialog_run (GTK_DIALOG (import_export_dialog)))
+	/*switch (gtk_dialog_run (GTK_DIALOG (import_export_dialog)))
 	{
 		case GTK_RESPONSE_OK :
 			if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (import_radio)))
-			{
+			{*/
 				/* Import mode */
-				retv = nact_import_actions ();
+				/*retv = nact_import_actions ();
 			}
 			else
-			{
+			{*/
 				/* Export Mode */
-				retv = nact_export_actions ();
+				/*retv = nact_export_actions ();
 			}
 			break;
 		case GTK_RESPONSE_DELETE_EVENT:
@@ -404,6 +401,6 @@ gboolean nact_import_export_actions (void)
 	nact_prefs_set_im_ex_dialog_position (GTK_WINDOW (import_export_dialog));
 
 	gtk_widget_hide (import_export_dialog);
-
+*/
 	return retv;
 }

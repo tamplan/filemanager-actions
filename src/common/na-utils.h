@@ -46,6 +46,11 @@ GSList  *na_utils_duplicate_string_list( GSList *list );
 
 void     na_utils_free_string_list( GSList *list );
 
+/*
+ * Some functions for GString manipulations.
+ */
+gchar *  na_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list );
+
 G_END_DECLS
 
 #endif /* __NA_UTILS_H__ */

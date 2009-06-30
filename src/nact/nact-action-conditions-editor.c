@@ -207,6 +207,9 @@ instance_dispose( GObject *dialog )
 
 		self->private->dispose_has_run = TRUE;
 
+		nact_imenu_item_dispose( NACT_WINDOW( dialog ));
+		nact_iprofile_conditions_dispose( NACT_WINDOW( dialog ));
+
 		g_object_unref( self->private->original );
 		g_object_unref( self->private->edited );
 

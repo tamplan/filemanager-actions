@@ -62,21 +62,32 @@ static void          interface_base_finalize( NactIProfileConditionsInterface *k
 static GObject      *v_get_edited_profile( NactWindow *window );
 static void          v_field_modified( NactWindow *window );
 
-static gchar        *basenames_to_text( GSList *basenames );
-static GSList       *text_to_basenames( const gchar *text );
-static GtkTreeView  *get_schemes_tree_view( NactWindow *window );
-static GtkTreeModel *get_schemes_tree_model( NactWindow *window );
-static void          create_schemes_selection_list( NactWindow *window );
-static GSList       *get_schemes_default_list( NactWindow *window );
-
 static void          on_path_changed( GtkEntry *entry, gpointer user_data );
 static void          on_path_browse( GtkButton *button, gpointer user_data );
+static GtkWidget    *get_path_widget( NactWindow *window );
 static void          on_parameters_changed( GtkEntry *entry, gpointer user_data );
+static GtkWidget    *get_parameters_widget( NactWindow *window );
+static void          update_example_label( NactWindow *window );
+static gchar        *parse_parameters( NactWindow *window );
+static void          on_legend_clicked( GtkButton *button, gpointer user_data );
+static void          show_legend_dialog( NactWindow *window );
+static void          hide_legend_dialog( NactWindow *window );
+static GtkWidget    *get_legend_button( NactWindow *window );
+static GtkWidget    *get_legend_dialog( NactWindow *window );
+
 static void          on_basenames_changed( GtkEntry *entry, gpointer user_data );
 static void          on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, gpointer user_data );
 static void          on_scheme_keyword_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data );
 static void          on_scheme_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data );
 static void          on_scheme_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
+
+static gchar        *basenames_to_text( GSList *basenames );
+static GSList       *text_to_basenames( const gchar *text );
+static GtkTreeView  *get_schemes_tree_view( NactWindow *window );
+static GtkTreeModel *get_schemes_tree_model( NactWindow *window );
+static void          create_schemes_selection_list( NactWindow *window );
+static gboolean      get_action_schemes_list( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, gpointer data );
+static GSList       *get_schemes_default_list( NactWindow *window );
 
 GType
 nact_iprofile_conditions_get_type( void )
@@ -160,25 +171,23 @@ nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAActionProfile *prof
 	static const gchar *thisfn = "nact_iprofile_conditions_runtime_init";
 	g_debug( "%s: dialog=%p, profile=%p", thisfn, dialog, profile );
 
-	GtkWidget *path_widget = base_window_get_widget( BASE_WINDOW( dialog ), "CommandPathEntry" );
+	GtkWidget *path_widget = get_path_widget( dialog );
 	nact_window_signal_connect( dialog, G_OBJECT( path_widget ), "changed", G_CALLBACK( on_path_changed ));
 	gchar *path = na_action_profile_get_path( profile );
-	g_debug( "%s: path=%s", thisfn, path );
 	gtk_entry_set_text( GTK_ENTRY( path_widget ), path );
 	g_free( path );
 
 	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "PathBrowseButton" );
 	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_path_browse ));
 
-	GtkWidget *parameters_widget = base_window_get_widget( BASE_WINDOW( dialog ), "CommandParamsEntry" );
+	GtkWidget *parameters_widget = get_parameters_widget( dialog );
 	nact_window_signal_connect( dialog, G_OBJECT( parameters_widget ), "changed", G_CALLBACK( on_parameters_changed ));
 	gchar *parameters = na_action_profile_get_parameters( profile );
 	gtk_entry_set_text( GTK_ENTRY( parameters_widget ), parameters );
 	g_free( parameters );
 
-	button = base_window_get_widget( BASE_WINDOW( dialog ), "LegendButton" );
-	/* TODO: implement legend button */
-	gtk_widget_set_sensitive( button, FALSE );
+	button = get_legend_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_legend_clicked ));
 
 	GtkWidget *basenames_widget = base_window_get_widget( BASE_WINDOW( dialog ), "PatternEntry" );
 	nact_window_signal_connect( dialog, G_OBJECT( basenames_widget ), "changed", G_CALLBACK( on_basenames_changed ));
@@ -214,6 +223,17 @@ nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAActionProfile *prof
 	/* TODO: remove scheme */
 }
 
+void
+nact_iprofile_conditions_all_widgets_showed( NactWindow *dialog )
+{
+}
+
+void
+nact_iprofile_conditions_dispose( NactWindow *dialog )
+{
+	hide_legend_dialog( dialog );
+}
+
 static GObject *
 v_get_edited_profile( NactWindow *window )
 {
@@ -234,6 +254,384 @@ v_field_modified( NactWindow *window )
 	if( NACT_IPROFILE_CONDITIONS_GET_INTERFACE( window )->field_modified ){
 		NACT_IPROFILE_CONDITIONS_GET_INTERFACE( window )->field_modified( window );
 	}
+}
+
+static void
+on_path_changed( GtkEntry *entry, gpointer user_data )
+{
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+	na_action_profile_set_path( edited, gtk_entry_get_text( entry ));
+
+	update_example_label( dialog );
+	v_field_modified( dialog );
+}
+
+/* TODO: keep trace of last browsed dir */
+static void
+on_path_browse( GtkButton *button, gpointer user_data )
+{
+	g_assert( NACT_IS_IPROFILE_CONDITIONS( user_data ));
+	gboolean set_current_location = FALSE;
+
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(
+			_( "Choosing a command" ),
+			NULL,
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			NULL
+			);
+
+	GtkWidget *path_widget = get_path_widget( NACT_WINDOW( user_data ));
+	const gchar *path = gtk_entry_get_text( GTK_ENTRY( path_widget ));
+	if( path && strlen( path )){
+		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
+	}
+
+	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
+		gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
+		gtk_entry_set_text( GTK_ENTRY( path_widget ), filename );
+	    g_free (filename);
+	  }
+
+	gtk_widget_destroy( dialog );
+}
+
+static GtkWidget *
+get_path_widget( NactWindow *window )
+{
+	return( base_window_get_widget( BASE_WINDOW( window ), "CommandPathEntry" ));
+}
+
+static void
+on_parameters_changed( GtkEntry *entry, gpointer user_data )
+{
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+	na_action_profile_set_parameters( edited, gtk_entry_get_text( entry ));
+
+	update_example_label( dialog );
+	v_field_modified( dialog );
+}
+
+static GtkWidget *
+get_parameters_widget( NactWindow *window )
+{
+	return( base_window_get_widget( BASE_WINDOW( window ), "CommandParamsEntry" ));
+}
+
+static void
+update_example_label( NactWindow *window )
+{
+	/*static const char *thisfn = "nact_iprofile_conditions_update_example_label";*/
+
+	static const gchar *original_label = N_( "<i><b><span size=\"small\">e.g., %s</span></b></i>" );
+
+	GtkWidget *example_widget = base_window_get_widget( BASE_WINDOW( window ), "LabelExample" );
+
+	gchar *parameters = parse_parameters( window );
+	/*g_debug( "%s: parameters=%s", thisfn, parameters );*/
+
+	/* convert special xml chars (&, <, >,...) to avoid warnings
+	 * generated by Pango parser
+	 */
+	gchar *new_label = g_markup_printf_escaped( original_label, parameters );
+
+	gtk_label_set_label( GTK_LABEL( example_widget ), new_label );
+	g_free( new_label );
+	g_free( parameters );
+}
+
+/*
+ * Valid parameters :
+ *
+ * %d : base dir of the selected file(s)/folder(s)
+ * %f : the name of the selected file/folder or the 1st one if many are selected
+ * %h : hostname of the GVfs URI
+ * %m : list of the basename of the selected files/directories separated by space.
+ * %M : list of the selected files/directories with their complete path separated by space.
+ * %s : scheme of the GVfs URI
+ * %u : GVfs URI
+ * %U : username of the GVfs URI
+ * %% : a percent sign
+ */
+static gchar *
+parse_parameters( NactWindow *window )
+{
+	GString* tmp_string = g_string_new( "" );
+
+	/* i18n notes: example strings for the command preview */
+	gchar* ex_path = _( "/path/to" );
+	gchar* ex_files[] = { N_( "file1.txt" ), N_( "file2.txt" ), NULL };
+	gchar* ex_dirs[] = { N_(" folder1" ), N_( "folder2" ), NULL };
+	gchar* ex_mixed[] = { N_(" file1.txt" ), N_( "folder1" ), NULL };
+	gchar* ex_scheme_default = "file";
+	gchar* ex_host_default = _( "test.example.net" );
+	gchar* ex_one_file = _( "file.txt" );
+	gchar* ex_one_dir = _( "folder" );
+	gchar* ex_one = NULL;
+	gchar* ex_list = NULL;
+	gchar* ex_path_list = NULL;
+	gchar* ex_scheme;
+	gchar* ex_host;
+
+	const gchar* command = gtk_entry_get_text( GTK_ENTRY( get_path_widget( window )));
+	const gchar* param_template = gtk_entry_get_text( GTK_ENTRY( get_parameters_widget( window )));
+
+	gchar* iter = g_strdup( param_template );
+	gchar* old_iter = iter;
+	gchar* tmp;
+	gchar* separator;
+	gchar* start;
+	GSList* scheme_list = NULL;
+
+	g_string_append_printf( tmp_string, "%s ", command );
+
+	gboolean is_file = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OnlyFilesButton" )));
+	gboolean is_dir = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OnlyFoldersButton" )));
+	if (gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "BothButton" )))){
+		is_file = TRUE;
+		is_dir = TRUE;
+	}
+	gboolean accept_multiple = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AcceptMultipleButton" )));
+
+	GtkTreeModel* scheme_model = get_schemes_tree_model( window );
+	gtk_tree_model_foreach( scheme_model, ( GtkTreeModelForeachFunc ) get_action_schemes_list, &scheme_list );
+
+	separator = g_strdup_printf( " %s/", ex_path );
+	start = g_strdup_printf( "%s/", ex_path );
+
+	if( accept_multiple ){
+		if( is_file && is_dir ){
+			ex_one = ex_files[0];
+			ex_list = na_utils_gstring_joinv( NULL, " ", ex_mixed );
+			ex_path_list = na_utils_gstring_joinv( start, separator, ex_mixed );
+
+		} else if( is_dir ){
+			ex_one = ex_dirs[0];
+			ex_list = na_utils_gstring_joinv( NULL, " ", ex_dirs );
+			ex_path_list = na_utils_gstring_joinv( start, separator, ex_dirs );
+
+		} else if( is_file ){
+			ex_one = ex_files[0];
+			ex_list = na_utils_gstring_joinv( NULL, " ", ex_files );
+			ex_path_list = na_utils_gstring_joinv( start, separator, ex_files );
+		}
+	} else {
+		if( is_dir && !is_file ){
+			ex_one = ex_one_dir;
+
+		} else {
+			ex_one = ex_one_file;
+		}
+		ex_list = g_strdup( ex_one );
+		ex_path_list = g_strjoin( "/", ex_path, ex_one, NULL );
+	}
+
+	g_free (start);
+	g_free (separator);
+
+	if( scheme_list != NULL ){
+		ex_scheme = ( gchar * ) scheme_list->data;
+		if( g_ascii_strcasecmp( ex_scheme, "file" ) == 0 ){
+			if( g_slist_length( scheme_list ) > 1 ){
+				ex_scheme = ( gchar * ) scheme_list->next->data;
+				ex_host = ex_host_default;
+			} else {
+				ex_host = "";
+			}
+		} else {
+			ex_host = ex_host_default;
+		}
+	} else {
+		ex_scheme = ex_scheme_default;
+		ex_host = "";
+	}
+
+	while(( iter = g_strstr_len( iter, strlen( iter ), "%" ))){
+		tmp_string = g_string_append_len( tmp_string, old_iter, strlen( old_iter ) - strlen( iter ));
+		switch( iter[1] ){
+
+			case 'd': /* base dir of the selected file(s)/folder(s) */
+				tmp_string = g_string_append( tmp_string, ex_path );
+				break;
+
+			case 'f': /* the basename of the selected file/folder or the 1st one if many are selected */
+				tmp_string = g_string_append( tmp_string, ex_one );
+				break;
+
+			case 'h': /* hostname of the GVfs URI */
+				tmp_string = g_string_append( tmp_string, ex_host );
+				break;
+
+			case 'm': /* list of the basename of the selected files/directories separated by space */
+				tmp_string = g_string_append( tmp_string, ex_list );
+				break;
+
+			case 'M': /* list of the selected files/directories with their complete path separated by space. */
+				tmp_string = g_string_append( tmp_string, ex_path_list );
+				break;
+
+			case 's': /* scheme of the GVfs URI */
+				tmp_string = g_string_append( tmp_string, ex_scheme );
+				break;
+
+			case 'u': /* GVfs URI */
+				tmp = g_strjoin( NULL, ex_scheme, "://", ex_path, "/", ex_one, NULL );
+				tmp_string = g_string_append( tmp_string, tmp );
+				g_free( tmp );
+				break;
+
+			case 'U': /* username of the GVfs URI */
+				tmp_string = g_string_append( tmp_string, "root" );
+				break;
+
+			case '%': /* a percent sign */
+				tmp_string = g_string_append_c( tmp_string, '%' );
+				break;
+		}
+		iter+=2; /* skip the % sign and the character after. */
+		old_iter = iter; /* store the new start of the string */
+	}
+	tmp_string = g_string_append_len( tmp_string, old_iter, strlen( old_iter ));
+
+	g_free( ex_list );
+	g_free( ex_path_list );
+	g_free( iter );
+
+	return( g_string_free( tmp_string, FALSE ));
+}
+
+static void
+on_legend_clicked( GtkButton *button, gpointer user_data )
+{
+	g_assert( NACT_IS_IPROFILE_CONDITIONS( user_data ));
+
+	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+		show_legend_dialog( NACT_WINDOW( user_data ));
+
+	} else {
+		hide_legend_dialog( NACT_WINDOW( user_data ));
+	}
+}
+
+/* TODO: get back the last position saved */
+static void
+show_legend_dialog( NactWindow *window )
+{
+	GtkWidget *legend_dialog = get_legend_dialog( window );
+	gtk_window_set_deletable( GTK_WINDOW( legend_dialog ), FALSE );
+
+	GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
+	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
+
+	gtk_widget_show( legend_dialog );
+}
+
+/* TODO: save the current position */
+static void
+hide_legend_dialog( NactWindow *window )
+{
+	GtkWidget *legend_dialog = get_legend_dialog( window );
+	gtk_widget_hide( legend_dialog );
+
+	/* set the legend button state consistent for when the dialog is
+	 * hidden by another mean (eg. close the edit profile dialog)
+	 */
+	GtkWidget *legend_button = get_legend_button( window );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( legend_button ), FALSE );
+}
+
+static GtkWidget *
+get_legend_button( NactWindow *window )
+{
+	return( base_window_get_widget( BASE_WINDOW( window ), "LegendButton" ));
+}
+
+static GtkWidget *
+get_legend_dialog( NactWindow *window )
+{
+	return( base_window_get_widget( BASE_WINDOW( window ), "LegendDialog" ));
+}
+
+static void
+on_basenames_changed( GtkEntry *entry, gpointer user_data )
+{
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+	const gchar *text = gtk_entry_get_text( entry );
+	GSList *basenames = text_to_basenames( text );
+	na_action_profile_set_basenames( edited, basenames );
+	na_utils_free_string_list( basenames );
+
+	v_field_modified( dialog );
+}
+
+static void
+on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, gpointer user_data )
+{
+	/*static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_selection_changed";
+	g_debug( "%s: renderer=%p, path=%s, user_data=%p", thisfn, renderer, path, user_data );*/
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	GtkTreeModel *model = get_schemes_tree_model( dialog );
+	GtkTreePath *tree_path = gtk_tree_path_new_from_string( path );
+	GtkTreeIter iter;
+	gboolean state;
+	gtk_tree_model_get_iter( model, &iter, tree_path );
+	gtk_tree_model_get( model, &iter, SCHEMES_CHECKBOX_COLUMN, &state, -1 );
+	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, SCHEMES_CHECKBOX_COLUMN, !state, -1 );
+	gtk_tree_path_free( tree_path );
+
+	/* TODO set profile scheme selection */
+	/*NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));*/
+	/*na_action_set_label( edited, gtk_entry_get_text( entry ));*/
+
+	v_field_modified( dialog );
+}
+
+static void
+on_scheme_keyword_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_keyword_edited";
+	g_debug( "%s: renderer=%p, path=%s, text=%s, user_data=%p", thisfn, renderer, path, text, user_data );
+
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	v_field_modified( dialog );
+}
+
+static void
+on_scheme_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_desc_edited";
+	g_debug( "%s: renderer=%p, path=%s, text=%s, user_data=%p", thisfn, renderer, path, text, user_data );
+
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	v_field_modified( dialog );
+}
+
+static void
+on_scheme_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_list_selection_changed";
+	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );
+
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	v_field_modified( dialog );
 }
 
 static gchar *
@@ -357,6 +755,30 @@ create_schemes_selection_list( NactWindow *window )
 	gtk_tree_view_append_column( GTK_TREE_VIEW( listview ), column );
 }
 
+static gboolean
+get_action_schemes_list( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, gpointer data )
+{
+	static const char *thisfn = "nact_iprofile_conditions_get_action_schemes_list";
+
+	GSList** list = data;
+	gboolean toggle_state;
+	gchar* scheme;
+
+	gtk_tree_model_get (scheme_model, iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state, SCHEMES_KEYWORD_COLUMN, &scheme, -1);
+
+	if (toggle_state)
+	{
+		g_debug( "%s: adding '%s' scheme", thisfn, scheme );
+		(*list) = g_slist_append ((*list), scheme);
+	}
+	else
+	{
+		g_free (scheme);
+	}
+
+	return FALSE; /* Don't stop looping */
+}
+
 static GSList *
 get_schemes_default_list( NactWindow *window )
 {
@@ -374,135 +796,4 @@ get_schemes_default_list( NactWindow *window )
 	list = g_slist_append( list, g_strdup( _( "dav|WebDAV files")));
 
 	return( list );
-}
-
-/* TODO: update label example when path or parameters changed */
-static void
-on_path_changed( GtkEntry *entry, gpointer user_data )
-{
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
-	na_action_profile_set_path( edited, gtk_entry_get_text( entry ));
-
-	v_field_modified( dialog );
-}
-
-/* TODO: keep trace of last browsed dir */
-static void
-on_path_browse( GtkButton *button, gpointer user_data )
-{
-	g_assert( NACT_IS_IPROFILE_CONDITIONS( user_data ));
-	gboolean set_current_location = FALSE;
-
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(
-			_( "Choosing a command" ),
-			NULL,
-			GTK_FILE_CHOOSER_ACTION_OPEN,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-			NULL
-			);
-
-	GtkWidget *path_widget = base_window_get_widget( BASE_WINDOW( user_data ), "CommandPathEntry" );
-	const gchar *path = gtk_entry_get_text( GTK_ENTRY( path_widget ));
-	if( path && strlen( path )){
-		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
-	}
-
-	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
-		gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
-		gtk_entry_set_text( GTK_ENTRY( path_widget ), filename );
-	    g_free (filename);
-	  }
-
-	gtk_widget_destroy( dialog );
-}
-
-static void
-on_parameters_changed( GtkEntry *entry, gpointer user_data )
-{
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
-	na_action_profile_set_parameters( edited, gtk_entry_get_text( entry ));
-
-	v_field_modified( dialog );
-}
-
-static void
-on_basenames_changed( GtkEntry *entry, gpointer user_data )
-{
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
-	const gchar *text = gtk_entry_get_text( entry );
-	GSList *basenames = text_to_basenames( text );
-	na_action_profile_set_basenames( edited, basenames );
-	na_utils_free_string_list( basenames );
-
-	v_field_modified( dialog );
-}
-
-static void
-on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, gpointer user_data )
-{
-	/*static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_selection_changed";
-	g_debug( "%s: renderer=%p, path=%s, user_data=%p", thisfn, renderer, path, user_data );*/
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	GtkTreeModel *model = get_schemes_tree_model( dialog );
-	GtkTreePath *tree_path = gtk_tree_path_new_from_string( path );
-	GtkTreeIter iter;
-	gboolean state;
-	gtk_tree_model_get_iter( model, &iter, tree_path );
-	gtk_tree_model_get( model, &iter, SCHEMES_CHECKBOX_COLUMN, &state, -1 );
-	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, SCHEMES_CHECKBOX_COLUMN, !state, -1 );
-	gtk_tree_path_free( tree_path );
-
-	/* TODO set profile scheme selection */
-	/*NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));*/
-	/*na_action_set_label( edited, gtk_entry_get_text( entry ));*/
-
-	v_field_modified( dialog );
-}
-
-static void
-on_scheme_keyword_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_keyword_edited";
-	g_debug( "%s: renderer=%p, path=%s, text=%s, user_data=%p", thisfn, renderer, path, text, user_data );
-
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	v_field_modified( dialog );
-}
-
-static void
-on_scheme_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_desc_edited";
-	g_debug( "%s: renderer=%p, path=%s, text=%s, user_data=%p", thisfn, renderer, path, text, user_data );
-
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	v_field_modified( dialog );
-}
-
-static void
-on_scheme_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_list_selection_changed";
-	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );
-
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	v_field_modified( dialog );
 }

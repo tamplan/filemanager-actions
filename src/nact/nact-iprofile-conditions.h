@@ -67,6 +67,8 @@ GType    nact_iprofile_conditions_get_type( void );
 
 void     nact_iprofile_conditions_initial_load( NactWindow *dialog, NAActionProfile *profile );
 void     nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAActionProfile *profile );
+void     nact_iprofile_conditions_all_widgets_showed( NactWindow *dialog );
+void     nact_iprofile_conditions_dispose( NactWindow *dialog );
 
 G_END_DECLS
 

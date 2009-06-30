@@ -61,8 +61,6 @@ nautilus_actions_config_SOURCES = \
 	nact-main-window.h									\
 	nact-profile-conditions-editor.c					\
 	nact-profile-conditions-editor.h					\
-	nact-utils.c										\
-	nact-utils.h										\
 	nact-prefs.c										\
 	nact-prefs.h										\
 	nact-import-export.c								\
