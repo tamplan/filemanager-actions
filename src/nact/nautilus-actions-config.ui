@@ -105,7 +105,7 @@
                             <child>
                               <object class="GtkLabel" id="label141">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Duplicate</property>
+                                <property name="label" translatable="yes">D_uplicate</property>
                                 <property name="use_underline">True</property>
                               </object>
                               <packing>
@@ -173,7 +173,7 @@
                             <child>
                               <object class="GtkLabel" id="label140">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Import/Export</property>
+                                <property name="label" translatable="yes">_Import/Export</property>
                                 <property name="use_underline">True</property>
                               </object>
                               <packing>

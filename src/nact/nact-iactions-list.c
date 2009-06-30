@@ -181,6 +181,16 @@ nact_iactions_list_fill( NactWindow *window )
 }
 
 /**
+ * Reset the focus on the ActionsList listbox.
+ */
+void
+nact_iactions_list_set_focus( NactWindow *window )
+{
+	GtkWidget *list = get_actions_list_widget( window );
+	gtk_widget_grab_focus( list );
+}
+
+/**
  * Returns the currently selected action.
  */
 GObject *

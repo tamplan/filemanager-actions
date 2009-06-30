@@ -400,7 +400,7 @@ on_about_button_clicked( GtkButton *button, gpointer user_data )
 	g_free( license_i18n );
 	g_free( icon_name );
 
-	/* TODO: reset focus to actions list */
+	nact_iactions_list_set_focus( NACT_WINDOW( wndmain ));
 }
 
 /*
@@ -422,7 +422,8 @@ on_add_button_clicked( GtkButton *button, gpointer user_data )
 	nact_action_conditions_editor_run_editor( wndmain, NULL );
 
 	/* TODO: set the selection to the newly created action
-	 * or restore the previous selection - set focus to actions list */
+	 * or restore the previous selection */
+	nact_iactions_list_set_focus( wndmain );
 }
 
 /*
@@ -463,6 +464,7 @@ on_edit_button_clicked( GtkButton *button, gpointer user_data )
 
 	/* TODO: reset the selection to the edited action
 	 * set focus to actions list */
+	nact_iactions_list_set_focus( wndmain );
 }
 
 static void
@@ -500,8 +502,8 @@ on_duplicate_button_clicked( GtkButton *button, gpointer user_data )
 		g_assert_not_reached();
 	}
 
-	/* TODO: set the selection to the newly created action
-	 * set focus to actions list */
+	/* TODO: set the selection to the newly created action */
+	nact_iactions_list_set_focus( wndmain );
 }
 
 static void
@@ -537,7 +539,8 @@ on_delete_button_clicked( GtkButton *button, gpointer user_data )
 		g_assert_not_reached();
 	}
 	/* TODO: set the selection to the previous action if any
-	 * or to the next one - set focus to actions list */
+	 * or to the next one */
+	nact_iactions_list_set_focus( wndmain );
 }
 
 static void
@@ -546,6 +549,9 @@ on_import_export_button_clicked( GtkButton *button, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_import_export_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
+	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	NactWindow *wndmain = NACT_WINDOW( user_data );
+
 	/*GtkWidget *nact_actions_list;
 
 	if (nact_import_export_actions ())
@@ -553,6 +559,7 @@ on_import_export_button_clicked( GtkButton *button, gpointer user_data )
 		nact_actions_list = nact_get_glade_widget ("ActionsList");
 		fill_actions_list (nact_actions_list);
 	}*/
+	nact_iactions_list_set_focus( wndmain );
 }
 
 static gboolean

@@ -74,6 +74,7 @@ void     nact_iactions_list_initial_load( NactWindow *window );
 void     nact_iactions_list_runtime_init( NactWindow *window );
 void     nact_iactions_list_fill( NactWindow *window );
 GObject *nact_iactions_list_get_selected_action( NactWindow *window );
+void     nact_iactions_list_set_focus( NactWindow *window );
 
 G_END_DECLS
 
