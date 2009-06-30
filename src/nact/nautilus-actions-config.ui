@@ -1020,7 +1020,6 @@
   </object>
   <object class="GtkWindow" id="LegendDialog">
     <property name="resizable">False</property>
-    <property name="window_position">mouse</property>
     <property name="type_hint">dialog</property>
     <child>
       <object class="GtkVBox" id="vbox11">

@@ -40,6 +40,7 @@
 #include <common/na-utils.h>
 
 #include "nact-iprofile-conditions.h"
+#include "nact-iprefs.h"
 
 /* private interface data
  */
@@ -563,7 +564,6 @@ on_legend_clicked( GtkButton *button, gpointer user_data )
 	}
 }
 
-/* TODO: get back the last position saved */
 static void
 show_legend_dialog( NactWindow *window )
 {
@@ -573,14 +573,15 @@ show_legend_dialog( NactWindow *window )
 	GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
 	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
 
+	nact_iprefs_position_named_window( window, legend_dialog, "legend-dialog" );
 	gtk_widget_show( GTK_WIDGET( legend_dialog ));
 }
 
-/* TODO: save the current position */
 static void
 hide_legend_dialog( NactWindow *window )
 {
 	GtkWindow *legend_dialog = get_legend_dialog( window );
+	nact_iprefs_save_named_window_position( window, legend_dialog, "legend-dialog" );
 	gtk_widget_hide( GTK_WIDGET( legend_dialog ));
 
 	/* set the legend button state consistent for when the dialog is

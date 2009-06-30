@@ -133,31 +133,41 @@ interface_base_finalize( NactIPrefsInterface *klass )
  *
  * @window: this NactWindow-derived window.
  *
- * @code: the IPrefs identifiant of the window
- *
  * A window position is stored as a list of integers "x,y,width,height".
  */
 void
 nact_iprefs_position_window( NactWindow *window )
 {
-	static const gchar *thisfn = "nact_iprefs_position_window";
-
 	gchar *key = v_get_iprefs_window_id( window );
 	if( key ){
-
-		GSList *list = read_key_listint( window, key );
-		if( list ){
-
-			gint x=0, y=0, width=0, height=0;
-			listint_to_position( window, list, &x, &y, &width, &height );
-			g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
-			free_listint( list );
-
-			GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
-			gtk_window_move( toplevel, x, y );
-			gtk_window_resize( toplevel, width, height );
-		}
+		GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
+		nact_iprefs_position_named_window( window, toplevel, key );
 		g_free( key );
+	}
+}
+
+/**
+ * Position the specified window on the screen.
+ *
+ * @window: this NactWindow-derived window.
+ *
+ * @name: the name of the window
+ */
+void
+nact_iprefs_position_named_window( NactWindow *window, GtkWindow *toplevel, const gchar *key )
+{
+	static const gchar *thisfn = "nact_iprefs_position_named_window";
+
+	GSList *list = read_key_listint( window, key );
+	if( list ){
+
+		gint x=0, y=0, width=0, height=0;
+		listint_to_position( window, list, &x, &y, &width, &height );
+		g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
+		free_listint( list );
+
+		gtk_window_move( toplevel, x, y );
+		gtk_window_resize( toplevel, width, height );
 	}
 }
 
@@ -171,22 +181,34 @@ nact_iprefs_position_window( NactWindow *window )
 void
 nact_iprefs_save_window_position( NactWindow *window )
 {
-	static const gchar *thisfn = "nact_iprefs_save_window_position";
-
 	gchar *key = v_get_iprefs_window_id( window );
 	if( key ){
-		gint x, y, width, height;
-
 		GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
-		gtk_window_get_position( toplevel, &x, &y );
-		gtk_window_get_size( toplevel, &width, &height );
-		g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
-
-		GSList *list = position_to_listint( window, x, y, width, height );
-		write_key_listint( window, key, list );
-		free_listint( list );
+		nact_iprefs_save_named_window_position( window, toplevel, key );
 		g_free( key );
 	}
+}
+
+/**
+ * Save the position of the specified window.
+ *
+ * @window: this NactWindow-derived window.
+ *
+ * @key: the name of the window
+ */
+void
+nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel, const gchar *key )
+{
+	static const gchar *thisfn = "nact_iprefs_save_named_window_position";
+	gint x, y, width, height;
+
+	gtk_window_get_position( toplevel, &x, &y );
+	gtk_window_get_size( toplevel, &width, &height );
+	g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
+
+	GSList *list = position_to_listint( window, x, y, width, height );
+	write_key_listint( window, key, list );
+	free_listint( list );
 }
 
 static gchar *

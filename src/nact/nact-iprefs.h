@@ -39,6 +39,7 @@
  */
 
 #include <glib-object.h>
+#include <gtk/gtk.h>
 
 #include "nact-window.h"
 
@@ -65,10 +66,12 @@ typedef struct {
 GType nact_iprefs_get_type( void );
 
 void  nact_iprefs_position_window( NactWindow *window );
+void  nact_iprefs_position_named_window( NactWindow *window, GtkWindow *toplevel, const gchar *name );
+
 void  nact_iprefs_save_window_position( NactWindow *window );
+void  nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel, const gchar *name );
 
 /* .. */
-#include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 
 typedef struct _NactPreferences NactPreferences;
