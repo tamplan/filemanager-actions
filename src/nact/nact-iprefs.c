@@ -45,6 +45,10 @@ struct NactIPrefsInterfacePrivate {
  */
 #define NA_GCONF_PREFS_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/preferences"
 
+/* key to read/write the last visited folder when browsing for command
+ */
+#define IPREFS_IPROFILE_CONDITION_FOLDER_URI	"iprofile-conditions-folder-uri"
+
 static GType   register_type( void );
 static void    interface_base_init( NactIPrefsInterface *klass );
 static void    interface_base_finalize( NactIPrefsInterface *klass );
@@ -321,6 +325,51 @@ free_listint( GSList *list )
 		gconf_value_free( value );
 	}*/
 	g_slist_free( list );
+}
+
+/**
+ * Save the last visited folder when browsing for command in
+ * IProfileConditions interface.
+ *
+ * @window: this NactWindow-derived window.
+ *
+ * Returns the last visited folder if any, or NULL.
+ * The returned string must be g_free by the caller.
+ */
+gchar *
+nact_iprefs_get_iprofile_conditions_folder_uri( NactWindow *window )
+{
+	static const gchar *thisfn = "nact_iprefs_get_iprofile_conditions_folder_uri";
+	GError *error = NULL;
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, IPREFS_IPROFILE_CONDITION_FOLDER_URI );
+
+	gchar *uri = gconf_client_get_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
+
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		uri = NULL;
+	}
+
+	g_free( path );
+	return( uri );
+}
+
+void
+nact_iprefs_save_iprofile_conditions_folder_uri( NactWindow *window, const gchar *uri )
+{
+	static const gchar *thisfn = "nact_iprefs_save_iprofile_conditions_folder_uri";
+	GError *error = NULL;
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, IPREFS_IPROFILE_CONDITION_FOLDER_URI );
+
+	gconf_client_set_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, uri, &error );
+
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+	}
+
+	g_free( path );
 }
 
 /* ... */

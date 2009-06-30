@@ -56,6 +56,11 @@ enum {
 	SCHEMES_N_COLUMN
 };
 
+/* the GConf key used to read/write size and position of auxiliary dialogs
+ */
+#define IPREFS_LEGEND_DIALOG		"iprofile-conditions-legend-dialog"
+#define IPREFS_COMMAND_CHOOSER		"iprofile-conditions-command-chooser"
+
 static GType         register_type( void );
 static void          interface_base_init( NactIProfileConditionsInterface *klass );
 static void          interface_base_finalize( NactIProfileConditionsInterface *klass );
@@ -316,12 +321,12 @@ on_path_changed( GtkEntry *entry, gpointer user_data )
 	v_field_modified( dialog );
 }
 
-/* TODO: keep trace of last browsed dir */
 static void
 on_path_browse( GtkButton *button, gpointer user_data )
 {
 	g_assert( NACT_IS_IPROFILE_CONDITIONS( user_data ));
 	gboolean set_current_location = FALSE;
+	gchar *uri = NULL;
 
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(
 			_( "Choosing a command" ),
@@ -332,10 +337,18 @@ on_path_browse( GtkButton *button, gpointer user_data )
 			NULL
 			);
 
+	nact_iprefs_position_named_window( NACT_WINDOW( user_data ), GTK_WINDOW( dialog ), IPREFS_COMMAND_CHOOSER );
+
 	GtkWidget *path_widget = get_path_widget( NACT_WINDOW( user_data ));
 	const gchar *path = gtk_entry_get_text( GTK_ENTRY( path_widget ));
+
 	if( path && strlen( path )){
 		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
+
+	} else {
+		uri = nact_iprefs_get_iprofile_conditions_folder_uri( NACT_WINDOW( user_data ));
+		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
+		g_free( uri );
 	}
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
@@ -343,6 +356,12 @@ on_path_browse( GtkButton *button, gpointer user_data )
 		gtk_entry_set_text( GTK_ENTRY( path_widget ), filename );
 	    g_free (filename);
 	  }
+
+	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
+	nact_iprefs_save_iprofile_conditions_folder_uri( NACT_WINDOW( user_data ), uri );
+	g_free( uri );
+
+	nact_iprefs_save_named_window_position( NACT_WINDOW( user_data ), GTK_WINDOW( dialog ), IPREFS_COMMAND_CHOOSER );
 
 	gtk_widget_destroy( dialog );
 }
@@ -573,7 +592,7 @@ show_legend_dialog( NactWindow *window )
 	GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
 	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
 
-	nact_iprefs_position_named_window( window, legend_dialog, "legend-dialog" );
+	nact_iprefs_position_named_window( window, legend_dialog, IPREFS_LEGEND_DIALOG );
 	gtk_widget_show( GTK_WIDGET( legend_dialog ));
 }
 
@@ -581,7 +600,7 @@ static void
 hide_legend_dialog( NactWindow *window )
 {
 	GtkWindow *legend_dialog = get_legend_dialog( window );
-	nact_iprefs_save_named_window_position( window, legend_dialog, "legend-dialog" );
+	nact_iprefs_save_named_window_position( window, legend_dialog, IPREFS_LEGEND_DIALOG );
 	gtk_widget_hide( GTK_WIDGET( legend_dialog ));
 
 	/* set the legend button state consistent for when the dialog is
