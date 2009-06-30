@@ -270,7 +270,6 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_debug( "%s: gtk_main_level=%d", thisfn, gtk_main_level());
 		if( is_main_window( BASE_WINDOW( window ))){
 			gtk_main_quit ();
 			gtk_widget_destroy( GTK_WIDGET( self->private->toplevel_widget ));
@@ -278,7 +277,6 @@ instance_dispose( GObject *window )
 		} else {
 			gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_widget ));
 		}
-
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( window );

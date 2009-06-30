@@ -39,6 +39,7 @@
 #include <common/na-iio-provider.h>
 
 #include "nact-application.h"
+#include "nact-iprefs.h"
 #include "nact-window.h"
 
 /* private class data
@@ -63,11 +64,16 @@ typedef struct {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType register_type( void );
-static void  class_init( NactWindowClass *klass );
-static void  instance_init( GTypeInstance *instance, gpointer klass );
-static void  instance_dispose( GObject *application );
-static void  instance_finalize( GObject *application );
+static GType  register_type( void );
+static void   class_init( NactWindowClass *klass );
+static void   iprefs_iface_init( NactIPrefsInterface *iface );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *application );
+static void   instance_finalize( GObject *application );
+
+static gchar *v_get_iprefs_window_id( NactWindow *window );
+
+static void   on_runtime_init_toplevel( BaseWindow *window );
 
 GType
 nact_window_get_type( void )
@@ -101,7 +107,19 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( BASE_WINDOW_TYPE, "NactWindow", &info, 0 ));
+	GType type = g_type_register_static( BASE_WINDOW_TYPE, "NactWindow", &info, 0 );
+
+	/* implement IPrefs interface
+	 */
+	static const GInterfaceInfo prefs_iface_info = {
+		( GInterfaceInitFunc ) iprefs_iface_init,
+		NULL,
+		NULL
+	};
+
+	g_type_add_interface_static( type, NACT_IPREFS_TYPE, &prefs_iface_info );
+
+	return( type );
 }
 
 static void
@@ -117,6 +135,20 @@ class_init( NactWindowClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactWindowClassPrivate, 1 );
+
+	klass->get_iprefs_window_id = v_get_iprefs_window_id;
+
+	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
+	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
+}
+
+static void
+iprefs_iface_init( NactIPrefsInterface *iface )
+{
+	static const gchar *thisfn = "nact_window_iprefs_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->get_iprefs_window_id = v_get_iprefs_window_id;
 }
 
 static void
@@ -147,6 +179,8 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
+		nact_iprefs_save_window_position( NACT_WINDOW( window ));
+
 		GSList *is;
 		for( is = self->private->signals ; is ; is = is->next ){
 			NactWindowRecordedSignal *str = ( NactWindowRecordedSignal * ) is->data;
@@ -176,6 +210,34 @@ instance_finalize( GObject *window )
 	if( st_parent_class->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( window );
 	}
+}
+
+static gchar *
+v_get_iprefs_window_id( NactWindow *window )
+{
+	g_assert( NACT_IS_IPREFS( window ));
+
+	if( NACT_WINDOW_GET_CLASS( window )->get_iprefs_window_id ){
+		return( NACT_WINDOW_GET_CLASS( window )->get_iprefs_window_id( window ));
+	}
+
+	return( NULL );
+}
+
+static void
+on_runtime_init_toplevel( BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_window_on_runtime_init_toplevel";
+
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
+		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( window );
+	}
+
+	g_debug( "%s: window=%p", thisfn, window );
+	g_assert( NACT_IS_WINDOW( window ));
+
+	nact_iprefs_position_window( NACT_WINDOW( window ));
 }
 
 /**

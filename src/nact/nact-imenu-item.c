@@ -171,7 +171,7 @@ nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action )
 	g_free( tooltip );
 
 	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuIconComboBoxEntry" );
-	g_debug( "%s: icon_widget=%p, child=%p", thisfn, icon_widget, GTK_BIN( icon_widget )->child );
+	/*g_debug( "%s: icon_widget=%p, child=%p", thisfn, icon_widget, GTK_BIN( icon_widget )->child );*/
 	nact_window_signal_connect( dialog, G_OBJECT( GTK_BIN( icon_widget )->child ), "changed", G_CALLBACK( on_icon_changed ));
 	gchar *icon = na_action_get_icon( action );
 	gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );

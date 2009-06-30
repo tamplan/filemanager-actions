@@ -31,11 +31,45 @@
 #ifndef __NACT_PREFS_H__
 #define __NACT_PREFS_H__
 
-#include <glib.h>
-#include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
+/*
+ * NactIPrefs interface definition.
+ *
+ * This interface should be implemented by all dialogs which wish take
+ * benefit of preferences management.
+ */
+
+#include <glib-object.h>
+
+#include "nact-window.h"
 
 G_BEGIN_DECLS
+
+#define NACT_IPREFS_TYPE						( nact_iprefs_get_type())
+#define NACT_IPREFS( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IPREFS_TYPE, NactIPrefs ))
+#define NACT_IS_IPREFS( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IPREFS_TYPE ))
+#define NACT_IPREFS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IPREFS_TYPE, NactIPrefsInterface ))
+
+typedef struct NactIPrefs NactIPrefs;
+
+typedef struct NactIPrefsInterfacePrivate NactIPrefsInterfacePrivate;
+
+typedef struct {
+	GTypeInterface              parent;
+	NactIPrefsInterfacePrivate *private;
+
+	/* api */
+	gchar * ( *get_iprefs_window_id )( NactWindow *window );
+}
+	NactIPrefsInterface;
+
+GType nact_iprefs_get_type( void );
+
+void  nact_iprefs_position_window( NactWindow *window );
+void  nact_iprefs_save_window_position( NactWindow *window );
+
+/* .. */
+#include <gtk/gtk.h>
+#include <gconf/gconf-client.h>
 
 typedef struct _NactPreferences NactPreferences;
 
@@ -102,4 +136,4 @@ void nact_prefs_save_preferences (void);
 
 G_END_DECLS
 
-#endif /* __NACT_PREFS_H__ */
+#endif /* __NACT_IPREFS_H__ */

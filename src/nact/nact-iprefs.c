@@ -28,9 +28,281 @@
  *   ... and many others (see AUTHORS)
  */
 
+
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#include "nact-iprefs.h"
+
+/* private interface data
+ */
+struct NactIPrefsInterfacePrivate {
+	GConfClient *client;
+};
+
+/* GConf general information
+ */
+#define NA_GCONF_PREFS_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/preferences"
+
+static GType   register_type( void );
+static void    interface_base_init( NactIPrefsInterface *klass );
+static void    interface_base_finalize( NactIPrefsInterface *klass );
+
+static gchar  *v_get_iprefs_window_id( NactWindow *window );
+
+static GSList *read_key_listint( NactWindow *window, const gchar *key );
+static void    write_key_listint( NactWindow *window, const gchar *key, GSList *list );
+static void    listint_to_position( NactWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height );
+static GSList *position_to_listint( NactWindow *window, gint x, gint y, gint width, gint height );
+static void    free_listint( GSList *list );
+
+GType
+nact_iprefs_get_type( void )
+{
+	static GType iface_type = 0;
+
+	if( !iface_type ){
+		iface_type = register_type();
+	}
+
+	return( iface_type );
+}
+
+static GType
+register_type( void )
+{
+	static const gchar *thisfn = "nact_iprefs_register_type";
+	g_debug( "%s", thisfn );
+
+	static const GTypeInfo info = {
+		sizeof( NactIPrefsInterface ),
+		( GBaseInitFunc ) interface_base_init,
+		( GBaseFinalizeFunc ) interface_base_finalize,
+		NULL,
+		NULL,
+		NULL,
+		0,
+		0,
+		NULL
+	};
+
+	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIPrefs", &info, 0 );
+
+	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
+
+	return( type );
+}
+
+static void
+interface_base_init( NactIPrefsInterface *klass )
+{
+	static const gchar *thisfn = "nact_iprefs_interface_base_init";
+	static gboolean initialized = FALSE;
+
+	if( !initialized ){
+		g_debug( "%s: klass=%p", thisfn, klass );
+
+		klass->private = g_new0( NactIPrefsInterfacePrivate, 1 );
+
+		klass->private->client = gconf_client_get_default();
+
+		klass->get_iprefs_window_id = NULL;
+
+		initialized = TRUE;
+	}
+}
+
+static void
+interface_base_finalize( NactIPrefsInterface *klass )
+{
+	static const gchar *thisfn = "nact_iprefs_interface_base_finalize";
+	static gboolean finalized = FALSE ;
+
+	if( !finalized ){
+		g_debug( "%s: klass=%p", thisfn, klass );
+
+		g_free( klass->private );
+
+		finalized = TRUE;
+	}
+}
+
+/**
+ * Position the specified window on the screen.
+ *
+ * @window: this NactWindow-derived window.
+ *
+ * @code: the IPrefs identifiant of the window
+ *
+ * A window position is stored as a list of integers "x,y,width,height".
+ */
+void
+nact_iprefs_position_window( NactWindow *window )
+{
+	static const gchar *thisfn = "nact_iprefs_position_window";
+
+	gchar *key = v_get_iprefs_window_id( window );
+	if( key ){
+
+		GSList *list = read_key_listint( window, key );
+		if( list ){
+
+			gint x=0, y=0, width=0, height=0;
+			listint_to_position( window, list, &x, &y, &width, &height );
+			g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
+			free_listint( list );
+
+			GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
+			gtk_window_move( toplevel, x, y );
+			gtk_window_resize( toplevel, width, height );
+		}
+		g_free( key );
+	}
+}
+
+/**
+ * Save the position of the specified window.
+ *
+ * @window: this NactWindow-derived window.
+ *
+ * @code: the IPrefs identifiant of the window
+ */
+void
+nact_iprefs_save_window_position( NactWindow *window )
+{
+	static const gchar *thisfn = "nact_iprefs_save_window_position";
+
+	gchar *key = v_get_iprefs_window_id( window );
+	if( key ){
+		gint x, y, width, height;
+
+		GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
+		gtk_window_get_position( toplevel, &x, &y );
+		gtk_window_get_size( toplevel, &width, &height );
+		g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
+
+		GSList *list = position_to_listint( window, x, y, width, height );
+		write_key_listint( window, key, list );
+		free_listint( list );
+		g_free( key );
+	}
+}
+
+static gchar *
+v_get_iprefs_window_id( NactWindow *window )
+{
+	g_assert( NACT_IS_IPREFS( window ));
+
+	if( NACT_IPREFS_GET_INTERFACE( window )->get_iprefs_window_id ){
+		return( NACT_IPREFS_GET_INTERFACE( window )->get_iprefs_window_id( window ));
+	}
+
+	return( NULL );
+}
+
+/*
+ * returns a list of GConfValue
+ */
+static GSList *
+read_key_listint( NactWindow *window, const gchar *key )
+{
+	static const gchar *thisfn = "nact_iprefs_read_key_listint";
+	GError *error = NULL;
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
+
+	GSList *list = gconf_client_get_list(
+			NACT_IPREFS_GET_INTERFACE( window )->private->client, path, GCONF_VALUE_INT, &error );
+
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		list = NULL;
+	}
+
+	g_free( path );
+	return( list );
+}
+
+static void
+write_key_listint( NactWindow *window, const gchar *key, GSList *list )
+{
+	static const gchar *thisfn = "nact_iprefs_write_key_listint";
+	GError *error = NULL;
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
+
+	gconf_client_set_list(
+			NACT_IPREFS_GET_INTERFACE( window )->private->client, path, GCONF_VALUE_INT, list, &error );
+
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		list = NULL;
+	}
+
+	g_free( path );
+}
+
+/*
+ * extract the position of the window from the list of GConfValue
+ */
+static void
+listint_to_position( NactWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height )
+{
+	g_assert( x );
+	g_assert( y );
+	g_assert( width );
+	g_assert( height );
+	GSList *il;
+	int i;
+
+	for( il=list, i=0 ; il ; il=il->next, i+=1 ){
+		switch( i ){
+			case 0:
+				*x = GPOINTER_TO_INT( il->data );
+				break;
+			case 1:
+				*y = GPOINTER_TO_INT( il->data );
+				break;
+			case 2:
+				*width = GPOINTER_TO_INT( il->data );
+				break;
+			case 3:
+				*height = GPOINTER_TO_INT( il->data );
+				break;
+		}
+	}
+}
+
+static GSList *
+position_to_listint( NactWindow *window, gint x, gint y, gint width, gint height )
+{
+	GSList *list = NULL;
+
+	list = g_slist_append( list, GINT_TO_POINTER( x ));
+	list = g_slist_append( list, GINT_TO_POINTER( y ));
+	list = g_slist_append( list, GINT_TO_POINTER( width ));
+	list = g_slist_append( list, GINT_TO_POINTER( height ));
+
+	return( list );
+}
+
+/*
+ * free the list of int
+ */
+static void
+free_listint( GSList *list )
+{
+	/*GSList *il;
+	for( il = list ; il ; il = il->next ){
+		GConfValue *value = ( GConfValue * ) il->data;
+		gconf_value_free( value );
+	}*/
+	g_slist_free( list );
+}
+
+/* ... */
 #include <glib/gi18n.h>
-#include "nact-prefs.h"
 
 /* List of gconf keys */
 #define PREFS_SCHEMES 		"nact_schemes_list"

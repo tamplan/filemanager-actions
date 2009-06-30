@@ -47,6 +47,7 @@
 #include "nact-action-conditions-editor.h"
 #include "nact-action-profiles-editor.h"
 #include "nact-iactions-list.h"
+#include "nact-iprefs.h"
 #include "nact-main-window.h"
 
 /* private class data
@@ -70,6 +71,7 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
+static gchar   *get_iprefs_window_id( NactWindow *window );
 static gchar   *get_toplevel_name( BaseWindow *window );
 static void     on_initial_load_toplevel( BaseWindow *window );
 static void     on_runtime_init_toplevel( BaseWindow *window );
@@ -163,6 +165,9 @@ class_init( NactMainWindowClass *klass )
 	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
 	base_class->dialog_response = on_dialog_response;
 	base_class->get_toplevel_name = get_toplevel_name;
+
+	NactWindowClass *nact_class = NACT_WINDOW_CLASS( klass );
+	nact_class->get_iprefs_window_id = get_iprefs_window_id;
 }
 
 static void
@@ -247,6 +252,12 @@ nact_main_window_new( GObject *application )
 }
 
 static gchar *
+get_iprefs_window_id( NactWindow *window )
+{
+	return( g_strdup( "main-window" ));
+}
+
+static gchar *
 get_toplevel_name( BaseWindow *window )
 {
 	return( g_strdup( "ActionsDialog" ));
@@ -256,8 +267,13 @@ static void
 on_initial_load_toplevel( BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_on_initial_load_toplevel";
-	g_debug( "%s: window=%p", thisfn, window );
 
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel ){
+		BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel( window );
+	}
+
+	g_debug( "%s: window=%p", thisfn, window );
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	/*NactMainWindow *wnd = NACT_MAIN_WINDOW( window );*/
 
@@ -268,8 +284,13 @@ static void
 on_runtime_init_toplevel( BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_on_runtime_init_toplevel";
-	g_debug( "%s: window=%p", thisfn, window );
 
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
+		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( window );
+	}
+
+	g_debug( "%s: window=%p", thisfn, window );
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	/*NactMainWindow *wnd = NACT_MAIN_WINDOW( window );*/
 

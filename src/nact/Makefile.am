@@ -54,6 +54,8 @@ nautilus_actions_config_SOURCES = \
 	nact-iactions-list.h								\
 	nact-imenu-item.c									\
 	nact-imenu-item.h									\
+	nact-iprefs.c										\
+	nact-iprefs.h										\
 	nact-iprofile-conditions.c							\
 	nact-iprofile-conditions.h							\
 	nact-main.c											\
@@ -61,8 +63,6 @@ nautilus_actions_config_SOURCES = \
 	nact-main-window.h									\
 	nact-profile-conditions-editor.c					\
 	nact-profile-conditions-editor.h					\
-	nact-prefs.c										\
-	nact-prefs.h										\
 	nact-import-export.c								\
 	nact-import-export.h								\
 	nact-window.c										\

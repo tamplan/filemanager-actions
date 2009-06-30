@@ -64,6 +64,9 @@ typedef struct NactWindowClassPrivate NactWindowClassPrivate;
 typedef struct {
 	BaseWindowClass         parent;
 	NactWindowClassPrivate *private;
+
+	/* api */
+	gchar * ( *get_iprefs_window_id )( NactWindow *window );
 }
 	NactWindowClass;
 

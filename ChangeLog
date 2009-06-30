@@ -28,6 +28,13 @@
 	* src/nact/nact-utils.c:
 	* src/nact/nact-utils.h: Removed files.
 
+	* src/nact/nact-prefs.c:
+	* src/nact/nact-prefs.h: Renamed as nact-iprefs.{c,h}.
+	Define NactIPrefs interface, to be implemented by NactWindows
+	which wish use GConf preferences.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
 	* src/nact/nautilus-actions-config.ui:
 	Add LegendDialog window.
 	Remove all embedded action handlers (as I don't want pollute my

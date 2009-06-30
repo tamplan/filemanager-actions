@@ -40,6 +40,7 @@
 #include "nact-action-conditions-editor.h"
 #include "nact-imenu-item.h"
 #include "nact-iprofile-conditions.h"
+#include "nact-iprefs.h"
 #include "nact-main-window.h"
 
 /* private class data
@@ -68,6 +69,7 @@ static void     instance_finalize( GObject *dialog );
 
 static NactActionConditionsEditor *action_conditions_editor_new( BaseApplication *application );
 
+static gchar   *do_get_iprefs_window_id( NactWindow *window );
 static gchar   *do_get_dialog_name( BaseWindow *dialog );
 static void     on_initial_load_dialog( BaseWindow *dialog );
 static void     on_runtime_init_dialog( BaseWindow *dialog );
@@ -156,6 +158,9 @@ class_init( NactActionConditionsEditorClass *klass )
 	base_class->all_widgets_showed = on_all_widgets_showed;
 	base_class->dialog_response = on_dialog_response;
 	base_class->get_toplevel_name = do_get_dialog_name;
+
+	NactWindowClass *nact_class = NACT_WINDOW_CLASS( klass );
+	nact_class->get_iprefs_window_id = do_get_iprefs_window_id;
 }
 
 static void
@@ -293,6 +298,12 @@ nact_action_conditions_editor_run_editor( NactWindow *parent, gpointer user_data
 }
 
 static gchar *
+do_get_iprefs_window_id( NactWindow *window )
+{
+	return( g_strdup( "action-conditions-editor" ));
+}
+
+static gchar *
 do_get_dialog_name( BaseWindow *dialog )
 {
 	/*g_debug( "nact_action_conditions_editor_do_get_dialog_name" );*/
@@ -303,8 +314,13 @@ static void
 on_initial_load_dialog( BaseWindow *dialog )
 {
 	static const gchar *thisfn = "nact_action_conditions_editor_on_initial_load_dialog";
-	g_debug( "%s: dialog=%p", thisfn, dialog );
 
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel ){
+		BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel( dialog );
+	}
+
+	g_debug( "%s: dialog=%p", thisfn, dialog );
 	g_assert( NACT_IS_ACTION_CONDITIONS_EDITOR( dialog ));
 	NactActionConditionsEditor *window = NACT_ACTION_CONDITIONS_EDITOR( dialog );
 
@@ -318,8 +334,13 @@ static void
 on_runtime_init_dialog( BaseWindow *dialog )
 {
 	static const gchar *thisfn = "nact_action_conditions_editor_on_runtime_init_dialog";
-	g_debug( "%s: dialog=%p", thisfn, dialog );
 
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
+		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( dialog );
+	}
+
+	g_debug( "%s: dialog=%p", thisfn, dialog );
 	g_assert( NACT_IS_ACTION_CONDITIONS_EDITOR( dialog ));
 	NactActionConditionsEditor *window = NACT_ACTION_CONDITIONS_EDITOR( dialog );
 
@@ -404,6 +425,8 @@ on_all_widgets_showed( BaseWindow *dialog )
 	gtk_notebook_set_current_page( notebook, 0 );
 
 	nact_imenu_item_all_widgets_showed( NACT_WINDOW( dialog ));
+
+	nact_iprefs_position_window( NACT_WINDOW( dialog ));
 }
 
 static gboolean
