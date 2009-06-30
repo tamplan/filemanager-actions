@@ -307,8 +307,8 @@ on_runtime_init_toplevel( BaseWindow *window )
 static void
 on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_on_actions_list_selection_changed";
-	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );
+	/*static const gchar *thisfn = "nact_main_window_on_actions_list_selection_changed";
+	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );*/
 
 	g_assert( BASE_IS_WINDOW( user_data ));
 	BaseWindow *window = BASE_WINDOW( user_data );

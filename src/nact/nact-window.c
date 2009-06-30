@@ -185,7 +185,7 @@ instance_dispose( GObject *window )
 		for( is = self->private->signals ; is ; is = is->next ){
 			NactWindowRecordedSignal *str = ( NactWindowRecordedSignal * ) is->data;
 			g_signal_handler_disconnect( str->instance, str->handler_id );
-			g_debug( "%s: disconnecting signal handler %p:%lu", thisfn, str->instance, str->handler_id );
+			/*g_debug( "%s: disconnecting signal handler %p:%lu", thisfn, str->instance, str->handler_id );*/
 			g_free( str );
 		}
 		g_slist_free( self->private->signals );
@@ -346,7 +346,7 @@ nact_window_get_actions( NactWindow *window )
 void
 nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn )
 {
-	static const gchar *thisfn = "nact_window_signal_connect";
+	/*static const gchar *thisfn = "nact_window_signal_connect";*/
 
 	gulong handler_id = g_signal_connect( instance, signal, fn, window );
 
@@ -355,5 +355,5 @@ nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *
 	str->handler_id = handler_id;
 	window->private->signals = g_slist_prepend( window->private->signals, str );
 
-	g_debug( "%s: connecting signal handler %p:%lu", thisfn, instance, handler_id );
+	/*g_debug( "%s: connecting signal handler %p:%lu", thisfn, instance, handler_id );*/
 }

@@ -189,6 +189,9 @@ nact_imenu_item_all_widgets_showed( NactWindow *dialog )
 {
 	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuLabelEntry" );
 	gtk_widget_grab_focus( label_widget );
+
+	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuIconComboBoxEntry" );
+	on_icon_changed( GTK_ENTRY( GTK_BIN( icon_widget )->child ), dialog );
 }
 
 /**
@@ -265,7 +268,7 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 	GtkWidget *image = base_window_get_widget( BASE_WINDOW( dialog ), "IconImage" );
 	g_assert( GTK_IS_WIDGET( image ));
 	const gchar *icon_name = gtk_entry_get_text( icon_entry );
-	g_debug( "%s: icon_name=%s", thisfn, icon_name );
+	/*g_debug( "%s: icon_name=%s", thisfn, icon_name );*/
 
 	GtkStockItem stock_item;
 	GdkPixbuf *icon = NULL;

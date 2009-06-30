@@ -6,6 +6,7 @@
 	nact_iprefs_save_iprofile_conditions_folder_uri): New functions.
 
 	* src/nact/nact-iprofile-conditions.c:
+	Fix display of icon for new actions.
 	Save state and position of LegendDialog and GtkFileChooser.
 
 2009-06-30 Pierre Wieser <pwieser@trychlos.org>
