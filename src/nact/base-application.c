@@ -37,7 +37,6 @@
 #include <unique/unique.h>
 
 #include "base-application.h"
-#include "base-window.h"
 
 /* private class data
  */
@@ -122,6 +121,8 @@ static gchar         *do_get_application_name( BaseApplication *application );
 static gchar         *do_get_icon_name( BaseApplication *application );
 
 static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
+static GtkWidget     *recursive_search_for_child( BaseApplication *application, GtkWindow *toplevel, const gchar *name );
+static GtkWidget     *search_for_child_widget( GtkContainer *container, const gchar *name );
 
 /*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
 
@@ -495,24 +496,72 @@ base_application_get_main_window( BaseApplication *application )
 	return( v_get_main_window( application ));
 }
 
-GtkWidget *
-base_application_get_widget( BaseApplication *application, const gchar *name )
+/**
+ * Returns a pointer to the named dialog.
+ *
+ * @application: this BaseApplication.
+ *
+ * @name: the name of the searched toplevel dialog.
+ *
+ * This function is called for having a pointer to the toplevel
+ * associated with the BaseWindow, and also for finding a specific
+ * widget inside this toplevel.
+ *
+ * Returns a pointer to the searched dialog, or NULL.
+ * This pointer is owned by GtkBuilder object, and moust not be freed
+ * nor unreffed by the caller.
+ */
+GtkWindow *
+base_application_get_dialog( BaseApplication *application, const gchar *name )
 {
-	/*static const gchar *thisfn = "base_application_get_widget";
+	/*static const gchar *thisfn = "base_application_get_dialog";
 	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
 
-	GtkWidget *widget = GTK_WIDGET( gtk_builder_get_object( application->private->ui_xml, name ));
+	GtkWindow *dialog = GTK_WINDOW( gtk_builder_get_object( application->private->ui_xml, name ));
 
-	if( !widget ){
+	if( !dialog ){
 		gchar *msg = g_strdup_printf(
-				_( "Unable to load %s widget from %s glade file." ), name, application->private->ui_fname );
+				_( "Unable to load %s dialog from %s glade file." ), name, application->private->ui_fname );
 		base_application_error_dlg( application, GTK_MESSAGE_ERROR, msg, NULL );
 		g_free( msg );
 		g_object_set( G_OBJECT( application ), PROP_APPLICATION_CODE_STR, 1, NULL );
 
 	} else {
-		g_assert( GTK_IS_WIDGET( widget ));
+		g_assert( GTK_IS_WINDOW( dialog ));
 	}
+
+	return( dialog );
+}
+
+/**
+ * Returns a pointer to the named widget as a dialog's child.
+ *
+ * @application: this BaseApplication.
+ *
+ * @window: a BaseWindow document.
+ *
+ * @name: the name of the searched widget.
+ *
+ * Returns a pointer to the searched widget, or NULL.
+ * This pointer is owned by GtkBuilder object, and moust not be freed
+ * nor unreffed by the caller.
+ */
+GtkWidget *
+base_application_get_widget( BaseApplication *application, BaseWindow *window, const gchar *name )
+{
+	/*static const gchar *thisfn = "base_application_get_widget";
+	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
+
+	GtkWidget *widget = NULL;
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( window );
+
+	if( toplevel ){
+		widget = recursive_search_for_child( application, toplevel, name );
+		if( widget ){
+			g_assert( GTK_IS_WIDGET( widget ));
+		}
+	}
+
 	return( widget );
 }
 
@@ -940,7 +989,7 @@ do_start( BaseApplication *application )
 
 	if( !application->private->code ){
 
-		GtkWindow *wnd = base_window_get_toplevel_widget( window );
+		GtkWindow *wnd = base_window_get_toplevel_dialog( window );
 		g_assert( wnd );
 		g_assert( GTK_IS_WINDOW( wnd ));
 
@@ -1030,4 +1079,43 @@ display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButto
 	gtk_widget_destroy( dialog );
 
 	return( result );
+}
+
+static GtkWidget *
+recursive_search_for_child( BaseApplication *application, GtkWindow *toplevel, const gchar *name )
+{
+	return( search_for_child_widget( GTK_CONTAINER( toplevel ) , name ));
+}
+
+static GtkWidget *
+search_for_child_widget( GtkContainer *container, const gchar *name )
+{
+	/*static const gchar *thisfn = "base_application_search_for_child_widget";
+	g_debug( "%s: container=%p, name=%s", thisfn, container, name );*/
+
+	GList *children = gtk_container_get_children( container );
+	GList *ic;
+	GtkWidget *found = NULL;
+
+	for( ic = children ; ic ; ic = ic->next ){
+		if( GTK_IS_WIDGET( ic->data )){
+			GtkWidget *child = GTK_WIDGET( ic->data );
+			if( child->name && strlen( child->name )){
+				/*g_debug( "%s: child=%s", thisfn, child->name );*/
+				if( !g_ascii_strcasecmp( name, child->name )){
+					found = child;
+					break;
+
+				} else if( GTK_IS_CONTAINER( child )){
+					found = search_for_child_widget( GTK_CONTAINER( child ), name );
+					if( found ){
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	g_list_free( children );
+	return( found );
 }

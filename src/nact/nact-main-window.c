@@ -380,10 +380,9 @@ on_about_button_clicked( GtkButton *button, gpointer user_data )
 	};
 	gchar *license_i18n = g_strjoinv( "\n\n", license );
 
-	GtkWidget *toplevel;
-	g_object_get( G_OBJECT( wndmain ), PROP_WINDOW_TOPLEVEL_WIDGET_STR, &toplevel, NULL );
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( wndmain );
 
-	gtk_show_about_dialog( GTK_WINDOW( toplevel ),
+	gtk_show_about_dialog( toplevel,
 			"artists", artists,
 			"authors", authors,
 			"comments", _( "A graphical tool to create and edit your Nautilus actions." ),

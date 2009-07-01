@@ -589,7 +589,7 @@ show_legend_dialog( NactWindow *window )
 	GtkWindow *legend_dialog = get_legend_dialog( window );
 	gtk_window_set_deletable( legend_dialog, FALSE );
 
-	GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
 	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
 
 	nact_iprefs_position_named_window( window, legend_dialog, IPREFS_LEGEND_DIALOG );
@@ -600,8 +600,11 @@ static void
 hide_legend_dialog( NactWindow *window )
 {
 	GtkWindow *legend_dialog = get_legend_dialog( window );
-	nact_iprefs_save_named_window_position( window, legend_dialog, IPREFS_LEGEND_DIALOG );
-	gtk_widget_hide( GTK_WIDGET( legend_dialog ));
+
+	if( GTK_IS_WINDOW( legend_dialog )){
+		nact_iprefs_save_named_window_position( window, legend_dialog, IPREFS_LEGEND_DIALOG );
+		gtk_widget_hide( GTK_WIDGET( legend_dialog ));
+	}
 
 	/* set the legend button state consistent for when the dialog is
 	 * hidden by another mean (eg. close the edit profile dialog)
@@ -619,7 +622,7 @@ get_legend_button( NactWindow *window )
 static GtkWindow *
 get_legend_dialog( NactWindow *window )
 {
-	return( GTK_WINDOW( base_window_get_widget( BASE_WINDOW( window ), "LegendDialog" )));
+	return( base_window_get_dialog( BASE_WINDOW( window ), "LegendDialog" ));
 }
 
 static void

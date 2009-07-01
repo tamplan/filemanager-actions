@@ -144,7 +144,7 @@ nact_iprefs_position_window( NactWindow *window )
 {
 	gchar *key = v_get_iprefs_window_id( window );
 	if( key ){
-		GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
+		GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
 		nact_iprefs_position_named_window( window, toplevel, key );
 		g_free( key );
 	}
@@ -187,7 +187,7 @@ nact_iprefs_save_window_position( NactWindow *window )
 {
 	gchar *key = v_get_iprefs_window_id( window );
 	if( key ){
-		GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( window ));
+		GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
 		nact_iprefs_save_named_window_position( window, toplevel, key );
 		g_free( key );
 	}
@@ -206,13 +206,15 @@ nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel,
 	static const gchar *thisfn = "nact_iprefs_save_named_window_position";
 	gint x, y, width, height;
 
-	gtk_window_get_position( toplevel, &x, &y );
-	gtk_window_get_size( toplevel, &width, &height );
-	g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
+	if( GTK_IS_WINDOW( toplevel )){
+		gtk_window_get_position( toplevel, &x, &y );
+		gtk_window_get_size( toplevel, &width, &height );
+		g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
 
-	GSList *list = position_to_listint( window, x, y, width, height );
-	write_key_listint( window, key, list );
-	free_listint( list );
+		GSList *list = position_to_listint( window, x, y, width, height );
+		write_key_listint( window, key, list );
+		free_listint( list );
+	}
 }
 
 static gchar *

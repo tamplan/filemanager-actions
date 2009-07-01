@@ -279,7 +279,7 @@ on_runtime_init_dialog( BaseWindow *dialog )
 static void
 init_dialog_title( NactProfileConditionsEditor *dialog )
 {
-	GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( dialog ));
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( dialog ));
 
 	if( dialog->private->is_new ){
 		gtk_window_set_title( toplevel, _( "Adding a new action" ));

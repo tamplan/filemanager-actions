@@ -40,6 +40,8 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
+#include "base-window.h"
+
 G_BEGIN_DECLS
 
 #define BASE_APPLICATION_TYPE					( base_application_get_type())
@@ -87,16 +89,16 @@ typedef struct {
 
 /* instance properties
  */
-#define PROP_APPLICATION_ARGC_STR				"argc"
-#define PROP_APPLICATION_ARGV_STR				"argv"
-#define PROP_APPLICATION_UNIQUE_NAME_STR		"unique-name"
-#define PROP_APPLICATION_UNIQUE_APP_STR			"unique-app"
-#define PROP_APPLICATION_NAME_STR				"application-name"
-#define PROP_APPLICATION_ICON_NAME_STR			"icon-name"
-#define PROP_APPLICATION_CODE_STR				"code"
-#define PROP_APPLICATION_UI_XML_STR				"ui-xml"
-#define PROP_APPLICATION_UI_FILENAME_STR		"ui-filename"
-#define PROP_APPLICATION_MAIN_WINDOW_STR		"main-window"
+#define PROP_APPLICATION_ARGC_STR				"base-application-argc"
+#define PROP_APPLICATION_ARGV_STR				"base-application-argv"
+#define PROP_APPLICATION_UNIQUE_NAME_STR		"base-application-unique-name"
+#define PROP_APPLICATION_UNIQUE_APP_STR			"base-application-unique-app"
+#define PROP_APPLICATION_NAME_STR				"base-application-application-name"
+#define PROP_APPLICATION_ICON_NAME_STR			"base-application-icon-name"
+#define PROP_APPLICATION_CODE_STR				"base-application-code"
+#define PROP_APPLICATION_UI_XML_STR				"base-application-ui-xml"
+#define PROP_APPLICATION_UI_FILENAME_STR		"base-application-ui-filename"
+#define PROP_APPLICATION_MAIN_WINDOW_STR		"base-application-main-window"
 
 GType      base_application_get_type( void );
 
@@ -105,7 +107,8 @@ int        base_application_run( BaseApplication *application );
 gchar     *base_application_get_icon_name( BaseApplication *application );
 GObject   *base_application_get_main_window( BaseApplication *application );
 
-GtkWidget *base_application_get_widget( BaseApplication *application, const gchar *name );
+GtkWindow *base_application_get_dialog( BaseApplication *application, const gchar *name );
+GtkWidget *base_application_get_widget( BaseApplication *application, BaseWindow *window, const gchar *name );
 
 void       base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary );
 gboolean   base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );

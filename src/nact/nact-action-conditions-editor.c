@@ -356,7 +356,7 @@ on_runtime_init_dialog( BaseWindow *dialog )
 static void
 setup_dialog_title( NactActionConditionsEditor *dialog, gboolean is_modified )
 {
-	GtkWindow *toplevel = base_window_get_toplevel_widget( BASE_WINDOW( dialog ));
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( dialog ));
 
 	gchar *title;
 	if( dialog->private->is_new ){

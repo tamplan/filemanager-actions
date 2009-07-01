@@ -72,25 +72,27 @@ typedef struct {
 	gboolean    ( *dialog_response )      ( GtkDialog *dialog, gint code, BaseWindow *window );
 	GObject   * ( *get_application )      ( BaseWindow *window );
 	gchar     * ( *get_toplevel_name )    ( BaseWindow *window );
-	GtkWindow * ( *get_toplevel_widget )  ( BaseWindow *window );
+	GtkWindow * ( *get_toplevel_dialog )  ( BaseWindow *window );
+	GtkWindow * ( *get_dialog )           ( BaseWindow *window, const gchar *name );
 	GtkWidget * ( *get_widget )           ( BaseWindow *window, const gchar *name );
 }
 	BaseWindowClass;
 
 /* instance properties
  */
-#define PROP_WINDOW_APPLICATION_STR			"application"
-#define PROP_WINDOW_TOPLEVEL_NAME_STR		"toplevel-name"
-#define PROP_WINDOW_TOPLEVEL_WIDGET_STR		"toplevel-widget"
-#define PROP_WINDOW_INITIALIZED_STR			"is-initialized"
+#define PROP_WINDOW_APPLICATION_STR			"base-window-application"
+#define PROP_WINDOW_TOPLEVEL_NAME_STR		"base-window-toplevel-name"
+#define PROP_WINDOW_TOPLEVEL_DIALOG_STR		"base-window-toplevel-dialog"
+#define PROP_WINDOW_INITIALIZED_STR			"base-window-is-initialized"
 
 GType      base_window_get_type( void );
 
 void       base_window_init( BaseWindow *window );
 void       base_window_run( BaseWindow *window );
 
-GtkWindow *base_window_get_toplevel_widget( BaseWindow *window );
+GtkWindow *base_window_get_toplevel_dialog( BaseWindow *window );
 GObject   *base_window_get_application( BaseWindow *window );
+GtkWindow *base_window_get_dialog( BaseWindow *window, const gchar *name );
 GtkWidget *base_window_get_widget( BaseWindow *window, const gchar *name );
 
 void       base_window_connect( BaseWindow *window, const gchar *widget, const gchar *signal, GCallback handler );
