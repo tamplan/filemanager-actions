@@ -181,6 +181,56 @@ nact_iactions_list_fill( NactWindow *window )
 }
 
 /**
+ * Set the selection to the named action.
+ * If not found, we select the first following, else the previous one.
+ */
+void
+nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label )
+{
+	static const gchar *thisfn = "nact_iactions_list_set_selection";
+	g_debug( "%s: window=%p, uuid=%s, label=%s", thisfn, window, uuid, label );
+
+	GtkWidget *list = get_actions_list_widget( window );
+	GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( list ));
+	GtkTreeModel *model = gtk_tree_view_get_model( GTK_TREE_VIEW( list ));
+	GtkTreeIter iter, previous;
+
+	gtk_tree_selection_unselect_all( selection );
+
+	gboolean iterok = gtk_tree_model_get_iter_first( model, &iter );
+	gboolean found = FALSE;
+	gchar *iter_uuid, *iter_label;
+	gint count = 0;
+
+	while( iterok && !found ){
+		count += 1;
+		gtk_tree_model_get(
+				model,
+				&iter,
+				IACTIONS_LIST_UUID_COLUMN, &iter_uuid, IACTIONS_LIST_LABEL_COLUMN, &iter_label,
+				-1 );
+
+		gint ret_uuid = g_ascii_strcasecmp( iter_uuid, uuid );
+		gint ret_label = g_utf8_collate( iter_label, label );
+		if( ret_uuid == 0 || ret_label >= 0 ){
+			gtk_tree_selection_select_iter( selection, &iter );
+			found = TRUE;
+
+		} else {
+			previous = iter;
+		}
+
+		g_free( iter_uuid );
+		g_free( iter_label );
+		iterok = gtk_tree_model_iter_next( model, &iter );
+	}
+
+	if( !found && count ){
+		gtk_tree_selection_select_iter( selection, &previous );
+	}
+}
+
+/**
  * Reset the focus on the ActionsList listbox.
  */
 void

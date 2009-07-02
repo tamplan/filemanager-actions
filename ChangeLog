@@ -5,10 +5,13 @@
 
 	* src/nact/nact-action-conditions-editor.c
 	(on_initial_load_dialog): Make labels and buttons the same size.
-
-	* src/nact/nact-action-conditions-editor.c
 	(on_all_widgets_showed): Call
 	nact_iprofile_conditions_all_widgets_showed function.
+	(on_dialog_response): Advertize parent window of a new action.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h
+	(nact_iactions_list_set_selection): New function.
 
 	* src/nact/nact-imenu-item.c:
 	* src/nact/nact-imenu-item.h (nact_imenu_item_size_labels,
@@ -24,6 +27,13 @@
 	* nact/nact-iprofile-conditions.h
 	(nact_iprofile_conditions_size_labels,
 	nact_iprofile_conditions_size_buttons): New functions.
+
+	* src/nact/nact-main-window.c:
+	Do not trigger on_selection_changed when filling the Actions list.
+
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h (set_current_action):
+	New virtual function.
 
 	* src/nact/nautilus-actions-config.ui:
 	Add tooltips to AddAction and EditAction buttons.

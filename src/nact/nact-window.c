@@ -214,47 +214,6 @@ instance_finalize( GObject *window )
 	}
 }
 
-static gchar *
-v_get_iprefs_window_id( NactWindow *window )
-{
-	g_assert( NACT_IS_IPREFS( window ));
-
-	if( NACT_WINDOW_GET_CLASS( window )->get_iprefs_window_id ){
-		return( NACT_WINDOW_GET_CLASS( window )->get_iprefs_window_id( window ));
-	}
-
-	return( NULL );
-}
-
-static void
-on_runtime_init_toplevel( BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_window_on_runtime_init_toplevel";
-
-	/* call parent class at the very beginning */
-	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
-		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( window );
-	}
-
-	g_debug( "%s: window=%p", thisfn, window );
-	g_assert( NACT_IS_WINDOW( window ));
-
-	nact_iprefs_position_window( NACT_WINDOW( window ));
-}
-
-static void
-on_all_widgets_showed( BaseWindow *dialog )
-{
-	static const gchar *thisfn = "nact_window_on_all_widgets_showed";
-
-	/* call parent class at the very beginning */
-	if( BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed ){
-		BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed( dialog );
-	}
-
-	g_debug( "%s: dialog=%p", thisfn, dialog );
-}
-
 /**
  * Returns a pointer to the list of actions.
  */
@@ -282,6 +241,20 @@ nact_window_get_action( NactWindow *window, const gchar *uuid )
 
 	GObject *action = na_pivot_get_action( pivot, uuid );
 	return( action );
+}
+
+/**
+ * Set the current action.
+ *
+ * This is called by one of the editors to advertize the main window
+ * that the newly selected action has changed.
+ */
+void
+nact_window_set_current_action( NactWindow *window, const gchar *uuid, const gchar *label )
+{
+	if( NACT_WINDOW_GET_CLASS( window )->set_current_action ){
+		NACT_WINDOW_GET_CLASS( window )->set_current_action( window, uuid, label );
+	}
 }
 
 /**
@@ -371,4 +344,45 @@ nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *
 	window->private->signals = g_slist_prepend( window->private->signals, str );
 
 	/*g_debug( "%s: connecting signal handler %p:%lu", thisfn, instance, handler_id );*/
+}
+
+static gchar *
+v_get_iprefs_window_id( NactWindow *window )
+{
+	g_assert( NACT_IS_IPREFS( window ));
+
+	if( NACT_WINDOW_GET_CLASS( window )->get_iprefs_window_id ){
+		return( NACT_WINDOW_GET_CLASS( window )->get_iprefs_window_id( window ));
+	}
+
+	return( NULL );
+}
+
+static void
+on_runtime_init_toplevel( BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_window_on_runtime_init_toplevel";
+
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
+		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( window );
+	}
+
+	g_debug( "%s: window=%p", thisfn, window );
+	g_assert( NACT_IS_WINDOW( window ));
+
+	nact_iprefs_position_window( NACT_WINDOW( window ));
+}
+
+static void
+on_all_widgets_showed( BaseWindow *dialog )
+{
+	static const gchar *thisfn = "nact_window_on_all_widgets_showed";
+
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed ){
+		BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed( dialog );
+	}
+
+	g_debug( "%s: dialog=%p", thisfn, dialog );
 }

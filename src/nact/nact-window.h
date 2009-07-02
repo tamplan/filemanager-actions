@@ -67,6 +67,7 @@ typedef struct {
 
 	/* api */
 	gchar * ( *get_iprefs_window_id )( NactWindow *window );
+	void    ( *set_current_action )  ( NactWindow *window, const gchar *uuid, const gchar *label );
 }
 	NactWindowClass;
 
@@ -75,6 +76,7 @@ GType    nact_window_get_type( void );
 GObject *nact_window_get_pivot( NactWindow *window );
 
 GObject *nact_window_get_action( NactWindow *window, const gchar *uuid );
+void     nact_window_set_current_action( NactWindow *window, const gchar *uuid, const gchar *label );
 gboolean nact_window_save_action( NactWindow *window, const NAAction *action );
 
 gboolean nact_window_warn_action_modified( NactWindow *window, const NAAction *action );

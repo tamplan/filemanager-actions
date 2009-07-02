@@ -51,10 +51,11 @@ struct NactActionConditionsEditorClassPrivate {
 /* private instance data
  */
 struct NactActionConditionsEditorPrivate {
-	gboolean  dispose_has_run;
-	NAAction *original;
-	NAAction *edited;
-	gboolean  is_new;
+	gboolean    dispose_has_run;
+	NactWindow *parent;
+	NAAction   *original;
+	NAAction   *edited;
+	gboolean    is_new;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -83,6 +84,7 @@ static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *wi
 static GObject *get_edited_action( NactWindow *window );
 static GObject *get_edited_profile( NactWindow *window );
 static gboolean is_edited_modified( NactActionConditionsEditor *dialog );
+static void     set_current_action( NactActionConditionsEditor *dialog );
 
 GType
 nact_action_conditions_editor_get_type( void )
@@ -277,6 +279,7 @@ nact_action_conditions_editor_run_editor( NactWindow *parent, gpointer user_data
 	g_assert( NACT_IS_APPLICATION( application ));
 
 	NactActionConditionsEditor *dialog = action_conditions_editor_new( application );
+	dialog->private->parent = parent;
 
 	g_assert( NA_IS_ACTION( user_data ) || !user_data );
 	NAAction *action = NA_ACTION( user_data );
@@ -487,6 +490,7 @@ on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 					editor->private->original = na_action_duplicate( editor->private->edited );
 					editor->private->is_new = FALSE;
 					on_modified_field( NACT_WINDOW( editor ));
+					set_current_action( NACT_ACTION_CONDITIONS_EDITOR( window ));
 				}
 			}
 			break;
@@ -513,4 +517,14 @@ static gboolean
 is_edited_modified( NactActionConditionsEditor *dialog )
 {
 	return( !na_action_are_equal( dialog->private->original, dialog->private->edited ));
+}
+
+static void
+set_current_action( NactActionConditionsEditor *dialog )
+{
+	gchar *uuid = na_action_get_uuid( dialog->private->original );
+	gchar *label = na_action_get_label( dialog->private->original );
+	nact_window_set_current_action( dialog->private->parent, uuid, label );
+	g_free( label );
+	g_free( uuid );
 }

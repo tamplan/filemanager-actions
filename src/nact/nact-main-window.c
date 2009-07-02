@@ -58,7 +58,10 @@ struct NactMainWindowClassPrivate {
 /* private instance data
  */
 struct NactMainWindowPrivate {
-	gboolean dispose_has_run;
+	gboolean  dispose_has_run;
+	gboolean  selection_changed_authorized;
+	gchar    *current_uuid;
+	gchar    *current_label;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -88,6 +91,9 @@ static void     on_import_export_button_clicked( GtkButton *button, gpointer use
 static gboolean on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );
 
 static void     on_actions_changed( NAIPivotContainer *instance, gpointer user_data );
+
+static void     set_current_action( NactMainWindow *window, const NAAction *action );
+static void     do_set_current_action( NactWindow *window, const gchar *uuid, const gchar *label );
 
 /*static gint     count_actions( BaseWindow *window );*/
 
@@ -168,6 +174,7 @@ class_init( NactMainWindowClass *klass )
 
 	NactWindowClass *nact_class = NACT_WINDOW_CLASS( klass );
 	nact_class->get_iprefs_window_id = get_iprefs_window_id;
+	nact_class->set_current_action = do_set_current_action;
 }
 
 static void
@@ -217,6 +224,9 @@ instance_dispose( GObject *window )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
+
+		g_free( self->private->current_uuid );
+		g_free( self->private->current_label );
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( window );
@@ -302,6 +312,8 @@ on_runtime_init_toplevel( BaseWindow *window )
 	base_window_connect( window, "DuplicateActionButton", "clicked", G_CALLBACK( on_duplicate_button_clicked ));
 	base_window_connect( window, "DeleteActionButton", "clicked", G_CALLBACK( on_delete_button_clicked ));
 	base_window_connect( window, "ImExportButton", "clicked", G_CALLBACK( on_import_export_button_clicked ));
+
+	NACT_MAIN_WINDOW( window )->private->selection_changed_authorized = TRUE;
 }
 
 static void
@@ -310,18 +322,24 @@ on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_da
 	/*static const gchar *thisfn = "nact_main_window_on_actions_list_selection_changed";
 	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );*/
 
-	g_assert( BASE_IS_WINDOW( user_data ));
-	BaseWindow *window = BASE_WINDOW( user_data );
+	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	if( NACT_MAIN_WINDOW( user_data )->private->selection_changed_authorized ){
 
-	GtkWidget *edit_button = base_window_get_widget( window, "EditActionButton" );
-	GtkWidget *delete_button = base_window_get_widget( window, "DeleteActionButton" );
-	GtkWidget *duplicate_button = base_window_get_widget( window, "DuplicateActionButton" );
+		BaseWindow *window = BASE_WINDOW( user_data );
 
-	gboolean enabled = ( gtk_tree_selection_count_selected_rows( selection ) > 0 );
+		GtkWidget *edit_button = base_window_get_widget( window, "EditActionButton" );
+		GtkWidget *delete_button = base_window_get_widget( window, "DeleteActionButton" );
+		GtkWidget *duplicate_button = base_window_get_widget( window, "DuplicateActionButton" );
 
-	gtk_widget_set_sensitive( edit_button, enabled );
-	gtk_widget_set_sensitive( delete_button, enabled );
-	gtk_widget_set_sensitive( duplicate_button, enabled );
+		gboolean enabled = ( gtk_tree_selection_count_selected_rows( selection ) > 0 );
+
+		gtk_widget_set_sensitive( edit_button, enabled );
+		gtk_widget_set_sensitive( delete_button, enabled );
+		gtk_widget_set_sensitive( duplicate_button, enabled );
+
+		NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( NACT_WINDOW( window )));
+		set_current_action( NACT_MAIN_WINDOW( window ), action );
+	}
 }
 
 static gboolean
@@ -420,8 +438,6 @@ on_add_button_clicked( GtkButton *button, gpointer user_data )
 
 	nact_action_conditions_editor_run_editor( wndmain, NULL );
 
-	/* TODO: set the selection to the newly created action
-	 * or restore the previous selection */
 	nact_iactions_list_set_focus( wndmain );
 }
 
@@ -461,8 +477,6 @@ on_edit_button_clicked( GtkButton *button, gpointer user_data )
 		g_assert_not_reached();
 	}
 
-	/* TODO: reset the selection to the edited action
-	 * set focus to actions list */
 	nact_iactions_list_set_focus( wndmain );
 }
 
@@ -493,15 +507,18 @@ on_duplicate_button_clicked( GtkButton *button, gpointer user_data )
 			base_window_error_dlg( BASE_WINDOW( wndmain ), GTK_MESSAGE_ERROR, first, msg );
 			g_free( first );
 			g_free( msg );
+
+		} else {
+			set_current_action( NACT_MAIN_WINDOW( wndmain ), duplicate );
 		}
 
+		g_object_unref( duplicate );
 		g_free( label );
 
 	} else {
 		g_assert_not_reached();
 	}
 
-	/* TODO: set the selection to the newly created action */
 	nact_iactions_list_set_focus( wndmain );
 }
 
@@ -537,8 +554,7 @@ on_delete_button_clicked( GtkButton *button, gpointer user_data )
 	} else {
 		g_assert_not_reached();
 	}
-	/* TODO: set the selection to the previous action if any
-	 * or to the next one */
+
 	nact_iactions_list_set_focus( wndmain );
 }
 
@@ -577,17 +593,8 @@ on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window )
 			/* Free any profile in the clipboard */
 			/*nautilus_actions_config_action_profile_free (g_object_steal_data (G_OBJECT (paste_button), "profile"));*/
 
-			/* FIXME : update pref settings
-			nact_prefs_set_main_dialog_size (GTK_WINDOW (dialog));
-			nact_prefs_set_main_dialog_position (GTK_WINDOW (dialog));
-			nact_prefs_save_preferences ();
-			 */
-
 			g_object_unref( window );
 			return( TRUE );
-			/*gtk_widget_destroy (GTK_WIDGET (dialog));
-			nact_destroy_glade_objects ();
-			gtk_main_quit ();*/
 			break;
 	}
 
@@ -603,9 +610,37 @@ on_actions_changed( NAIPivotContainer *instance, gpointer user_data )
 	g_assert( NACT_IS_MAIN_WINDOW( instance ));
 	NactMainWindow *self = NACT_MAIN_WINDOW( instance );
 
+	self->private->selection_changed_authorized = FALSE;
+
 	if( !self->private->dispose_has_run ){
 		nact_iactions_list_fill( NACT_WINDOW( instance ));
 	}
+
+	self->private->selection_changed_authorized = TRUE;
+	nact_iactions_list_set_selection(
+			NACT_WINDOW( self ), self->private->current_uuid, self->private->current_label );
+}
+
+static void
+set_current_action( NactMainWindow *window, const NAAction *action )
+{
+	g_free( window->private->current_uuid );
+	g_free( window->private->current_label );
+	if( action ){
+		g_assert( NA_IS_ACTION( action ));
+		window->private->current_uuid = na_action_get_uuid( action );
+		window->private->current_label = na_action_get_label( action );
+	}
+}
+
+static void
+do_set_current_action( NactWindow *window, const gchar *uuid, const gchar *label )
+{
+	g_debug( "nact_main_window_do_set_current_action: window=%p, uuid=%s, label=%s", window, uuid, label );
+	g_free( NACT_MAIN_WINDOW( window )->private->current_uuid );
+	g_free( NACT_MAIN_WINDOW( window )->private->current_label );
+	NACT_MAIN_WINDOW( window )->private->current_uuid = g_strdup( uuid );
+	NACT_MAIN_WINDOW( window )->private->current_label = g_strdup( label );
 }
 
 /*static gint
