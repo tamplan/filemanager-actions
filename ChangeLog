@@ -11,7 +11,9 @@
 
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nact-iactions-list.h
-	(nact_iactions_list_set_selection): New function.
+	(nact_iactions_list_set_selection,
+	nact_iactions_list_set_send_selection_changed_on_fill_list,
+	nact_iactions_list_set_is_filling_list)): New functions.
 
 	* src/nact/nact-imenu-item.c:
 	* src/nact/nact-imenu-item.h (nact_imenu_item_size_labels,

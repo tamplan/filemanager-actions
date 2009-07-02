@@ -77,6 +77,9 @@ GObject *nact_iactions_list_get_selected_action( NactWindow *window );
 void     nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label );
 void     nact_iactions_list_set_focus( NactWindow *window );
 
+void     nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );
+void     nact_iactions_list_set_is_filling_list( NactWindow *window, gboolean is_filling );
+
 G_END_DECLS
 
 #endif /* __NACT_IACTIONS_LIST_H__ */

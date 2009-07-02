@@ -52,6 +52,11 @@ enum {
 	IACTIONS_LIST_N_COLUMN
 };
 
+/* data set against GObject
+ */
+#define SEND_SELECTION_CHANGED_MESSAGE	"iactions-list-send-selection-changed-message"
+#define IS_FILLING_LIST					"iactions-list-is-filling-list"
+
 static GType      register_type( void );
 static void       interface_base_init( NactIActionsListInterface *klass );
 static void       interface_base_finalize( NactIActionsListInterface *klass );
@@ -143,6 +148,9 @@ nact_iactions_list_initial_load( NactWindow *window )
 {
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 
+	nact_iactions_list_set_send_selection_changed_on_fill_list( window, FALSE );
+	nact_iactions_list_set_is_filling_list( window, FALSE );
+
 	if( NACT_IACTIONS_LIST_GET_INTERFACE( window )->initial_load_widget ){
 		NACT_IACTIONS_LIST_GET_INTERFACE( window )->initial_load_widget( window );
 	} else {
@@ -173,11 +181,15 @@ nact_iactions_list_fill( NactWindow *window )
 {
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 
+	nact_iactions_list_set_is_filling_list( window, TRUE );
+
 	if( NACT_IACTIONS_LIST_GET_INTERFACE( window )->fill_actions_list ){
 		NACT_IACTIONS_LIST_GET_INTERFACE( window )->fill_actions_list( window );
 	} else {
 		do_fill_actions_list( window );
 	}
+
+	nact_iactions_list_set_is_filling_list( window, FALSE );
 }
 
 /**
@@ -265,6 +277,27 @@ nact_iactions_list_get_selected_action( NactWindow *window )
 	return( action );
 }
 
+/**
+ * Should the IActionsList interface trigger a 'on_selection_changed'
+ * message when the ActionsList list is filled ?
+ */
+void
+nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message )
+{
+	g_assert( NACT_IS_IACTIONS_LIST( window ));
+	g_object_set_data( G_OBJECT( window ), SEND_SELECTION_CHANGED_MESSAGE, GINT_TO_POINTER( send_message ));
+}
+
+/**
+ * Is the IActionsList interface currently filling the ActionsList ?
+ */
+void
+nact_iactions_list_set_is_filling_list( NactWindow *window, gboolean is_filling )
+{
+	g_assert( NACT_IS_IACTIONS_LIST( window ));
+	g_object_set_data( G_OBJECT( window ), IS_FILLING_LIST, GINT_TO_POINTER( is_filling ));
+}
+
 static void
 v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data )
 {
@@ -273,8 +306,14 @@ v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data )
 
 	NactIActionsList *instance = NACT_IACTIONS_LIST( user_data );
 
-	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_selection_changed ){
-		NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_selection_changed( selection, user_data );
+	g_assert( NACT_IS_WINDOW( user_data ));
+	gboolean send_message = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( user_data ), SEND_SELECTION_CHANGED_MESSAGE ));
+	gboolean is_filling = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( user_data ), IS_FILLING_LIST ));
+
+	if( send_message || !is_filling ){
+		if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_selection_changed ){
+			NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_selection_changed( selection, user_data );
+		}
 	}
 }
 

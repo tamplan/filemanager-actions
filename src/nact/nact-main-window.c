@@ -59,7 +59,6 @@ struct NactMainWindowClassPrivate {
  */
 struct NactMainWindowPrivate {
 	gboolean  dispose_has_run;
-	gboolean  selection_changed_authorized;
 	gchar    *current_uuid;
 	gchar    *current_label;
 };
@@ -287,7 +286,9 @@ on_initial_load_toplevel( BaseWindow *window )
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	/*NactMainWindow *wnd = NACT_MAIN_WINDOW( window );*/
 
+	g_assert( NACT_IS_IACTIONS_LIST( window ));
 	nact_iactions_list_initial_load( NACT_WINDOW( window ));
+	nact_iactions_list_set_send_selection_changed_on_fill_list( NACT_WINDOW( window ), FALSE );
 }
 
 static void
@@ -312,8 +313,6 @@ on_runtime_init_toplevel( BaseWindow *window )
 	base_window_connect( window, "DuplicateActionButton", "clicked", G_CALLBACK( on_duplicate_button_clicked ));
 	base_window_connect( window, "DeleteActionButton", "clicked", G_CALLBACK( on_delete_button_clicked ));
 	base_window_connect( window, "ImExportButton", "clicked", G_CALLBACK( on_import_export_button_clicked ));
-
-	NACT_MAIN_WINDOW( window )->private->selection_changed_authorized = TRUE;
 }
 
 static void
@@ -323,23 +322,20 @@ on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_da
 	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );*/
 
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	if( NACT_MAIN_WINDOW( user_data )->private->selection_changed_authorized ){
+	BaseWindow *window = BASE_WINDOW( user_data );
 
-		BaseWindow *window = BASE_WINDOW( user_data );
+	GtkWidget *edit_button = base_window_get_widget( window, "EditActionButton" );
+	GtkWidget *delete_button = base_window_get_widget( window, "DeleteActionButton" );
+	GtkWidget *duplicate_button = base_window_get_widget( window, "DuplicateActionButton" );
 
-		GtkWidget *edit_button = base_window_get_widget( window, "EditActionButton" );
-		GtkWidget *delete_button = base_window_get_widget( window, "DeleteActionButton" );
-		GtkWidget *duplicate_button = base_window_get_widget( window, "DuplicateActionButton" );
+	gboolean enabled = ( gtk_tree_selection_count_selected_rows( selection ) > 0 );
 
-		gboolean enabled = ( gtk_tree_selection_count_selected_rows( selection ) > 0 );
+	gtk_widget_set_sensitive( edit_button, enabled );
+	gtk_widget_set_sensitive( delete_button, enabled );
+	gtk_widget_set_sensitive( duplicate_button, enabled );
 
-		gtk_widget_set_sensitive( edit_button, enabled );
-		gtk_widget_set_sensitive( delete_button, enabled );
-		gtk_widget_set_sensitive( duplicate_button, enabled );
-
-		NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( NACT_WINDOW( window )));
-		set_current_action( NACT_MAIN_WINDOW( window ), action );
-	}
+	NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( NACT_WINDOW( window )));
+	set_current_action( NACT_MAIN_WINDOW( window ), action );
 }
 
 static gboolean
@@ -610,13 +606,10 @@ on_actions_changed( NAIPivotContainer *instance, gpointer user_data )
 	g_assert( NACT_IS_MAIN_WINDOW( instance ));
 	NactMainWindow *self = NACT_MAIN_WINDOW( instance );
 
-	self->private->selection_changed_authorized = FALSE;
-
 	if( !self->private->dispose_has_run ){
 		nact_iactions_list_fill( NACT_WINDOW( instance ));
 	}
 
-	self->private->selection_changed_authorized = TRUE;
 	nact_iactions_list_set_selection(
 			NACT_WINDOW( self ), self->private->current_uuid, self->private->current_label );
 }
