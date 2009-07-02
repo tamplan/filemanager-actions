@@ -253,8 +253,6 @@ on_all_widgets_showed( BaseWindow *dialog )
 	}
 
 	g_debug( "%s: dialog=%p", thisfn, dialog );
-
-	nact_iprefs_position_window( NACT_WINDOW( dialog ));
 }
 
 /**

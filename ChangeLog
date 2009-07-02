@@ -6,6 +6,10 @@
 	* src/nact/nact-action-conditions-editor.c
 	(on_initial_load_dialog): Make labels and buttons the same size.
 
+	* src/nact/nact-action-conditions-editor.c
+	(on_all_widgets_showed): Call
+	nact_iprofile_conditions_all_widgets_showed function.
+
 	* src/nact/nact-imenu-item.c:
 	* src/nact/nact-imenu-item.h (nact_imenu_item_size_labels,
 	nact_imenu_item_size_buttons): New functions.
@@ -20,9 +24,6 @@
 	* nact/nact-iprofile-conditions.h
 	(nact_iprofile_conditions_size_labels,
 	nact_iprofile_conditions_size_buttons): New functions.
-
-	* src/nact/nact-window.c (on_all_widgets_showed): Restore the
-	saved position of the window.
 
 	* src/nact/nautilus-actions-config.ui:
 	Add tooltips to AddAction and EditAction buttons.

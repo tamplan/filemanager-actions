@@ -385,8 +385,7 @@ on_all_widgets_showed( BaseWindow *dialog )
 	gtk_notebook_set_current_page( notebook, 0 );
 
 	nact_imenu_item_all_widgets_showed( NACT_WINDOW( dialog ));
-
-	/*nact_iprefs_position_window( NACT_WINDOW( dialog ));*/
+	nact_iprofile_conditions_all_widgets_showed( NACT_WINDOW( dialog ));
 }
 
 static void
