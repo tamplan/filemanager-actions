@@ -1,5 +1,8 @@
 2009-07-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-pivot.c (action_changed_handler):
+	Use a milliseconds timeout to get a better UI reactivity.
+
 	* src/nact/nact-action-conditions-editor.c (on_cancel_clicked):
 	New function to trigger dialog response.
 

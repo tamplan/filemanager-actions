@@ -88,7 +88,8 @@ static GObjectClass *st_parent_class = NULL;
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 static GTimeVal      st_last_event;
 static guint         st_event_source_id = 0;
-static gint          st_timeout_usec = 500000;
+static gint          st_timeout_msec = 100;
+static gint          st_timeout_usec = 100000;
 
 static GType    register_type( void );
 static void     class_init( NAPivotClass *klass );
@@ -432,10 +433,10 @@ action_changed_handler( NAPivot *self, gpointer user_data  )
 		return;
 	}
 
-	/* set a timeout to notify nautilus at the end of the serie */
+	/* set a timeout to notify clients at the end of the serie */
 	g_get_current_time( &st_last_event );
 	if( !st_event_source_id ){
-		st_event_source_id = g_timeout_add_seconds( 1, ( GSourceFunc ) on_actions_changed_timeout, self );
+		st_event_source_id = g_timeout_add( st_timeout_msec, ( GSourceFunc ) on_actions_changed_timeout, self );
 	}
 }
 
