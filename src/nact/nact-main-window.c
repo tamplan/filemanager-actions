@@ -627,7 +627,11 @@ static void
 set_current_action( NactMainWindow *window, const NAAction *action )
 {
 	g_free( window->private->current_uuid );
+	window->private->current_uuid = NULL;
+
 	g_free( window->private->current_label );
+	window->private->current_label = NULL;
+
 	if( action ){
 		g_assert( NA_IS_ACTION( action ));
 		window->private->current_uuid = na_action_get_uuid( action );
