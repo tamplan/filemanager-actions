@@ -68,6 +68,7 @@ static void          icon_combo_list_fill( GtkComboBoxEntry* combo );
 static GtkTreeModel *create_stock_icon_model( void );
 static gint          sort_stock_ids( gconstpointer a, gconstpointer b );
 static gchar        *strip_underscore( const gchar *text );
+static void          display_icon( NactWindow *window, GtkWidget *image, gboolean display );
 
 GType
 nact_imenu_item_get_type( void )
@@ -150,6 +151,32 @@ nact_imenu_item_initial_load( NactWindow *dialog, NAAction *action )
 	gtk_combo_box_set_model( GTK_COMBO_BOX( icon_widget ), create_stock_icon_model());
 
 	icon_combo_list_fill( GTK_COMBO_BOX_ENTRY( icon_widget ));
+}
+
+void
+nact_imenu_item_size_labels( NactWindow *window, GObject *size_group )
+{
+	g_assert( NACT_IS_WINDOW( window ));
+	g_assert( GTK_IS_SIZE_GROUP( size_group ));
+
+	GtkWidget *label = base_window_get_widget( BASE_WINDOW( window ), "MenuLabelLabel" );
+	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), label );
+
+	label = base_window_get_widget( BASE_WINDOW( window ), "MenuTooltipLabel" );
+	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), label );
+
+	label = base_window_get_widget( BASE_WINDOW( window ), "MenuIconLabel" );
+	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), label );
+}
+
+void
+nact_imenu_item_size_buttons( NactWindow *window, GObject *size_group )
+{
+	g_assert( NACT_IS_WINDOW( window ));
+	g_assert( GTK_IS_SIZE_GROUP( size_group ));
+
+	GtkWidget *button = base_window_get_widget( BASE_WINDOW( window ), "IconBrowseButton" );
+	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), button );
 }
 
 void
@@ -267,9 +294,10 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 
 	GtkWidget *image = base_window_get_widget( BASE_WINDOW( dialog ), "IconImage" );
 	g_assert( GTK_IS_WIDGET( image ));
+	display_icon( dialog, image, FALSE );
+
 	const gchar *icon_name = gtk_entry_get_text( icon_entry );
 	/*g_debug( "%s: icon_name=%s", thisfn, icon_name );*/
-
 	GtkStockItem stock_item;
 	GdkPixbuf *icon = NULL;
 
@@ -279,7 +307,7 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 		if( gtk_stock_lookup( icon_name, &stock_item )){
 			g_debug( "%s: gtk_stock_lookup", thisfn );
 			gtk_image_set_from_stock( GTK_IMAGE( image ), icon_name, GTK_ICON_SIZE_MENU );
-			gtk_widget_show( image );
+			display_icon( dialog, image, TRUE );
 
 		} else if( g_file_test( icon_name, G_FILE_TEST_EXISTS ) &&
 					g_file_test( icon_name, G_FILE_TEST_IS_REGULAR )){
@@ -296,14 +324,9 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 				g_error_free( error );
 			}
 			gtk_image_set_from_pixbuf( GTK_IMAGE( image ), icon );
-			gtk_widget_show( image );
+			display_icon( dialog, image, TRUE );
 
-		} else {
-			g_debug( "%s: not stock, nor file", thisfn );
-			gtk_widget_hide( image );
 		}
-	} else {
-		gtk_widget_hide( image );
 	}
 
 	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
@@ -447,4 +470,19 @@ strip_underscore( const gchar *text )
 	*q = '\0';
 
 	return( result );
+}
+
+static void
+display_icon( NactWindow *window, GtkWidget *image, gboolean show )
+{
+	GtkFrame *frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "IconFrame" ));
+
+	if( show ){
+		gtk_widget_show( image );
+		gtk_frame_set_shadow_type( frame, GTK_SHADOW_NONE );
+
+	} else {
+		gtk_widget_hide( image );
+		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
+	}
 }

@@ -77,6 +77,7 @@ static void     on_all_widgets_showed( BaseWindow *dialog );
 static void     setup_dialog_title( NactActionConditionsEditor *dialog, gboolean is_modified );
 static void     setup_buttons( NactActionConditionsEditor *dialog, gboolean can_save );
 static void     on_modified_field( NactWindow *dialog );
+static void     on_cancel_clicked( GtkButton *button, gpointer user_data );
 static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 static GObject *get_edited_action( NactWindow *window );
@@ -307,7 +308,7 @@ static gchar *
 do_get_dialog_name( BaseWindow *dialog )
 {
 	/*g_debug( "nact_action_conditions_editor_do_get_dialog_name" );*/
-	return( g_strdup( "EditActionDialogExt"));
+	return( g_strdup( "EditActionDialogExt" ));
 }
 
 static void
@@ -328,6 +329,18 @@ on_initial_load_dialog( BaseWindow *dialog )
 
 	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited )->data );
 	nact_iprofile_conditions_initial_load( NACT_WINDOW( window ), profile );
+
+	/* label alignements */
+	GtkSizeGroup *label_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
+	nact_imenu_item_size_labels( NACT_WINDOW( window ), G_OBJECT( label_group ));
+	nact_iprofile_conditions_size_labels( NACT_WINDOW( window ), G_OBJECT( label_group ));
+	g_object_unref( label_group );
+
+	/* buttons size */
+	GtkSizeGroup *button_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
+	nact_imenu_item_size_buttons( NACT_WINDOW( window ), G_OBJECT( button_group ));
+	nact_iprofile_conditions_size_buttons( NACT_WINDOW( window ), G_OBJECT( button_group ));
+	g_object_unref( button_group );
 }
 
 static void
@@ -351,6 +364,29 @@ on_runtime_init_dialog( BaseWindow *dialog )
 	/*na_object_dump( NA_OBJECT( window->private->edited ));*/
 	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited )->data );
 	nact_iprofile_conditions_runtime_init( NACT_WINDOW( window ), profile );
+
+	GtkWidget *close_button = base_window_get_widget( dialog, "CancelButton" );
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( close_button ), "clicked", G_CALLBACK( on_cancel_clicked ));
+}
+
+static void
+on_all_widgets_showed( BaseWindow *dialog )
+{
+	static const gchar *thisfn = "nact_action_conditions_editor_on_all_widgets_showed";
+
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed ){
+		BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed( dialog );
+	}
+
+	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( dialog, "notebook2" ));
+	gtk_notebook_set_current_page( notebook, 0 );
+
+	nact_imenu_item_all_widgets_showed( NACT_WINDOW( dialog ));
+
+	/*nact_iprefs_position_window( NACT_WINDOW( dialog ));*/
 }
 
 static void
@@ -416,17 +452,10 @@ on_modified_field( NactWindow *window )
 }
 
 static void
-on_all_widgets_showed( BaseWindow *dialog )
+on_cancel_clicked( GtkButton *button, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_action_conditions_editor_on_all_widgets_showed";
-	g_debug( "%s: dialog=%p", thisfn, dialog );
-
-	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( dialog, "notebook2" ));
-	gtk_notebook_set_current_page( notebook, 0 );
-
-	nact_imenu_item_all_widgets_showed( NACT_WINDOW( dialog ));
-
-	nact_iprefs_position_window( NACT_WINDOW( dialog ));
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( user_data ));
+	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static gboolean
@@ -458,7 +487,6 @@ on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 					g_object_unref( editor->private->original );
 					editor->private->original = na_action_duplicate( editor->private->edited );
 					editor->private->is_new = FALSE;
-					g_debug( "%s: after replication", thisfn );
 					on_modified_field( NACT_WINDOW( editor ));
 				}
 			}

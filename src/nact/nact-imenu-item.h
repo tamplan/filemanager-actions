@@ -65,11 +65,15 @@ typedef struct {
 GType    nact_imenu_item_get_type( void );
 
 void     nact_imenu_item_initial_load( NactWindow *dialog, NAAction *action );
+void     nact_imenu_item_size_labels( NactWindow *window, GObject *size_group );
+void     nact_imenu_item_size_buttons( NactWindow *window, GObject *size_group );
+
 void     nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action );
 void     nact_imenu_item_all_widgets_showed( NactWindow *dialog );
-void     nact_imenu_item_dispose( NactWindow *dialog );
 
 gboolean nact_imenu_item_has_label( NactWindow *window );
+
+void     nact_imenu_item_dispose( NactWindow *dialog );
 
 G_END_DECLS
 

@@ -1,3 +1,33 @@
+2009-07-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-action-conditions-editor.c (on_cancel_clicked):
+	New function to trigger dialog response.
+
+	* src/nact/nact-action-conditions-editor.c
+	(on_initial_load_dialog): Make labels and buttons the same size.
+
+	* src/nact/nact-imenu-item.c:
+	* src/nact/nact-imenu-item.h (nact_imenu_item_size_labels,
+	nact_imenu_item_size_buttons): New functions.
+
+	* src/nact/nact-imenu-item.c (on_icon_changed):
+	Forces the display of an empty frame where there is no icon.
+
+	* nact/nact-iprofile-conditions.c (hide_legend_dialog):
+	Fixes bug which recorded a (0,0) position when the dialog closed.
+
+	* nact/nact-iprofile-conditions.c:
+	* nact/nact-iprofile-conditions.h
+	(nact_iprofile_conditions_size_labels,
+	nact_iprofile_conditions_size_buttons): New functions.
+
+	* src/nact/nact-window.c (on_all_widgets_showed): Restore the
+	saved position of the window.
+
+	* src/nact/nautilus-actions-config.ui:
+	Add tooltips to AddAction and EditAction buttons.
+	Encapsulates the IconImage into a IconFrame.
+
 2009-07-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-application.c:

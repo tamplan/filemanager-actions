@@ -61,6 +61,10 @@ enum {
 #define IPREFS_LEGEND_DIALOG		"iprofile-conditions-legend-dialog"
 #define IPREFS_COMMAND_CHOOSER		"iprofile-conditions-command-chooser"
 
+/* a data set in the LegendDialog GObject
+ */
+#define LEGEND_DIALOG_IS_VISIBLE	"iprofile-conditions-legend-dialog-visible"
+
 static GType         register_type( void );
 static void          interface_base_init( NactIProfileConditionsInterface *klass );
 static void          interface_base_finalize( NactIProfileConditionsInterface *klass );
@@ -186,6 +190,32 @@ void
 nact_iprofile_conditions_initial_load( NactWindow *dialog, NAActionProfile *profile )
 {
 	create_schemes_selection_list( dialog );
+}
+
+void
+nact_iprofile_conditions_size_labels( NactWindow *window, GObject *size_group )
+{
+	g_assert( NACT_IS_WINDOW( window ));
+	g_assert( GTK_IS_SIZE_GROUP( size_group ));
+
+	GtkWidget *label = base_window_get_widget( BASE_WINDOW( window ), "ActionPathLabel" );
+	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), label );
+
+	label = base_window_get_widget( BASE_WINDOW( window ), "ActionParametersLabel" );
+	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), label );
+}
+
+void
+nact_iprofile_conditions_size_buttons( NactWindow *window, GObject *size_group )
+{
+	g_assert( NACT_IS_WINDOW( window ));
+	g_assert( GTK_IS_SIZE_GROUP( size_group ));
+
+	GtkWidget *button = base_window_get_widget( BASE_WINDOW( window ), "PathBrowseButton" );
+	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), button );
+
+	button = GTK_WIDGET( get_legend_button( window ));
+	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), button );
 }
 
 void
@@ -594,23 +624,29 @@ show_legend_dialog( NactWindow *window )
 
 	nact_iprefs_position_named_window( window, legend_dialog, IPREFS_LEGEND_DIALOG );
 	gtk_widget_show( GTK_WIDGET( legend_dialog ));
+
+	g_object_set_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE, ( gpointer ) TRUE );
 }
 
 static void
 hide_legend_dialog( NactWindow *window )
 {
 	GtkWindow *legend_dialog = get_legend_dialog( window );
+	gboolean is_visible = ( gboolean ) g_object_get_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE );
 
-	if( GTK_IS_WINDOW( legend_dialog )){
+	if( is_visible ){
+		g_assert( GTK_IS_WINDOW( legend_dialog ));
 		nact_iprefs_save_named_window_position( window, legend_dialog, IPREFS_LEGEND_DIALOG );
 		gtk_widget_hide( GTK_WIDGET( legend_dialog ));
-	}
 
-	/* set the legend button state consistent for when the dialog is
-	 * hidden by another mean (eg. close the edit profile dialog)
-	 */
-	GtkButton *legend_button = get_legend_button( window );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( legend_button ), FALSE );
+		/* set the legend button state consistent for when the dialog is
+		 * hidden by another mean (eg. close the edit profile dialog)
+		 */
+		GtkButton *legend_button = get_legend_button( window );
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( legend_button ), FALSE );
+
+		g_object_set_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE, ( gpointer ) FALSE );
+	}
 }
 
 static GtkButton *

@@ -74,6 +74,7 @@ static void   instance_finalize( GObject *application );
 static gchar *v_get_iprefs_window_id( NactWindow *window );
 
 static void   on_runtime_init_toplevel( BaseWindow *window );
+static void   on_all_widgets_showed( BaseWindow *dialog );
 
 GType
 nact_window_get_type( void )
@@ -140,6 +141,7 @@ class_init( NactWindowClass *klass )
 
 	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
 	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
+	base_class->all_widgets_showed = on_all_widgets_showed;
 }
 
 static void
@@ -238,6 +240,21 @@ on_runtime_init_toplevel( BaseWindow *window )
 	g_assert( NACT_IS_WINDOW( window ));
 
 	nact_iprefs_position_window( NACT_WINDOW( window ));
+}
+
+static void
+on_all_widgets_showed( BaseWindow *dialog )
+{
+	static const gchar *thisfn = "nact_window_on_all_widgets_showed";
+
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed ){
+		BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed( dialog );
+	}
+
+	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	nact_iprefs_position_window( NACT_WINDOW( dialog ));
 }
 
 /**
