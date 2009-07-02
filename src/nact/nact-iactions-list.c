@@ -224,7 +224,7 @@ nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const g
 
 		gint ret_uuid = g_ascii_strcasecmp( iter_uuid, uuid );
 		gint ret_label = g_utf8_collate( iter_label, label );
-		if( ret_uuid == 0 || ret_label >= 0 ){
+		if(( ret_uuid == 0 && ret_label == 0 ) || ret_label > 0 ){
 			gtk_tree_selection_select_iter( selection, &iter );
 			found = TRUE;
 
