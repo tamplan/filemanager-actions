@@ -349,8 +349,8 @@ v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer user
 static gboolean
 v_on_key_press_event( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_iactions_list_v_on_key_pres_event";
-	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );
+	/*static const gchar *thisfn = "nact_iactions_list_v_on_key_pres_event";
+	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );*/
 
 	g_assert( NACT_IS_IACTIONS_LIST( user_data ));
 	g_assert( NACT_IS_WINDOW( user_data ));
