@@ -27,7 +27,7 @@
                   <object class="GtkTreeView" id="ActionsList">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="events">GDK_BUTTON_PRESS_MASK</property>
+                    <property name="events">GDK_BUTTON_PRESS_MASK | GDK_KEY_PRESS_MASK</property>
                     <property name="headers_visible">False</property>
                     <property name="rules_hint">True</property>
                   </object>

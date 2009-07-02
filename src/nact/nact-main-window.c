@@ -80,6 +80,7 @@ static void     on_runtime_init_toplevel( BaseWindow *window );
 
 static void     on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
+static gboolean on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
 
 static void     on_about_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_add_button_clicked( GtkButton *button, gpointer user_data );
@@ -186,6 +187,7 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	iface->runtime_init_widget = NULL;
 	iface->on_selection_changed = on_actions_list_selection_changed;
 	iface->on_double_click = on_actions_list_double_click;
+	iface->on_enter_key_pressed = on_actions_list_enter_key_pressed;
 }
 
 static void
@@ -342,6 +344,13 @@ static gboolean
 on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer user_data )
 {
 	g_assert( event->type == GDK_2BUTTON_PRESS );
+	on_edit_button_clicked( NULL, user_data );
+	return( TRUE );
+}
+
+static gboolean
+on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
+{
 	on_edit_button_clicked( NULL, user_data );
 	return( TRUE );
 }

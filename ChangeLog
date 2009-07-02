@@ -16,7 +16,8 @@
 	* src/nact/nact-iactions-list.h
 	(nact_iactions_list_set_selection,
 	nact_iactions_list_set_send_selection_changed_on_fill_list,
-	nact_iactions_list_set_is_filling_list)): New functions.
+	nact_iactions_list_set_is_filling_list,
+	on_key_press_event, on_enter_key_pressed): New functions.
 
 	* src/nact/nact-imenu-item.c:
 	* src/nact/nact-imenu-item.h (nact_imenu_item_size_labels,
@@ -35,6 +36,7 @@
 
 	* src/nact/nact-main-window.c:
 	Do not trigger on_selection_changed when filling the Actions list.
+	Edit action when Enter key pressed.
 
 	* src/nact/nact-window.c:
 	* src/nact/nact-window.h (set_current_action):

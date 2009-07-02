@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <gdk/gdkkeysyms.h>
+
 #include <common/na-action.h>
 #include <common/na-pivot.h>
 
@@ -63,6 +65,7 @@ static void       interface_base_finalize( NactIActionsListInterface *klass );
 
 static void       v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean   v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
+static gboolean   v_on_key_press_event( GtkWidget *widget, GdkEventKey *event, gpointer data );
 
 static void       do_initial_load_widget( NactWindow *window );
 static void       do_runtime_init_widget( NactWindow *window );
@@ -343,6 +346,32 @@ v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer user
 	return( stop );
 }
 
+static gboolean
+v_on_key_press_event( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_iactions_list_v_on_key_pres_event";
+	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );
+
+	g_assert( NACT_IS_IACTIONS_LIST( user_data ));
+	g_assert( NACT_IS_WINDOW( user_data ));
+
+	gboolean stop = FALSE;
+	NactIActionsList *instance = NACT_IACTIONS_LIST( user_data );
+
+	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_key_press_event ){
+		stop = NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_key_press_event( widget, event, user_data );
+	}
+
+	if( !stop ){
+		if( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ){
+			if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_enter_key_pressed ){
+				stop = NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_enter_key_pressed( widget, event, user_data );
+			}
+		}
+	}
+	return( stop );
+}
+
 void
 do_initial_load_widget( NactWindow *window )
 {
@@ -387,6 +416,13 @@ do_runtime_init_widget( NactWindow *window )
 			G_OBJECT( gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ))),
 			"changed",
 			G_CALLBACK( v_on_selection_changed ),
+			window );
+
+	/* catch press 'Enter' */
+	g_signal_connect(
+			G_OBJECT( widget ),
+			"key-press-event",
+			G_CALLBACK( v_on_key_press_event ),
 			window );
 
 	/* catch double-click */
