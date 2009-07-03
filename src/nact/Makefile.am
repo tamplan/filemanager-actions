@@ -50,6 +50,10 @@ nautilus_actions_config_SOURCES = \
 	nact-action-profiles-editor.h						\
 	nact-application.c									\
 	nact-application.h									\
+	nact-gconf-schema.c									\
+	nact-gconf-schema.h									\
+	nact-gconf-schema-writer.c							\
+	nact-gconf-schema-writer.h							\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
 	nact-imenu-item.c									\
@@ -63,8 +67,6 @@ nautilus_actions_config_SOURCES = \
 	nact-main-window.h									\
 	nact-profile-conditions-editor.c					\
 	nact-profile-conditions-editor.h					\
-	nact-import-export.c								\
-	nact-import-export.h								\
 	nact-window.c										\
 	nact-window.h										\
 	$(NULL)

@@ -263,9 +263,6 @@ action_conditions_editor_new( BaseApplication *application )
  *
  * @user_data: a pointer to the NAAction to edit, or NULL. If NULL, a
  * new NAAction is created.
- *
- * Returns TRUE if the NAAction has been edited and saved, or FALSE if
- * there has been no modification at all.
  */
 void
 nact_action_conditions_editor_run_editor( NactWindow *parent, gpointer user_data )
@@ -334,12 +331,15 @@ on_initial_load_dialog( BaseWindow *dialog )
 	nact_iprofile_conditions_initial_load( NACT_WINDOW( window ), profile );
 
 	/* label alignements */
-	GtkSizeGroup *label_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
+	/*GtkSizeGroup *label_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
 	nact_imenu_item_size_labels( NACT_WINDOW( window ), G_OBJECT( label_group ));
 	nact_iprofile_conditions_size_labels( NACT_WINDOW( window ), G_OBJECT( label_group ));
-	g_object_unref( label_group );
+	g_object_unref( label_group );*/
 
-	/* buttons size */
+	/* buttons size
+	 * nb: while label sizing group works well with Glade 3.3 and GtkBuilder,
+	 * it doesn't with button size - so sizing them by code
+	 */
 	GtkSizeGroup *button_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
 	nact_imenu_item_size_buttons( NACT_WINDOW( window ), G_OBJECT( button_group ));
 	nact_iprofile_conditions_size_buttons( NACT_WINDOW( window ), G_OBJECT( button_group ));
@@ -368,8 +368,7 @@ on_runtime_init_dialog( BaseWindow *dialog )
 	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited )->data );
 	nact_iprofile_conditions_runtime_init( NACT_WINDOW( window ), profile );
 
-	GtkWidget *close_button = base_window_get_widget( dialog, "CancelButton" );
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( close_button ), "clicked", G_CALLBACK( on_cancel_clicked ));
+	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
 }
 
 static void

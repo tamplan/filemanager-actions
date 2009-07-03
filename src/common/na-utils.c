@@ -202,6 +202,45 @@ na_utils_text_to_string_list( const gchar *text )
 }
 
 /**
+ * Converts a list of strings to a comma-separated list of strings,
+ * enclosed by brackets.
+ */
+gchar *
+na_utils_gslist_to_schema( GSList *list )
+{
+	GSList *ib;
+	gchar *tmp;
+	gchar *text = g_strdup( "" );
+
+	for( ib = list ; ib ; ib = ib->next ){
+		if( strlen( text )){
+			tmp = g_strdup_printf( "%s,", text );
+			g_free( text );
+			text = tmp;
+		}
+		tmp = g_strdup_printf( "%s%s", text, ( gchar * ) ib->data );
+		g_free( text );
+		text = tmp;
+	}
+
+	tmp = g_strdup_printf( "[%s]", text );
+	g_free( text );
+	text = tmp;
+
+	return( text );
+}
+
+/**
+ * Converts a boolean to the suitable string for a GConf schema
+ */
+gchar *
+na_utils_boolean_to_schema( gboolean b )
+{
+	gchar *text = g_strdup_printf( "%s", b ? "true" : "false" );
+	return( text );
+}
+
+/**
  * Concatenates a gchar **list of strings to a GString.
  */
 gchar *

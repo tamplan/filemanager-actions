@@ -46,6 +46,9 @@ void     na_utils_free_string_list( GSList *list );
 gchar   *na_utils_string_list_to_text( GSList *list );
 GSList  *na_utils_text_to_string_list( const gchar *text );
 
+gchar   *na_utils_gslist_to_schema( GSList *list );
+gchar   *na_utils_boolean_to_schema( gboolean b );
+
 /*
  * Some functions for GString manipulations.
  */

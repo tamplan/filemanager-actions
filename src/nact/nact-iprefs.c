@@ -33,6 +33,9 @@
 #include <config.h>
 #endif
 
+#include <gconf/gconf.h>
+#include <gconf/gconf-client.h>
+
 #include "nact-iprefs.h"
 
 /* private interface data
@@ -45,9 +48,11 @@ struct NactIPrefsInterfacePrivate {
  */
 #define NA_GCONF_PREFS_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/preferences"
 
-/* key to read/write the last visited folder when browsing for command
+/* key to read/write the last visited folder when browsing for a file
  */
 #define IPREFS_IPROFILE_CONDITION_FOLDER_URI	"iprofile-conditions-folder-uri"
+#define IPREFS_IMPORT_ACTIONS_FOLDER_URI		"main-window-import-folder-uri"
+#define IPREFS_EXPORT_ACTIONS_FOLDER_URI		"main-window-export-folder-uri"
 
 static GType   register_type( void );
 static void    interface_base_init( NactIPrefsInterface *klass );
@@ -60,6 +65,8 @@ static void    write_key_listint( NactWindow *window, const gchar *key, GSList *
 static void    listint_to_position( NactWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height );
 static GSList *position_to_listint( NactWindow *window, gint x, gint y, gint width, gint height );
 static void    free_listint( GSList *list );
+static gchar  *read_key_str( NactWindow *window, const gchar *key );
+static void    save_key_str( NactWindow *window, const gchar *key, const gchar *text );
 
 GType
 nact_iprefs_get_type( void )
@@ -217,6 +224,67 @@ nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel,
 	}
 }
 
+/**
+ * Save the last visited folder when browsing for command in
+ * IProfileConditions interface.
+ *
+ * @window: this NactWindow-derived window.
+ *
+ * Returns the last visited folder if any, or NULL.
+ * The returned string must be g_free by the caller.
+ */
+gchar *
+nact_iprefs_get_iprofile_conditions_folder_uri( NactWindow *window )
+{
+	return( read_key_str( window, IPREFS_IPROFILE_CONDITION_FOLDER_URI ));
+}
+
+void
+nact_iprefs_save_iprofile_conditions_folder_uri( NactWindow *window, const gchar *uri )
+{
+	save_key_str( window, IPREFS_IPROFILE_CONDITION_FOLDER_URI, uri );
+}
+
+/**
+ * Save the last visited folder when importing an action.
+ *
+ * @window: this NactWindow-derived window.
+ *
+ * Returns the last visited folder if any, or NULL.
+ * The returned string must be g_free by the caller.
+ */
+gchar *
+nact_iprefs_get_import_folder_uri( NactWindow *window )
+{
+	return( read_key_str( window, IPREFS_IMPORT_ACTIONS_FOLDER_URI ));
+}
+
+void
+nact_iprefs_save_import_folder_uri( NactWindow *window, const gchar *uri )
+{
+	save_key_str( window, IPREFS_IMPORT_ACTIONS_FOLDER_URI, uri );
+}
+
+/**
+ * Save the last visited folder when exporting an action.
+ *
+ * @window: this NactWindow-derived window.
+ *
+ * Returns the last visited folder if any, or NULL.
+ * The returned string must be g_free by the caller.
+ */
+gchar *
+nact_iprefs_get_export_folder_uri( NactWindow *window )
+{
+	return( read_key_str( window, IPREFS_EXPORT_ACTIONS_FOLDER_URI ));
+}
+
+void
+nact_iprefs_save_export_folder_uri( NactWindow *window, const gchar *uri )
+{
+	save_key_str( window, IPREFS_EXPORT_ACTIONS_FOLDER_URI, uri );
+}
+
 static gchar *
 v_get_iprefs_window_id( NactWindow *window )
 {
@@ -329,549 +397,38 @@ free_listint( GSList *list )
 	g_slist_free( list );
 }
 
-/**
- * Save the last visited folder when browsing for command in
- * IProfileConditions interface.
- *
- * @window: this NactWindow-derived window.
- *
- * Returns the last visited folder if any, or NULL.
- * The returned string must be g_free by the caller.
- */
-gchar *
-nact_iprefs_get_iprofile_conditions_folder_uri( NactWindow *window )
-{
-	static const gchar *thisfn = "nact_iprefs_get_iprofile_conditions_folder_uri";
-	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, IPREFS_IPROFILE_CONDITION_FOLDER_URI );
-
-	gchar *uri = gconf_client_get_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
-
-	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
-		g_error_free( error );
-		uri = NULL;
-	}
-
-	g_free( path );
-	return( uri );
-}
-
-void
-nact_iprefs_save_iprofile_conditions_folder_uri( NactWindow *window, const gchar *uri )
-{
-	static const gchar *thisfn = "nact_iprefs_save_iprofile_conditions_folder_uri";
-	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, IPREFS_IPROFILE_CONDITION_FOLDER_URI );
-
-	gconf_client_set_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, uri, &error );
-
-	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
-		g_error_free( error );
-	}
-
-	g_free( path );
-}
-
-/* ... */
-#include <glib/gi18n.h>
-
-/* List of gconf keys */
-#define PREFS_SCHEMES 		"nact_schemes_list"
-#define PREFS_MAIN_X  		"nact_main_dialog_position_x"
-#define PREFS_MAIN_Y  		"nact_main_dialog_position_y"
-#define PREFS_MAIN_W  		"nact_main_dialog_size_width"
-#define PREFS_MAIN_H  		"nact_main_dialog_size_height"
-#define PREFS_EDIT_X  		"nact_edit_dialog_position_x"
-#define PREFS_EDIT_Y  		"nact_edit_dialog_position_y"
-#define PREFS_EDIT_W  		"nact_edit_dialog_size_width"
-#define PREFS_EDIT_H  		"nact_edit_dialog_size_height"
-#define PREFS_IM_EX_X  		"nact_im_ex_dialog_position_x"
-#define PREFS_IM_EX_Y  		"nact_im_ex_dialog_position_y"
-#define PREFS_IM_EX_W  		"nact_im_ex_dialog_size_width"
-#define PREFS_IM_EX_H  		"nact_im_ex_dialog_size_height"
-#define PREFS_ICON_PATH		"nact_icon_last_browsed_dir"
-#define PREFS_PATH_PATH		"nact_path_last_browsed_dir"
-#define PREFS_IMPORT_PATH	"nact_import_last_browsed_dir"
-#define PREFS_EXPORT_PATH	"nact_export_last_browsed_dir"
-
-static GSList *
-get_prefs_list_key (GConfClient *client, const gchar *key)
-{
-	gchar *fullkey;
-	GSList *l;
-
-	fullkey = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, key);
-	l = gconf_client_get_list (client, fullkey, GCONF_VALUE_STRING, NULL);
-
-	g_free (fullkey);
-
-	return l;
-}
-
 static gchar *
-get_prefs_string_key (GConfClient *client, const gchar *key)
+read_key_str( NactWindow *window, const gchar *key )
 {
-	gchar *fullkey, *s;
+	static const gchar *thisfn = "nact_iprefs_read_key_str";
+	GError *error = NULL;
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
 
-	fullkey = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, key);
-	s = gconf_client_get_string (client, fullkey, NULL);
+	gchar *text = gconf_client_get_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
 
-	g_free (fullkey);
-
-	return s;
-}
-
-static int
-get_prefs_int_key (GConfClient *client, const gchar *key)
-{
-	gchar *fullkey;
-	gint i = -1;
-	GConfValue* value;
-
-	fullkey = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, key);
-	value = gconf_client_get (client, fullkey, NULL);
-
-	if (value != NULL)
-	{
-		i = gconf_value_get_int (value);
+	if( error ){
+		g_warning( "%s: key=%s, %s", thisfn, key, error->message );
+		g_error_free( error );
+		text = NULL;
 	}
 
-	g_free (fullkey);
-
-	return i;
-}
-
-static gboolean
-set_prefs_list_key (GConfClient *client, const gchar *key, GSList* value)
-{
-	gchar *fullkey;
-	gboolean retv;
-
-	fullkey = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, key);
-	retv = gconf_client_set_list (client, fullkey, GCONF_VALUE_STRING, value, NULL);
-
-	g_free (fullkey);
-
-	return retv;
-}
-
-static gboolean
-set_prefs_string_key (GConfClient *client, const gchar *key, const gchar* value)
-{
-	gchar *fullkey;
-	gboolean retv;
-
-	fullkey = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, key);
-	retv = gconf_client_set_string (client, fullkey, value, NULL);
-
-	g_free (fullkey);
-
-	return retv;
-}
-
-static gboolean
-set_prefs_int_key (GConfClient *client, const gchar *key, gint value)
-{
-	gchar *fullkey;
-	gboolean retv;
-
-	fullkey = g_strdup_printf ("%s/%s", NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, key);
-	retv = gconf_client_set_int (client, fullkey, value, NULL);
-
-	g_free (fullkey);
-
-	return retv;
-}
-
-static void prefs_changed_cb (GConfClient *client,
-										guint cnxn_id,
-									 	GConfEntry *entry,
-									 	gpointer user_data)
-{
-	/*NactPreferences* prefs = (NactPreferences*)user_data;*/
-
-	if (user_data != NULL)
-	{
-		/*g_print ("Key changed : %s\n", entry->key);*/
-	}
-}
-
-static NactPreferences* nact_prefs_get_preferences (void)
-{
-	static NactPreferences* prefs = NULL;
-	gchar* tmp;
-
-	if (!prefs)
-	{
-		prefs = g_new0 (NactPreferences, 1);
-
-		prefs->client = gconf_client_get_default ();
-
-		prefs->schemes = get_prefs_list_key (prefs->client, PREFS_SCHEMES);
-		if (!prefs->schemes)
-		{
-			/* initialize the default schemes */
-			/* i18n notes : description of 'file' scheme */
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sLocal Files"), "file|"));
-			/* i18n notes : description of 'sftp' scheme */
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sSSH Files"), "sftp|"));
-			/* i18n notes : description of 'smb' scheme */
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sWindows Files"), "smb|"));
-			/* i18n notes : description of 'ftp' scheme */
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sFTP Files"), "ftp|"));
-			/* i18n notes : description of 'dav' scheme */
-			prefs->schemes = g_slist_append (prefs->schemes, g_strdup_printf (_("%sWebdav Files"), "dav|"));
-		}
-		prefs->main_size_width  = get_prefs_int_key (prefs->client, PREFS_MAIN_W);
-		prefs->main_size_height = get_prefs_int_key (prefs->client, PREFS_MAIN_H);
-		prefs->edit_size_width  = get_prefs_int_key (prefs->client, PREFS_EDIT_W);
-		prefs->edit_size_height = get_prefs_int_key (prefs->client, PREFS_EDIT_H);
-		prefs->im_ex_size_width  = get_prefs_int_key (prefs->client, PREFS_IM_EX_W);
-		prefs->im_ex_size_height = get_prefs_int_key (prefs->client, PREFS_IM_EX_H);
-		prefs->main_position_x  = get_prefs_int_key (prefs->client, PREFS_MAIN_X);
-		prefs->main_position_y  = get_prefs_int_key (prefs->client, PREFS_MAIN_Y);
-		prefs->edit_position_x  = get_prefs_int_key (prefs->client, PREFS_EDIT_X);
-		prefs->edit_position_y  = get_prefs_int_key (prefs->client, PREFS_EDIT_Y);
-		prefs->im_ex_position_x  = get_prefs_int_key (prefs->client, PREFS_IM_EX_X);
-		prefs->im_ex_position_y  = get_prefs_int_key (prefs->client, PREFS_IM_EX_Y);
-		tmp = get_prefs_string_key (prefs->client, PREFS_ICON_PATH);
-		if (!tmp)
-		{
-			tmp = g_strdup ("/usr/share/pixmaps");
-		}
-		prefs->icon_last_browsed_dir = tmp;
-
-		tmp = get_prefs_string_key (prefs->client, PREFS_PATH_PATH);
-		if (!tmp)
-		{
-			tmp = g_strdup ("/usr/bin");
-		}
-		prefs->path_last_browsed_dir = tmp;
-
-		tmp = get_prefs_string_key (prefs->client, PREFS_IMPORT_PATH);
-		if (!tmp)
-		{
-			tmp = g_strdup ("/tmp");
-		}
-		prefs->import_last_browsed_dir = tmp;
-
-		tmp = get_prefs_string_key (prefs->client, PREFS_EXPORT_PATH);
-		if (!tmp)
-		{
-			tmp = g_strdup ("/tmp");
-		}
-		prefs->export_last_browsed_dir = tmp;
-
-		gconf_client_add_dir (prefs->client, NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, GCONF_CLIENT_PRELOAD_NONE, NULL);
-		prefs->prefs_notify_id = gconf_client_notify_add (prefs->client, NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR,
-									  (GConfClientNotifyFunc) prefs_changed_cb, prefs,
-									  NULL, NULL);
-	}
-
-	return prefs;
+	g_free( path );
+	return( text );
 }
 
 static void
-copy_to_list (gpointer value, gpointer user_data)
+save_key_str( NactWindow *window, const gchar *key, const gchar *text )
 {
-	GSList **list = user_data;
+	static const gchar *thisfn = "nact_iprefs_save_key_str";
+	GError *error = NULL;
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
 
-	(*list) = g_slist_append ((*list), g_strdup ((gchar*)value));
-}
+	gconf_client_set_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, text, &error );
 
-GSList* nact_prefs_get_schemes_list (void)
-{
-	GSList* new_list = NULL;
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	g_slist_foreach (prefs->schemes, (GFunc)copy_to_list, &new_list);
-
-	return new_list;
-}
-
-void nact_prefs_set_schemes_list (GSList* schemes)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->schemes)
-	{
-		g_slist_foreach (prefs->schemes, (GFunc) g_free, NULL);
-		g_slist_free (prefs->schemes);
-		prefs->schemes = NULL;
+	if( error ){
+		g_warning( "%s: key=%s, %s", thisfn, key, error->message );
+		g_error_free( error );
 	}
 
-	g_slist_foreach (schemes, (GFunc)copy_to_list, &(prefs->schemes));
-}
-
-gboolean nact_prefs_get_main_dialog_size (gint* width, gint* height)
-{
-	gboolean retv = FALSE;
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->main_size_width != -1 && prefs->main_size_height != -1)
-	{
-		retv = TRUE;
-		(*width) = prefs->main_size_width;
-		(*height) = prefs->main_size_height;
-	}
-
-	return retv;
-}
-
-void nact_prefs_set_main_dialog_size (GtkWindow* dialog)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	gtk_window_get_size (dialog, &(prefs->main_size_width), &(prefs->main_size_height));
-}
-
-gboolean nact_prefs_get_edit_dialog_size (gint* width, gint* height)
-{
-	gboolean retv = FALSE;
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->edit_size_width != -1 && prefs->edit_size_height != -1)
-	{
-		retv = TRUE;
-		(*width) = prefs->edit_size_width;
-		(*height) = prefs->edit_size_height;
-	}
-
-	return retv;
-
-}
-
-void nact_prefs_set_edit_dialog_size (GtkWindow* dialog)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	gtk_window_get_size (dialog, &(prefs->edit_size_width), &(prefs->edit_size_height));
-}
-
-gboolean nact_prefs_get_im_ex_dialog_size (gint* width, gint* height)
-{
-	gboolean retv = FALSE;
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->im_ex_size_width != -1 && prefs->im_ex_size_height != -1)
-	{
-		retv = TRUE;
-		(*width) = prefs->im_ex_size_width;
-		(*height) = prefs->im_ex_size_height;
-	}
-
-	return retv;
-
-}
-
-void nact_prefs_set_im_ex_dialog_size (GtkWindow* dialog)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	gtk_window_get_size (dialog, &(prefs->im_ex_size_width), &(prefs->im_ex_size_height));
-}
-
-gboolean nact_prefs_get_main_dialog_position (gint* x, gint* y)
-{
-	gboolean retv = FALSE;
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->main_position_x != -1 && prefs->main_position_y != -1)
-	{
-		retv = TRUE;
-		(*x) = prefs->main_position_x;
-		(*y) = prefs->main_position_y;
-	}
-
-	return retv;
-}
-
-void nact_prefs_set_main_dialog_position (GtkWindow* dialog)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	gtk_window_get_position (dialog, &(prefs->main_position_x), &(prefs->main_position_y));
-}
-
-gboolean nact_prefs_get_edit_dialog_position (gint* x, gint* y)
-{
-	gboolean retv = FALSE;
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->edit_position_x != -1 && prefs->edit_position_y != -1)
-	{
-		retv = TRUE;
-		(*x) = prefs->edit_position_x;
-		(*y) = prefs->edit_position_y;
-	}
-
-	return retv;
-}
-
-void nact_prefs_set_edit_dialog_position (GtkWindow* dialog)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	gtk_window_get_position (dialog, &(prefs->edit_position_x), &(prefs->edit_position_y));
-}
-
-gboolean nact_prefs_get_im_ex_dialog_position (gint* x, gint* y)
-{
-	gboolean retv = FALSE;
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->im_ex_position_x != -1 && prefs->im_ex_position_y != -1)
-	{
-		retv = TRUE;
-		(*x) = prefs->im_ex_position_x;
-		(*y) = prefs->im_ex_position_y;
-	}
-
-	return retv;
-}
-
-void nact_prefs_set_im_ex_dialog_position (GtkWindow* dialog)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	gtk_window_get_position (dialog, &(prefs->im_ex_position_x), &(prefs->im_ex_position_y));
-}
-
-gchar* nact_prefs_get_icon_last_browsed_dir (void)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	return g_strdup (prefs->icon_last_browsed_dir);
-}
-
-void nact_prefs_set_icon_last_browsed_dir (const gchar* path)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->icon_last_browsed_dir)
-	{
-		g_free (prefs->icon_last_browsed_dir);
-	}
-	prefs->icon_last_browsed_dir = g_strdup (path);
-}
-
-gchar* nact_prefs_get_path_last_browsed_dir (void)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	return g_strdup (prefs->path_last_browsed_dir);
-}
-
-void nact_prefs_set_path_last_browsed_dir (const gchar* path)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->path_last_browsed_dir)
-	{
-		g_free (prefs->path_last_browsed_dir);
-	}
-	prefs->path_last_browsed_dir = g_strdup (path);
-}
-
-gchar* nact_prefs_get_import_last_browsed_dir (void)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	return g_strdup (prefs->import_last_browsed_dir);
-}
-
-void nact_prefs_set_import_last_browsed_dir (const gchar* path)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->import_last_browsed_dir)
-	{
-		g_free (prefs->import_last_browsed_dir);
-	}
-	prefs->import_last_browsed_dir = g_strdup (path);
-}
-
-gchar* nact_prefs_get_export_last_browsed_dir (void)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	return g_strdup (prefs->export_last_browsed_dir);
-}
-
-void nact_prefs_set_export_last_browsed_dir (const gchar* path)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	if (prefs->export_last_browsed_dir)
-	{
-		g_free (prefs->export_last_browsed_dir);
-	}
-	prefs->export_last_browsed_dir = g_strdup (path);
-}
-
-static void nact_prefs_free_preferences (NactPreferences* prefs)
-{
-	if (prefs)
-	{
-		if (prefs->schemes)
-		{
-			g_slist_foreach (prefs->schemes, (GFunc) g_free, NULL);
-			g_slist_free (prefs->schemes);
-		}
-
-		if (prefs->icon_last_browsed_dir)
-		{
-			g_free (prefs->icon_last_browsed_dir);
-		}
-
-		if (prefs->path_last_browsed_dir)
-		{
-			g_free (prefs->path_last_browsed_dir);
-		}
-
-		if (prefs->import_last_browsed_dir)
-		{
-			g_free (prefs->import_last_browsed_dir);
-		}
-
-		if (prefs->export_last_browsed_dir)
-		{
-			g_free (prefs->export_last_browsed_dir);
-		}
-
-		gconf_client_remove_dir (prefs->client, NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, NULL);
-		gconf_client_notify_remove (prefs->client, prefs->prefs_notify_id);
-		g_object_unref (prefs->client);
-
-		g_free (prefs);
-		prefs = NULL;
-	}
-}
-
-void nact_prefs_save_preferences (void)
-{
-	NactPreferences* prefs = nact_prefs_get_preferences ();
-
-	/* Save preferences in GConf */
-	set_prefs_list_key (prefs->client, PREFS_SCHEMES, prefs->schemes);
-	set_prefs_int_key (prefs->client, PREFS_MAIN_W, prefs->main_size_width);
-	set_prefs_int_key (prefs->client, PREFS_MAIN_H, prefs->main_size_height);
-	set_prefs_int_key (prefs->client, PREFS_EDIT_W, prefs->edit_size_width);
-	set_prefs_int_key (prefs->client, PREFS_EDIT_H, prefs->edit_size_height);
-	set_prefs_int_key (prefs->client, PREFS_IM_EX_W, prefs->im_ex_size_width);
-	set_prefs_int_key (prefs->client, PREFS_IM_EX_H, prefs->im_ex_size_height);
-	set_prefs_int_key (prefs->client, PREFS_MAIN_X, prefs->main_position_x);
-	set_prefs_int_key (prefs->client, PREFS_MAIN_Y, prefs->main_position_y);
-	set_prefs_int_key (prefs->client, PREFS_EDIT_X, prefs->edit_position_x);
-	set_prefs_int_key (prefs->client, PREFS_EDIT_Y, prefs->edit_position_y);
-	set_prefs_int_key (prefs->client, PREFS_IM_EX_X, prefs->im_ex_position_x);
-	set_prefs_int_key (prefs->client, PREFS_IM_EX_Y, prefs->im_ex_position_y);
-	set_prefs_string_key (prefs->client, PREFS_ICON_PATH, prefs->icon_last_browsed_dir);
-	set_prefs_string_key (prefs->client, PREFS_PATH_PATH, prefs->path_last_browsed_dir);
-	set_prefs_string_key (prefs->client, PREFS_IMPORT_PATH, prefs->import_last_browsed_dir);
-	set_prefs_string_key (prefs->client, PREFS_EXPORT_PATH, prefs->export_last_browsed_dir);
-
-	nact_prefs_free_preferences (prefs);
+	g_free( path );
 }

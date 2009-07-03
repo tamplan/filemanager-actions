@@ -77,6 +77,13 @@ typedef struct {
 #define PROP_ACTION_READONLY_STR		"action-read-only"
 #define PROP_ACTION_PROVIDER_STR		"action-provider"
 
+/* export formats
+ * used to be only GConf schemas ('gconfschemafile' XML document)
+ */
+enum {
+	EXPORT_FORMAT_GCONFSCHEMAFILE = 1
+};
+
 GType     na_action_get_type( void );
 
 NAAction *na_action_new( const gchar *uuid );

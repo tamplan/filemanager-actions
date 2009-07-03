@@ -56,8 +56,9 @@ enum {
 
 /* data set against GObject
  */
-#define SEND_SELECTION_CHANGED_MESSAGE	"iactions-list-send-selection-changed-message"
+#define ACCEPT_MULTIPLE_SELECTION		"iactions-list-accept-multiple-selection"
 #define IS_FILLING_LIST					"iactions-list-is-filling-list"
+#define SEND_SELECTION_CHANGED_MESSAGE	"iactions-list-send-selection-changed-message"
 
 static GType      register_type( void );
 static void       interface_base_init( NactIActionsListInterface *klass );
@@ -261,23 +262,63 @@ nact_iactions_list_set_focus( NactWindow *window )
 GObject *
 nact_iactions_list_get_selected_action( NactWindow *window )
 {
-	GObject *action = NULL;
+	GSList *list = nact_iactions_list_get_selected_actions( window );
 
-	GtkWidget *list = get_actions_list_widget( window );
-	GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( list ));
+	GObject *action = G_OBJECT( list->data );
 
-	GtkTreeIter iter;
+	g_slist_free( list );
+
+	return( action );
+}
+
+/**
+ * Returns the currently selected actions when in export mode.
+ *
+ * The returned GSList should be freed by the caller (g_slist_free),
+ * without freing not unref any of the contained objects.
+ */
+GSList *
+nact_iactions_list_get_selected_actions( NactWindow *window )
+{
+	GSList *actions = NULL;
+
+	GtkWidget *treeview = get_actions_list_widget( window );
+	GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( treeview ));
+
 	GtkTreeModel *model;
+	GtkTreeIter iter;
+	gchar *uuid;
+	GList *it;
 
-	if( gtk_tree_selection_get_selected( selection, &model, &iter )){
+	GList *listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+	for( it = listrows ; it ; it = it->next ){
+		GtkTreePath *path = ( GtkTreePath * ) it->data;
+		gtk_tree_model_get_iter( model, &iter, path );
 
-		gchar *uuid;
 		gtk_tree_model_get( model, &iter, IACTIONS_LIST_UUID_COLUMN, &uuid, -1 );
-		action = nact_window_get_action( window, uuid );
+		NAAction *action = NA_ACTION( nact_window_get_action( window, uuid ));
+		actions = g_slist_prepend( actions, action );
 		g_free (uuid);
 	}
 
-	return( action );
+	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+	g_list_free( listrows );
+
+	return( actions );
+}
+
+/**
+ * Does the IActionsList box support multiple selection ?
+ */
+void
+nact_iactions_list_set_multiple_selection( NactWindow *window, gboolean multiple )
+{
+	g_assert( NACT_IS_IACTIONS_LIST( window ));
+	g_object_set_data( G_OBJECT( window ), ACCEPT_MULTIPLE_SELECTION, GINT_TO_POINTER( multiple ));
+
+	GtkWidget *list = get_actions_list_widget( window );
+	GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( list ));
+	gtk_tree_selection_set_mode( selection, multiple ? GTK_SELECTION_MULTIPLE : GTK_SELECTION_SINGLE );
 }
 
 /**
@@ -410,27 +451,28 @@ do_runtime_init_widget( NactWindow *window )
 	g_assert( BASE_IS_WINDOW( window ));
 
 	GtkWidget *widget = get_actions_list_widget( window );
+	g_assert( GTK_IS_WIDGET( widget ));
 
 	/* set up selection */
-	g_signal_connect(
+	nact_window_signal_connect(
+			window,
 			G_OBJECT( gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ))),
 			"changed",
-			G_CALLBACK( v_on_selection_changed ),
-			window );
+			G_CALLBACK( v_on_selection_changed ));
 
 	/* catch press 'Enter' */
-	g_signal_connect(
+	nact_window_signal_connect(
+			window,
 			G_OBJECT( widget ),
 			"key-press-event",
-			G_CALLBACK( v_on_key_press_event ),
-			window );
+			G_CALLBACK( v_on_key_press_event ));
 
 	/* catch double-click */
-	g_signal_connect(
+	nact_window_signal_connect(
+			window,
 			G_OBJECT( widget ),
 			"button-press-event",
-			G_CALLBACK( v_on_button_press_event ),
-			window );
+			G_CALLBACK( v_on_button_press_event ));
 }
 
 static void

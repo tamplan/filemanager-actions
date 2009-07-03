@@ -841,7 +841,7 @@ free_profiles( NAAction *action )
  * @list: a list of NAActionProfile objects.
  */
 void
-na_action_free_profiles( GSList * list )
+na_action_free_profiles( GSList *list )
 {
 	GSList *ip;
 	for( ip = list ; ip ; ip = ip->next ){

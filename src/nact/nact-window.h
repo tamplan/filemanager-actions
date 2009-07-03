@@ -84,6 +84,7 @@ gboolean nact_window_warn_action_modified( NactWindow *window, const NAAction *a
 GSList  *nact_window_get_actions( NactWindow *window );
 
 void     nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn );
+void     nact_window_signal_connect_by_name( NactWindow *window, const gchar *name, const gchar *signal, GCallback fn );
 
 G_END_DECLS
 

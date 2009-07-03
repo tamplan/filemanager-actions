@@ -52,19 +52,6 @@ libnact_la_SOURCES = \
 	na-pivot.h									\
 	na-utils.c									\
 	na-utils.h									\
-	nautilus-actions-config.c					\
-	nautilus-actions-config.h					\
-	nautilus-actions-config-gconf.c				\
-	nautilus-actions-config-gconf.h				\
-	nautilus-actions-config-gconf-private.h		\
-	nautilus-actions-config-gconf-reader.c		\
-	nautilus-actions-config-gconf-reader.h		\
-	nautilus-actions-config-gconf-writer.c		\
-	nautilus-actions-config-gconf-writer.h		\
-	nautilus-actions-config-schema-writer.c		\
-	nautilus-actions-config-schema-writer.h		\
-	nautilus-actions-config-schema-reader.c		\
-	nautilus-actions-config-schema-reader.h		\
 	$(NULL)
 
 libnact_la_LIBADD = -lxml2 -luuid

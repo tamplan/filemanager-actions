@@ -392,17 +392,6 @@ base_window_get_widget( BaseWindow *window, const gchar *name )
 	return( BASE_WINDOW_GET_CLASS( window )->get_widget( window, name ));
 }
 
-/**
- * Connects a signal to a handler, assuring that the BaseWindow pointer
- * is passed as user data.
- */
-void
-base_window_connect( BaseWindow *window, const gchar *widget, const gchar *signal, GCallback handler )
-{
-	GtkWidget *target = base_window_get_widget( window, widget );
-	g_signal_connect( G_OBJECT( target ), signal, handler, window );
-}
-
 static gchar *
 v_get_toplevel_name( BaseWindow *window )
 {

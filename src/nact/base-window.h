@@ -95,8 +95,6 @@ GObject   *base_window_get_application( BaseWindow *window );
 GtkWindow *base_window_get_dialog( BaseWindow *window, const gchar *name );
 GtkWidget *base_window_get_widget( BaseWindow *window, const gchar *name );
 
-void       base_window_connect( BaseWindow *window, const gchar *widget, const gchar *signal, GCallback handler );
-
 void       base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );
 gboolean   base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second );
 

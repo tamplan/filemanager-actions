@@ -232,6 +232,9 @@ nact_window_get_pivot( NactWindow *window )
 
 /**
  * Returns a pointer to the specified action.
+ *
+ * The returned pointer is owned by NAPivot, and should not be freed
+ * nor unref by the caller.
  */
 GObject *
 nact_window_get_action( NactWindow *window, const gchar *uuid )
@@ -344,6 +347,15 @@ nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *
 	window->private->signals = g_slist_prepend( window->private->signals, str );
 
 	/*g_debug( "%s: connecting signal handler %p:%lu", thisfn, instance, handler_id );*/
+}
+
+void
+nact_window_signal_connect_by_name( NactWindow *window, const gchar *name, const gchar *signal, GCallback fn )
+{
+	GtkWidget *widget = base_window_get_widget( BASE_WINDOW( window ), name );
+	if( GTK_IS_WIDGET( widget )){
+		nact_window_signal_connect( window, G_OBJECT( widget ), signal, fn );
+	}
 }
 
 static gchar *
