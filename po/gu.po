@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.master.gu\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-06-16 18:03+0000\n"
-"PO-Revision-Date: 2009-06-18 12:15+0530\n"
+"POT-Creation-Date: 2009-06-18 23:53+0000\n"
+"PO-Revision-Date: 2009-07-06 02:31-0400\n"
 "Last-Translator: Sweta Kothari <swkothar@redhat.com>\n"
 "Language-Team: Gujarati\n"
 "MIME-Version: 1.0\n"
@@ -30,8 +30,8 @@ msgid ""
 "The action '%s' already exists with the name '%s', please first remove the "
 "existing one before trying to add this one"
 msgstr ""
-"ક્રિયા '%s' પહેલેથી જ નામ '%s' સાથે અસ્તિત્વ ધરાવે છે, મહેરબાની કરીને આ એકને ઉમેરવાનું પ્રયત્ન કરતા "
-"પહેલા હાજર રહેલા એકને પહેલાં દૂર કરો"
+"ક્રિયા '%s' પહેલેથી જ નામ '%s' સાથે અસ્તિત્વ ધરાવે છે, મહેરબાની કરીને આ એકને ઉમેરવાનું "
+"પ્રયત્ન કરતા પહેલા હાજર રહેલા એકને પહેલાં દૂર કરો"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../src/common/nautilus-actions-config.c:229
@@ -46,8 +46,8 @@ msgid ""
 "A profile already exists with the name '%s', please first remove or rename "
 "the existing one before trying to add this one"
 msgstr ""
-"રૂપરેખા પહેલેથી જ નામ '%s' સાથે અસ્તિત્વ ધરાવે છે, મહેરબાની કરીને આ એકને ઉમેરવાનું પ્રયત્ન કરતા "
-"પહેલા હાજર રહેલા એકને પહેલાં દૂર કરો"
+"રૂપરેખા પહેલેથી જ નામ '%s' સાથે અસ્તિત્વ ધરાવે છે, મહેરબાની કરીને આ એકને ઉમેરવાનું પ્રયત્ન "
+"કરતા પહેલા હાજર રહેલા એકને પહેલાં દૂર કરો"
 
 #. GConf description strings :
 #: ../src/common/nautilus-actions-config-gconf-private.h:80
@@ -98,9 +98,8 @@ msgid ""
 "the Nact interface. If not set there will be a default auto generated string "
 "set by default"
 msgstr ""
-"Nact ઇન્ટરફેસમાં રૂપરેખા માટે વપરાશકર્તાને મનુષ્ય વાંચી શકાય તેવા નામને આપવા માટે "
-"ક્ષેત્ર એ અહિંયા છે. જો સુયોજિત ન હોય તો ત્યાં મૂળભૂત દ્દારા મૂળભૂત આપોઆપ ઉત્પન્ન થયેલ "
-"શબ્દમાળા હશે"
+"Nact ઇન્ટરફેસમાં રૂપરેખા માટે વપરાશકર્તાને મનુષ્ય વાંચી શકાય તેવા નામને આપવા માટે ક્ષેત્ર એ "
+"અહિંયા છે. જો સુયોજિત ન હોય તો ત્યાં મૂળભૂત દ્દારા મૂળભૂત આપોઆપ ઉત્પન્ન થયેલ શબ્દમાળા હશે"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:88
 #: ../src/utils/nautilus-actions-new-config.c:60
@@ -138,11 +137,11 @@ msgid ""
 "%U: username of the GnomeVFS URI\n"
 "%%: a percent sign"
 msgstr ""
-"શરૂ કરવા માટેના આદેશના પરિમાણો કે જ્યારે વપરાશકર્તા Nautilus પોપઅપ મેનુમાં મેનુ વસ્તુ પસંદ કરે "
-"છે.\n"
+"શરૂ કરવા માટેના આદેશના પરિમાણો કે જ્યારે વપરાશકર્તા Nautilus પોપઅપ મેનુમાં મેનુ વસ્તુ પસંદ "
+"કરે છે.\n"
 "\n"
-"પરિમાણો વિશિષ્ટ ટોકનો સમાવી શકે છે કે જેઓ આદેશ શરૂ કરવા પહેલાં Nautilus જાણકારીઓ દ્વારા "
-"બદલાઈ જાય છે :\n"
+"પરિમાણો વિશિષ્ટ ટોકનો સમાવી શકે છે કે જેઓ આદેશ શરૂ કરવા પહેલાં Nautilus જાણકારીઓ "
+"દ્વારા બદલાઈ જાય છે :\n"
 "\n"
 "%d : પસંદ કરેલ ફાઈલોનું આધાર ફોલ્ડર\n"
 "%f : પસંદ કરેલ ફાઈલનું નામ અથવા પ્રથમ જો ઘણી બધી પસંદ કરેલ હોય\n"
@@ -164,8 +163,8 @@ msgid ""
 "file(s)/folder(s). Each selected items must match at least one of the "
 "filename patterns for the action to appear"
 msgstr ""
-"પસંદ કરેલ ફાઈલો/ફોલ્ડરો નાં નામ સાથે સરખાવવા માટે જોકર '*' અથવા '?' સાથે શબ્દમાળાઓની યાદી. "
-"દરેક પસંદ કરેલ વસ્તુઓ ક્રિયાને દેખાવા માટે ઓછામાં ઓછી એક ભાત સાથે બંધબેસવી જ જોઈએ"
+"પસંદ કરેલ ફાઈલો/ફોલ્ડરો નાં નામ સાથે સરખાવવા માટે જોકર '*' અથવા '?' સાથે શબ્દમાળાઓની "
+"યાદી. દરેક પસંદ કરેલ વસ્તુઓ ક્રિયાને દેખાવા માટે ઓછામાં ઓછી એક ભાત સાથે બંધબેસવી જ જોઈએ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:94
 msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
@@ -177,9 +176,9 @@ msgid ""
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
 "'false'"
 msgstr ""
-"જો તમને કેસ પ્રત્યે સંવેદશીલ પ્રકારમાં ફાઇલનામને બંધબેસાડવાનું જરૂરી હોય તો, તો આ કીને 'true' "
-"તરીકે સુયોજિત કરો. જો તમે ઇચ્છતા હોય તો, ઉદાહરણ તરીકે 'photo.JPG' સાથે બંધબેસાડવા માટે '*.jpg', "
-"'false' તરીકે સુયોજિત કરો"
+"જો તમને કેસ પ્રત્યે સંવેદશીલ પ્રકારમાં ફાઇલનામને બંધબેસાડવાનું જરૂરી હોય તો, તો આ કીને "
+"'true' તરીકે સુયોજિત કરો. જો તમે ઇચ્છતા હોય તો, ઉદાહરણ તરીકે 'photo.JPG' સાથે "
+"બંધબેસાડવા માટે '*.jpg', 'false' તરીકે સુયોજિત કરો"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:96
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
@@ -191,8 +190,8 @@ msgid ""
 "selected file(s). Each selected items must match at least one of the "
 "mimetype patterns for the action to appear"
 msgstr ""
-"પસંદ કરેલ ફાઈલોને માઇમપ્રકારો સાથે સરખાવવા માટે જોકર '*' અથવા '?' સાથે શબ્દમાળાઓની યાદી. "
-"દરેક પસંદ કરેલ વસ્તુઓ ક્રિયાને દેખાવા માટે ઓછામાં ઓછી એક ભાત સાથે બંધબેસવી જ જોઈએ"
+"પસંદ કરેલ ફાઈલોને માઇમપ્રકારો સાથે સરખાવવા માટે જોકર '*' અથવા '?' સાથે શબ્દમાળાઓની "
+"યાદી. દરેક પસંદ કરેલ વસ્તુઓ ક્રિયાને દેખાવા માટે ઓછામાં ઓછી એક ભાત સાથે બંધબેસવી જ જોઈએ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:98
 msgid ""
@@ -340,9 +339,9 @@ msgid ""
 "support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
 msgstr ""
-"આ Nautilus-actions આવૃત્તિ આધાર આપી શકે છે તેનાં કરતા આ રૂપરેખા ફાઇલ એ "
-"વધારે તાજેતરની છે. મહેરબાની કરીને તાજેતરની આવૃત્તિમાં Nautilus-actions ને સુધારો જો "
-"તમે તેને આયાત કરવા સક્ષમ થવા માંગતા હોય તો (ફાઇલ આવૃત્તિ: %s (મહત્તમ આધારભૂત આવૃત્તિ : %s))"
+"આ Nautilus-actions આવૃત્તિ આધાર આપી શકે છે તેનાં કરતા આ રૂપરેખા ફાઇલ એ વધારે તાજેતરની "
+"છે. મહેરબાની કરીને તાજેતરની આવૃત્તિમાં Nautilus-actions ને સુધારો જો તમે તેને આયાત કરવા "
+"સક્ષમ થવા માંગતા હોય તો (ફાઇલ આવૃત્તિ: %s (મહત્તમ આધારભૂત આવૃત્તિ : %s))"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../src/common/nautilus-actions-config-schema-reader.c:763
@@ -369,42 +368,56 @@ msgid ""
 "instead of <%s>)"
 msgstr "આ XML ફાઇલ એ યોગ્ય Nautilus-actions રૂપરેખા ફાઇલ નથી (રુટ નોડ <%s> ને બદલે <%s> છે)"
 
-#. i18n notes: will be displayed in a dialog
-#: ../src/nact/nact.c:229
+#: ../src/nact/nact.c:236
 #, c-format
 msgid "Can't duplicate action '%s'!"
 msgstr "ક્રિયા '%s' ની નકલ કરી શકાતી નથી!"
 
 #. create columns on the tree view
-#: ../src/nact/nact.c:344 ../src/nact/nact-import-export.c:179
+#: ../src/nact/nact.c:352 ../src/nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "ચિહ્ન"
 
-#: ../src/nact/nact.c:349 ../src/nact/nact-import-export.c:184
+#: ../src/nact/nact.c:357 ../src/nact/nact-import-export.c:184
 msgid "Label"
 msgstr "લેબલ"
 
-#: ../src/nact/nact.c:373 ../src/nact/nact-action-editor.c:161
+#: ../src/nact/nact.c:387 ../src/nact/nact-action-editor.c:161
 #: ../src/nact/nact-editor.c:663 ../src/nact/nact-import-export.c:331
 #: ../src/nact/nact-profile-editor.c:567
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "નોટિલસ ક્રિયાઓ રૂપરેખા સાધન માટે ઈન્ટરફેસ લાવી શક્યા નહિં"
 
-#: ../src/nact/nact-application.c:291
-#| msgid "Could not load interface for Nautilus Actions Config Tool"
+#: ../src/nact/nact-application.c:246
 msgid "Another instance of Nautilus Actions Configurator is already running."
 msgstr "નોટિલસ ક્રિયાઓ રૂપરેખાકર્તાનો બીજો નમૂનો પહેલેથી જ ચાલી રહ્યો છે."
 
-#: ../src/nact/nact-application.c:292
+#: ../src/nact/nact-application.c:247
 msgid "Please switch back to it."
 msgstr "મહેરબાની કરીને તેમાં પાછા જાઓ."
 
-#. i18n: window title
-#: ../src/nact/nact-application.c:298
-#: ../src/nact/nautilus-actions-config.glade.h:64
-msgid "Nautilus Actions"
-msgstr "નોટિલસ ક્રિયાઓ"
+#. i18n: this is the application name, used in window title
+#.
+#: ../src/nact/nact-application.c:258
+#| msgid "Nautilus Actions Configuration"
+msgid "Nautilus Actions Configuration Tool"
+msgstr "Nautilus Actions Configuration Tool"
 
+#. static int
+#. run_appli( NactApplication *application )
+#. {
+#. int code = 0;
+#.
+#. g_object_set( G_OBJECT( application ), PROP_PIVOT_STR, na_pivot_new( NULL ), NULL );
+#.
+#. g_object_set( G_OBJECT( application ), PROP_MAINWINDOW_STR, nact_init_dialog( G_OBJECT( application ), NULL );
+#.
+#. unique_app_watch_window( application->private->unique, application->private->main );
+#.
+#. gtk_main();
+#.
+#. return( code );
+#. }
 #: ../src/nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
 msgstr "નોટિલસ પોપઅપ મેનુમાં વસ્તુઓ ઉમેરો"
@@ -419,13 +432,11 @@ msgid "Icon of the menu item in the Nautilus popup menu"
 msgstr "નોટિલસ પોપઅપ મેનુમાં મેનુ વસ્તુનું ચિહ્ન"
 
 #: ../src/nact/nact-action-editor.c:230
-#| msgid "Add a New Action"
 msgid "Add a new action"
 msgstr "નવી ક્રિયા ઉમેરો"
 
 #: ../src/nact/nact-action-editor.c:234
 #, c-format
-#| msgid "Edit Action \"%s\""
 msgid "Edit action \"%s\""
 msgstr "ક્રિયા \"%s\" માં ફેરફાર કરો"
 
@@ -681,8 +692,8 @@ msgid ""
 "You can set several filename patterns by separating them with a semi-colon "
 "(;)."
 msgstr ""
-"વાઈલ્ડકાર્ડો (? અથવા *) સાથેની શબ્દમાળા કે જે ફાઈલનામ સરખાવવા માટે વપરાશે. તમે ઘણી ફાઈલનામ "
-"ભાતો સુયોજિત શકો છો તેમને અર્ધવિરામ ચિહ્ન (;) થી અલગ પાડીને."
+"વાઈલ્ડકાર્ડો (? અથવા *) સાથેની શબ્દમાળા કે જે ફાઈલનામ સરખાવવા માટે વપરાશે. તમે ઘણી "
+"ફાઈલનામ ભાતો સુયોજિત શકો છો તેમને અર્ધવિરામ ચિહ્ન (;) થી અલગ પાડીને."
 
 #: ../src/nact/nautilus-actions-config.glade.h:35
 msgid ""
@@ -690,8 +701,9 @@ msgid ""
 "files. You can set several mimetype patterns by separating them with a semi-"
 "colon (;)."
 msgstr ""
-"વાઈલ્ડકાર્ડો (? અથવા *) સાથેની શબ્દમાળા કે જે ફાઈલોનાં માઇમપ્રકારોને સરખાવવા માટે વપરાશે. તમે ઘણી ફાઈલ "
-"ભાતોને સુયોજિત કરી શકો છો તેમને અર્ધવિરામ ચિહ્ન (;) થી અલગ પાડીને."
+"વાઈલ્ડકાર્ડો (? અથવા *) સાથેની શબ્દમાળા કે જે ફાઈલોનાં માઇમપ્રકારોને સરખાવવા માટે "
+"વપરાશે. તમે ઘણી ફાઈલ ભાતોને સુયોજિત કરી શકો છો તેમને અર્ધવિરામ ચિહ્ન (;) થી અલગ "
+"પાડીને."
 
 #: ../src/nact/nautilus-actions-config.glade.h:36
 msgid "Action"
@@ -819,6 +831,10 @@ msgstr "નોટિલસ ક્રિયા સંપાદક"
 msgid "Nautilus Action Profile Editor"
 msgstr "Nautilus ક્રિયા રૂપરેખા સંપાદક"
 
+#: ../src/nact/nautilus-actions-config.glade.h:64
+msgid "Nautilus Actions"
+msgstr "નોટિલસ ક્રિયાઓ"
+
 #: ../src/nact/nautilus-actions-config.glade.h:65
 msgid ""
 "Nautilus Actions Configuration Tool\n"
@@ -852,7 +868,6 @@ msgid "Path:"
 msgstr "પાથ:"
 
 #: ../src/nact/nautilus-actions-config.glade.h:72
-#| msgid "Project Website"
 msgid "Project website"
 msgstr "પ્રોજેક્ટ વેબસાઈટ"
 
@@ -969,8 +984,8 @@ msgid ""
 "A pattern to match selected files' mimetype against. May include wildcards "
 "(* or ?) (you must set one option for each pattern you need)"
 msgstr ""
-"પસંદ કરેલ ફાઈલો માઇમપ્રકાર વિરુદ્દ સરખાવવા માટેની ભાત. કદાચ વાઈલ્ડકાર્ડો (* અથવા ?) ને સમાવી શકશે "
-"(તમને જરૂરી દરેક ભાત માટે તમારે એક વિકલ્પ સુયોજિત કરવો જ જોઈએ)"
+"પસંદ કરેલ ફાઈલો માઇમપ્રકાર વિરુદ્દ સરખાવવા માટેની ભાત. કદાચ વાઈલ્ડકાર્ડો (* અથવા ?) "
+"ને સમાવી શકશે (તમને જરૂરી દરેક ભાત માટે તમારે એક વિકલ્પ સુયોજિત કરવો જ જોઈએ)"
 
 #: ../src/utils/nautilus-actions-new-config.c:65
 msgid "Set it if the selection can contain files"
