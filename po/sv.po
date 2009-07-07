@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-13 10:26+0200\n"
-"PO-Revision-Date: 2009-06-13 10:28+0100\n"
+"POT-Creation-Date: 2009-07-07 12:50+0200\n"
+"PO-Revision-Date: 2009-07-07 22:02+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -287,24 +287,23 @@ msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-åtgär
 msgid "This XML file is not a valid Nautilus-actions config file (root node is <%s> instead of <%s>)"
 msgstr "Denna XML-fil är inte en giltig konfigurationsfil för Nautilus-åtgärder (rotnod är <%s> istället för <%s>)"
 
-#. i18n notes: will be displayed in a dialog
-#: ../src/nact/nact.c:229
+#: ../src/nact/nact.c:236
 #, c-format
 msgid "Can't duplicate action '%s'!"
 msgstr "Kan inte duplicera åtgärden \"%s\"!"
 
 #. create columns on the tree view
-#: ../src/nact/nact.c:344
+#: ../src/nact/nact.c:352
 #: ../src/nact/nact-import-export.c:179
 msgid "Icon"
 msgstr "Ikon"
 
-#: ../src/nact/nact.c:349
+#: ../src/nact/nact.c:357
 #: ../src/nact/nact-import-export.c:184
 msgid "Label"
 msgstr "Etikett"
 
-#: ../src/nact/nact.c:373
+#: ../src/nact/nact.c:387
 #: ../src/nact/nact-action-editor.c:161
 #: ../src/nact/nact-editor.c:663
 #: ../src/nact/nact-import-export.c:331
@@ -312,6 +311,35 @@ msgstr "Etikett"
 msgid "Could not load interface for Nautilus Actions Config Tool"
 msgstr "Kunde inte läsa in gränssnitt för konfigurationsverktyget för Nautilus-åtgärder"
 
+#: ../src/nact/nact-application.c:246
+msgid "Another instance of Nautilus Actions Configurator is already running."
+msgstr "En annan instans av konfigurationsverktyget för Nautilus-åtgärder är redan igång."
+
+#: ../src/nact/nact-application.c:247
+msgid "Please switch back to it."
+msgstr "Växla tillbaka till den."
+
+#. i18n: this is the application name, used in window title
+#.
+#: ../src/nact/nact-application.c:258
+msgid "Nautilus Actions Configuration Tool"
+msgstr "Konfigurationsverktyg för Nautilus-åtgärder"
+
+#. static int
+#. run_appli( NactApplication *application )
+#. {
+#. int code = 0;
+#.
+#. g_object_set( G_OBJECT( application ), PROP_PIVOT_STR, na_pivot_new( NULL ), NULL );
+#.
+#. g_object_set( G_OBJECT( application ), PROP_MAINWINDOW_STR, nact_init_dialog( G_OBJECT( application ), NULL );
+#.
+#. unique_app_watch_window( application->private->unique, application->private->main );
+#.
+#. gtk_main();
+#.
+#. return( code );
+#. }
 #: ../src/nact/nact.desktop.in.h:1
 msgid "Add items to the Nautilus popup menu"
 msgstr "Lägg till poster till Nautilus popupmeny"
