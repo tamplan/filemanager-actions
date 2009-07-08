@@ -1,0 +1,1053 @@
+# translation of nautilus-actions.po.master.te.po to Telugu
+# Telugu translation of nautilus-actions.
+# Copyright (C) 2009 nautilus-actions's COPYRIGHT HOLDER
+# This file is distributed under the same license as the nautilus-actions package.
+#
+# Krishna Babu K <kkrothap@redhat.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: nautilus-actions.po.master.te\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
+"POT-Creation-Date: 2009-07-06 06:33+0000\n"
+"PO-Revision-Date: 2009-07-07 15:40+0530\n"
+"Last-Translator: Krishna Babu K <kkrothap@redhat.com>\n"
+"Language-Team: Telugu <en@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config.c:212
+#, c-format
+msgid ""
+"The action '%s' already exists with the name '%s', please first remove the "
+"existing one before trying to add this one"
+msgstr ""
+"'%s' అను చర్య యిప్పటికే నామము '%s'తో వుంది, కొత్త దానిని జతచేయుటకు ప్రయత్నించుటకు ముందుగా "
+"వున్న దానిని తీసివేయుము"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config.c:229
+#, c-format
+msgid "Can't save action '%s'"
+msgstr "చర్య '%s'ను దాయలేదు"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config.c:505
+#, c-format
+msgid ""
+"A profile already exists with the name '%s', please first remove or rename "
+"the existing one before trying to add this one"
+msgstr ""
+"'%s' అను నామముతో యిప్పటికే వొక ప్రొఫైల్ వుంది, కొత్త దానిని జతచేయుటకు ప్రయత్నించుటకు ముందుగా "
+"వున్నదానిని తీసివేయుము లేదా పునఃనామకరణ చేయుము"
+
+#. GConf description strings :
+#: ../src/common/nautilus-actions-config-gconf-private.h:80
+#: ../src/utils/nautilus-actions-new-config.c:57
+msgid "The label of the menu item"
+msgstr "మెనూ అంశముయొక్క లేబుల్"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:81
+msgid ""
+"The label of the menu item that will appear in the Nautilus popup menu when "
+"the selection matches the appearance condition settings"
+msgstr ""
+"ఎంపిక అనునది అప్పీయరెన్స్ కండీషన్ అమరికలకు సరిపోలినప్పుడు నాటిలస్ పాపప్ మెనూనందు కనిపించు "
+"మెనూ అంశముయొక్క లేబుల్"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:82
+#: ../src/utils/nautilus-actions-new-config.c:58
+msgid "The tooltip of the menu item"
+msgstr "మెనూ అంశముయొక్క సాధనచిట్కా"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:83
+msgid ""
+"The tooltip of the menu item that will appear in the Nautilus statusbar when "
+"the user points to the Nautilus popup menu item with his/her mouse"
+msgstr ""
+"వినియోగదారి తన మౌస్‌తో నాటిలస్ పాపప్ మెనూ అంశమును సూచించినప్పుడు నాటిలస్ స్థితిపట్టీ నందు "
+"కనిపించు మెనూ అంశముయొక్క సాధనచిట్కా"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:84
+msgid "The icon of the menu item"
+msgstr "మెనూ అంశముయొక్క ప్రతిమ"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:85
+msgid ""
+"The icon of the menu item that will appear next to the label in the Nautilus "
+"popup menu when the selection matches the appearance conditions settings"
+msgstr ""
+"ఎంపిక అనునది అప్పీయరెన్స్ కండీషన్స్ అమరికలకు సరిపోలినప్పుడు నాటిలస్ పాపప్ మెనూనందు లేబుల్ ప్రక్కనే "
+"కనిపించు మెనూ అంశముయొక్క ప్రతిమ"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:86
+msgid "A description name of the profile"
+msgstr "ప్రొఫైల్ యొక్క వివరణ నామము"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:87
+msgid ""
+"The field is here to give the user a human readable name for a profile in "
+"the Nact interface. If not set there will be a default auto generated string "
+"set by default"
+msgstr ""
+"Nact యింటర్ఫేస్ నందలి ప్రొఫైల్‌కు వినియోగదారి చదవగలుగు నామమును యిచ్చుటకు ఈ క్షేత్రము వుంది. "
+"ఒకవేళ అమర్చకపోతే స్వయంచాలకంగా జనియింపబడు వొక అప్రమేయ స్ట్రింగ్ అమర్చబడుతుంది"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:88
+#: ../src/utils/nautilus-actions-new-config.c:60
+#: ../src/utils/nautilus-actions-new-config.c:63
+msgid "The path of the command"
+msgstr "ఆదేశముయొక్క పాత్"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:89
+msgid ""
+"The path of the command to start when the user select the menu item in the "
+"Nautilus popup menu"
+msgstr ""
+"వినియోగదారి నాటిలస్ పాపప్ మెనూనందలి మెనూ అంశమును యెంపికచేయగానే ప్రారంభముకావలసిన ఆదేశము "
+"యొక్క పాత్"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:90
+#: ../src/utils/nautilus-actions-new-config.c:61
+msgid "The parameters of the command"
+msgstr "ఆదేశము యొక్క పారామితులు"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:91
+msgid ""
+"The parameters of the command to start when the user selects the menu item "
+"in the Nautilus popup menu.\n"
+"\n"
+"The parameters can contain some special tokens which are replaced by "
+"Nautilus information before starting the command:\n"
+"\n"
+"%d: base folder of the selected file(s)\n"
+"%f: the name of the selected file or the first one if many are selected\n"
+"%m: space-separated list of the basenames of the selected file(s)/folder(s)\n"
+"%M: space-separated list of the selected file(s)/folder(s), with their full "
+"paths\n"
+"%u: GnomeVFS URI\n"
+"%s: scheme of the GnomeVFS URI\n"
+"%h: hostname of the GnomeVFS URI\n"
+"%U: username of the GnomeVFS URI\n"
+"%%: a percent sign"
+msgstr ""
+"వినియోగదారి నాటిలస్ పాపప్ మెనూనందలి మెనూ అంశమును యెంపికచేయగానే ప్రారంభము కావలసిన ఆదేశముయొక్క "
+"పారామితులు.\n"
+"\n"
+"ఆదేశము ప్రారంభము కావటానికి ముందుగా నాటిలస్ సమాచారముతో పునఃస్థాపించబడు కొన్ని ప్రత్యేక టోకెన్లను పారామితలు "
+"కలిగివుంటాయి:\n"
+"\n"
+"%d: ఎంపికచేసిన దస్త్రము(ల) ఆధార ఫోల్డర్\n"
+"%f: ఎంపికచేసిన దస్త్రము యొక్క నామము లేదా చాలావాటిని యెంపికచేసినచో మొదటిదాని నామము\n"
+"%m: ఎంపికచేసిన దస్త్రము(ల)/ఫోల్డరు(ల) యొక్క ఆధారనామముల జాబితా\n"
+"%M: ఎంపికచేసిన దస్త్రము(ల)/ఫోల్డరు(ల) యొక్క జాబితా, వాటియొక్క పూర్తి పాత్‌లతో\n"
+"%u: GnomeVFS URI\n"
+"%s: GnomeVFS URI యొక్క స్కీమ్\n"
+"%h: GnomeVFS URI యొక్క హోస్ట్ నామము\n"
+"%U: GnomeVFS URI యొక్క వినియోగదారి నామము\n"
+"%%: ఒక శాతము గుర్తు"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:92
+msgid "The list of pattern to match the selected file(s)/folder(s)"
+msgstr "ఎంపికచేసిన దస్త్రము(లు)/ఫోల్డరు(లు)కు సరిపోల్చుటకు మాదిరిల జాబితా"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:93
+msgid ""
+"A list of strings with joker '*' or '?' to match the name of the selected "
+"file(s)/folder(s). Each selected items must match at least one of the "
+"filename patterns for the action to appear"
+msgstr ""
+"ఎంపికచేసిన దస్త్రము(ల)/ఫోల్డరు(ల) నామముతో సరిపోల్చుటకు జోకర్‌ '*' లేదా '?'తో స్ట్రింగ్ యొక్క జాబితా. "
+"ఎంపిక కాబడిన ప్రతి అంశము కనీసం వొక దస్త్రమునామపు మాదిరితోనైనా సరిపోలవలెను"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:94
+msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
+msgstr "దస్త్రమునామపు మాదిరిలు చిన్నపెద్ద అక్షరతేడాలను గుర్తించాలి అంటే 'సత్యము', లేకపోతే 'అసత్యము'"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:95
+msgid ""
+"If you need to match a filename in a case-sensitive manner, set this key to "
+"'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
+"'false'"
+msgstr ""
+"మీరు దస్త్రమునామము చిన్నా-పెద్ద అక్షరతేడా గుర్తించు రీతిలో సరిపోల్చవలసివస్తే, ఈ కీను 'సత్యము'కు అమర్చుము. "
+"ఒకవేళ మీరు, ఉదాహరణకు '*.jpg' అనునది 'photo.JPG'తో సరిపోలవలెనని అనుకుంటే గనుక, 'అసత్యము'కు "
+"అమర్చుము"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:96
+msgid "The list of patterns to match the mimetypes of the selected file(s)"
+msgstr "ఎంపికచేసిన దస్త్రము(ల) యొక్క మైమ్‌రకములను సరిపోల్చుటకు మాదిరిల జాబితా"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:97
+msgid ""
+"A list of strings with joker '*' or '?' to match the mimetypes of the "
+"selected file(s). Each selected items must match at least one of the "
+"mimetype patterns for the action to appear"
+msgstr ""
+"ఎంపికచేసిన దస్త్రము(ల) యొక్క మైమ్‌రకములను సరిపోల్చుటకు జోకర్ '*' లేదా '?'తో స్ట్రింగ్స్  యొక్క "
+"జాబితా. ప్రతి యెంపికచేసిన అంశము కనీసం వొక్క మైమ్‌రకపు మాదిరితోనైనా తప్పక సరిపోలవలెను"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:98
+msgid ""
+"The valid combinations are:\n"
+"\n"
+"isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
+"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
+"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
+"configuration will never appear)"
+msgstr ""
+"చెల్లునటువంటి సంయోగములు:\n"
+"\n"
+"isfile=TRUE మరియు isdir=FALSE: యెంపిక దస్త్రములను మాత్రమే కలిగివుండవచ్చును\n"
+"isfile=FALSE మరియు isdir=TRUE: యెంపిక ఫోల్డర్లను మాత్రమే కలిగివుండవచ్చును\n"
+"isfile=TRUE మరియు isdir=TRUE: యెంపిక దస్త్రములను మరియు ఫోల్డర్లను రెంటిని కలిగివుండవచ్చు\n"
+"isfile=FALSE మరియు isdir=FALSE: ఇది వొక చెల్లని సంయోగము (మీ ఆకృతీకరణ యెప్పటికి "
+"కనిపించదు)"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:99
+msgid "'true' if the selection can have files, 'false' otherwise"
+msgstr "ఎంపిక దస్త్రములను కలిగివుండవలెనంటే 'సత్యము', లేకపోతే 'అసత్యము'"
+
+#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
+#: ../src/common/nautilus-actions-config-gconf-private.h:101
+msgid "This setting is tied in with the 'isdir' setting. "
+msgstr "ఈ అమర్పు అనునది 'isdir' అమర్పుతో బందించబడుతుంది. "
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:102
+msgid "'true' if the selection can have folders, 'false' otherwise"
+msgstr "ఎంపిక ఫోల్డర్లను కలిగివుండవలెనంటే 'సత్యము', లేకపోతే 'అసత్యము'"
+
+#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
+#: ../src/common/nautilus-actions-config-gconf-private.h:104
+msgid "This setting is tied in with the 'isfile' setting. "
+msgstr "ఈ అమర్పు 'isfile' అమర్పుతో బందించబడుతుంది. "
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:105
+msgid "'true' if the selection can have several items, 'false' otherwise"
+msgstr "ఎంపిక చాలా అంశములను కలిగివుండవలెనంటే 'సత్యము', లేకపోతే 'అసత్యము'"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:106
+msgid ""
+"If you need one or more files or folders to be selected, set this key to "
+"'true'. If you want just one file or folder, set 'false'"
+msgstr ""
+"మీరు వొకటి లేక అంతకన్నా యెక్కువ దస్త్రములను లేదా ఫోల్డర్లను యెంపికచేయవలెనంటే, ఈ కీను 'సత్యము'కు "
+"అమర్చుము. మీకు వొక దస్త్రము లేదా ఫోల్డరు మాత్రమే కావలెనంటే, 'అసత్యము'కు అమర్చుము"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:107
+msgid "The list of GnomeVFS schemes where the selected files should be located"
+msgstr "ఎంపికచేయబడిన దస్త్రములు వుంచబడు GnomeVFS స్కీమాల జాబితా"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:108
+msgid ""
+"Defines the list of valid GnomeVFS schemes to be matched against the "
+"selected items. The GnomeVFS scheme is the protocol used to access the "
+"files. The keyword to use is the one used in the GnomeVFS URI.\n"
+"\n"
+"Examples of GnomeVFS URI include: \n"
+"file:///tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt\n"
+"\n"
+"The most common schemes are:\n"
+"\n"
+"'file': local files\n"
+"'sftp': files accessed via SSH\n"
+"'ftp': files accessed via FTP\n"
+"'smb': files accessed via Samba (Windows share)\n"
+"'dav': files accessed via WebDav\n"
+"\n"
+"All GnomeVFS schemes used by Nautilus can be used here."
+msgstr ""
+"ఎంపికచేసిన అంశములు సరిపోలవలసిన విలువైన GnomeVFS స్కీమాల జాబితాను నిర్వచిస్తుంది. GnomeVFS "
+"స్కీమా అనునది దస్త్రములను యాక్సెస్ చేయుటకు వుపయోగించు ప్రొటోకాల్. దీనిని వుపయోగించుటకు కీపదము "
+"GnomeVFS URI నందు వుపయోగించినదే.\n"
+"\n"
+"GnomeVFS URI యొక్క వుదాహరణలు: \n"
+"file:///tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt\n"
+"\n"
+"అతి సాదారణమైన స్కీమాలు:\n"
+"\n"
+"'file': స్థానిక దస్త్రములు\n"
+"'sftp': SSH ద్వారా యాక్సెస్ చేసిన దస్త్రములు\n"
+"'ftp': FTP ద్వారా యాక్సెస్ చేసిన దస్త్రములు\n"
+"'smb': సాంబా ద్వారా యాక్సెస్ చేసిన దస్త్రములు (Windows భాగస్వామ్యం)\n"
+"'dav': WebDav ద్వారా యాక్సెస్ చేసిన దస్త్రములు\n"
+"\n"
+"నాటిలస్ ద్వారా వుపయోగించిన అన్ని GnomeVFS స్కీములు యిక్కడ వుపయోగించబడతాయి."
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:109
+msgid "The version of the configuration format"
+msgstr "ఆకృతీకరణ ఫార్మాట్ యొక్క వర్షన్"
+
+#: ../src/common/nautilus-actions-config-gconf-private.h:110
+msgid ""
+"The version of the configuration format that will be used to manage backward "
+"compatibility"
+msgstr "గతవాటితో సారూప్యతను నిర్వహించుటకు వుపయోగించబడు ఆకృతీకరణ ఫార్మాట్ యొక్క వర్షన్"
+
+#. i18n notes: will be displayed in an error dialog concatenated
+#. * to another error message
+#.
+#: ../src/common/nautilus-actions-config-schema-reader.c:193
+msgid " and some profiles are incomplete: "
+msgstr " మరియు కొన్ని ప్రొఫైల్సు అసంపూర్ణంగావున్నాయి: "
+
+#. i18n notes: this is a list separator, it can have more than one
+#. * character (ie, in French it will be ", ")
+#.
+#. i18n notes: this is a list separator, it can have more
+#. * than one character (ie, in French it will be ", ")
+#.
+#: ../src/common/nautilus-actions-config-schema-reader.c:217
+#: ../src/common/nautilus-actions-config-schema-reader.c:736
+msgid ","
+msgstr ","
+
+#. i18n notes: will be displayed in an error dialog
+#. * concatenated to another error message
+#.
+#: ../src/common/nautilus-actions-config-schema-reader.c:320
+#, c-format
+msgid "%s (one missing key: %s)%s"
+msgid_plural "%s (missing keys: %s)%s"
+msgstr[0] "%s (ఒక తప్పిపోయిన కీ: %s)%s"
+msgstr[1] "%s (తప్పిపోయిన కీలు: %s)%s"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config-schema-reader.c:699
+#: ../src/common/nautilus-actions-config-schema-reader.c:836
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (found <%s> "
+"element instead of <%s>)"
+msgstr ""
+"ఈ XML దస్త్రము చెల్లునటువంటి నాటిలస్-చర్యల ఆకృతీకరణ దస్త్రము కాదు ( <%s> మూలకంను "
+"<%s> బదులుగా కనుగొన్నది)"
+
+#. if the version of the file is greater than the current one, we reject the file
+#: ../src/common/nautilus-actions-config-schema-reader.c:713
+#, c-format
+msgid ""
+"This config file is more recent than this version of Nautilus-actions can "
+"support. Please upgrade Nautilus-actions to the latest version if you want "
+"to be able to import it (File version: %s (max supported version : %s))"
+msgstr ""
+"ఈ ఆకృతీకరణ దస్త్రము నాటిలస్-చర్యలు మద్దతిచ్చు దానికంటే మరీ కొత్తది. మీరు దానిని దిగుమతి చేయవలెనంటే "
+"దయచేసి నాటిలస్-చర్యలును సరికొత్త వర్షన్‌కు నవీకరించుము (దస్త్రము వర్షన్: %s (గరిష్టంగా మద్దతిచ్చు వర్షన్ : %s))"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config-schema-reader.c:763
+#, c-format
+msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
+msgid_plural ""
+"This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
+"s"
+msgstr[0] "ఈ XML దస్త్రము చెల్లునటువంటి నాటిలస్-చర్యలు ఆకృతీకరణ దస్త్రము కాదు (తప్పిపోయిన కీ: %s)%s"
+msgstr[1] "ఈ XML దస్త్రము చెల్లునటువంటి నాటిలస్-చర్యల ఆకృతీకరణ దస్త్రముకాదు (తప్పిపోయిన కీలు: %s)%s"
+
+#. No error occured but we have not found the "version" gconf key
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config-schema-reader.c:772
+#, c-format
+msgid "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+msgstr "ఈ XML దస్త్రము చెల్లునటువంటి నాటిలస్-చర్యల ఆకృతీకరణ దస్త్రము కాదు (తప్పిపోయిన కీ: %s)"
+
+#. i18n notes: will be displayed in an error dialog
+#: ../src/common/nautilus-actions-config-schema-reader.c:846
+#, c-format
+msgid ""
+"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
+"instead of <%s>)"
+msgstr ""
+"ఈ XML దస్త్రము చెల్లునటువంటి నాటిలస్-చర్యల ఆకృతీకరణ దస్త్రము కాదు (root నోడ్ <%s> దీనికి "
+"బదులుగా <%s>)"
+
+#: ../src/nact/nact.c:236
+#, c-format
+msgid "Can't duplicate action '%s'!"
+msgstr "చర్య '%s'ను నకిలీ చేయలేము!"
+
+#. create columns on the tree view
+#: ../src/nact/nact.c:352 ../src/nact/nact-import-export.c:179
+msgid "Icon"
+msgstr "ప్రతిమ"
+
+#: ../src/nact/nact.c:357 ../src/nact/nact-import-export.c:184
+msgid "Label"
+msgstr "లేబుల్"
+
+#: ../src/nact/nact.c:387 ../src/nact/nact-action-editor.c:161
+#: ../src/nact/nact-editor.c:663 ../src/nact/nact-import-export.c:331
+#: ../src/nact/nact-profile-editor.c:567
+msgid "Could not load interface for Nautilus Actions Config Tool"
+msgstr "నాటిలస్ చర్యల ఆకృతీకరణ సాధనము కొరకు యింటర్ఫేస్‌ను లోడుచేయలేక పోయింది"
+
+#: ../src/nact/nact-application.c:246
+msgid "Another instance of Nautilus Actions Configurator is already running."
+msgstr "నాటిలస్ చర్యల ఆకృతీకరణి యొక్క వేరొక సంభవం యిప్పటికే నడుచుచున్నది."
+
+#: ../src/nact/nact-application.c:247
+msgid "Please switch back to it."
+msgstr "దయచేసి దీనికి మారండి."
+
+#. i18n: this is the application name, used in window title
+#.
+#: ../src/nact/nact-application.c:258
+msgid "Nautilus Actions Configuration Tool"
+msgstr "నాటిలస్ చర్యల ఆకృతీకరణ సాధనము"
+
+#. static int
+#. run_appli( NactApplication *application )
+#. {
+#. int code = 0;
+#.
+#. g_object_set( G_OBJECT( application ), PROP_PIVOT_STR, na_pivot_new( NULL ), NULL );
+#.
+#. g_object_set( G_OBJECT( application ), PROP_MAINWINDOW_STR, nact_init_dialog( G_OBJECT( application ), NULL );
+#.
+#. unique_app_watch_window( application->private->unique, application->private->main );
+#.
+#. gtk_main();
+#.
+#. return( code );
+#. }
+#: ../src/nact/nact.desktop.in.h:1
+msgid "Add items to the Nautilus popup menu"
+msgstr "నాటిలస్ పాపప్ మెనూకు అంశములను జతచేయుము"
+
+#: ../src/nact/nact.desktop.in.h:2
+msgid "Nautilus Actions Configuration"
+msgstr "నాటిలస్ చర్యల ఆకృతీకరణ"
+
+#: ../src/nact/nact-action-editor.c:186 ../src/nact/nact-action-editor.c:189
+#: ../src/nact/nact-editor.c:681 ../src/nact/nact-editor.c:684
+msgid "Icon of the menu item in the Nautilus popup menu"
+msgstr "నాటిలస్ పాపప్ మెనూనందు మెనూ అంశముయొక్క ప్రతిమ"
+
+#: ../src/nact/nact-action-editor.c:230
+msgid "Add a new action"
+msgstr "కొత్త చర్యను జతచేయుము"
+
+#: ../src/nact/nact-action-editor.c:234
+#, c-format
+msgid "Edit action \"%s\""
+msgstr "\"%s\" చర్యను సరికూర్చుము"
+
+#. i18n notes: when no icon is selected in the drop-down list
+#: ../src/nact/nact-editor.c:195
+msgid "None"
+msgstr "ఏదీకాదు"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact-editor.c:485
+#, c-format
+msgid "Can't copy action's profile '%s'!"
+msgstr "చర్యయొక్క ప్రొఫైల్‌ '%s'ను నకలుతీయలేదు!"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact-editor.c:509
+#, c-format
+msgid "Can't paste action's profile '%s'!"
+msgstr "చర్యయొక్క ప్రొఫైల్‌ '%s'ను అతికించలేదు!"
+
+#. printf ("profile_name : %s\n", action_profile->desc_name);
+#. i18n notes: this is the default name of a copied profile
+#: ../src/nact/nact-editor.c:514
+#, c-format
+msgid "%s Copy"
+msgstr "%s నకలు"
+
+#. i18n notes: will be displayed in a dialog
+#: ../src/nact/nact-editor.c:573
+#, c-format
+msgid "Can't delete action's profile '%s'!"
+msgstr "చర్యయొక్క ప్రొఫైల్ '%s'ను తొలగించలేదు!"
+
+#: ../src/nact/nact-editor.c:626
+msgid "Profile Name"
+msgstr "ప్రొఫైల్ నామము"
+
+#: ../src/nact/nact-editor.c:706
+msgid "Add a New Action"
+msgstr "కొత్త చర్యను జతచేయుము"
+
+#: ../src/nact/nact-editor.c:710
+#, c-format
+msgid "Edit Action \"%s\""
+msgstr "చర్య \"%s\"ను సరికూర్చుము"
+
+#: ../src/nact/nact-import-export.c:223
+#, c-format
+msgid "Can't parse file '%s' as GConf schema description file!"
+msgstr "దస్త్రము '%s'ను GConf స్కీమా వివరణ దస్త్రమువలె పార్శ్ చేయలేక పోయింది!"
+
+#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
+#: ../src/nact/nact-import-export.c:244
+#, c-format
+msgid "Action '%s' importation failed!"
+msgstr "చర్య '%s' దిగుమతిచేయుట విఫలమైంది!"
+
+#. initialize the default schemes
+#. i18n notes : description of 'file' scheme
+#: ../src/nact/nact-prefs.c:172
+#, c-format
+msgid "%sLocal Files"
+msgstr "%sస్థానిక దస్త్రములు"
+
+#. i18n notes : description of 'sftp' scheme
+#: ../src/nact/nact-prefs.c:174
+#, c-format
+msgid "%sSSH Files"
+msgstr "%sSSH దస్త్రములు"
+
+#. i18n notes : description of 'smb' scheme
+#: ../src/nact/nact-prefs.c:176
+#, c-format
+msgid "%sWindows Files"
+msgstr "%sWindows దస్త్రములు"
+
+#. i18n notes : description of 'ftp' scheme
+#: ../src/nact/nact-prefs.c:178
+#, c-format
+msgid "%sFTP Files"
+msgstr "%sFTP దస్త్రములు"
+
+#. i18n notes : description of 'dav' scheme
+#: ../src/nact/nact-prefs.c:180
+#, c-format
+msgid "%sWebdav Files"
+msgstr "%sWebdav దస్త్రములు"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../src/nact/nact-profile-editor.c:299
+msgid "new-scheme"
+msgstr "కొత్త-స్కీమా"
+
+#: ../src/nact/nact-profile-editor.c:300
+msgid "New Scheme Description"
+msgstr "కొత్త స్కీమా వివరణ"
+
+#: ../src/nact/nact-profile-editor.c:396
+msgid "Scheme"
+msgstr "స్కీమా"
+
+#: ../src/nact/nact-profile-editor.c:407
+msgid "Description"
+msgstr "వివరణ"
+
+#: ../src/nact/nact-profile-editor.c:608
+msgid "Add a New Profile"
+msgstr "ఒక కొత్త ప్రొఫైల్ జతచేయుము"
+
+#: ../src/nact/nact-profile-editor.c:612
+#, c-format
+msgid "Edit Profile \"%s\""
+msgstr "ప్రొఫైల్ \"%s\" సరికూర్చుము"
+
+#. i18n notes: example strings for the command preview
+#: ../src/nact/nact-utils.c:196
+msgid "/path/to"
+msgstr "/path/to"
+
+#: ../src/nact/nact-utils.c:197 ../src/nact/nact-utils.c:199
+msgid "file1.txt"
+msgstr "file1.txt"
+
+#: ../src/nact/nact-utils.c:197
+msgid "file2.txt"
+msgstr "file2.txt"
+
+#: ../src/nact/nact-utils.c:198 ../src/nact/nact-utils.c:199
+msgid "folder1"
+msgstr "folder1"
+
+#: ../src/nact/nact-utils.c:198
+msgid "folder2"
+msgstr "folder2"
+
+#: ../src/nact/nact-utils.c:201
+msgid "test.example.net"
+msgstr "test.example.net"
+
+#: ../src/nact/nact-utils.c:202
+msgid "file.txt"
+msgstr "file.txt"
+
+#: ../src/nact/nact-utils.c:203
+msgid "folder"
+msgstr "folder"
+
+#: ../src/nact/nautilus-actions-config.glade.h:1
+msgid ""
+"(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"(C) 2009 Pierre Wieser <pwieser@trychlos.org>"
+msgstr ""
+"(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"(C) 2009 Pierre Wieser <pwieser@trychlos.org>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:4
+#, no-c-format
+msgid "<b>%%</b>: a percent sign"
+msgstr "<b>%%</b>: శాతం గుర్తు"
+
+#: ../src/nact/nautilus-actions-config.glade.h:6
+#, no-c-format
+msgid ""
+"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
+"full paths"
+msgstr "<b>%M</b>: ఎంపికచేసిన దస్త్రము(ల)/ఫోల్డరు(ల) పూర్తి పాత్‌ల జాబితా"
+
+#: ../src/nact/nautilus-actions-config.glade.h:8
+#, no-c-format
+msgid "<b>%U</b>: username of the GnomeVFS URI"
+msgstr "<b>%U</b>: GnomeVFS URI యొక్క వినియోగదారి నామము"
+
+#: ../src/nact/nautilus-actions-config.glade.h:10
+#, no-c-format
+msgid "<b>%d</b>: base folder of the selected file(s)"
+msgstr "<b>%d</b>: ఎంపికచేసిన దస్త్రము(ల) ప్రాధమిక ఫోల్డర్"
+
+#: ../src/nact/nautilus-actions-config.glade.h:12
+#, no-c-format
+msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+msgstr "<b>%f</b>: ఎంపికచేసిన దస్త్రముయొక్క నామము లేదా చాలావాటిని యెంపికచేసివుంటే మొదటిదాని నామము"
+
+#: ../src/nact/nautilus-actions-config.glade.h:14
+#, no-c-format
+msgid "<b>%h</b>: hostname of the GnomeVFS URI"
+msgstr "<b>%h</b>: GnomeVFS URI యొక్క హోస్టునామము"
+
+#: ../src/nact/nautilus-actions-config.glade.h:16
+#, no-c-format
+msgid ""
+"<b>%m</b>: space-separated list of the basenames of the selected\n"
+"file(s)/folder(s)"
+msgstr "<b>%m</b>: ఎంపికచేసిన దస్త్రము(ల)/ఫోల్డరు(ల) ఆధారనామముల జాబితా"
+
+#: ../src/nact/nautilus-actions-config.glade.h:19
+#, no-c-format
+msgid "<b>%s</b>: scheme of the GnomeVFS URI"
+msgstr "<b>%s</b>: GnomeVFS URI యొక్క స్కీమ్"
+
+#: ../src/nact/nautilus-actions-config.glade.h:21
+#, no-c-format
+msgid "<b>%u</b>: GnomeVFS URI"
+msgstr "<b>%u</b>: GnomeVFS URI"
+
+#: ../src/nact/nautilus-actions-config.glade.h:22
+msgid "<b>Action</b>"
+msgstr "<b>చర్య</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:23
+msgid "<b>Appears if file matches</b>"
+msgstr "<b>దస్త్రము సరిపోలితే కనిపిస్తుంది</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:24
+msgid "<b>Appears if scheme is in this list</b>"
+msgstr "<b>స్కీమా ఈ జాబితానందు వుంటే కనిపిస్తుంది</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:25
+msgid "<b>Appears if selection contains</b>"
+msgstr "<b>ఎంపిక కలిగివుంటే కనిపిస్తుంది</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:26
+msgid "<b>Nautilus Menu Item</b>"
+msgstr "<b>నాటిలస్ మెనూ అంశము</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:27
+msgid "<b>Profiles</b>"
+msgstr "<b>ప్రొఫైలులు</b>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:29
+#, no-c-format
+msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
+msgstr "<i><b><span size=\"small\">ఉ.దా., %s</span></b></i>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:30
+msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
+msgstr "<span size=\"larger\"><b>పారామితి లెజెండ్</b></span>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:31
+msgid ""
+"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
+"\n"
+"place secondary text here"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">ప్రాధమిక పాఠ్యమును యిక్కడ వుంచుము</span>\n"
+"\n"
+"ద్వితీయ పాఠ్యమును యిక్కడ వుంచుము"
+
+#: ../src/nact/nautilus-actions-config.glade.h:34
+msgid ""
+"A string with wildcards (? or *) that will be used to match the filenames. "
+"You can set several filename patterns by separating them with a semi-colon "
+"(;)."
+msgstr ""
+"దస్త్రనామములను సరిపోల్చుటకు వుపయోగించబడే స్ట్రింగ్ వైల్డుకార్డ్సు (? లేదా *)తో. "
+"(;)తో వేరుచేయుట ద్వారా మీరు చాలా దస్త్రనామపు మాదిరిలను అమర్చవచ్చును."
+
+#: ../src/nact/nautilus-actions-config.glade.h:35
+msgid ""
+"A string with wildcards (? or *) that will be used to match the mimetypes of "
+"files. You can set several mimetype patterns by separating them with a semi-"
+"colon (;)."
+msgstr ""
+"దస్త్రనాముల యొక్క మైమ్ రకములను సరిపోల్చుటకు వుపయోగించబడే స్ట్రింగ్ వైల్డుకార్డ్సు (? లేదా *)తో. "
+"(;)తో వేరుచేయుట ద్వారా మీరు చాలా మైమ్ రకపు మాదిరిలను అమర్చవచ్చును."
+
+#: ../src/nact/nautilus-actions-config.glade.h:36
+msgid "Action"
+msgstr "చర్య"
+
+#: ../src/nact/nautilus-actions-config.glade.h:37
+msgid "Advanced Conditions"
+msgstr "అదునాతన నియమములు"
+
+#: ../src/nact/nautilus-actions-config.glade.h:38
+msgid "Appears if selection has multiple files or folders"
+msgstr "ఎంపిక బహుళ దస్త్రములను లేదా ఫోల్డర్లను కలిగివుంటే కనిపిస్తుంది"
+
+#: ../src/nact/nautilus-actions-config.glade.h:39
+msgid "Both"
+msgstr "రెండూ"
+
+#: ../src/nact/nautilus-actions-config.glade.h:40
+msgid "Click to add a new scheme."
+msgstr "కొత్త స్కీమును జతచేయుటకు నొక్కుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:41
+msgid "Click to choose a command from the file chooser dialog."
+msgstr "దస్త్రము యెంపికదారి డైలాగునుండి ఆదేశమును యెంచుకొనుటకు నొక్కుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:42
+msgid ""
+"Click to choose a custom icon from a file instead of a predefined icon from "
+"the drop-down list."
+msgstr ""
+"డ్రాప్-డౌన్ జాబితా నుండి ముందుగానిర్వచించిన ప్రతిమకు బదులుగా దస్త్రమునుండి మలచుకొనిన ప్రతిమను "
+"యెంచుకొనుటకు నొక్కుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:43
+msgid "Click to remove the selected scheme."
+msgstr "ఎంపికచేసిన స్కీమును తీసివేయుటకు నొక్కుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:44
+msgid ""
+"Click to toggle the display of the list of special tokens you can use in the "
+"parameter field."
+msgstr ""
+"పారామితి క్షేత్రమునందు మీరు వుపయోగించగలిగిన ప్రత్యేక టోకెన్ల జాబితాయొక్క ప్రదర్శనను మార్చుటకు "
+"నొక్కుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:45
+msgid "Conditions"
+msgstr "నియమములు"
+
+#: ../src/nact/nautilus-actions-config.glade.h:46
+msgid "Create a copy of the selected action."
+msgstr "ఎంపికచేసిన చర్యయొక్క నకలును సృష్టించుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:47
+msgid "Delete the action without any confirmation nor the possibility to restore it."
+msgstr "ఎటువంటి నిర్ధారణ లేకుండా మరియు తిరిగివుంచుటకు వీలుకాకుండా చర్యను తొలగించుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:48
+msgid "Duplicate"
+msgstr "నకిలీ"
+
+#: ../src/nact/nautilus-actions-config.glade.h:49
+msgid "Export existing configs"
+msgstr "ఉన్న ఆకృతీకరణలను ఎగుమతిచేయుము"
+
+#: ../src/nact/nautilus-actions-config.glade.h:50
+msgid "File to Import:"
+msgstr "దిగుమతి చేయుటకు దస్త్రము:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:51
+msgid "Filenames:"
+msgstr "దస్త్రమునామములు:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:52
+msgid "Icon:"
+msgstr "ప్రతిమ:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:53
+msgid ""
+"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
+"will not match photo.JPG)"
+msgstr ""
+"ఎంపికచేసినట్లైతే, దస్త్రమునామపు మాదిరిలు చిన్నపెద్ద అక్షరము తేడాతో సరిపోల్చబడతాయి (ఉదా, *.jpg "
+"అనునది photo.JPGతో సరిపోలదు)"
+
+#: ../src/nact/nautilus-actions-config.glade.h:54
+msgid "Import new configurations"
+msgstr "కొత్త ఆకృతీకరణలను దిగుమతిచేయుము"
+
+#: ../src/nact/nautilus-actions-config.glade.h:55
+msgid "Import/Export"
+msgstr "దిగుమతి/ఎగుమతి"
+
+#: ../src/nact/nautilus-actions-config.glade.h:56
+msgid "Import/Export Settings"
+msgstr "దిగుమతి/ఎగుమతి అమరికలు"
+
+#: ../src/nact/nautilus-actions-config.glade.h:57
+msgid "Label of the menu item in the Nautilus popup menu."
+msgstr "నాటిలస్ పాపప్ మెనూనందు మెనూ అంశముయొక్క లేబుల్."
+
+#: ../src/nact/nautilus-actions-config.glade.h:58
+msgid "Label:"
+msgstr "లేబుల్:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:59
+msgid ""
+"Manage importation of external action configurations and exportation of "
+"existing actions."
+msgstr "బాహ్య చర్యా ఆకృతీకరణల దిగుమతీకరణను మరియు అంతర్గత చర్యల ఎగుమతీకరణను నిర్వహిస్తుంది."
+
+#: ../src/nact/nautilus-actions-config.glade.h:60
+msgid "Match case"
+msgstr "అక్షరపు కేస్(చిన్నపెద్ద అక్షరపుతేడా)ను సరిపోల్చుము"
+
+#: ../src/nact/nautilus-actions-config.glade.h:61
+msgid "Mimetypes:"
+msgstr "మైమ్‌రకములు:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:62
+msgid "Nautilus Action Editor"
+msgstr "నాటిలస్ చర్యా సరికూర్పరి"
+
+#: ../src/nact/nautilus-actions-config.glade.h:63
+msgid "Nautilus Action Profile Editor"
+msgstr "నాటిలస్ చర్యా ప్రొఫైల్ సరికూర్పరి"
+
+#: ../src/nact/nautilus-actions-config.glade.h:64
+msgid "Nautilus Actions"
+msgstr "నాటిలస్ చర్యలు"
+
+#: ../src/nact/nautilus-actions-config.glade.h:65
+msgid ""
+"Nautilus Actions Configuration Tool\n"
+"Application to configure Nautilus Action extension"
+msgstr ""
+"నాటిలస్ చర్యల ఆకృతీకరణ సాధనము\n"
+"నాటిలస్ చర్యా పొడిగింపును ఆకృతీకరించుటకు అనువర్తనము"
+
+#: ../src/nact/nautilus-actions-config.glade.h:67
+msgid "Only files"
+msgstr "దస్త్రములు మాత్రమే"
+
+#: ../src/nact/nautilus-actions-config.glade.h:68
+msgid "Only folders"
+msgstr "ఫోల్డర్లు మాత్రమే"
+
+#: ../src/nact/nautilus-actions-config.glade.h:69
+msgid ""
+"Parameters that will be sent to the program. Click on the 'Legend' button to "
+"see the different replacement tokens."
+msgstr "ప్రోగ్రామ్‌కు పంపబడే పారామితులు. విభిన్న పునఃస్థాపన టోకెన్లను చూడుటకు 'లెజెండ్' బటన్‌పై వత్తుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:70
+msgid "Parameters:"
+msgstr "పారామితులు:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:71
+msgid "Path:"
+msgstr "పాత్:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:72
+msgid "Project website"
+msgstr "ప్రోజెక్టు వెబ్‌సైటు"
+
+#: ../src/nact/nautilus-actions-config.glade.h:73
+msgid "Save in Folder:"
+msgstr "ఫోల్డర్‌నందు దాయుము:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:74
+msgid ""
+"Select the configurations you want to export. Use Shift or Ctrl key to "
+"select more than one."
+msgstr ""
+"మీరు ఎగుమతి చేయాలని అనుకొనుచున్న ఆకృతీకరణలను యెంపికచేయుము. ఒకటి కన్నా యెక్కువవాటిని "
+"యెంచుకొనుటకు Shift లేదా Ctrl కీను యెంపికచేయుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:75
+msgid "Select the configurations you want to export:"
+msgstr "మీరు ఎగుమతి చేయాలని అనుకొనుచున్న ఆకృతీకరణలను యెంపికచేయుము:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:76
+msgid "Select the file you want to import."
+msgstr "మీరు దిగుమతి చేయాలని అనుకొనుచున్న దస్త్రమును యెంపికచేయుము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:77
+msgid ""
+"Select the folder you want your config to be saved in. This folder must "
+"exist."
+msgstr "మీ ఆకృతీకరణ దాయాలని అనుకొనుచున్న ఫోల్డరును యెంపికచేయుము. ఈ ఫోల్డర్ తప్పక కలిగివుండవలెను."
+
+#: ../src/nact/nautilus-actions-config.glade.h:78
+msgid ""
+"Select the kind of files where you want your action to appear. If you don't "
+"know what to choose, try selecting just 'file' which is the most common "
+"choice. You can add a new scheme by clicking on the '+' button."
+msgstr ""
+"మీరు యెటువంటి దస్త్రముల వద్ద మీ చర్య కనిపించాలని అనుకొనుచున్నారో యెంపికచేయండి. మీకు యేది "
+"యెంచుకొనవలెనో తెలియకపోతే, చాలా సాదారణమైన యెంపిక అయినటువంటి 'file' యెంపికచేసి "
+"ప్రయత్నించండి. '+' బటన్‌పైన నొక్కుట ద్వారా మీరు కొత్త స్కీమా దస్త్రమును జతచేయవచ్చును."
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../src/nact/nautilus-actions-config.glade.h:80
+msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
+msgstr "GNOME అనువాదీకరణ ప్రోజెక్టు <gnome-i18n@gnome.org>"
+
+#: ../src/nact/nautilus-actions-config.glade.h:81
+msgid ""
+"The command that will be launched by selecting the action in Nautilus popup "
+"menu."
+msgstr "నాటిలస్ పాపప్ మెనూ నందలి చర్యను యెంపికచేయగనే ఆరంభించబడు ఆదేశము."
+
+#: ../src/nact/nautilus-actions-config.glade.h:82
+msgid "This software is licensed under the GNU Genaral Public License (GPL)"
+msgstr "ఈ సాఫ్టువేరు GNU జనరల్ పబ్లిక్ లెసెన్సు (GPL) క్రింద లెసెన్సు చేయబడింది"
+
+#: ../src/nact/nautilus-actions-config.glade.h:83
+msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
+msgstr "నాటిలస్ స్థితిపట్టీనందు కనిపించు మెనూ అంశముయొక్క సాధనచిట్కా."
+
+#: ../src/nact/nautilus-actions-config.glade.h:84
+msgid "Tooltip:"
+msgstr "సాధనచిట్కా:"
+
+#: ../src/nact/nautilus-actions-config.glade.h:85
+msgid "_Browse"
+msgstr "అన్వేషించు (_B)"
+
+#: ../src/nact/nautilus-actions-config.glade.h:86
+msgid "_Legend"
+msgstr "లెజెండ్(_L)"
+
+#: ../src/utils/nautilus-actions-new-config.c:57
+msgid "LABEL"
+msgstr "LABEL"
+
+#: ../src/utils/nautilus-actions-new-config.c:58
+msgid "TOOLTIP"
+msgstr "TOOLTIP"
+
+#: ../src/utils/nautilus-actions-new-config.c:59
+msgid "The icon of the menu item (filename or GTK stock ID)"
+msgstr "మెనూ అంశము యొక్క ప్రతిమ (దస్త్రమునామము లేదా GTK స్టాక్ ID)"
+
+#: ../src/utils/nautilus-actions-new-config.c:59
+msgid "ICON"
+msgstr "ICON"
+
+#: ../src/utils/nautilus-actions-new-config.c:60
+#: ../src/utils/nautilus-actions-new-config.c:63
+#: ../src/utils/nautilus-actions-new-config.c:69
+msgid "PATH"
+msgstr "PATH"
+
+#: ../src/utils/nautilus-actions-new-config.c:61
+msgid "PARAMS"
+msgstr "PARAMS"
+
+#: ../src/utils/nautilus-actions-new-config.c:62
+msgid ""
+"A pattern to match selected files against. May include wildcards (* or ?) "
+"(you must set one option for each pattern you need)"
+msgstr ""
+"ఎంపికచేసిన దస్త్రములను సరిపోల్చుటకు మాదిరి. వైల్డుకార్డ్స్ కూడా చేర్చవచ్చును (* లేదా ?) "
+"(మీకు కావలసిన ప్రతి మాదిరికి మీరు వొక ఐచ్చికాన్ని అమర్చాలి)"
+
+#: ../src/utils/nautilus-actions-new-config.c:62
+#: ../src/utils/nautilus-actions-new-config.c:64
+msgid "EXPR"
+msgstr "EXPR"
+
+#: ../src/utils/nautilus-actions-new-config.c:64
+msgid ""
+"A pattern to match selected files' mimetype against. May include wildcards "
+"(* or ?) (you must set one option for each pattern you need)"
+msgstr ""
+"ఎంపికచేసిన దస్త్రముల మైమ్‌టైప్ సరిపోల్చుటకు వొక మాదిరి. వైల్డుకార్డ్సును కూడా చేర్చవచ్చును (* లేదా ?) "
+"(మీకు కావలసిన ప్రతి మాదిరికి మీరు తప్పక వొక ఐచ్చికాన్ని అమర్చాలి)"
+
+#: ../src/utils/nautilus-actions-new-config.c:65
+msgid "Set it if the selection can contain files"
+msgstr "ఎంపిక దస్త్రములను కలిగివుంటే దీనిని అమర్చుము"
+
+#: ../src/utils/nautilus-actions-new-config.c:66
+msgid "Set it if the selection can contain folders"
+msgstr "ఎంపిక ఫోల్డర్లను కలిగివుంటే దీనిని అమర్చుము"
+
+#: ../src/utils/nautilus-actions-new-config.c:67
+msgid "Set it if the selection can have several items"
+msgstr "ఎంపిక చాలా అంశములను కలిగివుంటే దీనిని అమర్చుము"
+
+#: ../src/utils/nautilus-actions-new-config.c:68
+msgid ""
+"A GnomeVFS scheme where the selected files should be located (you must set "
+"it for each scheme you need)"
+msgstr ""
+"ఎంపికచేసిన దస్త్రములను వుంచుటకు GnomeVFS స్కీము (మీకు కావలసిన ప్రతి స్కీమునకు మీరు దీనిని "
+"అమర్చాలి)"
+
+#: ../src/utils/nautilus-actions-new-config.c:68
+msgid "SCHEME"
+msgstr "SCHEME"
+
+#: ../src/utils/nautilus-actions-new-config.c:69
+msgid ""
+"The path of the file where to save the new GConf schema definition file "
+"[default: /tmp/config_UUID.schemas]"
+msgstr ""
+"కొత్త Gconf స్కీమా నిర్వచన దస్త్రమును దాయుటకు దస్త్రము పాత్ "
+"[అప్రమేయ: /tmp/config_UUID.schemas]"
+
+#: ../src/utils/nautilus-actions-new-config.c:108
+#, c-format
+msgid ""
+"Syntax error:\n"
+"\t- %s\n"
+"Try %s --help\n"
+msgstr ""
+"సిన్టాక్స్ దోషము:\n"
+"\t- %s\n"
+"%s --help ప్రయత్నించుము\n"
+
+#: ../src/utils/nautilus-actions-new-config.c:160
+#, c-format
+msgid "Creating %s..."
+msgstr "%s సృష్టించుచున్నది..."
+
+#: ../src/utils/nautilus-actions-new-config.c:179
+#, c-format
+msgid " Failed: Can't create %s: %s\n"
+msgstr " విఫలమైంది: %s సృష్టించలేదు: %s\n"
+
+#: ../src/utils/nautilus-actions-new-config.c:188
+#, c-format
+msgid "  OK, saved in %s\n"
+msgstr "  సరే, %s నందు దాయబడింది\n"
+
+#: ../src/utils/nautilus-actions-new-config.c:193
+#, c-format
+msgid " Failed: %s\n"
+msgstr " విఫలమైంది: %s\n"
+
+#: ../src/utils/nautilus-actions-tools-utils.c:57
+#, c-format
+msgid "Can't write data in file %s\n"
+msgstr "డాటాను దస్త్రము %s నందు వ్రాయలేము\n"
+
+#: ../src/utils/nautilus-actions-tools-utils.c:63
+#, c-format
+msgid "Can't open file %s for writing\n"
+msgstr "దస్త్రము %s వ్రాయుట కొరకు తెరువలేము\n"
+
