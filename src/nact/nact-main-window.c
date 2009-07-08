@@ -662,9 +662,9 @@ on_saveas_button_clicked( GtkButton *button, gpointer user_data )
 	NactWindow *wndmain = NACT_WINDOW( user_data );
 
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(
-			_( "Exporting actions to a folder" ),
+			_( "Selecting a folder in which selected actions are to be saved" ),
 			NULL,
-			GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+			GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER,
 			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			GTK_STOCK_OK, GTK_RESPONSE_OK,
 			NULL
@@ -672,7 +672,7 @@ on_saveas_button_clicked( GtkButton *button, gpointer user_data )
 
 	nact_iprefs_position_named_window( wndmain, GTK_WINDOW( dialog ), IPREFS_EXPORT_ACTIONS );
 	gchar *uri = nact_iprefs_get_export_folder_uri( wndmain );
-	gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
+	gtk_file_chooser_set_uri( GTK_FILE_CHOOSER( dialog ), uri );
 	g_free( uri );
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_OK ){
@@ -686,11 +686,8 @@ on_saveas_button_clicked( GtkButton *button, gpointer user_data )
 	nact_iprefs_save_named_window_position( wndmain, GTK_WINDOW( dialog ), IPREFS_EXPORT_ACTIONS );
 	gtk_widget_destroy( dialog );
 
-	/*set_export_mode( wndmain, FALSE );*/
 	GtkWidget *export_button = base_window_get_widget( BASE_WINDOW( user_data ), "ExportButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( export_button ), FALSE );
-
-	nact_iactions_list_set_focus( wndmain );
 }
 
 static gboolean
@@ -766,8 +763,8 @@ set_export_mode( NactWindow *window, gboolean mode )
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	NactMainWindow *self = NACT_MAIN_WINDOW( window );
 
-	self->private->export_mode = mode;
 	nact_iactions_list_set_multiple_selection( window, mode );
+	self->private->export_mode = mode;
 	setup_buttons( window );
 }
 
