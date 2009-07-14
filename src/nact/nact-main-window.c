@@ -97,9 +97,9 @@ static void     on_import_button_clicked( GtkButton *button, gpointer user_data 
 static void     on_export_button_clicked( GtkButton *button, gpointer user_data );
 static gboolean on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );
 
+static GSList  *do_get_actions( NactWindow *window );
 static void     on_actions_changed( NAIPivotContainer *instance, gpointer user_data );
-static void     set_current_action( NactMainWindow *window, const NAAction *action );
-static void     do_set_current_action( NactWindow *window, const gchar *uuid, const gchar *label );
+static void     do_set_current_action( NactWindow *window, const NAAction *action );
 
 GType
 nact_main_window_get_type( void )
@@ -187,8 +187,7 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	static const gchar *thisfn = "nact_main_window_iactions_list_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
-	iface->initial_load_widget = NULL;
-	iface->runtime_init_widget = NULL;
+	iface->get_actions = do_get_actions;
 	iface->on_selection_changed = on_actions_list_selection_changed;
 	iface->on_double_click = on_actions_list_double_click;
 	iface->on_enter_key_pressed = on_actions_list_enter_key_pressed;
@@ -343,7 +342,7 @@ on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_da
 	gtk_widget_set_sensitive( duplicate_button, enabled );
 
 	NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( NACT_WINDOW( window )));
-	set_current_action( NACT_MAIN_WINDOW( window ), action );
+	do_set_current_action( NACT_WINDOW( window ), action );
 }
 
 static gboolean
@@ -523,7 +522,7 @@ on_duplicate_button_clicked( GtkButton *button, gpointer user_data )
 			g_free( msg );
 
 		} else {
-			set_current_action( NACT_MAIN_WINDOW( wndmain ), duplicate );
+			do_set_current_action( NACT_WINDOW( wndmain ), duplicate );
 		}
 
 		g_object_unref( duplicate );
@@ -583,39 +582,6 @@ on_import_button_clicked( GtkButton *button, gpointer user_data )
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactWindow *wndmain = NACT_WINDOW( user_data );
 	nact_iactions_list_set_focus( wndmain );
-
-	/*g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactWindow *wndmain = NACT_WINDOW( user_data );
-
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(
-			_( "Importing new actions" ),
-			NULL,
-			GTK_FILE_CHOOSER_ACTION_OPEN,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-			NULL
-			);
-
-	nact_iprefs_position_named_window( NACT_WINDOW( user_data ), GTK_WINDOW( dialog ), IPREFS_IMPORT_ACTIONS );
-	gchar *uri = nact_iprefs_get_import_folder_uri( NACT_WINDOW( user_data ));
-	gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
-	g_free( uri );
-
-	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
-		gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
-		do_import_actions( NACT_MAIN_WINDOW( wndmain ), filename );
-	    g_free (filename);
-	  }
-
-	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	nact_iprefs_save_import_folder_uri( NACT_WINDOW( user_data ), uri );
-	g_free( uri );
-
-	nact_iprefs_save_named_window_position( NACT_WINDOW( user_data ), GTK_WINDOW( dialog ), IPREFS_IMPORT_ACTIONS );
-
-	gtk_widget_destroy( dialog );
-
-	nact_iactions_list_set_focus( wndmain );*/
 }
 
 /*
@@ -660,6 +626,14 @@ on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window )
 	return( FALSE );
 }
 
+static GSList *
+do_get_actions( NactWindow *window )
+{
+	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( application ));
+	return( na_pivot_get_actions( pivot ));
+}
+
 static void
 on_actions_changed( NAIPivotContainer *instance, gpointer user_data )
 {
@@ -678,8 +652,10 @@ on_actions_changed( NAIPivotContainer *instance, gpointer user_data )
 }
 
 static void
-set_current_action( NactMainWindow *window, const NAAction *action )
+do_set_current_action( NactWindow *wnd, const NAAction *action )
 {
+	NactMainWindow *window = NACT_MAIN_WINDOW( wnd );
+
 	g_free( window->private->current_uuid );
 	window->private->current_uuid = NULL;
 
@@ -691,14 +667,4 @@ set_current_action( NactMainWindow *window, const NAAction *action )
 		window->private->current_uuid = na_action_get_uuid( action );
 		window->private->current_label = na_action_get_label( action );
 	}
-}
-
-static void
-do_set_current_action( NactWindow *window, const gchar *uuid, const gchar *label )
-{
-	g_debug( "nact_main_window_do_set_current_action: window=%p, uuid=%s, label=%s", window, uuid, label );
-	g_free( NACT_MAIN_WINDOW( window )->private->current_uuid );
-	g_free( NACT_MAIN_WINDOW( window )->private->current_label );
-	NACT_MAIN_WINDOW( window )->private->current_uuid = g_strdup( uuid );
-	NACT_MAIN_WINDOW( window )->private->current_label = g_strdup( label );
 }

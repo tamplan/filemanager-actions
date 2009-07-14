@@ -234,32 +234,16 @@ nact_window_get_pivot( NactWindow *window )
 }
 
 /**
- * Returns a pointer to the specified action.
- *
- * The returned pointer is owned by NAPivot, and should not be freed
- * nor unref by the caller.
- */
-GObject *
-nact_window_get_action( NactWindow *window, const gchar *uuid )
-{
-	NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( window ));
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
-
-	GObject *action = na_pivot_get_action( pivot, uuid );
-	return( action );
-}
-
-/**
  * Set the current action.
  *
  * This is called by one of the editors to advertize the main window
  * that the newly selected action has changed.
  */
 void
-nact_window_set_current_action( NactWindow *window, const gchar *uuid, const gchar *label )
+nact_window_set_current_action( NactWindow *window, const NAAction *action )
 {
 	if( NACT_WINDOW_GET_CLASS( window )->set_current_action ){
-		NACT_WINDOW_GET_CLASS( window )->set_current_action( window, uuid, label );
+		NACT_WINDOW_GET_CLASS( window )->set_current_action( window, action );
 	}
 }
 
@@ -273,6 +257,9 @@ nact_window_set_current_action( NactWindow *window, const gchar *uuid, const gch
 gboolean
 nact_window_save_action( NactWindow *window, const NAAction *action )
 {
+	static const gchar *thisfn = "nact_window_save_action";
+	g_debug( "%s: window=%p, action=%p", thisfn, window, action );
+
 	NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( window ));
 	g_assert( NA_IS_PIVOT( pivot ));
 
@@ -319,19 +306,6 @@ nact_window_warn_action_modified( NactWindow *window, const NAAction *action )
 	g_free( label );
 
 	return( ok );
-}
-
-/**
- * Returns a pointer to the list of actions.
- */
-GSList *
-nact_window_get_actions( NactWindow *window )
-{
-	NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( window ));
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
-
-	GSList *actions = na_pivot_get_actions( pivot );
-	return( actions );
 }
 
 /**

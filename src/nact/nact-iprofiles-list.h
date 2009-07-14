@@ -28,11 +28,11 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_IACTIONS_LIST_H__
-#define __NACT_IACTIONS_LIST_H__
+#ifndef __NACT_IPROFILES_LIST_H__
+#define __NACT_IPROFILES_LIST_H__
 
 /*
- * NactIActionsList interface definition.
+ * NactIProfilesList interface definition.
  *
  * This interface defines some API against the ActionsList listbox.
  * Our NactWindow may implement it in order to personalize the
@@ -45,43 +45,44 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IACTIONS_LIST_TYPE							( nact_iactions_list_get_type())
-#define NACT_IACTIONS_LIST( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IACTIONS_LIST_TYPE, NactIActionsList ))
-#define NACT_IS_IACTIONS_LIST( object )					( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IACTIONS_LIST_TYPE ))
-#define NACT_IACTIONS_LIST_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IACTIONS_LIST_TYPE, NactIActionsListInterface ))
+#define NACT_IPROFILES_LIST_TYPE							( nact_iprofiles_list_get_type())
+#define NACT_IPROFILES_LIST( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IPROFILES_LIST_TYPE, NactIProfilesList ))
+#define NACT_IS_IPROFILES_LIST( object )					( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IPROFILES_LIST_TYPE ))
+#define NACT_IPROFILES_LIST_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IPROFILES_LIST_TYPE, NactIProfilesListInterface ))
 
-typedef struct NactIActionsList NactIActionsList;
+typedef struct NactIProfilesList NactIProfilesList;
 
-typedef struct NactIActionsListInterfacePrivate NactIActionsListInterfacePrivate;
+typedef struct NactIProfilesListInterfacePrivate NactIProfilesListInterfacePrivate;
 
 typedef struct {
 	GTypeInterface                    parent;
-	NactIActionsListInterfacePrivate *private;
+	NactIProfilesListInterfacePrivate *private;
 
 	/* api */
-	GSList * ( *get_actions )          ( NactWindow *window );
+	GSList * ( *get_profiles )         ( NactWindow *window );
+	void     ( *initial_load_widget )  ( NactWindow *window );
+	void     ( *runtime_init_widget )  ( NactWindow *window );
+	void     ( *fill_actions_list )    ( NactWindow *window );
 	void     ( *on_selection_changed ) ( GtkTreeSelection *selection, gpointer user_data );
 	gboolean ( *on_button_press_event )( GtkWidget *widget, GdkEventButton *event, gpointer data );
 	gboolean ( *on_key_pressed_event ) ( GtkWidget *widget, GdkEventKey *event, gpointer data );
 	gboolean ( *on_double_click )      ( GtkWidget *widget, GdkEventButton *event, gpointer data );
 	gboolean ( *on_enter_key_pressed ) ( GtkWidget *widget, GdkEventKey *event, gpointer data );
 }
-	NactIActionsListInterface;
+	NactIProfilesListInterface;
 
-GType    nact_iactions_list_get_type( void );
+GType    nact_iprofiles_list_get_type( void );
 
-void     nact_iactions_list_initial_load( NactWindow *window );
-void     nact_iactions_list_runtime_init( NactWindow *window );
-void     nact_iactions_list_fill( NactWindow *window );
-GObject *nact_iactions_list_get_selected_action( NactWindow *window );
-GSList  *nact_iactions_list_get_selected_actions( NactWindow *window );
-void     nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label );
-void     nact_iactions_list_set_focus( NactWindow *window );
+void     nact_iprofiles_list_initial_load( NactWindow *window );
+void     nact_iprofiles_list_runtime_init( NactWindow *window );
+void     nact_iprofiles_list_fill( NactWindow *window );
+GObject *nact_iprofiles_list_get_selected_profile( NactWindow *window );
+void     nact_iprofiles_list_set_focus( NactWindow *window );
 
-void     nact_iactions_list_set_multiple_selection( NactWindow *window, gboolean multiple );
-void     nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );
-void     nact_iactions_list_set_is_filling_list( NactWindow *window, gboolean is_filling );
+void     nact_iprofiles_list_set_multiple_selection( NactWindow *window, gboolean multiple );
+void     nact_iprofiles_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );
+void     nact_iprofiles_list_set_is_filling_list( NactWindow *window, gboolean is_filling );
 
 G_END_DECLS
 
-#endif /* __NACT_IACTIONS_LIST_H__ */
+#endif /* __NACT_IPROFILES_LIST_H__ */

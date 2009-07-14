@@ -69,6 +69,8 @@ nautilus_actions_config_SOURCES = \
 	nact-iprefs.h										\
 	nact-iprofile-conditions.c							\
 	nact-iprofile-conditions.h							\
+	nact-iprofiles-list.c								\
+	nact-iprofiles-list.h								\
 	nact-main.c											\
 	nact-main-window.c									\
 	nact-main-window.h									\

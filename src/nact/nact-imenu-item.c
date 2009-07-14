@@ -38,6 +38,7 @@
 #include <common/na-action.h>
 #include <common/na-action-profile.h>
 
+#include "nact-application.h"
 #include "nact-imenu-item.h"
 
 /* private interface data
@@ -146,10 +147,14 @@ nact_imenu_item_initial_load( NactWindow *dialog, NAAction *action )
 	static const gchar *thisfn = "nact_imenu_item_initial_load";
 	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );
 
+	/*BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
+	GtkWindow *toplevel = base_application_get_dialog( appli, "MenuItemWindow" );
+	GtkWidget *vbox = base_application_search_for_widget( appli, toplevel, "MenuItemVBox" );
+	GtkWidget *dest = base_application_get_widget( appli, BASE_WINDOW( dialog ), "MenuItemVBox" );
+	gtk_widget_reparent( vbox, dest );*/
+
 	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuIconComboBoxEntry" );
-
 	gtk_combo_box_set_model( GTK_COMBO_BOX( icon_widget ), create_stock_icon_model());
-
 	icon_combo_list_fill( GTK_COMBO_BOX_ENTRY( icon_widget ));
 }
 
@@ -236,6 +241,13 @@ nact_imenu_item_has_label( NactWindow *window )
 void
 nact_imenu_item_dispose( NactWindow *dialog )
 {
+	static const gchar *thisfn = "nact_imenu_item_dispose";
+	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	/*BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
+	GtkWindow *toplevel = base_application_get_dialog( appli, "MenuItemWindow" );
+	GtkWidget *vbox = base_application_get_widget( appli, BASE_WINDOW( dialog ), "MenuItemVBox" );
+	gtk_widget_reparent( vbox, GTK_WIDGET( toplevel ));*/
 }
 
 static GObject *

@@ -313,6 +313,9 @@ nact_iprofile_conditions_all_widgets_showed( NactWindow *dialog )
 void
 nact_iprofile_conditions_dispose( NactWindow *dialog )
 {
+	static const gchar *thisfn = "nact_iprofile_conditions_dispose";
+	g_debug( "%s: dialog=%p", thisfn, dialog );
+
 	hide_legend_dialog( dialog );
 }
 

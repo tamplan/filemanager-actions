@@ -79,12 +79,12 @@ static void     setup_dialog_title( NactActionConditionsEditor *dialog, gboolean
 static void     setup_buttons( NactActionConditionsEditor *dialog, gboolean can_save );
 static void     on_modified_field( NactWindow *dialog );
 static void     on_cancel_clicked( GtkButton *button, gpointer user_data );
+static void     on_save_clicked( GtkButton *button, gpointer user_data );
 static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 static GObject *get_edited_action( NactWindow *window );
 static GObject *get_edited_profile( NactWindow *window );
 static gboolean is_edited_modified( NactActionConditionsEditor *dialog );
-static void     set_current_action( NactActionConditionsEditor *dialog );
 
 GType
 nact_action_conditions_editor_get_type( void )
@@ -243,10 +243,10 @@ instance_finalize( GObject *dialog )
 	}
 }
 
-/**
+/*
  * Returns a newly allocated NactActionConditionsEditor object.
  *
- * @parent: is the BaseWindow parent of this dialog (usually, the main
+ * @parent: the BaseWindow parent of this dialog (usually, the main
  * toplevel window of the application).
  */
 static NactActionConditionsEditor *
@@ -369,6 +369,7 @@ on_runtime_init_dialog( BaseWindow *dialog )
 	nact_iprofile_conditions_runtime_init( NACT_WINDOW( window ), profile );
 
 	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
+	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "SaveButton", "clicked", G_CALLBACK( on_save_clicked ));
 }
 
 static void
@@ -411,7 +412,6 @@ setup_dialog_title( NactActionConditionsEditor *dialog, gboolean is_modified )
 	}
 
 	gtk_window_set_title( toplevel, title );
-
 	g_free( title );
 }
 
@@ -459,6 +459,13 @@ on_cancel_clicked( GtkButton *button, gpointer user_data )
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
+static void
+on_save_clicked( GtkButton *button, gpointer user_data )
+{
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( user_data ));
+	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
+}
+
 static gboolean
 on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
@@ -489,7 +496,7 @@ on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 					editor->private->original = na_action_duplicate( editor->private->edited );
 					editor->private->is_new = FALSE;
 					on_modified_field( NACT_WINDOW( editor ));
-					set_current_action( NACT_ACTION_CONDITIONS_EDITOR( window ));
+					nact_window_set_current_action( editor->private->parent, editor->private->original );
 				}
 			}
 			break;
@@ -516,14 +523,4 @@ static gboolean
 is_edited_modified( NactActionConditionsEditor *dialog )
 {
 	return( !na_action_are_equal( dialog->private->original, dialog->private->edited ));
-}
-
-static void
-set_current_action( NactActionConditionsEditor *dialog )
-{
-	gchar *uuid = na_action_get_uuid( dialog->private->original );
-	gchar *label = na_action_get_label( dialog->private->original );
-	nact_window_set_current_action( dialog->private->parent, uuid, label );
-	g_free( label );
-	g_free( uuid );
 }

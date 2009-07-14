@@ -1,3 +1,30 @@
+2009-07-15 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-action-conditions-editor.c (on_save_clicked):
+	New function (do not know why it used to work without it!).
+
+	* src/nact/nact-action-conditions-editor.c
+	(set_current_action): Removed function.
+
+	* src/nact/nact-action-profiles-editor.c:
+	Begin with the rewriting with the new object hierarchy and the
+	new interfaces.
+
+	* src/nact/nact-iprofiles-list.c:
+	* src/nact/nact-iprofiles-list.h: New files.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h:
+	Remove references to NAPivot, rather use interface.
+	Now directly attach the NAAction to each line of the listbox.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h
+	(nact_window_get_action, nact_window_get_actions):
+	Removed functions.
+
 2009-07-14 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-utils.c:
