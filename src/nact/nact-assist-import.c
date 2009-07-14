@@ -37,6 +37,7 @@
 #include <string.h>
 
 #include <common/na-action.h>
+#include <common/na-iio-provider.h>
 #include <common/na-utils.h>
 
 #include "base-application.h"
@@ -486,15 +487,24 @@ do_import( NactAssistImport *window, GtkAssistant *assistant )
 	static const gchar *thisfn = "nact_assist_import_do_import";
 	g_debug( "%s: window=%p", thisfn, window );
 
+	NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( NACT_WINDOW( window )));
+
 	GtkWidget *chooser = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FILES_SELECTION );
 	GSList *uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
-	GSList *is, *msg ;
+	GSList *is, *msg;
+	gchar *error;
 
 	for( is = uris ; is ; is = is->next ){
 
 		msg = NULL;
 		NAAction *action = nact_gconf_reader_import( G_OBJECT( window ), ( const gchar * ) is->data, &msg );
-		g_debug( "%s: msg has %d lines", thisfn, g_slist_length( msg ));
+
+		if( action && na_pivot_write_action( pivot, G_OBJECT( action ), &error ) != NA_IIO_PROVIDER_WRITE_OK ){
+			g_object_unref( action );
+			action = NULL;
+			msg = g_slist_append( msg, error );
+			g_free( error );
+		}
 
 		ImportUriStruct *str = g_new0( ImportUriStruct, 1 );
 		str->uri = g_strdup(( const gchar * ) is->data );

@@ -310,10 +310,7 @@ nact_gconf_reader_import( GObject *window, const gchar *uri, GSList **msg )
 	}
 
 	xmlCleanupParser();
-
-	g_debug( "%s: messages has %d lines", thisfn, g_slist_length( reader->private->messages ));
 	*msg = na_utils_duplicate_string_list( reader->private->messages );
-	g_debug( "%s: after", thisfn );
 
 	if( reader->private->action ){
 		g_assert( NA_IS_ACTION( reader->private->action ));

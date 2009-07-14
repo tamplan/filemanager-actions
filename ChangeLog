@@ -1,5 +1,13 @@
 2009-07-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-utils.c:
+	Implement na_utils_schema_to_gslist function.
+
+	* src/nact/nact-assist-import.c:
+	Write the imported action to the I/O provider.
+
+2009-07-14 Pierre Wieser <pwieser@trychlos.org>
+
 	* configure.ac: Bump version number to 1.11.2.
 
 2009-07-14 Pierre Wieser <pwieser@trychlos.org>

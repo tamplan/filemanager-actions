@@ -253,6 +253,42 @@ GSList *
 na_utils_schema_to_gslist( const gchar *value )
 {
 	GSList *list = NULL;
+	const gchar *ptr = value;
+	const gchar *start = NULL;
+	gchar *str_list = NULL;
+	gchar **str_list_splited = NULL;
+	int i;
+
+	/* first remove the surrounding brackets [] */
+	while( *ptr != '[' ){
+		ptr++;
+	}
+
+	if( *ptr == '[' ){
+		ptr++;
+		start = ptr;
+		i = 0;
+		while( *ptr != ']' ){
+			i++;
+			ptr++;
+		}
+		if( *ptr == ']' ){
+			str_list = g_strndup( start, i );
+		}
+	}
+
+	/* split the result and fill the list */
+	if( str_list != NULL ){
+
+		str_list_splited = g_strsplit( str_list, ",", -1 );
+		i = 0;
+		while( str_list_splited[i] != NULL ){
+			list = g_slist_append( list, g_strdup( str_list_splited[i] ));
+			i++;
+		}
+		g_strfreev( str_list_splited );
+	}
+
 	return( list );
 }
 
@@ -268,6 +304,7 @@ na_utils_boolean_to_schema( gboolean b )
 
 /**
  * Converts a string to a boolean
+ * Not case sensitive, accepts abbreviations
  */
 gboolean
 na_utils_schema_to_boolean( const gchar *value, gboolean default_value )
