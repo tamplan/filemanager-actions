@@ -51,8 +51,8 @@ struct NactIPrefsInterfacePrivate {
 /* key to read/write the last visited folder when browsing for a file
  */
 #define IPREFS_IPROFILE_CONDITION_FOLDER_URI	"iprofile-conditions-folder-uri"
-#define IPREFS_IMPORT_ACTIONS_FOLDER_URI		"main-window-import-folder-uri"
-#define IPREFS_EXPORT_ACTIONS_FOLDER_URI		"main-window-export-folder-uri"
+#define IPREFS_IMPORT_ACTIONS_FOLDER_URI		"import-folder-uri"
+#define IPREFS_EXPORT_ACTIONS_FOLDER_URI		"export-folder-uri"
 
 static GType   register_type( void );
 static void    interface_base_init( NactIPrefsInterface *klass );

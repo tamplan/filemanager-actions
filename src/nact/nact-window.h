@@ -66,8 +66,8 @@ typedef struct {
 	NactWindowClassPrivate *private;
 
 	/* api */
-	gchar * ( *get_iprefs_window_id )( NactWindow *window );
-	void    ( *set_current_action )  ( NactWindow *window, const gchar *uuid, const gchar *label );
+	gchar *  ( *get_iprefs_window_id )( NactWindow *window );
+	void     ( *set_current_action )  ( NactWindow *window, const gchar *uuid, const gchar *label );
 }
 	NactWindowClass;
 

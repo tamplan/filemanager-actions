@@ -66,7 +66,7 @@ static void       interface_base_finalize( NactIActionsListInterface *klass );
 
 static void       v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean   v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
-static gboolean   v_on_key_press_event( GtkWidget *widget, GdkEventKey *event, gpointer data );
+static gboolean   v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer data );
 
 static void       do_initial_load_widget( NactWindow *window );
 static void       do_runtime_init_widget( NactWindow *window );
@@ -388,19 +388,20 @@ v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer user
 }
 
 static gboolean
-v_on_key_press_event( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
+v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
 {
-	/*static const gchar *thisfn = "nact_iactions_list_v_on_key_pres_event";
+	/*static const gchar *thisfn = "nact_iactions_list_v_on_key_pressed_event";
 	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );*/
 
 	g_assert( NACT_IS_IACTIONS_LIST( user_data ));
 	g_assert( NACT_IS_WINDOW( user_data ));
+	g_assert( event->type == GDK_KEY_PRESS );
 
 	gboolean stop = FALSE;
 	NactIActionsList *instance = NACT_IACTIONS_LIST( user_data );
 
-	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_key_press_event ){
-		stop = NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_key_press_event( widget, event, user_data );
+	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_key_pressed_event ){
+		stop = NACT_IACTIONS_LIST_GET_INTERFACE( instance )->on_key_pressed_event( widget, event, user_data );
 	}
 
 	if( !stop ){
@@ -465,7 +466,7 @@ do_runtime_init_widget( NactWindow *window )
 			window,
 			G_OBJECT( widget ),
 			"key-press-event",
-			G_CALLBACK( v_on_key_press_event ));
+			G_CALLBACK( v_on_key_pressed_event ));
 
 	/* catch double-click */
 	nact_window_signal_connect(
@@ -473,6 +474,10 @@ do_runtime_init_widget( NactWindow *window )
 			G_OBJECT( widget ),
 			"button-press-event",
 			G_CALLBACK( v_on_button_press_event ));
+
+	/* clear the selection */
+	GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ));
+	gtk_tree_selection_unselect_all( selection );
 }
 
 static void

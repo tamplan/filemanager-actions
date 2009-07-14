@@ -256,8 +256,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->dispose_has_run = FALSE;
 
 	/* initialize suitable default values
-	 * i18n: default label for the default profile
 	 */
+	/* i18n: default label for the default profile */
 	self->private->label = g_strdup( _( "Default profile" ));
 	self->private->path = g_strdup( "" );
 	self->private->parameters = g_strdup( "" );
@@ -855,6 +855,19 @@ validate_schemes( GSList* schemes2test, NautilusFileInfo* file )
 }
 
 /**
+ * Set the label for this profile.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @label: label to be set.
+ */
+void
+na_action_profile_set_label( NAActionProfile *profile, const gchar *label )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_LABEL_STR, label, NULL );
+}
+
+/**
  * Set the path of the command for this profile.
  *
  * @profile: this NAActionProfile object.
@@ -921,6 +934,32 @@ na_action_profile_set_mimetypes( NAActionProfile *profile, GSList *mimetypes )
 }
 
 /**
+ * Set the 'isfile' flag on which this profile applies.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @isfile: the profile applies only to files.
+ */
+void
+na_action_profile_set_isfile( NAActionProfile *profile, gboolean isfile )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_ISFILE_STR, isfile, NULL );
+}
+
+/**
+ * Set the 'isdir' flag on which this profile applies.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @isdir: the profile applies only to folders.
+ */
+void
+na_action_profile_set_isdir( NAActionProfile *profile, gboolean isdir )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_ISDIR_STR, isdir, NULL );
+}
+
+/**
  * Set the 'isfile' and 'isdir' flags on which this profile applies.
  *
  * @profile: this NAActionProfile object.
@@ -971,6 +1010,19 @@ na_action_profile_set_scheme( NAActionProfile *profile, const gchar *scheme, gbo
 	if( !selected && exist ){
 		profile->private->schemes = na_utils_remove_ascii_from_string_list( profile->private->schemes, scheme );
 	}
+}
+
+/**
+ * Set the schemes on which this profile applies.
+ *
+ * @profile: this NAActionProfile object.
+ *
+ * @schemes: list of schemes which apply.
+ */
+void
+na_action_profile_set_schemes( NAActionProfile *profile, GSList *schemes )
+{
+	g_object_set( G_OBJECT( profile ), PROP_PROFILE_SCHEMES_STR, schemes, NULL );
 }
 
 /**

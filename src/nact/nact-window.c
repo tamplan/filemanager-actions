@@ -63,18 +63,19 @@ typedef struct {
 	NactWindowRecordedSignal;
 
 static GObjectClass *st_parent_class = NULL;
+static gboolean      st_debug_signal_connect = FALSE;
 
-static GType  register_type( void );
-static void   class_init( NactWindowClass *klass );
-static void   iprefs_iface_init( NactIPrefsInterface *iface );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *application );
-static void   instance_finalize( GObject *application );
+static GType    register_type( void );
+static void     class_init( NactWindowClass *klass );
+static void     iprefs_iface_init( NactIPrefsInterface *iface );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *application );
+static void     instance_finalize( GObject *application );
 
-static gchar *v_get_iprefs_window_id( NactWindow *window );
+static gchar   *v_get_iprefs_window_id( NactWindow *window );
 
-static void   on_runtime_init_toplevel( BaseWindow *window );
-static void   on_all_widgets_showed( BaseWindow *dialog );
+static void     on_runtime_init_toplevel( BaseWindow *window );
+static void     on_all_widgets_showed( BaseWindow *dialog );
 
 GType
 nact_window_get_type( void )
@@ -137,11 +138,11 @@ class_init( NactWindowClass *klass )
 
 	klass->private = g_new0( NactWindowClassPrivate, 1 );
 
-	klass->get_iprefs_window_id = v_get_iprefs_window_id;
-
 	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
 	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
 	base_class->all_widgets_showed = on_all_widgets_showed;
+
+	klass->get_iprefs_window_id = v_get_iprefs_window_id;
 }
 
 static void
@@ -187,7 +188,9 @@ instance_dispose( GObject *window )
 		for( is = self->private->signals ; is ; is = is->next ){
 			NactWindowRecordedSignal *str = ( NactWindowRecordedSignal * ) is->data;
 			g_signal_handler_disconnect( str->instance, str->handler_id );
-			/*g_debug( "%s: disconnecting signal handler %p:%lu", thisfn, str->instance, str->handler_id );*/
+			if( st_debug_signal_connect ){
+				g_debug( "%s: disconnecting signal handler %p:%lu", thisfn, str->instance, str->handler_id );
+			}
 			g_free( str );
 		}
 		g_slist_free( self->private->signals );
@@ -305,7 +308,7 @@ nact_window_warn_action_modified( NactWindow *window, const NAAction *action )
 	if( label && strlen( label )){
 		first = g_strdup_printf( _( "The action \"%s\" has been modified." ), label );
 	} else {
-		first = g_strdup( _( "The newly created action has been modified" ));
+		first = g_strdup( _( "The newly created action has been modified." ));
 	}
 	gchar *second = g_strdup( _( "Are you sure you want to quit without saving it ?" ));
 
@@ -337,7 +340,7 @@ nact_window_get_actions( NactWindow *window )
 void
 nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn )
 {
-	/*static const gchar *thisfn = "nact_window_signal_connect";*/
+	static const gchar *thisfn = "nact_window_signal_connect";
 
 	gulong handler_id = g_signal_connect( instance, signal, fn, window );
 
@@ -346,7 +349,9 @@ nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *
 	str->handler_id = handler_id;
 	window->private->signals = g_slist_prepend( window->private->signals, str );
 
-	/*g_debug( "%s: connecting signal handler %p:%lu", thisfn, instance, handler_id );*/
+	if( st_debug_signal_connect ){
+		g_debug( "%s: connecting signal handler %p:%lu", thisfn, instance, handler_id );
+	}
 }
 
 void

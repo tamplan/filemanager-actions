@@ -1,3 +1,55 @@
+2009-07-14 Pierre Wieser <pwieser@trychlos.org>
+
+	Implement import assistant with new object hierarchy.
+
+	* src/common/na-action.c:
+	* src/common/na-action.h (na_action_get_profile):
+	Now returns a NAObject.
+
+	* src/common/na-action.c:
+	* src/common/na-action.h
+	(na_action_set_uuid, na_action_set_version,
+	na_action_add_profile): New functions.
+
+	* src/common/na-action-profile.c:
+	* src/common/na-action-profile.h
+	(na_action_profile_set_label, na_action_profile_set_isfile,
+	na_action_profile_set_isdir, na_action_profile_set_schemes):
+	New functions.
+
+	* src/common/na-action-profile.h:
+	Define ACTION_PROFILE_PREFIX as a way of identifying a profile.
+
+	* src/common/na-utils.c:
+	* src/common/na-utils.h (na_utils_dump_string_list,
+	na_utils_schema_to_gslist, na_utils_schema_to_boolean):
+	New functions.
+
+	* src/nact/nact-assistant.c:
+	* src/nact/nact-assistant.h:
+	* src/nact/nact-assist-export.c:
+	* src/nact/nact-assist-export.h:
+	* src/nact/nact-assist-import.c:
+	* src/nact/nact-gconf-keys.h:
+	* src/nact/nact-gconf-reader.c:
+	* src/nact/nact-gconf-reader.h:
+	* src/nact/nact-gconf-writer.c:
+	* src/nact/nact-gconf-writer.c: New files.
+
+	* src/nact/nact-gconf-schema.c:
+	* src/nact/nact-gconf-schema.h:
+	* src/nact/nact-gconf-schema-writer.c:
+	* src/nact/nact-gconf-schema-writer.h: Removed files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/base-application.c:
+	* src/nact/base-application.h
+	(base_application_search_for_widget): New function.
+
+	* src/nact/base-window.c:
+	Call gtk_main/gtk_main_quit when we are running an assistant.
+
 2009-07-08 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-window.c:

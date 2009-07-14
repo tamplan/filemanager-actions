@@ -109,6 +109,7 @@ GObject   *base_application_get_main_window( BaseApplication *application );
 
 GtkWindow *base_application_get_dialog( BaseApplication *application, const gchar *name );
 GtkWidget *base_application_get_widget( BaseApplication *application, BaseWindow *window, const gchar *name );
+GtkWidget *base_application_search_for_widget( BaseApplication *application, GtkWindow *window, const gchar *name );
 
 void       base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary );
 gboolean   base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );

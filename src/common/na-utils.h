@@ -45,9 +45,12 @@ GSList  *na_utils_remove_ascii_from_string_list( GSList *list, const gchar *text
 void     na_utils_free_string_list( GSList *list );
 gchar   *na_utils_string_list_to_text( GSList *list );
 GSList  *na_utils_text_to_string_list( const gchar *text );
+void     na_utils_dump_string_list( GSList *list );
 
 gchar   *na_utils_gslist_to_schema( GSList *list );
+GSList  *na_utils_schema_to_gslist( const gchar *value );
 gchar   *na_utils_boolean_to_schema( gboolean b );
+gboolean na_utils_schema_to_boolean( const gchar *value, gboolean default_value );
 
 /*
  * Some functions for GString manipulations.

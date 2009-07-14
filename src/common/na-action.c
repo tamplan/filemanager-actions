@@ -393,7 +393,7 @@ na_action_new_with_profile( void )
 {
 	NAAction *action = na_action_new( NULL );
 
-	NAActionProfile *profile = na_action_profile_new( NA_OBJECT( action ), "default-profile" );
+	NAActionProfile *profile = na_action_profile_new( NA_OBJECT( action ), ACTION_PROFILE_PREFIX "zero" );
 
 	action->private->profiles = g_slist_prepend( action->private->profiles, profile );
 
@@ -650,6 +650,34 @@ na_action_set_new_uuid( NAAction *action )
 }
 
 /**
+ * Set a new uuid for the action.
+ *
+ * @action: action whose uuid is to be set.
+ *
+ * @uuid: new uuid.
+ */
+void
+na_action_set_uuid( NAAction *action, const gchar *uuid )
+{
+	g_assert( NA_IS_ACTION( action ));
+	g_object_set( G_OBJECT( action ), PROP_ACTION_UUID_STR, uuid, NULL );
+}
+
+/**
+ * Set a new version for the action.
+ *
+ * @action: action whose version is to be set.
+ *
+ * @version: new version.
+ */
+void
+na_action_set_version( NAAction *action, const gchar *version )
+{
+	g_assert( NA_IS_ACTION( action ));
+	g_object_set( G_OBJECT( action ), PROP_ACTION_VERSION_STR, version, NULL );
+}
+
+/**
  * Set a new label for the action.
  *
  * @action: action whose label is to be set.
@@ -750,23 +778,39 @@ na_action_are_equal( NAAction *first, NAAction *second )
  * The returned pointer is owned by the @action object ; the caller
  * should not try to free or unref it.
  */
-GObject *
+NAObject *
 na_action_get_profile( const NAAction *action, const gchar *name )
 {
 	g_assert( NA_IS_ACTION( action ));
-	GObject *found = NULL;
+	NAObject *found = NULL;
 	GSList *ip;
 
 	for( ip = action->private->profiles ; ip && !found ; ip = ip->next ){
 		NAActionProfile *iprofile = NA_ACTION_PROFILE( ip->data );
 		gchar *iname = na_action_profile_get_name( iprofile );
 		if( !g_ascii_strcasecmp( name, iname )){
-			found = G_OBJECT( iprofile );
+			found = NA_OBJECT( iprofile );
 		}
 		g_free( iname );
 	}
 
 	return( found );
+}
+
+/**
+ * Add a profile at the end of the list of profiles.
+ *
+ * @action: the action.
+ *
+ * @profile: the added profile.
+ */
+void
+na_action_add_profile( NAAction *action, NAObject *profile )
+{
+	g_assert( NA_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
+
+	action->private->profiles = g_slist_append( action->private->profiles, profile );
 }
 
 /**

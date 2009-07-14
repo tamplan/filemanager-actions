@@ -170,7 +170,8 @@ na_utils_string_list_to_text( GSList *strlist )
 }
 
 /**
- * Extracts a list of strings from a semi-colon-separated text.
+ * Extracts a list of strings from a semi-colon-separated text
+ * (entry text).
  */
 GSList *
 na_utils_text_to_string_list( const gchar *text )
@@ -201,9 +202,23 @@ na_utils_text_to_string_list( const gchar *text )
 	return( strlist );
 }
 
+void
+na_utils_dump_string_list( GSList *list )
+{
+	static const gchar *thisfn = "na_utils_dump_string_list";
+	GSList *i;
+	int c;
+
+	g_debug( "%s: list at %p has %d elements", thisfn, list, g_slist_length( list ));
+	for( i=list, c=0 ; i ; i=i->next, c++ ){
+		gchar *s = ( gchar * ) i->data;
+		g_debug( "%s: %2d - %s", thisfn, c, s );
+	}
+}
+
 /**
  * Converts a list of strings to a comma-separated list of strings,
- * enclosed by brackets.
+ * enclosed by brackets (GConf export format).
  */
 gchar *
 na_utils_gslist_to_schema( GSList *list )
@@ -231,6 +246,17 @@ na_utils_gslist_to_schema( GSList *list )
 }
 
 /**
+ * Converts a string representing a list of strings in a GConf format
+ * to a list of strings.
+ */
+GSList *
+na_utils_schema_to_gslist( const gchar *value )
+{
+	GSList *list = NULL;
+	return( list );
+}
+
+/**
  * Converts a boolean to the suitable string for a GConf schema
  */
 gchar *
@@ -238,6 +264,21 @@ na_utils_boolean_to_schema( gboolean b )
 {
 	gchar *text = g_strdup_printf( "%s", b ? "true" : "false" );
 	return( text );
+}
+
+/**
+ * Converts a string to a boolean
+ */
+gboolean
+na_utils_schema_to_boolean( const gchar *value, gboolean default_value )
+{
+	if( !g_ascii_strncasecmp( value, "true", strlen( value ))){
+		return( TRUE );
+	}
+	if( !g_ascii_strncasecmp( value, "false", strlen( value ))){
+		return( FALSE );
+	}
+	return( default_value );
 }
 
 /**

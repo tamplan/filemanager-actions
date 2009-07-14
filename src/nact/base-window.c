@@ -91,9 +91,9 @@ static GtkWindow *do_get_toplevel_dialog( BaseWindow *window );
 static GtkWindow *do_get_dialog( BaseWindow *window, const gchar *name );
 static GtkWidget *do_get_widget( BaseWindow *window, const gchar *name );
 
-static gboolean   is_toplevel_initialized( BaseWindow *window );
-static void       set_toplevel_initialized( BaseWindow *window );
 static gboolean   is_main_window( BaseWindow *window );
+static gboolean   is_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel );
+static void       set_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel, gboolean init );
 
 GType
 base_window_get_type( void )
@@ -273,10 +273,17 @@ instance_dispose( GObject *window )
 		self->private->dispose_has_run = TRUE;
 
 		if( is_main_window( BASE_WINDOW( window ))){
+			g_debug( "%s: quitting main window", thisfn );
 			gtk_main_quit ();
 			gtk_widget_destroy( GTK_WIDGET( self->private->toplevel_dialog ));
 
+		} else if( GTK_IS_ASSISTANT( self->private->toplevel_dialog )){
+			g_debug( "%s: quitting assistant", thisfn );
+			gtk_main_quit();
+			gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_dialog ));
+
 		} else {
+			g_debug( "%s: quitting dialog", thisfn );
 			gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_dialog ));
 		}
 
@@ -312,9 +319,13 @@ instance_finalize( GObject *window )
  * This is a one-time initialization just after the BaseWindow has been
  * allocated. This should leave the BaseWindow object with a valid
  * toplevel GtkWindow dialog. This is also time to make one-time
- * initialization on the toplevel dialog.
+ * initialization on this toplevel dialog.
  *
  * For an every-time initialization, see base_window_run.
+ *
+ * Note that the BaseWindow itself should be initialized each time
+ * the user opens the dialog, though the GtkWindow itself needs only
+ * be initialized the first time it is loaded.
  */
 void
 base_window_init( BaseWindow *window )
@@ -469,29 +480,30 @@ static void
 do_init_window( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_do_init_window";
-	g_debug( "%s: window=%p", thisfn, window );
-
 	g_assert( BASE_IS_WINDOW( window ));
 
-	gchar *dialog_name = v_get_toplevel_name( window );
-	g_assert( dialog_name && strlen( dialog_name ));
+	if( !window->private->initialized ){
+		g_debug( "%s: window=%p", thisfn, window );
 
-	GtkWindow *toplevel = base_window_get_dialog( window, dialog_name );
-	window->private->toplevel_dialog = toplevel;
+		gchar *dialog_name = v_get_toplevel_name( window );
+		g_assert( dialog_name && strlen( dialog_name ));
 
-	if( toplevel ){
-		g_assert( GTK_IS_WINDOW( toplevel ));
+		GtkWindow *toplevel = base_window_get_dialog( window, dialog_name );
+		window->private->toplevel_dialog = toplevel;
 
-		if( !is_toplevel_initialized( window )){
-			v_initial_load_toplevel( window );
-			set_toplevel_initialized( window );
+		if( toplevel ){
+			g_assert( GTK_IS_WINDOW( toplevel ));
+
+			if( !is_toplevel_initialized( window, toplevel )){
+
+				v_initial_load_toplevel( window );
+				set_toplevel_initialized( window, toplevel, TRUE );
+			}
 		}
 
-		v_runtime_init_toplevel( window );
+		g_free( dialog_name );
+		window->private->initialized = TRUE;
 	}
-
-	g_free( dialog_name );
-	window->private->initialized = TRUE;
 }
 
 static void
@@ -522,6 +534,8 @@ do_run_window( BaseWindow *window )
 		base_window_init( window );
 	}
 
+	v_runtime_init_toplevel( window );
+
 	static const gchar *thisfn = "base_window_do_run_window";
 	g_debug( "%s: window=%p", thisfn, window );
 
@@ -534,7 +548,12 @@ do_run_window( BaseWindow *window )
 		g_debug( "%s: starting gtk_main", thisfn );
 		gtk_main();
 
+	} else if( GTK_IS_ASSISTANT( this_dialog )){
+		g_debug( "%s: starting gtk_main", thisfn );
+		gtk_main();
+
 	} else {
+		g_assert( GTK_IS_DIALOG( this_dialog ));
 		g_debug( "%s: starting gtk_dialog_run", thisfn );
 		gint code;
 		do {
@@ -580,30 +599,6 @@ do_get_widget( BaseWindow *window, const gchar *name )
 }
 
 static gboolean
-is_toplevel_initialized( BaseWindow *window )
-{
-	GtkWindow *toplevel = window->private->toplevel_dialog;
-	g_assert( toplevel );
-	g_assert( GTK_IS_WINDOW( toplevel ));
-
-	gpointer data = g_object_get_data( G_OBJECT( toplevel ), "base-window-toplevel-initialized" );
-	if( !data ){
-		return( FALSE );
-	}
-	return(( gboolean ) data );
-}
-
-static void
-set_toplevel_initialized( BaseWindow *window )
-{
-	GtkWindow *toplevel = window->private->toplevel_dialog;
-	g_assert( toplevel );
-	g_assert( GTK_IS_WINDOW( toplevel ));
-
-	g_object_set_data( G_OBJECT( toplevel ), "base-window-toplevel-initialized", ( gpointer ) TRUE );
-}
-
-static gboolean
 is_main_window( BaseWindow *window )
 {
 	BaseApplication *appli = window->private->application;
@@ -615,6 +610,20 @@ is_main_window( BaseWindow *window )
 	GtkWidget *this_dialog = GTK_WIDGET( window->private->toplevel_dialog );
 
 	return( main_dialog == this_dialog );
+}
+
+static gboolean
+is_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel )
+{
+	gboolean initialized;
+	initialized = GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( toplevel ), "base-window-toplevel-initialized" ));
+	return( initialized );
+}
+
+static void
+set_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel, gboolean initialized )
+{
+	g_object_set_data( G_OBJECT( toplevel ), "base-window-toplevel-initialized", GUINT_TO_POINTER( initialized ));
 }
 
 void

@@ -83,6 +83,12 @@ typedef struct {
 #define PROP_PROFILE_MIMETYPES_STR				"profile-mimetypes"
 #define PROP_PROFILE_SCHEMES_STR				"profile-schemes"
 
+/* internal identifier of profiles must begin with the following prefix
+ * this let us identify a profile key versus an action key
+ * corollarily, no action entry must begin with this same prefix
+ */
+#define ACTION_PROFILE_PREFIX					"profile-"
+
 GType            na_action_profile_get_type( void );
 
 NAActionProfile *na_action_profile_new( const NAObject *action, const gchar *name );
@@ -104,14 +110,18 @@ GSList          *na_action_profile_get_schemes( const NAActionProfile *profile )
 
 gboolean         na_action_profile_are_equal( NAActionProfile *first, NAActionProfile *second );
 
+void             na_action_profile_set_label( NAActionProfile *profile, const gchar *label );
 void             na_action_profile_set_path( NAActionProfile *profile, const gchar *path );
 void             na_action_profile_set_parameters( NAActionProfile *profile, const gchar *parameters );
 void             na_action_profile_set_basenames( NAActionProfile *profile, GSList *basenames );
 void             na_action_profile_set_matchcase( NAActionProfile *profile, gboolean matchcase );
 void             na_action_profile_set_mimetypes( NAActionProfile *profile, GSList *mimetypes );
+void             na_action_profile_set_isfile( NAActionProfile *profile, gboolean isfile );
+void             na_action_profile_set_isdir( NAActionProfile *profile, gboolean isdir );
 void             na_action_profile_set_isfiledir( NAActionProfile *profile, gboolean isfile, gboolean isdir );
 void             na_action_profile_set_multiple( NAActionProfile *profile, gboolean multiple );
 void             na_action_profile_set_scheme( NAActionProfile *profile, const gchar *scheme, gboolean selected );
+void             na_action_profile_set_schemes( NAActionProfile *profile, GSList *schemes );
 
 gboolean         na_action_profile_is_candidate( const NAActionProfile *profile, GList *files );
 gchar           *na_action_profile_parse_parameters( const NAActionProfile *profile, GList *files );

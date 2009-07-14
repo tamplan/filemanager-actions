@@ -34,32 +34,46 @@
 
 #include <libxml/tree.h>
 
-#include "nact-gconf-schema-writer.h"
+#include <common/na-gconf-keys.h>
+#include <common/na-utils.h>
+
+#include "nact-gconf-keys.h"
+#include "nact-gconf-writer.h"
 
 /* private class data
  */
-struct NactGConfSchemaWriterClassPrivate {
+struct NactGConfWriterClassPrivate {
 };
 
 /* private instance data
  */
-struct NactGConfSchemaWriterPrivate {
+struct NactGConfWriterPrivate {
 	gboolean  dispose_has_run;
 	gchar    *uuid;
 };
 
+/* instance properties
+ */
+enum {
+	PROP_GCONF_WRITER_UUID = 1
+};
+
+#define PROP_GCONF_WRITER_UUID_STR		"gconf-writer-uuid"
+
 static GObjectClass *st_parent_class = NULL;
 
-static GType                  register_type( void );
-static void                   class_init( NactGConfSchemaWriterClass *klass );
-static void                   instance_init( GTypeInstance *instance, gpointer klass );
-static void                   instance_dispose( GObject *object );
-static void                   instance_finalize( GObject *object );
+static GType            register_type( void );
+static void             class_init( NactGConfWriterClass *klass );
+static void             instance_init( GTypeInstance *instance, gpointer klass );
+static void             instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void             instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void             instance_dispose( GObject *object );
+static void             instance_finalize( GObject *object );
 
-static NactGConfSchemaWriter *gconf_schema_writer_new( void );
-static xmlDocPtr              create_xml( NactGConfSchemaWriter *writer, NAAction *action );
-static void                   create_schema_entry(
-										NactGConfSchemaWriter *writer,
+static NactGConfWriter *gconf_writer_new( const gchar *uuid );
+static xmlDocPtr        create_xml( NactGConfWriter *writer, NAAction *action );
+static void             create_schema_entry(
+										NactGConfWriter *writer,
 										const gchar *profile_name,
 										const gchar *key,
 										const gchar *value,
@@ -69,7 +83,7 @@ static void                   create_schema_entry(
 										gboolean is_l10n_value );
 
 GType
-nact_gconf_schema_writer_get_type( void )
+nact_gconf_writer_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -84,26 +98,26 @@ static GType
 register_type( void )
 {
 	static GTypeInfo info = {
-		sizeof( NactGConfSchemaWriterClass ),
+		sizeof( NactGConfWriterClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactGConfSchemaWriter ),
+		sizeof( NactGConfWriter ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( G_TYPE_OBJECT, "NactGConfSchemaWriter", &info, 0 );
+	GType type = g_type_register_static( G_TYPE_OBJECT, "NactGConfWriter", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactGConfSchemaWriterClass *klass )
+class_init( NactGConfWriterClass *klass )
 {
-	static const gchar *thisfn = "nact_gconf_schema_writer_class_init";
+	static const gchar *thisfn = "nact_gconf_writer_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
@@ -111,29 +125,74 @@ class_init( NactGConfSchemaWriterClass *klass )
 	GObjectClass *object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
+	object_class->get_property = instance_get_property;
+	object_class->set_property = instance_set_property;
 
-	klass->private = g_new0( NactGConfSchemaWriterClassPrivate, 1 );
+	GParamSpec *spec;
+	spec = g_param_spec_string(
+			PROP_GCONF_WRITER_UUID_STR,
+			PROP_GCONF_WRITER_UUID_STR,
+			"UUID of the action", "",
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_GCONF_WRITER_UUID, spec );
+
+	klass->private = g_new0( NactGConfWriterClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_gconf_schema_writer_instance_init";
+	static const gchar *thisfn = "nact_gconf_writer_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
 
-	g_assert( NACT_IS_GCONF_SCHEMA_WRITER( instance ));
-	NactGConfSchemaWriter *self = NACT_GCONF_SCHEMA_WRITER( instance );
+	g_assert( NACT_IS_GCONF_WRITER( instance ));
+	NactGConfWriter *self = NACT_GCONF_WRITER( instance );
 
-	self->private = g_new0( NactGConfSchemaWriterPrivate, 1 );
+	self->private = g_new0( NactGConfWriterPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
 
 static void
+instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
+{
+	g_assert( NACT_IS_GCONF_WRITER( object ));
+	NactGConfWriter *self = NACT_GCONF_WRITER( object );
+
+	switch( property_id ){
+		case PROP_GCONF_WRITER_UUID:
+			g_value_set_string( value, self->private->uuid );
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+			break;
+	}
+}
+
+static void
+instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
+{
+	g_assert( NACT_IS_GCONF_WRITER( object ));
+	NactGConfWriter *self = NACT_GCONF_WRITER( object );
+
+	switch( property_id ){
+		case PROP_GCONF_WRITER_UUID:
+			g_free( self->private->uuid );
+			self->private->uuid = g_value_dup_string( value );
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+			break;
+	}
+}
+
+static void
 instance_dispose( GObject *object )
 {
-	g_assert( NACT_IS_GCONF_SCHEMA_WRITER( object ));
-	NactGConfSchemaWriter *self = NACT_GCONF_SCHEMA_WRITER( object );
+	g_assert( NACT_IS_GCONF_WRITER( object ));
+	NactGConfWriter *self = NACT_GCONF_WRITER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -147,8 +206,8 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	g_assert( NACT_IS_GCONF_SCHEMA_WRITER( object ));
-	NactGConfSchemaWriter *self = NACT_GCONF_SCHEMA_WRITER( object );
+	g_assert( NACT_IS_GCONF_WRITER( object ));
+	NactGConfWriter *self = NACT_GCONF_WRITER( object );
 
 	g_free( self->private->uuid );
 
@@ -160,44 +219,43 @@ instance_finalize( GObject *object )
 	}
 }
 
-static NactGConfSchemaWriter *
-gconf_schema_writer_new( void )
+static NactGConfWriter *
+gconf_writer_new( const gchar *uuid )
 {
-	return( g_object_new( NACT_GCONF_SCHEMA_WRITER_TYPE, NULL ));
-}
-
-static void
-gconf_schema_writer_set_uuid( NactGConfSchemaWriter *writer, const gchar *uuid )
-{
-	g_free( writer->private->uuid );
-	writer->private->uuid = g_strdup( uuid );
+	return( g_object_new( NACT_GCONF_WRITER_TYPE, PROP_GCONF_WRITER_UUID_STR, uuid, NULL ));
 }
 
 /**
  * Export the specified action as a GConf schema.
+ *
+ * Returns the written filename.
  */
-void
-nact_gconf_schema_writer_export( NAAction *action, const gchar *folder, gchar **msg )
+gchar *
+nact_gconf_writer_export( NAAction *action, const gchar *folder, gchar **msg )
 {
-	NactGConfSchemaWriter *writer = gconf_schema_writer_new();
-
 	gchar *uuid = na_action_get_uuid( action );
-	gconf_schema_writer_set_uuid( writer, uuid );
+	NactGConfWriter *writer = gconf_writer_new( uuid );
 	g_free( uuid );
 
 	xmlDocPtr doc = create_xml( writer, action );
 
-	/* generate the filename name and save the schema into it */
-	gchar *filename = g_strdup_printf( "%s/%s.schema", folder, writer->private->uuid );
-	xmlSaveFormatFileEnc( filename, doc, "UTF-8", 1 );
-	g_free( filename );
+	/* generate the filename name and save the xml document into it */
+	gchar *filename = g_strdup_printf( "%s/action-%s.xml", folder, writer->private->uuid );
 
+	if( xmlSaveFormatFileEnc( filename, doc, "UTF-8", 1 ) == -1 ){
+		g_free( filename );
+		filename = NULL;
+	}
 	xmlFreeDoc (doc);
 	xmlCleanupParser();
+
+	g_object_unref( writer );
+
+	return( filename );
 }
 
 static xmlDocPtr
-create_xml( NactGConfSchemaWriter *writer, NAAction *action )
+create_xml( NactGConfWriter *writer, NAAction *action )
 {
 	xmlDocPtr doc = xmlNewDoc( BAD_CAST( "1.0" ));
 	xmlNodePtr root_node = xmlNewNode( NULL, BAD_CAST( NACT_GCONF_XML_ROOT ));
@@ -299,7 +357,7 @@ create_xml( NactGConfSchemaWriter *writer, NAAction *action )
 }
 
 static void
-create_schema_entry( NactGConfSchemaWriter *writer,
+create_schema_entry( NactGConfWriter *writer,
 		const gchar *profile_name, const gchar *key, const gchar *value,
 		xmlDocPtr doc, xmlNodePtr list_node, const gchar *type, gboolean is_l10n_value )
 {
@@ -312,17 +370,17 @@ create_schema_entry( NactGConfSchemaWriter *writer,
 
 	xmlNodePtr schema_node = xmlNewChild( list_node, NULL, BAD_CAST( NACT_GCONF_XML_SCHEMA_ENTRY ), NULL );
 
-	xmlChar *content = BAD_CAST( g_build_path( "/", NACT_GCONF_SCHEMA_PREFIX, path, NULL ));
+	/*xmlChar *content = BAD_CAST( g_build_path( "/", NACT_GCONF_SCHEMA_PREFIX, path, NULL ));
 	xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_XML_SCHEMA_KEY ), content );
-	xmlFree( content );
+	xmlFree( content );*/
 
 	xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_XML_SCHEMA_APPLYTO ), BAD_CAST( path ));
 
-	xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_XML_SCHEMA_TYPE ), BAD_CAST( type ));
+	/*xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_XML_SCHEMA_TYPE ), BAD_CAST( type ));*/
 
-	if( !g_ascii_strcasecmp( type, "list" )){
+	/*if( !g_ascii_strcasecmp( type, "list" )){
 		xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_XML_SCHEMA_LIST_TYPE ), BAD_CAST( "string" ));
-	}
+	}*/
 
 	/* if the default value must be localized, put it in the <locale> element
 	 */

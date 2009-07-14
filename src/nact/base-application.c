@@ -543,7 +543,7 @@ base_application_get_dialog( BaseApplication *application, const gchar *name )
  * @name: the name of the searched widget.
  *
  * Returns a pointer to the searched widget, or NULL.
- * This pointer is owned by GtkBuilder object, and moust not be freed
+ * This pointer is owned by GtkBuilder object, and must not be freed
  * nor unreffed by the caller.
  */
 GtkWidget *
@@ -552,14 +552,34 @@ base_application_get_widget( BaseApplication *application, BaseWindow *window, c
 	/*static const gchar *thisfn = "base_application_get_widget";
 	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
 
-	GtkWidget *widget = NULL;
 	GtkWindow *toplevel = base_window_get_toplevel_dialog( window );
 
-	if( toplevel ){
-		widget = recursive_search_for_child( application, toplevel, name );
-		if( widget ){
-			g_assert( GTK_IS_WIDGET( widget ));
-		}
+	return( base_application_search_for_widget( application, toplevel, name ));
+}
+
+/**
+ * Returns a pointer to the named widget as a dialog's child.
+ *
+ * @application: this BaseApplication.
+ *
+ * @window: a GtkWindow toplevel dialog.
+ *
+ * @name: the name of the searched widget.
+ *
+ * Returns a pointer to the searched widget, or NULL.
+ * This pointer is owned by GtkBuilder object, and must not be freed
+ * nor unreffed by the caller.
+ */
+GtkWidget *
+base_application_search_for_widget( BaseApplication *application, GtkWindow *window, const gchar *name )
+{
+	/*static const gchar *thisfn = "base_application_get_widget";
+	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
+
+	GtkWidget *widget = recursive_search_for_child( application, window, name );
+
+	if( widget ){
+		g_assert( GTK_IS_WIDGET( widget ));
 	}
 
 	return( widget );

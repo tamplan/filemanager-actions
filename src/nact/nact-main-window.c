@@ -46,8 +46,8 @@
 #include "nact-application.h"
 #include "nact-action-conditions-editor.h"
 #include "nact-action-profiles-editor.h"
-#include "nact-action-profiles-editor.h"
-#include "nact-gconf-schema-writer.h"
+#include "nact-assist-export.h"
+#include "nact-assist-import.h"
 #include "nact-iactions-list.h"
 #include "nact-iprefs.h"
 #include "nact-main-window.h"
@@ -61,7 +61,6 @@ struct NactMainWindowClassPrivate {
  */
 struct NactMainWindowPrivate {
 	gboolean  dispose_has_run;
-	gboolean  export_mode;
 	gchar    *current_uuid;
 	gchar    *current_label;
 };
@@ -69,7 +68,6 @@ struct NactMainWindowPrivate {
 /* the GConf key used to read/write size and position of auxiliary dialogs
  */
 #define IPREFS_IMPORT_ACTIONS		"main-window-import-actions"
-#define IPREFS_EXPORT_ACTIONS		"main-window-export-actions"
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -97,19 +95,11 @@ static void     on_duplicate_button_clicked( GtkButton *button, gpointer user_da
 static void     on_delete_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_import_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_export_button_clicked( GtkButton *button, gpointer user_data );
-static void     on_saveas_button_clicked( GtkButton *button, gpointer user_data );
 static gboolean on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );
 
 static void     on_actions_changed( NAIPivotContainer *instance, gpointer user_data );
-
 static void     set_current_action( NactMainWindow *window, const NAAction *action );
 static void     do_set_current_action( NactWindow *window, const gchar *uuid, const gchar *label );
-static void     set_export_mode( NactWindow *window, gboolean mode );
-static void     setup_buttons( NactWindow *window );
-static void     do_import_actions( NactMainWindow *window, const gchar *filename );
-static void     do_export_actions( NactMainWindow *window, const gchar *folder );
-
-/*static gint     count_actions( BaseWindow *window );*/
 
 GType
 nact_main_window_get_type( void )
@@ -240,9 +230,6 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_free( self->private->current_uuid );
-		g_free( self->private->current_label );
-
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( window );
 	}
@@ -256,6 +243,9 @@ instance_finalize( GObject *window )
 
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	NactMainWindow *self = ( NactMainWindow * ) window;
+
+	g_free( self->private->current_uuid );
+	g_free( self->private->current_label );
 
 	g_free( self->private );
 
@@ -331,9 +321,6 @@ on_runtime_init_toplevel( BaseWindow *window )
 	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "DeleteActionButton", "clicked", G_CALLBACK( on_delete_button_clicked ));
 	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "ImportButton", "clicked", G_CALLBACK( on_import_button_clicked ));
 	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "ExportButton", "clicked", G_CALLBACK( on_export_button_clicked ));
-	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "SaveAsButton", "clicked", G_CALLBACK( on_saveas_button_clicked ));
-
-	setup_buttons( NACT_WINDOW( window ));
 }
 
 static void
@@ -345,21 +332,18 @@ on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_da
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	BaseWindow *window = BASE_WINDOW( user_data );
 
-	if( !NACT_MAIN_WINDOW( window )->private->export_mode ){
+	GtkWidget *edit_button = base_window_get_widget( window, "EditActionButton" );
+	GtkWidget *delete_button = base_window_get_widget( window, "DeleteActionButton" );
+	GtkWidget *duplicate_button = base_window_get_widget( window, "DuplicateActionButton" );
 
-		GtkWidget *edit_button = base_window_get_widget( window, "EditActionButton" );
-		GtkWidget *delete_button = base_window_get_widget( window, "DeleteActionButton" );
-		GtkWidget *duplicate_button = base_window_get_widget( window, "DuplicateActionButton" );
+	gboolean enabled = ( gtk_tree_selection_count_selected_rows( selection ) > 0 );
 
-		gboolean enabled = ( gtk_tree_selection_count_selected_rows( selection ) > 0 );
+	gtk_widget_set_sensitive( edit_button, enabled );
+	gtk_widget_set_sensitive( delete_button, enabled );
+	gtk_widget_set_sensitive( duplicate_button, enabled );
 
-		gtk_widget_set_sensitive( edit_button, enabled );
-		gtk_widget_set_sensitive( delete_button, enabled );
-		gtk_widget_set_sensitive( duplicate_button, enabled );
-
-		NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( NACT_WINDOW( window )));
-		set_current_action( NACT_MAIN_WINDOW( window ), action );
-	}
+	NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( NACT_WINDOW( window )));
+	set_current_action( NACT_MAIN_WINDOW( window ), action );
 }
 
 static gboolean
@@ -367,9 +351,7 @@ on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer
 {
 	g_assert( event->type == GDK_2BUTTON_PRESS );
 
-	if( !NACT_MAIN_WINDOW( user_data )->private->export_mode ){
-		on_edit_button_clicked( NULL, user_data );
-	}
+	on_edit_button_clicked( NULL, user_data );
 
 	return( TRUE );
 }
@@ -377,9 +359,7 @@ on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer
 static gboolean
 on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
 {
-	if( !NACT_MAIN_WINDOW( user_data )->private->export_mode ){
-		on_edit_button_clicked( NULL, user_data );
-	}
+	on_edit_button_clicked( NULL, user_data );
 
 	return( TRUE );
 }
@@ -598,7 +578,13 @@ on_import_button_clicked( GtkButton *button, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_import_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
+	nact_assist_import_run( NACT_WINDOW( user_data ));
+
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	NactWindow *wndmain = NACT_WINDOW( user_data );
+	nact_iactions_list_set_focus( wndmain );
+
+	/*g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactWindow *wndmain = NACT_WINDOW( user_data );
 
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(
@@ -629,7 +615,7 @@ on_import_button_clicked( GtkButton *button, gpointer user_data )
 
 	gtk_widget_destroy( dialog );
 
-	nact_iactions_list_set_focus( wndmain );
+	nact_iactions_list_set_focus( wndmain );*/
 }
 
 /*
@@ -643,51 +629,11 @@ on_export_button_clicked( GtkButton *button, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_export_button_clicked";
 	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
 
-	gboolean export = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	set_export_mode( NACT_WINDOW( user_data ), export );
+	nact_assist_export_run( NACT_WINDOW( user_data ));
 
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactWindow *wndmain = NACT_WINDOW( user_data );
-
 	nact_iactions_list_set_focus( wndmain );
-}
-
-static void
-on_saveas_button_clicked( GtkButton *button, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_main_window_on_saveas_button_clicked";
-	g_debug( "%s: button=%p, user_data=%p", thisfn, button, user_data );
-
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactWindow *wndmain = NACT_WINDOW( user_data );
-
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(
-			_( "Selecting a folder in which selected actions are to be saved" ),
-			NULL,
-			GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OK, GTK_RESPONSE_OK,
-			NULL
-			);
-
-	nact_iprefs_position_named_window( wndmain, GTK_WINDOW( dialog ), IPREFS_EXPORT_ACTIONS );
-	gchar *uri = nact_iprefs_get_export_folder_uri( wndmain );
-	gtk_file_chooser_set_uri( GTK_FILE_CHOOSER( dialog ), uri );
-	g_free( uri );
-
-	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_OK ){
-		uri = gtk_file_chooser_get_uri( GTK_FILE_CHOOSER( dialog ));
-		do_export_actions( NACT_MAIN_WINDOW( wndmain ), uri );
-	  }
-
-	nact_iprefs_save_export_folder_uri( wndmain, uri );
-	g_free( uri );
-
-	nact_iprefs_save_named_window_position( wndmain, GTK_WINDOW( dialog ), IPREFS_EXPORT_ACTIONS );
-	gtk_widget_destroy( dialog );
-
-	GtkWidget *export_button = base_window_get_widget( BASE_WINDOW( user_data ), "ExportButton" );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( export_button ), FALSE );
 }
 
 static gboolean
@@ -756,101 +702,3 @@ do_set_current_action( NactWindow *window, const gchar *uuid, const gchar *label
 	NACT_MAIN_WINDOW( window )->private->current_uuid = g_strdup( uuid );
 	NACT_MAIN_WINDOW( window )->private->current_label = g_strdup( label );
 }
-
-static void
-set_export_mode( NactWindow *window, gboolean mode )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	NactMainWindow *self = NACT_MAIN_WINDOW( window );
-
-	nact_iactions_list_set_multiple_selection( window, mode );
-	self->private->export_mode = mode;
-	setup_buttons( window );
-}
-
-static void
-setup_buttons( NactWindow *window )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	NactMainWindow *self = NACT_MAIN_WINDOW( window );
-
-	GtkWidget *new_button = base_window_get_widget( BASE_WINDOW( window ), "NewActionButton" );
-	GtkWidget *edit_button = base_window_get_widget( BASE_WINDOW( window ), "EditActionButton" );
-	GtkWidget *duplicate_button = base_window_get_widget( BASE_WINDOW( window ), "DuplicateActionButton" );
-	GtkWidget *delete_button = base_window_get_widget( BASE_WINDOW( window ), "DeleteActionButton" );
-	GtkWidget *import_button = base_window_get_widget( BASE_WINDOW( window ), "ImportButton" );
-	GtkWidget *saveas_button = base_window_get_widget( BASE_WINDOW( window ), "SaveAsButton" );
-	GtkWidget *close_button = base_window_get_widget( BASE_WINDOW( window ), "CloseButton" );
-
-	gtk_widget_set_sensitive( new_button, !self->private->export_mode );
-	gtk_widget_set_sensitive( edit_button, !self->private->export_mode );
-	gtk_widget_set_sensitive( delete_button, !self->private->export_mode );
-	gtk_widget_set_sensitive( duplicate_button, !self->private->export_mode );
-	gtk_widget_set_sensitive( import_button, !self->private->export_mode );
-	gtk_widget_set_sensitive( close_button, !self->private->export_mode );
-
-	gtk_widget_set_sensitive( saveas_button, self->private->export_mode );
-
-	GtkWidget *label = base_window_get_widget( BASE_WINDOW( window ), "ExportModeLabel" );
-	gchar *text = g_strdup( "" );
-	if( self->private->export_mode ){
-		g_free( text );
-		text = g_strdup( _( "Export mode toggled.\n"
-				"Please, select actions to be exported (multiple selection is authorized).\n" ));
-	}
-	gtk_label_set_label( GTK_LABEL( label ), text );
-	g_free( text );
-}
-
-static void
-do_import_actions( NactMainWindow *window, const gchar *filename )
-{
-	static const gchar *thisfn = "nact_main_window_do_import_actions";
-	g_debug( "%s: window=%p, filename=%p", thisfn, window, filename );
-}
-
-static void
-do_export_actions( NactMainWindow *window, const gchar *folder )
-{
-	static const gchar *thisfn = "nact_main_window_do_export_actions";
-	g_debug( "%s: window=%p, folder=%p", thisfn, window, folder );
-
-	GSList *actions = nact_iactions_list_get_selected_actions( NACT_WINDOW( window ));
-	GSList *ia;
-	gchar *msg = NULL;
-	gchar *reason = NULL;
-	gchar *tmp;
-
-	for( ia = actions ; ia ; ia = ia->next ){
-		NAAction *action = NA_ACTION( ia->data );
-		nact_gconf_schema_writer_export( action, folder, &msg );
-		if( msg ){
-			if( reason ){
-				tmp = g_strdup_printf( "%s\n", reason );
-				g_free( reason );
-				reason = tmp;
-			}
-			tmp = g_strdup_printf( "%s%s", reason, msg );
-			g_free( reason );
-			reason = tmp;
-		}
-		g_free( msg );
-	}
-
-	if( reason ){
-		base_window_error_dlg( BASE_WINDOW( window ), GTK_MESSAGE_WARNING,
-				_( "One or more errors have been detected when exporting actions." ), reason );
-		g_free( reason );
-	}
-
-	g_slist_free( actions );
-}
-
-/*static gint
-count_actions( BaseWindow *window )
-{
-	NactApplication *appli = NACT_APPLICATION( base_window_get_application( window ));
-	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( appli ));
-	GSList *actions = na_pivot_get_actions( pivot );
-	return( g_slist_length( actions ));
-}*/

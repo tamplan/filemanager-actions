@@ -50,10 +50,17 @@ nautilus_actions_config_SOURCES = \
 	nact-action-profiles-editor.h						\
 	nact-application.c									\
 	nact-application.h									\
-	nact-gconf-schema.c									\
-	nact-gconf-schema.h									\
-	nact-gconf-schema-writer.c							\
-	nact-gconf-schema-writer.h							\
+	nact-assistant.c									\
+	nact-assistant.h									\
+	nact-assist-export.c								\
+	nact-assist-export.h								\
+	nact-assist-import.c								\
+	nact-assist-import.h								\
+	nact-gconf-keys.h									\
+	nact-gconf-reader.c									\
+	nact-gconf-reader.h									\
+	nact-gconf-writer.c									\
+	nact-gconf-writer.h									\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
 	nact-imenu-item.c									\

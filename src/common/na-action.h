@@ -100,14 +100,17 @@ gboolean  na_action_is_readonly( const NAAction *action );
 gpointer  na_action_get_provider( const NAAction *action );
 
 void      na_action_set_new_uuid( NAAction *action );
+void      na_action_set_uuid( NAAction *action, const gchar *uuid );
+void      na_action_set_version( NAAction *action, const gchar *version );
 void      na_action_set_label( NAAction *action, const gchar *label );
 void      na_action_set_tooltip( NAAction *action, const gchar *tooltip );
 void      na_action_set_icon( NAAction *action, const gchar *icon_name );
 
 gboolean  na_action_are_equal( NAAction *first, NAAction *second );
 
-GObject  *na_action_get_profile( const NAAction *action, const gchar *name );
+NAObject *na_action_get_profile( const NAAction *action, const gchar *name );
 GSList   *na_action_get_profiles( const NAAction *action );
+void      na_action_add_profile( NAAction *action, NAObject *profile );
 void      na_action_set_profiles( NAAction *action, GSList *list );
 void      na_action_free_profiles( GSList *list );
 

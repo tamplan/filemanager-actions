@@ -28,64 +28,41 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_GCONF_SCHEMA_H__
-#define __NACT_GCONF_SCHEMA_H__
-
-/*
- * NactGConfSchema class definition.
- *
- * This is the base class for importing into and exporting from GConf
- * storage subsystem.
- */
+#ifndef __NACT_GCONF_KEYS_H__
+#define __NACT_GCONF_KEYS_H__
 
 #include <glib-object.h>
 
-#include <common/na-action.h>
-#include <common/na-action-profile.h>
-#include <common/na-gconf-keys.h>
-#include <common/na-utils.h>
-
 G_BEGIN_DECLS
 
-#define NACT_GCONF_SCHEMA_TYPE					( nact_gconf_schema_get_type())
-#define NACT_GCONF_SCHEMA( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_GCONF_SCHEMA_TYPE, NactGConfSchema ))
-#define NACT_GCONF_SCHEMA_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_GCONF_SCHEMA_TYPE, NactGConfSchemaClass ))
-#define NACT_IS_GCONF_SCHEMA( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_GCONF_SCHEMA_TYPE ))
-#define NACT_IS_GCONF_SCHEMA_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_GCONF_SCHEMA_TYPE ))
-#define NACT_GCONF_SCHEMA_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_GCONF_SCHEMA_TYPE, NactGConfSchemaClass ))
-
-typedef struct NactGConfSchemaPrivate NactGConfSchemaPrivate;
-
-typedef struct {
-	GObject                 parent;
-	NactGConfSchemaPrivate *private;
-}
-	NactGConfSchema;
-
-typedef struct NactGConfSchemaClassPrivate NactGConfSchemaClassPrivate;
-
-typedef struct {
-	GObjectClass                 parent;
-	NactGConfSchemaClassPrivate *private;
-}
-	NactGConfSchemaClass;
-
-/* GConf XML element names
+/* XML element names (GConf style)
  */
 #define NACT_GCONF_XML_ROOT						"gconfschemafile"
 #define NACT_GCONF_XML_SCHEMA_LIST				"schemalist"
 #define NACT_GCONF_XML_SCHEMA_ENTRY				"schema"
-#define NACT_GCONF_XML_SCHEMA_KEY				"key"
 #define NACT_GCONF_XML_SCHEMA_APPLYTO			"applyto"
-#define NACT_GCONF_XML_SCHEMA_TYPE				"type"
 #define NACT_GCONF_XML_SCHEMA_LOCALE			"locale"
 #define NACT_GCONF_XML_SCHEMA_DFT				"default"
+
+/* Previous used keys
+ *
+ * Up to v 1.10, export used to contain a full schema description,
+ * while import only checked for applyto keys (along with locale
+ * and default)
+ *
+ * Starting with 1.11, export only contains required keys (applyto,
+ * default and locale) ; import of course accept all previous keys
+ * without warning
+ */
+#define NACT_GCONF_XML_SCHEMA_KEY				"key"
+#define NACT_GCONF_XML_SCHEMA_OWNER				"owner"
+#define NACT_GCONF_XML_SCHEMA_TYPE				"type"
 #define NACT_GCONF_XML_SCHEMA_LIST_TYPE			"list_type"
+#define NACT_GCONF_XML_SCHEMA_SHORT				"short"
+#define NACT_GCONF_XML_SCHEMA_LONG				"long"
 
 #define NACT_GCONF_SCHEMA_PREFIX				"/schemas"
 
-GType nact_gconf_schema_get_type( void );
-
 G_END_DECLS
 
-#endif /* __NACT_GCONF_SCHEMA_H__ */
+#endif /* __NACT_GCONF_KEYS_H__ */

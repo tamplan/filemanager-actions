@@ -64,7 +64,7 @@ typedef struct {
 	void     ( *fill_actions_list )    ( NactWindow *window );
 	void     ( *on_selection_changed ) ( GtkTreeSelection *selection, gpointer user_data );
 	gboolean ( *on_button_press_event )( GtkWidget *widget, GdkEventButton *event, gpointer data );
-	gboolean ( *on_key_press_event )   ( GtkWidget *widget, GdkEventKey *event, gpointer data );
+	gboolean ( *on_key_pressed_event ) ( GtkWidget *widget, GdkEventKey *event, gpointer data );
 	gboolean ( *on_double_click )      ( GtkWidget *widget, GdkEventButton *event, gpointer data );
 	gboolean ( *on_enter_key_pressed ) ( GtkWidget *widget, GdkEventKey *event, gpointer data );
 }
