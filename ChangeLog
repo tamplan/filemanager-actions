@@ -1,5 +1,9 @@
 2009-07-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump version number to 1.11.2.
+
+2009-07-14 Pierre Wieser <pwieser@trychlos.org>
+
 	Implement import assistant with new object hierarchy.
 
 	* src/common/na-action.c:
