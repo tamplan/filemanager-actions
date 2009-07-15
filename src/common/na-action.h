@@ -108,6 +108,7 @@ void      na_action_set_icon( NAAction *action, const gchar *icon_name );
 
 gboolean  na_action_are_equal( NAAction *first, NAAction *second );
 
+gchar    *na_action_get_new_profile_name( const NAAction *action );
 NAObject *na_action_get_profile( const NAAction *action, const gchar *name );
 GSList   *na_action_get_profiles( const NAAction *action );
 void      na_action_add_profile( NAAction *action, NAObject *profile );

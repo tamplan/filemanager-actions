@@ -28,11 +28,11 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_IPROFILE_CONDITIONS_H__
-#define __NACT_IPROFILE_CONDITIONS_H__
+#ifndef __NACT_ICONDITIONS_H__
+#define __NACT_ICONDITIONS_H__
 
 /*
- * NactIProfileConditions interface definition.
+ * NactIConditions interface definition.
  *
  * This interface implements all the widgets which define the
  * conditions for the action.
@@ -44,36 +44,36 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IPROFILE_CONDITIONS_TYPE						( nact_iprofile_conditions_get_type())
-#define NACT_IPROFILE_CONDITIONS( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IPROFILE_CONDITIONS_TYPE, NactIProfileConditions ))
-#define NACT_IS_IPROFILE_CONDITIONS( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IPROFILE_CONDITIONS_TYPE ))
-#define NACT_IPROFILE_CONDITIONS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IPROFILE_CONDITIONS_TYPE, NactIProfileConditionsInterface ))
+#define NACT_ICONDITIONS_TYPE						( nact_iconditions_get_type())
+#define NACT_ICONDITIONS( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICONDITIONS_TYPE, NactIConditions ))
+#define NACT_IS_ICONDITIONS( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICONDITIONS_TYPE ))
+#define NACT_ICONDITIONS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICONDITIONS_TYPE, NactIConditionsInterface ))
 
-typedef struct NactIProfileConditions NactIProfileConditions;
+typedef struct NactIConditions NactIConditions;
 
-typedef struct NactIProfileConditionsInterfacePrivate NactIProfileConditionsInterfacePrivate;
+typedef struct NactIConditionsInterfacePrivate NactIConditionsInterfacePrivate;
 
 typedef struct {
 	GTypeInterface                          parent;
-	NactIProfileConditionsInterfacePrivate *private;
+	NactIConditionsInterfacePrivate *private;
 
 	/* api */
 	GObject * ( *get_edited_profile )( NactWindow *window );
 	void      ( *field_modified )    ( NactWindow *window );
 }
-	NactIProfileConditionsInterface;
+	NactIConditionsInterface;
 
-GType    nact_iprofile_conditions_get_type( void );
+GType    nact_iconditions_get_type( void );
 
-void     nact_iprofile_conditions_initial_load( NactWindow *dialog, NAActionProfile *profile );
-void     nact_iprofile_conditions_size_labels( NactWindow *window, GObject *size_group );
-void     nact_iprofile_conditions_size_buttons( NactWindow *window, GObject *size_group );
+void     nact_iconditions_initial_load( NactWindow *dialog, NAActionProfile *profile );
+void     nact_iconditions_size_labels( NactWindow *window, GObject *size_group );
+void     nact_iconditions_size_buttons( NactWindow *window, GObject *size_group );
 
-void     nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAActionProfile *profile );
-void     nact_iprofile_conditions_all_widgets_showed( NactWindow *dialog );
+void     nact_iconditions_runtime_init( NactWindow *dialog, NAActionProfile *profile );
+void     nact_iconditions_all_widgets_showed( NactWindow *dialog );
 
-void     nact_iprofile_conditions_dispose( NactWindow *dialog );
+void     nact_iconditions_dispose( NactWindow *dialog );
 
 G_END_DECLS
 
-#endif /* __NACT_IPROFILE_CONDITIONS_H__ */
+#endif /* __NACT_ICONDITIONS_H__ */

@@ -39,7 +39,7 @@
 #include "nact-application.h"
 #include "nact-action-conditions-editor.h"
 #include "nact-imenu-item.h"
-#include "nact-iprofile-conditions.h"
+#include "nact-iconditions.h"
 #include "nact-iprefs.h"
 #include "nact-main-window.h"
 
@@ -63,7 +63,7 @@ static GObjectClass *st_parent_class = NULL;
 static GType    register_type( void );
 static void     class_init( NactActionConditionsEditorClass *klass );
 static void     imenu_item_iface_init( NactIMenuItemInterface *iface );
-static void     iprofile_conditions_iface_init( NactIProfileConditionsInterface *iface );
+static void     iconditions_iface_init( NactIConditionsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
@@ -128,15 +128,15 @@ register_type( void )
 
 	g_type_add_interface_static( type, NACT_IMENU_ITEM_TYPE, &imenu_item_iface_info );
 
-	/* implement IProfileConditions interface
+	/* implement IConditions interface
 	 */
-	static const GInterfaceInfo iprofile_conditions_iface_info = {
-		( GInterfaceInitFunc ) iprofile_conditions_iface_init,
+	static const GInterfaceInfo iconditions_iface_info = {
+		( GInterfaceInitFunc ) iconditions_iface_init,
 		NULL,
 		NULL
 	};
 
-	g_type_add_interface_static( type, NACT_IPROFILE_CONDITIONS_TYPE, &iprofile_conditions_iface_info );
+	g_type_add_interface_static( type, NACT_ICONDITIONS_TYPE, &iconditions_iface_info );
 
 	return( type );
 }
@@ -177,9 +177,9 @@ imenu_item_iface_init( NactIMenuItemInterface *iface )
 }
 
 static void
-iprofile_conditions_iface_init( NactIProfileConditionsInterface *iface )
+iconditions_iface_init( NactIConditionsInterface *iface )
 {
-	static const gchar *thisfn = "nact_action_conditions_editor_iprofile_conditions_iface_init";
+	static const gchar *thisfn = "nact_action_conditions_editor_iconditions_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
 	iface->get_edited_profile = get_edited_profile;
@@ -216,7 +216,7 @@ instance_dispose( GObject *dialog )
 		self->private->dispose_has_run = TRUE;
 
 		nact_imenu_item_dispose( NACT_WINDOW( dialog ));
-		nact_iprofile_conditions_dispose( NACT_WINDOW( dialog ));
+		nact_iconditions_dispose( NACT_WINDOW( dialog ));
 
 		g_object_unref( self->private->original );
 		g_object_unref( self->private->edited );
@@ -265,10 +265,10 @@ action_conditions_editor_new( BaseApplication *application )
  * new NAAction is created.
  */
 void
-nact_action_conditions_editor_run_editor( NactWindow *parent, gpointer user_data )
+nact_action_conditions_editor_run_editor( NactWindow *parent, NAAction *action )
 {
 	static const gchar *thisfn = "nact_action_conditions_editor_run_editor";
-	g_debug( "%s: parent=%p, user_data=%p", thisfn, parent, user_data );
+	g_debug( "%s: parent=%p, action=%p", thisfn, parent, action );
 
 	g_assert( NACT_IS_MAIN_WINDOW( parent ));
 
@@ -277,9 +277,6 @@ nact_action_conditions_editor_run_editor( NactWindow *parent, gpointer user_data
 
 	NactActionConditionsEditor *dialog = action_conditions_editor_new( application );
 	dialog->private->parent = parent;
-
-	g_assert( NA_IS_ACTION( user_data ) || !user_data );
-	NAAction *action = NA_ACTION( user_data );
 
 	if( !action ){
 		dialog->private->original = na_action_new_with_profile();
@@ -308,7 +305,7 @@ static gchar *
 do_get_dialog_name( BaseWindow *dialog )
 {
 	/*g_debug( "nact_action_conditions_editor_do_get_dialog_name" );*/
-	return( g_strdup( "EditActionDialogExt" ));
+	return( g_strdup( "ActionConditionsDialog" ));
 }
 
 static void
@@ -328,13 +325,13 @@ on_initial_load_dialog( BaseWindow *dialog )
 	nact_imenu_item_initial_load( NACT_WINDOW( window ), window->private->edited );
 
 	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited )->data );
-	nact_iprofile_conditions_initial_load( NACT_WINDOW( window ), profile );
+	nact_iconditions_initial_load( NACT_WINDOW( window ), profile );
 
 	/* label alignements */
-	/*GtkSizeGroup *label_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
+	GtkSizeGroup *label_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
 	nact_imenu_item_size_labels( NACT_WINDOW( window ), G_OBJECT( label_group ));
-	nact_iprofile_conditions_size_labels( NACT_WINDOW( window ), G_OBJECT( label_group ));
-	g_object_unref( label_group );*/
+	nact_iconditions_size_labels( NACT_WINDOW( window ), G_OBJECT( label_group ));
+	g_object_unref( label_group );
 
 	/* buttons size
 	 * nb: while label sizing group works well with Glade 3.3 and GtkBuilder,
@@ -342,7 +339,7 @@ on_initial_load_dialog( BaseWindow *dialog )
 	 */
 	GtkSizeGroup *button_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
 	nact_imenu_item_size_buttons( NACT_WINDOW( window ), G_OBJECT( button_group ));
-	nact_iprofile_conditions_size_buttons( NACT_WINDOW( window ), G_OBJECT( button_group ));
+	nact_iconditions_size_buttons( NACT_WINDOW( window ), G_OBJECT( button_group ));
 	g_object_unref( button_group );
 }
 
@@ -358,18 +355,22 @@ on_runtime_init_dialog( BaseWindow *dialog )
 
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 	g_assert( NACT_IS_ACTION_CONDITIONS_EDITOR( dialog ));
-	NactActionConditionsEditor *window = NACT_ACTION_CONDITIONS_EDITOR( dialog );
+	NactActionConditionsEditor *editor = NACT_ACTION_CONDITIONS_EDITOR( dialog );
 
-	setup_dialog_title( window, FALSE );
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( dialog );
+	GtkWindow *parent_toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( editor->private->parent ));
+	gtk_window_set_transient_for( toplevel, parent_toplevel );
 
-	nact_imenu_item_runtime_init( NACT_WINDOW( window ), window->private->edited );
+	setup_dialog_title( editor, FALSE );
 
-	/*na_object_dump( NA_OBJECT( window->private->edited ));*/
-	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited )->data );
-	nact_iprofile_conditions_runtime_init( NACT_WINDOW( window ), profile );
+	nact_imenu_item_runtime_init( NACT_WINDOW( editor ), editor->private->edited );
 
-	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
-	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "SaveButton", "clicked", G_CALLBACK( on_save_clicked ));
+	/*na_object_dump( NA_OBJECT( editor->private->edited ));*/
+	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( editor->private->edited )->data );
+	nact_iconditions_runtime_init( NACT_WINDOW( editor ), profile );
+
+	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
+	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "SaveButton", "clicked", G_CALLBACK( on_save_clicked ));
 }
 
 static void
@@ -384,11 +385,11 @@ on_all_widgets_showed( BaseWindow *dialog )
 
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( dialog, "notebook2" ));
+	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( dialog, "Notebook" ));
 	gtk_notebook_set_current_page( notebook, 0 );
 
 	nact_imenu_item_all_widgets_showed( NACT_WINDOW( dialog ));
-	nact_iprofile_conditions_all_widgets_showed( NACT_WINDOW( dialog ));
+	nact_iconditions_all_widgets_showed( NACT_WINDOW( dialog ));
 }
 
 static void

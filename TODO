@@ -1,11 +1,27 @@
-Last Modified: 07/11/2005
-
-Important things to do before next release :
 
 - Create a command line tool to install a schema (wrapper to
 "gconftool-2 --install-schema-file")
+
 - Implement the Help button in nact (or hide it meanwhile)
+
 - i18n doen't works in the command line tool and for some part of NACT 
 like the scheme list, it seems.
+
 - Add better error handling in import/export stuff of nact and some feedback to
 user throught error dialog when import/export failed.
+
+- na-action and na-action-profile are included in nact-window.h
+  so are not needed in all other derived window files
+
+- try to import a schema for an action (without schema)
+
+- see if we could define signals in base classes, and if this signals
+  can be caught by interfaces - this would prevent us to define and
+  call specific api (initial_load, runtime_init, etc)
+
+- is it required to pass an action or a profile at initial_load ??
+  (would be better only at runtime_init)
+
+- gtk_window_set_transient_for (see nact-conditions-editor.c) should be
+  called in base_window_do_initial_load, but requires a parent window
+  which should be passed as a virtual or in the constructor

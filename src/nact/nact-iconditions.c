@@ -39,12 +39,12 @@
 #include <common/na-action-profile.h>
 #include <common/na-utils.h>
 
-#include "nact-iprofile-conditions.h"
+#include "nact-iconditions.h"
 #include "nact-iprefs.h"
 
 /* private interface data
  */
-struct NactIProfileConditionsInterfacePrivate {
+struct NactIConditionsInterfacePrivate {
 };
 
 /* column ordering
@@ -58,16 +58,16 @@ enum {
 
 /* the GConf key used to read/write size and position of auxiliary dialogs
  */
-#define IPREFS_LEGEND_DIALOG		"iprofile-conditions-legend-dialog"
-#define IPREFS_COMMAND_CHOOSER		"iprofile-conditions-command-chooser"
+#define IPREFS_LEGEND_DIALOG		"iconditions-legend-dialog"
+#define IPREFS_COMMAND_CHOOSER		"iconditions-command-chooser"
 
 /* a data set in the LegendDialog GObject
  */
-#define LEGEND_DIALOG_IS_VISIBLE	"iprofile-conditions-legend-dialog-visible"
+#define LEGEND_DIALOG_IS_VISIBLE	"iconditions-legend-dialog-visible"
 
 static GType         register_type( void );
-static void          interface_base_init( NactIProfileConditionsInterface *klass );
-static void          interface_base_finalize( NactIProfileConditionsInterface *klass );
+static void          interface_base_init( NactIConditionsInterface *klass );
+static void          interface_base_finalize( NactIConditionsInterface *klass );
 
 static GObject      *v_get_edited_profile( NactWindow *window );
 static void          v_field_modified( NactWindow *window );
@@ -117,7 +117,7 @@ static void          set_action_schemes( gchar *scheme, GtkTreeModel *model );
 static GtkButton    *get_remove_button( NactWindow *window );
 
 GType
-nact_iprofile_conditions_get_type( void )
+nact_iconditions_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -131,11 +131,11 @@ nact_iprofile_conditions_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_iprofile_conditions_register_type";
+	static const gchar *thisfn = "nact_iconditions_register_type";
 	g_debug( "%s", thisfn );
 
 	static const GTypeInfo info = {
-		sizeof( NactIProfileConditionsInterface ),
+		sizeof( NactIConditionsInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -146,7 +146,7 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIProfileConditions", &info, 0 );
+	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIConditions", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -154,15 +154,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIProfileConditionsInterface *klass )
+interface_base_init( NactIConditionsInterface *klass )
 {
-	static const gchar *thisfn = "nact_iprofile_conditions_interface_base_init";
+	static const gchar *thisfn = "nact_iconditions_interface_base_init";
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
 		g_debug( "%s: klass=%p", thisfn, klass );
 
-		klass->private = g_new0( NactIProfileConditionsInterfacePrivate, 1 );
+		klass->private = g_new0( NactIConditionsInterfacePrivate, 1 );
 
 		klass->get_edited_profile = NULL;
 		klass->field_modified = NULL;
@@ -172,9 +172,9 @@ interface_base_init( NactIProfileConditionsInterface *klass )
 }
 
 static void
-interface_base_finalize( NactIProfileConditionsInterface *klass )
+interface_base_finalize( NactIConditionsInterface *klass )
 {
-	static const gchar *thisfn = "nact_iprofile_conditions_interface_base_finalize";
+	static const gchar *thisfn = "nact_iconditions_interface_base_finalize";
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
@@ -187,13 +187,13 @@ interface_base_finalize( NactIProfileConditionsInterface *klass )
 }
 
 void
-nact_iprofile_conditions_initial_load( NactWindow *dialog, NAActionProfile *profile )
+nact_iconditions_initial_load( NactWindow *dialog, NAActionProfile *profile )
 {
 	create_schemes_selection_list( dialog );
 }
 
 void
-nact_iprofile_conditions_size_labels( NactWindow *window, GObject *size_group )
+nact_iconditions_size_labels( NactWindow *window, GObject *size_group )
 {
 	g_assert( NACT_IS_WINDOW( window ));
 	g_assert( GTK_IS_SIZE_GROUP( size_group ));
@@ -206,7 +206,7 @@ nact_iprofile_conditions_size_labels( NactWindow *window, GObject *size_group )
 }
 
 void
-nact_iprofile_conditions_size_buttons( NactWindow *window, GObject *size_group )
+nact_iconditions_size_buttons( NactWindow *window, GObject *size_group )
 {
 	g_assert( NACT_IS_WINDOW( window ));
 	g_assert( GTK_IS_SIZE_GROUP( size_group ));
@@ -219,9 +219,9 @@ nact_iprofile_conditions_size_buttons( NactWindow *window, GObject *size_group )
 }
 
 void
-nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAActionProfile *profile )
+nact_iconditions_runtime_init( NactWindow *dialog, NAActionProfile *profile )
 {
-	static const gchar *thisfn = "nact_iprofile_conditions_runtime_init";
+	static const gchar *thisfn = "nact_iconditions_runtime_init";
 	g_debug( "%s: dialog=%p, profile=%p", thisfn, dialog, profile );
 
 	GtkWidget *path_widget = get_path_widget( dialog );
@@ -306,14 +306,14 @@ nact_iprofile_conditions_runtime_init( NactWindow *dialog, NAActionProfile *prof
 }
 
 void
-nact_iprofile_conditions_all_widgets_showed( NactWindow *dialog )
+nact_iconditions_all_widgets_showed( NactWindow *dialog )
 {
 }
 
 void
-nact_iprofile_conditions_dispose( NactWindow *dialog )
+nact_iconditions_dispose( NactWindow *dialog )
 {
-	static const gchar *thisfn = "nact_iprofile_conditions_dispose";
+	static const gchar *thisfn = "nact_iconditions_dispose";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
 	hide_legend_dialog( dialog );
@@ -322,10 +322,10 @@ nact_iprofile_conditions_dispose( NactWindow *dialog )
 static GObject *
 v_get_edited_profile( NactWindow *window )
 {
-	g_assert( NACT_IS_IPROFILE_CONDITIONS( window ));
+	g_assert( NACT_IS_ICONDITIONS( window ));
 
-	if( NACT_IPROFILE_CONDITIONS_GET_INTERFACE( window )->get_edited_profile ){
-		return( NACT_IPROFILE_CONDITIONS_GET_INTERFACE( window )->get_edited_profile( window ));
+	if( NACT_ICONDITIONS_GET_INTERFACE( window )->get_edited_profile ){
+		return( NACT_ICONDITIONS_GET_INTERFACE( window )->get_edited_profile( window ));
 	}
 
 	return( NULL );
@@ -334,10 +334,10 @@ v_get_edited_profile( NactWindow *window )
 static void
 v_field_modified( NactWindow *window )
 {
-	g_assert( NACT_IS_IPROFILE_CONDITIONS( window ));
+	g_assert( NACT_IS_ICONDITIONS( window ));
 
-	if( NACT_IPROFILE_CONDITIONS_GET_INTERFACE( window )->field_modified ){
-		NACT_IPROFILE_CONDITIONS_GET_INTERFACE( window )->field_modified( window );
+	if( NACT_ICONDITIONS_GET_INTERFACE( window )->field_modified ){
+		NACT_ICONDITIONS_GET_INTERFACE( window )->field_modified( window );
 	}
 }
 
@@ -357,7 +357,7 @@ on_path_changed( GtkEntry *entry, gpointer user_data )
 static void
 on_path_browse( GtkButton *button, gpointer user_data )
 {
-	g_assert( NACT_IS_IPROFILE_CONDITIONS( user_data ));
+	g_assert( NACT_IS_ICONDITIONS( user_data ));
 	gboolean set_current_location = FALSE;
 	gchar *uri = NULL;
 
@@ -379,7 +379,7 @@ on_path_browse( GtkButton *button, gpointer user_data )
 		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
 
 	} else {
-		uri = nact_iprefs_get_iprofile_conditions_folder_uri( NACT_WINDOW( user_data ));
+		uri = nact_iprefs_get_iconditions_folder_uri( NACT_WINDOW( user_data ));
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 		g_free( uri );
 	}
@@ -391,7 +391,7 @@ on_path_browse( GtkButton *button, gpointer user_data )
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	nact_iprefs_save_iprofile_conditions_folder_uri( NACT_WINDOW( user_data ), uri );
+	nact_iprefs_save_iconditions_folder_uri( NACT_WINDOW( user_data ), uri );
 	g_free( uri );
 
 	nact_iprefs_save_named_window_position( NACT_WINDOW( user_data ), GTK_WINDOW( dialog ), IPREFS_COMMAND_CHOOSER );
@@ -427,7 +427,7 @@ get_parameters_widget( NactWindow *window )
 static void
 update_example_label( NactWindow *window )
 {
-	/*static const char *thisfn = "nact_iprofile_conditions_update_example_label";*/
+	/*static const char *thisfn = "nact_iconditions_update_example_label";*/
 
 	static const gchar *original_label = N_( "<i><b><span size=\"small\">e.g., %s</span></b></i>" );
 
@@ -606,7 +606,7 @@ parse_parameters( NactWindow *window )
 static void
 on_legend_clicked( GtkButton *button, gpointer user_data )
 {
-	g_assert( NACT_IS_IPROFILE_CONDITIONS( user_data ));
+	g_assert( NACT_IS_ICONDITIONS( user_data ));
 
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
 		show_legend_dialog( NACT_WINDOW( user_data ));
@@ -733,7 +733,7 @@ get_mimetypes_widget( NactWindow *window )
 static void
 on_isfiledir_toggled( GtkToggleButton *button, gpointer user_data )
 {
-	/*static const gchar *thisfn = "nact_iprofile_conditions_on_isfiledir_toggled";*/
+	/*static const gchar *thisfn = "nact_iconditions_on_isfiledir_toggled";*/
 
 	g_assert( NACT_IS_WINDOW( user_data ));
 	NactWindow *dialog = NACT_WINDOW( user_data );
@@ -816,7 +816,7 @@ get_multiple_button( NactWindow *window )
 static void
 on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, gpointer user_data )
 {
-	/*static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_selection_toggled";*/
+	/*static const gchar *thisfn = "nact_iconditions_on_scheme_selection_toggled";*/
 	/*g_debug( "%s: renderer=%p, path=%s, user_data=%p", thisfn, renderer, path, user_data );*/
 	g_assert( NACT_IS_WINDOW( user_data ));
 	NactWindow *dialog = NACT_WINDOW( user_data );
@@ -848,7 +848,7 @@ on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, gpoin
 static void
 on_scheme_keyword_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data )
 {
-	/*static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_keyword_edited";*/
+	/*static const gchar *thisfn = "nact_iconditions_on_scheme_keyword_edited";*/
 	/*g_debug( "%s: renderer=%p, path=%s, text=%s, user_data=%p", thisfn, renderer, path, text, user_data );*/
 
 	g_assert( NACT_IS_WINDOW( user_data ));
@@ -872,7 +872,7 @@ on_scheme_keyword_edited( GtkCellRendererText *renderer, const gchar *path, cons
 static void
 on_scheme_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, gpointer user_data )
 {
-	/*static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_desc_edited";
+	/*static const gchar *thisfn = "nact_iconditions_on_scheme_desc_edited";
 	g_debug( "%s: renderer=%p, path=%s, text=%s, user_data=%p", thisfn, renderer, path, text, user_data );*/
 
 	g_assert( NACT_IS_WINDOW( user_data ));
@@ -884,7 +884,7 @@ on_scheme_desc_edited( GtkCellRendererText *renderer, const gchar *path, const g
 static void
 on_scheme_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
 {
-	/*static const gchar *thisfn = "nact_iprofile_conditions_on_scheme_list_selection_changed";
+	/*static const gchar *thisfn = "nact_iconditions_on_scheme_list_selection_changed";
 	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );*/
 
 	g_assert( NACT_IS_WINDOW( user_data ));
@@ -987,9 +987,9 @@ get_schemes_tree_model( NactWindow *window )
 static void
 create_schemes_selection_list( NactWindow *window )
 {
-	static const char *thisfn = "nact_iprofile_conditions_create_schemes_selection_list";
+	static const char *thisfn = "nact_iconditions_create_schemes_selection_list";
 	g_debug( "%s: window=%p", thisfn, window );
-	g_assert( NACT_IS_IPROFILE_CONDITIONS( window ));
+	g_assert( NACT_IS_ICONDITIONS( window ));
 
 	GtkWidget *listview = GTK_WIDGET( get_schemes_tree_view( window ));
 	GSList* schemes_list = get_schemes_default_list( window );
@@ -1045,7 +1045,7 @@ create_schemes_selection_list( NactWindow *window )
 static gboolean
 get_action_schemes_list( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, gpointer data )
 {
-	static const char *thisfn = "nact_iprofile_conditions_get_action_schemes_list";
+	static const char *thisfn = "nact_iconditions_get_action_schemes_list";
 
 	GSList** list = data;
 	gboolean toggle_state;

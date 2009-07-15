@@ -475,19 +475,13 @@ on_edit_button_clicked( GtkButton *button, gpointer user_data )
 	NactWindow *wndmain = NACT_WINDOW( user_data );
 
 	NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( wndmain ));
+	g_assert( action );
+	g_assert( NA_IS_ACTION( action ));
 
-	if( action ){
-		guint count = na_action_get_profiles_count( action );
-
-		if( count > 1 ){
-			nact_action_profiles_editor_run_editor( wndmain, action );
-
-		} else {
-			nact_action_conditions_editor_run_editor( wndmain, action );
-		}
-
+	if( na_action_get_profiles_count( action ) > 1 ){
+		nact_action_profiles_editor_run_editor( wndmain, action );
 	} else {
-		g_assert_not_reached();
+		nact_action_conditions_editor_run_editor( wndmain, action );
 	}
 
 	nact_iactions_list_set_focus( wndmain );

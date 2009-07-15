@@ -39,6 +39,7 @@
  */
 
 #include <common/na-action.h>
+#include <common/na-action-profile.h>
 
 #include "base-window.h"
 
@@ -79,6 +80,7 @@ void     nact_window_set_current_action( NactWindow *window, const NAAction *act
 gboolean nact_window_save_action( NactWindow *window, const NAAction *action );
 
 gboolean nact_window_warn_action_modified( NactWindow *window, const NAAction *action );
+gboolean nact_window_warn_profile_modified( NactWindow *window, const NAActionProfile *profile );
 
 void     nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn );
 void     nact_window_signal_connect_by_name( NactWindow *window, const gchar *name, const gchar *signal, GCallback fn );

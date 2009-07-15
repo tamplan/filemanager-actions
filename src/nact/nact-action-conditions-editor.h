@@ -67,7 +67,7 @@ typedef struct {
 
 GType nact_action_conditions_editor_get_type( void );
 
-void  nact_action_conditions_editor_run_editor( NactWindow *parent, gpointer user_data );
+void  nact_action_conditions_editor_run_editor( NactWindow *parent, NAAction *action );
 
 G_END_DECLS
 

@@ -35,11 +35,12 @@
 #include <glib/gi18n.h>
 
 #include <common/na-action.h>
+#include <common/na-action-profile.h>
 
 #include "nact-application.h"
 #include "nact-profile-conditions-editor.h"
-#include "nact-iprofile-conditions.h"
-#include "nact-main-window.h"
+#include "nact-iprofile-item.h"
+#include "nact-iconditions.h"
 
 /* private class data
  */
@@ -49,27 +50,38 @@ struct NactProfileConditionsEditorClassPrivate {
 /* private instance data
  */
 struct NactProfileConditionsEditorPrivate {
-	gboolean  dispose_has_run;
-	NAAction *action;
-	gboolean  is_new;
+	gboolean         dispose_has_run;
+	NactWindow      *parent;
+	NAAction        *original_action;
+	NAActionProfile *original_profile;
+	gboolean         saved;
+	gboolean         is_new;
+	NAAction        *edited_action;
+	NAActionProfile *edited_profile;
 };
 
 static GObjectClass *st_parent_class = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactProfileConditionsEditorClass *klass );
-static void     iprofile_conditions_iface_init( NactIProfileConditionsInterface *iface );
+static void     iprofile_item_iface_init( NactIConditionsInterface *iface );
+static void     iconditions_iface_init( NactIConditionsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
 static NactProfileConditionsEditor *profile_conditions_editor_new( BaseApplication *application );
 
+static gchar   *do_get_iprefs_window_id( NactWindow *window );
 static gchar   *do_get_dialog_name( BaseWindow *dialog );
 static void     on_initial_load_dialog( BaseWindow *dialog );
 static void     on_runtime_init_dialog( BaseWindow *dialog );
-static void     init_dialog_title( NactProfileConditionsEditor *dialog );
+static void     setup_dialog_title( NactProfileConditionsEditor *dialog, gboolean is_modified );
+static void     setup_buttons( NactProfileConditionsEditor *dialog, gboolean can_save );
+static void     on_modified_field( NactWindow *dialog );
 static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static GObject *get_edited_profile( NactWindow *window );
+static gboolean is_edited_modified( NactProfileConditionsEditor *editor );
 
 GType
 nact_profile_conditions_editor_get_type( void )
@@ -103,15 +115,25 @@ register_type( void )
 
 	GType type = g_type_register_static( NACT_WINDOW_TYPE, "NactProfileConditionsEditor", &info, 0 );
 
-	/* implement IProfileConditions interface
+	/* implement IProfileItem interface
 	 */
-	static const GInterfaceInfo iprofile_conditions_iface_info = {
-		( GInterfaceInitFunc ) iprofile_conditions_iface_init,
+	static const GInterfaceInfo iprofile_item_iface_info = {
+		( GInterfaceInitFunc ) iprofile_item_iface_init,
 		NULL,
 		NULL
 	};
 
-	g_type_add_interface_static( type, NACT_IPROFILE_CONDITIONS_TYPE, &iprofile_conditions_iface_info );
+	g_type_add_interface_static( type, NACT_IPROFILE_ITEM_TYPE, &iprofile_item_iface_info );
+
+	/* implement IConditions interface
+	 */
+	static const GInterfaceInfo iconditions_iface_info = {
+		( GInterfaceInitFunc ) iconditions_iface_init,
+		NULL,
+		NULL
+	};
+
+	g_type_add_interface_static( type, NACT_ICONDITIONS_TYPE, &iconditions_iface_info );
 
 	return( type );
 }
@@ -131,17 +153,33 @@ class_init( NactProfileConditionsEditorClass *klass )
 	klass->private = g_new0( NactProfileConditionsEditorClassPrivate, 1 );
 
 	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
+	base_class->get_toplevel_name = do_get_dialog_name;
 	base_class->initial_load_toplevel = on_initial_load_dialog;
 	base_class->runtime_init_toplevel = on_runtime_init_dialog;
 	base_class->dialog_response = on_dialog_response;
-	base_class->get_toplevel_name = do_get_dialog_name;
+
+	NactWindowClass *nact_class = NACT_WINDOW_CLASS( klass );
+	nact_class->get_iprefs_window_id = do_get_iprefs_window_id;
 }
 
 static void
-iprofile_conditions_iface_init( NactIProfileConditionsInterface *iface )
+iprofile_item_iface_init( NactIConditionsInterface *iface )
 {
-	static const gchar *thisfn = "nact_profile_conditions_editor_iprofile_conditions_iface_init";
+	static const gchar *thisfn = "nact_profile_conditions_editor_iprofile_item_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->get_edited_profile = get_edited_profile;
+	iface->field_modified = on_modified_field;
+}
+
+static void
+iconditions_iface_init( NactIConditionsInterface *iface )
+{
+	static const gchar *thisfn = "nact_profile_conditions_editor_iconditions_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->get_edited_profile = get_edited_profile;
+	iface->field_modified = on_modified_field;
 }
 
 static void
@@ -171,6 +209,9 @@ instance_dispose( GObject *dialog )
 
 		self->private->dispose_has_run = TRUE;
 
+		g_object_unref( self->private->original_action );
+		g_object_unref( self->private->edited_action );
+
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( dialog );
 	}
@@ -183,7 +224,9 @@ instance_finalize( GObject *dialog )
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
 	g_assert( NACT_IS_PROFILE_CONDITIONS_EDITOR( dialog ));
-	/*NactProfileConditionsEditor *self = ( NactProfileConditionsEditor * ) dialog;*/
+	NactProfileConditionsEditor *self = ( NactProfileConditionsEditor * ) dialog;
+
+	g_free( self->private );
 
 	/* chain call to parent class */
 	if( st_parent_class->finalize ){
@@ -191,7 +234,7 @@ instance_finalize( GObject *dialog )
 	}
 }
 
-/**
+/*
  * Returns a newly allocated NactProfileConditionsEditor object.
  *
  * @parent: is the BaseWindow parent of this dialog (usually, the main
@@ -209,45 +252,62 @@ profile_conditions_editor_new( BaseApplication *application )
  * @parent: is the BaseWindow parent of this dialog (usually, the main
  * toplevel window of the application).
  *
- * @user_data: a pointer to the NAAction to edit, or NULL. If NULL, a
- * new NAAction is created.
+ * @action: the NAAction to which belongs the profile to edit.
  *
- * Returns TRUE if the NAAction has been edited and saved, or FALSE if
- * there has been no modification at all.
+ * @profile: the NAActionProfile to be edited, or NULL to create a new one.
+ *
+ * Returns the modified action, or NULL if no modification has been
+ * validated.
  */
-gboolean
-nact_profile_conditions_editor_run_editor( NactWindow *parent, gpointer user_data )
+NAAction *
+nact_profile_conditions_editor_run_editor( NactWindow *parent, NAAction *action, NAActionProfile *profile )
 {
-	g_assert( NACT_IS_MAIN_WINDOW( parent ));
-
 	BaseApplication *application = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
 	g_assert( NACT_IS_APPLICATION( application ));
 
-	NactProfileConditionsEditor *dialog = profile_conditions_editor_new( application );
+	NactProfileConditionsEditor *editor = profile_conditions_editor_new( application );
+	editor->private->parent = parent;
 
-	g_assert( NA_IS_ACTION( user_data ) || !user_data );
-	NAAction *action = NA_ACTION( user_data );
+	g_assert( action );
+	g_assert( NA_IS_ACTION( action ));
+	g_assert( NA_IS_ACTION_PROFILE( profile ) || !profile );
 
-	if( !action ){
-		dialog->private->action = na_action_new( NULL );
-		dialog->private->is_new = TRUE;
+	gchar *name;
+	editor->private->original_action = na_action_duplicate( action );
+
+	if( !profile ){
+		name = na_action_get_new_profile_name( action );
+		NAActionProfile *new_profile = na_action_profile_new( NA_OBJECT( editor->private->original_action ), name );
+		na_action_add_profile( editor->private->original_action, NA_OBJECT( new_profile ));
+		editor->private->original_profile = new_profile;
+		editor->private->is_new = TRUE;
 
 	} else {
-		dialog->private->action = na_action_duplicate( action );
-		dialog->private->is_new = FALSE;
+		name = na_action_profile_get_name( profile );
+		editor->private->original_profile = NA_ACTION_PROFILE( na_action_get_profile( editor->private->original_action, name ));
+		editor->private->is_new = FALSE;
 	}
 
-	base_window_run( BASE_WINDOW( dialog ));
+	editor->private->edited_action = na_action_duplicate( editor->private->original_action );
+	editor->private->edited_profile = NA_ACTION_PROFILE( na_action_get_profile( editor->private->edited_action, name ));
 
-	g_object_unref( dialog->private->action );
-	return( TRUE );
+	g_free( name );
+
+	base_window_run( BASE_WINDOW( editor ));
+
+	return( editor->private->saved ? editor->private->original_action : NULL );
+}
+
+static gchar *
+do_get_iprefs_window_id( NactWindow *window )
+{
+	return( g_strdup( "profile-conditions-editor" ));
 }
 
 static gchar *
 do_get_dialog_name( BaseWindow *dialog )
 {
-	/*g_debug( "nact_profile_conditions_editor_do_get_dialog_name" );*/
-	return( g_strdup( "EditActionDialogExt"));
+	return( g_strdup( "ProfileConditionsDialog"));
 }
 
 static void
@@ -257,10 +317,10 @@ on_initial_load_dialog( BaseWindow *dialog )
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
 	g_assert( NACT_IS_PROFILE_CONDITIONS_EDITOR( dialog ));
-	NactProfileConditionsEditor *window = NACT_PROFILE_CONDITIONS_EDITOR( dialog );
+	NactProfileConditionsEditor *editor = NACT_PROFILE_CONDITIONS_EDITOR( dialog );
 
-	init_dialog_title( window );
-	/*nact_iprofile_conditions_initial_load( NACT_WINDOW( window ), window->private->action );*/
+	nact_iprofile_item_initial_load( NACT_WINDOW( editor ), editor->private->edited_profile );
+	nact_iconditions_initial_load( NACT_WINDOW( editor ), editor->private->edited_profile );
 }
 
 static void
@@ -270,27 +330,87 @@ on_runtime_init_dialog( BaseWindow *dialog )
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
 	g_assert( NACT_IS_PROFILE_CONDITIONS_EDITOR( dialog ));
-	NactProfileConditionsEditor *window = NACT_PROFILE_CONDITIONS_EDITOR( dialog );
+	NactProfileConditionsEditor *editor = NACT_PROFILE_CONDITIONS_EDITOR( dialog );
 
-	init_dialog_title( window );
-	/*nact_iprofile_conditions_runtime_init( NACT_WINDOW( window ), window->private->action );*/
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( dialog );
+	GtkWindow *parent_toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( editor->private->parent ));
+	gtk_window_set_transient_for( toplevel, parent_toplevel );
+
+	setup_dialog_title( editor, FALSE );
+
+	nact_iprofile_item_runtime_init( NACT_WINDOW( editor ), editor->private->edited_profile );
+	nact_iconditions_runtime_init( NACT_WINDOW( editor ), editor->private->edited_profile );
 }
 
 static void
-init_dialog_title( NactProfileConditionsEditor *dialog )
+setup_dialog_title( NactProfileConditionsEditor *editor, gboolean is_modified )
 {
-	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( dialog ));
+	gchar *title;
+	gchar *label;
 
-	if( dialog->private->is_new ){
-		gtk_window_set_title( toplevel, _( "Adding a new action" ));
+	if( editor->private->is_new ){
+		/* i18n: title of the window when adding a new profile to an existing action */
+		title = g_strdup( _( "Adding a new profile" ));
 
 	} else {
-		gchar *label = na_action_get_label( dialog->private->action );
-		gchar* title = g_strdup_printf( _( "Editing \"%s\" action" ), label );
-		gtk_window_set_title( toplevel, title );
+		label = na_action_profile_get_label( editor->private->original_profile );
+		/* i18n: title of the window when editing a profile */
+		title = g_strdup_printf( _( "Editing \"%s\" profile" ), label );
 		g_free( label );
-		g_free( title );
 	}
+
+	if( is_modified ){
+		gchar *tmp = g_strdup_printf( "*%s", title );
+		g_free( title );
+		title = tmp;
+	}
+
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( editor ));
+	gtk_window_set_title( toplevel, title );
+	g_free( title );
+}
+
+/*
+ * rationale:
+ * - while the action or the profile are not modified, only the cancel
+ *   button is activated (showed as close)
+ * - when the mono-profile action is modified, we have a save and a
+ *   cancel buttons (a label is mandatory to enable the save button)
+ * - when editing a profile, we have a OK and an cancel buttons
+ *   (profile label is mandatory) as the actual save will take place in
+ *   the NactActionProfilesEditor parent window
+ */
+static void
+setup_buttons( NactProfileConditionsEditor *editor, gboolean can_save )
+{
+	GtkWidget *cancel_button = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
+	GtkWidget *close_button = gtk_button_new_from_stock( GTK_STOCK_CLOSE );
+
+	GtkWidget *dlg_cancel = base_window_get_widget( BASE_WINDOW( editor ), "CancelButton" );
+	gtk_button_set_label( GTK_BUTTON( dlg_cancel ), can_save ? _( "_Cancel" ) : _( "_Close" ));
+	gtk_button_set_image( GTK_BUTTON( dlg_cancel ), can_save ? gtk_button_get_image( GTK_BUTTON( cancel_button )) : gtk_button_get_image( GTK_BUTTON( close_button )));
+
+	gtk_widget_destroy( close_button );
+	gtk_widget_destroy( cancel_button );
+
+	GtkWidget *dlg_ok = base_window_get_widget( BASE_WINDOW( editor ), "OKButton" );
+	gtk_widget_set_sensitive( dlg_ok, can_save );
+}
+
+static void
+on_modified_field( NactWindow *window )
+{
+	/*static const gchar *thisfn = "nact_profile_conditions_editor_on_modified_field";*/
+
+	g_assert( NACT_IS_PROFILE_CONDITIONS_EDITOR( window ));
+	NactProfileConditionsEditor *editor = ( NACT_PROFILE_CONDITIONS_EDITOR( window ));
+
+	gboolean is_modified = is_edited_modified( editor );
+	setup_dialog_title( editor, is_modified );
+
+	gboolean can_save = is_modified && nact_iprofile_item_has_label( window );
+
+	setup_buttons( editor, can_save );
 }
 
 static gboolean
@@ -300,14 +420,49 @@ on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, dialog, code, window );
 
 	g_assert( NACT_IS_PROFILE_CONDITIONS_EDITOR( window ));
+	NactProfileConditionsEditor *editor = NACT_PROFILE_CONDITIONS_EDITOR( window );
+
+	gboolean is_modified = is_edited_modified( editor );
 
 	switch( code ){
 		case GTK_RESPONSE_NONE:
 		case GTK_RESPONSE_DELETE_EVENT:
 		case GTK_RESPONSE_CLOSE:
-			g_object_unref( window );
+		case GTK_RESPONSE_CANCEL:
+			if( !is_modified ||
+					nact_window_warn_profile_modified( NACT_WINDOW( dialog ), editor->private->original_profile )){
+
+					g_object_unref( window );
+					return( TRUE );
+			}
+			break;
+
+		case GTK_RESPONSE_OK:
+			if( is_modified ){
+				g_object_unref( editor->private->original_action );
+				editor->private->original_action = na_action_duplicate( editor->private->edited_action );
+				gchar *name = na_action_profile_get_name( editor->private->edited_profile );
+				editor->private->original_profile = NA_ACTION_PROFILE( na_action_get_profile( editor->private->original_action, name ));
+				g_free( name );
+				editor->private->is_new = FALSE;
+				editor->private->saved = TRUE;
+				on_modified_field( NACT_WINDOW( dialog ));
+			}
 			break;
 	}
 
-	return( TRUE );
+	return( FALSE );
+}
+
+static GObject *
+get_edited_profile( NactWindow *window )
+{
+	g_assert( NACT_IS_PROFILE_CONDITIONS_EDITOR( window ));
+	return( G_OBJECT( NACT_PROFILE_CONDITIONS_EDITOR( window )->private->edited_profile ));
+}
+
+static gboolean
+is_edited_modified( NactProfileConditionsEditor *editor )
+{
+	return( !na_action_are_equal( editor->private->original_action, editor->private->edited_action ));
 }

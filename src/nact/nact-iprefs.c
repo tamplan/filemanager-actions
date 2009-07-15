@@ -50,7 +50,7 @@ struct NactIPrefsInterfacePrivate {
 
 /* key to read/write the last visited folder when browsing for a file
  */
-#define IPREFS_IPROFILE_CONDITION_FOLDER_URI	"iprofile-conditions-folder-uri"
+#define IPREFS_ICONDITION_FOLDER_URI			"iconditions-folder-uri"
 #define IPREFS_IMPORT_ACTIONS_FOLDER_URI		"import-folder-uri"
 #define IPREFS_EXPORT_ACTIONS_FOLDER_URI		"export-folder-uri"
 
@@ -226,7 +226,7 @@ nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel,
 
 /**
  * Save the last visited folder when browsing for command in
- * IProfileConditions interface.
+ * IConditions interface.
  *
  * @window: this NactWindow-derived window.
  *
@@ -234,15 +234,15 @@ nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel,
  * The returned string must be g_free by the caller.
  */
 gchar *
-nact_iprefs_get_iprofile_conditions_folder_uri( NactWindow *window )
+nact_iprefs_get_iconditions_folder_uri( NactWindow *window )
 {
-	return( read_key_str( window, IPREFS_IPROFILE_CONDITION_FOLDER_URI ));
+	return( read_key_str( window, IPREFS_ICONDITION_FOLDER_URI ));
 }
 
 void
-nact_iprefs_save_iprofile_conditions_folder_uri( NactWindow *window, const gchar *uri )
+nact_iprefs_save_iconditions_folder_uri( NactWindow *window, const gchar *uri )
 {
-	save_key_str( window, IPREFS_IPROFILE_CONDITION_FOLDER_URI, uri );
+	save_key_str( window, IPREFS_ICONDITION_FOLDER_URI, uri );
 }
 
 /**

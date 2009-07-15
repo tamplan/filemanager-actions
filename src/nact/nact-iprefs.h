@@ -71,8 +71,8 @@ void   nact_iprefs_position_named_window( NactWindow *window, GtkWindow *topleve
 void   nact_iprefs_save_window_position( NactWindow *window );
 void   nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel, const gchar *name );
 
-gchar *nact_iprefs_get_iprofile_conditions_folder_uri( NactWindow *window );
-void   nact_iprefs_save_iprofile_conditions_folder_uri( NactWindow *window, const gchar *uri );
+gchar *nact_iprefs_get_iconditions_folder_uri( NactWindow *window );
+void   nact_iprefs_save_iconditions_folder_uri( NactWindow *window, const gchar *uri );
 
 gchar *nact_iprefs_get_import_folder_uri( NactWindow *window );
 void   nact_iprefs_save_import_folder_uri( NactWindow *window, const gchar *uri );

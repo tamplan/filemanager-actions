@@ -39,9 +39,9 @@
 
 #include "nact-application.h"
 #include "nact-action-profiles-editor.h"
+#include "nact-profile-conditions-editor.h"
 #include "nact-imenu-item.h"
 #include "nact-iprofiles-list.h"
-#include "nact-iprefs.h"
 
 /* private class data
  */
@@ -82,14 +82,17 @@ static void     on_profiles_list_selection_changed( GtkTreeSelection *selection,
 static gboolean on_profiles_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
 static gboolean on_profiles_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
 static void     on_modified_field( NactWindow *dialog );
+static void     on_new_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_edit_button_clicked( GtkButton *button, gpointer user_data );
+static void     on_duplicate_button_clicked( GtkButton *button, gpointer user_data );
+static void     on_delete_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_cancel_clicked( GtkButton *button, gpointer user_data );
 static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 static GSList  *do_get_profiles( NactWindow *window );
 static GObject *get_edited_action( NactWindow *window );
 static gboolean is_edited_modified( NactActionProfilesEditor *dialog );
-static void     do_set_current_profile( NactActionProfilesEditor *dialog, const NAActionProfile *profile );
+/*static void     do_set_current_profile( NactActionProfilesEditor *dialog, const NAActionProfile *profile );*/
 
 GType
 nact_action_profiles_editor_get_type( void )
@@ -276,30 +279,18 @@ action_profiles_editor_new( BaseApplication *application )
 void
 nact_action_profiles_editor_run_editor( NactWindow *parent, gpointer user_data )
 {
-	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( parent ));
-
 	BaseApplication *application = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
 	g_assert( NACT_IS_APPLICATION( application ));
 
 	NactActionProfilesEditor *dialog = action_profiles_editor_new( application );
 	dialog->private->parent = parent;
 
-	g_assert( NA_IS_ACTION( user_data ) || !user_data );
+	g_assert( NA_IS_ACTION( user_data ));
 	NAAction *action = NA_ACTION( user_data );
+	g_assert( na_action_get_profiles_count( action ) > 1 );
 
-	if( !action ){
-		dialog->private->original = na_action_new_with_profile();
-		dialog->private->is_new = TRUE;
-
-	} else {
-		dialog->private->original = na_action_duplicate( action );
-		dialog->private->is_new = FALSE;
-	}
-
+	dialog->private->original = na_action_duplicate( action );
 	dialog->private->edited = na_action_duplicate( dialog->private->original );
-
-	g_assert( na_action_get_profiles_count( dialog->private->original ) > 1 );
-	g_assert( na_action_get_profiles_count( dialog->private->edited ) > 1 );
 
 	base_window_run( BASE_WINDOW( dialog ));
 }
@@ -313,7 +304,7 @@ do_get_iprefs_window_id( NactWindow *window )
 static gchar *
 do_get_dialog_name( BaseWindow *dialog )
 {
-	return( g_strdup( "EditActionDialog"));
+	return( g_strdup( "ActionProfilesDialog"));
 }
 
 static void
@@ -328,14 +319,14 @@ on_initial_load_dialog( BaseWindow *dialog )
 
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( dialog ));
-	NactActionProfilesEditor *window = NACT_ACTION_PROFILES_EDITOR( dialog );
+	NactActionProfilesEditor *editor = NACT_ACTION_PROFILES_EDITOR( dialog );
 
-	nact_imenu_item_initial_load( NACT_WINDOW( window ), window->private->edited );
+	nact_imenu_item_initial_load( NACT_WINDOW( editor ), editor->private->edited );
 
-	g_assert( NACT_IS_IPROFILES_LIST( window ));
-	nact_iprofiles_list_initial_load( NACT_WINDOW( window ));
-	nact_iprofiles_list_set_multiple_selection( NACT_WINDOW( window ), FALSE );
-	nact_iprofiles_list_set_send_selection_changed_on_fill_list( NACT_WINDOW( window ), FALSE );
+	g_assert( NACT_IS_IPROFILES_LIST( editor ));
+	nact_iprofiles_list_initial_load( NACT_WINDOW( editor ));
+	nact_iprofiles_list_set_multiple_selection( NACT_WINDOW( editor ), FALSE );
+	nact_iprofiles_list_set_send_selection_changed_on_fill_list( NACT_WINDOW( editor ), FALSE );
 }
 
 static void
@@ -350,14 +341,23 @@ on_runtime_init_dialog( BaseWindow *dialog )
 
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( dialog ));
-	NactActionProfilesEditor *window = NACT_ACTION_PROFILES_EDITOR( dialog );
+	NactActionProfilesEditor *editor = NACT_ACTION_PROFILES_EDITOR( dialog );
 
-	setup_dialog_title( window, FALSE );
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( dialog );
+	GtkWindow *parent_toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( editor->private->parent ));
+	gtk_window_set_transient_for( toplevel, parent_toplevel );
 
-	nact_imenu_item_runtime_init( NACT_WINDOW( window ), window->private->edited );
-	nact_iprofiles_list_runtime_init( NACT_WINDOW( window ));
+	setup_dialog_title( editor, FALSE );
 
-	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
+	nact_imenu_item_runtime_init( NACT_WINDOW( editor ), editor->private->edited );
+	nact_iprofiles_list_runtime_init( NACT_WINDOW( editor ));
+
+	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "NewProfileButton", "clicked", G_CALLBACK( on_new_button_clicked ));
+	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "EditProfileButton", "clicked", G_CALLBACK( on_edit_button_clicked ));
+	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "DuplicateProfileButton", "clicked", G_CALLBACK( on_duplicate_button_clicked ));
+	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "DeleteProfileButton", "clicked", G_CALLBACK( on_delete_button_clicked ));
+
+	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
 }
 
 static void
@@ -378,16 +378,9 @@ on_all_widgets_showed( BaseWindow *dialog )
 static void
 setup_dialog_title( NactActionProfilesEditor *dialog, gboolean is_modified )
 {
-	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( dialog ));
-
-	gchar *title;
-	if( dialog->private->is_new ){
-		title = g_strdup( _( "Adding a new action" ));
-	} else {
-		gchar *label = na_action_get_label( dialog->private->original );
-		title = g_strdup_printf( _( "Editing \"%s\" action" ), label );
-		g_free( label );
-	}
+	gchar *label = na_action_get_label( dialog->private->original );
+	gchar *title = g_strdup_printf( _( "Editing \"%s\" action" ), label );
+	g_free( label );
 
 	if( is_modified ){
 		gchar *tmp = g_strdup_printf( "*%s", title );
@@ -395,6 +388,7 @@ setup_dialog_title( NactActionProfilesEditor *dialog, gboolean is_modified )
 		title = tmp;
 	}
 
+	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( dialog ));
 	gtk_window_set_title( toplevel, title );
 	g_free( title );
 }
@@ -429,9 +423,9 @@ on_profiles_list_selection_changed( GtkTreeSelection *selection, gpointer user_d
 	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( user_data ));
 	BaseWindow *window = BASE_WINDOW( user_data );
 
-	GtkWidget *edit_button = base_window_get_widget( window, "EditActionButton" );
-	GtkWidget *delete_button = base_window_get_widget( window, "DeleteActionButton" );
-	GtkWidget *duplicate_button = base_window_get_widget( window, "DuplicateActionButton" );
+	GtkWidget *edit_button = base_window_get_widget( window, "EditProfileButton" );
+	GtkWidget *delete_button = base_window_get_widget( window, "DeleteProfileButton" );
+	GtkWidget *duplicate_button = base_window_get_widget( window, "DuplicateProfileButton" );
 
 	gboolean enabled = ( gtk_tree_selection_count_selected_rows( selection ) > 0 );
 
@@ -439,8 +433,8 @@ on_profiles_list_selection_changed( GtkTreeSelection *selection, gpointer user_d
 	gtk_widget_set_sensitive( delete_button, enabled );
 	gtk_widget_set_sensitive( duplicate_button, enabled );
 
-	NAActionProfile *profile = NA_ACTION_PROFILE( nact_iprofiles_list_get_selected_profile( NACT_WINDOW( window )));
-	do_set_current_profile( NACT_ACTION_PROFILES_EDITOR( window ), profile );
+	/*NAActionProfile *profile = NA_ACTION_PROFILE( nact_iprofiles_list_get_selected_profile( NACT_WINDOW( window )));
+	do_set_current_profile( NACT_ACTION_PROFILES_EDITOR( window ), profile );*/
 }
 
 static gboolean
@@ -470,15 +464,41 @@ on_modified_field( NactWindow *window )
 	NactActionProfilesEditor *dialog = ( NACT_ACTION_PROFILES_EDITOR( window ));
 
 	gboolean is_modified = is_edited_modified( dialog );
-	/*g_debug( "%s: is_modified=%s", thisfn, is_modified ? "True":"False" );*/
 	setup_dialog_title( dialog, is_modified );
 
 	gboolean can_save = is_modified && nact_imenu_item_has_label( window );
 	setup_buttons( dialog, can_save );
 }
 
+/*
+ * creating a new profile
+ */
+static void
+on_new_button_clicked( GtkButton *button, gpointer user_data )
+{
+	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( user_data ));
+	NactWindow *window = NACT_WINDOW( user_data );
+	NactActionProfilesEditor *editor = NACT_ACTION_PROFILES_EDITOR( window );
+
+	nact_profile_conditions_editor_run_editor( window, editor->private->edited, NULL );
+
+	nact_iprofiles_list_set_focus( window );
+}
+
 static void
 on_edit_button_clicked( GtkButton *button, gpointer user_data )
+{
+
+}
+
+static void
+on_delete_button_clicked( GtkButton *button, gpointer user_data )
+{
+
+}
+
+static void
+on_duplicate_button_clicked( GtkButton *button, gpointer user_data )
 {
 
 }
@@ -533,8 +553,9 @@ static GSList *
 do_get_profiles( NactWindow *window )
 {
 	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( window ));
+	NactActionProfilesEditor *editor = NACT_ACTION_PROFILES_EDITOR( window );
 
-	return( NULL );
+	return( na_action_get_profiles( editor->private->edited ));
 }
 
 static GObject *
@@ -550,12 +571,12 @@ is_edited_modified( NactActionProfilesEditor *dialog )
 	return( !na_action_are_equal( dialog->private->original, dialog->private->edited ));
 }
 
-static void
+/*static void
 do_set_current_profile( NactActionProfilesEditor *dialog, const NAActionProfile *profile )
 {
-	/*gchar *uuid = na_action_get_uuid( dialog->private->original );
+	gchar *uuid = na_action_get_uuid( dialog->private->original );
 	gchar *label = na_action_get_label( dialog->private->original );
 	nact_window_set_current_action( dialog->private->parent, uuid, label );
 	g_free( label );
-	g_free( uuid );*/
-}
+	g_free( uuid );
+}*/

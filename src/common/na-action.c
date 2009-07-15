@@ -769,6 +769,35 @@ na_action_are_equal( NAAction *first, NAAction *second )
 }
 
 /**
+ * Returns a name suitable as a new profile name.
+ *
+ * @action: the action for which we are searching a new profile name.
+ *
+ * Basically, we increment a counter until finding a unique name.
+ */
+gchar *
+na_action_get_new_profile_name( const NAAction *action )
+{
+	g_assert( NA_IS_ACTION( action ));
+	int i;
+	gboolean ok = FALSE;
+	gchar *candidate = NULL;
+
+	for( i=1 ; !ok ; ++i ){
+		g_free( candidate );
+		candidate = g_strdup_printf( "%s%d", ACTION_PROFILE_PREFIX, i );
+		if( !na_action_get_profile( action, candidate )){
+			ok = TRUE;
+		}
+	}
+	if( !ok ){
+		g_free( candidate );
+		candidate = NULL;
+	}
+	return( candidate );
+}
+
+/**
  * Returns the profile with the required name.
  *
  * @action: the action whose profiles has to be retrieved.
@@ -788,7 +817,7 @@ na_action_get_profile( const NAAction *action, const gchar *name )
 	for( ip = action->private->profiles ; ip && !found ; ip = ip->next ){
 		NAActionProfile *iprofile = NA_ACTION_PROFILE( ip->data );
 		gchar *iname = na_action_profile_get_name( iprofile );
-		if( !g_ascii_strcasecmp( name, iname )){
+		if( !strcmp( name, iname )){
 			found = NA_OBJECT( iprofile );
 		}
 		g_free( iname );

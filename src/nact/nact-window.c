@@ -309,6 +309,37 @@ nact_window_warn_action_modified( NactWindow *window, const NAAction *action )
 }
 
 /**
+ * Emits a warning if the profile has been modified.
+ *
+ * @window: this NactWindow object.
+ *
+ * @profile: the modified profile.
+ *
+ * Returns TRUE if the user confirms he wants to quit.
+ */
+gboolean
+nact_window_warn_profile_modified( NactWindow *window, const NAActionProfile *profile )
+{
+	gchar *label = na_action_profile_get_label( profile );
+
+	gchar *first;
+	if( label && strlen( label )){
+		first = g_strdup_printf( _( "The profile \"%s\" has been modified." ), label );
+	} else {
+		first = g_strdup( _( "The newly created profile has been modified." ));
+	}
+	gchar *second = g_strdup( _( "Are you sure you want to quit without saving it ?" ));
+
+	gboolean ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+
+	g_free( second );
+	g_free( first );
+	g_free( label );
+
+	return( ok );
+}
+
+/**
  * Records a connected signal, to be disconnected at NactWindow dispose.
  */
 void

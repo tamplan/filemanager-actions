@@ -63,12 +63,14 @@ nautilus_actions_config_SOURCES = \
 	nact-gconf-writer.h									\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
+	nact-iconditions.c									\
+	nact-iconditions.h									\
 	nact-imenu-item.c									\
 	nact-imenu-item.h									\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
-	nact-iprofile-conditions.c							\
-	nact-iprofile-conditions.h							\
+	nact-iprofile-item.c								\
+	nact-iprofile-item.h								\
 	nact-iprofiles-list.c								\
 	nact-iprofiles-list.h								\
 	nact-main.c											\

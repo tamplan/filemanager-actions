@@ -1,3 +1,23 @@
+2009-07-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-action.c:
+	* src/common/na-action.h (na_action_get_new_profile_name):
+	New function.
+
+	* src/nact/nact-iprofile-conditions.c:
+	* src/nact/nact-iprofile-conditions.h:
+	Renamed as nact-iconditions.{c,h}.
+	IProfileConditions renamed accordingly.
+
+	* src/nact/nact-iprofile-item.c:
+	* src/nact/nact-iprofile-item.h: New files.
+	Define IProfileItem interface.
+
+	* src/nact/nact-action-conditions-editor.c:
+	* src/nact/nact-profile-conditions-editor.c:
+	* src/nact/nact-iprefs.c:
+	* src/nact/Makefile.am: Updated accordingly.
+
 2009-07-15 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-action-conditions-editor.c (on_save_clicked):

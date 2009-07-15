@@ -65,9 +65,9 @@ typedef struct {
 }
 	NactProfileConditionsEditorClass;
 
-GType    nact_profile_conditions_editor_get_type( void );
+GType     nact_profile_conditions_editor_get_type( void );
 
-gboolean nact_profile_conditions_editor_run_editor( NactWindow *parent, gpointer user_data );
+NAAction *nact_profile_conditions_editor_run_editor( NactWindow *parent, NAAction *action, NAActionProfile *profile );
 
 G_END_DECLS
 
