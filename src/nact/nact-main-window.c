@@ -171,10 +171,10 @@ class_init( NactMainWindowClass *klass )
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
 	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
+	base_class->get_toplevel_name = get_toplevel_name;
 	base_class->initial_load_toplevel = on_initial_load_toplevel;
 	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
 	base_class->dialog_response = on_dialog_response;
-	base_class->get_toplevel_name = get_toplevel_name;
 
 	NactWindowClass *nact_class = NACT_WINDOW_CLASS( klass );
 	nact_class->get_iprefs_window_id = get_iprefs_window_id;

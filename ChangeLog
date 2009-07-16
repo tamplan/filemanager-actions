@@ -1,5 +1,14 @@
 2009-07-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-window.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-action-conditions-editor.c:
+	* src/nact/nact-action-profiles-editor.c:
+	* src/nact/nact-profile-conditions-editor.c:
+	Make all dialogs transient for their parent in BaseWindow.
+
+2009-07-16 Pierre Wieser <pwieser@trychlos.org>
+
 	* src/common/na-action.c:
 	* src/common/na-action.h (na_action_get_new_profile_name):
 	New function.

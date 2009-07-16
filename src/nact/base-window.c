@@ -49,6 +49,7 @@ struct BaseWindowClassPrivate {
  */
 struct BaseWindowPrivate {
 	gboolean         dispose_has_run;
+	BaseWindow      *parent;
 	BaseApplication *application;
 	gchar           *toplevel_name;
 	GtkWindow       *toplevel_dialog;
@@ -58,7 +59,8 @@ struct BaseWindowPrivate {
 /* instance properties
  */
 enum {
-	PROP_WINDOW_APPLICATION = 1,
+	PROP_WINDOW_PARENT = 1,
+	PROP_WINDOW_APPLICATION,
 	PROP_WINDOW_TOPLEVEL_NAME,
 	PROP_WINDOW_TOPLEVEL_DIALOG,
 	PROP_WINDOW_INITIALIZED
@@ -144,6 +146,13 @@ class_init( BaseWindowClass *klass )
 
 	GParamSpec *spec;
 	spec = g_param_spec_pointer(
+			PROP_WINDOW_PARENT_STR,
+			PROP_WINDOW_PARENT_STR,
+			"Parent BaseWindow object pointer",
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_WINDOW_PARENT, spec );
+
+	spec = g_param_spec_pointer(
 			PROP_WINDOW_APPLICATION_STR,
 			PROP_WINDOW_APPLICATION_STR,
 			"BaseApplication object pointer",
@@ -207,6 +216,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	BaseWindow *self = BASE_WINDOW( object );
 
 	switch( property_id ){
+		case PROP_WINDOW_PARENT:
+			g_value_set_pointer( value, self->private->parent );
+			break;
+
 		case PROP_WINDOW_APPLICATION:
 			g_value_set_pointer( value, self->private->application );
 			break;
@@ -236,6 +249,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	BaseWindow *self = BASE_WINDOW( object );
 
 	switch( property_id ){
+		case PROP_WINDOW_PARENT:
+			self->private->parent = g_value_get_pointer( value );
+			break;
+
 		case PROP_WINDOW_APPLICATION:
 			self->private->application = g_value_get_pointer( value );
 			break;
@@ -485,6 +502,16 @@ do_init_window( BaseWindow *window )
 	if( !window->private->initialized ){
 		g_debug( "%s: window=%p", thisfn, window );
 
+		if( !window->private->application ){
+			g_assert( window->private->parent );
+			g_assert( BASE_IS_WINDOW( window->private->parent ));
+			window->private->application = BASE_APPLICATION( base_window_get_application( window->private->parent ));
+			g_debug( "%s: application=%p", thisfn, window->private->application );
+		}
+
+		g_assert( window->private->application );
+		g_assert( BASE_IS_APPLICATION( window->private->application ));
+
 		gchar *dialog_name = v_get_toplevel_name( window );
 		g_assert( dialog_name && strlen( dialog_name ));
 
@@ -518,6 +545,12 @@ do_runtime_init_toplevel( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_do_runtime_init_toplevel";
 	g_debug( "%s: window=%p", thisfn, window );
+
+	if( window->private->parent ){
+		g_assert( BASE_IS_WINDOW( window->private->parent ));
+		GtkWindow *parent_toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window->private->parent ));
+		gtk_window_set_transient_for( window->private->toplevel_dialog, parent_toplevel );
+	}
 }
 
 static void
@@ -545,7 +578,7 @@ do_run_window( BaseWindow *window )
 
 	if( is_main_window( window )){
 		g_signal_connect( G_OBJECT( this_dialog ), "response", G_CALLBACK( v_dialog_response ), window );
-		g_debug( "%s: starting gtk_main", thisfn );
+		g_debug( "%s: application=%p, starting gtk_main", thisfn, window->private->application );
 		gtk_main();
 
 	} else if( GTK_IS_ASSISTANT( this_dialog )){
