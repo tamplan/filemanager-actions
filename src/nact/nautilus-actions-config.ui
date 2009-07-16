@@ -1412,7 +1412,18 @@ file(s)/folder(s)</property>
             <property name="visible">True</property>
             <property name="layout_style">end</property>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="CancelButton">
+                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkButton" id="SaveButton">
@@ -1439,6 +1450,7 @@ file(s)/folder(s)</property>
       </object>
     </child>
     <action-widgets>
+      <action-widget response="0">CancelButton</action-widget>
       <action-widget response="-5">SaveButton</action-widget>
     </action-widgets>
   </object>
@@ -1993,7 +2005,18 @@ file(s)/folder(s)</property>
             <property name="visible">True</property>
             <property name="layout_style">end</property>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="CancelButton">
+                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkButton" id="OKButton">
@@ -2020,6 +2043,7 @@ file(s)/folder(s)</property>
       </object>
     </child>
     <action-widgets>
+      <action-widget response="0">CancelButton</action-widget>
       <action-widget response="-5">OKButton</action-widget>
     </action-widgets>
   </object>
