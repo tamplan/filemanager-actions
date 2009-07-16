@@ -36,7 +36,6 @@
 
 #include <common/na-action.h>
 
-#include "nact-application.h"
 #include "nact-action-conditions-editor.h"
 #include "nact-imenu-item.h"
 #include "nact-iconditions.h"
@@ -52,7 +51,6 @@ struct NactActionConditionsEditorClassPrivate {
  */
 struct NactActionConditionsEditorPrivate {
 	gboolean    dispose_has_run;
-	NactWindow *parent;
 	NAAction   *original;
 	NAAction   *edited;
 	gboolean    is_new;
@@ -68,7 +66,7 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static NactActionConditionsEditor *action_conditions_editor_new( BaseApplication *application );
+static NactActionConditionsEditor *action_conditions_editor_new( NactWindow *parent );
 
 static gchar   *do_get_iprefs_window_id( NactWindow *window );
 static gchar   *do_get_dialog_name( BaseWindow *dialog );
@@ -156,11 +154,11 @@ class_init( NactActionConditionsEditorClass *klass )
 	klass->private = g_new0( NactActionConditionsEditorClassPrivate, 1 );
 
 	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
+	base_class->get_toplevel_name = do_get_dialog_name;
 	base_class->initial_load_toplevel = on_initial_load_dialog;
 	base_class->runtime_init_toplevel = on_runtime_init_dialog;
 	base_class->all_widgets_showed = on_all_widgets_showed;
 	base_class->dialog_response = on_dialog_response;
-	base_class->get_toplevel_name = do_get_dialog_name;
 
 	NactWindowClass *nact_class = NACT_WINDOW_CLASS( klass );
 	nact_class->get_iprefs_window_id = do_get_iprefs_window_id;
@@ -250,9 +248,9 @@ instance_finalize( GObject *dialog )
  * toplevel window of the application).
  */
 static NactActionConditionsEditor *
-action_conditions_editor_new( BaseApplication *application )
+action_conditions_editor_new( NactWindow *parent )
 {
-	return( g_object_new( NACT_ACTION_CONDITIONS_EDITOR_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
+	return( g_object_new( NACT_ACTION_CONDITIONS_EDITOR_TYPE, PROP_WINDOW_PARENT_STR, parent, NULL ));
 }
 
 /**
@@ -272,11 +270,7 @@ nact_action_conditions_editor_run_editor( NactWindow *parent, NAAction *action )
 
 	g_assert( NACT_IS_MAIN_WINDOW( parent ));
 
-	BaseApplication *application = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
-	g_assert( NACT_IS_APPLICATION( application ));
-
-	NactActionConditionsEditor *dialog = action_conditions_editor_new( application );
-	dialog->private->parent = parent;
+	NactActionConditionsEditor *dialog = action_conditions_editor_new( parent );
 
 	if( !action ){
 		dialog->private->original = na_action_new_with_profile();
@@ -356,10 +350,6 @@ on_runtime_init_dialog( BaseWindow *dialog )
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 	g_assert( NACT_IS_ACTION_CONDITIONS_EDITOR( dialog ));
 	NactActionConditionsEditor *editor = NACT_ACTION_CONDITIONS_EDITOR( dialog );
-
-	GtkWindow *toplevel = base_window_get_toplevel_dialog( dialog );
-	GtkWindow *parent_toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( editor->private->parent ));
-	gtk_window_set_transient_for( toplevel, parent_toplevel );
 
 	setup_dialog_title( editor, FALSE );
 
@@ -497,7 +487,8 @@ on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 					editor->private->original = na_action_duplicate( editor->private->edited );
 					editor->private->is_new = FALSE;
 					on_modified_field( NACT_WINDOW( editor ));
-					nact_window_set_current_action( editor->private->parent, editor->private->original );
+					/* TODO : set current action in parent */
+					/*nact_window_set_current_action( editor->private->parent, editor->private->original );*/
 				}
 			}
 			break;

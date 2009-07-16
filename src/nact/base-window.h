@@ -35,6 +35,8 @@
  * BaseWindow class definition.
  *
  * This is a base class which encapsulates a Gtk+ windows.
+ * It works together with the BaseApplication class to run a Gtk+
+ * application.
  */
 
 #include <glib-object.h>
@@ -80,6 +82,7 @@ typedef struct {
 
 /* instance properties
  */
+#define PROP_WINDOW_PARENT_STR				"base-window-parent"
 #define PROP_WINDOW_APPLICATION_STR			"base-window-application"
 #define PROP_WINDOW_TOPLEVEL_NAME_STR		"base-window-toplevel-name"
 #define PROP_WINDOW_TOPLEVEL_DIALOG_STR		"base-window-toplevel-dialog"

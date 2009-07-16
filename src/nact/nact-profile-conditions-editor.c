@@ -37,7 +37,6 @@
 #include <common/na-action.h>
 #include <common/na-action-profile.h>
 
-#include "nact-application.h"
 #include "nact-profile-conditions-editor.h"
 #include "nact-iprofile-item.h"
 #include "nact-iconditions.h"
@@ -51,7 +50,6 @@ struct NactProfileConditionsEditorClassPrivate {
  */
 struct NactProfileConditionsEditorPrivate {
 	gboolean         dispose_has_run;
-	NactWindow      *parent;
 	NAAction        *original_action;
 	NAActionProfile *original_profile;
 	gboolean         saved;
@@ -70,12 +68,13 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static NactProfileConditionsEditor *profile_conditions_editor_new( BaseApplication *application );
+static NactProfileConditionsEditor *profile_conditions_editor_new( NactWindow *parent );
 
 static gchar   *do_get_iprefs_window_id( NactWindow *window );
 static gchar   *do_get_dialog_name( BaseWindow *dialog );
 static void     on_initial_load_dialog( BaseWindow *dialog );
 static void     on_runtime_init_dialog( BaseWindow *dialog );
+static void     on_all_widgets_showed( BaseWindow *dialog );
 static void     setup_dialog_title( NactProfileConditionsEditor *dialog, gboolean is_modified );
 static void     setup_buttons( NactProfileConditionsEditor *dialog, gboolean can_save );
 static void     on_modified_field( NactWindow *dialog );
@@ -156,6 +155,7 @@ class_init( NactProfileConditionsEditorClass *klass )
 	base_class->get_toplevel_name = do_get_dialog_name;
 	base_class->initial_load_toplevel = on_initial_load_dialog;
 	base_class->runtime_init_toplevel = on_runtime_init_dialog;
+	base_class->all_widgets_showed = on_all_widgets_showed;
 	base_class->dialog_response = on_dialog_response;
 
 	NactWindowClass *nact_class = NACT_WINDOW_CLASS( klass );
@@ -241,9 +241,9 @@ instance_finalize( GObject *dialog )
  * toplevel window of the application).
  */
 static NactProfileConditionsEditor *
-profile_conditions_editor_new( BaseApplication *application )
+profile_conditions_editor_new( NactWindow *parent )
 {
-	return( g_object_new( NACT_PROFILE_CONDITIONS_EDITOR_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
+	return( g_object_new( NACT_PROFILE_CONDITIONS_EDITOR_TYPE, PROP_WINDOW_PARENT_STR, parent, NULL ));
 }
 
 /**
@@ -262,11 +262,7 @@ profile_conditions_editor_new( BaseApplication *application )
 NAAction *
 nact_profile_conditions_editor_run_editor( NactWindow *parent, NAAction *action, NAActionProfile *profile )
 {
-	BaseApplication *application = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
-	g_assert( NACT_IS_APPLICATION( application ));
-
-	NactProfileConditionsEditor *editor = profile_conditions_editor_new( application );
-	editor->private->parent = parent;
+	NactProfileConditionsEditor *editor = profile_conditions_editor_new( parent );
 
 	g_assert( action );
 	g_assert( NA_IS_ACTION( action ));
@@ -314,6 +310,12 @@ static void
 on_initial_load_dialog( BaseWindow *dialog )
 {
 	static const gchar *thisfn = "nact_profile_conditions_editor_on_initial_load_dialog";
+
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel ){
+		BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel( dialog );
+	}
+
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
 	g_assert( NACT_IS_PROFILE_CONDITIONS_EDITOR( dialog ));
@@ -327,19 +329,40 @@ static void
 on_runtime_init_dialog( BaseWindow *dialog )
 {
 	static const gchar *thisfn = "nact_profile_conditions_editor_on_runtime_init_dialog";
+
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
+		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( dialog );
+	}
+
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
 	g_assert( NACT_IS_PROFILE_CONDITIONS_EDITOR( dialog ));
 	NactProfileConditionsEditor *editor = NACT_PROFILE_CONDITIONS_EDITOR( dialog );
 
-	GtkWindow *toplevel = base_window_get_toplevel_dialog( dialog );
-	GtkWindow *parent_toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( editor->private->parent ));
-	gtk_window_set_transient_for( toplevel, parent_toplevel );
-
 	setup_dialog_title( editor, FALSE );
 
 	nact_iprofile_item_runtime_init( NACT_WINDOW( editor ), editor->private->edited_profile );
 	nact_iconditions_runtime_init( NACT_WINDOW( editor ), editor->private->edited_profile );
+}
+
+static void
+on_all_widgets_showed( BaseWindow *dialog )
+{
+	static const gchar *thisfn = "nact_profile_conditions_editor_on_all_widgets_showed";
+
+	/* call parent class at the very beginning */
+	if( BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed ){
+		BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed( dialog );
+	}
+
+	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( dialog, "Notebook" ));
+	gtk_notebook_set_current_page( notebook, 0 );
+
+	nact_iprofile_item_all_widgets_showed( NACT_WINDOW( dialog ));
+	nact_iconditions_all_widgets_showed( NACT_WINDOW( dialog ));
 }
 
 static void
