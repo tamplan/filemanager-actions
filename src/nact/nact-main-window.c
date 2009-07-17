@@ -274,7 +274,7 @@ get_iprefs_window_id( NactWindow *window )
 static gchar *
 get_toplevel_name( BaseWindow *window )
 {
-	return( g_strdup( "ActionsDialog" ));
+	return( g_strdup( "MainWindow" ));
 }
 
 static void
