@@ -314,26 +314,23 @@ on_initial_load_dialog( BaseWindow *dialog )
 
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 	g_assert( NACT_IS_ACTION_CONDITIONS_EDITOR( dialog ));
-	NactActionConditionsEditor *window = NACT_ACTION_CONDITIONS_EDITOR( dialog );
+	NactActionConditionsEditor *editor = NACT_ACTION_CONDITIONS_EDITOR( dialog );
 
-	nact_imenu_item_initial_load( NACT_WINDOW( window ), window->private->edited );
+	nact_imenu_item_initial_load( NACT_WINDOW( editor ), editor->private->edited );
 
-	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited )->data );
-	nact_iconditions_initial_load( NACT_WINDOW( window ), profile );
+	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( editor->private->edited )->data );
+	nact_iconditions_initial_load( NACT_WINDOW( editor ), profile );
 
 	/* label alignements */
 	GtkSizeGroup *label_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
-	nact_imenu_item_size_labels( NACT_WINDOW( window ), G_OBJECT( label_group ));
-	nact_iconditions_size_labels( NACT_WINDOW( window ), G_OBJECT( label_group ));
+	nact_imenu_item_size_labels( NACT_WINDOW( editor ), G_OBJECT( label_group ));
+	nact_iconditions_size_labels( NACT_WINDOW( editor ), G_OBJECT( label_group ));
 	g_object_unref( label_group );
 
-	/* buttons size
-	 * nb: while label sizing group works well with Glade 3.3 and GtkBuilder,
-	 * it doesn't with button size - so sizing them by code
-	 */
+	/* buttons size */
 	GtkSizeGroup *button_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
-	nact_imenu_item_size_buttons( NACT_WINDOW( window ), G_OBJECT( button_group ));
-	nact_iconditions_size_buttons( NACT_WINDOW( window ), G_OBJECT( button_group ));
+	nact_imenu_item_size_buttons( NACT_WINDOW( editor ), G_OBJECT( button_group ));
+	nact_iconditions_size_buttons( NACT_WINDOW( editor ), G_OBJECT( button_group ));
 	g_object_unref( button_group );
 }
 
@@ -374,6 +371,8 @@ on_all_widgets_showed( BaseWindow *dialog )
 	}
 
 	g_debug( "%s: dialog=%p", thisfn, dialog );
+	g_assert( NACT_IS_ACTION_CONDITIONS_EDITOR( dialog ));
+	/*NactActionConditionsEditor *editor = NACT_ACTION_CONDITIONS_EDITOR( dialog );*/
 
 	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( dialog, "Notebook" ));
 	gtk_notebook_set_current_page( notebook, 0 );

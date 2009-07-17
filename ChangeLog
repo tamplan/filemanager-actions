@@ -1,5 +1,10 @@
 2009-07-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-profile-conditions-editor.c:
+	Align widgets.
+
+2009-07-16 Pierre Wieser <pwieser@trychlos.org>
+
 	* src/nact/base-window.c:
 	* src/nact/nact-main-window.c:
 	* src/nact/nact-action-conditions-editor.c:

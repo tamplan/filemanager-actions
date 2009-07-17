@@ -75,6 +75,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="image">ActionDuplicateButtonImage</property>
                     <property name="use_underline">True</property>
                   </object>
                   <packing>
@@ -212,12 +213,12 @@
                   <object class="GtkVBox" id="MenuItemVBox">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
+                    <property name="spacing">10</property>
                     <child>
                       <object class="GtkLabel" id="label159">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Nautilus Menu Item&lt;/b&gt;
-</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Nautilus Menu Item&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
                       <packing>
@@ -342,6 +343,7 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="use_underline">True</property>
+                                <property name="xalign">1</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -361,8 +363,6 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -378,12 +378,11 @@
                     <property name="visible">True</property>
                     <property name="border_width">6</property>
                     <property name="orientation">vertical</property>
-                    <property name="spacing">4</property>
+                    <property name="spacing">10</property>
                     <child>
                       <object class="GtkLabel" id="label40">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
-                        <property name="ypad">4</property>
                         <property name="label" translatable="yes">&lt;b&gt;Action&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
@@ -399,7 +398,7 @@
                         <property name="n_rows">3</property>
                         <property name="n_columns">3</property>
                         <property name="column_spacing">6</property>
-                        <property name="row_spacing">4</property>
+                        <property name="row_spacing">6</property>
                         <child>
                           <object class="GtkLabel" id="ActionPathLabel">
                             <property name="visible">True</property>
@@ -407,33 +406,6 @@
                             <property name="label" translatable="yes">Path :</property>
                           </object>
                           <packing>
-                            <property name="x_options"></property>
-                            <property name="y_options"></property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkEntry" id="CommandPathEntry">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="invisible_char">&#x25CF;</property>
-                            <property name="width_chars">10</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="PathBrowseButton">
-                            <property name="label" translatable="yes">_Browse...</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="use_underline">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">2</property>
-                            <property name="right_attach">3</property>
                             <property name="x_options"></property>
                             <property name="y_options"></property>
                           </packing>
@@ -452,6 +424,19 @@
                           </packing>
                         </child>
                         <child>
+                          <object class="GtkEntry" id="CommandPathEntry">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">&#x25CF;</property>
+                            <property name="width_chars">10</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                        <child>
                           <object class="GtkEntry" id="CommandParamsEntry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -463,22 +448,20 @@
                             <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
+                            <property name="y_options"></property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkToggleButton" id="LegendButton">
-                            <property name="label" translatable="yes">_Legend</property>
+                          <object class="GtkButton" id="PathBrowseButton">
+                            <property name="label" translatable="yes">_Browse...</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="image">LegendButtonImage</property>
                             <property name="use_underline">True</property>
                           </object>
                           <packing>
                             <property name="left_attach">2</property>
                             <property name="right_attach">3</property>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
                             <property name="x_options"></property>
                             <property name="y_options"></property>
                           </packing>
@@ -495,6 +478,25 @@
                             <property name="right_attach">2</property>
                             <property name="top_attach">2</property>
                             <property name="bottom_attach">3</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToggleButton" id="LegendButton">
+                            <property name="label" translatable="yes">_Legend</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="image">ActionLegendButtonImage</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="right_attach">3</property>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options"></property>
+                            <property name="y_options"></property>
                           </packing>
                         </child>
                         <child>
@@ -505,8 +507,6 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -532,7 +532,7 @@
               <object class="GtkVBox" id="vbox394">
                 <property name="visible">True</property>
                 <property name="border_width">10</property>
-                <property name="spacing">12</property>
+                <property name="spacing">10</property>
                 <child>
                   <object class="GtkLabel" id="aaaLabelAlign7">
                     <property name="visible">True</property>
@@ -551,7 +551,7 @@
                     <property name="visible">True</property>
                     <property name="n_rows">3</property>
                     <property name="n_columns">2</property>
-                    <property name="column_spacing">4</property>
+                    <property name="column_spacing">6</property>
                     <property name="row_spacing">6</property>
                     <child>
                       <object class="GtkLabel" id="CLabelAlign1">
@@ -645,7 +645,7 @@
                 <child>
                   <object class="GtkHBox" id="hbox21">
                     <property name="visible">True</property>
-                    <property name="homogeneous">True</property>
+                    <property name="spacing">14</property>
                     <child>
                       <object class="GtkRadioButton" id="OnlyFilesButton">
                         <property name="label" translatable="yes">Only files</property>
@@ -733,7 +733,7 @@
               <object class="GtkVBox" id="vbox340">
                 <property name="visible">True</property>
                 <property name="border_width">12</property>
-                <property name="spacing">6</property>
+                <property name="spacing">10</property>
                 <child>
                   <object class="GtkLabel" id="label46">
                     <property name="visible">True</property>
@@ -1359,7 +1359,7 @@ file(s)/folder(s)</property>
                             <property name="can_focus">True</property>
                             <property name="can_default">True</property>
                             <property name="receives_default">True</property>
-                            <property name="image">DuplicateButtonImage</property>
+                            <property name="image">ProfileDuplicateButtonImage</property>
                             <property name="use_underline">True</property>
                           </object>
                           <packing>
@@ -1412,7 +1412,7 @@ file(s)/folder(s)</property>
             <property name="visible">True</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="CancelButton">
+              <object class="GtkButton" id="CancelButton1">
                 <property name="label" translatable="yes">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -1450,7 +1450,7 @@ file(s)/folder(s)</property>
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0">CancelButton</action-widget>
+      <action-widget response="0">CancelButton1</action-widget>
       <action-widget response="-5">SaveButton</action-widget>
     </action-widgets>
   </object>
@@ -1464,7 +1464,7 @@ file(s)/folder(s)</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
-          <object class="GtkNotebook" id="notebook2">
+          <object class="GtkNotebook" id="Notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="border_width">6</property>
@@ -1473,10 +1473,12 @@ file(s)/folder(s)</property>
                 <property name="visible">True</property>
                 <property name="border_width">10</property>
                 <property name="orientation">vertical</property>
+                <property name="spacing">10</property>
                 <child>
                   <object class="GtkVBox" id="vbox1">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
+                    <property name="spacing">10</property>
                     <child>
                       <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
@@ -1491,8 +1493,9 @@ file(s)/folder(s)</property>
                     <child>
                       <object class="GtkHBox" id="hbox1">
                         <property name="visible">True</property>
+                        <property name="spacing">6</property>
                         <child>
-                          <object class="GtkLabel" id="label2">
+                          <object class="GtkLabel" id="ProfileLabelLabel">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
                             <property name="label" translatable="yes">Label :</property>
@@ -1520,6 +1523,8 @@ file(s)/folder(s)</property>
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -1528,12 +1533,11 @@ file(s)/folder(s)</property>
                     <property name="visible">True</property>
                     <property name="border_width">6</property>
                     <property name="orientation">vertical</property>
-                    <property name="spacing">4</property>
+                    <property name="spacing">10</property>
                     <child>
                       <object class="GtkLabel" id="label40">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
-                        <property name="ypad">4</property>
                         <property name="label" translatable="yes">&lt;b&gt;Action&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
@@ -1549,7 +1553,7 @@ file(s)/folder(s)</property>
                         <property name="n_rows">3</property>
                         <property name="n_columns">3</property>
                         <property name="column_spacing">6</property>
-                        <property name="row_spacing">4</property>
+                        <property name="row_spacing">6</property>
                         <child>
                           <object class="GtkLabel" id="ActionPathLabel">
                             <property name="visible">True</property>
@@ -1621,7 +1625,7 @@ file(s)/folder(s)</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="image">LegendButtonImage1</property>
+                            <property name="image">ProfileLegendButtonImage</property>
                             <property name="use_underline">True</property>
                           </object>
                           <packing>
@@ -1681,7 +1685,7 @@ file(s)/folder(s)</property>
                 <property name="visible">True</property>
                 <property name="border_width">10</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">12</property>
+                <property name="spacing">10</property>
                 <child>
                   <object class="GtkLabel" id="aaaLabelAlign7">
                     <property name="visible">True</property>
@@ -1792,9 +1796,9 @@ file(s)/folder(s)</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkVBox" id="vbox2">
+                  <object class="GtkHBox" id="hbox2">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
+                    <property name="spacing">14</property>
                     <child>
                       <object class="GtkRadioButton" id="OnlyFilesButton">
                         <property name="label" translatable="yes">Only files</property>
@@ -1885,7 +1889,7 @@ file(s)/folder(s)</property>
                 <property name="visible">True</property>
                 <property name="border_width">12</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">6</property>
+                <property name="spacing">10</property>
                 <child>
                   <object class="GtkLabel" id="label46">
                     <property name="visible">True</property>
@@ -2005,7 +2009,7 @@ file(s)/folder(s)</property>
             <property name="visible">True</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="CancelButton">
+              <object class="GtkButton" id="CancelButton2">
                 <property name="label" translatable="yes">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -2043,7 +2047,7 @@ file(s)/folder(s)</property>
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0">CancelButton</action-widget>
+      <action-widget response="0">CancelButton2</action-widget>
       <action-widget response="-5">OKButton</action-widget>
     </action-widgets>
   </object>
@@ -2110,10 +2114,10 @@ to extend a selection.</property>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
-            <property name="use_preview_label">False</property>
             <property name="local_only">False</property>
-            <property name="action">select-folder</property>
             <property name="preview_widget_active">False</property>
+            <property name="use_preview_label">False</property>
+            <property name="action">select-folder</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -2162,10 +2166,10 @@ to extend a selection.</property>
       <object class="GtkFileChooserWidget" id="filechooserwidget1">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
-        <property name="use_preview_label">False</property>
         <property name="local_only">False</property>
-        <property name="select_multiple">True</property>
         <property name="preview_widget_active">False</property>
+        <property name="select_multiple">True</property>
+        <property name="use_preview_label">False</property>
       </object>
     </child>
     <child>
@@ -2185,12 +2189,7 @@ to extend a selection.</property>
       </packing>
     </child>
   </object>
-  <object class="GtkImage" id="LegendButtonImage">
-    <property name="visible">True</property>
-    <property name="stock">gtk-help</property>
-    <property name="icon-size">4</property>
-  </object>
-  <object class="GtkImage" id="DuplicateButtonImage">
+  <object class="GtkImage" id="ProfileDuplicateButtonImage">
     <property name="visible">True</property>
     <property name="stock">gtk-copy</property>
     <property name="icon-size">4</property>
@@ -2205,7 +2204,17 @@ to extend a selection.</property>
     <property name="stock">gtk-save</property>
     <property name="icon-size">4</property>
   </object>
-  <object class="GtkImage" id="LegendButtonImage1">
+  <object class="GtkImage" id="ProfileLegendButtonImage">
+    <property name="visible">True</property>
+    <property name="stock">gtk-help</property>
+    <property name="icon-size">4</property>
+  </object>
+  <object class="GtkImage" id="ActionDuplicateButtonImage">
+    <property name="visible">True</property>
+    <property name="stock">gtk-copy</property>
+    <property name="icon-size">4</property>
+  </object>
+  <object class="GtkImage" id="ActionLegendButtonImage">
     <property name="visible">True</property>
     <property name="stock">gtk-help</property>
     <property name="icon-size">4</property>

@@ -321,6 +321,11 @@ on_initial_load_dialog( BaseWindow *dialog )
 	nact_iprofiles_list_initial_load( NACT_WINDOW( editor ));
 	nact_iprofiles_list_set_multiple_selection( NACT_WINDOW( editor ), FALSE );
 	nact_iprofiles_list_set_send_selection_changed_on_fill_list( NACT_WINDOW( editor ), FALSE );
+
+	/* label alignements */
+	GtkSizeGroup *label_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
+	nact_imenu_item_size_labels( NACT_WINDOW( editor ), G_OBJECT( label_group ));
+	g_object_unref( label_group );
 }
 
 static void
@@ -394,7 +399,7 @@ setup_buttons( NactActionProfilesEditor *dialog, gboolean can_save )
 {
 	GtkWidget *cancel_button = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
 	GtkWidget *close_button = gtk_button_new_from_stock( GTK_STOCK_CLOSE );
-	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "CancelButton" );
+	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "CancelButton1" );
 	gtk_button_set_label( GTK_BUTTON( button ), can_save ? _( "_Cancel" ) : _( "_Close" ));
 	gtk_button_set_image( GTK_BUTTON( button ), can_save ? gtk_button_get_image( GTK_BUTTON( cancel_button )) : gtk_button_get_image( GTK_BUTTON( close_button )));
 	gtk_widget_destroy( cancel_button );
