@@ -323,6 +323,18 @@ on_initial_load_dialog( BaseWindow *dialog )
 
 	nact_iprofile_item_initial_load( NACT_WINDOW( editor ), editor->private->edited_profile );
 	nact_iconditions_initial_load( NACT_WINDOW( editor ), editor->private->edited_profile );
+
+	/* label alignements */
+	GtkSizeGroup *label_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
+	nact_iprofile_item_size_labels( NACT_WINDOW( editor ), G_OBJECT( label_group ));
+	nact_iconditions_size_labels( NACT_WINDOW( editor ), G_OBJECT( label_group ));
+	g_object_unref( label_group );
+
+	/* buttons size */
+	GtkSizeGroup *button_group = gtk_size_group_new( GTK_SIZE_GROUP_HORIZONTAL );
+	nact_iprofile_item_size_buttons( NACT_WINDOW( editor ), G_OBJECT( button_group ));
+	nact_iconditions_size_buttons( NACT_WINDOW( editor ), G_OBJECT( button_group ));
+	g_object_unref( button_group );
 }
 
 static void
@@ -409,7 +421,7 @@ setup_buttons( NactProfileConditionsEditor *editor, gboolean can_save )
 	GtkWidget *cancel_button = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
 	GtkWidget *close_button = gtk_button_new_from_stock( GTK_STOCK_CLOSE );
 
-	GtkWidget *dlg_cancel = base_window_get_widget( BASE_WINDOW( editor ), "CancelButton" );
+	GtkWidget *dlg_cancel = base_window_get_widget( BASE_WINDOW( editor ), "CancelButton2" );
 	gtk_button_set_label( GTK_BUTTON( dlg_cancel ), can_save ? _( "_Cancel" ) : _( "_Close" ));
 	gtk_button_set_image( GTK_BUTTON( dlg_cancel ), can_save ? gtk_button_get_image( GTK_BUTTON( cancel_button )) : gtk_button_get_image( GTK_BUTTON( close_button )));
 
