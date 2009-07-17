@@ -36,8 +36,6 @@
 
 #include "nact-application.h"
 
-#include <glade/glade-xml.h>
-
 int
 main( int argc, char *argv[] )
 {
