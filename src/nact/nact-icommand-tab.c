@@ -66,11 +66,13 @@ static gboolean         v_get_multiple( NactWindow *window );
 static GSList          *v_get_schemes( NactWindow *window );
 
 static void             on_label_changed( GtkEntry *entry, gpointer user_data );
+static GtkWidget       *get_label_entry( NactWindow *window );
 static void             on_path_changed( GtkEntry *entry, gpointer user_data );
 static void             on_path_browse( GtkButton *button, gpointer user_data );
-static GtkWidget       *get_path_widget( NactWindow *window );
+static GtkWidget       *get_path_entry( NactWindow *window );
+static GtkButton       *get_path_button( NactWindow *window );
 static void             on_parameters_changed( GtkEntry *entry, gpointer user_data );
-static GtkWidget       *get_parameters_widget( NactWindow *window );
+static GtkWidget       *get_parameters_entry( NactWindow *window );
 static void             update_example_label( NactWindow *window );
 static gchar           *parse_parameters( NactWindow *window );
 static void             on_legend_clicked( GtkButton *button, gpointer user_data );
@@ -157,42 +159,25 @@ nact_icommand_tab_initial_load( NactWindow *dialog )
 }
 
 void
-nact_icommand_tab_size_labels( NactWindow *window, GObject *size_group )
-{
-	g_assert( NACT_IS_WINDOW( window ));
-	g_assert( GTK_IS_SIZE_GROUP( size_group ));
-
-	GtkWidget *label = base_window_get_widget( BASE_WINDOW( window ), "ProfileLabelLabel" );
-	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), label );
-}
-
-void
-nact_icommand_tab_size_buttons( NactWindow *window, GObject *size_group )
-{
-	g_assert( NACT_IS_WINDOW( window ));
-	g_assert( GTK_IS_SIZE_GROUP( size_group ));
-}
-
-void
 nact_icommand_tab_runtime_init( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_icommand_tab_runtime_init";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "CommandProfileLabelEntry" );
-	nact_window_signal_connect( dialog, G_OBJECT( label_widget ), "changed", G_CALLBACK( on_label_changed ));
+	GtkWidget *label_entry = get_label_entry( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( label_entry ), "changed", G_CALLBACK( on_label_changed ));
 
-	GtkWidget *path_widget = get_path_widget( dialog );
-	nact_window_signal_connect( dialog, G_OBJECT( path_widget ), "changed", G_CALLBACK( on_path_changed ));
+	GtkWidget *path_entry = get_path_entry( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( path_entry ), "changed", G_CALLBACK( on_path_changed ));
 
-	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "CommandPathButton" );
-	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_path_browse ));
+	GtkButton *path_button = get_path_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( path_button ), "clicked", G_CALLBACK( on_path_browse ));
 
-	GtkWidget *parameters_widget = get_parameters_widget( dialog );
-	nact_window_signal_connect( dialog, G_OBJECT( parameters_widget ), "changed", G_CALLBACK( on_parameters_changed ));
+	GtkWidget *parameters_entry = get_parameters_entry( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( parameters_entry ), "changed", G_CALLBACK( on_parameters_changed ));
 
-	button = GTK_WIDGET( get_legend_button( dialog ));
-	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_legend_clicked ));
+	GtkButton *legend_button = get_legend_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( legend_button ), "clicked", G_CALLBACK( on_legend_clicked ));
 }
 
 /**
@@ -201,8 +186,8 @@ nact_icommand_tab_runtime_init( NactWindow *dialog )
 void
 nact_icommand_tab_all_widgets_showed( NactWindow *dialog )
 {
-	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ProfileLabelEntry" );
-	gtk_widget_grab_focus( label_widget );
+	static const gchar *thisfn = "nact_icommand_tab_all_widgets_showed";
+	g_debug( "%s: dialog=%p", thisfn, dialog );
 }
 
 void
@@ -211,10 +196,7 @@ nact_icommand_tab_dispose( NactWindow *dialog )
 	static const gchar *thisfn = "nact_icommand_tab_dispose";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	/*BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
-	GtkWindow *toplevel = base_application_get_dialog( appli, "MenuItemWindow" );
-	GtkWidget *vbox = base_application_get_widget( appli, BASE_WINDOW( dialog ), "MenuItemVBox" );
-	gtk_widget_reparent( vbox, GTK_WIDGET( toplevel ));*/
+	hide_legend_dialog( dialog );
 }
 
 void
@@ -223,20 +205,29 @@ nact_icommand_tab_set_profile( NactWindow *dialog, const NAActionProfile *profil
 	static const gchar *thisfn = "nact_icommand_tab_set_profile";
 	g_debug( "%s: dialog=%p, profile=%p", thisfn, dialog, profile );
 
-	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "CommandProfileLabelEntry" );
+	GtkWidget *label_entry = get_label_entry( dialog );
 	gchar *label = profile ? na_action_profile_get_label( profile ) : g_strdup( "" );
-	gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
+	gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
+	gtk_widget_set_sensitive( label_entry, profile != NULL );
 	g_free( label );
 
-	GtkWidget *path_widget = get_path_widget( dialog );
+	GtkWidget *path_entry = get_path_entry( dialog );
 	gchar *path = profile ? na_action_profile_get_path( profile ) : g_strdup( "" );
-	gtk_entry_set_text( GTK_ENTRY( path_widget ), path );
+	gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
+	gtk_widget_set_sensitive( path_entry, profile != NULL );
 	g_free( path );
 
-	GtkWidget *parameters_widget = get_parameters_widget( dialog );
+	GtkWidget *parameters_entry = get_parameters_entry( dialog );
 	gchar *parameters = profile ? na_action_profile_get_parameters( profile ) : g_strdup( "" );
-	gtk_entry_set_text( GTK_ENTRY( parameters_widget ), parameters );
+	gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
+	gtk_widget_set_sensitive( parameters_entry, profile != NULL );
 	g_free( parameters );
+
+	GtkButton *path_button = get_path_button( dialog );
+	gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile != NULL );
+
+	GtkButton *legend_button = get_legend_button( dialog );
+	gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );
 }
 
 /**
@@ -246,8 +237,8 @@ nact_icommand_tab_set_profile( NactWindow *dialog, const NAActionProfile *profil
 gboolean
 nact_icommand_tab_has_label( NactWindow *window )
 {
-	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( window ), "ProfileLabelEntry" );
-	const gchar *label = gtk_entry_get_text( GTK_ENTRY( label_widget ));
+	GtkWidget *label_entry = get_label_entry( window );
+	const gchar *label = gtk_entry_get_text( GTK_ENTRY( label_entry ));
 	return( g_utf8_strlen( label, -1 ) > 0 );
 }
 
@@ -318,9 +309,16 @@ on_label_changed( GtkEntry *entry, gpointer user_data )
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
 	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
-	na_action_profile_set_label( edited, gtk_entry_get_text( entry ));
+	if( edited ){
+		na_action_profile_set_label( edited, gtk_entry_get_text( entry ));
+		v_field_modified( dialog );
+	}
+}
 
-	v_field_modified( dialog );
+static GtkWidget *
+get_label_entry( NactWindow *window )
+{
+	return( base_window_get_widget( BASE_WINDOW( window ), "ProfileLabelEntry" ));
 }
 
 static void
@@ -330,10 +328,12 @@ on_path_changed( GtkEntry *entry, gpointer user_data )
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
 	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
-	na_action_profile_set_path( edited, gtk_entry_get_text( entry ));
+	if( edited ){
+		na_action_profile_set_path( edited, gtk_entry_get_text( entry ));
+		v_field_modified( dialog );
+	}
 
 	update_example_label( dialog );
-	v_field_modified( dialog );
 }
 
 static void
@@ -354,8 +354,8 @@ on_path_browse( GtkButton *button, gpointer user_data )
 
 	nact_iprefs_position_named_window( NACT_WINDOW( user_data ), GTK_WINDOW( dialog ), IPREFS_COMMAND_CHOOSER );
 
-	GtkWidget *path_widget = get_path_widget( NACT_WINDOW( user_data ));
-	const gchar *path = gtk_entry_get_text( GTK_ENTRY( path_widget ));
+	GtkWidget *path_entry = get_path_entry( NACT_WINDOW( user_data ));
+	const gchar *path = gtk_entry_get_text( GTK_ENTRY( path_entry ));
 
 	if( path && strlen( path )){
 		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
@@ -368,7 +368,7 @@ on_path_browse( GtkButton *button, gpointer user_data )
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
-		gtk_entry_set_text( GTK_ENTRY( path_widget ), filename );
+		gtk_entry_set_text( GTK_ENTRY( path_entry ), filename );
 	    g_free (filename);
 	  }
 
@@ -382,9 +382,15 @@ on_path_browse( GtkButton *button, gpointer user_data )
 }
 
 static GtkWidget *
-get_path_widget( NactWindow *window )
+get_path_entry( NactWindow *window )
 {
 	return( base_window_get_widget( BASE_WINDOW( window ), "CommandPathEntry" ));
+}
+
+static GtkButton *
+get_path_button( NactWindow *window )
+{
+	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "CommandPathButton" )));
 }
 
 static void
@@ -394,14 +400,16 @@ on_parameters_changed( GtkEntry *entry, gpointer user_data )
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
 	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
-	na_action_profile_set_parameters( edited, gtk_entry_get_text( entry ));
+	if( edited ){
+		na_action_profile_set_parameters( edited, gtk_entry_get_text( entry ));
+		v_field_modified( dialog );
+	}
 
 	update_example_label( dialog );
-	v_field_modified( dialog );
 }
 
 static GtkWidget *
-get_parameters_widget( NactWindow *window )
+get_parameters_entry( NactWindow *window )
 {
 	return( base_window_get_widget( BASE_WINDOW( window ), "CommandParametersEntry" ));
 }
@@ -461,8 +469,8 @@ parse_parameters( NactWindow *window )
 	gchar* ex_scheme;
 	gchar* ex_host;
 
-	const gchar* command = gtk_entry_get_text( GTK_ENTRY( get_path_widget( window )));
-	const gchar* param_template = gtk_entry_get_text( GTK_ENTRY( get_parameters_widget( window )));
+	const gchar* command = gtk_entry_get_text( GTK_ENTRY( get_path_entry( window )));
+	const gchar* param_template = gtk_entry_get_text( GTK_ENTRY( get_parameters_entry( window )));
 
 	gchar* iter = g_strdup( param_template );
 	gchar* old_iter = iter;

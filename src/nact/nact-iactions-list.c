@@ -167,6 +167,7 @@ nact_iactions_list_initial_load( NactWindow *window )
 			GTK_TREE_MODEL_FILTER( tmf_model ), ( GtkTreeModelFilterVisibleFunc ) filter_visible, window, NULL );
 
 	gtk_tree_view_set_model( GTK_TREE_VIEW( widget ), tmf_model );
+	gtk_tree_view_set_enable_tree_lines( GTK_TREE_VIEW( widget ), TRUE );
 
 	/*g_object_unref( tmf_model );*/
 	g_object_unref( ts_model );

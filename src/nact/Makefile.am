@@ -61,8 +61,12 @@ nautilus_actions_config_SOURCES = \
 	nact-iaction-tab.h									\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
+	nact-iadvanced-tab.c								\
+	nact-iadvanced-tab.h								\
 	nact-icommand-tab.c									\
 	nact-icommand-tab.h									\
+	nact-iconditions-tab.c								\
+	nact-iconditions-tab.h								\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
 	nact-main.c											\

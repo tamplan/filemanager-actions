@@ -49,6 +49,8 @@
 #include "nact-iactions-list.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
+#include "nact-iconditions-tab.h"
+#include "nact-iadvanced-tab.h"
 #include "nact-iprefs.h"
 #include "nact-main-window.h"
 
@@ -63,6 +65,7 @@ struct NactMainWindowPrivate {
 	gboolean         dispose_has_run;
 	GtkStatusbar    *status_bar;
 	guint            status_context;
+	GtkWidget       *new_profile_item;
 	GtkWidget       *save_item;
 	GSList          *actions;
 	NAAction        *edited_action;
@@ -80,6 +83,8 @@ static void             class_init( NactMainWindowClass *klass );
 static void             iactions_list_iface_init( NactIActionsListInterface *iface );
 static void             iaction_tab_iface_init( NactIActionTabInterface *iface );
 static void             icommand_tab_iface_init( NactICommandTabInterface *iface );
+static void             iconditions_tab_iface_init( NactIConditionsTabInterface *iface );
+static void             iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
 static void             ipivot_container_iface_init( NAIPivotContainerInterface *iface );
 static void             instance_init( GTypeInstance *instance, gpointer klass );
 static void             instance_dispose( GObject *application );
@@ -113,6 +118,11 @@ static gboolean         is_action_to_save( const NAAction *action );
 static void             get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
 static gboolean         get_multiple( NactWindow *window );
 static GSList          *get_schemes( NactWindow *window );
+
+static void             on_new_action_activated( GtkMenuItem *item, gpointer user_data );
+static void             on_new_action_selected( GtkItem *item, gpointer user_data );
+static void             on_new_profile_activated( GtkMenuItem *item, gpointer user_data );
+static void             on_new_profile_selected( GtkItem *item, gpointer user_data );
 
 static void             on_import_activated( GtkMenuItem *item, gpointer user_data );
 static void             on_import_selected( GtkItem *item, gpointer user_data );
@@ -190,6 +200,24 @@ register_type( void )
 	};
 	g_type_add_interface_static( type, NACT_ICOMMAND_TAB_TYPE, &icommand_tab_iface_info );
 
+	/* implement IConditionsTab interface
+	 */
+	static const GInterfaceInfo iconditions_tab_iface_info = {
+		( GInterfaceInitFunc ) iconditions_tab_iface_init,
+		NULL,
+		NULL
+	};
+	g_type_add_interface_static( type, NACT_ICONDITIONS_TAB_TYPE, &iconditions_tab_iface_info );
+
+	/* implement IAdvancedTab interface
+	 */
+	static const GInterfaceInfo iadvanced_tab_iface_info = {
+		( GInterfaceInitFunc ) iadvanced_tab_iface_init,
+		NULL,
+		NULL
+	};
+	g_type_add_interface_static( type, NACT_IADVANCED_TAB_TYPE, &iadvanced_tab_iface_info );
+
 	/* implement IPivotContainer interface
 	 */
 	static const GInterfaceInfo pivot_container_iface_info = {
@@ -263,6 +291,26 @@ icommand_tab_iface_init( NactICommandTabInterface *iface )
 }
 
 static void
+iconditions_tab_iface_init( NactIConditionsTabInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_iconditions_tab_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->get_edited_profile = get_edited_profile;
+	iface->field_modified = on_modified_field;
+}
+
+static void
+iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_iadvanced_tab_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->get_edited_profile = get_edited_profile;
+	iface->field_modified = on_modified_field;
+}
+
+static void
 ipivot_container_iface_init( NAIPivotContainerInterface *iface )
 {
 	static const gchar *thisfn = "nact_main_window_ipivot_container_iface_init";
@@ -307,6 +355,11 @@ instance_dispose( GObject *window )
 			g_object_unref( NA_ACTION( ia->data ));
 		}
 		g_slist_free( self->private->actions );
+
+		nact_iaction_tab_dispose( NACT_WINDOW( window ));
+		nact_icommand_tab_dispose( NACT_WINDOW( window ));
+		nact_iconditions_tab_dispose( NACT_WINDOW( window ));
+		nact_iadvanced_tab_dispose( NACT_WINDOW( window ));
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( window );
@@ -420,11 +473,11 @@ on_initial_load_toplevel( BaseWindow *window )
 	g_assert( NACT_IS_ICOMMAND_TAB( window ));
 	nact_icommand_tab_initial_load( NACT_WINDOW( window ));
 
-	/*g_assert( NACT_IS_CONDITIONS_TAB( window ));
-	nact_iconditions_tab_initial_load( window );
+	g_assert( NACT_IS_ICONDITIONS_TAB( window ));
+	nact_iconditions_tab_initial_load( NACT_WINDOW( window ));
 
-	g_assert( NACT_IS_ADVANCED_TAB( window ));
-	nact_iadvanced_tab_initial_load( window );*/
+	g_assert( NACT_IS_IADVANCED_TAB( window ));
+	nact_iadvanced_tab_initial_load( NACT_WINDOW( window ));
 
 	gint pos = nact_iprefs_get_int( NACT_WINDOW( window ), "main-paned" );
 	if( pos ){
@@ -443,8 +496,22 @@ create_file_menu( BaseWindow *window, GtkMenuBar *menubar )
 	GtkWidget *menu = gtk_menu_new();
 	gtk_menu_item_set_submenu( GTK_MENU_ITEM( file ), menu );
 
-	GtkWidget *item = gtk_image_menu_item_new_from_stock( GTK_STOCK_NEW, NULL );
+	/* i18n: 'New action' item in 'File' menu */
+	GtkWidget *item = gtk_image_menu_item_new_with_label( _( "New _action" ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
+	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", G_CALLBACK( on_new_action_activated ));
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "select", G_CALLBACK( on_new_action_selected ));
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "deselect", G_CALLBACK( on_menu_item_deselected ));
+
+	/* i18n: 'New profile' item in 'File' menu */
+	item = gtk_image_menu_item_new_with_label( _( "New _profile" ));
+	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
+	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
+	NACT_MAIN_WINDOW( window )->private->new_profile_item = item;
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", G_CALLBACK( on_new_profile_activated ));
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "select", G_CALLBACK( on_new_profile_selected ));
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "deselect", G_CALLBACK( on_menu_item_deselected ));
 
 	item = gtk_image_menu_item_new_from_stock( GTK_STOCK_SAVE, NULL );
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
@@ -525,12 +592,11 @@ on_runtime_init_toplevel( BaseWindow *window )
 	g_assert( NACT_IS_ICOMMAND_TAB( window ));
 	nact_icommand_tab_runtime_init( NACT_WINDOW( window ));
 
-	/*nact_window_signal_connect_by_name( NACT_WINDOW( window ), "NewActionButton", "clicked", G_CALLBACK( on_new_button_clicked ));
-	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "EditActionButton", "clicked", G_CALLBACK( on_edit_button_clicked ));
-	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "DuplicateActionButton", "clicked", G_CALLBACK( on_duplicate_button_clicked ));
-	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "DeleteActionButton", "clicked", G_CALLBACK( on_delete_button_clicked ));
-	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "ImportButton", "clicked", G_CALLBACK( on_import_button_clicked ));
-	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "ExportButton", "clicked", G_CALLBACK( on_export_button_clicked ));*/
+	g_assert( NACT_IS_ICONDITIONS_TAB( window ));
+	nact_iconditions_tab_runtime_init( NACT_WINDOW( window ));
+
+	g_assert( NACT_IS_IADVANCED_TAB( window ));
+	nact_iadvanced_tab_runtime_init( NACT_WINDOW( window ));
 }
 
 static void
@@ -569,7 +635,9 @@ setup_dialog_menu( NactMainWindow *window )
 		to_save |= elt_to_save;
 	}
 
-	gtk_widget_set_sensitive( NACT_MAIN_WINDOW( window )->private->save_item, to_save );
+	gtk_widget_set_sensitive(  window->private->new_profile_item, window->private->edited_action != NULL );
+
+	gtk_widget_set_sensitive( window->private->save_item, to_save );
 }
 
 /*
@@ -634,7 +702,17 @@ set_current_action( NactMainWindow *window )
 static void
 set_current_profile( NactMainWindow *window )
 {
+	if( window->private->edited_profile ){
+		NAAction *action = NA_ACTION( na_action_profile_get_action( window->private->edited_profile ));
+		if( action != window->private->edited_action ){
+			window->private->edited_action = action;
+			nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action );
+		}
+	}
+
 	nact_icommand_tab_set_profile( NACT_WINDOW( window ), window->private->edited_profile );
+	nact_iconditions_tab_set_profile( NACT_WINDOW( window ), window->private->edited_profile );
+	nact_iadvanced_tab_set_profile( NACT_WINDOW( window ), window->private->edited_profile );
 }
 
 /*
@@ -735,6 +813,42 @@ static GSList *
 get_schemes( NactWindow *window )
 {
 	return( NULL );
+}
+
+static void
+on_new_action_activated( GtkMenuItem *item, gpointer user_data )
+{
+
+}
+
+static void
+on_new_action_selected( GtkItem *item, gpointer user_data )
+{
+	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
+	gtk_statusbar_push(
+			window->private->status_bar,
+			window->private->status_context,
+			/* i18n: tooltip displayed in the status bar when selecting the 'New action' item */
+			_( "Define a new action" ));
+}
+
+static void
+on_new_profile_activated( GtkMenuItem *item, gpointer user_data )
+{
+
+}
+
+static void
+on_new_profile_selected( GtkItem *item, gpointer user_data )
+{
+	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
+	gtk_statusbar_push(
+			window->private->status_bar,
+			window->private->status_context,
+			/* i18n: tooltip displayed in the status bar when selecting the 'New profile' item */
+			_( "Define a new profile attached to the current action" ));
 }
 
 static void

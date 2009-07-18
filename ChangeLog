@@ -13,10 +13,19 @@
 	New virtual function: advertise the implementer of the interface
 	of the new address of the sorted list.
 	Use GtkTreeModelFilter to display actions and profiles.
+	Enable connecting lines in tree view.
 
 	* src/nact/nact-icommand-tab.c:
 	* src/nact/nact-icommand-tab.h:
 	New files which define NactICommandTab interface.
+
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-iconditions-tab.h:
+	New files which define NactIConditionsTab interface.
+
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-iadvanced-tab.h:
+	New files which define NactIAdvancedTab interface.
 
 	* src/nact/nact-iprofile-item.c:
 	* src/nact/nact-iprofile-item.h:

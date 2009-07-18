@@ -66,8 +66,6 @@ typedef struct {
 GType    nact_icommand_tab_get_type( void );
 
 void     nact_icommand_tab_initial_load( NactWindow *window );
-void     nact_icommand_tab_size_labels( NactWindow *window, GObject *size_group );
-void     nact_icommand_tab_size_buttons( NactWindow *window, GObject *size_group );
 void     nact_icommand_tab_runtime_init( NactWindow *window );
 void     nact_icommand_tab_all_widgets_showed( NactWindow *window );
 void     nact_icommand_tab_dispose( NactWindow *window );

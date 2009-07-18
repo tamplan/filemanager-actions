@@ -266,7 +266,7 @@
                                     <property name="visible">True</property>
                                     <property name="spacing">6</property>
                                     <child>
-                                      <object class="GtkLabel" id="CommandProfileLabel">
+                                      <object class="GtkLabel" id="ProfileLabelLabel">
                                         <property name="visible">True</property>
                                         <property name="xalign">1</property>
                                         <property name="label" translatable="yes">Label :</property>
@@ -277,7 +277,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkEntry" id="CommandProfileLabelEntry">
+                                      <object class="GtkEntry" id="ProfileLabelEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="invisible_char">&#x25CF;</property>
@@ -403,6 +403,7 @@
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="use_markup">True</property>
+                                        <property name="wrap">True</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
@@ -419,6 +420,7 @@
                                     </child>
                                   </object>
                                   <packing>
+                                    <property name="fill">False</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
@@ -694,73 +696,84 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="hbox5">
+                              <object class="GtkVBox" id="vbox2">
                                 <property name="visible">True</property>
-                                <property name="spacing">6</property>
+                                <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkScrolledWindow" id="scrolledwindow2">
+                                  <object class="GtkHBox" id="hbox5">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="hscrollbar_policy">automatic</property>
-                                    <property name="vscrollbar_policy">automatic</property>
+                                    <property name="spacing">6</property>
                                     <child>
-                                      <object class="GtkScrolledWindow" id="scrolledwindow4">
+                                      <object class="GtkScrolledWindow" id="scrolledwindow2">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="hscrollbar_policy">automatic</property>
                                         <property name="vscrollbar_policy">automatic</property>
-                                        <property name="shadow_type">in</property>
                                         <child>
-                                          <object class="GtkTreeView" id="SchemesTreeView">
+                                          <object class="GtkScrolledWindow" id="scrolledwindow4">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="headers_visible">False</property>
-                                            <property name="rules_hint">True</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkVButtonBox" id="vbuttonbox1">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">6</property>
-                                    <property name="layout_style">start</property>
-                                    <child>
-                                      <object class="GtkButton" id="AddSchemeButton">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <child>
-                                          <object class="GtkImage" id="image16">
-                                            <property name="visible">True</property>
-                                            <property name="stock">gtk-add</property>
-                                            <property name="icon-size">4</property>
+                                            <property name="hscrollbar_policy">automatic</property>
+                                            <property name="vscrollbar_policy">automatic</property>
+                                            <property name="shadow_type">in</property>
+                                            <child>
+                                              <object class="GtkTreeView" id="SchemesTreeView">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="headers_visible">False</property>
+                                                <property name="rules_hint">True</property>
+                                              </object>
+                                            </child>
                                           </object>
                                         </child>
                                       </object>
                                       <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkButton" id="RemoveSchemeButton">
+                                      <object class="GtkVButtonBox" id="vbuttonbox1">
                                         <property name="visible">True</property>
-                                        <property name="sensitive">False</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
+                                        <property name="spacing">6</property>
+                                        <property name="layout_style">start</property>
                                         <child>
-                                          <object class="GtkImage" id="image17">
+                                          <object class="GtkButton" id="AddSchemeButton">
                                             <property name="visible">True</property>
-                                            <property name="stock">gtk-remove</property>
-                                            <property name="icon-size">4</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">True</property>
+                                            <child>
+                                              <object class="GtkImage" id="image16">
+                                                <property name="visible">True</property>
+                                                <property name="stock">gtk-add</property>
+                                                <property name="icon-size">4</property>
+                                              </object>
+                                            </child>
                                           </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">False</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkButton" id="RemoveSchemeButton">
+                                            <property name="visible">True</property>
+                                            <property name="sensitive">False</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">True</property>
+                                            <child>
+                                              <object class="GtkImage" id="image17">
+                                                <property name="visible">True</property>
+                                                <property name="stock">gtk-remove</property>
+                                                <property name="icon-size">4</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">False</property>
+                                            <property name="position">1</property>
+                                          </packing>
                                         </child>
                                       </object>
                                       <packing>
@@ -772,8 +785,7 @@
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">1</property>
+                                    <property name="position">0</property>
                                   </packing>
                                 </child>
                               </object>
@@ -1189,7 +1201,7 @@ file(s)/folder(s)</property>
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandProfileLabel"/>
+      <widget name="ProfileLabelLabel"/>
       <widget name="CommandPathLabel"/>
       <widget name="CommandParametersLabel"/>
     </widgets>
