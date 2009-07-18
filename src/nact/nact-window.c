@@ -282,6 +282,36 @@ nact_window_save_action( NactWindow *window, const NAAction *action )
  *
  * @window: this NactWindow object.
  *
+ * @count
+ *
+ * Returns TRUE if the user confirms he wants to quit.
+ */
+gboolean
+nact_window_warn_count_modified( NactWindow *window, gint count )
+{
+	gchar *first;
+	gchar *second;
+	if( count == 1 ){
+		first = g_strdup_printf( _( "One action has been modified." ));
+		second = g_strdup( _( "Are you sure you want to quit without saving it ?" ));
+	} else {
+		first = g_strdup_printf( _( "%d actions have been modified." ), count );
+		second = g_strdup( _( "Are you sure you want to quit without saving them ?" ));
+	}
+
+	gboolean ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+
+	g_free( second );
+	g_free( first );
+
+	return( ok );
+}
+
+/**
+ * Emits a warning if the action has been modified.
+ *
+ * @window: this NactWindow object.
+ *
  * @action: the modified action.
  *
  * Returns TRUE if the user confirms he wants to quit.

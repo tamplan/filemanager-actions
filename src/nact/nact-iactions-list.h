@@ -60,6 +60,7 @@ typedef struct {
 
 	/* api */
 	GSList * ( *get_actions )          ( NactWindow *window );
+	void     ( *set_sorted_actions )   ( NactWindow *window, GSList *actions );
 	void     ( *on_selection_changed ) ( GtkTreeSelection *selection, gpointer user_data );
 	gboolean ( *on_button_press_event )( GtkWidget *widget, GdkEventButton *event, gpointer data );
 	gboolean ( *on_key_pressed_event ) ( GtkWidget *widget, GdkEventKey *event, gpointer data );
@@ -77,7 +78,7 @@ NAAction *nact_iactions_list_get_selected_action( NactWindow *window );
 GSList  * nact_iactions_list_get_selected_actions( NactWindow *window );
 void      nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label );
 void      nact_iactions_list_set_focus( NactWindow *window );
-void      nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified );
+void      nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified, gboolean can_save );
 
 void      nact_iactions_list_set_multiple_selection( NactWindow *window, gboolean multiple );
 void      nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );

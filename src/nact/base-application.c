@@ -466,8 +466,8 @@ base_application_run( BaseApplication *application )
 gchar *
 base_application_get_name( BaseApplication *application )
 {
-	static const gchar *thisfn = "base_application_get_name";
-	g_debug( "%s: icon=%p", thisfn, application );
+	/*static const gchar *thisfn = "base_application_get_name";
+	g_debug( "%s: application=%p", thisfn, application );*/
 
 	g_assert( BASE_IS_APPLICATION( application ));
 

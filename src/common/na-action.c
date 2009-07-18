@@ -727,7 +727,7 @@ na_action_set_icon( NAAction *action, const gchar *icon )
  * @second: second action to be compared to @first.
  */
 gboolean
-na_action_are_equal( NAAction *first, NAAction *second )
+na_action_are_equal( const NAAction *first, const NAAction *second )
 {
 	gboolean equal =
 		( g_utf8_collate( first->private->label, second->private->label ) == 0 ) &&

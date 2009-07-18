@@ -76,9 +76,13 @@ GType    nact_window_get_type( void );
 
 GObject *nact_window_get_pivot( NactWindow *window );
 
+/* TODO: check these functions */
 void     nact_window_set_current_action( NactWindow *window, const NAAction *action );
 gboolean nact_window_save_action( NactWindow *window, const NAAction *action );
 
+/* TODO: move the function to nact-main-window */
+gboolean nact_window_warn_count_modified( NactWindow *window, gint count );
+/* TODO: remove the function */
 gboolean nact_window_warn_action_modified( NactWindow *window, const NAAction *action );
 gboolean nact_window_warn_profile_modified( NactWindow *window, const NAActionProfile *profile );
 

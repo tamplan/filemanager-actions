@@ -188,8 +188,8 @@ nact_iaction_tab_dispose( NactWindow *dialog )
 void
 nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action )
 {
-	static const gchar *thisfn = "nact_iaction_tab_set_action";
-	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );
+	/*static const gchar *thisfn = "nact_iaction_tab_set_action";
+	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );*/
 
 	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionLabelEntry" );
 	gchar *label = na_action_get_label( action );

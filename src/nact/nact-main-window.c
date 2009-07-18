@@ -64,6 +64,7 @@ struct NactMainWindowPrivate {
 	guint         status_context;
 	GtkWidget    *save_item;
 	GSList       *actions;
+	NAAction     *edited;
 	/*gchar        *current_uuid;
 	gchar        *current_label;*/
 };
@@ -86,22 +87,25 @@ static void      instance_finalize( GObject *application );
 static gchar    *get_iprefs_window_id( NactWindow *window );
 static gchar    *get_toplevel_name( BaseWindow *window );
 static GSList   *get_actions( NactWindow *window );
+static void      set_sorted_actions( NactWindow *window, GSList *actions );
 
 static void      on_initial_load_toplevel( BaseWindow *window );
 static void      create_file_menu( BaseWindow *window, GtkMenuBar *menubar );
 static void      create_tools_menu( BaseWindow *window, GtkMenuBar *menubar );
 static void      create_help_menu( BaseWindow *window, GtkMenuBar *menubar );
 static void      on_runtime_init_toplevel( BaseWindow *window );
-static void      setup_dialog_title( NactWindow *window, gboolean is_modified );
-static void      setup_dialog_menu( NactWindow *window, gboolean can_save );
+static void      setup_dialog_title( NactMainWindow *window );
+static void      setup_dialog_menu( NactMainWindow *window );
 
 static void      on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean  on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
 static gboolean  on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
-static void      set_current_action( NactMainWindow *window, const NAAction *action );
+static void      set_current_action( NactMainWindow *window );
 static NAAction *get_edited_action( NactWindow *window );
 static void      on_modified_field( NactWindow *window );
-static gboolean  is_edited_modified( NactMainWindow *window );
+static void      check_edited_status( NactWindow *window, const NAAction *action );
+static gboolean  is_action_modified( const NAAction *action );
+static gboolean  is_action_to_save( const NAAction *action );
 
 static void      on_import_activated( GtkMenuItem *item, gpointer user_data );
 static void      on_import_selected( GtkItem *item, gpointer user_data );
@@ -118,6 +122,7 @@ static gboolean on_dialog_response( GtkDialog *dialog, gint response_id, BaseWin
 static void      on_close( GtkMenuItem *item, gpointer user_data );
 static gboolean  on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
 
+static gint      count_modified_actions( NactMainWindow *window );
 static void      on_actions_changed( NAIPivotContainer *instance, gpointer user_data );
 
 GType
@@ -212,6 +217,7 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, iface );
 
 	iface->get_actions = get_actions;
+	iface->set_sorted_actions = set_sorted_actions;
 	iface->on_selection_changed = on_actions_list_selection_changed;
 	iface->on_double_click = on_actions_list_double_click;
 	iface->on_enter_key_pressed = on_actions_list_enter_key_pressed;
@@ -326,6 +332,13 @@ get_actions( NactWindow *window )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	return( NACT_MAIN_WINDOW( window )->private->actions );
+}
+
+static void
+set_sorted_actions( NactWindow *window, GSList *actions )
+{
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+	NACT_MAIN_WINDOW( window )->private->actions = actions;
 }
 
 /*
@@ -489,48 +502,52 @@ on_runtime_init_toplevel( BaseWindow *window )
 }
 
 static void
-setup_dialog_title( NactWindow *window, gboolean is_modified )
+setup_dialog_title( NactMainWindow *window )
 {
 	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	gchar *title = base_application_get_name( appli );
-	gchar *newtitle = g_strdup_printf( "%s%s", is_modified ? "*":"", title );
+
+	if( window->private->edited ){
+		gchar *label = na_action_get_label( window->private->edited );
+		gchar *tmp = g_strdup_printf( "%s - %s", title, label );
+		g_free( label );
+		g_free( title );
+		title = tmp;
+	}
+
+	if( count_modified_actions( window )){
+		gchar *tmp = g_strdup_printf( "*%s", title );
+		g_free( title );
+		title = tmp;
+	}
 
 	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
-	gtk_window_set_title( toplevel, newtitle );
+	gtk_window_set_title( toplevel, title );
 
-	g_free( newtitle );
 	g_free( title );
 }
 
 static void
-setup_dialog_menu( NactWindow *window, gboolean can_save )
+setup_dialog_menu( NactMainWindow *window )
 {
-	gtk_widget_set_sensitive( NACT_MAIN_WINDOW( window )->private->save_item, can_save );
+	GSList *ia;
+	gboolean to_save = FALSE;
+	for( ia = window->private->actions ; ia && !to_save ; ia = ia->next ){
+		gboolean elt_to_save = is_action_to_save( NA_ACTION( ia->data ));
+		to_save |= elt_to_save;
+	}
+
+	gtk_widget_set_sensitive( NACT_MAIN_WINDOW( window )->private->save_item, to_save );
 }
 
 static void
 on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
 {
-	/*static const gchar *thisfn = "nact_main_window_on_actions_list_selection_changed";*/
-	/*g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );*/
-
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
 
-	/*GtkWidget *edit_button = base_window_get_widget( window, "EditActionButton" );
-	GtkWidget *delete_button = base_window_get_widget( window, "DeleteActionButton" );
-	GtkWidget *duplicate_button = base_window_get_widget( window, "DuplicateActionButton" );*/
-
-	/*gboolean enabled = ( gtk_tree_selection_count_selected_rows( selection ) > 0 );*/
-
-	/*gtk_widget_set_sensitive( edit_button, enabled );
-	gtk_widget_set_sensitive( delete_button, enabled );
-	gtk_widget_set_sensitive( duplicate_button, enabled );*/
-
-	NAAction *action = NA_ACTION( nact_iactions_list_get_selected_action( NACT_WINDOW( window )));
-	if( action ){
-		set_current_action( window, action );
-	}
+	window->private->edited = NA_ACTION( nact_iactions_list_get_selected_action( NACT_WINDOW( window )));
+	set_current_action( window );
 }
 
 static gboolean
@@ -555,7 +572,7 @@ on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpoint
  * update the notebook when selection changes in IActionsList
  */
 static void
-set_current_action( NactMainWindow *window, const NAAction *action )
+set_current_action( NactMainWindow *window )
 {
 	/*NactMainWindow *window = NACT_MAIN_WINDOW( wnd );*/
 
@@ -571,18 +588,19 @@ set_current_action( NactMainWindow *window, const NAAction *action )
 		window->private->current_label = na_action_get_label( action );
 	}*/
 
-	nact_iaction_tab_set_action( NACT_WINDOW( window ), action );
+	g_debug( "set_current_action: current=%p", window->private->edited );
+	nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited );
 }
 
 /*
- * update the currently edited action when an field is modified
+ * update the currently edited NAAction when a field is modified
  * (called as a virtual function by each interface tab)
  */
 static NAAction *
 get_edited_action( NactWindow *window )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	return( nact_iactions_list_get_selected_action( window ));
+	return( NACT_MAIN_WINDOW( window )->private->edited );
 }
 
 /*
@@ -595,25 +613,58 @@ on_modified_field( NactWindow *window )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 
-	gboolean is_modified = is_edited_modified( NACT_MAIN_WINDOW( window ));
-	/*g_debug( "on_modified_field: is_modified=%s", is_modified ? "True":"False" );*/
-	setup_dialog_title( window, is_modified );
-	nact_iactions_list_set_modified( window, is_modified );
+	check_edited_status( window, NACT_MAIN_WINDOW( window )->private->edited );
 
-	gboolean can_save = is_modified && nact_iaction_tab_has_label( window );
-	setup_dialog_menu( window, can_save );
+	setup_dialog_title( NACT_MAIN_WINDOW( window ));
+	setup_dialog_menu( NACT_MAIN_WINDOW( window ));
+}
+
+static void
+check_edited_status( NactWindow *window, const NAAction *edited )
+{
+	g_assert( edited );
+
+	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( application ));
+	gchar *uuid = na_action_get_uuid( edited );
+	NAAction *original = NA_ACTION( na_pivot_get_action( pivot, uuid ));
+	g_free( uuid );
+	gboolean is_modified = !na_action_are_equal( edited, original );
+	g_object_set_data( G_OBJECT( edited ), "nact-main-window-action-modified", GINT_TO_POINTER( is_modified ));
+
+	/*gboolean check = is_action_modified( edited );
+	g_debug( "check_edited_status: edited=%p, is_modified=%s, check=%s", edited, is_modified ? "True":"False", check ? "True":"False" );*/
+
+	gboolean can_save = FALSE;
+	if( is_modified ){
+		gchar *label = na_action_get_label( edited );
+		if( label && g_utf8_strlen( label, -1 )){
+			GSList *ip;
+			GSList *profiles = na_action_get_profiles( edited );
+			for( ip = profiles ; ip ; ip = ip->next ){
+				NAActionProfile *prof = NA_ACTION_PROFILE( ip->data );
+				gchar *prof_label = na_action_profile_get_label( prof );
+				if( prof_label && g_utf8_strlen( prof_label, -1 )){
+					can_save = TRUE;
+				}
+				g_free( prof_label );
+			}
+			g_free( label );
+		}
+	}
+	g_object_set_data( G_OBJECT( edited ), "nact-main-window-action-can-save", GINT_TO_POINTER( can_save));
 }
 
 static gboolean
-is_edited_modified( NactMainWindow *window )
+is_action_modified( const NAAction *action )
 {
-	NAAction *edited = nact_iactions_list_get_selected_action( NACT_WINDOW( window ));
-	gchar *uuid = na_action_get_uuid( edited );
-	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( application ));
-	NAAction *original = NA_ACTION( na_pivot_get_action( pivot, uuid ));
-	g_free( uuid );
-	return( !na_action_are_equal( edited, original ));
+	return( GPOINTER_TO_INT( g_object_get_data( G_OBJECT( action ), "nact-main-window-action-modified" )));
+}
+
+static gboolean
+is_action_to_save( const NAAction *action )
+{
+	return( GPOINTER_TO_INT( g_object_get_data( G_OBJECT( action ), "nact-main-window-action-can-save" )));
 }
 
 static void
@@ -921,7 +972,10 @@ on_close( GtkMenuItem *item, gpointer user_data )
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
 
-	g_object_unref( window );
+	gint count = count_modified_actions( window );
+	if( !count || nact_window_warn_count_modified( NACT_WINDOW( window ), count )){
+		g_object_unref( window );
+	}
 }
 
 static gboolean
@@ -935,6 +989,22 @@ on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event )
 	on_close( NULL, window );
 
 	return( TRUE );
+}
+
+static gint
+count_modified_actions( NactMainWindow *window )
+{
+	gint count = 0;
+	GSList *ia;
+	for( ia = window->private->actions ; ia ; ia = ia->next ){
+		gboolean is_modified = is_action_modified( NA_ACTION( ia->data ));
+		if( is_modified ){
+			count += 1;
+		}
+		/*g_debug( "count_modified_actions: action=%p, is_modified=%s", ia->data, is_modified ? "True":"False" );*/
+	}
+	/*g_debug( "count_modified_actions: length=%d, count=%d", g_slist_length( window->private->actions ), count );*/
+	return( count );
 }
 
 /*

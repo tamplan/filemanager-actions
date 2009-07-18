@@ -64,6 +64,7 @@ static void       interface_base_init( NactIActionsListInterface *klass );
 static void       interface_base_finalize( NactIActionsListInterface *klass );
 
 static GSList    *v_get_actions( NactWindow *window );
+static void       v_set_sorted_actions( NactWindow *window, GSList *actions );
 static void       v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean   v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
 static gboolean   v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer data );
@@ -235,6 +236,7 @@ nact_iactions_list_fill( NactWindow *window )
 
 	GSList *actions = v_get_actions( window );
 	actions = g_slist_sort( actions, ( GCompareFunc ) sort_actions_by_label );
+	v_set_sorted_actions( window, actions );
 
 	GSList *ia;
 	/*g_debug( "%s: actions has %d elements", thisfn, g_slist_length( actions ));*/
@@ -278,6 +280,7 @@ nact_iactions_list_fill( NactWindow *window )
 				    IACTIONS_LIST_LABEL_COLUMN, label,
 				    IACTIONS_LIST_ACTION_COLUMN, action,
 				    -1);
+		g_debug( "%s: action=%p", thisfn, action );
 
 		g_free( iconname );
 		g_free( label );
@@ -400,7 +403,7 @@ nact_iactions_list_get_selected_actions( NactWindow *window )
 
 
 void
-nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified )
+nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified, gboolean can_save )
 {
 }
 
@@ -450,6 +453,17 @@ v_get_actions( NactWindow *window )
 	}
 
 	return( NULL );
+}
+
+static void
+v_set_sorted_actions( NactWindow *window, GSList *actions )
+{
+	g_assert( NACT_IS_IACTIONS_LIST( window ));
+	NactIActionsList *instance = NACT_IACTIONS_LIST( window );
+
+	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->set_sorted_actions ){
+		NACT_IACTIONS_LIST_GET_INTERFACE( instance )->set_sorted_actions( window, actions );
+	}
 }
 
 static void

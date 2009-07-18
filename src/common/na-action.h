@@ -106,7 +106,7 @@ void      na_action_set_label( NAAction *action, const gchar *label );
 void      na_action_set_tooltip( NAAction *action, const gchar *tooltip );
 void      na_action_set_icon( NAAction *action, const gchar *icon_name );
 
-gboolean  na_action_are_equal( NAAction *first, NAAction *second );
+gboolean  na_action_are_equal( const NAAction *first, const NAAction *second );
 
 gchar    *na_action_get_new_profile_name( const NAAction *action );
 NAObject *na_action_get_profile( const NAAction *action, const gchar *name );
