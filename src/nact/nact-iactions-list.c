@@ -49,7 +49,7 @@ struct NactIActionsListInterfacePrivate {
 enum {
 	IACTIONS_LIST_ICON_COLUMN = 0,
 	IACTIONS_LIST_LABEL_COLUMN,
-	IACTIONS_LIST_ACTION_COLUMN,
+	IACTIONS_LIST_NAOBJECT_COLUMN,
 	IACTIONS_LIST_N_COLUMN
 };
 
@@ -69,6 +69,7 @@ static void       v_on_selection_changed( GtkTreeSelection *selection, gpointer 
 static gboolean   v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
 static gboolean   v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer data );
 
+static gboolean   filter_visible( GtkTreeModel *model, GtkTreeIter *iter, gpointer data );
 static GtkWidget *get_actions_list_widget( NactWindow *window );
 static gint       sort_actions_by_label( gconstpointer a1, gconstpointer a2 );
 
@@ -154,18 +155,24 @@ nact_iactions_list_initial_load( NactWindow *window )
 	nact_iactions_list_set_send_selection_changed_on_fill_list( window, FALSE );
 	nact_iactions_list_set_is_filling_list( window, FALSE );
 
-	GtkListStore *model;
-	GtkTreeViewColumn *column;
 	GtkWidget *widget = get_actions_list_widget( window );
 
 	/* create the model */
-	model = gtk_list_store_new(
-			IACTIONS_LIST_N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, NA_ACTION_TYPE );
-	gtk_tree_view_set_model( GTK_TREE_VIEW( widget ), GTK_TREE_MODEL( model ));
-	g_object_unref( model );
+	GtkTreeStore *ts_model = gtk_tree_store_new(
+			IACTIONS_LIST_N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, NA_OBJECT_TYPE );
+
+	GtkTreeModel *tmf_model = gtk_tree_model_filter_new( GTK_TREE_MODEL( ts_model ), NULL );
+
+	gtk_tree_model_filter_set_visible_func(
+			GTK_TREE_MODEL_FILTER( tmf_model ), ( GtkTreeModelFilterVisibleFunc ) filter_visible, window, NULL );
+
+	gtk_tree_view_set_model( GTK_TREE_VIEW( widget ), tmf_model );
+
+	/*g_object_unref( tmf_model );*/
+	g_object_unref( ts_model );
 
 	/* create visible columns on the tree view */
-	column = gtk_tree_view_column_new_with_attributes(
+	GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes(
 			"icon", gtk_cell_renderer_pixbuf_new(), "pixbuf", IACTIONS_LIST_ICON_COLUMN, NULL );
 	gtk_tree_view_append_column( GTK_TREE_VIEW( widget ), column );
 
@@ -231,8 +238,9 @@ nact_iactions_list_fill( NactWindow *window )
 	nact_iactions_list_set_is_filling_list( window, TRUE );
 
 	GtkWidget *widget = get_actions_list_widget( window );
-	GtkListStore *model = GTK_LIST_STORE( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
-	gtk_list_store_clear( model );
+	GtkTreeModelFilter *tmf_model = GTK_TREE_MODEL_FILTER( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
+	GtkTreeStore *ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( tmf_model ));
+	gtk_tree_store_clear( ts_model );
 
 	GSList *actions = v_get_actions( window );
 	actions = g_slist_sort( actions, ( GCompareFunc ) sort_actions_by_label );
@@ -274,13 +282,27 @@ nact_iactions_list_fill( NactWindow *window )
 				}
 			}
 		}
-		gtk_list_store_append( model, &iter );
-		gtk_list_store_set( model, &iter,
+		gtk_tree_store_append( ts_model, &iter, NULL );
+		gtk_tree_store_set( ts_model, &iter,
 				    IACTIONS_LIST_ICON_COLUMN, icon,
 				    IACTIONS_LIST_LABEL_COLUMN, label,
-				    IACTIONS_LIST_ACTION_COLUMN, action,
+				    IACTIONS_LIST_NAOBJECT_COLUMN, action,
 				    -1);
 		g_debug( "%s: action=%p", thisfn, action );
+
+		GSList *profiles = na_action_get_profiles( action );
+		GSList *ip;
+		GtkTreeIter profile_iter;
+		for( ip = profiles ; ip ; ip = ip->next ){
+			NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
+			gchar *profile_label = na_action_profile_get_label( profile );
+			gtk_tree_store_append( ts_model, &profile_iter, &iter );
+			gtk_tree_store_set( ts_model, &profile_iter,
+					    IACTIONS_LIST_LABEL_COLUMN, profile_label,
+					    IACTIONS_LIST_NAOBJECT_COLUMN, profile,
+					    -1);
+			g_free( profile_label );
+		}
 
 		g_free( iconname );
 		g_free( label );
@@ -318,7 +340,7 @@ nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const g
 		gtk_tree_model_get(
 				model,
 				&iter,
-				IACTIONS_LIST_ACTION_COLUMN, &action, IACTIONS_LIST_LABEL_COLUMN, &iter_label,
+				IACTIONS_LIST_NAOBJECT_COLUMN, &action, IACTIONS_LIST_LABEL_COLUMN, &iter_label,
 				-1 );
 
 		iter_uuid = na_action_get_uuid( action );
@@ -353,18 +375,21 @@ nact_iactions_list_set_focus( NactWindow *window )
 }
 
 /**
- * Returns the currently selected action.
+ * Returns the currently selected action or profile.
  */
-NAAction *
+NAObject *
 nact_iactions_list_get_selected_action( NactWindow *window )
 {
 	GSList *list = nact_iactions_list_get_selected_actions( window );
 
-	NAAction *action = NA_ACTION( list->data );
+	NAObject *object = NA_OBJECT( list->data );
+
+	g_assert( object );
+	g_assert( NA_IS_OBJECT( object ));
 
 	g_slist_free( list );
 
-	return( action );
+	return( object );
 }
 
 /**
@@ -391,7 +416,7 @@ nact_iactions_list_get_selected_actions( NactWindow *window )
 		GtkTreePath *path = ( GtkTreePath * ) it->data;
 		gtk_tree_model_get_iter( model, &iter, path );
 
-		gtk_tree_model_get( model, &iter, IACTIONS_LIST_ACTION_COLUMN, &action, -1 );
+		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &action, -1 );
 		actions = g_slist_prepend( actions, action );
 	}
 
@@ -536,6 +561,25 @@ v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer user_dat
 		}
 	}
 	return( stop );
+}
+
+static gboolean
+filter_visible( GtkTreeModel *model, GtkTreeIter *iter, gpointer data )
+{
+	NAObject *object;
+	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+
+	if( object ){
+		if( NA_IS_ACTION( object )){
+			return( TRUE );
+		}
+
+		g_assert( NA_IS_ACTION_PROFILE( object ));
+		NAAction *action = NA_ACTION( na_action_profile_get_action( NA_ACTION_PROFILE( object )));
+		return( na_action_get_profiles_count( action ) > 1 );
+	}
+
+	return( FALSE );
 }
 
 static GtkWidget *

@@ -224,17 +224,17 @@ nact_icommand_tab_set_profile( NactWindow *dialog, const NAActionProfile *profil
 	g_debug( "%s: dialog=%p, profile=%p", thisfn, dialog, profile );
 
 	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "CommandProfileLabelEntry" );
-	gchar *label = na_action_profile_get_label( profile );
+	gchar *label = profile ? na_action_profile_get_label( profile ) : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 	g_free( label );
 
 	GtkWidget *path_widget = get_path_widget( dialog );
-	gchar *path = na_action_profile_get_path( profile );
+	gchar *path = profile ? na_action_profile_get_path( profile ) : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( path_widget ), path );
 	g_free( path );
 
 	GtkWidget *parameters_widget = get_parameters_widget( dialog );
-	gchar *parameters = na_action_profile_get_parameters( profile );
+	gchar *parameters = profile ? na_action_profile_get_parameters( profile ) : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( parameters_widget ), parameters );
 	g_free( parameters );
 }

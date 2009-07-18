@@ -60,14 +60,13 @@ struct NactMainWindowClassPrivate {
 /* private instance data
  */
 struct NactMainWindowPrivate {
-	gboolean      dispose_has_run;
-	GtkStatusbar *status_bar;
-	guint         status_context;
-	GtkWidget    *save_item;
-	GSList       *actions;
-	NAAction     *edited;
-	/*gchar        *current_uuid;
-	gchar        *current_label;*/
+	gboolean         dispose_has_run;
+	GtkStatusbar    *status_bar;
+	guint            status_context;
+	GtkWidget       *save_item;
+	GSList          *actions;
+	NAAction        *edited_action;
+	NAActionProfile *edited_profile;
 };
 
 /* the GConf key used to read/write size and position of auxiliary dialogs
@@ -103,13 +102,14 @@ static void             on_actions_list_selection_changed( GtkTreeSelection *sel
 static gboolean         on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
 static gboolean         on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
 static void             set_current_action( NactMainWindow *window );
+static void             set_current_profile( NactMainWindow *window );
 static NAAction        *get_edited_action( NactWindow *window );
+static NAActionProfile *get_edited_profile( NactWindow *window );
 static void             on_modified_field( NactWindow *window );
 static void             check_edited_status( NactWindow *window, const NAAction *action );
 static gboolean         is_action_modified( const NAAction *action );
 static gboolean         is_action_to_save( const NAAction *action );
 
-static NAActionProfile *get_edited_profile( NactWindow *window );
 static void             get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
 static gboolean         get_multiple( NactWindow *window );
 static GSList          *get_schemes( NactWindow *window );
@@ -539,8 +539,8 @@ setup_dialog_title( NactMainWindow *window )
 	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	gchar *title = base_application_get_name( appli );
 
-	if( window->private->edited ){
-		gchar *label = na_action_get_label( window->private->edited );
+	if( window->private->edited_action ){
+		gchar *label = na_action_get_label( window->private->edited_action );
 		gchar *tmp = g_strdup_printf( "%s - %s", title, label );
 		g_free( label );
 		g_free( title );
@@ -572,14 +572,26 @@ setup_dialog_menu( NactMainWindow *window )
 	gtk_widget_set_sensitive( NACT_MAIN_WINDOW( window )->private->save_item, to_save );
 }
 
+/*
+ * note that the IActionsList tree store may return an action or a profile
+ */
 static void
 on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
 
-	window->private->edited = NA_ACTION( nact_iactions_list_get_selected_action( NACT_WINDOW( window )));
-	set_current_action( window );
+	NAObject *object = nact_iactions_list_get_selected_action( NACT_WINDOW( window ));
+
+	if( NA_IS_ACTION( object )){
+		window->private->edited_action = NA_ACTION( object );
+		set_current_action( window );
+
+	} else {
+		g_assert( NA_IS_ACTION_PROFILE( object ));
+		window->private->edited_profile = NA_ACTION_PROFILE( object );
+		set_current_profile( window );
+	}
 }
 
 static gboolean
@@ -602,26 +614,27 @@ on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpoint
 
 /*
  * update the notebook when selection changes in IActionsList
+ * if there is only one profile, we also setup the profile
  */
 static void
 set_current_action( NactMainWindow *window )
 {
-	/*NactMainWindow *window = NACT_MAIN_WINDOW( wnd );*/
+	g_debug( "set_current_action: current=%p", window->private->edited_action );
 
-	/*g_free( window->private->current_uuid );
-	window->private->current_uuid = NULL;
+	nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action );
 
-	g_free( window->private->current_label );
-	window->private->current_label = NULL;
+	window->private->edited_profile = NULL;
+	if( na_action_get_profiles_count( window->private->edited_action ) == 1 ){
+		window->private->edited_profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited_action )->data );
+	}
 
-	if( action ){
-		g_assert( NA_IS_ACTION( action ));
-		window->private->current_uuid = na_action_get_uuid( action );
-		window->private->current_label = na_action_get_label( action );
-	}*/
+	set_current_profile( window );
+}
 
-	g_debug( "set_current_action: current=%p", window->private->edited );
-	nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited );
+static void
+set_current_profile( NactMainWindow *window )
+{
+	nact_icommand_tab_set_profile( NACT_WINDOW( window ), window->private->edited_profile );
 }
 
 /*
@@ -632,7 +645,14 @@ static NAAction *
 get_edited_action( NactWindow *window )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	return( NACT_MAIN_WINDOW( window )->private->edited );
+	return( NACT_MAIN_WINDOW( window )->private->edited_action );
+}
+
+static NAActionProfile *
+get_edited_profile( NactWindow *window )
+{
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+	return( NACT_MAIN_WINDOW( window )->private->edited_profile );
 }
 
 /*
@@ -645,7 +665,7 @@ on_modified_field( NactWindow *window )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 
-	check_edited_status( window, NACT_MAIN_WINDOW( window )->private->edited );
+	check_edited_status( window, NACT_MAIN_WINDOW( window )->private->edited_action );
 
 	setup_dialog_title( NACT_MAIN_WINDOW( window ));
 	setup_dialog_menu( NACT_MAIN_WINDOW( window ));
@@ -697,12 +717,6 @@ static gboolean
 is_action_to_save( const NAAction *action )
 {
 	return( GPOINTER_TO_INT( g_object_get_data( G_OBJECT( action ), "nact-main-window-action-can-save" )));
-}
-
-static NAActionProfile *
-get_edited_profile( NactWindow *window )
-{
-	return( NULL );
 }
 
 static void

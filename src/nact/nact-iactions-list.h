@@ -74,7 +74,7 @@ GType     nact_iactions_list_get_type( void );
 void      nact_iactions_list_initial_load( NactWindow *window );
 void      nact_iactions_list_runtime_init( NactWindow *window );
 void      nact_iactions_list_fill( NactWindow *window );
-NAAction *nact_iactions_list_get_selected_action( NactWindow *window );
+NAObject *nact_iactions_list_get_selected_action( NactWindow *window );
 GSList  * nact_iactions_list_get_selected_actions( NactWindow *window );
 void      nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label );
 void      nact_iactions_list_set_focus( NactWindow *window );
