@@ -61,14 +61,10 @@ nautilus_actions_config_SOURCES = \
 	nact-iaction-tab.h									\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
-	nact-iconditions.c									\
-	nact-iconditions.h									\
+	nact-icommand-tab.c									\
+	nact-icommand-tab.h									\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
-	nact-iprofile-item.c								\
-	nact-iprofile-item.h								\
-	nact-iprofiles-list.c								\
-	nact-iprofiles-list.h								\
 	nact-main.c											\
 	nact-main-window.c									\
 	nact-main-window.h									\

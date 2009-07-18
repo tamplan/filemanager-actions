@@ -48,6 +48,7 @@
 #include "nact-assist-import.h"
 #include "nact-iactions-list.h"
 #include "nact-iaction-tab.h"
+#include "nact-icommand-tab.h"
 #include "nact-iprefs.h"
 #include "nact-main-window.h"
 
@@ -75,55 +76,61 @@ struct NactMainWindowPrivate {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType     register_type( void );
-static void      class_init( NactMainWindowClass *klass );
-static void      iactions_list_iface_init( NactIActionsListInterface *iface );
-static void      iaction_tab_iface_init( NactIActionTabInterface *iface );
-static void      ipivot_container_iface_init( NAIPivotContainerInterface *iface );
-static void      instance_init( GTypeInstance *instance, gpointer klass );
-static void      instance_dispose( GObject *application );
-static void      instance_finalize( GObject *application );
+static GType            register_type( void );
+static void             class_init( NactMainWindowClass *klass );
+static void             iactions_list_iface_init( NactIActionsListInterface *iface );
+static void             iaction_tab_iface_init( NactIActionTabInterface *iface );
+static void             icommand_tab_iface_init( NactICommandTabInterface *iface );
+static void             ipivot_container_iface_init( NAIPivotContainerInterface *iface );
+static void             instance_init( GTypeInstance *instance, gpointer klass );
+static void             instance_dispose( GObject *application );
+static void             instance_finalize( GObject *application );
 
-static gchar    *get_iprefs_window_id( NactWindow *window );
-static gchar    *get_toplevel_name( BaseWindow *window );
-static GSList   *get_actions( NactWindow *window );
-static void      set_sorted_actions( NactWindow *window, GSList *actions );
+static gchar           *get_iprefs_window_id( NactWindow *window );
+static gchar           *get_toplevel_name( BaseWindow *window );
+static GSList          *get_actions( NactWindow *window );
+static void             set_sorted_actions( NactWindow *window, GSList *actions );
 
-static void      on_initial_load_toplevel( BaseWindow *window );
-static void      create_file_menu( BaseWindow *window, GtkMenuBar *menubar );
-static void      create_tools_menu( BaseWindow *window, GtkMenuBar *menubar );
-static void      create_help_menu( BaseWindow *window, GtkMenuBar *menubar );
-static void      on_runtime_init_toplevel( BaseWindow *window );
-static void      setup_dialog_title( NactMainWindow *window );
-static void      setup_dialog_menu( NactMainWindow *window );
+static void             on_initial_load_toplevel( BaseWindow *window );
+static void             create_file_menu( BaseWindow *window, GtkMenuBar *menubar );
+static void             create_tools_menu( BaseWindow *window, GtkMenuBar *menubar );
+static void             create_help_menu( BaseWindow *window, GtkMenuBar *menubar );
+static void             on_runtime_init_toplevel( BaseWindow *window );
+static void             setup_dialog_title( NactMainWindow *window );
+static void             setup_dialog_menu( NactMainWindow *window );
 
-static void      on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
-static gboolean  on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
-static gboolean  on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
-static void      set_current_action( NactMainWindow *window );
-static NAAction *get_edited_action( NactWindow *window );
-static void      on_modified_field( NactWindow *window );
-static void      check_edited_status( NactWindow *window, const NAAction *action );
-static gboolean  is_action_modified( const NAAction *action );
-static gboolean  is_action_to_save( const NAAction *action );
+static void             on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
+static gboolean         on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
+static gboolean         on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
+static void             set_current_action( NactMainWindow *window );
+static NAAction        *get_edited_action( NactWindow *window );
+static void             on_modified_field( NactWindow *window );
+static void             check_edited_status( NactWindow *window, const NAAction *action );
+static gboolean         is_action_modified( const NAAction *action );
+static gboolean         is_action_to_save( const NAAction *action );
 
-static void      on_import_activated( GtkMenuItem *item, gpointer user_data );
-static void      on_import_selected( GtkItem *item, gpointer user_data );
-static void      on_export_activated( GtkMenuItem *item, gpointer user_data );
-static void      on_export_selected( GtkItem *item, gpointer user_data );
-static void      on_about_activated( GtkMenuItem *item, gpointer user_data );
-static void      on_about_selected( GtkItem *item, gpointer user_data );
-static void      on_menu_item_deselected( GtkItem *item, gpointer user_data );
+static NAActionProfile *get_edited_profile( NactWindow *window );
+static void             get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
+static gboolean         get_multiple( NactWindow *window );
+static GSList          *get_schemes( NactWindow *window );
+
+static void             on_import_activated( GtkMenuItem *item, gpointer user_data );
+static void             on_import_selected( GtkItem *item, gpointer user_data );
+static void             on_export_activated( GtkMenuItem *item, gpointer user_data );
+static void             on_export_selected( GtkItem *item, gpointer user_data );
+static void             on_about_activated( GtkMenuItem *item, gpointer user_data );
+static void             on_about_selected( GtkItem *item, gpointer user_data );
+static void             on_menu_item_deselected( GtkItem *item, gpointer user_data );
 /*static void     on_new_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_edit_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_duplicate_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_delete_button_clicked( GtkButton *button, gpointer user_data );
 static gboolean on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );*/
-static void      on_close( GtkMenuItem *item, gpointer user_data );
-static gboolean  on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
+static void             on_close( GtkMenuItem *item, gpointer user_data );
+static gboolean         on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
 
-static gint      count_modified_actions( NactMainWindow *window );
-static void      on_actions_changed( NAIPivotContainer *instance, gpointer user_data );
+static gint             count_modified_actions( NactMainWindow *window );
+static void             on_actions_changed( NAIPivotContainer *instance, gpointer user_data );
 
 GType
 nact_main_window_get_type( void )
@@ -173,6 +180,15 @@ register_type( void )
 		NULL
 	};
 	g_type_add_interface_static( type, NACT_IACTION_TAB_TYPE, &iaction_tab_iface_info );
+
+	/* implement ICommandTab interface
+	 */
+	static const GInterfaceInfo icommand_tab_iface_info = {
+		( GInterfaceInitFunc ) icommand_tab_iface_init,
+		NULL,
+		NULL
+	};
+	g_type_add_interface_static( type, NACT_ICOMMAND_TAB_TYPE, &icommand_tab_iface_info );
 
 	/* implement IPivotContainer interface
 	 */
@@ -231,6 +247,19 @@ iaction_tab_iface_init( NactIActionTabInterface *iface )
 
 	iface->get_edited_action = get_edited_action;
 	iface->field_modified = on_modified_field;
+}
+
+static void
+icommand_tab_iface_init( NactICommandTabInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_icommand_tab_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->get_edited_profile = get_edited_profile;
+	iface->field_modified = on_modified_field;
+	iface->get_isfiledir = get_isfiledir;
+	iface->get_multiple = get_multiple;
+	iface->get_schemes = get_schemes;
 }
 
 static void
@@ -388,10 +417,10 @@ on_initial_load_toplevel( BaseWindow *window )
 	g_assert( NACT_IS_IACTION_TAB( window ));
 	nact_iaction_tab_initial_load( NACT_WINDOW( window ));
 
-	/*g_assert( NACT_IS_COMMAND_TAB( window ));
-	nact_icommand_tab_initial_load( window );
+	g_assert( NACT_IS_ICOMMAND_TAB( window ));
+	nact_icommand_tab_initial_load( NACT_WINDOW( window ));
 
-	g_assert( NACT_IS_CONDITIONS_TAB( window ));
+	/*g_assert( NACT_IS_CONDITIONS_TAB( window ));
 	nact_iconditions_tab_initial_load( window );
 
 	g_assert( NACT_IS_ADVANCED_TAB( window ));
@@ -492,6 +521,9 @@ on_runtime_init_toplevel( BaseWindow *window )
 
 	g_assert( NACT_IS_IACTION_TAB( window ));
 	nact_iaction_tab_runtime_init( NACT_WINDOW( window ));
+
+	g_assert( NACT_IS_ICOMMAND_TAB( window ));
+	nact_icommand_tab_runtime_init( NACT_WINDOW( window ));
 
 	/*nact_window_signal_connect_by_name( NACT_WINDOW( window ), "NewActionButton", "clicked", G_CALLBACK( on_new_button_clicked ));
 	nact_window_signal_connect_by_name( NACT_WINDOW( window ), "EditActionButton", "clicked", G_CALLBACK( on_edit_button_clicked ));
@@ -665,6 +697,30 @@ static gboolean
 is_action_to_save( const NAAction *action )
 {
 	return( GPOINTER_TO_INT( g_object_get_data( G_OBJECT( action ), "nact-main-window-action-can-save" )));
+}
+
+static NAActionProfile *
+get_edited_profile( NactWindow *window )
+{
+	return( NULL );
+}
+
+static void
+get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir )
+{
+
+}
+
+static gboolean
+get_multiple( NactWindow *window )
+{
+	return( FALSE );
+}
+
+static GSList *
+get_schemes( NactWindow *window )
+{
+	return( NULL );
 }
 
 static void

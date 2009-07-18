@@ -13,9 +13,22 @@
 	New virtual function: advertise the implementer of the interface
 	of the new address of the sorted list.
 
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icommand-tab.h:
+	New files which define NactICommandTab interface.
+
+	* src/nact/nact-iprofile-item.c:
+	* src/nact/nact-iprofile-item.h:
+	* src/nact/nact-iprofiles-list.c:
+	* src/nact/nact-iprofiles-list.h:
+	Removed files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
 	* src/nact/nact-main-window.c:
 	Setup display of the window title and of the menu depending of
 	the currently selected action and its status.
+	Implements ICommandTab interface.
 
 	* src/nact/nact-window.c:
 	* src/nact/nact-window.c (nact_window_warn_count_modified):
