@@ -72,6 +72,7 @@ typedef struct {
 	void        ( *runtime_init_toplevel )( BaseWindow *window );
 	void        ( *all_widgets_showed )   ( BaseWindow *window );
 	gboolean    ( *dialog_response )      ( GtkDialog *dialog, gint code, BaseWindow *window );
+	gboolean    ( *delete_event )         ( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
 	GObject   * ( *get_application )      ( BaseWindow *window );
 	gchar     * ( *get_toplevel_name )    ( BaseWindow *window );
 	GtkWindow * ( *get_toplevel_dialog )  ( BaseWindow *window );

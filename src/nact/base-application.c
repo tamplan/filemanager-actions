@@ -99,7 +99,6 @@ static void           v_advertise_not_willing_to_run( BaseApplication *applicati
 static void           v_start( BaseApplication *application );
 static void           v_finish( BaseApplication *application );
 static gchar         *v_get_unique_name( BaseApplication *application );
-static gchar         *v_get_application_name( BaseApplication *application );
 static GObject       *v_get_main_window( BaseApplication *application );
 static gchar         *v_get_ui_filename( BaseApplication *application );
 
@@ -465,6 +464,27 @@ base_application_run( BaseApplication *application )
 }
 
 gchar *
+base_application_get_name( BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_get_name";
+	g_debug( "%s: icon=%p", thisfn, application );
+
+	g_assert( BASE_IS_APPLICATION( application ));
+
+	gchar *name;
+	g_object_get( G_OBJECT( application ), PROP_APPLICATION_NAME_STR, &name, NULL );
+
+	if( !name || !strlen( name )){
+		name = BASE_APPLICATION_GET_CLASS( application )->get_application_name( application );
+		if( name && strlen( name )){
+			g_object_set( G_OBJECT( application ), PROP_APPLICATION_NAME_STR, name, NULL );
+		}
+	}
+
+	return( name );
+}
+
+gchar *
 base_application_get_icon_name( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_get_icon_name";
@@ -769,27 +789,6 @@ v_get_unique_name( BaseApplication *application )
 }
 
 static gchar *
-v_get_application_name( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_get_application_name";
-	g_debug( "%s: application=%p", thisfn, application );
-
-	g_assert( BASE_IS_APPLICATION( application ));
-
-	gchar *name;
-	g_object_get( G_OBJECT( application ), PROP_APPLICATION_NAME_STR, &name, NULL );
-
-	if( !name || !strlen( name )){
-		name = BASE_APPLICATION_GET_CLASS( application )->get_application_name( application );
-		if( name && strlen( name )){
-			g_object_set( G_OBJECT( application ), PROP_APPLICATION_NAME_STR, name, NULL );
-		}
-	}
-
-	return( name );
-}
-
-static gchar *
 v_get_ui_filename( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_get_ui_filename";
@@ -890,7 +889,7 @@ do_initialize_gtk( BaseApplication *application )
 static void
 do_initialize_application_name( BaseApplication *application )
 {
-	gchar *name = v_get_application_name( application );
+	gchar *name = base_application_get_name( application );
 	if( name && strlen( name )){
 		g_set_application_name( name );
 	}

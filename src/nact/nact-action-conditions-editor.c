@@ -316,7 +316,7 @@ on_initial_load_dialog( BaseWindow *dialog )
 	g_assert( NACT_IS_ACTION_CONDITIONS_EDITOR( dialog ));
 	NactActionConditionsEditor *editor = NACT_ACTION_CONDITIONS_EDITOR( dialog );
 
-	nact_imenu_item_initial_load( NACT_WINDOW( editor ), editor->private->edited );
+	nact_imenu_item_initial_load( NACT_WINDOW( editor ));
 
 	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( editor->private->edited )->data );
 	nact_iconditions_initial_load( NACT_WINDOW( editor ), profile );

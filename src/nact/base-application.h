@@ -104,6 +104,7 @@ GType      base_application_get_type( void );
 
 int        base_application_run( BaseApplication *application );
 
+gchar     *base_application_get_name( BaseApplication *application );
 gchar     *base_application_get_icon_name( BaseApplication *application );
 GObject   *base_application_get_main_window( BaseApplication *application );
 

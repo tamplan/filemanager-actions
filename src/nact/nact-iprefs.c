@@ -67,6 +67,8 @@ static GSList *position_to_listint( NactWindow *window, gint x, gint y, gint wid
 static void    free_listint( GSList *list );
 static gchar  *read_key_str( NactWindow *window, const gchar *key );
 static void    save_key_str( NactWindow *window, const gchar *key, const gchar *text );
+static gint    read_key_int( NactWindow *window, const gchar *name );
+static void    write_key_int( NactWindow *window, const gchar *name, gint value );
 
 GType
 nact_iprefs_get_type( void )
@@ -285,6 +287,23 @@ nact_iprefs_save_export_folder_uri( NactWindow *window, const gchar *uri )
 	save_key_str( window, IPREFS_EXPORT_ACTIONS_FOLDER_URI, uri );
 }
 
+/**
+ * Get/set a named integer.
+ *
+ * @window: this NactWindow-derived window.
+ */
+gint
+nact_iprefs_get_int( NactWindow *window, const gchar *name )
+{
+	return( read_key_int( window, name ));
+}
+
+void
+nact_iprefs_set_int( NactWindow *window, const gchar *name, gint value )
+{
+	write_key_int( window, name, value );
+}
+
 static gchar *
 v_get_iprefs_window_id( NactWindow *window )
 {
@@ -427,6 +446,41 @@ save_key_str( NactWindow *window, const gchar *key, const gchar *text )
 
 	if( error ){
 		g_warning( "%s: key=%s, %s", thisfn, key, error->message );
+		g_error_free( error );
+	}
+
+	g_free( path );
+}
+
+static gint
+read_key_int( NactWindow *window, const gchar *name )
+{
+	static const gchar *thisfn = "nact_iprefs_read_key_int";
+	GError *error = NULL;
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+
+	gint value = gconf_client_get_int( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
+
+	if( error ){
+		g_warning( "%s: name=%s, %s", thisfn, name, error->message );
+		g_error_free( error );
+	}
+
+	g_free( path );
+	return( value );
+}
+
+static void
+write_key_int( NactWindow *window, const gchar *name, gint value )
+{
+	static const gchar *thisfn = "nact_iprefs_write_key_int";
+	GError *error = NULL;
+	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+
+	gconf_client_set_int( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, value, &error );
+
+	if( error ){
+		g_warning( "%s: name=%s, %s", thisfn, name, error->message );
 		g_error_free( error );
 	}
 

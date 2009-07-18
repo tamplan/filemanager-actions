@@ -81,6 +81,7 @@ static void       v_initial_load_toplevel( BaseWindow *window );
 static void       v_runtime_init_toplevel( BaseWindow *window );
 static void       v_all_widgets_showed( BaseWindow *window );
 static gboolean   v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static gboolean   v_delete_event( GtkWidget *widget, GdkEvent *event, BaseWindow *window );
 
 static void       do_init_window( BaseWindow *window );
 static void       do_initial_load_toplevel( BaseWindow *window );
@@ -493,6 +494,22 @@ v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 	return( TRUE );
 }
 
+/*
+ * return TRUE to quit the toplevel window loop
+ */
+static gboolean
+v_delete_event( GtkWidget *widget, GdkEvent *event, BaseWindow *window )
+{
+	g_assert( BASE_IS_WINDOW( window ));
+	g_assert( GTK_IS_WINDOW( widget ));
+
+	if( BASE_WINDOW_GET_CLASS( window )->delete_event ){
+		return( BASE_WINDOW_GET_CLASS( window )->delete_event( window, GTK_WINDOW( widget ), event ));
+	}
+
+	return( TRUE );
+}
+
 static void
 do_init_window( BaseWindow *window )
 {
@@ -577,7 +594,13 @@ do_run_window( BaseWindow *window )
 	v_all_widgets_showed( window );
 
 	if( is_main_window( window )){
-		g_signal_connect( G_OBJECT( this_dialog ), "response", G_CALLBACK( v_dialog_response ), window );
+
+		if( GTK_IS_DIALOG( this_dialog )){
+			g_signal_connect( G_OBJECT( this_dialog ), "response", G_CALLBACK( v_dialog_response ), window );
+		} else {
+			g_signal_connect( G_OBJECT( this_dialog ), "delete-event", G_CALLBACK( v_delete_event ), window );
+		}
+
 		g_debug( "%s: application=%p, starting gtk_main", thisfn, window->private->application );
 		gtk_main();
 

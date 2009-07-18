@@ -44,10 +44,6 @@ nautilus_actions_config_SOURCES = \
 	base-application.h									\
 	base-window.c										\
 	base-window.h										\
-	nact-action-conditions-editor.c						\
-	nact-action-conditions-editor.h						\
-	nact-action-profiles-editor.c						\
-	nact-action-profiles-editor.h						\
 	nact-application.c									\
 	nact-application.h									\
 	nact-assistant.c									\
@@ -61,12 +57,12 @@ nautilus_actions_config_SOURCES = \
 	nact-gconf-reader.h									\
 	nact-gconf-writer.c									\
 	nact-gconf-writer.h									\
+	nact-iaction-tab.c									\
+	nact-iaction-tab.h									\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
 	nact-iconditions.c									\
 	nact-iconditions.h									\
-	nact-imenu-item.c									\
-	nact-imenu-item.h									\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
 	nact-iprofile-item.c								\
@@ -76,8 +72,6 @@ nautilus_actions_config_SOURCES = \
 	nact-main.c											\
 	nact-main-window.c									\
 	nact-main-window.h									\
-	nact-profile-conditions-editor.c					\
-	nact-profile-conditions-editor.h					\
 	nact-window.c										\
 	nact-window.h										\
 	$(NULL)

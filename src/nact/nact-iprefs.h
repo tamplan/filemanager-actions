@@ -34,7 +34,7 @@
 /*
  * NactIPrefs interface definition.
  *
- * This interface should be implemented by all dialogs which wish take
+ * This interface may be implemented by all dialogs which wish take
  * benefit of preferences management.
  */
 
@@ -79,6 +79,9 @@ void   nact_iprefs_save_import_folder_uri( NactWindow *window, const gchar *uri 
 
 gchar *nact_iprefs_get_export_folder_uri( NactWindow *window );
 void   nact_iprefs_save_export_folder_uri( NactWindow *window, const gchar *uri );
+
+gint   nact_iprefs_get_int( NactWindow *window, const gchar *key );
+void   nact_iprefs_set_int( NactWindow *window, const gchar *key, gint value );
 
 G_END_DECLS
 

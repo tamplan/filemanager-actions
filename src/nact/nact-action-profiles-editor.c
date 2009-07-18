@@ -315,7 +315,7 @@ on_initial_load_dialog( BaseWindow *dialog )
 	g_assert( NACT_IS_ACTION_PROFILES_EDITOR( dialog ));
 	NactActionProfilesEditor *editor = NACT_ACTION_PROFILES_EDITOR( dialog );
 
-	nact_imenu_item_initial_load( NACT_WINDOW( editor ), editor->private->edited );
+	nact_imenu_item_initial_load( NACT_WINDOW( editor ));
 
 	g_assert( NACT_IS_IPROFILES_LIST( editor ));
 	nact_iprofiles_list_initial_load( NACT_WINDOW( editor ));

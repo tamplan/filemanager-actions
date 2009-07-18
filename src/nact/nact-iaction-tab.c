@@ -35,15 +35,12 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <common/na-action.h>
-#include <common/na-action-profile.h>
-
 #include "nact-application.h"
-#include "nact-imenu-item.h"
+#include "nact-iaction-tab.h"
 
 /* private interface data
  */
-struct NactIMenuItemInterfacePrivate {
+struct NactIActionTabInterfacePrivate {
 };
 
 /* columns in the icon combobox
@@ -55,10 +52,10 @@ enum {
 };
 
 static GType         register_type( void );
-static void          interface_base_init( NactIMenuItemInterface *klass );
-static void          interface_base_finalize( NactIMenuItemInterface *klass );
+static void          interface_base_init( NactIActionTabInterface *klass );
+static void          interface_base_finalize( NactIActionTabInterface *klass );
 
-static GObject      *v_get_edited_action( NactWindow *window );
+static NAAction     *v_get_edited_action( NactWindow *window );
 static void          v_field_modified( NactWindow *window );
 
 static void          on_label_changed( GtkEntry *entry, gpointer user_data );
@@ -72,7 +69,7 @@ static gchar        *strip_underscore( const gchar *text );
 static void          display_icon( NactWindow *window, GtkWidget *image, gboolean display );
 
 GType
-nact_imenu_item_get_type( void )
+nact_iaction_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -86,11 +83,11 @@ nact_imenu_item_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_imenu_item_register_type";
+	static const gchar *thisfn = "nact_iaction_tab_register_type";
 	g_debug( "%s", thisfn );
 
 	static const GTypeInfo info = {
-		sizeof( NactIMenuItemInterface ),
+		sizeof( NactIActionTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -101,23 +98,23 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIMenuItem", &info, 0 );
+	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIActionTab", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
+	g_type_interface_add_prerequisite( type, NACT_WINDOW_TYPE );
 
 	return( type );
 }
 
 static void
-interface_base_init( NactIMenuItemInterface *klass )
+interface_base_init( NactIActionTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_imenu_item_interface_base_init";
+	static const gchar *thisfn = "nact_iaction_tab_interface_base_init";
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
 		g_debug( "%s: klass=%p", thisfn, klass );
 
-		klass->private = g_new0( NactIMenuItemInterfacePrivate, 1 );
+		klass->private = g_new0( NactIActionTabInterfacePrivate, 1 );
 
 		klass->get_edited_action = NULL;
 		klass->field_modified = NULL;
@@ -127,9 +124,9 @@ interface_base_init( NactIMenuItemInterface *klass )
 }
 
 static void
-interface_base_finalize( NactIMenuItemInterface *klass )
+interface_base_finalize( NactIActionTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_imenu_item_interface_base_finalize";
+	static const gchar *thisfn = "nact_iaction_tab_interface_base_finalize";
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
@@ -142,74 +139,32 @@ interface_base_finalize( NactIMenuItemInterface *klass )
 }
 
 void
-nact_imenu_item_initial_load( NactWindow *dialog, NAAction *action )
+nact_iaction_tab_initial_load( NactWindow *dialog )
 {
-	static const gchar *thisfn = "nact_imenu_item_initial_load";
-	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );
+	static const gchar *thisfn = "nact_iaction_tab_initial_load";
+	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	/*BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
-	GtkWindow *toplevel = base_application_get_dialog( appli, "MenuItemWindow" );
-	GtkWidget *vbox = base_application_search_for_widget( appli, toplevel, "MenuItemVBox" );
-	GtkWidget *dest = base_application_get_widget( appli, BASE_WINDOW( dialog ), "MenuItemVBox" );
-	gtk_widget_reparent( vbox, dest );*/
-
-	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuIconComboBoxEntry" );
+	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconComboBoxEntry" );
 	gtk_combo_box_set_model( GTK_COMBO_BOX( icon_widget ), create_stock_icon_model());
 	icon_combo_list_fill( GTK_COMBO_BOX_ENTRY( icon_widget ));
 }
 
 void
-nact_imenu_item_size_labels( NactWindow *window, GObject *size_group )
+nact_iaction_tab_runtime_init( NactWindow *dialog )
 {
-	g_assert( NACT_IS_WINDOW( window ));
-	g_assert( GTK_IS_SIZE_GROUP( size_group ));
+	static const gchar *thisfn = "nact_iaction_tab_runtime_init";
+	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	GtkWidget *label = base_window_get_widget( BASE_WINDOW( window ), "MenuLabelLabel" );
-	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), label );
-
-	label = base_window_get_widget( BASE_WINDOW( window ), "MenuTooltipLabel" );
-	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), label );
-
-	label = base_window_get_widget( BASE_WINDOW( window ), "MenuIconLabel" );
-	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), label );
-}
-
-void
-nact_imenu_item_size_buttons( NactWindow *window, GObject *size_group )
-{
-	g_assert( NACT_IS_WINDOW( window ));
-	g_assert( GTK_IS_SIZE_GROUP( size_group ));
-
-	GtkWidget *button = base_window_get_widget( BASE_WINDOW( window ), "IconBrowseButton" );
-	gtk_size_group_add_widget( GTK_SIZE_GROUP( size_group ), button );
-}
-
-void
-nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action )
-{
-	static const gchar *thisfn = "nact_imenu_item_runtime_init";
-	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );
-
-	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuLabelEntry" );
+	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionLabelEntry" );
 	nact_window_signal_connect( dialog, G_OBJECT( label_widget ), "changed", G_CALLBACK( on_label_changed ));
-	gchar *label = na_action_get_label( action );
-	gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
-	g_free( label );
 
-	GtkWidget *tooltip_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuTooltipEntry" );
+	GtkWidget *tooltip_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionTooltipEntry" );
 	nact_window_signal_connect( dialog, G_OBJECT( tooltip_widget ), "changed", G_CALLBACK( on_tooltip_changed ));
-	gchar *tooltip = na_action_get_tooltip( action );
-	gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
-	g_free( tooltip );
 
-	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuIconComboBoxEntry" );
-	/*g_debug( "%s: icon_widget=%p, child=%p", thisfn, icon_widget, GTK_BIN( icon_widget )->child );*/
+	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconComboBoxEntry" );
 	nact_window_signal_connect( dialog, G_OBJECT( GTK_BIN( icon_widget )->child ), "changed", G_CALLBACK( on_icon_changed ));
-	gchar *icon = na_action_get_icon( action );
-	gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
-	g_free( icon );
 
-	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "IconBrowseButton" );
+	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconBrowseButton" );
 	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_icon_browse ));
 }
 
@@ -217,13 +172,39 @@ nact_imenu_item_runtime_init( NactWindow *dialog, NAAction *action )
  * A good place to set focus to the first visible field.
  */
 void
-nact_imenu_item_all_widgets_showed( NactWindow *dialog )
+nact_iaction_tab_all_widgets_showed( NactWindow *dialog )
 {
-	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuLabelEntry" );
-	gtk_widget_grab_focus( label_widget );
+	static const gchar *thisfn = "nact_iaction_tab_all_widgets_showed";
+	g_debug( "%s: dialog=%p", thisfn, dialog );
+}
 
-	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "MenuIconComboBoxEntry" );
-	on_icon_changed( GTK_ENTRY( GTK_BIN( icon_widget )->child ), dialog );
+void
+nact_iaction_tab_dispose( NactWindow *dialog )
+{
+	static const gchar *thisfn = "nact_iaction_tab_dispose";
+	g_debug( "%s: dialog=%p", thisfn, dialog );
+}
+
+void
+nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action )
+{
+	static const gchar *thisfn = "nact_iaction_tab_set_action";
+	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );
+
+	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionLabelEntry" );
+	gchar *label = na_action_get_label( action );
+	gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
+	g_free( label );
+
+	GtkWidget *tooltip_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionTooltipEntry" );
+	gchar *tooltip = na_action_get_tooltip( action );
+	gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
+	g_free( tooltip );
+
+	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconComboBoxEntry" );
+	gchar *icon = na_action_get_icon( action );
+	gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
+	g_free( icon );
 }
 
 /**
@@ -231,32 +212,20 @@ nact_imenu_item_all_widgets_showed( NactWindow *dialog )
  * Returns TRUE if the label of the action is not empty.
  */
 gboolean
-nact_imenu_item_has_label( NactWindow *window )
+nact_iaction_tab_has_label( NactWindow *window )
 {
-	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( window ), "MenuLabelEntry" );
+	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( window ), "ActionLabelEntry" );
 	const gchar *label = gtk_entry_get_text( GTK_ENTRY( label_widget ));
 	return( g_utf8_strlen( label, -1 ) > 0 );
 }
 
-void
-nact_imenu_item_dispose( NactWindow *dialog )
-{
-	static const gchar *thisfn = "nact_imenu_item_dispose";
-	g_debug( "%s: dialog=%p", thisfn, dialog );
-
-	/*BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
-	GtkWindow *toplevel = base_application_get_dialog( appli, "MenuItemWindow" );
-	GtkWidget *vbox = base_application_get_widget( appli, BASE_WINDOW( dialog ), "MenuItemVBox" );
-	gtk_widget_reparent( vbox, GTK_WIDGET( toplevel ));*/
-}
-
-static GObject *
+static NAAction *
 v_get_edited_action( NactWindow *window )
 {
-	g_assert( NACT_IS_IMENU_ITEM( window ));
+	g_assert( NACT_IS_IACTION_TAB( window ));
 
-	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->get_edited_action ){
-		return( NACT_IMENU_ITEM_GET_INTERFACE( window )->get_edited_action( window ));
+	if( NACT_IACTION_TAB_GET_INTERFACE( window )->get_edited_action ){
+		return( NACT_IACTION_TAB_GET_INTERFACE( window )->get_edited_action( window ));
 	}
 
 	return( NULL );
@@ -265,10 +234,10 @@ v_get_edited_action( NactWindow *window )
 static void
 v_field_modified( NactWindow *window )
 {
-	g_assert( NACT_IS_IMENU_ITEM( window ));
+	g_assert( NACT_IS_IACTION_TAB( window ));
 
-	if( NACT_IMENU_ITEM_GET_INTERFACE( window )->field_modified ){
-		NACT_IMENU_ITEM_GET_INTERFACE( window )->field_modified( window );
+	if( NACT_IACTION_TAB_GET_INTERFACE( window )->field_modified ){
+		NACT_IACTION_TAB_GET_INTERFACE( window )->field_modified( window );
 	}
 }
 
@@ -278,7 +247,7 @@ on_label_changed( GtkEntry *entry, gpointer user_data )
 	g_assert( NACT_IS_WINDOW( user_data ));
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
-	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
+	NAAction *edited = v_get_edited_action( dialog );
 	na_action_set_label( edited, gtk_entry_get_text( entry ));
 
 	v_field_modified( dialog );
@@ -290,7 +259,7 @@ on_tooltip_changed( GtkEntry *entry, gpointer user_data )
 	g_assert( NACT_IS_WINDOW( user_data ));
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
-	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
+	NAAction *edited = v_get_edited_action( dialog );
 	na_action_set_tooltip( edited, gtk_entry_get_text( entry ));
 
 	v_field_modified( dialog );
@@ -299,12 +268,12 @@ on_tooltip_changed( GtkEntry *entry, gpointer user_data )
 static void
 on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_imenu_item_on_icon_changed";
+	static const gchar *thisfn = "nact_iaction_tab_on_icon_changed";
 
 	g_assert( NACT_IS_WINDOW( user_data ));
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
-	GtkWidget *image = base_window_get_widget( BASE_WINDOW( dialog ), "IconImage" );
+	GtkWidget *image = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconImage" );
 	g_assert( GTK_IS_WIDGET( image ));
 	display_icon( dialog, image, FALSE );
 
@@ -341,7 +310,7 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 		}
 	}
 
-	NAAction *edited = NA_ACTION( v_get_edited_action( dialog ));
+	NAAction *edited = v_get_edited_action( dialog );
 	na_action_set_icon( edited, icon_name );
 
 	v_field_modified( dialog );
@@ -351,7 +320,7 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 static void
 on_icon_browse( GtkButton *button, gpointer user_data )
 {
-	g_assert( NACT_IS_IMENU_ITEM( user_data ));
+	g_assert( NACT_IS_IACTION_TAB( user_data ));
 
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(
 			_( "Choosing an icon" ),
@@ -487,7 +456,7 @@ strip_underscore( const gchar *text )
 static void
 display_icon( NactWindow *window, GtkWidget *image, gboolean show )
 {
-	GtkFrame *frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "IconFrame" ));
+	GtkFrame *frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "ActionIconFrame" ));
 
 	if( show ){
 		gtk_widget_show( image );

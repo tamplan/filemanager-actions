@@ -34,8 +34,7 @@
 /*
  * NactMainWindow class definition.
  *
- * This class is derived from NactWindow.
- * It encapsulates the "ActionsDialog" window.
+ * This class is derived from BaseWindow and manages the MainWindow.
  */
 
 #include "nact-window.h"

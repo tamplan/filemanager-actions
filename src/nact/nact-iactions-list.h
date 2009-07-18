@@ -68,19 +68,20 @@ typedef struct {
 }
 	NactIActionsListInterface;
 
-GType    nact_iactions_list_get_type( void );
+GType     nact_iactions_list_get_type( void );
 
-void     nact_iactions_list_initial_load( NactWindow *window );
-void     nact_iactions_list_runtime_init( NactWindow *window );
-void     nact_iactions_list_fill( NactWindow *window );
-GObject *nact_iactions_list_get_selected_action( NactWindow *window );
-GSList  *nact_iactions_list_get_selected_actions( NactWindow *window );
-void     nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label );
-void     nact_iactions_list_set_focus( NactWindow *window );
+void      nact_iactions_list_initial_load( NactWindow *window );
+void      nact_iactions_list_runtime_init( NactWindow *window );
+void      nact_iactions_list_fill( NactWindow *window );
+NAAction *nact_iactions_list_get_selected_action( NactWindow *window );
+GSList  * nact_iactions_list_get_selected_actions( NactWindow *window );
+void      nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label );
+void      nact_iactions_list_set_focus( NactWindow *window );
+void      nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified );
 
-void     nact_iactions_list_set_multiple_selection( NactWindow *window, gboolean multiple );
-void     nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );
-void     nact_iactions_list_set_is_filling_list( NactWindow *window, gboolean is_filling );
+void      nact_iactions_list_set_multiple_selection( NactWindow *window, gboolean multiple );
+void      nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );
+void      nact_iactions_list_set_is_filling_list( NactWindow *window, gboolean is_filling );
 
 G_END_DECLS
 

@@ -69,6 +69,7 @@ static gboolean   v_on_button_press_event( GtkWidget *widget, GdkEventButton *ev
 static gboolean   v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer data );
 
 static GtkWidget *get_actions_list_widget( NactWindow *window );
+static gint       sort_actions_by_label( gconstpointer a1, gconstpointer a2 );
 
 GType
 nact_iactions_list_get_type( void )
@@ -160,7 +161,6 @@ nact_iactions_list_initial_load( NactWindow *window )
 	model = gtk_list_store_new(
 			IACTIONS_LIST_N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, NA_ACTION_TYPE );
 	gtk_tree_view_set_model( GTK_TREE_VIEW( widget ), GTK_TREE_MODEL( model ));
-	nact_iactions_list_fill( window );
 	g_object_unref( model );
 
 	/* create visible columns on the tree view */
@@ -187,6 +187,8 @@ nact_iactions_list_runtime_init( NactWindow *window )
 
 	GtkWidget *widget = get_actions_list_widget( window );
 	g_assert( GTK_IS_WIDGET( widget ));
+
+	nact_iactions_list_fill( window );
 
 	/* set up selection */
 	nact_window_signal_connect(
@@ -232,6 +234,8 @@ nact_iactions_list_fill( NactWindow *window )
 	gtk_list_store_clear( model );
 
 	GSList *actions = v_get_actions( window );
+	actions = g_slist_sort( actions, ( GCompareFunc ) sort_actions_by_label );
+
 	GSList *ia;
 	/*g_debug( "%s: actions has %d elements", thisfn, g_slist_length( actions ));*/
 
@@ -348,12 +352,12 @@ nact_iactions_list_set_focus( NactWindow *window )
 /**
  * Returns the currently selected action.
  */
-GObject *
+NAAction *
 nact_iactions_list_get_selected_action( NactWindow *window )
 {
 	GSList *list = nact_iactions_list_get_selected_actions( window );
 
-	GObject *action = G_OBJECT( list->data );
+	NAAction *action = NA_ACTION( list->data );
 
 	g_slist_free( list );
 
@@ -392,6 +396,12 @@ nact_iactions_list_get_selected_actions( NactWindow *window )
 	g_list_free( listrows );
 
 	return( actions );
+}
+
+
+void
+nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified )
+{
 }
 
 /**
@@ -518,4 +528,21 @@ static GtkWidget *
 get_actions_list_widget( NactWindow *window )
 {
 	return( base_window_get_widget( BASE_WINDOW( window ), "ActionsList" ));
+}
+
+static gint
+sort_actions_by_label( gconstpointer a1, gconstpointer a2 )
+{
+	NAAction *action1 = NA_ACTION( a1 );
+	gchar *label1 = na_action_get_label( action1 );
+
+	NAAction *action2 = NA_ACTION( a2 );
+	gchar *label2 = na_action_get_label( action2 );
+
+	gint ret = g_utf8_collate( label1, label2 );
+
+	g_free( label1 );
+	g_free( label2 );
+
+	return( ret );
 }
