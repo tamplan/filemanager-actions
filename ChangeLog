@@ -13,6 +13,7 @@
 	* src/nact/nact-iactions-list.h:
 	Uses GtkSortable interface.
 	Remove set_sorted_actions API.
+	nact_iactions_list_toggle_collapse: new function.
 
 	* src/nact/nact-icommand-tab.c:
 	Disable the example label when there is no current profile.

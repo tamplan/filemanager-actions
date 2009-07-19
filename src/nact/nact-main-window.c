@@ -656,7 +656,7 @@ on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer
 {
 	g_assert( event->type == GDK_2BUTTON_PRESS );
 
-	/*on_edit_button_clicked( NULL, user_data );*/
+	nact_iactions_list_toggle_collapse( NACT_WINDOW( user_data ));
 
 	return( TRUE );
 }
@@ -664,7 +664,7 @@ on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer
 static gboolean
 on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
 {
-	/*on_edit_button_clicked( NULL, user_data );*/
+	nact_iactions_list_toggle_collapse( NACT_WINDOW( user_data ));
 
 	return( TRUE );
 }

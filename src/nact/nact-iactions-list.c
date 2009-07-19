@@ -176,7 +176,7 @@ nact_iactions_list_initial_load( NactWindow *window )
 	gtk_tree_view_set_model( GTK_TREE_VIEW( widget ), tmf_model );
 	gtk_tree_view_set_enable_tree_lines( GTK_TREE_VIEW( widget ), TRUE );
 
-	/*g_object_unref( tmf_model );*/
+	g_object_unref( tmf_model );
 	g_object_unref( ts_model );
 
 	/* create visible columns on the tree view */
@@ -251,9 +251,6 @@ nact_iactions_list_fill( NactWindow *window )
 	gtk_tree_store_clear( ts_model );
 
 	GSList *actions = v_get_actions( window );
-	/*actions = g_slist_sort( actions, ( GCompareFunc ) sort_actions_by_label );
-	v_set_sorted_actions( window, actions );*/
-
 	GSList *ia;
 	/*g_debug( "%s: actions has %d elements", thisfn, g_slist_length( actions ));*/
 
@@ -438,6 +435,33 @@ nact_iactions_list_get_selected_actions( NactWindow *window )
 void
 nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified, gboolean can_save )
 {
+}
+
+/*
+ * Collapse / expand if actions has more than one profile
+ */
+void
+nact_iactions_list_toggle_collapse( NactWindow *window )
+{
+	NAObject *object = nact_iactions_list_get_selected_action( window );
+	if( NA_IS_ACTION( object )){
+		NAAction *action = NA_ACTION( object );
+		if( na_action_get_profiles_count( action ) > 1 ){
+			GtkWidget *treeview = get_actions_list_widget( window );
+			GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( treeview ));
+			GtkTreeModel *model;
+			GtkTreeIter iter;
+			if( gtk_tree_selection_get_selected( selection, &model, &iter )){
+				GtkTreePath *path = gtk_tree_model_get_path( model, &iter );
+				if( gtk_tree_view_row_expanded( GTK_TREE_VIEW( treeview ), path )){
+					gtk_tree_view_collapse_row( GTK_TREE_VIEW( treeview ), path );
+				} else {
+					gtk_tree_view_expand_row( GTK_TREE_VIEW( treeview ), path, TRUE );
+				}
+				gtk_tree_path_free( path );
+			}
+		}
+	}
 }
 
 /**
