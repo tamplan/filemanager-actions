@@ -68,6 +68,8 @@ static void       v_on_selection_changed( GtkTreeSelection *selection, gpointer 
 static gboolean   v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
 static gboolean   v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer data );
 
+static void       setup_action( GtkWidget *treeview, GtkTreeStore *model, GtkTreeIter *iter, NAAction *action );
+static void       setup_profile( GtkWidget *treeview, GtkTreeStore *model, GtkTreeIter *iter, NAActionProfile *profile );
 static gint       sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, NactWindow *window );
 static gboolean   filter_visible( GtkTreeModel *model, GtkTreeIter *iter, gpointer data );
 static GtkWidget *get_actions_list_widget( NactWindow *window );
@@ -160,8 +162,6 @@ nact_iactions_list_initial_load( NactWindow *window )
 	GtkTreeStore *ts_model = gtk_tree_store_new(
 			IACTIONS_LIST_N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, NA_OBJECT_TYPE );
 
-	GtkTreeModel *tmf_model = gtk_tree_model_filter_new( GTK_TREE_MODEL( ts_model ), NULL );
-
 	gtk_tree_sortable_set_default_sort_func(
 			GTK_TREE_SORTABLE( ts_model ),
 	        ( GtkTreeIterCompareFunc ) sort_actions_list, window, NULL );
@@ -169,6 +169,8 @@ nact_iactions_list_initial_load( NactWindow *window )
 	gtk_tree_sortable_set_sort_column_id(
 			GTK_TREE_SORTABLE( ts_model ),
 			IACTIONS_LIST_LABEL_COLUMN, GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID );
+
+	GtkTreeModel *tmf_model = gtk_tree_model_filter_new( GTK_TREE_MODEL( ts_model ), NULL );
 
 	gtk_tree_model_filter_set_visible_func(
 			GTK_TREE_MODEL_FILTER( tmf_model ), ( GtkTreeModelFilterVisibleFunc ) filter_visible, window, NULL );
@@ -256,43 +258,10 @@ nact_iactions_list_fill( NactWindow *window )
 
 	for( ia = actions ; ia != NULL ; ia = ia->next ){
 		GtkTreeIter iter;
-		GtkStockItem item;
-		GdkPixbuf* icon = NULL;
-
 		NAAction *action = NA_ACTION( ia->data );
-		gchar *label = na_action_get_label( action );
-		gchar *iconname = na_action_get_icon( action );
-
-		/* TODO: use the same algorythm than Nautilus to find and
-		 * display an icon + move the code to NAAction class +
-		 * remove na_action_get_verified_icon_name
-		 */
-		if( iconname ){
-			if( gtk_stock_lookup( iconname, &item )){
-				icon = gtk_widget_render_icon( widget, iconname, GTK_ICON_SIZE_MENU, NULL );
-
-			} else if( g_file_test( iconname, G_FILE_TEST_EXISTS )
-				   && g_file_test( iconname, G_FILE_TEST_IS_REGULAR )){
-				gint width;
-				gint height;
-				GError* error = NULL;
-
-				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
-				icon = gdk_pixbuf_new_from_file_at_size( iconname, width, height, &error );
-				if( error ){
-					g_warning( "%s: iconname=%s, error=%s", thisfn, iconname, error->message );
-					g_error_free( error );
-					error = NULL;
-					icon = NULL;
-				}
-			}
-		}
 		gtk_tree_store_append( ts_model, &iter, NULL );
-		gtk_tree_store_set( ts_model, &iter,
-				    IACTIONS_LIST_ICON_COLUMN, icon,
-				    IACTIONS_LIST_LABEL_COLUMN, label,
-				    IACTIONS_LIST_NAOBJECT_COLUMN, action,
-				    -1);
+		gtk_tree_store_set( ts_model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, action, -1);
+		setup_action( widget, ts_model, &iter, action );
 		g_debug( "%s: action=%p", thisfn, action );
 
 		GSList *profiles = na_action_get_profiles( action );
@@ -300,17 +269,10 @@ nact_iactions_list_fill( NactWindow *window )
 		GtkTreeIter profile_iter;
 		for( ip = profiles ; ip ; ip = ip->next ){
 			NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
-			gchar *profile_label = na_action_profile_get_label( profile );
 			gtk_tree_store_append( ts_model, &profile_iter, &iter );
-			gtk_tree_store_set( ts_model, &profile_iter,
-					    IACTIONS_LIST_LABEL_COLUMN, profile_label,
-					    IACTIONS_LIST_NAOBJECT_COLUMN, profile,
-					    -1);
-			g_free( profile_label );
+			gtk_tree_store_set( ts_model, &profile_iter, IACTIONS_LIST_NAOBJECT_COLUMN, profile, -1 );
+			setup_profile( widget, ts_model, &profile_iter, profile );
 		}
-
-		g_free( iconname );
-		g_free( label );
 	}
 	/*g_debug( "%s: at end, actions has %d elements", thisfn, g_slist_length( actions ));*/
 
@@ -465,6 +427,63 @@ nact_iactions_list_toggle_collapse( NactWindow *window )
 }
 
 /**
+ * Update the listbox when a field has been modified in one of the tabs.
+ *
+ * @action: the NAAction whose one field has been modified ; the field
+ * can be a profile field or an action field, whatever be the currently
+ * selected row.
+ *
+ * e.g. while the currently selected row is a profile, user may have
+ * modified the action label or the action icon : we wish report this
+ * modification on the listbox
+ */
+void
+nact_iactions_list_update_selected( NactWindow *window, NAAction *action )
+{
+	GtkWidget *treeview = get_actions_list_widget( window );
+	GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( treeview ));
+
+	GtkTreeModel *tm_model;
+	GtkTreeIter iter;
+	if( gtk_tree_selection_get_selected( selection, &tm_model, &iter )){
+
+		NAObject *object;
+		gtk_tree_model_get( tm_model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+		g_assert( object );
+
+		GtkTreePath *path = gtk_tree_model_get_path( tm_model, &iter );
+
+		GtkTreeModelFilter *tmf_model = GTK_TREE_MODEL_FILTER( gtk_tree_view_get_model( GTK_TREE_VIEW( treeview )));
+		GtkTreeStore *ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( tmf_model ));
+		GtkTreeIter ts_iter;
+		gtk_tree_model_get_iter( GTK_TREE_MODEL( ts_model ), &ts_iter, path );
+
+		if( NA_IS_ACTION( object )){
+			g_assert( object == NA_OBJECT( action ));
+			/*g_debug( "nact_iactions_list_update_selected: selected action=%p", object );*/
+			setup_action( treeview, ts_model, &ts_iter, action );
+
+		} else {
+			g_assert( NA_IS_ACTION_PROFILE( object ));
+			/*g_debug( "nact_iactions_list_update_selected: selected profile=%p", object );*/
+			GSList *profiles = na_action_get_profiles( action );
+			GSList *ip;
+			for( ip = profiles ; ip ; ip = ip->next ){
+				if( object == NA_OBJECT( ip->data )){
+					setup_profile( treeview, ts_model, &ts_iter, NA_ACTION_PROFILE( ip->data ));
+					break;
+				}
+			}
+
+			if( gtk_tree_path_up( path )){
+				gtk_tree_model_get_iter( GTK_TREE_MODEL( ts_model ), &ts_iter, path );
+				setup_action( treeview, ts_model, &ts_iter, action );
+			}
+		}
+	}
+}
+
+/**
  * Does the IActionsList box support multiple selection ?
  */
 void
@@ -593,6 +612,55 @@ v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer user_dat
 		}
 	}
 	return( stop );
+}
+
+static void
+setup_action( GtkWidget *treeview, GtkTreeStore *model, GtkTreeIter *iter, NAAction *action )
+{
+	static const gchar *thisfn = "nact_iactions_list_setup_action";
+	GtkStockItem item;
+	GdkPixbuf* icon = NULL;
+
+	gchar *label = na_action_get_label( action );
+	gchar *iconname = na_action_get_icon( action );
+
+	/* TODO: use the same algorythm than Nautilus to find and
+	 * display an icon + move the code to NAAction class +
+	 * remove na_action_get_verified_icon_name
+	 */
+	if( iconname ){
+		if( gtk_stock_lookup( iconname, &item )){
+			icon = gtk_widget_render_icon( treeview, iconname, GTK_ICON_SIZE_MENU, NULL );
+
+		} else if( g_file_test( iconname, G_FILE_TEST_EXISTS )
+			   && g_file_test( iconname, G_FILE_TEST_IS_REGULAR )){
+			gint width;
+			gint height;
+			GError* error = NULL;
+
+			gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
+			icon = gdk_pixbuf_new_from_file_at_size( iconname, width, height, &error );
+			if( error ){
+				g_warning( "%s: iconname=%s, error=%s", thisfn, iconname, error->message );
+				g_error_free( error );
+				error = NULL;
+				icon = NULL;
+			}
+		}
+	}
+
+	gtk_tree_store_set( model, iter, IACTIONS_LIST_ICON_COLUMN, icon, IACTIONS_LIST_LABEL_COLUMN, label, -1 );
+
+	g_free( iconname );
+	g_free( label );
+}
+
+static void
+setup_profile( GtkWidget *treeview, GtkTreeStore *model, GtkTreeIter *iter, NAActionProfile *profile )
+{
+	gchar *label = na_action_profile_get_label( profile );
+	gtk_tree_store_set( model, iter, IACTIONS_LIST_LABEL_COLUMN, label, -1);
+	g_free( label );
 }
 
 static gint

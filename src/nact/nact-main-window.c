@@ -736,6 +736,8 @@ on_modified_field( NactWindow *window )
 
 	setup_dialog_title( NACT_MAIN_WINDOW( window ));
 	setup_dialog_menu( NACT_MAIN_WINDOW( window ));
+
+	nact_iactions_list_update_selected( window, NACT_MAIN_WINDOW( window )->private->edited_action );
 }
 
 static void

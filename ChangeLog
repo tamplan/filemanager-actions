@@ -10,10 +10,11 @@
 	* src/nact/Makefile.am: Updated accordingly.
 
 	* src/nact/nact-iactions-list.c:
-	* src/nact/nact-iactions-list.h:
+	* src/nact/nact-iactions-list.h
+	(nact_iactions_list_toggle_collapse,
+	nact_iactions_list_update_selected): New functions.
 	Uses GtkSortable interface.
 	Remove set_sorted_actions API.
-	nact_iactions_list_toggle_collapse: new function.
 
 	* src/nact/nact-icommand-tab.c:
 	Disable the example label when there is no current profile.

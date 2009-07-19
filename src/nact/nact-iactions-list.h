@@ -79,6 +79,7 @@ GSList  * nact_iactions_list_get_selected_actions( NactWindow *window );
 /*void      nact_iactions_list_set_focus( NactWindow *window );*/
 void      nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified, gboolean can_save );
 void      nact_iactions_list_toggle_collapse( NactWindow *window );
+void      nact_iactions_list_update_selected( NactWindow *window, NAAction *action );
 
 void      nact_iactions_list_set_multiple_selection( NactWindow *window, gboolean multiple );
 void      nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );
