@@ -64,14 +64,13 @@ static void       interface_base_init( NactIActionsListInterface *klass );
 static void       interface_base_finalize( NactIActionsListInterface *klass );
 
 static GSList    *v_get_actions( NactWindow *window );
-static void       v_set_sorted_actions( NactWindow *window, GSList *actions );
 static void       v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean   v_on_button_press_event( GtkWidget *widget, GdkEventButton *event, gpointer data );
 static gboolean   v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer data );
 
+static gint       sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, NactWindow *window );
 static gboolean   filter_visible( GtkTreeModel *model, GtkTreeIter *iter, gpointer data );
 static GtkWidget *get_actions_list_widget( NactWindow *window );
-static gint       sort_actions_by_label( gconstpointer a1, gconstpointer a2 );
 
 GType
 nact_iactions_list_get_type( void )
@@ -163,6 +162,14 @@ nact_iactions_list_initial_load( NactWindow *window )
 
 	GtkTreeModel *tmf_model = gtk_tree_model_filter_new( GTK_TREE_MODEL( ts_model ), NULL );
 
+	gtk_tree_sortable_set_default_sort_func(
+			GTK_TREE_SORTABLE( ts_model ),
+	        ( GtkTreeIterCompareFunc ) sort_actions_list, window, NULL );
+
+	gtk_tree_sortable_set_sort_column_id(
+			GTK_TREE_SORTABLE( ts_model ),
+			IACTIONS_LIST_LABEL_COLUMN, GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID );
+
 	gtk_tree_model_filter_set_visible_func(
 			GTK_TREE_MODEL_FILTER( tmf_model ), ( GtkTreeModelFilterVisibleFunc ) filter_visible, window, NULL );
 
@@ -244,8 +251,8 @@ nact_iactions_list_fill( NactWindow *window )
 	gtk_tree_store_clear( ts_model );
 
 	GSList *actions = v_get_actions( window );
-	actions = g_slist_sort( actions, ( GCompareFunc ) sort_actions_by_label );
-	v_set_sorted_actions( window, actions );
+	/*actions = g_slist_sort( actions, ( GCompareFunc ) sort_actions_by_label );
+	v_set_sorted_actions( window, actions );*/
 
 	GSList *ia;
 	/*g_debug( "%s: actions has %d elements", thisfn, g_slist_length( actions ));*/
@@ -481,7 +488,7 @@ v_get_actions( NactWindow *window )
 	return( NULL );
 }
 
-static void
+/*static void
 v_set_sorted_actions( NactWindow *window, GSList *actions )
 {
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
@@ -490,7 +497,7 @@ v_set_sorted_actions( NactWindow *window, GSList *actions )
 	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->set_sorted_actions ){
 		NACT_IACTIONS_LIST_GET_INTERFACE( instance )->set_sorted_actions( window, actions );
 	}
-}
+}*/
 
 static void
 v_on_selection_changed( GtkTreeSelection *selection, gpointer user_data )
@@ -564,6 +571,23 @@ v_on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer user_dat
 	return( stop );
 }
 
+static gint
+sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, NactWindow *window )
+{
+	g_debug( "sort_actions_list" );
+	gchar *labela, *labelb;
+
+	gtk_tree_model_get( model, a, IACTIONS_LIST_LABEL_COLUMN, &labela, -1 );
+	gtk_tree_model_get( model, b, IACTIONS_LIST_LABEL_COLUMN, &labelb, -1 );
+
+	gint ret = g_utf8_collate( labela, labelb );
+
+	g_free( labela );
+	g_free( labelb );
+
+	return( ret );
+}
+
 static gboolean
 filter_visible( GtkTreeModel *model, GtkTreeIter *iter, gpointer data )
 {
@@ -587,21 +611,4 @@ static GtkWidget *
 get_actions_list_widget( NactWindow *window )
 {
 	return( base_window_get_widget( BASE_WINDOW( window ), "ActionsList" ));
-}
-
-static gint
-sort_actions_by_label( gconstpointer a1, gconstpointer a2 )
-{
-	NAAction *action1 = NA_ACTION( a1 );
-	gchar *label1 = na_action_get_label( action1 );
-
-	NAAction *action2 = NA_ACTION( a2 );
-	gchar *label2 = na_action_get_label( action2 );
-
-	gint ret = g_utf8_collate( label1, label2 );
-
-	g_free( label1 );
-	g_free( label2 );
-
-	return( ret );
 }

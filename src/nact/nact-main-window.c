@@ -91,7 +91,6 @@ static void             instance_finalize( GObject *application );
 static gchar           *get_iprefs_window_id( NactWindow *window );
 static gchar           *get_toplevel_name( BaseWindow *window );
 static GSList          *get_actions( NactWindow *window );
-static void             set_sorted_actions( NactWindow *window, GSList *actions );
 
 static void             on_initial_load_toplevel( BaseWindow *window );
 static void             create_file_menu( BaseWindow *window, GtkMenuBar *menubar );
@@ -259,7 +258,6 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, iface );
 
 	iface->get_actions = get_actions;
-	iface->set_sorted_actions = set_sorted_actions;
 	iface->on_selection_changed = on_actions_list_selection_changed;
 	iface->on_double_click = on_actions_list_double_click;
 	iface->on_enter_key_pressed = on_actions_list_enter_key_pressed;
@@ -414,13 +412,6 @@ get_actions( NactWindow *window )
 	return( NACT_MAIN_WINDOW( window )->private->actions );
 }
 
-static void
-set_sorted_actions( NactWindow *window, GSList *actions )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	NACT_MAIN_WINDOW( window )->private->actions = actions;
-}
-
 /*
  * note that for this NactMainWindow, on_initial_load_toplevel and
  * on_runtime_init_toplevel are equivalent, as there is only one
@@ -494,10 +485,10 @@ create_file_menu( BaseWindow *window, GtkMenuBar *menubar )
 	GtkWidget *menu = gtk_menu_new();
 	gtk_menu_item_set_submenu( GTK_MENU_ITEM( file ), menu );
 
-	/* i18n: 'New action' item in 'File' menu */
-	GtkWidget *item = gtk_image_menu_item_new_with_label( _( "New _action" ));
+	GtkWidget *item = gtk_image_menu_item_new_from_stock( GTK_STOCK_NEW, NULL );
+	/* i18n: 'New action' item in 'File' menu - use same accelerator than GTK_STOCK_NEW item */
+	gtk_menu_item_set_label( GTK_MENU_ITEM( item ), _( "_New action" ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
 	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", G_CALLBACK( on_new_action_activated ));
 	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "select", G_CALLBACK( on_new_action_selected ));
 	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "deselect", G_CALLBACK( on_menu_item_deselected ));
@@ -816,7 +807,11 @@ get_schemes( NactWindow *window )
 static void
 on_new_action_activated( GtkMenuItem *item, gpointer user_data )
 {
+	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
+	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
 
+	NAAction *action = na_action_new_with_profile();
+	window->private->actions = g_slist_prepend( window->private->actions, action );
 }
 
 static void
