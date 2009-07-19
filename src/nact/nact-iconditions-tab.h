@@ -61,14 +61,16 @@ typedef struct {
 }
 	NactIConditionsTabInterface;
 
-GType nact_iconditions_tab_get_type( void );
+GType    nact_iconditions_tab_get_type( void );
 
-void  nact_iconditions_tab_initial_load( NactWindow *dialog );
-void  nact_iconditions_tab_runtime_init( NactWindow *dialog );
-void  nact_iconditions_tab_all_widgets_showed( NactWindow *dialog );
-void  nact_iconditions_tab_dispose( NactWindow *dialog );
+void     nact_iconditions_tab_initial_load( NactWindow *dialog );
+void     nact_iconditions_tab_runtime_init( NactWindow *dialog );
+void     nact_iconditions_tab_all_widgets_showed( NactWindow *dialog );
+void     nact_iconditions_tab_dispose( NactWindow *dialog );
 
-void  nact_iconditions_tab_set_profile( NactWindow *window, NAActionProfile *profile );
+void     nact_iconditions_tab_set_profile( NactWindow *window, NAActionProfile *profile );
+void     nact_iconditions_tab_get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
+gboolean nact_iconditions_tab_get_multiple( NactWindow *window );
 
 G_END_DECLS
 

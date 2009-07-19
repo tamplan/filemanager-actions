@@ -1,3 +1,30 @@
+2009-07-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-action-conditions-editor.c:
+	* src/nact/nact-action-conditions-editor.h:
+	* src/nact/nact-action-profiles-editor.c:
+	* src/nact/nact-action-profiles-editor.h:
+	* src/nact/nact-profile-conditions-editor.c:
+	* src/nact/nact-profile-conditions-editor.h: Removed files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-icommand-tab.c:
+	Disable the example label when there is no current profile.
+
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-iconditions-tab.h
+	(nact_iconditions_tab_get_isfiledir,
+	nact_iconditions_tab_get_multiple): New functions.
+
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-iadvanced-tab.h (nact_iadvanced_tab_get_schemes):
+	New function.
+
+	* src/nact/nautilus-actions-config.ui:
+	Example label now wraps on more than two lines.
+	Scheme lists now is more than four rows.
+
 2009-07-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-action.c:

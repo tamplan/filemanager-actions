@@ -42,8 +42,6 @@
 #include <common/na-ipivot-container.h>
 
 #include "nact-application.h"
-#include "nact-action-conditions-editor.h"
-#include "nact-action-profiles-editor.h"
 #include "nact-assist-export.h"
 #include "nact-assist-import.h"
 #include "nact-iactions-list.h"
@@ -800,19 +798,19 @@ is_action_to_save( const NAAction *action )
 static void
 get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir )
 {
-
+	nact_iconditions_tab_get_isfiledir( window, isfile, isdir );
 }
 
 static gboolean
 get_multiple( NactWindow *window )
 {
-	return( FALSE );
+	return( nact_iconditions_tab_get_multiple( window ));
 }
 
 static GSList *
 get_schemes( NactWindow *window )
 {
-	return( NULL );
+	return( nact_iadvanced_tab_get_schemes( window ));
 }
 
 static void

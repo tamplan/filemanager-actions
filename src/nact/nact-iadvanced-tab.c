@@ -71,7 +71,7 @@ static void             scheme_cell_edited( NactWindow *window, const gchar *pat
 static GtkTreeView     *get_schemes_tree_view( NactWindow *window );
 static GtkTreeModel    *get_schemes_tree_model( NactWindow *window );
 static void             create_schemes_selection_list( NactWindow *window );
-/*static gboolean         get_action_schemes_list( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, gpointer data );*/
+static gboolean         get_action_schemes_list( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, gpointer data );
 static GSList          *get_schemes_default_list( NactWindow *window );
 static gboolean         reset_schemes_list( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data );
 static void             set_action_schemes( gchar *scheme, GtkTreeModel *model );
@@ -221,6 +221,19 @@ nact_iadvanced_tab_set_profile( NactWindow *dialog, NAActionProfile *profile )
 
 	GtkButton *remove = get_remove_button( dialog );
 	gtk_widget_set_sensitive( GTK_WIDGET( remove ), profile != NULL );
+}
+
+/**
+ * Returns selected schemes as a list of strings.
+ * The caller should call na_utils_free_string_list after use.
+ */
+GSList *
+nact_iadvanced_tab_get_schemes( NactWindow *window )
+{
+	GSList *list = NULL;
+	GtkTreeModel* scheme_model = get_schemes_tree_model( window );
+	gtk_tree_model_foreach( scheme_model, ( GtkTreeModelForeachFunc ) get_action_schemes_list, &list );
+	return( list );
 }
 
 static NAActionProfile *
@@ -476,29 +489,32 @@ create_schemes_selection_list( NactWindow *window )
 	gtk_tree_view_append_column( GTK_TREE_VIEW( listview ), column );
 }
 
-/*static gboolean
+/*
+ * CommandExampleLabel is updated each time a field is modified
+ * And at each time, we need the list of selected schemes
+ */
+static gboolean
 get_action_schemes_list( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, gpointer data )
 {
-	static const char *thisfn = "nact_iadvanced_tab_get_action_schemes_list";
+	/*static const char *thisfn = "nact_iadvanced_tab_get_action_schemes_list";*/
 
 	GSList** list = data;
 	gboolean toggle_state;
 	gchar* scheme;
 
-	gtk_tree_model_get (scheme_model, iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state, SCHEMES_KEYWORD_COLUMN, &scheme, -1);
+	gtk_tree_model_get( scheme_model, iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state, SCHEMES_KEYWORD_COLUMN, &scheme, -1 );
 
-	if (toggle_state)
-	{
-		g_debug( "%s: adding '%s' scheme", thisfn, scheme );
-		(*list) = g_slist_append ((*list), scheme);
-	}
-	else
-	{
-		g_free (scheme);
+	if( toggle_state ){
+		/*g_debug( "%s: adding '%s' scheme", thisfn, scheme );*/
+		( *list ) = g_slist_append(( *list ), scheme );
+
+	} else {
+		g_free( scheme );
 	}
 
-	return FALSE; *//* Don't stop looping *//*
-}*/
+	 /* don't stop looping */
+	return( FALSE );
+}
 
 static GSList *
 get_schemes_default_list( NactWindow *window )

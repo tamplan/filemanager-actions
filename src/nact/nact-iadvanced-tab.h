@@ -61,14 +61,15 @@ typedef struct {
 }
 	NactIAdvancedTabInterface;
 
-GType nact_iadvanced_tab_get_type( void );
+GType   nact_iadvanced_tab_get_type( void );
 
-void  nact_iadvanced_tab_initial_load( NactWindow *dialog );
-void  nact_iadvanced_tab_runtime_init( NactWindow *dialog );
-void  nact_iadvanced_tab_all_widgets_showed( NactWindow *dialog );
-void  nact_iadvanced_tab_dispose( NactWindow *dialog );
+void    nact_iadvanced_tab_initial_load( NactWindow *dialog );
+void    nact_iadvanced_tab_runtime_init( NactWindow *dialog );
+void    nact_iadvanced_tab_all_widgets_showed( NactWindow *dialog );
+void    nact_iadvanced_tab_dispose( NactWindow *dialog );
 
-void  nact_iadvanced_tab_set_profile( NactWindow *window, NAActionProfile *profile );
+void    nact_iadvanced_tab_set_profile( NactWindow *window, NAActionProfile *profile );
+GSList *nact_iadvanced_tab_get_schemes( NactWindow *window );
 
 G_END_DECLS
 

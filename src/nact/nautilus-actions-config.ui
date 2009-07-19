@@ -315,7 +315,7 @@
                                 <child>
                                   <object class="GtkTable" id="table2">
                                     <property name="visible">True</property>
-                                    <property name="n_rows">3</property>
+                                    <property name="n_rows">2</property>
                                     <property name="n_columns">3</property>
                                     <property name="column_spacing">6</property>
                                     <property name="row_spacing">6</property>
@@ -398,6 +398,24 @@
                                         <property name="y_options"></property>
                                       </packing>
                                     </child>
+                                  </object>
+                                  <packing>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkHBox" id="hbox1">
+                                    <property name="visible">True</property>
+                                    <child>
+                                      <object class="GtkLabel" id="CommandExamplePreLabel">
+                                        <property name="visible">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
                                     <child>
                                       <object class="GtkLabel" id="CommandExampleLabel">
                                         <property name="visible">True</property>
@@ -406,22 +424,12 @@
                                         <property name="wrap">True</property>
                                       </object>
                                       <packing>
-                                        <property name="left_attach">1</property>
-                                        <property name="right_attach">2</property>
-                                        <property name="top_attach">2</property>
-                                        <property name="bottom_attach">3</property>
+                                        <property name="position">1</property>
                                       </packing>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
                                     </child>
                                   </object>
                                   <packing>
-                                    <property name="fill">False</property>
-                                    <property name="position">1</property>
+                                    <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
@@ -680,100 +688,84 @@
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkVBox" id="vbox15">
+                          <object class="GtkVBox" id="vbox340">
                             <property name="visible">True</property>
+                            <property name="border_width">12</property>
                             <property name="orientation">vertical</property>
                             <property name="spacing">10</property>
                             <child>
-                              <object class="GtkLabel" id="label20">
+                              <object class="GtkLabel" id="label46">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Appears if scheme is in this list&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
                               </object>
                               <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkVBox" id="vbox2">
+                              <object class="GtkHBox" id="hbox38">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
+                                <property name="spacing">6</property>
                                 <child>
-                                  <object class="GtkHBox" id="hbox5">
+                                  <object class="GtkScrolledWindow" id="scrolledwindow4">
                                     <property name="visible">True</property>
-                                    <property name="spacing">6</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="hscrollbar_policy">automatic</property>
+                                    <property name="vscrollbar_policy">automatic</property>
+                                    <property name="shadow_type">in</property>
                                     <child>
-                                      <object class="GtkScrolledWindow" id="scrolledwindow2">
+                                      <object class="GtkTreeView" id="SchemesTreeView">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
-                                        <property name="hscrollbar_policy">automatic</property>
-                                        <property name="vscrollbar_policy">automatic</property>
+                                        <property name="headers_visible">False</property>
+                                        <property name="rules_hint">True</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkVBox" id="vbox345">
+                                    <property name="visible">True</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkButton" id="AddSchemeButton">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
                                         <child>
-                                          <object class="GtkScrolledWindow" id="scrolledwindow4">
+                                          <object class="GtkImage" id="image16">
                                             <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="hscrollbar_policy">automatic</property>
-                                            <property name="vscrollbar_policy">automatic</property>
-                                            <property name="shadow_type">in</property>
-                                            <child>
-                                              <object class="GtkTreeView" id="SchemesTreeView">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                                <property name="headers_visible">False</property>
-                                                <property name="rules_hint">True</property>
-                                              </object>
-                                            </child>
+                                            <property name="stock">gtk-add</property>
+                                            <property name="icon-size">4</property>
                                           </object>
                                         </child>
                                       </object>
                                       <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkVButtonBox" id="vbuttonbox1">
+                                      <object class="GtkButton" id="RemoveSchemeButton">
                                         <property name="visible">True</property>
-                                        <property name="spacing">6</property>
-                                        <property name="layout_style">start</property>
+                                        <property name="sensitive">False</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
                                         <child>
-                                          <object class="GtkButton" id="AddSchemeButton">
+                                          <object class="GtkImage" id="image17">
                                             <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="receives_default">True</property>
-                                            <child>
-                                              <object class="GtkImage" id="image16">
-                                                <property name="visible">True</property>
-                                                <property name="stock">gtk-add</property>
-                                                <property name="icon-size">4</property>
-                                              </object>
-                                            </child>
+                                            <property name="stock">gtk-remove</property>
+                                            <property name="icon-size">4</property>
                                           </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">False</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkButton" id="RemoveSchemeButton">
-                                            <property name="visible">True</property>
-                                            <property name="sensitive">False</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="receives_default">True</property>
-                                            <child>
-                                              <object class="GtkImage" id="image17">
-                                                <property name="visible">True</property>
-                                                <property name="stock">gtk-remove</property>
-                                                <property name="icon-size">4</property>
-                                              </object>
-                                            </child>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">False</property>
-                                            <property name="position">1</property>
-                                          </packing>
                                         </child>
                                       </object>
                                       <packing>
@@ -785,7 +777,8 @@
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
-                                    <property name="position">0</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
                                   </packing>
                                 </child>
                               </object>
@@ -795,8 +788,6 @@
                             </child>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="padding">10</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
@@ -1204,6 +1195,7 @@ file(s)/folder(s)</property>
       <widget name="ProfileLabelLabel"/>
       <widget name="CommandPathLabel"/>
       <widget name="CommandParametersLabel"/>
+      <widget name="CommandExamplePreLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">

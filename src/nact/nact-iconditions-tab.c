@@ -59,7 +59,6 @@ static GtkButton       *get_matchcase_button( NactWindow *window );
 static void             on_mimetypes_changed( GtkEntry *entry, gpointer user_data );
 static GtkWidget       *get_mimetypes_entry( NactWindow *window );
 static void             on_isfiledir_toggled( GtkToggleButton *button, gpointer user_data );
-static void             get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
 static void             set_isfiledir( NactWindow *window, gboolean isfile, gboolean isdir );
 static GtkButton       *get_isfile_button( NactWindow *window );
 static GtkButton       *get_isdir_button( NactWindow *window );
@@ -227,6 +226,29 @@ nact_iconditions_tab_set_profile( NactWindow *dialog, NAActionProfile *profile )
 	gtk_widget_set_sensitive( GTK_WIDGET( multiple_button ), profile != NULL );
 }
 
+void
+nact_iconditions_tab_get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir )
+{
+	g_assert( isfile );
+	g_assert( isdir );
+
+	gboolean both = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_both_button( window )));
+	if( both ){
+		*isfile = TRUE;
+		*isdir = TRUE;
+	} else {
+		*isfile = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_isfile_button( window )));
+		*isdir = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_isdir_button( window )));
+	}
+}
+
+gboolean
+nact_iconditions_tab_get_multiple( NactWindow *window )
+{
+	GtkButton *button = get_multiple_button( window );
+	return( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button )));
+}
+
 static NAActionProfile *
 v_get_edited_profile( NactWindow *window )
 {
@@ -332,27 +354,11 @@ on_isfiledir_toggled( GtkToggleButton *button, gpointer user_data )
 	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
 	if( edited ){
 		gboolean isfile, isdir;
-		get_isfiledir( dialog, &isfile, &isdir );
+		nact_iconditions_tab_get_isfiledir( dialog, &isfile, &isdir );
 		na_action_profile_set_isfiledir( edited, isfile, isdir );
 	}
 
 	v_field_modified( dialog );
-}
-
-static void
-get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir )
-{
-	g_assert( isfile );
-	g_assert( isdir );
-
-	gboolean both = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_both_button( window )));
-	if( both ){
-		*isfile = TRUE;
-		*isdir = TRUE;
-	} else {
-		*isfile = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_isfile_button( window )));
-		*isdir = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_isdir_button( window )));
-	}
 }
 
 static void
