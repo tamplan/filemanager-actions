@@ -75,8 +75,8 @@ void      nact_iactions_list_runtime_init( NactWindow *window );
 void      nact_iactions_list_fill( NactWindow *window );
 NAObject *nact_iactions_list_get_selected_action( NactWindow *window );
 GSList  * nact_iactions_list_get_selected_actions( NactWindow *window );
-void      nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label );
-void      nact_iactions_list_set_focus( NactWindow *window );
+/*void      nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label );*/
+/*void      nact_iactions_list_set_focus( NactWindow *window );*/
 void      nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified, gboolean can_save );
 void      nact_iactions_list_toggle_collapse( NactWindow *window );
 

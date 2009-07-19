@@ -321,7 +321,7 @@ nact_iactions_list_fill( NactWindow *window )
  * Set the selection to the named action.
  * If not found, we select the first following, else the previous one.
  */
-void
+/*void
 nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const gchar *label )
 {
 	static const gchar *thisfn = "nact_iactions_list_set_selection";
@@ -367,17 +367,17 @@ nact_iactions_list_set_selection( NactWindow *window, const gchar *uuid, const g
 	if( !found && count ){
 		gtk_tree_selection_select_iter( selection, &previous );
 	}
-}
+}*/
 
 /**
  * Reset the focus on the ActionsList listbox.
  */
-void
+/*void
 nact_iactions_list_set_focus( NactWindow *window )
 {
 	GtkWidget *list = get_actions_list_widget( window );
 	gtk_widget_grab_focus( list );
-}
+}*/
 
 /**
  * Returns the currently selected action or profile.
