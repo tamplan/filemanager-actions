@@ -130,6 +130,7 @@
                                   <object class="GtkEntry" id="ActionLabelEntry">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">Label of the menu item in the Nautilus popup menu.</property>
                                     <property name="invisible_char">&#x25CF;</property>
                                   </object>
                                   <packing>
@@ -141,6 +142,7 @@
                                   <object class="GtkEntry" id="ActionTooltipEntry">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">Tooltip of the menu item that will appear in the Nautilus statusbar.</property>
                                     <property name="invisible_char">&#x25CF;</property>
                                   </object>
                                   <packing>
@@ -178,6 +180,7 @@
                                     <child>
                                       <object class="GtkComboBoxEntry" id="ActionIconComboBoxEntry">
                                         <property name="visible">True</property>
+                                        <property name="tooltip_text" translatable="yes">Select the icon which will appear in the Nautilus context menu.</property>
                                         <child>
                                           <object class="GtkCellRendererText" id="cellrenderertext1"/>
                                           <attributes>
@@ -195,6 +198,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">Click to choose a custom icon from a file instead of a predefined icon from the drop-down list.</property>
                                         <property name="image">image3</property>
                                         <property name="use_underline">True</property>
                                       </object>
@@ -280,6 +284,7 @@
                                       <object class="GtkEntry" id="ProfileLabelEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">The name of the profile.</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -344,6 +349,7 @@
                                       <object class="GtkEntry" id="CommandPathEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">The command that will be launched by selecting the action in Nautilus popup menu.</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -357,6 +363,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">Click to choose a command from the file chooser dialog.</property>
                                         <property name="image">image2</property>
                                         <property name="use_underline">True</property>
                                       </object>
@@ -371,6 +378,7 @@
                                       <object class="GtkEntry" id="CommandParametersEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">Parameters that will be sent to the program. Click on the 'Legend' button to see the different replacement tokens.</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -386,6 +394,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">Click to toggle the display of the list of special tokens you can use in the parameter field.</property>
                                         <property name="image">image1</property>
                                         <property name="use_underline">True</property>
                                       </object>
@@ -518,6 +527,7 @@
                                       <object class="GtkEntry" id="ConditionsFilenamesEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">A string with wildcards (? or *) that will be used to match the filenames. You can set several filename patterns by separating them with a semi-colon (;).</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -529,6 +539,7 @@
                                       <object class="GtkEntry" id="ConditionsMimetypesEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">A string with wildcards (? or *) that will be used to match the mimetypes of files. You can set several mimetype patterns by separating them with a semi-colon (;).</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -544,6 +555,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">If selected, the filename patterns will be matched case sensitive (eg, *.jpg will not match photo.JPG).</property>
                                         <property name="xalign">0</property>
                                         <property name="active">True</property>
                                         <property name="draw_indicator">True</property>
@@ -593,6 +605,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">If selected, item will appear in the Nautilus context menu if and only if the selection contains only files.</property>
                                         <property name="xalign">0</property>
                                         <property name="active">True</property>
                                         <property name="draw_indicator">True</property>
@@ -607,6 +620,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">If selected, item will appear in the Nautilus context menu if and only if the selection contains only folders.</property>
                                         <property name="xalign">0</property>
                                         <property name="draw_indicator">True</property>
                                         <property name="group">ConditionsOnlyFilesButton</property>
@@ -621,6 +635,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">If selected, item will always appear in the Nautilus context menu.</property>
                                         <property name="xalign">0</property>
                                         <property name="draw_indicator">True</property>
                                         <property name="group">ConditionsOnlyFilesButton</property>
@@ -649,6 +664,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">If selected, item will always appear in the Nautilus context menu. Else it will appear if and only if the selection contains only one file or folder.</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
@@ -721,6 +737,7 @@
                                       <object class="GtkTreeView" id="SchemesTreeView">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">Select the kind of files where you want your action to appear. If you don't know what to choose, try selecting just 'file' which is the most common choice. You can add a new scheme by clicking on the '+' button.</property>
                                         <property name="headers_visible">False</property>
                                         <property name="rules_hint">True</property>
                                       </object>
@@ -740,6 +757,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">Click to add a new scheme.</property>
                                         <child>
                                           <object class="GtkImage" id="image16">
                                             <property name="visible">True</property>
@@ -760,6 +778,7 @@
                                         <property name="sensitive">False</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">Click to remove the selected scheme.</property>
                                         <child>
                                           <object class="GtkImage" id="image17">
                                             <property name="visible">True</property>

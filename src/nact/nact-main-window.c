@@ -828,7 +828,7 @@ on_new_action_selected( GtkItem *item, gpointer user_data )
 			window->private->status_bar,
 			window->private->status_context,
 			/* i18n: tooltip displayed in the status bar when selecting the 'New action' item */
-			_( "Define a new action" ));
+			_( "Define a new action." ));
 }
 
 static void
@@ -846,7 +846,7 @@ on_new_profile_selected( GtkItem *item, gpointer user_data )
 			window->private->status_bar,
 			window->private->status_context,
 			/* i18n: tooltip displayed in the status bar when selecting the 'New profile' item */
-			_( "Define a new profile attached to the current action" ));
+			_( "Define a new profile attached to the current action." ));
 }
 
 static void
@@ -871,7 +871,7 @@ on_import_selected( GtkItem *item, gpointer user_data )
 			window->private->status_bar,
 			window->private->status_context,
 			/* i18n: tooltip displayed in the status bar when selecting the Import item */
-			_( "Import one or more actions from external (XML) files into your configuration" ));
+			_( "Import one or more actions from external (XML) files into your configuration." ));
 }
 
 static void
@@ -896,7 +896,7 @@ on_export_selected( GtkItem *item, gpointer user_data )
 			window->private->status_bar,
 			window->private->status_context,
 			/* i18n: tooltip displayed in the status bar when selecting the Export item */
-			_( "Export one or more actions from your configuration to external XML files" ));
+			_( "Export one or more actions from your configuration to external XML files." ));
 }
 
 /* TODO: make the website url and the mail addresses clickables
@@ -978,7 +978,7 @@ on_about_selected( GtkItem *item, gpointer user_data )
 			window->private->status_bar,
 			window->private->status_context,
 			/* i18n: tooltip displayed in the status bar when selecting the About item */
-			_( "Display informations about this program" ));
+			_( "Display informations about this program." ));
 }
 
 static void

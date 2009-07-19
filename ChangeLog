@@ -21,9 +21,13 @@
 	* src/nact/nact-iadvanced-tab.h (nact_iadvanced_tab_get_schemes):
 	New function.
 
+	* src/nact/nact-main-window.c:
+	Update menu tooltips to be dot-terminated.
+
 	* src/nact/nautilus-actions-config.ui:
 	Example label now wraps on more than two lines.
 	Scheme lists now is more than four rows.
+	All fields have tooltip.
 
 2009-07-18 Pierre Wieser <pwieser@trychlos.org>
 
