@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.po.master.kn\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
 "POT-Creation-Date: 2009-07-08 12:29+0000\n"
-"PO-Revision-Date: 2009-07-15 22:48+0530\n"
+"PO-Revision-Date: 2009-07-19 18:59+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -51,6 +51,8 @@ msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
 msgstr ""
+"ಆಯ್ಕೆ ಮಾಡಲಾಗಿರುವ ಗೋಚರಿಸುವ ಸ್ಥಿತಿಯ ಸಿದ್ಧತೆಗಳಿಗೆ ತಾಳೆಯಾದಾಗ ನಾಟಿಲಸ್ ಪುಟಿಕೆ ಮೆನುವಿನಲ್ಲಿ "
+"ಕಾಣಿಸಿಕೊಳ್ಳುವ ಮೆನು ಅಂಶದ ಲೇಬಲ್"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:82
 #: ../src/utils/nautilus-actions-new-config.c:58
@@ -61,7 +63,7 @@ msgstr "ಮೆನು ಅಂಶದ ಉಪಕರಣಸಲಹೆ"
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
-msgstr ""
+msgstr "ಬಳಕೆದಾರರು ತಮ್ಮ ಮೌಸ್‌ನ ಸೂಚಕವನ್ನು ನಾಟಿಲಸ್ ಪುಟಿಕೆ ಅಂಶದತ್ತ ಸೂಚಿಸಿದಾಗ ನಾಟಿಲಸ್ ಸ್ಥಿತಿ ಪಟ್ಟಿಯಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುವ ಮೆನು ಅಂಶದ ಉಪಕರಣಸಲಹೆ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:84
 msgid "The icon of the menu item"
@@ -72,6 +74,8 @@ msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
 msgstr ""
+"ಆಯ್ಕೆ ಮಾಡಲಾಗಿರುವ ಗೋಚರಿಸುವ ಸ್ಥಿತಿಯ ಸಿದ್ಧತೆಗಳಿಗೆ ತಾಳೆಯಾದಾಗ ನಾಟಿಲಸ್ ಪುಟಿಕೆ ಮೆನುವಿನಲ್ಲಿನ ಲೇಬಲ್‌ನ "
+"ಎದುರಿಗೆ ಕಾಣಿಸಿಕೊಳ್ಳುವ ಮೆನು ಅಂಶದ ಚಿಹ್ನೆ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:86
 msgid "A description name of the profile"
@@ -82,7 +86,7 @@ msgid ""
 "The field is here to give the user a human readable name for a profile in "
 "the Nact interface. If not set there will be a default auto generated string "
 "set by default"
-msgstr ""
+msgstr "Nact ಸಂಪರ್ಕಸಾಧನದಲ್ಲಿ ಪ್ರೊಫೈಲಿಗೆ ಮನುಷ್ಯರು ಓದುವಂತಹ ಒಂದು ಹೆಸರನ್ನು ನೀಡವು ಸಲುವಾಗಿ ಈ ಸ್ಥಳವಿರುತ್ತದೆ. ಇಲ್ಲದೆ ಹೋದಲ್ಲಿ ಇದು ಒಂದು ಸ್ವಯಂ ಉತ್ಪತ್ತಿಗೊಂಡ ವಾಕ್ಯಕ್ಕೆ ಹೊಂದಿಸಲ್ಪಡುತ್ತದೆ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:88
 #: ../src/utils/nautilus-actions-new-config.c:60
@@ -94,7 +98,7 @@ msgstr "ಆಜ್ಞೆಯ ಮಾರ್ಗ"
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
-msgstr ""
+msgstr "ನಾಟಿಲಸ್ ಪುಟಿಕೆ ಮೆನುವಿನಲ್ಲಿ ಬಳಕೆದಾರರು ಮೆನು ಅಂಶವನ್ನು ಆಯ್ಕೆ ಮಾಡಿದಾಗ ಆರಂಭಗೊಳ್ಳಬೇಕಿರುವ ಆಜ್ಞೆಯ ಮಾರ್ಗ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:90
 #: ../src/utils/nautilus-actions-new-config.c:61
@@ -120,10 +124,25 @@ msgid ""
 "%U: username of the GnomeVFS URI\n"
 "%%: a percent sign"
 msgstr ""
+"ನಾಟಿಲಸ್ ಪುಟಿಕೆ ಮೆನುವಿನಲ್ಲಿ ಬಳಕೆದಾರರು ಮೆನು ಅಂಶವನ್ನು ಆಯ್ಕೆ ಮಾಡಿದಾಗ ಆರಂಭಗೊಳ್ಳಬೇಕಿರುವ "
+"ಆಜ್ಞೆಯ ನಿಯತಾಂಕಗಳು.\n"
+"\n"
+"ನಿಯತಾಂಕಗಳು ಕೆಲವು ವಿಶೇಷ ಟೋಕನ್‌ಗಳನ್ನು ಹೊಂದಿರುತ್ತವೆ ಹಾಗು ಅವುಗಳನ್ನು ಆಜ್ಞೆಯನ್ನು ಆರಂಭಿಸುವ "
+"ಮೊದಲು ನಾಟಿಲಸ್ ಮಾಹಿತಿಯಿಂದ ಬದಲಾಯಿಸಲ್ಪಡುತ್ತದೆ:\n"
+"\n"
+"%d: ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ(ಗಳ) ಮೂಲ ಕಡತಕೋಶ\n"
+"%f: ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ ಹೆಸರು ಅಥವ ಬಳಷ್ಟನ್ನು ಆಯ್ಕೆ ಮಾಡಿದಲ್ಲಿ ಮೊದಲಿನದು\n"
+"%m: ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ(ಗಳ)/ಕಡತಕೋಶದ(ಗಳ) ಮೂಲಹೆಸರುಗಳ ಒಂದು ಪಟ್ಟಿ\n"
+"%M: ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ(ಗಳ)/ಕಡತಕೋಶದ(ಗಳ) ಮೂಲಹೆಸರುಗಳ ಒಂದು ಪಟ್ಟಿ, ಸಂಪೂರ್ಣ ಮಾರ್ಗಗಳೊಂದಿಗೆ\n"
+"%u: GnomeVFS URI\n"
+"%s: GnomeVFS URI ಯ ಸ್ಕೀಮ್\n"
+"%h: GnomeVFS URI ಯ ಅತಿಥೇಯ ಹೆಸರು\n"
+"%U: GnomeVFS URI ನ ಬಳಕೆದಾರ ಹೆಸರು\n"
+"%%: ಒಂದು ಪ್ರತಿಶತ ಸಂಕೇತ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:92
 msgid "The list of pattern to match the selected file(s)/folder(s)"
-msgstr ""
+msgstr "ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತಕ್ಕೆ(ಗಳಿಗೆ)/ಕಡತಕೋಶಕ್ಕೆ(ಗಳಿಗೆ) ತಾಳೆಯಾಗುವ ವಿನ್ಯಾಸದ ಪಟ್ಟಿ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:93
 msgid ""
@@ -131,10 +150,13 @@ msgid ""
 "file(s)/folder(s). Each selected items must match at least one of the "
 "filename patterns for the action to appear"
 msgstr ""
+"ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತಕ್ಕೆ(ಗಳಿಗೆ)/ಕಡತಕೋಶಕ್ಕೆ(ಗಳಿಗೆ) ತಾಳೆಯಾಗುವ ಜೋಕರ್ '*' ಅಥವ '?' ಅನ್ನು "
+"ಒಳಗೊಂಡಿರುವ ವಾಕ್ಯಗಳ ಪಟ್ಟಿ. ಕ್ರಿಯೆಯು ಕಾಣಿಸಿಕೊಳ್ಳಲು ಆಯ್ಕೆ ಮಾಡಲಾದ ಪ್ರತಿಯೊಂದು ಅಂಶಗಳು "
+"ಕನಿಷ್ಟ ಒಂದು ಕಡತದ ಹೆಸರಿನ ವಿನ್ಯಾಸಕ್ಕೆ ತಾಳೆಯಾಗಬೇಕು"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:94
 msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr ""
+msgstr "ಕಡತದ ಹೆಸರುಗಳು ಕೇಸ್ ಸಂವೇದಿಯಾಗಿರಬೇಕಿದ್ದಲ್ಲಿ 'true' ಆಗಿರುತ್ತವೆ, ಇಲ್ಲದೆ ಹೋದಲ್ಲಿ 'false' ಆಗಿರುತ್ತದೆ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:95
 msgid ""
@@ -142,10 +164,13 @@ msgid ""
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
 "'false'"
 msgstr ""
+"ಒಂದು ಕಡತದ ಹೆಸರನ್ನು ಕೇಸ್‌ ಸಂವೇದಿ ರೀತಿಯಲ್ಲಿ ತಾಳೆ ಮಾಡಲು ನೀವು ಬಯಸಿದಲ್ಲಿ, ಈ ಕೀಲಿಯನ್ನು "
+"'true' ಬದಲಾಯಿಸಿ. ನೀವು. ಉದಾಹರಣೆಗೆ '*.jpg' ಯು 'photo.JPG' ಗೆ ತಾಳೆಯಾಗಬೇಕೆಂದು ಬಯಸಿದರೆ, "
+"'false' ಗೆ ಬದಲಾಯಿಸಿ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:96
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
-msgstr ""
+msgstr "ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ(ಗಳ) ಮೈಮ್‌ಬಗೆಗಳಿಗೆ ತಾಳೆಯಾಗುವ ವಿನ್ಯಾಸಗಳ ಪಟ್ಟಿ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:97
 msgid ""
@@ -153,6 +178,9 @@ msgid ""
 "selected file(s). Each selected items must match at least one of the "
 "mimetype patterns for the action to appear"
 msgstr ""
+"ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ(ಗಳ) ಮೈಮ್‌ಬಗೆಗಳಿಗೆ ತಾಳೆಯಾಗುವ ಜೋಕರ್ '*' ಅಥವ '?' ಅನ್ನು ಒಳಗೊಂಡಿರುವ "
+"ವಾಕ್ಯಗಳ ಪಟ್ಟಿ. ಕ್ರಿಯೆಯು ಕಾಣಿಸಿಕೊಳ್ಳಲು ಆಯ್ಕೆ ಮಾಡಲಾದ ಪ್ರತಿಯೊಂದು ಅಂಶಗಳು ಕನಿಷ್ಟ ಒಂದು "
+"ಮೈಮ್‌ಬಗೆಗಳ ವಿನ್ಯಾಸಕ್ಕೆ ತಾಳೆಯಾಗಬೇಕು"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:98
 msgid ""
@@ -173,35 +201,37 @@ msgstr ""
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:99
 msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr ""
+msgstr "ಆಯ್ಕೆಯು ಕಡತವನ್ನು ಹೊಂದಿರುವಂತಿದ್ದರೆ 'true' ಆಗಿರುತ್ತದೆ, ಇಲ್ಲದೆ ಹೋದಲ್ಲಿ 'false' ಆಗಿರುತ್ತದೆ"
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
 #: ../src/common/nautilus-actions-config-gconf-private.h:101
 msgid "This setting is tied in with the 'isdir' setting. "
-msgstr ""
+msgstr "ಈ ಸಿದ್ಧತೆಯನ್ನು 'isdir' ಸಿದ್ಧತೆಯೊಂದಿಗೆ ಜೋಡಿಸಿರಲಾಗಿರುತ್ತದೆ. "
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:102
 msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr ""
+msgstr "ಆಯ್ಕೆಯು ಕಡತಕೋಶವನ್ನು ಹೊಂದಿರುವಂತಿದ್ದರೆ 'true' ಆಗಿರುತ್ತದೆ, ಇಲ್ಲದೆ ಹೋದಲ್ಲಿ 'false' ಆಗಿರುತ್ತದೆ"
 
 #. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
 #: ../src/common/nautilus-actions-config-gconf-private.h:104
 msgid "This setting is tied in with the 'isfile' setting. "
-msgstr ""
+msgstr "ಈ ಸಿದ್ಧತೆಯನ್ನು 'isfile' ಸಿದ್ಧತೆಯೊಂದಿಗೆ ಜೋಡಿಸಿರಲಾಗಿರುತ್ತದೆ. "
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:105
 msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr ""
+msgstr "ಆಯ್ಕೆಯು ಹಲವಾರು ಅಂಶಗಳನ್ನು ಹೊಂದಿರುವಂತಿದ್ದರೆ 'true' ಆಗಿರುತ್ತದೆ, ಇಲ್ಲದೆ ಹೋದಲ್ಲಿ 'false' ಆಗಿರುತ್ತದೆ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:106
 msgid ""
 "If you need one or more files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set 'false'"
 msgstr ""
+"ನೀವು ಒಂದು ಅಥವ ಹೆಚ್ಚಿನ ಕಡತಗಳನ್ನು ಅಥವ ಕಡತಕೋಶಗಳನ್ನು ಆರಿಸಿಕೊಳ್ಳಲು ನೀವು ಬಯಸಿದಲ್ಲಿ, ಇದನ್ನು "
+"'true' ಗೆ ಬದಲಾಯಿಸಿ. ನೀವು ಕೇವಲ ಒಂದು ಕಡತಕೋಶವನ್ನು ಆಯ್ಕೆ ಮಾಡಲು ಬಯಸಿದಲ್ಲಿ 'false' ಗೆ ಬದಲಾಯಿಸಿ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:107
 msgid "The list of GnomeVFS schemes where the selected files should be located"
-msgstr ""
+msgstr "ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತಗಳನ್ನು ಶೇಖರಿಸಿಡಬೇಕಿರುವ GnomeVFS ಸ್ಕೀಮ್‌ಗಳ ಪಟ್ಟಿ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:108
 msgid ""
@@ -223,23 +253,38 @@ msgid ""
 "\n"
 "All GnomeVFS schemes used by Nautilus can be used here."
 msgstr ""
+"ಆಯ್ಕೆ ಮಾಡಲಾದ ಅಂಶಗಳಿಗೆ ತಾಳೆಯಾಗುವ ಮಾನ್ಯವಾದ GnomeVFS ಸ್ಕೀಮ್‌ಗಳನ್ನು ಸೂಚಿಸುವ ಪಟ್ಟಿ. GnomeVFS ಸ್ಕೀಮ್ ಎನ್ನುವುದು ಕಡತಗಳನ್ನು ನಿಲುಕಿಸಿಕೊಳ್ಳಲು ಬಳಸಲಾಗುವ ಪ್ರೊಟೊಕಾಲ್‌ ಆಗಿದೆ. ಬಳಸಬೇಕಿರುವ ಕೀಲಿಪದವು GnomeVFS URI ನಲ್ಲಿ ಬಳಸುವುದಾಗಿರುತ್ತದೆ.\n"
+"\n"
+"GnomeVFS URI ನ ಉದಾಹರಣೆಗಳು: \n"
+"file:///tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt\n"
+"\n"
+"ಹೆಚ್ಚಾಗಿ ಬಳಸಲಾಗುವ ಸ್ಕೀಮ್‌ಗಳು:\n"
+"\n"
+"'file': ಸ್ಥಳೀಯ ಕಡತಗಳು\n"
+"'sftp': ಕಡತಗಳನ್ನು SSH ಮೂಲಕ ನಿಲುಕಿಸಿಕೊಳ್ಳಲಾಗುತ್ತದೆ\n"
+"'ftp': ಕಡತಗಳನ್ನು FTP ಮೂಲಕ ನಿಲುಕಿಸಿಕೊಳ್ಳಲಾಗುತ್ತದೆ\n"
+"'smb': ಕಡತಗಳನ್ನು Samba (ವಿಂಡೋಸ್ ಹಂಚಿಕೆ) ಮೂಲಕ ನಿಲುಕಿಸಿಕೊಳ್ಳಲಾಗುತ್ತದೆ\n"
+"'dav': ಕಡತಗಳನ್ನು WebDav ಮೂಲಕ ನಿಲುಕಿಸಿಕೊಳ್ಳಲಾಗುತ್ತದೆ\n"
+"\n"
+"ನಾಟಿಲಸ್‌ನಿಂದ ಬಳಸಲಾಗುವ ಎಲ್ಲಾ GnomeVFS ಸ್ಕೀಮ್‌ಗಳನ್ನು ಇಲ್ಲಿ ಬಳಸಬಹುದಾಗಿದೆ."
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:109
 msgid "The version of the configuration format"
-msgstr ""
+msgstr "ಸಂರಚನೆಯ ವಿನ್ಯಾಸದ ಆವೃತ್ತಿ"
 
 #: ../src/common/nautilus-actions-config-gconf-private.h:110
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
-msgstr ""
+msgstr "ಹಿಮ್ಮುಖ ಸಹವರ್ತನೀಯತೆಯನ್ನು ನಿರ್ವಹಿಸಲು ಬಳಸಲಾಗುವ ಸಂರಚನಾ ವಿನ್ಯಾಸದ ಆವೃತ್ತಿ"
 
 #. i18n notes: will be displayed in an error dialog concatenated
 #. * to another error message
 #.
 #: ../src/common/nautilus-actions-config-schema-reader.c:193
 msgid " and some profiles are incomplete: "
-msgstr ""
+msgstr " ಹಾಗು ಕೆಲವು ಪ್ರೊಫೈಲುಗಳು ಅಪೂರ್ಣವಾಗಿವೆ: "
 
 #. i18n notes: this is a list separator, it can have more than one
 #. * character (ie, in French it will be ", ")
@@ -278,7 +323,7 @@ msgid ""
 "This config file is more recent than this version of Nautilus-actions can "
 "support. Please upgrade Nautilus-actions to the latest version if you want "
 "to be able to import it (File version: %s (max supported version : %s))"
-msgstr ""
+msgstr "ಈ ಸಂರಚನಾ ಕಡತವು Nautilus-actions ಬೆಂಬಲಿಸುವ ಒಂದು ಆವೃತ್ತಿಗಿಂತ ಹೊಸತಾಗಿದೆ. ನೀವದನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಲು ದಯವಿಟ್ಟು Nautilus-actions ಅನ್ನು ಇತ್ತೀಚಿನ ಒಂದು ಆವೃತ್ತಿಗೆ ನವೀಕರಿಸಿ (ಕಡತದ ಆವೃತ್ತಿ: %s (ಬೆಂಬಲಿಸಲಾಗುವ ಗರಿಷ್ಟ ಆವೃತ್ತಿ : %s))"
 
 #. i18n notes: will be displayed in an error dialog
 #: ../src/common/nautilus-actions-config-schema-reader.c:763
@@ -323,11 +368,11 @@ msgstr "ಲೇಬಲ್"
 #: ../src/nact/nact-editor.c:663 ../src/nact/nact-import-export.c:331
 #: ../src/nact/nact-profile-editor.c:567
 msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr ""
+msgstr "Nautilus ಕ್ರಿಯೆಗಳ ಸಂರಚನಾ ಉಪಕರಣದ ಸಂಪರ್ಕಸಾಧನವನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ"
 
 #: ../src/nact/nact-application.c:246
 msgid "Another instance of Nautilus Actions Configurator is already running."
-msgstr ""
+msgstr "Nautilus ಕ್ರಿಯೆಗಳ ಸಂರಚನಾ ಉಪಕರಣದ ಇನ್ನೊಂದು ಸಂದರ್ಭವು ಈಗಾಗಲೆ ಚಾಲನೆಯಲ್ಲಿದೆ."
 
 #: ../src/nact/nact-application.c:247
 msgid "Please switch back to it."
@@ -538,7 +583,7 @@ msgstr "<b>%%</b>: ಒಂದು ಪ್ರತಿಶತದ ಚಿಹ್ನೆ"
 msgid ""
 "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
 "full paths"
-msgstr ""
+msgstr "<b>%M</b>: ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ(ಗಳ)/ಕಡತಕೋಶದ(ಗಳ) ಮೂಲಹೆಸರುಗಳ ಒಂದು ಪಟ್ಟಿ, ಸಂಪೂರ್ಣ ಮಾರ್ಗದೊಂದಿಗೆ"
 
 #: ../src/nact/nautilus-actions-config.glade.h:8
 #, no-c-format
@@ -553,7 +598,7 @@ msgstr "<b>%d</b>: ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ(ಗಳ) ಮ�
 #: ../src/nact/nautilus-actions-config.glade.h:12
 #, no-c-format
 msgid "<b>%f</b>: the name of the selected file or the 1st one if many are selected"
-msgstr ""
+msgstr "<b>%f</b>: ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ ಹೆಸರು ಅಥವ ಬಳಷ್ಟನ್ನು ಆಯ್ಕೆ ಮಾಡಿದಲ್ಲಿ ಮೊದಲಿನದು"
 
 #: ../src/nact/nautilus-actions-config.glade.h:14
 #, no-c-format
@@ -565,7 +610,7 @@ msgstr "<b>%h</b>: GnomeVFS URI ಯ ಅತಿಥೇಯ ಹೆಸರು"
 msgid ""
 "<b>%m</b>: space-separated list of the basenames of the selected\n"
 "file(s)/folder(s)"
-msgstr ""
+msgstr "<b>%m</b>: ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ(ಗಳ)/ಕಡತಕೋಶದ(ಗಳ) ಮೂಲಹೆಸರುಗಳ ಒಂದು ಪಟ್ಟಿ"
 
 #: ../src/nact/nautilus-actions-config.glade.h:19
 #, no-c-format
@@ -616,6 +661,9 @@ msgid ""
 "\n"
 "place secondary text here"
 msgstr ""
+"<span weight=\"bold\" size=\"larger\">ಪ್ರಮುಖ ಪಠ್ಯವನ್ನು ಇಲ್ಲಿ ನಮೂದಿಸಿ</span>\n"
+"\n"
+"ಪ್ರಮುಖವಲ್ಲದ ಪಠ್ಯವನ್ನು ಇಲ್ಲಿ ನಮೂದಿಸಿ"
 
 #: ../src/nact/nautilus-actions-config.glade.h:34
 msgid ""
@@ -623,6 +671,8 @@ msgid ""
 "You can set several filename patterns by separating them with a semi-colon "
 "(;)."
 msgstr ""
+"ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ ಹೆಸರುಗಳಿಗೆ ಹೋಲಿಸಬೇಕಿರುವ, ವೈಲ್ಡ್‌ಕಾರ್ಡುಗಳನ್ನು (* ಅಥವ ?) ಹೊಂದಿರುವ ಒಂದು ವಾಕ್ಯ. "
+"ನೀವು ಹಲವಾರು ಕಡತವಿನ್ಯಾಸಗಳನ್ನು ಸೂಚಿಸಲು ಅರ್ಧವಿರಾಮ ಚಿಹ್ನೆಯನ್ನು(;) ಬಳಸಬಹುದು."
 
 #: ../src/nact/nautilus-actions-config.glade.h:35
 msgid ""
@@ -630,6 +680,8 @@ msgid ""
 "files. You can set several mimetype patterns by separating them with a semi-"
 "colon (;)."
 msgstr ""
+"ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತದ ಮೈಮ್‌ಬಗೆಗಳಿಗೆ ಹೋಲಿಸಬೇಕಿರುವ, ವೈಲ್ಡ್‌ಕಾರ್ಡುಗಳನ್ನು (* ಅಥವ ?) ಹೊಂದಿರುವ ಒಂದು ವಾಕ್ಯ. "
+"ನೀವು ಹಲವಾರು ಮೈಮ್‌ಬಗೆಗಳನ್ನು ಸೂಚಿಸಲು ಅರ್ಧವಿರಾಮ ಚಿಹ್ನೆಯನ್ನು(;) ಬಳಸಬಹುದು."
 
 #: ../src/nact/nautilus-actions-config.glade.h:36
 msgid "Action"
@@ -659,7 +711,7 @@ msgstr "ಕಡತ ಆಯ್ಕೆಗಾರ ಸಂವಾದದಿಂದ ಒಂದ
 msgid ""
 "Click to choose a custom icon from a file instead of a predefined icon from "
 "the drop-down list."
-msgstr ""
+msgstr "ಬೀಳಿಕೆ(ಡ್ರಾಪ್‌ಡೌನ್) ಪಟ್ಟಿಯಿಂದ ಪೂರ್ವನಿರ್ಧಾರಿತವಾದ ಚಿಹ್ನೆಗಳ ಬದಲಿಗೆ ಕಡತದಿಂದ ಇಚ್ಛೆಯ ಚಿಹ್ನೆಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ."
 
 #: ../src/nact/nautilus-actions-config.glade.h:43
 msgid "Click to remove the selected scheme."
@@ -669,7 +721,7 @@ msgstr "ಆಯ್ಕೆ ಮಾಡಲಾದ ಸ್ಕೀಮ್ ಅನ್ನು �
 msgid ""
 "Click to toggle the display of the list of special tokens you can use in the "
 "parameter field."
-msgstr ""
+msgstr "ನೀವು ನಿಯತಾಂಕದ ಸ್ಥಳದಲ್ಲಿ ಬಳಸಬಹುದಾದ ವಿಶೇಷ ಟೋಕನ್‌ಗಳ ಪ್ರದರ್ಶನವನ್ನು ಬದಲಾಯಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ."
 
 #: ../src/nact/nautilus-actions-config.glade.h:45
 msgid "Conditions"
@@ -681,7 +733,7 @@ msgstr "ಆಯ್ಕೆ ಮಾಡಲಾದ ಕ್ರಿಯೆಯ ಒಂದು �
 
 #: ../src/nact/nautilus-actions-config.glade.h:47
 msgid "Delete the action without any confirmation nor the possibility to restore it."
-msgstr ""
+msgstr "ಖಚಿತ ಪಡಿಸಲು ಕೇಳದೆ ಅಥವ ಮರಳಿ ಸ್ಥಾಪಿಸುವ ಸಾಧ್ಯತೆ ಇಲ್ಲದೆ ಕ್ರಿಯೆಯನ್ನು ಅಳಿಸಿ ಹಾಕು."
 
 #: ../src/nact/nautilus-actions-config.glade.h:48
 msgid "Duplicate"
@@ -707,7 +759,7 @@ msgstr "ಚಿಹ್ನೆ:"
 msgid ""
 "If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
 "will not match photo.JPG)"
-msgstr ""
+msgstr "ಆಯ್ಕೆ ಮಾಡಿದಲ್ಲಿ ಕಡತದ ಹೆಸರಿನ ವಿನ್ಯಾಸವನ್ನು ಕೇಸ್‌ ಸಂವೇದಿಯಲ್ಲಿ ತಾಳೆ ಮಾಡಲಾಗುತ್ತದೆ. (ಉದಾ, *.jpg ಯು photo.JPG ಗೆ ತಾಳೆಯಾಗುತ್ತದೆ)"
 
 #: ../src/nact/nautilus-actions-config.glade.h:54
 msgid "Import new configurations"
@@ -723,7 +775,7 @@ msgstr "ಆಮದು/ರಫ್ತು ಸಿದ್ಧತೆಗಳು"
 
 #: ../src/nact/nautilus-actions-config.glade.h:57
 msgid "Label of the menu item in the Nautilus popup menu."
-msgstr ""
+msgstr "ನಾಟಿಲಸ್ ಪುಟಿಕೆ ಮೆನುವಿನಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುವ ಮೆನು ಅಂಶದ ಲೇಬಲ್."
 
 #: ../src/nact/nautilus-actions-config.glade.h:58
 msgid "Label:"
@@ -733,7 +785,7 @@ msgstr "ಲೇಬಲ್:"
 msgid ""
 "Manage importation of external action configurations and exportation of "
 "existing actions."
-msgstr ""
+msgstr "ಹೊರಗಿನ ಕ್ರಿಯೆ ಸಂರಚನೆಗಳನ್ನು ಆಮದು ಮಾಡುವುದನ್ನು ಹಾಗು ಈಗಿರುವ ಕ್ರಿಯೆಗಳನ್ನು ರಫ್ತು ಮಾಡುವುದನ್ನು ನಿರ್ವಹಿಸಿ."
 
 #: ../src/nact/nautilus-actions-config.glade.h:60
 msgid "Match case"
@@ -753,13 +805,15 @@ msgstr "Nautilus ಕ್ರಿಯೆ ಪ್ರೊಫೈಲ್ ಸಂಪಾದಕ"
 
 #: ../src/nact/nautilus-actions-config.glade.h:64
 msgid "Nautilus Actions"
-msgstr "Nautilus ಕ್ರಿಯೆಗಳು"
+msgstr "Nautilus Actions"
 
 #: ../src/nact/nautilus-actions-config.glade.h:65
 msgid ""
 "Nautilus Actions Configuration Tool\n"
 "Application to configure Nautilus Action extension"
 msgstr ""
+"Nautilus Actions ಸಂರಚನಾ ಉಪಕರಣ\n"
+"Nautilus Action ವಿಸ್ತರಣೆಯನ್ನು ಸಂರಚಿಸುವ ಅನ್ವಯ"
 
 #: ../src/nact/nautilus-actions-config.glade.h:67
 msgid "Only files"
@@ -773,7 +827,7 @@ msgstr "ಕೇವಲ ಕಡತಕೋಶಗಳು"
 msgid ""
 "Parameters that will be sent to the program. Click on the 'Legend' button to "
 "see the different replacement tokens."
-msgstr ""
+msgstr "ಪ್ರೊಗ್ರಾಮಿಗೆ ಕಳುಹಿಸಲಾಗುವ ನಿಯತಾಂಕಗಳು. ವಿವಿಧ ಬದಲಾಯಿಸುವ ಟೋಕನ್‌ಗಳನ್ನು ನೋಡಲು 'ಲೆಜೆಂಡ್' ಗುಂಡಿಯನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ."
 
 #: ../src/nact/nautilus-actions-config.glade.h:70
 msgid "Parameters:"
@@ -816,18 +870,18 @@ msgid ""
 "Select the kind of files where you want your action to appear. If you don't "
 "know what to choose, try selecting just 'file' which is the most common "
 "choice. You can add a new scheme by clicking on the '+' button."
-msgstr ""
+msgstr "ನಿಮ್ಮ ಕ್ರಿಯೆಯು ಎಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳಬೇಕೊ ಆ ಕಡತಗಳ ಬಗೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿ. ಏನನ್ನು ಆರಿಸಬೇಕೆಂದು ನಿಮಗೆ ತಿಳಿಯದೆ ಇದ್ದಲ್ಲಿ, ಸಾಮಾನ್ಯವಾಗಿ ಆರಿಸುವ 'file' ಅನ್ನು ಆಯ್ಕೆ ಮಾಡಿ. '+' ಗುಂಡಿಯನ್ನು ಒತ್ತುವ ಮೂಲಕ ನೀವು ಹೊಸ ಸ್ಕೀಮ್ ಅನ್ನು ಸೇರಿಸಬಹುದು."
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../src/nact/nautilus-actions-config.glade.h:80
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr ""
+msgstr "ಶಂಕರ್ ಪ್ರಸಾದ್ <gnome-i18n@gnome.org>"
 
 #: ../src/nact/nautilus-actions-config.glade.h:81
 msgid ""
 "The command that will be launched by selecting the action in Nautilus popup "
 "menu."
-msgstr ""
+msgstr "ನಾಟಿಲಸ್ ಪುಟಿಕೆ ಮೆನುವನ್ನು ಕ್ರಿಯೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿದಾಗ ಆರಂಭಗೊಳ್ಳುವ ಆಜ್ಞೆ."
 
 #: ../src/nact/nautilus-actions-config.glade.h:82
 msgid "This software is licensed under the GNU Genaral Public License (GPL)"
@@ -835,7 +889,7 @@ msgstr "ಈ ತಂತ್ರಾಂಶವನ್ನು GNU Genaral Public License (
 
 #: ../src/nact/nautilus-actions-config.glade.h:83
 msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr ""
+msgstr "ನಾಟಿಲಸ್ ಸ್ಥಿತಿ ಪಟ್ಟಿಕೆಯಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುವ ಮೆನು ಅಂಶ ಉಪಕರಣಸಲಹೆ."
 
 #: ../src/nact/nautilus-actions-config.glade.h:84
 msgid "Tooltip:"
@@ -880,6 +934,8 @@ msgid ""
 "A pattern to match selected files against. May include wildcards (* or ?) "
 "(you must set one option for each pattern you need)"
 msgstr ""
+"ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತಗಳಿಗೆ ಹೋಲಿಸಬೇಕಿರುವ ಒಂದು ವಿನ್ಯಾಸ . ಇದು ವೈಲ್ಡ್‌ಕಾರ್ಡುಗಳನ್ನೂ (* ಅಥವ ?) ಒಳಗೊಂಡಿರಬಹುದು"
+"(ನಿಮಗೆ ಅಗತ್ಯವಿರುವ ಪ್ರತಿ ವಿನ್ಯಾಸಗಳಿಗೆ ಒಂದು ಆಯ್ಕೆಯನ್ನು ನೀವು ಹೊಂದಿಸಬೇಕು)"
 
 #: ../src/utils/nautilus-actions-new-config.c:62
 #: ../src/utils/nautilus-actions-new-config.c:64
@@ -891,6 +947,8 @@ msgid ""
 "A pattern to match selected files' mimetype against. May include wildcards "
 "(* or ?) (you must set one option for each pattern you need)"
 msgstr ""
+"ಆಯ್ಕೆ ಮಾಡಲಾದ ಕಡತಗಳ ಮೈಮ್‌ಬಗೆಗೆ ಹೋಲಿಸಬೇಕಿರುವ ಒಂದು ವಿನ್ಯಾಸ . ಇದು ವೈಲ್ಡ್‌ಕಾರ್ಡುಗಳನ್ನು (* ಅಥವ ?) ಒಳಗೊಂಡಿರಬಹುದು"
+"(ನಿಮಗೆ ಅಗತ್ಯವಿರುವ ಪ್ರತಿ ವಿನ್ಯಾಸಗಳಿಗೆ ಒಂದು ಆಯ್ಕೆಯನ್ನು ನೀವು ಹೊಂದಿಸಬೇಕು)"
 
 #: ../src/utils/nautilus-actions-new-config.c:65
 msgid "Set it if the selection can contain files"
