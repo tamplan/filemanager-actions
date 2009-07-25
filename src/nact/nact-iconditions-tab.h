@@ -43,7 +43,7 @@
 G_BEGIN_DECLS
 
 #define NACT_ICONDITIONS_TAB_TYPE						( nact_iconditions_tab_get_type())
-#define NACT_ICONDITIONS_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICONDITIONS_TAB_TYPE, NactIConditions_Tab ))
+#define NACT_ICONDITIONS_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICONDITIONS_TAB_TYPE, NactIConditionsTab ))
 #define NACT_IS_ICONDITIONS_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICONDITIONS_TAB_TYPE ))
 #define NACT_ICONDITIONS_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICONDITIONS_TAB_TYPE, NactIConditionsTabInterface ))
 

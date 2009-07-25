@@ -35,8 +35,6 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include <common/na-pivot.h>
-
 #include "nact-application.h"
 #include "nact-main-window.h"
 
@@ -60,7 +58,7 @@ enum {
 	PROP_PIVOT = 1
 };
 
-#define PROP_PIVOT_STR					"pivot"
+#define PROP_PIVOT_STR					"nact-application-pivot"
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -306,7 +304,7 @@ get_main_window( BaseApplication *application )
 
 	GObject *window = G_OBJECT( nact_main_window_new( G_OBJECT( application )));
 
-	na_pivot_add_notified( NA_PIVOT( nact_application_get_pivot( NACT_APPLICATION( application ))), window );
+	na_pivot_add_consumer( NA_PIVOT( nact_application_get_pivot( NACT_APPLICATION( application ))), window );
 
 	return( window );
 }
@@ -319,9 +317,9 @@ get_main_window( BaseApplication *application )
  * The returned pointer is owned by the NactApplication object.
  * It should not be freed not unref by the caller.
  */
-GObject *
+NAPivot *
 nact_application_get_pivot( NactApplication *application )
 {
 	g_assert( NACT_IS_APPLICATION( application ));
-	return( G_OBJECT( application->private->pivot ));
+	return( NA_PIVOT( application->private->pivot ));
 }

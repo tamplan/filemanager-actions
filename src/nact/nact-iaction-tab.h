@@ -51,12 +51,14 @@ typedef struct NactIActionTab NactIActionTab;
 typedef struct NactIActionTabInterfacePrivate NactIActionTabInterfacePrivate;
 
 typedef struct {
-	GTypeInterface                 parent;
+	GTypeInterface                  parent;
 	NactIActionTabInterfacePrivate *private;
 
 	/* api */
-	NAAction * ( *get_edited_action )( NactWindow *window );
-	void       ( *field_modified )   ( NactWindow *window );
+	GtkWidget * ( *get_status_bar )   ( NactWindow *window );
+	NAObject *  ( *get_selected )     ( NactWindow *window );
+	NAAction *  ( *get_edited_action )( NactWindow *window );
+	void        ( *field_modified )   ( NactWindow *window );
 }
 	NactIActionTabInterface;
 

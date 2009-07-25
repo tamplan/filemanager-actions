@@ -218,7 +218,7 @@ na_utils_dump_string_list( GSList *list )
 
 /**
  * Converts a list of strings to a comma-separated list of strings,
- * enclosed by brackets (GConf export format).
+ * enclosed by brackets (dump format, GConf export format).
  */
 gchar *
 na_utils_gslist_to_schema( GSList *list )

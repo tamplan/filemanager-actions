@@ -31,16 +31,52 @@
 #ifndef __NA_PIVOT_H__
 #define __NA_PIVOT_H__
 
-/*
- * NAPivot class definition.
+/**
+ * SECTION: na_pivot
+ * @short_description: #NAPivot class definition.
+ * @include: common/na-pivot.h
  *
  * A consuming program should allocate one new NAPivot object in its
  * startup phase. The class takes care of declaring the I/O interface,
  * while registering the known providers. The object will then load
  * itself the existing list of actions.
+ *
+ * Notification system
+ *
+ * Each I/O storage provider should monitor modifications/deletions of
+ * actions, and advertize this #NAPivot, which itself will then
+ * advertize any registered consumers.
+ *
+ * This notification system is so a double-stage one :
+ *
+ * 1. When an I/O storage subsystem detects a change on an action, it
+ *    should emit the "notify_pivot_of_action_changed" signal to notify
+ *    #NAPivot of this change. The user data associated with the
+ *    message should be a #gpointer to a #NAPivotNotify structure.
+ *
+ *    When this signal is received, #NAPivot updates accordingly the
+ *    list of actions it maintains.
+ *
+ *    It is up to the I/O storage provider to decide if it sends a
+ *    message for each and every one detected modification, or if it
+ *    sends only one message for a whole, maybe coherent, set of
+ *    updates.
+ *
+ *    This first stage message is defined in na-iio-provider.h,
+ *    as NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED.
+ *
+ * 2. When #NAPivot has successfully updated its list of actions, it
+ *    notifies its consumers in order they update themselves.
+ *
+ *    Note that #NAPivot tries to factorize notification messages, and
+ *    to notify its consumers only once even if it has itself received
+ *    many elementary notifications from the underlying I/O storage
+ *    subsystem.
  */
 
 #include <glib-object.h>
+
+#include "na-action-class.h"
 
 G_BEGIN_DECLS
 
@@ -67,18 +103,29 @@ typedef struct {
 }
 	NAPivotClass;
 
-GType    na_pivot_get_type( void );
+GType     na_pivot_get_type( void );
 
-NAPivot *na_pivot_new( const GObject *notified );
+NAPivot  *na_pivot_new( const GObject *notified );
+void      na_pivot_dump( const NAPivot *pivot );
 
-GSList  *na_pivot_get_providers( const NAPivot *pivot, GType type );
+GSList   *na_pivot_get_providers( const NAPivot *pivot, GType type );
+void      na_pivot_free_providers( GSList *providers );
 
-GSList  *na_pivot_get_actions( const NAPivot *pivot );
-void     na_pivot_free_actions( GSList *actions );
+GSList   *na_pivot_get_actions( const NAPivot *pivot );
+void      na_pivot_reload_actions( NAPivot *pivot );
+GSList   *na_pivot_get_duplicate_actions( const NAPivot *pivot );
+void      na_pivot_free_actions( GSList *actions );
+void      na_pivot_add_action( NAPivot *pivot, const NAAction *action );
+void      na_pivot_remove_action( NAPivot *pivot, NAAction *action );
 
-GObject *na_pivot_get_action( NAPivot *pivot, const gchar *uuid );
-guint    na_pivot_write_action( NAPivot *pivot, const GObject *action, gchar **message );
-guint    na_pivot_delete_action( NAPivot *pivot, const GObject *action, gchar **message );
+NAAction *na_pivot_get_action( const NAPivot *pivot, const gchar *uuid );
+guint     na_pivot_write_action( const NAPivot *pivot, NAAction *action, gchar **message );
+guint     na_pivot_delete_action( const NAPivot *pivot, const NAAction *action, gchar **message );
+
+void      na_pivot_add_consumer( NAPivot *pivot, const GObject *consumer );
+
+gboolean  na_pivot_get_automatic_reload( const NAPivot *pivot );
+void      na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
 
 /* data passed from the storage subsystem when an action is changed
  */
@@ -98,8 +145,6 @@ typedef struct {
 	NAPivotNotify;
 
 void       na_pivot_free_notify( NAPivotNotify *data );
-
-void       na_pivot_add_notified( NAPivot *pivot, GObject *container );
 
 G_END_DECLS
 

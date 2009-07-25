@@ -28,43 +28,42 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_IPIVOT_CONTAINER_H__
-#define __NA_IPIVOT_CONTAINER_H__
+#ifndef __NA_ACTION_PROFILE_CLASS_H__
+#define __NA_ACTION_PROFILE_CLASS_H__
 
-/*
- * NAIPivotContainer interface definition.
- *
- * This interface should be implemented by all classes which embed a
- * NAPivot object, in order to receive modification notification
- * messages.
+/**
+ * SECTION: na_action_profile
  */
 
-#include <glib-object.h>
+#include "na-object.h"
 
 G_BEGIN_DECLS
 
-#define NA_IPIVOT_CONTAINER_TYPE						( na_ipivot_container_get_type())
-#define NA_IPIVOT_CONTAINER( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IPIVOT_CONTAINER_TYPE, NAIPivotContainer ))
-#define NA_IS_IPIVOT_CONTAINER( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPIVOT_CONTAINER_TYPE ))
-#define NA_IPIVOT_CONTAINER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPIVOT_CONTAINER_TYPE, NAIPivotContainerInterface ))
+#define NA_ACTION_PROFILE_TYPE					( na_action_profile_get_type())
+#define NA_ACTION_PROFILE( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_ACTION_PROFILE_TYPE, NAActionProfile ))
+#define NA_ACTION_PROFILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_ACTION_PROFILE_TYPE, NAActionProfileClass ))
+#define NA_IS_ACTION_PROFILE( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_ACTION_PROFILE_TYPE ))
+#define NA_IS_ACTION_PROFILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_ACTION_PROFILE_TYPE ))
+#define NA_ACTION_PROFILE_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_ACTION_PROFILE_TYPE, NAActionProfileClass ))
 
-typedef struct NAIPivotContainer NAIPivotContainer;
-
-typedef struct NAIPivotContainerInterfacePrivate NAIPivotContainerInterfacePrivate;
+typedef struct NAActionProfilePrivate NAActionProfilePrivate;
 
 typedef struct {
-	GTypeInterface                     parent;
-	NAIPivotContainerInterfacePrivate *private;
-
-	/* api */
-	void ( *on_actions_changed )( NAIPivotContainer *instance, gpointer user_data );
+	NAObject                parent;
+	NAActionProfilePrivate *private;
 }
-	NAIPivotContainerInterface;
+	NAActionProfile;
 
-GType na_ipivot_container_get_type( void );
+typedef struct NAActionProfileClassPrivate NAActionProfileClassPrivate;
 
-void  na_ipivot_container_notify( NAIPivotContainer *instance );
+typedef struct {
+	NAObjectClass                parent;
+	NAActionProfileClassPrivate *private;
+}
+	NAActionProfileClass;
+
+GType na_action_profile_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NA_IPIVOT_CONTAINER_H__ */
+#endif /* __NA_ACTION_PROFILE_CLASS_H__ */

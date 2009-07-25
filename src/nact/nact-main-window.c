@@ -39,16 +39,15 @@
 
 #include <common/na-pivot.h>
 #include <common/na-iio-provider.h>
-#include <common/na-ipivot-container.h>
+#include <common/na-ipivot-consumer.h>
 
 #include "nact-application.h"
-#include "nact-assist-export.h"
-#include "nact-assist-import.h"
 #include "nact-iactions-list.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
 #include "nact-iconditions-tab.h"
 #include "nact-iadvanced-tab.h"
+#include "nact-imenubar.h"
 #include "nact-iprefs.h"
 #include "nact-main-window.h"
 
@@ -63,11 +62,11 @@ struct NactMainWindowPrivate {
 	gboolean         dispose_has_run;
 	GtkStatusbar    *status_bar;
 	guint            status_context;
-	GtkWidget       *new_profile_item;
-	GtkWidget       *save_item;
 	GSList          *actions;
 	NAAction        *edited_action;
 	NAActionProfile *edited_profile;
+	GSList          *deleted;
+	GTimeVal         last_saved;
 };
 
 /* the GConf key used to read/write size and position of auxiliary dialogs
@@ -83,7 +82,8 @@ static void             iaction_tab_iface_init( NactIActionTabInterface *iface )
 static void             icommand_tab_iface_init( NactICommandTabInterface *iface );
 static void             iconditions_tab_iface_init( NactIConditionsTabInterface *iface );
 static void             iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
-static void             ipivot_container_iface_init( NAIPivotContainerInterface *iface );
+static void             imenubar_iface_init( NactIMenubarInterface *iface );
+static void             ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
 static void             instance_init( GTypeInstance *instance, gpointer klass );
 static void             instance_dispose( GObject *application );
 static void             instance_finalize( GObject *application );
@@ -91,17 +91,16 @@ static void             instance_finalize( GObject *application );
 static gchar           *get_iprefs_window_id( NactWindow *window );
 static gchar           *get_toplevel_name( BaseWindow *window );
 static GSList          *get_actions( NactWindow *window );
+static GtkWidget       *get_status_bar( NactWindow *window );
 
 static void             on_initial_load_toplevel( BaseWindow *window );
-static void             create_file_menu( BaseWindow *window, GtkMenuBar *menubar );
-static void             create_tools_menu( BaseWindow *window, GtkMenuBar *menubar );
-static void             create_help_menu( BaseWindow *window, GtkMenuBar *menubar );
 static void             on_runtime_init_toplevel( BaseWindow *window );
-static void             setup_dialog_title( NactMainWindow *window );
-static void             setup_dialog_menu( NactMainWindow *window );
+static void             setup_dialog_title( NactWindow *window );
+/*static void             setup_dialog_menu( NactMainWindow *window );*/
 
 static void             on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean         on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
+static gboolean         on_actions_list_delete_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
 static gboolean         on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
 static void             set_current_action( NactMainWindow *window );
 static void             set_current_profile( NactMainWindow *window );
@@ -109,35 +108,34 @@ static NAAction        *get_edited_action( NactWindow *window );
 static NAActionProfile *get_edited_profile( NactWindow *window );
 static void             on_modified_field( NactWindow *window );
 static void             check_edited_status( NactWindow *window, const NAAction *action );
-static gboolean         is_action_modified( const NAAction *action );
-static gboolean         is_action_to_save( const NAAction *action );
+static gboolean         is_modified_action( NactWindow *window, const NAAction *action );
+static gboolean         is_valid_action( NactWindow *window, const NAAction *action );
+static gboolean         is_modified_profile( NactWindow *window, const NAActionProfile *profile );
+static gboolean         is_valid_profile( NactWindow *window, const NAActionProfile *profile );
 
 static void             get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
 static gboolean         get_multiple( NactWindow *window );
 static GSList          *get_schemes( NactWindow *window );
 
-static void             on_new_action_activated( GtkMenuItem *item, gpointer user_data );
-static void             on_new_action_selected( GtkItem *item, gpointer user_data );
-static void             on_new_profile_activated( GtkMenuItem *item, gpointer user_data );
-static void             on_new_profile_selected( GtkItem *item, gpointer user_data );
+static void             add_action( NactWindow *window, NAAction *action );
+static void             add_profile( NactWindow *window, NAActionProfile *profile );
+static void             remove_action( NactWindow *window, NAAction *action );
+static GSList          *get_deleted_actions( NactWindow *window );
+static void             free_deleted_actions( NactWindow *window );
+static void             push_removed_action( NactWindow *window, NAAction *action );
 
-static void             on_import_activated( GtkMenuItem *item, gpointer user_data );
-static void             on_import_selected( GtkItem *item, gpointer user_data );
-static void             on_export_activated( GtkMenuItem *item, gpointer user_data );
-static void             on_export_selected( GtkItem *item, gpointer user_data );
-static void             on_about_activated( GtkMenuItem *item, gpointer user_data );
-static void             on_about_selected( GtkItem *item, gpointer user_data );
-static void             on_menu_item_deselected( GtkItem *item, gpointer user_data );
 /*static void     on_new_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_edit_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_duplicate_button_clicked( GtkButton *button, gpointer user_data );
 static void     on_delete_button_clicked( GtkButton *button, gpointer user_data );
 static gboolean on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );*/
-static void             on_close( GtkMenuItem *item, gpointer user_data );
-static gboolean         on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
 
-static gint             count_modified_actions( NactMainWindow *window );
-static void             on_actions_changed( NAIPivotContainer *instance, gpointer user_data );
+static void             update_actions_list( NactWindow *window );
+static gboolean         on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
+static gint             count_actions( NactWindow *window );
+static gint             count_modified_actions( NactWindow *window );
+static void             on_save( NactWindow *window );
+static void             on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
 
 GType
 nact_main_window_get_type( void )
@@ -215,14 +213,23 @@ register_type( void )
 	};
 	g_type_add_interface_static( type, NACT_IADVANCED_TAB_TYPE, &iadvanced_tab_iface_info );
 
-	/* implement IPivotContainer interface
+	/* implement IMenubar interface
 	 */
-	static const GInterfaceInfo pivot_container_iface_info = {
-		( GInterfaceInitFunc ) ipivot_container_iface_init,
+	static const GInterfaceInfo imenubar_iface_info = {
+		( GInterfaceInitFunc ) imenubar_iface_init,
 		NULL,
 		NULL
 	};
-	g_type_add_interface_static( type, NA_IPIVOT_CONTAINER_TYPE, &pivot_container_iface_info );
+	g_type_add_interface_static( type, NACT_IMENUBAR_TYPE, &imenubar_iface_info );
+
+	/* implement IPivotConsumer interface
+	 */
+	static const GInterfaceInfo pivot_consumer_iface_info = {
+		( GInterfaceInitFunc ) ipivot_consumer_iface_init,
+		NULL,
+		NULL
+	};
+	g_type_add_interface_static( type, NA_IPIVOT_CONSUMER_TYPE, &pivot_consumer_iface_info );
 
 	return( type );
 }
@@ -260,7 +267,12 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	iface->get_actions = get_actions;
 	iface->on_selection_changed = on_actions_list_selection_changed;
 	iface->on_double_click = on_actions_list_double_click;
+	iface->on_delete_key_pressed = on_actions_list_delete_key_pressed;
 	iface->on_enter_key_pressed = on_actions_list_enter_key_pressed;
+	iface->is_modified_action = is_modified_action;
+	iface->is_valid_action = is_valid_action;
+	iface->is_modified_profile = is_modified_profile;
+	iface->is_valid_profile = is_valid_profile;
 }
 
 static void
@@ -269,6 +281,8 @@ iaction_tab_iface_init( NactIActionTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_iaction_tab_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
+	iface->get_status_bar = get_status_bar;
+	iface->get_selected = nact_iactions_list_get_selected_object;
 	iface->get_edited_action = get_edited_action;
 	iface->field_modified = on_modified_field;
 }
@@ -279,6 +293,7 @@ icommand_tab_iface_init( NactICommandTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_icommand_tab_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
+	iface->get_status_bar = get_status_bar;
 	iface->get_edited_profile = get_edited_profile;
 	iface->field_modified = on_modified_field;
 	iface->get_isfiledir = get_isfiledir;
@@ -307,9 +322,32 @@ iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface )
 }
 
 static void
-ipivot_container_iface_init( NAIPivotContainerInterface *iface )
+imenubar_iface_init( NactIMenubarInterface *iface )
 {
-	static const gchar *thisfn = "nact_main_window_ipivot_container_iface_init";
+	static const gchar *thisfn = "nact_main_window_imenubar_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
+
+	iface->add_action = add_action;
+	iface->add_profile = add_profile;
+	iface->remove_action = remove_action;
+	iface->get_deleted_actions = get_deleted_actions;
+	iface->free_deleted_actions = free_deleted_actions;
+	iface->push_removed_action = push_removed_action;
+	iface->get_actions = get_actions;
+	iface->get_selected = nact_iactions_list_get_selected_object;
+	iface->get_status_bar = get_status_bar;
+	iface->setup_dialog_title = setup_dialog_title;
+	iface->update_actions_list = update_actions_list;
+	iface->select_actions_list = nact_iactions_list_set_selection;
+	iface->count_actions = count_actions;
+	iface->count_modified_actions = count_modified_actions;
+	iface->on_save = on_save;
+}
+
+static void
+ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_ipivot_consumer_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
 	iface->on_actions_changed = on_actions_changed;
@@ -351,6 +389,8 @@ instance_dispose( GObject *window )
 			g_object_unref( NA_ACTION( ia->data ));
 		}
 		g_slist_free( self->private->actions );
+
+		free_deleted_actions( NACT_WINDOW( self ));
 
 		nact_iaction_tab_dispose( NACT_WINDOW( window ));
 		nact_icommand_tab_dispose( NACT_WINDOW( window ));
@@ -412,6 +452,13 @@ get_actions( NactWindow *window )
 	return( NACT_MAIN_WINDOW( window )->private->actions );
 }
 
+static GtkWidget *
+get_status_bar( NactWindow *window )
+{
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+	return( GTK_WIDGET( NACT_MAIN_WINDOW( window )->private->status_bar ));
+}
+
 /*
  * note that for this NactMainWindow, on_initial_load_toplevel and
  * on_runtime_init_toplevel are equivalent, as there is only one
@@ -433,23 +480,16 @@ on_initial_load_toplevel( BaseWindow *window )
 	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
 
 	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( wnd )));
-	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( application ));
-	GSList *origin = na_pivot_get_actions( pivot );
-	GSList *ia;
-	for( ia = origin ; ia ; ia = ia->next ){
-		wnd->private->actions = g_slist_prepend( wnd->private->actions, na_action_duplicate( NA_ACTION( ia->data )));
-	}
+	NAPivot *pivot = nact_application_get_pivot( application );
+	na_pivot_set_automatic_reload( pivot, FALSE );
+	wnd->private->actions = na_pivot_get_duplicate_actions( pivot );
 
-	GtkWidget *vbox = base_window_get_widget( window, "MenuBarVBox" );
-	GtkWidget *menubar = gtk_menu_bar_new();
-	gtk_container_add( GTK_CONTAINER( vbox ), menubar );
-
-	create_file_menu( window, GTK_MENU_BAR( menubar ));
-	create_tools_menu( window, GTK_MENU_BAR( menubar ));
-	create_help_menu( window, GTK_MENU_BAR( menubar ));
+	g_get_current_time( &wnd->private->last_saved );
 
 	wnd->private->status_bar = GTK_STATUSBAR( base_window_get_widget( window, "StatusBar" ));
-	wnd->private->status_context = gtk_statusbar_get_context_id( wnd->private->status_bar, "NautilusActionsConfigurationTool" );
+	wnd->private->status_context = gtk_statusbar_get_context_id( wnd->private->status_bar, "nact-main-window" );
+
+	nact_imenubar_init( wnd );
 
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 	nact_iactions_list_initial_load( NACT_WINDOW( window ));
@@ -473,89 +513,6 @@ on_initial_load_toplevel( BaseWindow *window )
 		GtkWidget *pane = base_window_get_widget( window, "MainPaned" );
 		gtk_paned_set_position( GTK_PANED( pane ), pos );
 	}
-}
-
-static void
-create_file_menu( BaseWindow *window, GtkMenuBar *menubar )
-{
-	/* i18n: File menu */
-	GtkWidget *file = gtk_menu_item_new_with_label( _( "_File" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( file ), TRUE );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), file );
-	GtkWidget *menu = gtk_menu_new();
-	gtk_menu_item_set_submenu( GTK_MENU_ITEM( file ), menu );
-
-	GtkWidget *item = gtk_image_menu_item_new_from_stock( GTK_STOCK_NEW, NULL );
-	/* i18n: 'New action' item in 'File' menu - use same accelerator than GTK_STOCK_NEW item */
-	gtk_menu_item_set_label( GTK_MENU_ITEM( item ), _( "_New action" ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", G_CALLBACK( on_new_action_activated ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "select", G_CALLBACK( on_new_action_selected ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "deselect", G_CALLBACK( on_menu_item_deselected ));
-
-	/* i18n: 'New profile' item in 'File' menu */
-	item = gtk_image_menu_item_new_with_label( _( "New _profile" ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
-	NACT_MAIN_WINDOW( window )->private->new_profile_item = item;
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", G_CALLBACK( on_new_profile_activated ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "select", G_CALLBACK( on_new_profile_selected ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "deselect", G_CALLBACK( on_menu_item_deselected ));
-
-	item = gtk_image_menu_item_new_from_stock( GTK_STOCK_SAVE, NULL );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	NACT_MAIN_WINDOW( window )->private->save_item = item;
-
-	item = gtk_separator_menu_item_new();
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-
-	item = gtk_image_menu_item_new_from_stock( GTK_STOCK_CLOSE, NULL );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", G_CALLBACK( on_close ));
-}
-
-static void
-create_tools_menu( BaseWindow *window, GtkMenuBar *menubar )
-{
-	/* i18n: Tools menu */
-	GtkWidget *tools = gtk_menu_item_new_with_label( _( "_Tools" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( tools ), TRUE );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), tools );
-	GtkWidget *menu = gtk_menu_new();
-	gtk_menu_item_set_submenu( GTK_MENU_ITEM( tools ), menu );
-
-	/* i18n: Import item in Tools menu */
-	GtkWidget *item = gtk_image_menu_item_new_with_label( _( "_Import" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", G_CALLBACK( on_import_activated ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "select", G_CALLBACK( on_import_selected ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "deselect", G_CALLBACK( on_menu_item_deselected ));
-
-	/* i18n: Export item in Tools menu */
-	item = gtk_image_menu_item_new_with_label( _( "_Export" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", G_CALLBACK( on_export_activated ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "select", G_CALLBACK( on_export_selected ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "deselect", G_CALLBACK( on_menu_item_deselected ));
-}
-
-static void
-create_help_menu( BaseWindow *window, GtkMenuBar *menubar )
-{
-	/* i18n: Help menu */
-	GtkWidget *help = gtk_menu_item_new_with_label( _( "_Help" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( help ), TRUE );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), help );
-	GtkWidget *menu = gtk_menu_new();
-	gtk_menu_item_set_submenu( GTK_MENU_ITEM( help ), menu );
-
-	GtkWidget *item = gtk_image_menu_item_new_from_stock( GTK_STOCK_ABOUT, NULL );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", G_CALLBACK( on_about_activated ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "select", G_CALLBACK( on_about_selected ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "deselect", G_CALLBACK( on_menu_item_deselected ));
 }
 
 static void
@@ -589,23 +546,23 @@ on_runtime_init_toplevel( BaseWindow *window )
 }
 
 static void
-setup_dialog_title( NactMainWindow *window )
+setup_dialog_title( NactWindow *window )
 {
 	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	gchar *title = base_application_get_name( appli );
 
-	if( window->private->edited_action ){
-		gchar *label = na_action_get_label( window->private->edited_action );
+	if( NACT_MAIN_WINDOW( window )->private->edited_action ){
+		gchar *label = na_action_get_label( NACT_MAIN_WINDOW( window )->private->edited_action );
 		gchar *tmp = g_strdup_printf( "%s - %s", title, label );
 		g_free( label );
 		g_free( title );
 		title = tmp;
-	}
 
-	if( count_modified_actions( window )){
-		gchar *tmp = g_strdup_printf( "*%s", title );
-		g_free( title );
-		title = tmp;
+		if( is_modified_action( NACT_WINDOW( window ), NACT_MAIN_WINDOW( window )->private->edited_action )){
+			gchar *tmp = g_strdup_printf( "*%s", title );
+			g_free( title );
+			title = tmp;
+		}
 	}
 
 	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
@@ -614,20 +571,20 @@ setup_dialog_title( NactMainWindow *window )
 	g_free( title );
 }
 
-static void
+/*static void
 setup_dialog_menu( NactMainWindow *window )
 {
 	GSList *ia;
 	gboolean to_save = FALSE;
 	for( ia = window->private->actions ; ia && !to_save ; ia = ia->next ){
-		gboolean elt_to_save = is_action_to_save( NA_ACTION( ia->data ));
+		gboolean elt_to_save = is_valid_action( NACT_WINDOW( window ), NA_ACTION( ia->data ));
 		to_save |= elt_to_save;
 	}
 
 	gtk_widget_set_sensitive(  window->private->new_profile_item, window->private->edited_action != NULL );
 
 	gtk_widget_set_sensitive( window->private->save_item, to_save );
-}
+}*/
 
 /*
  * note that the IActionsList tree store may return an action or a profile
@@ -635,19 +592,25 @@ setup_dialog_menu( NactMainWindow *window )
 static void
 on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
 {
+	static const gchar *thisfn = "nact_main_window_on_actions_list_selection_changed";
+	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );
+
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
 
-	NAObject *object = nact_iactions_list_get_selected_action( NACT_WINDOW( window ));
+	NAObject *object = nact_iactions_list_get_selected_object( NACT_WINDOW( window ));
+	g_debug( "%s: object=%p", thisfn, object );
 
-	if( NA_IS_ACTION( object )){
-		window->private->edited_action = NA_ACTION( object );
-		set_current_action( window );
+	if( object ){
+		if( NA_IS_ACTION( object )){
+			window->private->edited_action = NA_ACTION( object );
+			set_current_action( window );
 
-	} else {
-		g_assert( NA_IS_ACTION_PROFILE( object ));
-		window->private->edited_profile = NA_ACTION_PROFILE( object );
-		set_current_profile( window );
+		} else {
+			g_assert( NA_IS_ACTION_PROFILE( object ));
+			window->private->edited_profile = NA_ACTION_PROFILE( object );
+			set_current_profile( window );
+		}
 	}
 }
 
@@ -656,15 +619,28 @@ on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer
 {
 	g_assert( event->type == GDK_2BUTTON_PRESS );
 
-	nact_iactions_list_toggle_collapse( NACT_WINDOW( user_data ));
+	nact_iactions_list_toggle_collapse(
+			NACT_WINDOW( user_data ), NACT_MAIN_WINDOW( user_data )->private->edited_action );
 
 	return( TRUE );
 }
 
 static gboolean
+on_actions_list_delete_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
+{
+	if( NACT_MAIN_WINDOW( user_data )->private->edited_action ){
+		nact_imenubar_on_delete_key_pressed( NACT_WINDOW( user_data ));
+		return( TRUE );
+	}
+
+	return( FALSE );
+}
+
+static gboolean
 on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
 {
-	nact_iactions_list_toggle_collapse( NACT_WINDOW( user_data ));
+	nact_iactions_list_toggle_collapse(
+			NACT_WINDOW( user_data ), NACT_MAIN_WINDOW( user_data )->private->edited_action );
 
 	return( TRUE );
 }
@@ -681,6 +657,7 @@ set_current_action( NactMainWindow *window )
 	nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action );
 
 	window->private->edited_profile = NULL;
+
 	if( na_action_get_profiles_count( window->private->edited_action ) == 1 ){
 		window->private->edited_profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited_action )->data );
 	}
@@ -693,10 +670,8 @@ set_current_profile( NactMainWindow *window )
 {
 	if( window->private->edited_profile ){
 		NAAction *action = NA_ACTION( na_action_profile_get_action( window->private->edited_profile ));
-		if( action != window->private->edited_action ){
-			window->private->edited_action = action;
-			nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action );
-		}
+		window->private->edited_action = action;
+		nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action );
 	}
 
 	nact_icommand_tab_set_profile( NACT_WINDOW( window ), window->private->edited_profile );
@@ -724,8 +699,9 @@ get_edited_profile( NactWindow *window )
 
 /*
  * called as a virtual function by each interface tab when a field
- * has been modified : time to set the 'modified' flag in the
- * IActionsList box
+ * has been modified
+ * - if the label has been modified, the IActionsList must reflect this
+ * - setup dialog title
  */
 static void
 on_modified_field( NactWindow *window )
@@ -734,58 +710,76 @@ on_modified_field( NactWindow *window )
 
 	check_edited_status( window, NACT_MAIN_WINDOW( window )->private->edited_action );
 
-	setup_dialog_title( NACT_MAIN_WINDOW( window ));
-	setup_dialog_menu( NACT_MAIN_WINDOW( window ));
+	setup_dialog_title( window );
 
 	nact_iactions_list_update_selected( window, NACT_MAIN_WINDOW( window )->private->edited_action );
 }
 
+/*
+ * is it modified ?
+ * and, if it has been modified, is it valid ?
+ */
 static void
 check_edited_status( NactWindow *window, const NAAction *edited )
 {
 	g_assert( edited );
 
-	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	na_object_check_edited_status( NA_OBJECT( edited ));
+	/*NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( application ));
 	gchar *uuid = na_action_get_uuid( edited );
 	NAAction *original = NA_ACTION( na_pivot_get_action( pivot, uuid ));
 	g_free( uuid );
-	gboolean is_modified = !na_action_are_equal( edited, original );
-	g_object_set_data( G_OBJECT( edited ), "nact-main-window-action-modified", GINT_TO_POINTER( is_modified ));
+	gboolean is_modified = !na_object_are_equal( NA_OBJECT( edited ), NA_OBJECT( original ));
+	g_object_set_data( G_OBJECT( edited ), "nact-main-window-action-modified", GINT_TO_POINTER( is_modified ));*/
 
 	/*gboolean check = is_action_modified( edited );
 	g_debug( "check_edited_status: edited=%p, is_modified=%s, check=%s", edited, is_modified ? "True":"False", check ? "True":"False" );*/
 
-	gboolean can_save = FALSE;
+	/*gboolean a_valid = TRUE;
 	if( is_modified ){
 		gchar *label = na_action_get_label( edited );
 		if( label && g_utf8_strlen( label, -1 )){
 			GSList *ip;
+			gboolean p_valid = FALSE;
 			GSList *profiles = na_action_get_profiles( edited );
 			for( ip = profiles ; ip ; ip = ip->next ){
 				NAActionProfile *prof = NA_ACTION_PROFILE( ip->data );
 				gchar *prof_label = na_action_profile_get_label( prof );
 				if( prof_label && g_utf8_strlen( prof_label, -1 )){
-					can_save = TRUE;
+					p_valid = TRUE;
 				}
+				g_object_set_data( G_OBJECT( prof ), "nact-main-window-profile-is-valid", GINT_TO_POINTER( p_valid ));
 				g_free( prof_label );
 			}
 			g_free( label );
 		}
 	}
-	g_object_set_data( G_OBJECT( edited ), "nact-main-window-action-can-save", GINT_TO_POINTER( can_save));
+	g_object_set_data( G_OBJECT( edited ), "nact-main-window-action-is-valid", GINT_TO_POINTER( a_valid ));*/
 }
 
 static gboolean
-is_action_modified( const NAAction *action )
+is_modified_action( NactWindow *window, const NAAction *action )
 {
-	return( GPOINTER_TO_INT( g_object_get_data( G_OBJECT( action ), "nact-main-window-action-modified" )));
+	return( na_object_get_modified_status( NA_OBJECT( action )));
 }
 
 static gboolean
-is_action_to_save( const NAAction *action )
+is_valid_action( NactWindow *window, const NAAction *action )
 {
-	return( GPOINTER_TO_INT( g_object_get_data( G_OBJECT( action ), "nact-main-window-action-can-save" )));
+	return( na_object_get_valid_status( NA_OBJECT( action )));
+}
+
+static gboolean
+is_modified_profile( NactWindow *window, const NAActionProfile *profile )
+{
+	return( na_object_get_modified_status( NA_OBJECT( profile )));
+}
+
+static gboolean
+is_valid_profile( NactWindow *window, const NAActionProfile *profile )
+{
+	return( na_object_get_valid_status( NA_OBJECT( profile )));
 }
 
 static void
@@ -807,183 +801,52 @@ get_schemes( NactWindow *window )
 }
 
 static void
-on_new_action_activated( GtkMenuItem *item, gpointer user_data )
+add_action( NactWindow *window, NAAction *action )
 {
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
-
-	NAAction *action = na_action_new_with_profile();
-	window->private->actions = g_slist_prepend( window->private->actions, action );
+	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
+	wnd->private->actions = g_slist_prepend( wnd->private->actions, ( gpointer ) action );
 }
 
 static void
-on_new_action_selected( GtkItem *item, gpointer user_data )
+add_profile( NactWindow *window, NAActionProfile *profile )
 {
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
-	gtk_statusbar_push(
-			window->private->status_bar,
-			window->private->status_context,
-			/* i18n: tooltip displayed in the status bar when selecting the 'New action' item */
-			_( "Define a new action." ));
+	NAAction *action = na_action_profile_get_action( profile );
+
+	if( !nact_iactions_list_is_expanded( window, action )){
+		nact_iactions_list_toggle_collapse( window, action );
+	}
 }
 
 static void
-on_new_profile_activated( GtkMenuItem *item, gpointer user_data )
+remove_action( NactWindow *window, NAAction *action )
 {
+	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
+	wnd->private->actions = g_slist_remove( wnd->private->actions, ( gconstpointer ) action );
+}
 
+static GSList *
+get_deleted_actions( NactWindow *window )
+{
+	return( NACT_MAIN_WINDOW( window )->private->deleted );
 }
 
 static void
-on_new_profile_selected( GtkItem *item, gpointer user_data )
+free_deleted_actions( NactWindow *window )
 {
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
-	gtk_statusbar_push(
-			window->private->status_bar,
-			window->private->status_context,
-			/* i18n: tooltip displayed in the status bar when selecting the 'New profile' item */
-			_( "Define a new profile attached to the current action." ));
+	NactMainWindow *self = NACT_MAIN_WINDOW( window );
+	GSList *ia;
+	for( ia = self->private->deleted ; ia ; ia = ia->next ){
+		g_object_unref( NA_ACTION( ia->data ));
+	}
+	g_slist_free( self->private->deleted );
+	self->private->deleted = NULL;
 }
 
 static void
-on_import_activated( GtkMenuItem *item, gpointer user_data )
+push_removed_action( NactWindow *window, NAAction *action )
 {
-	static const gchar *thisfn = "nact_main_window_on_import_activated";
-	g_debug( "%s: item=%p, user_data=%p", thisfn, item, user_data );
-
-	nact_assist_import_run( NACT_WINDOW( user_data ));
-
-	/*g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactWindow *wndmain = NACT_WINDOW( user_data );
-	nact_iactions_list_set_focus( wndmain );*/
-}
-
-static void
-on_import_selected( GtkItem *item, gpointer user_data )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
-	gtk_statusbar_push(
-			window->private->status_bar,
-			window->private->status_context,
-			/* i18n: tooltip displayed in the status bar when selecting the Import item */
-			_( "Import one or more actions from external (XML) files into your configuration." ));
-}
-
-static void
-on_export_activated( GtkMenuItem *item, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_main_window_on_export_activated";
-	g_debug( "%s: item=%p, user_data=%p", thisfn, item, user_data );
-
-	nact_assist_export_run( NACT_WINDOW( user_data ));
-
-	/*g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactWindow *wndmain = NACT_WINDOW( user_data );
-	nact_iactions_list_set_focus( wndmain );*/
-}
-
-static void
-on_export_selected( GtkItem *item, gpointer user_data )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
-	gtk_statusbar_push(
-			window->private->status_bar,
-			window->private->status_context,
-			/* i18n: tooltip displayed in the status bar when selecting the Export item */
-			_( "Export one or more actions from your configuration to external XML files." ));
-}
-
-/* TODO: make the website url and the mail addresses clickables
- */
-static void
-on_about_activated( GtkMenuItem *item, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_main_window_on_about_activated";
-	g_debug( "%s: item=%p, user_data=%p", thisfn, item, user_data );
-
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
-
-	BaseApplication *appli;
-	g_object_get( G_OBJECT( window ), PROP_WINDOW_APPLICATION_STR, &appli, NULL );
-	gchar *icon_name = base_application_get_icon_name( appli );
-
-	static const gchar *artists[] = {
-		N_( "Ulisse Perusin <uli.peru@gmail.com>" ),
-		NULL
-	};
-
-	static const gchar *authors[] = {
-		N_( "Frederic Ruaudel <grumz@grumz.net>" ),
-		N_( "Rodrigo Moya <rodrigo@gnome-db.org>" ),
-		N_( "Pierre Wieser <pwieser@trychlos.org>" ),
-		NULL
-	};
-
-	static const gchar *documenters[] = {
-		NULL
-	};
-
-	static gchar *license[] = {
-		N_( "Nautilus Actions Configuration Tool is free software; you can "
-			"redistribute it and/or modify it under the terms of the GNU General "
-			"Public License as published by the Free Software Foundation; either "
-			"version 2 of the License, or (at your option) any later version." ),
-		N_( "Nautilus Actions Configuration Tool is distributed in the hope that it "
-			"will be useful, but WITHOUT ANY WARRANTY; without even the implied "
-			"warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See "
-			"the GNU General Public License for more details." ),
-		N_( "You should have received a copy of the GNU General Public License along "
-			"with Nautilus Actions Configuration Tool ; if not, write to the Free "
-			"Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
-			"MA 02110-1301, USA." ),
-		NULL
-	};
-	gchar *license_i18n = g_strjoinv( "\n\n", license );
-
-	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
-
-	gtk_show_about_dialog( toplevel,
-			"artists", artists,
-			"authors", authors,
-			"comments", _( "A graphical tool to create and edit your Nautilus actions." ),
-			"copyright", _( "Copyright \xc2\xa9 2005-2007 Frederic Ruaudel <grumz@grumz.net>\nCopyright \xc2\xa9 2009 Pierre Wieser <pwieser@trychlos.org>" ),
-			"documenters", documenters,
-			"translator-credits", _( "The GNOME Translation Project <gnome-i18n@gnome.org>" ),
-			"license", license_i18n,
-			"wrap-license", TRUE,
-			"logo-icon-name", icon_name,
-			"version", PACKAGE_VERSION,
-			"website", "http://www.nautilus-actions.org",
-			NULL );
-
-	g_free( license_i18n );
-	g_free( icon_name );
-
-	/*nact_iactions_list_set_focus( NACT_WINDOW( wndmain ));*/
-}
-
-static void
-on_about_selected( GtkItem *item, gpointer user_data )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
-	gtk_statusbar_push(
-			window->private->status_bar,
-			window->private->status_context,
-			/* i18n: tooltip displayed in the status bar when selecting the About item */
-			_( "Display informations about this program." ));
-}
-
-static void
-on_menu_item_deselected( GtkItem *item, gpointer user_data )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
-	gtk_statusbar_pop( window->private->status_bar, window->private->status_context );
+	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
+	wnd->private->deleted = g_slist_append( wnd->private->deleted, ( gpointer ) action );
 }
 
 /*
@@ -1143,18 +1006,9 @@ on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window )
 }*/
 
 static void
-on_close( GtkMenuItem *item, gpointer user_data )
+update_actions_list( NactWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_on_close";
-	g_debug( "%s: item=%p, user_data=%p", thisfn, item, user_data );
-
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
-
-	gint count = count_modified_actions( window );
-	if( !count || nact_window_warn_count_modified( NACT_WINDOW( window ), count )){
-		g_object_unref( window );
-	}
+	nact_iactions_list_fill( window, TRUE );
 }
 
 static gboolean
@@ -1164,36 +1018,66 @@ on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event )
 	g_debug( "%s: window=%p, toplevel=%p, event=%p", thisfn, window, toplevel, event );
 
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
-
-	on_close( NULL, window );
+	nact_imenubar_on_delete_event( NACT_WINDOW( window ));
 
 	return( TRUE );
 }
 
 static gint
-count_modified_actions( NactMainWindow *window )
+count_actions( NactWindow *window )
 {
-	gint count = 0;
+	return( g_slist_length( NACT_MAIN_WINDOW( window )->private->actions ));
+}
+
+static gint
+count_modified_actions( NactWindow *window )
+{
+	gint count = g_slist_length( NACT_MAIN_WINDOW( window )->private->deleted );
+
 	GSList *ia;
-	for( ia = window->private->actions ; ia ; ia = ia->next ){
-		gboolean is_modified = is_action_modified( NA_ACTION( ia->data ));
-		if( is_modified ){
+	for( ia = NACT_MAIN_WINDOW( window )->private->actions ; ia ; ia = ia->next ){
+		if( is_modified_action( window, NA_ACTION( ia->data ))){
 			count += 1;
 		}
-		/*g_debug( "count_modified_actions: action=%p, is_modified=%s", ia->data, is_modified ? "True":"False" );*/
 	}
-	/*g_debug( "count_modified_actions: length=%d, count=%d", g_slist_length( window->private->actions ), count );*/
+
 	return( count );
 }
 
 /*
- * called by NAPivot because this window implements the IIOContainer
+ * in initial_load_toplevel(), we have forbidden the automatic reload
+ * of the list of actions in NAPivot, as we take care of updating it of
+ * the modifications entered in the UI
+ *
+ * this doesn't prevent NAPivot to advertise us when it detects some
+ * modifications in an I/O provider ; so that we are able to ask the
+ * user for a reload
+ *
+ * but we don't want be advertized when this is our own save which
+ * triggers the NAPivot advertising - so we forbids such advertisings
+ * during one seconde after each save
+ *
+ * note that last_saved is initialized in initial_load_toplevel()
+ * there is so a race condition if NAPivot detects a modification
+ * in the seconde after this initialization - just ignore this case
+ */
+static void
+on_save( NactWindow *window )
+{
+	g_get_current_time( &NACT_MAIN_WINDOW( window )->private->last_saved );
+}
+
+/*
+ * called by NAPivot because this window implements the IIOConsumer
  * interface, i.e. it wish to be advertised when the list of actions
  * changes in the underlying I/O storage subsystem (typically, when we
  * save the modifications)
+ *
+ * note that we only reload the full list of actions when asking for a
+ * reset - saving is handled on a per-action basis.
  */
 static void
-on_actions_changed( NAIPivotContainer *instance, gpointer user_data )
+on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_actions_changed";
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, instance, user_data );
@@ -1201,10 +1085,44 @@ on_actions_changed( NAIPivotContainer *instance, gpointer user_data )
 	g_assert( NACT_IS_MAIN_WINDOW( instance ));
 	NactMainWindow *self = NACT_MAIN_WINDOW( instance );
 
-	if( !self->private->dispose_has_run ){
-		nact_iactions_list_fill( NACT_WINDOW( instance ));
+	GTimeVal now;
+	g_get_current_time( &now );
+	glong ecart = 1000000 * ( now.tv_sec - self->private->last_saved.tv_sec );
+	ecart += now.tv_usec - self->private->last_saved.tv_usec;
+	if( ecart < 1000000 ){
+		return;
 	}
 
-	/*nact_iactions_list_set_selection(
-			NACT_WINDOW( self ), self->private->current_uuid, self->private->current_label );*/
+	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+	NAPivot *pivot = nact_application_get_pivot( application );
+
+	gchar *first = g_strdup(_( "One or more actions have been modified in the filesystem.\n"
+								"You could keep to work with your current list of actions, "
+								"or you may want to reload a fresh one." ));
+
+	if( count_modified_actions( NACT_WINDOW( instance )) > 0 ){
+		gchar *tmp = g_strdup_printf( "%s\n\n%s", first,
+				_( "Note that reloading a fresh list of actions requires "
+					"that you give up with your current modifications." ));
+		g_free( first );
+		first = tmp;
+	}
+
+	gchar *second = g_strdup( _( "Do you want to reload a fresh list of actions ?" ));
+
+	gboolean ok = base_window_yesno_dlg( BASE_WINDOW( instance ), GTK_MESSAGE_QUESTION, first, second );
+
+	g_free( second );
+	g_free( first );
+
+	if( ok ){
+
+		na_pivot_reload_actions( pivot );
+
+		na_pivot_free_actions( self->private->actions );
+
+		self->private->actions = na_pivot_get_duplicate_actions( pivot );
+
+		nact_iactions_list_fill( NACT_WINDOW( instance ), TRUE );
+	}
 }

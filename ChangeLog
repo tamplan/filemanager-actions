@@ -1,3 +1,21 @@
+2009-07-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-action-class.h:
+	* src/common/na-action-profile-class.h:
+	New files to properly handle forward declarations.
+
+	* src/common/na-ipivot-container.c:
+	* src/common/na-ipivot-container.h:
+	Renamed as na-ipivot-consumer.{c,h}.
+
+	* src/common/na-iduplicable.c:
+	* src/common/na-iduplicable.h:
+	New NAIDuplicable interface implemented by NAObject class.
+
+	* src/nact/nact-imenubar.c:
+	* src/nact/nact-imenubar.h:
+	New NactIMenubar interface implemented by NactMainWindow class.
+
 2009-07-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-action-conditions-editor.c:

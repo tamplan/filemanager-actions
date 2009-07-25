@@ -28,49 +28,42 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_H__
-#define __NA_GCONF_H__
+#ifndef __NA_ACTION_CLASS_H__
+#define __NA_ACTION_CLASS_H__
 
 /**
- * SECTION: na_gconf
- * @short_description: #NAGConf class definition.
- * @include: common/na-gconf.h
- *
- * This class manages the GConf I/O storage subsystem.
- * It should only be used through the NAIIOProvider interface.
+ * SECTION: na_action
  */
 
-#include <glib-object.h>
+#include "na-object.h"
 
 G_BEGIN_DECLS
 
-#define NA_GCONF_TYPE					( na_gconf_get_type())
-#define NA_GCONF( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_GCONF_TYPE, NAGConf ))
-#define NA_GCONF_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NA_GCONF_TYPE, NAGConfClass ))
-#define NA_IS_GCONF( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_GCONF_TYPE ))
-#define NA_IS_GCONF_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_GCONF_TYPE ))
-#define NA_GCONF_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_GCONF_TYPE, NAGConfClass ))
+#define NA_ACTION_TYPE					( na_action_get_type())
+#define NA_ACTION( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_ACTION_TYPE, NAAction ))
+#define NA_ACTION_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_ACTION_TYPE, NAActionClass ))
+#define NA_IS_ACTION( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_ACTION_TYPE ))
+#define NA_IS_ACTION_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_ACTION_TYPE ))
+#define NA_ACTION_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_ACTION_TYPE, NAActionClass ))
 
-typedef struct NAGConfPrivate NAGConfPrivate;
-
-typedef struct {
-	GObject         parent;
-	NAGConfPrivate *private;
-}
-	NAGConf;
-
-typedef struct NAGConfClassPrivate NAGConfClassPrivate;
+typedef struct NAActionPrivate NAActionPrivate;
 
 typedef struct {
-	GObjectClass         parent;
-	NAGConfClassPrivate *private;
+	NAObject         parent;
+	NAActionPrivate *private;
 }
-	NAGConfClass;
+	NAAction;
 
-GType    na_gconf_get_type( void );
+typedef struct NAActionClassPrivate NAActionClassPrivate;
 
-NAGConf *na_gconf_new( const GObject *notified );
+typedef struct {
+	NAObjectClass         parent;
+	NAActionClassPrivate *private;
+}
+	NAActionClass;
+
+GType na_action_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NA_GCONF_H__ */
+#endif /* __NA_ACTION_CLASS_H__ */

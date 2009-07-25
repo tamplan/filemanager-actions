@@ -334,7 +334,7 @@ gconf_reader_parse_schemalist( NactGConfReader *reader, xmlNode *schema )
 
 	xmlNode *iter;
 
-	reader->private->action = na_action_new( NULL );
+	reader->private->action = na_action_new();
 	reader->private->uuid_set = FALSE;
 
 	for( iter = schema->children ; iter ; iter = iter->next ){
@@ -554,7 +554,7 @@ gconf_reader_parse_applyto( NactGConfReader *reader, xmlNode *node )
 	if( ret ){
 		if( !reader->private->uuid_set ){
 
-			GObject *object = na_pivot_get_action( reader->private->pivot, uuid );
+			NAAction *object = na_pivot_get_action( reader->private->pivot, uuid );
 			if( object ){
 				add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid );
 				ret = FALSE;
@@ -581,8 +581,8 @@ gconf_reader_parse_applyto( NactGConfReader *reader, xmlNode *node )
 			reader->private->profile = NA_ACTION_PROFILE( na_action_get_profile( reader->private->action, profile ));
 
 			if( !reader->private->profile ){
-				reader->private->profile = na_action_profile_new( NA_OBJECT( reader->private->action ), profile );
-				na_action_add_profile( reader->private->action, NA_OBJECT( reader->private->profile ));
+				reader->private->profile = na_action_profile_new();
+				na_action_attach_profile( reader->private->action, reader->private->profile );
 			}
 		}
 

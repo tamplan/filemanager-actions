@@ -48,17 +48,22 @@ struct NactICommandTabInterfacePrivate {
 
 /* the GConf key used to read/write size and position of auxiliary dialogs
  */
-#define IPREFS_LEGEND_DIALOG		"iconditions-legend-dialog"
-#define IPREFS_COMMAND_CHOOSER		"iconditions-command-chooser"
+#define IPREFS_LEGEND_DIALOG				"iconditions-legend-dialog"
+#define IPREFS_COMMAND_CHOOSER				"iconditions-command-chooser"
 
 /* a data set in the LegendDialog GObject
  */
-#define LEGEND_DIALOG_IS_VISIBLE	"iconditions-legend-dialog-visible"
+#define LEGEND_DIALOG_IS_VISIBLE			"iconditions-legend-dialog-visible"
+
+/* ICommandTab properties, set on the main window
+ */
+#define PROP_ICOMMAND_TAB_STATUS_CONTEXT	"iconditions-status-context"
 
 static GType            register_type( void );
 static void             interface_base_init( NactICommandTabInterface *klass );
 static void             interface_base_finalize( NactICommandTabInterface *klass );
 
+static GtkWidget       *v_get_status_bar( NactWindow *window );
 static NAActionProfile *v_get_edited_profile( NactWindow *window );
 static void             v_field_modified( NactWindow *window );
 static void             v_get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
@@ -66,6 +71,7 @@ static gboolean         v_get_multiple( NactWindow *window );
 static GSList          *v_get_schemes( NactWindow *window );
 
 static void             on_label_changed( GtkEntry *entry, gpointer user_data );
+static void             check_for_label( NactWindow *window, GtkEntry *entry, const gchar *label );
 static GtkWidget       *get_label_entry( NactWindow *window );
 static void             on_path_changed( GtkEntry *entry, gpointer user_data );
 static void             on_path_browse( GtkButton *button, gpointer user_data );
@@ -80,6 +86,11 @@ static void             show_legend_dialog( NactWindow *window );
 static void             hide_legend_dialog( NactWindow *window );
 static GtkButton       *get_legend_button( NactWindow *window );
 static GtkWindow       *get_legend_dialog( NactWindow *window );
+
+static void             display_status( NactWindow *window, const gchar *status );
+static void             hide_status( NactWindow *window );
+static guint            get_status_context( NactWindow *window );
+static void             set_status_context( NactWindow *window, guint context );
 
 GType
 nact_icommand_tab_get_type( void )
@@ -156,6 +167,13 @@ nact_icommand_tab_initial_load( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_icommand_tab_initial_load";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	GtkWidget *status_bar = v_get_status_bar( dialog );
+	if( status_bar ){
+		g_assert( GTK_IS_STATUSBAR( status_bar ));
+		guint context = gtk_statusbar_get_context_id( GTK_STATUSBAR( status_bar ), "nact-iaction-tab" );
+		set_status_context( dialog, context );
+	}
 }
 
 void
@@ -209,6 +227,7 @@ nact_icommand_tab_set_profile( NactWindow *dialog, const NAActionProfile *profil
 	gchar *label = profile ? na_action_profile_get_label( profile ) : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
 	gtk_widget_set_sensitive( label_entry, profile != NULL );
+	check_for_label( dialog, GTK_ENTRY( label_entry ), label );
 	g_free( label );
 
 	GtkWidget *path_entry = get_path_entry( dialog );
@@ -240,6 +259,16 @@ nact_icommand_tab_has_label( NactWindow *window )
 	GtkWidget *label_entry = get_label_entry( window );
 	const gchar *label = gtk_entry_get_text( GTK_ENTRY( label_entry ));
 	return( g_utf8_strlen( label, -1 ) > 0 );
+}
+
+static GtkWidget *
+v_get_status_bar( NactWindow *window )
+{
+	if( NACT_ICOMMAND_TAB_GET_INTERFACE( window )->get_status_bar ){
+		return( NACT_ICOMMAND_TAB_GET_INTERFACE( window )->get_status_bar( window ));
+	}
+
+	return( NULL );
 }
 
 static NAActionProfile *
@@ -308,10 +337,26 @@ on_label_changed( GtkEntry *entry, gpointer user_data )
 	g_assert( NACT_IS_WINDOW( user_data ));
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
-	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+	NAActionProfile *edited = v_get_edited_profile( dialog );
+
 	if( edited ){
-		na_action_profile_set_label( edited, gtk_entry_get_text( entry ));
+		const gchar *label = gtk_entry_get_text( entry );
+		na_action_profile_set_label( edited, label );
 		v_field_modified( dialog );
+		check_for_label( dialog, entry, label );
+	}
+}
+
+static void
+check_for_label( NactWindow *window, GtkEntry *entry, const gchar *label )
+{
+	hide_status( window );
+
+	NAActionProfile *edited = v_get_edited_profile( window );
+
+	if( edited && g_utf8_strlen( label, -1 ) == 0 ){
+		/* i18n: status bar message when the profile label is empty */
+		display_status( window, _( "Caution: a label is mandatory for the profile." ));
 	}
 }
 
@@ -659,4 +704,32 @@ static GtkWindow *
 get_legend_dialog( NactWindow *window )
 {
 	return( base_window_get_dialog( BASE_WINDOW( window ), "LegendDialog" ));
+}
+
+static void
+display_status( NactWindow *window, const gchar *status )
+{
+	GtkWidget *bar = v_get_status_bar( window );
+	guint context = get_status_context( window );
+	gtk_statusbar_push( GTK_STATUSBAR( bar ), context, status );
+}
+
+static void
+hide_status( NactWindow *window )
+{
+	GtkWidget *bar = v_get_status_bar( window );
+	guint context = get_status_context( window );
+	gtk_statusbar_pop( GTK_STATUSBAR( bar ), context );
+}
+
+static guint
+get_status_context( NactWindow *window )
+{
+	return( GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( window ), PROP_ICOMMAND_TAB_STATUS_CONTEXT )));
+}
+
+static void
+set_status_context( NactWindow *window, guint context )
+{
+	g_object_set_data( G_OBJECT( window ), PROP_ICOMMAND_TAB_STATUS_CONTEXT, GUINT_TO_POINTER( context ));
 }

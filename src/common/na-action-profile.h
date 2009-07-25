@@ -31,71 +31,32 @@
 #ifndef __NA_ACTION_PROFILE_H__
 #define __NA_ACTION_PROFILE_H__
 
-/*
- * NactActionProfile class definition.
+/**
+ * SECTION: na_action_profile
+ * @short_description: #NAActionProfile class definition.
+ * @include: common/na-action-profile.h
  *
- * This is a companion class of NactAction. It embeds the profile
+ * This is a companion class of NAAction. It embeds the profile
  * definition of an action.
  *
- * As NactAction itself, NactActionProfile class is derived from
- * NAObject which takes care of i/o.
+ * As NAAction itself, NAActionProfile class is derived from
+ * NAObject class, which takes care of IDuplicable interface management.
  */
 
-#include "na-object.h"
+#include "na-action-class.h"
+#include "na-action-profile-class.h"
 
 G_BEGIN_DECLS
-
-#define NA_ACTION_PROFILE_TYPE					( na_action_profile_get_type())
-#define NA_ACTION_PROFILE( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_ACTION_PROFILE_TYPE, NAActionProfile ))
-#define NA_ACTION_PROFILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_ACTION_PROFILE_TYPE, NAActionProfileClass ))
-#define NA_IS_ACTION_PROFILE( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_ACTION_PROFILE_TYPE ))
-#define NA_IS_ACTION_PROFILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_ACTION_PROFILE_TYPE ))
-#define NA_ACTION_PROFILE_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_ACTION_PROFILE_TYPE, NAActionProfileClass ))
-
-typedef struct NAActionProfilePrivate NAActionProfilePrivate;
-
-typedef struct {
-	NAObject                parent;
-	NAActionProfilePrivate *private;
-}
-	NAActionProfile;
-
-typedef struct NAActionProfileClassPrivate NAActionProfileClassPrivate;
-
-typedef struct {
-	NAObjectClass                parent;
-	NAActionProfileClassPrivate *private;
-}
-	NAActionProfileClass;
-
-/* instance properties
- */
-#define PROP_PROFILE_ACTION_STR					"profile-action"
-#define PROP_PROFILE_NAME_STR					"profile-name"
-#define PROP_PROFILE_LABEL_STR					"profile-desc-name"
-#define PROP_PROFILE_PATH_STR					"profile-path"
-#define PROP_PROFILE_PARAMETERS_STR				"profile-parameters"
-#define PROP_PROFILE_BASENAMES_STR				"profile-basenames"
-#define PROP_PROFILE_MATCHCASE_STR				"profile-matchcase"
-#define PROP_PROFILE_ISDIR_STR					"profile-isdir"
-#define PROP_PROFILE_ISFILE_STR					"profile-isfile"
-#define PROP_PROFILE_ACCEPT_MULTIPLE_STR		"profile-accept-multiple-files"
-#define PROP_PROFILE_MIMETYPES_STR				"profile-mimetypes"
-#define PROP_PROFILE_SCHEMES_STR				"profile-schemes"
 
 /* internal identifier of profiles must begin with the following prefix
  * this let us identify a profile key versus an action key
  * corollarily, no action entry must begin with this same prefix
  */
-#define ACTION_PROFILE_PREFIX					"profile-"
+#define ACTION_PROFILE_PREFIX			"profile-"
 
-GType            na_action_profile_get_type( void );
+NAActionProfile *na_action_profile_new( void );
 
-NAActionProfile *na_action_profile_new( const NAObject *action, const gchar *name );
-NAActionProfile *na_action_profile_duplicate( const NAAction *action, const NAActionProfile *profile );
-void             na_action_profile_free( NAActionProfile *profile );
-
-NAObject        *na_action_profile_get_action( const NAActionProfile *profile );
+NAAction        *na_action_profile_get_action( const NAActionProfile *profile );
 gchar           *na_action_profile_get_name( const NAActionProfile *profile );
 gchar           *na_action_profile_get_label( const NAActionProfile *profile );
 gchar           *na_action_profile_get_path( const NAActionProfile *profile );
@@ -103,13 +64,13 @@ gchar           *na_action_profile_get_parameters( const NAActionProfile *profil
 GSList          *na_action_profile_get_basenames( const NAActionProfile *profile );
 gboolean         na_action_profile_get_matchcase( const NAActionProfile *profile );
 GSList          *na_action_profile_get_mimetypes( const NAActionProfile *profile );
-gboolean         na_action_profile_get_is_dir( const NAActionProfile *profile );
 gboolean         na_action_profile_get_is_file( const NAActionProfile *profile );
+gboolean         na_action_profile_get_is_dir( const NAActionProfile *profile );
 gboolean         na_action_profile_get_multiple( const NAActionProfile *profile );
 GSList          *na_action_profile_get_schemes( const NAActionProfile *profile );
 
-gboolean         na_action_profile_are_equal( NAActionProfile *first, NAActionProfile *second );
-
+void             na_action_profile_set_action( NAActionProfile *profile, const NAAction *action );
+void             na_action_profile_set_name( NAActionProfile *profile, const gchar *name );
 void             na_action_profile_set_label( NAActionProfile *profile, const gchar *label );
 void             na_action_profile_set_path( NAActionProfile *profile, const gchar *path );
 void             na_action_profile_set_parameters( NAActionProfile *profile, const gchar *parameters );

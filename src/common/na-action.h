@@ -31,52 +31,22 @@
 #ifndef __NA_ACTION_H__
 #define __NA_ACTION_H__
 
-/*
- * NAAction class definition.
+/**
+ * SECTION: na_action
+ * @short_description: #NAAction class definition.
+ * @include: common/na-action.h
  *
- * This is the class which maintains an action.
- *
- * NAAction class is derived from NAObject.
+ * This is the class which maintains data and properties of an Nautilus
+ * action.
  */
 
-#include "na-object.h"
-#include "na-pivot.h"
+#include "na-action-class.h"
+#include "na-action-profile-class.h"
+#include "na-iio-provider.h"
 
 G_BEGIN_DECLS
 
-#define NA_ACTION_TYPE					( na_action_get_type())
-#define NA_ACTION( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_ACTION_TYPE, NAAction ))
-#define NA_ACTION_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_ACTION_TYPE, NAActionClass ))
-#define NA_IS_ACTION( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_ACTION_TYPE ))
-#define NA_IS_ACTION_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_ACTION_TYPE ))
-#define NA_ACTION_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_ACTION_TYPE, NAActionClass ))
-
-typedef struct NAActionPrivate NAActionPrivate;
-
-typedef struct {
-	NAObject         parent;
-	NAActionPrivate *private;
-}
-	NAAction;
-
-typedef struct NAActionClassPrivate NAActionClassPrivate;
-
-typedef struct {
-	NAObjectClass         parent;
-	NAActionClassPrivate *private;
-}
-	NAActionClass;
-
-/* instance properties
- */
-#define PROP_ACTION_UUID_STR			"action-uuid"
-#define PROP_ACTION_VERSION_STR			"action-version"
-#define PROP_ACTION_LABEL_STR			"action-label"
-#define PROP_ACTION_TOOLTIP_STR			"action-tooltip"
-#define PROP_ACTION_ICON_STR			"action-icon"
-#define PROP_ACTION_READONLY_STR		"action-read-only"
-#define PROP_ACTION_PROVIDER_STR		"action-provider"
-
+/* TODO: move this declaration elsewhere */
 /* export formats
  * used to be only GConf schemas ('gconfschemafile' XML document)
  */
@@ -84,38 +54,35 @@ enum {
 	EXPORT_FORMAT_GCONFSCHEMAFILE = 1
 };
 
-GType     na_action_get_type( void );
+NAAction        *na_action_new( void );
+NAAction        *na_action_new_with_profile( void );
 
-NAAction *na_action_new( const gchar *uuid );
-NAAction *na_action_new_with_profile( void );
-NAAction *na_action_duplicate( const NAAction *action );
+gchar           *na_action_get_uuid( const NAAction *action );
+gchar           *na_action_get_label( const NAAction *action );
+gchar           *na_action_get_version( const NAAction *action );
+gchar           *na_action_get_tooltip( const NAAction *action );
+gchar           *na_action_get_icon( const NAAction *action );
+gchar           *na_action_get_verified_icon_name( const NAAction *action );
+gboolean         na_action_is_readonly( const NAAction *action );
+NAIIOProvider   *na_action_get_provider( const NAAction *action );
 
-gchar    *na_action_get_uuid( const NAAction *action );
-gchar    *na_action_get_version( const NAAction *action );
-gchar    *na_action_get_label( const NAAction *action );
-gchar    *na_action_get_tooltip( const NAAction *action );
-gchar    *na_action_get_icon( const NAAction *action );
-gchar    *na_action_get_verified_icon_name( const NAAction *action );
-gboolean  na_action_is_readonly( const NAAction *action );
-gpointer  na_action_get_provider( const NAAction *action );
+void             na_action_set_new_uuid( NAAction *action );
+void             na_action_set_uuid( NAAction *action, const gchar *uuid );
+void             na_action_set_label( NAAction *action, const gchar *label );
+void             na_action_set_version( NAAction *action, const gchar *version );
+void             na_action_set_tooltip( NAAction *action, const gchar *tooltip );
+void             na_action_set_icon( NAAction *action, const gchar *icon_name );
+void             na_action_set_readonly( NAAction *action, gboolean readonly );
+void             na_action_set_provider( NAAction *action, const NAIIOProvider *provider );
 
-void      na_action_set_new_uuid( NAAction *action );
-void      na_action_set_uuid( NAAction *action, const gchar *uuid );
-void      na_action_set_version( NAAction *action, const gchar *version );
-void      na_action_set_label( NAAction *action, const gchar *label );
-void      na_action_set_tooltip( NAAction *action, const gchar *tooltip );
-void      na_action_set_icon( NAAction *action, const gchar *icon_name );
-
-gboolean  na_action_are_equal( const NAAction *first, const NAAction *second );
-
-gchar    *na_action_get_new_profile_name( const NAAction *action );
-NAObject *na_action_get_profile( const NAAction *action, const gchar *name );
-GSList   *na_action_get_profiles( const NAAction *action );
-void      na_action_add_profile( NAAction *action, NAObject *profile );
-void      na_action_set_profiles( NAAction *action, GSList *list );
-void      na_action_free_profiles( GSList *list );
-
-guint     na_action_get_profiles_count( const NAAction *action );
+gchar           *na_action_get_new_profile_name( const NAAction *action );
+NAActionProfile *na_action_get_profile( const NAAction *action, const gchar *name );
+GSList          *na_action_get_profiles( const NAAction *action );
+void             na_action_attach_profile( NAAction *action, NAActionProfile *profile );
+void             na_action_remove_profile( NAAction *action, NAActionProfile *profile );
+void             na_action_set_profiles( NAAction *action, GSList *list );
+void             na_action_free_profiles( GSList *list );
+guint            na_action_get_profiles_count( const NAAction *action );
 
 G_END_DECLS
 

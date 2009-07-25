@@ -499,7 +499,7 @@ do_import( NactAssistImport *window, GtkAssistant *assistant )
 		msg = NULL;
 		NAAction *action = nact_gconf_reader_import( G_OBJECT( window ), ( const gchar * ) is->data, &msg );
 
-		if( action && na_pivot_write_action( pivot, G_OBJECT( action ), &error ) != NA_IIO_PROVIDER_WRITE_OK ){
+		if( action && na_pivot_write_action( pivot, action, &error ) != NA_IIO_PROVIDER_WRITE_OK ){
 			g_object_unref( action );
 			action = NULL;
 			msg = g_slist_append( msg, error );

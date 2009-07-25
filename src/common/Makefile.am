@@ -37,15 +37,19 @@ AM_CPPFLAGS += \
 libnact_la_SOURCES = \
 	na-action.c									\
 	na-action.h									\
+	na-action-class.h							\
 	na-action-profile.c							\
 	na-action-profile.h							\
+	na-action-profile-class.h					\
 	na-gconf.c									\
 	na-gconf.h									\
 	na-gconf-keys.h								\
+	na-iduplicable.c							\
+	na-iduplicable.h							\
 	na-iio-provider.c							\
 	na-iio-provider.h							\
-	na-ipivot-container.c						\
-	na-ipivot-container.h						\
+	na-ipivot-consumer.c						\
+	na-ipivot-consumer.h						\
 	na-object.c									\
 	na-object.h									\
 	na-pivot.c									\

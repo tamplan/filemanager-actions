@@ -35,7 +35,6 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 
-#include <common/na-pivot.h>
 #include <common/na-iio-provider.h>
 
 #include "nact-application.h"
@@ -220,14 +219,14 @@ instance_finalize( GObject *window )
 /**
  * Returns a pointer to the list of actions.
  */
-GObject *
+NAPivot *
 nact_window_get_pivot( NactWindow *window )
 {
 	NactApplication *application;
 	g_object_get( G_OBJECT( window ), PROP_WINDOW_APPLICATION_STR, &application, NULL );
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
-	GObject *pivot = nact_application_get_pivot( application );
+	NAPivot *pivot = nact_application_get_pivot( application );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	return( pivot );
@@ -255,22 +254,52 @@ nact_window_set_current_action( NactWindow *window, const NAAction *action )
  * @action: the modified action.
  */
 gboolean
-nact_window_save_action( NactWindow *window, const NAAction *action )
+nact_window_save_action( NactWindow *window, NAAction *action )
 {
 	static const gchar *thisfn = "nact_window_save_action";
 	g_debug( "%s: window=%p, action=%p", thisfn, window, action );
 
-	NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( window ));
+	NAPivot *pivot = nact_window_get_pivot( window );
 	g_assert( NA_IS_PIVOT( pivot ));
 
 	na_object_dump( NA_OBJECT( action ));
 
 	gchar *msg = NULL;
-	guint ret = na_pivot_write_action( pivot, G_OBJECT( action ), &msg );
+	guint ret = na_pivot_write_action( pivot, action, &msg );
 	if( msg ){
 		base_window_error_dlg(
 				BASE_WINDOW( window ),
 				GTK_MESSAGE_WARNING, _( "An error has occured when trying to save the action" ), msg );
+		g_free( msg );
+	}
+
+	return( ret == NA_IIO_PROVIDER_WRITE_OK );
+}
+
+/**
+ * Deleted an action from the I/O storage subsystem.
+ *
+ * @window: this NactWindow object.
+ *
+ * @action: the action to delete.
+ */
+gboolean
+nact_window_delete_action( NactWindow *window, NAAction *action )
+{
+	static const gchar *thisfn = "nact_window_delete_action";
+	g_debug( "%s: window=%p, action=%p", thisfn, window, action );
+
+	NAPivot *pivot = nact_window_get_pivot( window );
+	g_assert( NA_IS_PIVOT( pivot ));
+
+	na_object_dump( NA_OBJECT( action ));
+
+	gchar *msg = NULL;
+	guint ret = na_pivot_delete_action( pivot, action, &msg );
+	if( msg ){
+		base_window_error_dlg(
+				BASE_WINDOW( window ),
+				GTK_MESSAGE_WARNING, _( "An error has occured when trying to delete the action" ), msg );
 		g_free( msg );
 	}
 

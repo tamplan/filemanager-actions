@@ -55,6 +55,7 @@ typedef struct {
 	NactICommandTabInterfacePrivate *private;
 
 	/* api */
+	GtkWidget *       ( *get_status_bar )    ( NactWindow *window );
 	NAActionProfile * ( *get_edited_profile )( NactWindow *window );
 	void              ( *field_modified )    ( NactWindow *window );
 	void              ( *get_isfiledir )     ( NactWindow *window, gboolean *is_file, gboolean *is_dir );

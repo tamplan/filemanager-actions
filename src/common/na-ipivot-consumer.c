@@ -34,24 +34,24 @@
 
 #include <glib.h>
 
-#include "na-ipivot-container.h"
+#include "na-ipivot-consumer.h"
 
 /* private interface data
  */
-struct NAIPivotContainerInterfacePrivate {
+struct NAIPivotConsumerInterfacePrivate {
 };
 
 static GType register_type( void );
-static void  interface_base_init( NAIPivotContainerInterface *klass );
-static void  interface_base_finalize( NAIPivotContainerInterface *klass );
+static void  interface_base_init( NAIPivotConsumerInterface *klass );
+static void  interface_base_finalize( NAIPivotConsumerInterface *klass );
 
-/*static void  do_actions_changed( NAIPivotContainer *instance, gpointer user_data );*/
+/*static void  do_actions_changed( NAIPivotConsumer *instance, gpointer user_data );*/
 
 /**
  * Registers the GType of this interface.
  */
 GType
-na_ipivot_container_get_type( void )
+na_ipivot_consumer_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -65,11 +65,11 @@ na_ipivot_container_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_ipivot_container_register_type";
+	static const gchar *thisfn = "na_ipivot_consumer_register_type";
 	g_debug( "%s", thisfn );
 
 	static const GTypeInfo info = {
-		sizeof( NAIPivotContainerInterface ),
+		sizeof( NAIPivotConsumerInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -80,7 +80,7 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NAIPivotContainer", &info, 0 );
+	GType type = g_type_register_static( G_TYPE_INTERFACE, "NAIPivotConsumer", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -88,15 +88,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIPivotContainerInterface *klass )
+interface_base_init( NAIPivotConsumerInterface *klass )
 {
-	static const gchar *thisfn = "na_ipivot_container_interface_base_init";
+	static const gchar *thisfn = "na_ipivot_consumer_interface_base_init";
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
 		g_debug( "%s: klass=%p", thisfn, klass );
 
-		klass->private = g_new0( NAIPivotContainerInterfacePrivate, 1 );
+		klass->private = g_new0( NAIPivotConsumerInterfacePrivate, 1 );
 
 		klass->on_actions_changed = NULL /*do_actions_changed*/;
 
@@ -105,9 +105,9 @@ interface_base_init( NAIPivotContainerInterface *klass )
 }
 
 static void
-interface_base_finalize( NAIPivotContainerInterface *klass )
+interface_base_finalize( NAIPivotConsumerInterface *klass )
 {
-	static const gchar *thisfn = "na_ipivot_container_interface_base_finalize";
+	static const gchar *thisfn = "na_ipivot_consumer_interface_base_finalize";
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
@@ -120,21 +120,25 @@ interface_base_finalize( NAIPivotContainerInterface *klass )
 }
 
 /**
- * Notify the container that the actions have been modified.
+ * na_ipivot_consumer_notify:
+ * @instance: the #NAIPivotConsumer instance to be notified of the end
+ * of the modifications.
+ *
+ * Notifies the consumers that the actions have been modified.
  */
-void na_ipivot_container_notify( NAIPivotContainer *instance )
+void na_ipivot_consumer_notify( NAIPivotConsumer *instance )
 {
-	static const gchar *thisfn = "na_ipivot_container_notify";
+	static const gchar *thisfn = "na_ipivot_consumer_notify";
 	g_debug( "%s: instance=%p", thisfn, instance );
 
-	if( NA_IPIVOT_CONTAINER_GET_INTERFACE( instance )->on_actions_changed ){
-		NA_IPIVOT_CONTAINER_GET_INTERFACE( instance )->on_actions_changed( instance, NULL );
+	if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed ){
+		NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed( instance, NULL );
 	}
 }
 
 /*static void
-do_actions_changed( NAIPivotContainer *instance, gpointer user_data )
+do_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
 {
-	static const gchar *thisfn = "na_ipivot_container_do_actions_changed";
+	static const gchar *thisfn = "na_ipivot_consumer_do_actions_changed";
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, instance, user_data );
 }*/

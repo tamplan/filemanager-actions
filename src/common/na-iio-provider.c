@@ -33,11 +33,10 @@
 #endif
 
 #include <glib.h>
+#include <glib/gi18n.h>
 
 #include "na-action.h"
-#include "na-action-profile.h"
 #include "na-iio-provider.h"
-#include "na-pivot.h"
 
 /* private interface data
  */
@@ -48,8 +47,9 @@ static GType    register_type( void );
 static void     interface_base_init( NAIIOProviderInterface *klass );
 static void     interface_base_finalize( NAIIOProviderInterface *klass );
 
-static gboolean do_is_writable( NAIIOProvider *instance );
-static gboolean do_is_willing_to_write( NAIIOProvider *instance, const GObject *action );
+static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
+static gboolean do_is_writable( const NAIIOProvider *instance, const NAAction *action );
+static guint    write_action( const NAIIOProvider *instance, NAAction *action, gchar **message );
 
 /**
  * Registers the GType of this interface.
@@ -103,9 +103,10 @@ interface_base_init( NAIIOProviderInterface *klass )
 		klass->private = g_new0( NAIIOProviderInterfacePrivate, 1 );
 
 		klass->read_actions = NULL;
-		klass->is_writable = do_is_writable;
 		klass->is_willing_to_write = do_is_willing_to_write;
+		klass->is_writable = do_is_writable;
 		klass->write_action = NULL;
+		klass->delete_action = NULL;
 
 		initialized = TRUE;
 	}
@@ -127,24 +128,28 @@ interface_base_finalize( NAIIOProviderInterface *klass )
 }
 
 /**
- * Loads the actions defined in the system.
+ * na_iio_provider_read_actions:
+ * @pivot: the #NAPivot object which owns the list of registered I/O
+ * storage providers.
  *
- * @object: the pivot object which owns the list of registered
- * interface providers.
+ * Loads the actions from storage subsystems.
  *
- * Returns a GSList of newly allocated NAAction objects.
+ * Returns: a #GSList of newly allocated #NAAction objects.
+ *
+ * na_iio_provider_read_actions() loads the list of #NAAction from each
+ * registered I/O storage provider, and takes care of concatenating
+ * them into the returned global list.
  */
 GSList *
-na_iio_provider_read_actions( const GObject *object )
+na_iio_provider_read_actions( const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_iio_provider_read_actions";
-	g_debug( "%s", thisfn );
+	g_debug( "%s: pivot=%p", thisfn, pivot );
 
-	g_assert( NA_IS_PIVOT( object ));
-	NAPivot *pivot = NA_PIVOT( object );
+	g_assert( NA_IS_PIVOT( pivot ));
 
 	GSList *actions = NULL;
-	GSList *ip, *il;
+	GSList *ip;
 	GSList *list;
 	NAIIOProvider *instance;
 
@@ -157,59 +162,54 @@ na_iio_provider_read_actions( const GObject *object )
 
 			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_actions( instance );
 
-			for( il = list ; il ; il = il->next ){
-				g_object_set_data( G_OBJECT( il->data ), "provider", instance );
+			GSList *ia;
+			for( ia = list ; ia ; ia = ia->next ){
+
+				na_action_set_provider( NA_ACTION( ia->data ), instance );
+
+				na_object_dump( NA_OBJECT( ia->data ));
 			}
 
 			actions = g_slist_concat( actions, list );
 		}
 	}
 
-#ifdef NACT_MAINTAINER_MODE
-	for( ip = actions ; ip ; ip = ip->next ){
-		na_object_dump( NA_OBJECT( ip->data ));
-	}
-#endif
-
 	return( actions );
 }
 
 /**
- * Writes an action to a willing-to storage subsystem.
- *
- * @obj_pivot: the pivot object which owns the list of registered
- * interface providers.
- *
- * @obj_action: the action to be written.
- *
+ * na_iio_provider_write_action:
+ * @pivot: the #NAPivot object which owns the list of registered I/O
+ * storage providers.
+ * @action: the #NAAction action to be written.
  * @message: the I/O provider can allocate and store here an error
  * message.
  *
- * Returns the IIOProvider return code.
+ * Writes an action to a willing-to storage subsystem.
+ *
+ * Returns: the NAIIOProvider return code.
  */
 guint
-na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_action, gchar **message )
+na_iio_provider_write_action( const NAPivot *pivot, NAAction *action, gchar **message )
 {
 	static const gchar *thisfn = "na_iio_provider_write_action";
-	g_debug( "%s", thisfn );
+	g_debug( "%s: pivot=%p, action=%p, message=%p", thisfn, pivot, action, message );
 
-	g_assert( NA_IS_PIVOT( obj_pivot ));
-	NAPivot *pivot = NA_PIVOT( obj_pivot );
-
-	g_assert( NA_IS_ACTION( obj_action ));
+	g_assert( NA_IS_PIVOT( pivot ));
+	g_assert( NA_IS_ACTION( action ));
 
 	guint ret = NA_IIO_PROVIDER_NOT_WRITABLE;
-	NAIIOProvider *instance = NA_IIO_PROVIDER( na_action_get_provider( NA_ACTION( obj_action )));
 
 	/* try to write to the original provider of the action
 	 */
+	NAIIOProvider *instance = NA_IIO_PROVIDER( na_action_get_provider( action ));
+
 	if( instance ){
-		g_assert( NA_IS_IIO_PROVIDER( instance ));
-		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action ){
-			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action( instance, obj_action, message );
-		} else {
-			instance = NULL;
-		}
+		ret = write_action( instance, action, message );
+	}
+
+	if( ret == NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE || ret == NA_IIO_PROVIDER_NOT_WRITABLE ){
+		instance = NULL;
 	}
 
 	/* else, search for a provider which is willing to write the action
@@ -217,15 +217,12 @@ na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_actio
 	if( !instance ){
 		GSList *providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
 		GSList *ip;
-
 		for( ip = providers ; ip ; ip = ip->next ){
-			instance = NA_IIO_PROVIDER( ip->data );
-			if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action ){
 
-				ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->write_action( instance, obj_action, message );
-				if( ret == NA_IIO_PROVIDER_WRITE_OK || ret == NA_IIO_PROVIDER_WRITE_ERROR ){
-					break;
-				}
+			instance = NA_IIO_PROVIDER( ip->data );
+			ret = write_action( instance, action, message );
+			if( ret == NA_IIO_PROVIDER_WRITE_OK || ret == NA_IIO_PROVIDER_WRITE_ERROR ){
+				break;
 			}
 		}
 	}
@@ -234,49 +231,84 @@ na_iio_provider_write_action( const GObject *obj_pivot, const GObject *obj_actio
 }
 
 /**
- * Deletes an action from the storage subsystem.
- *
- * @obj_pivot: the pivot object which owns the list of registered
- * interface providers.
- *
- * @obj_action: the action to be deleted.
- *
+ * na_iio_provider_delete_action:
+ * @pivot: the #NAPivot object which owns the list of registered I/O
+ * storage providers.
+ * @action: the #NAAction action to be written.
  * @message: the I/O provider can allocate and store here an error
  * message.
  *
- * Returns the IIOProvider return code.
+ * Deletes an action from the storage subsystem.
+ *
+ * Returns: the NAIIOProvider return code.
+ *
+ * Note that a new action, not already written to an I/O subsystem,
+ * doesn't have any attached provider. We so do nothing...
  */
 guint
-na_iio_provider_delete_action( const GObject *obj_pivot, const GObject *obj_action, gchar **message )
+na_iio_provider_delete_action( const NAPivot *pivot, const NAAction *action, gchar **message )
 {
 	static const gchar *thisfn = "na_iio_provider_delete_action";
-	g_debug( "%s: pivot=%p, action=%p, message=%p", thisfn, obj_pivot, obj_action, message );
+	g_debug( "%s: pivot=%p, action=%p, message=%p", thisfn, pivot, action, message );
 
-	g_assert( NA_IS_ACTION( obj_action ));
+	g_assert( NA_IS_PIVOT( pivot ));
+	g_assert( NA_IS_ACTION( action ));
+
 	guint ret = NA_IIO_PROVIDER_NOT_WRITABLE;
+	NAIIOProvider *instance = NA_IIO_PROVIDER( na_action_get_provider( action ));
 
-	NAIIOProvider *instance = NA_IIO_PROVIDER( na_action_get_provider( NA_ACTION( obj_action )));
 	if( instance ){
 		g_assert( NA_IS_IIO_PROVIDER( instance ));
 
 		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_action ){
-			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_action( instance, obj_action, message );
+			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_action( instance, action, message );
 		}
-	} else {
-		g_assert_not_reached();
+	/*} else {
+		*message = g_strdup( _( "Unable to delete the action: no I/O provider." ));
+		ret = NA_IIO_PROVIDER_NO_PROVIDER;*/
 	}
 
 	return( ret );
 }
 
 static gboolean
-do_is_writable( NAIIOProvider *instance )
+do_is_willing_to_write( const NAIIOProvider *instance )
 {
 	return( FALSE );
 }
 
 static gboolean
-do_is_willing_to_write( NAIIOProvider *instance, const GObject *action )
+do_is_writable( const NAIIOProvider *instance, const NAAction *action )
 {
 	return( FALSE );
+}
+
+static guint
+write_action( const NAIIOProvider *provider, NAAction *action, gchar **message )
+{
+	static const gchar *thisfn = "na_iio_provider_write_action";
+	g_debug( "%s: provider=%p, action=%p, message=%p", thisfn, provider, action, message );
+
+	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->is_willing_to_write( provider )){
+		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
+	}
+
+	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->is_writable( provider, action )){
+		return( NA_IIO_PROVIDER_NOT_WRITABLE );
+	}
+
+	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->delete_action ){
+		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
+	}
+
+	guint ret = NA_IIO_PROVIDER_GET_INTERFACE( provider )->delete_action( provider, action, message );
+	if( ret != NA_IIO_PROVIDER_WRITE_OK ){
+		return( ret );
+	}
+
+	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_action ){
+		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
+	}
+
+	return( NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_action( provider, action, message ));
 }

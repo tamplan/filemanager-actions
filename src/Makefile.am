@@ -29,6 +29,6 @@
 SUBDIRS = \
 	common						\
 	nact						\
-	$(OPTIONAL_SUBDIR)			\
 	plugin						\
+	$(OPTIONAL_SUBDIR)			\
 	$(NULL)
