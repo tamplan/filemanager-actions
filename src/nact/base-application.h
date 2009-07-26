@@ -37,55 +37,12 @@
  * This is a base class for Gtk+ programs.
  */
 
-#include <glib-object.h>
 #include <gtk/gtk.h>
 
-#include "base-window.h"
+#include "base-application-class.h"
+#include "base-window-class.h"
 
 G_BEGIN_DECLS
-
-#define BASE_APPLICATION_TYPE					( base_application_get_type())
-#define BASE_APPLICATION( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_APPLICATION_TYPE, BaseApplication ))
-#define BASE_APPLICATION_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, BASE_APPLICATION_TYPE, BaseApplicationClass ))
-#define BASE_IS_APPLICATION( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_APPLICATION_TYPE ))
-#define BASE_IS_APPLICATION_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_APPLICATION_TYPE ))
-#define BASE_APPLICATION_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_APPLICATION_TYPE, BaseApplicationClass ))
-
-typedef struct BaseApplicationPrivate BaseApplicationPrivate;
-
-typedef struct {
-	GObject                 parent;
-	BaseApplicationPrivate *private;
-}
-	BaseApplication;
-
-typedef struct BaseApplicationClassPrivate BaseApplicationClassPrivate;
-
-typedef struct {
-	GObjectClass                 parent;
-	BaseApplicationClassPrivate *private;
-
-	/* virtual functions */
-	int       ( *run )                         ( BaseApplication *appli );
-	void      ( *initialize )                  ( BaseApplication *appli );
-	void      ( *initialize_i18n )             ( BaseApplication *appli );
-	void      ( *initialize_gtk )              ( BaseApplication *appli );
-	void      ( *initialize_application_name ) ( BaseApplication *appli );
-	void      ( *initialize_icon_name )        ( BaseApplication *appli );
-	void      ( *initialize_unique )           ( BaseApplication *appli );
-	void      ( *initialize_ui )               ( BaseApplication *appli );
-	gboolean  ( *is_willing_to_run )           ( BaseApplication *appli );
-	void      ( *advertise_willing_to_run )    ( BaseApplication *appli );
-	void      ( *advertise_not_willing_to_run )( BaseApplication *appli );
-	void      ( *start )                       ( BaseApplication *appli );
-	void      ( *finish )                      ( BaseApplication *appli );
-	gchar   * ( *get_unique_name )             ( BaseApplication *appli );
-	gchar   * ( *get_application_name )        ( BaseApplication *appli );
-	gchar   * ( *get_icon_name )               ( BaseApplication *appli );
-	gchar   * ( *get_ui_filename )             ( BaseApplication *appli );
-	GObject * ( *get_main_window )             ( BaseApplication *appli );
-}
-	BaseApplicationClass;
 
 /* instance properties
  */
@@ -100,20 +57,19 @@ typedef struct {
 #define PROP_APPLICATION_UI_FILENAME_STR		"base-application-ui-filename"
 #define PROP_APPLICATION_MAIN_WINDOW_STR		"base-application-main-window"
 
-GType      base_application_get_type( void );
+int         base_application_run( BaseApplication *application );
 
-int        base_application_run( BaseApplication *application );
+gchar      *base_application_get_ui_filename( BaseApplication *application );
+gchar      *base_application_get_name( BaseApplication *application );
+gchar      *base_application_get_icon_name( BaseApplication *application );
+BaseWindow *base_application_get_main_window( BaseApplication *application );
 
-gchar     *base_application_get_name( BaseApplication *application );
-gchar     *base_application_get_icon_name( BaseApplication *application );
-GObject   *base_application_get_main_window( BaseApplication *application );
+GtkWindow  *base_application_get_dialog( BaseApplication *application, const gchar *name );
+GtkWidget  *base_application_get_widget( BaseApplication *application, BaseWindow *window, const gchar *name );
+GtkWidget  *base_application_search_for_widget( BaseApplication *application, GtkWindow *window, const gchar *name );
 
-GtkWindow *base_application_get_dialog( BaseApplication *application, const gchar *name );
-GtkWidget *base_application_get_widget( BaseApplication *application, BaseWindow *window, const gchar *name );
-GtkWidget *base_application_search_for_widget( BaseApplication *application, GtkWindow *window, const gchar *name );
-
-void       base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary );
-gboolean   base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
+void        base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *primary, const gchar *secondary );
+gboolean    base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
 
 G_END_DECLS
 

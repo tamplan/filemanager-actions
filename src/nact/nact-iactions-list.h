@@ -87,6 +87,7 @@ gboolean  nact_iactions_list_is_expanded( NactWindow *window, const NAAction *ac
 void      nact_iactions_list_toggle_collapse( NactWindow *window, const NAAction *action );
 void      nact_iactions_list_update_selected( NactWindow *window, NAAction *action );
 
+void      nact_iactions_list_set_edition_mode( NactWindow *window, gboolean mode );
 void      nact_iactions_list_set_multiple_selection( NactWindow *window, gboolean multiple );
 void      nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );
 void      nact_iactions_list_set_is_filling_list( NactWindow *window, gboolean is_filling );

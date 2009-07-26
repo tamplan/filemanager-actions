@@ -39,9 +39,9 @@
 #include <uuid/uuid.h>
 
 #include <common/na-gconf-keys.h>
-#include <common/na-pivot.h>
 #include <common/na-utils.h>
 
+#include "nact-application.h"
 #include "nact-gconf-keys.h"
 #include "nact-gconf-reader.h"
 #include "nact-assistant.h"
@@ -58,7 +58,7 @@ struct NactGConfReaderClassPrivate {
  */
 struct NactGConfReaderPrivate {
 	gboolean         dispose_has_run;
-	NAPivot         *pivot;
+	NactWindow      *window;
 	NAAction        *action;			/* the action that we will return, or NULL */
 	GSList          *messages;
 	gboolean         uuid_set;			/* set at first uuid, then checked against */
@@ -136,6 +136,7 @@ static gboolean         is_uuid_valid( const gchar *uuid );
 static gchar           *get_profile_name_from_key( const gchar *key, const gchar *uuid );
 static gchar           *get_entry_from_key( const gchar *key );
 static void             free_schema_value( NactGConfReader *reader );
+static gboolean         action_exists( NactGConfReader *reader, const gchar *uuid );
 
 GType
 nact_gconf_reader_get_type( void )
@@ -252,7 +253,7 @@ gconf_reader_new( void )
  * Import the specified file as an NAAction XML description.
  */
 NAAction *
-nact_gconf_reader_import( GObject *window, const gchar *uri, GSList **msg )
+nact_gconf_reader_import( NactWindow *window, const gchar *uri, GSList **msg )
 {
 	static const gchar *thisfn = "nact_gconf_reader_import";
 	g_debug( "%s: window=%p, uri=%s, msg=%p", thisfn, window, uri, msg );
@@ -261,9 +262,9 @@ nact_gconf_reader_import( GObject *window, const gchar *uri, GSList **msg )
 	gboolean found = FALSE;
 
 	NactGConfReader *reader = gconf_reader_new();
+	reader->private->window = window;
 
 	g_assert( NACT_IS_ASSISTANT( window ));
-	reader->private->pivot = NA_PIVOT( nact_window_get_pivot( NACT_WINDOW( window )));
 
 	xmlDoc *doc = xmlParseFile( uri );
 	xmlNode *iter;
@@ -384,9 +385,6 @@ gconf_reader_parse_schemalist( NactGConfReader *reader, xmlNode *schema )
  *
  * data found in schema node is imported into the action if and only if
  * the whole node is correct ; else the error is warned (but not fatal)
- *
- * note that versions previous to 1.11 used to export a full schema
- * we have so always a 'locale' even if the value is in 'default'
  *
  * note also that versions previous to 1.11 used to export profile label
  * as if it were not localized (which is a bug, though not signaled)
@@ -554,8 +552,7 @@ gconf_reader_parse_applyto( NactGConfReader *reader, xmlNode *node )
 	if( ret ){
 		if( !reader->private->uuid_set ){
 
-			NAAction *object = na_pivot_get_action( reader->private->pivot, uuid );
-			if( object ){
+			if( action_exists( reader, uuid )){
 				add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid );
 				ret = FALSE;
 
@@ -566,7 +563,7 @@ gconf_reader_parse_applyto( NactGConfReader *reader, xmlNode *node )
 
 		} else {
 			gchar *ref = na_action_get_uuid( reader->private->action );
-			if( strcmp(( const char * ) uuid, ( const char * ) ref )){
+			if( g_ascii_strcasecmp(( const gchar * ) uuid, ( const gchar * ) ref )){
 				add_message( reader, ERR_INVALID_UUID, ref, uuid, node->line );
 				ret = FALSE;
 			}
@@ -582,6 +579,7 @@ gconf_reader_parse_applyto( NactGConfReader *reader, xmlNode *node )
 
 			if( !reader->private->profile ){
 				reader->private->profile = na_action_profile_new();
+				na_action_profile_set_name( reader->private->profile, profile );
 				na_action_attach_profile( reader->private->action, reader->private->profile );
 			}
 		}
@@ -866,4 +864,12 @@ free_schema_value( NactGConfReader *reader )
 	for( i=0 ; reader_str[i].entry ; ++i ){
 		reader_str[i].entry_found = FALSE;
 	}
+}
+
+static gboolean
+action_exists( NactGConfReader *reader, const gchar *uuid )
+{
+	BaseApplication *appli = base_window_get_application( BASE_WINDOW( reader->private->window ));
+	NactMainWindow *main_window = NACT_MAIN_WINDOW( base_application_get_main_window( appli ));
+	return( nact_main_window_action_exists( main_window, uuid ));
 }

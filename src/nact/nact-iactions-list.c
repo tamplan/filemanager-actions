@@ -56,6 +56,7 @@ enum {
 
 /* data set against GObject
  */
+#define IS_EDITION_MODE					"iactions-list-edition-mode"
 #define ACCEPT_MULTIPLE_SELECTION		"iactions-list-accept-multiple-selection"
 #define IS_FILLING_LIST					"iactions-list-is-filling-list"
 #define SEND_SELECTION_CHANGED_MESSAGE	"iactions-list-send-selection-changed-message"
@@ -82,6 +83,7 @@ static GtkWidget *get_actions_list_widget( NactWindow *window );
 static GSList    *get_expanded_rows( NactWindow *window );
 static void       expand_rows( NactWindow *window, GSList *expanded );
 static void       free_expanded_list( GSList *expanded );
+static gboolean   is_edition_mode( NactWindow *window );
 
 GType
 nact_iactions_list_get_type( void )
@@ -285,14 +287,16 @@ nact_iactions_list_fill( NactWindow *window, gboolean keep_expanded )
 		setup_action( widget, ts_model, &iter, action );
 		g_debug( "%s: action=%p", thisfn, action );
 
-		GSList *profiles = na_action_get_profiles( action );
-		GSList *ip;
-		GtkTreeIter profile_iter;
-		for( ip = profiles ; ip ; ip = ip->next ){
-			NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
-			gtk_tree_store_append( ts_model, &profile_iter, &iter );
-			gtk_tree_store_set( ts_model, &profile_iter, IACTIONS_LIST_NAOBJECT_COLUMN, profile, -1 );
-			setup_profile( widget, ts_model, &profile_iter, profile );
+		if( is_edition_mode( window )){
+			GSList *profiles = na_action_get_profiles( action );
+			GSList *ip;
+			GtkTreeIter profile_iter;
+			for( ip = profiles ; ip ; ip = ip->next ){
+				NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
+				gtk_tree_store_append( ts_model, &profile_iter, &iter );
+				gtk_tree_store_set( ts_model, &profile_iter, IACTIONS_LIST_NAOBJECT_COLUMN, profile, -1 );
+				setup_profile( widget, ts_model, &profile_iter, profile );
+			}
 		}
 	}
 	/*g_debug( "%s: at end, actions has %d elements", thisfn, g_slist_length( actions ));*/
@@ -655,6 +659,16 @@ nact_iactions_list_update_selected( NactWindow *window, NAAction *action )
 }
 
 /**
+ * Are we in edition mode (vs. selection only mode) ?
+ */
+void
+nact_iactions_list_set_edition_mode( NactWindow *window, gboolean edition )
+{
+	g_assert( NACT_IS_IACTIONS_LIST( window ));
+	g_object_set_data( G_OBJECT( window ), IS_EDITION_MODE, GINT_TO_POINTER( edition ));
+}
+
+/**
  * Does the IActionsList box support multiple selection ?
  */
 void
@@ -846,14 +860,16 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		gboolean modified = FALSE;
 		gboolean valid = TRUE;
 
-		if( NA_IS_ACTION( object )){
-			modified = v_is_modified_action( window, NA_ACTION( object ));
-			valid = v_is_valid_action( window, NA_ACTION( object ));
+		if( is_edition_mode( window )){
+			if( NA_IS_ACTION( object )){
+				modified = v_is_modified_action( window, NA_ACTION( object ));
+				valid = v_is_valid_action( window, NA_ACTION( object ));
 
-		} else {
-			g_assert( NA_IS_ACTION_PROFILE( object ));
-			modified = v_is_modified_profile( window, NA_ACTION_PROFILE( object ));
-			valid = v_is_valid_profile( window, NA_ACTION_PROFILE( object ));
+			} else {
+				g_assert( NA_IS_ACTION_PROFILE( object ));
+				modified = v_is_modified_profile( window, NA_ACTION_PROFILE( object ));
+				valid = v_is_valid_profile( window, NA_ACTION_PROFILE( object ));
+			}
 		}
 
 		if( modified ){
@@ -1026,4 +1042,10 @@ static void
 free_expanded_list( GSList *expanded )
 {
 	g_slist_free( expanded );
+}
+
+static gboolean
+is_edition_mode( NactWindow *window )
+{
+	return( GPOINTER_TO_INT( g_object_get_data( G_OBJECT( window ), IS_EDITION_MODE )));
 }

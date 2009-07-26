@@ -36,7 +36,6 @@
 #include <gtk/gtk.h>
 
 #include "nact-application.h"
-#include "nact-main-window.h"
 
 #define GLADE_FILENAME				GLADEDIR "/nautilus-actions-config.ui"
 
@@ -48,8 +47,8 @@ struct NactApplicationClassPrivate {
 /* private instance data
  */
 struct NactApplicationPrivate {
-	gboolean dispose_has_run;
-	NAPivot *pivot;
+	gboolean  dispose_has_run;
+	NAPivot  *pivot;
 };
 
 /* private instance properties
@@ -250,6 +249,21 @@ nact_application_new_with_args( int argc, char **argv )
 	);
 }
 
+/**
+ * Returns a pointer on the NAPivot object.
+ *
+ * @application: this NactApplication object.
+ *
+ * The returned pointer is owned by the NactApplication object.
+ * It should not be freed not unref by the caller.
+ */
+NAPivot *
+nact_application_get_pivot( NactApplication *application )
+{
+	g_assert( NACT_IS_APPLICATION( application ));
+	return( NA_PIVOT( application->private->pivot ));
+}
+
 static void
 warn_other_instance( BaseApplication *application )
 {
@@ -302,24 +316,11 @@ get_main_window( BaseApplication *application )
 	static const gchar *thisfn = "nact_application_get_main_window";
 	g_debug( "%s: application=%p", thisfn, application );
 
-	GObject *window = G_OBJECT( nact_main_window_new( G_OBJECT( application )));
+	BaseWindow *window = BASE_WINDOW( nact_main_window_new( application ));
 
-	na_pivot_add_consumer( NA_PIVOT( nact_application_get_pivot( NACT_APPLICATION( application ))), window );
+	na_pivot_add_consumer(
+			NA_PIVOT( nact_application_get_pivot( NACT_APPLICATION( application ))),
+			G_OBJECT( window ));
 
-	return( window );
-}
-
-/**
- * Returns a pointer on the NAPivot object.
- *
- * @application: this NactApplication object.
- *
- * The returned pointer is owned by the NactApplication object.
- * It should not be freed not unref by the caller.
- */
-NAPivot *
-nact_application_get_pivot( NactApplication *application )
-{
-	g_assert( NACT_IS_APPLICATION( application ));
-	return( NA_PIVOT( application->private->pivot ));
+	return( G_OBJECT( window ));
 }

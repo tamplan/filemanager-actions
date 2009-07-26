@@ -38,10 +38,7 @@
  * storage subsystem.
  */
 
-#include <glib-object.h>
-
-#include <common/na-action.h>
-#include <common/na-action-profile.h>
+#include "nact-window.h"
 
 G_BEGIN_DECLS
 
@@ -70,7 +67,7 @@ typedef struct {
 
 GType     nact_gconf_reader_get_type( void );
 
-NAAction *nact_gconf_reader_import( GObject *window, const gchar *uri, GSList **msg );
+NAAction *nact_gconf_reader_import( NactWindow *window, const gchar *uri, GSList **msg );
 
 G_END_DECLS
 

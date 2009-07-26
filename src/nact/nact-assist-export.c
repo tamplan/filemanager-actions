@@ -40,6 +40,7 @@
 #include <common/na-utils.h>
 
 #include "base-application.h"
+#include "nact-main-window.h"
 #include "nact-assist-export.h"
 #include "nact-gconf-writer.h"
 #include "nact-iactions-list.h"
@@ -72,11 +73,12 @@ struct NactAssistExportClassPrivate {
 /* private instance data
  */
 struct NactAssistExportPrivate {
-	gboolean  dispose_has_run;
-	gchar    *uri;
-	GSList   *fnames;
-	gint      errors;
-	gchar    *reason;
+	gboolean        dispose_has_run;
+	NactMainWindow *main_window;
+	gchar          *uri;
+	GSList         *fnames;
+	gint            errors;
+	gchar          *reason;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -92,6 +94,7 @@ static NactAssistExport *assist_new( BaseApplication *application );
 
 static gchar            *do_get_iprefs_window_id( NactWindow *window );
 static gchar            *do_get_dialog_name( BaseWindow *dialog );
+static GSList           *get_actions( NactWindow *window );
 static void              on_initial_load_dialog( BaseWindow *dialog );
 static void              on_runtime_init_dialog( BaseWindow *dialog );
 static void              on_apply( NactAssistant *window, GtkAssistant *assistant );
@@ -197,6 +200,7 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	static const gchar *thisfn = "nact_assist_export_iactions_list_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
+	iface->get_actions = get_actions;
 	iface->on_selection_changed = on_actions_list_selection_changed;
 }
 
@@ -267,11 +271,13 @@ assist_new( BaseApplication *application )
  * @main: the main window of the application.
  */
 void
-nact_assist_export_run( NactWindow *main )
+nact_assist_export_run( NactWindow *main_window )
 {
-	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( main )));
+	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( main_window )));
 
 	NactAssistExport *assist = assist_new( appli );
+
+	assist->private->main_window = NACT_MAIN_WINDOW( main_window );
 
 	base_window_run( BASE_WINDOW( assist ));
 }
@@ -286,6 +292,12 @@ static gchar *
 do_get_dialog_name( BaseWindow *dialog )
 {
 	return( g_strdup( "ExportAssistant" ));
+}
+
+static GSList *
+get_actions( NactWindow *window )
+{
+	return( nact_main_window_get_actions( NACT_ASSIST_EXPORT( window )->private->main_window ));
 }
 
 static void
@@ -392,6 +404,7 @@ assist_initial_load_actions_list( NactAssistExport *window, GtkAssistant *assist
 {
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 	nact_iactions_list_initial_load( NACT_WINDOW( window ));
+	nact_iactions_list_set_edition_mode( NACT_WINDOW( window ), FALSE );
 	nact_iactions_list_set_multiple_selection( NACT_WINDOW( window ), TRUE );
 	nact_iactions_list_set_send_selection_changed_on_fill_list( NACT_WINDOW( window ), FALSE );
 }

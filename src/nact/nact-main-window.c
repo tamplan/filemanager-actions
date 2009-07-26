@@ -426,11 +426,39 @@ instance_finalize( GObject *window )
  * Returns a newly allocated NactMainWindow object.
  */
 NactMainWindow *
-nact_main_window_new( GObject *application )
+nact_main_window_new( BaseApplication *application )
 {
 	g_assert( NACT_IS_APPLICATION( application ));
 
 	return( g_object_new( NACT_MAIN_WINDOW_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
+}
+
+/**
+ * Returns the current list of actions
+ */
+GSList *
+nact_main_window_get_actions( const NactMainWindow *window )
+{
+	return( window->private->actions );
+}
+
+/**
+ * The specified action does already exist in the list ?
+ */
+gboolean
+nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid )
+{
+	GSList *ia;
+	for( ia = window->private->actions ; ia ; ia = ia->next ){
+		NAAction *action = NA_ACTION( ia->data );
+		gchar *action_uuid = na_action_get_uuid( action );
+		gboolean ok = ( g_ascii_strcasecmp( action_uuid, uuid ) == 0 );
+		g_free( action_uuid );
+		if( ok ){
+			return( TRUE );
+		}
+	}
+	return( FALSE );
 }
 
 static gchar *
@@ -493,6 +521,7 @@ on_initial_load_toplevel( BaseWindow *window )
 
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 	nact_iactions_list_initial_load( NACT_WINDOW( window ));
+	nact_iactions_list_set_edition_mode( NACT_WINDOW( window ), TRUE );
 	nact_iactions_list_set_multiple_selection( NACT_WINDOW( window ), FALSE );
 	nact_iactions_list_set_send_selection_changed_on_fill_list( NACT_WINDOW( window ), FALSE );
 

@@ -66,7 +66,10 @@ typedef struct {
 
 GType           nact_main_window_get_type( void );
 
-NactMainWindow *nact_main_window_new( GObject *application );
+NactMainWindow *nact_main_window_new( BaseApplication *application );
+
+GSList         *nact_main_window_get_actions( const NactMainWindow *window );
+gboolean        nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid );
 
 G_END_DECLS
 

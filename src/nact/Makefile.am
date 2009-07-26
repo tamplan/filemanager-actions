@@ -42,8 +42,10 @@ AM_CPPFLAGS += \
 nautilus_actions_config_SOURCES = \
 	base-application.c									\
 	base-application.h									\
+	base-application-class.h							\
 	base-window.c										\
 	base-window.h										\
+	base-window-class.h									\
 	nact-application.c									\
 	nact-application.h									\
 	nact-assistant.c									\

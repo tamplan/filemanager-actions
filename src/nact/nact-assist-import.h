@@ -62,9 +62,9 @@ typedef struct {
 }
 	NactAssistImportClass;
 
-GType nact_assist_import_get_type( void );
+GType   nact_assist_import_get_type( void );
 
-void  nact_assist_import_run( NactWindow *main );
+GSList *nact_assist_import_run( NactWindow *main );
 
 G_END_DECLS
 

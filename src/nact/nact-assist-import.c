@@ -79,6 +79,7 @@ struct NactAssistImportClassPrivate {
 struct NactAssistImportPrivate {
 	gboolean  dispose_has_run;
 	GSList   *results;
+	GSList   *actions;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -227,14 +228,15 @@ assist_new( BaseApplication *application )
  *
  * @main: the main window of the application.
  */
-void
+GSList *
 nact_assist_import_run( NactWindow *main )
 {
 	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( main )));
-
 	NactAssistImport *assist = assist_new( appli );
 
 	base_window_run( BASE_WINDOW( assist ));
+
+	return( assist->private->actions );
 }
 
 static gchar *
@@ -456,9 +458,13 @@ prepare_importdone( NactAssistImport *window, GtkAssistant *assistant, GtkWidget
 			tmp = g_strdup_printf( _( "%s\t\tUUID: %s\t%s\n\n" ), text, uuid, label );
 			g_free( label );
 			g_free( uuid );
+
+			window->private->actions = g_slist_prepend( window->private->actions, str->action );
+
 		} else {
 			tmp = g_strdup_printf( "%s\t\t NOT OK\n\n", text );
 		}
+
 		g_free( text );
 		text = tmp;
 
@@ -487,24 +493,14 @@ do_import( NactAssistImport *window, GtkAssistant *assistant )
 	static const gchar *thisfn = "nact_assist_import_do_import";
 	g_debug( "%s: window=%p", thisfn, window );
 
-	NAPivot *pivot = NA_PIVOT( nact_window_get_pivot( NACT_WINDOW( window )));
-
 	GtkWidget *chooser = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FILES_SELECTION );
 	GSList *uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
 	GSList *is, *msg;
-	gchar *error;
 
 	for( is = uris ; is ; is = is->next ){
 
 		msg = NULL;
-		NAAction *action = nact_gconf_reader_import( G_OBJECT( window ), ( const gchar * ) is->data, &msg );
-
-		if( action && na_pivot_write_action( pivot, action, &error ) != NA_IIO_PROVIDER_WRITE_OK ){
-			g_object_unref( action );
-			action = NULL;
-			msg = g_slist_append( msg, error );
-			g_free( error );
-		}
+		NAAction *action = nact_gconf_reader_import( NACT_WINDOW( window ), ( const gchar * ) is->data, &msg );
 
 		ImportUriStruct *str = g_new0( ImportUriStruct, 1 );
 		str->uri = g_strdup(( const gchar * ) is->data );
