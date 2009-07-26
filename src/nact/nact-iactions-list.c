@@ -349,115 +349,79 @@ nact_iactions_list_set_selection( NactWindow *window, GType type, const gchar *u
 
 	GtkWidget *list = get_actions_list_widget( window );
 	GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( list ));
-	/*GtkTreeModelFilter *tmf_model = GTK_TREE_MODEL_FILTER( gtk_tree_view_get_model( GTK_TREE_VIEW( list )));
-	GtkTreeStore *ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( tmf_model ));*/
+
+	if( !uuid || !strlen( uuid )){
+		g_debug( "%s: null or empty uuid: unselect all", thisfn );
+		gtk_tree_selection_unselect_all( selection );
+		v_on_selection_changed( selection, window );
+		return;
+	}
+
+	GtkTreeIter iter;
 	GtkTreeModel *model = gtk_tree_view_get_model( GTK_TREE_VIEW( list ));
+	gboolean iterok = gtk_tree_model_get_iter_first( model, &iter );
+	if( !iterok ){
+		g_debug( "%s: empty actions list: unselect all", thisfn );
+		gtk_tree_selection_unselect_all( selection );
+		v_on_selection_changed( selection, window );
+		return;
+	}
 
-	if( uuid && strlen( uuid )){
-		gboolean found = FALSE;
-		GtkTreeIter iter, previous;
-		/*gboolean iterok = gtk_tree_model_get_iter_first( GTK_TREE_MODEL( ts_model ), &iter );*/
-		gboolean iterok = gtk_tree_model_get_iter_first( model, &iter );
-		NAObject *iter_object;
-		gchar *iter_uuid, *iter_label;
+	gboolean found = FALSE;
+	GtkTreeIter previous;
+	NAObject *iter_object;
+	gchar *iter_uuid, *iter_label;
 
-		while( iterok && !found ){
-			/*gtk_tree_model_get( GTK_TREE_MODEL( ts_model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, -1 );*/
-			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, IACTIONS_LIST_LABEL_COLUMN, &iter_label, -1 );
-			g_debug( "%s: iter_object=%p", thisfn, iter_object );
-			g_assert( NA_IS_ACTION( iter_object ));
+	while( iterok && !found ){
+		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, IACTIONS_LIST_LABEL_COLUMN, &iter_label, -1 );
+		g_assert( NA_IS_ACTION( iter_object ));
 
-			iter_uuid = na_action_get_uuid( NA_ACTION( iter_object ));
-			gint ret_uuid = g_ascii_strcasecmp( iter_uuid, uuid );
-			guint nb_profiles = na_action_get_profiles_count( NA_ACTION( iter_object ));
+		iter_uuid = na_action_get_uuid( NA_ACTION( iter_object ));
+		gint ret_uuid = g_ascii_strcasecmp( iter_uuid, uuid );
+		guint nb_profiles = na_action_get_profiles_count( NA_ACTION( iter_object ));
 
-			if( type == NA_ACTION_TYPE || ( ret_uuid == 0 && nb_profiles == 1 )){
+		if( type == NA_ACTION_TYPE || ( ret_uuid == 0 && nb_profiles == 1 )){
+			gint ret_label = g_utf8_collate( iter_label, label );
+
+			if( ret_uuid == 0 || ret_label > 0 ){
+				g_debug( "%s: selecting action iter_object=%p, ret_uuid=%d, ret_label=%d", thisfn, iter_object, ret_uuid, ret_label );
+				gtk_tree_selection_select_iter( selection, &iter );
+				found = TRUE;
+				break;
+			}
+
+		} else if( ret_uuid == 0 && gtk_tree_model_iter_has_child( model, &iter )){
+			GtkTreeIter iter_child, previous_child;
+			gboolean iter_child_ok = gtk_tree_model_iter_children( model, &iter_child, &iter );
+
+			while( iter_child_ok ){
+				gtk_tree_model_get( model, &iter_child, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, IACTIONS_LIST_LABEL_COLUMN, &iter_label, -1 );
 				gint ret_label = g_utf8_collate( iter_label, label );
 
-				if( ret_uuid == 0 || ret_label > 0 ){
-					gtk_tree_selection_select_iter( selection, &iter );
+				if( ret_label >= 0 ){
+					g_debug( "%s: selecting profile iter_object=%p, ret_uuid=%d, ret_label=%d", thisfn, iter_object, ret_uuid, ret_label );
+					gtk_tree_selection_select_iter( selection, &iter_child );
 					found = TRUE;
 					break;
 				}
-
-			} else if( ret_uuid == 0 && gtk_tree_model_iter_has_child( model, &iter )){
-				GtkTreeIter iter_child, previous_child;
-				gboolean iter_child_ok = gtk_tree_model_iter_children( model, &iter_child, &iter );
-
-				while( iter_child_ok ){
-					gtk_tree_model_get( model, &iter_child, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, IACTIONS_LIST_LABEL_COLUMN, &iter_label, -1 );
-					gint ret_label = g_utf8_collate( iter_label, label );
-
-					if( ret_label >= 0 ){
-						gtk_tree_selection_select_iter( selection, &iter_child );
-						found = TRUE;
-						break;
-					}
-					previous_child = iter_child;
-					iter_child_ok = gtk_tree_model_iter_next( model, &iter_child );
-				}
-				if( !found ){
-					gtk_tree_selection_select_iter( selection, &previous_child );
-					found = TRUE;
-				}
+				previous_child = iter_child;
+				iter_child_ok = gtk_tree_model_iter_next( model, &iter_child );
 			}
-
-			previous = iter;
-			/*iterok = gtk_tree_model_iter_next( GTK_TREE_MODEL( ts_model ), &iter );*/
-			iterok = gtk_tree_model_iter_next( model, &iter );
-		}
-		if( !found ){
-			gtk_tree_selection_select_iter( selection, &previous );
-		}
-
-	} else {
-		gtk_tree_selection_unselect_all( selection );
-	}
-	/*
-		static const gchar *thisfn = "nact_iactions_list_set_selection";
-		g_debug( "%s: window=%p, uuid=%s, label=%s", thisfn, window, uuid, label );
-
-		GtkWidget *list = get_actions_list_widget( window );
-		GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( list ));
-		GtkTreeModel *model = gtk_tree_view_get_model( GTK_TREE_VIEW( list ));
-		GtkTreeIter iter, previous;
-
-		gtk_tree_selection_unselect_all( selection );
-
-		gboolean iterok = gtk_tree_model_get_iter_first( model, &iter );
-		gboolean found = FALSE;
-		NAAction *action;
-		gchar *iter_uuid, *iter_label;
-		gint count = 0;
-
-		while( iterok && !found ){
-			count += 1;
-			gtk_tree_model_get(
-					model,
-					&iter,
-					IACTIONS_LIST_NAOBJECT_COLUMN, &action, IACTIONS_LIST_LABEL_COLUMN, &iter_label,
-					-1 );
-
-			iter_uuid = na_action_get_uuid( action );
-			gint ret_uuid = g_ascii_strcasecmp( iter_uuid, uuid );
-			gint ret_label = g_utf8_collate( iter_label, label );
-			if(( ret_uuid == 0 && ret_label == 0 ) || ret_label > 0 ){
-				gtk_tree_selection_select_iter( selection, &iter );
+			if( !found ){
+				g_debug( "%s: selecting previous profile", thisfn );
+				gtk_tree_selection_select_iter( selection, &previous_child );
 				found = TRUE;
-
-			} else {
-				previous = iter;
 			}
-
-			g_free( iter_uuid );
-			g_free( iter_label );
-			iterok = gtk_tree_model_iter_next( model, &iter );
 		}
 
-		if( !found && count ){
-			gtk_tree_selection_select_iter( selection, &previous );
-		}
-	 */
+		previous = iter;
+		iterok = gtk_tree_model_iter_next( model, &iter );
+	}
+
+	if( !found ){
+		g_debug( "%s: selecting previous action", thisfn );
+		gtk_tree_selection_select_iter( selection, &previous );
+	}
 }
 
 /**

@@ -202,7 +202,7 @@ nact_iadvanced_tab_dispose( NactWindow *dialog )
 void
 nact_iadvanced_tab_set_profile( NactWindow *dialog, NAActionProfile *profile )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_runtime_init";
+	static const gchar *thisfn = "nact_iadvanced_tab_set_profile";
 	g_debug( "%s: dialog=%p, profile=%p", thisfn, dialog, profile );
 
 	GtkTreeModel *scheme_model = get_schemes_tree_model( dialog );
@@ -287,9 +287,9 @@ on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, gpoin
 		na_action_profile_set_scheme( edited, scheme, !state );
 
 		g_free( scheme );
-	}
 
-	v_field_modified( dialog );
+		v_field_modified( dialog );
+	}
 }
 
 static void

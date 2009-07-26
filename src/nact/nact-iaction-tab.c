@@ -215,7 +215,7 @@ nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action )
 	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );*/
 
 	NAObject *current = v_get_selected( dialog );
-	gboolean enabled = TRUE;
+	gboolean enabled = ( action != NULL );
 	if( NA_IS_ACTION_PROFILE( current)){
 		if( na_action_get_profiles_count( action ) > 1 ){
 			enabled = FALSE;
@@ -223,20 +223,22 @@ nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action )
 	}
 
 	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionLabelEntry" );
-	gchar *label = na_action_get_label( action );
+	gchar *label = action ? na_action_get_label( action ) : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 	gtk_widget_set_sensitive( label_widget, enabled );
-	check_for_label( dialog, GTK_ENTRY( label_widget ), label );
+	if( action ){
+		check_for_label( dialog, GTK_ENTRY( label_widget ), label );
+	}
 	g_free( label );
 
 	GtkWidget *tooltip_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionTooltipEntry" );
-	gchar *tooltip = na_action_get_tooltip( action );
+	gchar *tooltip = action ? na_action_get_tooltip( action ) : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
 	gtk_widget_set_sensitive( tooltip_widget, enabled );
 	g_free( tooltip );
 
 	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconComboBoxEntry" );
-	gchar *icon = na_action_get_icon( action );
+	gchar *icon = action ? na_action_get_icon( action ) : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
 	gtk_widget_set_sensitive( icon_widget, enabled );
 	g_free( icon );
@@ -308,8 +310,13 @@ on_label_changed( GtkEntry *entry, gpointer user_data )
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
 	NAAction *edited = v_get_edited_action( dialog );
-	const gchar *label = gtk_entry_get_text( entry );
-	na_action_set_label( edited, label );
+
+	if( edited ){
+		const gchar *label = gtk_entry_get_text( entry );
+		na_action_set_label( edited, label );
+		v_field_modified( dialog );
+		check_for_label( dialog, entry, label );
+	}
 
 	/* 2009-07-20: about 900-1200 usec for ten loops */
 	/*int i;
@@ -321,8 +328,6 @@ on_label_changed( GtkEntry *entry, gpointer user_data )
 	g_get_current_time( &end );
 	g_debug( "on_label_changed: %ld usec", ( 1000000 * ( end.tv_sec - begin.tv_sec )) + end.tv_usec - begin.tv_usec );*/
 
-	v_field_modified( dialog );
-	check_for_label( dialog, entry, label );
 }
 
 static void
@@ -345,9 +350,11 @@ on_tooltip_changed( GtkEntry *entry, gpointer user_data )
 	NactWindow *dialog = NACT_WINDOW( user_data );
 
 	NAAction *edited = v_get_edited_action( dialog );
-	na_action_set_tooltip( edited, gtk_entry_get_text( entry ));
 
-	v_field_modified( dialog );
+	if( edited ){
+		na_action_set_tooltip( edited, gtk_entry_get_text( entry ));
+		v_field_modified( dialog );
+	}
 }
 
 static void
@@ -396,9 +403,11 @@ on_icon_changed( GtkEntry *icon_entry, gpointer user_data )
 	}
 
 	NAAction *edited = v_get_edited_action( dialog );
-	na_action_set_icon( edited, icon_name );
 
-	v_field_modified( dialog );
+	if( edited ){
+		na_action_set_icon( edited, icon_name );
+		v_field_modified( dialog );
+	}
 }
 
 /* TODO: replace with a fds-compliant icon chooser */

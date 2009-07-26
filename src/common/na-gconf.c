@@ -468,6 +468,10 @@ iio_provider_write_action( const NAIIOProvider *provider, NAAction *action, gcha
 	return( NA_IIO_PROVIDER_WRITE_OK );
 }
 
+/*
+ * also delete the schema which may be directly attached to this action
+ * cf. http://bugzilla.gnome.org/show_bug.cgi?id=325585
+ */
 static guint
 iio_provider_delete_action( const NAIIOProvider *provider, const NAAction *action, gchar **message )
 {
@@ -484,9 +488,19 @@ iio_provider_delete_action( const NAIIOProvider *provider, const NAAction *actio
 	g_assert( NA_IS_ACTION( action ));
 
 	gchar *uuid = na_action_get_uuid( action );
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
-	GError *error = NULL;
 
+	GError *error = NULL;
+	gchar *path = g_strdup_printf( "/schemas%s/%s", NA_GCONF_CONFIG_PATH, uuid );
+	gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
+	if( error ){
+		g_debug( "%s: error=%s for path=%s", thisfn, error->message, path );
+		g_error_free( error );
+		error = NULL;
+	}
+	g_free( path );
+
+
+	path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
 	if( !gconf_client_recursive_unset( self->private->gconf, path, 0, &error )){
 		g_debug( "%s: error=%s", thisfn, error->message );
 		*message = g_strdup( error->message );

@@ -103,7 +103,7 @@ static gboolean         on_actions_list_double_click( GtkWidget *widget, GdkEven
 static gboolean         on_actions_list_delete_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
 static gboolean         on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
 static void             set_current_action( NactMainWindow *window );
-static void             set_current_profile( NactMainWindow *window );
+static void             set_current_profile( NactMainWindow *window, gboolean set_action );
 static NAAction        *get_edited_action( NactWindow *window );
 static NAActionProfile *get_edited_profile( NactWindow *window );
 static void             on_modified_field( NactWindow *window );
@@ -572,6 +572,12 @@ on_runtime_init_toplevel( BaseWindow *window )
 
 	g_assert( NACT_IS_IADVANCED_TAB( window ));
 	nact_iadvanced_tab_runtime_init( NACT_WINDOW( window ));
+
+	/* forces a no-selection when the list is initially empty
+	 */
+	if( !g_slist_length( NACT_MAIN_WINDOW( window )->private->actions )){
+		set_current_action( NACT_MAIN_WINDOW( window ));
+	}
 }
 
 static void
@@ -638,8 +644,12 @@ on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_da
 		} else {
 			g_assert( NA_IS_ACTION_PROFILE( object ));
 			window->private->edited_profile = NA_ACTION_PROFILE( object );
-			set_current_profile( window );
+			set_current_profile( window, TRUE );
 		}
+
+	} else {
+		window->private->edited_action = NULL;
+		set_current_action( window );
 	}
 }
 
@@ -687,17 +697,19 @@ set_current_action( NactMainWindow *window )
 
 	window->private->edited_profile = NULL;
 
-	if( na_action_get_profiles_count( window->private->edited_action ) == 1 ){
-		window->private->edited_profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited_action )->data );
+	if( window->private->edited_action ){
+		if( na_action_get_profiles_count( window->private->edited_action ) == 1 ){
+			window->private->edited_profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited_action )->data );
+		}
 	}
 
-	set_current_profile( window );
+	set_current_profile( window, FALSE );
 }
 
 static void
-set_current_profile( NactMainWindow *window )
+set_current_profile( NactMainWindow *window, gboolean set_action )
 {
-	if( window->private->edited_profile ){
+	if( window->private->edited_profile && set_action ){
 		NAAction *action = NA_ACTION( na_action_profile_get_action( window->private->edited_profile ));
 		window->private->edited_action = action;
 		nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action );

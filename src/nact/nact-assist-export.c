@@ -81,6 +81,24 @@ struct NactAssistExportPrivate {
 	gchar          *reason;
 };
 
+/* export formats
+ *
+ * EXPORT_FORMAT_GCONFSCHEMAFILE_V1: a schema with owner, short and long
+ * descriptions ; each action has its own schema addressed by the uuid
+ * (historical format)
+ *
+ * EXPORT_FORMAT_GCONFSCHEMAFILE_V2: the lightest schema still compatible
+ * with gconftool-2 --install-schema-file (no owner, no short nor long
+ * descriptions) - introduced in v 1.11
+ *
+ * EXPORT_FORMAT_GCONFENTRY: not a schema, but a dump of the GConf entry
+ */
+enum {
+	EXPORT_FORMAT_GCONFSCHEMAFILE_V1 = 1,
+	EXPORT_FORMAT_GCONFSCHEMAFILE_V2,
+	EXPORT_FORMAT_GCONFENTRY
+};
+
 static GObjectClass *st_parent_class = NULL;
 
 static GType             register_type( void );
@@ -354,6 +372,8 @@ on_runtime_init_dialog( BaseWindow *dialog )
  * apply signal is ran from the confirm page _after_ the prepare signal
  * of the summary page ; it is so almost useless to do anything here if
  * we want show the result on the summary...
+ *
+ * see http://bugzilla.gnome.org/show_bug.cgi?id=589745
  */
 static void
 on_apply( NactAssistant *window, GtkAssistant *assistant )

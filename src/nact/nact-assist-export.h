@@ -33,6 +33,31 @@
 
 /*
  * NactAssistExport class definition.
+ *
+ * Rationale:
+ *
+ * Up to v 1.10.x, actions are exported as config_uuid.schemas. These
+ * are actually full GConf schema exports of the form :
+ *  <schemalist>
+ *   <schema>
+ *    <key>/schemas/apps/nautilus-actions/..../uuid/label</key>
+ *    <applyto>/apps/..../label</applyto>
+ *
+ * I don't know why Frederic had choosen to export as schema. But this
+ * implies that :
+ * - if all actions are imported via gconftool-2 --install-schema-file,
+ *   then the schema will be repeated once for each imported action (as
+ *   schema is attached here to the uuid), which is obviously a waste
+ *   of resources
+ * - it seems that GConfClient refuses to delete only the 'applyto' key
+ *   when there is a corresponding schema key ..? (to be confirmed)
+ *
+ * Considering exporting schemas, we have two goals with this :
+ * - make the files lighter
+ * - keep the compatibility with previous mode
+ *
+ * which means exporting the minimal schema file which can be imported
+ * with v1.10 and previous series, and via gconftool-2 --install-schema-file.
  */
 
 #include "nact-assistant.h"

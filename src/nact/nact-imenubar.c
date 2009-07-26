@@ -445,20 +445,24 @@ on_save_activated( GtkMenuItem *item, NactWindow *window )
 	/* keep the current selection
 	 * to be able to restore it at the end of the operation
 	 */
-	NAObject *current = v_get_selected( window );
-	GType type;
-	gchar *uuid, *label;
-	if( NA_IS_ACTION( current )){
-		uuid = na_action_get_uuid( NA_ACTION( current ));
-		label = na_action_get_label( NA_ACTION( current ));
-		type = NA_ACTION_TYPE;
+	GType type = 0;
+	gchar *uuid = NULL;
+	gchar *label = NULL;
 
-	} else {
-		g_assert( NA_IS_ACTION_PROFILE( current ));
-		NAAction *action = na_action_profile_get_action( NA_ACTION_PROFILE( current ));
-		uuid = na_action_get_uuid( action );
-		label = na_action_profile_get_label( NA_ACTION_PROFILE( current ));
-		type = NA_ACTION_PROFILE_TYPE;
+	NAObject *current = v_get_selected( window );
+	if( current ){
+		if( NA_IS_ACTION( current )){
+			uuid = na_action_get_uuid( NA_ACTION( current ));
+			label = na_action_get_label( NA_ACTION( current ));
+			type = NA_ACTION_TYPE;
+
+		} else {
+			g_assert( NA_IS_ACTION_PROFILE( current ));
+			NAAction *action = na_action_profile_get_action( NA_ACTION_PROFILE( current ));
+			uuid = na_action_get_uuid( action );
+			label = na_action_profile_get_label( NA_ACTION_PROFILE( current ));
+			type = NA_ACTION_PROFILE_TYPE;
+		}
 	}
 
 	/* save the modified actions
@@ -508,10 +512,13 @@ on_save_activated( GtkMenuItem *item, NactWindow *window )
 	v_on_save( window );
 
 	v_setup_dialog_title( window );
-	v_update_actions_list( window );
-	v_select_actions_list( window, type, uuid, label );
-	g_free( label );
-	g_free( uuid );
+
+	if( current ){
+		v_update_actions_list( window );
+		v_select_actions_list( window, type, uuid, label );
+		g_free( label );
+		g_free( uuid );
+	}
 }
 
 static void
@@ -547,13 +554,14 @@ add_action( NactWindow *window, NAAction *action )
 	v_add_action( window, action );
 
 	v_update_actions_list( window );
-	v_setup_dialog_title( window );
 
 	gchar *uuid = na_action_get_uuid( action );
 	gchar *label = na_action_get_label( action );
 	v_select_actions_list( window, NA_ACTION_TYPE, uuid, label );
 	g_free( label );
 	g_free( uuid );
+
+	v_setup_dialog_title( window );
 }
 
 static void
@@ -564,7 +572,6 @@ add_profile( NactWindow *window, NAAction *action, NAActionProfile *profile )
 
 	v_add_profile( window, profile );
 
-	v_setup_dialog_title( window );
 	v_update_actions_list( window );
 
 	gchar *uuid = na_action_get_uuid( action );
@@ -572,6 +579,8 @@ add_profile( NactWindow *window, NAAction *action, NAActionProfile *profile )
 	v_select_actions_list( window, NA_ACTION_PROFILE_TYPE, uuid, label );
 	g_free( label );
 	g_free( uuid );
+
+	v_setup_dialog_title( window );
 }
 
 static void
@@ -670,12 +679,13 @@ on_delete_activated( GtkMenuItem *item, NactWindow *window )
 		na_object_check_edited_status( NA_OBJECT( action ));
 	}
 
-	v_setup_dialog_title( window );
 	v_update_actions_list( window );
 
 	v_select_actions_list( window, type, uuid, label );
 	g_free( label );
 	g_free( uuid );
+
+	v_setup_dialog_title( window );
 }
 
 static void

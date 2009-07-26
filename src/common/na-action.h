@@ -46,14 +46,6 @@
 
 G_BEGIN_DECLS
 
-/* TODO: move this declaration elsewhere */
-/* export formats
- * used to be only GConf schemas ('gconfschemafile' XML document)
- */
-enum {
-	EXPORT_FORMAT_GCONFSCHEMAFILE = 1
-};
-
 NAAction        *na_action_new( void );
 NAAction        *na_action_new_with_profile( void );
 

@@ -186,7 +186,7 @@ nact_iconditions_tab_dispose( NactWindow *dialog )
 void
 nact_iconditions_tab_set_profile( NactWindow *dialog, NAActionProfile *profile )
 {
-	static const gchar *thisfn = "nact_iconditions_tab_runtime_init";
+	static const gchar *thisfn = "nact_iconditions_tab_set_profile";
 	g_debug( "%s: dialog=%p, profile=%p", thisfn, dialog, profile );
 
 	GtkWidget *basenames_widget = get_basenames_entry( dialog );
@@ -283,9 +283,8 @@ on_basenames_changed( GtkEntry *entry, gpointer user_data )
 		GSList *basenames = na_utils_text_to_string_list( text );
 		na_action_profile_set_basenames( edited, basenames );
 		na_utils_free_string_list( basenames );
+		v_field_modified( dialog );
 	}
-
-	v_field_modified( dialog );
 }
 
 static GtkWidget *
@@ -304,9 +303,8 @@ on_matchcase_toggled( GtkToggleButton *button, gpointer user_data )
 	if( edited ){
 		gboolean matchcase = gtk_toggle_button_get_active( button );
 		na_action_profile_set_matchcase( edited, matchcase );
+		v_field_modified( dialog );
 	}
-
-	v_field_modified( dialog );
 }
 
 static GtkButton *
@@ -327,9 +325,8 @@ on_mimetypes_changed( GtkEntry *entry, gpointer user_data )
 		GSList *mimetypes = na_utils_text_to_string_list( text );
 		na_action_profile_set_mimetypes( edited, mimetypes );
 		na_utils_free_string_list( mimetypes );
+		v_field_modified( dialog );
 	}
-
-	v_field_modified( dialog );
 }
 
 static GtkWidget *
@@ -356,9 +353,8 @@ on_isfiledir_toggled( GtkToggleButton *button, gpointer user_data )
 		gboolean isfile, isdir;
 		nact_iconditions_tab_get_isfiledir( dialog, &isfile, &isdir );
 		na_action_profile_set_isfiledir( edited, isfile, isdir );
+		v_field_modified( dialog );
 	}
-
-	v_field_modified( dialog );
 }
 
 static void
@@ -403,9 +399,8 @@ on_multiple_toggled( GtkToggleButton *button, gpointer user_data )
 	if( edited ){
 		gboolean multiple = gtk_toggle_button_get_active( button );
 		na_action_profile_set_multiple( edited, multiple );
+		v_field_modified( dialog );
 	}
-
-	v_field_modified( dialog );
 }
 
 static GtkButton *

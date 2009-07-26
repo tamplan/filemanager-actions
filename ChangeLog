@@ -1,5 +1,21 @@
 2009-07-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-action.h:
+	Move export format enumeration to src/nact/nact-assist-export.c.
+
+	* src/common/na-gconf.c:
+	Fix #325585 by deleting a schema which may be directly attached
+	to the action.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-imenubar.c:
+	* src/nact/nact-main-window.c:
+	Fix selection when removing last action, or entering with
+	no action at all.
+
 	* src/nact/base-application-class.h:
 	* src/nact/base-window-class.h: New files.
 
