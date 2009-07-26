@@ -70,7 +70,7 @@ typedef struct {
 
 GType  nact_gconf_writer_get_type( void );
 
-gchar *nact_gconf_writer_export( NAAction *action, const gchar *folder, gchar **msg );
+gchar *nact_gconf_writer_export( NAAction *action, const gchar *folder, gint format, gchar **msg );
 
 G_END_DECLS
 

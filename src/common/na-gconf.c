@@ -490,7 +490,7 @@ iio_provider_delete_action( const NAIIOProvider *provider, const NAAction *actio
 	gchar *uuid = na_action_get_uuid( action );
 
 	GError *error = NULL;
-	gchar *path = g_strdup_printf( "/schemas%s/%s", NA_GCONF_CONFIG_PATH, uuid );
+	gchar *path = g_strdup_printf( "%s%s/%s", NA_GCONF_SCHEMA_PREFIX, NA_GCONF_CONFIG_PATH, uuid );
 	gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
 	if( error ){
 		g_debug( "%s: error=%s for path=%s", thisfn, error->message, path );

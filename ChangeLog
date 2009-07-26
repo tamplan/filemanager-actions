@@ -15,6 +15,7 @@
 	* src/nact/nact-main-window.c:
 	Fix selection when removing last action, or entering with
 	no action at all.
+	Sets the modification indicator to be application-wide.
 
 	* src/nact/base-application-class.h:
 	* src/nact/base-window-class.h: New files.
@@ -26,6 +27,12 @@
 	* src/nact/nact-assistant.c:
 	Reload the GtkBuilder XML file each time we run the assistant
 	(see http://bugzilla.gnome.org/show_bug.cgi?id=589746).
+
+	* src/nact/nact-import-export-format.h: New file.
+
+	* src/nact/nact-assist-export.c:
+	* src/nact/nact-gconf-writer.c:
+	Introduce two new export formats.
 
 2009-07-25 Pierre Wieser <pwieser@trychlos.org>
 

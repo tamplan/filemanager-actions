@@ -592,12 +592,12 @@ setup_dialog_title( NactWindow *window )
 		g_free( label );
 		g_free( title );
 		title = tmp;
+	}
 
-		if( is_modified_action( NACT_WINDOW( window ), NACT_MAIN_WINDOW( window )->private->edited_action )){
-			gchar *tmp = g_strdup_printf( "*%s", title );
-			g_free( title );
-			title = tmp;
-		}
+	if( count_modified_actions( window )){
+		gchar *tmp = g_strdup_printf( "*%s", title );
+		g_free( title );
+		title = tmp;
 	}
 
 	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));

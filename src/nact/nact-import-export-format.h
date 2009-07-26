@@ -28,29 +28,30 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_KEYS_H__
-#define __NA_GCONF_KEYS_H__
+#ifndef __NACT_IMPORT_EXPORT_FORMAT_H__
+#define __NACT_IMPORT_EXPORT_FORMAT_H__
 
-/* GConf general information
+G_BEGIN_DECLS
+
+/* import/export formats
+ *
+ * FORMAT_GCONFSCHEMAFILE_V1: a schema with owner, short and long
+ * descriptions ; each action has its own schema addressed by the uuid
+ * (historical format up to v1.10.x serie)
+ *
+ * FORMAT_GCONFSCHEMAFILE_V2: the lightest schema still compatible
+ * with gconftool-2 --install-schema-file (no owner, no short nor long
+ * descriptions) - introduced in v 1.11
+ *
+ * FORMAT_GCONFENTRY: not a schema, but a dump of the GConf entry
+ * introduced in v 1.11
  */
-#define NA_GCONF_CONFIG_PATH			NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
-#define NA_GCONF_SCHEMA_PREFIX			"/schemas"
+enum {
+	FORMAT_GCONFSCHEMAFILE_V1 = 1,
+	FORMAT_GCONFSCHEMAFILE_V2,
+	FORMAT_GCONFENTRY
+};
 
-/* GConf key names
- */
-#define ACTION_VERSION_ENTRY			"version"
-#define ACTION_LABEL_ENTRY				"label"
-#define ACTION_TOOLTIP_ENTRY			"tooltip"
-#define ACTION_ICON_ENTRY				"icon"
-#define ACTION_PROFILE_LABEL_ENTRY		"desc-name"
-#define ACTION_PATH_ENTRY				"path"
-#define ACTION_PARAMETERS_ENTRY			"parameters"
-#define ACTION_BASENAMES_ENTRY			"basenames"
-#define ACTION_MATCHCASE_ENTRY			"matchcase"
-#define ACTION_MIMETYPES_ENTRY			"mimetypes"
-#define ACTION_ISFILE_ENTRY				"isfile"
-#define ACTION_ISDIR_ENTRY				"isdir"
-#define ACTION_MULTIPLE_ENTRY			"accept-multiple-files"
-#define ACTION_SCHEMES_ENTRY			"schemes"
+G_END_DECLS
 
-#endif /* __NA_GCONF_KEYS_H__ */
+#endif /* __NACT_IMPORT_EXPORT_FORMAT_H__ */

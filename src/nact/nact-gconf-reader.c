@@ -278,10 +278,10 @@ nact_gconf_reader_import( NactWindow *window, const gchar *uri, GSList **msg )
 	} else {
 		xmlNode *root_node = xmlDocGetRootElement( doc );
 
-		if( strxcmp( root_node->name, NACT_GCONF_XML_ROOT )){
+		if( strxcmp( root_node->name, NACT_GCONF_SCHEMA_ROOT )){
 			add_message( reader,
 					ERR_ROOT_ELEMENT,
-					NACT_GCONF_XML_ROOT, ( const char * ) root_node->name, root_node->line );
+					NACT_GCONF_SCHEMA_ROOT, ( const char * ) root_node->name, root_node->line );
 
 		} else {
 			for( iter = root_node->children ; iter ; iter = iter->next ){
@@ -290,10 +290,10 @@ nact_gconf_reader_import( NactWindow *window, const gchar *uri, GSList **msg )
 					continue;
 				}
 
-				if( strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_LIST )){
+				if( strxcmp( iter->name, NACT_GCONF_SCHEMA_LIST )){
 					add_message( reader,
 							ERR_WAITED_IGNORED_NODE,
-							NACT_GCONF_XML_SCHEMA_LIST, ( const char * ) iter->name, iter->line );
+							NACT_GCONF_SCHEMA_LIST, ( const char * ) iter->name, iter->line );
 					continue;
 				}
 
@@ -344,10 +344,10 @@ gconf_reader_parse_schemalist( NactGConfReader *reader, xmlNode *schema )
 			continue;
 		}
 
-		if( strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_ENTRY )){
+		if( strxcmp( iter->name, NACT_GCONF_SCHEMA_ENTRY )){
 			add_message( reader,
 					ERR_WAITED_IGNORED_NODE,
-					NACT_GCONF_XML_SCHEMA_ENTRY, ( const char * ) iter->name, iter->line );
+					NACT_GCONF_SCHEMA_ENTRY, ( const char * ) iter->name, iter->line );
 			continue;
 		}
 
@@ -415,23 +415,23 @@ gconf_reader_parse_schema( NactGConfReader *reader, xmlNode *schema )
 			continue;
 		}
 
-		if( strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_KEY ) &&
-			strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_APPLYTO ) &&
-			strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_OWNER ) &&
-			strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_TYPE ) &&
-			strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_LIST_TYPE ) &&
-			strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_LOCALE ) &&
-			strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_DFT )){
+		if( strxcmp( iter->name, NACT_GCONF_SCHEMA_KEY ) &&
+			strxcmp( iter->name, NACT_GCONF_SCHEMA_APPLYTO ) &&
+			strxcmp( iter->name, NACT_GCONF_SCHEMA_OWNER ) &&
+			strxcmp( iter->name, NACT_GCONF_SCHEMA_TYPE ) &&
+			strxcmp( iter->name, NACT_GCONF_SCHEMA_LIST_TYPE ) &&
+			strxcmp( iter->name, NACT_GCONF_SCHEMA_LOCALE ) &&
+			strxcmp( iter->name, NACT_GCONF_SCHEMA_DEFAULT )){
 
 				add_message( reader, ERR_UNEXPECTED_NODE, ( const char * ) iter->name, iter->line );
 				ret = FALSE;
 				continue;
 		}
 
-		if( !strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_KEY ) ||
-			!strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_OWNER ) ||
-			!strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_TYPE ) ||
-			!strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_LIST_TYPE )){
+		if( !strxcmp( iter->name, NACT_GCONF_SCHEMA_KEY ) ||
+			!strxcmp( iter->name, NACT_GCONF_SCHEMA_OWNER ) ||
+			!strxcmp( iter->name, NACT_GCONF_SCHEMA_TYPE ) ||
+			!strxcmp( iter->name, NACT_GCONF_SCHEMA_LIST_TYPE )){
 
 				pre_v1_11 = TRUE;
 				continue;
@@ -456,7 +456,7 @@ gconf_reader_parse_schema( NactGConfReader *reader, xmlNode *schema )
 			continue;
 		}
 
-		if( !strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_APPLYTO )){
+		if( !strxcmp( iter->name, NACT_GCONF_SCHEMA_APPLYTO )){
 
 			if( applyto ){
 				add_message( reader, ERR_UNEXPECTED_NODE, ( const char * ) iter->name, iter->line );
@@ -470,7 +470,7 @@ gconf_reader_parse_schema( NactGConfReader *reader, xmlNode *schema )
 
 	if( !applyto ){
 		g_assert( ret );
-		add_message( reader, ERR_NODE_NOT_FOUND, NACT_GCONF_XML_SCHEMA_APPLYTO );
+		add_message( reader, ERR_NODE_NOT_FOUND, NACT_GCONF_SCHEMA_APPLYTO );
 		ret = FALSE;
 	}
 
@@ -490,7 +490,7 @@ gconf_reader_parse_schema( NactGConfReader *reader, xmlNode *schema )
 			continue;
 		}
 
-		if( !strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_LOCALE )){
+		if( !strxcmp( iter->name, NACT_GCONF_SCHEMA_LOCALE )){
 
 			if( locale_found ){
 				add_message( reader, ERR_UNEXPECTED_NODE, ( const char * ) iter->name, iter->line );
@@ -503,7 +503,7 @@ gconf_reader_parse_schema( NactGConfReader *reader, xmlNode *schema )
 				}
 			}
 
-		} else if( !strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_DFT )){
+		} else if( !strxcmp( iter->name, NACT_GCONF_SCHEMA_DEFAULT )){
 
 			if( default_found ){
 				add_message( reader, ERR_UNEXPECTED_NODE, ( const char * ) iter->name, iter->line );
@@ -654,17 +654,17 @@ gconf_reader_parse_locale( NactGConfReader *reader, xmlNode *locale )
 			continue;
 		}
 
-		if( strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_SHORT ) &&
-			strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_LONG ) &&
-			strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_DFT )){
+		if( strxcmp( iter->name, NACT_GCONF_SCHEMA_SHORT ) &&
+			strxcmp( iter->name, NACT_GCONF_SCHEMA_LONG ) &&
+			strxcmp( iter->name, NACT_GCONF_SCHEMA_DEFAULT )){
 
 				add_message( reader, ERR_UNEXPECTED_NODE, ( const char * ) iter->name, iter->line );
 				ret = FALSE;
 				continue;
 		}
 
-		if( !strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_SHORT ) ||
-			!strxcmp( iter->name, NACT_GCONF_XML_SCHEMA_LONG )){
+		if( !strxcmp( iter->name, NACT_GCONF_SCHEMA_SHORT ) ||
+			!strxcmp( iter->name, NACT_GCONF_SCHEMA_LONG )){
 				continue;
 		}
 

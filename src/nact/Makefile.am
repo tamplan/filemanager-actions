@@ -71,6 +71,7 @@ nautilus_actions_config_SOURCES = \
 	nact-iconditions-tab.h								\
 	nact-imenubar.c										\
 	nact-imenubar.h										\
+	nact-import-export-format.h							\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
 	nact-main.c											\
