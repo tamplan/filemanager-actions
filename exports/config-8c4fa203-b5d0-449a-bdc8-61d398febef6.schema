@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gconfschemafile>
+  <schemalist>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/version</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/version</applyto>
+      <type>string</type>
+      <locale name="C"/>
+      <default>2.0</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/label</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/label</applyto>
+      <type>string</type>
+      <locale name="C">
+        <default>New Nautilus action</default>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/tooltip</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/tooltip</applyto>
+      <type>string</type>
+      <locale name="C">
+        <default></default>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/icon</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/icon</applyto>
+      <type>string</type>
+      <locale name="C"/>
+      <default></default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/desc-name</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/desc-name</applyto>
+      <type>string</type>
+      <locale name="C">
+        <default>Default profile</default>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/path</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/path</applyto>
+      <type>string</type>
+      <locale name="C"/>
+      <default></default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/parameters</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/parameters</applyto>
+      <type>string</type>
+      <locale name="C"/>
+      <default></default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/basenames</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/basenames</applyto>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C"/>
+      <default>[*]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/matchcase</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/matchcase</applyto>
+      <type>bool</type>
+      <locale name="C"/>
+      <default>true</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/mimetypes</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/mimetypes</applyto>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C"/>
+      <default>[*/*]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/isfile</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/isfile</applyto>
+      <type>bool</type>
+      <locale name="C"/>
+      <default>true</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/isdir</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/isdir</applyto>
+      <type>bool</type>
+      <locale name="C"/>
+      <default>false</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/accept-multiple-files</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/accept-multiple-files</applyto>
+      <type>bool</type>
+      <locale name="C"/>
+      <default>false</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/schemes</key>
+      <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/schemes</applyto>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C"/>
+      <default>[file]</default>
+    </schema>
+  </schemalist>
+</gconfschemafile>

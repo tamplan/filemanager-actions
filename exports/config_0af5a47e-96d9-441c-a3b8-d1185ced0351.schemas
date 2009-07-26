@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gconfschemafile>
+  <schemalist>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/label</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/label</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <default>test 2 profiles</default>
+        <short>The label of the menu item</short>
+        <long>The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/tooltip</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/tooltip</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <default>this is another test + string</default>
+        <short>The tooltip of the menu item</short>
+        <long>The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/icon</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/icon</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>The icon of the menu item</short>
+        <long>The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings</long>
+      </locale>
+      <default>gtk-add</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/desc-name</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/desc-name</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>A description name of the profile</short>
+        <long>The field is here to give the user a human readable name for a profile in the Nact interface. If not set there will be a default auto generated string set by default</long>
+      </locale>
+      <default>Default profile</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/path</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/path</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>The path of the command</short>
+        <long>The path of the command to start when the user select the menu item in the Nautilus popup menu</long>
+      </locale>
+      <default></default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/parameters</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/parameters</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>The parameters of the command</short>
+        <long>The parameters of the command to start when the user selects the menu item in the Nautilus popup menu.
+
+The parameters can contain some special tokens which are replaced by Nautilus information before starting the command:
+
+%d: base folder of the selected file(s)
+%f: the name of the selected file or the first one if many are selected
+%m: space-separated list of the basenames of the selected file(s)/folder(s)
+%M: space-separated list of the selected file(s)/folder(s), with their full paths
+%u: GnomeVFS URI
+%s: scheme of the GnomeVFS URI
+%h: hostname of the GnomeVFS URI
+%U: username of the GnomeVFS URI
+%%: a percent sign</long>
+      </locale>
+      <default></default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/basenames</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/basenames</applyto>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>The list of pattern to match the selected file(s)/folder(s)</short>
+        <long>A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear</long>
+      </locale>
+      <default>[*]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/matchcase</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/matchcase</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>'true' if the filename patterns have to be case sensitive, 'false' otherwise</short>
+        <long>If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'</long>
+      </locale>
+      <default>true</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/mimetypes</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/mimetypes</applyto>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>The list of patterns to match the mimetypes of the selected file(s)</short>
+        <long>A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear</long>
+      </locale>
+      <default>[*/*]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/isfile</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/isfile</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>'true' if the selection can have files, 'false' otherwise</short>
+        <long>This setting is tied in with the 'isdir' setting. The valid combinations are:
+
+isfile=TRUE and isdir=FALSE: the selection may hold only files
+isfile=FALSE and isdir=TRUE: the selection may hold only folders
+isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
+isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)</long>
+      </locale>
+      <default>true</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/isdir</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/isdir</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>'true' if the selection can have folders, 'false' otherwise</short>
+        <long>This setting is tied in with the 'isfile' setting. The valid combinations are:
+
+isfile=TRUE and isdir=FALSE: the selection may hold only files
+isfile=FALSE and isdir=TRUE: the selection may hold only folders
+isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
+isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)</long>
+      </locale>
+      <default>false</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/accept-multiple-files</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/accept-multiple-files</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>'true' if the selection can have several items, 'false' otherwise</short>
+        <long>If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'</long>
+      </locale>
+      <default>false</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/schemes</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-zero/schemes</applyto>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>The list of GnomeVFS schemes where the selected files should be located</short>
+        <long>Defines the list of valid GnomeVFS schemes to be matched against the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one used in the GnomeVFS URI.
+
+Examples of GnomeVFS URI include: 
+file:///tmp/foo.txt
+sftp:///root@test.example.net/tmp/foo.txt
+
+The most common schemes are:
+
+'file': local files
+'sftp': files accessed via SSH
+'ftp': files accessed via FTP
+'smb': files accessed via Samba (Windows share)
+'dav': files accessed via WebDav
+
+All GnomeVFS schemes used by Nautilus can be used here.</long>
+      </locale>
+      <default>[file]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/desc-name</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/desc-name</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>A description name of the profile</short>
+        <long>The field is here to give the user a human readable name for a profile in the Nact interface. If not set there will be a default auto generated string set by default</long>
+      </locale>
+      <default>Main</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/path</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/path</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>The path of the command</short>
+        <long>The path of the command to start when the user select the menu item in the Nautilus popup menu</long>
+      </locale>
+      <default>sssssssssssss</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/parameters</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/parameters</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>The parameters of the command</short>
+        <long>The parameters of the command to start when the user selects the menu item in the Nautilus popup menu.
+
+The parameters can contain some special tokens which are replaced by Nautilus information before starting the command:
+
+%d: base folder of the selected file(s)
+%f: the name of the selected file or the first one if many are selected
+%m: space-separated list of the basenames of the selected file(s)/folder(s)
+%M: space-separated list of the selected file(s)/folder(s), with their full paths
+%u: GnomeVFS URI
+%s: scheme of the GnomeVFS URI
+%h: hostname of the GnomeVFS URI
+%U: username of the GnomeVFS URI
+%%: a percent sign</long>
+      </locale>
+      <default></default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/basenames</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/basenames</applyto>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>The list of pattern to match the selected file(s)/folder(s)</short>
+        <long>A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear</long>
+      </locale>
+      <default>[*]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/matchcase</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/matchcase</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>'true' if the filename patterns have to be case sensitive, 'false' otherwise</short>
+        <long>If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'</long>
+      </locale>
+      <default>true</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/mimetypes</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/mimetypes</applyto>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>The list of patterns to match the mimetypes of the selected file(s)</short>
+        <long>A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear</long>
+      </locale>
+      <default>[*/*]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/isfile</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/isfile</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>'true' if the selection can have files, 'false' otherwise</short>
+        <long>This setting is tied in with the 'isdir' setting. The valid combinations are:
+
+isfile=TRUE and isdir=FALSE: the selection may hold only files
+isfile=FALSE and isdir=TRUE: the selection may hold only folders
+isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
+isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)</long>
+      </locale>
+      <default>true</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/isdir</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/isdir</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>'true' if the selection can have folders, 'false' otherwise</short>
+        <long>This setting is tied in with the 'isfile' setting. The valid combinations are:
+
+isfile=TRUE and isdir=FALSE: the selection may hold only files
+isfile=FALSE and isdir=TRUE: the selection may hold only folders
+isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
+isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)</long>
+      </locale>
+      <default>false</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/accept-multiple-files</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/accept-multiple-files</applyto>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>'true' if the selection can have several items, 'false' otherwise</short>
+        <long>If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'</long>
+      </locale>
+      <default>false</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/schemes</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/profile-main/schemes</applyto>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>The list of GnomeVFS schemes where the selected files should be located</short>
+        <long>Defines the list of valid GnomeVFS schemes to be matched against the selected items. The GnomeVFS scheme is the protocol used to access the files. The keyword to use is the one used in the GnomeVFS URI.
+
+Examples of GnomeVFS URI include: 
+file:///tmp/foo.txt
+sftp:///root@test.example.net/tmp/foo.txt
+
+The most common schemes are:
+
+'file': local files
+'sftp': files accessed via SSH
+'ftp': files accessed via FTP
+'smb': files accessed via Samba (Windows share)
+'dav': files accessed via WebDav
+
+All GnomeVFS schemes used by Nautilus can be used here.</long>
+      </locale>
+      <default>[file]</default>
+    </schema>
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/version</key>
+      <applyto>/apps/nautilus-actions/configurations/0af5a47e-96d9-441c-a3b8-d1185ced0351/version</applyto>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>The version of the configuration format</short>
+        <long>The version of the configuration format that will be used to manage backward compatibility</long>
+      </locale>
+      <default>2.0</default>
+    </schema>
+  </schemalist>
+</gconfschemafile>
