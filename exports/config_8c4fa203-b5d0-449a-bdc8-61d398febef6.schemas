@@ -17,7 +17,7 @@
       <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/label</applyto>
       <type>string</type>
       <locale name="C">
-        <default>New Nautilus action</default>
+        <default>Import/Export test</default>
         <short>The label of the menu item</short>
         <short>The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings</short>
       </locale>
@@ -28,7 +28,7 @@
       <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/tooltip</applyto>
       <type>string</type>
       <locale name="C">
-        <default></default>
+        <default>The tooltip for "import/export test" action</default>
         <short>The tooltip of the menu item</short>
         <short>The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse</short>
       </locale>
@@ -42,7 +42,7 @@
         <short>The icon of the menu item</short>
         <short>The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings</short>
       </locale>
-      <default></default>
+      <default>gtk-justify-center</default>
       <owner>nautilus-actions</owner>
     </schema>
     <schema>
@@ -64,7 +64,7 @@
         <short>The path of the command</short>
         <short>The path of the command to start when the user select the menu item in the Nautilus popup menu</short>
       </locale>
-      <default></default>
+      <default>/bin/ls</default>
       <owner>nautilus-actions</owner>
     </schema>
     <schema>
@@ -87,7 +87,7 @@ The parameters can contain some special tokens which are replaced by Nautilus in
 %U: username of the GnomeVFS URI
 %%: a percent sign</short>
       </locale>
-      <default></default>
+      <default>%h %M</default>
       <owner>nautilus-actions</owner>
     </schema>
     <schema>
@@ -99,7 +99,7 @@ The parameters can contain some special tokens which are replaced by Nautilus in
         <short>The list of pattern to match the selected file(s)/folder(s)</short>
         <short>A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear</short>
       </locale>
-      <default>[*]</default>
+      <default>[*,*.c]</default>
       <owner>nautilus-actions</owner>
     </schema>
     <schema>
@@ -110,7 +110,7 @@ The parameters can contain some special tokens which are replaced by Nautilus in
         <short>'true' if the filename patterns have to be case sensitive, 'false' otherwise</short>
         <short>If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'</short>
       </locale>
-      <default>true</default>
+      <default>false</default>
       <owner>nautilus-actions</owner>
     </schema>
     <schema>
@@ -154,7 +154,7 @@ isfile=FALSE and isdir=TRUE: the selection may hold only folders
 isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
 isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)</short>
       </locale>
-      <default>false</default>
+      <default>true</default>
       <owner>nautilus-actions</owner>
     </schema>
     <schema>
@@ -165,7 +165,7 @@ isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration
         <short>'true' if the selection can have several items, 'false' otherwise</short>
         <short>If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'</short>
       </locale>
-      <default>false</default>
+      <default>true</default>
       <owner>nautilus-actions</owner>
     </schema>
     <schema>
@@ -191,7 +191,7 @@ The most common schemes are:
 
 All GnomeVFS schemes used by Nautilus can be used here.</short>
       </locale>
-      <default>[file]</default>
+      <default>[file,dav,smb]</default>
       <owner>nautilus-actions</owner>
     </schema>
   </schemalist>

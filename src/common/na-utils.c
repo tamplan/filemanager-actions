@@ -309,13 +309,30 @@ na_utils_boolean_to_schema( gboolean b )
 gboolean
 na_utils_schema_to_boolean( const gchar *value, gboolean default_value )
 {
-	if( !g_ascii_strncasecmp( value, "true", strlen( value ))){
+	if( !g_ascii_strcasecmp( value, "true" )){
+		/*g_debug( "na_utils_schema_to_boolean: value=%s, returning TRUE", value );*/
 		return( TRUE );
 	}
-	if( !g_ascii_strncasecmp( value, "false", strlen( value ))){
+	if( !g_ascii_strcasecmp( value, "false" )){
+		/*g_debug( "na_utils_schema_to_boolean: value=%s, returning FALSE", value );*/
 		return( FALSE );
 	}
+	/*g_debug( "na_utils_schema_to_boolean: value=%s, returning default_value", value );*/
 	return( default_value );
+}
+
+/**
+ * extract the key part (the last part) of a full path
+ * returns a newly allocated string which must be g_free() by the caller
+ */
+gchar *
+na_utils_path_to_key( const gchar *path )
+{
+	gchar **split = g_strsplit( path, "/", -1 );
+	guint count = g_strv_length( split );
+	gchar *key = g_strdup( split[count-1] );
+	g_strfreev( split );
+	return( key );
 }
 
 /**

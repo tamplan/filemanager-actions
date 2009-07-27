@@ -731,11 +731,11 @@ assist_prepare_exportdone( NactAssistExport *window, GtkAssistant *assistant, Gt
 	} else {
 		text = g_strdup( _( "<b>Selected actions have been successfully exported...</b>\n\n" ));
 
-		tmp = g_strdup_printf( _( "%s<b>...in folder :</b>\n\n\t%s/\n\n" ), text, window->private->uri );
+		tmp = g_strdup_printf( _( "%s<b>... in folder :</b>\n\n\t%s/\n\n" ), text, window->private->uri );
 		g_free( text );
 		text = tmp;
 
-		tmp = g_strdup_printf( _( "%s<b>...as files :</b>\n\n" ), text );
+		tmp = g_strdup_printf( _( "%s<b>... as files :</b>\n\n" ), text );
 		g_free( text );
 		text = tmp;
 

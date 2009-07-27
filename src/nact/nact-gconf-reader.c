@@ -63,13 +63,15 @@ struct NactGConfReaderPrivate {
 	GSList          *messages;
 	gboolean         uuid_set;			/* set at first uuid, then checked against */
 
-	/* followinf values are reset at each schema node
+	/* following values are reset at each schema/entry node
 	 */
 	NAActionProfile *profile;			/* profile */
 	gboolean         locale_waited;		/* does this require a locale ? */
 	gboolean         profile_waited;	/* does this entry apply to a profile ? */
+	gboolean         list_waited;
 	gchar           *entry;
 	gchar           *value;				/* found value */
+	GSList          *list_value;
 };
 
 typedef struct {
@@ -77,29 +79,30 @@ typedef struct {
 	gboolean entry_found;
 	gboolean locale_waited;
 	gboolean profile_waited;
+	gboolean list_waited;
 }
 	GConfReaderStruct;
 
 static GConfReaderStruct reader_str[] = {
-	{ ACTION_VERSION_ENTRY      , FALSE, FALSE, FALSE },
-	{ ACTION_LABEL_ENTRY        , FALSE,  TRUE, FALSE },
-	{ ACTION_TOOLTIP_ENTRY      , FALSE,  TRUE, FALSE },
-	{ ACTION_ICON_ENTRY         , FALSE, FALSE, FALSE },
-	{ ACTION_PROFILE_LABEL_ENTRY, FALSE,  TRUE,  TRUE },
-	{ ACTION_PATH_ENTRY         , FALSE, FALSE,  TRUE },
-	{ ACTION_PARAMETERS_ENTRY   , FALSE, FALSE,  TRUE },
-	{ ACTION_BASENAMES_ENTRY    , FALSE, FALSE,  TRUE },
-	{ ACTION_MATCHCASE_ENTRY    , FALSE, FALSE,  TRUE },
-	{ ACTION_ISFILE_ENTRY       , FALSE, FALSE,  TRUE },
-	{ ACTION_ISDIR_ENTRY        , FALSE, FALSE,  TRUE },
-	{ ACTION_MULTIPLE_ENTRY     , FALSE, FALSE,  TRUE },
-	{ ACTION_MIMETYPES_ENTRY    , FALSE, FALSE,  TRUE },
-	{ ACTION_SCHEMES_ENTRY      , FALSE, FALSE,  TRUE },
-	{                       NULL, FALSE, FALSE,  TRUE },
+	{ ACTION_VERSION_ENTRY      , FALSE, FALSE, FALSE, FALSE },
+	{ ACTION_LABEL_ENTRY        , FALSE,  TRUE, FALSE, FALSE },
+	{ ACTION_TOOLTIP_ENTRY      , FALSE,  TRUE, FALSE, FALSE },
+	{ ACTION_ICON_ENTRY         , FALSE, FALSE, FALSE, FALSE },
+	{ ACTION_PROFILE_LABEL_ENTRY, FALSE,  TRUE,  TRUE, FALSE },
+	{ ACTION_PATH_ENTRY         , FALSE, FALSE,  TRUE, FALSE },
+	{ ACTION_PARAMETERS_ENTRY   , FALSE, FALSE,  TRUE, FALSE },
+	{ ACTION_BASENAMES_ENTRY    , FALSE, FALSE,  TRUE,  TRUE },
+	{ ACTION_MATCHCASE_ENTRY    , FALSE, FALSE,  TRUE, FALSE },
+	{ ACTION_ISFILE_ENTRY       , FALSE, FALSE,  TRUE, FALSE },
+	{ ACTION_ISDIR_ENTRY        , FALSE, FALSE,  TRUE, FALSE },
+	{ ACTION_MULTIPLE_ENTRY     , FALSE, FALSE,  TRUE, FALSE },
+	{ ACTION_MIMETYPES_ENTRY    , FALSE, FALSE,  TRUE,  TRUE },
+	{ ACTION_SCHEMES_ENTRY      , FALSE, FALSE,  TRUE,  TRUE },
+	{                       NULL, FALSE, FALSE, FALSE, FALSE },
 };
 
 #define ERR_UNABLE_PARSE_XML_FILE	_( "Unable to parse XML file: %s." )
-#define ERR_ROOT_ELEMENT			_( "Invalid XML root element: waited for '%s', found '%s' at line %d." )
+#define ERR_ROOT_ELEMENT			_( "Invalid XML root element: waited for '%s' or '%s', found '%s' at line %d." )
 #define ERR_WAITED_IGNORED_NODE		_( "Waited for '%s' node, found (ignored) '%s' at line %d." )
 #define ERR_IGNORED_NODE			_( "Unexpected (ignored) '%s' node found at line %d." )
 #define ERR_IGNORED_SCHEMA			_( "Schema is ignored at line %d." )
@@ -122,20 +125,31 @@ static void             instance_dispose( GObject *object );
 static void             instance_finalize( GObject *object );
 
 static NactGConfReader *gconf_reader_new( void );
+
+static void             gconf_reader_parse_schema_root( NactGConfReader *reader, xmlNode *root );
 static void             gconf_reader_parse_schemalist( NactGConfReader *reader, xmlNode *schemalist );
 static gboolean         gconf_reader_parse_schema( NactGConfReader *reader, xmlNode *schema );
 static gboolean         gconf_reader_parse_applyto( NactGConfReader *reader, xmlNode *node );
 static gboolean         gconf_reader_check_for_entry( NactGConfReader *reader, xmlNode *node, const char *entry );
 static gboolean         gconf_reader_parse_locale( NactGConfReader *reader, xmlNode *node );
 static void             gconf_reader_parse_default( NactGConfReader *reader, xmlNode *node );
-static void             apply_schema_value( NactGConfReader *reader );
+static gchar           *get_profile_name_from_schema_key( const gchar *key, const gchar *uuid );
+
+static void             gconf_reader_parse_dump_root( NactGConfReader *reader, xmlNode *root );
+static void             gconf_reader_parse_entrylist( NactGConfReader *reader, xmlNode *entrylist );
+static gboolean         gconf_reader_parse_entry( NactGConfReader *reader, xmlNode *entry );
+static gboolean         gconf_reader_parse_dump_key( NactGConfReader *reader, xmlNode *key );
+static void             gconf_reader_parse_dump_value( NactGConfReader *reader, xmlNode *key );
+static void             gconf_reader_parse_dump_value_list( NactGConfReader *reader, xmlNode *key );
+static gchar           *get_profile_name_from_dump_key( const gchar *key );
+
+static void             apply_values( NactGConfReader *reader );
 static void             add_message( NactGConfReader *reader, const gchar *format, ... );
 static int              strxcmp( const xmlChar *a, const char *b );
 static gchar           *get_uuid_from_key( NactGConfReader *reader, const gchar *key, guint line );
 static gboolean         is_uuid_valid( const gchar *uuid );
-static gchar           *get_profile_name_from_key( const gchar *key, const gchar *uuid );
 static gchar           *get_entry_from_key( const gchar *key );
-static void             free_schema_value( NactGConfReader *reader );
+static void             free_reader_values( NactGConfReader *reader );
 static gboolean         action_exists( NactGConfReader *reader, const gchar *uuid );
 
 GType
@@ -233,7 +247,7 @@ instance_finalize( GObject *object )
 	NactGConfReader *self = NACT_GCONF_READER( object );
 
 	na_utils_free_string_list( self->private->messages );
-	free_schema_value( self );
+	free_reader_values( self );
 
 	g_free( self->private );
 
@@ -259,15 +273,12 @@ nact_gconf_reader_import( NactWindow *window, const gchar *uri, GSList **msg )
 	g_debug( "%s: window=%p, uri=%s, msg=%p", thisfn, window, uri, msg );
 
 	NAAction *action = NULL;
-	gboolean found = FALSE;
-
 	NactGConfReader *reader = gconf_reader_new();
 	reader->private->window = window;
 
 	g_assert( NACT_IS_ASSISTANT( window ));
 
 	xmlDoc *doc = xmlParseFile( uri );
-	xmlNode *iter;
 
 	if( !doc ){
 		xmlErrorPtr error = xmlGetLastError();
@@ -278,33 +289,18 @@ nact_gconf_reader_import( NactWindow *window, const gchar *uri, GSList **msg )
 	} else {
 		xmlNode *root_node = xmlDocGetRootElement( doc );
 
-		if( strxcmp( root_node->name, NACT_GCONF_SCHEMA_ROOT )){
-			add_message( reader,
-					ERR_ROOT_ELEMENT,
-					NACT_GCONF_SCHEMA_ROOT, ( const char * ) root_node->name, root_node->line );
+		if( strxcmp( root_node->name, NACT_GCONF_SCHEMA_ROOT ) &&
+			strxcmp( root_node->name, NACT_GCONF_DUMP_ROOT )){
+				add_message( reader,
+						ERR_ROOT_ELEMENT,
+						NACT_GCONF_SCHEMA_ROOT, NACT_GCONF_DUMP_ROOT, ( const char * ) root_node->name, root_node->line );
+
+		} else if( !strxcmp( root_node->name, NACT_GCONF_SCHEMA_ROOT )){
+			gconf_reader_parse_schema_root( reader, root_node );
 
 		} else {
-			for( iter = root_node->children ; iter ; iter = iter->next ){
-
-				if( iter->type != XML_ELEMENT_NODE ){
-					continue;
-				}
-
-				if( strxcmp( iter->name, NACT_GCONF_SCHEMA_LIST )){
-					add_message( reader,
-							ERR_WAITED_IGNORED_NODE,
-							NACT_GCONF_SCHEMA_LIST, ( const char * ) iter->name, iter->line );
-					continue;
-				}
-
-				if( found ){
-					add_message( reader, ERR_IGNORED_NODE, ( const char * ) iter->name, iter->line );
-					continue;
-				}
-
-				found = TRUE;
-				gconf_reader_parse_schemalist( reader, iter );
-			}
+			g_assert( !strxcmp( root_node->name, NACT_GCONF_DUMP_ROOT ));
+			gconf_reader_parse_dump_root( reader, root_node );
 		}
 
 		xmlFreeDoc (doc);
@@ -320,6 +316,38 @@ nact_gconf_reader_import( NactWindow *window, const gchar *uri, GSList **msg )
 	g_object_unref( reader );
 
 	return( action );
+}
+
+static void
+gconf_reader_parse_schema_root( NactGConfReader *reader, xmlNode *root )
+{
+	static const gchar *thisfn = "gconf_reader_parse_schema_root";
+	g_debug( "%s: reader=%p, root=%p", thisfn, reader, root );
+
+	xmlNodePtr iter;
+	gboolean found = FALSE;
+
+	for( iter = root->children ; iter ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+
+		if( strxcmp( iter->name, NACT_GCONF_SCHEMA_LIST )){
+			add_message( reader,
+					ERR_WAITED_IGNORED_NODE,
+					NACT_GCONF_SCHEMA_LIST, ( const char * ) iter->name, iter->line );
+			continue;
+		}
+
+		if( found ){
+			add_message( reader, ERR_IGNORED_NODE, ( const char * ) iter->name, iter->line );
+			continue;
+		}
+
+		found = TRUE;
+		gconf_reader_parse_schemalist( reader, iter );
+	}
 }
 
 /*
@@ -360,7 +388,7 @@ gconf_reader_parse_schemalist( NactGConfReader *reader, xmlNode *schema )
 
 	if( reader->private->uuid_set ){
 		gchar *label = na_action_get_label( reader->private->action );
-		ok = ( label && strlen( label ));
+		ok = ( label && g_utf8_strlen( label, -1 ));
 		g_debug( "%s: action=%p, label=%s, ok=%s", thisfn, reader->private->action, label, ok ? "True":"False" );
 		g_free( label );
 	}
@@ -404,7 +432,7 @@ gconf_reader_parse_schema( NactGConfReader *reader, xmlNode *schema )
 	gboolean applyto = FALSE;
 	gboolean pre_v1_11 = FALSE;
 
-	free_schema_value( reader );
+	free_reader_values( reader );
 
 	/* check for the children of the 'schema' node
 	 * we must only found known keys
@@ -519,14 +547,14 @@ gconf_reader_parse_schema( NactGConfReader *reader, xmlNode *schema )
 		}
 	}
 
-	if( !reader->private->value ){
+	if( !reader->private->value && !g_slist_length( reader->private->list_value )){
 		g_assert( ret );
 		add_message( reader, ERR_NO_VALUE_FOUND );
 		ret = FALSE;
 	}
 
 	if( ret ){
-		apply_schema_value( reader );
+		apply_values( reader );
 	}
 
 	return( ret );
@@ -572,7 +600,7 @@ gconf_reader_parse_applyto( NactGConfReader *reader, xmlNode *node )
 	}
 
 	if( ret ){
-		profile = get_profile_name_from_key(( const gchar * ) text, uuid );
+		profile = get_profile_name_from_schema_key(( const gchar * ) text, uuid );
 
 		if( profile ){
 			reader->private->profile = NA_ACTION_PROFILE( na_action_get_profile( reader->private->action, profile ));
@@ -609,7 +637,9 @@ gconf_reader_check_for_entry( NactGConfReader *reader, xmlNode *node, const char
 	int i;
 
 	for( i=0 ; reader_str[i].entry ; ++i ){
+
 		if( !strcmp( reader_str[i].entry, entry )){
+
 			found = TRUE;
 
 			if( reader_str[i].entry_found ){
@@ -621,6 +651,7 @@ gconf_reader_check_for_entry( NactGConfReader *reader, xmlNode *node, const char
 				reader->private->entry  = g_strdup( reader_str[i].entry );
 				reader->private->locale_waited = reader_str[i].locale_waited;
 				reader->private->profile_waited = reader_str[i].profile_waited;
+				reader->private->list_waited = reader_str[i].list_waited;
 			}
 		}
 	}
@@ -691,18 +722,323 @@ gconf_reader_parse_default( NactGConfReader *reader, xmlNode *node )
 	}
 
 	xmlChar *text = xmlNodeGetContent( node );
-	reader->private->value = g_strdup(( const gchar * ) text );
+	gchar *value = g_strdup(( const gchar * ) text );
+
+	if( reader->private->list_waited ){
+		reader->private->list_value = na_utils_schema_to_gslist( value );
+		g_free( value );
+
+	} else {
+		reader->private->value = value;
+	}
+
 	xmlFree( text );
 	/*g_debug( "gconf_reader_parse_default: set value=%s", reader->private->value );*/
 }
 
-static void
-apply_schema_value( NactGConfReader *reader )
+/*
+ * prefix was already been checked when extracting the uuid
+ */
+static gchar *
+get_profile_name_from_schema_key( const gchar *key, const gchar *uuid )
 {
-	static const gchar *thisfn = "gconf_reader_apply_schema_value";
-	g_debug( "%s: reader=%p, entry=%s, value=%s", thisfn, reader, reader->private->entry, reader->private->value );
+	gchar *prefix = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, ACTION_PROFILE_PREFIX );
+	gchar *profile_name = NULL;
 
-	GSList *list;
+	if( g_str_has_prefix( key, prefix )){
+		profile_name = g_strdup( key + strlen( prefix ));
+		gchar *pos = g_strrstr( profile_name, "/" );
+		if( pos != NULL ){
+			*pos = '\0';
+		}
+	}
+
+	g_free( prefix );
+	return( profile_name );
+}
+
+static void
+gconf_reader_parse_dump_root( NactGConfReader *reader, xmlNode *root )
+{
+	static const gchar *thisfn = "gconf_reader_parse_dump_root";
+	g_debug( "%s: reader=%p, root=%p", thisfn, reader, root );
+
+	xmlNodePtr iter;
+	gboolean found = FALSE;
+
+	for( iter = root->children ; iter ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+		if( strxcmp( iter->name, NACT_GCONF_DUMP_ENTRYLIST )){
+			add_message( reader,
+					ERR_WAITED_IGNORED_NODE,
+					NACT_GCONF_DUMP_ENTRYLIST, ( const char * ) iter->name, iter->line );
+			continue;
+		}
+		if( found ){
+			add_message( reader, ERR_IGNORED_NODE, ( const char * ) iter->name, iter->line );
+			continue;
+		}
+
+		found = TRUE;
+
+		reader->private->action = na_action_new();
+		xmlChar *path = xmlGetProp( iter, ( const xmlChar * ) NACT_GCONF_DUMP_ENTRYLIST_BASE );
+		gchar *uuid = na_utils_path_to_key(( const gchar * ) path );
+		na_action_set_uuid( reader->private->action, uuid );
+		reader->private->uuid_set = TRUE;
+		g_debug( "%s: uuid=%s", thisfn, uuid );
+		g_free( uuid );
+		xmlFree( path );
+
+		gconf_reader_parse_entrylist( reader, iter );
+	}
+
+	gboolean ok = FALSE;
+
+	if( reader->private->uuid_set ){
+		gchar *label = na_action_get_label( reader->private->action );
+		ok = ( label && g_utf8_strlen( label, -1 ));
+		g_debug( "%s: action=%p, label=%s, ok=%s", thisfn, reader->private->action, label, ok ? "True":"False" );
+		g_free( label );
+	}
+
+	if( !ok ){
+		g_object_unref( reader->private->action );
+		reader->private->action = NULL;
+	}
+}
+
+/*
+ * iter points to the 'entrylist' node (already checked)
+ * children should only be 'entry' nodes ; other nodes are warned,
+ * but not fatal
+ */
+static void
+gconf_reader_parse_entrylist( NactGConfReader *reader, xmlNode *entrylist )
+{
+	static const gchar *thisfn = "gconf_reader_parse_entrylist";
+	g_debug( "%s: reader=%p, entrylist=%p", thisfn, reader, entrylist );
+
+	xmlNode *iter;
+	for( iter = entrylist->children ; iter ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+
+		if( strxcmp( iter->name, NACT_GCONF_DUMP_ENTRY )){
+			add_message( reader,
+					ERR_WAITED_IGNORED_NODE,
+					NACT_GCONF_DUMP_ENTRY, ( const char * ) iter->name, iter->line );
+			continue;
+		}
+
+		if( !gconf_reader_parse_entry( reader, iter )){
+			add_message( reader, ERR_IGNORED_SCHEMA, iter->line );
+		}
+	}
+}
+static gboolean
+gconf_reader_parse_entry( NactGConfReader *reader, xmlNode *entry )
+{
+	static const gchar *thisfn = "gconf_reader_parse_entry";
+	g_debug( "%s: reader=%p, entry=%p", thisfn, reader, entry );
+
+	xmlNode *iter;
+	gboolean ret = TRUE;
+	free_reader_values( reader );
+
+	/* check for the children of the 'entry' node
+	 * we must only found known keys
+	 */
+	for( iter = entry->children ; iter ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+		if( strxcmp( iter->name, NACT_GCONF_DUMP_KEY ) &&
+			strxcmp( iter->name, NACT_GCONF_DUMP_VALUE )){
+
+				add_message( reader, ERR_UNEXPECTED_NODE, ( const char * ) iter->name, iter->line );
+				ret = FALSE;
+				continue;
+		}
+	}
+	if( !ret ){
+		return( ret );
+	}
+
+	/* check for one and only one 'key' node
+	 */
+	gboolean key_found = FALSE;
+	for( iter = entry->children ; iter ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+		if( !strxcmp( iter->name, NACT_GCONF_DUMP_KEY )){
+
+			if( key_found ){
+				add_message( reader, ERR_UNEXPECTED_NODE, ( const char * ) iter->name, iter->line );
+				ret = FALSE;
+
+			} else {
+				key_found = TRUE;
+				ret = gconf_reader_parse_dump_key( reader, iter );
+			}
+		}
+	}
+	if( !key_found ){
+		g_assert( ret );
+		add_message( reader, ERR_NODE_NOT_FOUND, NACT_GCONF_DUMP_KEY );
+		ret = FALSE;
+	}
+	if( !ret ){
+		return( ret );
+	}
+
+	/* check for one and only one 'value' node
+	 */
+	gboolean value_found = FALSE;
+	for( iter = entry->children ; iter ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+		if( !strxcmp( iter->name, NACT_GCONF_DUMP_VALUE )){
+
+			if( value_found ){
+				add_message( reader, ERR_UNEXPECTED_NODE, ( const char * ) iter->name, iter->line );
+				ret = FALSE;
+
+			} else {
+				value_found = TRUE;
+				gconf_reader_parse_dump_value( reader, iter );
+			}
+		}
+	}
+	if( !value_found ){
+		g_assert( ret );
+		add_message( reader, ERR_NO_VALUE_FOUND );
+		ret = FALSE;
+	}
+	if( ret ){
+		apply_values( reader );
+	}
+
+	return( ret );
+}
+
+static gboolean
+gconf_reader_parse_dump_key( NactGConfReader *reader, xmlNode *node )
+{
+	static const gchar *thisfn = "gconf_reader_parse_dump_key";
+	g_debug( "%s: reader=%p, node=%p", thisfn, reader, node );
+
+	gboolean ret = TRUE;
+
+	xmlChar *text = xmlNodeGetContent( node );
+	gchar *profile = NULL;
+	gchar *entry = NULL;
+
+	if( ret ){
+		profile = get_profile_name_from_dump_key(( const gchar * ) text );
+
+		if( profile ){
+			reader->private->profile = na_action_get_profile( reader->private->action, profile );
+
+			if( !reader->private->profile ){
+				reader->private->profile = na_action_profile_new();
+				na_action_profile_set_name( reader->private->profile, profile );
+				na_action_attach_profile( reader->private->action, reader->private->profile );
+			}
+		}
+
+		entry = get_entry_from_key(( const gchar * ) text );
+		g_assert( entry && strlen( entry ));
+
+		ret = gconf_reader_check_for_entry( reader, node, entry );
+	}
+
+	g_free( entry );
+	g_free( profile );
+	xmlFree( text );
+
+	return( ret );
+}
+
+static void
+gconf_reader_parse_dump_value( NactGConfReader *reader, xmlNode *node )
+{
+	xmlNode *iter;
+	for( iter = node->children ; iter ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+		if( strxcmp( iter->name, NACT_GCONF_DUMP_LIST ) &&
+			strxcmp( iter->name, NACT_GCONF_DUMP_STRING )){
+				add_message( reader,
+					ERR_IGNORED_NODE, ( const char * ) iter->name, iter->line );
+			continue;
+		}
+		if( !strxcmp( iter->name, NACT_GCONF_DUMP_STRING )){
+
+			xmlChar *text = xmlNodeGetContent( iter );
+
+			if( reader->private->list_waited ){
+				reader->private->list_value = g_slist_append( reader->private->list_value, g_strdup(( const gchar * ) text ));
+			} else {
+				reader->private->value = g_strdup(( const gchar * ) text );
+			}
+
+			xmlFree( text );
+			continue;
+		}
+		gconf_reader_parse_dump_value_list( reader, iter );
+	}
+}
+
+static void
+gconf_reader_parse_dump_value_list( NactGConfReader *reader, xmlNode *list_node )
+{
+	xmlNode *iter;
+	for( iter = list_node->children ; iter ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+		if( strxcmp( iter->name, NACT_GCONF_DUMP_VALUE )){
+				add_message( reader,
+					ERR_IGNORED_NODE, ( const char * ) iter->name, iter->line );
+			continue;
+		}
+		gconf_reader_parse_dump_value( reader, iter );
+	}
+}
+
+static gchar *
+get_profile_name_from_dump_key( const gchar *key )
+{
+	gchar *profile_name = NULL;
+	gchar **split = g_strsplit( key, "/", -1 );
+	guint count = g_strv_length( split );
+	g_assert( count );
+	if( count > 1 ){
+		profile_name = g_strdup( split[0] );
+	}
+	g_strfreev( split );
+	return( profile_name );
+}
+
+static void
+apply_values( NactGConfReader *reader )
+{
+	static const gchar *thisfn = "gconf_reader_apply_values";
+	g_debug( "%s: reader=%p, entry=%s, value=%s", thisfn, reader, reader->private->entry, reader->private->value );
 
 	if( reader->private->entry && strlen( reader->private->entry )){
 		if( !strcmp( reader->private->entry, ACTION_VERSION_ENTRY )){
@@ -727,31 +1063,25 @@ apply_schema_value( NactGConfReader *reader )
 			na_action_profile_set_parameters( reader->private->profile, reader->private->value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_BASENAMES_ENTRY )){
-			list = na_utils_schema_to_gslist( reader->private->entry );
-			na_action_profile_set_basenames( reader->private->profile, list );
-			na_utils_free_string_list( list );
+			na_action_profile_set_basenames( reader->private->profile, reader->private->list_value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_MATCHCASE_ENTRY )){
-			na_action_profile_set_matchcase( reader->private->profile, na_utils_schema_to_boolean( reader->private->entry, TRUE ));
-
-		} else if( !strcmp( reader->private->entry, ACTION_MULTIPLE_ENTRY )){
-			na_action_profile_set_multiple( reader->private->profile, na_utils_schema_to_boolean( reader->private->entry, FALSE ));
+			na_action_profile_set_matchcase( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, TRUE ));
 
 		} else if( !strcmp( reader->private->entry, ACTION_ISFILE_ENTRY )){
-			na_action_profile_set_isfile( reader->private->profile, na_utils_schema_to_boolean( reader->private->entry, TRUE ));
+			na_action_profile_set_isfile( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, TRUE ));
 
 		} else if( !strcmp( reader->private->entry, ACTION_ISDIR_ENTRY )){
-			na_action_profile_set_isdir( reader->private->profile, na_utils_schema_to_boolean( reader->private->entry, FALSE ));
+			na_action_profile_set_isdir( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, FALSE ));
+
+		} else if( !strcmp( reader->private->entry, ACTION_MULTIPLE_ENTRY )){
+			na_action_profile_set_multiple( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, FALSE ));
 
 		} else if( !strcmp( reader->private->entry, ACTION_MIMETYPES_ENTRY )){
-			list = na_utils_schema_to_gslist( reader->private->entry );
-			na_action_profile_set_mimetypes( reader->private->profile, list );
-			na_utils_free_string_list( list );
+			na_action_profile_set_mimetypes( reader->private->profile, reader->private->list_value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_SCHEMES_ENTRY )){
-			list = na_utils_schema_to_gslist( reader->private->entry );
-			na_action_profile_set_schemes( reader->private->profile, list );
-			na_utils_free_string_list( list );
+			na_action_profile_set_schemes( reader->private->profile, reader->private->list_value );
 
 		} else {
 			g_assert_not_reached();
@@ -817,38 +1147,16 @@ is_uuid_valid( const gchar *uuid )
 	return( uuid_parse( uuid, uu ) == 0 );
 }
 
-/*
- * prefix was already been checked when extracting the uuid
- */
-static gchar *
-get_profile_name_from_key( const gchar *key, const gchar *uuid )
-{
-	gchar *prefix = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, ACTION_PROFILE_PREFIX );
-	gchar *profile_name = NULL;
-
-	if( g_str_has_prefix( key, prefix )){
-		profile_name = g_strdup( key + strlen( prefix ));
-		gchar *pos = g_strrstr( profile_name, "/" );
-		if( pos != NULL ){
-			*pos = '\0';
-		}
-	}
-
-	g_free( prefix );
-	return( profile_name );
-}
-
 static gchar *
 get_entry_from_key( const gchar *key )
 {
 	gchar *pos = g_strrstr( key, "/" );
-	g_assert( pos );
-	gchar *entry = g_strdup( pos+1 );
+	gchar *entry = pos ? g_strdup( pos+1 ) : g_strdup( key );
 	return( entry );
 }
 
 static void
-free_schema_value( NactGConfReader *reader )
+free_reader_values( NactGConfReader *reader )
 {
 	int i;
 
@@ -860,6 +1168,9 @@ free_schema_value( NactGConfReader *reader )
 
 	g_free( reader->private->value );
 	reader->private->value = NULL;
+
+	na_utils_free_string_list( reader->private->list_value );
+	reader->private->list_value = NULL;
 
 	for( i=0 ; reader_str[i].entry ; ++i ){
 		reader_str[i].entry_found = FALSE;

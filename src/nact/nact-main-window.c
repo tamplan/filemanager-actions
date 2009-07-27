@@ -62,6 +62,7 @@ struct NactMainWindowPrivate {
 	gboolean         dispose_has_run;
 	GtkStatusbar    *status_bar;
 	guint            status_context;
+	gint             initial_count;
 	GSList          *actions;
 	NAAction        *edited_action;
 	NAActionProfile *edited_profile;
@@ -511,6 +512,7 @@ on_initial_load_toplevel( BaseWindow *window )
 	NAPivot *pivot = nact_application_get_pivot( application );
 	na_pivot_set_automatic_reload( pivot, FALSE );
 	wnd->private->actions = na_pivot_get_duplicate_actions( pivot );
+	wnd->private->initial_count = g_slist_length( wnd->private->actions );
 
 	g_get_current_time( &wnd->private->last_saved );
 
@@ -1073,6 +1075,11 @@ count_actions( NactWindow *window )
 static gint
 count_modified_actions( NactWindow *window )
 {
+	if( g_slist_length( NACT_MAIN_WINDOW( window )->private->actions ) == 0 &&
+		NACT_MAIN_WINDOW( window )->private->initial_count == 0 ){
+			return( 0 );
+	}
+
 	gint count = g_slist_length( NACT_MAIN_WINDOW( window )->private->deleted );
 
 	GSList *ia;

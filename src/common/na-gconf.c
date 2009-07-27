@@ -123,7 +123,6 @@ static void           fill_profile_properties( NAGConf *gconf, NAActionProfile *
 static GSList        *get_path_subdirs( const NAGConf *gconf, const gchar *path );
 static GSList        *get_list_entries( const NAGConf *gconf, const gchar *path );
 static void           free_list_entries( GSList *entries );
-static gchar         *path_to_key( const gchar *path );
 static NAPivotNotify *entry_to_notify( const GConfEntry *entry );
 static GSList        *entries_to_notifies( GSList *entries );
 static void           free_list_notifies( GSList *notifies );
@@ -568,7 +567,7 @@ read_action( NAGConf *gconf, NAAction *action, const gchar *path )
 	g_assert( NA_IS_GCONF( gconf ));
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *uuid = path_to_key( path );
+	gchar *uuid = na_utils_path_to_key( path );
 	na_action_set_uuid( action, uuid );
 	g_free( uuid );
 
@@ -614,7 +613,7 @@ read_profile( NAGConf *gconf, NAActionProfile *profile, const gchar *path )
 	g_assert( NA_IS_GCONF( gconf ));
 	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
-	gchar *name = path_to_key( path );
+	gchar *name = na_utils_path_to_key( path );
 	na_action_profile_set_name( profile, name );
 	g_free( name );
 
@@ -818,20 +817,6 @@ free_list_entries( GSList *list )
 		gconf_entry_unref( entry );
 	}
 	g_slist_free( list );
-}
-
-/*
- * extract the key part (the last part) of a full path
- * returns a newly allocated string which must be g_free() by the caller
- */
-static gchar *
-path_to_key( const gchar *path )
-{
-	gchar **split = g_strsplit( path, "/", -1 );
-	guint count = g_strv_length( split );
-	gchar *key = g_strdup( split[count-1] );
-	g_strfreev( split );
-	return( key );
 }
 
 /*

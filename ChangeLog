@@ -1,3 +1,12 @@
+2009-07-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-utils.c:
+	* src/common/na-utils.h (na_utils_path_to_key):
+	New function moved from na-gconf.c.
+
+	* src/nact/nact-gconf-reader.c:
+	Import the two new export formats.
+
 2009-07-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-action.h:

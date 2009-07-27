@@ -13,7 +13,7 @@
       <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/label</applyto>
       <type>string</type>
       <locale name="C">
-        <default>New Nautilus action</default>
+        <default>Import/Export test</default>
       </locale>
     </schema>
     <schema>
@@ -21,7 +21,7 @@
       <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/tooltip</applyto>
       <type>string</type>
       <locale name="C">
-        <default></default>
+        <default>The tooltip for "import/export test" action</default>
       </locale>
     </schema>
     <schema>
@@ -29,7 +29,7 @@
       <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/icon</applyto>
       <type>string</type>
       <locale name="C"/>
-      <default></default>
+      <default>gtk-justify-center</default>
     </schema>
     <schema>
       <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/desc-name</key>
@@ -44,14 +44,14 @@
       <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/path</applyto>
       <type>string</type>
       <locale name="C"/>
-      <default></default>
+      <default>/bin/ls</default>
     </schema>
     <schema>
       <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/parameters</key>
       <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/parameters</applyto>
       <type>string</type>
       <locale name="C"/>
-      <default></default>
+      <default>%h %M</default>
     </schema>
     <schema>
       <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/basenames</key>
@@ -59,7 +59,7 @@
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C"/>
-      <default>[*]</default>
+      <default>[*,*.c]</default>
     </schema>
     <schema>
       <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/matchcase</key>
@@ -88,7 +88,7 @@
       <applyto>/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/isdir</applyto>
       <type>bool</type>
       <locale name="C"/>
-      <default>false</default>
+      <default>true</default>
     </schema>
     <schema>
       <key>/schemas/apps/nautilus-actions/configurations/8c4fa203-b5d0-449a-bdc8-61d398febef6/profile-zero/accept-multiple-files</key>
@@ -103,7 +103,7 @@
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C"/>
-      <default>[file]</default>
+      <default>[file,dav,smb]</default>
     </schema>
   </schemalist>
 </gconfschemafile>

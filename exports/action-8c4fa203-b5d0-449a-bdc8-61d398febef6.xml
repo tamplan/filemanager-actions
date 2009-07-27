@@ -10,19 +10,19 @@
     <entry>
       <key>label</key>
       <value>
-        <string>New Nautilus action</string>
+        <string>Import/Export test</string>
       </value>
     </entry>
     <entry>
       <key>tooltip</key>
       <value>
-        <string></string>
+        <string>The tooltip for "import/export test" action</string>
       </value>
     </entry>
     <entry>
       <key>icon</key>
       <value>
-        <string></string>
+        <string>gtk-justify-center</string>
       </value>
     </entry>
     <entry>
@@ -34,13 +34,13 @@
     <entry>
       <key>profile-zero/path</key>
       <value>
-        <string></string>
+        <string>/bin/ls</string>
       </value>
     </entry>
     <entry>
       <key>profile-zero/parameters</key>
       <value>
-        <string></string>
+        <string>%h %M</string>
       </value>
     </entry>
     <entry>
@@ -49,6 +49,7 @@
         <list type="string">
           <value>
             <string>*</string>
+            <string>*.c</string>
           </value>
         </list>
       </value>
@@ -72,19 +73,19 @@
     <entry>
       <key>profile-zero/isfile</key>
       <value>
-        <string>true</string>
+        <string>false</string>
       </value>
     </entry>
     <entry>
       <key>profile-zero/isdir</key>
       <value>
-        <string>false</string>
+        <string>true</string>
       </value>
     </entry>
     <entry>
       <key>profile-zero/accept-multiple-files</key>
       <value>
-        <string>false</string>
+        <string>true</string>
       </value>
     </entry>
     <entry>
@@ -93,6 +94,8 @@
         <list type="string">
           <value>
             <string>file</string>
+            <string>dav</string>
+            <string>smb</string>
           </value>
         </list>
       </value>
