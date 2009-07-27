@@ -81,6 +81,7 @@ void      nact_iactions_list_fill( NactWindow *window, gboolean keep_expanded );
 NAObject *nact_iactions_list_get_selected_object( NactWindow *window );
 GSList  * nact_iactions_list_get_selected_actions( NactWindow *window );
 void      nact_iactions_list_set_selection( NactWindow *window, GType type, const gchar *uuid, const gchar *label );
+void      nact_iactions_list_select_first( NactWindow *window );
 /*void      nact_iactions_list_set_focus( NactWindow *window );*/
 /*void      nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified, gboolean can_save );*/
 gboolean  nact_iactions_list_is_expanded( NactWindow *window, const NAAction *action );

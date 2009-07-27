@@ -96,7 +96,6 @@
                                   <object class="GtkLabel" id="ActionLabelLabel">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
-                                    <property name="label" translatable="yes">Label :</property>
                                   </object>
                                   <packing>
                                     <property name="y_options"></property>
@@ -273,7 +272,6 @@
                                       <object class="GtkLabel" id="ProfileLabelLabel">
                                         <property name="visible">True</property>
                                         <property name="xalign">1</property>
-                                        <property name="label" translatable="yes">Label :</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -887,9 +885,9 @@
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <property name="select_multiple">True</property>
-        <property name="preview_widget_active">False</property>
         <property name="local_only">False</property>
         <property name="use_preview_label">False</property>
+        <property name="preview_widget_active">False</property>
       </object>
     </child>
     <child>
@@ -972,10 +970,10 @@ to extend a selection.</property>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
-            <property name="preview_widget_active">False</property>
-            <property name="local_only">False</property>
             <property name="action">select-folder</property>
+            <property name="local_only">False</property>
             <property name="use_preview_label">False</property>
+            <property name="preview_widget_active">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -1402,16 +1400,16 @@ file(s)/folder(s)</property>
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandExamplePreLabel"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandExamplePreLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
 </interface>

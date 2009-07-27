@@ -72,6 +72,7 @@ static GSList          *v_get_schemes( NactWindow *window );
 
 static void             on_label_changed( GtkEntry *entry, gpointer user_data );
 static void             check_for_label( NactWindow *window, GtkEntry *entry, const gchar *label );
+static void             set_label_label( NactWindow *window, const gchar *color );
 static GtkWidget       *get_label_entry( NactWindow *window );
 static void             on_path_changed( GtkEntry *entry, gpointer user_data );
 static void             on_path_browse( GtkButton *button, gpointer user_data );
@@ -351,13 +352,24 @@ static void
 check_for_label( NactWindow *window, GtkEntry *entry, const gchar *label )
 {
 	hide_status( window );
+	set_label_label( window, "black" );
 
 	NAActionProfile *edited = v_get_edited_profile( window );
 
 	if( edited && g_utf8_strlen( label, -1 ) == 0 ){
 		/* i18n: status bar message when the profile label is empty */
 		display_status( window, _( "Caution: a label is mandatory for the profile." ));
+		set_label_label( window, "red" );
 	}
+}
+
+static void
+set_label_label( NactWindow *window, const gchar *color )
+{
+	GtkWidget *label = base_window_get_widget( BASE_WINDOW( window ), "ProfileLabelLabel" );
+	/* i18n: label in front of the GtkEntry where user enters the profile label */
+	gchar *text = g_markup_printf_escaped( "<span color=\"%s\">%s</span>", color, _( "Label :" ));
+	gtk_label_set_markup( GTK_LABEL( label ), text );
 }
 
 static GtkWidget *

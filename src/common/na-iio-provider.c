@@ -297,17 +297,14 @@ write_action( const NAIIOProvider *provider, NAAction *action, gchar **message )
 		return( NA_IIO_PROVIDER_NOT_WRITABLE );
 	}
 
-	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->delete_action ){
+	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->delete_action ||
+		!NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_action ){
 		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
 	}
 
 	guint ret = NA_IIO_PROVIDER_GET_INTERFACE( provider )->delete_action( provider, action, message );
 	if( ret != NA_IIO_PROVIDER_WRITE_OK ){
 		return( ret );
-	}
-
-	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_action ){
-		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
 	}
 
 	return( NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_action( provider, action, message ));

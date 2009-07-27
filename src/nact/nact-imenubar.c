@@ -435,6 +435,10 @@ on_new_profile_activated( GtkMenuItem *item, NactWindow *window )
 	NAActionProfile *new_profile = na_action_profile_new();
 	g_debug( "nact_imenubar_on_new_profile_activated: action=%p, profile=%p", action, new_profile );
 
+	gchar *name = na_action_get_new_profile_name( action );
+	na_action_profile_set_name( new_profile, name );
+	g_free( name );
+
 	add_profile( window, action, new_profile );
 }
 
@@ -476,7 +480,7 @@ on_save_activated( GtkMenuItem *item, NactWindow *window )
 		}
 	}
 
-	/* save the modified actions
+	/* save the valid modified actions
 	 * - remove the origin of pivot if any
 	 * - add a duplicate of this action to pivot
 	 * - set the duplicate as the origin of this action
@@ -484,7 +488,9 @@ on_save_activated( GtkMenuItem *item, NactWindow *window )
 	 */
 	for( ia = actions ; ia ; ia = ia->next ){
 		NAAction *current = NA_ACTION( ia->data );
-		if( na_object_get_modified_status( NA_OBJECT( current ))){
+		if( na_object_get_modified_status( NA_OBJECT( current )) &&
+			na_object_get_valid_status( NA_OBJECT( current ))){
+
 			if( nact_window_save_action( window, current )){
 
 				NAAction *origin = NA_ACTION( na_object_get_origin( NA_OBJECT( current )));
@@ -536,7 +542,7 @@ static void
 on_save_selected( GtkMenuItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting 'Save' item */
-	display_status( window, _( "Record all the modified actions." ));
+	display_status( window, _( "Record all the modified actions. Invalid actions will be silently ignored." ));
 }
 
 static void

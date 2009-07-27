@@ -114,9 +114,9 @@ static gboolean       iio_provider_is_writable( const NAIIOProvider *provider, c
 static guint          iio_provider_write_action( const NAIIOProvider *provider, NAAction *action, gchar **message );
 static guint          iio_provider_delete_action( const NAIIOProvider *provider, const NAAction *action, gchar **message );
 
-static gboolean       read_action( NAGConf *gconf, NAAction *action, const gchar *path );
-static gboolean       read_profile( NAGConf *gconf, NAActionProfile *profile, const gchar *path );
-static gboolean       fill_action_core_properties( NAGConf *gconf, NAAction *action, GSList *notifies );
+static void           read_action( NAGConf *gconf, NAAction *action, const gchar *path );
+static void           read_profile( NAGConf *gconf, NAActionProfile *profile, const gchar *path );
+static void           fill_action_core_properties( NAGConf *gconf, NAAction *action, GSList *notifies );
 static void           fill_action_v1_properties( NAGConf *gconf, NAAction *action, GSList *notifies );
 static void           fill_profile_properties( NAGConf *gconf, NAActionProfile *profile, GSList *notifies );
 
@@ -401,12 +401,9 @@ iio_provider_read_actions( const NAIIOProvider *provider )
 
 		NAAction *action = na_action_new();
 
-		if( read_action( self, action, path )){
-			items = g_slist_prepend( items, action );
+		read_action( self, action, path );
 
-		} else {
-			g_object_unref( action );
-		}
+		items = g_slist_prepend( items, action );
 
 		/*gchar *uuid = path_to_key( path );
 
@@ -558,10 +555,10 @@ load_action( NAGConf *gconf, NAAction *action, const gchar *path )
 	g_free( path );
 	return( ok );
 }*/
-static gboolean
+static void
 read_action( NAGConf *gconf, NAAction *action, const gchar *path )
 {
-	static const gchar *thisfn = "nacf_gconf_read_action";
+	static const gchar *thisfn = "na_gconf_read_action";
 	g_debug( "%s: gconf=%p, action=%p, path=%s", thisfn, gconf, action, path );
 
 	g_assert( NA_IS_GCONF( gconf ));
@@ -575,7 +572,7 @@ read_action( NAGConf *gconf, NAAction *action, const gchar *path )
 	GSList *notifies = entries_to_notifies( entries );
 	free_list_entries( entries );
 
-	gboolean ok = fill_action_core_properties( gconf, action, notifies  );
+	fill_action_core_properties( gconf, action, notifies  );
 
 	GSList *ip;
 	GSList *list_profiles = get_path_subdirs( gconf, path );
@@ -585,12 +582,9 @@ read_action( NAGConf *gconf, NAAction *action, const gchar *path )
 			const gchar *profile_path = ( const gchar * ) ip->data;
 			NAActionProfile *profile = na_action_profile_new();
 
-			if( read_profile( gconf, profile, profile_path )){
-				na_action_attach_profile( action, profile );
+			read_profile( gconf, profile, profile_path );
 
-			} else {
-				g_object_unref( profile );
-			}
+			na_action_attach_profile( action, profile );
 		}
 
 	} else {
@@ -600,14 +594,12 @@ read_action( NAGConf *gconf, NAAction *action, const gchar *path )
 	free_list_notifies( notifies );
 
 	na_action_set_readonly( action, !key_is_writable( gconf, path ));
-
-	return( ok );
 }
 
-static gboolean
+static void
 read_profile( NAGConf *gconf, NAActionProfile *profile, const gchar *path )
 {
-	static const gchar *thisfn = "nacf_gconf_read_profile";
+	static const gchar *thisfn = "na_gconf_read_profile";
 	g_debug( "%s: gconf=%p, profile=%p, path=%s", thisfn, gconf, profile, path );
 
 	g_assert( NA_IS_GCONF( gconf ));
@@ -624,15 +616,13 @@ read_profile( NAGConf *gconf, NAActionProfile *profile, const gchar *path )
 	fill_profile_properties( gconf, profile, notifies  );
 
 	free_list_notifies( notifies );
-
-	return( TRUE );
 }
 
 /*
  * set the item properties into the action, dealing with successive
  * versions
  */
-static gboolean
+static void
 fill_action_core_properties( NAGConf *gconf, NAAction *action, GSList *notifies )
 {
 	static const gchar *thisfn = "na_gconf_fill_action_properties";
@@ -642,7 +632,7 @@ fill_action_core_properties( NAGConf *gconf, NAAction *action, GSList *notifies 
 		gchar *uuid = na_action_get_uuid( action );
 		g_warning( "%s: no label found for action '%s'", thisfn, uuid );
 		g_free( uuid );
-		return( FALSE );
+		label = g_strdup( "" );
 	}
 	na_action_set_label( action, label );
 	g_free( label );
@@ -664,8 +654,6 @@ fill_action_core_properties( NAGConf *gconf, NAAction *action, GSList *notifies 
 		na_action_set_icon( action, icon );
 		g_free( icon );
 	}
-
-	return( TRUE );
 }
 
 /*

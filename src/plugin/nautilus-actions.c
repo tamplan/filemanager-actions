@@ -253,9 +253,7 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	GSList *ia, *ip;
 	NautilusMenuItem *item;
 	GSList *actions = NULL;
-#ifdef NACT_MAINTAINER_MODE
-	gchar *debug_label;
-#endif
+	gchar *label, *uuid;
 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 	NautilusActions *self = NAUTILUS_ACTIONS( provider );
@@ -272,11 +270,17 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 			NAAction *action = NA_ACTION( ia->data );
 
-#ifdef NACT_MAINTAINER_MODE
-			debug_label = na_action_get_label( action );
-			g_debug( "%s: examining '%s' action", thisfn, debug_label );
-			g_free( debug_label );
-#endif
+			label = na_action_get_label( action );
+
+			if( !label || !g_utf8_strlen( label, -1 )){
+				uuid = na_action_get_uuid( action );
+				g_warning( "%s: label null or empty for uuid=%s", thisfn, uuid );
+				g_free( uuid );
+				continue;
+			}
+
+			g_debug( "%s: examining '%s' action", thisfn, label );
+			g_free( label );
 
 			profiles = na_action_get_profiles( action );
 
@@ -285,9 +289,9 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 				NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
 
 #ifdef NACT_MAINTAINER_MODE
-				debug_label = na_action_profile_get_label( profile );
-				g_debug( "%s: examining '%s' profile", thisfn, debug_label );
-				g_free( debug_label );
+				label = na_action_profile_get_label( profile );
+				g_debug( "%s: examining '%s' profile", thisfn, label );
+				g_free( label );
 #endif
 
 				if( na_action_profile_is_candidate( profile, files )){

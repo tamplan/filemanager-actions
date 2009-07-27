@@ -66,6 +66,7 @@ static void          v_field_modified( NactWindow *window );
 
 static void          on_label_changed( GtkEntry *entry, gpointer user_data );
 static void          check_for_label( NactWindow *window, GtkEntry *entry, const gchar *label );
+static void          set_label_label( NactWindow *window, const gchar *color );
 static void          on_tooltip_changed( GtkEntry *entry, gpointer user_data );
 static void          on_icon_changed( GtkEntry *entry, gpointer user_data );
 static void          on_icon_browse( GtkButton *button, gpointer user_data );
@@ -334,13 +335,24 @@ static void
 check_for_label( NactWindow *window, GtkEntry *entry, const gchar *label )
 {
 	hide_status( window );
+	set_label_label( window, "black" );
 
 	NAAction *edited = v_get_edited_action( window );
 
 	if( edited && g_utf8_strlen( label, -1 ) == 0 ){
 		/* i18n: status bar message when the action label is empty */
 		display_status( window, _( "Caution: a label is mandatory for the action." ));
+		set_label_label( window, "red" );
 	}
+}
+
+static void
+set_label_label( NactWindow *window, const gchar *color )
+{
+	GtkWidget *label = base_window_get_widget( BASE_WINDOW( window ), "ActionLabelLabel" );
+	/* i18n: label in front of the GtkEntry where user enters the action label */
+	gchar *text = g_markup_printf_escaped( "<span color=\"%s\">%s</span>", color, _( "Label :" ));
+	gtk_label_set_markup( GTK_LABEL( label ), text );
 }
 
 static void

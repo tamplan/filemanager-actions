@@ -424,6 +424,28 @@ nact_iactions_list_set_selection( NactWindow *window, GType type, const gchar *u
 	}
 }
 
+void
+nact_iactions_list_select_first( NactWindow *window )
+{
+	static const gchar *thisfn = "nact_iactions_list_select_first";
+	g_debug( "%s: window=%p", thisfn, window );
+
+	GtkWidget *list = get_actions_list_widget( window );
+	GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( list ));
+
+	GtkTreeIter iter;
+	GtkTreeModel *model = gtk_tree_view_get_model( GTK_TREE_VIEW( list ));
+	gboolean iterok = gtk_tree_model_get_iter_first( model, &iter );
+	if( !iterok ){
+		g_debug( "%s: empty actions list: unselect all", thisfn );
+		gtk_tree_selection_unselect_all( selection );
+		v_on_selection_changed( selection, window );
+		return;
+	}
+
+	gtk_tree_selection_select_iter( selection, &iter );
+}
+
 /**
  * Reset the focus on the ActionsList listbox.
  */

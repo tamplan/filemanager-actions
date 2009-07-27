@@ -505,14 +505,6 @@ on_initial_load_toplevel( BaseWindow *window )
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
 
-	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( wnd )));
-	NAPivot *pivot = nact_application_get_pivot( application );
-	na_pivot_set_automatic_reload( pivot, FALSE );
-	wnd->private->actions = na_pivot_get_duplicate_actions( pivot );
-	wnd->private->initial_count = g_slist_length( wnd->private->actions );
-
-	g_get_current_time( &wnd->private->last_saved );
-
 	wnd->private->status_bar = GTK_STATUSBAR( base_window_get_widget( window, "StatusBar" ));
 	wnd->private->status_context = gtk_statusbar_get_context_id( wnd->private->status_bar, "nact-main-window" );
 
@@ -553,6 +545,25 @@ on_runtime_init_toplevel( BaseWindow *window )
 		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( window );
 	}
 
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
+
+	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( wnd )));
+	NAPivot *pivot = nact_application_get_pivot( application );
+	na_pivot_set_automatic_reload( pivot, FALSE );
+	wnd->private->actions = na_pivot_get_duplicate_actions( pivot );
+	wnd->private->initial_count = g_slist_length( wnd->private->actions );
+
+	/* initialize the current edition status as a loaded action may be
+	 * invalid (without having been modified)
+	 */
+	GSList *ia;
+	for( ia = wnd->private->actions ; ia ; ia = ia->next ){
+		na_object_check_edited_status( NA_OBJECT( ia->data ));
+	}
+
+	g_get_current_time( &wnd->private->last_saved );
+
 	g_debug( "%s: window=%p", thisfn, window );
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	/*NactMainWindow *wnd = NACT_MAIN_WINDOW( window );*/
@@ -574,7 +585,7 @@ on_runtime_init_toplevel( BaseWindow *window )
 
 	/* forces a no-selection when the list is initially empty
 	 */
-	if( !g_slist_length( NACT_MAIN_WINDOW( window )->private->actions )){
+	if( !wnd->private->initial_count ){
 		set_current_action( NACT_MAIN_WINDOW( window ));
 	}
 }
@@ -1068,6 +1079,14 @@ reload_actions( NactWindow *window )
 	na_pivot_reload_actions( pivot );
 	self->private->actions = na_pivot_get_duplicate_actions( pivot );
 	self->private->initial_count = g_slist_length( self->private->actions );
+
+	nact_iactions_list_fill( window, FALSE );
+
+	if( self->private->initial_count ){
+		nact_iactions_list_select_first( window );
+	}
+	/*self->private->edited_action = NULL;
+	set_current_action( NACT_MAIN_WINDOW( window ));*/
 }
 
 static GSList *
@@ -1095,7 +1114,7 @@ free_actions( GSList *actions )
  * during one seconde after each save
  *
  * note that last_saved is initialized in initial_load_toplevel()
- * there is so a race condition if NAPivot detects a modification
+ * so we will not be advertised if NAPivot detects a modification
  * in the seconde after this initialization - just ignore this case
  */
 static void
