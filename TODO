@@ -13,5 +13,6 @@ like the scheme list, it seems.
 - try to import a schema for an action (without schema)
 
 - import and export assistants are seen as a distinct application in the
-  task bar (there is a second NA icon)
+  task bar (there is a second NA icon) - gtk_window_set_transient_for()
+  has no effect of this - open a bug ?
 
