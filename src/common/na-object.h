@@ -83,7 +83,16 @@ typedef struct {
 	 * implementation should call its parent class before actually
 	 * dumping its own data and properties.
 	 */
-	void       ( *dump )     ( const NAObject *object );
+	void       ( *dump )               ( const NAObject *object );
+
+	/**
+	 * check_edited_status:
+	 * @object: the #NAObject-derived object to be checked.
+	 *
+	 * Checks a #NAObject-derived object for modification and validity
+	 * status.
+	 */
+	void       ( *check_edited_status )( const NAObject *object );
 
 	/**
 	 * duplicate:
@@ -100,7 +109,7 @@ typedef struct {
 	 * Returns: a newly allocated object, which is an exact copy of
 	 * @object.
 	 */
-	NAObject * ( *duplicate )( const NAObject *object );
+	NAObject * ( *duplicate )          ( const NAObject *object );
 
 	/**
 	 * copy:
@@ -112,7 +121,7 @@ typedef struct {
 	 * Each derived class should take care of calling its parent class
 	 * to complete the copy.
 	 */
-	void       ( *copy )     ( NAObject *target, const NAObject *source );
+	void       ( *copy )               ( NAObject *target, const NAObject *source );
 
 	/**
 	 * are_equal:
@@ -127,7 +136,7 @@ typedef struct {
 	 *
 	 * Returns: %TRUE if @a and @b are identical, %FALSE else.
 	 */
-	gboolean   ( *are_equal )( const NAObject *a, const NAObject *b );
+	gboolean   ( *are_equal )          ( const NAObject *a, const NAObject *b );
 
 	/**
 	 * is_valid:
@@ -143,7 +152,7 @@ typedef struct {
 	 *
 	 * Returns: %TRUE if @object is valid, %FALSE else.
 	 */
-	gboolean   ( *is_valid ) ( const NAObject *object );
+	gboolean   ( *is_valid )           ( const NAObject *object );
 }
 	NAObjectClass;
 

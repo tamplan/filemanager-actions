@@ -69,6 +69,7 @@ typedef struct {
 	void        ( *select_actions_list )   ( NactWindow *window, GType type, const gchar *uuid, const gchar *label );
 	gint        ( *count_actions )         ( NactWindow *window );
 	gint        ( *count_modified_actions )( NactWindow *window );
+	void        ( *reload_actions )        ( NactWindow *window );
 	void        ( *on_save )               ( NactWindow *window );
 }
 	NactIMenubarInterface;

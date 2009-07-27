@@ -108,7 +108,6 @@ static void             set_current_profile( NactMainWindow *window, gboolean se
 static NAAction        *get_edited_action( NactWindow *window );
 static NAActionProfile *get_edited_profile( NactWindow *window );
 static void             on_modified_field( NactWindow *window );
-static void             check_edited_status( NactWindow *window, const NAAction *action );
 static gboolean         is_modified_action( NactWindow *window, const NAAction *action );
 static gboolean         is_valid_action( NactWindow *window, const NAAction *action );
 static gboolean         is_modified_profile( NactWindow *window, const NAActionProfile *profile );
@@ -135,6 +134,8 @@ static void             update_actions_list( NactWindow *window );
 static gboolean         on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
 static gint             count_actions( NactWindow *window );
 static gint             count_modified_actions( NactWindow *window );
+static void             reload_actions( NactWindow *window );
+static GSList          *free_actions( GSList *actions );
 static void             on_save( NactWindow *window );
 static void             on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
 
@@ -342,6 +343,7 @@ imenubar_iface_init( NactIMenubarInterface *iface )
 	iface->select_actions_list = nact_iactions_list_set_selection;
 	iface->count_actions = count_actions;
 	iface->count_modified_actions = count_modified_actions;
+	iface->reload_actions = reload_actions;
 	iface->on_save = on_save;
 }
 
@@ -385,13 +387,8 @@ instance_dispose( GObject *window )
 		gint pos = gtk_paned_get_position( GTK_PANED( pane ));
 		nact_iprefs_set_int( NACT_WINDOW( window ), "main-paned", pos );
 
-		GSList *ia;
-		for( ia = self->private->actions ; ia ; ia = ia->next ){
-			g_object_unref( NA_ACTION( ia->data ));
-		}
-		g_slist_free( self->private->actions );
-
-		free_deleted_actions( NACT_WINDOW( self ));
+		self->private->actions = free_actions( self->private->actions );
+		self->private->deleted = free_actions( self->private->deleted );
 
 		nact_iaction_tab_dispose( NACT_WINDOW( window ));
 		nact_icommand_tab_dispose( NACT_WINDOW( window ));
@@ -751,54 +748,11 @@ on_modified_field( NactWindow *window )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 
-	check_edited_status( window, NACT_MAIN_WINDOW( window )->private->edited_action );
+	na_object_check_edited_status( NA_OBJECT( NACT_MAIN_WINDOW( window )->private->edited_action ));
 
 	setup_dialog_title( window );
 
 	nact_iactions_list_update_selected( window, NACT_MAIN_WINDOW( window )->private->edited_action );
-}
-
-/*
- * is it modified ?
- * and, if it has been modified, is it valid ?
- */
-static void
-check_edited_status( NactWindow *window, const NAAction *edited )
-{
-	g_assert( edited );
-
-	na_object_check_edited_status( NA_OBJECT( edited ));
-	/*NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	NAPivot *pivot = NA_PIVOT( nact_application_get_pivot( application ));
-	gchar *uuid = na_action_get_uuid( edited );
-	NAAction *original = NA_ACTION( na_pivot_get_action( pivot, uuid ));
-	g_free( uuid );
-	gboolean is_modified = !na_object_are_equal( NA_OBJECT( edited ), NA_OBJECT( original ));
-	g_object_set_data( G_OBJECT( edited ), "nact-main-window-action-modified", GINT_TO_POINTER( is_modified ));*/
-
-	/*gboolean check = is_action_modified( edited );
-	g_debug( "check_edited_status: edited=%p, is_modified=%s, check=%s", edited, is_modified ? "True":"False", check ? "True":"False" );*/
-
-	/*gboolean a_valid = TRUE;
-	if( is_modified ){
-		gchar *label = na_action_get_label( edited );
-		if( label && g_utf8_strlen( label, -1 )){
-			GSList *ip;
-			gboolean p_valid = FALSE;
-			GSList *profiles = na_action_get_profiles( edited );
-			for( ip = profiles ; ip ; ip = ip->next ){
-				NAActionProfile *prof = NA_ACTION_PROFILE( ip->data );
-				gchar *prof_label = na_action_profile_get_label( prof );
-				if( prof_label && g_utf8_strlen( prof_label, -1 )){
-					p_valid = TRUE;
-				}
-				g_object_set_data( G_OBJECT( prof ), "nact-main-window-profile-is-valid", GINT_TO_POINTER( p_valid ));
-				g_free( prof_label );
-			}
-			g_free( label );
-		}
-	}
-	g_object_set_data( G_OBJECT( edited ), "nact-main-window-action-is-valid", GINT_TO_POINTER( a_valid ));*/
 }
 
 static gboolean
@@ -877,12 +831,8 @@ static void
 free_deleted_actions( NactWindow *window )
 {
 	NactMainWindow *self = NACT_MAIN_WINDOW( window );
-	GSList *ia;
-	for( ia = self->private->deleted ; ia ; ia = ia->next ){
-		g_object_unref( NA_ACTION( ia->data ));
-	}
-	g_slist_free( self->private->deleted );
-	self->private->deleted = NULL;
+
+	self->private->deleted = free_actions( self->private->deleted );
 }
 
 static void
@@ -1104,6 +1054,31 @@ count_modified_actions( NactWindow *window )
 	}
 
 	return( count );
+}
+
+static void
+reload_actions( NactWindow *window )
+{
+	NactMainWindow *self = NACT_MAIN_WINDOW( window );
+	self->private->actions = free_actions( self->private->actions );
+	self->private->deleted = free_actions( self->private->deleted );
+
+	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	NAPivot *pivot = nact_application_get_pivot( application );
+	na_pivot_reload_actions( pivot );
+	self->private->actions = na_pivot_get_duplicate_actions( pivot );
+	self->private->initial_count = g_slist_length( self->private->actions );
+}
+
+static GSList *
+free_actions( GSList *actions )
+{
+	GSList *ia;
+	for( ia = actions ; ia ; ia = ia->next ){
+		g_object_unref( NA_ACTION( ia->data ));
+	}
+	g_slist_free( actions );
+	return( NULL );
 }
 
 /*

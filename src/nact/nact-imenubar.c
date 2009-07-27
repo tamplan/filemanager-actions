@@ -81,6 +81,8 @@ static void       on_duplicate_activated( GtkMenuItem *item, NactWindow *window 
 static void       on_duplicate_selected( GtkItem *item, NactWindow *window );
 static void       on_delete_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_delete_selected( GtkItem *item, NactWindow *window );
+static void       on_reload_activated( GtkMenuItem *item, NactWindow *window );
+static void       on_reload_selected( GtkItem *item, NactWindow *window );
 
 static void       on_tools_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_import_activated( GtkMenuItem *item, NactWindow *window );
@@ -111,6 +113,7 @@ static void       v_update_actions_list( NactWindow *window );
 static void       v_select_actions_list( NactWindow *window, GType type, const gchar *uuid, const gchar *label );
 static gint       v_count_actions( NactWindow *window );
 static gint       v_count_modified_actions( NactWindow *window );
+static void       v_reload_actions( NactWindow *window );
 static void       v_on_save( NactWindow *window );
 
 static guint      get_status_context( NactMainWindow *window );
@@ -321,6 +324,14 @@ create_edit_menu( NactMainWindow *window, GtkMenuBar *menubar )
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
 	set_delete_item( NACT_WINDOW( window ), item );
 	signal_connect( window, item, G_CALLBACK( on_delete_activated ), G_CALLBACK( on_delete_selected ));
+
+	item = gtk_separator_menu_item_new();
+	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
+
+	item = gtk_image_menu_item_new_with_label( _( "_Reload the list of actions" ));
+	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
+	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
+	signal_connect( window, item, G_CALLBACK( on_reload_activated ), G_CALLBACK( on_reload_selected ));
 }
 
 static void
@@ -696,6 +707,38 @@ on_delete_selected( GtkItem *item, NactWindow *window )
 }
 
 static void
+on_reload_activated( GtkMenuItem *item, NactWindow *window )
+{
+	static const gchar *thisfn = "nact_imenubar_on_reload_activated";
+	g_debug( "%s: item=%p, window=%p", thisfn, item, window );
+
+	gboolean ok = TRUE;
+
+	if( v_count_modified_actions( window )){
+
+		/* i18n: message before reloading the list of actions */
+		gchar *first = g_strdup( _( "This will cancel your current modifications." ));
+		gchar *second = g_strdup( _( "Are you sure this is what you want ?" ));
+
+		ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+
+		g_free( second );
+		g_free( first );
+	}
+
+	if( ok ){
+		v_reload_actions( window );
+	}
+}
+
+static void
+on_reload_selected( GtkItem *item, NactWindow *window )
+{
+	/* i18n: tooltip displayed in the status bar when selecting the 'Reload' item */
+	display_status( window, _( " Cancel your current modifications and reload the list of actions." ));
+}
+
+static void
 on_tools_selected( GtkMenuItem *item, NactWindow *window )
 {
 	gboolean export_enabled = v_count_actions( window );
@@ -970,6 +1013,14 @@ v_count_modified_actions( NactWindow *window )
 	}
 
 	return( 0 );
+}
+
+static void
+v_reload_actions( NactWindow *window )
+{
+	if( NACT_IMENUBAR_GET_INTERFACE( window )->reload_actions ){
+		NACT_IMENUBAR_GET_INTERFACE( window )->reload_actions( window );
+	}
 }
 
 static void

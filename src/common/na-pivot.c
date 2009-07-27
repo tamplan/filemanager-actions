@@ -67,7 +67,7 @@ struct NAPivotPrivate {
 	/* list of actions
 	 */
 	GSList  *actions;
-	gboolean reload;
+	gboolean automatic_reload;
 };
 
 enum {
@@ -171,7 +171,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->notified = NULL;
 	self->private->providers = register_interface_providers( self );
 	self->private->actions = na_iio_provider_read_actions( self );
-	self->private->reload = TRUE;
+	self->private->automatic_reload = TRUE;
 }
 
 static GSList *
@@ -547,7 +547,7 @@ na_pivot_get_automatic_reload( const NAPivot *pivot )
 {
 	g_assert( NA_IS_PIVOT( pivot ));
 
-	return( pivot->private->reload );
+	return( pivot->private->automatic_reload );
 }
 
 /**
@@ -569,7 +569,7 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 {
 	g_assert( NA_IS_PIVOT( pivot ));
 
-	pivot->private->reload = reload;
+	pivot->private->automatic_reload = reload;
 }
 
 static void
@@ -633,7 +633,7 @@ on_actions_changed_timeout( gpointer user_data )
 		return( TRUE );
 	}
 
-	if( pivot->private->reload ){
+	if( pivot->private->automatic_reload ){
 		na_pivot_free_actions( pivot->private->actions );
 		pivot->private->actions = na_iio_provider_read_actions( pivot );
 	}

@@ -105,6 +105,7 @@ static void      instance_set_property( GObject *object, guint property_id, cons
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
+static void      object_check_edited_status( const NAObject *action );
 static void      object_dump( const NAObject *action );
 static NAObject *object_duplicate( const NAObject *action );
 static void      object_copy( NAObject *target, const NAObject *source );
@@ -213,6 +214,7 @@ class_init( NAActionClass *klass )
 	klass->private = g_new0( NAActionClassPrivate, 1 );
 
 	NA_OBJECT_CLASS( klass )->dump = object_dump;
+	NA_OBJECT_CLASS( klass )->check_edited_status = object_check_edited_status;
 	NA_OBJECT_CLASS( klass )->duplicate = object_duplicate;
 	NA_OBJECT_CLASS( klass )->copy = object_copy;
 	NA_OBJECT_CLASS( klass )->are_equal = object_are_equal;
@@ -928,6 +930,19 @@ na_action_get_profiles_count( const NAAction *action )
 	g_assert( NA_IS_ACTION( action ));
 
 	return( g_slist_length( action->private->profiles ));
+}
+
+static void
+object_check_edited_status( const NAObject *action )
+{
+	if( st_parent_class->check_edited_status ){
+		st_parent_class->check_edited_status( action );
+	}
+
+	GSList *ip;
+	for( ip = NA_ACTION( action )->private->profiles ; ip ; ip = ip->next ){
+		na_object_check_edited_status( NA_OBJECT( ip->data ));
+	}
 }
 
 static void

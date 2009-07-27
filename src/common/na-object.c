@@ -67,12 +67,14 @@ static void      instance_set_property( GObject *object, guint property_id, cons
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
+static void      v_check_edited_status( const NAObject *object );
 static NAObject *v_duplicate( const NAObject *object );
 static void      v_copy( NAObject *target, const NAObject *source );
 static gboolean  v_are_equal( const NAObject *a, const NAObject *b );
 static gboolean  v_is_valid( const NAObject *object );
 
 static void      do_dump( const NAObject *object );
+static void      do_check_edited_status( const NAObject *object );
 static void      do_copy( NAObject *target, const NAObject *source );
 static gboolean  do_are_equal( const NAObject *a, const NAObject *b );
 static gboolean  do_is_valid( const NAObject *object );
@@ -159,6 +161,7 @@ class_init( NAObjectClass *klass )
 	klass->private = g_new0( NAObjectClassPrivate, 1 );
 
 	klass->dump = do_dump;
+	klass->check_edited_status = do_check_edited_status;
 	klass->duplicate = NULL;
 	klass->copy = do_copy;
 	klass->are_equal = do_are_equal;
@@ -339,7 +342,7 @@ na_object_check_edited_status( const NAObject *object )
 {
 	g_assert( NA_IS_OBJECT( object ));
 
-	na_iduplicable_check_edited_status( object );
+	v_check_edited_status( object );
 }
 
 /**
@@ -524,6 +527,17 @@ na_object_set_label( NAObject *object, const gchar *label )
 	g_object_set( G_OBJECT( object ), PROP_NAOBJECT_LABEL_STR, label, NULL );
 }
 
+static void
+v_check_edited_status( const NAObject *object )
+{
+	if( NA_OBJECT_GET_CLASS( object )->check_edited_status ){
+		NA_OBJECT_GET_CLASS( object )->check_edited_status( object );
+
+	} else {
+		do_check_edited_status( object );
+	}
+}
+
 static NAObject *
 v_duplicate( const NAObject *object )
 {
@@ -574,6 +588,12 @@ do_dump( const NAObject *object )
 	g_debug( "%s:  label=%s", thisfn, object->private->label );
 
 	na_iduplicable_dump( object );
+}
+
+static void
+do_check_edited_status( const NAObject *object )
+{
+	na_iduplicable_check_edited_status( object );
 }
 
 static void
