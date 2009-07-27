@@ -238,13 +238,13 @@ nact_window_get_pivot( NactWindow *window )
  * This is called by one of the editors to advertize the main window
  * that the newly selected action has changed.
  */
-void
+/*void
 nact_window_set_current_action( NactWindow *window, const NAAction *action )
 {
 	if( NACT_WINDOW_GET_CLASS( window )->set_current_action ){
 		NACT_WINDOW_GET_CLASS( window )->set_current_action( window, action );
 	}
-}
+}*/
 
 /**
  * Saves a modified action to the I/O storage subsystem.
@@ -314,6 +314,9 @@ nact_window_delete_action( NactWindow *window, NAAction *action )
  * @count
  *
  * Returns TRUE if the user confirms he wants to quit.
+ *
+ * Note: the count of modified actions is subject to some approximation.
+ * So, just say that 'actions have been modified'
  */
 gboolean
 nact_window_warn_count_modified( NactWindow *window, gint count )
@@ -324,7 +327,8 @@ nact_window_warn_count_modified( NactWindow *window, gint count )
 		first = g_strdup_printf( _( "One action has been modified." ));
 		second = g_strdup( _( "Are you sure you want to quit without saving it ?" ));
 	} else {
-		first = g_strdup_printf( _( "%d actions have been modified." ), count );
+		/*first = g_strdup_printf( _( "%d actions have been modified." ), count );*/
+		first = g_strdup_printf( _( "Actions have been modified." ));
 		second = g_strdup( _( "Are you sure you want to quit without saving them ?" ));
 	}
 
@@ -332,68 +336,6 @@ nact_window_warn_count_modified( NactWindow *window, gint count )
 
 	g_free( second );
 	g_free( first );
-
-	return( ok );
-}
-
-/**
- * Emits a warning if the action has been modified.
- *
- * @window: this NactWindow object.
- *
- * @action: the modified action.
- *
- * Returns TRUE if the user confirms he wants to quit.
- */
-gboolean
-nact_window_warn_action_modified( NactWindow *window, const NAAction *action )
-{
-	gchar *label = na_action_get_label( action );
-
-	gchar *first;
-	if( label && strlen( label )){
-		first = g_strdup_printf( _( "The action \"%s\" has been modified." ), label );
-	} else {
-		first = g_strdup( _( "The newly created action has been modified." ));
-	}
-	gchar *second = g_strdup( _( "Are you sure you want to quit without saving it ?" ));
-
-	gboolean ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
-
-	g_free( second );
-	g_free( first );
-	g_free( label );
-
-	return( ok );
-}
-
-/**
- * Emits a warning if the profile has been modified.
- *
- * @window: this NactWindow object.
- *
- * @profile: the modified profile.
- *
- * Returns TRUE if the user confirms he wants to quit.
- */
-gboolean
-nact_window_warn_profile_modified( NactWindow *window, const NAActionProfile *profile )
-{
-	gchar *label = na_action_profile_get_label( profile );
-
-	gchar *first;
-	if( label && strlen( label )){
-		first = g_strdup_printf( _( "The profile \"%s\" has been modified." ), label );
-	} else {
-		first = g_strdup( _( "The newly created profile has been modified." ));
-	}
-	gchar *second = g_strdup( _( "Are you sure you want to quit without saving it ?" ));
-
-	gboolean ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
-
-	g_free( second );
-	g_free( first );
-	g_free( label );
 
 	return( ok );
 }

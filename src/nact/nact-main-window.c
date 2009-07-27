@@ -1072,6 +1072,14 @@ count_actions( NactWindow *window )
 	return( g_slist_length( NACT_MAIN_WINDOW( window )->private->actions ));
 }
 
+/*
+ * exact count of modified actions is subject to some approximation
+ * 1. counting the actions currently in the list is ok
+ * 2. what about deleted actions ?
+ *    we can create any new actions, deleting them, and so on
+ *    if we have eventually deleted all newly created actions, then the
+ *    final count of modified actions should be zero... don't it ?
+ */
 static gint
 count_modified_actions( NactWindow *window )
 {
@@ -1080,9 +1088,15 @@ count_modified_actions( NactWindow *window )
 			return( 0 );
 	}
 
-	gint count = g_slist_length( NACT_MAIN_WINDOW( window )->private->deleted );
-
 	GSList *ia;
+	gint count = 0;
+
+	for( ia = NACT_MAIN_WINDOW( window )->private->deleted ; ia ; ia = ia->next ){
+		if( na_object_get_origin( NA_OBJECT( ia->data )) != NULL ){
+			count += 1;
+		}
+	}
+
 	for( ia = NACT_MAIN_WINDOW( window )->private->actions ; ia ; ia = ia->next ){
 		if( is_modified_action( window, NA_ACTION( ia->data ))){
 			count += 1;

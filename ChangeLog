@@ -4,8 +4,16 @@
 	* src/common/na-utils.h (na_utils_path_to_key):
 	New function moved from na-gconf.c.
 
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h
+	(nact_window_set_current_action, nact_window_warn_action_modified,
+	nact_window_warn_profile_modified): Removed functions.
+
 	* src/nact/nact-gconf-reader.c:
 	Import the two new export formats.
+
+	* src/nact/nact-main-window.c:
+	Update count_modified_actions.
 
 2009-07-26 Pierre Wieser <pwieser@trychlos.org>
 
