@@ -28,8 +28,8 @@
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
-	-DG_LOG_DOMAIN=\"nact\"								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PLUGIN}\"			\
 	$(NULL)
 
 nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)

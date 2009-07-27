@@ -30,7 +30,7 @@ noinst_LTLIBRARIES = libnact.la
 
 AM_CPPFLAGS += \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	-DG_LOG_DOMAIN=\"nact\"						\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_COMMON}\"	\
 	$(NAUTILUS_ACTIONS_CFLAGS)					\
 	$(NULL)
 

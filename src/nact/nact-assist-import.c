@@ -229,10 +229,13 @@ assist_new( BaseApplication *application )
  * @main: the main window of the application.
  */
 GSList *
-nact_assist_import_run( NactWindow *main )
+nact_assist_import_run( NactWindow *main_window )
 {
-	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( main )));
+	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( main_window )));
+
 	NactAssistImport *assist = assist_new( appli );
+
+	g_object_set( G_OBJECT( assist ), PROP_WINDOW_PARENT_STR, main_window, NULL );
 
 	base_window_run( BASE_WINDOW( assist ));
 

@@ -36,6 +36,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DGLADEDIR=\"$(gladedir)\"							\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"				\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 

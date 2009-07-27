@@ -26,15 +26,15 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 1 creation
+# serial 2 change NACT_ prefix to NA_ (Nautilus Actions)
 
 # commandline tools are built on user option
 # they need gtk+ 2.4, and take interest of glib 2.8
 # default is to build them if we have gtk+ v 2.4
 
-AC_DEFUN([NACT_COMMANDLINE_TOOLS],[
-	AC_REQUIRE([_AC_ARG_NACT_COMMANDLINE_TOOLS])dnl
-	AC_REQUIRE([_AC_CHECK_NACT_COMMANDLINE_TOOLS])dnl
+AC_DEFUN([NA_COMMANDLINE_TOOLS],[
+	AC_REQUIRE([_AC_ARG_NA_COMMANDLINE_TOOLS])dnl
+	AC_REQUIRE([_AC_CHECK_NA_COMMANDLINE_TOOLS])dnl
 
 	if test "${_ac_commandline_tools}" = "yes"; then
 
@@ -58,7 +58,7 @@ AC_DEFUN([NACT_COMMANDLINE_TOOLS],[
 	fi
 ])
 
-AC_DEFUN([_AC_ARG_NACT_COMMANDLINE_TOOLS],[
+AC_DEFUN([_AC_ARG_NA_COMMANDLINE_TOOLS],[
 	AC_ARG_ENABLE(
 		[commandline-tool],
 		AC_HELP_STRING(
@@ -70,7 +70,7 @@ AC_DEFUN([_AC_ARG_NACT_COMMANDLINE_TOOLS],[
 	)
 ])
 
-AC_DEFUN([_AC_CHECK_NACT_COMMANDLINE_TOOLS],[
+AC_DEFUN([_AC_CHECK_NA_COMMANDLINE_TOOLS],[
 	_ac_commandline_tools="yes"
 	_ac_have_glib_2_8=0
 	${PKG_CONFIG} gtk+-2.0 --max-version=2.4

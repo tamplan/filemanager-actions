@@ -561,7 +561,7 @@ static void
 do_runtime_init_toplevel( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_do_runtime_init_toplevel";
-	g_debug( "%s: window=%p", thisfn, window );
+	g_debug( "%s: window=%p, parent_window=%p", thisfn, window, window->private->parent );
 
 	if( window->private->parent ){
 		g_assert( BASE_IS_WINDOW( window->private->parent ));

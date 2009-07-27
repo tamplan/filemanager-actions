@@ -1,5 +1,15 @@
 2009-07-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* m4/na-log-domains.m4: New file.
+
+	* m4/nact-cmdline-tools.m4: Renamed to m4/na-cmdline-tools.m4.
+	* m4/nact-compiler-flags.m4: Renamed to m4/na-compiler-flags.m4.
+	* m4/nact-maintainer-mode.m4: Renamed to m4/na-maintainer-mode.m4.
+	* m4/nact-nautilus-extdir.m4: Renamed to m4/na-nautilus-extdir.m4.
+
+	* configure.ac:
+	Updated accordingly.
+
 	* src/common/na-object.c:
 	* src/common/na-object.h (na_object_check_edited_status):
 	New derivable function.
@@ -18,6 +28,11 @@
 
 	* src/nact/nact-gconf-reader.c:
 	Import the two new export formats.
+	Fix check of imported actions.
+
+	* src/nact/nact-main.c:
+	* src/plugin/nautilus-module.c:
+	Disable output of g_debug messages when not in maintainer mode.
 
 	* src/nact/nact-main-window.c:
 	Update count_modified_actions.

@@ -135,7 +135,7 @@ static void              assist_prepare_exportdone( NactAssistExport *window, Gt
 
 static void              do_export( NactAssistExport *window );
 
-#ifdef NACT_MAINTAINER_MODE
+#ifdef NA_MAINTAINER_MODE
 static void              dump( NactAssistExport *window );
 #endif
 
@@ -294,6 +294,7 @@ nact_assist_export_run( NactWindow *main_window )
 	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( main_window )));
 
 	NactAssistExport *assist = assist_new( appli );
+	g_object_set( G_OBJECT( assist ), PROP_WINDOW_PARENT_STR, main_window, NULL );
 
 	assist->private->main_window = NACT_MAIN_WINDOW( main_window );
 
@@ -643,7 +644,7 @@ assist_prepare_confirm( NactAssistExport *window, GtkAssistant *assistant, GtkWi
 	static const gchar *thisfn = "nact_assist_export_prepare_confirm";
 	g_debug( "%s: window=%p, assistant=%p, page=%p", thisfn, window, assistant, page );
 
-#ifdef NACT_MAINTAINER_MODE
+#ifdef NA_MAINTAINER_MODE
 	dump( window );
 #endif
 
@@ -717,7 +718,7 @@ assist_prepare_exportdone( NactAssistExport *window, GtkAssistant *assistant, Gt
 
 	do_export( window );
 
-#ifdef NACT_MAINTAINER_MODE
+#ifdef NA_MAINTAINER_MODE
 	dump( window );
 #endif
 
@@ -806,7 +807,7 @@ do_export( NactAssistExport *window )
 	g_slist_free( actions );
 }
 
-#ifdef NACT_MAINTAINER_MODE
+#ifdef NA_MAINTAINER_MODE
 static void
 dump( NactAssistExport *window )
 {

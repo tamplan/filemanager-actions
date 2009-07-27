@@ -113,8 +113,10 @@ static GConfReaderStruct reader_str[] = {
 #define ERR_INVALID_UUID			_( "Invalid UUID: waited for %s, found %s at line %d." )
 #define ERR_INVALID_KEY_PREFIX		_( "Invalid content: waited for %s prefix, found %s at line %d." )
 #define ERR_NOT_AN_UUID				_( "Invalid UUID %s found at line %d." )
-#define ERR_UUID_ALREADY_EXISTS		_( "Already existing UUID %s at line %d." )
+#define ERR_UUID_ALREADY_EXISTS		_( "Already existing action (UUID: %s) at line %d." )
 #define ERR_VALUE_ALREADY_SET		_( "Value '%s' already set: new value ignored at line %d." )
+#define ERR_UUID_NOT_FOUND			_( "UUID not found." )
+#define ERR_ACTION_LABEL_NOT_FOUND	_( "Action label not found." )
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -384,12 +386,18 @@ gconf_reader_parse_schemalist( NactGConfReader *reader, xmlNode *schema )
 		}
 	}
 
-	gboolean ok = FALSE;
+	gboolean ok = TRUE;
 
-	if( reader->private->uuid_set ){
+	if( !reader->private->uuid_set ){
+		add_message( reader, ERR_UUID_NOT_FOUND );
+		ok = FALSE;
+	}
+
+	if( ok ){
 		gchar *label = na_action_get_label( reader->private->action );
-		ok = ( label && g_utf8_strlen( label, -1 ));
-		g_debug( "%s: action=%p, label=%s, ok=%s", thisfn, reader->private->action, label, ok ? "True":"False" );
+		if( !label || !g_utf8_strlen( label, -1 )){
+			add_message( reader, ERR_ACTION_LABEL_NOT_FOUND );
+		}
 		g_free( label );
 	}
 
@@ -783,31 +791,7 @@ gconf_reader_parse_dump_root( NactGConfReader *reader, xmlNode *root )
 		}
 
 		found = TRUE;
-
-		reader->private->action = na_action_new();
-		xmlChar *path = xmlGetProp( iter, ( const xmlChar * ) NACT_GCONF_DUMP_ENTRYLIST_BASE );
-		gchar *uuid = na_utils_path_to_key(( const gchar * ) path );
-		na_action_set_uuid( reader->private->action, uuid );
-		reader->private->uuid_set = TRUE;
-		g_debug( "%s: uuid=%s", thisfn, uuid );
-		g_free( uuid );
-		xmlFree( path );
-
 		gconf_reader_parse_entrylist( reader, iter );
-	}
-
-	gboolean ok = FALSE;
-
-	if( reader->private->uuid_set ){
-		gchar *label = na_action_get_label( reader->private->action );
-		ok = ( label && g_utf8_strlen( label, -1 ));
-		g_debug( "%s: action=%p, label=%s, ok=%s", thisfn, reader->private->action, label, ok ? "True":"False" );
-		g_free( label );
-	}
-
-	if( !ok ){
-		g_object_unref( reader->private->action );
-		reader->private->action = NULL;
 	}
 }
 
@@ -822,23 +806,55 @@ gconf_reader_parse_entrylist( NactGConfReader *reader, xmlNode *entrylist )
 	static const gchar *thisfn = "gconf_reader_parse_entrylist";
 	g_debug( "%s: reader=%p, entrylist=%p", thisfn, reader, entrylist );
 
-	xmlNode *iter;
-	for( iter = entrylist->children ; iter ; iter = iter->next ){
+	reader->private->action = na_action_new();
+	xmlChar *path = xmlGetProp( entrylist, ( const xmlChar * ) NACT_GCONF_DUMP_ENTRYLIST_BASE );
+	gchar *uuid = na_utils_path_to_key(( const gchar * ) path );
+	g_debug( "%s: uuid=%s", thisfn, uuid );
 
-		if( iter->type != XML_ELEMENT_NODE ){
-			continue;
+	if( is_uuid_valid( uuid )){
+		if( action_exists( reader, uuid )){
+			add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid, entrylist->line );
+
+		} else {
+			na_action_set_uuid( reader->private->action, uuid );
+			reader->private->uuid_set = TRUE;
+		}
+	} else {
+		add_message( reader, ERR_NOT_AN_UUID, uuid, entrylist->line );
+	}
+
+	g_free( uuid );
+	xmlFree( path );
+
+	if( reader->private->uuid_set ){
+		xmlNode *iter;
+		for( iter = entrylist->children ; iter ; iter = iter->next ){
+
+			if( iter->type != XML_ELEMENT_NODE ){
+				continue;
+			}
+
+			if( strxcmp( iter->name, NACT_GCONF_DUMP_ENTRY )){
+				add_message( reader,
+						ERR_WAITED_IGNORED_NODE,
+						NACT_GCONF_DUMP_ENTRY, ( const char * ) iter->name, iter->line );
+				continue;
+			}
+
+			if( !gconf_reader_parse_entry( reader, iter )){
+				add_message( reader, ERR_IGNORED_SCHEMA, iter->line );
+			}
 		}
 
-		if( strxcmp( iter->name, NACT_GCONF_DUMP_ENTRY )){
-			add_message( reader,
-					ERR_WAITED_IGNORED_NODE,
-					NACT_GCONF_DUMP_ENTRY, ( const char * ) iter->name, iter->line );
-			continue;
+		gchar *label = na_action_get_label( reader->private->action );
+		if( !label || !g_utf8_strlen( label, -1 )){
+			add_message( reader, ERR_ACTION_LABEL_NOT_FOUND );
 		}
+		g_free( label );
 
-		if( !gconf_reader_parse_entry( reader, iter )){
-			add_message( reader, ERR_IGNORED_SCHEMA, iter->line );
-		}
+	} else {
+		g_object_unref( reader->private->action );
+		reader->private->action = NULL;
 	}
 }
 static gboolean

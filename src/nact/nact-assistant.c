@@ -240,7 +240,7 @@ instance_finalize( GObject *window )
 }
 
 /*
- * cf. http://bugzilla.gnome.org/show_bug.cgi?id=589746
+ * cf. http://bugzilla.gnome.org/show_bug.cgi?id=589746 against Gtk+ 2.16
  * a GtkFileChooseWidget embedded in a GtkAssistant is not displayed
  * when run more than once
  *

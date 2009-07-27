@@ -1400,16 +1400,16 @@ file(s)/folder(s)</property>
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="CommandExamplePreLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
 </interface>

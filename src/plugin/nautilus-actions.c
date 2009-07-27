@@ -233,7 +233,7 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
 static GList *
 get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
 {
-#ifdef NACT_MAINTAINER_MODE
+#ifdef NA_MAINTAINER_MODE
 	static const gchar *thisfn = "nautilus_actions_get_background_items";
 	gchar *uri = nautilus_file_info_get_uri( current_folder );
 	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)", thisfn, provider, window, current_folder, uri );
@@ -288,7 +288,7 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 				NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
 
-#ifdef NACT_MAINTAINER_MODE
+#ifdef NA_MAINTAINER_MODE
 				label = na_action_profile_get_label( profile );
 				g_debug( "%s: examining '%s' profile", thisfn, label );
 				g_free( label );

@@ -12,10 +12,6 @@ like the scheme list, it seems.
 
 - try to import a schema for an action (without schema)
 
-- gtk_window_set_transient_for (see nact-conditions-editor.c) should be
-  called in base_window_do_initial_load, but requires a parent window
-  which should be passed as a virtual or in the constructor
+- import and export assistants are seen as a distinct application in the
+  task bar (there is a second NA icon)
 
-- when importing multi-profile actions, profiles are not marked as modified
-
-- reload actions : doesn't work ?? nothing appears in the ui

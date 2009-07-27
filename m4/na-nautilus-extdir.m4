@@ -26,12 +26,38 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 1 creation
+# serial 2 change NACT_ prefix to NA_ (Nautilus Actions)
 
-dnl define NACT_MAINTAINER_MODE
+# let the user specify an alternate nautilus-extension dir
+# --with-nautilus-extdir=<dir>
 
-AC_DEFUN([NACT_IS_MAINTAINER_MODE],[
-	if test "${USE_MAINTAINER_MODE}" = "yes"; then
-		AC_DEFINE([NACT_MAINTAINER_MODE],[1],[Define to 1 if we are in maintainer mode])
+AC_DEFUN([NA_NAUTILUS_EXTDIR],[
+	AC_REQUIRE([_AC_ARG_NA_NAUTILUS_EXTDIR])dnl
+	AC_REQUIRE([_AC_NA_CHECK_NAUTILUS_EXTDIR])dnl
+	if test "${ac_with_nact_nautilus_extdir}" = ""; then
+		AC_MSG_ERROR([Unable to determine nautilus extension folder, please use --with-nautilus-extdir option])
+	else
+		AC_MSG_NOTICE([installing plugin in ${ac_with_nact_nautilus_extdir}])
+		AC_SUBST([NAUTILUS_EXTENSIONS_DIR],[${ac_with_nact_nautilus_extdir}])
+	fi
+])
+
+AC_DEFUN([_AC_ARG_NA_NAUTILUS_EXTDIR],[
+	AC_ARG_WITH(
+		[nautilus-extdir],
+		AC_HELP_STRING(
+			[--with-nautilus-extdir=DIR],
+			[nautilus plugins extension directory @<:@auto@:>@]
+		),
+	[ac_with_nact_nautilus_extdir=$withval],
+	[ac_with_nact_nautilus_extdir=""]
+	)
+])
+
+AC_DEFUN([_AC_NA_CHECK_NAUTILUS_EXTDIR],[
+	if test "${ac_with_nact_nautilus_extdir}" = ""; then
+		if test "{PKG_CONFIG}" != ""; then
+			ac_with_nact_nautilus_extdir=`${PKG_CONFIG} --variable=extensiondir libnautilus-extension`
+		fi
 	fi
 ])

@@ -1,11 +1,15 @@
 dnl GNOME_COMPILE_WARNINGS
 dnl Turn on many useful compiler warnings
 dnl For now, only works on GCC
+
+# serial 2 change NACT_ prefix to NA_ (Nautilus Actions)
+
 #
 # pwi 2009-05-15 shamelessly copied from gnome-compiler-flags.m4
 # two patch have been submitted (see gnome-common #582860)
 #
-AC_DEFUN([NACT_GNOME_COMPILE_WARNINGS],[
+
+AC_DEFUN([NA_GNOME_COMPILE_WARNINGS],[
 
 	_ac_warning_def=m4_default([$1],[yes])
 	_ac_compliant_def=m4_default([$2],[no])
