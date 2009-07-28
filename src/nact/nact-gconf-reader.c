@@ -40,9 +40,9 @@
 
 #include <common/na-gconf-keys.h>
 #include <common/na-utils.h>
+#include <common/na-xml-names.h>
 
 #include "nact-application.h"
-#include "nact-gconf-keys.h"
 #include "nact-gconf-reader.h"
 #include "nact-assistant.h"
 

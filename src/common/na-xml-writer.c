@@ -35,21 +35,20 @@
 #include <glib/gi18n.h>
 #include <libxml/tree.h>
 
-#include <common/na-gconf-keys.h>
-#include <common/na-utils.h>
-
-#include "nact-gconf-keys.h"
-#include "nact-gconf-writer.h"
-#include "nact-import-export-format.h"
+#include "na-action-profile.h"
+#include "na-gconf-keys.h"
+#include "na-utils.h"
+#include "na-xml-names.h"
+#include "na-xml-writer.h"
 
 /* private class data
  */
-struct NactGConfWriterClassPrivate {
+struct NAXMLWriterClassPrivate {
 };
 
 /* private instance data
  */
-struct NactGConfWriterPrivate {
+struct NAXMLWriterPrivate {
 	gboolean  dispose_has_run;
 	gchar    *uuid;
 };
@@ -64,41 +63,41 @@ enum {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType            register_type( void );
-static void             class_init( NactGConfWriterClass *klass );
-static void             instance_init( GTypeInstance *instance, gpointer klass );
-static void             instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void             instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void             instance_dispose( GObject *object );
-static void             instance_finalize( GObject *object );
+static GType        register_type( void );
+static void         class_init( NAXMLWriterClass *klass );
+static void         instance_init( GTypeInstance *instance, gpointer klass );
+static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void         instance_dispose( GObject *object );
+static void         instance_finalize( GObject *object );
 
-static NactGConfWriter *gconf_writer_new( const gchar *uuid );
-static xmlDocPtr        create_xml_schema( NactGConfWriter *writer, gint format, NAAction *action );
-static void             create_schema_entry(
-										NactGConfWriter *writer,
-										gint format,
-										const gchar *profile_name,
-										const gchar *key,
-										const gchar *value,
-										xmlDocPtr doc,
-										xmlNodePtr list_node,
-										const gchar *type,
-										gboolean is_l10n_value,
-										const gchar *short_desc,
-										const gchar *long_desc );
-static xmlDocPtr        create_xml_dump( NactGConfWriter *writer, gint format, NAAction *action );
-static void             create_dump_entry(
-										NactGConfWriter *writer,
-										gint format,
-										const gchar *profile_name,
-										const gchar *key,
-										const gchar *value,
-										xmlDocPtr doc,
-										xmlNodePtr list_node,
-										const gchar *type );
+static NAXMLWriter *xml_writer_new( const gchar *uuid );
+static xmlDocPtr    create_xml_schema( NAXMLWriter *writer, gint format, NAAction *action );
+static void         create_schema_entry(
+								NAXMLWriter *writer,
+								gint format,
+								const gchar *profile_name,
+								const gchar *key,
+								const gchar *value,
+								xmlDocPtr doc,
+								xmlNodePtr list_node,
+								const gchar *type,
+								gboolean is_l10n_value,
+								const gchar *short_desc,
+								const gchar *long_desc );
+static xmlDocPtr    create_xml_dump( NAXMLWriter *writer, gint format, NAAction *action );
+static void         create_dump_entry(
+								NAXMLWriter *writer,
+								gint format,
+								const gchar *profile_name,
+								const gchar *key,
+								const gchar *value,
+								xmlDocPtr doc,
+								xmlNodePtr list_node,
+								const gchar *type );
 
 GType
-nact_gconf_writer_get_type( void )
+na_xml_writer_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -113,26 +112,26 @@ static GType
 register_type( void )
 {
 	static GTypeInfo info = {
-		sizeof( NactGConfWriterClass ),
+		sizeof( NAXMLWriterClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactGConfWriter ),
+		sizeof( NAXMLWriter ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( G_TYPE_OBJECT, "NactGConfWriter", &info, 0 );
+	GType type = g_type_register_static( G_TYPE_OBJECT, "NAXMLWriter", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactGConfWriterClass *klass )
+class_init( NAXMLWriterClass *klass )
 {
-	static const gchar *thisfn = "nact_gconf_writer_class_init";
+	static const gchar *thisfn = "na_xml_writer_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
@@ -151,19 +150,19 @@ class_init( NactGConfWriterClass *klass )
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_GCONF_WRITER_UUID, spec );
 
-	klass->private = g_new0( NactGConfWriterClassPrivate, 1 );
+	klass->private = g_new0( NAXMLWriterClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_gconf_writer_instance_init";
+	static const gchar *thisfn = "na_xml_writer_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
 
-	g_assert( NACT_IS_GCONF_WRITER( instance ));
-	NactGConfWriter *self = NACT_GCONF_WRITER( instance );
+	g_assert( NA_IS_XML_WRITER( instance ));
+	NAXMLWriter *self = NA_XML_WRITER( instance );
 
-	self->private = g_new0( NactGConfWriterPrivate, 1 );
+	self->private = g_new0( NAXMLWriterPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -171,8 +170,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	g_assert( NACT_IS_GCONF_WRITER( object ));
-	NactGConfWriter *self = NACT_GCONF_WRITER( object );
+	g_assert( NA_IS_XML_WRITER( object ));
+	NAXMLWriter *self = NA_XML_WRITER( object );
 
 	switch( property_id ){
 		case PROP_GCONF_WRITER_UUID:
@@ -188,8 +187,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	g_assert( NACT_IS_GCONF_WRITER( object ));
-	NactGConfWriter *self = NACT_GCONF_WRITER( object );
+	g_assert( NA_IS_XML_WRITER( object ));
+	NAXMLWriter *self = NA_XML_WRITER( object );
 
 	switch( property_id ){
 		case PROP_GCONF_WRITER_UUID:
@@ -206,8 +205,8 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	g_assert( NACT_IS_GCONF_WRITER( object ));
-	NactGConfWriter *self = NACT_GCONF_WRITER( object );
+	g_assert( NA_IS_XML_WRITER( object ));
+	NAXMLWriter *self = NA_XML_WRITER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -221,8 +220,8 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	g_assert( NACT_IS_GCONF_WRITER( object ));
-	NactGConfWriter *self = NACT_GCONF_WRITER( object );
+	g_assert( NA_IS_XML_WRITER( object ));
+	NAXMLWriter *self = NA_XML_WRITER( object );
 
 	g_free( self->private->uuid );
 
@@ -234,22 +233,27 @@ instance_finalize( GObject *object )
 	}
 }
 
-static NactGConfWriter *
-gconf_writer_new( const gchar *uuid )
+static NAXMLWriter *
+xml_writer_new( const gchar *uuid )
 {
-	return( g_object_new( NACT_GCONF_WRITER_TYPE, PROP_GCONF_WRITER_UUID_STR, uuid, NULL ));
+	return( g_object_new( NA_XML_WRITER_TYPE, PROP_GCONF_WRITER_UUID_STR, uuid, NULL ));
 }
 
 /**
- * Export the specified action as a GConf schema.
+ * na_xml_writer_export:
+ * @action:
+ * @folder: the directoy where to write the output XML file.
+ * If NULL, the output will be directed to stdout.
  *
- * Returns the written filename.
+ * Export the specified action as an XML file.
+ *
+ * Returns: the written filename, or NULL if written to stdout.
  */
 gchar *
-nact_gconf_writer_export( NAAction *action, const gchar *folder, gint format, gchar **msg )
+na_xml_writer_export( NAAction *action, const gchar *folder, gint format, gchar **msg )
 {
 	gchar *uuid = na_action_get_uuid( action );
-	NactGConfWriter *writer = gconf_writer_new( uuid );
+	NAXMLWriter *writer = xml_writer_new( uuid );
 	g_free( uuid );
 
 	xmlDocPtr doc = NULL;
@@ -268,7 +272,11 @@ nact_gconf_writer_export( NAAction *action, const gchar *folder, gint format, gc
 
 		case FORMAT_GCONFENTRY:
 			doc = create_xml_dump( writer, format, action );
-			filename = g_strdup_printf( "%s/action-%s.xml", folder, writer->private->uuid );
+			if( folder ){
+				filename = g_strdup_printf( "%s/action-%s.xml", folder, writer->private->uuid );
+			} else {
+				filename = g_strdup( "-" );
+			}
 			break;
 	}
 
@@ -276,6 +284,11 @@ nact_gconf_writer_export( NAAction *action, const gchar *folder, gint format, gc
 	g_assert( filename );
 
 	if( xmlSaveFormatFileEnc( filename, doc, "UTF-8", 1 ) == -1 ){
+		g_free( filename );
+		filename = NULL;
+	}
+
+	if( !folder ){
 		g_free( filename );
 		filename = NULL;
 	}
@@ -288,7 +301,7 @@ nact_gconf_writer_export( NAAction *action, const gchar *folder, gint format, gc
 }
 
 static xmlDocPtr
-create_xml_schema( NactGConfWriter *writer, gint format, NAAction *action )
+create_xml_schema( NAXMLWriter *writer, gint format, NAAction *action )
 {
 	xmlDocPtr doc = xmlNewDoc( BAD_CAST( "1.0" ));
 	xmlNodePtr root_node = xmlNewNode( NULL, BAD_CAST( NACT_GCONF_SCHEMA_ROOT ));
@@ -390,7 +403,7 @@ create_xml_schema( NactGConfWriter *writer, gint format, NAAction *action )
 }
 
 static void
-create_schema_entry( NactGConfWriter *writer,
+create_schema_entry( NAXMLWriter *writer,
 		gint format,
 		const gchar *profile_name, const gchar *key, const gchar *value,
 		xmlDocPtr doc, xmlNodePtr list_node, const gchar *type, gboolean is_l10n_value,
@@ -447,7 +460,7 @@ create_schema_entry( NactGConfWriter *writer,
 }
 
 static xmlDocPtr
-create_xml_dump( NactGConfWriter *writer, gint format, NAAction *action )
+create_xml_dump( NAXMLWriter *writer, gint format, NAAction *action )
 {
 	xmlDocPtr doc = xmlNewDoc( BAD_CAST( "1.0" ));
 	xmlNodePtr root_node = xmlNewNode( NULL, BAD_CAST( NACT_GCONF_DUMP_ROOT ));
@@ -553,7 +566,7 @@ create_xml_dump( NactGConfWriter *writer, gint format, NAAction *action )
 }
 
 static void
-create_dump_entry( NactGConfWriter *writer,
+create_dump_entry( NAXMLWriter *writer,
 		gint format,
 		const gchar *profile_name, const gchar *key, const gchar *value,
 		xmlDocPtr doc, xmlNodePtr list_node, const gchar *type )

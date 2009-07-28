@@ -27,22 +27,21 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
-	nautilus-actions-new-config					\
+	nautilus-actions-new							\
 	$(NULL)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)/src						\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	$(NAUTILUS_ACTIONS_UTILS_CFLAGS)			\
+	-I $(top_srcdir)/src							\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
+	$(NAUTILUS_ACTIONS_UTILS_CFLAGS)				\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"		\
 	$(NULL)
 
-nautilus_actions_new_config_SOURCES = \
-	nautilus-actions-tools-utils.c				\
-	nautilus-actions-tools-utils.h				\
-	nautilus-actions-new-config.c				\
+nautilus_actions_new_SOURCES = \
+	nautilus-actions-new.c							\
 	$(NULL)
 
-nautilus_actions_new_config_LDADD = \
-	$(top_builddir)/src/common/libnact.la		\
-	$(NAUTILUS_ACTIONS_UTILS_LIBS)				\
+nautilus_actions_new_LDADD = \
+	$(top_builddir)/src/common/libnact.la			\
+	$(NAUTILUS_ACTIONS_UTILS_LIBS)					\
 	$(NULL)

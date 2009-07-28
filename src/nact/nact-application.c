@@ -37,7 +37,7 @@
 
 #include "nact-application.h"
 
-#define GLADE_FILENAME				GLADEDIR "/nautilus-actions-config.ui"
+#define GLADE_FILENAME				GLADEDIR "/nautilus-actions-config-tool.ui"
 
 /* private class data
  */

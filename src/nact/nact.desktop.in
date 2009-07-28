@@ -4,6 +4,6 @@ Type=Application
 Encoding=UTF-8
 _Name=Nautilus Actions Configuration
 _Comment=Add items to the Nautilus popup menu
-Exec=nautilus-actions-config
+Exec=nautilus-actions-config-tool
 Icon=nautilus-actions
 Categories=Application;FileManager;DesktopSettings;Settings;AdvancedSettings;

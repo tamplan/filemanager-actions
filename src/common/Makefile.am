@@ -56,6 +56,9 @@ libnact_la_SOURCES = \
 	na-pivot.h									\
 	na-utils.c									\
 	na-utils.h									\
+	na-xml-names.h								\
+	na-xml-writer.c								\
+	na-xml-writer.h								\
 	$(NULL)
 
 libnact_la_LIBADD = -lxml2 -luuid

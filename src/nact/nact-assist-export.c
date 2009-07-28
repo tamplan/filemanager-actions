@@ -38,14 +38,14 @@
 
 #include <common/na-action.h>
 #include <common/na-utils.h>
+#include <common/na-xml-names.h>
+#include <common/na-xml-writer.h>
 
 #include "base-application.h"
 #include "nact-main-window.h"
 #include "nact-assist-export.h"
-#include "nact-gconf-writer.h"
 #include "nact-iactions-list.h"
 #include "nact-iprefs.h"
-#include "nact-import-export-format.h"
 
 /* Export Assistant
  *
@@ -775,7 +775,7 @@ do_export( NactAssistExport *window )
 
 	for( ia = actions ; ia ; ia = ia->next ){
 		NAAction *action = NA_ACTION( ia->data );
-		gchar *fname = nact_gconf_writer_export( action, window->private->uri, window->private->format, &msg );
+		gchar *fname = na_xml_writer_export( action, window->private->uri, window->private->format, &msg );
 
 		if( fname && strlen( fname )){
 			window->private->fnames = g_slist_prepend( window->private->fnames, fname );

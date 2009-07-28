@@ -27,7 +27,7 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
-	nautilus-actions-config								\
+	nautilus-actions-config-tool						\
 	$(NULL)
 
 gladedir = $(datadir)/nautilus-actions
@@ -40,7 +40,7 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
-nautilus_actions_config_SOURCES = \
+nautilus_actions_config_tool_SOURCES = \
 	base-application.c									\
 	base-application.h									\
 	base-application-class.h							\
@@ -55,11 +55,8 @@ nautilus_actions_config_SOURCES = \
 	nact-assist-export.h								\
 	nact-assist-import.c								\
 	nact-assist-import.h								\
-	nact-gconf-keys.h									\
 	nact-gconf-reader.c									\
 	nact-gconf-reader.h									\
-	nact-gconf-writer.c									\
-	nact-gconf-writer.h									\
 	nact-iaction-tab.c									\
 	nact-iaction-tab.h									\
 	nact-iactions-list.c								\
@@ -72,7 +69,6 @@ nautilus_actions_config_SOURCES = \
 	nact-iconditions-tab.h								\
 	nact-imenubar.c										\
 	nact-imenubar.h										\
-	nact-import-export-format.h							\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
 	nact-main.c											\
@@ -82,12 +78,12 @@ nautilus_actions_config_SOURCES = \
 	nact-window.h										\
 	$(NULL)
 
-nautilus_actions_config_LDADD = \
+nautilus_actions_config_tool_LDADD = \
 	$(top_builddir)/src/common/libnact.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-glade_DATA = nautilus-actions-config.ui
+glade_DATA = nautilus-actions-config-tool.ui
 
 @INTLTOOL_DESKTOP_RULE@
 

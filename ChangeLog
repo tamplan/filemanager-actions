@@ -1,3 +1,37 @@
+2009-07-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-iio-provider.c:
+	Write action now accepts a NULL NAPivot to deal with command-line
+	utility.
+
+	* src/nact/nact-gconf-keys.h:
+	Renamed as src/common/na-xml-names.h.
+
+	* src/nact/nact-gconf-writer.{c,h}:
+	Renamed as src/common/na-xml-writer.{c,h}.
+
+	* src/nact/nact-import-export-format.h: Removed file.
+
+	* src/nact/nautilus-actions-config.ui:
+	Renamed as src/nact/nautilus-actions-config-tool.ui.
+
+	* src/utils/nautilus-actions-new-config.c:
+	Renamed as src/utils/nautilus-actions-new.c.
+
+	* src/utils/nautilus-actions-tools-utils.c:
+	* src/utils/nautilus-actions-tools-utils.h: Removed files.
+
+	* configure.ac:
+	* src/common/Makefile.am:
+	* src/nact/Makefile.am:
+	* src/nact/nact-application.c:
+	* src/nact/nact-assist-export.c:
+	* src/nact/nact.desktop.in
+	* src/utils/Makefile.am: Updated accordingly.
+
+	* m4/na-log-domains.m4:
+	Define a new log domain for utilities.
+
 2009-07-27 Pierre Wieser <pwieser@trychlos.org>
 
 	* m4/na-log-domains.m4: New file.
@@ -7,8 +41,7 @@
 	* m4/nact-maintainer-mode.m4: Renamed to m4/na-maintainer-mode.m4.
 	* m4/nact-nautilus-extdir.m4: Renamed to m4/na-nautilus-extdir.m4.
 
-	* configure.ac:
-	Updated accordingly.
+	* configure.ac: Updated accordingly.
 
 	* src/common/na-object.c:
 	* src/common/na-object.h (na_object_check_edited_status):

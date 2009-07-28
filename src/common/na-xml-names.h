@@ -28,12 +28,31 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_GCONF_KEYS_H__
-#define __NACT_GCONF_KEYS_H__
+#ifndef __NA_XML_NAMES_H__
+#define __NA_XML_NAMES_H__
 
-#include <glib-object.h>
+#include <glib/gi18n.h>
 
 G_BEGIN_DECLS
+
+/* import/export formats
+ *
+ * FORMAT_GCONFSCHEMAFILE_V1: a schema with owner, short and long
+ * descriptions ; each action has its own schema addressed by the uuid
+ * (historical format up to v1.10.x serie)
+ *
+ * FORMAT_GCONFSCHEMAFILE_V2: the lightest schema still compatible
+ * with gconftool-2 --install-schema-file (no owner, no short nor long
+ * descriptions) - introduced in v 1.11
+ *
+ * FORMAT_GCONFENTRY: not a schema, but a dump of the GConf entry
+ * introduced in v 1.11
+ */
+enum {
+	FORMAT_GCONFSCHEMAFILE_V1 = 1,
+	FORMAT_GCONFSCHEMAFILE_V2,
+	FORMAT_GCONFENTRY
+};
 
 /* XML element names (GConf schema)
  * used in FORMAT_GCONFSCHEMAFILE_V1 and FORMAT_GCONFSCHEMAFILE_V2
@@ -48,15 +67,14 @@ G_BEGIN_DECLS
 #define NACT_GCONF_SCHEMA_LOCALE			"locale"
 #define NACT_GCONF_SCHEMA_DEFAULT			"default"
 
-/* Previous used keys
+/* Previouly used keys
  *
  * Up to v 1.10, export used to contain a full schema description,
  * while import only checked for applyto keys (along with locale
  * and default)
  *
- * Starting with 1.11, export only contains required keys (applyto,
- * default and locale) ; import of course accept all previous keys
- * without warning
+ * Starting with 1.11, we have introduced a lighter export schema
+ * (mainly without owner and short and long descriptions)
  *
  * only used in FORMAT_GCONFSCHEMAFILE_V1
  */
@@ -110,4 +128,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __NACT_GCONF_KEYS_H__ */
+#endif /* __NA_XML_NAMES_H__ */

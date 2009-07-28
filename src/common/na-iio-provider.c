@@ -180,7 +180,8 @@ na_iio_provider_read_actions( const NAPivot *pivot )
 /**
  * na_iio_provider_write_action:
  * @pivot: the #NAPivot object which owns the list of registered I/O
- * storage providers.
+ * storage providers. if NULL, @action must already have registered
+ * its own provider.
  * @action: the #NAAction action to be written.
  * @message: the I/O provider can allocate and store here an error
  * message.
@@ -195,7 +196,7 @@ na_iio_provider_write_action( const NAPivot *pivot, NAAction *action, gchar **me
 	static const gchar *thisfn = "na_iio_provider_write_action";
 	g_debug( "%s: pivot=%p, action=%p, message=%p", thisfn, pivot, action, message );
 
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_assert( NA_IS_PIVOT( pivot ) || !pivot );
 	g_assert( NA_IS_ACTION( action ));
 
 	guint ret = NA_IIO_PROVIDER_NOT_WRITABLE;
@@ -214,7 +215,7 @@ na_iio_provider_write_action( const NAPivot *pivot, NAAction *action, gchar **me
 
 	/* else, search for a provider which is willing to write the action
 	 */
-	if( !instance ){
+	if( !instance && pivot ){
 		GSList *providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
 		GSList *ip;
 		for( ip = providers ; ip ; ip = ip->next ){

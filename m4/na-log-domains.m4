@@ -13,4 +13,7 @@ AC_DEFUN([NA_LOG_DOMAINS],[
 
 	AC_SUBST([NA_LOGDOMAIN_NACT],[NA-nact])
 	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_NACT],["NA-nact"],[Log domain of NACT user interface])
+
+	AC_SUBST([NA_LOGDOMAIN_UTILS],[NA-utils])
+	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_UTILS],["NA-utils"],[Log domain of utilities])
 ])
