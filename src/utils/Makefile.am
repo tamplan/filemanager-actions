@@ -28,6 +28,7 @@
 
 bin_PROGRAMS = \
 	nautilus-actions-new							\
+	nautilus-actions-schema							\
 	$(NULL)
 
 AM_CPPFLAGS += \
@@ -42,6 +43,15 @@ nautilus_actions_new_SOURCES = \
 	$(NULL)
 
 nautilus_actions_new_LDADD = \
+	$(top_builddir)/src/common/libnact.la			\
+	$(NAUTILUS_ACTIONS_UTILS_LIBS)					\
+	$(NULL)
+
+nautilus_actions_schema_SOURCES = \
+	nautilus-actions-schema.c						\
+	$(NULL)
+
+nautilus_actions_schema_LDADD = \
 	$(top_builddir)/src/common/libnact.la			\
 	$(NAUTILUS_ACTIONS_UTILS_LIBS)					\
 	$(NULL)

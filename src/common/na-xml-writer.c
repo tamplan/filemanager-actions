@@ -95,6 +95,17 @@ static void         create_dump_entry(
 								xmlDocPtr doc,
 								xmlNodePtr list_node,
 								const gchar *type );
+static xmlDocPtr    create_gconf_schema( NAXMLWriter *writer );
+static void         create_gconf_schema_entry(
+								NAXMLWriter *writer,
+								const gchar *entry,
+								xmlDocPtr doc,
+								xmlNodePtr list_node,
+								const gchar *type,
+								const gchar *short_desc,
+								const gchar *long_desc,
+								const gchar *default_value,
+								gboolean is_i18n );
 
 GType
 na_xml_writer_get_type( void )
@@ -252,12 +263,13 @@ xml_writer_new( const gchar *uuid )
 gchar *
 na_xml_writer_export( NAAction *action, const gchar *folder, gint format, gchar **msg )
 {
-	gchar *uuid = na_action_get_uuid( action );
+	gchar *uuid = action ? na_action_get_uuid( action ) : NULL;
 	NAXMLWriter *writer = xml_writer_new( uuid );
 	g_free( uuid );
 
 	xmlDocPtr doc = NULL;
 	gchar *filename = NULL;
+	gboolean free_filename = FALSE;
 
 	switch( format ){
 		case FORMAT_GCONFSCHEMAFILE_V1:
@@ -270,12 +282,30 @@ na_xml_writer_export( NAAction *action, const gchar *folder, gint format, gchar 
 			filename = g_strdup_printf( "%s/config-%s.schema", folder, writer->private->uuid );
 			break;
 
+		/* this is the format used by nautilus-actions-new utility,
+		 * and that's why this option takes care of a NULL folder
+		 */
 		case FORMAT_GCONFENTRY:
 			doc = create_xml_dump( writer, format, action );
 			if( folder ){
 				filename = g_strdup_printf( "%s/action-%s.xml", folder, writer->private->uuid );
 			} else {
 				filename = g_strdup( "-" );
+				free_filename = TRUE;
+			}
+			break;
+
+		/* this is the format used by nautilus-actions-install-schema
+		 * utility, and that's why this option takes care of a NULL
+		 * folder, or an output filename
+		 */
+		case FORMAT_GCONFSCHEMA:
+			doc = create_gconf_schema( writer );
+			if( folder ){
+				filename = g_strdup( folder );
+			} else {
+				filename = g_strdup( "-" );
+				free_filename = TRUE;
 			}
 			break;
 	}
@@ -288,7 +318,7 @@ na_xml_writer_export( NAAction *action, const gchar *folder, gint format, gchar 
 		filename = NULL;
 	}
 
-	if( !folder ){
+	if( free_filename ){
 		g_free( filename );
 		filename = NULL;
 	}
@@ -600,4 +630,65 @@ create_dump_entry( NAXMLWriter *writer,
 		xmlNewChild( value_node, NULL, BAD_CAST( NACT_GCONF_DUMP_STRING ), encoded_content );
 		xmlFree( encoded_content );
 	}
+}
+
+static xmlDocPtr
+create_gconf_schema( NAXMLWriter *writer )
+{
+	xmlDocPtr doc = xmlNewDoc( BAD_CAST( "1.0" ));
+	xmlNodePtr root_node = xmlNewNode( NULL, BAD_CAST( NACT_GCONF_SCHEMA_ROOT ));
+	xmlDocSetRootElement( doc, root_node );
+	xmlNodePtr list_node = xmlNewChild( root_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_LIST ), NULL );
+
+	create_gconf_schema_entry( writer, ACTION_VERSION_ENTRY       , doc, list_node, "string", ACTION_VERSION_DESC_SHORT     , ACTION_VERSION_DESC_LONG, NAUTILUS_ACTIONS_CONFIG_VERSION, FALSE );
+	create_gconf_schema_entry( writer, ACTION_LABEL_ENTRY         , doc, list_node, "string", ACTION_LABEL_DESC_SHORT       , ACTION_LABEL_DESC_LONG, "", TRUE );
+	create_gconf_schema_entry( writer, ACTION_TOOLTIP_ENTRY       , doc, list_node, "string", ACTION_TOOLTIP_DESC_SHORT     , ACTION_TOOLTIP_DESC_LONG, "", TRUE );
+	create_gconf_schema_entry( writer, ACTION_ICON_ENTRY          , doc, list_node, "string", ACTION_ICON_DESC_SHORT        , ACTION_ICON_DESC_LONG, "", FALSE );
+	create_gconf_schema_entry( writer, ACTION_PROFILE_LABEL_ENTRY , doc, list_node, "string", ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, _( "Default profile" ), TRUE );
+	create_gconf_schema_entry( writer, ACTION_PATH_ENTRY          , doc, list_node, "string", ACTION_PATH_DESC_SHORT        , ACTION_PATH_DESC_LONG, "", FALSE );
+	create_gconf_schema_entry( writer, ACTION_PARAMETERS_ENTRY    , doc, list_node, "string", ACTION_PARAMETERS_DESC_SHORT  , ACTION_PARAMETERS_DESC_LONG, "", FALSE );
+	create_gconf_schema_entry( writer, ACTION_BASENAMES_ENTRY     , doc, list_node, "list"  , ACTION_BASENAMES_DESC_SHORT   , ACTION_BASENAMES_DESC_LONG, "[*]", FALSE );
+	create_gconf_schema_entry( writer, ACTION_MATCHCASE_ENTRY     , doc, list_node, "bool"  , ACTION_MATCHCASE_DESC_SHORT   , ACTION_MATCHCASE_DESC_LONG, "true", FALSE );
+	create_gconf_schema_entry( writer, ACTION_MIMETYPES_ENTRY     , doc, list_node, "list"  , ACTION_MIMETYPES_DESC_SHORT   , ACTION_MIMETYPES_DESC_LONG, "[*/*]", FALSE );
+	create_gconf_schema_entry( writer, ACTION_ISFILE_ENTRY        , doc, list_node, "bool"  , ACTION_ISFILE_DESC_SHORT      , ACTION_ISFILE_DESC_LONG, "true", FALSE );
+	create_gconf_schema_entry( writer, ACTION_ISDIR_ENTRY         , doc, list_node, "bool"  , ACTION_ISDIR_DESC_SHORT       , ACTION_ISDIR_DESC_LONG, "false", FALSE );
+	create_gconf_schema_entry( writer, ACTION_MULTIPLE_ENTRY      , doc, list_node, "bool"  , ACTION_MULTIPLE_DESC_SHORT    , ACTION_MULTIPLE_DESC_LONG, "false", FALSE );
+	create_gconf_schema_entry( writer, ACTION_SCHEMES_ENTRY       , doc, list_node, "list"  , ACTION_SCHEMES_DESC_SHORT     , ACTION_SCHEMES_DESC_LONG, "[file]", FALSE );
+
+	return( doc );
+}
+
+static void
+create_gconf_schema_entry( NAXMLWriter *writer,
+		const gchar *entry,
+		xmlDocPtr doc, xmlNodePtr list_node, const gchar *type,
+		const gchar *short_desc, const gchar *long_desc,
+		const gchar *default_value, gboolean is_i18n )
+{
+	xmlNodePtr schema_node = xmlNewChild( list_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_ENTRY ), NULL );
+
+	xmlChar *content = BAD_CAST( g_build_path( "/", NA_GCONF_SCHEMA_PREFIX, NA_GCONF_CONFIG_PATH, entry, NULL ));
+	xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_KEY ), content );
+	xmlFree( content );
+
+	xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
+
+	xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_TYPE ), BAD_CAST( type ));
+	if( !g_ascii_strcasecmp( type, "list" )){
+		xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_LIST_TYPE ), BAD_CAST( "string" ));
+	}
+
+	xmlNodePtr locale_node = xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_LOCALE ), NULL );
+	xmlNewProp( locale_node, BAD_CAST( "name" ), BAD_CAST( "C" ));
+
+	content = xmlEncodeSpecialChars( doc, BAD_CAST( default_value ));
+	xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_DEFAULT ), content );
+	if( is_i18n ){
+		xmlNewChild( locale_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_DEFAULT ), content );
+	}
+	xmlFree( content );
+
+	xmlNewChild( locale_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_SHORT ), BAD_CAST( short_desc ));
+
+	xmlNewChild( locale_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_SHORT ), BAD_CAST( long_desc ));
 }

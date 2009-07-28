@@ -4,11 +4,15 @@
 	Write action now accepts a NULL NAPivot to deal with command-line
 	utility.
 
+	* src/common/na-xml-names.h:
+	Define new FORMAT_GCONFSCHEMA format to create a schema.
+
 	* src/nact/nact-gconf-keys.h:
 	Renamed as src/common/na-xml-names.h.
 
 	* src/nact/nact-gconf-writer.{c,h}:
 	Renamed as src/common/na-xml-writer.{c,h}.
+	Create a schema on FORMAT_GCONFSCHEMA format.
 
 	* src/nact/nact-import-export-format.h: Removed file.
 
@@ -20,6 +24,8 @@
 
 	* src/utils/nautilus-actions-tools-utils.c:
 	* src/utils/nautilus-actions-tools-utils.h: Removed files.
+
+	* src/utils/nautilus-actions-schema.c: New file.
 
 	* configure.ac:
 	* src/common/Makefile.am:

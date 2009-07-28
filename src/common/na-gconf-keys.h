@@ -33,8 +33,10 @@
 
 /* GConf general information
  */
-#define NA_GCONF_CONFIG_PATH			NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/configurations"
+#define NA_GCONF_CONFIG_CONFIGURATION	"configurations"
+#define NA_GCONF_CONFIG_PATH			NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/" NA_GCONF_CONFIG_CONFIGURATION
 #define NA_GCONF_SCHEMA_PREFIX			"/schemas"
+#define NA_GCONF_SCHEMA_PREFERENCES		"preferences"
 
 /* GConf key names
  */

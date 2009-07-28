@@ -36,6 +36,8 @@
 #include <gconf/gconf.h>
 #include <gconf/gconf-client.h>
 
+#include <common/na-gconf-keys.h>
+
 #include "nact-iprefs.h"
 
 /* private interface data
@@ -46,7 +48,7 @@ struct NactIPrefsInterfacePrivate {
 
 /* GConf general information
  */
-#define NA_GCONF_PREFS_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/preferences"
+#define NA_GCONF_PREFS_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/" NA_GCONF_SCHEMA_PREFERENCES
 
 /* key to read/write the last visited folder when browsing for a file
  */
