@@ -36,7 +36,6 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include <common/na-action.h>
 #include <common/na-iio-provider.h>
 #include <common/na-utils.h>
 

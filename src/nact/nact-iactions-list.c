@@ -35,8 +35,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
-#include <common/na-action.h>
-
 #include "nact-application.h"
 #include "nact-iactions-list.h"
 

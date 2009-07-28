@@ -1,18 +1,23 @@
 
-- Create a command line tool to install a schema (wrapper to
-"gconftool-2 --install-schema-file")
-
 - Implement the Help button in nact (or hide it meanwhile)
 
 - i18n doen't works in the command line tool and for some part of NACT 
 like the scheme list, it seems.
 
-- na-action and na-action-profile are included in nact-window.h
-  so are not needed in all other derived window files
-
-- try to import a schema for an action (without schema)
-
 - import and export assistants are seen as a distinct application in the
   task bar (there is a second NA icon) - gtk_window_set_transient_for()
   has no effect of this - open a bug ?
 
+- Note about the schemas in Nautilus Actions:
+  a) actions are identified by uuid
+  b) so, all GConf keys have a path with the uuid of the action
+  c) I'm not willing to write a schema for each and every uuid
+  d) so, as of 1.11.2, the provided schema is general and should apply
+     to all actions
+  e) but there is not yet an API to set a GConfMetaInfo for a key
+     note that gconftool-2 --dump is able to export for each entry a
+     <schema_key> which includes the path to the general schema key
+     but we cannot set it programatically (bad !)
+
+- allow users to upload/download actions directly from a web repository
+  (REST services ?)
