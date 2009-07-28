@@ -23,7 +23,8 @@
 	* src/nact/nact-gconf-reader.{c,h}:
 	Renamed as src/nact/nact-xml-reader.{c,h}.
 
-	* src/nact/nact-import-export-format.h: Removed file.
+	* src/nact/nact-import-export-format.h:
+	* src/nact/nact-iprofiles-list.{c,h}: Removed files.
 
 	* src/nact/nautilus-actions-config.ui:
 	Renamed as src/nact/nautilus-actions-config-tool.ui.
