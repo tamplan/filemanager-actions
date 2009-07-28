@@ -28,11 +28,11 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_GCONF_READER_H__
-#define __NACT_GCONF_READER_H__
+#ifndef __NACT_XML_READER_H__
+#define __NACT_XML_READER_H__
 
 /*
- * NactGConfReader class definition.
+ * NactXMLReader class definition.
  *
  * This is the base class for importing into and exporting from GConf
  * storage subsystem.
@@ -42,33 +42,33 @@
 
 G_BEGIN_DECLS
 
-#define NACT_GCONF_READER_TYPE					( nact_gconf_reader_get_type())
-#define NACT_GCONF_READER( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_GCONF_READER_TYPE, NactGConfReader ))
-#define NACT_GCONF_READER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_GCONF_READER_TYPE, NactGConfReaderClass ))
-#define NACT_IS_GCONF_READER( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_GCONF_READER_TYPE ))
-#define NACT_IS_GCONF_READER_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_GCONF_READER_TYPE ))
-#define NACT_GCONF_READER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_GCONF_READER_TYPE, NactGConfReaderClass ))
+#define NACT_XML_READER_TYPE				( nact_xml_reader_get_type())
+#define NACT_XML_READER( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_XML_READER_TYPE, NactXMLReader ))
+#define NACT_XML_READER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_XML_READER_TYPE, NactXMLReaderClass ))
+#define NACT_IS_XML_READER( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_XML_READER_TYPE ))
+#define NACT_IS_XML_READER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_XML_READER_TYPE ))
+#define NACT_XML_READER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_XML_READER_TYPE, NactXMLReaderClass ))
 
-typedef struct NactGConfReaderPrivate NactGConfReaderPrivate;
-
-typedef struct {
-	GObject                 parent;
-	NactGConfReaderPrivate *private;
-}
-	NactGConfReader;
-
-typedef struct NactGConfReaderClassPrivate NactGConfReaderClassPrivate;
+typedef struct NactXMLReaderPrivate NactXMLReaderPrivate;
 
 typedef struct {
-	GObjectClass                 parent;
-	NactGConfReaderClassPrivate *private;
+	GObject               parent;
+	NactXMLReaderPrivate *private;
 }
-	NactGConfReaderClass;
+	NactXMLReader;
 
-GType     nact_gconf_reader_get_type( void );
+typedef struct NactXMLReaderClassPrivate NactXMLReaderClassPrivate;
 
-NAAction *nact_gconf_reader_import( NactWindow *window, const gchar *uri, GSList **msg );
+typedef struct {
+	GObjectClass               parent;
+	NactXMLReaderClassPrivate *private;
+}
+	NactXMLReaderClass;
+
+GType     nact_xml_reader_get_type( void );
+
+NAAction *nact_xml_reader_import( NactWindow *window, const gchar *uri, GSList **msg );
 
 G_END_DECLS
 
-#endif /* __NACT_GCONF_READER_H__ */
+#endif /* __NACT_XML_READER_H__ */

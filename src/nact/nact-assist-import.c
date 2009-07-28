@@ -42,7 +42,7 @@
 
 #include "base-application.h"
 #include "nact-assist-import.h"
-#include "nact-gconf-reader.h"
+#include "nact-xml-reader.h"
 #include "nact-iprefs.h"
 
 /* Import Assistant
@@ -503,7 +503,7 @@ do_import( NactAssistImport *window, GtkAssistant *assistant )
 	for( is = uris ; is ; is = is->next ){
 
 		msg = NULL;
-		NAAction *action = nact_gconf_reader_import( NACT_WINDOW( window ), ( const gchar * ) is->data, &msg );
+		NAAction *action = nact_xml_reader_import( NACT_WINDOW( window ), ( const gchar * ) is->data, &msg );
 
 		ImportUriStruct *str = g_new0( ImportUriStruct, 1 );
 		str->uri = g_strdup(( const gchar * ) is->data );

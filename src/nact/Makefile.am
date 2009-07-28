@@ -55,8 +55,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-assist-export.h								\
 	nact-assist-import.c								\
 	nact-assist-import.h								\
-	nact-gconf-reader.c									\
-	nact-gconf-reader.h									\
 	nact-iaction-tab.c									\
 	nact-iaction-tab.h									\
 	nact-iactions-list.c								\
@@ -76,6 +74,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-main-window.h									\
 	nact-window.c										\
 	nact-window.h										\
+	nact-xml-reader.c									\
+	nact-xml-reader.h									\
 	$(NULL)
 
 nautilus_actions_config_tool_LDADD = \

@@ -14,6 +14,9 @@
 	Renamed as src/common/na-xml-writer.{c,h}.
 	Create a schema on FORMAT_GCONFSCHEMA format.
 
+	* src/nact/nact-gconf-reader.{c,h}:
+	Renamed as src/nact/nact-xml-reader.{c,h}.
+
 	* src/nact/nact-import-export-format.h: Removed file.
 
 	* src/nact/nautilus-actions-config.ui:
