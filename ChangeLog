@@ -7,6 +7,12 @@
 	* src/common/na-xml-names.h:
 	Define new FORMAT_GCONFSCHEMA format to create a schema.
 
+	* src/nact/nact-assist-export.{c,h}:
+	Renamed as src/nact/nact-assistant-export.{c,h}.
+
+	* src/nact/nact-assist-import.{c,h}:
+	Renamed as src/nact/nact-assistant-import.{c,h}.
+
 	* src/nact/nact-gconf-keys.h:
 	Renamed as src/common/na-xml-names.h.
 

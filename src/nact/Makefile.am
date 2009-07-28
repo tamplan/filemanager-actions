@@ -51,10 +51,10 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-application.h									\
 	nact-assistant.c									\
 	nact-assistant.h									\
-	nact-assist-export.c								\
-	nact-assist-export.h								\
-	nact-assist-import.c								\
-	nact-assist-import.h								\
+	nact-assistant-export.c								\
+	nact-assistant-export.h								\
+	nact-assistant-import.c								\
+	nact-assistant-import.h								\
 	nact-iaction-tab.c									\
 	nact-iaction-tab.h									\
 	nact-iactions-list.c								\

@@ -28,11 +28,11 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_ASSIST_EXPORT_H__
-#define __NACT_ASSIST_EXPORT_H__
+#ifndef __NACT_ASSISTANT_EXPORT_H__
+#define __NACT_ASSISTANT_EXPORT_H__
 
 /*
- * NactAssistExport class definition.
+ * NactAssistantExport class definition.
  *
  * Rationale:
  *
@@ -64,33 +64,33 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ASSIST_EXPORT_TYPE					( nact_assist_export_get_type())
-#define NACT_ASSIST_EXPORT( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ASSIST_EXPORT_TYPE, NactAssistExport ))
-#define NACT_ASSIST_EXPORT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ASSIST_EXPORT_TYPE, NactAssistExportClass ))
-#define NACT_IS_ASSIST_EXPORT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ASSIST_EXPORT_TYPE ))
-#define NACT_IS_ASSIST_EXPORT_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ASSIST_EXPORT_TYPE ))
-#define NACT_ASSIST_EXPORT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ASSIST_EXPORT_TYPE, NactAssistExportClass ))
+#define NACT_ASSISTANT_EXPORT_TYPE					( nact_assistant_export_get_type())
+#define NACT_ASSISTANT_EXPORT( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ASSISTANT_EXPORT_TYPE, NactAssistantExport ))
+#define NACT_ASSISTANT_EXPORT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ASSISTANT_EXPORT_TYPE, NactAssistantExportClass ))
+#define NACT_IS_ASSISTANT_EXPORT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ASSISTANT_EXPORT_TYPE ))
+#define NACT_IS_ASSISTANT_EXPORT_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ASSISTANT_EXPORT_TYPE ))
+#define NACT_ASSISTANT_EXPORT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ASSISTANT_EXPORT_TYPE, NactAssistantExportClass ))
 
-typedef struct NactAssistExportPrivate NactAssistExportPrivate;
-
-typedef struct {
-	NactAssistant            parent;
-	NactAssistExportPrivate *private;
-}
-	NactAssistExport;
-
-typedef struct NactAssistExportClassPrivate NactAssistExportClassPrivate;
+typedef struct NactAssistantExportPrivate NactAssistantExportPrivate;
 
 typedef struct {
-	NactAssistantClass            parent;
-	NactAssistExportClassPrivate *private;
+	NactAssistant               parent;
+	NactAssistantExportPrivate *private;
 }
-	NactAssistExportClass;
+	NactAssistantExport;
 
-GType nact_assist_export_get_type( void );
+typedef struct NactAssistantExportClassPrivate NactAssistantExportClassPrivate;
 
-void  nact_assist_export_run( NactWindow *main );
+typedef struct {
+	NactAssistantClass               parent;
+	NactAssistantExportClassPrivate *private;
+}
+	NactAssistantExportClass;
+
+GType nact_assistant_export_get_type( void );
+
+void  nact_assistant_export_run( NactWindow *main );
 
 G_END_DECLS
 
-#endif /* __NACT_ASSIST_EXPORT_H__ */
+#endif /* __NACT_ASSISTANT_EXPORT_H__ */

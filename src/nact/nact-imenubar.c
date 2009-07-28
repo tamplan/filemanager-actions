@@ -35,8 +35,8 @@
 #include <glib/gi18n.h>
 
 #include "nact-application.h"
-#include "nact-assist-export.h"
-#include "nact-assist-import.h"
+#include "nact-assistant-export.h"
+#include "nact-assistant-import.h"
 #include "nact-imenubar.h"
 
 /* private interface data
@@ -755,7 +755,7 @@ on_tools_selected( GtkMenuItem *item, NactWindow *window )
 static void
 on_import_activated( GtkMenuItem *item, NactWindow *window )
 {
-	GSList *list = nact_assist_import_run( window );
+	GSList *list = nact_assistant_import_run( window );
 	GSList *ia;
 	for( ia = list ; ia ; ia = ia->next ){
 		add_action( window, NA_ACTION( ia->data ));
@@ -775,7 +775,7 @@ on_export_activated( GtkMenuItem *item, NactWindow *window )
 	static const gchar *thisfn = "nact_imenubar_on_export_activated";
 	g_debug( "%s: item=%p, window=%p", thisfn, item, window );
 
-	nact_assist_export_run( NACT_WINDOW( window ));
+	nact_assistant_export_run( NACT_WINDOW( window ));
 
 	/*g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactWindow *wndmain = NACT_WINDOW( user_data );
