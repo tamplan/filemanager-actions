@@ -34,7 +34,7 @@ bin_PROGRAMS = \
 AM_CPPFLAGS += \
 	-I $(top_srcdir)/src							\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
-	$(NAUTILUS_ACTIONS_UTILS_CFLAGS)				\
+	$(NAUTILUS_ACTIONS_CFLAGS)						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"		\
 	$(NULL)
 
@@ -44,14 +44,14 @@ nautilus_actions_new_SOURCES = \
 
 nautilus_actions_new_LDADD = \
 	$(top_builddir)/src/common/libnact.la			\
-	$(NAUTILUS_ACTIONS_UTILS_LIBS)					\
+	$(NAUTILUS_ACTIONS_LIBS)						\
 	$(NULL)
 
 nautilus_actions_schemas_SOURCES = \
-	nautilus-actions-schema.c						\
+	nautilus-actions-schemas.c						\
 	$(NULL)
 
 nautilus_actions_schemas_LDADD = \
 	$(top_builddir)/src/common/libnact.la			\
-	$(NAUTILUS_ACTIONS_UTILS_LIBS)					\
+	$(NAUTILUS_ACTIONS_LIBS)						\
 	$(NULL)

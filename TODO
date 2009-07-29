@@ -1,8 +1,8 @@
 
 - Implement the Help button in nact (or hide it meanwhile)
 
-- i18n doen't works in the command line tool and for some part of NACT 
-like the scheme list, it seems.
+- 'Grumz) i18n doen't works in the command line tool and for some part
+  of NACT like the scheme list, it seems..?
 
 - import and export assistants are seen as a distinct application in the
   task bar (there is a second NA icon) - gtk_window_set_transient_for()
@@ -24,8 +24,6 @@ like the scheme list, it seems.
 
 - NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR has nothing to do in configure.ac
   (not a configuration variable)
-
-- remove option to build or not utilities : always build all
 
 - configure.ac: distinguish between common, nautilus extension or gtk
   program to build nautilus_actions_flags/libs

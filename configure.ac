@@ -141,9 +141,6 @@ NA_LOG_DOMAINS
 # a non-standard location ; lets specify this here
 NA_NAUTILUS_EXTDIR
 
-# building or not the commandline tools
-NA_COMMANDLINE_TOOLS
-
 # define NACT_MAINTAINER_MODE variable
 NA_IS_MAINTAINER_MODE
 
