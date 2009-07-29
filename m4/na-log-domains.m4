@@ -1,5 +1,5 @@
 dnl define three distinct log domains, respectively for common code,
-dnl plugin and NACT user interface - log handlers will be disabled 
+dnl plugin and NACT user interface - log handlers will be disabled
 dnl when not in development mode
 
 # serial 1 creation

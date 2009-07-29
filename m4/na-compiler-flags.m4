@@ -18,7 +18,7 @@ AC_DEFUN([NA_GNOME_COMPILE_WARNINGS],[
     dnl More compiler warnings
     dnl ******************************
 
-    AC_ARG_ENABLE(compile-warnings, 
+    AC_ARG_ENABLE(compile-warnings,
                   AC_HELP_STRING([--enable-compile-warnings=@<:@no/minimum/yes/maximum/error@:>@],
                                  [Turn on compiler warnings]),,
                   [enable_compile_warnings=${_ac_warning_def}])
@@ -83,7 +83,7 @@ AC_DEFUN([NA_GNOME_COMPILE_WARNINGS],[
 		if test "x$GCC" = "xyes"; then
 			if test "${enable_iso_c}" = "yes"; then
 				case " $CFLAGS " in
-	    			*[\ \	]-ansi[\ \	]*) ;;
+					*[\ \	]-ansi[\ \	]*) ;;
 				    *) complCFLAGS="$complCFLAGS -ansi" ;;
 				esac
 				case " $CFLAGS " in
