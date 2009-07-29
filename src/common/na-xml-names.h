@@ -123,7 +123,7 @@ enum {
 #define ACTION_MULTIPLE_DESC_SHORT	_("'true' if the selection can have several items, 'false' otherwise")
 #define ACTION_MULTIPLE_DESC_LONG	_("If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'")
 #define ACTION_SCHEMES_DESC_SHORT	_("The list of schemes where the selected files should be located")
-#define ACTION_SCHEMES_DESC_LONG	_("Defines the list of valid schemes to be matched against the selected items. The scheme is the protocol used to access the files. The keyword to use is the one used in the URI.\n\nExamples of URI include: \nfile:///tmp/foo.txt\nsftp:///root@test.example.net/tmp/foo.txt\n\nThe most common schemes are:\n\n'file': local files\n'sftp': files accessed via SSH\n'ftp': files accessed via FTP\n'smb': files accessed via Samba (Windows share)\n'dav': files accessed via WebDAV\n\nAll schemes used by Nautilus can be used here.")
+#define ACTION_SCHEMES_DESC_LONG	_("Defines the list of valid schemes to be matched against the selected items. The scheme is the protocol used to access the files. The keyword to use is the one used in the URI.\n\nExamples of valid URI include:\nfile:///tmp/foo.txt\nsftp:///root@test.example.net/tmp/foo.txt\n\nThe most common schemes are:\n\n'file': local files\n'sftp': files accessed via SSH\n'ftp': files accessed via FTP\n'smb': files accessed via Samba (Windows share)\n'dav': files accessed via WebDAV\n\nAll schemes used by Nautilus can be used here.")
 #define ACTION_VERSION_DESC_SHORT	_("The version of the configuration format")
 #define ACTION_VERSION_DESC_LONG	_("The version of the configuration format that will be used to manage backward compatibility")
 
