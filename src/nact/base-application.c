@@ -37,6 +37,7 @@
 #include <unique/unique.h>
 
 #include "base-application.h"
+#include "base-window.h"
 
 /* private class data
  */
@@ -56,7 +57,7 @@ struct BaseApplicationPrivate {
 	int         code;
 	GtkBuilder *ui_xml;
 	gchar      *ui_fname;
-	GObject    *main_window;
+	BaseWindow *main_window;
 };
 
 /* instance properties
@@ -99,9 +100,7 @@ static void           v_advertise_not_willing_to_run( BaseApplication *applicati
 static void           v_start( BaseApplication *application );
 static void           v_finish( BaseApplication *application );
 static gchar         *v_get_unique_name( BaseApplication *application );
-static gchar         *v_get_application_name( BaseApplication *application );
-static GObject       *v_get_main_window( BaseApplication *application );
-static gchar         *v_get_ui_filename( BaseApplication *application );
+static BaseWindow    *v_get_main_window( BaseApplication *application );
 
 static void           do_initialize( BaseApplication *application );
 static void           do_initialize_i18n( BaseApplication *application );
@@ -465,6 +464,48 @@ base_application_run( BaseApplication *application )
 }
 
 gchar *
+base_application_get_ui_filename( BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_get_ui_filename";
+	g_debug( "%s: icon=%p", thisfn, application );
+
+	g_assert( BASE_IS_APPLICATION( application ));
+
+	gchar *name;
+	g_object_get( G_OBJECT( application ), PROP_APPLICATION_UI_FILENAME_STR, &name, NULL );
+
+	if( !name || !strlen( name )){
+		name = BASE_APPLICATION_GET_CLASS( application )->get_ui_filename( application );
+		if( name && strlen( name )){
+			g_object_set( G_OBJECT( application ), PROP_APPLICATION_UI_FILENAME_STR, name, NULL );
+		}
+	}
+
+	return( name );
+}
+
+gchar *
+base_application_get_name( BaseApplication *application )
+{
+	/*static const gchar *thisfn = "base_application_get_name";
+	g_debug( "%s: application=%p", thisfn, application );*/
+
+	g_assert( BASE_IS_APPLICATION( application ));
+
+	gchar *name;
+	g_object_get( G_OBJECT( application ), PROP_APPLICATION_NAME_STR, &name, NULL );
+
+	if( !name || !strlen( name )){
+		name = BASE_APPLICATION_GET_CLASS( application )->get_application_name( application );
+		if( name && strlen( name )){
+			g_object_set( G_OBJECT( application ), PROP_APPLICATION_NAME_STR, name, NULL );
+		}
+	}
+
+	return( name );
+}
+
+gchar *
 base_application_get_icon_name( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_get_icon_name";
@@ -485,7 +526,7 @@ base_application_get_icon_name( BaseApplication *application )
 	return( name );
 }
 
-GObject *
+BaseWindow *
 base_application_get_main_window( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_get_main_window";
@@ -768,49 +809,7 @@ v_get_unique_name( BaseApplication *application )
 	return( name );
 }
 
-static gchar *
-v_get_application_name( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_get_application_name";
-	g_debug( "%s: application=%p", thisfn, application );
-
-	g_assert( BASE_IS_APPLICATION( application ));
-
-	gchar *name;
-	g_object_get( G_OBJECT( application ), PROP_APPLICATION_NAME_STR, &name, NULL );
-
-	if( !name || !strlen( name )){
-		name = BASE_APPLICATION_GET_CLASS( application )->get_application_name( application );
-		if( name && strlen( name )){
-			g_object_set( G_OBJECT( application ), PROP_APPLICATION_NAME_STR, name, NULL );
-		}
-	}
-
-	return( name );
-}
-
-static gchar *
-v_get_ui_filename( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_get_ui_filename";
-	g_debug( "%s: icon=%p", thisfn, application );
-
-	g_assert( BASE_IS_APPLICATION( application ));
-
-	gchar *name;
-	g_object_get( G_OBJECT( application ), PROP_APPLICATION_UI_FILENAME_STR, &name, NULL );
-
-	if( !name || !strlen( name )){
-		name = BASE_APPLICATION_GET_CLASS( application )->get_ui_filename( application );
-		if( name && strlen( name )){
-			g_object_set( G_OBJECT( application ), PROP_APPLICATION_UI_FILENAME_STR, name, NULL );
-		}
-	}
-
-	return( name );
-}
-
-static GObject *
+static BaseWindow *
 v_get_main_window( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_get_main_window";
@@ -822,7 +821,7 @@ v_get_main_window( BaseApplication *application )
 
 		g_assert( BASE_APPLICATION_GET_CLASS( application )->get_main_window );
 
-		GObject *main_window = BASE_APPLICATION_GET_CLASS( application )->get_main_window( application );
+		BaseWindow *main_window = BASE_WINDOW( BASE_APPLICATION_GET_CLASS( application )->get_main_window( application ));
 		application->private->main_window = main_window;
 	}
 
@@ -890,7 +889,7 @@ do_initialize_gtk( BaseApplication *application )
 static void
 do_initialize_application_name( BaseApplication *application )
 {
-	gchar *name = v_get_application_name( application );
+	gchar *name = base_application_get_name( application );
 	if( name && strlen( name )){
 		g_set_application_name( name );
 	}
@@ -923,7 +922,7 @@ static void
 do_initialize_ui( BaseApplication *application )
 {
 	GError *error = NULL;
-	gchar *ui_name = v_get_ui_filename( application );
+	gchar *ui_name = base_application_get_ui_filename( application );
 
 	application->private->ui_xml = gtk_builder_new();
 
@@ -1001,7 +1000,7 @@ do_start( BaseApplication *application )
 	static const gchar *thisfn = "base_application_do_start";
 	g_debug( "%s: application=%p", thisfn, application );
 
-	BaseWindow *window = BASE_WINDOW( v_get_main_window( application ));
+	BaseWindow *window = v_get_main_window( application );
 	g_assert( window );
 	g_assert( BASE_IS_WINDOW( window ));
 

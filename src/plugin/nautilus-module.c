@@ -40,9 +40,7 @@
 
 static guint st_log_handler = 0;
 
-#ifdef NACT_MAINTAINER_MODE
 static void na_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
-#endif
 
 /*
  * A nautilus extension must implement three functions :
@@ -61,16 +59,11 @@ nautilus_module_initialize( GTypeModule *module )
 {
 	syslog( LOG_USER | LOG_INFO, "%s initializing...", PACKAGE_STRING );
 
-#ifdef NACT_MAINTAINER_MODE
-	/*
-	 *  install a debug log handler
-	 * (if development mode and not already done)
-	 */
 	if( !st_log_handler ){
 		openlog( G_LOG_DOMAIN, LOG_PID, LOG_USER );
-		st_log_handler = g_log_set_handler( G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
+		st_log_handler = g_log_set_handler( NA_LOGDOMAIN_PLUGIN, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
+		g_log_set_handler( NA_LOGDOMAIN_COMMON, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
 	}
-#endif
 
 	static const gchar *thisfn = "nautilus_module_initialize";
 	g_debug( "%s: module=%p", thisfn, module );
@@ -115,13 +108,15 @@ nautilus_module_shutdown( void )
  * setup a given key and obtain a full log to send to Bugzilla..
  * For now, is always install when compiled in maintainer mode, never else
  */
-#ifdef NACT_MAINTAINER_MODE
 static void
 na_log_handler( const gchar *log_domain,
 					GLogLevelFlags log_level,
 					const gchar *message,
 					gpointer user_data )
 {
+#ifdef NA_MAINTAINER_MODE
 	syslog( LOG_USER | LOG_DEBUG, "%s", message );
-}
+#else
+	/* do nothing */
 #endif
+}

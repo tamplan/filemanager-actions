@@ -35,12 +35,9 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include <common/na-pivot.h>
-
 #include "nact-application.h"
-#include "nact-main-window.h"
 
-#define GLADE_FILENAME				GLADEDIR "/nautilus-actions-config.ui"
+#define GLADE_FILENAME				GLADEDIR "/nautilus-actions-config-tool.ui"
 
 /* private class data
  */
@@ -50,8 +47,8 @@ struct NactApplicationClassPrivate {
 /* private instance data
  */
 struct NactApplicationPrivate {
-	gboolean dispose_has_run;
-	NAPivot *pivot;
+	gboolean  dispose_has_run;
+	NAPivot  *pivot;
 };
 
 /* private instance properties
@@ -60,7 +57,7 @@ enum {
 	PROP_PIVOT = 1
 };
 
-#define PROP_PIVOT_STR					"pivot"
+#define PROP_PIVOT_STR					"nact-application-pivot"
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -252,6 +249,21 @@ nact_application_new_with_args( int argc, char **argv )
 	);
 }
 
+/**
+ * Returns a pointer on the NAPivot object.
+ *
+ * @application: this NactApplication object.
+ *
+ * The returned pointer is owned by the NactApplication object.
+ * It should not be freed not unref by the caller.
+ */
+NAPivot *
+nact_application_get_pivot( NactApplication *application )
+{
+	g_assert( NACT_IS_APPLICATION( application ));
+	return( NA_PIVOT( application->private->pivot ));
+}
+
 static void
 warn_other_instance( BaseApplication *application )
 {
@@ -270,8 +282,7 @@ get_application_name( BaseApplication *application )
 	static const gchar *thisfn = "nact_application_get_application_name";
 	g_debug( "%s: application=%p", thisfn, application );
 
-	/* i18n: this is the application name, used in window title
-	 */
+	/* i18n: this is the application name, used in window title */
 	return( g_strdup( _( "Nautilus Actions Configuration Tool" )));
 }
 
@@ -305,24 +316,11 @@ get_main_window( BaseApplication *application )
 	static const gchar *thisfn = "nact_application_get_main_window";
 	g_debug( "%s: application=%p", thisfn, application );
 
-	GObject *window = G_OBJECT( nact_main_window_new( G_OBJECT( application )));
+	BaseWindow *window = BASE_WINDOW( nact_main_window_new( application ));
 
-	na_pivot_add_notified( NA_PIVOT( nact_application_get_pivot( NACT_APPLICATION( application ))), window );
+	na_pivot_add_consumer(
+			NA_PIVOT( nact_application_get_pivot( NACT_APPLICATION( application ))),
+			G_OBJECT( window ));
 
-	return( window );
-}
-
-/**
- * Returns a pointer on the NAPivot object.
- *
- * @application: this NactApplication object.
- *
- * The returned pointer is owned by the NactApplication object.
- * It should not be freed not unref by the caller.
- */
-GObject *
-nact_application_get_pivot( NactApplication *application )
-{
-	g_assert( NACT_IS_APPLICATION( application ));
-	return( G_OBJECT( application->private->pivot ));
+	return( G_OBJECT( window ));
 }

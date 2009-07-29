@@ -1,3 +1,281 @@
+2009-07-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* exports/nautilus-actions.schema.in:
+	Remove files as it is rebuildable via nautilus-actions-schemas.
+
+	* m4/na-cmdline-tools.m4: Deleted file.
+
+	* m4/na-log-domains.m4:
+	Define a new log domain for test programs.
+
+	* src/common/na-gnome-vfs-uri.c:
+	* src/common/na-gnome-vfs-uri.h: New files.
+
+	* src/common/na-action-profile.c:
+	Take advantage of new na_gnome_vfs_uri_parse() function.
+
+	* src/test/test-parse-uris.c:
+	* src/test/test-parse-uris.h: New files.
+
+	* src/common/na-xml-names.h:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Remove all mentions of GnomeVFS or GVfs.
+
+	* src/common/na-action-profile.c:
+	* src/common/na-action.c:
+	* src/common/na-action.h:
+	* src/common/na-gconf.c:
+	* src/common/na-iio-provider.c:
+	* src/common/na-xml-writer.c:
+	* src/utils/nautilus-actions-schema.c:
+	Factorize the definition of default labels.
+
+	* po/POTFILES.in: Update the list of translatable files.
+
+2009-07-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-iio-provider.c:
+	Write action now accepts a NULL NAPivot to deal with command-line
+	utility.
+
+	* src/common/na-xml-names.h:
+	Define new FORMAT_GCONFSCHEMA format to create a schema.
+
+	* src/nact/nact-assist-export.{c,h}:
+	Renamed as src/nact/nact-assistant-export.{c,h}.
+
+	* src/nact/nact-assist-import.{c,h}:
+	Renamed as src/nact/nact-assistant-import.{c,h}.
+
+	* src/nact/nact-gconf-keys.h:
+	Renamed as src/common/na-xml-names.h.
+
+	* src/nact/nact-gconf-writer.{c,h}:
+	Renamed as src/common/na-xml-writer.{c,h}.
+	Create a schema on FORMAT_GCONFSCHEMA format.
+
+	* src/nact/nact-gconf-reader.{c,h}:
+	Renamed as src/nact/nact-xml-reader.{c,h}.
+
+	* src/nact/nact-import-export-format.h:
+	* src/nact/nact-iprofiles-list.{c,h}: Removed files.
+
+	* src/nact/nautilus-actions-config.ui:
+	Renamed as src/nact/nautilus-actions-config-tool.ui.
+
+	* src/utils/nautilus-actions-new-config.c:
+	Renamed as src/utils/nautilus-actions-new.c.
+
+	* src/utils/nautilus-actions-tools-utils.c:
+	* src/utils/nautilus-actions-tools-utils.h: Removed files.
+
+	* src/utils/nautilus-actions-schema.c: New file.
+
+	* configure.ac:
+	* src/common/Makefile.am:
+	* src/nact/Makefile.am:
+	* src/nact/nact-application.c:
+	* src/nact/nact-assist-export.c:
+	* src/nact/nact.desktop.in
+	* src/utils/Makefile.am: Updated accordingly.
+
+	* m4/na-log-domains.m4:
+	Define a new log domain for utilities.
+
+2009-07-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* m4/na-log-domains.m4: New file.
+
+	* m4/nact-cmdline-tools.m4: Renamed to m4/na-cmdline-tools.m4.
+	* m4/nact-compiler-flags.m4: Renamed to m4/na-compiler-flags.m4.
+	* m4/nact-maintainer-mode.m4: Renamed to m4/na-maintainer-mode.m4.
+	* m4/nact-nautilus-extdir.m4: Renamed to m4/na-nautilus-extdir.m4.
+
+	* configure.ac: Updated accordingly.
+
+	* src/common/na-object.c:
+	* src/common/na-object.h (na_object_check_edited_status):
+	New derivable function.
+
+	* src/common/na-action.c:
+	Implements check_edited_status for profiles.
+
+	* src/common/na-utils.c:
+	* src/common/na-utils.h (na_utils_path_to_key):
+	New function moved from na-gconf.c.
+
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h
+	(nact_window_set_current_action, nact_window_warn_action_modified,
+	nact_window_warn_profile_modified): Removed functions.
+
+	* src/nact/nact-gconf-reader.c:
+	Import the two new export formats.
+	Fix check of imported actions.
+
+	* src/nact/nact-main.c:
+	* src/plugin/nautilus-module.c:
+	Disable output of g_debug messages when not in maintainer mode.
+
+	* src/nact/nact-main-window.c:
+	Update count_modified_actions.
+
+2009-07-26 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-action.h:
+	Move export format enumeration to src/nact/nact-assist-export.c.
+
+	* src/common/na-gconf.c:
+	Fix #325585 by deleting a schema which may be directly attached
+	to the action.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-imenubar.c:
+	* src/nact/nact-main-window.c:
+	Fix selection when removing last action, or entering with
+	no action at all.
+	Sets the modification indicator to be application-wide.
+
+	* src/nact/base-application-class.h:
+	* src/nact/base-window-class.h: New files.
+
+	* src/nact/base-application.c:
+	* src/nact/base-application.h
+	(base_application_get_ui_filename): New function.
+
+	* src/nact/nact-assistant.c:
+	Reload the GtkBuilder XML file each time we run the assistant
+	(see http://bugzilla.gnome.org/show_bug.cgi?id=589746).
+
+	* src/nact/nact-import-export-format.h: New file.
+
+	* src/nact/nact-assist-export.c:
+	* src/nact/nact-gconf-writer.c:
+	Introduce two new export formats.
+
+2009-07-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-action-class.h:
+	* src/common/na-action-profile-class.h:
+	New files to properly handle forward declarations.
+
+	* src/common/na-ipivot-container.c:
+	* src/common/na-ipivot-container.h:
+	Renamed as na-ipivot-consumer.{c,h}.
+
+	* src/common/na-iduplicable.c:
+	* src/common/na-iduplicable.h:
+	New NAIDuplicable interface implemented by NAObject class.
+
+	* src/nact/nact-imenubar.c:
+	* src/nact/nact-imenubar.h:
+	New NactIMenubar interface implemented by NactMainWindow class.
+
+2009-07-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-action-conditions-editor.c:
+	* src/nact/nact-action-conditions-editor.h:
+	* src/nact/nact-action-profiles-editor.c:
+	* src/nact/nact-action-profiles-editor.h:
+	* src/nact/nact-profile-conditions-editor.c:
+	* src/nact/nact-profile-conditions-editor.h: Removed files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h
+	(nact_iactions_list_toggle_collapse,
+	nact_iactions_list_update_selected): New functions.
+	Uses GtkSortable interface.
+	Remove set_sorted_actions API.
+
+	* src/nact/nact-icommand-tab.c:
+	Disable the example label when there is no current profile.
+
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-iconditions-tab.h
+	(nact_iconditions_tab_get_isfiledir,
+	nact_iconditions_tab_get_multiple): New functions.
+
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-iadvanced-tab.h (nact_iadvanced_tab_get_schemes):
+	New function.
+
+	* src/nact/nact-main-window.c:
+	Update menu tooltips to be dot-terminated.
+	New action is taken from GTK_STOCK_NEW.
+
+	* src/nact/nautilus-actions-config.ui:
+	Example label now wraps on more than two lines.
+	Scheme lists now is more than four rows.
+	All fields have tooltip.
+
+2009-07-18 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-action.c:
+	* src/common/na-action.c (na_action_are_equal):
+	Function takes const arguments.
+
+	* src/nact/base-application.c:
+	* src/nact/nact-iaction-tab.c:
+	Disable debug message.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h (set_sorted_actions):
+	New virtual function: advertise the implementer of the interface
+	of the new address of the sorted list.
+	Use GtkTreeModelFilter to display actions and profiles.
+	Enable connecting lines in tree view.
+
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icommand-tab.h:
+	New files which define NactICommandTab interface.
+
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-iconditions-tab.h:
+	New files which define NactIConditionsTab interface.
+
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-iadvanced-tab.h:
+	New files which define NactIAdvancedTab interface.
+
+	* src/nact/nact-iprofile-item.c:
+	* src/nact/nact-iprofile-item.h:
+	* src/nact/nact-iprofiles-list.c:
+	* src/nact/nact-iprofiles-list.h:
+	Removed files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-main-window.c:
+	Setup display of the window title and of the menu depending of
+	the currently selected action and its status.
+	Implements ICommandTab interface.
+
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.c (nact_window_warn_count_modified):
+	New function.
+
+2009-07-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac:
+	Get ride of libglade, libgnome, libgnomeui deprecated libraries.
+
+	* src/nact/nact-profile-conditions-editor.c:
+	Align widgets.
+
+2009-07-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-window.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-action-conditions-editor.c:
+	* src/nact/nact-action-profiles-editor.c:
+	* src/nact/nact-profile-conditions-editor.c:
+	Make all dialogs transient for their parent in BaseWindow.
+
 2009-07-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:

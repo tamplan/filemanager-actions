@@ -27,7 +27,7 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
-	nautilus-actions-config								\
+	nautilus-actions-config-tool						\
 	$(NULL)
 
 gladedir = $(datadir)/nautilus-actions
@@ -36,58 +36,54 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DGLADEDIR=\"$(gladedir)\"							\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"				\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
-nautilus_actions_config_SOURCES = \
+nautilus_actions_config_tool_SOURCES = \
 	base-application.c									\
 	base-application.h									\
+	base-application-class.h							\
 	base-window.c										\
 	base-window.h										\
-	nact-action-conditions-editor.c						\
-	nact-action-conditions-editor.h						\
-	nact-action-profiles-editor.c						\
-	nact-action-profiles-editor.h						\
+	base-window-class.h									\
 	nact-application.c									\
 	nact-application.h									\
 	nact-assistant.c									\
 	nact-assistant.h									\
-	nact-assist-export.c								\
-	nact-assist-export.h								\
-	nact-assist-import.c								\
-	nact-assist-import.h								\
-	nact-gconf-keys.h									\
-	nact-gconf-reader.c									\
-	nact-gconf-reader.h									\
-	nact-gconf-writer.c									\
-	nact-gconf-writer.h									\
+	nact-assistant-export.c								\
+	nact-assistant-export.h								\
+	nact-assistant-import.c								\
+	nact-assistant-import.h								\
+	nact-iaction-tab.c									\
+	nact-iaction-tab.h									\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
-	nact-iconditions.c									\
-	nact-iconditions.h									\
-	nact-imenu-item.c									\
-	nact-imenu-item.h									\
+	nact-iadvanced-tab.c								\
+	nact-iadvanced-tab.h								\
+	nact-icommand-tab.c									\
+	nact-icommand-tab.h									\
+	nact-iconditions-tab.c								\
+	nact-iconditions-tab.h								\
+	nact-imenubar.c										\
+	nact-imenubar.h										\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
-	nact-iprofile-item.c								\
-	nact-iprofile-item.h								\
-	nact-iprofiles-list.c								\
-	nact-iprofiles-list.h								\
 	nact-main.c											\
 	nact-main-window.c									\
 	nact-main-window.h									\
-	nact-profile-conditions-editor.c					\
-	nact-profile-conditions-editor.h					\
 	nact-window.c										\
 	nact-window.h										\
+	nact-xml-reader.c									\
+	nact-xml-reader.h									\
 	$(NULL)
 
-nautilus_actions_config_LDADD = \
+nautilus_actions_config_tool_LDADD = \
 	$(top_builddir)/src/common/libnact.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-glade_DATA = nautilus-actions-config.ui
+glade_DATA = nautilus-actions-config-tool.ui
 
 @INTLTOOL_DESKTOP_RULE@
 

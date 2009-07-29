@@ -32,13 +32,20 @@
 #define __NA_OBJECT_H__
 
 /*
- * NAObject class definition.
+ * SECTION: na_object
+ * @short_description: #NAObject class definition.
+ * @include: common/na-object.h
  *
- * This is the base class for NactAction and NactActionProfile.
+ * This is the base class for NAAction and NActionProfile.
  *
- * It takes care of common things such as ids, i/o, etc.
- * It uses the NactIIOProviderInterface for all storage subsystems
- * management.
+ * It implements the NAIDuplicable interface in order to have easily
+ * duplicable derived objects.
+ *
+ * A #NAObject object is characterized by :
+ * - an internal identifiant (ASCII, case insensitive)
+ * - a libelle (UTF8, localizable).
+ *
+ * The #NAObject class is a pure virtual class.
  */
 
 #include <glib-object.h>
@@ -66,18 +73,118 @@ typedef struct {
 	GObjectClass          parent;
 	NAObjectClassPrivate *private;
 
-	/* virtual public functions */
-	void    ( *dump )     ( const NAObject *object );
-	gchar * ( *get_id )   ( const NAObject *object );
-	gchar * ( *get_label )( const NAObject *object );
+	/**
+	 * dump:
+	 * @object: the #NAObject-derived object to be dumped.
+	 *
+	 * Dumps via g_debug the content of the object.
+	 *
+	 * In order to get a down-to-top display, the derived class
+	 * implementation should call its parent class before actually
+	 * dumping its own data and properties.
+	 */
+	void       ( *dump )               ( const NAObject *object );
+
+	/**
+	 * check_edited_status:
+	 * @object: the #NAObject-derived object to be checked.
+	 *
+	 * Checks a #NAObject-derived object for modification and validity
+	 * status.
+	 */
+	void       ( *check_edited_status )( const NAObject *object );
+
+	/**
+	 * duplicate:
+	 * @object: the #NAObject-derived object to be dumped.
+	 *
+	 * Duplicates a #NAObject-derived object.
+	 *
+	 * As the most-derived class will actually allocate the new object
+	 * with the right class, it shouldn't call its parent class.
+	 *
+	 * Copying data and properties should then be done via the
+	 * na_object_copy() function.
+	 *
+	 * Returns: a newly allocated object, which is an exact copy of
+	 * @object.
+	 */
+	NAObject * ( *duplicate )          ( const NAObject *object );
+
+	/**
+	 * copy:
+	 * @target: the #NAObject-derived object which will receive data.
+	 * @source: the #NAObject-derived object which will provide data.
+	 *
+	 * Copies data and properties from @source to @target.
+	 *
+	 * Each derived class should take care of calling its parent class
+	 * to complete the copy.
+	 */
+	void       ( *copy )               ( NAObject *target, const NAObject *source );
+
+	/**
+	 * are_equal:
+	 * @a: a first #NAObject object.
+	 * @b: a second #NAObject object to be compared to the first one.
+	 *
+	 * Compares the two objects.
+	 *
+	 * At least when it finds that @a and @b are equal, each derived
+	 * class should call its parent class to give it an opportunity to
+	 * detect a difference.
+	 *
+	 * Returns: %TRUE if @a and @b are identical, %FALSE else.
+	 */
+	gboolean   ( *are_equal )          ( const NAObject *a, const NAObject *b );
+
+	/**
+	 * is_valid:
+	 * @object: the #NAObject object to be checked.
+	 *
+	 * Checks @object for validity.
+	 *
+	 * At least when it finds that @object is valid, each derived class
+	 * should call its parent class to give it an opportunity to detect
+	 * an error.
+	 *
+	 * A #NAObject is valid if its internal identifiant is set.
+	 *
+	 * Returns: %TRUE if @object is valid, %FALSE else.
+	 */
+	gboolean   ( *is_valid )           ( const NAObject *object );
 }
 	NAObjectClass;
 
-GType    na_object_get_type( void );
+/* object properties
+ * used in derived classes to access to the properties
+ */
+enum {
+	PROP_NAOBJECT_ID = 1,
+	PROP_NAOBJECT_LABEL
+};
 
-void     na_object_dump( const NAObject *object );
-gchar   *na_object_get_id( const NAObject *object );
-gchar   *na_object_get_label( const NAObject *object );
+GType     na_object_get_type( void );
+
+void      na_object_dump( const NAObject *object );
+NAObject *na_object_duplicate( const NAObject *object );
+void      na_object_copy( NAObject *target, const NAObject *source );
+
+void      na_object_check_edited_status( const NAObject *object );
+gboolean  na_object_are_equal( const NAObject *a, const NAObject *b );
+gboolean  na_object_is_valid( const NAObject *object );
+
+NAObject *na_object_get_origin( const NAObject *object );
+gboolean  na_object_get_modified_status( const NAObject *object );
+gboolean  na_object_get_valid_status( const NAObject *object );
+
+void      na_object_set_origin( NAObject *object, const NAObject *origin );
+
+gchar    *na_object_get_id( const NAObject *object );
+gchar    *na_object_get_label( const NAObject *object );
+
+void      na_object_set_id( NAObject *object, const gchar *id );
+void      na_object_set_label( NAObject *object, const gchar *label );
 
 G_END_DECLS
 

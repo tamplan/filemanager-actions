@@ -32,13 +32,16 @@
 #include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-
 #include "nact-application.h"
+
+static void na_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
 
 int
 main( int argc, char *argv[] )
 {
+	g_log_set_handler( NA_LOGDOMAIN_NACT, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
+	g_log_set_handler( NA_LOGDOMAIN_COMMON, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
+
 	NactApplication *app = nact_application_new_with_args( argc, argv );
 
 	int ret = base_application_run( BASE_APPLICATION( app ));
@@ -46,4 +49,14 @@ main( int argc, char *argv[] )
 	g_object_unref( app );
 
 	return( ret );
+}
+
+static void
+na_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data )
+{
+#ifdef NA_MAINTAINER_MODE
+	g_log_default_handler( log_domain, log_level, message, user_data );
+#else
+	/* do nothing */
+#endif
 }

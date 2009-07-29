@@ -52,6 +52,8 @@ GSList  *na_utils_schema_to_gslist( const gchar *value );
 gchar   *na_utils_boolean_to_schema( gboolean b );
 gboolean na_utils_schema_to_boolean( const gchar *value, gboolean default_value );
 
+gchar   *na_utils_path_to_key( const gchar *path );
+
 /*
  * Some functions for GString manipulations.
  */

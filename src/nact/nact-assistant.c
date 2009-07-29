@@ -36,6 +36,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 
+#include "base-application.h"
 #include "nact-assistant.h"
 
 /* private class data
@@ -67,6 +68,8 @@ static void     instance_get_property( GObject *object, guint property_id, GValu
 static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
+
+static GtkWindow * get_dialog( BaseWindow *window, const gchar *name );
 
 static void     v_assistant_apply( GtkAssistant *assistant, gpointer user_data );
 static void     v_assistant_cancel( GtkAssistant *assistant, gpointer user_data );
@@ -143,6 +146,7 @@ class_init( NactAssistantClass *klass )
 	klass->private = g_new0( NactAssistantClassPrivate, 1 );
 
 	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
+	base_class->get_dialog = get_dialog;
 	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
 
 	klass->on_escape_key_pressed = on_escape_key_pressed;
@@ -233,6 +237,31 @@ instance_finalize( GObject *window )
 	if( st_parent_class->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( window );
 	}
+}
+
+/*
+ * cf. http://bugzilla.gnome.org/show_bug.cgi?id=589746 against Gtk+ 2.16
+ * a GtkFileChooseWidget embedded in a GtkAssistant is not displayed
+ * when run more than once
+ *
+ * as a work-around, reload the XML ui each time we run an assistant !
+ */
+static GtkWindow *
+get_dialog( BaseWindow *window, const gchar *name )
+{
+	GtkBuilder *builder = gtk_builder_new();
+
+	BaseApplication *appli = base_window_get_application( window );
+
+	gchar *fname = base_application_get_ui_filename( appli );
+
+	gtk_builder_add_from_file( builder, fname, NULL );
+
+	g_free( fname );
+
+	GtkWindow *dialog = GTK_WINDOW( gtk_builder_get_object( builder, name ));
+
+	return( dialog );
 }
 
 /**

@@ -1,27 +1,29 @@
 
-- Create a command line tool to install a schema (wrapper to
-"gconftool-2 --install-schema-file")
-
 - Implement the Help button in nact (or hide it meanwhile)
 
-- i18n doen't works in the command line tool and for some part of NACT 
-like the scheme list, it seems.
+- 'Grumz) i18n doen't works in the command line tool and for some part
+  of NACT like the scheme list, it seems..?
 
-- Add better error handling in import/export stuff of nact and some feedback to
-user throught error dialog when import/export failed.
+- import and export assistants are seen as a distinct application in the
+  task bar (there is a second NA icon) - gtk_window_set_transient_for()
+  has no effect of this - open a bug ?
 
-- na-action and na-action-profile are included in nact-window.h
-  so are not needed in all other derived window files
+- Note about the schemas in Nautilus Actions:
+  a) actions are identified by uuid
+  b) so, all GConf keys have a path with the uuid of the action
+  c) I'm not willing to write a schema for each and every uuid
+  d) so, as of 1.11.2, the provided schema is general and should apply
+     to all actions
+  e) but there is not yet an API to set a GConfMetaInfo for a key
+     note that gconftool-2 --dump is able to export for each entry a
+     <schema_key> which includes the path to the general schema key
+     but we cannot set it programatically (bad !)
 
-- try to import a schema for an action (without schema)
+- allow users to upload/download actions directly from a web repository
+  (REST services ?)
 
-- see if we could define signals in base classes, and if this signals
-  can be caught by interfaces - this would prevent us to define and
-  call specific api (initial_load, runtime_init, etc)
+- NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR has nothing to do in configure.ac
+  (not a configuration variable)
 
-- is it required to pass an action or a profile at initial_load ??
-  (would be better only at runtime_init)
-
-- gtk_window_set_transient_for (see nact-conditions-editor.c) should be
-  called in base_window_do_initial_load, but requires a parent window
-  which should be passed as a virtual or in the constructor
+- configure.ac: distinguish between common, nautilus extension or gtk
+  program to build nautilus_actions_flags/libs

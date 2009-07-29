@@ -31,10 +31,13 @@
 #ifndef __NA_GCONF_H__
 #define __NA_GCONF_H__
 
-/*
- * NAGConf class definition.
+/**
+ * SECTION: na_gconf
+ * @short_description: #NAGConf class definition.
+ * @include: common/na-gconf.h
  *
- * Implements the NactIIOProvider (I/O storage subsystem) interface.
+ * This class manages the GConf I/O storage subsystem.
+ * It should only be used through the NAIIOProvider interface.
  */
 
 #include <glib-object.h>

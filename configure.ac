@@ -49,8 +49,9 @@ AC_CONFIG_FILES([
 	src/Makefile
 	src/common/Makefile
 	src/nact/Makefile
-	src/utils/Makefile
 	src/plugin/Makefile
+	src/test/Makefile
+	src/utils/Makefile
 	po/Makefile.in
 ])
 
@@ -77,7 +78,7 @@ AC_PROG_MAKE_SET
 # Gnome stuff
 GNOME_COMMON_INIT
 GNOME_MAINTAINER_MODE_DEFINES
-NACT_GNOME_COMPILE_WARNINGS([error],[-ansi])
+NA_GNOME_COMPILE_WARNINGS([error],[-ansi])
 AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} ${DISABLE_DEPRECATED}"])
 # unique 1.0.8 doesn't satisfy this
 #AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} \
@@ -133,15 +134,15 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
+# defines log domains when in maintainer mode
+NA_LOG_DOMAINS
+
 # when working in a test environment, nautilus is typically installed in
 # a non-standard location ; lets specify this here
-NACT_NAUTILUS_EXTDIR
-
-# building or not the commandline tools
-NACT_COMMANDLINE_TOOLS
+NA_NAUTILUS_EXTDIR
 
 # define NACT_MAINTAINER_MODE variable
-NACT_IS_MAINTAINER_MODE
+NA_IS_MAINTAINER_MODE
 
 # Check for menu update function
 AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)

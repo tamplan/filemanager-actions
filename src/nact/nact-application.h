@@ -37,7 +37,10 @@
  * This is the main class for UI programs.
  */
 
+#include <common/na-pivot.h>
+
 #include "base-application.h"
+#include "nact-main-window.h"
 
 G_BEGIN_DECLS
 
@@ -68,7 +71,7 @@ GType            nact_application_get_type( void );
 
 NactApplication *nact_application_new_with_args( int argc, char **argv );
 
-GObject         *nact_application_get_pivot( NactApplication *application );
+NAPivot         *nact_application_get_pivot( NactApplication *application );
 
 G_END_DECLS
 

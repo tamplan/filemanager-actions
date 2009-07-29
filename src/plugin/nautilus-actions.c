@@ -41,7 +41,7 @@
 #include <common/na-action.h>
 #include <common/na-action-profile.h>
 #include <common/na-pivot.h>
-#include <common/na-ipivot-container.h>
+#include <common/na-ipivot-consumer.h>
 
 #include "nautilus-actions.h"
 
@@ -62,7 +62,7 @@ static GType         st_actions_type = 0;
 
 static void              class_init( NautilusActionsClass *klass );
 static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static void              pivot_container_iface_init( NAIPivotContainerInterface *iface );
+static void              pivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
 static void              instance_dispose( GObject *object );
 static void              instance_finalize( GObject *object );
@@ -71,7 +71,7 @@ static GList            *get_background_items( NautilusMenuProvider *provider, G
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
 static NautilusMenuItem *create_menu_item( NAAction *action, NAActionProfile *profile, GList *files );
 static void              execute_action( NautilusMenuItem *item, NAActionProfile *profile );
-static void              actions_changed_handler( NAIPivotContainer *instance, gpointer user_data );
+static void              actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data );
 
 GType
 nautilus_actions_get_type( void )
@@ -112,15 +112,15 @@ nautilus_actions_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
 
-	/* implement IPivotContainer interface
+	/* implement IPivotConsumer interface
 	 */
-	static const GInterfaceInfo pivot_container_iface_info = {
-		( GInterfaceInitFunc ) pivot_container_iface_init,
+	static const GInterfaceInfo pivot_consumer_iface_info = {
+		( GInterfaceInitFunc ) pivot_consumer_iface_init,
 		NULL,
 		NULL
 	};
 
-	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONTAINER_TYPE, &pivot_container_iface_info );
+	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONSUMER_TYPE, &pivot_consumer_iface_info );
 }
 
 static void
@@ -149,9 +149,9 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 }
 
 static void
-pivot_container_iface_init( NAIPivotContainerInterface *iface )
+pivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 {
-	static const gchar *thisfn = "nautilus_actions_pivot_container_iface_init";
+	static const gchar *thisfn = "nautilus_actions_pivot_consumer_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
 	iface->on_actions_changed = actions_changed_handler;
@@ -171,18 +171,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	/* from na-pivot */
 	self->private->pivot = na_pivot_new( G_OBJECT( self ));
-
-	/* see nautilus_actions_class_init for why we had to connect an
-	 * handler to our signal instead of relying on default handler
-	 * see also nautilus_actions_class_init for why g_signal_connect is
-	 * no more needed
-	 */
-	/*g_signal_connect(
-			G_OBJECT( self ),
-			SIGNAL_ACTION_CHANGED_NAME,
-			( GCallback ) action_changed_handler,
-			NULL
-	);*/
 }
 
 static void
@@ -245,7 +233,7 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
 static GList *
 get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
 {
-#ifdef NACT_MAINTAINER_MODE
+#ifdef NA_MAINTAINER_MODE
 	static const gchar *thisfn = "nautilus_actions_get_background_items";
 	gchar *uri = nautilus_file_info_get_uri( current_folder );
 	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)", thisfn, provider, window, current_folder, uri );
@@ -265,9 +253,7 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	GSList *ia, *ip;
 	NautilusMenuItem *item;
 	GSList *actions = NULL;
-#ifdef NACT_MAINTAINER_MODE
-	gchar *debug_label;
-#endif
+	gchar *label, *uuid;
 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 	NautilusActions *self = NAUTILUS_ACTIONS( provider );
@@ -284,11 +270,17 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 			NAAction *action = NA_ACTION( ia->data );
 
-#ifdef NACT_MAINTAINER_MODE
-			debug_label = na_action_get_label( action );
-			g_debug( "%s: examining '%s' action", thisfn, debug_label );
-			g_free( debug_label );
-#endif
+			label = na_action_get_label( action );
+
+			if( !label || !g_utf8_strlen( label, -1 )){
+				uuid = na_action_get_uuid( action );
+				g_warning( "%s: label null or empty for uuid=%s", thisfn, uuid );
+				g_free( uuid );
+				continue;
+			}
+
+			g_debug( "%s: examining '%s' action", thisfn, label );
+			g_free( label );
 
 			profiles = na_action_get_profiles( action );
 
@@ -296,10 +288,10 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 				NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
 
-#ifdef NACT_MAINTAINER_MODE
-				debug_label = na_action_profile_get_label( profile );
-				g_debug( "%s: examining '%s' profile", thisfn, debug_label );
-				g_free( debug_label );
+#ifdef NA_MAINTAINER_MODE
+				label = na_action_profile_get_label( profile );
+				g_debug( "%s: examining '%s' profile", thisfn, label );
+				g_free( label );
 #endif
 
 				if( na_action_profile_is_candidate( profile, files )){
@@ -328,7 +320,7 @@ create_menu_item( NAAction *action, NAActionProfile *profile, GList *files )
 	gchar *tooltip = na_action_get_tooltip( action );
 	gchar* icon_name = na_action_get_verified_icon_name( action );
 
-	NAActionProfile *dup4menu = na_action_profile_duplicate( action, profile );
+	NAActionProfile *dup4menu = NA_ACTION_PROFILE( na_object_duplicate( NA_OBJECT( profile )));
 
 	item = nautilus_menu_item_new( name, label, tooltip, icon_name );
 
@@ -336,7 +328,7 @@ create_menu_item( NAAction *action, NAActionProfile *profile, GList *files )
 				"activate",
 				G_CALLBACK( execute_action ),
 				dup4menu,
-				( GClosureNotify ) na_action_profile_free,
+				( GClosureNotify ) g_object_unref,
 				0
 	);
 
@@ -386,7 +378,7 @@ execute_action( NautilusMenuItem *item, NAActionProfile *profile )
 }
 
 static void
-actions_changed_handler( NAIPivotContainer *instance, gpointer user_data )
+actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data )
 {
 	static const gchar *thisfn = "nautilus_actions_actions_changed_handler";
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, instance, user_data );
