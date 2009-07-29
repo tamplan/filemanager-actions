@@ -24,3 +24,8 @@
 
 - NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR has nothing to do in configure.ac
   (not a configuration variable)
+
+- changing conditions in IConditionsTab should trigger an update of the
+  example label
+
+- use GtkUIManager

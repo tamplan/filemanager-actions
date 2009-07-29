@@ -504,14 +504,16 @@ update_example_label( NactWindow *window )
 /*
  * Valid parameters :
  *
- * %d : base dir of the selected file(s)/folder(s)
- * %f : the name of the selected file/folder or the 1st one if many are selected
- * %h : hostname of the GVfs URI
+ * %d : base dir of the (first) selected file(s)/folder(s)
+ * %f : the name of the (firstà selected file/folder
+ * %h : hostname of the (first) URI
  * %m : list of the basename of the selected files/directories separated by space.
  * %M : list of the selected files/directories with their complete path separated by space.
- * %s : scheme of the GVfs URI
- * %u : GVfs URI
- * %U : username of the GVfs URI
+ * %p : port number of the (first) URI
+ * %R : space-separated list of selected URIs
+ * %s : scheme of the (first) URI
+ * %u : (first) URI
+ * %U : username of the (first) URI
  * %% : a percent sign
  */
 static gchar *
@@ -528,9 +530,15 @@ parse_parameters( NactWindow *window )
 	gchar* ex_host_default = _( "test.example.net" );
 	gchar* ex_one_file = _( "file.txt" );
 	gchar* ex_one_dir = _( "folder" );
+	gchar* ex_port_default = _( "8080" );
 	gchar* ex_one = NULL;
 	gchar* ex_list = NULL;
 	gchar* ex_path_list = NULL;
+	gchar* ex_uri_file1 = _( "file:///path/to/file1.text" );
+	gchar* ex_uri_file2 = _( "file:///path/to/file2.text" );
+	gchar* ex_uri_folder1 = _( "file:///path/to/a/dir" );
+	gchar* ex_uri_folder2 = _( "file:///path/to/another/dir" );
+	gchar* ex_uri_list = NULL;
 	gchar* ex_scheme;
 	gchar* ex_host;
 
@@ -559,23 +567,28 @@ parse_parameters( NactWindow *window )
 			ex_one = ex_files[0];
 			ex_list = na_utils_gstring_joinv( NULL, " ", ex_mixed );
 			ex_path_list = na_utils_gstring_joinv( start, separator, ex_mixed );
+			ex_uri_list = g_strjoin( " ", ex_uri_file1, ex_uri_folder1, NULL );
 
 		} else if( is_dir ){
 			ex_one = ex_dirs[0];
 			ex_list = na_utils_gstring_joinv( NULL, " ", ex_dirs );
 			ex_path_list = na_utils_gstring_joinv( start, separator, ex_dirs );
+			ex_uri_list = g_strjoin( " ", ex_uri_folder1, ex_uri_folder2, NULL );
 
 		} else if( is_file ){
 			ex_one = ex_files[0];
 			ex_list = na_utils_gstring_joinv( NULL, " ", ex_files );
 			ex_path_list = na_utils_gstring_joinv( start, separator, ex_files );
+			ex_uri_list = g_strjoin( " ", ex_uri_file1, ex_uri_file2, NULL );
 		}
 	} else {
 		if( is_dir && !is_file ){
 			ex_one = ex_one_dir;
+			ex_uri_list = g_strdup( ex_uri_folder1 );
 
 		} else {
 			ex_one = ex_one_file;
+			ex_uri_list = g_strdup( ex_uri_file1 );
 		}
 		ex_list = g_strdup( ex_one );
 		ex_path_list = g_strjoin( "/", ex_path, ex_one, NULL );
@@ -605,15 +618,15 @@ parse_parameters( NactWindow *window )
 		tmp_string = g_string_append_len( tmp_string, old_iter, strlen( old_iter ) - strlen( iter ));
 		switch( iter[1] ){
 
-			case 'd': /* base dir of the selected file(s)/folder(s) */
+			case 'd': /* base dir of the (first) selected file(s)/folder(s) */
 				tmp_string = g_string_append( tmp_string, ex_path );
 				break;
 
-			case 'f': /* the basename of the selected file/folder or the 1st one if many are selected */
+			case 'f': /* the basename of the (first) selected file/folder */
 				tmp_string = g_string_append( tmp_string, ex_one );
 				break;
 
-			case 'h': /* hostname of the GVfs URI */
+			case 'h': /* hostname of the (first) URI */
 				tmp_string = g_string_append( tmp_string, ex_host );
 				break;
 
@@ -625,11 +638,19 @@ parse_parameters( NactWindow *window )
 				tmp_string = g_string_append( tmp_string, ex_path_list );
 				break;
 
-			case 's': /* scheme of the GVfs URI */
+			case 'p': /* port number of the (first) URI */
+				tmp_string = g_string_append( tmp_string, ex_port_default );
+				break;
+
+			case 'R': /* space-separated list of selected URIs */
+				tmp_string = g_string_append( tmp_string, ex_uri_list );
+				break;
+
+			case 's': /* scheme of the (first) URI */
 				tmp_string = g_string_append( tmp_string, ex_scheme );
 				break;
 
-			case 'u': /* GVfs URI */
+			case 'u': /* (first) URI */
 				tmp = g_strjoin( NULL, ex_scheme, "://", ex_path, "/", ex_one, NULL );
 				tmp_string = g_string_append( tmp_string, tmp );
 				g_free( tmp );
@@ -652,6 +673,7 @@ parse_parameters( NactWindow *window )
 
 	g_free( ex_list );
 	g_free( ex_path_list );
+	g_free( ex_uri_list );
 	g_free( iter );
 
 	return( g_string_free( tmp_string, FALSE ));

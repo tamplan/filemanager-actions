@@ -1267,10 +1267,18 @@ na_action_profile_is_candidate( const NAActionProfile *profile, GList* files )
  * %h : hostname of the (first) URI
  * %m : list of the basename of the selected files/directories separated by space.
  * %M : list of the selected files/directories with their complete path separated by space.
+ * %p : port number from the (first) URI
+ * %R : space-separated list of URIs
  * %s : scheme of the (first) URI
- * %u : (first)  URI
+ * %u : (first) URI
  * %U : username of the (first) URI
  * %% : a percent sign
+ *
+ * Adding a parameter requires updating of :
+ * - src/common/na/na-action-profile.c:na_action_profile_parse_parameters()
+ * - src/common/na/na-xml-names.h
+ * - src/nact/nact-icommand-tab.c:parse_parameters()
+ * - src/nact/nautilus-actions-config-tool.ui:LegendDialog
  */
 gchar *
 na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files )
@@ -1287,7 +1295,8 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 	gchar *filename = NULL;
 	gchar *hostname = NULL;
 	gchar *username = NULL;
-	GString *basename_list, *pathname_list;
+	gint port_number = 0;
+	GString *basename_list, *pathname_list, *uris_list;
 	gchar *tmp;
 	NAGnomeVFSURI *vfs;
 
@@ -1296,6 +1305,7 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 	string = g_string_new( "" );
 	basename_list = g_string_new( "" );
 	pathname_list = g_string_new( "" );
+	uris_list = g_string_new( "" );
 	first = TRUE;
 
 	for( ifi = files ; ifi ; ifi = ifi->next ){
@@ -1305,24 +1315,24 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 		ipath = g_file_get_path( iloc );
 		ibname = g_file_get_basename( iloc );
 
-		vfs = g_new0( NAGnomeVFSURI, 1 );
-		na_gnome_vfs_uri_parse( vfs, iuri );
-
 		if( first ){
+
+			vfs = g_new0( NAGnomeVFSURI, 1 );
+			na_gnome_vfs_uri_parse( vfs, iuri );
 
 			uri = g_strdup( iuri );
 			dirname = g_path_get_dirname( ipath );
 			scheme = nautilus_file_info_get_uri_scheme(( NautilusFileInfo * ) ifi->data );
 			filename = g_strdup( ibname );
-
 			hostname = g_strdup( vfs->host_name );
 			username = g_strdup( vfs->user_name );
+			port_number = vfs->host_port;
 
 			first = FALSE;
+			na_gnome_vfs_uri_free( vfs );
 		}
 
 		tmp = g_shell_quote( ibname );
-
 		g_string_append_printf( basename_list, " %s", tmp );
 		g_free( tmp );
 
@@ -1330,7 +1340,10 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 		g_string_append_printf( pathname_list, " %s", tmp );
 		g_free( tmp );
 
-		na_gnome_vfs_uri_free( vfs );
+		tmp = g_shell_quote( iuri );
+		g_string_append_printf( uris_list, " %s", tmp );
+		g_free( tmp );
+
 		g_free( ibname );
 		g_free( ipath );
 		g_object_unref( iloc );
@@ -1361,7 +1374,7 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 				g_free( tmp );
 				break;
 
-			/* hostname of the (first) GVfs URI
+			/* hostname of the (first) URI
 			 */
 			case 'h':
 				string = g_string_append( string, hostname );
@@ -1379,19 +1392,33 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 				string = g_string_append( string, pathname_list->str );
 				break;
 
-			/* scheme of the (first) GVfs URI
+			/* port number of the (first) URI
+			 */
+			case 'p':
+				if( port_number > 0 ){
+					g_string_append_printf( string, "%d", port_number );
+				}
+				break;
+
+			/* list of URIs
+			 */
+			case 'R':
+				string = g_string_append( string, uris_list->str );
+				break;
+
+			/* scheme of the (first) URI
 			 */
 			case 's':
 				string = g_string_append( string, scheme );
 				break;
 
-			/* GVfs URI of the first item
+			/* URI of the first item
 			 */
 			case 'u':
 				string = g_string_append( string, uri );
 				break;
 
-			/* username of the (first) GVfs URI
+			/* username of the (first) URI
 			 */
 			case 'U':
 				string = g_string_append( string, username );
@@ -1416,6 +1443,7 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 	g_free( hostname );
 	g_free( username );
 	g_free( iter );
+	g_string_free( uris_list, TRUE );
 	g_string_free( basename_list, TRUE );
 	g_string_free( pathname_list, TRUE );
 

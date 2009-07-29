@@ -1,3 +1,11 @@
+2009-07-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-action-profile.c:
+	* src/common/na-xml-names.h:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Add %p (port number) and %R (list of URIs) parameters.
+
 2009-07-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* exports/nautilus-actions.schema.in:

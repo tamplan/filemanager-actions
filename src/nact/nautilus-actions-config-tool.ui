@@ -884,10 +884,10 @@
       <object class="GtkFileChooserWidget" id="filechooserwidget1">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
-        <property name="local_only">False</property>
         <property name="select_multiple">True</property>
-        <property name="use_preview_label">False</property>
         <property name="preview_widget_active">False</property>
+        <property name="use_preview_label">False</property>
+        <property name="local_only">False</property>
       </object>
     </child>
     <child>
@@ -970,10 +970,10 @@ to extend a selection.</property>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
-            <property name="local_only">False</property>
-            <property name="use_preview_label">False</property>
             <property name="preview_widget_active">False</property>
             <property name="action">select-folder</property>
+            <property name="use_preview_label">False</property>
+            <property name="local_only">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -1259,7 +1259,7 @@ The exported file may later be imported via :
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt;: base folder of the selected file(s)</property>
+                <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt;: base directory of the (first) selected file or folder</property>
                 <property name="use_markup">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -1274,7 +1274,7 @@ The exported file may later be imported via :
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%f&lt;/b&gt;: the name of the selected file or the 1st one if many are selected</property>
+                <property name="label" translatable="yes">&lt;b&gt;%f&lt;/b&gt;: the name of the (first) selected file or folder</property>
                 <property name="use_markup">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -1289,7 +1289,7 @@ The exported file may later be imported via :
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt;: hostname of the URI</property>
+                <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt;: hostname of the (first) URI</property>
                 <property name="use_markup">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -1320,7 +1320,7 @@ file(s)/folder(s)</property>
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt;: space-separated list of the selected file(s)/folder(s) with their full paths</property>
+                <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt;: space-separated list of the full pathanmes of the selected file(s) or folder(s)</property>
                 <property name="use_markup">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -1331,41 +1331,33 @@ file(s)/folder(s)</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label16">
+              <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt;: scheme of the URI</property>
+                <property name="label" translatable="yes">&lt;b&gt;%p&lt;/b&gt;: port number of the (first) selected URI</property>
                 <property name="use_markup">True</property>
-                <property name="wrap">True</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="position">5</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label15">
+              <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt;: URI</property>
+                <property name="label" translatable="yes">&lt;b&gt;%R&lt;/b&gt;: space-separated list of selected URIs</property>
                 <property name="use_markup">True</property>
-                <property name="wrap">True</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="position">6</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label20">
+              <object class="GtkLabel" id="label16">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt;: username of the URI</property>
+                <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt;: scheme of the (first) URI</property>
                 <property name="use_markup">True</property>
                 <property name="wrap">True</property>
               </object>
@@ -1373,6 +1365,36 @@ file(s)/folder(s)</property>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label15">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt;: (first) URI</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">8</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label20">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt;: username of the (first) URI</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">9</property>
               </packing>
             </child>
             <child>
@@ -1387,7 +1409,7 @@ file(s)/folder(s)</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">8</property>
+                <property name="position">10</property>
               </packing>
             </child>
           </object>
@@ -1400,16 +1422,16 @@ file(s)/folder(s)</property>
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="CommandExamplePreLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
 </interface>
