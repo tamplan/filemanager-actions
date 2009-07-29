@@ -49,8 +49,9 @@ AC_CONFIG_FILES([
 	src/Makefile
 	src/common/Makefile
 	src/nact/Makefile
-	src/utils/Makefile
 	src/plugin/Makefile
+	src/test/Makefile
+	src/utils/Makefile
 	po/Makefile.in
 ])
 

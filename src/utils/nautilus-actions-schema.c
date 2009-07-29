@@ -62,7 +62,7 @@ static void            exit_with_usage( void );
 int
 main( int argc, char** argv )
 {
-	g_type_init ();
+	g_type_init();
 
 	int status = EXIT_SUCCESS;
 

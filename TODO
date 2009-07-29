@@ -21,3 +21,11 @@ like the scheme list, it seems.
 
 - allow users to upload/download actions directly from a web repository
   (REST services ?)
+
+- NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR has nothing to do in configure.ac
+  (not a configuration variable)
+
+- remove option to build or not utilities : always build all
+
+- configure.ac: distinguish between common, nautilus extension or gtk
+  program to build nautilus_actions_flags/libs

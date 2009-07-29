@@ -26,41 +26,22 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-noinst_LTLIBRARIES = libnact.la
+noinst_PROGRAMS = \
+	test-parse-uris									\
+	$(NULL)
 
 AM_CPPFLAGS += \
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_COMMON}\"	\
-	$(NAUTILUS_ACTIONS_CFLAGS)					\
+	-I $(top_srcdir)/src							\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
+	$(NAUTILUS_ACTIONS_CFLAGS)						\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"			\
 	$(NULL)
 
-libnact_la_SOURCES = \
-	na-action.c									\
-	na-action.h									\
-	na-action-class.h							\
-	na-action-profile.c							\
-	na-action-profile.h							\
-	na-action-profile-class.h					\
-	na-gconf.c									\
-	na-gconf.h									\
-	na-gconf-keys.h								\
-	na-gnome-vfs-uri.c							\
-	na-gnome-vfs-uri.h							\
-	na-iduplicable.c							\
-	na-iduplicable.h							\
-	na-iio-provider.c							\
-	na-iio-provider.h							\
-	na-ipivot-consumer.c						\
-	na-ipivot-consumer.h						\
-	na-object.c									\
-	na-object.h									\
-	na-pivot.c									\
-	na-pivot.h									\
-	na-utils.c									\
-	na-utils.h									\
-	na-xml-names.h								\
-	na-xml-writer.c								\
-	na-xml-writer.h								\
+test_parse_uris_SOURCES = \
+	test-parse-uris.c								\
 	$(NULL)
 
-libnact_la_LIBADD = -lxml2 -luuid
+test_parse_uris_LDADD = \
+	$(top_builddir)/src/common/libnact.la			\
+	$(NAUTILUS_ACTIONS_LIBS)						\
+	$(NULL)

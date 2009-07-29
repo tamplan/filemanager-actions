@@ -1,3 +1,21 @@
+2009-07-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* m4/na-log-domains.m4:
+	Define a new log domain for test programs.
+
+	* src/common/na-gnome-vfs-uri.c:
+	* src/common/na-gnome-vfs-uri.h: New files.
+
+	* src/common/na-action-profile.c:
+	Take advantage of new na_gnome_vfs_uri_parse() function.
+
+	* src/test/test-parse-uris.c:
+	* src/test/test-parse-uris.h: New files.
+
+	* src/common/na-xml-names.h:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Remove all mentions of GnomeVFS or GVfs.
+
 2009-07-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-iio-provider.c:

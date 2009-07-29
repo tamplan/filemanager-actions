@@ -40,6 +40,7 @@
 #include "na-action.h"
 #include "na-action-profile.h"
 #include "na-utils.h"
+#include "na-gnome-vfs-uri.h"
 
 /* private class data
  */
@@ -1264,12 +1265,12 @@ na_action_profile_is_candidate( const NAActionProfile *profile, GList* files )
  *
  * %d : base dir of the (first) selected file(s)/folder(s)
  * %f : the name of the (first) selected file/folder
- * %h : hostname of the (first) GVfs URI
+ * %h : hostname of the (first) URI
  * %m : list of the basename of the selected files/directories separated by space.
  * %M : list of the selected files/directories with their complete path separated by space.
- * %s : scheme of the (first) GVfs URI
- * %u : (first) GVfs URI
- * %U : username of the (first) GVfs URI
+ * %s : scheme of the (first) URI
+ * %u : (first)  URI
+ * %U : username of the (first) URI
  * %% : a percent sign
  */
 gchar *
@@ -1289,6 +1290,7 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 	gchar *username = NULL;
 	GString *basename_list, *pathname_list;
 	gchar *tmp;
+	NAGnomeVFSURI *vfs;
 
 	g_return_val_if_fail( NA_IS_ACTION_PROFILE( profile ), NULL );
 
@@ -1304,6 +1306,9 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 		ipath = g_file_get_path( iloc );
 		ibname = g_file_get_basename( iloc );
 
+		vfs = g_new0( NAGnomeVFSURI, 1 );
+		na_gnome_vfs_uri_parse( vfs, iuri );
+
 		if( first ){
 
 			uri = g_strdup( iuri );
@@ -1311,11 +1316,8 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 			scheme = nautilus_file_info_get_uri_scheme(( NautilusFileInfo * ) ifi->data );
 			filename = g_strdup( ibname );
 
-			/*hostname = g_strdup( gnome_vfs_uri_get_host_name( gvfs_uri ));
-			username = g_strdup( gnome_vfs_uri_get_user_name( gvfs_uri ));*/
-			/* TODO get hostname or username from GFile uri */
-			hostname = NULL;
-			username = NULL;
+			hostname = g_strdup( vfs->host_name );
+			username = g_strdup( vfs->user_name );
 
 			first = FALSE;
 		}
@@ -1329,6 +1331,7 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 		g_string_append_printf( pathname_list, " %s", tmp );
 		g_free( tmp );
 
+		na_gnome_vfs_uri_free( vfs );
 		g_free( ibname );
 		g_free( ipath );
 		g_object_unref( iloc );
