@@ -32,9 +32,6 @@
 #include <config.h>
 #endif
 
-#include <glib.h>
-#include <glib/gi18n.h>
-
 #include "na-action.h"
 #include "na-iio-provider.h"
 

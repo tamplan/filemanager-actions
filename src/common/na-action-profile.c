@@ -33,7 +33,6 @@
 #endif
 
 #include <string.h>
-#include <glib/gi18n.h>
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
@@ -476,7 +475,7 @@ na_action_profile_new( void )
 	na_action_profile_set_name( profile, ACTION_PROFILE_PREFIX "zero" );
 
 	/* i18n: default label for a new profile */
-	na_action_profile_set_label( profile, _( "Default profile" ));
+	na_action_profile_set_label( profile, NA_ACTION_PROFILE_DEFAULT_LABEL );
 
 	return( profile );
 }

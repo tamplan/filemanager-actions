@@ -40,11 +40,16 @@
  * action.
  */
 
+#include <glib/gi18n.h>
+
 #include "na-action-class.h"
 #include "na-action-profile-class.h"
 #include "na-iio-provider.h"
 
 G_BEGIN_DECLS
+
+#define NA_ACTION_DEFAULT_LABEL			_( "New Nautilus action" )
+#define NA_ACTION_PROFILE_DEFAULT_LABEL	_( "Default profile" )
 
 NAAction        *na_action_new( void );
 NAAction        *na_action_new_with_profile( void );

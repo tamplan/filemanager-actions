@@ -34,7 +34,6 @@
 
 #include <gconf/gconf.h>
 #include <gconf/gconf-client.h>
-#include <glib/gi18n.h>
 #include <string.h>
 
 #include "na-action.h"
@@ -608,7 +607,7 @@ fill_profile_properties( NAGConf *gconf, NAActionProfile *profile, GSList *notif
 	gchar *label;
 	if( !search_for_str( notifies, NULL, ACTION_PROFILE_LABEL_ENTRY, &label )){
 		/* i18n: default profile label */
-		label = g_strdup( _( "Default profile" ));
+		label = g_strdup( NA_ACTION_PROFILE_DEFAULT_LABEL );
 	}
 	na_action_profile_set_label( profile, label );
 	g_free( label );

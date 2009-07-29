@@ -32,7 +32,6 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n.h>
 #include <string.h>
 #include <uuid/uuid.h>
 
@@ -388,7 +387,7 @@ na_action_new( void )
 	na_action_set_new_uuid( action );
 
 	/* i18n: default label for a new action */
-	na_action_set_label( action, _( "New Nautilus action" ));
+	na_action_set_label( action, NA_ACTION_DEFAULT_LABEL );
 
 	return( action );
 }

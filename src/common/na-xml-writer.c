@@ -32,7 +32,6 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n.h>
 #include <libxml/tree.h>
 
 #include "na-action-profile.h"
@@ -644,7 +643,7 @@ create_gconf_schema( NAXMLWriter *writer )
 	create_gconf_schema_entry( writer, ACTION_LABEL_ENTRY         , doc, list_node, "string", ACTION_LABEL_DESC_SHORT       , ACTION_LABEL_DESC_LONG, "", TRUE );
 	create_gconf_schema_entry( writer, ACTION_TOOLTIP_ENTRY       , doc, list_node, "string", ACTION_TOOLTIP_DESC_SHORT     , ACTION_TOOLTIP_DESC_LONG, "", TRUE );
 	create_gconf_schema_entry( writer, ACTION_ICON_ENTRY          , doc, list_node, "string", ACTION_ICON_DESC_SHORT        , ACTION_ICON_DESC_LONG, "", FALSE );
-	create_gconf_schema_entry( writer, ACTION_PROFILE_LABEL_ENTRY , doc, list_node, "string", ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, _( "Default profile" ), TRUE );
+	create_gconf_schema_entry( writer, ACTION_PROFILE_LABEL_ENTRY , doc, list_node, "string", ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, NA_ACTION_PROFILE_DEFAULT_LABEL, TRUE );
 	create_gconf_schema_entry( writer, ACTION_PATH_ENTRY          , doc, list_node, "string", ACTION_PATH_DESC_SHORT        , ACTION_PATH_DESC_LONG, "", FALSE );
 	create_gconf_schema_entry( writer, ACTION_PARAMETERS_ENTRY    , doc, list_node, "string", ACTION_PARAMETERS_DESC_SHORT  , ACTION_PARAMETERS_DESC_LONG, "", FALSE );
 	create_gconf_schema_entry( writer, ACTION_BASENAMES_ENTRY     , doc, list_node, "list"  , ACTION_BASENAMES_DESC_SHORT   , ACTION_BASENAMES_DESC_LONG, "[*]", FALSE );

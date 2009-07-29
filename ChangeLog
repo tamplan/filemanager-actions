@@ -16,6 +16,17 @@
 	* src/nact/nautilus-actions-config-tool.ui:
 	Remove all mentions of GnomeVFS or GVfs.
 
+	* src/common/na-action-profile.c:
+	* src/common/na-action.c:
+	* src/common/na-action.h:
+	* src/common/na-gconf.c:
+	* src/common/na-iio-provider.c:
+	* src/common/na-xml-writer.c:
+	* src/utils/nautilus-actions-schema.c:
+	Factorize the definition of default labels.
+
+	* po/POTFILES.in: Update the list of translatable files.
+
 2009-07-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-iio-provider.c:
