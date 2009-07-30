@@ -39,23 +39,46 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <child>
-                  <object class="GtkScrolledWindow" id="scrolledwindow1">
+                  <object class="GtkVBox" id="vbox2">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="hscrollbar_policy">automatic</property>
-                    <property name="vscrollbar_policy">automatic</property>
-                    <property name="shadow_type">in</property>
+                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkTreeView" id="ActionsList">
+                      <object class="GtkLabel" id="ActionsListLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">4</property>
+                        <property name="ypad">4</property>
+                        <property name="label" translatable="yes">Actions _list :</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolledwindow1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="headers_visible">False</property>
-                        <property name="rules_hint">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkTreeView" id="ActionsList">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="headers_visible">False</property>
+                            <property name="rules_hint">True</property>
+                          </object>
+                        </child>
                       </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="resize">True</property>
+                    <property name="resize">False</property>
                     <property name="shrink">True</property>
                   </packing>
                 </child>
@@ -1431,16 +1454,16 @@ file(s)/folder(s)</property>
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="CommandExamplePreLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
 </interface>

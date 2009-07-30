@@ -162,10 +162,14 @@ nact_iactions_list_initial_load( NactWindow *window )
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 	g_assert( NACT_IS_WINDOW( window ));
 
+	GtkWidget *widget = get_actions_list_widget( window );
+
+	/* associates the ActionsList to the label */
+	GtkWidget *label = base_window_get_widget( BASE_WINDOW( window ), "ActionsListLabel" );
+	gtk_label_set_mnemonic_widget( GTK_LABEL( label ), widget );
+
 	nact_iactions_list_set_send_selection_changed_on_fill_list( window, FALSE );
 	nact_iactions_list_set_is_filling_list( window, FALSE );
-
-	GtkWidget *widget = get_actions_list_widget( window );
 
 	/* create the model */
 	GtkTreeStore *ts_model = gtk_tree_store_new(
