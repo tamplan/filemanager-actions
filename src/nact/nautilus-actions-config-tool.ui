@@ -60,7 +60,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkNotebook" id="Notebook">
+                  <object class="GtkNotebook" id="MainNotebook">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <child>
@@ -232,7 +232,9 @@
                     <child type="tab">
                       <object class="GtkLabel" id="label5">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Action</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you enter main characteristics of the action, as it will be displayed in the Nautilus context menu : label, tooltip, icon.</property>
+                        <property name="label" translatable="yes">_Action</property>
+                        <property name="use_underline">True</property>
                       </object>
                       <packing>
                         <property name="tab_fill">False</property>
@@ -459,7 +461,10 @@
                     <child type="tab">
                       <object class="GtkLabel" id="label7">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Command</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you choose the command to be executed, along with its parameters.
+Defining several profiles lets you have several commands, each applying with a different set of conditions.</property>
+                        <property name="label" translatable="yes">_Command</property>
+                        <property name="use_underline">True</property>
                       </object>
                       <packing>
                         <property name="position">3</property>
@@ -689,7 +694,9 @@
                     <child type="tab">
                       <object class="GtkLabel" id="label6">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Conditions</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine when the action will appear in the Nautilus context menu, depending of the nature and the number of selected items.</property>
+                        <property name="label" translatable="yes">C_onditions</property>
+                        <property name="use_underline">True</property>
                       </object>
                       <packing>
                         <property name="position">2</property>
@@ -816,7 +823,9 @@
                     <child type="tab">
                       <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Advanced conditions</property>
+                        <property name="tooltip_text" translatable="yes">This advanced tab lets you precisely choose on which schemes the selection will apply.</property>
+                        <property name="label" translatable="yes">A_dvanced conditions</property>
+                        <property name="use_underline">True</property>
                       </object>
                       <packing>
                         <property name="position">3</property>
@@ -885,8 +894,8 @@
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <property name="select_multiple">True</property>
-        <property name="preview_widget_active">False</property>
         <property name="use_preview_label">False</property>
+        <property name="preview_widget_active">False</property>
         <property name="local_only">False</property>
       </object>
     </child>
@@ -970,9 +979,9 @@ to extend a selection.</property>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
-            <property name="preview_widget_active">False</property>
-            <property name="action">select-folder</property>
             <property name="use_preview_label">False</property>
+            <property name="action">select-folder</property>
+            <property name="preview_widget_active">False</property>
             <property name="local_only">False</property>
           </object>
           <packing>
@@ -1422,16 +1431,16 @@ file(s)/folder(s)</property>
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandExamplePreLabel"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandExamplePreLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
 </interface>

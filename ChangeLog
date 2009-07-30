@@ -6,6 +6,9 @@
 	* src/nact/nautilus-actions-config-tool.ui:
 	Add %p (port number) and %R (list of URIs) parameters.
 
+	* src/nact/nautilus-actions-config-tool.ui:
+	Define mnemonic and tooltip for each tab of the notebook.
+
 2009-07-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* exports/nautilus-actions.schema.in:

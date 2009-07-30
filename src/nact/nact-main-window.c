@@ -97,7 +97,6 @@ static GtkWidget       *get_status_bar( NactWindow *window );
 static void             on_initial_load_toplevel( BaseWindow *window );
 static void             on_runtime_init_toplevel( BaseWindow *window );
 static void             setup_dialog_title( NactWindow *window );
-/*static void             setup_dialog_menu( NactMainWindow *window );*/
 
 static void             on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean         on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
@@ -615,21 +614,6 @@ setup_dialog_title( NactWindow *window )
 
 	g_free( title );
 }
-
-/*static void
-setup_dialog_menu( NactMainWindow *window )
-{
-	GSList *ia;
-	gboolean to_save = FALSE;
-	for( ia = window->private->actions ; ia && !to_save ; ia = ia->next ){
-		gboolean elt_to_save = is_valid_action( NACT_WINDOW( window ), NA_ACTION( ia->data ));
-		to_save |= elt_to_save;
-	}
-
-	gtk_widget_set_sensitive(  window->private->new_profile_item, window->private->edited_action != NULL );
-
-	gtk_widget_set_sensitive( window->private->save_item, to_save );
-}*/
 
 /*
  * note that the IActionsList tree store may return an action or a profile
