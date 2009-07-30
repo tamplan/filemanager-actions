@@ -2,10 +2,10 @@ Version 1.11.2
  
     Release date 2009-07-30
 
-    Probably the most exciting feature in this last development version
-    is the right through new user interface.
-    Take a look at it.
-    Packagers, your users will want it !
+    Two new parameters are introduced :
+    
+        %p: expands to the port number from an URI
+        %R: expands to a space-separated list of selected URIs
  
     Bugfixes
  
@@ -36,21 +36,15 @@ Version 1.11.2
 
     Various code enhancements
 
-        This is mostly a complete rewriting :
-        - internally, of the object hierarchy
-        - externally, of the UI
-
-        The new object hierarchy is fully GObject/events based.
-
-        More, we have tried to follow all future Gnome 3.0 requirements :
+        Gnome 3.0 requirements are met :
         - migrated from libglade to GtkBuilder
-        - migrated from Gnome VFS to GVFS
-        - get ride of old dependancies
+        - migrated from GnomeVFS to GVFS
+        - gets ride of old dependancies
 
-        - add a dependancy on libunique 1.0
-        - require now Gtk+ 2.12, Glib ..?,
+        - adds a dependancy on libunique 1.0
+        - requires now Gtk+ 2.12, Glib 2.16
 
-        Command-line utilities are now always build (no more a configure option).
+        Command-line utilities are now always built (no more a configure option).
 
     nautilus-actions-config-tool
 
@@ -76,8 +70,6 @@ Version 1.11.2
 
          This new command-line utility writes a GConf schema on stdout.
          Packagers may use it to install a schema.
-
-        Note also that we have defined a NAIIOProvider interface. We will so in the future be able to handle action definitions from elsewhere than GConf, and, why not, take advantage of actions configured for other file managers.
 
 Version 1.11.0 [unstable]
 
