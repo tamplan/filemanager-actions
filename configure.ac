@@ -106,7 +106,8 @@ AM_GCONF_SOURCE_2
 # (1.1.0) ; for the usual final user, this is very analog to requiring
 # a whole gnome version
 #
-# Gtk >= 2.12: GtkBuilder
+# GLib >= 2.16: GVFS/GIO
+# Gtk  >= 2.12: GtkBuilder
 #
 GLIB_REQUIRED=2.16.0
 GTK_REQUIRED=2.12.0
