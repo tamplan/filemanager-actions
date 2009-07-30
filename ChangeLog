@@ -9,6 +9,7 @@
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nautilus-actions-config-tool.ui:
 	Define mnemonic for the actions list.
+	Report the same feature on export assistant.
 
 	* src/nact/nautilus-actions-config-tool.ui:
 	Define mnemonic and tooltip for each tab of the notebook.
