@@ -29,3 +29,6 @@
   example label
 
 - use GtkUIManager
+
+- propose a patch for GOptions so that the help for an option could be
+  multiline (by defining an optional maximum width)
