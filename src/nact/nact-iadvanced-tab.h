@@ -67,6 +67,7 @@ void    nact_iadvanced_tab_initial_load( NactWindow *dialog );
 void    nact_iadvanced_tab_runtime_init( NactWindow *dialog );
 void    nact_iadvanced_tab_all_widgets_showed( NactWindow *dialog );
 void    nact_iadvanced_tab_dispose( NactWindow *dialog );
+void    nact_iadvanced_tab_reset_last_focus( NactWindow *dialog );
 
 void    nact_iadvanced_tab_set_profile( NactWindow *window, NAActionProfile *profile );
 GSList *nact_iadvanced_tab_get_schemes( NactWindow *window );

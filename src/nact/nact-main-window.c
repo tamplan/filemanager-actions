@@ -624,6 +624,11 @@ on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_da
 	static const gchar *thisfn = "nact_main_window_on_actions_list_selection_changed";
 	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );
 
+	nact_iaction_tab_reset_last_focus( NACT_WINDOW( user_data ));
+	nact_icommand_tab_reset_last_focus( NACT_WINDOW( user_data ));
+	nact_iconditions_tab_reset_last_focus( NACT_WINDOW( user_data ));
+	nact_iadvanced_tab_reset_last_focus( NACT_WINDOW( user_data ));
+
 	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
 	NactMainWindow *window = NACT_MAIN_WINDOW( user_data );
 

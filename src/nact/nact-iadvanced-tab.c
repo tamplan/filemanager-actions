@@ -37,6 +37,7 @@
 
 #include <common/na-utils.h>
 
+#include "nact-main-window.h"
 #include "nact-iadvanced-tab.h"
 #include "nact-iprefs.h"
 
@@ -77,6 +78,8 @@ static gboolean         reset_schemes_list( GtkTreeModel *model, GtkTreePath *pa
 static void             set_action_schemes( gchar *scheme, GtkTreeModel *model );
 static GtkButton       *get_add_button( NactWindow *window );
 static GtkButton       *get_remove_button( NactWindow *window );
+
+static void             on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window );
 
 GType
 nact_iadvanced_tab_get_type( void )
@@ -163,6 +166,9 @@ nact_iadvanced_tab_runtime_init( NactWindow *dialog )
 	static const gchar *thisfn = "nact_iadvanced_tab_runtime_init";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
+	GtkWidget *notebook = base_window_get_widget( BASE_WINDOW( dialog ), "MainNotebook" );
+	nact_window_signal_connect( dialog, G_OBJECT( notebook ), "switch-page", G_CALLBACK( on_switch_page ));
+
 	GtkTreeView *scheme_widget = get_schemes_tree_view( dialog );
 
 	GtkTreeViewColumn *column = gtk_tree_view_get_column( scheme_widget, SCHEMES_CHECKBOX_COLUMN );
@@ -197,6 +203,12 @@ nact_iadvanced_tab_dispose( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_dispose";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
+}
+
+void
+nact_iadvanced_tab_reset_last_focus( NactWindow *dialog )
+{
+	g_object_set_data( G_OBJECT( dialog ), "nact-iadvanced-tab-last-focus", NULL );
 }
 
 void
@@ -587,4 +599,22 @@ static GtkButton *
 get_remove_button( NactWindow *window )
 {
 	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RemoveSchemeButton" )));
+}
+
+/*
+ * rationale: cf. nact-iaction-tab:on_swotch_page()
+ */
+static void
+on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window )
+{
+	static const gchar *thisfn = "nact_iadvanced_tab_on_switch_page";
+
+	if( page_num == ADVANCED_TAB ){
+		g_debug( "%s: notebook=%p, page=%p, page_num=%d, window=%p", thisfn, notebook, page, page_num, window );
+		GtkWidget *widget = GTK_WIDGET( g_object_get_data( G_OBJECT( window ), "nact-iadvanced-tab-last-focus" ));
+		if( !widget ){
+			widget = GTK_WIDGET( get_schemes_tree_view( window ));
+		}
+		gtk_widget_grab_focus( widget );
+	}
 }

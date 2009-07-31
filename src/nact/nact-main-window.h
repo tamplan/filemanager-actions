@@ -71,6 +71,13 @@ NactMainWindow *nact_main_window_new( BaseApplication *application );
 GSList         *nact_main_window_get_actions( const NactMainWindow *window );
 gboolean        nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid );
 
+enum {
+	ACTION_TAB = 0,
+	COMMAND_TAB,
+	CONDITIONS_TAB,
+	ADVANCED_TAB
+};
+
 G_END_DECLS
 
 #endif /* __NACT_MAIN_WINDOW_H__ */
