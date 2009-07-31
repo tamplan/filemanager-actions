@@ -208,6 +208,31 @@ nact_imenubar_init( NactMainWindow *window )
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	g_assert( NACT_IS_IMENUBAR( window ));
 
+	/*static const gchar *menubar[] =
+			"<ui>"
+			"    <menubar>"
+			"        <menu action=\"FileMenu\">"
+			"            <menuitem action=\"NewActionItem\" />"
+			"            <menuitem action=\"NewProfileItem\" />"
+			"            <menuitem action=\"SaveItem\" />"
+			"            <menuitem action=\"QuitItem\" />"
+			"        </menu>"
+			"        <menu action=\"EditMenu\">"
+			"            <menuitem action=\"DuplicateItem\" />"
+			"            <menuitem action=\"DeleteItem\" />"
+			"            <menuitem action=\"ReloadActionsItem\" />"
+			"        </menu>"
+			"        <menu action=\"ToolsMenu\">"
+			"            <menuitem action=\"ImportItem\" />"
+			"            <menuitem action=\"ExportItem\" />"
+			"        </menu>"
+			"        <menu action=\"HelpMenu\">"
+			"            <menuitem action=\"HelpItem\" />"
+			"            <menuitem action=\"AboutItem\" />"
+			"        </menu>"
+			"    </menubar>"
+			"</ui>";*/
+
 	GtkWidget *vbox = base_window_get_widget( BASE_WINDOW( window ), "MenuBarVBox" );
 	GtkWidget *menubar= gtk_menu_bar_new();
 	gtk_container_add( GTK_CONTAINER( vbox ), menubar );
@@ -268,23 +293,21 @@ static void
 create_file_menu( NactMainWindow *window, GtkMenuBar *menubar )
 {
 	/* i18n: File menu */
-	GtkWidget *file = gtk_menu_item_new_with_label( _( "_File" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( file ), TRUE );
+	GtkWidget *file = gtk_menu_item_new_with_mnemonic( _( "_File" ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), file );
 	GtkWidget *menu = gtk_menu_new();
 	gtk_menu_item_set_submenu( GTK_MENU_ITEM( file ), menu );
 	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( file ), "select", G_CALLBACK( on_file_selected ));
 
-	GtkWidget *item = gtk_image_menu_item_new_from_stock( GTK_STOCK_NEW, NULL );
 	/* i18n: 'New action' item in 'File' menu */
-	gtk_menu_item_set_label( GTK_MENU_ITEM( item ), _( "_New action" ));
+	GtkWidget *item = gtk_image_menu_item_new_with_mnemonic( _( "_New action" ));
+	gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), gtk_image_new_from_stock( GTK_STOCK_NEW, GTK_ICON_SIZE_MENU ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
 	signal_connect( window, item, G_CALLBACK( on_new_action_activated ), G_CALLBACK( on_new_action_selected ));
 
 	/* i18n: 'New profile' item in 'File' menu */
-	item = gtk_image_menu_item_new_with_label( _( "New _profile" ));
+	item = gtk_image_menu_item_new_with_mnemonic( _( "New _profile" ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
 	set_new_profile_item( NACT_WINDOW( window ), item );
 	signal_connect( window, item, G_CALLBACK( on_new_profile_activated ), G_CALLBACK( on_new_profile_selected ));
 
@@ -305,16 +328,15 @@ static void
 create_edit_menu( NactMainWindow *window, GtkMenuBar *menubar )
 {
 	/* i18n: Edit menu */
-	GtkWidget *edit = gtk_menu_item_new_with_label( _( "_Edit" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( edit ), TRUE );
+	GtkWidget *edit = gtk_menu_item_new_with_mnemonic( _( "_Edit" ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), edit );
 	GtkWidget *menu = gtk_menu_new();
 	gtk_menu_item_set_submenu( GTK_MENU_ITEM( edit ), menu );
 	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( edit ), "select", G_CALLBACK( on_edit_selected ));
 
-	GtkWidget *item = gtk_image_menu_item_new_from_stock( GTK_STOCK_COPY, NULL );
 	/* i18n: Duplicate item in Edit menu */
-	gtk_menu_item_set_label( GTK_MENU_ITEM( item ), _( "D_uplicate" ));
+	GtkWidget *item = gtk_image_menu_item_new_with_mnemonic( _( "D_uplicate" ));
+	gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), gtk_image_new_from_stock( GTK_STOCK_COPY, GTK_ICON_SIZE_MENU ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
 	set_duplicate_item( NACT_WINDOW( window ), item );
 	signal_connect( window, item, G_CALLBACK( on_duplicate_activated ), G_CALLBACK( on_duplicate_selected ));
@@ -328,8 +350,7 @@ create_edit_menu( NactMainWindow *window, GtkMenuBar *menubar )
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
 
-	item = gtk_image_menu_item_new_with_label( _( "_Reload the list of actions" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
+	item = gtk_image_menu_item_new_with_mnemonic( _( "_Reload the list of actions" ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
 	signal_connect( window, item, G_CALLBACK( on_reload_activated ), G_CALLBACK( on_reload_selected ));
 }
@@ -338,22 +359,20 @@ static void
 create_tools_menu( NactMainWindow *window, GtkMenuBar *menubar )
 {
 	/* i18n: Tools menu */
-	GtkWidget *tools = gtk_menu_item_new_with_label( _( "_Tools" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( tools ), TRUE );
+	GtkWidget *tools = gtk_menu_item_new_with_mnemonic( _( "_Tools" ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), tools );
 	GtkWidget *menu = gtk_menu_new();
 	gtk_menu_item_set_submenu( GTK_MENU_ITEM( tools ), menu );
 	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( tools ), "select", G_CALLBACK( on_tools_selected ));
 
 	/* i18n: Import item in Tools menu */
-	GtkWidget *item = gtk_image_menu_item_new_with_label( _( "_Import assistant..." ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
+	GtkWidget *item = gtk_image_menu_item_new_with_mnemonic( _( "_Import assistant..." ));
+	gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), gtk_image_new_from_stock( GTK_STOCK_CONVERT, GTK_ICON_SIZE_MENU ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
 	signal_connect( window, item, G_CALLBACK( on_import_activated ), G_CALLBACK( on_import_selected ));
 
 	/* i18n: Export item in Tools menu */
-	item = gtk_image_menu_item_new_with_label( _( "E_xport assistant..." ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( item ), TRUE );
+	item = gtk_image_menu_item_new_with_mnemonic( _( "E_xport assistant..." ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
 	set_export_item( NACT_WINDOW( window ), item );
 	signal_connect( window, item, G_CALLBACK( on_export_activated ), G_CALLBACK( on_export_selected ));
@@ -363,8 +382,7 @@ static void
 create_help_menu( NactMainWindow *window, GtkMenuBar *menubar )
 {
 	/* i18n: Help menu */
-	GtkWidget *help = gtk_menu_item_new_with_label( _( "_Help" ));
-	gtk_menu_item_set_use_underline( GTK_MENU_ITEM( help ), TRUE );
+	GtkWidget *help = gtk_menu_item_new_with_mnemonic( _( "_Help" ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), help );
 	GtkWidget *menu = gtk_menu_new();
 	gtk_menu_item_set_submenu( GTK_MENU_ITEM( help ), menu );

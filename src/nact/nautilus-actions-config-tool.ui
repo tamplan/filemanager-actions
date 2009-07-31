@@ -6,11 +6,9 @@
     <child>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <child>
           <object class="GtkVBox" id="MenuBarVBox">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <placeholder/>
             </child>
@@ -33,7 +31,6 @@
         <child>
           <object class="GtkVBox" id="vbox16">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <object class="GtkHPaned" id="MainPaned">
                 <property name="visible">True</property>
@@ -41,7 +38,6 @@
                 <child>
                   <object class="GtkVBox" id="vbox2">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkLabel" id="ActionsListLabel">
                         <property name="visible">True</property>
@@ -90,11 +86,9 @@
                       <object class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkVBox" id="vbox4">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <property name="spacing">10</property>
                             <child>
                               <object class="GtkLabel" id="label2">
@@ -267,16 +261,13 @@
                       <object class="GtkVBox" id="vbox5">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkVBox" id="vbox6">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <property name="spacing">10</property>
                             <child>
                               <object class="GtkVBox" id="vbox7">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">10</property>
                                 <child>
                                   <object class="GtkLabel" id="label10">
@@ -327,7 +318,6 @@
                             <child>
                               <object class="GtkVBox" id="vbox8">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">10</property>
                                 <child>
                                   <object class="GtkLabel" id="label12">
@@ -498,16 +488,13 @@ Defining several profiles lets you have several commands, each applying with a d
                       <object class="GtkVBox" id="vbox9">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkVBox" id="vbox10">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <property name="spacing">10</property>
                             <child>
                               <object class="GtkVBox" id="vbox11">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">10</property>
                                 <child>
                                   <object class="GtkLabel" id="label16">
@@ -609,7 +596,6 @@ Defining several profiles lets you have several commands, each applying with a d
                             <child>
                               <object class="GtkVBox" id="vbox12">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">10</property>
                                 <child>
                                   <object class="GtkLabel" id="label19">
@@ -683,7 +669,6 @@ Defining several profiles lets you have several commands, each applying with a d
                             <child>
                               <object class="GtkVBox" id="vbox13">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkCheckButton" id="ConditionsMultipleButton">
                                     <property name="label" translatable="yes">Appears if selection has multiple files or folders</property>
@@ -730,12 +715,10 @@ Defining several profiles lets you have several commands, each applying with a d
                       <object class="GtkVBox" id="vbox14">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkVBox" id="vbox340">
                             <property name="visible">True</property>
                             <property name="border_width">12</property>
-                            <property name="orientation">vertical</property>
                             <property name="spacing">10</property>
                             <child>
                               <object class="GtkLabel" id="label46">
@@ -778,7 +761,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                 <child>
                                   <object class="GtkVBox" id="vbox345">
                                     <property name="visible">True</property>
-                                    <property name="orientation">vertical</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkButton" id="AddSchemeButton">
@@ -915,7 +897,6 @@ Defining several profiles lets you have several commands, each applying with a d
     <child>
       <object class="GtkFileChooserWidget" id="filechooserwidget1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="select_multiple">True</property>
         <property name="use_preview_label">False</property>
         <property name="preview_widget_active">False</property>
@@ -959,7 +940,6 @@ Defining several profiles lets you have several commands, each applying with a d
         <child>
           <object class="GtkVBox" id="vbox5">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel" id="ActionsListLabel">
                 <property name="visible">True</property>
@@ -1023,7 +1003,6 @@ to extend a selection.</property>
         <child>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <property name="use_preview_label">False</property>
             <property name="action">select-folder</property>
             <property name="preview_widget_active">False</property>
@@ -1042,12 +1021,10 @@ to extend a selection.</property>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <property name="border_width">10</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkVBox" id="vbox2">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="ExportSchemaV1Button">
                 <property name="label" translatable="yes">Export as a GConf schema file with full key descriptions.</property>
@@ -1106,7 +1083,6 @@ The exported file may later be imported via :
         <child>
           <object class="GtkVBox" id="vbox3">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="ExportSchemaV2Button">
                 <property name="label" translatable="yes">Export as a light GConf schema file.</property>
@@ -1166,7 +1142,6 @@ The exported file may later be imported via :
         <child>
           <object class="GtkVBox" id="vbox4">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="ExportGConfDumpButton">
                 <property name="label" translatable="yes">Export as a GConf dump file.</property>
@@ -1257,7 +1232,6 @@ The exported file may later be imported via :
       <object class="GtkVBox" id="vbox11">
         <property name="visible">True</property>
         <property name="border_width">12</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkHBox" id="hbox11">
@@ -1306,7 +1280,6 @@ The exported file may later be imported via :
         <child>
           <object class="GtkVBox" id="vbox397">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkLabel" id="label17">

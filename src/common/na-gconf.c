@@ -777,7 +777,7 @@ entry_to_notify( const GConfEntry *entry )
 
 			case GCONF_VALUE_BOOL:
 				npn->type = NA_PIVOT_BOOL;
-				npn->data = ( gpointer ) gconf_value_get_bool( value );
+				npn->data = GINT_TO_POINTER( gconf_value_get_bool( value ));
 				break;
 
 			case GCONF_VALUE_LIST:
@@ -856,7 +856,7 @@ search_for_bool( GSList *properties, const gchar *profile, const gchar *key, gbo
 		if( npn->type == NA_PIVOT_BOOL &&
 		  ( !profile || !g_ascii_strcasecmp( profile, npn->profile )) &&
 			!g_ascii_strcasecmp( key, npn->parm )){
-				*value = ( gboolean ) npn->data;
+				*value = GPOINTER_TO_INT( npn->data );
 				return( TRUE );
 		}
 	}

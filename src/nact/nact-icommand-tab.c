@@ -175,6 +175,11 @@ nact_icommand_tab_initial_load( NactWindow *dialog )
 		guint context = gtk_statusbar_get_context_id( GTK_STATUSBAR( status_bar ), "nact-iaction-tab" );
 		set_status_context( dialog, context );
 	}
+
+	/* doesn't work under f10 */
+	GtkWidget *tab = base_window_get_widget( BASE_WINDOW( dialog ), "ActionTabLabel" );
+	GtkWidget *widget = get_path_entry( dialog );
+	gtk_label_set_mnemonic_widget( GTK_LABEL( tab ), widget );
 }
 
 void
@@ -704,14 +709,14 @@ show_legend_dialog( NactWindow *window )
 	nact_iprefs_position_named_window( window, legend_dialog, IPREFS_LEGEND_DIALOG );
 	gtk_widget_show( GTK_WIDGET( legend_dialog ));
 
-	g_object_set_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE, ( gpointer ) TRUE );
+	g_object_set_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE, GINT_TO_POINTER( TRUE ));
 }
 
 static void
 hide_legend_dialog( NactWindow *window )
 {
 	GtkWindow *legend_dialog = get_legend_dialog( window );
-	gboolean is_visible = ( gboolean ) g_object_get_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE );
+	gboolean is_visible = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE ));
 
 	if( is_visible ){
 		g_assert( GTK_IS_WINDOW( legend_dialog ));
@@ -724,7 +729,7 @@ hide_legend_dialog( NactWindow *window )
 		GtkButton *legend_button = get_legend_button( window );
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( legend_button ), FALSE );
 
-		g_object_set_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE, ( gpointer ) FALSE );
+		g_object_set_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE, GINT_TO_POINTER( FALSE ));
 	}
 }
 

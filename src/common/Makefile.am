@@ -63,4 +63,7 @@ libnact_la_SOURCES = \
 	na-xml-writer.h								\
 	$(NULL)
 
-libnact_la_LIBADD = -lxml2 -luuid
+libnact_la_LIBADD = \
+	-lxml2										\
+	-luuid										\
+	$(NULL)
