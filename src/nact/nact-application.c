@@ -37,7 +37,7 @@
 
 #include "nact-application.h"
 
-#define GLADE_FILENAME				GLADEDIR "/nautilus-actions-config-tool.ui"
+#define GLADE_FILENAME				GLADEDIR "/nautilus-actions-config.ui"
 
 /* private class data
  */
@@ -243,8 +243,8 @@ nact_application_new_with_args( int argc, char **argv )
 	return(
 			g_object_new(
 					NACT_APPLICATION_TYPE,
-					PROP_APPLICATION_ARGC_STR, argc,
-					PROP_APPLICATION_ARGV_STR, argv,
+					PROP_APPLICATION_ARGC, argc,
+					PROP_APPLICATION_ARGV, argv,
 					NULL )
 	);
 }

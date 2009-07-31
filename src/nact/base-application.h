@@ -44,23 +44,28 @@
 
 G_BEGIN_DECLS
 
+enum {
+	APPLICATION_ERROR_GTK = 1,		/* gtk+ initialization error */
+	APPLICATION_ERROR_MAIN_WINDOW,	/* unable to obtain the main window */
+	APPLICATION_ERROR_UNIQUE_APP,	/* another instance is running */
+	APPLICATION_ERROR_UI_FNAME,		/* empty XML filename */
+	APPLICATION_ERROR_UI_LOAD		/* unable to load the XML definition */
+};
+
 /* instance properties
  */
-#define PROP_APPLICATION_ARGC_STR				"base-application-argc"
-#define PROP_APPLICATION_ARGV_STR				"base-application-argv"
-#define PROP_APPLICATION_UNIQUE_NAME_STR		"base-application-unique-name"
-#define PROP_APPLICATION_UNIQUE_APP_STR			"base-application-unique-app"
-#define PROP_APPLICATION_NAME_STR				"base-application-application-name"
-#define PROP_APPLICATION_ICON_NAME_STR			"base-application-icon-name"
-#define PROP_APPLICATION_CODE_STR				"base-application-code"
-#define PROP_APPLICATION_UI_XML_STR				"base-application-ui-xml"
-#define PROP_APPLICATION_UI_FILENAME_STR		"base-application-ui-filename"
-#define PROP_APPLICATION_MAIN_WINDOW_STR		"base-application-main-window"
+#define PROP_APPLICATION_ARGC				"base-application-argc"
+#define PROP_APPLICATION_ARGV				"base-application-argv"
+#define PROP_APPLICATION_IS_GTK_INITIALIZED	"base-application-is-gtk-initialized"
+#define PROP_APPLICATION_UNIQUE_APP_HANDLE	"base-application-unique-app-handle"
+#define PROP_APPLICATION_EXIT_CODE			"base-application-exit-code"
+#define PROP_APPLICATION_EXIT_MESSAGE		"base-application-exit-message"
+#define PROP_APPLICATION_UI_XML				"base-application-ui-xml"
+#define PROP_APPLICATION_MAIN_WINDOW		"base-application-main-window"
 
 int         base_application_run( BaseApplication *application );
 
-gchar      *base_application_get_ui_filename( BaseApplication *application );
-gchar      *base_application_get_name( BaseApplication *application );
+gchar      *base_application_get_application_name( BaseApplication *application );
 gchar      *base_application_get_icon_name( BaseApplication *application );
 BaseWindow *base_application_get_main_window( BaseApplication *application );
 

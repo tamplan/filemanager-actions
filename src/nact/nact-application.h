@@ -40,7 +40,6 @@
 #include <common/na-pivot.h>
 
 #include "base-application.h"
-#include "nact-main-window.h"
 
 G_BEGIN_DECLS
 

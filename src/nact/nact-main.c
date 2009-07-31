@@ -39,12 +39,15 @@ static void na_log_handler( const gchar *log_domain, GLogLevelFlags log_level, c
 int
 main( int argc, char *argv[] )
 {
+	NactApplication *app;
+	int ret;
+
 	g_log_set_handler( NA_LOGDOMAIN_NACT, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
 	g_log_set_handler( NA_LOGDOMAIN_COMMON, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
 
-	NactApplication *app = nact_application_new_with_args( argc, argv );
+	app = nact_application_new_with_args( argc, argv );
 
-	int ret = base_application_run( BASE_APPLICATION( app ));
+	ret = base_application_run( BASE_APPLICATION( app ));
 
 	g_object_unref( app );
 
