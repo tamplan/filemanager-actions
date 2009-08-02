@@ -26,43 +26,8 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-ACLOCAL_AMFLAGS = -I m4
-
-SUBDIRS = \
-	doc					\
-	m4					\
-	icons					\
-	src					\
-	po					\
-	$(NULL)
-
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
-DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
-
-EXTRA_DIST = \
-	intltool-extract.in			\
-	intltool-merge.in			\
-	intltool-update.in			\
-	$(NULL)
-
-DISTCLEANFILES = \
-	intltool-extract			\
-	intltool-merge				\
-	intltool-update				\
-	$(NULL)
-
 docdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
 dist_doc_DATA = \
-        AUTHORS					\
-	ChangeLog				\
-	ChangeLog-2008				\
-	COPYING					\
-	INSTALL					\
-	MAINTAINERS				\
-	NEWS					\
-	README					\
-	TODO					\
+        objects-hierarchy.odg			\
 	$(NULL)
