@@ -26,44 +26,25 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-ACLOCAL_AMFLAGS = -I m4
+schema_in_files = nautilus-actions.schemas.in
 
-SUBDIRS = \
-	data						\
-	doc							\
-	m4							\
-	icons						\
-	src							\
-	po							\
-	$(NULL)
+noinst_schemadir = $(GCONF_SCHEMA_FILE_DIR)
 
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
-DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
+#schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 
-EXTRA_DIST = \
-	intltool-extract.in			\
-	intltool-merge.in			\
-	intltool-update.in			\
-	$(NULL)
+noinst_schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 
-DISTCLEANFILES = \
-	intltool-extract			\
-	intltool-merge				\
-	intltool-update				\
-	$(NULL)
+@INTLTOOL_SCHEMAS_RULE@
 
-docdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
+if GCONF_SCHEMAS_INSTALL
+NA_INSTALL_SCHEMAS  = yes
+else
+NA_INSTALL_SCHEMAS = no
+endif
 
-dist_doc_DATA = \
-	AUTHORS						\
-	ChangeLog					\
-	ChangeLog-2008				\
-	COPYING						\
-	INSTALL						\
-	MAINTAINERS					\
-	NEWS						\
-	README						\
-	TODO						\
-	$(NULL)
+install-data-am:
+	@if test "$(NA_INSTALL_SCHEMAS)" = "yes"; then \
+		for p in $(noinst_schema_DATA); do \
+			GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $$p; \
+		done \
+	fi

@@ -4,6 +4,11 @@ Version 1.11.3
     Bugfixes
 
         #...... reported by Pierre Wieser (install doc)
+
+    Various code enhancements
+
+        Do not install schemas if --disable-schemas-install option has
+        been specified.
  
 Version 1.11.2
 ==============

@@ -689,5 +689,5 @@ create_gconf_schema_entry( NAXMLWriter *writer,
 
 	xmlNewChild( locale_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_SHORT ), BAD_CAST( short_desc ));
 
-	xmlNewChild( locale_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_SHORT ), BAD_CAST( long_desc ));
+	xmlNewChild( locale_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_LONG ), BAD_CAST( long_desc ));
 }

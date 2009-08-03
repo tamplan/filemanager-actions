@@ -39,6 +39,7 @@ AC_CONFIG_HEADERS([src/config.h])
 
 AC_CONFIG_FILES([
 	Makefile
+	data/Makefile
 	doc/Makefile
 	m4/Makefile
 	icons/Makefile
@@ -98,7 +99,7 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
 AM_GLIB_GNU_GETTEXT
 
 # GConf support
-AC_PATH_PROG([GCONFTOOL],[gconftool-2])
+AC_PATH_PROG([GCONFTOOL],[gconftool-2],[no])
 AM_GCONF_SOURCE_2
 
 # note that requiring through pkg-config the version number of the
