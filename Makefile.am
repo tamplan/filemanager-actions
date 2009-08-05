@@ -42,6 +42,10 @@ SUBDIRS = \
 DISTCHECK_CONFIGURE_FLAGS = \
 	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
 
+# do not try to install schemas when making distcheck
+DISTCHECK_CONFIGURE_FLAGS += \
+	--disable-schemas-install
+
 EXTRA_DIST = \
 	intltool-extract.in			\
 	intltool-merge.in			\
@@ -54,9 +58,9 @@ DISTCLEANFILES = \
 	intltool-update				\
 	$(NULL)
 
-docdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
+pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
-dist_doc_DATA = \
+dist_pkgdoc_DATA = \
 	AUTHORS						\
 	ChangeLog					\
 	ChangeLog-2008				\
@@ -67,3 +71,6 @@ dist_doc_DATA = \
 	README						\
 	TODO						\
 	$(NULL)
+
+uninstall-hook:
+	-\rm -fr $(DESTDIR)$(pkgdocdir)

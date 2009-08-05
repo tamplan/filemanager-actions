@@ -6,6 +6,10 @@
 	* configure.ac:
 	* Makefile.am: Updated accordingly.
 
+	* Makefile.am:
+	* src/nact/Makefile.am:
+	Remove nautilus-actions subdirectories at uninstall time.
+
 	* src/common/na-xml-writer.c:
 	Fix schemas generation (long description tag).
 

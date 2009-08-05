@@ -26,8 +26,8 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-docdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
+pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
-dist_doc_DATA = \
-        objects-hierarchy.odg			\
+dist_pkgdoc_DATA = \
+	objects-hierarchy.odg			\
 	$(NULL)

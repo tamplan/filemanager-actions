@@ -30,12 +30,10 @@ bin_PROGRAMS = \
 	nautilus-actions-config-tool						\
 	$(NULL)
 
-gladedir = $(datadir)/nautilus-actions
-
 AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
-	-DGLADEDIR=\"$(gladedir)\"							\
+	-DGLADEDIR=\"$(pkgdatadir)\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"				\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
@@ -83,24 +81,25 @@ nautilus_actions_config_tool_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-glade_DATA = nautilus-actions-config-tool.ui
+pkgdata_DATA = nautilus-actions-config-tool.ui
 
 @INTLTOOL_DESKTOP_RULE@
 
-Applications_in_files = nact.desktop.in
+applications_in_files = nact.desktop.in
 
-Applications_files = $(Applications_in_files:.desktop.in=.desktop)
+applications_files = $(applications_in_files:.desktop.in=.desktop)
 
-Applicationsdir = $(datadir)/applications
+applicationsdir = $(datadir)/applications
 
-schemedir = $(datadir)/applications
+applications_DATA = $(applications_files)
 
-scheme_DATA = $(Applications_files)
-
-DISTCLEANFILES = \
-	$(Applications_files)
+CLEANFILES = \
+	$(applications_files)
 
 EXTRA_DIST = \
-	$(Applications_in_files)							\
-	$(glade_DATA)										\
+	$(applications_in_files)							\
+	$(pkgdata_DATA)										\
 	$(NULL)
+
+uninstall-hook:
+	-\rm -fr $(DESTDIR)$(pkgdatadir)

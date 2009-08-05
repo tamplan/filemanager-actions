@@ -26,13 +26,13 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-schema_in_files = nautilus-actions.schemas.in
+schemas_in_files = nautilus-actions.schemas.in
 
-noinst_schemadir = $(GCONF_SCHEMA_FILE_DIR)
+schemas_files = $(schemas_in_files:.schemas.in=.schemas)
 
-#schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+schemasdir = $(pkgdatadir)
 
-noinst_schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+schemas_DATA = $(schemas_files)
 
 @INTLTOOL_SCHEMAS_RULE@
 
@@ -42,9 +42,28 @@ else
 NA_INSTALL_SCHEMAS = no
 endif
 
-install-data-am:
+EXTRA_DIST = \
+	$(schemas_in_files)						\
+	$(NULL)
+
+install-data-hook:
 	@if test "$(NA_INSTALL_SCHEMAS)" = "yes"; then \
-		for p in $(noinst_schema_DATA); do \
+		if test `id -u` != 0; then \
+			echo "***"; \
+			echo "*** You need to be root to install GConf schemas"; \
+			echo "***"; \
+			exit 1; \
+		fi; \
+		for p in $(schemas_DATA); do \
 			GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $$p; \
+		done \
+	fi
+
+CLEANFILES = $(schemas_files)
+
+uninstall-hook:
+	@if test "$(NA_INSTALL_SCHEMAS)" = "yes"; then \
+		for p in $(schemas_DATA); do \
+			GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-uninstall-rule $$p; \
 		done \
 	fi

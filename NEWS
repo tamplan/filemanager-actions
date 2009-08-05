@@ -7,8 +7,10 @@ Version 1.11.3
 
     Various code enhancements
 
-        Do not install schemas if --disable-schemas-install option has
-        been specified.
+        Do not install GConf schemas if --disable-schemas-install option
+        has been specified.
+
+        Remove nautilus-actions subdirectories at uninstall time.
  
 Version 1.11.2
 ==============

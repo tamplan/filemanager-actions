@@ -1,3 +1,4 @@
+data/nautilus-actions.schemas.in
 src/common/na-action.h
 src/common/na-iio-provider.c
 src/common/na-xml-names.h
