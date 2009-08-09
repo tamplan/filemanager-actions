@@ -1,3 +1,14 @@
+2009-08-09 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	Fix #590709: Too much markup in translatable strings (reported
+	by Claude Paroz).
+
+	* src/nact/nact-iadvanced-tab.c:
+	Fix #590711: String containing pipe char is ambiguous to
+	translate (reported by Claude Paroz).
+
 2009-08-03 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/nautilus-actions.schemas.in:
