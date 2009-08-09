@@ -897,10 +897,10 @@ Defining several profiles lets you have several commands, each applying with a d
     <child>
       <object class="GtkFileChooserWidget" id="filechooserwidget1">
         <property name="visible">True</property>
-        <property name="select_multiple">True</property>
-        <property name="use_preview_label">False</property>
         <property name="preview_widget_active">False</property>
+        <property name="select_multiple">True</property>
         <property name="local_only">False</property>
+        <property name="use_preview_label">False</property>
       </object>
     </child>
     <child>
@@ -1003,10 +1003,10 @@ to extend a selection.</property>
         <child>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
-            <property name="use_preview_label">False</property>
-            <property name="action">select-folder</property>
             <property name="preview_widget_active">False</property>
+            <property name="action">select-folder</property>
             <property name="local_only">False</property>
+            <property name="use_preview_label">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -1226,7 +1226,6 @@ The exported file may later be imported via :
     </child>
   </object>
   <object class="GtkWindow" id="LegendDialog">
-    <property name="resizable">False</property>
     <property name="type_hint">dialog</property>
     <child>
       <object class="GtkVBox" id="vbox11">
@@ -1278,169 +1277,332 @@ The exported file may later be imported via :
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="vbox397">
+          <object class="GtkTable" id="table1">
             <property name="visible">True</property>
-            <property name="spacing">6</property>
+            <property name="n_rows">11</property>
+            <property name="n_columns">2</property>
+            <property name="column_spacing">2</property>
+            <property name="row_spacing">6</property>
             <child>
-              <object class="GtkLabel" id="label17">
+              <object class="GtkLabel" id="label3">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label4">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%f&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label5">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label6">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%m&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label7">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">4</property>
+                <property name="bottom_attach">5</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label8">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%p&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">5</property>
+                <property name="bottom_attach">6</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label9">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%R&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">6</property>
+                <property name="bottom_attach">7</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label10">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">7</property>
+                <property name="bottom_attach">8</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label11">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">8</property>
+                <property name="bottom_attach">9</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label12">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">9</property>
+                <property name="bottom_attach">10</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label13">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%%&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">10</property>
+                <property name="bottom_attach">11</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label14">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt;: base directory of the (first) selected file or folder</property>
-                <property name="use_markup">True</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">base directory of the (first) selected file or folder.</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label21">
+              <object class="GtkLabel" id="label19">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%f&lt;/b&gt;: the name of the (first) selected file or folder</property>
-                <property name="use_markup">True</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">the name of the (first) selected file or folder.</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+                <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label18">
+              <object class="GtkLabel" id="label24">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt;: hostname of the (first) URI</property>
-                <property name="use_markup">True</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">hostname of the (first) URI.</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
+                <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label33">
+              <object class="GtkLabel" id="label26">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%m&lt;/b&gt;: space-separated list of the basenames of the selected
-file(s)/folder(s)</property>
-                <property name="use_markup">True</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">space-separated list of the basenames of the selected file(s)/folder(s).</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">3</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+                <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label23">
+              <object class="GtkLabel" id="label27">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt;: space-separated list of the full pathanmes of the selected file(s) or folder(s)</property>
-                <property name="use_markup">True</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">space-separated list of the full pathnames of the selected file(s) or folder(s).</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">4</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">4</property>
+                <property name="bottom_attach">5</property>
+                <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label1">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%p&lt;/b&gt;: port number of the (first) selected URI</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="position">5</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label2">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%R&lt;/b&gt;: space-separated list of selected URIs</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="position">6</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label16">
+              <object class="GtkLabel" id="label28">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt;: scheme of the (first) URI</property>
-                <property name="use_markup">True</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">port number of the (first) selected URI.</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">7</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">5</property>
+                <property name="bottom_attach">6</property>
+                <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label15">
+              <object class="GtkLabel" id="label29">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt;: (first) URI</property>
-                <property name="use_markup">True</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">space-separated list of selected URIs.</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">8</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">6</property>
+                <property name="bottom_attach">7</property>
+                <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label20">
+              <object class="GtkLabel" id="label30">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt;: username of the (first) URI</property>
-                <property name="use_markup">True</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">scheme of the (first) URI.</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">9</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">7</property>
+                <property name="bottom_attach">8</property>
+                <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label22">
+              <object class="GtkLabel" id="label31">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%%&lt;/b&gt;: a percent sign</property>
-                <property name="use_markup">True</property>
-                <property name="wrap">True</property>
+                <property name="label" translatable="yes">(first) URI.</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">10</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">8</property>
+                <property name="bottom_attach">9</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label32">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">username of the (first) URI.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">9</property>
+                <property name="bottom_attach">10</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label34">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">a percent sign.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">10</property>
+                <property name="bottom_attach">11</property>
+                <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
           </object>
           <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="padding">4</property>
             <property name="position">2</property>
           </packing>
         </child>
@@ -1449,16 +1611,16 @@ file(s)/folder(s)</property>
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandExamplePreLabel"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandExamplePreLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
 </interface>
