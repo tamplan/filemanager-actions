@@ -647,11 +647,14 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	dump( window );
 #endif
 
-	gchar *text = g_strdup( _( "<b>About to export selected actions :</b>\n\n" ));
+	/* i18n: this is the title of the confirm page of the export assistant */
+	gchar *text = g_strdup( _( "About to export selected actions:" ));
+	gchar *tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
+	g_free( text );
+	text = tmp;
 
 	GSList *actions = nact_iactions_list_get_selected_actions( NACT_WINDOW( window ));
 	GSList *ia;
-	gchar *tmp;
 
 	for( ia = actions ; ia ; ia = ia->next ){
 		tmp = g_strdup_printf( "%s\t%s\n", text, na_action_get_label( NA_ACTION( ia->data )));
@@ -661,7 +664,10 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 
 	g_assert( window->private->uri && strlen( window->private->uri ));
 
-	tmp = g_strdup_printf( _( "%s\n\n<b>Into the destination folder :</b>\n\n\t%s" ), text, window->private->uri );
+	/* i18n: all exported actions go to one destination folder */
+	gchar *text2 = g_strdup( _( "Into the destination folder:" ));
+	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n\t%s", text, text2, window->private->uri );
+	g_free( text2 );
 	g_free( text );
 	text = tmp;
 
@@ -687,7 +693,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 			break;
 	}
 
-	tmp = g_strdup_printf( _( "%s\n\n<b>%s</b>\n\n%s" ), text, label1, label2 );
+	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label1, label2 );
 	g_free( label2 );
 	g_free( label1 );
 	g_free( text );

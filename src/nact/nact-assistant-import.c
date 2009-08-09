@@ -410,8 +410,11 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	static const gchar *thisfn = "nact_assistant_import_prepare_confirm";
 	g_debug( "%s: window=%p, assistant=%p, page=%p", thisfn, window, assistant, page );
 
-	gchar *text = g_strdup( _( "<b>About to import selected files :</b>\n\n" ));
-	gchar *tmp;
+	/* i18n: the title of the confirm page of the import assistant */
+	gchar *text = g_strdup( _( "About to import selected files:" ));
+	gchar *tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
+	g_free( text );
+	text = tmp;
 
 	GtkWidget *chooser = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FILES_SELECTION );
 	GSList *uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
