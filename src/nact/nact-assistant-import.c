@@ -465,12 +465,11 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		if( str->action ){
 			gchar *uuid = na_action_get_uuid( str->action );
 			gchar *label = na_action_get_label( str->action );
-			/* i18n: this is the globally unique identifier of the newly imported action */
-			text2 = g_strdup( _( "UUID:" ));
-			tmp = g_strdup_printf( "%s\t\t%s %s\t%s\n\n", text, text2, uuid, label );
-			g_free( text2 );
+			/* i18n: this is the globally unique identifier and the label of the newly imported action */
+			text2 = g_strdup_printf( _( "UUID: %s\t%s" ), uuid, label);
 			g_free( label );
 			g_free( uuid );
+			tmp = g_strdup_printf( "%s\t\t%s\n\n", text, text2 );
 
 			window->private->actions = g_slist_prepend( window->private->actions, str->action );
 
