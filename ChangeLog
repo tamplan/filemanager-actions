@@ -23,7 +23,7 @@
 	* doc/Makefile.am:
 	* doc/objects-hierarchy.odg:
 	Distribute a description of objects hierarchy.
-	Fix #...... (install doc)
+	Fix #590398 (install doc)
 
 2009-07-30 Pierre Wieser <pwieser@trychlos.org>
 
