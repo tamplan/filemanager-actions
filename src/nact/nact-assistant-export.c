@@ -721,21 +721,33 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 	dump( window );
 #endif
 
-	gchar *text, *tmp;
+	gchar *text, *tmp, *text2;
 
 	if( window->private->errors ){
-		text = g_strdup_printf(
-				_( "<b>One or more errors have been detected when exporting actions.</b>\n\n%s" ),
-				window->private->reason );
-
-	} else {
-		text = g_strdup( _( "<b>Selected actions have been successfully exported...</b>\n\n" ));
-
-		tmp = g_strdup_printf( _( "%s<b>... in folder :</b>\n\n\t%s/\n\n" ), text, window->private->uri );
+		/* i18n: error message displayed in the result page of the export assistant */
+		text = g_strdup( _( "One or more errors have been detected when exporting actions." ));
+		tmp = g_strdup_printf( _( "<b>%s</b>\n\n%s" ), text, window->private->reason );
 		g_free( text );
 		text = tmp;
 
-		tmp = g_strdup_printf( _( "%s<b>... as files :</b>\n\n" ), text );
+	} else {
+		/* i18n: result of the export assistant */
+		text = g_strdup( _( "Selected actions have been successfully exported..." ));
+		tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
+		g_free( text );
+		text = tmp;
+
+		/* i18n: the target folder is displayed in its own line */
+		text2 = g_strdup( _( "... in folder:" ));
+		tmp = g_strdup_printf( _( "%s<b>%s</b>\n\n\t%s/\n\n" ), text, text2, window->private->uri );
+		g_free( text2 );
+		g_free( text );
+		text = tmp;
+
+		/* i18n: the export file for each actions is displayed in its own line */
+		text2 = g_strdup( _( "... as files:" ));
+		tmp = g_strdup_printf( _( "%s<b>%s</b>\n\n" ), text, text2 );
+		g_free( text2 );
 		g_free( text );
 		text = tmp;
 

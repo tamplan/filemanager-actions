@@ -437,10 +437,15 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 
 	do_import( window, assistant );
 
-	gchar *text, *tmp;
+	gchar *text, *tmp, *text2;
 	GSList *is;
 
-	text = g_strdup( _( "<b>Selected files have been imported :</b>\n\n" ));
+	/* i18n: result of the import assistant */
+	text = g_strdup( _( "Selected files have been imported:" ));
+
+	tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
+	g_free( text );
+	text = tmp;
 
 	for( is = window->private->results ; is ; is = is->next ){
 
@@ -449,7 +454,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		GFile *file = g_file_new_for_uri( str->uri );
 		gchar *bname = g_file_get_basename( file );
 		g_object_unref( file );
-		tmp = g_strdup_printf( _( "%s\t%s\n\n" ), text, bname );
+		tmp = g_strdup_printf( "%s\t%s\n\n", text, bname );
 		g_free( text );
 		text = tmp;
 		g_free( bname );
@@ -457,14 +462,20 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		if( str->action ){
 			gchar *uuid = na_action_get_uuid( str->action );
 			gchar *label = na_action_get_label( str->action );
-			tmp = g_strdup_printf( _( "%s\t\tUUID: %s\t%s\n\n" ), text, uuid, label );
+			/* i18n: this is the globally unique identifier of the newly imported action */
+			text2 = g_strdup( _( "UUID:" ));
+			tmp = g_strdup_printf( "%s\t\t%s %s\t%s\n\n", text, text2, uuid, label );
+			g_free( text2 );
 			g_free( label );
 			g_free( uuid );
 
 			window->private->actions = g_slist_prepend( window->private->actions, str->action );
 
 		} else {
-			tmp = g_strdup_printf( "%s\t\t NOT OK\n\n", text );
+			/* i18n: just indicate that the import of this file was unsuccessfull */
+			text2 = g_strdup( _( "NOT OK" ));
+			tmp = g_strdup_printf( "%s\t\t %s\n\n", text, text2 );
+			g_free( text2 );
 		}
 
 		g_free( text );
