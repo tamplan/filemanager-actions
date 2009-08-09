@@ -1,17 +1,21 @@
 Version 1.11.3
 ==============
 
-    Bugfixes
+	Bugfixes
 
-        #590398 reported by Pierre Wieser (install doc)
+		#590398 reported by Pierre Wieser (install doc)
 
-    Various code enhancements
+	Various code enhancements
 
-        Do not install GConf schemas if --disable-schemas-install option
-        has been specified.
+		Do not install GConf schemas if --disable-schemas-install option
+		has been specified.
 
-        Remove nautilus-actions subdirectories at uninstall time.
- 
+		Remove nautilus-actions subdirectories at uninstall time.
+
+	New and updated translations
+
+		es (Jorge González)
+
 Version 1.11.2
 ==============
  
