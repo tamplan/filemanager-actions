@@ -54,6 +54,7 @@ struct NAActionPrivate {
 	gchar         *version;
 	gchar         *tooltip;
 	gchar         *icon;
+	gboolean       enabled;
 
 	/* list of action's profiles as NAActionProfile objects
 	 *  (thanks, Frederic ;-))
@@ -80,6 +81,7 @@ enum {
 	PROP_NAACTION_VERSION,
 	PROP_NAACTION_TOOLTIP,
 	PROP_NAACTION_ICON,
+	PROP_NAACTION_ENABLED,
 	PROP_NAACTION_READONLY,
 	PROP_NAACTION_PROVIDER
 };
@@ -89,6 +91,7 @@ enum {
 #define PROP_NAACTION_VERSION_STR		"na-action-version"
 #define PROP_NAACTION_TOOLTIP_STR		"na-action-tooltip"
 #define PROP_NAACTION_ICON_STR			"na-action-icon"
+#define PROP_NAACTION_ENABLED_STR		"na-action-enabled"
 #define PROP_NAACTION_READONLY_STR		"na-action-read-only"
 #define PROP_NAACTION_PROVIDER_STR		"na-action-provider"
 
@@ -197,6 +200,13 @@ class_init( NAActionClass *klass )
 	g_object_class_install_property( object_class, PROP_NAACTION_ICON, spec );
 
 	spec = g_param_spec_boolean(
+			PROP_NAACTION_ENABLED_STR,
+			"Enabled",
+			"Whether this action is enabled", TRUE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_NAACTION_ENABLED, spec );
+
+	spec = g_param_spec_boolean(
 			PROP_NAACTION_READONLY_STR,
 			"Read-only flag",
 			"Is this action only readable", FALSE,
@@ -238,6 +248,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->version = g_strdup( NA_ACTION_LATEST_VERSION );
 	self->private->tooltip = g_strdup( "" );
 	self->private->icon = g_strdup( "" );
+	self->private->enabled = TRUE;
 	self->private->read_only = FALSE;
 	self->private->provider = NULL;
 }
@@ -267,6 +278,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 		case PROP_NAACTION_ICON:
 			g_value_set_string( value, self->private->icon );
+			break;
+
+		case PROP_NAACTION_ENABLED:
+			g_value_set_boolean( value, self->private->enabled );
 			break;
 
 		case PROP_NAACTION_READONLY:
@@ -311,6 +326,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 		case PROP_NAACTION_ICON:
 			g_free( self->private->icon );
 			self->private->icon = g_value_dup_string( value );
+			break;
+
+		case PROP_NAACTION_ENABLED:
+			self->private->enabled = g_value_get_boolean( value );
 			break;
 
 		case PROP_NAACTION_READONLY:
@@ -545,6 +564,26 @@ na_action_get_verified_icon_name( const NAAction *action )
 }
 
 /**
+ * na_action_is_enabled:
+ * @action: the #NAAction object to be requested.
+ *
+ * Is the specified action enabled ?
+ * When disabled, the action is never candidate to any selection
+ *
+ * Returns: %TRUE if the action is enabled, %FALSE else.
+ */
+gboolean
+na_action_is_enabled( const NAAction *action )
+{
+	g_assert( NA_IS_ACTION( action ));
+
+	gboolean enabled;
+	g_object_get( G_OBJECT( action ), PROP_NAACTION_ENABLED_STR, &enabled, NULL );
+
+	return( enabled );
+}
+
+/**
  * na_action_is_readonly:
  * @action: the #NAAction object to be requested.
  *
@@ -721,6 +760,21 @@ na_action_set_icon( NAAction *action, const gchar *icon )
 	g_assert( NA_IS_ACTION( action ));
 
 	g_object_set( G_OBJECT( action ), PROP_NAACTION_ICON_STR, icon, NULL );
+}
+
+/**
+ * na_action_set_enabled:
+ * @action: the #NAAction object to be updated.
+ * @enabled: the indicator to be set.
+ *
+ * Sets whether the action is enabled or not.
+ */
+void
+na_action_set_enabled( NAAction *action, gboolean enabled )
+{
+	g_assert( NA_IS_ACTION( action ));
+
+	g_object_set( G_OBJECT( action ), PROP_NAACTION_ENABLED_STR, enabled, NULL );
 }
 
 /**
@@ -959,6 +1013,7 @@ object_dump( const NAObject *action )
 	g_debug( "%s:   version='%s'", thisfn, self->private->version );
 	g_debug( "%s:   tooltip='%s'", thisfn, self->private->tooltip );
 	g_debug( "%s:      icon='%s'", thisfn, self->private->icon );
+	g_debug( "%s:   enabled='%s'", thisfn, self->private->enabled ? "True" : "False" );
 	g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
 	g_debug( "%s:  provider=%p", thisfn, self->private->provider );
 
@@ -989,13 +1044,14 @@ object_copy( NAObject *target, const NAObject *source )
 	g_assert( NA_IS_ACTION( target ));
 
 	gchar *version, *tooltip, *icon;
-	gboolean readonly;
+	gboolean enabled, readonly;
 	gpointer provider;
 
 	g_object_get( G_OBJECT( source ),
 			PROP_NAACTION_VERSION_STR, &version,
 			PROP_NAACTION_TOOLTIP_STR, &tooltip,
 			PROP_NAACTION_ICON_STR, &icon,
+			PROP_NAACTION_ENABLED_STR, &enabled,
 			PROP_NAACTION_READONLY_STR, &readonly,
 			PROP_NAACTION_PROVIDER_STR, &provider,
 			NULL );
@@ -1004,6 +1060,7 @@ object_copy( NAObject *target, const NAObject *source )
 			PROP_NAACTION_VERSION_STR, version,
 			PROP_NAACTION_TOOLTIP_STR, tooltip,
 			PROP_NAACTION_ICON_STR, icon,
+			PROP_NAACTION_ENABLED_STR, enabled,
 			PROP_NAACTION_READONLY_STR, readonly,
 			PROP_NAACTION_PROVIDER_STR, provider,
 			NULL );
@@ -1036,6 +1093,10 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		( g_utf8_collate( first->private->tooltip, second->private->tooltip ) == 0 ) &&
 		( g_utf8_collate( first->private->icon, second->private->icon ) == 0 );
 
+	if( equal ){
+		equal = ( first->private->enabled && second->private->enabled ) ||
+				( !first->private->enabled && !second->private->enabled );
+	}
 	if( equal ){
 		equal = ( g_slist_length( first->private->profiles ) == g_slist_length( second->private->profiles ));
 	}

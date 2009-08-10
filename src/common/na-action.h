@@ -60,6 +60,7 @@ gchar           *na_action_get_version( const NAAction *action );
 gchar           *na_action_get_tooltip( const NAAction *action );
 gchar           *na_action_get_icon( const NAAction *action );
 gchar           *na_action_get_verified_icon_name( const NAAction *action );
+gboolean         na_action_is_enabled( const NAAction *action );
 gboolean         na_action_is_readonly( const NAAction *action );
 NAIIOProvider   *na_action_get_provider( const NAAction *action );
 
@@ -69,6 +70,7 @@ void             na_action_set_label( NAAction *action, const gchar *label );
 void             na_action_set_version( NAAction *action, const gchar *version );
 void             na_action_set_tooltip( NAAction *action, const gchar *tooltip );
 void             na_action_set_icon( NAAction *action, const gchar *icon_name );
+void             na_action_set_enabled( NAAction *action, gboolean enabled );
 void             na_action_set_readonly( NAAction *action, gboolean readonly );
 void             na_action_set_provider( NAAction *action, const NAIIOProvider *provider );
 

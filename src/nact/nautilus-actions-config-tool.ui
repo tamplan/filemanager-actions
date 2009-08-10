@@ -86,6 +86,7 @@
                       <object class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
+                        <property name="spacing">10</property>
                         <child>
                           <object class="GtkVBox" id="vbox4">
                             <property name="visible">True</property>
@@ -115,6 +116,7 @@
                                     <property name="xalign">1</property>
                                   </object>
                                   <packing>
+                                    <property name="x_options">GTK_FILL</property>
                                     <property name="y_options"></property>
                                   </packing>
                                 </child>
@@ -127,6 +129,7 @@
                                   <packing>
                                     <property name="top_attach">1</property>
                                     <property name="bottom_attach">2</property>
+                                    <property name="x_options">GTK_FILL</property>
                                     <property name="y_options"></property>
                                   </packing>
                                 </child>
@@ -139,6 +142,7 @@
                                   <packing>
                                     <property name="top_attach">2</property>
                                     <property name="bottom_attach">3</property>
+                                    <property name="x_options">GTK_FILL</property>
                                     <property name="y_options"></property>
                                   </packing>
                                 </child>
@@ -242,6 +246,90 @@
                             <property name="expand">False</property>
                             <property name="padding">10</property>
                             <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkVBox" id="vbox15">
+                            <property name="visible">True</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">10</property>
+                            <child>
+                              <object class="GtkLabel" id="label3">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Action properties&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkTable" id="table4">
+                                <property name="visible">True</property>
+                                <property name="n_rows">2</property>
+                                <property name="n_columns">2</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="ActionEnabledButton">
+                                    <property name="label" translatable="yes">Enabled</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">When the action is disabled, it will never appear in the Nautilus context menu.</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="ActionReadonlyButton">
+                                    <property name="label" translatable="yes">Read-only</property>
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">If only readable, the action cannot be edited.</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="label4">
+                                    <property name="width_request">20</property>
+                                    <property name="visible">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="x_options"></property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="label8">
+                                    <property name="width_request">20</property>
+                                    <property name="visible">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options"></property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </object>
@@ -1178,7 +1266,7 @@ The exported file may later be imported via :
                   <object class="GtkLabel" id="ExportGConfDumpLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">This is the preferred format for newly exported actions.
+                    <property name="label" translatable="yes">This should be the preferred format for newly exported actions.
 The exported file may later be imported via :
 - Import assistant of the Nautilus Actions Configuration Tool,
 - or via the gconftool-2 --load command-line tool.</property>
@@ -1611,16 +1699,16 @@ The exported file may later be imported via :
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="CommandExamplePreLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
 </interface>

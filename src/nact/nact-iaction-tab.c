@@ -75,6 +75,8 @@ static GtkTreeModel *create_stock_icon_model( void );
 static gint          sort_stock_ids( gconstpointer a, gconstpointer b );
 static gchar        *strip_underscore( const gchar *text );
 static void          display_icon( NactWindow *window, GtkWidget *image, gboolean display );
+static void          on_enabled_toggled( GtkToggleButton *button, gpointer user_data );
+static GtkButton    *get_enabled_button( NactWindow *window );
 
 static void          display_status( NactWindow *window, const gchar *status );
 static void          hide_status( NactWindow *window );
@@ -186,6 +188,9 @@ nact_iaction_tab_runtime_init( NactWindow *dialog )
 
 	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconBrowseButton" );
 	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_icon_browse ));
+
+	GtkButton *enabled_button = get_enabled_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( enabled_button ), "toggled", G_CALLBACK( on_enabled_toggled ));
 }
 
 /**
@@ -246,6 +251,11 @@ nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action )
 
 	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconBrowseButton" );
 	gtk_widget_set_sensitive( button, enabled );
+
+	GtkButton *enabled_button = get_enabled_button( dialog );
+	gboolean enabled_action = action ? na_action_is_enabled( action ) : FALSE;
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( enabled_button ), enabled_action );
+	gtk_widget_set_sensitive( GTK_WIDGET( enabled_button ), enabled );
 }
 
 /**
@@ -572,6 +582,26 @@ display_icon( NactWindow *window, GtkWidget *image, gboolean show )
 		gtk_widget_hide( image );
 		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 	}
+}
+
+static void
+on_enabled_toggled( GtkToggleButton *button, gpointer user_data )
+{
+	g_assert( NACT_IS_WINDOW( user_data ));
+	NactWindow *dialog = NACT_WINDOW( user_data );
+
+	NAAction *edited = v_get_edited_action( dialog );
+	if( edited ){
+		gboolean enabled = gtk_toggle_button_get_active( button );
+		na_action_set_enabled( edited, enabled );
+		v_field_modified( dialog );
+	}
+}
+
+static GtkButton *
+get_enabled_button( NactWindow *window )
+{
+	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "ActionEnabledButton" )));
 }
 
 static void

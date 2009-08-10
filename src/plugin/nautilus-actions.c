@@ -270,6 +270,10 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 			NAAction *action = NA_ACTION( ia->data );
 
+			if( !na_action_is_enabled( action )){
+				continue;
+			}
+
 			label = na_action_get_label( action );
 
 			if( !label || !g_utf8_strlen( label, -1 )){

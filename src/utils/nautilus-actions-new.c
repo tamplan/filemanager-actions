@@ -46,6 +46,7 @@
 static gchar     *label           = "";
 static gchar     *tooltip         = "";
 static gchar     *icon            = "";
+static gboolean   enabled         = TRUE;
 static gchar     *command         = "";
 static gchar     *parameters      = "";
 static gchar    **basenames_array = NULL;
@@ -63,6 +64,7 @@ static GOptionEntry entries[] = {
 	{ "label"                , 'l', 0, G_OPTION_ARG_STRING      , &label          ,	N_("The label of the menu item (mandatory)"), N_("LABEL") },
 	{ "tooltip"              , 't', 0, G_OPTION_ARG_STRING      , &tooltip        , N_("The tooltip of the menu item"), N_("TOOLTIP") },
 	{ "icon"                 , 'i', 0, G_OPTION_ARG_STRING      , &icon           , N_("The icon of the menu item (filename or GTK stock ID)"), N_("ICON") },
+	{ "enabled"              , 'e', 0, G_OPTION_ARG_NONE        , &enabled        , N_("Whether the action is enabled"), NULL },
 	{ "command"              , 'c', 0, G_OPTION_ARG_FILENAME    , &command        , N_("The path of the command"), N_("PATH") },
 	{ "parameters"           , 'p', 0, G_OPTION_ARG_STRING      , &parameters     , N_("The parameters of the command"), N_("PARAMS") },
 	{ "match"                , 'm', 0, G_OPTION_ARG_STRING_ARRAY, &basenames_array, N_("A pattern to match selected files against. May include wildcards (* or ?) (you must set one option for each pattern you need)"), N_("EXPR") },
@@ -203,6 +205,7 @@ get_action_from_cmdline( void )
 	na_action_set_label( action, label );
 	na_action_set_tooltip( action, tooltip );
 	na_action_set_icon( action, icon );
+	na_action_set_enabled( action, enabled );
 
 	na_action_profile_set_path( profile, command );
 	na_action_profile_set_parameters( profile, parameters );

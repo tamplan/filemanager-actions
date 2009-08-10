@@ -88,6 +88,7 @@ static GConfReaderStruct reader_str[] = {
 	{ ACTION_LABEL_ENTRY        , FALSE,  TRUE, FALSE, FALSE },
 	{ ACTION_TOOLTIP_ENTRY      , FALSE,  TRUE, FALSE, FALSE },
 	{ ACTION_ICON_ENTRY         , FALSE, FALSE, FALSE, FALSE },
+	{ ACTION_ENABLED_ENTRY      , FALSE, FALSE, FALSE, FALSE },
 	{ ACTION_PROFILE_LABEL_ENTRY, FALSE,  TRUE,  TRUE, FALSE },
 	{ ACTION_PATH_ENTRY         , FALSE, FALSE,  TRUE, FALSE },
 	{ ACTION_PARAMETERS_ENTRY   , FALSE, FALSE,  TRUE, FALSE },
@@ -1068,6 +1069,9 @@ apply_values( NactXMLReader *reader )
 
 		} else if( !strcmp( reader->private->entry, ACTION_ICON_ENTRY )){
 			na_action_set_icon( reader->private->action, reader->private->value );
+
+		} else if( !strcmp( reader->private->entry, ACTION_ENABLED_ENTRY )){
+			na_action_set_enabled( reader->private->action, na_utils_schema_to_boolean( reader->private->value, TRUE ));
 
 		} else if( !strcmp( reader->private->entry, ACTION_PROFILE_LABEL_ENTRY )){
 			na_action_profile_set_label( reader->private->profile, reader->private->value );

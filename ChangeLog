@@ -1,3 +1,33 @@
+2009-08-10 Pierre Wieser <pwieser@trychlos.org>
+
+	* data/nautilus-actions.schemas.in:
+	Add schema description for 'enabled' action property.
+
+	* src/common/na-action.c:
+	* src/common/na-action.h:
+	Define 'enabled' new action property.
+
+	* src/common/na-gconf-keys.h:
+	* src/common/na-xml-names.h:
+	Define GConf entry and schema description for 'enabled' property.
+
+	* src/common/na-gconf.c:
+	Read 'enabled' property from GConf.
+
+	* src/common/na-xml-writer.c:
+	* src/nact/nact-xml-reader.c:
+	Import and export 'enabled' action property.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Display and update 'enabled' action property.
+
+	* src/plugin/nautilus-actions.c:
+	Do not display item if action is disabled.
+
+	* src/utils/nautilus-actions-new.c:
+	Add '--enabled' command-line option.
+
 2009-08-09 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-assistant-export.c:

@@ -52,6 +52,17 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/enabled</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether the action is enabled</short>
+        <long>If the action is disabled, it will never appear in the Nautilus context menu</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/nautilus-actions/configurations/desc-name</key>
       <owner>nautilus-actions</owner>
       <type>string</type>

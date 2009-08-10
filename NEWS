@@ -3,6 +3,7 @@ Version 1.11.3
 
 	Bugfixes
 
+		#325519 asked by Frederic Ruaudel (enabled property)
 		#590398 reported by Pierre Wieser (install doc)
 		#590709 reported by Claude Paroz (markup in translatable strings)
 		#590711 reported by Claude Paroz (pipe char is ambiguous to translate)

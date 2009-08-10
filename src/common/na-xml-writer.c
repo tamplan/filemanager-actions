@@ -357,6 +357,12 @@ create_xml_schema( NAXMLWriter *writer, gint format, NAAction *action )
 	create_schema_entry( writer, format, NULL, ACTION_ICON_ENTRY, icon, doc, list_node, "string", FALSE, ACTION_ICON_DESC_SHORT, ACTION_ICON_DESC_LONG );
 	g_free( icon );
 
+	/* enabled */
+	gboolean enabled = na_action_is_enabled( action );
+	gchar *text = na_utils_boolean_to_schema( enabled );
+	create_schema_entry( writer, format, NULL, ACTION_ENABLED_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_ENABLED_DESC_SHORT, ACTION_ENABLED_DESC_LONG );
+	g_free( text );
+
 	GSList *profiles = na_action_get_profiles( action );
 	GSList *ip;
 
@@ -382,7 +388,7 @@ create_xml_schema( NAXMLWriter *writer, gint format, NAAction *action )
 
 		/* basenames */
 		GSList *basenames = na_action_profile_get_basenames( profile );
-		gchar *text = na_utils_gslist_to_schema( basenames );
+		text = na_utils_gslist_to_schema( basenames );
 		create_schema_entry( writer, format, profile_dir, ACTION_BASENAMES_ENTRY, text, doc, list_node, "list", FALSE, ACTION_BASENAMES_DESC_SHORT, ACTION_BASENAMES_DESC_LONG );
 		g_free( text );
 		na_utils_free_string_list( basenames );
@@ -520,6 +526,12 @@ create_xml_dump( NAXMLWriter *writer, gint format, NAAction *action )
 	create_dump_entry( writer, format, NULL, ACTION_ICON_ENTRY, icon, doc, list_node, "string" );
 	g_free( icon );
 
+	/* enabled */
+	gboolean enabled = na_action_is_enabled( action );
+	gchar *text = na_utils_boolean_to_schema( enabled );
+	create_dump_entry( writer, format, NULL, ACTION_ENABLED_ENTRY, text, doc, list_node, "bool" );
+	g_free( text );
+
 	GSList *profiles = na_action_get_profiles( action );
 	GSList *ip;
 
@@ -545,7 +557,7 @@ create_xml_dump( NAXMLWriter *writer, gint format, NAAction *action )
 
 		/* basenames */
 		GSList *basenames = na_action_profile_get_basenames( profile );
-		gchar *text = na_utils_gslist_to_schema( basenames );
+		text = na_utils_gslist_to_schema( basenames );
 		create_dump_entry( writer, format, profile_dir, ACTION_BASENAMES_ENTRY, text, doc, list_node, "list" );
 		g_free( text );
 		na_utils_free_string_list( basenames );
@@ -639,20 +651,21 @@ create_gconf_schema( NAXMLWriter *writer )
 	xmlDocSetRootElement( doc, root_node );
 	xmlNodePtr list_node = xmlNewChild( root_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_LIST ), NULL );
 
-	create_gconf_schema_entry( writer, ACTION_VERSION_ENTRY       , doc, list_node, "string", ACTION_VERSION_DESC_SHORT     , ACTION_VERSION_DESC_LONG, NAUTILUS_ACTIONS_CONFIG_VERSION, FALSE );
-	create_gconf_schema_entry( writer, ACTION_LABEL_ENTRY         , doc, list_node, "string", ACTION_LABEL_DESC_SHORT       , ACTION_LABEL_DESC_LONG, "", TRUE );
-	create_gconf_schema_entry( writer, ACTION_TOOLTIP_ENTRY       , doc, list_node, "string", ACTION_TOOLTIP_DESC_SHORT     , ACTION_TOOLTIP_DESC_LONG, "", TRUE );
-	create_gconf_schema_entry( writer, ACTION_ICON_ENTRY          , doc, list_node, "string", ACTION_ICON_DESC_SHORT        , ACTION_ICON_DESC_LONG, "", FALSE );
+	create_gconf_schema_entry( writer, ACTION_VERSION_ENTRY       , doc, list_node, "string", ACTION_VERSION_DESC_SHORT     , ACTION_VERSION_DESC_LONG     , NAUTILUS_ACTIONS_CONFIG_VERSION, FALSE );
+	create_gconf_schema_entry( writer, ACTION_LABEL_ENTRY         , doc, list_node, "string", ACTION_LABEL_DESC_SHORT       , ACTION_LABEL_DESC_LONG       , "", TRUE );
+	create_gconf_schema_entry( writer, ACTION_TOOLTIP_ENTRY       , doc, list_node, "string", ACTION_TOOLTIP_DESC_SHORT     , ACTION_TOOLTIP_DESC_LONG     , "", TRUE );
+	create_gconf_schema_entry( writer, ACTION_ICON_ENTRY          , doc, list_node, "string", ACTION_ICON_DESC_SHORT        , ACTION_ICON_DESC_LONG        , "", FALSE );
+	create_gconf_schema_entry( writer, ACTION_ENABLED_ENTRY       , doc, list_node, "bool"  , ACTION_ENABLED_DESC_SHORT     , ACTION_ENABLED_DESC_LONG     , "true", FALSE );
 	create_gconf_schema_entry( writer, ACTION_PROFILE_LABEL_ENTRY , doc, list_node, "string", ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, NA_ACTION_PROFILE_DEFAULT_LABEL, TRUE );
-	create_gconf_schema_entry( writer, ACTION_PATH_ENTRY          , doc, list_node, "string", ACTION_PATH_DESC_SHORT        , ACTION_PATH_DESC_LONG, "", FALSE );
-	create_gconf_schema_entry( writer, ACTION_PARAMETERS_ENTRY    , doc, list_node, "string", ACTION_PARAMETERS_DESC_SHORT  , ACTION_PARAMETERS_DESC_LONG, "", FALSE );
-	create_gconf_schema_entry( writer, ACTION_BASENAMES_ENTRY     , doc, list_node, "list"  , ACTION_BASENAMES_DESC_SHORT   , ACTION_BASENAMES_DESC_LONG, "[*]", FALSE );
-	create_gconf_schema_entry( writer, ACTION_MATCHCASE_ENTRY     , doc, list_node, "bool"  , ACTION_MATCHCASE_DESC_SHORT   , ACTION_MATCHCASE_DESC_LONG, "true", FALSE );
-	create_gconf_schema_entry( writer, ACTION_MIMETYPES_ENTRY     , doc, list_node, "list"  , ACTION_MIMETYPES_DESC_SHORT   , ACTION_MIMETYPES_DESC_LONG, "[*/*]", FALSE );
-	create_gconf_schema_entry( writer, ACTION_ISFILE_ENTRY        , doc, list_node, "bool"  , ACTION_ISFILE_DESC_SHORT      , ACTION_ISFILE_DESC_LONG, "true", FALSE );
-	create_gconf_schema_entry( writer, ACTION_ISDIR_ENTRY         , doc, list_node, "bool"  , ACTION_ISDIR_DESC_SHORT       , ACTION_ISDIR_DESC_LONG, "false", FALSE );
-	create_gconf_schema_entry( writer, ACTION_MULTIPLE_ENTRY      , doc, list_node, "bool"  , ACTION_MULTIPLE_DESC_SHORT    , ACTION_MULTIPLE_DESC_LONG, "false", FALSE );
-	create_gconf_schema_entry( writer, ACTION_SCHEMES_ENTRY       , doc, list_node, "list"  , ACTION_SCHEMES_DESC_SHORT     , ACTION_SCHEMES_DESC_LONG, "[file]", FALSE );
+	create_gconf_schema_entry( writer, ACTION_PATH_ENTRY          , doc, list_node, "string", ACTION_PATH_DESC_SHORT        , ACTION_PATH_DESC_LONG        , "", FALSE );
+	create_gconf_schema_entry( writer, ACTION_PARAMETERS_ENTRY    , doc, list_node, "string", ACTION_PARAMETERS_DESC_SHORT  , ACTION_PARAMETERS_DESC_LONG  , "", FALSE );
+	create_gconf_schema_entry( writer, ACTION_BASENAMES_ENTRY     , doc, list_node, "list"  , ACTION_BASENAMES_DESC_SHORT   , ACTION_BASENAMES_DESC_LONG   , "[*]", FALSE );
+	create_gconf_schema_entry( writer, ACTION_MATCHCASE_ENTRY     , doc, list_node, "bool"  , ACTION_MATCHCASE_DESC_SHORT   , ACTION_MATCHCASE_DESC_LONG   , "true", FALSE );
+	create_gconf_schema_entry( writer, ACTION_MIMETYPES_ENTRY     , doc, list_node, "list"  , ACTION_MIMETYPES_DESC_SHORT   , ACTION_MIMETYPES_DESC_LONG   , "[*/*]", FALSE );
+	create_gconf_schema_entry( writer, ACTION_ISFILE_ENTRY        , doc, list_node, "bool"  , ACTION_ISFILE_DESC_SHORT      , ACTION_ISFILE_DESC_LONG      , "true", FALSE );
+	create_gconf_schema_entry( writer, ACTION_ISDIR_ENTRY         , doc, list_node, "bool"  , ACTION_ISDIR_DESC_SHORT       , ACTION_ISDIR_DESC_LONG       , "false", FALSE );
+	create_gconf_schema_entry( writer, ACTION_MULTIPLE_ENTRY      , doc, list_node, "bool"  , ACTION_MULTIPLE_DESC_SHORT    , ACTION_MULTIPLE_DESC_LONG    , "false", FALSE );
+	create_gconf_schema_entry( writer, ACTION_SCHEMES_ENTRY       , doc, list_node, "list"  , ACTION_SCHEMES_DESC_SHORT     , ACTION_SCHEMES_DESC_LONG     , "[file]", FALSE );
 
 	return( doc );
 }

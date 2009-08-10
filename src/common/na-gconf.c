@@ -583,6 +583,11 @@ fill_action_core_properties( NAGConf *gconf, NAAction *action, GSList *notifies 
 		na_action_set_icon( action, icon );
 		g_free( icon );
 	}
+
+	gboolean enabled;
+	if( search_for_bool( notifies, NULL, ACTION_ENABLED_ENTRY, &enabled )){
+		na_action_set_enabled( action, enabled );
+	}
 }
 
 /*
@@ -944,7 +949,8 @@ write_v2_keys( NAGConf *gconf, const NAAction *action, gchar **message )
 		write_str( gconf, uuid, ACTION_VERSION_ENTRY, na_action_get_version( action ), message ) &&
 		write_str( gconf, uuid, ACTION_LABEL_ENTRY, na_action_get_label( action ), message ) &&
 		write_str( gconf, uuid, ACTION_TOOLTIP_ENTRY, na_action_get_tooltip( action ), message ) &&
-		write_str( gconf, uuid, ACTION_ICON_ENTRY, na_action_get_icon( action ), message );
+		write_str( gconf, uuid, ACTION_ICON_ENTRY, na_action_get_icon( action ), message ) &&
+		write_bool( gconf, uuid, NULL, ACTION_ENABLED_ENTRY, na_action_is_enabled( action ), message );
 
 	GSList *ip;
 	GSList *profiles = na_action_get_profiles( action );
@@ -1014,7 +1020,12 @@ write_bool( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *k
 	gboolean ret = TRUE;
 	GError *error = NULL;
 
-	gchar *path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
+	gchar *path;
+	if( name && strlen( name )){
+		path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
+	} else {
+		path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
+	}
 
 	if( !gconf_client_set_bool( gconf->private->gconf, path, value, &error )){
 		*message = g_strdup( error->message );

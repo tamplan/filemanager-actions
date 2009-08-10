@@ -44,6 +44,7 @@
 #define ACTION_LABEL_ENTRY				"label"
 #define ACTION_TOOLTIP_ENTRY			"tooltip"
 #define ACTION_ICON_ENTRY				"icon"
+#define ACTION_ENABLED_ENTRY			"enabled"
 #define ACTION_PROFILE_LABEL_ENTRY		"desc-name"
 #define ACTION_PATH_ENTRY				"path"
 #define ACTION_PARAMETERS_ENTRY			"parameters"
