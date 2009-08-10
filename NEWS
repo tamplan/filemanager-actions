@@ -1,6 +1,9 @@
 Version 1.11.3
 ==============
 
+	User is now able to freely enable/disable an action. A disabled action
+	never appear in the Nautilus context menu.
+
 	Bugfixes
 
 		#325519 asked by Frederic Ruaudel (enabled property)
