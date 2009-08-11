@@ -4,6 +4,11 @@
 	* src/nact/nautilus-actions-config-tool.ui:
 	Cleanup code.
 
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Set a mnemonic for all entry fields.
+
 2009-08-10 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/nautilus-actions.schemas.in:

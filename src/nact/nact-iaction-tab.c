@@ -361,8 +361,8 @@ set_label_label( NactWindow *window, const gchar *color )
 {
 	GtkWidget *label = base_window_get_widget( BASE_WINDOW( window ), "ActionLabelLabel" );
 	/* i18n: label in front of the GtkEntry where user enters the action label */
-	gchar *text = g_markup_printf_escaped( "<span color=\"%s\">%s</span>", color, _( "Label :" ));
-	gtk_label_set_markup( GTK_LABEL( label ), text );
+	gchar *text = g_markup_printf_escaped( "<span color=\"%s\">%s</span>", color, _( "_Label :" ));
+	gtk_label_set_markup_with_mnemonic( GTK_LABEL( label ), text );
 }
 
 static void
