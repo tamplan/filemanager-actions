@@ -175,11 +175,6 @@ nact_icommand_tab_initial_load( NactWindow *dialog )
 		guint context = gtk_statusbar_get_context_id( GTK_STATUSBAR( status_bar ), "nact-iaction-tab" );
 		set_status_context( dialog, context );
 	}
-
-	/* doesn't work under f10 */
-	GtkWidget *tab = base_window_get_widget( BASE_WINDOW( dialog ), "ActionTabLabel" );
-	GtkWidget *widget = get_path_entry( dialog );
-	gtk_label_set_mnemonic_widget( GTK_LABEL( tab ), widget );
 }
 
 void

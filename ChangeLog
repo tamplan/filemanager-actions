@@ -1,3 +1,9 @@
+2009-08-11 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Cleanup code.
+
 2009-08-10 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/nautilus-actions.schemas.in:
