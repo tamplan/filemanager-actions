@@ -28,8 +28,7 @@
 
 AC_PREREQ([2.53])
 
-# 1.11 odd version is unstable
-AC_INIT([Nautilus-Actions],[1.11.3],[maintainer@nautilus-actions.org])
+AC_INIT([Nautilus-Actions],[1.12.0],[maintainer@nautilus-actions.org])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
 
