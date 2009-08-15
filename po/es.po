@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-08-11 22:07+0000\n"
-"PO-Revision-Date: 2009-08-14 14:55+0200\n"
+"POT-Creation-Date: 2009-08-14 13:58+0000\n"
+"PO-Revision-Date: 2009-08-15 14:46+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -618,7 +618,6 @@ msgid "Default application name"
 msgstr "Nombre predeterminado de la aplicación"
 
 #: ../src/nact/nact-application.c:275
-#, fuzzy
 #| msgid ""
 #| "Another instance of Nautilus Actions Configurator is already running."
 msgid ""
@@ -642,40 +641,21 @@ msgstr "¿Está seguro de que quiere salir de este asistente?"
 
 #. i18n: this is the title of the confirm page of the export assistant
 #: ../src/nact/nact-assistant-export.c:651
-#| msgid ""
-#| "<b>About to export selected actions :</b>\n"
-#| "\n"
 msgid "About to export selected actions:"
 msgstr "Acerca de exportar las acciones seleccionadas:"
 
 #. i18n: all exported actions go to one destination folder
 #: ../src/nact/nact-assistant-export.c:668
-#| msgid ""
-#| "%s\n"
-#| "\n"
-#| "<b>Into the destination folder :</b>\n"
-#| "\n"
-#| "\t%s"
 msgid "Into the destination folder:"
 msgstr "En la carpeta de destino:"
 
 #. i18n: error message displayed in the result page of the export assistant
 #: ../src/nact/nact-assistant-export.c:734
-#| msgid ""
-#| "<b>One or more errors have been detected when exporting actions.</b>\n"
-#| "\n"
-#| "%s"
 msgid "One or more errors have been detected when exporting actions."
 msgstr "Se han detectado uno o varios errores al exportar las acciones."
 
 #: ../src/nact/nact-assistant-export.c:735
 #, c-format
-#| msgid ""
-#| "%s\n"
-#| "\n"
-#| "<b>%s</b>\n"
-#| "\n"
-#| "%s"
 msgid ""
 "<b>%s</b>\n"
 "\n"
@@ -687,26 +667,16 @@ msgstr ""
 
 #. i18n: result of the export assistant
 #: ../src/nact/nact-assistant-export.c:741
-#| msgid ""
-#| "<b>Selected actions have been successfully exported...</b>\n"
-#| "\n"
 msgid "Selected actions have been successfully exported..."
 msgstr "Las acciones se han exportado satisfactoriamente..."
 
 #. i18n: the target folder is displayed in its own line
 #: ../src/nact/nact-assistant-export.c:747
-#| msgid "Save in Folder:"
 msgid "... in folder:"
 msgstr "... en la carpeta:"
 
 #: ../src/nact/nact-assistant-export.c:748
 #, c-format
-#| msgid ""
-#| "%s\n"
-#| "\n"
-#| "<b>%s</b>\n"
-#| "\n"
-#| "%s"
 msgid ""
 "%s<b>%s</b>\n"
 "\n"
@@ -720,20 +690,11 @@ msgstr ""
 
 #. i18n: the export file for each actions is displayed in its own line
 #: ../src/nact/nact-assistant-export.c:754
-#| msgid ""
-#| "%s<b>... as files :</b>\n"
-#| "\n"
 msgid "... as files:"
 msgstr "... como archivos:"
 
 #: ../src/nact/nact-assistant-export.c:755
 #, c-format
-#| msgid ""
-#| "%s\n"
-#| "\n"
-#| "<b>%s</b>\n"
-#| "\n"
-#| "%s"
 msgid ""
 "%s<b>%s</b>\n"
 "\n"
@@ -747,26 +708,17 @@ msgstr "Puede que no tenga permisos de escritura en la carpeta seleccionada."
 
 #. i18n: the title of the confirm page of the import assistant
 #: ../src/nact/nact-assistant-import.c:414
-#| msgid ""
-#| "<b>About to import selected files :</b>\n"
-#| "\n"
 msgid "About to import selected files:"
 msgstr "Acerca de importar los archivos seleccionados:"
 
 #. i18n: result of the import assistant
 #: ../src/nact/nact-assistant-import.c:447
-#| msgid ""
-#| "<b>Selected files have been imported :</b>\n"
-#| "\n"
 msgid "Selected files have been imported:"
 msgstr "Se importaron los archivos seleccionados:"
 
 #. i18n: this is the globally unique identifier and the label of the newly imported action
 #: ../src/nact/nact-assistant-import.c:469
 #, c-format
-#| msgid ""
-#| "%s\t\tUUID: %s\t%s\n"
-#| "\n"
 msgid "UUID: %s\t%s"
 msgstr "UUID: %s\t%s"
 
@@ -791,7 +743,6 @@ msgstr "Precaución: la etiqueta es obligatoria para la acción."
 #. i18n: label in front of the GtkEntry where user enters the action label
 #. i18n: label in front of the GtkEntry where user enters the profile label
 #: ../src/nact/nact-iaction-tab.c:364 ../src/nact/nact-icommand-tab.c:371
-#| msgid "Label :"
 msgid "_Label :"
 msgstr "_Etiqueta:"
 
@@ -815,31 +766,26 @@ msgstr "Descripción de esquema nueva"
 
 #. i18n notes : description of 'file' scheme
 #: ../src/nact/nact-iadvanced-tab.c:525
-#| msgid "file|Local files"
 msgid "Local files"
 msgstr "Archivos locales"
 
 #. i18n notes : description of 'sftp' scheme
 #: ../src/nact/nact-iadvanced-tab.c:527
-#| msgid "sftp|SSH files"
 msgid "SSH files"
 msgstr "Archivos SSH"
 
 #. i18n notes : description of 'smb' scheme
 #: ../src/nact/nact-iadvanced-tab.c:529
-#| msgid "smb|Windows files"
 msgid "Windows files"
 msgstr "Archivos de Windows"
 
 #. i18n notes : description of 'ftp' scheme
 #: ../src/nact/nact-iadvanced-tab.c:531
-#| msgid "ftp|FTP files"
 msgid "FTP files"
 msgstr "Archivos FTP"
 
 #. i18n notes : description of 'dav' scheme
 #: ../src/nact/nact-iadvanced-tab.c:533
-#| msgid "dav|WebDAV files"
 msgid "WebDAV files"
 msgstr "Archivos WebDAV"
 
@@ -1207,20 +1153,21 @@ msgstr ""
 #: ../src/nact/nact-xml-reader.c:117
 #, c-format
 msgid "Already existing action (UUID: %s) at line %d."
-msgstr ""
+msgstr "Ya existe una acción (UUID: %s) en la línea %d."
 
 #: ../src/nact/nact-xml-reader.c:118
 #, c-format
 msgid "Value '%s' already set: new value ignored at line %d."
 msgstr ""
+"El valor «%s» ya está establecido: se ignora el valor nuevo en la línea %d."
 
 #: ../src/nact/nact-xml-reader.c:119
 msgid "UUID not found."
-msgstr ""
+msgstr "No se encontró el UUID."
 
 #: ../src/nact/nact-xml-reader.c:120
 msgid "Action label not found."
-msgstr ""
+msgstr "No se encontró la etiqueta de acción."
 
 #: ../src/test/test-parse-uris.c:54
 #, c-format
@@ -1228,12 +1175,13 @@ msgid ""
 "URIs parsing test.\n"
 "\n"
 msgstr ""
+"Test de análisis de URI.\n"
+"\n"
 
 #: ../src/utils/nautilus-actions-new.c:64
-#, fuzzy
 #| msgid "The label of the menu item"
 msgid "The label of the menu item (mandatory)"
-msgstr "La etiqueta del elemento del menú"
+msgstr "La etiqueta del elemento del menú (obligatorio)"
 
 #: ../src/utils/nautilus-actions-new.c:64
 msgid "LABEL"
@@ -1283,7 +1231,6 @@ msgstr ""
 "que necesite)"
 
 #: ../src/utils/nautilus-actions-new.c:73
-#, fuzzy
 #| msgid "Set it if the selection can contain files"
 msgid "Set it if the selection must only contain files"
 msgstr "Establézcalo si la selección puede contener archivos"
@@ -1299,7 +1246,6 @@ msgid "Set it if the selection can have several items"
 msgstr "Establézcalo si la selección puede contener varios elementos"
 
 #: ../src/utils/nautilus-actions-new.c:76
-#, fuzzy
 #| msgid ""
 #| "A GnomeVFS scheme where the selected files should be located (you must "
 #| "set it for each scheme you need)"
@@ -1307,8 +1253,8 @@ msgid ""
 "A valid GVFS scheme where the selected files should be located (you must set "
 "one option for each scheme you need)"
 msgstr ""
-"Un esquema GnomeVFS donde los archivos seleccionados deberían situarse (debe "
-"establecerla por cada esquema que necesite)"
+"Un esquema GVFS válido donde los archivos seleccionados deberían situarse "
+"(debe establecerla por cada esquema que necesite)"
 
 #: ../src/utils/nautilus-actions-new.c:76
 msgid "SCHEME"
@@ -1326,7 +1272,7 @@ msgstr ""
 
 #: ../src/utils/nautilus-actions-new.c:83
 msgid "DIR"
-msgstr ""
+msgstr "DIR"
 
 #: ../src/utils/nautilus-actions-new.c:111
 #: ../src/utils/nautilus-actions-schemas.c:81
@@ -1337,7 +1283,7 @@ msgstr "Error de sintaxis: %s\n"
 #: ../src/utils/nautilus-actions-new.c:117
 #, c-format
 msgid "Error: an action label is mandatory."
-msgstr ""
+msgstr "Error: es obligatoria una etiqueta de acción."
 
 #: ../src/utils/nautilus-actions-new.c:122
 #, c-format
@@ -1377,7 +1323,7 @@ msgstr ""
 
 #: ../src/utils/nautilus-actions-new.c:187
 msgid "Output of the program"
-msgstr ""
+msgstr "Salida del programa"
 
 #: ../src/utils/nautilus-actions-new.c:187
 msgid "Choose where the program creates the action"
@@ -1387,19 +1333,18 @@ msgstr ""
 #: ../src/utils/nautilus-actions-schemas.c:250
 #, c-format
 msgid "Try %s --help for usage.\n"
-msgstr ""
+msgstr "Pruebe %s --help para ver su uso.\n"
 
 #. { "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE    , &output_gconf   , N_("Writes the Nautilus Actions schema in GConf"), NULL },
 #. { "output-filename"      , 'o', 0, G_OPTION_ARG_FILENAME, &output_fname   , N_("The file where to write the GConf schema ('-' for stdout)"), N_("FILENAME") },
 #: ../src/utils/nautilus-actions-schemas.c:53
 msgid "Output the schema on stdout"
-msgstr ""
+msgstr "Mostrar la salida del esquema en stdout"
 
 #: ../src/utils/nautilus-actions-schemas.c:123
-#, fuzzy
 #| msgid "Nautilus Actions Configuration Tool"
 msgid "Output the Nautilus Actions GConf schema on stdout."
-msgstr "Herramienta de configuración de acciones de Nautilus"
+msgstr "Mostrar la salida del esquema de GConf de Nautilus Actions en stdout."
 
 #~ msgid ""
 #~ "%s<b>... in folder :</b>\n"
