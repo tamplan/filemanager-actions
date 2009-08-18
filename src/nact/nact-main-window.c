@@ -593,7 +593,7 @@ static void
 setup_dialog_title( NactWindow *window )
 {
 	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	gchar *title = base_application_get_name( appli );
+	gchar *title = base_application_get_application_name( appli );
 
 	if( NACT_MAIN_WINDOW( window )->private->edited_action ){
 		gchar *label = na_action_get_label( NACT_MAIN_WINDOW( window )->private->edited_action );

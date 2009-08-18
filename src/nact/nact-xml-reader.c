@@ -43,8 +43,9 @@
 #include <common/na-xml-names.h>
 
 #include "nact-application.h"
-#include "nact-xml-reader.h"
+#include "nact-main-window.h"
 #include "nact-assistant.h"
+#include "nact-xml-reader.h"
 
 /* private class data
  */

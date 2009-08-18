@@ -146,10 +146,57 @@ typedef struct {
 	 * parse some command-line parameters.
 	 *
 	 * If failed, the base class implementation sets #exit_code to
-	 * APPLICATION_ERROR_GTK, and prepares a short #exit_message to be
+	 * %APPLICATION_ERROR_GTK, and prepares a short #exit_message to be
 	 * written to stdout.
 	 */
 	gboolean  ( *application_initialize_gtk )        ( BaseApplication *appli );
+
+	/**
+	 * application_initialize_unique_app:
+	 * @appli: this #BaseApplication instance.
+	 *
+	 * If relevant, checks if an instance of the application is already
+	 * running.
+	 *
+	 * Returns: %TRUE if the initialization process can continue,
+	 * %FALSE if the application asked for to be unique and another
+	 * instance is already running.
+	 *
+	 * If failed, this function sets #exit_code to
+	 * %APPLICATION_ERROR_UNIQUE_APP, and prepares a short #exit_message
+	 * to be displayed in a dialog box.
+	 *
+	 * The base class implementation asks the #BaseApplication-derived
+	 * class for a DBus unique name. If not empty, it then allocates a
+	 * UniqueApp object, delegating it the actual check for the unicity
+	 * of the application instance.
+	 *
+	 * If another instance is already running, the base class
+	 * implementation sets #exit_code to APPLICATION_ERROR_UNIQUE_APP,
+	 * and prepares a short #exit_message to be displayed in a dialog
+	 * box.
+	 */
+	gboolean  ( *application_initialize_unique_app ) ( BaseApplication *appli );
+
+	/**
+	 * application_initialize_ui:
+	 * @appli: this #BaseApplication instance.
+	 *
+	 * Loads and initializes the XML file which contains the description
+	 * of the user interface of the application.
+	 *
+	 * Returns: %TRUE if the UI description has been successfully
+	 * loaded, %FALSE else.
+	 *
+	 * If failed, this function sets #exit_code to %APPLICATION_ERROR_UI,
+	 * and prepares a short #exit_message to be displayed in a dialog
+	 * box.
+	 *
+	 * The base class implementation asks the #BaseApplication-derived
+	 * class for the XML filename. If not empty, it then loads it, and
+	 * initializes a corresponding GtkBuilder object.
+	 */
+	gboolean  ( *application_initialize_ui )         ( BaseApplication *appli );
 
 	/**
 	 * application_initialize_application:
@@ -176,64 +223,15 @@ typedef struct {
 	gboolean  ( *application_initialize_application )( BaseApplication *appli );
 
 	/**
-	 * application_initialize_unique_app:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * If relevant, checks if an instance of the application is already
-	 * running.
-	 *
-	 * Returns: %TRUE if the initialization process can continue,
-	 * %FALSE if the application asked for to be unique and another
-	 * instance is already running.
-	 *
-	 * If failed, this function sets #exit_code to
-	 * APPLICATION_ERROR_UNIQUE_APP, and prepares a short #exit_message
-	 * to be displayed in a dialog box.
-	 *
-	 * The base class implementation asks the #BaseApplication-derived
-	 * class for a DBus unique name. If not empty, it then allocates a
-	 * UniqueApp object, delegating it the actual check for the unicity
-	 * of the application instance.
-	 *
-	 * If another instance is already running, the base class
-	 * implementation sets #exit_code to APPLICATION_ERROR_UNIQUE_APP,
-	 * and prepares a short #exit_message to be displayed in a dialog
-	 * box.
-	 */
-	gboolean  ( *application_initialize_unique_app ) ( BaseApplication *appli );
-
-	/**
-	 * application_initialize_ui:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Loads and initializes the XML file which contains the description
-	 * of the user interface of the application.
-	 *
-	 * Returns: %TRUE if the UI description has been successfully
-	 * loaded, %FALSE else.
-	 *
-	 * If failed, this function sets #exit_code to APPLICATION_ERROR_UI,
-	 * and prepares a short #exit_message to be displayed in a dialog
-	 * box.
-	 *
-	 * The base class implementation asks the #BaseApplication-derived
-	 * class for the XML filename. If not empty, it then loads it, and
-	 * initializes a corresponding GtkBuilder object.
-	 */
-	gboolean  ( *application_initialize_ui )         ( BaseApplication *appli );
-
-	/**
 	 * application_get_application_name:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Asks the derived class for the application name.
 	 *
-	 * A copy of this name is stored to be provided to any future
-	 * request.
-	 *
 	 * It is typically used as the primary title of the main window.
 	 *
-	 * If not provided by the application, name defaults to empty.
+	 * If not provided by the derived class, application name defaults
+	 * to empty.
 	 *
 	 * Returns: the application name, to be g_free() by the caller.
 	 */
@@ -243,20 +241,62 @@ typedef struct {
 	 * application_get_icon_name:
 	 * @appli: this #BaseApplication instance.
 	 *
-	 * Asks the derived class for the application name.
+	 * Asks the derived class for the name of the default icon.
 	 *
-	 * A copy of this name is stored to be provided to any future
-	 * request.
+	 * It is typically used as the icon of the main window.
 	 *
-	 * It is typically used as the primary title of the main window.
+	 * No default is provided by the base class.
 	 *
-	 * If not provided by the application, name defaults to empty.
-	 *
-	 * Returns: the application name, to be g_free() by the caller.
+	 * Returns: the default icon name for the application, to be
+	 * g_free() by the caller.
 	 */
 	gchar *   ( *application_get_icon_name )         ( BaseApplication *appli );
+
+	/**
+	 * application_get_unique_app_name:
+	 * @appli: this #BaseApplication instance.
+	 *
+	 * Asks the derived class for the UniqueApp name of this application.
+	 *
+	 * A UniqueApp name is typically of the form
+	 * "com.mydomain.MyApplication.MyName". It is registered in DBus
+	 * system by each running instance of the application, and is then
+	 * used to check if another instance of the application is already
+	 * running.
+	 *
+	 * No default is provided by the base class, which means that the
+	 * base class defaults to not check for another instance.
+	 *
+	 * Returns: the UniqueApp name of the application, to be g_free()
+	 * by the caller.
+	 */
 	gchar *   ( *application_get_unique_app_name )   ( BaseApplication *appli );
+
+	/**
+	 * application_get_ui_filename:
+	 * @appli: this #BaseApplication instance.
+	 *
+	 * Asks the derived class for the filename of the XML definition of
+	 * the user interface. This XML definition must be suitable in order
+	 * to be loaded via GtkBuilder.
+	 *
+	 * No default is provided by the base class. If the base class does
+	 * not provide one, then the program stops and exits with the code
+	 * %APPLICATION_ERROR_UI_FNAME.
+	 *
+	 * Returns: the filename of the XML definition, to be g_free() by
+	 * the caller.
+	 */
 	gchar *   ( *application_get_ui_filename )       ( BaseApplication *appli );
+
+	/**
+	 * application_get_main_window:
+	 * @appli: this #BaseApplication instance.
+	 *
+	 * Returns: a pointer to the #BaseWindow-derived main window of the
+	 * application. This pointer is owned by the @appli, and should not
+	 * be g_free() not g_object_unref() by the caller.
+	 */
 	GObject * ( *application_get_main_window )       ( BaseApplication *appli );
 }
 	BaseApplicationClass;

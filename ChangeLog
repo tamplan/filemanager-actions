@@ -1,3 +1,20 @@
+2009-08-18 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-application-class.h:
+	* src/nact/base-application.c:
+	* src/nact/base-application.h:
+	Rewrite BaseApplication base class, and document all public
+	and virtual functions.
+	Define exit codes when an error occurs.
+	Define some standard error messages.
+
+	* src/nact/nact-application.c:
+	* src/nact/nact-application.h
+	(appli_initialize_unique_app): Customize error message.
+	(appli_initialize_application): Complete application initialization.
+
+	* src/nact/nact-xml-reader.c: Add nact-main-window.h header.
+
 2009-08-11 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-icommand-tab.c:

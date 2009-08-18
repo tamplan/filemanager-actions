@@ -36,8 +36,9 @@
 #include <gtk/gtk.h>
 
 #include "nact-application.h"
+#include "nact-main-window.h"
 
-#define GLADE_FILENAME				GLADEDIR "/nautilus-actions-config.ui"
+#define GLADE_FILENAME				GLADEDIR "/nautilus-actions-config-tool.ui"
 
 /* private class data
  */
@@ -59,7 +60,7 @@ enum {
 
 #define PROP_PIVOT_STR					"nact-application-pivot"
 
-static GObjectClass *st_parent_class = NULL;
+static BaseApplicationClass *st_parent_class = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactApplicationClass *klass );
@@ -69,12 +70,13 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
-static void     warn_other_instance( BaseApplication *application );
-static gchar   *get_application_name( BaseApplication *application );
-static gchar   *get_icon_name( BaseApplication *application );
-static gchar   *get_unique_name( BaseApplication *application );
-static gchar   *get_glade_file( BaseApplication *application );
-static GObject *get_main_window( BaseApplication *application );
+static gboolean appli_initialize_unique_app( BaseApplication *application );
+static gboolean appli_initialize_application( BaseApplication *application );
+static gchar   *appli_get_application_name( BaseApplication *application );
+static gchar   *appli_get_icon_name( BaseApplication *application );
+static gchar   *appli_get_unique_app_name( BaseApplication *application );
+static gchar   *appli_get_gtkbuilder_filename( BaseApplication *application );
+static GObject *appli_get_main_window( BaseApplication *application );
 
 GType
 nact_application_get_type( void )
@@ -115,7 +117,7 @@ class_init( NactApplicationClass *klass )
 	static const gchar *thisfn = "nact_application_class_init";
 	g_debug( "%s: klass=%p", thisfn, klass );
 
-	st_parent_class = g_type_class_peek_parent( klass );
+	st_parent_class = BASE_APPLICATION_CLASS( g_type_class_peek_parent( klass ));
 
 	GObjectClass *object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
@@ -135,12 +137,13 @@ class_init( NactApplicationClass *klass )
 
 	BaseApplicationClass *appli_class = BASE_APPLICATION_CLASS( klass );
 
-	appli_class->advertise_not_willing_to_run = warn_other_instance;
-	appli_class->get_application_name = get_application_name;
-	appli_class->get_icon_name = get_icon_name;
-	appli_class->get_unique_name = get_unique_name;
-	appli_class->get_ui_filename = get_glade_file;
-	appli_class->get_main_window = get_main_window;
+	appli_class->application_initialize_unique_app = appli_initialize_unique_app;
+	appli_class->application_initialize_application = appli_initialize_application;
+	appli_class->application_get_application_name = appli_get_application_name;
+	appli_class->application_get_icon_name = appli_get_icon_name;
+	appli_class->application_get_unique_app_name = appli_get_unique_app_name;
+	appli_class->application_get_ui_filename = appli_get_gtkbuilder_filename;
+	appli_class->application_get_main_window = appli_get_main_window;
 }
 
 static void
@@ -155,8 +158,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactApplicationPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-
-	self->private->pivot = na_pivot_new( NULL );
 }
 
 static void
@@ -206,7 +207,9 @@ instance_dispose( GObject *application )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_object_unref( self->private->pivot );
+		if( self->private->pivot ){
+			g_object_unref( self->private->pivot );
+		}
 
 		/* chain up to the parent class */
 		G_OBJECT_CLASS( st_parent_class )->dispose( application );
@@ -225,7 +228,7 @@ instance_finalize( GObject *application )
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if( st_parent_class->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( application );
 	}
 }
@@ -264,22 +267,51 @@ nact_application_get_pivot( NactApplication *application )
 	return( NA_PIVOT( application->private->pivot ));
 }
 
-static void
-warn_other_instance( BaseApplication *application )
+/*
+ * overrided to provide a personalized error message
+ */
+static gboolean
+appli_initialize_unique_app( BaseApplication *application )
 {
-	g_assert( NACT_IS_APPLICATION( application ));
+	/* call parent class */
+	gboolean ok = st_parent_class->application_initialize_unique_app( application );
 
-	base_application_error_dlg(
-			application,
-			GTK_MESSAGE_INFO,
-			_( "Another instance of Nautilus Actions Configuration Tool is already running." ),
-			_( "Please switch back to it." ));
+	if( !ok ){
+		gchar *msg1 = g_strdup( _( "Another instance of Nautilus Actions Configuration Tool is already running." ));
+		/* i18n: another instance is already running: second line of error message */
+		gchar *msg2 = g_strdup( _( "Please switch back to it." ));
+
+		g_object_set( G_OBJECT( application ),
+				PROP_APPLICATION_EXIT_MESSAGE1, msg1,
+				PROP_APPLICATION_EXIT_MESSAGE2, msg2,
+				NULL );
+
+		g_free( msg2 );
+		g_free( msg1 );
+	}
+
+	return( ok );
+}
+
+/*
+ * overrided to complete the initialization of the application
+ * note that pivot must be initialized _before_ the main window be created
+ */
+static gboolean
+appli_initialize_application( BaseApplication *application )
+{
+	NACT_APPLICATION( application )->private->pivot = na_pivot_new( NULL );
+
+	/* call parent class */
+	gboolean ok = st_parent_class->application_initialize_application( application );
+
+	return( ok );
 }
 
 static gchar *
-get_application_name( BaseApplication *application )
+appli_get_application_name( BaseApplication *application )
 {
-	static const gchar *thisfn = "nact_application_get_application_name";
+	static const gchar *thisfn = "nact_application_appli_get_application_name";
 	g_debug( "%s: application=%p", thisfn, application );
 
 	/* i18n: this is the application name, used in window title */
@@ -287,33 +319,37 @@ get_application_name( BaseApplication *application )
 }
 
 static gchar *
-get_icon_name( BaseApplication *application )
+appli_get_icon_name( BaseApplication *application )
 {
-	static const gchar *thisfn = "nact_application_get_icon_name";
+	static const gchar *thisfn = "nact_application_appli_get_icon_name";
 	g_debug( "%s: application=%p", thisfn, application );
 
 	return( g_strdup( PACKAGE ));
 }
 
 static gchar *
-get_unique_name( BaseApplication *application )
+appli_get_unique_app_name( BaseApplication *application )
 {
-	static const gchar *thisfn = "nact_application_get_unique_name";
+	static const gchar *thisfn = "nact_application_appli_get_unique_app_name";
 	g_debug( "%s: application=%p", thisfn, application );
 
 	return( g_strdup( "org.nautilus-actions.ConfigurationTool" ));
 }
 
 static gchar *
-get_glade_file( BaseApplication *application )
+appli_get_gtkbuilder_filename( BaseApplication *application )
 {
 	return( g_strdup( GLADE_FILENAME ));
 }
 
+/*
+ * this should be called only once as base class is supposed to keep
+ * the pointer to the main BaseWindow window as a property
+ */
 static GObject *
-get_main_window( BaseApplication *application )
+appli_get_main_window( BaseApplication *application )
 {
-	static const gchar *thisfn = "nact_application_get_main_window";
+	static const gchar *thisfn = "nact_application_appli_get_main_window";
 	g_debug( "%s: application=%p", thisfn, application );
 
 	BaseWindow *window = BASE_WINDOW( nact_main_window_new( application ));
