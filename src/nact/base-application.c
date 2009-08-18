@@ -89,6 +89,7 @@ static gboolean       v_initialize_i18n( BaseApplication *application );
 static gboolean       v_initialize_gtk( BaseApplication *application );
 static gboolean       v_initialize_unique_app( BaseApplication *application );
 static gboolean       v_initialize_ui( BaseApplication *application );
+static gboolean       v_initialize_default_icon( BaseApplication *application );
 static gboolean       v_initialize_application( BaseApplication *application );
 
 static int            do_application_run( BaseApplication *application );
@@ -97,6 +98,7 @@ static gboolean       do_application_initialize_i18n( BaseApplication *applicati
 static gboolean       do_application_initialize_gtk( BaseApplication *application );
 static gboolean       do_application_initialize_unique_app( BaseApplication *application );
 static gboolean       do_application_initialize_ui( BaseApplication *application );
+static gboolean       do_application_initialize_default_icon( BaseApplication *application );
 static gboolean       do_application_initialize_application( BaseApplication *application );
 
 static gboolean       check_for_unique_app( BaseApplication *application );
@@ -109,10 +111,11 @@ static void           display_error_message( BaseApplication *application );
 static void           set_get_dialog_error( BaseApplication *application, const gchar *dialog );
 static void           set_initialize_i18n_error( BaseApplication *application );
 static void           set_initialize_gtk_error( BaseApplication *application );
-static void           set_initialize_application_error( BaseApplication *application );
 static void           set_initialize_unique_app_error( BaseApplication *application );
 static void           set_initialize_ui_get_fname_error( BaseApplication *application );
 static void           set_initialize_ui_add_xml_error( BaseApplication *application, const gchar *filename, GError *error );
+static void           set_initialize_default_icon_error( BaseApplication *application );
+static void           set_initialize_application_error( BaseApplication *application );
 
 GType
 base_application_get_type( void )
@@ -233,9 +236,10 @@ class_init( BaseApplicationClass *klass )
 	klass->application_initialize = do_application_initialize;
 	klass->application_initialize_i18n = do_application_initialize_i18n;
 	klass->application_initialize_gtk = do_application_initialize_gtk;
-	klass->application_initialize_application = do_application_initialize_application;
 	klass->application_initialize_unique_app = do_application_initialize_unique_app;
 	klass->application_initialize_ui = do_application_initialize_ui;
+	klass->application_initialize_default_icon = do_application_initialize_default_icon;
+	klass->application_initialize_application = do_application_initialize_application;
 	klass->application_get_application_name = NULL;
 	klass->application_get_icon_name = NULL;
 	klass->application_get_unique_app_name = NULL;
@@ -775,9 +779,26 @@ v_initialize_ui( BaseApplication *application )
 }
 
 static gboolean
+v_initialize_default_icon( BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_v_initialize_default_icon";
+	g_debug( "%s: application=%p", thisfn, application );
+
+	g_assert( BASE_IS_APPLICATION( application ));
+
+	gboolean ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_default_icon( application );
+
+	if( !ok ){
+		set_initialize_default_icon_error( application );
+	}
+
+	return( ok );
+}
+
+static gboolean
 v_initialize_application( BaseApplication *application )
 {
-	static const gchar *thisfn = "base_application_v_initialize_application_name";
+	static const gchar *thisfn = "base_application_v_initialize_application";
 	g_debug( "%s: application=%p", thisfn, application );
 
 	g_assert( BASE_IS_APPLICATION( application ));
@@ -828,6 +849,7 @@ do_application_initialize( BaseApplication *application )
 			v_initialize_gtk( application ) &&
 			v_initialize_unique_app( application ) &&
 			v_initialize_ui( application ) &&
+			v_initialize_default_icon( application ) &&
 			v_initialize_application( application )
 	);
 }
@@ -903,6 +925,20 @@ do_application_initialize_ui( BaseApplication *application )
 
 	g_free( name );
 	return( ret );
+}
+
+static gboolean
+do_application_initialize_default_icon( BaseApplication *application )
+{
+	gchar *name = base_application_get_icon_name( application );
+
+	if( name && strlen( name )){
+		gtk_window_set_default_icon_name( name );
+	}
+
+	g_free( name );
+
+	return( TRUE );
 }
 
 static gboolean
@@ -1079,15 +1115,6 @@ set_initialize_gtk_error( BaseApplication *application )
 }
 
 static void
-set_initialize_application_error( BaseApplication *application )
-{
-	application->private->exit_code = APPLICATION_ERROR_MAIN_WINDOW;
-
-	application->private->exit_message1 =
-		g_strdup( _( "Unable to get the main window of the application." ));
-}
-
-static void
 set_initialize_unique_app_error( BaseApplication *application )
 {
 	application->private->exit_code = APPLICATION_ERROR_UNIQUE_APP;
@@ -1117,4 +1144,22 @@ set_initialize_ui_add_xml_error( BaseApplication *application, const gchar *file
 	if( error->message ){
 		application->private->exit_message2 = g_strdup( error->message );
 	}
+}
+
+static void
+set_initialize_default_icon_error( BaseApplication *application )
+{
+	application->private->exit_code = APPLICATION_ERROR_DEFAULT_ICON;
+
+	application->private->exit_message1 =
+		g_strdup( _( "Unable to set the default icon for the application." ));
+}
+
+static void
+set_initialize_application_error( BaseApplication *application )
+{
+	application->private->exit_code = APPLICATION_ERROR_MAIN_WINDOW;
+
+	application->private->exit_message1 =
+		g_strdup( _( "Unable to get the main window of the application." ));
 }

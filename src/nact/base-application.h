@@ -51,7 +51,8 @@ enum {
 	APPLICATION_ERROR_UNIQUE_APP,	/* another instance is running */
 	APPLICATION_ERROR_UI_FNAME,		/* empty XML filename */
 	APPLICATION_ERROR_UI_LOAD,		/* unable to load the XML definition of the UI */
-	APPLICATION_ERROR_DIALOG_LOAD	/* unable to load a dialog from the XML definition */
+	APPLICATION_ERROR_DIALOG_LOAD,	/* unable to load a dialog from the XML definition */
+	APPLICATION_ERROR_DEFAULT_ICON	/* unable to set default icon */
 };
 
 /**

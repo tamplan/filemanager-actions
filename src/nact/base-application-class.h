@@ -199,6 +199,19 @@ typedef struct {
 	gboolean  ( *application_initialize_ui )         ( BaseApplication *appli );
 
 	/**
+	 * application_initialize_default_icon:
+	 * @appli: this #BaseApplication instance.
+	 *
+	 * Initializes the default icon for the application.
+	 *
+	 * Returns: %TRUE if the default icon has been successfully set for
+	 * the application, %FALSE else.
+	 *
+	 * The base class implementation always returns %TRUE.
+	 */
+	gboolean  ( *application_initialize_default_icon )( BaseApplication *appli );
+
+	/**
 	 * application_initialize_application:
 	 * @appli: this #BaseApplication instance.
 	 *
