@@ -70,7 +70,6 @@ void     nact_icommand_tab_initial_load( NactWindow *window );
 void     nact_icommand_tab_runtime_init( NactWindow *window );
 void     nact_icommand_tab_all_widgets_showed( NactWindow *window );
 void     nact_icommand_tab_dispose( NactWindow *window );
-void     nact_icommand_tab_reset_last_focus( NactWindow *dialog );
 
 void     nact_icommand_tab_set_profile( NactWindow *window, const NAActionProfile *profile );
 gboolean nact_icommand_tab_has_label( NactWindow *window );

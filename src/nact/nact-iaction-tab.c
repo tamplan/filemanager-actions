@@ -84,8 +84,6 @@ static void          hide_status( NactWindow *window );
 static guint         get_status_context( NactWindow *window );
 static void          set_status_context( NactWindow *window, guint context );
 
-static void          on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window );
-static gboolean      on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactWindow *window );
 GType
 nact_iaction_tab_get_type( void )
 {
@@ -180,20 +178,14 @@ nact_iaction_tab_runtime_init( NactWindow *dialog )
 	static const gchar *thisfn = "nact_iaction_tab_runtime_init";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	GtkWidget *notebook = base_window_get_widget( BASE_WINDOW( dialog ), "MainNotebook" );
-	nact_window_signal_connect( dialog, G_OBJECT( notebook ), "switch-page", G_CALLBACK( on_switch_page ));
-
 	GtkWidget *label_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionLabelEntry" );
 	nact_window_signal_connect( dialog, G_OBJECT( label_widget ), "changed", G_CALLBACK( on_label_changed ));
-	nact_window_signal_connect( dialog, G_OBJECT( label_widget ), "focus-in-event", G_CALLBACK( on_focus_in ));
 
 	GtkWidget *tooltip_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionTooltipEntry" );
 	nact_window_signal_connect( dialog, G_OBJECT( tooltip_widget ), "changed", G_CALLBACK( on_tooltip_changed ));
-	nact_window_signal_connect( dialog, G_OBJECT( tooltip_widget ), "focus-in-event", G_CALLBACK( on_focus_in ));
 
 	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconComboBoxEntry" );
 	nact_window_signal_connect( dialog, G_OBJECT( GTK_BIN( icon_widget )->child ), "changed", G_CALLBACK( on_icon_changed ));
-	nact_window_signal_connect( dialog, G_OBJECT( GTK_BIN( icon_widget )->child ), "focus-in-event", G_CALLBACK( on_focus_in ));
 
 	GtkWidget *button = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconBrowseButton" );
 	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_icon_browse ));
@@ -217,12 +209,6 @@ nact_iaction_tab_dispose( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_iaction_tab_dispose";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
-}
-
-void
-nact_iaction_tab_reset_last_focus( NactWindow *dialog )
-{
-	g_object_set_data( G_OBJECT( dialog ), "nact-iaction-tab-last-focus", NULL );
 }
 
 /*
@@ -645,34 +631,4 @@ static void
 set_status_context( NactWindow *window, guint context )
 {
 	g_object_set_data( G_OBJECT( window ), PROP_IACTION_TAB_STATUS_CONTEXT, GUINT_TO_POINTER( context ));
-}
-
-/*
- * this callback is triggered once when we enter the page (page_num = 0..n)
- * all tabs which are connected to this signal are triggered with same parameters
- * at runtime initialization, we are not triggered when page 0 is displayed
- * (or we are connecting too late ?)
- */
-static void
-on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window )
-{
-	static const gchar *thisfn = "nact_iaction_tab_on_switch_page";
-
-	if( page_num == ACTION_TAB ){
-		g_debug( "%s: notebook=%p, page=%p, page_num=%d, window=%p", thisfn, notebook, page, page_num, window );
-		GtkWidget *widget = GTK_WIDGET( g_object_get_data( G_OBJECT( window ), "nact-iaction-tab-last-focus" ));
-		if( !widget ){
-			widget = base_window_get_widget( BASE_WINDOW( window ), "ActionLabelEntry" );
-		}
-		gtk_widget_grab_focus( widget );
-	}
-}
-
-static gboolean
-on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactWindow *window )
-{
-	g_object_set_data( G_OBJECT( window ), "nact-iaction-tab-last-focus", widget );
-	gtk_label_set_mnemonic_widget( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "ActionTabLabel" )), widget );
-
-	return( FALSE );
 }

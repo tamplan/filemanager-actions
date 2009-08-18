@@ -94,8 +94,6 @@ static void             hide_status( NactWindow *window );
 static guint            get_status_context( NactWindow *window );
 static void             set_status_context( NactWindow *window, guint context );
 
-static void             on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window );
-
 GType
 nact_icommand_tab_get_type( void )
 {
@@ -186,9 +184,6 @@ nact_icommand_tab_runtime_init( NactWindow *dialog )
 	static const gchar *thisfn = "nact_icommand_tab_runtime_init";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	GtkWidget *notebook = base_window_get_widget( BASE_WINDOW( dialog ), "MainNotebook" );
-	nact_window_signal_connect( dialog, G_OBJECT( notebook ), "switch-page", G_CALLBACK( on_switch_page ));
-
 	GtkWidget *label_entry = get_label_entry( dialog );
 	nact_window_signal_connect( dialog, G_OBJECT( label_entry ), "changed", G_CALLBACK( on_label_changed ));
 
@@ -222,12 +217,6 @@ nact_icommand_tab_dispose( NactWindow *dialog )
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
 	hide_legend_dialog( dialog );
-}
-
-void
-nact_icommand_tab_reset_last_focus( NactWindow *dialog )
-{
-	g_object_set_data( G_OBJECT( dialog ), "nact-icommand-tab-last-focus", NULL );
 }
 
 void
@@ -778,22 +767,4 @@ static void
 set_status_context( NactWindow *window, guint context )
 {
 	g_object_set_data( G_OBJECT( window ), PROP_ICOMMAND_TAB_STATUS_CONTEXT, GUINT_TO_POINTER( context ));
-}
-
-/*
- * rationale: cf. nact-iaction-tab:on_swotch_page()
- */
-static void
-on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window )
-{
-	static const gchar *thisfn = "nact_icommand_tab_on_switch_page";
-
-	if( page_num == COMMAND_TAB ){
-		g_debug( "%s: notebook=%p, page=%p, page_num=%d, window=%p", thisfn, notebook, page, page_num, window );
-		GtkWidget *widget = GTK_WIDGET( g_object_get_data( G_OBJECT( window ), "nact-icommand-tab-last-focus" ));
-		if( !widget ){
-			widget = get_label_entry( window );
-		}
-		gtk_widget_grab_focus( widget );
-	}
 }

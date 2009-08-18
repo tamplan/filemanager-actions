@@ -206,12 +206,6 @@ nact_iadvanced_tab_dispose( NactWindow *dialog )
 }
 
 void
-nact_iadvanced_tab_reset_last_focus( NactWindow *dialog )
-{
-	g_object_set_data( G_OBJECT( dialog ), "nact-iadvanced-tab-last-focus", NULL );
-}
-
-void
 nact_iadvanced_tab_set_profile( NactWindow *dialog, NAActionProfile *profile )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_set_profile";

@@ -67,7 +67,6 @@ void     nact_iconditions_tab_initial_load( NactWindow *dialog );
 void     nact_iconditions_tab_runtime_init( NactWindow *dialog );
 void     nact_iconditions_tab_all_widgets_showed( NactWindow *dialog );
 void     nact_iconditions_tab_dispose( NactWindow *dialog );
-void     nact_iconditions_tab_reset_last_focus( NactWindow *dialog );
 
 void     nact_iconditions_tab_set_profile( NactWindow *window, NAActionProfile *profile );
 void     nact_iconditions_tab_get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );

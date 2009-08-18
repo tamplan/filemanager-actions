@@ -15,6 +15,20 @@
 
 	* src/nact/nact-xml-reader.c: Add nact-main-window.h header.
 
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iaction-tab.h:
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-iadvanced-tab.h:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icommand-tab.h:
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-iconditions-tab.h:
+	Remove nact_ixxxx_tab_reset_last_focus function.
+	Remove focus-in-event and switch-page signal connections.
+
+	* src/nact/nact-main-window.c:
+	No more call nact_ixxxx_tab_reset_last_focus functions.
+
 2009-08-11 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-icommand-tab.c:

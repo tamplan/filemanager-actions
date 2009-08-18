@@ -68,7 +68,6 @@ void     nact_iaction_tab_initial_load( NactWindow *dialog );
 void     nact_iaction_tab_runtime_init( NactWindow *dialog );
 void     nact_iaction_tab_all_widgets_showed( NactWindow *dialog );
 void     nact_iaction_tab_dispose( NactWindow *dialog );
-void     nact_iaction_tab_reset_last_focus( NactWindow *dialog );
 
 void     nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action );
 gboolean nact_iaction_tab_has_label( NactWindow *window );

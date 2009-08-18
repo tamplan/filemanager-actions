@@ -67,8 +67,6 @@ static GtkButton       *get_both_button( NactWindow *window );
 static void             on_multiple_toggled( GtkToggleButton *button, gpointer user_data );
 static GtkButton       *get_multiple_button( NactWindow *window );
 
-static void             on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window );
-
 GType
 nact_iconditions_tab_get_type( void )
 {
@@ -152,9 +150,6 @@ nact_iconditions_tab_runtime_init( NactWindow *dialog )
 	static const gchar *thisfn = "nact_iconditions_tab_runtime_init";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
 
-	GtkWidget *notebook = base_window_get_widget( BASE_WINDOW( dialog ), "MainNotebook" );
-	nact_window_signal_connect( dialog, G_OBJECT( notebook ), "switch-page", G_CALLBACK( on_switch_page ));
-
 	GtkWidget *basenames_widget = get_basenames_entry( dialog );
 	nact_window_signal_connect( dialog, G_OBJECT( basenames_widget ), "changed", G_CALLBACK( on_basenames_changed ));
 
@@ -187,12 +182,6 @@ nact_iconditions_tab_dispose( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_iconditions_tab_dispose";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
-}
-
-void
-nact_iconditions_tab_reset_last_focus( NactWindow *dialog )
-{
-	g_object_set_data( G_OBJECT( dialog ), "nact-iconditions-tab-last-focus", NULL );
 }
 
 void
@@ -419,22 +408,4 @@ static GtkButton *
 get_multiple_button( NactWindow *window )
 {
 	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "ConditionsMultipleButton" )));
-}
-
-/*
- * rationale: cf. nact-iaction-tab:on_swotch_page()
- */
-static void
-on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window )
-{
-	static const gchar *thisfn = "nact_iconditions_tab_on_switch_page";
-
-	if( page_num == CONDITIONS_TAB ){
-		g_debug( "%s: notebook=%p, page=%p, page_num=%d, window=%p", thisfn, notebook, page, page_num, window );
-		GtkWidget *widget = GTK_WIDGET( g_object_get_data( G_OBJECT( window ), "nact-iconditions-tab-last-focus" ));
-		if( !widget ){
-			widget = get_basenames_entry( window );
-		}
-		gtk_widget_grab_focus( widget );
-	}
 }
