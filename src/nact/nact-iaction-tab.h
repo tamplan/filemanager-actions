@@ -55,7 +55,6 @@ typedef struct {
 	NactIActionTabInterfacePrivate *private;
 
 	/* api */
-	GtkWidget * ( *get_status_bar )   ( NactWindow *window );
 	NAObject *  ( *get_selected )     ( NactWindow *window );
 	NAAction *  ( *get_edited_action )( NactWindow *window );
 	void        ( *field_modified )   ( NactWindow *window );

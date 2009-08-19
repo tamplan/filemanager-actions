@@ -70,6 +70,7 @@ NactMainWindow *nact_main_window_new( BaseApplication *application );
 
 GSList         *nact_main_window_get_actions( const NactMainWindow *window );
 gboolean        nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid );
+GtkStatusbar   *nact_main_window_get_statusbar( const NactMainWindow *window );
 
 enum {
 	ACTION_TAB = 0,

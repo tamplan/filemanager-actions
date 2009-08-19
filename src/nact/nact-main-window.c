@@ -60,8 +60,6 @@ struct NactMainWindowClassPrivate {
  */
 struct NactMainWindowPrivate {
 	gboolean         dispose_has_run;
-	GtkStatusbar    *status_bar;
-	guint            status_context;
 	gint             initial_count;
 	GSList          *actions;
 	NAAction        *edited_action;
@@ -92,7 +90,6 @@ static void             instance_finalize( GObject *application );
 static gchar           *get_iprefs_window_id( NactWindow *window );
 static gchar           *get_toplevel_name( BaseWindow *window );
 static GSList          *get_actions( NactWindow *window );
-static GtkWidget       *get_status_bar( NactWindow *window );
 
 static void             on_initial_load_toplevel( BaseWindow *window );
 static void             on_runtime_init_toplevel( BaseWindow *window );
@@ -122,12 +119,6 @@ static void             remove_action( NactWindow *window, NAAction *action );
 static GSList          *get_deleted_actions( NactWindow *window );
 static void             free_deleted_actions( NactWindow *window );
 static void             push_removed_action( NactWindow *window, NAAction *action );
-
-/*static void     on_new_button_clicked( GtkButton *button, gpointer user_data );
-static void     on_edit_button_clicked( GtkButton *button, gpointer user_data );
-static void     on_duplicate_button_clicked( GtkButton *button, gpointer user_data );
-static void     on_delete_button_clicked( GtkButton *button, gpointer user_data );
-static gboolean on_dialog_response( GtkDialog *dialog, gint response_id, BaseWindow *window );*/
 
 static void             update_actions_list( NactWindow *window );
 static gboolean         on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
@@ -282,7 +273,6 @@ iaction_tab_iface_init( NactIActionTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_iaction_tab_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
-	iface->get_status_bar = get_status_bar;
 	iface->get_selected = nact_iactions_list_get_selected_object;
 	iface->get_edited_action = get_edited_action;
 	iface->field_modified = on_modified_field;
@@ -294,7 +284,6 @@ icommand_tab_iface_init( NactICommandTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_icommand_tab_iface_init";
 	g_debug( "%s: iface=%p", thisfn, iface );
 
-	iface->get_status_bar = get_status_bar;
 	iface->get_edited_profile = get_edited_profile;
 	iface->field_modified = on_modified_field;
 	iface->get_isfiledir = get_isfiledir;
@@ -336,7 +325,6 @@ imenubar_iface_init( NactIMenubarInterface *iface )
 	iface->push_removed_action = push_removed_action;
 	iface->get_actions = get_actions;
 	iface->get_selected = nact_iactions_list_get_selected_object;
-	iface->get_status_bar = get_status_bar;
 	iface->setup_dialog_title = setup_dialog_title;
 	iface->update_actions_list = update_actions_list;
 	iface->select_actions_list = nact_iactions_list_set_selection;
@@ -458,6 +446,19 @@ nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid 
 	return( FALSE );
 }
 
+/**
+ * Returns the status bar widget
+ */
+GtkStatusbar *
+nact_main_window_get_statusbar( const NactMainWindow *window )
+{
+	g_assert( NACT_IS_MAIN_WINDOW( window ));
+
+	GtkWidget *statusbar = base_window_get_widget( BASE_WINDOW( window ), "StatusBar" );
+
+	return( GTK_STATUSBAR( statusbar ));
+}
+
 static gchar *
 get_iprefs_window_id( NactWindow *window )
 {
@@ -475,13 +476,6 @@ get_actions( NactWindow *window )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	return( NACT_MAIN_WINDOW( window )->private->actions );
-}
-
-static GtkWidget *
-get_status_bar( NactWindow *window )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	return( GTK_WIDGET( NACT_MAIN_WINDOW( window )->private->status_bar ));
 }
 
 /*
@@ -503,9 +497,6 @@ on_initial_load_toplevel( BaseWindow *window )
 	g_debug( "%s: window=%p", thisfn, window );
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
-
-	wnd->private->status_bar = GTK_STATUSBAR( base_window_get_widget( window, "StatusBar" ));
-	wnd->private->status_context = gtk_statusbar_get_context_id( wnd->private->status_bar, "nact-main-window" );
 
 	nact_imenubar_init( wnd );
 

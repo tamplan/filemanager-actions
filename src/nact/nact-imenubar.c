@@ -37,6 +37,7 @@
 #include "nact-application.h"
 #include "nact-assistant-export.h"
 #include "nact-assistant-import.h"
+#include "nact-statusbar.h"
 #include "nact-imenubar.h"
 
 /* private interface data
@@ -96,8 +97,6 @@ static void       on_about_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_about_selected( GtkItem *item, NactWindow *window );
 
 static void       on_menu_item_deselected( GtkItem *item, NactWindow *window );
-static void       display_status( NactWindow *window, const gchar *status );
-static void       hide_status( NactWindow *window );
 
 static void       v_add_action( NactWindow *window, NAAction *action );
 static void       v_add_profile( NactWindow *window, NAActionProfile *profile );
@@ -107,7 +106,6 @@ static void       v_free_deleted_actions( NactWindow *window );
 static void       v_push_removed_action( NactWindow *window, NAAction *action );
 static GSList    *v_get_actions( NactWindow *window );
 static NAObject  *v_get_selected( NactWindow *window );
-static GtkWidget *v_get_status_bar( NactWindow *window );
 static void       v_setup_dialog_title( NactWindow *window );
 static void       v_update_actions_list( NactWindow *window );
 static void       v_select_actions_list( NactWindow *window, GType type, const gchar *uuid, const gchar *label );
@@ -116,8 +114,6 @@ static gint       v_count_modified_actions( NactWindow *window );
 static void       v_reload_actions( NactWindow *window );
 static void       v_on_save( NactWindow *window );
 
-static guint      get_status_context( NactMainWindow *window );
-static void       set_status_context( NactMainWindow *window, guint context );
 static GtkWidget *get_new_profile_item( NactWindow *window );
 static void       set_new_profile_item( NactWindow *window, GtkWidget *item );
 static GtkWidget *get_save_item( NactWindow *window );
@@ -241,13 +237,6 @@ nact_imenubar_init( NactMainWindow *window )
 	create_edit_menu( window, GTK_MENU_BAR( menubar ));
 	create_tools_menu( window, GTK_MENU_BAR( menubar ));
 	create_help_menu( window, GTK_MENU_BAR( menubar ));
-
-	GtkWidget *status_bar = v_get_status_bar( NACT_WINDOW( window ));
-	if( status_bar ){
-		g_assert( GTK_IS_STATUSBAR( status_bar ));
-		guint context = gtk_statusbar_get_context_id( GTK_STATUSBAR( status_bar ), "nact-imenubar" );
-		set_status_context( window, context );
-	}
 }
 
 /**
@@ -438,7 +427,7 @@ static void
 on_new_action_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the 'New action' item */
-	display_status( window, _( "Define a new action." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Define a new action." ));
 }
 
 static void
@@ -464,7 +453,7 @@ static void
 on_new_profile_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the 'New profile' item */
-	display_status( window, _( "Define a new profile attached to the current action." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Define a new profile attached to the current action." ));
 }
 
 static void
@@ -560,7 +549,7 @@ static void
 on_save_selected( GtkMenuItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting 'Save' item */
-	display_status( window, _( "Record all the modified actions. Invalid actions will be silently ignored." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Record all the modified actions. Invalid actions will be silently ignored." ));
 }
 
 static void
@@ -579,7 +568,7 @@ static void
 on_quit_selected( GtkMenuItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting 'Quit' item */
-	display_status( window, _( "Quit the application." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Quit the application." ));
 }
 
 static void
@@ -683,7 +672,7 @@ static void
 on_duplicate_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the Duplicate item */
-	display_status( window, _( "Create a copy of the selected action or profile." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Create a copy of the selected action or profile." ));
 }
 
 static void
@@ -727,7 +716,7 @@ static void
 on_delete_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the Delete item */
-	display_status( window, _( "Remove the selected action or profile from your configuration." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Remove the selected action or profile from your configuration." ));
 }
 
 static void
@@ -759,7 +748,7 @@ static void
 on_reload_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the 'Reload' item */
-	display_status( window, _( " Cancel your current modifications and reload the list of actions." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( " Cancel your current modifications and reload the list of actions." ));
 }
 
 static void
@@ -784,7 +773,7 @@ static void
 on_import_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the Import item */
-	display_status( window, _( "Import one or more actions from external (XML) files into your configuration." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Import one or more actions from external (XML) files into your configuration." ));
 }
 
 static void
@@ -804,7 +793,7 @@ static void
 on_export_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the Export item */
-	display_status( window, _( "Export one or more actions from your configuration to external XML files." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Export one or more actions from your configuration to external XML files." ));
 }
 
 static void
@@ -816,7 +805,7 @@ static void
 on_help_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the Help item */
-	display_status( window, _( "Display help about this program." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Display help about this program." ));
 }
 
 /* TODO: make the website url and the mail addresses clickables
@@ -890,29 +879,13 @@ static void
 on_about_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the About item */
-	display_status( window, _( "Display informations about this program." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Display informations about this program." ));
 }
 
 static void
 on_menu_item_deselected( GtkItem *item, NactWindow *window )
 {
-	hide_status( window );
-}
-
-static void
-display_status( NactWindow *window, const gchar *status )
-{
-	GtkWidget *bar = v_get_status_bar( window );
-	guint context = get_status_context( NACT_MAIN_WINDOW( window ));
-	gtk_statusbar_push( GTK_STATUSBAR( bar ), context, status );
-}
-
-static void
-hide_status( NactWindow *window )
-{
-	GtkWidget *bar = v_get_status_bar( window );
-	guint context = get_status_context( NACT_MAIN_WINDOW( window ));
-	gtk_statusbar_pop( GTK_STATUSBAR( bar ), context );
+	nact_statusbar_hide_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT );
 }
 
 static void
@@ -985,16 +958,6 @@ v_get_selected( NactWindow *window )
 	return( NULL );
 }
 
-static GtkWidget *
-v_get_status_bar( NactWindow *window )
-{
-	if( NACT_IMENUBAR_GET_INTERFACE( window )->get_status_bar ){
-		return( NACT_IMENUBAR_GET_INTERFACE( window )->get_status_bar( window ));
-	}
-
-	return( NULL );
-}
-
 static void
 v_setup_dialog_title( NactWindow *window )
 {
@@ -1053,18 +1016,6 @@ v_on_save( NactWindow *window )
 	if( NACT_IMENUBAR_GET_INTERFACE( window )->on_save ){
 		NACT_IMENUBAR_GET_INTERFACE( window )->on_save( window );
 	}
-}
-
-static guint
-get_status_context( NactMainWindow *window )
-{
-	return( GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( window ), PROP_IMENUBAR_STATUS_CONTEXT )));
-}
-
-static void
-set_status_context( NactMainWindow *window, guint context )
-{
-	g_object_set_data( G_OBJECT( window ), PROP_IMENUBAR_STATUS_CONTEXT, GUINT_TO_POINTER( context ));
 }
 
 static GtkWidget *

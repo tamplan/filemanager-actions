@@ -3,6 +3,18 @@
 	* src/nact/nact-statusbar.c:
 	* src/nact/nact-statusbar.h: New files.
 
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iaction-tab.h:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icommand-tab.h:
+	* src/nact/nact-imenubar.c:
+	* src/nact/nact-imenubar.h:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h:
+	Updated to take advantage of new nact_statusbar_display_status()
+	and nact_statusbar_hide_status() functions.
+	Removed get_status_bar() virtual functions from the interfaces.
+
 2009-08-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-application-class.h:

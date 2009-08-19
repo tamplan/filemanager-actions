@@ -38,9 +38,9 @@
 #include <common/na-utils.h>
 
 #include "nact-application.h"
-#include "nact-main-window.h"
-#include "nact-icommand-tab.h"
+#include "nact-statusbar.h"
 #include "nact-iprefs.h"
+#include "nact-icommand-tab.h"
 
 /* private interface data
  */
@@ -56,15 +56,12 @@ struct NactICommandTabInterfacePrivate {
  */
 #define LEGEND_DIALOG_IS_VISIBLE			"iconditions-legend-dialog-visible"
 
-/* ICommandTab properties, set on the main window
- */
 #define PROP_ICOMMAND_TAB_STATUS_CONTEXT	"iconditions-status-context"
 
 static GType            register_type( void );
 static void             interface_base_init( NactICommandTabInterface *klass );
 static void             interface_base_finalize( NactICommandTabInterface *klass );
 
-static GtkWidget       *v_get_status_bar( NactWindow *window );
 static NAActionProfile *v_get_edited_profile( NactWindow *window );
 static void             v_field_modified( NactWindow *window );
 static void             v_get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
@@ -88,11 +85,6 @@ static void             show_legend_dialog( NactWindow *window );
 static void             hide_legend_dialog( NactWindow *window );
 static GtkButton       *get_legend_button( NactWindow *window );
 static GtkWindow       *get_legend_dialog( NactWindow *window );
-
-static void             display_status( NactWindow *window, const gchar *status );
-static void             hide_status( NactWindow *window );
-static guint            get_status_context( NactWindow *window );
-static void             set_status_context( NactWindow *window, guint context );
 
 GType
 nact_icommand_tab_get_type( void )
@@ -169,13 +161,6 @@ nact_icommand_tab_initial_load( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_icommand_tab_initial_load";
 	g_debug( "%s: dialog=%p", thisfn, dialog );
-
-	GtkWidget *status_bar = v_get_status_bar( dialog );
-	if( status_bar ){
-		g_assert( GTK_IS_STATUSBAR( status_bar ));
-		guint context = gtk_statusbar_get_context_id( GTK_STATUSBAR( status_bar ), "nact-iaction-tab" );
-		set_status_context( dialog, context );
-	}
 }
 
 void
@@ -263,16 +248,6 @@ nact_icommand_tab_has_label( NactWindow *window )
 	return( g_utf8_strlen( label, -1 ) > 0 );
 }
 
-static GtkWidget *
-v_get_status_bar( NactWindow *window )
-{
-	if( NACT_ICOMMAND_TAB_GET_INTERFACE( window )->get_status_bar ){
-		return( NACT_ICOMMAND_TAB_GET_INTERFACE( window )->get_status_bar( window ));
-	}
-
-	return( NULL );
-}
-
 static NAActionProfile *
 v_get_edited_profile( NactWindow *window )
 {
@@ -352,14 +327,14 @@ on_label_changed( GtkEntry *entry, gpointer user_data )
 static void
 check_for_label( NactWindow *window, GtkEntry *entry, const gchar *label )
 {
-	hide_status( window );
+	nact_statusbar_hide_status( NACT_MAIN_WINDOW( window ), PROP_ICOMMAND_TAB_STATUS_CONTEXT );
 	set_label_label( window, "black" );
 
 	NAActionProfile *edited = v_get_edited_profile( window );
 
 	if( edited && g_utf8_strlen( label, -1 ) == 0 ){
 		/* i18n: status bar message when the profile label is empty */
-		display_status( window, _( "Caution: a label is mandatory for the profile." ));
+		nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_ICOMMAND_TAB_STATUS_CONTEXT, _( "Caution: a label is mandatory for the profile." ));
 		set_label_label( window, "red" );
 	}
 }
@@ -739,32 +714,4 @@ static GtkWindow *
 get_legend_dialog( NactWindow *window )
 {
 	return( base_window_get_dialog( BASE_WINDOW( window ), "LegendDialog" ));
-}
-
-static void
-display_status( NactWindow *window, const gchar *status )
-{
-	GtkWidget *bar = v_get_status_bar( window );
-	guint context = get_status_context( window );
-	gtk_statusbar_push( GTK_STATUSBAR( bar ), context, status );
-}
-
-static void
-hide_status( NactWindow *window )
-{
-	GtkWidget *bar = v_get_status_bar( window );
-	guint context = get_status_context( window );
-	gtk_statusbar_pop( GTK_STATUSBAR( bar ), context );
-}
-
-static guint
-get_status_context( NactWindow *window )
-{
-	return( GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( window ), PROP_ICOMMAND_TAB_STATUS_CONTEXT )));
-}
-
-static void
-set_status_context( NactWindow *window, guint context )
-{
-	g_object_set_data( G_OBJECT( window ), PROP_ICOMMAND_TAB_STATUS_CONTEXT, GUINT_TO_POINTER( context ));
 }

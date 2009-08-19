@@ -70,6 +70,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-main.c											\
 	nact-main-window.c									\
 	nact-main-window.h									\
+	nact-statusbar.c									\
+	nact-statusbar.h									\
 	nact-window.c										\
 	nact-window.h										\
 	nact-xml-reader.c									\

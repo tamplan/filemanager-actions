@@ -63,7 +63,6 @@ typedef struct {
 	void        ( *push_removed_action )   ( NactWindow *window, NAAction *action );
 	GSList *    ( *get_actions )           ( NactWindow *window );
 	NAObject *  ( *get_selected )          ( NactWindow *window );
-	GtkWidget * ( *get_status_bar )        ( NactWindow *window );
 	void        ( *setup_dialog_title )    ( NactWindow *window );
 	void        ( *update_actions_list )   ( NactWindow *window );
 	void        ( *select_actions_list )   ( NactWindow *window, GType type, const gchar *uuid, const gchar *label );

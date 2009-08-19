@@ -36,7 +36,7 @@
 #include <string.h>
 
 #include "nact-application.h"
-#include "nact-main-window.h"
+#include "nact-statusbar.h"
 #include "nact-iaction-tab.h"
 
 /* private interface data
@@ -60,7 +60,6 @@ static GType         register_type( void );
 static void          interface_base_init( NactIActionTabInterface *klass );
 static void          interface_base_finalize( NactIActionTabInterface *klass );
 
-static GtkWidget    *v_get_status_bar( NactWindow *window );
 static NAObject     *v_get_selected( NactWindow *window );
 static NAAction     *v_get_edited_action( NactWindow *window );
 static void          v_field_modified( NactWindow *window );
@@ -78,11 +77,6 @@ static gchar        *strip_underscore( const gchar *text );
 static void          display_icon( NactWindow *window, GtkWidget *image, gboolean display );
 static void          on_enabled_toggled( GtkToggleButton *button, gpointer user_data );
 static GtkButton    *get_enabled_button( NactWindow *window );
-
-static void          display_status( NactWindow *window, const gchar *status );
-static void          hide_status( NactWindow *window );
-static guint         get_status_context( NactWindow *window );
-static void          set_status_context( NactWindow *window, guint context );
 
 GType
 nact_iaction_tab_get_type( void )
@@ -163,13 +157,6 @@ nact_iaction_tab_initial_load( NactWindow *dialog )
 	GtkWidget *icon_widget = base_window_get_widget( BASE_WINDOW( dialog ), "ActionIconComboBoxEntry" );
 	gtk_combo_box_set_model( GTK_COMBO_BOX( icon_widget ), create_stock_icon_model());
 	icon_combo_list_fill( GTK_COMBO_BOX_ENTRY( icon_widget ));
-
-	GtkWidget *status_bar = v_get_status_bar( dialog );
-	if( status_bar ){
-		g_assert( GTK_IS_STATUSBAR( status_bar ));
-		guint context = gtk_statusbar_get_context_id( GTK_STATUSBAR( status_bar ), "nact-iaction-tab" );
-		set_status_context( dialog, context );
-	}
 }
 
 void
@@ -271,16 +258,6 @@ nact_iaction_tab_has_label( NactWindow *window )
 	return( g_utf8_strlen( label, -1 ) > 0 );
 }
 
-static GtkWidget *
-v_get_status_bar( NactWindow *window )
-{
-	if( NACT_IACTION_TAB_GET_INTERFACE( window )->get_status_bar ){
-		return( NACT_IACTION_TAB_GET_INTERFACE( window )->get_status_bar( window ));
-	}
-
-	return( NULL );
-}
-
 static NAObject *
 v_get_selected( NactWindow *window )
 {
@@ -345,14 +322,14 @@ on_label_changed( GtkEntry *entry, gpointer user_data )
 static void
 check_for_label( NactWindow *window, GtkEntry *entry, const gchar *label )
 {
-	hide_status( window );
+	nact_statusbar_hide_status( NACT_MAIN_WINDOW( window ), PROP_IACTION_TAB_STATUS_CONTEXT );
 	set_label_label( window, "black" );
 
 	NAAction *edited = v_get_edited_action( window );
 
 	if( edited && g_utf8_strlen( label, -1 ) == 0 ){
 		/* i18n: status bar message when the action label is empty */
-		display_status( window, _( "Caution: a label is mandatory for the action." ));
+		nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IACTION_TAB_STATUS_CONTEXT, _( "Caution: a label is mandatory for the action." ));
 		set_label_label( window, "red" );
 	}
 }
@@ -603,32 +580,4 @@ static GtkButton *
 get_enabled_button( NactWindow *window )
 {
 	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "ActionEnabledButton" )));
-}
-
-static void
-display_status( NactWindow *window, const gchar *status )
-{
-	GtkWidget *bar = v_get_status_bar( window );
-	guint context = get_status_context( window );
-	gtk_statusbar_push( GTK_STATUSBAR( bar ), context, status );
-}
-
-static void
-hide_status( NactWindow *window )
-{
-	GtkWidget *bar = v_get_status_bar( window );
-	guint context = get_status_context( window );
-	gtk_statusbar_pop( GTK_STATUSBAR( bar ), context );
-}
-
-static guint
-get_status_context( NactWindow *window )
-{
-	return( GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( window ), PROP_IACTION_TAB_STATUS_CONTEXT )));
-}
-
-static void
-set_status_context( NactWindow *window, guint context )
-{
-	g_object_set_data( G_OBJECT( window ), PROP_IACTION_TAB_STATUS_CONTEXT, GUINT_TO_POINTER( context ));
 }
