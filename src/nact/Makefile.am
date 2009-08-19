@@ -85,7 +85,10 @@ nautilus_actions_config_tool_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-pkgdata_DATA = nautilus-actions-config-tool.ui
+pkgdata_DATA = \
+	nautilus-actions-config-tool.actions				\
+	nautilus-actions-config-tool.ui						\
+	$(NULL)
 
 @INTLTOOL_DESKTOP_RULE@
 
