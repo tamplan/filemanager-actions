@@ -1,3 +1,8 @@
+2009-08-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-statusbar.c:
+	* src/nact/nact-statusbar.h: New files.
+
 2009-08-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-application-class.h:
