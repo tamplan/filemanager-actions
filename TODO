@@ -32,3 +32,14 @@
 
 - propose a patch for GOptions so that the help for an option could be
   multiline (by defining an optional maximum width)
+
+- Make Nautilus conscious of modifications of preferences
+  This suppose Nautilus receive a item-updated signal
+  NACT is not conscious of Nautilus
+  -> watching GConf preferences keys (in the same model than that used
+     for reloading updated actions)
+     But I don't want wath at the whole preferences/ dir, so we'd have
+     to watch to each and every single preference which may have an
+     impact on Nautilus behavior
+  -> send a DBus message would be the most elegant solution
+
