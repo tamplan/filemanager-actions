@@ -20,6 +20,8 @@
 
 	* src/nact/nautilus-actions-config-tool.ui:
 	Creates the PreferencesDialog dialog.
+	Enabled and ReadOnly checkboxes no longer expand to all dialog
+	width to minimize focus errors.
 
 	* src/common/Makefile.am:
 	* src/nact/Makefile.am: Updated accordingly.
