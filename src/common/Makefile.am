@@ -52,6 +52,8 @@ libnact_la_SOURCES = \
 	na-iio-provider.h							\
 	na-ipivot-consumer.c						\
 	na-ipivot-consumer.h						\
+	na-iprefs.c									\
+	na-iprefs.h									\
 	na-object.c									\
 	na-object.h									\
 	na-pivot.c									\

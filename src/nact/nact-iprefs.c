@@ -36,7 +36,7 @@
 #include <gconf/gconf.h>
 #include <gconf/gconf-client.h>
 
-#include <common/na-gconf-keys.h>
+#include <common/na-iprefs.h>
 
 #include "nact-iprefs.h"
 
@@ -46,31 +46,27 @@ struct NactIPrefsInterfacePrivate {
 	GConfClient *client;
 };
 
-/* GConf general information
- */
-#define NA_GCONF_PREFS_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/" NA_GCONF_SCHEMA_PREFERENCES
-
 /* key to read/write the last visited folder when browsing for a file
  */
 #define IPREFS_ICONDITION_FOLDER_URI			"iconditions-folder-uri"
 #define IPREFS_IMPORT_ACTIONS_FOLDER_URI		"import-folder-uri"
 #define IPREFS_EXPORT_ACTIONS_FOLDER_URI		"export-folder-uri"
 
-static GType   register_type( void );
-static void    interface_base_init( NactIPrefsInterface *klass );
-static void    interface_base_finalize( NactIPrefsInterface *klass );
+static GType    register_type( void );
+static void     interface_base_init( NactIPrefsInterface *klass );
+static void     interface_base_finalize( NactIPrefsInterface *klass );
 
-static gchar  *v_get_iprefs_window_id( NactWindow *window );
+static gchar   *v_get_iprefs_window_id( NactWindow *window );
 
-static GSList *read_key_listint( NactWindow *window, const gchar *key );
-static void    write_key_listint( NactWindow *window, const gchar *key, GSList *list );
-static void    listint_to_position( NactWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height );
-static GSList *position_to_listint( NactWindow *window, gint x, gint y, gint width, gint height );
-static void    free_listint( GSList *list );
-static gchar  *read_key_str( NactWindow *window, const gchar *key );
-static void    save_key_str( NactWindow *window, const gchar *key, const gchar *text );
-static gint    read_key_int( NactWindow *window, const gchar *name );
-static void    write_key_int( NactWindow *window, const gchar *name, gint value );
+static GSList  *read_key_listint( NactWindow *window, const gchar *key );
+static void     write_key_listint( NactWindow *window, const gchar *key, GSList *list );
+static void     listint_to_position( NactWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height );
+static GSList  *position_to_listint( NactWindow *window, gint x, gint y, gint width, gint height );
+static void     free_listint( GSList *list );
+static gchar   *read_key_str( NactWindow *window, const gchar *key );
+static void     save_key_str( NactWindow *window, const gchar *key, const gchar *text );
+static gint     read_key_int( NactWindow *window, const gchar *name );
+static void     write_key_int( NactWindow *window, const gchar *name, gint value );
 
 GType
 nact_iprefs_get_type( void )

@@ -1079,6 +1079,7 @@ install_gconf_watch( NAGConf *gconf )
 			NULL,
 			&error
 		);
+
 	if( error ){
 		g_warning( "%s: error=%s", thisfn, error->message );
 		g_error_free( error );
@@ -1096,6 +1097,7 @@ install_gconf_watched_dir( NAGConf *gconf )
 
 	gconf_client_add_dir(
 			gconf->private->gconf, NA_GCONF_CONFIG_PATH, GCONF_CLIENT_PRELOAD_RECURSIVE, &error );
+
 	if( error ){
 		g_warning( "%s: error=%s", thisfn, error->message );
 		g_error_free( error );
@@ -1119,6 +1121,7 @@ remove_gconf_watched_dir( NAGConf *gconf )
 	GError *error = NULL;
 
 	gconf_client_remove_dir( gconf->private->gconf, NA_GCONF_CONFIG_PATH, &error );
+
 	if( error ){
 		g_warning( "%s: error=%s", thisfn, error->message );
 		g_error_free( error );

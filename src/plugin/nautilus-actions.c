@@ -42,6 +42,7 @@
 #include <common/na-action-profile.h>
 #include <common/na-pivot.h>
 #include <common/na-ipivot-consumer.h>
+#include <common/na-iprefs.h>
 
 #include "nautilus-actions.h"
 
@@ -63,6 +64,7 @@ static GType         st_actions_type = 0;
 static void              class_init( NautilusActionsClass *klass );
 static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
 static void              pivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
+static void              prefs_iface_init( NAIPrefsInterface *iface );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
 static void              instance_dispose( GObject *object );
 static void              instance_finalize( GObject *object );
@@ -70,6 +72,7 @@ static void              instance_finalize( GObject *object );
 static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
 static NautilusMenuItem *create_menu_item( NAAction *action, NAActionProfile *profile, GList *files );
+static NautilusMenuItem *create_sub_menu( NautilusMenu **menu );
 static void              execute_action( NautilusMenuItem *item, NAActionProfile *profile );
 static void              actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data );
 
@@ -100,10 +103,10 @@ nautilus_actions_register_type( GTypeModule *module )
 		( GInstanceInitFunc ) instance_init,
 	};
 
-	/* implements NautilusMenuItem interface
-	 */
 	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NautilusActions", &info, 0 );
 
+	/* implements NautilusMenuItem interface
+	 */
 	static const GInterfaceInfo menu_provider_iface_info = {
 		( GInterfaceInitFunc ) menu_provider_iface_init,
 		NULL,
@@ -121,6 +124,16 @@ nautilus_actions_register_type( GTypeModule *module )
 	};
 
 	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONSUMER_TYPE, &pivot_consumer_iface_info );
+
+	/* implement IPrefs interface
+	 */
+	static const GInterfaceInfo prefs_iface_info = {
+		( GInterfaceInitFunc ) prefs_iface_init,
+		NULL,
+		NULL
+	};
+
+	g_type_module_add_interface( module, st_actions_type, NA_IPREFS_TYPE, &prefs_iface_info );
 }
 
 static void
@@ -155,6 +168,13 @@ pivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, iface );
 
 	iface->on_actions_changed = actions_changed_handler;
+}
+
+static void
+prefs_iface_init( NAIPrefsInterface *iface )
+{
+	static const gchar *thisfn = "nautilus_actions_prefs_iface_init";
+	g_debug( "%s: iface=%p", thisfn, iface );
 }
 
 static void
@@ -251,6 +271,7 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	GList *items = NULL;
 	GSList* profiles;
 	GSList *ia, *ip;
+	NautilusMenu *menu = NULL;
 	NautilusMenuItem *item;
 	GSList *actions = NULL;
 	gchar *label, *uuid;
@@ -262,6 +283,8 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	if( !g_list_length( files )){
 		return(( GList * ) NULL );
 	}
+
+	gboolean have_submenu = na_iprefs_get_bool( NA_IPREFS( self ), PREFS_DISPLAY_AS_SUBMENU );
 
 	if( !self->private->dispose_has_run ){
 		actions = na_pivot_get_actions( self->private->pivot );
@@ -300,7 +323,16 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 				if( na_action_profile_is_candidate( profile, files )){
 					item = create_menu_item( action, profile, files );
-					items = g_list_append( items, item );
+
+					if( have_submenu ){
+						if( !menu ){
+							items = g_list_append( items, create_sub_menu( &menu ));
+						}
+						nautilus_menu_append_item( menu, item );
+
+					} else {
+						items = g_list_append( items, item );
+					}
 					break;
 				}
 			}
@@ -347,6 +379,24 @@ create_menu_item( NAAction *action, NAActionProfile *profile, GList *files )
 	g_free( label );
 	g_free( name );
 	g_free( uuid );
+
+	return( item );
+}
+
+static NautilusMenuItem *
+create_sub_menu( NautilusMenu **menu )
+{
+	NautilusMenuItem *item;
+
+	item = nautilus_menu_item_new( "NautilusActionsExtensions",
+			_( "Nautilus-Actions extensions" ),
+			_( "A submenu which embeds the currently available Nautilus-Actions extensions" ),
+			PACKAGE );
+
+	if( menu ){
+		*menu = nautilus_menu_new();
+		nautilus_menu_item_set_submenu( item, *menu );
+	}
 
 	return( item );
 }

@@ -1,3 +1,32 @@
+2009-08-20 Pierre Wieser <pwieser@trychlos.org>
+
+	Display actions as a submenu.
+
+	* src/common/na-iprefs.c:
+	* src/common/na-iprefs.h: New files.
+	Manage preferences which are used by Nautilus-Actions plugin.
+
+	* src/common/na-gconf.c: Fix typo.
+
+	* src/nact/nact-imenubar.c:
+	Add an item in the menubar to run the Preferences dialog.
+
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h: Fix typos.
+
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-preferences-editor.h: New files.
+	Let the user edit its preferences.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Creates the PreferencesDialog dialog.
+
+	* src/common/Makefile.am:
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/plugin/nautilus-actions.c:
+	Take into account the DisplayAsSubmenu preference.
+
 2009-08-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-statusbar.c:

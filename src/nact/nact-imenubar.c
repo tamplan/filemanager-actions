@@ -37,6 +37,7 @@
 #include "nact-application.h"
 #include "nact-assistant-export.h"
 #include "nact-assistant-import.h"
+#include "nact-preferences-editor.h"
 #include "nact-statusbar.h"
 #include "nact-imenubar.h"
 
@@ -84,6 +85,8 @@ static void       on_delete_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_delete_selected( GtkItem *item, NactWindow *window );
 static void       on_reload_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_reload_selected( GtkItem *item, NactWindow *window );
+static void       on_preferences_activated( GtkMenuItem *item, NactWindow *window );
+static void       on_preferences_selected( GtkItem *item, NactWindow *window );
 
 static void       on_tools_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_import_activated( GtkMenuItem *item, NactWindow *window );
@@ -342,6 +345,13 @@ create_edit_menu( NactMainWindow *window, GtkMenuBar *menubar )
 	item = gtk_image_menu_item_new_with_mnemonic( _( "_Reload the list of actions" ));
 	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
 	signal_connect( window, item, G_CALLBACK( on_reload_activated ), G_CALLBACK( on_reload_selected ));
+
+	item = gtk_separator_menu_item_new();
+	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
+
+	item = gtk_image_menu_item_new_from_stock( GTK_STOCK_PREFERENCES, NULL );
+	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
+	signal_connect( window, item, G_CALLBACK( on_preferences_activated ), G_CALLBACK( on_preferences_selected ));
 }
 
 static void
@@ -748,7 +758,20 @@ static void
 on_reload_selected( GtkItem *item, NactWindow *window )
 {
 	/* i18n: tooltip displayed in the status bar when selecting the 'Reload' item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( " Cancel your current modifications and reload the list of actions." ));
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Cancel your current modifications and reload the list of actions." ));
+}
+
+static void
+on_preferences_activated( GtkMenuItem *item, NactWindow *window )
+{
+	nact_preferences_editor_run( window );
+}
+
+static void
+on_preferences_selected( GtkItem *item, NactWindow *window )
+{
+	/* i18n: tooltip displayed in the status bar when selecting the 'Preferences' item */
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Edit your preferences." ));
 }
 
 static void

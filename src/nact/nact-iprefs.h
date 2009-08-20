@@ -63,25 +63,25 @@ typedef struct {
 }
 	NactIPrefsInterface;
 
-GType nact_iprefs_get_type( void );
+GType    nact_iprefs_get_type( void );
 
-void   nact_iprefs_position_window( NactWindow *window );
-void   nact_iprefs_position_named_window( NactWindow *window, GtkWindow *toplevel, const gchar *name );
+void     nact_iprefs_position_window( NactWindow *window );
+void     nact_iprefs_position_named_window( NactWindow *window, GtkWindow *toplevel, const gchar *name );
 
-void   nact_iprefs_save_window_position( NactWindow *window );
-void   nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel, const gchar *name );
+void     nact_iprefs_save_window_position( NactWindow *window );
+void     nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel, const gchar *name );
 
-gchar *nact_iprefs_get_iconditions_folder_uri( NactWindow *window );
-void   nact_iprefs_save_iconditions_folder_uri( NactWindow *window, const gchar *uri );
+gchar   *nact_iprefs_get_iconditions_folder_uri( NactWindow *window );
+void     nact_iprefs_save_iconditions_folder_uri( NactWindow *window, const gchar *uri );
 
-gchar *nact_iprefs_get_import_folder_uri( NactWindow *window );
-void   nact_iprefs_save_import_folder_uri( NactWindow *window, const gchar *uri );
+gchar   *nact_iprefs_get_import_folder_uri( NactWindow *window );
+void     nact_iprefs_save_import_folder_uri( NactWindow *window, const gchar *uri );
 
-gchar *nact_iprefs_get_export_folder_uri( NactWindow *window );
-void   nact_iprefs_save_export_folder_uri( NactWindow *window, const gchar *uri );
+gchar   *nact_iprefs_get_export_folder_uri( NactWindow *window );
+void     nact_iprefs_save_export_folder_uri( NactWindow *window, const gchar *uri );
 
-gint   nact_iprefs_get_int( NactWindow *window, const gchar *key );
-void   nact_iprefs_set_int( NactWindow *window, const gchar *key, gint value );
+gint     nact_iprefs_get_int( NactWindow *window, const gchar *key );
+void     nact_iprefs_set_int( NactWindow *window, const gchar *key, gint value );
 
 G_END_DECLS
 
