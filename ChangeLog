@@ -8,6 +8,12 @@
 
 	* src/common/na-gconf.c: Fix typo.
 
+	* src/common/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-application.c:
+	Rename GLADEDIR to PKGDATADIR.
+	Rename GLADE_FILENAME to UI_XML_FILENAME.
+
 	* src/nact/nact-imenubar.c:
 	Add an item in the menubar to run the Preferences dialog.
 	Rename MenuBarVBox to MenubarVBox to be consistent with Statusbar.
@@ -25,8 +31,8 @@
 	width to minimize focus errors.
 	Rename MenuBarVBox to MenubarVBox to be consistent with Statusbar.
 
-	* src/common/Makefile.am:
 	* src/nact/Makefile.am: Updated accordingly.
+	Rename GLADEDIR to PKGDATADIR.
 
 	* src/plugin/nautilus-actions.c:
 	Take into account the DisplayAsSubmenu preference.

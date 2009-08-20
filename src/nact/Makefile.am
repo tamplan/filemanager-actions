@@ -33,7 +33,7 @@ bin_PROGRAMS = \
 AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
-	-DGLADEDIR=\"$(pkgdatadir)\"						\
+	-DPKGDATADIR=\"$(pkgdatadir)\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"				\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
