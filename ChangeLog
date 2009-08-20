@@ -10,6 +10,7 @@
 
 	* src/nact/nact-imenubar.c:
 	Add an item in the menubar to run the Preferences dialog.
+	Rename MenuBarVBox to MenubarVBox to be consistent with Statusbar.
 
 	* src/nact/nact-iprefs.c:
 	* src/nact/nact-iprefs.h: Fix typos.
@@ -22,6 +23,7 @@
 	Creates the PreferencesDialog dialog.
 	Enabled and ReadOnly checkboxes no longer expand to all dialog
 	width to minimize focus errors.
+	Rename MenuBarVBox to MenubarVBox to be consistent with Statusbar.
 
 	* src/common/Makefile.am:
 	* src/nact/Makefile.am: Updated accordingly.

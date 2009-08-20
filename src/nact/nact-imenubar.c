@@ -232,7 +232,7 @@ nact_imenubar_init( NactMainWindow *window )
 			"    </menubar>"
 			"</ui>";*/
 
-	GtkWidget *vbox = base_window_get_widget( BASE_WINDOW( window ), "MenuBarVBox" );
+	GtkWidget *vbox = base_window_get_widget( BASE_WINDOW( window ), "MenubarVBox" );
 	GtkWidget *menubar= gtk_menu_bar_new();
 	gtk_container_add( GTK_CONTAINER( vbox ), menubar );
 

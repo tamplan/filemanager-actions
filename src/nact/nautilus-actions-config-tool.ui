@@ -7,7 +7,7 @@
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <child>
-          <object class="GtkVBox" id="MenuBarVBox">
+          <object class="GtkVBox" id="MenubarVBox">
             <property name="visible">True</property>
             <child>
               <placeholder/>
