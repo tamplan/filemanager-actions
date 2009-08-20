@@ -2,6 +2,9 @@
 
 	Display actions as a submenu.
 
+	* data/nautilus-actions.schemas.in:
+	Add schemas for Preferences dialog and AsSubmenu option.
+
 	* src/common/na-iprefs.c:
 	* src/common/na-iprefs.h: New files.
 	Manage preferences which are used by Nautilus-Actions plugin.
