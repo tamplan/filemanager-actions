@@ -34,6 +34,8 @@
 
 #include <glib/gi18n.h>
 
+#include <common/na-about.h>
+
 #include "nact-application.h"
 #include "nact-assistant-export.h"
 #include "nact-assistant-import.h"
@@ -839,63 +841,9 @@ on_about_activated( GtkMenuItem *item, NactWindow *window )
 	static const gchar *thisfn = "nact_imenubar_on_about_activated";
 	g_debug( "%s: item=%p, window=%p", thisfn, item, window );
 
-	BaseApplication *appli;
-	g_object_get( G_OBJECT( window ), PROP_WINDOW_APPLICATION_STR, &appli, NULL );
-	gchar *icon_name = base_application_get_icon_name( appli );
-
-	static const gchar *artists[] = {
-		N_( "Ulisse Perusin <uli.peru@gmail.com>" ),
-		NULL
-	};
-
-	static const gchar *authors[] = {
-		N_( "Frederic Ruaudel <grumz@grumz.net>" ),
-		N_( "Rodrigo Moya <rodrigo@gnome-db.org>" ),
-		N_( "Pierre Wieser <pwieser@trychlos.org>" ),
-		NULL
-	};
-
-	static const gchar *documenters[] = {
-		NULL
-	};
-
-	static gchar *license[] = {
-		N_( "Nautilus Actions Configuration Tool is free software; you can "
-			"redistribute it and/or modify it under the terms of the GNU General "
-			"Public License as published by the Free Software Foundation; either "
-			"version 2 of the License, or (at your option) any later version." ),
-		N_( "Nautilus Actions Configuration Tool is distributed in the hope that it "
-			"will be useful, but WITHOUT ANY WARRANTY; without even the implied "
-			"warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See "
-			"the GNU General Public License for more details." ),
-		N_( "You should have received a copy of the GNU General Public License along "
-			"with Nautilus Actions Configuration Tool ; if not, write to the Free "
-			"Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
-			"MA 02110-1301, USA." ),
-		NULL
-	};
-	gchar *license_i18n = g_strjoinv( "\n\n", license );
-
 	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
 
-	gtk_show_about_dialog( toplevel,
-			"artists", artists,
-			"authors", authors,
-			"comments", _( "A graphical interface to create and edit your Nautilus actions." ),
-			"copyright", _( "Copyright \xc2\xa9 2005-2007 Frederic Ruaudel <grumz@grumz.net>\nCopyright \xc2\xa9 2009 Pierre Wieser <pwieser@trychlos.org>" ),
-			"documenters", documenters,
-			"translator-credits", _( "The GNOME Translation Project <gnome-i18n@gnome.org>" ),
-			"license", license_i18n,
-			"wrap-license", TRUE,
-			"logo-icon-name", icon_name,
-			"version", PACKAGE_VERSION,
-			"website", "http://www.nautilus-actions.org",
-			NULL );
-
-	g_free( license_i18n );
-	g_free( icon_name );
-
-	/*nact_iactions_list_set_focus( NACT_WINDOW( wndmain ));*/
+	na_about_display( G_OBJECT( toplevel ));
 }
 
 static void

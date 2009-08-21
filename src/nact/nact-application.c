@@ -35,6 +35,8 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include <common/na-about.h>
+
 #include "nact-application.h"
 #include "nact-main-window.h"
 
@@ -324,7 +326,7 @@ appli_get_icon_name( BaseApplication *application )
 	static const gchar *thisfn = "nact_application_appli_get_icon_name";
 	g_debug( "%s: application=%p", thisfn, application );
 
-	return( g_strdup( PACKAGE ));
+	return( na_about_get_icon_name());
 }
 
 static gchar *

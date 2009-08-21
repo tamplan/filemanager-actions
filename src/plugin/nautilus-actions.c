@@ -38,6 +38,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
+#include <common/na-about.h>
 #include <common/na-action.h>
 #include <common/na-action-profile.h>
 #include <common/na-pivot.h>
@@ -73,6 +74,7 @@ static GList            *get_background_items( NautilusMenuProvider *provider, G
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
 static NautilusMenuItem *create_menu_item( NAAction *action, NAActionProfile *profile, GList *files );
 static NautilusMenuItem *create_sub_menu( NautilusMenu **menu );
+static void              add_post_submenu( NautilusMenu *menu );
 static void              execute_action( NautilusMenuItem *item, NAActionProfile *profile );
 static void              actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data );
 
@@ -337,6 +339,9 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 				}
 			}
 		}
+		if( have_submenu ){
+			add_post_submenu( menu );
+		}
 	}
 
 	return( items );
@@ -388,17 +393,45 @@ create_sub_menu( NautilusMenu **menu )
 {
 	NautilusMenuItem *item;
 
+	gchar *icon_name = na_about_get_icon_name();
+
 	item = nautilus_menu_item_new( "NautilusActionsExtensions",
 			_( "Nautilus-Actions extensions" ),
 			_( "A submenu which embeds the currently available Nautilus-Actions extensions" ),
-			PACKAGE );
+			icon_name );
 
 	if( menu ){
 		*menu = nautilus_menu_new();
 		nautilus_menu_item_set_submenu( item, *menu );
 	}
 
+	g_free( icon_name );
+
 	return( item );
+}
+
+static void
+add_post_submenu( NautilusMenu *menu )
+{
+	gchar *icon_name = na_about_get_icon_name();
+
+	NautilusMenuItem *item = nautilus_menu_item_new(
+			"AboutNautilusActions",
+			_( "About Nautilus Actions" ),
+			_( "Display information about Nautilus Actions" ),
+			icon_name );
+
+	g_signal_connect_data( item,
+				"activate",
+				G_CALLBACK( na_about_display ),
+				NULL,
+				NULL,
+				0
+	);
+
+	nautilus_menu_append_item( menu, item );
+
+	g_free( icon_name );
 }
 
 static void

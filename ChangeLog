@@ -1,3 +1,21 @@
+2009-08-21 Pierre Wieser <pwieser@trychlos.org>
+
+	Add About Nautilus Actions item in Nautilus context menu.
+
+	* src/common/na-about.c:
+	* src/common/na-about.h: New files.
+
+	* src/common/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-application.c:
+	Call na_about_get_icon_name() to get application default icon.
+
+	* src/nact/nact-imenubar.c:
+	Call na_about_display() to display About dialog box.
+
+	* src/plugin/nautilus-actions.c:
+	Add About Nautilus Actions item in Nautilus context menu.
+
 2009-08-20 Pierre Wieser <pwieser@trychlos.org>
 
 	Display actions as a submenu.

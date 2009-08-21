@@ -35,6 +35,8 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libnact_la_SOURCES = \
+	na-about.c									\
+	na-about.h									\
 	na-action.c									\
 	na-action.h									\
 	na-action-class.h							\
