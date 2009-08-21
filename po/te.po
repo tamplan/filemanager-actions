@@ -8,14 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.master.te\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-08-11 22:07+0000\n"
-"PO-Revision-Date: 2009-08-20 13:51+0530\n"
+"POT-Creation-Date: 2009-08-21 12:03+0000\n"
+"PO-Revision-Date: 2009-08-21 22:26+0530\n"
 "Last-Translator: Krishna Babu K <kkrothap@redhat.com>\n"
 "Language-Team: Telugu <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n\n"
+"\n"
 "\n"
 "X-Generator: KBabel 1.11.4\n"
 
@@ -71,19 +72,23 @@ msgid ""
 "FTP 'smb': files accessed via Samba (Windows share) 'dav': files accessed "
 "via WebDAV All schemes used by Nautilus can be used here."
 msgstr ""
-"ఎంపికచేసిన అంశములకు సరిపోలవలసిన విలువైన స్కీమాల జాబితాను నిర్వచిస్తుంది. స్కీమా "
-"అనునది దస్త్రములను యాక్సెస్ చేయుటకు వుపయోగించు ప్రొటోకాల్. దీనిని వుపయోగించుటకు కీపదము "
-"URI నందు వుపయోగించినదే. విలువైన URI యొక్క వుదాహరణలు: file:///tmp/foo.txt"
-"sftp:///root@test.example.net/tmp/foo.txt"
-"అతి సాదారణమైన స్కీమాలు: 'file': స్థానిక దస్త్రములు 'sftp': SSH ద్వారా యాక్సెస్ చేసిన దస్త్రములు "
-"'ftp': FTP ద్వారా యాక్సెస్ చేసిన దస్త్రములు 'smb': సాంబా ద్వారా యాక్సెస్ చేసిన దస్త్రములు (Windows భాగస్వామ్యం) "
-"'dav': WebDav ద్వారా యాక్సెస్ చేసిన దస్త్రములు నాటిలస్ ద్వారా వుపయోగించిన అన్ని స్కీములు యిక్కడ వుపయోగించబడతాయి."
+"ఎంపికచేసిన అంశములకు సరిపోలవలసిన విలువైన స్కీమాల జాబితాను నిర్వచిస్తుంది. స్కీమా అనునది దస్త్రములను "
+"యాక్సెస్ చేయుటకు వుపయోగించు ప్రొటోకాల్. దీనిని వుపయోగించుటకు కీపదము URI నందు వుపయోగించినదే. విలువైన "
+"URI యొక్క వుదాహరణలు: file:///tmp/foo.txtsftp:///root@test.example.net/tmp/foo."
+"txtఅతి సాదారణమైన స్కీమాలు: 'file': స్థానిక దస్త్రములు 'sftp': SSH ద్వారా యాక్సెస్ చేసిన దస్త్రములు "
+"'ftp': FTP ద్వారా యాక్సెస్ చేసిన దస్త్రములు 'smb': సాంబా ద్వారా యాక్సెస్ చేసిన దస్త్రములు (Windows "
+"భాగస్వామ్యం) 'dav': WebDav ద్వారా యాక్సెస్ చేసిన దస్త్రములు నాటిలస్ ద్వారా వుపయోగించిన అన్ని స్కీములు "
+"యిక్కడ వుపయోగించబడతాయి."
 
-#: ../data/nautilus-actions.schemas.in.h:10 ../src/common/na-xml-names.h:108
+#: ../data/nautilus-actions.schemas.in.h:10
+msgid "Display actions as a Nautilus submenu"
+msgstr "నాటిలస్ వుపమెనూలా చర్యలను ప్రదర్శించుము"
+
+#: ../data/nautilus-actions.schemas.in.h:11 ../src/common/na-xml-names.h:108
 msgid "If the action is disabled, it will never appear in the Nautilus context menu"
 msgstr "చర్య అచేతనము చేయబడితే,అది యెప్పటికి నాటిలస్ కాంటెస్టు మెనూనందు కనబడదు"
 
-#: ../data/nautilus-actions.schemas.in.h:11 ../src/common/na-xml-names.h:126
+#: ../data/nautilus-actions.schemas.in.h:12 ../src/common/na-xml-names.h:126
 msgid ""
 "If you need one or more files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set 'false'"
@@ -91,7 +96,7 @@ msgstr ""
 "మీరు వొకటి లేక అంతకన్నా యెక్కువ దస్త్రములను లేదా ఫోల్డర్లను యెంపికచేయవలెనంటే, ఈ కీను 'సత్యము'కు "
 "అమర్చుము. మీకు వొక దస్త్రము లేదా ఫోల్డరు మాత్రమే కావలెనంటే, 'అసత్యము'కు అమర్చుము"
 
-#: ../data/nautilus-actions.schemas.in.h:12 ../src/common/na-xml-names.h:118
+#: ../data/nautilus-actions.schemas.in.h:13 ../src/common/na-xml-names.h:118
 msgid ""
 "If you need to match a filename in a case-sensitive manner, set this key to "
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
@@ -101,79 +106,90 @@ msgstr ""
 "అమర్చుము. ఒకవేళ మీరు, ఉదాహరణకు '*.jpg' అనునది 'photo.JPG'తో సరిపోలవలెనని అనుకుంటే గనుక, "
 "'అసత్యము'కు అమర్చుము"
 
-#: ../data/nautilus-actions.schemas.in.h:13
+#: ../data/nautilus-actions.schemas.in.h:14
 msgid "Last folder selected when browsing for a command in the Conditions tab"
 msgstr "నియంత్రణల టాబ్‌నందు ఆదేశము కొరకు అన్వేషించుచున్నప్పుడు యెంపికచేయబడిన చివరి ఫోల్డర్"
 
-#: ../data/nautilus-actions.schemas.in.h:14
+#: ../data/nautilus-actions.schemas.in.h:15
 msgid "Last folder selected when choosing a folder from where import new actions"
 msgstr "కొత్త చర్యలను దిగుమతిచేయుచోటునుండి ఫోల్డర్ యెంచుకుంటున్నప్పుడు యెంపికైన చివరి ఫోల్డర్"
 
-#: ../data/nautilus-actions.schemas.in.h:15
+#: ../data/nautilus-actions.schemas.in.h:16
 msgid "Last folder selected when choosing a folder where to export the actions"
 msgstr "చర్యలను యెచటకి ఎగుమతి చేయాలో అనుదాని కొరకు ఫోల్డరును యెంచుకొనునప్పుడు యెంపికైన చివరి ఫోల్డర్"
 
-#: ../data/nautilus-actions.schemas.in.h:16
+#: ../data/nautilus-actions.schemas.in.h:17
 msgid "Last selected folder"
 msgstr "చివరిగా యెంపికైన ఫోల్డర్"
 
-#: ../data/nautilus-actions.schemas.in.h:17
+#: ../data/nautilus-actions.schemas.in.h:18
 msgid "Main pane position"
 msgstr "ముఖ్య పేన్ స్థానము"
 
-#: ../data/nautilus-actions.schemas.in.h:18
+#: ../data/nautilus-actions.schemas.in.h:19
 msgid "Position and size of the Legend dialog"
 msgstr "లెజెండ్ డైలాగ్‌యొక్క స్థానము మరియు పరిమాణము"
 
-#: ../data/nautilus-actions.schemas.in.h:19
+#: ../data/nautilus-actions.schemas.in.h:20
 msgid "Position and size of the Legend dialog ; default is set by the UI manager"
 msgstr "లెజెండ్ డైలాగుయొక్క స్థానము మరియు పరిమాణము ; అప్రమేయం అనునది UI నిర్వాహిక ద్వారా అమర్చబడింది"
 
-#: ../data/nautilus-actions.schemas.in.h:20
+#: ../data/nautilus-actions.schemas.in.h:21
 msgid "Position and size of the command chooser window"
 msgstr "ఆదేశము యెంచుకొను విండోయొక్క స్థానము మరియు పరిమాణము"
 
-#: ../data/nautilus-actions.schemas.in.h:21
+#: ../data/nautilus-actions.schemas.in.h:22
 msgid ""
 "Position and size of the command chooser window in the Conditions tab ; "
 "default is set by the window manager"
 msgstr ""
-"నియమాల టాబ్‌నందు ఆదేశము యెంచుకొను విండో యొక్క స్థానము మరియు పరిమాణము ; "
-"అప్రమేయం అనునది విండో నిర్వాహిక ద్వారా అమర్చబడింది"
+"నియమాల టాబ్‌నందు ఆదేశము యెంచుకొను విండో యొక్క స్థానము మరియు పరిమాణము ; అప్రమేయం అనునది విండో నిర్వాహిక "
+"ద్వారా అమర్చబడింది"
 
-#: ../data/nautilus-actions.schemas.in.h:22
+#: ../data/nautilus-actions.schemas.in.h:23
 msgid "Position and size of the export assistant window"
 msgstr "ఎగుమతి సహాయకి విండోయొక్క స్థానము మరియు పరిమాణము"
 
-#: ../data/nautilus-actions.schemas.in.h:23
+#: ../data/nautilus-actions.schemas.in.h:24
 msgid ""
 "Position and size of the export assistant window ; default is set by the "
 "window manager"
-msgstr ""
-"ఎగుమతి సహాయకి విండో యొక్క స్థానము మరియు పరిమాణము ; అప్రమేయం అనునది విండో నిర్వాహిక ద్వారా "
-"అమర్చబడింది"
+msgstr "ఎగుమతి సహాయకి విండో యొక్క స్థానము మరియు పరిమాణము ; అప్రమేయం అనునది విండో నిర్వాహిక ద్వారా అమర్చబడింది"
 
-#: ../data/nautilus-actions.schemas.in.h:24
+#: ../data/nautilus-actions.schemas.in.h:25
 msgid "Position and size of the import assistant window"
 msgstr "దిగుమతి సహాయకి విండోయొక్క స్థానము మరియు పరిమాణము"
 
-#: ../data/nautilus-actions.schemas.in.h:25
+#: ../data/nautilus-actions.schemas.in.h:26
 msgid ""
 "Position and size of the import assistant window ; default is set by the "
 "window manager"
-msgstr ""
-"దిగుమతి సహాయకి విండోయొక్క స్థానము మరియు పరిమాణము ; అప్రమేయం అనునది విండో నిర్వాహిక "
-"ద్వారా అమర్చబడింది"
+msgstr "దిగుమతి సహాయకి విండోయొక్క స్థానము మరియు పరిమాణము ; అప్రమేయం అనునది విండో నిర్వాహిక ద్వారా అమర్చబడింది"
 
-#: ../data/nautilus-actions.schemas.in.h:26
+#: ../data/nautilus-actions.schemas.in.h:27
 msgid "Position and size of the main window"
 msgstr "ముఖ్య విండోయొక్క స్థానము మరియు పరిమాణము"
 
-#: ../data/nautilus-actions.schemas.in.h:27
+#: ../data/nautilus-actions.schemas.in.h:28
 msgid "Position and size of the main window ; default is set by the window manager"
 msgstr "ముఖ్య విండోయొక్క స్థానము మరియు పరిమాణము ; అప్రమేయం అనునది విండో నిర్వాహిక ద్వారా అమర్చబడింది"
 
-#: ../data/nautilus-actions.schemas.in.h:28 ../src/common/na-xml-names.h:110
+#: ../data/nautilus-actions.schemas.in.h:29
+#| msgid "Position and size of the Legend dialog"
+msgid "Position and size of the preferences dialog"
+msgstr "అభీష్టాల డైలాగు యొక్క స్థానము మరియు పరిమాణము"
+
+#: ../data/nautilus-actions.schemas.in.h:30
+#| msgid ""
+#| "Position and size of the Legend dialog ; default is set by the UI manager"
+msgid ""
+"Position and size of the preferences dialog ; default is set by the window "
+"manager"
+msgstr ""
+"అభీష్టాల డైలాగుయొక్క స్థానము మరియు పరిమాణము ; అప్రమేయం అనునది విండో నిర్వాహిక ద్వారా "
+"అమర్చబడింది"
+
+#: ../data/nautilus-actions.schemas.in.h:31 ../src/common/na-xml-names.h:110
 msgid ""
 "The field is here to give the user a human readable name for a profile in "
 "the Nact interface. If not set there will be a default auto generated string "
@@ -182,11 +198,11 @@ msgstr ""
 "Nact యింటర్ఫేస్ నందలి ప్రొఫైల్‌కు వినియోగదారి చదవగలుగు నామమును యిచ్చుటకు ఈ క్షేత్రము వుంది. ఒకవేళ "
 "అమర్చకపోతే స్వయంచాలకంగా జనియింపబడు వొక అప్రమేయ స్ట్రింగ్ అమర్చబడుతుంది"
 
-#: ../data/nautilus-actions.schemas.in.h:29 ../src/common/na-xml-names.h:105
+#: ../data/nautilus-actions.schemas.in.h:32 ../src/common/na-xml-names.h:105
 msgid "The icon of the menu item"
 msgstr "మెనూ అంశముయొక్క ప్రతిమ"
 
-#: ../data/nautilus-actions.schemas.in.h:30 ../src/common/na-xml-names.h:106
+#: ../data/nautilus-actions.schemas.in.h:33 ../src/common/na-xml-names.h:106
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings"
@@ -196,11 +212,11 @@ msgstr ""
 
 #. GConf schema descriptions
 #.
-#: ../data/nautilus-actions.schemas.in.h:31 ../src/common/na-xml-names.h:101
+#: ../data/nautilus-actions.schemas.in.h:34 ../src/common/na-xml-names.h:101
 msgid "The label of the menu item"
 msgstr "మెనూ అంశముయొక్క లేబుల్"
 
-#: ../data/nautilus-actions.schemas.in.h:32 ../src/common/na-xml-names.h:102
+#: ../data/nautilus-actions.schemas.in.h:35 ../src/common/na-xml-names.h:102
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings"
@@ -208,24 +224,24 @@ msgstr ""
 "ఎంపిక అనునది అప్పీయరెన్స్ కండీషన్ అమరికలకు సరిపోలినప్పుడు నాటిలస్ పాపప్ మెనూనందు కనిపించు మెనూ "
 "అంశముయొక్క లేబుల్"
 
-#: ../data/nautilus-actions.schemas.in.h:33 ../src/common/na-xml-names.h:115
+#: ../data/nautilus-actions.schemas.in.h:36 ../src/common/na-xml-names.h:115
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr "ఎంపికచేసిన దస్త్రము(లు)/ఫోల్డరు(లు)కు సరిపోల్చుటకు మాదిరిల జాబితా"
 
-#: ../data/nautilus-actions.schemas.in.h:34 ../src/common/na-xml-names.h:119
+#: ../data/nautilus-actions.schemas.in.h:37 ../src/common/na-xml-names.h:119
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr "ఎంపికచేసిన దస్త్రము(ల) యొక్క మైమ్‌రకములను సరిపోల్చుటకు మాదిరిల జాబితా"
 
-#: ../data/nautilus-actions.schemas.in.h:35 ../src/common/na-xml-names.h:127
+#: ../data/nautilus-actions.schemas.in.h:38 ../src/common/na-xml-names.h:127
 msgid "The list of schemes where the selected files should be located"
 msgstr "ఎంపికచేయబడిన దస్త్రములు వుంచబడు స్కీమాల జాబితా"
 
-#: ../data/nautilus-actions.schemas.in.h:36 ../src/common/na-xml-names.h:113
+#: ../data/nautilus-actions.schemas.in.h:39 ../src/common/na-xml-names.h:113
 #: ../src/utils/nautilus-actions-new.c:69
 msgid "The parameters of the command"
 msgstr "ఆదేశము యొక్క పారామితులు"
 
-#: ../data/nautilus-actions.schemas.in.h:38
+#: ../data/nautilus-actions.schemas.in.h:41
 #, no-c-format
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
@@ -238,29 +254,32 @@ msgid ""
 "number of the first URI %R: space-separated list of selected URIs %s: scheme "
 "of the URI %u: URI %U: username of the URI %%: a percent sign"
 msgstr ""
-"వినియోగదారి నాటిలస్ పాపప్ మెనూనందలి మెనూ అంశమును యెంపికచేయగానే ప్రారంభము కావలసిన ఆదేశముయొక్క "
-"పారామితులు.ఆదేశము ప్రారంభము కావటానికి ముందుగా నాటిలస్ సమాచారముతో పునఃస్థాపించబడు కొన్ని ప్రత్యేక టోకెన్లనుపారామితలు కలిగివుంటాయి:%d: ఎంపికచేసిన దస్త్రము(ల) ఆధార ఫోల్డర్ %f: ఎంపికచేసిన దస్త్రము యొక్క నామము లేదా చాలావాటిని యెంపికచేసినచో మొదటిదాని నామము %h:URI యొక్క హోస్ట్ నామము %m: ఎంపికచేసిన "
-"దస్త్రము(ల)/ఫోల్డరు(ల) యొక్క ఆధారనామముల జాబితా %M: ఎంపికచేసిన దస్త్రము(ల)/ఫోల్డరు(ల) యొక్క జాబితా, వాటియొక్క పూర్తి పాత్‌లతో %p: మొదటి URI యొక్క పోర్టు సంఖ్య %R: ఎంపికచేసిన URIల జాబితా %s: URI యొక్క స్కీమా"
-"%u: URI %U: URI యొక్క వినియోగదారి నామము %%: ఒక శాతము గుర్తు"
+"వినియోగదారి నాటిలస్ పాపప్ మెనూనందలి మెనూ అంశమును యెంపికచేయగానే ప్రారంభము కావలసిన ఆదేశముయొక్క పారామితులు."
+"ఆదేశము ప్రారంభము కావటానికి ముందుగా నాటిలస్ సమాచారముతో పునఃస్థాపించబడు కొన్ని ప్రత్యేక టోకెన్లనుపారామితలు "
+"కలిగివుంటాయి:%d: ఎంపికచేసిన దస్త్రము(ల) ఆధార ఫోల్డర్ %f: ఎంపికచేసిన దస్త్రము యొక్క నామము లేదా చాలావాటిని "
+"యెంపికచేసినచో మొదటిదాని నామము %h:URI యొక్క హోస్ట్ నామము %m: ఎంపికచేసిన దస్త్రము(ల)/ఫోల్డరు(ల) యొక్క "
+"ఆధారనామముల జాబితా %M: ఎంపికచేసిన దస్త్రము(ల)/ఫోల్డరు(ల) యొక్క జాబితా, వాటియొక్క పూర్తి పాత్‌లతో %p: మొదటి "
+"URI యొక్క పోర్టు సంఖ్య %R: ఎంపికచేసిన URIల జాబితా %s: URI యొక్క స్కీమా%u: URI %U: URI యొక్క "
+"వినియోగదారి నామము %%: ఒక శాతము గుర్తు"
 
-#: ../data/nautilus-actions.schemas.in.h:39 ../src/common/na-xml-names.h:111
+#: ../data/nautilus-actions.schemas.in.h:42 ../src/common/na-xml-names.h:111
 #: ../src/utils/nautilus-actions-new.c:68
 #: ../src/utils/nautilus-actions-new.c:71
 msgid "The path of the command"
 msgstr "ఆదేశముయొక్క పాత్"
 
-#: ../data/nautilus-actions.schemas.in.h:40 ../src/common/na-xml-names.h:112
+#: ../data/nautilus-actions.schemas.in.h:43 ../src/common/na-xml-names.h:112
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu"
 msgstr "వినియోగదారి నాటిలస్ పాపప్ మెనూనందలి మెనూ అంశమును యెంపికచేయగానే ప్రారంభముకావలసిన ఆదేశము యొక్క పాత్"
 
-#: ../data/nautilus-actions.schemas.in.h:41 ../src/common/na-xml-names.h:103
+#: ../data/nautilus-actions.schemas.in.h:44 ../src/common/na-xml-names.h:103
 #: ../src/utils/nautilus-actions-new.c:65
 msgid "The tooltip of the menu item"
 msgstr "మెనూ అంశముయొక్క సాధనచిట్కా"
 
-#: ../data/nautilus-actions.schemas.in.h:42 ../src/common/na-xml-names.h:104
+#: ../data/nautilus-actions.schemas.in.h:45 ../src/common/na-xml-names.h:104
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse"
@@ -268,17 +287,17 @@ msgstr ""
 "వినియోగదారి తన మౌస్‌తో నాటిలస్ పాపప్ మెనూ అంశమును సూచించినప్పుడు నాటిలస్ స్థితిపట్టీ నందు కనిపించు మెనూ "
 "అంశముయొక్క సాధనచిట్కా"
 
-#: ../data/nautilus-actions.schemas.in.h:43 ../src/common/na-xml-names.h:129
+#: ../data/nautilus-actions.schemas.in.h:46 ../src/common/na-xml-names.h:129
 msgid "The version of the configuration format"
 msgstr "ఆకృతీకరణ ఫార్మాట్ యొక్క వర్షన్"
 
-#: ../data/nautilus-actions.schemas.in.h:44 ../src/common/na-xml-names.h:130
+#: ../data/nautilus-actions.schemas.in.h:47 ../src/common/na-xml-names.h:130
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility"
 msgstr "గతవాటితో సారూప్యతను నిర్వహించుటకు వుపయోగించబడు ఆకృతీకరణ ఫార్మాట్ యొక్క వర్షన్"
 
-#: ../data/nautilus-actions.schemas.in.h:45
+#: ../data/nautilus-actions.schemas.in.h:48
 msgid ""
 "This setting is tied in with the 'isdir' setting. The valid combinations "
 "are: isfile=TRUE and isdir=FALSE: the selection may hold only files "
@@ -287,13 +306,13 @@ msgid ""
 "and isdir=FALSE: this is an invalid combination (your configuration will "
 "never appear)"
 msgstr ""
-"ఈ అమర్పు 'isdir' అమర్పుతో కట్టివుంచబడింది. చెల్లునటువంటి సంయోగములు:"
-"isfile=TRUE మరియు isdir=FALSE: యెంపిక దస్త్రములను మాత్రమే కలిగివుండవచ్చును"
-"isfile=FALSE మరియు isdir=TRUE: యెంపిక ఫోల్డర్లను మాత్రమే కలిగివుండవచ్చును"
-"isfile=TRUE మరియు isdir=TRUE: యెంపిక దస్త్రములను మరియు ఫోల్డర్లను రెంటిని కలిగివుండవచ్చు"
-"isfile=FALSE మరియు isdir=FALSE: ఇది వొక చెల్లని సంయోగము (మీ ఆకృతీకరణ యెప్పటికి కనిపించదు)"
+"ఈ అమర్పు 'isdir' అమర్పుతో కట్టివుంచబడింది. చెల్లునటువంటి సంయోగములు:isfile=TRUE మరియు "
+"isdir=FALSE: యెంపిక దస్త్రములను మాత్రమే కలిగివుండవచ్చునుisfile=FALSE మరియు isdir=TRUE: "
+"యెంపిక ఫోల్డర్లను మాత్రమే కలిగివుండవచ్చునుisfile=TRUE మరియు isdir=TRUE: యెంపిక దస్త్రములను "
+"మరియు ఫోల్డర్లను రెంటిని కలిగివుండవచ్చుisfile=FALSE మరియు isdir=FALSE: ఇది వొక చెల్లని "
+"సంయోగము (మీ ఆకృతీకరణ యెప్పటికి కనిపించదు)"
 
-#: ../data/nautilus-actions.schemas.in.h:46
+#: ../data/nautilus-actions.schemas.in.h:49
 msgid ""
 "This setting is tied in with the 'isfile' setting. The valid combinations "
 "are: isfile=TRUE and isdir=FALSE: the selection may hold only files "
@@ -302,20 +321,93 @@ msgid ""
 "and isdir=FALSE: this is an invalid combination (your configuration will "
 "never appear)"
 msgstr ""
-"ఈ అమర్పు 'isfile' అమర్పుతో కట్టివుంచబడుతుంది. చెల్లునటువంటి సంయోగములు:"
-"isfile=TRUE మరియు isdir=FALSE: యెంపిక దస్త్రములను మాత్రమే కలిగివుండవచ్చును"
-"isfile=FALSE మరియు isdir=TRUE: యెంపిక ఫోల్డర్లను మాత్రమే కలిగివుండవచ్చును"
-"isfile=TRUE మరియు isdir=TRUE: యెంపిక దస్త్రములను మరియు ఫోల్డర్లను రెంటిని కలిగివుండవచ్చు"
-"isfile=FALSE మరియు isdir=FALSE: ఇది వొక చెల్లని సంయోగము (మీ ఆకృతీకరణ యెప్పటికి కనిపించదు)"
+"ఈ అమర్పు 'isfile' అమర్పుతో కట్టివుంచబడుతుంది. చెల్లునటువంటి సంయోగములు:isfile=TRUE మరియు "
+"isdir=FALSE: యెంపిక దస్త్రములను మాత్రమే కలిగివుండవచ్చునుisfile=FALSE మరియు isdir=TRUE: "
+"యెంపిక ఫోల్డర్లను మాత్రమే కలిగివుండవచ్చునుisfile=TRUE మరియు isdir=TRUE: యెంపిక దస్త్రములను "
+"మరియు ఫోల్డర్లను రెంటిని కలిగివుండవచ్చుisfile=FALSE మరియు isdir=FALSE: ఇది వొక చెల్లని "
+"సంయోగము (మీ ఆకృతీకరణ యెప్పటికి కనిపించదు)"
 
-#: ../data/nautilus-actions.schemas.in.h:47 ../src/common/na-xml-names.h:107
+#: ../data/nautilus-actions.schemas.in.h:50
+msgid ""
+"When TRUE, the available Nautilus-Actions actions are displayed as a submenu "
+"of the Nautilus context menu"
+msgstr ""
+"సత్యమైతే, అందుబాటులో వున్న Nautilus-Actions చర్యలు నాటిలస్ కాంటెస్టు మెనూ యొక్క "
+"వుపమెనూ వలె ప్రదర్శితమౌతుంది"
+
+#: ../data/nautilus-actions.schemas.in.h:51 ../src/common/na-xml-names.h:107
 #: ../src/utils/nautilus-actions-new.c:67
 msgid "Whether the action is enabled"
 msgstr "చర్య చేతనముచేయవలెనా"
 
-#: ../data/nautilus-actions.schemas.in.h:48
+#: ../data/nautilus-actions.schemas.in.h:52
 msgid "Width of the main window pane ; default is set by the UI manager"
 msgstr "ముఖ్య విండో పేన్ యొక్క వెడల్పు ; అప్రమేయం అనునది UI నిర్వాహిక ద్వారా అమర్చబడుతుంది"
+
+#: ../src/common/na-about.c:58
+msgid "Ulisse Perusin <uli.peru@gmail.com>"
+msgstr "Ulisse Perusin <uli.peru@gmail.com>"
+
+#: ../src/common/na-about.c:63
+msgid "Frederic Ruaudel <grumz@grumz.net>"
+msgstr "Frederic Ruaudel <grumz@grumz.net>"
+
+#: ../src/common/na-about.c:64
+msgid "Rodrigo Moya <rodrigo@gnome-db.org>"
+msgstr "Rodrigo Moya <rodrigo@gnome-db.org>"
+
+#: ../src/common/na-about.c:65
+msgid "Pierre Wieser <pwieser@trychlos.org>"
+msgstr "Pierre Wieser <pwieser@trychlos.org>"
+
+#: ../src/common/na-about.c:74
+msgid ""
+"Nautilus Actions Configuration Tool is free software; you can redistribute "
+"it and/or modify it under the terms of the GNU General Public License as "
+"published by the Free Software Foundation; either version 2 of the License, "
+"or (at your option) any later version."
+msgstr ""
+"నాటిలస్ చర్యల ఆకృతీకరణ సాధనము ఉచిత సాఫ్టువేర్; ఉచిత సాఫ్టువేర్ సంస్థ తరుపున ప్రచురితమైన GNU జనరల్ "
+"పబ్లిక్ లైసెన్సు కు లోబడి దీనిని మీరు పునఃపంపిణి మరియు/లేదా సవరణ చేయవచ్చు; మీరు అనుసరించవలిసినది "
+"లైసెన్సు యొక్క వర్షన్ 2, లేదా (మీ ఐచ్చికం వద్ద) దాని తరువాతి వర్షన్ కాని."
+
+#: ../src/common/na-about.c:78
+msgid ""
+"Nautilus Actions Configuration Tool is distributed in the hope that it will "
+"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
+"Public License for more details."
+msgstr ""
+"నాటిలస్ చర్యల ఆకృతీకరణ సాధనము అది ఉపయోగపడుతుందనే నమ్మకం తో పంపిణీ చేయబడింది, అయితే ఏ హామి లేదు; "
+"వ్యాపారసంబంధితంగా కాని లేదా ప్రతిపాదిత ప్రయోజనం కొరకు కాని హామీ లేదు. అధికవివరములకొరకు GNU జనరల్ పబ్లిక్ "
+"లైసెన్సు ను చూడండి."
+
+#: ../src/common/na-about.c:82
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"Nautilus Actions Configuration Tool ; if not, write to the Free Software "
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
+"USA."
+msgstr ""
+"నాటిలస్ చర్యల ఆకృతీకరణ సాధనముతో పాటు మీరు GNU జనరల్ పబ్లిక్ లైసెన్సు నకలు ను పొంది ఉంటారు; "
+"పొందకపోతే, Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, "
+"Boston. MA02110-1301, USA కు వ్రాయండి."
+
+#: ../src/common/na-about.c:100
+msgid "A graphical interface to create and edit your Nautilus actions."
+msgstr "మీ నాటిలస్ చర్యలను సృష్టించుటకు మరియు సరికూర్చుటకు వొక గ్రాఫికల్ యింటర్ఫేస్."
+
+#: ../src/common/na-about.c:101
+msgid ""
+"Copyright © 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright © 2009 Pierre Wieser <pwieser@trychlos.org>"
+msgstr ""
+"Copyright © 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright © 2009 Pierre Wieser <pwieser@trychlos.org>"
+
+#: ../src/common/na-about.c:103
+msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
+msgstr "GNOME అనువాదీకరణ ప్రోజెక్టు <gnome-i18n@gnome.org>"
 
 #: ../src/common/na-action.h:51
 msgid "New Nautilus action"
@@ -355,7 +447,8 @@ msgstr ""
 "%M: ఎంపికచేసిన దస్త్రము(ల)/ఫోల్డరు(ల) యొక్క జాబితా, వాటియొక్క పూర్తి పాత్‌లతో\n"
 "%p: మొదటి URI యొక్క పోర్టు సంఖ్య\n"
 "%R: ఎంపికైన URIల జాబితా\n"
-"%s: URI యొక్క స్కీమ్\nURIల %u: Gోస్ట్ నామము\n"
+"%s: URI యొక్క స్కీమ్\n"
+"URIల %u: Gోస్ట్ నామము\n"
 "%U: GnomeVFS URI యొక్క వినియోగదారి నామము\n"
 "%%: ఒక శాతము గుర్తు"
 
@@ -432,25 +525,58 @@ msgstr ""
 "\n"
 "నాటిలస్ ద్వారా వుపయోగించిన అన్ని స్కీములు యిక్కడ వుపయోగించబడతాయి."
 
-#: ../src/nact/base-application.c:565
+#. i18n: unable to load <dialog_name> dialog from XML definition in <filename>
+#: ../src/nact/base-application.c:1091
 #, c-format
-msgid "Unable to load %s dialog from %s glade file."
-msgstr "%s డైలాగును %s గ్లేడ్ ఫైలునుండి లోడు చేయలేక పోయింది."
+#| msgid "Unable to load %s dialog from %s glade file."
+msgid "Unable to load %s dialog from XML definition in %s."
+msgstr "%s డైలాగును XML నిర్వచనమునుండి %s నందు లోడుచేయలేదు."
 
-#: ../src/nact/base-application.c:1039
-msgid "Default application name"
-msgstr "అప్రమేయ అనువర్తనము నామము"
+#: ../src/nact/base-application.c:1105
+msgid "Unable to initialize the internationalization environment."
+msgstr "అంతర్జాతీయ వాతావరణమును సిద్దపరచలేక పోయింది."
 
-#: ../src/nact/nact-application.c:275
+#: ../src/nact/base-application.c:1114
+msgid "Unable to initialize the Gtk+ user interface."
+msgstr "Gtk+ వినియోగదారి ఇంటర్ఫేసును సిద్దపరచలేక పోయింది."
+
+#: ../src/nact/base-application.c:1123
+#| msgid ""
+#| "Another instance of Nautilus Actions Configuration Tool is already "
+#| "running."
+msgid "Another instance of the application is already running."
+msgstr "అనువర్తనము యొక్క మరియొక సంభవము యిప్పటికే నడుచుచున్నది."
+
+#: ../src/nact/base-application.c:1132
+msgid "No filename provided for the UI XML definition."
+msgstr "UI XML నిర్వచనము కొరకు యెటువంటి దస్త్రమునామము అందించబడుటలేదు."
+
+#. i18n: Unable to load the XML definition from <filename>
+#: ../src/nact/base-application.c:1142
+#, c-format
+#| msgid "Unable to load %s dialog from %s glade file."
+msgid "Unable to load the XML definition from %s."
+msgstr "XML నిర్వచనమును %s నుండి లోడు చేయలేక పోయింది."
+
+#: ../src/nact/base-application.c:1155
+msgid "Unable to set the default icon for the application."
+msgstr "అనువర్తనము కొరకు అప్రమేయ ప్రతిమను అమర్చలేక పోయింది."
+
+#: ../src/nact/base-application.c:1164
+msgid "Unable to get the main window of the application."
+msgstr "అనువర్తనము యొక్క ముఖ్యవిండోను పొందలేక పోయింది."
+
+#: ../src/nact/nact-application.c:282
 msgid "Another instance of Nautilus Actions Configuration Tool is already running."
 msgstr "నాటిలస్ చర్యల ఆకృతీకరణి సాధనం యొక్క వేరొక సంభవం యిప్పటికే నడుచుచున్నది."
 
-#: ../src/nact/nact-application.c:276
+#. i18n: another instance is already running: second line of error message
+#: ../src/nact/nact-application.c:284
 msgid "Please switch back to it."
 msgstr "దయచేసి దీనికి మారండి."
 
 #. i18n: this is the application name, used in window title
-#: ../src/nact/nact-application.c:286
+#: ../src/nact/nact-application.c:320
 msgid "Nautilus Actions Configuration Tool"
 msgstr "నాటిలస్ చర్యల ఆకృతీకరణ సాధనము"
 
@@ -555,339 +681,277 @@ msgid "Nautilus Actions Configuration"
 msgstr "నాటిలస్ చర్యల ఆకృతీకరణ"
 
 #. i18n: status bar message when the action label is empty
-#: ../src/nact/nact-iaction-tab.c:354
+#: ../src/nact/nact-iaction-tab.c:332
 msgid "Caution: a label is mandatory for the action."
 msgstr "జాగ్రత్త: చర్యకు వొక లేబుల్ తప్పనిసరి"
 
 #. i18n: label in front of the GtkEntry where user enters the action label
 #. i18n: label in front of the GtkEntry where user enters the profile label
-#: ../src/nact/nact-iaction-tab.c:364 ../src/nact/nact-icommand-tab.c:371
+#: ../src/nact/nact-iaction-tab.c:342 ../src/nact/nact-icommand-tab.c:347
 msgid "_Label :"
 msgstr "లేబుల్ (_L):"
 
-#: ../src/nact/nact-iaction-tab.c:442
+#: ../src/nact/nact-iaction-tab.c:420
 msgid "Choosing an icon"
 msgstr "ప్రతిమను యెంచుకొనుచున్నది"
 
 #. i18n notes: when no icon is selected in the drop-down list
-#: ../src/nact/nact-iaction-tab.c:494
+#: ../src/nact/nact-iaction-tab.c:472
 msgid "None"
 msgstr "ఏదీకాదు"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../src/nact/nact-iadvanced-tab.c:361
+#: ../src/nact/nact-iadvanced-tab.c:367
 msgid "new-scheme"
 msgstr "కొత్త-స్కీమా"
 
-#: ../src/nact/nact-iadvanced-tab.c:362
+#: ../src/nact/nact-iadvanced-tab.c:368
 msgid "New scheme description"
 msgstr "కొత్త స్కీమా వివరణ"
 
 #. i18n notes : description of 'file' scheme
-#: ../src/nact/nact-iadvanced-tab.c:525
+#: ../src/nact/nact-iadvanced-tab.c:531
 msgid "Local files"
 msgstr "స్థానిక దస్త్రములు"
 
 #. i18n notes : description of 'sftp' scheme
-#: ../src/nact/nact-iadvanced-tab.c:527
+#: ../src/nact/nact-iadvanced-tab.c:533
 msgid "SSH files"
 msgstr "SSH దస్త్రములు"
 
 #. i18n notes : description of 'smb' scheme
-#: ../src/nact/nact-iadvanced-tab.c:529
+#: ../src/nact/nact-iadvanced-tab.c:535
 msgid "Windows files"
 msgstr "Windows దస్త్రములు"
 
 #. i18n notes : description of 'ftp' scheme
-#: ../src/nact/nact-iadvanced-tab.c:531
+#: ../src/nact/nact-iadvanced-tab.c:537
 msgid "FTP files"
 msgstr "FTP దస్త్రములు"
 
 #. i18n notes : description of 'dav' scheme
-#: ../src/nact/nact-iadvanced-tab.c:533
+#: ../src/nact/nact-iadvanced-tab.c:539
 msgid "WebDAV files"
 msgstr "Webdav దస్త్రములు"
 
 #. i18n: status bar message when the profile label is empty
-#: ../src/nact/nact-icommand-tab.c:361
+#: ../src/nact/nact-icommand-tab.c:337
 msgid "Caution: a label is mandatory for the profile."
 msgstr "జాగ్రత్త: ప్రోఫైల్‌నకు వొక లేబుల్ తప్పనిసరి."
 
-#: ../src/nact/nact-icommand-tab.c:404
+#: ../src/nact/nact-icommand-tab.c:380
 msgid "Choosing a command"
 msgstr "ఆదేశమును యెంచుకొనుచున్నది"
 
 #. static const char *thisfn = "nact_iconditions_update_example_label";
-#: ../src/nact/nact-icommand-tab.c:479
+#: ../src/nact/nact-icommand-tab.c:455
 #, c-format
 msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
 msgstr "<i><b><span size=\"small\">ఉ.దా., %s</span></b></i>"
 
 #. i18n notes: example strings for the command preview
-#: ../src/nact/nact-icommand-tab.c:525
+#: ../src/nact/nact-icommand-tab.c:501
 msgid "/path/to"
 msgstr "/path/to"
 
-#: ../src/nact/nact-icommand-tab.c:526
+#: ../src/nact/nact-icommand-tab.c:502
 msgid "file1.txt"
 msgstr "file1.txt"
 
-#: ../src/nact/nact-icommand-tab.c:526
+#: ../src/nact/nact-icommand-tab.c:502
 msgid "file2.txt"
 msgstr "file2.txt"
 
-#: ../src/nact/nact-icommand-tab.c:527
+#: ../src/nact/nact-icommand-tab.c:503
 msgid " folder1"
 msgstr " ఫోల్డర్‌1"
 
-#: ../src/nact/nact-icommand-tab.c:527
+#: ../src/nact/nact-icommand-tab.c:503
 msgid "folder2"
 msgstr "ఫోల్డర్2"
 
-#: ../src/nact/nact-icommand-tab.c:528
+#: ../src/nact/nact-icommand-tab.c:504
 msgid " file1.txt"
 msgstr " file1.txt"
 
-#: ../src/nact/nact-icommand-tab.c:528
+#: ../src/nact/nact-icommand-tab.c:504
 msgid "folder1"
 msgstr "ఫోల్డర్1"
 
-#: ../src/nact/nact-icommand-tab.c:530
+#: ../src/nact/nact-icommand-tab.c:506
 msgid "test.example.net"
 msgstr "test.example.net"
 
-#: ../src/nact/nact-icommand-tab.c:531
+#: ../src/nact/nact-icommand-tab.c:507
 msgid "file.txt"
 msgstr "file.txt"
 
-#: ../src/nact/nact-icommand-tab.c:532
+#: ../src/nact/nact-icommand-tab.c:508
 msgid "folder"
 msgstr "ఫోల్డర్"
 
-#: ../src/nact/nact-icommand-tab.c:533
+#: ../src/nact/nact-icommand-tab.c:509
 msgid "8080"
 msgstr "8080"
 
-#: ../src/nact/nact-icommand-tab.c:537
+#: ../src/nact/nact-icommand-tab.c:513
 msgid "file:///path/to/file1.text"
 msgstr "file:///path/to/file1.text"
 
-#: ../src/nact/nact-icommand-tab.c:538
+#: ../src/nact/nact-icommand-tab.c:514
 msgid "file:///path/to/file2.text"
 msgstr "file:///path/to/file2.text"
 
-#: ../src/nact/nact-icommand-tab.c:539
+#: ../src/nact/nact-icommand-tab.c:515
 msgid "file:///path/to/a/dir"
 msgstr "file:///path/to/a/dir"
 
-#: ../src/nact/nact-icommand-tab.c:540
+#: ../src/nact/nact-icommand-tab.c:516
 msgid "file:///path/to/another/dir"
 msgstr "file:///path/to/another/dir"
 
 #. i18n: File menu
-#: ../src/nact/nact-imenubar.c:296
+#: ../src/nact/nact-imenubar.c:290
 msgid "_File"
 msgstr "దస్త్రము (_F)"
 
 #. i18n: 'New action' item in 'File' menu
-#: ../src/nact/nact-imenubar.c:303
+#: ../src/nact/nact-imenubar.c:297
 msgid "_New action"
 msgstr "కొత్త చర్య (_N)"
 
 #. i18n: 'New profile' item in 'File' menu
-#: ../src/nact/nact-imenubar.c:309
+#: ../src/nact/nact-imenubar.c:303
 msgid "New _profile"
 msgstr "కొత్త ప్రొఫైల్ (_p)"
 
 #. i18n: Edit menu
-#: ../src/nact/nact-imenubar.c:331
+#: ../src/nact/nact-imenubar.c:325
 msgid "_Edit"
 msgstr "సరికూర్చు (_E)"
 
 #. i18n: Duplicate item in Edit menu
-#: ../src/nact/nact-imenubar.c:338
+#: ../src/nact/nact-imenubar.c:332
 msgid "D_uplicate"
 msgstr "నకిలీ (_u)"
 
-#: ../src/nact/nact-imenubar.c:353
+#: ../src/nact/nact-imenubar.c:347
 msgid "_Reload the list of actions"
 msgstr "చర్యల జాబితాను తిరిగిలోడు చేయుము (_R)"
 
 #. i18n: Tools menu
-#: ../src/nact/nact-imenubar.c:362
+#: ../src/nact/nact-imenubar.c:363
 msgid "_Tools"
 msgstr "సాధనములు (_T)"
 
 #. i18n: Import item in Tools menu
-#: ../src/nact/nact-imenubar.c:369
+#: ../src/nact/nact-imenubar.c:370
 msgid "_Import assistant..."
 msgstr "దిగుమతి సహాయకి... (_I)"
 
 #. i18n: Export item in Tools menu
-#: ../src/nact/nact-imenubar.c:375
+#: ../src/nact/nact-imenubar.c:376
 msgid "E_xport assistant..."
 msgstr "ఎగుమతి సహాయకి... (_x)"
 
 #. i18n: Help menu
-#: ../src/nact/nact-imenubar.c:385
+#: ../src/nact/nact-imenubar.c:386
 msgid "_Help"
 msgstr "సహాయము (_H)"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New action' item
-#: ../src/nact/nact-imenubar.c:441
+#: ../src/nact/nact-imenubar.c:442
 msgid "Define a new action."
 msgstr "కొత్త చర్యను నిర్వచించుము."
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
-#: ../src/nact/nact-imenubar.c:467
+#: ../src/nact/nact-imenubar.c:468
 msgid "Define a new profile attached to the current action."
 msgstr "ప్రస్తుత చర్యనకు అనుభందించిన కొత్త ప్రొఫైల్‌ను నిర్వచించుము."
 
 #. i18n: tooltip displayed in the status bar when selecting 'Save' item
-#: ../src/nact/nact-imenubar.c:563
+#: ../src/nact/nact-imenubar.c:564
 msgid "Record all the modified actions. Invalid actions will be silently ignored."
 msgstr "అన్ని సవరించిన చర్యలను రికార్డు చేయుము. చెల్లని చర్యలు నిశ్శబ్దంగా వదిలివేయబడతాయి."
 
 #. i18n: tooltip displayed in the status bar when selecting 'Quit' item
-#: ../src/nact/nact-imenubar.c:582
+#: ../src/nact/nact-imenubar.c:583
 msgid "Quit the application."
 msgstr "అనువర్తనమును నిష్క్రమించుము."
 
 #. i18n: label of a duplicated action
 #. i18n: label of a duplicated profile
-#: ../src/nact/nact-imenubar.c:659 ../src/nact/nact-imenubar.c:673
+#: ../src/nact/nact-imenubar.c:660 ../src/nact/nact-imenubar.c:674
 #, c-format
 msgid "Copy of %s"
 msgstr "%s యొక్క నకలు"
 
 #. i18n: tooltip displayed in the status bar when selecting the Duplicate item
-#: ../src/nact/nact-imenubar.c:686
+#: ../src/nact/nact-imenubar.c:687
 msgid "Create a copy of the selected action or profile."
 msgstr "ఎంపికచేసిన చర్యయొక్క లేదా ప్రొఫైల్ యొక్క నకలును సృష్టించుము."
 
 #. i18n: tooltip displayed in the status bar when selecting the Delete item
-#: ../src/nact/nact-imenubar.c:730
+#: ../src/nact/nact-imenubar.c:731
 msgid "Remove the selected action or profile from your configuration."
 msgstr "ఎంపికచేసిన చర్య లేదా ప్రొఫైల్‌ను మీ ఆకృతీకరణనుండి తీసివేయుము."
 
 #. i18n: message before reloading the list of actions
-#: ../src/nact/nact-imenubar.c:744
+#: ../src/nact/nact-imenubar.c:745
 msgid "This will cancel your current modifications."
 msgstr "ఇది మీ ప్రస్తుత చర్యలను రద్దుచేస్తుంది."
 
-#: ../src/nact/nact-imenubar.c:745
+#: ../src/nact/nact-imenubar.c:746
 msgid "Are you sure this is what you want ?"
 msgstr "మీరు కావాలనుకొన్నది యిదేనా?"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
-#: ../src/nact/nact-imenubar.c:762
-msgid " Cancel your current modifications and reload the list of actions."
-msgstr " మీ ప్రస్తుత సవరింపులను రద్దుచేసి మరియు చర్యల జాబితాను తిరిగిలోడు చేయుము."
+#: ../src/nact/nact-imenubar.c:763
+#| msgid " Cancel your current modifications and reload the list of actions."
+msgid "Cancel your current modifications and reload the list of actions."
+msgstr "మీ ప్రస్తుత సవరింపులను రద్దుచేసి మరియు చర్యల జాబితాను తిరిగిలోడు చేయుము."
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
+#: ../src/nact/nact-imenubar.c:776
+msgid "Edit your preferences."
+msgstr "మీ అభీష్టాలను సరికూర్చుము."
 
 #. i18n: tooltip displayed in the status bar when selecting the Import item
-#: ../src/nact/nact-imenubar.c:787
+#: ../src/nact/nact-imenubar.c:801
 msgid "Import one or more actions from external (XML) files into your configuration."
 msgstr "ఒకటి లేదా అంతకన్నా యెక్కువ చర్యలను బహిర్గత (XML) దస్త్రములనుండి మీ ఆకృతీకరణకు దిగుమతి చేయుము."
 
 #. i18n: tooltip displayed in the status bar when selecting the Export item
-#: ../src/nact/nact-imenubar.c:807
+#: ../src/nact/nact-imenubar.c:821
 msgid "Export one or more actions from your configuration to external XML files."
 msgstr "ఒకటి లేదా యెక్కువ చర్యలను మీ ఆకృతీకరణనుండి బహిర్గత XML దస్త్రములకు ఎగుమతిచేయుము."
 
 #. i18n: tooltip displayed in the status bar when selecting the Help item
-#: ../src/nact/nact-imenubar.c:819
+#: ../src/nact/nact-imenubar.c:833
 msgid "Display help about this program."
 msgstr "ఈ ప్రోగ్రామ్ గురించి సహాయమును ప్రదర్శించుము."
 
-#: ../src/nact/nact-imenubar.c:835
-msgid "Ulisse Perusin <uli.peru@gmail.com>"
-msgstr "Ulisse Perusin <uli.peru@gmail.com>"
-
-#: ../src/nact/nact-imenubar.c:840
-msgid "Frederic Ruaudel <grumz@grumz.net>"
-msgstr "Frederic Ruaudel <grumz@grumz.net>"
-
-#: ../src/nact/nact-imenubar.c:841
-msgid "Rodrigo Moya <rodrigo@gnome-db.org>"
-msgstr "Rodrigo Moya <rodrigo@gnome-db.org>"
-
-#: ../src/nact/nact-imenubar.c:842
-msgid "Pierre Wieser <pwieser@trychlos.org>"
-msgstr "Pierre Wieser <pwieser@trychlos.org>"
-
-#: ../src/nact/nact-imenubar.c:851
-msgid ""
-"Nautilus Actions Configuration Tool is free software; you can redistribute "
-"it and/or modify it under the terms of the GNU General Public License as "
-"published by the Free Software Foundation; either version 2 of the License, "
-"or (at your option) any later version."
-msgstr ""
-"నాటిలస్ చర్యల ఆకృతీకరణ సాధనము ఉచిత సాఫ్టువేర్; ఉచిత సాఫ్టువేర్ సంస్థ తరుపున "
-"ప్రచురితమైన GNU జనరల్ పబ్లిక్ లైసెన్సు కు లోబడి దీనిని మీరు పునఃపంపిణి మరియు/లేదా "
-"సవరణ చేయవచ్చు; మీరు అనుసరించవలిసినది లైసెన్సు యొక్క వర్షన్ 2, లేదా "
-"(మీ ఐచ్చికం వద్ద) దాని తరువాతి వర్షన్ కాని."
-
-#: ../src/nact/nact-imenubar.c:855
-msgid ""
-"Nautilus Actions Configuration Tool is distributed in the hope that it will "
-"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-"Public License for more details."
-msgstr ""
-"నాటిలస్ చర్యల ఆకృతీకరణ సాధనము అది ఉపయోగపడుతుందనే నమ్మకం తో పంపిణీ చేయబడింది, "
-"అయితే ఏ హామి లేదు; వ్యాపారసంబంధితంగా కాని లేదా ప్రతిపాదిత ప్రయోజనం కొరకు "
-"కాని హామీ లేదు. అధికవివరములకొరకు GNU జనరల్ పబ్లిక్ లైసెన్సు ను "
-"చూడండి."
-
-#: ../src/nact/nact-imenubar.c:859
-msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Nautilus Actions Configuration Tool ; if not, write to the Free Software "
-"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
-"USA."
-msgstr ""
-"నాటిలస్ చర్యల ఆకృతీకరణ సాధనముతో పాటు మీరు GNU జనరల్ పబ్లిక్ లైసెన్సు నకలు ను పొంది ఉంటారు; "
-"పొందకపోతే, Free Software Foundation, Inc., 51 Franklin Street, Fifth "
-"Floor, Boston. MA02110-1301, USA కు వ్రాయండి."
-
-#: ../src/nact/nact-imenubar.c:872
-msgid "A graphical interface to create and edit your Nautilus actions."
-msgstr "మీ నాటిలస్ చర్యలను సృష్టించుటకు మరియు సరికూర్చుటకు వొక గ్రాఫికల్ యింటర్ఫేస్."
-
-#: ../src/nact/nact-imenubar.c:873
-msgid ""
-"Copyright © 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright © 2009 Pierre Wieser <pwieser@trychlos.org>"
-msgstr ""
-"Copyright © 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright © 2009 Pierre Wieser <pwieser@trychlos.org>"
-
-#: ../src/nact/nact-imenubar.c:875
-msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr "GNOME అనువాదీకరణ ప్రోజెక్టు <gnome-i18n@gnome.org>"
-
 #. i18n: tooltip displayed in the status bar when selecting the About item
-#: ../src/nact/nact-imenubar.c:893
+#: ../src/nact/nact-imenubar.c:853
 msgid "Display informations about this program."
 msgstr "ఈ ప్రోగ్రామ్ గురించి ప్రదర్శన సమాచారములు"
 
-#: ../src/nact/nact-main-window.c:1139
+#: ../src/nact/nact-main-window.c:1130
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
 "reload a fresh one."
 msgstr ""
 "ఈ ఫైలుసిస్టమ్‌నందు వొకటి లేదా యెక్కువ చర్యలు సవరించబడినవి.\n"
-"మీరు మీ ప్రస్తుత చర్యల జాబితాతో పనిచేయగలుగుతూనే వుంటారు, లేదా మీరు "
-"కొత్త దానిని తిరిగిలోడు చేయవచ్చును."
+"మీరు మీ ప్రస్తుత చర్యల జాబితాతో పనిచేయగలుగుతూనే వుంటారు, లేదా మీరు కొత్త దానిని తిరిగిలోడు చేయవచ్చును."
 
-#: ../src/nact/nact-main-window.c:1145
+#: ../src/nact/nact-main-window.c:1136
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
 msgstr "కొత్త చర్యల జాబితాను తిరిగిలోడు చేయుటకు మీరు మీ ప్రస్తుత సవరింపులను వదులుకోవలసి వుంటుంది."
 
-#: ../src/nact/nact-main-window.c:1151
+#: ../src/nact/nact-main-window.c:1142
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "మీరు కొత్త చర్యల జాబితాను తిరిగిలోడు చేద్దామని అనుకొనుచున్నారా?"
 
@@ -918,80 +982,80 @@ msgstr "చర్యలు సవరించబడినవి."
 msgid "Are you sure you want to quit without saving them ?"
 msgstr "వాటిని దాయకుండానే మీరు నిష్క్రమించుదామని అనుకొనుచున్నారా?"
 
-#: ../src/nact/nact-xml-reader.c:105
+#: ../src/nact/nact-xml-reader.c:106
 #, c-format
 msgid "Unable to parse XML file: %s."
 msgstr "XML ఫైలును పార్శ్ చేయలేక పోయింది: %s."
 
-#: ../src/nact/nact-xml-reader.c:106
+#: ../src/nact/nact-xml-reader.c:107
 #, c-format
 msgid "Invalid XML root element: waited for '%s' or '%s', found '%s' at line %d."
 msgstr "చెల్లని XML root మూలకము: '%s' లేదా '%s' కొరకు వేచివుంది, '%s'ను %d వరుసవద్ద కనుగొన్నది."
 
-#: ../src/nact/nact-xml-reader.c:107
+#: ../src/nact/nact-xml-reader.c:108
 #, c-format
 msgid "Waited for '%s' node, found (ignored) '%s' at line %d."
 msgstr "'%s' నోడు కొరకు వేచివుంది, (వదిలివేసిన) '%s'ను %d వరుసవద్ద కనుగొన్నది."
 
-#: ../src/nact/nact-xml-reader.c:108
+#: ../src/nact/nact-xml-reader.c:109
 #, c-format
 msgid "Unexpected (ignored) '%s' node found at line %d."
 msgstr "ఊహించని (వదలివేసిన) '%s' నోడు %d వరుసవద్ద కనబడింది."
 
-#: ../src/nact/nact-xml-reader.c:109
+#: ../src/nact/nact-xml-reader.c:110
 #, c-format
 msgid "Schema is ignored at line %d."
 msgstr "వరుస %d వద్ద స్కీమా వదిలివేయబడింది."
 
-#: ../src/nact/nact-xml-reader.c:110
+#: ../src/nact/nact-xml-reader.c:111
 #, c-format
 msgid "Unexpected '%s' node found at line %d."
 msgstr "ఊహించని '%s' నోడు వరుస %d వద్ద కనుగొనబడింది."
 
-#: ../src/nact/nact-xml-reader.c:111
+#: ../src/nact/nact-xml-reader.c:112
 #, c-format
 msgid "Unexpected '%s' entry found at line %d."
 msgstr "ఊహించని '%s' ప్రవేశము %d వరుసవద్ద కనబడింది."
 
-#: ../src/nact/nact-xml-reader.c:112
+#: ../src/nact/nact-xml-reader.c:113
 #, c-format
 msgid "Mandatory node '%s' not found."
 msgstr "తప్పనిసరి నోడు '%s' కనబడలేదు."
 
-#: ../src/nact/nact-xml-reader.c:113
+#: ../src/nact/nact-xml-reader.c:114
 msgid "No value found."
 msgstr "ఏ విలువ కనబడలేదు."
 
-#: ../src/nact/nact-xml-reader.c:114
+#: ../src/nact/nact-xml-reader.c:115
 #, c-format
 msgid "Invalid UUID: waited for %s, found %s at line %d."
 msgstr "చెల్లని UUID: %s కొరకు వేచివుంది, %sను %d వరుసవద్ద కనుగొన్నది."
 
-#: ../src/nact/nact-xml-reader.c:115
+#: ../src/nact/nact-xml-reader.c:116
 #, c-format
 msgid "Invalid content: waited for %s prefix, found %s at line %d."
 msgstr "చెల్లని సారము: %s ప్రిఫిక్స్ కొరకు వేచివుంది, %sను వరుస %d వద్ద కనుగొన్నది."
 
-#: ../src/nact/nact-xml-reader.c:116
+#: ../src/nact/nact-xml-reader.c:117
 #, c-format
 msgid "Invalid UUID %s found at line %d."
 msgstr "చెల్లని UUID %s వరుస %d వద్ద కనుగొన్నది."
 
-#: ../src/nact/nact-xml-reader.c:117
+#: ../src/nact/nact-xml-reader.c:118
 #, c-format
 msgid "Already existing action (UUID: %s) at line %d."
 msgstr "చర్య (UUID: %s) వరుస %dవద్ద యిప్పటికే వుంది."
 
-#: ../src/nact/nact-xml-reader.c:118
+#: ../src/nact/nact-xml-reader.c:119
 #, c-format
 msgid "Value '%s' already set: new value ignored at line %d."
 msgstr "విలువ '%s' యిప్పటికే అమర్చబడింది: వరుస %d వద్ద కొత్త విలువ వదిలివేయబడింది."
 
-#: ../src/nact/nact-xml-reader.c:119
+#: ../src/nact/nact-xml-reader.c:120
 msgid "UUID not found."
 msgstr "UUID కనుగొనబడలేదు."
 
-#: ../src/nact/nact-xml-reader.c:120
+#: ../src/nact/nact-xml-reader.c:121
 msgid "Action label not found."
 msgstr "చర్యా లేబుల్ కనుగొనబడలేదు."
 
@@ -1063,8 +1127,8 @@ msgid ""
 "Set it if the selection must only contain folders. Specify both '--isfile' "
 "and '--isdir' options is selection can contain both types of items"
 msgstr ""
-"ఎంపిక ఫోల్డర్లను కలిగివుంటే మాత్రమే దీనిని అమర్చుము. '--isfile' మరియు '--isdir' "
-"ఐచ్చికములు రెంటిని తెలుపుము is ఎంపిక రెండు రకముల అంశములను కలిగివుండగలదు"
+"ఎంపిక ఫోల్డర్లను కలిగివుంటే మాత్రమే దీనిని అమర్చుము. '--isfile' మరియు '--isdir' ఐచ్చికములు "
+"రెంటిని తెలుపుము is ఎంపిక రెండు రకముల అంశములను కలిగివుండగలదు"
 
 #: ../src/utils/nautilus-actions-new.c:75
 msgid "Set it if the selection can have several items"
@@ -1075,8 +1139,8 @@ msgid ""
 "A valid GVFS scheme where the selected files should be located (you must set "
 "one option for each scheme you need)"
 msgstr ""
-"ఎంపికచేసిన దస్త్రములను వుంచుటకు చెల్లునటువంటి GVFS స్కీము (మీకు కావలసిన ప్రతి స్కీమునకు మీరు వొక "
-"ఐచ్చికాన్ని అమర్చాలి)"
+"ఎంపికచేసిన దస్త్రములను వుంచుటకు చెల్లునటువంటి GVFS స్కీము (మీకు కావలసిన ప్రతి స్కీమునకు మీరు "
+"వొక ఐచ్చికాన్ని అమర్చాలి)"
 
 #: ../src/utils/nautilus-actions-new.c:76
 msgid "SCHEME"
@@ -1146,8 +1210,8 @@ msgid ""
 "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
 "mail to <maintainer@nautilus-actions.org>.\n"
 msgstr ""
-"http://bugzilla.gnome.org వద్ద బగ్సు నివేదించవచ్చును, లేదా మీరు "
-"<maintainer@nautilus-actions.org>కు మెయిల్ చేయవచ్చు.\n"
+"http://bugzilla.gnome.org వద్ద బగ్సు నివేదించవచ్చును, లేదా మీరు <maintainer@nautilus-"
+"actions.org>కు మెయిల్ చేయవచ్చు.\n"
 
 #: ../src/utils/nautilus-actions-new.c:187
 msgid "Output of the program"
