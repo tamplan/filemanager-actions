@@ -5,6 +5,7 @@
 	* src/common/na-about.c:
 	* src/common/na-about.h: New files.
 
+	* po/POTFILES.in:
 	* src/common/Makefile.am: Updated accordingly.
 
 	* src/nact/nact-application.c:
