@@ -122,7 +122,7 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the Duplicate item */
 				N_( "Create a copy of the selected action or profile." ),
 				G_CALLBACK( on_duplicate_activated ) },
-		{ "DeleteItem", GTK_STOCK_DELETE, NULL, "Del",
+		{ "DeleteItem", GTK_STOCK_DELETE, NULL, "Delete",
 				/* i18n: tooltip displayed in the status bar when selecting the Delete item */
 				N_( "Remove the selected action or profile from your configuration." ),
 				G_CALLBACK( on_delete_activated ) },
@@ -326,24 +326,6 @@ nact_imenubar_init( NactMainWindow *window )
 		nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( widget ), "select", menu_callback[i].on_selected );
 		g_free( path );
 	}
-}
-
-/**
- * nact_imenubar_on_delete_key_pressed:
- * @window: the #NactMainWindow to which the menubar is attached.
- *
- * Deletes the currently selected item.
- */
-void
-nact_imenubar_on_delete_key_pressed( NactWindow *window )
-{
-	static const gchar *thisfn = "nact_imenubar_on_delete_key_pressed";
-	g_debug( "%s: window=%p", thisfn, window );
-
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	g_assert( NACT_IS_IMENUBAR( window ));
-
-	on_delete_activated( NULL, window );
 }
 
 /**

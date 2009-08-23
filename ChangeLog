@@ -20,6 +20,10 @@
 	Rewrite save function to allow saving all modified actions in one pass.
 	Take advantage of na_ipivot_consumer_delay_notify().
 	Use UI Manager, thus removing all helper functions.
+	Remove nact_imenubar_on_delete_key_pressed() function.
+
+	* src/nact/nact-main-window.c:
+	No more call nact_imenubar_on_delete_key_pressed() function.
 
 	* src/nact/nautilus-actions-config-tool.actions:
 	Add Preferences item in the Edit menu.

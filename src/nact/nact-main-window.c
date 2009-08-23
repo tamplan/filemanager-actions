@@ -96,7 +96,6 @@ static void             setup_dialog_title( NactWindow *window );
 
 static void             on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
 static gboolean         on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
-static gboolean         on_actions_list_delete_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
 static gboolean         on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
 static void             set_current_action( NactMainWindow *window );
 static void             set_current_profile( NactMainWindow *window, gboolean set_action );
@@ -257,7 +256,7 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	iface->get_actions = get_actions;
 	iface->on_selection_changed = on_actions_list_selection_changed;
 	iface->on_double_click = on_actions_list_double_click;
-	iface->on_delete_key_pressed = on_actions_list_delete_key_pressed;
+	iface->on_delete_key_pressed = NULL;
 	iface->on_enter_key_pressed = on_actions_list_enter_key_pressed;
 	iface->is_modified_action = is_modified_action;
 	iface->is_valid_action = is_valid_action;
@@ -639,17 +638,6 @@ on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer
 			NACT_WINDOW( user_data ), NACT_MAIN_WINDOW( user_data )->private->edited_action );
 
 	return( TRUE );
-}
-
-static gboolean
-on_actions_list_delete_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
-{
-	if( NACT_MAIN_WINDOW( user_data )->private->edited_action ){
-		nact_imenubar_on_delete_key_pressed( NACT_WINDOW( user_data ));
-		return( TRUE );
-	}
-
-	return( FALSE );
 }
 
 static gboolean

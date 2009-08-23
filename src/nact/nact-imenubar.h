@@ -76,7 +76,6 @@ GType nact_imenubar_get_type( void );
 
 void  nact_imenubar_init( NactMainWindow *window );
 
-void  nact_imenubar_on_delete_key_pressed( NactWindow *window );
 void  nact_imenubar_on_delete_event( NactWindow *window );
 
 G_END_DECLS
