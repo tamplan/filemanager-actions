@@ -455,7 +455,7 @@ base_application_get_application_name( BaseApplication *application )
 
 	gchar *name = NULL;
 
-	if( BASE_APPLICATION_GET_CLASS( application )->application_get_application_name( application )){
+	if( BASE_APPLICATION_GET_CLASS( application )->application_get_application_name ){
 		name = BASE_APPLICATION_GET_CLASS( application )->application_get_application_name( application );
 
 	} else {
@@ -485,7 +485,7 @@ base_application_get_icon_name( BaseApplication *application )
 
 	gchar *name = NULL;
 
-	if( BASE_APPLICATION_GET_CLASS( application )->application_get_icon_name( application )){
+	if( BASE_APPLICATION_GET_CLASS( application )->application_get_icon_name ){
 		name = BASE_APPLICATION_GET_CLASS( application )->application_get_icon_name( application );
 
 	} else {
@@ -515,7 +515,7 @@ base_application_get_unique_app_name( BaseApplication *application )
 
 	gchar *name = NULL;
 
-	if( BASE_APPLICATION_GET_CLASS( application )->application_get_unique_app_name( application )){
+	if( BASE_APPLICATION_GET_CLASS( application )->application_get_unique_app_name ){
 		name = BASE_APPLICATION_GET_CLASS( application )->application_get_unique_app_name( application );
 
 	} else {
@@ -546,7 +546,7 @@ base_application_get_ui_filename( BaseApplication *application )
 
 	gchar *name = NULL;
 
-	if( BASE_APPLICATION_GET_CLASS( application )->application_get_ui_filename( application )){
+	if( BASE_APPLICATION_GET_CLASS( application )->application_get_ui_filename ){
 		name = BASE_APPLICATION_GET_CLASS( application )->application_get_ui_filename( application );
 
 	} else {
@@ -579,7 +579,7 @@ base_application_get_main_window( BaseApplication *application )
 	g_assert( BASE_IS_APPLICATION( application ));
 
 	if( !application->private->main_window &&
-		BASE_APPLICATION_GET_CLASS( application )->application_get_main_window( application )){
+		BASE_APPLICATION_GET_CLASS( application )->application_get_main_window ){
 			application->private->main_window = BASE_WINDOW( BASE_APPLICATION_GET_CLASS( application )->application_get_main_window( application ));
 	}
 

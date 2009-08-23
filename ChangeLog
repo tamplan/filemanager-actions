@@ -2,6 +2,7 @@
 
 	* src/nact/base-application.c:
 	Fix #592781: use explicit format strings.
+	Fix test of virtual functions which caused double calls.
 
 2009-08-21 Pierre Wieser <pwieser@trychlos.org>
 
