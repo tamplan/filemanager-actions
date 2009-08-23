@@ -41,11 +41,11 @@
 struct NAIPivotConsumerInterfacePrivate {
 };
 
-static GType register_type( void );
-static void  interface_base_init( NAIPivotConsumerInterface *klass );
-static void  interface_base_finalize( NAIPivotConsumerInterface *klass );
+static GType    register_type( void );
+static void     interface_base_init( NAIPivotConsumerInterface *klass );
+static void     interface_base_finalize( NAIPivotConsumerInterface *klass );
 
-/*static void  do_actions_changed( NAIPivotConsumer *instance, gpointer user_data );*/
+static gboolean is_notify_allowed( const NAIPivotConsumer *instance );
 
 /**
  * Registers the GType of this interface.
@@ -120,6 +120,30 @@ interface_base_finalize( NAIPivotConsumerInterface *klass )
 }
 
 /**
+ * na_ipivot_consumer_delay_notify:
+ * @instance: the #NAIPivotConsumer instance.
+ *
+ * Informs the #NAIPivotconsumer instance that the next notification
+ * message should only be handled if a short delay has expired. This
+ * let us to no be polluted by notifications that we create ourselves
+ * (e.g. when saving actions).
+ */
+void
+na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance )
+{
+	GTimeVal *last_delay;
+
+	last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
+
+	if( !last_delay ){
+		last_delay = g_new0( GTimeVal, 1 );
+		g_object_set_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify", last_delay );
+	}
+
+	g_get_current_time( last_delay );
+}
+
+/**
  * na_ipivot_consumer_notify:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
@@ -131,14 +155,26 @@ void na_ipivot_consumer_notify( NAIPivotConsumer *instance )
 	static const gchar *thisfn = "na_ipivot_consumer_notify";
 	g_debug( "%s: instance=%p", thisfn, instance );
 
-	if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed ){
-		NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed( instance, NULL );
+	if( is_notify_allowed( instance )){
+		if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed ){
+			NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed( instance, NULL );
+		}
 	}
 }
 
-/*static void
-do_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
+static gboolean
+is_notify_allowed( const NAIPivotConsumer *instance )
 {
-	static const gchar *thisfn = "na_ipivot_consumer_do_actions_changed";
-	g_debug( "%s: instance=%p, user_data=%p", thisfn, instance, user_data );
-}*/
+	GTimeVal *last_delay;
+	GTimeVal now;
+
+	last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
+	if( !last_delay ){
+		return( TRUE );
+	}
+
+	g_get_current_time( &now );
+	glong ecart = 1000000 * ( now.tv_sec - last_delay->tv_sec );
+	ecart += now.tv_usec - last_delay->tv_usec;
+	return( ecart > 1000000 );
+}

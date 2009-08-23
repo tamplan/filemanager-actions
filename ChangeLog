@@ -1,8 +1,20 @@
 2009-08-23 Pierre Wieser <pwieser@trychlos.org>
 
+	Get rid of unwanted notifications.
+
+	* src/common/na-ipivot-consumer.c:
+	* src/common/na-ipivot-consumer.h (na_ipivot_consumer_delay_notify):
+	New function.
+
+	* src/common/na-object.c: Accept NULL origin.
+
 	* src/nact/base-application.c:
 	Fix #592781: use explicit format strings.
 	Fix test of virtual functions which caused double calls.
+
+	* src/nact/nact-imenubar.c:
+	Rewrite save function to allow saving all modified actions in one pass.
+	Take advantage of na_ipivot_consumer_delay_notify().
 
 2009-08-21 Pierre Wieser <pwieser@trychlos.org>
 

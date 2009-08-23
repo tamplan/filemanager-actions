@@ -455,6 +455,7 @@ void
 na_object_set_origin( NAObject *object, const NAObject *origin )
 {
 	g_assert( NA_IS_OBJECT( object ));
+	g_assert( NA_IS_OBJECT( origin ) || !origin );
 
 	na_iduplicable_set_origin( object, origin );
 }

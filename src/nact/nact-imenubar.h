@@ -69,7 +69,6 @@ typedef struct {
 	gint        ( *count_actions )         ( NactWindow *window );
 	gint        ( *count_modified_actions )( NactWindow *window );
 	void        ( *reload_actions )        ( NactWindow *window );
-	void        ( *on_save )               ( NactWindow *window );
 }
 	NactIMenubarInterface;
 

@@ -65,7 +65,6 @@ struct NactMainWindowPrivate {
 	NAAction        *edited_action;
 	NAActionProfile *edited_profile;
 	GSList          *deleted;
-	GTimeVal         last_saved;
 };
 
 /* the GConf key used to read/write size and position of auxiliary dialogs
@@ -126,7 +125,6 @@ static gint             count_actions( NactWindow *window );
 static gint             count_modified_actions( NactWindow *window );
 static void             reload_actions( NactWindow *window );
 static GSList          *free_actions( GSList *actions );
-static void             on_save( NactWindow *window );
 static void             on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
 
 GType
@@ -331,7 +329,6 @@ imenubar_iface_init( NactIMenubarInterface *iface )
 	iface->count_actions = count_actions;
 	iface->count_modified_actions = count_modified_actions;
 	iface->reload_actions = reload_actions;
-	iface->on_save = on_save;
 }
 
 static void
@@ -395,9 +392,6 @@ instance_finalize( GObject *window )
 
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	NactMainWindow *self = ( NactMainWindow * ) window;
-
-	/*g_free( self->private->current_uuid );
-	g_free( self->private->current_label );*/
 
 	g_free( self->private );
 
@@ -551,8 +545,6 @@ on_runtime_init_toplevel( BaseWindow *window )
 	for( ia = wnd->private->actions ; ia ; ia = ia->next ){
 		na_object_check_edited_status( NA_OBJECT( ia->data ));
 	}
-
-	g_get_current_time( &wnd->private->last_saved );
 
 	g_debug( "%s: window=%p", thisfn, window );
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
@@ -1076,29 +1068,6 @@ free_actions( GSList *actions )
 }
 
 /*
- * in initial_load_toplevel(), we have forbidden the automatic reload
- * of the list of actions in NAPivot, as we take care of updating it of
- * the modifications entered in the UI
- *
- * this doesn't prevent NAPivot to advertise us when it detects some
- * modifications in an I/O provider ; so that we are able to ask the
- * user for a reload
- *
- * but we don't want be advertized when this is our own save which
- * triggers the NAPivot advertising - so we forbids such advertisings
- * during one seconde after each save
- *
- * note that last_saved is initialized in initial_load_toplevel()
- * so we will not be advertised if NAPivot detects a modification
- * in the seconde after this initialization - just ignore this case
- */
-static void
-on_save( NactWindow *window )
-{
-	g_get_current_time( &NACT_MAIN_WINDOW( window )->private->last_saved );
-}
-
-/*
  * called by NAPivot because this window implements the IIOConsumer
  * interface, i.e. it wish to be advertised when the list of actions
  * changes in the underlying I/O storage subsystem (typically, when we
@@ -1115,14 +1084,6 @@ on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
 
 	g_assert( NACT_IS_MAIN_WINDOW( instance ));
 	NactMainWindow *self = NACT_MAIN_WINDOW( instance );
-
-	GTimeVal now;
-	g_get_current_time( &now );
-	glong ecart = 1000000 * ( now.tv_sec - self->private->last_saved.tv_sec );
-	ecart += now.tv_usec - self->private->last_saved.tv_usec;
-	if( ecart < 1000000 ){
-		return;
-	}
 
 	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
 	NAPivot *pivot = nact_application_get_pivot( application );

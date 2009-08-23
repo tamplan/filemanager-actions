@@ -75,6 +75,8 @@ typedef struct {
 
 GType na_ipivot_consumer_get_type( void );
 
+void  na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance );
+
 void  na_ipivot_consumer_notify( NAIPivotConsumer *instance );
 
 G_END_DECLS

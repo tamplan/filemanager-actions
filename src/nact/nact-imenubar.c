@@ -35,6 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <common/na-about.h>
+#include <common/na-ipivot-consumer.h>
 
 #include "nact-application.h"
 #include "nact-assistant-export.h"
@@ -117,7 +118,6 @@ static void       v_select_actions_list( NactWindow *window, GType type, const g
 static gint       v_count_actions( NactWindow *window );
 static gint       v_count_modified_actions( NactWindow *window );
 static void       v_reload_actions( NactWindow *window );
-static void       v_on_save( NactWindow *window );
 
 static GtkWidget *get_new_profile_item( NactWindow *window );
 static void       set_new_profile_item( NactWindow *window, GtkWidget *item );
@@ -471,9 +471,13 @@ on_new_profile_selected( GtkItem *item, NactWindow *window )
 static void
 on_save_activated( GtkMenuItem *item, NactWindow *window )
 {
+	static const gchar *thisfn = "nact_imenubar_on_save_activated";
+	g_debug( "%s: item=%p, window=%p", thisfn, item, window );
+
 	NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	NAPivot *pivot = nact_application_get_pivot( application );
 	GSList *actions = v_get_actions( window );
+	g_debug( "%s: %d actions", thisfn, g_slist_length( actions ));
 	GSList *ia;
 
 	/* keep the current selection
@@ -500,33 +504,31 @@ on_save_activated( GtkMenuItem *item, NactWindow *window )
 	}
 
 	/* save the valid modified actions
-	 * - remove the origin of pivot if any
-	 * - add a duplicate of this action to pivot
+	 * - add a duplicate of this action to pivot or update the origin
 	 * - set the duplicate as the origin of this action
 	 * - reset the status
 	 */
 	for( ia = actions ; ia ; ia = ia->next ){
-		NAAction *current = NA_ACTION( ia->data );
-		if( na_object_get_modified_status( NA_OBJECT( current )) &&
-			na_object_get_valid_status( NA_OBJECT( current ))){
 
-			if( nact_window_save_action( window, current )){
+		NAAction *current = NA_ACTION( ia->data );
+
+		if( na_object_get_modified_status( NA_OBJECT( current )) &&
+			na_object_get_valid_status( NA_OBJECT( current )) &&
+			nact_window_save_action( window, current )){
 
 				NAAction *origin = NA_ACTION( na_object_get_origin( NA_OBJECT( current )));
+
 				if( origin ){
-					na_pivot_remove_action( pivot, origin );
+					na_object_copy( NA_OBJECT( origin ), NA_OBJECT( current ));
+
+				} else {
+					NAAction *dup_pivot = NA_ACTION( na_object_duplicate( NA_OBJECT( current )));
+					na_object_set_origin( NA_OBJECT( dup_pivot ), NULL );
+					na_object_set_origin( NA_OBJECT( current ), NA_OBJECT( dup_pivot ));
+					na_pivot_add_action( pivot, dup_pivot );
 				}
 
-				NAAction *dup_pivot = NA_ACTION( na_object_duplicate( NA_OBJECT( current )));
-				na_pivot_add_action( pivot, dup_pivot );
-
-				v_remove_action( window, current );
-				g_object_unref( current );
-
-				NAAction *dup_window = NA_ACTION( na_object_duplicate( NA_OBJECT( dup_pivot )));
-				v_add_action( window, dup_window );
-				na_object_check_edited_status( NA_OBJECT( dup_window ));
-			}
+				na_object_check_edited_status( NA_OBJECT( current ));
 		}
 	}
 
@@ -545,7 +547,6 @@ on_save_activated( GtkMenuItem *item, NactWindow *window )
 		}
 	}
 	v_free_deleted_actions( window );
-	v_on_save( window );
 
 	v_setup_dialog_title( window );
 
@@ -555,6 +556,8 @@ on_save_activated( GtkMenuItem *item, NactWindow *window )
 		g_free( label );
 		g_free( uuid );
 	}
+
+	na_ipivot_consumer_delay_notify( NA_IPIVOT_CONSUMER( window ));
 }
 
 static void
@@ -978,14 +981,6 @@ v_reload_actions( NactWindow *window )
 {
 	if( NACT_IMENUBAR_GET_INTERFACE( window )->reload_actions ){
 		NACT_IMENUBAR_GET_INTERFACE( window )->reload_actions( window );
-	}
-}
-
-static void
-v_on_save( NactWindow *window )
-{
-	if( NACT_IMENUBAR_GET_INTERFACE( window )->on_save ){
-		NACT_IMENUBAR_GET_INTERFACE( window )->on_save( window );
 	}
 }
 
