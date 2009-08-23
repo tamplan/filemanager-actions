@@ -4,6 +4,7 @@ Version xxxxxx
 	Release date
 
 	Displays actions as a submenu of Nautilus context menu.
+	Menu items have now keyboard accelerators.
 
 	Bugfixes
 
@@ -12,6 +13,8 @@ Version xxxxxx
 	Various code enhancements
 
 		BaseApplication base class has been rewritten to get a cleaner api.
+
+		Use Gtk+ UI Manager.
 
 	New and updated translations
 

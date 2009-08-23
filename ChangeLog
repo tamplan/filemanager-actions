@@ -1,6 +1,7 @@
 2009-08-23 Pierre Wieser <pwieser@trychlos.org>
 
 	Get rid of unwanted notifications.
+	Use UI Manager.
 
 	* src/common/na-ipivot-consumer.c:
 	* src/common/na-ipivot-consumer.h (na_ipivot_consumer_delay_notify):
@@ -12,9 +13,16 @@
 	Fix #592781: use explicit format strings.
 	Fix test of virtual functions which caused double calls.
 
+	* src/nact/nact-application.c:
+	Remove the UI_XML_FILENAME variable.
+
 	* src/nact/nact-imenubar.c:
 	Rewrite save function to allow saving all modified actions in one pass.
 	Take advantage of na_ipivot_consumer_delay_notify().
+	Use UI Manager, thus removing all helper functions.
+
+	* src/nact/nautilus-actions-config-tool.actions:
+	Add Preferences item in the Edit menu.
 
 2009-08-21 Pierre Wieser <pwieser@trychlos.org>
 

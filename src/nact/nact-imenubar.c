@@ -50,56 +50,34 @@ struct NactIMenubarInterfacePrivate {
 };
 
 #define PROP_IMENUBAR_STATUS_CONTEXT	"nact-imenubar-status-context"
-#define PROP_IMENUBAR_DELETED_ACTIONS	"nact-imenubar-deleted-actions"
-#define PROP_IMENUBAR_NEW_PROFILE_ITEM	"nact-imenubar-new-profile-item"
-#define PROP_IMENUBAR_SAVE_ITEM			"nact-imenubar-save-item"
-#define PROP_IMENUBAR_DUPLICATE_ITEM	"nact-imenubar-duplicate-item"
-#define PROP_IMENUBAR_DELETE_ITEM		"nact-imenubar-delete-item"
-#define PROP_IMENUBAR_EXPORT_ITEM		"nact-imenubar-export-item"
 
 static GType      register_type( void );
 static void       interface_base_init( NactIMenubarInterface *klass );
 static void       interface_base_finalize( NactIMenubarInterface *klass );
 
-static void       create_file_menu( NactMainWindow *window, GtkMenuBar *bar );
-static void       create_edit_menu( NactMainWindow *window, GtkMenuBar *bar );
-static void       create_tools_menu( NactMainWindow *window, GtkMenuBar *bar );
-static void       create_help_menu( NactMainWindow *window, GtkMenuBar *bar );
-static void       signal_connect( NactMainWindow *window, GtkWidget *item, GCallback on_activated, GCallback on_selected );
-
-static void       on_file_selected( GtkMenuItem *item, NactWindow *window );
+static void       on_file_menu_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_new_action_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_new_action_selected( GtkItem *item, NactWindow *window );
 static void       on_new_profile_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_new_profile_selected( GtkItem *item, NactWindow *window );
 static void       on_save_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_save_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_quit_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_quit_selected( GtkMenuItem *item, NactWindow *window );
 static void       add_action( NactWindow *window, NAAction *action );
 static void       add_profile( NactWindow *window, NAAction *action, NAActionProfile *profile );
 
-static void       on_edit_selected( GtkMenuItem *item, NactWindow *window );
+static void       on_edit_menu_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_duplicate_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_duplicate_selected( GtkItem *item, NactWindow *window );
 static void       on_delete_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_delete_selected( GtkItem *item, NactWindow *window );
 static void       on_reload_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_reload_selected( GtkItem *item, NactWindow *window );
 static void       on_preferences_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_preferences_selected( GtkItem *item, NactWindow *window );
 
-static void       on_tools_selected( GtkMenuItem *item, NactWindow *window );
+static void       on_tools_menu_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_import_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_import_selected( GtkItem *item, NactWindow *window );
 static void       on_export_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_export_selected( GtkItem *item, NactWindow *window );
 
+static void       on_help_menu_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_help_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_help_selected( GtkItem *item, NactWindow *window );
 static void       on_about_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_about_selected( GtkItem *item, NactWindow *window );
 
+static void       on_menu_item_selected( GtkItem *item, NactWindow *window );
 static void       on_menu_item_deselected( GtkItem *item, NactWindow *window );
 
 static void       v_add_action( NactWindow *window, NAAction *action );
@@ -117,17 +95,6 @@ static gint       v_count_actions( NactWindow *window );
 static gint       v_count_modified_actions( NactWindow *window );
 static void       v_reload_actions( NactWindow *window );
 
-static GtkWidget *get_new_profile_item( NactWindow *window );
-static void       set_new_profile_item( NactWindow *window, GtkWidget *item );
-static GtkWidget *get_save_item( NactWindow *window );
-static void       set_save_item( NactWindow *window, GtkWidget *item );
-static GtkWidget *get_duplicate_item( NactWindow *window );
-static void       set_duplicate_item( NactWindow *window, GtkWidget *item );
-static GtkWidget *get_delete_item( NactWindow *window );
-static void       set_delete_item( NactWindow *window, GtkWidget *item );
-static GtkWidget *get_export_item( NactWindow *window );
-static void       set_export_item( NactWindow *window, GtkWidget *item );
-
 static const GtkActionEntry entries[] = {
 
 		{ "FileMenu", NULL, N_( "_File" ) },
@@ -135,39 +102,92 @@ static const GtkActionEntry entries[] = {
 		{ "ToolsMenu", NULL, N_( "_Tools" ) },
 		{ "HelpMenu", NULL, N_( "_Help" ) },
 
-		{ "NewActionItem", GTK_STOCK_NEW, N_( "_New action" ), "<Ctrl>N",
+		{ "NewActionItem", GTK_STOCK_NEW, N_( "_New action" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the 'New action' item */
 				N_( "Define a new action." ),
 				G_CALLBACK( on_new_action_activated ) },
-		{ "NewProfileItem", NULL, N_( "_New _profile" ), "<Ctrl>P",
+		{ "NewProfileItem", NULL, N_( "_New _profile" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the 'New profile' item */
 				N_( "Define a new profile attached to the current action." ),
 				G_CALLBACK( on_new_profile_activated ) },
 		{ "SaveItem", GTK_STOCK_SAVE, NULL, NULL,
+				/* i18n: tooltip displayed in the status bar when selecting 'Save' item */
 				N_( "Record all the modified actions. Invalid actions will be silently ignored." ),
 				G_CALLBACK( on_save_activated ) },
 		{ "QuitItem", GTK_STOCK_QUIT, NULL, NULL,
+				/* i18n: tooltip displayed in the status bar when selecting 'Quit' item */
 				N_( "Quit the application." ),
 				G_CALLBACK( on_quit_activated ) },
 		{ "DuplicateItem" , GTK_STOCK_COPY, N_( "D_uplicate" ), "",
+				/* i18n: tooltip displayed in the status bar when selecting the Duplicate item */
 				N_( "Create a copy of the selected action or profile." ),
 				G_CALLBACK( on_duplicate_activated ) },
-		{ "DeleteItem", GTK_STOCK_DELETE, NULL, "Delete",
+		{ "DeleteItem", GTK_STOCK_DELETE, NULL, "Del",
+				/* i18n: tooltip displayed in the status bar when selecting the Delete item */
 				N_( "Remove the selected action or profile from your configuration." ),
 				G_CALLBACK( on_delete_activated ) },
 		{ "ReloadActionsItem", NULL, N_( "_Reload the list of actions" ), "<Ctrl>R",
+				/* i18n: tooltip displayed in the status bar when selecting the 'Reload' item */
 				N_( "Cancel your current modifications and reload the list of actions." ),
 				G_CALLBACK( on_reload_activated ) },
+		{ "PreferencesItem", GTK_STOCK_PREFERENCES, NULL, "<Ctrl>P",
+				/* i18n: tooltip displayed in the status bar when selecting the 'Preferences' item */
+				N_( "Edit your preferences." ),
+				G_CALLBACK( on_preferences_activated ) },
 		{ "ImportItem" , GTK_STOCK_CONVERT, N_( "_Import assistant..." ), "",
+				/* i18n: tooltip displayed in the status bar when selecting the Import item */
 				N_( "Import one or more actions from external (XML) files into your configuration." ),
 				G_CALLBACK( on_import_activated ) },
 		{ "ExportItem", NULL, N_( "E_xport assistant..." ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the Export item */
 				N_( "Export one or more actions from your configuration to external XML files." ),
 				G_CALLBACK( on_export_activated ) },
 		{ "HelpItem" , GTK_STOCK_HELP, NULL, NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the Help item */
 				N_( "Display help about this program." ),
 				G_CALLBACK( on_help_activated ) },
 		{ "AboutItem", GTK_STOCK_ABOUT, NULL, NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the About item */
 				N_( "Display informations about this program." ),
 				G_CALLBACK( on_about_activated ) },
+};
+
+/* list of menus and on_selected corresponding functions
+ */
+typedef struct {
+	char     *menu;
+	GCallback on_selected;
+}
+	MenuOnSelectedStruct;
+
+static const MenuOnSelectedStruct menu_callback[] = {
+		{ "FileMenu" , G_CALLBACK( on_file_menu_selected ) },
+		{ "EditMenu" , G_CALLBACK( on_edit_menu_selected ) },
+		{ "ToolsMenu", G_CALLBACK( on_tools_menu_selected ) },
+		{ "HelpMenu" , G_CALLBACK( on_help_menu_selected ) },
+};
+
+/* associates action with menu to be able to build their path
+ */
+typedef struct {
+	char *menu;
+	char *action;
+}
+	MenuActionStruct;
+
+static const MenuActionStruct menu_actions[] = {
+		{ "FileMenu", "NewActionItem" },
+		{ "FileMenu", "NewProfileItem" },
+		{ "FileMenu", "SaveItem" },
+		{ "FileMenu", "QuitItem" },
+		{ "EditMenu", "DuplicateItem" },
+		{ "EditMenu", "DeleteItem" },
+		{ "EditMenu", "ReloadActionsItem" },
+		{ "EditMenu", "PreferencesItem" },
+		{ "ToolsMenu", "ImportItem" },
+		{ "ToolsMenu", "ExportItem" },
+		{ "HelpMenu", "HelpItem" },
+		{ "HelpMenu", "AboutItem" },
 };
 
 GType
@@ -251,17 +271,13 @@ nact_imenubar_init( NactMainWindow *window )
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	g_assert( NACT_IS_IMENUBAR( window ));
 
-	if( FALSE ){
-		GtkWidget *vbox = base_window_get_widget( BASE_WINDOW( window ), "MenubarVBox" );
-		GtkWidget *menubar= gtk_menu_bar_new();
-		gtk_container_add( GTK_CONTAINER( vbox ), menubar );
-
-		create_file_menu( window, GTK_MENU_BAR( menubar ));
-		create_edit_menu( window, GTK_MENU_BAR( menubar ));
-		create_tools_menu( window, GTK_MENU_BAR( menubar ));
-		create_help_menu( window, GTK_MENU_BAR( menubar ));
-	}
-
+	/* create the menubar:
+	 * - create action group, and insert list of actions in it
+	 * - create ui_manager, and insert action group in it
+	 * - merge inserted actions group with ui xml definition
+	 * - install accelerators in the main window
+	 * - pack menu bar in the main window
+	 */
 	GtkActionGroup *action_group = gtk_action_group_new( "MenubarActions" );
 	gtk_action_group_set_translation_domain( action_group, GETTEXT_PACKAGE );
 	gtk_action_group_add_actions( action_group, entries, G_N_ELEMENTS( entries ), window );
@@ -271,7 +287,7 @@ nact_imenubar_init( NactMainWindow *window )
 	g_object_unref( action_group );
 
 	GError *error = NULL;
-	guint merge_id = gtk_ui_manager_add_ui_from_file( ui_manager, GLADEDIR "/nautilus-actions-config-tool.actions", &error );
+	guint merge_id = gtk_ui_manager_add_ui_from_file( ui_manager, PKGDATADIR "/nautilus-actions-config-tool.actions", &error );
 	if( merge_id == 0 || error ){
 		g_warning( "%s: error=%s", thisfn, error->message );
 		g_error_free( error );
@@ -281,46 +297,34 @@ nact_imenubar_init( NactMainWindow *window )
 	GtkAccelGroup *accel_group = gtk_ui_manager_get_accel_group( ui_manager );
 	gtk_window_add_accel_group( wnd, accel_group );
 
-	GtkAction *action = gtk_ui_manager_get_action( ui_manager, "/ui/MainMenubar/FileMenu/NewActionItem" );
-	const gchar *tooltip = gtk_action_get_tooltip( action );
-	g_debug( "%s: tooltip=%s", thisfn, tooltip );
-
-	GList *action_groups = gtk_ui_manager_get_action_groups( ui_manager );
-	GList *ig;
-	for( ig = action_groups ; ig ; ig = ig->next ){
-		GtkActionGroup *group = GTK_ACTION_GROUP( ig->data );
-		const gchar *group_name = gtk_action_group_get_name( group );
-		GList *actions = gtk_action_group_list_actions( group );
-		GList *ia;
-		for( ia = actions ; ia ; ia = ia->next ){
-			GtkAction *action = GTK_ACTION( ia->data );
-			const gchar *action_name = gtk_action_get_name( action );
-			gchar *path = g_build_path( "/", "ui", group_name, action_name, NULL );
-			GtkWidget *widget = gtk_ui_manager_get_widget( ui_manager, path );
-			g_free( path );
-			g_debug( "%s: group_name=%s, action_name=%s, widget=%p", thisfn, group_name, action_name, widget );
-			signal_connect( window, widget, NULL, G_CALLBACK( on_new_profile_selected ));
-		}
-		g_list_free( actions );
-	}
-	/*int i;
-	for( i = 0 ; i < G_N_ELEMENTS( entries ) ; ++i ){
-		gchar *path = g_build_path( "/", "ui", "MainMenubar", entries[i].name, NULL );
-		GtkWidget *widget = gtk_ui_manager_get_widget( ui_manager, path );
-		g_debug( "%s: i=%d, widget=%p", thisfn, i, widget );
-		signal_connect( window, widget, NULL, G_CALLBACK( on_new_profile_selected ));
-		g_free( path );
-	}*/
-
 	GtkWidget *menubar = gtk_ui_manager_get_widget( ui_manager, "/ui/MainMenubar" );
-	GtkWidget *vbox = base_window_get_widget( BASE_WINDOW( window ), "MenuBarVBox" );
+	GtkWidget *vbox = base_window_get_widget( BASE_WINDOW( window ), "MenubarVBox" );
 	gtk_box_pack_start( GTK_BOX( vbox ), menubar, FALSE, FALSE, 0 );
 
-	GtkWidget *status_bar = v_get_status_bar( NACT_WINDOW( window ));
-	if( status_bar ){
-		g_assert( GTK_IS_STATUSBAR( status_bar ));
-		guint context = gtk_statusbar_get_context_id( GTK_STATUSBAR( status_bar ), "nact-imenubar" );
-		set_status_context( window, context );
+	g_object_set_data( G_OBJECT( window ), "nact-imenubar-ui-manager", ui_manager );
+
+	/* menu and accelerators are ok
+	 * but tooltip are no more displayed
+	 */
+	int i;
+	for( i = 0 ; i < G_N_ELEMENTS( menu_actions ) ; ++ i ){
+		gchar *path = g_build_path( "/", "ui", "MainMenubar", menu_actions[i].menu, menu_actions[i].action, NULL );
+		GtkAction *action = gtk_ui_manager_get_action( ui_manager, path );
+		GtkWidget *widget = gtk_ui_manager_get_widget( ui_manager, path );
+		g_object_set_data( G_OBJECT( widget ), "nact-imenubar-action", action );
+		nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( widget ), "select", G_CALLBACK( on_menu_item_selected ));
+		nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( widget ), "deselect", G_CALLBACK( on_menu_item_deselected ));
+		g_free( path );
+	}
+
+	/* we don't use property synchronization to update the items
+	 * instead we update items just before opening the menu
+	 */
+	for( i = 0 ; i < G_N_ELEMENTS( menu_callback ) ; ++ i ){
+		gchar *path = g_build_path( "/", "ui", "MainMenubar", menu_callback[i].menu, NULL );
+		GtkWidget *widget = gtk_ui_manager_get_widget( ui_manager, path );
+		nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( widget ), "select", menu_callback[i].on_selected );
+		g_free( path );
 	}
 }
 
@@ -364,148 +368,19 @@ nact_imenubar_on_delete_event( NactWindow *window )
 }
 
 static void
-create_file_menu( NactMainWindow *window, GtkMenuBar *menubar )
+on_file_menu_selected( GtkMenuItem *item, NactWindow *window )
 {
-	/* i18n: File menu */
-	GtkWidget *file = gtk_menu_item_new_with_mnemonic( _( "_File" ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), file );
-	GtkWidget *menu = gtk_menu_new();
-	gtk_menu_item_set_submenu( GTK_MENU_ITEM( file ), menu );
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( file ), "select", G_CALLBACK( on_file_selected ));
+	GtkUIManager *ui_manager = GTK_UI_MANAGER( g_object_get_data( G_OBJECT( window ), "nact-imenubar-ui-manager" ));
 
-	/* i18n: 'New action' item in 'File' menu */
-	GtkWidget *item = gtk_image_menu_item_new_with_mnemonic( _( "_New action" ));
-	gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), gtk_image_new_from_stock( GTK_STOCK_NEW, GTK_ICON_SIZE_MENU ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	signal_connect( window, item, G_CALLBACK( on_new_action_activated ), G_CALLBACK( on_new_action_selected ));
-
-	/* i18n: 'New profile' item in 'File' menu */
-	item = gtk_image_menu_item_new_with_mnemonic( _( "New _profile" ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	set_new_profile_item( NACT_WINDOW( window ), item );
-	signal_connect( window, item, G_CALLBACK( on_new_profile_activated ), G_CALLBACK( on_new_profile_selected ));
-
-	item = gtk_image_menu_item_new_from_stock( GTK_STOCK_SAVE, NULL );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	set_save_item( NACT_WINDOW( window ), item );
-	signal_connect( window, item, G_CALLBACK( on_save_activated ), G_CALLBACK( on_save_selected ));
-
-	item = gtk_separator_menu_item_new();
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-
-	item = gtk_image_menu_item_new_from_stock( GTK_STOCK_QUIT, NULL );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	signal_connect( window, item, G_CALLBACK( on_quit_activated ), G_CALLBACK( on_quit_selected ));
-}
-
-static void
-create_edit_menu( NactMainWindow *window, GtkMenuBar *menubar )
-{
-	/* i18n: Edit menu */
-	GtkWidget *edit = gtk_menu_item_new_with_mnemonic( _( "_Edit" ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), edit );
-	GtkWidget *menu = gtk_menu_new();
-	gtk_menu_item_set_submenu( GTK_MENU_ITEM( edit ), menu );
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( edit ), "select", G_CALLBACK( on_edit_selected ));
-
-	/* i18n: Duplicate item in Edit menu */
-	GtkWidget *item = gtk_image_menu_item_new_with_mnemonic( _( "D_uplicate" ));
-	gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), gtk_image_new_from_stock( GTK_STOCK_COPY, GTK_ICON_SIZE_MENU ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	set_duplicate_item( NACT_WINDOW( window ), item );
-	signal_connect( window, item, G_CALLBACK( on_duplicate_activated ), G_CALLBACK( on_duplicate_selected ));
-
-	/* i18n: Delete item in Edit menu */
-	item = gtk_image_menu_item_new_from_stock( GTK_STOCK_DELETE, NULL );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	set_delete_item( NACT_WINDOW( window ), item );
-	signal_connect( window, item, G_CALLBACK( on_delete_activated ), G_CALLBACK( on_delete_selected ));
-
-	item = gtk_separator_menu_item_new();
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-
-	item = gtk_image_menu_item_new_with_mnemonic( _( "_Reload the list of actions" ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	signal_connect( window, item, G_CALLBACK( on_reload_activated ), G_CALLBACK( on_reload_selected ));
-
-	item = gtk_separator_menu_item_new();
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-
-	item = gtk_image_menu_item_new_from_stock( GTK_STOCK_PREFERENCES, NULL );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	signal_connect( window, item, G_CALLBACK( on_preferences_activated ), G_CALLBACK( on_preferences_selected ));
-}
-
-static void
-create_tools_menu( NactMainWindow *window, GtkMenuBar *menubar )
-{
-	/* i18n: Tools menu */
-	GtkWidget *tools = gtk_menu_item_new_with_mnemonic( _( "_Tools" ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), tools );
-	GtkWidget *menu = gtk_menu_new();
-	gtk_menu_item_set_submenu( GTK_MENU_ITEM( tools ), menu );
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( tools ), "select", G_CALLBACK( on_tools_selected ));
-
-	/* i18n: Import item in Tools menu */
-	GtkWidget *item = gtk_image_menu_item_new_with_mnemonic( _( "_Import assistant..." ));
-	gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), gtk_image_new_from_stock( GTK_STOCK_CONVERT, GTK_ICON_SIZE_MENU ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	signal_connect( window, item, G_CALLBACK( on_import_activated ), G_CALLBACK( on_import_selected ));
-
-	/* i18n: Export item in Tools menu */
-	item = gtk_image_menu_item_new_with_mnemonic( _( "E_xport assistant..." ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	set_export_item( NACT_WINDOW( window ), item );
-	signal_connect( window, item, G_CALLBACK( on_export_activated ), G_CALLBACK( on_export_selected ));
-}
-
-static void
-create_help_menu( NactMainWindow *window, GtkMenuBar *menubar )
-{
-	/* i18n: Help menu */
-	GtkWidget *help = gtk_menu_item_new_with_mnemonic( _( "_Help" ));
-	gtk_menu_shell_append( GTK_MENU_SHELL( menubar ), help );
-	GtkWidget *menu = gtk_menu_new();
-	gtk_menu_item_set_submenu( GTK_MENU_ITEM( help ), menu );
-
-	GtkWidget *item = gtk_image_menu_item_new_from_stock( GTK_STOCK_HELP, NULL );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	signal_connect( window, item, G_CALLBACK( on_help_activated ), G_CALLBACK( on_help_selected ));
-	gtk_widget_set_sensitive( item, FALSE );
-
-	item = gtk_separator_menu_item_new();
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-
-	item = gtk_image_menu_item_new_from_stock( GTK_STOCK_ABOUT, NULL );
-	gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
-	signal_connect( window, item, G_CALLBACK( on_about_activated ), G_CALLBACK( on_about_selected ));
-}
-
-static void
-signal_connect( NactMainWindow *window, GtkWidget *item, GCallback on_activated, GCallback on_selected )
-{
-	if( on_activated ){
-		nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "activate", on_activated );
-	}
-
-	if( on_selected ){
-		nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "select", on_selected );
-		nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( item ), "deselect", G_CALLBACK( on_menu_item_deselected ));
-	}
-}
-
-static void
-on_file_selected( GtkMenuItem *item, NactWindow *window )
-{
 	NAObject *object = v_get_selected( window );
 	gboolean new_profile_enabled = NA_IS_ACTION( object ) || NA_IS_ACTION_PROFILE( object );
-	GtkWidget *new_profile_item = get_new_profile_item( window );
-	gtk_widget_set_sensitive( new_profile_item, new_profile_enabled );
+	GtkAction *new_profile_action = gtk_ui_manager_get_action( ui_manager, "/ui/MainMenubar/FileMenu/NewProfileItem" );
+	gtk_action_set_sensitive( new_profile_action, new_profile_enabled );
 
 	gint modified = v_count_modified_actions( window );
 	gboolean save_enabled = ( modified > 0 );
-	GtkWidget *save_item = get_save_item( window );
-	gtk_widget_set_sensitive( save_item, save_enabled );
+	GtkAction *save_action = gtk_ui_manager_get_action( ui_manager, "/ui/MainMenubar/FileMenu/SaveItem" );
+	gtk_action_set_sensitive( save_action, save_enabled );
 }
 
 static void
@@ -513,13 +388,6 @@ on_new_action_activated( GtkMenuItem *item, NactWindow *window )
 {
 	NAAction *action = na_action_new_with_profile();
 	add_action( window, action );
-}
-
-static void
-on_new_action_selected( GtkItem *item, NactWindow *window )
-{
-	/* i18n: tooltip displayed in the status bar when selecting the 'New action' item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Define a new action." ));
 }
 
 static void
@@ -539,13 +407,6 @@ on_new_profile_activated( GtkMenuItem *item, NactWindow *window )
 	g_free( name );
 
 	add_profile( window, action, new_profile );
-}
-
-static void
-on_new_profile_selected( GtkItem *item, NactWindow *window )
-{
-	/* i18n: tooltip displayed in the status bar when selecting the 'New profile' item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Define a new profile attached to the current action." ));
 }
 
 static void
@@ -641,13 +502,6 @@ on_save_activated( GtkMenuItem *item, NactWindow *window )
 }
 
 static void
-on_save_selected( GtkMenuItem *item, NactWindow *window )
-{
-	/* i18n: tooltip displayed in the status bar when selecting 'Save' item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Record all the modified actions. Invalid actions will be silently ignored." ));
-}
-
-static void
 on_quit_activated( GtkMenuItem *item, NactWindow *window )
 {
 	static const gchar *thisfn = "nact_imenubar_on_quit_activated";
@@ -657,13 +511,6 @@ on_quit_activated( GtkMenuItem *item, NactWindow *window )
 	if( !count || nact_window_warn_count_modified( NACT_WINDOW( window ), count )){
 		g_object_unref( window );
 	}
-}
-
-static void
-on_quit_selected( GtkMenuItem *item, NactWindow *window )
-{
-	/* i18n: tooltip displayed in the status bar when selecting 'Quit' item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Quit the application." ));
 }
 
 static void
@@ -703,8 +550,10 @@ add_profile( NactWindow *window, NAAction *action, NAActionProfile *profile )
 }
 
 static void
-on_edit_selected( GtkMenuItem *item, NactWindow *window )
+on_edit_menu_selected( GtkMenuItem *item, NactWindow *window )
 {
+	GtkUIManager *ui_manager = GTK_UI_MANAGER( g_object_get_data( G_OBJECT( window ), "nact-imenubar-ui-manager" ));
+
 	NAObject *object = v_get_selected( window );
 	gboolean delete_enabled = FALSE;
 	if( object ){
@@ -719,11 +568,11 @@ on_edit_selected( GtkMenuItem *item, NactWindow *window )
 
 	gboolean duplicate_enabled = delete_enabled;
 
-	GtkWidget *delete_item = get_delete_item( window );
-	gtk_widget_set_sensitive( delete_item, delete_enabled );
+	GtkAction *delete_action = gtk_ui_manager_get_action( ui_manager, "/ui/MainMenubar/EditMenu/DeleteItem" );
+	gtk_action_set_sensitive( delete_action, delete_enabled );
 
-	GtkWidget *duplicate_item = get_duplicate_item( window );
-	gtk_widget_set_sensitive( duplicate_item, duplicate_enabled );
+	GtkAction *duplicate_action = gtk_ui_manager_get_action( ui_manager, "/ui/MainMenubar/EditMenu/DuplicateItem" );
+	gtk_action_set_sensitive( duplicate_action, duplicate_enabled );
 }
 
 static void
@@ -764,13 +613,6 @@ on_duplicate_activated( GtkMenuItem *item, NactWindow *window )
 }
 
 static void
-on_duplicate_selected( GtkItem *item, NactWindow *window )
-{
-	/* i18n: tooltip displayed in the status bar when selecting the Duplicate item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Create a copy of the selected action or profile." ));
-}
-
-static void
 on_delete_activated( GtkMenuItem *item, NactWindow *window )
 {
 	static const gchar *thisfn = "nact_imenubar_on_delete_activated";
@@ -808,13 +650,6 @@ on_delete_activated( GtkMenuItem *item, NactWindow *window )
 }
 
 static void
-on_delete_selected( GtkItem *item, NactWindow *window )
-{
-	/* i18n: tooltip displayed in the status bar when selecting the Delete item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Remove the selected action or profile from your configuration." ));
-}
-
-static void
 on_reload_activated( GtkMenuItem *item, NactWindow *window )
 {
 	static const gchar *thisfn = "nact_imenubar_on_reload_activated";
@@ -840,31 +675,19 @@ on_reload_activated( GtkMenuItem *item, NactWindow *window )
 }
 
 static void
-on_reload_selected( GtkItem *item, NactWindow *window )
-{
-	/* i18n: tooltip displayed in the status bar when selecting the 'Reload' item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Cancel your current modifications and reload the list of actions." ));
-}
-
-static void
 on_preferences_activated( GtkMenuItem *item, NactWindow *window )
 {
 	nact_preferences_editor_run( window );
 }
 
 static void
-on_preferences_selected( GtkItem *item, NactWindow *window )
+on_tools_menu_selected( GtkMenuItem *item, NactWindow *window )
 {
-	/* i18n: tooltip displayed in the status bar when selecting the 'Preferences' item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Edit your preferences." ));
-}
+	GtkUIManager *ui_manager = GTK_UI_MANAGER( g_object_get_data( G_OBJECT( window ), "nact-imenubar-ui-manager" ));
 
-static void
-on_tools_selected( GtkMenuItem *item, NactWindow *window )
-{
 	gboolean export_enabled = v_count_actions( window );
-	GtkWidget *export_item = get_export_item( window );
-	gtk_widget_set_sensitive( export_item, export_enabled );
+	GtkAction *export_action = gtk_ui_manager_get_action( ui_manager, "/ui/MainMenubar/ToolsMenu/ExportItem" );
+	gtk_action_set_sensitive( export_action, export_enabled );
 }
 
 static void
@@ -878,42 +701,27 @@ on_import_activated( GtkMenuItem *item, NactWindow *window )
 }
 
 static void
-on_import_selected( GtkItem *item, NactWindow *window )
-{
-	/* i18n: tooltip displayed in the status bar when selecting the Import item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Import one or more actions from external (XML) files into your configuration." ));
-}
-
-static void
 on_export_activated( GtkMenuItem *item, NactWindow *window )
 {
 	static const gchar *thisfn = "nact_imenubar_on_export_activated";
 	g_debug( "%s: item=%p, window=%p", thisfn, item, window );
 
 	nact_assistant_export_run( NACT_WINDOW( window ));
-
-	/*g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	NactWindow *wndmain = NACT_WINDOW( user_data );
-	nact_iactions_list_set_focus( wndmain );*/
 }
 
 static void
-on_export_selected( GtkItem *item, NactWindow *window )
+on_help_menu_selected( GtkMenuItem *item, NactWindow *window )
 {
-	/* i18n: tooltip displayed in the status bar when selecting the Export item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Export one or more actions from your configuration to external XML files." ));
+	GtkUIManager *ui_manager = GTK_UI_MANAGER( g_object_get_data( G_OBJECT( window ), "nact-imenubar-ui-manager" ));
+
+	gboolean help_enabled = FALSE;
+	GtkAction *help_action = gtk_ui_manager_get_action( ui_manager, "/ui/MainMenubar/HelpMenu/HelpItem" );
+	gtk_action_set_sensitive( help_action, help_enabled );
 }
 
 static void
 on_help_activated( GtkMenuItem *item, NactWindow *window )
 {
-}
-
-static void
-on_help_selected( GtkItem *item, NactWindow *window )
-{
-	/* i18n: tooltip displayed in the status bar when selecting the Help item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Display help about this program." ));
 }
 
 /* TODO: make the website url and the mail addresses clickables
@@ -930,10 +738,11 @@ on_about_activated( GtkMenuItem *item, NactWindow *window )
 }
 
 static void
-on_about_selected( GtkItem *item, NactWindow *window )
+on_menu_item_selected( GtkItem *item, NactWindow *window )
 {
-	/* i18n: tooltip displayed in the status bar when selecting the About item */
-	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, _( "Display informations about this program." ));
+	GtkAction *action = GTK_ACTION( g_object_get_data( G_OBJECT( item ), "nact-imenubar-action" ));
+	const gchar *tooltip = gtk_action_get_tooltip( action );
+	nact_statusbar_display_status( NACT_MAIN_WINDOW( window ), PROP_IMENUBAR_STATUS_CONTEXT, tooltip );
 }
 
 static void
@@ -1062,64 +871,4 @@ v_reload_actions( NactWindow *window )
 	if( NACT_IMENUBAR_GET_INTERFACE( window )->reload_actions ){
 		NACT_IMENUBAR_GET_INTERFACE( window )->reload_actions( window );
 	}
-}
-
-static GtkWidget *
-get_new_profile_item( NactWindow *window )
-{
-	return( GTK_WIDGET( g_object_get_data( G_OBJECT( window ), PROP_IMENUBAR_NEW_PROFILE_ITEM )));
-}
-
-static void
-set_new_profile_item( NactWindow *window, GtkWidget *item )
-{
-	g_object_set_data( G_OBJECT( window ), PROP_IMENUBAR_NEW_PROFILE_ITEM, item );
-}
-
-static GtkWidget *
-get_save_item( NactWindow *window )
-{
-	return( GTK_WIDGET( g_object_get_data( G_OBJECT( window ), PROP_IMENUBAR_SAVE_ITEM )));
-}
-
-static void
-set_save_item( NactWindow *window, GtkWidget *item )
-{
-	g_object_set_data( G_OBJECT( window ), PROP_IMENUBAR_SAVE_ITEM, item );
-}
-
-static GtkWidget *
-get_duplicate_item( NactWindow *window )
-{
-	return( GTK_WIDGET( g_object_get_data( G_OBJECT( window ), PROP_IMENUBAR_DUPLICATE_ITEM )));
-}
-
-static void
-set_duplicate_item( NactWindow *window, GtkWidget *item )
-{
-	g_object_set_data( G_OBJECT( window ), PROP_IMENUBAR_DUPLICATE_ITEM, item );
-}
-
-static GtkWidget *
-get_delete_item( NactWindow *window )
-{
-	return( GTK_WIDGET( g_object_get_data( G_OBJECT( window ), PROP_IMENUBAR_DELETE_ITEM )));
-}
-
-static void
-set_delete_item( NactWindow *window, GtkWidget *item )
-{
-	g_object_set_data( G_OBJECT( window ), PROP_IMENUBAR_DELETE_ITEM, item );
-}
-
-static GtkWidget *
-get_export_item( NactWindow *window )
-{
-	return( GTK_WIDGET( g_object_get_data( G_OBJECT( window ), PROP_IMENUBAR_EXPORT_ITEM )));
-}
-
-static void
-set_export_item( NactWindow *window, GtkWidget *item )
-{
-	g_object_set_data( G_OBJECT( window ), PROP_IMENUBAR_EXPORT_ITEM, item );
 }

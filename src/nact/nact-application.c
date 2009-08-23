@@ -40,8 +40,6 @@
 #include "nact-application.h"
 #include "nact-main-window.h"
 
-#define UI_XML_FILENAME				PKGDATADIR "/nautilus-actions-config-tool.ui"
-
 /* private class data
  */
 struct NactApplicationClassPrivate {
@@ -341,7 +339,7 @@ appli_get_unique_app_name( BaseApplication *application )
 static gchar *
 appli_get_gtkbuilder_filename( BaseApplication *application )
 {
-	return( g_strdup( UI_XML_FILENAME ));
+	return( g_strdup( PKGDATADIR "/nautilus-actions-config-tool.ui" ));
 }
 
 /*

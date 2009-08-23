@@ -13,6 +13,8 @@
             <menuitem action="DeleteItem" />
             <separator />
             <menuitem action="ReloadActionsItem" />
+            <separator />
+            <menuitem action="PreferencesItem" />
         </menu>
         <menu action="ToolsMenu">
             <menuitem action="ImportItem" />
