@@ -1,3 +1,20 @@
+Version xxxxxx
+==============
+
+	Release date
+
+	Displays actions as a submenu of Nautilus context menu.
+
+	Bugfixes
+
+		#592781 reported by Jerome Krausz (use explicit format string)
+
+	Various code enhancements
+
+		BaseApplication base class has been rewritten to get a cleaner api.
+
+	New and updated translations
+
 Version 1.12.0
 ==============
 

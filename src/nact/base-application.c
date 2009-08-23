@@ -574,7 +574,7 @@ BaseWindow *
 base_application_get_main_window( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_get_main_window";
-	g_debug( "%s: icon=%p", thisfn, application );
+	g_debug( "%s: application=%p", thisfn, application );
 
 	g_assert( BASE_IS_APPLICATION( application ));
 
@@ -1003,10 +1003,10 @@ display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButto
 {
 	g_assert( BASE_IS_APPLICATION( application ));
 
-	GtkWidget *dialog = gtk_message_dialog_new( NULL, GTK_DIALOG_MODAL, type_message, type_buttons, first );
+	GtkWidget *dialog = gtk_message_dialog_new( NULL, GTK_DIALOG_MODAL, type_message, type_buttons, "%s", first );
 
-	if( second && strlen( second )){
-		gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), second );
+	if( second && g_utf8_strlen( second, -1 )){
+		gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), "%s", second );
 	}
 
 	const gchar *name = g_get_application_name();
@@ -1086,6 +1086,7 @@ set_get_dialog_error( BaseApplication *application, const gchar *dialog )
 	application->private->exit_code = APPLICATION_ERROR_DIALOG_LOAD;
 
 	gchar *fname = base_application_get_ui_filename( application );
+
 	gchar *msg = g_strdup_printf(
 			/* i18n: unable to load <dialog_name> dialog from XML definition in <filename> */
 			_( "Unable to load %s dialog from XML definition in %s." ), dialog, fname );
