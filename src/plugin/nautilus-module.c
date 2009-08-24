@@ -57,6 +57,8 @@ static void na_log_handler( const gchar *log_domain, GLogLevelFlags log_level, c
 void
 nautilus_module_initialize( GTypeModule *module )
 {
+	static const gchar *thisfn = "nautilus_module_initialize";
+
 	syslog( LOG_USER | LOG_INFO, "%s initializing...", PACKAGE_STRING );
 
 	if( !st_log_handler ){
@@ -65,8 +67,7 @@ nautilus_module_initialize( GTypeModule *module )
 		g_log_set_handler( NA_LOGDOMAIN_COMMON, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
 	}
 
-	static const gchar *thisfn = "nautilus_module_initialize";
-	g_debug( "%s: module=%p", thisfn, module );
+	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
 	nautilus_actions_register_type( module );
 }
@@ -75,13 +76,12 @@ void
 nautilus_module_list_types( const GType **types, int *num_types )
 {
 	static const gchar *thisfn = "nautilus_module_list_types";
-	g_debug( "%s: types=%p, num_types=%p", thisfn, types, num_types );
-
 	static GType type_list[1];
+
+	g_debug( "%s: types=%p, num_types=%p", thisfn, ( void * ) types, ( void * ) num_types );
 
 	type_list[0] = NAUTILUS_ACTIONS_TYPE;
 	*types = type_list;
-
 	*num_types = 1;
 }
 
@@ -89,6 +89,7 @@ void
 nautilus_module_shutdown( void )
 {
 	static const gchar *thisfn = "nautilus_module_shutdown";
+
 	g_debug( "%s", thisfn );
 
 	/* remove the log handler

@@ -46,6 +46,7 @@
 /* private class data
  */
 struct NAGConfClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -132,7 +133,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "na_gconf_register_type";
-	g_debug( "%s", thisfn );
+	GType type;
 
 	static GTypeInfo info = {
 		sizeof( NAGConfClass ),
@@ -146,15 +147,15 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( G_TYPE_OBJECT, "NAGConf", &info, 0 );
-
-	/* implements IIOProvider interface
-	 */
 	static const GInterfaceInfo iio_provider_iface_info = {
 		( GInterfaceInitFunc ) iio_provider_iface_init,
 		NULL,
 		NULL
 	};
+
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_OBJECT, "NAGConf", &info, 0 );
 
 	g_type_add_interface_static( type, NA_IIO_PROVIDER_TYPE, &iio_provider_iface_info );
 
@@ -165,17 +166,19 @@ static void
 class_init( NAGConfClass *klass )
 {
 	static const gchar *thisfn = "na_gconf_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *object_class;
+	GParamSpec *spec;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
-	GObjectClass *object_class = G_OBJECT_CLASS( klass );
+	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
 
-	GParamSpec *spec;
 	spec = g_param_spec_pointer(
 			PROP_NAGCONF_GCONF_STR,
 			"GConfClient object",
@@ -204,7 +207,8 @@ static void
 iio_provider_iface_init( NAIIOProviderInterface *iface )
 {
 	static const gchar *thisfn = "na_gconf_iio_provider_iface_init";
-	g_debug( "%s: iface=%p", thisfn, iface );
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->read_actions = iio_provider_read_actions;
 	iface->is_willing_to_write = iio_provider_is_willing_to_write;
@@ -217,10 +221,12 @@ static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "na_gconf_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+	NAGConf *self;
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
 	g_assert( NA_IS_GCONF( instance ));
-	NAGConf *self = NA_GCONF( instance );
+	self = NA_GCONF( instance );
 
 	self->private = g_new0( NAGConfPrivate, 1 );
 
@@ -232,8 +238,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
+	NAGConf *self;
+
 	g_assert( NA_IS_GCONF( object ));
-	NAGConf *self = NA_GCONF( object );
+	self = NA_GCONF( object );
 
 	switch( property_id ){
 		case PROP_NAGCONF_GCONF:
@@ -257,8 +265,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
+	NAGConf *self;
+
 	g_assert( NA_IS_GCONF( object ));
-	NAGConf *self = NA_GCONF( object );
+	self = NA_GCONF( object );
 
 	switch( property_id ){
 		case PROP_NAGCONF_GCONF:
@@ -282,8 +292,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
+	NAGConf *self;
+
 	g_assert( NA_IS_GCONF( object ));
-	NAGConf *self = NA_GCONF( object );
+	self = NA_GCONF( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -301,8 +313,10 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
+	NAGConf *self;
+
 	g_assert( NA_IS_GCONF( object ));
-	NAGConf *self = NA_GCONF( object );
+	self = NA_GCONF( object );
 
 	g_free( self->private );
 
@@ -339,38 +353,28 @@ static GSList *
 iio_provider_read_actions( const NAIIOProvider *provider )
 {
 	static const gchar *thisfn = "nacf_gconf_iio_provider_read_actions";
-	g_debug( "%s: provider=%p", thisfn, provider );
+	NAGConf *self;
+	GSList *items = NULL;
+	GSList *listpath, *ip;
+	NAAction *action;
+
+	g_debug( "%s: provider=%p", thisfn, ( void * ) provider );
 
 	g_assert( NA_IS_IIO_PROVIDER( provider ));
 	g_assert( NA_IS_GCONF( provider ));
-	NAGConf *self = NA_GCONF( provider );
+	self = NA_GCONF( provider );
 
-	GSList *items = NULL;
-	GSList *ip;
-	GSList *listpath = get_path_subdirs( self, NA_GCONF_CONFIG_PATH );
+	listpath = get_path_subdirs( self, NA_GCONF_CONFIG_PATH );
 
 	for( ip = listpath ; ip ; ip = ip->next ){
 
 		const gchar *path = ( const gchar * ) ip->data;
 
-		NAAction *action = na_action_new();
+		action = na_action_new();
 
 		read_action( self, action, path );
 
 		items = g_slist_prepend( items, action );
-
-		/*gchar *uuid = path_to_key( path );
-
-		NAAction *action = na_action_new( uuid );
-
-		if( load_action( self, action, path )){
-			items = g_slist_prepend( items, action );
-
-		} else {
-			g_object_unref( action );
-		}
-
-		g_free( uuid );*/
 	}
 
 	na_utils_free_string_list( listpath );
@@ -396,11 +400,14 @@ static guint
 iio_provider_write_action( const NAIIOProvider *provider, NAAction *action, gchar **message )
 {
 	static const gchar *thisfn = "na_gconf_iio_provider_write_action";
-	g_debug( "%s: provider=%p, action=%p, message=%p", thisfn, provider, action, message );
+	NAGConf *self;
+
+	g_debug( "%s: provider=%p, action=%p, message=%p",
+			thisfn, ( void * ) provider, ( void * ) action, ( void * ) message );
 
 	g_assert( NA_IS_IIO_PROVIDER( provider ));
 	g_assert( NA_IS_GCONF( provider ));
-	NAGConf *self = NA_GCONF( provider );
+	self = NA_GCONF( provider );
 
 	message = NULL;
 
@@ -426,21 +433,26 @@ static guint
 iio_provider_delete_action( const NAIIOProvider *provider, const NAAction *action, gchar **message )
 {
 	static const gchar *thisfn = "na_gconf_iio_provider_delete_action";
-	g_debug( "%s: provider=%p, action=%p, message=%p", thisfn, provider, action, message );
+	NAGConf *self;
+	guint ret;
+	gchar *uuid, *path;
+	GError *error = NULL;
+
+	g_debug( "%s: provider=%p, action=%p, message=%p",
+			thisfn, ( void * ) provider, ( void * ) action, ( void * ) message );
 
 	g_assert( NA_IS_IIO_PROVIDER( provider ));
 	g_assert( NA_IS_GCONF( provider ));
-	NAGConf *self = NA_GCONF( provider );
+	self = NA_GCONF( provider );
 
 	message = NULL;
-	guint ret = NA_IIO_PROVIDER_WRITE_OK;
+	ret = NA_IIO_PROVIDER_WRITE_OK;
 
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *uuid = na_action_get_uuid( action );
+	uuid = na_action_get_uuid( action );
 
-	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s%s/%s", NA_GCONF_SCHEMA_PREFIX, NA_GCONF_CONFIG_PATH, uuid );
+	path = g_strdup_printf( "%s%s/%s", NA_GCONF_SCHEMA_PREFIX, NA_GCONF_CONFIG_PATH, uuid );
 	gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
 	if( error ){
 		g_debug( "%s: error=%s for path=%s", thisfn, error->message, path );
@@ -488,28 +500,32 @@ static void
 read_action( NAGConf *gconf, NAAction *action, const gchar *path )
 {
 	static const gchar *thisfn = "na_gconf_read_action";
-	g_debug( "%s: gconf=%p, action=%p, path=%s", thisfn, gconf, action, path );
+	gchar *uuid;
+	GSList *entries, *notifies, *list_profiles, *ip;
+	NAActionProfile *profile;
+
+	g_debug( "%s: gconf=%p, action=%p, path=%s",
+			thisfn, ( void * ) gconf, ( void * ) action, path );
 
 	g_assert( NA_IS_GCONF( gconf ));
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *uuid = na_utils_path_to_key( path );
+	uuid = na_utils_path_to_key( path );
 	na_action_set_uuid( action, uuid );
 	g_free( uuid );
 
-	GSList *entries = get_list_entries( gconf, path );
-	GSList *notifies = entries_to_notifies( entries );
+	entries = get_list_entries( gconf, path );
+	notifies = entries_to_notifies( entries );
 	free_list_entries( entries );
 
 	fill_action_core_properties( gconf, action, notifies  );
 
-	GSList *ip;
-	GSList *list_profiles = get_path_subdirs( gconf, path );
+	list_profiles = get_path_subdirs( gconf, path );
 	if( list_profiles ){
 		for( ip = list_profiles ; ip ; ip = ip->next ){
 
 			const gchar *profile_path = ( const gchar * ) ip->data;
-			NAActionProfile *profile = na_action_profile_new();
+			profile = na_action_profile_new();
 
 			read_profile( gconf, profile, profile_path );
 
@@ -529,17 +545,21 @@ static void
 read_profile( NAGConf *gconf, NAActionProfile *profile, const gchar *path )
 {
 	static const gchar *thisfn = "na_gconf_read_profile";
-	g_debug( "%s: gconf=%p, profile=%p, path=%s", thisfn, gconf, profile, path );
+	gchar *name;
+	GSList *entries, *notifies;
+
+	g_debug( "%s: gconf=%p, profile=%p, path=%s",
+			thisfn, ( void * ) gconf, ( void * ) profile, path );
 
 	g_assert( NA_IS_GCONF( gconf ));
 	g_assert( NA_IS_ACTION_PROFILE( profile ));
 
-	gchar *name = na_utils_path_to_key( path );
+	name = na_utils_path_to_key( path );
 	na_action_profile_set_name( profile, name );
 	g_free( name );
 
-	GSList *entries = get_list_entries( gconf, path );
-	GSList *notifies = entries_to_notifies( entries );
+	entries = get_list_entries( gconf, path );
+	notifies = entries_to_notifies( entries );
 	free_list_entries( entries );
 
 	fill_profile_properties( gconf, profile, notifies  );
@@ -555,10 +575,11 @@ static void
 fill_action_core_properties( NAGConf *gconf, NAAction *action, GSList *notifies )
 {
 	static const gchar *thisfn = "na_gconf_fill_action_properties";
+	gchar *label, *uuid, *version, *tooltip, *icon;
+	gboolean enabled;
 
-	gchar *label;
 	if( !search_for_str( notifies, NULL, ACTION_LABEL_ENTRY, &label )){
-		gchar *uuid = na_action_get_uuid( action );
+		uuid = na_action_get_uuid( action );
 		g_warning( "%s: no label found for action '%s'", thisfn, uuid );
 		g_free( uuid );
 		label = g_strdup( "" );
@@ -566,25 +587,21 @@ fill_action_core_properties( NAGConf *gconf, NAAction *action, GSList *notifies 
 	na_action_set_label( action, label );
 	g_free( label );
 
-	gchar *version;
 	if( search_for_str( notifies, NULL, ACTION_VERSION_ENTRY, &version )){
 		na_action_set_version( action, version );
 		g_free( version );
 	}
 
-	gchar *tooltip;
 	if( search_for_str( notifies, NULL, ACTION_TOOLTIP_ENTRY, &tooltip )){
 		na_action_set_tooltip( action, tooltip );
 		g_free( tooltip );
 	}
 
-	gchar *icon;
 	if( search_for_str( notifies, NULL, ACTION_ICON_ENTRY, &icon )){
 		na_action_set_icon( action, icon );
 		g_free( icon );
 	}
 
-	gboolean enabled;
 	if( search_for_bool( notifies, NULL, ACTION_ENABLED_ENTRY, &enabled )){
 		na_action_set_enabled( action, enabled );
 	}
@@ -609,7 +626,10 @@ fill_action_v1_properties( NAGConf *gconf, NAAction *action, GSList *notifies )
 static void
 fill_profile_properties( NAGConf *gconf, NAActionProfile *profile, GSList *notifies )
 {
-	gchar *label;
+	gchar *label, *path, *parameters;
+	GSList *basenames, *schemes, *mimetypes;
+	gboolean isfile, isdir, multiple, matchcase;
+
 	if( !search_for_str( notifies, NULL, ACTION_PROFILE_LABEL_ENTRY, &label )){
 		/* i18n: default profile label */
 		label = g_strdup( NA_ACTION_PROFILE_DEFAULT_LABEL );
@@ -617,40 +637,33 @@ fill_profile_properties( NAGConf *gconf, NAActionProfile *profile, GSList *notif
 	na_action_profile_set_label( profile, label );
 	g_free( label );
 
-	gchar *path;
 	if( search_for_str( notifies, NULL, ACTION_PATH_ENTRY, &path )){
 		na_action_profile_set_path( profile, path );
 		g_free( path );
 	}
 
-	gchar *parameters;
 	if( search_for_str( notifies, NULL, ACTION_PARAMETERS_ENTRY, &parameters )){
 		na_action_profile_set_parameters( profile, parameters );
 		g_free( parameters );
 	}
 
-	GSList *basenames;
 	if( search_for_list( notifies, NULL, ACTION_BASENAMES_ENTRY, &basenames )){
 		na_action_profile_set_basenames( profile, basenames );
 		na_utils_free_string_list( basenames );
 	}
 
-	gboolean isfile;
 	if( search_for_bool( notifies, NULL, ACTION_ISFILE_ENTRY, &isfile )){
 		na_action_profile_set_isfile( profile, isfile );
 	}
 
-	gboolean isdir;
 	if( search_for_bool( notifies, NULL, ACTION_ISDIR_ENTRY, &isdir )){
 		na_action_profile_set_isdir( profile, isdir );
 	}
 
-	gboolean multiple;
 	if( search_for_bool( notifies, NULL, ACTION_MULTIPLE_ENTRY, &multiple )){
 		na_action_profile_set_multiple( profile, multiple );
 	}
 
-	GSList *schemes;
 	if( search_for_list( notifies, NULL, ACTION_SCHEMES_ENTRY, &schemes )){
 		na_action_profile_set_schemes( profile, schemes );
 		na_utils_free_string_list( schemes );
@@ -660,12 +673,10 @@ fill_profile_properties( NAGConf *gconf, NAActionProfile *profile, GSList *notif
 	 * note that default values for 1.0 version have been set
 	 * in na_action_profile_instance_init
 	 */
-	gboolean matchcase;
 	if( search_for_bool( notifies, NULL, ACTION_MATCHCASE_ENTRY, &matchcase )){
 		na_action_profile_set_matchcase( profile, matchcase );
 	}
 
-	GSList *mimetypes;
 	if( search_for_list( notifies, NULL, ACTION_MIMETYPES_ENTRY, &mimetypes )){
 		na_action_profile_set_mimetypes( profile, mimetypes );
 		na_utils_free_string_list( mimetypes );
@@ -680,9 +691,11 @@ static GSList *
 get_path_subdirs( const NAGConf *gconf, const gchar *path )
 {
 	static const gchar *thisfn = "na_gconf_get_path_subdirs";
-
 	GError *error = NULL;
-	GSList *list = gconf_client_all_dirs( gconf->private->gconf, path, &error );
+	GSList *list;
+
+	list = gconf_client_all_dirs( gconf->private->gconf, path, &error );
+
 	if( error ){
 		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
 		g_error_free( error );
@@ -703,9 +716,11 @@ static GSList *
 get_list_entries( const NAGConf *gconf, const gchar *path )
 {
 	static const gchar *thisfn = "na_gconf_get_list_values";
-
 	GError *error = NULL;
-	GSList *list_path = gconf_client_all_entries( gconf->private->gconf, path, &error );
+	GSList *list_path;
+
+	list_path = gconf_client_all_entries( gconf->private->gconf, path, &error );
+
 	if( error ){
 		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
 		g_error_free( error );
@@ -719,10 +734,12 @@ static void
 free_list_entries( GSList *list )
 {
 	GSList *item;
+
 	for( item = list ; item != NULL ; item = item->next ){
 		GConfEntry *entry = ( GConfEntry * ) item->data;
 		gconf_entry_unref( entry );
 	}
+
 	g_slist_free( list );
 }
 
@@ -751,27 +768,35 @@ entry_to_notify( const GConfEntry *entry )
 {
 	/*static const gchar *thisfn = "na_gconf_entry_to_notify";*/
 	GSList *listvalues, *iv, *strings;
+	NAPivotNotify *npn;
+	gchar **split;
+	const gchar *path;
+	const gchar *subpath;
+	const GConfValue *value;
 
 	g_assert( entry );
-
-	const gchar *path = gconf_entry_get_key( entry );
+	path = gconf_entry_get_key( entry );
 	g_assert( path );
 
-	NAPivotNotify *npn = g_new0( NAPivotNotify, 1 );
+	npn = g_new0( NAPivotNotify, 1 );
 
-	const gchar *subpath = path + strlen( NA_GCONF_CONFIG_PATH ) + 1;
-	gchar **split = g_strsplit( subpath, "/", -1 );
+	subpath = path + strlen( NA_GCONF_CONFIG_PATH ) + 1;
+	split = g_strsplit( subpath, "/", -1 );
 	/*g_debug( "%s: [0]=%s, [1]=%s", thisfn, split[0], split[1] );*/
 	npn->uuid = g_strdup( split[0] );
+
 	if( g_strv_length( split ) == 2 ){
 		npn->parm = g_strdup( split[1] );
+
 	} else if( g_strv_length( split ) == 3 ){
 		npn->profile = g_strdup( split[1] );
 		npn->parm = g_strdup( split[2] );
 	}
+
 	g_strfreev( split );
 
-	const GConfValue *value = gconf_entry_get_value( entry );
+	value = gconf_entry_get_value( entry );
+
 	if( value ){
 		switch( value->type ){
 
@@ -814,11 +839,12 @@ entries_to_notifies( GSList *entries )
 {
 	GSList *item;
 	GSList *notifies = NULL;
+	NAPivotNotify *npn;
 
 	for( item = entries ; item ; item = item->next ){
 
 		const GConfEntry *entry = ( const GConfEntry * ) item->data;
-		NAPivotNotify *npn = entry_to_notify( entry );
+		npn = entry_to_notify( entry );
 		notifies = g_slist_prepend( notifies, npn );
 	}
 
@@ -829,6 +855,7 @@ static void
 free_list_notifies( GSList *list )
 {
 	GSList *il;
+
 	for( il = list ; il ; il = il->next ){
 		na_pivot_free_notify(( NAPivotNotify *) il->data );
 	}
@@ -837,10 +864,12 @@ free_list_notifies( GSList *list )
 static gboolean
 search_for_str( GSList *properties, const gchar *profile, const gchar *key, gchar **value )
 {
-	*value = NULL;
 	GSList *ip;
+	NAPivotNotify *npn;
+
+	*value = NULL;
 	for( ip = properties ; ip ; ip = ip->next ){
-		NAPivotNotify *npn = ( NAPivotNotify * ) ip->data;
+		npn = ( NAPivotNotify * ) ip->data;
 		if( npn->type == NA_PIVOT_STR &&
 		  ( !profile || !g_ascii_strcasecmp( profile, npn->profile )) &&
 		    !g_ascii_strcasecmp( key, npn->parm )){
@@ -848,16 +877,19 @@ search_for_str( GSList *properties, const gchar *profile, const gchar *key, gcha
 				return( TRUE );
 		}
 	}
+
 	return( FALSE );
 }
 
 static gboolean
 search_for_bool( GSList *properties, const gchar *profile, const gchar *key, gboolean *value )
 {
-	*value = FALSE;
 	GSList *ip;
+	NAPivotNotify *npn;
+
+	*value = FALSE;
 	for( ip = properties ; ip ; ip = ip->next ){
-		NAPivotNotify *npn = ( NAPivotNotify * ) ip->data;
+		npn = ( NAPivotNotify * ) ip->data;
 		if( npn->type == NA_PIVOT_BOOL &&
 		  ( !profile || !g_ascii_strcasecmp( profile, npn->profile )) &&
 			!g_ascii_strcasecmp( key, npn->parm )){
@@ -865,16 +897,19 @@ search_for_bool( GSList *properties, const gchar *profile, const gchar *key, gbo
 				return( TRUE );
 		}
 	}
+
 	return( FALSE );
 }
 
 static gboolean
 search_for_list( GSList *properties, const gchar *profile, const gchar *key, GSList **value )
 {
-	*value = NULL;
 	GSList *ip;
+	NAPivotNotify *npn;
+
+	*value = NULL;
 	for( ip = properties ; ip ; ip = ip->next ){
-		NAPivotNotify *npn = ( NAPivotNotify * ) ip->data;
+		npn = ( NAPivotNotify * ) ip->data;
 		if( npn->type == NA_PIVOT_STRLIST &&
 		  ( !profile || !g_ascii_strcasecmp( profile, npn->profile )) &&
 			!g_ascii_strcasecmp( key, npn->parm )){
@@ -882,6 +917,7 @@ search_for_list( GSList *properties, const gchar *profile, const gchar *key, GSL
 				return( TRUE );
 		}
 	}
+
 	return( FALSE );
 }
 
@@ -943,22 +979,26 @@ key_is_writable( NAGConf *gconf, const gchar *path )
 static gboolean
 write_v2_keys( NAGConf *gconf, const NAAction *action, gchar **message )
 {
-	gchar *uuid = na_action_get_uuid( action );
+	gchar *uuid, *name;
+	gboolean ret;
+	GSList *profiles, *ip;
+	NAActionProfile *profile;
 
-	gboolean ret =
+	uuid = na_action_get_uuid( action );
+
+	ret =
 		write_str( gconf, uuid, ACTION_VERSION_ENTRY, na_action_get_version( action ), message ) &&
 		write_str( gconf, uuid, ACTION_LABEL_ENTRY, na_action_get_label( action ), message ) &&
 		write_str( gconf, uuid, ACTION_TOOLTIP_ENTRY, na_action_get_tooltip( action ), message ) &&
 		write_str( gconf, uuid, ACTION_ICON_ENTRY, na_action_get_icon( action ), message ) &&
 		write_bool( gconf, uuid, NULL, ACTION_ENABLED_ENTRY, na_action_is_enabled( action ), message );
 
-	GSList *ip;
-	GSList *profiles = na_action_get_profiles( action );
+	profiles = na_action_get_profiles( action );
 
 	for( ip = profiles ; ip && ret ; ip = ip->next ){
 
-		NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
-		gchar *name = na_action_profile_get_name( profile );
+		profile = NA_ACTION_PROFILE( ip->data );
+		name = na_action_profile_get_name( profile );
 
 		ret =
 			write_str2( gconf, uuid, name, ACTION_PROFILE_LABEL_ENTRY, na_action_profile_get_label( profile ), message ) &&
@@ -1019,8 +1059,8 @@ write_bool( NAGConf *gconf, const gchar *uuid, const gchar *name, const gchar *k
 {
 	gboolean ret = TRUE;
 	GError *error = NULL;
-
 	gchar *path;
+
 	if( name && strlen( name )){
 		path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
 	} else {
@@ -1067,10 +1107,11 @@ install_gconf_watch( NAGConf *gconf )
 {
 	static const gchar *thisfn = "na_gconf_install_gconf_watch";
 	GError *error = NULL;
+	guint notify_id;
 
 	install_gconf_watched_dir( gconf );
 
-	guint notify_id =
+	notify_id =
 		gconf_client_notify_add(
 			gconf->private->gconf,
 			NA_GCONF_CONFIG_PATH,
@@ -1153,11 +1194,14 @@ action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpoint
 {
 	/*static const gchar *thisfn = "action_changed_cb";*/
 	/*g_debug( "%s: client=%p, cnxnid=%u, entry=%p, user_data=%p", thisfn, client, cnxn_id, entry, user_data );*/
+	NAGConf *gconf;
+	NAPivotNotify *npn;
 
 	g_assert( NA_IS_GCONF( user_data ));
-	NAGConf *gconf = NA_GCONF( user_data );
+
+	gconf = NA_GCONF( user_data );
 	g_assert( NA_IS_IIO_PROVIDER( gconf ));
 
-	NAPivotNotify *npn = entry_to_notify( entry );
+	npn = entry_to_notify( entry );
 	g_signal_emit_by_name( gconf->private->notified, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );
 }

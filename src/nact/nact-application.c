@@ -43,6 +43,7 @@
 /* private class data
  */
 struct NactApplicationClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -94,7 +95,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "nact_application_register_type";
-	g_debug( "%s", thisfn );
+	GType type;
 
 	static GTypeInfo info = {
 		sizeof( NactApplicationClass ),
@@ -108,24 +109,31 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( BASE_APPLICATION_TYPE, "NactApplication", &info, 0 ));
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( BASE_APPLICATION_TYPE, "NactApplication", &info, 0 );
+
+	return( type );
 }
 
 static void
 class_init( NactApplicationClass *klass )
 {
 	static const gchar *thisfn = "nact_application_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *object_class;
+	GParamSpec *spec;
+	BaseApplicationClass *appli_class;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = BASE_APPLICATION_CLASS( g_type_class_peek_parent( klass ));
 
-	GObjectClass *object_class = G_OBJECT_CLASS( klass );
+	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 	object_class->get_property = instance_get_property;
 	object_class->set_property = instance_set_property;
 
-	GParamSpec *spec;
 	spec = g_param_spec_pointer(
 			PROP_PIVOT_STR,
 			PROP_PIVOT_STR,
@@ -135,7 +143,7 @@ class_init( NactApplicationClass *klass )
 
 	klass->private = g_new0( NactApplicationClassPrivate, 1 );
 
-	BaseApplicationClass *appli_class = BASE_APPLICATION_CLASS( klass );
+	appli_class = BASE_APPLICATION_CLASS( klass );
 
 	appli_class->application_initialize_unique_app = appli_initialize_unique_app;
 	appli_class->application_initialize_application = appli_initialize_application;
@@ -150,10 +158,12 @@ static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_application_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+	NactApplication *self;
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
 	g_assert( NACT_IS_APPLICATION( instance ));
-	NactApplication *self = NACT_APPLICATION( instance );
+	self = NACT_APPLICATION( instance );
 
 	self->private = g_new0( NactApplicationPrivate, 1 );
 
@@ -163,8 +173,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
+	NactApplication *self;
+
 	g_assert( NACT_IS_APPLICATION( object ));
-	NactApplication *self = NACT_APPLICATION( object );
+	self = NACT_APPLICATION( object );
 
 	switch( property_id ){
 		case PROP_PIVOT:
@@ -180,8 +192,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
+	NactApplication *self;
+
 	g_assert( NACT_IS_APPLICATION( object ));
-	NactApplication *self = NACT_APPLICATION( object );
+	self = NACT_APPLICATION( object );
 
 	switch( property_id ){
 		case PROP_PIVOT:
@@ -198,10 +212,11 @@ static void
 instance_dispose( GObject *application )
 {
 	static const gchar *thisfn = "nact_application_instance_dispose";
-	g_debug( "%s: application=%p", thisfn, application );
+	NactApplication *self;
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( NACT_IS_APPLICATION( application ));
-	NactApplication *self = NACT_APPLICATION( application );
+	self = NACT_APPLICATION( application );
 
 	if( !self->private->dispose_has_run ){
 
@@ -220,10 +235,11 @@ static void
 instance_finalize( GObject *application )
 {
 	static const gchar *thisfn = "nact_application_instance_finalize";
-	g_debug( "%s: application=%p", thisfn, application );
+	NactApplication *self;
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( NACT_IS_APPLICATION( application ));
-	NactApplication *self = ( NactApplication * ) application;
+	self = ( NactApplication * ) application;
 
 	g_free( self->private );
 
@@ -273,13 +289,16 @@ nact_application_get_pivot( NactApplication *application )
 static gboolean
 appli_initialize_unique_app( BaseApplication *application )
 {
+	gboolean ok;
+	gchar *msg1, *msg2;
+
 	/* call parent class */
-	gboolean ok = st_parent_class->application_initialize_unique_app( application );
+	ok = st_parent_class->application_initialize_unique_app( application );
 
 	if( !ok ){
-		gchar *msg1 = g_strdup( _( "Another instance of Nautilus Actions Configuration Tool is already running." ));
+		msg1 = g_strdup( _( "Another instance of Nautilus Actions Configuration Tool is already running." ));
 		/* i18n: another instance is already running: second line of error message */
-		gchar *msg2 = g_strdup( _( "Please switch back to it." ));
+		msg2 = g_strdup( _( "Please switch back to it." ));
 
 		g_object_set( G_OBJECT( application ),
 				PROP_APPLICATION_EXIT_MESSAGE1, msg1,
@@ -300,10 +319,12 @@ appli_initialize_unique_app( BaseApplication *application )
 static gboolean
 appli_initialize_application( BaseApplication *application )
 {
+	gboolean ok;
+
 	NACT_APPLICATION( application )->private->pivot = na_pivot_new( NULL );
 
 	/* call parent class */
-	gboolean ok = st_parent_class->application_initialize_application( application );
+	ok = st_parent_class->application_initialize_application( application );
 
 	return( ok );
 }
@@ -312,7 +333,8 @@ static gchar *
 appli_get_application_name( BaseApplication *application )
 {
 	static const gchar *thisfn = "nact_application_appli_get_application_name";
-	g_debug( "%s: application=%p", thisfn, application );
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	/* i18n: this is the application name, used in window title */
 	return( g_strdup( _( "Nautilus Actions Configuration Tool" )));
@@ -322,7 +344,8 @@ static gchar *
 appli_get_icon_name( BaseApplication *application )
 {
 	static const gchar *thisfn = "nact_application_appli_get_icon_name";
-	g_debug( "%s: application=%p", thisfn, application );
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	return( na_about_get_icon_name());
 }
@@ -331,7 +354,8 @@ static gchar *
 appli_get_unique_app_name( BaseApplication *application )
 {
 	static const gchar *thisfn = "nact_application_appli_get_unique_app_name";
-	g_debug( "%s: application=%p", thisfn, application );
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	return( g_strdup( "org.nautilus-actions.ConfigurationTool" ));
 }
@@ -350,9 +374,11 @@ static GObject *
 appli_get_main_window( BaseApplication *application )
 {
 	static const gchar *thisfn = "nact_application_appli_get_main_window";
-	g_debug( "%s: application=%p", thisfn, application );
+	BaseWindow *window;
 
-	BaseWindow *window = BASE_WINDOW( nact_main_window_new( application ));
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	window = BASE_WINDOW( nact_main_window_new( application ));
 
 	na_pivot_add_consumer(
 			NA_PIVOT( nact_application_get_pivot( NACT_APPLICATION( application ))),

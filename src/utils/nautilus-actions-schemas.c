@@ -62,21 +62,24 @@ static void            exit_with_usage( void );
 int
 main( int argc, char** argv )
 {
+	int status = EXIT_SUCCESS;
+	GOptionContext *context;
+	gchar *help;
+	GError *error = NULL;
+	gchar *msg = NULL;
+
 	g_type_init();
 
-	int status = EXIT_SUCCESS;
-
-	GOptionContext *context = init_options();
+	context = init_options();
 
 	if( argc == 1 ){
 		g_set_prgname( argv[0] );
-		gchar *help = g_option_context_get_help( context, FALSE, NULL );
+		help = g_option_context_get_help( context, FALSE, NULL );
 		g_print( "\n%s", help );
 		g_free( help );
 		exit( status );
 	}
 
-	GError *error = NULL;
 	if( !g_option_context_parse( context, &argc, &argv, &error )){
 		g_printerr( _("Syntax error: %s\n" ), error->message );
 		g_error_free (error);
@@ -87,8 +90,6 @@ main( int argc, char** argv )
 		g_printerr( _( "Error: only one output option may be specified." ));
 		exit_with_usage();
 	}*/
-
-	gchar *msg = NULL;
 
 	/*if( output_gconf ){
 		if( write_to_gconf( &msg )){
@@ -120,7 +121,10 @@ main( int argc, char** argv )
 static GOptionContext *
 init_options( void )
 {
-	GOptionContext *context = g_option_context_new( _( "Output the Nautilus Actions GConf schema on stdout." ));
+	GOptionContext *context;
+	gchar *description;
+
+	context = g_option_context_new( _( "Output the Nautilus Actions GConf schema on stdout." ));
 			/*"  The schema can be written to stdout.\n"
 			"  It can also be written to an output file, in a file later suitable for an installation via gconftool-2.\n"
 			"  Or you may choose to directly write the schema into the GConf configuration." ));*/
@@ -136,7 +140,7 @@ init_options( void )
 	g_option_context_add_main_entries( context, entries, NULL );
 #endif
 
-	gchar* description = g_strdup_printf( "%s.\n%s", PACKAGE_STRING,
+	description = g_strdup_printf( "%s.\n%s", PACKAGE_STRING,
 			_( "Bug reports are welcomed at http://bugzilla.gnome.org,"
 				" or you may prefer to mail to <maintainer@nautilus-actions.org>.\n" ));
 

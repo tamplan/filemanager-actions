@@ -39,6 +39,7 @@
 /* private interface data
  */
 struct NAIPivotConsumerInterfacePrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 static GType    register_type( void );
@@ -66,7 +67,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "na_ipivot_consumer_register_type";
-	g_debug( "%s", thisfn );
+	GType type;
 
 	static const GTypeInfo info = {
 		sizeof( NAIPivotConsumerInterface ),
@@ -80,7 +81,9 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NAIPivotConsumer", &info, 0 );
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_INTERFACE, "NAIPivotConsumer", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -94,7 +97,7 @@ interface_base_init( NAIPivotConsumerInterface *klass )
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NAIPivotConsumerInterfacePrivate, 1 );
 
@@ -111,7 +114,7 @@ interface_base_finalize( NAIPivotConsumerInterface *klass )
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 
@@ -153,7 +156,8 @@ na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance )
 void na_ipivot_consumer_notify( NAIPivotConsumer *instance )
 {
 	static const gchar *thisfn = "na_ipivot_consumer_notify";
-	g_debug( "%s: instance=%p", thisfn, instance );
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 	if( is_notify_allowed( instance )){
 		if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed ){
@@ -167,6 +171,7 @@ is_notify_allowed( const NAIPivotConsumer *instance )
 {
 	GTimeVal *last_delay;
 	GTimeVal now;
+	glong ecart;
 
 	last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
 	if( !last_delay ){
@@ -174,7 +179,8 @@ is_notify_allowed( const NAIPivotConsumer *instance )
 	}
 
 	g_get_current_time( &now );
-	glong ecart = 1000000 * ( now.tv_sec - last_delay->tv_sec );
+	ecart = 1000000 * ( now.tv_sec - last_delay->tv_sec );
 	ecart += now.tv_usec - last_delay->tv_usec;
+
 	return( ecart > 1000000 );
 }

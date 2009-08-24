@@ -37,6 +37,7 @@
 /* private interface data
  */
 struct NAIDuplicableInterfacePrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* data set against GObject
@@ -76,7 +77,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "na_iduplicable_register_type";
-	g_debug( "%s", thisfn );
+	GType type;
 
 	static const GTypeInfo info = {
 		sizeof( NAIDuplicableInterface ),
@@ -90,7 +91,9 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NAIDuplicable", &info, 0 );
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_INTERFACE, "NAIDuplicable", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -104,7 +107,7 @@ interface_base_init( NAIDuplicableInterface *klass )
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NAIDuplicableInterfacePrivate, 1 );
 
@@ -119,7 +122,7 @@ interface_base_finalize( NAIDuplicableInterface *klass )
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 
@@ -157,7 +160,6 @@ void
 na_iduplicable_dump( const NAObject *object )
 {
 	static const gchar *thisfn = "na_iduplicable_dump";
-
 	NAObject *origin = NULL;
 	gboolean modified = FALSE;
 	gboolean valid = TRUE;
@@ -171,7 +173,7 @@ na_iduplicable_dump( const NAObject *object )
 		valid = get_valid( object );
 	}
 
-	g_debug( "%s:   origin=%p", thisfn, origin );
+	g_debug( "%s:   origin=%p", thisfn, ( void * ) origin );
 	g_debug( "%s: modified=%s", thisfn, modified ? "True" : "False" );
 	g_debug( "%s:    valid=%s", thisfn, valid ? "True" : "False" );
 }
@@ -194,9 +196,9 @@ NAObject *
 na_iduplicable_duplicate( const NAObject *object )
 {
 	static const gchar *thisfn = "na_iduplicable_duplicate";
-	g_debug( "%s: object=%p", thisfn, object );
-
 	NAObject *dup = NULL;
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	if( object ){
 		g_assert( NA_IS_OBJECT( object ));
@@ -230,19 +232,21 @@ na_iduplicable_check_edited_status( const NAObject *object )
 {
 	/*static const gchar *thisfn = "na_iduplicable_check_edited_status";
 	g_debug( "%s: object=%p", thisfn, object );*/
+	gboolean modified = TRUE;
+	NAObject *origin;
+	gboolean valid;
 
 	if( object ){
 		g_assert( NA_IS_OBJECT( object ));
 		g_assert( NA_IS_IDUPLICABLE( object ));
 
-		gboolean modified = TRUE;
-		NAObject *origin = get_origin( object );
+		origin = get_origin( object );
 		if( origin ){
 			modified = !v_are_equal( object, origin );
 		}
 		set_modified( object, modified );
 
-		gboolean valid = v_is_valid( object );
+		valid = v_is_valid( object );
 		set_valid( object, valid );
 	}
 }
@@ -262,7 +266,6 @@ na_iduplicable_is_modified( const NAObject *object )
 {
 	/*static const gchar *thisfn = "na_iduplicable_is_modified";
 	g_debug( "%s: object=%p", thisfn, object );*/
-
 	gboolean is_modified = FALSE;
 
 	if( object ){
@@ -289,7 +292,6 @@ na_iduplicable_is_valid( const NAObject *object )
 {
 	/*static const gchar *thisfn = "na_iduplicable_is_valid";
 	g_debug( "%s: object=%p", thisfn, object );*/
-
 	gboolean is_valid = FALSE;
 
 	if( object ){
@@ -315,7 +317,6 @@ na_iduplicable_get_origin( const NAObject *object )
 {
 	/*static const gchar *thisfn = "na_iduplicable_is_valid";
 	g_debug( "%s: object=%p", thisfn, object );*/
-
 	NAObject *origin = NULL;
 
 	if( object ){

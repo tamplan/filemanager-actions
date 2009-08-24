@@ -79,7 +79,7 @@ AC_PROG_MAKE_SET
 # Gnome stuff
 GNOME_COMMON_INIT
 GNOME_MAINTAINER_MODE_DEFINES
-NA_GNOME_COMPILE_WARNINGS([error],[-ansi])
+NA_GNOME_COMPILE_WARNINGS([error],[-ansi -pedantic -Wno-overlength-strings])
 AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} ${DISABLE_DEPRECATED}"])
 # unique 1.0.8 doesn't satisfy this
 #AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} \

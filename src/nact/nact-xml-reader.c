@@ -50,6 +50,7 @@
 /* private class data
  */
 struct NactXMLReaderClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -171,6 +172,9 @@ nact_xml_reader_get_type( void )
 static GType
 register_type( void )
 {
+	static const gchar *thisfn = "nact_xml_reader_register_type";
+	GType type;
+
 	static GTypeInfo info = {
 		sizeof( NactXMLReaderClass ),
 		NULL,
@@ -183,7 +187,9 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( G_TYPE_OBJECT, "NactXMLReader", &info, 0 );
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_OBJECT, "NactXMLReader", &info, 0 );
 
 	return( type );
 }
@@ -192,11 +198,13 @@ static void
 class_init( NactXMLReaderClass *klass )
 {
 	static const gchar *thisfn = "nact_xml_reader_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *object_class;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
-	GObjectClass *object_class = G_OBJECT_CLASS( klass );
+	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
@@ -207,10 +215,11 @@ static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_xml_reader_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+	NactXMLReader *self;
 
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 	g_assert( NACT_IS_XML_READER( instance ));
-	NactXMLReader *self = NACT_XML_READER( instance );
+	self = NACT_XML_READER( instance );
 
 	self->private = g_new0( NactXMLReaderPrivate, 1 );
 
@@ -227,8 +236,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
+	static const gchar *thisfn = "nact_xml_reader_instance_dispose";
+	NactXMLReader *self;
+
 	g_assert( NACT_IS_XML_READER( object ));
-	NactXMLReader *self = NACT_XML_READER( object );
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	self = NACT_XML_READER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -247,8 +260,12 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
+	static const gchar *thisfn = "nact_xml_reader_instance_finalize";
+	NactXMLReader *self;
+
 	g_assert( NACT_IS_XML_READER( object ));
-	NactXMLReader *self = NACT_XML_READER( object );
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	self = NACT_XML_READER( object );
 
 	na_utils_free_string_list( self->private->messages );
 	free_reader_values( self );
@@ -274,15 +291,18 @@ NAAction *
 nact_xml_reader_import( NactWindow *window, const gchar *uri, GSList **msg )
 {
 	static const gchar *thisfn = "nact_xml_reader_import";
-	g_debug( "%s: window=%p, uri=%s, msg=%p", thisfn, window, uri, msg );
-
 	NAAction *action = NULL;
-	NactXMLReader *reader = gconf_reader_new();
+	NactXMLReader *reader;
+	xmlDoc *doc;
+
+	g_debug( "%s: window=%p, uri=%s, msg=%p", thisfn, ( void * ) window, uri, ( void * ) msg );
+
+	reader = gconf_reader_new();
 	reader->private->window = window;
 
 	g_assert( NACT_IS_ASSISTANT( window ));
 
-	xmlDoc *doc = xmlParseFile( uri );
+	doc = xmlParseFile( uri );
 
 	if( !doc ){
 		xmlErrorPtr error = xmlGetLastError();
@@ -326,10 +346,10 @@ static void
 gconf_reader_parse_schema_root( NactXMLReader *reader, xmlNode *root )
 {
 	static const gchar *thisfn = "gconf_reader_parse_schema_root";
-	g_debug( "%s: reader=%p, root=%p", thisfn, reader, root );
-
 	xmlNodePtr iter;
 	gboolean found = FALSE;
+
+	g_debug( "%s: reader=%p, root=%p", thisfn, ( void * ) reader, ( void * ) root );
 
 	for( iter = root->children ; iter ; iter = iter->next ){
 
@@ -363,9 +383,10 @@ static void
 gconf_reader_parse_schemalist( NactXMLReader *reader, xmlNode *schema )
 {
 	static const gchar *thisfn = "gconf_reader_parse_schemalist";
-	g_debug( "%s: reader=%p, schema=%p", thisfn, reader, schema );
-
 	xmlNode *iter;
+	gboolean ok = TRUE;
+
+	g_debug( "%s: reader=%p, schema=%p", thisfn, ( void * ) reader, ( void * ) schema );
 
 	reader->private->action = na_action_new();
 	reader->private->uuid_set = FALSE;
@@ -387,8 +408,6 @@ gconf_reader_parse_schemalist( NactXMLReader *reader, xmlNode *schema )
 			add_message( reader, ERR_IGNORED_SCHEMA, iter->line );
 		}
 	}
-
-	gboolean ok = TRUE;
 
 	if( !reader->private->uuid_set ){
 		add_message( reader, ERR_UUID_NOT_FOUND );
@@ -435,12 +454,14 @@ static gboolean
 gconf_reader_parse_schema( NactXMLReader *reader, xmlNode *schema )
 {
 	static const gchar *thisfn = "gconf_reader_parse_schema";
-	g_debug( "%s: reader=%p, schema=%p", thisfn, reader, schema );
-
 	xmlNode *iter;
 	gboolean ret = TRUE;
 	gboolean applyto = FALSE;
 	gboolean pre_v1_11 = FALSE;
+	gboolean locale_found = FALSE;
+	gboolean default_found = FALSE;
+
+	g_debug( "%s: reader=%p, schema=%p", thisfn, ( void * ) reader, ( void * ) schema );
 
 	free_reader_values( reader );
 
@@ -519,9 +540,6 @@ gconf_reader_parse_schema( NactXMLReader *reader, xmlNode *schema )
 	/* check for and parse locale+default or locale depending of the
 	 * previously found 'applyto' node
 	 */
-	gboolean locale_found = FALSE;
-	gboolean default_found = FALSE;
-
 	for( iter = schema->children ; iter ; iter = iter->next ){
 
 		if( iter->type != XML_ELEMENT_NODE ){
@@ -574,14 +592,16 @@ static gboolean
 gconf_reader_parse_applyto( NactXMLReader *reader, xmlNode *node )
 {
 	static const gchar *thisfn = "gconf_reader_parse_applyto";
-	g_debug( "%s: reader=%p, node=%p", thisfn, reader, node );
-
 	gboolean ret = TRUE;
-
-	xmlChar *text = xmlNodeGetContent( node );
-	gchar *uuid = get_uuid_from_key( reader, ( const gchar * ) text, node->line );
+	xmlChar *text;
+	gchar *uuid;
 	gchar *profile = NULL;
 	gchar *entry = NULL;
+
+	g_debug( "%s: reader=%p, node=%p", thisfn, ( void * ) reader, ( void * ) node );
+
+	text = xmlNodeGetContent( node );
+	uuid = get_uuid_from_key( reader, ( const gchar * ) text, node->line );
 
 	if( !uuid ){
 		ret = FALSE;
@@ -640,11 +660,11 @@ static gboolean
 gconf_reader_check_for_entry( NactXMLReader *reader, xmlNode *node, const char *entry )
 {
 	static const gchar *thisfn = "gconf_reader_check_for_entry";
-	g_debug( "%s: reader=%p, node=%p, entry=%s", thisfn, reader, node, entry );
-
 	gboolean ret = TRUE;
 	gboolean found = FALSE;
 	int i;
+
+	g_debug( "%s: reader=%p, node=%p, entry=%s", thisfn, ( void * ) reader, ( void * ) node, entry );
 
 	for( i=0 ; reader_str[i].entry ; ++i ){
 
@@ -683,11 +703,11 @@ static gboolean
 gconf_reader_parse_locale( NactXMLReader *reader, xmlNode *locale )
 {
 	static const gchar *thisfn = "gconf_reader_parse_locale";
-	g_debug( "%s: reader=%p, locale=%p", thisfn, reader, locale );
-
 	gboolean ret = TRUE;
 	xmlNode *iter;
 	gboolean default_found = FALSE;
+
+	g_debug( "%s: reader=%p, locale=%p", thisfn, ( void * ) reader, ( void * ) locale );
 
 	for( iter = locale->children ; iter ; iter = iter->next ){
 
@@ -726,13 +746,16 @@ gconf_reader_parse_locale( NactXMLReader *reader, xmlNode *locale )
 static void
 gconf_reader_parse_default( NactXMLReader *reader, xmlNode *node )
 {
+	xmlChar *text;
+	gchar *value;
+
 	if( reader->private->value ){
 		add_message( reader, ERR_VALUE_ALREADY_SET, reader->private->value, node->line );
 		return;
 	}
 
-	xmlChar *text = xmlNodeGetContent( node );
-	gchar *value = g_strdup(( const gchar * ) text );
+	text = xmlNodeGetContent( node );
+	value = g_strdup(( const gchar * ) text );
 
 	if( reader->private->list_waited ){
 		reader->private->list_value = na_utils_schema_to_gslist( value );
@@ -754,10 +777,11 @@ get_profile_name_from_schema_key( const gchar *key, const gchar *uuid )
 {
 	gchar *prefix = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, ACTION_PROFILE_PREFIX );
 	gchar *profile_name = NULL;
+	gchar *pos;
 
 	if( g_str_has_prefix( key, prefix )){
 		profile_name = g_strdup( key + strlen( prefix ));
-		gchar *pos = g_strrstr( profile_name, "/" );
+		pos = g_strrstr( profile_name, "/" );
 		if( pos != NULL ){
 			*pos = '\0';
 		}
@@ -771,10 +795,10 @@ static void
 gconf_reader_parse_dump_root( NactXMLReader *reader, xmlNode *root )
 {
 	static const gchar *thisfn = "gconf_reader_parse_dump_root";
-	g_debug( "%s: reader=%p, root=%p", thisfn, reader, root );
-
 	xmlNodePtr iter;
 	gboolean found = FALSE;
+
+	g_debug( "%s: reader=%p, root=%p", thisfn, ( void * ) reader, ( void * ) root );
 
 	for( iter = root->children ; iter ; iter = iter->next ){
 
@@ -806,12 +830,15 @@ static void
 gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist )
 {
 	static const gchar *thisfn = "gconf_reader_parse_entrylist";
-	g_debug( "%s: reader=%p, entrylist=%p", thisfn, reader, entrylist );
+	xmlChar *path;
+	gchar *uuid, *label;
+
+	g_debug( "%s: reader=%p, entrylist=%p", thisfn, ( void * ) reader, ( void * ) entrylist );
 
 	reader->private->action = na_action_new();
-	xmlChar *path = xmlGetProp( entrylist, ( const xmlChar * ) NACT_GCONF_DUMP_ENTRYLIST_BASE );
-	gchar *uuid = na_utils_path_to_key(( const gchar * ) path );
-	g_debug( "%s: uuid=%s", thisfn, uuid );
+	path = xmlGetProp( entrylist, ( const xmlChar * ) NACT_GCONF_DUMP_ENTRYLIST_BASE );
+	uuid = na_utils_path_to_key(( const gchar * ) path );
+	/*g_debug( "%s: uuid=%s", thisfn, uuid );*/
 
 	if( is_uuid_valid( uuid )){
 		if( action_exists( reader, uuid )){
@@ -848,7 +875,7 @@ gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist )
 			}
 		}
 
-		gchar *label = na_action_get_label( reader->private->action );
+		label = na_action_get_label( reader->private->action );
 		if( !label || !g_utf8_strlen( label, -1 )){
 			add_message( reader, ERR_ACTION_LABEL_NOT_FOUND );
 		}
@@ -863,10 +890,13 @@ static gboolean
 gconf_reader_parse_entry( NactXMLReader *reader, xmlNode *entry )
 {
 	static const gchar *thisfn = "gconf_reader_parse_entry";
-	g_debug( "%s: reader=%p, entry=%p", thisfn, reader, entry );
-
 	xmlNode *iter;
 	gboolean ret = TRUE;
+	gboolean key_found = FALSE;
+	gboolean value_found = FALSE;
+
+	g_debug( "%s: reader=%p, entry=%p", thisfn, ( void * ) reader, ( void * ) entry );
+
 	free_reader_values( reader );
 
 	/* check for the children of the 'entry' node
@@ -891,7 +921,6 @@ gconf_reader_parse_entry( NactXMLReader *reader, xmlNode *entry )
 
 	/* check for one and only one 'key' node
 	 */
-	gboolean key_found = FALSE;
 	for( iter = entry->children ; iter ; iter = iter->next ){
 
 		if( iter->type != XML_ELEMENT_NODE ){
@@ -909,18 +938,19 @@ gconf_reader_parse_entry( NactXMLReader *reader, xmlNode *entry )
 			}
 		}
 	}
+
 	if( !key_found ){
 		g_assert( ret );
 		add_message( reader, ERR_NODE_NOT_FOUND, NACT_GCONF_DUMP_KEY );
 		ret = FALSE;
 	}
+
 	if( !ret ){
 		return( ret );
 	}
 
 	/* check for one and only one 'value' node
 	 */
-	gboolean value_found = FALSE;
 	for( iter = entry->children ; iter ; iter = iter->next ){
 
 		if( iter->type != XML_ELEMENT_NODE ){
@@ -938,11 +968,13 @@ gconf_reader_parse_entry( NactXMLReader *reader, xmlNode *entry )
 			}
 		}
 	}
+
 	if( !value_found ){
 		g_assert( ret );
 		add_message( reader, ERR_NO_VALUE_FOUND );
 		ret = FALSE;
 	}
+
 	if( ret ){
 		apply_values( reader );
 	}
@@ -954,13 +986,14 @@ static gboolean
 gconf_reader_parse_dump_key( NactXMLReader *reader, xmlNode *node )
 {
 	static const gchar *thisfn = "gconf_reader_parse_dump_key";
-	g_debug( "%s: reader=%p, node=%p", thisfn, reader, node );
-
 	gboolean ret = TRUE;
-
-	xmlChar *text = xmlNodeGetContent( node );
+	xmlChar *text;
 	gchar *profile = NULL;
 	gchar *entry = NULL;
+
+	g_debug( "%s: reader=%p, node=%p", thisfn, ( void * ) reader, ( void * ) node );
+
+	text = xmlNodeGetContent( node );
 
 	if( ret ){
 		profile = get_profile_name_from_dump_key(( const gchar * ) text );
@@ -1044,11 +1077,15 @@ get_profile_name_from_dump_key( const gchar *key )
 	gchar *profile_name = NULL;
 	gchar **split = g_strsplit( key, "/", -1 );
 	guint count = g_strv_length( split );
+
 	g_assert( count );
+
 	if( count > 1 ){
 		profile_name = g_strdup( split[0] );
 	}
+
 	g_strfreev( split );
+
 	return( profile_name );
 }
 
@@ -1056,7 +1093,9 @@ static void
 apply_values( NactXMLReader *reader )
 {
 	static const gchar *thisfn = "gconf_reader_apply_values";
-	g_debug( "%s: reader=%p, entry=%s, value=%s", thisfn, reader, reader->private->entry, reader->private->value );
+
+	g_debug( "%s: reader=%p, entry=%s, value=%s",
+			thisfn, ( void * ) reader, reader->private->entry, reader->private->value );
 
 	if( reader->private->entry && strlen( reader->private->entry )){
 		if( !strcmp( reader->private->entry, ACTION_VERSION_ENTRY )){
@@ -1113,11 +1152,13 @@ apply_values( NactXMLReader *reader )
 static void
 add_message( NactXMLReader *reader, const gchar *format, ... )
 {
+	va_list va;
+	gchar *tmp;
+
 	g_debug( "nact_xml_reader_add_message: format=%s", format );
 
-	va_list va;
 	va_start( va, format );
-	gchar *tmp = g_strdup_vprintf( format, va );
+	tmp = g_strdup_vprintf( format, va );
 	va_end( va );
 	reader->private->messages = g_slist_append( reader->private->messages, tmp );
 }
@@ -1140,14 +1181,16 @@ strxcmp( const xmlChar *a, const char *b )
 static gchar *
 get_uuid_from_key( NactXMLReader *reader, const gchar *key, guint line )
 {
+	gchar *uuid, *pos;
+
 	if( !g_str_has_prefix( key, NA_GCONF_CONFIG_PATH )){
 		add_message( reader,
 				ERR_INVALID_KEY_PREFIX, NA_GCONF_CONFIG_PATH, key, line );
 		return( NULL );
 	}
 
-	gchar *uuid = g_strdup( key + strlen( NA_GCONF_CONFIG_PATH "/" ));
-	gchar *pos = g_strstr_len( uuid, strlen( uuid ), "/" );
+	uuid = g_strdup( key + strlen( NA_GCONF_CONFIG_PATH "/" ));
+	pos = g_strstr_len( uuid, strlen( uuid ), "/" );
 	if( pos != NULL ){
 		*pos = '\0';
 	}

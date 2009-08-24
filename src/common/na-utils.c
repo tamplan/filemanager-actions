@@ -209,7 +209,7 @@ na_utils_dump_string_list( GSList *list )
 	GSList *i;
 	int c;
 
-	g_debug( "%s: list at %p has %d elements", thisfn, list, g_slist_length( list ));
+	g_debug( "%s: list at %p has %d elements", thisfn, ( void * ) list, g_slist_length( list ));
 	for( i=list, c=0 ; i ; i=i->next, c++ ){
 		gchar *s = ( gchar * ) i->data;
 		g_debug( "%s: %2d - %s", thisfn, c, s );

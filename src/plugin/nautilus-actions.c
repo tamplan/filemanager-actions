@@ -50,6 +50,7 @@
 /* private class data
  */
 struct NautilusActionsClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -89,9 +90,6 @@ void
 nautilus_actions_register_type( GTypeModule *module )
 {
 	static const gchar *thisfn = "nautilus_actions_register_type";
-	g_debug( "%s: module=%p", thisfn, module );
-
-	g_assert( st_actions_type == 0 );
 
 	static const GTypeInfo info = {
 		sizeof( NautilusActionsClass ),
@@ -105,35 +103,32 @@ nautilus_actions_register_type( GTypeModule *module )
 		( GInstanceInitFunc ) instance_init,
 	};
 
-	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NautilusActions", &info, 0 );
-
-	/* implements NautilusMenuItem interface
-	 */
 	static const GInterfaceInfo menu_provider_iface_info = {
 		( GInterfaceInitFunc ) menu_provider_iface_init,
 		NULL,
 		NULL
 	};
 
-	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
-
-	/* implement IPivotConsumer interface
-	 */
 	static const GInterfaceInfo pivot_consumer_iface_info = {
 		( GInterfaceInitFunc ) pivot_consumer_iface_init,
 		NULL,
 		NULL
 	};
 
-	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONSUMER_TYPE, &pivot_consumer_iface_info );
-
-	/* implement IPrefs interface
-	 */
 	static const GInterfaceInfo prefs_iface_info = {
 		( GInterfaceInitFunc ) prefs_iface_init,
 		NULL,
 		NULL
 	};
+
+	g_debug( "%s: module=%p", thisfn, ( void * ) module );
+	g_assert( st_actions_type == 0 );
+
+	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NautilusActions", &info, 0 );
+
+	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
+
+	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONSUMER_TYPE, &pivot_consumer_iface_info );
 
 	g_type_module_add_interface( module, st_actions_type, NA_IPREFS_TYPE, &prefs_iface_info );
 }
@@ -142,11 +137,13 @@ static void
 class_init( NautilusActionsClass *klass )
 {
 	static const gchar *thisfn = "nautilus_actions_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *gobject_class;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
-	GObjectClass *gobject_class = G_OBJECT_CLASS( klass );
+	gobject_class = G_OBJECT_CLASS( klass );
 	gobject_class->dispose = instance_dispose;
 	gobject_class->finalize = instance_finalize;
 
@@ -157,7 +154,8 @@ static void
 menu_provider_iface_init( NautilusMenuProviderIface *iface )
 {
 	static const gchar *thisfn = "nautilus_actions_menu_provider_iface_init";
-	g_debug( "%s: iface=%p", thisfn, iface );
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_file_items = get_file_items;
 	iface->get_background_items = get_background_items;
@@ -167,7 +165,8 @@ static void
 pivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 {
 	static const gchar *thisfn = "nautilus_actions_pivot_consumer_iface_init";
-	g_debug( "%s: iface=%p", thisfn, iface );
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->on_actions_changed = actions_changed_handler;
 }
@@ -176,17 +175,20 @@ static void
 prefs_iface_init( NAIPrefsInterface *iface )
 {
 	static const gchar *thisfn = "nautilus_actions_prefs_iface_init";
-	g_debug( "%s: iface=%p", thisfn, iface );
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nautilus_actions_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+	NautilusActions *self;
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
 	g_assert( NAUTILUS_IS_ACTIONS( instance ));
-	NautilusActions *self = NAUTILUS_ACTIONS( instance );
+	self = NAUTILUS_ACTIONS( instance );
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
@@ -199,10 +201,11 @@ static void
 instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "nautilus_actions_instance_dispose";
-	g_debug( "%s: object=%p", thisfn, object );
+	NautilusActions *self;
 
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_assert( NAUTILUS_IS_ACTIONS( object ));
-	NautilusActions *self = NAUTILUS_ACTIONS( object );
+	self = NAUTILUS_ACTIONS( object );
 
 	if( !self->private->dispose_has_run ){
 		self->private->dispose_has_run = TRUE;
@@ -218,10 +221,11 @@ static void
 instance_finalize( GObject *object )
 {
 	static const gchar *thisfn = "nautilus_actions_instance_finalize";
-	g_debug( "%s: object=%p", thisfn, object );
+	NautilusActions *self;
 
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_assert( NAUTILUS_IS_ACTIONS( object ));
-	NautilusActions* self = NAUTILUS_ACTIONS( object );
+	self = NAUTILUS_ACTIONS( object );
 
 	g_free( self->private );
 
@@ -258,7 +262,8 @@ get_background_items( NautilusMenuProvider *provider, GtkWidget *window, Nautilu
 #ifdef NA_MAINTAINER_MODE
 	static const gchar *thisfn = "nautilus_actions_get_background_items";
 	gchar *uri = nautilus_file_info_get_uri( current_folder );
-	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)", thisfn, provider, window, current_folder, uri );
+	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
+			thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
 	g_free( uri );
 #endif
 	return(( GList * ) NULL );
@@ -268,8 +273,7 @@ static GList *
 get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_get_file_items";
-	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d", thisfn, provider, window, files, g_list_length( files ));
-
+	NautilusActions *self;
 	GList *items = NULL;
 	GSList* profiles;
 	GSList *ia, *ip;
@@ -277,16 +281,20 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	NautilusMenuItem *item;
 	GSList *actions = NULL;
 	gchar *label, *uuid;
+	gboolean have_submenu;
+
+	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
+			thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
-	NautilusActions *self = NAUTILUS_ACTIONS( provider );
+	self = NAUTILUS_ACTIONS( provider );
 
 	/* no need to go further if there is no files in the list */
 	if( !g_list_length( files )){
 		return(( GList * ) NULL );
 	}
 
-	gboolean have_submenu = na_iprefs_get_bool( NA_IPREFS( self ), PREFS_DISPLAY_AS_SUBMENU );
+	have_submenu = na_iprefs_get_bool( NA_IPREFS( self ), PREFS_DISPLAY_AS_SUBMENU );
 
 	if( !self->private->dispose_has_run ){
 		actions = na_pivot_get_actions( self->private->pivot );
@@ -351,17 +359,19 @@ static NautilusMenuItem *
 create_menu_item( NAAction *action, NAActionProfile *profile, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_create_menu_item";
+	NautilusMenuItem *item;
+	gchar *uuid, *name, *label, *tooltip, *icon_name;
+	NAActionProfile *dup4menu;
+
 	g_debug( "%s", thisfn );
 
-	NautilusMenuItem *item;
+	uuid = na_action_get_uuid( action );
+	name = g_strdup_printf( "NautilusActions::%s", uuid );
+	label = na_action_get_label( action );
+	tooltip = na_action_get_tooltip( action );
+	icon_name = na_action_get_verified_icon_name( action );
 
-	gchar *uuid = na_action_get_uuid( action );
-	gchar *name = g_strdup_printf( "NautilusActions::%s", uuid );
-	gchar *label = na_action_get_label( action );
-	gchar *tooltip = na_action_get_tooltip( action );
-	gchar* icon_name = na_action_get_verified_icon_name( action );
-
-	NAActionProfile *dup4menu = NA_ACTION_PROFILE( na_object_duplicate( NA_OBJECT( profile )));
+	dup4menu = NA_ACTION_PROFILE( na_object_duplicate( NA_OBJECT( profile )));
 
 	item = nautilus_menu_item_new( name, label, tooltip, icon_name );
 
@@ -438,11 +448,11 @@ static void
 execute_action( NautilusMenuItem *item, NAActionProfile *profile )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action";
-	g_debug( "%s: item=%p, profile=%p", thisfn, item, profile );
-
 	GList *files;
 	GString *cmd;
 	gchar *param, *path;
+
+	g_debug( "%s: item=%p, profile=%p", thisfn, ( void * ) item, ( void * ) profile );
 
 	files = ( GList* ) g_object_get_data( G_OBJECT( item ), "files" );
 
@@ -468,10 +478,11 @@ static void
 actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data )
 {
 	static const gchar *thisfn = "nautilus_actions_actions_changed_handler";
-	g_debug( "%s: instance=%p, user_data=%p", thisfn, instance, user_data );
+	NautilusActions *self;
 
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 	g_assert( NAUTILUS_IS_ACTIONS( instance ));
-	NautilusActions *self = NAUTILUS_ACTIONS( instance );
+	self = NAUTILUS_ACTIONS( instance );
 
 	if( !self->private->dispose_has_run ){
 

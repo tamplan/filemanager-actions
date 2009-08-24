@@ -50,10 +50,11 @@ static const gchar *uris[] = {
 int
 main( int argc, char** argv )
 {
+	int i;
+
 	g_type_init();
 	g_printf( _( "URIs parsing test.\n\n" ));
 
-	int i;
 	for( i = 0 ; uris[i] ; ++i ){
 		NAGnomeVFSURI *vfs = g_new0( NAGnomeVFSURI, 1 );
 		na_gnome_vfs_uri_parse( vfs, uris[i] );

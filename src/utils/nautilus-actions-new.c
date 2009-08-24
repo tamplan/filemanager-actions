@@ -92,21 +92,25 @@ static void            exit_with_usage( void );
 int
 main( int argc, char** argv )
 {
+	int status = EXIT_SUCCESS;
+	GOptionContext *context;
+	GError *error = NULL;
+	NAAction *action;
+	gchar *msg = NULL;
+	gchar *help;
+
 	g_type_init();
 
-	int status = EXIT_SUCCESS;
-
-	GOptionContext *context = init_options();
+	context = init_options();
 
 	if( argc == 1 ){
 		g_set_prgname( argv[0] );
-		gchar *help = g_option_context_get_help( context, FALSE, NULL );
+		help = g_option_context_get_help( context, FALSE, NULL );
 		g_print( "\n%s", help );
 		g_free( help );
 		exit( status );
 	}
 
-	GError *error = NULL;
 	if( !g_option_context_parse( context, &argc, &argv, &error )){
 		g_printerr( _("Syntax error: %s\n" ), error->message );
 		g_error_free (error);
@@ -123,8 +127,7 @@ main( int argc, char** argv )
 		exit_with_usage();
 	}
 
-	NAAction *action = get_action_from_cmdline();
-	gchar *msg = NULL;
+	action = get_action_from_cmdline();
 
 	if( output_gconf ){
 		if( write_to_gconf( action, &msg )){
@@ -159,7 +162,11 @@ main( int argc, char** argv )
 static GOptionContext *
 init_options( void )
 {
-	GOptionContext *context = g_option_context_new( _( "Define a new action.\n\n"
+	GOptionContext *context;
+	gchar* description;
+	GOptionGroup *output_group;
+
+	context = g_option_context_new( _( "Define a new action.\n\n"
 			"  The created action defaults to be written to stdout.\n"
 			"  It can also be written to an output folder, in a file later suitable for an import in NACT.\n"
 			"  Or you may choose to directly write the action into your GConf configuration." ));
@@ -175,7 +182,7 @@ init_options( void )
 	g_option_context_add_main_entries( context, entries, NULL );
 #endif
 
-	gchar* description = g_strdup_printf( "%s.\n%s", PACKAGE_STRING,
+	description = g_strdup_printf( "%s.\n%s", PACKAGE_STRING,
 			_( "Bug reports are welcomed at http://bugzilla.gnome.org,"
 				" or you may prefer to mail to <maintainer@nautilus-actions.org>.\n" ));
 
@@ -183,7 +190,7 @@ init_options( void )
 
 	g_free( description );
 
-	GOptionGroup *output_group = g_option_group_new(
+	output_group = g_option_group_new(
 			"output", _( "Output of the program" ), _( "Choose where the program creates the action" ), NULL, NULL );
 
 	g_option_group_add_entries( output_group, output_entries );
@@ -201,6 +208,10 @@ get_action_from_cmdline( void )
 {
 	NAAction *action = na_action_new_with_profile();
 	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( action )->data );
+	int i = 0;
+	GSList *basenames = NULL;
+	GSList *mimetypes = NULL;
+	GSList *schemes = NULL;
 
 	na_action_set_label( action, label );
 	na_action_set_tooltip( action, tooltip );
@@ -210,8 +221,6 @@ get_action_from_cmdline( void )
 	na_action_profile_set_path( profile, command );
 	na_action_profile_set_parameters( profile, parameters );
 
-	int i = 0;
-	GSList *basenames = NULL;
 	while( basenames_array != NULL && basenames_array[i] != NULL ){
 		basenames = g_slist_append( basenames, g_strdup( basenames_array[i] ));
 		i++;
@@ -223,7 +232,6 @@ get_action_from_cmdline( void )
 	na_action_profile_set_matchcase( profile, matchcase );
 
 	i = 0;
-	GSList *mimetypes = NULL;
 	while( mimetypes_array != NULL && mimetypes_array[i] != NULL ){
 		mimetypes = g_slist_append( mimetypes, g_strdup( mimetypes_array[i] ));
 		i++;
@@ -240,7 +248,6 @@ get_action_from_cmdline( void )
 	na_action_profile_set_multiple( profile, accept_multiple );
 
 	i = 0;
-	GSList *schemes = NULL;
 	while( schemes_array != NULL && schemes_array[i] != NULL ){
 		schemes = g_slist_append( schemes, g_strdup( schemes_array[i] ));
 		i++;
@@ -259,11 +266,14 @@ get_action_from_cmdline( void )
 static gboolean
 write_to_gconf( NAAction *action, gchar **msg )
 {
-	NAGConf *gconf = na_gconf_new( NULL );
+	NAGConf *gconf;
+	guint ret;
+
+	gconf = na_gconf_new( NULL );
 
 	na_action_set_provider( action, NA_IIO_PROVIDER( gconf ));
 
-	guint ret = na_iio_provider_write_action( NULL, action, msg );
+	ret = na_iio_provider_write_action( NULL, action, msg );
 
 	return( ret == NA_IIO_PROVIDER_WRITE_OK );
 }

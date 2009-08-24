@@ -67,7 +67,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "na_iprefs_register_type";
-	g_debug( "%s", thisfn );
+	GType type;
 
 	static const GTypeInfo info = {
 		sizeof( NAIPrefsInterface ),
@@ -81,7 +81,9 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NAIPrefs", &info, 0 );
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_INTERFACE, "NAIPrefs", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -95,7 +97,7 @@ interface_base_init( NAIPrefsInterface *klass )
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NAIPrefsInterfacePrivate, 1 );
 
@@ -112,7 +114,7 @@ interface_base_finalize( NAIPrefsInterface *klass )
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 
@@ -142,9 +144,12 @@ read_key_bool( NAIPrefs *instance, const gchar *name )
 {
 	static const gchar *thisfn = "na_iprefs_read_key_bool";
 	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	gchar *path;
+	gboolean value;
 
-	gboolean value = gconf_client_get_bool( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, &error );
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+
+	value = gconf_client_get_bool( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, &error );
 
 	if( error ){
 		g_warning( "%s: name=%s, %s", thisfn, name, error->message );
@@ -160,7 +165,9 @@ write_key_bool( NAIPrefs *instance, const gchar *name, gboolean value )
 {
 	static const gchar *thisfn = "na_iprefs_write_key_bool";
 	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	gchar *path;
+
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
 
 	gconf_client_set_bool( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, value, &error );
 

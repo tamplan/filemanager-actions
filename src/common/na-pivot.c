@@ -45,6 +45,7 @@
 /* private class data
  */
 struct NAPivotClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -109,6 +110,9 @@ na_pivot_get_type( void )
 static GType
 register_type( void )
 {
+	static const gchar *thisfn = "na_pivot_register_type";
+	GType type;
+
 	static GTypeInfo info = {
 		sizeof( NAPivotClass ),
 		( GBaseInitFunc ) NULL,
@@ -121,18 +125,24 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( G_TYPE_OBJECT, "NAPivot", &info, 0 ));
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_OBJECT, "NAPivot", &info, 0 );
+
+	return( type );
 }
 
 static void
 class_init( NAPivotClass *klass )
 {
 	static const gchar *thisfn = "na_pivot_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *object_class;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
-	GObjectClass *object_class = G_OBJECT_CLASS( klass );
+	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
@@ -160,10 +170,12 @@ static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "na_pivot_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+	NAPivot *self;
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
 	g_assert( NA_IS_PIVOT( instance ));
-	NAPivot* self = NA_PIVOT( instance );
+	self = NA_PIVOT( instance );
 
 	self->private = g_new0( NAPivotPrivate, 1 );
 
@@ -178,9 +190,9 @@ static GSList *
 register_interface_providers( const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_pivot_register_interface_providers";
-	g_debug( "%s", thisfn );
-
 	GSList *list = NULL;
+
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
 	list = g_slist_prepend( list, na_gconf_new( G_OBJECT( pivot )));
 
@@ -191,10 +203,12 @@ static void
 instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "na_pivot_instance_dispose";
-	g_debug( "%s: object=%p", thisfn, object );
+	NAPivot *self;
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_assert( NA_IS_PIVOT( object ));
-	NAPivot *self = NA_PIVOT( object );
+	self = NA_PIVOT( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -216,13 +230,15 @@ static void
 instance_finalize( GObject *object )
 {
 	static const gchar *thisfn = "na_pivot_instance_finalize";
-	g_debug( "%s: object=%p", thisfn, object );
+	NAPivot *self;
+	GSList *ip;
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_assert( NA_IS_PIVOT( object ));
-	NAPivot *self = ( NAPivot * ) object;
+	self = ( NAPivot * ) object;
 
 	/* release the interface providers */
-	GSList *ip;
 	for( ip = self->private->providers ; ip ; ip = ip->next ){
 		g_object_unref( G_OBJECT( ip->data ));
 	}
@@ -269,12 +285,13 @@ void
 na_pivot_dump( const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_pivot_dump";
-
 	GSList *it;
 	int i;
-	g_debug( "%s:  notified=%p (%d elts)", thisfn, pivot->private->notified, g_slist_length( pivot->private->notified ));
-	g_debug( "%s: providers=%p (%d elts)", thisfn, pivot->private->providers, g_slist_length( pivot->private->providers ));
-	g_debug( "%s:   actions=%p (%d elts)", thisfn, pivot->private->actions, g_slist_length( pivot->private->actions ));
+
+	g_debug( "%s:  notified=%p (%d elts)", thisfn, ( void * ) pivot->private->notified, g_slist_length( pivot->private->notified ));
+	g_debug( "%s: providers=%p (%d elts)", thisfn, ( void * ) pivot->private->providers, g_slist_length( pivot->private->providers ));
+	g_debug( "%s:   actions=%p (%d elts)", thisfn, ( void * ) pivot->private->actions, g_slist_length( pivot->private->actions ));
+
 	for( it = pivot->private->actions, i = 0 ; it ; it = it->next ){
 		g_debug( "%s:   [%d]: %p", thisfn, i++, it->data );
 	}
@@ -298,12 +315,12 @@ GSList *
 na_pivot_get_providers( const NAPivot *pivot, GType type )
 {
 	static const gchar *thisfn = "na_pivot_get_providers";
-	g_debug( "%s: pivot=%p", thisfn, pivot );
-
-	g_assert( NA_IS_PIVOT( pivot ));
-
 	GSList *list = NULL;
 	GSList *ip;
+
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
+	g_assert( NA_IS_PIVOT( pivot ));
+
 	for( ip = pivot->private->providers ; ip ; ip = ip->next ){
 		if( G_TYPE_CHECK_INSTANCE_TYPE( G_OBJECT( ip->data ), type )){
 			list = g_slist_prepend( list, ip->data );
@@ -373,10 +390,10 @@ na_pivot_reload_actions( NAPivot *pivot )
 GSList *
 na_pivot_get_duplicate_actions( const NAPivot *pivot )
 {
-	g_assert( NA_IS_PIVOT( pivot ));
-
 	GSList *list = NULL;
 	GSList *ia;
+
+	g_assert( NA_IS_PIVOT( pivot ));
 
 	for( ia = pivot->private->actions ; ia ; ia = ia->next ){
 		list = g_slist_prepend( list, na_object_duplicate( NA_OBJECT( ia->data )));
@@ -395,9 +412,11 @@ void
 na_pivot_free_actions( GSList *actions )
 {
 	GSList *ia;
+
 	for( ia = actions ; ia ; ia = ia->next ){
 		g_object_unref( NA_ACTION( ia->data ));
 	}
+
 	g_slist_free( actions );
 }
 
@@ -452,6 +471,7 @@ NAAction *
 na_pivot_get_action( const NAPivot *pivot, const gchar *uuid )
 {
 	uuid_t uua, i_uub;
+	GSList *ia;
 
 	g_assert( NA_IS_PIVOT( pivot ));
 	if( !uuid || !strlen( uuid )){
@@ -460,7 +480,6 @@ na_pivot_get_action( const NAPivot *pivot, const gchar *uuid )
 
 	uuid_parse( uuid, uua );
 
-	GSList *ia;
 	for( ia = pivot->private->actions ; ia ; ia = ia->next ){
 
 		gchar *i_uuid = na_action_get_uuid( NA_ACTION( ia->data ));
@@ -528,8 +547,8 @@ void
 na_pivot_add_consumer( NAPivot *pivot, const GObject *consumer )
 {
 	static const gchar *thisfn = "na_pivot_add_consumer";
-	g_debug( "%s: pivot=%p, consumer=%p", thisfn, pivot, consumer );
 
+	g_debug( "%s: pivot=%p, consumer=%p", thisfn, ( void * ) pivot, ( void * ) consumer );
 	g_assert( NA_IS_PIVOT( pivot ));
 	g_assert( G_IS_OBJECT( consumer ));
 
@@ -576,8 +595,10 @@ static void
 free_consumers( GSList *consumers )
 {
 	GSList *ic;
+
 	for( ic = consumers ; ic ; ic = ic->next )
 		;
+
 	g_slist_free( consumers );
 }
 
@@ -597,6 +618,7 @@ action_changed_handler( NAPivot *self, gpointer user_data  )
 
 	g_assert( NA_IS_PIVOT( self ));
 	g_assert( user_data );
+
 	if( self->private->dispose_has_run ){
 		return;
 	}
@@ -621,14 +643,16 @@ on_actions_changed_timeout( gpointer user_data )
 {
 	/*static const gchar *thisfn = "na_pivot_on_actions_changed_timeout";
 	g_debug( "%s: pivot=%p", thisfn, user_data );*/
-
 	GTimeVal now;
+	const NAPivot *pivot;
+	gulong diff;
+	GSList *ic;
 
 	g_assert( NA_IS_PIVOT( user_data ));
-	const NAPivot *pivot = NA_PIVOT( user_data );
+	pivot = NA_PIVOT( user_data );
 
 	g_get_current_time( &now );
-	gulong diff = time_val_diff( &now, &st_last_event );
+	diff = time_val_diff( &now, &st_last_event );
 	if( diff < st_timeout_usec ){
 		return( TRUE );
 	}
@@ -638,7 +662,6 @@ on_actions_changed_timeout( gpointer user_data )
 		pivot->private->actions = na_iio_provider_read_actions( pivot );
 	}
 
-	GSList *ic;
 	for( ic = pivot->private->notified ; ic ; ic = ic->next ){
 		na_ipivot_consumer_notify( NA_IPIVOT_CONSUMER( ic->data ));
 	}

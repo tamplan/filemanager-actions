@@ -50,9 +50,7 @@ void
 na_about_display( GObject *toplevel )
 {
 	static const gchar *thisfn = "na_about_display";
-	g_debug( "%s: toplevel=%p", thisfn, toplevel );
-
-	gchar *icon_name = na_about_get_icon_name();
+	gchar *icon_name, *license_i18n;
 
 	static const gchar *artists[] = {
 		N_( "Ulisse Perusin <uli.peru@gmail.com>" ),
@@ -85,7 +83,12 @@ na_about_display( GObject *toplevel )
 			"MA 02110-1301, USA." ),
 		NULL
 	};
-	gchar *license_i18n = g_strjoinv( "\n\n", license );
+
+	g_debug( "%s: toplevel=%p", thisfn, ( void * ) toplevel );
+
+	icon_name = na_about_get_icon_name();
+
+	license_i18n = g_strjoinv( "\n\n", license );
 
 	/*GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));*/
 	if( toplevel ){

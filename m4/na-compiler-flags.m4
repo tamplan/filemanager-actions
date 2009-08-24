@@ -2,7 +2,7 @@ dnl GNOME_COMPILE_WARNINGS
 dnl Turn on many useful compiler warnings
 dnl For now, only works on GCC
 
-# serial 2 change NACT_ prefix to NA_ (Nautilus Actions)
+# serial 3 Fix to correctly handle provided default values
 
 #
 # pwi 2009-05-15 shamelessly copied from gnome-compiler-flags.m4
@@ -12,7 +12,7 @@ dnl For now, only works on GCC
 AC_DEFUN([NA_GNOME_COMPILE_WARNINGS],[
 
 	_ac_warning_def=m4_default([$1],[yes])
-	_ac_compliant_def=m4_default([$2],[no])
+	_ac_compliant_def=m4_default(["$2"],[no])
 
     dnl ******************************
     dnl More compiler warnings
@@ -21,7 +21,7 @@ AC_DEFUN([NA_GNOME_COMPILE_WARNINGS],[
     AC_ARG_ENABLE(compile-warnings,
                   AC_HELP_STRING([--enable-compile-warnings=@<:@no/minimum/yes/maximum/error@:>@],
                                  [Turn on compiler warnings]),,
-                  [enable_compile_warnings=${_ac_warning_def}])
+                  [enable_compile_warnings="${_ac_warning_def}"])
 
     warnCFLAGS=
     if test "x$GCC" != xyes; then
@@ -75,13 +75,13 @@ AC_DEFUN([NA_GNOME_COMPILE_WARNINGS],[
     AC_ARG_ENABLE(iso-c,
                   AC_HELP_STRING([--enable-iso-c],
                                  [Try to warn if code is not ISO C ]),,
-                  [enable_iso_c=${_ac_compliant_def}])
+                  [enable_iso_c="${_ac_compliant_def}"])
 
     AC_MSG_CHECKING(what language compliance flags to pass to the C compiler)
     complCFLAGS=
     if test "x$enable_iso_c" != "xno"; then
 		if test "x$GCC" = "xyes"; then
-			if test "${enable_iso_c}" = "yes"; then
+			if test "x${_ac_compliant_def}" = "x"; then
 				case " $CFLAGS " in
 					*[\ \	]-ansi[\ \	]*) ;;
 				    *) complCFLAGS="$complCFLAGS -ansi" ;;
@@ -91,7 +91,7 @@ AC_DEFUN([NA_GNOME_COMPILE_WARNINGS],[
 				    *) complCFLAGS="$complCFLAGS -pedantic" ;;
 				esac
 			else
-				complCFLAGS="$complCFLAGS ${enable_iso_c}"
+				complCFLAGS="$complCFLAGS ${_ac_compliant_def}"
 			fi
 		fi
     fi

@@ -44,6 +44,7 @@
 /* private interface data
  */
 struct NactIAdvancedTabInterfacePrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* column ordering
@@ -79,8 +80,6 @@ static void             set_action_schemes( gchar *scheme, GtkTreeModel *model )
 static GtkButton       *get_add_button( NactWindow *window );
 static GtkButton       *get_remove_button( NactWindow *window );
 
-static void             on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window );
-
 GType
 nact_iadvanced_tab_get_type( void )
 {
@@ -97,7 +96,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_register_type";
-	g_debug( "%s", thisfn );
+	GType type;
 
 	static const GTypeInfo info = {
 		sizeof( NactIAdvancedTabInterface ),
@@ -111,7 +110,9 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIAdvancedTab", &info, 0 );
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_INTERFACE, "NactIAdvancedTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -125,7 +126,7 @@ interface_base_init( NactIAdvancedTabInterface *klass )
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIAdvancedTabInterfacePrivate, 1 );
 
@@ -143,7 +144,7 @@ interface_base_finalize( NactIAdvancedTabInterface *klass )
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 
@@ -155,7 +156,8 @@ void
 nact_iadvanced_tab_initial_load( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_initial_load";
-	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
 	create_schemes_selection_list( dialog );
 }
@@ -164,15 +166,17 @@ void
 nact_iadvanced_tab_runtime_init( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_runtime_init";
-	g_debug( "%s: dialog=%p", thisfn, dialog );
+	GtkTreeView *scheme_widget;
+	GtkTreeViewColumn *column;
+	GList *renderers;
+	GtkButton *add_button, *remove_button;
 
-	GtkWidget *notebook = base_window_get_widget( BASE_WINDOW( dialog ), "MainNotebook" );
-	nact_window_signal_connect( dialog, G_OBJECT( notebook ), "switch-page", G_CALLBACK( on_switch_page ));
+	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
-	GtkTreeView *scheme_widget = get_schemes_tree_view( dialog );
+	scheme_widget = get_schemes_tree_view( dialog );
 
-	GtkTreeViewColumn *column = gtk_tree_view_get_column( scheme_widget, SCHEMES_CHECKBOX_COLUMN );
-	GList *renderers = gtk_tree_view_column_get_cell_renderers( column );
+	column = gtk_tree_view_get_column( scheme_widget, SCHEMES_CHECKBOX_COLUMN );
+	renderers = gtk_tree_view_column_get_cell_renderers( column );
 	nact_window_signal_connect( dialog, G_OBJECT( renderers->data ), "toggled", G_CALLBACK( on_scheme_selection_toggled ));
 
 	column = gtk_tree_view_get_column( scheme_widget, SCHEMES_KEYWORD_COLUMN );
@@ -183,9 +187,9 @@ nact_iadvanced_tab_runtime_init( NactWindow *dialog )
 	renderers = gtk_tree_view_column_get_cell_renderers( column );
 	nact_window_signal_connect( dialog, G_OBJECT( renderers->data ), "edited", G_CALLBACK( on_scheme_desc_edited ));
 
-	GtkButton *button = get_add_button( dialog );
-	nact_window_signal_connect( dialog, G_OBJECT( button ), "clicked", G_CALLBACK( on_add_scheme_clicked ));
-	GtkButton *remove_button = get_remove_button( dialog );
+	add_button = get_add_button( dialog );
+	nact_window_signal_connect( dialog, G_OBJECT( add_button ), "clicked", G_CALLBACK( on_add_scheme_clicked ));
+	remove_button = get_remove_button( dialog );
 	nact_window_signal_connect( dialog, G_OBJECT( remove_button ), "clicked", G_CALLBACK( on_remove_scheme_clicked ));
 
 	nact_window_signal_connect( dialog, G_OBJECT( gtk_tree_view_get_selection( scheme_widget )), "changed", G_CALLBACK( on_scheme_list_selection_changed ));
@@ -195,37 +199,44 @@ void
 nact_iadvanced_tab_all_widgets_showed( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_all_widgets_showed";
-	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 }
 
 void
 nact_iadvanced_tab_dispose( NactWindow *dialog )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_dispose";
-	g_debug( "%s: dialog=%p", thisfn, dialog );
+
+	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 }
 
 void
 nact_iadvanced_tab_set_profile( NactWindow *dialog, NAActionProfile *profile )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_set_profile";
-	g_debug( "%s: dialog=%p, profile=%p", thisfn, dialog, profile );
+	GtkTreeModel *scheme_model;
+	GSList *schemes;
+	GtkTreeView *scheme_widget;
+	GtkButton *add, *remove;
 
-	GtkTreeModel *scheme_model = get_schemes_tree_model( dialog );
+	g_debug( "%s: dialog=%p, profile=%p", thisfn, ( void * ) dialog, ( void * ) profile );
+
+	scheme_model = get_schemes_tree_model( dialog );
 	gtk_tree_model_foreach( scheme_model, ( GtkTreeModelForeachFunc ) reset_schemes_list, NULL );
 
 	if( profile ){
-		GSList *schemes = na_action_profile_get_schemes( profile );
+		schemes = na_action_profile_get_schemes( profile );
 		g_slist_foreach( schemes, ( GFunc ) set_action_schemes, scheme_model );
 	}
 
-	GtkTreeView *scheme_widget = get_schemes_tree_view( dialog );
+	scheme_widget = get_schemes_tree_view( dialog );
 	gtk_widget_set_sensitive( GTK_WIDGET( scheme_widget ), profile != NULL );
 
-	GtkButton *add = get_add_button( dialog );
+	add = get_add_button( dialog );
 	gtk_widget_set_sensitive( GTK_WIDGET( add ), profile != NULL );
 
-	GtkButton *remove = get_remove_button( dialog );
+	remove = get_remove_button( dialog );
 	gtk_widget_set_sensitive( GTK_WIDGET( remove ), profile != NULL );
 }
 
@@ -237,8 +248,11 @@ GSList *
 nact_iadvanced_tab_get_schemes( NactWindow *window )
 {
 	GSList *list = NULL;
-	GtkTreeModel* scheme_model = get_schemes_tree_model( window );
+	GtkTreeModel* scheme_model;
+
+	scheme_model = get_schemes_tree_model( window );
 	gtk_tree_model_foreach( scheme_model, ( GtkTreeModelForeachFunc ) get_action_schemes_list, &list );
+
 	return( list );
 }
 
@@ -269,20 +283,25 @@ on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, gpoin
 {
 	/*static const gchar *thisfn = "nact_iadvanced_tab_on_scheme_selection_toggled";*/
 	/*g_debug( "%s: renderer=%p, path=%s, user_data=%p", thisfn, renderer, path, user_data );*/
+
+	NactWindow *dialog;
+	NAActionProfile *edited;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *tree_path;
+	gboolean state;
+	gchar *scheme;
+
 	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
+	dialog = NACT_WINDOW( user_data );
 
-	NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+	edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
 	if( edited ){
-		GtkTreeModel *model = get_schemes_tree_model( dialog );
-		GtkTreeIter iter;
+		model = get_schemes_tree_model( dialog );
 
-		GtkTreePath *tree_path = gtk_tree_path_new_from_string( path );
+		tree_path = gtk_tree_path_new_from_string( path );
 		gtk_tree_model_get_iter( model, &iter, tree_path );
 		gtk_tree_path_free( tree_path );
-
-		gboolean state;
-		gchar *scheme;
 		gtk_tree_model_get( model, &iter, SCHEMES_CHECKBOX_COLUMN, &state, SCHEMES_KEYWORD_COLUMN, &scheme, -1 );
 
 		/* gtk_tree_model_get: returns the previous state
@@ -304,16 +323,19 @@ on_scheme_keyword_edited( GtkCellRendererText *renderer, const gchar *path, cons
 	/*static const gchar *thisfn = "nact_iadvanced_tab_on_scheme_keyword_edited";*/
 	/*g_debug( "%s: renderer=%p, path=%s, text=%s, user_data=%p", thisfn, renderer, path, text, user_data );*/
 
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
+	NactWindow *dialog;
 	gboolean state = FALSE;
 	gchar *old_text = NULL;
+	NAActionProfile *edited;
+
+	g_assert( NACT_IS_WINDOW( user_data ));
+	dialog = NACT_WINDOW( user_data );
+
 	scheme_cell_edited( dialog, path, text, SCHEMES_KEYWORD_COLUMN, &state, &old_text );
 
 	if( state ){
 		/*g_debug( "%s: old_scheme=%s", thisfn, old_text );*/
-		NAActionProfile *edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
+		edited = NA_ACTION_PROFILE( v_get_edited_profile( dialog ));
 		na_action_profile_set_scheme( edited, old_text, FALSE );
 		na_action_profile_set_scheme( edited, text, TRUE );
 	}
@@ -328,8 +350,10 @@ on_scheme_desc_edited( GtkCellRendererText *renderer, const gchar *path, const g
 	/*static const gchar *thisfn = "nact_iadvanced_tab_on_scheme_desc_edited";
 	g_debug( "%s: renderer=%p, path=%s, text=%s, user_data=%p", thisfn, renderer, path, text, user_data );*/
 
+	NactWindow *dialog;
+
 	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
+	dialog = NACT_WINDOW( user_data );
 
 	scheme_cell_edited( dialog, path, text, SCHEMES_DESC_COLUMN, NULL, NULL );
 }
@@ -340,10 +364,13 @@ on_scheme_list_selection_changed( GtkTreeSelection *selection, gpointer user_dat
 	/*static const gchar *thisfn = "nact_iadvanced_tab_on_scheme_list_selection_changed";
 	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );*/
 
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
+	NactWindow *dialog;
+	GtkWidget *button;
 
-	GtkWidget *button = GTK_WIDGET( get_remove_button( dialog ));
+	g_assert( NACT_IS_WINDOW( user_data ));
+	dialog = NACT_WINDOW( user_data );
+
+	button = GTK_WIDGET( get_remove_button( dialog ));
 
 	if( gtk_tree_selection_count_selected_rows( selection )){
 		gtk_widget_set_sensitive( button, TRUE );
@@ -358,6 +385,7 @@ on_add_scheme_clicked( GtkButton *button, gpointer user_data )
 {
 	GtkTreeModel *model = get_schemes_tree_model( NACT_WINDOW( user_data ));
 	GtkTreeIter row;
+
 	gtk_list_store_append( GTK_LIST_STORE( model ), &row );
 	gtk_list_store_set(
 			GTK_LIST_STORE( model ),
@@ -372,19 +400,23 @@ on_add_scheme_clicked( GtkButton *button, gpointer user_data )
 static void
 on_remove_scheme_clicked( GtkButton *button, gpointer user_data )
 {
-	g_assert( NACT_IS_WINDOW( user_data ));
-	NactWindow *dialog = NACT_WINDOW( user_data );
-
-	GtkTreeView *listview = get_schemes_tree_view( dialog );
-	GtkTreeSelection *selection = gtk_tree_view_get_selection( listview );
-	GtkTreeModel *model = get_schemes_tree_model( dialog );
-
+	NactWindow *dialog;
+	GtkTreeView *listview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
 	GList *selected_values_path = NULL;
 	GtkTreeIter iter;
 	GtkTreePath *path;
 	GList *il;
 	gboolean toggle_state;
 	gchar *scheme;
+
+	g_assert( NACT_IS_WINDOW( user_data ));
+	dialog = NACT_WINDOW( user_data );
+
+	listview = get_schemes_tree_view( dialog );
+	selection = gtk_tree_view_get_selection( listview );
+	model = get_schemes_tree_model( dialog );
 
 	selected_values_path = gtk_tree_selection_get_selected_rows( selection, &model );
 
@@ -411,8 +443,9 @@ scheme_cell_edited( NactWindow *window, const gchar *path_string, const gchar *t
 {
 	GtkTreeModel *model = get_schemes_tree_model( window );
 	GtkTreeIter iter;
+	GtkTreePath *path;
 
-	GtkTreePath *path = gtk_tree_path_new_from_string( path_string );
+	path = gtk_tree_path_new_from_string( path_string );
 	gtk_tree_model_get_iter( model, &iter, path );
 	gtk_tree_path_free( path );
 
@@ -441,18 +474,26 @@ static void
 create_schemes_selection_list( NactWindow *window )
 {
 	static const char *thisfn = "nact_iadvanced_tab_create_schemes_selection_list";
-	g_debug( "%s: window=%p", thisfn, window );
-	g_assert( NACT_IS_IADVANCED_TAB( window ));
-
-	GtkWidget *listview = GTK_WIDGET( get_schemes_tree_view( window ));
-	GSList* schemes_list = get_schemes_default_list( window );
-	GtkListStore *model = gtk_list_store_new( SCHEMES_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING );
-
+	GtkWidget *listview;
+	GSList *schemes_list;
+	GtkListStore *model;
 	GSList *iter;
 	GtkTreeIter row;
+	gchar **tokens;
+	GtkCellRenderer *toggled_cell;
+	GtkTreeViewColumn *column;
+	GtkCellRenderer *text_cell;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_assert( NACT_IS_IADVANCED_TAB( window ));
+
+	listview = GTK_WIDGET( get_schemes_tree_view( window ));
+	schemes_list = get_schemes_default_list( window );
+	model = gtk_list_store_new( SCHEMES_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING );
+
 	for( iter = schemes_list ; iter ; iter = iter->next ){
 
-		gchar **tokens = g_strsplit(( gchar * ) iter->data, "|", 2 );
+		tokens = g_strsplit(( gchar * ) iter->data, "|", 2 );
 		gtk_list_store_append( model, &row );
 		gtk_list_store_set( model, &row,
 				SCHEMES_CHECKBOX_COLUMN, FALSE,
@@ -467,8 +508,8 @@ create_schemes_selection_list( NactWindow *window )
 	gtk_tree_view_set_model( GTK_TREE_VIEW( listview ), GTK_TREE_MODEL( model ));
 	g_object_unref( model );
 
-	GtkCellRenderer *toggled_cell = gtk_cell_renderer_toggle_new();
-	GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes(
+	toggled_cell = gtk_cell_renderer_toggle_new();
+	column = gtk_tree_view_column_new_with_attributes(
 			"scheme-selected",
 			toggled_cell,
 			"active", SCHEMES_CHECKBOX_COLUMN,
@@ -476,7 +517,7 @@ create_schemes_selection_list( NactWindow *window )
 	gtk_tree_view_append_column( GTK_TREE_VIEW( listview ), column );
 	/*g_debug( "%s: toggled_cell=%p", thisfn, toggled_cell );*/
 
-	GtkCellRenderer *text_cell = gtk_cell_renderer_text_new();
+	text_cell = gtk_cell_renderer_text_new();
 	g_object_set( G_OBJECT( text_cell ), "editable", TRUE, NULL );
 	column = gtk_tree_view_column_new_with_attributes(
 			"scheme-code",
@@ -593,22 +634,4 @@ static GtkButton *
 get_remove_button( NactWindow *window )
 {
 	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RemoveSchemeButton" )));
-}
-
-/*
- * rationale: cf. nact-iaction-tab:on_swotch_page()
- */
-static void
-on_switch_page( GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, NactWindow *window )
-{
-	static const gchar *thisfn = "nact_iadvanced_tab_on_switch_page";
-
-	if( page_num == ADVANCED_TAB ){
-		g_debug( "%s: notebook=%p, page=%p, page_num=%d, window=%p", thisfn, notebook, page, page_num, window );
-		GtkWidget *widget = GTK_WIDGET( g_object_get_data( G_OBJECT( window ), "nact-iadvanced-tab-last-focus" ));
-		if( !widget ){
-			widget = GTK_WIDGET( get_schemes_tree_view( window ));
-		}
-		gtk_widget_grab_focus( widget );
-	}
 }

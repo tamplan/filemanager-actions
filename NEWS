@@ -16,6 +16,8 @@ Version xxxxxx
 
 		Use Gtk+ UI Manager.
 
+		Whole program is now compiled with '-pedantic' option.
+
 	New and updated translations
 
 Version 1.12.0

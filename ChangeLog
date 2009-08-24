@@ -1,3 +1,56 @@
+2009-08-24 Pierre Wieser <pwieser@trychlos.org>
+
+	* Makefile.am:
+	make distcheck uses now '--enable-iso-c' option.
+
+	* configure.ac:
+	Add '-pedantic' as '--enable-iso-c' default option.
+	Add also '-Wno-overlength-strings' to handle long strings in
+	src/common/xml-names.h.
+
+	* m4/na-compiler-flags.m4:
+	Fix '--enable-iso-c' macro to correctly handle provided values.
+
+	* src/common/na-about.c:
+	* src/common/na-action-profile.c:
+	* src/common/na-action.c:
+	* src/common/na-gconf.c:
+	* src/common/na-iduplicable.c:
+	* src/common/na-iio-provider.c:
+	* src/common/na-iio-provider.h:
+	* src/common/na-ipivot-consumer.c:
+	* src/common/na-iprefs.c:
+	* src/common/na-object.c:
+	* src/common/na-pivot.c:
+	* src/common/na-utils.c:
+	* src/common/na-xml-writer.c:
+	* src/nact/base-application.c:
+	* src/nact/base-window.c:
+	* src/nact/nact-application.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-assistant.c:
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-imenubar.c:
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-window.c:
+	* src/nact/nact-xml-reader.c:
+	* src/plugin/nautilus-actions.c:
+	* src/plugin/nautilus-module.c:
+	* src/test/test-parse-uris.c:
+	* src/utils/nautilus-actions-new.c:
+	* src/utils/nautilus-actions-schemas.c:
+	Compile with -pedantic gcc option.
+
+	* src/common/na-xml-names.h:
+	Long names are rewritten on several lines for more readability.
+
 2009-08-23 Pierre Wieser <pwieser@trychlos.org>
 
 	Get rid of unwanted notifications.

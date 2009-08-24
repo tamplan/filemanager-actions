@@ -42,6 +42,7 @@
 /* private class data
  */
 struct NactAssistantClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -61,28 +62,28 @@ enum {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NactAssistantClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void     instance_dispose( GObject *application );
-static void     instance_finalize( GObject *application );
+static GType      register_type( void );
+static void       class_init( NactAssistantClass *klass );
+static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void       instance_dispose( GObject *application );
+static void       instance_finalize( GObject *application );
 
-static GtkWindow * get_dialog( BaseWindow *window, const gchar *name );
+static GtkWindow *get_dialog( BaseWindow *window, const gchar *name );
 
-static void     v_assistant_apply( GtkAssistant *assistant, gpointer user_data );
-static void     v_assistant_cancel( GtkAssistant *assistant, gpointer user_data );
-static void     v_assistant_close( GtkAssistant *assistant, gpointer user_data );
-static void     v_assistant_prepare( GtkAssistant *assistant, GtkWidget *page, gpointer user_data );
+static void       v_assistant_apply( GtkAssistant *assistant, gpointer user_data );
+static void       v_assistant_cancel( GtkAssistant *assistant, gpointer user_data );
+static void       v_assistant_close( GtkAssistant *assistant, gpointer user_data );
+static void       v_assistant_prepare( GtkAssistant *assistant, GtkWidget *page, gpointer user_data );
 
-static void     on_runtime_init_toplevel( BaseWindow *window );
-static gboolean on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer user_data );
-static gboolean on_escape_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data );
-static void     do_assistant_apply( NactAssistant *window, GtkAssistant *assistant );
-static void     do_assistant_cancel( NactAssistant *window, GtkAssistant *assistant );
-static void     do_assistant_close( NactAssistant *window, GtkAssistant *assistant );
-static void     do_assistant_prepare( NactAssistant *window, GtkAssistant *assistant, GtkWidget *page );
+static void       on_runtime_init_toplevel( BaseWindow *window );
+static gboolean   on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer user_data );
+static gboolean   on_escape_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data );
+static void       do_assistant_apply( NactAssistant *window, GtkAssistant *assistant );
+static void       do_assistant_cancel( NactAssistant *window, GtkAssistant *assistant );
+static void       do_assistant_close( NactAssistant *window, GtkAssistant *assistant );
+static void       do_assistant_prepare( NactAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 
 GType
 nact_assistant_get_type( void )
@@ -100,9 +101,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "nact_assistant_register_type";
-	g_debug( "%s", thisfn );
-
-	g_type_init();
+	GType type;
 
 	static GTypeInfo info = {
 		sizeof( NactAssistantClass ),
@@ -116,7 +115,11 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( NACT_WINDOW_TYPE, "NactAssistant", &info, 0 );
+	g_debug( "%s", thisfn );
+
+	g_type_init();
+
+	type = g_type_register_static( NACT_WINDOW_TYPE, "NactAssistant", &info, 0 );
 
 	return( type );
 }
@@ -125,17 +128,20 @@ static void
 class_init( NactAssistantClass *klass )
 {
 	static const gchar *thisfn = "nact_assistant_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *object_class;
+	GParamSpec *spec;
+	BaseWindowClass *base_class;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
-	GObjectClass *object_class = G_OBJECT_CLASS( klass );
+	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 	object_class->get_property = instance_get_property;
 	object_class->set_property = instance_set_property;
 
-	GParamSpec *spec;
 	spec = g_param_spec_boolean(
 			PROP_ASSIST_WARN_ON_CANCEL_STR,
 			PROP_ASSIST_WARN_ON_CANCEL_STR,
@@ -145,7 +151,8 @@ class_init( NactAssistantClass *klass )
 
 	klass->private = g_new0( NactAssistantClassPrivate, 1 );
 
-	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
+	base_class = BASE_WINDOW_CLASS( klass );
+
 	base_class->get_dialog = get_dialog;
 	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
 
@@ -160,10 +167,12 @@ static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_assistant_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+	NactAssistant *self;
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
 	g_assert( NACT_IS_ASSISTANT( instance ));
-	NactAssistant *self = NACT_ASSISTANT( instance );
+	self = NACT_ASSISTANT( instance );
 
 	self->private = g_new0( NactAssistantPrivate, 1 );
 
@@ -173,8 +182,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
+	NactAssistant *self;
+
 	g_assert( NACT_IS_ASSISTANT( object ));
-	NactAssistant *self = NACT_ASSISTANT( object );
+	self = NACT_ASSISTANT( object );
 
 	switch( property_id ){
 		case PROP_ASSIST_WARN_ON_CANCEL:
@@ -190,8 +201,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
+	NactAssistant *self;
+
 	g_assert( NACT_IS_ASSISTANT( object ));
-	NactAssistant *self = NACT_ASSISTANT( object );
+	self = NACT_ASSISTANT( object );
 
 	switch( property_id ){
 		case PROP_ASSIST_WARN_ON_CANCEL:
@@ -208,10 +221,11 @@ static void
 instance_dispose( GObject *window )
 {
 	static const gchar *thisfn = "nact_assistant_instance_dispose";
-	g_debug( "%s: window=%p", thisfn, window );
+	NactAssistant *self;
 
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_assert( NACT_IS_ASSISTANT( window ));
-	NactAssistant *self = NACT_ASSISTANT( window );
+	self = NACT_ASSISTANT( window );
 
 	if( !self->private->dispose_has_run ){
 
@@ -226,10 +240,11 @@ static void
 instance_finalize( GObject *window )
 {
 	static const gchar *thisfn = "nact_assistant_instance_finalize";
-	g_debug( "%s: window=%p", thisfn, window );
+	NactAssistant *self;
 
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_assert( NACT_IS_ASSISTANT( window ));
-	NactAssistant *self = ( NactAssistant * ) window;
+	self = ( NactAssistant * ) window;
 
 	g_free( self->private );
 
@@ -241,7 +256,7 @@ instance_finalize( GObject *window )
 
 /*
  * cf. http://bugzilla.gnome.org/show_bug.cgi?id=589746 against Gtk+ 2.16
- * a GtkFileChooseWidget embedded in a GtkAssistant is not displayed
+ * a GtkFileChooserWidget embedded in a GtkAssistant is not displayed
  * when run more than once
  *
  * as a work-around, reload the XML ui each time we run an assistant !
@@ -249,17 +264,22 @@ instance_finalize( GObject *window )
 static GtkWindow *
 get_dialog( BaseWindow *window, const gchar *name )
 {
-	GtkBuilder *builder = gtk_builder_new();
+	GtkBuilder *builder;
+	BaseApplication *appli;
+	gchar *fname;
+	GtkWindow *dialog;
 
-	BaseApplication *appli = base_window_get_application( window );
+	builder = gtk_builder_new();
 
-	gchar *fname = base_application_get_ui_filename( appli );
+	appli = base_window_get_application( window );
+
+	fname = base_application_get_ui_filename( appli );
 
 	gtk_builder_add_from_file( builder, fname, NULL );
 
 	g_free( fname );
 
-	GtkWindow *dialog = GTK_WINDOW( gtk_builder_get_object( builder, name ));
+	dialog = GTK_WINDOW( gtk_builder_get_object( builder, name ));
 
 	return( dialog );
 }
@@ -327,16 +347,17 @@ static void
 on_runtime_init_toplevel( BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_assistant_on_runtime_init_toplevel";
+	GtkWindow *toplevel;
 
 	/* call parent class at the very beginning */
 	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
 		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( window );
 	}
 
-	g_debug( "%s: window=%p", thisfn, window );
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_assert( NACT_IS_ASSISTANT( window ));
 
-	GtkWindow *toplevel = base_window_get_toplevel_dialog( window );
+	toplevel = base_window_get_toplevel_dialog( window );
 	g_assert( GTK_IS_ASSISTANT( toplevel ));
 
 	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "key-press-event", G_CALLBACK( on_key_pressed_event ));
@@ -369,9 +390,12 @@ static gboolean
 on_escape_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_on_escape_key_pressed";
-	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );
+	GtkWindow *toplevel;
 
-	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( user_data ));
+	g_debug( "%s: widget=%p, event=%p, user_data=%p",
+			thisfn, ( void * ) widget, ( void * ) event, ( void * ) user_data );
+
+	toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( user_data ));
 	v_assistant_cancel( GTK_ASSISTANT( toplevel ), user_data );
 
 	return( TRUE );
@@ -381,7 +405,8 @@ static void
 do_assistant_apply( NactAssistant *window, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_do_assistant_apply";
-	g_debug( "%s: window=%p, assistant=%p", thisfn, window, assistant );
+
+	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) window, ( void * ) assistant );
 }
 
 /*
@@ -391,12 +416,13 @@ static void
 do_assistant_cancel( NactAssistant *window, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_do_assistant_cancel";
-	g_debug( "%s: window=%p, assistant=%p", thisfn, window, assistant );
-
 	gboolean ok = TRUE;
+	gchar *first;
+
+	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) window, ( void * ) assistant );
 
 	if( window->private->warn_on_cancel ){
-		gchar *first = g_strdup( _( "Are you sure you want to quit this assistant ?" ));
+		first = g_strdup( _( "Are you sure you want to quit this assistant ?" ));
 		ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, NULL );
 		g_free( first );
 	}
@@ -410,7 +436,8 @@ static void
 do_assistant_close( NactAssistant *window, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_do_assistant_close";
-	g_debug( "%s: window=%p, assistant=%p", thisfn, window, assistant );
+
+	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) window, ( void * ) assistant );
 
 	g_object_unref( window );
 }
@@ -419,5 +446,7 @@ static void
 do_assistant_prepare( NactAssistant *window, GtkAssistant *assistant, GtkWidget *page )
 {
 	static const gchar *thisfn = "nact_assistant_do_assistant_prepare";
-	g_debug( "%s: window=%p, assistant=%p, page=%p", thisfn, window, assistant, page );
+
+	g_debug( "%s: window=%p, assistant=%p, page=%p",
+			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 }

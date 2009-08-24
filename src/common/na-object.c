@@ -40,6 +40,7 @@
 /* private class data
  */
 struct NAObjectClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -99,7 +100,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "na_object_register_type";
-	g_debug( "%s", thisfn );
+	GType type;
 
 	static GTypeInfo info = {
 		sizeof( NAObjectClass ),
@@ -113,15 +114,15 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( G_TYPE_OBJECT, "NAObject", &info, 0 );
-
-	/* implements IDuplicable interface
-	 */
 	static const GInterfaceInfo idupicable_iface_info = {
 		( GInterfaceInitFunc ) iduplicable_iface_init,
 		NULL,
 		NULL
 	};
+
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_OBJECT, "NAObject", &info, 0 );
 
 	g_type_add_interface_static( type, NA_IDUPLICABLE_TYPE, &idupicable_iface_info );
 
@@ -132,18 +133,20 @@ static void
 class_init( NAObjectClass *klass )
 {
 	static const gchar *thisfn = "na_object_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *object_class;
+	GParamSpec *spec;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
-	GObjectClass *object_class = G_OBJECT_CLASS( klass );
+	object_class = G_OBJECT_CLASS( klass );
 	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
 
-	GParamSpec *spec;
 	spec = g_param_spec_string(
 			PROP_NAOBJECT_ID_STR,
 			"NAObject identifiant",
@@ -172,7 +175,8 @@ static void
 iduplicable_iface_init( NAIDuplicableInterface *iface )
 {
 	static const gchar *thisfn = "na_object_iduplicable_iface_init";
-	g_debug( "%s: iface=%p", thisfn, iface );
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->duplicate = iduplicable_duplicate;
 	iface->are_equal = iduplicable_are_equal;
@@ -184,9 +188,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 {
 	/*static const gchar *thisfn = "na_object_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
+	NAObject *self;
 
 	g_assert( NA_IS_OBJECT( instance ));
-	NAObject *self = NA_OBJECT( instance );
+	self = NA_OBJECT( instance );
 
 	self->private = g_new0( NAObjectPrivate, 1 );
 
@@ -207,8 +212,10 @@ instance_constructed( GObject *object )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
+	NAObject *self;
+
 	g_assert( NA_IS_OBJECT( object ));
-	NAObject *self = NA_OBJECT( object );
+	self = NA_OBJECT( object );
 
 	switch( property_id ){
 		case PROP_NAOBJECT_ID:
@@ -228,8 +235,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
+	NAObject *self;
+
 	g_assert( NA_IS_OBJECT( object ));
-	NAObject *self = NA_OBJECT( object );
+	self = NA_OBJECT( object );
 
 	switch( property_id ){
 		case PROP_NAOBJECT_ID:
@@ -251,8 +260,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
+	NAObject *self;
+
 	g_assert( NA_IS_OBJECT( object ));
-	NAObject *self = NA_OBJECT( object );
+	self = NA_OBJECT( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -266,8 +277,10 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
+	NAObject *self;
+
 	g_assert( NA_IS_OBJECT( object ));
-	NAObject *self = ( NAObject * ) object;
+	self = ( NAObject * ) object;
 
 	g_free( self->private->id );
 	g_free( self->private->label );
@@ -474,9 +487,12 @@ na_object_set_origin( NAObject *object, const NAObject *origin )
 gchar *
 na_object_get_id( const NAObject *object )
 {
-	g_assert( NA_IS_OBJECT( object ));
 	gchar *id;
+
+	g_assert( NA_IS_OBJECT( object ));
+
 	g_object_get( G_OBJECT( object ), PROP_NAOBJECT_ID_STR, &id, NULL );
+
 	return( id );
 }
 
@@ -492,9 +508,12 @@ na_object_get_id( const NAObject *object )
 gchar *
 na_object_get_label( const NAObject *object )
 {
-	g_assert( NA_IS_OBJECT( object ));
 	gchar *label;
+
+	g_assert( NA_IS_OBJECT( object ));
+
 	g_object_get( G_OBJECT( object ), PROP_NAOBJECT_LABEL_STR, &label, NULL );
+
 	return( label );
 }
 
@@ -584,7 +603,7 @@ do_dump( const NAObject *object )
 
 	g_assert( NA_IS_OBJECT( object ));
 
-	g_debug( "%s: object=%p", thisfn, object );
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_debug( "%s:     id=%s", thisfn, object->private->id );
 	g_debug( "%s:  label=%s", thisfn, object->private->label );
 
@@ -600,11 +619,13 @@ do_check_edited_status( const NAObject *object )
 static void
 do_copy( NAObject *target, const NAObject *source )
 {
-	gchar *id = na_object_get_id( source );
+	gchar *id, *label;
+
+	id = na_object_get_id( source );
 	na_object_set_id( target, id );
 	g_free( id );
 
-	gchar *label = na_object_get_label( source );
+	label = na_object_get_label( source );
 	na_object_set_label( target, label );
 	g_free( label );
 }

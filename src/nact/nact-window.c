@@ -44,6 +44,7 @@
 /* private class data
  */
 struct NactWindowClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -92,9 +93,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "nact_window_register_type";
-	g_debug( "%s", thisfn );
-
-	g_type_init();
+	GType type;
 
 	static GTypeInfo info = {
 		sizeof( NactWindowClass ),
@@ -108,15 +107,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	GType type = g_type_register_static( BASE_WINDOW_TYPE, "NactWindow", &info, 0 );
-
-	/* implement IPrefs interface
-	 */
 	static const GInterfaceInfo prefs_iface_info = {
 		( GInterfaceInitFunc ) iprefs_iface_init,
 		NULL,
 		NULL
 	};
+
+	g_debug( "%s", thisfn );
+
+	g_type_init();
+
+	type = g_type_register_static( BASE_WINDOW_TYPE, "NactWindow", &info, 0 );
 
 	g_type_add_interface_static( type, NACT_IPREFS_TYPE, &prefs_iface_info );
 
@@ -127,17 +128,20 @@ static void
 class_init( NactWindowClass *klass )
 {
 	static const gchar *thisfn = "nact_window_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *object_class;
+	BaseWindowClass *base_class;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
-	GObjectClass *object_class = G_OBJECT_CLASS( klass );
+	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactWindowClassPrivate, 1 );
 
-	BaseWindowClass *base_class = BASE_WINDOW_CLASS( klass );
+	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
 	base_class->all_widgets_showed = on_all_widgets_showed;
 
@@ -148,7 +152,8 @@ static void
 iprefs_iface_init( NactIPrefsInterface *iface )
 {
 	static const gchar *thisfn = "nact_window_iprefs_iface_init";
-	g_debug( "%s: iface=%p", thisfn, iface );
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_iprefs_window_id = v_get_iprefs_window_id;
 }
@@ -157,10 +162,12 @@ static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_window_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+	NactWindow *self;
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
 	g_assert( NACT_IS_WINDOW( instance ));
-	NactWindow *self = NACT_WINDOW( instance );
+	self = NACT_WINDOW( instance );
 
 	self->private = g_new0( NactWindowPrivate, 1 );
 
@@ -172,10 +179,13 @@ static void
 instance_dispose( GObject *window )
 {
 	static const gchar *thisfn = "nact_window_instance_dispose";
-	g_debug( "%s: window=%p", thisfn, window );
+	NactWindow *self;
+	GSList *is;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	g_assert( NACT_IS_WINDOW( window ));
-	NactWindow *self = NACT_WINDOW( window );
+	self = NACT_WINDOW( window );
 
 	if( !self->private->dispose_has_run ){
 
@@ -183,7 +193,6 @@ instance_dispose( GObject *window )
 
 		nact_iprefs_save_window_position( NACT_WINDOW( window ));
 
-		GSList *is;
 		for( is = self->private->signals ; is ; is = is->next ){
 			NactWindowRecordedSignal *str = ( NactWindowRecordedSignal * ) is->data;
 			g_signal_handler_disconnect( str->instance, str->handler_id );
@@ -203,10 +212,12 @@ static void
 instance_finalize( GObject *window )
 {
 	static const gchar *thisfn = "nact_window_instance_finalize";
-	g_debug( "%s: window=%p", thisfn, window );
+	NactWindow *self;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	g_assert( NACT_IS_WINDOW( window ));
-	NactWindow *self = ( NactWindow * ) window;
+	self = ( NactWindow * ) window;
 
 	g_free( self->private );
 
@@ -223,28 +234,16 @@ NAPivot *
 nact_window_get_pivot( NactWindow *window )
 {
 	NactApplication *application;
+	NAPivot *pivot;
+
 	g_object_get( G_OBJECT( window ), PROP_WINDOW_APPLICATION_STR, &application, NULL );
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
-	NAPivot *pivot = nact_application_get_pivot( application );
+	pivot = nact_application_get_pivot( application );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	return( pivot );
 }
-
-/**
- * Set the current action.
- *
- * This is called by one of the editors to advertize the main window
- * that the newly selected action has changed.
- */
-/*void
-nact_window_set_current_action( NactWindow *window, const NAAction *action )
-{
-	if( NACT_WINDOW_GET_CLASS( window )->set_current_action ){
-		NACT_WINDOW_GET_CLASS( window )->set_current_action( window, action );
-	}
-}*/
 
 /**
  * Saves a modified action to the I/O storage subsystem.
@@ -257,15 +256,18 @@ gboolean
 nact_window_save_action( NactWindow *window, NAAction *action )
 {
 	static const gchar *thisfn = "nact_window_save_action";
-	g_debug( "%s: window=%p, action=%p", thisfn, window, action );
+	NAPivot *pivot;
+	gchar *msg = NULL;
+	guint ret;
 
-	NAPivot *pivot = nact_window_get_pivot( window );
+	g_debug( "%s: window=%p, action=%p", thisfn, ( void * ) window, ( void * ) action );
+
+	pivot = nact_window_get_pivot( window );
 	g_assert( NA_IS_PIVOT( pivot ));
 
 	na_object_dump( NA_OBJECT( action ));
 
-	gchar *msg = NULL;
-	guint ret = na_pivot_write_action( pivot, action, &msg );
+	ret = na_pivot_write_action( pivot, action, &msg );
 	if( msg ){
 		base_window_error_dlg(
 				BASE_WINDOW( window ),
@@ -287,15 +289,18 @@ gboolean
 nact_window_delete_action( NactWindow *window, NAAction *action )
 {
 	static const gchar *thisfn = "nact_window_delete_action";
-	g_debug( "%s: window=%p, action=%p", thisfn, window, action );
+	NAPivot *pivot;
+	gchar *msg = NULL;
+	guint ret;
 
-	NAPivot *pivot = nact_window_get_pivot( window );
+	g_debug( "%s: window=%p, action=%p", thisfn, ( void * ) window, ( void * ) action );
+
+	pivot = nact_window_get_pivot( window );
 	g_assert( NA_IS_PIVOT( pivot ));
 
 	na_object_dump( NA_OBJECT( action ));
 
-	gchar *msg = NULL;
-	guint ret = na_pivot_delete_action( pivot, action, &msg );
+	ret = na_pivot_delete_action( pivot, action, &msg );
 	if( msg ){
 		base_window_error_dlg(
 				BASE_WINDOW( window ),
@@ -323,16 +328,19 @@ nact_window_warn_count_modified( NactWindow *window, gint count )
 {
 	gchar *first;
 	gchar *second;
+	gboolean ok;
+
 	if( count == 1 ){
 		first = g_strdup_printf( _( "One action has been modified." ));
 		second = g_strdup( _( "Are you sure you want to quit without saving it ?" ));
+
 	} else {
 		/*first = g_strdup_printf( _( "%d actions have been modified." ), count );*/
 		first = g_strdup_printf( _( "Actions have been modified." ));
 		second = g_strdup( _( "Are you sure you want to quit without saving them ?" ));
 	}
 
-	gboolean ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+	ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
 
 	g_free( second );
 	g_free( first );
@@ -356,7 +364,7 @@ nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *
 	window->private->signals = g_slist_prepend( window->private->signals, str );
 
 	if( st_debug_signal_connect ){
-		g_debug( "%s: connecting signal handler %p:%lu", thisfn, instance, handler_id );
+		g_debug( "%s: connecting signal handler %p:%lu", thisfn, ( void * ) instance, handler_id );
 	}
 }
 
@@ -391,7 +399,7 @@ on_runtime_init_toplevel( BaseWindow *window )
 		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( window );
 	}
 
-	g_debug( "%s: window=%p", thisfn, window );
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_assert( NACT_IS_WINDOW( window ));
 
 	nact_iprefs_position_window( NACT_WINDOW( window ));
@@ -407,5 +415,5 @@ on_all_widgets_showed( BaseWindow *dialog )
 		BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed( dialog );
 	}
 
-	g_debug( "%s: dialog=%p", thisfn, dialog );
+	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 }

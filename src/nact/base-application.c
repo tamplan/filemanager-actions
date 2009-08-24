@@ -43,6 +43,7 @@
 /* private class data
  */
 struct BaseApplicationClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -133,9 +134,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "base_application_register_type";
-	g_debug( "%s", thisfn );
-
-	g_type_init();
+	GType type;
 
 	static GTypeInfo info = {
 		sizeof( BaseApplicationClass ),
@@ -149,24 +148,32 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	return( g_type_register_static( G_TYPE_OBJECT, "BaseApplication", &info, 0 ));
+	g_debug( "%s", thisfn );
+
+	g_type_init();
+
+	type = g_type_register_static( G_TYPE_OBJECT, "BaseApplication", &info, 0 );
+
+	return( type );
 }
 
 static void
 class_init( BaseApplicationClass *klass )
 {
 	static const gchar *thisfn = "base_application_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *object_class;
+	GParamSpec *spec;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
-	GObjectClass *object_class = G_OBJECT_CLASS( klass );
+	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 	object_class->get_property = instance_get_property;
 	object_class->set_property = instance_set_property;
 
-	GParamSpec *spec;
 	spec = g_param_spec_int(
 			PROP_APPLICATION_ARGC,
 			"Command-line arguments count",
@@ -251,10 +258,12 @@ static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "base_application_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );
+	BaseApplication *self;
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
 	g_assert( BASE_IS_APPLICATION( instance ));
-	BaseApplication *self = BASE_APPLICATION( instance );
+	self = BASE_APPLICATION( instance );
 
 	self->private = g_new0( BaseApplicationPrivate, 1 );
 
@@ -265,8 +274,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
+	BaseApplication *self;
+
 	g_assert( BASE_IS_APPLICATION( object ));
-	BaseApplication *self = BASE_APPLICATION( object );
+	self = BASE_APPLICATION( object );
 
 	switch( property_id ){
 		case PROP_APPLICATION_ARGC_ID:
@@ -314,8 +325,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
+	BaseApplication *self;
+
 	g_assert( BASE_IS_APPLICATION( object ));
-	BaseApplication *self = BASE_APPLICATION( object );
+	self = BASE_APPLICATION( object );
 
 	switch( property_id ){
 		case PROP_APPLICATION_ARGC_ID:
@@ -366,10 +379,11 @@ static void
 instance_dispose( GObject *application )
 {
 	static const gchar *thisfn = "base_application_instance_dispose";
-	g_debug( "%s: application=%p", thisfn, application );
+	BaseApplication *self;
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( BASE_IS_APPLICATION( application ));
-	BaseApplication *self = BASE_APPLICATION( application );
+	self = BASE_APPLICATION( application );
 
 	if( !self->private->dispose_has_run ){
 
@@ -392,10 +406,11 @@ static void
 instance_finalize( GObject *application )
 {
 	static const gchar *thisfn = "base_application_instance_finalize";
-	g_debug( "%s: application=%p", thisfn, application );
+	BaseApplication *self;
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( BASE_IS_APPLICATION( application ));
-	BaseApplication *self = ( BaseApplication * ) application;
+	self = ( BaseApplication * ) application;
 
 	g_free( self->private->exit_message1 );
 	g_free( self->private->exit_message2 );
@@ -427,7 +442,8 @@ int
 base_application_run( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_run";
-	g_debug( "%s: application=%p", thisfn, application );
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	g_assert( BASE_IS_APPLICATION( application ));
 
@@ -451,9 +467,9 @@ base_application_get_application_name( BaseApplication *application )
 	/*static const gchar *thisfn = "base_application_get_application_name";
 	g_debug( "%s: application=%p", thisfn, application );*/
 
-	g_assert( BASE_IS_APPLICATION( application ));
-
 	gchar *name = NULL;
+
+	g_assert( BASE_IS_APPLICATION( application ));
 
 	if( BASE_APPLICATION_GET_CLASS( application )->application_get_application_name ){
 		name = BASE_APPLICATION_GET_CLASS( application )->application_get_application_name( application );
@@ -481,9 +497,9 @@ base_application_get_icon_name( BaseApplication *application )
 	/*static const gchar *thisfn = "base_application_get_icon_name";
 	g_debug( "%s: icon=%p", thisfn, application );*/
 
-	g_assert( BASE_IS_APPLICATION( application ));
-
 	gchar *name = NULL;
+
+	g_assert( BASE_IS_APPLICATION( application ));
 
 	if( BASE_APPLICATION_GET_CLASS( application )->application_get_icon_name ){
 		name = BASE_APPLICATION_GET_CLASS( application )->application_get_icon_name( application );
@@ -511,9 +527,9 @@ base_application_get_unique_app_name( BaseApplication *application )
 	/*static const gchar *thisfn = "base_application_get_unique_app_name";
 	g_debug( "%s: icon=%p", thisfn, application );*/
 
-	g_assert( BASE_IS_APPLICATION( application ));
-
 	gchar *name = NULL;
+
+	g_assert( BASE_IS_APPLICATION( application ));
 
 	if( BASE_APPLICATION_GET_CLASS( application )->application_get_unique_app_name ){
 		name = BASE_APPLICATION_GET_CLASS( application )->application_get_unique_app_name( application );
@@ -542,9 +558,9 @@ base_application_get_ui_filename( BaseApplication *application )
 	/*static const gchar *thisfn = "base_application_get_ui_filename";
 	g_debug( "%s: icon=%p", thisfn, application );*/
 
-	g_assert( BASE_IS_APPLICATION( application ));
-
 	gchar *name = NULL;
+
+	g_assert( BASE_IS_APPLICATION( application ));
 
 	if( BASE_APPLICATION_GET_CLASS( application )->application_get_ui_filename ){
 		name = BASE_APPLICATION_GET_CLASS( application )->application_get_ui_filename( application );
@@ -573,8 +589,8 @@ base_application_get_ui_filename( BaseApplication *application )
 BaseWindow *
 base_application_get_main_window( BaseApplication *application )
 {
-	static const gchar *thisfn = "base_application_get_main_window";
-	g_debug( "%s: application=%p", thisfn, application );
+	/*static const gchar *thisfn = "base_application_get_main_window";
+	g_debug( "%s: application=%p", thisfn, application );*/
 
 	g_assert( BASE_IS_APPLICATION( application ));
 
@@ -699,6 +715,7 @@ gboolean
 base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second )
 {
 	gint result = display_dlg( application, type, GTK_BUTTONS_YES_NO, first, second );
+
 	return( result == GTK_RESPONSE_YES );
 }
 
@@ -706,8 +723,8 @@ static gboolean
 v_initialize( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize";
-	g_debug( "%s: application=%p", thisfn, application );
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( BASE_IS_APPLICATION( application ));
 
 	return( BASE_APPLICATION_GET_CLASS( application )->application_initialize( application ));
@@ -717,11 +734,12 @@ static gboolean
 v_initialize_i18n( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_i18n";
-	g_debug( "%s: application=%p", thisfn, application );
+	gboolean ok;
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( BASE_IS_APPLICATION( application ));
 
-	gboolean ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_i18n( application );
+	ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_i18n( application );
 
 	if( !ok ){
 		set_initialize_i18n_error( application );
@@ -734,11 +752,12 @@ static gboolean
 v_initialize_gtk( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_gtk";
-	g_debug( "%s: application=%p", thisfn, application );
+	gboolean ok;
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( BASE_IS_APPLICATION( application ));
 
-	gboolean ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_gtk( application );
+	ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_gtk( application );
 
 	if( ok ){
 		application->private->is_gtk_initialized = TRUE;
@@ -754,11 +773,12 @@ static gboolean
 v_initialize_unique_app( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_unique_app";
-	g_debug( "%s: application=%p", thisfn, application );
+	gboolean ok;
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( BASE_IS_APPLICATION( application ));
 
-	gboolean ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_unique_app( application );
+	ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_unique_app( application );
 
 	if( !ok ){
 		set_initialize_unique_app_error( application );
@@ -771,8 +791,8 @@ static gboolean
 v_initialize_ui( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_ui";
-	g_debug( "%s: application=%p", thisfn, application );
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( BASE_IS_APPLICATION( application ));
 
 	return( BASE_APPLICATION_GET_CLASS( application )->application_initialize_ui( application ));
@@ -782,11 +802,12 @@ static gboolean
 v_initialize_default_icon( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_default_icon";
-	g_debug( "%s: application=%p", thisfn, application );
+	gboolean ok;
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( BASE_IS_APPLICATION( application ));
 
-	gboolean ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_default_icon( application );
+	ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_default_icon( application );
 
 	if( !ok ){
 		set_initialize_default_icon_error( application );
@@ -799,11 +820,12 @@ static gboolean
 v_initialize_application( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_application";
-	g_debug( "%s: application=%p", thisfn, application );
+	gboolean ok;
 
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_assert( BASE_IS_APPLICATION( application ));
 
-	gboolean ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_application( application );
+	ok = BASE_APPLICATION_GET_CLASS( application )->application_initialize_application( application );
 
 	if( !ok ){
 		set_initialize_application_error( application );
@@ -816,7 +838,9 @@ static int
 do_application_run( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_do_application_run";
-	g_debug( "%s: application=%p", thisfn, application );
+	GtkWindow *wnd;
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	if( v_initialize( application )){
 
@@ -825,7 +849,7 @@ do_application_run( BaseApplication *application )
 
 		base_window_init( application->private->main_window );
 
-		GtkWindow *wnd = base_window_get_toplevel_dialog( application->private->main_window );
+		wnd = base_window_get_toplevel_dialog( application->private->main_window );
 		g_assert( wnd );
 		g_assert( GTK_IS_WINDOW( wnd ));
 
@@ -889,8 +913,9 @@ static gboolean
 do_application_initialize_unique_app( BaseApplication *application )
 {
 	gboolean ret = TRUE;
+	gchar *name;
 
-	gchar *name = base_application_get_unique_app_name( application );
+	name = base_application_get_unique_app_name( application );
 
 	if( name && strlen( name )){
 		application->private->unique_app_handle = unique_app_new( name, NULL );
@@ -906,8 +931,10 @@ do_application_initialize_ui( BaseApplication *application )
 {
 	gboolean ret = TRUE;
 	GError *error = NULL;
+	gchar *name;
+	guint retint;
 
-	gchar *name = base_application_get_ui_filename( application );
+	name = base_application_get_ui_filename( application );
 
 	if( !name || !strlen( name )){
 		ret = FALSE;
@@ -915,7 +942,7 @@ do_application_initialize_ui( BaseApplication *application )
 
 	} else {
 		application->private->ui_xml = gtk_builder_new();
-		guint retint = gtk_builder_add_from_file( application->private->ui_xml, name, &error );
+		retint = gtk_builder_add_from_file( application->private->ui_xml, name, &error );
 		if( error || retint == 0 ){
 			ret = FALSE;
 			set_initialize_ui_add_xml_error( application, name, error );
@@ -930,7 +957,9 @@ do_application_initialize_ui( BaseApplication *application )
 static gboolean
 do_application_initialize_default_icon( BaseApplication *application )
 {
-	gchar *name = base_application_get_icon_name( application );
+	gchar *name;
+
+	name = base_application_get_icon_name( application );
 
 	if( name && strlen( name )){
 		gtk_window_set_default_icon_name( name );
@@ -1001,19 +1030,23 @@ on_unique_message_received(
 static gint
 display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second )
 {
+	GtkWidget *dialog;
+	const gchar *name;
+	gint result;
+
 	g_assert( BASE_IS_APPLICATION( application ));
 
-	GtkWidget *dialog = gtk_message_dialog_new( NULL, GTK_DIALOG_MODAL, type_message, type_buttons, "%s", first );
+	dialog = gtk_message_dialog_new( NULL, GTK_DIALOG_MODAL, type_message, type_buttons, "%s", first );
 
 	if( second && g_utf8_strlen( second, -1 )){
 		gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), "%s", second );
 	}
 
-	const gchar *name = g_get_application_name();
+	name = g_get_application_name();
 
 	g_object_set( G_OBJECT( dialog ) , "title", name, NULL );
 
-	gint result = gtk_dialog_run( GTK_DIALOG( dialog ));
+	result = gtk_dialog_run( GTK_DIALOG( dialog ));
 
 	gtk_widget_destroy( dialog );
 
@@ -1035,10 +1068,11 @@ search_for_child_widget( GtkContainer *container, const gchar *name )
 	GList *children = gtk_container_get_children( container );
 	GList *ic;
 	GtkWidget *found = NULL;
+	GtkWidget *child;
 
 	for( ic = children ; ic ; ic = ic->next ){
 		if( GTK_IS_WIDGET( ic->data )){
-			GtkWidget *child = GTK_WIDGET( ic->data );
+			child = GTK_WIDGET( ic->data );
 			if( child->name && strlen( child->name )){
 				/*g_debug( "%s: child=%s", thisfn, child->name );*/
 				if( !g_ascii_strcasecmp( name, child->name )){
@@ -1083,11 +1117,13 @@ display_error_message( BaseApplication *application )
 static void
 set_get_dialog_error( BaseApplication *application, const gchar *dialog )
 {
+	gchar *fname, *msg;
+
 	application->private->exit_code = APPLICATION_ERROR_DIALOG_LOAD;
 
-	gchar *fname = base_application_get_ui_filename( application );
+	fname = base_application_get_ui_filename( application );
 
-	gchar *msg = g_strdup_printf(
+	msg = g_strdup_printf(
 			/* i18n: unable to load <dialog_name> dialog from XML definition in <filename> */
 			_( "Unable to load %s dialog from XML definition in %s." ), dialog, fname );
 

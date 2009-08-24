@@ -42,6 +42,7 @@
 /* private class data
  */
 struct NAActionClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
@@ -132,7 +133,6 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "na_action_register_type";
-	g_debug( "%s", thisfn );
 
 	static GTypeInfo info = {
 		sizeof( NAActionClass ),
@@ -146,6 +146,8 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	g_debug( "%s", thisfn );
+
 	return( g_type_register_static( NA_OBJECT_TYPE, "NAAction", &info, 0 ));
 }
 
@@ -153,17 +155,19 @@ static void
 class_init( NAActionClass *klass )
 {
 	static const gchar *thisfn = "na_action_class_init";
-	g_debug( "%s: klass=%p", thisfn, klass );
+	GObjectClass *object_class;
+	GParamSpec *spec;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
-	GObjectClass *object_class = G_OBJECT_CLASS( klass );
+	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
 
-	GParamSpec *spec;
 	spec = g_param_spec_string(
 			PROP_NAACTION_UUID_STR,
 			"Action UUID",
@@ -236,8 +240,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	/*static const gchar *thisfn = "na_action_instance_init";
 	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
 
+	NAAction *self;
+
 	g_assert( NA_IS_ACTION( instance ));
-	NAAction* self = NA_ACTION( instance );
+	self = NA_ACTION( instance );
 
 	self->private = g_new0( NAActionPrivate, 1 );
 
@@ -256,8 +262,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
+	NAAction *self;
+
 	g_assert( NA_IS_ACTION( object ));
-	NAAction *self = NA_ACTION( object );
+	self = NA_ACTION( object );
 
 	switch( property_id ){
 		case PROP_NAACTION_UUID:
@@ -301,8 +309,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
+	NAAction *self;
+
 	g_assert( NA_IS_ACTION( object ));
-	NAAction *self = NA_ACTION( object );
+	self = NA_ACTION( object );
 
 	switch( property_id ){
 		case PROP_NAACTION_UUID:
@@ -350,10 +360,12 @@ static void
 instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "na_action_instance_dispose";
-	g_debug( "%s: object=%p", thisfn, object );
+	NAAction *self;
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_assert( NA_IS_ACTION( object ));
-	NAAction *self = NA_ACTION( object );
+	self = NA_ACTION( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -371,10 +383,12 @@ static void
 instance_finalize( GObject *object )
 {
 	static const gchar *thisfn = "na_action_instance_finalize";
-	g_debug( "%s: object=%p", thisfn, object );
+	NAAction *self;
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_assert( NA_IS_ACTION( object ));
-	NAAction *self = ( NAAction * ) object;
+	self = ( NAAction * ) object;
 
 	g_free( self->private->version );
 	g_free( self->private->tooltip );
@@ -401,7 +415,9 @@ instance_finalize( GObject *object )
 NAAction *
 na_action_new( void )
 {
-	NAAction *action = g_object_new( NA_ACTION_TYPE, NULL );
+	NAAction *action;
+
+	action = g_object_new( NA_ACTION_TYPE, NULL );
 
 	na_action_set_new_uuid( action );
 
@@ -421,9 +437,12 @@ na_action_new( void )
 NAAction *
 na_action_new_with_profile( void )
 {
-	NAAction *action = na_action_new();
+	NAAction *action;
+	NAActionProfile *profile;
 
-	NAActionProfile *profile = na_action_profile_new();
+	action = na_action_new();
+
+	profile = na_action_profile_new();
 
 	na_action_attach_profile( action, profile );
 
@@ -444,9 +463,10 @@ na_action_new_with_profile( void )
 gchar *
 na_action_get_uuid( const NAAction *action )
 {
+	gchar *id;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *id;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_UUID_STR, &id, NULL );
 
 	return( id );
@@ -466,9 +486,10 @@ na_action_get_uuid( const NAAction *action )
 gchar *
 na_action_get_label( const NAAction *action )
 {
+	gchar *label;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *label;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_LABEL_STR, &label, NULL );
 
 	return( label );
@@ -489,9 +510,10 @@ na_action_get_label( const NAAction *action )
 gchar *
 na_action_get_version( const NAAction *action )
 {
+	gchar *version;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *version;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_VERSION_STR, &version, NULL );
 
 	return( version );
@@ -510,9 +532,10 @@ na_action_get_version( const NAAction *action )
 gchar *
 na_action_get_tooltip( const NAAction *action )
 {
+	gchar *tooltip;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *tooltip;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_TOOLTIP_STR, &tooltip, NULL );
 
 	return( tooltip );
@@ -531,9 +554,10 @@ na_action_get_tooltip( const NAAction *action )
 gchar *
 na_action_get_icon( const NAAction *action )
 {
+	gchar *icon;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *icon;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_ICON_STR, &icon, NULL );
 
 	return( icon );
@@ -545,9 +569,10 @@ na_action_get_icon( const NAAction *action )
 gchar *
 na_action_get_verified_icon_name( const NAAction *action )
 {
+	gchar *icon_name;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *icon_name;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_ICON_STR, &icon_name, NULL );
 
 	if( icon_name[0] == '/' ){
@@ -575,9 +600,10 @@ na_action_get_verified_icon_name( const NAAction *action )
 gboolean
 na_action_is_enabled( const NAAction *action )
 {
+	gboolean enabled;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	gboolean enabled;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_ENABLED_STR, &enabled, NULL );
 
 	return( enabled );
@@ -596,9 +622,10 @@ na_action_is_enabled( const NAAction *action )
 gboolean
 na_action_is_readonly( const NAAction *action )
 {
+	gboolean readonly;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	gboolean readonly;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_READONLY_STR, &readonly, NULL );
 
 	return( readonly );
@@ -620,9 +647,10 @@ na_action_is_readonly( const NAAction *action )
 NAIIOProvider *
 na_action_get_provider( const NAAction *action )
 {
+	NAIIOProvider *provider;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	NAIIOProvider *provider;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_PROVIDER_STR, &provider, NULL );
 
 	return( provider );
@@ -637,9 +665,10 @@ na_action_get_provider( const NAAction *action )
 void
 na_action_set_new_uuid( NAAction *action )
 {
-	g_assert( NA_IS_ACTION( action ));
 	uuid_t uuid;
 	gchar uuid_str[64];
+
+	g_assert( NA_IS_ACTION( action ));
 
 	uuid_generate( uuid );
 	uuid_unparse_lower( uuid, uuid_str );
@@ -824,10 +853,11 @@ na_action_set_provider( NAAction *action, const NAIIOProvider *provider )
 gchar *
 na_action_get_new_profile_name( const NAAction *action )
 {
-	g_assert( NA_IS_ACTION( action ));
 	int i;
 	gboolean ok = FALSE;
 	gchar *candidate = NULL;
+
+	g_assert( NA_IS_ACTION( action ));
 
 	for( i=1 ; !ok ; ++i ){
 		g_free( candidate );
@@ -836,10 +866,12 @@ na_action_get_new_profile_name( const NAAction *action )
 			ok = TRUE;
 		}
 	}
+
 	if( !ok ){
 		g_free( candidate );
 		candidate = NULL;
 	}
+
 	return( candidate );
 }
 
@@ -859,13 +891,16 @@ na_action_get_new_profile_name( const NAAction *action )
 NAActionProfile *
 na_action_get_profile( const NAAction *action, const gchar *name )
 {
-	g_assert( NA_IS_ACTION( action ));
 	NAActionProfile *found = NULL;
 	GSList *ip;
+	NAActionProfile *iprofile;
+	gchar *iname;
+
+	g_assert( NA_IS_ACTION( action ));
 
 	for( ip = action->private->profiles ; ip && !found ; ip = ip->next ){
-		NAActionProfile *iprofile = NA_ACTION_PROFILE( ip->data );
-		gchar *iname = na_action_profile_get_name( iprofile );
+		iprofile = NA_ACTION_PROFILE( ip->data );
+		iname = na_action_profile_get_name( iprofile );
 		if( !strcmp( name, iname )){
 			found = iprofile;
 		}
@@ -942,13 +977,15 @@ na_action_get_profiles( const NAAction *action )
 void
 na_action_set_profiles( NAAction *action, GSList *list )
 {
+	GSList *ip;
+	NAObject *new_profile;
+
 	g_assert( NA_IS_ACTION( action ));
 
 	free_profiles( action );
 
-	GSList *ip;
 	for( ip = list ; ip ; ip = ip->next ){
-		NAObject *new_profile = na_object_duplicate( NA_OBJECT( ip->data ));
+		new_profile = na_object_duplicate( NA_OBJECT( ip->data ));
 		na_action_attach_profile( action, NA_ACTION_PROFILE( new_profile ));
 	}
 }
@@ -963,9 +1000,11 @@ void
 na_action_free_profiles( GSList *list )
 {
 	GSList *ip;
+
 	for( ip = list ; ip ; ip = ip->next ){
 		g_object_unref( NA_ACTION_PROFILE( ip->data ));
 	}
+
 	g_slist_free( list );
 }
 
@@ -988,11 +1027,12 @@ na_action_get_profiles_count( const NAAction *action )
 static void
 object_check_edited_status( const NAObject *action )
 {
+	GSList *ip;
+
 	if( st_parent_class->check_edited_status ){
 		st_parent_class->check_edited_status( action );
 	}
 
-	GSList *ip;
 	for( ip = NA_ACTION( action )->private->profiles ; ip ; ip = ip->next ){
 		na_object_check_edited_status( NA_OBJECT( ip->data ));
 	}
@@ -1002,9 +1042,11 @@ static void
 object_dump( const NAObject *action )
 {
 	static const gchar *thisfn = "na_action_object_dump";
+	NAAction *self;
+	GSList *item;
 
 	g_assert( NA_IS_ACTION( action ));
-	NAAction *self = NA_ACTION( action );
+	self = NA_ACTION( action );
 
 	if( st_parent_class->dump ){
 		st_parent_class->dump( action );
@@ -1015,11 +1057,10 @@ object_dump( const NAObject *action )
 	g_debug( "%s:      icon='%s'", thisfn, self->private->icon );
 	g_debug( "%s:   enabled='%s'", thisfn, self->private->enabled ? "True" : "False" );
 	g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
-	g_debug( "%s:  provider=%p", thisfn, self->private->provider );
+	g_debug( "%s:  provider=%p", thisfn, ( void * ) self->private->provider );
 
 	/* dump profiles */
-	g_debug( "%s: %d profile(s) at %p", thisfn, na_action_get_profiles_count( self ), self->private->profiles );
-	GSList *item;
+	g_debug( "%s: %d profile(s) at %p", thisfn, na_action_get_profiles_count( self ), ( void * ) self->private->profiles );
 	for( item = self->private->profiles ;	item != NULL ; item = item->next ){
 		na_object_dump(( const NAObject * ) item->data );
 	}
@@ -1028,9 +1069,11 @@ object_dump( const NAObject *action )
 static NAObject *
 object_duplicate( const NAObject *action )
 {
+	NAObject *duplicate;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	NAObject *duplicate = NA_OBJECT( na_action_new());
+	duplicate = NA_OBJECT( na_action_new());
 
 	na_object_copy( duplicate, action );
 
@@ -1040,12 +1083,14 @@ object_duplicate( const NAObject *action )
 void
 object_copy( NAObject *target, const NAObject *source )
 {
-	g_assert( NA_IS_ACTION( source ));
-	g_assert( NA_IS_ACTION( target ));
-
 	gchar *version, *tooltip, *icon;
 	gboolean enabled, readonly;
 	gpointer provider;
+	GSList *ip;
+	NAActionProfile *profile;
+
+	g_assert( NA_IS_ACTION( source ));
+	g_assert( NA_IS_ACTION( target ));
 
 	g_object_get( G_OBJECT( source ),
 			PROP_NAACTION_VERSION_STR, &version,
@@ -1068,9 +1113,8 @@ object_copy( NAObject *target, const NAObject *source )
 	g_free( tooltip );
 	g_free( version );
 
-	GSList *ip;
 	for( ip = NA_ACTION( source )->private->profiles ; ip ; ip = ip->next ){
-		NAActionProfile *profile = NA_ACTION_PROFILE( na_object_duplicate( NA_OBJECT( ip->data )));
+		profile = NA_ACTION_PROFILE( na_object_duplicate( NA_OBJECT( ip->data )));
 		na_action_attach_profile( NA_ACTION( target ), profile );
 	}
 
@@ -1082,13 +1126,16 @@ object_copy( NAObject *target, const NAObject *source )
 static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )
 {
+	NAAction *first = NA_ACTION( a );
+	NAAction *second = NA_ACTION( b );
+	gboolean equal;
+	NAActionProfile *first_profile, *second_profile;
+	gchar *first_name, *second_name;
+
 	g_assert( NA_IS_ACTION( a ));
 	g_assert( NA_IS_ACTION( b ));
 
-	NAAction *first = NA_ACTION( a );
-	NAAction *second = NA_ACTION( b );
-
-	gboolean equal =
+	equal =
 		( g_utf8_collate( first->private->version, second->private->version ) == 0 ) &&
 		( g_utf8_collate( first->private->tooltip, second->private->tooltip ) == 0 ) &&
 		( g_utf8_collate( first->private->icon, second->private->icon ) == 0 );
@@ -1103,9 +1150,9 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	if( equal ){
 		GSList *ip;
 		for( ip = first->private->profiles ; ip && equal ; ip = ip->next ){
-			NAActionProfile *first_profile = NA_ACTION_PROFILE( ip->data );
-			gchar *first_name = na_action_profile_get_name( first_profile );
-			NAActionProfile *second_profile = NA_ACTION_PROFILE( na_action_get_profile( second, first_name ));
+			first_profile = NA_ACTION_PROFILE( ip->data );
+			first_name = na_action_profile_get_name( first_profile );
+			second_profile = NA_ACTION_PROFILE( na_action_get_profile( second, first_name ));
 			if( second_profile ){
 				equal = na_object_are_equal( NA_OBJECT( first_profile ), NA_OBJECT( second_profile ));
 			} else {
@@ -1117,9 +1164,9 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	if( equal ){
 		GSList *ip;
 		for( ip = second->private->profiles ; ip && equal ; ip = ip->next ){
-			NAActionProfile *second_profile = NA_ACTION_PROFILE( ip->data );
-			gchar *second_name = na_action_profile_get_name( second_profile );
-			NAActionProfile *first_profile = NA_ACTION_PROFILE( na_action_get_profile( first, second_name ));
+			second_profile = NA_ACTION_PROFILE( ip->data );
+			second_name = na_action_profile_get_name( second_profile );
+			first_profile = NA_ACTION_PROFILE( na_action_get_profile( first, second_name ));
 			if( first_profile ){
 				equal = na_object_are_equal( NA_OBJECT( first_profile ), NA_OBJECT( second_profile ));
 			} else {
@@ -1140,14 +1187,16 @@ object_are_equal( const NAObject *a, const NAObject *b )
 gboolean
 object_is_valid( const NAObject *action )
 {
+	gchar *label;
+	gboolean is_valid;
+	GSList *ip;
+
 	g_assert( NA_IS_ACTION( action ));
 
-	gchar *label;
 	g_object_get( G_OBJECT( action ), PROP_NAACTION_LABEL_STR, &label, NULL );
-	gboolean is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
 	g_free( label );
 
-	GSList *ip;
 	for( ip = NA_ACTION( action )->private->profiles ; ip && is_valid ; ip = ip->next ){
 		is_valid = na_object_is_valid( NA_OBJECT( ip->data ));
 	}

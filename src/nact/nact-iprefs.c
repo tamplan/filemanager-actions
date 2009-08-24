@@ -84,7 +84,7 @@ static GType
 register_type( void )
 {
 	static const gchar *thisfn = "nact_iprefs_register_type";
-	g_debug( "%s", thisfn );
+	GType type;
 
 	static const GTypeInfo info = {
 		sizeof( NactIPrefsInterface ),
@@ -98,7 +98,9 @@ register_type( void )
 		NULL
 	};
 
-	GType type = g_type_register_static( G_TYPE_INTERFACE, "NactIPrefs", &info, 0 );
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_INTERFACE, "NactIPrefs", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -112,7 +114,7 @@ interface_base_init( NactIPrefsInterface *klass )
 	static gboolean initialized = FALSE;
 
 	if( !initialized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIPrefsInterfacePrivate, 1 );
 
@@ -131,7 +133,7 @@ interface_base_finalize( NactIPrefsInterface *klass )
 	static gboolean finalized = FALSE ;
 
 	if( !finalized ){
-		g_debug( "%s: klass=%p", thisfn, klass );
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 
@@ -149,9 +151,11 @@ interface_base_finalize( NactIPrefsInterface *klass )
 void
 nact_iprefs_position_window( NactWindow *window )
 {
+	GtkWindow *toplevel;
 	gchar *key = v_get_iprefs_window_id( window );
+
 	if( key ){
-		GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
+		toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
 		nact_iprefs_position_named_window( window, toplevel, key );
 		g_free( key );
 	}
@@ -168,11 +172,12 @@ void
 nact_iprefs_position_named_window( NactWindow *window, GtkWindow *toplevel, const gchar *key )
 {
 	static const gchar *thisfn = "nact_iprefs_position_named_window";
+	GSList *list;
+	gint x=0, y=0, width=0, height=0;
 
-	GSList *list = read_key_listint( window, key );
+	list = read_key_listint( window, key );
 	if( list ){
 
-		gint x=0, y=0, width=0, height=0;
 		listint_to_position( window, list, &x, &y, &width, &height );
 		g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
 		free_listint( list );
@@ -192,9 +197,11 @@ nact_iprefs_position_named_window( NactWindow *window, GtkWindow *toplevel, cons
 void
 nact_iprefs_save_window_position( NactWindow *window )
 {
+	GtkWindow *toplevel;
 	gchar *key = v_get_iprefs_window_id( window );
+
 	if( key ){
-		GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
+		toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
 		nact_iprefs_save_named_window_position( window, toplevel, key );
 		g_free( key );
 	}
@@ -212,13 +219,14 @@ nact_iprefs_save_named_window_position( NactWindow *window, GtkWindow *toplevel,
 {
 	static const gchar *thisfn = "nact_iprefs_save_named_window_position";
 	gint x, y, width, height;
+	GSList *list;
 
 	if( GTK_IS_WINDOW( toplevel )){
 		gtk_window_get_position( toplevel, &x, &y );
 		gtk_window_get_size( toplevel, &width, &height );
 		g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
 
-		GSList *list = position_to_listint( window, x, y, width, height );
+		list = position_to_listint( window, x, y, width, height );
 		write_key_listint( window, key, list );
 		free_listint( list );
 	}
@@ -322,9 +330,12 @@ read_key_listint( NactWindow *window, const gchar *key )
 {
 	static const gchar *thisfn = "nact_iprefs_read_key_listint";
 	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
+	gchar *path;
+	GSList *list;
 
-	GSList *list = gconf_client_get_list(
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
+
+	list = gconf_client_get_list(
 			NACT_IPREFS_GET_INTERFACE( window )->private->client, path, GCONF_VALUE_INT, &error );
 
 	if( error ){
@@ -342,7 +353,9 @@ write_key_listint( NactWindow *window, const gchar *key, GSList *list )
 {
 	static const gchar *thisfn = "nact_iprefs_write_key_listint";
 	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
+	gchar *path;
+
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
 
 	gconf_client_set_list(
 			NACT_IPREFS_GET_INTERFACE( window )->private->client, path, GCONF_VALUE_INT, list, &error );
@@ -362,12 +375,13 @@ write_key_listint( NactWindow *window, const gchar *key, GSList *list )
 static void
 listint_to_position( NactWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height )
 {
+	GSList *il;
+	int i;
+
 	g_assert( x );
 	g_assert( y );
 	g_assert( width );
 	g_assert( height );
-	GSList *il;
-	int i;
 
 	for( il=list, i=0 ; il ; il=il->next, i+=1 ){
 		switch( i ){
@@ -419,9 +433,12 @@ read_key_str( NactWindow *window, const gchar *key )
 {
 	static const gchar *thisfn = "nact_iprefs_read_key_str";
 	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
+	gchar *path;
+	gchar *text;
 
-	gchar *text = gconf_client_get_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
+
+	text = gconf_client_get_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
 
 	if( error ){
 		g_warning( "%s: key=%s, %s", thisfn, key, error->message );
@@ -438,7 +455,9 @@ save_key_str( NactWindow *window, const gchar *key, const gchar *text )
 {
 	static const gchar *thisfn = "nact_iprefs_save_key_str";
 	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
+	gchar *path;
+
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
 
 	gconf_client_set_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, text, &error );
 
@@ -455,9 +474,12 @@ read_key_int( NactWindow *window, const gchar *name )
 {
 	static const gchar *thisfn = "nact_iprefs_read_key_int";
 	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	gchar *path;
+	gint value;
 
-	gint value = gconf_client_get_int( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+
+	value = gconf_client_get_int( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
 
 	if( error ){
 		g_warning( "%s: name=%s, %s", thisfn, name, error->message );
@@ -473,7 +495,9 @@ write_key_int( NactWindow *window, const gchar *name, gint value )
 {
 	static const gchar *thisfn = "nact_iprefs_write_key_int";
 	GError *error = NULL;
-	gchar *path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	gchar *path;
+
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
 
 	gconf_client_set_int( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, value, &error );
 
