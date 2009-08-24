@@ -117,8 +117,6 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	g_type_init();
-
 	type = g_type_register_static( NACT_WINDOW_TYPE, "NactAssistant", &info, 0 );
 
 	return( type );

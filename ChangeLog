@@ -51,6 +51,14 @@
 	* src/common/na-xml-names.h:
 	Long names are rewritten on several lines for more readability.
 
+	* src/nact/nact-assistant.c:
+	* src/nact/nact-window.c:
+	Remove superfluous calls to g_type_init().
+
+	* src/nact/nact-imenubar.c:
+	Do not try to delete an object when the list is empty (as Delete
+	accelerator is always active, even if the Delete menu item is not).
+
 2009-08-23 Pierre Wieser <pwieser@trychlos.org>
 
 	Get rid of unwanted notifications.

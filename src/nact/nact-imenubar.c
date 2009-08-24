@@ -646,6 +646,10 @@ on_delete_activated( GtkMenuItem *item, NactWindow *window )
 	g_debug( "%s: item=%p, window=%p", thisfn, ( void * ) item, ( void * ) window );
 
 	object = v_get_selected( window );
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	if( !object ){
+		return;
+	}
 
 	if( NA_IS_ACTION( object )){
 		uuid = na_action_get_uuid( NA_ACTION( object ));

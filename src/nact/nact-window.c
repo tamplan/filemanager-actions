@@ -115,8 +115,6 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	g_type_init();
-
 	type = g_type_register_static( BASE_WINDOW_TYPE, "NactWindow", &info, 0 );
 
 	g_type_add_interface_static( type, NACT_IPREFS_TYPE, &prefs_iface_info );
