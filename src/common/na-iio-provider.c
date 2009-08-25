@@ -48,6 +48,8 @@ static void     interface_base_finalize( NAIIOProviderInterface *klass );
 static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
 static gboolean do_is_writable( const NAIIOProvider *instance, const NAAction *action );
 static guint    write_action( const NAIIOProvider *instance, NAAction *action, gchar **message );
+static GSList  *sort_actions( const NAPivot *pivot, GSList *actions );
+static gint     compare_actions_label_alpha_fn( const NAAction *a, const NAAction *b );
 
 /**
  * Registers the GType of this interface.
@@ -171,7 +173,7 @@ na_iio_provider_read_actions( const NAPivot *pivot )
 		}
 	}
 
-	return( actions );
+	return( sort_actions( pivot, actions ));
 }
 
 /**
@@ -315,4 +317,32 @@ write_action( const NAIIOProvider *provider, NAAction *action, gchar **message )
 	}
 
 	return( NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_action( provider, action, message ));
+}
+
+/*
+ * sort the actions so that they are in the same order than when they
+ * are displayed in NACT
+ */
+static GSList *
+sort_actions( const NAPivot *pivot, GSList *actions )
+{
+	GSList *sorted;
+
+	sorted = g_slist_sort( actions, ( GCompareFunc ) compare_actions_label_alpha_fn );
+
+	return( sorted );
+}
+
+static gint
+compare_actions_label_alpha_fn( const NAAction *a, const NAAction *b )
+{
+	gchar *label_a, *label_b;
+	gint compare;
+
+	label_a = na_action_get_label( a );
+	label_b = na_action_get_label( b );
+
+	compare = g_utf8_collate( label_a, label_b );
+
+	return( compare );
 }
