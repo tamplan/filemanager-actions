@@ -13,6 +13,9 @@
 	* src/nact/nact-assistant-import.c:
 	Can now do the operations in the on_assistant_apply() functions.
 
+	* src/nact/nact-iactions-list.c:
+	Returns selected actions in the same order as they are displayed.
+
 2009-08-24 Pierre Wieser <pwieser@trychlos.org>
 
 	* Makefile.am:

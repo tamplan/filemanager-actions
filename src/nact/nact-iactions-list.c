@@ -544,7 +544,7 @@ nact_iactions_list_get_selected_actions( NactWindow *window )
 	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( listrows );
 
-	return( actions );
+	return( g_slist_reverse( actions ));
 }
 
 /*void
