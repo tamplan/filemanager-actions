@@ -4,6 +4,8 @@
 	Add a comment about
 	nautilus_menu_provider_emit_items_updated_signal().
 
+	* src/common/na-object.h: Fix typo.
+
 	* src/common/na-iio-provider.c:
 	Sort the actions in the same order as they are displayed.
 

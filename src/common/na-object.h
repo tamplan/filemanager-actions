@@ -31,7 +31,7 @@
 #ifndef __NA_OBJECT_H__
 #define __NA_OBJECT_H__
 
-/*
+/**
  * SECTION: na_object
  * @short_description: #NAObject class definition.
  * @include: common/na-object.h
