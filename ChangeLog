@@ -1,3 +1,16 @@
+2009-08-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Add a comment about bug #589745.
+
+	* src/nact/nact-assistant.c:
+	* src/nact/nact-assistant.h:
+	Implement a work-around for bug #589745 (apply message).
+	Remove on_escape_key_pressed() virtual function.
+
+	* nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	Can now do the operations in the on_assistant_apply() functions.
+
 2009-08-24 Pierre Wieser <pwieser@trychlos.org>
 
 	* Makefile.am:

@@ -50,6 +50,7 @@ struct NactAssistantClassPrivate {
 struct NactAssistantPrivate {
 	gboolean dispose_has_run;
 	gboolean warn_on_cancel;
+	gboolean apply_has_run;
 };
 
 /* instance properties
@@ -72,14 +73,18 @@ static void       instance_finalize( GObject *application );
 
 static GtkWindow *get_dialog( BaseWindow *window, const gchar *name );
 
-static void       v_assistant_apply( GtkAssistant *assistant, gpointer user_data );
-static void       v_assistant_cancel( GtkAssistant *assistant, gpointer user_data );
-static void       v_assistant_close( GtkAssistant *assistant, gpointer user_data );
-static void       v_assistant_prepare( GtkAssistant *assistant, GtkWidget *page, gpointer user_data );
+static void       v_assistant_apply( GtkAssistant *assistant, NactAssistant *window );
+static void       v_assistant_cancel( GtkAssistant *assistant, NactAssistant *window );
+static void       v_assistant_close( GtkAssistant *assistant, NactAssistant *window );
+static void       v_assistant_prepare( GtkAssistant *assistant, GtkWidget *page, NactAssistant *window );
+
+static void       on_apply_message( GtkAssistant *assistant, NactAssistant *window );
+static void       on_cancel_message( GtkAssistant *assistant, NactAssistant *window );
+static void       on_close_message( GtkAssistant *assistant, NactAssistant *window );
+static void       on_prepare_message( GtkAssistant *assistant, GtkWidget *page, NactAssistant *window );
 
 static void       on_runtime_init_toplevel( BaseWindow *window );
 static gboolean   on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer user_data );
-static gboolean   on_escape_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data );
 static void       do_assistant_apply( NactAssistant *window, GtkAssistant *assistant );
 static void       do_assistant_cancel( NactAssistant *window, GtkAssistant *assistant );
 static void       do_assistant_close( NactAssistant *window, GtkAssistant *assistant );
@@ -154,10 +159,9 @@ class_init( NactAssistantClass *klass )
 	base_class->get_dialog = get_dialog;
 	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
 
-	klass->on_escape_key_pressed = on_escape_key_pressed;
 	klass->on_assistant_apply = do_assistant_apply;
-	klass->on_assistant_close = do_assistant_close;
 	klass->on_assistant_cancel = do_assistant_cancel;
+	klass->on_assistant_close = do_assistant_close;
 	klass->on_assistant_prepare = do_assistant_prepare;
 }
 
@@ -175,6 +179,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactAssistantPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+	self->private->warn_on_cancel = FALSE;
+	self->private->apply_has_run = FALSE;
 }
 
 static void
@@ -294,51 +300,102 @@ nact_assistant_set_warn_on_cancel( NactAssistant *window, gboolean warn )
 }
 
 static void
-v_assistant_apply( GtkAssistant *assistant, gpointer user_data )
+v_assistant_apply( GtkAssistant *assistant, NactAssistant *window )
 {
-	g_assert( NACT_IS_ASSISTANT( user_data ));
+	g_assert( NACT_IS_ASSISTANT( window ));
 
-	if( NACT_ASSISTANT_GET_CLASS( user_data )->on_assistant_apply ){
-		NACT_ASSISTANT_GET_CLASS( user_data )->on_assistant_apply( NACT_ASSISTANT( user_data ), assistant );
+	if( NACT_ASSISTANT_GET_CLASS( window )->on_assistant_apply ){
+		NACT_ASSISTANT_GET_CLASS( window )->on_assistant_apply( window, assistant );
 	} else {
-		do_assistant_apply( NACT_ASSISTANT( user_data ), assistant );
+		do_assistant_apply( window, assistant );
+	}
+
+	window->private->apply_has_run = TRUE;
+}
+
+static void
+v_assistant_cancel( GtkAssistant *assistant, NactAssistant *window )
+{
+	g_assert( NACT_IS_ASSISTANT( window ));
+
+	if( NACT_ASSISTANT_GET_CLASS( window )->on_assistant_cancel ){
+		NACT_ASSISTANT_GET_CLASS( window )->on_assistant_cancel( window, assistant );
+	} else {
+		do_assistant_cancel( window, assistant );
 	}
 }
 
 static void
-v_assistant_cancel( GtkAssistant *assistant, gpointer user_data )
+v_assistant_close( GtkAssistant *assistant, NactAssistant *window )
 {
-	g_assert( NACT_IS_ASSISTANT( user_data ));
+	g_assert( NACT_IS_ASSISTANT( window ));
 
-	if( NACT_ASSISTANT_GET_CLASS( user_data )->on_assistant_cancel ){
-		NACT_ASSISTANT_GET_CLASS( user_data )->on_assistant_cancel( NACT_ASSISTANT( user_data ), assistant );
+	if( NACT_ASSISTANT_GET_CLASS( window )->on_assistant_close ){
+		NACT_ASSISTANT_GET_CLASS( window )->on_assistant_close( window, assistant );
 	} else {
-		do_assistant_cancel( NACT_ASSISTANT( user_data ), assistant );
+		do_assistant_close( window, assistant );
 	}
 }
 
 static void
-v_assistant_close( GtkAssistant *assistant, gpointer user_data )
+v_assistant_prepare( GtkAssistant *assistant, GtkWidget *page, NactAssistant *window )
 {
-	g_assert( NACT_IS_ASSISTANT( user_data ));
+	g_assert( NACT_IS_ASSISTANT( window ));
 
-	if( NACT_ASSISTANT_GET_CLASS( user_data )->on_assistant_close ){
-		NACT_ASSISTANT_GET_CLASS( user_data )->on_assistant_close( NACT_ASSISTANT( user_data ), assistant );
+	if( NACT_ASSISTANT_GET_CLASS( window )->on_assistant_prepare ){
+		NACT_ASSISTANT_GET_CLASS( window )->on_assistant_prepare( window, assistant, page );
 	} else {
-		do_assistant_close( NACT_ASSISTANT( user_data ), assistant );
+		do_assistant_prepare( window, assistant, page );
+	}
+}
+
+/*
+ * starting with Gtk+ 2.18, this work-around will become useless
+ * so message handlers could safely be the v_xxx functions
+ */
+static void
+on_apply_message( GtkAssistant *assistant, NactAssistant *window )
+{
+	if( !window->private->apply_has_run ){
+		v_assistant_apply( assistant, window );
 	}
 }
 
 static void
-v_assistant_prepare( GtkAssistant *assistant, GtkWidget *page, gpointer user_data )
+on_cancel_message( GtkAssistant *assistant, NactAssistant *window )
 {
-	g_assert( NACT_IS_ASSISTANT( user_data ));
+	v_assistant_cancel( assistant, window );
+}
 
-	if( NACT_ASSISTANT_GET_CLASS( user_data )->on_assistant_prepare ){
-		NACT_ASSISTANT_GET_CLASS( user_data )->on_assistant_prepare( NACT_ASSISTANT( user_data ), assistant, page );
-	} else {
-		do_assistant_prepare( NACT_ASSISTANT( user_data ), assistant, page );
+static void
+on_close_message( GtkAssistant *assistant, NactAssistant *window )
+{
+	v_assistant_close( assistant, window );
+}
+
+static void
+on_prepare_message( GtkAssistant *assistant, GtkWidget *page, NactAssistant *window )
+{
+	static const gchar *thisfn = "nact_assistant_on_prepare_message";
+	GtkAssistantPageType type;
+
+	g_debug( "%s: assistant=%p, page=%p, window=%p",
+			thisfn, ( void * ) assistant, ( void * ) page, ( void * ) window );
+
+	type = gtk_assistant_get_page_type( assistant, page );
+
+	switch( type ){
+		case GTK_ASSISTANT_PAGE_SUMMARY:
+			if( !window->private->apply_has_run ){
+				v_assistant_apply( assistant, window );
+			}
+			break;
+
+		default:
+			break;
 	}
+
+	v_assistant_prepare( assistant, page, window );
 }
 
 static void
@@ -359,10 +416,10 @@ on_runtime_init_toplevel( BaseWindow *window )
 	g_assert( GTK_IS_ASSISTANT( toplevel ));
 
 	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "key-press-event", G_CALLBACK( on_key_pressed_event ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "cancel", G_CALLBACK( v_assistant_cancel ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "close", G_CALLBACK( v_assistant_close ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "prepare", G_CALLBACK( v_assistant_prepare ));
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "apply", G_CALLBACK( v_assistant_apply ));
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "apply", G_CALLBACK( on_apply_message ));
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "cancel", G_CALLBACK( on_cancel_message ));
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "close", G_CALLBACK( on_close_message ));
+	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( toplevel ), "prepare", G_CALLBACK( on_prepare_message ));
 
 	nact_assistant_set_warn_on_cancel( NACT_ASSISTANT( window ), TRUE );
 }
@@ -372,31 +429,16 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, gpointer user_data 
 {
 	/*static const gchar *thisfn = "nact_assistant_on_key_pressed_event";
 	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );*/
-
 	gboolean stop = FALSE;
+	GtkWindow *toplevel;
 
 	if( event->keyval == GDK_Escape ){
-		if( NACT_ASSISTANT_GET_CLASS( user_data )->on_escape_key_pressed ){
-			stop = NACT_ASSISTANT_GET_CLASS( user_data )->on_escape_key_pressed( widget, event, user_data );
-		}
+		toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( user_data ));
+		g_signal_emit_by_name( toplevel, "cancel", toplevel );
+		stop = TRUE;
 	}
 
 	return( stop );
-}
-
-static gboolean
-on_escape_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_assistant_on_escape_key_pressed";
-	GtkWindow *toplevel;
-
-	g_debug( "%s: widget=%p, event=%p, user_data=%p",
-			thisfn, ( void * ) widget, ( void * ) event, ( void * ) user_data );
-
-	toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( user_data ));
-	v_assistant_cancel( GTK_ASSISTANT( toplevel ), user_data );
-
-	return( TRUE );
 }
 
 static void

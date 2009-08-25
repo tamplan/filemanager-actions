@@ -99,10 +99,10 @@ static void     runtime_init_intro( NactAssistantImport *window, GtkAssistant *a
 static void     runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant );
 static void     on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
 static gboolean has_readable_files( GSList *uris );
+static void     on_apply( NactAssistant *window, GtkAssistant *assistant );
 static void     on_prepare( NactAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 static void     prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void     prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
-static void     do_import( NactAssistantImport *window, GtkAssistant *assistant );
 static void     free_results( GSList *list );
 
 GType
@@ -169,6 +169,7 @@ class_init( NactAssistantImportClass *klass )
 	nact_class->get_iprefs_window_id = do_get_iprefs_window_id;
 
 	assist_class = NACT_ASSISTANT_CLASS( klass );
+	assist_class->on_assistant_apply = on_apply;
 	assist_class->on_assistant_prepare = on_prepare;
 }
 
@@ -416,6 +417,41 @@ has_readable_files( GSList *uris )
 }
 
 static void
+on_apply( NactAssistant *wnd, GtkAssistant *assistant )
+{
+	static const gchar *thisfn = "nact_assistant_import_on_apply";
+	NactAssistantImport *window;
+	GtkWidget *chooser;
+	GSList *uris, *is, *msg;
+	NAAction *action;
+	ImportUriStruct *str;
+
+	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
+	g_assert( NACT_IS_ASSISTANT_IMPORT( wnd ));
+	window = NACT_ASSISTANT_IMPORT( wnd );
+
+	chooser = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FILES_SELECTION );
+	uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
+
+	for( is = uris ; is ; is = is->next ){
+
+		msg = NULL;
+		action = nact_xml_reader_import( NACT_WINDOW( window ), ( const gchar * ) is->data, &msg );
+
+		str = g_new0( ImportUriStruct, 1 );
+		str->uri = g_strdup(( const gchar * ) is->data );
+		str->action = action;
+		str->msg = na_utils_duplicate_string_list( msg );
+
+		window->private->results = g_slist_prepend( window->private->results, str );
+
+		na_utils_free_string_list( msg );
+	}
+
+	na_utils_free_string_list( uris );
+}
+
+static void
 on_prepare( NactAssistant *window, GtkAssistant *assistant, GtkWidget *page )
 {
 	static const gchar *thisfn = "nact_assistant_import_on_prepare";
@@ -485,8 +521,6 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
-	do_import( window, assistant );
-
 	/* i18n: result of the import assistant */
 	text = g_strdup( _( "Selected files have been imported:" ));
 
@@ -543,38 +577,6 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	nact_assistant_set_warn_on_cancel( NACT_ASSISTANT( window ), FALSE );
-}
-
-static void
-do_import( NactAssistantImport *window, GtkAssistant *assistant )
-{
-	static const gchar *thisfn = "nact_assistant_import_do_import";
-	GtkWidget *chooser;
-	GSList *uris, *is, *msg;
-	NAAction *action;
-	ImportUriStruct *str;
-
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	chooser = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FILES_SELECTION );
-	uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
-
-	for( is = uris ; is ; is = is->next ){
-
-		msg = NULL;
-		action = nact_xml_reader_import( NACT_WINDOW( window ), ( const gchar * ) is->data, &msg );
-
-		str = g_new0( ImportUriStruct, 1 );
-		str->uri = g_strdup(( const gchar * ) is->data );
-		str->action = action;
-		str->msg = na_utils_duplicate_string_list( msg );
-
-		window->private->results = g_slist_prepend( window->private->results, str );
-
-		na_utils_free_string_list( msg );
-	}
-
-	na_utils_free_string_list( uris );
 }
 
 static void

@@ -133,8 +133,6 @@ static void            assist_initial_load_exportdone( NactAssistantExport *wind
 static void            assist_runtime_init_exportdone( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
 
-static void            do_export( NactAssistantExport *window );
-
 #ifdef NA_MAINTAINER_MODE
 static void              dump( NactAssistantExport *window );
 #endif
@@ -392,18 +390,58 @@ on_all_widgets_showed( BaseWindow *dialog )
  * As of 1.11, nact_gconf_writer doesn't return any error message.
  * An error is simply indicated by returning a null filename.
  * So we provide a general error message.
- *
- * apply signal is ran from the confirm page _after_ the prepare signal
- * of the summary page ; it is so almost useless to do anything here if
- * we want show the result on the summary...
- *
- * see http://bugzilla.gnome.org/show_bug.cgi?id=589745
  */
 static void
-on_apply( NactAssistant *window, GtkAssistant *assistant )
+on_apply( NactAssistant *wnd, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_export_on_apply";
-	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) window, ( void * ) assistant );
+	NactAssistantExport *window;
+	GSList *actions, *ia;
+	gchar *msg = NULL;
+	gchar *reason = NULL;
+	gchar *tmp, *fname;
+	NAAction *action;
+
+	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
+	g_assert( NACT_IS_ASSISTANT_EXPORT( wnd ));
+	window = NACT_ASSISTANT_EXPORT( wnd );
+
+	actions = nact_iactions_list_get_selected_actions( NACT_WINDOW( window ));
+
+	g_assert( window->private->uri && strlen( window->private->uri ));
+
+	for( ia = actions ; ia ; ia = ia->next ){
+		action = NA_ACTION( ia->data );
+		fname = na_xml_writer_export( action, window->private->uri, window->private->format, &msg );
+
+		if( fname && strlen( fname )){
+			window->private->fnames = g_slist_prepend( window->private->fnames, fname );
+			g_debug( "%s: fname=%s", thisfn, fname );
+
+		} else {
+			window->private->errors += 1;
+			if( msg ){
+				if( reason ){
+					tmp = g_strdup_printf( "%s\n", reason );
+					g_free( reason );
+					reason = tmp;
+				}
+				tmp = g_strdup_printf( "%s%s", reason, msg );
+				g_free( reason );
+				reason = tmp;
+				g_free( msg );
+			}
+		}
+	}
+
+	if( window->private->errors ){
+		if( !reason ){
+			reason = g_strdup( _( "You may not have writing permissions on selected folder." ));
+		}
+		window->private->reason = reason;
+	}
+
+	g_slist_free( actions );
 }
 
 static void
@@ -777,8 +815,6 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
-	do_export( window );
-
 #ifdef NA_MAINTAINER_MODE
 	dump( window );
 #endif
@@ -827,56 +863,6 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	nact_assistant_set_warn_on_cancel( NACT_ASSISTANT( window ), FALSE );
-}
-
-static void
-do_export( NactAssistantExport *window )
-{
-	static const gchar *thisfn = "nact_assistant_export_do_export";
-	GSList *actions, *ia;
-	gchar *msg = NULL;
-	gchar *reason = NULL;
-	gchar *tmp, *fname;
-	NAAction *action;
-
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	actions = nact_iactions_list_get_selected_actions( NACT_WINDOW( window ));
-
-	g_assert( window->private->uri && strlen( window->private->uri ));
-
-	for( ia = actions ; ia ; ia = ia->next ){
-		action = NA_ACTION( ia->data );
-		fname = na_xml_writer_export( action, window->private->uri, window->private->format, &msg );
-
-		if( fname && strlen( fname )){
-			window->private->fnames = g_slist_prepend( window->private->fnames, fname );
-			g_debug( "%s: fname=%s", thisfn, fname );
-
-		} else {
-			window->private->errors += 1;
-			if( msg ){
-				if( reason ){
-					tmp = g_strdup_printf( "%s\n", reason );
-					g_free( reason );
-					reason = tmp;
-				}
-				tmp = g_strdup_printf( "%s%s", reason, msg );
-				g_free( reason );
-				reason = tmp;
-				g_free( msg );
-			}
-		}
-	}
-
-	if( window->private->errors ){
-		if( !reason ){
-			reason = g_strdup( _( "You may not have writing permissions on selected folder." ));
-		}
-		window->private->reason = reason;
-	}
-
-	g_slist_free( actions );
 }
 
 #ifdef NA_MAINTAINER_MODE

@@ -110,6 +110,8 @@ AM_GCONF_SOURCE_2
 # GLib >= 2.16: GVFS/GIO
 # Gtk  >= 2.12: GtkBuilder
 #
+# [nact-assistant] remove work-around for #589745 when Gtk+ >= 2.18
+#
 GLIB_REQUIRED=2.16.0
 GTK_REQUIRED=2.12.0
 NAUTILUS_EXTENSION=2.8.0

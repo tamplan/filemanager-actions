@@ -31,11 +31,20 @@
 #ifndef __NACT_ASSISTANT_H__
 #define __NACT_ASSISTANT_H__
 
-/*
- * NactAssistant class definition.
+/**
+ * SECTION: nact_assistant
+ * @short_description: #NactAssistant class definition.
+ * @include: nact/nact-assistant.h
  *
  * This class is derived from NactWindow class, and serves as a base
  * class for all Nautilus Actions assistants.
+ *
+ * Note: as a work-around to #589745 (Apply message in GtkAssistant),
+ * we may trigger "on_assistant_apply" function from the
+ * "on_prepare_message" handler.
+ * The provided patch has been applied on 2009-08-07, and released in
+ * Gtk+ 2.17.7. So, this work-around will can be safely removed when
+ * minimal Gtk+ version will be 2.18 or later.
  */
 
 #include "nact-window.h"
@@ -64,7 +73,6 @@ typedef struct {
 	NactAssistantClassPrivate *private;
 
 	/* api */
-	gboolean ( *on_escape_key_pressed )( GtkWidget *widget, GdkEventKey *event, gpointer data );
 	void     ( *on_assistant_apply )   ( NactAssistant *window, GtkAssistant *assistant );
 	void     ( *on_assistant_cancel )  ( NactAssistant *window, GtkAssistant *assistant );
 	void     ( *on_assistant_close )   ( NactAssistant *window, GtkAssistant *assistant );
