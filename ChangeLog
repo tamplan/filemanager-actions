@@ -1,6 +1,8 @@
 2009-08-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Add a comment about bug #589745.
+	Add a comment about
+	nautilus_menu_provider_emit_items_updated_signal().
 
 	* src/nact/nact-assistant.c:
 	* src/nact/nact-assistant.h:
