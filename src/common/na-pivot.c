@@ -73,6 +73,8 @@ struct NAPivotPrivate {
 
 enum {
 	ACTION_CHANGED,
+	DISPLAY_ORDER_CHANGE,
+	DISPLAY_ABOUT_CHANGE,
 	LAST_SIGNAL
 };
 
@@ -94,6 +96,9 @@ static void     free_consumers( GSList *list );
 static void     action_changed_handler( NAPivot *pivot, gpointer user_data );
 static gboolean on_actions_changed_timeout( gpointer user_data );
 static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+
+static void     on_display_order_change( NAPivot *pivot, gpointer user_data );
+static void     on_display_about_change( NAPivot *pivot, gpointer user_data );
 
 GType
 na_pivot_get_type( void )
@@ -157,6 +162,30 @@ class_init( NAPivotClass *klass )
 				G_TYPE_FROM_CLASS( klass ),
 				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
 				( GCallback ) action_changed_handler,
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER
+	);
+	st_signals[ DISPLAY_ORDER_CHANGE ] = g_signal_new_class_handler(
+				NA_IIO_PROVIDER_SIGNAL_DISPLAY_ORDER_CHANGED,
+				G_TYPE_FROM_CLASS( klass ),
+				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+				( GCallback ) on_display_order_change,
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER
+	);
+	st_signals[ DISPLAY_ABOUT_CHANGE ] = g_signal_new_class_handler(
+				NA_IIO_PROVIDER_SIGNAL_DISPLAY_ABOUT_CHANGED,
+				G_TYPE_FROM_CLASS( klass ),
+				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+				( GCallback ) on_display_about_change,
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
@@ -399,7 +428,7 @@ na_pivot_get_duplicate_actions( const NAPivot *pivot )
 		list = g_slist_prepend( list, na_object_duplicate( NA_OBJECT( ia->data )));
 	}
 
-	return( list );
+	return( g_slist_reverse( list ));
 }
 
 /**
@@ -713,5 +742,38 @@ na_pivot_free_notify( NAPivotNotify *npn )
 		g_free( npn->profile );
 		g_free( npn->parm );
 		g_free( npn );
+	}
+}
+
+static void
+on_display_order_change( NAPivot *self, gpointer user_data  )
+{
+	static const gchar *thisfn = "na_pivot_on_display_order_change";
+	GSList *ic;
+
+	g_debug( "%s: self=%p, data=%p", thisfn, ( void * ) self, ( void * ) user_data );
+	g_assert( NA_IS_PIVOT( self ));
+	g_assert( user_data );
+
+	if( self->private->dispose_has_run ){
+		return;
+	}
+
+	for( ic = self->private->notified ; ic ; ic = ic->next ){
+		na_ipivot_consumer_notify( NA_IPIVOT_CONSUMER( ic->data ));
+	}
+}
+
+static void
+on_display_about_change( NAPivot *self, gpointer user_data  )
+{
+	static const gchar *thisfn = "na_pivot_on_display_order_change";
+
+	g_debug( "%s: self=%p, data=%p", thisfn, ( void * ) self, ( void * ) user_data );
+	g_assert( NA_IS_PIVOT( self ));
+	g_assert( user_data );
+
+	if( self->private->dispose_has_run ){
+		return;
 	}
 }

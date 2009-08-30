@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <gio/gio.h>
 #include <libxml/tree.h>
 
 #include "na-action-profile.h"
@@ -72,7 +73,7 @@ static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
 static NAXMLWriter *xml_writer_new( const gchar *uuid );
-static xmlDocPtr    create_xml_schema( NAXMLWriter *writer, gint format, NAAction *action );
+static xmlDocPtr    create_xml_schema( NAXMLWriter *writer, gint format, const NAAction *action );
 static void         create_schema_entry(
 								NAXMLWriter *writer,
 								gint format,
@@ -85,7 +86,7 @@ static void         create_schema_entry(
 								gboolean is_l10n_value,
 								const gchar *short_desc,
 								const gchar *long_desc );
-static xmlDocPtr    create_xml_dump( NAXMLWriter *writer, gint format, NAAction *action );
+static xmlDocPtr    create_xml_dump( NAXMLWriter *writer, gint format, const NAAction *action );
 static void         create_dump_entry(
 								NAXMLWriter *writer,
 								gint format,
@@ -268,46 +269,35 @@ xml_writer_new( const gchar *uuid )
 
 /**
  * na_xml_writer_export:
- * @action:
+ * @action: the #NAAction to be exported.
  * @folder: the directoy where to write the output XML file.
  * If NULL, the output will be directed to stdout.
+ * @format: the export format.
+ * @msg: pointer to a buffer which will receive error messages.
  *
  * Export the specified action as an XML file.
  *
  * Returns: the written filename, or NULL if written to stdout.
  */
 gchar *
-na_xml_writer_export( NAAction *action, const gchar *folder, gint format, gchar **msg )
+na_xml_writer_export( const NAAction *action, const gchar *folder, gint format, gchar **msg )
 {
-	gchar *uuid;
-	NAXMLWriter *writer;
-	xmlDocPtr doc = NULL;
 	gchar *filename = NULL;
 	gboolean free_filename = FALSE;
-
-
-	uuid = action ? na_action_get_uuid( action ) : NULL;
-	writer = xml_writer_new( uuid );
-	g_free( uuid );
+	gchar *xml_buffer;
 
 	switch( format ){
 		case FORMAT_GCONFSCHEMAFILE_V1:
-			doc = create_xml_schema( writer, format, action );
-			filename = g_strdup_printf( "%s/config_%s.schemas", folder, writer->private->uuid );
-			break;
-
 		case FORMAT_GCONFSCHEMAFILE_V2:
-			doc = create_xml_schema( writer, format, action );
-			filename = g_strdup_printf( "%s/config-%s.schema", folder, writer->private->uuid );
+			filename = na_xml_writer_get_output_fname( action, folder, format );
 			break;
 
 		/* this is the format used by nautilus-actions-new utility,
 		 * and that's why this option takes care of a NULL folder
 		 */
 		case FORMAT_GCONFENTRY:
-			doc = create_xml_dump( writer, format, action );
 			if( folder ){
-				filename = g_strdup_printf( "%s/action-%s.xml", folder, writer->private->uuid );
+				filename = na_xml_writer_get_output_fname( action, folder, format );
 			} else {
 				filename = g_strdup( "-" );
 				free_filename = TRUE;
@@ -319,7 +309,6 @@ na_xml_writer_export( NAAction *action, const gchar *folder, gint format, gchar 
 		 * folder, or an output filename
 		 */
 		case FORMAT_GCONFSCHEMA:
-			doc = create_gconf_schema( writer );
 			if( folder ){
 				filename = g_strdup( folder );
 			} else {
@@ -329,28 +318,201 @@ na_xml_writer_export( NAAction *action, const gchar *folder, gint format, gchar 
 			break;
 	}
 
-	g_assert( doc );
 	g_assert( filename );
 
-	if( xmlSaveFormatFileEnc( filename, doc, "UTF-8", 1 ) == -1 ){
-		g_free( filename );
-		filename = NULL;
-	}
+	xml_buffer = na_xml_writer_get_xml_buffer( action, format );
+
+	na_xml_writer_output_xml( xml_buffer, filename );
+
+	g_free( xml_buffer );
 
 	if( free_filename ){
 		g_free( filename );
 		filename = NULL;
 	}
 
+	return( filename );
+}
+
+/**
+ * na_xml_writer_get_output_fname:
+ * @action: the #NAAction to be exported.
+ * @folder: the uri of the directoy where to write the output XML file.
+ * @format: the export format.
+ *
+ * Returns: a filename suitable for writing the output XML.
+ *
+ * As we don't want overwrite already existing files, the candidate
+ * filename is incremented until we find an available filename.
+ *
+ * The returned string should be g_free() by the caller.
+ *
+ * Note that this function is always subject to race condition, as it
+ * is possible, though very unlikely, that the given file be created
+ * between our test of inexistance and the actual write.
+ */
+gchar *
+na_xml_writer_get_output_fname( const NAAction *action, const gchar *folder, gint format )
+{
+	gchar *uuid;
+	gchar *canonical_fname = NULL;
+	gchar *canonical_ext = NULL;
+	gchar *candidate_fname;
+	gint counter;
+
+	g_return_val_if_fail( action, NULL );
+	g_return_val_if_fail( folder, NULL );
+	g_return_val_if_fail( strlen( folder ), NULL );
+
+	uuid = na_action_get_uuid( action );
+
+	switch( format ){
+		case FORMAT_GCONFSCHEMAFILE_V1:
+			canonical_fname = g_strdup_printf( "config_%s", uuid );
+			canonical_ext = g_strdup( "schemas" );
+			break;
+
+		case FORMAT_GCONFSCHEMAFILE_V2:
+			canonical_fname = g_strdup_printf( "config-%s", uuid );
+			canonical_ext = g_strdup( "schema" );
+			break;
+
+		case FORMAT_GCONFENTRY:
+			canonical_fname = g_strdup_printf( "action-%s", uuid );
+			canonical_ext = g_strdup( "xml" );
+			break;
+	}
+
+	g_free( uuid );
+	g_return_val_if_fail( canonical_fname, NULL );
+
+	candidate_fname = g_strdup_printf( "%s/%s.%s", folder, canonical_fname, canonical_ext );
+
+	if( !na_utils_exist_file( candidate_fname )){
+		g_free( canonical_fname );
+		g_free( canonical_ext );
+		return( candidate_fname );
+	}
+
+	for( counter = 0 ; ; ++counter ){
+		g_free( candidate_fname );
+		candidate_fname = g_strdup_printf( "%s/%s_%d.%s", folder, canonical_fname, counter, canonical_ext );
+		if( !na_utils_exist_file( candidate_fname )){
+			break;
+		}
+	}
+
+	g_free( canonical_fname );
+	g_free( canonical_ext );
+
+	return( candidate_fname );
+}
+
+/**
+ * na_xml_writer_get_xml_buffer:
+ * @action: the #NAAction to be exported.
+ * @format: the export format.
+ *
+ * Returns: a buffer which contains the XML output.
+ *
+ * The returned string should be g_free() by the caller.
+ */
+gchar *
+na_xml_writer_get_xml_buffer( const NAAction *action, gint format )
+{
+	gchar *uuid;
+	NAXMLWriter *writer;
+	xmlDocPtr doc = NULL;
+	xmlChar *text;
+	int textlen;
+	gchar *buffer;
+
+	g_return_val_if_fail( action, NULL );
+
+	uuid = na_action_get_uuid( action );
+	writer = xml_writer_new( uuid );
+	g_free( uuid );
+
+	switch( format ){
+		case FORMAT_GCONFSCHEMAFILE_V1:
+		case FORMAT_GCONFSCHEMAFILE_V2:
+			doc = create_xml_schema( writer, format, action );
+			break;
+
+		case FORMAT_GCONFENTRY:
+			doc = create_xml_dump( writer, format, action );
+			break;
+
+		case FORMAT_GCONFSCHEMA:
+			doc = create_gconf_schema( writer );
+			break;
+	}
+
+	g_assert( doc );
+
+	xmlDocDumpFormatMemoryEnc( doc, &text, &textlen, "UTF-8", 1 );
+	buffer = g_strdup(( const gchar * ) text );
+
+	xmlFree( text );
 	xmlFreeDoc (doc);
 	xmlCleanupParser();
 	g_object_unref( writer );
 
-	return( filename );
+	return( buffer );
+}
+
+/**
+ * na_xml_writer_output_xml:
+ * @action: the #NAAction to be exported.
+ * @filename: the uri of the output filename
+ *
+ * Exports an action to the given filename.
+ */
+void
+na_xml_writer_output_xml( const gchar *xml, const gchar *filename )
+{
+	static const gchar *thisfn = "na_xml_writer_output_xml";
+	GFile *file;
+	GFileOutputStream *stream;
+	GError *error = NULL;
+
+	g_assert( filename );
+
+	file = g_file_new_for_uri( filename );
+
+	stream = g_file_create( file, G_FILE_CREATE_REPLACE_DESTINATION, NULL, &error );
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		g_object_unref( stream );
+		g_object_unref( file );
+		return;
+	}
+
+	g_output_stream_write( G_OUTPUT_STREAM( stream ), xml, g_utf8_strlen( xml, -1 ), NULL, &error );
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		g_object_unref( stream );
+		g_object_unref( file );
+		return;
+	}
+
+	g_output_stream_close( G_OUTPUT_STREAM( stream ), NULL, &error );
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		g_object_unref( stream );
+		g_object_unref( file );
+		return;
+	}
+
+	g_object_unref( stream );
+	g_object_unref( file );
 }
 
 static xmlDocPtr
-create_xml_schema( NAXMLWriter *writer, gint format, NAAction *action )
+create_xml_schema( NAXMLWriter *writer, gint format, const NAAction *action )
 {
 	xmlDocPtr doc;
 	xmlNodePtr root_node, list_node;
@@ -528,7 +690,7 @@ create_schema_entry( NAXMLWriter *writer,
 }
 
 static xmlDocPtr
-create_xml_dump( NAXMLWriter *writer, gint format, NAAction *action )
+create_xml_dump( NAXMLWriter *writer, gint format, const NAAction *action )
 {
 	xmlDocPtr doc;
 	xmlNodePtr root_node, list_node;

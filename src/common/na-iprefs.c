@@ -48,7 +48,7 @@ static GType    register_type( void );
 static void     interface_base_init( NAIPrefsInterface *klass );
 static void     interface_base_finalize( NAIPrefsInterface *klass );
 
-static gboolean read_key_bool( NAIPrefs *instance, const gchar *name );
+static gboolean read_key_bool( NAIPrefs *instance, const gchar *name, gboolean default_value );
 static void     write_key_bool( NAIPrefs *instance, const gchar *name, gboolean value );
 
 GType
@@ -123,41 +123,106 @@ interface_base_finalize( NAIPrefsInterface *klass )
 }
 
 /**
- * Get/set a named boolean.
+ * na_iprefs_get_alphabetical_order:
+ * @instance: this #NAIPrefs interface instance.
  *
- * @window: this NAWindow-derived window.
+ * Returns: #TRUE if the actions are to be maintained in alphabetical
+ * order of their label, #FALSE else.
+ *
+ * Note: this function returns a suitable default value if the key is
+ * not found in GConf preferences.
+ *
+ * Note: please take care of keeping the default value synchronized with
+ * those defined in schemas.
+ */
+gboolean na_iprefs_get_alphabetical_order( NAIPrefs *instance )
+{
+	return( read_key_bool( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, TRUE ));
+}
+
+/**
+ * na_iprefs_get_add_about_item:
+ * @instance: this #NAIPrefs interface instance.
+ *
+ * Returns: #TRUE if an "About Nautilus Actions" item may be added to
+ * the first level of Nautilus context submenus (if any), #FALSE else.
+ *
+ * Note: this function returns a suitable default value if the key is
+ * not found in GConf preferences.
+ *
+ * Note: please take care of keeping the default value synchronized with
+ * those defined in schemas.
+ */
+gboolean na_iprefs_get_add_about_item( NAIPrefs *instance )
+{
+	return( read_key_bool( instance, PREFS_ADD_ABOUT_ITEM, TRUE ));
+}
+
+/**
+ * Get a named boolean.
+ * @instance: this #NAIPrefs interface instance.
+ * @name: the name of the key to be read.
+ *
+ * Returns: the boolean attached to the @name key.
+ *
+ * Note that this returns #FALSE if the key doesn't exist.
+ * See na_iprefs_get_alphabetical_order() and
+ * na_iprefs_get_add_about_item() to get suitable default values.
  */
 gboolean
 na_iprefs_get_bool( NAIPrefs *instance, const gchar *name )
 {
-	return( read_key_bool( instance, name ));
+	return( read_key_bool( instance, name, FALSE ));
 }
 
+/**
+ * Set a named boolean.
+ * @instance: this #NAIPrefs interface instance.
+ * @name: the name of the key to be read.
+ *
+ * Records the specified boolean in the GConf preferences.
+ */
 void
 na_iprefs_set_bool( NAIPrefs *instance, const gchar *name, gboolean value )
 {
 	write_key_bool( instance, name, value );
 }
 
+/*
+ * note that don't rely on having correctly installed the schema for the key
+ */
 static gboolean
-read_key_bool( NAIPrefs *instance, const gchar *name )
+read_key_bool( NAIPrefs *instance, const gchar *name, gboolean default_value )
 {
 	static const gchar *thisfn = "na_iprefs_read_key_bool";
 	GError *error = NULL;
 	gchar *path;
-	gboolean value;
+	GConfValue *value;
+	gboolean ret;
+
+	ret = default_value;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
 
-	value = gconf_client_get_bool( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, &error );
+	value = gconf_client_get_without_default( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, &error );
+	/*g_debug( "%s: path=%s, value=%p", thisfn, path, ( void * ) value );*/
 
 	if( error ){
 		g_warning( "%s: name=%s, %s", thisfn, name, error->message );
 		g_error_free( error );
+		if( value ){
+			gconf_value_free( value );
+			value = NULL;
+		}
+	}
+
+	if( value ){
+		ret = gconf_value_get_bool( value );
+		gconf_value_free( value );
 	}
 
 	g_free( path );
-	return( value );
+	return( ret );
 }
 
 static void

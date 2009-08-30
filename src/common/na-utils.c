@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <gio/gio.h>
 #include <glib-object.h>
 #include <string.h>
 
@@ -362,4 +363,88 @@ na_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list
 	}
 
 	return( g_string_free( tmp_string, FALSE ));
+}
+
+gchar *
+na_utils_remove_last_level_from_path( const gchar *path )
+{
+	int p;
+	const char *ptr = path;
+	char *new_path;
+
+	if( path == NULL ){
+		return( NULL );
+	}
+
+	p = strlen( path ) - 1;
+	if( p < 0 ){
+		return( NULL );
+	}
+
+	while(( p > 0 ) && ( ptr[p] != '/' )){
+		p--;
+	}
+
+	if(( p == 0 ) && ( ptr[p] == '/' )){
+		p++;
+	}
+
+	new_path = g_strndup( path, ( guint ) p );
+
+	return( new_path );
+}
+
+gboolean
+na_utils_is_writable_dir( const gchar *uri )
+{
+	static const gchar *thisfn = "na_utils_is_writable_dir";
+	GFile *file;
+	GError *error = NULL;
+	GFileInfo *info;
+	GFileType type;
+	gboolean writable;
+
+	if( !uri || !strlen( uri )){
+		return( FALSE );
+	}
+
+	file = g_file_new_for_uri( uri );
+	info = g_file_query_info( file,
+			G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE "," G_FILE_ATTRIBUTE_STANDARD_TYPE,
+			G_FILE_QUERY_INFO_NONE, NULL, &error );
+
+	if( error ){
+		g_warning( "%s: g_file_query_info error: %s", thisfn, error->message );
+		g_error_free( error );
+		g_object_unref( file );
+		return( FALSE );
+	}
+
+	type = g_file_info_get_file_type( info );
+	if( type != G_FILE_TYPE_DIRECTORY ){
+		g_warning( "%s: %s is not a directory", thisfn, uri );
+		g_object_unref( info );
+		return( FALSE );
+	}
+
+	writable = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE );
+	if( !writable ){
+		g_warning( "%s: %s is not writable", thisfn, uri );
+	}
+	g_object_unref( info );
+
+	return( writable );
+}
+
+gboolean
+na_utils_exist_file( const gchar *uri )
+{
+	GFile *file;
+	gboolean exists;
+
+	file = g_file_new_for_uri( uri );
+	exists = g_file_query_exists( file, NULL );
+	g_object_unref( file );
+
+	return( exists );
 }

@@ -45,6 +45,8 @@ nautilus_actions_config_tool_SOURCES = \
 	base-window.c										\
 	base-window.h										\
 	base-window-class.h									\
+	egg-tree-multi-dnd.c								\
+	egg-tree-multi-dnd.h								\
 	nact-application.c									\
 	nact-application.h									\
 	nact-assistant.c									\
@@ -72,8 +74,12 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-main-window.h									\
 	nact-preferences-editor.c							\
 	nact-preferences-editor.h							\
+	nact-selection.c									\
+	nact-selection.h									\
 	nact-statusbar.c									\
 	nact-statusbar.h									\
+	nact-tree-model.c									\
+	nact-tree-model.h									\
 	nact-window.c										\
 	nact-window.h										\
 	nact-xml-reader.c									\

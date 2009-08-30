@@ -61,7 +61,6 @@ static GType         register_type( void );
 static void          interface_base_init( NactIActionTabInterface *klass );
 static void          interface_base_finalize( NactIActionTabInterface *klass );
 
-static NAObject     *v_get_selected( NactWindow *window );
 static NAAction     *v_get_edited_action( NactWindow *window );
 static void          v_field_modified( NactWindow *window );
 
@@ -214,11 +213,9 @@ nact_iaction_tab_dispose( NactWindow *dialog )
  * than one profile
  */
 void
-nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action )
+nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action, GSList *selected_items )
 {
-	/*static const gchar *thisfn = "nact_iaction_tab_set_action";
-	g_debug( "%s: dialog=%p, action=%p", thisfn, dialog, action );*/
-
+	static const gchar *thisfn = "nact_iaction_tab_set_action";
 	NAObject *current;
 	gboolean enabled;
 	GtkWidget *label_widget, *tooltip_widget, *icon_widget, *button;
@@ -226,11 +223,16 @@ nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action )
 	GtkButton *enabled_button;
 	gboolean enabled_action;
 
-	current = v_get_selected( dialog );
-	enabled = ( action != NULL );
-	if( NA_IS_ACTION_PROFILE( current)){
-		if( na_action_get_profiles_count( action ) > 1 ){
-			enabled = FALSE;
+	g_debug( "%s: dialog=%p, action=%p, selected_items=%p",
+			thisfn, ( void * ) dialog, ( void * ) action, ( void * ) selected_items );
+
+	enabled = ( action != NULL && selected_items != NULL && g_slist_length( selected_items ) == 1 );
+	if( enabled ){
+		current = NA_OBJECT( selected_items->data );
+		if( NA_IS_ACTION_PROFILE( current)){
+			if( na_action_get_profiles_count( action ) > 1 ){
+				enabled = FALSE;
+			}
 		}
 	}
 
@@ -277,18 +279,6 @@ nact_iaction_tab_has_label( NactWindow *window )
 	label_widget = base_window_get_widget( BASE_WINDOW( window ), "ActionLabelEntry" );
 	label = gtk_entry_get_text( GTK_ENTRY( label_widget ));
 	return( g_utf8_strlen( label, -1 ) > 0 );
-}
-
-static NAObject *
-v_get_selected( NactWindow *window )
-{
-	g_assert( NACT_IS_IACTION_TAB( window ));
-
-	if( NACT_IACTION_TAB_GET_INTERFACE( window )->get_selected ){
-		return( NACT_IACTION_TAB_GET_INTERFACE( window )->get_selected( window ));
-	}
-
-	return( NULL );
 }
 
 static NAAction *

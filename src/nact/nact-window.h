@@ -39,6 +39,7 @@
  */
 
 #include <common/na-action.h>
+#include <common/na-action-menu.h>
 #include <common/na-action-profile.h>
 #include <common/na-pivot.h>
 

@@ -46,7 +46,7 @@
  * will stay in life at least as long as the duplicated one.
  */
 
-#include "na-object.h"
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -64,65 +64,75 @@ typedef struct {
 	NAIDuplicableInterfacePrivate *private;
 
 	/**
-	 * duplicate:
-	 * @object: the #NAObject object to be duplicated.
+	 * get_new_instance:
+	 * @nstance: a #NAIDuplicable instance of the klass of which we
+	 * want a new instance.
 	 *
-	 * Allocates an exact copy of the specified #NAObject object.
+	 * Returns a new instance of the same class.
 	 *
-	 * The implementor should define a duplicate()-equivalent virtual
-	 * function in order the new #NAObject-derived object be allocated
-	 * with the right most-derived class.
-	 *
-	 * The implementor should also define a copy()-equivalent virtual
-	 * function so that each class in the derivation hierarchy be able
-	 * to copy its own data and properties to the target instance.
-	 *
-	 * Returns: a newly allocated #NAObject object, which is an exact
-	 * copy of @object.
+	 * Returns: a newly allocated #NAIDuplicable object.
 	 */
-	NAObject * ( *duplicate )( const NAObject *object );
+	NAIDuplicable * ( *new )      ( const NAIDuplicable *object );
+
+	/**
+	 * copy:
+	 * @target: the #NAIDuplicable target of the copy.
+	 * @source: the #NAIDuplicable source of the copy
+	 *
+	 * Copies data from @source to @ŧarget, so that @target becomes an
+	 * exact copy of @source.
+	 */
+	void            ( *copy )     ( NAIDuplicable *target, const NAIDuplicable *source );
 
 	/**
 	 * are_equal:
-	 * @a: a first #NAObject object.
-	 * @b: a second #NAObject object to be compared to the first one.
+	 * @a: a first #NAIDuplicable object.
+	 * @b: a second #NAIDuplicable object to be compared to the first
+	 * one.
 	 *
 	 * Compares the two objects.
 	 *
 	 * The implementor should define a are_equal()-equivalent virtual
-	 * function so that each #NAObject-derived class be able to check
-	 * for identity.
+	 * function so that each #NAIDuplicable-derived class be able to
+	 * check for identity.
 	 *
 	 * Returns: %TRUE if @a and @b are identical, %FALSE else.
 	 */
-	gboolean   ( *are_equal )( const NAObject *a, const NAObject *b );
+	gboolean        ( *are_equal )( const NAIDuplicable *a, const NAIDuplicable *b );
 
 	/**
 	 * is_valid:
-	 * @object: the #NAObject object to be checked.
+	 * @object: the #NAIDuplicable object to be checked.
 	 *
 	 * Checks @object for validity.
 	 *
 	 * The implementor should define a is_valid()-equivalent virtual
-	 * function so that each #NAObject-derived class be able to check
-	 * for validity.
+	 * function so that each #NAIDuplicable-derived class be able to
+	 * check for validity.
 	 *
 	 * Returns: %TRUE if @object is valid, %FALSE else.
 	 */
-	gboolean   ( *is_valid ) ( const NAObject *object );
+	gboolean        ( *is_valid ) ( const NAIDuplicable *object );
 }
 	NAIDuplicableInterface;
 
-GType     na_iduplicable_get_type( void );
+GType          na_iduplicable_get_type( void );
 
-void      na_iduplicable_init( NAObject *object );
-void      na_iduplicable_dump( const NAObject *object );
-NAObject *na_iduplicable_duplicate( const NAObject *object );
-void      na_iduplicable_check_edited_status( const NAObject *object );
-gboolean  na_iduplicable_is_modified( const NAObject *object );
-gboolean  na_iduplicable_is_valid( const NAObject *object );
-NAObject *na_iduplicable_get_origin( const NAObject *object );
-void      na_iduplicable_set_origin( NAObject *object, const NAObject *origin );
+void           na_iduplicable_init( NAIDuplicable *object );
+
+void           na_iduplicable_dump( const NAIDuplicable *object );
+
+NAIDuplicable *na_iduplicable_duplicate( const NAIDuplicable *object );
+
+void           na_iduplicable_check_edited_status( const NAIDuplicable *object );
+
+gboolean       na_iduplicable_is_modified( const NAIDuplicable *object );
+
+gboolean       na_iduplicable_is_valid( const NAIDuplicable *object );
+
+NAIDuplicable *na_iduplicable_get_origin( const NAIDuplicable *object );
+
+void           na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin );
 
 G_END_DECLS
 

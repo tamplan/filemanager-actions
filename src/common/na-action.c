@@ -53,8 +53,6 @@ struct NAActionPrivate {
 	/* action properties
 	 */
 	gchar         *version;
-	gchar         *tooltip;
-	gchar         *icon;
 	gboolean       enabled;
 
 	/* list of action's profiles as NAActionProfile objects
@@ -77,21 +75,13 @@ struct NAActionPrivate {
 /* action properties
  */
 enum {
-	PROP_NAACTION_UUID = 1,
-	PROP_NAACTION_LABEL,
-	PROP_NAACTION_VERSION,
-	PROP_NAACTION_TOOLTIP,
-	PROP_NAACTION_ICON,
+	PROP_NAACTION_VERSION = 1,
 	PROP_NAACTION_ENABLED,
 	PROP_NAACTION_READONLY,
 	PROP_NAACTION_PROVIDER
 };
 
-#define PROP_NAACTION_UUID_STR			"na-action-uuid"
-#define PROP_NAACTION_LABEL_STR			"na-action-label"
 #define PROP_NAACTION_VERSION_STR		"na-action-version"
-#define PROP_NAACTION_TOOLTIP_STR		"na-action-tooltip"
-#define PROP_NAACTION_ICON_STR			"na-action-icon"
 #define PROP_NAACTION_ENABLED_STR		"na-action-enabled"
 #define PROP_NAACTION_READONLY_STR		"na-action-read-only"
 #define PROP_NAACTION_PROVIDER_STR		"na-action-provider"
@@ -108,12 +98,12 @@ static void      instance_set_property( GObject *object, guint property_id, cons
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
-static void      object_check_edited_status( const NAObject *action );
-static void      object_dump( const NAObject *action );
-static NAObject *object_duplicate( const NAObject *action );
+static NAObject *object_new( const NAObject *object );
 static void      object_copy( NAObject *target, const NAObject *source );
 static gboolean  object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean  object_is_valid( const NAObject *action );
+static void      object_dump( const NAObject *action );
+static gchar    *object_get_clipboard_id( const NAObject *object );
 
 static void      free_profiles( NAAction *action );
 
@@ -148,7 +138,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	return( g_type_register_static( NA_OBJECT_TYPE, "NAAction", &info, 0 ));
+	return( g_type_register_static( NA_OBJECT_ITEM_TYPE, "NAAction", &info, 0 ));
 }
 
 static void
@@ -169,39 +159,11 @@ class_init( NAActionClass *klass )
 	object_class->get_property = instance_get_property;
 
 	spec = g_param_spec_string(
-			PROP_NAACTION_UUID_STR,
-			"Action UUID",
-			"Globally unique identifier (UUID) of the action", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_NAACTION_UUID, spec );
-
-	spec = g_param_spec_string(
-			PROP_NAACTION_LABEL_STR,
-			"Action label",
-			"Context menu displayable label", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_NAACTION_LABEL, spec );
-
-	spec = g_param_spec_string(
 			PROP_NAACTION_VERSION_STR,
 			"Version",
 			"Version of the schema", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_NAACTION_VERSION, spec );
-
-	spec = g_param_spec_string(
-			PROP_NAACTION_TOOLTIP_STR,
-			"Action tooltip",
-			"Context menu tooltip", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_NAACTION_TOOLTIP, spec );
-
-	spec = g_param_spec_string(
-			PROP_NAACTION_ICON_STR,
-			"Icon name",
-			"Context menu displayable icon", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_NAACTION_ICON, spec );
 
 	spec = g_param_spec_boolean(
 			PROP_NAACTION_ENABLED_STR,
@@ -226,22 +188,21 @@ class_init( NAActionClass *klass )
 
 	klass->private = g_new0( NAActionClassPrivate, 1 );
 
-	NA_OBJECT_CLASS( klass )->dump = object_dump;
-	NA_OBJECT_CLASS( klass )->check_edited_status = object_check_edited_status;
-	NA_OBJECT_CLASS( klass )->duplicate = object_duplicate;
+	NA_OBJECT_CLASS( klass )->new = object_new;
 	NA_OBJECT_CLASS( klass )->copy = object_copy;
 	NA_OBJECT_CLASS( klass )->are_equal = object_are_equal;
 	NA_OBJECT_CLASS( klass )->is_valid = object_is_valid;
+	NA_OBJECT_CLASS( klass )->dump = object_dump;
+	NA_OBJECT_CLASS( klass )->get_clipboard_id = object_get_clipboard_id;
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	/*static const gchar *thisfn = "na_action_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
-
+	/*static const gchar *thisfn = "na_action_instance_init";*/
 	NAAction *self;
 
+	/*g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );*/
 	g_assert( NA_IS_ACTION( instance ));
 	self = NA_ACTION( instance );
 
@@ -252,8 +213,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	/* initialize suitable default values
 	 */
 	self->private->version = g_strdup( NA_ACTION_LATEST_VERSION );
-	self->private->tooltip = g_strdup( "" );
-	self->private->icon = g_strdup( "" );
 	self->private->enabled = TRUE;
 	self->private->read_only = FALSE;
 	self->private->provider = NULL;
@@ -268,24 +227,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	self = NA_ACTION( object );
 
 	switch( property_id ){
-		case PROP_NAACTION_UUID:
-			G_OBJECT_CLASS( st_parent_class )->get_property( object, PROP_NAOBJECT_ID, value, spec );
-			break;
-
-		case PROP_NAACTION_LABEL:
-			G_OBJECT_CLASS( st_parent_class )->get_property( object, PROP_NAOBJECT_LABEL, value, spec );
-			break;
-
 		case PROP_NAACTION_VERSION:
 			g_value_set_string( value, self->private->version );
-			break;
-
-		case PROP_NAACTION_TOOLTIP:
-			g_value_set_string( value, self->private->tooltip );
-			break;
-
-		case PROP_NAACTION_ICON:
-			g_value_set_string( value, self->private->icon );
 			break;
 
 		case PROP_NAACTION_ENABLED:
@@ -315,27 +258,9 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	self = NA_ACTION( object );
 
 	switch( property_id ){
-		case PROP_NAACTION_UUID:
-			G_OBJECT_CLASS( st_parent_class )->set_property( object, PROP_NAOBJECT_ID, value, spec );
-			break;
-
-		case PROP_NAACTION_LABEL:
-			G_OBJECT_CLASS( st_parent_class )->set_property( object, PROP_NAOBJECT_LABEL, value, spec );
-			break;
-
 		case PROP_NAACTION_VERSION:
 			g_free( self->private->version );
 			self->private->version = g_value_dup_string( value );
-			break;
-
-		case PROP_NAACTION_TOOLTIP:
-			g_free( self->private->tooltip );
-			self->private->tooltip = g_value_dup_string( value );
-			break;
-
-		case PROP_NAACTION_ICON:
-			g_free( self->private->icon );
-			self->private->icon = g_value_dup_string( value );
 			break;
 
 		case PROP_NAACTION_ENABLED:
@@ -359,10 +284,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_action_instance_dispose";
+	/*static const gchar *thisfn = "na_action_instance_dispose";*/
 	NAAction *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
 
 	g_assert( NA_IS_ACTION( object ));
 	self = NA_ACTION( object );
@@ -375,29 +300,29 @@ instance_dispose( GObject *object )
 		free_profiles( self );
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		}
 	}
 }
 
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_action_instance_finalize";
+	/*static const gchar *thisfn = "na_action_instance_finalize";*/
 	NAAction *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
 
 	g_assert( NA_IS_ACTION( object ));
 	self = ( NAAction * ) object;
 
 	g_free( self->private->version );
-	g_free( self->private->tooltip );
-	g_free( self->private->icon );
 
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if((( GObjectClass * ) st_parent_class )->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
 }
@@ -463,13 +388,7 @@ na_action_new_with_profile( void )
 gchar *
 na_action_get_uuid( const NAAction *action )
 {
-	gchar *id;
-
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_get( G_OBJECT( action ), PROP_NAACTION_UUID_STR, &id, NULL );
-
-	return( id );
+	return( na_object_get_id( NA_OBJECT( action )));
 }
 
 /**
@@ -486,13 +405,7 @@ na_action_get_uuid( const NAAction *action )
 gchar *
 na_action_get_label( const NAAction *action )
 {
-	gchar *label;
-
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_get( G_OBJECT( action ), PROP_NAACTION_LABEL_STR, &label, NULL );
-
-	return( label );
+	return( na_object_get_label( NA_OBJECT( action )));
 }
 
 /**
@@ -532,13 +445,7 @@ na_action_get_version( const NAAction *action )
 gchar *
 na_action_get_tooltip( const NAAction *action )
 {
-	gchar *tooltip;
-
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_get( G_OBJECT( action ), PROP_NAACTION_TOOLTIP_STR, &tooltip, NULL );
-
-	return( tooltip );
+	return( na_object_item_get_tooltip( NA_OBJECT_ITEM( action )));
 }
 
 /**
@@ -554,13 +461,7 @@ na_action_get_tooltip( const NAAction *action )
 gchar *
 na_action_get_icon( const NAAction *action )
 {
-	gchar *icon;
-
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_get( G_OBJECT( action ), PROP_NAACTION_ICON_STR, &icon, NULL );
-
-	return( icon );
+	return( na_object_item_get_icon( NA_OBJECT_ITEM( action )));
 }
 
 /*
@@ -569,23 +470,7 @@ na_action_get_icon( const NAAction *action )
 gchar *
 na_action_get_verified_icon_name( const NAAction *action )
 {
-	gchar *icon_name;
-
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_get( G_OBJECT( action ), PROP_NAACTION_ICON_STR, &icon_name, NULL );
-
-	if( icon_name[0] == '/' ){
-		if( !g_file_test( icon_name, G_FILE_TEST_IS_REGULAR )){
-			g_free( icon_name );
-			return NULL;
-		}
-	} else if( strlen( icon_name ) == 0 ){
-		g_free( icon_name );
-		return NULL;
-	}
-
-	return( icon_name );
+	return( na_object_item_get_verified_icon_name( NA_OBJECT_ITEM( action )));
 }
 
 /**
@@ -673,7 +558,7 @@ na_action_set_new_uuid( NAAction *action )
 	uuid_generate( uuid );
 	uuid_unparse_lower( uuid, uuid_str );
 
-	g_object_set( G_OBJECT( action ), PROP_NAACTION_UUID_STR, uuid_str, NULL );
+	na_object_set_id( NA_OBJECT( action ), uuid_str );
 }
 
 /**
@@ -700,9 +585,7 @@ na_action_set_new_uuid( NAAction *action )
 void
 na_action_set_uuid( NAAction *action, const gchar *uuid )
 {
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_set( G_OBJECT( action ), PROP_NAACTION_UUID_STR, uuid, NULL );
+	na_object_set_id( NA_OBJECT( action ), uuid );
 }
 
 /**
@@ -722,9 +605,7 @@ na_action_set_uuid( NAAction *action, const gchar *uuid )
 void
 na_action_set_label( NAAction *action, const gchar *label )
 {
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_set( G_OBJECT( action ), PROP_NAACTION_LABEL_STR, label, NULL );
+	na_object_set_label( NA_OBJECT( action ), label );
 }
 
 /**
@@ -768,9 +649,7 @@ na_action_set_version( NAAction *action, const gchar *version )
 void
 na_action_set_tooltip( NAAction *action, const gchar *tooltip )
 {
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_set( G_OBJECT( action ), PROP_NAACTION_TOOLTIP_STR, tooltip, NULL );
+	na_object_item_set_tooltip( NA_OBJECT_ITEM( action ), tooltip );
 }
 
 /**
@@ -786,9 +665,7 @@ na_action_set_tooltip( NAAction *action, const gchar *tooltip )
 void
 na_action_set_icon( NAAction *action, const gchar *icon )
 {
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_set( G_OBJECT( action ), PROP_NAACTION_ICON_STR, icon, NULL );
+	na_object_item_set_icon( NA_OBJECT_ITEM( action ), icon );
 }
 
 /**
@@ -1024,78 +901,30 @@ na_action_get_profiles_count( const NAAction *action )
 	return( g_slist_length( action->private->profiles ));
 }
 
-static void
-object_check_edited_status( const NAObject *action )
-{
-	GSList *ip;
-
-	if( st_parent_class->check_edited_status ){
-		st_parent_class->check_edited_status( action );
-	}
-
-	for( ip = NA_ACTION( action )->private->profiles ; ip ; ip = ip->next ){
-		na_object_check_edited_status( NA_OBJECT( ip->data ));
-	}
-}
-
-static void
-object_dump( const NAObject *action )
-{
-	static const gchar *thisfn = "na_action_object_dump";
-	NAAction *self;
-	GSList *item;
-
-	g_assert( NA_IS_ACTION( action ));
-	self = NA_ACTION( action );
-
-	if( st_parent_class->dump ){
-		st_parent_class->dump( action );
-	}
-
-	g_debug( "%s:   version='%s'", thisfn, self->private->version );
-	g_debug( "%s:   tooltip='%s'", thisfn, self->private->tooltip );
-	g_debug( "%s:      icon='%s'", thisfn, self->private->icon );
-	g_debug( "%s:   enabled='%s'", thisfn, self->private->enabled ? "True" : "False" );
-	g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
-	g_debug( "%s:  provider=%p", thisfn, ( void * ) self->private->provider );
-
-	/* dump profiles */
-	g_debug( "%s: %d profile(s) at %p", thisfn, na_action_get_profiles_count( self ), ( void * ) self->private->profiles );
-	for( item = self->private->profiles ;	item != NULL ; item = item->next ){
-		na_object_dump(( const NAObject * ) item->data );
-	}
-}
-
 static NAObject *
-object_duplicate( const NAObject *action )
+object_new( const NAObject *action )
 {
-	NAObject *duplicate;
-
-	g_assert( NA_IS_ACTION( action ));
-
-	duplicate = NA_OBJECT( na_action_new());
-
-	na_object_copy( duplicate, action );
-
-	return( duplicate );
+	return( NA_OBJECT( na_action_new()));
 }
 
 void
 object_copy( NAObject *target, const NAObject *source )
 {
-	gchar *version, *tooltip, *icon;
+	gchar *version;
 	gboolean enabled, readonly;
 	gpointer provider;
 	GSList *ip;
 	NAActionProfile *profile;
+
+	if( st_parent_class->copy ){
+		st_parent_class->copy( target, source );
+	}
 
 	g_assert( NA_IS_ACTION( source ));
 	g_assert( NA_IS_ACTION( target ));
 
 	g_object_get( G_OBJECT( source ),
 			PROP_NAACTION_VERSION_STR, &version,
-			PROP_NAACTION_TOOLTIP_STR, &tooltip,
-			PROP_NAACTION_ICON_STR, &icon,
 			PROP_NAACTION_ENABLED_STR, &enabled,
 			PROP_NAACTION_READONLY_STR, &readonly,
 			PROP_NAACTION_PROVIDER_STR, &provider,
@@ -1103,50 +932,52 @@ object_copy( NAObject *target, const NAObject *source )
 
 	g_object_set( G_OBJECT( target ),
 			PROP_NAACTION_VERSION_STR, version,
-			PROP_NAACTION_TOOLTIP_STR, tooltip,
-			PROP_NAACTION_ICON_STR, icon,
 			PROP_NAACTION_ENABLED_STR, enabled,
 			PROP_NAACTION_READONLY_STR, readonly,
 			PROP_NAACTION_PROVIDER_STR, provider,
 			NULL );
 
-	g_free( tooltip );
 	g_free( version );
 
 	for( ip = NA_ACTION( source )->private->profiles ; ip ; ip = ip->next ){
 		profile = NA_ACTION_PROFILE( na_object_duplicate( NA_OBJECT( ip->data )));
 		na_action_attach_profile( NA_ACTION( target ), profile );
 	}
-
-	if( st_parent_class->copy ){
-		st_parent_class->copy( target, source );
-	}
 }
 
 static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )
 {
-	NAAction *first = NA_ACTION( a );
-	NAAction *second = NA_ACTION( b );
-	gboolean equal;
+	NAAction *first, *second;
+	gboolean equal = TRUE;
 	NAActionProfile *first_profile, *second_profile;
 	gchar *first_name, *second_name;
 
-	g_assert( NA_IS_ACTION( a ));
-	g_assert( NA_IS_ACTION( b ));
+	if( equal ){
+		if( st_parent_class->are_equal ){
+			equal = st_parent_class->are_equal( a, b );
+		}
+	}
 
-	equal =
-		( g_utf8_collate( first->private->version, second->private->version ) == 0 ) &&
-		( g_utf8_collate( first->private->tooltip, second->private->tooltip ) == 0 ) &&
-		( g_utf8_collate( first->private->icon, second->private->icon ) == 0 );
+	g_assert( NA_IS_ACTION( a ));
+	first = NA_ACTION( a );
+
+	g_assert( NA_IS_ACTION( b ));
+	second = NA_ACTION( b );
+
+	if( equal ){
+		equal = ( g_utf8_collate( first->private->version, second->private->version ) == 0 );
+	}
 
 	if( equal ){
 		equal = ( first->private->enabled && second->private->enabled ) ||
 				( !first->private->enabled && !second->private->enabled );
 	}
+
 	if( equal ){
 		equal = ( g_slist_length( first->private->profiles ) == g_slist_length( second->private->profiles ));
 	}
+
 	if( equal ){
 		GSList *ip;
 		for( ip = first->private->profiles ; ip && equal ; ip = ip->next ){
@@ -1161,6 +992,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			g_free( first_name );
 		}
 	}
+
 	if( equal ){
 		GSList *ip;
 		for( ip = second->private->profiles ; ip && equal ; ip = ip->next ){
@@ -1175,31 +1007,20 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			g_free( second_name );
 		}
 	}
-	if( equal ){
-		if( st_parent_class->are_equal ){
-			equal = st_parent_class->are_equal( a, b );
-		}
-	}
 
 	return( equal );
 }
 
+/*
+ * a valid NAAction requires a not null, not empty label
+ * this is checked here as NAObject doesn't have this condition
+ */
 gboolean
 object_is_valid( const NAObject *action )
 {
 	gchar *label;
-	gboolean is_valid;
+	gboolean is_valid = TRUE;
 	GSList *ip;
-
-	g_assert( NA_IS_ACTION( action ));
-
-	g_object_get( G_OBJECT( action ), PROP_NAACTION_LABEL_STR, &label, NULL );
-	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
-	g_free( label );
-
-	for( ip = NA_ACTION( action )->private->profiles ; ip && is_valid ; ip = ip->next ){
-		is_valid = na_object_is_valid( NA_OBJECT( ip->data ));
-	}
 
 	if( is_valid ){
 		if( st_parent_class->is_valid ){
@@ -1207,7 +1028,45 @@ object_is_valid( const NAObject *action )
 		}
 	}
 
+	g_assert( NA_IS_ACTION( action ));
+
+	if( is_valid ){
+		label = na_action_get_label( NA_ACTION( action ));
+		is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+		g_free( label );
+	}
+
+	for( ip = NA_ACTION( action )->private->profiles ; ip && is_valid ; ip = ip->next ){
+		is_valid = na_object_is_valid( NA_OBJECT( ip->data ));
+	}
+
 	return( is_valid );
+}
+
+static void
+object_dump( const NAObject *action )
+{
+	static const gchar *thisfn = "na_action_object_dump";
+	NAAction *self;
+	GSList *item;
+
+	if( st_parent_class->dump ){
+		st_parent_class->dump( action );
+	}
+
+	g_assert( NA_IS_ACTION( action ));
+	self = NA_ACTION( action );
+
+	g_debug( "%s:   version='%s'", thisfn, self->private->version );
+	g_debug( "%s:   enabled='%s'", thisfn, self->private->enabled ? "True" : "False" );
+	g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
+	g_debug( "%s:  provider=%p", thisfn, ( void * ) self->private->provider );
+
+	/* dump profiles */
+	g_debug( "%s: %d profile(s) at %p", thisfn, na_action_get_profiles_count( self ), ( void * ) self->private->profiles );
+	for( item = self->private->profiles ;	item != NULL ; item = item->next ){
+		na_object_dump(( const NAObject * ) item->data );
+	}
 }
 
 static void
@@ -1216,4 +1075,17 @@ free_profiles( NAAction *action )
 	na_action_free_profiles( action->private->profiles );
 
 	action->private->profiles = NULL;
+}
+
+static gchar *
+object_get_clipboard_id( const NAObject *action )
+{
+	gchar *uuid;
+	gchar *clipboard_id;
+
+	uuid = na_object_get_id( action );
+	clipboard_id = g_strdup_printf( "A:%s", uuid );
+	g_free( uuid );
+
+	return( clipboard_id );
 }

@@ -71,7 +71,13 @@ typedef struct {
 
 GType  na_xml_writer_get_type( void );
 
-gchar *na_xml_writer_export( NAAction *action, const gchar *folder, gint format, gchar **msg );
+gchar *na_xml_writer_export( const NAAction *action, const gchar *folder, gint format, gchar **msg );
+
+gchar *na_xml_writer_get_output_fname( const NAAction *action, const gchar *folder, gint format );
+
+gchar *na_xml_writer_get_xml_buffer( const NAAction *action, gint format );
+
+void   na_xml_writer_output_xml( const gchar *xml, const gchar *filename );
 
 G_END_DECLS
 

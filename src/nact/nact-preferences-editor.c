@@ -71,7 +71,8 @@ static void     on_runtime_init_dialog( BaseWindow *dialog );
 static void     on_all_widgets_showed( BaseWindow *dialog );
 /*static void     setup_buttons( NactPreferencesEditor *dialog, gboolean is_modified );
 static void     on_modified_field( NactWindow *dialog );*/
-static void     on_submenu_toggled( GtkToggleButton *button, NactWindow *window );
+static void     on_sort_alpha_toggled( GtkToggleButton *button, NactWindow *window );
+static void     on_add_about_toggled( GtkToggleButton *button, NactWindow *window );
 static void     on_cancel_clicked( GtkButton *button, NactWindow *window );
 static void     on_ok_clicked( GtkButton *button, NactWindow *window );
 static void     save_preferences( NactPreferencesEditor *editor );
@@ -290,7 +291,7 @@ on_runtime_init_dialog( BaseWindow *dialog )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_runtime_init_dialog";
 	NactPreferencesEditor *editor;
-	gboolean as_submenu;
+	gboolean sort_alpha, add_about_item;
 	GtkWidget *button;
 
 	/* call parent class at the very beginning */
@@ -302,11 +303,15 @@ on_runtime_init_dialog( BaseWindow *dialog )
 	g_assert( NACT_IS_PREFERENCES_EDITOR( dialog ));
 	editor = NACT_PREFERENCES_EDITOR( dialog );
 
-	as_submenu = na_iprefs_get_bool( NA_IPREFS( editor ), PREFS_DISPLAY_AS_SUBMENU );
-	button = base_window_get_widget( dialog, "AsSubmenuButton" );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), as_submenu );
+	sort_alpha = na_iprefs_get_alphabetical_order( NA_IPREFS( editor ));
+	button = base_window_get_widget( dialog, "SortAlphabeticalButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), sort_alpha );
+	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "SortAlphabeticalButton", "toggled", G_CALLBACK( on_sort_alpha_toggled ));
 
-	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "AsSubmenuButton", "toggled", G_CALLBACK( on_submenu_toggled ));
+	add_about_item = na_iprefs_get_add_about_item( NA_IPREFS( editor ));
+	button = base_window_get_widget( dialog, "AddAboutButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), add_about_item );
+	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "AddAboutButton", "toggled", G_CALLBACK( on_add_about_toggled ));
 
 	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
 	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "OKButton", "clicked", G_CALLBACK( on_ok_clicked ));
@@ -371,7 +376,14 @@ on_modified_field( NactWindow *window )
 }*/
 
 static void
-on_submenu_toggled( GtkToggleButton *button, NactWindow *window )
+on_sort_alpha_toggled( GtkToggleButton *button, NactWindow *window )
+{
+	g_assert( NACT_IS_PREFERENCES_EDITOR( window ));
+	/*NactPreferencesEditor *editor = NACT_PREFERENCES_EDITOR( window );*/
+}
+
+static void
+on_add_about_toggled( GtkToggleButton *button, NactWindow *window )
 {
 	g_assert( NACT_IS_PREFERENCES_EDITOR( window ));
 	/*NactPreferencesEditor *editor = NACT_PREFERENCES_EDITOR( window );*/
@@ -394,9 +406,16 @@ on_ok_clicked( GtkButton *button, NactWindow *window )
 static void
 save_preferences( NactPreferencesEditor *editor )
 {
-	GtkWidget *button = base_window_get_widget( BASE_WINDOW( editor ), "AsSubmenuButton" );
-	gboolean as_submenu = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	na_iprefs_set_bool( NA_IPREFS( editor ), PREFS_DISPLAY_AS_SUBMENU, as_submenu );
+	GtkWidget *button;
+	gboolean enabled;
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "SortAlphabeticalButton" );
+	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	na_iprefs_set_bool( NA_IPREFS( editor ), PREFS_DISPLAY_ALPHABETICAL_ORDER, enabled );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
+	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	na_iprefs_set_bool( NA_IPREFS( editor ), PREFS_ADD_ABOUT_ITEM, enabled );
 }
 
 static gboolean

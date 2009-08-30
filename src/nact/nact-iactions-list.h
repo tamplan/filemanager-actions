@@ -60,7 +60,7 @@ typedef struct {
 
 	/* api */
 	GSList * ( *get_actions )          ( NactWindow *window );
-	void     ( *on_selection_changed ) ( GtkTreeSelection *selection, gpointer user_data );
+	void     ( *on_selection_changed ) ( NactIActionsList *instance, GSList *selected_items );
 	gboolean ( *on_button_press_event )( GtkWidget *widget, GdkEventButton *event, gpointer data );
 	gboolean ( *on_key_pressed_event ) ( GtkWidget *widget, GdkEventKey *event, gpointer data );
 	gboolean ( *on_double_click )      ( GtkWidget *widget, GdkEventButton *event, gpointer data );
@@ -80,6 +80,7 @@ void      nact_iactions_list_runtime_init( NactWindow *window );
 void      nact_iactions_list_fill( NactWindow *window, gboolean keep_expanded );
 NAObject *nact_iactions_list_get_selected_object( NactWindow *window );
 GSList  * nact_iactions_list_get_selected_actions( NactWindow *window );
+GSList   *nact_iactions_list_get_selected_items( NactIActionsList *instance );
 void      nact_iactions_list_set_selection( NactWindow *window, GType type, const gchar *uuid, const gchar *label );
 void      nact_iactions_list_select_first( NactWindow *window );
 /*void      nact_iactions_list_set_focus( NactWindow *window );*/
@@ -92,6 +93,7 @@ void      nact_iactions_list_set_edition_mode( NactWindow *window, gboolean mode
 void      nact_iactions_list_set_multiple_selection( NactWindow *window, gboolean multiple );
 void      nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );
 void      nact_iactions_list_set_is_filling_list( NactWindow *window, gboolean is_filling );
+void      nact_iactions_list_set_dnd_mode( NactWindow *window, gboolean have_dnd );
 
 G_END_DECLS
 

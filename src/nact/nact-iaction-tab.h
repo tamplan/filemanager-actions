@@ -68,7 +68,7 @@ void     nact_iaction_tab_runtime_init( NactWindow *dialog );
 void     nact_iaction_tab_all_widgets_showed( NactWindow *dialog );
 void     nact_iaction_tab_dispose( NactWindow *dialog );
 
-void     nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action );
+void     nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action, GSList *selected_items );
 gboolean nact_iaction_tab_has_label( NactWindow *window );
 
 G_END_DECLS

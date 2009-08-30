@@ -73,8 +73,6 @@ struct NAActionProfilePrivate {
  */
 enum {
 	PROP_NAPROFILE_ACTION = 1,
-	PROP_NAPROFILE_NAME,
-	PROP_NAPROFILE_LABEL,
 	PROP_NAPROFILE_PATH,
 	PROP_NAPROFILE_PARAMETERS,
 	PROP_NAPROFILE_BASENAMES,
@@ -87,8 +85,6 @@ enum {
 };
 
 #define PROP_NAPROFILE_ACTION_STR				"na-profile-action"
-#define PROP_NAPROFILE_NAME_STR					"na-profile-name"
-#define PROP_NAPROFILE_LABEL_STR				"na-profile-desc-name"
 #define PROP_NAPROFILE_PATH_STR					"na-profile-path"
 #define PROP_NAPROFILE_PARAMETERS_STR			"na-profile-parameters"
 #define PROP_NAPROFILE_BASENAMES_STR			"na-profile-basenames"
@@ -109,14 +105,15 @@ static void      instance_set_property( GObject *object, guint property_id, cons
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
-static void      object_dump( const NAObject *action );
-static void      object_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
-static NAObject *object_duplicate( const NAObject *action );
+static int       validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
+
+static NAObject *object_new( const NAObject *profile );
 static void      object_copy( NAObject *target, const NAObject *source );
 static gboolean  object_are_equal( const NAObject *a, const NAObject *b );
-static gboolean  object_is_valid( const NAObject *action );
-
-static int       validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
+static gboolean  object_is_valid( const NAObject *profile );
+static void      object_dump( const NAObject *profile );
+static void      object_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
+static gchar    *object_get_clipboard_id( const NAObject *profile );
 
 GType
 na_action_profile_get_type( void )
@@ -175,20 +172,6 @@ class_init( NAActionProfileClass *klass )
 			"The NAAction action to which this profile belongs",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_NAPROFILE_ACTION, spec );
-
-	spec = g_param_spec_string(
-			PROP_NAPROFILE_NAME_STR,
-			"Profile name",
-			"Internal profile identifiant (ASCII, case insensitive)", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_NAPROFILE_NAME, spec );
-
-	spec = g_param_spec_string(
-			PROP_NAPROFILE_LABEL_STR,
-			"Profile label",
-			"Displayable profile's label (UTF-8, localizable)", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_NAPROFILE_LABEL, spec );
 
 	spec = g_param_spec_string(
 			PROP_NAPROFILE_PATH_STR,
@@ -255,21 +238,21 @@ class_init( NAActionProfileClass *klass )
 
 	klass->private = g_new0( NAActionProfileClassPrivate, 1 );
 
-	NA_OBJECT_CLASS( klass )->dump = object_dump;
-	NA_OBJECT_CLASS( klass )->duplicate = object_duplicate;
+	NA_OBJECT_CLASS( klass )->new = object_new;
 	NA_OBJECT_CLASS( klass )->copy = object_copy;
 	NA_OBJECT_CLASS( klass )->are_equal = object_are_equal;
 	NA_OBJECT_CLASS( klass )->is_valid = object_is_valid;
+	NA_OBJECT_CLASS( klass )->dump = object_dump;
+	NA_OBJECT_CLASS( klass )->get_clipboard_id = object_get_clipboard_id;
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	/*static const gchar *thisfn = "na_action_profile_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
-
+	/*static const gchar *thisfn = "na_action_profile_instance_init";*/
 	NAActionProfile *self;
 
+	/*g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );*/
 	g_assert( NA_IS_ACTION_PROFILE( instance ));
 	self = NA_ACTION_PROFILE( instance );
 
@@ -305,14 +288,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	switch( property_id ){
 		case PROP_NAPROFILE_ACTION:
 			g_value_set_pointer( value, self->private->action );
-			break;
-
-		case PROP_NAPROFILE_NAME:
-			G_OBJECT_CLASS( st_parent_class )->get_property( object, PROP_NAOBJECT_ID, value, spec );
-			break;
-
-		case PROP_NAPROFILE_LABEL:
-			G_OBJECT_CLASS( st_parent_class )->get_property( object, PROP_NAOBJECT_LABEL, value, spec );
 			break;
 
 		case PROP_NAPROFILE_PATH:
@@ -373,14 +348,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			self->private->action = g_value_get_pointer( value );
 			break;
 
-		case PROP_NAPROFILE_NAME:
-			G_OBJECT_CLASS( st_parent_class )->set_property( object, PROP_NAOBJECT_ID, value, spec );
-			break;
-
-		case PROP_NAPROFILE_LABEL:
-			G_OBJECT_CLASS( st_parent_class )->set_property( object, PROP_NAOBJECT_LABEL, value, spec );
-			break;
-
 		case PROP_NAPROFILE_PATH:
 			g_free( self->private->path );
 			self->private->path = g_value_dup_string( value );
@@ -431,11 +398,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_action_profile_instance_dispose";
+	/*static const gchar *thisfn = "na_action_profile_instance_dispose";*/
 	NAActionProfile *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-
+	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
 	g_assert( NA_IS_ACTION_PROFILE( object ));
 	self = NA_ACTION_PROFILE( object );
 
@@ -444,18 +410,19 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		}
 	}
 }
 
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_action_profile_instance_finalize";
+	/*static const gchar *thisfn = "na_action_profile_instance_finalize";*/
 	NAActionProfile *self;
 
-	g_debug( "%s: object=%p", thisfn, (void * ) object );
-
+	/*g_debug( "%s: object=%p", thisfn, (void * ) object );*/
 	g_assert( NA_IS_ACTION_PROFILE( object ));
 	self = ( NAActionProfile * ) object;
 
@@ -468,7 +435,7 @@ instance_finalize( GObject *object )
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if((( GObjectClass * ) st_parent_class )->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
 }
@@ -531,13 +498,7 @@ na_action_profile_get_action( const NAActionProfile *profile )
 gchar *
 na_action_profile_get_name( const NAActionProfile *profile )
 {
-	gchar *id;
-
-	g_assert( NA_IS_ACTION_PROFILE( profile ));
-
-	g_object_get( G_OBJECT( profile ), PROP_NAPROFILE_NAME_STR, &id, NULL );
-
-	return( id );
+	return( na_object_get_id( NA_OBJECT( profile )));
 }
 
 /**
@@ -554,13 +515,7 @@ na_action_profile_get_name( const NAActionProfile *profile )
 gchar *
 na_action_profile_get_label( const NAActionProfile *profile )
 {
-	gchar *label;
-
-	g_assert( NA_IS_ACTION_PROFILE( profile ));
-
-	g_object_get( G_OBJECT( profile ), PROP_NAPROFILE_LABEL_STR, &label, NULL );
-
-	return( label );
+	return( na_object_get_label( NA_OBJECT( profile )));
 }
 
 /**
@@ -806,9 +761,7 @@ na_action_profile_set_action( NAActionProfile *profile, const NAAction *action )
 void
 na_action_profile_set_name( NAActionProfile *profile, const gchar *name )
 {
-	g_assert( NA_IS_ACTION_PROFILE( profile ));
-
-	g_object_set( G_OBJECT( profile ), PROP_NAPROFILE_NAME_STR, name, NULL );
+	na_object_set_id( NA_OBJECT( profile ), name );
 }
 
 /**
@@ -826,9 +779,7 @@ na_action_profile_set_name( NAActionProfile *profile, const gchar *name )
 void
 na_action_profile_set_label( NAActionProfile *profile, const gchar *label )
 {
-	g_assert( NA_IS_ACTION_PROFILE( profile ));
-
-	g_object_set( G_OBJECT( profile ), PROP_NAPROFILE_LABEL_STR, label, NULL );
+	na_object_set_label( NA_OBJECT( profile ), label );
 }
 
 /**
@@ -1480,51 +1431,36 @@ na_action_profile_parse_parameters( const NAActionProfile *profile, GList* files
 	return( parsed );
 }
 
-static void
-object_dump( const NAObject *object )
+static int
+validate_schemes( GSList* schemes2test, NautilusFileInfo* file )
 {
-	static const gchar *thisfn = "na_action_profile_object_dump";
-	NAActionProfile *self;
+	int retv = 0;
+	GSList* iter;
+	gboolean found = FALSE;
+	gchar *scheme;
 
-	g_assert( NA_IS_ACTION_PROFILE( object ));
-	self = NA_ACTION_PROFILE( object );
+	iter = schemes2test;
+	while (iter && !found)
+	{
+		scheme = nautilus_file_info_get_uri_scheme (file);
 
-	if( st_parent_class->dump ){
-		st_parent_class->dump( object );
+		if (g_ascii_strncasecmp (scheme, (gchar*)iter->data, strlen ((gchar*)iter->data)) == 0)
+		{
+			found = TRUE;
+			retv = 1;
+		}
+
+		g_free (scheme);
+		iter = iter->next;
 	}
 
-	g_debug( "%s:          action=%p", thisfn, ( void * ) self->private->action );
-	g_debug( "%s:            path='%s'", thisfn, self->private->path );
-	g_debug( "%s:      parameters='%s'", thisfn, self->private->parameters );
-	g_debug( "%s: accept_multiple='%s'", thisfn, self->private->accept_multiple ? "True" : "False" );
-	g_debug( "%s:          is_dir='%s'", thisfn, self->private->is_dir ? "True" : "False" );
-	g_debug( "%s:         is_file='%s'", thisfn, self->private->is_file ? "True" : "False" );
-	g_debug( "%s:      match_case='%s'", thisfn, self->private->match_case ? "True" : "False" );
-	object_dump_list( thisfn, "basenames", self->private->basenames );
-	object_dump_list( thisfn, "mimetypes", self->private->mimetypes );
-	object_dump_list( thisfn, "  schemes", self->private->schemes );
-}
-
-static void
-object_dump_list( const gchar *thisfn, const gchar *label, GSList *list )
-{
-	gchar *string = na_utils_gslist_to_schema( list );
-	g_debug( "%s:       %s=%s", thisfn, label, string );
-	g_free( string );
+	return retv;
 }
 
 static NAObject *
-object_duplicate( const NAObject *profile )
+object_new( const NAObject *profile )
 {
-	NAObject *duplicate;
-
-	g_assert( NA_IS_ACTION_PROFILE( profile ));
-
-	duplicate = NA_OBJECT( na_action_profile_new());
-
-	na_object_copy( duplicate, profile );
-
-	return( duplicate );
+	return( NA_OBJECT( na_action_profile_new()));
 }
 
 static void
@@ -1533,6 +1469,10 @@ object_copy( NAObject *target, const NAObject *source )
 	gchar *path, *parameters;
 	gboolean matchcase, isfile, isdir, multiple;
 	GSList *basenames, *mimetypes, *schemes;
+
+	if( st_parent_class->copy ){
+		st_parent_class->copy( target, source );
+	}
 
 	g_assert( NA_IS_ACTION_PROFILE( target ));
 	g_assert( NA_IS_ACTION_PROFILE( source ));
@@ -1566,10 +1506,6 @@ object_copy( NAObject *target, const NAObject *source )
 	na_utils_free_string_list( basenames );
 	na_utils_free_string_list( mimetypes );
 	na_utils_free_string_list( schemes );
-
-	if( st_parent_class->copy ){
-		st_parent_class->copy( target, source );
-	}
 }
 
 gboolean
@@ -1577,52 +1513,56 @@ object_are_equal( const NAObject *a, const NAObject *b )
 {
 	NAActionProfile *first = NA_ACTION_PROFILE( a );
 	NAActionProfile *second = NA_ACTION_PROFILE( b );
-	gboolean equal;
+	gboolean equal = TRUE;
 
-	g_assert( NA_IS_ACTION_PROFILE( a ));
-	g_assert( NA_IS_ACTION_PROFILE( b ));
-
-	equal =
-		( g_utf8_collate( first->private->path, second->private->path ) == 0 ) &&
-		( g_utf8_collate( first->private->parameters, second->private->parameters ) == 0 );
-
-	if( equal ){
-		equal = (( first->private->accept_multiple && second->private->accept_multiple ) ||
-				( !first->private->accept_multiple && !second->private->accept_multiple ));
-	}
-	if( equal ){
-		equal = (( first->private->is_dir && second->private->is_dir ) ||
-				( !first->private->is_dir && !second->private->is_dir ));
-	}
-	if( equal ){
-		equal = (( first->private->is_file && second->private->is_file ) ||
-				( !first->private->is_file && !second->private->is_file ));
-	}
-	if( equal ){
-		equal = na_utils_string_lists_are_equal( first->private->basenames, second->private->basenames ) &&
-				na_utils_string_lists_are_equal( first->private->mimetypes, second->private->mimetypes ) &&
-				na_utils_string_lists_are_equal( first->private->schemes, second->private->schemes );
-	}
 	if( equal ){
 		if( st_parent_class->are_equal ){
 			equal = st_parent_class->are_equal( a, b );
 		}
 	}
 
+	g_assert( NA_IS_ACTION_PROFILE( a ));
+	g_assert( NA_IS_ACTION_PROFILE( b ));
+
+	if( equal ){
+		equal =
+			( g_utf8_collate( first->private->path, second->private->path ) == 0 ) &&
+			( g_utf8_collate( first->private->parameters, second->private->parameters ) == 0 );
+	}
+
+	if( equal ){
+		equal = (( first->private->accept_multiple && second->private->accept_multiple ) ||
+				( !first->private->accept_multiple && !second->private->accept_multiple ));
+	}
+
+	if( equal ){
+		equal = (( first->private->is_dir && second->private->is_dir ) ||
+				( !first->private->is_dir && !second->private->is_dir ));
+	}
+
+	if( equal ){
+		equal = (( first->private->is_file && second->private->is_file ) ||
+				( !first->private->is_file && !second->private->is_file ));
+	}
+
+	if( equal ){
+		equal = na_utils_string_lists_are_equal( first->private->basenames, second->private->basenames ) &&
+				na_utils_string_lists_are_equal( first->private->mimetypes, second->private->mimetypes ) &&
+				na_utils_string_lists_are_equal( first->private->schemes, second->private->schemes );
+	}
+
 	return( equal );
 }
 
+/*
+ * a valid NAActionProfile requires a not null, not empty label
+ * this is checked here as NAObject doesn't have this condition
+ */
 gboolean
 object_is_valid( const NAObject *profile )
 {
 	gchar *label;
-	gboolean is_valid;
-
-	g_assert( NA_IS_ACTION_PROFILE( profile ));
-
-	g_object_get( G_OBJECT( profile ), PROP_NAPROFILE_LABEL_STR, &label, NULL );
-	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
-	g_free( label );
+	gboolean is_valid = TRUE;
 
 	if( is_valid ){
 		if( st_parent_class->is_valid ){
@@ -1630,31 +1570,62 @@ object_is_valid( const NAObject *profile )
 		}
 	}
 
+	g_assert( NA_IS_ACTION_PROFILE( profile ));
+
+	if( is_valid ){
+		label = na_object_get_label( profile );
+		is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+		g_free( label );
+	}
+
 	return( is_valid );
 }
 
-static int
-validate_schemes( GSList* schemes2test, NautilusFileInfo* file )
+static void
+object_dump( const NAObject *object )
 {
-	int retv = 0;
-	GSList* iter;
-	gboolean found = FALSE;
-	gchar *scheme;
+	static const gchar *thisfn = "na_action_profile_object_dump";
+	NAActionProfile *self;
 
-	iter = schemes2test;
-	while (iter && !found)
-	{
-		scheme = nautilus_file_info_get_uri_scheme (file);
+	g_assert( NA_IS_ACTION_PROFILE( object ));
+	self = NA_ACTION_PROFILE( object );
 
-		if (g_ascii_strncasecmp (scheme, (gchar*)iter->data, strlen ((gchar*)iter->data)) == 0)
-		{
-			found = TRUE;
-			retv = 1;
-		}
-
-		g_free (scheme);
-		iter = iter->next;
+	if( st_parent_class->dump ){
+		st_parent_class->dump( object );
 	}
 
-	return retv;
+	g_debug( "%s:          action=%p", thisfn, ( void * ) self->private->action );
+	g_debug( "%s:            path='%s'", thisfn, self->private->path );
+	g_debug( "%s:      parameters='%s'", thisfn, self->private->parameters );
+	g_debug( "%s: accept_multiple='%s'", thisfn, self->private->accept_multiple ? "True" : "False" );
+	g_debug( "%s:          is_dir='%s'", thisfn, self->private->is_dir ? "True" : "False" );
+	g_debug( "%s:         is_file='%s'", thisfn, self->private->is_file ? "True" : "False" );
+	g_debug( "%s:      match_case='%s'", thisfn, self->private->match_case ? "True" : "False" );
+	object_dump_list( thisfn, "basenames", self->private->basenames );
+	object_dump_list( thisfn, "mimetypes", self->private->mimetypes );
+	object_dump_list( thisfn, "  schemes", self->private->schemes );
+}
+
+static void
+object_dump_list( const gchar *thisfn, const gchar *label, GSList *list )
+{
+	gchar *string = na_utils_gslist_to_schema( list );
+	g_debug( "%s:       %s=%s", thisfn, label, string );
+	g_free( string );
+}
+
+static gchar *
+object_get_clipboard_id( const NAObject *profile )
+{
+	gchar *uuid;
+	gchar *name;
+	gchar *clipboard_id;
+
+	uuid = na_action_get_uuid( NA_ACTION_PROFILE( profile )->private->action );
+	name = na_object_get_id( profile );
+	clipboard_id = g_strdup_printf( "P:%s/%s", uuid, name );
+	g_free( uuid );
+	g_free( name );
+
+	return( clipboard_id );
 }

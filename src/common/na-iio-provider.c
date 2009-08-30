@@ -48,7 +48,6 @@ static void     interface_base_finalize( NAIIOProviderInterface *klass );
 static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
 static gboolean do_is_writable( const NAIIOProvider *instance, const NAAction *action );
 static guint    write_action( const NAIIOProvider *instance, NAAction *action, gchar **message );
-static GSList  *sort_actions( const NAPivot *pivot, GSList *actions );
 static gint     compare_actions_label_alpha_fn( const NAAction *a, const NAAction *b );
 
 /**
@@ -173,7 +172,28 @@ na_iio_provider_read_actions( const NAPivot *pivot )
 		}
 	}
 
-	return( sort_actions( pivot, actions ));
+	/* TODO: should be done only if prefs is set */
+	return( na_iio_provider_sort_actions( pivot, actions ));
+}
+
+/**
+ * na_iio_provider_sort_action:
+ * @pivot: the #NAPivot object which owns the list of registered I/O
+ * storage providers.
+ * @actions: the list of #NAAction action to be sorted.
+ *
+ * Sorts the list of actions in alphabetical order of their label.
+ *
+ * Returns: the sorted list.
+ */
+GSList *
+na_iio_provider_sort_actions( const NAPivot *pivot, GSList *actions )
+{
+	GSList *sorted;
+
+	sorted = g_slist_sort( actions, ( GCompareFunc ) compare_actions_label_alpha_fn );
+
+	return( sorted );
 }
 
 /**
@@ -317,20 +337,6 @@ write_action( const NAIIOProvider *provider, NAAction *action, gchar **message )
 	}
 
 	return( NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_action( provider, action, message ));
-}
-
-/*
- * sort the actions so that they are in the same order than when they
- * are displayed in NACT
- */
-static GSList *
-sort_actions( const NAPivot *pivot, GSList *actions )
-{
-	GSList *sorted;
-
-	sorted = g_slist_sort( actions, ( GCompareFunc ) compare_actions_label_alpha_fn );
-
-	return( sorted );
 }
 
 static gint

@@ -40,6 +40,7 @@
 #include <common/na-pivot.h>
 #include <common/na-iio-provider.h>
 #include <common/na-ipivot-consumer.h>
+#include <common/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-iactions-list.h"
@@ -83,6 +84,7 @@ static void             iconditions_tab_iface_init( NactIConditionsTabInterface 
 static void             iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
 static void             imenubar_iface_init( NactIMenubarInterface *iface );
 static void             ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
+static void             iprefs_iface_init( NAIPrefsInterface *iface );
 static void             instance_init( GTypeInstance *instance, gpointer klass );
 static void             instance_dispose( GObject *application );
 static void             instance_finalize( GObject *application );
@@ -95,11 +97,11 @@ static void             on_initial_load_toplevel( BaseWindow *window );
 static void             on_runtime_init_toplevel( BaseWindow *window );
 static void             setup_dialog_title( NactWindow *window );
 
-static void             on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
+static void             on_actions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static gboolean         on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
 static gboolean         on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
-static void             set_current_action( NactMainWindow *window );
-static void             set_current_profile( NactMainWindow *window, gboolean set_action );
+static void             set_current_action( NactMainWindow *window, GSList *selected_items );
+static void             set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
 static NAAction        *get_edited_action( NactWindow *window );
 static NAActionProfile *get_edited_profile( NactWindow *window );
 static void             on_modified_field( NactWindow *window );
@@ -112,7 +114,7 @@ static void             get_isfiledir( NactWindow *window, gboolean *isfile, gbo
 static gboolean         get_multiple( NactWindow *window );
 static GSList          *get_schemes( NactWindow *window );
 
-static void             add_action( NactWindow *window, NAAction *action );
+static void             insert_item( NactWindow *window, NAAction *action );
 static void             add_profile( NactWindow *window, NAActionProfile *profile );
 static void             remove_action( NactWindow *window, NAAction *action );
 static GSList          *get_deleted_actions( NactWindow *window );
@@ -126,6 +128,8 @@ static gint             count_modified_actions( NactWindow *window );
 static void             reload_actions( NactWindow *window );
 static GSList          *free_actions( GSList *actions );
 static void             on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
+static void             on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data );
+static void             sort_actions_list( NactMainWindow *window );
 
 GType
 nact_main_window_get_type( void )
@@ -193,8 +197,14 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo pivot_consumer_iface_info = {
+	static const GInterfaceInfo ipivot_consumer_iface_info = {
 		( GInterfaceInitFunc ) ipivot_consumer_iface_init,
+		NULL,
+		NULL
+	};
+
+	static const GInterfaceInfo iprefs_iface_info = {
+		( GInterfaceInitFunc ) iprefs_iface_init,
 		NULL,
 		NULL
 	};
@@ -215,7 +225,9 @@ register_type( void )
 
 	g_type_add_interface_static( type, NACT_IMENUBAR_TYPE, &imenubar_iface_info );
 
-	g_type_add_interface_static( type, NA_IPIVOT_CONSUMER_TYPE, &pivot_consumer_iface_info );
+	g_type_add_interface_static( type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
+
+	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_iface_info );
 
 	return( type );
 }
@@ -273,7 +285,6 @@ iaction_tab_iface_init( NactIActionTabInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_selected = nact_iactions_list_get_selected_object;
 	iface->get_edited_action = get_edited_action;
 	iface->field_modified = on_modified_field;
 }
@@ -321,7 +332,7 @@ imenubar_iface_init( NactIMenubarInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->add_action = add_action;
+	iface->insert_item = insert_item;
 	iface->add_profile = add_profile;
 	iface->remove_action = remove_action;
 	iface->get_deleted_actions = get_deleted_actions;
@@ -345,6 +356,15 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->on_actions_changed = on_actions_changed;
+	iface->on_display_order_changed = on_display_order_changed;
+}
+
+static void
+iprefs_iface_init( NAIPrefsInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_iprefs_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void
@@ -503,6 +523,7 @@ on_initial_load_toplevel( BaseWindow *window )
 	NactMainWindow *wnd;
 	gint pos;
 	GtkWidget *pane;
+	/*gboolean alpha_order;*/
 
 	/* call parent class at the very beginning */
 	if( BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel ){
@@ -518,8 +539,12 @@ on_initial_load_toplevel( BaseWindow *window )
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
 	nact_iactions_list_initial_load( NACT_WINDOW( window ));
 	nact_iactions_list_set_edition_mode( NACT_WINDOW( window ), TRUE );
-	nact_iactions_list_set_multiple_selection( NACT_WINDOW( window ), FALSE );
 	nact_iactions_list_set_send_selection_changed_on_fill_list( NACT_WINDOW( window ), FALSE );
+	nact_iactions_list_set_multiple_selection( NACT_WINDOW( window ), TRUE );
+
+	/*alpha_order = na_iprefs_get_alphabetical_order( NA_IPREFS( window ));
+	nact_iactions_list_set_multiple_selection( NACT_WINDOW( window ), !alpha_order );
+	nact_iactions_list_set_dnd_mode( NACT_WINDOW( window ), !alpha_order );*/
 
 	g_assert( NACT_IS_IACTION_TAB( window ));
 	nact_iaction_tab_initial_load( NACT_WINDOW( window ));
@@ -589,7 +614,9 @@ on_runtime_init_toplevel( BaseWindow *window )
 	/* forces a no-selection when the list is initially empty
 	 */
 	if( !wnd->private->initial_count ){
-		set_current_action( NACT_MAIN_WINDOW( window ));
+		set_current_action( NACT_MAIN_WINDOW( window ), NULL );
+	} else {
+		nact_iactions_list_select_first( NACT_WINDOW( window ));
 	}
 }
 
@@ -620,38 +647,36 @@ setup_dialog_title( NactWindow *window )
 	g_free( title );
 }
 
-/*
- * note that the IActionsList tree store may return an action or a profile
- */
 static void
-on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
+on_actions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
 {
 	static const gchar *thisfn = "nact_main_window_on_actions_list_selection_changed";
 	NactMainWindow *window;
 	NAObject *object;
+	gint count;
 
-	g_debug( "%s: selection=%p, user_data=%p", thisfn, ( void * ) selection, ( void * ) user_data );
+	g_debug( "%s: instance=%p, selected_items=%p", thisfn, ( void * ) instance, ( void * ) selected_items );
 
-	g_assert( NACT_IS_MAIN_WINDOW( user_data ));
-	window = NACT_MAIN_WINDOW( user_data );
+	g_assert( NACT_IS_MAIN_WINDOW( instance ));
+	window = NACT_MAIN_WINDOW( instance );
 
-	object = nact_iactions_list_get_selected_object( NACT_WINDOW( window ));
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	count = g_slist_length( selected_items );
 
-	if( object ){
+	if( count == 1 ){
+		object = NA_OBJECT( selected_items->data );
 		if( NA_IS_ACTION( object )){
 			window->private->edited_action = NA_ACTION( object );
-			set_current_action( window );
+			set_current_action( window, selected_items );
 
 		} else {
 			g_assert( NA_IS_ACTION_PROFILE( object ));
 			window->private->edited_profile = NA_ACTION_PROFILE( object );
-			set_current_profile( window, TRUE );
+			set_current_profile( window, TRUE, selected_items );
 		}
 
 	} else {
 		window->private->edited_action = NULL;
-		set_current_action( window );
+		set_current_action( window, selected_items );
 	}
 }
 
@@ -680,11 +705,14 @@ on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpoint
  * if there is only one profile, we also setup the profile
  */
 static void
-set_current_action( NactMainWindow *window )
+set_current_action( NactMainWindow *window, GSList *selected_items )
 {
-	g_debug( "set_current_action: current=%p", ( void * ) window->private->edited_action );
+	static const gchar *thisfn = "nact_main_window_set_current_action";
 
-	nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action );
+	g_debug( "%s: window=%p, current=%p, selected_items=%p",
+			thisfn, ( void * ) window, ( void * ) window->private->edited_action, ( void * ) selected_items );
+
+	nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action, selected_items );
 
 	window->private->edited_profile = NULL;
 
@@ -694,16 +722,21 @@ set_current_action( NactMainWindow *window )
 		}
 	}
 
-	set_current_profile( window, FALSE );
+	set_current_profile( window, FALSE, selected_items );
 }
 
 static void
-set_current_profile( NactMainWindow *window, gboolean set_action )
+set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items )
 {
+	static const gchar *thisfn = "nact_main_window_set_current_profile";
+
+	g_debug( "%s: window=%p, set_action=%s, selected_items=%p",
+			thisfn, ( void * ) window, set_action ? "True":"False", ( void * ) selected_items );
+
 	if( window->private->edited_profile && set_action ){
 		NAAction *action = NA_ACTION( na_action_profile_get_action( window->private->edited_profile ));
 		window->private->edited_action = action;
-		nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action );
+		nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action, selected_items );
 	}
 
 	nact_icommand_tab_set_profile( NACT_WINDOW( window ), window->private->edited_profile );
@@ -789,11 +822,44 @@ get_schemes( NactWindow *window )
 	return( nact_iadvanced_tab_get_schemes( window ));
 }
 
+/*
+ * insert an item (action or menu) in the list:
+ * - the last position if the list is sorted, and sort it
+ * - at the current position if the list is not sorted
+ *
+ * set the selection on the new item
+ */
 static void
-add_action( NactWindow *window, NAAction *action )
+insert_item( NactWindow *window, NAAction *item )
 {
 	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
-	wnd->private->actions = g_slist_prepend( wnd->private->actions, ( gpointer ) action );
+	gboolean alpha_order;
+	gchar *uuid;
+	NAAction *current;
+	gint index;
+
+	alpha_order = na_iprefs_get_alphabetical_order( NA_IPREFS( window ));
+	if( alpha_order ){
+		wnd->private->actions = g_slist_prepend( wnd->private->actions, ( gpointer ) item );
+		sort_actions_list( wnd );
+
+	} else {
+		current = get_edited_action( window );
+		if( current ){
+			index = g_slist_index( wnd->private->actions, current );
+			g_assert( index >= 0 );
+			wnd->private->actions = g_slist_insert( wnd->private->actions, item, index );
+		} else {
+			g_assert( g_slist_length( wnd->private->actions ) == 0 );
+			wnd->private->actions = g_slist_prepend( wnd->private->actions, ( gpointer ) item );
+		}
+	}
+
+	nact_iactions_list_fill( window, TRUE );
+
+	uuid = na_action_get_uuid( item );
+	nact_iactions_list_set_selection( window, NA_ACTION_TYPE, uuid, NULL );
+	g_free( uuid );
 }
 
 static void
@@ -983,4 +1049,36 @@ on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
 
 		nact_iactions_list_fill( NACT_WINDOW( instance ), TRUE );
 	}
+}
+
+/*
+ * called by NAPivot via NAIPivotConsumer whenever the
+ * "sort in alphabetical order" preference is modified.
+ */
+static void
+on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_main_window_on_display_order_changed";
+	/*NactMainWindow *self;*/
+	gboolean alpha_order;
+
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+	g_assert( NACT_IS_MAIN_WINDOW( instance ));
+	/*self = NACT_MAIN_WINDOW( instance );*/
+
+	alpha_order = na_iprefs_get_alphabetical_order( NA_IPREFS( instance ));
+
+	nact_iactions_list_set_multiple_selection( NACT_WINDOW( instance ), !alpha_order );
+	nact_iactions_list_set_dnd_mode( NACT_WINDOW( instance ), !alpha_order );
+}
+
+static void
+sort_actions_list( NactMainWindow *window )
+{
+	NactApplication *application;
+	NAPivot *pivot;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+	window->private->actions = na_iio_provider_sort_actions( pivot, window->private->actions );
 }

@@ -110,13 +110,12 @@ static void            assist_runtime_init_intro( NactAssistantExport *window, G
 
 static void            assist_initial_load_actions_list( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *assistant );
-static void            on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data );
+static void            on_actions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 
 static void            assist_initial_load_target_folder( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *assistant );
 static GtkFileChooser *get_folder_chooser( NactAssistantExport *window );
 static void            on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data );
-static gboolean        is_writable_dir( const gchar *uri );
 
 static void            assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant );
@@ -506,7 +505,7 @@ assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *ass
 }
 
 static void
-on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_data )
+on_actions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
 {
 	/*static const gchar *thisfn = "nact_assistant_export_on_actions_list_selection_changed";
 	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );*/
@@ -516,12 +515,12 @@ on_actions_list_selection_changed( GtkTreeSelection *selection, gpointer user_da
 	gboolean enabled;
 	GtkWidget *content;
 
-	g_assert( NACT_IS_ASSISTANT_EXPORT( user_data ));
-	assistant = GTK_ASSISTANT( base_window_get_toplevel_dialog( BASE_WINDOW( user_data )));
+	g_assert( NACT_IS_ASSISTANT_EXPORT( instance ));
+	assistant = GTK_ASSISTANT( base_window_get_toplevel_dialog( BASE_WINDOW( instance )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_ACTIONS_SELECTION ){
 
-		enabled = ( gtk_tree_selection_count_selected_rows( selection ) > 0 );
+		enabled = ( g_slist_length( selected_items ) > 0 );
 
 		content = gtk_assistant_get_nth_page( assistant, pos );
 		gtk_assistant_set_page_complete( assistant, content, enabled );
@@ -590,7 +589,7 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 
 		uri = gtk_file_chooser_get_uri( chooser );
 		g_debug( "%s: uri=%s", thisfn, uri );
-		enabled = ( uri && strlen( uri ) && is_writable_dir( uri ));
+		enabled = ( uri && strlen( uri ) && na_utils_is_writable_dir( uri ));
 
 		if( enabled ){
 			assist = NACT_ASSISTANT_EXPORT( user_data );
@@ -605,48 +604,6 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 		gtk_assistant_set_page_complete( assistant, content, enabled );
 		gtk_assistant_update_buttons_state( assistant );
 	}
-}
-
-static gboolean
-is_writable_dir( const gchar *uri )
-{
-	static const gchar *thisfn = "nact_assistant_export_is_writable_dir";
-	GFile *file;
-	GError *error = NULL;
-	GFileInfo *info;
-	GFileType type;
-	gboolean writable;
-
-	if( !uri || !strlen( uri )){
-		return( FALSE );
-	}
-
-	file = g_file_new_for_uri( uri );
-	info = g_file_query_info( file,
-			G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE "," G_FILE_ATTRIBUTE_STANDARD_TYPE,
-			G_FILE_QUERY_INFO_NONE, NULL, &error );
-
-	if( error ){
-		g_warning( "%s: g_file_query_info error: %s", thisfn, error->message );
-		g_error_free( error );
-		g_object_unref( file );
-		return( FALSE );
-	}
-
-	type = g_file_info_get_file_type( info );
-	if( type != G_FILE_TYPE_DIRECTORY ){
-		g_warning( "%s: %s is not a directory", thisfn, uri );
-		g_object_unref( info );
-		return( FALSE );
-	}
-
-	writable = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE );
-	if( !writable ){
-		g_warning( "%s: %s is not writable", thisfn, uri );
-	}
-	g_object_unref( info );
-
-	return( writable );
 }
 
 static void

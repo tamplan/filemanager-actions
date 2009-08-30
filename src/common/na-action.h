@@ -48,7 +48,10 @@
 
 G_BEGIN_DECLS
 
+/* i18n: default label for a newly created action */
 #define NA_ACTION_DEFAULT_LABEL			_( "New Nautilus action" )
+
+/* i18n: default label for a newly created profile */
 #define NA_ACTION_PROFILE_DEFAULT_LABEL	_( "Default profile" )
 
 NAAction        *na_action_new( void );
@@ -69,7 +72,7 @@ void             na_action_set_uuid( NAAction *action, const gchar *uuid );
 void             na_action_set_label( NAAction *action, const gchar *label );
 void             na_action_set_version( NAAction *action, const gchar *version );
 void             na_action_set_tooltip( NAAction *action, const gchar *tooltip );
-void             na_action_set_icon( NAAction *action, const gchar *icon_name );
+void             na_action_set_icon( NAAction *action, const gchar *icon );
 void             na_action_set_enabled( NAAction *action, gboolean enabled );
 void             na_action_set_readonly( NAAction *action, gboolean readonly );
 void             na_action_set_provider( NAAction *action, const NAIIOProvider *provider );

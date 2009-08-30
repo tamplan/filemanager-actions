@@ -74,42 +74,12 @@ typedef struct {
 	NAObjectClassPrivate *private;
 
 	/**
-	 * dump:
-	 * @object: the #NAObject-derived object to be dumped.
+	 * new:
+	 * @object: a #NAObject-derived object.
 	 *
-	 * Dumps via g_debug the content of the object.
-	 *
-	 * In order to get a down-to-top display, the derived class
-	 * implementation should call its parent class before actually
-	 * dumping its own data and properties.
+	 * Returns: a newly allocated object of the same class that @object.
 	 */
-	void       ( *dump )               ( const NAObject *object );
-
-	/**
-	 * check_edited_status:
-	 * @object: the #NAObject-derived object to be checked.
-	 *
-	 * Checks a #NAObject-derived object for modification and validity
-	 * status.
-	 */
-	void       ( *check_edited_status )( const NAObject *object );
-
-	/**
-	 * duplicate:
-	 * @object: the #NAObject-derived object to be dumped.
-	 *
-	 * Duplicates a #NAObject-derived object.
-	 *
-	 * As the most-derived class will actually allocate the new object
-	 * with the right class, it shouldn't call its parent class.
-	 *
-	 * Copying data and properties should then be done via the
-	 * na_object_copy() function.
-	 *
-	 * Returns: a newly allocated object, which is an exact copy of
-	 * @object.
-	 */
-	NAObject * ( *duplicate )          ( const NAObject *object );
+	NAObject * ( *new )                ( const NAObject *object );
 
 	/**
 	 * copy:
@@ -153,11 +123,31 @@ typedef struct {
 	 * Returns: %TRUE if @object is valid, %FALSE else.
 	 */
 	gboolean   ( *is_valid )           ( const NAObject *object );
+
+	/**
+	 * dump:
+	 * @object: the #NAObject-derived object to be dumped.
+	 *
+	 * Dumps via g_debug the content of the object.
+	 *
+	 * In order to get a down-to-top display, the derived class
+	 * implementation should call its parent class before actually
+	 * dumping its own data and properties.
+	 */
+	void       ( *dump )               ( const NAObject *object );
+
+	/**
+	 * get_clipboard_id:
+	 * @object: the #NAObject-derived object whose id is to be retrieved.
+	 *
+	 * Returns: an id suitable for the internal clipboard.
+	 */
+	gchar *    ( *get_clipboard_id )   ( const NAObject *object );
 }
 	NAObjectClass;
 
 /* object properties
- * used in derived classes to access to the properties
+ * used in derived classes to access the properties
  */
 enum {
 	PROP_NAOBJECT_ID = 1,
@@ -170,19 +160,19 @@ void      na_object_dump( const NAObject *object );
 NAObject *na_object_duplicate( const NAObject *object );
 void      na_object_copy( NAObject *target, const NAObject *source );
 
+gchar    *na_object_get_clipboard_id( const NAObject *object );
+
 void      na_object_check_edited_status( const NAObject *object );
 gboolean  na_object_are_equal( const NAObject *a, const NAObject *b );
 gboolean  na_object_is_valid( const NAObject *object );
-
-NAObject *na_object_get_origin( const NAObject *object );
 gboolean  na_object_get_modified_status( const NAObject *object );
 gboolean  na_object_get_valid_status( const NAObject *object );
 
-void      na_object_set_origin( NAObject *object, const NAObject *origin );
-
+NAObject *na_object_get_origin( const NAObject *object );
 gchar    *na_object_get_id( const NAObject *object );
 gchar    *na_object_get_label( const NAObject *object );
 
+void      na_object_set_origin( NAObject *object, const NAObject *origin );
 void      na_object_set_id( NAObject *object, const gchar *id );
 void      na_object_set_label( NAObject *object, const gchar *label );
 

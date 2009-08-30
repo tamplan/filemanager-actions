@@ -4,6 +4,7 @@
         <menu action="FileMenu">
             <menuitem action="NewActionItem" />
             <menuitem action="NewProfileItem" />
+            <menuitem action="NewMenuItem" />
             <menuitem action="SaveItem" />
             <separator />
             <menuitem action="QuitItem" />

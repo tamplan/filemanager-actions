@@ -28,42 +28,18 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_ACTION_CLASS_H__
-#define __NA_ACTION_CLASS_H__
+#ifndef __NACT_DND_H__
+#define __NACT_DND_H__
 
-/**
- * SECTION: na_action
- */
-
-#include "na-object-item.h"
+#include <glib.h>
 
 G_BEGIN_DECLS
 
-#define NA_ACTION_TYPE					( na_action_get_type())
-#define NA_ACTION( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_ACTION_TYPE, NAAction ))
-#define NA_ACTION_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_ACTION_TYPE, NAActionClass ))
-#define NA_IS_ACTION( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_ACTION_TYPE ))
-#define NA_IS_ACTION_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_ACTION_TYPE ))
-#define NA_ACTION_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_ACTION_TYPE, NAActionClass ))
+char *nact_selection_get_data_for_intern_use( GSList *selected_items );
+char *nact_selection_get_data_for_extern_use( GSList *selected_items );
 
-typedef struct NAActionPrivate NAActionPrivate;
-
-typedef struct {
-	NAObjectItem     parent;
-	NAActionPrivate *private;
-}
-	NAAction;
-
-typedef struct NAActionClassPrivate NAActionClassPrivate;
-
-typedef struct {
-	NAObjectItemClass     parent;
-	NAActionClassPrivate *private;
-}
-	NAActionClass;
-
-GType na_action_get_type( void );
+void  nact_selection_export_items( const gchar *uri, GSList *items );
 
 G_END_DECLS
 
-#endif /* __NA_ACTION_CLASS_H__ */
+#endif /* __NACT_DND_H__ */

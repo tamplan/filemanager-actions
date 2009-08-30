@@ -55,7 +55,7 @@ typedef struct {
 	NactIMenubarInterfacePrivate *private;
 
 	/* api */
-	void        ( *add_action )            ( NactWindow *window, NAAction* action );
+	void        ( *insert_item )           ( NactWindow *window, NAAction* action );
 	void        ( *add_profile )           ( NactWindow *window, NAActionProfile *profile );
 	void        ( *remove_action )         ( NactWindow *window, NAAction *action );
 	GSList *    ( *get_deleted_actions )   ( NactWindow *window );

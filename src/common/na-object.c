@@ -58,31 +58,31 @@ struct NAObjectPrivate {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType     register_type( void );
-static void      class_init( NAObjectClass *klass );
-static void      iduplicable_iface_init( NAIDuplicableInterface *iface );
-static void      instance_init( GTypeInstance *instance, gpointer klass );
-static void      instance_constructed( GObject *object );
-static void      instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void      instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void      instance_dispose( GObject *object );
-static void      instance_finalize( GObject *object );
+static GType          register_type( void );
+static void           class_init( NAObjectClass *klass );
+static void           iduplicable_iface_init( NAIDuplicableInterface *iface );
+static void           instance_init( GTypeInstance *instance, gpointer klass );
+static void           instance_constructed( GObject *object );
+static void           instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void           instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void           instance_dispose( GObject *object );
+static void           instance_finalize( GObject *object );
 
-static void      v_check_edited_status( const NAObject *object );
-static NAObject *v_duplicate( const NAObject *object );
-static void      v_copy( NAObject *target, const NAObject *source );
-static gboolean  v_are_equal( const NAObject *a, const NAObject *b );
-static gboolean  v_is_valid( const NAObject *object );
+static NAIDuplicable *iduplicable_new( const NAIDuplicable *object );
+static void           iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
+static gboolean       iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
+static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
 
-static void      do_dump( const NAObject *object );
-static void      do_check_edited_status( const NAObject *object );
-static void      do_copy( NAObject *target, const NAObject *source );
-static gboolean  do_are_equal( const NAObject *a, const NAObject *b );
-static gboolean  do_is_valid( const NAObject *object );
+static NAObject      *v_new( const NAObject *object );
+static void           v_copy( NAObject *target, const NAObject *source );
+static gchar         *v_get_clipboard_id( const NAObject *object );
+static gboolean       v_are_equal( const NAObject *a, const NAObject *b );
+static gboolean       v_is_valid( const NAObject *object );
 
-static NAObject *iduplicable_duplicate( const NAObject *object );
-static gboolean  iduplicable_are_equal( const NAObject *a, const NAObject *b );
-static gboolean  iduplicable_is_valid( const NAObject *object );
+static void           do_copy( NAObject *target, const NAObject *source );
+static gboolean       do_are_equal( const NAObject *a, const NAObject *b );
+static gboolean       do_is_valid( const NAObject *object );
+static void           do_dump( const NAObject *object );
 
 GType
 na_object_get_type( void )
@@ -114,7 +114,7 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo idupicable_iface_info = {
+	static const GInterfaceInfo iduplicable_iface_info = {
 		( GInterfaceInitFunc ) iduplicable_iface_init,
 		NULL,
 		NULL
@@ -124,7 +124,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NAObject", &info, 0 );
 
-	g_type_add_interface_static( type, NA_IDUPLICABLE_TYPE, &idupicable_iface_info );
+	g_type_add_interface_static( type, NA_IDUPLICABLE_TYPE, &iduplicable_iface_info );
 
 	return( type );
 }
@@ -163,12 +163,11 @@ class_init( NAObjectClass *klass )
 
 	klass->private = g_new0( NAObjectClassPrivate, 1 );
 
-	klass->dump = do_dump;
-	klass->check_edited_status = do_check_edited_status;
-	klass->duplicate = NULL;
+	klass->new = NULL;
 	klass->copy = do_copy;
 	klass->are_equal = do_are_equal;
 	klass->is_valid = do_is_valid;
+	klass->dump = do_dump;
 }
 
 static void
@@ -178,7 +177,8 @@ iduplicable_iface_init( NAIDuplicableInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->duplicate = iduplicable_duplicate;
+	iface->copy = iduplicable_copy;
+	iface->new = iduplicable_new;
 	iface->are_equal = iduplicable_are_equal;
 	iface->is_valid = iduplicable_is_valid;
 }
@@ -186,10 +186,10 @@ iduplicable_iface_init( NAIDuplicableInterface *iface )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	/*static const gchar *thisfn = "na_object_instance_init";
-	g_debug( "%s: instance=%p, klass=%p", thisfn, instance, klass );*/
+	/*static const gchar *thisfn = "na_object_instance_init";*/
 	NAObject *self;
 
+	/*g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );*/
 	g_assert( NA_IS_OBJECT( instance ));
 	self = NA_OBJECT( instance );
 
@@ -201,10 +201,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *object )
 {
-	na_iduplicable_init( NA_OBJECT( object ));
+	na_iduplicable_init( NA_IDUPLICABLE( object ));
 
 	/* chain call to parent class */
-	if( st_parent_class->constructed ){
+	if( G_OBJECT_CLASS( st_parent_class )->constructed ){
 		G_OBJECT_CLASS( st_parent_class )->constructed( object );
 	}
 }
@@ -270,7 +270,9 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		}
 	}
 }
 
@@ -288,7 +290,7 @@ instance_finalize( GObject *object )
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if( st_parent_class->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
 }
@@ -316,13 +318,31 @@ na_object_dump( const NAObject *object )
  * Exactly duplicates a #NAObject-derived object.
  *
  * Returns: the new #NAObject.
+ *
+ *     na_object_duplicate( origin )
+ *      +- na_iduplicable_duplicate( origin )
+ *      |   +- dup = duplicate( origin )
+ *      |   |   +- dup = v_get_new_object()	-> interface get_new_object
+ *      |   |   +- v_copy( dup, origin )	-> interface copy
+ *      |   |
+ *      |   +- set_origin( dup, origin )
+ *      |   +- set_modified( dup, FALSE )
+ *      |   +- set_valid( dup, FALSE )
+ *      |
+ *      +- na_object_check_edited_status
  */
 NAObject *
 na_object_duplicate( const NAObject *object )
 {
+	NAIDuplicable *duplicate;
+
 	g_assert( NA_IS_OBJECT( object ));
 
-	return( na_iduplicable_duplicate( object ));
+	duplicate = na_iduplicable_duplicate( NA_IDUPLICABLE( object ));
+
+	na_object_check_edited_status( NA_OBJECT( duplicate ));
+
+	return( NA_OBJECT( duplicate ));
 }
 
 /**
@@ -342,6 +362,23 @@ na_object_copy( NAObject *target, const NAObject *source )
 }
 
 /**
+ * na_object_get_clipboard_id:
+ * @object: the #NAObject-derived object for which we will get a id.
+ *
+ * Returns: a newly allocated string which contains an id for the
+ * #NAobject. This id is suitable for the internal clipboard.
+ *
+ * The returned string should be g_free() by the caller.
+ */
+gchar *
+na_object_get_clipboard_id( const NAObject *object )
+{
+	g_assert( NA_IS_OBJECT( object ));
+
+	return( v_get_clipboard_id( object ));
+}
+
+/**
  * na_object_check_edited_status:
  * @object: the #NAObject object to be checked.
  *
@@ -349,13 +386,19 @@ na_object_copy( NAObject *target, const NAObject *source )
  *
  * Internally set some properties which may be requested later. This
  * two-steps check-request let us optimize some work in the UI.
+ *
+ * na_object_check_edited_status( object )
+ *  +- na_iduplicable_check_edited_status( object )
+ *      +- get_origin( object )
+ *      +- modified_status = v_are_equal( origin, object )	-> interface are_equal
+ *      +- valid_status = v_is_valid( object )				-> interface is_valid
  */
 void
 na_object_check_edited_status( const NAObject *object )
 {
 	g_assert( NA_IS_OBJECT( object ));
 
-	v_check_edited_status( object );
+	na_iduplicable_check_edited_status( NA_IDUPLICABLE( object ));
 }
 
 /**
@@ -397,22 +440,6 @@ na_object_is_valid( const NAObject *object )
 }
 
 /**
- * na_object_get_origin:
- * @object: the #NAObject object whose status is requested.
- *
- * Returns the original object which was at the origin of @object.
- *
- * Returns: a #NAObject, or NULL.
- */
-NAObject *
-na_object_get_origin( const NAObject *object )
-{
-	g_assert( NA_IS_OBJECT( object ));
-
-	return( na_iduplicable_get_origin( object ));
-}
-
-/**
  * na_object_get_modified_status:
  * @object: the #NAObject object whose status is requested.
  *
@@ -432,7 +459,7 @@ na_object_get_modified_status( const NAObject *object )
 {
 	g_assert( NA_IS_OBJECT( object ));
 
-	return( na_iduplicable_is_modified( object ));
+	return( na_iduplicable_is_modified( NA_IDUPLICABLE( object )));
 }
 
 /**
@@ -454,23 +481,23 @@ na_object_get_valid_status( const NAObject *object )
 {
 	g_assert( NA_IS_OBJECT( object ));
 
-	return( na_iduplicable_is_valid( object ));
+	return( na_iduplicable_is_valid( NA_IDUPLICABLE( object )));
 }
 
 /**
- * na_object_set_origin:
+ * na_object_get_origin:
  * @object: the #NAObject object whose status is requested.
- * @origin: a #NAObject which will be set as the new origin of @object.
  *
- * Sets the new origin of @object.
+ * Returns the original object which was at the origin of @object.
+ *
+ * Returns: a #NAObject, or NULL.
  */
-void
-na_object_set_origin( NAObject *object, const NAObject *origin )
+NAObject *
+na_object_get_origin( const NAObject *object )
 {
 	g_assert( NA_IS_OBJECT( object ));
-	g_assert( NA_IS_OBJECT( origin ) || !origin );
 
-	na_iduplicable_set_origin( object, origin );
+	return( NA_OBJECT( na_iduplicable_get_origin( NA_IDUPLICABLE( object ))));
 }
 
 /**
@@ -518,6 +545,22 @@ na_object_get_label( const NAObject *object )
 }
 
 /**
+ * na_object_set_origin:
+ * @object: the #NAObject object whose status is requested.
+ * @origin: a #NAObject which will be set as the new origin of @object.
+ *
+ * Sets the new origin of @object.
+ */
+void
+na_object_set_origin( NAObject *object, const NAObject *origin )
+{
+	g_assert( NA_IS_OBJECT( object ));
+	g_assert( NA_IS_OBJECT( origin ) || !origin );
+
+	na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
+}
+
+/**
  * na_object_set_id:
  * @object: the #NAObject object whose internal identifiant is to be
  * set.
@@ -530,6 +573,7 @@ void
 na_object_set_id( NAObject *object, const gchar *id )
 {
 	g_assert( NA_IS_OBJECT( object ));
+
 	g_object_set( G_OBJECT( object ), PROP_NAOBJECT_ID_STR, id, NULL );
 }
 
@@ -544,25 +588,39 @@ void
 na_object_set_label( NAObject *object, const gchar *label )
 {
 	g_assert( NA_IS_OBJECT( object ));
+
 	g_object_set( G_OBJECT( object ), PROP_NAOBJECT_LABEL_STR, label, NULL );
 }
 
-static void
-v_check_edited_status( const NAObject *object )
+static NAIDuplicable *
+iduplicable_new( const NAIDuplicable *object )
 {
-	if( NA_OBJECT_GET_CLASS( object )->check_edited_status ){
-		NA_OBJECT_GET_CLASS( object )->check_edited_status( object );
+	return( NA_IDUPLICABLE( v_new( NA_OBJECT( object ))));
+}
 
-	} else {
-		do_check_edited_status( object );
-	}
+static void
+iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
+{
+	v_copy( NA_OBJECT( target ), NA_OBJECT( source ));
+}
+
+static gboolean
+iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
+{
+	return( v_are_equal( NA_OBJECT( a ), NA_OBJECT( b )));
+}
+
+static gboolean
+iduplicable_is_valid( const NAIDuplicable *object )
+{
+	return( v_is_valid( NA_OBJECT( object )));
 }
 
 static NAObject *
-v_duplicate( const NAObject *object )
+v_new( const NAObject *object )
 {
-	if( NA_OBJECT_GET_CLASS( object )->duplicate ){
-		return( NA_OBJECT_GET_CLASS( object )->duplicate( object ));
+	if( NA_OBJECT_GET_CLASS( object )->new ){
+		return( NA_OBJECT_GET_CLASS( object )->new( object ));
 	}
 
 	return( NULL );
@@ -574,6 +632,16 @@ v_copy( NAObject *target, const NAObject *source )
 	if( NA_OBJECT_GET_CLASS( target )->copy ){
 		NA_OBJECT_GET_CLASS( target )->copy( target, source );
 	}
+}
+
+static gchar *
+v_get_clipboard_id( const NAObject *object )
+{
+	if( NA_OBJECT_GET_CLASS( object )->get_clipboard_id ){
+		return( NA_OBJECT_GET_CLASS( object )->get_clipboard_id( object ));
+	}
+
+	return( NULL );
 }
 
 static gboolean
@@ -594,26 +662,6 @@ v_is_valid( const NAObject *object )
 	}
 
 	return( TRUE );
-}
-
-static void
-do_dump( const NAObject *object )
-{
-	static const char *thisfn = "na_object_do_dump";
-
-	g_assert( NA_IS_OBJECT( object ));
-
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_debug( "%s:     id=%s", thisfn, object->private->id );
-	g_debug( "%s:  label=%s", thisfn, object->private->label );
-
-	na_iduplicable_dump( object );
-}
-
-static void
-do_check_edited_status( const NAObject *object )
-{
-	na_iduplicable_check_edited_status( object );
 }
 
 static void
@@ -642,26 +690,26 @@ do_are_equal( const NAObject *a, const NAObject *b )
 	return( TRUE );
 }
 
+/*
+ * from NAObject point of view, a valid object requires an id
+ * (not null, not empty)
+ */
 static gboolean
 do_is_valid( const NAObject *object )
 {
 	return( object->private->id && strlen( object->private->id ));
 }
 
-static NAObject *
-iduplicable_duplicate( const NAObject *object )
+static void
+do_dump( const NAObject *object )
 {
-	return( v_duplicate( object ));
-}
+	static const char *thisfn = "na_object_do_dump";
 
-static gboolean
-iduplicable_are_equal( const NAObject *a, const NAObject *b )
-{
-	return( v_are_equal( a, b ));
-}
+	g_assert( NA_IS_OBJECT( object ));
 
-static gboolean
-iduplicable_is_valid( const NAObject *object )
-{
-	return( v_is_valid( object ));
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s:     id=%s", thisfn, object->private->id );
+	g_debug( "%s:  label=%s", thisfn, object->private->label );
+
+	na_iduplicable_dump( NA_IDUPLICABLE( object ));
 }

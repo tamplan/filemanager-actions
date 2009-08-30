@@ -3,8 +3,14 @@ Version xxxxxx
 
 	Release date
 
-	Displays actions as a submenu of Nautilus context menu.
-	Menu items have now keyboard accelerators.
+	Actions can be displayed as Nautilus submenus.
+	An 'About Nautilus Actions' item can be added to Nautilus context
+	menu.
+	Menubar items have now keyboard accelerators.
+	Preferences can be edited in NACT user interface.
+	Actions can be freely reordered in NACT user interface.
+	Actions can be exported as XML files by drag and drop to file-
+	manager, text editor, ...
 
 	Bugfixes
 

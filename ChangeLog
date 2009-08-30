@@ -1,3 +1,119 @@
+2009-08-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* data/nautilus-actions.schemas.in:
+	Remove schema for 'Use submenu' preference.
+	Add schemas for 'Add About' and 'Alphabetical order' preferences.
+
+	* doc/objects-hierarchy.odg:
+	Update doc to show new NAObjectItem and NAActionMenu classes.
+
+	* src/common/na-action-class.h:
+	NAAction is now derived from NAObjectItem.
+
+	* src/common/na-action-profile.c:
+	Remove PROP_NAPROFILE_NAME and PROP_NAPROFILE_LABEL properties.
+	Remove duplicate() virtual function.
+	Add new() and get_clipboard_id() virtual functions.
+
+	* src/common/na-action.c:
+	Remove PROP_NAACTION_UUID, PROP_NAACTION_LABEL,
+	PROP_NAACTION_TOOLTIP and PROP_NAACTION_ICON properties.
+	Remove duplicate() and check_edited_status() virtual functions.
+	Add new() and get_clipboard_id() virtual functions.
+
+	* src/common/na-action-menu.c:
+	* src/common/na-action-menu.h: New files.
+
+	* src/common/na-gconf.c:
+	Now watches for preferences directory to manage display mode in
+	Nautilus.
+
+	* src/common/na-iduplicable.c:
+	* src/common/na-iduplicable.h:
+	Replace duplicate() virtual function with copy() and new().
+	All interface is now declared with NAIDuplicable instead of NAObject.
+
+	* src/common/na-iio-provider.c:
+	* src/common/na-iio-provider.h:
+	Temporarily sort read actions.
+	Define NA_IIO_PROVIDER_SIGNAL_DISPLAY_ORDER_CHANGED and
+	NA_IIO_PROVIDER_SIGNAL_DISPLAY_ABOUT_CHANGED new signals.
+
+	* src/common/na-ipivot-consumer.c:
+	Take advantage of new signals defined in na-iio-provider.h.
+	Define on_display_about_changed() and on_display_order_changed()
+	new virtual functions.
+
+	* src/common/na-iprefs.c:
+	* src/common/na-iprefs.h (na_iprefs_get_alphabetical_order,
+	na_iprefs_get_add_about_item): New functions.
+
+	* src/common/na-object.c:
+	* src/common/na-object.h (new, copy, get_clipboard_id):
+	New virtual functions.
+
+	* src/common/na-object-item.c:
+	* src/common/na-object-item.h: New files.
+
+	* src/common/na-pivot.c:
+	Take advantage of new signals defined in na-iio-provider.h.
+
+	* src/common/na-utils.c:
+	* src/common/na-utils.h (na_utils_remove_last_level_from_path,
+	na_utils_is_writable_dir, na_utils_exist_file): New functions.
+
+	* src/common/na-xml-writer.c:
+	* src/common/na-xml-writer.h (na_xml_writer_get_output_fname,
+	na_xml_writer_get_xml_buffer, na_xml_writer_output_xml):
+	New functions.
+
+	* src/nact/egg-tree-multi-dnd.c:
+	* src/nact/egg-tree-multi-dnd.h: New files.
+
+	* src/nact/nact-application.c:
+	No more display debug message in appli_get_application_name().
+
+	* src/nact/nact-assistant-export.c
+	(on_actions_list_selection_changed): Use actual parameters types.
+	(is_writable_dir): Removed function.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iaction-tab.h
+	(get_selected): Removed virtual function.
+	(nact_iaction_tab_set_action): Add selected items parameter.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h:
+	Implements drag from the tree view based on a dedicated
+	NactTreeModel.
+	Remove virtual function on_selection_changed().
+	nact_iactions_list_get_selected_items(),
+	nact_iactions_list_set_dnd_mode(): New functions.
+
+	* nact/nact-imenubar.c:
+	* nact/nact-imenubar.h:
+	Add 'New menu' item in the menubar.
+	Define new insert_item() virtual function.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h:
+	Implements NaIPrefs interface.
+	Be kept informed of preferences modifications.
+
+	* src/nact/nact-preferences-editor.c:
+	Replace 'Display as submenu' by 'Add About' and 'Display in
+	alphabetical order' preferences.
+
+	* src/nact/nact-selection.c:
+	* src/nact/nact-selection.h: New files.
+
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h: New files.
+
+	* src/plugin/nautilus-actions.c:
+	Creates submenus if asked for.
+	Adds 'About Nautilus Actions' item is asked for.
+
 2009-08-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Add a comment about bug #589745.

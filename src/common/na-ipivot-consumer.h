@@ -69,7 +69,31 @@ typedef struct {
 	 * a bunch of modifications. At this time, the embedded list of
 	 * #NAAction has been updated to be up to date.
 	 */
-	void ( *on_actions_changed )( NAIPivotConsumer *instance, gpointer user_data );
+	void ( *on_actions_changed )      ( NAIPivotConsumer *instance, gpointer user_data );
+
+	/**
+	 * on_display_about_changed:
+	 * @instance: the #NAIPivotConsumer instance which implements this
+	 * interface.
+	 * user_data: user data set when emitting the message. Currently,
+	 * not used.
+	 *
+	 * This function is triggered each time the setting of the display
+	 * of an 'About' item in the Nautilus context menu is changed.
+	 */
+	void ( *on_display_about_changed )( NAIPivotConsumer *instance, gpointer user_data );
+
+	/**
+	 * on_display_order_changed:
+	 * @instance: the #NAIPivotConsumer instance which implements this
+	 * interface.
+	 * user_data: user data set when emitting the message. Currently,
+	 * not used.
+	 *
+	 * This function is triggered each time the display order preference
+	 * is changed.
+	 */
+	void ( *on_display_order_changed )( NAIPivotConsumer *instance, gpointer user_data );
 }
 	NAIPivotConsumerInterface;
 
@@ -78,6 +102,8 @@ GType na_ipivot_consumer_get_type( void );
 void  na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance );
 
 void  na_ipivot_consumer_notify( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_display_order_change( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_display_about_change( NAIPivotConsumer *instance );
 
 G_END_DECLS
 

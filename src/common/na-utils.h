@@ -59,6 +59,13 @@ gchar   *na_utils_path_to_key( const gchar *path );
  */
 gchar *  na_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list );
 
+/*
+ * path manipulations
+ */
+gchar   *na_utils_remove_last_level_from_path( const gchar *path );
+gboolean na_utils_is_writable_dir( const gchar *uri );
+gboolean na_utils_exist_file( const gchar *uri );
+
 G_END_DECLS
 
 #endif /* __NA_UTILS_H__ */

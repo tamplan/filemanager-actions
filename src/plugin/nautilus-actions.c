@@ -74,8 +74,8 @@ static void              instance_finalize( GObject *object );
 static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
 static NautilusMenuItem *create_menu_item( NAAction *action, NAActionProfile *profile, GList *files );
-static NautilusMenuItem *create_sub_menu( NautilusMenu **menu );
-static void              add_post_submenu( NautilusMenu *menu );
+/*static NautilusMenuItem *create_sub_menu( NautilusMenu **menu );*/
+static void              add_about_item( NautilusMenu *menu );
 static void              execute_action( NautilusMenuItem *item, NAActionProfile *profile );
 static void              actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data );
 
@@ -281,7 +281,8 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	NautilusMenuItem *item;
 	GSList *actions = NULL;
 	gchar *label, *uuid;
-	gboolean have_submenu;
+	gint submenus = 0;
+	gboolean add_about;
 
 	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
 			thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
@@ -293,8 +294,6 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	if( !g_list_length( files )){
 		return(( GList * ) NULL );
 	}
-
-	have_submenu = na_iprefs_get_bool( NA_IPREFS( self ), PREFS_DISPLAY_AS_SUBMENU );
 
 	if( !self->private->dispose_has_run ){
 		actions = na_pivot_get_actions( self->private->pivot );
@@ -333,22 +332,24 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 				if( na_action_profile_is_candidate( profile, files )){
 					item = create_menu_item( action, profile, files );
+					items = g_list_append( items, item );
 
-					if( have_submenu ){
+					/*if( have_submenu ){
 						if( !menu ){
 							items = g_list_append( items, create_sub_menu( &menu ));
 						}
 						nautilus_menu_append_item( menu, item );
 
 					} else {
-						items = g_list_append( items, item );
-					}
+					}*/
 					break;
 				}
 			}
 		}
-		if( have_submenu ){
-			add_post_submenu( menu );
+
+		add_about = na_iprefs_get_add_about_item( NA_IPREFS( self ));
+		if( submenus == 1 && add_about ){
+			add_about_item( menu );
 		}
 	}
 
@@ -398,7 +399,7 @@ create_menu_item( NAAction *action, NAActionProfile *profile, GList *files )
 	return( item );
 }
 
-static NautilusMenuItem *
+/*static NautilusMenuItem *
 create_sub_menu( NautilusMenu **menu )
 {
 	NautilusMenuItem *item;
@@ -418,10 +419,10 @@ create_sub_menu( NautilusMenu **menu )
 	g_free( icon_name );
 
 	return( item );
-}
+}*/
 
 static void
-add_post_submenu( NautilusMenu *menu )
+add_about_item( NautilusMenu *menu )
 {
 	gchar *icon_name = na_about_get_icon_name();
 

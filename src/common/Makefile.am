@@ -40,6 +40,8 @@ libnact_la_SOURCES = \
 	na-action.c									\
 	na-action.h									\
 	na-action-class.h							\
+	na-action-menu.c							\
+	na-action-menu.h							\
 	na-action-profile.c							\
 	na-action-profile.h							\
 	na-action-profile-class.h					\
@@ -58,6 +60,8 @@ libnact_la_SOURCES = \
 	na-iprefs.h									\
 	na-object.c									\
 	na-object.h									\
+	na-object-item.c							\
+	na-object-item.h							\
 	na-pivot.c									\
 	na-pivot.h									\
 	na-utils.c									\

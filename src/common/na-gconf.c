@@ -41,6 +41,7 @@
 #include "na-gconf.h"
 #include "na-gconf-keys.h"
 #include "na-iio-provider.h"
+#include "na-iprefs.h"
 #include "na-utils.h"
 
 /* private class data
@@ -115,7 +116,7 @@ static guint          install_gconf_watch( NAGConf *gconf );
 static void           install_gconf_watched_dir( NAGConf *gconf );
 static void           remove_gconf_watch( NAGConf *gconf );
 static void           remove_gconf_watched_dir( NAGConf *gconf );
-static void           action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
+static void           gconf_dir_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data );
 
 GType
 na_gconf_get_type( void )
@@ -1115,7 +1116,7 @@ install_gconf_watch( NAGConf *gconf )
 		gconf_client_notify_add(
 			gconf->private->gconf,
 			NA_GCONF_CONFIG_PATH,
-			( GConfClientNotifyFunc ) action_changed_cb,
+			( GConfClientNotifyFunc ) gconf_dir_changed_cb,
 			gconf,
 			NULL,
 			&error
@@ -1140,7 +1141,15 @@ install_gconf_watched_dir( NAGConf *gconf )
 			gconf->private->gconf, NA_GCONF_CONFIG_PATH, GCONF_CLIENT_PRELOAD_RECURSIVE, &error );
 
 	if( error ){
-		g_warning( "%s: error=%s", thisfn, error->message );
+		g_warning( "%s: path=%s, error=%s", thisfn, NA_GCONF_CONFIG_PATH, error->message );
+		g_error_free( error );
+	}
+
+	gconf_client_add_dir(
+			gconf->private->gconf, NA_GCONF_PREFS_PATH, GCONF_CLIENT_PRELOAD_ONELEVEL, &error );
+
+	if( error ){
+		g_warning( "%s: path=%s, error=%s", thisfn, NA_GCONF_PREFS_PATH, error->message );
 		g_error_free( error );
 	}
 }
@@ -1188,20 +1197,41 @@ remove_gconf_watched_dir( NAGConf *gconf )
  * if the modification is made elsewhere (an action is imported as a
  * xml file in gconf, or gconf is directly edited), we'd have to rely
  * only on the standard watch mechanism
+ *
+ * Please note that this handler is also called when a preference is
+ * changed, in order to advertise Nautilus when the display mode of
+ * actions is modified. So we have to check the entry to see if a
+ * message is needed to be sent.
  */
 static void
-action_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data )
+gconf_dir_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, gpointer user_data )
 {
 	/*static const gchar *thisfn = "action_changed_cb";*/
 	/*g_debug( "%s: client=%p, cnxnid=%u, entry=%p, user_data=%p", thisfn, client, cnxn_id, entry, user_data );*/
 	NAGConf *gconf;
 	NAPivotNotify *npn;
+	const char *key;
 
 	g_assert( NA_IS_GCONF( user_data ));
 
 	gconf = NA_GCONF( user_data );
 	g_assert( NA_IS_IIO_PROVIDER( gconf ));
 
-	npn = entry_to_notify( entry );
-	g_signal_emit_by_name( gconf->private->notified, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );
+	key = gconf_entry_get_key( entry );
+
+	if( !strncmp( key, NA_GCONF_CONFIG_PATH, strlen( NA_GCONF_CONFIG_PATH ))){
+		npn = entry_to_notify( entry );
+		g_signal_emit_by_name( gconf->private->notified, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );
+		return;
+	}
+
+	if( strstr( key, PREFS_DISPLAY_ALPHABETICAL_ORDER ) != NULL ){
+		g_signal_emit_by_name( gconf->private->notified, NA_IIO_PROVIDER_SIGNAL_DISPLAY_ORDER_CHANGED, NULL );
+		return;
+	}
+
+	if( strstr( key, PREFS_ADD_ABOUT_ITEM ) != NULL ){
+		g_signal_emit_by_name( gconf->private->notified, NA_IIO_PROVIDER_SIGNAL_DISPLAY_ABOUT_CHANGED, NULL );
+		return;
+	}
 }

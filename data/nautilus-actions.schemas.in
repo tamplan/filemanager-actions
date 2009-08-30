@@ -217,17 +217,6 @@ All schemes used by Nautilus can be used here.</long>
     <!-- schemas for preferences -->
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/display-as-submenu</key>
-      <owner>nautilus-actions</owner>
-      <type>bool</type>
-      <locale name="C">
-        <short>Display actions as a Nautilus submenu</short>
-        <long>When TRUE, the available Nautilus-Actions actions are displayed as a submenu of the Nautilus context menu</long>
-      </locale>
-      <default>false</default>
-    </schema>
-
-    <schema>
       <key>/schemas/apps/nautilus-actions/preferences/export-assistant</key>
       <owner>nautilus-actions</owner>
       <type>list</type>
@@ -341,6 +330,28 @@ All schemes used by Nautilus can be used here.</long>
         <long>Position and size of the preferences dialog ; default is set by the window manager</long>
       </locale>
       <default>[]</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/preferences-add-about-item</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Add an 'About' item in the Nautilus context menu</short>
+        <long>If TRUE, and if the user has defined a single root menu for its actions, then an 'About Nautilus Actions' will be displayed at end of the first submenu.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/preferences-alphabetical-order</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Sort actions in alphabetical order</short>
+        <long>When TRUE, the actions are maintained in alphabetical order (historical behavior). When FALSE, user is free to reorder them via Nautilus-Actions configuration tool.</long>
+      </locale>
+      <default>true</default>
     </schema>
 
   </schemalist>

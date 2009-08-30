@@ -59,9 +59,9 @@ static void       interface_base_finalize( NactIMenubarInterface *klass );
 static void       on_file_menu_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_new_action_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_new_profile_activated( GtkMenuItem *item, NactWindow *window );
+static void       on_new_menu_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_save_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_quit_activated( GtkMenuItem *item, NactWindow *window );
-static void       add_action( NactWindow *window, NAAction *action );
 static void       add_profile( NactWindow *window, NAAction *action, NAActionProfile *profile );
 
 static void       on_edit_menu_selected( GtkMenuItem *item, NactWindow *window );
@@ -81,7 +81,7 @@ static void       on_about_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_menu_item_selected( GtkItem *item, NactWindow *window );
 static void       on_menu_item_deselected( GtkItem *item, NactWindow *window );
 
-static void       v_add_action( NactWindow *window, NAAction *action );
+static void       v_insert_item( NactWindow *window, NAAction *action );
 static void       v_add_profile( NactWindow *window, NAActionProfile *profile );
 static void       v_remove_action( NactWindow *window, NAAction *action );
 static GSList    *v_get_deleted_actions( NactWindow *window );
@@ -111,6 +111,10 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the 'New profile' item */
 				N_( "Define a new profile attached to the current action." ),
 				G_CALLBACK( on_new_profile_activated ) },
+		{ "NewMenuItem", NULL, N_( "_New _menu" ), "<Ctrl>M",
+				/* i18n: tooltip displayed in the status bar when selecting the 'New menu' item */
+				N_( "Insert a new menu at the current position." ),
+				G_CALLBACK( on_new_menu_activated ) },
 		{ "SaveItem", GTK_STOCK_SAVE, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting 'Save' item */
 				N_( "Record all the modified actions. Invalid actions will be silently ignored." ),
@@ -169,6 +173,9 @@ static const MenuOnSelectedStruct menu_callback[] = {
 };
 
 /* associates action with menu to be able to build their path
+ * should also be done by parsing the XML definition file (beurk !)
+ * or if Gtk+ would give the path of a given action (maybe in the
+ * future ??)
  */
 typedef struct {
 	char *menu;
@@ -179,6 +186,7 @@ typedef struct {
 static const MenuActionStruct menu_actions[] = {
 		{ "FileMenu", "NewActionItem" },
 		{ "FileMenu", "NewProfileItem" },
+		{ "FileMenu", "NewMenuItem" },
 		{ "FileMenu", "SaveItem" },
 		{ "FileMenu", "QuitItem" },
 		{ "EditMenu", "DuplicateItem" },
@@ -384,7 +392,7 @@ static void
 on_new_action_activated( GtkMenuItem *item, NactWindow *window )
 {
 	NAAction *action = na_action_new_with_profile();
-	add_action( window, action );
+	v_insert_item( window, action );
 }
 
 static void
@@ -409,6 +417,13 @@ on_new_profile_activated( GtkMenuItem *item, NactWindow *window )
 	g_free( name );
 
 	add_profile( window, action, new_profile );
+}
+
+static void
+on_new_menu_activated( GtkMenuItem *item, NactWindow *window )
+{
+	NAActionMenu *menu = na_action_menu_new();
+	v_insert_item( window, NA_ACTION( menu ));
 }
 
 static void
@@ -523,25 +538,6 @@ on_quit_activated( GtkMenuItem *item, NactWindow *window )
 }
 
 static void
-add_action( NactWindow *window, NAAction *action )
-{
-	gchar *uuid, *label;
-
-	na_object_check_edited_status( NA_OBJECT( action ));
-	v_add_action( window, action );
-
-	v_update_actions_list( window );
-
-	uuid = na_action_get_uuid( action );
-	label = na_action_get_label( action );
-	v_select_actions_list( window, NA_ACTION_TYPE, uuid, label );
-	g_free( label );
-	g_free( uuid );
-
-	v_setup_dialog_title( window );
-}
-
-static void
 add_profile( NactWindow *window, NAAction *action, NAActionProfile *profile )
 {
 	gchar *uuid, *label;
@@ -617,7 +613,7 @@ on_duplicate_activated( GtkMenuItem *item, NactWindow *window )
 		g_free( dup_label );
 		g_free( label );
 
-		add_action( window, NA_ACTION( dup ));
+		v_insert_item( window, NA_ACTION( dup ));
 
 	} else {
 		g_assert( NA_IS_ACTION_PROFILE( object ));
@@ -643,13 +639,12 @@ on_delete_activated( GtkMenuItem *item, NactWindow *window )
 	GType type;
 	NAAction *action;
 
-	g_debug( "%s: item=%p, window=%p", thisfn, ( void * ) item, ( void * ) window );
-
 	object = v_get_selected( window );
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	if( !object ){
 		return;
 	}
+
+	g_debug( "%s: item=%p, window=%p", thisfn, ( void * ) item, ( void * ) window );
 
 	if( NA_IS_ACTION( object )){
 		uuid = na_action_get_uuid( NA_ACTION( object ));
@@ -727,7 +722,7 @@ on_import_activated( GtkMenuItem *item, NactWindow *window )
 	GSList *list = nact_assistant_import_run( window );
 	GSList *ia;
 	for( ia = list ; ia ; ia = ia->next ){
-		add_action( window, NA_ACTION( ia->data ));
+		v_insert_item( window, NA_ACTION( ia->data ));
 	}
 }
 
@@ -786,10 +781,12 @@ on_menu_item_deselected( GtkItem *item, NactWindow *window )
 }
 
 static void
-v_add_action( NactWindow *window, NAAction *action )
+v_insert_item( NactWindow *window, NAAction *action )
 {
-	if( NACT_IMENUBAR_GET_INTERFACE( window )->add_action ){
-		NACT_IMENUBAR_GET_INTERFACE( window )->add_action( window, action );
+	na_object_check_edited_status( NA_OBJECT( action ));
+
+	if( NACT_IMENUBAR_GET_INTERFACE( window )->insert_item ){
+		NACT_IMENUBAR_GET_INTERFACE( window )->insert_item( window, action );
 	}
 }
 

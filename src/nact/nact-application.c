@@ -332,9 +332,9 @@ appli_initialize_application( BaseApplication *application )
 static gchar *
 appli_get_application_name( BaseApplication *application )
 {
-	static const gchar *thisfn = "nact_application_appli_get_application_name";
+	/*static const gchar *thisfn = "nact_application_appli_get_application_name";*/
 
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+	/*g_debug( "%s: application=%p", thisfn, ( void * ) application );*/
 
 	/* i18n: this is the application name, used in window title */
 	return( g_strdup( _( "Nautilus Actions Configuration Tool" )));
