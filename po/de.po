@@ -1410,7 +1410,7 @@ msgstr "Fehler: Nur eine Ausgabeoption darf angegeben werden."
 #: ../src/utils/nautilus-actions-new.c:135
 #, c-format
 msgid "Action '%s' succesfully written to GConf configuration.\n"
-msgstr "Aktion »%s« wurde erfolgreich in der GConf-Datenbank gespeichert."
+msgstr "Aktion »%s« wurde erfolgreich in der GConf-Datenbank gespeichert.\n"
 
 #. i18n: Action <action_label> written to <output_filename>...
 #: ../src/utils/nautilus-actions-new.c:142
