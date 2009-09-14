@@ -7,799 +7,53 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-16 17:18+0200\n"
-"PO-Revision-Date: 2009-03-16 13:56+0100\n"
+"POT-Creation-Date: 2009-09-14 12:23+0200\n"
+"PO-Revision-Date: 2009-09-14 15:53+0200\n"
 "Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Language-Team: Basque <itzulpena@euskalgnu.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../nact/nact.desktop.in.h:1
-msgid "Add items to the Nautilus popup menu"
-msgstr "Gehitu elementuak Nautilus-en laster-menuari"
-
-#: ../nact/nact.desktop.in.h:2
-msgid "Nautilus Actions Configuration"
-msgstr "Nautilus-eko ekintzen konfigurazioa"
-
-#: ../nact/nautilus-actions-config.glade.h:1
-msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
-msgstr "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
-
-#: ../nact/nautilus-actions-config.glade.h:3
-#, no-c-format
-msgid "<b>%%</b>: a percent sign"
-msgstr "<b>%%</b>: ehunekoaren ikurra"
-
-#: ../nact/nautilus-actions-config.glade.h:5
-#, no-c-format
-msgid ""
-"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
-"full paths"
+#: ../data/nautilus-actions.schemas.in.h:1 ../src/common/na-xml-names.h:138
+msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr ""
-"<b>%M</b>: hautatutako fitxategien/karpeten zerrenda (beraien bide-izen "
-"osoekin) zuriunez bereiztuta"
+"'true' (egia) fitxategi-izenen ereduek maiuskulak eta minuskulak bereiztu "
+"behar badute, bestela 'false' (faltsua)"
 
-#: ../nact/nautilus-actions-config.glade.h:7
-#, no-c-format
-msgid "<b>%U</b>: username of the GnomeVFS URI"
-msgstr "<b>%U</b>: GnomeVFS URIaren erabiltzaile-izena"
-
-#: ../nact/nautilus-actions-config.glade.h:9
-#, no-c-format
-msgid "<b>%d</b>: base folder of the selected file(s)"
-msgstr "<b>%d</b>: hautatutako fitxategien oinarrizko karpeta"
-
-#: ../nact/nautilus-actions-config.glade.h:11
-#, no-c-format
-msgid ""
-"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+#: ../data/nautilus-actions.schemas.in.h:2 ../src/common/na-xml-names.h:146
+msgid "'true' if the selection can have files, 'false' otherwise"
 msgstr ""
-"<b>%f</b>: hautatutako fitxategiaren izena, edo aurrenekoa hainbat hautatuta "
-"egonez gero"
+"'true' (egia) hautapenak fitxategiak eduki baditzake, bestela "
+"'false' (faltsua)"
 
-#: ../nact/nautilus-actions-config.glade.h:13
-#, no-c-format
-msgid "<b>%h</b>: hostname of the GnomeVFS URI"
-msgstr "<b>%h</b>: GnomeVFS URIaren ostalari-izena"
+#: ../data/nautilus-actions.schemas.in.h:3 ../src/common/na-xml-names.h:153
+msgid "'true' if the selection can have folders, 'false' otherwise"
+msgstr "'true' (egia) hautapenak karpetak eduki baditzake, bestela 'false' (faltsua)"
 
-#: ../nact/nautilus-actions-config.glade.h:15
-#, no-c-format
-msgid ""
-"<b>%m</b>: space-separated list of the basenames of the selected\n"
-"file(s)/folder(s)"
+#: ../data/nautilus-actions.schemas.in.h:4 ../src/common/na-xml-names.h:160
+msgid "'true' if the selection can have several items, 'false' otherwise"
 msgstr ""
-"<b>%m</b>: hautatutako fitxategien/karpeten oinarrizko izenen zerrenda\n"
-"zuriunez bereiztuta"
+"'true' (egia) hautapenak hainbat elementu eduki baditzake, bestela "
+"'false' (faltsua)"
 
-#: ../nact/nautilus-actions-config.glade.h:18
-#, no-c-format
-msgid "<b>%s</b>: scheme of the GnomeVFS URI"
-msgstr "<b>%s</b>: GnomeVFS URIaren eskema"
-
-#: ../nact/nautilus-actions-config.glade.h:20
-#, no-c-format
-msgid "<b>%u</b>: GnomeVFS URI"
-msgstr "<b>%u</b>: GnomeVFS URIa"
-
-#: ../nact/nautilus-actions-config.glade.h:21
-msgid "<b>Action</b>"
-msgstr "<b>Ekintza</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:22
-msgid "<b>Appears if file matches</b>"
-msgstr "<b>Agertuko da fitxategia bat etorriz gero</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:23
-msgid "<b>Appears if scheme is in this list</b>"
-msgstr "<b>Agertuko da eskema zerrenda honetan badago</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:24
-msgid "<b>Appears if selection contains</b>"
-msgstr "<b>Agertuko da hautapenak hau badu</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:25
-msgid "<b>Nautilus Menu Item</b>"
-msgstr "<b>Nautilus-en menuko elementua</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:26
-msgid "<b>Profiles</b>"
-msgstr "<b>Profilak</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:28
-#, no-c-format
-msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
-msgstr "<i><b><span size=\"small\">adib., %s</span></b></i>"
-
-#: ../nact/nautilus-actions-config.glade.h:29
-msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
-msgstr "<span size=\"larger\"><b>Parametroen legenda</b></span>"
-
-#: ../nact/nautilus-actions-config.glade.h:30
-msgid ""
-"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
-"\n"
-"place secondary text here"
-msgstr ""
-"<span weight=\"bold\" size=\"larger\">Jarri maila nagusiko testua hemen</"
-"span>\n"
-"\n"
-"Jarri bigarren mailako testua hemen"
-
-#: ../nact/nautilus-actions-config.glade.h:33
-msgid ""
-"A string with wildcards (? or *) that will be used to match the filenames. "
-"You can set several filename patterns by separating them with a semi-colon "
-"(;)."
-msgstr ""
-"Komodinak (? edo *) dituen katea erabil daiteke fitxategien izenekin bat "
-"etortzeko. Fitxategi-izenen hainbat eredu ezar ditzakezu puntu eta komaz (;) "
-"bereiztuz."
-
-#: ../nact/nautilus-actions-config.glade.h:34
-msgid ""
-"A string with wildcards (? or *) that will be used to match the mimetypes of "
-"files. You can set several mimetype patterns by separating them with a semi-"
-"colon (;)."
-msgstr ""
-"Komodinak (? edo *) dituen katea erabil daiteke fitxategien MIME motekin bat "
-"etortzeko. MIME moten hainbat eredu ezar ditzakezu puntu eta komaz (;) "
-"bereiztuz."
-
-#: ../nact/nautilus-actions-config.glade.h:35
-msgid "Action"
-msgstr "Ekintza"
-
-#: ../nact/nautilus-actions-config.glade.h:36
-msgid "Advanced Conditions"
-msgstr "Baldintza aurreratuak"
-
-#: ../nact/nautilus-actions-config.glade.h:37
-msgid "Appears if selection has multiple files or folders"
-msgstr "Agertuko da hautapenak hainbat fitxategi edo karpeta baditu"
-
-#: ../nact/nautilus-actions-config.glade.h:38
-msgid "Both"
-msgstr "Biak"
-
-#: ../nact/nautilus-actions-config.glade.h:39
-msgid "Click to add a new scheme."
-msgstr "Egin klik eskema berria gehitzeko."
-
-#: ../nact/nautilus-actions-config.glade.h:40
-msgid "Click to choose a command from the file chooser dialog."
-msgstr ""
-"Egin klik komandoa aukeratzeko fitxategi-hautatzailearen elkarrizketa-"
-"koadrotik."
-
-#: ../nact/nautilus-actions-config.glade.h:41
-msgid ""
-"Click to choose a custom icon from a file instead of a predefined icon from "
-"the drop-down list."
-msgstr ""
-"Egin klik ikono pertsonalizatu bat aukeratzeko fitxategi batetik "
-"(aurredefinitutako ikonoen goiti-beherako zerrenda erabili ordez)."
-
-#: ../nact/nautilus-actions-config.glade.h:42
-msgid "Click to remove the selected scheme."
-msgstr "Egin klik hautatutako eskema kentzeko."
-
-#: ../nact/nautilus-actions-config.glade.h:43
-msgid ""
-"Click to toggle the display of the list of special tokens you can use in the "
-"parameter field."
-msgstr ""
-"Egin klik token berezien (parametroen zerrendan erabil ditzakezunak) "
-"zerrenda bistaratzea txandakatzeko."
-
-#: ../nact/nautilus-actions-config.glade.h:44
-msgid "Conditions"
-msgstr "Baldintzak"
-
-#: ../nact/nautilus-actions-config.glade.h:45
-msgid "Create a copy of the selected action."
-msgstr "Sortu hautatutako ekintzaren kopia."
-
-#: ../nact/nautilus-actions-config.glade.h:46
-msgid ""
-"Delete the action without any confirmation nor the possibility to restore it."
-msgstr ""
-"Ekintza ezabatu berrespena eskatu gabe edo leheneratzeko aukerarik izan gabe."
-
-#: ../nact/nautilus-actions-config.glade.h:47
-msgid "Duplicate"
-msgstr "Bikoiztu"
-
-#: ../nact/nautilus-actions-config.glade.h:48
-msgid "Export existing configs"
-msgstr "Esportatu existitzen diren konfigurazioak"
-
-#: ../nact/nautilus-actions-config.glade.h:49
-msgid "File to Import:"
-msgstr "Fitxategia inportatzeko:"
-
-#: ../nact/nautilus-actions-config.glade.h:50
-msgid "Filenames:"
-msgstr "Fitxategi-izenak:"
-
-#: ../nact/nautilus-actions-config.glade.h:51
-msgid "Icon:"
-msgstr "Ikonoa:"
-
-#: ../nact/nautilus-actions-config.glade.h:52
-msgid ""
-"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
-"will not match photo.JPG)"
-msgstr ""
-"Hautatuta egonez gero, fitxategi-izenen ereduak bat etortzean maiuskulak eta "
-"minuskulak desberdindu egingo dira (adib., *.jpg ez da bat etorriko "
-"'argazkia.JPG' fitxategi-izenarekin)"
-
-#: ../nact/nautilus-actions-config.glade.h:53
-msgid "Import new configurations"
-msgstr "Inportatu konfigurazio berriak"
-
-#: ../nact/nautilus-actions-config.glade.h:54
-msgid "Import/Export"
-msgstr "Inportatu/Esportatu"
-
-#: ../nact/nautilus-actions-config.glade.h:55
-msgid "Import/Export Settings"
-msgstr "Inportatu/Esportatu ezarpenak"
-
-#: ../nact/nautilus-actions-config.glade.h:56
-msgid "Label of the menu item in the Nautilus popup menu."
-msgstr "Menuko elementuaren etiketa Nautilus-en laster-menuan."
-
-#: ../nact/nautilus-actions-config.glade.h:57
-msgid "Label:"
-msgstr "Etiketa:"
-
-#: ../nact/nautilus-actions-config.glade.h:58
-msgid ""
-"Manage importation of external action configurations and exportation of "
-"existing actions."
-msgstr ""
-"Kudeatu kanpoko ekintzen konfigurazioak inportatzea eta esportatzea "
-"(existitzen diren ekintzenak)."
-
-#: ../nact/nautilus-actions-config.glade.h:59
-msgid "Match case"
-msgstr "Bat etorri maiuskulekin/minuskulekin"
-
-#: ../nact/nautilus-actions-config.glade.h:60
-msgid "Mimetypes:"
-msgstr "MIME motak:"
-
-#: ../nact/nautilus-actions-config.glade.h:61
-msgid "Nautilus Action Editor"
-msgstr "Nautilus-eko ekintzen editorea"
-
-#: ../nact/nautilus-actions-config.glade.h:62
-msgid "Nautilus Action Profile Editor"
-msgstr "Nautilus-eko ekintzen profilen editorea"
-
-#: ../nact/nautilus-actions-config.glade.h:63
-msgid "Nautilus Actions"
-msgstr "Nautilus-eko ekintzak"
-
-#: ../nact/nautilus-actions-config.glade.h:64
-msgid ""
-"Nautilus Actions Configuration Tool\n"
-"Application to configure Nautilus Action extension"
-msgstr ""
-"Nautilus-eko ekintzak konfiguratzeko tresna\n"
-"'Nautilus-eko ekintzak' hedapena konfiguratzeko aplikazioa"
-
-#: ../nact/nautilus-actions-config.glade.h:66
-msgid "Only files"
-msgstr "Fitxategiak soilik"
-
-#: ../nact/nautilus-actions-config.glade.h:67
-msgid "Only folders"
-msgstr "Karpetak soilik"
-
-#: ../nact/nautilus-actions-config.glade.h:68
-msgid ""
-"Parameters that will be sent to the program. Click on the 'Legend' button to "
-"see the different replacement tokens."
-msgstr ""
-"Programari bidaliko zaizkion parametroak. Egin klik 'Legenda' botoian "
-"ordezko token desberdinak ikusteko."
-
-#: ../nact/nautilus-actions-config.glade.h:69
-msgid "Parameters:"
-msgstr "Parametroak:"
-
-#: ../nact/nautilus-actions-config.glade.h:70
-msgid "Path:"
-msgstr "Bide-izena:"
-
-#: ../nact/nautilus-actions-config.glade.h:71
-msgid "Project Website"
-msgstr "Proiektuaren web gunea"
-
-#: ../nact/nautilus-actions-config.glade.h:72
-msgid "Save in Folder:"
-msgstr "Gorde karpetan:"
-
-#: ../nact/nautilus-actions-config.glade.h:73
-msgid ""
-"Select the configurations you want to export. Use Shift or Ctrl key to "
-"select more than one."
-msgstr ""
-"Esportatzea nahi dituzun konfigurazioak hautatu. Erabili Maius edo Kontrol "
-"tekla bat baino gehiago hautatzeko."
-
-#: ../nact/nautilus-actions-config.glade.h:74
-msgid "Select the configurations you want to export:"
-msgstr "Hautatu konfigurazioak esportatzeko:"
-
-#: ../nact/nautilus-actions-config.glade.h:75
-msgid "Select the file you want to import."
-msgstr "Hautatu fitxategia inportatzeko."
-
-#: ../nact/nautilus-actions-config.glade.h:76
-msgid ""
-"Select the folder you want your config to be saved in. This folder must "
-"exist."
-msgstr ""
-"Hautatu karpeta, bertan zure konfigurazioa gordetzeko. Karpeta honek "
-"existitu egin behar du."
-
-#: ../nact/nautilus-actions-config.glade.h:77
-msgid ""
-"Select the kind of files where you want your action to appear. If you don't "
-"know what to choose, try selecting just 'file' which is the most common "
-"choice. You can add a new scheme by clicking on the '+' button."
-msgstr ""
-"Hautatu fitxategi mota (zure ekintzak zein motan agertuko diren zehazteko). "
-"Ez badakizu zer aukeratu, saiatu 'fitxategia' hautatuz (aukera arruntena "
-"baita). Eskema berria gehitu dezakezu '+' botoian klik eginez."
-
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:79
-msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr "Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>"
-
-#: ../nact/nautilus-actions-config.glade.h:80
-msgid ""
-"The command that will be launched by selecting the action in Nautilus popup "
-"menu."
-msgstr "Abiaraziko den komandoa Nautilus-en laster-menuko ekintza hautatzean."
-
-#: ../nact/nautilus-actions-config.glade.h:81
-msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr ""
-"Software hau GNU Lizentzia Publiko Orokorraren (GPL) baldintzen arabera "
-"ematen da."
-
-#: ../nact/nautilus-actions-config.glade.h:82
-msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr "Menuko elementuaren argibidea Nautilus-eko egoera-barran agertzeko."
-
-#: ../nact/nautilus-actions-config.glade.h:83
-msgid "Tooltip:"
-msgstr "Argibidea:"
-
-#: ../nact/nautilus-actions-config.glade.h:84
-msgid "_Browse"
-msgstr "_Arakatu"
-
-#: ../nact/nautilus-actions-config.glade.h:85
-msgid "_Legend"
-msgstr "_Legenda"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact.c:163
-#, c-format
-msgid "Can't duplicate action '%s'!"
-msgstr "Ezin da '%s' ekintza bikoiztu."
-
-#. create columns on the tree view
-#: ../nact/nact.c:277 ../nact/nact-import-export.c:162
-msgid "Icon"
-msgstr "Ikonoa"
-
-#: ../nact/nact.c:282 ../nact/nact-import-export.c:167
-msgid "Label"
-msgstr "Etiketa"
-
-#: ../nact/nact.c:303 ../nact/nact-editor.c:628
-#: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
-msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr ""
-"Ezin izan da Nautilus-eko ekintzak konfiguratzeko tresnaren interfazea "
-"kargatu"
-
-#. i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:185
-msgid "/path/to"
-msgstr "/bide/izena"
-
-#: ../nact/nact-utils.c:186 ../nact/nact-utils.c:188
-msgid "file1.txt"
-msgstr "fitxategia1.txt"
-
-#: ../nact/nact-utils.c:186
-msgid "file2.txt"
-msgstr "fitxategia2.txt"
-
-#: ../nact/nact-utils.c:187 ../nact/nact-utils.c:188
-msgid "folder1"
-msgstr "karpeta1"
-
-#: ../nact/nact-utils.c:187
-msgid "folder2"
-msgstr "karpeta2"
-
-#: ../nact/nact-utils.c:190
-msgid "test.example.net"
-msgstr "proba.adibidea.net"
-
-#: ../nact/nact-utils.c:191
-msgid "file.txt"
-msgstr "fitxategia.txt"
-
-#: ../nact/nact-utils.c:192
-msgid "folder"
-msgstr "karpeta"
-
-#. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:168
-msgid "None"
-msgstr "Bat ere ez"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:449
-#, c-format
-msgid "Can't copy action's profile '%s'!"
-msgstr "Ezin da ekintzaren '%s' profila kopiatu."
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:474
-#, c-format
-msgid "Can't paste action's profile '%s'!"
-msgstr "Ezin da ekintzaren '%s' profila itsatsi."
-
-#. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:479
-#, c-format
-msgid "%s Copy"
-msgstr "%s kopia"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:539
-#, c-format
-msgid "Can't delete action's profile '%s'!"
-msgstr "Ezin da ekintzaren '%s' profila ezabatu."
-
-#: ../nact/nact-editor.c:591
-msgid "Profile Name"
-msgstr "Profilaren izena"
-
-#: ../nact/nact-editor.c:644
-msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr "Menuko elementuaren ikonoa (Nautilus-eko laster-menuan)"
-
-#: ../nact/nact-editor.c:666
-msgid "Add a New Action"
-msgstr "Gehitu ekintza berria"
-
-#: ../nact/nact-editor.c:670
-#, c-format
-msgid "Edit Action \"%s\""
-msgstr "Editatu \"%s\" ekintza"
-
-#: ../nact/nact-import-export.c:205
-#, c-format
-msgid "Can't parse file '%s' as GConf schema description file!"
-msgstr ""
-"Ezin da '%s' fitxategia analizatu GConf-eko eskemaren deskripzio-fitxategi "
-"gisa."
-
-#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:226
-#, c-format
-msgid "Action '%s' importation failed!"
-msgstr "Huts egin du '%s' ekintza inportatzean."
-
-#. initialize the default schemes
-#. i18n notes : description of 'file' scheme
-#: ../nact/nact-prefs.c:164
-#, c-format
-msgid "%sLocal Files"
-msgstr "%s lokaleko fitxategiak"
-
-#. i18n notes : description of 'sftp' scheme
-#: ../nact/nact-prefs.c:166
-#, c-format
-msgid "%sSSH Files"
-msgstr "%s SSH fitxategiak"
-
-#. i18n notes : description of 'smb' scheme
-#: ../nact/nact-prefs.c:168
-#, c-format
-msgid "%sWindows Files"
-msgstr "%s Windows-eko fitxategiak"
-
-#. i18n notes : description of 'ftp' scheme
-#: ../nact/nact-prefs.c:170
-#, c-format
-msgid "%sFTP Files"
-msgstr "%s FTP fitxategiak"
-
-#. i18n notes : description of 'dav' scheme
-#: ../nact/nact-prefs.c:172
-#, c-format
-msgid "%sWebdav Files"
-msgstr "%s Webdav fitxategiak"
-
-#. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-profile-editor.c:243
-msgid "new-scheme"
-msgstr "eskema-berria"
-
-#: ../nact/nact-profile-editor.c:244
-msgid "New Scheme Description"
-msgstr "Eskema berriaren azalpena"
-
-#: ../nact/nact-profile-editor.c:329
-msgid "Scheme"
-msgstr "Eskema"
-
-#: ../nact/nact-profile-editor.c:341
-msgid "Description"
-msgstr "Azalpena"
-
-#: ../nact/nact-profile-editor.c:532
-msgid "Add a New Profile"
-msgstr "Gehitu profila berria"
-
-#: ../nact/nact-profile-editor.c:536
-#, c-format
-msgid "Edit Profile \"%s\""
-msgstr "Editatu \"%s\" profila"
-
-#. GConf description strings :
-#: ../utils/nautilus-actions-new-config.c:49
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
-msgid "The label of the menu item"
-msgstr "Menuko elementuaren ikonoa"
-
-#: ../utils/nautilus-actions-new-config.c:49
-msgid "LABEL"
-msgstr "ETIKETA"
-
-#: ../utils/nautilus-actions-new-config.c:50
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
-msgid "The tooltip of the menu item"
-msgstr "Menuko elementuaren argibidea"
-
-#: ../utils/nautilus-actions-new-config.c:50
-msgid "TOOLTIP"
-msgstr "ARGIBIDEA"
-
-#: ../utils/nautilus-actions-new-config.c:51
-msgid "The icon of the menu item (filename or GTK stock ID)"
-msgstr "Menuko elementuaren ikonoa (fitxategi-izena edo GTK pilaren IDa)"
-
-#: ../utils/nautilus-actions-new-config.c:51
-msgid "ICON"
-msgstr "IKONOA"
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
-msgid "The path of the command"
-msgstr "Komandoaren bide-izena"
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../utils/nautilus-actions-new-config.c:61
-msgid "PATH"
-msgstr "BIDE-IZENA"
-
-#: ../utils/nautilus-actions-new-config.c:53
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
-msgid "The parameters of the command"
-msgstr "Komandoaren parametroak"
-
-#: ../utils/nautilus-actions-new-config.c:53
-msgid "PARAMS"
-msgstr "PARAMETROAK"
-
-#: ../utils/nautilus-actions-new-config.c:54
-msgid ""
-"A pattern to match selected files against. May include wildcards (* or ?) "
-"(you must set one option for each pattern you need)"
-msgstr ""
-"Eredua hautatutako fitxategiak bat etortzeko. Komodinak (? edo *) eduki "
-"ditzake (behar duzun eredu bakoitzeko aukera bat ezarri behar duzu)"
-
-#: ../utils/nautilus-actions-new-config.c:54
-#: ../utils/nautilus-actions-new-config.c:56
-msgid "EXPR"
-msgstr "ADIERA"
-
-#: ../utils/nautilus-actions-new-config.c:56
-msgid ""
-"A pattern to match selected files' mimetype against. May include wildcards "
-"(* or ?) (you must set one option for each pattern you need)"
-msgstr ""
-"Eredua hautatutako fitxategien MIME motak bat etortzeko. Komodinak (? edo *) "
-"eduki ditzake (behar duzun eredu bakoitzeko aukera bat ezarri behar duzu)"
-
-#: ../utils/nautilus-actions-new-config.c:57
-msgid "Set it if the selection can contain files"
-msgstr "Ezarri hau hautapenak fitxategiak baditu"
-
-#: ../utils/nautilus-actions-new-config.c:58
-msgid "Set it if the selection can contain folders"
-msgstr "Ezarri hau hautapenak karpetak baditu"
-
-#: ../utils/nautilus-actions-new-config.c:59
-msgid "Set it if the selection can have several items"
-msgstr "Ezarri hau hautapenak hainbat elementu baditu"
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid ""
-"A GnomeVFS scheme where the selected files should be located (you must set "
-"it for each scheme you need)"
-msgstr ""
-"GnomeVFS eskema (hautatutako fitxategiak kokatuta egon beharko luketena). "
-"Behar duzun eskema bakoitzeko ezarri behar duzu"
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid "SCHEME"
-msgstr "ESKEMA"
-
-#: ../utils/nautilus-actions-new-config.c:61
-msgid ""
-"The path of the file where to save the new GConf schema definition file "
-"[default: /tmp/config_UUID.schemas]"
-msgstr ""
-"Fitxategiaren bide-izena (GConf-eko eskemaren definizioaren fitxategi berria "
-"gordetzeko) [lehenetsia: /tmp/config_UUID.schemas]"
-
-#: ../utils/nautilus-actions-new-config.c:100
-#, c-format
-msgid ""
-"Syntax error:\n"
-"\t- %s\n"
-"Try %s --help\n"
-msgstr ""
-"Sintaxi-errorea:\n"
-"\t- %s\n"
-"Saiatu '%s --help'\n"
-
-#: ../utils/nautilus-actions-new-config.c:152
-#, c-format
-msgid "Creating %s..."
-msgstr "%s sortzen..."
-
-#: ../utils/nautilus-actions-new-config.c:171
-#, c-format
-msgid " Failed: Can't create %s: %s\n"
-msgstr " Huts egin du: ezin da %s sortu: %s\n"
-
-#: ../utils/nautilus-actions-new-config.c:180
-#, c-format
-msgid "  OK, saved in %s\n"
-msgstr " ONGI, %s-(e)n gordeta\n"
-
-#: ../utils/nautilus-actions-new-config.c:185
-#, c-format
-msgid " Failed: %s\n"
-msgstr " Huts egin du: %s\n"
-
-#: ../utils/nautilus-actions-tools-utils.c:48
-#, c-format
-msgid "Can't write data in file %s\n"
-msgstr "Ezin dira datuak %s fitxategian idatzi\n"
-
-#: ../utils/nautilus-actions-tools-utils.c:54
-#, c-format
-msgid "Can't open file %s for writing\n"
-msgstr "Ezin da %s fitxategia ireki idazteko\n"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
-msgid ""
-"The label of the menu item that will appear in the Nautilus popup menu when "
-"the selection matches the appearance condition settings"
-msgstr ""
-"Menuko elementuaren etiketa, Nautilus-eko laster-menuan agertuko dena "
-"hautapena bat etortzean itxuraren baldintzaren ezarpenekin."
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
-msgid ""
-"The tooltip of the menu item that will appear in the Nautilus statusbar when "
-"the user points to the Nautilus popup menu item with his/her mouse"
-msgstr ""
-"Menuko elementuaren argibidea, Nautilus-eko egoera-barran agertuko dena "
-"erabiltzaileak saguaren erakuslea Nautilus-eko laster-menuko elementuaren "
-"gainean jartzean"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
-msgid "The icon of the menu item"
-msgstr "Menuko elementuaren ikonoa"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
-msgid ""
-"The icon of the menu item that will appear next to the label in the Nautilus "
-"popup menu when the selection matches the appearance conditions settings"
-msgstr ""
-"Menuko elementuaren ikonoa, Nautilus-eko laster-menuan etiketaren alboan "
-"agertuko dena hautapena bat etortzean itxuraren baldintzaren ezarpenekin."
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
+#: ../data/nautilus-actions.schemas.in.h:5 ../src/common/na-xml-names.h:115
 msgid "A description name of the profile"
 msgstr "Profilaren azalpenaren izena"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
+#: ../data/nautilus-actions.schemas.in.h:6 ../src/common/na-xml-names.h:143
 msgid ""
-"The field is here to give the user a human readable name for a profile in "
-"the Nact interface. If not set there will be a default auto generated string "
-"set by default"
+"A list of strings with joker '*' or '?' to match the mimetypes of the "
+"selected file(s). Each selected items must match at least one of the "
+"mimetype patterns for the action to appear"
 msgstr ""
-"Gizakiek irakur dezaketen profilaren izena erabiltzaileari emateko (Nautilus-"
-"eko ekintzen interfazean) da eremu hau. Ez bada ezartzen, automatikoki "
-"sortutako kate lehenetsia emango zaio (lehenetsi gisa ezarritakoa)"
+"Komodina duten (? edo *) kateen zerrenda hautatutako fitxategien MIME "
+"motakbat etortzeko. Hautatutako elementu bakoitzak ekintzaren MIME moten "
+"ereduetariko batekin bat etorri behar du gutxienez agertzeko"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
-msgid ""
-"The path of the command to start when the user select the menu item in the "
-"Nautilus popup menu"
-msgstr ""
-"Abiaraziko den komandoaren bide-izena (erabiltzaileak Nautilus-eko laster-"
-"menuan elementua hautatzean)"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
-msgid ""
-"The parameters of the command to start when the user selects the menu item "
-"in the Nautilus popup menu.\n"
-"\n"
-"The parameters can contain some special tokens which are replaced by "
-"Nautilus information before starting the command:\n"
-"\n"
-"%d: base folder of the selected file(s)\n"
-"%f: the name of the selected file or the first one if many are selected\n"
-"%m: space-separated list of the basenames of the selected file(s)/folder(s)\n"
-"%M: space-separated list of the selected file(s)/folder(s), with their full "
-"paths\n"
-"%u: GnomeVFS URI\n"
-"%s: scheme of the GnomeVFS URI\n"
-"%h: hostname of the GnomeVFS URI\n"
-"%U: username of the GnomeVFS URI\n"
-"%%: a percent sign"
-msgstr ""
-"Abiaraziko den komandoaren parametroak (erabiltzaileak Nautilus-eko laster-"
-"menuan elementua hautatzean).\n"
-"\n"
-"Parametroek token berezi batzuk eduki ditzakete, Nautilus-en informazioak "
-"ordeztuko dituenak komandoa hasi aurretik:\n"
-"\n"
-"%d: hautatutako fitxategien oinarrizko karpeta\n"
-"%f: hautatutako fitxategiaren izena, edo aurrenekoa hainbat hautatuta egonez "
-"gero\n"
-"%m: hautatutako fitxategien/karpeten oinarrizko izenen zerrenda zuriunez "
-"bereiztuta\n"
-"%M: hautatutako fitxategien/karpeten zerrenda (beraien bide-izen osoekin) "
-"zuriunez bereiztuta\n"
-"%u: GnomeVFS URIa\n"
-"%s: GnomeVFS URIaren eskema\n"
-"%h: GnomeVFS URIaren ostalari-izena\n"
-"%U: GnomeVFS URIaren erabiltzaile-izena\n"
-"%%: ehunekoaren ikurra"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
-msgid "The list of pattern to match the selected file(s)/folder(s)"
-msgstr "Ereduen zerrenda hautatutako fitxategiak/karpetak bat etortzeko"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
+#: ../data/nautilus-actions.schemas.in.h:7 ../src/common/na-xml-names.h:135
 msgid ""
 "A list of strings with joker '*' or '?' to match the name of the selected "
 "file(s)/folder(s). Each selected items must match at least one of the "
@@ -809,14 +63,60 @@ msgstr ""
 "izenak bat etortzeko. Hautatutako elementu bakoitzak ekintzaren fitxategi-"
 "izenaren ereduetariko batekin bat etorri behar du gutxienez agertzeko"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid ""
-"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr ""
-"'true' (egia) fitxategi-izenen ereduek maiuskulak eta minuskulak bereiztu "
-"behar badute, bestela 'false' (faltsua)"
+#: ../data/nautilus-actions.schemas.in.h:8
+msgid "Add an 'About' item in the Nautilus context menu"
+msgstr "Gehitu 'Honi buruz' elementua Nautilus-en testuinguruko menuari"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
+#. i18n: default label for a newly created profile
+#: ../data/nautilus-actions.schemas.in.h:9 ../src/common/na-action.h:55
+msgid "Default profile"
+msgstr "Profila lehenetsia"
+
+#: ../data/nautilus-actions.schemas.in.h:10
+msgid ""
+"Defines the list of valid schemes to be matched against the selected items. "
+"The scheme is the protocol used to access the files. The keyword to use is "
+"the one used in the URI. Examples of valid URI include: file:///tmp/foo.txt "
+"sftp:///root@test.example.net/tmp/foo.txt The most common schemes are: "
+"'file': local files 'sftp': files accessed via SSH 'ftp': files accessed via "
+"FTP 'smb': files accessed via Samba (Windows share) 'dav': files accessed "
+"via WebDAV All schemes used by Nautilus can be used here."
+msgstr ""
+"Baliozko eskemen zerrenda definitzen du (hautatutako elementuekin bat "
+"etortzeko). Eskema fitxategiak atzitzeko protokoloa da. Erabiliko den gakoa "
+"URIan erabiltzen direnetariko bat da. URIaren adibideak: file:///tmp/leloa."
+"txt sftp:///root@proba.adibidea.net/tmp/leloa.txt Eskema arruntenak: 'file': "
+"fitxategi lokalak 'sftp': SSH bidez atzitutako fitxategiak 'ftp': FTP bidez "
+"atzitutako fitxategiak 'smb':Samba bidez atzitutako fitxategiak (Windows-ek "
+"partekatua) 'dav': WebDav bidez atzitutako fitxategiak Nautilus-ek "
+"darabilkien eskema guztiak erabil daitezke hemen."
+
+#: ../data/nautilus-actions.schemas.in.h:11
+msgid ""
+"If TRUE, and if the user has defined a single root menu for its actions, "
+"then an 'About Nautilus Actions' will be displayed at end of the first "
+"submenu."
+msgstr ""
+"TRUE (egia) ezartzen bada, eta erabiltzaileak menu nagusi bakuna definitu "
+"badu bere ekintzentzako, 'Nautilus Ekintzei Buruz' bat bistaratuko da "
+"aurreneko azpimenuaren amaieran."
+
+#: ../data/nautilus-actions.schemas.in.h:12 ../src/common/na-xml-names.h:113
+msgid "If the action is disabled, it will never appear in the Nautilus context menu"
+msgstr ""
+"Ekintza desgaitzen bada, ez da inoiz agertuko Nautilus-en testuinguruko "
+"menuan"
+
+#: ../data/nautilus-actions.schemas.in.h:13 ../src/common/na-xml-names.h:161
+msgid ""
+"If you need one or more files or folders to be selected, set this key to "
+"'true'. If you want just one file or folder, set 'false'"
+msgstr ""
+"Fitxategi edo karpeta bat baino gehiago hautatu behar badituzu, ezarri gako "
+"hau 'true' (egia) gisa. Fitxategi edo karpeta bakar bat nahi baduzu, ezarri "
+"'false' (faltsua) gisa"
+
+#: ../data/nautilus-actions.schemas.in.h:14 ../src/common/na-xml-names.h:139
 msgid ""
 "If you need to match a filename in a case-sensitive manner, set this key to "
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
@@ -827,24 +127,380 @@ msgstr ""
 "'argazkia.JPG'-rekin bat etortzea nahi izanez gero, ezarri 'false' (faltsua) "
 "gisa"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
+#: ../data/nautilus-actions.schemas.in.h:15
+msgid "Last folder selected when browsing for a command in the Conditions tab"
+msgstr "Hautatutako azken karpeta komando baten bila arakatzean Baldintzak fitxan"
+
+#: ../data/nautilus-actions.schemas.in.h:16
+msgid "Last folder selected when choosing a folder from where import new actions"
+msgstr ""
+"Hautatutako azken karpeta karpeta bat aukeratzean (handik ekintza berriak "
+"zein inportatzeko)"
+
+#: ../data/nautilus-actions.schemas.in.h:17
+msgid "Last folder selected when choosing a folder where to export the actions"
+msgstr ""
+"Hautatutako azken karpeta karpeta bat aukeratzean (horra ekintza berriak "
+"esportatzeko)"
+
+#: ../data/nautilus-actions.schemas.in.h:18
+msgid "Last selected folder"
+msgstr "Hautatutako azken karpeta"
+
+#: ../data/nautilus-actions.schemas.in.h:19
+msgid "Main pane position"
+msgstr "Panel nagusiaren posizioa"
+
+#: ../data/nautilus-actions.schemas.in.h:20
+msgid "Position and size of the Legend dialog"
+msgstr "Legenda elkarrizketa-koadroaren posizioa eta tamaina"
+
+#: ../data/nautilus-actions.schemas.in.h:21
+msgid "Position and size of the Legend dialog ; default is set by the UI manager"
+msgstr ""
+"Legenda elkarrizketa-koadroaren posizioa eta tamaina. UI kudeatzaileak "
+"ezartzen du lehenetsia"
+
+#: ../data/nautilus-actions.schemas.in.h:22
+msgid "Position and size of the command chooser window"
+msgstr "Komandoak aukeratzeko leihoaren posizioa eta tamaina"
+
+#: ../data/nautilus-actions.schemas.in.h:23
+msgid ""
+"Position and size of the command chooser window in the Conditions tab ; "
+"default is set by the window manager"
+msgstr ""
+"Komandoak aukeratzeko leihoaren posizioa eta tamaina Baldintzak fitxan. "
+"Leiho-kudeatzaileak ezartzen du lehenetsia"
+
+#: ../data/nautilus-actions.schemas.in.h:24
+msgid "Position and size of the export assistant window"
+msgstr "Esportatzeko morroiaren leihoaren posizioa eta tamaina"
+
+#: ../data/nautilus-actions.schemas.in.h:25
+msgid ""
+"Position and size of the export assistant window ; default is set by the "
+"window manager"
+msgstr ""
+"Esportatzeko morroiaren leihoaren posizioa eta tamaina. Leiho-kudeatzaileak "
+"ezartzen du lehenetsia"
+
+#: ../data/nautilus-actions.schemas.in.h:26
+msgid "Position and size of the import assistant window"
+msgstr "Inportatzeko morroiaren leihoaren posizioa eta tamaina"
+
+#: ../data/nautilus-actions.schemas.in.h:27
+msgid ""
+"Position and size of the import assistant window ; default is set by the "
+"window manager"
+msgstr ""
+"Inportatzeko morroiaren leihoaren posizioa eta tamaina. Leiho-kudeatzaileak "
+"ezartzen du lehenetsia"
+
+#: ../data/nautilus-actions.schemas.in.h:28
+msgid "Position and size of the main window"
+msgstr "Leiho nagusiaren posizioa eta tamaina"
+
+#: ../data/nautilus-actions.schemas.in.h:29
+msgid "Position and size of the main window ; default is set by the window manager"
+msgstr ""
+"Leiho nagusiaren posizioa eta tamaina. Leiho-kudeatzaileak ezartzen du "
+"lehenetsia"
+
+#: ../data/nautilus-actions.schemas.in.h:30
+msgid "Position and size of the preferences dialog"
+msgstr "Hobespenak elkarrizketa-koadroaren posizioa eta tamaina"
+
+#: ../data/nautilus-actions.schemas.in.h:31
+msgid ""
+"Position and size of the preferences dialog ; default is set by the window "
+"manager"
+msgstr ""
+"Hobespenak elkarrizketa-koadroaren posizioa eta tamaina. Leiho-kudeatzaileak "
+"ezartzen du lehenetsia"
+
+#: ../data/nautilus-actions.schemas.in.h:32
+msgid "Sort actions in alphabetical order"
+msgstr "Ordenatu ekintzak alfabetikoki"
+
+#: ../data/nautilus-actions.schemas.in.h:33 ../src/common/na-xml-names.h:116
+msgid ""
+"The field is here to give the user a human readable name for a profile in "
+"the Nact interface. If not set there will be a default auto generated string "
+"set by default"
+msgstr ""
+"Gizakiek irakur dezaketen profilaren izena erabiltzaileari emateko (Nautilus-"
+"eko ekintzen interfazean) da eremu hau. Ez bada ezartzen, automatikoki "
+"sortutako kate lehenetsia emango zaio (lehenetsi gisa ezarritakoa)"
+
+#: ../data/nautilus-actions.schemas.in.h:34 ../src/common/na-xml-names.h:108
+msgid "The icon of the menu item"
+msgstr "Menuko elementuaren ikonoa"
+
+#: ../data/nautilus-actions.schemas.in.h:35 ../src/common/na-xml-names.h:109
+msgid ""
+"The icon of the menu item that will appear next to the label in the Nautilus "
+"popup menu when the selection matches the appearance conditions settings"
+msgstr ""
+"Menuko elementuaren ikonoa, Nautilus-eko laster-menuan etiketaren alboan "
+"agertuko dena hautapena bat etortzean itxuraren baldintzaren ezarpenekin."
+
+#. GConf schema descriptions
+#.
+#: ../data/nautilus-actions.schemas.in.h:36 ../src/common/na-xml-names.h:101
+msgid "The label of the menu item"
+msgstr "Menuko elementuaren ikonoa"
+
+#: ../data/nautilus-actions.schemas.in.h:37 ../src/common/na-xml-names.h:102
+msgid ""
+"The label of the menu item that will appear in the Nautilus popup menu when "
+"the selection matches the appearance condition settings"
+msgstr ""
+"Menuko elementuaren etiketa, Nautilus-eko laster-menuan agertuko dena "
+"hautapena bat etortzean itxuraren baldintzaren ezarpenekin."
+
+#: ../data/nautilus-actions.schemas.in.h:38 ../src/common/na-xml-names.h:134
+msgid "The list of pattern to match the selected file(s)/folder(s)"
+msgstr "Ereduen zerrenda hautatutako fitxategiak/karpetak bat etortzeko"
+
+#: ../data/nautilus-actions.schemas.in.h:39 ../src/common/na-xml-names.h:142
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr "Ereduen zerrenda hautatutako fitxategien MIME motak bat etortzeko"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
-msgid ""
-"A list of strings with joker '*' or '?' to match the mimetypes of the "
-"selected file(s). Each selected items must match at least one of the "
-"mimetype patterns for the action to appear"
-msgstr ""
-"Komodina duten (? edo *) kateen zerrenda hautatutako fitxategien MIME "
-"motakbat etortzeko. Hautatutako elementu bakoitzak ekintzaren MIME moten "
-"ereduetariko batekin bat etorri behar du gutxienez agertzeko"
+#: ../data/nautilus-actions.schemas.in.h:40 ../src/common/na-xml-names.h:163
+msgid "The list of schemes where the selected files should be located"
+msgstr "Eskemen zerrenda (hautatutako fitxategiak kokatuta egon beharko luketena)"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
-#, fuzzy
+#: ../data/nautilus-actions.schemas.in.h:41 ../src/common/na-xml-names.h:122
+#: ../src/utils/nautilus-actions-new.c:69
+msgid "The parameters of the command"
+msgstr "Komandoaren parametroak"
+
+#: ../data/nautilus-actions.schemas.in.h:43
+#, no-c-format
 msgid ""
-"The valid combinations are:\n"
+"The parameters of the command to start when the user selects the menu item "
+"in the Nautilus popup menu. The parameters can contain some special tokens "
+"which are replaced by Nautilus information before starting the command: %d: "
+"base folder of the selected file(s) %f: the name of the selected file or the "
+"first one if many are selected %h: hostname of the URI %m: space-separated "
+"list of the basenames of the selected file(s)/folder(s) %M: space-separated "
+"list of the selected file(s)/folder(s), with their full paths %p: port "
+"number of the first URI %R: space-separated list of selected URIs %s: scheme "
+"of the URI %u: URI %U: username of the URI %%: a percent sign"
+msgstr ""
+"Abiaraziko den komandoaren parametroak (erabiltzaileak Nautilus-eko laster-"
+"menuan elementua hautatzean). Parametroek token berezi batzuk eduki "
+"ditzakete, Nautilus-en informazioak ordeztuko dituenak komandoa hasi "
+"aurretik:%d: hautatutako fitxategien oinarrizko karpeta %f: hautatutako "
+"fitxategiaren izena, edo aurrenekoa hainbat hautatuta egonez gero %h: "
+"URIaren ostalari-izena %m: hautatutako fitxategien/karpeten oinarrizko "
+"izenen zerrenda zuriunez bereiztuta %M: hautatutako fitxategien/karpeten "
+"zerrenda (beraien bide-izen osoekin) zuriunez bereiztuta %p: aurreneko "
+"URIaren ataka zenbakia %R: zuriunez bereiztutako hautatutako URIen zerrenda %"
+"s: URIaren eskema %u: URIa %U: URIaren erabiltzaile-izena%%: ehunekoaren "
+"ikurra"
+
+#: ../data/nautilus-actions.schemas.in.h:44 ../src/common/na-xml-names.h:119
+#: ../src/utils/nautilus-actions-new.c:68
+#: ../src/utils/nautilus-actions-new.c:71
+msgid "The path of the command"
+msgstr "Komandoaren bide-izena"
+
+#: ../data/nautilus-actions.schemas.in.h:45 ../src/common/na-xml-names.h:120
+msgid ""
+"The path of the command to start when the user select the menu item in the "
+"Nautilus popup menu"
+msgstr ""
+"Abiaraziko den komandoaren bide-izena (erabiltzaileak Nautilus-eko laster-"
+"menuan elementua hautatzean)"
+
+#: ../data/nautilus-actions.schemas.in.h:46 ../src/common/na-xml-names.h:104
+#: ../src/utils/nautilus-actions-new.c:65
+msgid "The tooltip of the menu item"
+msgstr "Menuko elementuaren argibidea"
+
+#: ../data/nautilus-actions.schemas.in.h:47 ../src/common/na-xml-names.h:105
+msgid ""
+"The tooltip of the menu item that will appear in the Nautilus statusbar when "
+"the user points to the Nautilus popup menu item with his/her mouse"
+msgstr ""
+"Menuko elementuaren argibidea, Nautilus-eko egoera-barran agertuko dena "
+"erabiltzaileak saguaren erakuslea Nautilus-eko laster-menuko elementuaren "
+"gainean jartzean"
+
+#: ../data/nautilus-actions.schemas.in.h:48 ../src/common/na-xml-names.h:172
+msgid "The version of the configuration format"
+msgstr "Konfigurazio-formatuaren bertsioa"
+
+#: ../data/nautilus-actions.schemas.in.h:49 ../src/common/na-xml-names.h:173
+msgid ""
+"The version of the configuration format that will be used to manage backward "
+"compatibility"
+msgstr ""
+"Konfigurazio-formatuaren bertsioa (atzerantzko bateragarritasuna kudeatzean "
+"erabiltzeko)"
+
+#: ../data/nautilus-actions.schemas.in.h:50
+msgid ""
+"This setting is tied in with the 'isdir' setting. The valid combinations "
+"are: isfile=TRUE and isdir=FALSE: the selection may hold only files "
+"isfile=FALSE and isdir=TRUE: the selection may hold only folders isfile=TRUE "
+"and isdir=TRUE: the selection may hold both files and folders isfile=FALSE "
+"and isdir=FALSE: this is an invalid combination (your configuration will "
+"never appear)"
+msgstr ""
+"Konbinazio erabilgarriak: isfile=TRUE eta isdir=FALSE: hautapenak "
+"fitxategiak bakarrik edukiko ditu; isfile=FALSE eta isdir=TRUE: hautapenak "
+"karpetak bakarrik edukiko ditu; isfile=TRUE eta isdir=TRUE': hautapenak bai "
+"fitxategiak bai karpetak edukiko ditu; isfile=FALSE eta isdir=FALSE: hau "
+"baliogabeko konbinazioa da (zure konfigurazioa ez da inoiz agertuko)"
+
+#: ../data/nautilus-actions.schemas.in.h:51
+msgid ""
+"This setting is tied in with the 'isfile' setting. The valid combinations "
+"are: isfile=TRUE and isdir=FALSE: the selection may hold only files "
+"isfile=FALSE and isdir=TRUE: the selection may hold only folders isfile=TRUE "
+"and isdir=TRUE: the selection may hold both files and folders isfile=FALSE "
+"and isdir=FALSE: this is an invalid combination (your configuration will "
+"never appear)"
+msgstr ""
+"Konbinazio erabilgarriak: isfile=TRUE eta isdir=FALSE: hautapenak "
+"fitxategiak bakarrik edukiko ditu; isfile=FALSE eta isdir=TRUE: hautapenak "
+"karpetak bakarrik edukiko ditu; isfile=TRUE eta isdir=TRUE': hautapenak bai "
+"fitxategiak bai karpetak edukiko ditu; isfile=FALSE eta isdir=FALSE: hau "
+"baliogabeko konbinazioa da (zure konfigurazioa ez da inoiz agertuko)"
+
+#: ../data/nautilus-actions.schemas.in.h:52
+msgid ""
+"When TRUE, the actions are maintained in alphabetical order (historical "
+"behavior). When FALSE, user is free to reorder them via Nautilus-Actions "
+"configuration tool."
+msgstr ""
+"TRUE (egia) gisa ezartzen denean, ekintzak ordena alfabetikoan mantentzen "
+"dira (portaera historikoa). FALSE (faltsua) denean, erabiltzailea aske da "
+"hauek nahi dituen bezala ordenatzeko Nautilus-Action konfiguratzeko "
+"tresnarekin."
+
+#: ../data/nautilus-actions.schemas.in.h:53 ../src/common/na-xml-names.h:112
+#: ../src/utils/nautilus-actions-new.c:67
+msgid "Whether the action is enabled"
+msgstr "Ekintza gaituta dagoen edo ez"
+
+#: ../data/nautilus-actions.schemas.in.h:54
+msgid "Width of the main window pane ; default is set by the UI manager"
+msgstr "Leiho nagusiko panelaren zabalera. UI kudeatzaileak ezarten du lehenetsia"
+
+#: ../src/common/na-about.c:56
+msgid "Ulisse Perusin <uli.peru@gmail.com>"
+msgstr "Ulisse Perusin <uli.peru@gmail.com>"
+
+#: ../src/common/na-about.c:61
+msgid "Frederic Ruaudel <grumz@grumz.net>"
+msgstr "Frederic Ruaudel <grumz@grumz.net>"
+
+#: ../src/common/na-about.c:62
+msgid "Rodrigo Moya <rodrigo@gnome-db.org>"
+msgstr "Rodrigo Moya <rodrigo@gnome-db.org>"
+
+#: ../src/common/na-about.c:63
+msgid "Pierre Wieser <pwieser@trychlos.org>"
+msgstr "Pierre Wieser <pwieser@trychlos.org>"
+
+#: ../src/common/na-about.c:72
+msgid ""
+"Nautilus Actions Configuration Tool is free software; you can redistribute "
+"it and/or modify it under the terms of the GNU General Public License as "
+"published by the Free Software Foundation; either version 2 of the License, "
+"or (at your option) any later version."
+msgstr ""
+"Nautilus Action konfiguratzeko tresna software librea da; birbana eta/edo "
+"alda dezakezu Software Foundation-ek argitaratutako GNU Lizentzia Publiko "
+"Orokorraren 2. bertsioan, edo (nahiago baduzu) beste berriago batean, "
+"jasotako baldintzak betez gero."
+
+#: ../src/common/na-about.c:76
+msgid ""
+"Nautilus Actions Configuration Tool is distributed in the hope that it will "
+"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
+"Public License for more details."
+msgstr ""
+"Nautilus Action konfiguratzeko tresna erabilgarria izango delakoan banatzen "
+"da, baina, INOLAKO BERMERIK GABE; era berean, ez da bermatzen beraren "
+"EGOKITASUNA MERKATURATZEKO edo HELBURU PARTIKULARRETARAKO ERABILTZEKO. "
+"Argibide gehiago nahi izanez gero, ikus GNU Lizentzia Publiko Orokorra."
+
+#: ../src/common/na-about.c:80
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"Nautilus Actions Configuration Tool ; if not, write to the Free Software "
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
+"USA."
+msgstr ""
+"Programa honekin batera GNU Lizentzia Publiko Orokorraren kopia bat jasoko "
+"zenuen; hala ez bada, idatzi hona: ree Software Foundation, Inc., 51 "
+"Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
+
+#: ../src/common/na-about.c:103
+msgid "A graphical interface to create and edit your Nautilus actions."
+msgstr "Interfaze grafiko bat Nautilus-eko ekintzak sortzeko eta editateko."
+
+#: ../src/common/na-about.c:104
+msgid ""
+"Copyright © 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright © 2009 Pierre Wieser <pwieser@trychlos.org>"
+msgstr ""
+"Copyright-a © 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright-a © 2009 Pierre Wieser <pwieser@trychlos.org>"
+
+#: ../src/common/na-about.c:106
+msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
+msgstr "Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>"
+
+#. i18n: default label for a newly created action
+#: ../src/common/na-action.h:52
+msgid "New Nautilus action"
+msgstr "Nautilus-eko ekintza berria"
+
+#. too long string for iso c: 665 (max=509)
+#: ../src/common/na-xml-names.h:124
+msgid ""
+"The parameters of the command to start when the user selects the menu item "
+"in the Nautilus popup menu.\n"
+"\n"
+"The parameters can contain some special tokens which are replaced by "
+"Nautilus information before starting the command:\n"
+"\n"
+"%d: base folder of the selected file(s)\n"
+"%f: the name of the selected file or the first one if many are selected\n"
+"%h: hostname of the URI\n"
+"%m: space-separated list of the basenames of the selected file(s)/folder(s)\n"
+"%M: space-separated list of the selected file(s)/folder(s), with their full "
+"paths\n"
+"%p: port number of the first URI\n"
+"%R: space-separated list of selected URIs\n"
+"%s: scheme of the URI\n"
+"%u: URI\n"
+"%U: username of the URI\n"
+"%%: a percent sign"
+msgstr ""
+"Abiaraziko den komandoaren parametroak (erabiltzaileak Nautilus-eko laster-"
+"menuan elementua hautatzean). Parametroek token berezi batzuk eduki "
+"ditzakete, Nautilus-en informazioak ordeztuko dituenak komandoa hasi "
+"aurretik:%d: hautatutako fitxategien oinarrizko karpeta; %f: hautatutako "
+"fitxategiaren izena, edo aurrenekoa hainbat hautatuta egonez gero; %h: "
+"URIaren ostalari-izena; %m: hautatutako fitxategien/karpeten oinarrizko "
+"izenen zerrenda zuriunez bereiztuta; %M: hautatutako fitxategien/karpeten "
+"zerrenda (beraien bide-izen osoekin) zuriunez bereiztuta; %p: aurreneko "
+"URIaren atakaren zenbakia; %R: hautatutako URIen zuriunez bereiztutako "
+"zerrenda;%s: URIaren eskema; %u: URIa; %U: URIaren erabiltzaile-izena%%: "
+"ehunekoaren ikurra"
+
+#: ../src/common/na-xml-names.h:147
+msgid ""
+"This setting is tied in with the 'isdir' setting. The valid combinations "
+"are:\n"
 "\n"
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
@@ -852,64 +508,37 @@ msgid ""
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
-"Konbinazio erabilgarriak:\n"
-"\n"
-"isfile=TRUE and isdir=FALSE: hautapenak fitxategiak bakarrik edukiko ditu\n"
-"isfile=FALSE and isdir=TRUE: hautapenak karpetak bakarrik edukiko ditu\n"
-"isfile=TRUE and isdir=TRUE': hautapenak bai fitxategiak bai karpetak edukiko "
-"ditu\n"
-"isfile=FALSE and isdir=FALSE: hau baliogabeko konbinazioa da (zure "
-"konfigurazioa ez da inoiz agertuko)"
+"Konbinazio erabilgarriak: isfile=TRUE eta isdir=FALSE: hautapenak "
+"fitxategiak bakarrik edukiko ditu; isfile=FALSE eta isdir=TRUE: hautapenak "
+"karpetak bakarrik edukiko ditu; isfile=TRUE eta isdir=TRUE': hautapenak bai "
+"fitxategiak bai karpetak edukiko ditu; isfile=FALSE eta isdir=FALSE: hau "
+"baliogabeko konbinazioa da (zure konfigurazioa ez da inoiz agertuko)"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
-msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr ""
-"'true' (egia) hautapenak fitxategiak eduki baditzake, bestela "
-"'false' (faltsua)"
-
-#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
-msgid "This setting is tied in with the 'isdir' setting. "
-msgstr "Ezarpen hau 'isdir' ezarpenarekin lotuta dago. "
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
-msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr ""
-"'true' (egia) hautapenak karpetak eduki baditzake, bestela 'false' (faltsua)"
-
-#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
-msgid "This setting is tied in with the 'isfile' setting. "
-msgstr "Ezarpen hau 'isfile' ezarpenarekin lotuta dago. "
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
-msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr ""
-"'true' (egia) hautapenak hainbat elementu eduki baditzake, bestela "
-"'false' (faltsua)"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
+#: ../src/common/na-xml-names.h:154
 msgid ""
-"If you need one or more files or folders to be selected, set this key to "
-"'true'. If you want just one file or folder, set 'false'"
-msgstr ""
-"Fitxategi edo karpeta bat baino gehiago hautatu behar badituzu, ezarri gako "
-"hau 'true' (egia) gisa. Fitxategi edo karpeta bakar bat nahi baduzu, ezarri "
-"'false' (faltsua) gisa"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:99
-msgid "The list of GnomeVFS schemes where the selected files should be located"
-msgstr ""
-"GnomeVFS eskemen zerrenda (hautatutako fitxategiak kokatuta egon beharko "
-"luketena)"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:100
-msgid ""
-"Defines the list of valid GnomeVFS schemes to be matched against the "
-"selected items. The GnomeVFS scheme is the protocol used to access the "
-"files. The keyword to use is the one used in the GnomeVFS URI.\n"
+"This setting is tied in with the 'isfile' setting. The valid combinations "
+"are:\n"
 "\n"
-"Examples of GnomeVFS URI include: \n"
+"isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
+"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
+"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
+"configuration will never appear)"
+msgstr ""
+"Konbinazio erabilgarriak: isfile=TRUE eta isdir=FALSE: hautapenak "
+"fitxategiak bakarrik edukiko ditu; isfile=FALSE eta isdir=TRUE: hautapenak "
+"karpetak bakarrik edukiko ditu; isfile=TRUE eta isdir=TRUE': hautapenak bai "
+"fitxategiak bai karpetak edukiko ditu; isfile=FALSE eta isdir=FALSE: hau "
+"baliogabeko konbinazioa da (zure konfigurazioa ez da inoiz agertuko)"
+
+#. too long string for iso c: 510 (max=509)
+#: ../src/common/na-xml-names.h:165
+msgid ""
+"Defines the list of valid schemes to be matched against the selected items. "
+"The scheme is the protocol used to access the files. The keyword to use is "
+"the one used in the URI.\n"
+"\n"
+"Examples of valid URI include:\n"
 "file:///tmp/foo.txt\n"
 "sftp:///root@test.example.net/tmp/foo.txt\n"
 "\n"
@@ -919,15 +548,15 @@ msgid ""
 "'sftp': files accessed via SSH\n"
 "'ftp': files accessed via FTP\n"
 "'smb': files accessed via Samba (Windows share)\n"
-"'dav': files accessed via WebDav\n"
+"'dav': files accessed via WebDAV\n"
 "\n"
-"All GnomeVFS schemes used by Nautilus can be used here."
+"All schemes used by Nautilus can be used here."
 msgstr ""
-"Baliozko GnomeVFS eskemen zerrenda definitzen du (hautatutako elementuekin "
-"bat etortzeko). GnomeVFS eskema fitxategiak atzitzeko protokoloa da. "
-"Erabiliko den gakoa GnomeVFS URIan erabiltzen direnetariko bat da.\n"
+"Baliozko eskemen zerrenda definitzen du (hautatutako elementuekin bat "
+"etortzeko). eskema fitxategiak atzitzeko protokoloa da. Erabiliko den gakoa "
+"URIan erabiltzen direnetariko bat da.\n"
 "\n"
-"GnomeVFS URIaren adibideak:\n"
+"URIaren adibideak:\n"
 "file:///tmp/leloa.txt\n"
 "sftp:///root@proba.adibidea.net/tmp/leloa.txt\n"
 "\n"
@@ -939,135 +568,724 @@ msgstr ""
 "'smb':Samba bidez atzitutako fitxategiak (Windows-ek partekatua)\n"
 "'dav': WebDav bidez atzitutako fitxategiak\n"
 "\n"
-"Nautilus-ek darabilkien GnomeVFS eskema guztiak erabil daitezke hemen."
+"Nautilus-ek darabilkien eskema guztiak erabil daitezke hemen."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:101
-msgid "The version of the configuration format"
-msgstr "Konfigurazio-formatuaren bertsioa"
+#. i18n: unable to load <dialog_name> dialog from XML definition in <filename>
+#: ../src/nact/base-application.c:1128
+#, c-format
+msgid "Unable to load %s dialog from XML definition in %s."
+msgstr "Ezin da %s elkarrizketa-koadroa kargatu %s(e)ngo XML definiziotik."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:102
-msgid ""
-"The version of the configuration format that will be used to manage backward "
-"compatibility"
+#: ../src/nact/base-application.c:1142
+msgid "Unable to initialize the internationalization environment."
+msgstr "Ezin da nazioartekotzeko ingurunea hasieratu."
+
+#: ../src/nact/base-application.c:1151
+msgid "Unable to initialize the Gtk+ user interface."
+msgstr "Ezin da Gtk+ erabiltzailearen interfazea hasieratu."
+
+#: ../src/nact/base-application.c:1160
+msgid "Another instance of the application is already running."
+msgstr "Aplikazioaren beste instantzia bat jadanik exekutatzen ari da."
+
+#: ../src/nact/base-application.c:1169
+msgid "No filename provided for the UI XML definition."
+msgstr "Ez da fitxategi-izenik eman UI XMLaren definiziorako."
+
+#. i18n: Unable to load the XML definition from <filename>
+#: ../src/nact/base-application.c:1179
+#, c-format
+msgid "Unable to load the XML definition from %s."
+msgstr "Ezin da XML definizioa kargatu %s(e)ndik."
+
+#: ../src/nact/base-application.c:1192
+msgid "Unable to set the default icon for the application."
+msgstr "Ezin da ikono lehenetsia ezarri aplikazioarentzako."
+
+#: ../src/nact/base-application.c:1201
+msgid "Unable to get the main window of the application."
+msgstr "Ezin da aplikazioaren leiho nagusia lortu."
+
+#: ../src/nact/nact-application.c:299
+msgid "Another instance of Nautilus Actions Configuration Tool is already running."
 msgstr ""
-"Konfigurazio-formatuaren bertsioa (atzerantzko bateragarritasuna kudeatzean "
-"erabiltzeko)"
+"Nautilus-eko ekintzak konfiguratzeko tresnaren beste instantzia bat jadanik "
+"exekutatzen ari da."
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:205
+#. i18n: another instance is already running: second line of error message
+#: ../src/nact/nact-application.c:301
+msgid "Please switch back to it."
+msgstr "Itzuli hara."
+
+#. static const gchar *thisfn = "nact_application_appli_get_application_name";
+#. g_debug( "%s: application=%p", thisfn, ( void * ) application );
+#. i18n: this is the application name, used in window title
+#: ../src/nact/nact-application.c:340
+msgid "Nautilus Actions Configuration Tool"
+msgstr "Nautilus-eko ekintzak konfiguratzeko tresna"
+
+#: ../src/nact/nact-assistant.c:465
+msgid "Are you sure you want to quit this assistant ?"
+msgstr "Ziur zaude morroi honetatik irtetzea nahi duzula?"
+
+#: ../src/nact/nact-assistant-export.c:438
+msgid "You may not have writing permissions on selected folder."
+msgstr "Baliteke hautatutako karpetan idazteko baimenik ez izatea."
+
+#. i18n: this is the title of the confirm page of the export assistant
+#: ../src/nact/nact-assistant-export.c:698
+msgid "About to export selected actions:"
+msgstr "Hautatutako ekintzak esportatzeari buruz:"
+
+#. i18n: all exported actions go to one destination folder
+#: ../src/nact/nact-assistant-export.c:714
+msgid "Into the destination folder:"
+msgstr "Helburuko karpetan:"
+
+#. i18n: error message displayed in the result page of the export assistant
+#: ../src/nact/nact-assistant-export.c:781
+msgid "One or more errors have been detected when exporting actions."
+msgstr "Errore bat edo gehiago detektatu dira ekintzak esportatzean."
+
+#: ../src/nact/nact-assistant-export.c:782
 #, c-format
 msgid ""
-"The action '%s' already exists with the name '%s', please first remove the "
-"existing one before trying to add this one"
+"<b>%s</b>\n"
+"\n"
+"%s"
 msgstr ""
-"'%s' ekintza badago lehendik ere '%s' izenarekin, lehenbizi existitzen dena "
-"kendu hau gehitzen saiatu aurretik"
+"<b>%s</b>\n"
+"\n"
+"%s"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:222
-#, c-format
-msgid "Can't save action '%s'"
-msgstr "Ezin da '%s' ekintza gorde"
+#. i18n: result of the export assistant
+#: ../src/nact/nact-assistant-export.c:788
+msgid "Selected actions have been successfully exported..."
+msgstr "Hautatutako ekintzak ongi esportatu dira..."
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:470
+#. i18n: the target folder is displayed in its own line
+#: ../src/nact/nact-assistant-export.c:794
+msgid "... in folder:"
+msgstr "... karpetan:"
+
+#: ../src/nact/nact-assistant-export.c:795
 #, c-format
 msgid ""
-"A profile already exists with the name '%s', please first remove or rename "
-"the existing one before trying to add this one"
+"%s<b>%s</b>\n"
+"\n"
+"\t%s/\n"
+"\n"
 msgstr ""
-"'%s' izeneko profila badago lehendik ere, lehenbizi existitzen dena kendu "
-"edo izenez aldatu hau gehitzen saiatu aurretik"
+"%s<b>%s</b>\n"
+"\n"
+"\t%s/\n"
+"\n"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:524
-#, fuzzy, c-format
-msgid "Can't remove the old profile '%s'"
-msgstr "Ezin da '%s' profila zaharra kendu"
+#. i18n: the export file for each actions is displayed in its own line
+#: ../src/nact/nact-assistant-export.c:801
+msgid "... as files:"
+msgstr "... fitxategi gisa:"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:531
-#, c-format
-msgid "Can't find profile named '%s'"
-msgstr "Ezin da '%s' izeneko profila aurkitu"
-
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:184
-msgid " and some profiles are incomplete: "
-msgstr " eta profila batzuk osatu gabe daude: "
-
-#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:204
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:717
-msgid ","
-msgstr ", "
-
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:303
-#, c-format
-msgid "%s (one missing key: %s)%s"
-msgid_plural "%s (missing keys: %s)%s"
-msgstr[0] "%s (gakoa falta da: %s)%s"
-msgstr[1] "%s (gakoak falta dira: %s)%s"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:682
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:817
+#: ../src/nact/nact-assistant-export.c:802
 #, c-format
 msgid ""
-"This XML file is not a valid Nautilus-actions config file (found <%s> "
-"element instead of <%s>)"
+"%s<b>%s</b>\n"
+"\n"
 msgstr ""
-"XML fitxategia ez da baliozko Nautilus-eko ekintzen konfigurazioko "
-"fitxategia (<%s> elementua aurkitu da <%s> ordez)"
+"%s<b>%s</b>\n"
+"\n"
 
-#. if the version of the file is greater than the current one, we reject the file
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
-#, fuzzy, c-format
+#. i18n: the title of the confirm page of the import assistant
+#: ../src/nact/nact-assistant-import.c:491
+msgid "About to import selected files:"
+msgstr "Hautatutako ekintzak inportatzeari buruz:"
+
+#. i18n: result of the import assistant
+#: ../src/nact/nact-assistant-import.c:525
+msgid "Selected files have been imported:"
+msgstr "Hautatutako ekintzak inportatu dira:"
+
+#. i18n: this is the globally unique identifier and the label of the newly imported action
+#: ../src/nact/nact-assistant-import.c:547
+#, c-format
+msgid "UUID: %s\t%s"
+msgstr "UUID: %s\t%s"
+
+#. i18n: just indicate that the import of this file was unsuccessfull
+#: ../src/nact/nact-assistant-import.c:556
+msgid "NOT OK"
+msgstr "Gaizki"
+
+#: ../src/nact/nact.desktop.in.h:1
+msgid "Add items to the Nautilus popup menu"
+msgstr "Gehitu elementuak Nautilus-en laster-menuari"
+
+#: ../src/nact/nact.desktop.in.h:2
+msgid "Nautilus Actions Configuration"
+msgstr "Nautilus-eko ekintzen konfigurazioa"
+
+#. i18n: status bar message when the action label is empty
+#: ../src/nact/nact-iaction-tab.c:348
+msgid "Caution: a label is mandatory for the action."
+msgstr "Kontuz: etiketa bat derrigorrezkoa da ekintzarentzako"
+
+#. i18n: label in front of the GtkEntry where user enters the action label
+#. i18n: label in front of the GtkEntry where user enters the profile label
+#: ../src/nact/nact-iaction-tab.c:361 ../src/nact/nact-icommand-tab.c:366
+msgid "_Label :"
+msgstr "_Etiketa:"
+
+#: ../src/nact/nact-iaction-tab.c:449
+msgid "Choosing an icon"
+msgstr "Ikonoa aukeratzea"
+
+#. i18n notes: when no icon is selected in the drop-down list
+#: ../src/nact/nact-iaction-tab.c:505
+msgid "None"
+msgstr "Bat ere ez"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../src/nact/nact-iadvanced-tab.c:395
+msgid "new-scheme"
+msgstr "eskema-berria"
+
+#: ../src/nact/nact-iadvanced-tab.c:396
+msgid "New scheme description"
+msgstr "Eskema berriaren azalpena"
+
+#. i18n notes : description of 'file' scheme
+#: ../src/nact/nact-iadvanced-tab.c:572
+msgid "Local files"
+msgstr "Lokaleko fitxategiak"
+
+#. i18n notes : description of 'sftp' scheme
+#: ../src/nact/nact-iadvanced-tab.c:574
+msgid "SSH files"
+msgstr "SSH fitxategiak"
+
+#. i18n notes : description of 'smb' scheme
+#: ../src/nact/nact-iadvanced-tab.c:576
+msgid "Windows files"
+msgstr "Windows-eko fitxategiak"
+
+#. i18n notes : description of 'ftp' scheme
+#: ../src/nact/nact-iadvanced-tab.c:578
+msgid "FTP files"
+msgstr "FTP fitxategiak"
+
+#. i18n notes : description of 'dav' scheme
+#: ../src/nact/nact-iadvanced-tab.c:580
+msgid "WebDAV files"
+msgstr "WebDAV fitxategiak"
+
+#. i18n: status bar message when the profile label is empty
+#: ../src/nact/nact-icommand-tab.c:356
+msgid "Caution: a label is mandatory for the profile."
+msgstr "Kontuz: etiketa bat derrigorrezkoa da profilarentzako."
+
+#: ../src/nact/nact-icommand-tab.c:408
+msgid "Choosing a command"
+msgstr "Komando bat aukeratzea"
+
+#. static const char *thisfn = "nact_iconditions_update_example_label";
+#: ../src/nact/nact-icommand-tab.c:487
+#, c-format
+msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
+msgstr "<i><b><span size=\"small\">adib., %s</span></b></i>"
+
+#. i18n notes: example strings for the command preview
+#: ../src/nact/nact-icommand-tab.c:532
+msgid "/path/to"
+msgstr "/bide/izena"
+
+#: ../src/nact/nact-icommand-tab.c:533
+msgid "file1.txt"
+msgstr "fitxategia1.txt"
+
+#: ../src/nact/nact-icommand-tab.c:533
+msgid "file2.txt"
+msgstr "fitxategia2.txt"
+
+#: ../src/nact/nact-icommand-tab.c:534
+msgid " folder1"
+msgstr " karpeta1"
+
+#: ../src/nact/nact-icommand-tab.c:534
+msgid "folder2"
+msgstr "karpeta2"
+
+#: ../src/nact/nact-icommand-tab.c:535
+msgid " file1.txt"
+msgstr " fitxategia1.txt"
+
+#: ../src/nact/nact-icommand-tab.c:535
+msgid "folder1"
+msgstr "karpeta1"
+
+#: ../src/nact/nact-icommand-tab.c:537
+msgid "test.example.net"
+msgstr "proba.adibidea.net"
+
+#: ../src/nact/nact-icommand-tab.c:538
+msgid "file.txt"
+msgstr "fitxategia.txt"
+
+#: ../src/nact/nact-icommand-tab.c:539
+msgid "folder"
+msgstr "karpeta"
+
+#: ../src/nact/nact-icommand-tab.c:540
+msgid "8080"
+msgstr "8080"
+
+#: ../src/nact/nact-icommand-tab.c:544
+msgid "file:///path/to/file1.text"
+msgstr "file:///bide-izena/fitxategia1.text"
+
+#: ../src/nact/nact-icommand-tab.c:545
+msgid "file:///path/to/file2.text"
+msgstr "file:///bide-izena/fitxategia2.text"
+
+#: ../src/nact/nact-icommand-tab.c:546
+msgid "file:///path/to/a/dir"
+msgstr "file:///bide-izena/direktorio/bat"
+
+#: ../src/nact/nact-icommand-tab.c:547
+msgid "file:///path/to/another/dir"
+msgstr "file:///bide-izena/beste/direktorio/bat"
+
+#: ../src/nact/nact-imenubar.c:101
+msgid "_File"
+msgstr "_Fitxategia"
+
+#: ../src/nact/nact-imenubar.c:102
+msgid "_Edit"
+msgstr "_Editatu"
+
+#: ../src/nact/nact-imenubar.c:103
+msgid "_Tools"
+msgstr "_Tresnak"
+
+#: ../src/nact/nact-imenubar.c:104
+msgid "_Help"
+msgstr "_Laguntza"
+
+#: ../src/nact/nact-imenubar.c:106
+msgid "_New action"
+msgstr "Ekintza _berria"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New action' item
+#: ../src/nact/nact-imenubar.c:108
+msgid "Define a new action."
+msgstr "Definitu ekintza berria."
+
+#: ../src/nact/nact-imenubar.c:110
+msgid "_New _profile"
+msgstr "_Profila berria"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
+#: ../src/nact/nact-imenubar.c:112
+msgid "Define a new profile attached to the current action."
+msgstr "Definitu uneko ekintzari erantsitako profila berria."
+
+#: ../src/nact/nact-imenubar.c:114
+msgid "_New _menu"
+msgstr "_Menu berria"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
+#: ../src/nact/nact-imenubar.c:116
+msgid "Insert a new menu at the current position."
+msgstr "Txertatu menu berria uneko posizioan."
+
+#. i18n: tooltip displayed in the status bar when selecting 'Save' item
+#: ../src/nact/nact-imenubar.c:120
+msgid "Record all the modified actions. Invalid actions will be silently ignored."
+msgstr "Erregistratu eraldatutako ekintza guztiak. Ekintza baliogabeei isilean ezikusi egingo zaie."
+
+#. i18n: tooltip displayed in the status bar when selecting 'Quit' item
+#: ../src/nact/nact-imenubar.c:124
+msgid "Quit the application."
+msgstr "Irte aplikaziotik."
+
+#: ../src/nact/nact-imenubar.c:126
+msgid "D_uplicate"
+msgstr "_Bikoiztu"
+
+#. i18n: tooltip displayed in the status bar when selecting the Duplicate item
+#: ../src/nact/nact-imenubar.c:128
+msgid "Create a copy of the selected action or profile."
+msgstr "Sortu hautatutako ekintza edo profilaren kopia."
+
+#. i18n: tooltip displayed in the status bar when selecting the Delete item
+#: ../src/nact/nact-imenubar.c:132
+msgid "Remove the selected action or profile from your configuration."
+msgstr "Kendu hautatutako ekintza edo profila zure konfiguraziotik."
+
+#: ../src/nact/nact-imenubar.c:134
+msgid "_Reload the list of actions"
+msgstr "_Birkargatu ekintzen zerrenda"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
+#: ../src/nact/nact-imenubar.c:136
+msgid "Cancel your current modifications and reload the list of actions."
+msgstr "Bertan behera utzi zure uneko eraldaketak eta birkargatu ekintzen zerrenda."
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
+#: ../src/nact/nact-imenubar.c:140
+msgid "Edit your preferences."
+msgstr "Editatu zure hobespenak."
+
+#: ../src/nact/nact-imenubar.c:142
+msgid "_Import assistant..."
+msgstr "_Inportatze-laguntzailea..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Import item
+#: ../src/nact/nact-imenubar.c:144
+msgid "Import one or more actions from external (XML) files into your configuration."
+msgstr "Inportatu ekintza bat edo gehiago kanpoko (XML) fitxategiak zure konfiguraziora."
+
+#: ../src/nact/nact-imenubar.c:146
+msgid "E_xport assistant..."
+msgstr "_Exportatze-laguntzailea..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Export item
+#: ../src/nact/nact-imenubar.c:148
+msgid "Export one or more actions from your configuration to external XML files."
+msgstr "Esportatu ekintza bat edo gehiago zure konfiguraziotik kanpoko XML fitxategietara."
+
+#. i18n: tooltip displayed in the status bar when selecting the Help item
+#: ../src/nact/nact-imenubar.c:152
+msgid "Display help about this program."
+msgstr "Bistaratu programa honi buruzko laguntza."
+
+#. i18n: tooltip displayed in the status bar when selecting the About item
+#: ../src/nact/nact-imenubar.c:156
+msgid "Display informations about this program."
+msgstr "Bistaratu programa honi buruzko informazioa."
+
+#. i18n: label of a duplicated action
+#. i18n: label of a duplicated profile
+#: ../src/nact/nact-imenubar.c:610 ../src/nact/nact-imenubar.c:624
+#, c-format
+msgid "Copy of %s"
+msgstr "%s(r)en kopia"
+
+#. i18n: message before reloading the list of actions
+#: ../src/nact/nact-imenubar.c:687
+msgid "This will cancel your current modifications."
+msgstr "Honek zure uneko aldaketak bertan behera utziko ditu."
+
+#: ../src/nact/nact-imenubar.c:688
+msgid "Are you sure this is what you want ?"
+msgstr "Ziur zaude hori egitea nahi duzula?"
+
+#: ../src/nact/nact-main-window.c:1023
 msgid ""
-"This config file is more recent than this version of Nautilus-actions can "
-"support. Please upgrade Nautilus-actions to the latest version if you want "
-"to be able to import it (File version: %s (max supported version : %s))"
+"One or more actions have been modified in the filesystem.\n"
+"You could keep to work with your current list of actions, or you may want to "
+"reload a fresh one."
 msgstr ""
-"Konfigurazioko fitxategi hau Nautilus-eko ekintzen bertsio honek onartu "
-"ditzakeenak baino berriagoa da. Eguneratu 'Nautilus-eko ekintzak' azken "
-"bertsiora fitxategi hau inportatzea nahi baduzu (fitxategi-bertsioa: %s; "
-"gehienez onartutako bertsioa: %s)"
+"Ekintza bat edo gehiago alda daitezke fitxategi-sisteman.\n"
+"Lanean jarrai dezakezu zure uneko ekintzen zerrendarekin, edo nahiago baduzu "
+"fresko bat birkarga dezakezu."
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
+#: ../src/nact/nact-main-window.c:1029
+msgid ""
+"Note that reloading a fresh list of actions requires that you give up with "
+"your current modifications."
+msgstr ""
+"Jakin ezazu ekintzen zerrenda fresko bat birkargatzeak zure uneko "
+"aldaketak uztea eskatzen duela."
+
+#: ../src/nact/nact-main-window.c:1035
+msgid "Do you want to reload a fresh list of actions ?"
+msgstr "Nahi duzu ekintzen zerrenda freskoa birkargatzea?"
+
+#: ../src/nact/nact-window.c:272
+msgid "An error has occured when trying to save the action"
+msgstr "Errorea gertatu da ekintza gordetzen saiatzean"
+
+#: ../src/nact/nact-window.c:305
+msgid "An error has occured when trying to delete the action"
+msgstr "Errorea gertatu da ekintza ezabatzen saiatzean"
+
+#: ../src/nact/nact-window.c:332
+#, c-format
+msgid "One action has been modified."
+msgstr "Ekintza bat aldatu da."
+
+#: ../src/nact/nact-window.c:333
+msgid "Are you sure you want to quit without saving it ?"
+msgstr "Ziur zaude hura gorde gabe irtetzea nahi duzula?"
+
+#. first = g_strdup_printf( _( "%d actions have been modified." ), count );
+#: ../src/nact/nact-window.c:337
+#, c-format
+msgid "Actions have been modified."
+msgstr "Ekintzak aldatu dira."
+
+#: ../src/nact/nact-window.c:338
+msgid "Are you sure you want to quit without saving them ?"
+msgstr "Ziur zaude haiek gorde gabe irtetzea nahi duzula?"
+
+#: ../src/nact/nact-xml-reader.c:107
+#, c-format
+msgid "Unable to parse XML file: %s."
+msgstr "Ezin da XML fitxategia analizatu: %s."
+
+#: ../src/nact/nact-xml-reader.c:108
+#, c-format
+msgid "Invalid XML root element: waited for '%s' or '%s', found '%s' at line %d."
+msgstr ""
+"Baliogabeko XMLren erroko elementua: '%s' edo '%s' espero zen, "
+"baina '%s' aurkituta %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:109
+#, c-format
+msgid "Waited for '%s' node, found (ignored) '%s' at line %d."
+msgstr "'%s' nodoaren zain, '%s' aurkituta (ezikusi eginda) %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:110
+#, c-format
+msgid "Unexpected (ignored) '%s' node found at line %d."
+msgstr "Ustekageko '%s' nodoa (ezikusi eginda) %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:111
+#, c-format
+msgid "Schema is ignored at line %d."
+msgstr "Eskemari ezikusi egin zaio %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:112
+#, c-format
+msgid "Unexpected '%s' node found at line %d."
+msgstr "Ustekabeko '%s' nodoa aurkituta %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:113
+#, c-format
+msgid "Unexpected '%s' entry found at line %d."
+msgstr "Ustekabeko '%s' sarrera aurkituta %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:114
+#, c-format
+msgid "Mandatory node '%s' not found."
+msgstr "Ez da derrigorrezko '%s' nodoa aurkitu."
+
+#: ../src/nact/nact-xml-reader.c:115
+msgid "No value found."
+msgstr "Ez da balioa aurkitu."
+
+#: ../src/nact/nact-xml-reader.c:116
+#, c-format
+msgid "Invalid UUID: waited for %s, found %s at line %d."
+msgstr "Baliogabeko UUIDa: '%s' espero zen, '%s' aurkituta %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:117
+#, c-format
+msgid "Invalid content: waited for %s prefix, found %s at line %d."
+msgstr "Iruzkin baliogabea: '%s' aurrizkia espero zen, '%s' aurkituta %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:118
+#, c-format
+msgid "Invalid UUID %s found at line %d."
+msgstr "%s UUID baliogabea aurkituta %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:119
+#, c-format
+msgid "Already existing action (UUID: %s) at line %d."
+msgstr "Badago ekintza (UUIDa: %s) lehendik ere %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:120
+#, c-format
+msgid "Value '%s' already set: new value ignored at line %d."
+msgstr "'%s' balioa jadanik ezarrita. Balio berriari ezikusi eginda %d. lerroan."
+
+#: ../src/nact/nact-xml-reader.c:121
+msgid "UUID not found."
+msgstr "Ez da UUIDa aurkitu."
+
+#: ../src/nact/nact-xml-reader.c:122
+msgid "Action label not found."
+msgstr "Ekintzaren etiketa ez da aurkitu."
+
+#: ../src/test/test-parse-uris.c:56
 #, c-format
 msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
-msgid_plural ""
-"This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
-"s"
-msgstr[0] ""
-"XML fitxategi hau ez da baliozko Nautilus-eko ekintzen konfigurazio-"
-"fitxategia (gakoa falta zaio: %s)%s"
-msgstr[1] ""
-"XML fitxategi hau ez da baliozko Nautilus-eko ekintzen konfigurazio-"
-"fitxategia (gakoak falta zaizkio: %s)%s"
-
-#. No error occured but we have not found the "version" gconf key
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
-#, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+"URIs parsing test.\n"
+"\n"
 msgstr ""
-"XML fitxategi hau ez da baliozko Nautilus-eko ekintzen konfigurazio-"
-"fitxategia (gakoa falta zaio: %s)"
+"URIa analizatzeko proba.\n"
+"\n"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:827
-#, c-format
+#: ../src/utils/nautilus-actions-new.c:64
+msgid "The label of the menu item (mandatory)"
+msgstr "Menuko elementuaren etiketa (derrigorra)"
+
+#: ../src/utils/nautilus-actions-new.c:64
+msgid "LABEL"
+msgstr "ETIKETA"
+
+#: ../src/utils/nautilus-actions-new.c:65
+msgid "TOOLTIP"
+msgstr "ARGIBIDEA"
+
+#: ../src/utils/nautilus-actions-new.c:66
+msgid "The icon of the menu item (filename or GTK stock ID)"
+msgstr "Menuko elementuaren ikonoa (fitxategi-izena edo GTK pilaren IDa)"
+
+#: ../src/utils/nautilus-actions-new.c:66
+msgid "ICON"
+msgstr "IKONOA"
+
+#: ../src/utils/nautilus-actions-new.c:68
+#: ../src/utils/nautilus-actions-new.c:71
+msgid "PATH"
+msgstr "BIDE-IZENA"
+
+#: ../src/utils/nautilus-actions-new.c:69
+msgid "PARAMS"
+msgstr "PARAMETROAK"
+
+#: ../src/utils/nautilus-actions-new.c:70
 msgid ""
-"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
-"instead of <%s>)"
+"A pattern to match selected files against. May include wildcards (* or ?) "
+"(you must set one option for each pattern you need)"
 msgstr ""
-"XML fitxategi hau ez da baliozko Nautilus-eko ekintzen konfigurazio-"
-"fitxategia (erroko nodoa %s da %s ordez)"
+"Eredua hautatutako fitxategiak bat etortzeko. Komodinak (? edo *) eduki "
+"ditzake (behar duzun eredu bakoitzeko aukera bat ezarri behar duzu)"
 
-#~ msgid "Can't paste action's profile '%s' !"
-#~ msgstr "Ezin da ekintzaren '%s' profila itsatsi."
+#: ../src/utils/nautilus-actions-new.c:70
+#: ../src/utils/nautilus-actions-new.c:72
+msgid "EXPR"
+msgstr "ADIERA"
+
+#: ../src/utils/nautilus-actions-new.c:72
+msgid ""
+"A pattern to match selected files' mimetype against. May include wildcards "
+"(* or ?) (you must set one option for each pattern you need)"
+msgstr ""
+"Eredua hautatutako fitxategien MIME motak bat etortzeko. Komodinak (? edo *) "
+"eduki ditzake (behar duzun eredu bakoitzeko aukera bat ezarri behar duzu)"
+
+#: ../src/utils/nautilus-actions-new.c:73
+msgid "Set it if the selection must only contain files"
+msgstr "Ezarri hau hautapenak fitxategiak soilik baditu"
+
+#: ../src/utils/nautilus-actions-new.c:74
+msgid ""
+"Set it if the selection must only contain folders. Specify both '--isfile' "
+"and '--isdir' options is selection can contain both types of items"
+msgstr ""
+"Ezarri hau hautapenak karpetak soilik baditu. Zehaztu biak '--isfile' eta "
+"'--isdir' aukerak hautapenak elementu mota biak eduki baditzake."
+
+#: ../src/utils/nautilus-actions-new.c:75
+msgid "Set it if the selection can have several items"
+msgstr "Ezarri hau hautapenak hainbat elementu baditu"
+
+#: ../src/utils/nautilus-actions-new.c:76
+msgid ""
+"A valid GVFS scheme where the selected files should be located (you must set "
+"one option for each scheme you need)"
+msgstr ""
+"GVFS eskema (hautatutako fitxategiak kokatuta egon beharko luketena). Behar "
+"duzun eskema bakoitzeko ezarri behar duzu"
+
+#: ../src/utils/nautilus-actions-new.c:76
+msgid "SCHEME"
+msgstr "ESKEMA"
+
+#: ../src/utils/nautilus-actions-new.c:82
+msgid "Directly import the newly created action in GConf configuration"
+msgstr "Inportatu zuzenean sortu berri den ekintza GConf konfigurazioan"
+
+#: ../src/utils/nautilus-actions-new.c:83
+msgid ""
+"The folder where to write the new action as a GConf dump output [default: "
+"stdout]"
+msgstr ""
+"Ekintza berriak idatziko diren karpeta GConf-en iraulitako irteera gisa "
+"[lehenetsia: stdout]"
+
+#: ../src/utils/nautilus-actions-new.c:83
+msgid "DIR"
+msgstr "DIR"
+
+#: ../src/utils/nautilus-actions-new.c:115
+#: ../src/utils/nautilus-actions-schemas.c:84
+#, c-format
+msgid "Syntax error: %s\n"
+msgstr "Sintaxi-errorea: %s\n"
+
+#: ../src/utils/nautilus-actions-new.c:121
+#, c-format
+msgid "Error: an action label is mandatory."
+msgstr "Errorea: ekintzaren etiketa bat derrigorrezkoa da."
+
+#: ../src/utils/nautilus-actions-new.c:126
+#, c-format
+msgid "Error: only one output option may be specified."
+msgstr "Errorea: soilik irteerako aukera bat zehaz daiteke."
+
+#. i18n: Action <action_label> written to...
+#: ../src/utils/nautilus-actions-new.c:135
+#, c-format
+msgid "Action '%s' succesfully written to GConf configuration.\n"
+msgstr "'%s' ekintza ongi idatzi da GConf konfigurazioan.\n"
+
+#. i18n: Action <action_label> written to <output_filename>...
+#: ../src/utils/nautilus-actions-new.c:142
+#, c-format
+msgid "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n"
+msgstr "'%s' ekintza ongi idatzi da %s(e)n, eta prest dago NACTen inportatzeko.\n"
+
+#: ../src/utils/nautilus-actions-new.c:169
+msgid ""
+"Define a new action.\n"
+"\n"
+"  The created action defaults to be written to stdout.\n"
+"  It can also be written to an output folder, in a file later suitable for "
+"an import in NACT.\n"
+"  Or you may choose to directly write the action into your GConf "
+"configuration."
+msgstr ""
+"Definitu ekintza berria\n"
+"\n"
+"  Sortutako ekintza lehenetsia irteera estandarrean idazteko.\n"
+"  Irteerako karpeta bateko fitxategian ere idatz daiteke, beranduago   NACT-"
+"ek inporta dezan.\n"
+"  Edo ekintza zuzenean zure GConf konfigurazioan idaztea   aukera dezakezu."
+
+#: ../src/utils/nautilus-actions-new.c:186
+#: ../src/utils/nautilus-actions-schemas.c:144
+msgid ""
+"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
+"mail to <maintainer@nautilus-actions.org>.\n"
+msgstr ""
+"Eskertuko genizuke programaren akatsei buruz berri emango bazenu  http://"
+"bugzilla.gnome.org webgunean, edo nahiago baduzu, bidali mezu bat hona: "
+"maintainer@nautilus-actions.org\n"
+
+#: ../src/utils/nautilus-actions-new.c:194
+msgid "Output of the program"
+msgstr "Programaren irteera"
+
+#: ../src/utils/nautilus-actions-new.c:194
+msgid "Choose where the program creates the action"
+msgstr "Aukeratu programak non sortzen duen ekintza"
+
+#: ../src/utils/nautilus-actions-new.c:287
+#: ../src/utils/nautilus-actions-schemas.c:254
+#, c-format
+msgid "Try %s --help for usage.\n"
+msgstr "Saiatu '%s --help' erabilera ikasteko.\n"
+
+#. { "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE    , &output_gconf   , N_("Writes the Nautilus Actions schema in GConf"), NULL },
+#. { "output-filename"      , 'o', 0, G_OPTION_ARG_FILENAME, &output_fname   , N_("The file where to write the GConf schema ('-' for stdout)"), N_("FILENAME") },
+#: ../src/utils/nautilus-actions-schemas.c:53
+msgid "Output the schema on stdout"
+msgstr "Idatzi eskema irteera estandarrean (stdout)"
+
+#: ../src/utils/nautilus-actions-schemas.c:127
+msgid "Output the Nautilus Actions GConf schema on stdout."
+msgstr "Nautilus Actions-en GConf eskema irteera estandarrean idatzi."
+
