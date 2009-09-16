@@ -305,7 +305,7 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	}
 
 	if( !self->private->dispose_has_run ){
-		tree = na_pivot_get_items_tree( self->private->pivot );
+		tree = na_pivot_get_items( self->private->pivot );
 
 		for( ia = tree ; ia ; ia = ia->next ){
 

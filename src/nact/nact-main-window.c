@@ -475,7 +475,7 @@ instance_dispose( GObject *window )
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		base_iprefs_set_int( BASE_WINDOW( window ), "main-paned", pos );
 
-		self->private->deleted = na_pivot_free_items_tree( self->private->deleted );
+		na_object_free_items( self->private->deleted );
 
 		nact_iactions_list_dispose( NACT_IACTIONS_LIST( window ));
 		nact_iaction_tab_dispose( NACT_IACTION_TAB( window ));
@@ -656,7 +656,8 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 		actually_delete_item( window, item, pivot );
 	}
 
-	window->private->deleted = na_pivot_free_items_tree( window->private->deleted );
+	na_object_free_items( window->private->deleted );
+	window->private->deleted = NULL;
 }
 
 /**
@@ -743,7 +744,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( application );
-	tree = na_pivot_get_items_tree( pivot );
+	tree = na_pivot_get_items( pivot );
 	g_debug( "%s: pivot_tree=%p", thisfn, ( void * ) tree );
 
 	nact_iaction_tab_runtime_init_toplevel( NACT_IACTION_TAB( window ));
@@ -953,14 +954,8 @@ ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_da
 	g_free( first );
 
 	if( ok ){
-
-		na_pivot_reload_items_tree( pivot );
-
-		/*na_pivot_free_actions( self->private->actions );
-
-		self->private->actions = na_pivot_get_duplicate_actions( pivot );
-
-		nact_iactions_list_fill( NACT_IACTIONS_LIST( instance ), na_pivot_get_actions( pivot ));*/
+		na_pivot_reload_items( pivot );
+		nact_iactions_list_fill( NACT_IACTIONS_LIST( instance ), na_pivot_get_items( pivot ));
 	}
 }
 

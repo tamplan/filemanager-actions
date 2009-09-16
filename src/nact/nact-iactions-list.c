@@ -583,7 +583,13 @@ nact_iactions_list_get_selected_items( NactIActionsList *instance )
  *
  * Inserts the provided @items list in the treeview.
  *
- * The provided @items list is supposed to be homogeneous, i.e. it
+ * The provided @items list is supposed to be homogeneous, i.e. referes
+ * to a whole subtree.
+ *
+ * If the @items list contains only profiles, they can only be inserted
+ * into an action, and the profiles will eventually be renumbered.
+ * The insertion position is current, or alpha-sorted, depending on
+ *
  * If the list is not sorted, the new item is inserted just before the
  * current position.
  *
@@ -595,18 +601,24 @@ nact_iactions_list_get_selected_items( NactIActionsList *instance )
  * of profiles of the current action.
  */
 void
-nact_iactions_list_insert_items( NactIActionsList *instance, NAObject *item )
+nact_iactions_list_insert_items( NactIActionsList *instance, GSList *items )
 {
 	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GList *list_selected;
 	GtkTreePath *path = NULL;
+	NAObject *item;
 	NAObject *obj_selected = NULL;
 	GtkTreeIter iter;
 
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
-	g_return_if_fail( NA_IS_OBJECT( item ));
+	/*g_return_if_fail( NA_IS_OBJECT( item ));*/
+
+	item = NA_OBJECT( items->data );
+	if( FALSE ){
+		insert_item( instance, item );
+	}
 
 	treeview = get_actions_list_treeview( instance );
 	model = gtk_tree_view_get_model( treeview );
@@ -661,7 +673,7 @@ nact_iactions_list_insert_items( NactIActionsList *instance, NAObject *item )
 	g_list_free( list_selected );
 }
 
-/**
+/*
  * nact_iactions_list_insert_item:
  * @instance: this #NactIActionsList instance.
  * @item: a #NAActionMenu, #NAAction or #NAActionProfile to be added.

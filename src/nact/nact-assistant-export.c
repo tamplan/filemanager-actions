@@ -507,7 +507,7 @@ assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *ass
 
 	appli = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( appli );
-	tree = na_pivot_get_items_tree( pivot );
+	tree = na_pivot_get_items( pivot );
 
 	nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
 

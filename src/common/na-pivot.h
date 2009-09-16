@@ -110,10 +110,8 @@ void      na_pivot_dump( const NAPivot *pivot );
 GSList   *na_pivot_get_providers( const NAPivot *pivot, GType type );
 void      na_pivot_free_providers( GSList *providers );
 
-GSList   *na_pivot_get_items_tree( const NAPivot *pivot );
-/*GSList   *na_pivot_get_duplicate_items_tree( const NAPivot *pivot );*/
-void      na_pivot_reload_items_tree( NAPivot *pivot );
-GSList   *na_pivot_free_items_tree( GSList *tree );
+GSList   *na_pivot_get_items( const NAPivot *pivot );
+void      na_pivot_reload_items( NAPivot *pivot );
 
 void      na_pivot_add_item( NAPivot *pivot, const NAObject *item );
 void      na_pivot_remove_item( NAPivot *pivot, NAObject *item );

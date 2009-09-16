@@ -36,6 +36,9 @@
 	* src/common/na-gconf-utils.h: New file.
 	Handle some GConf general utilities.
 
+	* src/common/na-iio-provider.c: Sort each level of the tree if
+	alphabetical order display has been requested.
+
 	* src/common/na-object.h: Splitted in na-object-fn.h,
 	na-object-class.h and na-object-api.h.
 	All NAObject-derived public functions are now declared in
@@ -46,6 +49,62 @@
 
 	* src/common/na-object-item.h: Splitted in na-object-item-fn.h
 	and na-object-item-class.h.
+
+	* src/common/na-pivot.c:
+	* src/common/na-pivot.h:
+	Remove na_pivot_free_items_tree(), replacing it with
+	na_object_free_items().
+
+	* src/nact/base-application-class.c:
+	* src/nact/base-application-class.h:
+	Virtual function are no more prefixed by a class prefix, but local
+	implementations or these virtuals are.
+	Properties are renamed as BASE_APPLICATION_PROP_xxxx.
+
+	* src/nact/base-window-class.c:
+	* src/nact/base-window-class.h:
+	Remove not used init() and run() virtual functions.
+	Properties are renamed as BASE_WINDOW_PROP_xxxx.
+
+	* src/nact/egg-tree-multi-dnd.c: Cleanup the code.
+
+	* src/nact/nact-application.c:
+	Properties are renamed as NACT_APPLICATION_PROP_xxxx.
+
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-export.h:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-assistant-import.h:
+	Now derived from BaseAssistant class.
+
+	* src/nact/base-dialog.c: New file.
+	* src/nact/base-dialog.h: New file.
+	Define the BaseDialog class.
+
+	* src/nact/nact-assistant.c: Renamed as base-assistant.c.
+	* src/nact/nact-assistant.h: Renamed as base-assistant.h.
+	Define the BaseAssistant class.
+
+	* src/nact/nact-imenubar.c: Renamed as nact-main-menubar.c.
+	* src/nact/nact-imenubar.h: Renamed as nact-main-menubar.h.
+	Remove the NactIMenubar interface.
+
+	* src/nact/nact-iprefs.c: Renamed as base-iprefs.c.
+	* src/nact/nact-iprefs.h: Renamed as base-iprefs.h.
+	Define the BaseIPrefs interface which handles all NACT preferences.
+
+	* src/nact/nact-main-tab.h: New file.
+	Handles update of the tabs of the notebook.
+
+	* src/nact/selection.c: Renamed as nact-clipboard.c.
+	* src/nact/selection.h: Renamed as nact-clipboard.h.
+
+	* src/nact/nact-statusbar.c: Renamed as nact-main-statusbar.c.
+	* src/nact/nact-statusbar.h: Renamed as nact-main-statusbar.h.
+
+	* src/common/Makefile.am:
+	* src/nact/Makefile.am:
+	* src/test/Makefile.am: Updated accordingly.
 
 2009-08-30 Pierre Wieser <pwieser@trychlos.org>
 

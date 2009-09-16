@@ -57,7 +57,9 @@ static guint    try_write_item( const NAIIOProvider *instance, NAObject *item, g
 
 static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
 static gboolean do_is_writable( const NAIIOProvider *instance, const NAObject *item );
-/*static gint     compare_actions_label_alpha_fn( const NAAction *a, const NAAction *b );*/
+
+static GSList  *sort_tree( const NAPivot *pivot, GSList *tree );
+static gint     compare_label_alpha_fn( const NAObjectId *a, const NAObjectId *b );
 
 /**
  * Registers the GType of this interface.
@@ -169,15 +171,18 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 	level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
 	alpha_order = na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ));
 
-	/*if( alpha_order ){
-		actions = na_iio_provider_sort_actions( pivot, actions );
-	}*/
+	if( alpha_order ){
+		merged = sort_tree( pivot, merged );
+	}
 
 	na_utils_free_string_list( level_zero );
 
 	return( merged );
 }
 
+/*
+ * returns a concatened list of readen actions / menus
+ */
 static GSList *
 get_merged_items_list( const NAPivot *pivot, GSList *providers )
 {
@@ -205,26 +210,6 @@ get_merged_items_list( const NAPivot *pivot, GSList *providers )
 
 	return( merged );
 }
-
-/**
- * na_iio_provider_sort_action:
- * @pivot: the #NAPivot object which owns the list of registered I/O
- * storage providers.
- * @actions: the list of #NAAction action to be sorted.
- *
- * Sorts the list of actions in alphabetical order of their label.
- *
- * Returns: the sorted list.
- */
-/*GSList *
-na_iio_provider_sort_actions( const NAPivot *pivot, GSList *actions )
-{
-	GSList *sorted;
-
-	sorted = g_slist_sort( actions, ( GCompareFunc ) compare_actions_label_alpha_fn );
-
-	return( sorted );
-}*/
 
 /**
  * na_iio_provider_write_item:
@@ -377,16 +362,41 @@ do_is_writable( const NAIIOProvider *instance, const NAObject *item )
 	return( FALSE );
 }
 
-/*static gint
-compare_actions_label_alpha_fn( const NAAction *a, const NAAction *b )
+static GSList *
+sort_tree( const NAPivot *pivot, GSList *tree )
+{
+	GSList *sorted;
+	GSList *items, *it;
+
+	sorted = g_slist_sort( tree, ( GCompareFunc ) compare_label_alpha_fn );
+
+	/* recursively sort each level of the tree
+	 */
+	for( it = sorted ; it ; it = it->next ){
+		if( NA_IS_OBJECT_ITEM( it->data )){
+			items = na_object_get_items( it->data );
+			items = sort_tree( pivot, items );
+			na_object_set_items( it->data, items );
+			na_object_free_items( items );
+		}
+	}
+
+	return( sorted );
+}
+
+static gint
+compare_label_alpha_fn( const NAObjectId *a, const NAObjectId *b )
 {
 	gchar *label_a, *label_b;
 	gint compare;
 
-	label_a = na_action_get_label( a );
-	label_b = na_action_get_label( b );
+	label_a = na_object_get_label( a );
+	label_b = na_object_get_label( b );
 
 	compare = g_utf8_collate( label_a, label_b );
 
+	g_free( label_b );
+	g_free( label_a );
+
 	return( compare );
-}*/
+}

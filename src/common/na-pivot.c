@@ -54,7 +54,7 @@ struct NAPivotClassPrivate {
 struct NAPivotPrivate {
 	gboolean dispose_has_run;
 
-	/* list of instances to be notified of an action modification
+	/* list of instances to be notified of repository updates
 	 * these are called 'consumers' of NAPivot
 	 */
 	GSList  *consumers;
@@ -269,7 +269,7 @@ instance_dispose( GObject *object )
 		self->private->providers = NULL;
 
 		/* release item tree */
-		na_pivot_free_items_tree( self->private->tree );
+		na_object_free_items( self->private->tree );
 		self->private->tree = NULL;
 
 		/* chain up to the parent class */
@@ -400,7 +400,7 @@ na_pivot_free_providers( GSList *providers )
 }
 
 /**
- * na_pivot_get_items_tree:
+ * na_pivot_get_items:
  * @pivot: this #NAPivot instance.
  *
  * Returns: the current configuration tree.
@@ -409,7 +409,7 @@ na_pivot_free_providers( GSList *providers )
  * be g_free(), nor g_object_unref() by the caller.
  */
 GSList *
-na_pivot_get_items_tree( const NAPivot *pivot )
+na_pivot_get_items( const NAPivot *pivot )
 {
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( !pivot->private->dispose_has_run, NULL );
@@ -418,61 +418,20 @@ na_pivot_get_items_tree( const NAPivot *pivot )
 }
 
 /**
- * na_pivot_reload_items_tree:
+ * na_pivot_reload_items:
  * @pivot: this #NAPivot instance.
  *
  * Reloads the hierarchical list of items from I/O providers.
  */
 void
-na_pivot_reload_items_tree( NAPivot *pivot )
+na_pivot_reload_items( NAPivot *pivot )
 {
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 	g_return_if_fail( !pivot->private->dispose_has_run );
 
-	if( pivot->private->tree ){
-		na_pivot_free_items_tree( pivot->private->tree );
-	}
+	na_object_free_items( pivot->private->tree );
 
 	pivot->private->tree = na_iio_provider_get_items_tree( pivot );
-}
-
-/**
- * na_pivot_get_duplicate_actions:
- * @pivot: this #NAPivot instance.
- *
- * Returns an exact copy of the current list of actions.
- *
- * Returns: a #GSList of #NAAction actions.
- * The caller should na_pivot_free_actions() after usage.
- */
-/*GSList *
-na_pivot_get_duplicate_actions( const NAPivot *pivot )
-{
-	GSList *list = NULL;
-	GSList *ia;
-
-	g_assert( NA_IS_PIVOT( pivot ));
-
-	for( ia = pivot->private->actions ; ia ; ia = ia->next ){
-		list = g_slist_prepend( list, na_object_duplicate( NA_OBJECT( ia->data )));
-	}
-
-	return( g_slist_reverse( list ));
-}*/
-
-/**
- * na_pivot_free_items_tree:
- * @list: a #GSList of #NAObjectItems to be released.
- *
- * Frees a hierarchical tree of items.
- */
-GSList *
-na_pivot_free_items_tree( GSList *tree )
-{
-	g_slist_foreach( tree, ( GFunc ) g_object_unref, NULL );
-	g_slist_free( tree );
-
-	return( NULL );
 }
 
 /**
@@ -738,11 +697,11 @@ on_actions_changed_timeout( gpointer user_data )
 	/*static const gchar *thisfn = "na_pivot_on_actions_changed_timeout";
 	g_debug( "%s: pivot=%p", thisfn, user_data );*/
 	GTimeVal now;
-	const NAPivot *pivot;
+	NAPivot *pivot;
 	gulong diff;
 	GSList *ic;
 
-	g_assert( NA_IS_PIVOT( user_data ));
+	g_return_val_if_fail( NA_IS_PIVOT( user_data ), FALSE );
 	pivot = NA_PIVOT( user_data );
 
 	g_get_current_time( &now );
@@ -752,8 +711,7 @@ on_actions_changed_timeout( gpointer user_data )
 	}
 
 	if( pivot->private->automatic_reload ){
-		na_pivot_free_items_tree( pivot->private->tree );
-		pivot->private->tree = na_iio_provider_get_items_tree( pivot );
+		na_pivot_reload_items( pivot );
 	}
 
 	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){

@@ -78,7 +78,7 @@ static void          add_item_to_clipboard0( NAObject *object, gboolean copy_dat
 static void          add_item_to_clipboard( NAObject *object, GSList **copied );
 static void          export_action( const gchar *uri, const NAObject *action, GSList **exported );
 static gchar        *get_action_xml_buffer( const NAObject *action, GSList **exported );
-static void          get_from_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, NactClipboardData *data );
+static void          get_from_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
 static void          clear_clipboard_callback( GtkClipboard *clipboard, NactClipboardData *data );
 
 /**
@@ -225,7 +225,7 @@ nact_clipboard_get( void )
 	GtkClipboard *clipboard;
 	GtkSelectionData *selection;
 	NactClipboardData *data;
-	GSList *items;
+	/*GSList *items;*/
 
 	if( nact_clipboard_is_empty()){
 		return( NULL );
@@ -372,13 +372,13 @@ get_action_xml_buffer( const NAObject *action, GSList **exported )
 }
 
 static void
-get_from_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, NactClipboardData *data )
+get_from_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data )
 {
 	static const gchar *thisfn = "nact_clipboard_get_from_clipboard_callback";
 
 	g_debug( "%s: clipboard=%p, selection_data=%p, target=%s, info=%d, data=%p",
 			thisfn, ( void * ) clipboard,
-			( void * ) selection_data, gtk_atom_name( selection_data->target ), info, ( void * ) data );
+			( void * ) selection_data, gdk_atom_name( selection_data->target ), info, ( void * ) data );
 
 	gtk_selection_data_set( selection_data, selection_data->target, 8, data, sizeof( NactClipboardData ));
 }
