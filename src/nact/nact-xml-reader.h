@@ -34,11 +34,11 @@
 /*
  * NactXMLReader class definition.
  *
- * This is the base class for importing into and exporting from GConf
- * storage subsystem.
+ * This is the base class for importing actions from XML files.
  */
 
-#include "nact-window.h"
+#include "common/na-obj-action-class.h"
+#include "base-assistant.h"
 
 G_BEGIN_DECLS
 
@@ -65,9 +65,9 @@ typedef struct {
 }
 	NactXMLReaderClass;
 
-GType     nact_xml_reader_get_type( void );
+GType           nact_xml_reader_get_type( void );
 
-NAAction *nact_xml_reader_import( NactWindow *window, const gchar *uri, GSList **msg );
+NAObjectAction *nact_xml_reader_import( BaseWindow *window, const gchar *uri, GSList **msg );
 
 G_END_DECLS
 

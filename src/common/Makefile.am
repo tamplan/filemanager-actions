@@ -37,17 +37,15 @@ AM_CPPFLAGS += \
 libnact_la_SOURCES = \
 	na-about.c									\
 	na-about.h									\
-	na-action.c									\
-	na-action.h									\
-	na-action-class.h							\
-	na-action-menu.c							\
-	na-action-menu.h							\
-	na-action-profile.c							\
-	na-action-profile.h							\
-	na-action-profile-class.h					\
-	na-gconf.c									\
-	na-gconf.h									\
-	na-gconf-keys.h								\
+	na-gconf-keys-base.h						\
+	na-gconf-keys-schemas.h						\
+	na-gconf-monitor.c							\
+	na-gconf-monitor.h							\
+	na-gconf-provider.c							\
+	na-gconf-provider.h							\
+	na-gconf-provider-keys.h					\
+	na-gconf-utils.c							\
+	na-gconf-utils.h							\
 	na-gnome-vfs-uri.c							\
 	na-gnome-vfs-uri.h							\
 	na-iduplicable.c							\
@@ -59,9 +57,23 @@ libnact_la_SOURCES = \
 	na-iprefs.c									\
 	na-iprefs.h									\
 	na-object.c									\
-	na-object.h									\
+	na-object-api.h								\
+	na-object-class.h							\
+	na-object-fn.h								\
+	na-object-id.c								\
+	na-object-id-class.h						\
+	na-object-id-fn.h							\
 	na-object-item.c							\
-	na-object-item.h							\
+	na-object-item-class.h						\
+	na-object-item-fn.h							\
+	na-obj-action.c								\
+	na-obj-action.h								\
+	na-obj-action-class.h						\
+	na-obj-menu.c								\
+	na-obj-menu.h								\
+	na-obj-profile.c							\
+	na-obj-profile.h							\
+	na-obj-profile-class.h						\
 	na-pivot.c									\
 	na-pivot.h									\
 	na-utils.c									\

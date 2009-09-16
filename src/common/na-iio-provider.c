@@ -32,8 +32,12 @@
 #include <config.h>
 #endif
 
-#include "na-action.h"
+#include "na-object-api.h"
+#include "na-obj-action.h"
+#include "na-obj-menu.h"
 #include "na-iio-provider.h"
+#include "na-iprefs.h"
+#include "na-utils.h"
 
 /* private interface data
  */
@@ -41,14 +45,19 @@ struct NAIIOProviderInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+static gboolean st_initialized = FALSE;
+static gboolean st_finalized = FALSE;
+
 static GType    register_type( void );
 static void     interface_base_init( NAIIOProviderInterface *klass );
 static void     interface_base_finalize( NAIIOProviderInterface *klass );
 
+static GSList  *get_merged_items_list( const NAPivot *pivot, GSList *providers );
+static guint    try_write_item( const NAIIOProvider *instance, NAObject *item, gchar **message );
+
 static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
-static gboolean do_is_writable( const NAIIOProvider *instance, const NAAction *action );
-static guint    write_action( const NAIIOProvider *instance, NAAction *action, gchar **message );
-static gint     compare_actions_label_alpha_fn( const NAAction *a, const NAAction *b );
+static gboolean do_is_writable( const NAIIOProvider *instance, const NAObject *item );
+/*static gint     compare_actions_label_alpha_fn( const NAAction *a, const NAAction *b );*/
 
 /**
  * Registers the GType of this interface.
@@ -96,20 +105,19 @@ static void
 interface_base_init( NAIIOProviderInterface *klass )
 {
 	static const gchar *thisfn = "na_iio_provider_interface_base_init";
-	static gboolean initialized = FALSE;
 
-	if( !initialized ){
+	if( !st_initialized ){
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NAIIOProviderInterfacePrivate, 1 );
 
-		klass->read_actions = NULL;
+		klass->read_items_list = NULL;
 		klass->is_willing_to_write = do_is_willing_to_write;
 		klass->is_writable = do_is_writable;
-		klass->write_action = NULL;
-		klass->delete_action = NULL;
+		klass->write_item = NULL;
+		klass->delete_item = NULL;
 
-		initialized = TRUE;
+		st_initialized = TRUE;
 	}
 }
 
@@ -117,63 +125,85 @@ static void
 interface_base_finalize( NAIIOProviderInterface *klass )
 {
 	static const gchar *thisfn = "na_iio_provider_interface_base_finalize";
-	static gboolean finalized = FALSE ;
 
-	if( !finalized ){
+	if( !st_finalized ){
+
+		st_finalized = TRUE;
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
-
-		finalized = TRUE;
 	}
 }
 
 /**
- * na_iio_provider_read_actions:
+ * na_iio_provider_get_items_tree:
  * @pivot: the #NAPivot object which owns the list of registered I/O
  * storage providers.
  *
- * Loads the actions from storage subsystems.
+ * Loads the tree from I/O storage subsystems.
  *
- * Returns: a #GSList of newly allocated #NAAction objects.
- *
- * na_iio_provider_read_actions() loads the list of #NAAction from each
- * registered I/O storage provider, and takes care of concatenating
- * them into the returned global list.
+ * Returns: a #GSList of newly allocated objects as a hierarchical tree
+ * in display order. This tree may contain #NAActionMenu menus and
+ * #NAAction actions and their #NAActionProfile profiles.
  */
 GSList *
-na_iio_provider_read_actions( const NAPivot *pivot )
+na_iio_provider_get_items_tree( const NAPivot *pivot )
 {
-	static const gchar *thisfn = "na_iio_provider_read_actions";
-	GSList *actions = NULL;
-	GSList *providers, *ip, *list, *ia;
-	NAIIOProvider *instance;
+	static const gchar *thisfn = "na_iio_provider_get_items_tree";
+	GSList *providers;
+	GSList *merged;
+	GSList *level_zero;
+	gboolean alpha_order;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-	g_assert( NA_IS_PIVOT( pivot ));
+
+	g_return_val_if_fail( st_initialized && !st_finalized, NULL );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( NA_IS_IPREFS( pivot ), NULL );
 
 	providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+	merged = get_merged_items_list( pivot, providers );
+	na_pivot_free_providers( providers );
+
+	level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
+	alpha_order = na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ));
+
+	/*if( alpha_order ){
+		actions = na_iio_provider_sort_actions( pivot, actions );
+	}*/
+
+	na_utils_free_string_list( level_zero );
+
+	return( merged );
+}
+
+static GSList *
+get_merged_items_list( const NAPivot *pivot, GSList *providers )
+{
+	GSList *merged = NULL;
+	GSList *ip;
+	GSList *list, *item;
+	NAIIOProvider *instance;
 
 	for( ip = providers ; ip ; ip = ip->next ){
 
 		instance = NA_IIO_PROVIDER( ip->data );
-		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_actions ){
+		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_items_list ){
 
-			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_actions( instance );
+			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_items_list( instance );
 
-			for( ia = list ; ia ; ia = ia->next ){
+			for( item = list ; item ; item = item->next ){
 
-				na_action_set_provider( NA_ACTION( ia->data ), instance );
-
-				na_object_dump( NA_OBJECT( ia->data ));
+				na_object_set_provider( item->data, instance );
+				na_object_dump( item->data );
 			}
 
-			actions = g_slist_concat( actions, list );
+			merged = g_slist_concat( merged, list );
 		}
 	}
 
-	/* TODO: should be done only if prefs is set */
-	return( na_iio_provider_sort_actions( pivot, actions ));
+	return( merged );
 }
 
 /**
@@ -186,7 +216,7 @@ na_iio_provider_read_actions( const NAPivot *pivot )
  *
  * Returns: the sorted list.
  */
-GSList *
+/*GSList *
 na_iio_provider_sort_actions( const NAPivot *pivot, GSList *actions )
 {
 	GSList *sorted;
@@ -194,100 +224,138 @@ na_iio_provider_sort_actions( const NAPivot *pivot, GSList *actions )
 	sorted = g_slist_sort( actions, ( GCompareFunc ) compare_actions_label_alpha_fn );
 
 	return( sorted );
-}
+}*/
 
 /**
- * na_iio_provider_write_action:
+ * na_iio_provider_write_item:
  * @pivot: the #NAPivot object which owns the list of registered I/O
  * storage providers. if NULL, @action must already have registered
  * its own provider.
- * @action: the #NAAction action to be written.
+ * @item: a #NAObject to be written by the storage subsystem.
  * @message: the I/O provider can allocate and store here an error
  * message.
  *
- * Writes an action to a willing-to storage subsystem.
+ * Writes an @item to a willing-to storage subsystem.
  *
  * Returns: the NAIIOProvider return code.
  */
 guint
-na_iio_provider_write_action( const NAPivot *pivot, NAAction *action, gchar **message )
+na_iio_provider_write_item( const NAPivot *pivot, NAObject *item, gchar **message )
 {
-	static const gchar *thisfn = "na_iio_provider_write_action";
+	static const gchar *thisfn = "na_iio_provider_write_item";
 	guint ret;
 	NAIIOProvider *instance;
+	NAIIOProvider *bad_instance;
 	GSList *providers, *ip;
 
-	g_debug( "%s: pivot=%p, action=%p, message=%p",
-			thisfn, ( void * ) pivot, ( void * ) action, ( void * ) message );
-	g_assert( NA_IS_PIVOT( pivot ) || !pivot );
-	g_assert( NA_IS_ACTION( action ));
+	g_debug( "%s: pivot=%p, item=%p, message=%p",
+			thisfn, ( void * ) pivot, ( void * ) item, ( void * ) message );
+
+	g_return_val_if_fail( st_initialized && !st_finalized, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail(( NA_IS_PIVOT( pivot ) || !pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 
 	ret = NA_IIO_PROVIDER_NOT_WRITABLE;
+	bad_instance = NULL;
 
-	/* try to write to the original provider of the action
+	/* try to write to the original provider of the item
 	 */
-	instance = NA_IIO_PROVIDER( na_action_get_provider( action ));
-
+	instance = NA_IIO_PROVIDER( na_object_get_provider( item ));
 	if( instance ){
-		ret = write_action( instance, action, message );
+		ret = try_write_item( instance, item, message );
+		if( ret == NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE || ret == NA_IIO_PROVIDER_NOT_WRITABLE ){
+			bad_instance = instance;
+			instance = NULL;
+		}
 	}
 
-	if( ret == NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE || ret == NA_IIO_PROVIDER_NOT_WRITABLE ){
-		instance = NULL;
-	}
-
-	/* else, search for a provider which is willing to write the action
+	/* else, search for a provider which is willing to write the item
 	 */
 	if( !instance && pivot ){
 		providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
 		for( ip = providers ; ip ; ip = ip->next ){
 
 			instance = NA_IIO_PROVIDER( ip->data );
-			ret = write_action( instance, action, message );
-			if( ret == NA_IIO_PROVIDER_WRITE_OK || ret == NA_IIO_PROVIDER_WRITE_ERROR ){
-				break;
+			if( !bad_instance || bad_instance != instance ){
+				ret = try_write_item( instance, item, message );
+				if( ret == NA_IIO_PROVIDER_WRITE_OK ){
+					break;
+				}
 			}
 		}
+		na_pivot_free_providers( providers );
 	}
 
 	return( ret );
 }
 
+static guint
+try_write_item( const NAIIOProvider *provider, NAObject *item, gchar **message )
+{
+	static const gchar *thisfn = "na_iio_provider_try_write_item";
+	guint ret;
+
+	g_debug( "%s: provider=%p, item=%p, message=%p",
+			thisfn, ( void * ) provider, ( void * ) item, ( void * ) message );
+
+	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->is_willing_to_write( provider )){
+		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
+	}
+
+	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->is_writable( provider, item )){
+		return( NA_IIO_PROVIDER_NOT_WRITABLE );
+	}
+
+	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->delete_item ||
+		!NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_item ){
+		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
+	}
+
+	ret = NA_IIO_PROVIDER_GET_INTERFACE( provider )->delete_item( provider, item, message );
+	if( ret != NA_IIO_PROVIDER_WRITE_OK ){
+		return( ret );
+	}
+
+	return( NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_item( provider, item, message ));
+}
+
 /**
- * na_iio_provider_delete_action:
+ * na_iio_provider_delete_item:
  * @pivot: the #NAPivot object which owns the list of registered I/O
  * storage providers.
- * @action: the #NAAction action to be written.
+ * @item: the #NAObject item to be deleted.
  * @message: the I/O provider can allocate and store here an error
  * message.
  *
- * Deletes an action from the storage subsystem.
+ * Deletes an item (action or menu) from the storage subsystem.
  *
  * Returns: the NAIIOProvider return code.
  *
- * Note that a new action, not already written to an I/O subsystem,
+ * Note that a new item, not already written to an I/O subsystem,
  * doesn't have any attached provider. We so do nothing...
  */
 guint
-na_iio_provider_delete_action( const NAPivot *pivot, const NAAction *action, gchar **message )
+na_iio_provider_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message )
 {
-	static const gchar *thisfn = "na_iio_provider_delete_action";
+	static const gchar *thisfn = "na_iio_provider_delete_item";
 	guint ret;
 	NAIIOProvider *instance;
 
-	g_debug( "%s: pivot=%p, action=%p, message=%p",
-			thisfn, ( void * ) pivot, ( void * ) action, ( void * ) message );
-	g_assert( NA_IS_PIVOT( pivot ));
-	g_assert( NA_IS_ACTION( action ));
+	g_debug( "%s: pivot=%p, item=%p, message=%p",
+			thisfn, ( void * ) pivot, ( void * ) item, ( void * ) message );
+
+	g_return_val_if_fail( st_initialized && !st_finalized, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 
 	ret = NA_IIO_PROVIDER_NOT_WRITABLE;
-	instance = NA_IIO_PROVIDER( na_action_get_provider( action ));
+	instance = NA_IIO_PROVIDER( na_object_get_provider( item ));
 
 	if( instance ){
 		g_assert( NA_IS_IIO_PROVIDER( instance ));
 
-		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_action ){
-			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_action( instance, action, message );
+		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_item ){
+			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_item( instance, item, message );
 		}
 	/*} else {
 		*message = g_strdup( _( "Unable to delete the action: no I/O provider." ));
@@ -304,42 +372,12 @@ do_is_willing_to_write( const NAIIOProvider *instance )
 }
 
 static gboolean
-do_is_writable( const NAIIOProvider *instance, const NAAction *action )
+do_is_writable( const NAIIOProvider *instance, const NAObject *item )
 {
 	return( FALSE );
 }
 
-static guint
-write_action( const NAIIOProvider *provider, NAAction *action, gchar **message )
-{
-	static const gchar *thisfn = "na_iio_provider_write_action";
-	guint ret;
-
-	g_debug( "%s: provider=%p, action=%p, message=%p",
-			thisfn, ( void * ) provider, ( void * ) action, ( void * ) message );
-
-	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->is_willing_to_write( provider )){
-		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
-	}
-
-	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->is_writable( provider, action )){
-		return( NA_IIO_PROVIDER_NOT_WRITABLE );
-	}
-
-	if( !NA_IIO_PROVIDER_GET_INTERFACE( provider )->delete_action ||
-		!NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_action ){
-		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
-	}
-
-	ret = NA_IIO_PROVIDER_GET_INTERFACE( provider )->delete_action( provider, action, message );
-	if( ret != NA_IIO_PROVIDER_WRITE_OK ){
-		return( ret );
-	}
-
-	return( NA_IIO_PROVIDER_GET_INTERFACE( provider )->write_action( provider, action, message ));
-}
-
-static gint
+/*static gint
 compare_actions_label_alpha_fn( const NAAction *a, const NAAction *b )
 {
 	gchar *label_a, *label_b;
@@ -351,4 +389,4 @@ compare_actions_label_alpha_fn( const NAAction *a, const NAAction *b )
 	compare = g_utf8_collate( label_a, label_b );
 
 	return( compare );
-}
+}*/

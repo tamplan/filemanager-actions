@@ -66,19 +66,92 @@ typedef struct {
 	GObjectClass            parent;
 	BaseWindowClassPrivate *private;
 
-	/* virtual functions */
-	void              ( *init )                 ( BaseWindow *window );
-	void              ( *run )                  ( BaseWindow *window );
-	void              ( *initial_load_toplevel )( BaseWindow *window );
-	void              ( *runtime_init_toplevel )( BaseWindow *window );
-	void              ( *all_widgets_showed )   ( BaseWindow *window );
+	/**
+	 * initial_load_toplevel:
+	 * @window: this #BaseWindow instance.
+	 */
+	void              ( *initial_load_toplevel )( BaseWindow *window, gpointer user_data );
+
+	/**
+	 * runtime_init_toplevel:
+	 * @window: this #BaseWindow instance.
+	 */
+	void              ( *runtime_init_toplevel )( BaseWindow *window, gpointer user_data );
+
+	/**
+	 * all_widgets_showed:
+	 * @window: this #BaseWindow instance.
+	 */
+	void              ( *all_widgets_showed )   ( BaseWindow *window, gpointer user_data );
+
+	/**
+	 * dialog_response:
+	 * @window: this #BaseWindow instance.
+	 */
 	gboolean          ( *dialog_response )      ( GtkDialog *dialog, gint code, BaseWindow *window );
+
+	/**
+	 * delete_event:
+	 * @window: this #BaseWindow instance.
+	 *
+	 * The #BaseWindow class connects to the "delete-event" signal,
+	 * and transforms it into a virtual function. The derived class
+	 * can so implement the virtual function, without having to take
+	 * care of the signal itself.
+	 */
 	gboolean          ( *delete_event )         ( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
+
+	/**
+	 * get_application:
+	 * @window: this #BaseWindow instance.
+	 */
 	BaseApplication * ( *get_application )      ( BaseWindow *window );
+
+	/**
+	 * window_get_toplevel_name:
+	 * @window: this #BaseWindow instance.
+	 *
+	 * Pure virtual function.
+	 */
 	gchar *           ( *get_toplevel_name )    ( BaseWindow *window );
-	GtkWindow *       ( *get_toplevel_dialog )  ( BaseWindow *window );
-	GtkWindow *       ( *get_dialog )           ( BaseWindow *window, const gchar *name );
+
+	/**
+	 * get_toplevel_window:
+	 * @window: this #BaseWindow instance.
+	 *
+	 * Returns the toplevel #GtkWindow associated with this #BaseWindow
+	 * instance.
+	 */
+	GtkWindow *       ( *get_toplevel_window )  ( BaseWindow *window );
+
+	/**
+	 * get_window:
+	 * @window: this #BaseWindow instance.
+	 *
+	 * Returns the named GtkWindow.
+	 */
+	GtkWindow *       ( *get_window )           ( BaseWindow *window, const gchar *name );
+
+	/**
+	 * get_widget:
+	 * @window: this #BaseWindow instance.
+	 *
+	 * Returns the named #GtkWidget searched as a descendant of the
+	 * #GtkWindow toplevel associated to this #Basewindow instance.
+	 */
 	GtkWidget *       ( *get_widget )           ( BaseWindow *window, const gchar *name );
+
+	/**
+	 * get_iprefs_window_id:
+	 * @window: this #BaseWindow instance.
+	 *
+	 * Asks the derived class for the string which must be used to
+	 * store last size and position of the window in GConf preferences.
+	 *
+	 * This delegates to #BaseWindow-derived classes the NactIPrefs
+	 * interface virtual function.
+	 */
+	gchar *           ( *get_iprefs_window_id ) ( BaseWindow *window );
 }
 	BaseWindowClass;
 

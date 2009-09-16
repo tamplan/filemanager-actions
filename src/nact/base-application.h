@@ -45,70 +45,71 @@
 G_BEGIN_DECLS
 
 enum {
-	APPLICATION_ERROR_I18N = 1,		/* i18n initialization error */
-	APPLICATION_ERROR_GTK,			/* gtk+ initialization error */
-	APPLICATION_ERROR_MAIN_WINDOW,	/* unable to obtain the main window */
-	APPLICATION_ERROR_UNIQUE_APP,	/* another instance is running */
-	APPLICATION_ERROR_UI_FNAME,		/* empty XML filename */
-	APPLICATION_ERROR_UI_LOAD,		/* unable to load the XML definition of the UI */
-	APPLICATION_ERROR_DIALOG_LOAD,	/* unable to load a dialog from the XML definition */
-	APPLICATION_ERROR_DEFAULT_ICON	/* unable to set default icon */
+	BASE_APPLICATION_ERROR_I18N = 1,		/* i18n initialization error */
+	BASE_APPLICATION_ERROR_GTK,				/* gtk+ initialization error */
+	BASE_APPLICATION_ERROR_MAIN_WINDOW,		/* unable to obtain the main window */
+	BASE_APPLICATION_ERROR_UNIQUE_APP,		/* another instance is running */
+	BASE_APPLICATION_ERROR_UI_FNAME,		/* empty XML filename */
+	BASE_APPLICATION_ERROR_UI_LOAD,			/* unable to load the XML definition of the UI */
+	BASE_APPLICATION_ERROR_TOPLEVEL_LOAD,	/* unable to load a toplevel from the XML definition */
+	BASE_APPLICATION_ERROR_DEFAULT_ICON		/* unable to set default icon */
 };
 
 /**
- * @PROP_APPLICATION_ARGC: count of arguments in command-line.
- * @PROP_APPLICATION_ARGV: list of command-line arguments
+ * @BASE_APPLICATION_PROP_ARGC: count of arguments in command-line.
+ * @BASE_APPLICATION_PROP_ARGV: list of command-line arguments
  *
  * These two variables must be provided before running the
  * initialization process ; they are required in order to correctly
  * initialize the Gtk+ user interface.
  */
-#define PROP_APPLICATION_ARGC				"base-application-argc"
-#define PROP_APPLICATION_ARGV				"base-application-argv"
+#define BASE_APPLICATION_PROP_ARGC					"base-application-argc"
+#define BASE_APPLICATION_PROP_ARGV					"base-application-argv"
 
 /**
- * @PROP_APPLICATION_IS_GTK_INITIALIZED: set to %TRUE after successfully
- * returning from the application_initialize_gtk() virtual function.
+ * @BASE_APPLICATION_PROP_IS_GTK_INITIALIZED: set to %TRUE after
+ * successfully returning from the application_initialize_gtk() virtual
+ * function.
  *
  * While this flag is not %TRUE, error messages are printed to
  * stdout. When %TRUE, error messages are displayed with a dialog
  * box.
  */
-#define PROP_APPLICATION_IS_GTK_INITIALIZED	"base-application-is-gtk-initialized"
+#define BASE_APPLICATION_PROP_IS_GTK_INITIALIZED	"base-application-is-gtk-initialized"
 
 /**
- * @PROP_APPLICATION_UNIQUE_APP_HANDLE: the UniqueApp object allocated
+ * @BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE: the UniqueApp object allocated
  * if the derived-class has provided a UniqueApp name (see
  * #application_get_unique_app_name). Rather for internal use.
  */
-#define PROP_APPLICATION_UNIQUE_APP_HANDLE	"base-application-unique-app-handle"
+#define BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE		"base-application-unique-app-handle"
 
 /**
- * @PROP_APPLICATION_EXIT_CODE: the code which will be returned by the
+ * @BASE_APPLICATION_PROP_EXIT_CODE: the code which will be returned by the
  * program to the operating system.
- * @PROP_APPLICATION_EXIT_MESSAGE1:
- * @PROP_APPLICATION_EXIT_MESSAGE2: the message which will be displayed
- * at program terminaison if @PROP_APPLICATION_EXIT_CODE is not zero.
+ * @BASE_APPLICATION_PROP_EXIT_MESSAGE1:
+ * @BASE_APPLICATION_PROP_EXIT_MESSAGE2: the message which will be displayed
+ * at program terminaison if @BASE_APPLICATION_PROP_EXIT_CODE is not zero.
  * When in graphical mode, the first line is displayed as bold.
  *
- * See @PROP_APPLICATION_IS_GTK_INITIALIZED for how the
- * @PROP_APPLICATION_EXIT_MESSAGE is actually displayed.
+ * See @BASE_APPLICATION_PROP_IS_GTK_INITIALIZED for how the
+ * @BASE_APPLICATION_PROP_EXIT_MESSAGE is actually displayed.
  */
-#define PROP_APPLICATION_EXIT_CODE			"base-application-exit-code"
-#define PROP_APPLICATION_EXIT_MESSAGE1		"base-application-exit-message1"
-#define PROP_APPLICATION_EXIT_MESSAGE2		"base-application-exit-message2"
+#define BASE_APPLICATION_PROP_EXIT_CODE				"base-application-exit-code"
+#define BASE_APPLICATION_PROP_EXIT_MESSAGE1			"base-application-exit-message1"
+#define BASE_APPLICATION_PROP_EXIT_MESSAGE2			"base-application-exit-message2"
 
 /**
- * @PROP_APPLICATION_UI_XML: the GtkBuilder object allocated to handle
+ * @BASE_APPLICATION_PROP_UI_XML: the GtkBuilder object allocated to handle
  * the user interface XML definition. Rather for internal use.
  */
-#define PROP_APPLICATION_UI_XML				"base-application-ui-xml"
+#define BASE_APPLICATION_PROP_UI_XML				"base-application-ui-xml"
 
 /**
- * @PROP_APPLICATION_MAIN_WINDOW: as its name says: a pointer to the
+ * @BASE_APPLICATION_PROP_MAIN_WINDOW: as its name says: a pointer to the
  * #BaseWindow-derived main window of the application.
  */
-#define PROP_APPLICATION_MAIN_WINDOW		"base-application-main-window"
+#define BASE_APPLICATION_PROP_MAIN_WINDOW			"base-application-main-window"
 
 int         base_application_run( BaseApplication *application );
 gchar      *base_application_get_application_name( BaseApplication *application );
@@ -117,7 +118,7 @@ gchar      *base_application_get_unique_app_name( BaseApplication *application )
 gchar      *base_application_get_ui_filename( BaseApplication *application );
 BaseWindow *base_application_get_main_window( BaseApplication *application );
 
-GtkWindow  *base_application_get_dialog( BaseApplication *application, const gchar *name );
+GtkWindow  *base_application_get_toplevel( BaseApplication *application, const gchar *name );
 GtkWidget  *base_application_get_widget( BaseApplication *application, BaseWindow *window, const gchar *name );
 GtkWidget  *base_application_search_for_widget( BaseApplication *application, GtkWindow *window, const gchar *name );
 

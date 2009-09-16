@@ -31,17 +31,7 @@
 #ifndef __NACT_IACTIONS_LIST_H__
 #define __NACT_IACTIONS_LIST_H__
 
-/*
- * NactIActionsList interface definition.
- *
- * This interface defines some API against the ActionsList listbox.
- * Our NactWindow may implement it in order to personalize the
- * behaviour of the listbox.
- */
-
-#include <gtk/gtk.h>
-
-#include "nact-window.h"
+#include <common/na-object-class.h>
 
 G_BEGIN_DECLS
 
@@ -58,42 +48,56 @@ typedef struct {
 	GTypeInterface                    parent;
 	NactIActionsListInterfacePrivate *private;
 
-	/* api */
-	GSList * ( *get_actions )          ( NactWindow *window );
-	void     ( *on_selection_changed ) ( NactIActionsList *instance, GSList *selected_items );
-	gboolean ( *on_button_press_event )( GtkWidget *widget, GdkEventButton *event, gpointer data );
-	gboolean ( *on_key_pressed_event ) ( GtkWidget *widget, GdkEventKey *event, gpointer data );
-	gboolean ( *on_double_click )      ( GtkWidget *widget, GdkEventButton *event, gpointer data );
-	gboolean ( *on_delete_key_pressed )( GtkWidget *widget, GdkEventKey *event, gpointer data );
-	gboolean ( *on_enter_key_pressed ) ( GtkWidget *widget, GdkEventKey *event, gpointer data );
-	gboolean ( *is_modified_action )   ( NactWindow *window, const NAAction *action );
-	gboolean ( *is_valid_action )      ( NactWindow *window, const NAAction *action );
-	gboolean ( *is_modified_profile )  ( NactWindow *window, const NAActionProfile *profile );
-	gboolean ( *is_valid_profile )     ( NactWindow *window, const NAActionProfile *profile );
+	/**
+	 * selection_changed:
+	 * @instance: this #NactIActionsList instance.
+	 * @selected_items: currently selected items.
+	 */
+	void ( *selection_changed )( NactIActionsList *instance, GSList *selected_items );
+
+	/**
+	 * item_updated:
+	 * @instance: this #NactIActionsList instance.
+	 * @updated_items: flat list of updated items.
+	 */
+	void ( *item_updated )     ( NactIActionsList *instance, GSList *updated_items );
 }
 	NactIActionsListInterface;
 
+/* signals
+ */
+#define IACTIONS_LIST_SIGNAL_SELECTION_CHANGED			"nact-iactions-list-selection-changed"
+#define IACTIONS_LIST_SIGNAL_ITEM_UPDATED				"nact-iactions-list-item-updated"
+
 GType     nact_iactions_list_get_type( void );
 
-void      nact_iactions_list_initial_load( NactWindow *window );
-void      nact_iactions_list_runtime_init( NactWindow *window );
-void      nact_iactions_list_fill( NactWindow *window, gboolean keep_expanded );
-NAObject *nact_iactions_list_get_selected_object( NactWindow *window );
-GSList  * nact_iactions_list_get_selected_actions( NactWindow *window );
-GSList   *nact_iactions_list_get_selected_items( NactIActionsList *instance );
-void      nact_iactions_list_set_selection( NactWindow *window, GType type, const gchar *uuid, const gchar *label );
-void      nact_iactions_list_select_first( NactWindow *window );
-/*void      nact_iactions_list_set_focus( NactWindow *window );*/
-/*void      nact_iactions_list_set_modified( NactWindow *window, gboolean is_modified, gboolean can_save );*/
-gboolean  nact_iactions_list_is_expanded( NactWindow *window, const NAAction *action );
-void      nact_iactions_list_toggle_collapse( NactWindow *window, const NAAction *action );
-void      nact_iactions_list_update_selected( NactWindow *window, NAAction *action );
+void      nact_iactions_list_initial_load_toplevel( NactIActionsList *instance );
+void      nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GSList *actions );
+void      nact_iactions_list_all_widgets_showed( NactIActionsList *instance );
+void      nact_iactions_list_dispose( NactIActionsList *instance );
 
-void      nact_iactions_list_set_edition_mode( NactWindow *window, gboolean mode );
-void      nact_iactions_list_set_multiple_selection( NactWindow *window, gboolean multiple );
-void      nact_iactions_list_set_send_selection_changed_on_fill_list( NactWindow *window, gboolean send_message );
-void      nact_iactions_list_set_is_filling_list( NactWindow *window, gboolean is_filling );
-void      nact_iactions_list_set_dnd_mode( NactWindow *window, gboolean have_dnd );
+GSList   *nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **path );
+void      nact_iactions_list_fill( NactIActionsList *instance, GSList *items );
+GSList   *nact_iactions_list_free_items_list( NactIActionsList *instance, GSList *items );
+guint     nact_iactions_list_get_items_count( NactIActionsList *instance );
+GSList   *nact_iactions_list_get_items( NactIActionsList *instance );
+GSList   *nact_iactions_list_get_modified_items( NactIActionsList *instance );
+GSList   *nact_iactions_list_get_selected_items( NactIActionsList *instance );
+void      nact_iactions_list_insert_items( NactIActionsList *instance, GSList *items );
+gboolean  nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item );
+gboolean  nact_iactions_list_is_filling_list( NactIActionsList *instance );
+gboolean  nact_iactions_list_is_only_actions_mode( NactIActionsList *instance );
+void      nact_iactions_list_select_row( NactIActionsList *instance, GtkTreePath *path );
+void      nact_iactions_list_set_dnd_mode( NactIActionsList *instance, gboolean have_dnd );
+void      nact_iactions_list_set_multiple_selection_mode( NactIActionsList *instance, gboolean multiple );
+void      nact_iactions_list_set_only_actions_mode( NactIActionsList *instance, gboolean only_actions );
+void      nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *item );
+
+/*
+void      nact_list_actions_insert_item( NactMainWindow *window, NAObject *item );
+void      nact_list_actions_set_selection( NactMainWindow *window, GType type, const gchar *uuid, const gchar *label );
+void      nact_list_actions_update_selected( NactMainWindow *window, NAAction *action );
+*/
 
 G_END_DECLS
 

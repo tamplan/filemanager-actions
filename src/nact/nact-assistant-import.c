@@ -36,13 +36,15 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
+#include <common/na-object-api.h>
+#include <common/na-obj-action-class.h>
 #include <common/na-iio-provider.h>
 #include <common/na-utils.h>
 
+#include "base-iprefs.h"
 #include "base-application.h"
 #include "nact-assistant-import.h"
 #include "nact-xml-reader.h"
-#include "nact-iprefs.h"
 
 /* Import Assistant
  *
@@ -62,9 +64,9 @@ enum {
 };
 
 typedef struct {
-	gchar    *uri;
-	NAAction *action;
-	GSList   *msg;
+	gchar          *uri;
+	NAObjectAction *action;
+	GSList         *msg;
 }
 	ImportUriStruct;
 
@@ -82,7 +84,9 @@ struct NactAssistantImportPrivate {
 	GSList   *actions;
 };
 
-static GObjectClass *st_parent_class = NULL;
+#define IPREFS_IMPORT_ACTIONS_FOLDER_URI		"import-folder-uri"
+
+static BaseAssistantClass *st_parent_class = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactAssistantImportClass *klass );
@@ -92,15 +96,18 @@ static void     instance_finalize( GObject *application );
 
 static NactAssistantImport *assist_new( BaseApplication *application );
 
-static gchar   *do_get_iprefs_window_id( NactWindow *window );
-static gchar   *do_get_dialog_name( BaseWindow *dialog );
-static void     on_runtime_init_dialog( BaseWindow *dialog );
+static gchar   *window_get_iprefs_window_id( BaseWindow *window );
+static gchar   *window_get_dialog_name( BaseWindow *dialog );
+
+static void     on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data );
 static void     runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant );
 static void     runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant );
 static void     on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
 static gboolean has_readable_files( GSList *uris );
-static void     on_apply( NactAssistant *window, GtkAssistant *assistant );
-static void     on_prepare( NactAssistant *window, GtkAssistant *assistant, GtkWidget *page );
+
+static void     assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
+static void     assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
+
 static void     prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void     prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void     free_results( GSList *list );
@@ -137,7 +144,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NACT_ASSISTANT_TYPE, "NactAssistantImport", &info, 0 );
+	type = g_type_register_static( BASE_ASSISTANT_TYPE, "NactAssistantImport", &info, 0 );
 
 	return( type );
 }
@@ -148,8 +155,7 @@ class_init( NactAssistantImportClass *klass )
 	static const gchar *thisfn = "nact_assistant_import_class_init";
 	GObjectClass *object_class;
 	BaseWindowClass *base_class;
-	NactWindowClass *nact_class;
-	NactAssistantClass *assist_class;
+	BaseAssistantClass *assist_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -162,15 +168,12 @@ class_init( NactAssistantImportClass *klass )
 	klass->private = g_new0( NactAssistantImportClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_toplevel_name = do_get_dialog_name;
-	base_class->runtime_init_toplevel = on_runtime_init_dialog;
+	base_class->get_toplevel_name = window_get_dialog_name;
+	base_class->get_iprefs_window_id = window_get_iprefs_window_id;
 
-	nact_class = NACT_WINDOW_CLASS( klass );
-	nact_class->get_iprefs_window_id = do_get_iprefs_window_id;
-
-	assist_class = NACT_ASSISTANT_CLASS( klass );
-	assist_class->on_assistant_apply = on_apply;
-	assist_class->on_assistant_prepare = on_prepare;
+	assist_class = BASE_ASSISTANT_CLASS( klass );
+	assist_class->apply = assistant_apply;
+	assist_class->prepare = assistant_prepare;
 }
 
 static void
@@ -188,6 +191,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->dispose_has_run = FALSE;
 	self->private->results = NULL;
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_WINDOW_SIGNAL_RUNTIME_INIT,
+			G_CALLBACK( on_runtime_init_dialog ));
 }
 
 static void
@@ -205,7 +214,9 @@ instance_dispose( GObject *window )
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( window );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( window );
+		}
 	}
 }
 
@@ -224,7 +235,7 @@ instance_finalize( GObject *window )
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if( st_parent_class->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( window );
 	}
 }
@@ -232,7 +243,7 @@ instance_finalize( GObject *window )
 static NactAssistantImport *
 assist_new( BaseApplication *application )
 {
-	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
+	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE, BASE_WINDOW_PROP_APPLICATION, application, NULL ));
 }
 
 /**
@@ -241,16 +252,16 @@ assist_new( BaseApplication *application )
  * @main: the main window of the application.
  */
 GSList *
-nact_assistant_import_run( NactWindow *main_window )
+nact_assistant_import_run( BaseWindow *main_window )
 {
 	BaseApplication *appli;
 	NactAssistantImport *assist;
 
-	appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( main_window )));
+	appli = BASE_APPLICATION( base_window_get_application( main_window ));
 
 	assist = assist_new( appli );
 
-	g_object_set( G_OBJECT( assist ), PROP_WINDOW_PARENT_STR, main_window, NULL );
+	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_PARENT, main_window, NULL );
 
 	base_window_run( BASE_WINDOW( assist ));
 
@@ -258,37 +269,30 @@ nact_assistant_import_run( NactWindow *main_window )
 }
 
 static gchar *
-do_get_iprefs_window_id( NactWindow *window )
+window_get_iprefs_window_id( BaseWindow *window )
 {
 	return( g_strdup( "import-assistant" ));
 }
 
 static gchar *
-do_get_dialog_name( BaseWindow *dialog )
+window_get_dialog_name( BaseWindow *dialog )
 {
 	return( g_strdup( "ImportAssistant" ));
 }
 
 static void
-on_runtime_init_dialog( BaseWindow *dialog )
+on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_import_on_runtime_init_dialog";
-	NactAssistantImport *window;
 	GtkAssistant *assistant;
 
-	/* call parent class at the very beginning */
-	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
-		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( dialog );
-	}
-
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
+	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 	g_assert( NACT_IS_ASSISTANT_IMPORT( dialog ));
-	window = NACT_ASSISTANT_IMPORT( dialog );
 
-	assistant = GTK_ASSISTANT( base_window_get_toplevel_dialog( dialog ));
+	assistant = GTK_ASSISTANT( base_window_get_toplevel_window( BASE_WINDOW( dialog )));
 
-	runtime_init_intro( window, assistant );
-	runtime_init_file_selector( window, assistant );
+	runtime_init_intro( dialog, assistant );
+	runtime_init_file_selector( dialog, assistant );
 }
 
 static void
@@ -317,13 +321,17 @@ runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant
 	g_debug( "%s: window=%p, assistant=%p, chooser=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) chooser );
 
-	uri = nact_iprefs_get_import_folder_uri( NACT_WINDOW( window ));
+	uri = base_iprefs_get_string( BASE_WINDOW( window ), IPREFS_IMPORT_ACTIONS_FOLDER_URI );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( chooser ), uri );
 	}
 	g_free( uri );
 
-	nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( chooser ), "selection-changed", G_CALLBACK( on_file_selection_changed ));
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( chooser ),
+			"selection-changed",
+			G_CALLBACK( on_file_selection_changed ));
 
 	gtk_assistant_set_page_complete( assistant, chooser, FALSE );
 }
@@ -342,7 +350,7 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	GtkWidget *content;
 
 	g_assert( NACT_IS_ASSISTANT_IMPORT( user_data ));
-	assistant = GTK_ASSISTANT( base_window_get_toplevel_dialog( BASE_WINDOW( user_data )));
+	assistant = GTK_ASSISTANT( base_window_get_toplevel_window( BASE_WINDOW( user_data )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_FILES_SELECTION ){
 
@@ -351,7 +359,7 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 
 		if( enabled ){
 			folder = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( chooser ));
-			nact_iprefs_save_import_folder_uri( NACT_WINDOW( user_data ), folder );
+			base_iprefs_set_string( BASE_WINDOW( user_data ), IPREFS_IMPORT_ACTIONS_FOLDER_URI, folder );
 			g_free( folder );
 		}
 
@@ -417,13 +425,13 @@ has_readable_files( GSList *uris )
 }
 
 static void
-on_apply( NactAssistant *wnd, GtkAssistant *assistant )
+assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 {
-	static const gchar *thisfn = "nact_assistant_import_on_apply";
+	static const gchar *thisfn = "nact_assistant_import_assistant_apply";
 	NactAssistantImport *window;
 	GtkWidget *chooser;
 	GSList *uris, *is, *msg;
-	NAAction *action;
+	NAObjectAction *action;
 	ImportUriStruct *str;
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
@@ -436,7 +444,7 @@ on_apply( NactAssistant *wnd, GtkAssistant *assistant )
 	for( is = uris ; is ; is = is->next ){
 
 		msg = NULL;
-		action = nact_xml_reader_import( NACT_WINDOW( window ), ( const gchar * ) is->data, &msg );
+		action = nact_xml_reader_import( BASE_WINDOW( window ), ( const gchar * ) is->data, &msg );
 
 		str = g_new0( ImportUriStruct, 1 );
 		str->uri = g_strdup(( const gchar * ) is->data );
@@ -452,9 +460,9 @@ on_apply( NactAssistant *wnd, GtkAssistant *assistant )
 }
 
 static void
-on_prepare( NactAssistant *window, GtkAssistant *assistant, GtkWidget *page )
+assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page )
 {
-	static const gchar *thisfn = "nact_assistant_import_on_prepare";
+	static const gchar *thisfn = "nact_assistant_import_assistant_prepare";
 	GtkAssistantPageType type;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
@@ -541,8 +549,8 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		g_free( bname );
 
 		if( str->action ){
-			uuid = na_action_get_uuid( str->action );
-			label = na_action_get_label( str->action );
+			uuid = na_object_get_id( str->action );
+			label = na_object_get_label( str->action );
 			/* i18n: this is the globally unique identifier and the label of the newly imported action */
 			text2 = g_strdup_printf( _( "UUID: %s\t%s" ), uuid, label);
 			g_free( label );
@@ -576,7 +584,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	g_free( text );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
-	nact_assistant_set_warn_on_cancel( NACT_ASSISTANT( window ), FALSE );
+	base_assistant_set_warn_on_cancel( BASE_ASSISTANT( window ), FALSE );
 }
 
 static void

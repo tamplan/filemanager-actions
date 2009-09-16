@@ -35,11 +35,12 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include "na-action.h"
-#include "na-gconf.h"
-#include "na-pivot.h"
+#include "na-object-api.h"
+#include "na-object-item-class.h"
 #include "na-iio-provider.h"
-#include "na-ipivot-consumer.h"
+#include "na-gconf-provider.h"
+#include "na-iprefs.h"
+#include "na-pivot.h"
 #include "na-utils.h"
 
 /* private class data
@@ -56,25 +57,32 @@ struct NAPivotPrivate {
 	/* list of instances to be notified of an action modification
 	 * these are called 'consumers' of NAPivot
 	 */
-	GSList  *notified;
+	GSList  *consumers;
 
-	/* list of interface providers
+	/* list of NAIIOProvider interface providers
 	 * needs to be in the instance rather than in the class to be able
 	 * to pass NAPivot object to the IO provider, so that the later
 	 * is able to have access to the former (and its list of actions)
 	 */
 	GSList  *providers;
 
-	/* list of actions
+	/* configuration tree
 	 */
-	GSList  *actions;
+	GSList  *tree;
+
+	/* whether to automatically reload the whole configuration tree
+	 * when a modification has been detected in one of the underlying
+	 * I/O storage subsystems
+	 * defaults to FALSE
+	 */
 	gboolean automatic_reload;
 };
 
 enum {
 	ACTION_CHANGED,
-	DISPLAY_ORDER_CHANGE,
-	DISPLAY_ABOUT_CHANGE,
+	LEVEL_ZERO_CHANGED,
+	DISPLAY_ORDER_CHANGED,
+	DISPLAY_ABOUT_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -87,12 +95,20 @@ static gint          st_timeout_usec = 100000;
 
 static GType    register_type( void );
 static void     class_init( NAPivotClass *klass );
+static void     iprefs_iface_init( NAIPrefsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
-static GSList  *register_interface_providers( const NAPivot *pivot );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
+/* NAIPivotConsumer management */
 static void     free_consumers( GSList *list );
+
+/* NAIIOProvider management */
+static void     register_io_providers( NAPivot *pivot );
+
+/* NAGConf runtime preferences management */
+static void     read_runtime_preferences( NAPivot *pivot );
+
 static void     action_changed_handler( NAPivot *pivot, gpointer user_data );
 static gboolean on_actions_changed_timeout( gpointer user_data );
 static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
@@ -130,9 +146,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo iprefs_iface_info = {
+		( GInterfaceInitFunc ) iprefs_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NAPivot", &info, 0 );
+
+	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_iface_info );
 
 	return( type );
 }
@@ -169,7 +193,7 @@ class_init( NAPivotClass *klass )
 				1,
 				G_TYPE_POINTER
 	);
-	st_signals[ DISPLAY_ORDER_CHANGE ] = g_signal_new_class_handler(
+	st_signals[ DISPLAY_ORDER_CHANGED ] = g_signal_new_class_handler(
 				NA_IIO_PROVIDER_SIGNAL_DISPLAY_ORDER_CHANGED,
 				G_TYPE_FROM_CLASS( klass ),
 				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
@@ -181,7 +205,7 @@ class_init( NAPivotClass *klass )
 				1,
 				G_TYPE_POINTER
 	);
-	st_signals[ DISPLAY_ABOUT_CHANGE ] = g_signal_new_class_handler(
+	st_signals[ DISPLAY_ABOUT_CHANGED ] = g_signal_new_class_handler(
 				NA_IIO_PROVIDER_SIGNAL_DISPLAY_ABOUT_CHANGED,
 				G_TYPE_FROM_CLASS( klass ),
 				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
@@ -196,36 +220,30 @@ class_init( NAPivotClass *klass )
 }
 
 static void
+iprefs_iface_init( NAIPrefsInterface *iface )
+{
+	static const gchar *thisfn = "na_pivot_iprefs_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+}
+
+static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "na_pivot_instance_init";
 	NAPivot *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-
-	g_assert( NA_IS_PIVOT( instance ));
+	g_return_if_fail( NA_IS_PIVOT( instance ));
 	self = NA_PIVOT( instance );
 
 	self->private = g_new0( NAPivotPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->notified = NULL;
-	self->private->providers = register_interface_providers( self );
-	self->private->actions = na_iio_provider_read_actions( self );
-	self->private->automatic_reload = TRUE;
-}
-
-static GSList *
-register_interface_providers( const NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_register_interface_providers";
-	GSList *list = NULL;
-
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-
-	list = g_slist_prepend( list, na_gconf_new( G_OBJECT( pivot )));
-
-	return( list );
+	self->private->consumers = NULL;
+	self->private->providers = NULL;
+	self->private->tree = NULL;
+	self->private->automatic_reload = FALSE;
 }
 
 static void
@@ -235,23 +253,29 @@ instance_dispose( GObject *object )
 	NAPivot *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-
-	g_assert( NA_IS_PIVOT( object ));
+	g_return_if_fail( NA_IS_PIVOT( object ));
 	self = NA_PIVOT( object );
 
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
 
-		/* release list of containers to be notified */
-		free_consumers( self->private->notified );
+		/* release list of NAIPivotConsumers */
+		free_consumers( self->private->consumers );
+		self->private->consumers = NULL;
 
-		/* release list of actions */
-		na_pivot_free_actions( self->private->actions );
-		self->private->actions = NULL;
+		/* release list of NAIIOProviders */
+		na_pivot_free_providers( self->private->providers );
+		self->private->providers = NULL;
+
+		/* release item tree */
+		na_pivot_free_items_tree( self->private->tree );
+		self->private->tree = NULL;
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		}
 	}
 }
 
@@ -260,24 +284,15 @@ instance_finalize( GObject *object )
 {
 	static const gchar *thisfn = "na_pivot_instance_finalize";
 	NAPivot *self;
-	GSList *ip;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-
-	g_assert( NA_IS_PIVOT( object ));
-	self = ( NAPivot * ) object;
-
-	/* release the interface providers */
-	for( ip = self->private->providers ; ip ; ip = ip->next ){
-		g_object_unref( G_OBJECT( ip->data ));
-	}
-	g_slist_free( self->private->providers );
-	self->private->providers = NULL;
+	g_return_if_fail( NA_IS_PIVOT( object ));
+	self = NA_PIVOT( object );
 
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if((( GObjectClass * ) st_parent_class )->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
 }
@@ -293,13 +308,25 @@ instance_finalize( GObject *object )
  * message, without any parameter.
  */
 NAPivot *
-na_pivot_new( const GObject *target )
+na_pivot_new( const NAIPivotConsumer *target )
 {
-	NAPivot *pivot = g_object_new( NA_PIVOT_TYPE, NULL );
+	static const gchar *thisfn = "na_pivot_new";
+	NAPivot *pivot;
+
+	g_debug( "%s: target=%p", thisfn, ( void * ) target );
+	g_return_val_if_fail( NA_IS_IPIVOT_CONSUMER( target ) || !target, NULL );
+
+	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
+
+	register_io_providers( pivot );
 
 	if( target ){
-		na_pivot_add_consumer( pivot, target );
+		na_pivot_register_consumer( pivot, target );
 	}
+
+	read_runtime_preferences( pivot );
+
+	pivot->private->tree = na_iio_provider_get_items_tree( pivot );
 
 	return( pivot );
 }
@@ -317,12 +344,12 @@ na_pivot_dump( const NAPivot *pivot )
 	GSList *it;
 	int i;
 
-	g_debug( "%s:  notified=%p (%d elts)", thisfn, ( void * ) pivot->private->notified, g_slist_length( pivot->private->notified ));
+	g_debug( "%s: consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_slist_length( pivot->private->consumers ));
 	g_debug( "%s: providers=%p (%d elts)", thisfn, ( void * ) pivot->private->providers, g_slist_length( pivot->private->providers ));
-	g_debug( "%s:   actions=%p (%d elts)", thisfn, ( void * ) pivot->private->actions, g_slist_length( pivot->private->actions ));
+	g_debug( "%s:      tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_slist_length( pivot->private->tree ));
 
-	for( it = pivot->private->actions, i = 0 ; it ; it = it->next ){
-		g_debug( "%s:   [%d]: %p", thisfn, i++, it->data );
+	for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
+		g_debug( "%s:     [%d]: %p", thisfn, i++, it->data );
 	}
 }
 
@@ -332,13 +359,12 @@ na_pivot_dump( const NAPivot *pivot )
  * @type: the type of searched interface.
  * For now, we only have NA_IIO_PROVIDER_TYPE interfaces.
  *
- * Returns the list of providers of the required interface.
+ * Returns: a newly allocated list of providers of the required interface.
  *
  * This function is called by interfaces API in order to find the
- * list of providers registered for this given interface.
+ * list of providers registered for their own given interface.
  *
- * Returns: the list of providers of the required interface.
- * This list should be na_pivot_free_providers().
+ * The returned list should be release by calling na_pivot_free_providers().
  */
 GSList *
 na_pivot_get_providers( const NAPivot *pivot, GType type )
@@ -348,11 +374,12 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 	GSList *ip;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( !pivot->private->dispose_has_run, NULL );
 
 	for( ip = pivot->private->providers ; ip ; ip = ip->next ){
 		if( G_TYPE_CHECK_INSTANCE_TYPE( G_OBJECT( ip->data ), type )){
-			list = g_slist_prepend( list, ip->data );
+			list = g_slist_prepend( list, g_object_ref( ip->data ));
 		}
 	}
 
@@ -368,43 +395,45 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 void
 na_pivot_free_providers( GSList *providers )
 {
+	g_slist_foreach( providers, ( GFunc ) g_object_unref, NULL );
 	g_slist_free( providers );
 }
 
 /**
- * na_pivot_get_actions:
+ * na_pivot_get_items_tree:
  * @pivot: this #NAPivot instance.
  *
- * Returns the list of actions.
+ * Returns: the current configuration tree.
  *
- * Returns: the list of #NAAction actions.
  * The returned list is owned by this #NAPivot object, and should not
  * be g_free(), nor g_object_unref() by the caller.
  */
 GSList *
-na_pivot_get_actions( const NAPivot *pivot )
+na_pivot_get_items_tree( const NAPivot *pivot )
 {
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( !pivot->private->dispose_has_run, NULL );
 
-	return( pivot->private->actions );
+	return( pivot->private->tree );
 }
 
 /**
- * na_pivot_reload_actions:
+ * na_pivot_reload_items_tree:
  * @pivot: this #NAPivot instance.
  *
- * Reloads the list of actions from I/O providers.
+ * Reloads the hierarchical list of items from I/O providers.
  */
 void
-na_pivot_reload_actions( NAPivot *pivot )
+na_pivot_reload_items_tree( NAPivot *pivot )
 {
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( !pivot->private->dispose_has_run );
 
-	if( pivot->private->actions ){
-		na_pivot_free_actions( pivot->private->actions );
+	if( pivot->private->tree ){
+		na_pivot_free_items_tree( pivot->private->tree );
 	}
 
-	pivot->private->actions = na_iio_provider_read_actions( pivot );
+	pivot->private->tree = na_iio_provider_get_items_tree( pivot );
 }
 
 /**
@@ -416,7 +445,7 @@ na_pivot_reload_actions( NAPivot *pivot )
  * Returns: a #GSList of #NAAction actions.
  * The caller should na_pivot_free_actions() after usage.
  */
-GSList *
+/*GSList *
 na_pivot_get_duplicate_actions( const NAPivot *pivot )
 {
 	GSList *list = NULL;
@@ -429,60 +458,61 @@ na_pivot_get_duplicate_actions( const NAPivot *pivot )
 	}
 
 	return( g_slist_reverse( list ));
-}
+}*/
 
 /**
- * na_pivot_free_actions:
- * @list: a #GSList of #NAActions to be freed.
+ * na_pivot_free_items_tree:
+ * @list: a #GSList of #NAObjectItems to be released.
  *
- * Frees a list of actions.
+ * Frees a hierarchical tree of items.
  */
-void
-na_pivot_free_actions( GSList *actions )
+GSList *
+na_pivot_free_items_tree( GSList *tree )
 {
-	GSList *ia;
+	g_slist_foreach( tree, ( GFunc ) g_object_unref, NULL );
+	g_slist_free( tree );
 
-	for( ia = actions ; ia ; ia = ia->next ){
-		g_object_unref( NA_ACTION( ia->data ));
-	}
-
-	g_slist_free( actions );
+	return( NULL );
 }
 
 /**
- * na_pivot_add_action:
+ * na_pivot_add_item:
  * @pivot: this #NAPivot instance.
- * @action: the #NAAction to be added to the list.
+ * @item: the #NAObjectItem to be added to the list.
  *
- * Adds a new #NAAction to the list of actions.
+ * Adds a new item to the list.
  *
- * We take the provided pointer. The provided #NAAction should so not
+ * We take the provided pointer. The provided @item should so not
  * be g_object_unref() by the caller.
  */
 void
-na_pivot_add_action( NAPivot *pivot, const NAAction *action )
+na_pivot_add_item( NAPivot *pivot, const NAObject *item )
 {
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( !pivot->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
-	pivot->private->actions = g_slist_prepend( pivot->private->actions, ( gpointer ) action );
+	pivot->private->tree = g_slist_append( pivot->private->tree, ( gpointer ) item );
 }
 
 /**
- * na_pivot_remove_action:
+ * na_pivot_remove_item:
  * @pivot: this #NAPivot instance.
- * @action: the #NAAction to be removed to the list.
+ * @item: the #NAObjectItem to be removed from the list.
  *
- * Removes a #NAAction from the list of actions.
+ * Removes a #NAObjectItem from the hierarchical tree.
  *
- * Note that #NAPivot also g_object_unref() the removed #NAAction.
+ * Note that #NAPivot also g_object_unref() the removed #NAObjectItem.
  */
 void
-na_pivot_remove_action( NAPivot *pivot, NAAction *action )
+na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 {
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( !pivot->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
-	pivot->private->actions = g_slist_remove( pivot->private->actions, ( gconstpointer ) action );
-	g_object_unref( action );
+	pivot->private->tree = g_slist_remove( pivot->private->tree, ( gconstpointer ) item );
+	g_object_unref( item );
 }
 
 /**
@@ -496,27 +526,29 @@ na_pivot_remove_action( NAPivot *pivot, NAAction *action )
  * The returned pointer is owned by #NAPivot, and should not be
  * g_free() nor g_object_unref() by the caller.
  */
-NAAction *
-na_pivot_get_action( const NAPivot *pivot, const gchar *uuid )
+NAObject *
+na_pivot_get_item( const NAPivot *pivot, const gchar *uuid )
 {
 	uuid_t uua, i_uub;
 	GSList *ia;
 
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( !pivot->private->dispose_has_run, NULL );
+
 	if( !uuid || !strlen( uuid )){
 		return( NULL );
 	}
 
 	uuid_parse( uuid, uua );
 
-	for( ia = pivot->private->actions ; ia ; ia = ia->next ){
+	for( ia = pivot->private->tree ; ia ; ia = ia->next ){
 
-		gchar *i_uuid = na_action_get_uuid( NA_ACTION( ia->data ));
+		gchar *i_uuid = na_object_get_id( NA_OBJECT( ia->data ));
 		uuid_parse( i_uuid, i_uub );
 		g_free( i_uuid );
 
 		if( !uuid_compare( uua, i_uub )){
-			return( NA_ACTION( ia->data ));
+			return( NA_OBJECT( ia->data ));
 		}
 	}
 
@@ -524,30 +556,31 @@ na_pivot_get_action( const NAPivot *pivot, const gchar *uuid )
 }
 
 /**
- * na_pivot_write_action:
+ * na_pivot_write_item:
  * @pivot: this #NAPivot instance.
- * @action: a #NAAction action to be written by the storage subsystem.
+ * @item: a #NAObjectItem to be written by the storage subsystem.
  * @message: the I/O provider can allocate and store here an error
  * message.
  *
- * Writes an action.
+ * Writes an item (an action or a menu).
  *
  * Returns: the #NAIIOProvider return code.
  */
 guint
-na_pivot_write_action( const NAPivot *pivot, NAAction *action, gchar **message )
+na_pivot_write_item( const NAPivot *pivot, NAObject *item, gchar **message )
 {
-	g_assert( NA_IS_PIVOT( pivot ));
-	g_assert( NA_IS_ACTION( action ));
-	g_assert( message );
-	return( na_iio_provider_write_action( pivot, action, message ));
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( !pivot->private->dispose_has_run, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( message, NA_IIO_PROVIDER_PROGRAM_ERROR );
+
+	return( na_iio_provider_write_item( pivot, item, message ));
 }
 
 /**
- * na_pivot_delete_action:
+ * na_pivot_delete_item:
  * @pivot: this #NAPivot instance.
- * @action: a #NAAction action to be deleted from the storage
- * subsystem.
+ * @item: the #NAObjectItem to be deleted from the storage subsystem.
  * @message: the I/O provider can allocate and store here an error
  * message.
  *
@@ -556,32 +589,36 @@ na_pivot_write_action( const NAPivot *pivot, NAAction *action, gchar **message )
  * Returns: the #NAIIOProvider return code.
  */
 guint
-na_pivot_delete_action( const NAPivot *pivot, const NAAction *action, gchar **message )
+na_pivot_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message )
 {
-	g_assert( NA_IS_PIVOT( pivot ));
-	g_assert( NA_IS_ACTION( action ));
-	g_assert( message );
-	return( na_iio_provider_delete_action( pivot, action, message ));
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( !pivot->private->dispose_has_run, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( message, NA_IIO_PROVIDER_PROGRAM_ERROR );
+
+	return( na_iio_provider_delete_item( pivot, item, message ));
 }
 
 /**
- * na_pivot_add_consumer:
+ * na_pivot_register_consumer:
  * @pivot: this #NAPivot instance.
- * @consumer: a #GObject which wishes be notified of any modification
- * of an action in any of the underlying I/O storage subsystems.
+ * @consumer: a #NAIPivotConsumer which wishes be notified of any
+ * modification of an action or a menu in any of the underlying I/O
+ * storage subsystems.
  *
- * Registers a new consumer to be notified of an action modification.
+ * Registers a new consumer to be notified of configuration modification.
  */
 void
-na_pivot_add_consumer( NAPivot *pivot, const GObject *consumer )
+na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer )
 {
-	static const gchar *thisfn = "na_pivot_add_consumer";
+	static const gchar *thisfn = "na_pivot_register_consumer";
 
 	g_debug( "%s: pivot=%p, consumer=%p", thisfn, ( void * ) pivot, ( void * ) consumer );
-	g_assert( NA_IS_PIVOT( pivot ));
-	g_assert( G_IS_OBJECT( consumer ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( !pivot->private->dispose_has_run );
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( consumer ));
 
-	pivot->private->notified = g_slist_prepend( pivot->private->notified, ( gpointer ) consumer );
+	pivot->private->consumers = g_slist_prepend( pivot->private->consumers, ( gpointer ) consumer );
 }
 
 /**
@@ -593,7 +630,8 @@ na_pivot_add_consumer( NAPivot *pivot, const GObject *consumer )
 gboolean
 na_pivot_get_automatic_reload( const NAPivot *pivot )
 {
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_val_if_fail( !pivot->private->dispose_has_run, FALSE );
 
 	return( pivot->private->automatic_reload );
 }
@@ -615,7 +653,8 @@ na_pivot_get_automatic_reload( const NAPivot *pivot )
 void
 na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 {
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( !pivot->private->dispose_has_run );
 
 	pivot->private->automatic_reload = reload;
 }
@@ -623,12 +662,37 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 static void
 free_consumers( GSList *consumers )
 {
-	GSList *ic;
-
-	for( ic = consumers ; ic ; ic = ic->next )
-		;
-
+	/*g_slist_foreach( consumers, ( GFunc ) g_object_unref, NULL );*/
 	g_slist_free( consumers );
+}
+
+/*
+ * Note that each implementation of NAIIOProvider interface must have
+ * this same type of constructor, which accepts as parameter a pointer
+ * to this NAPivot object.
+ * This is required because NAIIOProviders will send all their
+ * notification messages to this NAPivot, letting this later redirect
+ * them to appropriate NAIPivotConsumers.
+ */
+static void
+register_io_providers( NAPivot *pivot )
+{
+	static const gchar *thisfn = "na_pivot_register_io_providers";
+	GSList *list = NULL;
+
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( !pivot->private->dispose_has_run );
+
+	list = g_slist_prepend( list, na_gconf_provider_new( pivot ));
+
+	pivot->private->providers = list;
+}
+
+static void
+read_runtime_preferences( NAPivot *pivot )
+{
+	/*pivot->private->gconf = na_gconf_new();*/
 }
 
 /*
@@ -645,8 +709,9 @@ action_changed_handler( NAPivot *self, gpointer user_data  )
 	/*static const gchar *thisfn = "na_pivot_action_changed_handler";
 	g_debug( "%s: self=%p, data=%p", thisfn, self, user_data );*/
 
-	g_assert( NA_IS_PIVOT( self ));
-	g_assert( user_data );
+	g_return_if_fail( NA_IS_PIVOT( self ));
+	g_return_if_fail( !self->private->dispose_has_run );
+	g_return_if_fail( user_data );
 
 	if( self->private->dispose_has_run ){
 		return;
@@ -687,11 +752,11 @@ on_actions_changed_timeout( gpointer user_data )
 	}
 
 	if( pivot->private->automatic_reload ){
-		na_pivot_free_actions( pivot->private->actions );
-		pivot->private->actions = na_iio_provider_read_actions( pivot );
+		na_pivot_free_items_tree( pivot->private->tree );
+		pivot->private->tree = na_iio_provider_get_items_tree( pivot );
 	}
 
-	for( ic = pivot->private->notified ; ic ; ic = ic->next ){
+	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 		na_ipivot_consumer_notify( NA_IPIVOT_CONSUMER( ic->data ));
 	}
 
@@ -759,7 +824,7 @@ on_display_order_change( NAPivot *self, gpointer user_data  )
 		return;
 	}
 
-	for( ic = self->private->notified ; ic ; ic = ic->next ){
+	for( ic = self->private->consumers ; ic ; ic = ic->next ){
 		na_ipivot_consumer_notify( NA_IPIVOT_CONSUMER( ic->data ));
 	}
 }

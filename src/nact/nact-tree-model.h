@@ -28,10 +28,6 @@
  *   ... and many others (see AUTHORS)
  */
 
-/*
- * Adapted from File-Roller:fr-list-model.h
- */
-
 /**
  * SECTION: nact_tree_model
  *
@@ -49,7 +45,7 @@
 
 #include <gtk/gtk.h>
 
-#include "nact-main-window.h"
+#include "base-window.h"
 
 G_BEGIN_DECLS
 
@@ -85,10 +81,23 @@ enum {
 	IACTIONS_LIST_N_COLUMN
 };
 
-GType          nact_tree_model_get_type( void );
+/* iter on tree store
+ */
+typedef gboolean ( *FnIterOnStore )( NactTreeModel *, GtkTreePath *, NAObject *, gpointer );
 
-NactTreeModel *nact_tree_model_new( NactMainWindow *window );
-void           nact_tree_model_runtime_init_dnd( NactMainWindow *window, GtkTreeView *widget );
+GType   nact_tree_model_get_type( void );
+
+void    nact_tree_model_initial_load( BaseWindow *window, GtkTreeView *treeview );
+void    nact_tree_model_runtime_init( NactTreeModel *model, gboolean have_dnd );
+void    nact_tree_model_dispose( NactTreeModel *model );
+
+void    nact_tree_model_dump( NactTreeModel *model );
+void    nact_tree_model_fill( NactTreeModel *model, GSList *items, gboolean only_actions);
+guint   nact_tree_model_get_items_count( NactTreeModel *model );
+void    nact_tree_model_insert_item( NactTreeModel *model, const NAObject *object, GtkTreePath *path, const NAObject *selected, GtkTreeIter *iter );
+void    nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );
+GSList *nact_tree_model_remove( NactTreeModel *model, GList *selected );
+void    nact_tree_model_update_parent( NactTreeModel *model, const NAObject *object );
 
 G_END_DECLS
 

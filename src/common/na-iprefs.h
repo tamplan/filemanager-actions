@@ -36,9 +36,13 @@
  * @short_description: #NAIPrefs interface definition.
  * @include: common/na-iprefs.h
  *
- * This interface is to be implemented by all modules which wish take
- * benefit of preferences management. It only manages preferences which
- * are used by the plugin, and used/updated in the NACT user interface.
+ * This interface should only be implemented by #NAPivot. This is
+ * because the interface stores in its class private area some data
+ * only relevant for one client (GConfClient, GConf monitors, etc.).
+ *
+ * Though all modules may use the public functions na_iprefs_xxx(),
+ * only #NAPivot will receive update notifications, taking itself care
+ * of proxying them to identified consumers.
  *
  * Displaying the actions.
  *
@@ -96,7 +100,7 @@
 
 #include <glib-object.h>
 
-#include "na-gconf-keys.h"
+#include "na-gconf-keys-base.h"
 
 G_BEGIN_DECLS
 
@@ -117,20 +121,25 @@ typedef struct {
 
 GType    na_iprefs_get_type( void );
 
-gboolean na_iprefs_get_alphabetical_order( NAIPrefs *instance );
-gboolean na_iprefs_get_add_about_item( NAIPrefs *instance );
+GSList  *na_iprefs_get_level_zero_items( NAIPrefs *instance );
+void     na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order );
 
-gboolean na_iprefs_get_bool( NAIPrefs *instance, const gchar *key );
-void     na_iprefs_set_bool( NAIPrefs *instance, const gchar *key, gboolean value );
+gboolean na_iprefs_is_alphabetical_order( NAIPrefs *instance );
+void     na_iprefs_set_alphabetical_order( NAIPrefs *instance, gboolean enabled );
 
-/* GConf general information
+gboolean na_iprefs_should_add_about_item( NAIPrefs *instance );
+void     na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
+
+/* GConf key
  */
-#define NA_GCONF_PREFS_PATH		NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR "/" NA_GCONF_SCHEMA_PREFERENCES
+#define NA_GCONF_PREFERENCES				"preferences"
+#define NA_GCONF_PREFS_PATH					NAUTILUS_ACTIONS_GCONF_BASEDIR "/" NA_GCONF_PREFERENCES
 
 /* GConf Preference keys managed by IPrefs interface
  */
-#define PREFS_DISPLAY_ALPHABETICAL_ORDER	"preferences-alphabetical-order"
-#define PREFS_ADD_ABOUT_ITEM				"preferences-add-about-item"
+#define PREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
+#define PREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
+#define PREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
 
 G_END_DECLS
 

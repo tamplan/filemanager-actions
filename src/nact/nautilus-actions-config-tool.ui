@@ -29,7 +29,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="vbox16">
+          <object class="GtkVBox" id="MainVBox">
             <property name="visible">True</property>
             <child>
               <object class="GtkHPaned" id="MainPaned">
@@ -114,6 +114,7 @@
                                   <object class="GtkLabel" id="ActionLabelLabel">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">_Label :</property>
                                     <property name="use_underline">True</property>
                                     <property name="mnemonic_widget">ActionLabelEntry</property>
                                   </object>
@@ -259,7 +260,7 @@
                             <property name="visible">True</property>
                             <property name="spacing">10</property>
                             <child>
-                              <object class="GtkLabel" id="label3">
+                              <object class="GtkLabel" id="ActionPropertiesGroupTitle">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Action properties&lt;/b&gt;</property>
@@ -277,7 +278,7 @@
                                 <property name="n_columns">2</property>
                                 <child>
                                   <object class="GtkCheckButton" id="ActionEnabledButton">
-                                    <property name="label" translatable="yes">_Enabled</property>
+                                    <property name="label" translatable="yes">E_nabled</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
@@ -385,6 +386,7 @@
                                       <object class="GtkLabel" id="ProfileLabelLabel">
                                         <property name="visible">True</property>
                                         <property name="xalign">1</property>
+                                        <property name="label" translatable="yes">_Label :</property>
                                         <property name="use_underline">True</property>
                                         <property name="mnemonic_widget">ProfileLabelEntry</property>
                                       </object>
@@ -1009,10 +1011,10 @@ Defining several profiles lets you have several commands, each applying with a d
     <child>
       <object class="GtkFileChooserWidget" id="filechooserwidget1">
         <property name="visible">True</property>
-        <property name="select_multiple">True</property>
-        <property name="local_only">False</property>
-        <property name="use_preview_label">False</property>
         <property name="preview_widget_active">False</property>
+        <property name="use_preview_label">False</property>
+        <property name="local_only">False</property>
+        <property name="select_multiple">True</property>
       </object>
     </child>
     <child>
@@ -1115,9 +1117,9 @@ to extend a selection.</property>
         <child>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
-            <property name="local_only">False</property>
-            <property name="use_preview_label">False</property>
             <property name="preview_widget_active">False</property>
+            <property name="use_preview_label">False</property>
+            <property name="local_only">False</property>
             <property name="action">select-folder</property>
           </object>
           <packing>
@@ -1839,16 +1841,16 @@ The exported file may later be imported via :
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandExamplePreLabel"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandExamplePreLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
 </interface>

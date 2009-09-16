@@ -38,7 +38,7 @@
  * It encapsulates the "PreferencesDialog" widget dialog.
  */
 
-#include "nact-window.h"
+#include "base-dialog.h"
 
 G_BEGIN_DECLS
 
@@ -52,7 +52,7 @@ G_BEGIN_DECLS
 typedef struct NactPreferencesEditorPrivate NactPreferencesEditorPrivate;
 
 typedef struct {
-	NactWindow                    parent;
+	BaseDialog                    parent;
 	NactPreferencesEditorPrivate *private;
 }
 	NactPreferencesEditor;
@@ -60,14 +60,14 @@ typedef struct {
 typedef struct NactPreferencesEditorClassPrivate NactPreferencesEditorClassPrivate;
 
 typedef struct {
-	NactWindowClass                    parent;
+	BaseDialogClass                    parent;
 	NactPreferencesEditorClassPrivate *private;
 }
 	NactPreferencesEditorClass;
 
 GType nact_preferences_editor_get_type( void );
 
-void  nact_preferences_editor_run( NactWindow *parent );
+void  nact_preferences_editor_run( BaseWindow *parent );
 
 G_END_DECLS
 

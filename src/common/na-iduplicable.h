@@ -28,21 +28,21 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_IDUPLICABLE_H__
-#define __NACT_IDUPLICABLE_H__
+#ifndef __NA_IDUPLICABLE_H__
+#define __NA_IDUPLICABLE_H__
 
 /**
  * SECTION: na_iduplicable
- * @short_description: #NAObject IDuplicable interface.
+ * @short_description: #NAIDuplicable interface.
  * @include: common/na-iduplicable.h
  *
  * This interface is implemented by #NAObject in order to let
  * #NAObject-derived instance duplication be easily tracked. This works
  * by keeping a pointer on the original object at duplication time, and
- * then only checking status when explictely required.
+ * then only checking edition status when explicitely required.
  *
  * As the reference count of the original object is not incremented
- * here, the caller has to garantee himself that the original object
+ * here, the caller has to garantee itself that the original object
  * will stay in life at least as long as the duplicated one.
  */
 
@@ -51,8 +51,8 @@
 G_BEGIN_DECLS
 
 #define NA_IDUPLICABLE_TYPE							( na_iduplicable_get_type())
-#define NA_IDUPLICABLE( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IDUPLICABLE_TYPE, NAIDuplicable ))
-#define NA_IS_IDUPLICABLE( object )					( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IDUPLICABLE_TYPE ))
+#define NA_IDUPLICABLE( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IDUPLICABLE_TYPE, NAIDuplicable ))
+#define NA_IS_IDUPLICABLE( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IDUPLICABLE_TYPE ))
 #define NA_IDUPLICABLE_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IDUPLICABLE_TYPE, NAIDuplicableInterface ))
 
 typedef struct NAIDuplicable NAIDuplicable;
@@ -64,13 +64,18 @@ typedef struct {
 	NAIDuplicableInterfacePrivate *private;
 
 	/**
-	 * get_new_instance:
-	 * @nstance: a #NAIDuplicable instance of the klass of which we
+	 * new:
+	 * @object: a #NAIDuplicable instance of the class of which we
 	 * want a new instance.
 	 *
-	 * Returns a new instance of the same class.
-	 *
 	 * Returns: a newly allocated #NAIDuplicable object.
+	 *
+	 * The most derived class of the implementation should define this
+	 * virtual function in order to get advantage of #NAIDuplicable
+	 * interface.
+	 *
+	 * This let the target class to do some initialization on the newly
+	 * created object.
 	 */
 	NAIDuplicable * ( *new )      ( const NAIDuplicable *object );
 
@@ -81,6 +86,11 @@ typedef struct {
 	 *
 	 * Copies data from @source to @ŧarget, so that @target becomes an
 	 * exact copy of @source.
+	 *
+	 * Each derived class of the implementation should define this
+	 * function to copy its own data. The implementation should take
+	 * care itself of calling each function in the class hierarchy,
+	 * from topmost base class to most-derived one.
 	 */
 	void            ( *copy )     ( NAIDuplicable *target, const NAIDuplicable *source );
 
@@ -92,11 +102,12 @@ typedef struct {
 	 *
 	 * Compares the two objects.
 	 *
-	 * The implementor should define a are_equal()-equivalent virtual
-	 * function so that each #NAIDuplicable-derived class be able to
-	 * check for identity.
-	 *
 	 * Returns: %TRUE if @a and @b are identical, %FALSE else.
+	 *
+	 * Each derived class of the implementation should define this
+	 * function to compare its own data. The implementation should take
+	 * care itself of calling each function in the class hierarchy,
+	 * from topmost base class to most-derived one.
 	 */
 	gboolean        ( *are_equal )( const NAIDuplicable *a, const NAIDuplicable *b );
 
@@ -106,30 +117,28 @@ typedef struct {
 	 *
 	 * Checks @object for validity.
 	 *
-	 * The implementor should define a is_valid()-equivalent virtual
-	 * function so that each #NAIDuplicable-derived class be able to
-	 * check for validity.
-	 *
 	 * Returns: %TRUE if @object is valid, %FALSE else.
+	 *
+	 * Each derived class of the implementation should define this
+	 * function to compare its own data. The implementation should take
+	 * care itself of calling each function in the class hierarchy,
+	 * from topmost base class to most-derived one.
 	 */
-	gboolean        ( *is_valid ) ( const NAIDuplicable *object );
+	gboolean        ( *is_valid )   ( const NAIDuplicable *object );
 }
 	NAIDuplicableInterface;
 
 GType          na_iduplicable_get_type( void );
 
 void           na_iduplicable_init( NAIDuplicable *object );
-
 void           na_iduplicable_dump( const NAIDuplicable *object );
 
 NAIDuplicable *na_iduplicable_duplicate( const NAIDuplicable *object );
 
-void           na_iduplicable_check_edited_status( const NAIDuplicable *object );
+void           na_iduplicable_check_edition_status( const NAIDuplicable *object );
 
 gboolean       na_iduplicable_is_modified( const NAIDuplicable *object );
-
 gboolean       na_iduplicable_is_valid( const NAIDuplicable *object );
-
 NAIDuplicable *na_iduplicable_get_origin( const NAIDuplicable *object );
 
 void           na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin );

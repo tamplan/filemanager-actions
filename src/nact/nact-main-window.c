@@ -37,19 +37,21 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include <common/na-object-api.h>
 #include <common/na-pivot.h>
 #include <common/na-iio-provider.h>
 #include <common/na-ipivot-consumer.h>
 #include <common/na-iprefs.h>
 
+#include "base-iprefs.h"
 #include "nact-application.h"
 #include "nact-iactions-list.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
 #include "nact-iconditions-tab.h"
 #include "nact-iadvanced-tab.h"
-#include "nact-imenubar.h"
-#include "nact-iprefs.h"
+#include "nact-main-tab.h"
+#include "nact-main-menubar.h"
 #include "nact-main-window.h"
 
 /* private class data
@@ -62,74 +64,92 @@ struct NactMainWindowClassPrivate {
  */
 struct NactMainWindowPrivate {
 	gboolean         dispose_has_run;
-	gint             initial_count;
-	GSList          *actions;
-	NAAction        *edited_action;
-	NAActionProfile *edited_profile;
+
+	/* TODO: this will have to be replaced with undo-manager */
 	GSList          *deleted;
+
+	/**
+	 * Currently edited action or menu.
+	 *
+	 * This is the action or menu which is displayed in tab Action ;
+	 * it may be different of the row being currently selected.
+	 *
+	 * Can be null, and this implies that edited_profile is also null.
+	 */
+	NAObjectItem    *edited_item;
+
+	/**
+	 * Edition status for the edited action or menu.
+	 *
+	 * Menu is always editable as only displayed if it is the currently
+	 * selected item.
+	 *
+	 * Action is only enable if the action itself, or an action with
+	 * only one profile, is currently selected
+	 */
+	/* TODO: remove this variable */
+	/*gboolean         edition_enabled;*/
+
+	/**
+	 * Currently edited profile.
+	 *
+	 * This is the profile which is displayed in tabs Command,
+	 * Conditions and Advanced ; it may be different of the row being
+	 * currently selected.
+	 *
+	 * Can be null and this implies that the edited item is a menu
+	 * (because an action cannot have zero profile).
+	 */
+	NAObjectProfile *edited_profile;
 };
 
-/* the GConf key used to read/write size and position of auxiliary dialogs
+/* action properties
  */
-#define IPREFS_IMPORT_ACTIONS		"main-window-import-actions"
+enum {
+	PROP_EDITED_ITEM = 1,
+	PROP_ITEM_EDITION_ENABLED,
+	PROP_EDITED_PROFILE
+};
 
-static GObjectClass *st_parent_class = NULL;
+/* signals
+ */
+enum {
+	SELECTION_UPDATED,
+	LAST_SIGNAL
+};
 
-static GType            register_type( void );
-static void             class_init( NactMainWindowClass *klass );
-static void             iactions_list_iface_init( NactIActionsListInterface *iface );
-static void             iaction_tab_iface_init( NactIActionTabInterface *iface );
-static void             icommand_tab_iface_init( NactICommandTabInterface *iface );
-static void             iconditions_tab_iface_init( NactIConditionsTabInterface *iface );
-static void             iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
-static void             imenubar_iface_init( NactIMenubarInterface *iface );
-static void             ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
-static void             iprefs_iface_init( NAIPrefsInterface *iface );
-static void             instance_init( GTypeInstance *instance, gpointer klass );
-static void             instance_dispose( GObject *application );
-static void             instance_finalize( GObject *application );
+static NactWindowClass *st_parent_class = NULL;
+static gint             st_signals[ LAST_SIGNAL ] = { 0 };
 
-static gchar           *get_iprefs_window_id( NactWindow *window );
-static gchar           *get_toplevel_name( BaseWindow *window );
-static GSList          *get_actions( NactWindow *window );
+static GType    register_type( void );
+static void     class_init( NactMainWindowClass *klass );
+static void     iactions_list_iface_init( NactIActionsListInterface *iface );
+static void     iaction_tab_iface_init( NactIActionTabInterface *iface );
+static void     icommand_tab_iface_init( NactICommandTabInterface *iface );
+static void     iconditions_tab_iface_init( NactIConditionsTabInterface *iface );
+static void     iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
+static void     ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
+static void     iprefs_iface_init( NAIPrefsInterface *iface );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void     instance_dispose( GObject *application );
+static void     instance_finalize( GObject *application );
 
-static void             on_initial_load_toplevel( BaseWindow *window );
-static void             on_runtime_init_toplevel( BaseWindow *window );
-static void             setup_dialog_title( NactWindow *window );
+static void     actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot );
 
-static void             on_actions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
-static gboolean         on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer data );
-static gboolean         on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer data );
-static void             set_current_action( NactMainWindow *window, GSList *selected_items );
-static void             set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
-static NAAction        *get_edited_action( NactWindow *window );
-static NAActionProfile *get_edited_profile( NactWindow *window );
-static void             on_modified_field( NactWindow *window );
-static gboolean         is_modified_action( NactWindow *window, const NAAction *action );
-static gboolean         is_valid_action( NactWindow *window, const NAAction *action );
-static gboolean         is_modified_profile( NactWindow *window, const NAActionProfile *profile );
-static gboolean         is_valid_profile( NactWindow *window, const NAActionProfile *profile );
+static gchar   *base_get_toplevel_name( BaseWindow *window );
+static gchar   *base_get_iprefs_window_id( BaseWindow *window );
+static void     on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data );
+static void     on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data );
+static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
-static void             get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
-static gboolean         get_multiple( NactWindow *window );
-static GSList          *get_schemes( NactWindow *window );
+static void     iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
+static void     set_current_object_item( NactMainWindow *window, GSList *selected_items );
+static void     set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
 
-static void             insert_item( NactWindow *window, NAAction *action );
-static void             add_profile( NactWindow *window, NAActionProfile *profile );
-static void             remove_action( NactWindow *window, NAAction *action );
-static GSList          *get_deleted_actions( NactWindow *window );
-static void             free_deleted_actions( NactWindow *window );
-static void             push_removed_action( NactWindow *window, NAAction *action );
-
-static void             update_actions_list( NactWindow *window );
-static gboolean         on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
-static gint             count_actions( NactWindow *window );
-static gint             count_modified_actions( NactWindow *window );
-static void             reload_actions( NactWindow *window );
-static GSList          *free_actions( GSList *actions );
-static void             on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
-static void             on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data );
-static void             sort_actions_list( NactMainWindow *window );
+static void     ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
+static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data );
 
 GType
 nact_main_window_get_type( void )
@@ -191,12 +211,6 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo imenubar_iface_info = {
-		( GInterfaceInitFunc ) imenubar_iface_init,
-		NULL,
-		NULL
-	};
-
 	static const GInterfaceInfo ipivot_consumer_iface_info = {
 		( GInterfaceInitFunc ) ipivot_consumer_iface_init,
 		NULL,
@@ -223,8 +237,6 @@ register_type( void )
 
 	g_type_add_interface_static( type, NACT_IADVANCED_TAB_TYPE, &iadvanced_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_IMENUBAR_TYPE, &imenubar_iface_info );
-
 	g_type_add_interface_static( type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
 
 	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_iface_info );
@@ -238,7 +250,7 @@ class_init( NactMainWindowClass *klass )
 	static const gchar *thisfn = "nact_main_window_class_init";
 	GObjectClass *object_class;
 	BaseWindowClass *base_class;
-	NactWindowClass *nact_class;
+	GParamSpec *spec;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -247,17 +259,53 @@ class_init( NactMainWindowClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
+	object_class->set_property = instance_set_property;
+	object_class->get_property = instance_get_property;
+
+	spec = g_param_spec_pointer(
+			TAB_UPDATABLE_PROP_EDITED_ACTION,
+			"Edited NAObjectItem",
+			"A pointer to the edited NAObjectItem, an action or a menu",
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_EDITED_ITEM, spec );
+
+	/*spec = g_param_spec_boolean(
+			TAB_UPDATABLE_PROP_EDITION_ACTION_ENABLED,
+			"Edition enabled",
+			"Whether editing the characteristics of NAObjectItem is allowed", FALSE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_ITEM_EDITION_ENABLED, spec );*/
+
+	spec = g_param_spec_pointer(
+			TAB_UPDATABLE_PROP_EDITED_PROFILE,
+			"Edited NAObjectProfile",
+			"A pointer to the edited NAObjectProfile",
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_EDITED_PROFILE, spec );
 
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_toplevel_name = get_toplevel_name;
-	base_class->initial_load_toplevel = on_initial_load_toplevel;
-	base_class->runtime_init_toplevel = on_runtime_init_toplevel;
-	base_class->delete_event = on_delete_event;
+	base_class->get_toplevel_name = base_get_toplevel_name;
+	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
 
-	nact_class = NACT_WINDOW_CLASS( klass );
-	nact_class->get_iprefs_window_id = get_iprefs_window_id;
+	/**
+	 * "nact-tab-updatable-selection-updated":
+	 *
+	 * This signal is emitted to inform updatable tabs that a new
+	 * item has been selected, and the displays should reflect it.
+	 */
+	st_signals[ SELECTION_UPDATED ] = g_signal_new(
+			TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,					/* no default handler */
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER );
 }
 
 static void
@@ -267,15 +315,7 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_actions = get_actions;
-	iface->on_selection_changed = on_actions_list_selection_changed;
-	iface->on_double_click = on_actions_list_double_click;
-	iface->on_delete_key_pressed = NULL;
-	iface->on_enter_key_pressed = on_actions_list_enter_key_pressed;
-	iface->is_modified_action = is_modified_action;
-	iface->is_valid_action = is_valid_action;
-	iface->is_modified_profile = is_modified_profile;
-	iface->is_valid_profile = is_valid_profile;
+	iface->selection_changed = iactions_list_selection_changed;
 }
 
 static void
@@ -284,9 +324,6 @@ iaction_tab_iface_init( NactIActionTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_iaction_tab_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_edited_action = get_edited_action;
-	iface->field_modified = on_modified_field;
 }
 
 static void
@@ -295,12 +332,6 @@ icommand_tab_iface_init( NactICommandTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_icommand_tab_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_edited_profile = get_edited_profile;
-	iface->field_modified = on_modified_field;
-	iface->get_isfiledir = get_isfiledir;
-	iface->get_multiple = get_multiple;
-	iface->get_schemes = get_schemes;
 }
 
 static void
@@ -309,9 +340,6 @@ iconditions_tab_iface_init( NactIConditionsTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_iconditions_tab_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_edited_profile = get_edited_profile;
-	iface->field_modified = on_modified_field;
 }
 
 static void
@@ -320,32 +348,6 @@ iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_iadvanced_tab_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_edited_profile = get_edited_profile;
-	iface->field_modified = on_modified_field;
-}
-
-static void
-imenubar_iface_init( NactIMenubarInterface *iface )
-{
-	static const gchar *thisfn = "nact_main_window_imenubar_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->insert_item = insert_item;
-	iface->add_profile = add_profile;
-	iface->remove_action = remove_action;
-	iface->get_deleted_actions = get_deleted_actions;
-	iface->free_deleted_actions = free_deleted_actions;
-	iface->push_removed_action = push_removed_action;
-	iface->get_actions = get_actions;
-	iface->get_selected = nact_iactions_list_get_selected_object;
-	iface->setup_dialog_title = setup_dialog_title;
-	iface->update_actions_list = update_actions_list;
-	iface->select_actions_list = nact_iactions_list_set_selection;
-	iface->count_actions = count_actions;
-	iface->count_modified_actions = count_modified_actions;
-	iface->reload_actions = reload_actions;
 }
 
 static void
@@ -355,8 +357,8 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->on_actions_changed = on_actions_changed;
-	iface->on_display_order_changed = on_display_order_changed;
+	iface->on_actions_changed = ipivot_consumer_on_actions_changed;
+	iface->on_display_order_changed = ipivot_consumer_on_display_order_changed;
 }
 
 static void
@@ -380,7 +382,79 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactMainWindowPrivate, 1 );
 
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_WINDOW_SIGNAL_INITIAL_LOAD,
+			G_CALLBACK( on_base_initial_load_toplevel ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_WINDOW_SIGNAL_RUNTIME_INIT,
+			G_CALLBACK( on_base_runtime_init_toplevel ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED,
+			G_CALLBACK( on_base_all_widgets_showed ));
+
 	self->private->dispose_has_run = FALSE;
+}
+
+static void
+instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
+{
+	NactMainWindow *self;
+
+	g_assert( NACT_IS_MAIN_WINDOW( object ));
+	self = NACT_MAIN_WINDOW( object );
+
+	switch( property_id ){
+		case PROP_EDITED_ITEM:
+			g_value_set_pointer( value, self->private->edited_item );
+			break;
+
+		/*case PROP_ITEM_EDITION_ENABLED:
+			g_value_set_boolean( value, self->private->edition_enabled );
+			break;*/
+
+		case PROP_EDITED_PROFILE:
+			g_value_set_pointer( value, self->private->edited_profile );
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+			break;
+	}
+}
+
+static void
+instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
+{
+	NactMainWindow *self;
+
+	g_assert( NACT_IS_MAIN_WINDOW( object ));
+	self = NACT_MAIN_WINDOW( object );
+
+	switch( property_id ){
+		case PROP_EDITED_ITEM:
+			self->private->edited_item = g_value_get_pointer( value );
+			break;
+
+		/*case PROP_ITEM_EDITION_ENABLED:
+			self->private->edition_enabled = g_value_get_boolean( value );
+			break;*/
+
+		case PROP_EDITED_PROFILE:
+			self->private->edited_profile = g_value_get_pointer( value );
+			break;
+
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+			break;
+	}
 }
 
 static void
@@ -397,22 +471,24 @@ instance_dispose( GObject *window )
 
 	if( !self->private->dispose_has_run ){
 
-		self->private->dispose_has_run = TRUE;
-
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
-		nact_iprefs_set_int( NACT_WINDOW( window ), "main-paned", pos );
+		base_iprefs_set_int( BASE_WINDOW( window ), "main-paned", pos );
 
-		self->private->actions = free_actions( self->private->actions );
-		self->private->deleted = free_actions( self->private->deleted );
+		self->private->deleted = na_pivot_free_items_tree( self->private->deleted );
 
-		nact_iaction_tab_dispose( NACT_WINDOW( window ));
-		nact_icommand_tab_dispose( NACT_WINDOW( window ));
-		nact_iconditions_tab_dispose( NACT_WINDOW( window ));
-		nact_iadvanced_tab_dispose( NACT_WINDOW( window ));
+		nact_iactions_list_dispose( NACT_IACTIONS_LIST( window ));
+		nact_iaction_tab_dispose( NACT_IACTION_TAB( window ));
+		nact_icommand_tab_dispose( NACT_ICOMMAND_TAB( window ));
+		nact_iconditions_tab_dispose( NACT_ICONDITIONS_TAB( window ));
+		nact_iadvanced_tab_dispose( NACT_IADVANCED_TAB( window ));
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( window );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( window );
+		}
+
+		self->private->dispose_has_run = TRUE;
 	}
 }
 
@@ -425,12 +501,12 @@ instance_finalize( GObject *window )
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	self = ( NactMainWindow * ) window;
+	self = NACT_MAIN_WINDOW( window );
 
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if( st_parent_class->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( window );
 	}
 }
@@ -443,71 +519,183 @@ nact_main_window_new( BaseApplication *application )
 {
 	g_assert( NACT_IS_APPLICATION( application ));
 
-	return( g_object_new( NACT_MAIN_WINDOW_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
+	return( g_object_new( NACT_MAIN_WINDOW_TYPE, BASE_WINDOW_PROP_APPLICATION, application, NULL ));
 }
 
 /**
- * Returns the current list of actions
- */
-GSList *
-nact_main_window_get_actions( const NactMainWindow *window )
-{
-	return( window->private->actions );
-}
-
-/**
- * The specified action does already exist in the list ?
+ * nact_main_window_action_exists:
+ * @window: this #NactMainWindow instance.
+ * @uuid: the uuid to check for existancy.
+ *
+ * Returns: %TRUE if the specified action already exists in the system,
+ * %FALSE else.
+ *
+ * We have to check against existing actions in #NAPivot, and against
+ * currently edited actions in #NactIActionsList.
  */
 gboolean
 nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid )
 {
-	GSList *ia;
+	/*GSList *ia;*/
 
-	for( ia = window->private->actions ; ia ; ia = ia->next ){
-		NAAction *action = NA_ACTION( ia->data );
-		gchar *action_uuid = na_action_get_uuid( action );
+	g_assert( FALSE );
+	/* TODO: search in current state of the tree store + in pivot */
+	/*for( ia = window->private->actions ; ia ; ia = ia->next ){
+		NAObjectAction *action = NA_ACTION( ia->data );
+		gchar *action_uuid = na_object_action_get_uuid( action );
 		gboolean ok = ( g_ascii_strcasecmp( action_uuid, uuid ) == 0 );
 		g_free( action_uuid );
 		if( ok ){
 			return( TRUE );
 		}
-	}
+	}*/
 
 	return( FALSE );
 }
 
+GSList *
+nact_main_window_delete_selection( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_delete_selection";
+	GtkTreePath *path;
+	GSList *deleted;
+	GSList *it;
+
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), 0 );
+	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( window ), 0 );
+
+	deleted = nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ), &path );
+
+	for( it = deleted ; it ; it = it->next ){
+		g_debug( "%s: deleting %s at %p", thisfn, G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data );
+		window->private->deleted = g_slist_prepend( window->private->deleted, g_object_ref( NA_OBJECT( it->data )));
+	}
+
+	/* the next row must be selected after having updated the deleted list
+	 * so that count_modified will take it into account
+	 */
+	nact_iactions_list_select_row( NACT_IACTIONS_LIST( window ), path );
+	gtk_tree_path_free( path );
+
+	return( deleted );
+}
+
 /**
- * Returns the status bar widget
+ * nact_main_window_get_all_items_count:
+ * @window: this #NactMainWindow instance.
+ *
+ * Returns: the current total count of items in the view.
  */
-GtkStatusbar *
-nact_main_window_get_statusbar( const NactMainWindow *window )
+guint
+nact_main_window_get_all_items_count( const NactMainWindow *window )
 {
-	GtkWidget *statusbar;
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), 0 );
+	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( window ), 0 );
 
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
+	return( nact_iactions_list_get_items_count( NACT_IACTIONS_LIST( window )));
+}
 
-	statusbar = base_window_get_widget( BASE_WINDOW( window ), "StatusBar" );
+/**
+ * nact_main_window_get_modified_items_count:
+ * @window: this #NactMainWindow instance.
+ *
+ * Returns: a count of modified items.
+ *
+ * Note that exact count of modified actions is subject to some
+ * approximation:
+ * 1. counting the modified actions currently in the list is ok
+ * 2. but what about deleted actions ?
+ *    we can create any new actions, deleting them, and so on
+ *    if we have eventually deleted all newly created actions, then the
+ *    final count of modified actions should be zero... don't it ?
+ */
+guint
+nact_main_window_get_modified_items_count( const NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_get_modified_items_count";
+	GSList *ia, *modified;
+	gint count_deleted = 0;
+	gint count_modified = 0;
 
-	return( GTK_STATUSBAR( statusbar ));
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), 0 );
+	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( window ), 0 );
+
+	for( ia = window->private->deleted ; ia ; ia = ia->next ){
+		if( na_object_get_origin( NA_OBJECT( ia->data )) != NULL ){
+			count_deleted += 1;
+		}
+	}
+	g_debug( "%s: count_deleted=%d", thisfn, count_deleted );
+
+	modified = nact_iactions_list_get_modified_items( NACT_IACTIONS_LIST( window ));
+	count_modified = g_slist_length( modified );
+	nact_iactions_list_free_items_list(NACT_IACTIONS_LIST( window ), modified );
+	g_debug( "%s: count_modified=%d", thisfn, count_modified );
+
+	return( count_deleted + count_modified );
+}
+
+/**
+ * nact_main_window_remove_deleted:
+ *
+ * Removes the deleted items from the underlying I/O storage subsystem.
+ */
+void
+nact_main_window_remove_deleted( NactMainWindow *window )
+{
+	NactApplication *application;
+	NAPivot *pivot;
+	GSList *it;
+	NAObject *item;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+
+	for( it = window->private->deleted ; it ; it = it->next ){
+		item = NA_OBJECT( it->data );
+		actually_delete_item( window, item, pivot );
+	}
+
+	window->private->deleted = na_pivot_free_items_tree( window->private->deleted );
+}
+
+/**
+ * nact_main_window_remove_deleted:
+ *
+ * Removes the deleted items from the underlying I/O storage subsystem.
+ */
+static void
+actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot )
+{
+	GSList *items, *it;
+
+	if( nact_window_delete_object_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ))){
+
+		NAObject *origin = na_object_get_origin( item );
+		if( origin ){
+			na_pivot_remove_item( pivot, origin );
+		}
+
+		if( NA_IS_OBJECT_MENU( item )){
+			items = na_object_get_items( item );
+			for( it = items ; it ; it = it->next ){
+				actually_delete_item( window, NA_OBJECT( it->data ), pivot );
+			}
+			na_object_free_items( items );
+		}
+	}
 }
 
 static gchar *
-get_iprefs_window_id( NactWindow *window )
-{
-	return( g_strdup( "main-window" ));
-}
-
-static gchar *
-get_toplevel_name( BaseWindow *window )
+base_get_toplevel_name( BaseWindow *window )
 {
 	return( g_strdup( "MainWindow" ));
 }
 
-static GSList *
-get_actions( NactWindow *window )
+static gchar *
+base_get_iprefs_window_id( BaseWindow *window )
 {
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	return( NACT_MAIN_WINDOW( window )->private->actions );
+	return( g_strdup( "main-window" ));
 }
 
 /*
@@ -517,210 +705,192 @@ get_actions( NactWindow *window )
  * is the same than quitting the application
  */
 static void
-on_initial_load_toplevel( BaseWindow *window )
+on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_on_initial_load_toplevel";
-	NactMainWindow *wnd;
+	static const gchar *thisfn = "nact_main_window_on_base_initial_load_toplevel";
 	gint pos;
 	GtkWidget *pane;
-	/*gboolean alpha_order;*/
 
-	/* call parent class at the very beginning */
-	if( BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel ){
-		BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel( window );
-	}
-
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	wnd = NACT_MAIN_WINDOW( window );
 
-	nact_imenubar_init( wnd );
-
-	g_assert( NACT_IS_IACTIONS_LIST( window ));
-	nact_iactions_list_initial_load( NACT_WINDOW( window ));
-	nact_iactions_list_set_edition_mode( NACT_WINDOW( window ), TRUE );
-	nact_iactions_list_set_send_selection_changed_on_fill_list( NACT_WINDOW( window ), FALSE );
-	nact_iactions_list_set_multiple_selection( NACT_WINDOW( window ), TRUE );
-
-	/*alpha_order = na_iprefs_get_alphabetical_order( NA_IPREFS( window ));
-	nact_iactions_list_set_multiple_selection( NACT_WINDOW( window ), !alpha_order );
-	nact_iactions_list_set_dnd_mode( NACT_WINDOW( window ), !alpha_order );*/
-
-	g_assert( NACT_IS_IACTION_TAB( window ));
-	nact_iaction_tab_initial_load( NACT_WINDOW( window ));
-
-	g_assert( NACT_IS_ICOMMAND_TAB( window ));
-	nact_icommand_tab_initial_load( NACT_WINDOW( window ));
-
-	g_assert( NACT_IS_ICONDITIONS_TAB( window ));
-	nact_iconditions_tab_initial_load( NACT_WINDOW( window ));
-
-	g_assert( NACT_IS_IADVANCED_TAB( window ));
-	nact_iadvanced_tab_initial_load( NACT_WINDOW( window ));
-
-	pos = nact_iprefs_get_int( NACT_WINDOW( window ), "main-paned" );
+	pos = base_iprefs_get_int( BASE_WINDOW( window ), "main-paned" );
 	if( pos ){
-		pane = base_window_get_widget( window, "MainPaned" );
+		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		gtk_paned_set_position( GTK_PANED( pane ), pos );
 	}
+
+	nact_iactions_list_initial_load_toplevel( NACT_IACTIONS_LIST( window ));
+	nact_iactions_list_set_multiple_selection_mode( NACT_IACTIONS_LIST( window ), TRUE );
+	nact_iactions_list_set_dnd_mode( NACT_IACTIONS_LIST( window ), TRUE );
+
+	nact_iaction_tab_initial_load_toplevel( NACT_IACTION_TAB( window ));
+	nact_icommand_tab_initial_load_toplevel( NACT_ICOMMAND_TAB( window ));
+	nact_iconditions_tab_initial_load_toplevel( NACT_ICONDITIONS_TAB( window ));
+	nact_iadvanced_tab_initial_load_toplevel( NACT_IADVANCED_TAB( window ));
 }
 
 static void
-on_runtime_init_toplevel( BaseWindow *window )
+on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_on_runtime_init_toplevel";
-	NactMainWindow *wnd;
+	static const gchar *thisfn = "nact_main_window_on_base_runtime_init_toplevel";
 	NactApplication *application;
 	NAPivot *pivot;
-	GSList *ia;
+	GSList *tree;
 
-	/* call parent class at the very beginning */
-	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
-		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( window );
-	}
-
+	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	wnd = NACT_MAIN_WINDOW( window );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( wnd )));
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( application );
-	na_pivot_set_automatic_reload( pivot, FALSE );
-	wnd->private->actions = na_pivot_get_duplicate_actions( pivot );
-	wnd->private->initial_count = g_slist_length( wnd->private->actions );
+	tree = na_pivot_get_items_tree( pivot );
+	g_debug( "%s: pivot_tree=%p", thisfn, ( void * ) tree );
 
-	/* initialize the current edition status as a loaded action may be
-	 * invalid (without having been modified)
+	nact_iaction_tab_runtime_init_toplevel( NACT_IACTION_TAB( window ));
+	nact_icommand_tab_runtime_init_toplevel( NACT_ICOMMAND_TAB( window ));
+	nact_iconditions_tab_runtime_init_toplevel( NACT_ICONDITIONS_TAB( window ));
+	nact_iadvanced_tab_runtime_init_toplevel( NACT_IADVANCED_TAB( window ));
+
+	/* fill the IActionsList at last so that all signals are connected
 	 */
-	for( ia = wnd->private->actions ; ia ; ia = ia->next ){
-		na_object_check_edited_status( NA_OBJECT( ia->data ));
-	}
-
-	g_assert( NACT_IS_IACTIONS_LIST( window ));
-	nact_iactions_list_runtime_init( NACT_WINDOW( window ));
-
-	g_assert( NACT_IS_IACTION_TAB( window ));
-	nact_iaction_tab_runtime_init( NACT_WINDOW( window ));
-
-	g_assert( NACT_IS_ICOMMAND_TAB( window ));
-	nact_icommand_tab_runtime_init( NACT_WINDOW( window ));
-
-	g_assert( NACT_IS_ICONDITIONS_TAB( window ));
-	nact_iconditions_tab_runtime_init( NACT_WINDOW( window ));
-
-	g_assert( NACT_IS_IADVANCED_TAB( window ));
-	nact_iadvanced_tab_runtime_init( NACT_WINDOW( window ));
+	nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
+	nact_main_menubar_runtime_init( window );
 
 	/* forces a no-selection when the list is initially empty
 	 */
-	if( !wnd->private->initial_count ){
+	/*if( !g_slist_length( wnd->private->actions )){
 		set_current_action( NACT_MAIN_WINDOW( window ), NULL );
-	} else {
-		nact_iactions_list_select_first( NACT_WINDOW( window ));
-	}
+	}*/
 }
 
 static void
-setup_dialog_title( NactWindow *window )
+on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 {
-	GtkWindow *toplevel;
-	BaseApplication *appli = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	gchar *title = base_application_get_application_name( appli );
+	static const gchar *thisfn = "nact_main_window_on_base_all_widgets_showed";
 
-	if( NACT_MAIN_WINDOW( window )->private->edited_action ){
-		gchar *label = na_action_get_label( NACT_MAIN_WINDOW( window )->private->edited_action );
-		gchar *tmp = g_strdup_printf( "%s - %s", title, label );
-		g_free( label );
-		g_free( title );
-		title = tmp;
-	}
+	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( window ));
+	g_return_if_fail( NACT_IS_IACTION_TAB( window ));
+	g_return_if_fail( NACT_IS_ICOMMAND_TAB( window ));
+	g_return_if_fail( NACT_IS_ICONDITIONS_TAB( window ));
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( window ));
 
-	if( count_modified_actions( window )){
-		gchar *tmp = g_strdup_printf( "*%s", title );
-		g_free( title );
-		title = tmp;
-	}
+	nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));
+	nact_iaction_tab_all_widgets_showed( NACT_IACTION_TAB( window ));
+	nact_icommand_tab_all_widgets_showed( NACT_ICOMMAND_TAB( window ));
+	nact_iconditions_tab_all_widgets_showed( NACT_ICONDITIONS_TAB( window ));
+	nact_iadvanced_tab_all_widgets_showed( NACT_IADVANCED_TAB( window ));
 
-	toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
-	gtk_window_set_title( toplevel, title );
-
-	g_free( title );
+	nact_main_menubar_refresh_actions_sensitivity( window );
 }
 
+/*
+ * iactions_list_selection_changed:
+ * @window: this #NactMainWindow instance.
+ * @selected_items: the currently selected items in ActionsList
+ */
 static void
-on_actions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
+iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
 {
-	static const gchar *thisfn = "nact_main_window_on_actions_list_selection_changed";
+	static const gchar *thisfn = "nact_main_window_list_actions_selection_changed";
 	NactMainWindow *window;
 	NAObject *object;
 	gint count;
 
-	g_debug( "%s: instance=%p, selected_items=%p", thisfn, ( void * ) instance, ( void * ) selected_items );
-
-	g_assert( NACT_IS_MAIN_WINDOW( instance ));
-	window = NACT_MAIN_WINDOW( instance );
-
 	count = g_slist_length( selected_items );
+
+	g_debug( "%s: instance=%p, selected_items=%p, count=%d",
+			thisfn, ( void * ) instance, ( void * ) selected_items, count );
+
+	window = NACT_MAIN_WINDOW( instance );
 
 	if( count == 1 ){
 		object = NA_OBJECT( selected_items->data );
-		if( NA_IS_ACTION( object )){
-			window->private->edited_action = NA_ACTION( object );
-			set_current_action( window, selected_items );
+		if( NA_IS_OBJECT_ITEM( object )){
+			window->private->edited_item = NA_OBJECT_ITEM( object );
+			set_current_object_item( window, selected_items );
 
 		} else {
-			g_assert( NA_IS_ACTION_PROFILE( object ));
-			window->private->edited_profile = NA_ACTION_PROFILE( object );
+			g_assert( NA_IS_OBJECT_PROFILE( object ));
+			window->private->edited_profile = NA_OBJECT_PROFILE( object );
 			set_current_profile( window, TRUE, selected_items );
 		}
 
 	} else {
-		window->private->edited_action = NULL;
-		set_current_action( window, selected_items );
+		window->private->edited_item = NULL;
+		set_current_object_item( window, selected_items );
 	}
-}
 
-static gboolean
-on_actions_list_double_click( GtkWidget *widget, GdkEventButton *event, gpointer user_data )
-{
-	g_assert( event->type == GDK_2BUTTON_PRESS );
+	g_object_set(
+			G_OBJECT( window ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, window->private->edited_item,
+			/*TAB_UPDATABLE_PROP_EDITION_ACTION_ENABLED, window->private->edition_enabled,*/
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, window->private->edited_profile,
+			NULL );
 
-	nact_iactions_list_toggle_collapse(
-			NACT_WINDOW( user_data ), NACT_MAIN_WINDOW( user_data )->private->edited_action );
-
-	return( TRUE );
-}
-
-static gboolean
-on_actions_list_enter_key_pressed( GtkWidget *widget, GdkEventKey *event, gpointer user_data )
-{
-	nact_iactions_list_toggle_collapse(
-			NACT_WINDOW( user_data ), NACT_MAIN_WINDOW( user_data )->private->edited_action );
-
-	return( TRUE );
+	g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED, GINT_TO_POINTER( count ));
 }
 
 /*
- * update the notebook when selection changes in IActionsList
+ * update the notebook when selection changes in ActionsList
  * if there is only one profile, we also setup the profile
  */
 static void
-set_current_action( NactMainWindow *window, GSList *selected_items )
+set_current_object_item( NactMainWindow *window, GSList *selected_items )
 {
-	static const gchar *thisfn = "nact_main_window_set_current_action";
+	static const gchar *thisfn = "nact_main_window_set_current_object_item";
+	gint count_profiles;
+	GSList *profiles;
+	/*NAObject *current;*/
 
 	g_debug( "%s: window=%p, current=%p, selected_items=%p",
-			thisfn, ( void * ) window, ( void * ) window->private->edited_action, ( void * ) selected_items );
+			thisfn, ( void * ) window, ( void * ) window->private->edited_item, ( void * ) selected_items );
 
-	nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action, selected_items );
-
+	/* set the profile to be displayed, if any
+	 */
 	window->private->edited_profile = NULL;
 
-	if( window->private->edited_action ){
-		if( na_action_get_profiles_count( window->private->edited_action ) == 1 ){
-			window->private->edited_profile = NA_ACTION_PROFILE( na_action_get_profiles( window->private->edited_action )->data );
+	if( window->private->edited_item &&
+		NA_IS_OBJECT_ACTION( window->private->edited_item )){
+
+			count_profiles = na_object_get_items_count( NA_OBJECT_ACTION( window->private->edited_item ));
+			g_return_if_fail( count_profiles >= 1 );
+
+			if( count_profiles == 1 ){
+				profiles = na_object_get_items( window->private->edited_item );
+				window->private->edited_profile = NA_OBJECT_PROFILE( profiles->data );
+				na_object_free_items( profiles );
+			}
+	}
+
+	/* do the profile tabs (ICommandTab, IConditionsTab and IAdvancedTab)
+	 * will be editable ?
+	 * yes if we have an action with only one profile, or the selected
+	 * item is itself a profile
+	 */
+	/*window->private->edition_enabled = ( window->private->edited_item != NULL );
+
+	if( window->private->edition_enabled ){
+		g_assert( selected_items );
+		if( g_slist_length( selected_items ) > 1 ){
+			window->private->edition_enabled = FALSE;
 		}
 	}
+
+	if( window->private->edition_enabled && NA_IS_OBJECT_MENU( window->private->edited_item )){
+		window->private->edition_enabled = FALSE;
+	}
+
+	if( window->private->edition_enabled ){
+		g_assert( NA_IS_ACTION( window->private->edited_item ));
+		current = NA_OBJECT( selected_items->data );
+		if( NA_IS_OBJECT_ACTION( current)){
+			if( na_object_action_get_profiles_count( NA_ACTION( window->private->edited_item )) > 1 ){
+				window->private->edition_enabled = FALSE;
+			}
+		}
+	}*/
 
 	set_current_profile( window, FALSE, selected_items );
 }
@@ -734,264 +904,9 @@ set_current_profile( NactMainWindow *window, gboolean set_action, GSList *select
 			thisfn, ( void * ) window, set_action ? "True":"False", ( void * ) selected_items );
 
 	if( window->private->edited_profile && set_action ){
-		NAAction *action = NA_ACTION( na_action_profile_get_action( window->private->edited_profile ));
-		window->private->edited_action = action;
-		nact_iaction_tab_set_action( NACT_WINDOW( window ), window->private->edited_action, selected_items );
+		NAObjectAction *action = NA_OBJECT_ACTION( na_object_profile_get_action( window->private->edited_profile ));
+		window->private->edited_item = NA_OBJECT_ITEM( action );
 	}
-
-	nact_icommand_tab_set_profile( NACT_WINDOW( window ), window->private->edited_profile );
-	nact_iconditions_tab_set_profile( NACT_WINDOW( window ), window->private->edited_profile );
-	nact_iadvanced_tab_set_profile( NACT_WINDOW( window ), window->private->edited_profile );
-}
-
-/*
- * update the currently edited NAAction when a field is modified
- * (called as a virtual function by each interface tab)
- */
-static NAAction *
-get_edited_action( NactWindow *window )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	return( NACT_MAIN_WINDOW( window )->private->edited_action );
-}
-
-static NAActionProfile *
-get_edited_profile( NactWindow *window )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-	return( NACT_MAIN_WINDOW( window )->private->edited_profile );
-}
-
-/*
- * called as a virtual function by each interface tab when a field
- * has been modified
- * - if the label has been modified, the IActionsList must reflect this
- * - setup dialog title
- */
-static void
-on_modified_field( NactWindow *window )
-{
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-
-	na_object_check_edited_status( NA_OBJECT( NACT_MAIN_WINDOW( window )->private->edited_action ));
-
-	setup_dialog_title( window );
-
-	nact_iactions_list_update_selected( window, NACT_MAIN_WINDOW( window )->private->edited_action );
-}
-
-static gboolean
-is_modified_action( NactWindow *window, const NAAction *action )
-{
-	return( na_object_get_modified_status( NA_OBJECT( action )));
-}
-
-static gboolean
-is_valid_action( NactWindow *window, const NAAction *action )
-{
-	return( na_object_get_valid_status( NA_OBJECT( action )));
-}
-
-static gboolean
-is_modified_profile( NactWindow *window, const NAActionProfile *profile )
-{
-	return( na_object_get_modified_status( NA_OBJECT( profile )));
-}
-
-static gboolean
-is_valid_profile( NactWindow *window, const NAActionProfile *profile )
-{
-	return( na_object_get_valid_status( NA_OBJECT( profile )));
-}
-
-static void
-get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir )
-{
-	nact_iconditions_tab_get_isfiledir( window, isfile, isdir );
-}
-
-static gboolean
-get_multiple( NactWindow *window )
-{
-	return( nact_iconditions_tab_get_multiple( window ));
-}
-
-static GSList *
-get_schemes( NactWindow *window )
-{
-	return( nact_iadvanced_tab_get_schemes( window ));
-}
-
-/*
- * insert an item (action or menu) in the list:
- * - the last position if the list is sorted, and sort it
- * - at the current position if the list is not sorted
- *
- * set the selection on the new item
- */
-static void
-insert_item( NactWindow *window, NAAction *item )
-{
-	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
-	gboolean alpha_order;
-	gchar *uuid;
-	NAAction *current;
-	gint index;
-
-	alpha_order = na_iprefs_get_alphabetical_order( NA_IPREFS( window ));
-	if( alpha_order ){
-		wnd->private->actions = g_slist_prepend( wnd->private->actions, ( gpointer ) item );
-		sort_actions_list( wnd );
-
-	} else {
-		current = get_edited_action( window );
-		if( current ){
-			index = g_slist_index( wnd->private->actions, current );
-			g_assert( index >= 0 );
-			wnd->private->actions = g_slist_insert( wnd->private->actions, item, index );
-		} else {
-			g_assert( g_slist_length( wnd->private->actions ) == 0 );
-			wnd->private->actions = g_slist_prepend( wnd->private->actions, ( gpointer ) item );
-		}
-	}
-
-	nact_iactions_list_fill( window, TRUE );
-
-	uuid = na_action_get_uuid( item );
-	nact_iactions_list_set_selection( window, NA_ACTION_TYPE, uuid, NULL );
-	g_free( uuid );
-}
-
-static void
-add_profile( NactWindow *window, NAActionProfile *profile )
-{
-	NAAction *action = na_action_profile_get_action( profile );
-
-	if( !nact_iactions_list_is_expanded( window, action )){
-		nact_iactions_list_toggle_collapse( window, action );
-	}
-}
-
-static void
-remove_action( NactWindow *window, NAAction *action )
-{
-	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
-	wnd->private->actions = g_slist_remove( wnd->private->actions, ( gconstpointer ) action );
-}
-
-static GSList *
-get_deleted_actions( NactWindow *window )
-{
-	return( NACT_MAIN_WINDOW( window )->private->deleted );
-}
-
-static void
-free_deleted_actions( NactWindow *window )
-{
-	NactMainWindow *self = NACT_MAIN_WINDOW( window );
-
-	self->private->deleted = free_actions( self->private->deleted );
-}
-
-static void
-push_removed_action( NactWindow *window, NAAction *action )
-{
-	NactMainWindow *wnd = NACT_MAIN_WINDOW( window );
-	wnd->private->deleted = g_slist_append( wnd->private->deleted, ( gpointer ) action );
-}
-
-static void
-update_actions_list( NactWindow *window )
-{
-	nact_iactions_list_fill( window, TRUE );
-}
-
-static gboolean
-on_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event )
-{
-	static const gchar *thisfn = "nact_main_window_on_delete_event";
-
-	g_debug( "%s: window=%p, toplevel=%p, event=%p",
-			thisfn, ( void * ) window, ( void * ) toplevel, ( void * ) event );
-	g_assert( NACT_IS_MAIN_WINDOW( window ));
-
-	nact_imenubar_on_delete_event( NACT_WINDOW( window ));
-
-	return( TRUE );
-}
-
-static gint
-count_actions( NactWindow *window )
-{
-	return( g_slist_length( NACT_MAIN_WINDOW( window )->private->actions ));
-}
-
-/*
- * exact count of modified actions is subject to some approximation
- * 1. counting the actions currently in the list is ok
- * 2. what about deleted actions ?
- *    we can create any new actions, deleting them, and so on
- *    if we have eventually deleted all newly created actions, then the
- *    final count of modified actions should be zero... don't it ?
- */
-static gint
-count_modified_actions( NactWindow *window )
-{
-	GSList *ia;
-	gint count = 0;
-
-	if( g_slist_length( NACT_MAIN_WINDOW( window )->private->actions ) == 0 &&
-		NACT_MAIN_WINDOW( window )->private->initial_count == 0 ){
-			return( 0 );
-	}
-
-	for( ia = NACT_MAIN_WINDOW( window )->private->deleted ; ia ; ia = ia->next ){
-		if( na_object_get_origin( NA_OBJECT( ia->data )) != NULL ){
-			count += 1;
-		}
-	}
-
-	for( ia = NACT_MAIN_WINDOW( window )->private->actions ; ia ; ia = ia->next ){
-		if( is_modified_action( window, NA_ACTION( ia->data ))){
-			count += 1;
-		}
-	}
-
-	return( count );
-}
-
-static void
-reload_actions( NactWindow *window )
-{
-	NactMainWindow *self = NACT_MAIN_WINDOW( window );
-	NactApplication *application;
-	NAPivot *pivot;
-
-	self->private->actions = free_actions( self->private->actions );
-	self->private->deleted = free_actions( self->private->deleted );
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
-	na_pivot_reload_actions( pivot );
-	self->private->actions = na_pivot_get_duplicate_actions( pivot );
-	self->private->initial_count = g_slist_length( self->private->actions );
-
-	nact_iactions_list_fill( window, FALSE );
-
-	if( self->private->initial_count ){
-		nact_iactions_list_select_first( window );
-	}
-}
-
-static GSList *
-free_actions( GSList *actions )
-{
-	GSList *ia;
-	for( ia = actions ; ia ; ia = ia->next ){
-		g_object_unref( NA_ACTION( ia->data ));
-	}
-	g_slist_free( actions );
-	return( NULL );
 }
 
 /*
@@ -1004,10 +919,9 @@ free_actions( GSList *actions )
  * reset - saving is handled on a per-action basis.
  */
 static void
-on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
+ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_on_actions_changed";
-	NactMainWindow *self;
+	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_actions_changed";
 	NactApplication *application;
 	NAPivot *pivot;
 	gchar *first, *second;
@@ -1015,7 +929,6 @@ on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 	g_assert( NACT_IS_MAIN_WINDOW( instance ));
-	self = NACT_MAIN_WINDOW( instance );
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
 	pivot = nact_application_get_pivot( application );
@@ -1024,7 +937,7 @@ on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
 								"You could keep to work with your current list of actions, "
 								"or you may want to reload a fresh one." ));
 
-	if( count_modified_actions( NACT_WINDOW( instance )) > 0 ){
+	if( nact_main_window_get_modified_items_count( NACT_MAIN_WINDOW( instance )) > 0 ){
 		gchar *tmp = g_strdup_printf( "%s\n\n%s", first,
 				_( "Note that reloading a fresh list of actions requires "
 					"that you give up with your current modifications." ));
@@ -1041,13 +954,13 @@ on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
 
 	if( ok ){
 
-		na_pivot_reload_actions( pivot );
+		na_pivot_reload_items_tree( pivot );
 
-		na_pivot_free_actions( self->private->actions );
+		/*na_pivot_free_actions( self->private->actions );
 
 		self->private->actions = na_pivot_get_duplicate_actions( pivot );
 
-		nact_iactions_list_fill( NACT_WINDOW( instance ), TRUE );
+		nact_iactions_list_fill( NACT_IACTIONS_LIST( instance ), na_pivot_get_actions( pivot ));*/
 	}
 }
 
@@ -1056,29 +969,12 @@ on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
  * "sort in alphabetical order" preference is modified.
  */
 static void
-on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data )
+ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_on_display_order_changed";
+	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_display_order_changed";
 	/*NactMainWindow *self;*/
-	gboolean alpha_order;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 	g_assert( NACT_IS_MAIN_WINDOW( instance ));
 	/*self = NACT_MAIN_WINDOW( instance );*/
-
-	alpha_order = na_iprefs_get_alphabetical_order( NA_IPREFS( instance ));
-
-	nact_iactions_list_set_multiple_selection( NACT_WINDOW( instance ), !alpha_order );
-	nact_iactions_list_set_dnd_mode( NACT_WINDOW( instance ), !alpha_order );
-}
-
-static void
-sort_actions_list( NactMainWindow *window )
-{
-	NactApplication *application;
-	NAPivot *pivot;
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
-	window->private->actions = na_iio_provider_sort_actions( pivot, window->private->actions );
 }

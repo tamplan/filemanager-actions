@@ -65,7 +65,7 @@ typedef struct {
 	BaseApplicationClassPrivate *private;
 
 	/**
-	 * application_run:
+	 * run:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Starts and runs the application.
@@ -78,10 +78,10 @@ typedef struct {
 	 * and running the main window. It blocks until the end of the
 	 * program.
 	 */
-	int       ( *application_run )                   ( BaseApplication *appli );
+	int       ( *run )                        ( BaseApplication *appli );
 
 	/**
-	 * application_initialize:
+	 * initialize:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Initializes the program.
@@ -114,10 +114,10 @@ typedef struct {
 	 * application is correctly initialized if and only if all
 	 * individual initialization virtual functions have returned %TRUE.
 	 */
-	gboolean  ( *application_initialize )            ( BaseApplication *appli );
+	gboolean  ( *initialize )                 ( BaseApplication *appli );
 
 	/**
-	 * application_initialize_i18n:
+	 * initialize_i18n:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Initializes the i18n context.
@@ -126,10 +126,10 @@ typedef struct {
 	 *
 	 * The base class implementation always returns %TRUE.
 	 */
-	gboolean  ( *application_initialize_i18n )       ( BaseApplication *appli );
+	gboolean  ( *initialize_i18n )            ( BaseApplication *appli );
 
 	/**
-	 * application_initialize_gtk:
+	 * initialize_gtk:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Initializes the Gtk+ GUI interface.
@@ -149,10 +149,18 @@ typedef struct {
 	 * %APPLICATION_ERROR_GTK, and prepares a short #exit_message to be
 	 * written to stdout.
 	 */
-	gboolean  ( *application_initialize_gtk )        ( BaseApplication *appli );
+	gboolean  ( *initialize_gtk )             ( BaseApplication *appli );
 
 	/**
-	 * application_initialize_unique_app:
+	 * initialize_application_name:
+	 * @appli: this #BaseApplication instance.
+	 *
+	 * Initializes the name of the application.
+	 */
+	gboolean  ( *initialize_application_name )( BaseApplication *appli );
+
+	/**
+	 * initialize_unique_app:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * If relevant, checks if an instance of the application is already
@@ -176,10 +184,10 @@ typedef struct {
 	 * and prepares a short #exit_message to be displayed in a dialog
 	 * box.
 	 */
-	gboolean  ( *application_initialize_unique_app ) ( BaseApplication *appli );
+	gboolean  ( *initialize_unique_app )      ( BaseApplication *appli );
 
 	/**
-	 * application_initialize_ui:
+	 * initialize_ui:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Loads and initializes the XML file which contains the description
@@ -196,10 +204,10 @@ typedef struct {
 	 * class for the XML filename. If not empty, it then loads it, and
 	 * initializes a corresponding GtkBuilder object.
 	 */
-	gboolean  ( *application_initialize_ui )         ( BaseApplication *appli );
+	gboolean  ( *initialize_ui )              ( BaseApplication *appli );
 
 	/**
-	 * application_initialize_default_icon:
+	 * initialize_default_icon:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Initializes the default icon for the application.
@@ -209,10 +217,10 @@ typedef struct {
 	 *
 	 * The base class implementation always returns %TRUE.
 	 */
-	gboolean  ( *application_initialize_default_icon )( BaseApplication *appli );
+	gboolean  ( *initialize_default_icon )    ( BaseApplication *appli );
 
 	/**
-	 * application_initialize_application:
+	 * initialize_application:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Initializes the derived-class application.
@@ -227,16 +235,16 @@ typedef struct {
 	 * The base class implementation asks the derived class to
 	 * allocates and provides the BaseWindow-derived object which will
 	 * be the main window of the application
-	 * (cf. application_get_main_window()). This step is mandatory.
+	 * (cf. get_main_window()). This step is mandatory.
 	 *
 	 * If failed, this function sets #exit_code to the value which is
 	 * pertinent depending of the missing information, and prepares a
 	 * short #exit_message to be displayed in a dialog box.
 	 */
-	gboolean  ( *application_initialize_application )( BaseApplication *appli );
+	gboolean  ( *initialize_application )     ( BaseApplication *appli );
 
 	/**
-	 * application_get_application_name:
+	 * get_application_name:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Asks the derived class for the application name.
@@ -248,10 +256,10 @@ typedef struct {
 	 *
 	 * Returns: the application name, to be g_free() by the caller.
 	 */
-	gchar *   ( *application_get_application_name )  ( BaseApplication *appli );
+	gchar *   ( *get_application_name )       ( BaseApplication *appli );
 
 	/**
-	 * application_get_icon_name:
+	 * get_icon_name:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Asks the derived class for the name of the default icon.
@@ -263,10 +271,10 @@ typedef struct {
 	 * Returns: the default icon name for the application, to be
 	 * g_free() by the caller.
 	 */
-	gchar *   ( *application_get_icon_name )         ( BaseApplication *appli );
+	gchar *   ( *get_icon_name )              ( BaseApplication *appli );
 
 	/**
-	 * application_get_unique_app_name:
+	 * get_unique_app_name:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Asks the derived class for the UniqueApp name of this application.
@@ -283,10 +291,10 @@ typedef struct {
 	 * Returns: the UniqueApp name of the application, to be g_free()
 	 * by the caller.
 	 */
-	gchar *   ( *application_get_unique_app_name )   ( BaseApplication *appli );
+	gchar *   ( *get_unique_app_name )             ( BaseApplication *appli );
 
 	/**
-	 * application_get_ui_filename:
+	 * get_ui_filename:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Asks the derived class for the filename of the XML definition of
@@ -300,17 +308,17 @@ typedef struct {
 	 * Returns: the filename of the XML definition, to be g_free() by
 	 * the caller.
 	 */
-	gchar *   ( *application_get_ui_filename )       ( BaseApplication *appli );
+	gchar *   ( *get_ui_filename )                 ( BaseApplication *appli );
 
 	/**
-	 * application_get_main_window:
+	 * get_main_window:
 	 * @appli: this #BaseApplication instance.
 	 *
 	 * Returns: a pointer to the #BaseWindow-derived main window of the
 	 * application. This pointer is owned by the @appli, and should not
 	 * be g_free() not g_object_unref() by the caller.
 	 */
-	GObject * ( *application_get_main_window )       ( BaseApplication *appli );
+	GObject * ( *get_main_window )            ( BaseApplication *appli );
 }
 	BaseApplicationClass;
 

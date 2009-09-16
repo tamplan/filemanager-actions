@@ -48,22 +48,43 @@ G_BEGIN_DECLS
 
 /* instance properties
  */
-#define PROP_WINDOW_PARENT_STR				"base-window-parent"
-#define PROP_WINDOW_APPLICATION_STR			"base-window-application"
-#define PROP_WINDOW_TOPLEVEL_NAME_STR		"base-window-toplevel-name"
-#define PROP_WINDOW_TOPLEVEL_DIALOG_STR		"base-window-toplevel-dialog"
-#define PROP_WINDOW_INITIALIZED_STR			"base-window-is-initialized"
+#define BASE_WINDOW_PROP_PARENT						"base-window-parent"
+#define BASE_WINDOW_PROP_APPLICATION				"base-window-application"
+#define BASE_WINDOW_PROP_TOPLEVEL_NAME				"base-window-toplevel-name"
+#define BASE_WINDOW_PROP_TOPLEVEL_WIDGET			"base-window-toplevel-widget"
+#define BASE_WINDOW_PROP_INITIALIZED				"base-window-is-initialized"
+#define BASE_WINDOW_PROP_SAVE_WINDOW_POSITION		"base-window-save-window-position"
 
-void             base_window_init( BaseWindow *window );
+/* signals defined in this class
+ *
+ * All signals of this class have the same behavior:
+ * - the message is sent to all derived classes, which are free to
+ *   connect to the signal in order to implement their own code
+ * - finally, the default class handler points to a virtual function
+ * - the virtual function actually tries to call the actual function
+ *   as possibly implemented by the derived class
+ * - if no derived class has implemented the virtual function, the call
+ *   fall back to doing nothing at all
+ */
+#define BASE_WINDOW_SIGNAL_INITIAL_LOAD				"nact-base-window-initial-load"
+#define BASE_WINDOW_SIGNAL_RUNTIME_INIT				"nact-base-window-runtime-init"
+#define BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED		"nact-base-window-all-widgets-showed"
+
+gboolean         base_window_init( BaseWindow *window );
 void             base_window_run( BaseWindow *window );
 
-GtkWindow       *base_window_get_toplevel_dialog( BaseWindow *window );
+GtkWindow       *base_window_get_toplevel_window( BaseWindow *window );
 BaseApplication *base_window_get_application( BaseWindow *window );
-GtkWindow       *base_window_get_dialog( BaseWindow *window, const gchar *name );
+GtkWindow       *base_window_get_toplevel( BaseWindow *window, const gchar *name );
 GtkWidget       *base_window_get_widget( BaseWindow *window, const gchar *name );
+
+void             base_window_set_save_window_position( BaseWindow *window, gboolean save );
 
 void             base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );
 gboolean         base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second );
+
+void             base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
+void             base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const gchar *signal, GCallback fn );
 
 G_END_DECLS
 

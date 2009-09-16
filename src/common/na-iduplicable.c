@@ -42,24 +42,27 @@ struct NAIDuplicableInterfacePrivate {
 
 /* data set against NAIDuplicable-implementated instance
  */
-#define PROP_IDUPLICABLE_ORIGIN			"na-iduplicable-origin"
-#define PROP_IDUPLICABLE_ISMODIFIED		"na-iduplicable-is-modified"
-#define PROP_IDUPLICABLE_ISVALID		"na-iduplicable-is-valid"
+#define NA_IDUPLICABLE_PROP_ORIGIN			"na-iduplicable-origin"
+#define NA_IDUPLICABLE_PROP_IS_MODIFIED		"na-iduplicable-is-modified"
+#define NA_IDUPLICABLE_PROP_IS_VALID		"na-iduplicable-is-valid"
+
+static gboolean st_initialized = FALSE;
+static gboolean st_finalized = FALSE ;
 
 static GType          register_type( void );
 static void           interface_base_init( NAIDuplicableInterface *klass );
 static void           interface_base_finalize( NAIDuplicableInterface *klass );
 
-static void           v_copy( NAIDuplicable *target, const NAIDuplicable *source );
 static NAIDuplicable *v_new( const NAIDuplicable *object );
+static void           v_copy( NAIDuplicable *target, const NAIDuplicable *source );
 static gboolean       v_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
 static gboolean       v_is_valid( const NAIDuplicable *object );
 
-static NAIDuplicable *get_origin( const NAIDuplicable *object );
-static void           set_origin( const NAIDuplicable *object, const NAIDuplicable *origin );
 static gboolean       get_modified( const NAIDuplicable *object );
-static void           set_modified( const NAIDuplicable *object, gboolean is_modified );
+static NAIDuplicable *get_origin( const NAIDuplicable *object );
 static gboolean       get_valid( const NAIDuplicable *object );
+static void           set_modified( const NAIDuplicable *object, gboolean is_modified );
+static void           set_origin( const NAIDuplicable *object, const NAIDuplicable *origin );
 static void           set_valid( const NAIDuplicable *object, gboolean is_valid );
 
 GType
@@ -105,14 +108,14 @@ static void
 interface_base_init( NAIDuplicableInterface *klass )
 {
 	static const gchar *thisfn = "na_iduplicable_interface_base_init";
-	static gboolean initialized = FALSE;
 
-	if( !initialized ){
+	if( !st_initialized ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NAIDuplicableInterfacePrivate, 1 );
 
-		initialized = TRUE;
+		st_initialized = TRUE;
 	}
 }
 
@@ -120,14 +123,14 @@ static void
 interface_base_finalize( NAIDuplicableInterface *klass )
 {
 	static const gchar *thisfn = "na_iduplicable_interface_base_finalize";
-	static gboolean finalized = FALSE ;
 
-	if( !finalized ){
+	if( !st_finalized ){
+
+		st_finalized = TRUE;
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
-
-		finalized = TRUE;
 	}
 }
 
@@ -137,14 +140,14 @@ interface_base_finalize( NAIDuplicableInterface *klass )
  *
  * Initializes the properties of a IDuplicable object.
  *
- * This function should be called by the implementor when creating the
- * object, e.g. from instance_init().
+ * This function should be called by the implementation when creating
+ * the object, e.g. from instance_init().
  */
 void
 na_iduplicable_init( NAIDuplicable *object )
 {
-	g_assert( G_IS_OBJECT( object ));
-	g_assert( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( st_initialized && !st_finalized );
+	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
 	set_origin( object, NULL );
 	set_modified( object, FALSE );
@@ -159,23 +162,24 @@ na_iduplicable_init( NAIDuplicable *object )
  *
  * We ouput here only the data we set ourselves againt the
  * #NAIDuplicable-implemented object.
+ *
+ * This function should be called by the implementation when it dumps
+ * itself its own content.
  */
 void
 na_iduplicable_dump( const NAIDuplicable *object )
 {
 	static const gchar *thisfn = "na_iduplicable_dump";
-	NAIDuplicable *origin = NULL;
-	gboolean modified = FALSE;
-	gboolean valid = FALSE;				/* may a NULL object be valid ? */
+	NAIDuplicable *origin;
+	gboolean modified;
+	gboolean valid;
 
-	if( object ){
-		g_assert( G_IS_OBJECT( object ));
-		g_assert( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( st_initialized && !st_finalized );
+	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
-		origin = get_origin( object );
-		modified = get_modified( object );
-		valid = get_valid( object );
-	}
+	origin = get_origin( object );
+	modified = get_modified( object );
+	valid = get_valid( object );
 
 	g_debug( "%s:   origin=%p", thisfn, ( void * ) origin );
 	g_debug( "%s: modified=%s", thisfn, modified ? "True" : "False" );
@@ -187,7 +191,7 @@ na_iduplicable_dump( const NAIDuplicable *object )
  * @object: the #NAIDuplicable object to be duplicated.
  *
  * Exactly duplicates a #NAIDuplicable-implemented object.
- * Properties %PROP_IDUPLICABLE_ORIGIN, %PROP_IDUPLICABLE_ISMODIFIED
+ * Properties %NA_IDUPLICABLE_PROP_ORIGIN, %PROP_IDUPLICABLE_ISMODIFIED
  * and %PROP_IDUPLICABLE_ISVALID are initialized to their default
  * values.
  *
@@ -199,30 +203,28 @@ na_iduplicable_dump( const NAIDuplicable *object )
 NAIDuplicable *
 na_iduplicable_duplicate( const NAIDuplicable *object )
 {
-	static const gchar *thisfn = "na_iduplicable_duplicate";
+	/*static const gchar *thisfn = "na_iduplicable_duplicate";*/
 	NAIDuplicable *dup = NULL;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
 
-	if( object ){
-		g_assert( G_IS_OBJECT( object ));
-		g_assert( NA_IS_IDUPLICABLE( object ));
+	g_return_val_if_fail( st_initialized && !st_finalized, NULL );
+	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
 
-		dup = v_new( object );
+	dup = v_new( object );
 
-		if( dup ){
-			v_copy( dup, object );
-			set_origin( dup, object );
-			set_modified( dup, FALSE );
-			set_valid( dup, TRUE );
-		}
+	if( dup ){
+		v_copy( dup, object );
+		set_origin( dup, object );
+		set_modified( dup, FALSE );
+		set_valid( dup, TRUE );
 	}
 
 	return( dup );
 }
 
 /**
- * na_iduplicable_check_edited_status:
+ * na_iduplicable_check_edition_status:
  * @object: the #NAIDuplicable object to be checked.
  *
  * Checks the edition status of the #NAIDuplicable object, and set up
@@ -235,27 +237,25 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
  * then only return the current value of the properties.
  */
 void
-na_iduplicable_check_edited_status( const NAIDuplicable *object )
+na_iduplicable_check_edition_status( const NAIDuplicable *object )
 {
-	/*static const gchar *thisfn = "na_iduplicable_check_edited_status";
+	/*static const gchar *thisfn = "na_iduplicable_check_edition_status";
 	g_debug( "%s: object=%p", thisfn, object );*/
 	gboolean modified = TRUE;
 	NAIDuplicable *origin;
 	gboolean valid;
 
-	if( object ){
-		g_assert( G_IS_OBJECT( object ));
-		g_assert( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( st_initialized && !st_finalized );
+	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
-		origin = get_origin( object );
-		if( origin ){
-			modified = !v_are_equal( object, origin );
-		}
-		set_modified( object, modified );
-
-		valid = v_is_valid( object );
-		set_valid( object, valid );
+	origin = get_origin( object );
+	if( origin ){
+		modified = !v_are_equal( object, origin );
 	}
+	set_modified( object, modified );
+
+	valid = v_is_valid( object );
+	set_valid( object, valid );
 }
 
 /**
@@ -275,12 +275,10 @@ na_iduplicable_is_modified( const NAIDuplicable *object )
 	g_debug( "%s: object=%p", thisfn, object );*/
 	gboolean is_modified = FALSE;
 
-	if( object ){
-		g_assert( G_IS_OBJECT( object ));
-		g_assert( NA_IS_IDUPLICABLE( object ));
+	g_return_val_if_fail( st_initialized && !st_finalized, FALSE );
+	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), FALSE );
 
-		is_modified = get_modified( object );
-	}
+	is_modified = get_modified( object );
 
 	return( is_modified );
 }
@@ -301,12 +299,10 @@ na_iduplicable_is_valid( const NAIDuplicable *object )
 	g_debug( "%s: object=%p", thisfn, object );*/
 	gboolean is_valid = FALSE;
 
-	if( object ){
-		g_assert( G_IS_OBJECT( object ));
-		g_assert( NA_IS_IDUPLICABLE( object ));
+	g_return_val_if_fail( st_initialized && !st_finalized, FALSE );
+	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), FALSE );
 
-		is_valid = get_valid( object );
-	}
+	is_valid = get_valid( object );
 
 	return( is_valid );
 }
@@ -326,19 +322,17 @@ na_iduplicable_get_origin( const NAIDuplicable *object )
 	g_debug( "%s: object=%p", thisfn, object );*/
 	NAIDuplicable *origin = NULL;
 
-	if( object ){
-		g_assert( G_IS_OBJECT( object ));
-		g_assert( NA_IS_IDUPLICABLE( object ));
+	g_return_val_if_fail( st_initialized && !st_finalized, NULL );
+	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
 
-		origin = get_origin( object );
-	}
+	origin = get_origin( object );
 
 	return( origin );
 }
 
 /**
  * na_iduplicable_set_origin:
- * @object: the #NAIDuplicable object whose origin is to be returned.
+ * @object: the #NAIDuplicable object whose origin is to be set.
  * @origin: the new original #NAIDuplicable.
  *
  * Sets the new origin of a duplicated #NAIDuplicable.
@@ -349,20 +343,11 @@ na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
 	/*static const gchar *thisfn = "na_iduplicable_is_valid";
 	g_debug( "%s: object=%p", thisfn, object );*/
 
-	if( object ){
-		g_assert( G_IS_OBJECT( object ));
-		g_assert( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( st_initialized && !st_finalized );
+	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( NA_IS_IDUPLICABLE( origin ) || !origin );
 
-		set_origin( object, origin );
-	}
-}
-
-static void
-v_copy( NAIDuplicable *target, const NAIDuplicable *source )
-{
-	if( NA_IDUPLICABLE_GET_INTERFACE( target )->copy ){
-		NA_IDUPLICABLE_GET_INTERFACE( target )->copy( target, source );
-	}
+	set_origin( object, origin );
 }
 
 static NAIDuplicable *
@@ -375,6 +360,14 @@ v_new( const NAIDuplicable *object )
 	return( NULL );
 }
 
+static void
+v_copy( NAIDuplicable *target, const NAIDuplicable *source )
+{
+	if( NA_IDUPLICABLE_GET_INTERFACE( target )->copy ){
+		NA_IDUPLICABLE_GET_INTERFACE( target )->copy( target, source );
+	}
+}
+
 static gboolean
 v_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 {
@@ -382,7 +375,7 @@ v_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 		return( NA_IDUPLICABLE_GET_INTERFACE( a )->are_equal( a, b ));
 	}
 
-	return( TRUE );
+	return( FALSE );
 }
 
 static gboolean
@@ -392,41 +385,41 @@ v_is_valid( const NAIDuplicable *object )
 		return( NA_IDUPLICABLE_GET_INTERFACE( object )->is_valid( object ));
 	}
 
-	return( TRUE );
-}
-
-static NAIDuplicable *
-get_origin( const NAIDuplicable *object )
-{
-	return( NA_IDUPLICABLE( g_object_get_data( G_OBJECT( object ), PROP_IDUPLICABLE_ORIGIN )));
-}
-
-static void
-set_origin( const NAIDuplicable *object, const NAIDuplicable *origin )
-{
-	g_object_set_data( G_OBJECT( object ), PROP_IDUPLICABLE_ORIGIN, ( gpointer ) origin );
+	return( FALSE );
 }
 
 static gboolean
 get_modified( const NAIDuplicable *object )
 {
-	return(( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( object ), PROP_IDUPLICABLE_ISMODIFIED )));
+	return(( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_MODIFIED )));
 }
 
-static void
-set_modified( const NAIDuplicable *object, gboolean is_modified )
+static NAIDuplicable *
+get_origin( const NAIDuplicable *object )
 {
-	g_object_set_data( G_OBJECT( object ), PROP_IDUPLICABLE_ISMODIFIED, GUINT_TO_POINTER( is_modified ));
+	return( NA_IDUPLICABLE( g_object_get_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_ORIGIN )));
 }
 
 static gboolean
 get_valid( const NAIDuplicable *object )
 {
-	return(( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( object ), PROP_IDUPLICABLE_ISVALID )));
+	return(( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_VALID )));
+}
+
+static void
+set_modified( const NAIDuplicable *object, gboolean is_modified )
+{
+	g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_MODIFIED, GUINT_TO_POINTER( is_modified ));
+}
+
+static void
+set_origin( const NAIDuplicable *object, const NAIDuplicable *origin )
+{
+	g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_ORIGIN, ( gpointer ) origin );
 }
 
 static void
 set_valid( const NAIDuplicable *object, gboolean is_valid )
 {
-	g_object_set_data( G_OBJECT( object ), PROP_IDUPLICABLE_ISVALID, GUINT_TO_POINTER( is_valid ));
+	g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_VALID, GUINT_TO_POINTER( is_valid ));
 }

@@ -57,11 +57,6 @@
 
 #define EGG_TREE_MULTI_DND_STRING		"EggTreeMultiDndString"
 
-/*static GtkTargetEntry target_table[] = {
-        { "XdndDirectSave0", 0, 0 },
-        { "XdndNautilusActions0", 0, 1 }
-};*/
-
 typedef struct
 {
 	guint    pressed_button;
@@ -89,8 +84,6 @@ static gboolean       on_drag_data_get( GtkWidget *widget, GdkDragContext *conte
 static void           stop_drag_check( GtkWidget *widget );
 static void           selection_foreach( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GList **path_list );
 static void           path_list_free( GList *path_list );
-/*static void     set_context_data( GdkDragContext *context, GList *path_list );
-static GList   *get_context_data( GdkDragContext *context );*/
 static void           set_treeview_data( GtkWidget *treeview, GList *path_list );
 static GList         *get_treeview_data( GtkWidget *treeview );
 
@@ -397,7 +390,6 @@ on_motion_event( GtkWidget *widget, GdkEventMotion *event, EggTreeMultiDragSourc
 
 			context = gtk_drag_begin(
 					widget, target_list, actions, priv_data->pressed_button, ( GdkEvent * ) event );
-			/*set_context_data( context, path_list );*/
 
 			set_treeview_data( widget, path_list );
 
@@ -416,7 +408,7 @@ on_motion_event( GtkWidget *widget, GdkEventMotion *event, EggTreeMultiDragSourc
 static gboolean
 on_drag_data_get( GtkWidget *widget, GdkDragContext *context, GtkSelectionData *selection_data, guint info, guint time )
 {
-	static const gchar *thisfn = "on_drag_data_get";
+	static const gchar *thisfn = "egg_tree_multi_dnd_on_drag_data_get";
 	GtkTreeView  *tree_view;
 	GtkTreeModel *model;
 	GList        *path_list;
@@ -429,7 +421,6 @@ on_drag_data_get( GtkWidget *widget, GdkDragContext *context, GtkSelectionData *
 	g_assert( model );
 	g_assert( EGG_IS_TREE_MULTI_DRAG_SOURCE( model ));
 
-	/*path_list = get_context_data( context );*/
 	path_list = get_treeview_data( widget );
 	if( path_list == NULL ){
 		return( FALSE );
@@ -475,20 +466,6 @@ path_list_free( GList *path_list )
 	g_list_foreach( path_list, ( GFunc ) gtk_tree_row_reference_free, NULL );
 	g_list_free( path_list );
 }
-
-/*static void
-set_context_data( GdkDragContext *context, GList *path_list )
-{
-	g_object_set_data_full(
-			G_OBJECT( context ),
-			"egg-tree-view-multi-source-row", path_list, ( GDestroyNotify ) path_list_free );
-}
-
-static GList *
-get_context_data( GdkDragContext *context )
-{
-	return( g_object_get_data( G_OBJECT( context ), "egg-tree-view-multi-source-row" ));
-}*/
 
 static void
 set_treeview_data( GtkWidget *treeview, GList *path_list )

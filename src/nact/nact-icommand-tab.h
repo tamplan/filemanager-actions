@@ -37,7 +37,7 @@
  * This interface implements the "Nautilus Menu Item" box.
  */
 
-#include "nact-window.h"
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -53,25 +53,17 @@ typedef struct NactICommandTabInterfacePrivate NactICommandTabInterfacePrivate;
 typedef struct {
 	GTypeInterface                   parent;
 	NactICommandTabInterfacePrivate *private;
-
-	/* api */
-	NAActionProfile * ( *get_edited_profile )( NactWindow *window );
-	void              ( *field_modified )    ( NactWindow *window );
-	void              ( *get_isfiledir )     ( NactWindow *window, gboolean *is_file, gboolean *is_dir );
-	gboolean          ( *get_multiple )      ( NactWindow *window );
-	GSList *          ( *get_schemes )       ( NactWindow *window );
 }
 	NactICommandTabInterface;
 
 GType    nact_icommand_tab_get_type( void );
 
-void     nact_icommand_tab_initial_load( NactWindow *window );
-void     nact_icommand_tab_runtime_init( NactWindow *window );
-void     nact_icommand_tab_all_widgets_showed( NactWindow *window );
-void     nact_icommand_tab_dispose( NactWindow *window );
+void     nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance );
+void     nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance );
+void     nact_icommand_tab_all_widgets_showed( NactICommandTab *instance );
+void     nact_icommand_tab_dispose( NactICommandTab *instance );
 
-void     nact_icommand_tab_set_profile( NactWindow *window, const NAActionProfile *profile );
-gboolean nact_icommand_tab_has_label( NactWindow *window );
+gboolean nact_icommand_tab_has_label( NactICommandTab *instance );
 
 G_END_DECLS
 

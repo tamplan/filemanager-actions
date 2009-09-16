@@ -42,6 +42,9 @@ struct NAIPivotConsumerInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+static gboolean st_initialized = FALSE;
+static gboolean st_finalized = FALSE;
+
 static GType    register_type( void );
 static void     interface_base_init( NAIPivotConsumerInterface *klass );
 static void     interface_base_finalize( NAIPivotConsumerInterface *klass );
@@ -94,16 +97,15 @@ static void
 interface_base_init( NAIPivotConsumerInterface *klass )
 {
 	static const gchar *thisfn = "na_ipivot_consumer_interface_base_init";
-	static gboolean initialized = FALSE;
 
-	if( !initialized ){
+	if( !st_initialized ){
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NAIPivotConsumerInterfacePrivate, 1 );
 
 		klass->on_actions_changed = NULL /*do_actions_changed*/;
 
-		initialized = TRUE;
+		st_initialized = TRUE;
 	}
 }
 
@@ -111,14 +113,14 @@ static void
 interface_base_finalize( NAIPivotConsumerInterface *klass )
 {
 	static const gchar *thisfn = "na_ipivot_consumer_interface_base_finalize";
-	static gboolean finalized = FALSE ;
 
-	if( !finalized ){
+	if( !st_finalized ){
+
+		st_finalized = TRUE;
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
-
-		finalized = TRUE;
 	}
 }
 
@@ -135,6 +137,9 @@ void
 na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance )
 {
 	GTimeVal *last_delay;
+
+	g_return_if_fail( st_initialized && !st_finalized );
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
 	last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
 
@@ -160,6 +165,9 @@ void na_ipivot_consumer_notify( NAIPivotConsumer *instance )
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
+	g_return_if_fail( st_initialized && !st_finalized );
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
+
 	if( is_notify_allowed( instance )){
 		if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed ){
 			NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed( instance, NULL );
@@ -177,6 +185,9 @@ void na_ipivot_consumer_notify( NAIPivotConsumer *instance )
 void
 na_ipivot_consumer_notify_display_order_change( NAIPivotConsumer *instance )
 {
+	g_return_if_fail( st_initialized && !st_finalized );
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
+
 	if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed ){
 		NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed( instance, NULL );
 	}
@@ -193,6 +204,9 @@ na_ipivot_consumer_notify_display_order_change( NAIPivotConsumer *instance )
 void
 na_ipivot_consumer_notify_display_about_change( NAIPivotConsumer *instance )
 {
+	g_return_if_fail( st_initialized && !st_finalized );
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
+
 	if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed ){
 		NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed( instance, NULL );
 	}

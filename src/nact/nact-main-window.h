@@ -34,7 +34,7 @@
 /*
  * NactMainWindow class definition.
  *
- * This class is derived from BaseWindow and manages the MainWindow.
+ * This class is derived from BaseWindow and manages the main window.
  */
 
 #include "nact-window.h"
@@ -68,18 +68,11 @@ GType           nact_main_window_get_type( void );
 
 NactMainWindow *nact_main_window_new( BaseApplication *application );
 
-GSList         *nact_main_window_get_actions( const NactMainWindow *window );
 gboolean        nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid );
-GtkStatusbar   *nact_main_window_get_statusbar( const NactMainWindow *window );
-
-GtkStatusbar   *nact_main_window_get_statusbar( const NactMainWindow *window );
-
-enum {
-	ACTION_TAB = 0,
-	COMMAND_TAB,
-	CONDITIONS_TAB,
-	ADVANCED_TAB
-};
+GSList         *nact_main_window_delete_selection( NactMainWindow *window );
+guint           nact_main_window_get_all_items_count( const NactMainWindow *window );
+guint           nact_main_window_get_modified_items_count( const NactMainWindow *window );
+void            nact_main_window_remove_deleted( NactMainWindow *window );
 
 G_END_DECLS
 

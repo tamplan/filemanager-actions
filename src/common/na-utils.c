@@ -147,7 +147,8 @@ na_utils_remove_ascii_from_string_list( GSList *list, const gchar *text )
 }
 
 /**
- * Concatenates a string list to a semi-colon-separated text.
+ * Concatenates a string list to a semi-colon-separated text
+ * suitable for an entry in the user interface
  */
 gchar *
 na_utils_string_list_to_text( GSList *strlist )
@@ -172,7 +173,7 @@ na_utils_string_list_to_text( GSList *strlist )
 
 /**
  * Extracts a list of strings from a semi-colon-separated text
- * (entry text).
+ * (entry text in the user interface).
  */
 GSList *
 na_utils_text_to_string_list( const gchar *text )
@@ -323,17 +324,17 @@ na_utils_schema_to_boolean( const gchar *value, gboolean default_value )
 }
 
 /**
- * extract the key part (the last part) of a full path
+ * extract the last part of a full path
  * returns a newly allocated string which must be g_free() by the caller
  */
 gchar *
-na_utils_path_to_key( const gchar *path )
+na_utils_path_extract_last_dir( const gchar *path )
 {
 	gchar **split = g_strsplit( path, "/", -1 );
 	guint count = g_strv_length( split );
-	gchar *key = g_strdup( split[count-1] );
+	gchar *lastdir = g_strdup( split[count-1] );
 	g_strfreev( split );
-	return( key );
+	return( lastdir );
 }
 
 /**

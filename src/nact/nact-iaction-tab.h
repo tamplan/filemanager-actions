@@ -31,13 +31,18 @@
 #ifndef __NACT_IACTION_TAB_H__
 #define __NACT_IACTION_TAB_H__
 
-/*
- * NactIActionTab interface definition.
+/**
+ * SECTION: nact_iaction_tab
+ * @short_description: #NactIActionTab interface definition.
+ * @include: nact/nact-iaction-tab.h
  *
- * This interface implements the "Nautilus Menu Item" box.
+ * This interface implements the "Nautilus Menu Item" tab of the notebook.
+ *
+ * Entry fields are enabled, as soon as an edited item has been set a a
+ * property of the main window,
  */
 
-#include "nact-window.h"
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -53,23 +58,17 @@ typedef struct NactIActionTabInterfacePrivate NactIActionTabInterfacePrivate;
 typedef struct {
 	GTypeInterface                  parent;
 	NactIActionTabInterfacePrivate *private;
-
-	/* api */
-	NAObject *  ( *get_selected )     ( NactWindow *window );
-	NAAction *  ( *get_edited_action )( NactWindow *window );
-	void        ( *field_modified )   ( NactWindow *window );
 }
 	NactIActionTabInterface;
 
 GType    nact_iaction_tab_get_type( void );
 
-void     nact_iaction_tab_initial_load( NactWindow *dialog );
-void     nact_iaction_tab_runtime_init( NactWindow *dialog );
-void     nact_iaction_tab_all_widgets_showed( NactWindow *dialog );
-void     nact_iaction_tab_dispose( NactWindow *dialog );
+void     nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance );
+void     nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance );
+void     nact_iaction_tab_all_widgets_showed( NactIActionTab *instance );
+void     nact_iaction_tab_dispose( NactIActionTab *instance );
 
-void     nact_iaction_tab_set_action( NactWindow *dialog, const NAAction *action, GSList *selected_items );
-gboolean nact_iaction_tab_has_label( NactWindow *window );
+gboolean nact_iaction_tab_has_label( NactIActionTab *instance );
 
 G_END_DECLS
 

@@ -36,9 +36,10 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
-#include <common/na-action.h>
-#include <common/na-action-profile.h>
-#include <common/na-gconf.h>
+#include <common/na-object-api.h>
+#include <common/na-obj-action.h>
+#include <common/na-obj-profile.h>
+#include <common/na-gconf-provider.h>
 #include <common/na-iio-provider.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
@@ -85,8 +86,8 @@ static GOptionEntry output_entries[] = {
 };
 
 static GOptionContext *init_options( void );
-static NAAction       *get_action_from_cmdline( void );
-static gboolean        write_to_gconf( NAAction *action, gchar **msg );
+static NAObjectAction *get_action_from_cmdline( void );
+static gboolean        write_to_gconf( NAObjectAction *action, gchar **msg );
 static void            exit_with_usage( void );
 
 int
@@ -95,7 +96,7 @@ main( int argc, char** argv )
 	int status = EXIT_SUCCESS;
 	GOptionContext *context;
 	GError *error = NULL;
-	NAAction *action;
+	NAObjectAction *action;
 	gchar *msg = NULL;
 	gchar *help;
 
@@ -136,7 +137,7 @@ main( int argc, char** argv )
 		}
 
 	} else {
-		gchar * output_fname = na_xml_writer_export( action, output_dir, FORMAT_GCONFENTRY, &msg );
+		gchar *output_fname = na_xml_writer_export( action, output_dir, FORMAT_GCONFENTRY, &msg );
 		if( output_fname ){
 			/* i18n: Action <action_label> written to <output_filename>...*/
 			g_print( _( "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n" ), label, output_fname );
@@ -203,56 +204,61 @@ init_options( void )
 /*
  * allocate a new action, and fill it with values readen from command-line
  */
-static NAAction *
+static NAObjectAction *
 get_action_from_cmdline( void )
 {
-	NAAction *action = na_action_new_with_profile();
-	NAActionProfile *profile = NA_ACTION_PROFILE( na_action_get_profiles( action )->data );
+	NAObjectAction *action = na_object_action_new_with_profile();
+	GSList *profiles;
+	NAObjectProfile *profile;
 	int i = 0;
 	GSList *basenames = NULL;
 	GSList *mimetypes = NULL;
 	GSList *schemes = NULL;
 
-	na_action_set_label( action, label );
-	na_action_set_tooltip( action, tooltip );
-	na_action_set_icon( action, icon );
-	na_action_set_enabled( action, enabled );
+	profiles = na_object_get_items( action );
+	profile = NA_OBJECT_PROFILE( profiles->data );
+	na_object_free_items( profiles );
 
-	na_action_profile_set_path( profile, command );
-	na_action_profile_set_parameters( profile, parameters );
+	na_object_set_label( action, label );
+	na_object_set_tooltip( action, tooltip );
+	na_object_set_icon( action, icon );
+	na_object_set_enabled( NA_OBJECT_ITEM( action ), enabled );
+
+	na_object_profile_set_path( profile, command );
+	na_object_profile_set_parameters( profile, parameters );
 
 	while( basenames_array != NULL && basenames_array[i] != NULL ){
 		basenames = g_slist_append( basenames, g_strdup( basenames_array[i] ));
 		i++;
 	}
-	na_action_profile_set_basenames( profile, basenames );
+	na_object_profile_set_basenames( profile, basenames );
 	g_slist_foreach( basenames, ( GFunc ) g_free, NULL );
 	g_slist_free( basenames );
 
-	na_action_profile_set_matchcase( profile, matchcase );
+	na_object_profile_set_matchcase( profile, matchcase );
 
 	i = 0;
 	while( mimetypes_array != NULL && mimetypes_array[i] != NULL ){
 		mimetypes = g_slist_append( mimetypes, g_strdup( mimetypes_array[i] ));
 		i++;
 	}
-	na_action_profile_set_mimetypes( profile, mimetypes );
+	na_object_profile_set_mimetypes( profile, mimetypes );
 	g_slist_foreach( mimetypes, ( GFunc ) g_free, NULL );
 	g_slist_free( mimetypes );
 
 	if( !isfile && !isdir ){
 		isfile = TRUE;
 	}
-	na_action_profile_set_isfile( profile, isfile );
-	na_action_profile_set_isdir( profile, isdir );
-	na_action_profile_set_multiple( profile, accept_multiple );
+	na_object_profile_set_isfile( profile, isfile );
+	na_object_profile_set_isdir( profile, isdir );
+	na_object_profile_set_multiple( profile, accept_multiple );
 
 	i = 0;
 	while( schemes_array != NULL && schemes_array[i] != NULL ){
 		schemes = g_slist_append( schemes, g_strdup( schemes_array[i] ));
 		i++;
 	}
-	na_action_profile_set_schemes( profile, schemes );
+	na_object_profile_set_schemes( profile, schemes );
 	g_slist_foreach( schemes, ( GFunc ) g_free, NULL );
 	g_slist_free( schemes );
 
@@ -264,16 +270,16 @@ get_action_from_cmdline( void )
  * then writes the action
  */
 static gboolean
-write_to_gconf( NAAction *action, gchar **msg )
+write_to_gconf( NAObjectAction *action, gchar **msg )
 {
-	NAGConf *gconf;
+	NAGConfProvider *gconf;
 	guint ret;
 
-	gconf = na_gconf_new( NULL );
+	gconf = na_gconf_provider_new( NULL );
 
-	na_action_set_provider( action, NA_IIO_PROVIDER( gconf ));
+	na_object_set_provider( action, NA_IIO_PROVIDER( gconf ));
 
-	ret = na_iio_provider_write_action( NULL, action, msg );
+	ret = na_iio_provider_write_item( NULL, NA_OBJECT( action ), msg );
 
 	return( ret == NA_IIO_PROVIDER_WRITE_OK );
 }

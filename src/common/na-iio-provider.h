@@ -44,8 +44,6 @@
  * startup time (e.g. on the model of provider interfaces in Nautilus).
  */
 
-#include <glib-object.h>
-
 #include "na-pivot.h"
 
 G_BEGIN_DECLS
@@ -64,14 +62,15 @@ typedef struct {
 	NAIIOProviderInterfacePrivate *private;
 
 	/**
-	 * read_actions:
+	 * read_tree:
 	 * @instance: the #NAIIOProvider provider.
 	 *
-	 * Reads actions from the specified I/O provider.
+	 * Reads the while items tree from the specified I/O provider.
 	 *
-	 * Returns: a #GSList of #NAAction actions.
+	 * Returns: a hierarchical #GSList of menus, actions and
+	 * profiles as #NAObject-derived objects.
 	 */
-	GSList * ( *read_actions )       ( const NAIIOProvider *instance );
+	GSList * ( *read_items_list )    ( const NAIIOProvider *instance );
 
 	/**
 	 * is_willing_to_write:
@@ -84,56 +83,56 @@ typedef struct {
 	 *
 	 * Note that the I/O provider may return a positive writability
 	 * flag when considering the whole I/O storage subsystem, while not
-	 * being able to update/write/delete a particular #NAAction.
+	 * being able to update/write/delete a particular item.
 	 */
 	gboolean ( *is_willing_to_write )( const NAIIOProvider *instance );
 
 	/**
 	 * is_writable:
 	 * @instance: the #NAIIOProvider provider.
-	 * @action: a #NAAction action.
+	 * @item: a #NAObject action or menu.
 	 *
-	 * Checks for writability of this particular #NAAction.
+	 * Checks for writability of this particular @item.
 	 *
 	 * Returns: %TRUE if we are able to update/write/delete the
-	 * #NAAction, %FALSE else.
+	 * @item, %FALSE else.
 	 */
-	gboolean ( *is_writable )        ( const NAIIOProvider *instance, const NAAction *action );
+	gboolean ( *is_writable )        ( const NAIIOProvider *instance, const NAObject *item );
 
 	/**
-	 * write_action:
+	 * write_tree_item:
 	 * @instance: the #NAIIOProvider provider.
-	 * @action: a #NAAction action.
+	 * @item: a #NAObject to be written.
 	 * @message: warning/error messages detected in the operation.
 	 *
-	 * Updates an existing #NAAction or write a new #NAAction.
+	 * Updates an existing @item or writes a new one.
 	 *
 	 * Returns: %NA_IIO_PROVIDER_WRITE_OK if the update/write operation
 	 * was successfull, or another code depending of the detected error.
 	 */
-	guint    ( *write_action )       ( const NAIIOProvider *instance, NAAction *action, gchar **message );
+	guint    ( *write_item )         ( const NAIIOProvider *instance, NAObject *item, gchar **message );
 
 	/**
-	 * delete_action:
+	 * delete_tree_item:
 	 * @instance: the #NAIIOProvider provider.
-	 * @action: a #NAAction action.
+	 * @item: a #NAObject to be deleted.
 	 * @message: warning/error messages detected in the operation.
 	 *
-	 * Deletes an existing #NAAction from the I/O subsystem.
+	 * Deletes an existing @item from the I/O subsystem.
 	 *
 	 * Returns: %NA_IIO_PROVIDER_WRITE_OK if the delete operation was
 	 * successfull, or another code depending of the detected error.
 	 */
-	guint    ( *delete_action )      ( const NAIIOProvider *instance, const NAAction *action, gchar **message );
+	guint    ( *delete_item )        ( const NAIIOProvider *instance, const NAObject *item, gchar **message );
 }
 	NAIIOProviderInterface;
 
 GType   na_iio_provider_get_type( void );
 
-GSList *na_iio_provider_read_actions( const NAPivot *pivot );
-GSList *na_iio_provider_sort_actions( const NAPivot *pivot, GSList *actions );
-guint   na_iio_provider_write_action( const NAPivot *pivot, NAAction *action, gchar **message );
-guint   na_iio_provider_delete_action( const NAPivot *pivot, const NAAction *action, gchar **message );
+GSList *na_iio_provider_get_items_tree( const NAPivot *pivot );
+/*GSList *na_iio_provider_sort_tree( const NAPivot *pivot, GSList *tree );*/
+guint   na_iio_provider_write_item( const NAPivot *pivot, NAObject *item, gchar **message );
+guint   na_iio_provider_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message );
 
 /* modification notification message to NAPivot
  */
@@ -148,7 +147,8 @@ enum {
 	NA_IIO_PROVIDER_NOT_WRITABLE,
 	NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE,
 	NA_IIO_PROVIDER_WRITE_ERROR,
-	NA_IIO_PROVIDER_NO_PROVIDER
+	NA_IIO_PROVIDER_NO_PROVIDER,
+	NA_IIO_PROVIDER_PROGRAM_ERROR
 };
 
 G_END_DECLS

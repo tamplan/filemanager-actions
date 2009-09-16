@@ -38,7 +38,7 @@
  * conditions for the action.
  */
 
-#include "nact-window.h"
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -54,22 +54,17 @@ typedef struct NactIAdvancedTabInterfacePrivate NactIAdvancedTabInterfacePrivate
 typedef struct {
 	GTypeInterface                    parent;
 	NactIAdvancedTabInterfacePrivate *private;
-
-	/* api */
-	NAActionProfile * ( *get_edited_profile )( NactWindow *window );
-	void              ( *field_modified )    ( NactWindow *window );
 }
 	NactIAdvancedTabInterface;
 
 GType   nact_iadvanced_tab_get_type( void );
 
-void    nact_iadvanced_tab_initial_load( NactWindow *dialog );
-void    nact_iadvanced_tab_runtime_init( NactWindow *dialog );
-void    nact_iadvanced_tab_all_widgets_showed( NactWindow *dialog );
-void    nact_iadvanced_tab_dispose( NactWindow *dialog );
+void    nact_iadvanced_tab_initial_load_toplevel( NactIAdvancedTab *instance );
+void    nact_iadvanced_tab_runtime_init_toplevel( NactIAdvancedTab *instance );
+void    nact_iadvanced_tab_all_widgets_showed( NactIAdvancedTab *instance );
+void    nact_iadvanced_tab_dispose( NactIAdvancedTab *instance );
 
-void    nact_iadvanced_tab_set_profile( NactWindow *window, NAActionProfile *profile );
-GSList *nact_iadvanced_tab_get_schemes( NactWindow *window );
+GSList *nact_iadvanced_tab_get_schemes( NactIAdvancedTab *instance );
 
 G_END_DECLS
 

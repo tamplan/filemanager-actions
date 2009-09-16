@@ -38,7 +38,6 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
-#include <common/na-gconf-keys.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
 
@@ -159,8 +158,8 @@ write_to_gconf( gchar **msg )
 {
 	GConfClient *gconf = gconf_client_get_default();
 
-	gchar *prefix_config = g_strdup_printf( "%s%s", NA_GCONF_SCHEMA_PREFIX, NA_GCONF_CONFIG_PATH );
-	gchar *prefix_prefs = g_strdup_printf( "%s%s/%s", NA_GCONF_SCHEMA_PREFIX, NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR, NA_GCONF_SCHEMA_PREFERENCES );
+	gchar *prefix_config = g_strdup_printf( "%s%s", NAUTILUS_ACTIONS_GCONF_SCHEMASDIR, NA_GCONF_CONFIG_PATH );
+	gchar *prefix_prefs = g_strdup_printf( "%s%s/%s", NAUTILUS_ACTIONS_GCONF_SCHEMASDIR, NAUTILUS_ACTIONS_GCONF_BASEDIR, NA_GCONF_PREFERENCES );
 
 	gboolean ret =
 		write_schema( gconf, prefix_config, GCONF_VALUE_STRING, ACTION_VERSION_ENTRY, ACTION_VERSION_DESC_SHORT, ACTION_VERSION_DESC_LONG, NAUTILUS_ACTIONS_CONFIG_VERSION, msg ) &&

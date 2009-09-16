@@ -36,6 +36,7 @@
 #include <gtk/gtk.h>
 
 #include <common/na-about.h>
+#include <common/na-ipivot-consumer.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"
@@ -56,10 +57,10 @@ struct NactApplicationPrivate {
 /* private instance properties
  */
 enum {
-	PROP_PIVOT = 1
+	NACT_APPLICATION_PROP_PIVOT_ID = 1
 };
 
-#define PROP_PIVOT_STR					"nact-application-pivot"
+#define NACT_APPLICATION_PROP_PIVOT		"nact-application-pivot"
 
 static BaseApplicationClass *st_parent_class = NULL;
 
@@ -135,23 +136,22 @@ class_init( NactApplicationClass *klass )
 	object_class->set_property = instance_set_property;
 
 	spec = g_param_spec_pointer(
-			PROP_PIVOT_STR,
-			PROP_PIVOT_STR,
+			NACT_APPLICATION_PROP_PIVOT,
+			NACT_APPLICATION_PROP_PIVOT,
 			"NAPivot object pointer",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_PIVOT, spec );
+	g_object_class_install_property( object_class, NACT_APPLICATION_PROP_PIVOT_ID, spec );
 
 	klass->private = g_new0( NactApplicationClassPrivate, 1 );
 
 	appli_class = BASE_APPLICATION_CLASS( klass );
-
-	appli_class->application_initialize_unique_app = appli_initialize_unique_app;
-	appli_class->application_initialize_application = appli_initialize_application;
-	appli_class->application_get_application_name = appli_get_application_name;
-	appli_class->application_get_icon_name = appli_get_icon_name;
-	appli_class->application_get_unique_app_name = appli_get_unique_app_name;
-	appli_class->application_get_ui_filename = appli_get_gtkbuilder_filename;
-	appli_class->application_get_main_window = appli_get_main_window;
+	appli_class->initialize_unique_app = appli_initialize_unique_app;
+	appli_class->initialize_application = appli_initialize_application;
+	appli_class->get_application_name = appli_get_application_name;
+	appli_class->get_icon_name = appli_get_icon_name;
+	appli_class->get_unique_app_name = appli_get_unique_app_name;
+	appli_class->get_ui_filename = appli_get_gtkbuilder_filename;
+	appli_class->get_main_window = appli_get_main_window;
 }
 
 static void
@@ -179,7 +179,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	self = NACT_APPLICATION( object );
 
 	switch( property_id ){
-		case PROP_PIVOT:
+		case NACT_APPLICATION_PROP_PIVOT_ID:
 			g_value_set_pointer( value, self->private->pivot );
 			break;
 
@@ -198,7 +198,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	self = NACT_APPLICATION( object );
 
 	switch( property_id ){
-		case PROP_PIVOT:
+		case NACT_APPLICATION_PROP_PIVOT_ID:
 			self->private->pivot = g_value_get_pointer( value );
 			break;
 
@@ -220,14 +220,16 @@ instance_dispose( GObject *application )
 
 	if( !self->private->dispose_has_run ){
 
-		self->private->dispose_has_run = TRUE;
-
 		if( self->private->pivot ){
 			g_object_unref( self->private->pivot );
 		}
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( application );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( application );
+		}
+
+		self->private->dispose_has_run = TRUE;
 	}
 }
 
@@ -262,8 +264,8 @@ nact_application_new_with_args( int argc, char **argv )
 	return(
 			g_object_new(
 					NACT_APPLICATION_TYPE,
-					PROP_APPLICATION_ARGC, argc,
-					PROP_APPLICATION_ARGV, argv,
+					BASE_APPLICATION_PROP_ARGC, argc,
+					BASE_APPLICATION_PROP_ARGV, argv,
 					NULL )
 	);
 }
@@ -293,7 +295,7 @@ appli_initialize_unique_app( BaseApplication *application )
 	gchar *msg1, *msg2;
 
 	/* call parent class */
-	ok = st_parent_class->application_initialize_unique_app( application );
+	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_unique_app( application );
 
 	if( !ok ){
 		msg1 = g_strdup( _( "Another instance of Nautilus Actions Configuration Tool is already running." ));
@@ -301,8 +303,8 @@ appli_initialize_unique_app( BaseApplication *application )
 		msg2 = g_strdup( _( "Please switch back to it." ));
 
 		g_object_set( G_OBJECT( application ),
-				PROP_APPLICATION_EXIT_MESSAGE1, msg1,
-				PROP_APPLICATION_EXIT_MESSAGE2, msg2,
+				BASE_APPLICATION_PROP_EXIT_MESSAGE1, msg1,
+				BASE_APPLICATION_PROP_EXIT_MESSAGE2, msg2,
 				NULL );
 
 		g_free( msg2 );
@@ -313,18 +315,27 @@ appli_initialize_unique_app( BaseApplication *application )
 }
 
 /*
- * overrided to complete the initialization of the application
- * note that pivot must be initialized _before_ the main window be created
+ * Overrided to complete the initialization of the application:
+ * - allocate the #NApivot here, so that it will be available when the
+ *   #NactMainWindow will require it
+ * - do not register #NactApplication as a NAIPivotConsumer as this is
+ *   essentially the NactMainwindow which will receive and deal with
+ *   NAPivot notification messages
+ *
+ * At last, let the base class do its work, i.e. creating the main window.
  */
 static gboolean
 appli_initialize_application( BaseApplication *application )
 {
+	static const gchar *thisfn = "nact_application_appli_initialize_application";
 	gboolean ok;
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	NACT_APPLICATION( application )->private->pivot = na_pivot_new( NULL );
 
 	/* call parent class */
-	ok = st_parent_class->application_initialize_application( application );
+	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_application( application );
 
 	return( ok );
 }
@@ -380,9 +391,9 @@ appli_get_main_window( BaseApplication *application )
 
 	window = BASE_WINDOW( nact_main_window_new( application ));
 
-	na_pivot_add_consumer(
-			NA_PIVOT( nact_application_get_pivot( NACT_APPLICATION( application ))),
-			G_OBJECT( window ));
+	na_pivot_register_consumer(
+			nact_application_get_pivot( NACT_APPLICATION( application )),
+			NA_IPIVOT_CONSUMER( window ));
 
 	return( G_OBJECT( window ));
 }

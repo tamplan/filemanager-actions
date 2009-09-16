@@ -42,6 +42,12 @@ nautilus_actions_config_tool_SOURCES = \
 	base-application.c									\
 	base-application.h									\
 	base-application-class.h							\
+	base-assistant.c									\
+	base-assistant.h									\
+	base-dialog.c										\
+	base-dialog.h										\
+	base-iprefs.c										\
+	base-iprefs.h										\
 	base-window.c										\
 	base-window.h										\
 	base-window-class.h									\
@@ -49,35 +55,32 @@ nautilus_actions_config_tool_SOURCES = \
 	egg-tree-multi-dnd.h								\
 	nact-application.c									\
 	nact-application.h									\
-	nact-assistant.c									\
-	nact-assistant.h									\
 	nact-assistant-export.c								\
 	nact-assistant-export.h								\
 	nact-assistant-import.c								\
 	nact-assistant-import.h								\
-	nact-iaction-tab.c									\
-	nact-iaction-tab.h									\
+	nact-clipboard.c									\
+	nact-clipboard.h									\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
+	nact-iaction-tab.c									\
+	nact-iaction-tab.h									\
 	nact-iadvanced-tab.c								\
 	nact-iadvanced-tab.h								\
 	nact-icommand-tab.c									\
 	nact-icommand-tab.h									\
 	nact-iconditions-tab.c								\
 	nact-iconditions-tab.h								\
-	nact-imenubar.c										\
-	nact-imenubar.h										\
-	nact-iprefs.c										\
-	nact-iprefs.h										\
 	nact-main.c											\
+	nact-main-menubar.c									\
+	nact-main-menubar.h									\
+	nact-main-statusbar.c								\
+	nact-main-statusbar.h								\
+	nact-main-tab.h										\
 	nact-main-window.c									\
 	nact-main-window.h									\
 	nact-preferences-editor.c							\
 	nact-preferences-editor.h							\
-	nact-selection.c									\
-	nact-selection.h									\
-	nact-statusbar.c									\
-	nact-statusbar.h									\
 	nact-tree-model.c									\
 	nact-tree-model.h									\
 	nact-window.c										\

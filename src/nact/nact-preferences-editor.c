@@ -36,8 +36,8 @@
 
 #include <common/na-iprefs.h>
 
+#include "base-iprefs.h"
 #include "nact-application.h"
-#include "nact-iprefs.h"
 #include "nact-preferences-editor.h"
 
 /* private class data
@@ -50,7 +50,7 @@ struct NactPreferencesEditorClassPrivate {
  */
 struct NactPreferencesEditorPrivate {
 	gboolean         dispose_has_run;
-	NactWindow      *parent;
+	BaseWindow      *parent;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -62,21 +62,21 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static NactPreferencesEditor *preferences_editor_new( BaseApplication *application );
+static NactPreferencesEditor *preferences_editor_new( NactApplication *application );
 
-static gchar   *do_get_iprefs_window_id( NactWindow *window );
-static gchar   *do_get_dialog_name( BaseWindow *dialog );
-static void     on_initial_load_dialog( BaseWindow *dialog );
-static void     on_runtime_init_dialog( BaseWindow *dialog );
-static void     on_all_widgets_showed( BaseWindow *dialog );
+static gchar   *base_get_iprefs_window_id( BaseWindow *window );
+static gchar   *base_get_dialog_name( BaseWindow *window );
+static void     on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data );
+static void     on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data );
 /*static void     setup_buttons( NactPreferencesEditor *dialog, gboolean is_modified );
 static void     on_modified_field( NactWindow *dialog );*/
-static void     on_sort_alpha_toggled( GtkToggleButton *button, NactWindow *window );
-static void     on_add_about_toggled( GtkToggleButton *button, NactWindow *window );
-static void     on_cancel_clicked( GtkButton *button, NactWindow *window );
-static void     on_ok_clicked( GtkButton *button, NactWindow *window );
+static void     on_sort_alpha_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void     on_add_about_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void     on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
+static void     on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     save_preferences( NactPreferencesEditor *editor );
-static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+
+static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 GType
 nact_preferences_editor_get_type( void )
@@ -116,7 +116,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NACT_WINDOW_TYPE, "NactPreferencesEditor", &info, 0 );
+	type = g_type_register_static( BASE_DIALOG_TYPE, "NactPreferencesEditor", &info, 0 );
 
 	g_type_add_interface_static( type, NA_IPREFS_TYPE, &prefs_iface_info );
 
@@ -129,7 +129,6 @@ class_init( NactPreferencesEditorClass *klass )
 	static const gchar *thisfn = "nact_preferences_editor_class_init";
 	GObjectClass *object_class;
 	BaseWindowClass *base_class;
-	NactWindowClass *nact_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -142,14 +141,9 @@ class_init( NactPreferencesEditorClass *klass )
 	klass->private = g_new0( NactPreferencesEditorClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->initial_load_toplevel = on_initial_load_dialog;
-	base_class->runtime_init_toplevel = on_runtime_init_dialog;
-	base_class->all_widgets_showed = on_all_widgets_showed;
-	base_class->dialog_response = on_dialog_response;
-	base_class->get_toplevel_name = do_get_dialog_name;
-
-	nact_class = NACT_WINDOW_CLASS( klass );
-	nact_class->get_iprefs_window_id = do_get_iprefs_window_id;
+	base_class->dialog_response = base_dialog_response;
+	base_class->get_toplevel_name = base_get_dialog_name;
+	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
 }
 
 static void
@@ -172,6 +166,18 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NACT_PREFERENCES_EDITOR( instance );
 
 	self->private = g_new0( NactPreferencesEditorPrivate, 1 );
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_WINDOW_SIGNAL_INITIAL_LOAD,
+			G_CALLBACK( on_base_initial_load_dialog ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_WINDOW_SIGNAL_RUNTIME_INIT,
+			G_CALLBACK( on_base_runtime_init_dialog ));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -222,28 +228,29 @@ instance_finalize( GObject *dialog )
  * toplevel window of the application).
  */
 static NactPreferencesEditor *
-preferences_editor_new( BaseApplication *application )
+preferences_editor_new( NactApplication *application )
 {
-	return( g_object_new( NACT_PREFERENCES_EDITOR_TYPE, PROP_WINDOW_APPLICATION_STR, application, NULL ));
+	return( g_object_new( NACT_PREFERENCES_EDITOR_TYPE, BASE_WINDOW_PROP_APPLICATION, application, NULL ));
 }
 
 /**
- * Initializes and runs the dialog.
+ * nact_preferences_editor_run:
+ * @parent: the BaseWindow parent of this dialog
+ * (usually the NactMainWindow).
  *
- * @parent: the NactWindow parent of this dialog.
- * Usually the NactMainWindow.
+ * Initializes and runs the dialog.
  */
 void
-nact_preferences_editor_run( NactWindow *parent )
+nact_preferences_editor_run( BaseWindow *parent )
 {
 	static const gchar *thisfn = "nact_preferences_editor_run";
-	BaseApplication *application;
+	NactApplication *application;
 	NactPreferencesEditor *editor;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
-	g_assert( NACT_IS_WINDOW( parent ));
+	g_assert( BASE_IS_WINDOW( parent ));
 
-	application = BASE_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
+	application = NACT_APPLICATION( base_window_get_application( parent ));
 	g_assert( NACT_IS_APPLICATION( application ));
 
 	editor = preferences_editor_new( application );
@@ -253,84 +260,71 @@ nact_preferences_editor_run( NactWindow *parent )
 }
 
 static gchar *
-do_get_iprefs_window_id( NactWindow *window )
+base_get_iprefs_window_id( BaseWindow *window )
 {
 	return( g_strdup( "preferences-editor" ));
 }
 
 static gchar *
-do_get_dialog_name( BaseWindow *dialog )
+base_get_dialog_name( BaseWindow *window )
 {
 	return( g_strdup( "PreferencesDialog" ));
 }
 
 static void
-on_initial_load_dialog( BaseWindow *dialog )
+on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_initial_load_dialog";
-	NactPreferencesEditor *editor;
-	GtkWindow *toplevel;
-	GtkWindow *parent_toplevel;
+	/*GtkWindow *toplevel;
+	GtkWindow *parent_toplevel;*/
 
-	/* call parent class at the very beginning */
-	if( BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel ){
-		BASE_WINDOW_CLASS( st_parent_class )->initial_load_toplevel( dialog );
-	}
+	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
-	g_assert( NACT_IS_PREFERENCES_EDITOR( dialog ));
-	editor = NACT_PREFERENCES_EDITOR( dialog );
-
-	toplevel = base_window_get_toplevel_dialog( dialog );
+	/*toplevel = base_window_get_toplevel_window( dialog );
 	parent_toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( editor->private->parent ));
-	gtk_window_set_transient_for( toplevel, parent_toplevel );
+	gtk_window_set_transient_for( toplevel, parent_toplevel );*/
 }
 
 static void
-on_runtime_init_dialog( BaseWindow *dialog )
+on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_runtime_init_dialog";
-	NactPreferencesEditor *editor;
 	gboolean sort_alpha, add_about_item;
 	GtkWidget *button;
 
-	/* call parent class at the very beginning */
-	if( BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel ){
-		BASE_WINDOW_CLASS( st_parent_class )->runtime_init_toplevel( dialog );
-	}
+	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
-	g_assert( NACT_IS_PREFERENCES_EDITOR( dialog ));
-	editor = NACT_PREFERENCES_EDITOR( dialog );
-
-	sort_alpha = na_iprefs_get_alphabetical_order( NA_IPREFS( editor ));
-	button = base_window_get_widget( dialog, "SortAlphabeticalButton" );
+	sort_alpha = na_iprefs_is_alphabetical_order( NA_IPREFS( editor ));
+	button = base_window_get_widget( BASE_WINDOW( editor ), "SortAlphabeticalButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), sort_alpha );
-	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "SortAlphabeticalButton", "toggled", G_CALLBACK( on_sort_alpha_toggled ));
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( editor ),
+			"SortAlphabeticalButton",
+			"toggled",
+			G_CALLBACK( on_sort_alpha_toggled ));
 
-	add_about_item = na_iprefs_get_add_about_item( NA_IPREFS( editor ));
-	button = base_window_get_widget( dialog, "AddAboutButton" );
+	add_about_item = na_iprefs_should_add_about_item( NA_IPREFS( editor ));
+	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), add_about_item );
-	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "AddAboutButton", "toggled", G_CALLBACK( on_add_about_toggled ));
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( editor ),
+			"AddAboutButton",
+			"toggled",
+			G_CALLBACK( on_add_about_toggled ));
 
-	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
-	nact_window_signal_connect_by_name( NACT_WINDOW( editor ), "OKButton", "clicked", G_CALLBACK( on_ok_clicked ));
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( editor ),
+			"CancelButton",
+			"clicked",
+			G_CALLBACK( on_cancel_clicked ));
+
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( editor ),
+			"OKButton",
+			"clicked",
+			G_CALLBACK( on_ok_clicked ));
 
 	/*setup_buttons( editor, FALSE );*/
-}
-
-static void
-on_all_widgets_showed( BaseWindow *dialog )
-{
-	static const gchar *thisfn = "nact_preferences_editor_on_all_widgets_showed";
-
-	/* call parent class at the very beginning */
-	if( BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed ){
-		BASE_WINDOW_CLASS( st_parent_class )->all_widgets_showed( dialog );
-	}
-
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
-	g_assert( NACT_IS_PREFERENCES_EDITOR( dialog ));
 }
 
 /*
@@ -376,30 +370,28 @@ on_modified_field( NactWindow *window )
 }*/
 
 static void
-on_sort_alpha_toggled( GtkToggleButton *button, NactWindow *window )
+on_sort_alpha_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 {
-	g_assert( NACT_IS_PREFERENCES_EDITOR( window ));
-	/*NactPreferencesEditor *editor = NACT_PREFERENCES_EDITOR( window );*/
 }
 
 static void
-on_add_about_toggled( GtkToggleButton *button, NactWindow *window )
+on_add_about_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 {
-	g_assert( NACT_IS_PREFERENCES_EDITOR( window ));
-	/*NactPreferencesEditor *editor = NACT_PREFERENCES_EDITOR( window );*/
 }
 
 static void
-on_cancel_clicked( GtkButton *button, NactWindow *window )
+on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
+	GtkWindow *toplevel = base_window_get_toplevel_window( BASE_WINDOW( editor ));
+
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static void
-on_ok_clicked( GtkButton *button, NactWindow *window )
+on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( window ));
+	GtkWindow *toplevel = base_window_get_toplevel_window( BASE_WINDOW( editor ));
+
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 
@@ -411,15 +403,15 @@ save_preferences( NactPreferencesEditor *editor )
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "SortAlphabeticalButton" );
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	na_iprefs_set_bool( NA_IPREFS( editor ), PREFS_DISPLAY_ALPHABETICAL_ORDER, enabled );
+	na_iprefs_set_alphabetical_order( NA_IPREFS( editor ), enabled );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	na_iprefs_set_bool( NA_IPREFS( editor ), PREFS_ADD_ABOUT_ITEM, enabled );
+	na_iprefs_set_add_about_item( NA_IPREFS( editor ), enabled );
 }
 
 static gboolean
-on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
+base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_dialog_response";
 	NactPreferencesEditor *editor;

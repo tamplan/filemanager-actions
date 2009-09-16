@@ -35,7 +35,7 @@
  * NactAssistantImport class definition.
  */
 
-#include "nact-assistant.h"
+#include "base-assistant.h"
 
 G_BEGIN_DECLS
 
@@ -49,7 +49,7 @@ G_BEGIN_DECLS
 typedef struct NactAssistantImportPrivate NactAssistantImportPrivate;
 
 typedef struct {
-	NactAssistant               parent;
+	BaseAssistant               parent;
 	NactAssistantImportPrivate *private;
 }
 	NactAssistantImport;
@@ -57,14 +57,14 @@ typedef struct {
 typedef struct NactAssistantImportClassPrivate NactAssistantImportClassPrivate;
 
 typedef struct {
-	NactAssistantClass               parent;
+	BaseAssistantClass               parent;
 	NactAssistantImportClassPrivate *private;
 }
 	NactAssistantImportClass;
 
 GType   nact_assistant_import_get_type( void );
 
-GSList *nact_assistant_import_run( NactWindow *main );
+GSList *nact_assistant_import_run( BaseWindow *main );
 
 G_END_DECLS
 

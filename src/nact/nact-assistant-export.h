@@ -60,7 +60,7 @@
  * with v1.10 and previous series, and via gconftool-2 --install-schema-file.
  */
 
-#include "nact-assistant.h"
+#include "base-assistant.h"
 
 G_BEGIN_DECLS
 
@@ -74,7 +74,7 @@ G_BEGIN_DECLS
 typedef struct NactAssistantExportPrivate NactAssistantExportPrivate;
 
 typedef struct {
-	NactAssistant               parent;
+	BaseAssistant               parent;
 	NactAssistantExportPrivate *private;
 }
 	NactAssistantExport;
@@ -82,14 +82,14 @@ typedef struct {
 typedef struct NactAssistantExportClassPrivate NactAssistantExportClassPrivate;
 
 typedef struct {
-	NactAssistantClass               parent;
+	BaseAssistantClass               parent;
 	NactAssistantExportClassPrivate *private;
 }
 	NactAssistantExportClass;
 
 GType nact_assistant_export_get_type( void );
 
-void  nact_assistant_export_run( NactWindow *main );
+void  nact_assistant_export_run( BaseWindow *main );
 
 G_END_DECLS
 

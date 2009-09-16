@@ -1,1 +1,4 @@
 test-parse-uris
+test-virtuals
+test-virtuals-without-test
+test-iface

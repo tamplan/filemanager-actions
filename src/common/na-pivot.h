@@ -74,9 +74,8 @@
  *    subsystem.
  */
 
-#include <glib-object.h>
-
-#include "na-action-class.h"
+#include "na-object-class.h"
+#include "na-ipivot-consumer.h"
 
 G_BEGIN_DECLS
 
@@ -105,24 +104,25 @@ typedef struct {
 
 GType     na_pivot_get_type( void );
 
-NAPivot  *na_pivot_new( const GObject *notified );
+NAPivot  *na_pivot_new( const NAIPivotConsumer *notified );
 void      na_pivot_dump( const NAPivot *pivot );
 
 GSList   *na_pivot_get_providers( const NAPivot *pivot, GType type );
 void      na_pivot_free_providers( GSList *providers );
 
-GSList   *na_pivot_get_actions( const NAPivot *pivot );
-void      na_pivot_reload_actions( NAPivot *pivot );
-GSList   *na_pivot_get_duplicate_actions( const NAPivot *pivot );
-void      na_pivot_free_actions( GSList *actions );
-void      na_pivot_add_action( NAPivot *pivot, const NAAction *action );
-void      na_pivot_remove_action( NAPivot *pivot, NAAction *action );
+GSList   *na_pivot_get_items_tree( const NAPivot *pivot );
+/*GSList   *na_pivot_get_duplicate_items_tree( const NAPivot *pivot );*/
+void      na_pivot_reload_items_tree( NAPivot *pivot );
+GSList   *na_pivot_free_items_tree( GSList *tree );
 
-NAAction *na_pivot_get_action( const NAPivot *pivot, const gchar *uuid );
-guint     na_pivot_write_action( const NAPivot *pivot, NAAction *action, gchar **message );
-guint     na_pivot_delete_action( const NAPivot *pivot, const NAAction *action, gchar **message );
+void      na_pivot_add_item( NAPivot *pivot, const NAObject *item );
+void      na_pivot_remove_item( NAPivot *pivot, NAObject *item );
+NAObject *na_pivot_get_item( const NAPivot *pivot, const gchar *uuid );
 
-void      na_pivot_add_consumer( NAPivot *pivot, const GObject *consumer );
+guint     na_pivot_write_item( const NAPivot *pivot, NAObject *item, gchar **message );
+guint     na_pivot_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message );
+
+void      na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
 
 gboolean  na_pivot_get_automatic_reload( const NAPivot *pivot );
 void      na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );

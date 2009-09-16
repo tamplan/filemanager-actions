@@ -27,7 +27,10 @@
 #   ... and many others (see AUTHORS)
 
 noinst_PROGRAMS = \
+	test-iface										\
 	test-parse-uris									\
+	test-virtuals									\
+	test-virtuals-without-test						\
 	$(NULL)
 
 AM_CPPFLAGS += \
@@ -35,6 +38,20 @@ AM_CPPFLAGS += \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(NAUTILUS_ACTIONS_CFLAGS)						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"			\
+	$(NULL)
+
+test_iface_SOURCES = \
+	test-iface.c									\
+	test-iface-iface.c								\
+	test-iface-iface.h								\
+	test-iface-base.c								\
+	test-iface-base.h								\
+	test-iface-derived.c							\
+	test-iface-derived.h							\
+	$(NULL)
+
+test_iface_LDADD = \
+	$(NAUTILUS_ACTIONS_LIBS)						\
 	$(NULL)
 
 test_parse_uris_SOURCES = \
@@ -45,3 +62,22 @@ test_parse_uris_LDADD = \
 	$(top_builddir)/src/common/libnact.la			\
 	$(NAUTILUS_ACTIONS_LIBS)						\
 	$(NULL)
+
+test_virtuals_SOURCES = \
+	test-virtuals.c									\
+	$(NULL)
+
+test_virtuals_LDADD = \
+	$(top_builddir)/src/common/libnact.la			\
+	$(NAUTILUS_ACTIONS_LIBS)						\
+	$(NULL)
+
+test_virtuals_without_test_SOURCES = \
+	test-virtuals-without-test.c					\
+	$(NULL)
+
+test_virtuals_Lwithout_test_DADD = \
+	$(top_builddir)/src/common/libnact.la			\
+	$(NAUTILUS_ACTIONS_LIBS)						\
+	$(NULL)
+	

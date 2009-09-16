@@ -35,8 +35,10 @@
 #include <gio/gio.h>
 #include <libxml/tree.h>
 
-#include "na-action-profile.h"
-#include "na-gconf-keys.h"
+#include "na-object-api.h"
+#include "na-obj-action.h"
+#include "na-obj-profile.h"
+#include "na-gconf-provider-keys.h"
 #include "na-utils.h"
 #include "na-xml-names.h"
 #include "na-xml-writer.h"
@@ -73,7 +75,7 @@ static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
 static NAXMLWriter *xml_writer_new( const gchar *uuid );
-static xmlDocPtr    create_xml_schema( NAXMLWriter *writer, gint format, const NAAction *action );
+static xmlDocPtr    create_xml_schema( NAXMLWriter *writer, gint format, const NAObjectAction *action );
 static void         create_schema_entry(
 								NAXMLWriter *writer,
 								gint format,
@@ -86,7 +88,7 @@ static void         create_schema_entry(
 								gboolean is_l10n_value,
 								const gchar *short_desc,
 								const gchar *long_desc );
-static xmlDocPtr    create_xml_dump( NAXMLWriter *writer, gint format, const NAAction *action );
+static xmlDocPtr    create_xml_dump( NAXMLWriter *writer, gint format, const NAObjectAction *action );
 static void         create_dump_entry(
 								NAXMLWriter *writer,
 								gint format,
@@ -269,7 +271,9 @@ xml_writer_new( const gchar *uuid )
 
 /**
  * na_xml_writer_export:
- * @action: the #NAAction to be exported.
+ * @action: the #NAObjectAction to be exported.
+ * Can be NULL when exporting schemas ; in this case, format must be
+ * FORMAT_GCONFSCHEMA.
  * @folder: the directoy where to write the output XML file.
  * If NULL, the output will be directed to stdout.
  * @format: the export format.
@@ -280,11 +284,12 @@ xml_writer_new( const gchar *uuid )
  * Returns: the written filename, or NULL if written to stdout.
  */
 gchar *
-na_xml_writer_export( const NAAction *action, const gchar *folder, gint format, gchar **msg )
+na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint format, gchar **msg )
 {
 	gchar *filename = NULL;
-	gboolean free_filename = FALSE;
 	gchar *xml_buffer;
+
+	g_assert( action || format == FORMAT_GCONFSCHEMA );
 
 	switch( format ){
 		case FORMAT_GCONFSCHEMAFILE_V1:
@@ -298,9 +303,6 @@ na_xml_writer_export( const NAAction *action, const gchar *folder, gint format, 
 		case FORMAT_GCONFENTRY:
 			if( folder ){
 				filename = na_xml_writer_get_output_fname( action, folder, format );
-			} else {
-				filename = g_strdup( "-" );
-				free_filename = TRUE;
 			}
 			break;
 
@@ -311,32 +313,28 @@ na_xml_writer_export( const NAAction *action, const gchar *folder, gint format, 
 		case FORMAT_GCONFSCHEMA:
 			if( folder ){
 				filename = g_strdup( folder );
-			} else {
-				filename = g_strdup( "-" );
-				free_filename = TRUE;
 			}
 			break;
 	}
 
-	g_assert( filename );
+	g_assert( filename || folder == NULL );
 
 	xml_buffer = na_xml_writer_get_xml_buffer( action, format );
 
-	na_xml_writer_output_xml( xml_buffer, filename );
+	if( folder ){
+		na_xml_writer_output_xml( xml_buffer, filename );
+	} else {
+		g_print( "%s", xml_buffer );
+	}
 
 	g_free( xml_buffer );
-
-	if( free_filename ){
-		g_free( filename );
-		filename = NULL;
-	}
 
 	return( filename );
 }
 
 /**
  * na_xml_writer_get_output_fname:
- * @action: the #NAAction to be exported.
+ * @action: the #NAObjectAction to be exported.
  * @folder: the uri of the directoy where to write the output XML file.
  * @format: the export format.
  *
@@ -352,7 +350,7 @@ na_xml_writer_export( const NAAction *action, const gchar *folder, gint format, 
  * between our test of inexistance and the actual write.
  */
 gchar *
-na_xml_writer_get_output_fname( const NAAction *action, const gchar *folder, gint format )
+na_xml_writer_get_output_fname( const NAObjectAction *action, const gchar *folder, gint format )
 {
 	gchar *uuid;
 	gchar *canonical_fname = NULL;
@@ -364,7 +362,7 @@ na_xml_writer_get_output_fname( const NAAction *action, const gchar *folder, gin
 	g_return_val_if_fail( folder, NULL );
 	g_return_val_if_fail( strlen( folder ), NULL );
 
-	uuid = na_action_get_uuid( action );
+	uuid = na_object_get_id( action );
 
 	switch( format ){
 		case FORMAT_GCONFSCHEMAFILE_V1:
@@ -410,7 +408,7 @@ na_xml_writer_get_output_fname( const NAAction *action, const gchar *folder, gin
 
 /**
  * na_xml_writer_get_xml_buffer:
- * @action: the #NAAction to be exported.
+ * @action: the #NAObjectAction to be exported.
  * @format: the export format.
  *
  * Returns: a buffer which contains the XML output.
@@ -418,7 +416,7 @@ na_xml_writer_get_output_fname( const NAAction *action, const gchar *folder, gin
  * The returned string should be g_free() by the caller.
  */
 gchar *
-na_xml_writer_get_xml_buffer( const NAAction *action, gint format )
+na_xml_writer_get_xml_buffer( const NAObjectAction *action, gint format )
 {
 	gchar *uuid;
 	NAXMLWriter *writer;
@@ -427,9 +425,9 @@ na_xml_writer_get_xml_buffer( const NAAction *action, gint format )
 	int textlen;
 	gchar *buffer;
 
-	g_return_val_if_fail( action, NULL );
+	g_assert( action || format == FORMAT_GCONFSCHEMA );
 
-	uuid = na_action_get_uuid( action );
+	uuid = action ? na_object_get_id( action ) : NULL;
 	writer = xml_writer_new( uuid );
 	g_free( uuid );
 
@@ -463,7 +461,7 @@ na_xml_writer_get_xml_buffer( const NAAction *action, gint format )
 
 /**
  * na_xml_writer_output_xml:
- * @action: the #NAAction to be exported.
+ * @action: the #NAObjectAction to be exported.
  * @filename: the uri of the output filename
  *
  * Exports an action to the given filename.
@@ -512,14 +510,14 @@ na_xml_writer_output_xml( const gchar *xml, const gchar *filename )
 }
 
 static xmlDocPtr
-create_xml_schema( NAXMLWriter *writer, gint format, const NAAction *action )
+create_xml_schema( NAXMLWriter *writer, gint format, const NAObjectAction *action )
 {
 	xmlDocPtr doc;
 	xmlNodePtr root_node, list_node;
 	gchar *version, *label, *tooltip, *icon, *text;
 	gboolean enabled;
 	GSList *profiles, *ip;
-	NAActionProfile *profile;
+	NAObjectProfile *profile;
 	gchar *profile_dir, *profile_label, *path, *parameters;
 	GSList *basenames, *mimetypes, *schemes;
 	gboolean match, isfile, isdir, multiple;
@@ -530,93 +528,93 @@ create_xml_schema( NAXMLWriter *writer, gint format, const NAAction *action )
 	list_node = xmlNewChild( root_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_LIST ), NULL );
 
 	/* version */
-	version = na_action_get_version( action );
+	version = na_object_action_get_version( action );
 	create_schema_entry( writer, format, NULL, ACTION_VERSION_ENTRY, version, doc, list_node, "string", FALSE, ACTION_VERSION_DESC_SHORT, ACTION_VERSION_DESC_LONG );
 	g_free( version );
 
 	/* label */
-	label = na_action_get_label( action );
-	create_schema_entry( writer, format, NULL, ACTION_LABEL_ENTRY, label, doc, list_node, "string", TRUE, ACTION_LABEL_DESC_SHORT, ACTION_LABEL_DESC_LONG );
+	label = na_object_get_label( action );
+	create_schema_entry( writer, format, NULL, OBJECT_ITEM_LABEL_ENTRY, label, doc, list_node, "string", TRUE, ACTION_LABEL_DESC_SHORT, ACTION_LABEL_DESC_LONG );
 	g_free( label );
 
 	/* tooltip */
-	tooltip = na_action_get_tooltip( action );
-	create_schema_entry( writer, format, NULL, ACTION_TOOLTIP_ENTRY, tooltip, doc, list_node, "string", TRUE, ACTION_TOOLTIP_DESC_SHORT, ACTION_TOOLTIP_DESC_LONG );
+	tooltip = na_object_get_tooltip( action );
+	create_schema_entry( writer, format, NULL, OBJECT_ITEM_TOOLTIP_ENTRY, tooltip, doc, list_node, "string", TRUE, ACTION_TOOLTIP_DESC_SHORT, ACTION_TOOLTIP_DESC_LONG );
 	g_free( tooltip );
 
 	/* icon name */
-	icon = na_action_get_icon( action );
-	create_schema_entry( writer, format, NULL, ACTION_ICON_ENTRY, icon, doc, list_node, "string", FALSE, ACTION_ICON_DESC_SHORT, ACTION_ICON_DESC_LONG );
+	icon = na_object_get_icon( action );
+	create_schema_entry( writer, format, NULL, OBJECT_ITEM_ICON_ENTRY, icon, doc, list_node, "string", FALSE, ACTION_ICON_DESC_SHORT, ACTION_ICON_DESC_LONG );
 	g_free( icon );
 
 	/* enabled */
-	enabled = na_action_is_enabled( action );
+	enabled = na_object_is_enabled( NA_OBJECT_ITEM( action ));
 	text = na_utils_boolean_to_schema( enabled );
-	create_schema_entry( writer, format, NULL, ACTION_ENABLED_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_ENABLED_DESC_SHORT, ACTION_ENABLED_DESC_LONG );
+	create_schema_entry( writer, format, NULL, OBJECT_ITEM_ENABLED_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_ENABLED_DESC_SHORT, ACTION_ENABLED_DESC_LONG );
 	g_free( text );
 
-	profiles = na_action_get_profiles( action );
+	profiles = na_object_get_items( action );
 
 	for( ip = profiles ; ip ; ip = ip->next ){
 
-		profile = NA_ACTION_PROFILE( ip->data );
-		profile_dir = na_action_profile_get_name( profile );
+		profile = NA_OBJECT_PROFILE( ip->data );
+		profile_dir = na_object_get_id( profile );
 
 		/* profile label */
-		profile_label = na_action_profile_get_label( profile );
+		profile_label = na_object_get_label( profile );
 		create_schema_entry( writer, format, profile_dir, ACTION_PROFILE_LABEL_ENTRY, profile_label, doc, list_node, "string", TRUE, ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG );
 		g_free( profile_label );
 
 		/* path */
-		path = na_action_profile_get_path( profile );
+		path = na_object_profile_get_path( profile );
 		create_schema_entry( writer, format, profile_dir, ACTION_PATH_ENTRY, path, doc, list_node, "string", FALSE, ACTION_PATH_DESC_SHORT, ACTION_PATH_DESC_LONG );
 		g_free( path );
 
 		/* parameters */
-		parameters = na_action_profile_get_parameters( profile );
+		parameters = na_object_profile_get_parameters( profile );
 		create_schema_entry( writer, format, profile_dir, ACTION_PARAMETERS_ENTRY, parameters, doc, list_node, "string", FALSE, ACTION_PARAMETERS_DESC_SHORT, ACTION_PARAMETERS_DESC_LONG );
 		g_free( parameters );
 
 		/* basenames */
-		basenames = na_action_profile_get_basenames( profile );
+		basenames = na_object_profile_get_basenames( profile );
 		text = na_utils_gslist_to_schema( basenames );
 		create_schema_entry( writer, format, profile_dir, ACTION_BASENAMES_ENTRY, text, doc, list_node, "list", FALSE, ACTION_BASENAMES_DESC_SHORT, ACTION_BASENAMES_DESC_LONG );
 		g_free( text );
 		na_utils_free_string_list( basenames );
 
 		/* match_case */
-		match = na_action_profile_get_matchcase( profile );
+		match = na_object_profile_get_matchcase( profile );
 		text = na_utils_boolean_to_schema( match );
 		create_schema_entry( writer, format, profile_dir, ACTION_MATCHCASE_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_MATCHCASE_DESC_SHORT, ACTION_MATCHCASE_DESC_LONG );
 		g_free( text );
 
 		/* mimetypes */
-		mimetypes = na_action_profile_get_mimetypes( profile );
+		mimetypes = na_object_profile_get_mimetypes( profile );
 		text = na_utils_gslist_to_schema( mimetypes );
 		create_schema_entry( writer, format, profile_dir, ACTION_MIMETYPES_ENTRY, text, doc, list_node, "list", FALSE, ACTION_MIMETYPES_DESC_SHORT, ACTION_MIMETYPES_DESC_LONG );
 		g_free( text );
 		na_utils_free_string_list( mimetypes );
 
 		/* is_file */
-		isfile = na_action_profile_get_is_file( profile );
+		isfile = na_object_profile_get_is_file( profile );
 		text = na_utils_boolean_to_schema( isfile );
 		create_schema_entry( writer, format, profile_dir, ACTION_ISFILE_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_ISFILE_DESC_SHORT, ACTION_ISFILE_DESC_LONG );
 		g_free( text );
 
 		/* is_dir */
-		isdir = na_action_profile_get_is_dir( profile );
+		isdir = na_object_profile_get_is_dir( profile );
 		text = na_utils_boolean_to_schema( isdir );
 		create_schema_entry( writer, format, profile_dir, ACTION_ISDIR_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_ISDIR_DESC_SHORT, ACTION_ISDIR_DESC_LONG );
 		g_free( text );
 
 		/* accept-multiple-files */
-		multiple = na_action_profile_get_multiple( profile );
+		multiple = na_object_profile_get_multiple( profile );
 		text = na_utils_boolean_to_schema( multiple );
 		create_schema_entry( writer, format, profile_dir, ACTION_MULTIPLE_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_MULTIPLE_DESC_SHORT, ACTION_MULTIPLE_DESC_LONG );
 		g_free( text );
 
 		/* schemes */
-		schemes = na_action_profile_get_schemes( profile );
+		schemes = na_object_profile_get_schemes( profile );
 		text = na_utils_gslist_to_schema( schemes );
 		create_schema_entry( writer, format, profile_dir, ACTION_SCHEMES_ENTRY, text, doc, list_node, "list", FALSE, ACTION_SCHEMES_DESC_SHORT, ACTION_SCHEMES_DESC_LONG );
 		g_free( text );
@@ -624,6 +622,8 @@ create_xml_schema( NAXMLWriter *writer, gint format, const NAAction *action )
 
 		g_free( profile_dir );
 	}
+
+	na_object_free_items( profiles );
 
 	return( doc );
 }
@@ -648,7 +648,7 @@ create_schema_entry( NAXMLWriter *writer,
 
 	schema_node = xmlNewChild( list_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_ENTRY ), NULL );
 
-	content = BAD_CAST( g_build_path( "/", NA_GCONF_SCHEMA_PREFIX, path, NULL ));
+	content = BAD_CAST( g_build_path( "/", NAUTILUS_ACTIONS_GCONF_SCHEMASDIR, path, NULL ));
 	xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_KEY ), content );
 	xmlFree( content );
 
@@ -690,7 +690,7 @@ create_schema_entry( NAXMLWriter *writer,
 }
 
 static xmlDocPtr
-create_xml_dump( NAXMLWriter *writer, gint format, const NAAction *action )
+create_xml_dump( NAXMLWriter *writer, gint format, const NAObjectAction *action )
 {
 	xmlDocPtr doc;
 	xmlNodePtr root_node, list_node;
@@ -698,7 +698,7 @@ create_xml_dump( NAXMLWriter *writer, gint format, const NAAction *action )
 	gchar *version, *label, *tooltip, *icon, *text;
 	gboolean enabled;
 	GSList *profiles, *ip;
-	NAActionProfile *profile;
+	NAObjectProfile *profile;
 	gchar *profile_dir;
 	gchar *profile_label, *parameters;
 	GSList *basenames, *mimetypes, *schemes;
@@ -714,93 +714,93 @@ create_xml_dump( NAXMLWriter *writer, gint format, const NAAction *action )
 	g_free( path );
 
 	/* version */
-	version = na_action_get_version( action );
+	version = na_object_action_get_version( action );
 	create_dump_entry( writer, format, NULL, ACTION_VERSION_ENTRY, version, doc, list_node, "string" );
 	g_free( version );
 
 	/* label */
-	label = na_action_get_label( action );
-	create_dump_entry( writer, format, NULL, ACTION_LABEL_ENTRY, label, doc, list_node, "string" );
+	label = na_object_get_label( action );
+	create_dump_entry( writer, format, NULL, OBJECT_ITEM_LABEL_ENTRY, label, doc, list_node, "string" );
 	g_free( label );
 
 	/* tooltip */
-	tooltip = na_action_get_tooltip( action );
-	create_dump_entry( writer, format, NULL, ACTION_TOOLTIP_ENTRY, tooltip, doc, list_node, "string" );
+	tooltip = na_object_get_tooltip( action );
+	create_dump_entry( writer, format, NULL, OBJECT_ITEM_TOOLTIP_ENTRY, tooltip, doc, list_node, "string" );
 	g_free( tooltip );
 
 	/* icon name */
-	icon = na_action_get_icon( action );
-	create_dump_entry( writer, format, NULL, ACTION_ICON_ENTRY, icon, doc, list_node, "string" );
+	icon = na_object_get_icon( action );
+	create_dump_entry( writer, format, NULL, OBJECT_ITEM_ICON_ENTRY, icon, doc, list_node, "string" );
 	g_free( icon );
 
 	/* enabled */
-	enabled = na_action_is_enabled( action );
+	enabled = na_object_is_enabled( NA_OBJECT_ITEM( action ));
 	text = na_utils_boolean_to_schema( enabled );
-	create_dump_entry( writer, format, NULL, ACTION_ENABLED_ENTRY, text, doc, list_node, "bool" );
+	create_dump_entry( writer, format, NULL, OBJECT_ITEM_ENABLED_ENTRY, text, doc, list_node, "bool" );
 	g_free( text );
 
-	profiles = na_action_get_profiles( action );
+	profiles = na_object_get_items( action );
 
 	for( ip = profiles ; ip ; ip = ip->next ){
 
-		profile = NA_ACTION_PROFILE( ip->data );
-		profile_dir = na_action_profile_get_name( profile );
+		profile = NA_OBJECT_PROFILE( ip->data );
+		profile_dir = na_object_get_id( profile );
 
 		/* profile label */
-		profile_label = na_action_profile_get_label( profile );
+		profile_label = na_object_get_label( profile );
 		create_dump_entry( writer, format, profile_dir, ACTION_PROFILE_LABEL_ENTRY, profile_label, doc, list_node, "string" );
 		g_free( profile_label );
 
 		/* path */
-		path = na_action_profile_get_path( profile );
+		path = na_object_profile_get_path( profile );
 		create_dump_entry( writer, format, profile_dir, ACTION_PATH_ENTRY, path, doc, list_node, "string" );
 		g_free( path );
 
 		/* parameters */
-		parameters = na_action_profile_get_parameters( profile );
+		parameters = na_object_profile_get_parameters( profile );
 		create_dump_entry( writer, format, profile_dir, ACTION_PARAMETERS_ENTRY, parameters, doc, list_node, "string" );
 		g_free( parameters );
 
 		/* basenames */
-		basenames = na_action_profile_get_basenames( profile );
+		basenames = na_object_profile_get_basenames( profile );
 		text = na_utils_gslist_to_schema( basenames );
 		create_dump_entry( writer, format, profile_dir, ACTION_BASENAMES_ENTRY, text, doc, list_node, "list" );
 		g_free( text );
 		na_utils_free_string_list( basenames );
 
 		/* match_case */
-		match = na_action_profile_get_matchcase( profile );
+		match = na_object_profile_get_matchcase( profile );
 		text = na_utils_boolean_to_schema( match );
 		create_dump_entry( writer, format, profile_dir, ACTION_MATCHCASE_ENTRY, text, doc, list_node, "bool" );
 		g_free( text );
 
 		/* mimetypes */
-		mimetypes = na_action_profile_get_mimetypes( profile );
+		mimetypes = na_object_profile_get_mimetypes( profile );
 		text = na_utils_gslist_to_schema( mimetypes );
 		create_dump_entry( writer, format, profile_dir, ACTION_MIMETYPES_ENTRY, text, doc, list_node, "list" );
 		g_free( text );
 		na_utils_free_string_list( mimetypes );
 
 		/* is_file */
-		isfile = na_action_profile_get_is_file( profile );
+		isfile = na_object_profile_get_is_file( profile );
 		text = na_utils_boolean_to_schema( isfile );
 		create_dump_entry( writer, format, profile_dir, ACTION_ISFILE_ENTRY, text, doc, list_node, "bool" );
 		g_free( text );
 
 		/* is_dir */
-		isdir = na_action_profile_get_is_dir( profile );
+		isdir = na_object_profile_get_is_dir( profile );
 		text = na_utils_boolean_to_schema( isdir );
 		create_dump_entry( writer, format, profile_dir, ACTION_ISDIR_ENTRY, text, doc, list_node, "bool" );
 		g_free( text );
 
 		/* accept-multiple-files */
-		multiple = na_action_profile_get_multiple( profile );
+		multiple = na_object_profile_get_multiple( profile );
 		text = na_utils_boolean_to_schema( multiple );
 		create_dump_entry( writer, format, profile_dir, ACTION_MULTIPLE_ENTRY, text, doc, list_node, "bool" );
 		g_free( text );
 
 		/* schemes */
-		schemes = na_action_profile_get_schemes( profile );
+		schemes = na_object_profile_get_schemes( profile );
 		text = na_utils_gslist_to_schema( schemes );
 		create_dump_entry( writer, format, profile_dir, ACTION_SCHEMES_ENTRY, text, doc, list_node, "list" );
 		g_free( text );
@@ -808,6 +808,8 @@ create_xml_dump( NAXMLWriter *writer, gint format, const NAAction *action )
 
 		g_free( profile_dir );
 	}
+
+	na_object_free_items( profiles );
 
 	return( doc );
 }
@@ -866,11 +868,11 @@ create_gconf_schema( NAXMLWriter *writer )
 	list_node = xmlNewChild( root_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_LIST ), NULL );
 
 	create_gconf_schema_entry( writer, ACTION_VERSION_ENTRY       , doc, list_node, "string", ACTION_VERSION_DESC_SHORT     , ACTION_VERSION_DESC_LONG     , NAUTILUS_ACTIONS_CONFIG_VERSION, FALSE );
-	create_gconf_schema_entry( writer, ACTION_LABEL_ENTRY         , doc, list_node, "string", ACTION_LABEL_DESC_SHORT       , ACTION_LABEL_DESC_LONG       , "", TRUE );
-	create_gconf_schema_entry( writer, ACTION_TOOLTIP_ENTRY       , doc, list_node, "string", ACTION_TOOLTIP_DESC_SHORT     , ACTION_TOOLTIP_DESC_LONG     , "", TRUE );
-	create_gconf_schema_entry( writer, ACTION_ICON_ENTRY          , doc, list_node, "string", ACTION_ICON_DESC_SHORT        , ACTION_ICON_DESC_LONG        , "", FALSE );
-	create_gconf_schema_entry( writer, ACTION_ENABLED_ENTRY       , doc, list_node, "bool"  , ACTION_ENABLED_DESC_SHORT     , ACTION_ENABLED_DESC_LONG     , "true", FALSE );
-	create_gconf_schema_entry( writer, ACTION_PROFILE_LABEL_ENTRY , doc, list_node, "string", ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, NA_ACTION_PROFILE_DEFAULT_LABEL, TRUE );
+	create_gconf_schema_entry( writer, OBJECT_ITEM_LABEL_ENTRY    , doc, list_node, "string", ACTION_LABEL_DESC_SHORT       , ACTION_LABEL_DESC_LONG       , "", TRUE );
+	create_gconf_schema_entry( writer, OBJECT_ITEM_TOOLTIP_ENTRY  , doc, list_node, "string", ACTION_TOOLTIP_DESC_SHORT     , ACTION_TOOLTIP_DESC_LONG     , "", TRUE );
+	create_gconf_schema_entry( writer, OBJECT_ITEM_ICON_ENTRY     , doc, list_node, "string", ACTION_ICON_DESC_SHORT        , ACTION_ICON_DESC_LONG        , "", FALSE );
+	create_gconf_schema_entry( writer, OBJECT_ITEM_ENABLED_ENTRY  , doc, list_node, "bool"  , ACTION_ENABLED_DESC_SHORT     , ACTION_ENABLED_DESC_LONG     , "true", FALSE );
+	create_gconf_schema_entry( writer, ACTION_PROFILE_LABEL_ENTRY , doc, list_node, "string", ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, NA_OBJECT_PROFILE_DEFAULT_LABEL, TRUE );
 	create_gconf_schema_entry( writer, ACTION_PATH_ENTRY          , doc, list_node, "string", ACTION_PATH_DESC_SHORT        , ACTION_PATH_DESC_LONG        , "", FALSE );
 	create_gconf_schema_entry( writer, ACTION_PARAMETERS_ENTRY    , doc, list_node, "string", ACTION_PARAMETERS_DESC_SHORT  , ACTION_PARAMETERS_DESC_LONG  , "", FALSE );
 	create_gconf_schema_entry( writer, ACTION_BASENAMES_ENTRY     , doc, list_node, "list"  , ACTION_BASENAMES_DESC_SHORT   , ACTION_BASENAMES_DESC_LONG   , "[*]", FALSE );
@@ -897,7 +899,7 @@ create_gconf_schema_entry( NAXMLWriter *writer,
 
 	schema_node = xmlNewChild( list_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_ENTRY ), NULL );
 
-	content = BAD_CAST( g_build_path( "/", NA_GCONF_SCHEMA_PREFIX, NA_GCONF_CONFIG_PATH, entry, NULL ));
+	content = BAD_CAST( g_build_path( "/", NAUTILUS_ACTIONS_GCONF_SCHEMASDIR, NA_GCONF_CONFIG_PATH, entry, NULL ));
 	xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_KEY ), content );
 	xmlFree( content );
 

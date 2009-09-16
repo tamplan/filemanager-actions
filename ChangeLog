@@ -1,3 +1,52 @@
+2009-09-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac:
+	Remove NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR (not a configuration
+	variable).
+
+	* src/common/na-action.c: Renamed as na-obj-action.c.
+	* src/common/na-action.h: Renamed as na-obj-action.h.
+	* src/common/na-action-class.h:	Renamed as na-obj-action-class.h.
+	Takes part of renaming NAAction class to NAObjectAction.
+
+	* src/common/na-action-profile.c: Renamed as na-obj-profile.c.
+	* src/common/na-action-profile.h: Renamed as na-obj-profile.h.
+	* src/common/na-action-profile-class.h:
+	Renamed as na-obj-profile-class.h.
+	Takes part of renaming NAActionProfile class to NAObjectProfile.
+
+	* src/common/na-action-menu.c: Renamed as na-obj-menu.c.
+	* src/common/na-action-menu.h: Renamed as na-obj-menu.h.
+	Takes part of renaming NAActionMenu class to NAObjectMenu.
+
+	* src/common/na-gconf.c: Renamed as na-gconf-provider.c.
+	* src/common/na-gconf.h: Renamed as na-gconf-provider.h.
+	Takes part of NAGConf class to NAGConfProvider.
+	This let us clearly identify the rule of the class, distinguishing
+	it from GConf as a preferences repository.
+
+	* src/common/na-gconf-key.h: Splitted in na-gconf-keys-base.h,
+	na-gconf-keys-schemas.h and na-gconf-provider-keys.h files.
+
+	* src/common/na-gconf-monitor.c: New file.
+	* src/common/na-gconf-monitor.h: New file.
+	New class NAGConfMonitor.
+
+	* src/common/na-gconf-utils.c: New file.
+	* src/common/na-gconf-utils.h: New file.
+	Handle some GConf general utilities.
+
+	* src/common/na-object.h: Splitted in na-object-fn.h,
+	na-object-class.h and na-object-api.h.
+	All NAObject-derived public functions are now declared in
+	na-object-api.h.
+
+	* src/common/na-object-id.h: Splitted in na-object-id-fn.h and
+	na-object-id-class.h.
+
+	* src/common/na-object-item.h: Splitted in na-object-item-fn.h
+	and na-object-item-class.h.
+
 2009-08-30 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/nautilus-actions.schemas.in:

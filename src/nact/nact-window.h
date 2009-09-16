@@ -38,9 +38,9 @@
  * It is a common base class for all Nautilus Actions window documents.
  */
 
-#include <common/na-action.h>
-#include <common/na-action-menu.h>
-#include <common/na-action-profile.h>
+#include <common/na-obj-action.h>
+#include <common/na-obj-menu.h>
+#include <common/na-obj-profile.h>
 #include <common/na-pivot.h>
 
 #include "base-window.h"
@@ -68,9 +68,13 @@ typedef struct {
 	BaseWindowClass         parent;
 	NactWindowClassPrivate *private;
 
-	/* api */
-	gchar *  ( *get_iprefs_window_id )( NactWindow *window );
-	void     ( *set_current_action )  ( NactWindow *window, const NAAction *action );
+	/**
+	 * edition_field_modified
+	 *
+	 * virtual handler for "nact-signal-edition-field-modified" signal
+	 * default implementation does nothing
+	 */
+	void    ( *edition_field_modified )( NactWindow *window, gpointer user_data );
 }
 	NactWindowClass;
 
@@ -79,13 +83,12 @@ GType    nact_window_get_type( void );
 NAPivot *nact_window_get_pivot( NactWindow *window );
 
 /*void     nact_window_set_current_action( NactWindow *window, const NAAction *action );*/
-gboolean nact_window_save_action( NactWindow *window, NAAction *action );
-gboolean nact_window_delete_action( NactWindow *window, NAAction *action );
+gboolean nact_window_save_object_item( NactWindow *window, NAObjectItem *item );
+gboolean nact_window_delete_object_item( NactWindow *window, NAObjectItem *item );
+
+void     nact_window_write_level_zero( NactWindow *window, GSList *items );
 
 gboolean nact_window_warn_count_modified( NactWindow *window, gint count );
-
-void     nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn );
-void     nact_window_signal_connect_by_name( NactWindow *window, const gchar *name, const gchar *signal, GCallback fn );
 
 G_END_DECLS
 

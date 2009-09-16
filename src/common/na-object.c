@@ -34,7 +34,8 @@
 
 #include <string.h>
 
-#include "na-object.h"
+#include "na-object-class.h"
+#include "na-object-fn.h"
 #include "na-iduplicable.h"
 
 /* private class data
@@ -46,15 +47,8 @@ struct NAObjectClassPrivate {
 /* private instance data
  */
 struct NAObjectPrivate {
-	gboolean  dispose_has_run;
-	gchar    *id;
-	gchar    *label;
+	gboolean dispose_has_run;
 };
-
-/* instance properties
- */
-#define PROP_NAOBJECT_ID_STR			"na-object-id"
-#define PROP_NAOBJECT_LABEL_STR			"na-object-label"
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -63,26 +57,34 @@ static void           class_init( NAObjectClass *klass );
 static void           iduplicable_iface_init( NAIDuplicableInterface *iface );
 static void           instance_init( GTypeInstance *instance, gpointer klass );
 static void           instance_constructed( GObject *object );
-static void           instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void           instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void           instance_dispose( GObject *object );
 static void           instance_finalize( GObject *object );
 
-static NAIDuplicable *iduplicable_new( const NAIDuplicable *object );
-static void           iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
-static gboolean       iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
-static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
+static void           dump_hierarchy( const NAObject *object );
+static void           do_dump( const NAObject *object );
 
-static NAObject      *v_new( const NAObject *object );
-static void           v_copy( NAObject *target, const NAObject *source );
-static gchar         *v_get_clipboard_id( const NAObject *object );
-static gboolean       v_are_equal( const NAObject *a, const NAObject *b );
-static gboolean       v_is_valid( const NAObject *object );
+static gchar         *most_derived_clipboard_id( const NAObject *object );
+
+static void           ref_hierarchy( const NAObject *object );
+
+static NAIDuplicable *iduplicable_new( const NAIDuplicable *object );
+static NAObject      *most_derived_new( const NAObject *object );
+
+static void           iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
+static void           copy_hierarchy( NAObject *target, const NAObject *source );
+
+static gboolean       iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
+static gboolean       are_equal_hierarchy( const NAObject *a, const NAObject *b );
+static gboolean       do_are_equal( const NAObject *a, const NAObject *b );
+
+static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
+static gboolean       is_valid_hierarchy( const NAObject *object );
+static gboolean       do_is_valid( const NAObject *object );
 
 static void           do_copy( NAObject *target, const NAObject *source );
-static gboolean       do_are_equal( const NAObject *a, const NAObject *b );
-static gboolean       do_is_valid( const NAObject *object );
-static void           do_dump( const NAObject *object );
+
+static GSList        *get_hierarchy( const NAObject *object );
+static void           free_hierarchy( GSList *hierarchy );
 
 GType
 na_object_get_type( void )
@@ -134,7 +136,6 @@ class_init( NAObjectClass *klass )
 {
 	static const gchar *thisfn = "na_object_class_init";
 	GObjectClass *object_class;
-	GParamSpec *spec;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -144,30 +145,16 @@ class_init( NAObjectClass *klass )
 	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-	object_class->set_property = instance_set_property;
-	object_class->get_property = instance_get_property;
-
-	spec = g_param_spec_string(
-			PROP_NAOBJECT_ID_STR,
-			"NAObject identifiant",
-			"Internal identifiant of the NAObject object (ASCII, case insensitive)", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_NAOBJECT_ID, spec );
-
-	spec = g_param_spec_string(
-			PROP_NAOBJECT_LABEL_STR,
-			"NAObject libelle",
-			"Libelle of the NAObject object (UTF-8, localizable)", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_NAOBJECT_LABEL, spec );
 
 	klass->private = g_new0( NAObjectClassPrivate, 1 );
 
+	klass->dump = do_dump;
+	klass->get_clipboard_id = NULL;
+	klass->ref = NULL;
 	klass->new = NULL;
 	klass->copy = do_copy;
 	klass->are_equal = do_are_equal;
 	klass->is_valid = do_is_valid;
-	klass->dump = do_dump;
 }
 
 static void
@@ -177,8 +164,8 @@ iduplicable_iface_init( NAIDuplicableInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->copy = iduplicable_copy;
 	iface->new = iduplicable_new;
+	iface->copy = iduplicable_copy;
 	iface->are_equal = iduplicable_are_equal;
 	iface->is_valid = iduplicable_is_valid;
 }
@@ -186,11 +173,12 @@ iduplicable_iface_init( NAIDuplicableInterface *iface )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	/*static const gchar *thisfn = "na_object_instance_init";*/
+	static const gchar *thisfn = "na_object_instance_init";
 	NAObject *self;
 
-	/*g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );*/
-	g_assert( NA_IS_OBJECT( instance ));
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_CLASS_NAME( klass ), ( void * ) klass );
+	g_return_if_fail( NA_IS_OBJECT( instance ));
 	self = NA_OBJECT( instance );
 
 	self->private = g_new0( NAObjectPrivate, 1 );
@@ -201,6 +189,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *object )
 {
+	/*static const gchar *thisfn = "na_object_instance_constructed";*/
+
+	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
+	g_return_if_fail( NA_IS_OBJECT( object ));
+
 	na_iduplicable_init( NA_IDUPLICABLE( object ));
 
 	/* chain call to parent class */
@@ -210,59 +203,13 @@ instance_constructed( GObject *object )
 }
 
 static void
-instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
-{
-	NAObject *self;
-
-	g_assert( NA_IS_OBJECT( object ));
-	self = NA_OBJECT( object );
-
-	switch( property_id ){
-		case PROP_NAOBJECT_ID:
-			g_value_set_string( value, self->private->id );
-			break;
-
-		case PROP_NAOBJECT_LABEL:
-			g_value_set_string( value, self->private->label );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}
-
-static void
-instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
-{
-	NAObject *self;
-
-	g_assert( NA_IS_OBJECT( object ));
-	self = NA_OBJECT( object );
-
-	switch( property_id ){
-		case PROP_NAOBJECT_ID:
-			g_free( self->private->id );
-			self->private->id = g_value_dup_string( value );
-			break;
-
-		case PROP_NAOBJECT_LABEL:
-			g_free( self->private->label );
-			self->private->label = g_value_dup_string( value );
-			break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
-	}
-}
-
-static void
 instance_dispose( GObject *object )
 {
+	static const gchar *thisfn = "na_object_instance_dispose";
 	NAObject *self;
 
-	g_assert( NA_IS_OBJECT( object ));
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_return_if_fail( NA_IS_OBJECT( object ));
 	self = NA_OBJECT( object );
 
 	if( !self->private->dispose_has_run ){
@@ -281,11 +228,8 @@ instance_finalize( GObject *object )
 {
 	NAObject *self;
 
-	g_assert( NA_IS_OBJECT( object ));
-	self = ( NAObject * ) object;
-
-	g_free( self->private->id );
-	g_free( self->private->label );
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	self = NA_OBJECT( object );
 
 	g_free( self->private );
 
@@ -296,23 +240,125 @@ instance_finalize( GObject *object )
 }
 
 /**
- * na_object_dump:
- * @object: the #NAObject object to be dumped.
+ * na_object_object_dump:
+ * @object: the #NAObject-derived object to be dumped.
  *
- * Dumps via g_debug the content of the object.
+ * Dumps via g_debug the actual content of the object.
  */
 void
-na_object_dump( const NAObject *object )
+na_object_object_dump( const NAObject *object )
 {
-	if( object ){
-		g_assert( NA_IS_OBJECT( object ));
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( !object->private->dispose_has_run );
 
-		NA_OBJECT_GET_CLASS( object )->dump( object );
+	dump_hierarchy( object );
+}
+
+static void
+dump_hierarchy( const NAObject *object )
+{
+	GSList *hierarchy, *ih;
+
+	hierarchy = get_hierarchy( object );
+
+	for( ih = hierarchy ; ih ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->dump ){
+			NA_OBJECT_CLASS( ih->data )->dump( object );
+		}
 	}
+
+	free_hierarchy( hierarchy );
+}
+
+static void
+do_dump( const NAObject *object )
+{
+	static const char *thisfn = "na_object_do_dump";
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+
+	na_iduplicable_dump( NA_IDUPLICABLE( object ));
 }
 
 /**
- * na_object_duplicate:
+ * na_object_object_get_clipboard_id:
+ * @object: the #NAObject-derived object for which we will get a id.
+ *
+ * Returns: a newly allocated string which contains an id for the
+ * #NAobject. This id is suitable for the internal clipboard.
+ *
+ * The returned string should be g_free() by the caller.
+ */
+gchar *
+na_object_object_get_clipboard_id( const NAObject *object )
+{
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
+
+	return( most_derived_clipboard_id( object ));
+}
+
+static gchar *
+most_derived_clipboard_id( const NAObject *object )
+{
+	gchar *clipboard_id;
+	GSList *hierarchy, *ih;
+	gboolean found;
+
+	found = FALSE;
+	clipboard_id = NULL;
+	hierarchy = g_slist_reverse( get_hierarchy( object ));
+
+	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->get_clipboard_id ){
+			clipboard_id = NA_OBJECT_CLASS( ih->data )->get_clipboard_id( object );
+			found = TRUE;
+		}
+	}
+
+	free_hierarchy( hierarchy );
+
+	return( clipboard_id );
+}
+
+/**
+ * TODO: get ride of this
+ * na_object_object_ref:
+ * @object: the #NAObject-derived object to be reffed.
+ *
+ * Returns: a ref on the #NAobject.
+ *
+ * If the object has childs, then it should also have reffed them.
+ */
+NAObject *
+na_object_object_ref( const NAObject *object )
+{
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
+
+	ref_hierarchy( object );
+
+	return( g_object_ref(( gpointer ) object ));
+}
+
+static void
+ref_hierarchy( const NAObject *object )
+{
+	GSList *hierarchy, *ih;
+
+	hierarchy = get_hierarchy( object );
+
+	for( ih = hierarchy ; ih ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->ref ){
+			NA_OBJECT_CLASS( ih->data )->ref( object );
+		}
+	}
+
+	free_hierarchy( hierarchy );
+}
+
+/**
+ * na_object_iduplicable_duplicate:
  * @object: the #NAObject object to be dumped.
  *
  * Exactly duplicates a #NAObject-derived object.
@@ -322,8 +368,8 @@ na_object_dump( const NAObject *object )
  *     na_object_duplicate( origin )
  *      +- na_iduplicable_duplicate( origin )
  *      |   +- dup = duplicate( origin )
- *      |   |   +- dup = v_get_new_object()	-> interface get_new_object
- *      |   |   +- v_copy( dup, origin )	-> interface copy
+ *      |   |   +- dup = v_new( object ) -> interface new()
+ *      |   |   +- v_copy( dup, origin ) -> interface copy()
  *      |   |
  *      |   +- set_origin( dup, origin )
  *      |   +- set_modified( dup, FALSE )
@@ -332,77 +378,112 @@ na_object_dump( const NAObject *object )
  *      +- na_object_check_edited_status
  */
 NAObject *
-na_object_duplicate( const NAObject *object )
+na_object_iduplicable_duplicate( const NAObject *object )
 {
 	NAIDuplicable *duplicate;
 
-	g_assert( NA_IS_OBJECT( object ));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
+	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
 
 	duplicate = na_iduplicable_duplicate( NA_IDUPLICABLE( object ));
 
-	na_object_check_edited_status( NA_OBJECT( duplicate ));
+	/*g_debug( "na_object_iduplicable_duplicate: object is %s at %p, duplicate is %s at %p",
+			G_OBJECT_TYPE_NAME( object ), ( void * ) object,
+			duplicate ? G_OBJECT_TYPE_NAME( duplicate ) : "", ( void * ) duplicate );*/
+
+	/*if( duplicate ){
+		na_iduplicable_check_edition_status( duplicate );
+	}*/
 
 	return( NA_OBJECT( duplicate ));
 }
 
+static NAIDuplicable *
+iduplicable_new( const NAIDuplicable *object )
+{
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+	g_return_val_if_fail( !NA_OBJECT( object )->private->dispose_has_run, NULL );
+
+	return( NA_IDUPLICABLE( most_derived_new( NA_OBJECT( object ))));
+}
+
+static NAObject *
+most_derived_new( const NAObject *object )
+{
+	NAObject *new_object;
+	GSList *hierarchy, *ih;
+	gboolean found;
+
+	found = FALSE;
+	new_object = NULL;
+	hierarchy = g_slist_reverse( get_hierarchy( object ));
+
+	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->new ){
+			new_object = NA_OBJECT_CLASS( ih->data )->new( object );
+			found = TRUE;
+		}
+	}
+
+	free_hierarchy( hierarchy );
+
+	return( new_object );
+}
+
 /**
- * na_object_copy:
+ * na_object_object_copy:
  * @target: the #NAObject-derived object which will receive data.
  * @source: the #NAObject-derived object which will provide data.
  *
  * Copies data and properties from @source to @target.
  */
 void
-na_object_copy( NAObject *target, const NAObject *source )
+na_object_object_copy( NAObject *target, const NAObject *source )
 {
-	g_assert( NA_IS_OBJECT( target ));
-	g_assert( NA_IS_OBJECT( source ));
+	g_return_if_fail( NA_IS_OBJECT( target ));
+	g_return_if_fail( !target->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT( source ));
+	g_return_if_fail( !source->private->dispose_has_run );
 
-	v_copy( target, source );
+	copy_hierarchy( target, source );
+}
+
+static void
+iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
+{
+	g_return_if_fail( NA_IS_OBJECT( target ));
+	g_return_if_fail( !NA_OBJECT( target )->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT( source ));
+	g_return_if_fail( !NA_OBJECT( source )->private->dispose_has_run );
+
+	copy_hierarchy( NA_OBJECT( target ), NA_OBJECT( source ));
+}
+
+static void
+copy_hierarchy( NAObject *target, const NAObject *source )
+{
+	GSList *hierarchy, *ih;
+
+	hierarchy = get_hierarchy( source );
+
+	for( ih = hierarchy ; ih ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->copy ){
+			NA_OBJECT_CLASS( ih->data )->copy( target, source );
+		}
+	}
+
+	free_hierarchy( hierarchy );
+}
+
+static void
+do_copy( NAObject *target, const NAObject *source )
+{
+	/* nothing to do here */
 }
 
 /**
- * na_object_get_clipboard_id:
- * @object: the #NAObject-derived object for which we will get a id.
- *
- * Returns: a newly allocated string which contains an id for the
- * #NAobject. This id is suitable for the internal clipboard.
- *
- * The returned string should be g_free() by the caller.
- */
-gchar *
-na_object_get_clipboard_id( const NAObject *object )
-{
-	g_assert( NA_IS_OBJECT( object ));
-
-	return( v_get_clipboard_id( object ));
-}
-
-/**
- * na_object_check_edited_status:
- * @object: the #NAObject object to be checked.
- *
- * Checks for the edition status of @object.
- *
- * Internally set some properties which may be requested later. This
- * two-steps check-request let us optimize some work in the UI.
- *
- * na_object_check_edited_status( object )
- *  +- na_iduplicable_check_edited_status( object )
- *      +- get_origin( object )
- *      +- modified_status = v_are_equal( origin, object )	-> interface are_equal
- *      +- valid_status = v_is_valid( object )				-> interface is_valid
- */
-void
-na_object_check_edited_status( const NAObject *object )
-{
-	g_assert( NA_IS_OBJECT( object ));
-
-	na_iduplicable_check_edited_status( NA_IDUPLICABLE( object ));
-}
-
-/**
- * na_object_are_equal:
+ * na_object_iduplicable_are_equal:
  * @a: a first #NAObject object.
  * @b: a second #NAObject object to be compared to the first one.
  *
@@ -415,32 +496,118 @@ na_object_check_edited_status( const NAObject *object )
  * Returns: %TRUE if @a and @b are identical, %FALSE else.
  */
 gboolean
-na_object_are_equal( const NAObject *a, const NAObject *b )
+na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b )
 {
-	g_assert( NA_IS_OBJECT( a ));
-	g_assert( NA_IS_OBJECT( b ));
+	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
+	g_return_val_if_fail( !a->private->dispose_has_run, FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
+	g_return_val_if_fail( !b->private->dispose_has_run, FALSE );
 
-	return( v_are_equal( a, b ));
+	return( are_equal_hierarchy( a, b ));
+}
+
+static gboolean
+iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
+{
+	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
+	g_return_val_if_fail( !NA_OBJECT( a )->private->dispose_has_run, FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
+	g_return_val_if_fail( !NA_OBJECT( b )->private->dispose_has_run, FALSE );
+
+	return( are_equal_hierarchy( NA_OBJECT( a ), NA_OBJECT( b )));
+}
+
+static gboolean
+are_equal_hierarchy( const NAObject *a, const NAObject *b )
+{
+	gboolean are_equal;
+	GSList *hierarchy, *ih;
+
+	are_equal = TRUE;
+	hierarchy = get_hierarchy( b );
+
+	for( ih = hierarchy ; ih && are_equal ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->are_equal ){
+			are_equal = NA_OBJECT_CLASS( ih->data )->are_equal( a, b );
+		}
+	}
+
+	free_hierarchy( hierarchy );
+
+	return( are_equal );
+}
+
+static gboolean
+do_are_equal( const NAObject *a, const NAObject *b )
+{
+	/*g_debug( "na_object_do_are_equal: a=%s at %p, b=%s at %p",
+			G_OBJECT_TYPE_NAME( a ), ( void * ) a, G_OBJECT_TYPE_NAME( b ), ( void * ) b );*/
+
+	/* as there is no data in NAObject, they are considered here as
+	 * equal is both null or both not null
+	 */
+	return(( a && b ) || ( !a && !b ));
+}
+
+static gboolean
+iduplicable_is_valid( const NAIDuplicable *object )
+{
+	return( is_valid_hierarchy( NA_OBJECT( object )));
+}
+
+static gboolean
+is_valid_hierarchy( const NAObject *object )
+{
+	gboolean is_valid;
+	GSList *hierarchy, *ih;
+
+	is_valid = TRUE;
+	hierarchy = get_hierarchy( object );
+
+	for( ih = hierarchy ; ih && is_valid ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->is_valid ){
+			is_valid = NA_OBJECT_CLASS( ih->data )->is_valid( object );
+		}
+	}
+
+	free_hierarchy( hierarchy );
+
+	return( is_valid );
+}
+
+static gboolean
+do_is_valid( const NAObject *object )
+{
+	/* as there is no data in NAObject, it is always valid */
+	return( object ? TRUE : FALSE );
 }
 
 /**
- * na_object_get_is_valid:
- * @object: the #NAObject object whose validity is to be checked.
+ * na_object_iduplicable_check_edition_status:
+ * @object: the #NAObject object to be checked.
  *
- * Checks for the validity of @object.
+ * Checks for the edition status of @object.
  *
- * Returns: %TRUE is @object is valid, %FALSE else.
+ * Internally set some properties which may be requested later. This
+ * two-steps check-request let us optimize some work in the UI.
+ *
+ * na_object_check_edition_status( object )
+ *  +- na_iduplicable_check_edition_status( object )
+ *      +- get_origin( object )
+ *      +- modified_status = v_are_equal( origin, object ) -> interface are_equal()
+ *      +- valid_status = v_is_valid( object )             -> interface is_valid()
  */
-gboolean
-na_object_is_valid( const NAObject *object )
+void
+na_object_iduplicable_check_edition_status( const NAObject *object )
 {
-	g_assert( NA_IS_OBJECT( object ));
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( !object->private->dispose_has_run );
 
-	return( v_is_valid( object ));
+	na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
 }
 
 /**
- * na_object_get_modified_status:
+ * na_object_iduplicable_is_modified:
  * @object: the #NAObject object whose status is requested.
  *
  * Returns the current modification status of @object.
@@ -455,37 +622,33 @@ na_object_is_valid( const NAObject *object )
  * the original one, %FALSE else.
  */
 gboolean
-na_object_get_modified_status( const NAObject *object )
+na_object_iduplicable_is_modified( const NAObject *object )
 {
-	g_assert( NA_IS_OBJECT( object ));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
+	g_return_val_if_fail( !object->private->dispose_has_run, FALSE );
 
 	return( na_iduplicable_is_modified( NA_IDUPLICABLE( object )));
 }
 
 /**
- * na_object_get_valid_status:
- * @object: the #NAObject object whose status is requested.
+ * na_object_iduplicable_is_valid:
+ * @object: the #NAObject object whose validity is to be checked.
  *
- * Returns the current validity status of @object.
+ * Gets the validity status of @object.
  *
- * This suppose that @object has been previously duplicated in order
- * to get benefits provided by the IDuplicable interface.
- *
- * This suppose also that the edition status of @object has previously
- * been checked via na_object_check_edited_status().
- *
- * Returns: %TRUE is the provided object is valid, %FALSE else.
+ * Returns: %TRUE is @object is valid, %FALSE else.
  */
 gboolean
-na_object_get_valid_status( const NAObject *object )
+na_object_iduplicable_is_valid( const NAObject *object )
 {
-	g_assert( NA_IS_OBJECT( object ));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
+	g_return_val_if_fail( !object->private->dispose_has_run, FALSE );
 
 	return( na_iduplicable_is_valid( NA_IDUPLICABLE( object )));
 }
 
 /**
- * na_object_get_origin:
+ * na_object_iduplicable_get_origin:
  * @object: the #NAObject object whose status is requested.
  *
  * Returns the original object which was at the origin of @object.
@@ -493,223 +656,56 @@ na_object_get_valid_status( const NAObject *object )
  * Returns: a #NAObject, or NULL.
  */
 NAObject *
-na_object_get_origin( const NAObject *object )
+na_object_iduplicable_get_origin( const NAObject *object )
 {
-	g_assert( NA_IS_OBJECT( object ));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
 
 	return( NA_OBJECT( na_iduplicable_get_origin( NA_IDUPLICABLE( object ))));
 }
 
 /**
- * na_object_get_id:
- * @object: the #NAObject object whose internal identifiant is
- * requested.
- *
- * Returns the internal identifiant of @object.
- *
- * Returns: the internal identifiant of @object as a new string. The
- * returned string is an ASCII, case insensitive, string. It should be
- * g_free() by the caller.
- */
-gchar *
-na_object_get_id( const NAObject *object )
-{
-	gchar *id;
-
-	g_assert( NA_IS_OBJECT( object ));
-
-	g_object_get( G_OBJECT( object ), PROP_NAOBJECT_ID_STR, &id, NULL );
-
-	return( id );
-}
-
-/**
- * na_object_get_label:
- * @object: the #NAObject object whose label is requested.
- *
- * Returns the label of @object.
- *
- * Returns: the label of @object as a new string. The returned string
- * is an UTF_8 string. It should be g_free() by the caller.
- */
-gchar *
-na_object_get_label( const NAObject *object )
-{
-	gchar *label;
-
-	g_assert( NA_IS_OBJECT( object ));
-
-	g_object_get( G_OBJECT( object ), PROP_NAOBJECT_LABEL_STR, &label, NULL );
-
-	return( label );
-}
-
-/**
- * na_object_set_origin:
- * @object: the #NAObject object whose status is requested.
+ * na_object_iduplicable_set_origin:
+ * @object: the #NAObject object whose origin is to be set.
  * @origin: a #NAObject which will be set as the new origin of @object.
  *
  * Sets the new origin of @object.
  */
 void
-na_object_set_origin( NAObject *object, const NAObject *origin )
+na_object_iduplicable_set_origin( NAObject *object, const NAObject *origin )
 {
-	g_assert( NA_IS_OBJECT( object ));
-	g_assert( NA_IS_OBJECT( origin ) || !origin );
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( !object->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT( origin ) || !origin );
+	g_return_if_fail( !origin || !origin->private->dispose_has_run );
 
 	na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
 }
 
-/**
- * na_object_set_id:
- * @object: the #NAObject object whose internal identifiant is to be
- * set.
- * @id: internal identifiant to be set.
- *
- * Sets the internal identifiant of @object by taking a copy of the
- * provided one.
- */
-void
-na_object_set_id( NAObject *object, const gchar *id )
-{
-	g_assert( NA_IS_OBJECT( object ));
-
-	g_object_set( G_OBJECT( object ), PROP_NAOBJECT_ID_STR, id, NULL );
-}
-
-/**
- * na_object_set_label:
- * @object: the #NAObject object whose label is to be set.
- * @label: label to be set.
- *
- * Sets the label of @object by taking a copy of the provided one.
- */
-void
-na_object_set_label( NAObject *object, const gchar *label )
-{
-	g_assert( NA_IS_OBJECT( object ));
-
-	g_object_set( G_OBJECT( object ), PROP_NAOBJECT_LABEL_STR, label, NULL );
-}
-
-static NAIDuplicable *
-iduplicable_new( const NAIDuplicable *object )
-{
-	return( NA_IDUPLICABLE( v_new( NA_OBJECT( object ))));
-}
-
-static void
-iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
-{
-	v_copy( NA_OBJECT( target ), NA_OBJECT( source ));
-}
-
-static gboolean
-iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
-{
-	return( v_are_equal( NA_OBJECT( a ), NA_OBJECT( b )));
-}
-
-static gboolean
-iduplicable_is_valid( const NAIDuplicable *object )
-{
-	return( v_is_valid( NA_OBJECT( object )));
-}
-
-static NAObject *
-v_new( const NAObject *object )
-{
-	if( NA_OBJECT_GET_CLASS( object )->new ){
-		return( NA_OBJECT_GET_CLASS( object )->new( object ));
-	}
-
-	return( NULL );
-}
-
-static void
-v_copy( NAObject *target, const NAObject *source )
-{
-	if( NA_OBJECT_GET_CLASS( target )->copy ){
-		NA_OBJECT_GET_CLASS( target )->copy( target, source );
-	}
-}
-
-static gchar *
-v_get_clipboard_id( const NAObject *object )
-{
-	if( NA_OBJECT_GET_CLASS( object )->get_clipboard_id ){
-		return( NA_OBJECT_GET_CLASS( object )->get_clipboard_id( object ));
-	}
-
-	return( NULL );
-}
-
-static gboolean
-v_are_equal( const NAObject *a, const NAObject *b )
-{
-	if( NA_OBJECT_GET_CLASS( a )->are_equal ){
-		return( NA_OBJECT_GET_CLASS( a )->are_equal( a, b ));
-	}
-
-	return( FALSE );
-}
-
-static gboolean
-v_is_valid( const NAObject *object )
-{
-	if( NA_OBJECT_GET_CLASS( object )->is_valid ){
-		return( NA_OBJECT_GET_CLASS( object )->is_valid( object ));
-	}
-
-	return( TRUE );
-}
-
-static void
-do_copy( NAObject *target, const NAObject *source )
-{
-	gchar *id, *label;
-
-	id = na_object_get_id( source );
-	na_object_set_id( target, id );
-	g_free( id );
-
-	label = na_object_get_label( source );
-	na_object_set_label( target, label );
-	g_free( label );
-}
-
-static gboolean
-do_are_equal( const NAObject *a, const NAObject *b )
-{
-	if( g_ascii_strcasecmp( a->private->id, b->private->id )){
-		return( FALSE );
-	}
-	if( g_utf8_collate( a->private->label, b->private->label )){
-		return( FALSE );
-	}
-	return( TRUE );
-}
-
 /*
- * from NAObject point of view, a valid object requires an id
- * (not null, not empty)
+ * returns the class hierarchy,
+ * from the topmost base class, to the most-derived one.
  */
-static gboolean
-do_is_valid( const NAObject *object )
+static GSList *
+get_hierarchy( const NAObject *object )
 {
-	return( object->private->id && strlen( object->private->id ));
+	GSList *hierarchy;
+	GObjectClass *class;
+
+	hierarchy = NULL;
+	class = G_OBJECT_GET_CLASS( object );
+
+	while( G_OBJECT_CLASS_TYPE( class ) != NA_OBJECT_TYPE ){
+		hierarchy = g_slist_prepend( hierarchy, class );
+		class = g_type_class_peek_parent( class );
+	}
+	hierarchy = g_slist_prepend( hierarchy, class );
+
+	return( hierarchy );
 }
 
 static void
-do_dump( const NAObject *object )
+free_hierarchy( GSList *hierarchy )
 {
-	static const char *thisfn = "na_object_do_dump";
-
-	g_assert( NA_IS_OBJECT( object ));
-
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_debug( "%s:     id=%s", thisfn, object->private->id );
-	g_debug( "%s:  label=%s", thisfn, object->private->label );
-
-	na_iduplicable_dump( NA_IDUPLICABLE( object ));
+	g_slist_free( hierarchy );
 }

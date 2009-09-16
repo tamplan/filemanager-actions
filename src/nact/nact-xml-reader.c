@@ -38,13 +38,14 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include <common/na-gconf-keys.h>
+#include <common/na-gconf-provider-keys.h>
+#include <common/na-gconf-utils.h>
+#include <common/na-object-api.h>
 #include <common/na-utils.h>
 #include <common/na-xml-names.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"
-#include "nact-assistant.h"
 #include "nact-xml-reader.h"
 
 /* private class data
@@ -60,14 +61,14 @@ struct NactXMLReaderClassPrivate {
  */
 struct NactXMLReaderPrivate {
 	gboolean         dispose_has_run;
-	NactWindow      *window;
-	NAAction        *action;			/* the action that we will return, or NULL */
+	BaseWindow      *window;
+	NAObjectAction  *action;			/* the action that we will return, or NULL */
 	GSList          *messages;
 	gboolean         uuid_set;			/* set at first uuid, then checked against */
 
 	/* following values are reset at each schema/entry node
 	 */
-	NAActionProfile *profile;			/* profile */
+	NAObjectProfile *profile;			/* profile */
 	gboolean         locale_waited;		/* does this require a locale ? */
 	gboolean         profile_waited;	/* does this entry apply to a profile ? */
 	gboolean         list_waited;
@@ -87,10 +88,10 @@ typedef struct {
 
 static GConfReaderStruct reader_str[] = {
 	{ ACTION_VERSION_ENTRY      , FALSE, FALSE, FALSE, FALSE },
-	{ ACTION_LABEL_ENTRY        , FALSE,  TRUE, FALSE, FALSE },
-	{ ACTION_TOOLTIP_ENTRY      , FALSE,  TRUE, FALSE, FALSE },
-	{ ACTION_ICON_ENTRY         , FALSE, FALSE, FALSE, FALSE },
-	{ ACTION_ENABLED_ENTRY      , FALSE, FALSE, FALSE, FALSE },
+	{ OBJECT_ITEM_LABEL_ENTRY   , FALSE,  TRUE, FALSE, FALSE },
+	{ OBJECT_ITEM_TOOLTIP_ENTRY , FALSE,  TRUE, FALSE, FALSE },
+	{ OBJECT_ITEM_ICON_ENTRY    , FALSE, FALSE, FALSE, FALSE },
+	{ OBJECT_ITEM_ENABLED_ENTRY , FALSE, FALSE, FALSE, FALSE },
 	{ ACTION_PROFILE_LABEL_ENTRY, FALSE,  TRUE,  TRUE, FALSE },
 	{ ACTION_PATH_ENTRY         , FALSE, FALSE,  TRUE, FALSE },
 	{ ACTION_PARAMETERS_ENTRY   , FALSE, FALSE,  TRUE, FALSE },
@@ -123,39 +124,39 @@ static GConfReaderStruct reader_str[] = {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType            register_type( void );
-static void             class_init( NactXMLReaderClass *klass );
-static void             instance_init( GTypeInstance *instance, gpointer klass );
-static void             instance_dispose( GObject *object );
-static void             instance_finalize( GObject *object );
+static GType    register_type( void );
+static void     class_init( NactXMLReaderClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
 
 static NactXMLReader *gconf_reader_new( void );
 
-static void             gconf_reader_parse_schema_root( NactXMLReader *reader, xmlNode *root );
-static void             gconf_reader_parse_schemalist( NactXMLReader *reader, xmlNode *schemalist );
-static gboolean         gconf_reader_parse_schema( NactXMLReader *reader, xmlNode *schema );
-static gboolean         gconf_reader_parse_applyto( NactXMLReader *reader, xmlNode *node );
-static gboolean         gconf_reader_check_for_entry( NactXMLReader *reader, xmlNode *node, const char *entry );
-static gboolean         gconf_reader_parse_locale( NactXMLReader *reader, xmlNode *node );
-static void             gconf_reader_parse_default( NactXMLReader *reader, xmlNode *node );
-static gchar           *get_profile_name_from_schema_key( const gchar *key, const gchar *uuid );
+static void     gconf_reader_parse_schema_root( NactXMLReader *reader, xmlNode *root );
+static void     gconf_reader_parse_schemalist( NactXMLReader *reader, xmlNode *schemalist );
+static gboolean gconf_reader_parse_schema( NactXMLReader *reader, xmlNode *schema );
+static gboolean gconf_reader_parse_applyto( NactXMLReader *reader, xmlNode *node );
+static gboolean gconf_reader_check_for_entry( NactXMLReader *reader, xmlNode *node, const char *entry );
+static gboolean gconf_reader_parse_locale( NactXMLReader *reader, xmlNode *node );
+static void     gconf_reader_parse_default( NactXMLReader *reader, xmlNode *node );
+static gchar   *get_profile_name_from_schema_key( const gchar *key, const gchar *uuid );
 
-static void             gconf_reader_parse_dump_root( NactXMLReader *reader, xmlNode *root );
-static void             gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist );
-static gboolean         gconf_reader_parse_entry( NactXMLReader *reader, xmlNode *entry );
-static gboolean         gconf_reader_parse_dump_key( NactXMLReader *reader, xmlNode *key );
-static void             gconf_reader_parse_dump_value( NactXMLReader *reader, xmlNode *key );
-static void             gconf_reader_parse_dump_value_list( NactXMLReader *reader, xmlNode *key );
-static gchar           *get_profile_name_from_dump_key( const gchar *key );
+static void     gconf_reader_parse_dump_root( NactXMLReader *reader, xmlNode *root );
+static void     gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist );
+static gboolean gconf_reader_parse_entry( NactXMLReader *reader, xmlNode *entry );
+static gboolean gconf_reader_parse_dump_key( NactXMLReader *reader, xmlNode *key );
+static void     gconf_reader_parse_dump_value( NactXMLReader *reader, xmlNode *key );
+static void     gconf_reader_parse_dump_value_list( NactXMLReader *reader, xmlNode *key );
+static gchar   *get_profile_name_from_dump_key( const gchar *key );
 
-static void             apply_values( NactXMLReader *reader );
-static void             add_message( NactXMLReader *reader, const gchar *format, ... );
-static int              strxcmp( const xmlChar *a, const char *b );
-static gchar           *get_uuid_from_key( NactXMLReader *reader, const gchar *key, guint line );
-static gboolean         is_uuid_valid( const gchar *uuid );
-static gchar           *get_entry_from_key( const gchar *key );
-static void             free_reader_values( NactXMLReader *reader );
-static gboolean         action_exists( NactXMLReader *reader, const gchar *uuid );
+static void     apply_values( NactXMLReader *reader );
+static void     add_message( NactXMLReader *reader, const gchar *format, ... );
+static int      strxcmp( const xmlChar *a, const char *b );
+static gchar   *get_uuid_from_key( NactXMLReader *reader, const gchar *key, guint line );
+static gboolean is_uuid_valid( const gchar *uuid );
+static gchar   *get_entry_from_key( const gchar *key );
+static void     free_reader_values( NactXMLReader *reader );
+static gboolean action_exists( NactXMLReader *reader, const gchar *uuid );
 
 GType
 nact_xml_reader_get_type( void )
@@ -218,7 +219,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NactXMLReader *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-	g_assert( NACT_IS_XML_READER( instance ));
+	g_return_if_fail( NACT_IS_XML_READER( instance ));
 	self = NACT_XML_READER( instance );
 
 	self->private = g_new0( NactXMLReaderPrivate, 1 );
@@ -239,8 +240,8 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "nact_xml_reader_instance_dispose";
 	NactXMLReader *self;
 
-	g_assert( NACT_IS_XML_READER( object ));
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_return_if_fail( NACT_IS_XML_READER( object ));
 	self = NACT_XML_READER( object );
 
 	if( !self->private->dispose_has_run ){
@@ -248,12 +249,14 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		if( self->private->action ){
-			g_assert( NA_IS_ACTION( self->private->action ));
+			g_return_if_fail( NA_IS_OBJECT_ACTION( self->private->action ));
 			g_object_unref( self->private->action );
 		}
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		}
 	}
 }
 
@@ -263,8 +266,8 @@ instance_finalize( GObject *object )
 	static const gchar *thisfn = "nact_xml_reader_instance_finalize";
 	NactXMLReader *self;
 
-	g_assert( NACT_IS_XML_READER( object ));
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_return_if_fail( NACT_IS_XML_READER( object ));
 	self = NACT_XML_READER( object );
 
 	na_utils_free_string_list( self->private->messages );
@@ -273,7 +276,7 @@ instance_finalize( GObject *object )
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if( st_parent_class->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
 }
@@ -287,20 +290,21 @@ gconf_reader_new( void )
 /**
  * Import the specified file as an NAAction XML description.
  */
-NAAction *
-nact_xml_reader_import( NactWindow *window, const gchar *uri, GSList **msg )
+NAObjectAction *
+nact_xml_reader_import( BaseWindow *window, const gchar *uri, GSList **msg )
 {
 	static const gchar *thisfn = "nact_xml_reader_import";
-	NAAction *action = NULL;
+	NAObjectAction *action = NULL;
 	NactXMLReader *reader;
 	xmlDoc *doc;
 
 	g_debug( "%s: window=%p, uri=%s, msg=%p", thisfn, ( void * ) window, uri, ( void * ) msg );
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
 	reader = gconf_reader_new();
 	reader->private->window = window;
 
-	g_assert( NACT_IS_ASSISTANT( window ));
+	g_assert( BASE_IS_ASSISTANT( window ));
 
 	doc = xmlParseFile( uri );
 
@@ -334,7 +338,7 @@ nact_xml_reader_import( NactWindow *window, const gchar *uri, GSList **msg )
 	*msg = na_utils_duplicate_string_list( reader->private->messages );
 
 	if( reader->private->action ){
-		g_assert( NA_IS_ACTION( reader->private->action ));
+		g_assert( NA_IS_OBJECT_ACTION( reader->private->action ));
 		action = g_object_ref( reader->private->action );
 	}
 	g_object_unref( reader );
@@ -388,7 +392,7 @@ gconf_reader_parse_schemalist( NactXMLReader *reader, xmlNode *schema )
 
 	g_debug( "%s: reader=%p, schema=%p", thisfn, ( void * ) reader, ( void * ) schema );
 
-	reader->private->action = na_action_new();
+	reader->private->action = na_object_action_new();
 	reader->private->uuid_set = FALSE;
 
 	for( iter = schema->children ; iter ; iter = iter->next ){
@@ -415,7 +419,7 @@ gconf_reader_parse_schemalist( NactXMLReader *reader, xmlNode *schema )
 	}
 
 	if( ok ){
-		gchar *label = na_action_get_label( reader->private->action );
+		gchar *label = na_object_get_label( reader->private->action );
 		if( !label || !g_utf8_strlen( label, -1 )){
 			add_message( reader, ERR_ACTION_LABEL_NOT_FOUND );
 		}
@@ -615,12 +619,12 @@ gconf_reader_parse_applyto( NactXMLReader *reader, xmlNode *node )
 				ret = FALSE;
 
 			} else {
-				na_action_set_uuid( reader->private->action, uuid );
+				na_object_set_id( reader->private->action, uuid );
 				reader->private->uuid_set = TRUE;
 			}
 
 		} else {
-			gchar *ref = na_action_get_uuid( reader->private->action );
+			gchar *ref = na_object_get_id( reader->private->action );
 			if( g_ascii_strcasecmp(( const gchar * ) uuid, ( const gchar * ) ref )){
 				add_message( reader, ERR_INVALID_UUID, ref, uuid, node->line );
 				ret = FALSE;
@@ -633,12 +637,12 @@ gconf_reader_parse_applyto( NactXMLReader *reader, xmlNode *node )
 		profile = get_profile_name_from_schema_key(( const gchar * ) text, uuid );
 
 		if( profile ){
-			reader->private->profile = NA_ACTION_PROFILE( na_action_get_profile( reader->private->action, profile ));
+			reader->private->profile = NA_OBJECT_PROFILE( na_object_get_item( reader->private->action, profile ));
 
 			if( !reader->private->profile ){
-				reader->private->profile = na_action_profile_new();
-				na_action_profile_set_name( reader->private->profile, profile );
-				na_action_attach_profile( reader->private->action, reader->private->profile );
+				reader->private->profile = na_object_profile_new();
+				na_object_set_id( reader->private->profile, profile );
+				na_object_action_attach_profile( reader->private->action, reader->private->profile );
 			}
 		}
 
@@ -775,7 +779,7 @@ gconf_reader_parse_default( NactXMLReader *reader, xmlNode *node )
 static gchar *
 get_profile_name_from_schema_key( const gchar *key, const gchar *uuid )
 {
-	gchar *prefix = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, ACTION_PROFILE_PREFIX );
+	gchar *prefix = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, OBJECT_PROFILE_PREFIX );
 	gchar *profile_name = NULL;
 	gchar *pos;
 
@@ -835,9 +839,9 @@ gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist )
 
 	g_debug( "%s: reader=%p, entrylist=%p", thisfn, ( void * ) reader, ( void * ) entrylist );
 
-	reader->private->action = na_action_new();
+	reader->private->action = na_object_action_new();
 	path = xmlGetProp( entrylist, ( const xmlChar * ) NACT_GCONF_DUMP_ENTRYLIST_BASE );
-	uuid = na_utils_path_to_key(( const gchar * ) path );
+	uuid = na_gconf_utils_path_to_key(( const gchar * ) path );
 	/*g_debug( "%s: uuid=%s", thisfn, uuid );*/
 
 	if( is_uuid_valid( uuid )){
@@ -845,7 +849,7 @@ gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist )
 			add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid, entrylist->line );
 
 		} else {
-			na_action_set_uuid( reader->private->action, uuid );
+			na_object_set_id( reader->private->action, uuid );
 			reader->private->uuid_set = TRUE;
 		}
 	} else {
@@ -875,7 +879,7 @@ gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist )
 			}
 		}
 
-		label = na_action_get_label( reader->private->action );
+		label = na_object_get_label( reader->private->action );
 		if( !label || !g_utf8_strlen( label, -1 )){
 			add_message( reader, ERR_ACTION_LABEL_NOT_FOUND );
 		}
@@ -999,12 +1003,12 @@ gconf_reader_parse_dump_key( NactXMLReader *reader, xmlNode *node )
 		profile = get_profile_name_from_dump_key(( const gchar * ) text );
 
 		if( profile ){
-			reader->private->profile = na_action_get_profile( reader->private->action, profile );
+			reader->private->profile = NA_OBJECT_PROFILE( na_object_get_item( reader->private->action, profile ));
 
 			if( !reader->private->profile ){
-				reader->private->profile = na_action_profile_new();
-				na_action_profile_set_name( reader->private->profile, profile );
-				na_action_attach_profile( reader->private->action, reader->private->profile );
+				reader->private->profile = na_object_profile_new();
+				na_object_set_id( reader->private->profile, profile );
+				na_object_action_attach_profile( reader->private->action, reader->private->profile );
 			}
 		}
 
@@ -1099,49 +1103,49 @@ apply_values( NactXMLReader *reader )
 
 	if( reader->private->entry && strlen( reader->private->entry )){
 		if( !strcmp( reader->private->entry, ACTION_VERSION_ENTRY )){
-			na_action_set_version( reader->private->action, reader->private->value );
+			na_object_action_set_version( reader->private->action, reader->private->value );
 
-		} else if( !strcmp( reader->private->entry, ACTION_LABEL_ENTRY )){
-			na_action_set_label( reader->private->action, reader->private->value );
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_LABEL_ENTRY )){
+			na_object_set_label( reader->private->action, reader->private->value );
 
-		} else if( !strcmp( reader->private->entry, ACTION_TOOLTIP_ENTRY )){
-			na_action_set_tooltip( reader->private->action, reader->private->value );
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TOOLTIP_ENTRY )){
+			na_object_set_tooltip( reader->private->action, reader->private->value );
 
-		} else if( !strcmp( reader->private->entry, ACTION_ICON_ENTRY )){
-			na_action_set_icon( reader->private->action, reader->private->value );
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_ICON_ENTRY )){
+			na_object_set_icon( reader->private->action, reader->private->value );
 
-		} else if( !strcmp( reader->private->entry, ACTION_ENABLED_ENTRY )){
-			na_action_set_enabled( reader->private->action, na_utils_schema_to_boolean( reader->private->value, TRUE ));
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_ENABLED_ENTRY )){
+			na_object_set_enabled( NA_OBJECT_ITEM( reader->private->action ), na_utils_schema_to_boolean( reader->private->value, TRUE ));
 
 		} else if( !strcmp( reader->private->entry, ACTION_PROFILE_LABEL_ENTRY )){
-			na_action_profile_set_label( reader->private->profile, reader->private->value );
+			na_object_set_label( reader->private->profile, reader->private->value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_PATH_ENTRY )){
-			na_action_profile_set_path( reader->private->profile, reader->private->value );
+			na_object_profile_set_path( reader->private->profile, reader->private->value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_PARAMETERS_ENTRY )){
-			na_action_profile_set_parameters( reader->private->profile, reader->private->value );
+			na_object_profile_set_parameters( reader->private->profile, reader->private->value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_BASENAMES_ENTRY )){
-			na_action_profile_set_basenames( reader->private->profile, reader->private->list_value );
+			na_object_profile_set_basenames( reader->private->profile, reader->private->list_value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_MATCHCASE_ENTRY )){
-			na_action_profile_set_matchcase( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, TRUE ));
+			na_object_profile_set_matchcase( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, TRUE ));
 
 		} else if( !strcmp( reader->private->entry, ACTION_ISFILE_ENTRY )){
-			na_action_profile_set_isfile( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, TRUE ));
+			na_object_profile_set_isfile( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, TRUE ));
 
 		} else if( !strcmp( reader->private->entry, ACTION_ISDIR_ENTRY )){
-			na_action_profile_set_isdir( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, FALSE ));
+			na_object_profile_set_isdir( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, FALSE ));
 
 		} else if( !strcmp( reader->private->entry, ACTION_MULTIPLE_ENTRY )){
-			na_action_profile_set_multiple( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, FALSE ));
+			na_object_profile_set_multiple( reader->private->profile, na_utils_schema_to_boolean( reader->private->value, FALSE ));
 
 		} else if( !strcmp( reader->private->entry, ACTION_MIMETYPES_ENTRY )){
-			na_action_profile_set_mimetypes( reader->private->profile, reader->private->list_value );
+			na_object_profile_set_mimetypes( reader->private->profile, reader->private->list_value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_SCHEMES_ENTRY )){
-			na_action_profile_set_schemes( reader->private->profile, reader->private->list_value );
+			na_object_profile_set_schemes( reader->private->profile, reader->private->list_value );
 
 		} else {
 			g_assert_not_reached();

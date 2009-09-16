@@ -38,7 +38,7 @@
  * conditions for the action.
  */
 
-#include "nact-window.h"
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -54,23 +54,18 @@ typedef struct NactIConditionsTabInterfacePrivate NactIConditionsTabInterfacePri
 typedef struct {
 	GTypeInterface                       parent;
 	NactIConditionsTabInterfacePrivate *private;
-
-	/* api */
-	NAActionProfile * ( *get_edited_profile )( NactWindow *window );
-	void              ( *field_modified )    ( NactWindow *window );
 }
 	NactIConditionsTabInterface;
 
 GType    nact_iconditions_tab_get_type( void );
 
-void     nact_iconditions_tab_initial_load( NactWindow *dialog );
-void     nact_iconditions_tab_runtime_init( NactWindow *dialog );
-void     nact_iconditions_tab_all_widgets_showed( NactWindow *dialog );
-void     nact_iconditions_tab_dispose( NactWindow *dialog );
+void     nact_iconditions_tab_initial_load_toplevel( NactIConditionsTab *instance );
+void     nact_iconditions_tab_runtime_init_toplevel( NactIConditionsTab *instance );
+void     nact_iconditions_tab_all_widgets_showed( NactIConditionsTab *instance );
+void     nact_iconditions_tab_dispose( NactIConditionsTab *instance );
 
-void     nact_iconditions_tab_set_profile( NactWindow *window, NAActionProfile *profile );
-void     nact_iconditions_tab_get_isfiledir( NactWindow *window, gboolean *isfile, gboolean *isdir );
-gboolean nact_iconditions_tab_get_multiple( NactWindow *window );
+void     nact_iconditions_tab_get_isfiledir( NactIConditionsTab *instance, gboolean *isfile, gboolean *isdir );
+gboolean nact_iconditions_tab_get_multiple( NactIConditionsTab *instance );
 
 G_END_DECLS
 

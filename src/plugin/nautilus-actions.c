@@ -39,11 +39,12 @@
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
 #include <common/na-about.h>
-#include <common/na-action.h>
-#include <common/na-action-profile.h>
+#include <common/na-object-api.h>
+#include <common/na-obj-action.h>
+#include <common/na-obj-profile.h>
 #include <common/na-pivot.h>
-#include <common/na-ipivot-consumer.h>
 #include <common/na-iprefs.h>
+#include <common/na-ipivot-consumer.h>
 
 #include "nautilus-actions.h"
 
@@ -65,18 +66,18 @@ static GType         st_actions_type = 0;
 
 static void              class_init( NautilusActionsClass *klass );
 static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static void              pivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
-static void              prefs_iface_init( NAIPrefsInterface *iface );
+static void              ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
+static void              iprefs_iface_init( NAIPrefsInterface *iface );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
 static void              instance_dispose( GObject *object );
 static void              instance_finalize( GObject *object );
 
 static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
-static NautilusMenuItem *create_menu_item( NAAction *action, NAActionProfile *profile, GList *files );
+static NautilusMenuItem *create_menu_item( NAObjectAction *action, NAObjectProfile *profile, GList *files );
 /*static NautilusMenuItem *create_sub_menu( NautilusMenu **menu );*/
 static void              add_about_item( NautilusMenu *menu );
-static void              execute_action( NautilusMenuItem *item, NAActionProfile *profile );
+static void              execute_action( NautilusMenuItem *item, NAObjectProfile *profile );
 static void              actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data );
 
 GType
@@ -109,14 +110,14 @@ nautilus_actions_register_type( GTypeModule *module )
 		NULL
 	};
 
-	static const GInterfaceInfo pivot_consumer_iface_info = {
-		( GInterfaceInitFunc ) pivot_consumer_iface_init,
+	static const GInterfaceInfo ipivot_consumer_iface_info = {
+		( GInterfaceInitFunc ) ipivot_consumer_iface_init,
 		NULL,
 		NULL
 	};
 
-	static const GInterfaceInfo prefs_iface_info = {
-		( GInterfaceInitFunc ) prefs_iface_init,
+	static const GInterfaceInfo iprefs_iface_info = {
+		( GInterfaceInitFunc ) iprefs_iface_init,
 		NULL,
 		NULL
 	};
@@ -128,9 +129,9 @@ nautilus_actions_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
 
-	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONSUMER_TYPE, &pivot_consumer_iface_info );
+	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
 
-	g_type_module_add_interface( module, st_actions_type, NA_IPREFS_TYPE, &prefs_iface_info );
+	g_type_module_add_interface( module, st_actions_type, NA_IPREFS_TYPE, &iprefs_iface_info );
 }
 
 static void
@@ -162,9 +163,9 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 }
 
 static void
-pivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
+ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 {
-	static const gchar *thisfn = "nautilus_actions_pivot_consumer_iface_init";
+	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -172,9 +173,9 @@ pivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 }
 
 static void
-prefs_iface_init( NAIPrefsInterface *iface )
+iprefs_iface_init( NAIPrefsInterface *iface )
 {
-	static const gchar *thisfn = "nautilus_actions_prefs_iface_init";
+	static const gchar *thisfn = "nautilus_actions_iprefs_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
@@ -187,14 +188,17 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
-	g_assert( NAUTILUS_IS_ACTIONS( instance ));
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
+
 	self = NAUTILUS_ACTIONS( instance );
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
 
 	/* from na-pivot */
-	self->private->pivot = na_pivot_new( G_OBJECT( self ));
+	self->private->pivot = na_pivot_new( NA_IPIVOT_CONSUMER( self ));
+	na_pivot_set_automatic_reload( self->private->pivot, TRUE );
 }
 
 static void
@@ -208,12 +212,15 @@ instance_dispose( GObject *object )
 	self = NAUTILUS_ACTIONS( object );
 
 	if( !self->private->dispose_has_run ){
-		self->private->dispose_has_run = TRUE;
 
 		g_object_unref( self->private->pivot );
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		}
+
+		self->private->dispose_has_run = TRUE;
 	}
 }
 
@@ -230,7 +237,9 @@ instance_finalize( GObject *object )
 	g_free( self->private );
 
 	/* chain up to the parent class */
-	G_OBJECT_CLASS( st_parent_class )->finalize( object );
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
+		G_OBJECT_CLASS( st_parent_class )->finalize( object );
+	}
 }
 
 /*
@@ -279,7 +288,7 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	GSList *ia, *ip;
 	NautilusMenu *menu = NULL;
 	NautilusMenuItem *item;
-	GSList *actions = NULL;
+	GSList *tree = NULL;
 	gchar *label, *uuid;
 	gint submenus = 0;
 	gboolean add_about;
@@ -296,20 +305,20 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	}
 
 	if( !self->private->dispose_has_run ){
-		actions = na_pivot_get_actions( self->private->pivot );
+		tree = na_pivot_get_items_tree( self->private->pivot );
 
-		for( ia = actions ; ia ; ia = ia->next ){
+		for( ia = tree ; ia ; ia = ia->next ){
 
-			NAAction *action = NA_ACTION( ia->data );
+			NAObjectAction *action = NA_OBJECT_ACTION( ia->data );
 
-			if( !na_action_is_enabled( action )){
+			if( !na_object_is_enabled( action )){
 				continue;
 			}
 
-			label = na_action_get_label( action );
+			label = na_object_get_label( action );
 
 			if( !label || !g_utf8_strlen( label, -1 )){
-				uuid = na_action_get_uuid( action );
+				uuid = na_object_get_id( action );
 				g_warning( "%s: label null or empty for uuid=%s", thisfn, uuid );
 				g_free( uuid );
 				continue;
@@ -318,19 +327,19 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 			g_debug( "%s: examining '%s' action", thisfn, label );
 			g_free( label );
 
-			profiles = na_action_get_profiles( action );
+			profiles = na_object_get_items( action );
 
 			for( ip = profiles ; ip ; ip = ip->next ){
 
-				NAActionProfile *profile = NA_ACTION_PROFILE( ip->data );
+				NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
 
 #ifdef NA_MAINTAINER_MODE
-				label = na_action_profile_get_label( profile );
+				label = na_object_get_label( profile );
 				g_debug( "%s: examining '%s' profile", thisfn, label );
 				g_free( label );
 #endif
 
-				if( na_action_profile_is_candidate( profile, files )){
+				if( na_object_profile_is_candidate( profile, files )){
 					item = create_menu_item( action, profile, files );
 					items = g_list_append( items, item );
 
@@ -345,9 +354,11 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 					break;
 				}
 			}
+
+			na_object_free_items( profiles );
 		}
 
-		add_about = na_iprefs_get_add_about_item( NA_IPREFS( self ));
+		add_about = FALSE; /*na_iprefs_get_add_about_item( NA_IPREFS( self ));*/
 		if( submenus == 1 && add_about ){
 			add_about_item( menu );
 		}
@@ -357,22 +368,22 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 }
 
 static NautilusMenuItem *
-create_menu_item( NAAction *action, NAActionProfile *profile, GList *files )
+create_menu_item( NAObjectAction *action, NAObjectProfile *profile, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_create_menu_item";
 	NautilusMenuItem *item;
 	gchar *uuid, *name, *label, *tooltip, *icon_name;
-	NAActionProfile *dup4menu;
+	NAObjectProfile *dup4menu;
 
 	g_debug( "%s", thisfn );
 
-	uuid = na_action_get_uuid( action );
+	uuid = na_object_get_id( action );
 	name = g_strdup_printf( "NautilusActions::%s", uuid );
-	label = na_action_get_label( action );
-	tooltip = na_action_get_tooltip( action );
-	icon_name = na_action_get_verified_icon_name( action );
+	label = na_object_get_label( action );
+	tooltip = na_object_get_tooltip( action );
+	icon_name = na_object_item_get_verified_icon_name( NA_OBJECT_ITEM( action ));
 
-	dup4menu = NA_ACTION_PROFILE( na_object_duplicate( NA_OBJECT( profile )));
+	dup4menu = NA_OBJECT_PROFILE( na_object_duplicate( profile ));
 
 	item = nautilus_menu_item_new( name, label, tooltip, icon_name );
 
@@ -381,14 +392,12 @@ create_menu_item( NAAction *action, NAActionProfile *profile, GList *files )
 				G_CALLBACK( execute_action ),
 				dup4menu,
 				( GClosureNotify ) g_object_unref,
-				0
-	);
+				0 );
 
 	g_object_set_data_full( G_OBJECT( item ),
 			"files",
 			nautilus_file_info_list_copy( files ),
-			( GDestroyNotify ) nautilus_file_info_list_free
-	);
+			( GDestroyNotify ) nautilus_file_info_list_free );
 
 	g_free( icon_name );
 	g_free( tooltip );
@@ -437,8 +446,7 @@ add_about_item( NautilusMenu *menu )
 				G_CALLBACK( na_about_display ),
 				NULL,
 				NULL,
-				0
-	);
+				0 );
 
 	nautilus_menu_append_item( menu, item );
 
@@ -446,7 +454,7 @@ add_about_item( NautilusMenu *menu )
 }
 
 static void
-execute_action( NautilusMenuItem *item, NAActionProfile *profile )
+execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action";
 	GList *files;
@@ -457,10 +465,10 @@ execute_action( NautilusMenuItem *item, NAActionProfile *profile )
 
 	files = ( GList* ) g_object_get_data( G_OBJECT( item ), "files" );
 
-	path = na_action_profile_get_path( profile );
+	path = na_object_profile_get_path( profile );
 	cmd = g_string_new( path );
 
-	param = na_action_profile_parse_parameters( profile, files );
+	param = na_object_profile_parse_parameters( profile, files );
 
 	if( param != NULL ){
 		g_string_append_printf( cmd, " %s", param );
@@ -482,7 +490,7 @@ actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data )
 	NautilusActions *self;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
-	g_assert( NAUTILUS_IS_ACTIONS( instance ));
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
 	self = NAUTILUS_ACTIONS( instance );
 
 	if( !self->private->dispose_has_run ){
