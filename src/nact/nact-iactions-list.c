@@ -87,9 +87,10 @@ static GType        register_type( void );
 static void         interface_base_init( NactIActionsListInterface *klass );
 static void         interface_base_finalize( NactIActionsListInterface *klass );
 
+static void         free_items_callback( NactIActionsList *instance, GSList *items );
+
 static void         display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *instance );
 static void         extend_selection_to_childs( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *parent );
-static void         free_items_flat_list_callback( NactIActionsList *instance, GSList *items );
 static GtkTreeView *get_actions_list_treeview( NactIActionsList *instance );
 static gboolean     get_item( NactTreeModel *model, GtkTreePath *path, NAObject *object, GSList **items );
 static gboolean     have_dnd_mode( NactIActionsList *instance );
@@ -172,7 +173,7 @@ interface_base_init( NactIActionsListInterface *klass )
 				IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
 				G_TYPE_OBJECT,
 				G_SIGNAL_RUN_CLEANUP,
-				G_CALLBACK( free_items_flat_list_callback ),
+				G_CALLBACK( free_items_callback ),
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
@@ -197,7 +198,7 @@ interface_base_init( NactIActionsListInterface *klass )
 				IACTIONS_LIST_SIGNAL_ITEM_UPDATED,
 				G_TYPE_OBJECT,
 				G_SIGNAL_RUN_CLEANUP,
-				G_CALLBACK( free_items_flat_list_callback ),
+				G_CALLBACK( free_items_callback ),
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
@@ -207,6 +208,12 @@ interface_base_init( NactIActionsListInterface *klass )
 
 		initialized = TRUE;
 	}
+}
+
+static void
+free_items_callback( NactIActionsList *instance, GSList *items )
+{
+	na_object_free_items( items );
 }
 
 static void
@@ -448,16 +455,6 @@ nact_iactions_list_fill( NactIActionsList *instance, GSList *items )
 	set_is_filling_list( instance, FALSE );
 
 	select_first_row( instance );
-}
-
-GSList *
-nact_iactions_list_free_items_list( NactIActionsList *instance, GSList *items )
-{
-	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), NULL );
-
-	free_items_flat_list_callback( instance, items );
-
-	return( NULL );
 }
 
 /**
@@ -1010,13 +1007,6 @@ extend_selection_to_childs( NactIActionsList *instance, GtkTreeView *treeview, G
 		gtk_tree_path_free( path );
 		ok = gtk_tree_model_iter_next( model, &iter );
 	}
-}
-
-static void
-free_items_flat_list_callback( NactIActionsList *instance, GSList *items )
-{
-	g_slist_foreach( items, ( GFunc ) g_object_unref, NULL );
-	g_slist_free( items );
 }
 
 static GtkTreeView *

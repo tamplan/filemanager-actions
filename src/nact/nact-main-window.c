@@ -629,7 +629,7 @@ nact_main_window_get_modified_items_count( const NactMainWindow *window )
 
 	modified = nact_iactions_list_get_modified_items( NACT_IACTIONS_LIST( window ));
 	count_modified = g_slist_length( modified );
-	nact_iactions_list_free_items_list(NACT_IACTIONS_LIST( window ), modified );
+	na_object_free_items( modified );
 	g_debug( "%s: count_modified=%d", thisfn, count_modified );
 
 	return( count_deleted + count_modified );

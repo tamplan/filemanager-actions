@@ -260,7 +260,7 @@ nact_main_menubar_refresh_actions_sensitivity( NactMainWindow *window )
 
 	selected = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	count = g_slist_length( selected );
-	nact_iactions_list_free_items_list( NACT_IACTIONS_LIST( window ), selected );
+	na_object_free_items( selected );
 	refresh_actions_sensitivity_with_count( window, count );
 }
 
@@ -451,7 +451,7 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	items = nact_main_window_delete_selection( window );
 	nact_clipboard_set( items );
-	nact_iactions_list_free_items_list( NACT_IACTIONS_LIST( window ), items );
+	na_object_free_items( items );
 
 	/* the selection is modified before updating the clipboard, so we
 	 * need a manual refresh of actions sensitivity
@@ -469,7 +469,7 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	nact_clipboard_set( items );
-	nact_iactions_list_free_items_list( NACT_IACTIONS_LIST( window ), items );
+	na_object_free_items( items );
 
 	/* selection is not even modified, so a manuel refresh is needed
 	 */
@@ -482,7 +482,7 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 	GSList *items;
 
 	items = nact_clipboard_get();
-	nact_iactions_list_free_items_list( NACT_IACTIONS_LIST( window ), items );
+	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
 
 	g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, NULL );
 }
@@ -502,7 +502,7 @@ on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	items = nact_main_window_delete_selection( window );
-	nact_iactions_list_free_items_list( NACT_IACTIONS_LIST( window ), items );
+	na_object_free_items( items );
 
 	g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, NULL );
 }

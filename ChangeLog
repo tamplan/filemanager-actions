@@ -85,6 +85,11 @@
 	* src/nact/nact-assistant.h: Renamed as base-assistant.h.
 	Define the BaseAssistant class.
 
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h:
+	Replace nact_iactions_list_free_items_list() with
+	na_object_free_items().
+
 	* src/nact/nact-imenubar.c: Renamed as nact-main-menubar.c.
 	* src/nact/nact-imenubar.h: Renamed as nact-main-menubar.h.
 	Remove the NactIMenubar interface.
