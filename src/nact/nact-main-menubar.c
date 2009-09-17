@@ -93,7 +93,7 @@ static const GtkActionEntry entries[] = {
 		{ "ToolsMenu", NULL, N_( "_Tools" ) },
 		{ "HelpMenu", NULL, N_( "_Help" ) },
 
-		{ "NewMenuItem", NULL, N_( "New _menu" ), "<Ctrl>M",
+		{ "NewMenuItem", NULL, N_( "New _menu" ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the 'New menu' item */
 				N_( "Insert a new menu at the current position" ),
 				G_CALLBACK( on_new_menu_activated ) },

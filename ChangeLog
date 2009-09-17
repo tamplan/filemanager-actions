@@ -47,6 +47,9 @@
 
 	* src/nact/nact-main-tab.c: Removed (unused) file.
 
+	* src/nact/nact-main-menubar.c: Remove <Ctrl+M> accelerator to let
+	actions be the main selectable items.
+
 2009-09-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:
