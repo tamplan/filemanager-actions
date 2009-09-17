@@ -515,7 +515,7 @@ object_copy( NAObject *target, const NAObject *source )
 {
 	gchar *version;
 	gboolean readonly;
-	GSList *profiles, *ip;
+	GList *profiles, *ip;
 
 	g_return_if_fail( NA_IS_OBJECT_ACTION( target ));
 	g_return_if_fail( !NA_OBJECT_ACTION( target )->private->dispose_has_run );

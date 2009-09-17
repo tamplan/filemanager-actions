@@ -63,6 +63,18 @@ typedef struct NAObjectIdClassPrivate NAObjectIdClassPrivate;
 typedef struct {
 	NAObjectClass           parent;
 	NAObjectIdClassPrivate *private;
+
+	/**
+	 * new_id:
+	 * @object: a #NAObjectId object.
+	 *
+	 * Returns: a new id suitable for this @object.
+	 *
+	 * This is a pure virtual function which should be implemented by
+	 * the actual class. Actually, we asks for the most-derived class
+	 * which implements this function.
+	 */
+	gchar * ( *new_id )( const NAObjectId *object );
 }
 	NAObjectIdClass;
 

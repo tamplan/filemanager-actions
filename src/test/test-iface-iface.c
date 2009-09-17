@@ -168,13 +168,13 @@ test_iface_fnb( TestIFace *object )
 	GTypeInterface *iface;
 
 	g_debug( "%s: %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
-	g_debug( "%s: g_type_from_instance=%u", thisfn, G_TYPE_FROM_INSTANCE( object ));
-	g_debug( "%s: g_type_from_interface=%u", thisfn, G_TYPE_FROM_INTERFACE( object ));
+	g_debug( "%s: g_type_from_instance=%d", thisfn, ( gint ) G_TYPE_FROM_INSTANCE( object ));
+	g_debug( "%s: g_type_from_interface=%d", thisfn, ( gint ) G_TYPE_FROM_INTERFACE( object ));
 
 	hierarchy = NULL;
 	base_type = TEST_BASE_TYPE;
 	type = G_OBJECT_TYPE( object );
-	g_debug( "%s: type=%u %s", thisfn, type, G_OBJECT_TYPE_NAME( object ));
+	g_debug( "%s: type=%d %s", thisfn, ( gint ) type, G_OBJECT_TYPE_NAME( object ));
 	while( TRUE ){
 		/*hierarchy = g_slist_prepend( hierarchy, class );*/
 		hierarchy = g_slist_prepend( hierarchy, GINT_TO_POINTER( type ));
@@ -191,7 +191,7 @@ test_iface_fnb( TestIFace *object )
 
 	for( ic = hierarchy ; ic ; ic = ic->next ){
 		type = GPOINTER_TO_INT( ic->data );
-		g_debug( "%s: iterating on %u type", thisfn, type );
+		g_debug( "%s: iterating on %d type", thisfn, ( gint ) type );
 		class = g_type_class_peek_static( type );
 		g_debug( "%s: class is %s at %p", thisfn, G_OBJECT_CLASS_NAME( class ), ( void * ) class );
 		iface = g_type_interface_peek( class, TEST_IFACE_TYPE );

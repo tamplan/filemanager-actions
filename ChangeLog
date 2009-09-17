@@ -1,9 +1,49 @@
 2009-09-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-iio-provider.c
+	(get_merged_items_list,	sort_tree):
+	* src/common/na-iio-provider.h
+	(read_items_list, na_iio_provider_get_items_tree):
+	* src/common/na-gconf-provider.c (iio_provider_read_items_list):
+	Now use a GList instead of a GSList (shorter, more powerful).
+
+	* src/common/na-object-api.h (na_object_set_new_id):
+	Fix declaration.
+
+	* src/common/na-object-id.c (new_id): New virtual function.
+	(na_object_id_set_new_id): new corresponding API.
+	Implements a 'most-derived' model.
+
+	* src/common/na-object-item.c:
+	Subitems are now managed in a GList instead of a GSList.
+
+	* src/common/na-obj-action.c:
+	* src/common/na-obj-menu.c:
+	* src/common/na-pivot.c:
+	* src/common/na-pivot.h:
+	* src/common/na-xml-writer.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-clipboard.h:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h:
+	* src/nact/nact-main-menubar.c
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-tree-model.c:
+	* src/plugin/nautilus-actions.c:
+	* src/utils/nautilus-actions-new.c: Updated accordingly.
+
 	* src/nact/nact-iactions-list.c (filter_selection,
 	filter_selection_iter):	Controls the allowed selection so that
 	we are only able to select profiles, or actions/menus.
 	Define new nact_iactions_list_set_filter_selection_mode() api.
+
+	* src/common/na-object.c:
+	* src/common/na-object-fn.h
+	(na_object_get_hierarchy, na_object_free_hierarchy): New functions.
+
+	* src/nact/nact-main-window.c (nact_main_window_delete_selection):
+	Renamed to nact_main_window_move_to_deleted().
 
 	* src/nact/nact-main-tab.c: Removed (unused) file.
 

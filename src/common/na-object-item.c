@@ -59,7 +59,7 @@ struct NAObjectItemPrivate {
 
 	/* list of NAObjectId subitems
 	 */
-	GSList        *items;
+	GList         *items;
 
 	/* the original provider
 	 * required to be able to edit/delete the item
@@ -98,6 +98,8 @@ static void     object_ref( const NAObject *action );
 static void     object_copy( NAObject *target, const NAObject *source );
 static gboolean object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean object_is_valid( const NAObject *object );
+
+static gchar   *object_id_new_id( const NAObjectId *object );
 
 GType
 na_object_item_get_type( void )
@@ -139,6 +141,7 @@ class_init( NAObjectItemClass *klass )
 	static const gchar *thisfn = "na_object_item_class_init";
 	GObjectClass *object_class;
 	NAObjectClass *naobject_class;
+	NAObjectIdClass *objectid_class;
 	GParamSpec *spec;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -189,6 +192,9 @@ class_init( NAObjectItemClass *klass )
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
+
+	objectid_class = NA_OBJECT_ID_CLASS( klass );
+	objectid_class->new_id = object_id_new_id;
 }
 
 static void
@@ -482,7 +488,7 @@ na_object_item_get_provider( const NAObjectItem *item )
 NAObject *
 na_object_item_get_item( const NAObjectItem *item, const gchar *id )
 {
-	GSList *it;
+	GList *it;
 	NAObject *found = NULL;
 	NAObject *isub;
 	gchar *isubid;
@@ -506,27 +512,27 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
  * na_object_item_get_items:
  * @item: the #NAObjectItem from which we want a list of subitems.
  *
- * Returns: a newly allocated #GSList of #NAObject objects which are
+ * Returns: a newly allocated #GList of #NAObject objects which are
  * embedded in the @item. Depending of the exact nature of @item, these
  * may be #NAObjectMenu, #NAObjectAction or #NAObjectProfile subitems.
  *
- * The returned pointer should be na_object_item_free_items() by the
- * caller.
+ * The returned pointer should be na_object_item_free_items() or
+ * na_object_free_items() by the caller.
  */
-GSList *
+GList *
 na_object_item_get_items( const NAObjectItem *item )
 {
-	GSList *items, *it;
+	GList *items, *it;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
 	g_return_val_if_fail( !item->private->dispose_has_run, NULL );
 
 	items = NULL;
 	for( it = item->private->items ; it ; it = it->next ){
-		items = g_slist_prepend( items, g_object_ref( it->data ));
+		items = g_list_prepend( items, g_object_ref( it->data ));
 	}
 
-	return( g_slist_reverse( items ));
+	return( g_list_reverse( items ));
 }
 
 /**
@@ -541,7 +547,7 @@ na_object_item_get_items_count( const NAObjectItem *item )
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
 	g_return_val_if_fail( !item->private->dispose_has_run, 0 );
 
-	return( item->private->items ? g_slist_length( item->private->items ) : 0 );
+	return( item->private->items ? g_list_length( item->private->items ) : 0 );
 }
 
 /**
@@ -552,10 +558,10 @@ na_object_item_get_items_count( const NAObjectItem *item )
  * Frees the list.
  */
 void
-na_object_item_free_items( GSList *items )
+na_object_item_free_items( GList *items )
 {
-	g_slist_foreach( items, ( GFunc ) g_object_unref, NULL );
-	g_slist_free( items );
+	g_list_foreach( items, ( GFunc ) g_object_unref, NULL );
+	g_list_free( items );
 }
 
 /**
@@ -677,7 +683,7 @@ na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider )
 /**
  * na_object_item_set_items:
  * @item: the #NAObjectItem whose subitems have to be set.
- * @list: a #GSList list of #NAObject subitems to be installed.
+ * @list: a #GList list of #NAObject subitems to be installed.
  *
  * Sets the list of the subitems for the @item.
  *
@@ -687,9 +693,9 @@ na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider )
  * by the caller.
  */
 void
-na_object_item_set_items( NAObjectItem *item, GSList *items )
+na_object_item_set_items( NAObjectItem *item, GList *items )
 {
-	GSList *it;
+	GList *it;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 	g_return_if_fail( !item->private->dispose_has_run );
@@ -698,9 +704,9 @@ na_object_item_set_items( NAObjectItem *item, GSList *items )
 	item->private->items = NULL;
 
 	for( it = items ; it ; it = it->next ){
-		item->private->items = g_slist_prepend( item->private->items, g_object_ref( it->data ));
+		item->private->items = g_list_prepend( item->private->items, g_object_ref( it->data ));
 	}
-	item->private->items = g_slist_reverse( item->private->items );
+	item->private->items = g_list_reverse( item->private->items );
 }
 
 /**
@@ -719,7 +725,7 @@ na_object_item_append_item( NAObjectItem *item, const NAObject *object )
 	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	item->private->items = g_slist_append( item->private->items, g_object_ref(( gpointer ) object ));
+	item->private->items = g_list_append( item->private->items, g_object_ref(( gpointer ) object ));
 }
 
 /**
@@ -739,7 +745,7 @@ na_object_item_insert_item( NAObjectItem *item, const NAObject *object )
 	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	item->private->items = g_slist_prepend( item->private->items, g_object_ref(( gpointer ) object ));
+	item->private->items = g_list_prepend( item->private->items, g_object_ref(( gpointer ) object ));
 }
 
 /**
@@ -758,7 +764,7 @@ na_object_item_remove_item( NAObjectItem *item, NAObject *object )
 	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	item->private->items = g_slist_remove( item->private->items, ( gconstpointer ) object );
+	item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
 	g_object_unref( object );
 }
 
@@ -766,7 +772,7 @@ static void
 object_dump( const NAObject *item )
 {
 	static const gchar *thisfn = "na_object_item_object_dump";
-	GSList *it;
+	GList *it;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 	g_return_if_fail( !NA_OBJECT_ITEM( item )->private->dispose_has_run );
@@ -779,7 +785,7 @@ object_dump( const NAObject *item )
 	/* dump subitems */
 	g_debug( "%s: %d subitem(s) at %p",
 			thisfn,
-			NA_OBJECT_ITEM( item )->private->items ? g_slist_length( NA_OBJECT_ITEM( item )->private->items ) : 0,
+			NA_OBJECT_ITEM( item )->private->items ? g_list_length( NA_OBJECT_ITEM( item )->private->items ) : 0,
 			( void * ) NA_OBJECT_ITEM( item )->private->items );
 
 	for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
@@ -790,7 +796,7 @@ object_dump( const NAObject *item )
 static void
 object_ref( const NAObject *item )
 {
-	g_slist_foreach( NA_OBJECT_ITEM( item )->private->items, ( GFunc ) g_object_ref, NULL );
+	g_list_foreach( NA_OBJECT_ITEM( item )->private->items, ( GFunc ) g_object_ref, NULL );
 }
 
 static void
@@ -799,7 +805,7 @@ object_copy( NAObject *target, const NAObject *source )
 	gchar *tooltip, *icon;
 	gboolean enabled;
 	gpointer provider;
-	GSList *subitems, *it;
+	GList *subitems, *it;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( target ));
 	g_return_if_fail( !NA_OBJECT_ITEM( target )->private->dispose_has_run );
@@ -825,9 +831,9 @@ object_copy( NAObject *target, const NAObject *source )
 
 	subitems = NULL;
 	for( it = NA_OBJECT_ITEM( source )->private->items ; it ; it = it->next ){
-		subitems = g_slist_prepend( subitems, na_object_duplicate( it->data ));
+		subitems = g_list_prepend( subitems, na_object_duplicate( it->data ));
 	}
-	subitems = g_slist_reverse( subitems );
+	subitems = g_list_reverse( subitems );
 	na_object_set_items( target, subitems );
 	na_object_free_items( subitems );
 
@@ -841,7 +847,7 @@ static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )
 {
 	gboolean equal = TRUE;
-	GSList *it;
+	GList *it;
 	NAObject *first_obj, *second_obj;
 	gchar *first_id, *second_id;
 
@@ -862,7 +868,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	}
 
 	if( equal ){
-		equal = ( g_slist_length( NA_OBJECT_ITEM( a )->private->items ) == g_slist_length( NA_OBJECT_ITEM( b )->private->items ));
+		equal = ( g_list_length( NA_OBJECT_ITEM( a )->private->items ) == g_list_length( NA_OBJECT_ITEM( b )->private->items ));
 	}
 
 	if( equal ){
@@ -893,7 +899,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		}
 	}
 
-	g_debug( "na_object_item_are_equal: %s", equal ? "True":"False" );
+	/*g_debug( "na_object_item_are_equal: %s", equal ? "True":"False" );*/
 	return( equal );
 }
 
@@ -904,7 +910,7 @@ static gboolean
 object_is_valid( const NAObject *object )
 {
 	gboolean valid = TRUE;
-	GSList *it;
+	GList *it;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), FALSE );
 	g_return_val_if_fail( !NA_OBJECT_ITEM( object )->private->dispose_has_run, FALSE );
@@ -916,4 +922,21 @@ object_is_valid( const NAObject *object )
 	}
 
 	return( valid );
+}
+
+static gchar *
+object_id_new_id( const NAObjectId *item )
+{
+	uuid_t uuid;
+	gchar uuid_str[64];
+	gchar *new_uuid;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+	g_return_val_if_fail( !NA_OBJECT_ITEM( item )->private->dispose_has_run, NULL );
+
+	uuid_generate( uuid );
+	uuid_unparse_lower( uuid, uuid_str );
+	new_uuid = g_strdup( uuid_str );
+
+	return( new_uuid );
 }

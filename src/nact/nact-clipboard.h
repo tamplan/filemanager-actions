@@ -35,16 +35,16 @@
 
 G_BEGIN_DECLS
 
-void     nact_clipboard_get_data_for_intern_use( GSList *selected_items, gboolean copy_data );
-char    *nact_clipboard_get_data_for_extern_use( GSList *selected_items );
+void     nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_data );
+char    *nact_clipboard_get_data_for_extern_use( GList *selected_items );
 
 gboolean nact_clipboard_is_empty( void );
-GSList  *nact_clipboard_get( void );
-void     nact_clipboard_set( GSList *items );
+GList   *nact_clipboard_get( void );
+void     nact_clipboard_set( GList *items, gboolean renumber_items );
 
 void     nact_clipboard_free_items( GSList *items );
 
-void     nact_clipboard_export_items( const gchar *uri, GSList *items );
+void     nact_clipboard_export_items( const gchar *uri, GList *items );
 
 G_END_DECLS
 

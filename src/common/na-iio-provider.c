@@ -52,13 +52,13 @@ static GType    register_type( void );
 static void     interface_base_init( NAIIOProviderInterface *klass );
 static void     interface_base_finalize( NAIIOProviderInterface *klass );
 
-static GSList  *get_merged_items_list( const NAPivot *pivot, GSList *providers );
+static GList   *get_merged_items_list( const NAPivot *pivot, GSList *providers );
 static guint    try_write_item( const NAIIOProvider *instance, NAObject *item, gchar **message );
 
 static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
 static gboolean do_is_writable( const NAIIOProvider *instance, const NAObject *item );
 
-static GSList  *sort_tree( const NAPivot *pivot, GSList *tree );
+static GList   *sort_tree( const NAPivot *pivot, GList *tree );
 static gint     compare_label_alpha_fn( const NAObjectId *a, const NAObjectId *b );
 
 /**
@@ -145,16 +145,16 @@ interface_base_finalize( NAIIOProviderInterface *klass )
  *
  * Loads the tree from I/O storage subsystems.
  *
- * Returns: a #GSList of newly allocated objects as a hierarchical tree
+ * Returns: a #GList of newly allocated objects as a hierarchical tree
  * in display order. This tree may contain #NAActionMenu menus and
  * #NAAction actions and their #NAActionProfile profiles.
  */
-GSList *
+GList *
 na_iio_provider_get_items_tree( const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_iio_provider_get_items_tree";
 	GSList *providers;
-	GSList *merged;
+	GList *merged;
 	GSList *level_zero;
 	gboolean alpha_order;
 
@@ -183,12 +183,12 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 /*
  * returns a concatened list of readen actions / menus
  */
-static GSList *
+static GList *
 get_merged_items_list( const NAPivot *pivot, GSList *providers )
 {
-	GSList *merged = NULL;
 	GSList *ip;
-	GSList *list, *item;
+	GList *merged = NULL;
+	GList *list, *item;
 	NAIIOProvider *instance;
 
 	for( ip = providers ; ip ; ip = ip->next ){
@@ -204,7 +204,7 @@ get_merged_items_list( const NAPivot *pivot, GSList *providers )
 				na_object_dump( item->data );
 			}
 
-			merged = g_slist_concat( merged, list );
+			merged = g_list_concat( merged, list );
 		}
 	}
 
@@ -362,13 +362,13 @@ do_is_writable( const NAIIOProvider *instance, const NAObject *item )
 	return( FALSE );
 }
 
-static GSList *
-sort_tree( const NAPivot *pivot, GSList *tree )
+static GList *
+sort_tree( const NAPivot *pivot, GList *tree )
 {
-	GSList *sorted;
-	GSList *items, *it;
+	GList *sorted;
+	GList *items, *it;
 
-	sorted = g_slist_sort( tree, ( GCompareFunc ) compare_label_alpha_fn );
+	sorted = g_list_sort( tree, ( GCompareFunc ) compare_label_alpha_fn );
 
 	/* recursively sort each level of the tree
 	 */

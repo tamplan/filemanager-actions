@@ -85,7 +85,7 @@ struct NactTreeModelPrivate {
 	guint        count;
 	gboolean     have_dnd;
 	gchar       *drag_dest_uri;
-	GSList      *drag_items;
+	GList       *drag_items;
 };
 
 #define MAX_XDS_ATOM_VAL_LEN			4096
@@ -153,7 +153,7 @@ static NactTreeModel *tree_model_new( BaseWindow *window, GtkTreeView *treeview 
 static void           append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
 static void           display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, const NAObject *object );
 static gboolean       dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpStruct *ntm );
-static void           fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, GSList *items, gboolean only_actions, GtkTreeIter *parent );
+static void           fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, GList *items, gboolean only_actions, GtkTreeIter *parent );
 static void           iter_on_store( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *parent, FnIterOnStore fn, gpointer user_data );
 static gboolean       iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter, FnIterOnStore fn, gpointer user_data );
 static gboolean       search_for_object( NactTreeModel *model, GtkTreeModel *store, const NAObject *object, GtkTreeIter *iter );
@@ -325,7 +325,7 @@ instance_finalize( GObject *object )
 	self = NACT_TREE_MODEL( object );
 
 	g_free( self->private->drag_dest_uri );
-	g_slist_free( self->private->drag_items );
+	g_list_free( self->private->drag_items );
 
 	g_free( self->private );
 
@@ -549,13 +549,13 @@ nact_tree_model_dump( NactTreeModel *model )
  * tree store, so that we are able to freely edit it.
  */
 void
-nact_tree_model_fill( NactTreeModel *model, GSList *items, gboolean only_actions)
+nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions)
 {
 	static const gchar *thisfn = "nact_tree_model_fill";
 	GtkTreeStore *ts_model;
 
 	g_debug( "%s: model=%p, items=%p (%d items), only_actions=%s",
-			thisfn, ( void * ) model, ( void * ) items, g_slist_length( items ), only_actions ? "True":"False" );
+			thisfn, ( void * ) model, ( void * ) items, g_list_length( items ), only_actions ? "True":"False" );
 	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
 
 	ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
@@ -567,10 +567,10 @@ nact_tree_model_fill( NactTreeModel *model, GSList *items, gboolean only_actions
 
 static void
 fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
-					GSList *items, gboolean only_actions, GtkTreeIter *parent )
+					GList *items, gboolean only_actions, GtkTreeIter *parent )
 {
 	/*static const gchar *thisfn = "nact_tree_model_fill_tree_store";*/
-	GSList *subitems, *it;
+	GList *subitems, *it;
 	NAObject *object;
 	NAObject *duplicate;
 	GtkTreeIter iter;
@@ -648,7 +648,7 @@ nact_tree_model_insert_item( NactTreeModel *model, const NAObject *object, GtkTr
 	GtkTreeIter *parent;
 	GtkTreeIter store_iter;
 	GtkTreeIter profile_iter;
-	GSList *profiles;
+	GList *profiles;
 
 	path_str = path ? gtk_tree_path_to_string( path ) : NULL;
 	g_debug( "%s: model=%p, object=%p, path=%p (%s), selected=%p, iter=%p",
@@ -722,30 +722,37 @@ nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data
 	iter_on_store( model, GTK_TREE_MODEL( store ), NULL, fn, user_data );
 }
 
-GSList *
+/**
+ * nact_tree_model_remove:
+ * @model: this #NactTreeModel instance.
+ * @selected: a list of #GtkTreePath as returned by
+ * gtk_tree_selection_get_selected_rows().
+ *
+ * Deletes the selected rows, unref-ing the underlying objects if any.
+ *
+ * We begin by the end, so that we are almost sure that path remain
+ * valid during the iteration.
+ */
+void
 nact_tree_model_remove( NactTreeModel *model, GList *selected )
 {
 	GList *reversed, *item;
 	GtkTreeIter iter;
 	GtkTreeStore *store;
 	gchar *path_str;
-	GSList *deleted = NULL;
-	NAObject *object;
 
 	reversed = g_list_reverse( selected );
 	store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 
 	for( item = reversed ; item ; item = item->next ){
+
 		path_str = gtk_tree_path_to_string(( GtkTreePath * ) item->data );
 		g_debug( "nact_tree_model_remove: path=%s", path_str );
 		g_free( path_str );
-		gtk_tree_model_get_iter( GTK_TREE_MODEL( store ), &iter, ( GtkTreePath * ) item->data );
-		gtk_tree_model_get( GTK_TREE_MODEL( store ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-		gtk_tree_store_remove( store, &iter );
-		deleted = g_slist_prepend( deleted, object );
-	}
 
-	return( g_slist_reverse( deleted ));
+		gtk_tree_model_get_iter( GTK_TREE_MODEL( store ), &iter, ( GtkTreePath * ) item->data );
+		gtk_tree_store_remove( store, &iter );
+	}
 }
 
 /**
@@ -965,7 +972,7 @@ imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source,
 	static const gchar *thisfn = "nact_tree_model_imulti_drag_source_drag_data_get";
 	gchar *atom_name;
 	NactTreeModel *model;
-	GSList *selected_items;
+	GList *selected_items;
 	gchar *data;
 	gboolean ret = FALSE;
 	gchar *dest_folder, *folder;
@@ -985,8 +992,8 @@ imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source,
 	if( !selected_items ){
 		return( FALSE );
 	}
-	if( !g_slist_length( selected_items )){
-		g_slist_free( selected_items );
+	if( !g_list_length( selected_items )){
+		g_list_free( selected_items );
 		return( FALSE );
 	}
 
@@ -1006,7 +1013,7 @@ imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source,
 			gtk_selection_data_set( selection_data, selection_data->target, 8, ( guchar * )( is_writable ? "S" : "F" ), 1 );
 			if( is_writable ){
 				model->private->drag_dest_uri = g_strdup( dest_folder );
-				model->private->drag_items = g_slist_copy( selected_items );
+				model->private->drag_items = g_list_copy( selected_items );
 			}
 			g_free( dest_folder );
 			ret = TRUE;
@@ -1024,7 +1031,7 @@ imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source,
 			break;
 	}
 
-	g_slist_free( selected_items );
+	g_list_free( selected_items );
 	return( ret );
 }
 
@@ -1091,7 +1098,7 @@ on_drag_begin( GtkWidget *widget, GdkDragContext *context, BaseWindow *window )
 	g_free( model->private->drag_dest_uri );
 	model->private->drag_dest_uri = NULL;
 
-	g_slist_free( model->private->drag_items );
+	g_list_free( model->private->drag_items );
 	model->private->drag_items = NULL;
 
 	gdk_property_change(
@@ -1112,14 +1119,14 @@ on_drag_end( GtkWidget *widget, GdkDragContext *context, BaseWindow *window )
 
 	model = NACT_TREE_MODEL( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
 
-	if( model->private->drag_dest_uri && model->private->drag_items && g_slist_length( model->private->drag_items )){
+	if( model->private->drag_dest_uri && model->private->drag_items && g_list_length( model->private->drag_items )){
 		nact_clipboard_export_items( model->private->drag_dest_uri, model->private->drag_items );
 	}
 
 	g_free( model->private->drag_dest_uri );
 	model->private->drag_dest_uri = NULL;
 
-	g_slist_free( model->private->drag_items );
+	g_list_free( model->private->drag_items );
 	model->private->drag_items = NULL;
 
 	gdk_property_delete( context->source_window, XDS_ATOM );

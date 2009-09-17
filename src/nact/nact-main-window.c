@@ -66,7 +66,7 @@ struct NactMainWindowPrivate {
 	gboolean         dispose_has_run;
 
 	/* TODO: this will have to be replaced with undo-manager */
-	GSList          *deleted;
+	GList           *deleted;
 
 	/**
 	 * Currently edited action or menu.
@@ -554,47 +554,6 @@ nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid 
 }
 
 /**
- * nact_main_window_delete_selection:
- * @window: this #NactMainWindow instance.
- *
- * Deletes the currently selected items from the treeview.
- *
- * We only delete the selected items from the treeview.
- * But, if asked for, we return the selection extended to a valid,
- * contiguous tree, suitable for a later insertion elsewhere.
- *
- * Returns: the tree of selected items, or NULL.
- *
- * The returned #GSList should be na_object_free_items() by the caller.
- */
-GSList *
-nact_main_window_delete_selection( NactMainWindow *window )
-{
-	static const gchar *thisfn = "nact_main_window_delete_selection";
-	GtkTreePath *path;
-	GSList *deleted;
-	GSList *it;
-
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), 0 );
-	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( window ), 0 );
-
-	deleted = nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ), &path );
-
-	for( it = deleted ; it ; it = it->next ){
-		g_debug( "%s: deleting %s at %p", thisfn, G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data );
-		window->private->deleted = g_slist_prepend( window->private->deleted, g_object_ref( NA_OBJECT( it->data )));
-	}
-
-	/* the next row must be selected after having updated the deleted list
-	 * so that count_modified will take it into account
-	 */
-	nact_iactions_list_select_row( NACT_IACTIONS_LIST( window ), path );
-	gtk_tree_path_free( path );
-
-	return( deleted );
-}
-
-/**
  * nact_main_window_get_all_items_count:
  * @window: this #NactMainWindow instance.
  *
@@ -627,7 +586,7 @@ guint
 nact_main_window_get_modified_items_count( const NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_get_modified_items_count";
-	GSList *ia, *modified;
+	GList *ia, *modified;
 	gint count_deleted = 0;
 	gint count_modified = 0;
 
@@ -642,11 +601,30 @@ nact_main_window_get_modified_items_count( const NactMainWindow *window )
 	g_debug( "%s: count_deleted=%d", thisfn, count_deleted );
 
 	modified = nact_iactions_list_get_modified_items( NACT_IACTIONS_LIST( window ));
-	count_modified = g_slist_length( modified );
+	count_modified = g_list_length( modified );
 	na_object_free_items( modified );
 	g_debug( "%s: count_modified=%d", thisfn, count_modified );
 
 	return( count_deleted + count_modified );
+}
+
+/**
+ * nact_main_window_move_to_deleted:
+ * @window: this #NactMainWindow instance.
+ * @items: list of deleted objects.
+ *
+ * Adds the given list to the deleted one.
+ *
+ * Note that we move the ref from @items list to our own deleted list.
+ * So that the caller should not try to na_object_free_items() the
+ * provided list, but should also g_slist_free() it.
+ */
+void
+nact_main_window_move_to_deleted( NactMainWindow *window, GList *items )
+{
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	window->private->deleted = g_list_concat( window->private->deleted, items );
 }
 
 /**
@@ -659,7 +637,7 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 {
 	NactApplication *application;
 	NAPivot *pivot;
-	GSList *it;
+	GList *it;
 	NAObject *item;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
@@ -682,7 +660,7 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 static void
 actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot )
 {
-	GSList *items, *it;
+	GList *items, *it;
 
 	if( nact_window_delete_object_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ))){
 
@@ -752,7 +730,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_base_runtime_init_toplevel";
 	NactApplication *application;
 	NAPivot *pivot;
-	GSList *tree;
+	GList *tree;
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
@@ -857,7 +835,7 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 {
 	static const gchar *thisfn = "nact_main_window_set_current_object_item";
 	gint count_profiles;
-	GSList *profiles;
+	GList *profiles;
 	/*NAObject *current;*/
 
 	g_debug( "%s: window=%p, current=%p, selected_items=%p",

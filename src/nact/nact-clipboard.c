@@ -37,6 +37,7 @@
 
 #include <common/na-object-api.h>
 #include <common/na-obj-action-class.h>
+#include <common/na-obj-menu.h>
 #include <common/na-obj-profile.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
@@ -67,19 +68,21 @@ static GtkTargetEntry clipboard_formats[] = {
 };
 
 typedef struct {
-	gboolean only_profiles;
-	GSList  *items;
+	guint  nb_profiles;
+	guint  nb_actions;
+	guint  nb_menus;
+	GList *items;
 }
 	NactClipboardData;
 
 static GtkClipboard *get_clipboard( void );
-static gboolean      have_only_profiles( GSList *items );
-static void          add_item_to_clipboard0( NAObject *object, gboolean copy_data, gboolean only_profiles, GSList **copied );
-static void          add_item_to_clipboard( NAObject *object, GSList **copied );
+static void          add_item_to_clipboard0( NAObject *object, gboolean copy_data, gboolean only_profiles, GList **copied );
+/*static void          add_item_to_clipboard( NAObject *object, GList **copied );*/
 static void          export_action( const gchar *uri, const NAObject *action, GSList **exported );
 static gchar        *get_action_xml_buffer( const NAObject *action, GSList **exported );
 static void          get_from_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
 static void          clear_clipboard_callback( GtkClipboard *clipboard, NactClipboardData *data );
+static void          renumber_items( GList *items );
 
 /**
  * nact_clipboard_get_data_for_intern_use:
@@ -90,23 +93,23 @@ static void          clear_clipboard_callback( GtkClipboard *clipboard, NactClip
  * able to paste them when needed.
  */
 void
-nact_clipboard_get_data_for_intern_use( GSList *selected_items, gboolean copy_data )
+nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_data )
 {
 	static const gchar *thisfn = "nact_clipboard_get_data_for_intern_use";
 	GtkClipboard *clipboard;
 	NactClipboardData *data;
-	GSList *item;
+	GList *it;
 
 	clipboard = get_clipboard();
 
 	data = g_new0( NactClipboardData, 1 );
-	data->only_profiles = have_only_profiles( selected_items );
+	/*data->only_profiles = have_only_profiles( selected_items );*/
 
-	for( item = selected_items ; item ; item = item->next ){
-		NAObject *item_object = NA_OBJECT( item->data );
-		add_item_to_clipboard0( item_object, copy_data, data->only_profiles, &data->items );
+	for( it = selected_items ; it ; it = it->next ){
+		NAObject *item_object = NA_OBJECT( it->data );
+		add_item_to_clipboard0( item_object, copy_data, FALSE /*data->only_profiles*/, &data->items );
 	}
-	data->items = g_slist_reverse( data->items );
+	data->items = g_list_reverse( data->items );
 
 	gtk_clipboard_set_with_data( clipboard,
 			clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
@@ -129,17 +132,17 @@ nact_clipboard_get_data_for_intern_use( GSList *selected_items, gboolean copy_da
  * For now, we only exports actions as XML files.
  */
 char *
-nact_clipboard_get_data_for_extern_use( GSList *selected_items )
+nact_clipboard_get_data_for_extern_use( GList *selected_items )
 {
-	GSList *item;
+	GList *it;
 	GSList *exported = NULL;
 	GString *data;
 	gchar *chunk;
 
 	data = g_string_new( "" );
 
-	for( item = selected_items ; item ; item = item->next ){
-		NAObject *item_object = NA_OBJECT( item->data );
+	for( it = selected_items ; it ; it = it->next ){
+		NAObject *item_object = NA_OBJECT( it->data );
 		chunk = NULL;
 
 		if( NA_IS_OBJECT_ACTION( item_object )){
@@ -170,13 +173,13 @@ nact_clipboard_get_data_for_extern_use( GSList *selected_items )
  * For now, we only exports actions as XML files.
  */
 void
-nact_clipboard_export_items( const gchar *uri, GSList *items )
+nact_clipboard_export_items( const gchar *uri, GList *items )
 {
-	GSList *item;
+	GList *it;
 	GSList *exported = NULL;
 
-	for( item = items ; item ; item = item->next ){
-		NAObject *item_object = NA_OBJECT( item->data );
+	for( it = items ; it ; it = it->next ){
+		NAObject *item_object = NA_OBJECT( it->data );
 
 		if( NA_IS_OBJECT_ACTION( item_object )){
 			export_action( uri, item_object, &exported );
@@ -213,19 +216,19 @@ nact_clipboard_is_empty( void )
 /**
  * nact_clipboard_get:
  *
- * Returns: the list of items previously referenced in the internal
- * clipboard.
+ * Returns: a copy of the list of items previously referenced in the
+ * internal clipboard.
  *
- * The list is owned by the clipboard, and should not be g_free() nor
- * g_object_unref() by the caller.
+ * We allocate a new id for items in order to be ready to paste another
+ * time.
  */
-GSList *
+GList *
 nact_clipboard_get( void )
 {
 	GtkClipboard *clipboard;
 	GtkSelectionData *selection;
 	NactClipboardData *data;
-	/*GSList *items;*/
+	GList *items, *it;
 
 	if( nact_clipboard_is_empty()){
 		return( NULL );
@@ -235,39 +238,65 @@ nact_clipboard_get( void )
 	selection = gtk_clipboard_wait_for_contents( clipboard, GDK_SELECTION_PRIMARY );
 	data = ( NactClipboardData * ) selection->data;
 
-	/* prepare the next paste by renumeroting the ids */
-	/*for( it = items ; it ; it = it->next ){
-		na_object_set_new_id( it->data );
-	}*/
+	items = NULL;
+	for( it = data->items ; it ; it = it->next ){
+		items = g_list_prepend( items, na_object_duplicate( it->data ));
+	}
 
-	return( data->items );
+	renumber_items( data->items );
+
+	return( g_list_reverse( items ));
 }
 
 /**
  * nact_clipboard_set:
  * @items: a list of #NAObject items
+ * @renumber_items: whether the actions or menus items should be
+ * renumbered when copied in the clipboard ?
  *
- * Takes a reference on the specified list of items, and installs them
- * in the internal clipboard.
+ * Installs a copy of provided items in the clipboard.
+ *
+ * Rationale: when cutting an item to the clipboard, the next paste
+ * will keep its same original id, and it is safe because this is
+ * actually what we we want when we cut/paste.
+ *
+ * Contrarily, when we copy/paste, we are waiting for a new element
+ * which has the same characteristics that the previous one ; we so
+ * have to renumber actions/menus items when copying into the clipboard.
+ *
+ * Note that we use NAIDuplicable interface without actually taking care
+ * of what is origin or so, as origin will be reinitialized when getting
+ * data out of the clipboard.
  */
 void
-nact_clipboard_set( GSList *items )
+nact_clipboard_set( GList *items, gboolean renumber )
 {
 	GtkClipboard *clipboard;
 	NactClipboardData *data;
-	GSList *it;
+	GList *it;
 
 	clipboard = get_clipboard();
-
 	gtk_clipboard_clear( clipboard );
-
 	data = g_new0( NactClipboardData, 1 );
-	data->only_profiles = have_only_profiles( items );
 
 	for( it = items ; it ; it = it->next ){
-		add_item_to_clipboard( NA_OBJECT( it->data ), &data->items );
+		data->items = g_list_prepend( data->items, na_object_duplicate( it->data ));
+
+		if( NA_IS_OBJECT_ACTION( it->data )){
+			data->nb_actions += 1;
+
+		} else if( NA_IS_OBJECT_MENU( it->data )){
+			data->nb_menus += 1;
+
+		} else if( NA_IS_OBJECT_PROFILE( it->data )){
+			data->nb_profiles += 1;
+		}
 	}
-	data->items = g_slist_reverse( data->items );
+	data->items = g_list_reverse( data->items );
+
+	if( renumber ){
+		renumber_items( data->items );
+	}
 
 	gtk_clipboard_set_with_data( clipboard,
 			clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
@@ -290,24 +319,8 @@ get_clipboard( void )
 	return( clipboard );
 }
 
-static gboolean
-have_only_profiles( GSList *items )
-{
-	GSList *item;
-	gboolean only_profiles = TRUE;
-
-	for( item = items ; item ; item = item->next ){
-		if( !NA_IS_OBJECT_PROFILE( item->data )){
-			only_profiles = FALSE;
-			break;
-		}
-	}
-
-	return( only_profiles );
-}
-
 static void
-add_item_to_clipboard0( NAObject *object, gboolean copy_data, gboolean only_profiles, GSList **items_list )
+add_item_to_clipboard0( NAObject *object, gboolean copy_data, gboolean only_profiles, GList **items_list )
 {
 	NAObject *source;
 	gint index;
@@ -317,19 +330,19 @@ add_item_to_clipboard0( NAObject *object, gboolean copy_data, gboolean only_prof
 		source = NA_OBJECT( na_object_profile_get_action( NA_OBJECT_PROFILE( object )));
 	}
 
-	index = g_slist_index( *items_list, ( gconstpointer ) source );
+	index = g_list_index( *items_list, ( gconstpointer ) source );
 	if( index != -1 ){
 		return;
 	}
 
-	*items_list = g_slist_prepend( *items_list, na_object_ref( source ));
+	*items_list = g_list_prepend( *items_list, na_object_ref( source ));
 }
 
-static void
-add_item_to_clipboard( NAObject *object, GSList **items_list )
+/*static void
+add_item_to_clipboard( NAObject *object, GList **items_list )
 {
-	*items_list = g_slist_prepend( *items_list, na_object_ref( object ));
-}
+	*items_list = g_list_prepend( *items_list, na_object_ref( object ));
+}*/
 
 static void
 export_action( const gchar *uri, const NAObject *action, GSList **exported )
@@ -390,9 +403,21 @@ clear_clipboard_callback( GtkClipboard *clipboard, NactClipboardData *data )
 
 	g_debug( "%s: clipboard=%p, data=%p", thisfn, ( void * ) clipboard, ( void * ) data );
 
-	g_slist_foreach( data->items, ( GFunc ) g_object_unref, NULL );
-	g_slist_free( data->items );
+	g_list_foreach( data->items, ( GFunc ) g_object_unref, NULL );
+	g_list_free( data->items );
 	g_free( data );
 
 	g_object_set_data( G_OBJECT( clipboard ), CLIPBOARD_PROP_PRIMAY_USED, GINT_TO_POINTER( FALSE ));
+}
+
+static void
+renumber_items( GList *items )
+{
+	GList *it;
+
+	for( it = items ; it ; it = it->next ){
+		if( NA_IS_OBJECT_ITEM( it->data )){
+			na_object_set_new_id( NA_OBJECT_ITEM( it->data ));
+		}
+	}
 }

@@ -69,9 +69,9 @@ GType           nact_main_window_get_type( void );
 NactMainWindow *nact_main_window_new( BaseApplication *application );
 
 gboolean        nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid );
-GSList         *nact_main_window_delete_selection( NactMainWindow *window );
 guint           nact_main_window_get_all_items_count( const NactMainWindow *window );
 guint           nact_main_window_get_modified_items_count( const NactMainWindow *window );
+void            nact_main_window_move_to_deleted( NactMainWindow *window, GList *items );
 void            nact_main_window_remove_deleted( NactMainWindow *window );
 
 G_END_DECLS

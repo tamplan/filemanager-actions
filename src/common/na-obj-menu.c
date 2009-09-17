@@ -218,7 +218,7 @@ GSList *
 na_object_menu_get_items_list( const NAObjectMenu *menu )
 {
 	GSList *list = NULL;
-	GSList *items, *it;
+	GList *items, *it;
 	gchar *uuid;
 
 	g_return_val_if_fail( NA_IS_OBJECT_MENU( menu ), NULL );

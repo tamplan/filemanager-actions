@@ -516,7 +516,7 @@ create_xml_schema( NAXMLWriter *writer, gint format, const NAObjectAction *actio
 	xmlNodePtr root_node, list_node;
 	gchar *version, *label, *tooltip, *icon, *text;
 	gboolean enabled;
-	GSList *profiles, *ip;
+	GList *profiles, *ip;
 	NAObjectProfile *profile;
 	gchar *profile_dir, *profile_label, *path, *parameters;
 	GSList *basenames, *mimetypes, *schemes;
@@ -697,7 +697,7 @@ create_xml_dump( NAXMLWriter *writer, gint format, const NAObjectAction *action 
 	gchar *path;
 	gchar *version, *label, *tooltip, *icon, *text;
 	gboolean enabled;
-	GSList *profiles, *ip;
+	GList *profiles, *ip;
 	NAObjectProfile *profile;
 	gchar *profile_dir;
 	gchar *profile_label, *parameters;

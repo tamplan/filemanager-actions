@@ -208,7 +208,7 @@ static NAObjectAction *
 get_action_from_cmdline( void )
 {
 	NAObjectAction *action = na_object_action_new_with_profile();
-	GSList *profiles;
+	GList *profiles;
 	NAObjectProfile *profile;
 	int i = 0;
 	GSList *basenames = NULL;

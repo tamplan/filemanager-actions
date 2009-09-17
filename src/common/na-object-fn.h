@@ -53,6 +53,9 @@ gchar    *na_object_object_get_clipboard_id( const NAObject *object );
 NAObject *na_object_object_ref( const NAObject *object );
 void      na_object_object_copy( NAObject *target, const NAObject *source );
 
+GList    *na_object_get_hierarchy( const NAObject *object );
+void      na_object_free_hierarchy( GList *hierarchy );
+
 /* NAIDuplicable
  */
 NAObject *na_object_iduplicable_duplicate( const NAObject *object );

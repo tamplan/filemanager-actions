@@ -83,9 +83,6 @@ static gboolean       do_is_valid( const NAObject *object );
 
 static void           do_copy( NAObject *target, const NAObject *source );
 
-static GSList        *get_hierarchy( const NAObject *object );
-static void           free_hierarchy( GSList *hierarchy );
-
 GType
 na_object_get_type( void )
 {
@@ -257,9 +254,9 @@ na_object_object_dump( const NAObject *object )
 static void
 dump_hierarchy( const NAObject *object )
 {
-	GSList *hierarchy, *ih;
+	GList *hierarchy, *ih;
 
-	hierarchy = get_hierarchy( object );
+	hierarchy = na_object_get_hierarchy( object );
 
 	for( ih = hierarchy ; ih ; ih = ih->next ){
 		if( NA_OBJECT_CLASS( ih->data )->dump ){
@@ -267,7 +264,7 @@ dump_hierarchy( const NAObject *object )
 		}
 	}
 
-	free_hierarchy( hierarchy );
+	na_object_free_hierarchy( hierarchy );
 }
 
 static void
@@ -302,12 +299,12 @@ static gchar *
 most_derived_clipboard_id( const NAObject *object )
 {
 	gchar *clipboard_id;
-	GSList *hierarchy, *ih;
+	GList *hierarchy, *ih;
 	gboolean found;
 
 	found = FALSE;
 	clipboard_id = NULL;
-	hierarchy = g_slist_reverse( get_hierarchy( object ));
+	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
 
 	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
 		if( NA_OBJECT_CLASS( ih->data )->get_clipboard_id ){
@@ -316,7 +313,7 @@ most_derived_clipboard_id( const NAObject *object )
 		}
 	}
 
-	free_hierarchy( hierarchy );
+	na_object_free_hierarchy( hierarchy );
 
 	return( clipboard_id );
 }
@@ -344,9 +341,9 @@ na_object_object_ref( const NAObject *object )
 static void
 ref_hierarchy( const NAObject *object )
 {
-	GSList *hierarchy, *ih;
+	GList *hierarchy, *ih;
 
-	hierarchy = get_hierarchy( object );
+	hierarchy = na_object_get_hierarchy( object );
 
 	for( ih = hierarchy ; ih ; ih = ih->next ){
 		if( NA_OBJECT_CLASS( ih->data )->ref ){
@@ -354,7 +351,7 @@ ref_hierarchy( const NAObject *object )
 		}
 	}
 
-	free_hierarchy( hierarchy );
+	na_object_free_hierarchy( hierarchy );
 }
 
 /**
@@ -412,12 +409,12 @@ static NAObject *
 most_derived_new( const NAObject *object )
 {
 	NAObject *new_object;
-	GSList *hierarchy, *ih;
+	GList *hierarchy, *ih;
 	gboolean found;
 
 	found = FALSE;
 	new_object = NULL;
-	hierarchy = g_slist_reverse( get_hierarchy( object ));
+	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
 
 	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
 		if( NA_OBJECT_CLASS( ih->data )->new ){
@@ -426,7 +423,7 @@ most_derived_new( const NAObject *object )
 		}
 	}
 
-	free_hierarchy( hierarchy );
+	na_object_free_hierarchy( hierarchy );
 
 	return( new_object );
 }
@@ -463,9 +460,9 @@ iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
 static void
 copy_hierarchy( NAObject *target, const NAObject *source )
 {
-	GSList *hierarchy, *ih;
+	GList *hierarchy, *ih;
 
-	hierarchy = get_hierarchy( source );
+	hierarchy = na_object_get_hierarchy( source );
 
 	for( ih = hierarchy ; ih ; ih = ih->next ){
 		if( NA_OBJECT_CLASS( ih->data )->copy ){
@@ -473,13 +470,46 @@ copy_hierarchy( NAObject *target, const NAObject *source )
 		}
 	}
 
-	free_hierarchy( hierarchy );
+	na_object_free_hierarchy( hierarchy );
 }
 
 static void
 do_copy( NAObject *target, const NAObject *source )
 {
 	/* nothing to do here */
+}
+
+/**
+ * na_object_get_hierarchy:
+ *
+ * Returns the class hierarchy,
+ * from the topmost base class, to the most-derived one.
+ */
+GList *
+na_object_get_hierarchy( const NAObject *object )
+{
+	GList *hierarchy;
+	GObjectClass *class;
+
+	hierarchy = NULL;
+	class = G_OBJECT_GET_CLASS( object );
+
+	while( G_OBJECT_CLASS_TYPE( class ) != NA_OBJECT_TYPE ){
+		hierarchy = g_list_prepend( hierarchy, class );
+		class = g_type_class_peek_parent( class );
+	}
+	hierarchy = g_list_prepend( hierarchy, class );
+
+	return( hierarchy );
+}
+
+/**
+ * na_object_free_hierarchy:
+ */
+void
+na_object_free_hierarchy( GList *hierarchy )
+{
+	g_list_free( hierarchy );
 }
 
 /**
@@ -521,10 +551,10 @@ static gboolean
 are_equal_hierarchy( const NAObject *a, const NAObject *b )
 {
 	gboolean are_equal;
-	GSList *hierarchy, *ih;
+	GList *hierarchy, *ih;
 
 	are_equal = TRUE;
-	hierarchy = get_hierarchy( b );
+	hierarchy = na_object_get_hierarchy( b );
 
 	for( ih = hierarchy ; ih && are_equal ; ih = ih->next ){
 		if( NA_OBJECT_CLASS( ih->data )->are_equal ){
@@ -532,7 +562,7 @@ are_equal_hierarchy( const NAObject *a, const NAObject *b )
 		}
 	}
 
-	free_hierarchy( hierarchy );
+	na_object_free_hierarchy( hierarchy );
 
 	return( are_equal );
 }
@@ -559,10 +589,10 @@ static gboolean
 is_valid_hierarchy( const NAObject *object )
 {
 	gboolean is_valid;
-	GSList *hierarchy, *ih;
+	GList *hierarchy, *ih;
 
 	is_valid = TRUE;
-	hierarchy = get_hierarchy( object );
+	hierarchy = na_object_get_hierarchy( object );
 
 	for( ih = hierarchy ; ih && is_valid ; ih = ih->next ){
 		if( NA_OBJECT_CLASS( ih->data )->is_valid ){
@@ -570,7 +600,7 @@ is_valid_hierarchy( const NAObject *object )
 		}
 	}
 
-	free_hierarchy( hierarchy );
+	na_object_free_hierarchy( hierarchy );
 
 	return( is_valid );
 }
@@ -680,32 +710,4 @@ na_object_iduplicable_set_origin( NAObject *object, const NAObject *origin )
 	g_return_if_fail( !origin || !origin->private->dispose_has_run );
 
 	na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
-}
-
-/*
- * returns the class hierarchy,
- * from the topmost base class, to the most-derived one.
- */
-static GSList *
-get_hierarchy( const NAObject *object )
-{
-	GSList *hierarchy;
-	GObjectClass *class;
-
-	hierarchy = NULL;
-	class = G_OBJECT_GET_CLASS( object );
-
-	while( G_OBJECT_CLASS_TYPE( class ) != NA_OBJECT_TYPE ){
-		hierarchy = g_slist_prepend( hierarchy, class );
-		class = g_type_class_peek_parent( class );
-	}
-	hierarchy = g_slist_prepend( hierarchy, class );
-
-	return( hierarchy );
-}
-
-static void
-free_hierarchy( GSList *hierarchy )
-{
-	g_slist_free( hierarchy );
 }

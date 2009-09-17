@@ -97,7 +97,7 @@ static GType        register_type( void );
 static void         interface_base_init( NactIActionsListInterface *klass );
 static void         interface_base_finalize( NactIActionsListInterface *klass );
 
-static void         free_items_callback( NactIActionsList *instance, GSList *items );
+static void         free_items_callback( NactIActionsList *instance, GList *items );
 
 static void         display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *instance );
 static void         extend_selection_to_childs( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *parent );
@@ -108,7 +108,7 @@ static gboolean     get_item( NactTreeModel *model, GtkTreePath *path, NAObject 
 static gboolean     have_dnd_mode( NactIActionsList *instance );
 static gboolean     have_filter_selection_mode( NactIActionsList *instance );
 static void         insert_item( NactIActionsList *instance, NAObject *item );
-static gboolean     is_modified_item( NactTreeModel *model, GtkTreePath *path, NAObject *object, GSList **items );
+static gboolean     is_modified_item( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items );
 static void         iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpointer user_data );
 static gboolean     on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsList *instance );
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
@@ -224,7 +224,7 @@ interface_base_init( NactIActionsListInterface *klass )
 }
 
 static void
-free_items_callback( NactIActionsList *instance, GSList *items )
+free_items_callback( NactIActionsList *instance, GList *items )
 {
 	na_object_free_items( items );
 }
@@ -307,7 +307,7 @@ nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
  * Allocates and initializes the ActionsList widget.
  */
 void
-nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GSList *items )
+nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *items )
 {
 	static const gchar *thisfn = "nact_iactions_list_runtime_init_toplevel";
 	GtkTreeView *treeview;
@@ -317,7 +317,7 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GSList *it
 	GtkTreeSelection *selection;
 
 	g_debug( "%s: instance=%p, items=%p (%d items)",
-			thisfn, ( void * ) instance, ( void * ) items, g_slist_length( items ));
+			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
 	treeview = get_actions_list_treeview( instance );
@@ -418,20 +418,17 @@ nact_iactions_list_dispose( NactIActionsList *instance )
  *
  * Deletes the current selection from the underlying tree store.
  *
- * Returns the list of deleted #NAObject items.
- *
- * the returned @path sould be gtk_tree_path_free() by the caller.
+ * The returned @path should be gtk_tree_path_free() by the caller.
  */
-GSList *
+void
 nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **path )
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
 	GList *selected;
-	GSList *deleted = NULL;
 
-	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), NULL );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
 	treeview = get_actions_list_treeview( instance );
 	selection = gtk_tree_view_get_selection( treeview );
@@ -439,13 +436,11 @@ nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **p
 
 	if( g_list_length( selected )){
 		*path = gtk_tree_path_copy(( GtkTreePath * ) selected->data );
-		deleted = nact_tree_model_remove( NACT_TREE_MODEL( model ), selected );
+		nact_tree_model_remove( NACT_TREE_MODEL( model ), selected );
 	}
 
 	g_list_foreach( selected, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( selected );
-
-	return( deleted );
 }
 
 /**
@@ -458,7 +453,7 @@ nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **p
  * The selection is reset to the first line of the tree, if there is one.
  */
 void
-nact_iactions_list_fill( NactIActionsList *instance, GSList *items )
+nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 {
 	static const gchar *thisfn = "nact_iactions_list_fill";
 	GtkTreeView *treeview;
@@ -536,12 +531,12 @@ nact_iactions_list_get_items( NactIActionsList *instance )
  *
  * Returns a flat list of modified items.
  *
- * The returned GSList should be nact_iaction_list_free_items_list()-ed.
+ * The returned #GList should be na_object_free_items()-ed.
  */
-GSList *
+GList *
 nact_iactions_list_get_modified_items( NactIActionsList *instance )
 {
-	GSList *items = NULL;
+	GList *items = NULL;
 	GtkTreeView *treeview;
 	NactTreeModel *model;
 
@@ -554,25 +549,26 @@ nact_iactions_list_get_modified_items( NactIActionsList *instance )
 
 	/*g_debug( "nact_iactions_list_get_modified_items: count=%d", g_slist_length( items ));*/
 
-	return( g_slist_reverse( items ));
+	return( g_list_reverse( items ));
 }
 
 /**
  * nact_iactions_list_get_selected_items:
  * @window: this #NactIActionsList instance.
  *
- * Returns the currently selected rows.
+ * Returns: the currently selected rows.
  *
- * If a selected item is collapsed, we consider that all subitems are
- * also silently selected. If it is expanded, then only actually
- * selected rows are returned.
+ * We acquire here a new reference on objects corresponding to actually
+ * selected rows. It is supposed that their subitems are also concerned,
+ * but this may be caller-dependant.
  *
- * The returned GSList should be nact_iaction_list_free_items_list()-ed.
+ * The caller may safely call na_object_free_items() on the returned
+ * list, or g_slist_free() if it wants keep the references somewhere.
  */
-GSList *
+GList *
 nact_iactions_list_get_selected_items( NactIActionsList *instance )
 {
-	GSList *items = NULL;
+	GList *items = NULL;
 	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
@@ -589,13 +585,13 @@ nact_iactions_list_get_selected_items( NactIActionsList *instance )
 		path = ( GtkTreePath * ) it->data;
 		gtk_tree_model_get_iter( model, &iter, path );
 		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-		items = g_slist_prepend( items, object );
+		items = g_list_prepend( items, object );
 	}
 
 	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( listrows );
 
-	return( g_slist_reverse( items ));
+	return( g_list_reverse( items ));
 }
 
 /**
@@ -606,7 +602,7 @@ nact_iactions_list_get_selected_items( NactIActionsList *instance )
  * Inserts the provided @items list in the treeview.
  *
  * The provided @items list is supposed to be homogeneous, i.e. referes
- * to a whole subtree.
+ * to only profiles, or only actions or menus.
  *
  * If the @items list contains only profiles, they can only be inserted
  * into an action, and the profiles will eventually be renumbered.
@@ -623,7 +619,7 @@ nact_iactions_list_get_selected_items( NactIActionsList *instance )
  * of profiles of the current action.
  */
 void
-nact_iactions_list_insert_items( NactIActionsList *instance, GSList *items )
+nact_iactions_list_insert_items( NactIActionsList *instance, GList *items )
 {
 	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
@@ -849,6 +845,12 @@ nact_iactions_list_is_only_actions_mode( NactIActionsList *instance )
  * nact_iactions_list_select_row:
  * @window: this #NactIActionsList instance.
  * @path: a #GtkTreePath.
+ *
+ * Select the rows at the required path, or the next following, or
+ * the immediate previous.
+ *
+ * Free the provided path, which becomes invalid when this function
+ * returns.
  */
 void
 nact_iactions_list_select_row( NactIActionsList *instance, GtkTreePath *path )
@@ -864,7 +866,21 @@ nact_iactions_list_select_row( NactIActionsList *instance, GtkTreePath *path )
 
 	if( gtk_tree_model_get_iter( model, &iter, path )){
 		gtk_tree_selection_select_iter( selection, &iter );
+
+	} else {
+		gtk_tree_path_next( path );
+		if( gtk_tree_model_get_iter( model, &iter, path )){
+			gtk_tree_selection_select_iter( selection, &iter );
+
+		} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
+			gtk_tree_selection_select_iter( selection, &iter );
+
+		} else if( gtk_tree_path_up( path ) && gtk_tree_model_get_iter( model, &iter, path )){
+			gtk_tree_selection_select_iter( selection, &iter );
+		}
 	}
+
+	gtk_tree_path_free( path );
 }
 
 /**
@@ -1184,11 +1200,11 @@ have_filter_selection_mode( NactIActionsList *instance )
  * count _all_ modified rows, including profiles
  */
 static gboolean
-is_modified_item( NactTreeModel *model, GtkTreePath *path, NAObject *object, GSList **items )
+is_modified_item( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items )
 {
 	/*if( !NA_IS_ACTION_PROFILE( object )){*/
 		if( na_object_is_modified( object )){
-			*items = g_slist_prepend( *items, g_object_ref( object ));
+			*items = g_list_prepend( *items, g_object_ref( object ));
 		}
 	/*}*/
 
@@ -1266,7 +1282,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *i
 static void
 on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance )
 {
-	GSList *selected_items;
+	GList *selected_items;
 
 	selected_items = nact_iactions_list_get_selected_items( instance );
 

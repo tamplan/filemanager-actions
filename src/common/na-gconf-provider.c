@@ -73,7 +73,7 @@ static void           install_monitors( NAGConfProvider *provider );
 static void           config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAGConfProvider *provider );
 static NAPivotNotify *entry_to_notify( const GConfEntry *entry );
 
-static GSList        *iio_provider_read_items_list( const NAIIOProvider *provider );
+static GList         *iio_provider_read_items_list( const NAIIOProvider *provider );
 static NAObjectItem  *read_item( NAGConfProvider *provider, const gchar *path );
 static void           read_item_action( NAGConfProvider *provider, const gchar *path, NAObjectAction *action );
 static void           read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjectAction *action );
@@ -424,12 +424,12 @@ entry_to_notify( const GConfEntry *entry )
  * stored as a #NAObjectAction and its set of #NAObjectProfile of the same,
  * latest, version of these classes.
  */
-static GSList *
+static GList *
 iio_provider_read_items_list( const NAIIOProvider *provider )
 {
 	static const gchar *thisfn = "na_gconf_provider_iio_provider_read_items_list";
 	NAGConfProvider *self;
-	GSList *items_list = NULL;
+	GList *items_list = NULL;
 	GSList *listpath, *ip;
 	NAObjectItem *item;
 
@@ -448,7 +448,7 @@ iio_provider_read_items_list( const NAIIOProvider *provider )
 
 		item = read_item( self, path );
 
-		items_list = g_slist_prepend( items_list, item );
+		items_list = g_list_prepend( items_list, item );
 	}
 
 	na_gconf_utils_free_subdirs( listpath );
@@ -791,7 +791,7 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 {
 	gchar *uuid, *name;
 	gboolean ret;
-	GSList *profiles, *ip;
+	GList *profiles, *ip;
 	NAObjectProfile *profile;
 
 	if( !write_object_item( provider, NA_OBJECT_ITEM( action ), message )){

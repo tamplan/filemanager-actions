@@ -92,11 +92,11 @@ void    nact_tree_model_runtime_init( NactTreeModel *model, gboolean have_dnd );
 void    nact_tree_model_dispose( NactTreeModel *model );
 
 void    nact_tree_model_dump( NactTreeModel *model );
-void    nact_tree_model_fill( NactTreeModel *model, GSList *items, gboolean only_actions);
+void    nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions);
 guint   nact_tree_model_get_items_count( NactTreeModel *model );
 void    nact_tree_model_insert_item( NactTreeModel *model, const NAObject *object, GtkTreePath *path, const NAObject *selected, GtkTreeIter *iter );
 void    nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );
-GSList *nact_tree_model_remove( NactTreeModel *model, GList *selected );
+void    nact_tree_model_remove( NactTreeModel *model, GList *selected );
 void    nact_tree_model_update_parent( NactTreeModel *model, const NAObject *object );
 
 G_END_DECLS

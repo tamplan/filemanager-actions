@@ -401,7 +401,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_export_on_apply";
 	NactAssistantExport *window;
-	GSList *actions, *ia;
+	GList *actions, *ia;
 	gchar *msg = NULL;
 	gchar *reason = NULL;
 	gchar *tmp, *fname;
@@ -439,14 +439,14 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		}
 	}
 
+	na_object_free_items( actions );
+
 	if( window->private->errors ){
 		if( !reason ){
 			reason = g_strdup( _( "You may not have writing permissions on selected folder." ));
 		}
 		window->private->reason = reason;
 	}
-
-	g_slist_free( actions );
 }
 
 static void
@@ -503,7 +503,7 @@ assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *ass
 	GtkWidget *content;
 	NactApplication *appli;
 	NAPivot *pivot;
-	GSList *tree;
+	GList *tree;
 
 	appli = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( appli );
@@ -710,7 +710,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	static const gchar *thisfn = "nact_assistant_export_prepare_confirm";
 	gchar *text, *tmp, *text2;
 	gchar *label1, *label2;
-	GSList *actions, *ia;
+	GList *actions, *ia;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -732,6 +732,8 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 		g_free( text );
 		text = tmp;
 	}
+
+	na_object_free_items( actions );
 
 	g_assert( window->private->uri && strlen( window->private->uri ));
 

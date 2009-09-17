@@ -34,6 +34,7 @@
 
 #include <string.h>
 
+#include "na-object-fn.h"
 #include "na-object-id-class.h"
 #include "na-object-id-fn.h"
 
@@ -77,6 +78,9 @@ static void     object_dump( const NAObject *object);
 static void     object_copy( NAObject *target, const NAObject *source );
 static gboolean object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean object_is_valid( const NAObject *object );
+
+static gchar   *v_new_id( NAObjectId *object );
+static gchar   *most_derived_new_id( NAObjectId *object );
 
 GType
 na_object_id_get_type( void )
@@ -157,6 +161,8 @@ class_init( NAObjectIdClass *klass )
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
+
+	klass->new_id = NULL;
 }
 
 static void
@@ -328,6 +334,28 @@ na_object_id_set_id( NAObjectId *object, const gchar *id )
 }
 
 /**
+ * na_object_id_set_new_id:
+ * @object: the #NAObjectId object whose internal identifiant is to be
+ * set.
+ *
+ * Request a new id to the derived class, and set it.
+ */
+void
+na_object_id_set_new_id( NAObjectId *object )
+{
+	gchar *id;
+
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( !object->private->dispose_has_run );
+
+	id = v_new_id( object );
+
+	g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_ID, id, NULL );
+
+	g_free( id );
+}
+
+/**
  * na_object_id_set_label:
  * @object: the #NAObjectId object whose label is to be set.
  * @label: label to be set.
@@ -424,4 +452,33 @@ object_is_valid( const NAObject *object )
 	}
 
 	return( valid );
+}
+
+static gchar *
+v_new_id( NAObjectId *object )
+{
+	return( most_derived_new_id( object ));
+}
+
+static gchar *
+most_derived_new_id( NAObjectId *object )
+{
+	gchar *new_id;
+	GList *hierarchy, *ih;
+	gboolean found;
+
+	found = FALSE;
+	new_id = NULL;
+	hierarchy = g_list_reverse( na_object_get_hierarchy( NA_OBJECT( object )));
+
+	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
+		if( NA_OBJECT_ID_CLASS( ih->data )->new_id ){
+			new_id = NA_OBJECT_ID_CLASS( ih->data )->new_id( object );
+			found = TRUE;
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
+
+	return( new_id );
 }

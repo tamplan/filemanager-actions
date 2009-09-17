@@ -68,7 +68,7 @@ struct NAPivotPrivate {
 
 	/* configuration tree
 	 */
-	GSList  *tree;
+	GList   *tree;
 
 	/* whether to automatically reload the whole configuration tree
 	 * when a modification has been detected in one of the underlying
@@ -341,12 +341,12 @@ void
 na_pivot_dump( const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_pivot_dump";
-	GSList *it;
+	GList *it;
 	int i;
 
 	g_debug( "%s: consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_slist_length( pivot->private->consumers ));
 	g_debug( "%s: providers=%p (%d elts)", thisfn, ( void * ) pivot->private->providers, g_slist_length( pivot->private->providers ));
-	g_debug( "%s:      tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_slist_length( pivot->private->tree ));
+	g_debug( "%s:      tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
 
 	for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
 		g_debug( "%s:     [%d]: %p", thisfn, i++, it->data );
@@ -408,7 +408,7 @@ na_pivot_free_providers( GSList *providers )
  * The returned list is owned by this #NAPivot object, and should not
  * be g_free(), nor g_object_unref() by the caller.
  */
-GSList *
+GList *
 na_pivot_get_items( const NAPivot *pivot )
 {
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
@@ -451,7 +451,7 @@ na_pivot_add_item( NAPivot *pivot, const NAObject *item )
 	g_return_if_fail( !pivot->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
-	pivot->private->tree = g_slist_append( pivot->private->tree, ( gpointer ) item );
+	pivot->private->tree = g_list_append( pivot->private->tree, ( gpointer ) item );
 }
 
 /**
@@ -470,7 +470,7 @@ na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 	g_return_if_fail( !pivot->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
-	pivot->private->tree = g_slist_remove( pivot->private->tree, ( gconstpointer ) item );
+	pivot->private->tree = g_list_remove( pivot->private->tree, ( gconstpointer ) item );
 	g_object_unref( item );
 }
 
@@ -489,7 +489,7 @@ NAObject *
 na_pivot_get_item( const NAPivot *pivot, const gchar *uuid )
 {
 	uuid_t uua, i_uub;
-	GSList *ia;
+	GList *ia;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( !pivot->private->dispose_has_run, NULL );

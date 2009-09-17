@@ -70,7 +70,7 @@ typedef struct {
 	 * Returns: a hierarchical #GSList of menus, actions and
 	 * profiles as #NAObject-derived objects.
 	 */
-	GSList * ( *read_items_list )    ( const NAIIOProvider *instance );
+	GList *  ( *read_items_list )    ( const NAIIOProvider *instance );
 
 	/**
 	 * is_willing_to_write:
@@ -127,12 +127,12 @@ typedef struct {
 }
 	NAIIOProviderInterface;
 
-GType   na_iio_provider_get_type( void );
+GType  na_iio_provider_get_type( void );
 
-GSList *na_iio_provider_get_items_tree( const NAPivot *pivot );
+GList *na_iio_provider_get_items_tree( const NAPivot *pivot );
 /*GSList *na_iio_provider_sort_tree( const NAPivot *pivot, GSList *tree );*/
-guint   na_iio_provider_write_item( const NAPivot *pivot, NAObject *item, gchar **message );
-guint   na_iio_provider_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message );
+guint  na_iio_provider_write_item( const NAPivot *pivot, NAObject *item, gchar **message );
+guint  na_iio_provider_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message );
 
 /* modification notification message to NAPivot
  */

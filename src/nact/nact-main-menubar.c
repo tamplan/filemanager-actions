@@ -252,14 +252,14 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 void
 nact_main_menubar_refresh_actions_sensitivity( NactMainWindow *window )
 {
-	GSList *selected;
+	GList *selected;
 	guint count;
 
 	g_return_if_fail( NACT_MAIN_WINDOW( window ));
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( window ));
 
 	selected = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	count = g_slist_length( selected );
+	count = g_list_length( selected );
 	na_object_free_items( selected );
 	refresh_actions_sensitivity_with_count( window, count );
 }
@@ -274,14 +274,14 @@ static void
 on_new_menu_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	NAObjectMenu *menu;
-	GSList *items = NULL;
+	GList *items = NULL;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	menu = na_object_menu_new();
 	na_object_check_edition_status( menu );
-	items = g_slist_prepend( items, menu );
+	items = g_list_prepend( items, menu );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
 
 	/*updates = g_slist_prepend( updates, g_object_ref( menu ));
@@ -294,7 +294,7 @@ static void
 on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	NAObjectAction *action;
-	GSList *items = NULL;
+	GList *items = NULL;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -302,7 +302,7 @@ on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 	action = na_object_action_new_with_profile();
 	na_object_check_edition_status( action );
 	/*na_object_check_edition_status( na_object_action_get_profiles( action )->data );*/
-	items = g_slist_prepend( items, action );
+	items = g_list_prepend( items, action );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
 
 	/*updates = g_slist_prepend( updates, g_object_ref( action ));
@@ -317,7 +317,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	NAObjectAction *action;
 	NAObjectProfile *profile;
 	gchar *name;
-	GSList *items = NULL;
+	GList *items = NULL;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -334,7 +334,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	na_object_set_id( profile, name );
 	na_object_check_edition_status( NA_OBJECT( profile ));
 	/*na_object_check_edited_status( NA_OBJECT( action ));*/
-	items = g_slist_prepend( items, profile );
+	items = g_list_prepend( items, profile );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
 
 	/*updates = g_slist_prepend( updates, g_object_ref( profile ));
@@ -391,7 +391,7 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 save_object_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *object )
 {
-	GSList *items, *it;
+	GList *items, *it;
 
 	if( na_object_is_modified( NA_OBJECT( object )) &&
 		na_object_is_valid( NA_OBJECT( object )) &&
@@ -443,63 +443,72 @@ on_quit_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 /*
  * cuts the visible selection
- * - (tree) remove the selection from the treeview
- * - (main) adds the removed selection to deleted
- * - (*) set the clipboard
- * - (tree) select the next row
- *
- * The clipboard must be set with a selection suitable for insertion :
- * - if selection contains only profiles, even from different actions,
- *   then these profiles can only be inserted into an action.
- * - if the selection contains only actions and menus, then these items
- *   can be inserted at root or inside a menu
- * - if the selection is a mixed of profiles, and actions or menus,
- *   then nothing can be done with it.
+ * - (tree) get new refs on selected items
+ * - (tree) remove selected items, unreffing objects
+ * - (main) add selected items to main list of deleted,
+ *          moving newref from list_from_tree to main_list_of_deleted
+ * - (menu) install in clipboard a copy of selected objects
+ * - (tree) select next row (if any, or previous if any, or none)
  */
 static void
 on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
-	GSList *items;
-
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	items = nact_main_window_delete_selection( window );
-	nact_clipboard_set( items );
-	na_object_free_items( items );
-
-	/* the selection is modified before updating the clipboard, so we
-	 * need a manual refresh of actions sensitivity
-	 */
-	nact_main_menubar_refresh_actions_sensitivity( window );
-}
-
-static void
-on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
-{
-	GSList *items;
+	GList *items;
+	GtkTreePath *path;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	nact_clipboard_set( items );
-	na_object_free_items( items );
+	nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ), &path );
+	nact_main_window_move_to_deleted( window, items );
+	nact_clipboard_set( items, FALSE );
+	nact_iactions_list_select_row( NACT_IACTIONS_LIST( window ), path );
 
-	/* selection is not even modified, so a manuel refresh is needed
-	 */
+	g_list_free( items );
+}
+
+/*
+ * copies the visible selection
+ * - (tree) get new refs on selected items
+ * - (menu) install in clipboard a copy of selected objects
+ *          renumbering actions/menus id to ensure unicity at paste time
+ * - (menu) release refs on selected items
+ * - (menu) refresh actions sensitivy (as selection doesn't change)
+ */
+static void
+on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
+{
+	GList *items;
+
+	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	nact_clipboard_set( items, TRUE );
+	na_object_free_items( items );
 	nact_main_menubar_refresh_actions_sensitivity( window );
 }
 
+/*
+ * pastes the current coontent of the clipboard
+ * - (menu) get from clipboard a copy of installed items
+ *          the clipboard will return a new copy
+ *          and renumber its own data for allowing a new paste
+ * - (tree) insert new items, the tree store will ref them
+ *          attaching each item to its parent
+ *          checking edition status of the topmost parent
+ *          selecting the first item at end
+ * - (menu) unreffing the copy got from clipboard
+ */
 static void
 on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
-	GSList *items;
+	GList *items;
 
 	items = nact_clipboard_get();
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
-
-	g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, NULL );
+	na_object_free_items( items );
 }
 
 static void
@@ -508,18 +517,29 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, NULL );
 }
 
+/*
+ * deletes the visible selection
+ * - (tree) get new refs on selected items
+ * - (tree) remove selected items, unreffing objects
+ * - (main) add selected items to main list of deleted,
+ *          moving newref from list_from_tree to main_list_of_deleted
+ * - (tree) select next row (if any, or previous if any, or none)
+ */
 static void
 on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
-	GSList *items;
+	GList *items;
+	GtkTreePath *path;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	items = nact_main_window_delete_selection( window );
-	na_object_free_items( items );
+	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ), &path );
+	nact_main_window_move_to_deleted( window, items );
+	nact_iactions_list_select_row( NACT_IACTIONS_LIST( window ), path );
 
-	g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, NULL );
+	g_list_free( items );
 }
 
 static void

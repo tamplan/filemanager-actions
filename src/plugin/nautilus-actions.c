@@ -284,11 +284,10 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	static const gchar *thisfn = "nautilus_actions_get_file_items";
 	NautilusActions *self;
 	GList *items = NULL;
-	GSList* profiles;
-	GSList *ia, *ip;
+	GList *profiles, *ia, *ip;
 	NautilusMenu *menu = NULL;
 	NautilusMenuItem *item;
-	GSList *tree = NULL;
+	GList *tree = NULL;
 	gchar *label, *uuid;
 	gint submenus = 0;
 	gboolean add_about;

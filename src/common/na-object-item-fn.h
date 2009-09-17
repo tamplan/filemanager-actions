@@ -54,16 +54,16 @@ GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *w
 gboolean       na_object_item_is_enabled( const NAObjectItem *item );
 NAIIOProvider *na_object_item_get_provider( const NAObjectItem *item );
 NAObject      *na_object_item_get_item( const NAObjectItem *item, const gchar *id );
-GSList        *na_object_item_get_items( const NAObjectItem *item );
+GList         *na_object_item_get_items( const NAObjectItem *item );
 guint          na_object_item_get_items_count( const NAObjectItem *item );
-void           na_object_item_free_items( GSList *items );
+void           na_object_item_free_items( GList *items );
 
 void           na_object_item_set_new_uuid( NAObjectItem *item );
 void           na_object_item_set_tooltip( NAObjectItem *item, const gchar *tooltip );
 void           na_object_item_set_icon( NAObjectItem *item, const gchar *icon_name );
 void           na_object_item_set_enabled( NAObjectItem *item, gboolean enabled );
 void           na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider );
-void           na_object_item_set_items( NAObjectItem *item, GSList *items );
+void           na_object_item_set_items( NAObjectItem *item, GList *items );
 
 void           na_object_item_append_item( NAObjectItem *item, const NAObject *object );
 void           na_object_item_insert_item( NAObjectItem *item, const NAObject *object );
