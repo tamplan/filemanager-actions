@@ -38,6 +38,9 @@
 	we are only able to select profiles, or actions/menus.
 	Define new nact_iactions_list_set_filter_selection_mode() api.
 
+	* src/nact/nact-iactions-list.c	(is_removing, set_remove_operation):
+	Doesn't update the selection while removing items.
+
 	* src/common/na-object.c:
 	* src/common/na-object-fn.h
 	(na_object_get_hierarchy, na_object_free_hierarchy): New functions.

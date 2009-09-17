@@ -90,6 +90,7 @@ typedef struct {
 #define IS_FILLING_LIST					"nact-iactions-list-is-filling-list"
 #define HAVE_DND_MODE					"nact-iactions-list-dnd-mode"
 #define FILTER_SELECTION_MODE			"nact-iactions-list-filter-selection-mode"
+#define REMOVE_OPERATION				"nact-iactions-list-removing"
 
 static gint         st_signals[ LAST_SIGNAL ] = { 0 };
 
@@ -109,6 +110,7 @@ static gboolean     have_dnd_mode( NactIActionsList *instance );
 static gboolean     have_filter_selection_mode( NactIActionsList *instance );
 static void         insert_item( NactIActionsList *instance, NAObject *item );
 static gboolean     is_modified_item( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items );
+static gboolean     is_removing( NactIActionsList *instance );
 static void         iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpointer user_data );
 static gboolean     on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsList *instance );
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
@@ -118,6 +120,7 @@ static void         on_iactions_list_item_updated_treeview( NactIActionsList *in
 static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void         select_first_row( NactIActionsList *instance );
 static void         set_is_filling_list( NactIActionsList *instance, gboolean is_filling );
+static void         set_remove_operation( NactIActionsList *instance, gboolean removing );
 static void         toggle_collapse( NactIActionsList *instance );
 static gboolean     toggle_collapse_iter( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter, NAObject *object, gpointer user_data );
 static void         toggle_collapse_row( GtkTreeView *treeview, GtkTreePath *path, guint *toggle );
@@ -418,7 +421,9 @@ nact_iactions_list_dispose( NactIActionsList *instance )
  *
  * Deletes the current selection from the underlying tree store.
  *
- * The returned @path should be gtk_tree_path_free() by the caller.
+ * The returned @path tries to represent the most probable available
+ * selection after deletion has occured.
+ * It should be gtk_tree_path_free() by the caller.
  */
 void
 nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **path )
@@ -434,10 +439,14 @@ nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **p
 	selection = gtk_tree_view_get_selection( treeview );
 	selected = gtk_tree_selection_get_selected_rows( selection, &model );
 
+	set_remove_operation( instance, TRUE );
+
 	if( g_list_length( selected )){
 		*path = gtk_tree_path_copy(( GtkTreePath * ) selected->data );
 		nact_tree_model_remove( NACT_TREE_MODEL( model ), selected );
 	}
+
+	set_remove_operation( instance, FALSE );
 
 	g_list_foreach( selected, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( selected );
@@ -1212,6 +1221,12 @@ is_modified_item( NactTreeModel *model, GtkTreePath *path, NAObject *object, GLi
 	return( FALSE );
 }
 
+static gboolean
+is_removing( NactIActionsList *instance )
+{
+	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), REMOVE_OPERATION )));
+}
+
 static void
 iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpointer user_data )
 {
@@ -1278,6 +1293,8 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *i
 
 /*
  * this is our handler of "changed" signal emitted by the treeview
+ * it is inhibited while filling the list (usually only at runtime init)
+ * and while deleting a selection
  */
 static void
 on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance )
@@ -1286,8 +1303,9 @@ on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *in
 
 	selected_items = nact_iactions_list_get_selected_items( instance );
 
-	if( !nact_iactions_list_is_filling_list( instance )){
-		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
+	if( !nact_iactions_list_is_filling_list( instance ) &&
+		!is_removing( instance )){
+			g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
 	}
 }
 
@@ -1364,6 +1382,12 @@ static void
 set_is_filling_list( NactIActionsList *instance, gboolean is_filling )
 {
 	g_object_set_data( G_OBJECT( instance ), IS_FILLING_LIST, GINT_TO_POINTER( is_filling ));
+}
+
+static void
+set_remove_operation( NactIActionsList *instance, gboolean removing )
+{
+	g_object_set_data( G_OBJECT( instance ), REMOVE_OPERATION, GINT_TO_POINTER( removing ));
 }
 
 static void

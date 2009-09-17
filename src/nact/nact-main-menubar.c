@@ -280,13 +280,8 @@ on_new_menu_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	menu = na_object_menu_new();
-	na_object_check_edition_status( menu );
 	items = g_list_prepend( items, menu );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
-
-	/*updates = g_slist_prepend( updates, g_object_ref( menu ));
-	g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, updates );*/
-
 	na_object_free_items( items );
 }
 
@@ -300,14 +295,8 @@ on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	action = na_object_action_new_with_profile();
-	na_object_check_edition_status( action );
-	/*na_object_check_edition_status( na_object_action_get_profiles( action )->data );*/
 	items = g_list_prepend( items, action );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
-
-	/*updates = g_slist_prepend( updates, g_object_ref( action ));
-	g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, updates );*/
-
 	na_object_free_items( items );
 }
 
@@ -328,17 +317,13 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 			NULL );
 
 	profile = na_object_profile_new();
-	name = na_object_action_get_new_profile_name( action );
 
+	name = na_object_action_get_new_profile_name( action );
 	na_object_action_attach_profile( action, profile );
 	na_object_set_id( profile, name );
-	na_object_check_edition_status( NA_OBJECT( profile ));
-	/*na_object_check_edited_status( NA_OBJECT( action ));*/
+
 	items = g_list_prepend( items, profile );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
-
-	/*updates = g_slist_prepend( updates, g_object_ref( profile ));
-	g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, updates );*/
 
 	na_object_free_items( items );
 	g_free( name );
@@ -539,6 +524,8 @@ on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 	nact_main_window_move_to_deleted( window, items );
 	nact_iactions_list_select_row( NACT_IACTIONS_LIST( window ), path );
 
+	/* do not unref selected items as the ref has been moved to main_deleted
+	 */
 	g_list_free( items );
 }
 
