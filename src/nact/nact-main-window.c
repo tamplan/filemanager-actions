@@ -553,6 +553,20 @@ nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid 
 	return( FALSE );
 }
 
+/**
+ * nact_main_window_delete_selection:
+ * @window: this #NactMainWindow instance.
+ *
+ * Deletes the currently selected items from the treeview.
+ *
+ * We only delete the selected items from the treeview.
+ * But, if asked for, we return the selection extended to a valid,
+ * contiguous tree, suitable for a later insertion elsewhere.
+ *
+ * Returns: the tree of selected items, or NULL.
+ *
+ * The returned #GSList should be na_object_free_items() by the caller.
+ */
 GSList *
 nact_main_window_delete_selection( NactMainWindow *window )
 {
@@ -722,6 +736,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 	}
 
 	nact_iactions_list_initial_load_toplevel( NACT_IACTIONS_LIST( window ));
+	nact_iactions_list_set_filter_selection_mode( NACT_IACTIONS_LIST( window ), TRUE );
 	nact_iactions_list_set_multiple_selection_mode( NACT_IACTIONS_LIST( window ), TRUE );
 	nact_iactions_list_set_dnd_mode( NACT_IACTIONS_LIST( window ), TRUE );
 

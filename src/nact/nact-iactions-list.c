@@ -75,11 +75,21 @@ enum {
 	TOGGLE_EXPAND
 };
 
+/* when iterating through a selection
+ */
+typedef struct {
+	guint nb_profiles;
+	guint nb_actions;
+	guint nb_menus;
+}
+	SelectionIter;
+
 /* data set against GObject
  */
 #define SHOW_ONLY_ACTIONS_MODE			"nact-iactions-list-show-only-actions-mode"
 #define IS_FILLING_LIST					"nact-iactions-list-is-filling-list"
 #define HAVE_DND_MODE					"nact-iactions-list-dnd-mode"
+#define FILTER_SELECTION_MODE			"nact-iactions-list-filter-selection-mode"
 
 static gint         st_signals[ LAST_SIGNAL ] = { 0 };
 
@@ -91,9 +101,12 @@ static void         free_items_callback( NactIActionsList *instance, GSList *ite
 
 static void         display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *instance );
 static void         extend_selection_to_childs( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *parent );
+static gboolean     filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactIActionsList *instance );
+static void         filter_selection_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, SelectionIter *str );
 static GtkTreeView *get_actions_list_treeview( NactIActionsList *instance );
 static gboolean     get_item( NactTreeModel *model, GtkTreePath *path, NAObject *object, GSList **items );
 static gboolean     have_dnd_mode( NactIActionsList *instance );
+static gboolean     have_filter_selection_mode( NactIActionsList *instance );
 static void         insert_item( NactIActionsList *instance, NAObject *item );
 static gboolean     is_modified_item( NactTreeModel *model, GtkTreePath *path, NAObject *object, GSList **items );
 static void         iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpointer user_data );
@@ -300,6 +313,8 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GSList *it
 	GtkTreeView *treeview;
 	NactTreeModel *model;
 	gboolean have_dnd;
+	gboolean have_filter_selection;
+	GtkTreeSelection *selection;
 
 	g_debug( "%s: instance=%p, items=%p (%d items)",
 			thisfn, ( void * ) instance, ( void * ) items, g_slist_length( items ));
@@ -308,6 +323,12 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GSList *it
 	treeview = get_actions_list_treeview( instance );
 	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 	have_dnd = have_dnd_mode( instance );
+
+	have_filter_selection = have_filter_selection_mode( instance );
+	if( have_filter_selection ){
+		selection = gtk_tree_view_get_selection( treeview );
+		gtk_tree_selection_set_select_function( selection, ( GtkTreeSelectionFunc ) filter_selection, instance, NULL );
+	}
 
 	nact_tree_model_runtime_init( model, have_dnd );
 
@@ -540,7 +561,11 @@ nact_iactions_list_get_modified_items( NactIActionsList *instance )
  * nact_iactions_list_get_selected_items:
  * @window: this #NactIActionsList instance.
  *
- * Returns the currently selected actions when in export mode.
+ * Returns the currently selected rows.
+ *
+ * If a selected item is collapsed, we consider that all subitems are
+ * also silently selected. If it is expanded, then only actually
+ * selected rows are returned.
  *
  * The returned GSList should be nact_iaction_list_free_items_list()-ed.
  */
@@ -859,6 +884,25 @@ nact_iactions_list_set_dnd_mode( NactIActionsList *instance, gboolean have_dnd )
 }
 
 /**
+ * nact_iactions_list_set_filter_selection_mode:
+ * @window: this #NactIActionsList instance.
+ * @filter: whether the filter selection function must be installed ?
+ *
+ * If %FALSE, user is able to select any item.
+ * If %TRUE, a filter selection function is installed, and the selection
+ * can only contains :
+ * - either only profiles
+ * - or actions or menus.
+ *
+ * This property defaults to %FALSE.
+ */
+void
+nact_iactions_list_set_filter_selection_mode( NactIActionsList *instance, gboolean filter )
+{
+	g_object_set_data( G_OBJECT( instance ), FILTER_SELECTION_MODE, GINT_TO_POINTER( filter ));
+}
+
+/**
  * nact_iactions_list_set_multiple_selection_mode:
  * @window: this #NactIActionsList instance.
  * @multiple: whether the treeview does support multiple selection ?
@@ -1009,6 +1053,96 @@ extend_selection_to_childs( NactIActionsList *instance, GtkTreeView *treeview, G
 	}
 }
 
+/*
+ * rationale: it is very difficult to copy anything in the clipboard,
+ * and to hope that this will be easily copyable anywhere after.
+ * We know how to insert profiles, or how to insert actions or menus,
+ * but not how not where to insert e.g. a mix selection.
+ * So the selection allows :
+ * - only profiles, maybe from different actions
+ * - or only actions or menus.
+ *
+ * Note that we do not allow here a selection to be made or not. What
+ * we actually allow is only toggle the selection state. And so, we
+ * only deal with "do we allow to toggle from non-selected ?"
+ */
+static gboolean
+filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactIActionsList *instance )
+{
+	SelectionIter *str;
+	GtkTreeIter iter;
+	NAObject *object;
+	gboolean select_ok;
+
+	if( path_currently_selected ){
+		return( TRUE );
+	}
+
+	/* iter through the selection: does it contain profiles ? actions or
+	 * menus ? or both ?
+	 */
+	str = g_new0( SelectionIter, 1 );
+	str->nb_profiles = 0;
+	str->nb_actions = 0;
+	str->nb_menus = 0;
+
+	gtk_tree_selection_selected_foreach( selection, ( GtkTreeSelectionForeachFunc ) filter_selection_iter, str );
+
+	/* if there is not yet any selection, then anything is allowed
+	 */
+	if( str->nb_profiles + str->nb_actions + str->nb_menus == 0 ){
+		return( TRUE );
+	}
+
+	gtk_tree_model_get_iter( model, &iter, path );
+	gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+
+	g_return_val_if_fail( object, FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), FALSE );
+
+	select_ok = FALSE;
+
+	/* selecting a profile is only ok if a profile is already selected
+	 */
+	if( NA_IS_OBJECT_PROFILE( object )){
+		select_ok = ( str->nb_actions + str->nb_menus == 0 );
+	}
+
+	/* selecting an action or a menu is only ok if no profile is selected
+	 */
+	if( NA_IS_OBJECT_ITEM( object )){
+		select_ok = ( str->nb_profiles == 0 );
+	}
+
+	g_free( str );
+	g_object_unref( object );
+
+	return( select_ok );
+}
+
+static void
+filter_selection_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, SelectionIter *str )
+{
+	NAObject *object;
+
+	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+
+	g_return_if_fail( object );
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+
+	if( NA_IS_OBJECT_PROFILE( object )){
+		str->nb_profiles += 1;
+
+	} else if( NA_IS_OBJECT_ACTION( object )){
+		str->nb_actions += 1;
+
+	} else if( NA_IS_OBJECT_MENU( object )){
+		str->nb_menus += 1;
+	}
+
+	g_object_unref( object );
+}
+
 static GtkTreeView *
 get_actions_list_treeview( NactIActionsList *instance )
 {
@@ -1038,6 +1172,12 @@ static gboolean
 have_dnd_mode( NactIActionsList *instance )
 {
 	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), HAVE_DND_MODE )));
+}
+
+static gboolean
+have_filter_selection_mode( NactIActionsList *instance )
+{
+	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), FILTER_SELECTION_MODE )));
 }
 
 /*

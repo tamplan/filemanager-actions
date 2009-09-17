@@ -441,6 +441,21 @@ on_quit_activated( GtkAction *gtk_action, NactMainWindow *window )
 	}
 }
 
+/*
+ * cuts the visible selection
+ * - (tree) remove the selection from the treeview
+ * - (main) adds the removed selection to deleted
+ * - (*) set the clipboard
+ * - (tree) select the next row
+ *
+ * The clipboard must be set with a selection suitable for insertion :
+ * - if selection contains only profiles, even from different actions,
+ *   then these profiles can only be inserted into an action.
+ * - if the selection contains only actions and menus, then these items
+ *   can be inserted at root or inside a menu
+ * - if the selection is a mixed of profiles, and actions or menus,
+ *   then nothing can be done with it.
+ */
 static void
 on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 {

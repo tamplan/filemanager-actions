@@ -88,6 +88,7 @@ gboolean  nact_iactions_list_is_filling_list( NactIActionsList *instance );
 gboolean  nact_iactions_list_is_only_actions_mode( NactIActionsList *instance );
 void      nact_iactions_list_select_row( NactIActionsList *instance, GtkTreePath *path );
 void      nact_iactions_list_set_dnd_mode( NactIActionsList *instance, gboolean have_dnd );
+void      nact_iactions_list_set_filter_selection_mode( NactIActionsList *instance, gboolean filter );
 void      nact_iactions_list_set_multiple_selection_mode( NactIActionsList *instance, gboolean multiple );
 void      nact_iactions_list_set_only_actions_mode( NactIActionsList *instance, gboolean only_actions );
 void      nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *item );

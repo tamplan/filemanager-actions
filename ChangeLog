@@ -1,3 +1,12 @@
+2009-09-17 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-iactions-list.c (filter_selection,
+	filter_selection_iter):	Controls the allowed selection so that
+	we are only able to select profiles, or actions/menus.
+	Define new nact_iactions_list_set_filter_selection_mode() api.
+
+	* src/nact/nact-main-tab.c: Removed (unused) file.
+
 2009-09-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:
