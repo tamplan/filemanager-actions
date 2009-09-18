@@ -44,9 +44,19 @@
 	nact_tree_model_update_parent(): removed function.
 
 	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h:
 	Set selection on last level 1 inserted row.
+	nact_iactions_list_get_items_count: Removed function.
 
 	* src/nact/nact-main-menubar.c (on_new_profile_activated): Fixed.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h (nact_main_window_get_all_items_count):
+	Removed function.
+
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h (nact_tree_model_get_items_count):
+	Removed function.
 
 	* src/nact/nact-window.c:
 	* src/nact/nact-window.h (nact_window_count_level_zero_items):

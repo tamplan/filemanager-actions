@@ -664,7 +664,7 @@ refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selec
 	static const gchar *thisfn = "nact_main_menubar_refresh_actions_sensitivity_with_count";
 	NAObjectItem *item;
 	NAObjectProfile *profile;
-	guint count_all;
+	/*guint count_all;*/
 	guint count_modified;
 	gboolean is_clipboard_empty;
 
@@ -677,7 +677,8 @@ refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selec
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
-	count_all = nact_main_window_get_all_items_count( window );
+	/* TODO: replace count_all by is_empty */
+	/*count_all = nact_main_window_get_all_items_count( window );*/
 	count_modified = nact_main_window_get_modified_items_count( window );
 	is_clipboard_empty = nact_clipboard_is_empty();
 
@@ -700,7 +701,7 @@ refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selec
 	/* preferences always enabled */
 	/* import item always enabled */
 	/* export item enabled if IActionsList not empty */
-	enable_item( window, "ExportItem", count_all > 0 );
+	enable_item( window, "ExportItem", FALSE /*count_all > 0*/ );
 	/* TODO: help temporarily disabled */
 	enable_item( window, "HelpItem", FALSE );
 	/* about always enabled */

@@ -78,7 +78,6 @@ struct NactTreeModelPrivate {
 	gboolean     dispose_has_run;
 	BaseWindow  *window;
 	GtkTreeView *treeview;
-	guint        count;
 	gboolean     have_dnd;
 	gchar       *drag_dest_uri;
 	GList       *drag_items;
@@ -166,8 +165,6 @@ static gboolean       idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, 
 
 static gboolean       on_drag_begin( GtkWidget *widget, GdkDragContext *context, BaseWindow *window );
 static void           on_drag_end( GtkWidget *widget, GdkDragContext *context, BaseWindow *window );
-static void           on_row_deleted( GtkTreeModel *tree_model, GtkTreePath *path, NactTreeModel *model );
-static void           on_row_inserted( GtkTreeModel *tree_model, GtkTreePath *path, GtkTreeIter *iter, NactTreeModel *model );
 
 /*static gboolean       on_drag_drop( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, BaseWindow *window );
 static void           on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, GtkSelectionData *data, guint info, guint time, BaseWindow *window );*/
@@ -285,7 +282,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactTreeModelPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->count = 0;
 }
 
 static void
@@ -433,7 +429,6 @@ void
 nact_tree_model_runtime_init( NactTreeModel *model, gboolean have_dnd )
 {
 	static const gchar *thisfn = "nact_tree_model_runtime_init";
-	GtkTreeModel *ts_model;
 
 	g_debug( "%s: model=%p, have_dnd=%s", thisfn, ( void * ) model, have_dnd ? "True":"False" );
 	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
@@ -469,20 +464,6 @@ nact_tree_model_runtime_init( NactTreeModel *model, gboolean have_dnd )
 				"drag_data-received",
 				G_CALLBACK( on_drag_data_received ));*/
 	}
-
-	ts_model = gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model ));
-
-	g_signal_connect(
-			G_OBJECT( ts_model ),
-			"row-deleted",
-			G_CALLBACK( on_row_deleted ),
-			model );
-
-	g_signal_connect(
-			G_OBJECT( ts_model ),
-			"row-inserted",
-			G_CALLBACK( on_row_inserted ),
-			model );
 }
 
 void
@@ -604,21 +585,6 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 			append_item( model, treeview, parent, &iter, object );
 		}
 	}
-}
-
-/**
- * nact_tree_model_get_items_count:
- * @model: this #NactTreeModel instance.
- *
- * Returns: the total count of rows, whether they are currently visible
- * or not.
- */
-guint
-nact_tree_model_get_items_count( NactTreeModel *model )
-{
-	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), 0 );
-
-	return( model->private->count );
 }
 
 /**
@@ -1194,22 +1160,6 @@ on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_context, gint x, 
 	g_debug( "%s: widget=%p, drag_context=%p, x=%d, y=%d, selection_data=%p, info=%d, time=%d, window=%p",
 			thisfn, ( void * ) widget, ( void * ) drag_context, x, y, ( void * ) data, info, time, ( void * ) window );
 }*/
-
-static void
-on_row_deleted( GtkTreeModel *tree_model, GtkTreePath *path, NactTreeModel *model )
-{
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
-
-	model->private->count -= 1;
-}
-
-static void
-on_row_inserted( GtkTreeModel *tree_model, GtkTreePath *path, GtkTreeIter *iter, NactTreeModel *model )
-{
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
-
-	model->private->count += 1;
-}
 
 static gint
 sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, BaseWindow *window )

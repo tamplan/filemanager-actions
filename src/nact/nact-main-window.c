@@ -554,21 +554,6 @@ nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid 
 }
 
 /**
- * nact_main_window_get_all_items_count:
- * @window: this #NactMainWindow instance.
- *
- * Returns: the current total count of items in the view.
- */
-guint
-nact_main_window_get_all_items_count( const NactMainWindow *window )
-{
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), 0 );
-	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( window ), 0 );
-
-	return( nact_iactions_list_get_items_count( NACT_IACTIONS_LIST( window )));
-}
-
-/**
  * nact_main_window_get_modified_items_count:
  * @window: this #NactMainWindow instance.
  *

@@ -511,30 +511,6 @@ nact_iactions_list_get_items( NactIActionsList *instance )
 }
 
 /**
- * nact_iactions_list_get_items_count:
- * @window: this #NactIActionsList instance.
- *
- * Returns: the current count of items in the list, whether they are
- * currently visible or not.
- */
-guint
-nact_iactions_list_get_items_count( NactIActionsList *instance )
-{
-	GtkTreeView *treeview;
-	NactTreeModel *model;
-
-	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), 0 );
-
-	treeview = get_actions_list_treeview( instance );
-
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-
-	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), 0 );
-
-	return( nact_tree_model_get_items_count( model ));
-}
-
-/**
  * nact_iactions_list_get_modified_items:
  * @window: this #NactIActionsList instance.
  *
