@@ -28,10 +28,6 @@
  *   ... and many others (see AUTHORS)
  */
 
-/*
- * Adapted from File-Roller:fr-list-model.c
- */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -647,8 +643,6 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 	GtkTreeIter select_iter;
 	GtkTreeIter store_iter;
 	NAObject *selected;
-	/*GtkTreeIter profile_iter;*/
-	/*GList *profiles;*/
 
 	path_str = path ? gtk_tree_path_to_string( path ) : NULL;
 	g_debug( "%s: model=%p, object=%p (%s), path=%p (%s), iter=%p",
@@ -713,16 +707,6 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 	if( parent_iter ){
 		gtk_tree_iter_free( parent_iter );
 	}
-
-	/*if( NA_IS_OBJECT_ACTION( object )){
-		g_return_if_fail( na_object_get_items_count( object ) == 1 );
-		profiles = na_object_get_items( object );
-		append_item( GTK_TREE_STORE( store ), model->private->treeview, &store_iter, &profile_iter, NA_OBJECT( profiles->data ));
-		na_object_free_items( profiles );
-	}*/
-
-	/*nact_tree_model_update_parent( model, object );
-	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));*/
 
 	gtk_tree_model_filter_convert_child_iter_to_iter( GTK_TREE_MODEL_FILTER( model ), iter, &store_iter );
 }

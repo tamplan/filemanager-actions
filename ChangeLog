@@ -36,9 +36,15 @@
 	Move GtkBuilder to private data structure to be able to unref it.
 
 	* src/nact/nact-clipboard.c:
+	Recursively renumber NAObjectItem when needed.
+
+	* src/nact/nact-clipboard.c:
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nact-tree-model.c: Fix cut/copy/paste functions.
 	nact_tree_model_update_parent(): removed function.
+
+	* src/nact/nact-iactions-list.c:
+	Set selection on last level 1 inserted row.
 
 	* src/nact/nact-main-menubar.c (on_new_profile_activated): Fixed.
 
