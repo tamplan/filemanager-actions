@@ -37,6 +37,8 @@
 #include "na-utils.h"
 #include "na-gconf-utils.h"
 
+static gboolean sync_gconf( GConfClient *gconf, gchar **message );
+
 /*
  * load the keys which are the subdirs of the given path
  * returns a list of keys as full path
@@ -262,6 +264,8 @@ na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_sc
 	GConfValue *value = NULL;
 	gboolean ret;
 
+	g_return_val_if_fail( GCONF_IS_CLIENT( gconf ), FALSE );
+
 	ret = default_value;
 
 	if( use_schema ){
@@ -299,6 +303,8 @@ na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
 	GError *error = NULL;
 	GSList *list_strings;
 
+	g_return_val_if_fail( GCONF_IS_CLIENT( gconf ), NULL );
+
 	list_strings = gconf_client_get_list( gconf, path, GCONF_VALUE_STRING, &error );
 
 	if( error ){
@@ -316,6 +322,8 @@ na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value
 	static const gchar *thisfn = "na_gconf_utils_write_bool";
 	gboolean ret = TRUE;
 	GError *error = NULL;
+
+	g_return_val_if_fail( GCONF_IS_CLIENT( gconf ), FALSE );
 
 	if( !gconf_client_set_bool( gconf, path, value, &error )){
 		if( message ){
@@ -336,6 +344,8 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
 	gboolean ret = TRUE;
 	GError *error = NULL;
 
+	g_return_val_if_fail( GCONF_IS_CLIENT( gconf ), FALSE );
+
 	if( !gconf_client_set_string( gconf, path, value, &error )){
 		if( message ){
 			*message = g_strdup( error->message );
@@ -355,11 +365,37 @@ na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList 
 	gboolean ret = TRUE;
 	GError *error = NULL;
 
+	g_return_val_if_fail( GCONF_IS_CLIENT( gconf ), FALSE );
+
 	if( !gconf_client_set_list( gconf, path, GCONF_VALUE_STRING, value, &error )){
 		if( message ){
 			*message = g_strdup( error->message );
 		}
 		g_warning( "%s: path=%s, value=%s, error=%s", thisfn, path, value ? "True":"False", error->message );
+		g_error_free( error );
+		ret = FALSE;
+	}
+
+	if( ret ){
+		ret = sync_gconf( gconf, message );
+	}
+
+	return( ret );
+}
+
+static gboolean
+sync_gconf( GConfClient *gconf, gchar **message )
+{
+	static const gchar *thisfn = "na_gconf_utils_sync_gconf";
+	gboolean ret = TRUE;
+	GError *error = NULL;
+
+	gconf_client_suggest_sync( gconf, &error );
+	if( error ){
+		if( message ){
+			*message = g_strdup( error->message );
+		}
+		g_warning( "%s: error=%s", thisfn, error->message );
 		g_error_free( error );
 		ret = FALSE;
 	}

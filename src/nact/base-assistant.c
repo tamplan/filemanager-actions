@@ -48,12 +48,13 @@ struct BaseAssistantClassPrivate {
 /* private instance data
  */
 struct BaseAssistantPrivate {
-	gboolean dispose_has_run;
-	gboolean cancel_on_escape;
-	gboolean warn_on_escape;
-	gboolean warn_on_cancel;
-	gboolean apply_has_run;
-	gboolean escape_key_pressed;
+	gboolean    dispose_has_run;
+	GtkBuilder *builder;
+	gboolean    cancel_on_escape;
+	gboolean    warn_on_escape;
+	gboolean    warn_on_cancel;
+	gboolean    apply_has_run;
+	gboolean    escape_key_pressed;
 };
 
 /* instance properties
@@ -282,6 +283,8 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
+		g_object_unref( self->private->builder );
+
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( window );
@@ -297,7 +300,7 @@ instance_finalize( GObject *window )
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_assert( BASE_IS_ASSISTANT( window ));
-	self = ( BaseAssistant * ) window;
+	self = BASE_ASSISTANT( window );
 
 	g_free( self->private );
 
@@ -317,22 +320,21 @@ instance_finalize( GObject *window )
 static GtkWindow *
 base_get_window( BaseWindow *window, const gchar *name )
 {
-	GtkBuilder *builder;
 	BaseApplication *appli;
 	gchar *fname;
 	GtkWindow *dialog;
 
-	builder = gtk_builder_new();
+	BASE_ASSISTANT( window )->private->builder = gtk_builder_new();
 
 	appli = base_window_get_application( window );
 
 	fname = base_application_get_ui_filename( appli );
 
-	gtk_builder_add_from_file( builder, fname, NULL );
+	gtk_builder_add_from_file( BASE_ASSISTANT( window )->private->builder, fname, NULL );
 
 	g_free( fname );
 
-	dialog = GTK_WINDOW( gtk_builder_get_object( builder, name ));
+	dialog = GTK_WINDOW( gtk_builder_get_object( BASE_ASSISTANT( window )->private->builder, name ));
 
 	return( dialog );
 }

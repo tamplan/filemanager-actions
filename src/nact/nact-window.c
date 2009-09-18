@@ -274,35 +274,59 @@ nact_window_delete_object_item( NactWindow *window, NAObjectItem *item )
  * @window: this #NactWindow-derived instance.
  * @items: full current tree of items in #NactIActionsList treeview.
  *
- * Writes as a GConf preference order and content of level zero items
- * if it has been modified.
+ * Writes as a GConf preference order and content of level zero items.
  */
 void
-nact_window_write_level_zero( NactWindow *window, GSList *items )
+nact_window_write_level_zero( NactWindow *window, GList *items )
 {
-	GSList *it;
-	gboolean modified;
+	static const gchar *thisfn = "nact_window_write_level_zero";
+	GList *it;
 	gchar *id;
 	GSList *content;
 	NactApplication *application;
 	NAPivot *pivot;
 
-	modified = FALSE;
-	for( it = items ; it && !modified ; it = it->next ){
-		modified = na_object_is_modified( it->data );
-	}
+	g_debug( "%s: window=%p, items=%p (%d items)", thisfn, ( void * ) window, ( void * ) items, g_list_length( items ));
+	g_return_if_fail( NACT_IS_WINDOW( window ));
 
-	if( modified ){
-		content = NULL;
-		for( it = items ; it && !modified ; it = it->next ){
-			id = na_object_get_id( it->data );
-			content = g_slist_prepend( content, id );
+	content = NULL;
+	for( it = items ; it ; it = it->next ){
+		id = na_object_get_id( it->data );
+		content = g_slist_prepend( content, id );
+	}
+	content = g_slist_reverse( content );
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+	na_iprefs_set_level_zero_items( NA_IPREFS( pivot ), content );
+
+	na_utils_free_string_list( content );
+}
+
+/**
+ * nact_window_count_level_zero_items:
+ */
+void
+nact_window_count_level_zero_items( GList *items, guint *actions, guint *profiles, guint *menus )
+{
+	GList *it;
+
+	g_return_if_fail( actions );
+	g_return_if_fail( profiles );
+	g_return_if_fail( menus );
+
+	*actions = 0;
+	*profiles = 0;
+	*menus = 0;
+
+	for( it = items ; it ; it = it->next ){
+		if( NA_IS_OBJECT_ACTION( it->data )){
+			*actions += 1;
+		} else if( NA_IS_OBJECT_PROFILE( it->data )){
+			*profiles += 1;
+		} else if( NA_IS_OBJECT_MENU( it->data )){
+			*menus += 1;
 		}
-		content = g_slist_reverse( content );
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		pivot = nact_application_get_pivot( application );
-		na_iprefs_set_level_zero_items( NA_IPREFS( pivot ), content );
-		na_utils_free_string_list( content );
 	}
 }
 

@@ -44,6 +44,20 @@
  * As the reference count of the original object is not incremented
  * here, the caller has to garantee itself that the original object
  * will stay in life at least as long as the duplicated one.
+ *
+ * Modification status in Nautilus-Actions configuration tool.
+ *
+ * - Objects whose origin is NULL are considered as modified ; this is
+ *   in particular the case of new, pasted, imported and dropped
+ *   objects.
+ *
+ * - when a new object, whether is is really new or it has been pasted,
+ *   imported or dropped, is inserted somewhere in the tree, its
+ *   immediate parent is also marked as modified.
+ *
+ * - Check for edition status, which positions modification and validity
+ *   status, is not recursive ; it is the responsability of the
+ *   implementation to check for edition status of childs of object..
  */
 
 #include <glib-object.h>

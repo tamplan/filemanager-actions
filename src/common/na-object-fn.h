@@ -67,6 +67,7 @@ gboolean  na_object_iduplicable_is_valid( const NAObject *object );
 
 NAObject *na_object_iduplicable_get_origin( const NAObject *object );
 void      na_object_iduplicable_set_origin( NAObject *object, const NAObject *origin );
+void      na_object_iduplicable_set_origin_recurse( NAObject *object, const NAObject *origin );
 
 G_END_DECLS
 

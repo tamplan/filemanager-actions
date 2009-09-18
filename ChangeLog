@@ -1,3 +1,58 @@
+2009-09-18 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-gconf-utils.c:
+	Add validity checks on public functions.
+	sync_gconf: New function.
+
+	* src/common/na-iduplicable.c:
+	* src/common/na-iduplicable.h:
+	Create new interface API get_childs() to let implementors recurse
+	into childs if any.
+
+	* src/common/na-object.c:
+	* src/common/na-object-class.h(get_childs): New virtual function.
+	Converts the interface API into a class virtual function.
+
+	* src/common/na-obj-action.c:
+	* src/common/na-obj-menu.c:
+	* src/common/na-obj-profile.c:
+	* src/common/na-object-id.c:
+	Do not implement get_childs() NAObject virtual function.
+
+	* src/common/na-object-item.c:
+	Implements get_childs() virtual function.
+	Use na_object_iduplicable_are_equal() instead of obsoleted public
+	na_object_are_equal() API.
+
+	* src/common/na-obj-action.c (is_valid):
+	Adds a check on profile existance.
+
+	* src/common/na-object.c:
+	* src/common/na-object-api.h (na_object_set_origin_rec):
+	* src/common/na-object-fn.h (na_object_iduplicable_set_origin_recurse):
+	New API. Let caller recursively set an origin on objects.
+
+	* src/nact/base-assistant.c:
+	Move GtkBuilder to private data structure to be able to unref it.
+
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-tree-model.c: Fix cut/copy/paste functions.
+	nact_tree_model_update_parent(): removed function.
+
+	* src/nact/nact-main-menubar.c (on_new_profile_activated): Fixed.
+
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h (nact_window_count_level_zero_items):
+	New	function.
+
+	* src/nact/nact-assistant-export.ui: New file (see #579345).
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Renumber items (see #579345).
+
+	* src/nact/Makefile.am: Updated accordingly.
+
 2009-09-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-iio-provider.c

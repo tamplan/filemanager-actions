@@ -164,6 +164,7 @@ class_init( NAObjectActionClass *klass )
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
+	naobject_class->get_childs = NULL;
 }
 
 static void
@@ -570,7 +571,10 @@ object_are_equal( const NAObject *a, const NAObject *b )
 
 /*
  * a valid NAObjectAction requires a not null, not empty label
- * this is checked here as NAObject doesn't have this condition
+ * this is checked here as NAObjectId doesn't have this condition
+ *
+ * and at least one profile
+ * checked here because NAObjectItem doesn't have this condition
  */
 gboolean
 object_is_valid( const NAObject *action )
@@ -585,6 +589,10 @@ object_is_valid( const NAObject *action )
 		label = na_object_get_label( NA_OBJECT_ACTION( action ));
 		is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
 		g_free( label );
+	}
+
+	if( is_valid ){
+		is_valid = ( na_object_get_items_count( action ) >= 1 );
 	}
 
 	return( is_valid );

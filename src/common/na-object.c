@@ -83,6 +83,9 @@ static gboolean       do_is_valid( const NAObject *object );
 
 static void           do_copy( NAObject *target, const NAObject *source );
 
+static GList         *v_get_childs( const NAObject *object );
+static GList         *most_derived_get_childs( const NAObject *object );
+
 GType
 na_object_get_type( void )
 {
@@ -152,6 +155,7 @@ class_init( NAObjectClass *klass )
 	klass->copy = do_copy;
 	klass->are_equal = do_are_equal;
 	klass->is_valid = do_is_valid;
+	klass->get_childs = NULL;
 }
 
 static void
@@ -616,7 +620,8 @@ do_is_valid( const NAObject *object )
  * na_object_iduplicable_check_edition_status:
  * @object: the #NAObject object to be checked.
  *
- * Checks for the edition status of @object.
+ * Recursively checks for the edition status of @object and its childs
+ * (if any).
  *
  * Internally set some properties which may be requested later. This
  * two-steps check-request let us optimize some work in the UI.
@@ -630,10 +635,17 @@ do_is_valid( const NAObject *object )
 void
 na_object_iduplicable_check_edition_status( const NAObject *object )
 {
+	GList *childs, *ic;
+
 	g_return_if_fail( NA_IS_OBJECT( object ));
 	g_return_if_fail( !object->private->dispose_has_run );
 
 	na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
+
+	childs = v_get_childs( object );
+	for( ic = childs ; ic ; ic = ic->next ){
+		na_iduplicable_check_edition_status( NA_IDUPLICABLE( ic->data ));
+	}
 }
 
 /**
@@ -710,4 +722,52 @@ na_object_iduplicable_set_origin( NAObject *object, const NAObject *origin )
 	g_return_if_fail( !origin || !origin->private->dispose_has_run );
 
 	na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
+}
+
+/**
+ * na_object_iduplicable_set_origin_recurse:
+ * @object: the #NAObject object whose origin is to be set.
+ * @origin: a #NAObject which will be set as the new origin of @object.
+ *
+ * Sets the new origin of @object, and of all its childs if any.
+ */
+void
+na_object_iduplicable_set_origin_recurse( NAObject *object, const NAObject *origin )
+{
+	GList *childs, *ic;
+
+	na_object_iduplicable_set_origin( object, origin );
+
+	childs = v_get_childs( object );
+
+	for( ic = childs ; ic ; ic = ic->next ){
+		na_object_iduplicable_set_origin_recurse( NA_OBJECT( ic->data ), origin );
+	}
+}
+
+static GList *
+v_get_childs( const NAObject *object ){
+
+	return( most_derived_get_childs( object ));
+}
+
+static GList *
+most_derived_get_childs( const NAObject *object )
+{
+	GList *childs;
+	GList *hierarchy, *ih;
+	gboolean found;
+
+	found = FALSE;
+	childs = NULL;
+	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
+
+	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->get_childs ){
+			childs = NA_OBJECT_CLASS( ih->data )->get_childs( object );
+			found = TRUE;
+		}
+	}
+
+	return( childs );
 }

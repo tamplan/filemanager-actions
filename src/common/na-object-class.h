@@ -178,6 +178,17 @@ typedef struct {
 	 */
 	gboolean   ( *is_valid )        ( const NAObject *object );
 
+	/**
+	 * get_childs:
+	 * @object: the #NAObject object whose childs are to be retrieved.
+	 *
+	 * Returns: a list of childs of @object, or NULL.
+	 *
+	 * As the returned list will not be freed by the caller, the
+	 * implementation should really returns its own list of childs,
+	 * if any.
+	 */
+	GList *    ( *get_childs )      ( const NAObject *object );
 }
 	NAObjectClass;
 

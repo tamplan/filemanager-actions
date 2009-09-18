@@ -78,8 +78,8 @@ void      nact_iactions_list_dispose( NactIActionsList *instance );
 
 void      nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **path );
 void      nact_iactions_list_fill( NactIActionsList *instance, GList *items );
+GList    *nact_iactions_list_get_items( NactIActionsList *instance );
 guint     nact_iactions_list_get_items_count( NactIActionsList *instance );
-GSList   *nact_iactions_list_get_items( NactIActionsList *instance );
 GList    *nact_iactions_list_get_modified_items( NactIActionsList *instance );
 GList    *nact_iactions_list_get_selected_items( NactIActionsList *instance );
 void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items );

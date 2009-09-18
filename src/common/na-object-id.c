@@ -161,6 +161,7 @@ class_init( NAObjectIdClass *klass )
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
+	naobject_class->get_childs = NULL;
 
 	klass->new_id = NULL;
 }

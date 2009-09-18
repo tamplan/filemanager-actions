@@ -629,6 +629,7 @@ nact_main_window_move_to_deleted( NactMainWindow *window, GList *items )
 
 /**
  * nact_main_window_remove_deleted:
+ * @window: this #NactMainWindow instance.
  *
  * Removes the deleted items from the underlying I/O storage subsystem.
  */
@@ -662,6 +663,7 @@ actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot )
 {
 	GList *items, *it;
 
+	g_debug( "actually_delete_item %p", ( void * ) item );
 	if( nact_window_delete_object_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ))){
 
 		NAObject *origin = na_object_get_origin( item );

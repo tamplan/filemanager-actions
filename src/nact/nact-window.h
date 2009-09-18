@@ -86,7 +86,8 @@ NAPivot *nact_window_get_pivot( NactWindow *window );
 gboolean nact_window_save_object_item( NactWindow *window, NAObjectItem *item );
 gboolean nact_window_delete_object_item( NactWindow *window, NAObjectItem *item );
 
-void     nact_window_write_level_zero( NactWindow *window, GSList *items );
+void     nact_window_write_level_zero( NactWindow *window, GList *items );
+void     nact_window_count_level_zero_items( GList *items, guint *actions, guint *profiles, guint *menus );
 
 gboolean nact_window_warn_count_modified( NactWindow *window, gint count );
 

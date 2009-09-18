@@ -319,7 +319,8 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	profile = na_object_profile_new();
 
 	name = na_object_action_get_new_profile_name( action );
-	na_object_action_attach_profile( action, profile );
+	/*na_object_action_attach_profile( action, profile );*/
+	na_object_profile_set_action( profile, action );
 	na_object_set_id( profile, name );
 
 	items = g_list_prepend( items, profile );
@@ -336,8 +337,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
-	GSList *items;
-	GSList *it;
+	GList *items, *it;
 	NactApplication *application;
 	NAPivot *pivot;
 
@@ -358,12 +358,15 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 		save_object_item( window, pivot, NA_OBJECT_ITEM( it->data ));
 	}
 
-	g_slist_free( items );
+	/* doesn't unref object owned by the tree store
+	 */
+	g_list_free( items );
 
 	/* delete the removed actions
 	 */
 	nact_main_window_remove_deleted( window );
 
+	nact_main_menubar_refresh_actions_sensitivity( window );
 	na_ipivot_consumer_delay_notify( NA_IPIVOT_CONSUMER( window ));
 }
 
@@ -526,7 +529,7 @@ on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	/* do not unref selected items as the ref has been moved to main_deleted
 	 */
-	g_list_free( items );
+	/*g_list_free( items );*/
 }
 
 static void

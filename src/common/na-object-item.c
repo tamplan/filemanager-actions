@@ -98,6 +98,7 @@ static void     object_ref( const NAObject *action );
 static void     object_copy( NAObject *target, const NAObject *source );
 static gboolean object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean object_is_valid( const NAObject *object );
+static GList   *object_get_childs( const NAObject *object );
 
 static gchar   *object_id_new_id( const NAObjectId *object );
 
@@ -192,6 +193,7 @@ class_init( NAObjectItemClass *klass )
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
+	naobject_class->get_childs = object_get_childs;
 
 	objectid_class = NA_OBJECT_ID_CLASS( klass );
 	objectid_class->new_id = object_id_new_id;
@@ -878,7 +880,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			second_obj = NA_OBJECT( na_object_get_item( b, first_id ));
 			g_free( first_id );
 			if( second_obj ){
-				equal = na_object_are_equal( first_obj, second_obj );
+				equal = na_object_iduplicable_are_equal( first_obj, second_obj );
 			} else {
 				equal = FALSE;
 			}
@@ -892,7 +894,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			first_obj = NA_OBJECT( na_object_get_item( a, second_id ));
 			g_free( second_id );
 			if( first_obj ){
-				equal = na_object_are_equal( first_obj, second_obj );
+				equal = na_object_iduplicable_are_equal( first_obj, second_obj );
 			} else {
 				equal = FALSE;
 			}
@@ -922,6 +924,12 @@ object_is_valid( const NAObject *object )
 	}
 
 	return( valid );
+}
+
+static GList *
+object_get_childs( const NAObject *object )
+{
+	return( NA_OBJECT_ITEM( object )->private->items );
 }
 
 static gchar *

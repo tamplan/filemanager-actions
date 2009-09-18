@@ -94,10 +94,9 @@ void    nact_tree_model_dispose( NactTreeModel *model );
 void    nact_tree_model_dump( NactTreeModel *model );
 void    nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions);
 guint   nact_tree_model_get_items_count( NactTreeModel *model );
-void    nact_tree_model_insert_item( NactTreeModel *model, const NAObject *object, GtkTreePath *path, const NAObject *selected, GtkTreeIter *iter );
+void    nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, GtkTreeIter *iter, NAObject **parent );
 void    nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );
 void    nact_tree_model_remove( NactTreeModel *model, GList *selected );
-void    nact_tree_model_update_parent( NactTreeModel *model, const NAObject *object );
 
 G_END_DECLS
 

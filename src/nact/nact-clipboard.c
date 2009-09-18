@@ -45,6 +45,7 @@
 #include "nact-clipboard.h"
 
 #define NACT_CLIPBOARD_ATOM				gdk_atom_intern( "_NACT_CLIPBOARD", FALSE )
+#define NACT_CLIPBOARD_NACT_ATOM		gdk_atom_intern( "ClipboardNautilusActions", FALSE )
 
 #define CLIPBOARD_PROP_PRIMAY_USED		"nact-clipboard-primary-used"
 
@@ -229,23 +230,32 @@ nact_clipboard_get( void )
 	GtkSelectionData *selection;
 	NactClipboardData *data;
 	GList *items, *it;
+	NAObject *obj;
 
 	if( nact_clipboard_is_empty()){
 		return( NULL );
 	}
 
 	clipboard = get_clipboard();
-	selection = gtk_clipboard_wait_for_contents( clipboard, GDK_SELECTION_PRIMARY );
-	data = ( NactClipboardData * ) selection->data;
 
 	items = NULL;
-	for( it = data->items ; it ; it = it->next ){
-		items = g_list_prepend( items, na_object_duplicate( it->data ));
+
+	selection = gtk_clipboard_wait_for_contents( clipboard, NACT_CLIPBOARD_NACT_ATOM );
+
+	if( selection ){
+		data = ( NactClipboardData * ) selection->data;
+
+		for( it = data->items ; it ; it = it->next ){
+			obj = na_object_duplicate( it->data );
+			na_object_set_origin_rec( obj, NULL );
+			items = g_list_prepend( items, obj );
+		}
+		items = g_list_reverse( items );
+
+		renumber_items( data->items );
 	}
 
-	renumber_items( data->items );
-
-	return( g_list_reverse( items ));
+	return( items );
 }
 
 /**

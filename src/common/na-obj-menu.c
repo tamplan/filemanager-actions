@@ -126,6 +126,7 @@ class_init( NAObjectMenuClass *klass )
 	NA_OBJECT_CLASS( klass )->copy = object_copy;
 	NA_OBJECT_CLASS( klass )->are_equal = object_are_equal;
 	NA_OBJECT_CLASS( klass )->is_valid = object_is_valid;
+	NA_OBJECT_CLASS( klass )->get_childs = NULL;
 }
 
 static void
