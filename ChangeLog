@@ -1,12 +1,20 @@
 2009-09-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-gconf-provider.c:
+	Use na_object_menu_rebuild_items_list() and fix memory leak.
+
+	* src/common/na-iio-provider.c:
+	Build the object hierarchy, eventually alphabetically sorted.
+
 	* src/common/na-object.c b:
 	Add class name in instance_dipose() trace.
 
 	* src/common/na-obj-action.c (are_equal): Remove trace.
 
 	* src/common/na-obj-menu.c:
+	* src/common/na-obj-menu.h:
 	Remove traces at instance_dispose() and instance_finalize().
+	na_object_menu_rebuild_items_list(): New function.
 
 	* src/nact/nact-clipboard.c:
 	* src/nact/nact-clipboard.h:

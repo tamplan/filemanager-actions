@@ -74,6 +74,7 @@ GType         na_object_menu_get_type( void );
 NAObjectMenu *na_object_menu_new( void );
 
 GSList       *na_object_menu_get_items_list( const NAObjectMenu *menu );
+GSList       *na_object_menu_rebuild_items_list( const NAObjectMenu *menu );
 void          na_object_menu_set_items_list( NAObjectMenu *menu, GSList *items );
 
 G_END_DECLS

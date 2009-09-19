@@ -211,12 +211,35 @@ na_object_menu_new( void )
 }
 
 /**
- * Build a string list which contains the ordered list of ids of subitems.
+ * na_object_menu_get_items_list:
+ * @menu: this #NAObjectMenu object.
  *
- * The list must be na_utils_free_string_list().
+ * Returns: the current state of intern items_ids string list.
+ *
+ * The returned list should be na_utils_free_string_list() by the caller.
  */
 GSList *
 na_object_menu_get_items_list( const NAObjectMenu *menu )
+{
+	g_return_val_if_fail( NA_IS_OBJECT_MENU( menu ), NULL );
+
+	return( na_utils_duplicate_string_list( menu->private->items_ids ));
+}
+
+/**
+ * na_object_menu_rebuild_items_list:
+ * @menu: this #NAObjectMenu object.
+ *
+ * Returns: a string list which contains the ordered list of ids of
+ * subitems.
+ *
+ * Note that the returned list is built on each call to this function,
+ * and is so an exact image of the current situation.
+ *
+ * The returned list should be na_utils_free_string_list() by the caller.
+ */
+GSList *
+na_object_menu_rebuild_items_list( const NAObjectMenu *menu )
 {
 	GSList *list = NULL;
 	GList *items, *it;
@@ -239,7 +262,14 @@ na_object_menu_get_items_list( const NAObjectMenu *menu )
 }
 
 /**
+ * na_object_menu_set_items_list:
+ * @menu: this #NAObjectMenu object.
+ * @items: an ordered list of UUID of subitems.
  *
+ * Set the internal list of uuids of subitems.
+ *
+ * This function takes a copy of the provided list. This later may so
+ * be safely released by the caller after this function has returned.
  */
 void
 na_object_menu_set_items_list( NAObjectMenu *menu, GSList *items )

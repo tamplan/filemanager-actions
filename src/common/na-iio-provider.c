@@ -52,6 +52,8 @@ static GType    register_type( void );
 static void     interface_base_init( NAIIOProviderInterface *klass );
 static void     interface_base_finalize( NAIIOProviderInterface *klass );
 
+static GList   *build_hierarchy( GList *tree, GSList *level_zero );
+static gint     search_item( const NAObject *obj, const gchar *uuid );
 static GList   *get_merged_items_list( const NAPivot *pivot, GSList *providers );
 static guint    try_write_item( const NAIIOProvider *instance, NAObject *item, gchar **message );
 
@@ -154,9 +156,8 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_iio_provider_get_items_tree";
 	GSList *providers;
-	GList *merged;
+	GList *merged, *hierarchy;
 	GSList *level_zero;
-	gboolean alpha_order;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
@@ -169,15 +170,66 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 	na_pivot_free_providers( providers );
 
 	level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
-	alpha_order = na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ));
-
-	if( alpha_order ){
-		merged = sort_tree( pivot, merged );
-	}
-
+	hierarchy = build_hierarchy( merged, level_zero );
 	na_utils_free_string_list( level_zero );
 
-	return( merged );
+	if( na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ))){
+		hierarchy = sort_tree( pivot, hierarchy );
+	}
+
+	return( hierarchy );
+}
+
+/*
+ * recursively builds the hierarchy
+ */
+static GList *
+build_hierarchy( GList *tree, GSList *level_zero )
+{
+	GList *hierarchy, *it;
+	GSList *ilevel;
+	GSList *subitems_ids;
+	GList *subitems;
+
+	hierarchy = NULL;
+
+	for( ilevel = level_zero ; ilevel ; ilevel = ilevel->next ){
+		g_debug( "na_iio_provider_build_hierarchy: next_level_zero uuid is %s", ( gchar * ) ilevel->data );
+		it = g_list_find_custom( tree, ilevel->data, ( GCompareFunc ) search_item );
+		if( it ){
+			hierarchy = g_list_append( hierarchy, it->data );
+			g_debug( "na_iio_provider_build_hierarchy: appending %s at %p to hierarchy %p",
+					G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data, ( void * ) hierarchy );
+
+			if( NA_IS_OBJECT_MENU( it->data )){
+				subitems_ids = na_object_menu_get_items_list( NA_OBJECT_MENU( it->data ));
+				subitems = build_hierarchy( tree, subitems_ids );
+				na_object_set_items( it->data, subitems );
+				na_object_free_items( subitems );
+				na_utils_free_string_list( subitems_ids );
+			}
+		}
+	}
+
+	return( hierarchy );
+}
+
+/*
+ * returns zero when obj has the required uuid
+ */
+static gint
+search_item( const NAObject *obj, const gchar *uuid )
+{
+	gchar *obj_id;
+	gint ret = 1;
+
+	if( NA_IS_OBJECT_ITEM( obj )){
+		obj_id = na_object_get_id( obj );
+		ret = strcmp( obj_id, uuid );
+		g_free( obj_id );
+	}
+
+	return( ret );
 }
 
 /*

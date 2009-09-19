@@ -835,13 +835,16 @@ write_item_menu( NAGConfProvider *provider, const NAObjectMenu *menu, gchar **me
 {
 	gchar *uuid;
 	gboolean ret;
+	GSList *ids;
 
 	if( !write_object_item( provider, NA_OBJECT_ITEM( menu ), message )){
 		return( FALSE );
 	}
 
 	uuid = na_object_get_id( NA_OBJECT( menu ));
-	ret = write_list( provider, uuid, NULL, MENU_ITEMS_ENTRY, na_object_menu_get_items_list( menu ), message );
+	ids = na_object_menu_rebuild_items_list( menu );
+	ret = write_list( provider, uuid, NULL, MENU_ITEMS_ENTRY, ids, message );
+	na_utils_free_string_list( ids );
 	g_free( uuid );
 
 	return( ret );
