@@ -87,11 +87,10 @@ typedef struct {
 
 /* data set against GObject
  */
+#define SELECTION_CHANGED_SIGNAL_MODE	"nact-iactions-list-selection-changed-signal-mode"
 #define SHOW_ONLY_ACTIONS_MODE			"nact-iactions-list-show-only-actions-mode"
-#define IS_FILLING_LIST					"nact-iactions-list-is-filling-list"
 #define HAVE_DND_MODE					"nact-iactions-list-dnd-mode"
 #define FILTER_SELECTION_MODE			"nact-iactions-list-filter-selection-mode"
-#define REMOVE_OPERATION				"nact-iactions-list-removing"
 
 static gint         st_signals[ LAST_SIGNAL ] = { 0 };
 
@@ -113,7 +112,7 @@ static gboolean     has_exportable_iter( NactTreeModel *model, GtkTreePath *path
 static gboolean     has_modified_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, gboolean *has_modified );
 static gboolean     have_dnd_mode( NactIActionsList *instance );
 static gboolean     have_filter_selection_mode( NactIActionsList *instance );
-static gboolean     is_removing( NactIActionsList *instance );
+static gboolean     is_selection_changed_authorized( NactIActionsList *instance );
 static void         iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpointer user_data );
 static gboolean     on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsList *instance );
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
@@ -122,8 +121,7 @@ static void         on_iactions_list_item_updated( NactIActionsList *instance, N
 static void         on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *object );
 static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void         select_first_row( NactIActionsList *instance );
-static void         set_is_filling_list( NactIActionsList *instance, gboolean is_filling );
-static void         set_remove_operation( NactIActionsList *instance, gboolean removing );
+static void         set_selection_changed_mode( NactIActionsList *instance, gboolean authorized );
 static void         toggle_collapse( NactIActionsList *instance );
 static gboolean     toggle_collapse_iter( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter, NAObject *object, gpointer user_data );
 static void         toggle_collapse_row( GtkTreeView *treeview, GtkTreePath *path, guint *toggle );
@@ -292,7 +290,7 @@ nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
 	nact_iactions_list_set_dnd_mode( instance, FALSE );
 	nact_iactions_list_set_multiple_selection_mode( instance, FALSE );
 	nact_iactions_list_set_only_actions_mode( instance, FALSE );
-	set_is_filling_list( instance, FALSE );
+	set_selection_changed_mode( instance, FALSE );
 
 	nact_tree_model_initial_load( BASE_WINDOW( instance ), treeview );
 
@@ -451,14 +449,14 @@ nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **p
 	selection = gtk_tree_view_get_selection( treeview );
 	selected = gtk_tree_selection_get_selected_rows( selection, &model );
 
-	set_remove_operation( instance, TRUE );
+	set_selection_changed_mode( instance, FALSE );
 
 	if( g_list_length( selected )){
 		*path = gtk_tree_path_copy(( GtkTreePath * ) selected->data );
 		nact_tree_model_remove( NACT_TREE_MODEL( model ), selected );
 	}
 
-	set_remove_operation( instance, FALSE );
+	set_selection_changed_mode( instance, TRUE );
 
 	g_list_foreach( selected, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( selected );
@@ -487,9 +485,9 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 	only_actions = nact_iactions_list_is_only_actions_mode( instance );
 
-	set_is_filling_list( instance, TRUE );
+	set_selection_changed_mode( instance, FALSE );
 	nact_tree_model_fill( model, items, only_actions );
-	set_is_filling_list( instance, FALSE );
+	set_selection_changed_mode( instance, TRUE );
 
 	select_first_row( instance );
 }
@@ -739,19 +737,7 @@ do_insert_items_add_parent( GList *parents, GtkTreeView *treeview, GtkTreeModel 
 }
 
 /**
- * nact_iactions_list_is_filling_list:
- * @instance: this #NactIActionsList instance.
- *
- * Returns %TRUE if currently being filling the list.
- */
-gboolean
-nact_iactions_list_is_filling_list( NactIActionsList *instance )
-{
-	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), IS_FILLING_LIST )));
-}
-
-/**
- * nact_iactions_list_is_filling_list:
+ * nact_iactions_list_is_expanded:
  * @instance: this #NactIActionsList instance.
  * @action: a #NAAction action.
  *
@@ -1189,9 +1175,9 @@ have_filter_selection_mode( NactIActionsList *instance )
 }
 
 static gboolean
-is_removing( NactIActionsList *instance )
+is_selection_changed_authorized( NactIActionsList *instance )
 {
-	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), REMOVE_OPERATION )));
+	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), SELECTION_CHANGED_SIGNAL_MODE )));
 }
 
 static void
@@ -1270,9 +1256,8 @@ on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *in
 
 	selected_items = nact_iactions_list_get_selected_items( instance );
 
-	if( !nact_iactions_list_is_filling_list( instance ) &&
-		!is_removing( instance )){
-			g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
+	if( !is_selection_changed_authorized( instance )){
+		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
 	}
 }
 
@@ -1337,15 +1322,9 @@ select_first_row( NactIActionsList *instance )
 }
 
 static void
-set_is_filling_list( NactIActionsList *instance, gboolean is_filling )
+set_selection_changed_mode( NactIActionsList *instance, gboolean authorized )
 {
-	g_object_set_data( G_OBJECT( instance ), IS_FILLING_LIST, GINT_TO_POINTER( is_filling ));
-}
-
-static void
-set_remove_operation( NactIActionsList *instance, gboolean removing )
-{
-	g_object_set_data( G_OBJECT( instance ), REMOVE_OPERATION, GINT_TO_POINTER( removing ));
+	g_object_set_data( G_OBJECT( instance ), SELECTION_CHANGED_SIGNAL_MODE, GINT_TO_POINTER( authorized ));
 }
 
 static void

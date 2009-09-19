@@ -17,6 +17,7 @@
 	nact_iactions_list_get_modified_items(): Replaced by
 	nact_iactions_list_has_modified_items().
 	nact_iactions_list_has_exportable(): New function.
+	nact_iactions_list_is_filling_list(): Removed function.
 
 	* src/nact/nact-iaction-tab.c:
 	* src/nact/nact-icommand-tab.c:

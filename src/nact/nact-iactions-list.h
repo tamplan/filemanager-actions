@@ -84,7 +84,6 @@ gboolean  nact_iactions_list_has_exportable( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_modified_items( NactIActionsList *instance );
 void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items );
 gboolean  nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item );
-gboolean  nact_iactions_list_is_filling_list( NactIActionsList *instance );
 gboolean  nact_iactions_list_is_only_actions_mode( NactIActionsList *instance );
 void      nact_iactions_list_select_row( NactIActionsList *instance, GtkTreePath *path );
 void      nact_iactions_list_set_dnd_mode( NactIActionsList *instance, gboolean have_dnd );
