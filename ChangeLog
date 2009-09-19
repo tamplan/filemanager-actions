@@ -1,3 +1,46 @@
+2009-09-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-object.c b:
+	Add class name in instance_dipose() trace.
+
+	* src/common/na-obj-menu.c:
+	Remove traces at instance_dispose() and instance_finalize().
+
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-clipboard.h:
+	All functions in use for cut/copy/paste functions are renamed as
+	primary_xxx.
+	nact_clipboard_primary_counts() replaces nact_clipboard_is_empty().
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h:
+	nact_iactions_list_get_modified_items(): Replaced by
+	nact_iactions_list_has_modified_items().
+	nact_iactions_list_has_exportable(): New function.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-iadvanced-tab.c:
+	Emit "item-updated" signal in response to an update in tabs.
+	All selection_updated() functions renamed to selecion_changed() to
+	keep consistency() with IActionsList message.
+
+	* src/nact/nact-main-menubar.c:
+	Update conditions of sensitivity of menu items.
+
+	* src/nact/nact-main-window.c:
+	Emits "item-updated" to IActionsList in response to "item-updated"
+	from notebook's tabs.
+	nact_main_window_get_modified_items_count(): Replaced with
+	nact_main_window_has_modified_items().
+
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h (nact_window_warn_count_modified):
+	Renamed as nact_window_warn_modified() with string change.
+
+	* po/POTFILES.in: Update list of files.
+
 2009-09-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-gconf-utils.c:

@@ -69,7 +69,7 @@ static GType      register_type( void );
 static void       interface_base_init( NactICommandTabInterface *klass );
 static void       interface_base_finalize( NactICommandTabInterface *klass );
 
-static void       on_tab_updatable_selection_updated( NactICommandTab *instance, gint count_selected );
+static void       on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected );
 static void       check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label );
 static GtkWidget *get_label_entry( NactICommandTab *instance );
 static GtkButton *get_legend_button( NactICommandTab *instance );
@@ -224,8 +224,8 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 
 	g_signal_connect(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED,
-			G_CALLBACK( on_tab_updatable_selection_updated ),
+			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tab_updatable_selection_changed ),
 			instance );
 }
 
@@ -266,9 +266,9 @@ nact_icommand_tab_has_label( NactICommandTab *instance )
 }
 
 static void
-on_tab_updatable_selection_updated( NactICommandTab *instance, gint count_selected )
+on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected )
 {
-	static const gchar *thisfn = "nact_icommand_tab_on_tab_updatable_selection_updated";
+	static const gchar *thisfn = "nact_icommand_tab_on_tab_updatable_selection_changed";
 	NAObjectProfile *profile = NULL;
 	GtkWidget *label_entry, *path_entry, *parameters_entry;
 	gchar *label, *path, *parameters;
@@ -429,7 +429,7 @@ on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 	if( edited ){
 		label = gtk_entry_get_text( entry );
 		na_object_set_label( edited, label );
-		/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 		check_for_label( instance, entry, label );
 	}
 }
@@ -457,7 +457,7 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 
 	if( edited ){
 		na_object_profile_set_parameters( edited, gtk_entry_get_text( entry ));
-		/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 
 	update_example_label( instance, edited );
@@ -523,7 +523,7 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 
 	if( edited ){
 		na_object_profile_set_path( edited, gtk_entry_get_text( entry ));
-		/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 
 	update_example_label( instance, edited );

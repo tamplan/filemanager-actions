@@ -54,7 +54,7 @@
 #define MENUBAR_PROP_UI_MANAGER			"nact-menubar-ui-manager"
 #define MENUBAR_PROP_ACTIONS_GROUP		"nact-menubar-actions-group"
 
-static void     on_tab_updatable_selection_updated( NactMainWindow *window, gint count_selected );
+static void     on_tab_updatable_selection_changed( NactMainWindow *window, gint count_selected );
 
 static void     on_new_menu_activated( GtkAction *action, NactMainWindow *window );
 static void     on_new_action_activated( GtkAction *action, NactMainWindow *window );
@@ -235,8 +235,8 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	base_window_signal_connect(
 			BASE_WINDOW( window ),
 			G_OBJECT( window ),
-			TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED,
-			G_CALLBACK( on_tab_updatable_selection_updated ));
+			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tab_updatable_selection_changed ));
 }
 
 /**
@@ -265,7 +265,7 @@ nact_main_menubar_refresh_actions_sensitivity( NactMainWindow *window )
 }
 
 static void
-on_tab_updatable_selection_updated( NactMainWindow *window, gint count_selected )
+on_tab_updatable_selection_changed( NactMainWindow *window, gint count_selected )
 {
 	refresh_actions_sensitivity_with_count( window, count_selected );
 }
@@ -417,14 +417,14 @@ static void
 on_quit_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_quit_activated";
-	gint count;
+	gboolean has_modified;
 
 	g_debug( "%s: item=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ) || gtk_action == NULL );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	count = nact_main_window_get_modified_items_count( window );
-	if( !count || nact_window_warn_count_modified( NACT_WINDOW( window ), count )){
+	has_modified = nact_main_window_has_modified_items( window );
+	if( !has_modified || nact_window_warn_modified( NACT_WINDOW( window ))){
 		g_object_unref( window );
 	}
 }
@@ -450,10 +450,12 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ), &path );
 	nact_main_window_move_to_deleted( window, items );
-	nact_clipboard_set( items, FALSE );
+	nact_clipboard_primary_set( items, FALSE );
 	nact_iactions_list_select_row( NACT_IACTIONS_LIST( window ), path );
 
-	g_list_free( items );
+	/* do not unref selected items as the ref has been moved to main_deleted
+	 */
+	/*g_list_free( items );*/
 }
 
 /*
@@ -473,7 +475,7 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	nact_clipboard_set( items, TRUE );
+	nact_clipboard_primary_set( items, TRUE );
 	na_object_free_items( items );
 	nact_main_menubar_refresh_actions_sensitivity( window );
 }
@@ -494,7 +496,7 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	GList *items;
 
-	items = nact_clipboard_get();
+	items = nact_clipboard_primary_get();
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
 	na_object_free_items( items );
 }
@@ -664,9 +666,10 @@ refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selec
 	static const gchar *thisfn = "nact_main_menubar_refresh_actions_sensitivity_with_count";
 	NAObjectItem *item;
 	NAObjectProfile *profile;
-	/*guint count_all;*/
-	guint count_modified;
-	gboolean is_clipboard_empty;
+	gboolean has_exportable;
+	gboolean has_modified;
+	guint nb_actions, nb_profiles, nb_menus;
+	gboolean paste_enabled;
 
 	g_debug( "%s: window=%p, count_selected=%d", thisfn, ( void * ) window, count_selected );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -677,31 +680,40 @@ refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selec
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
-	/* TODO: replace count_all by is_empty */
-	/*count_all = nact_main_window_get_all_items_count( window );*/
-	count_modified = nact_main_window_get_modified_items_count( window );
-	is_clipboard_empty = nact_clipboard_is_empty();
+	has_exportable = nact_iactions_list_has_exportable( NACT_IACTIONS_LIST( window ));
+	has_modified = nact_main_window_has_modified_items( window );
+
+	paste_enabled = FALSE;
+	nact_clipboard_primary_counts( &nb_actions, &nb_profiles, &nb_menus );
+	g_debug( "%s: actions=%d, profiles=%d, menus=%d", thisfn, nb_actions, nb_profiles, nb_menus );
+	if( nb_profiles ){
+		paste_enabled = NA_IS_OBJECT_ACTION( item );
+	} else {
+		paste_enabled = ( nb_actions + nb_menus > 0 );
+	}
 
 	/* new menu always enabled */
 	/* new action always enabled */
 	/* new profile enabled if selection is relative to only one action */
 	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ));
 	/* save enabled if at least one item has been modified */
-	enable_item( window, "SaveItem", count_modified > 0 );
+	enable_item( window, "SaveItem", has_modified );
 	/* quit always enabled */
 	/* cut/copy enabled if selection not empty */
 	enable_item( window, "CutItem", count_selected > 0 );
 	enable_item( window, "CopyItem", count_selected > 0 );
-	/* paste enabled if clipboard not empty */
-	enable_item( window, "PasteItem", !is_clipboard_empty );
+	/* paste enabled if
+	 * - clipboard contains only profiles, and current selection is action or profile
+	 * - clipboard contains actions or menus */
+	enable_item( window, "PasteItem", paste_enabled );
 	/* duplicate/delete enabled if selection not empty */
 	enable_item( window, "DuplicateItem", count_selected > 0 );
 	enable_item( window, "DeleteItem", count_selected > 0 );
 	/* reload items always enabled */
 	/* preferences always enabled */
 	/* import item always enabled */
-	/* export item enabled if IActionsList not empty */
-	enable_item( window, "ExportItem", FALSE /*count_all > 0*/ );
+	/* export item enabled if IActionsList store contains actions */
+	enable_item( window, "ExportItem", has_exportable );
 	/* TODO: help temporarily disabled */
 	enable_item( window, "HelpItem", FALSE );
 	/* about always enabled */

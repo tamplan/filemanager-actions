@@ -38,9 +38,9 @@ G_BEGIN_DECLS
 void     nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_data );
 char    *nact_clipboard_get_data_for_extern_use( GList *selected_items );
 
-gboolean nact_clipboard_is_empty( void );
-GList   *nact_clipboard_get( void );
-void     nact_clipboard_set( GList *items, gboolean renumber_items );
+void     nact_clipboard_primary_set( GList *items, gboolean renumber_items );
+GList   *nact_clipboard_primary_get( void );
+void     nact_clipboard_primary_counts( guint *actions, guint *profiles, guint *menus );
 
 void     nact_clipboard_free_items( GSList *items );
 

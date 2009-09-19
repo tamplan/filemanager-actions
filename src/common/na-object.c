@@ -209,7 +209,7 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_object_instance_dispose";
 	NAObject *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_OBJECT( object ));
 	self = NA_OBJECT( object );
 

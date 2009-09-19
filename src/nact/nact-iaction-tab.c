@@ -66,7 +66,7 @@ static GType         register_type( void );
 static void          interface_base_init( NactIActionTabInterface *klass );
 static void          interface_base_finalize( NactIActionTabInterface *klass );
 
-static void          on_tab_updatable_selection_updated( NactIActionTab *instance, gint count_selected );
+static void          on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selected );
 static void          check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label );
 static GtkTreeModel *create_stock_icon_model( void );
 static void          display_icon( NactIActionTab *instance, GtkWidget *image, gboolean display );
@@ -210,8 +210,8 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 
 	g_signal_connect(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED,
-			G_CALLBACK( on_tab_updatable_selection_updated ),
+			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tab_updatable_selection_changed ),
 			instance );
 }
 
@@ -251,14 +251,14 @@ nact_iaction_tab_has_label( NactIActionTab *instance )
 }
 
 static void
-on_tab_updatable_selection_updated( NactIActionTab *instance, gint count_selected )
+on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selected )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_selection_updated";
+	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	GtkWidget *label_widget, *tooltip_widget, *icon_widget, *button, *group_title;
 	gchar *label, *tooltip, *icon;
 	GtkButton *enabled_button;
-	gboolean enabled_action;
+	gboolean enabled_item;
 	gboolean enabled_tab;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
@@ -305,9 +305,9 @@ on_tab_updatable_selection_updated( NactIActionTab *instance, gint count_selecte
 	}
 
 	enabled_button = get_enabled_button( instance );
-	enabled_action = item ? na_object_is_enabled( NA_OBJECT_ITEM( item )) : FALSE;
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( enabled_button ), enabled_action );
-	gtk_widget_set_sensitive( GTK_WIDGET( enabled_button ), enabled_tab && NA_IS_OBJECT_ACTION( item ));
+	enabled_item = item ? na_object_is_enabled( NA_OBJECT_ITEM( item )) : FALSE;
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( enabled_button ), enabled_item );
+	gtk_widget_set_sensitive( GTK_WIDGET( enabled_button ), enabled_tab );
 
 	/* TODO: manage read-only flag */
 }
@@ -441,7 +441,7 @@ on_enabled_toggled( GtkToggleButton *button, NactIActionTab *instance )
 	if( edited && NA_IS_OBJECT_ACTION( edited )){
 		enabled = gtk_toggle_button_get_active( button );
 		na_object_item_set_enabled( edited, enabled );
-		/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 }
 
@@ -459,7 +459,7 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 	if( edited ){
 		label = gtk_entry_get_text( entry );
 		na_object_set_label( NA_OBJECT( edited ), label );
-		/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 		check_for_label( instance, entry, label );
 	}
 
@@ -521,7 +521,7 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 	if( edited ){
 		icon_name = gtk_entry_get_text( icon_entry );
 		na_object_item_set_icon( edited, icon_name );
-		/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 
 		if( icon_name && strlen( icon_name ) > 0 ){
 			icon = na_object_item_get_pixbuf( edited, image );
@@ -543,7 +543,7 @@ on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
 
 	if( edited ){
 		na_object_item_set_tooltip( edited, gtk_entry_get_text( entry ));
-		/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 }
 

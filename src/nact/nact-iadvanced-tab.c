@@ -67,7 +67,7 @@ static void          interface_base_finalize( NactIAdvancedTabInterface *klass )
 static void          initial_load_create_schemes_selection_list( NactIAdvancedTab *instance );
 static void          runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview );
 static void          runtime_init_setup_values( NactIAdvancedTab *instance, GtkTreeView *listview );
-static void          on_tab_updatable_selection_updated( NactIAdvancedTab *instance, gint count_selected );
+static void          on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selected );
 static gboolean      get_action_schemes_list( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, GSList **schemes_list );
 static GtkButton    *get_add_button( NactIAdvancedTab *instance );
 static GtkButton    *get_button( NactIAdvancedTab *instance, const gchar *name );
@@ -283,8 +283,8 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 
 	g_signal_connect(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED,
-			G_CALLBACK( on_tab_updatable_selection_updated ),
+			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tab_updatable_selection_changed ),
 			instance );
 }
 
@@ -352,9 +352,9 @@ nact_iadvanced_tab_get_schemes( NactIAdvancedTab *instance )
 }
 
 static void
-on_tab_updatable_selection_updated( NactIAdvancedTab *instance, gint count_selected )
+on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selected )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_on_tab_updatable_selection_updated";
+	static const gchar *thisfn = "nact_iadvanced_tab_on_tab_updatable_selection_changed";
 	NAObjectProfile *profile = NULL;
 	GtkTreeModel *scheme_model;
 	GSList *schemes;
@@ -531,6 +531,7 @@ on_remove_scheme_clicked( GtkButton *button, NactIAdvancedTab *instance )
 					TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 					NULL );
 			na_object_profile_set_scheme( edited, scheme, FALSE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 		}
 
 		g_free( scheme );
@@ -538,8 +539,6 @@ on_remove_scheme_clicked( GtkButton *button, NactIAdvancedTab *instance )
 
 	g_list_foreach( selected_values_path, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( selected_values_path );
-
-	/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
 }
 
 static void
@@ -571,11 +570,10 @@ on_scheme_keyword_edited( GtkCellRendererText *renderer, const gchar *path, cons
 				NULL );
 		na_object_profile_set_scheme( edited, old_text, FALSE );
 		na_object_profile_set_scheme( edited, text, TRUE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 
 	g_free( old_text );
-
-	/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
 }
 
 static void
@@ -631,7 +629,7 @@ on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, NactI
 
 		g_free( scheme );
 
-		/*g_signal_emit_by_name( G_OBJECT( window ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 }
 

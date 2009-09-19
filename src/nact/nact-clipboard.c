@@ -47,8 +47,6 @@
 #define NACT_CLIPBOARD_ATOM				gdk_atom_intern( "_NACT_CLIPBOARD", FALSE )
 #define NACT_CLIPBOARD_NACT_ATOM		gdk_atom_intern( "ClipboardNautilusActions", FALSE )
 
-#define CLIPBOARD_PROP_PRIMAY_USED		"nact-clipboard-primary-used"
-
 enum {
 	NACT_CLIPBOARD_FORMAT_NACT = 0,
 	NACT_CLIPBOARD_FORMAT_APPLICATION_XML,
@@ -69,14 +67,15 @@ static GtkTargetEntry clipboard_formats[] = {
 };
 
 typedef struct {
-	guint  nb_profiles;
 	guint  nb_actions;
+	guint  nb_profiles;
 	guint  nb_menus;
 	GList *items;
 }
 	NactClipboardData;
 
-static GtkClipboard *get_clipboard( void );
+static GtkClipboard *get_nact_clipboard( void );
+static GtkClipboard *get_primary_clipboard( void );
 static void          add_item_to_clipboard0( NAObject *object, gboolean copy_data, gboolean only_profiles, GList **copied );
 /*static void          add_item_to_clipboard( NAObject *object, GList **copied );*/
 static void          export_action( const gchar *uri, const NAObject *action, GSList **exported );
@@ -101,7 +100,7 @@ nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_dat
 	NactClipboardData *data;
 	GList *it;
 
-	clipboard = get_clipboard();
+	clipboard = get_nact_clipboard();
 
 	data = g_new0( NactClipboardData, 1 );
 	/*data->only_profiles = have_only_profiles( selected_items );*/
@@ -118,7 +117,6 @@ nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_dat
 			( GtkClipboardClearFunc ) clear_clipboard_callback,
 			data );
 
-	g_object_set_data( G_OBJECT( clipboard ), CLIPBOARD_PROP_PRIMAY_USED, GINT_TO_POINTER( TRUE ));
 	g_debug( "%s: clipboard=%p, data=%p", thisfn, ( void * ) clipboard, ( void * ) data );
 }
 
@@ -195,71 +193,7 @@ nact_clipboard_export_items( const gchar *uri, GList *items )
 }
 
 /**
- * nact_clipboard_is_empty:
- *
- * This is called to know if we can enable paste item in the menubar.
- */
-gboolean
-nact_clipboard_is_empty( void )
-{
-	GtkClipboard *clipboard;
-	gboolean used;
-	gpointer data;
-
-	clipboard = get_clipboard();
-	data = g_object_get_data( G_OBJECT( clipboard ), CLIPBOARD_PROP_PRIMAY_USED );
-	used = ( gboolean ) GPOINTER_TO_INT( data );
-	/*g_debug( "nact_clipboard_is_empty: used=%s", used ? "True":"False" );*/
-
-	return( !used );
-}
-
-/**
- * nact_clipboard_get:
- *
- * Returns: a copy of the list of items previously referenced in the
- * internal clipboard.
- *
- * We allocate a new id for items in order to be ready to paste another
- * time.
- */
-GList *
-nact_clipboard_get( void )
-{
-	GtkClipboard *clipboard;
-	GtkSelectionData *selection;
-	NactClipboardData *data;
-	GList *items, *it;
-	NAObject *obj;
-
-	if( nact_clipboard_is_empty()){
-		return( NULL );
-	}
-
-	clipboard = get_clipboard();
-
-	items = NULL;
-
-	selection = gtk_clipboard_wait_for_contents( clipboard, NACT_CLIPBOARD_NACT_ATOM );
-
-	if( selection ){
-		data = ( NactClipboardData * ) selection->data;
-
-		for( it = data->items ; it ; it = it->next ){
-			obj = na_object_duplicate( it->data );
-			na_object_set_origin_rec( obj, NULL );
-			items = g_list_prepend( items, obj );
-		}
-		items = g_list_reverse( items );
-
-		renumber_items( data->items );
-	}
-
-	return( items );
-}
-
-/**
- * nact_clipboard_set:
+ * nact_clipboard_primary_set:
  * @items: a list of #NAObject items
  * @renumber_items: whether the actions or menus items should be
  * renumbered when copied in the clipboard ?
@@ -279,14 +213,13 @@ nact_clipboard_get( void )
  * data out of the clipboard.
  */
 void
-nact_clipboard_set( GList *items, gboolean renumber )
+nact_clipboard_primary_set( GList *items, gboolean renumber )
 {
 	GtkClipboard *clipboard;
 	NactClipboardData *data;
 	GList *it;
 
-	clipboard = get_clipboard();
-	gtk_clipboard_clear( clipboard );
+	clipboard = get_primary_clipboard();
 	data = g_new0( NactClipboardData, 1 );
 
 	for( it = items ; it ; it = it->next ){
@@ -313,18 +246,98 @@ nact_clipboard_set( GList *items, gboolean renumber )
 			( GtkClipboardGetFunc ) get_from_clipboard_callback,
 			( GtkClipboardClearFunc ) clear_clipboard_callback,
 			data );
+}
 
-	g_object_set_data( G_OBJECT( clipboard ), CLIPBOARD_PROP_PRIMAY_USED, GINT_TO_POINTER( TRUE ));
+/**
+ * nact_clipboard_primary_get:
+ *
+ * Returns: a copy of the list of items previously referenced in the
+ * internal clipboard.
+ *
+ * We allocate a new id for items in order to be ready to paste another
+ * time.
+ */
+GList *
+nact_clipboard_primary_get( void )
+{
+	GtkClipboard *clipboard;
+	GtkSelectionData *selection;
+	NactClipboardData *data;
+	GList *items, *it;
+	NAObject *obj;
+
+	clipboard = get_primary_clipboard();
+
+	items = NULL;
+
+	selection = gtk_clipboard_wait_for_contents( clipboard, NACT_CLIPBOARD_NACT_ATOM );
+
+	if( selection ){
+		data = ( NactClipboardData * ) selection->data;
+
+		for( it = data->items ; it ; it = it->next ){
+			obj = na_object_duplicate( it->data );
+			na_object_set_origin_rec( obj, NULL );
+			items = g_list_prepend( items, obj );
+		}
+		items = g_list_reverse( items );
+
+		renumber_items( data->items );
+	}
+
+	return( items );
+}
+
+/**
+ * nact_clipboard_primary_counts:
+ *
+ * Returns some counters on content of primary clipboard.
+ */
+void
+nact_clipboard_primary_counts( guint *actions, guint *profiles, guint *menus )
+{
+	GtkClipboard *clipboard;
+	GtkSelectionData *selection;
+	NactClipboardData *data;
+
+	g_return_if_fail( actions && profiles && menus );
+	*actions = 0;
+	*profiles = 0;
+	*menus = 0;
+
+	clipboard = get_primary_clipboard();
+
+	selection = gtk_clipboard_wait_for_contents( clipboard, NACT_CLIPBOARD_NACT_ATOM );
+
+	if( selection ){
+		data = ( NactClipboardData * ) selection->data;
+
+		*actions = data->nb_actions;
+		*profiles = data->nb_profiles;
+		*menus = data->nb_menus;
+	}
 }
 
 static GtkClipboard *
-get_clipboard( void )
+get_nact_clipboard( void )
 {
 	GdkDisplay *display;
 	GtkClipboard *clipboard;
 
 	display = gdk_display_get_default();
 	clipboard = gtk_clipboard_get_for_display( display, GDK_SELECTION_PRIMARY );
+
+	return( clipboard );
+}
+
+static GtkClipboard *
+get_primary_clipboard( void )
+{
+	GdkDisplay *display;
+	GtkClipboard *clipboard;
+
+	display = gdk_display_get_default();
+	clipboard = gtk_clipboard_get_for_display( display, NACT_CLIPBOARD_ATOM );
 
 	return( clipboard );
 }
@@ -416,8 +429,6 @@ clear_clipboard_callback( GtkClipboard *clipboard, NactClipboardData *data )
 	g_list_foreach( data->items, ( GFunc ) g_object_unref, NULL );
 	g_list_free( data->items );
 	g_free( data );
-
-	g_object_set_data( G_OBJECT( clipboard ), CLIPBOARD_PROP_PRIMAY_USED, GINT_TO_POINTER( FALSE ));
 }
 
 static void

@@ -331,33 +331,22 @@ nact_window_count_level_zero_items( GList *items, guint *actions, guint *profile
 }
 
 /**
+ * nact_window_warn_modified:
+ * @window: this #NactWindow instance.
+ *
  * Emits a warning if the action has been modified.
  *
- * @window: this NactWindow object.
- *
- * @count
- *
- * Returns TRUE if the user confirms he wants to quit.
- *
- * Note: the count of modified actions is subject to some approximation.
- * So, just say that 'actions have been modified'
+ * Returns: %TRUE if the user confirms he wants to quit.
  */
 gboolean
-nact_window_warn_count_modified( NactWindow *window, gint count )
+nact_window_warn_modified( NactWindow *window )
 {
 	gchar *first;
 	gchar *second;
 	gboolean ok;
 
-	if( count == 1 ){
-		first = g_strdup_printf( _( "One action has been modified." ));
-		second = g_strdup( _( "Are you sure you want to quit without saving it ?" ));
-
-	} else {
-		/*first = g_strdup_printf( _( "%d actions have been modified." ), count );*/
-		first = g_strdup_printf( _( "Actions have been modified." ));
-		second = g_strdup( _( "Are you sure you want to quit without saving them ?" ));
-	}
+	first = g_strdup_printf( _( "Some items have been modified." ));
+	second = g_strdup( _( "Are you sure you want to quit without saving them ?" ));
 
 	ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
 

@@ -55,7 +55,7 @@ static GType      register_type( void );
 static void       interface_base_init( NactIConditionsTabInterface *klass );
 static void       interface_base_finalize( NactIConditionsTabInterface *klass );
 
-static void       on_tab_updatable_selection_updated( NactIConditionsTab *instance, gint count_selected );
+static void       on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_selected );
 static GtkWidget *get_basenames_entry( NactIConditionsTab *instance );
 static GtkButton *get_both_button( NactIConditionsTab *instance );
 static GtkButton *get_isdir_button( NactIConditionsTab *instance );
@@ -210,8 +210,8 @@ nact_iconditions_tab_runtime_init_toplevel( NactIConditionsTab *instance )
 
 	g_signal_connect(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED,
-			G_CALLBACK( on_tab_updatable_selection_updated ),
+			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tab_updatable_selection_changed ),
 			instance );
 }
 
@@ -257,9 +257,9 @@ nact_iconditions_tab_get_multiple( NactIConditionsTab *instance )
 }
 
 static void
-on_tab_updatable_selection_updated( NactIConditionsTab *instance, gint count_selected )
+on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_selected )
 {
-	static const gchar *thisfn = "nact_iconditions_tab_on_tab_updatable_selection_updated";
+	static const gchar *thisfn = "nact_iconditions_tab_on_tab_updatable_selection_changed";
 	NAObjectProfile *profile;
 	GtkWidget *basenames_widget, *mimetypes_widget;
 	GSList *basenames, *mimetypes;
@@ -374,7 +374,7 @@ on_basenames_changed( GtkEntry *entry, NactIConditionsTab *instance )
 		basenames = na_utils_text_to_string_list( text );
 		na_object_profile_set_basenames( edited, basenames );
 		na_utils_free_string_list( basenames );
-		/*g_signal_emit_by_name( G_OBJECT( instance ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 }
 
@@ -398,7 +398,7 @@ on_isfiledir_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 	if( edited ){
 		nact_iconditions_tab_get_isfiledir( instance, &isfile, &isdir );
 		na_object_profile_set_isfiledir( edited, isfile, isdir );
-		/*g_signal_emit_by_name( G_OBJECT( instance ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 }
 
@@ -416,7 +416,7 @@ on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 	if( edited ){
 		matchcase = gtk_toggle_button_get_active( button );
 		na_object_profile_set_matchcase( edited, matchcase );
-		/*g_signal_emit_by_name( G_OBJECT( instance ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 }
 
@@ -437,7 +437,7 @@ on_mimetypes_changed( GtkEntry *entry, NactIConditionsTab *instance )
 		mimetypes = na_utils_text_to_string_list( text );
 		na_object_profile_set_mimetypes( edited, mimetypes );
 		na_utils_free_string_list( mimetypes );
-		/*g_signal_emit_by_name( G_OBJECT( instance ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 }
 
@@ -455,7 +455,7 @@ on_multiple_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 	if( edited ){
 		multiple = gtk_toggle_button_get_active( button );
 		na_object_profile_set_multiple( edited, multiple );
-		/*g_signal_emit_by_name( G_OBJECT( instance ), NACT_SIGNAL_MODIFIED_FIELD );*/
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
 	}
 }
 

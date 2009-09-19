@@ -79,18 +79,6 @@ struct NactMainWindowPrivate {
 	NAObjectItem    *edited_item;
 
 	/**
-	 * Edition status for the edited action or menu.
-	 *
-	 * Menu is always editable as only displayed if it is the currently
-	 * selected item.
-	 *
-	 * Action is only enable if the action itself, or an action with
-	 * only one profile, is currently selected
-	 */
-	/* TODO: remove this variable */
-	/*gboolean         edition_enabled;*/
-
-	/**
 	 * Currently edited profile.
 	 *
 	 * This is the profile which is displayed in tabs Command,
@@ -114,7 +102,8 @@ enum {
 /* signals
  */
 enum {
-	SELECTION_UPDATED,
+	SELECTION_CHANGED,
+	ITEM_UPDATED,
 	LAST_SIGNAL
 };
 
@@ -147,6 +136,8 @@ static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer use
 static void     iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void     set_current_object_item( NactMainWindow *window, GSList *selected_items );
 static void     set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
+
+static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data );
 
 static void     ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
 static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data );
@@ -269,13 +260,6 @@ class_init( NactMainWindowClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_EDITED_ITEM, spec );
 
-	/*spec = g_param_spec_boolean(
-			TAB_UPDATABLE_PROP_EDITION_ACTION_ENABLED,
-			"Edition enabled",
-			"Whether editing the characteristics of NAObjectItem is allowed", FALSE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_ITEM_EDITION_ENABLED, spec );*/
-
 	spec = g_param_spec_pointer(
 			TAB_UPDATABLE_PROP_EDITED_PROFILE,
 			"Edited NAObjectProfile",
@@ -290,13 +274,43 @@ class_init( NactMainWindowClass *klass )
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
 
 	/**
-	 * "nact-tab-updatable-selection-updated":
+	 * nact-tab-updatable-selection-changed:
 	 *
-	 * This signal is emitted to inform updatable tabs that a new
-	 * item has been selected, and the displays should reflect it.
+	 * This signal is emitted by this main window, in response of a
+	 * change of the selection in IActionsList.
+	 * Notebook tabs should connect to this signal and update their
+	 * display to reflect the content of the new selection.
+	 *
+	 * Note also that, where this main window will receive from
+	 * IActionsList the full list of currently selected items, this
+	 * signal only carries to the tabs the count of selected items.
+	 *
+	 * See #iactions_list_selection_changed().
 	 */
-	st_signals[ SELECTION_UPDATED ] = g_signal_new(
-			TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED,
+	st_signals[ SELECTION_CHANGED ] = g_signal_new(
+			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,					/* no default handler */
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER );
+
+	/**
+	 * nact-tab-updatable-item-updated:
+	 *
+	 * This signal is emitted by the notebook tabs, when any property
+	 * of an item has been modified.
+	 *
+	 * This main window is rather the only consumer of this message,
+	 * does its tricks (title, etc.), and then reforward an item-updated
+	 * message to IActionsList.
+	 */
+	st_signals[ ITEM_UPDATED ] = g_signal_new(
+			TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
 			G_TYPE_OBJECT,
 			G_SIGNAL_RUN_LAST,
 			0,					/* no default handler */
@@ -400,6 +414,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED,
 			G_CALLBACK( on_base_all_widgets_showed ));
 
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
+			G_CALLBACK( on_tab_updatable_item_updated ));
+
 	self->private->dispose_has_run = FALSE;
 }
 
@@ -415,10 +435,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 		case PROP_EDITED_ITEM:
 			g_value_set_pointer( value, self->private->edited_item );
 			break;
-
-		/*case PROP_ITEM_EDITION_ENABLED:
-			g_value_set_boolean( value, self->private->edition_enabled );
-			break;*/
 
 		case PROP_EDITED_PROFILE:
 			g_value_set_pointer( value, self->private->edited_profile );
@@ -442,10 +458,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 		case PROP_EDITED_ITEM:
 			self->private->edited_item = g_value_get_pointer( value );
 			break;
-
-		/*case PROP_ITEM_EDITION_ENABLED:
-			self->private->edition_enabled = g_value_get_boolean( value );
-			break;*/
 
 		case PROP_EDITED_PROFILE:
 			self->private->edited_profile = g_value_get_pointer( value );
@@ -471,6 +483,8 @@ instance_dispose( GObject *window )
 
 	if( !self->private->dispose_has_run ){
 
+		self->private->dispose_has_run = TRUE;
+
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		base_iprefs_set_int( BASE_WINDOW( window ), "main-paned", pos );
@@ -487,8 +501,6 @@ instance_dispose( GObject *window )
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( window );
 		}
-
-		self->private->dispose_has_run = TRUE;
 	}
 }
 
@@ -554,10 +566,10 @@ nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid 
 }
 
 /**
- * nact_main_window_get_modified_items_count:
+ * nact_main_window_has_modified_items:
  * @window: this #NactMainWindow instance.
  *
- * Returns: a count of modified items.
+ * Returns: %TRUE if there is at least one modified item in IActionsList.
  *
  * Note that exact count of modified actions is subject to some
  * approximation:
@@ -567,30 +579,31 @@ nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid 
  *    if we have eventually deleted all newly created actions, then the
  *    final count of modified actions should be zero... don't it ?
  */
-guint
-nact_main_window_get_modified_items_count( const NactMainWindow *window )
+gboolean
+nact_main_window_has_modified_items( const NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_get_modified_items_count";
-	GList *ia, *modified;
+	static const gchar *thisfn = "nact_main_window_has_modified_items";
+	GList *ia;
 	gint count_deleted = 0;
-	gint count_modified = 0;
+	gboolean has_modified = FALSE;
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), 0 );
-	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( window ), 0 );
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
+	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( window ), FALSE );
 
-	for( ia = window->private->deleted ; ia ; ia = ia->next ){
-		if( na_object_get_origin( NA_OBJECT( ia->data )) != NULL ){
-			count_deleted += 1;
+	if( !window->private->dispose_has_run ){
+
+		for( ia = window->private->deleted ; ia ; ia = ia->next ){
+			if( na_object_get_origin( NA_OBJECT( ia->data )) != NULL ){
+				count_deleted += 1;
+			}
 		}
+		g_debug( "%s: count_deleted=%d", thisfn, count_deleted );
+
+		has_modified = nact_iactions_list_has_modified_items( NACT_IACTIONS_LIST( window ));
+		g_debug( "%s: has_modified=%s", thisfn, has_modified ? "True":"False" );
 	}
-	g_debug( "%s: count_deleted=%d", thisfn, count_deleted );
 
-	modified = nact_iactions_list_get_modified_items( NACT_IACTIONS_LIST( window ));
-	count_modified = g_list_length( modified );
-	na_object_free_items( modified );
-	g_debug( "%s: count_modified=%d", thisfn, count_modified );
-
-	return( count_deleted + count_modified );
+	return( count_deleted > 0 || has_modified );
 }
 
 /**
@@ -602,7 +615,7 @@ nact_main_window_get_modified_items_count( const NactMainWindow *window )
  *
  * Note that we move the ref from @items list to our own deleted list.
  * So that the caller should not try to na_object_free_items() the
- * provided list, but should also g_slist_free() it.
+ * provided list.
  */
 void
 nact_main_window_move_to_deleted( NactMainWindow *window, GList *items )
@@ -774,7 +787,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 static void
 iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
 {
-	static const gchar *thisfn = "nact_main_window_list_actions_selection_changed";
+	static const gchar *thisfn = "nact_main_window_iactions_list_selection_changed";
 	NactMainWindow *window;
 	NAObject *object;
 	gint count;
@@ -785,6 +798,10 @@ iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_it
 			thisfn, ( void * ) instance, ( void * ) selected_items, count );
 
 	window = NACT_MAIN_WINDOW( instance );
+
+	if( window->private->dispose_has_run ){
+		return;
+	}
 
 	if( count == 1 ){
 		object = NA_OBJECT( selected_items->data );
@@ -806,11 +823,10 @@ iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_it
 	g_object_set(
 			G_OBJECT( window ),
 			TAB_UPDATABLE_PROP_EDITED_ACTION, window->private->edited_item,
-			/*TAB_UPDATABLE_PROP_EDITION_ACTION_ENABLED, window->private->edition_enabled,*/
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, window->private->edited_profile,
 			NULL );
 
-	g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED, GINT_TO_POINTER( count ));
+	g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED, GINT_TO_POINTER( count ));
 }
 
 /*
@@ -890,6 +906,20 @@ set_current_profile( NactMainWindow *window, gboolean set_action, GSList *select
 	}
 }
 
+static void
+on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data )
+{
+	static const gchar *thisfn = "on_tab_updatable_item_updated";
+
+	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+
+		g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, NULL );
+	}
+}
+
 /*
  * called by NAPivot because this window implements the IIOConsumer
  * interface, i.e. it wish to be advertised when the list of actions
@@ -918,7 +948,7 @@ ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_da
 								"You could keep to work with your current list of actions, "
 								"or you may want to reload a fresh one." ));
 
-	if( nact_main_window_get_modified_items_count( NACT_MAIN_WINDOW( instance )) > 0 ){
+	if( nact_main_window_has_modified_items( NACT_MAIN_WINDOW( instance ))){
 		gchar *tmp = g_strdup_printf( "%s\n\n%s", first,
 				_( "Note that reloading a fresh list of actions requires "
 					"that you give up with your current modifications." ));

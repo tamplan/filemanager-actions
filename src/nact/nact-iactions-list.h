@@ -58,9 +58,9 @@ typedef struct {
 	/**
 	 * item_updated:
 	 * @instance: this #NactIActionsList instance.
-	 * @updated_items: flat list of updated items.
+	 * @object: the modified #NAObject.
 	 */
-	void ( *item_updated )     ( NactIActionsList *instance, GSList *updated_items );
+	void ( *item_updated )     ( NactIActionsList *instance, NAObject *object );
 }
 	NactIActionsListInterface;
 
@@ -79,8 +79,9 @@ void      nact_iactions_list_dispose( NactIActionsList *instance );
 void      nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **path );
 void      nact_iactions_list_fill( NactIActionsList *instance, GList *items );
 GList    *nact_iactions_list_get_items( NactIActionsList *instance );
-GList    *nact_iactions_list_get_modified_items( NactIActionsList *instance );
 GList    *nact_iactions_list_get_selected_items( NactIActionsList *instance );
+gboolean  nact_iactions_list_has_exportable( NactIActionsList *instance );
+gboolean  nact_iactions_list_has_modified_items( NactIActionsList *instance );
 void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items );
 gboolean  nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item );
 gboolean  nact_iactions_list_is_filling_list( NactIActionsList *instance );

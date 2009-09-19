@@ -38,7 +38,8 @@
 
 /* signals
  */
-#define TAB_UPDATABLE_SIGNAL_SELECTION_UPDATED			"nact-tab-updatable-selection-updated"
+#define TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED			"nact-tab-updatable-selection-changed"
+#define TAB_UPDATABLE_SIGNAL_ITEM_UPDATED				"nact-tab-updatable-item-updated"
 
 G_END_DECLS
 

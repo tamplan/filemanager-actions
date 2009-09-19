@@ -147,10 +147,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_object_menu_instance_dispose";
+	/*static const gchar *thisfn = "na_object_menu_instance_dispose";*/
 	NAObjectMenu *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
 	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
 	self = NA_OBJECT_MENU( object );
 
@@ -168,10 +168,10 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_object_menu_instance_finalize";
+	/*static const gchar *thisfn = "na_object_menu_instance_finalize";*/
 	NAObjectMenu *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
 	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
 	self = ( NAObjectMenu * ) object;
 
