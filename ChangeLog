@@ -28,6 +28,7 @@
 	nact_iactions_list_has_modified_items().
 	nact_iactions_list_has_exportable(): New function.
 	nact_iactions_list_is_filling_list(): Removed function.
+	toggle_collapse(): Activate shortcuts on menus.
 
 	* src/nact/nact-iaction-tab.c:
 	* src/nact/nact-icommand-tab.c:

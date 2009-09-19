@@ -1377,7 +1377,10 @@ toggle_collapse_iter( NactIActionsList *instance,
 
 		if( NA_IS_OBJECT_ITEM( object )){
 			count = na_object_get_items_count( object );
-			if( count > 1 ){
+
+			if(( count > 1 && NA_IS_OBJECT_ACTION( object )) ||
+				( count > 0 && NA_IS_OBJECT_MENU( object ))){
+
 				toggle_collapse_row( treeview, path, toggle );
 			}
 		}
