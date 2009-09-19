@@ -383,7 +383,7 @@ save_object_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *object )
 
 	if( na_object_is_modified( NA_OBJECT( object )) &&
 		na_object_is_valid( NA_OBJECT( object )) &&
-		nact_window_save_object_item( NACT_WINDOW( window ), object )){
+		nact_window_save_item( NACT_WINDOW( window ), object )){
 
 			NAObjectItem *origin = NA_OBJECT_ITEM( na_object_get_origin( NA_OBJECT( object )));
 

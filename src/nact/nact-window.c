@@ -63,8 +63,6 @@ static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *application );
 static void   instance_finalize( GObject *application );
 
-static void   do_edition_field_modified( NactWindow *window, gpointer user_data );
-
 GType
 nact_window_get_type( void )
 {
@@ -117,8 +115,6 @@ class_init( NactWindowClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactWindowClassPrivate, 1 );
-
-	klass->edition_field_modified = do_edition_field_modified;
 }
 
 static void
@@ -197,7 +193,7 @@ nact_window_get_pivot( NactWindow *window )
 }
 
 /**
- * nact_window_save_object_item:
+ * nact_window_save_item:
  * @window: this #NactWindow instance.
  * @item: the #NAObjectItem to be saved.
  *
@@ -209,9 +205,9 @@ nact_window_get_pivot( NactWindow *window )
  * along with the list and the order of its subitems.
  */
 gboolean
-nact_window_save_object_item( NactWindow *window, NAObjectItem *item )
+nact_window_save_item( NactWindow *window, NAObjectItem *item )
 {
-	static const gchar *thisfn = "nact_window_save_action";
+	static const gchar *thisfn = "nact_window_save_item";
 	NAPivot *pivot;
 	gchar *msg = NULL;
 	guint ret;
@@ -236,16 +232,16 @@ nact_window_save_object_item( NactWindow *window, NAObjectItem *item )
 }
 
 /**
- * nact_window_delete_object_item:
+ * nact_window_delete_item:
  * @window: this #NactWindow object.
  * @item: the item (action or menu) to delete.
  *
  * Deleted an item from the I/O storage subsystem.
  */
 gboolean
-nact_window_delete_object_item( NactWindow *window, NAObjectItem *item )
+nact_window_delete_item( NactWindow *window, NAObjectItem *item )
 {
-	static const gchar *thisfn = "nact_window_delete_object_item";
+	static const gchar *thisfn = "nact_window_delete_item";
 	NAPivot *pivot;
 	gchar *msg = NULL;
 	guint ret;
@@ -354,13 +350,4 @@ nact_window_warn_modified( NactWindow *window )
 	g_free( first );
 
 	return( ok );
-}
-
-/*
- * default implementation of "nact-signal-edition-field-modified" signal
- * does nothing here
- */
-static void
-do_edition_field_modified( NactWindow *window, gpointer user_data )
-{
 }

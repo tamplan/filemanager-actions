@@ -67,14 +67,6 @@ typedef struct NactWindowClassPrivate NactWindowClassPrivate;
 typedef struct {
 	BaseWindowClass         parent;
 	NactWindowClassPrivate *private;
-
-	/**
-	 * edition_field_modified
-	 *
-	 * virtual handler for "nact-signal-edition-field-modified" signal
-	 * default implementation does nothing
-	 */
-	void    ( *edition_field_modified )( NactWindow *window, gpointer user_data );
 }
 	NactWindowClass;
 
@@ -82,9 +74,8 @@ GType    nact_window_get_type( void );
 
 NAPivot *nact_window_get_pivot( NactWindow *window );
 
-/*void     nact_window_set_current_action( NactWindow *window, const NAAction *action );*/
-gboolean nact_window_save_object_item( NactWindow *window, NAObjectItem *item );
-gboolean nact_window_delete_object_item( NactWindow *window, NAObjectItem *item );
+gboolean nact_window_save_item( NactWindow *window, NAObjectItem *item );
+gboolean nact_window_delete_item( NactWindow *window, NAObjectItem *item );
 
 void     nact_window_write_level_zero( NactWindow *window, GList *items );
 void     nact_window_count_level_zero_items( GList *items, guint *actions, guint *profiles, guint *menus );

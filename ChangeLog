@@ -47,12 +47,14 @@
 
 	* src/nact/nact-main-menubar.c:
 	Update conditions of sensitivity of menu items.
+	Use nact_window_save_item() new function name.
 
 	* src/nact/nact-main-window.c:
 	Emits "item-updated" to IActionsList in response to "item-updated"
 	from notebook's tabs.
 	nact_main_window_get_modified_items_count(): Replaced with
 	nact_main_window_has_modified_items().
+	Use nact_window_delete_item() new function name.
 
 	* src/nact/nact-tree-model.c:
 	* src/nact/nact-tree-model.h (nact_tree_model_display): New function.
@@ -60,6 +62,8 @@
 	* src/nact/nact-window.c:
 	* src/nact/nact-window.h (nact_window_warn_count_modified):
 	Renamed as nact_window_warn_modified() with string change.
+	nact_window_save_object_item() renamed ad nact_window_save_item().
+	nact_window_delete_object_item() renamed ad nact_window_delete_item().
 
 	* po/POTFILES.in: Update list of files.
 
