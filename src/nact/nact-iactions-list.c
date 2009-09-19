@@ -121,6 +121,7 @@ static void         on_iactions_list_item_updated( NactIActionsList *instance, N
 static void         on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *object );
 static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void         select_first_row( NactIActionsList *instance );
+static void         select_row( GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter );
 static void         set_selection_changed_mode( NactIActionsList *instance, gboolean authorized );
 static void         toggle_collapse( NactIActionsList *instance );
 static gboolean     toggle_collapse_iter( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter, NAObject *object, gpointer user_data );
@@ -670,7 +671,6 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items )
 		na_object_check_edition_status( it->data );
 	}
 
-	gtk_tree_selection_unselect_all( selection );
 	nact_iactions_list_select_row( instance, last_path );
 
 	/*gtk_tree_path_free( last_path );*/
@@ -820,22 +820,29 @@ nact_iactions_list_select_row( NactIActionsList *instance, GtkTreePath *path )
 	GtkTreeIter iter;
 
 	treeview = get_actions_list_treeview( instance );
+
 	selection = gtk_tree_view_get_selection( treeview );
+	gtk_tree_selection_unselect_all( selection );
+
 	model = gtk_tree_view_get_model( treeview );
 
 	if( gtk_tree_model_get_iter( model, &iter, path )){
-		gtk_tree_selection_select_iter( selection, &iter );
+		/*gtk_tree_selection_select_iter( selection, &iter );*/
+		select_row( treeview, model, &iter );
 
 	} else {
 		gtk_tree_path_next( path );
 		if( gtk_tree_model_get_iter( model, &iter, path )){
-			gtk_tree_selection_select_iter( selection, &iter );
+			/*gtk_tree_selection_select_iter( selection, &iter );*/
+			select_row( treeview, model, &iter );
 
 		} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
-			gtk_tree_selection_select_iter( selection, &iter );
+			/*gtk_tree_selection_select_iter( selection, &iter );*/
+			select_row( treeview, model, &iter );
 
 		} else if( gtk_tree_path_up( path ) && gtk_tree_model_get_iter( model, &iter, path )){
-			gtk_tree_selection_select_iter( selection, &iter );
+			/*gtk_tree_selection_select_iter( selection, &iter );*/
+			select_row( treeview, model, &iter );
 		}
 	}
 
@@ -1342,6 +1349,16 @@ select_first_row( NactIActionsList *instance )
 	} else {
 		gtk_tree_selection_select_iter( selection, &iter );
 	}
+}
+
+static void
+select_row( GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter )
+{
+	GtkTreePath *path;
+
+	path = gtk_tree_model_get_path( model, iter );
+	gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+	gtk_tree_path_free( path );
 }
 
 static void
