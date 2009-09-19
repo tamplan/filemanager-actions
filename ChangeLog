@@ -16,6 +16,12 @@
 	Remove traces at instance_dispose() and instance_finalize().
 	na_object_menu_rebuild_items_list(): New function.
 
+	* src/common/na-obj-action.c:
+	* src/common/na-obj-menu.c:
+	* src/common/na-object-item-fn.h:
+	* src/common/na-object-item.c:
+	na_object_item_set_new_uuid(): Replace function by na_object_set_new_id().
+
 	* src/nact/nact-clipboard.c:
 	* src/nact/nact-clipboard.h:
 	All functions in use for cut/copy/paste functions are renamed as

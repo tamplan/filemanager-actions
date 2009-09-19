@@ -203,8 +203,7 @@ na_object_menu_new( void )
 
 	menu = g_object_new( NA_OBJECT_MENU_TYPE, NULL );
 
-	na_object_item_set_new_uuid( NA_OBJECT_ITEM( menu ));
-
+	na_object_set_new_id( menu );
 	na_object_set_label( menu, NA_OBJECT_MENU_DEFAULT_LABEL );
 
 	return( menu );

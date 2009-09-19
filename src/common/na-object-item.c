@@ -590,27 +590,6 @@ na_object_item_is_enabled( const NAObjectItem *item )
 }
 
 /**
- * na_object_item_set_new_uuid:
- * @item: the #NAObjectItem object to be updated.
- *
- * Set a new UUID for the item (an action or a menu).
- */
-void
-na_object_item_set_new_uuid( NAObjectItem *item )
-{
-	uuid_t uuid;
-	gchar uuid_str[64];
-
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !item->private->dispose_has_run );
-
-	uuid_generate( uuid );
-	uuid_unparse_lower( uuid, uuid_str );
-
-	na_object_set_id( item, uuid_str );
-}
-
-/**
  * na_object_item_set_tooltip:
  * @item: the #NAObjectItem object to be updated.
  * @tooltip: the tooltip to be set.

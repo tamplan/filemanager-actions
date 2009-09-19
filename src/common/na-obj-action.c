@@ -297,7 +297,7 @@ na_object_action_new( void )
 
 	action = g_object_new( NA_OBJECT_ACTION_TYPE, NULL );
 
-	na_object_item_set_new_uuid( NA_OBJECT_ITEM( action ));
+	na_object_set_new_id( NA_OBJECT_ITEM( action ));
 
 	/* i18n: default label for a new action */
 	na_object_set_label( action, NA_OBJECT_ACTION_DEFAULT_LABEL );
