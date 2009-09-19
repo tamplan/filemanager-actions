@@ -92,12 +92,6 @@ void      nact_iactions_list_set_multiple_selection_mode( NactIActionsList *inst
 void      nact_iactions_list_set_only_actions_mode( NactIActionsList *instance, gboolean only_actions );
 void      nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *item );
 
-/*
-void      nact_list_actions_insert_item( NactMainWindow *window, NAObject *item );
-void      nact_list_actions_set_selection( NactMainWindow *window, GType type, const gchar *uuid, const gchar *label );
-void      nact_list_actions_update_selected( NactMainWindow *window, NAAction *action );
-*/
-
 G_END_DECLS
 
 #endif /* __NACT_IACTIONS_LIST_H__ */

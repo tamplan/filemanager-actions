@@ -434,6 +434,10 @@ nact_iactions_list_dispose( NactIActionsList *instance )
  * The returned @path tries to represent the most probable available
  * selection after deletion has occured.
  * It should be gtk_tree_path_free() by the caller.
+ *
+ * This function takes care of refilter the display model.
+ * if possible, a new selection should be set with
+ * #nact_iactions_list_select_row().
  */
 void
 nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **path )
@@ -460,6 +464,8 @@ nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **p
 
 	g_list_foreach( selected, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( selected );
+
+	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
 }
 
 /**
@@ -623,6 +629,9 @@ nact_iactions_list_has_modified_items( NactIActionsList *instance )
  *
  * If new item is a #NAActionMenu or a #NAAction, it will be inserted
  * before the current action or inside the current menu.
+ *
+ * This function takes care of repositionning a new selection if
+ * possible, and refilter the display model.
  */
 void
 nact_iactions_list_insert_items( NactIActionsList *instance, GList *items )
@@ -632,9 +641,10 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items )
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
 	GList *list_selected;
-	GtkTreePath *insert_path;
-	GtkTreePath *last_path;
-	GList *parents, *it;
+	GtkTreePath *insert_path = NULL;
+	GtkTreePath *last_path = NULL;
+	GList *parents = NULL;
+	GList *it;
 
 	g_debug( "%s: instance=%p, items=%p (%d items)",
 			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
@@ -645,7 +655,6 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items )
 	model = gtk_tree_view_get_model( treeview );
 	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
 
-	insert_path = NULL;
 	selection = gtk_tree_view_get_selection( treeview );
 	list_selected = gtk_tree_selection_get_selected_rows( selection, NULL );
 	if( g_list_length( list_selected )){
@@ -655,7 +664,6 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items )
 	g_list_foreach( list_selected, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( list_selected );
 
-	parents = NULL;
 	last_path = do_insert_items( treeview, model, items, insert_path, 0, &parents );
 
 	for( it = parents ; it ; it = it->next ){
@@ -1256,7 +1264,7 @@ on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *in
 
 	selected_items = nact_iactions_list_get_selected_items( instance );
 
-	if( !is_selection_changed_authorized( instance )){
+	if( is_selection_changed_authorized( instance )){
 		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
 	}
 }
@@ -1281,6 +1289,21 @@ on_iactions_list_item_updated( NactIActionsList *instance, NAObject *object )
 static void
 on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *object )
 {
+	NAObject *item;
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+
+	if( object ){
+		item = NA_IS_OBJECT_PROFILE( object )
+			? NA_OBJECT( na_object_profile_get_action( NA_OBJECT_PROFILE( object )))
+			: object;
+
+		na_object_check_edition_status( item );
+
+		treeview = get_actions_list_treeview( instance );
+		model = gtk_tree_view_get_model( treeview );
+		nact_tree_model_display( NACT_TREE_MODEL( model ), object );
+	}
 }
 
 /*

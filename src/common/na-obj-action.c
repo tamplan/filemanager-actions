@@ -565,7 +565,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		equal = ( g_utf8_collate( first->private->version, second->private->version ) == 0 );
 	}
 
-	g_debug( "na_object_action_are_equal: %s", equal ? "True":"False" );
+	/*g_debug( "na_object_action_are_equal: %s", equal ? "True":"False" );*/
 	return( equal );
 }
 

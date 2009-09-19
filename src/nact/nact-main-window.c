@@ -909,14 +909,14 @@ set_current_profile( NactMainWindow *window, gboolean set_action, GSList *select
 static void
 on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data )
 {
-	static const gchar *thisfn = "on_tab_updatable_item_updated";
+	static const gchar *thisfn = "nact_main_window_on_tab_updatable_item_updated";
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 
-		g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, NULL );
+		g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, user_data );
 	}
 }
 

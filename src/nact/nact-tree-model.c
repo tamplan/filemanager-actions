@@ -145,14 +145,15 @@ static void           instance_finalize( GObject *application );
 
 static NactTreeModel *tree_model_new( BaseWindow *window, GtkTreeView *treeview );
 
+static GList         *add_parent( GList *parents, GtkTreeModel *store, GtkTreeIter *obj_iter, GtkTreePath *obj_path );
 static void           append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
 static void           display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, const NAObject *object );
 static gboolean       dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpStruct *ntm );
 static void           fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, GList *items, gboolean only_actions, GtkTreeIter *parent );
 static void           iter_on_store( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *parent, FnIterOnStore fn, gpointer user_data );
 static gboolean       iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter, FnIterOnStore fn, gpointer user_data );
-/*static gboolean       search_for_object( NactTreeModel *model, GtkTreeModel *store, const NAObject *object, GtkTreeIter *iter );
-static gboolean       search_for_objet_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmSearchStruct *ntm );*/
+static gboolean       search_for_object( NactTreeModel *model, GtkTreeModel *store, const NAObject *object, GtkTreeIter *iter );
+static gboolean       search_for_objet_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmSearchStruct *ntm );
 
 static gboolean       imulti_drag_source_row_draggable( EggTreeMultiDragSource *drag_source, GList *path_list );
 static gboolean       imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source, GdkDragContext *context, GtkSelectionData *selection_data, GList *path_list, guint info );
@@ -484,6 +485,24 @@ nact_tree_model_dispose( NactTreeModel *model )
 	gtk_tree_store_clear( ts_model );
 }
 
+/**
+ * nact_tree_model_display:
+ */
+void
+nact_tree_model_display( NactTreeModel *model, NAObject *object )
+{
+	GtkTreeStore *store;
+	GtkTreeIter iter;
+
+	store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
+
+	if( search_for_object( model, GTK_TREE_MODEL( store ), object, &iter )){
+		display_item( store, model->private->treeview, &iter, object );
+	}
+
+	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+}
+
 void
 nact_tree_model_dump( NactTreeModel *model )
 {
@@ -677,80 +696,6 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 	gtk_tree_model_filter_convert_child_iter_to_iter( GTK_TREE_MODEL_FILTER( model ), iter, &store_iter );
 }
 
-#if 0
-void
-nact_tree_model_insert_item( NactTreeModel *model, const NAObject *object, GtkTreePath *path, const NAObject *selected, GtkTreeIter *iter )
-{
-	static const gchar *thisfn = "nact_tree_model_insert_item";
-	gchar *path_str;
-	GtkTreeModel *store;
-	GtkTreeIter sibling;
-	GtkTreeIter *parent;
-	GtkTreeIter store_iter;
-	GtkTreeIter profile_iter;
-	GList *profiles;
-
-	path_str = path ? gtk_tree_path_to_string( path ) : NULL;
-	g_debug( "%s: model=%p, object=%p, path=%p (%s), selected=%p, iter=%p",
-			thisfn, ( void * ) model, ( void * ) object, ( void * ) path, path_str, ( void * ) selected, ( void * ) iter );
-	g_free( path_str );
-
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( iter );
-
-	store = gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model ));
-	parent = NULL;
-
-	if( path ){
-		g_return_if_fail( selected );
-		g_return_if_fail( NA_IS_OBJECT( selected ));
-
-		if( NA_IS_OBJECT_ITEM( object )){
-			if( !NA_IS_OBJECT_ITEM( selected )){
-				gtk_tree_path_up( path );
-			}
-			gtk_tree_model_get_iter( store, &sibling, path );
-			if( NA_IS_OBJECT_MENU( selected )){
-				parent = gtk_tree_iter_copy( &sibling );
-				na_object_insert_item( selected, object );
-			}
-		}
-
-		if( NA_IS_OBJECT_PROFILE( object )){
-			if( NA_IS_OBJECT_ACTION( selected )){
-				gtk_tree_path_down( path );
-				g_debug( "nact_tree_model_insert_item: object_is_action_profile, selected_is_action" );
-			}
-			gtk_tree_model_get_iter( store, &sibling, path );
-		}
-
-	} else {
-		g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
-	}
-
-	gtk_tree_store_insert_before( GTK_TREE_STORE( store ), &store_iter, parent, parent ? NULL : ( path ? &sibling : NULL ));
-	gtk_tree_store_set( GTK_TREE_STORE( store ), &store_iter, IACTIONS_LIST_NAOBJECT_COLUMN, object, -1 );
-	display_item( GTK_TREE_STORE( store ), model->private->treeview, &store_iter, object );
-
-	if( parent ){
-		gtk_tree_iter_free( parent );
-	}
-
-	if( NA_IS_OBJECT_ACTION( object )){
-		g_return_if_fail( na_object_get_items_count( object ) == 1 );
-		profiles = na_object_get_items( object );
-		append_item( GTK_TREE_STORE( store ), model->private->treeview, &store_iter, &profile_iter, NA_OBJECT( profiles->data ));
-		na_object_free_items( profiles );
-	}
-
-	nact_tree_model_update_parent( model, object );
-
-	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
-	gtk_tree_model_filter_convert_child_iter_to_iter( GTK_TREE_MODEL_FILTER( model ), iter, &store_iter );
-}
-#endif
-
 void
 nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data )
 {
@@ -777,23 +722,63 @@ nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data
 void
 nact_tree_model_remove( NactTreeModel *model, GList *selected )
 {
-	GList *reversed, *item;
+	GList *reversed, *it;
 	GtkTreeIter iter;
 	GtkTreeStore *store;
 	gchar *path_str;
+	GList *parents = NULL;
 
 	reversed = g_list_reverse( selected );
 	store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 
-	for( item = reversed ; item ; item = item->next ){
+	for( it = reversed ; it ; it = it->next ){
 
-		path_str = gtk_tree_path_to_string(( GtkTreePath * ) item->data );
+		path_str = gtk_tree_path_to_string(( GtkTreePath * ) it->data );
 		g_debug( "nact_tree_model_remove: path=%s", path_str );
 		g_free( path_str );
 
-		gtk_tree_model_get_iter( GTK_TREE_MODEL( store ), &iter, ( GtkTreePath * ) item->data );
+		gtk_tree_model_get_iter( GTK_TREE_MODEL( store ), &iter, ( GtkTreePath * ) it->data );
+		parents = add_parent( parents, GTK_TREE_MODEL( store ), &iter, ( GtkTreePath * ) it->data );
 		gtk_tree_store_remove( store, &iter );
 	}
+
+	for( it = parents ; it ; it = it->next ){
+		na_object_check_edition_status( it->data );
+	}
+}
+
+/*
+ * iter and path are positionned on the row which is going to be deleted
+ * remove the object from the subitems list of parent (if any)
+ * add parent to the list to check its status after remove will be done
+ */
+static GList *
+add_parent( GList *parents, GtkTreeModel *store, GtkTreeIter *obj_iter, GtkTreePath *obj_path )
+{
+	NAObject *object;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	NAObject *parent;
+
+	gtk_tree_model_get( store, obj_iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+	path = gtk_tree_path_copy( obj_path );
+
+	if( gtk_tree_path_up( path )){
+		gtk_tree_model_get_iter( store, &iter, path );
+		gtk_tree_model_get( store, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &parent, -1 );
+
+		if( !g_list_find( parents, parent )){
+			parents = g_list_prepend( parents, parent );
+			na_object_remove_item( parent, object );
+		}
+
+		g_object_unref( parent );
+	}
+
+	gtk_tree_path_free( path );
+	g_object_unref( object );
+
+	return( parents );
 }
 
 static void
@@ -876,7 +861,7 @@ iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter
 	return( stop );
 }
 
-/*static gboolean
+static gboolean
 search_for_object( NactTreeModel *model, GtkTreeModel *store, const NAObject *object, GtkTreeIter *result_iter )
 {
 	gboolean found = FALSE;
@@ -907,10 +892,11 @@ search_for_objet_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object
 		if( gtk_tree_model_get_iter( ntm->store, ntm->iter, path )){
 			ntm->found = TRUE;
 		}
-	}*/
+	}
+
 	/* stop iteration when found */
-	/*return( ntm->found );
-}*/
+	return( ntm->found );
+}
 
 /*
  * all rows are draggable
