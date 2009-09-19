@@ -172,6 +172,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 	level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
 	hierarchy = build_hierarchy( merged, level_zero );
 	na_utils_free_string_list( level_zero );
+	na_object_free_items( merged );
 
 	if( na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ))){
 		hierarchy = sort_tree( pivot, hierarchy );
@@ -182,6 +183,9 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 
 /*
  * recursively builds the hierarchy
+ * note that we add a ref count to object installed in new hierarchy
+ * so that eventual non-referenced objects will not cause memory leak
+ * when releasing initial merged tree
  */
 static GList *
 build_hierarchy( GList *tree, GSList *level_zero )
@@ -197,7 +201,7 @@ build_hierarchy( GList *tree, GSList *level_zero )
 		g_debug( "na_iio_provider_build_hierarchy: next_level_zero uuid is %s", ( gchar * ) ilevel->data );
 		it = g_list_find_custom( tree, ilevel->data, ( GCompareFunc ) search_item );
 		if( it ){
-			hierarchy = g_list_append( hierarchy, it->data );
+			hierarchy = g_list_append( hierarchy, g_object_ref( it->data ));
 			g_debug( "na_iio_provider_build_hierarchy: appending %s at %p to hierarchy %p",
 					G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data, ( void * ) hierarchy );
 
