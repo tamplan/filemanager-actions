@@ -3,6 +3,10 @@
 	* src/common/na-object-item.c (object_id_new_id):
 	Function becomes recursive.
 
+	src/common/na-object-item.c
+	(na_object_item_append_item, na_object_item_insert_item):
+	Only append/insert child item if not already recorded.
+
 	* src/nact/nact-clipboard.c (renumber_items):
 	Removes recursivity as it is provided by the class.
 
@@ -14,9 +18,19 @@
 	nact_iactions_list_select_row(): no more a public function.
 	Fix row selection code.
 
+	* src/nact/nact-iactions-list.c (select_row_at_path):
+	Simulate a "selection-changed" signal emission with an empty selection
+	in nothing can be selected.
+
+	* src/nact/nact-iactions-list.c (do_insert_items):
+	Do not rely on iter after a store_to_filter_model conversion.
+
 	* src/nact/nact-main-menubar.c:
 	Reorganize code to avoid the need of delete_selection returning
 	a path to be selected.
+
+	* src/nact/nact-tree-model.c (nact_tree_model_insert):
+	Rewrite the code to make the computing process clearer.
 
 2009-09-19 Pierre Wieser <pwieser@trychlos.org>
 

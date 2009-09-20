@@ -274,13 +274,13 @@ static void
 on_new_menu_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	NAObjectMenu *menu;
-	GList *items = NULL;
+	GList *items;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	menu = na_object_menu_new();
-	items = g_list_prepend( items, menu );
+	items = g_list_prepend( NULL, menu );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items( items );
 }
@@ -289,13 +289,13 @@ static void
 on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	NAObjectAction *action;
-	GList *items = NULL;
+	GList *items;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	action = na_object_action_new_with_profile();
-	items = g_list_prepend( items, action );
+	items = g_list_prepend( NULL, action );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items( items );
 }
@@ -306,7 +306,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	NAObjectAction *action;
 	NAObjectProfile *profile;
 	gchar *name;
-	GList *items = NULL;
+	GList *items;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -323,7 +323,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	na_object_profile_set_action( profile, action );
 	na_object_set_id( profile, name );
 
-	items = g_list_prepend( items, profile );
+	items = g_list_prepend( NULL, profile );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 
 	na_object_free_items( items );

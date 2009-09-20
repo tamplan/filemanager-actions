@@ -145,11 +145,19 @@ static void           instance_finalize( GObject *application );
 
 static NactTreeModel *tree_model_new( BaseWindow *window, GtkTreeView *treeview );
 
+static void           fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, GList *items, gboolean only_actions, GtkTreeIter *parent );
+
+static void           insert_get_iters_action( GtkTreeModel *model, const NAObject *select_object, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object );
+static void           insert_get_iters_profile( GtkTreeModel *model, const NAObject *select_object, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object );
+static void           insert_get_iters_menu( GtkTreeModel *model, const NAObject *select_object, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object );
+static void           insert_before_get_iters( GtkTreeModel *model,  GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object );
+static void           insert_before_parent_get_iters( GtkTreeModel *model,  GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object );
+static void           insert_as_last_child_get_iters( GtkTreeModel *model,  GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object );
+
 static GList         *add_parent( GList *parents, GtkTreeModel *store, GtkTreeIter *obj_iter, GtkTreePath *obj_path );
 static void           append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
 static void           display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, const NAObject *object );
 static gboolean       dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpStruct *ntm );
-static void           fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, GList *items, gboolean only_actions, GtkTreeIter *parent );
 static void           iter_on_store( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *parent, FnIterOnStore fn, gpointer user_data );
 static gboolean       iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter, FnIterOnStore fn, gpointer user_data );
 static gboolean       search_for_object( NactTreeModel *model, GtkTreeModel *store, const NAObject *object, GtkTreeIter *iter );
@@ -615,7 +623,26 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
  * @iter: set to the new row
  * @obj_parent: set to the parent or the object itself.
  *
- * Insert new rows starting at the given position.
+ * Insert a new row at the given position.
+ *
+ * +--------------------+----------------------+----------------------+----------------------+
+ * | inserted object -> |        action        |        profile       |         menu         |
+ * +--------------------+----------------------+----------------------+----------------------+
+ * | currently selected |                      |                      |                      |
+ * |      |             |                      |                      |                      |
+ * |      v             |                      |                      |                      |
+ * |    (nil)           |    insert_before     |          n/a         |    insert_before     |
+ * |                    |                      |                      |                      |
+ * |   action           |    insert_before     | insert_as_last_child |    insert_before     |
+ * |                    |                      |                      |                      |
+ * |   profile          | insert_before_parent |    insert_before     | insert_before_parent |
+ * |                    |                      |                      |                      |
+ * |    menu            | insert_as_last_child |          n/a         | insert_as_last_child |
+ * +-----------------------------------------------------------------------------------------+
+ *
+ * insert_before       : parent=NULL     , sibling_from_path (or null if path was null)
+ * insert_before_parent: parent=NULL     , sibling_from_parent_path
+ * insert_as_last_child: parent_from_path, sibling=NULL
  */
 void
 nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, GtkTreeIter *iter, NAObject **obj_parent )
@@ -623,11 +650,13 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 	static const gchar *thisfn = "nact_tree_model_insert";
 	gchar *path_str;
 	GtkTreeModel *store;
-	GtkTreeIter sibling;
-	GtkTreeIter *parent_iter;
 	GtkTreeIter select_iter;
+	NAObject *select_object;
+	GtkTreeIter parent_iter;
+	GtkTreeIter sibling_iter;
 	GtkTreeIter store_iter;
-	NAObject *selected;
+	gboolean has_parent_iter;
+	gboolean has_sibling_iter;
 
 	path_str = path ? gtk_tree_path_to_string( path ) : NULL;
 	g_debug( "%s: model=%p, object=%p (%s), path=%p (%s), iter=%p",
@@ -642,58 +671,182 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 	g_return_if_fail( iter );
 
 	store = gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model ));
-	parent_iter = NULL;
+	has_parent_iter = FALSE;
+	has_sibling_iter = FALSE;
 	*obj_parent = NA_OBJECT( object );
 
 	if( path ){
 		gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &select_iter, path );
-		gtk_tree_model_get( GTK_TREE_MODEL( model ), &select_iter, IACTIONS_LIST_NAOBJECT_COLUMN, &selected, -1 );
+		gtk_tree_model_get( GTK_TREE_MODEL( model ), &select_iter, IACTIONS_LIST_NAOBJECT_COLUMN, &select_object, -1 );
 
-		g_return_if_fail( selected );
-		g_return_if_fail( NA_IS_OBJECT( selected ));
+		g_return_if_fail( select_object );
+		g_return_if_fail( NA_IS_OBJECT( select_object ));
 
-		if( NA_IS_OBJECT_ITEM( object )){
-			if( !NA_IS_OBJECT_ITEM( selected )){
-				gtk_tree_path_up( path );
-			}
-			gtk_tree_model_get_iter( store, &sibling, path );
-			if( NA_IS_OBJECT_MENU( selected )){
-				parent_iter = gtk_tree_iter_copy( &sibling );
-				na_object_insert_item( selected, object );
-				*obj_parent = selected;
-			}
+		if( NA_IS_OBJECT_ACTION( object )){
+			insert_get_iters_action( GTK_TREE_MODEL( store ), select_object, path, object, &parent_iter, &has_parent_iter, &sibling_iter, &has_sibling_iter, obj_parent );
 		}
 
 		if( NA_IS_OBJECT_PROFILE( object )){
-			if( NA_IS_OBJECT_ACTION( selected )){
-				/*g_debug( "nact_tree_model_insert_item: object_is_action_profile, selected_is_action" );*/
-				na_object_action_attach_profile( NA_OBJECT_ACTION( selected ), NA_OBJECT_PROFILE( object ));
-				gtk_tree_model_get_iter( store, &sibling, path );
-				parent_iter = gtk_tree_iter_copy( &sibling );
-				*obj_parent = selected;
-			} else {
-				g_return_if_fail( NA_IS_OBJECT_PROFILE( selected ));
-				*obj_parent = NA_OBJECT( na_object_profile_get_action( NA_OBJECT_PROFILE( object )));
-				gtk_tree_path_down( path );
-				gtk_tree_model_get_iter( store, &sibling, path );
-			}
+			insert_get_iters_profile( GTK_TREE_MODEL( store ), select_object, path, object, &parent_iter, &has_parent_iter, &sibling_iter, &has_sibling_iter, obj_parent );
 		}
 
-		g_object_unref( selected );
+		if( NA_IS_OBJECT_MENU( object )){
+			insert_get_iters_menu( GTK_TREE_MODEL( store ), select_object, path, object, &parent_iter, &has_parent_iter, &sibling_iter, &has_sibling_iter, obj_parent );
+		}
+
+		g_object_unref( select_object );
 
 	} else {
 		g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
 	}
 
-	gtk_tree_store_insert_before( GTK_TREE_STORE( store ), &store_iter, parent_iter, parent_iter ? NULL : ( path ? &sibling : NULL ));
+	gtk_tree_store_insert_before( GTK_TREE_STORE( store ), &store_iter, has_parent_iter ? &parent_iter : NULL, has_sibling_iter ? &sibling_iter : NULL );
 	gtk_tree_store_set( GTK_TREE_STORE( store ), &store_iter, IACTIONS_LIST_NAOBJECT_COLUMN, object, -1 );
 	display_item( GTK_TREE_STORE( store ), model->private->treeview, &store_iter, object );
 
-	if( parent_iter ){
-		gtk_tree_iter_free( parent_iter );
+	gtk_tree_model_filter_convert_child_iter_to_iter( GTK_TREE_MODEL_FILTER( model ), iter, &store_iter );
+}
+
+static void
+insert_get_iters_action( GtkTreeModel *model, const NAObject *select_object, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object )
+{
+	g_return_if_fail( NA_IS_OBJECT_ACTION( object ));
+
+	/* (insert_before)
+	 * insert action before selected action
+	 * if selected action has a parent :
+	 * - set parent_object to parent of selected action
+	 * - add object to subitems of parent of selected action
+	 */
+	if( NA_IS_OBJECT_ACTION( select_object )){
+		insert_before_get_iters( model, select_path, object, parent_iter, has_parent_iter, sibling_iter, has_sibling_iter, parent_object );
 	}
 
-	gtk_tree_model_filter_convert_child_iter_to_iter( GTK_TREE_MODEL_FILTER( model ), iter, &store_iter );
+	/* (insert_before_parent)
+	 * insert action before parent of selected profile
+	 * if parent of selected profile has itself a parent :
+	 * - set parent_object to parent of parent of selected profile
+	 * - add object to subitems of parent of parent of selected profile
+	 */
+	if( NA_IS_OBJECT_PROFILE( select_object )){
+		insert_before_parent_get_iters( model, select_path, object, parent_iter, has_parent_iter, sibling_iter, has_sibling_iter, parent_object );
+	}
+
+	/* (insert_as_last_child)
+	 */
+	if( NA_IS_OBJECT_MENU( select_object )){
+		insert_as_last_child_get_iters( model, select_path, object, parent_iter, has_parent_iter, sibling_iter, has_sibling_iter, parent_object );
+	}
+}
+
+static void
+insert_get_iters_profile( GtkTreeModel *model, const NAObject *select_object, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object )
+{
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
+
+	if( NA_IS_OBJECT_ACTION( select_object )){
+		insert_as_last_child_get_iters( model, select_path, object, parent_iter, has_parent_iter, sibling_iter, has_sibling_iter, parent_object );
+	}
+
+	if( NA_IS_OBJECT_PROFILE( select_object )){
+		insert_before_get_iters( model, select_path, object, parent_iter, has_parent_iter, sibling_iter, has_sibling_iter, parent_object );
+	}
+
+	if( NA_IS_OBJECT_MENU( select_object )){
+		g_return_if_reached();
+	}
+}
+
+static void
+insert_get_iters_menu( GtkTreeModel *model, const NAObject *select_object, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object )
+{
+	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+
+	if( NA_IS_OBJECT_ACTION( select_object )){
+		insert_before_get_iters( model, select_path, object, parent_iter, has_parent_iter, sibling_iter, has_sibling_iter, parent_object );
+	}
+
+	if( NA_IS_OBJECT_PROFILE( select_object )){
+		insert_before_parent_get_iters( model, select_path, object, parent_iter, has_parent_iter, sibling_iter, has_sibling_iter, parent_object );
+	}
+
+	if( NA_IS_OBJECT_MENU( select_object )){
+		insert_as_last_child_get_iters( model, select_path, object, parent_iter, has_parent_iter, sibling_iter, has_sibling_iter, parent_object );
+	}
+}
+
+/*
+ * insert an action or a menu where there is no current selection
+ * insert an action or a menu when the selection is an action
+ * insert a profile before a profile
+ */
+static void
+insert_before_get_iters( GtkTreeModel *model,  GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object )
+{
+	GtkTreePath *path;
+	GtkTreeIter iter;
+
+	g_debug( "nact_tree_model_insert_before_get_iters" );
+
+	gtk_tree_model_get_iter( model, sibling_iter, select_path );
+	*has_sibling_iter = TRUE;
+
+	if( gtk_tree_path_get_depth( select_path ) > 1 ){
+		path = gtk_tree_path_copy( select_path );
+		gtk_tree_path_up( path );
+		gtk_tree_model_get_iter( model, &iter, path );
+		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, parent_object, -1 );
+		g_return_if_fail( NA_IS_OBJECT_ITEM( *parent_object ));
+		na_object_insert_item( *parent_object, object );
+		g_object_unref( *parent_object );
+		gtk_tree_path_free( path );
+	}
+}
+
+/*
+ * insert an action or a menu when the selection is a profile
+ */
+static void
+insert_before_parent_get_iters( GtkTreeModel *model, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object )
+{
+	GtkTreePath *path;
+	GtkTreeIter iter;
+
+	g_debug( "nact_tree_model_insert_before_parent_get_iters" );
+
+	path = gtk_tree_path_copy( select_path );
+	gtk_tree_path_up( path );
+	gtk_tree_model_get_iter( model, sibling_iter, path );
+	*has_sibling_iter = TRUE;
+
+	if( gtk_tree_path_get_depth( path ) > 1 ){
+		gtk_tree_path_up( path );
+		gtk_tree_model_get_iter( model, &iter, path );
+		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, parent_object, -1 );
+		g_return_if_fail( NA_IS_OBJECT_ITEM( *parent_object ));
+		na_object_insert_item( *parent_object, object );
+		g_object_unref( *parent_object );
+	}
+
+	gtk_tree_path_free( path );
+}
+
+/*
+ * insert an action or a menu when the selection is a menu
+ * insert a profile when the selection is an action
+ */
+static void
+insert_as_last_child_get_iters( GtkTreeModel *model, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object )
+{
+	g_debug( "nact_tree_model_insert_as_last_child_get_iters" );
+
+	gtk_tree_model_get_iter( model, parent_iter, select_path );
+	*has_parent_iter = TRUE;
+
+	gtk_tree_model_get( model, parent_iter, IACTIONS_LIST_NAOBJECT_COLUMN, parent_object, -1 );
+	g_return_if_fail( NA_IS_OBJECT_ITEM( *parent_object ));
+	na_object_insert_item( *parent_object, object );
+	g_object_unref( *parent_object );
 }
 
 void
@@ -1175,6 +1328,7 @@ filter_visible( GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *window
 	NAObject *object;
 	NAObjectAction *action;
 	gboolean only_actions;
+	gint count;
 
 	/*g_debug( "%s: model=%p, iter=%p, window=%p", thisfn, ( void * ) model, ( void * ) iter, ( void * ) window );*/
 	/*g_debug( "%s at %p", G_OBJECT_TYPE_NAME( model ), ( void * ) model );*/
@@ -1202,8 +1356,10 @@ filter_visible( GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *window
 			if( NA_IS_OBJECT_PROFILE( object )){
 				action = na_object_profile_get_action( NA_OBJECT_PROFILE( object ));
 				g_object_unref( object );
+				count = na_object_get_items_count( action );
+				/*g_debug( "action=%p: count=%d", ( void * ) action, count );*/
 				/*return( TRUE );*/
-				return( na_object_get_items_count( action ) > 1 );
+				return( count > 1 );
 			}
 
 			g_assert_not_reached();

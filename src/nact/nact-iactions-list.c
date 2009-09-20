@@ -121,7 +121,7 @@ static void         on_iactions_list_item_updated( NactIActionsList *instance, N
 static void         on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *object );
 static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void         select_first_row( NactIActionsList *instance );
-static void         select_row_at_path( GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
+static void         select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
 static void         set_selection_changed_mode( NactIActionsList *instance, gboolean authorized );
 static void         toggle_collapse( NactIActionsList *instance );
 static gboolean     toggle_collapse_iter( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter, NAObject *object, gpointer user_data );
@@ -463,7 +463,7 @@ nact_iactions_list_delete_selection( NactIActionsList *instance )
 
 	if( path ){
 		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
-		select_row_at_path( treeview, model, path );
+		select_row_at_path( instance, treeview, model, path );
 		gtk_tree_path_free( path );
 	}
 }
@@ -672,12 +672,11 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 		na_object_check_edition_status( it->data );
 	}
 
-	select_row_at_path( treeview, model, last_path );
+	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+	select_row_at_path( instance, treeview, model, last_path );
 
 	gtk_tree_path_free( last_path );
 	gtk_tree_path_free( insert_path );
-
-	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
 }
 
 static GtkTreePath *
@@ -690,7 +689,6 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 	GList *subitems;
 	GtkTreePath *newpath;
 	NAObject *obj_parent;
-	gchar *newpathstr;
 	GtkTreePath *returned_path;
 
 	returned_path = NULL;
@@ -705,8 +703,16 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 
 		for( it = items ; it ; it = it->next ){
 
+			/* note that returned iter may have became invalid after conversion
+			 * from store to filter_model, and ran through filter_visible function
+			 * we so cannot rely on it if object is a profile inserted at level > 0
+			 */
 			nact_tree_model_insert( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ), path, &iter, &obj_parent );
-			newpath = gtk_tree_model_get_path( model, &iter );
+
+			newpath = NULL;
+			if( !NA_IS_OBJECT_PROFILE( it->data ) || level == 0 ){
+				newpath = gtk_tree_model_get_path( model, &iter );
+			}
 
 			if( level == 0 ){
 				gtk_tree_view_expand_to_path( treeview, newpath );
@@ -716,17 +722,17 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 
 			*parents = do_insert_items_add_parent( *parents, treeview, model, obj_parent );
 
-			newpathstr = gtk_tree_path_to_string( newpath );
-			g_debug( "%s: newpath=%s", thisfn, newpathstr );
-			g_free( newpathstr );
-
+			/* recursively insert subitems
+			 */
 			if( NA_IS_OBJECT_ITEM( it->data )){
 				subitems = na_object_get_items( it->data );
 				do_insert_items( treeview, model, subitems, newpath, level+1, parents );
 				na_object_free_items( subitems );
 			}
 
-			gtk_tree_path_free( newpath );
+			if( newpath ){
+				gtk_tree_path_free( newpath );
+			}
 		}
 	}
 
@@ -1289,7 +1295,7 @@ select_first_row( NactIActionsList *instance )
 	model = gtk_tree_view_get_model( treeview );
 
 	path = gtk_tree_path_new_from_string( "0" );
-	select_row_at_path( treeview, model, path );
+	select_row_at_path( instance, treeview, model, path );
 	gtk_tree_path_free( path );
 }
 
@@ -1302,33 +1308,45 @@ select_first_row( NactIActionsList *instance )
  * the immediate previous.
  */
 static void
-select_row_at_path( GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path )
+select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path )
 {
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
+	gboolean anything = FALSE;
 
 	selection = gtk_tree_view_get_selection( treeview );
 	gtk_tree_selection_unselect_all( selection );
 
-	/*g_debug( "nact_iactions_list_select_row: path=%s", gtk_tree_path_to_string( path ));*/
+	g_debug( "nact_iactions_list_select_row_at_path: path=%s", gtk_tree_path_to_string( path ));
 
 	if( gtk_tree_model_get_iter( model, &iter, path )){
 		gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+		anything = TRUE;
 
 	} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
 		gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+		anything = TRUE;
 
 	} else {
 		gtk_tree_path_next( path );
 		if( gtk_tree_model_get_iter( model, &iter, path )){
 			gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+			anything = TRUE;
 
 		} else if( gtk_tree_path_get_depth( path ) > 1 &&
 					gtk_tree_path_up( path ) &&
 					gtk_tree_model_get_iter( model, &iter, path )){
 
 						gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+						anything = TRUE;
 		}
+	}
+
+	/* if nothing can be selected, at least send a message with empty
+	 *  selection
+	 */
+	if( !anything ){
+		on_treeview_selection_changed( NULL, instance );
 	}
 }
 

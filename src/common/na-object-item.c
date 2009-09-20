@@ -706,7 +706,9 @@ na_object_item_append_item( NAObjectItem *item, const NAObject *object )
 	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	item->private->items = g_list_append( item->private->items, g_object_ref(( gpointer ) object ));
+	if( !g_list_find( item->private->items, ( gpointer ) object )){
+		item->private->items = g_list_append( item->private->items, g_object_ref(( gpointer ) object ));
+	}
 }
 
 /**
@@ -726,7 +728,9 @@ na_object_item_insert_item( NAObjectItem *item, const NAObject *object )
 	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	item->private->items = g_list_prepend( item->private->items, g_object_ref(( gpointer ) object ));
+	if( !g_list_find( item->private->items, ( gpointer ) object )){
+		item->private->items = g_list_prepend( item->private->items, g_object_ref(( gpointer ) object ));
+	}
 }
 
 /**
