@@ -763,7 +763,8 @@ add_parent( GList *parents, GtkTreeModel *store, GtkTreeIter *obj_iter, GtkTreeP
 	gtk_tree_model_get( store, obj_iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 	path = gtk_tree_path_copy( obj_path );
 
-	if( gtk_tree_path_up( path )){
+	if( gtk_tree_path_get_depth( path ) > 1 ){
+		gtk_tree_path_up( path );
 		gtk_tree_model_get_iter( store, &iter, path );
 		gtk_tree_model_get( store, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &parent, -1 );
 

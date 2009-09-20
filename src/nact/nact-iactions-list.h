@@ -76,13 +76,13 @@ void      nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, 
 void      nact_iactions_list_all_widgets_showed( NactIActionsList *instance );
 void      nact_iactions_list_dispose( NactIActionsList *instance );
 
-void      nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **path );
+void      nact_iactions_list_delete_selection( NactIActionsList *instance );
 void      nact_iactions_list_fill( NactIActionsList *instance, GList *items );
 GList    *nact_iactions_list_get_items( NactIActionsList *instance );
 GList    *nact_iactions_list_get_selected_items( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_exportable( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_modified_items( NactIActionsList *instance );
-void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items );
+void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling );
 gboolean  nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item );
 gboolean  nact_iactions_list_is_only_actions_mode( NactIActionsList *instance );
 void      nact_iactions_list_select_row( NactIActionsList *instance, GtkTreePath *path );

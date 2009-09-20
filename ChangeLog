@@ -1,3 +1,21 @@
+2009-09-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-object-item.c (object_id_new_id):
+	Function becomes recursive.
+
+	* src/nact/nact-clipboard.c (renumber_items):
+	Removes recursivity as it is provided by the class.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h (nact_iactions_list_delete_selection):
+	No more returns the path to be selected as this can be directly taken
+	into account by the function itself.
+	Check depth of path before trying gtk_tree_path_up.
+
+	* src/nact/nact-main-menubar.c:
+	Reorganize code to avoid the need of delete_selection returning
+	a path to be selected.
+
 2009-09-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-gconf-provider.c:

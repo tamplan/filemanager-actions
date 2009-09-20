@@ -914,12 +914,19 @@ object_get_childs( const NAObject *object )
 static gchar *
 object_id_new_id( const NAObjectId *item )
 {
+	GList *it;
 	uuid_t uuid;
 	gchar uuid_str[64];
 	gchar *new_uuid;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
 	g_return_val_if_fail( !NA_OBJECT_ITEM( item )->private->dispose_has_run, NULL );
+
+	for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
+		if( NA_IS_OBJECT_ITEM( it->data )){
+			na_object_set_new_id( it->data );
+		}
+	}
 
 	uuid_generate( uuid );
 	uuid_unparse_lower( uuid, uuid_str );

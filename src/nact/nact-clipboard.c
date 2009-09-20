@@ -435,16 +435,10 @@ static void
 renumber_items( GList *items )
 {
 	GList *it;
-	GList *subitems;
 
 	for( it = items ; it ; it = it->next ){
-
 		if( NA_IS_OBJECT_ITEM( it->data )){
 			na_object_set_new_id( NA_OBJECT_ITEM( it->data ));
-
-			subitems = na_object_get_items( it->data );
-			renumber_items( subitems );
-			na_object_free_items( subitems );
 		}
 	}
 }

@@ -281,7 +281,7 @@ on_new_menu_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	menu = na_object_menu_new();
 	items = g_list_prepend( items, menu );
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
+	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items( items );
 }
 
@@ -296,7 +296,7 @@ on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	action = na_object_action_new_with_profile();
 	items = g_list_prepend( items, action );
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
+	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items( items );
 }
 
@@ -324,7 +324,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	na_object_set_id( profile, name );
 
 	items = g_list_prepend( items, profile );
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
+	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 
 	na_object_free_items( items );
 	g_free( name );
@@ -442,16 +442,14 @@ static void
 on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	GList *items;
-	GtkTreePath *path;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ), &path );
 	nact_main_window_move_to_deleted( window, items );
 	nact_clipboard_primary_set( items, FALSE );
-	nact_iactions_list_select_row( NACT_IACTIONS_LIST( window ), path );
+	nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ));
 
 	/* do not unref selected items as the ref has been moved to main_deleted
 	 */
@@ -481,7 +479,7 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 }
 
 /*
- * pastes the current coontent of the clipboard
+ * pastes the current content of the clipboard
  * - (menu) get from clipboard a copy of installed items
  *          the clipboard will return a new copy
  *          and renumber its own data for allowing a new paste
@@ -497,14 +495,41 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 	GList *items;
 
 	items = nact_clipboard_primary_get();
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items );
+	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items( items );
 }
 
+/*
+ * duplicate is just as paste, with the difference that content comes
+ * from the current selection, instead of coming from the clipboard
+ *
+ * this is nonetheless a bit more complicated because when we duplicate
+ * some items (e.g. a multiple selection), we expect to see the new
+ * items just besides the original ones...
+ */
 static void
 on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
-	g_signal_emit_by_name( window, IACTIONS_LIST_SIGNAL_ITEM_UPDATED, NULL );
+	GList *items, *it;
+	GList *dup;
+	NAObject *obj;
+
+	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	for( it = items ; it ; it = it->next ){
+		obj = NA_OBJECT( na_object_duplicate( it->data ));
+		if( NA_IS_OBJECT_ITEM( obj )){
+			na_object_set_new_id( obj );
+		}
+		na_object_set_origin_rec( obj, NULL );
+		dup = g_list_prepend( NULL, obj );
+		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
+		na_object_free_items( dup );
+	}
+
+	na_object_free_items( items );
 }
 
 /*
@@ -519,15 +544,13 @@ static void
 on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	GList *items;
-	GtkTreePath *path;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ), &path );
 	nact_main_window_move_to_deleted( window, items );
-	nact_iactions_list_select_row( NACT_IACTIONS_LIST( window ), path );
+	nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ));
 
 	/* do not unref selected items as the ref has been moved to main_deleted
 	 */

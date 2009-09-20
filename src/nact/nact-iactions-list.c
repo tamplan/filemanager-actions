@@ -428,25 +428,20 @@ nact_iactions_list_dispose( NactIActionsList *instance )
 /**
  * nact_iactions_list_delete_selection:
  * @window: this #NactIActionsList instance.
- * @path: a #GtkTreePath allocated here to point to the new row to select.
  *
  * Deletes the current selection from the underlying tree store.
  *
- * The returned @path tries to represent the most probable available
- * selection after deletion has occured.
- * It should be gtk_tree_path_free() by the caller.
- *
- * This function takes care of refilter the display model.
- * if possible, a new selection should be set with
- * #nact_iactions_list_select_row().
+ * This function takes care of repositionning a new selection if
+ * possible, and refilter the display model.
  */
 void
-nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **path )
+nact_iactions_list_delete_selection( NactIActionsList *instance )
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
 	GList *selected;
+	GtkTreePath *path = NULL;
 
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
@@ -457,7 +452,7 @@ nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **p
 	set_selection_changed_mode( instance, FALSE );
 
 	if( g_list_length( selected )){
-		*path = gtk_tree_path_copy(( GtkTreePath * ) selected->data );
+		path = gtk_tree_path_copy(( GtkTreePath * ) selected->data );
 		nact_tree_model_remove( NACT_TREE_MODEL( model ), selected );
 	}
 
@@ -466,7 +461,10 @@ nact_iactions_list_delete_selection( NactIActionsList *instance, GtkTreePath **p
 	g_list_foreach( selected, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( selected );
 
-	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+	if( path ){
+		nact_iactions_list_select_row( instance, path );
+		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+	}
 }
 
 /**
@@ -619,6 +617,8 @@ nact_iactions_list_has_modified_items( NactIActionsList *instance )
  * nact_iactions_list_insert_items:
  * @instance: this #NactIActionsList instance.
  * @items: a list of items to be inserted (e.g. from a paste).
+ * @sibling: the #NAObject besides which the insertion should occurs ;
+ * this may prevent e.g. to go inside a menu.
  *
  * Inserts the provided @items list in the treeview.
  *
@@ -635,7 +635,7 @@ nact_iactions_list_has_modified_items( NactIActionsList *instance )
  * possible, and refilter the display model.
  */
 void
-nact_iactions_list_insert_items( NactIActionsList *instance, GList *items )
+nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling )
 {
 	static const gchar *thisfn = "nact_iactions_list_insert_items";
 	GtkTreeView *treeview;
@@ -825,24 +825,23 @@ nact_iactions_list_select_row( NactIActionsList *instance, GtkTreePath *path )
 	gtk_tree_selection_unselect_all( selection );
 
 	model = gtk_tree_view_get_model( treeview );
+	g_debug( "nact_iactions_list_select_row: path=%s", gtk_tree_path_to_string( path ));
 
 	if( gtk_tree_model_get_iter( model, &iter, path )){
-		/*gtk_tree_selection_select_iter( selection, &iter );*/
 		select_row( treeview, model, &iter );
 
 	} else {
 		gtk_tree_path_next( path );
 		if( gtk_tree_model_get_iter( model, &iter, path )){
-			/*gtk_tree_selection_select_iter( selection, &iter );*/
 			select_row( treeview, model, &iter );
 
 		} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
-			/*gtk_tree_selection_select_iter( selection, &iter );*/
 			select_row( treeview, model, &iter );
 
-		} else if( gtk_tree_path_up( path ) && gtk_tree_model_get_iter( model, &iter, path )){
-			/*gtk_tree_selection_select_iter( selection, &iter );*/
-			select_row( treeview, model, &iter );
+		} else if( gtk_tree_path_get_depth( path ) > 1 &&
+					gtk_tree_path_up( path ) &&
+					gtk_tree_model_get_iter( model, &iter, path )){
+						select_row( treeview, model, &iter );
 		}
 	}
 
