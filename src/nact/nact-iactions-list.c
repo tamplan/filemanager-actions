@@ -121,7 +121,7 @@ static void         on_iactions_list_item_updated( NactIActionsList *instance, N
 static void         on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *object );
 static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void         select_first_row( NactIActionsList *instance );
-static void         select_row( GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter );
+static void         select_row_at_path( GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
 static void         set_selection_changed_mode( NactIActionsList *instance, gboolean authorized );
 static void         toggle_collapse( NactIActionsList *instance );
 static gboolean     toggle_collapse_iter( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter, NAObject *object, gpointer user_data );
@@ -462,8 +462,9 @@ nact_iactions_list_delete_selection( NactIActionsList *instance )
 	g_list_free( selected );
 
 	if( path ){
-		nact_iactions_list_select_row( instance, path );
 		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+		select_row_at_path( treeview, model, path );
+		gtk_tree_path_free( path );
 	}
 }
 
@@ -671,9 +672,9 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 		na_object_check_edition_status( it->data );
 	}
 
-	nact_iactions_list_select_row( instance, last_path );
+	select_row_at_path( treeview, model, last_path );
 
-	/*gtk_tree_path_free( last_path );*/
+	gtk_tree_path_free( last_path );
 	gtk_tree_path_free( insert_path );
 
 	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
@@ -798,54 +799,6 @@ gboolean
 nact_iactions_list_is_only_actions_mode( NactIActionsList *instance )
 {
 	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), SHOW_ONLY_ACTIONS_MODE )));
-}
-
-/**
- * nact_iactions_list_select_row:
- * @window: this #NactIActionsList instance.
- * @path: a #GtkTreePath.
- *
- * Select the rows at the required path, or the next following, or
- * the immediate previous.
- *
- * Free the provided path, which becomes invalid when this function
- * returns.
- */
-void
-nact_iactions_list_select_row( NactIActionsList *instance, GtkTreePath *path )
-{
-	GtkTreeView *treeview;
-	GtkTreeSelection *selection;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-
-	treeview = get_actions_list_treeview( instance );
-
-	selection = gtk_tree_view_get_selection( treeview );
-	gtk_tree_selection_unselect_all( selection );
-
-	model = gtk_tree_view_get_model( treeview );
-	g_debug( "nact_iactions_list_select_row: path=%s", gtk_tree_path_to_string( path ));
-
-	if( gtk_tree_model_get_iter( model, &iter, path )){
-		select_row( treeview, model, &iter );
-
-	} else {
-		gtk_tree_path_next( path );
-		if( gtk_tree_model_get_iter( model, &iter, path )){
-			select_row( treeview, model, &iter );
-
-		} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
-			select_row( treeview, model, &iter );
-
-		} else if( gtk_tree_path_get_depth( path ) > 1 &&
-					gtk_tree_path_up( path ) &&
-					gtk_tree_model_get_iter( model, &iter, path )){
-						select_row( treeview, model, &iter );
-		}
-	}
-
-	gtk_tree_path_free( path );
 }
 
 /**
@@ -1328,36 +1281,55 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 static void
 select_first_row( NactIActionsList *instance )
 {
-	static const gchar *thisfn = "nact_iactions_list_select_first_row";
 	GtkTreeView *treeview;
-	GtkTreeSelection *selection;
 	GtkTreeModel *model;
-	GtkTreeIter iter;
-	gboolean iterok;
-
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
-	treeview = get_actions_list_treeview( instance );
-	selection = gtk_tree_view_get_selection( treeview );
-	model = gtk_tree_view_get_model( treeview );
-
-	iterok = gtk_tree_model_get_iter_first( model, &iter );
-	if( !iterok ){
-		g_debug( "%s: empty actions list: unselect all", thisfn );
-		gtk_tree_selection_unselect_all( selection );
-	} else {
-		gtk_tree_selection_select_iter( selection, &iter );
-	}
-}
-
-static void
-select_row( GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter )
-{
 	GtkTreePath *path;
 
-	path = gtk_tree_model_get_path( model, iter );
-	gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+	treeview = get_actions_list_treeview( instance );
+	model = gtk_tree_view_get_model( treeview );
+
+	path = gtk_tree_path_new_from_string( "0" );
+	select_row_at_path( treeview, model, path );
 	gtk_tree_path_free( path );
+}
+
+/*
+ * select_row_at_path:
+ * @window: this #NactIActionsList instance.
+ * @path: a #GtkTreePath.
+ *
+ * Select the rows at the required path, or the next following, or
+ * the immediate previous.
+ */
+static void
+select_row_at_path( GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path )
+{
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+
+	selection = gtk_tree_view_get_selection( treeview );
+	gtk_tree_selection_unselect_all( selection );
+
+	/*g_debug( "nact_iactions_list_select_row: path=%s", gtk_tree_path_to_string( path ));*/
+
+	if( gtk_tree_model_get_iter( model, &iter, path )){
+		gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+
+	} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
+		gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+
+	} else {
+		gtk_tree_path_next( path );
+		if( gtk_tree_model_get_iter( model, &iter, path )){
+			gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+
+		} else if( gtk_tree_path_get_depth( path ) > 1 &&
+					gtk_tree_path_up( path ) &&
+					gtk_tree_model_get_iter( model, &iter, path )){
+
+						gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+		}
+	}
 }
 
 static void

@@ -11,6 +11,8 @@
 	No more returns the path to be selected as this can be directly taken
 	into account by the function itself.
 	Check depth of path before trying gtk_tree_path_up.
+	nact_iactions_list_select_row(): no more a public function.
+	Fix row selection code.
 
 	* src/nact/nact-main-menubar.c:
 	Reorganize code to avoid the need of delete_selection returning
