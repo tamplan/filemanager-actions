@@ -35,6 +35,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
+#include <common/na-iduplicable.h>
 #include <common/na-object-api.h>
 #include <common/na-object-action.h>
 #include <common/na-object-menu.h>
@@ -126,6 +127,7 @@ static void         iter_on_selection( NactIActionsList *instance, FnIterOnSelec
 static GtkTreePath *object_to_path( NactIActionsList *instance, NactTreeModel *model, NAObject *object );
 static gboolean     object_to_path_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ObjectToPathIter *otp );
 static gboolean     on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsList *instance );
+static void         on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object );
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
 static void         on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
 static void         on_iactions_list_item_updated( NactIActionsList *instance, NAObject *object );
@@ -403,6 +405,22 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 	 * so that callbacks are triggered at last
 	 */
 	nact_iactions_list_fill( instance, items );
+
+	/* records a proxy for edition status modification
+	 */
+	na_iduplicable_register_consumer( G_OBJECT( instance ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED_PROXY,
+			G_CALLBACK( on_edition_status_changed ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			NA_IDUPLICABLE_SIGNAL_VALID_CHANGED_PROXY,
+			G_CALLBACK( on_edition_status_changed ));
 }
 
 /**
@@ -473,7 +491,7 @@ nact_iactions_list_delete_selection( NactIActionsList *instance )
 	g_list_free( selected );
 
 	if( path ){
-		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+		/*gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));*/
 		select_row_at_path( instance, treeview, model, path );
 		gtk_tree_path_free( path );
 	}
@@ -687,7 +705,7 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 		na_object_check_edition_status( it->data );
 	}
 
-	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+	/*gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));*/
 	select_row_at_path( instance, treeview, model, last_path );
 
 	gtk_tree_path_free( last_path );
@@ -1245,6 +1263,25 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsLis
 	}
 
 	return( stop );
+}
+
+static void
+on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
+{
+	GtkTreeView *treeview;
+	NactTreeModel *model;
+
+	/*g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p (%s), object=%p (%s)",
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
+
+	if( is_selection_changed_authorized( instance )){
+		g_return_if_fail( NA_IS_OBJECT( object ));
+
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+		nact_tree_model_display( model, NA_OBJECT( object ));
+	}
 }
 
 static gboolean

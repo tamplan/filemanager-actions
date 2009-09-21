@@ -142,10 +142,12 @@ typedef struct {
 }
 	NAIDuplicableInterface;
 
-#define NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED	"na-iduplicable-modified-changed"
-#define NA_IDUPLICABLE_SIGNAL_VALID_CHANGED		"na-iduplicable-valid-changed"
+#define NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED			"na-iduplicable-modified-changed"
+#define NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED_PROXY	"na-iduplicable-modified-changed-proxy"
+#define NA_IDUPLICABLE_SIGNAL_VALID_CHANGED				"na-iduplicable-valid-changed"
+#define NA_IDUPLICABLE_SIGNAL_VALID_CHANGED_PROXY		"na-iduplicable-valid-changed-proxy"
 
-#define NA_IDUPLICABLE_EDITION_STATUS_DEBUG		0
+#define NA_IDUPLICABLE_EDITION_STATUS_DEBUG				0
 
 GType          na_iduplicable_get_type( void );
 
@@ -161,6 +163,8 @@ gboolean       na_iduplicable_is_valid( const NAIDuplicable *object );
 NAIDuplicable *na_iduplicable_get_origin( const NAIDuplicable *object );
 
 void           na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin );
+
+void           na_iduplicable_register_consumer( GObject *consumer );
 
 G_END_DECLS
 

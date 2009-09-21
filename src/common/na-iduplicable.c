@@ -37,7 +37,7 @@
 /* private interface data
  */
 struct NAIDuplicableInterfacePrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
+	GList *consumers;
 };
 
 /* data set against NAIDuplicable-implementated instance
@@ -50,13 +50,16 @@ struct NAIDuplicableInterfacePrivate {
  */
 enum {
 	MODIFIED_CHANGED,
+	MODIFIED_CHANGED_PROXY,
 	VALID_CHANGED,
+	VALID_CHANGED_PROXY,
 	LAST_SIGNAL
 };
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized = FALSE ;
-static gint     st_signals[ LAST_SIGNAL ] = { 0 };
+static NAIDuplicableInterface *st_interface = NULL;
+static gboolean                st_initialized = FALSE;
+static gboolean                st_finalized = FALSE ;
+static gint                    st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType          register_type( void );
 static void           interface_base_init( NAIDuplicableInterface *klass );
@@ -73,6 +76,11 @@ static gboolean       get_valid( const NAIDuplicable *object );
 static void           set_modified( const NAIDuplicable *object, gboolean is_modified );
 static void           set_origin( const NAIDuplicable *object, const NAIDuplicable *origin );
 static void           set_valid( const NAIDuplicable *object, gboolean is_valid );
+
+static void           propagate_modified_changed( NAIDuplicable *instance, gpointer user_data );
+static void           propagate_valid_changed( NAIDuplicable *instance, gpointer user_data );
+static void           propagate_signal_to_consumers( const gchar *signal, NAIDuplicable *instance, gpointer user_data );
+static void           release_signal_consumers( GList *consumers );
 
 GType
 na_iduplicable_get_type( void )
@@ -124,17 +132,38 @@ interface_base_init( NAIDuplicableInterface *klass )
 
 		klass->private = g_new0( NAIDuplicableInterfacePrivate, 1 );
 
+		klass->private->consumers = NULL;
+
 		/**
 		 * na-iduplicable-modified-changed:
 		 *
-		 * This signal is emitted byIDuplicable when the modification
+		 * This signal is emitted by NAIDuplicable when the modification
 		 * status of an object has been modified.
 		 */
-		st_signals[ MODIFIED_CHANGED ] = g_signal_new(
+		st_signals[ MODIFIED_CHANGED ] = g_signal_new_class_handler(
 				NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,
 				G_TYPE_OBJECT,
 				G_SIGNAL_RUN_LAST,
-				0,
+				( GCallback ) propagate_modified_changed,
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER );
+
+		/**
+		 * na-iduplicable-modified-changed-proxy:
+		 *
+		 * This signal is propagated to consumers when the modification
+		 * status of an object has been modified, as a default interface
+		 * handler for the previous signal.
+		 */
+		st_signals[ MODIFIED_CHANGED_PROXY ] = g_signal_new(
+				NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED_PROXY,
+				G_TYPE_OBJECT,
+				G_SIGNAL_RUN_LAST,
+				0,						/* no default handler */
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
@@ -148,17 +177,38 @@ interface_base_init( NAIDuplicableInterface *klass )
 		 * This signal is emitted byIDuplicable when the validity
 		 * status of an object has been modified.
 		 */
-		st_signals[ VALID_CHANGED ] = g_signal_new(
+		st_signals[ VALID_CHANGED ] = g_signal_new_class_handler(
 				NA_IDUPLICABLE_SIGNAL_VALID_CHANGED,
 				G_TYPE_OBJECT,
 				G_SIGNAL_RUN_LAST,
-				0,
+				( GCallback ) propagate_valid_changed,
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
 				G_TYPE_NONE,
 				1,
 				G_TYPE_POINTER );
+
+		/**
+		 * na-iduplicable-valid-changed-proxy:
+		 *
+		 * This signal is propagated to consumers when the validity
+		 * status of an object has been modified, as a default interface
+		 * handler for the previous signal.
+		 */
+		st_signals[ VALID_CHANGED_PROXY ] = g_signal_new(
+				NA_IDUPLICABLE_SIGNAL_VALID_CHANGED_PROXY,
+				G_TYPE_OBJECT,
+				G_SIGNAL_RUN_LAST,
+				0,						/* no default handler */
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER );
+
+		st_interface = klass;
 
 		st_initialized = TRUE;
 	}
@@ -174,6 +224,8 @@ interface_base_finalize( NAIDuplicableInterface *klass )
 		st_finalized = TRUE;
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+
+		release_signal_consumers( klass->private->consumers );
 
 		g_free( klass->private );
 	}
@@ -404,6 +456,23 @@ na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
 	set_origin( object, origin );
 }
 
+/**
+ * na_iduplicable_register_consumer:
+ * @consumer: the target instance.
+ *
+ * This function registers a consumer, i.e. an instance to which edition
+ * status signals will be propagated.
+ */
+void
+na_iduplicable_register_consumer( GObject *consumer )
+{
+	if( st_initialized && !st_finalized ){
+		g_return_if_fail( st_interface );
+		g_debug( "na_iduplicable_register_consumer: consumer=%p", ( void * ) consumer );
+		st_interface->private->consumers = g_list_prepend( st_interface->private->consumers, consumer );
+	}
+}
+
 static NAIDuplicable *
 v_new( const NAIDuplicable *object )
 {
@@ -506,4 +575,43 @@ set_valid( const NAIDuplicable *object, gboolean is_valid )
 				( void * ) object, G_OBJECT_TYPE_NAME( object ), is_valid ? "True":"False" );
 #endif
 	}
+}
+
+static void
+propagate_modified_changed( NAIDuplicable *instance, gpointer user_data )
+{
+	/*g_debug( "na_iduplicable_propagate_modified_changed: instance=%p (%s), user_data=%p (%s)",
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data, G_OBJECT_TYPE_NAME( user_data ));*/
+
+	propagate_signal_to_consumers( NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED_PROXY, instance, user_data );
+}
+
+static void
+propagate_valid_changed( NAIDuplicable *instance, gpointer user_data )
+{
+	/*g_debug( "na_iduplicable_propagate_valid_changed: instance=%p (%s), user_data=%p (%s)",
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data, G_OBJECT_TYPE_NAME( user_data ));*/
+
+	propagate_signal_to_consumers( NA_IDUPLICABLE_SIGNAL_VALID_CHANGED_PROXY, instance, user_data );
+}
+
+static void
+propagate_signal_to_consumers( const gchar *signal, NAIDuplicable *instance, gpointer user_data )
+{
+	GList *ic;
+
+	if( st_initialized && !st_finalized ){
+		g_return_if_fail( st_interface );
+		for( ic = st_interface->private->consumers ; ic ; ic = ic->next ){
+			g_signal_emit_by_name( ic->data, signal, user_data );
+		}
+	}
+}
+
+static void
+release_signal_consumers( GList *consumers )
+{
+	g_list_free( consumers );
 }

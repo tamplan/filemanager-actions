@@ -7,6 +7,7 @@
 	* src/common/na-iduplicable.h:
 	Emits a signal for each modification of one of the status.
 	Do not use NA_xx macros when returning a pointer that may be NULL.
+	Propagate the modification signal to registered consumers.
 
 	* src/common/na-iio-provider.c (build_hierarchy):
 	Defaults to keep the whole list when there is no level-zero pref.
@@ -35,6 +36,8 @@
 	* src/nact/nact-iactions-list.c:
 	When duplicating an object, try to insert the new one besides
 	the original one.
+	Replace calls to gtk_tree_model_refilter() by
+	nact_tree_model_display().
 
 	* src/nact/nact-main-menubar.c (on_new_profile_activated):
 	Setup edition status of new profile.
@@ -46,6 +49,7 @@
 	* src/nact/nact-tree-model.h (nact_tree_model_insert):
 	Returns the path string of the newly inserted row, as it appears
 	more liable that an iter after child model conversion.
+	nact_tree_model_display(): send signal "row-changed".
 
 2009-09-20 Pierre Wieser <pwieser@trychlos.org>
 

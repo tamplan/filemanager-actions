@@ -501,6 +501,7 @@ nact_tree_model_display( NactTreeModel *model, NAObject *object )
 {
 	GtkTreeStore *store;
 	GtkTreeIter iter;
+	GtkTreePath *path;
 
 	store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 
@@ -508,7 +509,10 @@ nact_tree_model_display( NactTreeModel *model, NAObject *object )
 		display_item( store, model->private->treeview, &iter, object );
 	}
 
-	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+	/*gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));*/
+	path = gtk_tree_model_get_path( GTK_TREE_MODEL( store ), &iter );
+	gtk_tree_model_row_changed( GTK_TREE_MODEL( store ), path, &iter );
+	gtk_tree_path_free( path );
 }
 
 void
