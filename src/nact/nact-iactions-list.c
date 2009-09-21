@@ -35,7 +35,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
-#include <common/na-iduplicable.h>
 #include <common/na-object-api.h>
 #include <common/na-obj-action.h>
 #include <common/na-obj-menu.h>
