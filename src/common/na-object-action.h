@@ -34,7 +34,7 @@
 /**
  * SECTION: na_object_action
  * @short_description: #NAObjectAction class definition.
- * @include: common/na-obj-action.h
+ * @include: common/na-object-action.h
  *
  * This is the class which maintains data and properties of an Nautilus
  * action.
@@ -53,8 +53,8 @@
 
 #include <glib/gi18n.h>
 
-#include "na-obj-action-class.h"
-#include "na-obj-profile-class.h"
+#include "na-object-action-class.h"
+#include "na-object-profile-class.h"
 
 G_BEGIN_DECLS
 

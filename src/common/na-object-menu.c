@@ -33,8 +33,8 @@
 #endif
 
 #include "na-object-api.h"
-#include "na-obj-action.h"
-#include "na-obj-menu.h"
+#include "na-object-action.h"
+#include "na-object-menu.h"
 #include "na-utils.h"
 
 /* private class data

@@ -36,8 +36,8 @@
 
 #include <common/na-about.h>
 #include <common/na-object-api.h>
-#include <common/na-obj-action.h>
-#include <common/na-obj-menu.h>
+#include <common/na-object-action.h>
+#include <common/na-object-menu.h>
 #include <common/na-ipivot-consumer.h>
 
 #include "nact-application.h"

@@ -57,7 +57,7 @@ typedef struct {
 typedef struct NAObjectProfileClassPrivate NAObjectProfileClassPrivate;
 
 typedef struct {
-	NAObjectIdClass             parent;
+	NAObjectIdClass              parent;
 	NAObjectProfileClassPrivate *private;
 }
 	NAObjectProfileClass;

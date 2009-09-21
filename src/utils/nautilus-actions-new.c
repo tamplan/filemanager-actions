@@ -37,8 +37,8 @@
 #include <stdlib.h>
 
 #include <common/na-object-api.h>
-#include <common/na-obj-action.h>
-#include <common/na-obj-profile.h>
+#include <common/na-object-action.h>
+#include <common/na-object-profile.h>
 #include <common/na-gconf-provider.h>
 #include <common/na-iio-provider.h>
 #include <common/na-xml-names.h>

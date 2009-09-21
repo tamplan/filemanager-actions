@@ -38,9 +38,9 @@
  * It is a common base class for all Nautilus Actions window documents.
  */
 
-#include <common/na-obj-action.h>
-#include <common/na-obj-menu.h>
-#include <common/na-obj-profile.h>
+#include <common/na-object-action.h>
+#include <common/na-object-menu.h>
+#include <common/na-object-profile.h>
 #include <common/na-pivot.h>
 
 #include "base-window.h"

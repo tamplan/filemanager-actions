@@ -37,8 +37,8 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 
 #include "na-object-api.h"
-#include "na-obj-action.h"
-#include "na-obj-profile.h"
+#include "na-object-action.h"
+#include "na-object-profile.h"
 #include "na-utils.h"
 #include "na-gnome-vfs-uri.h"
 

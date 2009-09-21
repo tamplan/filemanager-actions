@@ -66,14 +66,14 @@ libnact_la_SOURCES = \
 	na-object-item.c							\
 	na-object-item-class.h						\
 	na-object-item-fn.h							\
-	na-obj-action.c								\
-	na-obj-action.h								\
-	na-obj-action-class.h						\
-	na-obj-menu.c								\
-	na-obj-menu.h								\
-	na-obj-profile.c							\
-	na-obj-profile.h							\
-	na-obj-profile-class.h						\
+	na-object-action.c							\
+	na-object-action.h							\
+	na-object-action-class.h					\
+	na-object-menu.c							\
+	na-object-menu.h							\
+	na-object-profile.c							\
+	na-object-profile.h							\
+	na-object-profile-class.h					\
 	na-pivot.c									\
 	na-pivot.h									\
 	na-utils.c									\

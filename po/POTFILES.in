@@ -1,6 +1,6 @@
 data/nautilus-actions.schemas.in
 src/common/na-about.c
-src/common/na-obj-action.h
+src/common/na-object-action.h
 src/common/na-iio-provider.c
 src/common/na-xml-names.h
 src/nact/base-application.c

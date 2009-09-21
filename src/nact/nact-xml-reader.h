@@ -37,7 +37,7 @@
  * This is the base class for importing actions from XML files.
  */
 
-#include "common/na-obj-action-class.h"
+#include "common/na-object-action-class.h"
 #include "base-assistant.h"
 
 G_BEGIN_DECLS

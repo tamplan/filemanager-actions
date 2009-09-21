@@ -36,7 +36,7 @@
 #include <string.h>
 
 #include <common/na-object-api.h>
-#include <common/na-obj-profile.h>
+#include <common/na-object-profile.h>
 #include <common/na-utils.h>
 
 #include "base-window.h"

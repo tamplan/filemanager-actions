@@ -40,8 +40,8 @@
 
 #include <common/na-about.h>
 #include <common/na-object-api.h>
-#include <common/na-obj-action.h>
-#include <common/na-obj-profile.h>
+#include <common/na-object-action.h>
+#include <common/na-object-profile.h>
 #include <common/na-pivot.h>
 #include <common/na-iprefs.h>
 #include <common/na-ipivot-consumer.h>

@@ -21,6 +21,17 @@
 	* src/common/na-object.c:
 	No more over-checks edition status of item's childs.
 
+	* src/common/na-obj-action-class.h: Renamed to na-object-action-class.h.
+	* src/common/na-obj-action.c: Renamed to na-object-action.c.
+	* src/common/na-obj-action.h: Renamed to na-object-action.h.
+
+	* src/common/na-obj-profile-class.h: Renamed to na-object-profile-class.h.
+	* src/common/na-obj-profile.c: Renamed to na-object-profile.c.
+	* src/common/na-obj-profile.h: Renamed to na-object-profile.h.
+
+	* src/common/na-obj-menu.c: Renamed to na-object-menu.c.
+	* src/common/na-obj-menu.h: Renamed to na-object-menu.h.
+
 	* src/nact/nact-iactions-list.c:
 	When duplicating an object, try to insert the new one besides
 	the original one.

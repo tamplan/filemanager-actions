@@ -36,7 +36,7 @@
 #include <string.h>
 
 #include <common/na-object-api.h>
-#include <common/na-obj-action-class.h>
+#include <common/na-object-action-class.h>
 
 #include "base-window.h"
 #include "nact-application.h"

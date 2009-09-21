@@ -34,7 +34,7 @@
 /**
  * SECTION: na_object_menu
  * @short_description: #NAObjectMenu class definition.
- * @include: common/na-obj-menu.h
+ * @include: common/na-object-menu.h
  *
  * This is a menu.
  */

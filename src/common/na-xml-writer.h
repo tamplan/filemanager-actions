@@ -42,7 +42,7 @@
  * nautilus-actions-new utility.
  */
 
-#include "na-obj-action-class.h"
+#include "na-object-action-class.h"
 
 G_BEGIN_DECLS
 
