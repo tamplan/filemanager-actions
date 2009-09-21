@@ -284,12 +284,16 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
 void
 na_iduplicable_check_edition_status( const NAIDuplicable *object )
 {
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 	static const gchar *thisfn = "na_iduplicable_check_edition_status";
+#endif
 	gboolean modified = TRUE;
 	NAIDuplicable *origin;
 	gboolean valid;
 
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+#endif
 	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
@@ -301,8 +305,11 @@ na_iduplicable_check_edition_status( const NAIDuplicable *object )
 
 	valid = v_is_valid( object );
 	set_valid( object, valid );
+
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 	g_debug( "%s: object=%p, modified=%s, valid=%s",
 			thisfn, ( void * ) object, modified ? "True":"False", valid ? "True":"False" );
+#endif
 }
 
 /**
@@ -471,8 +478,11 @@ set_modified( const NAIDuplicable *object, gboolean is_modified )
 	if( was_modified != is_modified ){
 		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_MODIFIED, GUINT_TO_POINTER( is_modified ));
 		g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, object );
+
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 		g_debug( "na_iduplicable_set_modified: object=%p (%s) modified=%s",
 				( void * ) object, G_OBJECT_TYPE_NAME( object ), is_modified ? "True":"False" );
+#endif
 	}
 }
 
@@ -490,5 +500,10 @@ set_valid( const NAIDuplicable *object, gboolean is_valid )
 	if( was_valid != is_valid ){
 		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_VALID, GUINT_TO_POINTER( is_valid ));
 		g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, object );
+
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
+		g_debug( "na_iduplicable_set_valid: object=%p (%s) valid=%s",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), is_valid ? "True":"False" );
+#endif
 	}
 }

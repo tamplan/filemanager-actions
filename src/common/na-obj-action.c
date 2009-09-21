@@ -581,9 +581,13 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			id = na_object_get_id( ip->data );
 			profile = NA_OBJECT_PROFILE( na_object_get_item( b, id ));
 			equal = !na_object_is_modified( profile );
+
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 			if( !equal ){
 				g_debug( "na_object_action_are_equal: profile=%p, equal=False", ( void * ) profile );
 			}
+#endif
+
 			g_free( id );
 		}
 		na_object_free_items( profiles );

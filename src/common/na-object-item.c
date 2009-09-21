@@ -877,7 +877,9 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			if( second_obj ){
 				na_object_check_edition_status( second_obj );
 			} else {
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 				g_debug( "na_object_item_are_equal: object=%p (%s), equal=False", ( void * ) b, G_OBJECT_TYPE_NAME( b ));
+#endif
 				equal = FALSE;
 			}
 		}
@@ -890,7 +892,9 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			first_obj = ( NAObject * ) na_object_get_item( a, second_id );
 			g_free( second_id );
 			if( !first_obj ){
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 				g_debug( "na_object_item_are_equal: object=%p (%s), equal=False", ( void * ) b, G_OBJECT_TYPE_NAME( b ));
+#endif
 				equal = FALSE;
 			}
 		}
