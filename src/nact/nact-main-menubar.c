@@ -60,7 +60,7 @@ static void     on_new_menu_activated( GtkAction *action, NactMainWindow *window
 static void     on_new_action_activated( GtkAction *action, NactMainWindow *window );
 static void     on_new_profile_activated( GtkAction *action, NactMainWindow *window );
 static void     on_save_activated( GtkAction *action, NactMainWindow *window );
-static void     save_object_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *object );
+static void     save_item( NAObject *object, NactMainWindow *window );
 static void     on_quit_activated( GtkAction *action, NactMainWindow *window );
 
 static void     on_cut_activated( GtkAction *action, NactMainWindow *window );
@@ -319,7 +319,6 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	profile = na_object_profile_new();
 
 	name = na_object_action_get_new_profile_name( action );
-	/*na_object_action_attach_profile( action, profile );*/
 	na_object_profile_set_action( profile, action );
 	na_object_set_id( profile, name );
 	na_object_check_edition_status( profile );
@@ -338,26 +337,17 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
-	GList *items, *it;
-	NactApplication *application;
-	NAPivot *pivot;
+	GList *items;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-	g_return_if_fail( NACT_IS_WINDOW( window ));
 
 	items = nact_iactions_list_get_items( NACT_IACTIONS_LIST( window ));
 	nact_window_write_level_zero( NACT_WINDOW( window ), items );
 
 	/* recursively save the valid modified items
 	 */
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
-
-	for( it = items ; it ; it = it->next ){
-		g_return_if_fail( NA_IS_OBJECT_ITEM( it->data ));
-		save_object_item( window, pivot, NA_OBJECT_ITEM( it->data ));
-	}
+	g_list_foreach( items, ( GFunc ) save_item, window );
 
 	/* doesn't unref object owned by the tree store
 	 */
@@ -367,59 +357,59 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 	 */
 	nact_main_window_remove_deleted( window );
 
+	/* required as selection has not changed
+	 */
 	nact_main_menubar_refresh_actions_sensitivity( window );
+
+	/* get ride of notification messages of IOProviders
+	 */
 	na_ipivot_consumer_delay_notify( NA_IPIVOT_CONSUMER( window ));
 }
 
 /*
- * recursively saving an object item
- * - add a duplicate of this action to pivot or update the origin
- * - set the duplicate as the origin of this action
- * - reset the status
+ * iterates here on each and every row stored in the tree
+ * - do not deal with profiles as they are directly managed by their
+ *   action parent
+ * - do not deal with not modified, or not valid, items
  */
 static void
-save_object_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *object )
+save_item( NAObject *object, NactMainWindow *window )
 {
-	GList *items, *it;
+	NactApplication *application;
+	NAPivot *pivot;
 	NAObjectItem *origin;
 	NAObjectItem *dup_pivot;
 
-	if( na_object_is_modified( NA_OBJECT( object )) &&
-		na_object_is_valid( NA_OBJECT( object )) &&
-		nact_window_save_item( NACT_WINDOW( window ), object )){
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-			g_debug( "save_object_item: about to get origin" );
-			/* do not use OA_OBJECT_ITEM macro as this may return a (valid)
+	if( !NA_IS_OBJECT_PROFILE( object ) &&
+		na_object_is_modified( NA_OBJECT( object )) &&
+		na_object_is_valid( NA_OBJECT( object ))){
+
+		g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+
+		if( nact_window_save_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( object ))){
+
+			/* do not use NA_OBJECT_ITEM macro as this may return a (valid)
 			 * NULL value
 			 */
 			origin = ( NAObjectItem * ) na_object_get_origin( object );
 
 			if( origin ){
-				g_debug( "save_object_item: about to copy to origin" );
 				na_object_copy( origin, object );
 
 			} else {
-				g_debug( "save_object_item: about to duplicate" );
+				application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+				pivot = nact_application_get_pivot( application );
 				dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( object ));
 				na_object_set_origin( dup_pivot, NULL );
 				na_object_set_origin( object, dup_pivot );
 				na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
 			}
 
-			g_debug( "save_object_item: about to check edition status" );
 			na_object_check_edition_status( object );
-	}
-
-	/* Profiles are saved with their actions
-	 * so we only have to take care of menus
-	 */
-	if( NA_IS_OBJECT_MENU( object )){
-		items = na_object_get_items( NA_OBJECT_MENU( object ));
-		for( it = items ; it ; it = it->next ){
-			g_return_if_fail( NA_IS_OBJECT_ITEM( it->data ));
-			save_object_item( window, pivot, NA_OBJECT_ITEM( it->data ));
 		}
-		na_object_free_items( items );
 	}
 }
 

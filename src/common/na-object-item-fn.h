@@ -36,8 +36,21 @@
  * @short_description: #NAObjectItem class definition.
  * @include: common/na-object-item.h
  *
- * Derived from #NAObjectId class, this class is built to be used as
- * a base class for objects which have a tooltip and an icon.
+ * Derived from #NAObjectId class, this class implements objects which
+ * have :
+ * - a tooltip,
+ * - an icon,
+ * - a list of childs.
+ *
+ * Note that checking edition status of a #NAObjectItem is almost, but
+ * not really a recursive process :
+ * - it may appear as recursive because all childs of the checked
+ *   #NAObjectItem, and childs of childs, etc., are also checked so that
+ *   they are able to setup their individual own edition status ;
+ * - nonetheless, but a particular rule which may be implemented in a
+ *   derived class, the edition status of the checked #NAObjectItem
+ *   itself is computed individually, without regards of the edition
+ *   status of its childs.
  */
 
 #include <gtk/gtk.h>

@@ -401,26 +401,16 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 			IACTIONS_LIST_SIGNAL_ITEM_UPDATED,
 			G_CALLBACK( on_iactions_list_item_updated ));
 
+	/* records NactIActionsList as a proxy for edition status modification
+	 */
+	na_iduplicable_register_consumer( G_OBJECT( instance ));
+	g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
+	g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
+
 	/* fill the model after having connected the signals
 	 * so that callbacks are triggered at last
 	 */
 	nact_iactions_list_fill( instance, items );
-
-	/* records a proxy for edition status modification
-	 */
-	na_iduplicable_register_consumer( G_OBJECT( instance ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED_PROXY,
-			G_CALLBACK( on_edition_status_changed ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			NA_IDUPLICABLE_SIGNAL_VALID_CHANGED_PROXY,
-			G_CALLBACK( on_edition_status_changed ));
 }
 
 /**
@@ -705,7 +695,7 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 		na_object_check_edition_status( it->data );
 	}
 
-	/*gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));*/
+	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
 	select_row_at_path( instance, treeview, model, last_path );
 
 	gtk_tree_path_free( last_path );
@@ -1271,9 +1261,9 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 	GtkTreeView *treeview;
 	NactTreeModel *model;
 
-	/*g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p (%s), object=%p (%s)",
+	g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p (%s), object=%p (%s)",
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
+			( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	if( is_selection_changed_authorized( instance )){
 		g_return_if_fail( NA_IS_OBJECT( object ));

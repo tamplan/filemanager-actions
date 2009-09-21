@@ -142,12 +142,10 @@ typedef struct {
 }
 	NAIDuplicableInterface;
 
-#define NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED			"na-iduplicable-modified-changed"
-#define NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED_PROXY	"na-iduplicable-modified-changed-proxy"
-#define NA_IDUPLICABLE_SIGNAL_VALID_CHANGED				"na-iduplicable-valid-changed"
-#define NA_IDUPLICABLE_SIGNAL_VALID_CHANGED_PROXY		"na-iduplicable-valid-changed-proxy"
+#define NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED		"na-iduplicable-modified-changed"
+#define NA_IDUPLICABLE_SIGNAL_VALID_CHANGED			"na-iduplicable-valid-changed"
 
-#define NA_IDUPLICABLE_EDITION_STATUS_DEBUG				0
+#define NA_IDUPLICABLE_EDITION_STATUS_DEBUG			0
 
 GType          na_iduplicable_get_type( void );
 

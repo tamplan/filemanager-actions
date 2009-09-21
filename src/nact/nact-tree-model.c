@@ -499,20 +499,25 @@ nact_tree_model_dispose( NactTreeModel *model )
 void
 nact_tree_model_display( NactTreeModel *model, NAObject *object )
 {
+	static const gchar *thisfn = "nact_tree_model_display";
 	GtkTreeStore *store;
 	GtkTreeIter iter;
 	GtkTreePath *path;
+
+	g_debug( "%s: model=%p (%s), object=%p (%s)", thisfn,
+			( void * ) model, G_OBJECT_TYPE_NAME( model ),
+			( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 
 	if( search_for_object( model, GTK_TREE_MODEL( store ), object, &iter )){
 		display_item( store, model->private->treeview, &iter, object );
+		path = gtk_tree_model_get_path( GTK_TREE_MODEL( store ), &iter );
+		gtk_tree_model_row_changed( GTK_TREE_MODEL( store ), path, &iter );
+		gtk_tree_path_free( path );
 	}
 
 	/*gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));*/
-	path = gtk_tree_model_get_path( GTK_TREE_MODEL( store ), &iter );
-	gtk_tree_model_row_changed( GTK_TREE_MODEL( store ), path, &iter );
-	gtk_tree_path_free( path );
 }
 
 void
@@ -534,7 +539,6 @@ nact_tree_model_dump( NactTreeModel *model )
 	ntm->prefix = g_strdup( "" );
 
 	nact_tree_model_iter( model, ( FnIterOnStore ) dump_store, ntm );
-	/*dump_store( GTK_TREE_MODEL( store ), NULL, thisfn, "" );*/
 
 	g_free( ntm->prefix );
 	g_free( ntm->fname );
@@ -576,7 +580,7 @@ static void
 fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 					GList *items, gboolean only_actions, GtkTreeIter *parent )
 {
-	/*static const gchar *thisfn = "nact_tree_model_fill_tree_store";*/
+	static const gchar *thisfn = "nact_tree_model_fill_tree_store";
 	GList *subitems, *it;
 	NAObject *object;
 	NAObject *duplicate;
@@ -584,7 +588,8 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 
 	for( it = items ; it ; it = it->next ){
 		object = NA_OBJECT( it->data );
-		/*g_debug( "%s: %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );*/
+		g_debug( "%s: object=%p(%s)", thisfn
+				, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		if( NA_IS_OBJECT_MENU( object )){
 			duplicate = object;

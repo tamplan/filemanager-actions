@@ -50,9 +50,7 @@ struct NAIDuplicableInterfacePrivate {
  */
 enum {
 	MODIFIED_CHANGED,
-	MODIFIED_CHANGED_PROXY,
 	VALID_CHANGED,
-	VALID_CHANGED_PROXY,
 	LAST_SIGNAL
 };
 
@@ -139,6 +137,11 @@ interface_base_init( NAIDuplicableInterface *klass )
 		 *
 		 * This signal is emitted by NAIDuplicable when the modification
 		 * status of an object has been modified.
+		 *
+		 * The default class handler propagates this same signal to
+		 * registered consumers ; the consumer should have taken care
+		 * of overriding the class handler if he doesn't want create an
+		 * infinite loop.
 		 */
 		st_signals[ MODIFIED_CHANGED ] = g_signal_new_class_handler(
 				NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,
@@ -153,54 +156,21 @@ interface_base_init( NAIDuplicableInterface *klass )
 				G_TYPE_POINTER );
 
 		/**
-		 * na-iduplicable-modified-changed-proxy:
-		 *
-		 * This signal is propagated to consumers when the modification
-		 * status of an object has been modified, as a default interface
-		 * handler for the previous signal.
-		 */
-		st_signals[ MODIFIED_CHANGED_PROXY ] = g_signal_new(
-				NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED_PROXY,
-				G_TYPE_OBJECT,
-				G_SIGNAL_RUN_LAST,
-				0,						/* no default handler */
-				NULL,
-				NULL,
-				g_cclosure_marshal_VOID__POINTER,
-				G_TYPE_NONE,
-				1,
-				G_TYPE_POINTER );
-
-		/**
 		 * na-iduplicable-valid-changed:
 		 *
 		 * This signal is emitted byIDuplicable when the validity
 		 * status of an object has been modified.
+		 *
+		 * The default class handler propagates this same signal to
+		 * registered consumers ; the consumer should have taken care
+		 * of overriding the class handler if he doesn't want create an
+		 * infinite loop.
 		 */
 		st_signals[ VALID_CHANGED ] = g_signal_new_class_handler(
 				NA_IDUPLICABLE_SIGNAL_VALID_CHANGED,
 				G_TYPE_OBJECT,
 				G_SIGNAL_RUN_LAST,
 				( GCallback ) propagate_valid_changed,
-				NULL,
-				NULL,
-				g_cclosure_marshal_VOID__POINTER,
-				G_TYPE_NONE,
-				1,
-				G_TYPE_POINTER );
-
-		/**
-		 * na-iduplicable-valid-changed-proxy:
-		 *
-		 * This signal is propagated to consumers when the validity
-		 * status of an object has been modified, as a default interface
-		 * handler for the previous signal.
-		 */
-		st_signals[ VALID_CHANGED_PROXY ] = g_signal_new(
-				NA_IDUPLICABLE_SIGNAL_VALID_CHANGED_PROXY,
-				G_TYPE_OBJECT,
-				G_SIGNAL_RUN_LAST,
-				0,						/* no default handler */
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
@@ -329,9 +299,15 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
  * %PROP_IDUPLICABLE_ISVALID properties.
  *
  * This function is supposed to be called each time the object may have
- * been modified in order to set these properties. Helper functions
- * na_iduplicable_is_modified() and na_iduplicable_is_valid() will
- * then only return the current value of the properties.
+ * been modified in order to set the corresponding properties. Helper
+ * functions na_iduplicable_is_modified() and na_iduplicable_is_valid()
+ * will then only return the current value of the properties.
+ *
+ * na_iduplicable_check_edition_status() is not, as itself, recursive.
+ * That is, the modification and validity status are only set on the
+ * specified object.
+ * Nonetheless, a derived class may perfectly implement a recursive
+ * check on childs, if any. See, e.g. #NAObjectItem implementation.
  */
 void
 na_iduplicable_check_edition_status( const NAIDuplicable *object )
@@ -344,13 +320,18 @@ na_iduplicable_check_edition_status( const NAIDuplicable *object )
 	gboolean valid;
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_debug( "%s: object=%p (%s)", thisfn,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ));
 #endif
 	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
 	origin = get_origin( object );
 	if( origin ){
+
+		/* order is important, as derived class may rely on having
+		 * origin first, and then checked object itself
+		 */
 		modified = !v_are_equal( origin, object );
 	}
 	set_modified( object, modified );
@@ -359,8 +340,9 @@ na_iduplicable_check_edition_status( const NAIDuplicable *object )
 	set_valid( object, valid );
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "%s: object=%p, modified=%s, valid=%s",
-			thisfn, ( void * ) object, modified ? "True":"False", valid ? "True":"False" );
+	g_debug( "%s: object=%p (%s), modified=%s, valid=%s", thisfn,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ),
+			modified ? "True":"False", valid ? "True":"False" );
 #endif
 }
 
@@ -584,7 +566,7 @@ propagate_modified_changed( NAIDuplicable *instance, gpointer user_data )
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
 			( void * ) user_data, G_OBJECT_TYPE_NAME( user_data ));*/
 
-	propagate_signal_to_consumers( NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED_PROXY, instance, user_data );
+	propagate_signal_to_consumers( NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, instance, user_data );
 }
 
 static void
@@ -594,7 +576,7 @@ propagate_valid_changed( NAIDuplicable *instance, gpointer user_data )
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
 			( void * ) user_data, G_OBJECT_TYPE_NAME( user_data ));*/
 
-	propagate_signal_to_consumers( NA_IDUPLICABLE_SIGNAL_VALID_CHANGED_PROXY, instance, user_data );
+	propagate_signal_to_consumers( NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, instance, user_data );
 }
 
 static void
