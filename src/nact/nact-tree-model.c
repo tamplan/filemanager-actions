@@ -580,7 +580,7 @@ static void
 fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 					GList *items, gboolean only_actions, GtkTreeIter *parent )
 {
-	static const gchar *thisfn = "nact_tree_model_fill_tree_store";
+	/*static const gchar *thisfn = "nact_tree_model_fill_tree_store";*/
 	GList *subitems, *it;
 	NAObject *object;
 	NAObject *duplicate;
@@ -588,13 +588,14 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 
 	for( it = items ; it ; it = it->next ){
 		object = NA_OBJECT( it->data );
-		g_debug( "%s: object=%p(%s)", thisfn
-				, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+		/*g_debug( "%s: object=%p(%s)", thisfn
+				, ( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
 
 		if( NA_IS_OBJECT_MENU( object )){
 			duplicate = object;
 			if( !only_actions ){
 				duplicate = parent ? g_object_ref( object ) : na_object_duplicate( object );
+				/*g_debug( "%s: appending duplicate=%p (%s)", thisfn, ( void * ) duplicate, G_OBJECT_TYPE_NAME( duplicate ));*/
 				append_item( model, treeview, parent, &iter, duplicate );
 				g_object_unref( duplicate );
 			}
@@ -605,6 +606,7 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 
 		if( NA_IS_OBJECT_ACTION( object )){
 			duplicate = parent ? g_object_ref( object ) : na_object_duplicate( object );
+			/*g_debug( "%s: appending duplicate=%p (%s)", thisfn, ( void * ) duplicate, G_OBJECT_TYPE_NAME( duplicate ));*/
 			append_item( model, treeview, parent, &iter, duplicate );
 			g_object_unref( duplicate );
 			if( !only_actions ){
@@ -618,6 +620,7 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 
 		if( NA_IS_OBJECT_PROFILE( object )){
 			g_assert( !only_actions );
+			/*g_debug( "%s: appending object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
 			append_item( model, treeview, parent, &iter, object );
 		}
 	}

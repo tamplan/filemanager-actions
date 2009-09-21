@@ -52,9 +52,11 @@ static GType    register_type( void );
 static void     interface_base_init( NAIIOProviderInterface *klass );
 static void     interface_base_finalize( NAIIOProviderInterface *klass );
 
-static GList   *build_hierarchy( GList *tree, GSList *level_zero );
+static GList   *build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty );
 static gint     search_item( const NAObject *obj, const gchar *uuid );
 static GList   *get_merged_items_list( const NAPivot *pivot, GSList *providers );
+static void     dump_hierarchy( GList *tree, gint level );
+
 static guint    try_write_item( const NAIIOProvider *instance, NAObject *item, gchar **message );
 
 static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
@@ -170,13 +172,15 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 	na_pivot_free_providers( providers );
 
 	level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
-	hierarchy = build_hierarchy( merged, level_zero );
+	hierarchy = build_hierarchy( merged, level_zero, TRUE );
 	na_utils_free_string_list( level_zero );
 	na_object_free_items( merged );
 
 	if( na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ))){
 		hierarchy = sort_tree( pivot, hierarchy );
 	}
+
+	dump_hierarchy( hierarchy, 0 );
 
 	return( hierarchy );
 }
@@ -188,7 +192,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
  * when releasing initial merged tree
  */
 static GList *
-build_hierarchy( GList *tree, GSList *level_zero )
+build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty )
 {
 	GList *hierarchy, *it;
 	GSList *ilevel;
@@ -208,7 +212,7 @@ build_hierarchy( GList *tree, GSList *level_zero )
 
 				if( NA_IS_OBJECT_MENU( it->data )){
 					subitems_ids = na_object_menu_get_items_list( NA_OBJECT_MENU( it->data ));
-					subitems = build_hierarchy( tree, subitems_ids );
+					subitems = build_hierarchy( tree, subitems_ids, FALSE );
 					na_object_set_items( it->data, subitems );
 					na_object_free_items( subitems );
 					na_utils_free_string_list( subitems_ids );
@@ -218,7 +222,7 @@ build_hierarchy( GList *tree, GSList *level_zero )
 	}
 	/* if level-zero list is empty, we consider that all actions go to it
 	 */
-	else {
+	else if( list_if_empty ){
 		for( it = tree ; it ; it = it->next ){
 			hierarchy = g_list_append( hierarchy, g_object_ref( it->data ));
 		}
@@ -274,6 +278,35 @@ get_merged_items_list( const NAPivot *pivot, GSList *providers )
 	}
 
 	return( merged );
+}
+
+static void
+dump_hierarchy( GList *tree, gint level )
+{
+	GString *prefix;
+	gint i;
+	GList *subitems, *it;
+	gchar *id;
+
+	prefix = g_string_new( "" );
+	for( i = 0 ; i < level ; ++i ){
+		g_string_append_printf( prefix, "  " );
+	}
+
+	for( it = tree ; it ; it = it->next ){
+		id = na_object_get_id( it->data );
+		g_debug( "nact_iio_provider_dump_hierarchy: %s%p (%s) %s",
+				prefix->str, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), id );
+		g_free( id );
+
+		if( NA_IS_OBJECT_ITEM( it->data )){
+			subitems = na_object_get_items( it->data );
+			dump_hierarchy( subitems, level+1 );
+			na_object_free_items( subitems );
+		}
+	}
+
+	g_string_free( prefix, TRUE );
 }
 
 /**

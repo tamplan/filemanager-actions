@@ -1261,11 +1261,12 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 	GtkTreeView *treeview;
 	NactTreeModel *model;
 
-	g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p (%s), object=%p (%s)",
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
 	if( is_selection_changed_authorized( instance )){
+
+		g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p (%s), object=%p (%s)",
+				( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+				( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 		g_return_if_fail( NA_IS_OBJECT( object ));
 
 		treeview = get_actions_list_treeview( instance );
