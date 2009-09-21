@@ -46,8 +46,17 @@ struct NAIDuplicableInterfacePrivate {
 #define NA_IDUPLICABLE_PROP_IS_MODIFIED		"na-iduplicable-is-modified"
 #define NA_IDUPLICABLE_PROP_IS_VALID		"na-iduplicable-is-valid"
 
+/* signals emitted on NAIDuplicable when a status changes
+ */
+enum {
+	MODIFIED_CHANGED,
+	VALID_CHANGED,
+	LAST_SIGNAL
+};
+
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE ;
+static gint     st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType          register_type( void );
 static void           interface_base_init( NAIDuplicableInterface *klass );
@@ -114,6 +123,42 @@ interface_base_init( NAIDuplicableInterface *klass )
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NAIDuplicableInterfacePrivate, 1 );
+
+		/**
+		 * na-iduplicable-modified-changed:
+		 *
+		 * This signal is emitted byIDuplicable when the modification
+		 * status of an object has been modified.
+		 */
+		st_signals[ MODIFIED_CHANGED ] = g_signal_new(
+				NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,
+				G_TYPE_OBJECT,
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER );
+
+		/**
+		 * na-iduplicable-valid-changed:
+		 *
+		 * This signal is emitted byIDuplicable when the validity
+		 * status of an object has been modified.
+		 */
+		st_signals[ VALID_CHANGED ] = g_signal_new(
+				NA_IDUPLICABLE_SIGNAL_VALID_CHANGED,
+				G_TYPE_OBJECT,
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER );
 
 		st_initialized = TRUE;
 	}
@@ -239,23 +284,25 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
 void
 na_iduplicable_check_edition_status( const NAIDuplicable *object )
 {
-	/*static const gchar *thisfn = "na_iduplicable_check_edition_status";
-	g_debug( "%s: object=%p", thisfn, object );*/
+	static const gchar *thisfn = "na_iduplicable_check_edition_status";
 	gboolean modified = TRUE;
 	NAIDuplicable *origin;
 	gboolean valid;
 
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
 	origin = get_origin( object );
 	if( origin ){
-		modified = !v_are_equal( object, origin );
+		modified = !v_are_equal( origin, object );
 	}
 	set_modified( object, modified );
 
 	valid = v_is_valid( object );
 	set_valid( object, valid );
+	g_debug( "%s: object=%p, modified=%s, valid=%s",
+			thisfn, ( void * ) object, modified ? "True":"False", valid ? "True":"False" );
 }
 
 /**
@@ -394,10 +441,15 @@ get_modified( const NAIDuplicable *object )
 	return(( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_MODIFIED )));
 }
 
+/*
+ * do not use here NA_IDUPLICABLE macro as it may return a (valid) NULL
+ * value
+ */
 static NAIDuplicable *
 get_origin( const NAIDuplicable *object )
 {
-	return( NA_IDUPLICABLE( g_object_get_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_ORIGIN )));
+	/*return( NA_IDUPLICABLE( g_object_get_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_ORIGIN )));*/
+	return(( NAIDuplicable * ) g_object_get_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_ORIGIN ));
 }
 
 static gboolean
@@ -406,10 +458,22 @@ get_valid( const NAIDuplicable *object )
 	return(( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_VALID )));
 }
 
+/*
+ * I'd wish simulate the behavior of GObject property which is able to
+ * send a message each time a property is changed ; but these data are
+ * not properties of NAObject
+ */
 static void
 set_modified( const NAIDuplicable *object, gboolean is_modified )
 {
-	g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_MODIFIED, GUINT_TO_POINTER( is_modified ));
+	gboolean was_modified = get_modified( object );
+
+	if( was_modified != is_modified ){
+		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_MODIFIED, GUINT_TO_POINTER( is_modified ));
+		g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, object );
+		g_debug( "na_iduplicable_set_modified: object=%p (%s) modified=%s",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), is_modified ? "True":"False" );
+	}
 }
 
 static void
@@ -421,5 +485,10 @@ set_origin( const NAIDuplicable *object, const NAIDuplicable *origin )
 static void
 set_valid( const NAIDuplicable *object, gboolean is_valid )
 {
-	g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_VALID, GUINT_TO_POINTER( is_valid ));
+	gboolean was_valid = get_valid( object );
+
+	if( was_valid != is_valid ){
+		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_VALID, GUINT_TO_POINTER( is_valid ));
+		g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, object );
+	}
 }

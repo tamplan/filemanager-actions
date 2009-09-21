@@ -197,21 +197,30 @@ build_hierarchy( GList *tree, GSList *level_zero )
 
 	hierarchy = NULL;
 
-	for( ilevel = level_zero ; ilevel ; ilevel = ilevel->next ){
-		g_debug( "na_iio_provider_build_hierarchy: next_level_zero uuid is %s", ( gchar * ) ilevel->data );
-		it = g_list_find_custom( tree, ilevel->data, ( GCompareFunc ) search_item );
-		if( it ){
-			hierarchy = g_list_append( hierarchy, g_object_ref( it->data ));
-			g_debug( "na_iio_provider_build_hierarchy: appending %s at %p to hierarchy %p",
-					G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data, ( void * ) hierarchy );
+	if( g_slist_length( level_zero )){
+		for( ilevel = level_zero ; ilevel ; ilevel = ilevel->next ){
+			g_debug( "na_iio_provider_build_hierarchy: next_level_zero uuid is %s", ( gchar * ) ilevel->data );
+			it = g_list_find_custom( tree, ilevel->data, ( GCompareFunc ) search_item );
+			if( it ){
+				hierarchy = g_list_append( hierarchy, g_object_ref( it->data ));
+				g_debug( "na_iio_provider_build_hierarchy: appending %s at %p to hierarchy %p",
+						G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data, ( void * ) hierarchy );
 
-			if( NA_IS_OBJECT_MENU( it->data )){
-				subitems_ids = na_object_menu_get_items_list( NA_OBJECT_MENU( it->data ));
-				subitems = build_hierarchy( tree, subitems_ids );
-				na_object_set_items( it->data, subitems );
-				na_object_free_items( subitems );
-				na_utils_free_string_list( subitems_ids );
+				if( NA_IS_OBJECT_MENU( it->data )){
+					subitems_ids = na_object_menu_get_items_list( NA_OBJECT_MENU( it->data ));
+					subitems = build_hierarchy( tree, subitems_ids );
+					na_object_set_items( it->data, subitems );
+					na_object_free_items( subitems );
+					na_utils_free_string_list( subitems_ids );
+				}
 			}
+		}
+	}
+	/* if level-zero list is empty, we consider that all actions go to it
+	 */
+	else {
+		for( it = tree ; it ; it = it->next ){
+			hierarchy = g_list_append( hierarchy, g_object_ref( it->data ));
 		}
 	}
 

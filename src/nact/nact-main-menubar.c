@@ -322,6 +322,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	/*na_object_action_attach_profile( action, profile );*/
 	na_object_profile_set_action( profile, action );
 	na_object_set_id( profile, name );
+	na_object_check_edition_status( profile );
 
 	items = g_list_prepend( NULL, profile );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
@@ -380,24 +381,33 @@ static void
 save_object_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *object )
 {
 	GList *items, *it;
+	NAObjectItem *origin;
+	NAObjectItem *dup_pivot;
 
 	if( na_object_is_modified( NA_OBJECT( object )) &&
 		na_object_is_valid( NA_OBJECT( object )) &&
 		nact_window_save_item( NACT_WINDOW( window ), object )){
 
-			NAObjectItem *origin = NA_OBJECT_ITEM( na_object_get_origin( NA_OBJECT( object )));
+			g_debug( "save_object_item: about to get origin" );
+			/* do not use OA_OBJECT_ITEM macro as this may return a (valid)
+			 * NULL value
+			 */
+			origin = ( NAObjectItem * ) na_object_get_origin( object );
 
 			if( origin ){
-				na_object_copy( NA_OBJECT( origin ), NA_OBJECT( object ));
+				g_debug( "save_object_item: about to copy to origin" );
+				na_object_copy( origin, object );
 
 			} else {
-				NAObjectItem *dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( NA_OBJECT( object )));
-				na_object_set_origin( NA_OBJECT( dup_pivot ), NULL );
-				na_object_set_origin( NA_OBJECT( object ), NA_OBJECT( dup_pivot ));
+				g_debug( "save_object_item: about to duplicate" );
+				dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( object ));
+				na_object_set_origin( dup_pivot, NULL );
+				na_object_set_origin( object, dup_pivot );
 				na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
 			}
 
-			na_object_check_edition_status( NA_OBJECT( object ));
+			g_debug( "save_object_item: about to check edition status" );
+			na_object_check_edition_status( object );
 	}
 
 	/* Profiles are saved with their actions

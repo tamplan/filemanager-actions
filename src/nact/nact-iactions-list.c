@@ -35,6 +35,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
+#include <common/na-iduplicable.h>
 #include <common/na-object-api.h>
 #include <common/na-obj-action.h>
 #include <common/na-obj-menu.h>
@@ -85,6 +86,15 @@ typedef struct {
 }
 	SelectionIter;
 
+/* when iterating while searching for the path of an object
+ */
+typedef struct {
+	NAObject    *object;
+	gboolean     found;
+	GtkTreePath *path;
+}
+	ObjectToPathIter;
+
 /* data set against GObject
  */
 #define SELECTION_CHANGED_SIGNAL_MODE	"nact-iactions-list-selection-changed-signal-mode"
@@ -114,6 +124,8 @@ static gboolean     have_dnd_mode( NactIActionsList *instance );
 static gboolean     have_filter_selection_mode( NactIActionsList *instance );
 static gboolean     is_selection_changed_authorized( NactIActionsList *instance );
 static void         iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpointer user_data );
+static GtkTreePath *object_to_path( NactIActionsList *instance, NactTreeModel *model, NAObject *object );
+static gboolean     object_to_path_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ObjectToPathIter *otp );
 static gboolean     on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsList *instance );
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
 static void         on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
@@ -657,14 +669,18 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 	model = gtk_tree_view_get_model( treeview );
 	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
 
-	selection = gtk_tree_view_get_selection( treeview );
-	list_selected = gtk_tree_selection_get_selected_rows( selection, NULL );
-	if( g_list_length( list_selected )){
-		insert_path = gtk_tree_path_copy(( GtkTreePath * ) list_selected->data );
-	}
+	if( sibling ){
+		insert_path = object_to_path( instance, NACT_TREE_MODEL( model ), sibling );
 
-	g_list_foreach( list_selected, ( GFunc ) gtk_tree_path_free, NULL );
-	g_list_free( list_selected );
+	} else {
+		selection = gtk_tree_view_get_selection( treeview );
+		list_selected = gtk_tree_selection_get_selected_rows( selection, NULL );
+		if( g_list_length( list_selected )){
+			insert_path = gtk_tree_path_copy(( GtkTreePath * ) list_selected->data );
+		}
+		g_list_foreach( list_selected, ( GFunc ) gtk_tree_path_free, NULL );
+		g_list_free( list_selected );
+	}
 
 	last_path = do_insert_items( treeview, model, items, insert_path, 0, &parents );
 
@@ -684,10 +700,10 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 {
 	static const gchar *thisfn = "nact_iactions_list_do_insert_items";
 	guint nb_profiles, nb_actions, nb_menus;
-	GtkTreeIter iter;
 	GList *it;
 	GList *subitems;
-	GtkTreePath *newpath;
+	gchar *inserted_path_str;
+	GtkTreePath *inserted_path;
 	NAObject *obj_parent;
 	GtkTreePath *returned_path;
 
@@ -707,17 +723,15 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 			 * from store to filter_model, and ran through filter_visible function
 			 * we so cannot rely on it if object is a profile inserted at level > 0
 			 */
-			nact_tree_model_insert( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ), path, &iter, &obj_parent );
+			inserted_path_str = nact_tree_model_insert( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ), path, &obj_parent );
+			g_debug( "%s: inserted_path=%s", thisfn, inserted_path_str );
 
-			newpath = NULL;
-			if( !NA_IS_OBJECT_PROFILE( it->data ) || level == 0 ){
-				newpath = gtk_tree_model_get_path( model, &iter );
-			}
+			inserted_path = gtk_tree_path_new_from_string( inserted_path_str );
 
 			if( level == 0 ){
-				gtk_tree_view_expand_to_path( treeview, newpath );
+				gtk_tree_view_expand_to_path( treeview, inserted_path );
 				gtk_tree_path_free( returned_path );
-				returned_path = gtk_tree_path_copy( newpath );
+				returned_path = gtk_tree_path_copy( inserted_path );
 			}
 
 			*parents = do_insert_items_add_parent( *parents, treeview, model, obj_parent );
@@ -726,13 +740,12 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 			 */
 			if( NA_IS_OBJECT_ITEM( it->data )){
 				subitems = na_object_get_items( it->data );
-				do_insert_items( treeview, model, subitems, newpath, level+1, parents );
+				do_insert_items( treeview, model, subitems, inserted_path, level+1, parents );
 				na_object_free_items( subitems );
 			}
 
-			if( newpath ){
-				gtk_tree_path_free( newpath );
-			}
+			gtk_tree_path_free( inserted_path );
+			g_free( inserted_path_str );
 		}
 	}
 
@@ -1185,6 +1198,40 @@ iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpoint
 	g_list_free( listrows );
 }
 
+static GtkTreePath *
+object_to_path( NactIActionsList *instance, NactTreeModel *model, NAObject *object )
+{
+	ObjectToPathIter *otp;
+	GtkTreePath *path = NULL;
+
+	otp = g_new0( ObjectToPathIter, 1 );
+	otp->object = object;
+	otp->found = FALSE;
+	otp->path = NULL;
+
+	nact_tree_model_iter( model, ( FnIterOnStore ) object_to_path_iter, otp );
+
+	if( otp->found ){
+		path = gtk_tree_path_copy( otp->path );
+		gtk_tree_path_free( otp->path );
+	}
+
+	g_free( otp );
+
+	return( path );
+}
+
+static gboolean
+object_to_path_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ObjectToPathIter *otp )
+{
+	if( object == otp->object ){
+		otp->found = TRUE;
+		otp->path = gtk_tree_path_copy( path );
+	}
+
+	return( otp->found );
+}
+
 static gboolean
 on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsList *instance )
 {
@@ -1254,20 +1301,22 @@ on_iactions_list_item_updated( NactIActionsList *instance, NAObject *object )
 static void
 on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *object )
 {
-	NAObject *item;
+	NAObjectAction *item;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 
 	if( object ){
-		item = NA_IS_OBJECT_PROFILE( object )
-			? NA_OBJECT( na_object_profile_get_action( NA_OBJECT_PROFILE( object )))
-			: object;
-
-		na_object_check_edition_status( item );
-
 		treeview = get_actions_list_treeview( instance );
 		model = gtk_tree_view_get_model( treeview );
+
+		na_object_check_edition_status( object );
 		nact_tree_model_display( NACT_TREE_MODEL( model ), object );
+
+		if( NA_IS_OBJECT_PROFILE( object )){
+			item = na_object_profile_get_action( NA_OBJECT_PROFILE( object ));
+			na_object_check_edition_status( item );
+			nact_tree_model_display( NACT_TREE_MODEL( model ), NA_OBJECT( item ));
+		}
 	}
 }
 

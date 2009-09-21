@@ -826,7 +826,19 @@ object_copy( NAObject *target, const NAObject *source )
 }
 
 /*
- * note that provider is not consider as pertinent here
+ * @a: original object.
+ * @b: the object which has been initially duplicated from @a, and is
+ * being checked for modification status.
+ *
+ * note 1: The provider is not considered as pertinent here
+ *
+ * note 2: NAObjectItem recursively checks for equality in subitems.
+ * Nonetheless, the modification status of subitems doesn't have any
+ * impact on this object itself, provided that subitems lists are
+ * themselves identical
+ *
+ * note 3: Only NAObjectAction is modified that one of the profiles are
+ * modified (because they are saved as a whole)
  */
 static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )
@@ -860,11 +872,12 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		for( it = NA_OBJECT_ITEM( a )->private->items ; it && equal ; it = it->next ){
 			first_obj = NA_OBJECT( it->data );
 			first_id = na_object_get_id( first_obj );
-			second_obj = NA_OBJECT( na_object_get_item( b, first_id ));
+			second_obj = ( NAObject * ) na_object_get_item( b, first_id );
 			g_free( first_id );
 			if( second_obj ){
-				equal = na_object_iduplicable_are_equal( first_obj, second_obj );
+				na_object_check_edition_status( second_obj );
 			} else {
+				g_debug( "na_object_item_are_equal: object=%p (%s), equal=False", ( void * ) b, G_OBJECT_TYPE_NAME( b ));
 				equal = FALSE;
 			}
 		}
@@ -874,11 +887,10 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		for( it = NA_OBJECT_ITEM( b )->private->items ; it && equal ; it = it->next ){
 			second_obj = NA_OBJECT( it->data );
 			second_id = na_object_get_id( second_obj );
-			first_obj = NA_OBJECT( na_object_get_item( a, second_id ));
+			first_obj = ( NAObject * ) na_object_get_item( a, second_id );
 			g_free( second_id );
-			if( first_obj ){
-				equal = na_object_iduplicable_are_equal( first_obj, second_obj );
-			} else {
+			if( !first_obj ){
+				g_debug( "na_object_item_are_equal: object=%p (%s), equal=False", ( void * ) b, G_OBJECT_TYPE_NAME( b ));
 				equal = FALSE;
 			}
 		}

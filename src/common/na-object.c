@@ -635,17 +635,17 @@ do_is_valid( const NAObject *object )
 void
 na_object_iduplicable_check_edition_status( const NAObject *object )
 {
-	GList *childs, *ic;
+	/*GList *childs, *ic;*/
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
 	g_return_if_fail( !object->private->dispose_has_run );
 
 	na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
 
-	childs = v_get_childs( object );
+	/*childs = v_get_childs( object );
 	for( ic = childs ; ic ; ic = ic->next ){
 		na_iduplicable_check_edition_status( NA_IDUPLICABLE( ic->data ));
-	}
+	}*/
 }
 
 /**
@@ -696,6 +696,8 @@ na_object_iduplicable_is_valid( const NAObject *object )
  * Returns the original object which was at the origin of @object.
  *
  * Returns: a #NAObject, or NULL.
+ *
+ * Do not use here NA_OBJECT macro as it may return a (valid) NULL value
  */
 NAObject *
 na_object_iduplicable_get_origin( const NAObject *object )
@@ -703,7 +705,8 @@ na_object_iduplicable_get_origin( const NAObject *object )
 	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
 	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
 
-	return( NA_OBJECT( na_iduplicable_get_origin( NA_IDUPLICABLE( object ))));
+	/*return( NA_OBJECT( na_iduplicable_get_origin( NA_IDUPLICABLE( object ))));*/
+	return(( NAObject * ) na_iduplicable_get_origin( NA_IDUPLICABLE( object )));
 }
 
 /**

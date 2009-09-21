@@ -94,7 +94,7 @@ void    nact_tree_model_dispose( NactTreeModel *model );
 void    nact_tree_model_display( NactTreeModel *model, NAObject *object );
 void    nact_tree_model_dump( NactTreeModel *model );
 void    nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions);
-void    nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, GtkTreeIter *iter, NAObject **parent );
+gchar  *nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
 void    nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );
 void    nact_tree_model_remove( NactTreeModel *model, GList *selected );
 

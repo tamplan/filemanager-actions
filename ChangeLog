@@ -1,3 +1,41 @@
+2009-09-21 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-gconf-provider.c (write_item_menu):
+	Fix memory leak.
+
+	* src/common/na-iduplicable.c:
+	* src/common/na-iduplicable.h:
+	Emits a signal for each modification of one of the status.
+	Do not use NA_xx macros when returning a pointer that may be NULL.
+
+	* src/common/na-iio-provider.c (build_hierarchy):
+	Defaults to keep the whole list when there is no level-zero pref.
+
+	* src/common/na-obj-action.c:
+	Version number is not localized, so compare should be ascii.
+	Action inherits from edition status of its profiles.
+
+	* src/common/na-object-item.c:
+	Optimizes check of edition status of subitems.
+
+	* src/common/na-object.c:
+	No more over-checks edition status of item's childs.
+
+	* src/nact/nact-iactions-list.c:
+	When duplicating an object, try to insert the new one besides
+	the original one.
+
+	* src/nact/nact-main-menubar.c (on_new_profile_activated):
+	Setup edition status of new profile.
+
+	* src/nact/nact-main-menubar.c (save_object_item):
+	Cleanup the code.
+
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h (nact_tree_model_insert):
+	Returns the path string of the newly inserted row, as it appears
+	more liable that an iter after child model conversion.
+
 2009-09-20 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-object-item.c (object_id_new_id):

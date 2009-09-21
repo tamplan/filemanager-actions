@@ -547,11 +547,21 @@ object_copy( NAObject *target, const NAObject *source )
 	/*g_debug( "na_object_action_object_copy: end" );*/
 }
 
+/*
+ * note 1: version is not localized (see configure.ac)
+ *
+ * note 2: when checking for equality of profiles, we know that NAObjectItem
+ * has already checked their edition status, and assert that profiles lists
+ * were the sames ; we so only report the modification status to the action
+ */
 static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )
 {
 	NAObjectAction *first, *second;
 	gboolean equal = TRUE;
+	GList *profiles, *ip;
+	gchar *id;
+	NAObjectProfile *profile;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( a ), FALSE );
 	g_return_val_if_fail( !NA_OBJECT_ACTION( a )->private->dispose_has_run, FALSE );
@@ -562,7 +572,21 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	second = NA_OBJECT_ACTION( b );
 
 	if( equal ){
-		equal = ( g_utf8_collate( first->private->version, second->private->version ) == 0 );
+		equal = ( strcmp( first->private->version, second->private->version ) == 0 );
+	}
+
+	if( equal ){
+		profiles = na_object_get_items( a );
+		for( ip = profiles ; ip ; ip = ip->next ){
+			id = na_object_get_id( ip->data );
+			profile = NA_OBJECT_PROFILE( na_object_get_item( b, id ));
+			equal = !na_object_is_modified( profile );
+			if( !equal ){
+				g_debug( "na_object_action_are_equal: profile=%p, equal=False", ( void * ) profile );
+			}
+			g_free( id );
+		}
+		na_object_free_items( profiles );
 	}
 
 	/*g_debug( "na_object_action_are_equal: %s", equal ? "True":"False" );*/

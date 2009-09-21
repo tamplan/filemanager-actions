@@ -142,6 +142,9 @@ typedef struct {
 }
 	NAIDuplicableInterface;
 
+#define NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED	"na-iduplicable-modified-changed"
+#define NA_IDUPLICABLE_SIGNAL_VALID_CHANGED		"na-iduplicable-valid-changed"
+
 GType          na_iduplicable_get_type( void );
 
 void           na_iduplicable_init( NAIDuplicable *object );
