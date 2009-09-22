@@ -34,7 +34,7 @@
 /**
  * SECTION: base_dialog
  * @short_description: #BaseDialog class definition.
- * @include: base/base-dialog.h
+ * @include: nact/base-dialog.h
  *
  * This class is derived from BaseWindow class, and serves as a base
  * class for all Nautilus Actions dialogs.

@@ -448,7 +448,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 			}
 
 			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
-			na_object_rewind_origin( dup_pivot, item );
+			na_object_reset_origin( item, dup_pivot );
 			na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
 
 			na_object_check_edition_status( item );

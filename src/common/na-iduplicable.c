@@ -129,7 +129,6 @@ interface_base_init( NAIDuplicableInterface *klass )
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NAIDuplicableInterfacePrivate, 1 );
-
 		klass->private->consumers = NULL;
 
 		/**
@@ -179,7 +178,6 @@ interface_base_init( NAIDuplicableInterface *klass )
 				G_TYPE_POINTER );
 
 		st_interface = klass;
-
 		st_initialized = TRUE;
 	}
 }

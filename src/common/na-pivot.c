@@ -492,6 +492,9 @@ na_pivot_get_item( const NAPivot *pivot, const gchar *uuid )
  * Removes a #NAObjectItem from the hierarchical tree.
  *
  * Note that #NAPivot also g_object_unref() the removed #NAObjectItem.
+ *
+ * Last, note that the @item may have been already deleted, when its
+ * parents has itself been removed from @pivot.
  */
 void
 na_pivot_remove_item( NAPivot *pivot, NAObject *item )
@@ -502,10 +505,12 @@ na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 	g_return_if_fail( !pivot->private->dispose_has_run );
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
 	pivot->private->tree = g_list_remove( pivot->private->tree, ( gconstpointer ) item );
-	g_object_unref( item );
+
+	if( NA_IS_OBJECT( item )){
+		g_object_unref( item );
+	}
 }
 
 /**

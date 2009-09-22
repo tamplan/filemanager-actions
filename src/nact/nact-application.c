@@ -36,6 +36,7 @@
 #include <gtk/gtk.h>
 
 #include <common/na-about.h>
+#include <common/na-iduplicable.h>
 #include <common/na-ipivot-consumer.h>
 
 #include "nact-application.h"
@@ -323,14 +324,26 @@ appli_initialize_unique_app( BaseApplication *application )
  *   NAPivot notification messages
  *
  * At last, let the base class do its work, i.e. creating the main window.
+ *
+ * When the pivot will be empty, NAIDuplicable signals must yet be
+ * recorded in the system. Done here because :
+ * - I don't want do this in NAPivot which is also used by the plugin,
+ * - this is the last place where I'm pretty sure NAObject has not yet
+ *   been registered.
+ * So we allocate a new NAObject-derived object to be sure the interface
+ * is correctly initialized.
  */
 static gboolean
 appli_initialize_application( BaseApplication *application )
 {
 	static const gchar *thisfn = "nact_application_appli_initialize_application";
 	gboolean ok;
+	NAObjectAction *fake;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	fake = na_object_action_new();
+	g_object_unref( fake );
 
 	NACT_APPLICATION( application )->private->pivot = na_pivot_new( NULL );
 

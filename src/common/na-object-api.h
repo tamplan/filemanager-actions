@@ -50,7 +50,6 @@ G_BEGIN_DECLS
 #define na_object_dump_tree( tree )					na_object_object_dump_tree( tree )
 #define na_object_get_clipboard_id( object )		na_object_object_get_clipboard_id( NA_OBJECT( object ))
 #define na_object_ref( object )						na_object_object_ref( NA_OBJECT( object ))
-#define na_object_rewind_origin( target, source )	na_object_object_rewind_origin( NA_OBJECT( target ), NA_OBJECT( source ))
 
 /* NAIDuplicable
  */
@@ -61,6 +60,7 @@ G_BEGIN_DECLS
 
 #define na_object_get_origin( object )				na_object_iduplicable_get_origin( NA_OBJECT( object ))
 #define na_object_set_origin( object, origin )		na_object_iduplicable_set_origin( NA_OBJECT( object ), NA_OBJECT( origin ))
+#define na_object_reset_origin( object, origin )	na_object_object_reset_origin( NA_OBJECT( object ), NA_OBJECT( origin ))
 
 /* NAObjectId
  */

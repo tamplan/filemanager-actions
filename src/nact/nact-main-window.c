@@ -45,6 +45,7 @@
 
 #include "base-iprefs.h"
 #include "nact-application.h"
+#include "nact-clipboard.h"
 #include "nact-iactions-list.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
@@ -89,6 +90,11 @@ struct NactMainWindowPrivate {
 	 * (because an action cannot have zero profile).
 	 */
 	NAObjectProfile *edited_profile;
+
+	/**
+	 * The convenience clipboard object.
+	 */
+	NactClipboard   *clipboard;
 };
 
 /* action properties
@@ -485,6 +491,8 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
+		g_object_unref( self->private->clipboard );
+
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		base_iprefs_set_int( BASE_WINDOW( window ), "main-paned", pos );
@@ -715,6 +723,8 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
+
+	window->private->clipboard = nact_clipboard_new();
 
 	pos = base_iprefs_get_int( BASE_WINDOW( window ), "main-paned" );
 	if( pos ){

@@ -16,7 +16,7 @@
 	Fix equality check if a profile is modified.
 
 	* src/common/na-object-api.h (na_object_dump_norec,
-	na_object_dump_tree, na_object_rewind_origin): New functions.
+	na_object_dump_tree, na_object_reset_origin): New functions.
 	na_object_insert_item(): Add a sibling pointer.
 
 	* src/common/na-object.c:
@@ -38,10 +38,19 @@
 
 	* src/common/na-pivot.c:
 	* src/common/na-pivot.h (na_pivot_get_item): New function.
+	na_pivot_remove_item(): The removed object may have been already
+	deleted.
+
+	* src/nact/nact-application.c (appli_initialize_application):
+	Allocate a fake NAObjectAction to initialize NAIDuplicable
+	interface.
 
 	* src/nact/nact-assistant-import.c:
 	Actually imports the actions into the tree store before
 	confirming the operation was done.
+
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-clipboard.h: Make it a convenience class.
 
 	* nact/nact-iactions-list.c:
 	* nact/nact-iactions-list.h (nact_iactions_list_get_item):
@@ -53,6 +62,7 @@
 
 	* src/nact/nact-main-window.c (nact_main_window_action_exists):
 	Restore the function, searching in NAPivot and in tree store.
+	instance_dispose(): Clear the clipboard.
 
 	* src/nact/nact-tree-model.c:
 	Now inserts the new row before a given sibling object.

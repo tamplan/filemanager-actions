@@ -31,20 +31,57 @@
 #ifndef __NACT_CLIPBOARD_H__
 #define __NACT_CLIPBOARD_H__
 
-#include <glib.h>
+/*
+ * SECTION: nact_clipboard.
+ * @short_description: #NactClipboard class definition.
+ * @include: nact/nact-clipboard.h
+ *
+ * This is just a convenience class to extract clipboard functions
+ * from main window code. There is a unique object which manages all
+ * clipboard buffers.
+ */
+
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
-void     nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_data );
-char    *nact_clipboard_get_data_for_extern_use( GList *selected_items );
+#define NACT_CLIPBOARD_TYPE					( nact_clipboard_get_type())
+#define NACT_CLIPBOARD( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_CLIPBOARD_TYPE, NactClipboard ))
+#define NACT_CLIPBOARD_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_CLIPBOARD_TYPE, NactClipboardClass ))
+#define NACT_IS_CLIPBOARD( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_CLIPBOARD_TYPE ))
+#define NACT_IS_CLIPBOARD_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_CLIPBOARD_TYPE ))
+#define NACT_CLIPBOARD_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_CLIPBOARD_TYPE, NactClipboardClass ))
 
-void     nact_clipboard_primary_set( GList *items, gboolean renumber_items );
-GList   *nact_clipboard_primary_get( void );
-void     nact_clipboard_primary_counts( guint *actions, guint *profiles, guint *menus );
+typedef struct NactClipboardPrivate NactClipboardPrivate;
 
-void     nact_clipboard_free_items( GSList *items );
+typedef struct {
+	GObject               parent;
+	NactClipboardPrivate *private;
+}
+	NactClipboard;
 
-void     nact_clipboard_export_items( const gchar *uri, GList *items );
+typedef struct NactClipboardClassPrivate NactClipboardClassPrivate;
+
+typedef struct {
+	GObjectClass               parent;
+	NactClipboardClassPrivate *private;
+}
+	NactClipboardClass;
+
+GType          nact_clipboard_get_type( void );
+
+NactClipboard *nact_clipboard_new( void );
+
+void           nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_data );
+char          *nact_clipboard_get_data_for_extern_use( GList *selected_items );
+
+void           nact_clipboard_primary_set( GList *items, gboolean renumber_items );
+GList         *nact_clipboard_primary_get( void );
+void           nact_clipboard_primary_counts( guint *actions, guint *profiles, guint *menus );
+
+void           nact_clipboard_free_items( GSList *items );
+
+void           nact_clipboard_export_items( const gchar *uri, GList *items );
 
 G_END_DECLS
 

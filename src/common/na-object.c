@@ -529,39 +529,42 @@ na_object_object_ref( const NAObject *object )
 }
 
 /**
- * na_object_object_rewind_origin:
- * @target: must be a duplication of @source.
- * @source: a #NAObject-derived object.
+ * na_object_object_reset_origin:
+ * @object: a #NAObject-derived object.
+ * @origin: must be a duplication of @object.
  *
- * Recursively rewind origin between @source to @target, so that
- * @target appear as the origin of @source.
+ * Recursively reset origin of @object and its childs to @origin and
+ * its childs), so that @origin appear as the actual origin of @object.
  *
- * The origin of @target itself is set to NULL.
+ * The origin of @origin itself is set to NULL.
  *
- * This only works if @target has just been duplicated from @source,
+ * This only works if @origin has just been duplicated from @object,
  * and thus we do not have to check if childs lists are equal.
  */
 void
-na_object_object_rewind_origin( NAObject *target, const NAObject *source )
+na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 {
-	GList *childs, *ic;
-	NAObject *origin;
+	GList *origin_childs, *iorig;
+	GList *object_childs, *iobj;
+	NAObject *orig_object;
 
-	g_return_if_fail( NA_IS_OBJECT( target ));
-	g_return_if_fail( !target->private->dispose_has_run );
-	g_return_if_fail( NA_IS_OBJECT( source ));
-	g_return_if_fail( !source->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT( origin ));
+	g_return_if_fail( !origin->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( !object->private->dispose_has_run );
 
-	childs = v_get_childs( target );
-	for( ic = childs ; ic ; ic = ic->next ){
-		origin = na_object_get_origin( ic->data );
-		na_object_rewind_origin( ic->data, origin );
+	origin_childs = v_get_childs( origin );
+	object_childs = v_get_childs( object );
+	for( iorig = origin_childs, iobj = object_childs ; iorig && iobj ; iorig = iorig->next, iobj = iobj->next ){
+		orig_object = na_object_get_origin( iorig->data );
+		g_return_if_fail( orig_object == iobj->data );
+		na_object_reset_origin( iobj->data, iorig->data );
 	}
 
-	origin = na_object_get_origin( target );
-	g_return_if_fail( origin == source );
-	na_iduplicable_set_origin( NA_IDUPLICABLE( source ), NA_IDUPLICABLE( target ));
-	na_iduplicable_set_origin( NA_IDUPLICABLE( target ), NULL );
+	orig_object = na_object_get_origin( origin );
+	g_return_if_fail( orig_object == object );
+	na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
+	na_iduplicable_set_origin( NA_IDUPLICABLE( origin ), NULL );
 }
 
 /**

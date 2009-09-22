@@ -64,7 +64,7 @@ void      na_object_object_dump_norec( const NAObject *object );
 void      na_object_object_dump_tree( GList *tree );
 gchar    *na_object_object_get_clipboard_id( const NAObject *object );
 NAObject *na_object_object_ref( const NAObject *object );
-void      na_object_object_rewind_origin( NAObject *target, const NAObject *source );
+void      na_object_object_reset_origin( NAObject *object, const NAObject *origin );
 
 GList    *na_object_get_hierarchy( const NAObject *object );
 void      na_object_free_hierarchy( GList *hierarchy );

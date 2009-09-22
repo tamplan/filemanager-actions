@@ -44,6 +44,19 @@
 
 #include "nact-clipboard.h"
 
+/* private class data
+ */
+struct NactClipboardClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
+};
+
+/* private instance data
+ */
+struct NactClipboardPrivate {
+	gboolean      dispose_has_run;
+	GtkClipboard *primary;
+};
+
 #define NACT_CLIPBOARD_ATOM				gdk_atom_intern( "_NACT_CLIPBOARD", FALSE )
 #define NACT_CLIPBOARD_NACT_ATOM		gdk_atom_intern( "ClipboardNautilusActions", FALSE )
 
@@ -74,6 +87,14 @@ typedef struct {
 }
 	NactClipboardData;
 
+static GObjectClass *st_parent_class = NULL;
+
+static GType         register_type( void );
+static void          class_init( NactClipboardClass *klass );
+static void          instance_init( GTypeInstance *instance, gpointer klass );
+static void          instance_dispose( GObject *application );
+static void          instance_finalize( GObject *application );
+
 static GtkClipboard *get_nact_clipboard( void );
 static GtkClipboard *get_primary_clipboard( void );
 static void          add_item_to_clipboard0( NAObject *object, gboolean copy_data, gboolean only_profiles, GList **copied );
@@ -83,6 +104,132 @@ static gchar        *get_action_xml_buffer( const NAObject *action, GSList **exp
 static void          get_from_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
 static void          clear_clipboard_callback( GtkClipboard *clipboard, NactClipboardData *data );
 static void          renumber_items( GList *items );
+
+GType
+nact_clipboard_get_type( void )
+{
+	static GType type = 0;
+
+	if( !type ){
+		type = register_type();
+	}
+
+	return( type );
+}
+
+static GType
+register_type( void )
+{
+	static const gchar *thisfn = "nact_clipboard_register_type";
+	GType type;
+
+	static GTypeInfo info = {
+		sizeof( NactClipboardClass ),
+		( GBaseInitFunc ) NULL,
+		( GBaseFinalizeFunc ) NULL,
+		( GClassInitFunc ) class_init,
+		NULL,
+		NULL,
+		sizeof( NactClipboard ),
+		0,
+		( GInstanceInitFunc ) instance_init
+	};
+
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_OBJECT, "NactClipboard", &info, 0 );
+
+	return( type );
+}
+
+static void
+class_init( NactClipboardClass *klass )
+{
+	static const gchar *thisfn = "nact_clipboard_class_init";
+	GObjectClass *object_class;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+
+	st_parent_class = g_type_class_peek_parent( klass );
+
+	object_class = G_OBJECT_CLASS( klass );
+	object_class->dispose = instance_dispose;
+	object_class->finalize = instance_finalize;
+
+	klass->private = g_new0( NactClipboardClassPrivate, 1 );
+}
+
+static void
+instance_init( GTypeInstance *instance, gpointer klass )
+{
+	static const gchar *thisfn = "nact_clipboard_instance_init";
+	NactClipboard *self;
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_assert( NACT_IS_CLIPBOARD( instance ));
+	self = NACT_CLIPBOARD( instance );
+
+	self->private = g_new0( NactClipboardPrivate, 1 );
+
+	self->private->dispose_has_run = FALSE;
+	self->private->primary = get_primary_clipboard();
+}
+
+static void
+instance_dispose( GObject *window )
+{
+	static const gchar *thisfn = "nact_clipboard_instance_dispose";
+	NactClipboard *self;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_assert( NACT_IS_CLIPBOARD( window ));
+	self = NACT_CLIPBOARD( window );
+
+	if( !self->private->dispose_has_run ){
+
+		self->private->dispose_has_run = TRUE;
+
+		gtk_clipboard_clear( self->private->primary );
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( window );
+		}
+	}
+}
+
+static void
+instance_finalize( GObject *window )
+{
+	static const gchar *thisfn = "nact_clipboard_instance_finalize";
+	NactClipboard *self;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_assert( NACT_IS_CLIPBOARD( window ));
+	self = NACT_CLIPBOARD( window );
+
+	g_free( self->private );
+
+	/* chain call to parent class */
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
+		G_OBJECT_CLASS( st_parent_class )->finalize( window );
+	}
+}
+
+/**
+ * nact_clipboard_new:
+ *
+ * Returns: a new #NactClipboard object.
+ */
+NactClipboard *
+nact_clipboard_new( void )
+{
+	NactClipboard *clipboard;
+
+	clipboard = g_object_new( NACT_CLIPBOARD_TYPE, NULL );
+
+	return( clipboard );
+}
 
 /**
  * nact_clipboard_get_data_for_intern_use:
@@ -325,7 +472,7 @@ get_nact_clipboard( void )
 	GtkClipboard *clipboard;
 
 	display = gdk_display_get_default();
-	clipboard = gtk_clipboard_get_for_display( display, GDK_SELECTION_PRIMARY );
+	clipboard = gtk_clipboard_get_for_display( display, NACT_CLIPBOARD_ATOM );
 
 	return( clipboard );
 }
@@ -337,7 +484,7 @@ get_primary_clipboard( void )
 	GtkClipboard *clipboard;
 
 	display = gdk_display_get_default();
-	clipboard = gtk_clipboard_get_for_display( display, NACT_CLIPBOARD_ATOM );
+	clipboard = gtk_clipboard_get_for_display( display, GDK_SELECTION_PRIMARY );
 
 	return( clipboard );
 }
