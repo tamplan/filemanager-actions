@@ -548,19 +548,21 @@ nact_main_window_new( BaseApplication *application )
 gboolean
 nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid )
 {
-	/*GSList *ia;*/
+	NactApplication *application;
+	NAPivot *pivot;
+	NAObject *action;
 
-	g_assert( FALSE );
-	/* TODO: search in current state of the tree store + in pivot */
-	/*for( ia = window->private->actions ; ia ; ia = ia->next ){
-		NAObjectAction *action = NA_ACTION( ia->data );
-		gchar *action_uuid = na_object_action_get_uuid( action );
-		gboolean ok = ( g_ascii_strcasecmp( action_uuid, uuid ) == 0 );
-		g_free( action_uuid );
-		if( ok ){
-			return( TRUE );
-		}
-	}*/
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+	action = na_pivot_get_item( pivot, uuid );
+	if( action ){
+		return( TRUE );
+	}
+
+	action = nact_iactions_list_get_item( NACT_IACTIONS_LIST( window ), uuid );
+	if( action ){
+		return( TRUE );
+	}
 
 	return( FALSE );
 }
@@ -654,16 +656,24 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 /*
  * from nact_main_window_remove_deleted:
  * Removes the deleted items from the underlying I/O storage subsystem.
+ *
+ * If the deleted item is a profile, then do nothing because the parent
+ * action has been marked as modified when the profile has been deleted,
+ * and thus updated in the storage subsystem as well as in the pivot
  */
 static void
 actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot )
 {
 	GList *items, *it;
+	NAObject *origin;
 
-	g_debug( "actually_delete_item %p", ( void * ) item );
-	if( nact_window_delete_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ))){
+	g_debug( "nact_main_window_actually_delete_item: item=%p (%s)",
+			( void * ) item, G_OBJECT_TYPE_NAME( item ));
 
-		NAObject *origin = na_object_get_origin( item );
+	if( NA_IS_OBJECT_ITEM( item )){
+		nact_window_delete_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ));
+
+		origin = na_object_get_origin( item );
 		if( origin ){
 			na_pivot_remove_item( pivot, origin );
 		}

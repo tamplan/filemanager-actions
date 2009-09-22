@@ -78,8 +78,8 @@ void           na_object_item_set_provider( NAObjectItem *item, const NAIIOProvi
 void           na_object_item_set_items( NAObjectItem *item, GList *items );
 
 void           na_object_item_append_item( NAObjectItem *item, const NAObject *object );
-void           na_object_item_insert_item( NAObjectItem *item, const NAObject *object );
-void           na_object_item_remove_item( NAObjectItem *item, NAObject *object );
+void           na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before );
+void           na_object_item_remove_item( NAObjectItem *item, const NAObject *object );
 
 G_END_DECLS
 

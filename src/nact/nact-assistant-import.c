@@ -43,6 +43,7 @@
 
 #include "base-iprefs.h"
 #include "base-application.h"
+#include "nact-iactions-list.h"
 #include "nact-assistant-import.h"
 #include "nact-xml-reader.h"
 
@@ -247,11 +248,12 @@ assist_new( BaseApplication *application )
 }
 
 /**
- * Run the assistant.
+ * nact_assistant_import_run:
+ * @main: the #NactMainWindow parent window of this assistant.
  *
- * @main: the main window of the application.
+ * Run the assistant.
  */
-GSList *
+void
 nact_assistant_import_run( BaseWindow *main_window )
 {
 	BaseApplication *appli;
@@ -265,7 +267,7 @@ nact_assistant_import_run( BaseWindow *main_window )
 
 	base_window_run( BASE_WINDOW( assist ));
 
-	return( assist->private->actions );
+	/*g_object_unref( assist );*/
 }
 
 static gchar *
@@ -433,6 +435,8 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	GSList *uris, *is, *msg;
 	NAObjectAction *action;
 	ImportUriStruct *str;
+	GList *items;
+	BaseWindow *mainwnd;
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	g_assert( NACT_IS_ASSISTANT_IMPORT( wnd ));
@@ -440,6 +444,8 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	chooser = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FILES_SELECTION );
 	uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
+
+	g_object_get( G_OBJECT( wnd ), BASE_WINDOW_PROP_PARENT, &mainwnd, NULL );
 
 	for( is = uris ; is ; is = is->next ){
 
@@ -450,10 +456,13 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		str->uri = g_strdup(( const gchar * ) is->data );
 		str->action = action;
 		str->msg = na_utils_duplicate_string_list( msg );
+		na_utils_free_string_list( msg );
 
 		window->private->results = g_slist_prepend( window->private->results, str );
 
-		na_utils_free_string_list( msg );
+		items = g_list_prepend( NULL, action );
+		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
+		na_object_free_items( items );
 	}
 
 	na_utils_free_string_list( uris );

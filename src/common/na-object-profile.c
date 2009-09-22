@@ -36,6 +36,7 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
+#include "na-iduplicable.h"
 #include "na-object-api.h"
 #include "na-object-action.h"
 #include "na-object-profile.h"
@@ -1550,6 +1551,13 @@ object_are_equal( const NAObject *a, const NAObject *b )
 				na_utils_string_lists_are_equal( first->private->mimetypes, second->private->mimetypes ) &&
 				na_utils_string_lists_are_equal( first->private->schemes, second->private->schemes );
 	}
+
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
+	g_debug( "na_object_profile_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+			( void * ) a, G_OBJECT_TYPE_NAME( a ),
+			( void * ) b, G_OBJECT_TYPE_NAME( b ),
+			equal ? "True":"False" );
+#endif
 
 	return( equal );
 }

@@ -55,7 +55,6 @@ static void     interface_base_finalize( NAIIOProviderInterface *klass );
 static GList   *build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty );
 static gint     search_item( const NAObject *obj, const gchar *uuid );
 static GList   *get_merged_items_list( const NAPivot *pivot, GSList *providers );
-static void     dump_hierarchy( GList *tree, gint level );
 
 static guint    try_write_item( const NAIIOProvider *instance, NAObject *item, gchar **message );
 
@@ -180,7 +179,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 		hierarchy = sort_tree( pivot, hierarchy );
 	}
 
-	dump_hierarchy( hierarchy, 0 );
+	na_object_dump_tree( hierarchy );
 
 	return( hierarchy );
 }
@@ -280,35 +279,6 @@ get_merged_items_list( const NAPivot *pivot, GSList *providers )
 	return( merged );
 }
 
-static void
-dump_hierarchy( GList *tree, gint level )
-{
-	GString *prefix;
-	gint i;
-	GList *subitems, *it;
-	gchar *id;
-
-	prefix = g_string_new( "" );
-	for( i = 0 ; i < level ; ++i ){
-		g_string_append_printf( prefix, "  " );
-	}
-
-	for( it = tree ; it ; it = it->next ){
-		id = na_object_get_id( it->data );
-		g_debug( "nact_iio_provider_dump_hierarchy: %s%p (%s) %s",
-				prefix->str, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), id );
-		g_free( id );
-
-		if( NA_IS_OBJECT_ITEM( it->data )){
-			subitems = na_object_get_items( it->data );
-			dump_hierarchy( subitems, level+1 );
-			na_object_free_items( subitems );
-		}
-	}
-
-	g_string_free( prefix, TRUE );
-}
-
 /**
  * na_iio_provider_write_item:
  * @pivot: the #NAPivot object which owns the list of registered I/O
@@ -331,8 +301,10 @@ na_iio_provider_write_item( const NAPivot *pivot, NAObject *item, gchar **messag
 	NAIIOProvider *bad_instance;
 	GSList *providers, *ip;
 
-	g_debug( "%s: pivot=%p, item=%p, message=%p",
-			thisfn, ( void * ) pivot, ( void * ) item, ( void * ) message );
+	g_debug( "%s: pivot=%p (%s), item=%p (%s), message=%p", thisfn,
+			( void * ) pivot, G_OBJECT_TYPE_NAME( pivot ),
+			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			( void * ) message );
 
 	g_return_val_if_fail( st_initialized && !st_finalized, NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail(( NA_IS_PIVOT( pivot ) || !pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
@@ -424,8 +396,10 @@ na_iio_provider_delete_item( const NAPivot *pivot, const NAObject *item, gchar *
 	guint ret;
 	NAIIOProvider *instance;
 
-	g_debug( "%s: pivot=%p, item=%p, message=%p",
-			thisfn, ( void * ) pivot, ( void * ) item, ( void * ) message );
+	g_debug( "%s: pivot=%p (%s), item=%p (%s), message=%p", thisfn,
+			( void * ) pivot, G_OBJECT_TYPE_NAME( pivot ),
+			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			( void * ) message );
 
 	g_return_val_if_fail( st_initialized && !st_finalized, NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );

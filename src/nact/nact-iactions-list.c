@@ -95,6 +95,14 @@ typedef struct {
 }
 	ObjectToPathIter;
 
+/* when iterating while searching for an object
+ */
+typedef struct {
+	NAObject *object;
+	gchar    *uuid;
+}
+	IdToObjectIter;
+
 /* data set against GObject
  */
 #define SELECTION_CHANGED_SIGNAL_MODE	"nact-iactions-list-selection-changed-signal-mode"
@@ -117,7 +125,8 @@ static void         extend_selection_to_childs( NactIActionsList *instance, GtkT
 static gboolean     filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactIActionsList *instance );
 static void         filter_selection_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, SelectionIter *str );
 static GtkTreeView *get_actions_list_treeview( NactIActionsList *instance );
-static gboolean     get_item_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items );
+static gboolean     get_item_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, IdToObjectIter *ito );
+static gboolean     get_items_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items );
 static gboolean     has_exportable_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, gboolean *has_exportable );
 static gboolean     has_modified_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, gboolean *has_modified );
 static gboolean     have_dnd_mode( NactIActionsList *instance );
@@ -481,7 +490,7 @@ nact_iactions_list_delete_selection( NactIActionsList *instance )
 	g_list_free( selected );
 
 	if( path ){
-		/*gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));*/
+		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
 		select_row_at_path( instance, treeview, model, path );
 		gtk_tree_path_free( path );
 	}
@@ -518,6 +527,41 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 }
 
 /**
+ * nact_iactions_list_get_item:
+ * @window: this #NactIActionsList instance.
+ * @uuid: the id of the searched object.
+ *
+ * Returns: a pointer on the #NAObject which has this id, or NULL.
+ *
+ * The returned pointer is owned by IActionsList (actually by the
+ * underlying tree store), and should not be released by the caller.
+ */
+NAObject *
+nact_iactions_list_get_item( NactIActionsList *instance, const gchar *uuid )
+{
+	NAObject *item = NULL;
+	GtkTreeView *treeview;
+	NactTreeModel *model;
+	IdToObjectIter *ito;
+
+	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), NULL );
+
+	treeview = get_actions_list_treeview( instance );
+	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+
+	ito = g_new0( IdToObjectIter, 1 );
+	ito->uuid = ( gchar * ) uuid;
+
+	nact_tree_model_iter( model, ( FnIterOnStore ) get_item_iter, ito );
+
+	item = ito->object;
+
+	g_free( ito );
+
+	return( item );
+}
+
+/**
  * nact_iactions_list_get_items:
  * @window: this #NactIActionsList instance.
  *
@@ -538,7 +582,7 @@ nact_iactions_list_get_items( NactIActionsList *instance )
 	treeview = get_actions_list_treeview( instance );
 	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 
-	nact_tree_model_iter( model, ( FnIterOnStore ) get_item_iter, &items );
+	nact_tree_model_iter( model, ( FnIterOnStore ) get_items_iter, &items );
 
 	return( g_list_reverse( items ));
 }
@@ -1115,10 +1159,31 @@ get_actions_list_treeview( NactIActionsList *instance )
 }
 
 /*
+ * search for an object, given its uuid
+ */
+static gboolean
+get_item_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, IdToObjectIter *ito )
+{
+	gchar *id;
+	gboolean found = FALSE;
+
+	id = na_object_get_id( object );
+	found = ( g_ascii_strcasecmp( id, ito->uuid ) == 0 );
+	g_free( id );
+
+	if( found ){
+		ito->object = object;
+	}
+
+	/* stop iteration if found */
+	return( found );
+}
+
+/*
  * builds the tree
  */
 static gboolean
-get_item_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items )
+get_items_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items )
 {
 	if( gtk_tree_path_get_depth( path ) == 1 ){
 		*items = g_list_prepend( *items, object );
@@ -1328,7 +1393,7 @@ on_iactions_list_item_updated( NactIActionsList *instance, NAObject *object )
 static void
 on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *object )
 {
-	NAObjectAction *item;
+	NAObject *item;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 
@@ -1336,12 +1401,15 @@ on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *ob
 		treeview = get_actions_list_treeview( instance );
 		model = gtk_tree_view_get_model( treeview );
 
-		na_object_check_edition_status( object );
-		nact_tree_model_display( NACT_TREE_MODEL( model ), object );
-
+		item = object;
 		if( NA_IS_OBJECT_PROFILE( object )){
-			item = na_object_profile_get_action( NA_OBJECT_PROFILE( object ));
-			na_object_check_edition_status( item );
+			item = NA_OBJECT( na_object_profile_get_action( NA_OBJECT_PROFILE( object )));
+		}
+
+		na_object_check_edition_status( item );
+
+		nact_tree_model_display( NACT_TREE_MODEL( model ), object );
+		if( NA_IS_OBJECT_PROFILE( object )){
 			nact_tree_model_display( NACT_TREE_MODEL( model ), NA_OBJECT( item ));
 		}
 	}

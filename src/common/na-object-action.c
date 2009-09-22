@@ -34,6 +34,7 @@
 
 #include <string.h>
 
+#include "na-iduplicable.h"
 #include "na-object-api.h"
 #include "na-object-action.h"
 #include "na-object-profile.h"
@@ -551,7 +552,7 @@ object_copy( NAObject *target, const NAObject *source )
  * note 1: version is not localized (see configure.ac)
  *
  * note 2: when checking for equality of profiles, we know that NAObjectItem
- * has already checked their edition status, and assert that profiles lists
+ * has already checked their edition status, and that the two profiles lists
  * were the sames ; we so only report the modification status to the action
  */
 static gboolean
@@ -577,7 +578,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 
 	if( equal ){
 		profiles = na_object_get_items( a );
-		for( ip = profiles ; ip ; ip = ip->next ){
+		for( ip = profiles ; ip && equal ; ip = ip->next ){
 			id = na_object_get_id( ip->data );
 			profile = NA_OBJECT_PROFILE( na_object_get_item( b, id ));
 			equal = !na_object_is_modified( profile );
@@ -593,7 +594,13 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		na_object_free_items( profiles );
 	}
 
-	/*g_debug( "na_object_action_are_equal: %s", equal ? "True":"False" );*/
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
+	g_debug( "na_object_action_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+			( void * ) a, G_OBJECT_TYPE_NAME( a ),
+			( void * ) b, G_OBJECT_TYPE_NAME( b ),
+			equal ? "True":"False" );
+#endif
+
 	return( equal );
 }
 

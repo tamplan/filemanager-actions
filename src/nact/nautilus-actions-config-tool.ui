@@ -1426,7 +1426,6 @@ Defining several profiles lets you have several commands, each applying with a d
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkFrame" id="frame1">
@@ -1441,7 +1440,6 @@ Defining several profiles lets you have several commands, each applying with a d
                   <object class="GtkVBox" id="vbox17">
                     <property name="visible">True</property>
                     <property name="border_width">10</property>
-                    <property name="orientation">vertical</property>
                     <property name="spacing">10</property>
                     <child>
                       <object class="GtkCheckButton" id="SortAlphabeticalButton">

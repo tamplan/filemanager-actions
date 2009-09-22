@@ -54,13 +54,28 @@
 #define MENUBAR_PROP_UI_MANAGER			"nact-menubar-ui-manager"
 #define MENUBAR_PROP_ACTIONS_GROUP		"nact-menubar-actions-group"
 
+/* GtkActivatable
+ * gtk_action_get_tooltip are only available starting with Gtk 2.16
+ * until this is a required level, we must have some code to do the
+ * same thing
+ */
+#undef GTK_HAS_ACTIVATABLE
+#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MINOR_VERSION >= 16 ))
+	#define GTK_HAS_ACTIVATABLE
+#endif
+
+#ifndef GTK_HAS_ACTIVATABLE
+#define MENUBAR_PROP_ITEM_ACTION		"nact-menubar-item-action"
+#endif
+
 static void     on_tab_updatable_selection_changed( NactMainWindow *window, gint count_selected );
 
 static void     on_new_menu_activated( GtkAction *action, NactMainWindow *window );
 static void     on_new_action_activated( GtkAction *action, NactMainWindow *window );
 static void     on_new_profile_activated( GtkAction *action, NactMainWindow *window );
 static void     on_save_activated( GtkAction *action, NactMainWindow *window );
-static void     save_item( NAObject *object, NactMainWindow *window );
+static void     save_items( NactMainWindow *window, NAPivot *pivot, GList *items );
+static void     save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item );
 static void     on_quit_activated( GtkAction *action, NactMainWindow *window );
 
 static void     on_cut_activated( GtkAction *action, NactMainWindow *window );
@@ -242,12 +257,23 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 /**
  * nact_main_menubar_refresh_actions_sensitivity:
  *
- * Sensitivity of items in the menubar is primarily refreshed when
- * "tab-updatable-selection-updated" signal is received.
- * This signal itself is sent on new selection in IActionsList.
- * E.g in "cut" action, this happens before having stored the items
- * in the clipboard.
- * We so have to refresh the menubar items on demand.
+ * Sensitivity of items (whether they are activable of not) in the
+ * menubar should be recomputed each time aaction in the user interface
+ * may lead to a change in one of the menu actions.
+ *
+ * This consists in :
+ * - when there is a change in the current selection in IActionsList
+ *   (new profile, cut, copy, duplicate, delete)
+ * - when there is a change in the content of IActionsList
+ *   (export)
+ * - when there is a change in the content of the clipboard
+ *   (paste)
+ *
+ * Note that the same actions are also used as toolbar actions ; we so
+ * cannot rely on just recomputing the sensitivity e.g. when about to
+ * open a popup menu in the menubar. Sensitivity of the actions need
+ * to be updated as soon as the global context is changed.
+ *
  */
 void
 nact_main_menubar_refresh_actions_sensitivity( NactMainWindow *window )
@@ -333,29 +359,33 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 /*
  * saving is not only saving modified items, but also saving hierarchy
  * (and order if alpha order is not set)
+ *
+ * note that we only go down in the hierarchy is parent is valid and not
+ * modified (or has been successfully saved)
  */
 static void
 on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	GList *items;
+	NactApplication *application;
+	NAPivot *pivot;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	/* delete the removed actions
+	 */
+	nact_main_window_remove_deleted( window );
 
 	items = nact_iactions_list_get_items( NACT_IACTIONS_LIST( window ));
 	nact_window_write_level_zero( NACT_WINDOW( window ), items );
 
 	/* recursively save the valid modified items
 	 */
-	g_list_foreach( items, ( GFunc ) save_item, window );
-
-	/* doesn't unref object owned by the tree store
-	 */
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+	save_items( window, pivot, items );
 	g_list_free( items );
-
-	/* delete the removed actions
-	 */
-	nact_main_window_remove_deleted( window );
 
 	/* required as selection has not changed
 	 */
@@ -367,48 +397,61 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 }
 
 /*
+ * only recurse in menus
+ */
+static void
+save_items( NactMainWindow *window, NAPivot *pivot, GList *items )
+{
+	GList *it;
+
+	for( it = items ; it ; it = it->next ){
+		save_item( window, pivot, NA_OBJECT_ITEM( it->data ));
+	}
+}
+
+/*
  * iterates here on each and every row stored in the tree
  * - do not deal with profiles as they are directly managed by their
  *   action parent
- * - do not deal with not modified, or not valid, items
+ * - do not deal with not modified, or not valid, items, but allow
+ *   for save their subitems
  */
 static void
-save_item( NAObject *object, NactMainWindow *window )
+save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 {
-	NactApplication *application;
-	NAPivot *pivot;
 	NAObjectItem *origin;
 	NAObjectItem *dup_pivot;
+	GList *subitems;
 
-	g_return_if_fail( NA_IS_OBJECT( object ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
-	if( !NA_IS_OBJECT_PROFILE( object ) &&
-		na_object_is_modified( NA_OBJECT( object )) &&
-		na_object_is_valid( NA_OBJECT( object ))){
+	if( NA_IS_OBJECT_MENU( item )){
+		subitems = na_object_get_items( item );
+		save_items( window, pivot, subitems );
+		na_object_free_items( subitems );
+	}
 
-		g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+	if( na_object_is_modified( item ) &&
+		na_object_is_valid( item )){
 
-		if( nact_window_save_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( object ))){
+		if( nact_window_save_item( NACT_WINDOW( window ), item )){
 
-			/* do not use NA_OBJECT_ITEM macro as this may return a (valid)
-			 * NULL value
+			/* do not use NA_OBJECT_ITEM macro as this may return a
+			 * (valid) NULL value
 			 */
-			origin = ( NAObjectItem * ) na_object_get_origin( object );
+			origin = ( NAObjectItem * ) na_object_get_origin( item );
 
 			if( origin ){
-				na_object_copy( origin, object );
-
-			} else {
-				application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-				pivot = nact_application_get_pivot( application );
-				dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( object ));
-				na_object_set_origin( dup_pivot, NULL );
-				na_object_set_origin( object, dup_pivot );
-				na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
+				na_pivot_remove_item( pivot, NA_OBJECT( origin ));
 			}
 
-			na_object_check_edition_status( object );
+			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
+			na_object_rewind_origin( dup_pivot, item );
+			na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
+
+			na_object_check_edition_status( item );
 		}
 	}
 }
@@ -432,11 +475,10 @@ on_quit_activated( GtkAction *gtk_action, NactMainWindow *window )
 /*
  * cuts the visible selection
  * - (tree) get new refs on selected items
- * - (tree) remove selected items, unreffing objects
  * - (main) add selected items to main list of deleted,
  *          moving newref from list_from_tree to main_list_of_deleted
  * - (menu) install in clipboard a copy of selected objects
- * - (tree) select next row (if any, or previous if any, or none)
+ * - (tree) remove selected items, unreffing objects
  */
 static void
 on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
@@ -485,7 +527,7 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
  *          and renumber its own data for allowing a new paste
  * - (tree) insert new items, the tree store will ref them
  *          attaching each item to its parent
- *          checking edition status of the topmost parent
+ *          recursively checking edition status of the topmost parent
  *          selecting the first item at end
  * - (menu) unreffing the copy got from clipboard
  */
@@ -523,7 +565,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 		if( NA_IS_OBJECT_ITEM( obj )){
 			na_object_set_new_id( obj );
 		}
-		na_object_set_origin_rec( obj, NULL );
+		na_object_set_origin( obj, NULL );
 		dup = g_list_prepend( NULL, obj );
 		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
 		na_object_free_items( dup );
@@ -626,27 +668,49 @@ on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window )
 static void
 on_destroy_callback( gpointer data )
 {
-	g_debug( "nact_main_menubar_on_destroy_callback: data=%p", ( void * ) data );
+	static const gchar *thisfn = "nact_main_menubar_on_destroy_callback";
+
+	g_debug( "%s: data=%p (%s)", thisfn,
+			( void * ) data, G_OBJECT_TYPE_NAME( data ));
+
 	g_object_unref( G_OBJECT( data ));
 }
 
+/*
+ * gtk_activatable_get_related_action() and gtk_action_get_tooltip()
+ * are only available starting with Gtk 2.16
+ */
 static void
 on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window )
 {
 	GtkAction *action;
-	const gchar *tooltip;
+	gchar *tooltip;
 
+	/*g_debug( "nact_main_menubar_on_menu_item_selected: proxy=%p (%s), window=%p (%s)",
+			( void * ) proxy, G_OBJECT_TYPE_NAME( proxy ),
+			( void * ) window, G_OBJECT_TYPE_NAME( window ));*/
+
+	tooltip = NULL;
+
+#ifdef GTK_HAS_ACTIVATABLE
 	action = gtk_activatable_get_related_action( GTK_ACTIVATABLE( proxy ));
-	if( !action ){
-		return;
+	if( action ){
+		tooltip = ( gchar * ) gtk_action_get_tooltip( action );
+	}
+#else
+	action = GTK_ACTION( g_object_get_data( G_OBJECT( proxy ), MENUBAR_PROP_ITEM_ACTION ));
+	if( action ){
+		g_object_get( G_OBJECT( action ), "tooltip", &tooltip, NULL );
+	}
+#endif
+
+	if( tooltip ){
+		nact_main_statusbar_display_status( window, MENUBAR_PROP_STATUS_CONTEXT, tooltip );
 	}
 
-	tooltip = gtk_action_get_tooltip( action );
-	if( !tooltip ){
-		return;
-	}
-
-	nact_main_statusbar_display_status( window, MENUBAR_PROP_STATUS_CONTEXT, tooltip );
+#ifndef GTK_HAS_ACTIVATABLE
+	g_free( tooltip );
+#endif
 }
 
 static void
@@ -658,8 +722,14 @@ on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window )
 static void
 on_proxy_connect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window )
 {
-	g_debug( "on_proxy_connect: action_group=%p, action=%p, proxy=%p, window=%p",
-			( void * ) action_group, ( void * ) action, ( void * ) proxy, ( void * ) window );
+	static const gchar *thisfn = "nact_main_menubar_on_proxy_connect";
+
+	g_debug( "%s: action_group=%p (%s), action=%p (%s), proxy=%p (%s), window=%p (%s)",
+			thisfn,
+			( void * ) action_group, G_OBJECT_TYPE_NAME( action_group ),
+			( void * ) action, G_OBJECT_TYPE_NAME( action ),
+			( void * ) proxy, G_OBJECT_TYPE_NAME( proxy ),
+			( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 	if( GTK_IS_MENU_ITEM( proxy )){
 
@@ -674,6 +744,10 @@ on_proxy_connect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *pr
 				G_OBJECT( proxy ),
 				"deselect",
 				G_CALLBACK( on_menu_item_deselected ));
+
+#ifndef GTK_HAS_ACTIVATABLE
+		g_object_set_data( G_OBJECT( proxy ), MENUBAR_PROP_ITEM_ACTION, action );
+#endif
 	}
 }
 

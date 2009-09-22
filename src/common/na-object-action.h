@@ -39,7 +39,7 @@
  * This is the class which maintains data and properties of an Nautilus
  * action.
  *
- * Note about the UUID:
+ * Note about the UUID :
  *
  * The uuid is only required when writing the action to GConf in order
  * to ensure unicity of subdirectories.
@@ -49,6 +49,12 @@
  * Note that a user may import an action, translate it and then
  * reexport it : we so may have two different actions with the same
  * uuid. The user has so to modify the UUID before import.
+ *
+ * Note about edition status :
+ *
+ * As a particular rule of #NAObjectItem derived class, an action is
+ * considered modified as soon as any of its profiles has been modified
+ * itself (because they are saved as a whole).
  */
 
 #include <glib/gi18n.h>

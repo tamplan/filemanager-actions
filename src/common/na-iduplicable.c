@@ -254,43 +254,6 @@ na_iduplicable_dump( const NAIDuplicable *object )
 }
 
 /**
- * na_iduplicable_duplicate:
- * @object: the #NAIDuplicable object to be duplicated.
- *
- * Exactly duplicates a #NAIDuplicable-implemented object.
- * Properties %NA_IDUPLICABLE_PROP_ORIGIN, %PROP_IDUPLICABLE_ISMODIFIED
- * and %PROP_IDUPLICABLE_ISVALID are initialized to their default
- * values.
- *
- * As %PROP_IDUPLICABLE_ISVALID property is set to %TRUE without any
- * further check, this suppose that only valid objects are duplicated.
- *
- * Returns: a new #NAIDuplicable.
- */
-NAIDuplicable *
-na_iduplicable_duplicate( const NAIDuplicable *object )
-{
-	/*static const gchar *thisfn = "na_iduplicable_duplicate";*/
-	NAIDuplicable *dup = NULL;
-
-	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
-
-	g_return_val_if_fail( st_initialized && !st_finalized, NULL );
-	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
-
-	dup = v_new( object );
-
-	if( dup ){
-		v_copy( dup, object );
-		set_origin( dup, object );
-		set_modified( dup, FALSE );
-		set_valid( dup, TRUE );
-	}
-
-	return( dup );
-}
-
-/**
  * na_iduplicable_check_edition_status:
  * @object: the #NAIDuplicable object to be checked.
  *
@@ -307,7 +270,7 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
  * That is, the modification and validity status are only set on the
  * specified object.
  * Nonetheless, a derived class may perfectly implement a recursive
- * check on childs, if any. See, e.g. #NAObjectItem implementation.
+ * check on childs, if any. See, e.g. #NAObject implementation.
  */
 void
 na_iduplicable_check_edition_status( const NAIDuplicable *object )
@@ -344,6 +307,43 @@ na_iduplicable_check_edition_status( const NAIDuplicable *object )
 			( void * ) object, G_OBJECT_TYPE_NAME( object ),
 			modified ? "True":"False", valid ? "True":"False" );
 #endif
+}
+
+/**
+ * na_iduplicable_duplicate:
+ * @object: the #NAIDuplicable object to be duplicated.
+ *
+ * Exactly duplicates a #NAIDuplicable-implemented object.
+ * Properties %NA_IDUPLICABLE_PROP_ORIGIN, %PROP_IDUPLICABLE_ISMODIFIED
+ * and %PROP_IDUPLICABLE_ISVALID are initialized to their default
+ * values.
+ *
+ * As %PROP_IDUPLICABLE_ISVALID property is set to %TRUE without any
+ * further check, this suppose that only valid objects are duplicated.
+ *
+ * Returns: a new #NAIDuplicable.
+ */
+NAIDuplicable *
+na_iduplicable_duplicate( const NAIDuplicable *object )
+{
+	/*static const gchar *thisfn = "na_iduplicable_duplicate";*/
+	NAIDuplicable *dup = NULL;
+
+	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
+
+	g_return_val_if_fail( st_initialized && !st_finalized, NULL );
+	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
+
+	dup = v_new( object );
+
+	if( dup ){
+		v_copy( dup, object );
+		set_origin( dup, object );
+		set_modified( dup, FALSE );
+		set_valid( dup, TRUE );
+	}
+
+	return( dup );
 }
 
 /**

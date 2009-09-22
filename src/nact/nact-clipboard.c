@@ -277,7 +277,7 @@ nact_clipboard_primary_get( void )
 
 		for( it = data->items ; it ; it = it->next ){
 			obj = na_object_duplicate( it->data );
-			na_object_set_origin_rec( obj, NULL );
+			na_object_set_origin( obj, NULL );
 			items = g_list_prepend( items, obj );
 		}
 		items = g_list_reverse( items );

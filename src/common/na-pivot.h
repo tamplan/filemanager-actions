@@ -114,11 +114,11 @@ GList    *na_pivot_get_items( const NAPivot *pivot );
 void      na_pivot_reload_items( NAPivot *pivot );
 
 void      na_pivot_add_item( NAPivot *pivot, const NAObject *item );
-void      na_pivot_remove_item( NAPivot *pivot, NAObject *item );
 NAObject *na_pivot_get_item( const NAPivot *pivot, const gchar *uuid );
+void      na_pivot_remove_item( NAPivot *pivot, NAObject *item );
 
-guint     na_pivot_write_item( const NAPivot *pivot, NAObject *item, gchar **message );
 guint     na_pivot_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message );
+guint     na_pivot_write_item( const NAPivot *pivot, NAObject *item, gchar **message );
 
 void      na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
 

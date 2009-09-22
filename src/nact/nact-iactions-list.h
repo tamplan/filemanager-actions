@@ -78,6 +78,7 @@ void      nact_iactions_list_dispose( NactIActionsList *instance );
 
 void      nact_iactions_list_delete_selection( NactIActionsList *instance );
 void      nact_iactions_list_fill( NactIActionsList *instance, GList *items );
+NAObject *nact_iactions_list_get_item( NactIActionsList *instance, const gchar *uuid );
 GList    *nact_iactions_list_get_items( NactIActionsList *instance );
 GList    *nact_iactions_list_get_selected_items( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_exportable( NactIActionsList *instance );

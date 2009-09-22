@@ -35,6 +35,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
+#include "na-iduplicable.h"
 #include "na-object-api.h"
 #include "na-object-item-class.h"
 #include "na-object-item-fn.h"
@@ -562,7 +563,14 @@ na_object_item_get_items_count( const NAObjectItem *item )
 void
 na_object_item_free_items( GList *items )
 {
-	g_list_foreach( items, ( GFunc ) g_object_unref, NULL );
+	GList *it;
+
+	for( it = items ; it ; it = it->next ){
+		if( G_IS_OBJECT( it->data )){
+			g_object_unref( it->data );
+		}
+	}
+
 	g_list_free( items );
 }
 
@@ -714,50 +722,60 @@ na_object_item_append_item( NAObjectItem *item, const NAObject *object )
 /**
  * na_object_item_insert_item:
  * @item: the #NAObjectItem to which add the subitem.
- * @object: a #NAObject to be inserted at the list of subitems.
+ * @object: a #NAObject to be inserted in the list of subitems.
+ * @before: the #NAObject before which the @object should be inserted.
  *
- * Inserts a new @object at the beginning of the list of subitems of
- * @item.
+ * Inserts a new @object in the list of subitems of @item.
  *
  * We add a reference on provided @object.
  */
 void
-na_object_item_insert_item( NAObjectItem *item, const NAObject *object )
+na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before )
 {
+	GList *before_list;
+
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( NA_IS_OBJECT( before ));
 
 	if( !g_list_find( item->private->items, ( gpointer ) object )){
-		item->private->items = g_list_prepend( item->private->items, g_object_ref(( gpointer ) object ));
+		before_list = g_list_find( item->private->items, ( gconstpointer ) before );
+		if( before_list ){
+			item->private->items = g_list_insert_before( item->private->items, before_list, g_object_ref(( gpointer ) object ));
+		} else {
+			item->private->items = g_list_prepend( item->private->items, g_object_ref(( gpointer ) object ));
+		}
 	}
 }
 
 /**
  * na_object_item_remove_item:
- * @item: the #NAObjectItem item from which the subitems must be removed.
- * @object: a #NAObject object to be removed from list of subitems.
+ * @item: the #NAObjectItem from which the subitem must be removed.
+ * @object: a #NAObject to be removed from the list of subitems.
  *
- * Removes a subitem from the list of subitems.
+ * Removes an @object from the list of subitems of @item.
  *
- * We also decrement the reference count on removed subitem.
+ * We decrement the reference count on @object.
  */
 void
-na_object_item_remove_item( NAObjectItem *item, NAObject *object )
+na_object_item_remove_item( NAObjectItem *item, const NAObject *object )
 {
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
-	g_object_unref( object );
+	if( g_list_find( item->private->items, ( gconstpointer ) object )){
+		item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
+		g_object_unref(( gpointer ) object );
+	}
 }
 
 static void
 object_dump( const NAObject *item )
 {
 	static const gchar *thisfn = "na_object_item_object_dump";
-	GList *it;
+	/*GList *it;*/
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 	g_return_if_fail( !NA_OBJECT_ITEM( item )->private->dispose_has_run );
@@ -773,9 +791,13 @@ object_dump( const NAObject *item )
 			NA_OBJECT_ITEM( item )->private->items ? g_list_length( NA_OBJECT_ITEM( item )->private->items ) : 0,
 			( void * ) NA_OBJECT_ITEM( item )->private->items );
 
-	for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
+	/* do not recurse here, as this is actually dealt with by
+	 * na_object_dump() api ;
+	 * else, we would have the action being dumped after its childs
+	 */
+	/*for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
 		na_object_dump( it->data );
-	}
+	}*/
 }
 
 static void
@@ -832,21 +854,30 @@ object_copy( NAObject *target, const NAObject *source )
  *
  * note 1: The provider is not considered as pertinent here
  *
- * note 2: NAObjectItem recursively checks for equality in subitems.
- * Nonetheless, the modification status of subitems doesn't have any
+ * note 2: as a particular case, this function is not recursive
+ * because the equality test will stop as soon as it fails, and we so
+ * cannot be sure to even come here.
+ *
+ * The recursivity of na_object_check_edition_status() is directly
+ * dealt with by the main entry api function.
+ *
+ * More, the modification status of subitems doesn't have any
  * impact on this object itself, provided that subitems lists are
  * themselves identical
  *
- * note 3: Only NAObjectAction is modified that one of the profiles are
- * modified (because they are saved as a whole)
+ * note 3: #NAObjectAction is considered as modified when at least one
+ * of the profiles is itself modified (because they are saved as a
+ * whole). See #NAObjectAction.
  */
 static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )
 {
 	gboolean equal = TRUE;
 	GList *it;
-	NAObject *first_obj, *second_obj;
 	gchar *first_id, *second_id;
+	NAObject *first_obj, *second_obj;
+	gint first_pos, second_pos;
+	GList *second_list;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( a ), FALSE );
 	g_return_val_if_fail( !NA_OBJECT_ITEM( a )->private->dispose_has_run, FALSE );
@@ -870,37 +901,49 @@ object_are_equal( const NAObject *a, const NAObject *b )
 
 	if( equal ){
 		for( it = NA_OBJECT_ITEM( a )->private->items ; it && equal ; it = it->next ){
-			first_obj = NA_OBJECT( it->data );
-			first_id = na_object_get_id( first_obj );
-			second_obj = ( NAObject * ) na_object_get_item( b, first_id );
-			g_free( first_id );
+			first_id = na_object_get_id( it->data );
+			second_obj = na_object_get_item( b, first_id );
 			if( second_obj ){
-				na_object_check_edition_status( second_obj );
+				first_pos = g_list_position( NA_OBJECT_ITEM( a )->private->items, it );
+				second_list = g_list_find( NA_OBJECT_ITEM( b )->private->items, second_obj );
+				second_pos = g_list_position( NA_OBJECT_ITEM( b )->private->items, second_list );
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
+				g_debug( "na_object_item_object_are_equal: first_pos=%u, second_pos=%u", first_pos, second_pos );
+#endif
+				if( first_pos != second_pos ){
+					equal = FALSE;
+				}
 			} else {
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-				g_debug( "na_object_item_are_equal: object=%p (%s), equal=False", ( void * ) b, G_OBJECT_TYPE_NAME( b ));
+					g_debug( "na_object_item_object_are_equal: id=%s not found in b", first_id );
 #endif
 				equal = FALSE;
 			}
+			g_free( first_id );
 		}
 	}
 
 	if( equal ){
 		for( it = NA_OBJECT_ITEM( b )->private->items ; it && equal ; it = it->next ){
-			second_obj = NA_OBJECT( it->data );
-			second_id = na_object_get_id( second_obj );
-			first_obj = ( NAObject * ) na_object_get_item( a, second_id );
-			g_free( second_id );
+			second_id = na_object_get_id( it->data );
+			first_obj = na_object_get_item( a, second_id );
 			if( !first_obj ){
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-				g_debug( "na_object_item_are_equal: object=%p (%s), equal=False", ( void * ) b, G_OBJECT_TYPE_NAME( b ));
+					g_debug( "na_object_item_object_are_equal: id=%s not found in a", second_id );
 #endif
 				equal = FALSE;
 			}
+			g_free( second_id );
 		}
 	}
 
-	/*g_debug( "na_object_item_are_equal: %s", equal ? "True":"False" );*/
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
+	g_debug( "na_object_item_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+			( void * ) a, G_OBJECT_TYPE_NAME( a ),
+			( void * ) b, G_OBJECT_TYPE_NAME( b ),
+			equal ? "True":"False" );
+#endif
+
 	return( equal );
 }
 
@@ -911,16 +954,16 @@ static gboolean
 object_is_valid( const NAObject *object )
 {
 	gboolean valid = TRUE;
-	GList *it;
+	/*GList *it;*/
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), FALSE );
 	g_return_val_if_fail( !NA_OBJECT_ITEM( object )->private->dispose_has_run, FALSE );
 
-	if( valid ){
+	/*if( valid ){
 		for( it = NA_OBJECT_ITEM( object )->private->items ; it && valid ; it = it->next ){
 			valid = na_object_is_valid( it->data );
 		}
-	}
+	}*/
 
 	return( valid );
 }

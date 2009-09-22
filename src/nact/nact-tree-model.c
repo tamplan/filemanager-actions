@@ -499,14 +499,14 @@ nact_tree_model_dispose( NactTreeModel *model )
 void
 nact_tree_model_display( NactTreeModel *model, NAObject *object )
 {
-	static const gchar *thisfn = "nact_tree_model_display";
+	/*static const gchar *thisfn = "nact_tree_model_display";*/
 	GtkTreeStore *store;
 	GtkTreeIter iter;
 	GtkTreePath *path;
 
-	g_debug( "%s: model=%p (%s), object=%p (%s)", thisfn,
+	/*g_debug( "%s: model=%p (%s), object=%p (%s)", thisfn,
 			( void * ) model, G_OBJECT_TYPE_NAME( model ),
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));
+			( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
 
 	store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 
@@ -792,7 +792,7 @@ insert_get_iters_menu( GtkTreeModel *model, const NAObject *select_object, GtkTr
 }
 
 /*
- * insert an action or a menu where there is no current selection
+ * insert an action or a menu when there is no current selection
  * insert an action or a menu when the selection is an action
  * insert a profile before a profile
  */
@@ -801,10 +801,12 @@ insert_before_get_iters( GtkTreeModel *model,  GtkTreePath *select_path, const N
 {
 	GtkTreePath *path;
 	GtkTreeIter iter;
+	NAObject *sibling_obj;
 
 	g_debug( "nact_tree_model_insert_before_get_iters" );
 
 	gtk_tree_model_get_iter( model, sibling_iter, select_path );
+	gtk_tree_model_get( model, sibling_iter, IACTIONS_LIST_NAOBJECT_COLUMN, &sibling_obj, -1 );
 	*has_sibling_iter = TRUE;
 
 	if( gtk_tree_path_get_depth( select_path ) > 1 ){
@@ -813,10 +815,12 @@ insert_before_get_iters( GtkTreeModel *model,  GtkTreePath *select_path, const N
 		gtk_tree_model_get_iter( model, &iter, path );
 		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, parent_object, -1 );
 		g_return_if_fail( NA_IS_OBJECT_ITEM( *parent_object ));
-		na_object_insert_item( *parent_object, object );
+		na_object_insert_item( *parent_object, object, sibling_obj );
 		g_object_unref( *parent_object );
 		gtk_tree_path_free( path );
 	}
+
+	g_object_unref( sibling_obj );
 }
 
 /*
@@ -827,12 +831,14 @@ insert_before_parent_get_iters( GtkTreeModel *model, GtkTreePath *select_path, c
 {
 	GtkTreePath *path;
 	GtkTreeIter iter;
+	NAObject *sibling_obj;
 
 	g_debug( "nact_tree_model_insert_before_parent_get_iters" );
 
 	path = gtk_tree_path_copy( select_path );
 	gtk_tree_path_up( path );
 	gtk_tree_model_get_iter( model, sibling_iter, path );
+	gtk_tree_model_get( model, sibling_iter, IACTIONS_LIST_NAOBJECT_COLUMN, &sibling_obj, -1 );
 	*has_sibling_iter = TRUE;
 
 	if( gtk_tree_path_get_depth( path ) > 1 ){
@@ -840,10 +846,11 @@ insert_before_parent_get_iters( GtkTreeModel *model, GtkTreePath *select_path, c
 		gtk_tree_model_get_iter( model, &iter, path );
 		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, parent_object, -1 );
 		g_return_if_fail( NA_IS_OBJECT_ITEM( *parent_object ));
-		na_object_insert_item( *parent_object, object );
+		na_object_insert_item( *parent_object, object, sibling_obj );
 		g_object_unref( *parent_object );
 	}
 
+	g_object_unref( sibling_obj );
 	gtk_tree_path_free( path );
 }
 
@@ -861,7 +868,7 @@ insert_as_last_child_get_iters( GtkTreeModel *model, GtkTreePath *select_path, c
 
 	gtk_tree_model_get( model, parent_iter, IACTIONS_LIST_NAOBJECT_COLUMN, parent_object, -1 );
 	g_return_if_fail( NA_IS_OBJECT_ITEM( *parent_object ));
-	na_object_insert_item( *parent_object, object );
+	na_object_append_item( *parent_object, object );
 	g_object_unref( *parent_object );
 }
 
@@ -980,6 +987,7 @@ dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpSt
 	gint depth;
 	gint i;
 	GString *prefix;
+	gchar *id, *label;
 
 	depth = gtk_tree_path_get_depth( path );
 	prefix = g_string_new( ntm->prefix );
@@ -987,7 +995,12 @@ dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpSt
 		g_string_append_printf( prefix, "  " );
 	}
 
-	g_debug( "%s: %s%s at %p", ntm->fname, prefix->str, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
+	id = na_object_get_id( object );
+	label = na_object_get_label( object );
+	g_debug( "%s: %s%s at %p \"[%s] %s\"",
+			ntm->fname, prefix->str, G_OBJECT_TYPE_NAME( object ), ( void * ) object, id, label );
+	g_free( label );
+	g_free( id );
 
 	g_string_free( prefix, TRUE );
 

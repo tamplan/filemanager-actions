@@ -1,3 +1,59 @@
+2009-09-22 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Add a comment about GtkActivatable.
+
+	* src/common/na-iduplicable.c:
+	* src/common/na-iduplicable.h:
+	Reorganize the code and add comments about recursivity inside.
+
+	* src/common/na-iio-provider.c:
+	Replace local dump_hierarchy() with call to na_object_dump_tree().
+	na_iio_provider_write_item(): Make debug trace more verbose.
+
+	* src/common/na-object-action.c:
+	* src/common/na-object-action.h:
+	Output debug traces depending on NAIDuplicable flag.
+	Fix equality check if a profile is modified.
+
+	* src/common/na-object-api.h (na_object_dump_norec,
+	na_object_dump_tree, na_object_rewind_origin): New functions.
+	na_object_insert_item(): Add a sibling pointer.
+
+	* src/common/na-object.c:
+	* src/common/na-object-fn.h:
+	Reorganize the code and add comments about recursivity inside.
+
+	* src/common/na-object-id.c:
+	* src/common/na-object-menu.c:
+	* src/common/na-object-profile.c: Make debug trace more verbose.
+
+	* src/common/na-object-item.c:
+	* src/common/na-object-item-fn.h (na_object_item_insert_item):
+	Add a sibling pointer.
+	na_object_item_free_items(): Only unref if object is always valid.
+	object_are_equal(): Position is a factor of equality.
+
+	* src/common/na-pivot.c:
+	* src/common/na-pivot.h (na_pivot_get_item): New function.
+
+	* src/nact/nact-assistant-import.c:
+	Actually imports the actions into the tree store before
+	confirming the operation was done.
+
+	* nact/nact-iactions-list.c:
+	* nact/nact-iactions-list.h (nact_iactions_list_get_item):
+	New function.
+
+	* src/nact/nact-main-menubar.c:
+	Do not use GtkActivatable if version <= 2.16.
+	Rewrite save items process.
+
+	* src/nact/nact-main-window.c (nact_main_window_action_exists):
+	Restore the function, searching in NAPivot and in tree store.
+
+	* src/nact/nact-tree-model.c:
+	Now inserts the new row before a given sibling object.
+
 2009-09-21 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-gconf-provider.c (write_item_menu):

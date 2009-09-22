@@ -93,28 +93,30 @@ static guint         st_event_source_id = 0;
 static gint          st_timeout_msec = 100;
 static gint          st_timeout_usec = 100000;
 
-static GType    register_type( void );
-static void     class_init( NAPivotClass *klass );
-static void     iprefs_iface_init( NAIPrefsInterface *iface );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_dispose( GObject *object );
-static void     instance_finalize( GObject *object );
+static GType     register_type( void );
+static void      class_init( NAPivotClass *klass );
+static void      iprefs_iface_init( NAIPrefsInterface *iface );
+static void      instance_init( GTypeInstance *instance, gpointer klass );
+static void      instance_dispose( GObject *object );
+static void      instance_finalize( GObject *object );
+
+static NAObject *get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid );
 
 /* NAIPivotConsumer management */
-static void     free_consumers( GSList *list );
+static void      free_consumers( GSList *list );
 
 /* NAIIOProvider management */
-static void     register_io_providers( NAPivot *pivot );
+static void      register_io_providers( NAPivot *pivot );
 
 /* NAGConf runtime preferences management */
-static void     read_runtime_preferences( NAPivot *pivot );
+static void      read_runtime_preferences( NAPivot *pivot );
 
-static void     action_changed_handler( NAPivot *pivot, gpointer user_data );
-static gboolean on_actions_changed_timeout( gpointer user_data );
-static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+static void      action_changed_handler( NAPivot *pivot, gpointer user_data );
+static gboolean  on_actions_changed_timeout( gpointer user_data );
+static gulong    time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
-static void     on_display_order_change( NAPivot *pivot, gpointer user_data );
-static void     on_display_about_change( NAPivot *pivot, gpointer user_data );
+static void      on_display_order_change( NAPivot *pivot, gpointer user_data );
+static void      on_display_about_change( NAPivot *pivot, gpointer user_data );
 
 GType
 na_pivot_get_type( void )
@@ -455,26 +457,6 @@ na_pivot_add_item( NAPivot *pivot, const NAObject *item )
 }
 
 /**
- * na_pivot_remove_item:
- * @pivot: this #NAPivot instance.
- * @item: the #NAObjectItem to be removed from the list.
- *
- * Removes a #NAObjectItem from the hierarchical tree.
- *
- * Note that #NAPivot also g_object_unref() the removed #NAObjectItem.
- */
-void
-na_pivot_remove_item( NAPivot *pivot, NAObject *item )
-{
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-	g_return_if_fail( !pivot->private->dispose_has_run );
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	pivot->private->tree = g_list_remove( pivot->private->tree, ( gconstpointer ) item );
-	g_object_unref( item );
-}
-
-/**
  * na_pivot_get_action:
  * @pivot: this #NAPivot instance.
  * @uuid: the required globally unique identifier (uuid).
@@ -488,8 +470,7 @@ na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 NAObject *
 na_pivot_get_item( const NAPivot *pivot, const gchar *uuid )
 {
-	uuid_t uua, i_uub;
-	GList *ia;
+	uuid_t uuid_bin;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( !pivot->private->dispose_has_run, NULL );
@@ -498,42 +479,33 @@ na_pivot_get_item( const NAPivot *pivot, const gchar *uuid )
 		return( NULL );
 	}
 
-	uuid_parse( uuid, uua );
+	uuid_parse( uuid, uuid_bin );
 
-	for( ia = pivot->private->tree ; ia ; ia = ia->next ){
-
-		gchar *i_uuid = na_object_get_id( NA_OBJECT( ia->data ));
-		uuid_parse( i_uuid, i_uub );
-		g_free( i_uuid );
-
-		if( !uuid_compare( uua, i_uub )){
-			return( NA_OBJECT( ia->data ));
-		}
-	}
-
-	return( NULL );
+	return( get_item_from_tree( pivot, pivot->private->tree, uuid_bin ));
 }
 
 /**
- * na_pivot_write_item:
+ * na_pivot_remove_item:
  * @pivot: this #NAPivot instance.
- * @item: a #NAObjectItem to be written by the storage subsystem.
- * @message: the I/O provider can allocate and store here an error
- * message.
+ * @item: the #NAObjectItem to be removed from the list.
  *
- * Writes an item (an action or a menu).
+ * Removes a #NAObjectItem from the hierarchical tree.
  *
- * Returns: the #NAIIOProvider return code.
+ * Note that #NAPivot also g_object_unref() the removed #NAObjectItem.
  */
-guint
-na_pivot_write_item( const NAPivot *pivot, NAObject *item, gchar **message )
+void
+na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 {
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( !pivot->private->dispose_has_run, NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( message, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_debug( "na_pivot_remove_item: pivot=%p, item=%p (%s)",
+			( void * ) pivot,
+			( void * ) item, G_OBJECT_TYPE_NAME( item ));
 
-	return( na_iio_provider_write_item( pivot, item, message ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( !pivot->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	pivot->private->tree = g_list_remove( pivot->private->tree, ( gconstpointer ) item );
+	g_object_unref( item );
 }
 
 /**
@@ -556,6 +528,28 @@ na_pivot_delete_item( const NAPivot *pivot, const NAObject *item, gchar **messag
 	g_return_val_if_fail( message, NA_IIO_PROVIDER_PROGRAM_ERROR );
 
 	return( na_iio_provider_delete_item( pivot, item, message ));
+}
+
+/**
+ * na_pivot_write_item:
+ * @pivot: this #NAPivot instance.
+ * @item: a #NAObjectItem to be written by the storage subsystem.
+ * @message: the I/O provider can allocate and store here an error
+ * message.
+ *
+ * Writes an item (an action or a menu).
+ *
+ * Returns: the #NAIIOProvider return code.
+ */
+guint
+na_pivot_write_item( const NAPivot *pivot, NAObject *item, gchar **message )
+{
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( !pivot->private->dispose_has_run, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( message, NA_IIO_PROVIDER_PROGRAM_ERROR );
+
+	return( na_iio_provider_write_item( pivot, item, message ));
 }
 
 /**
@@ -616,6 +610,33 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 	g_return_if_fail( !pivot->private->dispose_has_run );
 
 	pivot->private->automatic_reload = reload;
+}
+
+static NAObject *
+get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid )
+{
+	uuid_t i_uuid_bin;
+	GList *subitems, *ia;
+	NAObject *found = NULL;
+
+	for( ia = tree ; ia && !found ; ia = ia->next ){
+
+		gchar *i_uuid = na_object_get_id( NA_OBJECT( ia->data ));
+		uuid_parse( i_uuid, i_uuid_bin );
+		g_free( i_uuid );
+
+		if( !uuid_compare( uuid, i_uuid_bin )){
+			found = NA_OBJECT( ia->data );
+		}
+
+		if( !found && NA_IS_OBJECT_ITEM( ia->data )){
+			subitems = na_object_get_items( ia->data );
+			found = get_item_from_tree( pivot, subitems, uuid );
+			na_object_free_items( subitems );
+		}
+	}
+
+	return( found );
 }
 
 static void

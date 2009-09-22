@@ -34,6 +34,7 @@
 
 #include <string.h>
 
+#include "na-object-api.h"
 #include "na-object-class.h"
 #include "na-object-fn.h"
 #include "na-iduplicable.h"
@@ -60,31 +61,26 @@ static void           instance_constructed( GObject *object );
 static void           instance_dispose( GObject *object );
 static void           instance_finalize( GObject *object );
 
-static void           dump_hierarchy( const NAObject *object );
-static void           do_dump( const NAObject *object );
-
-static gchar         *most_derived_clipboard_id( const NAObject *object );
-
-static void           ref_hierarchy( const NAObject *object );
-
 static NAIDuplicable *iduplicable_new( const NAIDuplicable *object );
-static NAObject      *most_derived_new( const NAObject *object );
-
 static void           iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
-static void           copy_hierarchy( NAObject *target, const NAObject *source );
-
 static gboolean       iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
-static gboolean       are_equal_hierarchy( const NAObject *a, const NAObject *b );
-static gboolean       do_are_equal( const NAObject *a, const NAObject *b );
-
 static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
-static gboolean       is_valid_hierarchy( const NAObject *object );
-static gboolean       do_is_valid( const NAObject *object );
-
-static void           do_copy( NAObject *target, const NAObject *source );
 
 static GList         *v_get_childs( const NAObject *object );
+
+static gboolean       are_equal_hierarchy( const NAObject *a, const NAObject *b );
+static void           copy_hierarchy( NAObject *target, const NAObject *source );
+static gboolean       do_are_equal( const NAObject *a, const NAObject *b );
+static void           do_copy( NAObject *target, const NAObject *source );
+static void           do_dump( const NAObject *object );
+static gboolean       do_is_valid( const NAObject *object );
+static void           dump_hierarchy( const NAObject *object );
+static void           dump_tree( GList *tree, gint level );
+static gboolean       is_valid_hierarchy( const NAObject *object );
+static gchar         *most_derived_clipboard_id( const NAObject *object );
 static GList         *most_derived_get_childs( const NAObject *object );
+static NAObject      *most_derived_new( const NAObject *object );
+static void           ref_hierarchy( const NAObject *object );
 
 GType
 na_object_get_type( void )
@@ -241,121 +237,42 @@ instance_finalize( GObject *object )
 }
 
 /**
- * na_object_object_dump:
- * @object: the #NAObject-derived object to be dumped.
+ * na_object_iduplicable_check_edition_status:
+ * @object: the #NAObject object to be checked.
  *
- * Dumps via g_debug the actual content of the object.
+ * Recursively checks for the edition status of @object and its childs
+ * (if any).
+ *
+ * Internally set some properties which may be requested later. This
+ * two-steps check-request let us optimize some work in the UI.
+ *
+ * na_object_check_edition_status( object )
+ *  +- na_iduplicable_check_edition_status( object )
+ *      +- get_origin( object )
+ *      +- modified_status = v_are_equal( origin, object ) -> interface are_equal()
+ *      +- valid_status = v_is_valid( object )             -> interface is_valid()
+ *
+ * Note that the recursivity is managed here, so that we can be sure
+ * that edition status of childs is actually checked.
  */
 void
-na_object_object_dump( const NAObject *object )
+na_object_iduplicable_check_edition_status( const NAObject *object )
 {
+	GList *childs, *ic;
+
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
+	g_debug( "na_object_iduplicable_check_edition_status: object=%p (%s)",
+			( void * ) object, G_OBJECT_TYPE_NAME( object ));
+#endif
 	g_return_if_fail( NA_IS_OBJECT( object ));
 	g_return_if_fail( !object->private->dispose_has_run );
 
-	dump_hierarchy( object );
-}
-
-static void
-dump_hierarchy( const NAObject *object )
-{
-	GList *hierarchy, *ih;
-
-	hierarchy = na_object_get_hierarchy( object );
-
-	for( ih = hierarchy ; ih ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->dump ){
-			NA_OBJECT_CLASS( ih->data )->dump( object );
-		}
+	childs = v_get_childs( object );
+	for( ic = childs ; ic ; ic = ic->next ){
+		na_object_iduplicable_check_edition_status( NA_OBJECT( ic->data ));
 	}
 
-	na_object_free_hierarchy( hierarchy );
-}
-
-static void
-do_dump( const NAObject *object )
-{
-	static const char *thisfn = "na_object_do_dump";
-
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-
-	na_iduplicable_dump( NA_IDUPLICABLE( object ));
-}
-
-/**
- * na_object_object_get_clipboard_id:
- * @object: the #NAObject-derived object for which we will get a id.
- *
- * Returns: a newly allocated string which contains an id for the
- * #NAobject. This id is suitable for the internal clipboard.
- *
- * The returned string should be g_free() by the caller.
- */
-gchar *
-na_object_object_get_clipboard_id( const NAObject *object )
-{
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
-	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
-
-	return( most_derived_clipboard_id( object ));
-}
-
-static gchar *
-most_derived_clipboard_id( const NAObject *object )
-{
-	gchar *clipboard_id;
-	GList *hierarchy, *ih;
-	gboolean found;
-
-	found = FALSE;
-	clipboard_id = NULL;
-	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
-
-	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->get_clipboard_id ){
-			clipboard_id = NA_OBJECT_CLASS( ih->data )->get_clipboard_id( object );
-			found = TRUE;
-		}
-	}
-
-	na_object_free_hierarchy( hierarchy );
-
-	return( clipboard_id );
-}
-
-/**
- * TODO: get ride of this
- * na_object_object_ref:
- * @object: the #NAObject-derived object to be reffed.
- *
- * Returns: a ref on the #NAobject.
- *
- * If the object has childs, then it should also have reffed them.
- */
-NAObject *
-na_object_object_ref( const NAObject *object )
-{
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
-	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
-
-	ref_hierarchy( object );
-
-	return( g_object_ref(( gpointer ) object ));
-}
-
-static void
-ref_hierarchy( const NAObject *object )
-{
-	GList *hierarchy, *ih;
-
-	hierarchy = na_object_get_hierarchy( object );
-
-	for( ih = hierarchy ; ih ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->ref ){
-			NA_OBJECT_CLASS( ih->data )->ref( object );
-		}
-	}
-
-	na_object_free_hierarchy( hierarchy );
+	na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
 }
 
 /**
@@ -366,17 +283,26 @@ ref_hierarchy( const NAObject *object )
  *
  * Returns: the new #NAObject.
  *
- *     na_object_duplicate( origin )
+ *   na_object_duplicate( origin )
+ *   +- na_object_iduplicable_duplicate( origin )
  *      +- na_iduplicable_duplicate( origin )
- *      |   +- dup = duplicate( origin )
- *      |   |   +- dup = v_new( object ) -> interface new()
- *      |   |   +- v_copy( dup, origin ) -> interface copy()
- *      |   |
- *      |   +- set_origin( dup, origin )
- *      |   +- set_modified( dup, FALSE )
- *      |   +- set_valid( dup, FALSE )
- *      |
- *      +- na_object_check_edited_status
+ *         +- dup = v_new( object )
+ *         |  +- interface->new( object)
+ *         |     +- iduplicable_new( object )
+ *         |        +- most_derived_new( object )
+ *         |           +- object_new( ... ) from a derived class
+ *         +- v_copy( dup, origin )
+ *         |  +- interface->copy( dup, origin )
+ *         |     +- iduplicable_copy( target, source )
+ *         |        +- copy_hierarchy( target, source )
+ *         |           +- object_copy( ... ) from each successive derived class
+ *         +- set_origin( dup, origin )
+ *         +- set_modified( dup, FALSE )
+ *         +- set_valid( dup, FALSE )
+ *
+ * Though the interface api is not recursive per se, the implementation
+ * is ; i.e. duplicating a #NAObjectItem also duplicates the whole tree
+ * inside.
  */
 NAObject *
 na_object_iduplicable_duplicate( const NAObject *object )
@@ -389,131 +315,11 @@ na_object_iduplicable_duplicate( const NAObject *object )
 
 	duplicate = na_iduplicable_duplicate( NA_IDUPLICABLE( object ));
 
-	/*g_debug( "na_object_iduplicable_duplicate: object is %s at %p, duplicate is %s at %p",
-			G_OBJECT_TYPE_NAME( object ), ( void * ) object,
-			duplicate ? G_OBJECT_TYPE_NAME( duplicate ) : "", ( void * ) duplicate );*/
-
-	/*if( duplicate ){
-		na_iduplicable_check_edition_status( duplicate );
-	}*/
+	/*g_debug( "na_object_iduplicable_duplicate: object=%p (%s), duplicate=%p (%s)",
+			( void * ) object, G_OBJECT_TYPE_NAME( object ),
+			( void * ) duplicate, duplicate ? G_OBJECT_TYPE_NAME( duplicate ) : "" );*/
 
 	return( NA_OBJECT( duplicate ));
-}
-
-static NAIDuplicable *
-iduplicable_new( const NAIDuplicable *object )
-{
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
-	g_return_val_if_fail( !NA_OBJECT( object )->private->dispose_has_run, NULL );
-
-	return( NA_IDUPLICABLE( most_derived_new( NA_OBJECT( object ))));
-}
-
-static NAObject *
-most_derived_new( const NAObject *object )
-{
-	NAObject *new_object;
-	GList *hierarchy, *ih;
-	gboolean found;
-
-	found = FALSE;
-	new_object = NULL;
-	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
-
-	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->new ){
-			new_object = NA_OBJECT_CLASS( ih->data )->new( object );
-			found = TRUE;
-		}
-	}
-
-	na_object_free_hierarchy( hierarchy );
-
-	return( new_object );
-}
-
-/**
- * na_object_object_copy:
- * @target: the #NAObject-derived object which will receive data.
- * @source: the #NAObject-derived object which will provide data.
- *
- * Copies data and properties from @source to @target.
- */
-void
-na_object_object_copy( NAObject *target, const NAObject *source )
-{
-	g_return_if_fail( NA_IS_OBJECT( target ));
-	g_return_if_fail( !target->private->dispose_has_run );
-	g_return_if_fail( NA_IS_OBJECT( source ));
-	g_return_if_fail( !source->private->dispose_has_run );
-
-	copy_hierarchy( target, source );
-}
-
-static void
-iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
-{
-	g_return_if_fail( NA_IS_OBJECT( target ));
-	g_return_if_fail( !NA_OBJECT( target )->private->dispose_has_run );
-	g_return_if_fail( NA_IS_OBJECT( source ));
-	g_return_if_fail( !NA_OBJECT( source )->private->dispose_has_run );
-
-	copy_hierarchy( NA_OBJECT( target ), NA_OBJECT( source ));
-}
-
-static void
-copy_hierarchy( NAObject *target, const NAObject *source )
-{
-	GList *hierarchy, *ih;
-
-	hierarchy = na_object_get_hierarchy( source );
-
-	for( ih = hierarchy ; ih ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->copy ){
-			NA_OBJECT_CLASS( ih->data )->copy( target, source );
-		}
-	}
-
-	na_object_free_hierarchy( hierarchy );
-}
-
-static void
-do_copy( NAObject *target, const NAObject *source )
-{
-	/* nothing to do here */
-}
-
-/**
- * na_object_get_hierarchy:
- *
- * Returns the class hierarchy,
- * from the topmost base class, to the most-derived one.
- */
-GList *
-na_object_get_hierarchy( const NAObject *object )
-{
-	GList *hierarchy;
-	GObjectClass *class;
-
-	hierarchy = NULL;
-	class = G_OBJECT_GET_CLASS( object );
-
-	while( G_OBJECT_CLASS_TYPE( class ) != NA_OBJECT_TYPE ){
-		hierarchy = g_list_prepend( hierarchy, class );
-		class = g_type_class_peek_parent( class );
-	}
-	hierarchy = g_list_prepend( hierarchy, class );
-
-	return( hierarchy );
-}
-
-/**
- * na_object_free_hierarchy:
- */
-void
-na_object_free_hierarchy( GList *hierarchy )
-{
-	g_list_free( hierarchy );
 }
 
 /**
@@ -538,114 +344,6 @@ na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b )
 	g_return_val_if_fail( !b->private->dispose_has_run, FALSE );
 
 	return( are_equal_hierarchy( a, b ));
-}
-
-static gboolean
-iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
-{
-	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT( a )->private->dispose_has_run, FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT( b )->private->dispose_has_run, FALSE );
-
-	return( are_equal_hierarchy( NA_OBJECT( a ), NA_OBJECT( b )));
-}
-
-static gboolean
-are_equal_hierarchy( const NAObject *a, const NAObject *b )
-{
-	gboolean are_equal;
-	GList *hierarchy, *ih;
-
-	are_equal = TRUE;
-	hierarchy = na_object_get_hierarchy( b );
-
-	for( ih = hierarchy ; ih && are_equal ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->are_equal ){
-			are_equal = NA_OBJECT_CLASS( ih->data )->are_equal( a, b );
-		}
-	}
-
-	na_object_free_hierarchy( hierarchy );
-
-	return( are_equal );
-}
-
-static gboolean
-do_are_equal( const NAObject *a, const NAObject *b )
-{
-	/*g_debug( "na_object_do_are_equal: a=%s at %p, b=%s at %p",
-			G_OBJECT_TYPE_NAME( a ), ( void * ) a, G_OBJECT_TYPE_NAME( b ), ( void * ) b );*/
-
-	/* as there is no data in NAObject, they are considered here as
-	 * equal is both null or both not null
-	 */
-	return(( a && b ) || ( !a && !b ));
-}
-
-static gboolean
-iduplicable_is_valid( const NAIDuplicable *object )
-{
-	return( is_valid_hierarchy( NA_OBJECT( object )));
-}
-
-static gboolean
-is_valid_hierarchy( const NAObject *object )
-{
-	gboolean is_valid;
-	GList *hierarchy, *ih;
-
-	is_valid = TRUE;
-	hierarchy = na_object_get_hierarchy( object );
-
-	for( ih = hierarchy ; ih && is_valid ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->is_valid ){
-			is_valid = NA_OBJECT_CLASS( ih->data )->is_valid( object );
-		}
-	}
-
-	na_object_free_hierarchy( hierarchy );
-
-	return( is_valid );
-}
-
-static gboolean
-do_is_valid( const NAObject *object )
-{
-	/* as there is no data in NAObject, it is always valid */
-	return( object ? TRUE : FALSE );
-}
-
-/**
- * na_object_iduplicable_check_edition_status:
- * @object: the #NAObject object to be checked.
- *
- * Recursively checks for the edition status of @object and its childs
- * (if any).
- *
- * Internally set some properties which may be requested later. This
- * two-steps check-request let us optimize some work in the UI.
- *
- * na_object_check_edition_status( object )
- *  +- na_iduplicable_check_edition_status( object )
- *      +- get_origin( object )
- *      +- modified_status = v_are_equal( origin, object ) -> interface are_equal()
- *      +- valid_status = v_is_valid( object )             -> interface is_valid()
- */
-void
-na_object_iduplicable_check_edition_status( const NAObject *object )
-{
-	/*GList *childs, *ic;*/
-
-	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( !object->private->dispose_has_run );
-
-	na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
-
-	/*childs = v_get_childs( object );
-	for( ic = childs ; ic ; ic = ic->next ){
-		na_iduplicable_check_edition_status( NA_IDUPLICABLE( ic->data ));
-	}*/
 }
 
 /**
@@ -714,44 +412,402 @@ na_object_iduplicable_get_origin( const NAObject *object )
  * @object: the #NAObject object whose origin is to be set.
  * @origin: a #NAObject which will be set as the new origin of @object.
  *
- * Sets the new origin of @object.
+ * Sets the new origin of @object, and of all its childs.
+ *
+ * Be warned: but recursively reinitializing the origin to NULL, this
+ * function may cause difficult to solve issues.
  */
 void
 na_object_iduplicable_set_origin( NAObject *object, const NAObject *origin )
 {
+	GList *childs, *ic;
+
 	g_return_if_fail( NA_IS_OBJECT( object ));
 	g_return_if_fail( !object->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( origin ) || !origin );
 	g_return_if_fail( !origin || !origin->private->dispose_has_run );
 
 	na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
+
+	childs = v_get_childs( object );
+	for( ic = childs ; ic ; ic = ic->next ){
+		na_object_iduplicable_set_origin( NA_OBJECT( ic->data ), origin );
+	}
 }
 
 /**
- * na_object_iduplicable_set_origin_recurse:
- * @object: the #NAObject object whose origin is to be set.
- * @origin: a #NAObject which will be set as the new origin of @object.
+ * na_object_object_dump:
+ * @object: the #NAObject-derived object to be dumped.
  *
- * Sets the new origin of @object, and of all its childs if any.
+ * Dumps via g_debug the actual content of the object.
+ *
+ * The recursivity is dealt with here. If we let #NAObjectItem do this,
+ * the dump of #NAObjectItem-derived object will be splitted, childs
+ * being inserted inside.
  */
 void
-na_object_iduplicable_set_origin_recurse( NAObject *object, const NAObject *origin )
+na_object_object_dump( const NAObject *object )
 {
 	GList *childs, *ic;
 
-	na_object_iduplicable_set_origin( object, origin );
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( !object->private->dispose_has_run );
+
+	na_object_object_dump_norec( object );
 
 	childs = v_get_childs( object );
-
 	for( ic = childs ; ic ; ic = ic->next ){
-		na_object_iduplicable_set_origin_recurse( NA_OBJECT( ic->data ), origin );
+		na_object_object_dump( NA_OBJECT( ic->data ));
 	}
+}
+
+/**
+ * na_object_object_dump_norec:
+ * @object: the #NAObject-derived object to be dumped.
+ *
+ * Dumps via g_debug the actual content of the object.
+ *
+ * This function is not recursive.
+ */
+void
+na_object_object_dump_norec( const NAObject *object )
+{
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( !object->private->dispose_has_run );
+
+	dump_hierarchy( object );
+}
+
+/**
+ * na_object_object_dump_tree:
+ * @tree: a hierarchical list of #NAObject-derived objects.
+ *
+ * Outputs a brief, hierarchical dump of the provided list.
+ */
+void
+na_object_object_dump_tree( GList *tree )
+{
+	dump_tree( tree, 0 );
+}
+
+/**
+ * na_object_object_get_clipboard_id:
+ * @object: the #NAObject-derived object for which we will get a id.
+ *
+ * Returns: a newly allocated string which contains an id for the
+ * #NAobject. This id is suitable for the internal clipboard.
+ *
+ * The returned string should be g_free() by the caller.
+ */
+gchar *
+na_object_object_get_clipboard_id( const NAObject *object )
+{
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
+
+	return( most_derived_clipboard_id( object ));
+}
+
+/**
+ * TODO: get ride of this
+ * na_object_object_ref:
+ * @object: the #NAObject-derived object to be reffed.
+ *
+ * Returns: a ref on the #NAobject.
+ *
+ * If the object has childs, then it should also have reffed them.
+ */
+NAObject *
+na_object_object_ref( const NAObject *object )
+{
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
+
+	ref_hierarchy( object );
+
+	return( g_object_ref(( gpointer ) object ));
+}
+
+/**
+ * na_object_object_rewind_origin:
+ * @target: must be a duplication of @source.
+ * @source: a #NAObject-derived object.
+ *
+ * Recursively rewind origin between @source to @target, so that
+ * @target appear as the origin of @source.
+ *
+ * The origin of @target itself is set to NULL.
+ *
+ * This only works if @target has just been duplicated from @source,
+ * and thus we do not have to check if childs lists are equal.
+ */
+void
+na_object_object_rewind_origin( NAObject *target, const NAObject *source )
+{
+	GList *childs, *ic;
+	NAObject *origin;
+
+	g_return_if_fail( NA_IS_OBJECT( target ));
+	g_return_if_fail( !target->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT( source ));
+	g_return_if_fail( !source->private->dispose_has_run );
+
+	childs = v_get_childs( target );
+	for( ic = childs ; ic ; ic = ic->next ){
+		origin = na_object_get_origin( ic->data );
+		na_object_rewind_origin( ic->data, origin );
+	}
+
+	origin = na_object_get_origin( target );
+	g_return_if_fail( origin == source );
+	na_iduplicable_set_origin( NA_IDUPLICABLE( source ), NA_IDUPLICABLE( target ));
+	na_iduplicable_set_origin( NA_IDUPLICABLE( target ), NULL );
+}
+
+/**
+ * na_object_get_hierarchy:
+ *
+ * Returns the class hierarchy,
+ * from the topmost base class, to the most-derived one.
+ */
+GList *
+na_object_get_hierarchy( const NAObject *object )
+{
+	GList *hierarchy;
+	GObjectClass *class;
+
+	hierarchy = NULL;
+	class = G_OBJECT_GET_CLASS( object );
+
+	while( G_OBJECT_CLASS_TYPE( class ) != NA_OBJECT_TYPE ){
+		hierarchy = g_list_prepend( hierarchy, class );
+		class = g_type_class_peek_parent( class );
+	}
+	hierarchy = g_list_prepend( hierarchy, class );
+
+	return( hierarchy );
+}
+
+/**
+ * na_object_free_hierarchy:
+ */
+void
+na_object_free_hierarchy( GList *hierarchy )
+{
+	g_list_free( hierarchy );
+}
+
+static NAIDuplicable *
+iduplicable_new( const NAIDuplicable *object )
+{
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+	g_return_val_if_fail( !NA_OBJECT( object )->private->dispose_has_run, NULL );
+
+	return( NA_IDUPLICABLE( most_derived_new( NA_OBJECT( object ))));
+}
+
+static void
+iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
+{
+	g_return_if_fail( NA_IS_OBJECT( target ));
+	g_return_if_fail( !NA_OBJECT( target )->private->dispose_has_run );
+	g_return_if_fail( NA_IS_OBJECT( source ));
+	g_return_if_fail( !NA_OBJECT( source )->private->dispose_has_run );
+
+	copy_hierarchy( NA_OBJECT( target ), NA_OBJECT( source ));
+}
+
+static gboolean
+iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
+{
+	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
+	g_return_val_if_fail( !NA_OBJECT( a )->private->dispose_has_run, FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
+	g_return_val_if_fail( !NA_OBJECT( b )->private->dispose_has_run, FALSE );
+
+	return( are_equal_hierarchy( NA_OBJECT( a ), NA_OBJECT( b )));
+}
+
+static gboolean
+iduplicable_is_valid( const NAIDuplicable *object )
+{
+	return( is_valid_hierarchy( NA_OBJECT( object )));
 }
 
 static GList *
 v_get_childs( const NAObject *object ){
 
 	return( most_derived_get_childs( object ));
+}
+
+static gboolean
+are_equal_hierarchy( const NAObject *a, const NAObject *b )
+{
+	gboolean are_equal;
+	GList *hierarchy, *ih;
+
+	are_equal = TRUE;
+	hierarchy = na_object_get_hierarchy( b );
+
+	for( ih = hierarchy ; ih && are_equal ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->are_equal ){
+			are_equal = NA_OBJECT_CLASS( ih->data )->are_equal( a, b );
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
+
+	return( are_equal );
+}
+
+static void
+copy_hierarchy( NAObject *target, const NAObject *source )
+{
+	GList *hierarchy, *ih;
+
+	hierarchy = na_object_get_hierarchy( source );
+
+	for( ih = hierarchy ; ih ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->copy ){
+			NA_OBJECT_CLASS( ih->data )->copy( target, source );
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
+}
+
+static gboolean
+do_are_equal( const NAObject *a, const NAObject *b )
+{
+	gboolean are_equal;
+
+	/* as there is no data in NAObject, they are considered here as
+	 * equal is both null or both not null
+	 */
+	are_equal = ( a && b ) || ( !a && !b );
+
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
+	g_debug( "na_object_do_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+			( void * ) a, G_OBJECT_TYPE_NAME( a ),
+			( void * ) b, G_OBJECT_TYPE_NAME( b ),
+			are_equal ? "True":"False" );
+#endif
+
+	return( are_equal );
+}
+
+static void
+do_copy( NAObject *target, const NAObject *source )
+{
+	/* nothing to do here */
+}
+
+static void
+do_dump( const NAObject *object )
+{
+	static const char *thisfn = "na_object_do_dump";
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+	na_iduplicable_dump( NA_IDUPLICABLE( object ));
+}
+
+static gboolean
+do_is_valid( const NAObject *object )
+{
+	/* as there is no data in NAObject, it is always valid */
+	return( object ? TRUE : FALSE );
+}
+
+static void
+dump_hierarchy( const NAObject *object )
+{
+	GList *hierarchy, *ih;
+
+	hierarchy = na_object_get_hierarchy( object );
+
+	for( ih = hierarchy ; ih ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->dump ){
+			NA_OBJECT_CLASS( ih->data )->dump( object );
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
+}
+
+static void
+dump_tree( GList *tree, gint level )
+{
+	GString *prefix;
+	gint i;
+	GList *subitems, *it;
+	gchar *id;
+	gchar *label;
+
+	prefix = g_string_new( "" );
+	for( i = 0 ; i < level ; ++i ){
+		g_string_append_printf( prefix, "  " );
+	}
+
+	for( it = tree ; it ; it = it->next ){
+		id = na_object_get_id( it->data );
+		label = na_object_get_label( it->data );
+		g_debug( "na_object_dump_tree: %s%p (%s) %s \"%s\"",
+				prefix->str, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), id, label );
+		g_free( id );
+		g_free( label );
+
+		if( NA_IS_OBJECT_ITEM( it->data )){
+			subitems = na_object_get_items( it->data );
+			dump_tree( subitems, level+1 );
+			na_object_free_items( subitems );
+		}
+	}
+
+	g_string_free( prefix, TRUE );
+}
+
+static gboolean
+is_valid_hierarchy( const NAObject *object )
+{
+	gboolean is_valid;
+	GList *hierarchy, *ih;
+
+	is_valid = TRUE;
+	hierarchy = na_object_get_hierarchy( object );
+
+	for( ih = hierarchy ; ih && is_valid ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->is_valid ){
+			is_valid = NA_OBJECT_CLASS( ih->data )->is_valid( object );
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
+
+	return( is_valid );
+}
+
+static gchar *
+most_derived_clipboard_id( const NAObject *object )
+{
+	gchar *clipboard_id;
+	GList *hierarchy, *ih;
+	gboolean found;
+
+	found = FALSE;
+	clipboard_id = NULL;
+	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
+
+	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->get_clipboard_id ){
+			clipboard_id = NA_OBJECT_CLASS( ih->data )->get_clipboard_id( object );
+			found = TRUE;
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
+
+	return( clipboard_id );
 }
 
 static GList *
@@ -773,4 +829,43 @@ most_derived_get_childs( const NAObject *object )
 	}
 
 	return( childs );
+}
+
+static NAObject *
+most_derived_new( const NAObject *object )
+{
+	NAObject *new_object;
+	GList *hierarchy, *ih;
+	gboolean found;
+
+	found = FALSE;
+	new_object = NULL;
+	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
+
+	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->new ){
+			new_object = NA_OBJECT_CLASS( ih->data )->new( object );
+			found = TRUE;
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
+
+	return( new_object );
+}
+
+static void
+ref_hierarchy( const NAObject *object )
+{
+	GList *hierarchy, *ih;
+
+	hierarchy = na_object_get_hierarchy( object );
+
+	for( ih = hierarchy ; ih ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->ref ){
+			NA_OBJECT_CLASS( ih->data )->ref( object );
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
 }

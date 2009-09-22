@@ -46,9 +46,11 @@ G_BEGIN_DECLS
 /* NAObject
  */
 #define na_object_dump( object )					na_object_object_dump( NA_OBJECT( object ))
+#define na_object_dump_norec( object )				na_object_object_dump_norec( NA_OBJECT( object ))
+#define na_object_dump_tree( tree )					na_object_object_dump_tree( tree )
 #define na_object_get_clipboard_id( object )		na_object_object_get_clipboard_id( NA_OBJECT( object ))
 #define na_object_ref( object )						na_object_object_ref( NA_OBJECT( object ))
-#define na_object_copy( target, source )			na_object_object_copy( NA_OBJECT( target ), NA_OBJECT( source ))
+#define na_object_rewind_origin( target, source )	na_object_object_rewind_origin( NA_OBJECT( target ), NA_OBJECT( source ))
 
 /* NAIDuplicable
  */
@@ -59,7 +61,6 @@ G_BEGIN_DECLS
 
 #define na_object_get_origin( object )				na_object_iduplicable_get_origin( NA_OBJECT( object ))
 #define na_object_set_origin( object, origin )		na_object_iduplicable_set_origin( NA_OBJECT( object ), NA_OBJECT( origin ))
-#define na_object_set_origin_rec( object, origin )	na_object_iduplicable_set_origin_recurse( NA_OBJECT( object ), NA_OBJECT( origin ))
 
 /* NAObjectId
  */
@@ -89,7 +90,7 @@ G_BEGIN_DECLS
 #define na_object_set_items( object, list )			na_object_item_set_items( NA_OBJECT_ITEM( object ), list )
 
 #define na_object_append_item( object, item )		na_object_item_append_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
-#define na_object_insert_item( object, item )		na_object_item_insert_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
+#define na_object_insert_item( object, item, before ) na_object_item_insert_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ), NA_OBJECT( before ))
 #define na_object_remove_item( object, item )		na_object_item_remove_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
 
 G_END_DECLS

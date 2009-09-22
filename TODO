@@ -50,3 +50,5 @@
   cf. commit 5ee6938486cd82f1274969506873df950348dd61 and before
   function nact-tree-model.c::add_parent
   recreate a small code which reproduces this bug and open in bugzilla
+
+- lot of work to do on gconf editor

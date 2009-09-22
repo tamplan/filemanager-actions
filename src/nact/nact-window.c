@@ -202,7 +202,8 @@ nact_window_get_pivot( NactWindow *window )
  * An action is always written at once, with all its profiles.
  *
  * Writing a menu only involves writing its NAObjectItem properties,
- * along with the list and the order of its subitems.
+ * along with the list and the order of its subitems, but not the
+ * subitems themselves (because they may be unmodified)
  */
 gboolean
 nact_window_save_item( NactWindow *window, NAObjectItem *item )
@@ -212,12 +213,14 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 	gchar *msg = NULL;
 	guint ret;
 
-	g_debug( "%s: window=%p, item=%p", thisfn, ( void * ) window, ( void * ) item );
+	g_debug( "%s: window=%p (%s), item=%p (%s)", thisfn,
+			( void * ) window, G_OBJECT_TYPE_NAME( window ),
+			( void * ) item, G_OBJECT_TYPE_NAME( item ));
 
 	pivot = nact_window_get_pivot( window );
 	g_assert( NA_IS_PIVOT( pivot ));
 
-	na_object_dump( item );
+	na_object_dump_norec( item );
 
 	ret = na_pivot_write_item( pivot, NA_OBJECT( item ), &msg );
 
@@ -251,7 +254,7 @@ nact_window_delete_item( NactWindow *window, NAObjectItem *item )
 	pivot = nact_window_get_pivot( window );
 	g_assert( NA_IS_PIVOT( pivot ));
 
-	na_object_dump( item );
+	na_object_dump_norec( item );
 
 	ret = na_pivot_delete_item( pivot, NA_OBJECT( item ), &msg );
 

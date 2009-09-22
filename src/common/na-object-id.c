@@ -34,6 +34,7 @@
 
 #include <string.h>
 
+#include "na-iduplicable.h"
 #include "na-object-fn.h"
 #include "na-object-id-class.h"
 #include "na-object-id-fn.h"
@@ -432,7 +433,13 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		}
 	}
 
-	/*g_debug( "na_object_id_are_equal: %s", equal ? "True":"False" );*/
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
+	g_debug( "na_object_id_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+			( void * ) a, G_OBJECT_TYPE_NAME( a ),
+			( void * ) b, G_OBJECT_TYPE_NAME( b ),
+			equal ? "True":"False" );
+#endif
+
 	return( equal );
 }
 

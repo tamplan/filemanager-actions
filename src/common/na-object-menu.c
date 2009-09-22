@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include "na-iduplicable.h"
 #include "na-object-api.h"
 #include "na-object-action.h"
 #include "na-object-menu.h"
