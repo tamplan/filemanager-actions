@@ -715,7 +715,8 @@ na_object_item_append_item( NAObjectItem *item, const NAObject *object )
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	if( !g_list_find( item->private->items, ( gpointer ) object )){
-		item->private->items = g_list_append( item->private->items, g_object_ref(( gpointer ) object ));
+		/*item->private->items = g_list_append( item->private->items, g_object_ref(( gpointer ) object ));*/
+		item->private->items = g_list_append( item->private->items, ( gpointer ) object );
 	}
 }
 
@@ -742,9 +743,11 @@ na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NA
 	if( !g_list_find( item->private->items, ( gpointer ) object )){
 		before_list = g_list_find( item->private->items, ( gconstpointer ) before );
 		if( before_list ){
-			item->private->items = g_list_insert_before( item->private->items, before_list, g_object_ref(( gpointer ) object ));
+			/*item->private->items = g_list_insert_before( item->private->items, before_list, g_object_ref(( gpointer ) object ));*/
+			item->private->items = g_list_insert_before( item->private->items, before_list, ( gpointer ) object );
 		} else {
-			item->private->items = g_list_prepend( item->private->items, g_object_ref(( gpointer ) object ));
+			/*item->private->items = g_list_prepend( item->private->items, g_object_ref(( gpointer ) object ));*/
+			item->private->items = g_list_prepend( item->private->items, ( gpointer ) object );
 		}
 	}
 }
@@ -767,7 +770,7 @@ na_object_item_remove_item( NAObjectItem *item, const NAObject *object )
 
 	if( g_list_find( item->private->items, ( gconstpointer ) object )){
 		item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
-		g_object_unref(( gpointer ) object );
+		/*g_object_unref(( gpointer ) object );*/
 	}
 }
 

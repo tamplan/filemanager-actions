@@ -32,6 +32,9 @@
 	Add a sibling pointer.
 	na_object_item_free_items(): Only unref if object is always valid.
 	object_are_equal(): Position is a factor of equality.
+	Remove g_object_ref() from na_object_item_insert_item() and
+	na_object_item_append_item().
+	Remove g_object_unref() from na_object_item_remove_item().
 
 	* src/common/na-pivot.c:
 	* src/common/na-pivot.h (na_pivot_get_item): New function.
