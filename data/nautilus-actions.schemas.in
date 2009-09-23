@@ -240,30 +240,30 @@ All schemes used by Nautilus can be used here.</long>
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/iconditions-command-chooser</key>
+      <key>/schemas/apps/nautilus-actions/preferences/icommand-command-chooser</key>
       <owner>nautilus-actions</owner>
       <type>list</type>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the command chooser window</short>
-        <long>Position and size of the command chooser window in the Conditions tab ; default is set by the window manager</long>
+        <long>Position and size of the command chooser window in the Command tab ; default is set by the window manager</long>
       </locale>
       <default>[]</default>
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/iconditions-folder-uri</key>
+      <key>/schemas/apps/nautilus-actions/preferences/icommand-folder-uri</key>
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">
         <short>Last selected folder</short>
-        <long>Last folder selected when browsing for a command in the Conditions tab</long>
+        <long>Last folder selected when browsing for a command in the Command tab</long>
       </locale>
       <default>/bin</default>
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/iconditions-legend-dialog</key>
+      <key>/schemas/apps/nautilus-actions/preferences/icommand-legend-dialog</key>
       <owner>nautilus-actions</owner>
       <type>list</type>
       <list_type>int</list_type>

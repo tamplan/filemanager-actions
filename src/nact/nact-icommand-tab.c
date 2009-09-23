@@ -62,8 +62,8 @@ struct NactICommandTabInterfacePrivate {
 
 /* a data set in the LegendDialog GObject
  */
-#define LEGEND_DIALOG_IS_VISIBLE			"nact-icommand-tab-legend-dialog-visible"
-#define PROP_ICOMMAND_TAB_STATUS_CONTEXT	"nact-icommand-tab-status-context"
+#define ICOMMAND_TAB_LEGEND_VISIBLE			"nact-icommand-tab-legend-dialog-visible"
+#define ICOMMAND_TAB_STATUSBAR_CONTEXT		"nact-icommand-tab-statusbar-context"
 
 static GType      register_type( void );
 static void       interface_base_init( NactICommandTabInterface *klass );
@@ -162,6 +162,10 @@ interface_base_finalize( NactICommandTabInterface *klass )
  * @window: this #NactICommandTab instance.
  *
  * Initializes the tab widget at initial load.
+ *
+ * The GConf preference keys used in this tab were misnamed from v1.11.1
+ * up to and including v1.12.0. Starting with v1.12.1, these are migrated
+ * here, so that the normal code only makes use of 'good' keys.
  */
 void
 nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance )
@@ -169,6 +173,10 @@ nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance )
 	static const gchar *thisfn = "nact_icommand_tab_initial_load_toplevel";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+	base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-legend-dialog", IPREFS_LEGEND_DIALOG );
+	base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-command-chooser", IPREFS_COMMAND_CHOOSER );
+	base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-folder-uri", IPREFS_FOLDER_URI );
 }
 
 /**
@@ -314,7 +322,7 @@ check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label 
 
 	nact_main_statusbar_hide_status(
 			NACT_MAIN_WINDOW( instance ),
-			PROP_ICOMMAND_TAB_STATUS_CONTEXT );
+			ICOMMAND_TAB_STATUSBAR_CONTEXT );
 
 	set_label_label( instance, "black" );
 
@@ -328,7 +336,7 @@ check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label 
 		/* i18n: status bar message when the profile label is empty */
 		nact_main_statusbar_display_status(
 				NACT_MAIN_WINDOW( instance ),
-				PROP_ICOMMAND_TAB_STATUS_CONTEXT,
+				ICOMMAND_TAB_STATUSBAR_CONTEXT,
 				_( "Caution: a label is mandatory for the profile." ));
 
 		set_label_label( instance, "red" );
@@ -380,7 +388,7 @@ legend_dialog_hide( NactICommandTab *instance )
 
 	legend_dialog = get_legend_dialog( instance );
 	is_visible = ( gboolean ) GPOINTER_TO_INT(
-			g_object_get_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE ));
+			g_object_get_data( G_OBJECT( legend_dialog ), ICOMMAND_TAB_LEGEND_VISIBLE ));
 
 	if( is_visible ){
 		g_assert( GTK_IS_WINDOW( legend_dialog ));
@@ -393,7 +401,7 @@ legend_dialog_hide( NactICommandTab *instance )
 		legend_button = get_legend_button( instance );
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( legend_button ), FALSE );
 
-		g_object_set_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE, GINT_TO_POINTER( FALSE ));
+		g_object_set_data( G_OBJECT( legend_dialog ), ICOMMAND_TAB_LEGEND_VISIBLE, GINT_TO_POINTER( FALSE ));
 	}
 }
 
@@ -412,7 +420,7 @@ legend_dialog_show( NactICommandTab *instance )
 	base_iprefs_position_named_window( BASE_WINDOW( instance ), legend_dialog, IPREFS_LEGEND_DIALOG );
 	gtk_widget_show( GTK_WIDGET( legend_dialog ));
 
-	g_object_set_data( G_OBJECT( legend_dialog ), LEGEND_DIALOG_IS_VISIBLE, GINT_TO_POINTER( TRUE ));
+	g_object_set_data( G_OBJECT( legend_dialog ), ICOMMAND_TAB_LEGEND_VISIBLE, GINT_TO_POINTER( TRUE ));
 }
 
 static void

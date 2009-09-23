@@ -31,11 +31,18 @@
 #ifndef __BASE_IPREFS_H__
 #define __BASE_IPREFS_H__
 
-/*
- * BaseIPrefs interface definition.
+/**
+ * SECTION: base_iprefs
+ * @short_description: #BaseIPrefs interface definition.
+ * @include: nact/base-iprefs.h
  *
  * This interface may be implemented by all dialogs which wish take
  * benefit of preferences management.
+ *
+ * As a side effect, it cooperates with #BaseWindow to automatically
+ * save, then restore, size and position of window on the display.
+ * This is made possible by identifying each window by an id specific
+ * to this function.
  */
 
 #include "base-window.h"
@@ -61,6 +68,8 @@ typedef struct {
 	BaseIPrefsInterface;
 
 GType    base_iprefs_get_type( void );
+
+void     base_iprefs_migrate_key( BaseWindow *window, const gchar *old_key, const gchar *new_key );
 
 void     base_iprefs_position_window( BaseWindow *window );
 void     base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, const gchar *name );

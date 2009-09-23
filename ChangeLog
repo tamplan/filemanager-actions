@@ -1,3 +1,13 @@
+2009-09-23 Pierre Wieser <pwieser@trychlos.org>
+
+	* data/nautilus-actions.schemas.in: Migrate misnamed keys.
+
+	* src/nact/base-iprefs.c:
+	* src/nact/base-iprefs.h (base_iprefs_migrate_key): New function.
+
+	* src/nact/nact-icommand-tab.c
+	(nact_icommand_tab_initial_load_toplevel): Migrate misnamed keys.
+
 2009-09-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Add a comment about GtkActivatable.
