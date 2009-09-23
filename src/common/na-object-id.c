@@ -188,21 +188,23 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	NAObjectId *self;
 
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !NA_OBJECT_ID( object )->private->dispose_has_run );
 	self = NA_OBJECT_ID( object );
 
-	switch( property_id ){
-		case NAOBJECT_ID_PROP_ID_ID:
-			g_value_set_string( value, self->private->id );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case NAOBJECT_ID_PROP_LABEL_ID:
-			g_value_set_string( value, self->private->label );
-			break;
+		switch( property_id ){
+			case NAOBJECT_ID_PROP_ID_ID:
+				g_value_set_string( value, self->private->id );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case NAOBJECT_ID_PROP_LABEL_ID:
+				g_value_set_string( value, self->private->label );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -212,23 +214,25 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	NAObjectId *self;
 
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !NA_OBJECT_ID( object )->private->dispose_has_run );
 	self = NA_OBJECT_ID( object );
 
-	switch( property_id ){
-		case NAOBJECT_ID_PROP_ID_ID:
-			g_free( self->private->id );
-			self->private->id = g_value_dup_string( value );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case NAOBJECT_ID_PROP_LABEL_ID:
-			g_free( self->private->label );
-			self->private->label = g_value_dup_string( value );
-			break;
+		switch( property_id ){
+			case NAOBJECT_ID_PROP_ID_ID:
+				g_free( self->private->id );
+				self->private->id = g_value_dup_string( value );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case NAOBJECT_ID_PROP_LABEL_ID:
+				g_free( self->private->label );
+				self->private->label = g_value_dup_string( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -285,12 +289,13 @@ instance_finalize( GObject *object )
 gchar *
 na_object_id_get_id( const NAObjectId *object )
 {
-	gchar *id;
+	gchar *id = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), NULL );
-	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( object ), NAOBJECT_ID_PROP_ID, &id, NULL );
+	if( !object->private->dispose_has_run ){
+		g_object_get( G_OBJECT( object ), NAOBJECT_ID_PROP_ID, &id, NULL );
+	}
 
 	return( id );
 }
@@ -307,12 +312,13 @@ na_object_id_get_id( const NAObjectId *object )
 gchar *
 na_object_id_get_label( const NAObjectId *object )
 {
-	gchar *label;
+	gchar *label = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), NULL );
-	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( object ), NAOBJECT_ID_PROP_LABEL, &label, NULL );
+	if( !object->private->dispose_has_run ){
+		g_object_get( G_OBJECT( object ), NAOBJECT_ID_PROP_LABEL, &label, NULL );
+	}
 
 	return( label );
 }
@@ -330,9 +336,10 @@ void
 na_object_id_set_id( NAObjectId *object, const gchar *id )
 {
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !object->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_ID, id, NULL );
+	if( !object->private->dispose_has_run ){
+		g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_ID, id, NULL );
+	}
 }
 
 /**
@@ -348,13 +355,16 @@ na_object_id_set_new_id( NAObjectId *object )
 	gchar *id;
 
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !object->private->dispose_has_run );
 
-	id = v_new_id( object );
+	if( !object->private->dispose_has_run ){
 
-	g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_ID, id, NULL );
+		id = v_new_id( object );
 
-	g_free( id );
+		if( id ){
+			g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_ID, id, NULL );
+			g_free( id );
+		}
+	}
 }
 
 /**
@@ -368,9 +378,10 @@ void
 na_object_id_set_label( NAObjectId *object, const gchar *label )
 {
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !object->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_LABEL, label, NULL );
+	if( !object->private->dispose_has_run ){
+		g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_LABEL, label, NULL );
+	}
 }
 
 static void
@@ -379,10 +390,12 @@ object_dump( const NAObject *object )
 	static const char *thisfn = "na_object_id_object_dump";
 
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !NA_OBJECT_ID( object )->private->dispose_has_run );
 
-	g_debug( "%s:    id=%s", thisfn, NA_OBJECT_ID( object )->private->id );
-	g_debug( "%s: label=%s", thisfn, NA_OBJECT_ID( object )->private->label );
+	if( !NA_OBJECT_ID( object )->private->dispose_has_run ){
+
+		g_debug( "%s:    id=%s", thisfn, NA_OBJECT_ID( object )->private->id );
+		g_debug( "%s: label=%s", thisfn, NA_OBJECT_ID( object )->private->label );
+	}
 }
 
 static void
@@ -391,22 +404,24 @@ object_copy( NAObject *target, const NAObject *source )
 	gchar *id, *label;
 
 	g_return_if_fail( NA_IS_OBJECT_ID( target ));
-	g_return_if_fail( !NA_OBJECT_ID( target )->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_ID( source ));
-	g_return_if_fail( !NA_OBJECT_ID( source )->private->dispose_has_run );
 
-	g_object_get( G_OBJECT( source ),
-			NAOBJECT_ID_PROP_ID, &id,
-			NAOBJECT_ID_PROP_LABEL, &label,
-			NULL );
+	if( !NA_OBJECT_ID( target )->private->dispose_has_run &&
+		!NA_OBJECT_ID( source )->private->dispose_has_run ){
 
-	g_object_set( G_OBJECT( target ),
-			NAOBJECT_ID_PROP_ID, id,
-			NAOBJECT_ID_PROP_LABEL, label,
-			NULL );
+			g_object_get( G_OBJECT( source ),
+					NAOBJECT_ID_PROP_ID, &id,
+					NAOBJECT_ID_PROP_LABEL, &label,
+					NULL );
 
-	g_free( id );
-	g_free( label );
+			g_object_set( G_OBJECT( target ),
+					NAOBJECT_ID_PROP_ID, id,
+					NAOBJECT_ID_PROP_LABEL, label,
+					NULL );
+
+			g_free( id );
+			g_free( label );
+	}
 }
 
 static gboolean
@@ -415,30 +430,32 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	gboolean equal = TRUE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ID( a ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_ID( a )->private->dispose_has_run, FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ID( b ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_ID( b )->private->dispose_has_run, FALSE );
 
-	if( equal ){
-		if( g_ascii_strcasecmp( NA_OBJECT_ID( a )->private->id, NA_OBJECT_ID( b )->private->id )){
-			/*g_debug( "a->id=%s, b->id=%s", NA_OBJECT_ID( a )->private->id, NA_OBJECT_ID( b )->private->id );*/
-			equal = FALSE;
-		}
-	}
+	if( !NA_OBJECT_ID( a )->private->dispose_has_run &&
+		!NA_OBJECT_ID( b )->private->dispose_has_run ){
 
-	if( equal ){
-		if( g_utf8_collate( NA_OBJECT_ID( a )->private->label, NA_OBJECT_ID( b )->private->label )){
-			/*g_debug( "a->label=%s, b->label=%s", NA_OBJECT_ID( a )->private->label, NA_OBJECT_ID( b )->private->label );*/
-			equal = FALSE;
-		}
-	}
+			if( equal ){
+				if( g_ascii_strcasecmp( NA_OBJECT_ID( a )->private->id, NA_OBJECT_ID( b )->private->id )){
+					/*g_debug( "a->id=%s, b->id=%s", NA_OBJECT_ID( a )->private->id, NA_OBJECT_ID( b )->private->id );*/
+					equal = FALSE;
+				}
+			}
+
+			if( equal ){
+				if( g_utf8_collate( NA_OBJECT_ID( a )->private->label, NA_OBJECT_ID( b )->private->label )){
+					/*g_debug( "a->label=%s, b->label=%s", NA_OBJECT_ID( a )->private->label, NA_OBJECT_ID( b )->private->label );*/
+					equal = FALSE;
+				}
+			}
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "na_object_id_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
-			( void * ) a, G_OBJECT_TYPE_NAME( a ),
-			( void * ) b, G_OBJECT_TYPE_NAME( b ),
-			equal ? "True":"False" );
+			g_debug( "na_object_id_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+					( void * ) a, G_OBJECT_TYPE_NAME( a ),
+					( void * ) b, G_OBJECT_TYPE_NAME( b ),
+					equal ? "True":"False" );
 #endif
+	}
 
 	return( equal );
 }
@@ -453,10 +470,12 @@ object_is_valid( const NAObject *object )
 	gboolean valid = TRUE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_ID( object )->private->dispose_has_run, FALSE );
 
-	if( valid ){
-		valid = ( NA_OBJECT_ID( object )->private->id && strlen( NA_OBJECT_ID( object )->private->id ));
+	if( !NA_OBJECT_ID( object )->private->dispose_has_run ){
+
+		if( valid ){
+			valid = ( NA_OBJECT_ID( object )->private->id && strlen( NA_OBJECT_ID( object )->private->id ));
+		}
 	}
 
 	return( valid );

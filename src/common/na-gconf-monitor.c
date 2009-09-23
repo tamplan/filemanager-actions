@@ -142,10 +142,10 @@ instance_dispose( GObject *object )
 
 	if( !self->private->dispose_has_run ){
 
-		self->private->dispose_has_run = TRUE;
-
-		/* release the installed monitor */
+		/* release the installed monitor before setting dispose_has_run */
 		release_monitor( self );
+
+		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -249,12 +249,15 @@ install_monitor( NAGConfMonitor *monitor )
  * Release allocated monitors.
  */
 void
-na_gconf_monitor_release_monitors( GSList *monitors )
+na_gconf_monitor_release_monitors( GList *monitors )
 {
-	g_slist_foreach( monitors, ( GFunc ) g_object_unref, NULL );
-	g_slist_free( monitors );
+	g_list_foreach( monitors, ( GFunc ) g_object_unref, NULL );
+	g_list_free( monitors );
 }
 
+/*
+ * this is called by instance_dispose, before setting dispose_has_run
+ */
 static void
 release_monitor( NAGConfMonitor *monitor )
 {
@@ -262,8 +265,8 @@ release_monitor( NAGConfMonitor *monitor )
 	GError *error = NULL;
 
 	g_debug( "%s: monitor=%p", thisfn, ( void * ) monitor );
-
 	g_return_if_fail( NA_IS_GCONF_MONITOR( monitor ));
+	g_return_if_fail( !monitor->private->dispose_has_run );
 
 	if( monitor->private->monitor_id ){
 		gconf_client_notify_remove( monitor->private->gconf, monitor->private->monitor_id );
@@ -272,7 +275,7 @@ release_monitor( NAGConfMonitor *monitor )
 	gconf_client_remove_dir( monitor->private->gconf, monitor->private->path, &error );
 
 	if( error ){
-		g_warning( "%s[gconf_client_remove_dir] path=%s, error=%s", thisfn, monitor->private->path, error->message );
+		g_warning( "%s: path=%s, error=%s", thisfn, monitor->private->path, error->message );
 		g_error_free( error );
 	}
 }

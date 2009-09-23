@@ -174,7 +174,7 @@ instance_finalize( GObject *object )
 
 	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
 	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
-	self = ( NAObjectMenu * ) object;
+	self = NA_OBJECT_MENU( object );
 
 	/* release string list of subitems */
 	na_utils_free_string_list( self->private->items_ids );
@@ -214,16 +214,22 @@ na_object_menu_new( void )
  * na_object_menu_get_items_list:
  * @menu: this #NAObjectMenu object.
  *
- * Returns: the current state of intern items_ids string list.
+ * Returns: the items_ids string list, as readen from the IIOProvider.
  *
  * The returned list should be na_utils_free_string_list() by the caller.
  */
 GSList *
 na_object_menu_get_items_list( const NAObjectMenu *menu )
 {
+	GSList *list = NULL;
+
 	g_return_val_if_fail( NA_IS_OBJECT_MENU( menu ), NULL );
 
-	return( na_utils_duplicate_string_list( menu->private->items_ids ));
+	if( !menu->private->dispose_has_run ){
+		list = na_utils_duplicate_string_list( menu->private->items_ids );
+	}
+
+	return( list );
 }
 
 /**
@@ -246,19 +252,23 @@ na_object_menu_rebuild_items_list( const NAObjectMenu *menu )
 	gchar *uuid;
 
 	g_return_val_if_fail( NA_IS_OBJECT_MENU( menu ), NULL );
-	g_return_val_if_fail( !menu->private->dispose_has_run, NULL );
 
-	items = na_object_get_items( menu );
+	if( !menu->private->dispose_has_run ){
 
-	for( it = items ; it ; it = it->next ){
-		NAObjectItem *item = NA_OBJECT_ITEM( it->data );
-		uuid = na_object_get_id( item );
-		list = g_slist_prepend( list, uuid );
+		items = na_object_get_items( menu );
+
+		for( it = items ; it ; it = it->next ){
+			NAObjectItem *item = NA_OBJECT_ITEM( it->data );
+			uuid = na_object_get_id( item );
+			list = g_slist_prepend( list, uuid );
+		}
+
+		na_object_free_items( items );
+
+		list = g_slist_reverse( list );
 	}
 
-	na_object_free_items( items );
-
-	return( g_slist_reverse( list ));
+	return( list );
 }
 
 /**
@@ -275,10 +285,12 @@ void
 na_object_menu_set_items_list( NAObjectMenu *menu, GSList *items )
 {
 	g_return_if_fail( NA_IS_OBJECT_MENU( menu ));
-	g_return_if_fail( !menu->private->dispose_has_run );
 
-	na_utils_free_string_list( menu->private->items_ids );
-	menu->private->items_ids = na_utils_duplicate_string_list( items );
+	if( !menu->private->dispose_has_run ){
+
+		na_utils_free_string_list( menu->private->items_ids );
+		menu->private->items_ids = na_utils_duplicate_string_list( items );
+	}
 }
 
 static void
@@ -288,23 +300,27 @@ object_dump( const NAObject *menu )
 	/*NAObjectMenu *self;*/
 
 	g_return_if_fail( NA_IS_OBJECT_MENU( menu ));
-	g_return_if_fail( !NA_OBJECT_MENU( menu )->private->dispose_has_run );
 
-	g_debug( "%s: (nothing to dump)", thisfn );
+	if( !NA_OBJECT_MENU( menu )->private->dispose_has_run ){
+
+		g_debug( "%s: (nothing to dump)", thisfn );
+	}
 }
 
 static gchar *
 object_get_clipboard_id( const NAObject *menu )
 {
 	gchar *uuid;
-	gchar *clipboard_id;
+	gchar *clipboard_id = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_MENU( menu ), NULL );
-	g_return_val_if_fail( !NA_OBJECT_MENU( menu )->private->dispose_has_run, NULL );
 
-	uuid = na_object_get_id( menu );
-	clipboard_id = g_strdup_printf( "M:%s", uuid );
-	g_free( uuid );
+	if( !NA_OBJECT_MENU( menu )->private->dispose_has_run ){
+
+		uuid = na_object_get_id( menu );
+		clipboard_id = g_strdup_printf( "M:%s", uuid );
+		g_free( uuid );
+	}
 
 	return( clipboard_id );
 }
@@ -319,9 +335,13 @@ static void
 object_copy( NAObject *target, const NAObject *source )
 {
 	g_return_if_fail( NA_IS_OBJECT_MENU( target ));
-	g_return_if_fail( !NA_OBJECT_MENU( target )->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_MENU( source ));
-	g_return_if_fail( !NA_OBJECT_MENU( source )->private->dispose_has_run );
+
+	if( !NA_OBJECT_MENU( target )->private->dispose_has_run &&
+		!NA_OBJECT_MENU( source )->private->dispose_has_run ){
+
+		/* nothing to do */
+	}
 }
 
 static gboolean
@@ -330,9 +350,13 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	gboolean equal = TRUE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_MENU( a ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_MENU( a )->private->dispose_has_run, FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_MENU( b ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_MENU( b )->private->dispose_has_run, FALSE );
+
+	if( !NA_OBJECT_MENU( a )->private->dispose_has_run &&
+		!NA_OBJECT_MENU( b )->private->dispose_has_run ){
+
+		/* nothing to compare */
+	}
 
 	return( equal );
 }
@@ -348,12 +372,14 @@ object_is_valid( const NAObject *menu )
 	gboolean is_valid = TRUE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_MENU( menu ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_MENU( menu )->private->dispose_has_run, FALSE );
 
-	if( is_valid ){
-		label = na_object_get_label( menu );
-		is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
-		g_free( label );
+	if( !NA_OBJECT_MENU( menu )->private->dispose_has_run ){
+
+		if( is_valid ){
+			label = na_object_get_label( menu );
+			is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+			g_free( label );
+		}
 	}
 
 	return( is_valid );

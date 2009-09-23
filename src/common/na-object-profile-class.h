@@ -33,6 +33,14 @@
 
 /**
  * SECTION: na_object_profile
+ * @short_description: #NAObjectProfile class definition.
+ * @include: common/na-object-profile-class.h
+ *
+ * This is a companion class of NAObjectAction. It embeds the profile
+ * definition of an action.
+ *
+ * As NAObjectAction itself, NAObjectProfile class is derived from
+ * NAObject class, which takes care of IDuplicable interface management.
  */
 
 #include "na-object-id-class.h"

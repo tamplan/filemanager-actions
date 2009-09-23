@@ -39,9 +39,17 @@
 
 static gboolean sync_gconf( GConfClient *gconf, gchar **message );
 
-/*
- * load the keys which are the subdirs of the given path
- * returns a list of keys as full path
+/**
+ * na_gconf_utils_get_subdirs:
+ * @gconf: a  #GConfClient instance.
+ * @path: a full path to be readen.
+ *
+ * Loads the subdirs of the given path.
+ *
+ * Returns: a GSList of full path subdirectories.
+ *
+ * The returned list should be na_gconf_utils_free_subdirs() by the
+ * caller.
  */
 GSList *
 na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
@@ -61,12 +69,26 @@ na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
 	return( list_subdirs );
 }
 
+/**
+ * na_gconf_utils_free_subdirs:
+ * @subdirs: a list of subdirs as returned by na_gconf_utils_get_subdirs().
+ *
+ * Release the list of subdirs.
+ */
 void
 na_gconf_utils_free_subdirs( GSList *subdirs )
 {
 	na_utils_free_string_list( subdirs );
 }
 
+/**
+ * na_gconf_utils_have_subdir:
+ * @gconf: a  #GConfClient instance.
+ * @path: a full path to be readen.
+ *
+ * Returns: %TRUE if the specified path has at least one subdirectory,
+ * %FALSE else.
+ */
 gboolean
 na_gconf_utils_have_subdir( GConfClient *gconf, const gchar *path )
 {
@@ -80,12 +102,18 @@ na_gconf_utils_have_subdir( GConfClient *gconf, const gchar *path )
 	return( have_subdir );
 }
 
-/*
- * load all the key=value pairs of this key specified as a full path,
- * returning them as a list of GConfEntry.
+/**
+ * na_gconf_utils_get_entries:
+ * @gconf: a  #GConfClient instance.
+ * @path: a full path to be readen.
  *
- * The list is not recursive, it contains only the immediate children of
- * path. To free the returned list, call na_gconf_utils_free_entries().
+ * Loads all the key=value pairs of the specified key.
+ *
+ * Returns: a list of #GConfEntry.
+ *
+ * The returned list is not recursive : it contains only the immediate
+ * children of @path. To free the returned list, call
+ * na_gconf_utils_free_entries().
  */
 GSList *
 na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
@@ -105,6 +133,12 @@ na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
 	return( list_entries );
 }
 
+/**
+ * na_gconf_utils_free_entries:
+ * @list: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ *
+ * Releases the provided list.
+ */
 void
 na_gconf_utils_free_entries( GSList *list )
 {
@@ -112,6 +146,15 @@ na_gconf_utils_free_entries( GSList *list )
 	g_slist_free( list );
 }
 
+/**
+ * na_gconf_utils_have_entry:
+ * @gconf: a  #GConfClient instance.
+ * @path: the full path of a key.
+ * @entry: the entry to be tested.
+ *
+ * Returns: %TRUE if the given @entry exists for the given @path,
+ * %FALSE else.
+ */
 gboolean
 na_gconf_utils_have_entry( GConfClient *gconf, const gchar *path, const gchar *entry )
 {
@@ -144,6 +187,17 @@ na_gconf_utils_have_entry( GConfClient *gconf, const gchar *path, const gchar *e
 	return( have_entry );
 }
 
+/**
+ * na_gconf_utils_get_bool_from_entries:
+ * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * @entry: the searched entry.
+ * @value: a pointer to a gboolean to be set to the found value.
+ *
+ * Returns: %TRUE if the entry was found, %FALSE else.
+ *
+ * If the entry was not found, or was not of boolean type, @value is set
+ * to %FALSE.
+ */
 gboolean
 na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gboolean *value )
 {
@@ -178,6 +232,19 @@ na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gbool
 	return( found );
 }
 
+/**
+ * na_gconf_utils_get_string_from_entries:
+ * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * @entry: the searched entry.
+ * @value: a pointer to a gchar * to be set to the found value.
+ *
+ * Returns: %TRUE if the entry was found, %FALSE else.
+ *
+ * If the entry was not found, or was not of string type, @value is set
+ * to %NULL.
+ *
+ * If @value is returned not NULL, it should be g_free() by the caller.
+ */
 gboolean
 na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gchar **value )
 {
@@ -212,6 +279,20 @@ na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gch
 	return( found );
 }
 
+/**
+ * na_gconf_utils_get_string_list_from_entries:
+ * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * @entry: the searched entry.
+ * @value: a pointer to a GSList * to be set to the found value.
+ *
+ * Returns: %TRUE if the entry was found, %FALSE else.
+ *
+ * If the entry was not found, or was not of string list type, @value
+ * is set to %NULL.
+ *
+ * If @value is returned not NULL, it should be na_utils_free_string_list()
+ * by the caller.
+ */
 gboolean
 na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry, GSList **value )
 {
@@ -250,12 +331,31 @@ na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry
 	return( found );
 }
 
+/**
+ * na_gconf_utils_path_to_key:
+ * @path: the full path of a key.
+ *
+ * Returns: the key itself, i.e. the last part of the @path.
+ *
+ * The returned string should be g_free() by the caller.
+ */
 gchar *
 na_gconf_utils_path_to_key( const gchar *path )
 {
 	return( na_utils_path_extract_last_dir( path ));
 }
 
+/**
+ * na_gconf_utils_read_bool:
+ * @gconf: a #GConfClient instance.
+ * @path: the full path to the key.
+ * @use_schema: whether to use a default value from schema, or not.
+ * @default_value: default value to be used if @use_schema is %FALSE.
+ *
+ * Returns: the boolean value read at the specified @path, taking into
+ * account a default value from schema (if @use_schema if %TRUE), or
+ * the specified @default_value.
+ */
 gboolean
 na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_schema, gboolean default_value )
 {
@@ -292,7 +392,12 @@ na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_sc
 }
 
 /**
- * Returns: a list of strings.
+ * na_gconf_utils_read_string_list:
+ * @gconf: a #GConfClient instance.
+ * @path: the full path to the key to be read.
+ *
+ * Returns: a list of strings,
+ * or %NULL if the entry was not found or was not of string list type.
  *
  * The returned list must be released with na_utils_free_string_list().
  */
@@ -316,6 +421,20 @@ na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
 	return( list_strings );
 }
 
+/**
+ * na_gconf_utils_write_bool:
+ * @gconf: a #GConfClient instance.
+ * @path: the full path to the key.
+ * @value: the value to be written.
+ * @message: a pointer to a gchar * which will be allocated if needed.
+ *
+ * Writes a boolean at the given @path.
+ *
+ * Returns: %TRUE if the writing has been successfull, %FALSE else.
+ *
+ * If returned not NULL, the @message contains an error message.
+ * It should be g_free() by the caller.
+ */
 gboolean
 na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value, gchar **message )
 {
@@ -337,6 +456,20 @@ na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value
 	return( ret );
 }
 
+/**
+ * na_gconf_utils_write_string:
+ * @gconf: a #GConfClient instance.
+ * @path: the full path to the key.
+ * @value: the value to be written.
+ * @message: a pointer to a gchar * which will be allocated if needed.
+ *
+ * Writes a string at the given @path.
+ *
+ * Returns: %TRUE if the writing has been successfull, %FALSE else.
+ *
+ * If returned not NULL, the @message contains an error message.
+ * It should be g_free() by the caller.
+ */
 gboolean
 na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message )
 {
@@ -358,6 +491,20 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
 	return( ret );
 }
 
+/**
+ * na_gconf_utils_write_string_list:
+ * @gconf: a #GConfClient instance.
+ * @path: the full path to the key.
+ * @value: the list of values to be written.
+ * @message: a pointer to a gchar * which will be allocated if needed.
+ *
+ * Writes a list of strings at the given @path.
+ *
+ * Returns: %TRUE if the writing has been successfull, %FALSE else.
+ *
+ * If returned not NULL, the @message contains an error message.
+ * It should be g_free() by the caller.
+ */
 gboolean
 na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList *value, gchar **message )
 {

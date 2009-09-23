@@ -194,21 +194,23 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	NAObjectAction *self;
 
 	g_return_if_fail( NA_IS_OBJECT_ACTION( object ));
-	g_return_if_fail( !NA_OBJECT_ACTION( object )->private->dispose_has_run );
 	self = NA_OBJECT_ACTION( object );
 
-	switch( property_id ){
-		case NAACTION_PROP_VERSION_ID:
-			g_value_set_string( value, self->private->version );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case NAACTION_PROP_READONLY_ID:
-			g_value_set_boolean( value, self->private->read_only );
-			break;
+		switch( property_id ){
+			case NAACTION_PROP_VERSION_ID:
+				g_value_set_string( value, self->private->version );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case NAACTION_PROP_READONLY_ID:
+				g_value_set_boolean( value, self->private->read_only );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -218,22 +220,24 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	NAObjectAction *self;
 
 	g_return_if_fail( NA_IS_OBJECT_ACTION( object ));
-	g_return_if_fail( !NA_OBJECT_ACTION( object )->private->dispose_has_run );
 	self = NA_OBJECT_ACTION( object );
 
-	switch( property_id ){
-		case NAACTION_PROP_VERSION_ID:
-			g_free( self->private->version );
-			self->private->version = g_value_dup_string( value );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case NAACTION_PROP_READONLY_ID:
-			self->private->read_only = g_value_get_boolean( value );
-			break;
+		switch( property_id ){
+			case NAACTION_PROP_VERSION_ID:
+				g_free( self->private->version );
+				self->private->version = g_value_dup_string( value );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case NAACTION_PROP_READONLY_ID:
+				self->private->read_only = g_value_get_boolean( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -247,7 +251,6 @@ instance_dispose( GObject *object )
 
 	g_return_if_fail( NA_IS_OBJECT_ACTION( object ));
 	self = NA_OBJECT_ACTION( object );
-	g_return_if_fail( !self->private->dispose_has_run );
 
 	if( !self->private->dispose_has_run ){
 
@@ -269,7 +272,7 @@ instance_finalize( GObject *object )
 	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
 
 	g_return_if_fail( NA_IS_OBJECT_ACTION( object ));
-	self = ( NAObjectAction * ) object;
+	self = NA_OBJECT_ACTION( object );
 
 	g_free( self->private->version );
 
@@ -311,7 +314,7 @@ na_object_action_new( void )
  *
  * Allocates a new #NAObjectAction object along with a default profile.
  *
- * Return: the newly allocated #NAObjectAction action.
+ * Returns: the newly allocated #NAObjectAction action.
  */
 NAObjectAction *
 na_object_action_new_with_profile( void )
@@ -345,12 +348,13 @@ na_object_action_new_with_profile( void )
 gchar *
 na_object_action_get_version( const NAObjectAction *action )
 {
-	gchar *version;
+	gchar *version = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
-	g_return_val_if_fail( !action->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( action ), NAACTION_PROP_VERSION, &version, NULL );
+	if( !action->private->dispose_has_run ){
+		g_object_get( G_OBJECT( action ), NAACTION_PROP_VERSION, &version, NULL );
+	}
 
 	return( version );
 }
@@ -363,17 +367,18 @@ na_object_action_get_version( const NAObjectAction *action )
  * Or, in other words, may this action be edited and then saved to the
  * original I/O storage subsystem ?
  *
- * Returns: %TRUE if the action is editable, %FALSE else.
+ * Returns: %TRUE if the action is read-only, %FALSE else.
  */
 gboolean
 na_object_action_is_readonly( const NAObjectAction *action )
 {
-	gboolean readonly;
+	gboolean readonly = FALSE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
-	g_return_val_if_fail( !action->private->dispose_has_run, FALSE );
 
-	g_object_get( G_OBJECT( action ), NAACTION_PROP_READONLY, &readonly, NULL );
+	if( !action->private->dispose_has_run ){
+		g_object_get( G_OBJECT( action ), NAACTION_PROP_READONLY, &readonly, NULL );
+	}
 
 	return( readonly );
 }
@@ -400,9 +405,10 @@ void
 na_object_action_set_version( NAObjectAction *action, const gchar *version )
 {
 	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
-	g_return_if_fail( !action->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( action ), NAACTION_PROP_VERSION, version, NULL );
+	if( !action->private->dispose_has_run ){
+		g_object_set( G_OBJECT( action ), NAACTION_PROP_VERSION, version, NULL );
+	}
 }
 
 /**
@@ -416,9 +422,10 @@ void
 na_object_action_set_readonly( NAObjectAction *action, gboolean readonly )
 {
 	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
-	g_return_if_fail( !action->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( action ), NAACTION_PROP_READONLY, readonly, NULL );
+	if( !action->private->dispose_has_run ){
+		g_object_set( G_OBJECT( action ), NAACTION_PROP_READONLY, readonly, NULL );
+	}
 }
 
 /**
@@ -443,19 +450,21 @@ na_object_action_get_new_profile_name( const NAObjectAction *action )
 	gchar *candidate = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
-	g_return_val_if_fail( !action->private->dispose_has_run, NULL );
 
-	for( i=1 ; !ok ; ++i ){
-		g_free( candidate );
-		candidate = g_strdup_printf( "%s%d", OBJECT_PROFILE_PREFIX, i );
-		if( !na_object_get_item( action, candidate )){
-			ok = TRUE;
+	if( !action->private->dispose_has_run ){
+
+		for( i=1 ; !ok ; ++i ){
+			g_free( candidate );
+			candidate = g_strdup_printf( "%s%d", OBJECT_PROFILE_PREFIX, i );
+			if( !na_object_get_item( action, candidate )){
+				ok = TRUE;
+			}
 		}
-	}
 
-	if( !ok ){
-		g_free( candidate );
-		candidate = NULL;
+		if( !ok ){
+			g_free( candidate );
+			candidate = NULL;
+		}
 	}
 
 	return( candidate );
@@ -472,11 +481,13 @@ void
 na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile )
 {
 	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
-	g_return_if_fail( !action->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
 
-	na_object_append_item( action, profile );
-	na_object_profile_set_action( profile, action );
+	if( !action->private->dispose_has_run ){
+
+		na_object_append_item( action, profile );
+		na_object_profile_set_action( profile, action );
+	}
 }
 
 static void
@@ -487,21 +498,26 @@ object_dump( const NAObject *action )
 
 	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
 	self = NA_OBJECT_ACTION( action );
-	g_return_if_fail( !self->private->dispose_has_run );
 
-	g_debug( "%s:   version='%s'", thisfn, self->private->version );
-	g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
+	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s:   version='%s'", thisfn, self->private->version );
+		g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
+	}
 }
 
 static gchar *
 object_get_clipboard_id( const NAObject *action )
 {
 	gchar *uuid;
-	gchar *clipboard_id;
+	gchar *clipboard_id = NULL;
 
-	uuid = na_object_get_id( action );
-	clipboard_id = g_strdup_printf( "A:%s", uuid );
-	g_free( uuid );
+	if( !NA_OBJECT_ACTION( action )->private->dispose_has_run ){
+
+		uuid = na_object_get_id( action );
+		clipboard_id = g_strdup_printf( "A:%s", uuid );
+		g_free( uuid );
+	}
 
 	return( clipboard_id );
 }
@@ -520,32 +536,32 @@ object_copy( NAObject *target, const NAObject *source )
 	GList *profiles, *ip;
 
 	g_return_if_fail( NA_IS_OBJECT_ACTION( target ));
-	g_return_if_fail( !NA_OBJECT_ACTION( target )->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_ACTION( source ));
-	g_return_if_fail( !NA_OBJECT_ACTION( source )->private->dispose_has_run );
 
-	g_object_get( G_OBJECT( source ),
-			NAACTION_PROP_VERSION, &version,
-			NAACTION_PROP_READONLY, &readonly,
-			NULL );
+	if( !NA_OBJECT_ACTION( target )->private->dispose_has_run &&
+		!NA_OBJECT_ACTION( source )->private->dispose_has_run ){
 
-	g_object_set( G_OBJECT( target ),
-			NAACTION_PROP_VERSION, version,
-			NAACTION_PROP_READONLY, readonly,
-			NULL );
+		g_object_get( G_OBJECT( source ),
+				NAACTION_PROP_VERSION, &version,
+				NAACTION_PROP_READONLY, &readonly,
+				NULL );
 
-	g_free( version );
+		g_object_set( G_OBJECT( target ),
+				NAACTION_PROP_VERSION, version,
+				NAACTION_PROP_READONLY, readonly,
+				NULL );
 
-	/* profiles have been copied (duplicated) as subitems by parent class
-	 * we have to attach new profiles to target action
-	 */
-	profiles = na_object_get_items( target );
-	for( ip = profiles ; ip ; ip = ip->next ){
-		na_object_profile_set_action( NA_OBJECT_PROFILE( ip->data ), NA_OBJECT_ACTION( target ));
+		g_free( version );
+
+		/* profiles have been copied (duplicated) as subitems by parent class
+		 * we have to attach new profiles to target action
+		 */
+		profiles = na_object_get_items( target );
+		for( ip = profiles ; ip ; ip = ip->next ){
+			na_object_profile_set_action( NA_OBJECT_PROFILE( ip->data ), NA_OBJECT_ACTION( target ));
+		}
+		na_object_free_items( profiles );
 	}
-	na_object_free_items( profiles );
-
-	/*g_debug( "na_object_action_object_copy: end" );*/
 }
 
 /*
@@ -565,41 +581,43 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	NAObjectProfile *profile;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( a ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_ACTION( a )->private->dispose_has_run, FALSE );
 	first = NA_OBJECT_ACTION( a );
 
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( b ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_ACTION( b )->private->dispose_has_run, FALSE );
 	second = NA_OBJECT_ACTION( b );
 
-	if( equal ){
-		equal = ( strcmp( first->private->version, second->private->version ) == 0 );
-	}
+	if( !NA_OBJECT_ACTION( a )->private->dispose_has_run &&
+		!NA_OBJECT_ACTION( b )->private->dispose_has_run ){
 
-	if( equal ){
-		profiles = na_object_get_items( a );
-		for( ip = profiles ; ip && equal ; ip = ip->next ){
-			id = na_object_get_id( ip->data );
-			profile = NA_OBJECT_PROFILE( na_object_get_item( b, id ));
-			equal = !na_object_is_modified( profile );
-
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-			if( !equal ){
-				g_debug( "na_object_action_are_equal: profile=%p, equal=False", ( void * ) profile );
-			}
-#endif
-
-			g_free( id );
+		if( equal ){
+			equal = ( strcmp( first->private->version, second->private->version ) == 0 );
 		}
-		na_object_free_items( profiles );
-	}
+
+		if( equal ){
+			profiles = na_object_get_items( a );
+			for( ip = profiles ; ip && equal ; ip = ip->next ){
+				id = na_object_get_id( ip->data );
+				profile = NA_OBJECT_PROFILE( na_object_get_item( b, id ));
+				equal = !na_object_is_modified( profile );
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "na_object_action_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
-			( void * ) a, G_OBJECT_TYPE_NAME( a ),
-			( void * ) b, G_OBJECT_TYPE_NAME( b ),
-			equal ? "True":"False" );
+				if( !equal ){
+					g_debug( "na_object_action_are_equal: profile=%p, equal=False", ( void * ) profile );
+				}
 #endif
+
+				g_free( id );
+			}
+			na_object_free_items( profiles );
+		}
+
+#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
+		g_debug( "na_object_action_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+				( void * ) a, G_OBJECT_TYPE_NAME( a ),
+				( void * ) b, G_OBJECT_TYPE_NAME( b ),
+				equal ? "True":"False" );
+#endif
+	}
 
 	return( equal );
 }
@@ -618,16 +636,18 @@ object_is_valid( const NAObject *action )
 	gboolean is_valid = TRUE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_ACTION( action )->private->dispose_has_run, FALSE );
 
-	if( is_valid ){
-		label = na_object_get_label( NA_OBJECT_ACTION( action ));
-		is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
-		g_free( label );
-	}
+	if( !NA_OBJECT_ACTION( action )->private->dispose_has_run ){
 
-	if( is_valid ){
-		is_valid = ( na_object_get_items_count( action ) >= 1 );
+		if( is_valid ){
+			label = na_object_get_label( NA_OBJECT_ACTION( action ));
+			is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+			g_free( label );
+		}
+
+		if( is_valid ){
+			is_valid = ( na_object_get_items_count( action ) >= 1 );
+		}
 	}
 
 	return( is_valid );

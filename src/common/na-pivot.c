@@ -346,12 +346,15 @@ na_pivot_dump( const NAPivot *pivot )
 	GList *it;
 	int i;
 
-	g_debug( "%s: consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_slist_length( pivot->private->consumers ));
-	g_debug( "%s: providers=%p (%d elts)", thisfn, ( void * ) pivot->private->providers, g_slist_length( pivot->private->providers ));
-	g_debug( "%s:      tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
+	if( !pivot->private->dispose_has_run ){
 
-	for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
-		g_debug( "%s:     [%d]: %p", thisfn, i++, it->data );
+		g_debug( "%s: consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_slist_length( pivot->private->consumers ));
+		g_debug( "%s: providers=%p (%d elts)", thisfn, ( void * ) pivot->private->providers, g_slist_length( pivot->private->providers ));
+		g_debug( "%s:      tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
+
+		for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
+			g_debug( "%s:     [%d]: %p", thisfn, i++, it->data );
+		}
 	}
 }
 
@@ -377,11 +380,13 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
-	g_return_val_if_fail( !pivot->private->dispose_has_run, NULL );
 
-	for( ip = pivot->private->providers ; ip ; ip = ip->next ){
-		if( G_TYPE_CHECK_INSTANCE_TYPE( G_OBJECT( ip->data ), type )){
-			list = g_slist_prepend( list, g_object_ref( ip->data ));
+	if( !pivot->private->dispose_has_run ){
+
+		for( ip = pivot->private->providers ; ip ; ip = ip->next ){
+			if( G_TYPE_CHECK_INSTANCE_TYPE( G_OBJECT( ip->data ), type )){
+				list = g_slist_prepend( list, g_object_ref( ip->data ));
+			}
 		}
 	}
 
@@ -413,10 +418,15 @@ na_pivot_free_providers( GSList *providers )
 GList *
 na_pivot_get_items( const NAPivot *pivot )
 {
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
-	g_return_val_if_fail( !pivot->private->dispose_has_run, NULL );
+	GList *tree = NULL;
 
-	return( pivot->private->tree );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+
+	if( !pivot->private->dispose_has_run ){
+		tree = pivot->private->tree;
+	}
+
+	return( tree );
 }
 
 /**
@@ -429,11 +439,13 @@ void
 na_pivot_reload_items( NAPivot *pivot )
 {
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
-	g_return_if_fail( !pivot->private->dispose_has_run );
 
-	na_object_free_items( pivot->private->tree );
+	if( !pivot->private->dispose_has_run ){
 
-	pivot->private->tree = na_iio_provider_get_items_tree( pivot );
+		na_object_free_items( pivot->private->tree );
+
+		pivot->private->tree = na_iio_provider_get_items_tree( pivot );
+	}
 }
 
 /**
@@ -450,10 +462,11 @@ void
 na_pivot_add_item( NAPivot *pivot, const NAObject *item )
 {
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
-	g_return_if_fail( !pivot->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
-	pivot->private->tree = g_list_append( pivot->private->tree, ( gpointer ) item );
+	if( !pivot->private->dispose_has_run ){
+		pivot->private->tree = g_list_append( pivot->private->tree, ( gpointer ) item );
+	}
 }
 
 /**
@@ -471,17 +484,22 @@ NAObject *
 na_pivot_get_item( const NAPivot *pivot, const gchar *uuid )
 {
 	uuid_t uuid_bin;
+	NAObject *object = NULL;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
-	g_return_val_if_fail( !pivot->private->dispose_has_run, NULL );
 
-	if( !uuid || !strlen( uuid )){
-		return( NULL );
+	if( !pivot->private->dispose_has_run ){
+
+		if( !uuid || !strlen( uuid )){
+			return( NULL );
+		}
+
+		uuid_parse( uuid, uuid_bin );
+
+		object = get_item_from_tree( pivot, pivot->private->tree, uuid_bin );
 	}
 
-	uuid_parse( uuid, uuid_bin );
-
-	return( get_item_from_tree( pivot, pivot->private->tree, uuid_bin ));
+	return( object );
 }
 
 /**
@@ -504,12 +522,14 @@ na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 			( void * ) item, G_OBJECT_TYPE_NAME( item ));
 
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
-	g_return_if_fail( !pivot->private->dispose_has_run );
 
-	pivot->private->tree = g_list_remove( pivot->private->tree, ( gconstpointer ) item );
+	if( !pivot->private->dispose_has_run ){
 
-	if( NA_IS_OBJECT( item )){
-		g_object_unref( item );
+		pivot->private->tree = g_list_remove( pivot->private->tree, ( gconstpointer ) item );
+
+		if( NA_IS_OBJECT( item )){
+			g_object_unref( item );
+		}
 	}
 }
 
@@ -527,12 +547,17 @@ na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 guint
 na_pivot_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message )
 {
+	guint ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
+
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( !pivot->private->dispose_has_run, NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( message, NA_IIO_PROVIDER_PROGRAM_ERROR );
 
-	return( na_iio_provider_delete_item( pivot, item, message ));
+	if( !pivot->private->dispose_has_run ){
+		ret = na_iio_provider_delete_item( pivot, item, message );
+	}
+
+	return( ret );
 }
 
 /**
@@ -549,12 +574,17 @@ na_pivot_delete_item( const NAPivot *pivot, const NAObject *item, gchar **messag
 guint
 na_pivot_write_item( const NAPivot *pivot, NAObject *item, gchar **message )
 {
+	guint ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
+
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( !pivot->private->dispose_has_run, NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( message, NA_IIO_PROVIDER_PROGRAM_ERROR );
 
-	return( na_iio_provider_write_item( pivot, item, message ));
+	if( !pivot->private->dispose_has_run ){
+		ret = na_iio_provider_write_item( pivot, item, message );
+	}
+
+	return( ret );
 }
 
 /**
@@ -573,10 +603,11 @@ na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer )
 
 	g_debug( "%s: pivot=%p, consumer=%p", thisfn, ( void * ) pivot, ( void * ) consumer );
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
-	g_return_if_fail( !pivot->private->dispose_has_run );
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( consumer ));
 
-	pivot->private->consumers = g_slist_prepend( pivot->private->consumers, ( gpointer ) consumer );
+	if( !pivot->private->dispose_has_run ){
+		pivot->private->consumers = g_slist_prepend( pivot->private->consumers, ( gpointer ) consumer );
+	}
 }
 
 /**
@@ -588,10 +619,15 @@ na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer )
 gboolean
 na_pivot_get_automatic_reload( const NAPivot *pivot )
 {
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
-	g_return_val_if_fail( !pivot->private->dispose_has_run, FALSE );
+	gboolean auto_reload = FALSE;
 
-	return( pivot->private->automatic_reload );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+
+	if( !pivot->private->dispose_has_run ){
+		auto_reload = pivot->private->automatic_reload;
+	}
+
+	return( auto_reload );
 }
 
 /**
@@ -612,9 +648,10 @@ void
 na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 {
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
-	g_return_if_fail( !pivot->private->dispose_has_run );
 
-	pivot->private->automatic_reload = reload;
+	if( !pivot->private->dispose_has_run ){
+		pivot->private->automatic_reload = reload;
+	}
 }
 
 static NAObject *
@@ -760,7 +797,10 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
 }
 
 /**
- * Free a NAPivotValue structure and its content.
+ * na_pivot_free_notify:
+ * @npn: a #NAPivotNotify structure.
+ *
+ * Frees a #NAPivotNotify structure and its content.
  */
 void
 na_pivot_free_notify( NAPivotNotify *npn )

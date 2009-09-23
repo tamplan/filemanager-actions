@@ -265,14 +265,16 @@ na_object_iduplicable_check_edition_status( const NAObject *object )
 			( void * ) object, G_OBJECT_TYPE_NAME( object ));
 #endif
 	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( !object->private->dispose_has_run );
 
-	childs = v_get_childs( object );
-	for( ic = childs ; ic ; ic = ic->next ){
-		na_object_iduplicable_check_edition_status( NA_OBJECT( ic->data ));
+	if( !object->private->dispose_has_run ){
+
+		childs = v_get_childs( object );
+		for( ic = childs ; ic ; ic = ic->next ){
+			na_object_iduplicable_check_edition_status( NA_OBJECT( ic->data ));
+		}
+
+		na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
 	}
-
-	na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
 }
 
 /**
@@ -307,19 +309,22 @@ na_object_iduplicable_check_edition_status( const NAObject *object )
 NAObject *
 na_object_iduplicable_duplicate( const NAObject *object )
 {
-	NAIDuplicable *duplicate;
+	NAIDuplicable *duplicate = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
 	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
-	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
 
-	duplicate = na_iduplicable_duplicate( NA_IDUPLICABLE( object ));
+	if( !object->private->dispose_has_run ){
 
-	/*g_debug( "na_object_iduplicable_duplicate: object=%p (%s), duplicate=%p (%s)",
-			( void * ) object, G_OBJECT_TYPE_NAME( object ),
-			( void * ) duplicate, duplicate ? G_OBJECT_TYPE_NAME( duplicate ) : "" );*/
+		duplicate = na_iduplicable_duplicate( NA_IDUPLICABLE( object ));
 
-	return( NA_OBJECT( duplicate ));
+		/*g_debug( "na_object_iduplicable_duplicate: object=%p (%s), duplicate=%p (%s)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ),
+				( void * ) duplicate, duplicate ? G_OBJECT_TYPE_NAME( duplicate ) : "" );*/
+	}
+
+	/* do not use NA_OBJECT macro as we may return a (valid) NULL value */
+	return(( NAObject * ) duplicate );
 }
 
 /**
@@ -338,12 +343,16 @@ na_object_iduplicable_duplicate( const NAObject *object )
 gboolean
 na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b )
 {
-	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
-	g_return_val_if_fail( !a->private->dispose_has_run, FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
-	g_return_val_if_fail( !b->private->dispose_has_run, FALSE );
+	gboolean are_equal = FALSE;
 
-	return( are_equal_hierarchy( a, b ));
+	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
+
+	if( !a->private->dispose_has_run && !b->private->dispose_has_run ){
+		are_equal = are_equal_hierarchy( a, b );
+	}
+
+	return( are_equal );
 }
 
 /**
@@ -364,10 +373,15 @@ na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b )
 gboolean
 na_object_iduplicable_is_modified( const NAObject *object )
 {
-	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
-	g_return_val_if_fail( !object->private->dispose_has_run, FALSE );
+	gboolean is_modified = FALSE;
 
-	return( na_iduplicable_is_modified( NA_IDUPLICABLE( object )));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
+
+	if( !object->private->dispose_has_run ){
+		is_modified = na_iduplicable_is_modified( NA_IDUPLICABLE( object ));
+	}
+
+	return( is_modified );
 }
 
 /**
@@ -381,10 +395,15 @@ na_object_iduplicable_is_modified( const NAObject *object )
 gboolean
 na_object_iduplicable_is_valid( const NAObject *object )
 {
-	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
-	g_return_val_if_fail( !object->private->dispose_has_run, FALSE );
+	gboolean is_valid = FALSE;
 
-	return( na_iduplicable_is_valid( NA_IDUPLICABLE( object )));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
+
+	if( !object->private->dispose_has_run ){
+		is_valid = na_iduplicable_is_valid( NA_IDUPLICABLE( object ));
+	}
+
+	return( is_valid );
 }
 
 /**
@@ -394,17 +413,20 @@ na_object_iduplicable_is_valid( const NAObject *object )
  * Returns the original object which was at the origin of @object.
  *
  * Returns: a #NAObject, or NULL.
- *
- * Do not use here NA_OBJECT macro as it may return a (valid) NULL value
  */
 NAObject *
 na_object_iduplicable_get_origin( const NAObject *object )
 {
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
-	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
+	NAObject *origin = NULL;
 
-	/*return( NA_OBJECT( na_iduplicable_get_origin( NA_IDUPLICABLE( object ))));*/
-	return(( NAObject * ) na_iduplicable_get_origin( NA_IDUPLICABLE( object )));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+
+	if( !object->private->dispose_has_run ){
+		/* do not use NA_OBJECT macro as we may return a (valid) NULL value */
+		origin = ( NAObject * ) na_iduplicable_get_origin( NA_IDUPLICABLE( object ));
+	}
+
+	return( origin );
 }
 
 /**
@@ -423,15 +445,17 @@ na_object_iduplicable_set_origin( NAObject *object, const NAObject *origin )
 	GList *childs, *ic;
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( !object->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( origin ) || !origin );
-	g_return_if_fail( !origin || !origin->private->dispose_has_run );
 
-	na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
+	if( !object->private->dispose_has_run &&
+		( !origin || !origin->private->dispose_has_run )){
 
-	childs = v_get_childs( object );
-	for( ic = childs ; ic ; ic = ic->next ){
-		na_object_iduplicable_set_origin( NA_OBJECT( ic->data ), origin );
+			na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
+
+			childs = v_get_childs( object );
+			for( ic = childs ; ic ; ic = ic->next ){
+				na_object_iduplicable_set_origin( NA_OBJECT( ic->data ), origin );
+			}
 	}
 }
 
@@ -451,13 +475,15 @@ na_object_object_dump( const NAObject *object )
 	GList *childs, *ic;
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( !object->private->dispose_has_run );
 
-	na_object_object_dump_norec( object );
+	if( !object->private->dispose_has_run ){
 
-	childs = v_get_childs( object );
-	for( ic = childs ; ic ; ic = ic->next ){
-		na_object_object_dump( NA_OBJECT( ic->data ));
+		na_object_object_dump_norec( object );
+
+		childs = v_get_childs( object );
+		for( ic = childs ; ic ; ic = ic->next ){
+			na_object_object_dump( NA_OBJECT( ic->data ));
+		}
 	}
 }
 
@@ -473,9 +499,10 @@ void
 na_object_object_dump_norec( const NAObject *object )
 {
 	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( !object->private->dispose_has_run );
 
-	dump_hierarchy( object );
+	if( !object->private->dispose_has_run ){
+		dump_hierarchy( object );
+	}
 }
 
 /**
@@ -502,10 +529,15 @@ na_object_object_dump_tree( GList *tree )
 gchar *
 na_object_object_get_clipboard_id( const NAObject *object )
 {
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
-	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
+	gchar *id = NULL;
 
-	return( most_derived_clipboard_id( object ));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+
+	if( !object->private->dispose_has_run ){
+		id = most_derived_clipboard_id( object );
+	}
+
+	return( id );
 }
 
 /**
@@ -549,22 +581,23 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 	NAObject *orig_object;
 
 	g_return_if_fail( NA_IS_OBJECT( origin ));
-	g_return_if_fail( !origin->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( !object->private->dispose_has_run );
 
-	origin_childs = v_get_childs( origin );
-	object_childs = v_get_childs( object );
-	for( iorig = origin_childs, iobj = object_childs ; iorig && iobj ; iorig = iorig->next, iobj = iobj->next ){
-		orig_object = na_object_get_origin( iorig->data );
-		g_return_if_fail( orig_object == iobj->data );
-		na_object_reset_origin( iobj->data, iorig->data );
+	if( !object->private->dispose_has_run && !origin->private->dispose_has_run ){
+
+		origin_childs = v_get_childs( origin );
+		object_childs = v_get_childs( object );
+		for( iorig = origin_childs, iobj = object_childs ; iorig && iobj ; iorig = iorig->next, iobj = iobj->next ){
+			orig_object = na_object_get_origin( iorig->data );
+			g_return_if_fail( orig_object == iobj->data );
+			na_object_reset_origin( iobj->data, iorig->data );
+		}
+
+		orig_object = na_object_get_origin( origin );
+		g_return_if_fail( orig_object == object );
+		na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
+		na_iduplicable_set_origin( NA_IDUPLICABLE( origin ), NULL );
 	}
-
-	orig_object = na_object_get_origin( origin );
-	g_return_if_fail( orig_object == object );
-	na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
-	na_iduplicable_set_origin( NA_IDUPLICABLE( origin ), NULL );
 }
 
 /**
@@ -576,17 +609,22 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 GList *
 na_object_get_hierarchy( const NAObject *object )
 {
-	GList *hierarchy;
+	GList *hierarchy = NULL;
 	GObjectClass *class;
 
-	hierarchy = NULL;
-	class = G_OBJECT_GET_CLASS( object );
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
 
-	while( G_OBJECT_CLASS_TYPE( class ) != NA_OBJECT_TYPE ){
+	if( !object->private->dispose_has_run ){
+
+		class = G_OBJECT_GET_CLASS( object );
+
+		while( G_OBJECT_CLASS_TYPE( class ) != NA_OBJECT_TYPE ){
+			hierarchy = g_list_prepend( hierarchy, class );
+			class = g_type_class_peek_parent( class );
+		}
+
 		hierarchy = g_list_prepend( hierarchy, class );
-		class = g_type_class_peek_parent( class );
 	}
-	hierarchy = g_list_prepend( hierarchy, class );
 
 	return( hierarchy );
 }
@@ -603,38 +641,58 @@ na_object_free_hierarchy( GList *hierarchy )
 static NAIDuplicable *
 iduplicable_new( const NAIDuplicable *object )
 {
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
-	g_return_val_if_fail( !NA_OBJECT( object )->private->dispose_has_run, NULL );
+	NAIDuplicable *new_object = NULL;
 
-	return( NA_IDUPLICABLE( most_derived_new( NA_OBJECT( object ))));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+
+	if( !NA_OBJECT( object )->private->dispose_has_run ){
+		/* do not use NA_IDUPLICABLE macro as we may return a (valid) NULL value */
+		new_object = ( NAIDuplicable * ) most_derived_new( NA_OBJECT( object ));
+	}
+
+	return( new_object );
 }
 
 static void
 iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
 {
 	g_return_if_fail( NA_IS_OBJECT( target ));
-	g_return_if_fail( !NA_OBJECT( target )->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( source ));
-	g_return_if_fail( !NA_OBJECT( source )->private->dispose_has_run );
 
-	copy_hierarchy( NA_OBJECT( target ), NA_OBJECT( source ));
+	if( !NA_OBJECT( source )->private->dispose_has_run &&
+		!NA_OBJECT( target )->private->dispose_has_run ){
+
+			copy_hierarchy( NA_OBJECT( target ), NA_OBJECT( source ));
+	}
 }
 
 static gboolean
 iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 {
-	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT( a )->private->dispose_has_run, FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT( b )->private->dispose_has_run, FALSE );
+	gboolean are_equal = FALSE;
 
-	return( are_equal_hierarchy( NA_OBJECT( a ), NA_OBJECT( b )));
+	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
+
+	if( !NA_OBJECT( a )->private->dispose_has_run &&
+		!NA_OBJECT( b )->private->dispose_has_run ){
+
+		are_equal = are_equal_hierarchy( NA_OBJECT( a ), NA_OBJECT( b ));
+	}
+
+	return( are_equal );
 }
 
 static gboolean
 iduplicable_is_valid( const NAIDuplicable *object )
 {
-	return( is_valid_hierarchy( NA_OBJECT( object )));
+	gboolean is_valid = FALSE;
+
+	if( !NA_OBJECT( object )->private->dispose_has_run ){
+		is_valid = is_valid_hierarchy( NA_OBJECT( object ));
+	}
+
+	return( is_valid );
 }
 
 static GList *

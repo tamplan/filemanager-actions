@@ -70,7 +70,7 @@ GType           na_gconf_monitor_get_type( void );
 
 NAGConfMonitor *na_gconf_monitor_new( GConfClient *client, const gchar *path, gint preload, GConfClientNotifyFunc handler, gpointer user_data );
 
-void            na_gconf_monitor_release_monitors( GSList *monitors );
+void            na_gconf_monitor_release_monitors( GList *monitors );
 
 G_END_DECLS
 

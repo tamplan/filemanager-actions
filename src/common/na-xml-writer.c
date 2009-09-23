@@ -59,10 +59,10 @@ struct NAXMLWriterPrivate {
 /* instance properties
  */
 enum {
-	PROP_GCONF_WRITER_UUID = 1
+	XML_WRITER_PROP_UUID_ID = 1
 };
 
-#define PROP_GCONF_WRITER_UUID_STR		"gconf-writer-uuid"
+#define XLM_WRITER_PROP_UUID		"na-xml-writer-uuid"
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -165,11 +165,11 @@ class_init( NAXMLWriterClass *klass )
 	object_class->set_property = instance_set_property;
 
 	spec = g_param_spec_string(
-			PROP_GCONF_WRITER_UUID_STR,
-			PROP_GCONF_WRITER_UUID_STR,
-			"UUID of the action", "",
+			XLM_WRITER_PROP_UUID,
+			XLM_WRITER_PROP_UUID,
+			"UUID of the action for which we invoke this XMLWriter", "",
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_GCONF_WRITER_UUID, spec );
+	g_object_class_install_property( object_class, XML_WRITER_PROP_UUID_ID, spec );
 
 	klass->private = g_new0( NAXMLWriterClassPrivate, 1 );
 }
@@ -181,7 +181,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NAXMLWriter *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-	g_assert( NA_IS_XML_WRITER( instance ));
+	g_return_if_fail( NA_IS_XML_WRITER( instance ));
 	self = NA_XML_WRITER( instance );
 
 	self->private = g_new0( NAXMLWriterPrivate, 1 );
@@ -194,17 +194,20 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 {
 	NAXMLWriter *self;
 
-	g_assert( NA_IS_XML_WRITER( object ));
+	g_return_if_fail( NA_IS_XML_WRITER( object ));
 	self = NA_XML_WRITER( object );
 
-	switch( property_id ){
-		case PROP_GCONF_WRITER_UUID:
-			g_value_set_string( value, self->private->uuid );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+		switch( property_id ){
+			case XML_WRITER_PROP_UUID_ID:
+				g_value_set_string( value, self->private->uuid );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -213,27 +216,32 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 {
 	NAXMLWriter *self;
 
-	g_assert( NA_IS_XML_WRITER( object ));
+	g_return_if_fail( NA_IS_XML_WRITER( object ));
 	self = NA_XML_WRITER( object );
 
-	switch( property_id ){
-		case PROP_GCONF_WRITER_UUID:
-			g_free( self->private->uuid );
-			self->private->uuid = g_value_dup_string( value );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+		switch( property_id ){
+			case XML_WRITER_PROP_UUID_ID:
+				g_free( self->private->uuid );
+				self->private->uuid = g_value_dup_string( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
 static void
 instance_dispose( GObject *object )
 {
+	static const gchar *thisfn = "na_xml_writer_instance_dispose";
 	NAXMLWriter *self;
 
-	g_assert( NA_IS_XML_WRITER( object ));
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_return_if_fail( NA_IS_XML_WRITER( object ));
 	self = NA_XML_WRITER( object );
 
 	if( !self->private->dispose_has_run ){
@@ -241,7 +249,9 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		}
 	}
 }
 
@@ -250,7 +260,7 @@ instance_finalize( GObject *object )
 {
 	NAXMLWriter *self;
 
-	g_assert( NA_IS_XML_WRITER( object ));
+	g_return_if_fail( NA_IS_XML_WRITER( object ));
 	self = NA_XML_WRITER( object );
 
 	g_free( self->private->uuid );
@@ -258,7 +268,7 @@ instance_finalize( GObject *object )
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if( st_parent_class->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
 }
@@ -266,7 +276,7 @@ instance_finalize( GObject *object )
 static NAXMLWriter *
 xml_writer_new( const gchar *uuid )
 {
-	return( g_object_new( NA_XML_WRITER_TYPE, PROP_GCONF_WRITER_UUID_STR, uuid, NULL ));
+	return( g_object_new( NA_XML_WRITER_TYPE, XLM_WRITER_PROP_UUID, uuid, NULL ));
 }
 
 /**
@@ -286,10 +296,12 @@ xml_writer_new( const gchar *uuid )
 gchar *
 na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint format, gchar **msg )
 {
+	static const gchar *thisfn = "na_xml_writer_export";
 	gchar *filename = NULL;
 	gchar *xml_buffer;
 
-	g_assert( action || format == FORMAT_GCONFSCHEMA );
+	g_debug( "%s: action=%p, format=%u", thisfn, ( void * ) action, format );
+	g_return_val_if_fail( action || format == FORMAT_GCONFSCHEMA, NULL );
 
 	switch( format ){
 		case FORMAT_GCONFSCHEMAFILE_V1:

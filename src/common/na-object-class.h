@@ -38,8 +38,9 @@
  *
  * This is the base class for managed objects.
  *
- * It implements the NAIDuplicable interface in order to have easily
- * duplicable derived objects.
+ * It implements the #NAIDuplicable interface in order to have easily
+ * duplicable derived objects. All the public API of the interface is
+ * converted to #NAObject virtual functions.
  *
  * The #NAObject class is a pure virtual class.
  */

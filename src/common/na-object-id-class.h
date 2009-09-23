@@ -36,6 +36,10 @@
  * @short_description: #NAObjectId class definition.
  * @include: common/na-object-id-class.h
  *
+ * A #NAObjectId object is characterized by :
+ * - an internal identifiant (ASCII, case insensitive)
+ * - a libelle (UTF8, localizable).
+ *
  * The #NAObjectId class is a pure virtual class.
  */
 

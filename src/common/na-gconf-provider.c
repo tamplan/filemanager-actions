@@ -57,7 +57,7 @@ struct NAGConfProviderPrivate {
 	gboolean     dispose_has_run;
 	GConfClient *gconf;
 	NAPivot     *pivot;
-	GSList      *monitors;
+	GList       *monitors;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -272,7 +272,7 @@ na_gconf_provider_new( NAPivot *handler )
 static void
 install_monitors( NAGConfProvider *provider )
 {
-	GSList *list = NULL;
+	GList *list = NULL;
 
 	g_return_if_fail( NA_IS_GCONF_PROVIDER( provider ));
 	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
@@ -281,7 +281,8 @@ install_monitors( NAGConfProvider *provider )
 	/* monitor the configurations/ directory which contains all menus,
 	 * actions and profiles definitions
 	 */
-	list = g_slist_prepend( list,
+	list = g_list_prepend( list,
+
 			na_gconf_monitor_new(
 					provider->private->gconf,
 					NA_GCONF_CONFIG_PATH,
@@ -294,23 +295,30 @@ install_monitors( NAGConfProvider *provider )
 
 /*
  * this callback is triggered each time a value is changed under our
- * configurations/ directory
+ * configurations/ directory ; as each object has several entries which
+ * describe it, this callback is triggered several times for each object
+ * update
  *
- * if the modification is made from nautilus-actions-config ui, then
- * the callback is triggered several times (one time for each rewritten
- * property) as action/profile are edited as blocs of data ; in this
- * case, the ui takes care (as of of 1.10) of also writing at last a
- * particular key of the form xxx:yyyyyyyy-yyyy-yyyy-..., where :
+ * up to and including 1.10.1, the user interface took care of writing
+ * a special key in GConf at the end of each update operations ;
+ * as GConf monitored only this special key, it triggered this callback
+ * once for each global update operation
+ *
+ * this special key was of the form xxx:yyyyyyyy-yyyy-yyyy-..., where :
  *    xxx was a sequential number (inside of the ui session)
  *    yyyyyyyy-yyyy-yyyy-... was the uuid of the involved action
  *
- * this was so a sort of hack which simplifies a lot the notification
- * system (take the new action, replace it in the current global list)
- * but didn't work if the modification was made from outside of the ui
+ * this was a sort of hack which simplified a lot the notification
+ * system, but didn't take into account any modification which might
+ * come from outside of the ui
  *
  * if the modification is made elsewhere (an action is imported as a
  * xml file in gconf, or gconf is directly edited), we'd have to rely
- * only on the standard mmonitor (GConf watch) mechanism
+ * only on the standard monitor (GConf watch) mechanism
+ *
+ * this is what we do below, thus triggering NAPivot for each and every
+ * modification in the GConf underlying system ; this is the prerogative
+ * of NAPivot to decide what to do with them
  */
 static void
 config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAGConfProvider *provider )
@@ -318,15 +326,16 @@ config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, N
 	/*static const gchar *thisfn = "na_gconf_provider_config_path_changed_cb";*/
 	NAPivotNotify *npn;
 
-	g_return_if_fail( NA_IS_GCONF_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
-	g_return_if_fail( !provider->private->dispose_has_run );
-
 	/*g_debug( "%s: client=%p, cnxnid=%u, entry=%p, provider=%p",
 			thisfn, ( void * ) client, cnxn_id, ( void * ) entry, ( void * ) provider );*/
 
-	npn = entry_to_notify( entry );
-	g_signal_emit_by_name( provider->private->pivot, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );
+	g_return_if_fail( NA_IS_GCONF_PROVIDER( provider ));
+	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
+
+	if( !provider->private->dispose_has_run ){
+		npn = entry_to_notify( entry );
+		g_signal_emit_by_name( provider->private->pivot, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );
+	}
 }
 
 /*
@@ -438,20 +447,20 @@ iio_provider_read_items_list( const NAIIOProvider *provider )
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NULL );
 	self = NA_GCONF_PROVIDER( provider );
-	g_return_val_if_fail( !self->private->dispose_has_run, NULL );
 
-	listpath = na_gconf_utils_get_subdirs( self->private->gconf, NA_GCONF_CONFIG_PATH );
+	if( !self->private->dispose_has_run ){
 
-	for( ip = listpath ; ip ; ip = ip->next ){
+		listpath = na_gconf_utils_get_subdirs( self->private->gconf, NA_GCONF_CONFIG_PATH );
 
-		const gchar *path = ( const gchar * ) ip->data;
+		for( ip = listpath ; ip ; ip = ip->next ){
 
-		item = read_item( self, path );
+			const gchar *path = ( const gchar * ) ip->data;
+			item = read_item( self, path );
+			items_list = g_list_prepend( items_list, item );
+		}
 
-		items_list = g_list_prepend( items_list, item );
+		na_gconf_utils_free_subdirs( listpath );
 	}
-
-	na_gconf_utils_free_subdirs( listpath );
 
 	return( items_list );
 }
@@ -730,24 +739,38 @@ read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 static gboolean
 iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 {
+	NAGConfProvider *self;
+	gboolean willing_to = FALSE;
+
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( !NA_GCONF_PROVIDER( provider )->private->dispose_has_run, FALSE );
+	self = NA_GCONF_PROVIDER( provider );
 
 	/* TODO: na_gconf_provider_iio_provider_is_willing_to_write */
-	return( TRUE );
+	if( !self->private->dispose_has_run ){
+		willing_to = TRUE;
+	}
+
+	return( willing_to );
 }
 
 static gboolean
 iio_provider_is_writable( const NAIIOProvider *provider, const NAObject *item )
 {
+	NAGConfProvider *self;
+	gboolean willing_to = FALSE;
+
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( !NA_GCONF_PROVIDER( provider )->private->dispose_has_run, FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+	self = NA_GCONF_PROVIDER( provider );
 
 	/* TODO: na_gconf_provider_iio_provider_is_writable */
-	return( TRUE );
+	if( !self->private->dispose_has_run ){
+		willing_to = TRUE;
+	}
+
+	return( willing_to );
 }
 
 static guint
@@ -756,16 +779,22 @@ iio_provider_write_item( const NAIIOProvider *provider, NAObject *item, gchar **
 	static const gchar *thisfn = "na_gconf_provider_iio_provider_write_item";
 	NAGConfProvider *self;
 
-	g_debug( "%s: provider=%p, item=%p, message=%p",
-			thisfn, ( void * ) provider, ( void * ) item, ( void * ) message );
-
+	g_debug( "%s: provider=%p, item=%p (%s), message=%p",
+			thisfn, ( void * ) provider,
+			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) message );
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( !NA_GCONF_PROVIDER( provider )->private->dispose_has_run, NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 
 	self = NA_GCONF_PROVIDER( provider );
-	message = NULL;
+
+	if( message ){
+		*message = NULL;
+	}
+
+	if( self->private->dispose_has_run ){
+		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
+	}
 
 	if( NA_IS_OBJECT_ACTION( item )){
 		if( !write_item_action( self, NA_OBJECT_ACTION( item ), message )){
@@ -880,17 +909,24 @@ iio_provider_delete_item( const NAIIOProvider *provider, const NAObject *item, g
 	gchar *uuid, *path;
 	GError *error = NULL;
 
-	g_debug( "%s: provider=%p, item=%p, message=%p",
-			thisfn, ( void * ) provider, ( void * ) item, ( void * ) message );
+	g_debug( "%s: provider=%p, item=%p (%s), message=%p",
+			thisfn, ( void * ) provider,
+			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) message );
 
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( !NA_GCONF_PROVIDER( provider )->private->dispose_has_run, NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 
 	self = NA_GCONF_PROVIDER( provider );
 
-	message = NULL;
+	if( self->private->dispose_has_run ){
+		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
+	}
+
+	if( message ){
+		*message = NULL;
+	}
+
 	ret = NA_IIO_PROVIDER_WRITE_OK;
 	uuid = na_object_get_id( NA_OBJECT( item ));
 

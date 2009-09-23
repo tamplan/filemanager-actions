@@ -161,25 +161,28 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 	GSList *level_zero;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-
-	g_return_val_if_fail( st_initialized && !st_finalized, NULL );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( NA_IS_IPREFS( pivot ), NULL );
 
-	providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
-	merged = get_merged_items_list( pivot, providers );
-	na_pivot_free_providers( providers );
+	hierarchy = NULL;
 
-	level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
-	hierarchy = build_hierarchy( merged, level_zero, TRUE );
-	na_utils_free_string_list( level_zero );
-	na_object_free_items( merged );
+	if( st_initialized && !st_finalized ){
 
-	if( na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ))){
-		hierarchy = sort_tree( pivot, hierarchy );
+		providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+		merged = get_merged_items_list( pivot, providers );
+		na_pivot_free_providers( providers );
+
+		level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
+		hierarchy = build_hierarchy( merged, level_zero, TRUE );
+		na_utils_free_string_list( level_zero );
+		na_object_free_items( merged );
+
+		if( na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ))){
+			hierarchy = sort_tree( pivot, hierarchy );
+		}
+
+		na_object_dump_tree( hierarchy );
 	}
-
-	na_object_dump_tree( hierarchy );
 
 	return( hierarchy );
 }
@@ -219,6 +222,7 @@ build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty )
 			}
 		}
 	}
+
 	/* if level-zero list is empty, we consider that all actions go to it
 	 */
 	else if( list_if_empty ){
@@ -306,39 +310,43 @@ na_iio_provider_write_item( const NAPivot *pivot, NAObject *item, gchar **messag
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			( void * ) message );
 
-	g_return_val_if_fail( st_initialized && !st_finalized, NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail(( NA_IS_PIVOT( pivot ) || !pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 
-	ret = NA_IIO_PROVIDER_NOT_WRITABLE;
-	bad_instance = NULL;
+	ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
 
-	/* try to write to the original provider of the item
-	 */
-	instance = NA_IIO_PROVIDER( na_object_get_provider( item ));
-	if( instance ){
-		ret = try_write_item( instance, item, message );
-		if( ret == NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE || ret == NA_IIO_PROVIDER_NOT_WRITABLE ){
-			bad_instance = instance;
-			instance = NULL;
-		}
-	}
+	if( st_initialized && !st_finalized ){
 
-	/* else, search for a provider which is willing to write the item
-	 */
-	if( !instance && pivot ){
-		providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
-		for( ip = providers ; ip ; ip = ip->next ){
+		ret = NA_IIO_PROVIDER_NOT_WRITABLE;
+		bad_instance = NULL;
 
-			instance = NA_IIO_PROVIDER( ip->data );
-			if( !bad_instance || bad_instance != instance ){
-				ret = try_write_item( instance, item, message );
-				if( ret == NA_IIO_PROVIDER_WRITE_OK ){
-					break;
-				}
+		/* try to write to the original provider of the item
+		 */
+		instance = NA_IIO_PROVIDER( na_object_get_provider( item ));
+		if( instance ){
+			ret = try_write_item( instance, item, message );
+			if( ret == NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE || ret == NA_IIO_PROVIDER_NOT_WRITABLE ){
+				bad_instance = instance;
+				instance = NULL;
 			}
 		}
-		na_pivot_free_providers( providers );
+
+		/* else, search for a provider which is willing to write the item
+		 */
+		if( !instance && pivot ){
+			providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+			for( ip = providers ; ip ; ip = ip->next ){
+
+				instance = NA_IIO_PROVIDER( ip->data );
+				if( !bad_instance || bad_instance != instance ){
+					ret = try_write_item( instance, item, message );
+					if( ret == NA_IIO_PROVIDER_WRITE_OK ){
+						break;
+					}
+				}
+			}
+			na_pivot_free_providers( providers );
+		}
 	}
 
 	return( ret );
@@ -401,22 +409,23 @@ na_iio_provider_delete_item( const NAPivot *pivot, const NAObject *item, gchar *
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			( void * ) message );
 
-	g_return_val_if_fail( st_initialized && !st_finalized, NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 
-	ret = NA_IIO_PROVIDER_NOT_WRITABLE;
-	instance = NA_IIO_PROVIDER( na_object_get_provider( item ));
+	ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
 
-	if( instance ){
-		g_assert( NA_IS_IIO_PROVIDER( instance ));
+	if( st_initialized && !st_finalized ){
 
-		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_item ){
-			ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_item( instance, item, message );
+		ret = NA_IIO_PROVIDER_NOT_WRITABLE;
+		instance = NA_IIO_PROVIDER( na_object_get_provider( item ));
+
+		if( instance ){
+			g_return_val_if_fail( NA_IS_IIO_PROVIDER( instance ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+
+			if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_item ){
+				ret = NA_IIO_PROVIDER_GET_INTERFACE( instance )->delete_item( instance, item, message );
+			}
 		}
-	/*} else {
-		*message = g_strdup( _( "Unable to delete the action: no I/O provider." ));
-		ret = NA_IIO_PROVIDER_NO_PROVIDER;*/
 	}
 
 	return( ret );

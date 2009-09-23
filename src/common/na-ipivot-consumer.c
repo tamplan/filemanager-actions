@@ -104,6 +104,8 @@ interface_base_init( NAIPivotConsumerInterface *klass )
 		klass->private = g_new0( NAIPivotConsumerInterfacePrivate, 1 );
 
 		klass->on_actions_changed = NULL /*do_actions_changed*/;
+		klass->on_display_about_changed = NULL;
+		klass->on_display_order_changed = NULL;
 
 		st_initialized = TRUE;
 	}
@@ -136,19 +138,23 @@ interface_base_finalize( NAIPivotConsumerInterface *klass )
 void
 na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance )
 {
+	static const gchar *thisfn = "na_ipivot_consumer_delay_notify";
 	GTimeVal *last_delay;
 
-	g_return_if_fail( st_initialized && !st_finalized );
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
-	last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
+	if( st_initialized && !st_finalized ){
 
-	if( !last_delay ){
-		last_delay = g_new0( GTimeVal, 1 );
-		g_object_set_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify", last_delay );
+		last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
+
+		if( !last_delay ){
+			last_delay = g_new0( GTimeVal, 1 );
+			g_object_set_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify", last_delay );
+		}
+
+		g_get_current_time( last_delay );
 	}
-
-	g_get_current_time( last_delay );
 }
 
 /**
@@ -165,12 +171,15 @@ void na_ipivot_consumer_notify( NAIPivotConsumer *instance )
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
-	if( is_notify_allowed( instance )){
-		if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed ){
-			NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed( instance, NULL );
+	if( st_initialized && !st_finalized ){
+
+		if( is_notify_allowed( instance )){
+
+			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed ){
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed( instance, NULL );
+			}
 		}
 	}
 }
@@ -185,11 +194,13 @@ void na_ipivot_consumer_notify( NAIPivotConsumer *instance )
 void
 na_ipivot_consumer_notify_display_order_change( NAIPivotConsumer *instance )
 {
-	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
-	if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed ){
-		NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed( instance, NULL );
+	if( st_initialized && !st_finalized ){
+
+		if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed ){
+			NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed( instance, NULL );
+		}
 	}
 }
 
@@ -204,11 +215,13 @@ na_ipivot_consumer_notify_display_order_change( NAIPivotConsumer *instance )
 void
 na_ipivot_consumer_notify_display_about_change( NAIPivotConsumer *instance )
 {
-	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
-	if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed ){
-		NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed( instance, NULL );
+	if( st_initialized && !st_finalized ){
+
+		if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed ){
+			NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed( instance, NULL );
+		}
 	}
 }
 

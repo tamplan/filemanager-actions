@@ -33,7 +33,7 @@
 
 /**
  * SECTION: na_object
- * @short_description: #NAObject public functions definition.
+ * @short_description: #NAObject public functions declarations.
  * @include: common/na-object-fn.h
  *
  * Define here the public functions of the #NAObject class.

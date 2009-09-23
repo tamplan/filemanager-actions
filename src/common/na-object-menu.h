@@ -36,7 +36,7 @@
  * @short_description: #NAObjectMenu class definition.
  * @include: common/na-object-menu.h
  *
- * This is a menu.
+ * This is a menu. It embeds other menus and/or actions.
  */
 
 #include "na-object-item-class.h"

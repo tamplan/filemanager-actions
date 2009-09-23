@@ -287,56 +287,58 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	GSList *list;
 
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
-	g_return_if_fail( !NA_OBJECT_PROFILE( object )->private->dispose_has_run );
 	self = NA_OBJECT_PROFILE( object );
 
-	switch( property_id ){
-		case NAPROFILE_PROP_ACTION_ID:
-			g_value_set_pointer( value, self->private->action );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case NAPROFILE_PROP_PATH_ID:
-			g_value_set_string( value, self->private->path );
-			break;
+		switch( property_id ){
+			case NAPROFILE_PROP_ACTION_ID:
+				g_value_set_pointer( value, self->private->action );
+				break;
 
-		case NAPROFILE_PROP_PARAMETERS_ID:
-			g_value_set_string( value, self->private->parameters );
-			break;
+			case NAPROFILE_PROP_PATH_ID:
+				g_value_set_string( value, self->private->path );
+				break;
 
-		case NAPROFILE_PROP_BASENAMES_ID:
-			list = na_utils_duplicate_string_list( self->private->basenames );
-			g_value_set_pointer( value, list );
-			break;
+			case NAPROFILE_PROP_PARAMETERS_ID:
+				g_value_set_string( value, self->private->parameters );
+				break;
 
-		case NAPROFILE_PROP_MATCHCASE_ID:
-			g_value_set_boolean( value, self->private->match_case );
-			break;
+			case NAPROFILE_PROP_BASENAMES_ID:
+				list = na_utils_duplicate_string_list( self->private->basenames );
+				g_value_set_pointer( value, list );
+				break;
 
-		case NAPROFILE_PROP_MIMETYPES_ID:
-			list = na_utils_duplicate_string_list( self->private->mimetypes );
-			g_value_set_pointer( value, list );
-			break;
+			case NAPROFILE_PROP_MATCHCASE_ID:
+				g_value_set_boolean( value, self->private->match_case );
+				break;
 
-		case NAPROFILE_PROP_ISFILE_ID:
-			g_value_set_boolean( value, self->private->is_file );
-			break;
+			case NAPROFILE_PROP_MIMETYPES_ID:
+				list = na_utils_duplicate_string_list( self->private->mimetypes );
+				g_value_set_pointer( value, list );
+				break;
 
-		case NAPROFILE_PROP_ISDIR_ID:
-			g_value_set_boolean( value, self->private->is_dir );
-			break;
+			case NAPROFILE_PROP_ISFILE_ID:
+				g_value_set_boolean( value, self->private->is_file );
+				break;
 
-		case NAPROFILE_PROP_ACCEPT_MULTIPLE_ID:
-			g_value_set_boolean( value, self->private->accept_multiple );
-			break;
+			case NAPROFILE_PROP_ISDIR_ID:
+				g_value_set_boolean( value, self->private->is_dir );
+				break;
 
-		case NAPROFILE_PROP_SCHEMES_ID:
-			list = na_utils_duplicate_string_list( self->private->schemes );
-			g_value_set_pointer( value, list );
-			break;
+			case NAPROFILE_PROP_ACCEPT_MULTIPLE_ID:
+				g_value_set_boolean( value, self->private->accept_multiple );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case NAPROFILE_PROP_SCHEMES_ID:
+				list = na_utils_duplicate_string_list( self->private->schemes );
+				g_value_set_pointer( value, list );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -346,58 +348,60 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	NAObjectProfile *self;
 
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
-	g_return_if_fail( !NA_OBJECT_PROFILE( object )->private->dispose_has_run );
 	self = NA_OBJECT_PROFILE( object );
 
-	switch( property_id ){
-		case NAPROFILE_PROP_ACTION_ID:
-			self->private->action = g_value_get_pointer( value );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case NAPROFILE_PROP_PATH_ID:
-			g_free( self->private->path );
-			self->private->path = g_value_dup_string( value );
-			break;
+		switch( property_id ){
+			case NAPROFILE_PROP_ACTION_ID:
+				self->private->action = g_value_get_pointer( value );
+				break;
 
-		case NAPROFILE_PROP_PARAMETERS_ID:
-			g_free( self->private->parameters );
-			self->private->parameters = g_value_dup_string( value );
-			break;
+			case NAPROFILE_PROP_PATH_ID:
+				g_free( self->private->path );
+				self->private->path = g_value_dup_string( value );
+				break;
 
-		case NAPROFILE_PROP_BASENAMES_ID:
-			na_utils_free_string_list( self->private->basenames );
-			self->private->basenames = na_utils_duplicate_string_list( g_value_get_pointer( value ));
-			break;
+			case NAPROFILE_PROP_PARAMETERS_ID:
+				g_free( self->private->parameters );
+				self->private->parameters = g_value_dup_string( value );
+				break;
 
-		case NAPROFILE_PROP_MATCHCASE_ID:
-			self->private->match_case = g_value_get_boolean( value );
-			break;
+			case NAPROFILE_PROP_BASENAMES_ID:
+				na_utils_free_string_list( self->private->basenames );
+				self->private->basenames = na_utils_duplicate_string_list( g_value_get_pointer( value ));
+				break;
 
-		case NAPROFILE_PROP_MIMETYPES_ID:
-			na_utils_free_string_list( self->private->mimetypes );
-			self->private->mimetypes = na_utils_duplicate_string_list( g_value_get_pointer( value ));
-			break;
+			case NAPROFILE_PROP_MATCHCASE_ID:
+				self->private->match_case = g_value_get_boolean( value );
+				break;
 
-		case NAPROFILE_PROP_ISFILE_ID:
-			self->private->is_file = g_value_get_boolean( value );
-			break;
+			case NAPROFILE_PROP_MIMETYPES_ID:
+				na_utils_free_string_list( self->private->mimetypes );
+				self->private->mimetypes = na_utils_duplicate_string_list( g_value_get_pointer( value ));
+				break;
 
-		case NAPROFILE_PROP_ISDIR_ID:
-			self->private->is_dir = g_value_get_boolean( value );
-			break;
+			case NAPROFILE_PROP_ISFILE_ID:
+				self->private->is_file = g_value_get_boolean( value );
+				break;
 
-		case NAPROFILE_PROP_ACCEPT_MULTIPLE_ID:
-			self->private->accept_multiple = g_value_get_boolean( value );
-			break;
+			case NAPROFILE_PROP_ISDIR_ID:
+				self->private->is_dir = g_value_get_boolean( value );
+				break;
 
-		case NAPROFILE_PROP_SCHEMES_ID:
-			na_utils_free_string_list( self->private->schemes );
-			self->private->schemes = na_utils_duplicate_string_list( g_value_get_pointer( value ));
-			break;
+			case NAPROFILE_PROP_ACCEPT_MULTIPLE_ID:
+				self->private->accept_multiple = g_value_get_boolean( value );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case NAPROFILE_PROP_SCHEMES_ID:
+				na_utils_free_string_list( self->private->schemes );
+				self->private->schemes = na_utils_duplicate_string_list( g_value_get_pointer( value ));
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -430,7 +434,7 @@ instance_finalize( GObject *object )
 
 	/*g_debug( "%s: object=%p", thisfn, (void * ) object );*/
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
-	self = ( NAObjectProfile * ) object;
+	self = NA_OBJECT_PROFILE( object );
 
 	g_free( self->private->path );
 	g_free( self->private->parameters );
@@ -481,12 +485,13 @@ na_object_profile_new( void )
 NAObjectAction *
 na_object_profile_get_action( const NAObjectProfile *profile )
 {
-	NAObjectAction *action;
+	NAObjectAction *action = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
-	g_return_val_if_fail( !profile->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_ACTION, &action, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_ACTION, &action, NULL );
+	}
 
 	return( action );
 }
@@ -503,12 +508,13 @@ na_object_profile_get_action( const NAObjectProfile *profile )
 gchar *
 na_object_profile_get_path( const NAObjectProfile *profile )
 {
-	gchar *path;
+	gchar *path = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
-	g_return_val_if_fail( !profile->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_PATH, &path, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_PATH, &path, NULL );
+	}
 
 	return( path );
 }
@@ -525,12 +531,13 @@ na_object_profile_get_path( const NAObjectProfile *profile )
 gchar *
 na_object_profile_get_parameters( const NAObjectProfile *profile )
 {
-	gchar *parameters;
+	gchar *parameters = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
-	g_return_val_if_fail( !profile->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_PARAMETERS, &parameters, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_PARAMETERS, &parameters, NULL );
+	}
 
 	return( parameters );
 }
@@ -550,12 +557,13 @@ na_object_profile_get_parameters( const NAObjectProfile *profile )
 GSList *
 na_object_profile_get_basenames( const NAObjectProfile *profile )
 {
-	GSList *basenames;
+	GSList *basenames = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
-	g_return_val_if_fail( !profile->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_BASENAMES, &basenames, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_BASENAMES, &basenames, NULL );
+	}
 
 	return( basenames );
 }
@@ -575,12 +583,13 @@ na_object_profile_get_basenames( const NAObjectProfile *profile )
 gboolean
 na_object_profile_get_matchcase( const NAObjectProfile *profile )
 {
-	gboolean matchcase;
+	gboolean matchcase = FALSE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
-	g_return_val_if_fail( !profile->private->dispose_has_run, FALSE );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_MATCHCASE, &matchcase, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_MATCHCASE, &matchcase, NULL );
+	}
 
 	return( matchcase );
 }
@@ -600,12 +609,13 @@ na_object_profile_get_matchcase( const NAObjectProfile *profile )
 GSList *
 na_object_profile_get_mimetypes( const NAObjectProfile *profile )
 {
-	GSList *mimetypes;
+	GSList *mimetypes = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
-	g_return_val_if_fail( !profile->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_MIMETYPES, &mimetypes, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_MIMETYPES, &mimetypes, NULL );
+	}
 
 	return( mimetypes );
 }
@@ -624,12 +634,13 @@ na_object_profile_get_mimetypes( const NAObjectProfile *profile )
 gboolean
 na_object_profile_get_is_file( const NAObjectProfile *profile )
 {
-	gboolean isfile;
+	gboolean isfile = FALSE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
-	g_return_val_if_fail( !profile->private->dispose_has_run, FALSE );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_ISFILE, &isfile, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_ISFILE, &isfile, NULL );
+	}
 
 	return( isfile );
 }
@@ -648,12 +659,13 @@ na_object_profile_get_is_file( const NAObjectProfile *profile )
 gboolean
 na_object_profile_get_is_dir( const NAObjectProfile *profile )
 {
-	gboolean isdir;
+	gboolean isdir = FALSE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
-	g_return_val_if_fail( !profile->private->dispose_has_run, FALSE );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_ISDIR, &isdir, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_ISDIR, &isdir, NULL );
+	}
 
 	return( isdir );
 }
@@ -673,12 +685,13 @@ na_object_profile_get_is_dir( const NAObjectProfile *profile )
 gboolean
 na_object_profile_get_multiple( const NAObjectProfile *profile )
 {
-	gboolean multiple;
+	gboolean multiple = FALSE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
-	g_return_val_if_fail( !profile->private->dispose_has_run, FALSE );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_ACCEPT_MULTIPLE, &multiple, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_ACCEPT_MULTIPLE, &multiple, NULL );
+	}
 
 	return( multiple );
 }
@@ -698,12 +711,13 @@ na_object_profile_get_multiple( const NAObjectProfile *profile )
 GSList *
 na_object_profile_get_schemes( const NAObjectProfile *profile )
 {
-	GSList *schemes;
+	GSList *schemes = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
-	g_return_val_if_fail( !profile->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_SCHEMES, &schemes, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_SCHEMES, &schemes, NULL );
+	}
 
 	return( schemes );
 }
@@ -721,10 +735,11 @@ void
 na_object_profile_set_action( NAObjectProfile *profile, const NAObjectAction *action )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ACTION, action, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ACTION, action, NULL );
+	}
 }
 
 /**
@@ -741,9 +756,10 @@ void
 na_object_profile_set_path( NAObjectProfile *profile, const gchar *path )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_PATH, path, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_PATH, path, NULL );
+	}
 }
 
 /**
@@ -760,9 +776,10 @@ void
 na_object_profile_set_parameters( NAObjectProfile *profile, const gchar *parameters )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_PARAMETERS, parameters, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_PARAMETERS, parameters, NULL );
+	}
 }
 
 /**
@@ -783,9 +800,10 @@ void
 na_object_profile_set_basenames( NAObjectProfile *profile, GSList *basenames )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_BASENAMES, basenames, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_BASENAMES, basenames, NULL );
+	}
 }
 
 /**
@@ -803,9 +821,10 @@ void
 na_object_profile_set_matchcase( NAObjectProfile *profile, gboolean matchcase )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_MATCHCASE, matchcase, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_MATCHCASE, matchcase, NULL );
+	}
 }
 
 /**
@@ -826,9 +845,10 @@ void
 na_object_profile_set_mimetypes( NAObjectProfile *profile, GSList *mimetypes )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_MIMETYPES, mimetypes, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_MIMETYPES, mimetypes, NULL );
+	}
 }
 
 /**
@@ -842,9 +862,10 @@ void
 na_object_profile_set_isfile( NAObjectProfile *profile, gboolean isfile )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ISFILE, isfile, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ISFILE, isfile, NULL );
+	}
 }
 
 /**
@@ -858,9 +879,10 @@ void
 na_object_profile_set_isdir( NAObjectProfile *profile, gboolean isdir )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ISDIR, isdir, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ISDIR, isdir, NULL );
+	}
 }
 
 /**
@@ -880,9 +902,10 @@ void
 na_object_profile_set_isfiledir( NAObjectProfile *profile, gboolean isfile, gboolean isdir )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ISFILE, isfile, NAPROFILE_PROP_ISDIR, isdir, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ISFILE, isfile, NAPROFILE_PROP_ISDIR, isdir, NULL );
+	}
 }
 
 /**
@@ -899,9 +922,10 @@ void
 na_object_profile_set_multiple( NAObjectProfile *profile, gboolean multiple )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ACCEPT_MULTIPLE, multiple, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ACCEPT_MULTIPLE, multiple, NULL );
+	}
 }
 
 /**
@@ -919,16 +943,18 @@ na_object_profile_set_scheme( NAObjectProfile *profile, const gchar *scheme, gbo
 	gboolean exist;
 
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	exist = na_utils_find_in_list( profile->private->schemes, scheme );
-	/*g_debug( "%s: scheme=%s exist=%s", thisfn, scheme, exist ? "True":"False" );*/
+	if( !profile->private->dispose_has_run ){
 
-	if( selected && !exist ){
-		profile->private->schemes = g_slist_prepend( profile->private->schemes, g_strdup( scheme ));
-	}
-	if( !selected && exist ){
-		profile->private->schemes = na_utils_remove_ascii_from_string_list( profile->private->schemes, scheme );
+		exist = na_utils_find_in_list( profile->private->schemes, scheme );
+		/*g_debug( "%s: scheme=%s exist=%s", thisfn, scheme, exist ? "True":"False" );*/
+
+		if( selected && !exist ){
+			profile->private->schemes = g_slist_prepend( profile->private->schemes, g_strdup( scheme ));
+		}
+		if( !selected && exist ){
+			profile->private->schemes = na_utils_remove_ascii_from_string_list( profile->private->schemes, scheme );
+		}
 	}
 }
 
@@ -950,9 +976,10 @@ void
 na_object_profile_set_schemes( NAObjectProfile *profile, GSList *schemes )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( !profile->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_SCHEMES, schemes, NULL );
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_SCHEMES, schemes, NULL );
+	}
 }
 
 /**
@@ -993,7 +1020,10 @@ na_object_profile_is_candidate( const NAObjectProfile *profile, GList* files )
 	gchar *tmp_pattern, *tmp_filename, *tmp_filename2, *tmp_mimetype, *tmp_mimetype2;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
-	g_return_val_if_fail( !profile->private->dispose_has_run, FALSE );
+
+	if( profile->private->dispose_has_run ){
+		return( FALSE );
+	}
 
 	if (profile->private->basenames && profile->private->basenames->next != NULL &&
 			g_ascii_strcasecmp ((gchar*)(profile->private->basenames->data), "*") == 0)
@@ -1238,7 +1268,10 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, GList* files
 	NAGnomeVFSURI *vfs;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
-	g_return_val_if_fail( !profile->private->dispose_has_run, NULL );
+
+	if( profile->private->dispose_has_run ){
+		return( NULL );
+	}
 
 	string = g_string_new( "" );
 	basename_list = g_string_new( "" );
@@ -1422,19 +1455,21 @@ object_dump( const NAObject *object )
 	NAObjectProfile *self;
 
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
-	g_return_if_fail( !NA_OBJECT_PROFILE( object )->private->dispose_has_run );
 	self = NA_OBJECT_PROFILE( object );
 
-	g_debug( "%s:          action=%p", thisfn, ( void * ) self->private->action );
-	g_debug( "%s:            path='%s'", thisfn, self->private->path );
-	g_debug( "%s:      parameters='%s'", thisfn, self->private->parameters );
-	g_debug( "%s: accept_multiple='%s'", thisfn, self->private->accept_multiple ? "True" : "False" );
-	g_debug( "%s:          is_dir='%s'", thisfn, self->private->is_dir ? "True" : "False" );
-	g_debug( "%s:         is_file='%s'", thisfn, self->private->is_file ? "True" : "False" );
-	g_debug( "%s:      match_case='%s'", thisfn, self->private->match_case ? "True" : "False" );
-	object_dump_list( thisfn, "basenames", self->private->basenames );
-	object_dump_list( thisfn, "mimetypes", self->private->mimetypes );
-	object_dump_list( thisfn, "  schemes", self->private->schemes );
+	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s:          action=%p", thisfn, ( void * ) self->private->action );
+		g_debug( "%s:            path='%s'", thisfn, self->private->path );
+		g_debug( "%s:      parameters='%s'", thisfn, self->private->parameters );
+		g_debug( "%s: accept_multiple='%s'", thisfn, self->private->accept_multiple ? "True" : "False" );
+		g_debug( "%s:          is_dir='%s'", thisfn, self->private->is_dir ? "True" : "False" );
+		g_debug( "%s:         is_file='%s'", thisfn, self->private->is_file ? "True" : "False" );
+		g_debug( "%s:      match_case='%s'", thisfn, self->private->match_case ? "True" : "False" );
+		object_dump_list( thisfn, "basenames", self->private->basenames );
+		object_dump_list( thisfn, "mimetypes", self->private->mimetypes );
+		object_dump_list( thisfn, "  schemes", self->private->schemes );
+	}
 }
 
 static void
@@ -1450,16 +1485,18 @@ object_get_clipboard_id( const NAObject *profile )
 {
 	gchar *uuid;
 	gchar *name;
-	gchar *clipboard_id;
+	gchar *clipboard_id = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
-	g_return_val_if_fail( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run, NULL );
 
-	uuid = na_object_get_id( NA_OBJECT_PROFILE( profile )->private->action );
-	name = na_object_get_id( profile );
-	clipboard_id = g_strdup_printf( "P:%s/%s", uuid, name );
-	g_free( uuid );
-	g_free( name );
+	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
+
+		uuid = na_object_get_id( NA_OBJECT_PROFILE( profile )->private->action );
+		name = na_object_get_id( profile );
+		clipboard_id = g_strdup_printf( "P:%s/%s", uuid, name );
+		g_free( uuid );
+		g_free( name );
+	}
 
 	return( clipboard_id );
 }
@@ -1478,39 +1515,41 @@ object_copy( NAObject *target, const NAObject *source )
 	GSList *basenames, *mimetypes, *schemes;
 
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( target ));
-	g_return_if_fail( !NA_OBJECT_PROFILE( target )->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( source ));
-	g_return_if_fail( !NA_OBJECT_PROFILE( source )->private->dispose_has_run );
 
-	g_object_get( G_OBJECT( source ),
-			NAPROFILE_PROP_PATH, &path,
-			NAPROFILE_PROP_PARAMETERS, &parameters,
-			NAPROFILE_PROP_BASENAMES, &basenames,
-			NAPROFILE_PROP_MATCHCASE, &matchcase,
-			NAPROFILE_PROP_MIMETYPES, &mimetypes,
-			NAPROFILE_PROP_ISFILE, &isfile,
-			NAPROFILE_PROP_ISDIR, &isdir,
-			NAPROFILE_PROP_ACCEPT_MULTIPLE, &multiple,
-			NAPROFILE_PROP_SCHEMES, &schemes,
-			NULL );
+	if( !NA_OBJECT_PROFILE( target )->private->dispose_has_run &&
+		!NA_OBJECT_PROFILE( source )->private->dispose_has_run ){
 
-	g_object_set( G_OBJECT( target ),
-			NAPROFILE_PROP_PATH, path,
-			NAPROFILE_PROP_PARAMETERS, parameters,
-			NAPROFILE_PROP_BASENAMES, basenames,
-			NAPROFILE_PROP_MATCHCASE, matchcase,
-			NAPROFILE_PROP_MIMETYPES, mimetypes,
-			NAPROFILE_PROP_ISFILE, isfile,
-			NAPROFILE_PROP_ISDIR, isdir,
-			NAPROFILE_PROP_ACCEPT_MULTIPLE, multiple,
-			NAPROFILE_PROP_SCHEMES, schemes,
-			NULL );
+		g_object_get( G_OBJECT( source ),
+				NAPROFILE_PROP_PATH, &path,
+				NAPROFILE_PROP_PARAMETERS, &parameters,
+				NAPROFILE_PROP_BASENAMES, &basenames,
+				NAPROFILE_PROP_MATCHCASE, &matchcase,
+				NAPROFILE_PROP_MIMETYPES, &mimetypes,
+				NAPROFILE_PROP_ISFILE, &isfile,
+				NAPROFILE_PROP_ISDIR, &isdir,
+				NAPROFILE_PROP_ACCEPT_MULTIPLE, &multiple,
+				NAPROFILE_PROP_SCHEMES, &schemes,
+				NULL );
 
-	g_free( path );
-	g_free( parameters );
-	na_utils_free_string_list( basenames );
-	na_utils_free_string_list( mimetypes );
-	na_utils_free_string_list( schemes );
+		g_object_set( G_OBJECT( target ),
+				NAPROFILE_PROP_PATH, path,
+				NAPROFILE_PROP_PARAMETERS, parameters,
+				NAPROFILE_PROP_BASENAMES, basenames,
+				NAPROFILE_PROP_MATCHCASE, matchcase,
+				NAPROFILE_PROP_MIMETYPES, mimetypes,
+				NAPROFILE_PROP_ISFILE, isfile,
+				NAPROFILE_PROP_ISDIR, isdir,
+				NAPROFILE_PROP_ACCEPT_MULTIPLE, multiple,
+				NAPROFILE_PROP_SCHEMES, schemes,
+				NULL );
+
+		g_free( path );
+		g_free( parameters );
+		na_utils_free_string_list( basenames );
+		na_utils_free_string_list( mimetypes );
+		na_utils_free_string_list( schemes );
+	}
 }
 
 gboolean
@@ -1521,43 +1560,45 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	gboolean equal = TRUE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( a ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_PROFILE( a )->private->dispose_has_run, FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( b ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_PROFILE( b )->private->dispose_has_run, FALSE );
 
-	if( equal ){
-		equal =
-			( g_utf8_collate( first->private->path, second->private->path ) == 0 ) &&
-			( g_utf8_collate( first->private->parameters, second->private->parameters ) == 0 );
-	}
+	if( !NA_OBJECT_PROFILE( a )->private->dispose_has_run &&
+		!NA_OBJECT_PROFILE( b )->private->dispose_has_run ){
 
-	if( equal ){
-		equal = (( first->private->accept_multiple && second->private->accept_multiple ) ||
-				( !first->private->accept_multiple && !second->private->accept_multiple ));
-	}
+		if( equal ){
+			equal =
+				( g_utf8_collate( first->private->path, second->private->path ) == 0 ) &&
+				( g_utf8_collate( first->private->parameters, second->private->parameters ) == 0 );
+		}
 
-	if( equal ){
-		equal = (( first->private->is_dir && second->private->is_dir ) ||
-				( !first->private->is_dir && !second->private->is_dir ));
-	}
+		if( equal ){
+			equal = (( first->private->accept_multiple && second->private->accept_multiple ) ||
+					( !first->private->accept_multiple && !second->private->accept_multiple ));
+		}
 
-	if( equal ){
-		equal = (( first->private->is_file && second->private->is_file ) ||
-				( !first->private->is_file && !second->private->is_file ));
-	}
+		if( equal ){
+			equal = (( first->private->is_dir && second->private->is_dir ) ||
+					( !first->private->is_dir && !second->private->is_dir ));
+		}
 
-	if( equal ){
-		equal = na_utils_string_lists_are_equal( first->private->basenames, second->private->basenames ) &&
-				na_utils_string_lists_are_equal( first->private->mimetypes, second->private->mimetypes ) &&
-				na_utils_string_lists_are_equal( first->private->schemes, second->private->schemes );
-	}
+		if( equal ){
+			equal = (( first->private->is_file && second->private->is_file ) ||
+					( !first->private->is_file && !second->private->is_file ));
+		}
+
+		if( equal ){
+			equal = na_utils_string_lists_are_equal( first->private->basenames, second->private->basenames ) &&
+					na_utils_string_lists_are_equal( first->private->mimetypes, second->private->mimetypes ) &&
+					na_utils_string_lists_are_equal( first->private->schemes, second->private->schemes );
+		}
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "na_object_profile_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
-			( void * ) a, G_OBJECT_TYPE_NAME( a ),
-			( void * ) b, G_OBJECT_TYPE_NAME( b ),
-			equal ? "True":"False" );
+		g_debug( "na_object_profile_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+				( void * ) a, G_OBJECT_TYPE_NAME( a ),
+				( void * ) b, G_OBJECT_TYPE_NAME( b ),
+				equal ? "True":"False" );
 #endif
+	}
 
 	return( equal );
 }
@@ -1573,12 +1614,14 @@ object_is_valid( const NAObject *profile )
 	gboolean is_valid = TRUE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run, FALSE );
 
-	if( is_valid ){
-		label = na_object_get_label( profile );
-		is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
-		g_free( label );
+	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
+
+		if( is_valid ){
+			label = na_object_get_label( profile );
+			is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+			g_free( label );
+		}
 	}
 
 	return( is_valid );

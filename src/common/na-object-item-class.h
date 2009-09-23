@@ -31,6 +31,30 @@
 #ifndef __NA_OBJECT_ITEM_CLASS_H__
 #define __NA_OBJECT_ITEM_CLASS_H__
 
+/**
+ * SECTION: na_object_item
+ * @short_description: #NAObjectItem class definition.
+ * @include: common/na-object-item-class.h
+ *
+ * Derived from #NAObjectId class, this class implements objects which
+ * have :
+ * - a tooltip,
+ * - an icon,
+ * - a list of childs.
+ *
+ * Note that checking edition status of a #NAObjectItem is almost, but
+ * not really a recursive process :
+ *
+ * - it may appear as recursive because all childs of the checked
+ *   #NAObjectItem, and childs of childs, etc., are also checked so that
+ *   they are able to setup their individual own edition status ;
+ *
+ * - nonetheless, but a particular rule which may be implemented in a
+ *   derived class, the edition status of the checked #NAObjectItem
+ *   itself is computed individually, without regards of the respective
+ *   edition status of its childs.
+ */
+
 #include "na-object-id-class.h"
 
 G_BEGIN_DECLS

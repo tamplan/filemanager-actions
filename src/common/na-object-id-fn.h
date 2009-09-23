@@ -33,14 +33,13 @@
 
 /**
  * SECTION: na_object_id
- * @short_description: #NAObjectId class definition.
+ * @short_description: #NAObjectId public function declarations.
  * @include: common/na-object-id-fn.h
  *
- * A #NAObjectId object is characterized by :
- * - an internal identifiant (ASCII, case insensitive)
- * - a libelle (UTF8, localizable).
+ * Define here the public functions of the #NAObjectId class.
  *
- * The #NAObjectId class is a pure virtual class.
+ * Note that most users of the class should rather use macros defined
+ * in na-object-api.h
  */
 
 #include "na-object-id-class.h"

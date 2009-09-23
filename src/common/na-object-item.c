@@ -228,29 +228,31 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	NAObjectItem *self;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
-	g_return_if_fail( !NA_OBJECT_ITEM( object )->private->dispose_has_run );
 	self = NA_OBJECT_ITEM( object );
 
-	switch( property_id ){
-		case NAOBJECT_ITEM_PROP_TOOLTIP_ID:
-			g_value_set_string( value, self->private->tooltip );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case NAOBJECT_ITEM_PROP_ICON_ID:
-			g_value_set_string( value, self->private->icon );
-			break;
+		switch( property_id ){
+			case NAOBJECT_ITEM_PROP_TOOLTIP_ID:
+				g_value_set_string( value, self->private->tooltip );
+				break;
 
-		case NAOBJECT_ITEM_PROP_ENABLED_ID:
-			g_value_set_boolean( value, self->private->enabled );
-			break;
+			case NAOBJECT_ITEM_PROP_ICON_ID:
+				g_value_set_string( value, self->private->icon );
+				break;
 
-		case NAOBJECT_ITEM_PROP_PROVIDER_ID:
-			g_value_set_pointer( value, self->private->provider );
-			break;
+			case NAOBJECT_ITEM_PROP_ENABLED_ID:
+				g_value_set_boolean( value, self->private->enabled );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
+				g_value_set_pointer( value, self->private->provider );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -260,31 +262,33 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	NAObjectItem *self;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
-	g_return_if_fail( !NA_OBJECT_ITEM( object )->private->dispose_has_run );
 	self = NA_OBJECT_ITEM( object );
 
-	switch( property_id ){
-		case NAOBJECT_ITEM_PROP_TOOLTIP_ID:
-			g_free( self->private->tooltip );
-			self->private->tooltip = g_value_dup_string( value );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case NAOBJECT_ITEM_PROP_ICON_ID:
-			g_free( self->private->icon );
-			self->private->icon = g_value_dup_string( value );
-			break;
+		switch( property_id ){
+			case NAOBJECT_ITEM_PROP_TOOLTIP_ID:
+				g_free( self->private->tooltip );
+				self->private->tooltip = g_value_dup_string( value );
+				break;
 
-		case NAOBJECT_ITEM_PROP_ENABLED_ID:
-			self->private->enabled = g_value_get_boolean( value );
-			break;
+			case NAOBJECT_ITEM_PROP_ICON_ID:
+				g_free( self->private->icon );
+				self->private->icon = g_value_dup_string( value );
+				break;
 
-		case NAOBJECT_ITEM_PROP_PROVIDER_ID:
-			self->private->provider = g_value_get_pointer( value );
-			break;
+			case NAOBJECT_ITEM_PROP_ENABLED_ID:
+				self->private->enabled = g_value_get_boolean( value );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
+				self->private->provider = g_value_get_pointer( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -345,12 +349,13 @@ instance_finalize( GObject *object )
 gchar *
 na_object_item_get_tooltip( const NAObjectItem *item )
 {
-	gchar *tooltip;
+	gchar *tooltip = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-	g_return_val_if_fail( !item->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TOOLTIP, &tooltip, NULL );
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TOOLTIP, &tooltip, NULL );
+	}
 
 	return( tooltip );
 }
@@ -368,12 +373,13 @@ na_object_item_get_tooltip( const NAObjectItem *item )
 gchar *
 na_object_item_get_icon( const NAObjectItem *item )
 {
-	gchar *icon;
+	gchar *icon = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-	g_return_val_if_fail( !item->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ICON, &icon, NULL );
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ICON, &icon, NULL );
+	}
 
 	return( icon );
 }
@@ -422,33 +428,36 @@ GdkPixbuf *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *widge
 	GError* error = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-	g_return_val_if_fail( !item->private->dispose_has_run, NULL );
 
-	iconname = na_object_item_get_icon( item );
+	if( !item->private->dispose_has_run ){
 
-	/* TODO: use the same algorythm than Nautilus to find and
-	 * display an icon + move the code to NAAction class +
-	 * remove na_action_get_verified_icon_name
-	 */
-	if( iconname ){
-		if( gtk_stock_lookup( iconname, &stock_item )){
-			icon = gtk_widget_render_icon( widget, iconname, GTK_ICON_SIZE_MENU, NULL );
+		iconname = na_object_item_get_icon( item );
 
-		} else if( g_file_test( iconname, G_FILE_TEST_EXISTS )
-			   && g_file_test( iconname, G_FILE_TEST_IS_REGULAR )){
+		/* TODO: use the same algorythm than Nautilus to find and
+		 * display an icon + move the code to NAAction class +
+		 * remove na_action_get_verified_icon_name
+		 */
+		if( iconname ){
+			if( gtk_stock_lookup( iconname, &stock_item )){
+				icon = gtk_widget_render_icon( widget, iconname, GTK_ICON_SIZE_MENU, NULL );
 
-			gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
-			icon = gdk_pixbuf_new_from_file_at_size( iconname, width, height, &error );
-			if( error ){
-				g_warning( "%s: iconname=%s, error=%s", thisfn, iconname, error->message );
-				g_error_free( error );
-				error = NULL;
-				icon = NULL;
+			} else if( g_file_test( iconname, G_FILE_TEST_EXISTS )
+				   && g_file_test( iconname, G_FILE_TEST_IS_REGULAR )){
+
+				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
+				icon = gdk_pixbuf_new_from_file_at_size( iconname, width, height, &error );
+				if( error ){
+					g_warning( "%s: iconname=%s, error=%s", thisfn, iconname, error->message );
+					g_error_free( error );
+					error = NULL;
+					icon = NULL;
+				}
 			}
 		}
+
+		g_free( iconname );
 	}
 
-	g_free( iconname );
 	return( icon );
 }
 
@@ -468,12 +477,13 @@ GdkPixbuf *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *widge
 NAIIOProvider *
 na_object_item_get_provider( const NAObjectItem *item )
 {
-	NAIIOProvider *provider;
+	NAIIOProvider *provider = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-	g_return_val_if_fail( !item->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER, &provider, NULL );
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER, &provider, NULL );
+	}
 
 	return( provider );
 }
@@ -497,15 +507,17 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
 	gchar *isubid;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-	g_return_val_if_fail( !item->private->dispose_has_run, NULL );
 
-	for( it = item->private->items ; it && !found ; it = it->next ){
-		isub = NA_OBJECT( it->data );
-		isubid = na_object_get_id( isub );
-		if( !strcmp( id, isubid )){
-			found = isub;
+	if( !item->private->dispose_has_run ){
+
+		for( it = item->private->items ; it && !found ; it = it->next ){
+			isub = NA_OBJECT( it->data );
+			isubid = na_object_get_id( isub );
+			if( !strcmp( id, isubid )){
+				found = isub;
+			}
+			g_free( isubid );
 		}
-		g_free( isubid );
 	}
 
 	return( found );
@@ -525,17 +537,21 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
 GList *
 na_object_item_get_items( const NAObjectItem *item )
 {
-	GList *items, *it;
+	GList *items = NULL;
+	GList *it;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-	g_return_val_if_fail( !item->private->dispose_has_run, NULL );
 
-	items = NULL;
-	for( it = item->private->items ; it ; it = it->next ){
-		items = g_list_prepend( items, g_object_ref( it->data ));
+	if( !item->private->dispose_has_run ){
+
+		for( it = item->private->items ; it ; it = it->next ){
+			items = g_list_prepend( items, g_object_ref( it->data ));
+		}
+
+		items = g_list_reverse( items );
 	}
 
-	return( g_list_reverse( items ));
+	return( items );
 }
 
 /**
@@ -547,10 +563,15 @@ na_object_item_get_items( const NAObjectItem *item )
 guint
 na_object_item_get_items_count( const NAObjectItem *item )
 {
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
-	g_return_val_if_fail( !item->private->dispose_has_run, 0 );
+	guint count = 0;
 
-	return( item->private->items ? g_list_length( item->private->items ) : 0 );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
+
+	if( !item->private->dispose_has_run ){
+		count = item->private->items ? g_list_length( item->private->items ) : 0;
+	}
+
+	return( count );
 }
 
 /**
@@ -587,12 +608,13 @@ na_object_item_free_items( GList *items )
 gboolean
 na_object_item_is_enabled( const NAObjectItem *item )
 {
-	gboolean enabled;
+	gboolean enabled = FALSE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
-	g_return_val_if_fail( !item->private->dispose_has_run, FALSE );
 
-	g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, &enabled, NULL );
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, &enabled, NULL );
+	}
 
 	return( enabled );
 }
@@ -613,9 +635,10 @@ void
 na_object_item_set_tooltip( NAObjectItem *item, const gchar *tooltip )
 {
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !item->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TOOLTIP, tooltip, NULL );
+	if( !item->private->dispose_has_run ){
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TOOLTIP, tooltip, NULL );
+	}
 }
 
 /**
@@ -632,9 +655,10 @@ void
 na_object_item_set_icon( NAObjectItem *item, const gchar *icon )
 {
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !item->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ICON, icon, NULL );
+	if( !item->private->dispose_has_run ){
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ICON, icon, NULL );
+	}
 }
 
 /**
@@ -648,9 +672,10 @@ void
 na_object_item_set_enabled( NAObjectItem *item, gboolean enabled )
 {
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !item->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, enabled, NULL );
+	if( !item->private->dispose_has_run ){
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, enabled, NULL );
+	}
 }
 
 /**
@@ -664,9 +689,10 @@ void
 na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider )
 {
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !item->private->dispose_has_run );
 
-	g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER, provider, NULL );
+	if( !item->private->dispose_has_run ){
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER, provider, NULL );
+	}
 }
 
 /**
@@ -687,15 +713,18 @@ na_object_item_set_items( NAObjectItem *item, GList *items )
 	GList *it;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !item->private->dispose_has_run );
 
-	na_object_item_free_items( item->private->items );
-	item->private->items = NULL;
+	if( !item->private->dispose_has_run ){
 
-	for( it = items ; it ; it = it->next ){
-		item->private->items = g_list_prepend( item->private->items, g_object_ref( it->data ));
+		na_object_item_free_items( item->private->items );
+		item->private->items = NULL;
+
+		for( it = items ; it ; it = it->next ){
+			item->private->items = g_list_prepend( item->private->items, g_object_ref( it->data ));
+		}
+
+		item->private->items = g_list_reverse( item->private->items );
 	}
-	item->private->items = g_list_reverse( item->private->items );
 }
 
 /**
@@ -711,11 +740,13 @@ void
 na_object_item_append_item( NAObjectItem *item, const NAObject *object )
 {
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	if( !g_list_find( item->private->items, ( gpointer ) object )){
-		item->private->items = g_list_append( item->private->items, ( gpointer ) object );
+	if( !item->private->dispose_has_run ){
+
+		if( !g_list_find( item->private->items, ( gpointer ) object )){
+			item->private->items = g_list_append( item->private->items, ( gpointer ) object );
+		}
 	}
 }
 
@@ -735,16 +766,18 @@ na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NA
 	GList *before_list;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 	g_return_if_fail( NA_IS_OBJECT( before ));
 
-	if( !g_list_find( item->private->items, ( gpointer ) object )){
-		before_list = g_list_find( item->private->items, ( gconstpointer ) before );
-		if( before_list ){
-			item->private->items = g_list_insert_before( item->private->items, before_list, ( gpointer ) object );
-		} else {
-			item->private->items = g_list_prepend( item->private->items, ( gpointer ) object );
+	if( !item->private->dispose_has_run ){
+
+		if( !g_list_find( item->private->items, ( gpointer ) object )){
+			before_list = g_list_find( item->private->items, ( gconstpointer ) before );
+			if( before_list ){
+				item->private->items = g_list_insert_before( item->private->items, before_list, ( gpointer ) object );
+			} else {
+				item->private->items = g_list_prepend( item->private->items, ( gpointer ) object );
+			}
 		}
 	}
 }
@@ -762,11 +795,13 @@ void
 na_object_item_remove_item( NAObjectItem *item, const NAObject *object )
 {
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !item->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	if( g_list_find( item->private->items, ( gconstpointer ) object )){
-		item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
+	if( !item->private->dispose_has_run ){
+
+		if( g_list_find( item->private->items, ( gconstpointer ) object )){
+			item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
+		}
 	}
 }
 
@@ -774,29 +809,27 @@ static void
 object_dump( const NAObject *item )
 {
 	static const gchar *thisfn = "na_object_item_object_dump";
-	/*GList *it;*/
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !NA_OBJECT_ITEM( item )->private->dispose_has_run );
 
-	g_debug( "%s:  tooltip='%s'", thisfn, NA_OBJECT_ITEM( item )->private->tooltip );
-	g_debug( "%s:     icon='%s'", thisfn, NA_OBJECT_ITEM( item )->private->icon );
-	g_debug( "%s:  enabled='%s'", thisfn, NA_OBJECT_ITEM( item )->private->enabled ? "True" : "False" );
-	g_debug( "%s: provider=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider );
+	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
 
-	/* dump subitems */
-	g_debug( "%s: %d subitem(s) at %p",
-			thisfn,
-			NA_OBJECT_ITEM( item )->private->items ? g_list_length( NA_OBJECT_ITEM( item )->private->items ) : 0,
-			( void * ) NA_OBJECT_ITEM( item )->private->items );
+		g_debug( "%s:  tooltip='%s'", thisfn, NA_OBJECT_ITEM( item )->private->tooltip );
+		g_debug( "%s:     icon='%s'", thisfn, NA_OBJECT_ITEM( item )->private->icon );
+		g_debug( "%s:  enabled='%s'", thisfn, NA_OBJECT_ITEM( item )->private->enabled ? "True" : "False" );
+		g_debug( "%s: provider=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider );
 
-	/* do not recurse here, as this is actually dealt with by
-	 * na_object_dump() api ;
-	 * else, we would have the action being dumped after its childs
-	 */
-	/*for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
-		na_object_dump( it->data );
-	}*/
+		/* dump subitems */
+		g_debug( "%s: %d subitem(s) at %p",
+				thisfn,
+				NA_OBJECT_ITEM( item )->private->items ? g_list_length( NA_OBJECT_ITEM( item )->private->items ) : 0,
+				( void * ) NA_OBJECT_ITEM( item )->private->items );
+
+		/* do not recurse here, as this is actually dealt with by
+		 * na_object_dump() api ;
+		 * else, we would have the action being dumped after its childs
+		 */
+	}
 }
 
 static void
@@ -814,36 +847,36 @@ object_copy( NAObject *target, const NAObject *source )
 	GList *subitems, *it;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( target ));
-	g_return_if_fail( !NA_OBJECT_ITEM( target )->private->dispose_has_run );
 	g_return_if_fail( NA_IS_OBJECT_ITEM( source ));
-	g_return_if_fail( !NA_OBJECT_ITEM( source )->private->dispose_has_run );
 
-	g_object_get( G_OBJECT( source ),
-			NAOBJECT_ITEM_PROP_TOOLTIP, &tooltip,
-			NAOBJECT_ITEM_PROP_ICON, &icon,
-			NAOBJECT_ITEM_PROP_ENABLED, &enabled,
-			NAOBJECT_ITEM_PROP_PROVIDER, &provider,
-			NULL );
+	if( !NA_OBJECT_ITEM( target )->private->dispose_has_run &&
+		!NA_OBJECT_ITEM( source )->private->dispose_has_run ){
 
-	g_object_set( G_OBJECT( target ),
-			NAOBJECT_ITEM_PROP_TOOLTIP, tooltip,
-			NAOBJECT_ITEM_PROP_ICON, icon,
-			NAOBJECT_ITEM_PROP_ENABLED, enabled,
-			NAOBJECT_ITEM_PROP_PROVIDER, provider,
-			NULL );
+		g_object_get( G_OBJECT( source ),
+				NAOBJECT_ITEM_PROP_TOOLTIP, &tooltip,
+				NAOBJECT_ITEM_PROP_ICON, &icon,
+				NAOBJECT_ITEM_PROP_ENABLED, &enabled,
+				NAOBJECT_ITEM_PROP_PROVIDER, &provider,
+				NULL );
 
-	g_free( tooltip );
-	g_free( icon );
+		g_object_set( G_OBJECT( target ),
+				NAOBJECT_ITEM_PROP_TOOLTIP, tooltip,
+				NAOBJECT_ITEM_PROP_ICON, icon,
+				NAOBJECT_ITEM_PROP_ENABLED, enabled,
+				NAOBJECT_ITEM_PROP_PROVIDER, provider,
+				NULL );
 
-	subitems = NULL;
-	for( it = NA_OBJECT_ITEM( source )->private->items ; it ; it = it->next ){
-		subitems = g_list_prepend( subitems, na_object_duplicate( it->data ));
+		g_free( tooltip );
+		g_free( icon );
+
+		subitems = NULL;
+		for( it = NA_OBJECT_ITEM( source )->private->items ; it ; it = it->next ){
+			subitems = g_list_prepend( subitems, na_object_duplicate( it->data ));
+		}
+		subitems = g_list_reverse( subitems );
+		na_object_set_items( target, subitems );
+		na_object_free_items( subitems );
 	}
-	subitems = g_list_reverse( subitems );
-	na_object_set_items( target, subitems );
-	na_object_free_items( subitems );
-
-	/*g_debug( "na_object_item_object_copy: end" );*/
 }
 
 /*
@@ -879,69 +912,71 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	GList *second_list;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( a ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_ITEM( a )->private->dispose_has_run, FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( b ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_ITEM( b )->private->dispose_has_run, FALSE );
 
-	if( equal ){
-		equal =
-			( g_utf8_collate( NA_OBJECT_ITEM( a )->private->tooltip, NA_OBJECT_ITEM( b )->private->tooltip ) == 0 ) &&
-			( g_utf8_collate( NA_OBJECT_ITEM( a )->private->icon, NA_OBJECT_ITEM( b )->private->icon ) == 0 );
-	}
+	if( !NA_OBJECT_ITEM( a )->private->dispose_has_run &&
+		!NA_OBJECT_ITEM( b )->private->dispose_has_run ){
 
-	if( equal ){
-		equal = ( NA_OBJECT_ITEM( a )->private->enabled && NA_OBJECT_ITEM( b )->private->enabled ) ||
-				( !NA_OBJECT_ITEM( a )->private->enabled && !NA_OBJECT_ITEM( b )->private->enabled );
-	}
+		if( equal ){
+			equal =
+				( g_utf8_collate( NA_OBJECT_ITEM( a )->private->tooltip, NA_OBJECT_ITEM( b )->private->tooltip ) == 0 ) &&
+				( g_utf8_collate( NA_OBJECT_ITEM( a )->private->icon, NA_OBJECT_ITEM( b )->private->icon ) == 0 );
+		}
 
-	if( equal ){
-		equal = ( g_list_length( NA_OBJECT_ITEM( a )->private->items ) == g_list_length( NA_OBJECT_ITEM( b )->private->items ));
-	}
+		if( equal ){
+			equal = ( NA_OBJECT_ITEM( a )->private->enabled && NA_OBJECT_ITEM( b )->private->enabled ) ||
+					( !NA_OBJECT_ITEM( a )->private->enabled && !NA_OBJECT_ITEM( b )->private->enabled );
+		}
 
-	if( equal ){
-		for( it = NA_OBJECT_ITEM( a )->private->items ; it && equal ; it = it->next ){
-			first_id = na_object_get_id( it->data );
-			second_obj = na_object_get_item( b, first_id );
-			if( second_obj ){
-				first_pos = g_list_position( NA_OBJECT_ITEM( a )->private->items, it );
-				second_list = g_list_find( NA_OBJECT_ITEM( b )->private->items, second_obj );
-				second_pos = g_list_position( NA_OBJECT_ITEM( b )->private->items, second_list );
+		if( equal ){
+			equal = ( g_list_length( NA_OBJECT_ITEM( a )->private->items ) == g_list_length( NA_OBJECT_ITEM( b )->private->items ));
+		}
+
+		if( equal ){
+			for( it = NA_OBJECT_ITEM( a )->private->items ; it && equal ; it = it->next ){
+				first_id = na_object_get_id( it->data );
+				second_obj = na_object_get_item( b, first_id );
+				if( second_obj ){
+					first_pos = g_list_position( NA_OBJECT_ITEM( a )->private->items, it );
+					second_list = g_list_find( NA_OBJECT_ITEM( b )->private->items, second_obj );
+					second_pos = g_list_position( NA_OBJECT_ITEM( b )->private->items, second_list );
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-				g_debug( "na_object_item_object_are_equal: first_pos=%u, second_pos=%u", first_pos, second_pos );
+					g_debug( "na_object_item_object_are_equal: first_pos=%u, second_pos=%u", first_pos, second_pos );
 #endif
-				if( first_pos != second_pos ){
-					equal = FALSE;
-				}
-			} else {
+					if( first_pos != second_pos ){
+						equal = FALSE;
+					}
+				} else {
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 					g_debug( "na_object_item_object_are_equal: id=%s not found in b", first_id );
 #endif
-				equal = FALSE;
+					equal = FALSE;
+				}
+				g_free( first_id );
 			}
-			g_free( first_id );
 		}
-	}
 
-	if( equal ){
-		for( it = NA_OBJECT_ITEM( b )->private->items ; it && equal ; it = it->next ){
-			second_id = na_object_get_id( it->data );
-			first_obj = na_object_get_item( a, second_id );
-			if( !first_obj ){
+		if( equal ){
+			for( it = NA_OBJECT_ITEM( b )->private->items ; it && equal ; it = it->next ){
+				second_id = na_object_get_id( it->data );
+				first_obj = na_object_get_item( a, second_id );
+				if( !first_obj ){
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 					g_debug( "na_object_item_object_are_equal: id=%s not found in a", second_id );
 #endif
-				equal = FALSE;
+					equal = FALSE;
+				}
+				g_free( second_id );
 			}
-			g_free( second_id );
 		}
-	}
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "na_object_item_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
-			( void * ) a, G_OBJECT_TYPE_NAME( a ),
-			( void * ) b, G_OBJECT_TYPE_NAME( b ),
-			equal ? "True":"False" );
+		g_debug( "na_object_item_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+				( void * ) a, G_OBJECT_TYPE_NAME( a ),
+				( void * ) b, G_OBJECT_TYPE_NAME( b ),
+				equal ? "True":"False" );
 #endif
+	}
 
 	return( equal );
 }
@@ -953,16 +988,13 @@ static gboolean
 object_is_valid( const NAObject *object )
 {
 	gboolean valid = TRUE;
-	/*GList *it;*/
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), FALSE );
-	g_return_val_if_fail( !NA_OBJECT_ITEM( object )->private->dispose_has_run, FALSE );
 
-	/*if( valid ){
-		for( it = NA_OBJECT_ITEM( object )->private->items ; it && valid ; it = it->next ){
-			valid = na_object_is_valid( it->data );
-		}
-	}*/
+	if( !NA_OBJECT_ITEM( object )->private->dispose_has_run ){
+
+		/* nothing to check here */
+	}
 
 	return( valid );
 }
@@ -970,7 +1002,15 @@ object_is_valid( const NAObject *object )
 static GList *
 object_get_childs( const NAObject *object )
 {
-	return( NA_OBJECT_ITEM( object )->private->items );
+	GList *childs = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), NULL );
+
+	if( !NA_OBJECT_ITEM( object )->private->dispose_has_run ){
+		childs = NA_OBJECT_ITEM( object )->private->items;
+	}
+
+	return( childs );
 }
 
 static gchar *
@@ -979,20 +1019,22 @@ object_id_new_id( const NAObjectId *item )
 	GList *it;
 	uuid_t uuid;
 	gchar uuid_str[64];
-	gchar *new_uuid;
+	gchar *new_uuid = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-	g_return_val_if_fail( !NA_OBJECT_ITEM( item )->private->dispose_has_run, NULL );
 
-	for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
-		if( NA_IS_OBJECT_ITEM( it->data )){
-			na_object_set_new_id( it->data );
+	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
+
+		for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
+			if( NA_IS_OBJECT_ITEM( it->data )){
+				na_object_set_new_id( it->data );
+			}
 		}
-	}
 
-	uuid_generate( uuid );
-	uuid_unparse_lower( uuid, uuid_str );
-	new_uuid = g_strdup( uuid_str );
+		uuid_generate( uuid );
+		uuid_unparse_lower( uuid, uuid_str );
+		new_uuid = g_strdup( uuid_str );
+	}
 
 	return( new_uuid );
 }

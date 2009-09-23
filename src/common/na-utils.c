@@ -39,13 +39,13 @@
 #include "na-utils.h"
 
 /**
- * Search for a string in a string list.
- *
+ * na_utils_find_in_list:
  * @list: the GSList of strings to be searched.
- *
  * @str: the searched string.
  *
- * Returns TRUE if the string has been found in list.
+ * Search for a string in a string list.
+ *
+ * Returns: %TRUE if the string has been found in list.
  */
 gboolean
 na_utils_find_in_list( GSList *list, const gchar *str )
@@ -63,13 +63,13 @@ na_utils_find_in_list( GSList *list, const gchar *str )
 }
 
 /**
- * Compare two string lists.
- *
+ * na_utils_string_lists_are_equal:
  * @first: a GSList of strings.
- *
  * @second: another GSList of strings to be compared with @first.
  *
- * Returns TRUE if the two lists have same content.
+ * Compare two string lists, without regards to the order.
+ *
+ * Returns: %TRUE if the two lists have same content.
  */
 gboolean
 na_utils_string_lists_are_equal( GSList *first, GSList *second )
@@ -94,9 +94,12 @@ na_utils_string_lists_are_equal( GSList *first, GSList *second )
 }
 
 /**
- * Duplicates a GSList of strings.
- *
+ * na_utils_duplicate_string_list:
  * @list: the GSList to be duplicated.
+ *
+ * Returns: a #GSList of strings.
+ *
+ * The returned list should be na_utils_free_string_list() by the caller.
  */
 GSList *
 na_utils_duplicate_string_list( GSList *list )
@@ -111,9 +114,10 @@ na_utils_duplicate_string_list( GSList *list )
 }
 
 /**
- * Frees a GSList of strings.
- *
+ * na_utils_free_string_list:
  * @list: the GSList to be freed.
+ *
+ * Frees a GSList of strings.
  */
 void
 na_utils_free_string_list( GSList *list )
@@ -126,11 +130,13 @@ na_utils_free_string_list( GSList *list )
 }
 
 /**
+ * na_utils_remove_ascii_from_string_list:
+ * @list: the GSList to be updated.
+ * @text: string to remove.
+ *
  * Removes a string from a GSList of strings.
  *
- * @list: the GSList to be updated.
- *
- * @text: string to remove.
+ * Returns the new list after update.
  */
 GSList *
 na_utils_remove_ascii_from_string_list( GSList *list, const gchar *text )
@@ -147,8 +153,14 @@ na_utils_remove_ascii_from_string_list( GSList *list, const gchar *text )
 }
 
 /**
+ * na_utils_string_list_to_text:
+ * @strlist: a list of strings.
+ *
  * Concatenates a string list to a semi-colon-separated text
  * suitable for an entry in the user interface
+ *
+ * Returns: a newly allocated string, which should be g_free() by the
+ * caller.
  */
 gchar *
 na_utils_string_list_to_text( GSList *strlist )
@@ -172,8 +184,13 @@ na_utils_string_list_to_text( GSList *strlist )
 }
 
 /**
- * Extracts a list of strings from a semi-colon-separated text
+ * na_utils_text_to_string_list:
+ * @text: a semi-colon-separated string.
+ *
+ * Returns: a list of strings from a semi-colon-separated text
  * (entry text in the user interface).
+ *
+ * The returned list should be na_utils_free_string_list() by the caller.
  */
 GSList *
 na_utils_text_to_string_list( const gchar *text )
@@ -204,6 +221,12 @@ na_utils_text_to_string_list( const gchar *text )
 	return( strlist );
 }
 
+/**
+ * na_utils_dump_string_list:
+ * @list: a list of strings.
+ *
+ * Dumps the content of a list of strings.
+ */
 void
 na_utils_dump_string_list( GSList *list )
 {
@@ -219,8 +242,13 @@ na_utils_dump_string_list( GSList *list )
 }
 
 /**
+ * na_utils_gslist_to_schema:
+ * @list: a list of strings.
+ *
  * Converts a list of strings to a comma-separated list of strings,
  * enclosed by brackets (dump format, GConf export format).
+ *
+ * Returns: a newly allocated string which should be g_free() by the caller.
  */
 gchar *
 na_utils_gslist_to_schema( GSList *list )
@@ -248,8 +276,14 @@ na_utils_gslist_to_schema( GSList *list )
 }
 
 /**
+ * na_utils_schema_to_gslist:
+ * @value: a string of the form [xxx,yyy,...] as read from GConf.
+ *
  * Converts a string representing a list of strings in a GConf format
  * to a list of strings.
+ *
+ * Returns: a newly allocated list of strings, which should be
+ * na_utils_free_string_list() by the caller.
  */
 GSList *
 na_utils_schema_to_gslist( const gchar *value )
@@ -295,7 +329,12 @@ na_utils_schema_to_gslist( const gchar *value )
 }
 
 /**
+ * na_utils_boolean_to_schema:
+ * @b: a boolean to be written.
+ *
  * Converts a boolean to the suitable string for a GConf schema
+ *
+ * Returns: a newly allocated string which should be g_free() by the caller.
  */
 gchar *
 na_utils_boolean_to_schema( gboolean b )
@@ -305,8 +344,17 @@ na_utils_boolean_to_schema( gboolean b )
 }
 
 /**
- * Converts a string to a boolean
- * Not case sensitive, accepts abbreviations
+ * na_utils_schema_to_boolean:
+ * @value: a string which should contains a boolean value.
+ * @default_value: the default value to be used.
+ *
+ * Converts a string to a boolean.
+ *
+ * The conversion is not case sensitive, and accepts abbreviations.
+ * The default value is used if we cannot parse the provided string.
+ *
+ * Returns: the boolean.
+ *
  */
 gboolean
 na_utils_schema_to_boolean( const gchar *value, gboolean default_value )
@@ -324,8 +372,12 @@ na_utils_schema_to_boolean( const gchar *value, gboolean default_value )
 }
 
 /**
- * extract the last part of a full path
- * returns a newly allocated string which must be g_free() by the caller
+ * na_utils_path_extract_last_dir:
+ * @path: a full path.
+ *
+ * Extracts the last part of a full path.
+ *
+ * Returns: a newly allocated string which should be g_free() by the caller.
  */
 gchar *
 na_utils_path_extract_last_dir( const gchar *path )
@@ -338,7 +390,14 @@ na_utils_path_extract_last_dir( const gchar *path )
 }
 
 /**
- * Concatenates a gchar **list of strings to a GString.
+ * na_utils_gstring_joinv:
+ * @start: a prefix to be written at the beginning of the output string.
+ * @separator: a string to be used as separator.
+ * @list: the list of strings to be concatenated.
+ *
+ * Concatenates a gchar **list of strings to a new string.
+ *
+ * Returns: a newly allocated string which should be g_free() by the caller.
  */
 gchar *
 na_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list )
@@ -366,6 +425,14 @@ na_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list
 	return( g_string_free( tmp_string, FALSE ));
 }
 
+/**
+ * na_utils_remove_last_level_from_path:
+ * @path: a full path.
+ *
+ * Removes last level from path (mostly a 'dirname').
+ *
+ * Returns: a newly allocated string which should be g_free() by the caller.
+ */
 gchar *
 na_utils_remove_last_level_from_path( const gchar *path )
 {
@@ -395,6 +462,18 @@ na_utils_remove_last_level_from_path( const gchar *path )
 	return( new_path );
 }
 
+/**
+ * na_utils_is_writable_dir:
+ * @uri: an uri which points to a directory.
+ *
+ * Returns: %TRUE if the directory is writable, %FALSE else.
+ *
+ * Please note that this type of test is subject to race conditions,
+ * as the directory may become unwritable after a successfull test,
+ * but before the caller has been able to actually write into it.
+ *
+ * There is no "super-test". Just try...
+ */
 gboolean
 na_utils_is_writable_dir( const gchar *uri )
 {
@@ -437,6 +516,14 @@ na_utils_is_writable_dir( const gchar *uri )
 	return( writable );
 }
 
+/**
+ * na_utils_exist_file:
+ * @uri: an uri which points to a file.
+ *
+ * Returns: %TRUE if the specified file exists, %FALSE else.
+ *
+ * Race condition: cf. na_utils_is_writable_dir() comment.
+ */
 gboolean
 na_utils_exist_file( const gchar *uri )
 {

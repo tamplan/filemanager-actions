@@ -128,30 +128,41 @@ interface_base_finalize( NAIPrefsInterface *klass )
 /**
  * na_iprefs_get_level_zero_items:
  * @instance: this #NAIPrefs interface instance.
+ *
+ * Returns: the ordered list of UUID's of items which are to be
+ * displayed at level zero of the hierarchy.
+ *
+ * The returned list should be na_utils_free_string_list() by the caller.
  */
 GSList *
 na_iprefs_get_level_zero_items( NAIPrefs *instance )
 {
-	g_return_val_if_fail( st_initialized && !st_finalized, NULL );
+	GSList *level_zero = NULL;
+
 	g_return_val_if_fail( NA_IS_IPREFS( instance ), NULL );
 
-	return( read_string_list( instance, PREFS_LEVEL_ZERO_ITEMS ));
+	if( st_initialized && !st_finalized ){
+		level_zero = read_string_list( instance, PREFS_LEVEL_ZERO_ITEMS );
+	}
+
+	return( level_zero );
 }
 
 /**
  * na_iprefs_set_level_zero_items:
  * @instance: this #NAIPrefs interface instance.
- * @order: a #GSList of item ids.
+ * @order: the ordered #GSList of item UUIDs.
  *
- * Writes the order and the content of the level-zero items.
+ * Writes the order and the content of the level-zero UUID's.
  */
 void
 na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
 {
-	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
-	write_string_list( instance, PREFS_LEVEL_ZERO_ITEMS, order );
+	if( st_initialized && !st_finalized ){
+		write_string_list( instance, PREFS_LEVEL_ZERO_ITEMS, order );
+	}
 }
 
 /**
@@ -170,23 +181,33 @@ na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
 gboolean
 na_iprefs_is_alphabetical_order( NAIPrefs *instance )
 {
-	g_return_val_if_fail( st_initialized && !st_finalized, FALSE );
+	gboolean alpha_order = FALSE;
+
 	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
 
-	return( read_bool( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, TRUE ));
+	if( st_initialized && !st_finalized ){
+		alpha_order = read_bool( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, TRUE );
+	}
+
+	return( alpha_order );
 }
 
 /**
  * na_iprefs_set_alphabetical_order:
  * @instance: this #NAIPrefs interface instance.
+ * @enabled: the new value to be written.
+ *
+ * Writes the current status of 'alphabetical order' to the GConf
+ * preference system.
  */
 void
 na_iprefs_set_alphabetical_order( NAIPrefs *instance, gboolean enabled )
 {
-	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
-	write_bool( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, enabled );
+	if( st_initialized && !st_finalized ){
+		write_bool( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, enabled );
+	}
 }
 
 /**
@@ -205,32 +226,32 @@ na_iprefs_set_alphabetical_order( NAIPrefs *instance, gboolean enabled )
 gboolean
 na_iprefs_should_add_about_item( NAIPrefs *instance )
 {
-	g_return_val_if_fail( st_initialized && !st_finalized, FALSE );
+	gboolean about = FALSE;
+
 	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
 
-	return( read_bool( instance, PREFS_ADD_ABOUT_ITEM, TRUE ));
+	if( st_initialized && !st_finalized ){
+		about = read_bool( instance, PREFS_ADD_ABOUT_ITEM, TRUE );
+	}
+
+	return( about );
 }
 
 /**
- * na_iprefs_should_add_about_item:
+ * na_iprefs_set_add_about_item:
  * @instance: this #NAIPrefs interface instance.
+ * @enabled: the new value to be written.
  *
- * Returns: #TRUE if an "About Nautilus Actions" item may be added to
- * the first level of Nautilus context submenus (if any), #FALSE else.
- *
- * Note: this function returns a suitable default value if the key is
- * not found in GConf preferences.
- *
- * Note: please take care of keeping the default value synchronized with
- * those defined in schemas.
+ * Writes the new value to the GConf preference system.
  */
 void
 na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled )
 {
-	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
-	write_bool( instance, PREFS_ADD_ABOUT_ITEM, enabled );
+	if( st_initialized && !st_finalized ){
+		write_bool( instance, PREFS_ADD_ABOUT_ITEM, enabled );
+	}
 }
 
 static gboolean
