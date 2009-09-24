@@ -378,5 +378,5 @@ nact_window_warn_modified( NactWindow *window )
 		g_free( first );
 	}
 
-	return( ok );
+	return( confirm );
 }

@@ -837,6 +837,8 @@ v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 			stop = window_do_dialog_response( dialog, code, window );
 		}
 	}
+
+	return( stop );
 }
 
 static BaseApplication *

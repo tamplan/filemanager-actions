@@ -148,7 +148,7 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the Delete item */
 				N_( "Delete the selected item(s)" ),
 				G_CALLBACK( on_delete_activated ) },
-		{ "ReloadActionsItem", NULL, N_( "_Reload the list of actions" ), "<Ctrl>R",
+		{ "ReloadActionsItem", GTK_STOCK_REFRESH, N_( "_Reload the list of actions" ), "F5",
 				/* i18n: tooltip displayed in the status bar when selecting the 'Reload' item */
 				N_( "Cancel your current modifications and reload the list of actions" ),
 				G_CALLBACK( on_reload_activated ) },
@@ -602,6 +602,7 @@ on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_reload_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	nact_main_window_reload( window );
 }
 
 static void

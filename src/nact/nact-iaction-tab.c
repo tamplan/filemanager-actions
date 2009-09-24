@@ -263,7 +263,7 @@ nact_iaction_tab_has_label( NactIActionTab *instance )
 	const gchar *label;
 	gboolean has_label = FALSE;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_val_if_fail( NACT_IS_IACTION_TAB( instance ), FALSE );
 
 	if( st_initialized && !st_finalized ){
 

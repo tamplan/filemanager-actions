@@ -1,5 +1,10 @@
 2009-09-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h (nact_main_window_reload):
+	New function.
+
 	* data/nautilus-actions.schemas.in: Rename preferences keys.
 	Add iprefs-level-zero key.
 

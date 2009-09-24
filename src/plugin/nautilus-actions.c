@@ -207,7 +207,7 @@ instance_dispose( GObject *object )
 	NautilusActions *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( object ));
 	self = NAUTILUS_ACTIONS( object );
 
 	if( !self->private->dispose_has_run ){
@@ -230,7 +230,7 @@ instance_finalize( GObject *object )
 	NautilusActions *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( object ));
 	self = NAUTILUS_ACTIONS( object );
 
 	g_free( self->private );

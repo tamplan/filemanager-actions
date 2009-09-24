@@ -288,7 +288,7 @@ nact_icommand_tab_has_label( NactICommandTab *instance )
 	GtkWidget *label_entry;
 	const gchar *label;
 
-	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
+	g_return_val_if_fail( NACT_IS_ICOMMAND_TAB( instance ), FALSE );
 
 	if( st_initialized && !st_finalized ){
 

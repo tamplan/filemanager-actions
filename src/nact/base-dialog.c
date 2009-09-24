@@ -130,7 +130,7 @@ instance_dispose( GObject *window )
 	BaseDialog *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_return_if_fail( BASE_IS_DIALOG( instance ));
+	g_return_if_fail( BASE_IS_DIALOG( window ));
 	self = BASE_DIALOG( window );
 
 	if( !self->private->dispose_has_run ){
@@ -151,7 +151,7 @@ instance_finalize( GObject *window )
 	BaseDialog *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_return_if_fail( BASE_IS_DIALOG( instance ));
+	g_return_if_fail( BASE_IS_DIALOG( window ));
 	self = BASE_DIALOG( window );
 
 	g_free( self->private );

@@ -361,6 +361,7 @@ nact_iadvanced_tab_dispose( NactIAdvancedTab *instance )
 
 	if( st_initialized && !st_finalized ){
 	}
+}
 
 /**
  * Returns selected schemes as a list of strings.
@@ -370,9 +371,9 @@ GSList *
 nact_iadvanced_tab_get_schemes( NactIAdvancedTab *instance )
 {
 	GSList *list = NULL;
-	GtkTreeModel* scheme_model;
+	GtkTreeModel *scheme_model;
 
-	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+	g_return_val_if_fail( NACT_IS_IADVANCED_TAB( instance ), NULL );
 
 	if( st_initialized && !st_finalized ){
 		scheme_model = get_schemes_tree_model( instance );

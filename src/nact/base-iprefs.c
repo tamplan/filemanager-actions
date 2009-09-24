@@ -165,7 +165,7 @@ base_iprefs_migrate_key( BaseWindow *window, const gchar *old_key, const gchar *
 
 	g_debug( "%s: window=%p, old_key=%s, new_key=%s", thisfn, ( void * ) window, old_key, new_key );
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_if_fail( BASE_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 
@@ -196,7 +196,7 @@ base_iprefs_position_window( BaseWindow *window )
 	gchar *key = v_iprefs_get_window_id( window );
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_if_fail( BASE_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 		if( key ){
@@ -224,7 +224,7 @@ base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, cons
 	gint x=0, y=0, width=0, height=0;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_if_fail( BASE_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 
@@ -254,7 +254,7 @@ base_iprefs_save_window_position( BaseWindow *window )
 	gchar *key;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_if_fail( BASE_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 
@@ -283,7 +283,7 @@ base_iprefs_save_named_window_position( BaseWindow *window, GtkWindow *toplevel,
 	GSList *list;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_if_fail( BASE_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 
@@ -311,8 +311,8 @@ base_iprefs_get_bool( BaseWindow *window, const gchar *name )
 {
 	gboolean ret = FALSE;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
+	g_return_val_if_fail( BASE_IS_IPREFS( window ), FALSE );
 
 	if( st_initialized && !st_finalized ){
 		ret = read_bool( window, name );
@@ -333,7 +333,7 @@ void
 base_iprefs_set_bool( BaseWindow *window, const gchar *name, gboolean value )
 {
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_if_fail( BASE_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 		write_bool( window, name, value );
@@ -352,8 +352,8 @@ base_iprefs_get_int( BaseWindow *window, const gchar *name )
 {
 	gint ret = 0;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), 0 );
+	g_return_val_if_fail( BASE_IS_IPREFS( window ), 0 );
 
 	if( st_initialized && !st_finalized ){
 		ret = read_int( window, name );
@@ -374,7 +374,7 @@ void
 base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value )
 {
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_if_fail( BASE_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 		write_int( window, name, value );
@@ -394,8 +394,8 @@ base_iprefs_get_string( BaseWindow *window, const gchar *name )
 {
 	gchar *string = NULL;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+	g_return_val_if_fail( BASE_IS_IPREFS( window ), NULL );
 
 	if( st_initialized && !st_finalized ){
 		string = read_str( window, name );
@@ -416,7 +416,7 @@ void
 base_iprefs_set_string( BaseWindow *window, const gchar *name, const gchar *string )
 {
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IPREFS( window ));
+	g_return_if_fail( BASE_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 		write_str( window, name, string );
@@ -426,7 +426,7 @@ base_iprefs_set_string( BaseWindow *window, const gchar *name, const gchar *stri
 static gchar *
 v_iprefs_get_window_id( BaseWindow *window )
 {
-	g_assert( BASE_IS_IPREFS( window ));
+	g_return_val_if_fail( BASE_IS_IPREFS( window ), NULL );
 
 	if( BASE_IPREFS_GET_INTERFACE( window )->iprefs_get_window_id ){
 		return( BASE_IPREFS_GET_INTERFACE( window )->iprefs_get_window_id( window ));

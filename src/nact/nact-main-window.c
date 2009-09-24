@@ -145,8 +145,11 @@ static void     set_current_profile( NactMainWindow *window, gboolean set_action
 
 static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data );
 
+static gboolean confirm_for_giveup_from_menu( NactMainWindow *window );
+static gboolean confirm_for_giveup_from_pivot( NactMainWindow *window );
 static void     ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
 static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data );
+static void     reload( NactMainWindow *window );
 
 GType
 nact_main_window_get_type( void )
@@ -650,6 +653,31 @@ nact_main_window_move_to_deleted( NactMainWindow *window, GList *items )
 }
 
 /**
+ * nact_main_window_reload:
+ * @window: this #NactMainWindow instance.
+ *
+ * Refresh the list of items.
+ * If there is some non-yet saved modifications, a confirmation is
+ * required before giving up with them.
+ */
+void
+nact_main_window_reload( NactMainWindow *window )
+{
+	gboolean reload_ok;
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+
+		reload_ok = confirm_for_giveup_from_menu( window );
+
+		if( reload_ok ){
+			reload( window );
+		}
+	}
+}
+
+/**
  * nact_main_window_remove_deleted:
  * @window: this #NactMainWindow instance.
  *
@@ -965,6 +993,68 @@ on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data )
 }
 
 /*
+ * requires a confirmation from the user when is has asked for reloading
+ * the actions via the Edit menu
+ */
+static gboolean
+confirm_for_giveup_from_menu( NactMainWindow *window )
+{
+	gboolean reload_ok = TRUE;
+	gchar *first, *second;
+
+	if( nact_main_window_has_modified_items( window )){
+
+		first = g_strdup(
+					_( "Reloading a fresh list of actions requires "
+						"that you give up with your current modifications." ));
+
+		second = g_strdup( _( "Do you really want to do this ?" ));
+
+		reload_ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+
+		g_free( second );
+		g_free( first );
+	}
+
+	return( reload_ok );
+}
+
+/*
+ * informs the user that the actions in underlying storage subsystem
+ * have changed, and propose for reloading
+ *
+ */
+static gboolean
+confirm_for_giveup_from_pivot( NactMainWindow *window )
+{
+	gboolean reload_ok;
+	gchar *first, *second;
+
+	first = g_strdup(
+				_( "One or more actions have been modified in the filesystem.\n"
+					"You could keep to work with your current list of actions, "
+					"or you may want to reload a fresh one." ));
+
+	if( nact_main_window_has_modified_items( window )){
+
+		gchar *tmp = g_strdup_printf( "%s\n\n%s", first,
+				_( "Note that reloading a fresh list of actions requires "
+					"that you give up with your current modifications." ));
+		g_free( first );
+		first = tmp;
+	}
+
+	second = g_strdup( _( "Do you want to reload a fresh list of actions ?" ));
+
+	reload_ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+
+	g_free( second );
+	g_free( first );
+
+	return( reload_ok );
+}
+
+/*
  * called by NAPivot because this window implements the IIOConsumer
  * interface, i.e. it wish to be advertised when the list of actions
  * changes in the underlying I/O storage subsystem (typically, when we
@@ -977,39 +1067,40 @@ static void
 ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_actions_changed";
-	NactApplication *application;
-	NAPivot *pivot;
-	gchar *first, *second;
-	gboolean ok;
+	NactMainWindow *window;
+	gboolean reload_ok;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
-	g_assert( NACT_IS_MAIN_WINDOW( instance ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
+	window = NACT_MAIN_WINDOW( instance );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-	pivot = nact_application_get_pivot( application );
+	if( !window->private->dispose_has_run ){
 
-	first = g_strdup(_( "One or more actions have been modified in the filesystem.\n"
-								"You could keep to work with your current list of actions, "
-								"or you may want to reload a fresh one." ));
+		reload_ok = confirm_for_giveup_from_pivot( window );
 
-	if( nact_main_window_has_modified_items( NACT_MAIN_WINDOW( instance ))){
-		gchar *tmp = g_strdup_printf( "%s\n\n%s", first,
-				_( "Note that reloading a fresh list of actions requires "
-					"that you give up with your current modifications." ));
-		g_free( first );
-		first = tmp;
+		if( reload_ok ){
+			reload( window );
+		}
 	}
+}
 
-	second = g_strdup( _( "Do you want to reload a fresh list of actions ?" ));
+static void
+reload( NactMainWindow *window )
+{
+	NactApplication *application;
+	NAPivot *pivot;
 
-	ok = base_window_yesno_dlg( BASE_WINDOW( instance ), GTK_MESSAGE_QUESTION, first, second );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	g_free( second );
-	g_free( first );
+	if( !window->private->dispose_has_run ){
 
-	if( ok ){
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		pivot = nact_application_get_pivot( application );
 		na_pivot_reload_items( pivot );
-		nact_iactions_list_fill( NACT_IACTIONS_LIST( instance ), na_pivot_get_items( pivot ));
+		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( pivot ));
+
+		na_object_free_items( window->private->deleted );
+		window->private->deleted = NULL;
 	}
 }
 

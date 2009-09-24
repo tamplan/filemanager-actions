@@ -276,7 +276,7 @@ nact_iconditions_tab_get_multiple( NactIConditionsTab *instance )
 	gboolean multiple = FALSE;
 	GtkButton *button;
 
-	g_return_if_fail( NACT_IS_ICONDITIONS_TAB( instance ));
+	g_return_val_if_fail( NACT_IS_ICONDITIONS_TAB( instance ), FALSE );
 
 	if( st_initialized && !st_finalized ){
 		button = get_multiple_button( instance );
@@ -346,6 +346,7 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		multiple = profile ? na_object_profile_get_multiple( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( multiple_button ), multiple );
 		gtk_widget_set_sensitive( GTK_WIDGET( multiple_button ), profile != NULL );
+	}
 }
 
 static GtkWidget *
