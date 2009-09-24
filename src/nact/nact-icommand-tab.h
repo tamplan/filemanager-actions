@@ -31,10 +31,13 @@
 #ifndef __NACT_ICOMMAND_TAB_H__
 #define __NACT_ICOMMAND_TAB_H__
 
-/*
- * NactICommandTab interface definition.
+/**
+ * SECTION: nact_icommand_tab
+ * @short_description: #NactICommandTab interface declaration.
+ * @include: nact/nact-icommand-tab.h
  *
- * This interface implements the "Nautilus Menu Item" box.
+ * This interface implements all the widgets which define the
+ * actual action to be executed.
  */
 
 #include <glib-object.h>

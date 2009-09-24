@@ -34,7 +34,7 @@
 /**
  * SECTION: base_application
  * @short_description: #BaseApplication class definition.
- * @include: nact/base-application.h
+ * @include: nact/base-application-class.h
  *
  * This is a pure virtual base class for Gtk+ programs.
  */

@@ -275,7 +275,7 @@ instance_dispose( GObject *window )
 	NactAssistantExport *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( NACT_IS_ASSISTANT_EXPORT( window ));
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 	self = NACT_ASSISTANT_EXPORT( window );
 
 	if( !self->private->dispose_has_run ){
@@ -296,8 +296,8 @@ instance_finalize( GObject *window )
 	NactAssistantExport *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( NACT_IS_ASSISTANT_EXPORT( window ));
-	self = ( NactAssistantExport * ) window;
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+	self = NACT_ASSISTANT_EXPORT( window );
 
 	g_free( self->private->uri );
 	na_utils_free_string_list( self->private->fnames );

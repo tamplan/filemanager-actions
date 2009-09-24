@@ -66,7 +66,7 @@ nact_main_statusbar_hide_status( NactMainWindow *window, const gchar *context )
 	}
 }
 
-/**
+/*
  * Returns the status bar widget
  */
 static GtkStatusbar *

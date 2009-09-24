@@ -31,8 +31,10 @@
 #ifndef __NACT_ASSISTANT_IMPORT_H__
 #define __NACT_ASSISTANT_IMPORT_H__
 
-/*
- * NactAssistantImport class definition.
+/**
+ * SECTION: nact_assistant_import
+ * @short_description: #NactAssistantImport class definition.
+ * @include: nact/nact-assistant-import.h
  */
 
 #include "base-assistant.h"

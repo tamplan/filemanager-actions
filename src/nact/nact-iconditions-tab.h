@@ -31,8 +31,10 @@
 #ifndef __NACT_ICONDITIONS_TAB_H__
 #define __NACT_ICONDITIONS_TAB_H__
 
-/*
- * NactIConditions_Tab interface definition.
+/**
+ * SECTION: nact_iconditionstab
+ * @short_description: #NactIConditionsTab interface declaration.
+ * @include: nact/nact-iconditions-tab.h
  *
  * This interface implements all the widgets which define the
  * conditions for the action.
@@ -52,7 +54,7 @@ typedef struct NactIConditionsTab NactIConditionsTab;
 typedef struct NactIConditionsTabInterfacePrivate NactIConditionsTabInterfacePrivate;
 
 typedef struct {
-	GTypeInterface                       parent;
+	GTypeInterface                      parent;
 	NactIConditionsTabInterfacePrivate *private;
 }
 	NactIConditionsTabInterface;

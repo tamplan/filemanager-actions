@@ -190,7 +190,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
-	g_assert( BASE_IS_ASSISTANT( instance ));
+	g_return_if_fail( BASE_IS_ASSISTANT( instance ));
 	self = BASE_ASSISTANT( instance );
 
 	self->private = g_new0( BaseAssistantPrivate, 1 );
@@ -220,25 +220,28 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 {
 	BaseAssistant *self;
 
-	g_assert( BASE_IS_ASSISTANT( object ));
+	g_return_if_fail( BASE_IS_ASSISTANT( object ));
 	self = BASE_ASSISTANT( object );
 
-	switch( property_id ){
-		case BASE_ASSISTANT_PROP_CANCEL_ON_ESCAPE_ID:
-			g_value_set_boolean( value, self->private->cancel_on_escape );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case BASE_ASSISTANT_PROP_WARN_ON_ESCAPE_ID:
-			g_value_set_boolean( value, self->private->warn_on_escape );
-			break;
+		switch( property_id ){
+			case BASE_ASSISTANT_PROP_CANCEL_ON_ESCAPE_ID:
+				g_value_set_boolean( value, self->private->cancel_on_escape );
+				break;
 
-		case BASE_ASSISTANT_PROP_WARN_ON_CANCEL_ID:
-			g_value_set_boolean( value, self->private->warn_on_cancel );
-			break;
+			case BASE_ASSISTANT_PROP_WARN_ON_ESCAPE_ID:
+				g_value_set_boolean( value, self->private->warn_on_escape );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case BASE_ASSISTANT_PROP_WARN_ON_CANCEL_ID:
+				g_value_set_boolean( value, self->private->warn_on_cancel );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -250,22 +253,25 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	g_assert( BASE_IS_ASSISTANT( object ));
 	self = BASE_ASSISTANT( object );
 
-	switch( property_id ){
-		case BASE_ASSISTANT_PROP_CANCEL_ON_ESCAPE_ID:
-			self->private->cancel_on_escape = g_value_get_boolean( value );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case BASE_ASSISTANT_PROP_WARN_ON_ESCAPE_ID:
-			self->private->warn_on_escape = g_value_get_boolean( value );
-			break;
+		switch( property_id ){
+			case BASE_ASSISTANT_PROP_CANCEL_ON_ESCAPE_ID:
+				self->private->cancel_on_escape = g_value_get_boolean( value );
+				break;
 
-		case BASE_ASSISTANT_PROP_WARN_ON_CANCEL_ID:
-			self->private->warn_on_cancel = g_value_get_boolean( value );
-			break;
+			case BASE_ASSISTANT_PROP_WARN_ON_ESCAPE_ID:
+				self->private->warn_on_escape = g_value_get_boolean( value );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case BASE_ASSISTANT_PROP_WARN_ON_CANCEL_ID:
+				self->private->warn_on_cancel = g_value_get_boolean( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -276,7 +282,7 @@ instance_dispose( GObject *window )
 	BaseAssistant *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 	self = BASE_ASSISTANT( window );
 
 	if( !self->private->dispose_has_run ){
@@ -299,7 +305,7 @@ instance_finalize( GObject *window )
 	BaseAssistant *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 	self = BASE_ASSISTANT( window );
 
 	g_free( self->private );
@@ -324,14 +330,13 @@ base_get_window( BaseWindow *window, const gchar *name )
 	gchar *fname;
 	GtkWindow *dialog;
 
+	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), NULL );
+
 	BASE_ASSISTANT( window )->private->builder = gtk_builder_new();
 
 	appli = base_window_get_application( window );
-
 	fname = base_application_get_ui_filename( appli );
-
 	gtk_builder_add_from_file( BASE_ASSISTANT( window )->private->builder, fname, NULL );
-
 	g_free( fname );
 
 	dialog = GTK_WINDOW( gtk_builder_get_object( BASE_ASSISTANT( window )->private->builder, name ));
@@ -349,7 +354,7 @@ base_get_window( BaseWindow *window, const gchar *name )
 void
 base_assistant_set_cancel_on_esc( BaseAssistant *window, gboolean cancel )
 {
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
 	g_object_set( G_OBJECT( window ), BASE_ASSISTANT_PROP_CANCEL_ON_ESCAPE, cancel, NULL );
 }
@@ -365,7 +370,7 @@ base_assistant_set_cancel_on_esc( BaseAssistant *window, gboolean cancel )
 void
 base_assistant_set_warn_on_esc( BaseAssistant *window, gboolean warn )
 {
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
 	g_object_set( G_OBJECT( window ), BASE_ASSISTANT_PROP_WARN_ON_ESCAPE, warn, NULL );
 }
@@ -380,7 +385,7 @@ base_assistant_set_warn_on_esc( BaseAssistant *window, gboolean warn )
 void
 base_assistant_set_warn_on_cancel( BaseAssistant *window, gboolean warn )
 {
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
 	g_object_set( G_OBJECT( window ), BASE_ASSISTANT_PROP_WARN_ON_CANCEL, warn, NULL );
 }
@@ -388,7 +393,7 @@ base_assistant_set_warn_on_cancel( BaseAssistant *window, gboolean warn )
 static void
 v_assistant_apply( GtkAssistant *assistant, BaseAssistant *window )
 {
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
 	if( BASE_ASSISTANT_GET_CLASS( window )->apply ){
 		BASE_ASSISTANT_GET_CLASS( window )->apply( window, assistant );
@@ -403,7 +408,7 @@ v_assistant_apply( GtkAssistant *assistant, BaseAssistant *window )
 static void
 v_assistant_cancel( GtkAssistant *assistant, BaseAssistant *window )
 {
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
 	if( BASE_ASSISTANT_GET_CLASS( window )->cancel ){
 		BASE_ASSISTANT_GET_CLASS( window )->cancel( window, assistant );
@@ -416,7 +421,7 @@ v_assistant_cancel( GtkAssistant *assistant, BaseAssistant *window )
 static void
 v_assistant_close( GtkAssistant *assistant, BaseAssistant *window )
 {
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
 	if( BASE_ASSISTANT_GET_CLASS( window )->close ){
 		BASE_ASSISTANT_GET_CLASS( window )->close( window, assistant );
@@ -429,7 +434,7 @@ v_assistant_close( GtkAssistant *assistant, BaseAssistant *window )
 static void
 v_assistant_prepare( GtkAssistant *assistant, GtkWidget *page, BaseAssistant *window )
 {
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
 	if( BASE_ASSISTANT_GET_CLASS( window )->prepare ){
 		BASE_ASSISTANT_GET_CLASS( window )->prepare( window, assistant, page );
@@ -446,6 +451,8 @@ v_assistant_prepare( GtkAssistant *assistant, GtkWidget *page, BaseAssistant *wi
 static void
 on_apply_message( GtkAssistant *assistant, BaseAssistant *window )
 {
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
+
 	if( !window->private->apply_has_run ){
 		v_assistant_apply( assistant, window );
 	}
@@ -454,12 +461,16 @@ on_apply_message( GtkAssistant *assistant, BaseAssistant *window )
 static void
 on_cancel_message( GtkAssistant *assistant, BaseAssistant *window )
 {
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
+
 	v_assistant_cancel( assistant, window );
 }
 
 static void
 on_close_message( GtkAssistant *assistant, BaseAssistant *window )
 {
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
+
 	v_assistant_close( assistant, window );
 }
 
@@ -471,6 +482,7 @@ on_prepare_message( GtkAssistant *assistant, GtkWidget *page, BaseAssistant *win
 
 	g_debug( "%s: assistant=%p, page=%p, window=%p",
 			thisfn, ( void * ) assistant, ( void * ) page, ( void * ) window );
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
 	type = gtk_assistant_get_page_type( assistant, page );
 
@@ -494,11 +506,14 @@ on_initial_load( BaseAssistant *window, gpointer user_data )
 	static const gchar *thisfn = "base_assistant_on_initial_load";
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
-	base_assistant_set_cancel_on_esc( window, FALSE );
-	base_assistant_set_warn_on_esc( window, FALSE );
-	base_assistant_set_warn_on_cancel( window, FALSE );
+	if( !window->private->dispose_has_run ){
+
+		base_assistant_set_cancel_on_esc( window, FALSE );
+		base_assistant_set_warn_on_esc( window, FALSE );
+		base_assistant_set_warn_on_cancel( window, FALSE );
+	}
 }
 
 static void
@@ -508,40 +523,43 @@ on_runtime_init( BaseAssistant *window, gpointer user_data )
 	GtkWindow *toplevel;
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_if_fail( BASE_IS_ASSISTANT( window ));
 
-	toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
-	g_assert( GTK_IS_ASSISTANT( toplevel ));
+	if( !window->private->dispose_has_run ){
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( toplevel ),
-			"key-press-event",
-			G_CALLBACK( on_key_pressed_event ));
+		toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
+		g_assert( GTK_IS_ASSISTANT( toplevel ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( toplevel ),
-			"apply",
-			G_CALLBACK( on_apply_message ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( toplevel ),
+				"key-press-event",
+				G_CALLBACK( on_key_pressed_event ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( toplevel ),
-			"cancel",
-			G_CALLBACK( on_cancel_message ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( toplevel ),
+				"apply",
+				G_CALLBACK( on_apply_message ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( toplevel ),
-			"close",
-			G_CALLBACK( on_close_message ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( toplevel ),
+				"cancel",
+				G_CALLBACK( on_cancel_message ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( toplevel ),
-			"prepare",
-			G_CALLBACK( on_prepare_message ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( toplevel ),
+				"close",
+				G_CALLBACK( on_close_message ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( toplevel ),
+				"prepare",
+				G_CALLBACK( on_prepare_message ));
+	}
 }
 
 static gboolean
@@ -552,13 +570,18 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseAssistant *assi
 	gboolean stop = FALSE;
 	GtkWindow *toplevel;
 
-	if( event->keyval == GDK_Escape &&
-		assistant->private->cancel_on_escape ){
+	g_return_val_if_fail( BASE_IS_ASSISTANT( assistant ), FALSE );
 
-			assistant->private->escape_key_pressed = TRUE;
-			toplevel = base_window_get_toplevel_window( BASE_WINDOW( assistant ));
-			g_signal_emit_by_name( toplevel, "cancel", toplevel );
-			stop = TRUE;
+	if( !assistant->private->dispose_has_run ){
+
+		if( event->keyval == GDK_Escape &&
+			assistant->private->cancel_on_escape ){
+
+				assistant->private->escape_key_pressed = TRUE;
+				toplevel = base_window_get_toplevel_window( BASE_WINDOW( assistant ));
+				g_signal_emit_by_name( toplevel, "cancel", toplevel );
+				stop = TRUE;
+		}
 	}
 
 	return( stop );

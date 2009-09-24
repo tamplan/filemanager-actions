@@ -124,8 +124,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NactWindow *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-
-	g_assert( NACT_IS_WINDOW( instance ));
+	g_return_if_fail( NACT_IS_WINDOW( instance ));
 	self = NACT_WINDOW( instance );
 
 	self->private = g_new0( NactWindowPrivate, 1 );
@@ -140,8 +139,7 @@ instance_dispose( GObject *window )
 	NactWindow *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	g_assert( NACT_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_WINDOW( window ));
 	self = NACT_WINDOW( window );
 
 	if( !self->private->dispose_has_run ){
@@ -162,9 +160,8 @@ instance_finalize( GObject *window )
 	NactWindow *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	g_assert( NACT_IS_WINDOW( window ));
-	self = ( NactWindow * ) window;
+	g_return_if_fail( NACT_IS_WINDOW( window ));
+	self = NACT_WINDOW( window );
 
 	g_free( self->private );
 
@@ -180,14 +177,19 @@ instance_finalize( GObject *window )
 NAPivot *
 nact_window_get_pivot( NactWindow *window )
 {
+	NAPivot *pivot = NULL;
 	NactApplication *application;
-	NAPivot *pivot;
 
-	g_object_get( G_OBJECT( window ), BASE_WINDOW_PROP_APPLICATION, &application, NULL );
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
+	g_return_val_if_fail( NACT_IS_WINDOW( window ), NULL );
 
-	pivot = nact_application_get_pivot( application );
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	if( !window->private->dispose_has_run ){
+
+		g_object_get( G_OBJECT( window ), BASE_WINDOW_PROP_APPLICATION, &application, NULL );
+		g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
+
+		pivot = nact_application_get_pivot( application );
+		g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	}
 
 	return( pivot );
 }
@@ -209,29 +211,36 @@ gboolean
 nact_window_save_item( NactWindow *window, NAObjectItem *item )
 {
 	static const gchar *thisfn = "nact_window_save_item";
+	gboolean save_ok = FALSE;
 	NAPivot *pivot;
 	gchar *msg = NULL;
 	guint ret;
 
-	g_debug( "%s: window=%p (%s), item=%p (%s)", thisfn,
-			( void * ) window, G_OBJECT_TYPE_NAME( window ),
-			( void * ) item, G_OBJECT_TYPE_NAME( item ));
+	g_debug( "%s: window=%p, item=%p (%s)", thisfn,
+			( void * ) window, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
+	g_return_val_if_fail( NACT_IS_WINDOW( window ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
 
-	pivot = nact_window_get_pivot( window );
-	g_assert( NA_IS_PIVOT( pivot ));
+	if( !window->private->dispose_has_run ){
 
-	na_object_dump_norec( item );
+		pivot = nact_window_get_pivot( window );
+		g_assert( NA_IS_PIVOT( pivot ));
 
-	ret = na_pivot_write_item( pivot, NA_OBJECT( item ), &msg );
+		na_object_dump_norec( item );
 
-	if( msg ){
-		base_window_error_dlg(
-				BASE_WINDOW( window ),
-				GTK_MESSAGE_WARNING, _( "An error has occured when trying to save the item" ), msg );
-		g_free( msg );
+		ret = na_pivot_write_item( pivot, NA_OBJECT( item ), &msg );
+
+		if( msg ){
+			base_window_error_dlg(
+					BASE_WINDOW( window ),
+					GTK_MESSAGE_WARNING, _( "An error has occured when trying to save the item" ), msg );
+			g_free( msg );
+		}
+
+		save_ok = ( ret == NA_IIO_PROVIDER_WRITE_OK );
 	}
 
-	return( ret == NA_IIO_PROVIDER_WRITE_OK );
+	return( save_ok );
 }
 
 /**
@@ -245,27 +254,36 @@ gboolean
 nact_window_delete_item( NactWindow *window, NAObjectItem *item )
 {
 	static const gchar *thisfn = "nact_window_delete_item";
+	gboolean delete_ok = FALSE;
 	NAPivot *pivot;
 	gchar *msg = NULL;
 	guint ret;
 
-	g_debug( "%s: window=%p, item=%p", thisfn, ( void * ) window, ( void * ) item );
+	g_debug( "%s: window=%p, item=%p (%s)", thisfn,
+			( void * ) window, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
+	g_return_val_if_fail( NACT_IS_WINDOW( window ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
 
-	pivot = nact_window_get_pivot( window );
-	g_assert( NA_IS_PIVOT( pivot ));
+	if( !window->private->dispose_has_run ){
 
-	na_object_dump_norec( item );
+		pivot = nact_window_get_pivot( window );
+		g_assert( NA_IS_PIVOT( pivot ));
 
-	ret = na_pivot_delete_item( pivot, NA_OBJECT( item ), &msg );
+		na_object_dump_norec( item );
 
-	if( msg ){
-		base_window_error_dlg(
-				BASE_WINDOW( window ),
-				GTK_MESSAGE_WARNING, _( "An error has occured when trying to delete the item" ), msg );
-		g_free( msg );
+		ret = na_pivot_delete_item( pivot, NA_OBJECT( item ), &msg );
+
+		if( msg ){
+			base_window_error_dlg(
+					BASE_WINDOW( window ),
+					GTK_MESSAGE_WARNING, _( "An error has occured when trying to delete the item" ), msg );
+			g_free( msg );
+		}
+
+		delete_ok = ( ret == NA_IIO_PROVIDER_WRITE_OK );
 	}
 
-	return( ret == NA_IIO_PROVIDER_WRITE_OK );
+	return( delete_ok );
 }
 
 /**
@@ -288,18 +306,21 @@ nact_window_write_level_zero( NactWindow *window, GList *items )
 	g_debug( "%s: window=%p, items=%p (%d items)", thisfn, ( void * ) window, ( void * ) items, g_list_length( items ));
 	g_return_if_fail( NACT_IS_WINDOW( window ));
 
-	content = NULL;
-	for( it = items ; it ; it = it->next ){
-		id = na_object_get_id( it->data );
-		content = g_slist_prepend( content, id );
+	if( !window->private->dispose_has_run ){
+
+		content = NULL;
+		for( it = items ; it ; it = it->next ){
+			id = na_object_get_id( it->data );
+			content = g_slist_prepend( content, id );
+		}
+		content = g_slist_reverse( content );
+
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		pivot = nact_application_get_pivot( application );
+		na_iprefs_set_level_zero_items( NA_IPREFS( pivot ), content );
+
+		na_utils_free_string_list( content );
 	}
-	content = g_slist_reverse( content );
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
-	na_iprefs_set_level_zero_items( NA_IPREFS( pivot ), content );
-
-	na_utils_free_string_list( content );
 }
 
 /**
@@ -340,17 +361,22 @@ nact_window_count_level_zero_items( GList *items, guint *actions, guint *profile
 gboolean
 nact_window_warn_modified( NactWindow *window )
 {
+	gboolean confirm = FALSE;
 	gchar *first;
 	gchar *second;
-	gboolean ok;
 
-	first = g_strdup_printf( _( "Some items have been modified." ));
-	second = g_strdup( _( "Are you sure you want to quit without saving them ?" ));
+	g_return_val_if_fail( NACT_IS_WINDOW( window ), FALSE );
 
-	ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+	if( !window->private->dispose_has_run ){
 
-	g_free( second );
-	g_free( first );
+		first = g_strdup_printf( _( "Some items have been modified." ));
+		second = g_strdup( _( "Are you sure you want to quit without saving them ?" ));
+
+		confirm = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+
+		g_free( second );
+		g_free( first );
+	}
 
 	return( ok );
 }

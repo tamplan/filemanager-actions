@@ -161,8 +161,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NactPreferencesEditor *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-
-	g_assert( NACT_IS_PREFERENCES_EDITOR( instance ));
+	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ));
 	self = NACT_PREFERENCES_EDITOR( instance );
 
 	self->private = g_new0( NactPreferencesEditorPrivate, 1 );
@@ -189,8 +188,7 @@ instance_dispose( GObject *dialog )
 	NactPreferencesEditor *self;
 
 	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
-
-	g_assert( NACT_IS_PREFERENCES_EDITOR( dialog ));
+	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
 	self = NACT_PREFERENCES_EDITOR( dialog );
 
 	if( !self->private->dispose_has_run ){
@@ -198,7 +196,9 @@ instance_dispose( GObject *dialog )
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
-		G_OBJECT_CLASS( st_parent_class )->dispose( dialog );
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( dialog );
+		}
 	}
 }
 
@@ -209,14 +209,13 @@ instance_finalize( GObject *dialog )
 	NactPreferencesEditor *self;
 
 	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
-
-	g_assert( NACT_IS_PREFERENCES_EDITOR( dialog ));
-	self = ( NactPreferencesEditor * ) dialog;
+	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
+	self = NACT_PREFERENCES_EDITOR( dialog );
 
 	g_free( self->private );
 
 	/* chain call to parent class */
-	if( st_parent_class->finalize ){
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( dialog );
 	}
 }
@@ -248,7 +247,7 @@ nact_preferences_editor_run( BaseWindow *parent )
 	NactPreferencesEditor *editor;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
-	g_assert( BASE_IS_WINDOW( parent ));
+	g_return_if_fail( BASE_IS_WINDOW( parent ));
 
 	application = NACT_APPLICATION( base_window_get_application( parent ));
 	g_assert( NACT_IS_APPLICATION( application ));

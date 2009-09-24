@@ -31,8 +31,10 @@
 #ifndef __NACT_ASSISTANT_EXPORT_H__
 #define __NACT_ASSISTANT_EXPORT_H__
 
-/*
- * NactAssistantExport class definition.
+/**
+ * SECTION: nact_assistant_export
+ * @short_description: #NactAssistantExport class definition.
+ * @include: nact/nact-assistant-export.h
  *
  * Rationale:
  *

@@ -31,10 +31,12 @@
 #ifndef __NACT_APPLICATION_H__
 #define __NACT_APPLICATION_H__
 
-/*
- * NactApplication class definition.
+/**
+ * SECTION: nact_application
+ * @short_description: #NactApplication class definition.
+ * @include: nact/nact-application.h
  *
- * This is the main class for UI programs.
+ * This is the main class for nautilus-actions-config-tool program.
  */
 
 #include <common/na-pivot.h>

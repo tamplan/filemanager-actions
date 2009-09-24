@@ -31,6 +31,12 @@
 #ifndef __NACT_IACTIONS_LIST_H__
 #define __NACT_IACTIONS_LIST_H__
 
+/**
+ * SECTION: nact_iactions_list
+ * @short_description: #NactIActionsList interface definition.
+ * @include: nact/nact-iactions-list.h
+ */
+
 #include <common/na-object-class.h>
 
 G_BEGIN_DECLS

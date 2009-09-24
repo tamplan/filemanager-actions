@@ -31,8 +31,10 @@
 #ifndef __BASE_WINDOW_H__
 #define __BASE_WINDOW_H__
 
-/*
- * BaseWindow class definition.
+/**
+ * SECTION: base_window
+ * @short_description: #BaseWindow public function declaration.
+ * @include: nact/base-window.h
  *
  * This is a base class which encapsulates a Gtk+ windows.
  * It works together with the BaseApplication class to run a Gtk+

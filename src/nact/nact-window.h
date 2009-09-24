@@ -31,8 +31,10 @@
 #ifndef __NACT_WINDOW_H__
 #define __NACT_WINDOW_H__
 
-/*
- * NactWindow class definition.
+/**
+ * SECTION: nact_window
+ * @short_description: #NactWindow class definition.
+ * @include: nact/nact-window.h
  *
  * This class is derived from BaseWindow class.
  * It is a common base class for all Nautilus Actions window documents.

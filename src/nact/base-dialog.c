@@ -115,8 +115,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	BaseDialog *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-
-	g_assert( BASE_IS_DIALOG( instance ));
+	g_return_if_fail( BASE_IS_DIALOG( instance ));
 	self = BASE_DIALOG( instance );
 
 	self->private = g_new0( BaseDialogPrivate, 1 );
@@ -131,7 +130,7 @@ instance_dispose( GObject *window )
 	BaseDialog *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( BASE_IS_DIALOG( window ));
+	g_return_if_fail( BASE_IS_DIALOG( instance ));
 	self = BASE_DIALOG( window );
 
 	if( !self->private->dispose_has_run ){
@@ -152,8 +151,8 @@ instance_finalize( GObject *window )
 	BaseDialog *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( BASE_IS_DIALOG( window ));
-	self = ( BaseDialog * ) window;
+	g_return_if_fail( BASE_IS_DIALOG( instance ));
+	self = BASE_DIALOG( window );
 
 	g_free( self->private );
 

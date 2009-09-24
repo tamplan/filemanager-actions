@@ -31,8 +31,10 @@
 #ifndef __NACT_XML_READER_H__
 #define __NACT_XML_READER_H__
 
-/*
- * NactXMLReader class definition.
+/**
+ * SECTION: nact_xml_reader
+ * @short_description: #NactXMLReader class definition.
+ * @include: nact/nact-xml-reader.h
  *
  * This is the base class for importing actions from XML files.
  */

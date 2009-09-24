@@ -31,8 +31,10 @@
 #ifndef __NACT_IADVANCED_TAB_H__
 #define __NACT_IADVANCED_TAB_H__
 
-/*
- * NactIAdvancedTab interface definition.
+/**
+ * SECTION: nact_iadvanced_tab
+ * @short_description: #NactIAdvancedTab interface declaration.
+ * @include: nact/nact-iadvanced-tab.h
  *
  * This interface implements all the widgets which define the
  * conditions for the action.

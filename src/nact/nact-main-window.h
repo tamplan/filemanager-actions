@@ -31,8 +31,10 @@
 #ifndef __NACT_MAIN_WINDOW_H__
 #define __NACT_MAIN_WINDOW_H__
 
-/*
- * NactMainWindow class definition.
+/**
+ * SECTION: nact_main_window
+ * @short_description: #NactMainWindow class definition.
+ * @include: nact/nact-main-window.h
  *
  * This class is derived from BaseWindow and manages the main window.
  */

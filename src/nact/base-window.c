@@ -328,7 +328,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	BaseWindow *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-
 	g_return_if_fail( BASE_IS_WINDOW( instance ));
 	self = BASE_WINDOW( instance );
 
@@ -353,34 +352,37 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	g_return_if_fail( BASE_IS_WINDOW( object ));
 	self = BASE_WINDOW( object );
 
-	switch( property_id ){
-		case BASE_WINDOW_PROP_PARENT_ID:
-			g_value_set_pointer( value, self->private->parent );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case BASE_WINDOW_PROP_APPLICATION_ID:
-			g_value_set_pointer( value, self->private->application );
-			break;
+		switch( property_id ){
+			case BASE_WINDOW_PROP_PARENT_ID:
+				g_value_set_pointer( value, self->private->parent );
+				break;
 
-		case BASE_WINDOW_PROP_TOPLEVEL_NAME_ID:
-			g_value_set_string( value, self->private->toplevel_name );
-			break;
+			case BASE_WINDOW_PROP_APPLICATION_ID:
+				g_value_set_pointer( value, self->private->application );
+				break;
 
-		case BASE_WINDOW_PROP_TOPLEVEL_WIDGET_ID:
-			g_value_set_pointer( value, self->private->toplevel_window );
-			break;
+			case BASE_WINDOW_PROP_TOPLEVEL_NAME_ID:
+				g_value_set_string( value, self->private->toplevel_name );
+				break;
 
-		case BASE_WINDOW_PROP_INITIALIZED_ID:
-			g_value_set_boolean( value, self->private->initialized );
-			break;
+			case BASE_WINDOW_PROP_TOPLEVEL_WIDGET_ID:
+				g_value_set_pointer( value, self->private->toplevel_window );
+				break;
 
-		case BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID:
-			g_value_set_boolean( value, self->private->save_window_position );
-			break;
+			case BASE_WINDOW_PROP_INITIALIZED_ID:
+				g_value_set_boolean( value, self->private->initialized );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID:
+				g_value_set_boolean( value, self->private->save_window_position );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -392,35 +394,38 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	g_return_if_fail( BASE_IS_WINDOW( object ));
 	self = BASE_WINDOW( object );
 
-	switch( property_id ){
-		case BASE_WINDOW_PROP_PARENT_ID:
-			self->private->parent = g_value_get_pointer( value );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case BASE_WINDOW_PROP_APPLICATION_ID:
-			self->private->application = g_value_get_pointer( value );
-			break;
+		switch( property_id ){
+			case BASE_WINDOW_PROP_PARENT_ID:
+				self->private->parent = g_value_get_pointer( value );
+				break;
 
-		case BASE_WINDOW_PROP_TOPLEVEL_NAME_ID:
-			g_free( self->private->toplevel_name );
-			self->private->toplevel_name = g_value_dup_string( value );
-			break;
+			case BASE_WINDOW_PROP_APPLICATION_ID:
+				self->private->application = g_value_get_pointer( value );
+				break;
 
-		case BASE_WINDOW_PROP_TOPLEVEL_WIDGET_ID:
-			self->private->toplevel_window = g_value_get_pointer( value );
-			break;
+			case BASE_WINDOW_PROP_TOPLEVEL_NAME_ID:
+				g_free( self->private->toplevel_name );
+				self->private->toplevel_name = g_value_dup_string( value );
+				break;
 
-		case BASE_WINDOW_PROP_INITIALIZED_ID:
-			self->private->initialized = g_value_get_boolean( value );
-			break;
+			case BASE_WINDOW_PROP_TOPLEVEL_WIDGET_ID:
+				self->private->toplevel_window = g_value_get_pointer( value );
+				break;
 
-		case BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID:
-			self->private->save_window_position = g_value_get_boolean( value );
-			break;
+			case BASE_WINDOW_PROP_INITIALIZED_ID:
+				self->private->initialized = g_value_get_boolean( value );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID:
+				self->private->save_window_position = g_value_get_boolean( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -487,7 +492,7 @@ instance_finalize( GObject *window )
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	self = ( BaseWindow * ) window;
+	self = BASE_WINDOW( window );
 
 	g_free( self->private->toplevel_name );
 
@@ -500,30 +505,38 @@ instance_finalize( GObject *window )
 }
 
 /**
- * Initializes the window.
+ * base_window_init:
  * @window: this #BaseWindow object.
+ *
+ * Initializes the window.
  *
  * This is a one-time initialization just after the BaseWindow has been
  * allocated. This should leave the BaseWindow object with a valid
  * toplevel GtkWindow dialog. This is also time to make one-time
  * initialization on this toplevel dialog.
  *
- * For an every-time initialization, see base_window_run.
+ * For an every-time initialization, see base_window_run().
  *
  * Note that the BaseWindow itself should be initialized each time
  * the user opens the dialog, though the GtkWindow itself needs only
  * be initialized the first time it is loaded.
+ *
+ * Returns: %TRUE if the window has been successfully initialized,
+ * %FALSE else.
  */
 gboolean
 base_window_init( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_init";
+	gboolean initialized = FALSE;
 	gchar *dialog_name;
 	GtkWindow *toplevel;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
 
-	if( !window->private->initialized ){
+	if( !window->private->dispose_has_run &&
+		!window->private->initialized ){
+
 		g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 		if( !window->private->application ){
@@ -552,18 +565,20 @@ base_window_init( BaseWindow *window )
 				set_toplevel_initialized( window, toplevel, TRUE );
 			}
 			window->private->initialized = TRUE;
+			initialized = TRUE;
 		}
 
 		g_free( dialog_name );
 	}
 
-	return( window->private->initialized );
+	return( initialized );
 }
 
 /**
- * Run the window.
+ * base_window_run:
+ * @window: this #BaseWindow object.
  *
- * @window: this BaseWindow object.
+ * Runs the window.
  */
 void
 base_window_run( BaseWindow *window )
@@ -574,56 +589,70 @@ base_window_run( BaseWindow *window )
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	if( !window->private->initialized ){
-		base_window_init( window );
-	}
+	if( !window->private->dispose_has_run ){
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+		if( !window->private->initialized ){
+			base_window_init( window );
+		}
 
-	g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_RUNTIME_INIT, NULL );
+		g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	this_dialog = GTK_WIDGET( window->private->toplevel_window );
+		g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_RUNTIME_INIT, NULL );
 
-	gtk_widget_show_all( this_dialog );
+		this_dialog = GTK_WIDGET( window->private->toplevel_window );
 
-	g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED, NULL );
+		gtk_widget_show_all( this_dialog );
 
-	if( is_main_window( window )){
+		g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED, NULL );
 
-		if( GTK_IS_DIALOG( this_dialog )){
-			g_signal_connect( G_OBJECT( this_dialog ), "response", G_CALLBACK( v_dialog_response ), window );
+		if( is_main_window( window )){
+
+			if( GTK_IS_DIALOG( this_dialog )){
+				g_signal_connect( G_OBJECT( this_dialog ), "response", G_CALLBACK( v_dialog_response ), window );
+			} else {
+				g_signal_connect( G_OBJECT( this_dialog ), "delete-event", G_CALLBACK( on_delete_event ), window );
+			}
+
+			g_debug( "%s: application=%p, starting gtk_main", thisfn, ( void * ) window->private->application );
+			gtk_main();
+
+		} else if( GTK_IS_ASSISTANT( this_dialog )){
+			g_debug( "%s: starting gtk_main", thisfn );
+			gtk_main();
+
 		} else {
-			g_signal_connect( G_OBJECT( this_dialog ), "delete-event", G_CALLBACK( on_delete_event ), window );
+			g_assert( GTK_IS_DIALOG( this_dialog ));
+			g_debug( "%s: starting gtk_dialog_run", thisfn );
+			do {
+				code = gtk_dialog_run( GTK_DIALOG( this_dialog ));
+			}
+			while( !v_dialog_response( GTK_DIALOG( this_dialog ), code, window ));
 		}
-
-		g_debug( "%s: application=%p, starting gtk_main", thisfn, ( void * ) window->private->application );
-		gtk_main();
-
-	} else if( GTK_IS_ASSISTANT( this_dialog )){
-		g_debug( "%s: starting gtk_main", thisfn );
-		gtk_main();
-
-	} else {
-		g_assert( GTK_IS_DIALOG( this_dialog ));
-		g_debug( "%s: starting gtk_dialog_run", thisfn );
-		do {
-			code = gtk_dialog_run( GTK_DIALOG( this_dialog ));
-		}
-		while( !v_dialog_response( GTK_DIALOG( this_dialog ), code, window ));
 	}
 }
 
 /**
- * Returns a pointer on the BaseApplication object.
+ * base_window_get_application:
+ * @window: this #BaseWindow object.
  *
- * @window: this BaseWindow object.
+ * Returns: a pointer on the #BaseApplication object.
+ *
+ * The returned pointer is owned by the primary allocator of the
+ * application ; it should not be g_free() nor g_object_unref() by the
+ * caller.
  */
 BaseApplication *
 base_window_get_application( BaseWindow *window )
 {
+	BaseApplication *application = NULL;
+
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
-	return( v_get_application( window ));
+	if( !window->private->dispose_has_run ){
+		application = v_get_application( window );
+	}
+
+	return( application );
 }
 
 /**
@@ -631,13 +660,22 @@ base_window_get_application( BaseWindow *window )
  * @window: this #BaseWindow instance..
  *
  * Returns the top-level GtkWindow attached to this BaseWindow object.
+ *
+ * The caller may close the window by g_object_unref()-ing the returned
+ * #GtkWindow.
  */
 GtkWindow *
 base_window_get_toplevel_window( BaseWindow *window )
 {
+	GtkWindow *toplevel = NULL;
+
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
-	return( v_get_toplevel_window( window ));
+	if( !window->private->dispose_has_run ){
+		toplevel = v_get_toplevel_window( window );
+	}
+
+	return( toplevel );
 }
 
 /**
@@ -645,29 +683,47 @@ base_window_get_toplevel_window( BaseWindow *window )
  * @window: this #BaseWindow instance.
  * @name: the name of the searched GtkWindow.
  *
- * Returns a top-level GtkWindow.
+ * Returns: the named top-level GtkWindow.
+ *
+ * The caller may close the window by g_object_unref()-ing the returned
+ * #GtkWindow.
  */
 GtkWindow *
 base_window_get_toplevel( BaseWindow *window, const gchar *name )
 {
-	g_assert( BASE_IS_WINDOW( window ));
+	GtkWindow *toplevel = NULL;
 
-	return( v_get_window( window, name ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+		toplevel = v_get_window( window, name );
+	}
+
+	return( toplevel );
 }
 
 /**
- * Returns the GtkWidget which is a child of this parent.
- *
+ * base_window_get_widget:
  * @window: this BaseWindow object.
- *
  * @name: the name of the searched child.
+ *
+ * Returns: the GtkWidget which is a child of this parent.
+ *
+ * The returned #GtkWidget is owned by the #GtkBuilder UI. It should
+ * not be g_free nor g_object_unref() by the caller.
  */
 GtkWidget *
 base_window_get_widget( BaseWindow *window, const gchar *name )
 {
-	g_assert( BASE_IS_WINDOW( window ));
+	GtkWidget *widget = NULL;
 
-	return( v_get_widget( window, name ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+		widget = v_get_widget( window, name );
+	}
+
+	return( widget );
 }
 
 /*
@@ -679,16 +735,23 @@ static gboolean
 on_delete_event( GtkWidget *toplevel, GdkEvent *event, BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_on_delete_event";
+	static gboolean stop = FALSE;
 
 	g_debug( "%s: toplevel=%p, event=%p, window=%p",
 			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) window );
-	g_assert( BASE_IS_WINDOW( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
 
-	if( BASE_WINDOW_GET_CLASS( window )->delete_event ){
-		return( BASE_WINDOW_GET_CLASS( window )->delete_event( window, GTK_WINDOW( toplevel ), event ));
+	if( !window->private->dispose_has_run ){
+
+		if( BASE_WINDOW_GET_CLASS( window )->delete_event ){
+			stop = BASE_WINDOW_GET_CLASS( window )->delete_event( window, GTK_WINDOW( toplevel ), event );
+
+		} else {
+			stop = window_do_delete_event( window, GTK_WINDOW( toplevel ), event );
+		}
 	}
 
-	return( window_do_delete_event( window, GTK_WINDOW( toplevel ), event ));
+	return( stop );
 }
 
 /*
@@ -701,13 +764,16 @@ v_initial_load_toplevel( BaseWindow *window, gpointer user_data )
 	static const gchar *thisfn = "base_window_v_initial_load_toplevel";
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-	g_assert( BASE_IS_WINDOW( window ));
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	if( BASE_WINDOW_GET_CLASS( window )->initial_load_toplevel ){
-		BASE_WINDOW_GET_CLASS( window )->initial_load_toplevel( window, user_data );
+	if( !window->private->dispose_has_run ){
 
-	} else {
-		window_do_initial_load_toplevel( window, user_data );
+		if( BASE_WINDOW_GET_CLASS( window )->initial_load_toplevel ){
+			BASE_WINDOW_GET_CLASS( window )->initial_load_toplevel( window, user_data );
+
+		} else {
+			window_do_initial_load_toplevel( window, user_data );
+		}
 	}
 }
 
@@ -721,13 +787,16 @@ v_runtime_init_toplevel( BaseWindow *window, gpointer user_data )
 	static const gchar *thisfn = "base_window_v_runtime_init_toplevel";
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-	g_assert( BASE_IS_WINDOW( window ));
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	if( BASE_WINDOW_GET_CLASS( window )->runtime_init_toplevel ){
-		BASE_WINDOW_GET_CLASS( window )->runtime_init_toplevel( window, user_data );
+	if( !window->private->dispose_has_run ){
 
-	} else {
-		window_do_runtime_init_toplevel( window, user_data );
+		if( BASE_WINDOW_GET_CLASS( window )->runtime_init_toplevel ){
+			BASE_WINDOW_GET_CLASS( window )->runtime_init_toplevel( window, user_data );
+
+		} else {
+			window_do_runtime_init_toplevel( window, user_data );
+		}
 	}
 }
 
@@ -737,13 +806,16 @@ v_all_widgets_showed( BaseWindow *window, gpointer user_data )
 	static const gchar *thisfn = "base_window_v_all_widgets_showed";
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-	g_assert( BASE_IS_WINDOW( window ));
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	if( BASE_WINDOW_GET_CLASS( window )->all_widgets_showed ){
-		BASE_WINDOW_GET_CLASS( window )->all_widgets_showed( window, user_data );
+	if( !window->private->dispose_has_run ){
 
-	} else {
-		window_do_all_widgets_showed( window, user_data );
+		if( BASE_WINDOW_GET_CLASS( window )->all_widgets_showed ){
+			BASE_WINDOW_GET_CLASS( window )->all_widgets_showed( window, user_data );
+
+		} else {
+			window_do_all_widgets_showed( window, user_data );
+		}
 	}
 }
 
@@ -751,27 +823,40 @@ static gboolean
 v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_v_dialog_response";
+	gboolean stop = FALSE;
 
 	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, ( void * ) dialog, code, ( void * ) window );
-	g_assert( BASE_IS_WINDOW( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
 
-	if( BASE_WINDOW_GET_CLASS( window )->dialog_response ){
-		return( BASE_WINDOW_GET_CLASS( window )->dialog_response( dialog, code, window ));
+	if( !window->private->dispose_has_run ){
+
+		if( BASE_WINDOW_GET_CLASS( window )->dialog_response ){
+			stop = BASE_WINDOW_GET_CLASS( window )->dialog_response( dialog, code, window );
+
+		} else {
+			stop = window_do_dialog_response( dialog, code, window );
+		}
 	}
-
-	return( window_do_dialog_response( dialog, code, window ));
 }
 
 static BaseApplication *
 v_get_application( BaseWindow *window )
 {
-	g_assert( BASE_IS_WINDOW( window ));
+	BaseApplication *application = NULL;
 
-	if( BASE_WINDOW_GET_CLASS( window )->get_application ){
-		return( BASE_WINDOW_GET_CLASS( window )->get_application( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+
+		if( BASE_WINDOW_GET_CLASS( window )->get_application ){
+			application = BASE_WINDOW_GET_CLASS( window )->get_application( window );
+
+		} else {
+			application = window_do_get_application( window );
+		}
 	}
 
-	return( window_do_get_application( window ));
+	return( application );
 }
 
 static GtkWindow *
@@ -789,37 +874,58 @@ v_get_toplevel_window( BaseWindow *window )
 static GtkWindow *
 v_get_window( BaseWindow *window, const gchar *name )
 {
-	g_assert( BASE_IS_WINDOW( window ));
+	GtkWindow *toplevel = NULL;
 
-	if( BASE_WINDOW_GET_CLASS( window )->get_window ){
-		return( BASE_WINDOW_GET_CLASS( window )->get_window( window, name ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+
+		if( BASE_WINDOW_GET_CLASS( window )->get_window ){
+			toplevel = BASE_WINDOW_GET_CLASS( window )->get_window( window, name );
+
+		} else {
+			toplevel = window_do_get_window( window, name );
+		}
 	}
 
-	return( window_do_get_window( window, name ));
+	return( toplevel );
 }
 
 static GtkWidget *
 v_get_widget( BaseWindow *window, const gchar *name )
 {
-	g_assert( BASE_IS_WINDOW( window ));
+	GtkWidget *widget = NULL;
 
-	if( BASE_WINDOW_GET_CLASS( window )->get_widget ){
-		return( BASE_WINDOW_GET_CLASS( window )->get_widget( window, name ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+
+		if( BASE_WINDOW_GET_CLASS( window )->get_widget ){
+			widget = BASE_WINDOW_GET_CLASS( window )->get_widget( window, name );
+
+		} else {
+			widget = window_do_get_widget( window, name );
+		}
 	}
 
-	return( window_do_get_widget( window, name ));
+	return( widget );
 }
 
 static gchar *
 v_get_iprefs_window_id( BaseWindow *window )
 {
-	g_assert( BASE_IS_IPREFS( window ));
+	gchar *id = NULL;
 
-	if( BASE_WINDOW_GET_CLASS( window )->get_iprefs_window_id ){
-		return( BASE_WINDOW_GET_CLASS( window )->get_iprefs_window_id( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+
+		if( BASE_WINDOW_GET_CLASS( window )->get_iprefs_window_id ){
+			id = BASE_WINDOW_GET_CLASS( window )->get_iprefs_window_id( window );
+		}
 	}
 
-	return( NULL );
+	return( id );
 }
 
 static void
@@ -830,14 +936,18 @@ on_runtime_init_toplevel( BaseWindow *window, gpointer user_data )
 
 	g_debug( "%s: window=%p, user_data=%p, parent_window=%p",
 			thisfn, ( void * ) window, ( void * ) user_data, ( void * ) window->private->parent );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	if( window->private->parent ){
-		g_assert( BASE_IS_WINDOW( window->private->parent ));
-		parent_toplevel = base_window_get_toplevel_window( BASE_WINDOW( window->private->parent ));
-		gtk_window_set_transient_for( window->private->toplevel_window, parent_toplevel );
+	if( !window->private->dispose_has_run ){
+
+		if( window->private->parent ){
+			g_assert( BASE_IS_WINDOW( window->private->parent ));
+			parent_toplevel = base_window_get_toplevel_window( BASE_WINDOW( window->private->parent ));
+			gtk_window_set_transient_for( window->private->toplevel_window, parent_toplevel );
+		}
+
+		base_iprefs_position_window( window );
 	}
-
-	base_iprefs_position_window( window );
 }
 
 static void
@@ -846,6 +956,11 @@ window_do_initial_load_toplevel( BaseWindow *window, gpointer user_data )
 	static const gchar *thisfn = "base_window_do_initial_load_toplevel";
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+		/* nothing to do here */
+	}
 }
 
 static void
@@ -854,6 +969,11 @@ window_do_runtime_init_toplevel( BaseWindow *window, gpointer user_data )
 	static const gchar *thisfn = "base_window_do_runtime_init_toplevel";
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+		/* nothing to do here */
+	}
 }
 
 static void
@@ -862,6 +982,11 @@ window_do_all_widgets_showed( BaseWindow *window, gpointer user_data )
 	static const gchar *thisfn = "base_window_do_all_widgets_showed";
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+		/* nothing to do here */
+	}
 }
 
 /*
@@ -899,22 +1024,33 @@ window_do_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event
 static BaseApplication *
 window_do_get_application( BaseWindow *window )
 {
-	return( window->private->application );
+	BaseApplication *application = NULL;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+		application = window->private->application;
+	}
+
+	return( application );
 }
 
 static gchar *
 window_do_get_toplevel_name( BaseWindow *window )
 {
-	gchar *name;
+	gchar *name = NULL;
 
-	g_assert( BASE_IS_WINDOW( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
-	g_object_get( G_OBJECT( window ), BASE_WINDOW_PROP_TOPLEVEL_NAME, &name, NULL );
+	if( !window->private->dispose_has_run ){
 
-	if( !name || !strlen( name )){
-		name = BASE_WINDOW_GET_CLASS( window )->get_toplevel_name( window );
-		if( name && strlen( name )){
-			g_object_set( G_OBJECT( window ), BASE_WINDOW_PROP_TOPLEVEL_NAME, name, NULL );
+		g_object_get( G_OBJECT( window ), BASE_WINDOW_PROP_TOPLEVEL_NAME, &name, NULL );
+
+		if( !name || !strlen( name )){
+			name = BASE_WINDOW_GET_CLASS( window )->get_toplevel_name( window );
+			if( name && strlen( name )){
+				g_object_set( G_OBJECT( window ), BASE_WINDOW_PROP_TOPLEVEL_NAME, name, NULL );
+			}
 		}
 	}
 
@@ -924,37 +1060,66 @@ window_do_get_toplevel_name( BaseWindow *window )
 static GtkWindow *
 window_do_get_toplevel_window( BaseWindow *window )
 {
-	return( window->private->toplevel_window );
+	GtkWindow *toplevel = NULL;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+		toplevel = window->private->toplevel_window;
+	}
+
+	return( toplevel );
 }
 
 static GtkWindow *
 window_do_get_window( BaseWindow *window, const gchar *name )
 {
-	g_assert( BASE_IS_WINDOW( window ));
+	GtkWindow *toplevel = NULL;
 
-	return( base_application_get_toplevel( window->private->application, name ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+		toplevel = base_application_get_toplevel( window->private->application, name );
+	}
+
+	return( toplevel );
 }
 
 static GtkWidget *
 window_do_get_widget( BaseWindow *window, const gchar *name )
 {
-	g_assert( BASE_IS_WINDOW( window ));
+	GtkWidget *widget = NULL;
 
-	return( base_application_get_widget( window->private->application, window, name ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+		widget = base_application_get_widget( window->private->application, window, name );
+	}
+
+	return( widget );
 }
 
 static gboolean
 is_main_window( BaseWindow *window )
 {
-	BaseApplication *appli = window->private->application;
+	gboolean is_main = FALSE;
 
-	BaseWindow *main_window = BASE_WINDOW( base_application_get_main_window( appli ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
 
-	GtkWidget *main_dialog = GTK_WIDGET( base_window_get_toplevel_window( main_window ));
+	if( !window->private->dispose_has_run ){
 
-	GtkWidget *this_dialog = GTK_WIDGET( window->private->toplevel_window );
+		BaseApplication *appli = window->private->application;
 
-	return( main_dialog == this_dialog );
+		BaseWindow *main_window = BASE_WINDOW( base_application_get_main_window( appli ));
+
+		GtkWidget *main_dialog = GTK_WIDGET( base_window_get_toplevel_window( main_window ));
+
+		GtkWidget *this_dialog = GTK_WIDGET( window->private->toplevel_window );
+
+		is_main = ( main_dialog == this_dialog );
+	}
+
+	return( is_main );
 }
 
 static gboolean
@@ -976,15 +1141,25 @@ set_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel, gboolean init
 void
 base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary )
 {
-	g_assert( BASE_IS_WINDOW( window ));
-	base_application_error_dlg( window->private->application, type, primary, secondary );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+		base_application_error_dlg( window->private->application, type, primary, secondary );
+	}
 }
 
 gboolean
 base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second )
 {
-	g_assert( BASE_IS_WINDOW( window ));
-	return( base_application_yesno_dlg( window->private->application, type, first, second ));
+	gboolean yesno = FALSE;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
+
+	if( !window->private->dispose_has_run ){
+		yesno = base_application_yesno_dlg( window->private->application, type, first, second );
+	}
+
+	return( yesno );
 }
 
 /**
@@ -995,23 +1170,34 @@ base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *
 {
 	static const gchar *thisfn = "base_window_signal_connect";
 
-	gulong handler_id = g_signal_connect( instance, signal, fn, window );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	BaseWindowRecordedSignal *str = g_new0( BaseWindowRecordedSignal, 1 );
-	str->instance = instance;
-	str->handler_id = handler_id;
-	window->private->signals = g_slist_prepend( window->private->signals, str );
+	if( !window->private->dispose_has_run ){
 
-	if( st_debug_signal_connect ){
-		g_debug( "%s: connecting signal handler %p:%lu", thisfn, ( void * ) instance, handler_id );
+		gulong handler_id = g_signal_connect( instance, signal, fn, window );
+
+		BaseWindowRecordedSignal *str = g_new0( BaseWindowRecordedSignal, 1 );
+		str->instance = instance;
+		str->handler_id = handler_id;
+		window->private->signals = g_slist_prepend( window->private->signals, str );
+
+		if( st_debug_signal_connect ){
+			g_debug( "%s: connecting signal handler %p:%lu", thisfn, ( void * ) instance, handler_id );
+		}
 	}
 }
 
 void
 base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const gchar *signal, GCallback fn )
 {
-	GtkWidget *widget = base_window_get_widget( window, name );
-	if( GTK_IS_WIDGET( widget )){
-		base_window_signal_connect( window, G_OBJECT( widget ), signal, fn );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+
+		GtkWidget *widget = base_window_get_widget( window, name );
+		if( GTK_IS_WIDGET( widget )){
+
+			base_window_signal_connect( window, G_OBJECT( widget ), signal, fn );
+		}
 	}
 }

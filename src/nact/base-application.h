@@ -31,10 +31,10 @@
 #ifndef __BASE_APPLICATION_H__
 #define __BASE_APPLICATION_H__
 
-/*
- * BaseApplication class definition.
- *
- * This is a base class for Gtk+ programs.
+/**
+ * SECTION: base_application
+ * @short_description: #BaseApplication public function declarations.
+ * @include: nact/base-application.h
  */
 
 #include <gtk/gtk.h>

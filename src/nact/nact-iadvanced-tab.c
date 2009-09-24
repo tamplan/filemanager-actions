@@ -60,6 +60,9 @@ enum {
 	SCHEMES_N_COLUMN
 };
 
+static gboolean st_initialized = FALSE;
+static gboolean st_finalized = FALSE;
+
 static GType         register_type( void );
 static void          interface_base_init( NactIAdvancedTabInterface *klass );
 static void          interface_base_finalize( NactIAdvancedTabInterface *klass );
@@ -128,14 +131,13 @@ static void
 interface_base_init( NactIAdvancedTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_interface_base_init";
-	static gboolean initialized = FALSE;
 
-	if( !initialized ){
+	if( !st_initialized ){
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIAdvancedTabInterfacePrivate, 1 );
 
-		initialized = TRUE;
+		st_initialized = TRUE;
 	}
 }
 
@@ -143,14 +145,13 @@ static void
 interface_base_finalize( NactIAdvancedTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_interface_base_finalize";
-	static gboolean finalized = FALSE ;
 
-	if( !finalized ){
+	if( !st_finalized ){
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 
-		finalized = TRUE;
+		st_finalized = TRUE;
 	}
 }
 
@@ -160,8 +161,11 @@ nact_iadvanced_tab_initial_load_toplevel( NactIAdvancedTab *instance )
 	static const gchar *thisfn = "nact_iadvanced_tab_initial_load_toplevel";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
-	initial_load_create_schemes_selection_list( instance );
+	if( st_initialized && !st_finalized ){
+		initial_load_create_schemes_selection_list( instance );
+	}
 }
 
 /*
@@ -179,37 +183,41 @@ initial_load_create_schemes_selection_list( NactIAdvancedTab *instance )
 	GtkCellRenderer *text_cell;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
-	model = gtk_list_store_new( SCHEMES_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING );
-	listview = get_schemes_tree_view( instance );
-	gtk_tree_view_set_model( listview, GTK_TREE_MODEL( model ));
-	g_object_unref( model );
+	if( st_initialized && !st_finalized ){
 
-	toggled_cell = gtk_cell_renderer_toggle_new();
-	column = gtk_tree_view_column_new_with_attributes(
-			"scheme-selected",
-			toggled_cell,
-			"active", SCHEMES_CHECKBOX_COLUMN,
-			NULL );
-	gtk_tree_view_append_column( listview, column );
+		model = gtk_list_store_new( SCHEMES_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING );
+		listview = get_schemes_tree_view( instance );
+		gtk_tree_view_set_model( listview, GTK_TREE_MODEL( model ));
+		g_object_unref( model );
 
-	text_cell = gtk_cell_renderer_text_new();
-	g_object_set( G_OBJECT( text_cell ), "editable", TRUE, NULL );
-	column = gtk_tree_view_column_new_with_attributes(
-			"scheme-code",
-			text_cell,
-			"text", SCHEMES_KEYWORD_COLUMN,
-			NULL );
-	gtk_tree_view_append_column( listview, column );
+		toggled_cell = gtk_cell_renderer_toggle_new();
+		column = gtk_tree_view_column_new_with_attributes(
+				"scheme-selected",
+				toggled_cell,
+				"active", SCHEMES_CHECKBOX_COLUMN,
+				NULL );
+		gtk_tree_view_append_column( listview, column );
 
-	text_cell = gtk_cell_renderer_text_new();
-	g_object_set( G_OBJECT( text_cell ), "editable", TRUE, NULL );
-	column = gtk_tree_view_column_new_with_attributes(
-			"scheme-description",
-			text_cell,
-			"text", SCHEMES_DESC_COLUMN,
-			NULL );
-	gtk_tree_view_append_column( listview, column );
+		text_cell = gtk_cell_renderer_text_new();
+		g_object_set( G_OBJECT( text_cell ), "editable", TRUE, NULL );
+		column = gtk_tree_view_column_new_with_attributes(
+				"scheme-code",
+				text_cell,
+				"text", SCHEMES_KEYWORD_COLUMN,
+				NULL );
+		gtk_tree_view_append_column( listview, column );
+
+		text_cell = gtk_cell_renderer_text_new();
+		g_object_set( G_OBJECT( text_cell ), "editable", TRUE, NULL );
+		column = gtk_tree_view_column_new_with_attributes(
+				"scheme-description",
+				text_cell,
+				"text", SCHEMES_DESC_COLUMN,
+				NULL );
+		gtk_tree_view_append_column( listview, column );
+	}
 }
 
 void
@@ -219,12 +227,16 @@ nact_iadvanced_tab_runtime_init_toplevel( NactIAdvancedTab *instance )
 	GtkTreeView *listview;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
-	listview = get_schemes_tree_view( instance );
+	if( st_initialized && !st_finalized ){
 
-	runtime_init_connect_signals( instance, listview );
+		listview = get_schemes_tree_view( instance );
 
-	runtime_init_setup_values( instance, listview );
+		runtime_init_connect_signals( instance, listview );
+
+		runtime_init_setup_values( instance, listview );
+	}
 }
 
 static void
@@ -236,56 +248,60 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 	GtkButton *add_button, *remove_button;
 
 	g_debug( "%s: instance=%p, listview=%p", thisfn, ( void * ) instance, ( void * ) listview );
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
-	column = gtk_tree_view_get_column( listview, SCHEMES_CHECKBOX_COLUMN );
-	renderers = gtk_tree_view_column_get_cell_renderers( column );
-	g_signal_connect(
-			G_OBJECT( renderers->data ),
-			"toggled",
-			G_CALLBACK( on_scheme_selection_toggled ),
-			instance );
+	if( st_initialized && !st_finalized ){
 
-	column = gtk_tree_view_get_column( listview, SCHEMES_KEYWORD_COLUMN );
-	renderers = gtk_tree_view_column_get_cell_renderers( column );
-	g_signal_connect(
-			G_OBJECT( renderers->data ),
-			"edited",
-			G_CALLBACK( on_scheme_keyword_edited ),
-			instance );
+		column = gtk_tree_view_get_column( listview, SCHEMES_CHECKBOX_COLUMN );
+		renderers = gtk_tree_view_column_get_cell_renderers( column );
+		g_signal_connect(
+				G_OBJECT( renderers->data ),
+				"toggled",
+				G_CALLBACK( on_scheme_selection_toggled ),
+				instance );
 
-	column = gtk_tree_view_get_column( listview, SCHEMES_DESC_COLUMN );
-	renderers = gtk_tree_view_column_get_cell_renderers( column );
-	g_signal_connect(
-			G_OBJECT( renderers->data ),
-			"edited",
-			G_CALLBACK( on_scheme_desc_edited ),
-			instance );
+		column = gtk_tree_view_get_column( listview, SCHEMES_KEYWORD_COLUMN );
+		renderers = gtk_tree_view_column_get_cell_renderers( column );
+		g_signal_connect(
+				G_OBJECT( renderers->data ),
+				"edited",
+				G_CALLBACK( on_scheme_keyword_edited ),
+				instance );
 
-	add_button = get_add_button( instance );
-	g_signal_connect(
-			G_OBJECT( add_button ),
-			"clicked",
-			G_CALLBACK( on_add_scheme_clicked ),
-			instance );
+		column = gtk_tree_view_get_column( listview, SCHEMES_DESC_COLUMN );
+		renderers = gtk_tree_view_column_get_cell_renderers( column );
+		g_signal_connect(
+				G_OBJECT( renderers->data ),
+				"edited",
+				G_CALLBACK( on_scheme_desc_edited ),
+				instance );
 
-	remove_button = get_remove_button( instance );
-	g_signal_connect(
-			G_OBJECT( remove_button ),
-			"clicked",
-			G_CALLBACK( on_remove_scheme_clicked ),
-			instance );
+		add_button = get_add_button( instance );
+		g_signal_connect(
+				G_OBJECT( add_button ),
+				"clicked",
+				G_CALLBACK( on_add_scheme_clicked ),
+				instance );
 
-	g_signal_connect(
-			G_OBJECT( gtk_tree_view_get_selection( listview )),
-			"changed",
-			G_CALLBACK( on_scheme_list_selection_changed ),
-			instance );
+		remove_button = get_remove_button( instance );
+		g_signal_connect(
+				G_OBJECT( remove_button ),
+				"clicked",
+				G_CALLBACK( on_remove_scheme_clicked ),
+				instance );
 
-	g_signal_connect(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_tab_updatable_selection_changed ),
-			instance );
+		g_signal_connect(
+				G_OBJECT( gtk_tree_view_get_selection( listview )),
+				"changed",
+				G_CALLBACK( on_scheme_list_selection_changed ),
+				instance );
+
+		g_signal_connect(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+				G_CALLBACK( on_tab_updatable_selection_changed ),
+				instance );
+	}
 }
 
 static void
@@ -299,24 +315,28 @@ runtime_init_setup_values( NactIAdvancedTab *instance, GtkTreeView *listview )
 	gchar **tokens;
 
 	g_debug( "%s: instance=%p, listview=%p", thisfn, ( void * ) instance, ( void * ) listview );
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
-	model = GTK_LIST_STORE( gtk_tree_view_get_model( listview ));
+	if( st_initialized && !st_finalized ){
 
-	schemes_list = get_schemes_default_list( instance );
+		model = GTK_LIST_STORE( gtk_tree_view_get_model( listview ));
 
-	for( iter = schemes_list ; iter ; iter = iter->next ){
+		schemes_list = get_schemes_default_list( instance );
 
-		tokens = g_strsplit(( gchar * ) iter->data, "|", 2 );
-		gtk_list_store_append( model, &row );
-		gtk_list_store_set( model, &row,
-				SCHEMES_CHECKBOX_COLUMN, FALSE,
-				SCHEMES_KEYWORD_COLUMN, tokens[0],
-				SCHEMES_DESC_COLUMN, tokens[1],
-				-1 );
-		g_strfreev( tokens );
+		for( iter = schemes_list ; iter ; iter = iter->next ){
+
+			tokens = g_strsplit(( gchar * ) iter->data, "|", 2 );
+			gtk_list_store_append( model, &row );
+			gtk_list_store_set( model, &row,
+					SCHEMES_CHECKBOX_COLUMN, FALSE,
+					SCHEMES_KEYWORD_COLUMN, tokens[0],
+					SCHEMES_DESC_COLUMN, tokens[1],
+					-1 );
+			g_strfreev( tokens );
+		}
+
+		na_utils_free_string_list( schemes_list );
 	}
-
-	na_utils_free_string_list( schemes_list );
 }
 
 void
@@ -325,6 +345,10 @@ nact_iadvanced_tab_all_widgets_showed( NactIAdvancedTab *instance )
 	static const gchar *thisfn = "nact_iadvanced_tab_all_widgets_showed";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+
+	if( st_initialized && !st_finalized ){
+	}
 }
 
 void
@@ -333,7 +357,10 @@ nact_iadvanced_tab_dispose( NactIAdvancedTab *instance )
 	static const gchar *thisfn = "nact_iadvanced_tab_dispose";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-}
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+
+	if( st_initialized && !st_finalized ){
+	}
 
 /**
  * Returns selected schemes as a list of strings.
@@ -345,8 +372,12 @@ nact_iadvanced_tab_get_schemes( NactIAdvancedTab *instance )
 	GSList *list = NULL;
 	GtkTreeModel* scheme_model;
 
-	scheme_model = get_schemes_tree_model( instance );
-	gtk_tree_model_foreach( scheme_model, ( GtkTreeModelForeachFunc ) get_action_schemes_list, &list );
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+
+	if( st_initialized && !st_finalized ){
+		scheme_model = get_schemes_tree_model( instance );
+		gtk_tree_model_foreach( scheme_model, ( GtkTreeModelForeachFunc ) get_action_schemes_list, &list );
+	}
 
 	return( list );
 }
@@ -362,28 +393,32 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 	GtkButton *add, *remove;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
+	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
-	scheme_model = get_schemes_tree_model( instance );
-	gtk_tree_model_foreach( scheme_model, ( GtkTreeModelForeachFunc ) reset_schemes_list, NULL );
+	if( st_initialized && !st_finalized ){
 
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-			NULL );
+		scheme_model = get_schemes_tree_model( instance );
+		gtk_tree_model_foreach( scheme_model, ( GtkTreeModelForeachFunc ) reset_schemes_list, NULL );
 
-	if( profile ){
-		schemes = na_object_profile_get_schemes( profile );
-		g_slist_foreach( schemes, ( GFunc ) set_action_schemes, scheme_model );
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				NULL );
+
+		if( profile ){
+			schemes = na_object_profile_get_schemes( profile );
+			g_slist_foreach( schemes, ( GFunc ) set_action_schemes, scheme_model );
+		}
+
+		listview = get_schemes_tree_view( instance );
+		gtk_widget_set_sensitive( GTK_WIDGET( listview ), profile != NULL );
+
+		add = get_add_button( instance );
+		gtk_widget_set_sensitive( GTK_WIDGET( add ), profile != NULL );
+
+		remove = get_remove_button( instance );
+		gtk_widget_set_sensitive( GTK_WIDGET( remove ), profile != NULL );
 	}
-
-	listview = get_schemes_tree_view( instance );
-	gtk_widget_set_sensitive( GTK_WIDGET( listview ), profile != NULL );
-
-	add = get_add_button( instance );
-	gtk_widget_set_sensitive( GTK_WIDGET( add ), profile != NULL );
-
-	remove = get_remove_button( instance );
-	gtk_widget_set_sensitive( GTK_WIDGET( remove ), profile != NULL );
 }
 
 /*

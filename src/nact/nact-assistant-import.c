@@ -184,8 +184,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NactAssistantImport *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-
-	g_assert( NACT_IS_ASSISTANT_IMPORT( instance ));
+	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( instance ));
 	self = NACT_ASSISTANT_IMPORT( instance );
 
 	self->private = g_new0( NactAssistantImportPrivate, 1 );
@@ -207,7 +206,7 @@ instance_dispose( GObject *window )
 	NactAssistantImport *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( NACT_IS_ASSISTANT_IMPORT( window ));
+	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( window ));
 	self = NACT_ASSISTANT_IMPORT( window );
 
 	if( !self->private->dispose_has_run ){
@@ -228,8 +227,8 @@ instance_finalize( GObject *window )
 	NactAssistantImport *self;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( NACT_IS_ASSISTANT_IMPORT( window ));
-	self = ( NactAssistantImport * ) window;
+	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( window ));
+	self = NACT_ASSISTANT_IMPORT( window );
 
 	free_results( self->private->results );
 

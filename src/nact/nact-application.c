@@ -162,7 +162,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NactApplication *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-
 	g_assert( NACT_IS_APPLICATION( instance ));
 	self = NACT_APPLICATION( instance );
 
@@ -179,14 +178,17 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	g_assert( NACT_IS_APPLICATION( object ));
 	self = NACT_APPLICATION( object );
 
-	switch( property_id ){
-		case NACT_APPLICATION_PROP_PIVOT_ID:
-			g_value_set_pointer( value, self->private->pivot );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+		switch( property_id ){
+			case NACT_APPLICATION_PROP_PIVOT_ID:
+				g_value_set_pointer( value, self->private->pivot );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -198,14 +200,17 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	g_assert( NACT_IS_APPLICATION( object ));
 	self = NACT_APPLICATION( object );
 
-	switch( property_id ){
-		case NACT_APPLICATION_PROP_PIVOT_ID:
-			self->private->pivot = g_value_get_pointer( value );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+		switch( property_id ){
+			case NACT_APPLICATION_PROP_PIVOT_ID:
+				self->private->pivot = g_value_get_pointer( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -216,7 +221,7 @@ instance_dispose( GObject *application )
 	NactApplication *self;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-	g_assert( NACT_IS_APPLICATION( application ));
+	g_return_if_fail( NACT_IS_APPLICATION( application ));
 	self = NACT_APPLICATION( application );
 
 	if( !self->private->dispose_has_run ){
@@ -241,8 +246,8 @@ instance_finalize( GObject *application )
 	NactApplication *self;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-	g_assert( NACT_IS_APPLICATION( application ));
-	self = ( NactApplication * ) application;
+	g_return_if_fail( NACT_IS_APPLICATION( application ));
+	self = NACT_APPLICATION( application );
 
 	g_free( self->private );
 
@@ -282,8 +287,15 @@ nact_application_new_with_args( int argc, char **argv )
 NAPivot *
 nact_application_get_pivot( NactApplication *application )
 {
-	g_assert( NACT_IS_APPLICATION( application ));
-	return( NA_PIVOT( application->private->pivot ));
+	NAPivot *pivot = NULL;
+
+	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
+
+	if( !application->private->dispose_has_run ){
+		pivot = application->private->pivot;
+	}
+
+	return( pivot );
 }
 
 /*

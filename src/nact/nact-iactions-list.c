@@ -111,6 +111,8 @@ typedef struct {
 #define FILTER_SELECTION_MODE			"nact-iactions-list-filter-selection-mode"
 
 static gint         st_signals[ LAST_SIGNAL ] = { 0 };
+static gboolean     st_initialized = FALSE;
+static gboolean     st_finalized = FALSE;
 
 static GType        register_type( void );
 static void         interface_base_init( NactIActionsListInterface *klass );
@@ -192,9 +194,8 @@ static void
 interface_base_init( NactIActionsListInterface *klass )
 {
 	static const gchar *thisfn = "nact_iactions_list_interface_base_init";
-	static gboolean initialized = FALSE;
 
-	if( !initialized ){
+	if( !st_initialized ){
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIActionsListInterfacePrivate, 1 );
@@ -255,7 +256,7 @@ interface_base_init( NactIActionsListInterface *klass )
 				1,
 				G_TYPE_POINTER );
 
-		initialized = TRUE;
+		st_initialized = TRUE;
 	}
 }
 
@@ -269,14 +270,13 @@ static void
 interface_base_finalize( NactIActionsListInterface *klass )
 {
 	static const gchar *thisfn = "nact_iactions_list_interface_base_finalize";
-	static gboolean finalized = FALSE ;
 
-	if( !finalized ){
+	if( !st_finalized ){
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 
-		finalized = TRUE;
+		st_finalized = TRUE;
 	}
 }
 
@@ -304,35 +304,38 @@ nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
-	treeview = get_actions_list_treeview( instance );
+	if( st_initialized && !st_finalized ){
 
-	/* associates the ActionsList to the label */
-	label = base_window_get_widget( BASE_WINDOW( instance ), "ActionsListLabel" );
-	gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( treeview ));
+		treeview = get_actions_list_treeview( instance );
 
-	nact_iactions_list_set_dnd_mode( instance, FALSE );
-	nact_iactions_list_set_multiple_selection_mode( instance, FALSE );
-	nact_iactions_list_set_only_actions_mode( instance, FALSE );
-	set_selection_changed_mode( instance, FALSE );
+		/* associates the ActionsList to the label */
+		label = base_window_get_widget( BASE_WINDOW( instance ), "ActionsListLabel" );
+		gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( treeview ));
 
-	nact_tree_model_initial_load( BASE_WINDOW( instance ), treeview );
+		nact_iactions_list_set_dnd_mode( instance, FALSE );
+		nact_iactions_list_set_multiple_selection_mode( instance, FALSE );
+		nact_iactions_list_set_only_actions_mode( instance, FALSE );
+		set_selection_changed_mode( instance, FALSE );
 
-	gtk_tree_view_set_enable_tree_lines( treeview, TRUE );
+		nact_tree_model_initial_load( BASE_WINDOW( instance ), treeview );
 
-	/* create visible columns on the tree view
-	 */
-	column = gtk_tree_view_column_new_with_attributes(
-			"icon", gtk_cell_renderer_pixbuf_new(), "pixbuf", IACTIONS_LIST_ICON_COLUMN, NULL );
-	gtk_tree_view_append_column( treeview, column );
+		gtk_tree_view_set_enable_tree_lines( treeview, TRUE );
 
-	column = gtk_tree_view_column_new();
-	gtk_tree_view_column_set_title( column, "label" );
-	gtk_tree_view_column_set_sort_column_id( column, IACTIONS_LIST_LABEL_COLUMN );
-	renderer = gtk_cell_renderer_text_new();
-	gtk_tree_view_column_pack_start( column, renderer, TRUE );
-	gtk_tree_view_column_set_cell_data_func(
-			column, renderer, ( GtkTreeCellDataFunc ) display_label, instance, NULL );
-	gtk_tree_view_append_column( treeview, column );
+		/* create visible columns on the tree view
+		 */
+		column = gtk_tree_view_column_new_with_attributes(
+				"icon", gtk_cell_renderer_pixbuf_new(), "pixbuf", IACTIONS_LIST_ICON_COLUMN, NULL );
+		gtk_tree_view_append_column( treeview, column );
+
+		column = gtk_tree_view_column_new();
+		gtk_tree_view_column_set_title( column, "label" );
+		gtk_tree_view_column_set_sort_column_id( column, IACTIONS_LIST_LABEL_COLUMN );
+		renderer = gtk_cell_renderer_text_new();
+		gtk_tree_view_column_pack_start( column, renderer, TRUE );
+		gtk_tree_view_column_set_cell_data_func(
+				column, renderer, ( GtkTreeCellDataFunc ) display_label, instance, NULL );
+		gtk_tree_view_append_column( treeview, column );
+	}
 }
 
 /**
@@ -356,70 +359,73 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
-	treeview = get_actions_list_treeview( instance );
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-	have_dnd = have_dnd_mode( instance );
+	if( st_initialized && !st_finalized ){
 
-	have_filter_selection = have_filter_selection_mode( instance );
-	if( have_filter_selection ){
-		selection = gtk_tree_view_get_selection( treeview );
-		gtk_tree_selection_set_select_function( selection, ( GtkTreeSelectionFunc ) filter_selection, instance, NULL );
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+		have_dnd = have_dnd_mode( instance );
+
+		have_filter_selection = have_filter_selection_mode( instance );
+		if( have_filter_selection ){
+			selection = gtk_tree_view_get_selection( treeview );
+			gtk_tree_selection_set_select_function( selection, ( GtkTreeSelectionFunc ) filter_selection, instance, NULL );
+		}
+
+		nact_tree_model_runtime_init( model, have_dnd );
+
+		/* set up selection control */
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( gtk_tree_view_get_selection( treeview )),
+				"changed",
+				G_CALLBACK( on_treeview_selection_changed ));
+
+		/* catch press 'Enter' */
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( treeview ),
+				"key-press-event",
+				G_CALLBACK( on_key_pressed_event ));
+
+		/* catch double-click */
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( treeview ),
+				"button-press-event",
+				G_CALLBACK( on_button_press_event ));
+
+		/* install a virtual function as 'selection-changed' handler */
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( instance ),
+				IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
+				G_CALLBACK( on_iactions_list_selection_changed ));
+
+		/* updates the treeview display when an item is modified */
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( instance ),
+				IACTIONS_LIST_SIGNAL_ITEM_UPDATED,
+				G_CALLBACK( on_iactions_list_item_updated_treeview ));
+
+		/* install a virtual function as 'item-updated' handler */
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( instance ),
+				IACTIONS_LIST_SIGNAL_ITEM_UPDATED,
+				G_CALLBACK( on_iactions_list_item_updated ));
+
+		/* records NactIActionsList as a proxy for edition status modification
+		 */
+		na_iduplicable_register_consumer( G_OBJECT( instance ));
+		g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
+		g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
+
+		/* fill the model after having connected the signals
+		 * so that callbacks are triggered at last
+		 */
+		nact_iactions_list_fill( instance, items );
 	}
-
-	nact_tree_model_runtime_init( model, have_dnd );
-
-	/* set up selection control */
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( gtk_tree_view_get_selection( treeview )),
-			"changed",
-			G_CALLBACK( on_treeview_selection_changed ));
-
-	/* catch press 'Enter' */
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( treeview ),
-			"key-press-event",
-			G_CALLBACK( on_key_pressed_event ));
-
-	/* catch double-click */
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( treeview ),
-			"button-press-event",
-			G_CALLBACK( on_button_press_event ));
-
-	/* install a virtual function as 'selection-changed' handler */
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_iactions_list_selection_changed ));
-
-	/* updates the treeview display when an item is modified */
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			IACTIONS_LIST_SIGNAL_ITEM_UPDATED,
-			G_CALLBACK( on_iactions_list_item_updated_treeview ));
-
-	/* install a virtual function as 'item-updated' handler */
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			IACTIONS_LIST_SIGNAL_ITEM_UPDATED,
-			G_CALLBACK( on_iactions_list_item_updated ));
-
-	/* records NactIActionsList as a proxy for edition status modification
-	 */
-	na_iduplicable_register_consumer( G_OBJECT( instance ));
-	g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
-	g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
-
-	/* fill the model after having connected the signals
-	 * so that callbacks are triggered at last
-	 */
-	nact_iactions_list_fill( instance, items );
 }
 
 /**
@@ -432,6 +438,10 @@ nact_iactions_list_all_widgets_showed( NactIActionsList *instance )
 	static const gchar *thisfn = "nact_iactions_list_all_widgets_showed";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_initialized && !st_finalized ){
+	}
 }
 
 /**
@@ -446,11 +456,15 @@ nact_iactions_list_dispose( NactIActionsList *instance )
 	NactTreeModel *model;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
-	treeview = get_actions_list_treeview( instance );
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+	if( st_initialized && !st_finalized ){
 
-	nact_tree_model_dispose( model );
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+
+		nact_tree_model_dispose( model );
+	}
 }
 
 /**
@@ -473,26 +487,29 @@ nact_iactions_list_delete_selection( NactIActionsList *instance )
 
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
-	treeview = get_actions_list_treeview( instance );
-	selection = gtk_tree_view_get_selection( treeview );
-	selected = gtk_tree_selection_get_selected_rows( selection, &model );
+	if( st_initialized && !st_finalized ){
 
-	set_selection_changed_mode( instance, FALSE );
+		treeview = get_actions_list_treeview( instance );
+		selection = gtk_tree_view_get_selection( treeview );
+		selected = gtk_tree_selection_get_selected_rows( selection, &model );
 
-	if( g_list_length( selected )){
-		path = gtk_tree_path_copy(( GtkTreePath * ) selected->data );
-		nact_tree_model_remove( NACT_TREE_MODEL( model ), selected );
-	}
+		set_selection_changed_mode( instance, FALSE );
 
-	set_selection_changed_mode( instance, TRUE );
+		if( g_list_length( selected )){
+			path = gtk_tree_path_copy(( GtkTreePath * ) selected->data );
+			nact_tree_model_remove( NACT_TREE_MODEL( model ), selected );
+		}
 
-	g_list_foreach( selected, ( GFunc ) gtk_tree_path_free, NULL );
-	g_list_free( selected );
+		set_selection_changed_mode( instance, TRUE );
 
-	if( path ){
-		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
-		select_row_at_path( instance, treeview, model, path );
-		gtk_tree_path_free( path );
+		g_list_foreach( selected, ( GFunc ) gtk_tree_path_free, NULL );
+		g_list_free( selected );
+
+		if( path ){
+			gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+			select_row_at_path( instance, treeview, model, path );
+			gtk_tree_path_free( path );
+		}
 	}
 }
 
@@ -514,16 +531,20 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 	gboolean only_actions;
 
 	g_debug( "%s: instance=%p, items=%p", thisfn, ( void * ) instance, ( void * ) items );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
-	treeview = get_actions_list_treeview( instance );
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-	only_actions = nact_iactions_list_is_only_actions_mode( instance );
+	if( st_initialized && !st_finalized ){
 
-	set_selection_changed_mode( instance, FALSE );
-	nact_tree_model_fill( model, items, only_actions );
-	set_selection_changed_mode( instance, TRUE );
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+		only_actions = nact_iactions_list_is_only_actions_mode( instance );
 
-	select_first_row( instance );
+		set_selection_changed_mode( instance, FALSE );
+		nact_tree_model_fill( model, items, only_actions );
+		set_selection_changed_mode( instance, TRUE );
+
+		select_first_row( instance );
+	}
 }
 
 /**
@@ -546,17 +567,20 @@ nact_iactions_list_get_item( NactIActionsList *instance, const gchar *uuid )
 
 	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), NULL );
 
-	treeview = get_actions_list_treeview( instance );
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+	if( st_initialized && !st_finalized ){
 
-	ito = g_new0( IdToObjectIter, 1 );
-	ito->uuid = ( gchar * ) uuid;
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 
-	nact_tree_model_iter( model, ( FnIterOnStore ) get_item_iter, ito );
+		ito = g_new0( IdToObjectIter, 1 );
+		ito->uuid = ( gchar * ) uuid;
 
-	item = ito->object;
+		nact_tree_model_iter( model, ( FnIterOnStore ) get_item_iter, ito );
 
-	g_free( ito );
+		item = ito->object;
+
+		g_free( ito );
+	}
 
 	return( item );
 }
@@ -579,12 +603,17 @@ nact_iactions_list_get_items( NactIActionsList *instance )
 
 	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), NULL );
 
-	treeview = get_actions_list_treeview( instance );
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+	if( st_initialized && !st_finalized ){
 
-	nact_tree_model_iter( model, ( FnIterOnStore ) get_items_iter, &items );
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 
-	return( g_list_reverse( items ));
+		nact_tree_model_iter( model, ( FnIterOnStore ) get_items_iter, &items );
+
+		items = g_list_reverse( items );
+	}
+
+	return( items );
 }
 
 /**
@@ -612,21 +641,28 @@ nact_iactions_list_get_selected_items( NactIActionsList *instance )
 	NAObject *object;
 	GtkTreePath *path;
 
-	treeview = get_actions_list_treeview( instance );
-	selection = gtk_tree_view_get_selection( treeview );
-	listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), NULL );
 
-	for( it = listrows ; it ; it = it->next ){
-		path = ( GtkTreePath * ) it->data;
-		gtk_tree_model_get_iter( model, &iter, path );
-		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-		items = g_list_prepend( items, object );
+	if( st_initialized && !st_finalized ){
+
+		treeview = get_actions_list_treeview( instance );
+		selection = gtk_tree_view_get_selection( treeview );
+		listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+
+		for( it = listrows ; it ; it = it->next ){
+			path = ( GtkTreePath * ) it->data;
+			gtk_tree_model_get_iter( model, &iter, path );
+			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+			items = g_list_prepend( items, object );
+		}
+
+		g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+		g_list_free( listrows );
+
+		items = g_list_reverse( items );
 	}
 
-	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
-	g_list_free( listrows );
-
-	return( g_list_reverse( items ));
+	return( items );
 }
 
 /**
@@ -647,9 +683,12 @@ nact_iactions_list_has_exportable( NactIActionsList *instance )
 
 	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), FALSE );
 
-	treeview = get_actions_list_treeview( instance );
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-	nact_tree_model_iter( model, ( FnIterOnStore ) has_exportable_iter, &has_exportable );
+	if( st_initialized && !st_finalized ){
+
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+		nact_tree_model_iter( model, ( FnIterOnStore ) has_exportable_iter, &has_exportable );
+	}
 
 	return( has_exportable );
 }
@@ -669,10 +708,13 @@ nact_iactions_list_has_modified_items( NactIActionsList *instance )
 
 	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), FALSE );
 
-	treeview = get_actions_list_treeview( instance );
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+	if( st_initialized && !st_finalized ){
 
-	nact_tree_model_iter( model, ( FnIterOnStore ) has_modified_iter, &has_modified );
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+
+		nact_tree_model_iter( model, ( FnIterOnStore ) has_modified_iter, &has_modified );
+	}
 
 	return( has_modified );
 }
@@ -716,34 +758,37 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 	g_return_if_fail( NACT_IS_WINDOW( instance ));
 
-	treeview = get_actions_list_treeview( instance );
-	model = gtk_tree_view_get_model( treeview );
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+	if( st_initialized && !st_finalized ){
 
-	if( sibling ){
-		insert_path = object_to_path( instance, NACT_TREE_MODEL( model ), sibling );
+		treeview = get_actions_list_treeview( instance );
+		model = gtk_tree_view_get_model( treeview );
+		g_return_if_fail( NACT_IS_TREE_MODEL( model ));
 
-	} else {
-		selection = gtk_tree_view_get_selection( treeview );
-		list_selected = gtk_tree_selection_get_selected_rows( selection, NULL );
-		if( g_list_length( list_selected )){
-			insert_path = gtk_tree_path_copy(( GtkTreePath * ) list_selected->data );
+		if( sibling ){
+			insert_path = object_to_path( instance, NACT_TREE_MODEL( model ), sibling );
+
+		} else {
+			selection = gtk_tree_view_get_selection( treeview );
+			list_selected = gtk_tree_selection_get_selected_rows( selection, NULL );
+			if( g_list_length( list_selected )){
+				insert_path = gtk_tree_path_copy(( GtkTreePath * ) list_selected->data );
+			}
+			g_list_foreach( list_selected, ( GFunc ) gtk_tree_path_free, NULL );
+			g_list_free( list_selected );
 		}
-		g_list_foreach( list_selected, ( GFunc ) gtk_tree_path_free, NULL );
-		g_list_free( list_selected );
+
+		last_path = do_insert_items( treeview, model, items, insert_path, 0, &parents );
+
+		for( it = parents ; it ; it = it->next ){
+			na_object_check_edition_status( it->data );
+		}
+
+		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+		select_row_at_path( instance, treeview, model, last_path );
+
+		gtk_tree_path_free( last_path );
+		gtk_tree_path_free( insert_path );
 	}
-
-	last_path = do_insert_items( treeview, model, items, insert_path, 0, &parents );
-
-	for( it = parents ; it ; it = it->next ){
-		na_object_check_edition_status( it->data );
-	}
-
-	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
-	select_row_at_path( instance, treeview, model, last_path );
-
-	gtk_tree_path_free( last_path );
-	gtk_tree_path_free( insert_path );
 }
 
 static GtkTreePath *
@@ -828,7 +873,7 @@ nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
-	gboolean is_expanded;
+	gboolean is_expanded = FALSE;
 	GtkTreeIter iter;
 	gboolean iterok, stop;
 	NAObject *iter_object;
@@ -836,24 +881,27 @@ nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item
 	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
 
-	treeview = get_actions_list_treeview( instance );
-	model = gtk_tree_view_get_model( treeview );
-	iterok = gtk_tree_model_get_iter_first( model, &iter );
-	stop = FALSE;
-	is_expanded = FALSE;
+	if( st_initialized && !st_finalized ){
 
-	while( iterok && !stop ){
-		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, -1 );
+		treeview = get_actions_list_treeview( instance );
+		model = gtk_tree_view_get_model( treeview );
+		iterok = gtk_tree_model_get_iter_first( model, &iter );
+		stop = FALSE;
+		is_expanded = FALSE;
 
-		if( iter_object == item ){
-			GtkTreePath *path = gtk_tree_model_get_path( model, &iter );
-			is_expanded = gtk_tree_view_row_expanded( treeview, path );
-			gtk_tree_path_free( path );
-			stop = TRUE;
+		while( iterok && !stop ){
+			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, -1 );
+
+			if( iter_object == item ){
+				GtkTreePath *path = gtk_tree_model_get_path( model, &iter );
+				is_expanded = gtk_tree_view_row_expanded( treeview, path );
+				gtk_tree_path_free( path );
+				stop = TRUE;
+			}
+
+			g_object_unref( iter_object );
+			iterok = gtk_tree_model_iter_next( model, &iter );
 		}
-
-		g_object_unref( iter_object );
-		iterok = gtk_tree_model_iter_next( model, &iter );
 	}
 
 	return( is_expanded );
@@ -868,7 +916,15 @@ nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item
 gboolean
 nact_iactions_list_is_only_actions_mode( NactIActionsList *instance )
 {
-	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), SHOW_ONLY_ACTIONS_MODE )));
+	gboolean mode = FALSE;
+
+	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), FALSE );
+
+	if( st_initialized && !st_finalized ){
+		mode = ( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), SHOW_ONLY_ACTIONS_MODE ));
+	}
+
+	return( mode );
 }
 
 /**
@@ -884,7 +940,11 @@ nact_iactions_list_is_only_actions_mode( NactIActionsList *instance )
 void
 nact_iactions_list_set_dnd_mode( NactIActionsList *instance, gboolean have_dnd )
 {
-	g_object_set_data( G_OBJECT( instance ), HAVE_DND_MODE, GINT_TO_POINTER( have_dnd ));
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_initialized && !st_finalized ){
+		g_object_set_data( G_OBJECT( instance ), HAVE_DND_MODE, GINT_TO_POINTER( have_dnd ));
+	}
 }
 
 /**
@@ -903,7 +963,11 @@ nact_iactions_list_set_dnd_mode( NactIActionsList *instance, gboolean have_dnd )
 void
 nact_iactions_list_set_filter_selection_mode( NactIActionsList *instance, gboolean filter )
 {
-	g_object_set_data( G_OBJECT( instance ), FILTER_SELECTION_MODE, GINT_TO_POINTER( filter ));
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_initialized && !st_finalized ){
+		g_object_set_data( G_OBJECT( instance ), FILTER_SELECTION_MODE, GINT_TO_POINTER( filter ));
+	}
 }
 
 /**
@@ -922,9 +986,14 @@ nact_iactions_list_set_multiple_selection_mode( NactIActionsList *instance, gboo
 	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
 
-	treeview = get_actions_list_treeview( instance );
-	selection = gtk_tree_view_get_selection( treeview );
-	gtk_tree_selection_set_mode( selection, multiple ? GTK_SELECTION_MULTIPLE : GTK_SELECTION_SINGLE );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		treeview = get_actions_list_treeview( instance );
+		selection = gtk_tree_view_get_selection( treeview );
+		gtk_tree_selection_set_mode( selection, multiple ? GTK_SELECTION_MULTIPLE : GTK_SELECTION_SINGLE );
+	}
 }
 
 /**
@@ -945,7 +1014,11 @@ nact_iactions_list_set_multiple_selection_mode( NactIActionsList *instance, gboo
 void
 nact_iactions_list_set_only_actions_mode( NactIActionsList *instance, gboolean only_actions )
 {
-	g_object_set_data( G_OBJECT( instance ), SHOW_ONLY_ACTIONS_MODE, GINT_TO_POINTER( only_actions ));
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_initialized && !st_finalized ){
+		g_object_set_data( G_OBJECT( instance ), SHOW_ONLY_ACTIONS_MODE, GINT_TO_POINTER( only_actions ));
+	}
 }
 
 /*
@@ -964,36 +1037,39 @@ nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
-	treeview = get_actions_list_treeview( instance );
-	model = gtk_tree_view_get_model( treeview );
-	iterok = gtk_tree_model_get_iter_first( model, &iter );
-	stop = FALSE;
+	if( st_initialized && !st_finalized ){
 
-	while( iterok && !stop ){
+		treeview = get_actions_list_treeview( instance );
+		model = gtk_tree_view_get_model( treeview );
+		iterok = gtk_tree_model_get_iter_first( model, &iter );
+		stop = FALSE;
 
-		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, -1 );
-		if( iter_object == item ){
+		while( iterok && !stop ){
 
-			if( na_object_get_items_count( item ) > 1 ){
+			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, -1 );
+			if( iter_object == item ){
 
-				GtkTreePath *path = gtk_tree_model_get_path( model, &iter );
+				if( na_object_get_items_count( item ) > 1 ){
 
-				if( gtk_tree_view_row_expanded( GTK_TREE_VIEW( treeview ), path )){
-					gtk_tree_view_collapse_row( GTK_TREE_VIEW( treeview ), path );
-					g_debug( "%s: action=%p collapsed", thisfn, ( void * ) item );
+					GtkTreePath *path = gtk_tree_model_get_path( model, &iter );
 
-				} else {
-					gtk_tree_view_expand_row( GTK_TREE_VIEW( treeview ), path, TRUE );
-					g_debug( "%s: action=%p expanded", thisfn, ( void * ) item );
+					if( gtk_tree_view_row_expanded( GTK_TREE_VIEW( treeview ), path )){
+						gtk_tree_view_collapse_row( GTK_TREE_VIEW( treeview ), path );
+						g_debug( "%s: action=%p collapsed", thisfn, ( void * ) item );
+
+					} else {
+						gtk_tree_view_expand_row( GTK_TREE_VIEW( treeview ), path, TRUE );
+						g_debug( "%s: action=%p expanded", thisfn, ( void * ) item );
+					}
+
+					gtk_tree_path_free( path );
 				}
-
-				gtk_tree_path_free( path );
+				stop = TRUE;
 			}
-			stop = TRUE;
-		}
 
-		g_object_unref( iter_object );
-		iterok = gtk_tree_model_iter_next( model, &iter );
+			g_object_unref( iter_object );
+			iterok = gtk_tree_model_iter_next( model, &iter );
+		}
 	}
 }
 

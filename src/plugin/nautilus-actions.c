@@ -187,7 +187,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NautilusActions *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
@@ -208,7 +207,7 @@ instance_dispose( GObject *object )
 	NautilusActions *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_assert( NAUTILUS_IS_ACTIONS( object ));
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
 	self = NAUTILUS_ACTIONS( object );
 
 	if( !self->private->dispose_has_run ){
@@ -231,7 +230,7 @@ instance_finalize( GObject *object )
 	NautilusActions *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_assert( NAUTILUS_IS_ACTIONS( object ));
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
 	self = NAUTILUS_ACTIONS( object );
 
 	g_free( self->private );
@@ -264,6 +263,8 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
  * one of the first calls is with current_folder = 'x-nautilus-desktop:///'
  * we have nothing to do here ; the function is left as a placeholder
  * (and as an historic remainder)
+ * .../...
+ * until we have some actions defined as specific to backgrounds !
  */
 static GList *
 get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
@@ -298,68 +299,71 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 	self = NAUTILUS_ACTIONS( provider );
 
-	/* no need to go further if there is no files in the list */
-	if( !g_list_length( files )){
-		return(( GList * ) NULL );
-	}
-
 	if( !self->private->dispose_has_run ){
-		tree = na_pivot_get_items( self->private->pivot );
 
-		for( ia = tree ; ia ; ia = ia->next ){
-
-			NAObjectAction *action = NA_OBJECT_ACTION( ia->data );
-
-			if( !na_object_is_enabled( action )){
-				continue;
-			}
-
-			label = na_object_get_label( action );
-
-			if( !label || !g_utf8_strlen( label, -1 )){
-				uuid = na_object_get_id( action );
-				g_warning( "%s: label null or empty for uuid=%s", thisfn, uuid );
-				g_free( uuid );
-				continue;
-			}
-
-			g_debug( "%s: examining '%s' action", thisfn, label );
-			g_free( label );
-
-			profiles = na_object_get_items( action );
-
-			for( ip = profiles ; ip ; ip = ip->next ){
-
-				NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
-
-#ifdef NA_MAINTAINER_MODE
-				label = na_object_get_label( profile );
-				g_debug( "%s: examining '%s' profile", thisfn, label );
-				g_free( label );
-#endif
-
-				if( na_object_profile_is_candidate( profile, files )){
-					item = create_menu_item( action, profile, files );
-					items = g_list_append( items, item );
-
-					/*if( have_submenu ){
-						if( !menu ){
-							items = g_list_append( items, create_sub_menu( &menu ));
-						}
-						nautilus_menu_append_item( menu, item );
-
-					} else {
-					}*/
-					break;
-				}
-			}
-
-			na_object_free_items( profiles );
+		/* no need to go further if there is no files in the list */
+		if( !g_list_length( files )){
+			return(( GList * ) NULL );
 		}
 
-		add_about = FALSE; /*na_iprefs_get_add_about_item( NA_IPREFS( self ));*/
-		if( submenus == 1 && add_about ){
-			add_about_item( menu );
+		if( !self->private->dispose_has_run ){
+			tree = na_pivot_get_items( self->private->pivot );
+
+			for( ia = tree ; ia ; ia = ia->next ){
+
+				NAObjectAction *action = NA_OBJECT_ACTION( ia->data );
+
+				if( !na_object_is_enabled( action )){
+					continue;
+				}
+
+				label = na_object_get_label( action );
+
+				if( !label || !g_utf8_strlen( label, -1 )){
+					uuid = na_object_get_id( action );
+					g_warning( "%s: label null or empty for uuid=%s", thisfn, uuid );
+					g_free( uuid );
+					continue;
+				}
+
+				g_debug( "%s: examining '%s' action", thisfn, label );
+				g_free( label );
+
+				profiles = na_object_get_items( action );
+
+				for( ip = profiles ; ip ; ip = ip->next ){
+
+					NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
+
+#ifdef NA_MAINTAINER_MODE
+					label = na_object_get_label( profile );
+					g_debug( "%s: examining '%s' profile", thisfn, label );
+					g_free( label );
+#endif
+
+					if( na_object_profile_is_candidate( profile, files )){
+						item = create_menu_item( action, profile, files );
+						items = g_list_append( items, item );
+
+						/*if( have_submenu ){
+							if( !menu ){
+								items = g_list_append( items, create_sub_menu( &menu ));
+							}
+							nautilus_menu_append_item( menu, item );
+
+						} else {
+						}*/
+						break;
+					}
+				}
+
+				na_object_free_items( profiles );
+			}
+
+			add_about = FALSE; /*na_iprefs_get_add_about_item( NA_IPREFS( self ));*/
+			if( submenus == 1 && add_about ){
+				add_about_item( menu );
+			}
 		}
 	}
 

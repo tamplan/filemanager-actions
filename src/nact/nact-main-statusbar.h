@@ -31,8 +31,10 @@
 #ifndef __NACT_MAIN_STATUSBAR_H__
 #define __NACT_MAIN_STATUSBAR_H__
 
-/*
- * Status bar management.
+/**
+ * SECTION: nact_main_statusbar
+ * @short_description: Main statusbar functions.
+ * @include: nact/nact-main-statusbar.h
  */
 
 #include "nact-main-window.h"

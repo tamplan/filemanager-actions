@@ -31,6 +31,14 @@
 #ifndef __NACT_MAIN_TAB_H__
 #define __NACT_MAIN_TAB_H__
 
+/**
+ * SECTION: nact_main_tab
+ * @short_description: Signals and properties.
+ * @include: nact/nact-main-tab.h
+ *
+ * Here as defined signals and properties common to all tabs.
+ */
+
 /* properties set against the GObject instance
  */
 #define TAB_UPDATABLE_PROP_EDITED_ACTION				"nact-tab-updatable-edited-action"

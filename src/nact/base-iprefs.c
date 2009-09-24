@@ -47,6 +47,9 @@ struct BaseIPrefsInterfacePrivate {
 
 #define BASE_IPREFS_SCHEMAS_PATH		NAUTILUS_ACTIONS_GCONF_SCHEMASDIR NA_GCONF_PREFS_PATH
 
+static gboolean st_initialized = FALSE;
+static gboolean st_finalized = FALSE;
+
 static GType       register_type( void );
 static void        interface_base_init( BaseIPrefsInterface *klass );
 static void        interface_base_finalize( BaseIPrefsInterface *klass );
@@ -114,18 +117,17 @@ static void
 interface_base_init( BaseIPrefsInterface *klass )
 {
 	static const gchar *thisfn = "base_iprefs_interface_base_init";
-	static gboolean initialized = FALSE;
 
-	if( !initialized ){
+	if( !st_initialized ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( BaseIPrefsInterfacePrivate, 1 );
-
 		klass->private->client = gconf_client_get_default();
 
 		klass->iprefs_get_window_id = NULL;
 
-		initialized = TRUE;
+		st_initialized = TRUE;
 	}
 }
 
@@ -133,14 +135,14 @@ static void
 interface_base_finalize( BaseIPrefsInterface *klass )
 {
 	static const gchar *thisfn = "base_iprefs_interface_base_finalize";
-	static gboolean finalized = FALSE ;
 
-	if( !finalized ){
+	if( !st_finalized ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 
-		finalized = TRUE;
+		st_finalized = TRUE;
 	}
 }
 
@@ -162,16 +164,21 @@ base_iprefs_migrate_key( BaseWindow *window, const gchar *old_key, const gchar *
 	GConfValue *value;
 
 	g_debug( "%s: window=%p, old_key=%s, new_key=%s", thisfn, ( void * ) window, old_key, new_key );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
 
-	value = get_value( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, old_key );
+	if( st_initialized && !st_finalized ){
 
-	if( value ){
-		set_value( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, new_key, value );
-		gconf_value_free( value );
+		value = get_value( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, old_key );
+
+		if( value ){
+			set_value( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, new_key, value );
+			gconf_value_free( value );
+		}
+
+		remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, old_key );
+		remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, BASE_IPREFS_SCHEMAS_PATH, old_key );
 	}
-
-	remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, old_key );
-	remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, BASE_IPREFS_SCHEMAS_PATH, old_key );
 }
 
 /**
@@ -188,19 +195,26 @@ base_iprefs_position_window( BaseWindow *window )
 	GtkWindow *toplevel;
 	gchar *key = v_iprefs_get_window_id( window );
 
-	if( key ){
-		toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
-		base_iprefs_position_named_window( window, toplevel, key );
-		g_free( key );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+		if( key ){
+			toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
+			base_iprefs_position_named_window( window, toplevel, key );
+			g_free( key );
+		}
 	}
 }
 
 /**
  * base_iprefs_position_named_window:
  * @window: this #BaseWindow-derived window.
- * @name: the name of the window
+ * @toplevel: the toplevel #GtkWindow whose size and position are to be
+ * set.
+ * @key: the string id of this toplevel.
  *
- * Position the specified window on the screen.
+ * Positions the specified window on the screen.
  */
 void
 base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, const gchar *key )
@@ -209,44 +223,57 @@ base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, cons
 	GSList *list;
 	gint x=0, y=0, width=0, height=0;
 
-	list = read_int_list( window, key );
-	if( list ){
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
 
-		int_list_to_position( window, list, &x, &y, &width, &height );
-		g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
-		free_int_list( list );
+	if( st_initialized && !st_finalized ){
 
-		gtk_window_move( toplevel, x, y );
-		gtk_window_resize( toplevel, width, height );
+		list = read_int_list( window, key );
+		if( list ){
+
+			int_list_to_position( window, list, &x, &y, &width, &height );
+			g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
+			free_int_list( list );
+
+			gtk_window_move( toplevel, x, y );
+			gtk_window_resize( toplevel, width, height );
+		}
 	}
 }
 
 /**
- * Save the position of the specified window.
+ * base_iprefs_save_window_position:
+ * @window: this #BaseWindow-derived window.
  *
- * @window: this BaseWindow-derived window.
- *
- * @code: the IPrefs identifiant of the window
+ * Save the size and position of the specified window.
  */
 void
 base_iprefs_save_window_position( BaseWindow *window )
 {
 	GtkWindow *toplevel;
-	gchar *key = v_iprefs_get_window_id( window );
+	gchar *key;
 
-	if( key ){
-		toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
-		base_iprefs_save_named_window_position( window, toplevel, key );
-		g_free( key );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+
+		key = v_iprefs_get_window_id( window );
+		if( key ){
+			toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
+			base_iprefs_save_named_window_position( window, toplevel, key );
+			g_free( key );
+		}
 	}
 }
 
 /**
- * Save the position of the specified window.
+ * base_iprefs_save_named_window_position:
+ * @window: this #BaseWindow-derived window.
+ * @toplevel: the #GtkWindow whose size and position are to be saved.
+ * @key: the name of the window.
  *
- * @window: this BaseWindow-derived window.
- *
- * @key: the name of the window
+ * Save size and position of the specified window.
  */
 void
 base_iprefs_save_named_window_position( BaseWindow *window, GtkWindow *toplevel, const gchar *key )
@@ -255,49 +282,103 @@ base_iprefs_save_named_window_position( BaseWindow *window, GtkWindow *toplevel,
 	gint x, y, width, height;
 	GSList *list;
 
-	if( GTK_IS_WINDOW( toplevel )){
-		gtk_window_get_position( toplevel, &x, &y );
-		gtk_window_get_size( toplevel, &width, &height );
-		g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
 
-		list = position_to_int_list( window, x, y, width, height );
-		write_int_list( window, key, list );
-		free_int_list( list );
+	if( st_initialized && !st_finalized ){
+
+		if( GTK_IS_WINDOW( toplevel )){
+			gtk_window_get_position( toplevel, &x, &y );
+			gtk_window_get_size( toplevel, &width, &height );
+			g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
+
+			list = position_to_int_list( window, x, y, width, height );
+			write_int_list( window, key, list );
+			free_int_list( list );
+		}
 	}
 }
 
 /**
- * Get/set a named boolean.
+ * base_iprefs_get_bool:
+ * @window: this #BaseWindow-derived window.
+ * @name: the entry to be readen.
  *
- * @window: this BaseWindow-derived window.
+ * Returns: the named boolean.
  */
 gboolean
 base_iprefs_get_bool( BaseWindow *window, const gchar *name )
 {
-	return( read_bool( window, name ));
-}
+	gboolean ret = FALSE;
 
-void
-base_iprefs_set_bool( BaseWindow *window, const gchar *name, gboolean value )
-{
-	write_bool( window, name, value );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+		ret = read_bool( window, name );
+	}
+
+	return( ret );
 }
 
 /**
- * Get/set a named integer.
+ * base_iprefs_set_bool:
+ * @window: this #BaseWindow-derived window.
+ * @name: the entry to be readen.
+ * @value: the value to be set.
  *
+ * Writes the named boolean in GConf.
+ */
+void
+base_iprefs_set_bool( BaseWindow *window, const gchar *name, gboolean value )
+{
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+		write_bool( window, name, value );
+	}
+}
+
+/**
+ * base_iprefs_get_int:
  * @window: this BaseWindow-derived window.
+ * @name: the entry to be readen.
+ *
+ * Returns: the named integer.
  */
 gint
 base_iprefs_get_int( BaseWindow *window, const gchar *name )
 {
-	return( read_int( window, name ));
+	gint ret = 0;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+		ret = read_int( window, name );
+	}
+
+	return( ret );
 }
 
+/**
+ * base_iprefs_set_int:
+ * @window: this BaseWindow-derived window.
+ * @name: the entry to be written.
+ * @value: the integer to be set.
+ *
+ * Writes an integer in the GConf system.
+ */
 void
 base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value )
 {
-	write_int( window, name, value );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+		write_int( window, name, value );
+	}
 }
 
 /**
@@ -311,7 +392,16 @@ base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value )
 gchar *
 base_iprefs_get_string( BaseWindow *window, const gchar *name )
 {
-	return( read_str( window, name ));
+	gchar *string = NULL;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+		string = read_str( window, name );
+	}
+
+	return( string );
 }
 
 /**
@@ -320,12 +410,17 @@ base_iprefs_get_string( BaseWindow *window, const gchar *name )
  * @name: entry of the string value.
  * @string: value to save.
  *
- * Save the required string.
+ * Saves the required string.
  */
 void
 base_iprefs_set_string( BaseWindow *window, const gchar *name, const gchar *string )
 {
-	write_str( window, name, string );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+		write_str( window, name, string );
+	}
 }
 
 static gchar *

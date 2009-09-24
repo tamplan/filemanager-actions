@@ -1,3 +1,46 @@
+2009-09-24 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-application-class.h:
+	* src/nact/base-application.c:
+	* src/nact/base-application.h:
+	* src/nact/base-assistant.c:
+	* src/nact/base-dialog.c:
+	* src/nact/base-iprefs.c:
+	* src/nact/base-window-class.h:
+	* src/nact/base-window.c:
+	* src/nact/base-window.h:
+	* src/nact/nact-application.c:
+	* src/nact/nact-application.h:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-export.h:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-assistant-import.h:
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h:
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-iadvanced-tab.h:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icommand-tab.h:
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nact-iconditions-tab.h:
+	* src/nact/nact-main-menubar.h:
+	* src/nact/nact-main-statusbar.c:
+	* src/nact/nact-main-statusbar.h:
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-preferences-editor.h:
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h:
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h:
+	* src/nact/nact-xml-reader.h:
+	* src/plugin/nautilus-actions.c:
+	* src/plugin/nautilus-actions.h:
+	Review code, usage of g_assert, test dispose_has_run.
+
 2009-09-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/nautilus-actions.schemas.in: Migrate misnamed keys.

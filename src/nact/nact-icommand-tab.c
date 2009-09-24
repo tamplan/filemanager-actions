@@ -65,6 +65,9 @@ struct NactICommandTabInterfacePrivate {
 #define ICOMMAND_TAB_LEGEND_VISIBLE			"nact-icommand-tab-legend-dialog-visible"
 #define ICOMMAND_TAB_STATUSBAR_CONTEXT		"nact-icommand-tab-statusbar-context"
 
+static gboolean st_initialized = FALSE;
+static gboolean st_finalized = FALSE;
+
 static GType      register_type( void );
 static void       interface_base_init( NactICommandTabInterface *klass );
 static void       interface_base_finalize( NactICommandTabInterface *klass );
@@ -131,14 +134,13 @@ static void
 interface_base_init( NactICommandTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_icommand_tab_interface_base_init";
-	static gboolean initialized = FALSE;
 
-	if( !initialized ){
+	if( !st_initialized ){
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactICommandTabInterfacePrivate, 1 );
 
-		initialized = TRUE;
+		st_initialized = TRUE;
 	}
 }
 
@@ -146,14 +148,13 @@ static void
 interface_base_finalize( NactICommandTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_icommand_tab_interface_base_finalize";
-	static gboolean finalized = FALSE ;
 
-	if( !finalized ){
+	if( !st_finalized ){
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 
-		finalized = TRUE;
+		st_finalized = TRUE;
 	}
 }
 
@@ -173,10 +174,14 @@ nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance )
 	static const gchar *thisfn = "nact_icommand_tab_initial_load_toplevel";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
-	base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-legend-dialog", IPREFS_LEGEND_DIALOG );
-	base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-command-chooser", IPREFS_COMMAND_CHOOSER );
-	base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-folder-uri", IPREFS_FOLDER_URI );
+	if( st_initialized && !st_finalized ){
+
+		base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-legend-dialog", IPREFS_LEGEND_DIALOG );
+		base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-command-chooser", IPREFS_COMMAND_CHOOSER );
+		base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-folder-uri", IPREFS_FOLDER_URI );
+	}
 }
 
 /**
@@ -194,47 +199,51 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 	GtkButton *path_button, *legend_button;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
-	label_entry = get_label_entry( instance );
-	g_signal_connect(
-			G_OBJECT( label_entry ),
-			"changed",
-			G_CALLBACK( on_label_changed ),
-			instance );
+	if( st_initialized && !st_finalized ){
 
-	path_entry = get_path_entry( instance );
-	g_signal_connect(
-			G_OBJECT( path_entry ),
-			"changed",
-			G_CALLBACK( on_path_changed ),
-			instance );
+		label_entry = get_label_entry( instance );
+		g_signal_connect(
+				G_OBJECT( label_entry ),
+				"changed",
+				G_CALLBACK( on_label_changed ),
+				instance );
 
-	path_button = get_path_button( instance );
-	g_signal_connect(
-			G_OBJECT( path_button ),
-			"clicked",
-			G_CALLBACK( on_path_browse ),
-			instance );
+		path_entry = get_path_entry( instance );
+		g_signal_connect(
+				G_OBJECT( path_entry ),
+				"changed",
+				G_CALLBACK( on_path_changed ),
+				instance );
 
-	parameters_entry = get_parameters_entry( instance );
-	g_signal_connect(
-			G_OBJECT( parameters_entry ),
-			"changed",
-			G_CALLBACK( on_parameters_changed ),
-			instance );
+		path_button = get_path_button( instance );
+		g_signal_connect(
+				G_OBJECT( path_button ),
+				"clicked",
+				G_CALLBACK( on_path_browse ),
+				instance );
 
-	legend_button = get_legend_button( instance );
-	g_signal_connect(
-			G_OBJECT( legend_button ),
-			"clicked",
-			G_CALLBACK( on_legend_clicked ),
-			instance );
+		parameters_entry = get_parameters_entry( instance );
+		g_signal_connect(
+				G_OBJECT( parameters_entry ),
+				"changed",
+				G_CALLBACK( on_parameters_changed ),
+				instance );
 
-	g_signal_connect(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_tab_updatable_selection_changed ),
-			instance );
+		legend_button = get_legend_button( instance );
+		g_signal_connect(
+				G_OBJECT( legend_button ),
+				"clicked",
+				G_CALLBACK( on_legend_clicked ),
+				instance );
+
+		g_signal_connect(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+				G_CALLBACK( on_tab_updatable_selection_changed ),
+				instance );
+	}
 }
 
 void
@@ -243,6 +252,10 @@ nact_icommand_tab_all_widgets_showed( NactICommandTab *instance )
 	static const gchar *thisfn = "nact_icommand_tab_all_widgets_showed";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
+
+	if( st_initialized && !st_finalized ){
+	}
 }
 
 /**
@@ -257,8 +270,11 @@ nact_icommand_tab_dispose( NactICommandTab *instance )
 	static const gchar *thisfn = "nact_icommand_tab_dispose";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
-	legend_dialog_hide( instance );
+	if( st_initialized && !st_finalized ){
+		legend_dialog_hide( instance );
+	}
 }
 
 /**
@@ -268,9 +284,20 @@ nact_icommand_tab_dispose( NactICommandTab *instance )
 gboolean
 nact_icommand_tab_has_label( NactICommandTab *instance )
 {
-	GtkWidget *label_entry = get_label_entry( instance );
-	const gchar *label = gtk_entry_get_text( GTK_ENTRY( label_entry ));
-	return( g_utf8_strlen( label, -1 ) > 0 );
+	gboolean has_label = FALSE;
+	GtkWidget *label_entry;
+	const gchar *label;
+
+	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		label_entry = get_label_entry( instance );
+		label = gtk_entry_get_text( GTK_ENTRY( label_entry ));
+		has_label = ( g_utf8_strlen( label, -1 ) > 0 );
+	}
+
+	return( has_label );
 }
 
 static void
@@ -283,36 +310,40 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 	GtkButton *path_button, *legend_button;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
+	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-			NULL );
+	if( st_initialized && !st_finalized ){
 
-	label_entry = get_label_entry( instance );
-	label = profile ? na_object_get_label( profile ) : g_strdup( "" );
-	gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
-	gtk_widget_set_sensitive( label_entry, profile != NULL );
-	check_for_label( instance, GTK_ENTRY( label_entry ), label );
-	g_free( label );
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				NULL );
 
-	path_entry = get_path_entry( instance );
-	path = profile ? na_object_profile_get_path( profile ) : g_strdup( "" );
-	gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
-	gtk_widget_set_sensitive( path_entry, profile != NULL );
-	g_free( path );
+		label_entry = get_label_entry( instance );
+		label = profile ? na_object_get_label( profile ) : g_strdup( "" );
+		gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
+		gtk_widget_set_sensitive( label_entry, profile != NULL );
+		check_for_label( instance, GTK_ENTRY( label_entry ), label );
+		g_free( label );
 
-	parameters_entry = get_parameters_entry( instance );
-	parameters = profile ? na_object_profile_get_parameters( profile ) : g_strdup( "" );
-	gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
-	gtk_widget_set_sensitive( parameters_entry, profile != NULL );
-	g_free( parameters );
+		path_entry = get_path_entry( instance );
+		path = profile ? na_object_profile_get_path( profile ) : g_strdup( "" );
+		gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
+		gtk_widget_set_sensitive( path_entry, profile != NULL );
+		g_free( path );
 
-	path_button = get_path_button( instance );
-	gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile != NULL );
+		parameters_entry = get_parameters_entry( instance );
+		parameters = profile ? na_object_profile_get_parameters( profile ) : g_strdup( "" );
+		gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
+		gtk_widget_set_sensitive( parameters_entry, profile != NULL );
+		g_free( parameters );
 
-	legend_button = get_legend_button( instance );
-	gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );
+		path_button = get_path_button( instance );
+		gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile != NULL );
+
+		legend_button = get_legend_button( instance );
+		gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );
+	}
 }
 
 static void

@@ -31,8 +31,10 @@
 #ifndef __NAUTILUS_ACTIONS_H__
 #define __NAUTILUS_ACTIONS_H__
 
-/*
- * NautilusActions class definition.
+/**
+ * SECTION: nautilus_actions
+ * @short_description: #NautilusActions class definition.
+ * @include: plugin/nautilus-actions.h
  *
  * There is only one NautilusActions object in the process.
  *

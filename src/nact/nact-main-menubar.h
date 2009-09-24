@@ -31,8 +31,10 @@
 #ifndef __NACT_MAIN_MENUBAR_H__
 #define __NACT_MAIN_MENUBAR_H__
 
-/*
- * Menu bar management.
+/**
+ * SECTION: nact_main_menubar
+ * @short_description: Main menubar management.
+ * @include: nact/nact-main-menubar.h
  */
 
 #include <gtk/gtk.h>

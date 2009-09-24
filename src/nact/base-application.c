@@ -282,46 +282,49 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	g_return_if_fail( BASE_IS_APPLICATION( object ));
 	self = BASE_APPLICATION( object );
 
-	switch( property_id ){
-		case BASE_APPLICATION_PROP_ARGC_ID:
-			g_value_set_int( value, self->private->argc );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case BASE_APPLICATION_PROP_ARGV_ID:
-			g_value_set_pointer( value, self->private->argv );
-			break;
+		switch( property_id ){
+			case BASE_APPLICATION_PROP_ARGC_ID:
+				g_value_set_int( value, self->private->argc );
+				break;
 
-		case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
-			g_value_set_boolean( value, self->private->is_gtk_initialized );
-			break;
+			case BASE_APPLICATION_PROP_ARGV_ID:
+				g_value_set_pointer( value, self->private->argv );
+				break;
 
-		case BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID:
-			g_value_set_pointer( value, self->private->unique_app_handle );
-			break;
+			case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
+				g_value_set_boolean( value, self->private->is_gtk_initialized );
+				break;
 
-		case BASE_APPLICATION_PROP_EXIT_CODE_ID:
-			g_value_set_int( value, self->private->exit_code );
-			break;
+			case BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID:
+				g_value_set_pointer( value, self->private->unique_app_handle );
+				break;
 
-		case BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID:
-			g_value_set_string( value, self->private->exit_message1 );
-			break;
+			case BASE_APPLICATION_PROP_EXIT_CODE_ID:
+				g_value_set_int( value, self->private->exit_code );
+				break;
 
-		case BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID:
-			g_value_set_string( value, self->private->exit_message2 );
-			break;
+			case BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID:
+				g_value_set_string( value, self->private->exit_message1 );
+				break;
 
-		case BASE_APPLICATION_PROP_UI_XML_ID:
-			g_value_set_pointer( value, self->private->ui_xml );
-			break;
+			case BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID:
+				g_value_set_string( value, self->private->exit_message2 );
+				break;
 
-		case BASE_APPLICATION_PROP_MAIN_WINDOW_ID:
-			g_value_set_pointer( value, self->private->main_window );
-			break;
+			case BASE_APPLICATION_PROP_UI_XML_ID:
+				g_value_set_pointer( value, self->private->ui_xml );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case BASE_APPLICATION_PROP_MAIN_WINDOW_ID:
+				g_value_set_pointer( value, self->private->main_window );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -333,48 +336,51 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	g_return_if_fail( BASE_IS_APPLICATION( object ));
 	self = BASE_APPLICATION( object );
 
-	switch( property_id ){
-		case BASE_APPLICATION_PROP_ARGC_ID:
-			self->private->argc = g_value_get_int( value );
-			break;
+	if( !self->private->dispose_has_run ){
 
-		case BASE_APPLICATION_PROP_ARGV_ID:
-			self->private->argv = g_value_get_pointer( value );
-			break;
+		switch( property_id ){
+			case BASE_APPLICATION_PROP_ARGC_ID:
+				self->private->argc = g_value_get_int( value );
+				break;
 
-		case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
-			self->private->is_gtk_initialized = g_value_get_boolean( value );
-			break;
+			case BASE_APPLICATION_PROP_ARGV_ID:
+				self->private->argv = g_value_get_pointer( value );
+				break;
 
-		case BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID:
-			self->private->unique_app_handle = g_value_get_pointer( value );
-			break;
+			case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
+				self->private->is_gtk_initialized = g_value_get_boolean( value );
+				break;
 
-		case BASE_APPLICATION_PROP_EXIT_CODE_ID:
-			self->private->exit_code = g_value_get_int( value );
-			break;
+			case BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID:
+				self->private->unique_app_handle = g_value_get_pointer( value );
+				break;
 
-		case BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID:
-			g_free( self->private->exit_message1 );
-			self->private->exit_message1 = g_value_dup_string( value );
-			break;
+			case BASE_APPLICATION_PROP_EXIT_CODE_ID:
+				self->private->exit_code = g_value_get_int( value );
+				break;
 
-		case BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID:
-			g_free( self->private->exit_message2 );
-			self->private->exit_message2 = g_value_dup_string( value );
-			break;
+			case BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID:
+				g_free( self->private->exit_message1 );
+				self->private->exit_message1 = g_value_dup_string( value );
+				break;
 
-		case BASE_APPLICATION_PROP_UI_XML_ID:
-			self->private->ui_xml = g_value_get_pointer( value );
-			break;
+			case BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID:
+				g_free( self->private->exit_message2 );
+				self->private->exit_message2 = g_value_dup_string( value );
+				break;
 
-		case BASE_APPLICATION_PROP_MAIN_WINDOW_ID:
-			self->private->main_window = g_value_get_pointer( value );
-			break;
+			case BASE_APPLICATION_PROP_UI_XML_ID:
+				self->private->ui_xml = g_value_get_pointer( value );
+				break;
 
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-			break;
+			case BASE_APPLICATION_PROP_MAIN_WINDOW_ID:
+				self->private->main_window = g_value_get_pointer( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
 	}
 }
 
@@ -415,7 +421,7 @@ instance_finalize( GObject *application )
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_return_if_fail( BASE_IS_APPLICATION( application ));
-	self = ( BaseApplication * ) application;
+	self = BASE_APPLICATION( application );
 
 	g_free( self->private->exit_message1 );
 	g_free( self->private->exit_message2 );
@@ -447,12 +453,17 @@ int
 base_application_run( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_run";
+	int code = -1;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), -1 );
 
-	return( BASE_APPLICATION_GET_CLASS( application )->run( application ));
+	if( !application->private->dispose_has_run ){
+		code = BASE_APPLICATION_GET_CLASS( application )->run( application );
+	}
+
+	return( code );
 }
 
 /**
@@ -471,16 +482,17 @@ base_application_get_application_name( BaseApplication *application )
 {
 	/*static const gchar *thisfn = "base_application_get_application_name";
 	g_debug( "%s: application=%p", thisfn, application );*/
-
 	gchar *name = NULL;
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
 
-	if( BASE_APPLICATION_GET_CLASS( application )->get_application_name ){
-		name = BASE_APPLICATION_GET_CLASS( application )->get_application_name( application );
+	if( !application->private->dispose_has_run ){
+		if( BASE_APPLICATION_GET_CLASS( application )->get_application_name ){
+			name = BASE_APPLICATION_GET_CLASS( application )->get_application_name( application );
 
-	} else {
-		name = g_strdup( "" );
+		} else {
+			name = g_strdup( "" );
+		}
 	}
 
 	return( name );
@@ -501,16 +513,17 @@ base_application_get_icon_name( BaseApplication *application )
 {
 	/*static const gchar *thisfn = "base_application_get_icon_name";
 	g_debug( "%s: icon=%p", thisfn, application );*/
-
 	gchar *name = NULL;
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
 
-	if( BASE_APPLICATION_GET_CLASS( application )->get_icon_name ){
-		name = BASE_APPLICATION_GET_CLASS( application )->get_icon_name( application );
+	if( !application->private->dispose_has_run ){
+		if( BASE_APPLICATION_GET_CLASS( application )->get_icon_name ){
+			name = BASE_APPLICATION_GET_CLASS( application )->get_icon_name( application );
 
-	} else {
-		name = g_strdup( "" );
+		} else {
+			name = g_strdup( "" );
+		}
 	}
 
 	return( name );
@@ -531,16 +544,17 @@ base_application_get_unique_app_name( BaseApplication *application )
 {
 	/*static const gchar *thisfn = "base_application_get_unique_app_name";
 	g_debug( "%s: icon=%p", thisfn, application );*/
-
 	gchar *name = NULL;
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
 
-	if( BASE_APPLICATION_GET_CLASS( application )->get_unique_app_name ){
-		name = BASE_APPLICATION_GET_CLASS( application )->get_unique_app_name( application );
+	if( !application->private->dispose_has_run ){
+		if( BASE_APPLICATION_GET_CLASS( application )->get_unique_app_name ){
+			name = BASE_APPLICATION_GET_CLASS( application )->get_unique_app_name( application );
 
-	} else {
-		name = g_strdup( "" );
+		} else {
+			name = g_strdup( "" );
+		}
 	}
 
 	return( name );
@@ -562,16 +576,17 @@ base_application_get_ui_filename( BaseApplication *application )
 {
 	/*static const gchar *thisfn = "base_application_get_ui_filename";
 	g_debug( "%s: icon=%p", thisfn, application );*/
-
 	gchar *name = NULL;
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
 
-	if( BASE_APPLICATION_GET_CLASS( application )->get_ui_filename ){
-		name = BASE_APPLICATION_GET_CLASS( application )->get_ui_filename( application );
+	if( !application->private->dispose_has_run ){
+		if( BASE_APPLICATION_GET_CLASS( application )->get_ui_filename ){
+			name = BASE_APPLICATION_GET_CLASS( application )->get_ui_filename( application );
 
-	} else {
-		name = g_strdup( "" );
+		} else {
+			name = g_strdup( "" );
+		}
 	}
 
 	return( name );
@@ -599,9 +614,11 @@ base_application_get_main_window( BaseApplication *application )
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
 
-	if( !application->private->main_window &&
-		BASE_APPLICATION_GET_CLASS( application )->get_main_window ){
-			application->private->main_window = BASE_WINDOW( BASE_APPLICATION_GET_CLASS( application )->get_main_window( application ));
+	if( !application->private->dispose_has_run ){
+		if( !application->private->main_window &&
+			BASE_APPLICATION_GET_CLASS( application )->get_main_window ){
+				application->private->main_window = BASE_WINDOW( BASE_APPLICATION_GET_CLASS( application )->get_main_window( application ));
+		}
 	}
 
 	return( application->private->main_window );
@@ -624,19 +641,22 @@ base_application_get_toplevel( BaseApplication *application, const gchar *name )
 {
 	/*static const gchar *thisfn = "base_application_get_dialog";
 	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
-	GtkWindow *toplevel;
+	GtkWindow *toplevel = NULL;
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
 	g_return_val_if_fail( name, NULL );
 	g_return_val_if_fail( strlen( name ), NULL );
 
-	toplevel = GTK_WINDOW( gtk_builder_get_object( application->private->ui_xml, name ));
+	if( !application->private->dispose_has_run ){
 
-	if( !toplevel ){
-		set_get_toplevel_error( application, name );
+		toplevel = GTK_WINDOW( gtk_builder_get_object( application->private->ui_xml, name ));
 
-	} else {
-		g_assert( GTK_IS_WINDOW( toplevel ));
+		if( !toplevel ){
+			set_get_toplevel_error( application, name );
+
+		} else {
+			g_assert( GTK_IS_WINDOW( toplevel ));
+		}
 	}
 
 	return( toplevel );
@@ -661,15 +681,20 @@ base_application_get_widget( BaseApplication *application, BaseWindow *window, c
 	/*static const gchar *thisfn = "base_application_get_widget";
 	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
 	GtkWindow *toplevel;
+	GtkWidget *widget = NULL;
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 	g_return_val_if_fail( name, NULL );
 	g_return_val_if_fail( strlen( name ), NULL );
 
-	toplevel = base_window_get_toplevel_window( window );
+	if( !application->private->dispose_has_run ){
 
-	return( base_application_search_for_widget( application, toplevel, name ));
+		toplevel = base_window_get_toplevel_window( window );
+		widget = base_application_search_for_widget( application, toplevel, name );
+	}
+
+	return( widget );
 }
 
 /**
@@ -689,11 +714,15 @@ base_application_search_for_widget( BaseApplication *application, GtkWindow *win
 {
 	/*static const gchar *thisfn = "base_application_get_widget";
 	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
+	GtkWidget *widget = NULL;
 
-	GtkWidget *widget = recursive_search_for_child( application, window, name );
+	if( !application->private->dispose_has_run ){
 
-	if( widget ){
-		g_assert( GTK_IS_WIDGET( widget ));
+		widget = recursive_search_for_child( application, window, name );
+
+		if( widget ){
+			g_assert( GTK_IS_WIDGET( widget ));
+		}
 	}
 
 	return( widget );
@@ -709,10 +738,14 @@ base_application_search_for_widget( BaseApplication *application, GtkWindow *win
  * Displays an error dialog with only an OK button.
  */
 void
-base_application_error_dlg(
-		BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second )
+base_application_error_dlg( BaseApplication *application,
+							GtkMessageType type,
+							const gchar *first,
+							const gchar *second )
 {
-	display_dlg( application, type, GTK_BUTTONS_OK, first, second );
+	if( !application->private->dispose_has_run ){
+		display_dlg( application, type, GTK_BUTTONS_OK, first, second );
+	}
 }
 
 /**
@@ -730,9 +763,16 @@ base_application_error_dlg(
 gboolean
 base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second )
 {
-	gint result = display_dlg( application, type, GTK_BUTTONS_YES_NO, first, second );
+	gboolean ret = FALSE;
+	gint result;
 
-	return( result == GTK_RESPONSE_YES );
+	if( !application->private->dispose_has_run ){
+
+		result = display_dlg( application, type, GTK_BUTTONS_YES_NO, first, second );
+		ret = ( result == GTK_RESPONSE_YES );
+	}
+
+	return( ret );
 }
 
 static gboolean
