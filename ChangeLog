@@ -1,5 +1,8 @@
 2009-09-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/nautilus-actions.schemas.in: Rename preferences keys.
+	Add iprefs-level-zero key.
+
 	* src/nact/base-application-class.h:
 	* src/nact/base-application.c:
 	* src/nact/base-application.h:

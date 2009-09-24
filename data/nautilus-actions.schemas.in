@@ -298,6 +298,40 @@ All schemes used by Nautilus can be used here.</long>
     </schema>
 
     <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/iprefs-add-about-item</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Add an 'About' item in the Nautilus context menu</short>
+        <long>If TRUE, and if the user has defined a single root menu for its actions, then an 'About Nautilus Actions' will be displayed at end of the first submenu.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/iprefs-alphabetical-order</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Sort actions in alphabetical order</short>
+        <long>When TRUE, the actions are maintained in alphabetical order (historical behavior). When FALSE, user is free to reorder them via Nautilus-Actions configuration tool.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/iprefs-level-zero</key>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>List of items at first level of the hierarchy</short>
+        <long>UUID of the items at the first level of the hierarchy. If this key is not found or empty, then all found items are considered as a flat list.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/nautilus-actions/preferences/main-paned</key>
       <owner>nautilus-actions</owner>
       <type>int</type>
@@ -330,28 +364,6 @@ All schemes used by Nautilus can be used here.</long>
         <long>Position and size of the preferences dialog ; default is set by the window manager</long>
       </locale>
       <default>[]</default>
-    </schema>
-
-    <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/preferences-add-about-item</key>
-      <owner>nautilus-actions</owner>
-      <type>bool</type>
-      <locale name="C">
-        <short>Add an 'About' item in the Nautilus context menu</short>
-        <long>If TRUE, and if the user has defined a single root menu for its actions, then an 'About Nautilus Actions' will be displayed at end of the first submenu.</long>
-      </locale>
-      <default>true</default>
-    </schema>
-
-    <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/preferences-alphabetical-order</key>
-      <owner>nautilus-actions</owner>
-      <type>bool</type>
-      <locale name="C">
-        <short>Sort actions in alphabetical order</short>
-        <long>When TRUE, the actions are maintained in alphabetical order (historical behavior). When FALSE, user is free to reorder them via Nautilus-Actions configuration tool.</long>
-      </locale>
-      <default>true</default>
     </schema>
 
   </schemalist>
