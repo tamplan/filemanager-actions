@@ -462,11 +462,6 @@ set_import_mode( NactAssistantImport *window, gint mode )
 	GtkToggleButton *button;
 
 	switch( mode ){
-		case NO_IMPORT_MODE:
-			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ));
-			gtk_toggle_button_set_active( button, TRUE );
-			break;
-
 		case RENUMBER_MODE:
 			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ));
 			gtk_toggle_button_set_active( button, TRUE );
@@ -474,6 +469,12 @@ set_import_mode( NactAssistantImport *window, gint mode )
 
 		case OVERRIDE_MODE:
 			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ));
+			gtk_toggle_button_set_active( button, TRUE );
+			break;
+
+		case NO_IMPORT_MODE:
+		default:
+			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ));
 			gtk_toggle_button_set_active( button, TRUE );
 			break;
 	}
