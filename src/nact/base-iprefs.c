@@ -193,12 +193,14 @@ void
 base_iprefs_position_window( BaseWindow *window )
 {
 	GtkWindow *toplevel;
-	gchar *key = v_iprefs_get_window_id( window );
+	gchar *key;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( BASE_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
+
+		key = v_iprefs_get_window_id( window );
 		if( key ){
 			toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
 			base_iprefs_position_named_window( window, toplevel, key );
@@ -214,7 +216,9 @@ base_iprefs_position_window( BaseWindow *window )
  * set.
  * @key: the string id of this toplevel.
  *
- * Positions the specified window on the screen.
+ * Positions the specified window on the screen, maximizing it by the
+ * actual current screen size. Note that this is a rough approximation
+ * as some of the screen is reserved by deskbars and so...
  */
 void
 base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, const gchar *key )
@@ -222,6 +226,9 @@ base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, cons
 	static const gchar *thisfn = "base_iprefs_position_named_window";
 	GSList *list;
 	gint x=0, y=0, width=0, height=0;
+	GdkDisplay *display;
+	GdkScreen *screen;
+	gint screen_width, screen_height;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( BASE_IS_IPREFS( window ));
@@ -234,6 +241,16 @@ base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, cons
 			int_list_to_position( window, list, &x, &y, &width, &height );
 			g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
 			free_int_list( list );
+
+			display = gdk_display_get_default();
+			screen = gdk_display_get_screen( display, 0 );
+			screen_width = gdk_screen_get_width( screen );
+			screen_height = gdk_screen_get_height( screen );
+
+			if(( x+width > screen_width ) ||
+				( y+height > screen_height )){
+				gtk_window_get_default_size( toplevel, &width, &height );
+			}
 
 			gtk_window_move( toplevel, x, y );
 			gtk_window_resize( toplevel, width, height );

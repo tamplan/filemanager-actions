@@ -3,6 +3,10 @@
 	* data/nautilus-actions.schemas.in:
 	Defines a new key for the "import-mode" preference.
 
+	* src/nact/base-iprefs.c:
+	Reset default size of the window if recorded size and position
+	exceed current screen size.
+
 	* src/nact/nact-assistant-export.ui:
 	All titles are verbs.
 
