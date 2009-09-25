@@ -76,7 +76,7 @@ to extend a selection.</property>
         </child>
       </object>
       <packing>
-        <property name="title">Selection of the exported actions</property>
+        <property name="title">Selecting the exported actions</property>
       </packing>
     </child>
     <child>
@@ -96,7 +96,7 @@ to extend a selection.</property>
         </child>
       </object>
       <packing>
-        <property name="title">Selection of the target folder</property>
+        <property name="title">Selecting the target folder</property>
       </packing>
     </child>
     <child>
@@ -283,7 +283,7 @@ The exported file may later be imported via :
         </child>
       </object>
       <packing>
-        <property name="title">Select the export format</property>
+        <property name="title">Selecting the export format</property>
       </packing>
     </child>
     <child>

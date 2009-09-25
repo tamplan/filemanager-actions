@@ -62,9 +62,11 @@ struct NactXMLReaderClassPrivate {
 struct NactXMLReaderPrivate {
 	gboolean         dispose_has_run;
 	BaseWindow      *window;
+	gint             import_mode;
 	NAObjectAction  *action;			/* the action that we will return, or NULL */
 	GSList          *messages;
 	gboolean         uuid_set;			/* set at first uuid, then checked against */
+	gboolean         relabel;			/* renumbered action: set a 'renumbered' label */
 
 	/* following values are reset at each schema/entry node
 	 */
@@ -156,7 +158,8 @@ static gchar   *get_uuid_from_key( NactXMLReader *reader, const gchar *key, guin
 static gboolean is_uuid_valid( const gchar *uuid );
 static gchar   *get_entry_from_key( const gchar *key );
 static void     free_reader_values( NactXMLReader *reader );
-static gboolean action_exists( NactXMLReader *reader, const gchar *uuid );
+static gboolean manage_import_mode( NactXMLReader *reader );
+static void     relabel( NactXMLReader *reader );
 
 GType
 nact_xml_reader_get_type( void )
@@ -228,6 +231,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->action = NULL;
 	self->private->messages = NULL;
 	self->private->uuid_set = FALSE;
+	self->private->relabel = FALSE;
 	self->private->profile = NULL;
 	self->private->locale_waited = FALSE;
 	self->private->entry = NULL;
@@ -288,10 +292,18 @@ gconf_reader_new( void )
 }
 
 /**
+ * nact_xml_reader_import:
+ * window: the #NactAssistantImport instance.
+ * @uri: the uri of the file to import.
+ * import_mode: the import mode.
+ * msg: a list of error messages which may be set by this function.
+ *
  * Import the specified file as an NAAction XML description.
+ *
+ * Returns: the imported action, or NULL.
  */
 NAObjectAction *
-nact_xml_reader_import( BaseWindow *window, const gchar *uri, GSList **msg )
+nact_xml_reader_import( BaseWindow *window, const gchar *uri, gint import_mode, GSList **msg )
 {
 	static const gchar *thisfn = "nact_xml_reader_import";
 	NAObjectAction *action = NULL;
@@ -303,8 +315,9 @@ nact_xml_reader_import( BaseWindow *window, const gchar *uri, GSList **msg )
 
 	reader = gconf_reader_new();
 	reader->private->window = window;
+	reader->private->import_mode = import_mode;
 
-	g_assert( BASE_IS_ASSISTANT( window ));
+	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), NULL );
 
 	doc = xmlParseFile( uri );
 
@@ -424,6 +437,10 @@ gconf_reader_parse_schemalist( NactXMLReader *reader, xmlNode *schema )
 			add_message( reader, ERR_ACTION_LABEL_NOT_FOUND );
 		}
 		g_free( label );
+	}
+
+	if( ok && reader->private->relabel ){
+		relabel( reader );
 	}
 
 	if( !ok ){
@@ -614,13 +631,13 @@ gconf_reader_parse_applyto( NactXMLReader *reader, xmlNode *node )
 	if( ret ){
 		if( !reader->private->uuid_set ){
 
-			if( action_exists( reader, uuid )){
-				add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid );
-				ret = FALSE;
+			na_object_set_id( reader->private->action, uuid );
 
-			} else {
-				na_object_set_id( reader->private->action, uuid );
+			if( manage_import_mode( reader )){
 				reader->private->uuid_set = TRUE;
+			} else {
+				add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid, node->line );
+				ret = FALSE;
 			}
 
 		} else {
@@ -836,6 +853,7 @@ gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist )
 	static const gchar *thisfn = "gconf_reader_parse_entrylist";
 	xmlChar *path;
 	gchar *uuid, *label;
+	gboolean ok;
 
 	g_debug( "%s: reader=%p, entrylist=%p", thisfn, ( void * ) reader, ( void * ) entrylist );
 
@@ -845,19 +863,22 @@ gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist )
 	/*g_debug( "%s: uuid=%s", thisfn, uuid );*/
 
 	if( is_uuid_valid( uuid )){
-		if( action_exists( reader, uuid )){
-			add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid, entrylist->line );
 
-		} else {
-			na_object_set_id( reader->private->action, uuid );
+		na_object_set_id( reader->private->action, uuid );
+
+		if( manage_import_mode( reader )){
 			reader->private->uuid_set = TRUE;
+		} else {
+			add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid, entrylist->line );
 		}
+
 	} else {
 		add_message( reader, ERR_NOT_AN_UUID, uuid, entrylist->line );
 	}
 
 	g_free( uuid );
 	xmlFree( path );
+	ok = TRUE;
 
 	if( reader->private->uuid_set ){
 		xmlNode *iter;
@@ -882,14 +903,20 @@ gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist )
 		label = na_object_get_label( reader->private->action );
 		if( !label || !g_utf8_strlen( label, -1 )){
 			add_message( reader, ERR_ACTION_LABEL_NOT_FOUND );
+			ok = FALSE;
 		}
 		g_free( label );
+
+		if( ok && reader->private->relabel ){
+			relabel( reader );
+		}
 
 	} else {
 		g_object_unref( reader->private->action );
 		reader->private->action = NULL;
 	}
 }
+
 static gboolean
 gconf_reader_parse_entry( NactXMLReader *reader, xmlNode *entry )
 {
@@ -1245,10 +1272,66 @@ free_reader_values( NactXMLReader *reader )
 	}
 }
 
+/*
+ * returns TRUE if we can safely insert the action
+ * - the uuid doesn't already exist
+ * - the uuid already exist, but import mode is renumber
+ * - the uuid already exists, but import mode is override
+ */
 static gboolean
-action_exists( NactXMLReader *reader, const gchar *uuid )
+manage_import_mode( NactXMLReader *reader )
 {
-	BaseApplication *appli = base_window_get_application( BASE_WINDOW( reader->private->window ));
-	NactMainWindow *main_window = NACT_MAIN_WINDOW( base_application_get_main_window( appli ));
-	return( nact_main_window_action_exists( main_window, uuid ));
+	gboolean exists;
+	gchar *uuid;
+	BaseApplication *appli;
+	NactMainWindow *main_window;
+	gboolean ret;
+
+	appli = base_window_get_application( BASE_WINDOW( reader->private->window ));
+	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( appli ));
+
+	uuid = na_object_get_id( reader->private->action );
+	exists = nact_main_window_action_exists( main_window, uuid );
+	g_free( uuid );
+
+	if( !exists ){
+		return( TRUE );
+	}
+
+	switch( reader->private->import_mode ){
+		case RENUMBER_MODE:
+			na_object_set_new_id( reader->private->action );
+			reader->private->relabel = TRUE;
+			ret = TRUE;
+			break;
+
+		case OVERRIDE_MODE:
+			ret = TRUE;
+			break;
+
+		case NO_IMPORT_MODE:
+		default:
+			ret = FALSE;
+	}
+
+	return( ret );
+}
+
+/*
+ * set a new label because the action has been renumbered
+ */
+static void
+relabel( NactXMLReader *reader )
+{
+	gchar *label, *tmp;
+
+	label = na_object_get_label( reader->private->action );
+
+	/* i18n: the action has been renumbered during import operation */
+	tmp = g_strdup_printf( "%s %s", label, _( "(renumbered)" ));
+
+	na_object_set_label( reader->private->action, tmp );
+
+	g_free( tmp );
+	g_free( label );
 }

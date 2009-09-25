@@ -1,3 +1,24 @@
+2009-09-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* data/nautilus-actions.schemas.in:
+	Defines a new key for the "import-mode" preference.
+
+	* src/nact/nact-assistant-export.ui:
+	All titles are verbs.
+
+	* src/nact/nact-assistant-import.c:
+	Let the user define an import mode if the UUID already exists.
+
+	* src/nact/nact-tree-model.c:
+	Override the object when inserting an already existing UUID.
+
+	* src/nact/nact-xml-reader.c:
+	* src/nact/nact-xml-reader.h:
+	Manage the import mode, renumbering the imported action if needed.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Add a page to the Import assistant to manage the import mode.
+
 2009-09-24 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-menubar.c:

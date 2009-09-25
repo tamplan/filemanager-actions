@@ -133,6 +133,14 @@ typedef struct {
 }
 	ntmSearchStruct;
 
+typedef struct {
+	GtkTreeModel *store;
+	gchar        *id;
+	gboolean      found;
+	GtkTreeIter  *iter;
+}
+	ntmSearchIdStruct;
+
 static GtkTreeModelFilterClass *st_parent_class = NULL;
 
 static GType          register_type( void );
@@ -153,6 +161,7 @@ static void           insert_get_iters_menu( GtkTreeModel *model, const NAObject
 static void           insert_before_get_iters( GtkTreeModel *model,  GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object );
 static void           insert_before_parent_get_iters( GtkTreeModel *model,  GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object );
 static void           insert_as_last_child_get_iters( GtkTreeModel *model,  GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object );
+static void           remove_if_exists( NactTreeModel *model, GtkTreeModel *store, const NAObject *object );
 
 static GList         *add_parent( GList *parents, GtkTreeModel *store, GtkTreeIter *obj_iter, GtkTreePath *obj_path );
 static void           append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
@@ -162,6 +171,8 @@ static void           iter_on_store( NactTreeModel *model, GtkTreeModel *store, 
 static gboolean       iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter, FnIterOnStore fn, gpointer user_data );
 static gboolean       search_for_object( NactTreeModel *model, GtkTreeModel *store, const NAObject *object, GtkTreeIter *iter );
 static gboolean       search_for_objet_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmSearchStruct *ntm );
+static gboolean       search_for_object_id( NactTreeModel *model, GtkTreeModel *store, const NAObject *object, GtkTreeIter *iter );
+static gboolean       search_for_object_id_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmSearchIdStruct *ntm );
 
 static gboolean       imulti_drag_source_row_draggable( EggTreeMultiDragSource *drag_source, GList *path_list );
 static gboolean       imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source, GdkDragContext *context, GtkSelectionData *selection_data, GList *path_list, guint info );
@@ -707,6 +718,8 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 		has_sibling_iter = FALSE;
 		*obj_parent = NA_OBJECT( object );
 
+		remove_if_exists( model, store, object );
+
 		if( path ){
 			gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &select_iter, path );
 			gtk_tree_model_get( GTK_TREE_MODEL( model ), &select_iter, IACTIONS_LIST_NAOBJECT_COLUMN, &select_object, -1 );
@@ -715,15 +728,15 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 			g_return_val_if_fail( NA_IS_OBJECT( select_object ), NULL );
 
 			if( NA_IS_OBJECT_ACTION( object )){
-				insert_get_iters_action( GTK_TREE_MODEL( store ), select_object, path, object, &parent_iter, &has_parent_iter, &sibling_iter, &has_sibling_iter, obj_parent );
+				insert_get_iters_action( store, select_object, path, object, &parent_iter, &has_parent_iter, &sibling_iter, &has_sibling_iter, obj_parent );
 			}
 
 			if( NA_IS_OBJECT_PROFILE( object )){
-				insert_get_iters_profile( GTK_TREE_MODEL( store ), select_object, path, object, &parent_iter, &has_parent_iter, &sibling_iter, &has_sibling_iter, obj_parent );
+				insert_get_iters_profile( store, select_object, path, object, &parent_iter, &has_parent_iter, &sibling_iter, &has_sibling_iter, obj_parent );
 			}
 
 			if( NA_IS_OBJECT_MENU( object )){
-				insert_get_iters_menu( GTK_TREE_MODEL( store ), select_object, path, object, &parent_iter, &has_parent_iter, &sibling_iter, &has_sibling_iter, obj_parent );
+				insert_get_iters_menu( store, select_object, path, object, &parent_iter, &has_parent_iter, &sibling_iter, &has_sibling_iter, obj_parent );
 			}
 
 			g_object_unref( select_object );
@@ -889,6 +902,21 @@ insert_as_last_child_get_iters( GtkTreeModel *model, GtkTreePath *select_path, c
 	g_return_if_fail( NA_IS_OBJECT_ITEM( *parent_object ));
 	na_object_append_item( *parent_object, object );
 	g_object_unref( *parent_object );
+}
+
+/*
+ * if the object, identified by its uuid, already exists, then remove it first
+ */
+static void
+remove_if_exists( NactTreeModel *model, GtkTreeModel *store, const NAObject *object )
+{
+	GtkTreeIter iter;
+
+	if( NA_IS_OBJECT_ITEM( object )){
+		if( search_for_object_id( model, store, object, &iter )){
+			gtk_tree_store_remove( GTK_TREE_STORE( store ), &iter );
+		}
+	}
 }
 
 void
@@ -1102,6 +1130,50 @@ search_for_objet_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object
 			ntm->found = TRUE;
 		}
 	}
+
+	/* stop iteration when found */
+	return( ntm->found );
+}
+
+static gboolean
+search_for_object_id( NactTreeModel *model, GtkTreeModel *store, const NAObject *object, GtkTreeIter *result_iter )
+{
+	gboolean found = FALSE;
+	ntmSearchIdStruct *ntm;
+	GtkTreeIter iter;
+
+	ntm = g_new0( ntmSearchIdStruct, 1 );
+	ntm->store = store;
+	ntm->id = na_object_get_id( object );
+	ntm->found = FALSE;
+	ntm->iter = &iter;
+
+	iter_on_store( model, store, NULL, ( FnIterOnStore ) search_for_object_id_iter, ntm );
+
+	if( ntm->found ){
+		found = TRUE;
+		memcpy( result_iter, ntm->iter, sizeof( GtkTreeIter ));
+	}
+
+	g_free( ntm->id );
+	g_free( ntm );
+	return( found );
+}
+
+static gboolean
+search_for_object_id_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmSearchIdStruct *ntm )
+{
+	gchar *id;
+
+	id = na_object_get_id( object );
+
+	if( !g_ascii_strcasecmp( id, ntm->id )){
+		if( gtk_tree_model_get_iter( ntm->store, ntm->iter, path )){
+			ntm->found = TRUE;
+		}
+	}
+
+	g_free( id );
 
 	/* stop iteration when found */
 	return( ntm->found );

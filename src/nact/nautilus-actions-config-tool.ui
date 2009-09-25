@@ -1009,13 +1009,192 @@ Defining several profiles lets you have several commands, each applying with a d
       </packing>
     </child>
     <child>
-      <object class="GtkFileChooserWidget" id="filechooserwidget1">
+      <object class="GtkVBox" id="vbox18">
         <property name="visible">True</property>
-        <property name="use_preview_label">False</property>
-        <property name="local_only">False</property>
-        <property name="select_multiple">True</property>
-        <property name="preview_widget_active">False</property>
+        <child>
+          <object class="GtkFileChooserWidget" id="ImportFileChooser">
+            <property name="visible">True</property>
+            <property name="preview_widget_active">False</property>
+            <property name="local_only">False</property>
+            <property name="select_multiple">True</property>
+            <property name="use_preview_label">False</property>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
       </object>
+      <packing>
+        <property name="title">Selecting what files to import</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox19">
+        <property name="visible">True</property>
+        <property name="border_width">10</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkVBox" id="vbox20">
+            <property name="visible">True</property>
+            <property name="spacing">10</property>
+            <child>
+              <object class="GtkLabel" id="label38">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">What should I do when importing an action whose UUID already exists ?</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox21">
+                <property name="visible">True</property>
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkVBox" id="vbox22">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkRadioButton" id="NoImportButton">
+                        <property name="label" translatable="yes">Do not import the action which UUID already exists</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox5">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="NoImportLabel">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="xpad">14</property>
+                            <property name="label" translatable="yes">This used to be the historical behavior.
+The selected file will be marked as "NOT OK" in the Summary page.
+The existing action will not be modified.</property>
+                          </object>
+                          <packing>
+                            <property name="padding">4</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="vbox23">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkRadioButton" id="RenumberButton">
+                        <property name="label" translatable="yes">Allocate a new identifiant for the imported action</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">NoImportButton</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox6">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="RenumberLabel">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="xpad">14</property>
+                            <property name="label" translatable="yes">The selected file will be imported with a slightly modified label indicating the renumbering.
+The existing action will not be modified.</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="padding">4</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="vbox24">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkRadioButton" id="OverrideButton">
+                        <property name="label" translatable="yes">Override the existing action</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">NoImportButton</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox7">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="OverrideLabel">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="xpad">14</property>
+                            <property name="label" translatable="yes">The action found in the selected file will silently override the current action which has the same identifiant.
+Be warned: you will not be prompted another time. This mode may be dangerous.</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="padding">4</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="title">Managing duplicates</property>
+      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="label17">
@@ -1023,6 +1202,7 @@ Defining several profiles lets you have several commands, each applying with a d
       </object>
       <packing>
         <property name="page_type">confirm</property>
+        <property name="title">Summary</property>
       </packing>
     </child>
     <child>
@@ -1031,6 +1211,7 @@ Defining several profiles lets you have several commands, each applying with a d
       </object>
       <packing>
         <property name="page_type">summary</property>
+        <property name="title">Import is done</property>
       </packing>
     </child>
   </object>
@@ -1534,16 +1715,16 @@ Defining several profiles lets you have several commands, each applying with a d
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandExamplePreLabel"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandExamplePreLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
 </interface>
