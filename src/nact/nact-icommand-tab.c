@@ -389,7 +389,7 @@ get_legend_button( NactICommandTab *instance )
 static GtkWindow *
 get_legend_dialog( NactICommandTab *instance )
 {
-	return( base_window_get_toplevel( BASE_WINDOW( instance ), "LegendDialog" ));
+	return( base_window_get_named_toplevel( BASE_WINDOW( instance ), "LegendDialog" ));
 }
 
 static GtkWidget *
@@ -445,7 +445,7 @@ legend_dialog_show( NactICommandTab *instance )
 	legend_dialog = get_legend_dialog( instance );
 	gtk_window_set_deletable( legend_dialog, FALSE );
 
-	toplevel = base_window_get_toplevel_window( BASE_WINDOW( instance ));
+	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
 	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
 
 	base_iprefs_position_named_window( BASE_WINDOW( instance ), legend_dialog, IPREFS_LEGEND_DIALOG );

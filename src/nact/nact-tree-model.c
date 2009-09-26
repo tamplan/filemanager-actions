@@ -79,6 +79,7 @@ struct NactTreeModelPrivate {
 	BaseWindow  *window;
 	GtkTreeView *treeview;
 	gboolean     have_dnd;
+	gboolean     only_actions;
 	gchar       *drag_dest_uri;
 	GList       *drag_items;
 };
@@ -190,7 +191,7 @@ static void           on_drag_end( GtkWidget *widget, GdkDragContext *context, B
 static void           on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, GtkSelectionData *data, guint info, guint time, BaseWindow *window );*/
 
 static gint           sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, BaseWindow *window );
-static gboolean       filter_visible( GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *window );
+static gboolean       filter_visible( GtkTreeModel *store, GtkTreeIter *iter, NactTreeModel *model );
 static char          *get_xds_atom_value( GdkDragContext *context );
 
 GType
@@ -390,7 +391,7 @@ tree_model_new( BaseWindow *window, GtkTreeView *treeview )
 	model = g_object_new( NACT_TREE_MODEL_TYPE, "child-model", ts_model, NULL );
 
 	gtk_tree_model_filter_set_visible_func(
-			GTK_TREE_MODEL_FILTER( model ), ( GtkTreeModelFilterVisibleFunc ) filter_visible, window, NULL );
+			GTK_TREE_MODEL_FILTER( model ), ( GtkTreeModelFilterVisibleFunc ) filter_visible, model, NULL );
 
 	model->private->window = window;
 	model->private->treeview = treeview;
@@ -593,10 +594,9 @@ nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions)
 
 	if( !model->private->dispose_has_run ){
 
+		model->private->only_actions = only_actions;
 		ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
-
 		gtk_tree_store_clear( ts_model );
-
 		fill_tree_store( ts_model, model->private->treeview, items, only_actions, NULL );
 	}
 }
@@ -1449,7 +1449,7 @@ sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, BaseWind
 }
 
 static gboolean
-filter_visible( GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *window )
+filter_visible( GtkTreeModel *store, GtkTreeIter *iter, NactTreeModel *model )
 {
 	/*static const gchar *thisfn = "nact_tree_model_filter_visible";*/
 	NAObject *object;
@@ -1461,7 +1461,7 @@ filter_visible( GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *window
 	/*g_debug( "%s at %p", G_OBJECT_TYPE_NAME( model ), ( void * ) model );*/
 	/* is a GtkTreeStore */
 
-	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+	gtk_tree_model_get( store, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 
 	if( object ){
 		/*na_object_dump( object );*/
@@ -1471,7 +1471,7 @@ filter_visible( GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *window
 			return( TRUE );
 		}
 
-		only_actions = nact_iactions_list_is_only_actions_mode( window );
+		only_actions = NACT_TREE_MODEL( model )->private->only_actions;
 
 		if( !only_actions ){
 

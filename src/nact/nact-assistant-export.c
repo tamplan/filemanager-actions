@@ -103,6 +103,7 @@ static NactAssistantExport *assist_new( BaseApplication *application );
 
 static gchar          *window_get_iprefs_window_id( BaseWindow *window );
 static gchar          *window_get_toplevel_name( BaseWindow *dialog );
+static gchar          *window_get_ui_filename( BaseWindow *dialog );
 
 static void            on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data );
 static void            on_runtime_init_dialog( NactAssistantExport *dialog, gpointer user_data );
@@ -213,8 +214,9 @@ class_init( NactAssistantExportClass *klass )
 	klass->private = g_new0( NactAssistantExportClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_toplevel_name = window_get_toplevel_name;
 	base_class->get_iprefs_window_id = window_get_iprefs_window_id;
+	base_class->get_toplevel_name = window_get_toplevel_name;
+	base_class->get_ui_filename = window_get_ui_filename;
 
 	assist_class = BASE_ASSISTANT_CLASS( klass );
 	assist_class->apply = assistant_apply;
@@ -332,6 +334,7 @@ nact_assistant_export_run( BaseWindow *main_window )
 
 	assist = assist_new( appli );
 	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_PARENT, main_window, NULL );
+	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );
 
 	assist->private->main_window = NACT_MAIN_WINDOW( main_window );
 
@@ -350,6 +353,12 @@ window_get_toplevel_name( BaseWindow *dialog )
 	return( g_strdup( "ExportAssistant" ));
 }
 
+static gchar *
+window_get_ui_filename( BaseWindow *dialog )
+{
+	return( g_strdup( PKGDATADIR "/nact-assistant-export.ui" ));
+}
+
 static void
 on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data )
 {
@@ -359,7 +368,7 @@ on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data )
 	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( dialog ));
 
-	assistant = GTK_ASSISTANT( base_window_get_toplevel_window( BASE_WINDOW( dialog )));
+	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
 
 	assist_initial_load_intro( dialog, assistant );
 	assist_initial_load_actions_list( dialog, assistant );
@@ -381,7 +390,7 @@ on_runtime_init_dialog( NactAssistantExport *dialog, gpointer user_data )
 	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( dialog ));
 
-	assistant = GTK_ASSISTANT( base_window_get_toplevel_window( BASE_WINDOW( dialog )));
+	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
 
 	assist_runtime_init_intro( dialog, assistant );
 	assist_runtime_init_actions_list( dialog, assistant );
@@ -492,9 +501,9 @@ static void
 assist_initial_load_actions_list( NactAssistantExport *window, GtkAssistant *assistant )
 {
 	g_assert( NACT_IS_IACTIONS_LIST( window ));
+
+	nact_iactions_list_set_management_mode( NACT_IACTIONS_LIST( window ), IACTIONS_LIST_MANAGEMENT_MODE_EXPORT );
 	nact_iactions_list_initial_load_toplevel( NACT_IACTIONS_LIST( window ));
-	nact_iactions_list_set_multiple_selection_mode( NACT_IACTIONS_LIST( window ), TRUE );
-	nact_iactions_list_set_only_actions_mode( NACT_IACTIONS_LIST( window ), TRUE );
 }
 
 static void
@@ -528,7 +537,7 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 	GtkWidget *content;
 
 	g_assert( NACT_IS_ASSISTANT_EXPORT( instance ));
-	assistant = GTK_ASSISTANT( base_window_get_toplevel_window( BASE_WINDOW( instance )));
+	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( instance )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_ACTIONS_SELECTION ){
 
@@ -599,7 +608,7 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	g_debug( "%s: chooser=%p, user_data=%p", thisfn, ( void * ) chooser, ( void * ) user_data );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( user_data ));
 
-	assistant = GTK_ASSISTANT( base_window_get_toplevel_window( BASE_WINDOW( user_data )));
+	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( user_data )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_FOLDER_SELECTION ){
 

@@ -103,12 +103,10 @@ typedef struct {
 }
 	IdToObjectIter;
 
-/* data set against GObject
+/* data set against GObject's instance
  */
 #define SELECTION_CHANGED_SIGNAL_MODE	"nact-iactions-list-selection-changed-signal-mode"
-#define SHOW_ONLY_ACTIONS_MODE			"nact-iactions-list-show-only-actions-mode"
-#define HAVE_DND_MODE					"nact-iactions-list-dnd-mode"
-#define FILTER_SELECTION_MODE			"nact-iactions-list-filter-selection-mode"
+#define MANAGEMENT_MODE					"nact-iactions-list-management-mode"
 
 static gint         st_signals[ LAST_SIGNAL ] = { 0 };
 static gboolean     st_initialized = FALSE;
@@ -133,6 +131,8 @@ static gboolean     has_exportable_iter( NactTreeModel *model, GtkTreePath *path
 static gboolean     has_modified_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, gboolean *has_modified );
 static gboolean     have_dnd_mode( NactIActionsList *instance );
 static gboolean     have_filter_selection_mode( NactIActionsList *instance );
+static gboolean     have_only_actions( NactIActionsList *instance );
+static gboolean     is_iduplicable_proxy( NactIActionsList *instance );
 static gboolean     is_selection_changed_authorized( NactIActionsList *instance );
 static void         iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpointer user_data );
 static GtkTreePath *object_to_path( NactIActionsList *instance, NactTreeModel *model, NAObject *object );
@@ -282,7 +282,7 @@ interface_base_finalize( NactIActionsListInterface *klass )
 
 /**
  * nact_iactions_list_initial_load_toplevel:
- * @window: this #NactIActionsList *instance.
+ * @instance: this #NactIActionsList *instance.
  *
  * Allocates and initializes the ActionsList widget.
  *
@@ -291,6 +291,9 @@ interface_base_finalize( NactIActionsListInterface *klass )
  *   implements EggTreeMultiDragSourceIface
  *   is derived from GtkTreeModelFilter
  *     GtkTreeModelFilter is built on top of GtkTreeStore
+ *
+ * Please note that management mode for the list should have been set
+ * before calling this function.
  */
 void
 nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
@@ -312,9 +315,6 @@ nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
 		label = base_window_get_widget( BASE_WINDOW( instance ), "ActionsListLabel" );
 		gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( treeview ));
 
-		nact_iactions_list_set_dnd_mode( instance, FALSE );
-		nact_iactions_list_set_multiple_selection_mode( instance, FALSE );
-		nact_iactions_list_set_only_actions_mode( instance, FALSE );
 		set_selection_changed_mode( instance, FALSE );
 
 		nact_tree_model_initial_load( BASE_WINDOW( instance ), treeview );
@@ -353,6 +353,7 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 	NactTreeModel *model;
 	gboolean have_dnd;
 	gboolean have_filter_selection;
+	gboolean is_proxy;
 	GtkTreeSelection *selection;
 
 	g_debug( "%s: instance=%p, items=%p (%d items)",
@@ -417,9 +418,12 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 
 		/* records NactIActionsList as a proxy for edition status modification
 		 */
-		na_iduplicable_register_consumer( G_OBJECT( instance ));
-		g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
-		g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
+		is_proxy = is_iduplicable_proxy( instance );
+		if( is_proxy ){
+			na_iduplicable_register_consumer( G_OBJECT( instance ));
+			g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
+			g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
+		}
 
 		/* fill the model after having connected the signals
 		 * so that callbacks are triggered at last
@@ -537,7 +541,7 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 
 		treeview = get_actions_list_treeview( instance );
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-		only_actions = nact_iactions_list_is_only_actions_mode( instance );
+		only_actions = have_only_actions( instance );
 
 		set_selection_changed_mode( instance, FALSE );
 		nact_tree_model_fill( model, items, only_actions );
@@ -614,6 +618,26 @@ nact_iactions_list_get_items( NactIActionsList *instance )
 	}
 
 	return( items );
+}
+
+/**
+ * nact_iactions_list_get_management_mode:
+ * @instance: this #NactIActionsList instance.
+ *
+ * Returns: the current management mode of the list.
+ */
+gint
+nact_iactions_list_get_management_mode( NactIActionsList *instance )
+{
+	gint mode = 0;
+
+	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), 0 );
+
+	if( st_initialized && !st_finalized ){
+		mode = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), MANAGEMENT_MODE ));
+	}
+
+	return( mode );
 }
 
 /**
@@ -908,116 +932,34 @@ nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item
 }
 
 /**
- * nact_iactions_list_is_only_actions_mode:
- * @window: this #NactIActionsList instance.
+ * nact_iactions_list_set_management_mode:
+ * @instance: this #NactIActionsList instance.
+ * @mode: management mode.
  *
- * Returns %TRUE if only actions should be displayed in the treeview.
- */
-gboolean
-nact_iactions_list_is_only_actions_mode( NactIActionsList *instance )
-{
-	gboolean mode = FALSE;
-
-	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), FALSE );
-
-	if( st_initialized && !st_finalized ){
-		mode = ( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), SHOW_ONLY_ACTIONS_MODE ));
-	}
-
-	return( mode );
-}
-
-/**
- * nact_iactions_list_set_dnd_mode:
- * @window: this #NactIActionsList instance.
- * @have_dnd: whether the treeview implements drag and drop ?
+ * Set the management mode for this @instance.
  *
- * When set to %TRUE, the corresponding tree model will implement the
- * GtkTreeDragSource and the GtkTreeDragDest interfaces.
- *
- * This property defaults to %FALSE.
+ * For the two known modes (edition mode, export mode), we also allow
+ * multiple selection in the list.
  */
 void
-nact_iactions_list_set_dnd_mode( NactIActionsList *instance, gboolean have_dnd )
-{
-	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
-
-	if( st_initialized && !st_finalized ){
-		g_object_set_data( G_OBJECT( instance ), HAVE_DND_MODE, GINT_TO_POINTER( have_dnd ));
-	}
-}
-
-/**
- * nact_iactions_list_set_filter_selection_mode:
- * @window: this #NactIActionsList instance.
- * @filter: whether the filter selection function must be installed ?
- *
- * If %FALSE, user is able to select any item.
- * If %TRUE, a filter selection function is installed, and the selection
- * can only contains :
- * - either only profiles
- * - or actions or menus.
- *
- * This property defaults to %FALSE.
- */
-void
-nact_iactions_list_set_filter_selection_mode( NactIActionsList *instance, gboolean filter )
-{
-	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
-
-	if( st_initialized && !st_finalized ){
-		g_object_set_data( G_OBJECT( instance ), FILTER_SELECTION_MODE, GINT_TO_POINTER( filter ));
-	}
-}
-
-/**
- * nact_iactions_list_set_multiple_selection_mode:
- * @window: this #NactIActionsList instance.
- * @multiple: whether the treeview does support multiple selection ?
- *
- * If %FALSE, only one item can selected at same time. Set to %TRUE to
- * be able to have multiple items simultaneously selected.
- *
- * This property defaults to %FALSE.
- */
-void
-nact_iactions_list_set_multiple_selection_mode( NactIActionsList *instance, gboolean multiple )
+nact_iactions_list_set_management_mode( NactIActionsList *instance, gint mode )
 {
 	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
+	gboolean multiple;
 
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_object_set_data( G_OBJECT( instance ), MANAGEMENT_MODE, GINT_TO_POINTER( mode ));
+
+		multiple = ( mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ||
+						mode == IACTIONS_LIST_MANAGEMENT_MODE_EXPORT );
 
 		treeview = get_actions_list_treeview( instance );
 		selection = gtk_tree_view_get_selection( treeview );
 		gtk_tree_selection_set_mode( selection, multiple ? GTK_SELECTION_MULTIPLE : GTK_SELECTION_SINGLE );
-	}
-}
-
-/**
- * nact_iactions_list_set_only_actions_mode:
- * @window: this #NactIActionsList instance.
- * @only_actions: whether the treeview must only display actions ?
- *
- * When @only_actions is %TRUE, then the treeview will only display the
- * list of actions in alphabetical order of their label. In this mode,
- * the actual value of the 'Display in alphabetical order' preference
- * is ignored.
- *
- * If @only_actions is %FALSE, the the treeview display all the tree
- * of menus, submenus, actions and profiles.
- *
- * This property defaults to %FALSE.
- */
-void
-nact_iactions_list_set_only_actions_mode( NactIActionsList *instance, gboolean only_actions )
-{
-	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
-
-	if( st_initialized && !st_finalized ){
-		g_object_set_data( G_OBJECT( instance ), SHOW_ONLY_ACTIONS_MODE, GINT_TO_POINTER( only_actions ));
 	}
 }
 
@@ -1299,13 +1241,49 @@ has_modified_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, gb
 static gboolean
 have_dnd_mode( NactIActionsList *instance )
 {
-	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), HAVE_DND_MODE )));
+	gint mode;
+	gboolean have_dnd;
+
+	mode = nact_iactions_list_get_management_mode( instance );
+	have_dnd = ( mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
+
+	return( have_dnd );
 }
 
 static gboolean
 have_filter_selection_mode( NactIActionsList *instance )
 {
-	return(( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( instance ), FILTER_SELECTION_MODE )));
+	gint mode;
+	gboolean have_filter;
+
+	mode = nact_iactions_list_get_management_mode( instance );
+	have_filter = ( mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
+
+	return( have_filter );
+}
+
+static gboolean
+have_only_actions( NactIActionsList *instance )
+{
+	gint mode;
+	gboolean only_actions;
+
+	mode = nact_iactions_list_get_management_mode( instance );
+	only_actions = ( mode == IACTIONS_LIST_MANAGEMENT_MODE_EXPORT );
+
+	return( only_actions );
+}
+
+static gboolean
+is_iduplicable_proxy( NactIActionsList *instance )
+{
+	gint mode;
+	gboolean is_proxy;
+
+	mode = nact_iactions_list_get_management_mode( instance );
+	is_proxy = ( mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
+
+	return( is_proxy );
 }
 
 static gboolean
@@ -1404,8 +1382,8 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 
 	if( is_selection_changed_authorized( instance )){
 
-		g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p (%s), object=%p (%s)",
-				( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+		g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p, object=%p (%s)",
+				( void * ) instance,
 				( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		g_return_if_fail( NA_IS_OBJECT( object ));

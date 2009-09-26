@@ -40,6 +40,7 @@
 #include <gtk/gtk.h>
 
 #include "base-application-class.h"
+#include "base-builder.h"
 #include "base-window-class.h"
 
 G_BEGIN_DECLS
@@ -51,7 +52,6 @@ enum {
 	BASE_APPLICATION_ERROR_UNIQUE_APP,		/* another instance is running */
 	BASE_APPLICATION_ERROR_UI_FNAME,		/* empty XML filename */
 	BASE_APPLICATION_ERROR_UI_LOAD,			/* unable to load the XML definition of the UI */
-	BASE_APPLICATION_ERROR_TOPLEVEL_LOAD,	/* unable to load a toplevel from the XML definition */
 	BASE_APPLICATION_ERROR_DEFAULT_ICON		/* unable to set default icon */
 };
 
@@ -100,10 +100,10 @@ enum {
 #define BASE_APPLICATION_PROP_EXIT_MESSAGE2			"base-application-exit-message2"
 
 /**
- * @BASE_APPLICATION_PROP_UI_XML: the GtkBuilder object allocated to handle
- * the user interface XML definition. Rather for internal use.
+ * @BASE_APPLICATION_PROP_BUILDER: the #BaseBuilder object allocated to
+ * handle the user interface XML definition. Rather for internal use.
  */
-#define BASE_APPLICATION_PROP_UI_XML				"base-application-ui-xml"
+#define BASE_APPLICATION_PROP_BUILDER				"base-application-builder"
 
 /**
  * @BASE_APPLICATION_PROP_MAIN_WINDOW: as its name says: a pointer to the
@@ -111,19 +111,16 @@ enum {
  */
 #define BASE_APPLICATION_PROP_MAIN_WINDOW			"base-application-main-window"
 
-int         base_application_run( BaseApplication *application );
-gchar      *base_application_get_application_name( BaseApplication *application );
-gchar      *base_application_get_icon_name( BaseApplication *application );
-gchar      *base_application_get_unique_app_name( BaseApplication *application );
-gchar      *base_application_get_ui_filename( BaseApplication *application );
-BaseWindow *base_application_get_main_window( BaseApplication *application );
+int          base_application_run( BaseApplication *application );
+gchar       *base_application_get_application_name( BaseApplication *application );
+gchar       *base_application_get_icon_name( BaseApplication *application );
+gchar       *base_application_get_unique_app_name( BaseApplication *application );
+gchar       *base_application_get_ui_filename( BaseApplication *application );
+BaseBuilder *base_application_get_builder( BaseApplication *application );
+BaseWindow  *base_application_get_main_window( BaseApplication *application );
 
-GtkWindow  *base_application_get_toplevel( BaseApplication *application, const gchar *name );
-GtkWidget  *base_application_get_widget( BaseApplication *application, BaseWindow *window, const gchar *name );
-GtkWidget  *base_application_search_for_widget( BaseApplication *application, GtkWindow *window, const gchar *name );
-
-void        base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
-gboolean    base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
+void         base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
+gboolean     base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
 
 G_END_DECLS
 

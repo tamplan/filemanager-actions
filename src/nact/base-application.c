@@ -49,16 +49,16 @@ struct BaseApplicationClassPrivate {
 /* private instance data
  */
 struct BaseApplicationPrivate {
-	gboolean    dispose_has_run;
-	int         argc;
-	gpointer    argv;
-	gboolean    is_gtk_initialized;
-	UniqueApp  *unique_app_handle;
-	int         exit_code;
-	gchar      *exit_message1;
-	gchar      *exit_message2;
-	GtkBuilder *ui_xml;
-	BaseWindow *main_window;
+	gboolean     dispose_has_run;
+	int          argc;
+	gpointer     argv;
+	gboolean     is_gtk_initialized;
+	UniqueApp   *unique_app_handle;
+	int          exit_code;
+	gchar       *exit_message1;
+	gchar       *exit_message2;
+	BaseBuilder *builder;
+	BaseWindow  *main_window;
 };
 
 /* instance properties
@@ -71,7 +71,7 @@ enum {
 	BASE_APPLICATION_PROP_EXIT_CODE_ID,
 	BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID,
 	BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID,
-	BASE_APPLICATION_PROP_UI_XML_ID,
+	BASE_APPLICATION_PROP_BUILDER_ID,
 	BASE_APPLICATION_PROP_MAIN_WINDOW_ID
 };
 
@@ -107,11 +107,8 @@ static gboolean       application_do_initialize_application( BaseApplication *ap
 static gboolean       check_for_unique_app( BaseApplication *application );
 /*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
 static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
-static GtkWidget     *recursive_search_for_child( BaseApplication *application, GtkWindow *toplevel, const gchar *name );
-static GtkWidget     *search_for_child_widget( GtkContainer *container, const gchar *name );
 
 static void           display_error_message( BaseApplication *application );
-static void           set_get_toplevel_error( BaseApplication *application, const gchar *name );
 static void           set_initialize_i18n_error( BaseApplication *application );
 static void           set_initialize_gtk_error( BaseApplication *application );
 static void           set_initialize_unique_app_error( BaseApplication *application );
@@ -226,11 +223,11 @@ class_init( BaseApplicationClass *klass )
 	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID, spec );
 
 	spec = g_param_spec_pointer(
-			BASE_APPLICATION_PROP_UI_XML,
+			BASE_APPLICATION_PROP_BUILDER,
 			"UI object pointer",
 			"A reference to the UI definition from GtkBuilder",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_UI_XML_ID, spec );
+	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_BUILDER_ID, spec );
 
 	spec = g_param_spec_pointer(
 			BASE_APPLICATION_PROP_MAIN_WINDOW,
@@ -313,8 +310,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_string( value, self->private->exit_message2 );
 				break;
 
-			case BASE_APPLICATION_PROP_UI_XML_ID:
-				g_value_set_pointer( value, self->private->ui_xml );
+			case BASE_APPLICATION_PROP_BUILDER_ID:
+				g_value_set_pointer( value, self->private->builder );
 				break;
 
 			case BASE_APPLICATION_PROP_MAIN_WINDOW_ID:
@@ -369,8 +366,8 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 				self->private->exit_message2 = g_value_dup_string( value );
 				break;
 
-			case BASE_APPLICATION_PROP_UI_XML_ID:
-				self->private->ui_xml = g_value_get_pointer( value );
+			case BASE_APPLICATION_PROP_BUILDER_ID:
+				self->private->builder = g_value_get_pointer( value );
 				break;
 
 			case BASE_APPLICATION_PROP_MAIN_WINDOW_ID:
@@ -402,8 +399,8 @@ instance_dispose( GObject *application )
 			g_object_unref( self->private->unique_app_handle );
 		}
 
-		if( GTK_IS_BUILDER( self->private->ui_xml )){
-			g_object_unref( self->private->ui_xml );
+		if( GTK_IS_BUILDER( self->private->builder )){
+			g_object_unref( self->private->builder );
 		}
 
 		/* chain up to the parent class */
@@ -496,6 +493,28 @@ base_application_get_application_name( BaseApplication *application )
 	}
 
 	return( name );
+}
+
+/**
+ * base_application_get_builder:
+ * @application: this #BaseApplication instance.
+ *
+ * Returns: the default #BaseBuilder object for the application.
+ */
+BaseBuilder *
+base_application_get_builder( BaseApplication *application )
+{
+	/*static const gchar *thisfn = "base_application_get_application_name";
+	g_debug( "%s: application=%p", thisfn, application );*/
+	BaseBuilder *builder = NULL;
+
+	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
+
+	if( !application->private->dispose_has_run ){
+		builder = application->private->builder;
+	}
+
+	return( builder );
 }
 
 /**
@@ -622,110 +641,6 @@ base_application_get_main_window( BaseApplication *application )
 	}
 
 	return( application->private->main_window );
-}
-
-/**
- * base_application_get_toplevel:
- * @application: this #BaseApplication instance.
- * @name: the name of the searched toplevel window.
- *
- * This function provides a pointer to the toplevel dialog associated
- * with the specified #BaseWindow.
- *
- * Returns: a pointer to the named dialog, or NULL.
- * This pointer is owned by GtkBuilder instance, and must not be
- * g_free() nor g_object_unref() by the caller.
- */
-GtkWindow *
-base_application_get_toplevel( BaseApplication *application, const gchar *name )
-{
-	/*static const gchar *thisfn = "base_application_get_dialog";
-	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
-	GtkWindow *toplevel = NULL;
-
-	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
-	g_return_val_if_fail( name, NULL );
-	g_return_val_if_fail( strlen( name ), NULL );
-
-	if( !application->private->dispose_has_run ){
-
-		toplevel = GTK_WINDOW( gtk_builder_get_object( application->private->ui_xml, name ));
-
-		if( !toplevel ){
-			set_get_toplevel_error( application, name );
-
-		} else {
-			g_assert( GTK_IS_WINDOW( toplevel ));
-		}
-	}
-
-	return( toplevel );
-}
-
-/**
- * base_application_get_widget:
- * @application: this #BaseApplication instance.
- * @window: a #BaseWindow-derived document.
- * @name: the name of the searched widget.
- *
- * Returns a pointer to the named widget which is a child of the
- * toplevel #GtkWindow associated with @window.
- *
- * Returns: a pointer to the searched widget, or NULL.
- * This pointer is owned by GtkBuilder instance, and must not be
- * g_free() nor g_object_unref() by the caller.
- */
-GtkWidget *
-base_application_get_widget( BaseApplication *application, BaseWindow *window, const gchar *name )
-{
-	/*static const gchar *thisfn = "base_application_get_widget";
-	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
-	GtkWindow *toplevel;
-	GtkWidget *widget = NULL;
-
-	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
-	g_return_val_if_fail( name, NULL );
-	g_return_val_if_fail( strlen( name ), NULL );
-
-	if( !application->private->dispose_has_run ){
-
-		toplevel = base_window_get_toplevel_window( window );
-		widget = base_application_search_for_widget( application, toplevel, name );
-	}
-
-	return( widget );
-}
-
-/**
- * base_application_search_for_widget:
- * @application: this #BaseApplication instance.
- * @window: a #GtkWindow toplevel dialog.
- * @name: the name of the searched widget.
- *
- * Returns a pointer to the named widget which is a child of @window.
- *
- * Returns: a pointer to the searched widget, or NULL.
- * This pointer is owned by GtkBuilder instance, and must not be
- * g_free() nor g_object_unref() by the caller.
- */
-GtkWidget *
-base_application_search_for_widget( BaseApplication *application, GtkWindow *window, const gchar *name )
-{
-	/*static const gchar *thisfn = "base_application_get_widget";
-	g_debug( "%s: application=%p, name=%s", thisfn, application, name );*/
-	GtkWidget *widget = NULL;
-
-	if( !application->private->dispose_has_run ){
-
-		widget = recursive_search_for_child( application, window, name );
-
-		if( widget ){
-			g_assert( GTK_IS_WIDGET( widget ));
-		}
-	}
-
-	return( widget );
 }
 
 /**
@@ -911,7 +826,7 @@ application_do_run( BaseApplication *application )
 
 		if( base_window_init( application->private->main_window )){
 
-			wnd = base_window_get_toplevel_window( application->private->main_window );
+			wnd = base_window_get_toplevel( application->private->main_window );
 			g_assert( wnd );
 			g_assert( GTK_IS_WINDOW( wnd ));
 
@@ -1028,7 +943,6 @@ application_do_initialize_ui( BaseApplication *application )
 	gboolean ret = TRUE;
 	GError *error = NULL;
 	gchar *name;
-	guint retint;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
@@ -1039,12 +953,13 @@ application_do_initialize_ui( BaseApplication *application )
 		set_initialize_ui_get_fname_error( application );
 
 	} else {
-		application->private->ui_xml = gtk_builder_new();
-		retint = gtk_builder_add_from_file( application->private->ui_xml, name, &error );
-		if( error || retint == 0 ){
+		application->private->builder = base_builder_new();
+		if( !base_builder_add_from_file( application->private->builder, name, &error )){
 			ret = FALSE;
 			set_initialize_ui_add_xml_error( application, name, error );
-			g_error_free( error );
+			if( error ){
+				g_error_free( error );
+			}
 		}
 	}
 
@@ -1159,46 +1074,6 @@ display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButto
 	return( result );
 }
 
-static GtkWidget *
-recursive_search_for_child( BaseApplication *application, GtkWindow *toplevel, const gchar *name )
-{
-	return( search_for_child_widget( GTK_CONTAINER( toplevel ) , name ));
-}
-
-static GtkWidget *
-search_for_child_widget( GtkContainer *container, const gchar *name )
-{
-	/*static const gchar *thisfn = "base_application_search_for_child_widget";
-	g_debug( "%s: container=%p, name=%s", thisfn, container, name );*/
-
-	GList *children = gtk_container_get_children( container );
-	GList *ic;
-	GtkWidget *found = NULL;
-	GtkWidget *child;
-
-	for( ic = children ; ic ; ic = ic->next ){
-		if( GTK_IS_WIDGET( ic->data )){
-			child = GTK_WIDGET( ic->data );
-			if( child->name && strlen( child->name )){
-				/*g_debug( "%s: child=%s", thisfn, child->name );*/
-				if( !g_ascii_strcasecmp( name, child->name )){
-					found = child;
-					break;
-
-				} else if( GTK_IS_CONTAINER( child )){
-					found = search_for_child_widget( GTK_CONTAINER( child ), name );
-					if( found ){
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	g_list_free( children );
-	return( found );
-}
-
 static void
 display_error_message( BaseApplication *application )
 {
@@ -1218,25 +1093,6 @@ display_error_message( BaseApplication *application )
 			}
 		}
 	}
-}
-
-static void
-set_get_toplevel_error( BaseApplication *application, const gchar *toplevel_name )
-{
-	gchar *fname, *msg;
-
-	application->private->exit_code = BASE_APPLICATION_ERROR_TOPLEVEL_LOAD;
-
-	fname = base_application_get_ui_filename( application );
-
-	msg = g_strdup_printf(
-			/* i18n: unable to load <dialog_name> dialog from XML definition in <filename> */
-			_( "Unable to load %s dialog from XML definition in %s." ), toplevel_name, fname );
-
-	base_application_error_dlg( application, GTK_MESSAGE_ERROR, msg, NULL );
-
-	g_free( msg );
-	g_free( fname );
 }
 
 static void
@@ -1284,7 +1140,7 @@ set_initialize_ui_add_xml_error( BaseApplication *application, const gchar *file
 		/* i18n: Unable to load the XML definition from <filename> */
 		g_strdup_printf( _( "Unable to load the XML definition from %s." ), filename );
 
-	if( error->message ){
+	if( error && error->message ){
 		application->private->exit_message2 = g_strdup( error->message );
 	}
 }

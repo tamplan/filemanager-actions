@@ -778,10 +778,8 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 			gtk_paned_set_position( GTK_PANED( pane ), pos );
 		}
 
+		nact_iactions_list_set_management_mode( NACT_IACTIONS_LIST( window ), IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
 		nact_iactions_list_initial_load_toplevel( NACT_IACTIONS_LIST( window ));
-		nact_iactions_list_set_filter_selection_mode( NACT_IACTIONS_LIST( window ), TRUE );
-		nact_iactions_list_set_multiple_selection_mode( NACT_IACTIONS_LIST( window ), TRUE );
-		nact_iactions_list_set_dnd_mode( NACT_IACTIONS_LIST( window ), TRUE );
 
 		nact_iaction_tab_initial_load_toplevel( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_initial_load_toplevel( NACT_ICOMMAND_TAB( window ));

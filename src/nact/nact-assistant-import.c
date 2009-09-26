@@ -267,8 +267,8 @@ nact_assistant_import_run( BaseWindow *main_window )
 	appli = BASE_APPLICATION( base_window_get_application( main_window ));
 
 	assist = assist_new( appli );
-
 	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_PARENT, main_window, NULL );
+	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );
 
 	base_window_run( BASE_WINDOW( assist ));
 
@@ -301,7 +301,7 @@ on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data )
 		base_assistant_set_cancel_on_esc( BASE_ASSISTANT( dialog ), TRUE );
 		base_assistant_set_warn_on_esc( BASE_ASSISTANT( dialog ), TRUE );
 
-		assistant = GTK_ASSISTANT( base_window_get_toplevel_window( BASE_WINDOW( dialog )));
+		assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
 
 		runtime_init_intro( dialog, assistant );
 		runtime_init_file_selector( dialog, assistant );
@@ -366,7 +366,7 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	GtkWidget *content;
 
 	g_assert( NACT_IS_ASSISTANT_IMPORT( user_data ));
-	assistant = GTK_ASSISTANT( base_window_get_toplevel_window( BASE_WINDOW( user_data )));
+	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( user_data )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_FILES_SELECTION ){
 

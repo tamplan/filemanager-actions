@@ -381,7 +381,7 @@ on_add_about_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 static void
 on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel_window( BASE_WINDOW( editor ));
+	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
@@ -389,7 +389,7 @@ on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
 static void
 on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel_window( BASE_WINDOW( editor ));
+	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }

@@ -1,3 +1,37 @@
+2009-09-26 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-builder.c:
+	* src/nact/base-builder.h: New files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/base-application.c:
+	* src/nact/base-application.h:
+	Embeds a NactBuilder object.
+	base_application_get_toplevel(), base_application_get_widget(),
+	base_application_search_for_widget(): Removed functions.
+
+	* src/nact/base-assistant.c:
+	Remove embedded GtkBuilder object.
+
+	* src/nact/base-window-class.h (get_ui_filename):
+	New virtual function.
+	base_window_get_toplevel_window(): Renamed to
+	base_window_get_toplevel().
+
+	* src/nact/base-iprefs.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-preferences-editor.c: Use base_window_get_toplevel().
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h: Two new properties
+	HAS_OWN_BUILDER and XML_UI_FILENAME.
+
+	* nact/nact-assistant-export.c:
+	* nact/nact-assistant-import.c: Use new properties.
+
+	* src/nact/nact-iactions-list.c: Define management mode.
+
 2009-09-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/nautilus-actions.schemas.in:

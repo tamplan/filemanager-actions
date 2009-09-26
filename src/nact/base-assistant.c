@@ -49,7 +49,6 @@ struct BaseAssistantClassPrivate {
  */
 struct BaseAssistantPrivate {
 	gboolean    dispose_has_run;
-	GtkBuilder *builder;
 	gboolean    cancel_on_escape;
 	gboolean    warn_on_escape;
 	gboolean    warn_on_cancel;
@@ -74,8 +73,6 @@ static void       instance_get_property( GObject *object, guint property_id, GVa
 static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void       instance_dispose( GObject *application );
 static void       instance_finalize( GObject *application );
-
-static GtkWindow *base_get_window( BaseWindow *window, const gchar *name );
 
 static void       v_assistant_apply( GtkAssistant *assistant, BaseAssistant *window );
 static void       v_assistant_cancel( GtkAssistant *assistant, BaseAssistant *window );
@@ -138,7 +135,6 @@ class_init( BaseAssistantClass *klass )
 	static const gchar *thisfn = "base_assistant_class_init";
 	GObjectClass *object_class;
 	GParamSpec *spec;
-	BaseWindowClass *base_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -172,9 +168,6 @@ class_init( BaseAssistantClass *klass )
 	g_object_class_install_property( object_class, BASE_ASSISTANT_PROP_WARN_ON_CANCEL_ID, spec );
 
 	klass->private = g_new0( BaseAssistantClassPrivate, 1 );
-
-	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_window = base_get_window;
 
 	klass->apply = assistant_do_apply;
 	klass->cancel = assistant_do_cancel;
@@ -289,8 +282,6 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_object_unref( self->private->builder );
-
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( window );
@@ -314,34 +305,6 @@ instance_finalize( GObject *window )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( window );
 	}
-}
-
-/*
- * cf. http://bugzilla.gnome.org/show_bug.cgi?id=589746 against Gtk+ 2.16
- * a GtkFileChooserWidget embedded in a GtkAssistant is not displayed
- * when run more than once
- *
- * as a work-around, reload the XML ui each time we run an assistant !
- */
-static GtkWindow *
-base_get_window( BaseWindow *window, const gchar *name )
-{
-	BaseApplication *appli;
-	gchar *fname;
-	GtkWindow *dialog;
-
-	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), NULL );
-
-	BASE_ASSISTANT( window )->private->builder = gtk_builder_new();
-
-	appli = base_window_get_application( window );
-	fname = base_application_get_ui_filename( appli );
-	gtk_builder_add_from_file( BASE_ASSISTANT( window )->private->builder, fname, NULL );
-	g_free( fname );
-
-	dialog = GTK_WINDOW( gtk_builder_get_object( BASE_ASSISTANT( window )->private->builder, name ));
-
-	return( dialog );
 }
 
 /**
@@ -527,7 +490,7 @@ on_runtime_init( BaseAssistant *window, gpointer user_data )
 
 	if( !window->private->dispose_has_run ){
 
-		toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
+		toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
 		g_assert( GTK_IS_ASSISTANT( toplevel ));
 
 		base_window_signal_connect(
@@ -578,7 +541,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseAssistant *assi
 			assistant->private->cancel_on_escape ){
 
 				assistant->private->escape_key_pressed = TRUE;
-				toplevel = base_window_get_toplevel_window( BASE_WINDOW( assistant ));
+				toplevel = base_window_get_toplevel( BASE_WINDOW( assistant ));
 				g_signal_emit_by_name( toplevel, "cancel", toplevel );
 				stop = TRUE;
 		}

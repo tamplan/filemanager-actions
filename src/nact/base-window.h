@@ -56,6 +56,8 @@ G_BEGIN_DECLS
 #define BASE_WINDOW_PROP_TOPLEVEL_WIDGET			"base-window-toplevel-widget"
 #define BASE_WINDOW_PROP_INITIALIZED				"base-window-is-initialized"
 #define BASE_WINDOW_PROP_SAVE_WINDOW_POSITION		"base-window-save-window-position"
+#define BASE_WINDOW_PROP_HAS_OWN_BUILDER			"base-window-has-own-builder"
+#define BASE_WINDOW_PROP_XML_UI_FILENAME			"base-window-xml-ui-filename"
 
 /* signals defined in this class
  *
@@ -75,9 +77,9 @@ G_BEGIN_DECLS
 gboolean         base_window_init( BaseWindow *window );
 void             base_window_run( BaseWindow *window );
 
-GtkWindow       *base_window_get_toplevel_window( BaseWindow *window );
 BaseApplication *base_window_get_application( BaseWindow *window );
-GtkWindow       *base_window_get_toplevel( BaseWindow *window, const gchar *name );
+GtkWindow       *base_window_get_named_toplevel( BaseWindow *window, const gchar *name );
+GtkWindow       *base_window_get_toplevel( BaseWindow *window );
 GtkWidget       *base_window_get_widget( BaseWindow *window, const gchar *name );
 
 void             base_window_set_save_window_position( BaseWindow *window, gboolean save );

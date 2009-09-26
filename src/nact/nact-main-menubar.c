@@ -188,7 +188,6 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	GtkUIManager *ui_manager;
 	GError *error = NULL;
 	guint merge_id;
-	GtkWindow *wnd;
 	GtkAccelGroup *accel_group;
 	GtkWidget *menubar, *vbox;
 	GtkWindow *toplevel;
@@ -232,15 +231,14 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 		g_error_free( error );
 	}
 
-	wnd = base_window_get_toplevel_window( BASE_WINDOW( window ));
+	toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
 	accel_group = gtk_ui_manager_get_accel_group( ui_manager );
-	gtk_window_add_accel_group( wnd, accel_group );
+	gtk_window_add_accel_group( toplevel, accel_group );
 
 	menubar = gtk_ui_manager_get_widget( ui_manager, "/ui/MainMenubar" );
 	vbox = base_window_get_widget( BASE_WINDOW( window ), "MenubarVBox" );
 	gtk_box_pack_start( GTK_BOX( vbox ), menubar, FALSE, FALSE, 0 );
 
-	toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
 	base_window_signal_connect(
 			BASE_WINDOW( window ),
 			G_OBJECT( toplevel ),
@@ -633,7 +631,7 @@ on_about_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	GtkWindow *toplevel;
 
-	toplevel = base_window_get_toplevel_window( BASE_WINDOW( window ));
+	toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
 
 	na_about_display( G_OBJECT( toplevel ));
 }

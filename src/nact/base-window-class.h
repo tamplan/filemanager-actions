@@ -39,6 +39,34 @@
  * This is a base class which encapsulates a Gtk+ windows.
  * It works together with the BaseApplication class to run a Gtk+
  * application.
+ *
+ * Note that two properties of #BaseApplication may be overriden on a
+ * per-#BaseWindow basis. These are :
+ *
+ * - the #GtkBuilder UI manager
+ *   the application has one global UI manager, but each window may
+ *   have its own, provided that it is willing to reallocate a new
+ *   one each time the window is opened.
+ *
+ *   Cf. http://bugzilla.gnome.org/show_bug.cgi?id=589746 against
+ *   Gtk+ 2.16 : a GtkFileChooserWidget embedded in a GtkAssistant is
+ *   not displayed when run more than once. As a work-around, reload
+ *   the XML ui each time we run an assistant !
+ *
+ * - the filename which handled the window XML definition
+ *   the application provides with one global default file, but each
+ *   window may decide to provide its own.
+ *
+ *   Cf. http://bugzilla.gnome.org/show_bug.cgi?id=579345 against
+ *   GtkBuilder : duplicate ids are no more allowed in a file. But we
+ *   require this ability to have the same widget definition
+ *   (ActionsList) in main window and export assistant.
+ *   As a work-around, we have XML definition of export assistant in
+ *   its own file.
+ *   Another work-around could have be to let the IActionsList
+ *   interface asks from the actual widget name to its implementor...
+ *
+ *   Having its own XML UI definition implies having its own builder.
  */
 
 #include <gtk/gtk.h>
@@ -104,44 +132,12 @@ typedef struct {
 	gboolean          ( *delete_event )         ( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
 
 	/**
-	 * get_application:
-	 * @window: this #BaseWindow instance.
-	 */
-	BaseApplication * ( *get_application )      ( BaseWindow *window );
-
-	/**
 	 * window_get_toplevel_name:
 	 * @window: this #BaseWindow instance.
 	 *
 	 * Pure virtual function.
 	 */
 	gchar *           ( *get_toplevel_name )    ( BaseWindow *window );
-
-	/**
-	 * get_toplevel_window:
-	 * @window: this #BaseWindow instance.
-	 *
-	 * Returns the toplevel #GtkWindow associated with this #BaseWindow
-	 * instance.
-	 */
-	GtkWindow *       ( *get_toplevel_window )  ( BaseWindow *window );
-
-	/**
-	 * get_window:
-	 * @window: this #BaseWindow instance.
-	 *
-	 * Returns the named GtkWindow.
-	 */
-	GtkWindow *       ( *get_window )           ( BaseWindow *window, const gchar *name );
-
-	/**
-	 * get_widget:
-	 * @window: this #BaseWindow instance.
-	 *
-	 * Returns the named #GtkWidget searched as a descendant of the
-	 * #GtkWindow toplevel associated to this #Basewindow instance.
-	 */
-	GtkWidget *       ( *get_widget )           ( BaseWindow *window, const gchar *name );
 
 	/**
 	 * get_iprefs_window_id:
@@ -154,6 +150,21 @@ typedef struct {
 	 * interface virtual function.
 	 */
 	gchar *           ( *get_iprefs_window_id ) ( BaseWindow *window );
+
+	/**
+	 * get_ui_filename:
+	 * @window: this #BaseWindow instance.
+	 *
+	 * Asks the derived class for the filename of the XML definition of
+	 * the user interface for this window. This XML definition must be
+	 * suitable in order to be loaded via GtkBuilder.
+	 *
+	 * Defaults to application UI filename.
+	 *
+	 * Returns: the filename of the XML definition, to be g_free() by
+	 * the caller.
+	 */
+	gchar *           ( *get_ui_filename )      ( BaseWindow *window );
 }
 	BaseWindowClass;
 

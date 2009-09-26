@@ -44,6 +44,8 @@ nautilus_actions_config_tool_SOURCES = \
 	base-application-class.h							\
 	base-assistant.c									\
 	base-assistant.h									\
+	base-builder.c										\
+	base-builder.h										\
 	base-dialog.c										\
 	base-dialog.h										\
 	base-iprefs.c										\

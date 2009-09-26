@@ -35,6 +35,9 @@
  * SECTION: nact_iactions_list
  * @short_description: #NactIActionsList interface definition.
  * @include: nact/nact-iactions-list.h
+ *
+ * This same interface is used in the main window (edition mode, default),
+ * and in the export assistant (export mode).
  */
 
 #include <common/na-object-class.h>
@@ -75,6 +78,15 @@ typedef struct {
 #define IACTIONS_LIST_SIGNAL_SELECTION_CHANGED			"nact-iactions-list-selection-changed"
 #define IACTIONS_LIST_SIGNAL_ITEM_UPDATED				"nact-iactions-list-item-updated"
 
+/* management modes
+ * - edition: dnd, filter, multiple selection, item updated signal
+ * - export: multiple selection
+ */
+enum {
+	IACTIONS_LIST_MANAGEMENT_MODE_EDITION = 1,
+	IACTIONS_LIST_MANAGEMENT_MODE_EXPORT
+};
+
 GType     nact_iactions_list_get_type( void );
 
 void      nact_iactions_list_initial_load_toplevel( NactIActionsList *instance );
@@ -86,16 +98,13 @@ void      nact_iactions_list_delete_selection( NactIActionsList *instance );
 void      nact_iactions_list_fill( NactIActionsList *instance, GList *items );
 NAObject *nact_iactions_list_get_item( NactIActionsList *instance, const gchar *uuid );
 GList    *nact_iactions_list_get_items( NactIActionsList *instance );
+gint      nact_iactions_list_get_management_mode( NactIActionsList *instance );
 GList    *nact_iactions_list_get_selected_items( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_exportable( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_modified_items( NactIActionsList *instance );
 void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling );
 gboolean  nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item );
-gboolean  nact_iactions_list_is_only_actions_mode( NactIActionsList *instance );
-void      nact_iactions_list_set_dnd_mode( NactIActionsList *instance, gboolean have_dnd );
-void      nact_iactions_list_set_filter_selection_mode( NactIActionsList *instance, gboolean filter );
-void      nact_iactions_list_set_multiple_selection_mode( NactIActionsList *instance, gboolean multiple );
-void      nact_iactions_list_set_only_actions_mode( NactIActionsList *instance, gboolean only_actions );
+void      nact_iactions_list_set_management_mode( NactIActionsList *instance, gint mode );
 void      nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *item );
 
 G_END_DECLS
