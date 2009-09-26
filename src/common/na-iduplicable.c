@@ -623,9 +623,6 @@ modified_changed_handler( NAIDuplicable *instance, gpointer user_data )
 static void
 valid_changed_handler( NAIDuplicable *instance, gpointer user_data )
 {
-	g_debug( "na_iduplicable_propagate_valid_changed: instance=%p, user_data=%p",
-			( void * ) instance,
-			( void * ) user_data );
 	/*g_debug( "na_iduplicable_propagate_valid_changed: instance=%p (%s), user_data=%p (%s)",
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
 			( void * ) user_data, G_OBJECT_TYPE_NAME( user_data ));*/
