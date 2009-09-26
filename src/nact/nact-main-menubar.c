@@ -482,13 +482,15 @@ static void
 on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	GList *items;
+	NactClipboard *clipboard;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	nact_main_window_move_to_deleted( window, items );
-	nact_clipboard_primary_set( items, FALSE );
+	clipboard = nact_main_window_get_clipboard( window );
+	nact_clipboard_primary_set( clipboard, items, FALSE );
 	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
 
 	/* do not unref selected items as the ref has been moved to main_deleted
@@ -508,12 +510,14 @@ static void
 on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	GList *items;
+	NactClipboard *clipboard;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	nact_clipboard_primary_set( items, TRUE );
+	clipboard = nact_main_window_get_clipboard( window );
+	nact_clipboard_primary_set( clipboard, items, TRUE );
 	na_object_free_items( items );
 	nact_main_menubar_refresh_actions_sensitivity( window );
 }
@@ -533,8 +537,10 @@ static void
 on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	GList *items;
+	NactClipboard *clipboard;
 
-	items = nact_clipboard_primary_get();
+	clipboard = nact_main_window_get_clipboard( window );
+	items = nact_clipboard_primary_get( clipboard );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items( items );
 }
@@ -770,6 +776,7 @@ refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selec
 	gboolean has_modified;
 	guint nb_actions, nb_profiles, nb_menus;
 	gboolean paste_enabled;
+	NactClipboard *clipboard;
 
 	g_debug( "%s: window=%p, count_selected=%d", thisfn, ( void * ) window, count_selected );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -784,7 +791,8 @@ refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selec
 	has_modified = nact_main_window_has_modified_items( window );
 
 	paste_enabled = FALSE;
-	nact_clipboard_primary_counts( &nb_actions, &nb_profiles, &nb_menus );
+	clipboard = nact_main_window_get_clipboard( window );
+	nact_clipboard_primary_counts( clipboard, &nb_actions, &nb_profiles, &nb_menus );
 	g_debug( "%s: actions=%d, profiles=%d, menus=%d", thisfn, nb_actions, nb_profiles, nb_menus );
 	if( nb_profiles ){
 		paste_enabled = NA_IS_OBJECT_ACTION( item );

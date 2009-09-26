@@ -341,6 +341,7 @@ nact_clipboard_export_items( const gchar *uri, GList *items )
 
 /**
  * nact_clipboard_primary_set:
+ * @clipboard: this #NactClipboard object.
  * @items: a list of #NAObject items
  * @renumber_items: whether the actions or menus items should be
  * renumbered when copied in the clipboard ?
@@ -360,43 +361,47 @@ nact_clipboard_export_items( const gchar *uri, GList *items )
  * data out of the clipboard.
  */
 void
-nact_clipboard_primary_set( GList *items, gboolean renumber )
+nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean renumber )
 {
-	GtkClipboard *clipboard;
 	NactClipboardData *data;
 	GList *it;
 
-	clipboard = get_primary_clipboard();
-	data = g_new0( NactClipboardData, 1 );
+	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
 
-	for( it = items ; it ; it = it->next ){
-		data->items = g_list_prepend( data->items, na_object_duplicate( it->data ));
+	if( !clipboard->private->dispose_has_run ){
 
-		if( NA_IS_OBJECT_ACTION( it->data )){
-			data->nb_actions += 1;
+		data = g_new0( NactClipboardData, 1 );
 
-		} else if( NA_IS_OBJECT_MENU( it->data )){
-			data->nb_menus += 1;
+		for( it = items ; it ; it = it->next ){
+			data->items = g_list_prepend( data->items, na_object_duplicate( it->data ));
 
-		} else if( NA_IS_OBJECT_PROFILE( it->data )){
-			data->nb_profiles += 1;
+			if( NA_IS_OBJECT_ACTION( it->data )){
+				data->nb_actions += 1;
+
+			} else if( NA_IS_OBJECT_MENU( it->data )){
+				data->nb_menus += 1;
+
+			} else if( NA_IS_OBJECT_PROFILE( it->data )){
+				data->nb_profiles += 1;
+			}
 		}
-	}
-	data->items = g_list_reverse( data->items );
+		data->items = g_list_reverse( data->items );
 
-	if( renumber ){
-		renumber_items( data->items );
-	}
+		if( renumber ){
+			renumber_items( data->items );
+		}
 
-	gtk_clipboard_set_with_data( clipboard,
-			clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
-			( GtkClipboardGetFunc ) get_from_clipboard_callback,
-			( GtkClipboardClearFunc ) clear_clipboard_callback,
-			data );
+		gtk_clipboard_set_with_data( clipboard->private->primary,
+				clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
+				( GtkClipboardGetFunc ) get_from_clipboard_callback,
+				( GtkClipboardClearFunc ) clear_clipboard_callback,
+				data );
+	}
 }
 
 /**
  * nact_clipboard_primary_get:
+ * @clipboard: this #NactClipboard object.
  *
  * Returns: a copy of the list of items previously referenced in the
  * internal clipboard.
@@ -405,31 +410,32 @@ nact_clipboard_primary_set( GList *items, gboolean renumber )
  * time.
  */
 GList *
-nact_clipboard_primary_get( void )
+nact_clipboard_primary_get( NactClipboard *clipboard )
 {
-	GtkClipboard *clipboard;
 	GtkSelectionData *selection;
 	NactClipboardData *data;
-	GList *items, *it;
+	GList *items = NULL;
+	GList *it;
 	NAObject *obj;
 
-	clipboard = get_primary_clipboard();
+	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
 
-	items = NULL;
+	if( !clipboard->private->dispose_has_run ){
 
-	selection = gtk_clipboard_wait_for_contents( clipboard, NACT_CLIPBOARD_NACT_ATOM );
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
 
-	if( selection ){
-		data = ( NactClipboardData * ) selection->data;
+		if( selection ){
+			data = ( NactClipboardData * ) selection->data;
 
-		for( it = data->items ; it ; it = it->next ){
-			obj = na_object_duplicate( it->data );
-			na_object_set_origin( obj, NULL );
-			items = g_list_prepend( items, obj );
+			for( it = data->items ; it ; it = it->next ){
+				obj = na_object_duplicate( it->data );
+				na_object_set_origin( obj, NULL );
+				items = g_list_prepend( items, obj );
+			}
+			items = g_list_reverse( items );
+
+			renumber_items( data->items );
 		}
-		items = g_list_reverse( items );
-
-		renumber_items( data->items );
 	}
 
 	return( items );
@@ -437,31 +443,34 @@ nact_clipboard_primary_get( void )
 
 /**
  * nact_clipboard_primary_counts:
+ * @clipboard: this #NactClipboard object.
  *
  * Returns some counters on content of primary clipboard.
  */
 void
-nact_clipboard_primary_counts( guint *actions, guint *profiles, guint *menus )
+nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *profiles, guint *menus )
 {
-	GtkClipboard *clipboard;
 	GtkSelectionData *selection;
 	NactClipboardData *data;
 
+	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
 	g_return_if_fail( actions && profiles && menus );
-	*actions = 0;
-	*profiles = 0;
-	*menus = 0;
 
-	clipboard = get_primary_clipboard();
+	if( !clipboard->private->dispose_has_run ){
 
-	selection = gtk_clipboard_wait_for_contents( clipboard, NACT_CLIPBOARD_NACT_ATOM );
+		*actions = 0;
+		*profiles = 0;
+		*menus = 0;
 
-	if( selection ){
-		data = ( NactClipboardData * ) selection->data;
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
 
-		*actions = data->nb_actions;
-		*profiles = data->nb_profiles;
-		*menus = data->nb_menus;
+		if( selection ){
+			data = ( NactClipboardData * ) selection->data;
+
+			*actions = data->nb_actions;
+			*profiles = data->nb_profiles;
+			*menus = data->nb_menus;
+		}
 	}
 }
 

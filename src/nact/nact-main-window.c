@@ -45,7 +45,6 @@
 
 #include "base-iprefs.h"
 #include "nact-application.h"
-#include "nact-clipboard.h"
 #include "nact-iactions-list.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
@@ -594,6 +593,26 @@ nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid 
 	}
 
 	return( exists );
+}
+
+/**
+ * nact_main_window_get_clipboard:
+ * @window: this #NactMainWindow instance.
+ *
+ * Returns: the #nactClipboard convenience object.
+ */
+NactClipboard *
+nact_main_window_get_clipboard( const NactMainWindow *window )
+{
+	NactClipboard *clipboard = NULL;
+
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+		clipboard = window->private->clipboard;
+	}
+
+	return( clipboard );
 }
 
 /**

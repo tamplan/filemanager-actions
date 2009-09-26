@@ -75,9 +75,9 @@ NactClipboard *nact_clipboard_new( void );
 void           nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_data );
 char          *nact_clipboard_get_data_for_extern_use( GList *selected_items );
 
-void           nact_clipboard_primary_set( GList *items, gboolean renumber_items );
-GList         *nact_clipboard_primary_get( void );
-void           nact_clipboard_primary_counts( guint *actions, guint *profiles, guint *menus );
+void           nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean renumber_items );
+GList         *nact_clipboard_primary_get( NactClipboard *clipboard );
+void           nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *profiles, guint *menus );
 
 void           nact_clipboard_free_items( GSList *items );
 
