@@ -421,8 +421,18 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 		is_proxy = is_iduplicable_proxy( instance );
 		if( is_proxy ){
 			na_iduplicable_register_consumer( G_OBJECT( instance ));
-			g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
-			g_signal_override_class_handler( NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, BASE_WINDOW_TYPE, G_CALLBACK( on_edition_status_changed ));
+
+			base_window_signal_connect(
+					BASE_WINDOW( instance ),
+					G_OBJECT( instance ),
+					NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,
+					G_CALLBACK( on_edition_status_changed ));
+
+			base_window_signal_connect(
+					BASE_WINDOW( instance ),
+					G_OBJECT( instance ),
+					NA_IDUPLICABLE_SIGNAL_VALID_CHANGED,
+					G_CALLBACK( on_edition_status_changed ));
 		}
 
 		/* fill the model after having connected the signals

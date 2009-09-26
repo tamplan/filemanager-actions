@@ -211,6 +211,8 @@ instance_dispose( GObject *object )
 
 	if( !self->private->dispose_has_run ){
 
+		na_iduplicable_dispose( NA_IDUPLICABLE( object ));
+
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */

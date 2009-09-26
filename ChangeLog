@@ -1,5 +1,11 @@
 2009-09-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-iduplicable.c:
+	* src/common/na-iduplicable.c (na_iduplicable_dispose): New function.
+	Rewrite signal logic to avoid having to override class handler.
+
+	* src/common/na-object.c: Call na_iduplicable_dispose().
+
 	* src/nact/base-builder.c:
 	* src/nact/base-builder.h: New files.
 
@@ -31,6 +37,7 @@
 	* nact/nact-assistant-import.c: Use new properties.
 
 	* src/nact/nact-iactions-list.c: Define management mode.
+	No longer override NAIDuplicable signal class handlers.
 
 2009-09-25 Pierre Wieser <pwieser@trychlos.org>
 
