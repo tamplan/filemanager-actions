@@ -87,18 +87,18 @@ enum {
  */
 typedef gboolean ( *FnIterOnStore )( NactTreeModel *, GtkTreePath *, NAObject *, gpointer );
 
-GType   nact_tree_model_get_type( void );
+GType        nact_tree_model_get_type( void );
 
-void    nact_tree_model_initial_load( BaseWindow *window, GtkTreeView *treeview );
-void    nact_tree_model_runtime_init( NactTreeModel *model, gboolean have_dnd );
-void    nact_tree_model_dispose( NactTreeModel *model );
+void         nact_tree_model_initial_load( BaseWindow *window, GtkTreeView *treeview );
+void         nact_tree_model_runtime_init( NactTreeModel *model, gboolean have_dnd );
+void         nact_tree_model_dispose( NactTreeModel *model );
 
-void    nact_tree_model_display( NactTreeModel *model, NAObject *object );
-void    nact_tree_model_dump( NactTreeModel *model );
-void    nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions);
-gchar  *nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
-void    nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );
-void    nact_tree_model_remove( NactTreeModel *model, GList *selected );
+void         nact_tree_model_display( NactTreeModel *model, NAObject *object );
+void         nact_tree_model_dump( NactTreeModel *model );
+void         nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions);
+gchar       *nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
+void         nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );
+GtkTreePath *nact_tree_model_remove( NactTreeModel *model, NAObject *object );
 
 G_END_DECLS
 

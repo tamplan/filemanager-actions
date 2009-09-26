@@ -492,6 +492,7 @@ instance_dispose( GObject *window )
 	NactMainWindow *self;
 	GtkWidget *pane;
 	gint pos;
+	GList *it;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -507,6 +508,9 @@ instance_dispose( GObject *window )
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		base_iprefs_set_int( BASE_WINDOW( window ), "main-paned", pos );
 
+		for( it = self->private->deleted ; it ; it = it->next ){
+			g_debug( "nact_main_window_instance_dispose: %p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+		}
 		na_object_free_items( self->private->deleted );
 
 		nact_iactions_list_dispose( NACT_IACTIONS_LIST( window ));
@@ -647,10 +651,15 @@ nact_main_window_has_modified_items( const NactMainWindow *window )
 void
 nact_main_window_move_to_deleted( NactMainWindow *window, GList *items )
 {
+	GList *it;
+
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 		window->private->deleted = g_list_concat( window->private->deleted, items );
+		for( it = window->private->deleted ; it ; it = it->next ){
+			g_debug( "nact_main_window_move_to_deleted: %p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+		}
 	}
 }
 

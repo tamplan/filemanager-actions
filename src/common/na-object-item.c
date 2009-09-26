@@ -589,6 +589,8 @@ na_object_item_free_items( GList *items )
 	for( it = items ; it ; it = it->next ){
 		if( G_IS_OBJECT( it->data )){
 			g_object_unref( it->data );
+		} else {
+			g_warning( "na_object_item_free_items: %p not an object", ( void * ) it->data );
 		}
 	}
 
@@ -734,7 +736,7 @@ na_object_item_set_items( NAObjectItem *item, GList *items )
  *
  * Appends a new @object to the list of subitems of @item.
  *
- * We add a reference on provided @object.
+ * Doesn't modify the reference count on @object.
  */
 void
 na_object_item_append_item( NAObjectItem *item, const NAObject *object )
@@ -758,7 +760,7 @@ na_object_item_append_item( NAObjectItem *item, const NAObject *object )
  *
  * Inserts a new @object in the list of subitems of @item.
  *
- * We add a reference on provided @object.
+ * Doesn't modify the reference count on @object.
  */
 void
 na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before )
@@ -789,7 +791,7 @@ na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NA
  *
  * Removes an @object from the list of subitems of @item.
  *
- * We decrement the reference count on @object.
+ * Doesn't modify the reference count on @object.
  */
 void
 na_object_item_remove_item( NAObjectItem *item, const NAObject *object )

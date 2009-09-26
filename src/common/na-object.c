@@ -543,7 +543,6 @@ na_object_object_get_clipboard_id( const NAObject *object )
 }
 
 /**
- * TODO: get ride of this
  * na_object_object_ref:
  * @object: the #NAObject-derived object to be reffed.
  *

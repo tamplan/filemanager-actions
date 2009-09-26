@@ -263,6 +263,7 @@ interface_base_init( NactIActionsListInterface *klass )
 static void
 free_items_callback( NactIActionsList *instance, GList *items )
 {
+	g_debug( "free_items_callback: selection=%p (%d items)", ( void * ) items, g_list_length( items ));
 	na_object_free_items( items );
 }
 
@@ -482,45 +483,43 @@ nact_iactions_list_dispose( NactIActionsList *instance )
 }
 
 /**
- * nact_iactions_list_delete_selection:
+ * nact_iactions_list_delete:
  * @window: this #NactIActionsList instance.
+ * @list: list of #NAObject to be deleted.
  *
- * Deletes the current selection from the underlying tree store.
+ * Deletes the specified list from the underlying tree store.
  *
  * This function takes care of repositionning a new selection if
  * possible, and refilter the display model.
  */
 void
-nact_iactions_list_delete_selection( NactIActionsList *instance )
+nact_iactions_list_delete( NactIActionsList *instance, GList *items )
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
-	GtkTreeSelection *selection;
-	GList *selected;
 	GtkTreePath *path = NULL;
+	GList *it;
 
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
 	if( st_initialized && !st_finalized ){
 
 		treeview = get_actions_list_treeview( instance );
-		selection = gtk_tree_view_get_selection( treeview );
-		selected = gtk_tree_selection_get_selected_rows( selection, &model );
+		model = gtk_tree_view_get_model( treeview );
 
 		set_selection_changed_mode( instance, FALSE );
 
-		if( g_list_length( selected )){
-			path = gtk_tree_path_copy(( GtkTreePath * ) selected->data );
-			nact_tree_model_remove( NACT_TREE_MODEL( model ), selected );
+		for( it = items ; it ; it = it->next ){
+			if( path ){
+				gtk_tree_path_free( path );
+			}
+			path = nact_tree_model_remove( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ));
 		}
 
 		set_selection_changed_mode( instance, TRUE );
-
-		g_list_foreach( selected, ( GFunc ) gtk_tree_path_free, NULL );
-		g_list_free( selected );
+		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
 
 		if( path ){
-			gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
 			select_row_at_path( instance, treeview, model, path );
 			gtk_tree_path_free( path );
 		}
@@ -1431,10 +1430,13 @@ on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *in
 	GList *selected_items;
 
 	selected_items = nact_iactions_list_get_selected_items( instance );
+	g_debug( "on_treeview_selection_changed: selection=%p (%d items)", ( void * ) selected_items, g_list_length( selected_items ));
 
 	if( is_selection_changed_authorized( instance )){
 		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
 	}
+
+	/* selection list if free in cleanup handler for the signal */
 }
 
 /*
@@ -1512,7 +1514,7 @@ select_first_row( NactIActionsList *instance )
  * @window: this #NactIActionsList instance.
  * @path: a #GtkTreePath.
  *
- * Select the rows at the required path, or the next following, or
+ * Select the row at the required path, or the next following, or
  * the immediate previous.
  */
 static void

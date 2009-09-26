@@ -97,7 +97,6 @@ typedef struct {
 	gchar *    ( *get_clipboard_id )( const NAObject *object );
 
 	/**
-	 * TODO: get ride of this
 	 * ref:
 	 * @object: the #NAObject-derived object to be reffed.
 	 *

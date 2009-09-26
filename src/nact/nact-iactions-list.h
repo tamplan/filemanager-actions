@@ -94,7 +94,7 @@ void      nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, 
 void      nact_iactions_list_all_widgets_showed( NactIActionsList *instance );
 void      nact_iactions_list_dispose( NactIActionsList *instance );
 
-void      nact_iactions_list_delete_selection( NactIActionsList *instance );
+void      nact_iactions_list_delete( NactIActionsList *instance, GList *items );
 void      nact_iactions_list_fill( NactIActionsList *instance, GList *items );
 NAObject *nact_iactions_list_get_item( NactIActionsList *instance, const gchar *uuid );
 GList    *nact_iactions_list_get_items( NactIActionsList *instance );

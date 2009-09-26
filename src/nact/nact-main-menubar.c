@@ -489,7 +489,7 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	nact_main_window_move_to_deleted( window, items );
 	nact_clipboard_primary_set( items, FALSE );
-	nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ));
+	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
 
 	/* do not unref selected items as the ref has been moved to main_deleted
 	 */
@@ -584,13 +584,17 @@ static void
 on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	GList *items;
+	GList *it;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	for( it = items ; it ; it = it->next ){
+		g_debug( "on_delete_activated: items=%p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+	}
 	nact_main_window_move_to_deleted( window, items );
-	nact_iactions_list_delete_selection( NACT_IACTIONS_LIST( window ));
+	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
 
 	/* do not unref selected items as the ref has been moved to main_deleted
 	 */
