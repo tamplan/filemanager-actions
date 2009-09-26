@@ -599,9 +599,7 @@ set_valid( const NAIDuplicable *object, gboolean is_valid )
 
 	if( was_valid != is_valid ){
 		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_PROP_IS_VALID, GUINT_TO_POINTER( is_valid ));
-		g_debug( "about to emit NA_IDUPLICABLE_SIGNAL_VALID_CHANGED signal" );
 		g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_VALID_CHANGED, object );
-		g_debug( "quatre" );
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 		g_debug( "na_iduplicable_set_valid: object=%p (%s) valid=%s",
