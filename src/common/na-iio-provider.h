@@ -130,15 +130,12 @@ typedef struct {
 GType  na_iio_provider_get_type( void );
 
 GList *na_iio_provider_get_items_tree( const NAPivot *pivot );
-/*GSList *na_iio_provider_sort_tree( const NAPivot *pivot, GSList *tree );*/
 guint  na_iio_provider_write_item( const NAPivot *pivot, NAObject *item, gchar **message );
 guint  na_iio_provider_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message );
 
-/* modification notification message to NAPivot
+/* notification message to NAPivot
  */
 #define NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED			"notify-consumer-of-action-change"
-#define NA_IIO_PROVIDER_SIGNAL_DISPLAY_ORDER_CHANGED	"notify-consumer-of-display-order-change"
-#define NA_IIO_PROVIDER_SIGNAL_DISPLAY_ABOUT_CHANGED	"notify-consumer-of-display-about-change"
 
 /* return code of update/write/delete operations
  */

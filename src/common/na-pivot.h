@@ -50,8 +50,8 @@
  * This notification system is so a double-stage one :
  *
  * 1. When an I/O storage subsystem detects a change on an action, it
- *    should emit the "notify_pivot_of_action_changed" signal to notify
- *    #NAPivot of this change. The user data associated with the
+ *    should emit the "notify-consumer-of-action-change" signal to
+ *    notify #NAPivot of this change. The user data associated with the
  *    message should be a #gpointer to a #NAPivotNotify structure.
  *
  *    When this signal is received, #NAPivot updates accordingly the

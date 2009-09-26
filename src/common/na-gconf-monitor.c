@@ -182,19 +182,18 @@ instance_finalize( GObject *object )
  * Initializes the monitoring of a GConf path.
  */
 NAGConfMonitor *
-na_gconf_monitor_new( GConfClient *client, const gchar *path, gint preload, GConfClientNotifyFunc handler, gpointer user_data )
+na_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data )
 {
 	static const gchar *thisfn = "na_gconf_monitor_new";
 	NAGConfMonitor *monitor;
 
-	g_debug( "%s: client=%p, path=%s, preload=%d, user_data=%p",
-			thisfn, ( void * ) client, path, preload, ( void * ) user_data );
+	g_debug( "%s: path=%s, user_data=%p", thisfn, path, ( void * ) user_data );
 
 	monitor = g_object_new( NA_GCONF_MONITOR_TYPE, NULL );
 
-	monitor->private->gconf = client;
+	monitor->private->gconf = gconf_client_get_default();
 	monitor->private->path = g_strdup( path );
-	monitor->private->preload = preload;
+	monitor->private->preload = GCONF_CLIENT_PRELOAD_RECURSIVE;
 	monitor->private->handler = handler;
 	monitor->private->user_data = user_data;
 
@@ -278,4 +277,6 @@ release_monitor( NAGConfMonitor *monitor )
 		g_warning( "%s: path=%s, error=%s", thisfn, monitor->private->path, error->message );
 		g_error_free( error );
 	}
+
+	g_object_unref( monitor->private->gconf );
 }

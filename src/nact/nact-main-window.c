@@ -148,6 +148,7 @@ static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer 
 static gboolean confirm_for_giveup_from_menu( NactMainWindow *window );
 static gboolean confirm_for_giveup_from_pivot( NactMainWindow *window );
 static void     ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
+static void     ipivot_consumer_on_display_about_changed( NAIPivotConsumer *instance, gpointer user_data );
 static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data );
 static void     reload( NactMainWindow *window );
 
@@ -381,6 +382,7 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->on_actions_changed = ipivot_consumer_on_actions_changed;
+	iface->on_display_about_changed = ipivot_consumer_on_display_about_changed;
 	iface->on_display_order_changed = ipivot_consumer_on_display_order_changed;
 }
 
@@ -1100,6 +1102,21 @@ reload( NactMainWindow *window )
 		na_object_free_items( window->private->deleted );
 		window->private->deleted = NULL;
 	}
+}
+
+/*
+ * called by NAPivot via NAIPivotConsumer whenever the
+ * "display 'about' item" preference is modified.
+ */
+static void
+ipivot_consumer_on_display_about_changed( NAIPivotConsumer *instance, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_display_about_changed";
+	/*NactMainWindow *self;*/
+
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+	g_assert( NACT_IS_MAIN_WINDOW( instance ));
+	/*self = NACT_MAIN_WINDOW( instance );*/
 }
 
 /*

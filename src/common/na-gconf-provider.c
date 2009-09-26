@@ -246,7 +246,7 @@ instance_finalize( GObject *object )
  * Allocates a new #NAGConfProvider object.
  *
  * The specified #NAPivot object will receive a
- * "notify_pivot_of_action_changed" message for each detected
+ * "notify-consumer-of-action-change" message for each detected
  * modification, with a pointer to a newly allocated #NAPivotNotify
  * structure describing the change.
  */
@@ -282,13 +282,10 @@ install_monitors( NAGConfProvider *provider )
 	 * actions and profiles definitions
 	 */
 	list = g_list_prepend( list,
-
 			na_gconf_monitor_new(
-					provider->private->gconf,
 					NA_GCONF_CONFIG_PATH,
-					GCONF_CLIENT_PRELOAD_RECURSIVE,
 					( GConfClientNotifyFunc ) config_path_changed_cb,
-					provider));
+					provider ));
 
 	provider->private->monitors = list;
 }

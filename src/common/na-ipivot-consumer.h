@@ -101,9 +101,9 @@ GType na_ipivot_consumer_get_type( void );
 
 void  na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance );
 
-void  na_ipivot_consumer_notify( NAIPivotConsumer *instance );
-void  na_ipivot_consumer_notify_display_order_change( NAIPivotConsumer *instance );
-void  na_ipivot_consumer_notify_display_about_change( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_actions_changed( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance );
 
 G_END_DECLS
 

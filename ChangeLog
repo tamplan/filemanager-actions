@@ -4,7 +4,25 @@
 	* src/common/na-iduplicable.c (na_iduplicable_dispose): New function.
 	Rewrite signal logic to avoid having to override class handler.
 
+	* src/common/na-gconf-monitor.c:
+	* src/common/na-gconf-monitor.h:
+	Embeds its own GConfClient.
+
+	* src/common/na-gconf-provider.c:
+	No more provide GConfClient from GConf provider.
+
+	* src/common/na-iio-provider.h:
+	No more define signals for preferences management.
+
+	* src/common/na-ipivot-consumer.c:
+	* src/common/na-ipivot-consumer.h:
+	Rename IPivotConsumer notification functions.
+
 	* src/common/na-object.c: Call na_iduplicable_dispose().
+
+	* src/common/na-pivot.c:
+	No more define signals for preferences management.
+	Move monitors from GSList to GList.
 
 	* src/nact/base-builder.c:
 	* src/nact/base-builder.h: New files.
