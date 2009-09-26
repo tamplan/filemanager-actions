@@ -54,7 +54,7 @@ static void     interface_base_finalize( NAIIOProviderInterface *klass );
 
 static GList   *build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty );
 static gint     search_item( const NAObject *obj, const gchar *uuid );
-static GList   *get_merged_items_list( const NAPivot *pivot, GSList *providers );
+static GList   *get_merged_items_list( const NAPivot *pivot, GList *providers );
 
 static guint    try_write_item( const NAIIOProvider *instance, NAObject *item, gchar **message );
 
@@ -156,7 +156,7 @@ GList *
 na_iio_provider_get_items_tree( const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_iio_provider_get_items_tree";
-	GSList *providers;
+	GList *providers;
 	GList *merged, *hierarchy;
 	GSList *level_zero;
 
@@ -256,9 +256,9 @@ search_item( const NAObject *obj, const gchar *uuid )
  * returns a concatened list of readen actions / menus
  */
 static GList *
-get_merged_items_list( const NAPivot *pivot, GSList *providers )
+get_merged_items_list( const NAPivot *pivot, GList *providers )
 {
-	GSList *ip;
+	GList *ip;
 	GList *merged = NULL;
 	GList *list, *item;
 	NAIIOProvider *instance;
@@ -303,7 +303,7 @@ na_iio_provider_write_item( const NAPivot *pivot, NAObject *item, gchar **messag
 	guint ret;
 	NAIIOProvider *instance;
 	NAIIOProvider *bad_instance;
-	GSList *providers, *ip;
+	GList *providers, *ip;
 
 	g_debug( "%s: pivot=%p (%s), item=%p (%s), message=%p", thisfn,
 			( void * ) pivot, G_OBJECT_TYPE_NAME( pivot ),

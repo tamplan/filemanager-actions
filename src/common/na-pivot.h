@@ -107,8 +107,8 @@ GType     na_pivot_get_type( void );
 NAPivot  *na_pivot_new( const NAIPivotConsumer *notified );
 void      na_pivot_dump( const NAPivot *pivot );
 
-GSList   *na_pivot_get_providers( const NAPivot *pivot, GType type );
-void      na_pivot_free_providers( GSList *providers );
+GList    *na_pivot_get_providers( const NAPivot *pivot, GType type );
+void      na_pivot_free_providers( GList *providers );
 
 GList    *na_pivot_get_items( const NAPivot *pivot );
 void      na_pivot_reload_items( NAPivot *pivot );

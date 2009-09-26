@@ -65,7 +65,7 @@ struct NAPivotPrivate {
 	 * to pass NAPivot object to the IO provider, so that the later
 	 * is able to have access to the former (and its list of actions)
 	 */
-	GSList  *providers;
+	GList   *providers;
 
 	/* configuration tree
 	 */
@@ -330,7 +330,7 @@ na_pivot_dump( const NAPivot *pivot )
 	if( !pivot->private->dispose_has_run ){
 
 		g_debug( "%s: consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
-		g_debug( "%s: providers=%p (%d elts)", thisfn, ( void * ) pivot->private->providers, g_slist_length( pivot->private->providers ));
+		g_debug( "%s: providers=%p (%d elts)", thisfn, ( void * ) pivot->private->providers, g_list_length( pivot->private->providers ));
 		g_debug( "%s:      tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
 
 		for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
@@ -352,12 +352,12 @@ na_pivot_dump( const NAPivot *pivot )
  *
  * The returned list should be release by calling na_pivot_free_providers().
  */
-GSList *
+GList *
 na_pivot_get_providers( const NAPivot *pivot, GType type )
 {
 	static const gchar *thisfn = "na_pivot_get_providers";
-	GSList *list = NULL;
-	GSList *ip;
+	GList *list = NULL;
+	GList *ip;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
@@ -366,7 +366,7 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 
 		for( ip = pivot->private->providers ; ip ; ip = ip->next ){
 			if( G_TYPE_CHECK_INSTANCE_TYPE( G_OBJECT( ip->data ), type )){
-				list = g_slist_prepend( list, g_object_ref( ip->data ));
+				list = g_list_prepend( list, g_object_ref( ip->data ));
 			}
 		}
 	}
@@ -381,10 +381,10 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
  * Frees a list of providers as returned from na_pivot_get_providers().
  */
 void
-na_pivot_free_providers( GSList *providers )
+na_pivot_free_providers( GList *providers )
 {
-	g_slist_foreach( providers, ( GFunc ) g_object_unref, NULL );
-	g_slist_free( providers );
+	g_list_foreach( providers, ( GFunc ) g_object_unref, NULL );
+	g_list_free( providers );
 }
 
 /**
@@ -681,13 +681,13 @@ static void
 register_io_providers( NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_pivot_register_io_providers";
-	GSList *list = NULL;
+	GList *list = NULL;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 	g_return_if_fail( !pivot->private->dispose_has_run );
 
-	list = g_slist_prepend( list, na_gconf_provider_new( pivot ));
+	list = g_list_prepend( list, na_gconf_provider_new( pivot ));
 
 	pivot->private->providers = list;
 }

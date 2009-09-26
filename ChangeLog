@@ -11,8 +11,10 @@
 	* src/common/na-gconf-provider.c:
 	No more provide GConfClient from GConf provider.
 
+	* src/common/na-iio-provider.c:
 	* src/common/na-iio-provider.h:
 	No more define signals for preferences management.
+	Move providers from GSList to GList.
 
 	* src/common/na-ipivot-consumer.c:
 	* src/common/na-ipivot-consumer.h:
@@ -23,6 +25,7 @@
 	* src/common/na-pivot.c:
 	No more define signals for preferences management.
 	Move monitors from GSList to GList.
+	Move providers from GSList to GList.
 
 	* src/nact/base-builder.c:
 	* src/nact/base-builder.h: New files.
