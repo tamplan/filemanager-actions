@@ -1,5 +1,10 @@
 2009-09-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-object-api.h (na_object_set_for_copy): New function.
+
+	* src/common/na-object-id-fn.h:
+	* src/common/na-object-id.c (na_object_id_set_for_copy): New function.
+
 	* src/common/na-object-item.c (na_object_item_remove_item):
 	Release the reference on the removed item.
 
@@ -7,12 +12,14 @@
 	* src/nact/nact-clipboard.h (nact_clipboard_primary_set,
 	nact_clipboard_primary_get, nact_clipboard_primary_counts):
 	Now use the NactClipboard convenience object.
+	Uses na_object_id_set_for_copy().
 
 	* src/nact/nact-iactions-list.c (on_treeview_selection_changed):
 	Only get selected items when about to send the message.
 
 	* src/nact/nact-main-menubar.c:
 	Now use the NactClipboard convenience object.
+	Uses na_object_id_set_for_copy().
 
 	* src/nact/nact-main-window.c:
 	* src/nact/nact-main-window.h (nact_main_window_get_clipboard):

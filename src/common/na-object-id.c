@@ -32,9 +32,11 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
 #include "na-iduplicable.h"
+#include "na-object-api.h"
 #include "na-object-fn.h"
 #include "na-object-id-class.h"
 #include "na-object-id-fn.h"
@@ -339,6 +341,31 @@ na_object_id_set_id( NAObjectId *object, const gchar *id )
 
 	if( !object->private->dispose_has_run ){
 		g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_ID, id, NULL );
+	}
+}
+
+/**
+ * na_object_id_set_for_copy:
+ * @object: the #NAObjectId object to be copied.
+ *
+ * Prepares @object to be copied, allocating to it a new uuid if apply,
+ * and relabeling it as "Copy of ...".
+ */
+void
+na_object_id_set_for_copy( NAObjectId *object )
+{
+	gchar *new_label;
+
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+
+	if( !object->private->dispose_has_run ){
+
+		na_object_id_set_new_id( object );
+
+		/* i18n: copied items have a label as 'Copy of original label' */
+		new_label = g_strdup_printf( _( "Copy of %s" ), object->private->label );
+		g_free( object->private->label );
+		object->private->label = new_label;
 	}
 }
 

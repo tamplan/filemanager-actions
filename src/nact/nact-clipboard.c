@@ -593,8 +593,6 @@ renumber_items( GList *items )
 	GList *it;
 
 	for( it = items ; it ; it = it->next ){
-		if( NA_IS_OBJECT_ITEM( it->data )){
-			na_object_set_new_id( NA_OBJECT_ITEM( it->data ));
-		}
+		na_object_set_for_copy( it->data );
 	}
 }

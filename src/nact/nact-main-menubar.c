@@ -566,9 +566,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	for( it = items ; it ; it = it->next ){
 		obj = NA_OBJECT( na_object_duplicate( it->data ));
-		if( NA_IS_OBJECT_ITEM( obj )){
-			na_object_set_new_id( obj );
-		}
+		na_object_set_for_copy( obj );
 		na_object_set_origin( obj, NULL );
 		dup = g_list_prepend( NULL, obj );
 		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
