@@ -589,8 +589,8 @@ na_object_item_free_items( GList *items )
 	for( it = items ; it ; it = it->next ){
 		if( G_IS_OBJECT( it->data )){
 			g_object_unref( it->data );
-		} else {
-			g_warning( "na_object_item_free_items: %p not an object", ( void * ) it->data );
+		/*} else {
+			g_warning( "na_object_item_free_items: %p not an object", ( void * ) it->data );*/
 		}
 	}
 
@@ -803,6 +803,7 @@ na_object_item_remove_item( NAObjectItem *item, const NAObject *object )
 
 		if( g_list_find( item->private->items, ( gconstpointer ) object )){
 			item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
+			g_object_unref(( gpointer ) object );
 		}
 	}
 }
@@ -828,8 +829,8 @@ object_dump( const NAObject *item )
 				( void * ) NA_OBJECT_ITEM( item )->private->items );
 
 		/* do not recurse here, as this is actually dealt with by
-		 * na_object_dump() api ;
-		 * else, we would have the action being dumped after its childs
+		 * na_object_dump() api ; else, we would have the action body
+		 * being dumped after its childs
 		 */
 	}
 }

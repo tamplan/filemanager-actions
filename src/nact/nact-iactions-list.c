@@ -1429,10 +1429,9 @@ on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *in
 {
 	GList *selected_items;
 
-	selected_items = nact_iactions_list_get_selected_items( instance );
-	g_debug( "on_treeview_selection_changed: selection=%p (%d items)", ( void * ) selected_items, g_list_length( selected_items ));
-
 	if( is_selection_changed_authorized( instance )){
+		selected_items = nact_iactions_list_get_selected_items( instance );
+		g_debug( "on_treeview_selection_changed: selection=%p (%d items)", ( void * ) selected_items, g_list_length( selected_items ));
 		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
 	}
 
