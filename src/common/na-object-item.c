@@ -565,6 +565,7 @@ na_object_item_get_items_count( const NAObjectItem *item )
 {
 	guint count = 0;
 
+	/*g_debug( "na_object_item_get_items_count: item=%p (%s)", ( void * ) item, G_OBJECT_TYPE_NAME( item ));*/
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
 
 	if( !item->private->dispose_has_run ){
@@ -803,7 +804,14 @@ na_object_item_remove_item( NAObjectItem *item, const NAObject *object )
 
 		if( g_list_find( item->private->items, ( gconstpointer ) object )){
 			item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
-			g_object_unref(( gpointer ) object );
+
+			/* don't understand why !?
+			 * it appears as if embedded actions and menus would have one sur-ref
+			 * that profiles don't have
+			 */
+			if( NA_IS_OBJECT_ITEM( object )){
+				g_object_unref(( gpointer ) object );
+			}
 		}
 	}
 }

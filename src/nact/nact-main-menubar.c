@@ -536,11 +536,25 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
-	GList *items;
+	GList *items, *it;
 	NactClipboard *clipboard;
+	NAObjectAction *action = NULL;
 
 	clipboard = nact_main_window_get_clipboard( window );
 	items = nact_clipboard_primary_get( clipboard );
+
+	/* if pasted items are profiles, then setup the action
+	 */
+	for( it = items ; it ; it = it->next ){
+		if( NA_IS_OBJECT_PROFILE( it->data )){
+			if( !action ){
+				g_object_get( G_OBJECT( window ), TAB_UPDATABLE_PROP_EDITED_ACTION, &action, NULL );
+				g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
+			}
+			na_object_profile_set_action( NA_OBJECT_PROFILE( it->data ), action );
+		}
+	}
+
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items( items );
 }

@@ -4,9 +4,11 @@
 
 	* src/common/na-object-id-fn.h:
 	* src/common/na-object-id.c (na_object_id_set_for_copy): New function.
+	(most_derived_new_id): Do not search in NAObjectClass.
 
 	* src/common/na-object-item.c (na_object_item_remove_item):
 	Release the reference on the removed item.
+	Only release the reference when action or menu, not profile.
 
 	* src/nact/nact-clipboard.c:
 	* src/nact/nact-clipboard.h (nact_clipboard_primary_set,
@@ -21,6 +23,7 @@
 	* src/nact/nact-main-menubar.c:
 	Now use the NactClipboard convenience object.
 	Uses na_object_id_set_for_copy().
+	(on_paste_activated): Setup the new action when pasting a profile.
 
 	* src/nact/nact-main-window.c:
 	* src/nact/nact-main-window.h (nact_main_window_get_clipboard):

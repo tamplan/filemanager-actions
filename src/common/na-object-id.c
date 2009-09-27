@@ -524,11 +524,15 @@ most_derived_new_id( NAObjectId *object )
 	found = FALSE;
 	new_id = NULL;
 	hierarchy = g_list_reverse( na_object_get_hierarchy( NA_OBJECT( object )));
+	g_debug( "na_object_id_most_derived_id: object=%p (%s)", ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
 		if( NA_OBJECT_ID_CLASS( ih->data )->new_id ){
 			new_id = NA_OBJECT_ID_CLASS( ih->data )->new_id( object );
 			found = TRUE;
+		}
+		if( G_OBJECT_CLASS_TYPE( ih->data ) == NA_OBJECT_ID_TYPE ){
+			break;
 		}
 	}
 

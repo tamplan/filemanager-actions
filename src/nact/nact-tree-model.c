@@ -756,6 +756,9 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 	return( path_str );
 }
 
+/*
+ * inserts an action
+ */
 static void
 insert_get_iters_action( GtkTreeModel *model, const NAObject *select_object, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object )
 {
@@ -788,6 +791,9 @@ insert_get_iters_action( GtkTreeModel *model, const NAObject *select_object, Gtk
 	}
 }
 
+/*
+ * insert a profile
+ */
 static void
 insert_get_iters_profile( GtkTreeModel *model, const NAObject *select_object, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object )
 {
@@ -806,6 +812,9 @@ insert_get_iters_profile( GtkTreeModel *model, const NAObject *select_object, Gt
 	}
 }
 
+/*
+ * insert a menu
+ */
 static void
 insert_get_iters_menu( GtkTreeModel *model, const NAObject *select_object, GtkTreePath *select_path, const NAObject *object, GtkTreeIter *parent_iter, gboolean *has_parent_iter, GtkTreeIter *sibling_iter, gboolean *has_sibling_iter, NAObject **parent_object )
 {
