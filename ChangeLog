@@ -16,6 +16,7 @@
 
 	* src/nact/nact-iactions-list.c (on_treeview_selection_changed):
 	Only get selected items when about to send the message.
+	Do not try to select a null path.
 
 	* src/nact/nact-main-menubar.c:
 	Now use the NactClipboard convenience object.

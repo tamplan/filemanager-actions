@@ -1526,28 +1526,30 @@ select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeMo
 	selection = gtk_tree_view_get_selection( treeview );
 	gtk_tree_selection_unselect_all( selection );
 
-	g_debug( "nact_iactions_list_select_row_at_path: path=%s", gtk_tree_path_to_string( path ));
+	if( path ){
+		g_debug( "nact_iactions_list_select_row_at_path: path=%s", gtk_tree_path_to_string( path ));
 
-	if( gtk_tree_model_get_iter( model, &iter, path )){
-		gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
-		anything = TRUE;
-
-	} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
-		gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
-		anything = TRUE;
-
-	} else {
-		gtk_tree_path_next( path );
 		if( gtk_tree_model_get_iter( model, &iter, path )){
 			gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
 			anything = TRUE;
 
-		} else if( gtk_tree_path_get_depth( path ) > 1 &&
-					gtk_tree_path_up( path ) &&
-					gtk_tree_model_get_iter( model, &iter, path )){
+		} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
+			gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+			anything = TRUE;
 
-						gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
-						anything = TRUE;
+		} else {
+			gtk_tree_path_next( path );
+			if( gtk_tree_model_get_iter( model, &iter, path )){
+				gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+				anything = TRUE;
+
+			} else if( gtk_tree_path_get_depth( path ) > 1 &&
+						gtk_tree_path_up( path ) &&
+						gtk_tree_model_get_iter( model, &iter, path )){
+
+							gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );
+							anything = TRUE;
+			}
 		}
 	}
 
