@@ -38,6 +38,7 @@
 
 	* src/nact/nautilus-actions-config-tool.ui:
 	Edit the user preferences in a notebook.
+	Remove "orientation=vertical" vbox properties.
 
 2009-09-27 Pierre Wieser <pwieser@trychlos.org>
 

@@ -1615,7 +1615,6 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
             <child>
               <object class="GtkVBox" id="vbox25">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame1">
                     <property name="visible">True</property>
@@ -1630,7 +1629,6 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                           <object class="GtkVBox" id="vbox17">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkCheckButton" id="SortAlphabeticalButton">
                                 <property name="label" translatable="yes">_Sort actions in alphabetical order</property>
@@ -1692,7 +1690,6 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
             <child>
               <object class="GtkVBox" id="vbox26">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame2">
                     <property name="visible">True</property>
@@ -1707,7 +1704,6 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                           <object class="GtkVBox" id="vbox27">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkCheckButton" id="RelabelMenuButton">
                                 <property name="label" translatable="yes">Relabel _menus</property>
