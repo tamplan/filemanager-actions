@@ -18,6 +18,9 @@
 	* src/nact/nact-main-window.c:
 	Now implements the BaseIPrefs interface.
 
+	* src/nact/nact-main-window.c (nact_main_window_action_exists):
+	No more check for action existancy in NAPivot.
+
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nact-iactions-list.h
 	(nact_iactions_list_collapse_all, nact_iactions_list_expand_all):

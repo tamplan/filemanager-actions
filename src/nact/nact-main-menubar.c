@@ -385,6 +385,7 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	/* delete the removed actions
+	 * so that new actions with same id do not risk to be deleted later
 	 */
 	nact_main_window_remove_deleted( window );
 

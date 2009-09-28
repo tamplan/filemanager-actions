@@ -579,8 +579,8 @@ nact_main_window_new( BaseApplication *application )
  * Returns: %TRUE if the specified action already exists in the system,
  * %FALSE else.
  *
- * We have to check against existing actions in #NAPivot, and against
- * currently edited actions in #NactIActionsList.
+ * Do not check in NAPivot: actions which are not displayed in the user
+ * interface are not considered as existing.
  */
 gboolean
 nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid )
@@ -594,11 +594,14 @@ nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid 
 
 	if( !window->private->dispose_has_run ){
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		pivot = nact_application_get_pivot( application );
-		action = na_pivot_get_item( pivot, uuid );
-		if( action ){
-			exists = TRUE;
+		/* leave here this dead code, if case I change of opinion later */
+		if( FALSE ){
+			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+			pivot = nact_application_get_pivot( application );
+			action = na_pivot_get_item( pivot, uuid );
+			if( action ){
+				exists = TRUE;
+			}
 		}
 
 		if( !exists ){
