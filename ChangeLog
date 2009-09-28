@@ -9,6 +9,9 @@
 	Add a relabel argument.
 	Remove useless debug trace.
 
+	* src/common/na-iio-provider.c (na_iio_provider_get_items_tree):
+	Dump the hierarchy tree before the alphabetical sort.
+
 	* src/nact/base-iprefs.c:
 	* src/nact/base-iprefs.c (base_iprefs_get_bool,
 	base_iprefs_set_bool):

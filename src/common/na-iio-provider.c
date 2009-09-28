@@ -177,11 +177,13 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 		na_utils_free_string_list( level_zero );
 		na_object_free_items( merged );
 
+		g_debug( "%s: tree before alphabetical reordering", thisfn );
+		na_object_dump_tree( hierarchy );
+		g_debug( "%s: end of tree", thisfn );
+
 		if( na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ))){
 			hierarchy = sort_tree( pivot, hierarchy );
 		}
-
-		na_object_dump_tree( hierarchy );
 	}
 
 	return( hierarchy );
@@ -196,6 +198,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 static GList *
 build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty )
 {
+	static const gchar *thisfn = "na_iio_provider_build_hierarchy";
 	GList *hierarchy, *it;
 	GSList *ilevel;
 	GSList *subitems_ids;
@@ -205,12 +208,12 @@ build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty )
 
 	if( g_slist_length( level_zero )){
 		for( ilevel = level_zero ; ilevel ; ilevel = ilevel->next ){
-			g_debug( "na_iio_provider_build_hierarchy: next_level_zero uuid is %s", ( gchar * ) ilevel->data );
+			g_debug( "%s: uuid=%s", thisfn, ( gchar * ) ilevel->data );
 			it = g_list_find_custom( tree, ilevel->data, ( GCompareFunc ) search_item );
 			if( it ){
 				hierarchy = g_list_append( hierarchy, g_object_ref( it->data ));
-				g_debug( "na_iio_provider_build_hierarchy: appending %s at %p to hierarchy %p",
-						G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data, ( void * ) hierarchy );
+				g_debug( "%s: uuid=%s: %s (%p) appended to hierarchy %p",
+						thisfn, ( gchar * ) ilevel->data, G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data, ( void * ) hierarchy );
 
 				if( NA_IS_OBJECT_MENU( it->data )){
 					subitems_ids = na_object_menu_get_items_list( NA_OBJECT_MENU( it->data ));

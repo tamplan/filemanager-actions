@@ -840,9 +840,13 @@ refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selec
 			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
+	g_debug( "%s: item=%p (%s), profile=%p", thisfn,
+			( void * ) item, item ? G_OBJECT_TYPE_NAME( item ) : "(nil)", ( void * ) profile );
 
 	has_exportable = nact_iactions_list_has_exportable( NACT_IACTIONS_LIST( window ));
+	g_debug( "%s: has_exportable=%s", thisfn, has_exportable ? "True":"False" );
 	has_modified = nact_main_window_has_modified_items( window );
+	g_debug( "%s: has_modified=%s", thisfn, has_modified ? "True":"False" );
 
 	paste_enabled = FALSE;
 	clipboard = nact_main_window_get_clipboard( window );
