@@ -7,6 +7,7 @@
 	* src/common/na-object-id-fn.h:
 	* src/common/na-object-id.c (na_object_id_set_for_copy):
 	Add a relabel argument.
+	Remove useless debug trace.
 
 	* src/nact/base-iprefs.c:
 	* src/nact/base-iprefs.c (base_iprefs_get_bool,
