@@ -50,8 +50,10 @@ static void     interface_base_init( NAIPrefsInterface *klass );
 static void     interface_base_finalize( NAIPrefsInterface *klass );
 
 static gboolean read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value );
+static gint     read_int( NAIPrefs *instance, const gchar *name, gint default_value );
 static GSList  *read_string_list( NAIPrefs *instance, const gchar *name );
 static void     write_bool( NAIPrefs *instance, const gchar *name, gboolean value );
+static void     write_int( NAIPrefs *instance, const gchar *name, gint value );
 static void     write_string_list( NAIPrefs *instance, const gchar *name, GSList *list );
 
 GType
@@ -166,27 +168,26 @@ na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
 }
 
 /**
- * na_iprefs_is_alphabetical_order:
+ * na_iprefs_get_alphabetical_order:
  * @instance: this #NAIPrefs interface instance.
  *
- * Returns: #TRUE if the actions are to be maintained in alphabetical
- * order of their label, #FALSE else.
+ * Returns: the order mode currently set.
  *
- * Note: this function returns a suitable default value if the key is
- * not found in GConf preferences.
+ * Note: this function returns a suitable default value even if the key
+ * is not found in GConf preferences or no schema has been installed.
  *
  * Note: please take care of keeping the default value synchronized with
  * those defined in schemas.
  */
-gboolean
-na_iprefs_is_alphabetical_order( NAIPrefs *instance )
+gint
+na_iprefs_get_alphabetical_order( NAIPrefs *instance )
 {
-	gboolean alpha_order = FALSE;
+	gint alpha_order = PREFS_ORDER_ALPHA_ASCENDING;
 
-	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), PREFS_ORDER_ALPHA_ASCENDING );
 
 	if( st_initialized && !st_finalized ){
-		alpha_order = read_bool( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, TRUE );
+		alpha_order = read_int( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, PREFS_ORDER_ALPHA_ASCENDING );
 	}
 
 	return( alpha_order );
@@ -195,18 +196,18 @@ na_iprefs_is_alphabetical_order( NAIPrefs *instance )
 /**
  * na_iprefs_set_alphabetical_order:
  * @instance: this #NAIPrefs interface instance.
- * @enabled: the new value to be written.
+ * @mode: the new value to be written.
  *
  * Writes the current status of 'alphabetical order' to the GConf
  * preference system.
  */
 void
-na_iprefs_set_alphabetical_order( NAIPrefs *instance, gboolean enabled )
+na_iprefs_set_alphabetical_order( NAIPrefs *instance, gint mode )
 {
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
 	if( st_initialized && !st_finalized ){
-		write_bool( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, enabled );
+		write_int( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, mode );
 	}
 }
 
@@ -261,7 +262,20 @@ read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value )
 	gboolean ret;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-	ret = na_gconf_utils_read_bool( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, FALSE, default_value );
+	ret = na_gconf_utils_read_bool( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, TRUE, default_value );
+	g_free( path );
+
+	return( ret );
+}
+
+static gint
+read_int( NAIPrefs *instance, const gchar *name, gint default_value )
+{
+	gchar *path;
+	gint ret;
+
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	ret = na_gconf_utils_read_int( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, TRUE, default_value );
 	g_free( path );
 
 	return( ret );
@@ -286,9 +300,17 @@ write_bool( NAIPrefs *instance, const gchar *name, gboolean value )
 	gchar *path;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-
 	na_gconf_utils_write_bool( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, value, NULL );
+	g_free( path );
+}
 
+static void
+write_int( NAIPrefs *instance, const gchar *name, gint value )
+{
+	gchar *path;
+
+	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	na_gconf_utils_write_int( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, value, NULL );
 	g_free( path );
 }
 

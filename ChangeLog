@@ -1,7 +1,8 @@
 2009-09-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/nautilus-actions.schemas.in:
-	Define a schema fot the three new preferences.
+	Define a schema for the three new preferences.
+	Update the schema with the new semantic of actions sorting.
 
 	* src/common/na-gconf-utils.c:
 	* src/common/na-gconf-utils.h
@@ -15,12 +16,15 @@
 
 	* src/common/na-iio-provider.c (na_iio_provider_get_items_tree):
 	Dump the hierarchy tree before the alphabetical sort.
+	Implement the new actions sorting semantic when loading the tree.
 
 	* src/nact/base-iprefs.c:
 	* src/nact/base-iprefs.c (base_iprefs_get_bool,
 	base_iprefs_set_bool):
 	Replace the BaseWindow argument by a BaseIPrefs	one.
 	Define three new UI preferences.
+	(na_iprefs_is_alphabetical_order):
+	Renamed as na_iprefs_get_alphabetical_order().
 
 	* src/nact/nact-assistant-export.c:
 	Implements IActionsList::get_treeview_name virtual function.

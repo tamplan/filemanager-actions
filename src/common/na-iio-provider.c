@@ -61,8 +61,9 @@ static guint    try_write_item( const NAIIOProvider *instance, NAObject *item, g
 static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
 static gboolean do_is_writable( const NAIIOProvider *instance, const NAObject *item );
 
-static GList   *sort_tree( const NAPivot *pivot, GList *tree );
-static gint     compare_label_alpha_fn( const NAObjectId *a, const NAObjectId *b );
+static GList   *sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn );
+static gint     compare_label_alpha_asc_fn( const NAObjectId *a, const NAObjectId *b );
+static gint     compare_label_alpha_desc_fn( const NAObjectId *a, const NAObjectId *b );
 
 /**
  * Registers the GType of this interface.
@@ -159,6 +160,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 	GList *providers;
 	GList *merged, *hierarchy;
 	GSList *level_zero;
+	gint order_mode;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
@@ -181,8 +183,16 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 		na_object_dump_tree( hierarchy );
 		g_debug( "%s: end of tree", thisfn );
 
-		if( na_iprefs_is_alphabetical_order( NA_IPREFS( pivot ))){
-			hierarchy = sort_tree( pivot, hierarchy );
+		order_mode = na_iprefs_get_alphabetical_order( NA_IPREFS( pivot ));
+		switch( order_mode ){
+			case PREFS_ORDER_ALPHA_DESCENDING:
+				hierarchy = sort_tree( pivot, hierarchy, compare_label_alpha_desc_fn );
+				break;
+
+			case PREFS_ORDER_ALPHA_ASCENDING:
+			default:
+				hierarchy = sort_tree( pivot, hierarchy, compare_label_alpha_asc_fn );
+				break;
 		}
 	}
 
@@ -469,7 +479,7 @@ sort_tree( const NAPivot *pivot, GList *tree )
 }
 
 static gint
-compare_label_alpha_fn( const NAObjectId *a, const NAObjectId *b )
+compare_label_alpha_asc_fn( const NAObjectId *a, const NAObjectId *b )
 {
 	gchar *label_a, *label_b;
 	gint compare;
@@ -483,4 +493,10 @@ compare_label_alpha_fn( const NAObjectId *a, const NAObjectId *b )
 	g_free( label_a );
 
 	return( compare );
+}
+
+static gint
+compare_label_alpha_desc_fn( const NAObjectId *a, const NAObjectId *b )
+{
+	return( -1 * compare_label_alpha_asc_fn( a, b ));
 }

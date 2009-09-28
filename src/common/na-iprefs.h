@@ -46,42 +46,19 @@
  *
  * Displaying the actions.
  *
- * - actions in alphabetical order: yes/no
+ * - actions in alphabetical order:
+ *
  *   Nautilus-Actions used to display the actions in alphabetical order.
  *   Starting with 1.12.x, Nautilus-Actions lets the user rearrange
  *   himself the order of its actions.
- *   Defaults to yes to stay compatible with previous versions.
  *
- *   Actions can be organized in a set of submenus. In this case, the
- *   'alphabetical order' preferences is also satisfied, on a level
- *   basis.
- *   This is not a preference: as submenus are available, user is free
- *   to define some in NACT ; plugin will take care of them.
- *
- *   Defined order is saved in the same time than actions. So
- *   considering the following operations:
- *
- *   a) set preference to 'no'
- *   b) rearrange the items in any order
- *   c) save
- *   d) set preference to 'yes'
- *      -> the items are reordered in alphabetical order
- *   e) set preference to 'no'
- *      -> the previous order is restaured (as it has been previously
- *         saved)
- *
- *   but
- *
- *   a) set preference to 'no'
- *   b) rearrange the items in any order
- *   c) set preference to 'yes'
- *      -> the items are reordered in alphabetical order
- *   d) save
- *   e) set preference to 'no'
- *      -> the items stay in alphabetical order, as the previous save
- *         has removed the previous order.
+ *   This option may have three values :
+ *   - ascending alphabetical order (historical behavior, and default),
+ *   - descending alphabetical order,
+ *   - manual ordering.
  *
  * - adding a 'About Nautilus Actions' item at end of actions: yes/no
+ *
  *   This is used only when there is a root submenu, i.e. when the
  *   Nautilus context menu will only display one item (the root
  *   submenu). Only in this case, and if preference is 'yes', the we
@@ -124,8 +101,8 @@ GType    na_iprefs_get_type( void );
 GSList  *na_iprefs_get_level_zero_items( NAIPrefs *instance );
 void     na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order );
 
-gboolean na_iprefs_is_alphabetical_order( NAIPrefs *instance );
-void     na_iprefs_set_alphabetical_order( NAIPrefs *instance, gboolean enabled );
+gint     na_iprefs_get_alphabetical_order( NAIPrefs *instance );
+void     na_iprefs_set_alphabetical_order( NAIPrefs *instance, gint mode );
 
 gboolean na_iprefs_should_add_about_item( NAIPrefs *instance );
 void     na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
@@ -140,6 +117,14 @@ void     na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
 #define PREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
 #define PREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
 #define PREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
+
+/* alphabetical order values
+ */
+enum {
+	PREFS_ORDER_ALPHA_ASCENDING = 0,
+	PREFS_ORDER_ALPHA_DESCENDING,
+	PREFS_ORDER_MANUAL
+};
 
 G_END_DECLS
 

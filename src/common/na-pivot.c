@@ -182,7 +182,7 @@ class_init( NAPivotClass *klass )
 	klass->private = g_new0( NAPivotClassPrivate, 1 );
 
 	/* register the signal and its default handler
-	 * this signal should be sent by the IIOProvider when an actions
+	 * this signal should be sent by the IIOProvider when an action
 	 * has changed in the underlying storage subsystem
 	 */
 	st_signals[ ACTION_CHANGED ] = g_signal_new_class_handler(

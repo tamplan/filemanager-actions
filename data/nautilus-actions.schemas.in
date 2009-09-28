@@ -325,12 +325,14 @@ All schemes used by Nautilus can be used here.</long>
     <schema>
       <key>/schemas/apps/nautilus-actions/preferences/iprefs-alphabetical-order</key>
       <owner>nautilus-actions</owner>
-      <type>bool</type>
+      <type>int</type>
       <locale name="C">
-        <short>Sort actions in alphabetical order</short>
-        <long>When TRUE, the actions are maintained in alphabetical order (historical behavior). When FALSE, user is free to reorder them via Nautilus-Actions configuration tool.</long>
+        <short>Sort indicator</short>
+        <long>If set to zero, the actions are maintained in ascending alphabetical order (historical behavior).
+If set to 1, actions are maintained in descending alphabetical order.
+When set to 2, user is free to reorder them via Nautilus-Actions configuration tool.</long>
       </locale>
-      <default>true</default>
+      <default>0</default>
     </schema>
 
     <schema>
