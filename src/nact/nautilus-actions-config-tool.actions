@@ -20,6 +20,10 @@
             <separator />
             <menuitem action="PreferencesItem" />
         </menu>
+        <menu action="ViewMenu">
+            <menuitem action="ExpandAllItem" />
+            <menuitem action="CollapseAllItem" />
+        </menu>
         <menu action="ToolsMenu">
             <menuitem action="ImportItem" />
             <menuitem action="ExportItem" />

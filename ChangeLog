@@ -15,11 +15,20 @@
 	* src/nact/nact-main-window.c:
 	Now implements the BaseIPrefs interface.
 
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h
+	(nact_iactions_list_collapse_all, nact_iactions_list_expand_all):
+	New functions.
+
 	* src/nact/nact-main-menubar.c (on_duplicate_activated):
 	Takes advantage of new UI preferences.
+	Define new Expand all/Collapse all menu items.
 
 	* src/nact/nact-preferences-editor.c:
 	Edit the new UI preferences.
+
+	* src/nact/nautilus-actions-config-tool.actions:
+	Define new View menu.
 
 	* src/nact/nautilus-actions-config-tool.ui:
 	Edit the user preferences in a notebook.

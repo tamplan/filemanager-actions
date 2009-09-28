@@ -483,6 +483,24 @@ nact_iactions_list_dispose( NactIActionsList *instance )
 }
 
 /**
+ * nact_iactions_list_collapse_all:
+ * @instance: this #NactIActionsList implementation.
+ *
+ * Collapse all the tree hierarchy.
+ */
+void
+nact_iactions_list_collapse_all( NactIActionsList *instance )
+{
+	static const gchar *thisfn = "nact_iactions_list_collapse_all";
+	GtkTreeView *treeview;
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+	treeview = get_actions_list_treeview( instance );
+	gtk_tree_view_collapse_all( treeview );
+}
+
+/**
  * nact_iactions_list_delete:
  * @window: this #NactIActionsList instance.
  * @list: list of #NAObject to be deleted.
@@ -527,8 +545,26 @@ nact_iactions_list_delete( NactIActionsList *instance, GList *items )
 }
 
 /**
+ * nact_iactions_list_expand_all:
+ * @instance: this #NactIActionsList implementation.
+ *
+ * Expand all the tree hierarchy.
+ */
+void
+nact_iactions_list_expand_all( NactIActionsList *instance )
+{
+	static const gchar *thisfn = "nact_iactions_list_expand_all";
+	GtkTreeView *treeview;
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+	treeview = get_actions_list_treeview( instance );
+	gtk_tree_view_expand_all( treeview );
+}
+
+/**
  * nact_iactions_list_fill:
- * @window: this #NactIActionsList instance.
+ * @instance: this #NactIActionsList instance.
  *
  * Fill the listbox with the provided list of items.
  *

@@ -87,6 +87,9 @@ static void     on_delete_activated( GtkAction *action, NactMainWindow *window )
 static void     on_reload_activated( GtkAction *action, NactMainWindow *window );
 static void     on_preferences_activated( GtkAction *action, NactMainWindow *window );
 
+static void     on_expand_all_activated( GtkAction *action, NactMainWindow *window );
+static void     on_collapse_all_activated( GtkAction *action, NactMainWindow *window );
+
 static void     on_import_activated( GtkAction *action, NactMainWindow *window );
 static void     on_export_activated( GtkAction *action, NactMainWindow *window );
 
@@ -106,6 +109,7 @@ static const GtkActionEntry entries[] = {
 
 		{ "FileMenu", NULL, N_( "_File" ) },
 		{ "EditMenu", NULL, N_( "_Edit" ) },
+		{ "ViewMenu", NULL, N_( "_View" ) },
 		{ "ToolsMenu", NULL, N_( "_Tools" ) },
 		{ "HelpMenu", NULL, N_( "_Help" ) },
 
@@ -157,6 +161,14 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the 'Preferences' item */
 				N_( "Edit your preferences" ),
 				G_CALLBACK( on_preferences_activated ) },
+		{ "ExpandAllItem" , NULL, N_( "_Expand all" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the Expand all item */
+				N_( "Entirely expand the items hierarchy" ),
+				G_CALLBACK( on_expand_all_activated ) },
+		{ "CollapseAllItem" , NULL, N_( "_Collapse all" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the Collapse all item */
+				N_( "Entirely collapse the items hierarchy" ),
+				G_CALLBACK( on_collapse_all_activated ) },
 		{ "ImportItem" , GTK_STOCK_CONVERT, N_( "_Import assistant.." ), "",
 				/* i18n: tooltip displayed in the status bar when selecting the Import item */
 				N_( "Import one or more actions from external (XML) files into your configuration" ),
@@ -646,6 +658,18 @@ static void
 on_preferences_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	nact_preferences_editor_run( BASE_WINDOW( window ));
+}
+
+static void
+on_expand_all_activated( GtkAction *gtk_action, NactMainWindow *window )
+{
+	nact_iactions_list_expand_all( NACT_IACTIONS_LIST( window ));
+}
+
+static void
+on_collapse_all_activated( GtkAction *gtk_action, NactMainWindow *window )
+{
+	nact_iactions_list_collapse_all( NACT_IACTIONS_LIST( window ));
 }
 
 static void
