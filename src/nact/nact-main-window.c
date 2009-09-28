@@ -1035,9 +1035,7 @@ iactions_list_get_treeview_name( NactIActionsList *instance )
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( instance ), NULL );
 
-	if( !NACT_MAIN_WINDOW( instance )->private->dispose_has_run ){
-		name = g_strdup( "ActionsList" );
-	}
+	name = g_strdup( "ActionsList" );
 
 	return( name );
 }
