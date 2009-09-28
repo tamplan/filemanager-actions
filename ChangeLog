@@ -3,6 +3,10 @@
 	* data/nautilus-actions.schemas.in:
 	Define a schema fot the three new preferences.
 
+	* src/common/na-gconf-utils.c:
+	* src/common/na-gconf-utils.h
+	(na_gconf_utils_read_int, na_gconf_utils_write_int): New functions.
+
 	* src/common/na-object-api.h:
 	* src/common/na-object-id-fn.h:
 	* src/common/na-object-id.c (na_object_id_set_for_copy):

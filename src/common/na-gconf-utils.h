@@ -54,9 +54,11 @@ gboolean na_gconf_utils_get_string_list_from_entries( GSList *entries, const gch
 gchar   *na_gconf_utils_path_to_key( const gchar *path );
 
 gboolean na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_schema, gboolean default_value );
+gint     na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_schema, gint default_value );
 GSList  *na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path );
 
 gboolean na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value, gchar **message );
+gboolean na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gchar **message );
 gboolean na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message );
 gboolean na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList *value, gchar **message );
 
