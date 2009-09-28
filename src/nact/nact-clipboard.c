@@ -42,6 +42,7 @@
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
 
+#include "base-iprefs.h"
 #include "nact-clipboard.h"
 
 /* private class data
@@ -91,6 +92,7 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType         register_type( void );
 static void          class_init( NactClipboardClass *klass );
+static void          iprefs_base_iface_init( BaseIPrefsInterface *iface );
 static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_dispose( GObject *application );
 static void          instance_finalize( GObject *application );
@@ -103,7 +105,7 @@ static void          export_action( const gchar *uri, const NAObject *action, GS
 static gchar        *get_action_xml_buffer( const NAObject *action, GSList **exported );
 static void          get_from_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
 static void          clear_clipboard_callback( GtkClipboard *clipboard, NactClipboardData *data );
-static void          renumber_items( GList *items );
+static void          renumber_items( NactClipboard *clipboard, GList *items );
 
 GType
 nact_clipboard_get_type( void )
@@ -135,9 +137,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo iprefs_base_iface_info = {
+		( GInterfaceInitFunc ) iprefs_base_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NactClipboard", &info, 0 );
+
+	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &iprefs_base_iface_info );
 
 	return( type );
 }
@@ -157,6 +167,14 @@ class_init( NactClipboardClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactClipboardClassPrivate, 1 );
+}
+
+static void
+iprefs_base_iface_init( BaseIPrefsInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_iprefs_base_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void
@@ -343,7 +361,7 @@ nact_clipboard_export_items( const gchar *uri, GList *items )
  * nact_clipboard_primary_set:
  * @clipboard: this #NactClipboard object.
  * @items: a list of #NAObject items
- * @renumber_items: whether the actions or menus items should be
+ * @renumber: whether the actions or menus items should be
  * renumbered when copied in the clipboard ?
  *
  * Installs a copy of provided items in the clipboard.
@@ -388,7 +406,7 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean ren
 		data->items = g_list_reverse( data->items );
 
 		if( renumber ){
-			renumber_items( data->items );
+			renumber_items( clipboard, data->items );
 		}
 
 		gtk_clipboard_set_with_data( clipboard->private->primary,
@@ -434,7 +452,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard )
 			}
 			items = g_list_reverse( items );
 
-			renumber_items( data->items );
+			renumber_items( clipboard, data->items );
 		}
 	}
 
@@ -588,11 +606,27 @@ clear_clipboard_callback( GtkClipboard *clipboard, NactClipboardData *data )
 }
 
 static void
-renumber_items( GList *items )
+renumber_items( NactClipboard *clipboard, GList *items )
 {
 	GList *it;
+	gboolean relabel_menus, relabel_actions, relabel_profiles;
+	gboolean relabel;
+
+	relabel_menus = base_iprefs_get_bool( BASE_IPREFS( clipboard ), BASE_IPREFS_RELABEL_MENUS );
+	relabel_actions = base_iprefs_get_bool( BASE_IPREFS( clipboard ), BASE_IPREFS_RELABEL_ACTIONS );
+	relabel_profiles = base_iprefs_get_bool( BASE_IPREFS( clipboard ), BASE_IPREFS_RELABEL_PROFILES );
 
 	for( it = items ; it ; it = it->next ){
-		na_object_set_for_copy( it->data );
+
+		if( NA_IS_OBJECT_MENU( it->data )){
+			relabel = relabel_menus;
+		} else if( NA_IS_OBJECT_ACTION( it->data )){
+			relabel = relabel_actions;
+		} else {
+			g_return_if_fail( NA_IS_OBJECT_PROFILE( it->data ));
+			relabel = relabel_profiles;
+		}
+
+		na_object_set_for_copy( it->data, relabel );
 	}
 }

@@ -40,6 +40,7 @@
 #include <common/na-object-menu.h>
 #include <common/na-ipivot-consumer.h>
 
+#include "base-iprefs.h"
 #include "nact-application.h"
 #include "nact-assistant-export.h"
 #include "nact-assistant-import.h"
@@ -573,14 +574,30 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 	GList *items, *it;
 	GList *dup;
 	NAObject *obj;
+	gboolean relabel_menus, relabel_actions, relabel_profiles;
+	gboolean relabel;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
+	relabel_menus = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_MENUS );
+	relabel_actions = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_ACTIONS );
+	relabel_profiles = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_PROFILES );
+
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	for( it = items ; it ; it = it->next ){
 		obj = NA_OBJECT( na_object_duplicate( it->data ));
-		na_object_set_for_copy( obj );
+
+		if( NA_IS_OBJECT_MENU( obj )){
+			relabel = relabel_menus;
+		} else if( NA_IS_OBJECT_ACTION( obj )){
+			relabel = relabel_actions;
+		} else {
+			g_return_if_fail( NA_IS_OBJECT_PROFILE( obj ));
+			relabel = relabel_profiles;
+		}
+
+		na_object_set_for_copy( obj, relabel );
 		na_object_set_origin( obj, NULL );
 		dup = g_list_prepend( NULL, obj );
 		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );

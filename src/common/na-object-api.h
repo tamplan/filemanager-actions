@@ -68,7 +68,7 @@ G_BEGIN_DECLS
 #define na_object_get_label( object )				na_object_id_get_label( NA_OBJECT_ID( object ))
 
 #define na_object_set_id( object, id )				na_object_id_set_id( NA_OBJECT_ID( object ), id )
-#define na_object_set_for_copy( object )			na_object_id_set_for_copy( NA_OBJECT_ID( object ))
+#define na_object_set_for_copy( object, relabel )	na_object_id_set_for_copy( NA_OBJECT_ID( object ), relabel )
 #define na_object_set_new_id( object )				na_object_id_set_new_id( NA_OBJECT_ID( object ))
 #define na_object_set_label( object, label )		na_object_id_set_label( NA_OBJECT_ID( object ), label )
 

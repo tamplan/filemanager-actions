@@ -123,7 +123,8 @@ static void     icommand_tab_iface_init( NactICommandTabInterface *iface );
 static void     iconditions_tab_iface_init( NactIConditionsTabInterface *iface );
 static void     iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
 static void     ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
-static void     iprefs_iface_init( NAIPrefsInterface *iface );
+static void     iprefs_na_iface_init( NAIPrefsInterface *iface );
+static void     iprefs_base_iface_init( BaseIPrefsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -217,8 +218,14 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo iprefs_iface_info = {
-		( GInterfaceInitFunc ) iprefs_iface_init,
+	static const GInterfaceInfo iprefs_na_iface_info = {
+		( GInterfaceInitFunc ) iprefs_na_iface_init,
+		NULL,
+		NULL
+	};
+
+	static const GInterfaceInfo iprefs_base_iface_info = {
+		( GInterfaceInitFunc ) iprefs_base_iface_init,
 		NULL,
 		NULL
 	};
@@ -239,7 +246,9 @@ register_type( void )
 
 	g_type_add_interface_static( type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
 
-	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_iface_info );
+	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_na_iface_info );
+
+	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &iprefs_base_iface_info );
 
 	return( type );
 }
@@ -386,9 +395,17 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 }
 
 static void
-iprefs_iface_init( NAIPrefsInterface *iface )
+iprefs_na_iface_init( NAIPrefsInterface *iface )
 {
-	static const gchar *thisfn = "nact_main_window_iprefs_iface_init";
+	static const gchar *thisfn = "nact_main_window_iprefs_na_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+}
+
+static void
+iprefs_base_iface_init( BaseIPrefsInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_iprefs_base_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }

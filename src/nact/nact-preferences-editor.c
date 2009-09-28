@@ -57,7 +57,8 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactPreferencesEditorClass *klass );
-static void     iprefs_iface_init( NAIPrefsInterface *iface );
+static void     iprefs_na_iface_init( NAIPrefsInterface *iface );
+static void     iprefs_base_iface_init( BaseIPrefsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
@@ -108,8 +109,14 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo prefs_iface_info = {
-		( GInterfaceInitFunc ) iprefs_iface_init,
+	static const GInterfaceInfo iprefs_na_iface_info = {
+		( GInterfaceInitFunc ) iprefs_na_iface_init,
+		NULL,
+		NULL
+	};
+
+	static const GInterfaceInfo iprefs_base_iface_info = {
+		( GInterfaceInitFunc ) iprefs_base_iface_init,
 		NULL,
 		NULL
 	};
@@ -118,7 +125,9 @@ register_type( void )
 
 	type = g_type_register_static( BASE_DIALOG_TYPE, "NactPreferencesEditor", &info, 0 );
 
-	g_type_add_interface_static( type, NA_IPREFS_TYPE, &prefs_iface_info );
+	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_na_iface_info );
+
+	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_base_iface_info );
 
 	return( type );
 }
@@ -147,9 +156,17 @@ class_init( NactPreferencesEditorClass *klass )
 }
 
 static void
-iprefs_iface_init( NAIPrefsInterface *iface )
+iprefs_na_iface_init( NAIPrefsInterface *iface )
 {
-	static const gchar *thisfn = "nact_preferences_editor_iprefs_iface_init";
+	static const gchar *thisfn = "nact_preferences_editor_iprefs_na_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+}
+
+static void
+iprefs_base_iface_init( BaseIPrefsInterface *iface )
+{
+	static const gchar *thisfn = "nact_preferences_editor_iprefs_base_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
@@ -278,10 +295,6 @@ on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	GtkWindow *parent_toplevel;*/
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-
-	/*toplevel = base_window_get_toplevel_window( dialog );
-	parent_toplevel = base_window_get_toplevel_dialog( BASE_WINDOW( editor->private->parent ));
-	gtk_window_set_transient_for( toplevel, parent_toplevel );*/
 }
 
 static void
@@ -289,6 +302,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_runtime_init_dialog";
 	gboolean sort_alpha, add_about_item;
+	gboolean relabel;
 	GtkWidget *button;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
@@ -323,7 +337,17 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 			"clicked",
 			G_CALLBACK( on_ok_clicked ));
 
-	/*setup_buttons( editor, FALSE );*/
+	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_MENUS );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
+
+	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_ACTIONS );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelActionButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
+
+	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_PROFILES );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 }
 
 /*
@@ -399,6 +423,7 @@ save_preferences( NactPreferencesEditor *editor )
 {
 	GtkWidget *button;
 	gboolean enabled;
+	gboolean relabel;
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "SortAlphabeticalButton" );
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
@@ -407,6 +432,18 @@ save_preferences( NactPreferencesEditor *editor )
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	na_iprefs_set_add_about_item( NA_IPREFS( editor ), enabled );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
+	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	base_iprefs_set_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_MENUS, relabel );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelActionButton" );
+	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	base_iprefs_set_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_ACTIONS, relabel );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
+	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	base_iprefs_set_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_PROFILES, relabel );
 }
 
 static gboolean

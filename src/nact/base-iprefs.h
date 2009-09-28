@@ -67,6 +67,10 @@ typedef struct {
 }
 	BaseIPrefsInterface;
 
+#define BASE_IPREFS_RELABEL_MENUS		"iprefs-relabel-menus"
+#define BASE_IPREFS_RELABEL_ACTIONS		"iprefs-relabel-actions"
+#define BASE_IPREFS_RELABEL_PROFILES	"iprefs-relabel-profiles"
+
 GType    base_iprefs_get_type( void );
 
 void     base_iprefs_migrate_key( BaseWindow *window, const gchar *old_key, const gchar *new_key );
@@ -77,8 +81,8 @@ void     base_iprefs_position_named_window( BaseWindow *window, GtkWindow *tople
 void     base_iprefs_save_window_position( BaseWindow *window );
 void     base_iprefs_save_named_window_position( BaseWindow *window, GtkWindow *toplevel, const gchar *name );
 
-gboolean base_iprefs_get_bool( BaseWindow *window, const gchar *key );
-void     base_iprefs_set_bool( BaseWindow *window, const gchar *key, gboolean value );
+gboolean base_iprefs_get_bool( BaseIPrefs *instance, const gchar *key );
+void     base_iprefs_set_bool( BaseIPrefs *instance, const gchar *key, gboolean value );
 
 gint     base_iprefs_get_int( BaseWindow *window, const gchar *key );
 void     base_iprefs_set_int( BaseWindow *window, const gchar *key, gint value );

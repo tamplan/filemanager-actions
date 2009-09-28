@@ -347,12 +347,13 @@ na_object_id_set_id( NAObjectId *object, const gchar *id )
 /**
  * na_object_id_set_for_copy:
  * @object: the #NAObjectId object to be copied.
+ * @relabel: whether this item should be relabeled ?
  *
  * Prepares @object to be copied, allocating to it a new uuid if apply,
- * and relabeling it as "Copy of ...".
+ * and relabeling it as "Copy of ..." if applies.
  */
 void
-na_object_id_set_for_copy( NAObjectId *object )
+na_object_id_set_for_copy( NAObjectId *object, gboolean relabel )
 {
 	gchar *new_label;
 
@@ -362,10 +363,12 @@ na_object_id_set_for_copy( NAObjectId *object )
 
 		na_object_id_set_new_id( object );
 
-		/* i18n: copied items have a label as 'Copy of original label' */
-		new_label = g_strdup_printf( _( "Copy of %s" ), object->private->label );
-		g_free( object->private->label );
-		object->private->label = new_label;
+		if( relabel ){
+			/* i18n: copied items have a label as 'Copy of original label' */
+			new_label = g_strdup_printf( _( "Copy of %s" ), object->private->label );
+			g_free( object->private->label );
+			object->private->label = new_label;
+		}
 	}
 }
 

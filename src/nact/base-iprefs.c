@@ -60,12 +60,12 @@ static GConfValue *get_value( GConfClient *client, const gchar *path, const gcha
 static void        set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value );
 static gboolean    remove_entry( GConfClient *client, const gchar *path, const gchar *entry );
 
-static gboolean    read_bool( BaseWindow *window, const gchar *name );
+static gboolean    read_bool( BaseIPrefs *instance, const gchar *name );
 static gint        read_int( BaseWindow *window, const gchar *name );
 static GSList     *read_int_list( BaseWindow *window, const gchar *key );
 static gchar      *read_str( BaseWindow *window, const gchar *key );
 
-static void        write_bool( BaseWindow *window, const gchar *name, gboolean value );
+static void        write_bool( BaseIPrefs *instance, const gchar *name, gboolean value );
 static void        write_int( BaseWindow *window, const gchar *name, gint value );
 static void        write_int_list( BaseWindow *window, const gchar *key, GSList *list );
 static void        write_str( BaseWindow *window, const gchar *key, const gchar *text );
@@ -318,21 +318,20 @@ base_iprefs_save_named_window_position( BaseWindow *window, GtkWindow *toplevel,
 
 /**
  * base_iprefs_get_bool:
- * @window: this #BaseWindow-derived window.
+ * @istance: this #BaseIPrefs implementation.
  * @name: the entry to be readen.
  *
  * Returns: the named boolean.
  */
 gboolean
-base_iprefs_get_bool( BaseWindow *window, const gchar *name )
+base_iprefs_get_bool( BaseIPrefs *instance, const gchar *name )
 {
 	gboolean ret = FALSE;
 
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
-	g_return_val_if_fail( BASE_IS_IPREFS( window ), FALSE );
+	g_return_val_if_fail( BASE_IS_IPREFS( instance ), FALSE );
 
 	if( st_initialized && !st_finalized ){
-		ret = read_bool( window, name );
+		ret = read_bool( instance, name );
 	}
 
 	return( ret );
@@ -340,20 +339,19 @@ base_iprefs_get_bool( BaseWindow *window, const gchar *name )
 
 /**
  * base_iprefs_set_bool:
- * @window: this #BaseWindow-derived window.
+ * @istance: this #BaseIPrefs implementation.
  * @name: the entry to be readen.
  * @value: the value to be set.
  *
  * Writes the named boolean in GConf.
  */
 void
-base_iprefs_set_bool( BaseWindow *window, const gchar *name, gboolean value )
+base_iprefs_set_bool( BaseIPrefs *instance, const gchar *name, gboolean value )
 {
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( BASE_IS_IPREFS( window ));
+	g_return_if_fail( BASE_IS_IPREFS( instance ));
 
 	if( st_initialized && !st_finalized ){
-		write_bool( window, name, value );
+		write_bool( instance, name, value );
 	}
 }
 
@@ -522,14 +520,14 @@ remove_entry( GConfClient *client, const gchar *path, const gchar *entry )
 }
 
 static gboolean
-read_bool( BaseWindow *window, const gchar *name )
+read_bool( BaseIPrefs *instance, const gchar *name )
 {
 	gchar *path;
 	gint value;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
 
-	value = na_gconf_utils_read_bool( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, TRUE, FALSE );
+	value = na_gconf_utils_read_bool( BASE_IPREFS_GET_INTERFACE( instance )->private->client, path, TRUE, FALSE );
 
 	g_free( path );
 	return( value );
@@ -605,13 +603,13 @@ read_str( BaseWindow *window, const gchar *key )
 }
 
 static void
-write_bool( BaseWindow *window, const gchar *name, gboolean value )
+write_bool( BaseIPrefs *instance, const gchar *name, gboolean value )
 {
 	gchar *path;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
 
-	na_gconf_utils_write_bool( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, value, NULL );
+	na_gconf_utils_write_bool( BASE_IPREFS_GET_INTERFACE( instance )->private->client, path, value, NULL );
 
 	g_free( path );
 }

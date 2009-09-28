@@ -50,7 +50,7 @@ gchar *na_object_id_get_id( const NAObjectId *object );
 gchar *na_object_id_get_label( const NAObjectId *object );
 
 void   na_object_id_set_id( NAObjectId *object, const gchar *id );
-void   na_object_id_set_for_copy( NAObjectId *object );
+void   na_object_id_set_for_copy( NAObjectId *object, gboolean relabel );
 void   na_object_id_set_new_id( NAObjectId *object );
 void   na_object_id_set_label( NAObjectId *object, const gchar *label );
 
