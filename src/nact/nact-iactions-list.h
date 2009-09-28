@@ -111,6 +111,7 @@ void      nact_iactions_list_dispose( NactIActionsList *instance );
 
 void      nact_iactions_list_collapse_all( NactIActionsList *instance );
 void      nact_iactions_list_delete( NactIActionsList *instance, GList *items );
+void      nact_iactions_list_display_order_change( NactIActionsList *instance, gint order_mode );
 void      nact_iactions_list_expand_all( NactIActionsList *instance );
 void      nact_iactions_list_fill( NactIActionsList *instance, GList *items );
 NAObject *nact_iactions_list_get_item( NactIActionsList *instance, const gchar *uuid );

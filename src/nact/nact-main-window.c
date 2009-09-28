@@ -1175,4 +1175,6 @@ ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order
 	g_debug( "%s: instance=%p, order_mode=%d", thisfn, ( void * ) instance, order_mode );
 	g_assert( NACT_IS_MAIN_WINDOW( instance ));
 	/*self = NACT_MAIN_WINDOW( instance );*/
+
+	nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( instance ), order_mode );
 }

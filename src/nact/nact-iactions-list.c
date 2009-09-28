@@ -465,9 +465,13 @@ nact_iactions_list_collapse_all( NactIActionsList *instance )
 	GtkTreeView *treeview;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
-	treeview = get_actions_list_treeview( instance );
-	gtk_tree_view_collapse_all( treeview );
+	if( st_initialized && !st_finalized ){
+
+		treeview = get_actions_list_treeview( instance );
+		gtk_tree_view_collapse_all( treeview );
+	}
 }
 
 /**
@@ -515,6 +519,29 @@ nact_iactions_list_delete( NactIActionsList *instance, GList *items )
 }
 
 /**
+ * nact_iactions_list_display_order_change:
+ * @instance: this #NactIActionsList implementation.
+ * @order_mode: the new order mode.
+ *
+ * Setup the new order mode.
+ */
+void
+nact_iactions_list_display_order_change( NactIActionsList *instance, gint order_mode )
+{
+	GtkTreeView *treeview;
+	NactTreeModel *model;
+
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+		nact_tree_model_display_order_change( model, order_mode );
+	}
+}
+
+/**
  * nact_iactions_list_expand_all:
  * @instance: this #NactIActionsList implementation.
  *
@@ -527,9 +554,13 @@ nact_iactions_list_expand_all( NactIActionsList *instance )
 	GtkTreeView *treeview;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
-	treeview = get_actions_list_treeview( instance );
-	gtk_tree_view_expand_all( treeview );
+	if( st_initialized && !st_finalized ){
+
+		treeview = get_actions_list_treeview( instance );
+		gtk_tree_view_expand_all( treeview );
+	}
 }
 
 /**

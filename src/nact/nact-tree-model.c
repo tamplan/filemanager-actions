@@ -90,6 +90,8 @@ struct NactTreeModelPrivate {
 #define XDS_ATOM						gdk_atom_intern( "XdndDirectSave0", FALSE )
 #define XDS_FILENAME					"xds.txt"
 
+#define TREE_MODEL_ORDER_MODE			"nact-tree-model-order-mode"
+
 enum {
 	NACT_XCHANGE_FORMAT_NACT = 0,
 	NACT_XCHANGE_FORMAT_XDS,
@@ -192,7 +194,7 @@ static void           on_drag_end( GtkWidget *widget, GdkDragContext *context, B
 /*static gboolean       on_drag_drop( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, BaseWindow *window );
 static void           on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, GtkSelectionData *data, guint info, guint time, BaseWindow *window );*/
 
-static gint           sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, BaseWindow *window );
+static gint           sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data );
 static gboolean       filter_visible( GtkTreeModel *store, GtkTreeIter *iter, NactTreeModel *model );
 static char          *get_xds_atom_value( GdkDragContext *context );
 
@@ -366,7 +368,9 @@ tree_model_new( BaseWindow *window, GtkTreeView *treeview )
 	static const gchar *thisfn = "nact_tree_model_new";
 	GtkTreeStore *ts_model;
 	NactTreeModel *model;
-	/*gboolean       alpha_order;*/
+	NactApplication *application;
+	NAPivot *pivot;
+	gint order_mode;
 
 	g_debug( "%s: window=%p, treeview=%p", thisfn, ( void * ) window, ( void * ) treeview );
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
@@ -376,24 +380,19 @@ tree_model_new( BaseWindow *window, GtkTreeView *treeview )
 	ts_model = gtk_tree_store_new(
 			IACTIONS_LIST_N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, NA_OBJECT_TYPE );
 
-	gtk_tree_sortable_set_default_sort_func(
-			GTK_TREE_SORTABLE( ts_model ),
-	        ( GtkTreeIterCompareFunc ) sort_actions_list, window, NULL );
-
-	/*alpha_order = na_iprefs_get_alphabetical_order( NA_IPREFS( window ));
-
-	if( alpha_order ){
-		gtk_tree_sortable_set_sort_column_id(
-				GTK_TREE_SORTABLE( ts_model ),
-				IACTIONS_LIST_LABEL_COLUMN, GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID );
-	}*/
-
 	/* create the filter model
 	 */
 	model = g_object_new( NACT_TREE_MODEL_TYPE, "child-model", ts_model, NULL );
 
 	gtk_tree_model_filter_set_visible_func(
 			GTK_TREE_MODEL_FILTER( model ), ( GtkTreeModelFilterVisibleFunc ) filter_visible, model, NULL );
+
+	/* initialize the sortable interface
+	 */
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	pivot = nact_application_get_pivot( application );
+	order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
+	nact_tree_model_display_order_change( model, order_mode );
 
 	model->private->window = window;
 	model->private->treeview = treeview;
@@ -513,6 +512,10 @@ nact_tree_model_dispose( NactTreeModel *model )
 
 /**
  * nact_tree_model_display:
+ * @model: this #NactTreeModel instance.
+ * @object: the object whose display is to be refreshed.
+ *
+ * Refresh the display of a #NAObject.
  */
 void
 nact_tree_model_display( NactTreeModel *model, NAObject *object )
@@ -539,6 +542,65 @@ nact_tree_model_display( NactTreeModel *model, NAObject *object )
 		}
 
 		/*gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));*/
+	}
+}
+
+/**
+ * Setup the new order mode.
+ */
+void
+nact_tree_model_display_order_change( NactTreeModel *model, gint order_mode )
+{
+	GtkTreeStore *store;
+
+	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+
+	if( !model->private->dispose_has_run ){
+
+		store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
+		g_object_set_data( G_OBJECT( store ), TREE_MODEL_ORDER_MODE, GINT_TO_POINTER( order_mode ));
+
+		switch( order_mode ){
+
+			case PREFS_ORDER_ALPHA_ASCENDING:
+
+				gtk_tree_sortable_set_sort_column_id(
+						GTK_TREE_SORTABLE( store ),
+						IACTIONS_LIST_LABEL_COLUMN,
+						GTK_SORT_ASCENDING );
+
+				gtk_tree_sortable_set_sort_func(
+						GTK_TREE_SORTABLE( store ),
+						IACTIONS_LIST_LABEL_COLUMN,
+						( GtkTreeIterCompareFunc ) sort_actions_list,
+						NULL,
+						NULL );
+				break;
+
+			case PREFS_ORDER_ALPHA_DESCENDING:
+
+				gtk_tree_sortable_set_sort_column_id(
+						GTK_TREE_SORTABLE( store ),
+						IACTIONS_LIST_LABEL_COLUMN,
+						GTK_SORT_DESCENDING );
+
+				gtk_tree_sortable_set_sort_func(
+						GTK_TREE_SORTABLE( store ),
+						IACTIONS_LIST_LABEL_COLUMN,
+						( GtkTreeIterCompareFunc ) sort_actions_list,
+						NULL,
+						NULL );
+				break;
+
+			case PREFS_ORDER_MANUAL:
+			default:
+
+				gtk_tree_sortable_set_sort_column_id(
+						GTK_TREE_SORTABLE( store ),
+						GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
+						0 );
+				break;
+		}
 	}
 }
 
@@ -1452,41 +1514,23 @@ on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_context, gint x, 
 }*/
 
 static gint
-sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, BaseWindow *window )
+sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data )
 {
 	/*static const gchar *thisfn = "nact_tree_model_sort_actions_list";*/
 	NAObjectId *obj_a, *obj_b;
-	NactApplication *application;
-	NAPivot *pivot;
-	gint order_mode;
-	gint ret = 0;
+	gint ret;
 
 	/*g_debug( "%s: model=%p, a=%p, b=%p, window=%p", thisfn, ( void * ) model, ( void * ) a, ( void * ) b, ( void * ) window );*/
-
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	pivot = nact_application_get_pivot( application );
-	order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
 
 	gtk_tree_model_get( model, a, IACTIONS_LIST_NAOBJECT_COLUMN, &obj_a, -1 );
 	gtk_tree_model_get( model, b, IACTIONS_LIST_NAOBJECT_COLUMN, &obj_b, -1 );
 
-	switch( order_mode ){
-		case PREFS_ORDER_ALPHA_ASCENDING:
-			ret = na_pivot_sort_alpha_asc( obj_a, obj_b );
-			break;
-
-		case PREFS_ORDER_ALPHA_DESCENDING:
-			ret = na_pivot_sort_alpha_desc( obj_a, obj_b );
-			break;
-
-		case PREFS_ORDER_MANUAL:
-		default:
-			break;
-	}
+	ret = na_pivot_sort_alpha_asc( obj_a, obj_b );
 
 	g_object_unref( obj_b );
 	g_object_unref( obj_a );
 
+	/*g_debug( "%s: ret=%d", thisfn, ret );*/
 	return( ret );
 }
 

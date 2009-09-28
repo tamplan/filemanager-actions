@@ -54,7 +54,8 @@
 
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nact-iactions-list.h
-	(nact_iactions_list_collapse_all, nact_iactions_list_expand_all):
+	(nact_iactions_list_collapse_all, nact_iactions_list_expand_all,
+	nact_iactions_list_display_order_change):
 	New functions.
 	Remove useless nact-iactions-list-item-updated signal.
 	Connect instead to nact-tab-updatable-item-updated signal.
