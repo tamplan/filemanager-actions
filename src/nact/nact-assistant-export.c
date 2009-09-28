@@ -94,7 +94,6 @@ static BaseAssistantClass *st_parent_class = NULL;
 static GType           register_type( void );
 static void            class_init( NactAssistantExportClass *klass );
 static void            iactions_list_iface_init( NactIActionsListInterface *iface );
-static void            iprefs_iface_init( NAIPrefsInterface *iface );
 static void            instance_init( GTypeInstance *instance, gpointer klass );
 static void            instance_dispose( GObject *application );
 static void            instance_finalize( GObject *application );
@@ -179,19 +178,11 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo iprefs_iface_info = {
-		( GInterfaceInitFunc ) iprefs_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( BASE_ASSISTANT_TYPE, "NactAssistantExport", &info, 0 );
 
 	g_type_add_interface_static( type, NACT_IACTIONS_LIST_TYPE, &iactions_list_iface_info );
-
-	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_iface_info );
 
 	return( type );
 }
@@ -233,14 +224,6 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 
 	iface->selection_changed = on_iactions_list_selection_changed;
 	iface->get_treeview_name = on_iactions_list_get_treeview_name;
-}
-
-static void
-iprefs_iface_init( NAIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "nact_assistant_export_iprefs_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void

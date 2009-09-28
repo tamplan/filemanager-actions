@@ -57,7 +57,6 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactPreferencesEditorClass *klass );
-static void     iprefs_na_iface_init( NAIPrefsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
@@ -68,10 +67,6 @@ static gchar   *base_get_iprefs_window_id( BaseWindow *window );
 static gchar   *base_get_dialog_name( BaseWindow *window );
 static void     on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data );
-/*static void     setup_buttons( NactPreferencesEditor *dialog, gboolean is_modified );
-static void     on_modified_field( NactWindow *dialog );*/
-static void     on_sort_alpha_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     on_add_about_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void     on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     save_preferences( NactPreferencesEditor *editor );
@@ -108,17 +103,9 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo iprefs_na_iface_info = {
-		( GInterfaceInitFunc ) iprefs_na_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( BASE_DIALOG_TYPE, "NactPreferencesEditor", &info, 0 );
-
-	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_na_iface_info );
 
 	return( type );
 }
@@ -144,14 +131,6 @@ class_init( NactPreferencesEditorClass *klass )
 	base_class->dialog_response = base_dialog_response;
 	base_class->get_toplevel_name = base_get_dialog_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
-}
-
-static void
-iprefs_na_iface_init( NAIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "nact_preferences_editor_iprefs_na_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void
@@ -284,29 +263,38 @@ static void
 on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_runtime_init_dialog";
-	gboolean sort_alpha, add_about_item;
+	NactApplication *application;
+	NAPivot *pivot;
+	gint order_mode;
+	gboolean add_about_item;
 	gboolean relabel;
 	GtkWidget *button;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
-	sort_alpha = na_iprefs_is_alphabetical_order( NA_IPREFS( editor ));
-	button = base_window_get_widget( BASE_WINDOW( editor ), "SortAlphabeticalButton" );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), sort_alpha );
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ),
-			"SortAlphabeticalButton",
-			"toggled",
-			G_CALLBACK( on_sort_alpha_toggled ));
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+	pivot = nact_application_get_pivot( application );
 
-	add_about_item = na_iprefs_should_add_about_item( NA_IPREFS( editor ));
+	order_mode = na_iprefs_get_alphabetical_order( NA_IPREFS( pivot ));
+	switch( order_mode ){
+		case PREFS_ORDER_ALPHA_ASCENDING:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
+			break;
+
+		case PREFS_ORDER_ALPHA_DESCENDING:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaDescButton" );
+			break;
+
+		case PREFS_ORDER_MANUAL:
+		default:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderManualButton" );
+			break;
+	}
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
+
+	add_about_item = na_iprefs_should_add_about_item( NA_IPREFS( pivot ));
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), add_about_item );
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ),
-			"AddAboutButton",
-			"toggled",
-			G_CALLBACK( on_add_about_toggled ));
 
 	base_window_signal_connect_by_name(
 			BASE_WINDOW( editor ),
@@ -333,58 +321,6 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 }
 
-/*
- * rationale:
- * - while the preferences are not modified, only the cancel
- *   button is activated (showed as close)
- * - when at least one preference has been modified, we have a OK and a
- *   cancel buttons
- */
-/*static void
-setup_buttons( NactPreferencesEditor *editor, gboolean is_modified )
-{
-	GtkWidget *cancel_stock = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
-	GtkWidget *close_stock = gtk_button_new_from_stock( GTK_STOCK_CLOSE );
-
-	GtkWidget *cancel_button = base_window_get_widget( BASE_WINDOW( editor ), "CancelButton" );
-	gtk_button_set_label( GTK_BUTTON( cancel_button ), is_modified ? _( "_Cancel" ) : _( "_Close" ));
-	gtk_button_set_image( GTK_BUTTON( cancel_button ), is_modified ? gtk_button_get_image( GTK_BUTTON( cancel_stock )) : gtk_button_get_image( GTK_BUTTON( close_stock )));
-
-	gtk_widget_destroy( close_stock );
-	gtk_widget_destroy( cancel_stock );
-
-	GtkWidget *ok_button = base_window_get_widget( BASE_WINDOW( editor ), "OKButton" );
-	gtk_widget_set_sensitive( ok_button, is_modified );
-}*/
-
-/*static void
-on_modified_field( NactWindow *window )
-{
-	static const gchar *thisfn = "nact_preferences_editor_on_modified_field";
-
-	g_assert( NACT_IS_PREFERENCES_EDITOR( window ));
-	NactPreferencesEditor *editor = ( NACT_PREFERENCES_EDITOR( window ));
-
-	gboolean is_modified = is_edited_modified( editor );
-	setup_dialog_title( editor, is_modified );
-
-	gboolean can_save = is_modified &&
-		(( editor->private->show_profile_item && nact_iprofile_item_has_label( window )) ||
-				nact_imenu_item_has_label( window ));
-
-	setup_buttons( editor, can_save );
-}*/
-
-static void
-on_sort_alpha_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
-{
-}
-
-static void
-on_add_about_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
-{
-}
-
 static void
 on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
@@ -404,17 +340,36 @@ on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor )
 static void
 save_preferences( NactPreferencesEditor *editor )
 {
+	NactApplication *application;
+	NAPivot *pivot;
 	GtkWidget *button;
+	gint order_mode;
 	gboolean enabled;
 	gboolean relabel;
 
-	button = base_window_get_widget( BASE_WINDOW( editor ), "SortAlphabeticalButton" );
-	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	na_iprefs_set_alphabetical_order( NA_IPREFS( editor ), enabled );
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+	pivot = nact_application_get_pivot( application );
+
+	order_mode = PREFS_ORDER_ALPHA_ASCENDING;
+	button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
+	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+		order_mode = PREFS_ORDER_ALPHA_ASCENDING;
+	} else {
+		button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaDescButton" );
+		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+			order_mode = PREFS_ORDER_ALPHA_DESCENDING;
+		} else {
+			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderManualButton" );
+			if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+				order_mode = PREFS_ORDER_MANUAL;
+			}
+		}
+	}
+	na_iprefs_set_alphabetical_order( NA_IPREFS( pivot ), order_mode );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	na_iprefs_set_add_about_item( NA_IPREFS( editor ), enabled );
+	na_iprefs_set_add_about_item( NA_IPREFS( pivot ), enabled );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));

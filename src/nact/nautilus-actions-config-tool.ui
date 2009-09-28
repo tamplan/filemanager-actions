@@ -1014,10 +1014,10 @@ Defining several profiles lets you have several commands, each applying with a d
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <property name="use_preview_label">False</property>
-            <property name="preview_widget_active">False</property>
             <property name="select_multiple">True</property>
             <property name="local_only">False</property>
+            <property name="use_preview_label">False</property>
+            <property name="preview_widget_active">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -1616,62 +1616,141 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
               <object class="GtkVBox" id="vbox25">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkFrame" id="frame1">
+                  <object class="GtkVBox" id="vbox28">
                     <property name="visible">True</property>
-                    <property name="border_width">6</property>
-                    <property name="label_xalign">0</property>
-                    <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkAlignment" id="alignment1">
+                      <object class="GtkFrame" id="frame3">
                         <property name="visible">True</property>
-                        <property name="left_padding">12</property>
+                        <property name="border_width">6</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">in</property>
                         <child>
-                          <object class="GtkVBox" id="vbox17">
+                          <object class="GtkAlignment" id="alignment3">
                             <property name="visible">True</property>
-                            <property name="border_width">6</property>
+                            <property name="left_padding">12</property>
                             <child>
-                              <object class="GtkCheckButton" id="SortAlphabeticalButton">
-                                <property name="label" translatable="yes">_Sort actions in alphabetical order</property>
+                              <object class="GtkVBox" id="vbox30">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="tooltip_text" translatable="yes">When checked, the actions will be forced to be displayed in ascending alphabetical order of their label. They cannot be reordered in the user interface.</property>
-                                <property name="use_underline">True</property>
-                                <property name="draw_indicator">True</property>
+                                <property name="border_width">6</property>
+                                <child>
+                                  <object class="GtkRadioButton" id="OrderAlphaAscButton">
+                                    <property name="label" translatable="yes">_Ascending alphabetical order</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">The actions will be sorted in ascending alphabetical order.</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="OrderAlphaDescButton">
+                                    <property name="label" translatable="yes">_Descending alphabetical order</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">The actions will be sorted in descending alphabetical order.</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">OrderAlphaAscButton</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="OrderManualButton">
+                                    <property name="label" translatable="yes">_Manual order</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">The actions will not be automatically sorted. Instead, the user is free to order them manually.</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">OrderAlphaAscButton</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
                               </object>
-                              <packing>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="AddAboutButton">
-                                <property name="label" translatable="yes">Add an '_About Nautilus Actions' item in the Nautilus context menu</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="tooltip_text" translatable="yes">When checked and a root submenu is defined, an 'About Nautilus Actions' item will be added at the end of the root submenu in the Nautilus context menu.</property>
-                                <property name="use_underline">True</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label1">
+                            <property name="visible">True</property>
+                            <property name="xpad">4</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Items ordering&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
                       </object>
-                    </child>
-                    <child type="label">
-                      <object class="GtkLabel" id="label41">
-                        <property name="visible">True</property>
-                        <property name="xpad">5</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Nautilus menu layout&lt;/b&gt;</property>
-                        <property name="use_markup">True</property>
-                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="vbox29">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkFrame" id="frame1">
+                        <property name="visible">True</property>
+                        <property name="border_width">6</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkAlignment" id="alignment1">
+                            <property name="visible">True</property>
+                            <property name="left_padding">12</property>
+                            <child>
+                              <object class="GtkVBox" id="vbox17">
+                                <property name="visible">True</property>
+                                <property name="border_width">6</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="AddAboutButton">
+                                    <property name="label" translatable="yes">Add an '_About Nautilus Actions' item in the Nautilus context menu</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label41">
+                            <property name="visible">True</property>
+                            <property name="xpad">4</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Nautilus menu layout&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </object>
@@ -1753,7 +1832,7 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                     <child type="label">
                       <object class="GtkLabel" id="label42">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">&lt;b&gt; Relabeling items when pasted or duplicated &lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Relabeling items when pasted or duplicated&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
                     </child>

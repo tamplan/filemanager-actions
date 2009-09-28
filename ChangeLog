@@ -17,17 +17,26 @@
 	* src/common/na-iio-provider.c (na_iio_provider_get_items_tree):
 	Dump the hierarchy tree before the alphabetical sort.
 	Implement the new actions sorting semantic when loading the tree.
+	Move the sorting functions to NAPivot class.
+
+	* src/common/na-iprefs.c:
+	* src/common/na-iprefs.h (na_iprefs_is_alphabetical_order):
+	Renamed as na_iprefs_get_alphabetical_order().
+	Move NAIPrefs data to instance object.
+
+	* src/common/na-pivot.c:
+	* src/common/na-pivot.h
+	(na_pivot_sort_alpha_asc, na_pivot_sort_alpha_desc): New functions.
 
 	* src/nact/base-iprefs.c:
 	* src/nact/base-iprefs.c (base_iprefs_get_bool,
 	base_iprefs_set_bool):
 	Replace the BaseWindow argument by a BaseIPrefs	one.
 	Define three new UI preferences.
-	(na_iprefs_is_alphabetical_order):
-	Renamed as na_iprefs_get_alphabetical_order().
 
 	* src/nact/nact-assistant-export.c:
 	Implements IActionsList::get_treeview_name virtual function.
+	Remove useless NAIPrefs implementation.
 
 	* src/nact/nact-clipboard.c:
 	* src/nact/nact-main-window.c:
@@ -37,6 +46,7 @@
 	No more check for action existancy in NAPivot.
 	No more forward nact-tab-updatable-item-updated signal.
 	Implements IActionsList::get_treeview_name virtual function.
+	Remove useless NAIPrefs implementation.
 
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nact-iactions-list.h
@@ -52,7 +62,12 @@
 
 	* src/nact/nact-preferences-editor.c:
 	Edit the new UI preferences.
-	Do not implement BaseIPrefs interface.
+	Do not implement BaseIPrefs nor NAIPrefs interfaces.
+	Implement new order mode semantic.
+
+	* src/nact/nact-tree-model.c (sort_actions_list):
+	Implement new order mode semantic.
+	Use new NAPivot sort functions.
 
 	* src/nact/nautilus-actions-config-tool.actions:
 	Define new View menu.

@@ -75,6 +75,7 @@
  */
 
 #include "na-object-class.h"
+#include "na-object-id-class.h"
 #include "na-ipivot-consumer.h"
 
 G_BEGIN_DECLS
@@ -124,6 +125,9 @@ void      na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *co
 
 gboolean  na_pivot_get_automatic_reload( const NAPivot *pivot );
 void      na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
+
+gint      na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b );
+gint      na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
 
 /* data passed from the storage subsystem when an action is changed
  */

@@ -635,6 +635,53 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 	}
 }
 
+/**
+ * na_pivot_sort_alpha_asc:
+ * @a: first #NAObjectId.
+ * @b: second #NAObjectId.
+ *
+ * Sort the objects in alphabetical ascending order of their label.
+ *
+ * Returns:
+ * -1 if @a must be sorted before @b,
+ *  0 if @a and @b are equal from the local point of view,
+ *  1 if @a must be sorted after @b.
+ */
+gint
+na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b )
+{
+	gchar *label_a, *label_b;
+	gint compare;
+
+	label_a = na_object_get_label( a );
+	label_b = na_object_get_label( b );
+
+	compare = g_utf8_collate( label_a, label_b );
+
+	g_free( label_b );
+	g_free( label_a );
+
+	return( compare );
+}
+
+/**
+ * na_pivot_sort_alpha_desc:
+ * @a: first #NAObjectId.
+ * @b: second #NAObjectId.
+ *
+ * Sort the objects in alphabetical descending order of their label.
+ *
+ * Returns:
+ * -1 if @a must be sorted before @b,
+ *  0 if @a and @b are equal from the local point of view,
+ *  1 if @a must be sorted after @b.
+ */
+gint
+na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
+{
+	return( -1 * na_pivot_sort_alpha_asc( a, b ));
+}
+
 static NAObject *
 get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid )
 {

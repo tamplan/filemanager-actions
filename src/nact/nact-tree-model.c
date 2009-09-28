@@ -42,6 +42,7 @@
 #include <common/na-utils.h>
 
 #include "egg-tree-multi-dnd.h"
+#include "nact-application.h"
 #include "nact-iactions-list.h"
 #include "nact-clipboard.h"
 #include "nact-tree-model.h"
@@ -1453,19 +1454,38 @@ on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_context, gint x, 
 static gint
 sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_tree_model_sort_actions_list";
-	gchar *labela, *labelb;
-	gint ret;
+	/*static const gchar *thisfn = "nact_tree_model_sort_actions_list";*/
+	NAObjectId *obj_a, *obj_b;
+	NactApplication *application;
+	NAPivot *pivot;
+	gint order_mode;
+	gint ret = 0;
 
-	g_debug( "%s: model=%p, a=%p, b=%p, window=%p", thisfn, ( void * ) model, ( void * ) a, ( void * ) b, ( void * ) window );
+	/*g_debug( "%s: model=%p, a=%p, b=%p, window=%p", thisfn, ( void * ) model, ( void * ) a, ( void * ) b, ( void * ) window );*/
 
-	gtk_tree_model_get( model, a, IACTIONS_LIST_LABEL_COLUMN, &labela, -1 );
-	gtk_tree_model_get( model, b, IACTIONS_LIST_LABEL_COLUMN, &labelb, -1 );
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	pivot = nact_application_get_pivot( application );
+	order_mode = na_iprefs_get_alphabetical_order( NA_IPREFS( pivot ));
 
-	ret = g_utf8_collate( labela, labelb );
+	gtk_tree_model_get( model, a, IACTIONS_LIST_NAOBJECT_COLUMN, &obj_a, -1 );
+	gtk_tree_model_get( model, b, IACTIONS_LIST_NAOBJECT_COLUMN, &obj_b, -1 );
 
-	g_free( labela );
-	g_free( labelb );
+	switch( order_mode ){
+		case PREFS_ORDER_ALPHA_ASCENDING:
+			ret = na_pivot_sort_alpha_asc( obj_a, obj_b );
+			break;
+
+		case PREFS_ORDER_ALPHA_DESCENDING:
+			ret = na_pivot_sort_alpha_desc( obj_a, obj_b );
+			break;
+
+		case PREFS_ORDER_MANUAL:
+		default:
+			break;
+	}
+
+	g_object_unref( obj_b );
+	g_object_unref( obj_a );
 
 	return( ret );
 }

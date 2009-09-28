@@ -37,8 +37,9 @@
  * @include: common/na-iprefs.h
  *
  * This interface should only be implemented by #NAPivot. This is
- * because the interface stores in its class private area some data
- * only relevant for one client (GConfClient, GConf monitors, etc.).
+ * because the interface stores as an implementor structure some data
+ * which are only relevant for one client (GConfClient, GConf monitors,
+ * etc.).
  *
  * Though all modules may use the public functions na_iprefs_xxx(),
  * only #NAPivot will receive update notifications, taking itself care

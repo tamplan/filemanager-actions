@@ -39,22 +39,35 @@
 /* private interface data
  */
 struct NAIPrefsInterfacePrivate {
-	GConfClient *client;
+	void *empty;						/* so that gcc -pedantic is happy */
 };
+
+/* private data initialized the first time an instance calls a function
+ * of the public api
+ */
+typedef struct {
+	GConfClient *client;
+}
+	NAIPrefsPrivate;
+
+#define NA_IPREFS_PRIVATE_DATA			"na-iprefs-private-data"
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
-static GType    register_type( void );
-static void     interface_base_init( NAIPrefsInterface *klass );
-static void     interface_base_finalize( NAIPrefsInterface *klass );
+static GType        register_type( void );
+static void         interface_base_init( NAIPrefsInterface *klass );
+static void         interface_base_finalize( NAIPrefsInterface *klass );
 
-static gboolean read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value );
-static gint     read_int( NAIPrefs *instance, const gchar *name, gint default_value );
-static GSList  *read_string_list( NAIPrefs *instance, const gchar *name );
-static void     write_bool( NAIPrefs *instance, const gchar *name, gboolean value );
-static void     write_int( NAIPrefs *instance, const gchar *name, gint value );
-static void     write_string_list( NAIPrefs *instance, const gchar *name, GSList *list );
+static gboolean     read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value );
+static gint         read_int( NAIPrefs *instance, const gchar *name, gint default_value );
+static GSList      *read_string_list( NAIPrefs *instance, const gchar *name );
+static void         write_bool( NAIPrefs *instance, const gchar *name, gboolean value );
+static void         write_int( NAIPrefs *instance, const gchar *name, gint value );
+static void         write_string_list( NAIPrefs *instance, const gchar *name, GSList *list );
+
+static void         setup_private_data( NAIPrefs *instance );
+static GConfClient *get_gconf_client( NAIPrefs *instance );
 
 GType
 na_iprefs_get_type( void )
@@ -106,8 +119,6 @@ interface_base_init( NAIPrefsInterface *klass )
 
 		klass->private = g_new0( NAIPrefsInterfacePrivate, 1 );
 
-		klass->private->client = gconf_client_get_default();
-
 		st_initialized = TRUE;
 	}
 }
@@ -144,6 +155,7 @@ na_iprefs_get_level_zero_items( NAIPrefs *instance )
 	g_return_val_if_fail( NA_IS_IPREFS( instance ), NULL );
 
 	if( st_initialized && !st_finalized ){
+		setup_private_data( instance );
 		level_zero = read_string_list( instance, PREFS_LEVEL_ZERO_ITEMS );
 	}
 
@@ -163,6 +175,7 @@ na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
 	if( st_initialized && !st_finalized ){
+		setup_private_data( instance );
 		write_string_list( instance, PREFS_LEVEL_ZERO_ITEMS, order );
 	}
 }
@@ -187,6 +200,7 @@ na_iprefs_get_alphabetical_order( NAIPrefs *instance )
 	g_return_val_if_fail( NA_IS_IPREFS( instance ), PREFS_ORDER_ALPHA_ASCENDING );
 
 	if( st_initialized && !st_finalized ){
+		setup_private_data( instance );
 		alpha_order = read_int( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, PREFS_ORDER_ALPHA_ASCENDING );
 	}
 
@@ -207,6 +221,7 @@ na_iprefs_set_alphabetical_order( NAIPrefs *instance, gint mode )
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
 	if( st_initialized && !st_finalized ){
+		setup_private_data( instance );
 		write_int( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, mode );
 	}
 }
@@ -232,6 +247,7 @@ na_iprefs_should_add_about_item( NAIPrefs *instance )
 	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
 
 	if( st_initialized && !st_finalized ){
+		setup_private_data( instance );
 		about = read_bool( instance, PREFS_ADD_ABOUT_ITEM, TRUE );
 	}
 
@@ -251,6 +267,7 @@ na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled )
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
 	if( st_initialized && !st_finalized ){
+		setup_private_data( instance );
 		write_bool( instance, PREFS_ADD_ABOUT_ITEM, enabled );
 	}
 }
@@ -262,7 +279,7 @@ read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value )
 	gboolean ret;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-	ret = na_gconf_utils_read_bool( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, TRUE, default_value );
+	ret = na_gconf_utils_read_bool( get_gconf_client( instance ), path, TRUE, default_value );
 	g_free( path );
 
 	return( ret );
@@ -275,7 +292,7 @@ read_int( NAIPrefs *instance, const gchar *name, gint default_value )
 	gint ret;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-	ret = na_gconf_utils_read_int( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, TRUE, default_value );
+	ret = na_gconf_utils_read_int( get_gconf_client( instance ), path, TRUE, default_value );
 	g_free( path );
 
 	return( ret );
@@ -288,7 +305,7 @@ read_string_list( NAIPrefs *instance, const gchar *name )
 	GSList *list;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-	list = na_gconf_utils_read_string_list( NA_IPREFS_GET_INTERFACE( instance )->private->client, path );
+	list = na_gconf_utils_read_string_list( get_gconf_client( instance ), path );
 	g_free( path );
 
 	return( list );
@@ -300,7 +317,7 @@ write_bool( NAIPrefs *instance, const gchar *name, gboolean value )
 	gchar *path;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_bool( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, value, NULL );
+	na_gconf_utils_write_bool( get_gconf_client( instance ), path, value, NULL );
 	g_free( path );
 }
 
@@ -310,7 +327,7 @@ write_int( NAIPrefs *instance, const gchar *name, gint value )
 	gchar *path;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_int( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, value, NULL );
+	na_gconf_utils_write_int( get_gconf_client( instance ), path, value, NULL );
 	g_free( path );
 }
 
@@ -320,6 +337,30 @@ write_string_list( NAIPrefs *instance, const gchar *name, GSList *list )
 	gchar *path;
 
 	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_string_list( NA_IPREFS_GET_INTERFACE( instance )->private->client, path, list, NULL );
+	na_gconf_utils_write_string_list( get_gconf_client( instance ), path, list, NULL );
 	g_free( path );
+}
+
+static void
+setup_private_data( NAIPrefs *instance )
+{
+	NAIPrefsPrivate *ipp;
+
+	ipp = ( NAIPrefsPrivate * ) g_object_get_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA );
+	if( !ipp ){
+		ipp = g_new0( NAIPrefsPrivate, 1 );
+		ipp->client = gconf_client_get_default();
+		g_object_set_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA, ipp );
+	}
+}
+
+static GConfClient *
+get_gconf_client( NAIPrefs *instance )
+{
+	NAIPrefsPrivate *ipp;
+
+	ipp = ( NAIPrefsPrivate * ) g_object_get_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA );
+	g_return_val_if_fail( ipp, NULL );
+
+	return( ipp->client );
 }

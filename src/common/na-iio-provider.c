@@ -62,8 +62,6 @@ static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
 static gboolean do_is_writable( const NAIIOProvider *instance, const NAObject *item );
 
 static GList   *sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn );
-static gint     compare_label_alpha_asc_fn( const NAObjectId *a, const NAObjectId *b );
-static gint     compare_label_alpha_desc_fn( const NAObjectId *a, const NAObjectId *b );
 
 /**
  * Registers the GType of this interface.
@@ -179,19 +177,22 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 		na_utils_free_string_list( level_zero );
 		na_object_free_items( merged );
 
-		g_debug( "%s: tree before alphabetical reordering", thisfn );
+		g_debug( "%s: tree before alphabetical reordering (if any)", thisfn );
 		na_object_dump_tree( hierarchy );
 		g_debug( "%s: end of tree", thisfn );
 
 		order_mode = na_iprefs_get_alphabetical_order( NA_IPREFS( pivot ));
 		switch( order_mode ){
-			case PREFS_ORDER_ALPHA_DESCENDING:
-				hierarchy = sort_tree( pivot, hierarchy, compare_label_alpha_desc_fn );
+			case PREFS_ORDER_ALPHA_ASCENDING:
+				hierarchy = sort_tree( pivot, hierarchy, ( GCompareFunc ) na_pivot_sort_alpha_asc );
 				break;
 
-			case PREFS_ORDER_ALPHA_ASCENDING:
+			case PREFS_ORDER_ALPHA_DESCENDING:
+				hierarchy = sort_tree( pivot, hierarchy, ( GCompareFunc ) na_pivot_sort_alpha_desc );
+				break;
+
+			case PREFS_ORDER_MANUAL:
 			default:
-				hierarchy = sort_tree( pivot, hierarchy, compare_label_alpha_asc_fn );
 				break;
 		}
 	}
@@ -457,46 +458,23 @@ do_is_writable( const NAIIOProvider *instance, const NAObject *item )
 }
 
 static GList *
-sort_tree( const NAPivot *pivot, GList *tree )
+sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn )
 {
 	GList *sorted;
 	GList *items, *it;
 
-	sorted = g_list_sort( tree, ( GCompareFunc ) compare_label_alpha_fn );
+	sorted = g_list_sort( tree, fn );
 
 	/* recursively sort each level of the tree
 	 */
 	for( it = sorted ; it ; it = it->next ){
 		if( NA_IS_OBJECT_ITEM( it->data )){
 			items = na_object_get_items( it->data );
-			items = sort_tree( pivot, items );
+			items = sort_tree( pivot, items, fn );
 			na_object_set_items( it->data, items );
 			na_object_free_items( items );
 		}
 	}
 
 	return( sorted );
-}
-
-static gint
-compare_label_alpha_asc_fn( const NAObjectId *a, const NAObjectId *b )
-{
-	gchar *label_a, *label_b;
-	gint compare;
-
-	label_a = na_object_get_label( a );
-	label_b = na_object_get_label( b );
-
-	compare = g_utf8_collate( label_a, label_b );
-
-	g_free( label_b );
-	g_free( label_a );
-
-	return( compare );
-}
-
-static gint
-compare_label_alpha_desc_fn( const NAObjectId *a, const NAObjectId *b )
-{
-	return( -1 * compare_label_alpha_asc_fn( a, b ));
 }

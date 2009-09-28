@@ -67,7 +67,6 @@ static GType         st_actions_type = 0;
 static void              class_init( NautilusActionsClass *klass );
 static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
 static void              ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
-static void              iprefs_iface_init( NAIPrefsInterface *iface );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
 static void              instance_dispose( GObject *object );
 static void              instance_finalize( GObject *object );
@@ -116,12 +115,6 @@ nautilus_actions_register_type( GTypeModule *module )
 		NULL
 	};
 
-	static const GInterfaceInfo iprefs_iface_info = {
-		( GInterfaceInitFunc ) iprefs_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 	g_assert( st_actions_type == 0 );
 
@@ -130,8 +123,6 @@ nautilus_actions_register_type( GTypeModule *module )
 	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
 
 	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
-
-	g_type_module_add_interface( module, st_actions_type, NA_IPREFS_TYPE, &iprefs_iface_info );
 }
 
 static void
@@ -170,14 +161,6 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->on_actions_changed = actions_changed_handler;
-}
-
-static void
-iprefs_iface_init( NAIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "nautilus_actions_iprefs_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void
