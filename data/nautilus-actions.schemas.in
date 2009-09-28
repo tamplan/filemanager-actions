@@ -342,6 +342,39 @@ All schemes used by Nautilus can be used here.</long>
         <short>List of items at first level of the hierarchy</short>
         <long>UUID of the items at the first level of the hierarchy. If this key is not found or empty, then all found items are considered as a flat list.</long>
       </locale>
+      <default></default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/iprefs-relabel-menus</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether menus should be relabeled when pasted or duplicated</short>
+        <long>Whether menus should be relabeled when pasted or duplicated.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/iprefs-relabel-actions</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether actions should be relabeled when pasted or duplicated</short>
+        <long>Whether actions should be relabeled when pasted or duplicated.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/iprefs-relabel-profiles</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether profiles should be relabeled when pasted or duplicated</short>
+        <long>Whether profiles should be relabeled when pasted or duplicated.</long>
+      </locale>
       <default>true</default>
     </schema>
 

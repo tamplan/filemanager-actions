@@ -1,5 +1,8 @@
 2009-09-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/nautilus-actions.schemas.in:
+	Define a schema fot the three new preferences.
+
 	* src/common/na-object-api.h:
 	* src/common/na-object-id-fn.h:
 	* src/common/na-object-id.c (na_object_id_set_for_copy):
