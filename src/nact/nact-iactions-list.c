@@ -211,7 +211,7 @@ interface_base_init( NactIActionsListInterface *klass )
 		 * (see #on_treeview_selection_changed()).
 		 *
 		 * Note that IActionsList is itself connected to this signal,
-		 * thus converting the signal to an interface API
+		 * in order to convert the signal to an interface API
 		 * (see #on_iactions_list_selection_changed()).
 		 *
 		 * The main window is typically the only interested. It will
