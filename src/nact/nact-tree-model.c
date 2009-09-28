@@ -1465,7 +1465,7 @@ sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, BaseWind
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	pivot = nact_application_get_pivot( application );
-	order_mode = na_iprefs_get_alphabetical_order( NA_IPREFS( pivot ));
+	order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
 
 	gtk_tree_model_get( model, a, IACTIONS_LIST_NAOBJECT_COLUMN, &obj_a, -1 );
 	gtk_tree_model_get( model, b, IACTIONS_LIST_NAOBJECT_COLUMN, &obj_b, -1 );

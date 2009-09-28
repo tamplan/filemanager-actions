@@ -77,7 +77,10 @@ static NautilusMenuItem *create_menu_item( NAObjectAction *action, NAObjectProfi
 /*static NautilusMenuItem *create_sub_menu( NautilusMenu **menu );*/
 static void              add_about_item( NautilusMenu *menu );
 static void              execute_action( NautilusMenuItem *item, NAObjectProfile *profile );
+
 static void              actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data );
+static void              display_about_changed_handler( NAIPivotConsumer *instance, gboolean enabled );
+static void              display_order_changed_handler( NAIPivotConsumer *instance, gint order_mode );
 
 GType
 nautilus_actions_get_type( void )
@@ -161,6 +164,8 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->on_actions_changed = actions_changed_handler;
+	iface->on_display_about_changed = display_about_changed_handler;
+	iface->on_display_order_changed = display_order_changed_handler;
 }
 
 static void
@@ -480,7 +485,36 @@ actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data )
 	self = NAUTILUS_ACTIONS( instance );
 
 	if( !self->private->dispose_has_run ){
+		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
+	}
+}
 
+static void
+display_about_changed_handler( NAIPivotConsumer *instance, gboolean enabled )
+{
+	static const gchar *thisfn = "nautilus_actions_display_about_changed_handler";
+	NautilusActions *self;
+
+	g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	self = NAUTILUS_ACTIONS( instance );
+
+	if( !self->private->dispose_has_run ){
+		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
+	}
+}
+
+static void
+display_order_changed_handler( NAIPivotConsumer *instance, gint order_mode )
+{
+	static const gchar *thisfn = "nautilus_actions_display_order_changed_handler";
+	NautilusActions *self;
+
+	g_debug( "%s: instance=%p, order_mode=%d", thisfn, ( void * ) instance, order_mode );
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	self = NAUTILUS_ACTIONS( instance );
+
+	if( !self->private->dispose_has_run ){
 		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
 	}
 }

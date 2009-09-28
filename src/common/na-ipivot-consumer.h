@@ -75,25 +75,23 @@ typedef struct {
 	 * on_display_about_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
-	 * user_data: user data set when emitting the message. Currently,
-	 * not used.
+	 * @order_mode: the new order mode.
 	 *
 	 * This function is triggered each time the setting of the display
 	 * of an 'About' item in the Nautilus context menu is changed.
 	 */
-	void ( *on_display_about_changed )( NAIPivotConsumer *instance, gpointer user_data );
+	void ( *on_display_about_changed )( NAIPivotConsumer *instance, gint order_mode );
 
 	/**
 	 * on_display_order_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
-	 * user_data: user data set when emitting the message. Currently,
-	 * not used.
+	 * @enabled: whether the 'About' item should be enabled.
 	 *
 	 * This function is triggered each time the display order preference
 	 * is changed.
 	 */
-	void ( *on_display_order_changed )( NAIPivotConsumer *instance, gpointer user_data );
+	void ( *on_display_order_changed )( NAIPivotConsumer *instance, gboolean enabled );
 }
 	NAIPivotConsumerInterface;
 
@@ -102,8 +100,8 @@ GType na_ipivot_consumer_get_type( void );
 void  na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance );
 
 void  na_ipivot_consumer_notify_actions_changed( NAIPivotConsumer *instance );
-void  na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance );
-void  na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance, gint order_mode );
+void  na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance, gboolean enabled );
 
 G_END_DECLS
 

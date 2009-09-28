@@ -181,7 +181,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 		na_object_dump_tree( hierarchy );
 		g_debug( "%s: end of tree", thisfn );
 
-		order_mode = na_iprefs_get_alphabetical_order( NA_IPREFS( pivot ));
+		order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
 		switch( order_mode ){
 			case PREFS_ORDER_ALPHA_ASCENDING:
 				hierarchy = sort_tree( pivot, hierarchy, ( GCompareFunc ) na_pivot_sort_alpha_asc );

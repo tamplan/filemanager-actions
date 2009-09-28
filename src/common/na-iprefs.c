@@ -181,7 +181,7 @@ na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
 }
 
 /**
- * na_iprefs_get_alphabetical_order:
+ * na_iprefs_get_order_mode:
  * @instance: this #NAIPrefs interface instance.
  *
  * Returns: the order mode currently set.
@@ -193,7 +193,7 @@ na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
  * those defined in schemas.
  */
 gint
-na_iprefs_get_alphabetical_order( NAIPrefs *instance )
+na_iprefs_get_order_mode( NAIPrefs *instance )
 {
 	gint alpha_order = PREFS_ORDER_ALPHA_ASCENDING;
 
@@ -208,7 +208,7 @@ na_iprefs_get_alphabetical_order( NAIPrefs *instance )
 }
 
 /**
- * na_iprefs_set_alphabetical_order:
+ * na_iprefs_set_order_mode:
  * @instance: this #NAIPrefs interface instance.
  * @mode: the new value to be written.
  *
@@ -216,7 +216,7 @@ na_iprefs_get_alphabetical_order( NAIPrefs *instance )
  * preference system.
  */
 void
-na_iprefs_set_alphabetical_order( NAIPrefs *instance, gint mode )
+na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 {
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 

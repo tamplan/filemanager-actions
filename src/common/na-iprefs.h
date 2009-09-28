@@ -102,8 +102,8 @@ GType    na_iprefs_get_type( void );
 GSList  *na_iprefs_get_level_zero_items( NAIPrefs *instance );
 void     na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order );
 
-gint     na_iprefs_get_alphabetical_order( NAIPrefs *instance );
-void     na_iprefs_set_alphabetical_order( NAIPrefs *instance, gint mode );
+gint     na_iprefs_get_order_mode( NAIPrefs *instance );
+void     na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
 
 gboolean na_iprefs_should_add_about_item( NAIPrefs *instance );
 void     na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );

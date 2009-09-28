@@ -148,8 +148,8 @@ static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer 
 static gboolean confirm_for_giveup_from_menu( NactMainWindow *window );
 static gboolean confirm_for_giveup_from_pivot( NactMainWindow *window );
 static void     ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
-static void     ipivot_consumer_on_display_about_changed( NAIPivotConsumer *instance, gpointer user_data );
-static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data );
+static void     ipivot_consumer_on_display_about_changed( NAIPivotConsumer *instance, gboolean enabled );
+static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode );
 static void     reload( NactMainWindow *window );
 
 GType
@@ -1152,12 +1152,12 @@ reload( NactMainWindow *window )
  * "display 'about' item" preference is modified.
  */
 static void
-ipivot_consumer_on_display_about_changed( NAIPivotConsumer *instance, gpointer user_data )
+ipivot_consumer_on_display_about_changed( NAIPivotConsumer *instance, gboolean enabled )
 {
 	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_display_about_changed";
 	/*NactMainWindow *self;*/
 
-	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+	g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
 	g_assert( NACT_IS_MAIN_WINDOW( instance ));
 	/*self = NACT_MAIN_WINDOW( instance );*/
 }
@@ -1167,12 +1167,12 @@ ipivot_consumer_on_display_about_changed( NAIPivotConsumer *instance, gpointer u
  * "sort in alphabetical order" preference is modified.
  */
 static void
-ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gpointer user_data )
+ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode )
 {
 	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_display_order_changed";
 	/*NactMainWindow *self;*/
 
-	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+	g_debug( "%s: instance=%p, order_mode=%d", thisfn, ( void * ) instance, order_mode );
 	g_assert( NACT_IS_MAIN_WINDOW( instance ));
 	/*self = NACT_MAIN_WINDOW( instance );*/
 }

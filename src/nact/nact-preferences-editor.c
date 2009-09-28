@@ -67,6 +67,7 @@ static gchar   *base_get_iprefs_window_id( BaseWindow *window );
 static gchar   *base_get_dialog_name( BaseWindow *window );
 static void     on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data );
+static void     on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     save_preferences( NactPreferencesEditor *editor );
@@ -156,6 +157,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			G_OBJECT( instance ),
 			BASE_WINDOW_SIGNAL_RUNTIME_INIT,
 			G_CALLBACK( on_base_runtime_init_dialog ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED,
+			G_CALLBACK( on_base_all_widgets_showed));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -275,7 +282,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	pivot = nact_application_get_pivot( application );
 
-	order_mode = na_iprefs_get_alphabetical_order( NA_IPREFS( pivot ));
+	order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
 	switch( order_mode ){
 		case PREFS_ORDER_ALPHA_ASCENDING:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
@@ -322,6 +329,17 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 }
 
 static void
+on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_preferences_editor_on_all_widgets_showed";
+	GtkNotebook *notebook;
+
+	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
+	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
+	gtk_notebook_set_current_page( notebook, 0 );
+}
+
+static void
 on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
@@ -365,7 +383,7 @@ save_preferences( NactPreferencesEditor *editor )
 			}
 		}
 	}
-	na_iprefs_set_alphabetical_order( NA_IPREFS( pivot ), order_mode );
+	na_iprefs_set_order_mode( NA_IPREFS( pivot ), order_mode );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));

@@ -188,11 +188,12 @@ void na_ipivot_consumer_notify_actions_changed( NAIPivotConsumer *instance )
  * na_ipivot_consumer_notify_of_display_order_change:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
+ * @order_mode: new order mode.
  *
  * Notifies the consumers that the display order has been changed.
  */
 void
-na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance )
+na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance, gint order_mode )
 {
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
@@ -201,7 +202,7 @@ na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance )
 		if( is_notify_allowed( instance )){
 
 			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed ){
-				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed( instance, NULL );
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed( instance, order_mode );
 			}
 		}
 	}
@@ -211,12 +212,13 @@ na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance )
  * na_ipivot_consumer_notify_of_display_about_change:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
+ * @enabled: whether the 'About' item should be enabled.
  *
  * Notifies the consumers that the setting of the display of an 'About'
  * item in the Nautilus context menu has been changed.
  */
 void
-na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance )
+na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance, gboolean enabled )
 {
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
@@ -225,7 +227,7 @@ na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance )
 		if( is_notify_allowed( instance )){
 
 			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed ){
-				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed( instance, NULL );
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed( instance, enabled );
 			}
 		}
 	}

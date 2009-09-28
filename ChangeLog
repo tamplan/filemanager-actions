@@ -19,9 +19,13 @@
 	Implement the new actions sorting semantic when loading the tree.
 	Move the sorting functions to NAPivot class.
 
+	* src/common/na-ipivot-consumer.c:
+	* src/common/na-ipivot-consumer.h:
+	Add new value to virtual functions arguments lists.
+
 	* src/common/na-iprefs.c:
 	* src/common/na-iprefs.h (na_iprefs_is_alphabetical_order):
-	Renamed as na_iprefs_get_alphabetical_order().
+	Renamed as na_iprefs_get_order_mode().
 	Move NAIPrefs data to instance object.
 
 	* src/common/na-pivot.c:
@@ -64,6 +68,7 @@
 	Edit the new UI preferences.
 	Do not implement BaseIPrefs nor NAIPrefs interfaces.
 	Implement new order mode semantic.
+	Make sure to show the page zero when opening the editor.
 
 	* src/nact/nact-tree-model.c (sort_actions_list):
 	Implement new order mode semantic.
@@ -75,6 +80,10 @@
 	* src/nact/nautilus-actions-config-tool.ui:
 	Edit the user preferences in a notebook.
 	Remove "orientation=vertical" vbox properties.
+
+	* src/plugin/nautilus-actions.c:
+	Trigger items-updated signal to Nautilus on runtime preferences
+	changes.
 
 2009-09-27 Pierre Wieser <pwieser@trychlos.org>
 

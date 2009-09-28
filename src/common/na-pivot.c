@@ -876,6 +876,7 @@ monitor_runtime_preferences( NAPivot *pivot )
 static void
 on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
 {
+	static const gchar *thisfn = "na_pivot_on_preferences_change";
 	const gchar *key;
 	gchar *key_entry;
 
@@ -883,6 +884,7 @@ on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NA
 
 	key = gconf_entry_get_key( entry );
 	key_entry = na_utils_path_extract_last_dir( key );
+	g_debug( "%s: key=%s", thisfn, key_entry );
 
 	if( !g_ascii_strcasecmp( key_entry, PREFS_ADD_ABOUT_ITEM )){
 		display_about_changed( pivot );
@@ -898,16 +900,19 @@ on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NA
 static void
 display_order_changed( NAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_on_display_order_change";
+	static const gchar *thisfn = "na_pivot_display_order_changed";
 	GList *ic;
+	gint order_mode;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_assert( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
 
+		order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
+
 		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-			na_ipivot_consumer_notify_of_display_order_change( NA_IPIVOT_CONSUMER( ic->data ));
+			na_ipivot_consumer_notify_of_display_order_change( NA_IPIVOT_CONSUMER( ic->data ), order_mode );
 		}
 	}
 }
@@ -915,16 +920,19 @@ display_order_changed( NAPivot *pivot )
 static void
 display_about_changed( NAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_on_display_order_change";
+	static const gchar *thisfn = "na_pivot_display_about_changed";
 	GList *ic;
+	gboolean enabled;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_assert( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
 
+		enabled = na_iprefs_should_add_about_item( NA_IPREFS( pivot ));
+
 		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-			na_ipivot_consumer_notify_of_display_order_change( NA_IPIVOT_CONSUMER( ic->data ));
+			na_ipivot_consumer_notify_of_display_about_change( NA_IPIVOT_CONSUMER( ic->data ), enabled );
 		}
 	}
 }
