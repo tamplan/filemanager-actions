@@ -20,11 +20,14 @@
 
 	* src/nact/nact-main-window.c (nact_main_window_action_exists):
 	No more check for action existancy in NAPivot.
+	No more forward nact-tab-updatable-item-updated signal.
 
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nact-iactions-list.h
 	(nact_iactions_list_collapse_all, nact_iactions_list_expand_all):
 	New functions.
+	Remove useless nact-iactions-list-item-updated signal.
+	Connect instead to nact-tab-updatable-item-updated signal.
 
 	* src/nact/nact-main-menubar.c (on_duplicate_activated):
 	Takes advantage of new UI preferences.

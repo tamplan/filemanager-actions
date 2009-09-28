@@ -61,22 +61,24 @@ typedef struct {
 	 * selection_changed:
 	 * @instance: this #NactIActionsList instance.
 	 * @selected_items: currently selected items.
+	 *
+	 * This function is an exact duplicate of the
+	 * "nact-iactions-list-selection-changed" signal. Implementor may
+	 * choose to to connect to the signal, or to implement this api, in
+	 * order to be triggered when the selection is modified in the
+	 * treeview.
+	 *
+	 * Be warned that both implementing the api and connecting to the
+	 * signal must be considered at least as useless, and just a way to
+	 * be triggered twice for the same event.
 	 */
 	void ( *selection_changed )( NactIActionsList *instance, GSList *selected_items );
-
-	/**
-	 * item_updated:
-	 * @instance: this #NactIActionsList instance.
-	 * @object: the modified #NAObject.
-	 */
-	void ( *item_updated )     ( NactIActionsList *instance, NAObject *object );
 }
 	NactIActionsListInterface;
 
 /* signals
  */
 #define IACTIONS_LIST_SIGNAL_SELECTION_CHANGED			"nact-iactions-list-selection-changed"
-#define IACTIONS_LIST_SIGNAL_ITEM_UPDATED				"nact-iactions-list-item-updated"
 
 /* management modes
  * - edition: dnd, filter, multiple selection, item updated signal

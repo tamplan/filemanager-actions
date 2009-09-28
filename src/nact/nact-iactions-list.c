@@ -58,7 +58,6 @@ struct NactIActionsListInterfacePrivate {
  */
 enum {
 	SELECTION_CHANGED,
-	ITEM_UPDATED,
 	LAST_SIGNAL
 };
 
@@ -141,8 +140,7 @@ static gboolean     on_button_press_event( GtkWidget *widget, GdkEventButton *ev
 static void         on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object );
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
 static void         on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
-static void         on_iactions_list_item_updated( NactIActionsList *instance, NAObject *object );
-static void         on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *object );
+static void         on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object );
 static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void         select_first_row( NactIActionsList *instance );
 static void         select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
@@ -203,12 +201,12 @@ interface_base_init( NactIActionsListInterface *klass )
 		/**
 		 * nact-iactions-list-selection-changed:
 		 *
-		 * This signal is emitted byIActionsList, in response to the
-		 * "changed" Gtk signal, each time the selection has changed
-		 * in the treeview.
+		 * This signal is emitted byIActionsList to its implementor,
+		 * in response to the "changed" Gtk signal, each time the
+		 * selection has changed in the treeview.
 		 *
-		 * This let us add the the currently selected items as user_data.
-		 * (see #on_treeview_selection_changed()).
+		 * It is not just a proxy, as we add a list of currently selected
+		 * objects as user_data (see #on_treeview_selection_changed()).
 		 *
 		 * Note that IActionsList is itself connected to this signal,
 		 * in order to convert the signal to an interface API
@@ -224,31 +222,6 @@ interface_base_init( NactIActionsListInterface *klass )
 				G_TYPE_OBJECT,
 				G_SIGNAL_RUN_CLEANUP,
 				G_CALLBACK( free_items_callback ),
-				NULL,
-				NULL,
-				g_cclosure_marshal_VOID__POINTER,
-				G_TYPE_NONE,
-				1,
-				G_TYPE_POINTER );
-
-		/**
-		 * nact-iactions-list-item-updated:
-		 *
-		 * This signal is emitted by the main window, in response to the
-		 * similar signal emitted by each notebook's tab when an entry
-		 * has been modified.
-		 *
-		 * After having dealing with the message, the main window
-		 * forwards the information to IActionsList with this message.
-		 *
-		 * User_data is a pointer to the modified #NAObject. It is owned
-		 * by the tab who had initially sent the message.
-		 */
-		st_signals[ ITEM_UPDATED ] = g_signal_new_class_handler(
-				IACTIONS_LIST_SIGNAL_ITEM_UPDATED,
-				G_TYPE_OBJECT,
-				G_SIGNAL_RUN_LAST,
-				G_CALLBACK( on_iactions_list_item_updated ),
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
@@ -407,15 +380,8 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
-				IACTIONS_LIST_SIGNAL_ITEM_UPDATED,
-				G_CALLBACK( on_iactions_list_item_updated_treeview ));
-
-		/* install a virtual function as 'item-updated' handler */
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				IACTIONS_LIST_SIGNAL_ITEM_UPDATED,
-				G_CALLBACK( on_iactions_list_item_updated ));
+				TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
+				G_CALLBACK( on_tab_updatable_item_updated ));
 
 		/* records NactIActionsList as a proxy for edition status modification
 		 */
@@ -1475,28 +1441,19 @@ on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *in
 }
 
 /*
- * our handler for "item-updated" emitted whan an item is modified
- * this let us transform the signal in a virtual function
- * so that our implementors have the best of two worlds ;-)
- */
-static void
-on_iactions_list_item_updated( NactIActionsList *instance, NAObject *object )
-{
-	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->item_updated ){
-		NACT_IACTIONS_LIST_GET_INTERFACE( instance )->item_updated( instance, object );
-	}
-}
-
-/*
  * an item has been updated in one of the tabs
  * update the treeview to reflects its new edition status
  */
 static void
-on_iactions_list_item_updated_treeview( NactIActionsList *instance, NAObject *object )
+on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object )
 {
+	static const gchar *thisfn = "nact_iactions_list_on_tab_updatable_item_updated";
 	NAObject *item;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
+
+	g_debug( "%s: instance=%p, object=%p (%s)", thisfn,
+			( void * ) instance, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	if( object ){
 		treeview = get_actions_list_treeview( instance );
