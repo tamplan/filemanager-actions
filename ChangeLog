@@ -14,6 +14,9 @@
 	Replace the BaseWindow argument by a BaseIPrefs	one.
 	Define three new UI preferences.
 
+	* src/nact/nact-assistant-export.c:
+	Implements IActionsList::get_treeview_name virtual function.
+
 	* src/nact/nact-clipboard.c:
 	* src/nact/nact-main-window.c:
 	Now implements the BaseIPrefs interface.
@@ -21,6 +24,7 @@
 	* src/nact/nact-main-window.c (nact_main_window_action_exists):
 	No more check for action existancy in NAPivot.
 	No more forward nact-tab-updatable-item-updated signal.
+	Implements IActionsList::get_treeview_name virtual function.
 
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nact-iactions-list.h
@@ -28,6 +32,7 @@
 	New functions.
 	Remove useless nact-iactions-list-item-updated signal.
 	Connect instead to nact-tab-updatable-item-updated signal.
+	(get_treeview_name): New pure virtual function.
 
 	* src/nact/nact-main-menubar.c (on_duplicate_activated):
 	Takes advantage of new UI preferences.

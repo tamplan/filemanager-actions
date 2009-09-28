@@ -142,6 +142,7 @@ static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer use
 static void     iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void     set_current_object_item( NactMainWindow *window, GSList *selected_items );
 static void     set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
+static gchar   *iactions_list_get_treeview_name( NactIActionsList *instance );
 
 static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data );
 
@@ -348,6 +349,7 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->selection_changed = iactions_list_selection_changed;
+	iface->get_treeview_name = iactions_list_get_treeview_name;
 }
 
 static void
@@ -1024,6 +1026,20 @@ set_current_profile( NactMainWindow *window, gboolean set_action, GSList *select
 		NAObjectAction *action = NA_OBJECT_ACTION( na_object_profile_get_action( window->private->edited_profile ));
 		window->private->edited_item = NA_OBJECT_ITEM( action );
 	}
+}
+
+static gchar *
+iactions_list_get_treeview_name( NactIActionsList *instance )
+{
+	gchar *name = NULL;
+
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( instance ), NULL );
+
+	if( !NACT_MAIN_WINDOW( instance )->private->dispose_has_run ){
+		name = g_strdup( "ActionsList" );
+	}
+
+	return( name );
 }
 
 static void

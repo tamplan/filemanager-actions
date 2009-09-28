@@ -117,6 +117,7 @@ static void            assist_runtime_init_intro( NactAssistantExport *window, G
 static void            assist_initial_load_actions_list( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *assistant );
 static void            on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
+static gchar          *on_iactions_list_get_treeview_name( NactIActionsList *instance );
 
 static void            assist_initial_load_target_folder( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *assistant );
@@ -231,6 +232,7 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->selection_changed = on_iactions_list_selection_changed;
+	iface->get_treeview_name = on_iactions_list_get_treeview_name;
 }
 
 static void
@@ -547,6 +549,20 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 		gtk_assistant_set_page_complete( assistant, content, enabled );
 		gtk_assistant_update_buttons_state( assistant );
 	}
+}
+
+static gchar *
+on_iactions_list_get_treeview_name( NactIActionsList *instance )
+{
+	gchar *name = NULL;
+
+	g_return_val_if_fail( NACT_IS_ASSISTANT_EXPORT( instance ), NULL );
+
+	if( !NACT_ASSISTANT_EXPORT( instance )->private->dispose_has_run ){
+		name = g_strdup( "ActionsList" );
+	}
+
+	return( name );
 }
 
 static void

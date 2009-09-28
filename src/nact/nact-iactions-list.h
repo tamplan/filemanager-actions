@@ -59,7 +59,7 @@ typedef struct {
 
 	/**
 	 * selection_changed:
-	 * @instance: this #NactIActionsList instance.
+	 * @instance: this #NactIActionsList implementor.
 	 * @selected_items: currently selected items.
 	 *
 	 * This function is an exact duplicate of the
@@ -72,7 +72,20 @@ typedef struct {
 	 * signal must be considered at least as useless, and just a way to
 	 * be triggered twice for the same event.
 	 */
-	void ( *selection_changed )( NactIActionsList *instance, GSList *selected_items );
+	void    ( *selection_changed )( NactIActionsList *instance, GSList *selected_items );
+
+	/**
+	 * get_treeview_name:
+	 * @instance: this #NactIActionsList implementor.
+	 *
+	 * Returns: a newly allocated string, which contains the treeview
+	 * widget name in its XML UI definition.
+	 *
+	 * The returned string will be g_free() by IActionsList interface.
+	 *
+	 * This is a pure virtual function which must be implemented.
+	 */
+	gchar * ( *get_treeview_name )( NactIActionsList *instance );
 }
 	NactIActionsListInterface;
 

@@ -119,6 +119,8 @@ static void         free_items_callback( NactIActionsList *instance, GList *item
 static GtkTreePath *do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *path, gint level, GList **parents );
 static GList       *do_insert_items_add_parent( GList *parents, GtkTreeView *treeview, GtkTreeModel *model, NAObject *parent );
 
+static gchar       *v_get_treeview_name( NactIActionsList *instance );
+
 static void         display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *instance );
 static void         extend_selection_to_childs( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *parent );
 static gboolean     filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactIActionsList *instance );
@@ -1026,6 +1028,20 @@ nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *
 	}
 }
 
+static gchar *
+v_get_treeview_name( NactIActionsList *instance )
+{
+	gchar *name = NULL;
+
+	if( st_initialized && !st_finalized ){
+		if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->get_treeview_name ){
+			name = NACT_IACTIONS_LIST_GET_INTERFACE( instance )->get_treeview_name( instance );
+		}
+	}
+
+	return( name );
+}
+
 /*
  * item modified: italic
  * item not saveable (invalid): red
@@ -1179,10 +1195,15 @@ filter_selection_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter
 static GtkTreeView *
 get_actions_list_treeview( NactIActionsList *instance )
 {
-	GtkTreeView *treeview;
+	gchar *widget_name;
+	GtkTreeView *treeview = NULL;
 
-	treeview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "ActionsList" ));
-	g_assert( GTK_IS_TREE_VIEW( treeview ));
+	widget_name = v_get_treeview_name( instance );
+	if( widget_name ){
+		treeview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), widget_name ));
+		g_return_val_if_fail( GTK_IS_TREE_VIEW( treeview ), NULL );
+		g_free( widget_name );
+	}
 
 	return( treeview );
 }
