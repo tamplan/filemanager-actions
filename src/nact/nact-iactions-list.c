@@ -299,12 +299,14 @@ nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
 
 		/* create visible columns on the tree view
 		 */
+		/* icon: no header */
 		column = gtk_tree_view_column_new_with_attributes(
-				"icon", gtk_cell_renderer_pixbuf_new(), "pixbuf", IACTIONS_LIST_ICON_COLUMN, NULL );
+				"", gtk_cell_renderer_pixbuf_new(), "pixbuf", IACTIONS_LIST_ICON_COLUMN, NULL );
 		gtk_tree_view_append_column( treeview, column );
 
 		column = gtk_tree_view_column_new();
-		gtk_tree_view_column_set_title( column, "label" );
+		/* i18n: header of the 'label' column in the treeview */
+		gtk_tree_view_column_set_title( column, _( "Label" ));
 		gtk_tree_view_column_set_sort_column_id( column, IACTIONS_LIST_LABEL_COLUMN );
 		renderer = gtk_cell_renderer_text_new();
 		gtk_tree_view_column_pack_start( column, renderer, TRUE );
