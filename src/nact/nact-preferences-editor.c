@@ -58,7 +58,6 @@ static GObjectClass *st_parent_class = NULL;
 static GType    register_type( void );
 static void     class_init( NactPreferencesEditorClass *klass );
 static void     iprefs_na_iface_init( NAIPrefsInterface *iface );
-static void     iprefs_base_iface_init( BaseIPrefsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
@@ -115,19 +114,11 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo iprefs_base_iface_info = {
-		( GInterfaceInitFunc ) iprefs_base_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( BASE_DIALOG_TYPE, "NactPreferencesEditor", &info, 0 );
 
 	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_na_iface_info );
-
-	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_base_iface_info );
 
 	return( type );
 }
@@ -159,14 +150,6 @@ static void
 iprefs_na_iface_init( NAIPrefsInterface *iface )
 {
 	static const gchar *thisfn = "nact_preferences_editor_iprefs_na_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-}
-
-static void
-iprefs_base_iface_init( BaseIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "nact_preferences_editor_iprefs_base_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }

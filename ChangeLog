@@ -40,6 +40,7 @@
 
 	* src/nact/nact-preferences-editor.c:
 	Edit the new UI preferences.
+	Do not implement BaseIPrefs interface.
 
 	* src/nact/nautilus-actions-config-tool.actions:
 	Define new View menu.
