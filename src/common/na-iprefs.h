@@ -108,6 +108,9 @@ void     na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
 gboolean na_iprefs_should_add_about_item( NAIPrefs *instance );
 void     na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
 
+gchar   *na_iprefs_read_string( NAIPrefs *instance, const gchar *key, const gchar *default_value );
+void     na_iprefs_write_string( NAIPrefs *instance, const gchar *key, const gchar *value );
+
 /* GConf key
  */
 #define NA_GCONF_PREFERENCES				"preferences"

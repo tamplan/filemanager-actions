@@ -303,10 +303,10 @@ All schemes used by Nautilus can be used here.</long>
       <type>int</type>
       <locale name="C">
         <short>Import mode</short>
-        <long>Last import mode choosen in the Import assistant. Possible values are:
-1: do not import an action whose UUID already exists
-2: allocate a new UUID if the imported UUID already exists
-3: override the existing action with the imported one.</long>
+        <long>Last import mode choosen in the Import assistant. Possible values are :
+- "NoImport": do not import an action whose UUID already exists,
+- "Renumber": allocate a new UUID if the imported UUID already exists,
+- "Override": override the existing action with the imported one.</long>
       </locale>
       <default>/tmp</default>
     </schema>
@@ -329,8 +329,8 @@ All schemes used by Nautilus can be used here.</long>
       <locale name="C">
         <short>Sort mode</short>
         <long>This preference indicates the preferred sort mode. Possible values are :
-- "AscendingAlphaOrder": the actions are maintained in ascending alphabetical order (historical behavior).
-- "DescendingAlphaOrder": the actions are maintained in descending alphabetical order.
+- "AscendingOrder": the actions are maintained in ascending alphabetical order (historical behavior).
+- "DescendingOrder": the actions are maintained in descending alphabetical order.
 - "ManualOrder": user is free to reorder them via Nautilus-Actions configuration tool.</long>
       </locale>
       <default>0</default>

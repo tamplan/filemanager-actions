@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <gconf/gconf.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <string.h>
@@ -39,10 +40,12 @@
 #include <common/na-object-api.h>
 #include <common/na-object-action-class.h>
 #include <common/na-iio-provider.h>
+#include <common/na-iprefs.h>
+#include <common/na-pivot.h>
 #include <common/na-utils.h>
 
 #include "base-iprefs.h"
-#include "base-application.h"
+#include "nact-application.h"
 #include "nact-iactions-list.h"
 #include "nact-assistant-import.h"
 #include "nact-xml-reader.h"
@@ -90,6 +93,16 @@ struct NactAssistantImportPrivate {
 #define IPREFS_IMPORT_ACTIONS_FOLDER_URI		"import-folder-uri"
 #define IPREFS_IMPORT_ACTIONS_IMPORT_MODE		"import-mode"
 
+#define DEFAULT_IMPORT_MODE_INT					NO_IMPORT_MODE
+#define DEFAULT_IMPORT_MODE_STR					"NoImport"
+
+static GConfEnumStringPair import_mode_table[] = {
+	{ NO_IMPORT_MODE, "NoImport" },
+	{ RENUMBER_MODE , "Renumber" },
+	{ OVERRIDE_MODE , "Override" },
+	{ 0, NULL }
+};
+
 static BaseAssistantClass *st_parent_class = NULL;
 
 static GType    register_type( void );
@@ -110,6 +123,8 @@ static void     on_file_selection_changed( GtkFileChooser *chooser, gpointer use
 static gboolean has_readable_files( GSList *uris );
 static void     runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant );
 static void     set_import_mode( NactAssistantImport *window, gint mode );
+static gint     get_pref_import_mode( NactAssistantImport *window );
+static void     set_pref_import_mode( NactAssistantImport *window, gint mode );
 
 static void     assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 static void     prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
@@ -449,7 +464,7 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	mode = base_iprefs_get_int( BASE_WINDOW( window ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE );
+	mode = get_pref_import_mode( window );
 	set_import_mode( window, mode );
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
@@ -478,6 +493,50 @@ set_import_mode( NactAssistantImport *window, gint mode )
 			gtk_toggle_button_set_active( button, TRUE );
 			break;
 	}
+}
+
+static gint
+get_pref_import_mode( NactAssistantImport *window )
+{
+	gint import_mode = DEFAULT_IMPORT_MODE_INT;
+	NactApplication *application;
+	NAPivot *pivot;
+	gchar *mode_str;
+	gint mode_int;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+
+	mode_str = na_iprefs_read_string(
+			NA_IPREFS( pivot ),
+			IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
+			DEFAULT_IMPORT_MODE_STR );
+
+	if( gconf_string_to_enum( import_mode_table, mode_str, &mode_int )){
+		import_mode = mode_int;
+	}
+
+	g_free( mode_str );
+
+	return( import_mode );
+}
+
+static void
+set_pref_import_mode( NactAssistantImport *window, gint mode )
+{
+	NactApplication *application;
+	NAPivot *pivot;
+	const gchar *mode_str;
+
+	mode_str = gconf_enum_to_string( import_mode_table, mode );
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+
+	na_iprefs_write_string(
+			NA_IPREFS( pivot ),
+			IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
+			mode_str ? mode_str : DEFAULT_IMPORT_MODE_STR );
 }
 
 static void
@@ -724,7 +783,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	g_free( text );
 
 	mode = get_import_mode( window );
-	base_iprefs_set_int( BASE_WINDOW( window ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE, mode );
+	set_pref_import_mode( window, mode );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	base_assistant_set_warn_on_cancel( BASE_ASSISTANT( window ), FALSE );

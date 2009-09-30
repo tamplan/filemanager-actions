@@ -3,6 +3,7 @@
 	* data/nautilus-actions.schemas.in:
 	Order mode preference is now a string to let the GConf edition
 	be more user friendly.
+	Import mode: idem.
 
 	* src/common/na-gconf-utils.c:
 	* src/common/na-gconf-utils.h (na_gconf_utils_read_string):
@@ -10,6 +11,10 @@
 
 	* src/common/na-iprefs.c:
 	Define order_mode_table to convert internal mode to GConf string.
+
+	* src/common/na-iprefs.c:
+	* src/common/na-iprefs.c
+	(na_iprefs_read_string, na_iprefs_write_string): New functions.
 
 	* src/common/na-about.c: Renamed as na-iabout.c.
 	* src/common/na-about.h: Renamed as na-iabout.h.
@@ -20,6 +25,9 @@
 	* src/nact/nact-application.c:
 	* src/nact/nact-main-menubar.c:
 	* src/nact/nact-main-window.c: Updated accordingly.
+
+	* src/nact/nact-assistant-import.c:
+	Import mode preference is now stored as a string.
 
 	* src/plugin/nautilus-actions.c:
 	Builds a hierachical menu for Nautilus context menu.

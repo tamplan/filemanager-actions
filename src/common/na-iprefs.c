@@ -71,11 +71,9 @@ static void         interface_base_finalize( NAIPrefsInterface *klass );
 
 static gboolean     read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value );
 /*static gint         read_int( NAIPrefs *instance, const gchar *name, gint default_value );*/
-static gchar       *read_string( NAIPrefs *instance, const gchar *name, const gchar *default_value );
 static GSList      *read_string_list( NAIPrefs *instance, const gchar *name );
 static void         write_bool( NAIPrefs *instance, const gchar *name, gboolean value );
 /*static void         write_int( NAIPrefs *instance, const gchar *name, gint value );*/
-static void         write_string( NAIPrefs *instance, const gchar *name, const gchar *value );
 static void         write_string_list( NAIPrefs *instance, const gchar *name, GSList *list );
 
 static void         setup_private_data( NAIPrefs *instance );
@@ -216,7 +214,10 @@ na_iprefs_get_order_mode( NAIPrefs *instance )
 	if( st_initialized && !st_finalized ){
 
 		setup_private_data( instance );
-		order_str = read_string( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, DEFAULT_ORDER_MODE_STR );
+		order_str = na_iprefs_read_string(
+				instance,
+				PREFS_DISPLAY_ALPHABETICAL_ORDER,
+				DEFAULT_ORDER_MODE_STR );
 		if( gconf_string_to_enum( order_mode_table, order_str, &order_int )){
 			alpha_order = order_int;
 		}
@@ -242,9 +243,13 @@ na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
 	if( st_initialized && !st_finalized ){
+
 		setup_private_data( instance );
 		order_str = gconf_enum_to_string( order_mode_table, mode );
-		write_string( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, order_str ? order_str : DEFAULT_ORDER_MODE_STR );
+		na_iprefs_write_string(
+				instance,
+				PREFS_DISPLAY_ALPHABETICAL_ORDER,
+				order_str ? order_str : DEFAULT_ORDER_MODE_STR );
 	}
 }
 
@@ -294,6 +299,47 @@ na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled )
 	}
 }
 
+/**
+ * na_iprefs_read_string:
+ * @instance: this #NAIPrefs interface instance.
+ * @name: the preference key.
+ * @default_value: the default value, used if entry is not found and
+ * there is no schema.
+ *
+ * Returns: the value, as a newly allocated string which should be
+ * g_free() by the caller.
+ */
+gchar *
+na_iprefs_read_string( NAIPrefs *instance, const gchar *name, const gchar *default_value )
+{
+	gchar *path;
+	gchar *value;
+
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
+	value = na_gconf_utils_read_string( get_gconf_client( instance ), path, TRUE, default_value );
+	g_free( path );
+
+	return( value );
+}
+
+/**
+ * na_iprefs_write_string:
+ * @instance: this #NAIPrefs interface instance.
+ * @name: the preference key.
+ * @value: the value to be written.
+ *
+ * Writes the value as the given GConf preference.
+ */
+void
+na_iprefs_write_string( NAIPrefs *instance, const gchar *name, const gchar *value )
+{
+	gchar *path;
+
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
+	na_gconf_utils_write_string( get_gconf_client( instance ), path, value, NULL );
+	g_free( path );
+}
+
 static gboolean
 read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value )
 {
@@ -319,19 +365,6 @@ read_int( NAIPrefs *instance, const gchar *name, gint default_value )
 
 	return( ret );
 }*/
-
-static gchar *
-read_string( NAIPrefs *instance, const gchar *name, const gchar *default_value )
-{
-	gchar *path;
-	gchar *value;
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	value = na_gconf_utils_read_string( get_gconf_client( instance ), path, TRUE, default_value );
-	g_free( path );
-
-	return( value );
-}
 
 static GSList *
 read_string_list( NAIPrefs *instance, const gchar *name )
@@ -365,16 +398,6 @@ write_int( NAIPrefs *instance, const gchar *name, gint value )
 	na_gconf_utils_write_int( get_gconf_client( instance ), path, value, NULL );
 	g_free( path );
 }*/
-
-static void
-write_string( NAIPrefs *instance, const gchar *name, const gchar *value )
-{
-	gchar *path;
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_string( get_gconf_client( instance ), path, value, NULL );
-	g_free( path );
-}
 
 static void
 write_string_list( NAIPrefs *instance, const gchar *name, GSList *list )
