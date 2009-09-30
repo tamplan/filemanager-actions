@@ -1,3 +1,18 @@
+2009-09-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-about.c: Renamed as na-iabout.c.
+	* src/common/na-about.h: Renamed as na-iabout.h.
+	Defines the NAIAbout interface to let the implementor provides
+	the actual application name.
+
+	* src/common/Makefile.am:
+	* src/nact/nact-application.c:
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-window.c: Updated accordingly.
+
+	* src/plugin/nautilus-actions.c:
+	Builds a hierachical menu for Nautilus context menu.
+
 2009-09-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/nautilus-actions.schemas.in:

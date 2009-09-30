@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include <common/na-about.h>
+#include <common/na-iabout.h>
 #include <common/na-iduplicable.h>
 #include <common/na-ipivot-consumer.h>
 
@@ -383,7 +383,7 @@ appli_get_icon_name( BaseApplication *application )
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	return( na_about_get_icon_name());
+	return( na_iabout_get_icon_name());
 }
 
 static gchar *

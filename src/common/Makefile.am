@@ -35,8 +35,6 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libnact_la_SOURCES = \
-	na-about.c									\
-	na-about.h									\
 	na-gconf-keys-base.h						\
 	na-gconf-keys-schemas.h						\
 	na-gconf-monitor.c							\
@@ -48,6 +46,8 @@ libnact_la_SOURCES = \
 	na-gconf-utils.h							\
 	na-gnome-vfs-uri.c							\
 	na-gnome-vfs-uri.h							\
+	na-iabout.c									\
+	na-iabout.h									\
 	na-iduplicable.c							\
 	na-iduplicable.h							\
 	na-iio-provider.c							\

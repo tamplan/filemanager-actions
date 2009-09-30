@@ -39,6 +39,7 @@
 
 #include <common/na-object-api.h>
 #include <common/na-pivot.h>
+#include <common/na-iabout.h>
 #include <common/na-iio-provider.h>
 #include <common/na-ipivot-consumer.h>
 #include <common/na-iprefs.h>
@@ -122,6 +123,7 @@ static void     iaction_tab_iface_init( NactIActionTabInterface *iface );
 static void     icommand_tab_iface_init( NactICommandTabInterface *iface );
 static void     iconditions_tab_iface_init( NactIConditionsTabInterface *iface );
 static void     iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
+static void     iabout_iface_init( NAIAboutInterface *iface );
 static void     ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
 static void     iprefs_base_iface_init( BaseIPrefsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
@@ -151,6 +153,8 @@ static void     ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, 
 static void     ipivot_consumer_on_display_about_changed( NAIPivotConsumer *instance, gboolean enabled );
 static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode );
 static void     reload( NactMainWindow *window );
+
+static gchar   *iabout_get_application_name( NAIAbout *instance );
 
 GType
 nact_main_window_get_type( void )
@@ -212,6 +216,12 @@ register_type( void )
 		NULL
 	};
 
+	static const GInterfaceInfo iabout_iface_info = {
+		( GInterfaceInitFunc ) iabout_iface_init,
+		NULL,
+		NULL
+	};
+
 	static const GInterfaceInfo ipivot_consumer_iface_info = {
 		( GInterfaceInitFunc ) ipivot_consumer_iface_init,
 		NULL,
@@ -237,6 +247,8 @@ register_type( void )
 	g_type_add_interface_static( type, NACT_ICONDITIONS_TAB_TYPE, &iconditions_tab_iface_info );
 
 	g_type_add_interface_static( type, NACT_IADVANCED_TAB_TYPE, &iadvanced_tab_iface_info );
+
+	g_type_add_interface_static( type, NA_IABOUT_TYPE, &iabout_iface_info );
 
 	g_type_add_interface_static( type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
 
@@ -373,6 +385,16 @@ iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_iadvanced_tab_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+}
+
+static void
+iabout_iface_init( NAIAboutInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_iabout_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_application_name = iabout_get_application_name;
 }
 
 static void
@@ -1177,4 +1199,16 @@ ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order
 	/*self = NACT_MAIN_WINDOW( instance );*/
 
 	nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( instance ), order_mode );
+}
+
+static gchar *
+iabout_get_application_name( NAIAbout *instance )
+{
+	BaseApplication *application;
+
+	g_return_val_if_fail( NA_IS_IABOUT( instance ), NULL );
+	g_return_val_if_fail( BASE_IS_WINDOW( instance ), NULL );
+
+	application = base_window_get_application( BASE_WINDOW( instance ));
+	return( base_application_get_application_name( application ));
 }

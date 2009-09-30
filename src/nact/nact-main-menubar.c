@@ -34,10 +34,10 @@
 
 #include <glib/gi18n.h>
 
-#include <common/na-about.h>
 #include <common/na-object-api.h>
 #include <common/na-object-action.h>
 #include <common/na-object-menu.h>
+#include <common/na-iabout.h>
 #include <common/na-ipivot-consumer.h>
 
 #include "base-iprefs.h"
@@ -693,11 +693,7 @@ on_help_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_about_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
-	GtkWindow *toplevel;
-
-	toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
-
-	na_about_display( G_OBJECT( toplevel ));
+	na_iabout_display( NA_IABOUT( window ));
 }
 
 static void

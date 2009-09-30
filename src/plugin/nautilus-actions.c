@@ -38,11 +38,12 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
-#include <common/na-about.h>
 #include <common/na-object-api.h>
+#include <common/na-object-menu.h>
 #include <common/na-object-action.h>
 #include <common/na-object-profile.h>
 #include <common/na-pivot.h>
+#include <common/na-iabout.h>
 #include <common/na-iprefs.h>
 #include <common/na-ipivot-consumer.h>
 
@@ -66,6 +67,7 @@ static GType         st_actions_type = 0;
 
 static void              class_init( NautilusActionsClass *klass );
 static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static void              iabout_iface_init( NAIAboutInterface *iface );
 static void              ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
 static void              instance_dispose( GObject *object );
@@ -73,10 +75,18 @@ static void              instance_finalize( GObject *object );
 
 static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
-static NautilusMenuItem *create_menu_item( NAObjectAction *action, NAObjectProfile *profile, GList *files );
-/*static NautilusMenuItem *create_sub_menu( NautilusMenu **menu );*/
-static void              add_about_item( NautilusMenu *menu );
+static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, GList *files );
+static NAObjectProfile  *is_action_candidate( NautilusActions *plugin, NAObjectAction *action, GList *files );
+static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, GList *files );
+static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems );
+static NautilusMenuItem *create_menu_item( NAObjectItem *item );
+static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
+
 static void              execute_action( NautilusMenuItem *item, NAObjectProfile *profile );
+
+static GList            *add_about_item( NautilusActions *plugin, GList *nautilus_menu );
+static gchar            *iabout_get_application_name( NAIAbout *instance );
+static void              execute_about( NautilusMenuItem *item, NautilusActions *plugin );
 
 static void              actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data );
 static void              display_about_changed_handler( NAIPivotConsumer *instance, gboolean enabled );
@@ -112,6 +122,12 @@ nautilus_actions_register_type( GTypeModule *module )
 		NULL
 	};
 
+	static const GInterfaceInfo iabout_iface_info = {
+		( GInterfaceInitFunc ) iabout_iface_init,
+		NULL,
+		NULL
+	};
+
 	static const GInterfaceInfo ipivot_consumer_iface_info = {
 		( GInterfaceInitFunc ) ipivot_consumer_iface_init,
 		NULL,
@@ -124,6 +140,8 @@ nautilus_actions_register_type( GTypeModule *module )
 	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NautilusActions", &info, 0 );
 
 	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
+
+	g_type_module_add_interface( module, st_actions_type, NA_IABOUT_TYPE, &iabout_iface_info );
 
 	g_type_module_add_interface( module, st_actions_type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
 }
@@ -154,6 +172,16 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 
 	iface->get_file_items = get_file_items;
 	iface->get_background_items = get_background_items;
+}
+
+static void
+iabout_iface_init( NAIAboutInterface *iface )
+{
+	static const gchar *thisfn = "nautilus_actions_iabout_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_application_name = iabout_get_application_name;
 }
 
 static void
@@ -271,15 +299,10 @@ static GList *
 get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_get_file_items";
+	GList *nautilus_menus_list = NULL;
 	NautilusActions *self;
-	GList *items = NULL;
-	GList *profiles, *ia, *ip;
-	NautilusMenu *menu = NULL;
-	NautilusMenuItem *item;
-	GList *tree = NULL;
-	gchar *label, *uuid;
-	gint submenus = 0;
-	gboolean add_about;
+	GList *pivot_tree;
+ 	gboolean add_about;
 
 	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
 			thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
@@ -287,96 +310,130 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 	self = NAUTILUS_ACTIONS( provider );
 
+	/* no need to go further if there is no files in the list */
+	if( !g_list_length( files )){
+		return(( GList * ) NULL );
+	}
+
 	if( !self->private->dispose_has_run ){
 
-		/* no need to go further if there is no files in the list */
-		if( !g_list_length( files )){
-			return(( GList * ) NULL );
-		}
+		pivot_tree = na_pivot_get_items( self->private->pivot );
 
-		if( !self->private->dispose_has_run ){
-			tree = na_pivot_get_items( self->private->pivot );
+		nautilus_menus_list = build_nautilus_menus( self, pivot_tree, files );
+		g_debug( "%s: menus has %d level zero items", thisfn, g_list_length( nautilus_menus_list ));
 
-			for( ia = tree ; ia ; ia = ia->next ){
-
-				NAObjectAction *action = NA_OBJECT_ACTION( ia->data );
-
-				if( !na_object_is_enabled( action )){
-					continue;
-				}
-
-				label = na_object_get_label( action );
-
-				if( !label || !g_utf8_strlen( label, -1 )){
-					uuid = na_object_get_id( action );
-					g_warning( "%s: label null or empty for uuid=%s", thisfn, uuid );
-					g_free( uuid );
-					continue;
-				}
-
-				g_debug( "%s: examining '%s' action", thisfn, label );
-				g_free( label );
-
-				profiles = na_object_get_items( action );
-
-				for( ip = profiles ; ip ; ip = ip->next ){
-
-					NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
-
-#ifdef NA_MAINTAINER_MODE
-					label = na_object_get_label( profile );
-					g_debug( "%s: examining '%s' profile", thisfn, label );
-					g_free( label );
-#endif
-
-					if( na_object_profile_is_candidate( profile, files )){
-						item = create_menu_item( action, profile, files );
-						items = g_list_append( items, item );
-
-						/*if( have_submenu ){
-							if( !menu ){
-								items = g_list_append( items, create_sub_menu( &menu ));
-							}
-							nautilus_menu_append_item( menu, item );
-
-						} else {
-						}*/
-						break;
-					}
-				}
-
-				na_object_free_items( profiles );
-			}
-
-			add_about = FALSE; /*na_iprefs_get_add_about_item( NA_IPREFS( self ));*/
-			if( submenus == 1 && add_about ){
-				add_about_item( menu );
-			}
+		add_about = na_iprefs_should_add_about_item( NA_IPREFS( self->private->pivot ));
+		g_debug( "%s: add_about=%s", thisfn, add_about ? "True":"False" );
+		if( add_about ){
+			nautilus_menus_list = add_about_item( self, nautilus_menus_list );
 		}
 	}
 
-	return( items );
+	return( nautilus_menus_list );
+}
+
+static GList *
+build_nautilus_menus( NautilusActions *plugin, GList *tree, GList *files )
+{
+	static const gchar *thisfn = "nautilus_actions_build_nautilus_menus";
+	GList *menus_list = NULL;
+	GList *subitems, *submenu;
+	GList *it;
+	NAObjectProfile *profile;
+	NautilusMenuItem *item;
+	gchar *label;
+
+	g_debug( "%s: plugin=%p, tree=%p, files=%p",
+			thisfn, ( void * ) plugin, ( void * ) tree, ( void * ) files );
+
+	for( it = tree ; it ; it = it->next ){
+
+		g_return_val_if_fail( NA_IS_OBJECT_ITEM( it->data ), NULL );
+
+		if( !na_object_is_enabled( it->data )){
+			continue;
+		}
+
+		label = na_object_get_label( it->data );
+		g_debug( "%s: %s - %s", thisfn, G_OBJECT_TYPE_NAME( it->data ), label );
+		g_free( label );
+
+		if( NA_IS_OBJECT_MENU( it->data )){
+			subitems = na_object_get_items( it->data );
+			submenu = build_nautilus_menus( plugin, subitems, files );
+			/*g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));*/
+			na_object_free_items( subitems );
+			if( submenu ){
+				item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu );
+				menus_list = g_list_append( menus_list, item );
+			}
+			continue;
+		}
+
+		g_return_val_if_fail( NA_IS_OBJECT_ACTION( it->data ), NULL );
+
+		profile = is_action_candidate( plugin, NA_OBJECT_ACTION( it->data ), files );
+		if( profile ){
+			item = create_item_from_profile( profile, files );
+			menus_list = g_list_append( menus_list, item );
+		}
+	}
+
+	return( menus_list );
+}
+
+/*
+ * could also be a NAObjectAction method - but this is not used elsewhere
+ */
+static NAObjectProfile *
+is_action_candidate( NautilusActions *plugin, NAObjectAction *action, GList *files )
+{
+	static const gchar *thisfn = "nautilus_actions_is_action_candidate";
+	NAObjectProfile *candidate = NULL;
+	gchar *action_label, *uuid;
+	gchar *profile_label;
+	GList *profiles, *ip;
+
+	action_label = na_object_get_label( action );
+
+	if( !action_label || !g_utf8_strlen( action_label, -1 )){
+		uuid = na_object_get_id( action );
+		g_warning( "%s: label null or empty for uuid=%s", thisfn, uuid );
+		g_free( uuid );
+		return( NULL );
+	}
+
+	profiles = na_object_get_items( action );
+	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
+
+		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
+		if( na_object_profile_is_candidate( profile, files )){
+
+			profile_label = na_object_get_label( profile );
+			g_debug( "%s: selecting %s - %s", thisfn, action_label, profile_label );
+			g_free( profile_label );
+
+			candidate = profile;
+ 		}
+ 	}
+
+	g_free( action_label );
+
+	return( candidate );
 }
 
 static NautilusMenuItem *
-create_menu_item( NAObjectAction *action, NAObjectProfile *profile, GList *files )
+create_item_from_profile( NAObjectProfile *profile, GList *files )
 {
-	static const gchar *thisfn = "nautilus_actions_create_menu_item";
 	NautilusMenuItem *item;
-	gchar *uuid, *name, *label, *tooltip, *icon_name;
+	NAObjectAction *action;
 	NAObjectProfile *dup4menu;
 
-	g_debug( "%s", thisfn );
+	action = na_object_profile_get_action( profile );
 
-	uuid = na_object_get_id( action );
-	name = g_strdup_printf( "NautilusActions::%s", uuid );
-	label = na_object_get_label( action );
-	tooltip = na_object_get_tooltip( action );
-	icon_name = na_object_item_get_verified_icon_name( NA_OBJECT_ITEM( action ));
+	item = create_menu_item( NA_OBJECT_ITEM( action ));
 
 	dup4menu = NA_OBJECT_PROFILE( na_object_duplicate( profile ));
-
-	item = nautilus_menu_item_new( name, label, tooltip, icon_name );
 
 	g_signal_connect_data( item,
 				"activate",
@@ -390,58 +447,63 @@ create_menu_item( NAObjectAction *action, NAObjectProfile *profile, GList *files
 			nautilus_file_info_list_copy( files ),
 			( GDestroyNotify ) nautilus_file_info_list_free );
 
-	g_free( icon_name );
-	g_free( tooltip );
-	g_free( label );
-	g_free( name );
-	g_free( uuid );
-
 	return( item );
 }
 
-/*static NautilusMenuItem *
-create_sub_menu( NautilusMenu **menu )
+/*
+ * note that each appended NautilusMenuItem is ref-ed by the NautilusMenu
+ * we can so safely release our own ref on subitems after this function
+ */
+static NautilusMenuItem *
+create_item_from_menu( NAObjectMenu *menu, GList *subitems )
 {
+	/*static const gchar *thisfn = "nautilus_actions_create_item_from_menu";*/
 	NautilusMenuItem *item;
 
-	gchar *icon_name = na_about_get_icon_name();
+	item = create_menu_item( NA_OBJECT_ITEM( menu ));
+	attach_submenu_to_item( item, subitems );
+	nautilus_menu_item_list_free( subitems );
 
-	item = nautilus_menu_item_new( "NautilusActionsExtensions",
-			_( "Nautilus-Actions extensions" ),
-			_( "A submenu which embeds the currently available Nautilus-Actions extensions" ),
-			icon_name );
-
-	if( menu ){
-		*menu = nautilus_menu_new();
-		nautilus_menu_item_set_submenu( item, *menu );
-	}
-
-	g_free( icon_name );
-
+	/*g_debug( "%s: returning item=%p", thisfn, ( void * ) item );*/
 	return( item );
-}*/
+}
+
+static NautilusMenuItem *
+create_menu_item( NAObjectItem *item )
+{
+	NautilusMenuItem *menu_item;
+	gchar *uuid, *name, *label, *tooltip, *icon;
+
+	uuid = na_object_get_id( item );
+	name = g_strdup_printf( "%s-%s-%s", PACKAGE, G_OBJECT_TYPE_NAME( item ), uuid );
+	label = na_object_get_label( item );
+	/*g_debug( "nautilus_actions_create_menu_item: %s - %s", name, label );*/
+	tooltip = na_object_get_tooltip( item );
+	icon = na_object_get_icon( item );
+
+	menu_item = nautilus_menu_item_new( name, label, tooltip, icon );
+
+	g_free( icon );
+ 	g_free( tooltip );
+ 	g_free( label );
+ 	g_free( name );
+ 	g_free( uuid );
+
+	return( menu_item );
+}
 
 static void
-add_about_item( NautilusMenu *menu )
+attach_submenu_to_item( NautilusMenuItem *item, GList *subitems )
 {
-	gchar *icon_name = na_about_get_icon_name();
+	NautilusMenu *submenu;
+	GList *it;
 
-	NautilusMenuItem *item = nautilus_menu_item_new(
-			"AboutNautilusActions",
-			_( "About Nautilus Actions" ),
-			_( "Display information about Nautilus Actions" ),
-			icon_name );
+	submenu = nautilus_menu_new();
+	nautilus_menu_item_set_submenu( item, submenu );
 
-	g_signal_connect_data( item,
-				"activate",
-				G_CALLBACK( na_about_display ),
-				NULL,
-				NULL,
-				0 );
-
-	nautilus_menu_append_item( menu, item );
-
-	g_free( icon_name );
+	for( it = subitems ; it ; it = it->next ){
+		nautilus_menu_append_item( submenu, NAUTILUS_MENU_ITEM( it->data ));
+	}
 }
 
 static void
@@ -472,6 +534,94 @@ execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 	g_string_free (cmd, TRUE);
 	g_free( path );
 
+}
+
+/*
+ * if there is a root submenu,
+ * then add the about item to the end of the first level of this menu
+ * else create a root submenu
+ */
+static GList *
+add_about_item( NautilusActions *plugin, GList *menu )
+{
+	static const gchar *thisfn = "nautilus_actions_add_about_item";
+	GList *nautilus_menu;
+	gboolean have_root_menu;
+	NautilusMenuItem *root_item;
+	NautilusMenuItem *about_item;
+	NautilusMenu *first;
+	gchar *icon;
+
+	g_debug( "%s: plugin=%p, menu=%p (%d items)",
+			thisfn, ( void * ) plugin, ( void * ) menu, g_list_length( menu ));
+
+	if( !menu || !g_list_length( menu )){
+		return( NULL );
+	}
+
+	icon = na_iabout_get_icon_name();
+	have_root_menu = FALSE;
+
+	if( g_list_length( menu ) == 1 ){
+		root_item = NAUTILUS_MENU_ITEM( menu->data );
+		g_object_get( G_OBJECT( root_item ), "menu", &first, NULL );
+		if( first ){
+			g_return_val_if_fail( NAUTILUS_IS_MENU( first ), NULL );
+			have_root_menu = TRUE;
+		}
+	}
+
+	if( have_root_menu ){
+		nautilus_menu = menu;
+
+	} else {
+		root_item = nautilus_menu_item_new( "NautilusActionsExtensions",
+				/* i18n: label of an automagic root submenu */
+				_( "Nautilus Actions" ),
+				/* i18n: tooltip of an automagic root submenu */
+				_( "A submenu which embeds the currently available Nautilus-Actions extensions" ),
+				icon );
+		attach_submenu_to_item( root_item, menu );
+		nautilus_menu = g_list_append( NULL, root_item );
+		g_object_get( G_OBJECT( root_item ), "menu", &first, NULL );
+	}
+
+	g_return_val_if_fail( g_list_length( nautilus_menu ) == 1, NULL );
+	g_return_val_if_fail( NAUTILUS_IS_MENU( first ), NULL );
+
+	about_item = nautilus_menu_item_new( "AboutNautilusActions",
+				_( "About Nautilus Actions" ),
+				_( "Display information about Nautilus Actions" ),
+				icon );
+
+	g_signal_connect_data( about_item,
+				"activate",
+				G_CALLBACK( execute_about ),
+				plugin,
+				NULL,
+				0 );
+
+	nautilus_menu_append_item( first, about_item );
+
+	g_free( icon );
+
+	return( nautilus_menu );
+}
+
+static gchar *
+iabout_get_application_name( NAIAbout *instance )
+{
+	/* i18n: title of the About dialog box, when seen from Nautilus file manager */
+	return( g_strdup( _( "Nautilus Actions" )));
+}
+
+static void
+execute_about( NautilusMenuItem *item, NautilusActions *plugin )
+{
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
+	g_return_if_fail( NA_IS_IABOUT( plugin ));
+
+	na_iabout_display( NA_IABOUT( plugin ));
 }
 
 static void
