@@ -37,6 +37,7 @@
 
 #include <common/na-object-api.h>
 #include <common/na-object-profile.h>
+#include <common/na-iprefs.h>
 #include <common/na-utils.h>
 
 #include "base-window.h"
@@ -507,10 +508,15 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 {
 	gboolean set_current_location = FALSE;
 	gchar *uri = NULL;
+	NactApplication *application;
+	NAPivot *pivot;
 	GtkWidget *dialog;
 	GtkWidget *path_entry;
 	const gchar *path;
 	gchar *filename;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+	pivot = nact_application_get_pivot( application );
 
 	dialog = gtk_file_chooser_dialog_new(
 			_( "Choosing a command" ),
@@ -530,7 +536,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
 
 	} else {
-		uri = base_iprefs_get_string( BASE_WINDOW( instance ), IPREFS_FOLDER_URI );
+		uri = na_iprefs_read_string( NA_IPREFS( pivot ), IPREFS_FOLDER_URI, "file:///bin" );
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 		g_free( uri );
 	}
@@ -542,7 +548,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	base_iprefs_set_string( BASE_WINDOW( instance ), IPREFS_FOLDER_URI, uri );
+	na_iprefs_write_string( NA_IPREFS( pivot ), IPREFS_FOLDER_URI, uri );
 	g_free( uri );
 
 	base_iprefs_save_named_window_position( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_COMMAND_CHOOSER );

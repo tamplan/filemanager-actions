@@ -342,6 +342,8 @@ static void
 runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_import_runtime_init_file_selector";
+	NactApplication *application;
+	NAPivot *pivot;
 	GtkWidget *page;
 	GtkWidget *chooser;
 	gchar *uri;
@@ -351,8 +353,11 @@ runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+
 	chooser = base_window_get_widget( BASE_WINDOW( window ), "ImportFileChooser" );
-	uri = base_iprefs_get_string( BASE_WINDOW( window ), IPREFS_IMPORT_ACTIONS_FOLDER_URI );
+	uri = na_iprefs_read_string( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_FOLDER_URI, "file:///tmp" );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( chooser ), uri );
 	}
@@ -374,6 +379,8 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	g_debug( "%s: chooser=%p, user_data=%p", thisfn, chooser, user_data );*/
 
 	GtkAssistant *assistant;
+	NactApplication *application;
+	NAPivot *pivot;
 	gint pos;
 	GSList *uris;
 	gboolean enabled;
@@ -390,7 +397,9 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 
 		if( enabled ){
 			folder = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( chooser ));
-			base_iprefs_set_string( BASE_WINDOW( user_data ), IPREFS_IMPORT_ACTIONS_FOLDER_URI, folder );
+			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( user_data )));
+			pivot = nact_application_get_pivot( application );
+			na_iprefs_write_string( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_FOLDER_URI, folder );
 			g_free( folder );
 		}
 

@@ -38,6 +38,7 @@
 
 #include <common/na-iprefs.h>
 #include <common/na-object-api.h>
+#include <common/na-pivot.h>
 #include <common/na-utils.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
@@ -558,13 +559,18 @@ static void
 assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *assistant )
 {
 	GtkFileChooser *chooser;
+	NactApplication *application;
+	NAPivot *pivot;
 	gchar *uri;
 	GtkWidget *content;
 
 	chooser = get_folder_chooser( window );
 	gtk_file_chooser_unselect_all( chooser );
 
-	uri = base_iprefs_get_string( BASE_WINDOW( window ), IPREFS_EXPORT_ACTIONS_FOLDER_URI );
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+
+	uri = na_iprefs_read_string( NA_IPREFS( pivot ), IPREFS_EXPORT_ACTIONS_FOLDER_URI, "file:///tmp" );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_uri( GTK_FILE_CHOOSER( chooser ), uri );
 	}
@@ -596,6 +602,8 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_on_folder_selection_changed";
 	GtkAssistant *assistant;
+	NactApplication *application;
+	NAPivot *pivot;
 	gint pos;
 	gchar *uri;
 	gboolean enabled;
@@ -604,8 +612,9 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 
 	g_debug( "%s: chooser=%p, user_data=%p", thisfn, ( void * ) chooser, ( void * ) user_data );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( user_data ));
+	assist = NACT_ASSISTANT_EXPORT( user_data );
 
-	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( user_data )));
+	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( assist )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_FOLDER_SELECTION ){
 
@@ -614,10 +623,11 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 		enabled = ( uri && strlen( uri ) && na_utils_is_writable_dir( uri ));
 
 		if( enabled ){
-			assist = NACT_ASSISTANT_EXPORT( user_data );
 			g_free( assist->private->uri );
 			assist->private->uri = g_strdup( uri );
-			base_iprefs_set_string( BASE_WINDOW( user_data ), IPREFS_EXPORT_ACTIONS_FOLDER_URI, uri );
+			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( assist )));
+			pivot = nact_application_get_pivot( application );
+			na_iprefs_write_string( NA_IPREFS( pivot ), IPREFS_EXPORT_ACTIONS_FOLDER_URI, uri );
 		}
 
 		g_free( uri );

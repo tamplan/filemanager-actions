@@ -87,9 +87,6 @@ void     base_iprefs_set_bool( BaseIPrefs *instance, const gchar *key, gboolean 
 gint     base_iprefs_get_int( BaseWindow *window, const gchar *key );
 void     base_iprefs_set_int( BaseWindow *window, const gchar *key, gint value );
 
-gchar   *base_iprefs_get_string( BaseWindow *window, const gchar *name );
-void     base_iprefs_set_string( BaseWindow *window, const gchar *name, const gchar *string );
-
 G_END_DECLS
 
 #endif /* __BASE_IPREFS_H__ */

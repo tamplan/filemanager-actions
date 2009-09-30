@@ -26,6 +26,15 @@
 	* src/nact/nact-main-menubar.c:
 	* src/nact/nact-main-window.c: Updated accordingly.
 
+	* src/nact/base-iprefs.c:
+	* src/nact/base-iprefs.h
+	(base_iprefs_get_string, base_iprefs_set_string): Removed functions.
+
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-icommand-tab.c:
+	Move base_iprefs_xxx_string() to na_iprefs_xxx equivalents.
+
 	* src/nact/nact-assistant-import.c:
 	Import mode preference is now stored as a string.
 

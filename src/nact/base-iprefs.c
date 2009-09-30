@@ -63,12 +63,10 @@ static gboolean    remove_entry( GConfClient *client, const gchar *path, const g
 static gboolean    read_bool( BaseIPrefs *instance, const gchar *name );
 static gint        read_int( BaseWindow *window, const gchar *name );
 static GSList     *read_int_list( BaseWindow *window, const gchar *key );
-static gchar      *read_str( BaseWindow *window, const gchar *key );
 
 static void        write_bool( BaseIPrefs *instance, const gchar *name, gboolean value );
 static void        write_int( BaseWindow *window, const gchar *name, gint value );
 static void        write_int_list( BaseWindow *window, const gchar *key, GSList *list );
-static void        write_str( BaseWindow *window, const gchar *key, const gchar *text );
 
 static void        int_list_to_position( BaseWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height );
 static GSList     *position_to_int_list( BaseWindow *window, gint x, gint y, gint width, gint height );
@@ -396,48 +394,6 @@ base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value )
 	}
 }
 
-/**
- * base_iprefs_get_string:
- * @window: this #BaseWindow-derived window.
- * @name: entry of the string value.
- *
- * Returns the required string if any, or NULL.
- * The returned string must be g_free() by the caller.
- */
-gchar *
-base_iprefs_get_string( BaseWindow *window, const gchar *name )
-{
-	gchar *string = NULL;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
-	g_return_val_if_fail( BASE_IS_IPREFS( window ), NULL );
-
-	if( st_initialized && !st_finalized ){
-		string = read_str( window, name );
-	}
-
-	return( string );
-}
-
-/**
- * base_iprefs_set_string:
- * @window: this #BaseWindow-derived window.
- * @name: entry of the string value.
- * @string: value to save.
- *
- * Saves the required string.
- */
-void
-base_iprefs_set_string( BaseWindow *window, const gchar *name, const gchar *string )
-{
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( BASE_IS_IPREFS( window ));
-
-	if( st_initialized && !st_finalized ){
-		write_str( window, name, string );
-	}
-}
-
 static gchar *
 v_iprefs_get_window_id( BaseWindow *window )
 {
@@ -580,28 +536,6 @@ read_int_list( BaseWindow *window, const gchar *key )
 	return( list );
 }
 
-static gchar *
-read_str( BaseWindow *window, const gchar *key )
-{
-	static const gchar *thisfn = "base_iprefs_read_str";
-	GError *error = NULL;
-	gchar *path;
-	gchar *text;
-
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
-
-	text = gconf_client_get_string( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, %s", thisfn, key, error->message );
-		g_error_free( error );
-		text = NULL;
-	}
-
-	g_free( path );
-	return( text );
-}
-
 static void
 write_bool( BaseIPrefs *instance, const gchar *name, gboolean value )
 {
@@ -649,25 +583,6 @@ write_int_list( BaseWindow *window, const gchar *key, GSList *list )
 		g_warning( "%s: %s", thisfn, error->message );
 		g_error_free( error );
 		list = NULL;
-	}
-
-	g_free( path );
-}
-
-static void
-write_str( BaseWindow *window, const gchar *key, const gchar *text )
-{
-	static const gchar *thisfn = "base_iprefs_write_str";
-	GError *error = NULL;
-	gchar *path;
-
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
-
-	gconf_client_set_string( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, text, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, %s", thisfn, key, error->message );
-		g_error_free( error );
 	}
 
 	g_free( path );
