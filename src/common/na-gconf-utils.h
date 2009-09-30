@@ -55,6 +55,7 @@ gchar   *na_gconf_utils_path_to_key( const gchar *path );
 
 gboolean na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_schema, gboolean default_value );
 gint     na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_schema, gint default_value );
+gchar   *na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_schema, const gchar *default_value );
 GSList  *na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path );
 
 gboolean na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value, gchar **message );

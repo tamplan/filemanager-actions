@@ -1,5 +1,16 @@
 2009-09-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/nautilus-actions.schemas.in:
+	Order mode preference is now a string to let the GConf edition
+	be more user friendly.
+
+	* src/common/na-gconf-utils.c:
+	* src/common/na-gconf-utils.h (na_gconf_utils_read_string):
+	New function.
+
+	* src/common/na-iprefs.c:
+	Define order_mode_table to convert internal mode to GConf string.
+
 	* src/common/na-about.c: Renamed as na-iabout.c.
 	* src/common/na-about.h: Renamed as na-iabout.h.
 	Defines the NAIAbout interface to let the implementor provides

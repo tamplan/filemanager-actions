@@ -50,6 +50,16 @@ typedef struct {
 }
 	NAIPrefsPrivate;
 
+#define DEFAULT_ORDER_MODE_INT			PREFS_ORDER_ALPHA_ASCENDING
+#define DEFAULT_ORDER_MODE_STR			"AscendingOrder"
+
+static GConfEnumStringPair order_mode_table[] = {
+	{ PREFS_ORDER_ALPHA_ASCENDING , "AscendingOrder" },
+	{ PREFS_ORDER_ALPHA_DESCENDING, "DescendingOrder" },
+	{ PREFS_ORDER_MANUAL          , "ManualOrder" },
+	{ 0, NULL }
+};
+
 #define NA_IPREFS_PRIVATE_DATA			"na-iprefs-private-data"
 
 static gboolean st_initialized = FALSE;
@@ -60,10 +70,12 @@ static void         interface_base_init( NAIPrefsInterface *klass );
 static void         interface_base_finalize( NAIPrefsInterface *klass );
 
 static gboolean     read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value );
-static gint         read_int( NAIPrefs *instance, const gchar *name, gint default_value );
+/*static gint         read_int( NAIPrefs *instance, const gchar *name, gint default_value );*/
+static gchar       *read_string( NAIPrefs *instance, const gchar *name, const gchar *default_value );
 static GSList      *read_string_list( NAIPrefs *instance, const gchar *name );
 static void         write_bool( NAIPrefs *instance, const gchar *name, gboolean value );
-static void         write_int( NAIPrefs *instance, const gchar *name, gint value );
+/*static void         write_int( NAIPrefs *instance, const gchar *name, gint value );*/
+static void         write_string( NAIPrefs *instance, const gchar *name, const gchar *value );
 static void         write_string_list( NAIPrefs *instance, const gchar *name, GSList *list );
 
 static void         setup_private_data( NAIPrefs *instance );
@@ -195,13 +207,20 @@ na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
 gint
 na_iprefs_get_order_mode( NAIPrefs *instance )
 {
-	gint alpha_order = PREFS_ORDER_ALPHA_ASCENDING;
+	gint alpha_order = DEFAULT_ORDER_MODE_INT;
+	gint order_int;
+	gchar *order_str;
 
-	g_return_val_if_fail( NA_IS_IPREFS( instance ), PREFS_ORDER_ALPHA_ASCENDING );
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), DEFAULT_ORDER_MODE_INT );
 
 	if( st_initialized && !st_finalized ){
+
 		setup_private_data( instance );
-		alpha_order = read_int( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, PREFS_ORDER_ALPHA_ASCENDING );
+		order_str = read_string( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, DEFAULT_ORDER_MODE_STR );
+		if( gconf_string_to_enum( order_mode_table, order_str, &order_int )){
+			alpha_order = order_int;
+		}
+		g_free( order_str );
 	}
 
 	return( alpha_order );
@@ -218,11 +237,14 @@ na_iprefs_get_order_mode( NAIPrefs *instance )
 void
 na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 {
+	const gchar *order_str;
+
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
 	if( st_initialized && !st_finalized ){
 		setup_private_data( instance );
-		write_int( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, mode );
+		order_str = gconf_enum_to_string( order_mode_table, mode );
+		write_string( instance, PREFS_DISPLAY_ALPHABETICAL_ORDER, order_str ? order_str : DEFAULT_ORDER_MODE_STR );
 	}
 }
 
@@ -278,24 +300,37 @@ read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value )
 	gchar *path;
 	gboolean ret;
 
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
 	ret = na_gconf_utils_read_bool( get_gconf_client( instance ), path, TRUE, default_value );
 	g_free( path );
 
 	return( ret );
 }
 
-static gint
+/*static gint
 read_int( NAIPrefs *instance, const gchar *name, gint default_value )
 {
 	gchar *path;
 	gint ret;
 
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
 	ret = na_gconf_utils_read_int( get_gconf_client( instance ), path, TRUE, default_value );
 	g_free( path );
 
 	return( ret );
+}*/
+
+static gchar *
+read_string( NAIPrefs *instance, const gchar *name, const gchar *default_value )
+{
+	gchar *path;
+	gchar *value;
+
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
+	value = na_gconf_utils_read_string( get_gconf_client( instance ), path, TRUE, default_value );
+	g_free( path );
+
+	return( value );
 }
 
 static GSList *
@@ -304,7 +339,7 @@ read_string_list( NAIPrefs *instance, const gchar *name )
 	gchar *path;
 	GSList *list;
 
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
 	list = na_gconf_utils_read_string_list( get_gconf_client( instance ), path );
 	g_free( path );
 
@@ -316,18 +351,28 @@ write_bool( NAIPrefs *instance, const gchar *name, gboolean value )
 {
 	gchar *path;
 
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
 	na_gconf_utils_write_bool( get_gconf_client( instance ), path, value, NULL );
 	g_free( path );
 }
 
-static void
+/*static void
 write_int( NAIPrefs *instance, const gchar *name, gint value )
 {
 	gchar *path;
 
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
 	na_gconf_utils_write_int( get_gconf_client( instance ), path, value, NULL );
+	g_free( path );
+}*/
+
+static void
+write_string( NAIPrefs *instance, const gchar *name, const gchar *value )
+{
+	gchar *path;
+
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
+	na_gconf_utils_write_string( get_gconf_client( instance ), path, value, NULL );
 	g_free( path );
 }
 
@@ -336,7 +381,7 @@ write_string_list( NAIPrefs *instance, const gchar *name, GSList *list )
 {
 	gchar *path;
 
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
 	na_gconf_utils_write_string_list( get_gconf_client( instance ), path, list, NULL );
 	g_free( path );
 }

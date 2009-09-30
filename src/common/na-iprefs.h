@@ -122,7 +122,7 @@ void     na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
 /* alphabetical order values
  */
 enum {
-	PREFS_ORDER_ALPHA_ASCENDING = 0,
+	PREFS_ORDER_ALPHA_ASCENDING = 1,
 	PREFS_ORDER_ALPHA_DESCENDING,
 	PREFS_ORDER_MANUAL
 };

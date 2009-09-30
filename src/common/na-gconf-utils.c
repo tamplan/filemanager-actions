@@ -406,6 +406,38 @@ na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_sch
 }
 
 /**
+ * na_gconf_utils_read_string:
+ * @gconf: a #GConfClient instance.
+ * @path: the full path to the key.
+ * @use_schema: whether to use the default value from schema, or not.
+ * @default_value: default value to be used if schema is not used or
+ * doesn't exist.
+ *
+ * Returns: the required string value in a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_schema, const gchar *default_value )
+{
+	GConfValue *value = NULL;
+	gchar *result;
+
+	g_return_val_if_fail( GCONF_IS_CLIENT( gconf ), NULL );
+
+	result = g_strdup( default_value );
+
+	value = read_value( gconf, path, use_schema, GCONF_VALUE_STRING );
+
+	if( value ){
+		g_free( result );
+		result = g_strdup( gconf_value_get_string( value ));
+		gconf_value_free( value );
+	}
+
+	return( result );
+}
+
+/**
  * na_gconf_utils_read_string_list:
  * @gconf: a #GConfClient instance.
  * @path: the full path to the key to be read.
