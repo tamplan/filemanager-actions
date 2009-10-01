@@ -116,7 +116,7 @@ static void         interface_base_init( NactIActionsListInterface *klass );
 static void         interface_base_finalize( NactIActionsListInterface *klass );
 
 static void         free_items_callback( NactIActionsList *instance, GList *items );
-static GtkTreePath *do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *path, gint level, GList **parents );
+static GtkTreePath *do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *path, gint level, GList **parents, gboolean inside );
 static GList       *do_insert_items_add_parent( GList *parents, GtkTreeView *treeview, GtkTreeModel *model, NAObject *parent );
 
 static gchar       *v_get_treeview_name( NactIActionsList *instance );
@@ -818,10 +818,7 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
 	GList *list_selected;
-	GtkTreePath *insert_path = NULL;
-	GtkTreePath *last_path = NULL;
-	GList *parents = NULL;
-	GList *it;
+	GtkTreePath *insert_path;
 
 	g_debug( "%s: instance=%p, items=%p (%d items)",
 			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
@@ -830,6 +827,7 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 
 	if( st_initialized && !st_finalized ){
 
+		insert_path = NULL;
 		treeview = get_actions_list_treeview( instance );
 		model = gtk_tree_view_get_model( treeview );
 		g_return_if_fail( NACT_IS_TREE_MODEL( model ));
@@ -847,7 +845,46 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 			g_list_free( list_selected );
 		}
 
-		last_path = do_insert_items( treeview, model, items, insert_path, 0, &parents );
+		nact_iactions_list_insert_at_path( instance, items, insert_path, TRUE );
+
+		gtk_tree_path_free( insert_path );
+	}
+}
+
+/**
+ * nact_iactions_list_insert_at_path:
+ * @instance: this #NactIActionsList instance.
+ * @items: a list of items to be inserted (e.g. from a paste).
+ * @path: insertion path.
+ * @inside: %TRUE if the item may be inserted inside of the give path.
+ *
+ * Inserts the provided @items list in the treeview.
+ *
+ * This function takes care of repositionning a new selection if
+ * possible, and refilter the display model.
+ */
+void
+nact_iactions_list_insert_at_path( NactIActionsList *instance, GList *items, GtkTreePath *insert_path, gboolean inside )
+{
+	static const gchar *thisfn = "nact_iactions_list_insert_at_path";
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreePath *last_path = NULL;
+	GList *parents = NULL;
+	GList *it;
+
+	g_debug( "%s: instance=%p, items=%p (%d items)",
+			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+	g_return_if_fail( NACT_IS_WINDOW( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		treeview = get_actions_list_treeview( instance );
+		model = gtk_tree_view_get_model( treeview );
+		g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+
+		last_path = do_insert_items( treeview, model, items, insert_path, 0, &parents, inside );
 
 		for( it = parents ; it ; it = it->next ){
 			na_object_check_edition_status( it->data );
@@ -857,12 +894,17 @@ nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObj
 		select_row_at_path( instance, treeview, model, last_path );
 
 		gtk_tree_path_free( last_path );
-		gtk_tree_path_free( insert_path );
 	}
 }
 
 static GtkTreePath *
-do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *path, gint level, GList **parents )
+do_insert_items( GtkTreeView *treeview,
+					GtkTreeModel *model,
+					GList *items,
+					GtkTreePath *path,
+					gint level,
+					GList **parents,
+					gboolean inside )
 {
 	static const gchar *thisfn = "nact_iactions_list_do_insert_items";
 	guint nb_profiles, nb_actions, nb_menus;
@@ -889,7 +931,8 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 			 * from store to filter_model, and ran through filter_visible function
 			 * we so cannot rely on it if object is a profile inserted at level > 0
 			 */
-			inserted_path_str = nact_tree_model_insert( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ), path, &obj_parent );
+			inserted_path_str = nact_tree_model_insert(
+					NACT_TREE_MODEL( model ), NA_OBJECT( it->data ), path, &obj_parent, inside );
 			g_debug( "%s: inserted_path=%s", thisfn, inserted_path_str );
 
 			inserted_path = gtk_tree_path_new_from_string( inserted_path_str );
@@ -906,7 +949,7 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 			 */
 			if( NA_IS_OBJECT_ITEM( it->data )){
 				subitems = na_object_get_items( it->data );
-				do_insert_items( treeview, model, subitems, inserted_path, level+1, parents );
+				do_insert_items( treeview, model, subitems, inserted_path, level+1, parents, inside );
 				na_object_free_items( subitems );
 			}
 

@@ -765,6 +765,32 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 	}
 }
 
+/**
+ * nact_main_window_prepare_object_for_copy:
+ * @window: this #NactMainWindow instance.
+ * @object: the #NAObject to be prepared.
+ * @new_parent: if @object is a profile, then the new id will be computed
+ * depending of already existing profiles in the @new_parent.
+ *
+ * Gives a new id to the object,
+ * possibly relabeling it depending on current preferences.
+ */
+void
+nact_main_window_prepare_object_for_copy( NactMainWindow *window, NAObject *object, NAObjectAction *new_parent )
+{
+	gboolean relabel = FALSE;
+
+	if( NA_IS_OBJECT_MENU( object )){
+		relabel = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_MENUS );
+	} else if( NA_IS_OBJECT_ACTION( object )){
+		relabel = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_ACTIONS );
+	} else if( NA_IS_OBJECT_PROFILE( object )){
+		relabel = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_PROFILES );
+	}
+
+	na_object_set_new_id( object );
+}
+
 /*
  * If the deleted item is a profile, then do nothing because the parent
  * action has been marked as modified when the profile has been deleted,

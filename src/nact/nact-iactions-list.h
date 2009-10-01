@@ -40,6 +40,8 @@
  * and in the export assistant (export mode).
  */
 
+#include <gtk/gtk.h>
+
 #include <common/na-object-class.h>
 
 G_BEGIN_DECLS
@@ -121,6 +123,7 @@ GList    *nact_iactions_list_get_selected_items( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_exportable( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_modified_items( NactIActionsList *instance );
 void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling );
+void      nact_iactions_list_insert_at_path( NactIActionsList *instance, GList *items, GtkTreePath *path, gboolean inside );
 gboolean  nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item );
 void      nact_iactions_list_set_management_mode( NactIActionsList *instance, gint mode );
 void      nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *item );

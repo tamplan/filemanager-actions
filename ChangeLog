@@ -1,3 +1,27 @@
+2009-10-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-application.c:
+	* src/nact/base-application.h (base_application_message_dlg):
+	New function.
+
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-clipboard.h (nact_clipboard_dnd_set,
+	nact_clipboard_dnd_get_data, nact_clipboard_dnd_get_text,
+	nact_clipboard_dnd_drag_end, nact_clipboard_dnd_clear): New functions.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h (nact_iactions_list_insert_at_path):
+	New function.
+
+	* src/nact/nact-main-statusbar.c:
+	* src/nact/nact-main-statusbar.h
+	(nact_main_statusbar_display_with_timeout): New function.
+
+	* nact/nact-main-window.c:
+	* nact/nact-main-window.h (nact_main_window_prepare_object_for_copy):
+	New function. This is a temporary place, waiting for (another)
+	reorganization of the code.
+
 2009-10-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-utils.c:

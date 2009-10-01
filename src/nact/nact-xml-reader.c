@@ -317,7 +317,7 @@ nact_xml_reader_import( BaseWindow *window, const gchar *uri, gint import_mode, 
 	reader->private->window = window;
 	reader->private->import_mode = import_mode;
 
-	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), NULL );
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
 	doc = xmlParseFile( uri );
 

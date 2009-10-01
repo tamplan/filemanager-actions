@@ -77,6 +77,7 @@ gboolean        nact_main_window_has_modified_items( const NactMainWindow *windo
 void            nact_main_window_move_to_deleted( NactMainWindow *window, GList *items );
 void            nact_main_window_reload( NactMainWindow *window );
 void            nact_main_window_remove_deleted( NactMainWindow *window );
+void            nact_main_window_prepare_object_for_copy( NactMainWindow *window, NAObject *object, NAObjectAction *new_parent );
 
 G_END_DECLS
 

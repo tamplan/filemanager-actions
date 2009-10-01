@@ -119,6 +119,7 @@ gchar       *base_application_get_ui_filename( BaseApplication *application );
 BaseBuilder *base_application_get_builder( BaseApplication *application );
 BaseWindow  *base_application_get_main_window( BaseApplication *application );
 
+void         base_application_message_dlg( BaseApplication *application, GSList *message );
 void         base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
 gboolean     base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
 

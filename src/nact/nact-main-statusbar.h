@@ -42,6 +42,7 @@
 G_BEGIN_DECLS
 
 void  nact_main_statusbar_display_status( NactMainWindow *window, const gchar *context, const gchar *status );
+void  nact_main_statusbar_display_with_timeout( NactMainWindow *window, const gchar *context, const gchar *status );
 void  nact_main_statusbar_hide_status( NactMainWindow *window, const gchar *context );
 
 G_END_DECLS

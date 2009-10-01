@@ -41,7 +41,7 @@
  * clipboard buffers.
  */
 
-#include <glib-object.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -68,20 +68,29 @@ typedef struct {
 }
 	NactClipboardClass;
 
+/* drag and drop formats
+ */
+enum {
+	NACT_XCHANGE_FORMAT_NACT = 0,
+	NACT_XCHANGE_FORMAT_XDS,
+	NACT_XCHANGE_FORMAT_APPLICATION_XML,
+	NACT_XCHANGE_FORMAT_TEXT_PLAIN,
+	NACT_XCHANGE_FORMAT_URI_LIST
+};
+
 GType          nact_clipboard_get_type( void );
 
 NactClipboard *nact_clipboard_new( void );
 
-void           nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_data );
-char          *nact_clipboard_get_data_for_extern_use( GList *selected_items );
+void           nact_clipboard_dnd_set( NactClipboard *clipboard, guint target, GList *rows, const gchar *folder, gboolean copy );
+GList         *nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy );
+gchar         *nact_clipboard_dnd_get_text( NactClipboard *clipboard, GList *rows );
+void           nact_clipboard_dnd_drag_end( NactClipboard *clipboard );
+void           nact_clipboard_dnd_clear( NactClipboard *clipboard );
 
 void           nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean renumber_items );
 GList         *nact_clipboard_primary_get( NactClipboard *clipboard );
 void           nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *profiles, guint *menus );
-
-void           nact_clipboard_free_items( GSList *items );
-
-void           nact_clipboard_export_items( const gchar *uri, GList *items );
 
 G_END_DECLS
 

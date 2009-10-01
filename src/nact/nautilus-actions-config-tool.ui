@@ -1799,7 +1799,7 @@ If there is no root submenu, a 'Nautilus Actions' one is created.</property>
                                   <object class="GtkLabel" id="label45">
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">What to do when pasting, duplicating or importing an action or a menu which already exists in the tree ?</property>
+                                    <property name="label" translatable="yes">What to do when pasting or duplicating an item in the tree ?</property>
                                     <property name="wrap">True</property>
                                   </object>
                                   <packing>
@@ -1941,7 +1941,7 @@ If there is no root submenu, a 'Nautilus Actions' one is created.</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">Imported actions whose UUID already exists will be renumbered. Depending on UI preferences, they may also be relabeled. Existing action will remain unchanged.</property>
+                                    <property name="tooltip_text" translatable="yes">Imported actions whose UUID already exists will be renumbered. A 'renumbered' mention will be added to the label of the item. Existing action will remain unchanged.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsNoImportButton</property>
@@ -2058,16 +2058,16 @@ Be warned: you will not be prompted another time. This mode may be dangerous.	</
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandExamplePreLabel"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandExamplePreLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
 </interface>

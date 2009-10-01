@@ -644,6 +644,34 @@ base_application_get_main_window( BaseApplication *application )
 }
 
 /**
+ * base_application_message_dlg:
+ * @application: this #BaseApplication instance.
+ * @message: the message to be displayed.
+ *
+ * Displays a dialog with only an OK button.
+ */
+void
+base_application_message_dlg( BaseApplication *application, GSList *msg )
+{
+	GString *string;
+	GSList *im;
+
+	if( !application->private->dispose_has_run ){
+
+		string = g_string_new( "" );
+		for( im = msg ; im ; im = im->next ){
+			if( g_utf8_strlen( string->str, -1 )){
+				string = g_string_append( string, "\n" );
+			}
+			string = g_string_append( string, ( gchar * ) im->data );
+		}
+		display_dlg( application, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, string->str, NULL );
+
+		g_string_free( string, TRUE );
+	}
+}
+
+/**
  * base_application_error_dlg:
  * @application: this #BaseApplication instance.
  * @type:

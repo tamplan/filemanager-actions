@@ -41,8 +41,10 @@
 #include <common/na-object-profile.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
+#include <common/na-utils.h>
 
 #include "base-iprefs.h"
+#include "nact-tree-model.h"
 #include "nact-clipboard.h"
 
 /* private class data
@@ -55,6 +57,7 @@ struct NactClipboardClassPrivate {
  */
 struct NactClipboardPrivate {
 	gboolean      dispose_has_run;
+	GtkClipboard *dnd;
 	GtkClipboard *primary;
 };
 
@@ -68,7 +71,8 @@ enum {
 };
 
 /* clipboard formats
- * - a special XdndNautilusAction format for internal move/copy
+ * - a special ClipboardNautilusAction format for internal move/copy
+ *   and also used by drag and drop operations
  * - a XdndDirectSave, suitable for exporting to a file manager
  *   (note that Nautilus recognized the "XdndDirectSave0" format as XDS
  *   protocol)
@@ -81,31 +85,38 @@ static GtkTargetEntry clipboard_formats[] = {
 };
 
 typedef struct {
+	guint    target;
+	gchar   *folder;
+	GList   *rows;
+	gboolean copy;
+}
+	NactClipboardDndData;
+
+typedef struct {
 	guint  nb_actions;
 	guint  nb_profiles;
 	guint  nb_menus;
 	GList *items;
 }
-	NactClipboardData;
+	NactClipboardPrimaryData;
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType         register_type( void );
-static void          class_init( NactClipboardClass *klass );
-static void          iprefs_base_iface_init( BaseIPrefsInterface *iface );
-static void          instance_init( GTypeInstance *instance, gpointer klass );
-static void          instance_dispose( GObject *application );
-static void          instance_finalize( GObject *application );
+static GType  register_type( void );
+static void   class_init( NactClipboardClass *klass );
+static void   iprefs_iface_init( BaseIPrefsInterface *iface );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *application );
+static void   instance_finalize( GObject *application );
 
-static GtkClipboard *get_nact_clipboard( void );
-static GtkClipboard *get_primary_clipboard( void );
-static void          add_item_to_clipboard0( NAObject *object, gboolean copy_data, gboolean only_profiles, GList **copied );
-/*static void          add_item_to_clipboard( NAObject *object, GList **copied );*/
-static void          export_action( const gchar *uri, const NAObject *action, GSList **exported );
-static gchar        *get_action_xml_buffer( const NAObject *action, GSList **exported );
-static void          get_from_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
-static void          clear_clipboard_callback( GtkClipboard *clipboard, NactClipboardData *data );
-static void          renumber_items( NactClipboard *clipboard, GList *items );
+static void   get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
+static void   clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *data );
+static gchar *get_action_xml_buffer( const NAObject *object, GList **exported, NAObjectAction **action );
+static void   export_rows( NactClipboard *clipboard, NactClipboardDndData *data );
+
+static void   get_from_primary_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
+static void   clear_primary_clipboard_callback( GtkClipboard *clipboard, NactClipboardPrimaryData *data );
+static void   renumber_items( NactClipboard *clipboard, GList *items );
 
 GType
 nact_clipboard_get_type( void )
@@ -137,8 +148,8 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo iprefs_base_iface_info = {
-		( GInterfaceInitFunc ) iprefs_base_iface_init,
+	static const GInterfaceInfo iprefs_iface_info = {
+		( GInterfaceInitFunc ) iprefs_iface_init,
 		NULL,
 		NULL
 	};
@@ -147,7 +158,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NactClipboard", &info, 0 );
 
-	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &iprefs_base_iface_info );
+	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &iprefs_iface_info );
 
 	return( type );
 }
@@ -170,9 +181,9 @@ class_init( NactClipboardClass *klass )
 }
 
 static void
-iprefs_base_iface_init( BaseIPrefsInterface *iface )
+iprefs_iface_init( BaseIPrefsInterface *iface )
 {
-	static const gchar *thisfn = "nact_main_window_iprefs_base_iface_init";
+	static const gchar *thisfn = "nact_main_window_iprefs_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
@@ -182,6 +193,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_clipboard_instance_init";
 	NactClipboard *self;
+	GdkDisplay *display;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 	g_assert( NACT_IS_CLIPBOARD( instance ));
@@ -190,7 +202,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactClipboardPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->primary = get_primary_clipboard();
+
+	display = gdk_display_get_default();
+	self->private->dnd = gtk_clipboard_get_for_display( display, NACT_CLIPBOARD_ATOM );
+	self->private->primary = gtk_clipboard_get_for_display( display, GDK_SELECTION_PRIMARY );
 }
 
 static void
@@ -207,6 +222,7 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
+		gtk_clipboard_clear( self->private->dnd );
 		gtk_clipboard_clear( self->private->primary );
 
 		/* chain up to the parent class */
@@ -250,42 +266,103 @@ nact_clipboard_new( void )
 }
 
 /**
- * nact_clipboard_get_data_for_intern_use:
+ * nact_clipboard_dnd_set:
+ * @clipboard: this #NactClipboard instance.
+ * @rows: the list of row references of dragged items.
+ * @folder: the target folder if any (XDS protocol to outside).
+ * @copy_data: %TRUE if data is to be copied, %FALSE else
+ *  (only relevant when drag and drop occurs inside of the tree view).
  *
- * Set the selected items into our custom clipboard.
- *
- * Note that we take a copy of the selected items, so that we will be
- * able to paste them when needed.
+ * Set the selected items into our dnd clipboard.
  */
 void
-nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_data )
+nact_clipboard_dnd_set( NactClipboard *clipboard, guint target, GList *rows, const gchar *folder, gboolean copy_data )
 {
-	static const gchar *thisfn = "nact_clipboard_get_data_for_intern_use";
-	GtkClipboard *clipboard;
-	NactClipboardData *data;
+	static const gchar *thisfn = "nact_clipboard_dnd_set";
+	NactClipboardDndData *data;
+	GtkTreeModel *model;
 	GList *it;
 
-	clipboard = get_nact_clipboard();
+	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+	g_return_if_fail( rows && g_list_length( rows ));
 
-	data = g_new0( NactClipboardData, 1 );
-	/*data->only_profiles = have_only_profiles( selected_items );*/
+	if( !clipboard->private->dispose_has_run ){
 
-	for( it = selected_items ; it ; it = it->next ){
-		NAObject *item_object = NA_OBJECT( it->data );
-		add_item_to_clipboard0( item_object, copy_data, FALSE /*data->only_profiles*/, &data->items );
+		data = g_new0( NactClipboardDndData, 1 );
+
+		data->target = target;
+		data->folder = g_strdup( folder );
+		data->rows = NULL;
+		data->copy = copy_data;
+
+		model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) rows->data );
+
+		for( it = rows ; it ; it = it->next ){
+			data->rows = g_list_append(
+					data->rows,
+					gtk_tree_row_reference_copy(( GtkTreeRowReference * ) it->data ));
+		}
+
+		gtk_clipboard_set_with_data( clipboard->private->dnd,
+				clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
+				( GtkClipboardGetFunc ) get_from_dnd_clipboard_callback,
+				( GtkClipboardClearFunc ) clear_dnd_clipboard_callback,
+				data );
+
+		g_debug( "%s: clipboard=%p, data=%p", thisfn, ( void * ) clipboard, ( void * ) data );
 	}
-	data->items = g_list_reverse( data->items );
-
-	gtk_clipboard_set_with_data( clipboard,
-			clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
-			( GtkClipboardGetFunc ) get_from_clipboard_callback,
-			( GtkClipboardClearFunc ) clear_clipboard_callback,
-			data );
-
-	g_debug( "%s: clipboard=%p, data=%p", thisfn, ( void * ) clipboard, ( void * ) data );
 }
 
 /**
+ * nact_clipboard_dnd_get_data:
+ * @clipboard: this #NactClipboard instance.
+ * @copy_data: will be set to the original value of the drag and drop.
+ *
+ * Returns the list of rows references privously stored.
+ *
+ * The returned list should be gtk_tree_row_reference_free() by the
+ * caller.
+ */
+GList *
+nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
+{
+	static const gchar *thisfn = "nact_clipboard_dnd_get_data";
+	GList *rows = NULL;
+	GtkSelectionData *selection;
+	NactClipboardDndData *data;
+	GtkTreeModel *model;
+	GList *it;
+
+	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
+	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
+
+	if( copy_data ){
+		*copy_data = FALSE;
+	}
+
+	if( !clipboard->private->dispose_has_run ){
+
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, NACT_CLIPBOARD_NACT_ATOM );
+		if( selection ){
+
+			data = ( NactClipboardDndData * ) selection->data;
+			if( data->target == NACT_XCHANGE_FORMAT_NACT ){
+
+				model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) data->rows->data );
+
+				for( it = data->rows ; it ; it = it->next ){
+					rows = g_list_append( rows,
+							gtk_tree_row_reference_copy(( GtkTreeRowReference * ) it->data ));
+				}
+				*copy_data = data->copy;
+			}
+		}
+	}
+
+	return( rows );
+}
+
+/*
  * Get text/plain from selected actions.
  *
  * This is called when we drop or paste a selection onto an application
@@ -293,41 +370,166 @@ nact_clipboard_get_data_for_intern_use( GList *selected_items, gboolean copy_dat
  * mime types.
  *
  * Selected items may include menus, actions and profiles.
- * For now, we only exports actions as XML files.
+ * For now, we only exports actions (and profiles) as XML files.
+ *
+ * FIXME: na_xml_writer_get_xml_buffer() returns a valid XML document,
+ * which includes the <?xml ...?> header. Concatenating several valid
+ * XML documents doesn't provide a valid global XML doc, because of
+ * the presence of several <?xml ?> headers inside.
  */
-char *
-nact_clipboard_get_data_for_extern_use( GList *selected_items )
+gchar *
+nact_clipboard_dnd_get_text( NactClipboard *clipboard, GList *rows )
 {
+	GtkTreeModel *model;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	NAObject *object;
+	NAObjectAction *action;
 	GList *it;
-	GSList *exported = NULL;
+	GList *exported;
 	GString *data;
 	gchar *chunk;
 
+	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
+	g_return_val_if_fail( rows && g_list_length( rows ), NULL );
+
 	data = g_string_new( "" );
 
-	for( it = selected_items ; it ; it = it->next ){
-		NAObject *item_object = NA_OBJECT( it->data );
-		chunk = NULL;
+	if( !clipboard->private->dispose_has_run ){
 
-		if( NA_IS_OBJECT_ACTION( item_object )){
-			chunk = get_action_xml_buffer( item_object, &exported );
+		exported = NULL;
+		model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) rows->data );
 
-		} else if( NA_IS_OBJECT_PROFILE( item_object )){
-			NAObjectAction *action = na_object_profile_get_action( NA_OBJECT_PROFILE( item_object ));
-			chunk = get_action_xml_buffer( NA_OBJECT( action ), &exported );
+		for( it = rows ; it ; it = it->next ){
+
+			path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
+			if( path ){
+				gtk_tree_model_get_iter( model, &iter, path );
+				gtk_tree_path_free( path );
+
+				gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+				chunk = NULL;
+
+				if( NA_IS_OBJECT_ACTION( object )){
+					chunk = get_action_xml_buffer( object, &exported, &action );
+
+				} else if( NA_IS_OBJECT_PROFILE( object )){
+					chunk = get_action_xml_buffer( object, &exported, &action );
+				}
+
+				if( chunk ){
+					g_assert( strlen( chunk ));
+					data = g_string_append( data, chunk );
+					g_free( chunk );
+				}
+
+				g_object_unref( object );
+			}
 		}
 
-		if( chunk && strlen( chunk )){
-			data = g_string_append( data, chunk );
-		}
-		g_free( chunk );
+		g_list_free( exported );
 	}
 
-	g_slist_free( exported );
 	return( g_string_free( data, FALSE ));
 }
 
 /**
+ * nact_clipboard_dnd_drag_end:
+ * @clipboard: this #NactClipboard instance.
+ *
+ * On drag-end, exports the objects if needed.
+ */
+void
+nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
+{
+	static const gchar *thisfn = "nact_clipboard_dnd_drag_end";
+	GtkSelectionData *selection;
+	NactClipboardDndData *data;
+
+	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
+	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+
+	if( !clipboard->private->dispose_has_run ){
+
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, NACT_CLIPBOARD_NACT_ATOM );
+		if( selection ){
+
+			data = ( NactClipboardDndData * ) selection->data;
+			if( data->target == NACT_XCHANGE_FORMAT_XDS ){
+				export_rows( clipboard, data );
+			}
+		}
+	}
+}
+
+/**
+ * nact_clipboard_dnd_clear:
+ * @clipboard: this #NactClipboard instance.
+ *
+ * Clears the drag-and-drop clipboard.
+ *
+ * At least called on drag-begin.
+ */
+void
+nact_clipboard_dnd_clear( NactClipboard *clipboard )
+{
+	gtk_clipboard_clear( clipboard->private->dnd );
+}
+
+static void
+get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data )
+{
+	static const gchar *thisfn = "nact_clipboard_get_from_dnd_clipboard_callback";
+
+	g_debug( "%s: clipboard=%p, selection_data=%p, target=%s, info=%d, data=%p",
+			thisfn, ( void * ) clipboard,
+			( void * ) selection_data, gdk_atom_name( selection_data->target ), info, ( void * ) data );
+
+	gtk_selection_data_set( selection_data, selection_data->target, 8, data, sizeof( NactClipboardDndData ));
+}
+
+static void
+clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *data )
+{
+	static const gchar *thisfn = "nact_clipboard_clear_dnd_clipboard_callback";
+
+	g_debug( "%s: clipboard=%p, data=%p", thisfn, ( void * ) clipboard, ( void * ) data );
+
+	g_free( data->folder );
+	g_list_foreach( data->rows, ( GFunc ) gtk_tree_row_reference_free, NULL );
+	g_list_free( data->rows );
+	g_free( data );
+}
+
+static gchar *
+get_action_xml_buffer( const NAObject *object, GList **exported, NAObjectAction **action )
+{
+	gchar *buffer = NULL;
+	gint index;
+
+	g_return_val_if_fail( action, NULL );
+
+	*action = NULL;
+
+	if( NA_IS_OBJECT_ACTION( object )){
+		*action = NA_OBJECT_ACTION( object );
+	}
+	if( NA_IS_OBJECT_PROFILE( object )){
+		*action = na_object_profile_get_action( NA_OBJECT_PROFILE( object ));
+	}
+
+	if( *action ){
+		index = g_list_index( *exported, ( gconstpointer ) *action );
+		if( index == -1 ){
+			buffer = na_xml_writer_get_xml_buffer( *action, FORMAT_GCONFENTRY );
+			*exported = g_list_prepend( *exported, ( gpointer ) *action );
+		}
+	}
+
+	return( buffer );
+}
+
+/*
  * Exports selected actions.
  *
  * This is called when we drop or paste a selection onto an application
@@ -336,25 +538,44 @@ nact_clipboard_get_data_for_extern_use( GList *selected_items )
  * Selected items may include menus, actions and profiles.
  * For now, we only exports actions as XML files.
  */
-void
-nact_clipboard_export_items( const gchar *uri, GList *items )
+static void
+export_rows( NactClipboard *clipboard, NactClipboardDndData *data )
 {
+	GtkTreeModel *model;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	NAObject *object;
+	NAObjectAction *action;
 	GList *it;
-	GSList *exported = NULL;
+	GList *exported;
+	gchar *buffer;
+	gchar *fname;
 
-	for( it = items ; it ; it = it->next ){
-		NAObject *item_object = NA_OBJECT( it->data );
+	exported = NULL;
+	model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) data->rows->data );
 
-		if( NA_IS_OBJECT_ACTION( item_object )){
-			export_action( uri, item_object, &exported );
+	for( it = data->rows ; it ; it = it->next ){
 
-		} else if( NA_IS_OBJECT_PROFILE( item_object )){
-			NAObjectAction *action = na_object_profile_get_action( NA_OBJECT_PROFILE( item_object ));
-			export_action( uri, NA_OBJECT( action ), &exported );
+		path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
+		if( path ){
+			gtk_tree_model_get_iter( model, &iter, path );
+			gtk_tree_path_free( path );
+			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+
+			buffer = get_action_xml_buffer( object, &exported, &action );
+			if( buffer ){
+
+				fname = na_xml_writer_get_output_fname( NA_OBJECT_ACTION( action ), data->folder, FORMAT_GCONFENTRY );
+				na_xml_writer_output_xml( buffer, fname );
+				g_free( fname );
+				g_free( buffer );
+			}
+
+			g_object_unref( object );
 		}
 	}
 
-	g_slist_free( exported );
+	g_list_free( exported );
 }
 
 /**
@@ -381,14 +602,14 @@ nact_clipboard_export_items( const gchar *uri, GList *items )
 void
 nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean renumber )
 {
-	NactClipboardData *data;
+	NactClipboardPrimaryData *data;
 	GList *it;
 
 	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
 
 	if( !clipboard->private->dispose_has_run ){
 
-		data = g_new0( NactClipboardData, 1 );
+		data = g_new0( NactClipboardPrimaryData, 1 );
 
 		for( it = items ; it ; it = it->next ){
 			data->items = g_list_prepend( data->items, na_object_duplicate( it->data ));
@@ -411,8 +632,8 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean ren
 
 		gtk_clipboard_set_with_data( clipboard->private->primary,
 				clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
-				( GtkClipboardGetFunc ) get_from_clipboard_callback,
-				( GtkClipboardClearFunc ) clear_clipboard_callback,
+				( GtkClipboardGetFunc ) get_from_primary_clipboard_callback,
+				( GtkClipboardClearFunc ) clear_primary_clipboard_callback,
 				data );
 	}
 }
@@ -431,7 +652,7 @@ GList *
 nact_clipboard_primary_get( NactClipboard *clipboard )
 {
 	GtkSelectionData *selection;
-	NactClipboardData *data;
+	NactClipboardPrimaryData *data;
 	GList *items = NULL;
 	GList *it;
 	NAObject *obj;
@@ -443,7 +664,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard )
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
 
 		if( selection ){
-			data = ( NactClipboardData * ) selection->data;
+			data = ( NactClipboardPrimaryData * ) selection->data;
 
 			for( it = data->items ; it ; it = it->next ){
 				obj = na_object_duplicate( it->data );
@@ -469,7 +690,7 @@ void
 nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *profiles, guint *menus )
 {
 	GtkSelectionData *selection;
-	NactClipboardData *data;
+	NactClipboardPrimaryData *data;
 
 	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
 	g_return_if_fail( actions && profiles && menus );
@@ -483,7 +704,7 @@ nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
 
 		if( selection ){
-			data = ( NactClipboardData * ) selection->data;
+			data = ( NactClipboardPrimaryData * ) selection->data;
 
 			*actions = data->nb_actions;
 			*profiles = data->nb_profiles;
@@ -492,111 +713,22 @@ nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *
 	}
 }
 
-static GtkClipboard *
-get_nact_clipboard( void )
-{
-	GdkDisplay *display;
-	GtkClipboard *clipboard;
-
-	display = gdk_display_get_default();
-	clipboard = gtk_clipboard_get_for_display( display, NACT_CLIPBOARD_ATOM );
-
-	return( clipboard );
-}
-
-static GtkClipboard *
-get_primary_clipboard( void )
-{
-	GdkDisplay *display;
-	GtkClipboard *clipboard;
-
-	display = gdk_display_get_default();
-	clipboard = gtk_clipboard_get_for_display( display, GDK_SELECTION_PRIMARY );
-
-	return( clipboard );
-}
-
 static void
-add_item_to_clipboard0( NAObject *object, gboolean copy_data, gboolean only_profiles, GList **items_list )
+get_from_primary_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data )
 {
-	NAObject *source;
-	gint index;
-
-	source = object;
-	if( !only_profiles && NA_IS_OBJECT_PROFILE( object )){
-		source = NA_OBJECT( na_object_profile_get_action( NA_OBJECT_PROFILE( object )));
-	}
-
-	index = g_list_index( *items_list, ( gconstpointer ) source );
-	if( index != -1 ){
-		return;
-	}
-
-	*items_list = g_list_prepend( *items_list, na_object_ref( source ));
-}
-
-/*static void
-add_item_to_clipboard( NAObject *object, GList **items_list )
-{
-	*items_list = g_list_prepend( *items_list, na_object_ref( object ));
-}*/
-
-static void
-export_action( const gchar *uri, const NAObject *action, GSList **exported )
-{
-	gint index;
-	gchar *fname, *buffer;
-
-	index = g_slist_index( *exported, ( gconstpointer ) action );
-	if( index != -1 ){
-		return;
-	}
-
-	fname = na_xml_writer_get_output_fname( NA_OBJECT_ACTION( action ), uri, FORMAT_GCONFENTRY );
-	buffer = na_xml_writer_get_xml_buffer( NA_OBJECT_ACTION( action ), FORMAT_GCONFENTRY );
-
-	na_xml_writer_output_xml( buffer, fname );
-
-	g_free( buffer );
-	g_free( fname );
-
-	*exported = g_slist_prepend( *exported, ( gpointer ) action );
-}
-
-static gchar *
-get_action_xml_buffer( const NAObject *action, GSList **exported )
-{
-	gint index;
-	gchar *buffer;
-
-	index = g_slist_index( *exported, ( gconstpointer ) action );
-	if( index != -1 ){
-		return( NULL );
-	}
-
-	buffer = na_xml_writer_get_xml_buffer( NA_OBJECT_ACTION( action ), FORMAT_GCONFENTRY );
-
-	*exported = g_slist_prepend( *exported, ( gpointer ) action );
-
-	return( buffer );
-}
-
-static void
-get_from_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data )
-{
-	static const gchar *thisfn = "nact_clipboard_get_from_clipboard_callback";
+	static const gchar *thisfn = "nact_clipboard_get_from_primary_clipboard_callback";
 
 	g_debug( "%s: clipboard=%p, selection_data=%p, target=%s, info=%d, data=%p",
 			thisfn, ( void * ) clipboard,
 			( void * ) selection_data, gdk_atom_name( selection_data->target ), info, ( void * ) data );
 
-	gtk_selection_data_set( selection_data, selection_data->target, 8, data, sizeof( NactClipboardData ));
+	gtk_selection_data_set( selection_data, selection_data->target, 8, data, sizeof( NactClipboardPrimaryData ));
 }
 
 static void
-clear_clipboard_callback( GtkClipboard *clipboard, NactClipboardData *data )
+clear_primary_clipboard_callback( GtkClipboard *clipboard, NactClipboardPrimaryData *data )
 {
-	static const gchar *thisfn = "nact_clipboard_clear_clipboard_callback";
+	static const gchar *thisfn = "nact_clipboard_clear_primary_clipboard_callback";
 
 	g_debug( "%s: clipboard=%p, data=%p", thisfn, ( void * ) clipboard, ( void * ) data );
 

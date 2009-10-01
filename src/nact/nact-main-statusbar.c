@@ -54,6 +54,23 @@ nact_main_statusbar_display_status( NactMainWindow *window, const gchar *context
 }
 
 void
+nact_main_statusbar_display_with_timeout( NactMainWindow *window, const gchar *context, const gchar *status )
+{
+	GtkStatusbar *bar;
+
+	if( !status || !g_utf8_strlen( status, -1 )){
+		return;
+	}
+
+	bar = get_statusbar( window );
+
+	if( bar ){
+		guint context_id = gtk_statusbar_get_context_id( bar, context );
+		gtk_statusbar_push( bar, context_id, status );
+	}
+}
+
+void
 nact_main_statusbar_hide_status( NactMainWindow *window, const gchar *context )
 {
 	GtkStatusbar *bar;
