@@ -132,6 +132,8 @@ static GtkWidget       *search_for_child_widget( GtkContainer *container, const 
 static void             set_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel, gboolean init );
 static void             setup_builder( BaseWindow *window );
 
+static void             record_connected_signal( BaseWindow *window, GObject *instance, gulong handler_id );
+
 GType
 base_window_get_type( void )
 {
@@ -1202,22 +1204,24 @@ base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *fir
 void
 base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn )
 {
-	static const gchar *thisfn = "base_window_signal_connect";
-
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 
 		gulong handler_id = g_signal_connect( instance, signal, fn, window );
+		record_connected_signal( window, instance, handler_id );
+	}
+}
 
-		BaseWindowRecordedSignal *str = g_new0( BaseWindowRecordedSignal, 1 );
-		str->instance = instance;
-		str->handler_id = handler_id;
-		window->private->signals = g_slist_prepend( window->private->signals, str );
+void
+base_window_signal_connect_after( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn )
+{
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-		if( st_debug_signal_connect ){
-			g_debug( "%s: connecting signal handler %p:%lu", thisfn, ( void * ) instance, handler_id );
-		}
+	if( !window->private->dispose_has_run ){
+
+		gulong handler_id = g_signal_connect_after( instance, signal, fn, window );
+		record_connected_signal( window, instance, handler_id );
 	}
 }
 
@@ -1233,5 +1237,20 @@ base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const
 
 			base_window_signal_connect( window, G_OBJECT( widget ), signal, fn );
 		}
+	}
+}
+
+static void
+record_connected_signal( BaseWindow *window, GObject *instance, gulong handler_id )
+{
+	static const gchar *thisfn = "base_window_record_connected_signal";
+
+	BaseWindowRecordedSignal *str = g_new0( BaseWindowRecordedSignal, 1 );
+	str->instance = instance;
+	str->handler_id = handler_id;
+	window->private->signals = g_slist_prepend( window->private->signals, str );
+
+	if( st_debug_signal_connect ){
+		g_debug( "%s: connecting signal handler %p:%lu", thisfn, ( void * ) instance, handler_id );
 	}
 }

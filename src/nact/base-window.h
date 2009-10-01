@@ -88,6 +88,7 @@ void             base_window_error_dlg( BaseWindow *window, GtkMessageType type,
 gboolean         base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second );
 
 void             base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
+void             base_window_signal_connect_after( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
 void             base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const gchar *signal, GCallback fn );
 
 G_END_DECLS

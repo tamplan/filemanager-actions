@@ -38,6 +38,8 @@
 
 #include "na-utils.h"
 
+static GSList *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
+
 /**
  * na_utils_find_in_list:
  * @list: the GSList of strings to be searched.
@@ -195,17 +197,40 @@ na_utils_string_list_to_text( GSList *strlist )
 GSList *
 na_utils_text_to_string_list( const gchar *text )
 {
+	return( text_to_string_list( text, ";", "*" ));
+}
+
+/**
+ * na_utils_lines_to_string_list:
+ * @text: a buffer which contains embedded newlines.
+ *
+ * Returns: a list of strings from the buffer.
+ *
+ * The returned list should be na_utils_free_string_list() by the caller.
+ */
+GSList *
+na_utils_lines_to_string_list( const gchar *text )
+{
+	return( text_to_string_list( text, "\n", NULL ));
+}
+
+/*
+ * split a text buffer in lines
+ */
+static GSList *
+text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value )
+{
 	GSList *strlist = NULL;
 	gchar **tokens, **iter;
 	gchar *tmp;
 	gchar *source = g_strdup( text );
 
 	tmp = g_strstrip( source );
-	if( !strlen( tmp )){
-		strlist = g_slist_append( strlist, g_strdup( "*" ));
+	if( !strlen( tmp ) && default_value ){
+		strlist = g_slist_append( strlist, g_strdup( default_value ));
 
 	} else {
-		tokens = g_strsplit( source, ";", -1 );
+		tokens = g_strsplit( source, separator, -1 );
 		iter = tokens;
 
 		while( *iter ){

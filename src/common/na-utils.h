@@ -45,6 +45,7 @@ GSList  *na_utils_remove_ascii_from_string_list( GSList *list, const gchar *text
 void     na_utils_free_string_list( GSList *list );
 gchar   *na_utils_string_list_to_text( GSList *list );
 GSList  *na_utils_text_to_string_list( const gchar *text );
+GSList  *na_utils_lines_to_string_list( const gchar *text );
 void     na_utils_dump_string_list( GSList *list );
 
 gchar   *na_utils_gslist_to_schema( GSList *list );
