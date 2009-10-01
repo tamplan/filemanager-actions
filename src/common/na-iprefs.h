@@ -108,6 +108,9 @@ void     na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
 gboolean na_iprefs_should_add_about_item( NAIPrefs *instance );
 void     na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
 
+gint     na_iprefs_get_import_mode( NAIPrefs *instance );
+void     na_iprefs_set_import_mode( NAIPrefs *instance, gint mode );
+
 gchar   *na_iprefs_read_string( NAIPrefs *instance, const gchar *key, const gchar *default_value );
 void     na_iprefs_write_string( NAIPrefs *instance, const gchar *key, const gchar *value );
 
@@ -118,16 +121,25 @@ void     na_iprefs_write_string( NAIPrefs *instance, const gchar *key, const gch
 
 /* GConf Preference keys managed by IPrefs interface
  */
-#define PREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
-#define PREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
-#define PREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
+#define IPREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
+#define IPREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
+#define IPREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
+#define IPREFS_IMPORT_ACTIONS_IMPORT_MODE	"import-mode"
 
 /* alphabetical order values
  */
 enum {
-	PREFS_ORDER_ALPHA_ASCENDING = 1,
-	PREFS_ORDER_ALPHA_DESCENDING,
-	PREFS_ORDER_MANUAL
+	IPREFS_ORDER_ALPHA_ASCENDING = 1,
+	IPREFS_ORDER_ALPHA_DESCENDING,
+	IPREFS_ORDER_MANUAL
+};
+
+/* import mode
+ */
+enum {
+	IPREFS_IMPORT_NO_IMPORT = 1,
+	IPREFS_IMPORT_RENUMBER,
+	IPREFS_IMPORT_OVERRIDE
 };
 
 G_END_DECLS

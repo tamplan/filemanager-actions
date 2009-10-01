@@ -876,7 +876,7 @@ monitor_runtime_preferences( NAPivot *pivot )
 static void
 on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_on_preferences_change";
+	/*static const gchar *thisfn = "na_pivot_on_preferences_change";*/
 	const gchar *key;
 	gchar *key_entry;
 
@@ -884,13 +884,13 @@ on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NA
 
 	key = gconf_entry_get_key( entry );
 	key_entry = na_utils_path_extract_last_dir( key );
-	g_debug( "%s: key=%s", thisfn, key_entry );
+	/*g_debug( "%s: key=%s", thisfn, key_entry );*/
 
-	if( !g_ascii_strcasecmp( key_entry, PREFS_ADD_ABOUT_ITEM )){
+	if( !g_ascii_strcasecmp( key_entry, IPREFS_ADD_ABOUT_ITEM )){
 		display_about_changed( pivot );
 	}
 
-	if( !g_ascii_strcasecmp( key_entry, PREFS_DISPLAY_ALPHABETICAL_ORDER )){
+	if( !g_ascii_strcasecmp( key_entry, IPREFS_DISPLAY_ALPHABETICAL_ORDER )){
 		display_order_changed( pivot );
 	}
 

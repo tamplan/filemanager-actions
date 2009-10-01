@@ -50,13 +50,23 @@ typedef struct {
 }
 	NAIPrefsPrivate;
 
-#define DEFAULT_ORDER_MODE_INT			PREFS_ORDER_ALPHA_ASCENDING
+#define DEFAULT_ORDER_MODE_INT			IPREFS_ORDER_ALPHA_ASCENDING
 #define DEFAULT_ORDER_MODE_STR			"AscendingOrder"
 
 static GConfEnumStringPair order_mode_table[] = {
-	{ PREFS_ORDER_ALPHA_ASCENDING , "AscendingOrder" },
-	{ PREFS_ORDER_ALPHA_DESCENDING, "DescendingOrder" },
-	{ PREFS_ORDER_MANUAL          , "ManualOrder" },
+	{ IPREFS_ORDER_ALPHA_ASCENDING ,	"AscendingOrder" },
+	{ IPREFS_ORDER_ALPHA_DESCENDING,	"DescendingOrder" },
+	{ IPREFS_ORDER_MANUAL          ,	"ManualOrder" },
+	{ 0, NULL }
+};
+
+#define DEFAULT_IMPORT_MODE_INT			IPREFS_IMPORT_NO_IMPORT
+#define DEFAULT_IMPORT_MODE_STR			"NoImport"
+
+static GConfEnumStringPair import_mode_table[] = {
+	{ IPREFS_IMPORT_NO_IMPORT,			"NoImport" },
+	{ IPREFS_IMPORT_RENUMBER ,			"Renumber" },
+	{ IPREFS_IMPORT_OVERRIDE ,			"Override" },
 	{ 0, NULL }
 };
 
@@ -166,7 +176,7 @@ na_iprefs_get_level_zero_items( NAIPrefs *instance )
 
 	if( st_initialized && !st_finalized ){
 		setup_private_data( instance );
-		level_zero = read_string_list( instance, PREFS_LEVEL_ZERO_ITEMS );
+		level_zero = read_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS );
 	}
 
 	return( level_zero );
@@ -186,7 +196,7 @@ na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
 
 	if( st_initialized && !st_finalized ){
 		setup_private_data( instance );
-		write_string_list( instance, PREFS_LEVEL_ZERO_ITEMS, order );
+		write_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS, order );
 	}
 }
 
@@ -216,7 +226,7 @@ na_iprefs_get_order_mode( NAIPrefs *instance )
 		setup_private_data( instance );
 		order_str = na_iprefs_read_string(
 				instance,
-				PREFS_DISPLAY_ALPHABETICAL_ORDER,
+				IPREFS_DISPLAY_ALPHABETICAL_ORDER,
 				DEFAULT_ORDER_MODE_STR );
 		if( gconf_string_to_enum( order_mode_table, order_str, &order_int )){
 			alpha_order = order_int;
@@ -248,7 +258,7 @@ na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 		order_str = gconf_enum_to_string( order_mode_table, mode );
 		na_iprefs_write_string(
 				instance,
-				PREFS_DISPLAY_ALPHABETICAL_ORDER,
+				IPREFS_DISPLAY_ALPHABETICAL_ORDER,
 				order_str ? order_str : DEFAULT_ORDER_MODE_STR );
 	}
 }
@@ -275,7 +285,7 @@ na_iprefs_should_add_about_item( NAIPrefs *instance )
 
 	if( st_initialized && !st_finalized ){
 		setup_private_data( instance );
-		about = read_bool( instance, PREFS_ADD_ABOUT_ITEM, TRUE );
+		about = read_bool( instance, IPREFS_ADD_ABOUT_ITEM, TRUE );
 	}
 
 	return( about );
@@ -295,7 +305,70 @@ na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled )
 
 	if( st_initialized && !st_finalized ){
 		setup_private_data( instance );
-		write_bool( instance, PREFS_ADD_ABOUT_ITEM, enabled );
+		write_bool( instance, IPREFS_ADD_ABOUT_ITEM, enabled );
+	}
+}
+
+/**
+ * na_iprefs_get_import_mode:
+ * @instance: this #NAIPrefs interface instance.
+ *
+ * Returns: the import mode currently set.
+ *
+ * Note: this function returns a suitable default value even if the key
+ * is not found in GConf preferences or no schema has been installed.
+ *
+ * Note: please take care of keeping the default value synchronized with
+ * those defined in schemas.
+ */
+gint
+na_iprefs_get_import_mode( NAIPrefs *instance )
+{
+	gint import_mode = DEFAULT_IMPORT_MODE_INT;
+	gint import_int;
+	gchar *import_str;
+
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), DEFAULT_IMPORT_MODE_INT );
+
+	if( st_initialized && !st_finalized ){
+
+		setup_private_data( instance );
+		import_str = na_iprefs_read_string(
+				instance,
+				IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
+				DEFAULT_IMPORT_MODE_STR );
+		if( gconf_string_to_enum( import_mode_table, import_str, &import_int )){
+			import_mode = import_int;
+		}
+		g_free( import_str );
+	}
+
+	return( import_mode );
+}
+
+/**
+ * na_iprefs_set_import_mode:
+ * @instance: this #NAIPrefs interface instance.
+ * @mode: the new value to be written.
+ *
+ * Writes the current status of 'alphabetical order' to the GConf
+ * preference system.
+ */
+void
+na_iprefs_set_import_mode( NAIPrefs *instance, gint mode )
+{
+	const gchar *import_str;
+
+	g_return_if_fail( NA_IS_IPREFS( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		setup_private_data( instance );
+		import_str = gconf_enum_to_string( import_mode_table, mode );
+		na_iprefs_write_string(
+				instance,
+				IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
+				import_str ? import_str : DEFAULT_IMPORT_MODE_STR );
 	}
 }
 

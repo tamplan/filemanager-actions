@@ -437,7 +437,7 @@ na_xml_writer_get_xml_buffer( const NAObjectAction *action, gint format )
 	int textlen;
 	gchar *buffer;
 
-	g_assert( action || format == FORMAT_GCONFSCHEMA );
+	g_return_val_if_fail( action || format == FORMAT_GCONFSCHEMA, NULL );
 
 	uuid = action ? na_object_get_id( action ) : NULL;
 	writer = xml_writer_new( uuid );
@@ -486,7 +486,8 @@ na_xml_writer_output_xml( const gchar *xml, const gchar *filename )
 	GFileOutputStream *stream;
 	GError *error = NULL;
 
-	g_assert( filename );
+	g_return_if_fail( xml );
+	g_return_if_fail( filename && g_utf8_strlen( filename, -1 ));
 
 	file = g_file_new_for_uri( filename );
 

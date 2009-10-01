@@ -275,6 +275,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	gint order_mode;
 	gboolean add_about_item;
 	gboolean relabel;
+	gint import_mode;
 	GtkWidget *button;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
@@ -282,17 +283,19 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	pivot = nact_application_get_pivot( application );
 
+	/* first tab: runtime preferences
+	 */
 	order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
 	switch( order_mode ){
-		case PREFS_ORDER_ALPHA_ASCENDING:
+		case IPREFS_ORDER_ALPHA_ASCENDING:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
 			break;
 
-		case PREFS_ORDER_ALPHA_DESCENDING:
+		case IPREFS_ORDER_ALPHA_DESCENDING:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaDescButton" );
 			break;
 
-		case PREFS_ORDER_MANUAL:
+		case IPREFS_ORDER_MANUAL:
 		default:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderManualButton" );
 			break;
@@ -302,6 +305,39 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	add_about_item = na_iprefs_should_add_about_item( NA_IPREFS( pivot ));
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), add_about_item );
+
+	/* second tab: ui preferences
+	 */
+	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_MENUS );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
+
+	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_ACTIONS );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelActionButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
+
+	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_PROFILES );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
+
+	/* third tab: tools preferences
+	 */
+	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ));
+	switch( import_mode ){
+		case IPREFS_IMPORT_NO_IMPORT:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsNoImportButton" );
+			break;
+
+		case IPREFS_IMPORT_RENUMBER:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsRenumberButton" );
+			break;
+
+		case IPREFS_IMPORT_OVERRIDE:
+		default:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsOverrideButton" );
+			break;
+	}
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 
 	base_window_signal_connect_by_name(
 			BASE_WINDOW( editor ),
@@ -314,18 +350,6 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 			"OKButton",
 			"clicked",
 			G_CALLBACK( on_ok_clicked ));
-
-	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_MENUS );
-	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
-
-	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_ACTIONS );
-	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelActionButton" );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
-
-	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_PROFILES );
-	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 }
 
 static void
@@ -364,22 +388,25 @@ save_preferences( NactPreferencesEditor *editor )
 	gint order_mode;
 	gboolean enabled;
 	gboolean relabel;
+	gint import_mode;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	pivot = nact_application_get_pivot( application );
 
-	order_mode = PREFS_ORDER_ALPHA_ASCENDING;
+	/* first tab: runtime preferences
+	 */
+	order_mode = IPREFS_ORDER_ALPHA_ASCENDING;
 	button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-		order_mode = PREFS_ORDER_ALPHA_ASCENDING;
+		order_mode = IPREFS_ORDER_ALPHA_ASCENDING;
 	} else {
 		button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaDescButton" );
 		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-			order_mode = PREFS_ORDER_ALPHA_DESCENDING;
+			order_mode = IPREFS_ORDER_ALPHA_DESCENDING;
 		} else {
 			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderManualButton" );
 			if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-				order_mode = PREFS_ORDER_MANUAL;
+				order_mode = IPREFS_ORDER_MANUAL;
 			}
 		}
 	}
@@ -389,6 +416,8 @@ save_preferences( NactPreferencesEditor *editor )
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	na_iprefs_set_add_about_item( NA_IPREFS( pivot ), enabled );
 
+	/* second tab: runtime preferences
+	 */
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	base_iprefs_set_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_MENUS, relabel );
@@ -400,6 +429,25 @@ save_preferences( NactPreferencesEditor *editor )
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	base_iprefs_set_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_PROFILES, relabel );
+
+	/* third tab: tools preferences
+	 */
+	import_mode = IPREFS_IMPORT_NO_IMPORT;
+	button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsNoImportButton" );
+	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+		import_mode = IPREFS_IMPORT_NO_IMPORT;
+	} else {
+		button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsRenumberButton" );
+		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+			import_mode = IPREFS_IMPORT_RENUMBER;
+		} else {
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsOverrideButton" );
+			if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+				import_mode = IPREFS_IMPORT_OVERRIDE;
+			}
+		}
+	}
+	na_iprefs_set_import_mode( NA_IPREFS( pivot ), import_mode );
 }
 
 static gboolean

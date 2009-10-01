@@ -183,15 +183,15 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 
 		order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
 		switch( order_mode ){
-			case PREFS_ORDER_ALPHA_ASCENDING:
+			case IPREFS_ORDER_ALPHA_ASCENDING:
 				hierarchy = sort_tree( pivot, hierarchy, ( GCompareFunc ) na_pivot_sort_alpha_asc );
 				break;
 
-			case PREFS_ORDER_ALPHA_DESCENDING:
+			case IPREFS_ORDER_ALPHA_DESCENDING:
 				hierarchy = sort_tree( pivot, hierarchy, ( GCompareFunc ) na_pivot_sort_alpha_desc );
 				break;
 
-			case PREFS_ORDER_MANUAL:
+			case IPREFS_ORDER_MANUAL:
 			default:
 				break;
 		}
