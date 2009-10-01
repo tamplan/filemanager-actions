@@ -1599,6 +1599,106 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
       </object>
     </child>
   </object>
+  <object class="GtkDialog" id="PreferencesDialog2">
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Nautilus Actions Preferences</property>
+    <property name="modal">True</property>
+    <property name="type_hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox2">
+        <property name="visible">True</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkNotebook" id="PreferencesNotebook2">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <child>
+              <object class="GtkVBox" id="vbox25">
+                <property name="visible">True</property>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="label391">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">page 1</property>
+              </object>
+              <packing>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox261">
+                <property name="visible">True</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="label401">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">page 2</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox311">
+                <property name="visible">True</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="label431">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">page 3</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area2">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkDialog" id="PreferencesDialog">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Nautilus Actions Preferences</property>
@@ -1613,11 +1713,13 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <object class="GtkVBox" id="vbox25">
+              <object class="GtkVBox" id="vbox33">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkVBox" id="vbox28">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame3">
                         <property name="visible">True</property>
@@ -1632,13 +1734,14 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                               <object class="GtkVBox" id="vbox30">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
+                                <property name="orientation">vertical</property>
+                                <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkRadioButton" id="OrderAlphaAscButton">
                                     <property name="label" translatable="yes">_Ascending alphabetical order</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">The actions will be sorted in ascending alphabetical order.</property>
                                     <property name="use_underline">True</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
@@ -1653,9 +1756,7 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">The actions will be sorted in descending alphabetical order.</property>
                                     <property name="use_underline">True</property>
-                                    <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">OrderAlphaAscButton</property>
                                   </object>
@@ -1669,9 +1770,7 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">The actions will not be automatically sorted. Instead, the user is free to order them manually.</property>
                                     <property name="use_underline">True</property>
-                                    <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">OrderAlphaAscButton</property>
                                   </object>
@@ -1704,6 +1803,7 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                 <child>
                   <object class="GtkVBox" id="vbox29">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame1">
                         <property name="visible">True</property>
@@ -1718,6 +1818,8 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                               <object class="GtkVBox" id="vbox17">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
+                                <property name="orientation">vertical</property>
+                                <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkCheckButton" id="AddAboutButton">
                                     <property name="label" translatable="yes">Add an '_About Nautilus Actions' item in the Nautilus context menu</property>
@@ -1767,74 +1869,84 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
               </packing>
             </child>
             <child>
-              <object class="GtkVBox" id="vbox26">
+              <object class="GtkVBox" id="vbox34">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkFrame" id="frame2">
+                  <object class="GtkVBox" id="vbox31">
                     <property name="visible">True</property>
-                    <property name="border_width">6</property>
-                    <property name="label_xalign">0</property>
-                    <property name="shadow_type">in</property>
+                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkAlignment" id="alignment2">
+                      <object class="GtkFrame" id="frame2">
                         <property name="visible">True</property>
-                        <property name="left_padding">12</property>
+                        <property name="border_width">6</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">in</property>
                         <child>
-                          <object class="GtkVBox" id="vbox27">
+                          <object class="GtkAlignment" id="alignment2">
                             <property name="visible">True</property>
-                            <property name="border_width">6</property>
+                            <property name="left_padding">12</property>
                             <child>
-                              <object class="GtkCheckButton" id="RelabelMenuButton">
-                                <property name="label" translatable="yes">Relabel _menus</property>
+                              <object class="GtkVBox" id="vbox27">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="tooltip_text" translatable="yes">The pasted or duplicated menu will be relabeled as 'Copy of &lt;original&gt;'.</property>
-                                <property name="use_underline">True</property>
-                                <property name="draw_indicator">True</property>
+                                <property name="border_width">6</property>
+                                <property name="orientation">vertical</property>
+                                <property name="homogeneous">True</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="RelabelMenuButton">
+                                    <property name="label" translatable="yes">Relabel _menus</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="RelabelActionButton">
+                                    <property name="label" translatable="yes">Relabel _actions</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="RelabelProfileButton">
+                                    <property name="label" translatable="yes">Relabel _profiles</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
                               </object>
-                              <packing>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="RelabelActionButton">
-                                <property name="label" translatable="yes">Relabel _actions</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="tooltip_text" translatable="yes">The pasted or duplicated action will be relabeled as 'Copy of &lt;original&gt;'.</property>
-                                <property name="use_underline">True</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="RelabelProfileButton">
-                                <property name="label" translatable="yes">Relabel _profiles</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="tooltip_text" translatable="yes">The pasted or duplicated profile will be relabeled as 'Copy of &lt;original&gt;'.</property>
-                                <property name="use_underline">True</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label42">
+                            <property name="visible">True</property>
+                            <property name="xpad">4</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Relabeling items when pasted or duplicated&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
                       </object>
-                    </child>
-                    <child type="label">
-                      <object class="GtkLabel" id="label42">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Relabeling items when pasted or duplicated&lt;/b&gt;</property>
-                        <property name="use_markup">True</property>
-                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
@@ -1858,9 +1970,114 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                 <property name="tab_fill">False</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkVBox" id="vbox35">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkVBox" id="vbox26">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkFrame" id="frame4">
+                        <property name="visible">True</property>
+                        <property name="border_width">6</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkAlignment" id="alignment4">
+                            <property name="visible">True</property>
+                            <property name="left_padding">12</property>
+                            <child>
+                              <object class="GtkVBox" id="vbox32">
+                                <property name="visible">True</property>
+                                <property name="border_width">6</property>
+                                <property name="orientation">vertical</property>
+                                <property name="homogeneous">True</property>
+                                <child>
+                                  <object class="GtkRadioButton" id="PrefsNoImportButton">
+                                    <property name="label" translatable="yes">Do _not import actions whose UUID already exists.</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="PrefsRenumberButton">
+                                    <property name="label" translatable="yes">_Renumber imported actions whose UUID already exists.</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">PrefsNoImportButton</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="PrefsOverrideButton">
+                                    <property name="label" translatable="yes">_Override existing actions when importing with same UUID.</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">PrefsNoImportButton</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label44">
+                            <property name="visible">True</property>
+                            <property name="xpad">4</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Import mode&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="label43">
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">There preferences are used by assistants and drag and drop operations.</property>
+                <property name="label" translatable="yes">_Tools</property>
+                <property name="use_underline">True</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="position">2</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child internal-child="action_area">
@@ -1911,16 +2128,16 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandExamplePreLabel"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandExamplePreLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
 </interface>
