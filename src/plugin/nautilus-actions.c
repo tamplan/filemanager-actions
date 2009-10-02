@@ -301,7 +301,7 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	GList *nautilus_menus_list = NULL;
 	NautilusActions *self;
 	GList *pivot_tree;
- 	gboolean add_about;
+	gboolean add_about;
 
 	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
 			thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
@@ -537,7 +537,6 @@ execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 
 	g_string_free (cmd, TRUE);
 	g_free( path );
-
 }
 
 /*
