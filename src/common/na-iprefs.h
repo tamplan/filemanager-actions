@@ -33,106 +33,21 @@
 
 /**
  * SECTION: na_iprefs
- * @short_description: #NAIPrefs interface definition.
+ * @short_description: #NAIPrefs interface definition extension.
  * @include: common/na-iprefs.h
  *
- * This interface should only be implemented by #NAPivot. This is
- * because the interface stores as an implementor structure some data
- * which are only relevant for one client (GConfClient, GConf monitors,
- * etc.).
- *
- * Though all modules may use the public functions na_iprefs_xxx(),
- * only #NAPivot will receive update notifications, taking itself care
- * of proxying them to identified consumers.
- *
- * Displaying the actions.
- *
- * - actions in alphabetical order:
- *
- *   Nautilus-Actions used to display the actions in alphabetical order.
- *   Starting with 1.12.x, Nautilus-Actions lets the user rearrange
- *   himself the order of its actions.
- *
- *   This option may have three values :
- *   - ascending alphabetical order (historical behavior, and default),
- *   - descending alphabetical order,
- *   - manual ordering.
- *
- * - adding a 'About Nautilus Actions' item at end of actions: yes/no
- *
- *   This is used only when there is a root submenu, i.e. when the
- *   Nautilus context menu will only display one item (the root
- *   submenu). Only in this case, and if preference is 'yes', the we
- *   will add the About item at the end of the first level of submenu.
- *
- *   Note that, as a convenience, the NACT user interface provides the
- *   user with a standard item (Nautilus Actions actions) which can be
- *   used as a root menu.
- *
- *   No 'About' item is added when user organize its actions so that
- *   Nautilus context menu will have several entries at the first level.
- *
- * In all cases, the plugin takes care of providing actions to Nautilus
- * if the same order than those they are displayed in NACT.
+ * #NAIPrefs main interface is defined as part of libna-runtime
+ * convenience library, and should only be implemented by #NAPivot.
+ * Found here is public API not shared by the Nautilus Actions plugin.
  */
 
-#include <glib-object.h>
-
-#include "na-gconf-keys-base.h"
+#include <runtime/na-iprefs.h>
 
 G_BEGIN_DECLS
 
-#define NA_IPREFS_TYPE						( na_iprefs_get_type())
-#define NA_IPREFS( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IPREFS_TYPE, NAIPrefs ))
-#define NA_IS_IPREFS( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPREFS_TYPE ))
-#define NA_IPREFS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPREFS_TYPE, NAIPrefsInterface ))
-
-typedef struct NAIPrefs NAIPrefs;
-
-typedef struct NAIPrefsInterfacePrivate NAIPrefsInterfacePrivate;
-
-typedef struct {
-	GTypeInterface            parent;
-	NAIPrefsInterfacePrivate *private;
-}
-	NAIPrefsInterface;
-
-GType    na_iprefs_get_type( void );
-
-GSList  *na_iprefs_get_level_zero_items( NAIPrefs *instance );
-void     na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order );
-
-gint     na_iprefs_get_order_mode( NAIPrefs *instance );
-void     na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
-
-gboolean na_iprefs_should_add_about_item( NAIPrefs *instance );
-void     na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
-
-gint     na_iprefs_get_import_mode( NAIPrefs *instance );
-void     na_iprefs_set_import_mode( NAIPrefs *instance, gint mode );
-
-gchar   *na_iprefs_read_string( NAIPrefs *instance, const gchar *key, const gchar *default_value );
-void     na_iprefs_write_string( NAIPrefs *instance, const gchar *key, const gchar *value );
-
-/* GConf key
- */
-#define NA_GCONF_PREFERENCES				"preferences"
-#define NA_GCONF_PREFS_PATH					NAUTILUS_ACTIONS_GCONF_BASEDIR "/" NA_GCONF_PREFERENCES
-
 /* GConf Preference keys managed by IPrefs interface
  */
-#define IPREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
-#define IPREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
-#define IPREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
 #define IPREFS_IMPORT_ACTIONS_IMPORT_MODE	"import-mode"
-
-/* alphabetical order values
- */
-enum {
-	IPREFS_ORDER_ALPHA_ASCENDING = 1,
-	IPREFS_ORDER_ALPHA_DESCENDING,
-	IPREFS_ORDER_MANUAL
-};
 
 /* import mode
  */
@@ -141,6 +56,15 @@ enum {
 	IPREFS_IMPORT_RENUMBER,
 	IPREFS_IMPORT_OVERRIDE
 };
+
+#define IPREFS_RELABEL_MENUS				"iprefs-relabel-menus"
+#define IPREFS_RELABEL_ACTIONS				"iprefs-relabel-actions"
+#define IPREFS_RELABEL_PROFILES				"iprefs-relabel-profiles"
+
+void     na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key );
+
+gint     na_iprefs_get_import_mode( NAIPrefs *instance );
+void     na_iprefs_set_import_mode( NAIPrefs *instance, gint mode );
 
 G_END_DECLS
 

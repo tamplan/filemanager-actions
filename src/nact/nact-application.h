@@ -39,7 +39,7 @@
  * This is the main class for nautilus-actions-config-tool program.
  */
 
-#include <common/na-pivot.h>
+#include <runtime/na-pivot.h>
 
 #include "base-application.h"
 

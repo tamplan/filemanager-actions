@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_MONITOR_H__
-#define __NA_GCONF_MONITOR_H__
+#ifndef __NA_RUNTIME_GCONF_MONITOR_H__
+#define __NA_RUNTIME_GCONF_MONITOR_H__
 
 /**
  * SECTION: na_gconf_monitor
@@ -76,4 +76,4 @@ void            na_gconf_monitor_release_monitors( GList *monitors );
 
 G_END_DECLS
 
-#endif /* __NA_GCONF_MONITOR_MONITOR_H__ */
+#endif /* __NA_RUNTIME_GCONF_MONITOR_MONITOR_H__ */

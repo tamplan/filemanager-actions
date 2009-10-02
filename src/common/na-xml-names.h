@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_XML_NAMES_H__
-#define __NA_XML_NAMES_H__
+#ifndef __NA_COMMON_XML_NAMES_H__
+#define __NA_COMMON_XML_NAMES_H__
 
 #include <glib/gi18n.h>
 
@@ -175,4 +175,4 @@ enum {
 
 G_END_DECLS
 
-#endif /* __NA_XML_NAMES_H__ */
+#endif /* __NA_COMMON_XML_NAMES_H__ */

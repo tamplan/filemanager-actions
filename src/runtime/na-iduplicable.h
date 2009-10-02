@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_IDUPLICABLE_H__
-#define __NA_IDUPLICABLE_H__
+#ifndef __NA_RUNTIME_IDUPLICABLE_H__
+#define __NA_RUNTIME_IDUPLICABLE_H__
 
 /**
  * SECTION: na_iduplicable
@@ -164,4 +164,4 @@ void           na_iduplicable_register_consumer( GObject *consumer );
 
 G_END_DECLS
 
-#endif /* __NA_IDUPLICABLE_H__ */
+#endif /* __NA_RUNTIME_IDUPLICABLE_H__ */

@@ -35,10 +35,9 @@
 #include <gio/gio.h>
 #include <libxml/tree.h>
 
-#include "na-object-api.h"
-#include "na-object-action.h"
-#include "na-object-profile.h"
-#include "na-gconf-provider-keys.h"
+#include <runtime/na-object-api.h>
+#include <runtime/na-gconf-provider-keys.h>
+
 #include "na-utils.h"
 #include "na-xml-names.h"
 #include "na-xml-writer.h"

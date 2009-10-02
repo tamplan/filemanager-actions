@@ -36,7 +36,6 @@
 #include <string.h>
 
 #include <common/na-object-api.h>
-#include <common/na-object-profile.h>
 #include <common/na-iprefs.h>
 #include <common/na-utils.h>
 
@@ -173,15 +172,20 @@ void
 nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance )
 {
 	static const gchar *thisfn = "nact_icommand_tab_initial_load_toplevel";
+	NactApplication *application;
+	NAPivot *pivot;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
-		base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-legend-dialog", IPREFS_LEGEND_DIALOG );
-		base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-command-chooser", IPREFS_COMMAND_CHOOSER );
-		base_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-folder-uri", IPREFS_FOLDER_URI );
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+		pivot = nact_application_get_pivot( application );
+
+		na_iprefs_migrate_key( NA_IPREFS( pivot ), "iconditions-legend-dialog", IPREFS_LEGEND_DIALOG );
+		na_iprefs_migrate_key( NA_IPREFS( pivot ), "iconditions-command-chooser", IPREFS_COMMAND_CHOOSER );
+		na_iprefs_migrate_key( NA_IPREFS( pivot ), "iconditions-folder-uri", IPREFS_FOLDER_URI );
 	}
 }
 

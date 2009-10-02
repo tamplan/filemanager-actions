@@ -33,23 +33,13 @@
 #endif
 
 #include "na-object-api.h"
+#include "na-object-menu-priv.h"
 #include "na-utils.h"
 
 /* private class data
  */
 struct NAObjectMenuClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
-};
-
-/* private instance data
- */
-struct NAObjectMenuPrivate {
-	gboolean dispose_has_run;
-
-	/* this is the list of subitems as a list of id strings
-	 * as readen from IIOProviders
-	 */
-	GSList  *items_ids;
 };
 
 static NAObjectClass *st_parent_class = NULL;

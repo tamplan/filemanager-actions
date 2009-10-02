@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_FN_H__
-#define __NA_OBJECT_FN_H__
+#ifndef __NA_RUNTIME_OBJECT_FN_H__
+#define __NA_RUNTIME_OBJECT_FN_H__
 
 /**
  * SECTION: na_object
@@ -49,6 +49,7 @@ G_BEGIN_DECLS
 /* NAIDuplicable
  */
 NAObject *na_object_iduplicable_duplicate( const NAObject *object );
+gboolean  na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b );
 gboolean  na_object_iduplicable_is_modified( const NAObject *object );
 
 /* NAObject
@@ -57,9 +58,10 @@ void      na_object_object_dump( const NAObject *object );
 void      na_object_object_dump_norec( const NAObject *object );
 void      na_object_object_dump_tree( GList *tree );
 
+GList    *na_object_most_derived_get_childs( const NAObject *object );
 GList    *na_object_get_hierarchy( const NAObject *object );
 void      na_object_free_hierarchy( GList *hierarchy );
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_FN_H__ */
+#endif /* __NA_RUNTIME_OBJECT_FN_H__ */

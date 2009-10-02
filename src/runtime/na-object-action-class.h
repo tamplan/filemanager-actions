@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ACTION_CLASS_H__
-#define __NA_OBJECT_ACTION_CLASS_H__
+#ifndef __NA_RUNTIME_OBJECT_ACTION_CLASS_H__
+#define __NA_RUNTIME_OBJECT_ACTION_CLASS_H__
 
 /**
  * SECTION: na_object_action
@@ -89,4 +89,4 @@ GType na_object_action_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_ACTION_CLASS_H__ */
+#endif /* __NA_RUNTIME_OBJECT_ACTION_CLASS_H__ */

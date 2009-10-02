@@ -37,11 +37,12 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include <runtime/na-pivot.h>
+#include <runtime/na-iabout.h>
+#include <runtime/na-iio-provider.h>
+#include <runtime/na-ipivot-consumer.h>
+
 #include <common/na-object-api.h>
-#include <common/na-pivot.h>
-#include <common/na-iabout.h>
-#include <common/na-iio-provider.h>
-#include <common/na-ipivot-consumer.h>
 #include <common/na-iprefs.h>
 
 #include "base-iprefs.h"
@@ -778,17 +779,22 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 void
 nact_main_window_prepare_object_for_copy( NactMainWindow *window, NAObject *object, NAObjectAction *new_parent )
 {
+	NactApplication *application;
+	NAPivot *pivot;
 	gboolean relabel = FALSE;
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+
 	if( NA_IS_OBJECT_MENU( object )){
-		relabel = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_MENUS );
+		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_MENUS, FALSE );
 	} else if( NA_IS_OBJECT_ACTION( object )){
-		relabel = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_ACTIONS );
+		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_ACTIONS, FALSE );
 	} else if( NA_IS_OBJECT_PROFILE( object )){
-		relabel = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_PROFILES );
+		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, FALSE );
 	}
 
-	na_object_set_new_id( object );
+	na_object_set_new_id( object, NULL );
 }
 
 /*

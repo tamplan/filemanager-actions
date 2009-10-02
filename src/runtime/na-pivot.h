@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_PIVOT_H__
-#define __NA_PIVOT_H__
+#ifndef __NA_RUNTIME_PIVOT_H__
+#define __NA_RUNTIME_PIVOT_H__
 
 /**
  * SECTION: na_pivot
@@ -150,4 +150,4 @@ void       na_pivot_free_notify( NAPivotNotify *data );
 
 G_END_DECLS
 
-#endif /* __NA_PIVOT_H__ */
+#endif /* __NA_RUNTIME_PIVOT_H__ */

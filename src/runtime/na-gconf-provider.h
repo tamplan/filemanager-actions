@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_PROVIDER_H__
-#define __NA_GCONF_PROVIDER_H__
+#ifndef __NA_RUNTIME_GCONF_PROVIDER_H__
+#define __NA_RUNTIME_GCONF_PROVIDER_H__
 
 /**
  * SECTION: na_gconf_provider
@@ -78,4 +78,4 @@ NAGConfProvider *na_gconf_provider_new( NAPivot *notified );
 
 G_END_DECLS
 
-#endif /* __NA_GCONF_PROVIDER_PROVIDER_H__ */
+#endif /* __NA_RUNTIME_GCONF_PROVIDER_PROVIDER_H__ */

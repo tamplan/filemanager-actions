@@ -35,9 +35,6 @@
 #include <string.h>
 
 #include <common/na-object-api.h>
-#include <common/na-object-action.h>
-#include <common/na-object-menu.h>
-#include <common/na-object-profile.h>
 #include <common/na-iprefs.h>
 #include <common/na-utils.h>
 #include <common/na-xml-writer.h>

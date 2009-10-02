@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_XML_WRITER_H__
-#define __NA_XML_WRITER_H__
+#ifndef __NA_COMMON_XML_WRITER_H__
+#define __NA_COMMON_XML_WRITER_H__
 
 /**
  * SECTION: na_xml_writer
@@ -42,7 +42,7 @@
  * nautilus-actions-new utility.
  */
 
-#include "na-object-action-class.h"
+#include <runtime/na-object-action-class.h>
 
 G_BEGIN_DECLS
 
@@ -78,4 +78,4 @@ void   na_xml_writer_output_xml( const gchar *xml, const gchar *filename );
 
 G_END_DECLS
 
-#endif /* __NA_XML_WRITER_H__ */
+#endif /* __NA_COMMON_XML_WRITER_H__ */

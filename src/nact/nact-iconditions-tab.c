@@ -36,8 +36,6 @@
 #include <string.h>
 
 #include <common/na-object-api.h>
-#include <common/na-object-action-class.h>
-#include <common/na-object-profile.h>
 #include <common/na-utils.h>
 
 #include "base-iprefs.h"

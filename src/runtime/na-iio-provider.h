@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_IIO_PROVIDER_H__
-#define __NA_IIO_PROVIDER_H__
+#ifndef __NA_RUNTIME_IIO_PROVIDER_H__
+#define __NA_RUNTIME_IIO_PROVIDER_H__
 
 /**
  * SECTION: na_iio_provider
@@ -150,4 +150,4 @@ enum {
 
 G_END_DECLS
 
-#endif /* __NA_IIO_PROVIDER_H__ */
+#endif /* __NA_RUNTIME_IIO_PROVIDER_H__ */

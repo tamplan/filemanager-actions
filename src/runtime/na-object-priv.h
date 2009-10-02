@@ -28,30 +28,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_MENU_FN_H__
-#define __NA_RUNTIME_OBJECT_MENU_FN_H__
+#ifndef __NA_RUNTIME_OBJECT_PRIV_H__
+#define __NA_RUNTIME_OBJECT_PRIV_H__
 
-/**
- * SECTION: na_object_menu
- * @short_description: #NAObjectMenu class definition.
- * @include: runtime/na-object-menu.h
- *
- * This is a menu. It embeds other menus and/or actions.
- */
-
-#include "na-object-menu-class.h"
+#include "na-object-class.h"
 
 G_BEGIN_DECLS
 
-/* i18n: default label for a newly created menu */
-#define NA_OBJECT_MENU_DEFAULT_LABEL	_( "New Nautilus menu" )
-
-NAObjectMenu *na_object_menu_new( void );
-
-GSList       *na_object_menu_get_items_list( const NAObjectMenu *menu );
-GSList       *na_object_menu_rebuild_items_list( const NAObjectMenu *menu );
-void          na_object_menu_set_items_list( NAObjectMenu *menu, GSList *items );
+/* private instance data
+ */
+struct NAObjectPrivate {
+	gboolean dispose_has_run;
+};
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_MENU_FN_H__ */
+#endif /* __NA_RUNTIME_OBJECT_PRIV_H__ */

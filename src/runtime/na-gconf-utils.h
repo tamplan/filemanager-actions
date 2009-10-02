@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_UTILS_H__
-#define __NA_GCONF_UTILS_H__
+#ifndef __NA_RUNTIME_GCONF_UTILS_H__
+#define __NA_RUNTIME_GCONF_UTILS_H__
 
 /**
  * SECTION: na_gconf_utils
@@ -65,4 +65,4 @@ gboolean na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path
 
 G_END_DECLS
 
-#endif /* __NA_GCONF_UTILS_H__ */
+#endif /* __NA_RUNTIME_GCONF_UTILS_H__ */

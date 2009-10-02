@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_IPREFS_H__
-#define __NA_IPREFS_H__
+#ifndef __NA_RUNTIME_IPREFS_H__
+#define __NA_RUNTIME_IPREFS_H__
 
 /**
  * SECTION: na_iprefs
@@ -67,6 +67,7 @@
  */
 
 #include <glib-object.h>
+#include <gconf/gconf-client.h>
 
 #include "na-gconf-keys.h"
 
@@ -87,19 +88,26 @@ typedef struct {
 }
 	NAIPrefsInterface;
 
-GType    na_iprefs_get_type( void );
+GType        na_iprefs_get_type( void );
 
-GSList  *na_iprefs_get_level_zero_items( NAIPrefs *instance );
-void     na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order );
+GSList      *na_iprefs_get_level_zero_items( NAIPrefs *instance );
+void         na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order );
 
-gint     na_iprefs_get_order_mode( NAIPrefs *instance );
-void     na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
+gint         na_iprefs_get_order_mode( NAIPrefs *instance );
+void         na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
 
-gboolean na_iprefs_should_add_about_item( NAIPrefs *instance );
-void     na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
+gboolean     na_iprefs_should_add_about_item( NAIPrefs *instance );
+void         na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
 
-gchar   *na_iprefs_read_string( NAIPrefs *instance, const gchar *key, const gchar *default_value );
-void     na_iprefs_write_string( NAIPrefs *instance, const gchar *key, const gchar *value );
+GConfClient *na_iprefs_get_gconf_client( NAIPrefs *instance );
+
+gboolean     na_iprefs_read_bool( NAIPrefs *instance, const gchar *key, gboolean default_value );
+gchar       *na_iprefs_read_string( NAIPrefs *instance, const gchar *key, const gchar *default_value );
+GSList      *na_iprefs_read_string_list( NAIPrefs *instance, const gchar *key, const gchar *default_value );
+
+void         na_iprefs_write_bool( NAIPrefs *instance, const gchar *key, gboolean value );
+void         na_iprefs_write_string( NAIPrefs *instance, const gchar *key, const gchar *value );
+void         na_iprefs_write_string_list( NAIPrefs *instance, const gchar *key, GSList *value );
 
 /* GConf keys
  */
@@ -122,4 +130,4 @@ enum {
 
 G_END_DECLS
 
-#endif /* __NA_IPREFS_H__ */
+#endif /* __NA_RUNTIME_IPREFS_H__ */

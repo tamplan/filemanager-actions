@@ -36,6 +36,7 @@
 
 #include "na-iduplicable.h"
 #include "na-object-api.h"
+#include "na-object-action-priv.h"
 #include "na-utils.h"
 
 /* private class data
@@ -44,31 +45,12 @@ struct NAObjectActionClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-/* private instance data
- */
-struct NAObjectActionPrivate {
-	gboolean dispose_has_run;
-
-	/* action properties
-	 */
-	gchar   *version;
-
-	/* dynamically set when reading the actions from the I/O storage
-	 * subsystem
-	 * defaults to FALSE unless a write has already returned an error
-	 */
-	gboolean read_only;
-};
-
 /* action properties
  */
 enum {
 	NAACTION_PROP_VERSION_ID = 1,
 	NAACTION_PROP_READONLY_ID
 };
-
-#define NAACTION_PROP_VERSION			"na-action-version"
-#define NAACTION_PROP_READONLY			"na-action-read-only"
 
 static NAObjectItemClass *st_parent_class = NULL;
 

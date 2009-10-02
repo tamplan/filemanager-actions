@@ -28,7 +28,6 @@
  *   ... and many others (see AUTHORS)
  */
 
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -66,17 +65,11 @@ static GConfEnumStringPair order_mode_table[] = {
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
-static GType        register_type( void );
-static void         interface_base_init( NAIPrefsInterface *klass );
-static void         interface_base_finalize( NAIPrefsInterface *klass );
+static GType register_type( void );
+static void  interface_base_init( NAIPrefsInterface *klass );
+static void  interface_base_finalize( NAIPrefsInterface *klass );
 
-static gboolean     read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value );
-static GSList      *read_string_list( NAIPrefs *instance, const gchar *name );
-static void         write_bool( NAIPrefs *instance, const gchar *name, gboolean value );
-static void         write_string_list( NAIPrefs *instance, const gchar *name, GSList *list );
-
-static void         setup_private_data( NAIPrefs *instance );
-static GConfClient *get_gconf_client( NAIPrefs *instance );
+static void  setup_private_data( NAIPrefs *instance );
 
 GType
 na_iprefs_get_type( void )
@@ -167,8 +160,7 @@ na_iprefs_get_level_zero_items( NAIPrefs *instance )
 
 	if( st_initialized && !st_finalized ){
 
-		setup_private_data( instance );
-		level_zero = read_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS );
+		level_zero = na_iprefs_read_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS, NULL );
 	}
 
 	return( level_zero );
@@ -187,8 +179,8 @@ na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
 	if( st_initialized && !st_finalized ){
-		setup_private_data( instance );
-		write_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS, order );
+
+		na_iprefs_write_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS, order );
 	}
 }
 
@@ -215,14 +207,15 @@ na_iprefs_get_order_mode( NAIPrefs *instance )
 
 	if( st_initialized && !st_finalized ){
 
-		setup_private_data( instance );
 		order_str = na_iprefs_read_string(
 				instance,
 				IPREFS_DISPLAY_ALPHABETICAL_ORDER,
 				DEFAULT_ORDER_MODE_STR );
+
 		if( gconf_string_to_enum( order_mode_table, order_str, &order_int )){
 			alpha_order = order_int;
 		}
+
 		g_free( order_str );
 	}
 
@@ -246,8 +239,8 @@ na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 
 	if( st_initialized && !st_finalized ){
 
-		setup_private_data( instance );
 		order_str = gconf_enum_to_string( order_mode_table, mode );
+
 		na_iprefs_write_string(
 				instance,
 				IPREFS_DISPLAY_ALPHABETICAL_ORDER,
@@ -276,8 +269,8 @@ na_iprefs_should_add_about_item( NAIPrefs *instance )
 	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
 
 	if( st_initialized && !st_finalized ){
-		setup_private_data( instance );
-		about = read_bool( instance, IPREFS_ADD_ABOUT_ITEM, TRUE );
+
+		about = na_iprefs_read_bool( instance, IPREFS_ADD_ABOUT_ITEM, TRUE );
 	}
 
 	return( about );
@@ -296,9 +289,54 @@ na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled )
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
 	if( st_initialized && !st_finalized ){
-		setup_private_data( instance );
-		write_bool( instance, IPREFS_ADD_ABOUT_ITEM, enabled );
+
+		na_iprefs_write_bool( instance, IPREFS_ADD_ABOUT_ITEM, enabled );
 	}
+}
+
+/**
+ * na_iprefs_get_gconf_client:
+ * @instance: this #NAIPrefs interface instance.
+ *
+ * Returns: a GConfClient object.
+ */
+GConfClient *
+na_iprefs_get_gconf_client( NAIPrefs *instance )
+{
+	NAIPrefsPrivate *ipp;
+
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), NULL );
+
+	setup_private_data( instance );
+	ipp = ( NAIPrefsPrivate * ) g_object_get_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA );
+	g_return_val_if_fail( ipp, NULL );
+
+	return( ipp->client );
+}
+
+/**
+ * na_iprefs_read_bool:
+ * @instance: this #NAIPrefs interface instance.
+ * @name: the name of the preference entry.
+ * @default_value: default value to be returned if the entry is not found,
+ * no default value is available in the schema, of there is no schema at
+ * all.
+ *
+ * Returns: the boolean value.
+ */
+gboolean
+na_iprefs_read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value )
+{
+	gchar *path;
+	gboolean ret;
+
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
+
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
+	ret = na_gconf_utils_read_bool( na_iprefs_get_gconf_client( instance ), path, TRUE, default_value );
+	g_free( path );
+
+	return( ret );
 }
 
 /**
@@ -317,11 +355,63 @@ na_iprefs_read_string( NAIPrefs *instance, const gchar *name, const gchar *defau
 	gchar *path;
 	gchar *value;
 
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), NULL );
+
 	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	value = na_gconf_utils_read_string( get_gconf_client( instance ), path, TRUE, default_value );
+	value = na_gconf_utils_read_string( na_iprefs_get_gconf_client( instance ), path, TRUE, default_value );
 	g_free( path );
 
 	return( value );
+}
+
+/**
+ * na_iprefs_read_string_list:
+ * @instance: this #NAIPrefs interface instance.
+ * @name: the preference key.
+ * @default_value: a default value, used if entry is not found, or there
+ * is no default value in the schema, of there is no schema at all.
+ *
+ * Returns: the list value, which should be na_utils_free_string_list()
+ * by the caller.
+ */
+GSList *
+na_iprefs_read_string_list( NAIPrefs *instance, const gchar *name, const gchar *default_value )
+{
+	gchar *path;
+	GSList *list;
+
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), NULL );
+
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
+	list = na_gconf_utils_read_string_list( na_iprefs_get_gconf_client( instance ), path );
+	g_free( path );
+
+	if(( !list || !g_slist_length( list )) && default_value ){
+		g_slist_free( list );
+		list = g_slist_append( NULL, g_strdup( default_value ));
+	}
+
+	return( list );
+}
+
+/**
+ * na_iprefs_write_bool:
+ * @instance: this #NAIPrefs interface instance.
+ * @name: the preference entry.
+ * @value: the value to be written.
+ *
+ * Writes the given boolean value.
+ */
+void
+na_iprefs_write_bool( NAIPrefs *instance, const gchar *name, gboolean value )
+{
+	gchar *path;
+
+	g_return_if_fail( NA_IS_IPREFS( instance ));
+
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
+	na_gconf_utils_write_bool( na_iprefs_get_gconf_client( instance ), path, value, NULL );
+	g_free( path );
 }
 
 /**
@@ -337,54 +427,30 @@ na_iprefs_write_string( NAIPrefs *instance, const gchar *name, const gchar *valu
 {
 	gchar *path;
 
+	g_return_if_fail( NA_IS_IPREFS( instance ));
+
 	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_string( get_gconf_client( instance ), path, value, NULL );
+	na_gconf_utils_write_string( na_iprefs_get_gconf_client( instance ), path, value, NULL );
 	g_free( path );
 }
 
-static gboolean
-read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value )
-{
-	gchar *path;
-	gboolean ret;
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	ret = na_gconf_utils_read_bool( get_gconf_client( instance ), path, TRUE, default_value );
-	g_free( path );
-
-	return( ret );
-}
-
-static GSList *
-read_string_list( NAIPrefs *instance, const gchar *name )
-{
-	gchar *path;
-	GSList *list;
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	list = na_gconf_utils_read_string_list( get_gconf_client( instance ), path );
-	g_free( path );
-
-	return( list );
-}
-
-static void
-write_bool( NAIPrefs *instance, const gchar *name, gboolean value )
+/**
+ * na_iprefs_write_string_list
+ * @instance: this #NAIPrefs interface instance.
+ * @name: the preference key.
+ * @value: the value to be written.
+ *
+ * Writes the value as the given GConf preference.
+ */
+void
+na_iprefs_write_string_list( NAIPrefs *instance, const gchar *name, GSList *list )
 {
 	gchar *path;
 
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_bool( get_gconf_client( instance ), path, value, NULL );
-	g_free( path );
-}
-
-static void
-write_string_list( NAIPrefs *instance, const gchar *name, GSList *list )
-{
-	gchar *path;
+	g_return_if_fail( NA_IS_IPREFS( instance ));
 
 	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_string_list( get_gconf_client( instance ), path, list, NULL );
+	na_gconf_utils_write_string_list( na_iprefs_get_gconf_client( instance ), path, list, NULL );
 	g_free( path );
 }
 
@@ -399,15 +465,4 @@ setup_private_data( NAIPrefs *instance )
 		ipp->client = gconf_client_get_default();
 		g_object_set_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA, ipp );
 	}
-}
-
-static GConfClient *
-get_gconf_client( NAIPrefs *instance )
-{
-	NAIPrefsPrivate *ipp;
-
-	ipp = ( NAIPrefsPrivate * ) g_object_get_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA );
-	g_return_val_if_fail( ipp, NULL );
-
-	return( ipp->client );
 }

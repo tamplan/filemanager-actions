@@ -34,13 +34,12 @@
 
 #include <glib/gi18n.h>
 
-#include <common/na-object-api.h>
-#include <common/na-object-action.h>
-#include <common/na-object-menu.h>
-#include <common/na-iabout.h>
-#include <common/na-ipivot-consumer.h>
+#include <runtime/na-iabout.h>
+#include <runtime/na-ipivot-consumer.h>
 
-#include "base-iprefs.h"
+#include <common/na-object-api.h>
+#include <common/na-iprefs.h>
+
 #include "nact-application.h"
 #include "nact-assistant-export.h"
 #include "nact-assistant-import.h"
@@ -584,6 +583,8 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	NactApplication *application;
+	NAPivot *pivot;
 	GList *items, *it;
 	GList *dup;
 	NAObject *obj;
@@ -593,9 +594,12 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	relabel_menus = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_MENUS );
-	relabel_actions = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_ACTIONS );
-	relabel_profiles = base_iprefs_get_bool( BASE_IPREFS( window ), BASE_IPREFS_RELABEL_PROFILES );
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+
+	relabel_menus = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_MENUS, FALSE );
+	relabel_actions = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_ACTIONS, FALSE );
+	relabel_profiles = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, FALSE );
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	for( it = items ; it ; it = it->next ){

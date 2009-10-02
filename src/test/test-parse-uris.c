@@ -37,7 +37,7 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
-#include <common/na-gnome-vfs-uri.h>
+#include <runtime/na-gnome-vfs-uri.h>
 
 static const gchar *uris[] = {
 		"http://robert:azerty01@mon.domain.com/path/to/a/document?query#anchor",

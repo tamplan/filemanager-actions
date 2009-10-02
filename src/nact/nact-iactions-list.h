@@ -42,7 +42,7 @@
 
 #include <gtk/gtk.h>
 
-#include <common/na-object-class.h>
+#include <runtime/na-object-class.h>
 
 G_BEGIN_DECLS
 

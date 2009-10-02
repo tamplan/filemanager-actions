@@ -37,14 +37,13 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
+#include <runtime/na-iio-provider.h>
+#include <runtime/na-pivot.h>
+
 #include <common/na-object-api.h>
-#include <common/na-object-action-class.h>
-#include <common/na-iio-provider.h>
 #include <common/na-iprefs.h>
-#include <common/na-pivot.h>
 #include <common/na-utils.h>
 
-#include "base-iprefs.h"
 #include "nact-application.h"
 #include "nact-iactions-list.h"
 #include "nact-assistant-import.h"

@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_API_H__
-#define __NA_OBJECT_API_H__
+#ifndef __NA_RUNTIME_OBJECT_API_H__
+#define __NA_RUNTIME_OBJECT_API_H__
 
 /**
  * SECTION: na_object
@@ -42,6 +42,8 @@
  *
  * Only define here the API which is relevant in libna-runtime library.
  */
+
+#include "na-iduplicable.h"
 
 #include "na-object-fn.h"
 #include "na-object-id-fn.h"
@@ -61,6 +63,7 @@ G_BEGIN_DECLS
 /* NAIDuplicable
  */
 #define na_object_duplicate( object )				na_object_iduplicable_duplicate( NA_OBJECT( object ))
+#define na_object_are_equal( a, b )					na_object_iduplicable_are_equal( NA_OBJECT( a ), NA_OBJECT( b ))
 #define na_object_is_modified( object )				na_object_iduplicable_is_modified( NA_OBJECT( object ))
 
 /* NAObjectId
@@ -93,4 +96,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_API_H__ */
+#endif /* __NA_RUNTIME_OBJECT_API_H__ */

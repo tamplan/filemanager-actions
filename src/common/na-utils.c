@@ -41,42 +41,6 @@
 static GSList *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
 
 /**
- * na_utils_duplicate_string_list:
- * @list: the GSList to be duplicated.
- *
- * Returns: a #GSList of strings.
- *
- * The returned list should be na_utils_free_string_list() by the caller.
- */
-GSList *
-na_utils_duplicate_string_list( GSList *list )
-{
-	GSList *duplist = NULL;
-	GSList *it;
-	for( it = list ; it != NULL ; it = it->next ){
-		gchar *dupstr = g_strdup(( gchar * ) it->data );
-		duplist = g_slist_prepend( duplist, dupstr );
-	}
-	return( duplist );
-}
-
-/**
- * na_utils_free_string_list:
- * @list: the GSList to be freed.
- *
- * Frees a GSList of strings.
- */
-void
-na_utils_free_string_list( GSList *list )
-{
-	GSList *item;
-	for( item = list ; item != NULL ; item = item->next ){
-		g_free(( gchar * ) item->data );
-	}
-	g_slist_free( list );
-}
-
-/**
  * na_utils_remove_ascii_from_string_list:
  * @list: the GSList to be updated.
  * @text: string to remove.
@@ -305,24 +269,6 @@ na_utils_schema_to_boolean( const gchar *value, gboolean default_value )
 	}
 	/*g_debug( "na_utils_schema_to_boolean: value=%s, returning default_value", value );*/
 	return( default_value );
-}
-
-/**
- * na_utils_path_extract_last_dir:
- * @path: a full path.
- *
- * Extracts the last part of a full path.
- *
- * Returns: a newly allocated string which should be g_free() by the caller.
- */
-gchar *
-na_utils_path_extract_last_dir( const gchar *path )
-{
-	gchar **split = g_strsplit( path, "/", -1 );
-	guint count = g_strv_length( split );
-	gchar *lastdir = g_strdup( split[count-1] );
-	g_strfreev( split );
-	return( lastdir );
 }
 
 /**

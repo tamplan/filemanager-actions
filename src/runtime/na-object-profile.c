@@ -38,6 +38,7 @@
 
 #include "na-iduplicable.h"
 #include "na-object-api.h"
+#include "na-object-profile-priv.h"
 #include "na-gnome-vfs-uri.h"
 #include "na-utils.h"
 
@@ -45,28 +46,6 @@
  */
 struct NAObjectProfileClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
-};
-
-/* private instance data
- */
-struct NAObjectProfilePrivate {
-	gboolean        dispose_has_run;
-
-	/* the NAObjectAction object
-	 */
-	NAObjectAction *action;
-
-	/* profile properties
-	 */
-	gchar          *path;
-	gchar          *parameters;
-	GSList         *basenames;
-	gboolean        match_case;
-	GSList         *mimetypes;
-	gboolean        is_file;
-	gboolean        is_dir;
-	gboolean        accept_multiple;
-	GSList         *schemes;
 };
 
 /* profile properties

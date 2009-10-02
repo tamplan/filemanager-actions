@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ITEM_FN_H__
-#define __NA_OBJECT_ITEM_FN_H__
+#ifndef __NA_RUNTIME_OBJECT_ITEM_FN_H__
+#define __NA_RUNTIME_OBJECT_ITEM_FN_H__
 
 /**
  * SECTION: na_object_item
@@ -66,4 +66,4 @@ void           na_object_item_append_item( NAObjectItem *item, const NAObject *o
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_ITEM_FN_H__ */
+#endif /* __NA_RUNTIME_OBJECT_ITEM_FN_H__ */

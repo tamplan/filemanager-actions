@@ -28,32 +28,40 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_API_H__
-#define __NA_OBJECT_API_H__
+#ifndef __NA_COMMON_OBJECT_API_H__
+#define __NA_COMMON_OBJECT_API_H__
 
 /**
  * SECTION: na_object
- * @short_description: #NAObject public API.
+ * @short_description: #NAObject public API extension.
  * @include: common/na-object-api.h
+ *
+ * #NAObject main public API is defined as part of in libna-runtime
+ * convenience library. Found here is public API not shared by the
+ * Nautilus Actions plugin.
  */
+
+#include <runtime/na-object-api.h>
 
 #include "na-object-fn.h"
 #include "na-object-id-fn.h"
 #include "na-object-item-fn.h"
+#include "na-object-menu-fn.h"
+#include "na-object-action-fn.h"
+#include "na-object-profile-fn.h"
 
 G_BEGIN_DECLS
 
 /* NAObject
  */
+#define na_object_reset_origin( object, origin )	na_object_object_reset_origin( NA_OBJECT( object ), ( NAObject * ) origin )
 
 /* NAIDuplicable
  */
 #define na_object_check_edition_status( object )	na_object_iduplicable_check_edition_status( NA_OBJECT( object ))
 #define na_object_is_valid( object )				na_object_iduplicable_is_valid( NA_OBJECT( object ))
-
 #define na_object_get_origin( object )				na_object_iduplicable_get_origin( NA_OBJECT( object ))
 #define na_object_set_origin( object, origin )		na_object_iduplicable_set_origin( NA_OBJECT( object ), NA_OBJECT( origin ))
-#define na_object_reset_origin( object, origin )	na_object_object_reset_origin( NA_OBJECT( object ), NA_OBJECT( origin ))
 
 /* NAObjectId
  */
@@ -67,4 +75,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_API_H__ */
+#endif /* __NA_COMMON_OBJECT_API_H__ */

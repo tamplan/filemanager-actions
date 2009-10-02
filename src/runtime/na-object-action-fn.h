@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ACTION_FN_H__
-#define __NA_OBJECT_ACTION_FN_H__
+#ifndef __NA_RUNTIME_OBJECT_ACTION_FN_H__
+#define __NA_RUNTIME_OBJECT_ACTION_FN_H__
 
 /**
  * SECTION: na_object_action
@@ -44,8 +44,13 @@
 
 G_BEGIN_DECLS
 
+/* #NAObjectAction properties
+ */
+#define NAACTION_PROP_VERSION			"na-action-version"
+#define NAACTION_PROP_READONLY			"na-action-read-only"
+
 /* i18n: default label for a newly created action */
-#define NA_OBJECT_ACTION_DEFAULT_LABEL		_( "New Nautilus action" )
+#define NA_OBJECT_ACTION_DEFAULT_LABEL	_( "New Nautilus action" )
 
 NAObjectAction *na_object_action_new( void );
 
@@ -59,4 +64,4 @@ void            na_object_action_attach_profile( NAObjectAction *action, NAObjec
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_ACTION_FN_H__ */
+#endif /* __NA_RUNTIME_OBJECT_ACTION_FN_H__ */

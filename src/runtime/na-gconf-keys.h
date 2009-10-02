@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_KEYS_H__
-#define __NA_GCONF_KEYS_H__
+#ifndef __NA_RUNTIME_GCONF_KEYS_H__
+#define __NA_RUNTIME_GCONF_KEYS_H__
 
 /**
  * SECTION: na_gconf
@@ -44,4 +44,4 @@
 #define NAUTILUS_ACTIONS_GCONF_BASEDIR			"/apps/" PACKAGE
 #define NAUTILUS_ACTIONS_GCONF_SCHEMASDIR		"/schemas"
 
-#endif /* __NA_GCONF_KEYS_H__ */
+#endif /* __NA_RUNTIME_GCONF_KEYS_H__ */

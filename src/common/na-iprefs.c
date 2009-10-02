@@ -33,32 +33,7 @@
 #include <config.h>
 #endif
 
-#include "na-gconf-utils.h"
 #include "na-iprefs.h"
-
-/* private interface data
- */
-struct NAIPrefsInterfacePrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
-
-/* private data initialized the first time an instance calls a function
- * of the public api
- */
-typedef struct {
-	GConfClient *client;
-}
-	NAIPrefsPrivate;
-
-#define DEFAULT_ORDER_MODE_INT			IPREFS_ORDER_ALPHA_ASCENDING
-#define DEFAULT_ORDER_MODE_STR			"AscendingOrder"
-
-static GConfEnumStringPair order_mode_table[] = {
-	{ IPREFS_ORDER_ALPHA_ASCENDING ,	"AscendingOrder" },
-	{ IPREFS_ORDER_ALPHA_DESCENDING,	"DescendingOrder" },
-	{ IPREFS_ORDER_MANUAL          ,	"ManualOrder" },
-	{ 0, NULL }
-};
 
 #define DEFAULT_IMPORT_MODE_INT			IPREFS_IMPORT_NO_IMPORT
 #define DEFAULT_IMPORT_MODE_STR			"NoImport"
@@ -70,243 +45,41 @@ static GConfEnumStringPair import_mode_table[] = {
 	{ 0, NULL }
 };
 
-#define NA_IPREFS_PRIVATE_DATA			"na-iprefs-private-data"
-
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized = FALSE;
-
-static GType        register_type( void );
-static void         interface_base_init( NAIPrefsInterface *klass );
-static void         interface_base_finalize( NAIPrefsInterface *klass );
-
-static gboolean     read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value );
-/*static gint         read_int( NAIPrefs *instance, const gchar *name, gint default_value );*/
-static GSList      *read_string_list( NAIPrefs *instance, const gchar *name );
-static void         write_bool( NAIPrefs *instance, const gchar *name, gboolean value );
-/*static void         write_int( NAIPrefs *instance, const gchar *name, gint value );*/
-static void         write_string_list( NAIPrefs *instance, const gchar *name, GSList *list );
-
-static void         setup_private_data( NAIPrefs *instance );
-static GConfClient *get_gconf_client( NAIPrefs *instance );
-
-GType
-na_iprefs_get_type( void )
-{
-	static GType iface_type = 0;
-
-	if( !iface_type ){
-		iface_type = register_type();
-	}
-
-	return( iface_type );
-}
-
-static GType
-register_type( void )
-{
-	static const gchar *thisfn = "na_iprefs_register_type";
-	GType type;
-
-	static const GTypeInfo info = {
-		sizeof( NAIPrefsInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
-		NULL,
-		NULL,
-		NULL,
-		0,
-		0,
-		NULL
-	};
-
-	g_debug( "%s", thisfn );
-
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIPrefs", &info, 0 );
-
-	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
-
-	return( type );
-}
-
-static void
-interface_base_init( NAIPrefsInterface *klass )
-{
-	static const gchar *thisfn = "na_iprefs_interface_base_init";
-
-	if( !st_initialized ){
-
-		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		klass->private = g_new0( NAIPrefsInterfacePrivate, 1 );
-
-		st_initialized = TRUE;
-	}
-}
-
-static void
-interface_base_finalize( NAIPrefsInterface *klass )
-{
-	static const gchar *thisfn = "na_iprefs_interface_base_finalize";
-
-	if( !st_finalized ){
-
-		st_finalized = TRUE;
-
-		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		g_free( klass->private );
-	}
-}
+static GConfValue *get_value( GConfClient *client, const gchar *path, const gchar *entry );
+static void        set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value );
 
 /**
- * na_iprefs_get_level_zero_items:
- * @instance: this #NAIPrefs interface instance.
+ * na_iprefs_migrate_key:
+ * @instance: the #NAIPrefs implementor.
+ * @old_key: the old preference entry.
+ * @new_key: the new preference entry.
  *
- * Returns: the ordered list of UUID's of items which are to be
- * displayed at level zero of the hierarchy.
- *
- * The returned list should be na_utils_free_string_list() by the caller.
- */
-GSList *
-na_iprefs_get_level_zero_items( NAIPrefs *instance )
-{
-	GSList *level_zero = NULL;
-
-	g_return_val_if_fail( NA_IS_IPREFS( instance ), NULL );
-
-	if( st_initialized && !st_finalized ){
-		setup_private_data( instance );
-		level_zero = read_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS );
-	}
-
-	return( level_zero );
-}
-
-/**
- * na_iprefs_set_level_zero_items:
- * @instance: this #NAIPrefs interface instance.
- * @order: the ordered #GSList of item UUIDs.
- *
- * Writes the order and the content of the level-zero UUID's.
+ * Migrates the content of an entry from an obsoleted key to a new one.
+ * Removes the old key, along with the schema associated to it,
+ * considering that the version which asks for this migration has
+ * installed a schema corresponding to the new key.
  */
 void
-na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
+na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key )
 {
+	static const gchar *thisfn = "na_iprefs_migrate_key";
+	GConfValue *value;
+
+	g_debug( "%s: instance=%p, old_key=%s, new_key=%s", thisfn, ( void * ) instance, old_key, new_key );
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
-	if( st_initialized && !st_finalized ){
-		setup_private_data( instance );
-		write_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS, order );
-	}
-}
+	value = get_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, old_key );
 
-/**
- * na_iprefs_get_order_mode:
- * @instance: this #NAIPrefs interface instance.
- *
- * Returns: the order mode currently set.
- *
- * Note: this function returns a suitable default value even if the key
- * is not found in GConf preferences or no schema has been installed.
- *
- * Note: please take care of keeping the default value synchronized with
- * those defined in schemas.
- */
-gint
-na_iprefs_get_order_mode( NAIPrefs *instance )
-{
-	gint alpha_order = DEFAULT_ORDER_MODE_INT;
-	gint order_int;
-	gchar *order_str;
-
-	g_return_val_if_fail( NA_IS_IPREFS( instance ), DEFAULT_ORDER_MODE_INT );
-
-	if( st_initialized && !st_finalized ){
-
-		setup_private_data( instance );
-		order_str = na_iprefs_read_string(
-				instance,
-				IPREFS_DISPLAY_ALPHABETICAL_ORDER,
-				DEFAULT_ORDER_MODE_STR );
-		if( gconf_string_to_enum( order_mode_table, order_str, &order_int )){
-			alpha_order = order_int;
-		}
-		g_free( order_str );
+	if( value ){
+		set_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, new_key, value );
+		gconf_value_free( value );
 	}
 
-	return( alpha_order );
-}
-
-/**
- * na_iprefs_set_order_mode:
- * @instance: this #NAIPrefs interface instance.
- * @mode: the new value to be written.
- *
- * Writes the current status of 'alphabetical order' to the GConf
- * preference system.
- */
-void
-na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
-{
-	const gchar *order_str;
-
-	g_return_if_fail( NA_IS_IPREFS( instance ));
-
-	if( st_initialized && !st_finalized ){
-
-		setup_private_data( instance );
-		order_str = gconf_enum_to_string( order_mode_table, mode );
-		na_iprefs_write_string(
-				instance,
-				IPREFS_DISPLAY_ALPHABETICAL_ORDER,
-				order_str ? order_str : DEFAULT_ORDER_MODE_STR );
-	}
-}
-
-/**
- * na_iprefs_should_add_about_item:
- * @instance: this #NAIPrefs interface instance.
- *
- * Returns: #TRUE if an "About Nautilus Actions" item may be added to
- * the first level of Nautilus context submenus (if any), #FALSE else.
- *
- * Note: this function returns a suitable default value if the key is
- * not found in GConf preferences.
- *
- * Note: please take care of keeping the default value synchronized with
- * those defined in schemas.
- */
-gboolean
-na_iprefs_should_add_about_item( NAIPrefs *instance )
-{
-	gboolean about = FALSE;
-
-	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
-
-	if( st_initialized && !st_finalized ){
-		setup_private_data( instance );
-		about = read_bool( instance, IPREFS_ADD_ABOUT_ITEM, TRUE );
-	}
-
-	return( about );
-}
-
-/**
- * na_iprefs_set_add_about_item:
- * @instance: this #NAIPrefs interface instance.
- * @enabled: the new value to be written.
- *
- * Writes the new value to the GConf preference system.
- */
-void
-na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled )
-{
-	g_return_if_fail( NA_IS_IPREFS( instance ));
-
-	if( st_initialized && !st_finalized ){
-		setup_private_data( instance );
-		write_bool( instance, IPREFS_ADD_ABOUT_ITEM, enabled );
-	}
+	/* do not remove entries which may be always used by another,
+	 * while older, version of NACT
+	 */
+	/*remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, old_key );*/
+	/*remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, BASE_IPREFS_SCHEMAS_PATH, old_key );*/
 }
 
 /**
@@ -330,18 +103,16 @@ na_iprefs_get_import_mode( NAIPrefs *instance )
 
 	g_return_val_if_fail( NA_IS_IPREFS( instance ), DEFAULT_IMPORT_MODE_INT );
 
-	if( st_initialized && !st_finalized ){
+	import_str = na_iprefs_read_string(
+			instance,
+			IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
+			DEFAULT_IMPORT_MODE_STR );
 
-		setup_private_data( instance );
-		import_str = na_iprefs_read_string(
-				instance,
-				IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
-				DEFAULT_IMPORT_MODE_STR );
-		if( gconf_string_to_enum( import_mode_table, import_str, &import_int )){
-			import_mode = import_int;
-		}
-		g_free( import_str );
+	if( gconf_string_to_enum( import_mode_table, import_str, &import_int )){
+		import_mode = import_int;
 	}
+
+	g_free( import_str );
 
 	return( import_mode );
 }
@@ -361,147 +132,57 @@ na_iprefs_set_import_mode( NAIPrefs *instance, gint mode )
 
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
-	if( st_initialized && !st_finalized ){
+	import_str = gconf_enum_to_string( import_mode_table, mode );
 
-		setup_private_data( instance );
-		import_str = gconf_enum_to_string( import_mode_table, mode );
-		na_iprefs_write_string(
-				instance,
-				IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
-				import_str ? import_str : DEFAULT_IMPORT_MODE_STR );
-	}
+	na_iprefs_write_string(
+			instance,
+			IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
+			import_str ? import_str : DEFAULT_IMPORT_MODE_STR );
 }
 
-/**
- * na_iprefs_read_string:
- * @instance: this #NAIPrefs interface instance.
- * @name: the preference key.
- * @default_value: the default value, used if entry is not found and
- * there is no schema.
- *
- * Returns: the value, as a newly allocated string which should be
- * g_free() by the caller.
- */
-gchar *
-na_iprefs_read_string( NAIPrefs *instance, const gchar *name, const gchar *default_value )
+static GConfValue *
+get_value( GConfClient *client, const gchar *path, const gchar *entry )
 {
-	gchar *path;
-	gchar *value;
+	static const gchar *thisfn = "na_iprefs_get_value";
+	GError *error = NULL;
+	gchar *fullpath;
+	GConfValue *value;
 
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	value = na_gconf_utils_read_string( get_gconf_client( instance ), path, TRUE, default_value );
-	g_free( path );
+	fullpath = gconf_concat_dir_and_key( path, entry );
+
+	value = gconf_client_get_without_default( client, fullpath, &error );
+
+	if( error ){
+		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
+		g_error_free( error );
+		if( value ){
+			gconf_value_free( value );
+			value = NULL;
+		}
+	}
+
+	g_free( fullpath );
 
 	return( value );
 }
 
-/**
- * na_iprefs_write_string:
- * @instance: this #NAIPrefs interface instance.
- * @name: the preference key.
- * @value: the value to be written.
- *
- * Writes the value as the given GConf preference.
- */
-void
-na_iprefs_write_string( NAIPrefs *instance, const gchar *name, const gchar *value )
-{
-	gchar *path;
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_string( get_gconf_client( instance ), path, value, NULL );
-	g_free( path );
-}
-
-static gboolean
-read_bool( NAIPrefs *instance, const gchar *name, gboolean default_value )
-{
-	gchar *path;
-	gboolean ret;
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	ret = na_gconf_utils_read_bool( get_gconf_client( instance ), path, TRUE, default_value );
-	g_free( path );
-
-	return( ret );
-}
-
-/*static gint
-read_int( NAIPrefs *instance, const gchar *name, gint default_value )
-{
-	gchar *path;
-	gint ret;
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	ret = na_gconf_utils_read_int( get_gconf_client( instance ), path, TRUE, default_value );
-	g_free( path );
-
-	return( ret );
-}*/
-
-static GSList *
-read_string_list( NAIPrefs *instance, const gchar *name )
-{
-	gchar *path;
-	GSList *list;
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	list = na_gconf_utils_read_string_list( get_gconf_client( instance ), path );
-	g_free( path );
-
-	return( list );
-}
-
 static void
-write_bool( NAIPrefs *instance, const gchar *name, gboolean value )
+set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value )
 {
-	gchar *path;
+	static const gchar *thisfn = "na_iprefs_set_value";
+	GError *error = NULL;
+	gchar *fullpath;
 
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_bool( get_gconf_client( instance ), path, value, NULL );
-	g_free( path );
-}
+	g_return_if_fail( value );
 
-/*static void
-write_int( NAIPrefs *instance, const gchar *name, gint value )
-{
-	gchar *path;
+	fullpath = gconf_concat_dir_and_key( path, entry );
 
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_int( get_gconf_client( instance ), path, value, NULL );
-	g_free( path );
-}*/
+	gconf_client_set( client, fullpath, value, &error );
 
-static void
-write_string_list( NAIPrefs *instance, const gchar *name, GSList *list )
-{
-	gchar *path;
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_string_list( get_gconf_client( instance ), path, list, NULL );
-	g_free( path );
-}
-
-static void
-setup_private_data( NAIPrefs *instance )
-{
-	NAIPrefsPrivate *ipp;
-
-	ipp = ( NAIPrefsPrivate * ) g_object_get_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA );
-	if( !ipp ){
-		ipp = g_new0( NAIPrefsPrivate, 1 );
-		ipp->client = gconf_client_get_default();
-		g_object_set_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA, ipp );
+	if( error ){
+		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
+		g_error_free( error );
 	}
-}
 
-static GConfClient *
-get_gconf_client( NAIPrefs *instance )
-{
-	NAIPrefsPrivate *ipp;
-
-	ipp = ( NAIPrefsPrivate * ) g_object_get_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA );
-	g_return_val_if_fail( ipp, NULL );
-
-	return( ipp->client );
+	g_free( fullpath );
 }

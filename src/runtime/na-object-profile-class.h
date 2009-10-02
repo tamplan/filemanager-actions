@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_PROFILE_CLASS_H__
-#define __NA_OBJECT_PROFILE_CLASS_H__
+#ifndef __NA_RUNTIME_OBJECT_PROFILE_CLASS_H__
+#define __NA_RUNTIME_OBJECT_PROFILE_CLASS_H__
 
 /**
  * SECTION: na_object_profile
@@ -74,4 +74,4 @@ GType na_object_profile_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_PROFILE_CLASS_H__ */
+#endif /* __NA_RUNTIME_OBJECT_PROFILE_CLASS_H__ */

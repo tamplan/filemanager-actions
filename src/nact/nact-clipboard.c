@@ -36,14 +36,10 @@
 #include <string.h>
 
 #include <common/na-object-api.h>
-#include <common/na-object-action-class.h>
-#include <common/na-object-menu.h>
-#include <common/na-object-profile.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
 #include <common/na-utils.h>
 
-#include "base-iprefs.h"
 #include "nact-tree-model.h"
 #include "nact-clipboard.h"
 
@@ -104,7 +100,6 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType  register_type( void );
 static void   class_init( NactClipboardClass *klass );
-static void   iprefs_iface_init( BaseIPrefsInterface *iface );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *application );
 static void   instance_finalize( GObject *application );
@@ -148,17 +143,9 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo iprefs_iface_info = {
-		( GInterfaceInitFunc ) iprefs_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NactClipboard", &info, 0 );
-
-	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &iprefs_iface_info );
 
 	return( type );
 }
@@ -178,14 +165,6 @@ class_init( NactClipboardClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactClipboardClassPrivate, 1 );
-}
-
-static void
-iprefs_iface_init( BaseIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "nact_main_window_iprefs_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void
@@ -740,7 +719,7 @@ clear_primary_clipboard_callback( GtkClipboard *clipboard, NactClipboardPrimaryD
 static void
 renumber_items( NactClipboard *clipboard, GList *items )
 {
-	GList *it;
+	/*GList *it;
 	gboolean relabel_menus, relabel_actions, relabel_profiles;
 	gboolean relabel;
 
@@ -760,5 +739,5 @@ renumber_items( NactClipboard *clipboard, GList *items )
 		}
 
 		na_object_set_for_copy( it->data, relabel );
-	}
+	}*/
 }

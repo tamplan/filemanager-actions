@@ -28,31 +28,27 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ID_FN_H__
-#define __NA_OBJECT_ID_FN_H__
+#ifndef __NA_COMMON_OBJECT_ID_FN_H__
+#define __NA_COMMON_OBJECT_ID_FN_H__
 
 /**
  * SECTION: na_object_id
- * @short_description: #NAObjectId public function declarations.
+ * @short_description: #NAObjectId public function declarations extension.
  * @include: common/na-object-id-fn.h
  *
- * Define here the public functions of the #NAObjectId class.
+ * Define here the public functions of the #NAObjectId class which are
+ * not shared by the Nautilus Actions plugin.
  *
  * Note that most users of the class should rather use macros defined
  * in na-object-api.h
  */
 
-#include "na-object-id-class.h"
+#include <runtime/na-object-id-class.h>
 
 G_BEGIN_DECLS
 
-gchar *na_object_id_get_id( const NAObjectId *object );
-gchar *na_object_id_get_label( const NAObjectId *object );
-
-void   na_object_id_set_id( NAObjectId *object, const gchar *id );
 void   na_object_id_set_for_copy( NAObjectId *object, gboolean relabel );
-void   na_object_id_set_label( NAObjectId *object, const gchar *label );
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_ID_FN_H__ */
+#endif /* __NA_COMMON_OBJECT_ID_FN_H__ */

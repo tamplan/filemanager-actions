@@ -37,19 +37,12 @@
 
 #include "na-iduplicable.h"
 #include "na-object-api.h"
+#include "na-object-id-priv.h"
 
 /* private class data
  */
 struct NAObjectIdClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
-};
-
-/* private instance data
- */
-struct NAObjectIdPrivate {
-	gboolean  dispose_has_run;
-	gchar    *id;
-	gchar    *label;
 };
 
 /* object properties

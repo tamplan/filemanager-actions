@@ -33,8 +33,8 @@
 #include <config.h>
 #endif
 
-#include <common/na-gconf-keys-schemas.h>
-#include <common/na-gconf-utils.h>
+#include <runtime/na-gconf-utils.h>
+
 #include <common/na-iprefs.h>
 
 #include "base-iprefs.h"
@@ -45,8 +45,6 @@ struct BaseIPrefsInterfacePrivate {
 	GConfClient *client;
 };
 
-#define BASE_IPREFS_SCHEMAS_PATH		NAUTILUS_ACTIONS_GCONF_SCHEMASDIR NA_GCONF_PREFS_PATH
-
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
@@ -56,18 +54,10 @@ static void        interface_base_finalize( BaseIPrefsInterface *klass );
 
 static gchar      *v_iprefs_get_window_id( BaseWindow *window );
 
-static GConfValue *get_value( GConfClient *client, const gchar *path, const gchar *entry );
-static void        set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value );
-static gboolean    remove_entry( GConfClient *client, const gchar *path, const gchar *entry );
-
-static gboolean    read_bool( BaseIPrefs *instance, const gchar *name );
 static gint        read_int( BaseWindow *window, const gchar *name );
 static GSList     *read_int_list( BaseWindow *window, const gchar *key );
-
-static void        write_bool( BaseIPrefs *instance, const gchar *name, gboolean value );
 static void        write_int( BaseWindow *window, const gchar *name, gint value );
 static void        write_int_list( BaseWindow *window, const gchar *key, GSList *list );
-
 static void        int_list_to_position( BaseWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height );
 static GSList     *position_to_int_list( BaseWindow *window, gint x, gint y, gint width, gint height );
 static void        free_int_list( GSList *list );
@@ -141,41 +131,6 @@ interface_base_finalize( BaseIPrefsInterface *klass )
 		g_free( klass->private );
 
 		st_finalized = TRUE;
-	}
-}
-
-/**
- * base_iprefs_migrate_key:
- * @window: this #BaseWindow-derived window.
- * @old_key: the old preference entry.
- * @new_key: the new preference entry.
- *
- * Migrates the content of an entry from an obsoleted key to a new one.
- * Removes the old key, along with the schema associated to it,
- * considering that the version which asks for this migration has
- * installed a schema corresponding to the new key.
- */
-void
-base_iprefs_migrate_key( BaseWindow *window, const gchar *old_key, const gchar *new_key )
-{
-	static const gchar *thisfn = "base_iprefs_migrate_key";
-	GConfValue *value;
-
-	g_debug( "%s: window=%p, old_key=%s, new_key=%s", thisfn, ( void * ) window, old_key, new_key );
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( BASE_IS_IPREFS( window ));
-
-	if( st_initialized && !st_finalized ){
-
-		value = get_value( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, old_key );
-
-		if( value ){
-			set_value( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, new_key, value );
-			gconf_value_free( value );
-		}
-
-		remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, old_key );
-		remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, BASE_IPREFS_SCHEMAS_PATH, old_key );
 	}
 }
 
@@ -315,45 +270,6 @@ base_iprefs_save_named_window_position( BaseWindow *window, GtkWindow *toplevel,
 }
 
 /**
- * base_iprefs_get_bool:
- * @istance: this #BaseIPrefs implementation.
- * @name: the entry to be readen.
- *
- * Returns: the named boolean.
- */
-gboolean
-base_iprefs_get_bool( BaseIPrefs *instance, const gchar *name )
-{
-	gboolean ret = FALSE;
-
-	g_return_val_if_fail( BASE_IS_IPREFS( instance ), FALSE );
-
-	if( st_initialized && !st_finalized ){
-		ret = read_bool( instance, name );
-	}
-
-	return( ret );
-}
-
-/**
- * base_iprefs_set_bool:
- * @istance: this #BaseIPrefs implementation.
- * @name: the entry to be readen.
- * @value: the value to be set.
- *
- * Writes the named boolean in GConf.
- */
-void
-base_iprefs_set_bool( BaseIPrefs *instance, const gchar *name, gboolean value )
-{
-	g_return_if_fail( BASE_IS_IPREFS( instance ));
-
-	if( st_initialized && !st_finalized ){
-		write_bool( instance, name, value );
-	}
-}
-
-/**
  * base_iprefs_get_int:
  * @window: this BaseWindow-derived window.
  * @name: the entry to be readen.
@@ -406,89 +322,6 @@ v_iprefs_get_window_id( BaseWindow *window )
 	return( NULL );
 }
 
-static GConfValue *
-get_value( GConfClient *client, const gchar *path, const gchar *entry )
-{
-	static const gchar *thisfn = "base_iprefs_get_value";
-	GError *error = NULL;
-	gchar *fullpath;
-	GConfValue *value;
-
-	fullpath = g_strdup_printf( "%s/%s", path, entry );
-
-	value = gconf_client_get_without_default( client, fullpath, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
-		g_error_free( error );
-		if( value ){
-			gconf_value_free( value );
-			value = NULL;
-		}
-	}
-
-	g_free( fullpath );
-
-	return( value );
-}
-
-static void
-set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value )
-{
-	static const gchar *thisfn = "base_iprefs_set_value";
-	GError *error = NULL;
-	gchar *fullpath;
-
-	g_return_if_fail( value );
-
-	fullpath = g_strdup_printf( "%s/%s", path, entry );
-
-	gconf_client_set( client, fullpath, value, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
-		g_error_free( error );
-	}
-
-	g_free( fullpath );
-}
-
-static gboolean
-remove_entry( GConfClient *client, const gchar *path, const gchar *entry )
-{
-	static const gchar *thisfn = "base_iprefs_remove_entry";
-	GError *error = NULL;
-	gchar *fullpath;
-	gboolean ret;
-
-	fullpath = g_strdup_printf( "%s/%s", path, entry );
-
-	ret = gconf_client_unset( client, fullpath, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
-		g_error_free( error );
-	}
-
-	g_free( fullpath );
-
-	return( ret );
-}
-
-static gboolean
-read_bool( BaseIPrefs *instance, const gchar *name )
-{
-	gchar *path;
-	gint value;
-
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-
-	value = na_gconf_utils_read_bool( BASE_IPREFS_GET_INTERFACE( instance )->private->client, path, TRUE, FALSE );
-
-	g_free( path );
-	return( value );
-}
-
 static gint
 read_int( BaseWindow *window, const gchar *name )
 {
@@ -497,7 +330,7 @@ read_int( BaseWindow *window, const gchar *name )
 	gchar *path;
 	gint value;
 
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
 
 	value = gconf_client_get_int( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
 
@@ -521,7 +354,7 @@ read_int_list( BaseWindow *window, const gchar *key )
 	gchar *path;
 	GSList *list;
 
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, key );
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, key );
 
 	list = gconf_client_get_list(
 			BASE_IPREFS_GET_INTERFACE( window )->private->client, path, GCONF_VALUE_INT, &error );
@@ -537,25 +370,13 @@ read_int_list( BaseWindow *window, const gchar *key )
 }
 
 static void
-write_bool( BaseIPrefs *instance, const gchar *name, gboolean value )
-{
-	gchar *path;
-
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
-
-	na_gconf_utils_write_bool( BASE_IPREFS_GET_INTERFACE( instance )->private->client, path, value, NULL );
-
-	g_free( path );
-}
-
-static void
 write_int( BaseWindow *window, const gchar *name, gint value )
 {
 	static const gchar *thisfn = "base_iprefs_write_int";
 	GError *error = NULL;
 	gchar *path;
 
-	path = g_strdup_printf( "%s/%s", NA_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
 
 	gconf_client_set_int( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, value, &error );
 

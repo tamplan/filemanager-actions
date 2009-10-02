@@ -1,6 +1,6 @@
 /*
- * Nautilus Actions
- * A Nautilus extension which offers configurable context menu actions.
+ * Nautilus ObjectItems
+ * A Nautilus extension which offers configurable context menu object_items.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
@@ -28,30 +28,34 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_MENU_FN_H__
-#define __NA_RUNTIME_OBJECT_MENU_FN_H__
+#ifndef __NA_RUNTIME_OBJECT_ITEM_PRIV_H__
+#define __NA_RUNTIME_OBJECT_ITEM_PRIV_H__
 
-/**
- * SECTION: na_object_menu
- * @short_description: #NAObjectMenu class definition.
- * @include: runtime/na-object-menu.h
- *
- * This is a menu. It embeds other menus and/or actions.
- */
-
-#include "na-object-menu-class.h"
+#include "na-object-item-class.h"
 
 G_BEGIN_DECLS
 
-/* i18n: default label for a newly created menu */
-#define NA_OBJECT_MENU_DEFAULT_LABEL	_( "New Nautilus menu" )
+/* private instance data
+ */
+struct NAObjectItemPrivate {
+	gboolean       dispose_has_run;
 
-NAObjectMenu *na_object_menu_new( void );
+	/* object_item properties
+	 */
+	gchar         *tooltip;
+	gchar         *icon;
+	gboolean       enabled;
 
-GSList       *na_object_menu_get_items_list( const NAObjectMenu *menu );
-GSList       *na_object_menu_rebuild_items_list( const NAObjectMenu *menu );
-void          na_object_menu_set_items_list( NAObjectMenu *menu, GSList *items );
+	/* list of NAObjectId subitems
+	 */
+	GList         *items;
+
+	/* the original provider
+	 * required to be able to edit/delete the item
+	 */
+	NAIIOProvider *provider;
+};
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_MENU_FN_H__ */
+#endif /* __NA_RUNTIME_OBJECT_ITEM_PRIV_H__ */

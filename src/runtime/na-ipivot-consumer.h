@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_IPIVOT_CONSUMER_H__
-#define __NA_IPIVOT_CONSUMER_H__
+#ifndef __NA_RUNTIME_IPIVOT_CONSUMER_H__
+#define __NA_RUNTIME_IPIVOT_CONSUMER_H__
 
 /**
  * SECTION: na_ipivot_consumer
@@ -105,4 +105,4 @@ void  na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *insta
 
 G_END_DECLS
 
-#endif /* __NA_IPIVOT_CONSUMER_H__ */
+#endif /* __NA_RUNTIME_IPIVOT_CONSUMER_H__ */

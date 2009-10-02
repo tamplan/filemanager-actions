@@ -28,21 +28,22 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_FN_H__
-#define __NA_OBJECT_FN_H__
+#ifndef __NA_COMMON_OBJECT_FN_H__
+#define __NA_COMMON_OBJECT_FN_H__
 
 /**
  * SECTION: na_object
- * @short_description: #NAObject public functions declarations.
+ * @short_description: #NAObject public functions declarations extension.
  * @include: common/na-object-fn.h
  *
- * Define here the public functions of the #NAObject class.
+ * Define here the public functions of the #NAObject class which are not
+ * shared by the Nautilus Actions plugin.
  *
  * Note that most users of the class should rather use macros defined
- * in na-object-api.h
+ * in common/na-object-api.h, which itself includes runtime/na-object-api.h.
  */
 
-#include "na-object-class.h"
+#include <runtime/na-object-class.h>
 
 G_BEGIN_DECLS
 
@@ -50,23 +51,14 @@ G_BEGIN_DECLS
  */
 void      na_object_iduplicable_check_edition_status( const NAObject *object );
 
-gboolean  na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b );
 gboolean  na_object_iduplicable_is_valid( const NAObject *object );
 NAObject *na_object_iduplicable_get_origin( const NAObject *object );
 void      na_object_iduplicable_set_origin( NAObject *object, const NAObject *origin );
 
 /* NAObject
  */
-void      na_object_object_dump( const NAObject *object );
-void      na_object_object_dump_norec( const NAObject *object );
-void      na_object_object_dump_tree( GList *tree );
-gchar    *na_object_object_get_clipboard_id( const NAObject *object );
-NAObject *na_object_object_ref( const NAObject *object );
 void      na_object_object_reset_origin( NAObject *object, const NAObject *origin );
-
-GList    *na_object_get_hierarchy( const NAObject *object );
-void      na_object_free_hierarchy( GList *hierarchy );
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_FN_H__ */
+#endif /* __NA_COMMON_OBJECT_FN_H__ */

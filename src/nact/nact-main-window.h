@@ -39,6 +39,8 @@
  * This class is derived from BaseWindow and manages the main window.
  */
 
+#include <runtime/na-object-action-class.h>
+
 #include "nact-clipboard.h"
 #include "nact-window.h"
 

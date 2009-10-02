@@ -59,21 +59,27 @@ libna_runtime_la_SOURCES = \
 	na-object.c									\
 	na-object-class.h							\
 	na-object-fn.h								\
+	na-object-priv.h							\
 	na-object-id.c								\
 	na-object-id-class.h						\
 	na-object-id-fn.h							\
+	na-object-id-priv.h							\
 	na-object-item.c							\
 	na-object-item-class.h						\
 	na-object-item-fn.h							\
+	na-object-item-priv.h						\
 	na-object-action.c							\
 	na-object-action-class.h					\
 	na-object-action-fn.h						\
+	na-object-action-priv.h						\
 	na-object-menu.c							\
 	na-object-menu-class.h						\
 	na-object-menu-fn.h							\
+	na-object-menu-priv.h						\
 	na-object-profile.c							\
 	na-object-profile-class.h					\
 	na-object-profile-fn.h						\
+	na-object-profile-priv.h					\
 	na-pivot.c									\
 	na-pivot.h									\
 	na-utils.c									\

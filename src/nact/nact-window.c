@@ -35,9 +35,10 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 
+#include <runtime/na-iio-provider.h>
+
 #include <common/na-object-api.h>
 #include <common/na-iprefs.h>
-#include <common/na-iio-provider.h>
 #include <common/na-utils.h>
 
 #include "nact-application.h"

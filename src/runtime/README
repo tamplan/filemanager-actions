@@ -1,0 +1,6 @@
+This is a runtime convenience library linked against the plugin.
+
+in order to keep the plugin as light as possible, thus with as less as
+possible bugs, and, if any, as easy as possible to fix, please only put
+here code which is used by the plugin, and shared by some other part of
+the package.

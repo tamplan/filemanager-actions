@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_IABOUT_H__
-#define __NA_IABOUT_H__
+#ifndef __NA_RUNTIME_IABOUT_H__
+#define __NA_RUNTIME_IABOUT_H__
 
 /**
  * SECTION: na_iabout
@@ -86,4 +86,4 @@ gchar *na_iabout_get_icon_name( void );
 
 G_END_DECLS
 
-#endif /* __NA_IABOUT_H__ */
+#endif /* __NA_RUNTIME_IABOUT_H__ */

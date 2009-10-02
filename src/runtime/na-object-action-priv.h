@@ -1,5 +1,5 @@
 /*
- * Nautilus ObjectActions
+ * Nautilus Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -28,32 +28,29 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ACTION_H__
-#define __NA_OBJECT_ACTION_H__
-
-/**
- * SECTION: na_object_action
- * @short_description: #NAObjectAction public function declaration.
- * @include: common/na-object-action.h
- */
-
-#include <glib/gi18n.h>
+#ifndef __NA_RUNTIME_OBJECT_ACTION_PRIV_H__
+#define __NA_RUNTIME_OBJECT_ACTION_PRIV_H__
 
 #include "na-object-action-class.h"
-#include "na-object-profile-class.h"
 
 G_BEGIN_DECLS
 
-NAObjectAction *na_object_action_new( void );
-NAObjectAction *na_object_action_new_with_profile( void );
+/* private instance data
+ */
+struct NAObjectActionPrivate {
+	gboolean dispose_has_run;
 
-gboolean        na_object_action_is_readonly( const NAObjectAction *action );
+	/* action properties
+	 */
+	gchar   *version;
 
-void            na_object_action_set_version( NAObjectAction *action, const gchar *version );
-void            na_object_action_set_readonly( NAObjectAction *action, gboolean readonly );
-
-void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );
+	/* dynamically set when reading the actions from the I/O storage
+	 * subsystem
+	 * defaults to FALSE unless a write has already returned an error
+	 */
+	gboolean read_only;
+};
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_ACTION_H__ */
+#endif /* __NA_RUNTIME_OBJECT_ACTION_PRIV_H__ */

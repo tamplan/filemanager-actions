@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_PROFILE_FN_H__
-#define __NA_OBJECT_PROFILE_FN_H__
+#ifndef __NA_RUNTIME_OBJECT_PROFILE_FN_H__
+#define __NA_RUNTIME_OBJECT_PROFILE_FN_H__
 
 /**
  * SECTION: na_object_profile
@@ -83,4 +83,4 @@ gchar           *na_object_profile_parse_parameters( const NAObjectProfile *prof
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_PROFILE_FN_H__ */
+#endif /* __NA_RUNTIME_OBJECT_PROFILE_FN_H__ */

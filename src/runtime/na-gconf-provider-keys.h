@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_PROVIDER_KEYS_H__
-#define __NA_GCONF_PROVIDER_KEYS_H__
+#ifndef __NA_RUNTIME_GCONF_PROVIDER_KEYS_H__
+#define __NA_RUNTIME_GCONF_PROVIDER_KEYS_H__
 
 #include "na-gconf-keys.h"
 
@@ -65,4 +65,4 @@
 #define ACTION_MULTIPLE_ENTRY			"accept-multiple-files"
 #define ACTION_SCHEMES_ENTRY			"schemes"
 
-#endif /* __NA_GCONF_PROVIDER_KEYS_H__ */
+#endif /* __NA_RUNTIME_GCONF_PROVIDER_KEYS_H__ */

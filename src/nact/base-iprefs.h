@@ -36,10 +36,7 @@
  * @short_description: #BaseIPrefs interface definition.
  * @include: nact/base-iprefs.h
  *
- * This interface may be implemented by all dialogs which wish take
- * benefit of preferences management.
- *
- * As a side effect, it cooperates with #BaseWindow to automatically
+ * This interface cooperates with #BaseWindow to automatically
  * save, then restore, size and position of window on the display.
  * This is made possible by identifying each window by an id specific
  * to this function.
@@ -67,25 +64,17 @@ typedef struct {
 }
 	BaseIPrefsInterface;
 
-#define BASE_IPREFS_RELABEL_MENUS		"iprefs-relabel-menus"
-#define BASE_IPREFS_RELABEL_ACTIONS		"iprefs-relabel-actions"
-#define BASE_IPREFS_RELABEL_PROFILES	"iprefs-relabel-profiles"
+GType base_iprefs_get_type( void );
 
-GType    base_iprefs_get_type( void );
+void  base_iprefs_position_window( BaseWindow *window );
+void  base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, const gchar *name );
 
-void     base_iprefs_migrate_key( BaseWindow *window, const gchar *old_key, const gchar *new_key );
+void  base_iprefs_save_window_position( BaseWindow *window );
+void  base_iprefs_save_named_window_position( BaseWindow *window, GtkWindow *toplevel, const gchar *name );
 
-void     base_iprefs_position_window( BaseWindow *window );
-void     base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, const gchar *name );
+gint  base_iprefs_get_int( BaseWindow *window, const gchar *name );
+void  base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value );
 
-void     base_iprefs_save_window_position( BaseWindow *window );
-void     base_iprefs_save_named_window_position( BaseWindow *window, GtkWindow *toplevel, const gchar *name );
-
-gboolean base_iprefs_get_bool( BaseIPrefs *instance, const gchar *key );
-void     base_iprefs_set_bool( BaseIPrefs *instance, const gchar *key, gboolean value );
-
-gint     base_iprefs_get_int( BaseWindow *window, const gchar *key );
-void     base_iprefs_set_int( BaseWindow *window, const gchar *key, gint value );
 
 G_END_DECLS
 

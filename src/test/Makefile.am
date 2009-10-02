@@ -59,7 +59,7 @@ test_parse_uris_SOURCES = \
 	$(NULL)
 
 test_parse_uris_LDADD = \
-	$(top_builddir)/src/common/libna-runtime.la		\
+	$(top_builddir)/src/runtime/libna-runtime.la	\
 	$(NAUTILUS_ACTIONS_LIBS)						\
 	$(NULL)
 
@@ -68,7 +68,6 @@ test_virtuals_SOURCES = \
 	$(NULL)
 
 test_virtuals_LDADD = \
-	$(top_builddir)/src/common/libna-runtime.la		\
 	$(NAUTILUS_ACTIONS_LIBS)						\
 	$(NULL)
 
@@ -77,7 +76,6 @@ test_virtuals_without_test_SOURCES = \
 	$(NULL)
 
 test_virtuals_Lwithout_test_DADD = \
-	$(top_builddir)/src/common/libnact.la			\
 	$(NAUTILUS_ACTIONS_LIBS)						\
 	$(NULL)
 	

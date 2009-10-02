@@ -93,7 +93,7 @@ nautilus_actions_config_tool_SOURCES = \
 
 nautilus_actions_config_tool_LDADD = \
 	$(top_builddir)/src/common/libna-common.la			\
-	$(top_builddir)/src/common/libna-runtime.la			\
+	$(top_builddir)/src/runtime/libna-runtime.la		\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 

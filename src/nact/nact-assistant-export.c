@@ -36,9 +36,10 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
+#include <runtime/na-object-api.h>
+#include <runtime/na-pivot.h>
+
 #include <common/na-iprefs.h>
-#include <common/na-object-api.h>
-#include <common/na-pivot.h>
 #include <common/na-utils.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>

@@ -40,10 +40,8 @@
  * It is a common base class for all Nautilus Actions window documents.
  */
 
-#include <common/na-object-action.h>
-#include <common/na-object-menu.h>
-#include <common/na-object-profile.h>
-#include <common/na-pivot.h>
+#include <runtime/na-object-item-class.h>
+#include <runtime/na-pivot.h>
 
 #include "base-window.h"
 

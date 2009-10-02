@@ -38,8 +38,9 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include <common/na-gconf-provider-keys.h>
-#include <common/na-gconf-utils.h>
+#include <runtime/na-gconf-provider-keys.h>
+#include <runtime/na-gconf-utils.h>
+
 #include <common/na-object-api.h>
 #include <common/na-utils.h>
 #include <common/na-xml-names.h>
@@ -1300,7 +1301,7 @@ manage_import_mode( NactXMLReader *reader )
 
 	switch( reader->private->import_mode ){
 		case RENUMBER_MODE:
-			na_object_set_new_id( reader->private->action );
+			na_object_set_new_id( reader->private->action, NULL );
 			reader->private->relabel = TRUE;
 			ret = TRUE;
 			break;

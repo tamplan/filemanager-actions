@@ -37,33 +37,13 @@
 
 #include "na-iduplicable.h"
 #include "na-object-api.h"
+#include "na-object-item-priv.h"
 #include "na-utils.h"
 
 /* private class data
  */
 struct NAObjectItemClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
-};
-
-/* private instance data
- */
-struct NAObjectItemPrivate {
-	gboolean       dispose_has_run;
-
-	/* object_item properties
-	 */
-	gchar         *tooltip;
-	gchar         *icon;
-	gboolean       enabled;
-
-	/* list of NAObjectId subitems
-	 */
-	GList         *items;
-
-	/* the original provider
-	 * required to be able to edit/delete the item
-	 */
-	NAIIOProvider *provider;
 };
 
 /* object properties

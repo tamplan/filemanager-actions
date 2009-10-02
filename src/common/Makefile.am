@@ -45,11 +45,11 @@ libna_common_la_SOURCES = \
 	na-object-item.c							\
 	na-object-item-fn.h							\
 	na-object-action.c							\
-	na-object-action.h							\
+	na-object-action-fn.h						\
 	na-object-menu.c							\
-	na-object-menu.h							\
+	na-object-menu-fn.h							\
 	na-object-profile.c							\
-	na-object-profile.h							\
+	na-object-profile-fn.h						\
 	na-utils.c									\
 	na-utils.h									\
 	na-xml-names.h								\
@@ -58,6 +58,4 @@ libna_common_la_SOURCES = \
 	$(NULL)
 
 libna_common_la_LIBADD = \
-	-lxml2										\
-	-luuid										\
 	$(NULL)

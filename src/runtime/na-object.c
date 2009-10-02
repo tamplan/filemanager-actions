@@ -36,17 +36,12 @@
 
 #include "na-object-api.h"
 #include "na-iduplicable.h"
+#include "na-object-priv.h"
 
 /* private class data
  */
 struct NAObjectClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
-};
-
-/* private instance data
- */
-struct NAObjectPrivate {
-	gboolean dispose_has_run;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -75,7 +70,6 @@ static gboolean       do_is_valid( const NAObject *object );
 static void           dump_hierarchy( const NAObject *object );
 static void           dump_tree( GList *tree, gint level );
 static gboolean       is_valid_hierarchy( const NAObject *object );
-static GList         *most_derived_get_childs( const NAObject *object );
 static NAObject      *most_derived_new( const NAObject *object );
 
 GType
@@ -283,6 +277,34 @@ na_object_iduplicable_duplicate( const NAObject *object )
 }
 
 /**
+ * na_object_iduplicable_are_equal:
+ * @a: a first #NAObject object.
+ * @b: a second #NAObject object to be compared to the first one.
+ *
+ * Compares the two #NAObject objects.
+ *
+ * At least when it finds that @a and @b are equal, each derived
+ * class should call its parent class to give it an opportunity to
+ * detect a difference.
+ *
+ * Returns: %TRUE if @a and @b are identical, %FALSE else.
+ */
+gboolean
+na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b )
+{
+	gboolean are_equal = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
+
+	if( !a->private->dispose_has_run && !b->private->dispose_has_run ){
+		are_equal = are_equal_hierarchy( a, b );
+	}
+
+	return( are_equal );
+}
+
+/**
  * na_object_iduplicable_is_modified:
  * @object: the #NAObject object whose status is requested.
  *
@@ -367,6 +389,36 @@ void
 na_object_object_dump_tree( GList *tree )
 {
 	dump_tree( tree, 0 );
+}
+
+/**
+ * na_object_most_derived_get_childs:
+ * @object: this #NAObject instance.
+ *
+ * Returns: the list of childs as returned by the most derived class
+ * which implements the virtual function 'get_childs'.
+ *
+ * The returned list should be g_list_free() by the caller.
+ */
+GList *
+na_object_most_derived_get_childs( const NAObject *object )
+{
+	GList *childs;
+	GList *hierarchy, *ih;
+	gboolean found;
+
+	found = FALSE;
+	childs = NULL;
+	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
+
+	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
+		if( NA_OBJECT_CLASS( ih->data )->get_childs ){
+			childs = NA_OBJECT_CLASS( ih->data )->get_childs( object );
+			found = TRUE;
+		}
+	}
+
+	return( childs );
 }
 
 /**
@@ -467,7 +519,7 @@ iduplicable_is_valid( const NAIDuplicable *object )
 static GList *
 v_get_childs( const NAObject *object ){
 
-	return( most_derived_get_childs( object ));
+	return( na_object_most_derived_get_childs( object ));
 }
 
 static gboolean
@@ -615,27 +667,6 @@ is_valid_hierarchy( const NAObject *object )
 	na_object_free_hierarchy( hierarchy );
 
 	return( is_valid );
-}
-
-static GList *
-most_derived_get_childs( const NAObject *object )
-{
-	GList *childs;
-	GList *hierarchy, *ih;
-	gboolean found;
-
-	found = FALSE;
-	childs = NULL;
-	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
-
-	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->get_childs ){
-			childs = NA_OBJECT_CLASS( ih->data )->get_childs( object );
-			found = TRUE;
-		}
-	}
-
-	return( childs );
 }
 
 static NAObject *

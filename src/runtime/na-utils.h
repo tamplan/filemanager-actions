@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_UTILS_H__
-#define __NA_UTILS_H__
+#ifndef __NA_RUNTIME_UTILS_H__
+#define __NA_RUNTIME_UTILS_H__
 
 #include <glib.h>
 
@@ -52,4 +52,4 @@ gchar   *na_utils_path_extract_last_dir( const gchar *path );
 
 G_END_DECLS
 
-#endif /* __NA_UTILS_H__ */
+#endif /* __NA_RUNTIME_UTILS_H__ */

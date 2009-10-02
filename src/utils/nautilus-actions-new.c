@@ -36,11 +36,10 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
+#include <runtime/na-gconf-provider.h>
+#include <runtime/na-iio-provider.h>
+
 #include <common/na-object-api.h>
-#include <common/na-object-action.h>
-#include <common/na-object-profile.h>
-#include <common/na-gconf-provider.h>
-#include <common/na-iio-provider.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
 

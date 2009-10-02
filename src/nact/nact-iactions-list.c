@@ -35,11 +35,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
-#include <common/na-iduplicable.h>
 #include <common/na-object-api.h>
-#include <common/na-object-action.h>
-#include <common/na-object-menu.h>
-#include <common/na-object-profile.h>
 #include <common/na-iprefs.h>
 
 #include "nact-application.h"

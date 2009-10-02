@@ -28,15 +28,16 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ITEM_FN_H__
-#define __NA_OBJECT_ITEM_FN_H__
+#ifndef __NA_COMMON_OBJECT_ITEM_FN_H__
+#define __NA_COMMON_OBJECT_ITEM_FN_H__
 
 /**
  * SECTION: na_object_item
- * @short_description: #NAObjectItem public function declarations.
+ * @short_description: #NAObjectItem public function declarations extension.
  * @include: common/na-object-fn.h
  *
- * Define here the public functions of the #NAObjectItem class.
+ * Define here the public functions of the #NAObjectItem class which are
+ * not shared by the Nautilus Actions plugin.
  *
  * Note that most users of the class should rather use macros defined
  * in na-object-api.h
@@ -44,8 +45,7 @@
 
 #include <gtk/gtk.h>
 
-#include "na-object-item-class.h"
-#include "na-iio-provider.h"
+#include <runtime/na-object-item-class.h>
 
 G_BEGIN_DECLS
 
@@ -56,4 +56,4 @@ void           na_object_item_remove_item( NAObjectItem *item, const NAObject *o
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_ITEM_FN_H__ */
+#endif /* __NA_COMMON_OBJECT_ITEM_FN_H__ */

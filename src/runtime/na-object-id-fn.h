@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ID_FN_H__
-#define __NA_OBJECT_ID_FN_H__
+#ifndef __NA_RUNTIME_OBJECT_ID_FN_H__
+#define __NA_RUNTIME_OBJECT_ID_FN_H__
 
 /**
  * SECTION: na_object_id
@@ -55,4 +55,4 @@ void   na_object_id_set_label( NAObjectId *object, const gchar *label );
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_ID_FN_H__ */
+#endif /* __NA_RUNTIME_OBJECT_ID_FN_H__ */

@@ -28,10 +28,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_UTILS_H__
-#define __NA_UTILS_H__
+#ifndef __NA_COMMON_UTILS_H__
+#define __NA_COMMON_UTILS_H__
 
 #include <glib.h>
+
+#include <runtime/na-utils.h>
 
 G_BEGIN_DECLS
 
@@ -62,4 +64,4 @@ gboolean na_utils_exist_file( const gchar *uri );
 
 G_END_DECLS
 
-#endif /* __NA_UTILS_H__ */
+#endif /* __NA_COMMON_UTILS_H__ */

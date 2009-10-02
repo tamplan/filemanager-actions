@@ -308,15 +308,15 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 
 	/* second tab: ui preferences
 	 */
-	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_MENUS );
+	relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_MENUS, FALSE );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 
-	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_ACTIONS );
+	relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_ACTIONS, FALSE );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelActionButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 
-	relabel = base_iprefs_get_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_PROFILES );
+	relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, FALSE );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 
@@ -420,15 +420,15 @@ save_preferences( NactPreferencesEditor *editor )
 	 */
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	base_iprefs_set_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_MENUS, relabel );
+	na_iprefs_write_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_MENUS, relabel );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelActionButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	base_iprefs_set_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_ACTIONS, relabel );
+	na_iprefs_write_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_ACTIONS, relabel );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	base_iprefs_set_bool( BASE_IPREFS( editor ), BASE_IPREFS_RELABEL_PROFILES, relabel );
+	na_iprefs_write_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, relabel );
 
 	/* third tab: tools preferences
 	 */
