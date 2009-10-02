@@ -28,31 +28,20 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ID_FN_H__
-#define __NA_OBJECT_ID_FN_H__
+#ifndef __NA_GCONF_KEYS_H__
+#define __NA_GCONF_KEYS_H__
 
 /**
- * SECTION: na_object_id
- * @short_description: #NAObjectId public function declarations.
- * @include: common/na-object-id-fn.h
+ * SECTION: na_gconf
+ * @short_description: GConf general information.
+ * @include: runtime/na-gconf-keys.h
  *
- * Define here the public functions of the #NAObjectId class.
- *
- * Note that most users of the class should rather use macros defined
- * in na-object-api.h
+ * These keys are used both:
+ * - by GConf as a NAIIOProvider
+ * - by GConf as the preferences storage system
+ * - as a part of schemas path in import/export operations
  */
+#define NAUTILUS_ACTIONS_GCONF_BASEDIR			"/apps/" PACKAGE
+#define NAUTILUS_ACTIONS_GCONF_SCHEMASDIR		"/schemas"
 
-#include "na-object-id-class.h"
-
-G_BEGIN_DECLS
-
-gchar *na_object_id_get_id( const NAObjectId *object );
-gchar *na_object_id_get_label( const NAObjectId *object );
-
-void   na_object_id_set_id( NAObjectId *object, const gchar *id );
-void   na_object_id_set_for_copy( NAObjectId *object, gboolean relabel );
-void   na_object_id_set_label( NAObjectId *object, const gchar *label );
-
-G_END_DECLS
-
-#endif /* __NA_OBJECT_ID_FN_H__ */
+#endif /* __NA_GCONF_KEYS_H__ */

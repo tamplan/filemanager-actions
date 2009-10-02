@@ -37,8 +37,6 @@
 
 #include "na-iduplicable.h"
 #include "na-object-api.h"
-#include "na-object-item-class.h"
-#include "na-object-item-fn.h"
 #include "na-utils.h"
 
 /* private class data
@@ -95,13 +93,12 @@ static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
 static void     object_dump( const NAObject *object );
-static void     object_ref( const NAObject *action );
 static void     object_copy( NAObject *target, const NAObject *source );
 static gboolean object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean object_is_valid( const NAObject *object );
 static GList   *object_get_childs( const NAObject *object );
 
-static gchar   *object_id_new_id( const NAObjectId *object );
+static gchar   *object_id_new_id( const NAObjectId *object, const NAObjectId *new_parent );
 
 GType
 na_object_item_get_type( void )
@@ -188,8 +185,6 @@ class_init( NAObjectItemClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
-	naobject_class->get_clipboard_id = NULL;
-	naobject_class->ref = object_ref;
 	naobject_class->new = NULL;
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
@@ -336,81 +331,189 @@ instance_finalize( GObject *object )
 	}
 }
 
-/*
- * TODO: remove this function
+/**
+ * na_object_item_get_tooltip:
+ * @item: the #NAObjectItem object to be requested.
+ *
+ * Returns the tooltip which will be display in the Nautilus context
+ * menu item for this @item.
+ *
+ * Returns: the tooltip of the @item as a newly allocated string. This
+ * returned string must be g_free() by the caller.
  */
 gchar *
-na_object_item_get_verified_icon_name( const NAObjectItem *item )
+na_object_item_get_tooltip( const NAObjectItem *item )
 {
-	gchar *icon_name;
+	gchar *tooltip = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-	g_return_val_if_fail( !item->private->dispose_has_run, NULL );
 
-	g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ICON, &icon_name, NULL );
-
-	if( icon_name[0] == '/' ){
-		if( !g_file_test( icon_name, G_FILE_TEST_IS_REGULAR )){
-			g_free( icon_name );
-			return NULL;
-		}
-	} else if( strlen( icon_name ) == 0 ){
-		g_free( icon_name );
-		return NULL;
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TOOLTIP, &tooltip, NULL );
 	}
 
-	return( icon_name );
+	return( tooltip );
 }
 
 /**
- * na_object_item_get_pixbuf:
- * @item: this #NAObjectItem.
- * @widget: the widget for which the icon must be rendered.
+ * na_object_item_get_icon:
+ * @item: the #NAObjectItem object to be requested.
  *
- * Returns the #GdkPixbuf image corresponding to the icon.
- * The image has a size of %GTK_ICON_SIZE_MENU.
+ * Returns the name of the icon attached to the Nautilus context menu
+ * item for this @item.
+ *
+ * Returns: the icon name as a newly allocated string. This returned
+ * string must be g_free() by the caller.
  */
-GdkPixbuf *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *widget )
+gchar *
+na_object_item_get_icon( const NAObjectItem *item )
 {
-	static const gchar *thisfn = "na_object_item_get_pixbuf";
-	gchar *iconname;
-	GtkStockItem stock_item;
-	GdkPixbuf* icon = NULL;
-	gint width, height;
-	GError* error = NULL;
+	gchar *icon = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ICON, &icon, NULL );
+	}
+
+	return( icon );
+}
+
+/**
+ * na_object_item_get_provider:
+ * @item: the #NAObjectItem object to be requested.
+ *
+ * Returns the initial provider of the item (or the last which has
+ * accepted a write operation). At the time of this request, this is
+ * the most probable provider willing to accept a next writing
+ * operation.
+ *
+ * Returns: a #NAIIOProvider object. The reference is
+ * owned by #NAPivot pivot and should not be g_object_unref() by the
+ * caller.
+ */
+NAIIOProvider *
+na_object_item_get_provider( const NAObjectItem *item )
+{
+	NAIIOProvider *provider = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER, &provider, NULL );
+	}
+
+	return( provider );
+}
+
+/**
+ * na_object_item_get_item:
+ * @item: the #NAObjectItem from which we want retrieve a subitem.
+ * @id: the id of the searched subitem.
+ *
+ * Returns: a pointer to the #NAObject subitem with the required id.
+ *
+ * The returned #NAObject is owned by the @item object ; the
+ * caller should not try to g_free() nor g_object_unref() it.
+ */
+NAObject *
+na_object_item_get_item( const NAObjectItem *item, const gchar *id )
+{
+	GList *it;
+	NAObject *found = NULL;
+	NAObject *isub;
+	gchar *isubid;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
 
 	if( !item->private->dispose_has_run ){
 
-		iconname = na_object_item_get_icon( item );
-
-		/* TODO: use the same algorythm than Nautilus to find and
-		 * display an icon + move the code to NAAction class +
-		 * remove na_action_get_verified_icon_name
-		 */
-		if( iconname ){
-			if( gtk_stock_lookup( iconname, &stock_item )){
-				icon = gtk_widget_render_icon( widget, iconname, GTK_ICON_SIZE_MENU, NULL );
-
-			} else if( g_file_test( iconname, G_FILE_TEST_EXISTS )
-				   && g_file_test( iconname, G_FILE_TEST_IS_REGULAR )){
-
-				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
-				icon = gdk_pixbuf_new_from_file_at_size( iconname, width, height, &error );
-				if( error ){
-					g_warning( "%s: iconname=%s, error=%s", thisfn, iconname, error->message );
-					g_error_free( error );
-					error = NULL;
-					icon = NULL;
-				}
+		for( it = item->private->items ; it && !found ; it = it->next ){
+			isub = NA_OBJECT( it->data );
+			isubid = na_object_get_id( isub );
+			if( !strcmp( id, isubid )){
+				found = isub;
 			}
+			g_free( isubid );
 		}
-
-		g_free( iconname );
 	}
 
-	return( icon );
+	return( found );
+}
+
+/**
+ * na_object_item_get_items:
+ * @item: the #NAObjectItem from which we want a list of subitems.
+ *
+ * Returns: a newly allocated #GList of #NAObject objects which are
+ * embedded in the @item. Depending of the exact nature of @item, these
+ * may be #NAObjectMenu, #NAObjectAction or #NAObjectProfile subitems.
+ *
+ * The returned pointer should be na_object_item_free_items() or
+ * na_object_free_items() by the caller.
+ */
+GList *
+na_object_item_get_items( const NAObjectItem *item )
+{
+	GList *items = NULL;
+	GList *it;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+
+	if( !item->private->dispose_has_run ){
+
+		for( it = item->private->items ; it ; it = it->next ){
+			items = g_list_prepend( items, g_object_ref( it->data ));
+		}
+
+		items = g_list_reverse( items );
+	}
+
+	return( items );
+}
+
+/**
+ * na_object_item_get_items_count:
+ * @item: the #NAObjectItem from which we want a count of subitems.
+ *
+ * Returns: the count of subitems of @item.
+ */
+guint
+na_object_item_get_items_count( const NAObjectItem *item )
+{
+	guint count = 0;
+
+	/*g_debug( "na_object_item_get_items_count: item=%p (%s)", ( void * ) item, G_OBJECT_TYPE_NAME( item ));*/
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
+
+	if( !item->private->dispose_has_run ){
+		count = item->private->items ? g_list_length( item->private->items ) : 0;
+	}
+
+	return( count );
+}
+
+/**
+ * na_object_item_free_items:
+ * @list: a list of #NAObject subitems as returned by
+ * na_object_item_get_items().
+ *
+ * Frees the list.
+ */
+void
+na_object_item_free_items( GList *items )
+{
+	GList *it;
+
+	for( it = items ; it ; it = it->next ){
+		if( G_IS_OBJECT( it->data )){
+			g_object_unref( it->data );
+		/*} else {
+			g_warning( "na_object_item_free_items: %p not an object", ( void * ) it->data );*/
+		}
+	}
+
+	g_list_free( items );
 }
 
 /**
@@ -568,69 +671,6 @@ na_object_item_append_item( NAObjectItem *item, const NAObject *object )
 	}
 }
 
-/**
- * na_object_item_insert_item:
- * @item: the #NAObjectItem to which add the subitem.
- * @object: a #NAObject to be inserted in the list of subitems.
- * @before: the #NAObject before which the @object should be inserted.
- *
- * Inserts a new @object in the list of subitems of @item.
- *
- * Doesn't modify the reference count on @object.
- */
-void
-na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before )
-{
-	GList *before_list;
-
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( NA_IS_OBJECT( before ));
-
-	if( !item->private->dispose_has_run ){
-
-		if( !g_list_find( item->private->items, ( gpointer ) object )){
-			before_list = g_list_find( item->private->items, ( gconstpointer ) before );
-			if( before_list ){
-				item->private->items = g_list_insert_before( item->private->items, before_list, ( gpointer ) object );
-			} else {
-				item->private->items = g_list_prepend( item->private->items, ( gpointer ) object );
-			}
-		}
-	}
-}
-
-/**
- * na_object_item_remove_item:
- * @item: the #NAObjectItem from which the subitem must be removed.
- * @object: a #NAObject to be removed from the list of subitems.
- *
- * Removes an @object from the list of subitems of @item.
- *
- * Doesn't modify the reference count on @object.
- */
-void
-na_object_item_remove_item( NAObjectItem *item, const NAObject *object )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	if( !item->private->dispose_has_run ){
-
-		if( g_list_find( item->private->items, ( gconstpointer ) object )){
-			item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
-
-			/* don't understand why !?
-			 * it appears as if embedded actions and menus would have one sur-ref
-			 * that profiles don't have
-			 */
-			if( NA_IS_OBJECT_ITEM( object )){
-				g_object_unref(( gpointer ) object );
-			}
-		}
-	}
-}
-
 static void
 object_dump( const NAObject *item )
 {
@@ -656,12 +696,6 @@ object_dump( const NAObject *item )
 		 * being dumped after its childs
 		 */
 	}
-}
-
-static void
-object_ref( const NAObject *item )
-{
-	g_list_foreach( NA_OBJECT_ITEM( item )->private->items, ( GFunc ) g_object_ref, NULL );
 }
 
 static void
@@ -839,8 +873,13 @@ object_get_childs( const NAObject *object )
 	return( childs );
 }
 
+/*
+ * new_parent is not relevant when allocating a new UUID for an action
+ * or a menu ; it may safely be left as NULL though there is no gain to
+ * check this
+ */
 static gchar *
-object_id_new_id( const NAObjectId *item )
+object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
 {
 	GList *it;
 	uuid_t uuid;
@@ -851,9 +890,14 @@ object_id_new_id( const NAObjectId *item )
 
 	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
 
-		for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
-			if( NA_IS_OBJECT_ITEM( it->data )){
-				na_object_set_new_id( it->data );
+		/* recurse into NAObjectItems childs
+		 * i.e., if a menu, recurse into embedded actions
+		 */
+		if( NA_OBJECT_ITEM( item )->private->items &&
+			NA_IS_OBJECT_ITEM( NA_OBJECT_ITEM( item )->private->items->data )){
+
+			for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
+				na_object_set_new_id( it->data, new_parent );
 			}
 		}
 

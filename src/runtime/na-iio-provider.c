@@ -32,9 +32,9 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include "na-object-api.h"
-#include "na-object-action.h"
-#include "na-object-menu.h"
 #include "na-iio-provider.h"
 #include "na-iprefs.h"
 #include "na-utils.h"

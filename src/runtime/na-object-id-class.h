@@ -34,7 +34,7 @@
 /**
  * SECTION: na_object_id
  * @short_description: #NAObjectId class definition.
- * @include: common/na-object-id-class.h
+ * @include: runtime/na-object-id-class.h
  *
  * A #NAObjectId object is characterized by :
  * - an internal identifiant (ASCII, case insensitive)
@@ -71,14 +71,19 @@ typedef struct {
 	/**
 	 * new_id:
 	 * @object: a #NAObjectId object.
+	 * @new_parent: possibly the new #NAObjectId parent, or NULL.
 	 *
 	 * Returns: a new id suitable for this @object.
+	 *
+	 * If @object is a #NAObjectProfile, then @new_parent must be a
+	 * not null #NAObjectAction. This function ensures that the new
+	 * profile name does not already exist in the given @new_parent.
 	 *
 	 * This is a pure virtual function which should be implemented by
 	 * the actual class. Actually, we asks for the most-derived class
 	 * which implements this function.
 	 */
-	gchar * ( *new_id )( const NAObjectId *object );
+	gchar * ( *new_id )( const NAObjectId *object, const NAObjectId *new_parent );
 }
 	NAObjectIdClass;
 

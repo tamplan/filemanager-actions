@@ -1,5 +1,53 @@
 2009-10-02 Pierre Wieser <pwieser@trychlos.org>
 
+	Centralize plugin routines in a dedicated libna-runtime library.
+
+	* configure.ac: Add src/runtime/Makefile generation.
+
+	* m4/na-log-domains.m4: Define NA-runtime log domain.
+
+	* src/Makefile.am: Recurse into runtime subdirectory.
+
+	* src/common/na-gconf-keys-base.h:
+	* src/common/na-gconf-keys-schemas.h:
+	* src/common/na-gconf-monitor.c:
+	* src/common/na-gconf-monitor.h:
+	* src/common/na-gconf-provider-keys.h:
+	* src/common/na-gconf-provider.c:
+	* src/common/na-gconf-provider.h:
+	* src/common/na-gconf-utils.c:
+	* src/common/na-gconf-utils.h:
+	* src/common/na-gnome-vfs-uri.c:
+	* src/common/na-gnome-vfs-uri.h:
+	* src/common/na-iabout.c:
+	* src/common/na-iabout.h:
+	* src/common/na-iduplicable.c:
+	* src/common/na-iduplicable.h:
+	* src/common/na-iio-provider.c:
+	* src/common/na-iio-provider.h:
+	* src/common/na-ipivot-consumer.c:
+	* src/common/na-ipivot-consumer.h:
+	* src/common/na-object-action-class.h:
+	* src/common/na-object-class.h:
+	* src/common/na-object-id-class.h:
+	* src/common/na-object-item-class.h:
+	* src/common/na-object-profile-class.h:
+	* src/common/na-pivot.c:
+	* src/common/na-pivot.h: Moved to libna-runtime library.
+
+	* src/common/na-object-action.c:
+	* src/common/na-object-action.h:
+	* src/common/na-object-menu.c:
+	* src/common/na-object-menu.h:
+	* src/common/na-object-profile.c:
+	* src/common/na-object-profile.h: Remove runtime functions.
+
+	* src/common/Makefile.am: Updated accordingly.
+
+	* src/runtime/Makefile.am: New file.
+
+2009-10-02 Pierre Wieser <pwieser@trychlos.org>
+
 	* src/nact/base-application.c:
 	* src/nact/base-application.h (base_application_message_dlg):
 	New function.

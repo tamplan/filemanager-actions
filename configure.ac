@@ -51,6 +51,7 @@ AC_CONFIG_FILES([
 	src/common/Makefile
 	src/nact/Makefile
 	src/plugin/Makefile
+	src/runtime/Makefile
 	src/test/Makefile
 	src/utils/Makefile
 	po/Makefile.in

@@ -34,13 +34,13 @@
 /**
  * SECTION: na_gconf_provider
  * @short_description: #NAGConfProvider class definition.
- * @include: common/na-gconf-provider.h
+ * @include: runtime/na-gconf-provider.h
  *
  * This class manages the GConf I/O storage subsystem, or, in other words,
  * the GConf subsystem as an NAIIOProvider. As this, it should only be
  * used through the NAIIOProvider interface.
  *
- * #NAGConfProvider uses NAGConfMonitor to watch at the configuration
+ * #NAGConfProvider uses #NAGConfMonitor to watch at the configuration
  * tree. When something is modified, it sends the appropriate signal to
  * the #NAPivot object it was created against.
  */

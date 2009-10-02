@@ -34,9 +34,11 @@
 /**
  * SECTION: na_gconf_monitor
  * @short_description: #NAGConfMonitor class definition.
- * @include: common/na-gconf-monitor.h
+ * @include: runtime/na-gconf-monitor.h
  *
  * This class manages the GConf monitoring.
+ * It is used to monitor both the GConf provider and the GConf runtime
+ * preferences.
  */
 
 #include <gconf/gconf-client.h>

@@ -28,31 +28,41 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ID_FN_H__
-#define __NA_OBJECT_ID_FN_H__
+#ifndef __NA_GCONF_PROVIDER_KEYS_H__
+#define __NA_GCONF_PROVIDER_KEYS_H__
 
-/**
- * SECTION: na_object_id
- * @short_description: #NAObjectId public function declarations.
- * @include: common/na-object-id-fn.h
- *
- * Define here the public functions of the #NAObjectId class.
- *
- * Note that most users of the class should rather use macros defined
- * in na-object-api.h
+#include "na-gconf-keys.h"
+
+/* GConf general information
  */
+#define NA_GCONF_CONFIG_PATH			NAUTILUS_ACTIONS_GCONF_BASEDIR "/configurations"
 
-#include "na-object-id-class.h"
+/* GConf key names (common to menu and actions)
+ */
+#define OBJECT_ITEM_LABEL_ENTRY			"label"
+#define OBJECT_ITEM_TOOLTIP_ENTRY		"tooltip"
+#define OBJECT_ITEM_ICON_ENTRY			"icon"
+#define OBJECT_ITEM_ENABLED_ENTRY		"enabled"
 
-G_BEGIN_DECLS
+/* GConf key names (specific to menu)
+ */
+#define MENU_ITEMS_ENTRY				"items"
 
-gchar *na_object_id_get_id( const NAObjectId *object );
-gchar *na_object_id_get_label( const NAObjectId *object );
+/* GConf key names (specific to action)
+ */
+#define ACTION_VERSION_ENTRY			"version"
 
-void   na_object_id_set_id( NAObjectId *object, const gchar *id );
-void   na_object_id_set_for_copy( NAObjectId *object, gboolean relabel );
-void   na_object_id_set_label( NAObjectId *object, const gchar *label );
+/* GConf key names (specific to profile)
+ */
+#define ACTION_PROFILE_LABEL_ENTRY		"desc-name"
+#define ACTION_PATH_ENTRY				"path"
+#define ACTION_PARAMETERS_ENTRY			"parameters"
+#define ACTION_BASENAMES_ENTRY			"basenames"
+#define ACTION_MATCHCASE_ENTRY			"matchcase"
+#define ACTION_MIMETYPES_ENTRY			"mimetypes"
+#define ACTION_ISFILE_ENTRY				"isfile"
+#define ACTION_ISDIR_ENTRY				"isdir"
+#define ACTION_MULTIPLE_ENTRY			"accept-multiple-files"
+#define ACTION_SCHEMES_ENTRY			"schemes"
 
-G_END_DECLS
-
-#endif /* __NA_OBJECT_ID_FN_H__ */
+#endif /* __NA_GCONF_PROVIDER_KEYS_H__ */

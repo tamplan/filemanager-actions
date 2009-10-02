@@ -34,7 +34,7 @@
 /**
  * SECTION: na_iio_provider
  * @short_description: #NAIIOProvider interface definition.
- * @include: common/na-iio-provider.h
+ * @include: runtime/na-iio-provider.h
  *
  * This is the API all storage subsystems should implement in order to
  * provide I/O resources to NautilusActions.
@@ -62,12 +62,12 @@ typedef struct {
 	NAIIOProviderInterfacePrivate *private;
 
 	/**
-	 * read_tree:
+	 * read_items_list:
 	 * @instance: the #NAIIOProvider provider.
 	 *
-	 * Reads the while items tree from the specified I/O provider.
+	 * Reads the whole items list from the specified I/O provider.
 	 *
-	 * Returns: a hierarchical #GSList of menus, actions and
+	 * Returns: a unordered #GSList of menus, actions and
 	 * profiles as #NAObject-derived objects.
 	 */
 	GList *  ( *read_items_list )    ( const NAIIOProvider *instance );

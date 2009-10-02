@@ -38,14 +38,11 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
-#include <common/na-object-api.h>
-#include <common/na-object-menu.h>
-#include <common/na-object-action.h>
-#include <common/na-object-profile.h>
-#include <common/na-pivot.h>
-#include <common/na-iabout.h>
-#include <common/na-iprefs.h>
-#include <common/na-ipivot-consumer.h>
+#include <runtime/na-object-api.h>
+#include <runtime/na-pivot.h>
+#include <runtime/na-iabout.h>
+#include <runtime/na-iprefs.h>
+#include <runtime/na-ipivot-consumer.h>
 
 #include "nautilus-actions.h"
 
@@ -211,7 +208,9 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
 
-	/* from na-pivot */
+	/* initialize NAPivot and load actions through NAIIOProvider interface
+	 * forwarding notification messages from NAPivot to NautilusActions
+	 */
 	self->private->pivot = na_pivot_new( NA_IPIVOT_CONSUMER( self ));
 	na_pivot_set_automatic_reload( self->private->pivot, TRUE );
 }
@@ -309,6 +308,10 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 	self = NAUTILUS_ACTIONS( provider );
+	if( !NA_IS_PIVOT( self->private->pivot )){
+		g_warning( "%s: NAPivot is null", thisfn );
+		g_return_val_if_fail( NA_IS_PIVOT( self->private->pivot ), NULL );
+	}
 
 	/* no need to go further if there is no files in the list */
 	if( !g_list_length( files )){
@@ -417,6 +420,7 @@ is_action_candidate( NautilusActions *plugin, NAObjectAction *action, GList *fil
  		}
  	}
 
+	na_object_free_items( profiles );
 	g_free( action_label );
 
 	return( candidate );

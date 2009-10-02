@@ -36,8 +36,6 @@
 
 #include "na-iduplicable.h"
 #include "na-object-api.h"
-#include "na-object-action.h"
-#include "na-object-profile.h"
 #include "na-utils.h"
 
 /* private class data
@@ -83,7 +81,6 @@ static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
 static void      object_dump( const NAObject *object );
-static gchar    *object_get_clipboard_id( const NAObject *action );
 static NAObject *object_new( const NAObject *action );
 static void      object_copy( NAObject *target, const NAObject *source );
 static gboolean  object_are_equal( const NAObject *a, const NAObject *b );
@@ -104,7 +101,7 @@ na_object_action_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_object_register_type";
+	static const gchar *thisfn = "na_object_action_register_type";
 
 	static GTypeInfo info = {
 		sizeof( NAObjectActionClass ),
@@ -126,7 +123,7 @@ register_type( void )
 static void
 class_init( NAObjectActionClass *klass )
 {
-	static const gchar *thisfn = "na_object_class_init";
+	static const gchar *thisfn = "na_object_action_class_init";
 	GObjectClass *object_class;
 	NAObjectClass *naobject_class;
 	GParamSpec *spec;
@@ -159,8 +156,6 @@ class_init( NAObjectActionClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
-	naobject_class->get_clipboard_id = object_get_clipboard_id;
-	naobject_class->ref = NULL;
 	naobject_class->new = object_new;
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
@@ -301,7 +296,7 @@ na_object_action_new( void )
 
 	action = g_object_new( NA_OBJECT_ACTION_TYPE, NULL );
 
-	na_object_set_new_id( NA_OBJECT_ITEM( action ));
+	na_object_set_new_id( action, NULL );
 
 	/* i18n: default label for a new action */
 	na_object_set_label( action, NA_OBJECT_ACTION_DEFAULT_LABEL );
@@ -310,51 +305,29 @@ na_object_action_new( void )
 }
 
 /**
- * na_object_action_new_with_profile:
- *
- * Allocates a new #NAObjectAction object along with a default profile.
- *
- * Returns: the newly allocated #NAObjectAction action.
- */
-NAObjectAction *
-na_object_action_new_with_profile( void )
-{
-	NAObjectAction *action;
-	NAObjectProfile *profile;
-
-	action = na_object_action_new();
-
-	profile = na_object_profile_new();
-
-	/* i18n: name of the default profile when creating an action */
-	na_object_set_label( profile, _( "Default profile" ));
-	na_object_action_attach_profile( action, profile );
-
-	return( action );
-}
-
-/**
- * na_object_action_is_readonly:
+ * na_object_action_get_version:
  * @action: the #NAObjectAction object to be requested.
  *
- * Is the specified action only readable ?
- * Or, in other words, may this action be edited and then saved to the
- * original I/O storage subsystem ?
+ * Returns the version of the description of the action, as found when
+ * reading it from the I/O storage subsystem.
  *
- * Returns: %TRUE if the action is read-only, %FALSE else.
+ * Returns: the version of the action as a newly allocated string. This
+ * returned string must be g_free() by the caller.
+ *
+ * See na_object_set_version() for some rationale about version.
  */
-gboolean
-na_object_action_is_readonly( const NAObjectAction *action )
+gchar *
+na_object_action_get_version( const NAObjectAction *action )
 {
-	gboolean readonly = FALSE;
+	gchar *version = NULL;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
 
 	if( !action->private->dispose_has_run ){
-		g_object_get( G_OBJECT( action ), NAACTION_PROP_READONLY, &readonly, NULL );
+		g_object_get( G_OBJECT( action ), NAACTION_PROP_VERSION, &version, NULL );
 	}
 
-	return( readonly );
+	return( version );
 }
 
 /**
@@ -403,6 +376,48 @@ na_object_action_set_readonly( NAObjectAction *action, gboolean readonly )
 }
 
 /**
+ * na_object_action_get_new_profile_name:
+ * @action: the #NAObjectAction object which will receive a new profile.
+ *
+ * Returns a name suitable as a new profile name.
+ *
+ * The search is made by iterating over the standard profile name
+ * prefix : basically, we increment a counter until finding a unique
+ * name. The provided name is so only suitable for the specified
+ * @action.
+ *
+ * Returns: a newly allocated profile name, which should be g_free() by
+ * the caller.
+ */
+gchar *
+na_object_action_get_new_profile_name( const NAObjectAction *action )
+{
+	int i;
+	gboolean ok = FALSE;
+	gchar *candidate = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
+
+	if( !action->private->dispose_has_run ){
+
+		for( i=1 ; !ok ; ++i ){
+			g_free( candidate );
+			candidate = g_strdup_printf( "%s%d", OBJECT_PROFILE_PREFIX, i );
+			if( !na_object_get_item( action, candidate )){
+				ok = TRUE;
+			}
+		}
+
+		if( !ok ){
+			g_free( candidate );
+			candidate = NULL;
+		}
+	}
+
+	return( candidate );
+}
+
+/**
  * na_object_action_attach_profile:
  * @action: the #NAObjectAction action to which the profile will be attached.
  * @profile: the #NAObjectProfile profile to be attached to @action.
@@ -436,22 +451,6 @@ object_dump( const NAObject *action )
 		g_debug( "%s:   version='%s'", thisfn, self->private->version );
 		g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
 	}
-}
-
-static gchar *
-object_get_clipboard_id( const NAObject *action )
-{
-	gchar *uuid;
-	gchar *clipboard_id = NULL;
-
-	if( !NA_OBJECT_ACTION( action )->private->dispose_has_run ){
-
-		uuid = na_object_get_id( action );
-		clipboard_id = g_strdup_printf( "A:%s", uuid );
-		g_free( uuid );
-	}
-
-	return( clipboard_id );
 }
 
 static NAObject *

@@ -34,7 +34,7 @@
 /**
  * SECTION: na_iduplicable
  * @short_description: #NAIDuplicable interface.
- * @include: common/na-iduplicable.h
+ * @include: runtime/na-iduplicable.h
  *
  * This interface is implemented by #NAObject in order to let
  * #NAObject-derived instance duplication be easily tracked. This works

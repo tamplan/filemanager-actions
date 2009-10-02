@@ -103,7 +103,7 @@ interface_base_init( NAIPivotConsumerInterface *klass )
 
 		klass->private = g_new0( NAIPivotConsumerInterfacePrivate, 1 );
 
-		klass->on_actions_changed = NULL /*do_actions_changed*/;
+		klass->on_actions_changed = NULL;
 		klass->on_display_about_changed = NULL;
 		klass->on_display_order_changed = NULL;
 

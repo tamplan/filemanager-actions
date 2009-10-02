@@ -36,7 +36,6 @@
 #include <uuid/uuid.h>
 
 #include "na-object-api.h"
-#include "na-object-item-class.h"
 #include "na-iio-provider.h"
 #include "na-gconf-monitor.h"
 #include "na-gconf-provider.h"
@@ -383,6 +382,10 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 void
 na_pivot_free_providers( GList *providers )
 {
+	static const gchar *thisfn = "na_pivot_free_providers";
+
+	g_debug( "%s: providers=%p", thisfn, ( void * ) providers );
+
 	g_list_foreach( providers, ( GFunc ) g_object_unref, NULL );
 	g_list_free( providers );
 }

@@ -34,7 +34,7 @@
 /**
  * SECTION: na_object_action
  * @short_description: #NAObjectAction class definition.
- * @include: common/na-object-action-class.h
+ * @include: runtime/na-object-action-class.h
  *
  * This is the class which maintains data and properties of an Nautilus
  * action.
@@ -48,7 +48,8 @@
  *
  * Note that a user may import an action, translate it and then
  * reexport it : we so may have two different actions with the same
- * uuid. The user has so to modify the UUID before import.
+ * uuid. The user has so to modify the UUID before import, or to
+ * select the appropriate option as an import mode.
  *
  * Note about edition status :
  *

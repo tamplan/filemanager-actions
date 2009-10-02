@@ -35,9 +35,6 @@
 #include <string.h>
 
 #include "na-object-api.h"
-#include "na-object-action.h"
-#include "na-object-profile.h"
-#include "na-object-menu.h"
 #include "na-gconf-monitor.h"
 #include "na-gconf-provider.h"
 #include "na-gconf-provider-keys.h"
@@ -475,26 +472,33 @@ read_item( NAGConfProvider *provider, const gchar *path )
 	gboolean have_items;
 	gboolean have_subdir;
 
+	/*g_debug( "%s: provider=%p, path=%s", thisfn, ( void * ) provider, path );*/
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
 	have_subdir = na_gconf_utils_have_subdir( provider->private->gconf, path );
 	have_items = na_gconf_utils_have_entry( provider->private->gconf, path, MENU_ITEMS_ENTRY );
+	/*g_debug( "%s: have_subdir=%s, have_items=%s", thisfn, have_subdir ? "True":"False", have_items ? "True":"False" );*/
 
 	if( have_subdir && have_items ){
-		g_warning( "%s: found both subdir and \"items\" entry at %s", thisfn, path );
+		g_warning( "%s: found both subdir(s) and \"items\" entry at %s", thisfn, path );
 		return( NULL );
 	}
 
+	/* it has a (maybe empty) 'items' entry: this is a menu
+	 */
 	if( have_items ){
 		item = NA_OBJECT_ITEM( na_object_menu_new());
 		read_item_menu( provider, path, NA_OBJECT_MENU( item ));
-		return( item );
+
+	/* else this should be an action
+	 */
+	} else {
+		item = NA_OBJECT_ITEM( na_object_action_new());
+		read_item_action( provider, path, NA_OBJECT_ACTION( item ));
 	}
 
-	item = NA_OBJECT_ITEM( na_object_action_new());
-	read_item_action( provider, path, NA_OBJECT_ACTION( item ));
 	return( item );
 }
 
@@ -609,13 +613,14 @@ read_item_action_profile( NAGConfProvider *provider, const gchar *path, NAObject
 static void
 read_item_action_profile_properties( NAGConfProvider *provider, GSList *entries, NAObjectProfile *profile )
 {
+	static const gchar *thisfn = "na_gconf_provider_read_item_action_profile_properties";
 	gchar *label, *path, *parameters;
 	GSList *basenames, *schemes, *mimetypes;
 	gboolean isfile, isdir, multiple, matchcase;
 
 	if( !na_gconf_utils_get_string_from_entries( entries, ACTION_PROFILE_LABEL_ENTRY, &label )){
-		/* i18n: default profile label */
-		label = g_strdup( NA_OBJECT_PROFILE_DEFAULT_LABEL );
+		g_warning( "%s: no label found", thisfn );
+		label = g_strdup( "" );
 	}
 	na_object_set_label( profile, label );
 	g_free( label );

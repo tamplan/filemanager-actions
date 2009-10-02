@@ -34,7 +34,7 @@
 /**
  * SECTION: na_object_id
  * @short_description: #NAObjectId public function declarations.
- * @include: common/na-object-id-fn.h
+ * @include: runtime/na-object-id-fn.h
  *
  * Define here the public functions of the #NAObjectId class.
  *
@@ -47,10 +47,10 @@
 G_BEGIN_DECLS
 
 gchar *na_object_id_get_id( const NAObjectId *object );
+void   na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent );
 gchar *na_object_id_get_label( const NAObjectId *object );
 
 void   na_object_id_set_id( NAObjectId *object, const gchar *id );
-void   na_object_id_set_for_copy( NAObjectId *object, gboolean relabel );
 void   na_object_id_set_label( NAObjectId *object, const gchar *label );
 
 G_END_DECLS

@@ -34,7 +34,7 @@
 /**
  * SECTION: na_object
  * @short_description: #NAObject class definition.
- * @include: common/na-object-class.h
+ * @include: runtime/na-object-class.h
  *
  * This is the base class for managed objects.
  *
@@ -82,32 +82,6 @@ typedef struct {
 	 * dumping its own data.
 	 */
 	void       ( *dump )            ( const NAObject *object );
-
-	/**
-	 * get_clipboard_id:
-	 * @object: the #NAObject-derived object whose id is to be
-	 * retrieved.
-	 *
-	 * Returns: an id suitable for our internal clipboard.
-	 *
-	 * This is a pure virtual function: the most derived class should
-	 * implement it. #NAObject class defaults to return the clipboard
-	 * id of the most derived class which implement this function.
-	 */
-	gchar *    ( *get_clipboard_id )( const NAObject *object );
-
-	/**
-	 * ref:
-	 * @object: the #NAObject-derived object to be reffed.
-	 *
-	 * Returns: a reference on the #NAObject.
-	 *
-	 * #NAObject public api implements a bottom-to-top iteration.
-	 * Each derived class has only to take care of ref-ing its own
-	 * childs if applies.
-	 * Finally, the #NAObject class will ref this @object itself.
-	 */
-	void       ( *ref )             ( const NAObject *object );
 
 	/**
 	 * new:

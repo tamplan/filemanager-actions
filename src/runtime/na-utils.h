@@ -28,13 +28,28 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_KEYS_SCHEMAS_H__
-#define __NA_GCONF_KEYS_SCHEMAS_H__
+#ifndef __NA_UTILS_H__
+#define __NA_UTILS_H__
 
-#include "na-gconf-keys-base.h"
+#include <glib.h>
 
-/* GConf general information
+G_BEGIN_DECLS
+
+/* some functions to ease the GSList list manipulations
  */
-#define NAUTILUS_ACTIONS_GCONF_SCHEMASDIR		"/schemas"
+GSList  *na_utils_duplicate_string_list( GSList *list );
+gboolean na_utils_find_in_list( GSList *list, const gchar *str );
+void     na_utils_free_string_list( GSList *list );
+gboolean na_utils_string_lists_are_equal( GSList *first, GSList *second );
 
-#endif /* __NA_GCONF_KEYS_SCHEMAS_H__ */
+/* a GSList to a string [aaaa,bbbb,cccc]
+ */
+gchar   *na_utils_gslist_to_schema( GSList *list );
+
+/* path manipulations
+ */
+gchar   *na_utils_path_extract_last_dir( const gchar *path );
+
+G_END_DECLS
+
+#endif /* __NA_UTILS_H__ */

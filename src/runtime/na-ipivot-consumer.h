@@ -34,7 +34,7 @@
 /**
  * SECTION: na_ipivot_consumer
  * @short_description: #NAIPivotConsumer interface definition.
- * @include: common/na-ipivot-consumer.h
+ * @include: runtime/na-ipivot-consumer.h
  *
  * This interface should be implemented by all classes which embed a
  * #NAPivot object, in order to receive modification notification

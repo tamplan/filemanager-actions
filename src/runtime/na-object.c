@@ -35,8 +35,6 @@
 #include <string.h>
 
 #include "na-object-api.h"
-#include "na-object-class.h"
-#include "na-object-fn.h"
 #include "na-iduplicable.h"
 
 /* private class data
@@ -77,10 +75,8 @@ static gboolean       do_is_valid( const NAObject *object );
 static void           dump_hierarchy( const NAObject *object );
 static void           dump_tree( GList *tree, gint level );
 static gboolean       is_valid_hierarchy( const NAObject *object );
-static gchar         *most_derived_clipboard_id( const NAObject *object );
 static GList         *most_derived_get_childs( const NAObject *object );
 static NAObject      *most_derived_new( const NAObject *object );
-static void           ref_hierarchy( const NAObject *object );
 
 GType
 na_object_get_type( void )
@@ -145,8 +141,6 @@ class_init( NAObjectClass *klass )
 	klass->private = g_new0( NAObjectClassPrivate, 1 );
 
 	klass->dump = do_dump;
-	klass->get_clipboard_id = NULL;
-	klass->ref = NULL;
 	klass->new = NULL;
 	klass->copy = do_copy;
 	klass->are_equal = do_are_equal;
@@ -239,47 +233,6 @@ instance_finalize( GObject *object )
 }
 
 /**
- * na_object_iduplicable_check_edition_status:
- * @object: the #NAObject object to be checked.
- *
- * Recursively checks for the edition status of @object and its childs
- * (if any).
- *
- * Internally set some properties which may be requested later. This
- * two-steps check-request let us optimize some work in the UI.
- *
- * na_object_check_edition_status( object )
- *  +- na_iduplicable_check_edition_status( object )
- *      +- get_origin( object )
- *      +- modified_status = v_are_equal( origin, object ) -> interface are_equal()
- *      +- valid_status = v_is_valid( object )             -> interface is_valid()
- *
- * Note that the recursivity is managed here, so that we can be sure
- * that edition status of childs is actually checked.
- */
-void
-na_object_iduplicable_check_edition_status( const NAObject *object )
-{
-	GList *childs, *ic;
-
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "na_object_iduplicable_check_edition_status: object=%p (%s)",
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));
-#endif
-	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	if( !object->private->dispose_has_run ){
-
-		childs = v_get_childs( object );
-		for( ic = childs ; ic ; ic = ic->next ){
-			na_object_iduplicable_check_edition_status( NA_OBJECT( ic->data ));
-		}
-
-		na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
-	}
-}
-
-/**
  * na_object_iduplicable_duplicate:
  * @object: the #NAObject object to be dumped.
  *
@@ -330,106 +283,32 @@ na_object_iduplicable_duplicate( const NAObject *object )
 }
 
 /**
- * na_object_iduplicable_are_equal:
- * @a: a first #NAObject object.
- * @b: a second #NAObject object to be compared to the first one.
+ * na_object_iduplicable_is_modified:
+ * @object: the #NAObject object whose status is requested.
  *
- * Compares the two #NAObject objects.
+ * Returns the current modification status of @object.
  *
- * At least when it finds that @a and @b are equal, each derived
- * class should call its parent class to give it an opportunity to
- * detect a difference.
+ * This suppose that @object has been previously duplicated in order
+ * to get benefits provided by the IDuplicable interface.
  *
- * Returns: %TRUE if @a and @b are identical, %FALSE else.
+ * This suppose also that the edition status of @object has previously
+ * been checked via na_object_check_edited_status().
+ *
+ * Returns: %TRUE is the provided object has been modified regarding to
+ * the original one, %FALSE else.
  */
 gboolean
-na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b )
+na_object_iduplicable_is_modified( const NAObject *object )
 {
-	gboolean are_equal = FALSE;
-
-	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
-
-	if( !a->private->dispose_has_run && !b->private->dispose_has_run ){
-		are_equal = are_equal_hierarchy( a, b );
-	}
-
-	return( are_equal );
-}
-
-/**
- * na_object_iduplicable_is_valid:
- * @object: the #NAObject object whose validity is to be checked.
- *
- * Gets the validity status of @object.
- *
- * Returns: %TRUE is @object is valid, %FALSE else.
- */
-gboolean
-na_object_iduplicable_is_valid( const NAObject *object )
-{
-	gboolean is_valid = FALSE;
+	gboolean is_modified = FALSE;
 
 	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
 
 	if( !object->private->dispose_has_run ){
-		is_valid = na_iduplicable_is_valid( NA_IDUPLICABLE( object ));
+		is_modified = na_iduplicable_is_modified( NA_IDUPLICABLE( object ));
 	}
 
-	return( is_valid );
-}
-
-/**
- * na_object_iduplicable_get_origin:
- * @object: the #NAObject object whose status is requested.
- *
- * Returns the original object which was at the origin of @object.
- *
- * Returns: a #NAObject, or NULL.
- */
-NAObject *
-na_object_iduplicable_get_origin( const NAObject *object )
-{
-	NAObject *origin = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
-
-	if( !object->private->dispose_has_run ){
-		/* do not use NA_OBJECT macro as we may return a (valid) NULL value */
-		origin = ( NAObject * ) na_iduplicable_get_origin( NA_IDUPLICABLE( object ));
-	}
-
-	return( origin );
-}
-
-/**
- * na_object_iduplicable_set_origin:
- * @object: the #NAObject object whose origin is to be set.
- * @origin: a #NAObject which will be set as the new origin of @object.
- *
- * Sets the new origin of @object, and of all its childs.
- *
- * Be warned: but recursively reinitializing the origin to NULL, this
- * function may cause difficult to solve issues.
- */
-void
-na_object_iduplicable_set_origin( NAObject *object, const NAObject *origin )
-{
-	GList *childs, *ic;
-
-	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( NA_IS_OBJECT( origin ) || !origin );
-
-	if( !object->private->dispose_has_run &&
-		( !origin || !origin->private->dispose_has_run )){
-
-			na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
-
-			childs = v_get_childs( object );
-			for( ic = childs ; ic ; ic = ic->next ){
-				na_object_iduplicable_set_origin( NA_OBJECT( ic->data ), origin );
-			}
-	}
+	return( is_modified );
 }
 
 /**
@@ -488,88 +367,6 @@ void
 na_object_object_dump_tree( GList *tree )
 {
 	dump_tree( tree, 0 );
-}
-
-/**
- * na_object_object_get_clipboard_id:
- * @object: the #NAObject-derived object for which we will get a id.
- *
- * Returns: a newly allocated string which contains an id for the
- * #NAobject. This id is suitable for the internal clipboard.
- *
- * The returned string should be g_free() by the caller.
- */
-gchar *
-na_object_object_get_clipboard_id( const NAObject *object )
-{
-	gchar *id = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
-
-	if( !object->private->dispose_has_run ){
-		id = most_derived_clipboard_id( object );
-	}
-
-	return( id );
-}
-
-/**
- * na_object_object_ref:
- * @object: the #NAObject-derived object to be reffed.
- *
- * Returns: a ref on the #NAobject.
- *
- * If the object has childs, then it should also have reffed them.
- */
-NAObject *
-na_object_object_ref( const NAObject *object )
-{
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
-	g_return_val_if_fail( !object->private->dispose_has_run, NULL );
-
-	ref_hierarchy( object );
-
-	return( g_object_ref(( gpointer ) object ));
-}
-
-/**
- * na_object_object_reset_origin:
- * @object: a #NAObject-derived object.
- * @origin: must be a duplication of @object.
- *
- * Recursively reset origin of @object and its childs to @origin and
- * its childs), so that @origin appear as the actual origin of @object.
- *
- * The origin of @origin itself is set to NULL.
- *
- * This only works if @origin has just been duplicated from @object,
- * and thus we do not have to check if childs lists are equal.
- */
-void
-na_object_object_reset_origin( NAObject *object, const NAObject *origin )
-{
-	GList *origin_childs, *iorig;
-	GList *object_childs, *iobj;
-	NAObject *orig_object;
-
-	g_return_if_fail( NA_IS_OBJECT( origin ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	if( !object->private->dispose_has_run && !origin->private->dispose_has_run ){
-
-		origin_childs = v_get_childs( origin );
-		object_childs = v_get_childs( object );
-		for( iorig = origin_childs, iobj = object_childs ; iorig && iobj ; iorig = iorig->next, iobj = iobj->next ){
-			orig_object = na_object_get_origin( iorig->data );
-			g_return_if_fail( orig_object == iobj->data );
-			na_object_reset_origin( iobj->data, iorig->data );
-		}
-
-		orig_object = na_object_get_origin( origin );
-		g_return_if_fail( orig_object == object );
-		na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
-		na_iduplicable_set_origin( NA_IDUPLICABLE( origin ), NULL );
-	}
 }
 
 /**
@@ -820,29 +617,6 @@ is_valid_hierarchy( const NAObject *object )
 	return( is_valid );
 }
 
-static gchar *
-most_derived_clipboard_id( const NAObject *object )
-{
-	gchar *clipboard_id;
-	GList *hierarchy, *ih;
-	gboolean found;
-
-	found = FALSE;
-	clipboard_id = NULL;
-	hierarchy = g_list_reverse( na_object_get_hierarchy( object ));
-
-	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->get_clipboard_id ){
-			clipboard_id = NA_OBJECT_CLASS( ih->data )->get_clipboard_id( object );
-			found = TRUE;
-		}
-	}
-
-	na_object_free_hierarchy( hierarchy );
-
-	return( clipboard_id );
-}
-
 static GList *
 most_derived_get_childs( const NAObject *object )
 {
@@ -885,20 +659,4 @@ most_derived_new( const NAObject *object )
 	na_object_free_hierarchy( hierarchy );
 
 	return( new_object );
-}
-
-static void
-ref_hierarchy( const NAObject *object )
-{
-	GList *hierarchy, *ih;
-
-	hierarchy = na_object_get_hierarchy( object );
-
-	for( ih = hierarchy ; ih ; ih = ih->next ){
-		if( NA_OBJECT_CLASS( ih->data )->ref ){
-			NA_OBJECT_CLASS( ih->data )->ref( object );
-		}
-	}
-
-	na_object_free_hierarchy( hierarchy );
 }

@@ -64,7 +64,7 @@ nautilus_module_initialize( GTypeModule *module )
 	if( !st_log_handler ){
 		openlog( G_LOG_DOMAIN, LOG_PID, LOG_USER );
 		st_log_handler = g_log_set_handler( NA_LOGDOMAIN_PLUGIN, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
-		g_log_set_handler( NA_LOGDOMAIN_COMMON, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
+		g_log_set_handler( NA_LOGDOMAIN_RUNTIME, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
 	}
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );

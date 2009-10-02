@@ -28,16 +28,30 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_KEYS_BASE_H__
-#define __NA_GCONF_KEYS_BASE_H__
+#ifndef __NA_OBJECT_MENU_FN_H__
+#define __NA_OBJECT_MENU_FN_H__
 
-/* GConf general information
+/**
+ * SECTION: na_object_menu
+ * @short_description: #NAObjectMenu class definition.
+ * @include: runtime/na-object-menu.h
  *
- * They are used both:
- * - by GConf as a NAIIOProvider
- * - by GConf as the preferences storage system
- * - for providing schemas in import/export actions
+ * This is a menu. It embeds other menus and/or actions.
  */
-#define NAUTILUS_ACTIONS_GCONF_BASEDIR			"/apps/nautilus-actions"
 
-#endif /* __NA_GCONF_KEYS_BASE_H__ */
+#include "na-object-menu-class.h"
+
+G_BEGIN_DECLS
+
+/* i18n: default label for a newly created menu */
+#define NA_OBJECT_MENU_DEFAULT_LABEL	_( "New Nautilus menu" )
+
+NAObjectMenu *na_object_menu_new( void );
+
+GSList       *na_object_menu_get_items_list( const NAObjectMenu *menu );
+GSList       *na_object_menu_rebuild_items_list( const NAObjectMenu *menu );
+void          na_object_menu_set_items_list( NAObjectMenu *menu, GSList *items );
+
+G_END_DECLS
+
+#endif /* __NA_OBJECT_MENU_FN_H__ */

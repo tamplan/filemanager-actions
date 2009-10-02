@@ -34,7 +34,7 @@
 /**
  * SECTION: na_object_item
  * @short_description: #NAObjectItem public function declarations.
- * @include: common/na-object-fn.h
+ * @include: runtime/na-object-fn.h
  *
  * Define here the public functions of the #NAObjectItem class.
  *
@@ -42,17 +42,27 @@
  * in na-object-api.h
  */
 
-#include <gtk/gtk.h>
-
 #include "na-object-item-class.h"
 #include "na-iio-provider.h"
 
 G_BEGIN_DECLS
 
-GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *widget );
+gchar         *na_object_item_get_tooltip( const NAObjectItem *item );
+gchar         *na_object_item_get_icon( const NAObjectItem *item );
+NAIIOProvider *na_object_item_get_provider( const NAObjectItem *item );
+gboolean       na_object_item_is_enabled( const NAObjectItem *item );
+NAObject      *na_object_item_get_item( const NAObjectItem *item, const gchar *id );
+GList         *na_object_item_get_items( const NAObjectItem *item );
+guint          na_object_item_get_items_count( const NAObjectItem *item );
+void           na_object_item_free_items( GList *items );
 
-void           na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before );
-void           na_object_item_remove_item( NAObjectItem *item, const NAObject *object );
+void           na_object_item_set_tooltip( NAObjectItem *item, const gchar *tooltip );
+void           na_object_item_set_icon( NAObjectItem *item, const gchar *icon_name );
+void           na_object_item_set_enabled( NAObjectItem *item, gboolean enabled );
+void           na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider );
+void           na_object_item_set_items( NAObjectItem *item, GList *items );
+
+void           na_object_item_append_item( NAObjectItem *item, const NAObject *object );
 
 G_END_DECLS
 

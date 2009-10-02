@@ -34,10 +34,11 @@
 /**
  * SECTION: na_iabout
  * @short_description: NAIAbout interface definition.
- * @include: common/na-iabout.h
+ * @include: runtime/na-iabout.h
  *
  * This interface displays the 'About Nautilus Actions' dialog box.
- * The application name may be provided by the implementor.
+ * The application name may be provided by the implementor ; else,
+ * the name of the application will be displayed.
  */
 
 #include <gtk/gtk.h>

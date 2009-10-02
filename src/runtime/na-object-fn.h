@@ -28,31 +28,38 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_OBJECT_ID_FN_H__
-#define __NA_OBJECT_ID_FN_H__
+#ifndef __NA_OBJECT_FN_H__
+#define __NA_OBJECT_FN_H__
 
 /**
- * SECTION: na_object_id
- * @short_description: #NAObjectId public function declarations.
- * @include: common/na-object-id-fn.h
+ * SECTION: na_object
+ * @short_description: #NAObject public functions declarations.
+ * @include: runtime/na-object-fn.h
  *
- * Define here the public functions of the #NAObjectId class.
+ * Define here the public functions of the #NAObject class.
  *
  * Note that most users of the class should rather use macros defined
  * in na-object-api.h
  */
 
-#include "na-object-id-class.h"
+#include "na-object-class.h"
 
 G_BEGIN_DECLS
 
-gchar *na_object_id_get_id( const NAObjectId *object );
-gchar *na_object_id_get_label( const NAObjectId *object );
+/* NAIDuplicable
+ */
+NAObject *na_object_iduplicable_duplicate( const NAObject *object );
+gboolean  na_object_iduplicable_is_modified( const NAObject *object );
 
-void   na_object_id_set_id( NAObjectId *object, const gchar *id );
-void   na_object_id_set_for_copy( NAObjectId *object, gboolean relabel );
-void   na_object_id_set_label( NAObjectId *object, const gchar *label );
+/* NAObject
+ */
+void      na_object_object_dump( const NAObject *object );
+void      na_object_object_dump_norec( const NAObject *object );
+void      na_object_object_dump_tree( GList *tree );
+
+GList    *na_object_get_hierarchy( const NAObject *object );
+void      na_object_free_hierarchy( GList *hierarchy );
 
 G_END_DECLS
 
-#endif /* __NA_OBJECT_ID_FN_H__ */
+#endif /* __NA_OBJECT_FN_H__ */

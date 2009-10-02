@@ -26,38 +26,59 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-noinst_LTLIBRARIES = libna-common.la
+noinst_LTLIBRARIES = libna-runtime.la
 
 AM_CPPFLAGS += \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_COMMON}\"	\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_RUNTIME}\"	\
 	$(NAUTILUS_ACTIONS_CFLAGS)					\
 	$(NULL)
 
-libna_common_la_SOURCES = \
+libna_runtime_la_SOURCES = \
+	na-gconf-keys.h								\
+	na-gconf-monitor.c							\
+	na-gconf-monitor.h							\
+	na-gconf-provider.c							\
+	na-gconf-provider.h							\
+	na-gconf-provider-keys.h					\
+	na-gconf-utils.c							\
+	na-gconf-utils.h							\
+	na-gnome-vfs-uri.c							\
+	na-gnome-vfs-uri.h							\
+	na-iabout.c									\
+	na-iabout.h									\
+	na-iduplicable.c							\
+	na-iduplicable.h							\
+	na-iio-provider.c							\
+	na-iio-provider.h							\
+	na-ipivot-consumer.c						\
+	na-ipivot-consumer.h						\
 	na-iprefs.c									\
 	na-iprefs.h									\
-	na-object.c									\
 	na-object-api.h								\
+	na-object.c									\
+	na-object-class.h							\
 	na-object-fn.h								\
 	na-object-id.c								\
+	na-object-id-class.h						\
 	na-object-id-fn.h							\
 	na-object-item.c							\
+	na-object-item-class.h						\
 	na-object-item-fn.h							\
 	na-object-action.c							\
-	na-object-action.h							\
+	na-object-action-class.h					\
+	na-object-action-fn.h						\
 	na-object-menu.c							\
-	na-object-menu.h							\
+	na-object-menu-class.h						\
+	na-object-menu-fn.h							\
 	na-object-profile.c							\
-	na-object-profile.h							\
+	na-object-profile-class.h					\
+	na-object-profile-fn.h						\
+	na-pivot.c									\
+	na-pivot.h									\
 	na-utils.c									\
 	na-utils.h									\
-	na-xml-names.h								\
-	na-xml-writer.c								\
-	na-xml-writer.h								\
 	$(NULL)
 
-libna_common_la_LIBADD = \
-	-lxml2										\
-	-luuid										\
+libna_runtime_la_LIBADD = \
 	$(NULL)

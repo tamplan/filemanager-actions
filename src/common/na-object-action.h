@@ -44,22 +44,14 @@
 
 G_BEGIN_DECLS
 
-/* i18n: default label for a newly created action */
-#define NA_OBJECT_ACTION_DEFAULT_LABEL		_( "New Nautilus action" )
-
-/* i18n: default label for a newly created profile */
-#define NA_OBJECT_PROFILE_DEFAULT_LABEL		_( "New profile" )
-
 NAObjectAction *na_object_action_new( void );
 NAObjectAction *na_object_action_new_with_profile( void );
 
-gchar          *na_object_action_get_version( const NAObjectAction *action );
 gboolean        na_object_action_is_readonly( const NAObjectAction *action );
 
 void            na_object_action_set_version( NAObjectAction *action, const gchar *version );
 void            na_object_action_set_readonly( NAObjectAction *action, gboolean readonly );
 
-gchar          *na_object_action_get_new_profile_name( const NAObjectAction *action );
 void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );
 
 G_END_DECLS

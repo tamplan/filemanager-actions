@@ -34,7 +34,7 @@
 /**
  * SECTION: na_gconf_utils
  * @short_description: GConf utilities.
- * @include: common/na-gconf-utils.h
+ * @include: runtime/na-gconf-utils.h
  */
 
 #include <gconf/gconf.h>

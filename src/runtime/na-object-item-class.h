@@ -34,7 +34,7 @@
 /**
  * SECTION: na_object_item
  * @short_description: #NAObjectItem class definition.
- * @include: common/na-object-item-class.h
+ * @include: runtime/na-object-item-class.h
  *
  * Derived from #NAObjectId class, this class implements objects which
  * have :

@@ -2,11 +2,14 @@ dnl define three distinct log domains, respectively for common code,
 dnl plugin and NACT user interface - log handlers will be disabled
 dnl when not in development mode
 
-# serial 1 creation
+# serial 2 define NA-runtime log domain
 
 AC_DEFUN([NA_LOG_DOMAINS],[
+	AC_SUBST([NA_LOGDOMAIN_RUNTIME],[NA-runtime])
+	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_RUNTIME],["NA-runtime"],[Log domain of runtime library])
+
 	AC_SUBST([NA_LOGDOMAIN_COMMON],[NA-common])
-	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_COMMON],["NA-common"],[Log domain of common code])
+	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_COMMON],["NA-common"],[Log domain of common library])
 
 	AC_SUBST([NA_LOGDOMAIN_PLUGIN],[NA-plugin])
 	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_PLUGIN],["NA-plugin"],[Log domain of Nautilus plugin])

@@ -37,9 +37,6 @@
 
 #include "na-iduplicable.h"
 #include "na-object-api.h"
-#include "na-object-fn.h"
-#include "na-object-id-class.h"
-#include "na-object-id-fn.h"
 
 /* private class data
  */
@@ -81,6 +78,9 @@ static void     object_dump( const NAObject *object);
 static void     object_copy( NAObject *target, const NAObject *source );
 static gboolean object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean object_is_valid( const NAObject *object );
+
+static gchar   *v_new_id( const NAObjectId *object, const NAObjectId *new_parent );
+static gchar   *most_derived_new_id( const NAObjectId *object, const NAObjectId *new_parent );
 
 GType
 na_object_id_get_type( void )
@@ -155,8 +155,6 @@ class_init( NAObjectIdClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
-	naobject_class->get_clipboard_id = NULL;
-	naobject_class->ref = NULL;
 	naobject_class->new = NULL;
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
@@ -342,30 +340,49 @@ na_object_id_set_id( NAObjectId *object, const gchar *id )
 }
 
 /**
- * na_object_id_set_for_copy:
- * @object: the #NAObjectId object to be copied.
- * @relabel: whether this item should be relabeled ?
+ * na_object_id_set_new_id:
+ * @object: the #NAObjectId object whose internal identifiant is to be
+ * set.
+ * @new_parent: if @object is a #NAObjectProfile, then @new_parent
+ * should be set to the #NAObjectActio new parent. Else, it would not
+ * be possible to allocate a new profile id compatible with already
+ * existing ones.
  *
- * Prepares @object to be copied, allocating to it a new uuid if apply,
- * and relabeling it as "Copy of ..." if applies.
+ * Request a new id to the derived class, and set it.
  */
 void
-na_object_id_set_for_copy( NAObjectId *object, gboolean relabel )
+na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent )
 {
-	gchar *new_label;
+	gchar *id;
 
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( !new_parent || NA_IS_OBJECT_ID( new_parent ));
 
 	if( !object->private->dispose_has_run ){
 
-		na_object_id_set_new_id( object );
+		id = v_new_id( object, new_parent );
 
-		if( relabel ){
-			/* i18n: copied items have a label as 'Copy of original label' */
-			new_label = g_strdup_printf( _( "Copy of %s" ), object->private->label );
-			g_free( object->private->label );
-			object->private->label = new_label;
+		if( id ){
+			g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_ID, id, NULL );
+			g_free( id );
 		}
+	}
+}
+
+/**
+ * na_object_id_set_label:
+ * @object: the #NAObjectId object whose label is to be set.
+ * @label: label to be set.
+ *
+ * Sets the label of @object by taking a copy of the provided one.
+ */
+void
+na_object_id_set_label( NAObjectId *object, const gchar *label )
+{
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+
+	if( !object->private->dispose_has_run ){
+		g_object_set( G_OBJECT( object ), NAOBJECT_ID_PROP_LABEL, label, NULL );
 	}
 }
 
@@ -464,4 +481,38 @@ object_is_valid( const NAObject *object )
 	}
 
 	return( valid );
+}
+
+static gchar *
+v_new_id( const NAObjectId *object, const NAObjectId *new_parent )
+{
+	return( most_derived_new_id( object, new_parent ));
+}
+
+static gchar *
+most_derived_new_id( const NAObjectId *object, const NAObjectId *new_parent )
+{
+	gchar *new_id;
+	GList *hierarchy, *ih;
+	gboolean found;
+
+	found = FALSE;
+	new_id = NULL;
+	hierarchy = g_list_reverse( na_object_get_hierarchy( NA_OBJECT( object )));
+	/*g_debug( "na_object_id_most_derived_id: object=%p (%s)",
+					( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
+
+	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
+		if( NA_OBJECT_ID_CLASS( ih->data )->new_id ){
+			new_id = NA_OBJECT_ID_CLASS( ih->data )->new_id( object, new_parent );
+			found = TRUE;
+		}
+		if( G_OBJECT_CLASS_TYPE( ih->data ) == NA_OBJECT_ID_TYPE ){
+			break;
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
+
+	return( new_id );
 }

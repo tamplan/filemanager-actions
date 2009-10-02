@@ -41,61 +41,6 @@
 static GSList *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
 
 /**
- * na_utils_find_in_list:
- * @list: the GSList of strings to be searched.
- * @str: the searched string.
- *
- * Search for a string in a string list.
- *
- * Returns: %TRUE if the string has been found in list.
- */
-gboolean
-na_utils_find_in_list( GSList *list, const gchar *str )
-{
-	GSList *il;
-
-	for( il = list ; il ; il = il->next ){
-		const gchar *istr = ( const gchar * ) il->data;
-		if( !g_utf8_collate( str, istr )){
-			return( TRUE );
-		}
-	}
-
-	return( FALSE );
-}
-
-/**
- * na_utils_string_lists_are_equal:
- * @first: a GSList of strings.
- * @second: another GSList of strings to be compared with @first.
- *
- * Compare two string lists, without regards to the order.
- *
- * Returns: %TRUE if the two lists have same content.
- */
-gboolean
-na_utils_string_lists_are_equal( GSList *first, GSList *second )
-{
-	GSList *il;
-
-	for( il = first ; il ; il = il->next ){
-		const gchar *str = ( const gchar * ) il->data;
-		if( !na_utils_find_in_list( second, str )){
-			return( FALSE );
-		}
-	}
-
-	for( il = second ; il ; il = il->next ){
-		const gchar *str = ( const gchar * ) il->data;
-		if( !na_utils_find_in_list( first, str )){
-			return( FALSE );
-		}
-	}
-
-	return( TRUE );
-}
-
-/**
  * na_utils_duplicate_string_list:
  * @list: the GSList to be duplicated.
  *
@@ -264,40 +209,6 @@ na_utils_dump_string_list( GSList *list )
 		gchar *s = ( gchar * ) i->data;
 		g_debug( "%s: %2d - %s", thisfn, c, s );
 	}
-}
-
-/**
- * na_utils_gslist_to_schema:
- * @list: a list of strings.
- *
- * Converts a list of strings to a comma-separated list of strings,
- * enclosed by brackets (dump format, GConf export format).
- *
- * Returns: a newly allocated string which should be g_free() by the caller.
- */
-gchar *
-na_utils_gslist_to_schema( GSList *list )
-{
-	GSList *ib;
-	gchar *tmp;
-	gchar *text = g_strdup( "" );
-
-	for( ib = list ; ib ; ib = ib->next ){
-		if( strlen( text )){
-			tmp = g_strdup_printf( "%s,", text );
-			g_free( text );
-			text = tmp;
-		}
-		tmp = g_strdup_printf( "%s%s", text, ( gchar * ) ib->data );
-		g_free( text );
-		text = tmp;
-	}
-
-	tmp = g_strdup_printf( "[%s]", text );
-	g_free( text );
-	text = tmp;
-
-	return( text );
 }
 
 /**

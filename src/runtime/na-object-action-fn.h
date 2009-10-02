@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus ObjectActions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -28,42 +28,35 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_GCONF_PROVIDER_KEYS_H__
-#define __NA_GCONF_PROVIDER_KEYS_H__
+#ifndef __NA_OBJECT_ACTION_FN_H__
+#define __NA_OBJECT_ACTION_FN_H__
 
-#include "na-gconf-keys-base.h"
-#include "na-gconf-keys-schemas.h"
-
-/* GConf general information
+/**
+ * SECTION: na_object_action
+ * @short_description: #NAObjectAction public function declaration.
+ * @include: runtime/na-object-action.h
  */
-#define NA_GCONF_CONFIG_PATH			NAUTILUS_ACTIONS_GCONF_BASEDIR "/configurations"
 
-/* GConf key names (common to menu and actions)
- */
-#define OBJECT_ITEM_LABEL_ENTRY			"label"
-#define OBJECT_ITEM_TOOLTIP_ENTRY		"tooltip"
-#define OBJECT_ITEM_ICON_ENTRY			"icon"
-#define OBJECT_ITEM_ENABLED_ENTRY		"enabled"
+#include <glib/gi18n.h>
 
-/* GConf key names (specific to menu)
- */
-#define MENU_ITEMS_ENTRY				"items"
+#include "na-object-action-class.h"
+#include "na-object-profile-class.h"
 
-/* GConf key names (specific to action)
- */
-#define ACTION_VERSION_ENTRY			"version"
+G_BEGIN_DECLS
 
-/* GConf key names (specific to profile)
- */
-#define ACTION_PROFILE_LABEL_ENTRY		"desc-name"
-#define ACTION_PATH_ENTRY				"path"
-#define ACTION_PARAMETERS_ENTRY			"parameters"
-#define ACTION_BASENAMES_ENTRY			"basenames"
-#define ACTION_MATCHCASE_ENTRY			"matchcase"
-#define ACTION_MIMETYPES_ENTRY			"mimetypes"
-#define ACTION_ISFILE_ENTRY				"isfile"
-#define ACTION_ISDIR_ENTRY				"isdir"
-#define ACTION_MULTIPLE_ENTRY			"accept-multiple-files"
-#define ACTION_SCHEMES_ENTRY			"schemes"
+/* i18n: default label for a newly created action */
+#define NA_OBJECT_ACTION_DEFAULT_LABEL		_( "New Nautilus action" )
 
-#endif /* __NA_GCONF_PROVIDER_KEYS_H__ */
+NAObjectAction *na_object_action_new( void );
+
+gchar          *na_object_action_get_version( const NAObjectAction *action );
+
+void            na_object_action_set_version( NAObjectAction *action, const gchar *version );
+void            na_object_action_set_readonly( NAObjectAction *action, gboolean readonly );
+
+gchar          *na_object_action_get_new_profile_name( const NAObjectAction *action );
+void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );
+
+G_END_DECLS
+
+#endif /* __NA_OBJECT_ACTION_FN_H__ */

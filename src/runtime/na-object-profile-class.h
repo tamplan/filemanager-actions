@@ -34,7 +34,7 @@
 /**
  * SECTION: na_object_profile
  * @short_description: #NAObjectProfile class definition.
- * @include: common/na-object-profile-class.h
+ * @include: runtime/na-object-profile-class.h
  *
  * This is a companion class of NAObjectAction. It embeds the profile
  * definition of an action.
