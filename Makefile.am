@@ -45,7 +45,6 @@ DISTCHECK_CONFIGURE_FLAGS = \
 # do not try to install schemas when making distcheck
 DISTCHECK_CONFIGURE_FLAGS += \
 	--disable-schemas-install	\
-	--enable-iso-c				\
 	$(NULL)
 
 EXTRA_DIST = \

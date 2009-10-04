@@ -69,6 +69,8 @@ typedef struct {
 }
 	NactMainWindowClass;
 
+#define MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES	"main-window-update-sensitivities"
+
 GType           nact_main_window_get_type( void );
 
 NactMainWindow *nact_main_window_new( BaseApplication *application );

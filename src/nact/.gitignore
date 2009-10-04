@@ -1,3 +1,5 @@
+nact-marshal.c
+nact-marshal.h
 nact.desktop
 nautilus-actions-config
 nautilus-actions-config-tool

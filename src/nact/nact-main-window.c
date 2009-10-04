@@ -111,6 +111,7 @@ enum {
 enum {
 	SELECTION_CHANGED,
 	ITEM_UPDATED,
+	UPDATE_SENSITIVITIES,
 	LAST_SIGNAL
 };
 
@@ -141,7 +142,7 @@ static void     on_base_initial_load_toplevel( NactMainWindow *window, gpointer 
 static void     on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data );
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
-static void     iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
+static void     on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void     set_current_object_item( NactMainWindow *window, GSList *selected_items );
 static void     set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
 static gchar   *iactions_list_get_treeview_name( NactIActionsList *instance );
@@ -343,6 +344,24 @@ class_init( NactMainWindowClass *klass )
 			G_TYPE_NONE,
 			1,
 			G_TYPE_POINTER );
+
+	/**
+	 * main-window-update-sensitivities:
+	 *
+	 * This signal is emitted each time a user interaction may led the
+	 * action sensitivities to be updated.
+	 */
+	st_signals[ UPDATE_SENSITIVITIES ] = g_signal_new(
+			MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,					/* no default handler */
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER );
 }
 
 static void
@@ -352,7 +371,7 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->selection_changed = iactions_list_selection_changed;
+	iface->selection_changed = NULL;
 	iface->get_treeview_name = iactions_list_get_treeview_name;
 }
 
@@ -542,6 +561,7 @@ instance_dispose( GObject *window )
 		nact_icommand_tab_dispose( NACT_ICOMMAND_TAB( window ));
 		nact_iconditions_tab_dispose( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_dispose( NACT_IADVANCED_TAB( window ));
+		nact_main_menubar_dispose( self );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -890,6 +910,12 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 
 	if( !window->private->dispose_has_run ){
 
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
+				G_CALLBACK( on_iactions_list_selection_changed ));
+
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		pivot = nact_application_get_pivot( application );
 		tree = na_pivot_get_items( pivot );
@@ -899,11 +925,11 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_icommand_tab_runtime_init_toplevel( NACT_ICOMMAND_TAB( window ));
 		nact_iconditions_tab_runtime_init_toplevel( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_runtime_init_toplevel( NACT_IADVANCED_TAB( window ));
+		nact_main_menubar_runtime_init( window );
 
 		/* fill the IActionsList at last so that all signals are connected
 		 */
 		nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
-		nact_main_menubar_runtime_init( window );
 
 		/* forces a no-selection when the list is initially empty
 		 */
@@ -933,8 +959,6 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 		nact_icommand_tab_all_widgets_showed( NACT_ICOMMAND_TAB( window ));
 		nact_iconditions_tab_all_widgets_showed( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_all_widgets_showed( NACT_IADVANCED_TAB( window ));
-
-		nact_main_menubar_refresh_actions_sensitivity( window );
 	}
 }
 
@@ -944,9 +968,9 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
  * @selected_items: the currently selected items in ActionsList
  */
 static void
-iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
+on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
 {
-	static const gchar *thisfn = "nact_main_window_iactions_list_selection_changed";
+	static const gchar *thisfn = "nact_main_window_on_iactions_list_selection_changed";
 	NactMainWindow *window;
 	NAObject *object;
 	gint count;

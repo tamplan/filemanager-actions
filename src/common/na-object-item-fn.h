@@ -54,6 +54,8 @@ GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *w
 void           na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before );
 void           na_object_item_remove_item( NAObjectItem *item, const NAObject *object );
 
+void           na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
+
 G_END_DECLS
 
 #endif /* __NA_COMMON_OBJECT_ITEM_FN_H__ */

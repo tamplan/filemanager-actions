@@ -1,3 +1,55 @@
+2009-10-04 Pierre Wieser <pwieser@trychlos.org>
+
+	Use some stored indicators to compute the action sensitivities
+	rather that all recomputing each time.
+	Rewrite insertion code in the treeview.
+
+	* Makefile.am:
+	* configure.ac: No more compile with --enable-iso-c not -pedantic
+	options as GLib-generated marshaling code is not compliant.
+
+	* src/common/na-object-api.h:
+	* src/common/na-object-item-fn.h:
+	* src/common/na-object-item.c (na_object_insert_item):
+	Now accepts a null object as sibling position.
+	(na_object_item_count_items): New function.
+
+	* src/nact/nact-marshal.c:
+	* src/nact/nact-marshal.h: New files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-iactions-list.c:
+	Now maintains a count of menus, actions and profiles items.
+	Send a signal when the count is changed.
+	Rewrite insertion in the treeview.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h
+	(nact_iactions_list_has_exportable): Removed function.
+	(nact_iactions_list_insert_into): New function.
+
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-menubar.h:
+	Maintains its own counters to compute the actions sensitivities.
+	Define new menu item 'Paste into'.
+	nact_main_menubar_refresh_actions_sensitivity: Removed function.
+	nact_main_menubar_dispose: New function.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h:
+	Connect to the iactions-list-selection-changed signal rather than
+	implement the corresponding virtual function.
+	Define new 'main-window-update-sensitivities' signal.
+
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h:
+	Rewrite insertion code in the tree store.
+	nact_tree_model_insert_into, nact_tree_model_object_at_path: New
+	functions.
+
+	* src/nact/nautilus-actions-config-tool.actions: new 'Paste into' item.
+
 2009-10-02 Pierre Wieser <pwieser@trychlos.org>
 
 	Centralize plugin routines in a dedicated libna-runtime library.

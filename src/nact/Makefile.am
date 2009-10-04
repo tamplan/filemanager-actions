@@ -38,6 +38,11 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
+BUILT_SOURCES = \
+	nact-marshal.c										\
+	nact-marshal.h										\
+	$(NULL)
+
 nautilus_actions_config_tool_SOURCES = \
 	base-application.c									\
 	base-application.h									\
@@ -89,7 +94,15 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-window.h										\
 	nact-xml-reader.c									\
 	nact-xml-reader.h									\
+	$(BUILT_SOURCES)									\
 	$(NULL)
+
+nact-marshal.h: nact-marshal.list $(GLIB_GENMARSHAL)
+	$(GLIB_GENMARSHAL) $< --header --prefix=nact_marshal > $@
+
+nact-marshal.c: nact-marshal.list $(GLIB_GENMARSHAL)
+	echo "#include \"nact-marshal.h\"" > $@ && \
+	$(GLIB_GENMARSHAL) $< --body --prefix=nact_marshal >> $@
 
 nautilus_actions_config_tool_LDADD = \
 	$(top_builddir)/src/common/libna-common.la			\
@@ -114,11 +127,14 @@ applicationsdir = $(datadir)/applications
 applications_DATA = $(applications_files)
 
 CLEANFILES = \
-	$(applications_files)
+	$(applications_files)								\
+	$(BUILT_SOURCES)									\
+	$(NULL)
 
 EXTRA_DIST = \
 	$(applications_in_files)							\
 	$(pkgdata_DATA)										\
+	nact-marshal.list									\
 	$(NULL)
 
 uninstall-hook:

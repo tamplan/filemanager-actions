@@ -37,14 +37,12 @@
  * @include: nact/nact-main-menubar.h
  */
 
-#include <gtk/gtk.h>
-
 #include "nact-main-window.h"
 
 G_BEGIN_DECLS
 
 void  nact_main_menubar_runtime_init( NactMainWindow *window );
-void  nact_main_menubar_refresh_actions_sensitivity( NactMainWindow *window );
+void  nact_main_menubar_dispose( NactMainWindow *window );
 
 G_END_DECLS
 

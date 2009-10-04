@@ -68,7 +68,29 @@
 #define MENUBAR_PROP_ITEM_ACTION		"nact-menubar-item-action"
 #endif
 
-static void     on_tab_updatable_selection_changed( NactMainWindow *window, gint count_selected );
+/* this structure is updated each time the user interacts in the
+ * interface ; it is then used to update action sensitivities
+ */
+typedef struct {
+	gint     selected_menus;
+	gint     selected_actions;
+	gint     selected_profiles;
+	gint     clipboard_menus;
+	gint     clipboard_actions;
+	gint     clipboard_profiles;
+	gint     list_menus;
+	gint     list_actions;
+	gint     list_profiles;
+	gboolean is_modified;
+	gboolean have_exportables;
+}
+	MenubarIndicatorsStruct;
+
+#define MENUBAR_PROP_INDICATORS			"nact-menubar-indicators"
+
+static void     on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles );
+static void     on_iactions_list_selection_changed( NactMainWindow *window, GList *selected );
+static void     on_update_sensitivities( NactMainWindow *window, gpointer user_data );
 
 static void     on_new_menu_activated( GtkAction *action, NactMainWindow *window );
 static void     on_new_action_activated( GtkAction *action, NactMainWindow *window );
@@ -81,8 +103,10 @@ static void     on_quit_activated( GtkAction *action, NactMainWindow *window );
 static void     on_cut_activated( GtkAction *action, NactMainWindow *window );
 static void     on_copy_activated( GtkAction *action, NactMainWindow *window );
 static void     on_paste_activated( GtkAction *action, NactMainWindow *window );
+static void     on_paste_into_activated( GtkAction *action, NactMainWindow *window );
 static void     on_duplicate_activated( GtkAction *action, NactMainWindow *window );
 static void     on_delete_activated( GtkAction *action, NactMainWindow *window );
+static void     update_clipboard_counters( NactMainWindow *window );
 static void     on_reload_activated( GtkAction *action, NactMainWindow *window );
 static void     on_preferences_activated( GtkAction *action, NactMainWindow *window );
 
@@ -102,7 +126,6 @@ static void     on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *windo
 static void     on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window );
 static void     on_proxy_connect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window );
 static void     on_proxy_disconnect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window );
-static void     refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selected );
 
 static const GtkActionEntry entries[] = {
 
@@ -142,8 +165,12 @@ static const GtkActionEntry entries[] = {
 				G_CALLBACK( on_copy_activated ) },
 		{ "PasteItem" , GTK_STOCK_PASTE, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Paste item */
-				N_( "Insert the content of the clipboard at the current position" ),
+				N_( "Insert the content of the clipboard just before the current position" ),
 				G_CALLBACK( on_paste_activated ) },
+		{ "PasteIntoItem" , NULL, N_( "Paste _into" ), "<Shift><Ctrl>V",
+				/* i18n: tooltip displayed in the status bar when selecting the Paste Into item */
+				N_( "Insert the content of the clipboard as first child of the current item" ),
+				G_CALLBACK( on_paste_into_activated ) },
 		{ "DuplicateItem" , NULL, N_( "D_uplicate" ), "",
 				/* i18n: tooltip displayed in the status bar when selecting the Duplicate item */
 				N_( "Duplicate the selected item(s)" ),
@@ -191,6 +218,8 @@ static const GtkActionEntry entries[] = {
  * @window: the #NactMainWindow to which the menubar is attached.
  *
  * Creates the menubar.
+ * Connects to all possible signals which may have an impact on action
+ * sensitivities.
  */
 void
 nact_main_menubar_runtime_init( NactMainWindow *window )
@@ -203,6 +232,7 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	GtkAccelGroup *accel_group;
 	GtkWidget *menubar, *vbox;
 	GtkWindow *toplevel;
+	MenubarIndicatorsStruct *mis;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
@@ -260,50 +290,171 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	base_window_signal_connect(
 			BASE_WINDOW( window ),
 			G_OBJECT( window ),
-			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_tab_updatable_selection_changed ));
+			IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED,
+			G_CALLBACK( on_iactions_list_count_updated ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( window ),
+			IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_iactions_list_selection_changed ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( window ),
+			MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES,
+			G_CALLBACK( on_update_sensitivities ));
+
+	mis = g_new0( MenubarIndicatorsStruct, 1 );
+	g_object_set_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS, mis );
 }
 
 /**
- * nact_main_menubar_refresh_actions_sensitivity:
+ * nact_main_menubar_dispose:
+ * @window: this #NactMainWindow window.
  *
- * Sensitivity of items (whether they are activable of not) in the
- * menubar should be recomputed each time aaction in the user interface
- * may lead to a change in one of the menu actions.
- *
- * This consists in :
- * - when there is a change in the current selection in IActionsList
- *   (new profile, cut, copy, duplicate, delete)
- * - when there is a change in the content of IActionsList
- *   (export)
- * - when there is a change in the content of the clipboard
- *   (paste)
- *
- * Note that the same actions are also used as toolbar actions ; we so
- * cannot rely on just recomputing the sensitivity e.g. when about to
- * open a popup menu in the menubar. Sensitivity of the actions need
- * to be updated as soon as the global context is changed.
- *
+ * Release internally allocated resources.
  */
 void
-nact_main_menubar_refresh_actions_sensitivity( NactMainWindow *window )
+nact_main_menubar_dispose( NactMainWindow *window )
 {
-	GList *selected;
-	guint count;
+	static const gchar *thisfn = "nact_main_menubar_dispose";
+	MenubarIndicatorsStruct *mis;
 
-	g_return_if_fail( NACT_MAIN_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IACTIONS_LIST( window ));
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	selected = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	count = g_list_length( selected );
-	na_object_free_items( selected );
-	refresh_actions_sensitivity_with_count( window, count );
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	g_free( mis );
+}
+
+/*
+ * when the IActionsList is refilled, update our internal counters so
+ * that we are knowing if we have some exportables
+ */
+static void
+on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles )
+{
+	MenubarIndicatorsStruct *mis;
+
+	g_debug( "nact_main_menubar_on_iactions_list_count_updated: menus=%u, actions=%u, profiles=%u", menus, actions, profiles );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	mis->list_menus = menus;
+	mis->list_actions = actions;
+	mis->list_profiles = profiles;
+	mis->have_exportables = ( mis->list_actions > 0 );
+
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+}
+
+/*
+ * when the selection changes in IActionsList, see what is selected
+ */
+static void
+on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
+{
+	MenubarIndicatorsStruct *mis;
+
+	g_debug( "nact_main_menubar_on_iactions_list_selection_changed: selected=%p (%d)",
+			( void * ) selected, g_list_length( selected ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	mis->selected_menus = 0;
+	mis->selected_actions = 0;
+	mis->selected_profiles = 0;
+	na_object_item_count_items( selected, &mis->selected_menus, &mis->selected_actions, &mis->selected_profiles, FALSE );
+	g_debug( "nact_main_menubar_on_iactions_list_selection_changed: menus=%d, actions=%d, profiles=%d",
+			mis->selected_menus, mis->selected_actions, mis->selected_profiles );
+
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
 static void
-on_tab_updatable_selection_changed( NactMainWindow *window, gint count_selected )
+on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 {
-	refresh_actions_sensitivity_with_count( window, count_selected );
+	static const gchar *thisfn = "nact_main_menubar_on_update_sensitivities";
+	MenubarIndicatorsStruct *mis;
+	NAObject *item;
+	NAObject *profile;
+	gboolean has_modified;
+	gint count_list;
+	gint count_selected;
+	gboolean paste_enabled;
+	gboolean paste_into_enabled;
+	gboolean clipboard_is_empty;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+
+	g_object_get(
+			G_OBJECT( window ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			NULL );
+	g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( !profile || NA_IS_OBJECT_PROFILE( profile ));
+
+	has_modified = nact_main_window_has_modified_items( window );
+	count_list = mis->list_menus + mis->list_actions + mis->list_profiles;
+	count_selected = mis->selected_menus + mis->selected_actions + mis->selected_profiles;
+
+	clipboard_is_empty = ( mis->clipboard_menus + mis->clipboard_actions + mis->clipboard_profiles == 0 );
+
+	paste_enabled = FALSE;
+	if( !clipboard_is_empty ){
+		if( mis->clipboard_profiles ){
+			paste_enabled = profile && NA_IS_OBJECT_PROFILE( profile );
+		} else {
+			paste_enabled = ( item != NULL );
+		}
+	}
+
+	paste_into_enabled = FALSE;
+	if( !clipboard_is_empty ){
+		if( mis->clipboard_profiles ){
+			paste_into_enabled = item && NA_IS_OBJECT_ACTION( item );
+		} else {
+			paste_into_enabled = item && NA_IS_OBJECT_MENU( item );
+		}
+	}
+
+	/* new menu always enabled */
+	/* new action always enabled */
+	/* new profile enabled if selection is relative to only one action */
+	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ));
+	/* save enabled if at least one item has been modified */
+	enable_item( window, "SaveItem", has_modified );
+	/* quit always enabled */
+	/* cut/copy enabled if selection not empty */
+	enable_item( window, "CutItem", count_selected > 0 );
+	enable_item( window, "CopyItem", count_selected > 0 );
+	/* paste enabled if
+	 * - clipboard contains only profiles, and current selection is a profile
+	 * - clipboard contains actions or menus, and current selection is a menu or an action */
+	enable_item( window, "PasteItem", count_selected <= 1 && paste_enabled );
+	/* paste into enabled if
+	 * - clipboard has profiles and current item is an action
+	 * - or current item is a menu */
+	enable_item( window, "PasteIntoItem", count_selected <= 1 && paste_into_enabled );
+	/* duplicate/delete enabled if selection not empty */
+	enable_item( window, "DuplicateItem", count_selected > 0 );
+	enable_item( window, "DeleteItem", count_selected > 0 );
+	/* reload items always enabled */
+	/* preferences always enabled */
+	/* expand all/collapse all requires at least one item in the list */
+	enable_item( window, "ExpandAllItem", count_list > 0 );
+	enable_item( window, "CollapseAllItem", count_list > 0 );
+	/* import item always enabled */
+	/* export item enabled if IActionsList store contains actions */
+	enable_item( window, "ExportItem", mis->have_exportables );
+	/* TODO: help temporarily disabled */
+	enable_item( window, "HelpItem", FALSE );
+	/* about always enabled */
 }
 
 static void
@@ -370,7 +521,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
  * saving is not only saving modified items, but also saving hierarchy
  * (and order if alpha order is not set)
  *
- * note that we only go down in the hierarchy is parent is valid and not
+ * note that we only go down in the hierarchy if parent is valid and not
  * modified (or has been successfully saved)
  */
 static void
@@ -400,7 +551,7 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	/* required as selection has not changed
 	 */
-	nact_main_menubar_refresh_actions_sensitivity( window );
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 
 	/* get ride of notification messages of IOProviders
 	 */
@@ -504,6 +655,7 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 	nact_main_window_move_to_deleted( window, items );
 	clipboard = nact_main_window_get_clipboard( window );
 	nact_clipboard_primary_set( clipboard, items, FALSE );
+	update_clipboard_counters( window );
 	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
 
 	/* do not unref selected items as the ref has been moved to main_deleted
@@ -531,12 +683,15 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	clipboard = nact_main_window_get_clipboard( window );
 	nact_clipboard_primary_set( clipboard, items, TRUE );
+	update_clipboard_counters( window );
 	na_object_free_items( items );
-	nact_main_menubar_refresh_actions_sensitivity( window );
+
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
 /*
- * pastes the current content of the clipboard
+ * pastes the current content of the clipboard at the current position
+ * (same path, same level)
  * - (menu) get from clipboard a copy of installed items
  *          the clipboard will return a new copy
  *          and renumber its own data for allowing a new paste
@@ -569,6 +724,44 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 	}
 
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
+	na_object_free_items( items );
+}
+
+/*
+ * pastes the current content of the clipboard as the first child of
+ * currently selected item
+ * - (menu) get from clipboard a copy of installed items
+ *          the clipboard will return a new copy
+ *          and renumber its own data for allowing a new paste
+ * - (tree) insert new items, the tree store will ref them
+ *          attaching each item to its parent
+ *          recursively checking edition status of the topmost parent
+ *          selecting the first item at end
+ * - (menu) unreffing the copy got from clipboard
+ */
+static void
+on_paste_into_activated( GtkAction *gtk_action, NactMainWindow *window )
+{
+	GList *items, *it;
+	NactClipboard *clipboard;
+	NAObjectAction *action = NULL;
+
+	clipboard = nact_main_window_get_clipboard( window );
+	items = nact_clipboard_primary_get( clipboard );
+
+	/* if pasted items are profiles, then setup the action
+	 */
+	for( it = items ; it ; it = it->next ){
+		if( NA_IS_OBJECT_PROFILE( it->data )){
+			if( !action ){
+				g_object_get( G_OBJECT( window ), TAB_UPDATABLE_PROP_EDITED_ACTION, &action, NULL );
+				g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
+			}
+			na_object_profile_set_action( NA_OBJECT_PROFILE( it->data ), action );
+		}
+	}
+
+	nact_iactions_list_insert_into( NACT_IACTIONS_LIST( window ), items );
 	na_object_free_items( items );
 }
 
@@ -651,6 +844,27 @@ on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 	/* do not unref selected items as the ref has been moved to main_deleted
 	 */
 	/*g_list_free( items );*/
+}
+
+/*
+ * as we are coming from cut or copy to clipboard, report selection
+ * counters to clipboard ones
+ */
+static void
+update_clipboard_counters( NactMainWindow *window )
+{
+	MenubarIndicatorsStruct *mis;
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+
+	mis->clipboard_menus = mis->selected_menus;
+	mis->clipboard_actions = mis->selected_actions;
+	mis->clipboard_profiles = mis->selected_profiles;
+
+	g_debug( "nact_main_menubar_update_clipboard_counters: menus=%d, actions=%d, profiles=%d",
+			mis->clipboard_menus, mis->clipboard_actions, mis->clipboard_profiles );
+
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
 static void
@@ -818,69 +1032,4 @@ static void
 on_proxy_disconnect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window )
 {
 	/* signal handlers will be automagically disconnected on NactWindow::dispose */
-}
-
-static void
-refresh_actions_sensitivity_with_count( NactMainWindow *window, gint count_selected )
-{
-	static const gchar *thisfn = "nact_main_menubar_refresh_actions_sensitivity_with_count";
-	NAObjectItem *item;
-	NAObjectProfile *profile;
-	gboolean has_exportable;
-	gboolean has_modified;
-	guint nb_actions, nb_profiles, nb_menus;
-	gboolean paste_enabled;
-	NactClipboard *clipboard;
-
-	g_debug( "%s: window=%p, count_selected=%d", thisfn, ( void * ) window, count_selected );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	g_object_get(
-			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-			NULL );
-	g_debug( "%s: item=%p (%s), profile=%p", thisfn,
-			( void * ) item, item ? G_OBJECT_TYPE_NAME( item ) : "(nil)", ( void * ) profile );
-
-	has_exportable = nact_iactions_list_has_exportable( NACT_IACTIONS_LIST( window ));
-	g_debug( "%s: has_exportable=%s", thisfn, has_exportable ? "True":"False" );
-	has_modified = nact_main_window_has_modified_items( window );
-	g_debug( "%s: has_modified=%s", thisfn, has_modified ? "True":"False" );
-
-	paste_enabled = FALSE;
-	clipboard = nact_main_window_get_clipboard( window );
-	nact_clipboard_primary_counts( clipboard, &nb_actions, &nb_profiles, &nb_menus );
-	g_debug( "%s: actions=%d, profiles=%d, menus=%d", thisfn, nb_actions, nb_profiles, nb_menus );
-	if( nb_profiles ){
-		paste_enabled = NA_IS_OBJECT_ACTION( item );
-	} else {
-		paste_enabled = ( nb_actions + nb_menus > 0 );
-	}
-
-	/* new menu always enabled */
-	/* new action always enabled */
-	/* new profile enabled if selection is relative to only one action */
-	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ));
-	/* save enabled if at least one item has been modified */
-	enable_item( window, "SaveItem", has_modified );
-	/* quit always enabled */
-	/* cut/copy enabled if selection not empty */
-	enable_item( window, "CutItem", count_selected > 0 );
-	enable_item( window, "CopyItem", count_selected > 0 );
-	/* paste enabled if
-	 * - clipboard contains only profiles, and current selection is action or profile
-	 * - clipboard contains actions or menus */
-	enable_item( window, "PasteItem", paste_enabled );
-	/* duplicate/delete enabled if selection not empty */
-	enable_item( window, "DuplicateItem", count_selected > 0 );
-	enable_item( window, "DeleteItem", count_selected > 0 );
-	/* reload items always enabled */
-	/* preferences always enabled */
-	/* import item always enabled */
-	/* export item enabled if IActionsList store contains actions */
-	enable_item( window, "ExportItem", has_exportable );
-	/* TODO: help temporarily disabled */
-	enable_item( window, "HelpItem", FALSE );
-	/* about always enabled */
 }

@@ -97,8 +97,10 @@ void         nact_tree_model_display( NactTreeModel *model, NAObject *object );
 void         nact_tree_model_display_order_change( NactTreeModel *model, gint order_mode );
 void         nact_tree_model_dump( NactTreeModel *model );
 void         nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions);
-gchar       *nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent, gboolean inside );
+void         nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
+GtkTreePath *nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
 void         nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );
+NAObject    *nact_tree_model_object_at_path( NactTreeModel *model, GtkTreePath *path );
 GtkTreePath *nact_tree_model_remove( NactTreeModel *model, NAObject *object );
 
 G_END_DECLS

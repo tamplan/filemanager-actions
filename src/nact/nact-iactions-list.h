@@ -38,6 +38,16 @@
  *
  * This same interface is used in the main window (edition mode, default),
  * and in the export assistant (export mode).
+ *
+ * Counting rows
+ *
+ *   Counting rows is needed to maintain action sensitivities in the
+ *   menubar : at least 'Tools\Export' menu item depends of the content
+ *   of the IActionsList.
+ *   Rows are first counted when the treeview is primarily filled, or
+ *   refilled on demand.
+ *   Counters are then incremented in nact_iactions_list_insert() and
+ *   nact_iactions_list_delete() functions.
  */
 
 #include <gtk/gtk.h>
@@ -93,6 +103,7 @@ typedef struct {
 
 /* signals
  */
+#define IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED			"nact-iactions-list-count-updated"
 #define IACTIONS_LIST_SIGNAL_SELECTION_CHANGED			"nact-iactions-list-selection-changed"
 
 /* management modes
@@ -120,10 +131,10 @@ NAObject *nact_iactions_list_get_item( NactIActionsList *instance, const gchar *
 GList    *nact_iactions_list_get_items( NactIActionsList *instance );
 gint      nact_iactions_list_get_management_mode( NactIActionsList *instance );
 GList    *nact_iactions_list_get_selected_items( NactIActionsList *instance );
-gboolean  nact_iactions_list_has_exportable( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_modified_items( NactIActionsList *instance );
+void      nact_iactions_list_insert_at_path( NactIActionsList *instance, GList *items, GtkTreePath *path );
 void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling );
-void      nact_iactions_list_insert_at_path( NactIActionsList *instance, GList *items, GtkTreePath *path, gboolean inside );
+void      nact_iactions_list_insert_into( NactIActionsList *instance, GList *items );
 gboolean  nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item );
 void      nact_iactions_list_set_management_mode( NactIActionsList *instance, gint mode );
 void      nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *item );
