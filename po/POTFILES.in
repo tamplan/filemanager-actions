@@ -1,5 +1,5 @@
 data/nautilus-actions.schemas.in
-src/common/na-object-action.h
+src/common/na-object-action.c
 src/common/na-object-id.c
 src/common/na-xml-names.h
 src/nact/base-application.c

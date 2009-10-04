@@ -8,6 +8,8 @@
 	* configure.ac: No more compile with --enable-iso-c not -pedantic
 	options as GLib-generated marshaling code is not compliant.
 
+	* po/POTFILES.in: Fix typo in a filename.
+
 	* src/common/na-object-api.h:
 	* src/common/na-object-item-fn.h:
 	* src/common/na-object-item.c (na_object_insert_item):

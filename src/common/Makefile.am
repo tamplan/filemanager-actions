@@ -29,6 +29,7 @@
 noinst_LTLIBRARIES = libna-common.la
 
 AM_CPPFLAGS += \
+	-I $(top_srcdir)/src						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_COMMON}\"	\
 	$(NAUTILUS_ACTIONS_CFLAGS)					\
