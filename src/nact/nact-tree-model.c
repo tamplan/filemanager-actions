@@ -1448,7 +1448,7 @@ idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, Gt
 						if( gtk_tree_model_get_iter( GTK_TREE_MODEL( drag_dest ), &iter, path )){
 							gtk_tree_model_get( GTK_TREE_MODEL( drag_dest ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &current, -1 );
 							if( copy_data ){
-								nact_main_window_prepare_object_for_copy( main_window, current, parent );
+								na_object_prepare_for_paste( NA_OBJECT_ITEM( current ), pivot, TRUE, parent );
 							}
 							object_list = g_list_prepend( object_list, current );
 							g_object_unref( current );

@@ -1615,11 +1615,9 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
             <child>
               <object class="GtkVBox" id="vbox33">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkVBox" id="vbox28">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame3">
                         <property name="visible">True</property>
@@ -1634,7 +1632,6 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                               <object class="GtkVBox" id="vbox30">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkRadioButton" id="OrderAlphaAscButton">
@@ -1706,7 +1703,6 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                 <child>
                   <object class="GtkVBox" id="vbox29">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame1">
                         <property name="visible">True</property>
@@ -1721,7 +1717,6 @@ Be warned: you will not be prompted another time. This mode may be dangerous.</p
                               <object class="GtkVBox" id="vbox17">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkCheckButton" id="AddAboutButton">
@@ -1776,11 +1771,9 @@ If there is no root submenu, a 'Nautilus Actions' one is created.</property>
             <child>
               <object class="GtkVBox" id="vbox34">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkVBox" id="vbox31">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame2">
                         <property name="visible">True</property>
@@ -1794,7 +1787,6 @@ If there is no root submenu, a 'Nautilus Actions' one is created.</property>
                             <child>
                               <object class="GtkVBox" id="vbox25">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkLabel" id="label45">
                                     <property name="visible">True</property>
@@ -1809,7 +1801,6 @@ If there is no root submenu, a 'Nautilus Actions' one is created.</property>
                                 <child>
                                   <object class="GtkVBox" id="vbox27">
                                     <property name="visible">True</property>
-                                    <property name="orientation">vertical</property>
                                     <child>
                                       <object class="GtkCheckButton" id="RelabelMenuButton">
                                         <property name="label" translatable="yes">Relabel _menus</property>
@@ -1899,11 +1890,9 @@ If there is no root submenu, a 'Nautilus Actions' one is created.</property>
             <child>
               <object class="GtkVBox" id="vbox35">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkVBox" id="vbox26">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame4">
                         <property name="visible">True</property>
@@ -1918,7 +1907,6 @@ If there is no root submenu, a 'Nautilus Actions' one is created.</property>
                               <object class="GtkVBox" id="vbox32">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkRadioButton" id="PrefsNoImportButton">

@@ -22,10 +22,18 @@
 
 	* src/nact/nact-iactions-list.c:
 	Prepare pasted items here when we know the exact target.
+	Replace all data set against GObject instance with a single structure.
+	Block tab-updated signal handler while changing a selection.
+
+	* src/nact/nact-tree-model.c:
+	Use new na_object_prepare_for_paste() function in drag and drop.
 
 	* src/nact/nact-main-window.c:
 	* src/nact/nact-main-window.h
 	(nact_main_window_prepare_object_for_copy): Removed function.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Remove not backward compatible 'orientation' properties.
 
 2009-10-04 Pierre Wieser <pwieser@trychlos.org>
 

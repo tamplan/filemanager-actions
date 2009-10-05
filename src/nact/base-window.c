@@ -1206,7 +1206,7 @@ base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *
 {
 	gulong handler_id = 0;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), ( gulong ) 0 );
 
 	if( !window->private->dispose_has_run ){
 
@@ -1222,7 +1222,7 @@ base_window_signal_connect_after( BaseWindow *window, GObject *instance, const g
 {
 	gulong handler_id = 0;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), ( gulong ) 0 );
 
 	if( !window->private->dispose_has_run ){
 
@@ -1238,7 +1238,7 @@ base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const
 {
 	gulong handler_id = 0;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), ( gulong ) 0 );
 
 	if( !window->private->dispose_has_run ){
 

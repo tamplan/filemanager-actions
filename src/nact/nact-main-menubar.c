@@ -751,7 +751,7 @@ prepare_for_paste( NactMainWindow *window )
 	items = nact_clipboard_primary_get( clipboard, &renumber );
 	action = NULL;
 
-	/* if pasted items are profiles, then setup the action
+	/* if pasted items are profiles, then setup the target action
 	 */
 	for( it = items ; it ; it = it->next ){
 		if( NA_IS_OBJECT_PROFILE( it->data )){
