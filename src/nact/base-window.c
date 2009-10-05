@@ -1201,33 +1201,43 @@ base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *fir
 /**
  * Records a connected signal, to be disconnected at NactWindow dispose.
  */
-void
+gulong
 base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn )
 {
+	gulong handler_id = 0;
+
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 
-		gulong handler_id = g_signal_connect( instance, signal, fn, window );
+		handler_id = g_signal_connect( instance, signal, fn, window );
 		record_connected_signal( window, instance, handler_id );
 	}
+
+	return( handler_id );
 }
 
-void
+gulong
 base_window_signal_connect_after( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn )
 {
+	gulong handler_id = 0;
+
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 
-		gulong handler_id = g_signal_connect_after( instance, signal, fn, window );
+		handler_id = g_signal_connect_after( instance, signal, fn, window );
 		record_connected_signal( window, instance, handler_id );
 	}
+
+	return( handler_id );
 }
 
-void
+gulong
 base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const gchar *signal, GCallback fn )
 {
+	gulong handler_id = 0;
+
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
@@ -1235,9 +1245,11 @@ base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const
 		GtkWidget *widget = base_window_get_widget( window, name );
 		if( GTK_IS_WIDGET( widget )){
 
-			base_window_signal_connect( window, G_OBJECT( widget ), signal, fn );
+			handler_id = base_window_signal_connect( window, G_OBJECT( widget ), signal, fn );
 		}
 	}
+
+	return( handler_id );
 }
 
 static void

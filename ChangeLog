@@ -3,13 +3,17 @@
 	Restaure and fix 'Copy of' relabeling of pasted items.
 
 	* src/common/na-object-api.h:
-	* /src/common/na-object-id-fn.h:
+	* src/common/na-object-id-fn.h:
 	* src/common/na-object-id.c
 	(na_object_set_for_copy, na_object_id_set_for_copy):
 	Removed functions.
 	(na_object_prepare_for_paste, na_object_id_prepare_for_paste,
 	na_object_id_set_copy_of_label):
 	New functions.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h:
+	Signal connection functions now return the handler_id.
 
 	* src/nact/nact-clipboard.c:
 	* /src/nact/nact-clipboard.h:
