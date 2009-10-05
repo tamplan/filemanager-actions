@@ -44,10 +44,12 @@
  */
 
 #include <runtime/na-object-id-class.h>
+#include <runtime/na-pivot.h>
 
 G_BEGIN_DECLS
 
-void   na_object_id_set_for_copy( NAObjectId *object, gboolean relabel );
+void   na_object_id_prepare_for_paste( NAObjectId *object, NAPivot *pivot, gboolean renumber, NAObjectAction *action );
+void   na_object_id_set_copy_of_label( NAObjectId *object );
 
 G_END_DECLS
 

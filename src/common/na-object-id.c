@@ -39,6 +39,7 @@
 #include <runtime/na-object-id-priv.h>
 
 #include "na-object-api.h"
+#include "na-iprefs.h"
 
 /* private class data
  */
@@ -47,15 +48,75 @@ struct NAObjectIdClassPrivate {
 };
 
 /**
- * na_object_id_set_for_copy:
- * @object: the #NAObjectId object to be copied.
- * @relabel: whether this item should be relabeled ?
+ * na_object_id_prepare_for_paste:
+ * @object: the #NAObjectId object to be pasted.
+ * @pivot; the #NAPivot instance which let us access to preferences.
+ * @relabel: whether this item should be renumbered ?
+ * @action: if @object is a #NAObjectProfile, the attached #NAObjectAction.
  *
- * Prepares @object to be copied, allocating to it a new uuid if apply,
- * and relabeling it as "Copy of ..." if applies.
+ * Prepares @object to be pasted.
+ *
+ * If a #NAObjectProfile, then @object is attached to the specified
+ * #NAObjectAction @action. The identifier is always renumbered to be
+ * suitable with the already existing profiles.
+ *
+ * If a #NAObjectAction or a #NAObjectMenu, a new UUID is allocated if
+ * and only if @relabel is %TRUE.
+ *
+ * Actual relabeling takes place if @relabel is %TRUE, depending of the
+ * user preferences.
  */
 void
-na_object_id_set_for_copy( NAObjectId *object, gboolean relabel )
+na_object_id_prepare_for_paste( NAObjectId *object, NAPivot *pivot, gboolean renumber, NAObjectAction *action )
+{
+	static const gchar *thisfn = "na_object_id_prepare_for_paste";
+	gboolean user_relabel;
+
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
+
+	if( !object->private->dispose_has_run ){
+
+		user_relabel = FALSE;
+
+		if( NA_IS_OBJECT_MENU( object )){
+			user_relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_MENUS, FALSE );
+		} else if( NA_IS_OBJECT_ACTION( object )){
+			user_relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_ACTIONS, FALSE );
+		} else if( NA_IS_OBJECT_PROFILE( object )){
+			user_relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, FALSE );
+		} else {
+			g_warning( "%s: unknown object type at %p", thisfn, ( void * ) object );
+			g_return_if_reached();
+		}
+
+		if( NA_IS_OBJECT_PROFILE( object )){
+			na_object_profile_set_action( NA_OBJECT_PROFILE( object ), action );
+			na_object_set_new_id( object, action );
+			if( renumber && user_relabel ){
+				na_object_set_copy_of_label( object );
+			}
+
+		} else {
+			if( renumber ){
+				na_object_set_new_id( object, NULL );
+				if( user_relabel ){
+					na_object_set_copy_of_label( object );
+				}
+			}
+		}
+	}
+}
+
+/**
+ * na_object_id_set_copy_of_label:
+ * @object: the #NAObjectId object whose label is to be changed.
+ *
+ * Sets the 'Copy of' label.
+ */
+void
+na_object_id_set_copy_of_label( NAObjectId *object )
 {
 	gchar *new_label;
 
@@ -63,14 +124,9 @@ na_object_id_set_for_copy( NAObjectId *object, gboolean relabel )
 
 	if( !object->private->dispose_has_run ){
 
-		/* TODO: review the set_for_copy function */
-		na_object_id_set_new_id( object, NULL );
-
-		if( relabel ){
-			/* i18n: copied items have a label as 'Copy of original label' */
-			new_label = g_strdup_printf( _( "Copy of %s" ), object->private->label );
-			g_free( object->private->label );
-			object->private->label = new_label;
-		}
+		/* i18n: copied items have a label as 'Copy of original label' */
+		new_label = g_strdup_printf( _( "Copy of %s" ), object->private->label );
+		g_free( object->private->label );
+		object->private->label = new_label;
 	}
 }

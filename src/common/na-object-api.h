@@ -65,12 +65,15 @@ G_BEGIN_DECLS
 
 /* NAObjectId
  */
-#define na_object_set_for_copy( object, relabel )	na_object_id_set_for_copy( NA_OBJECT_ID( object ), relabel )
+#define na_object_prepare_for_paste( object, pivot, renumber, action ) \
+													na_object_id_prepare_for_paste( NA_OBJECT_ID( object ), pivot, renumber, ( NAObjectAction * ) action )
+#define na_object_set_copy_of_label( object )		na_object_id_set_copy_of_label( NA_OBJECT_ID( object ))
 
 /* NAObjectItem
  */
 
-#define na_object_insert_item( object, item, before ) na_object_item_insert_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ), ( NAObject * ) before )
+#define na_object_insert_item( object, item, before ) \
+													na_object_item_insert_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ), ( NAObject * ) before )
 #define na_object_remove_item( object, item )		na_object_item_remove_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
 
 G_END_DECLS

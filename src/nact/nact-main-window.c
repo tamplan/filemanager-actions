@@ -786,37 +786,6 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 	}
 }
 
-/**
- * nact_main_window_prepare_object_for_copy:
- * @window: this #NactMainWindow instance.
- * @object: the #NAObject to be prepared.
- * @new_parent: if @object is a profile, then the new id will be computed
- * depending of already existing profiles in the @new_parent.
- *
- * Gives a new id to the object,
- * possibly relabeling it depending on current preferences.
- */
-void
-nact_main_window_prepare_object_for_copy( NactMainWindow *window, NAObject *object, NAObjectAction *new_parent )
-{
-	NactApplication *application;
-	NAPivot *pivot;
-	gboolean relabel = FALSE;
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
-
-	if( NA_IS_OBJECT_MENU( object )){
-		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_MENUS, FALSE );
-	} else if( NA_IS_OBJECT_ACTION( object )){
-		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_ACTIONS, FALSE );
-	} else if( NA_IS_OBJECT_PROFILE( object )){
-		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, FALSE );
-	}
-
-	na_object_set_new_id( object, NULL );
-}
-
 /*
  * If the deleted item is a profile, then do nothing because the parent
  * action has been marked as modified when the profile has been deleted,

@@ -104,6 +104,7 @@ static void     on_cut_activated( GtkAction *action, NactMainWindow *window );
 static void     on_copy_activated( GtkAction *action, NactMainWindow *window );
 static void     on_paste_activated( GtkAction *action, NactMainWindow *window );
 static void     on_paste_into_activated( GtkAction *action, NactMainWindow *window );
+static GList   *prepare_for_paste( NactMainWindow *window );
 static void     on_duplicate_activated( GtkAction *action, NactMainWindow *window );
 static void     on_delete_activated( GtkAction *action, NactMainWindow *window );
 static void     update_clipboard_counters( NactMainWindow *window );
@@ -654,7 +655,7 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	nact_main_window_move_to_deleted( window, items );
 	clipboard = nact_main_window_get_clipboard( window );
-	nact_clipboard_primary_set( clipboard, items, FALSE );
+	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_CUT );
 	update_clipboard_counters( window );
 	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
 
@@ -682,7 +683,7 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	clipboard = nact_main_window_get_clipboard( window );
-	nact_clipboard_primary_set( clipboard, items, TRUE );
+	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
 	update_clipboard_counters( window );
 	na_object_free_items( items );
 
@@ -704,25 +705,9 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
-	GList *items, *it;
-	NactClipboard *clipboard;
-	NAObjectAction *action = NULL;
+	GList *items;
 
-	clipboard = nact_main_window_get_clipboard( window );
-	items = nact_clipboard_primary_get( clipboard );
-
-	/* if pasted items are profiles, then setup the action
-	 */
-	for( it = items ; it ; it = it->next ){
-		if( NA_IS_OBJECT_PROFILE( it->data )){
-			if( !action ){
-				g_object_get( G_OBJECT( window ), TAB_UPDATABLE_PROP_EDITED_ACTION, &action, NULL );
-				g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
-			}
-			na_object_profile_set_action( NA_OBJECT_PROFILE( it->data ), action );
-		}
-	}
-
+	items = prepare_for_paste( window );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items( items );
 }
@@ -742,12 +727,29 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_paste_into_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	GList *items;
+
+	items = prepare_for_paste( window );
+	nact_iactions_list_insert_into( NACT_IACTIONS_LIST( window ), items );
+	na_object_free_items( items );
+}
+
+static GList *
+prepare_for_paste( NactMainWindow *window )
+{
 	GList *items, *it;
 	NactClipboard *clipboard;
-	NAObjectAction *action = NULL;
+	NAObjectAction *action;
+	gboolean renumber;
+	NactApplication *application;
+	NAPivot *pivot;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
 
 	clipboard = nact_main_window_get_clipboard( window );
-	items = nact_clipboard_primary_get( clipboard );
+	items = nact_clipboard_primary_get( clipboard, &renumber );
+	action = NULL;
 
 	/* if pasted items are profiles, then setup the action
 	 */
@@ -755,14 +757,13 @@ on_paste_into_activated( GtkAction *gtk_action, NactMainWindow *window )
 		if( NA_IS_OBJECT_PROFILE( it->data )){
 			if( !action ){
 				g_object_get( G_OBJECT( window ), TAB_UPDATABLE_PROP_EDITED_ACTION, &action, NULL );
-				g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
+				g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
 			}
-			na_object_profile_set_action( NA_OBJECT_PROFILE( it->data ), action );
 		}
+		na_object_prepare_for_paste( NA_OBJECT_ITEM( it->data ), pivot, renumber, action );
 	}
 
-	nact_iactions_list_insert_into( NACT_IACTIONS_LIST( window ), items );
-	na_object_free_items( items );
+	return( items );
 }
 
 /*
@@ -778,11 +779,10 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	NactApplication *application;
 	NAPivot *pivot;
+	NAObjectAction *action;
 	GList *items, *it;
 	GList *dup;
 	NAObject *obj;
-	gboolean relabel_menus, relabel_actions, relabel_profiles;
-	gboolean relabel;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -790,24 +790,19 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( application );
 
-	relabel_menus = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_MENUS, FALSE );
-	relabel_actions = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_ACTIONS, FALSE );
-	relabel_profiles = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, FALSE );
-
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	for( it = items ; it ; it = it->next ){
 		obj = NA_OBJECT( na_object_duplicate( it->data ));
+		action = NULL;
 
-		if( NA_IS_OBJECT_MENU( obj )){
-			relabel = relabel_menus;
-		} else if( NA_IS_OBJECT_ACTION( obj )){
-			relabel = relabel_actions;
-		} else {
-			g_return_if_fail( NA_IS_OBJECT_PROFILE( obj ));
-			relabel = relabel_profiles;
+		/* duplicating a profile
+		 * as we insert in sibling mode, the parent doesn't change
+		 */
+		if( NA_IS_OBJECT_PROFILE( obj )){
+			action = na_object_profile_get_action( NA_OBJECT_PROFILE( obj ));
 		}
 
-		na_object_set_for_copy( obj, relabel );
+		na_object_prepare_for_paste( obj, pivot, TRUE, action );
 		na_object_set_origin( obj, NULL );
 		dup = g_list_prepend( NULL, obj );
 		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );

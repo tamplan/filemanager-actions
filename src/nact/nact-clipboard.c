@@ -55,6 +55,7 @@ struct NactClipboardPrivate {
 	gboolean      dispose_has_run;
 	GtkClipboard *dnd;
 	GtkClipboard *primary;
+	gboolean      primary_got;
 };
 
 #define NACT_CLIPBOARD_ATOM				gdk_atom_intern( "_NACT_CLIPBOARD", FALSE )
@@ -89,10 +90,11 @@ typedef struct {
 	NactClipboardDndData;
 
 typedef struct {
-	guint  nb_actions;
-	guint  nb_profiles;
-	guint  nb_menus;
-	GList *items;
+	guint    nb_actions;
+	guint    nb_profiles;
+	guint    nb_menus;
+	GList   *items;
+	gint     mode;
 }
 	NactClipboardPrimaryData;
 
@@ -111,7 +113,6 @@ static void   export_rows( NactClipboard *clipboard, NactClipboardDndData *data 
 
 static void   get_from_primary_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
 static void   clear_primary_clipboard_callback( GtkClipboard *clipboard, NactClipboardPrimaryData *data );
-static void   renumber_items( NactClipboard *clipboard, GList *items );
 
 GType
 nact_clipboard_get_type( void )
@@ -561,8 +562,8 @@ export_rows( NactClipboard *clipboard, NactClipboardDndData *data )
  * nact_clipboard_primary_set:
  * @clipboard: this #NactClipboard object.
  * @items: a list of #NAObject items
- * @renumber: whether the actions or menus items should be
- * renumbered when copied in the clipboard ?
+ * @mode: where do these items come from ?
+ *  Or what is the operation which has led the items to the clipboard?
  *
  * Installs a copy of provided items in the clipboard.
  *
@@ -579,7 +580,7 @@ export_rows( NactClipboard *clipboard, NactClipboardDndData *data )
  * data out of the clipboard.
  */
 void
-nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean renumber )
+nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 {
 	NactClipboardPrimaryData *data;
 	GList *it;
@@ -590,24 +591,17 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean ren
 
 		data = g_new0( NactClipboardPrimaryData, 1 );
 
+		na_object_item_count_items( items,
+				( gint * ) &data->nb_menus, ( gint * ) &data->nb_actions, ( gint * ) &data->nb_profiles, FALSE );
+
 		for( it = items ; it ; it = it->next ){
 			data->items = g_list_prepend( data->items, na_object_duplicate( it->data ));
-
-			if( NA_IS_OBJECT_ACTION( it->data )){
-				data->nb_actions += 1;
-
-			} else if( NA_IS_OBJECT_MENU( it->data )){
-				data->nb_menus += 1;
-
-			} else if( NA_IS_OBJECT_PROFILE( it->data )){
-				data->nb_profiles += 1;
-			}
 		}
 		data->items = g_list_reverse( data->items );
 
-		if( renumber ){
-			renumber_items( clipboard, data->items );
-		}
+		data->mode = mode;
+
+		clipboard->private->primary_got = FALSE;
 
 		gtk_clipboard_set_with_data( clipboard->private->primary,
 				clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
@@ -628,7 +622,7 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean ren
  * time.
  */
 GList *
-nact_clipboard_primary_get( NactClipboard *clipboard )
+nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 {
 	GtkSelectionData *selection;
 	NactClipboardPrimaryData *data;
@@ -637,6 +631,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard )
 	NAObject *obj;
 
 	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
+	g_return_val_if_fail( relabel, NULL );
 
 	if( !clipboard->private->dispose_has_run ){
 
@@ -652,7 +647,10 @@ nact_clipboard_primary_get( NactClipboard *clipboard )
 			}
 			items = g_list_reverse( items );
 
-			renumber_items( clipboard, data->items );
+			*relabel = (( data->mode == CLIPBOARD_MODE_CUT && clipboard->private->primary_got ) ||
+							data->mode == CLIPBOARD_MODE_COPY );
+
+			clipboard->private->primary_got = TRUE;
 		}
 	}
 
@@ -714,30 +712,4 @@ clear_primary_clipboard_callback( GtkClipboard *clipboard, NactClipboardPrimaryD
 	g_list_foreach( data->items, ( GFunc ) g_object_unref, NULL );
 	g_list_free( data->items );
 	g_free( data );
-}
-
-static void
-renumber_items( NactClipboard *clipboard, GList *items )
-{
-	/*GList *it;
-	gboolean relabel_menus, relabel_actions, relabel_profiles;
-	gboolean relabel;
-
-	relabel_menus = base_iprefs_get_bool( BASE_IPREFS( clipboard ), BASE_IPREFS_RELABEL_MENUS );
-	relabel_actions = base_iprefs_get_bool( BASE_IPREFS( clipboard ), BASE_IPREFS_RELABEL_ACTIONS );
-	relabel_profiles = base_iprefs_get_bool( BASE_IPREFS( clipboard ), BASE_IPREFS_RELABEL_PROFILES );
-
-	for( it = items ; it ; it = it->next ){
-
-		if( NA_IS_OBJECT_MENU( it->data )){
-			relabel = relabel_menus;
-		} else if( NA_IS_OBJECT_ACTION( it->data )){
-			relabel = relabel_actions;
-		} else {
-			g_return_if_fail( NA_IS_OBJECT_PROFILE( it->data ));
-			relabel = relabel_profiles;
-		}
-
-		na_object_set_for_copy( it->data, relabel );
-	}*/
 }

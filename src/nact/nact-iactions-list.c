@@ -124,12 +124,12 @@ static void         interface_base_init( NactIActionsListInterface *klass );
 static void         interface_base_finalize( NactIActionsListInterface *klass );
 
 static void         free_items_callback( NactIActionsList *instance, GList *items );
-static void         decremente_counters( NactIActionsList *instance, GList *items );
+static void         decrement_counters( NactIActionsList *instance, GList *items );
 static GtkTreePath *get_selection_first_path( GtkTreeView *treeview );
 static void         do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *path, GList **parents );
 static NAObject    *do_insert_into_first( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *insert_path, GtkTreePath **new_path );
 static GtkTreePath *do_insert_into_second( GtkTreeView *treeview, GtkTreeModel *model, NAObject *object, GtkTreePath *insert_path, NAObject **parent );
-static void         incremente_counters( NactIActionsList *instance, GList *items );
+static void         increment_counters( NactIActionsList *instance, GList *items );
 static void         update_parents_edition_status( GList *parents, GList *items );
 
 static gchar       *v_get_treeview_name( NactIActionsList *instance );
@@ -545,7 +545,7 @@ nact_iactions_list_delete( NactIActionsList *instance, GList *items )
 
 		set_selection_changed_mode( instance, FALSE );
 
-		decremente_counters( instance, items );
+		decrement_counters( instance, items );
 
 		for( it = items ; it ; it = it->next ){
 			if( path ){
@@ -565,7 +565,7 @@ nact_iactions_list_delete( NactIActionsList *instance, GList *items )
 }
 
 static void
-decremente_counters( NactIActionsList *instance, GList *items )
+decrement_counters( NactIActionsList *instance, GList *items )
 {
 	gint menus, actions, profiles;
 	CountersStruct *cs;
@@ -866,9 +866,8 @@ nact_iactions_list_insert_at_path( NactIActionsList *instance, GList *items, Gtk
 
 		do_insert_items( treeview, model, items, insert_path, &parents );
 
-		incremente_counters( instance, items );
-
 		update_parents_edition_status( parents, items );
+		increment_counters( instance, items );
 
 		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
 
@@ -983,7 +982,7 @@ nact_iactions_list_insert_into( NactIActionsList *instance, GList *items )
 		model = gtk_tree_view_get_model( treeview );
 		insert_path = get_selection_first_path( treeview );
 
-		incremente_counters( instance, items );
+		increment_counters( instance, items );
 
 		parent = do_insert_into_first( treeview, model, items, insert_path, &new_path );
 
@@ -1098,23 +1097,26 @@ do_insert_into_second( GtkTreeView *treeview, GtkTreeModel *model, NAObject *obj
 }
 
 static void
-incremente_counters( NactIActionsList *instance, GList *items )
+increment_counters( NactIActionsList *instance, GList *items )
 {
+	static const gchar *thisfn = "nact_iactions_list_increment_counters";
 	gint menus, actions, profiles;
 	CountersStruct *cs;
+
+	g_debug( "%s: instance=%p, items=%p", thisfn, ( void * ) instance, ( void * ) items );
 
 	menus = 0;
 	actions = 0;
 	profiles = 0;
 	na_object_item_count_items( items, &menus, &actions, &profiles, TRUE );
-	/*g_debug( "incremente_counters: counted: menus=%d, actions=%d, profiles=%d", menus, actions, profiles );*/
+	/*g_debug( "increment_counters: counted: menus=%d, actions=%d, profiles=%d", menus, actions, profiles );*/
 
 	cs = ( CountersStruct * ) g_object_get_data( G_OBJECT( instance ), LIST_COUNTERS );
 	/*g_debug( "incremente_counters: cs before: menus=%d, actions=%d, profiles=%d", cs->menus, cs->actions, cs->profiles );*/
 	cs->menus += menus;
 	cs->actions += actions;
 	cs->profiles += profiles;
-	/*g_debug( "incremente_counters: cs after: menus=%d, actions=%d, profiles=%d", cs->menus, cs->actions, cs->profiles );*/
+	/*g_debug( "increment_counters: cs after: menus=%d, actions=%d, profiles=%d", cs->menus, cs->actions, cs->profiles );*/
 
 	send_list_count_updated_signal( instance, cs );
 }
@@ -1122,7 +1124,12 @@ incremente_counters( NactIActionsList *instance, GList *items )
 static void
 update_parents_edition_status( GList *parents, GList *items )
 {
+	static const gchar *thisfn = "nact_iactions_list_update_parents_edition_status";
 	GList *it;
+
+	g_debug( "%s: parents=%p (count=%d), items=%p (count=%d)", thisfn,
+			( void * ) parents, g_list_length( parents ),
+			( void * ) items, g_list_length( items ));
 
 	/*if( !parents || !g_list_length( parents )){
 		parents = g_list_copy( items );

@@ -78,6 +78,13 @@ enum {
 	NACT_XCHANGE_FORMAT_URI_LIST
 };
 
+/* mode indicator
+ */
+enum {
+	CLIPBOARD_MODE_CUT = 1,
+	CLIPBOARD_MODE_COPY
+};
+
 GType          nact_clipboard_get_type( void );
 
 NactClipboard *nact_clipboard_new( void );
@@ -88,8 +95,8 @@ gchar         *nact_clipboard_dnd_get_text( NactClipboard *clipboard, GList *row
 void           nact_clipboard_dnd_drag_end( NactClipboard *clipboard );
 void           nact_clipboard_dnd_clear( NactClipboard *clipboard );
 
-void           nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gboolean renumber_items );
-GList         *nact_clipboard_primary_get( NactClipboard *clipboard );
+void           nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode );
+GList         *nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel );
 void           nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *profiles, guint *menus );
 
 G_END_DECLS

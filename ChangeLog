@@ -1,3 +1,28 @@
+2009-10-05 Pierre Wieser <pwieser@trychlos.org>
+
+	Restaure and fix 'Copy of' relabeling of pasted items.
+
+	* src/common/na-object-api.h:
+	* /src/common/na-object-id-fn.h:
+	* src/common/na-object-id.c
+	(na_object_set_for_copy, na_object_id_set_for_copy):
+	Removed functions.
+	(na_object_prepare_for_paste, na_object_id_prepare_for_paste,
+	na_object_id_set_copy_of_label):
+	New functions.
+
+	* src/nact/nact-clipboard.c:
+	* /src/nact/nact-clipboard.h:
+	Keep the initial copy mode in the clipboard.
+	Remove the relabeling operations from the clipboard.
+
+	* src/nact/nact-iactions-list.c:
+	Prepare pasted items here when we know the exact target.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h
+	(nact_main_window_prepare_object_for_copy): Removed function.
+
 2009-10-04 Pierre Wieser <pwieser@trychlos.org>
 
 	Use some stored indicators to compute the action sensitivities
