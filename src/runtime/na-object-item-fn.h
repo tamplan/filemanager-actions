@@ -47,6 +47,8 @@
 
 G_BEGIN_DECLS
 
+void           na_object_item_free_items_list( GList *items );
+
 gchar         *na_object_item_get_tooltip( const NAObjectItem *item );
 gchar         *na_object_item_get_icon( const NAObjectItem *item );
 NAIIOProvider *na_object_item_get_provider( const NAObjectItem *item );
@@ -54,7 +56,6 @@ gboolean       na_object_item_is_enabled( const NAObjectItem *item );
 NAObject      *na_object_item_get_item( const NAObjectItem *item, const gchar *id );
 GList         *na_object_item_get_items_list( const NAObjectItem *item );
 guint          na_object_item_get_items_count( const NAObjectItem *item );
-void           na_object_item_free_items( GList *items );
 
 void           na_object_item_set_tooltip( NAObjectItem *item, const gchar *tooltip );
 void           na_object_item_set_icon( NAObjectItem *item, const gchar *icon_name );

@@ -661,7 +661,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 		items = g_list_prepend( NULL, action );
 		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
-		na_object_free_items( items );
+		na_object_free_items_list( items );
 	}
 
 	na_utils_free_string_list( uris );

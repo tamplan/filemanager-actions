@@ -552,7 +552,7 @@ instance_dispose( GObject *window )
 		for( it = self->private->deleted ; it ; it = it->next ){
 			g_debug( "nact_main_window_instance_dispose: %p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
 		}
-		na_object_free_items( self->private->deleted );
+		na_object_free_items_list( self->private->deleted );
 
 		nact_iactions_list_dispose( NACT_IACTIONS_LIST( window ));
 		nact_iaction_tab_dispose( NACT_IACTION_TAB( window ));
@@ -712,7 +712,7 @@ nact_main_window_has_modified_items( const NactMainWindow *window )
  * Adds the given list to the deleted one.
  *
  * Note that we move the ref from @items list to our own deleted list.
- * So that the caller should not try to na_object_free_items() the
+ * So that the caller should not try to na_object_free_items_list() the
  * provided list.
  */
 void
@@ -789,7 +789,7 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 		}
 
 		g_debug( "nact_main_window_remove_deleted: before free deleted" );
-		na_object_free_items( window->private->deleted );
+		na_object_free_items_list( window->private->deleted );
 		window->private->deleted = NULL;
 	}
 }
@@ -1168,7 +1168,7 @@ reload( NactMainWindow *window )
 		na_pivot_reload_items( pivot );
 		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( pivot ));
 
-		na_object_free_items( window->private->deleted );
+		na_object_free_items_list( window->private->deleted );
 		window->private->deleted = NULL;
 	}
 }

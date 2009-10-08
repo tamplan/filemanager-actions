@@ -247,7 +247,7 @@ instance_dispose( GObject *object )
 		self->private->providers = NULL;
 
 		/* release item tree */
-		na_object_free_items( self->private->tree );
+		na_object_free_items_list( self->private->tree );
 		self->private->tree = NULL;
 
 		/* release the GConf monitoring */
@@ -426,7 +426,7 @@ na_pivot_reload_items( NAPivot *pivot )
 
 	if( !pivot->private->dispose_has_run ){
 
-		na_object_free_items( pivot->private->tree );
+		na_object_free_items_list( pivot->private->tree );
 
 		pivot->private->tree = na_iio_provider_get_items_tree( pivot );
 	}

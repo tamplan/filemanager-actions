@@ -435,7 +435,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		}
 	}
 
-	na_object_free_items( actions );
+	na_object_free_items_list( actions );
 
 	if( window->private->errors ){
 		if( !reason ){
@@ -750,7 +750,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 		text = tmp;
 	}
 
-	na_object_free_items( actions );
+	na_object_free_items_list( actions );
 
 	g_assert( window->private->uri && strlen( window->private->uri ));
 

@@ -165,10 +165,18 @@ typedef struct {
 	GList *    ( *get_childs )      ( const NAObject *object );
 
 	/**
+	 * ref:
+	 * @object: the #NAObject object.
+	 *
+	 * Recursively ref the @object and all its childs.
+	 */
+	void       ( *ref )             ( NAObject *object );
+
+	/**
 	 * unref:
 	 * @object: the #NAObject object.
 	 *
-	 * Recursively unref all childs.
+	 * Recursively unref the @object and all its childs.
 	 */
 	void       ( *unref )           ( NAObject *object );
 }

@@ -1,5 +1,21 @@
 2009-10-08 Pierre Wieser <pwieser@trychlos.org>
 
+	na_object_free_items: Renamed to na_object_free_items_list.
+
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-window.c:
+	* src/runtime/na-iio-provider.c:
+	* src/runtime/na-object-api.h:
+	* src/runtime/na-object-class.h:
+	* src/runtime/na-object-fn.h:
+	* src/runtime/na-object-item-fn.h:
+	* src/runtime/na-object-item.c:
+	* src/runtime/na-object.c:
+	* src/runtime/na-pivot.c: Updated accordingly.
+
 	na_object_get_items: Renamed to na_object_get_items_list,
 	Now returns the list itself instead of a refed new list.
 

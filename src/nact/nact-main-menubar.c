@@ -470,7 +470,7 @@ on_new_menu_activated( GtkAction *gtk_action, NactMainWindow *window )
 	menu = na_object_menu_new();
 	items = g_list_prepend( NULL, menu );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_free_items( items );
+	na_object_free_items_list( items );
 }
 
 static void
@@ -485,7 +485,7 @@ on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 	action = na_object_action_new_with_profile();
 	items = g_list_prepend( NULL, action );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_free_items( items );
+	na_object_free_items_list( items );
 }
 
 static void
@@ -514,7 +514,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = g_list_prepend( NULL, profile );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 
-	na_object_free_items( items );
+	na_object_free_items_list( items );
 	g_free( name );
 }
 
@@ -700,7 +700,7 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 	clipboard = nact_main_window_get_clipboard( window );
 	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
 	update_clipboard_counters( window );
-	na_object_free_items( items );
+	na_object_free_items_list( items );
 
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
@@ -727,7 +727,7 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	items = prepare_for_paste( window );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_free_items( items );
+	na_object_free_items_list( items );
 }
 
 /*
@@ -752,7 +752,7 @@ on_paste_into_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	items = prepare_for_paste( window );
 	nact_iactions_list_insert_into( NACT_IACTIONS_LIST( window ), items );
-	na_object_free_items( items );
+	na_object_free_items_list( items );
 }
 
 static GList *
@@ -835,10 +835,10 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 		na_object_set_origin( obj, NULL );
 		dup = g_list_prepend( NULL, obj );
 		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
-		na_object_free_items( dup );
+		na_object_free_items_list( dup );
 	}
 
-	na_object_free_items( items );
+	na_object_free_items_list( items );
 }
 
 /*

@@ -175,7 +175,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 		level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
 		hierarchy = build_hierarchy( merged, level_zero, TRUE );
 		na_utils_free_string_list( level_zero );
-		na_object_free_items( merged );
+		na_object_free_items_list( merged );
 
 		g_debug( "%s: tree before alphabetical reordering (if any)", thisfn );
 		na_object_dump_tree( hierarchy );

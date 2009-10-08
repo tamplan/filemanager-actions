@@ -59,6 +59,7 @@ G_BEGIN_DECLS
 #define na_object_dump( object )					na_object_object_dump( NA_OBJECT( object ))
 #define na_object_dump_norec( object )				na_object_object_dump_norec( NA_OBJECT( object ))
 #define na_object_dump_tree( tree )					na_object_object_dump_tree( tree )
+#define na_object_ref( object )						na_object_object_ref( NA_OBJECT( object ))
 #define na_object_unref( object )					na_object_object_unref( NA_OBJECT( object ))
 
 /* NAIDuplicable
@@ -80,6 +81,8 @@ G_BEGIN_DECLS
 
 /* NAObjectItem
  */
+#define na_object_free_items_list( list )			na_object_item_free_items_list( list )
+
 #define na_object_get_tooltip( object )				na_object_item_get_tooltip( NA_OBJECT_ITEM( object ))
 #define na_object_get_icon( object )				na_object_item_get_icon( NA_OBJECT_ITEM( object ))
 #define na_object_get_provider( object )			na_object_item_get_provider( NA_OBJECT_ITEM( object ))
@@ -87,7 +90,6 @@ G_BEGIN_DECLS
 #define na_object_get_item( object, id )			na_object_item_get_item( NA_OBJECT_ITEM( object ), id )
 #define na_object_get_items_list( object )			na_object_item_get_items_list( NA_OBJECT_ITEM( object ))
 #define na_object_get_items_count( object )			na_object_item_get_items_count( NA_OBJECT_ITEM( object ))
-#define na_object_free_items( list )				na_object_item_free_items( list )
 
 #define na_object_set_tooltip( object, tooltip )	na_object_item_set_tooltip( NA_OBJECT_ITEM( object ), tooltip )
 #define na_object_set_icon( object, icon )			na_object_item_set_icon( NA_OBJECT_ITEM( object ), icon )

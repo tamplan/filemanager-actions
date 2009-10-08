@@ -60,6 +60,7 @@ static gboolean       iduplicable_are_equal( const NAIDuplicable *a, const NAIDu
 static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
 
 static GList         *v_get_childs( const NAObject *object );
+static void           v_ref( NAObject *object );
 static void           v_unref( NAObject *object );
 
 static gboolean       are_equal_hierarchy( const NAObject *a, const NAObject *b );
@@ -141,6 +142,7 @@ class_init( NAObjectClass *klass )
 	klass->are_equal = do_are_equal;
 	klass->is_valid = do_is_valid;
 	klass->get_childs = NULL;
+	klass->ref = NULL;
 	klass->unref = NULL;
 }
 
@@ -397,6 +399,32 @@ na_object_object_dump_tree( GList *tree )
 }
 
 /**
+ * na_object_object_ref:
+ * @object: a #NAObject-derived object.
+ *
+ * Recursively ref the @object and all its childs, incrementing their
+ * reference_count by 1.
+ *
+ * Returns: a reference on the @pbject.
+ */
+NAObject *
+na_object_object_ref( NAObject *object )
+{
+	NAObject *ref = NULL;
+
+	g_return_if_fail( NA_IS_OBJECT( object ));
+
+	if( !object->private->dispose_has_run ){
+
+		v_ref( object );
+
+		ref = g_object_ref( object );
+	}
+
+	return( ref );
+}
+
+/**
  * na_object_object_unref:
  * @object: a #NAObject-derived object.
  *
@@ -551,6 +579,14 @@ static GList *
 v_get_childs( const NAObject *object ){
 
 	return( na_object_most_derived_get_childs( object ));
+}
+
+static void
+v_ref( NAObject *object )
+{
+	if( NA_OBJECT_GET_CLASS( object )->ref ){
+		NA_OBJECT_GET_CLASS( object )->ref( object );
+	}
 }
 
 static void

@@ -284,7 +284,7 @@ static void
 free_items_callback( NactIActionsList *instance, GList *items )
 {
 	g_debug( "free_items_callback: selection=%p (%d items)", ( void * ) items, g_list_length( items ));
-	na_object_free_items( items );
+	na_object_free_items_list( items );
 }
 
 static void
@@ -792,11 +792,10 @@ nact_iactions_list_get_management_mode( NactIActionsList *instance )
  * Returns: the currently selected rows as a list of #NAObjects.
  *
  * We acquire here a new reference on objects corresponding to actually
- * selected rows. It is supposed that their subitems are also concerned,
- * but this may be caller-dependant.
+ * selected rows, and their childs.
  *
- * The caller may safely call na_object_free_items() on the returned
- * list, or g_list_free() if it wants keep the references somewhere.
+ * The caller may safely call na_object_free_items_list() on the
+ * returned list.
  */
 GList *
 nact_iactions_list_get_selected_items( NactIActionsList *instance )
@@ -822,7 +821,8 @@ nact_iactions_list_get_selected_items( NactIActionsList *instance )
 			path = ( GtkTreePath * ) it->data;
 			gtk_tree_model_get_iter( model, &iter, path );
 			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-			items = g_list_prepend( items, object );
+			items = g_list_prepend( items, na_object_ref( object ));
+			g_object_unref( object );
 		}
 
 		g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );

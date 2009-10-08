@@ -77,6 +77,7 @@ static void     object_copy( NAObject *target, const NAObject *source );
 static gboolean object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean object_is_valid( const NAObject *object );
 static GList   *object_get_childs( const NAObject *object );
+static void     object_ref( NAObject *object );
 static void     object_unref( NAObject *object );
 
 static gchar   *object_id_new_id( const NAObjectId *object, const NAObjectId *new_parent );
@@ -171,6 +172,7 @@ class_init( NAObjectItemClass *klass )
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
 	naobject_class->get_childs = object_get_childs;
+	naobject_class->ref = object_ref;
 	naobject_class->unref = object_unref;
 
 	objectid_class = NA_OBJECT_ID_CLASS( klass );
@@ -468,17 +470,21 @@ na_object_item_get_items_count( const NAObjectItem *item )
 }
 
 /**
- * na_object_item_free_items:
- * @list: a list of #NAObject subitems as returned by
- * na_object_item_get_items().
+ * na_object_item_free_items_list:
+ * @list: a list of #NAObject items.
  *
- * This function does nothing. It is just defined ad a placeholder and
- * to keep in the code a balance between get_items() and free_items()
- * calls.
+ * Recursively unref the #NAObject of the list, freeing the list at last.
  */
 void
-na_object_item_free_items( GList *items )
+na_object_item_free_items_list( GList *items )
 {
+	GList *it;
+
+	for( it = items ; it ; it = it->next ){
+		na_object_unref( it->data );
+	}
+
+	g_list_free( items );
 }
 
 /**
@@ -826,14 +832,27 @@ object_get_childs( const NAObject *object )
 }
 
 static void
+object_ref( NAObject *object )
+{
+	GList *childs, *ic;
+
+	childs = object_get_childs( object );
+	for( ic = childs ; ic ; ic = ic->next ){
+		/*g_debug( "na_object_item_object_unref: object=%p (%s, ref_count=%d)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );*/
+		na_object_ref( ic->data );
+	}
+}
+
+static void
 object_unref( NAObject *object )
 {
 	GList *childs, *ic;
 
 	childs = object_get_childs( object );
 	for( ic = childs ; ic ; ic = ic->next ){
-		g_debug( "na_object_item_object_unref: object=%p (%s, ref_count=%d)",
-				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+		/*g_debug( "na_object_item_object_unref: object=%p (%s, ref_count=%d)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );*/
 		na_object_unref( ic->data );
 	}
 }
