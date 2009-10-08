@@ -589,7 +589,8 @@ do_dump( const NAObject *object )
 {
 	static const char *thisfn = "na_object_do_dump";
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 	na_iduplicable_dump( NA_IDUPLICABLE( object ));
 }

@@ -49,7 +49,8 @@ struct NAObjectActionClassPrivate {
  */
 enum {
 	NAACTION_PROP_VERSION_ID = 1,
-	NAACTION_PROP_READONLY_ID
+	NAACTION_PROP_READONLY_ID,
+	NAACTION_PROP_LAST_ALLOCATED_ID
 };
 
 static NAObjectItemClass *st_parent_class = NULL;
@@ -134,6 +135,13 @@ class_init( NAObjectActionClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAACTION_PROP_READONLY_ID, spec );
 
+	spec = g_param_spec_int(
+			NAACTION_PROP_LAST_ALLOCATED,
+			"Last allocated counter",
+			"Last counter used in new profile name computing", 0, INT_MAX, 0,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAACTION_PROP_LAST_ALLOCATED_ID, spec );
+
 	klass->private = g_new0( NAObjectActionClassPrivate, 1 );
 
 	naobject_class = NA_OBJECT_CLASS( klass );
@@ -163,6 +171,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	 */
 	self->private->version = g_strdup( NAUTILUS_ACTIONS_CONFIG_VERSION );
 	self->private->read_only = FALSE;
+	self->private->last_allocated = 0;
 }
 
 static void
@@ -182,6 +191,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 			case NAACTION_PROP_READONLY_ID:
 				g_value_set_boolean( value, self->private->read_only );
+				break;
+
+			case NAACTION_PROP_LAST_ALLOCATED_ID:
+				g_value_set_int( value, self->private->last_allocated );
 				break;
 
 			default:
@@ -209,6 +222,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case NAACTION_PROP_READONLY_ID:
 				self->private->read_only = g_value_get_boolean( value );
+				break;
+
+			case NAACTION_PROP_LAST_ALLOCATED_ID:
+				self->private->last_allocated = g_value_get_int( value );
 				break;
 
 			default:
@@ -364,12 +381,16 @@ na_object_action_set_readonly( NAObjectAction *action, gboolean readonly )
  * Returns a name suitable as a new profile name.
  *
  * The search is made by iterating over the standard profile name
- * prefix : basically, we increment a counter until finding a unique
- * name. The provided name is so only suitable for the specified
- * @action.
+ * prefix : basically, we increment a counter until finding a name
+ * which is not yet allocated. The provided name is so only suitable
+ * for the specified @action.
  *
  * Returns: a newly allocated profile name, which should be g_free() by
  * the caller.
+ *
+ * When inserting a list of profiles in the action, we iter first for
+ * new names, before actually do the insertion. We so keep the last
+ * allocated name to avoid to allocate the same one twice.
  */
 gchar *
 na_object_action_get_new_profile_name( const NAObjectAction *action )
@@ -382,11 +403,14 @@ na_object_action_get_new_profile_name( const NAObjectAction *action )
 
 	if( !action->private->dispose_has_run ){
 
-		for( i=1 ; !ok ; ++i ){
+		for( i = action->private->last_allocated + 1 ; !ok ; ++i ){
+
 			g_free( candidate );
 			candidate = g_strdup_printf( "%s%d", OBJECT_PROFILE_PREFIX, i );
+
 			if( !na_object_get_item( action, candidate )){
 				ok = TRUE;
+				action->private->last_allocated = i;
 			}
 		}
 
@@ -415,7 +439,7 @@ na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profil
 	if( !action->private->dispose_has_run ){
 
 		na_object_append_item( action, profile );
-		na_object_profile_set_action( profile, action );
+		na_object_set_parent( profile, action );
 	}
 }
 
@@ -430,8 +454,9 @@ object_dump( const NAObject *action )
 
 	if( !self->private->dispose_has_run ){
 
-		g_debug( "%s:   version='%s'", thisfn, self->private->version );
-		g_debug( "%s: read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
+		g_debug( "%s:        version='%s'", thisfn, self->private->version );
+		g_debug( "%s:      read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
+		g_debug( "%s: last-allocated=%d", thisfn, self->private->last_allocated );
 	}
 }
 
@@ -446,6 +471,7 @@ object_copy( NAObject *target, const NAObject *source )
 {
 	gchar *version;
 	gboolean readonly;
+	gint last_allocated;
 	GList *profiles, *ip;
 
 	g_return_if_fail( NA_IS_OBJECT_ACTION( target ));
@@ -457,11 +483,13 @@ object_copy( NAObject *target, const NAObject *source )
 		g_object_get( G_OBJECT( source ),
 				NAACTION_PROP_VERSION, &version,
 				NAACTION_PROP_READONLY, &readonly,
+				NAACTION_PROP_LAST_ALLOCATED, &last_allocated,
 				NULL );
 
 		g_object_set( G_OBJECT( target ),
 				NAACTION_PROP_VERSION, version,
 				NAACTION_PROP_READONLY, readonly,
+				NAACTION_PROP_LAST_ALLOCATED, last_allocated,
 				NULL );
 
 		g_free( version );
@@ -471,7 +499,7 @@ object_copy( NAObject *target, const NAObject *source )
 		 */
 		profiles = na_object_get_items( target );
 		for( ip = profiles ; ip ; ip = ip->next ){
-			na_object_profile_set_action( NA_OBJECT_PROFILE( ip->data ), NA_OBJECT_ACTION( target ));
+			na_object_set_parent( ip->data, target );
 		}
 		na_object_free_items( profiles );
 	}
@@ -483,6 +511,8 @@ object_copy( NAObject *target, const NAObject *source )
  * note 2: when checking for equality of profiles, we know that NAObjectItem
  * has already checked their edition status, and that the two profiles lists
  * were the sames ; we so only report the modification status to the action
+ *
+ * note 3: last_allocated counter is not relevant for equality test
  */
 static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )

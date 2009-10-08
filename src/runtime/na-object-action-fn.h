@@ -48,6 +48,7 @@ G_BEGIN_DECLS
  */
 #define NAACTION_PROP_VERSION			"na-action-version"
 #define NAACTION_PROP_READONLY			"na-action-read-only"
+#define NAACTION_PROP_LAST_ALLOCATED	"na-action-last-allocated"
 
 /* i18n: default label for a newly created action */
 #define NA_OBJECT_ACTION_DEFAULT_LABEL	_( "New Nautilus action" )

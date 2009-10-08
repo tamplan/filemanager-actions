@@ -314,6 +314,26 @@ na_object_id_get_label( const NAObjectId *object )
 }
 
 /**
+ * na_object_id_get_parent:
+ * @object: the #NAObjectId whose parent is to be retrieved.
+ *
+ * Returns: the #NAObjectItem parent, or NULL.
+ */
+NAObjectItem *
+na_object_id_get_parent( NAObjectId *object )
+{
+	NAObjectItem *parent = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), NULL );
+
+	if( !object->private->dispose_has_run ){
+		parent = object->private->parent;
+	}
+
+	return( parent );
+}
+
+/**
  * na_object_id_set_id:
  * @object: the #NAObjectId object whose internal identifiant is to be
  * set.
@@ -379,6 +399,24 @@ na_object_id_set_label( NAObjectId *object, const gchar *label )
 	}
 }
 
+/**
+ * na_object_id_set_parent:
+ * @object: this #NAObjectId object.
+ * @parent: the #NAObjectItem parent to be set, or NULL.
+ *
+ * Store a pointer to the parent.
+ */
+void
+na_object_id_set_parent( NAObjectId *object, NAObjectItem *parent )
+{
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( NA_IS_OBJECT_ITEM( parent ) || !parent );
+
+	if( !object->private->dispose_has_run ){
+		object->private->parent = parent;
+	}
+}
+
 static void
 object_dump( const NAObject *object )
 {
@@ -388,8 +426,9 @@ object_dump( const NAObject *object )
 
 	if( !NA_OBJECT_ID( object )->private->dispose_has_run ){
 
-		g_debug( "%s:    id=%s", thisfn, NA_OBJECT_ID( object )->private->id );
-		g_debug( "%s: label=%s", thisfn, NA_OBJECT_ID( object )->private->label );
+		g_debug( "%s: parent=%p", thisfn, ( void * ) NA_OBJECT_ID( object )->private->parent );
+		g_debug( "%s:     id=%s", thisfn, NA_OBJECT_ID( object )->private->id );
+		g_debug( "%s:  label=%s", thisfn, NA_OBJECT_ID( object )->private->label );
 	}
 }
 

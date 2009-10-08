@@ -51,8 +51,7 @@ struct NAObjectProfileClassPrivate {
 /* profile properties
  */
 enum {
-	NAPROFILE_PROP_ACTION_ID = 1,
-	NAPROFILE_PROP_PATH_ID,
+	NAPROFILE_PROP_PATH_ID = 1,
 	NAPROFILE_PROP_PARAMETERS_ID,
 	NAPROFILE_PROP_BASENAMES_ID,
 	NAPROFILE_PROP_MATCHCASE_ID,
@@ -63,7 +62,6 @@ enum {
 	NAPROFILE_PROP_SCHEMES_ID
 };
 
-#define NAPROFILE_PROP_ACTION				"na-profile-action"
 #define NAPROFILE_PROP_PATH					"na-profile-path"
 #define NAPROFILE_PROP_PARAMETERS			"na-profile-parameters"
 #define NAPROFILE_PROP_BASENAMES			"na-profile-basenames"
@@ -145,13 +143,6 @@ class_init( NAObjectProfileClass *klass )
 	object_class->finalize = instance_finalize;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
-
-	spec = g_param_spec_pointer(
-			NAPROFILE_PROP_ACTION,
-			"NAAction attachment",
-			"The NAAction action to which this profile belongs",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAPROFILE_PROP_ACTION_ID, spec );
 
 	spec = g_param_spec_string(
 			NAPROFILE_PROP_PATH,
@@ -270,10 +261,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NAPROFILE_PROP_ACTION_ID:
-				g_value_set_pointer( value, self->private->action );
-				break;
-
 			case NAPROFILE_PROP_PATH_ID:
 				g_value_set_string( value, self->private->path );
 				break;
@@ -331,10 +318,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NAPROFILE_PROP_ACTION_ID:
-				self->private->action = g_value_get_pointer( value );
-				break;
-
 			case NAPROFILE_PROP_PATH_ID:
 				g_free( self->private->path );
 				self->private->path = g_value_dup_string( value );
@@ -446,32 +429,6 @@ na_object_profile_new( void )
 	na_object_set_label( profile, NA_OBJECT_PROFILE_DEFAULT_LABEL );
 
 	return( profile );
-}
-
-/**
- * na_object_profile_get_action:
- * @profile: the #NAObjectProfile to be requested.
- *
- * Returns a pointer to the action to which this profile is attached,
- * or NULL if the profile has never been attached.
- *
- * Returns: a #NAAction pointer.
- *
- * Note that the returned #NAAction pointer is owned by the profile.
- * The caller should not try to g_free() nor g_object_unref() it.
- */
-NAObjectAction *
-na_object_profile_get_action( const NAObjectProfile *profile )
-{
-	NAObjectAction *action = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
-
-	if( !profile->private->dispose_has_run ){
-		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_ACTION, &action, NULL );
-	}
-
-	return( action );
 }
 
 /**
@@ -698,26 +655,6 @@ na_object_profile_get_schemes( const NAObjectProfile *profile )
 	}
 
 	return( schemes );
-}
-
-/**
- * na_object_profile_set_action:
- * @profile: the #NAObjectProfile to be updated.
- * @action: the #NAAction action to which this profile is attached.
- *
- * Sets the action to which this profile is attached.
- *
- * The reference count of the @action is not modified.
- */
-void
-na_object_profile_set_action( NAObjectProfile *profile, const NAObjectAction *action )
-{
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
-
-	if( !profile->private->dispose_has_run ){
-		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_ACTION, action, NULL );
-	}
 }
 
 /**
@@ -1412,7 +1349,6 @@ object_dump( const NAObject *object )
 
 	if( !self->private->dispose_has_run ){
 
-		g_debug( "%s:          action=%p", thisfn, ( void * ) self->private->action );
 		g_debug( "%s:            path='%s'", thisfn, self->private->path );
 		g_debug( "%s:      parameters='%s'", thisfn, self->private->parameters );
 		g_debug( "%s: accept_multiple='%s'", thisfn, self->private->accept_multiple ? "True" : "False" );
@@ -1569,7 +1505,7 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
 	gchar *id = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( item ), NULL );
-	g_return_val_if_fail( item && NA_IS_OBJECT_ACTION( item ), NULL );
+	g_return_val_if_fail( new_parent && NA_IS_OBJECT_ACTION( new_parent ), NULL );
 
 	if( !NA_OBJECT_PROFILE( item )->private->dispose_has_run ){
 

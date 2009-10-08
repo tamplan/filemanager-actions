@@ -433,7 +433,7 @@ create_item_from_profile( NAObjectProfile *profile, GList *files )
 	NAObjectAction *action;
 	NAObjectProfile *dup4menu;
 
-	action = na_object_profile_get_action( profile );
+	action = NA_OBJECT_ACTION( na_object_get_parent( profile ));
 
 	item = create_menu_item( NA_OBJECT_ITEM( action ));
 

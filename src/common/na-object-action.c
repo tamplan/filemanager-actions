@@ -86,3 +86,22 @@ na_object_action_is_readonly( const NAObjectAction *action )
 
 	return( readonly );
 }
+
+/**
+ * na_object_action_reset_last_allocated:
+ * @action: the #NAObjectAction object.
+ *
+ * Resets the last_allocated counter for computing new profile names.
+ *
+ * This should be called after having successfully saved the action.
+ */
+void
+na_object_action_reset_last_allocated( NAObjectAction *action )
+{
+	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
+
+	if( !action->private->dispose_has_run ){
+
+		action->private->last_allocated = 0;
+	}
+}

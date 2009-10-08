@@ -511,7 +511,7 @@ na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 
 		pivot->private->tree = g_list_remove( pivot->private->tree, ( gconstpointer ) item );
 
-		if( NA_IS_OBJECT( item )){
+		if( G_IS_OBJECT( item )){
 			g_object_unref( item );
 		}
 	}

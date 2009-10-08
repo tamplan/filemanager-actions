@@ -70,10 +70,12 @@ G_BEGIN_DECLS
  */
 #define na_object_get_id( object )					na_object_id_get_id( NA_OBJECT_ID( object ))
 #define na_object_get_label( object )				na_object_id_get_label( NA_OBJECT_ID( object ))
+#define na_object_get_parent( object )				na_object_id_get_parent( NA_OBJECT_ID( object ))
 
 #define na_object_set_id( object, id )				na_object_id_set_id( NA_OBJECT_ID( object ), id )
 #define na_object_set_new_id( object, parent )		na_object_id_set_new_id( NA_OBJECT_ID( object ), ( NAObjectId * ) parent )
 #define na_object_set_label( object, label )		na_object_id_set_label( NA_OBJECT_ID( object ), label )
+#define na_object_set_parent( object, parent )		na_object_id_set_parent( NA_OBJECT_ID( object ), ( NAObjectItem * ) parent )
 
 /* NAObjectItem
  */

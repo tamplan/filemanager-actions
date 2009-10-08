@@ -49,6 +49,11 @@ struct NAObjectActionPrivate {
 	 * defaults to FALSE unless a write has already returned an error
 	 */
 	gboolean read_only;
+
+	/* last allocated profile name in na_object_action_get_new_profile_name()
+	 * reset to zero when saving the action
+	 */
+	gint     last_allocated;
 };
 
 G_END_DECLS

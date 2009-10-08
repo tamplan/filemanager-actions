@@ -893,9 +893,11 @@ nact_tree_model_object_at_path( NactTreeModel *model, GtkTreePath *path )
 	if( !model->private->dispose_has_run ){
 
 		store = gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model ));
-		gtk_tree_model_get_iter( store, &iter, path );
-		gtk_tree_model_get( store, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-		g_object_unref( object );
+
+		if( gtk_tree_model_get_iter( store, &iter, path )){
+			gtk_tree_model_get( store, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+			g_object_unref( object );
+		}
 	}
 
 	return( object );
@@ -913,12 +915,15 @@ nact_tree_model_object_at_path( NactTreeModel *model, GtkTreePath *path )
 GtkTreePath *
 nact_tree_model_remove( NactTreeModel *model, NAObject *object )
 {
+	static const gchar *thisfn = "nact_tree_model_remove";
 	GtkTreeIter iter;
 	GtkTreeStore *store;
 	GList *parents = NULL;
 	GList *it;
 	GtkTreePath *path = NULL;
 
+	g_debug( "%s: model=%p, object=%p (%s)",
+			thisfn, ( void * ) model, ( void * ) object, object ? G_OBJECT_TYPE_NAME( object ) : "(null)" );
 	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), NULL );
 
 	if( !model->private->dispose_has_run ){
@@ -1013,8 +1018,9 @@ dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpSt
 
 	id = na_object_get_id( object );
 	label = na_object_get_label( object );
-	g_debug( "%s: %s%s at %p \"[%s] %s\"",
-			ntm->fname, prefix->str, G_OBJECT_TYPE_NAME( object ), ( void * ) object, id, label );
+	g_debug( "%s: %s%s at %p (ref_count=%d) \"[%s] %s\"",
+			ntm->fname, prefix->str,
+			G_OBJECT_TYPE_NAME( object ), ( void * ) object, G_OBJECT( object )->ref_count, id, label );
 	g_free( label );
 	g_free( id );
 
@@ -1414,7 +1420,7 @@ idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, Gt
 		g_debug( "%s: current object at dest is %s", thisfn, G_OBJECT_TYPE_NAME( current ));
 		if( NA_IS_OBJECT_PROFILE( current )){
 			inside_an_action = TRUE;
-			parent = na_object_profile_get_action( NA_OBJECT_PROFILE( current ));
+			parent = NA_OBJECT_ACTION( na_object_get_parent( current ));
 		}
 		g_object_unref( current );
 	}
@@ -1448,7 +1454,7 @@ idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, Gt
 						if( gtk_tree_model_get_iter( GTK_TREE_MODEL( drag_dest ), &iter, path )){
 							gtk_tree_model_get( GTK_TREE_MODEL( drag_dest ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &current, -1 );
 							if( copy_data ){
-								na_object_prepare_for_paste( NA_OBJECT_ITEM( current ), pivot, TRUE, parent );
+								na_object_prepare_for_paste( current, pivot, TRUE, parent );
 							}
 							object_list = g_list_prepend( object_list, current );
 							g_object_unref( current );
@@ -1772,7 +1778,7 @@ filter_visible( GtkTreeModel *store, GtkTreeIter *iter, NactTreeModel *model )
 			}
 
 			if( NA_IS_OBJECT_PROFILE( object )){
-				action = na_object_profile_get_action( NA_OBJECT_PROFILE( object ));
+				action = NA_OBJECT_ACTION( na_object_get_parent( object ));
 				g_object_unref( object );
 				count = na_object_get_items_count( action );
 				/*g_debug( "action=%p: count=%d", ( void * ) action, count );*/

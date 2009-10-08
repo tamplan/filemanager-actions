@@ -72,6 +72,7 @@ typedef struct {
 	 * new_id:
 	 * @object: a #NAObjectId object.
 	 * @new_parent: possibly the new #NAObjectId parent, or NULL.
+	 * If not NULL, this should actually be a #NAObjectItem.
 	 *
 	 * Returns: a new id suitable for this @object.
 	 *

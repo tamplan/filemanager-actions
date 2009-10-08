@@ -507,7 +507,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	profile = na_object_profile_new();
 
 	name = na_object_action_get_new_profile_name( action );
-	na_object_profile_set_action( profile, action );
+	na_object_set_parent( profile, action );
 	na_object_set_id( profile, name );
 	na_object_check_edition_status( profile );
 
@@ -601,6 +601,10 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 
 		if( nact_window_save_item( NACT_WINDOW( window ), item )){
 
+			if( NA_IS_OBJECT_ACTION( item )){
+				na_object_action_reset_last_allocated( NA_OBJECT_ACTION( item ));
+			}
+
 			/* do not use NA_OBJECT_ITEM macro as this may return a
 			 * (valid) NULL value
 			 */
@@ -612,6 +616,11 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 
 			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
 			na_object_reset_origin( item, dup_pivot );
+			g_debug( "un" );
+			na_object_dump( item );
+			g_debug( "deux" );
+			na_object_dump( dup_pivot );
+			g_debug( "trois" );
 			na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
 
 			na_object_check_edition_status( item );
@@ -646,9 +655,11 @@ on_quit_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_menubar_on_cut_activated";
 	GList *items;
 	NactClipboard *clipboard;
 
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -659,7 +670,8 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 	update_clipboard_counters( window );
 	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
 
-	/* do not unref selected items as the ref has been moved to main_deleted
+	/* do not unref selected items as the list has been concatenated
+	 * to main_deleted
 	 */
 	/*g_list_free( items );*/
 }
@@ -675,9 +687,11 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_menubar_on_copy_activated";
 	GList *items;
 	NactClipboard *clipboard;
 
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -705,7 +719,10 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_menubar_on_paste_activated";
 	GList *items;
+
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 
 	items = prepare_for_paste( window );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
@@ -727,7 +744,10 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_paste_into_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_menubar_on_paste_into_activated";
 	GList *items;
+
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 
 	items = prepare_for_paste( window );
 	nact_iactions_list_insert_into( NACT_IACTIONS_LIST( window ), items );
@@ -737,6 +757,7 @@ on_paste_into_activated( GtkAction *gtk_action, NactMainWindow *window )
 static GList *
 prepare_for_paste( NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_menubar_prepare_for_paste";
 	GList *items, *it;
 	NactClipboard *clipboard;
 	NAObjectAction *action;
@@ -754,14 +775,19 @@ prepare_for_paste( NactMainWindow *window )
 	/* if pasted items are profiles, then setup the target action
 	 */
 	for( it = items ; it ; it = it->next ){
+
 		if( NA_IS_OBJECT_PROFILE( it->data )){
 			if( !action ){
 				g_object_get( G_OBJECT( window ), TAB_UPDATABLE_PROP_EDITED_ACTION, &action, NULL );
 				g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
 			}
 		}
-		na_object_prepare_for_paste( NA_OBJECT_ITEM( it->data ), pivot, renumber, action );
+
+		na_object_prepare_for_paste( it->data, pivot, renumber, action );
 	}
+
+	g_debug( "%s: action=%p (%s)",
+			thisfn, ( void * ) action, action ? G_OBJECT_TYPE_NAME( action ): "(null)" );
 
 	return( items );
 }
@@ -777,6 +803,7 @@ prepare_for_paste( NactMainWindow *window )
 static void
 on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_menubar_on_duplicate_activated";
 	NactApplication *application;
 	NAPivot *pivot;
 	NAObjectAction *action;
@@ -784,6 +811,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 	GList *dup;
 	NAObject *obj;
 
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -799,7 +827,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 		 * as we insert in sibling mode, the parent doesn't change
 		 */
 		if( NA_IS_OBJECT_PROFILE( obj )){
-			action = na_object_profile_get_action( NA_OBJECT_PROFILE( obj ));
+			action = NA_OBJECT_ACTION( na_object_get_parent( NA_OBJECT_PROFILE( obj )));
 		}
 
 		na_object_prepare_for_paste( obj, pivot, TRUE, action );
@@ -823,20 +851,23 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_menubar_on_delete_activated";
 	GList *items;
 	GList *it;
 
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 	for( it = items ; it ; it = it->next ){
-		g_debug( "on_delete_activated: items=%p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
 	}
 	nact_main_window_move_to_deleted( window, items );
 	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
 
-	/* do not unref selected items as the ref has been moved to main_deleted
+	/* do not unref selected items as the list has been concatenated
+	 * to main_deleted
 	 */
 	/*g_list_free( items );*/
 }

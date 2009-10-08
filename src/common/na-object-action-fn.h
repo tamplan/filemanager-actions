@@ -49,6 +49,8 @@ NAObjectAction *na_object_action_new_with_profile( void );
 
 gboolean        na_object_action_is_readonly( const NAObjectAction *action );
 
+void            na_object_action_reset_last_allocated( NAObjectAction *action );
+
 G_END_DECLS
 
 #endif /* __NA_COMMON_OBJECT_ACTION_FN_H__ */

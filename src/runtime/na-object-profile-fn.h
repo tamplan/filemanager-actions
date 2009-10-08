@@ -55,7 +55,6 @@ G_BEGIN_DECLS
 
 NAObjectProfile *na_object_profile_new( void );
 
-NAObjectAction  *na_object_profile_get_action( const NAObjectProfile *profile );
 gchar           *na_object_profile_get_path( const NAObjectProfile *profile );
 gchar           *na_object_profile_get_parameters( const NAObjectProfile *profile );
 GSList          *na_object_profile_get_basenames( const NAObjectProfile *profile );
@@ -66,7 +65,6 @@ gboolean         na_object_profile_get_is_dir( const NAObjectProfile *profile );
 gboolean         na_object_profile_get_multiple( const NAObjectProfile *profile );
 GSList          *na_object_profile_get_schemes( const NAObjectProfile *profile );
 
-void             na_object_profile_set_action( NAObjectProfile *profile, const NAObjectAction *action );
 void             na_object_profile_set_path( NAObjectProfile *profile, const gchar *path );
 void             na_object_profile_set_parameters( NAObjectProfile *profile, const gchar *parameters );
 void             na_object_profile_set_basenames( NAObjectProfile *profile, GSList *basenames );

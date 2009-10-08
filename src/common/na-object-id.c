@@ -41,12 +41,6 @@
 #include "na-object-api.h"
 #include "na-iprefs.h"
 
-/* private class data
- */
-struct NAObjectIdClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
-
 /**
  * na_object_id_prepare_for_paste:
  * @object: the #NAObjectId object to be pasted.
@@ -92,7 +86,7 @@ na_object_id_prepare_for_paste( NAObjectId *object, NAPivot *pivot, gboolean ren
 		}
 
 		if( NA_IS_OBJECT_PROFILE( object )){
-			na_object_profile_set_action( NA_OBJECT_PROFILE( object ), action );
+			na_object_set_parent( object, action );
 			na_object_set_new_id( object, action );
 			if( renumber && user_relabel ){
 				na_object_set_copy_of_label( object );

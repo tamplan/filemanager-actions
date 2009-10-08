@@ -40,10 +40,6 @@ G_BEGIN_DECLS
 struct NAObjectProfilePrivate {
 	gboolean        dispose_has_run;
 
-	/* the NAObjectAction object
-	 */
-	NAObjectAction *action;
-
 	/* profile properties
 	 */
 	gchar          *path;

@@ -87,8 +87,7 @@ struct NactMainWindowPrivate {
 	 * Conditions and Advanced ; it may be different of the row being
 	 * currently selected.
 	 *
-	 * Can be null and this implies that the edited item is a menu
-	 * (because an action cannot have zero profile).
+	 * Can be null if @edited_item is a menu or an invalid action.
 	 */
 	NAObjectProfile *edited_profile;
 
@@ -102,7 +101,6 @@ struct NactMainWindowPrivate {
  */
 enum {
 	PROP_EDITED_ITEM = 1,
-	PROP_ITEM_EDITION_ENABLED,
 	PROP_EDITED_PROFILE
 };
 
@@ -676,6 +674,8 @@ nact_main_window_get_clipboard( const NactMainWindow *window )
  *    we can create any new actions, deleting them, and so on
  *    if we have eventually deleted all newly created actions, then the
  *    final count of modified actions should be zero... don't it ?
+ *
+ * Note also that we don't count invalid items as they are not saveable.
  */
 gboolean
 nact_main_window_has_modified_items( const NactMainWindow *window )
@@ -718,15 +718,22 @@ nact_main_window_has_modified_items( const NactMainWindow *window )
 void
 nact_main_window_move_to_deleted( NactMainWindow *window, GList *items )
 {
+	static const gchar *thisfn = "nact_main_window_move_to_deleted";
 	GList *it;
 
+	g_debug( "%s: window=%p, items=%p (%d items)",
+			thisfn, ( void * ) window, ( void * ) items, g_list_length( items ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
-		window->private->deleted = g_list_concat( window->private->deleted, items );
-		for( it = window->private->deleted ; it ; it = it->next ){
-			g_debug( "nact_main_window_move_to_deleted: %p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+
+		for( it = items ; it ; it = it->next ){
+			g_debug( "%s: %p (%s, ref_count=%d)", thisfn,
+					( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
 		}
+
+		window->private->deleted = g_list_concat( window->private->deleted, items );
+		g_debug( "%s: main_deleted has %d items", thisfn, g_list_length( window->private->deleted ));
 	}
 }
 
@@ -781,6 +788,7 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 			actually_delete_item( window, item, pivot );
 		}
 
+		g_debug( "nact_main_window_remove_deleted: before free deleted" );
 		na_object_free_items( window->private->deleted );
 		window->private->deleted = NULL;
 	}
@@ -984,6 +992,7 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 /*
  * update the notebook when selection changes in ActionsList
  * if there is only one profile, we also setup the profile
+ * count_profiles may be null (invalid action)
  */
 static void
 set_current_object_item( NactMainWindow *window, GSList *selected_items )
@@ -1004,7 +1013,7 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 		NA_IS_OBJECT_ACTION( window->private->edited_item )){
 
 			count_profiles = na_object_get_items_count( NA_OBJECT_ACTION( window->private->edited_item ));
-			g_return_if_fail( count_profiles >= 1 );
+			/*g_return_if_fail( count_profiles >= 1 );*/
 
 			if( count_profiles == 1 ){
 				profiles = na_object_get_items( window->private->edited_item );
@@ -1012,34 +1021,6 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 				na_object_free_items( profiles );
 			}
 	}
-
-	/* do the profile tabs (ICommandTab, IConditionsTab and IAdvancedTab)
-	 * will be editable ?
-	 * yes if we have an action with only one profile, or the selected
-	 * item is itself a profile
-	 */
-	/*window->private->edition_enabled = ( window->private->edited_item != NULL );
-
-	if( window->private->edition_enabled ){
-		g_assert( selected_items );
-		if( g_slist_length( selected_items ) > 1 ){
-			window->private->edition_enabled = FALSE;
-		}
-	}
-
-	if( window->private->edition_enabled && NA_IS_OBJECT_MENU( window->private->edited_item )){
-		window->private->edition_enabled = FALSE;
-	}
-
-	if( window->private->edition_enabled ){
-		g_assert( NA_IS_ACTION( window->private->edited_item ));
-		current = NA_OBJECT( selected_items->data );
-		if( NA_IS_OBJECT_ACTION( current)){
-			if( na_object_action_get_profiles_count( NA_ACTION( window->private->edited_item )) > 1 ){
-				window->private->edition_enabled = FALSE;
-			}
-		}
-	}*/
 
 	set_current_profile( window, FALSE, selected_items );
 }
@@ -1053,7 +1034,7 @@ set_current_profile( NactMainWindow *window, gboolean set_action, GSList *select
 			thisfn, ( void * ) window, set_action ? "True":"False", ( void * ) selected_items );
 
 	if( window->private->edited_profile && set_action ){
-		NAObjectAction *action = NA_OBJECT_ACTION( na_object_profile_get_action( window->private->edited_profile ));
+		NAObjectAction *action = NA_OBJECT_ACTION( na_object_get_parent( window->private->edited_profile ));
 		window->private->edited_item = NA_OBJECT_ITEM( action );
 	}
 }

@@ -32,15 +32,17 @@
 #define __NA_RUNTIME_OBJECT_ID_PRIV_H__
 
 #include "na-object-id-class.h"
+#include "na-object-item-class.h"
 
 G_BEGIN_DECLS
 
 /* private instance data
  */
 struct NAObjectIdPrivate {
-	gboolean  dispose_has_run;
-	gchar    *id;
-	gchar    *label;
+	gboolean      dispose_has_run;
+	NAObjectItem *parent;
+	gchar        *id;
+	gchar        *label;
 };
 
 G_END_DECLS

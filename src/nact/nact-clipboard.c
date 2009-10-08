@@ -495,7 +495,7 @@ get_action_xml_buffer( const NAObject *object, GList **exported, NAObjectAction 
 		*action = NA_OBJECT_ACTION( object );
 	}
 	if( NA_IS_OBJECT_PROFILE( object )){
-		*action = na_object_profile_get_action( NA_OBJECT_PROFILE( object ));
+		*action = NA_OBJECT_ACTION( na_object_get_parent( NA_OBJECT_PROFILE( object )));
 	}
 
 	if( *action ){

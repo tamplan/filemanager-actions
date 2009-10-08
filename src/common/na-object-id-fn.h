@@ -43,13 +43,13 @@
  * in na-object-api.h
  */
 
-#include <runtime/na-object-id-class.h>
+#include <runtime/na-object-action-class.h>
 #include <runtime/na-pivot.h>
 
 G_BEGIN_DECLS
 
-void   na_object_id_prepare_for_paste( NAObjectId *object, NAPivot *pivot, gboolean renumber, NAObjectAction *action );
-void   na_object_id_set_copy_of_label( NAObjectId *object );
+void na_object_id_prepare_for_paste( NAObjectId *object, NAPivot *pivot, gboolean renumber, NAObjectAction *action );
+void na_object_id_set_copy_of_label( NAObjectId *object );
 
 G_END_DECLS
 

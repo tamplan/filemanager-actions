@@ -279,9 +279,9 @@ instance_dispose( GObject *object )
 
 	if( !self->private->dispose_has_run ){
 
-		na_object_item_free_items( self->private->items );
-
 		self->private->dispose_has_run = TRUE;
+
+		na_object_item_free_items( self->private->items );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -487,9 +487,12 @@ na_object_item_free_items( GList *items )
 
 	for( it = items ; it ; it = it->next ){
 		if( G_IS_OBJECT( it->data )){
+			g_debug( "na_object_item_free_items: items=%p, it_data=%p (%s, ref_count=%d)",
+				( void * ) items,
+				( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count);
 			g_object_unref( it->data );
-		/*} else {
-			g_warning( "na_object_item_free_items: %p not an object", ( void * ) it->data );*/
+		} else {
+			g_debug( "na_object_item_free_items: %p not an object", ( void * ) it->data );
 		}
 	}
 
@@ -501,7 +504,7 @@ na_object_item_free_items( GList *items )
  * @item: the #NAObjectItem object to be requested.
  *
  * Is the specified item enabled ?
- * When disabled, the item, not its subitems if any, is/are never
+ * When disabled, the item, nor its subitems if any, is/are never
  * candidate to any selection.
  *
  * Returns: %TRUE if the item is enabled, %FALSE else.

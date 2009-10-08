@@ -1,3 +1,32 @@
+2009-10-08 Pierre Wieser <pwieser@trychlos.org>
+
+	Move parent pointer from NAObjectProfile to NAObjectId class.
+
+	* src/common/na-object-action-fn.h:
+	* src/common/na-object-action.c:
+	* src/common/na-object-id-fn.h:
+	* src/common/na-object-id.c:
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-tree-model.c:
+	* src/plugin/nautilus-actions.c:
+	* src/runtime/na-object-action-fn.h:
+	* src/runtime/na-object-action-priv.h:
+	* src/runtime/na-object-action.c:
+	* src/runtime/na-object-api.h:
+	* src/runtime/na-object-id-class.h:
+	* src/runtime/na-object-id-fn.h:
+	* src/runtime/na-object-id-priv.h:
+	* src/runtime/na-object-id.c:
+	* src/runtime/na-object-item.c:
+	* src/runtime/na-object-profile-fn.h:
+	* src/runtime/na-object-profile-priv.h:
+	* src/runtime/na-object-profile.c:
+	* src/runtime/na-object.c:
+	* src/runtime/na-pivot.c: Updated accordingly.
+
 2009-10-05 Pierre Wieser <pwieser@trychlos.org>
 
 	Restaure and fix 'Copy of' relabeling of pasted items.
