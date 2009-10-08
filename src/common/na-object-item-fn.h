@@ -49,10 +49,9 @@
 
 G_BEGIN_DECLS
 
-GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *widget );
+GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *object, GtkWidget *widget );
 
-void           na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before );
-void           na_object_item_remove_item( NAObjectItem *item, const NAObject *object );
+void           na_object_item_insert_item( NAObjectItem *object, const NAObject *item, const NAObject *before );
 
 void           na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
 

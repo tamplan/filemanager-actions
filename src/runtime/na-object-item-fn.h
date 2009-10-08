@@ -63,7 +63,8 @@ void           na_object_item_set_enabled( NAObjectItem *item, gboolean enabled 
 void           na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider );
 void           na_object_item_set_items_list( NAObjectItem *item, GList *items );
 
-void           na_object_item_append_item( NAObjectItem *item, const NAObject *object );
+void           na_object_item_append_item( NAObjectItem *object, const NAObject *item );
+void           na_object_item_remove_item( NAObjectItem *object, const NAObject *item );
 
 G_END_DECLS
 

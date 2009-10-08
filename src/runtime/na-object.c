@@ -434,17 +434,14 @@ na_object_object_ref( NAObject *object )
 void
 na_object_object_unref( NAObject *object )
 {
+	g_debug( "na_object_object_unref: object=%p (%s, ref_count=%d)",
+			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	if( !object->private->dispose_has_run ){
 
-		g_debug( "na_object_object_unref: object=%p (%s, ref_count=%d)",
-				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
-
 		v_unref( object );
-
-		g_debug( "na_object_object_unref: unreffing %p (%s, ref_count=%d)",
-				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 		g_object_unref( object );
 	}

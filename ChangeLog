@@ -1,5 +1,29 @@
 2009-10-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-object-api.h (na_object_remove_item):
+	Moved to runtime library.
+
+	* src/common/na-object-item-fn.h:
+	* src/common/na-object-item.c (na_object_item_remove_item):
+	Moved to runtime library.
+
+	* src/nact/nact-tree-model.c (fill_tree_store):
+	Rewrite duplication code to get reference counts equal to 1 in the store.
+	Install parent pointer in childs.
+
+	* src/runtime/na-object-api.h (na_object_remove_item):
+	Moved from common library.
+
+	* src/runtime/na-object-id.c (instance_dispose):
+	Remove itself from parent if any.
+
+	* src/runtime/na-object-item-fn.h:
+	* src/runtime/na-object-item.c (na_object_item_remove_item):
+	Moved from common library.
+
+	* src/runtime/na-object.c:
+	Remove useless debug traces.
+
 	Items loaded from an IO provider but not recorded in the hierarchical
 	tree are yet displayed, at the end of the tree.
 

@@ -238,6 +238,11 @@ instance_dispose( GObject *object )
 
 	if( !self->private->dispose_has_run ){
 
+		if( self->private->parent ){
+			na_object_remove_item( self->private->parent, object );
+			self->private->parent = NULL;
+		}
+
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */

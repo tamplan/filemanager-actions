@@ -73,7 +73,6 @@ G_BEGIN_DECLS
  */
 #define na_object_insert_item( object, item, before ) \
 													na_object_item_insert_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ), ( NAObject * ) before )
-#define na_object_remove_item( object, item )		na_object_item_remove_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
 
 G_END_DECLS
 

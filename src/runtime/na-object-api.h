@@ -98,6 +98,7 @@ G_BEGIN_DECLS
 #define na_object_set_items_list( object, list )	na_object_item_set_items_list( NA_OBJECT_ITEM( object ), list )
 
 #define na_object_append_item( object, item )		na_object_item_append_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
+#define na_object_remove_item( object, item )		na_object_item_remove_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
 
 G_END_DECLS
 

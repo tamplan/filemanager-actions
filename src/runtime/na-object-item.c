@@ -599,11 +599,17 @@ na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider )
 void
 na_object_item_set_items_list( NAObjectItem *item, GList *items )
 {
+	GList *is;
+
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
 	if( !item->private->dispose_has_run ){
 
 		item->private->items = items;
+
+		for( is = items ; is ; is = is->next ){
+			na_object_set_parent( is->data, item );
+		}
 	}
 }
 
@@ -627,6 +633,27 @@ na_object_item_append_item( NAObjectItem *item, const NAObject *object )
 		if( !g_list_find( item->private->items, ( gpointer ) object )){
 			item->private->items = g_list_append( item->private->items, ( gpointer ) object );
 		}
+	}
+}
+
+/**
+ * na_object_item_remove_item:
+ * @item: the #NAObjectItem from which the subitem must be removed.
+ * @object: a #NAObject to be removed from the list of subitems.
+ *
+ * Removes an @object from the list of subitems of @item.
+ *
+ * Doesn't modify the reference count on @object.
+ */
+void
+na_object_item_remove_item( NAObjectItem *item, const NAObject *object )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( NA_IS_OBJECT( object ));
+
+	if( !item->private->dispose_has_run ){
+
+		item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
 	}
 }
 
@@ -844,15 +871,21 @@ object_ref( NAObject *object )
 	}
 }
 
+/*
+ * if we 'dispose' ic->data during the loop, the the 'ic->next' pointer
+ * is no more valid for the next iteration, so we have to keep its value
+ * before actually unref the data
+ */
 static void
 object_unref( NAObject *object )
 {
-	GList *childs, *ic;
+	GList *childs, *ic, *icnext;
 
 	childs = object_get_childs( object );
-	for( ic = childs ; ic ; ic = ic->next ){
+	for( ic = childs ; ic ; ic = icnext ){
 		/*g_debug( "na_object_item_object_unref: object=%p (%s, ref_count=%d)",
 				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );*/
+		icnext = ic->next;
 		na_object_unref( ic->data );
 	}
 }
