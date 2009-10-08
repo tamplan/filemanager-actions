@@ -1,5 +1,24 @@
 2009-10-08 Pierre Wieser <pwieser@trychlos.org>
 
+	Items loaded from an IO provider but not recorded in the hierarchical
+	tree are yet displayed, at the end of the tree.
+
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h:
+	* src/runtime/na-pivot.c:
+	* src/runtime/na-pivot.h:
+	* src/nact/nact-main-menubar.c:
+	nact_window_write_level_zero renamed as na_pivot_write_level_zero.
+
+	* src/runtime/na-iio-provider.c (na_iio_provider_get_items_tree):
+	Merge left items in the hierarchy, and update the level-zero list.
+
+	* src/runtime/na-gconf-provider.c:
+	* src/runtime/na-object-menu-fn.h:
+	* src/runtime/na-object-menu.c:
+	na_object_menu_set_items_list renamed as
+	na_object_menu_set_items_string_list.
+
 	na_object_free_items: Renamed to na_object_free_items_list.
 
 	* src/nact/nact-assistant-export.c:

@@ -542,13 +542,13 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 	 */
 	nact_main_window_remove_deleted( window );
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
 	items = nact_iactions_list_get_items( NACT_IACTIONS_LIST( window ));
-	nact_window_write_level_zero( NACT_WINDOW( window ), items );
+	na_pivot_write_level_zero( pivot, items );
 
 	/* recursively save the valid modified items
 	 */
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
 	save_items( window, pivot, items );
 	g_list_free( items );
 

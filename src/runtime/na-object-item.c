@@ -285,7 +285,7 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		na_object_item_free_items( self->private->items );
+		na_object_item_free_items_list( self->private->items );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){

@@ -699,7 +699,7 @@ read_item_menu_properties( NAGConfProvider *provider, GSList *entries, NAObjectM
 	read_object_item_properties( provider, entries, NA_OBJECT_ITEM( menu ) );
 
 	if( na_gconf_utils_get_string_list_from_entries( entries, MENU_ITEMS_ENTRY, &items )){
-		na_object_menu_set_items_list( menu, items );
+		na_object_menu_set_items_string_list( menu, items );
 		na_utils_free_string_list( items );
 	}
 }

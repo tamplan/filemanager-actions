@@ -52,7 +52,7 @@ static GType    register_type( void );
 static void     interface_base_init( NAIIOProviderInterface *klass );
 static void     interface_base_finalize( NAIIOProviderInterface *klass );
 
-static GList   *build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty );
+static GList   *build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty );
 static gint     search_item( const NAObject *obj, const gchar *uuid );
 static GList   *get_merged_items_list( const NAPivot *pivot, GList *providers );
 
@@ -173,9 +173,23 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 		na_pivot_free_providers( providers );
 
 		level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
-		hierarchy = build_hierarchy( merged, level_zero, TRUE );
+		hierarchy = build_hierarchy( &merged, level_zero, TRUE );
+
+		/* items that stay left in the merged list are simply appended
+		 * to the built hierarchy, and level zero is updated accordingly
+		 */
+		if( merged ){
+			g_debug( "%s: %d items left appended to the hierarchy", thisfn, g_list_length( merged ));
+			hierarchy = g_list_concat( hierarchy, merged );
+		}
+
+		if( merged || !level_zero || !g_slist_length( level_zero )){
+			g_debug( "%s: rewriting level-zero", thisfn );
+			na_pivot_write_level_zero( pivot, hierarchy );
+		}
+
 		na_utils_free_string_list( level_zero );
-		na_object_free_items_list( merged );
+		/*na_object_free_items_list( merged );*/
 
 		g_debug( "%s: tree before alphabetical reordering (if any)", thisfn );
 		na_object_dump_tree( hierarchy );
@@ -207,7 +221,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
  * when releasing initial merged tree
  */
 static GList *
-build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty )
+build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty )
 {
 	static const gchar *thisfn = "na_iio_provider_build_hierarchy";
 	GList *hierarchy, *it;
@@ -220,14 +234,17 @@ build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty )
 	if( g_slist_length( level_zero )){
 		for( ilevel = level_zero ; ilevel ; ilevel = ilevel->next ){
 			g_debug( "%s: uuid=%s", thisfn, ( gchar * ) ilevel->data );
-			it = g_list_find_custom( tree, ilevel->data, ( GCompareFunc ) search_item );
+			it = g_list_find_custom( *tree, ilevel->data, ( GCompareFunc ) search_item );
 			if( it ){
-				hierarchy = g_list_append( hierarchy, g_object_ref( it->data ));
+				hierarchy = g_list_append( hierarchy, it->data );
+
 				g_debug( "%s: uuid=%s: %s (%p) appended to hierarchy %p",
 						thisfn, ( gchar * ) ilevel->data, G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data, ( void * ) hierarchy );
 
+				*tree = g_list_remove_link( *tree, it );
+
 				if( NA_IS_OBJECT_MENU( it->data )){
-					subitems_ids = na_object_menu_get_items_list( NA_OBJECT_MENU( it->data ));
+					subitems_ids = na_object_menu_get_items_string_list( NA_OBJECT_MENU( it->data ));
 					subitems = build_hierarchy( tree, subitems_ids, FALSE );
 					na_object_set_items_list( it->data, subitems );
 					na_utils_free_string_list( subitems_ids );
@@ -239,9 +256,11 @@ build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty )
 	/* if level-zero list is empty, we consider that all actions go to it
 	 */
 	else if( list_if_empty ){
-		for( it = tree ; it ; it = it->next ){
-			hierarchy = g_list_append( hierarchy, g_object_ref( it->data ));
+		for( it = *tree ; it ; it = it->next ){
+			hierarchy = g_list_append( hierarchy, it->data );
 		}
+		g_list_free( *tree );
+		*tree = NULL;
 	}
 
 	return( hierarchy );

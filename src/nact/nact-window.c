@@ -288,43 +288,6 @@ nact_window_delete_item( NactWindow *window, NAObjectItem *item )
 }
 
 /**
- * nact_window_write_level_zero:
- * @window: this #NactWindow-derived instance.
- * @items: full current tree of items in #NactIActionsList treeview.
- *
- * Writes as a GConf preference order and content of level zero items.
- */
-void
-nact_window_write_level_zero( NactWindow *window, GList *items )
-{
-	static const gchar *thisfn = "nact_window_write_level_zero";
-	GList *it;
-	gchar *id;
-	GSList *content;
-	NactApplication *application;
-	NAPivot *pivot;
-
-	g_debug( "%s: window=%p, items=%p (%d items)", thisfn, ( void * ) window, ( void * ) items, g_list_length( items ));
-	g_return_if_fail( NACT_IS_WINDOW( window ));
-
-	if( !window->private->dispose_has_run ){
-
-		content = NULL;
-		for( it = items ; it ; it = it->next ){
-			id = na_object_get_id( it->data );
-			content = g_slist_prepend( content, id );
-		}
-		content = g_slist_reverse( content );
-
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		pivot = nact_application_get_pivot( application );
-		na_iprefs_set_level_zero_items( NA_IPREFS( pivot ), content );
-
-		na_utils_free_string_list( content );
-	}
-}
-
-/**
  * nact_window_count_level_zero_items:
  */
 void

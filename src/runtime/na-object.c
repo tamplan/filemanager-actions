@@ -412,7 +412,7 @@ na_object_object_ref( NAObject *object )
 {
 	NAObject *ref = NULL;
 
-	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
 
 	if( !object->private->dispose_has_run ){
 

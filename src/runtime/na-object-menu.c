@@ -195,7 +195,7 @@ na_object_menu_new( void )
 }
 
 /**
- * na_object_menu_get_items_list:
+ * na_object_menu_get_items_string_list:
  * @menu: this #NAObjectMenu object.
  *
  * Returns: the items_ids string list, as readen from the IIOProvider.
@@ -203,7 +203,7 @@ na_object_menu_new( void )
  * The returned list should be na_utils_free_string_list() by the caller.
  */
 GSList *
-na_object_menu_get_items_list( const NAObjectMenu *menu )
+na_object_menu_get_items_string_list( const NAObjectMenu *menu )
 {
 	GSList *list = NULL;
 
@@ -254,7 +254,7 @@ na_object_menu_rebuild_items_list( const NAObjectMenu *menu )
 }
 
 /**
- * na_object_menu_set_items_list:
+ * na_object_menu_set_items_string_list:
  * @menu: this #NAObjectMenu object.
  * @items: an ordered list of UUID of subitems.
  *
@@ -264,7 +264,7 @@ na_object_menu_rebuild_items_list( const NAObjectMenu *menu )
  * be safely released by the caller after this function has returned.
  */
 void
-na_object_menu_set_items_list( NAObjectMenu *menu, GSList *items )
+na_object_menu_set_items_string_list( NAObjectMenu *menu, GSList *items )
 {
 	g_return_if_fail( NA_IS_OBJECT_MENU( menu ));
 

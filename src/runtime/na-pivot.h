@@ -129,6 +129,8 @@ void      na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
 gint      na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b );
 gint      na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
 
+void      na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
+
 /* data passed from the storage subsystem when an action is changed
  */
 enum {

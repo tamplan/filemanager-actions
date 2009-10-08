@@ -685,6 +685,39 @@ na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
 	return( -1 * na_pivot_sort_alpha_asc( a, b ));
 }
 
+/**
+ * na_pivot_write_level_zero:
+ * @pivot: this #NAPivot instance.
+ * @items: full current tree of items in #NactIActionsList treeview.
+ *
+ * Writes as a GConf preference order and content of level zero items.
+ */
+void
+na_pivot_write_level_zero( const NAPivot *pivot, GList *items )
+{
+	static const gchar *thisfn = "na_pivot_write_level_zero";
+	GList *it;
+	gchar *id;
+	GSList *content;
+
+	g_debug( "%s: pivot=%p, items=%p (%d items)", thisfn, ( void * ) pivot, ( void * ) items, g_list_length( items ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		content = NULL;
+		for( it = items ; it ; it = it->next ){
+			id = na_object_get_id( it->data );
+			content = g_slist_prepend( content, id );
+		}
+		content = g_slist_reverse( content );
+
+		na_iprefs_set_level_zero_items( NA_IPREFS( pivot ), content );
+
+		na_utils_free_string_list( content );
+	}
+}
+
 static NAObject *
 get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid )
 {
