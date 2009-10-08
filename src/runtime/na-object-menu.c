@@ -239,15 +239,13 @@ na_object_menu_rebuild_items_list( const NAObjectMenu *menu )
 
 	if( !menu->private->dispose_has_run ){
 
-		items = na_object_get_items( menu );
+		items = na_object_get_items_list( menu );
 
 		for( it = items ; it ; it = it->next ){
 			NAObjectItem *item = NA_OBJECT_ITEM( it->data );
 			uuid = na_object_get_id( item );
 			list = g_slist_prepend( list, uuid );
 		}
-
-		na_object_free_items( items );
 
 		list = g_slist_reverse( list );
 	}

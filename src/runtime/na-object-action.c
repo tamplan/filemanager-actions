@@ -497,11 +497,10 @@ object_copy( NAObject *target, const NAObject *source )
 		/* profiles have been copied (duplicated) as subitems by parent class
 		 * we have to attach new profiles to target action
 		 */
-		profiles = na_object_get_items( target );
+		profiles = na_object_get_items_list( target );
 		for( ip = profiles ; ip ; ip = ip->next ){
 			na_object_set_parent( ip->data, target );
 		}
-		na_object_free_items( profiles );
 	}
 }
 
@@ -537,7 +536,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		}
 
 		if( equal ){
-			profiles = na_object_get_items( a );
+			profiles = na_object_get_items_list( a );
 			for( ip = profiles ; ip && equal ; ip = ip->next ){
 				id = na_object_get_id( ip->data );
 				profile = NA_OBJECT_PROFILE( na_object_get_item( b, id ));
@@ -551,7 +550,6 @@ object_are_equal( const NAObject *a, const NAObject *b )
 
 				g_free( id );
 			}
-			na_object_free_items( profiles );
 		}
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG

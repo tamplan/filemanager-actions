@@ -77,6 +77,7 @@ static void     object_copy( NAObject *target, const NAObject *source );
 static gboolean object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean object_is_valid( const NAObject *object );
 static GList   *object_get_childs( const NAObject *object );
+static void     object_unref( NAObject *object );
 
 static gchar   *object_id_new_id( const NAObjectId *object, const NAObjectId *new_parent );
 
@@ -170,6 +171,7 @@ class_init( NAObjectItemClass *klass )
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
 	naobject_class->get_childs = object_get_childs;
+	naobject_class->unref = object_unref;
 
 	objectid_class = NA_OBJECT_ID_CLASS( klass );
 	objectid_class->new_id = object_id_new_id;
@@ -422,31 +424,23 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
 }
 
 /**
- * na_object_item_get_items:
+ * na_object_item_get_items_list:
  * @item: the #NAObjectItem from which we want a list of subitems.
  *
- * Returns: a newly allocated #GList of #NAObject objects which are
- * embedded in the @item. Depending of the exact nature of @item, these
- * may be #NAObjectMenu, #NAObjectAction or #NAObjectProfile subitems.
+ * Returns: the list of child objects.
  *
- * The returned pointer should be na_object_item_free_items() or
- * na_object_free_items() by the caller.
+ * The returned pointer is owned by @item, and must not be released
+ * by the caller.
  */
 GList *
-na_object_item_get_items( const NAObjectItem *item )
+na_object_item_get_items_list( const NAObjectItem *item )
 {
 	GList *items = NULL;
-	GList *it;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
 
 	if( !item->private->dispose_has_run ){
-
-		for( it = item->private->items ; it ; it = it->next ){
-			items = g_list_prepend( items, g_object_ref( it->data ));
-		}
-
-		items = g_list_reverse( items );
+		items = item->private->items;
 	}
 
 	return( items );
@@ -478,25 +472,13 @@ na_object_item_get_items_count( const NAObjectItem *item )
  * @list: a list of #NAObject subitems as returned by
  * na_object_item_get_items().
  *
- * Frees the list.
+ * This function does nothing. It is just defined ad a placeholder and
+ * to keep in the code a balance between get_items() and free_items()
+ * calls.
  */
 void
 na_object_item_free_items( GList *items )
 {
-	GList *it;
-
-	for( it = items ; it ; it = it->next ){
-		if( G_IS_OBJECT( it->data )){
-			g_debug( "na_object_item_free_items: items=%p, it_data=%p (%s, ref_count=%d)",
-				( void * ) items,
-				( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count);
-			g_object_unref( it->data );
-		} else {
-			g_debug( "na_object_item_free_items: %p not an object", ( void * ) it->data );
-		}
-	}
-
-	g_list_free( items );
 }
 
 /**
@@ -600,34 +582,22 @@ na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider )
 }
 
 /**
- * na_object_item_set_items:
+ * na_object_item_set_items_list:
  * @item: the #NAObjectItem whose subitems have to be set.
  * @list: a #GList list of #NAObject subitems to be installed.
  *
  * Sets the list of the subitems for the @item.
  *
- * The previously existing list is removed and replaced by the provided
- * one. As we create here a new list with a new reference on provided
- * subitems, the provided list can be safely na_object_items_free_items()
- * by the caller.
+ * The provided list pointer simply overrides the existing one.
  */
 void
-na_object_item_set_items( NAObjectItem *item, GList *items )
+na_object_item_set_items_list( NAObjectItem *item, GList *items )
 {
-	GList *it;
-
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
 	if( !item->private->dispose_has_run ){
 
-		na_object_item_free_items( item->private->items );
-		item->private->items = NULL;
-
-		for( it = items ; it ; it = it->next ){
-			item->private->items = g_list_prepend( item->private->items, g_object_ref( it->data ));
-		}
-
-		item->private->items = g_list_reverse( item->private->items );
+		item->private->items = items;
 	}
 }
 
@@ -717,8 +687,7 @@ object_copy( NAObject *target, const NAObject *source )
 			subitems = g_list_prepend( subitems, na_object_duplicate( it->data ));
 		}
 		subitems = g_list_reverse( subitems );
-		na_object_set_items( target, subitems );
-		na_object_free_items( subitems );
+		na_object_set_items_list( target, subitems );
 	}
 }
 
@@ -854,6 +823,19 @@ object_get_childs( const NAObject *object )
 	}
 
 	return( childs );
+}
+
+static void
+object_unref( NAObject *object )
+{
+	GList *childs, *ic;
+
+	childs = object_get_childs( object );
+	for( ic = childs ; ic ; ic = ic->next ){
+		g_debug( "na_object_item_object_unref: object=%p (%s, ref_count=%d)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+		na_object_unref( ic->data );
+	}
 }
 
 /*

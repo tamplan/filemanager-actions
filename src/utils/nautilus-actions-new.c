@@ -214,9 +214,8 @@ get_action_from_cmdline( void )
 	GSList *mimetypes = NULL;
 	GSList *schemes = NULL;
 
-	profiles = na_object_get_items( action );
+	profiles = na_object_get_items_list( action );
 	profile = NA_OBJECT_PROFILE( profiles->data );
-	na_object_free_items( profiles );
 
 	na_object_set_label( action, label );
 	na_object_set_tooltip( action, tooltip );

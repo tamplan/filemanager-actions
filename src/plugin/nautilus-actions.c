@@ -362,10 +362,9 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, GList *files )
 		g_free( label );
 
 		if( NA_IS_OBJECT_MENU( it->data )){
-			subitems = na_object_get_items( it->data );
+			subitems = na_object_get_items_list( it->data );
 			submenu = build_nautilus_menus( plugin, subitems, files );
 			/*g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));*/
-			na_object_free_items( subitems );
 			if( submenu ){
 				item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu );
 				menus_list = g_list_append( menus_list, item );
@@ -406,7 +405,7 @@ is_action_candidate( NautilusActions *plugin, NAObjectAction *action, GList *fil
 		return( NULL );
 	}
 
-	profiles = na_object_get_items( action );
+	profiles = na_object_get_items_list( action );
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 
 		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
@@ -420,7 +419,6 @@ is_action_candidate( NautilusActions *plugin, NAObjectAction *action, GList *fil
  		}
  	}
 
-	na_object_free_items( profiles );
 	g_free( action_label );
 
 	return( candidate );

@@ -39,7 +39,7 @@
 
 #include "na-object-api.h"
 
-static GList         *v_get_childs( const NAObject *object );
+static GList *v_get_childs( const NAObject *object );
 
 /**
  * na_object_iduplicable_check_edition_status:
@@ -198,7 +198,7 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 }
 
 static GList *
-v_get_childs( const NAObject *object ){
-
+v_get_childs( const NAObject *object )
+{
 	return( na_object_most_derived_get_childs( object ));
 }

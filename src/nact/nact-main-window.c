@@ -817,11 +817,10 @@ actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot )
 		}
 
 		if( NA_IS_OBJECT_MENU( item )){
-			items = na_object_get_items( item );
+			items = na_object_get_items_list( item );
 			for( it = items ; it ; it = it->next ){
 				actually_delete_item( window, NA_OBJECT( it->data ), pivot );
 			}
-			na_object_free_items( items );
 		}
 	}
 }
@@ -1016,9 +1015,8 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 			/*g_return_if_fail( count_profiles >= 1 );*/
 
 			if( count_profiles == 1 ){
-				profiles = na_object_get_items( window->private->edited_item );
+				profiles = na_object_get_items_list( window->private->edited_item );
 				window->private->edited_profile = NA_OBJECT_PROFILE( profiles->data );
-				na_object_free_items( profiles );
 			}
 	}
 

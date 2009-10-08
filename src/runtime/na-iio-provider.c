@@ -229,8 +229,7 @@ build_hierarchy( GList *tree, GSList *level_zero, gboolean list_if_empty )
 				if( NA_IS_OBJECT_MENU( it->data )){
 					subitems_ids = na_object_menu_get_items_list( NA_OBJECT_MENU( it->data ));
 					subitems = build_hierarchy( tree, subitems_ids, FALSE );
-					na_object_set_items( it->data, subitems );
-					na_object_free_items( subitems );
+					na_object_set_items_list( it->data, subitems );
 					na_utils_free_string_list( subitems_ids );
 				}
 			}
@@ -469,10 +468,9 @@ sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn )
 	 */
 	for( it = sorted ; it ; it = it->next ){
 		if( NA_IS_OBJECT_ITEM( it->data )){
-			items = na_object_get_items( it->data );
+			items = na_object_get_items_list( it->data );
 			items = sort_tree( pivot, items, fn );
-			na_object_set_items( it->data, items );
-			na_object_free_items( items );
+			na_object_set_items_list( it->data, items );
 		}
 	}
 

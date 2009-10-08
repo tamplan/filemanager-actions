@@ -57,6 +57,7 @@ gboolean  na_object_iduplicable_is_modified( const NAObject *object );
 void      na_object_object_dump( const NAObject *object );
 void      na_object_object_dump_norec( const NAObject *object );
 void      na_object_object_dump_tree( GList *tree );
+void      na_object_object_unref( NAObject *object );
 
 GList    *na_object_most_derived_get_childs( const NAObject *object );
 GList    *na_object_get_hierarchy( const NAObject *object );

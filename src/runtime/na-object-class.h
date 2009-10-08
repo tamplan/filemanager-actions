@@ -163,6 +163,14 @@ typedef struct {
 	 * if any.
 	 */
 	GList *    ( *get_childs )      ( const NAObject *object );
+
+	/**
+	 * unref:
+	 * @object: the #NAObject object.
+	 *
+	 * Recursively unref all childs.
+	 */
+	void       ( *unref )           ( NAObject *object );
 }
 	NAObjectClass;
 

@@ -60,6 +60,7 @@ static gboolean       iduplicable_are_equal( const NAIDuplicable *a, const NAIDu
 static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
 
 static GList         *v_get_childs( const NAObject *object );
+static void           v_unref( NAObject *object );
 
 static gboolean       are_equal_hierarchy( const NAObject *a, const NAObject *b );
 static void           copy_hierarchy( NAObject *target, const NAObject *source );
@@ -140,6 +141,7 @@ class_init( NAObjectClass *klass )
 	klass->are_equal = do_are_equal;
 	klass->is_valid = do_is_valid;
 	klass->get_childs = NULL;
+	klass->unref = NULL;
 }
 
 static void
@@ -342,6 +344,9 @@ na_object_iduplicable_is_modified( const NAObject *object )
  * The recursivity is dealt with here. If we let #NAObjectItem do this,
  * the dump of #NAObjectItem-derived object will be splitted, childs
  * being inserted inside.
+ *
+ * na_object_dump() doesn't modify the reference count of the dumped
+ * object.
  */
 void
 na_object_object_dump( const NAObject *object )
@@ -389,6 +394,32 @@ void
 na_object_object_dump_tree( GList *tree )
 {
 	dump_tree( tree, 0 );
+}
+
+/**
+ * na_object_object_unref:
+ * @object: a #NAObject-derived object.
+ *
+ * Recursively unref the @object and all its childs, decrementing their
+ * reference_count by 1.
+ */
+void
+na_object_object_unref( NAObject *object )
+{
+	g_return_if_fail( NA_IS_OBJECT( object ));
+
+	if( !object->private->dispose_has_run ){
+
+		g_debug( "na_object_object_unref: object=%p (%s, ref_count=%d)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+
+		v_unref( object );
+
+		g_debug( "na_object_object_unref: unreffing %p (%s, ref_count=%d)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+
+		g_object_unref( object );
+	}
 }
 
 /**
@@ -522,6 +553,14 @@ v_get_childs( const NAObject *object ){
 	return( na_object_most_derived_get_childs( object ));
 }
 
+static void
+v_unref( NAObject *object )
+{
+	if( NA_OBJECT_GET_CLASS( object )->unref ){
+		NA_OBJECT_GET_CLASS( object )->unref( object );
+	}
+}
+
 static gboolean
 are_equal_hierarchy( const NAObject *a, const NAObject *b )
 {
@@ -641,9 +680,8 @@ dump_tree( GList *tree, gint level )
 		g_free( label );
 
 		if( NA_IS_OBJECT_ITEM( it->data )){
-			subitems = na_object_get_items( it->data );
+			subitems = na_object_get_items_list( it->data );
 			dump_tree( subitems, level+1 );
-			na_object_free_items( subitems );
 		}
 	}
 

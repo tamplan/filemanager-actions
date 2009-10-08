@@ -1,5 +1,32 @@
 2009-10-08 Pierre Wieser <pwieser@trychlos.org>
 
+	na_object_get_items: Renamed to na_object_get_items_list,
+	Now returns the list itself instead of a refed new list.
+
+	na_object_set_items: Renamed to na_object_set_items_list.
+	Now install the provided GList pointer instead of copying the list.
+
+	* src/common/na-object-api.h:
+	* src/common/na-object.c:
+	* src/common/na-xml-writer.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-tree-model.c:
+	* src/plugin/nautilus-actions.c:
+	* src/runtime/na-gconf-provider.c:
+	* src/runtime/na-iio-provider.c:
+	* src/runtime/na-object-action.c:
+	* src/runtime/na-object-api.h:
+	* src/runtime/na-object-class.h:
+	* src/runtime/na-object-fn.h:
+	* src/runtime/na-object-item-fn.h:
+	* src/runtime/na-object-item.c:
+	* src/runtime/na-object-menu.c:
+	* src/runtime/na-object.c:
+	* src/runtime/na-pivot.c:
+	* src/utils/nautilus-actions-new.c: Updated accordingly.
+
 	Move parent pointer from NAObjectProfile to NAObjectId class.
 
 	* src/common/na-object-action-fn.h:

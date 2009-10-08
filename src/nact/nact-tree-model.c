@@ -695,9 +695,8 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 				append_item( model, treeview, parent, &iter, duplicate );
 				g_object_unref( duplicate );
 			}
-			subitems = na_object_get_items( duplicate );
+			subitems = na_object_get_items_list( duplicate );
 			fill_tree_store( model, treeview, subitems, only_actions, only_actions ? NULL : &iter );
-			na_object_free_items( subitems );
 		}
 
 		if( NA_IS_OBJECT_ACTION( object )){
@@ -706,9 +705,8 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 			append_item( model, treeview, parent, &iter, duplicate );
 			g_object_unref( duplicate );
 			if( !only_actions ){
-				subitems = na_object_get_items( duplicate );
+				subitems = na_object_get_items_list( duplicate );
 				fill_tree_store( model, treeview, subitems, only_actions, &iter );
-				na_object_free_items( subitems );
 			}
 			g_return_if_fail( NA_IS_OBJECT_ACTION( duplicate ));
 			g_return_if_fail( na_object_get_items_count( duplicate ) >= 1 );
@@ -1052,12 +1050,16 @@ iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter
 	gboolean stop;
 
 	gtk_tree_model_get( store, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+	/* unreffing as soon as we got the pointer so that the ref count is
+	 * unchanged in dump_store
+	 */
+	g_object_unref( object );
+
 	path = gtk_tree_model_get_path( store, iter );
 
 	stop = ( *fn )( model, path, object, user_data );
 
 	gtk_tree_path_free( path );
-	g_object_unref( object );
 
 	if( !stop ){
 		iter_on_store( model, store, iter, fn, user_data );
@@ -1514,9 +1516,10 @@ idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, Gt
 
 					if( action ){
 						g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
-						g_object_unref( action );
+						na_object_unref( action );
 					}
 				}
+				nact_tree_model_dump( NACT_TREE_MODEL( drag_dest ));
 				na_utils_free_string_list( uri_list );
 				result = TRUE;
 			}

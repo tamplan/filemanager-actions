@@ -1085,9 +1085,8 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 		 */
 		if( NA_IS_OBJECT_ITEM( it->data ) && na_object_get_items_count( it->data )){
 
-			subitems = na_object_get_items( it->data );
+			subitems = na_object_get_items_list( it->data );
 			do_insert_into_first( treeview, model, subitems, insert_path, NULL );
-			na_object_free_items( subitems );
 		}
 	}
 

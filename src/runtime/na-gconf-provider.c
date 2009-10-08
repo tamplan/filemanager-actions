@@ -833,7 +833,7 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 
 	ret = write_str( provider, uuid, NULL, ACTION_VERSION_ENTRY, na_object_action_get_version( action ), message );
 
-	profiles = na_object_get_items( action );
+	profiles = na_object_get_items_list( action );
 
 	for( ip = profiles ; ip && ret ; ip = ip->next ){
 
@@ -855,7 +855,6 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 		g_free( name );
 	}
 
-	na_object_free_items( profiles );
 	g_free( uuid );
 
 	return( ret );

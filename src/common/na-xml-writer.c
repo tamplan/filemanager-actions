@@ -565,7 +565,7 @@ create_xml_schema( NAXMLWriter *writer, gint format, const NAObjectAction *actio
 	create_schema_entry( writer, format, NULL, OBJECT_ITEM_ENABLED_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_ENABLED_DESC_SHORT, ACTION_ENABLED_DESC_LONG );
 	g_free( text );
 
-	profiles = na_object_get_items( action );
+	profiles = na_object_get_items_list( action );
 
 	for( ip = profiles ; ip ; ip = ip->next ){
 
@@ -634,8 +634,6 @@ create_xml_schema( NAXMLWriter *writer, gint format, const NAObjectAction *actio
 
 		g_free( profile_dir );
 	}
-
-	na_object_free_items( profiles );
 
 	return( doc );
 }
@@ -751,7 +749,7 @@ create_xml_dump( NAXMLWriter *writer, gint format, const NAObjectAction *action 
 	create_dump_entry( writer, format, NULL, OBJECT_ITEM_ENABLED_ENTRY, text, doc, list_node, "bool" );
 	g_free( text );
 
-	profiles = na_object_get_items( action );
+	profiles = na_object_get_items_list( action );
 
 	for( ip = profiles ; ip ; ip = ip->next ){
 
@@ -820,8 +818,6 @@ create_xml_dump( NAXMLWriter *writer, gint format, const NAObjectAction *action 
 
 		g_free( profile_dir );
 	}
-
-	na_object_free_items( profiles );
 
 	return( doc );
 }

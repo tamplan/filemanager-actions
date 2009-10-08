@@ -528,10 +528,12 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_menubar_on_save_activated";
 	GList *items;
 	NactApplication *application;
 	NAPivot *pivot;
 
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -591,9 +593,8 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
 	if( NA_IS_OBJECT_MENU( item )){
-		subitems = na_object_get_items( item );
+		subitems = na_object_get_items_list( item );
 		save_items( window, pivot, subitems );
-		na_object_free_items( subitems );
 	}
 
 	if( na_object_is_modified( item ) &&
@@ -616,11 +617,11 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 
 			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
 			na_object_reset_origin( item, dup_pivot );
-			g_debug( "un" );
+			g_debug( "save_item: un" );
 			na_object_dump( item );
-			g_debug( "deux" );
+			g_debug( "save_item: deux" );
 			na_object_dump( dup_pivot );
-			g_debug( "trois" );
+			g_debug( "save_item: trois" );
 			na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
 
 			na_object_check_edition_status( item );

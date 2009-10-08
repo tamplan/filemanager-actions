@@ -703,9 +703,8 @@ get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid )
 		}
 
 		if( !found && NA_IS_OBJECT_ITEM( ia->data )){
-			subitems = na_object_get_items( ia->data );
+			subitems = na_object_get_items_list( ia->data );
 			found = get_item_from_tree( pivot, subitems, uuid );
-			na_object_free_items( subitems );
 		}
 	}
 
