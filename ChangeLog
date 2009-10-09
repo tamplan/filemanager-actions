@@ -11,12 +11,15 @@
 	* src/nact/nact-iactions-list.h (nact_iactions_list_brief_tree_dump):
 	Briefly dump the tree store content.
 	(nact_iactions_list_runtime_init_toplevel): Grab the focus at start.
+	(on_focus_in, on_focus_out): Track the focus in the treeview.
 
 	* src/nact/nact-main-menubar.c (nact_main_menubar_runtime_init):
 	Display a Maintainer menu when in maintainer mode.
 	Add BriefTreeStoreDumpItem new item.
 	Display a first toolbar.
 	(on_save_activated): Also save non-valid items.
+	(on_update_sensitivities): Disable edit actions when the focus is
+	not in the treeview.
 
 	* src/nact/nact-tree-model.c (nact_tree_model_insert):
 	Add debug traces.

@@ -80,6 +80,8 @@ typedef struct {
 enum {
 	LIST_COUNT_UPDATED,
 	SELECTION_CHANGED,
+	FOCUS_IN,
+	FOCUS_OUT,
 	LAST_SIGNAL
 };
 
@@ -159,6 +161,8 @@ static GtkTreePath *object_to_path( NactIActionsList *instance, NactTreeModel *m
 static gboolean     object_to_path_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ObjectToPathIter *otp );
 static gboolean     on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsList *instance );
 static void         on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object );
+static gboolean     on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance );
+static gboolean     on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance );
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
 static void         on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
 static void         on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object );
@@ -268,6 +272,42 @@ interface_base_init( NactIActionsListInterface *klass )
 				G_TYPE_OBJECT,
 				G_SIGNAL_RUN_CLEANUP,
 				G_CALLBACK( free_items_callback ),
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER );
+
+		/**
+		 * nact-iactions-list-focus-in:
+		 *
+		 * This signal is emitted byIActionsList when it gains the focus.
+		 * In particular, edition menu is disabled outside of the treeview.
+		 */
+		st_signals[ FOCUS_IN ] = g_signal_new(
+				IACTIONS_LIST_SIGNAL_FOCUS_IN,
+				G_TYPE_OBJECT,
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER );
+
+		/**
+		 * nact-iactions-list-focus-out:
+		 *
+		 * This signal is emitted byIActionsList when it looses the focus.
+		 * In particular, edition menu is disabled outside of the treeview.
+		 */
+		st_signals[ FOCUS_OUT ] = g_signal_new(
+				IACTIONS_LIST_SIGNAL_FOCUS_OUT,
+				G_TYPE_OBJECT,
+				G_SIGNAL_RUN_LAST,
+				0,
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
@@ -435,6 +475,20 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
 				G_CALLBACK( on_tab_updatable_item_updated ));
+
+		/* enable/disable edit menu item accelerators depending of
+		 * which widget has the focus */
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( treeview ),
+				"focus-in-event",
+				G_CALLBACK( on_focus_in ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( treeview ),
+				"focus-out-event",
+				G_CALLBACK( on_focus_out ));
 
 		/* records NactIActionsList as a proxy for edition status
 		 * modification */
@@ -1706,6 +1760,30 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 		nact_tree_model_display( model, NA_OBJECT( object ));
 	}
+}
+
+static gboolean
+on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance )
+{
+	/*static const gchar *thisfn = "nact_iactions_list_on_focus_in";*/
+	gboolean stop = FALSE;
+
+	/*g_debug( "%s: widget=%p, event=%p, instance=%p", thisfn, ( void * ) widget, ( void * ) event, ( void * ) instance );*/
+	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_IN, instance );
+
+	return( stop );
+}
+
+static gboolean
+on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance )
+{
+	/*static const gchar *thisfn = "nact_iactions_list_on_focus_out";*/
+	gboolean stop = FALSE;
+
+	/*g_debug( "%s: widget=%p, event=%p, instance=%p", thisfn, ( void * ) widget, ( void * ) event, ( void * ) instance );*/
+	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_OUT, instance );
+
+	return( stop );
 }
 
 static gboolean

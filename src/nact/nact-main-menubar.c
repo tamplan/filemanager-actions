@@ -83,6 +83,7 @@ typedef struct {
 	gint     list_profiles;
 	gboolean is_modified;
 	gboolean have_exportables;
+	gboolean treeview_has_focus;
 }
 	MenubarIndicatorsStruct;
 
@@ -90,6 +91,8 @@ typedef struct {
 
 static void     on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles );
 static void     on_iactions_list_selection_changed( NactMainWindow *window, GList *selected );
+static void     on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data );
+static void     on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data );
 static void     on_update_sensitivities( NactMainWindow *window, gpointer user_data );
 
 static void     on_new_menu_activated( GtkAction *action, NactMainWindow *window );
@@ -334,6 +337,18 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	base_window_signal_connect(
 			BASE_WINDOW( window ),
 			G_OBJECT( window ),
+			IACTIONS_LIST_SIGNAL_FOCUS_IN,
+			G_CALLBACK( on_iactions_list_focus_in ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( window ),
+			IACTIONS_LIST_SIGNAL_FOCUS_OUT,
+			G_CALLBACK( on_iactions_list_focus_out ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( window ),
 			MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES,
 			G_CALLBACK( on_update_sensitivities ));
 
@@ -405,6 +420,32 @@ on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 }
 
 static void
+on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data )
+{
+	MenubarIndicatorsStruct *mis;
+
+	g_debug( "nact_main_menubar_on_iactions_list_focus_in" );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	mis->treeview_has_focus = TRUE;
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+}
+
+static void
+on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data )
+{
+	MenubarIndicatorsStruct *mis;
+
+	g_debug( "nact_main_menubar_on_iactions_list_focus_out" );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	mis->treeview_has_focus = FALSE;
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+}
+
+static void
 on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_update_sensitivities";
@@ -414,8 +455,12 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	gboolean has_modified;
 	gint count_list;
 	gint count_selected;
+	gboolean cut_enabled;
+	gboolean copy_enabled;
 	gboolean paste_enabled;
 	gboolean paste_into_enabled;
+	gboolean duplicate_enabled;
+	gboolean delete_enabled;
 	gboolean clipboard_is_empty;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
@@ -437,22 +482,44 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	clipboard_is_empty = ( mis->clipboard_menus + mis->clipboard_actions + mis->clipboard_profiles == 0 );
 
+	/* edit menu is only enabled when the treeview has the focus
+	 */
+
+	/* cut/copy/duplicate/delete enabled when selection not empty */
+	cut_enabled = mis->treeview_has_focus && count_selected > 0;
+	copy_enabled = mis->treeview_has_focus && count_selected > 0;
+	duplicate_enabled = mis->treeview_has_focus && count_selected > 0;
+	delete_enabled = mis->treeview_has_focus && count_selected > 0;
+
+	/* paste enabled if
+	 * - simple selection
+	 * - clipboard contains only profiles, and current selection is a profile
+	 * - clipboard contains actions or menus, and current selection is a menu or an action */
 	paste_enabled = FALSE;
-	if( !clipboard_is_empty ){
-		if( mis->clipboard_profiles ){
-			paste_enabled = item && NA_IS_OBJECT_ACTION( item );
-		} else {
-			paste_enabled = ( item != NULL );
+	if( mis->treeview_has_focus && count_selected <= 1 ){
+		if( !clipboard_is_empty ){
+			if( mis->clipboard_profiles ){
+				paste_enabled = item && NA_IS_OBJECT_ACTION( item );
+			} else {
+				paste_enabled = ( item != NULL );
+			}
 		}
 	}
 
+	/* paste into enabled if
+	 * - simple selection
+	 * - clipboard has profiles and current item is an action
+	 * - or current item is a menu
+	 * do not paste into if current selection is a profile */
 	paste_into_enabled = FALSE;
-	if( mis->selected_menus + mis->selected_actions ){
-		if( !clipboard_is_empty ){
-			if( mis->clipboard_profiles ){
-				paste_into_enabled = item && NA_IS_OBJECT_ACTION( item );
-			} else {
-				paste_into_enabled = item && NA_IS_OBJECT_MENU( item );
+	if( mis->treeview_has_focus && count_selected <= 1 ){
+		if( mis->selected_menus + mis->selected_actions ){
+			if( !clipboard_is_empty ){
+				if( mis->clipboard_profiles ){
+					paste_into_enabled = item && NA_IS_OBJECT_ACTION( item );
+				} else {
+					paste_into_enabled = item && NA_IS_OBJECT_MENU( item );
+				}
 			}
 		}
 	}
@@ -464,21 +531,15 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	/* save enabled if at least one item has been modified */
 	enable_item( window, "SaveItem", has_modified );
 	/* quit always enabled */
-	/* cut/copy enabled if selection not empty */
-	enable_item( window, "CutItem", count_selected > 0 );
-	enable_item( window, "CopyItem", count_selected > 0 );
-	/* paste enabled if
-	 * - clipboard contains only profiles, and current selection is a profile
-	 * - clipboard contains actions or menus, and current selection is a menu or an action */
-	enable_item( window, "PasteItem", count_selected <= 1 && paste_enabled );
-	/* paste into enabled if
-	 * - clipboard has profiles and current item is an action
-	 * - or current item is a menu
-	 * do not paste into if current selection is a profile */
-	enable_item( window, "PasteIntoItem", count_selected <= 1 && paste_into_enabled );
-	/* duplicate/delete enabled if selection not empty */
-	enable_item( window, "DuplicateItem", count_selected > 0 );
-	enable_item( window, "DeleteItem", count_selected > 0 );
+
+	/* edit menu (cf. above) */
+	enable_item( window, "CutItem", cut_enabled );
+	enable_item( window, "CopyItem", copy_enabled );
+	enable_item( window, "PasteItem", paste_enabled );
+	enable_item( window, "PasteIntoItem", paste_into_enabled );
+	enable_item( window, "DuplicateItem", duplicate_enabled );
+	enable_item( window, "DeleteItem", delete_enabled );
+
 	/* reload items always enabled */
 	/* preferences always enabled */
 	/* expand all/collapse all requires at least one item in the list */

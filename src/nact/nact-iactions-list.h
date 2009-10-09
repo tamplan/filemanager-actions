@@ -105,6 +105,8 @@ typedef struct {
  */
 #define IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED			"nact-iactions-list-count-updated"
 #define IACTIONS_LIST_SIGNAL_SELECTION_CHANGED			"nact-iactions-list-selection-changed"
+#define IACTIONS_LIST_SIGNAL_FOCUS_IN					"nact-iactions-list-focus-in"
+#define IACTIONS_LIST_SIGNAL_FOCUS_OUT					"nact-iactions-list-focus-out"
 
 /* management modes
  * - edition: dnd, filter, multiple selection, item updated signal
