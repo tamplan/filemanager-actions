@@ -7,6 +7,18 @@
 	* src/common/na-object-item.c (na_object_item_remove_item):
 	Moved to runtime library.
 
+	* src/nact/nact-iactions-list.c (do_insert_items):
+	Marks the item itself as modified if it has no parent.
+
+	* src/nact/nact-main-menubar.c (on_update_sensitivities):
+	Enable Paste a profile if an action is selected.
+	Always disable Paste into a profile.
+
+	* src/nact/nact-main-window.c (actually_delete_item):
+	Delete childs before removing from pivot.
+	(nact_tree_model_insert, nact_tree_model_insert_into):
+	Set parent on newly inserted child.
+
 	* src/nact/nact-tree-model.c (fill_tree_store):
 	Rewrite duplication code to get reference counts equal to 1 in the store.
 	Install parent pointer in childs.

@@ -316,6 +316,24 @@ instance_finalize( GObject *object )
 }
 
 /**
+ * na_object_item_free_items_list:
+ * @list: a list of #NAObject items.
+ *
+ * Recursively unref the #NAObject of the list, freeing the list at last.
+ */
+void
+na_object_item_free_items_list( GList *items )
+{
+	GList *it;
+
+	for( it = items ; it ; it = it->next ){
+		na_object_unref( it->data );
+	}
+
+	g_list_free( items );
+}
+
+/**
  * na_object_item_get_tooltip:
  * @item: the #NAObjectItem object to be requested.
  *
@@ -467,24 +485,6 @@ na_object_item_get_items_count( const NAObjectItem *item )
 	}
 
 	return( count );
-}
-
-/**
- * na_object_item_free_items_list:
- * @list: a list of #NAObject items.
- *
- * Recursively unref the #NAObject of the list, freeing the list at last.
- */
-void
-na_object_item_free_items_list( GList *items )
-{
-	GList *it;
-
-	for( it = items ; it ; it = it->next ){
-		na_object_unref( it->data );
-	}
-
-	g_list_free( items );
 }
 
 /**

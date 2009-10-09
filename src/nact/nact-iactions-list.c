@@ -1060,6 +1060,7 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 	GList *it;
 	GList *subitems;
 	NAObject *obj_parent;
+	gpointer updatable;
 
 	obj_parent = NULL;
 	if( list_parents ){
@@ -1075,9 +1076,10 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 		g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
 				( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
 
-		if( list_parents && obj_parent ){
-			if( !g_list_find( *list_parents, obj_parent )){
-				*list_parents = g_list_prepend( *list_parents, obj_parent );
+		if( list_parents ){
+			updatable = obj_parent ? obj_parent : it->data;
+			if( !g_list_find( *list_parents, updatable )){
+				*list_parents = g_list_prepend( *list_parents, updatable );
 			}
 		}
 

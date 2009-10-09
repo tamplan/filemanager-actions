@@ -409,18 +409,20 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	paste_enabled = FALSE;
 	if( !clipboard_is_empty ){
 		if( mis->clipboard_profiles ){
-			paste_enabled = profile && NA_IS_OBJECT_PROFILE( profile );
+			paste_enabled = item && NA_IS_OBJECT_ACTION( item );
 		} else {
 			paste_enabled = ( item != NULL );
 		}
 	}
 
 	paste_into_enabled = FALSE;
-	if( !clipboard_is_empty ){
-		if( mis->clipboard_profiles ){
-			paste_into_enabled = item && NA_IS_OBJECT_ACTION( item );
-		} else {
-			paste_into_enabled = item && NA_IS_OBJECT_MENU( item );
+	if( mis->selected_menus + mis->selected_actions ){
+		if( !clipboard_is_empty ){
+			if( mis->clipboard_profiles ){
+				paste_into_enabled = item && NA_IS_OBJECT_ACTION( item );
+			} else {
+				paste_into_enabled = item && NA_IS_OBJECT_MENU( item );
+			}
 		}
 	}
 
@@ -440,7 +442,8 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	enable_item( window, "PasteItem", count_selected <= 1 && paste_enabled );
 	/* paste into enabled if
 	 * - clipboard has profiles and current item is an action
-	 * - or current item is a menu */
+	 * - or current item is a menu
+	 * do not paste into if current selection is a profile */
 	enable_item( window, "PasteIntoItem", count_selected <= 1 && paste_into_enabled );
 	/* duplicate/delete enabled if selection not empty */
 	enable_item( window, "DuplicateItem", count_selected > 0 );

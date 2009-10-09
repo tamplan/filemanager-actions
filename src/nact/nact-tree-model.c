@@ -791,6 +791,8 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 			} else {
 				na_object_append_item( parent_obj, object );
 			}
+
+			na_object_set_parent( object, parent_obj );
 		}
 
 		gtk_tree_store_insert_before(
@@ -831,6 +833,7 @@ nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTr
 		g_object_unref( *parent );
 
 		na_object_insert_item( *parent, object, NULL );
+		na_object_set_parent( object, *parent );
 
 		gtk_tree_store_insert_after( GTK_TREE_STORE( store ), &iter, &parent_iter, NULL );
 		gtk_tree_store_set( GTK_TREE_STORE( store ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, object, -1 );

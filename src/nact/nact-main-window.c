@@ -811,16 +811,16 @@ actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot )
 	if( NA_IS_OBJECT_ITEM( item )){
 		nact_window_delete_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ));
 
-		origin = na_object_get_origin( item );
-		if( origin ){
-			na_pivot_remove_item( pivot, origin );
-		}
-
 		if( NA_IS_OBJECT_MENU( item )){
 			items = na_object_get_items_list( item );
 			for( it = items ; it ; it = it->next ){
 				actually_delete_item( window, NA_OBJECT( it->data ), pivot );
 			}
+		}
+
+		origin = na_object_get_origin( item );
+		if( origin ){
+			na_pivot_remove_item( pivot, origin );
 		}
 	}
 }
