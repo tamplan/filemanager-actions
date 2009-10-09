@@ -4,6 +4,9 @@
 	Fix multi-childs insertion.
 	Remove useless do_insert_into_second() function.
 
+	* src/nact-main.c (main):
+	Only display traces from runtime library when in maintainer mode.
+
 	* src/nact/nact-main-menubar.c (nact_main_menubar_runtime_init):
 	Display a Maintainer menu when in maintainer mode.
 
