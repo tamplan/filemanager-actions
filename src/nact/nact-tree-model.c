@@ -741,8 +741,9 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 void
 nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent )
 {
-	/*static const gchar *thisfn = "nact_tree_model_insert";*/
+	static const gchar *thisfn = "nact_tree_model_insert";
 	GtkTreeModel *store;
+	gchar *path_str;
 	GtkTreeIter iter;
 	GtkTreeIter parent_iter;
 	GtkTreePath *parent_path;
@@ -752,6 +753,13 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 	NAObject *sibling_obj;
 	gboolean has_sibling;
 
+	path_str = gtk_tree_path_to_string( path );
+	g_debug( "%s: model=%p, object=%p (%s, ref_count=%d), path=%p (%s), parent=%p",
+			thisfn,
+			( void * ) model,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count,
+			( void * ) path, path_str, ( void * ) parent );
+	g_free( path_str );
 	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
@@ -770,6 +778,7 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 			gtk_tree_model_get( store, &sibling_iter, IACTIONS_LIST_NAOBJECT_COLUMN, &sibling_obj, -1 );
 			g_object_unref( sibling_obj );
 		}
+		g_debug( "%s: has_sibling=%s, sibling_obj=%p", thisfn, has_sibling ? "True":"False", ( void * ) sibling_obj );
 
 		if( gtk_tree_path_get_depth( path ) > 1 ){
 
@@ -794,13 +803,18 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 
 			na_object_set_parent( object, parent_obj );
 		}
+		g_debug( "%s: has_parent=%s, parent_obj=%p", thisfn, has_parent ? "True":"False", ( void * ) parent_obj );
 
 		gtk_tree_store_insert_before(
 				GTK_TREE_STORE( store ), &iter,
 				has_parent ? &parent_iter : NULL,
 				has_sibling ? &sibling_iter : NULL );
+		g_debug( "un" );
+		g_debug( "%s: iter_is_valid=%s", thisfn, gtk_tree_store_iter_is_valid( GTK_TREE_STORE( store ), &iter ) ? "True":"False" );
 		gtk_tree_store_set( GTK_TREE_STORE( store ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, object, -1 );
+		g_debug( "deux" );
 		display_item( GTK_TREE_STORE( store ), model->private->treeview, &iter, object );
+		g_debug( "trois" );
 	}
 }
 
@@ -814,6 +828,13 @@ nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTr
 	GtkTreePath *new_path;
 	gchar *path_str;
 
+	path_str = gtk_tree_path_to_string( path );
+	g_debug( "%s: model=%p, object=%p (%s, ref_count=%d), path=%p (%s), parent=%p",
+			thisfn,
+			( void * ) model,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count,
+			( void * ) path, path_str, ( void * ) parent );
+	g_free( path_str );
 	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), NULL );
 	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
 
@@ -1516,6 +1537,7 @@ idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, Gt
 					} else {
 						g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
 						object_list = g_list_prepend( NULL, action );
+						na_object_dump( action );
 						nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, dest );
 						g_list_free( object_list );
 					}

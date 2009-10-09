@@ -137,7 +137,6 @@ static void         decrement_counters( NactIActionsList *instance, IActionsList
 static GtkTreePath *get_selection_first_path( GtkTreeView *treeview );
 static void         do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *path, GList **parents );
 static NAObject    *do_insert_into_first( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *insert_path, GtkTreePath **new_path );
-static GtkTreePath *do_insert_into_second( GtkTreeView *treeview, GtkTreeModel *model, NAObject *object, GtkTreePath *insert_path, NAObject **parent );
 static void         increment_counters( NactIActionsList *instance, IActionsListInstanceData *ialid, GList *items );
 static void         update_parents_edition_status( GList *parents, GList *items );
 
@@ -1098,37 +1097,37 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 static NAObject *
 do_insert_into_first( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *insert_path, GtkTreePath **new_path )
 {
+	static const gchar *thisfn = "nact_iactions_list_do_insert_into_first";
+	GList *copy;
 	GList *last;
 	NAObject *parent;
+	gchar *insert_path_str;
 	GtkTreePath *inserted_path;
 
-	parent = NULL;
-	last = g_list_last( items );
-	items = g_list_remove_link( items, last );
+	insert_path_str = gtk_tree_path_to_string( insert_path );
+	g_debug( "%s: treeview=%p, model=%p, items=%p (count=%d), insert_path=%p (%s), new_path=%p",
+			thisfn,
+			( void * ) treeview, ( void * ) model, ( void * ) items, g_list_length( items ),
+			( void * ) insert_path, insert_path_str, ( void * ) new_path );
+	g_free( insert_path_str );
 
-	inserted_path = do_insert_into_second( treeview, model, NA_OBJECT( last->data ), insert_path, &parent );
-	do_insert_items( treeview, model, items, inserted_path, NULL );
+	parent = NULL;
+	copy = g_list_copy( items );
+	last = g_list_last( copy );
+	copy = g_list_remove_link( copy, last );
+
+	inserted_path = nact_tree_model_insert_into( NACT_TREE_MODEL( model ), NA_OBJECT( last->data ), insert_path, &parent );
+	gtk_tree_view_expand_to_path( treeview, inserted_path );
+	do_insert_items( treeview, model, copy, inserted_path, NULL );
 
 	if( new_path ){
 		*new_path = gtk_tree_path_copy( inserted_path );
 	}
 
+	g_list_free( copy );
 	gtk_tree_path_free( inserted_path );
 
 	return( parent );
-}
-
-static GtkTreePath *
-do_insert_into_second( GtkTreeView *treeview, GtkTreeModel *model, NAObject *object, GtkTreePath *insert_path, NAObject **parent )
-{
-	/*static const gchar *thisfn = "nact_iactions_list_do_insert_into";*/
-	GtkTreePath *new_path;
-
-	new_path = nact_tree_model_insert_into( NACT_TREE_MODEL( model ), object, insert_path, parent );
-
-	gtk_tree_view_expand_to_path( treeview, new_path );
-
-	return( new_path );
 }
 
 static void

@@ -1,3 +1,12 @@
+2009-10-09 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-iactions-list.c (do_insert_into_first):
+	Fix multi-childs insertion.
+	Remove useless do_insert_into_second() function.
+
+	* src/nact/nact-tree-model.c (nact_tree_model_insert):
+	Add debug traces.
+
 2009-10-08 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-object-api.h (na_object_remove_item):
