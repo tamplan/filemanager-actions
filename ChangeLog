@@ -21,6 +21,10 @@
 	(on_update_sensitivities): Disable edit actions when the focus is
 	not in the treeview.
 
+	* src/nact/nact-main-statusbar.c
+	(nact_main_statusbar_display_with_timeout):
+	Actually put a timeout to pop the status message.
+
 	* src/nact/nact-tree-model.c (nact_tree_model_insert):
 	Add debug traces.
 	(nact_tree_model_fill): Check validity status at load time.

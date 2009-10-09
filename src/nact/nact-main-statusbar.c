@@ -34,7 +34,16 @@
 
 #include "nact-main-statusbar.h"
 
+typedef struct {
+	guint         event_source_id;
+	guint         context_id;
+	GtkStatusbar *bar;
+}
+	StatusbarTimeoutDisplayStruct;
+
 static GtkStatusbar *get_statusbar( const NactMainWindow *window );
+static gboolean      display_timeout( StatusbarTimeoutDisplayStruct *stds );
+static void          display_timeout_free( StatusbarTimeoutDisplayStruct *stds );
 
 void
 nact_main_statusbar_display_status( NactMainWindow *window, const gchar *context, const gchar *status )
@@ -53,10 +62,17 @@ nact_main_statusbar_display_status( NactMainWindow *window, const gchar *context
 	}
 }
 
+/*
+ * push a message
+ * automatically pop it after a timeout
+ * the timeout is not suspended when another message is pushed onto the
+ * previous one
+ */
 void
 nact_main_statusbar_display_with_timeout( NactMainWindow *window, const gchar *context, const gchar *status )
 {
 	GtkStatusbar *bar;
+	StatusbarTimeoutDisplayStruct *stds;
 
 	if( !status || !g_utf8_strlen( status, -1 )){
 		return;
@@ -67,6 +83,16 @@ nact_main_statusbar_display_with_timeout( NactMainWindow *window, const gchar *c
 	if( bar ){
 		guint context_id = gtk_statusbar_get_context_id( bar, context );
 		gtk_statusbar_push( bar, context_id, status );
+
+		stds = g_new0( StatusbarTimeoutDisplayStruct, 1 );
+		stds->context_id = context_id;
+		stds->bar = bar;
+		stds->event_source_id = g_timeout_add_seconds_full(
+				G_PRIORITY_DEFAULT,
+				10,
+				( GSourceFunc ) display_timeout,
+				stds,
+				( GDestroyNotify ) display_timeout_free );
 	}
 }
 
@@ -94,4 +120,20 @@ get_statusbar( const NactMainWindow *window )
 	statusbar = base_window_get_widget( BASE_WINDOW( window ), "StatusBar" );
 
 	return( GTK_STATUSBAR( statusbar ));
+}
+
+static gboolean
+display_timeout( StatusbarTimeoutDisplayStruct *stds )
+{
+	gboolean keep_source = FALSE;
+
+	gtk_statusbar_pop( stds->bar, stds->context_id );
+
+	return( keep_source );
+}
+
+static void
+display_timeout_free( StatusbarTimeoutDisplayStruct *stds )
+{
+	g_free( stds );
 }
