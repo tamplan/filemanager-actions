@@ -14,12 +14,17 @@
 	* src/nact/nact-main-menubar.c (nact_main_menubar_runtime_init):
 	Display a Maintainer menu when in maintainer mode.
 	Add BriefTreeStoreDumpItem new item.
+	Display a first toolbar.
 
 	* src/nact/nact-tree-model.c (nact_tree_model_insert):
 	Add debug traces.
 
 	* src/nact/nautilus-actions-config-tool.actions:
 	Define a placeholder for the Maintainer menu.
+	Define a first toolbar.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Replace the GtkToolbar with a VBox placeholder.
 
 	* src/nact/nautilus-actions-maintainer.actions: New file.
 

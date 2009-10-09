@@ -238,7 +238,7 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	GError *error = NULL;
 	guint merge_id;
 	GtkAccelGroup *accel_group;
-	GtkWidget *menubar, *vbox;
+	GtkWidget *menubar, *vbox, *toolbar;
 	GtkWindow *toplevel;
 	MenubarIndicatorsStruct *mis;
 	gboolean has_maintainer_menu;
@@ -302,6 +302,16 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	menubar = gtk_ui_manager_get_widget( ui_manager, "/ui/MainMenubar" );
 	vbox = base_window_get_widget( BASE_WINDOW( window ), "MenubarVBox" );
 	gtk_box_pack_start( GTK_BOX( vbox ), menubar, FALSE, FALSE, 0 );
+
+	/* this works, but we should only display buttons which have icons
+	 * (a button with only text in a toolbar is somewhat sad..
+	 */
+	toolbar = gtk_ui_manager_get_widget( ui_manager, "/ui/FileToolbar" );
+	vbox = base_window_get_widget( BASE_WINDOW( window ), "ToolbarVBox" );
+	gtk_box_pack_start( GTK_BOX( vbox ), toolbar, FALSE, FALSE, 0 );
+
+	/* this creates a submenu in the toolbar */
+	/*gtk_container_add( GTK_CONTAINER( vbox ), toolbar );*/
 
 	base_window_signal_connect(
 			BASE_WINDOW( window ),

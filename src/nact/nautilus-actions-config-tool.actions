@@ -36,4 +36,10 @@
             <menuitem action="AboutItem" />
         </menu>
     </menubar>
+
+    <toolbar name="FileToolbar">
+        <toolitem action="NewActionItem" />
+        <toolitem action="SaveItem" />
+        <toolitem action="QuitItem" />
+    </toolbar>
 </ui>
