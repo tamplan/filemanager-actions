@@ -30,6 +30,9 @@
 
 	* src/nact/Makefile.am: Updated accordingly.
 
+	* src/runtime/na-object-profile.c (object_is_valid):
+	A profile requires rather a command to be valid that a label.
+
 2009-10-08 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-object-api.h (na_object_remove_item):

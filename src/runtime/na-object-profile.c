@@ -1472,13 +1472,14 @@ object_are_equal( const NAObject *a, const NAObject *b )
 }
 
 /*
- * a valid NAObjectProfile requires a not null, not empty label
- * this is checked here as NAObject doesn't have this condition
+ * a valid NAObjectProfile requires rather a not empty command to be a
+ * valid candidate to execution ; as the distinction path vs.parameters
+ * is somewhat arbitrary, we check for at least one of these
  */
 gboolean
 object_is_valid( const NAObject *profile )
 {
-	gchar *label;
+	gchar *path, *parameters;
 	gboolean is_valid = TRUE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
@@ -1486,9 +1487,14 @@ object_is_valid( const NAObject *profile )
 	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
 
 		if( is_valid ){
-			label = na_object_get_label( profile );
-			is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
-			g_free( label );
+			path = na_object_get_path( profile );
+			parameters = na_object_get_parameters( profile );
+
+			is_valid = ( path && g_utf8_strlen( path, -1 ) > 0 ) ||
+						( parameters && g_utf8_strlen( parameters, -1 ) > 0 );
+
+			g_free( parameters );
+			g_free( path );
 		}
 	}
 
