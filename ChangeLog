@@ -36,6 +36,9 @@
 
 	* src/nact/Makefile.am: Updated accordingly.
 
+	* src/runtime/na-gconf-provider.c (read_item_action_profile_properties):
+	Load all found items, emitting a warning when non valid.
+
 	* src/runtime/na-object-action.c (object_is_valid):
 	An action is valid if it has at least one valid profile.
 
