@@ -29,6 +29,7 @@
             <menuitem action="ImportItem" />
             <menuitem action="ExportItem" />
         </menu>
+        <placeholder name="MaintainerMenu" />
         <menu action="HelpMenu">
             <menuitem action="HelpItem" />
             <separator />

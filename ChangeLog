@@ -4,8 +4,18 @@
 	Fix multi-childs insertion.
 	Remove useless do_insert_into_second() function.
 
+	* src/nact/nact-main-menubar.c (nact_main_menubar_runtime_init):
+	Display a Maintainer menu when in maintainer mode.
+
 	* src/nact/nact-tree-model.c (nact_tree_model_insert):
 	Add debug traces.
+
+	* src/nact/nautilus-actions-config-tool.actions:
+	Define a placeholder for the Maintainer menu.
+
+	* src/nact/nautilus-actions-maintainer.actions: New file.
+
+	* src/nact/Makefile.am: Updated accordingly.
 
 2009-10-08 Pierre Wieser <pwieser@trychlos.org>
 

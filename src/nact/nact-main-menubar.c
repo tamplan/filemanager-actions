@@ -117,6 +117,8 @@ static void     on_collapse_all_activated( GtkAction *action, NactMainWindow *wi
 static void     on_import_activated( GtkAction *action, NactMainWindow *window );
 static void     on_export_activated( GtkAction *action, NactMainWindow *window );
 
+static void     on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window );
+
 static void     on_help_activated( GtkAction *action, NactMainWindow *window );
 static void     on_about_activated( GtkAction *action, NactMainWindow *window );
 
@@ -134,6 +136,7 @@ static const GtkActionEntry entries[] = {
 		{ "EditMenu", NULL, N_( "_Edit" ) },
 		{ "ViewMenu", NULL, N_( "_View" ) },
 		{ "ToolsMenu", NULL, N_( "_Tools" ) },
+		{ "MaintainerMenu", NULL, N_( "_Maintainer" ) },
 		{ "HelpMenu", NULL, N_( "_Help" ) },
 
 		{ "NewMenuItem", NULL, N_( "New _menu" ), NULL,
@@ -196,14 +199,18 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the Collapse all item */
 				N_( "Entirely collapse the items hierarchy" ),
 				G_CALLBACK( on_collapse_all_activated ) },
-		{ "ImportItem" , GTK_STOCK_CONVERT, N_( "_Import assistant.." ), "",
+		{ "ImportItem" , GTK_STOCK_CONVERT, N_( "_Import assistant..." ), "",
 				/* i18n: tooltip displayed in the status bar when selecting the Import item */
 				N_( "Import one or more actions from external (XML) files into your configuration" ),
 				G_CALLBACK( on_import_activated ) },
-		{ "ExportItem", NULL, N_( "E_xport assistant.." ), NULL,
+		{ "ExportItem", NULL, N_( "E_xport assistant..." ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Export item */
 				N_( "Export one or more actions from your configuration to external XML files" ),
 				G_CALLBACK( on_export_activated ) },
+		{ "BriefTreeStoreDumpItem", NULL, N_( "_Brief tree store dump" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item */
+				N_( "Briefly dump the tree store" ),
+				G_CALLBACK( on_brief_tree_store_dump_activated ) },
 		{ "HelpItem" , GTK_STOCK_HELP, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Help item */
 				N_( "Display help about this program" ),
@@ -234,6 +241,7 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	GtkWidget *menubar, *vbox;
 	GtkWindow *toplevel;
 	MenubarIndicatorsStruct *mis;
+	gboolean has_maintainer_menu;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
@@ -272,6 +280,19 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	if( merge_id == 0 || error ){
 		g_warning( "%s: error=%s", thisfn, error->message );
 		g_error_free( error );
+	}
+
+	has_maintainer_menu = FALSE;
+#ifdef NA_MAINTAINER_MODE
+	has_maintainer_menu = TRUE;
+#endif
+
+	if( has_maintainer_menu ){
+		merge_id = gtk_ui_manager_add_ui_from_file( ui_manager, PKGDATADIR "/nautilus-actions-maintainer.actions", &error );
+		if( merge_id == 0 || error ){
+			g_warning( "%s: error=%s", thisfn, error->message );
+			g_error_free( error );
+		}
 	}
 
 	toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
@@ -931,6 +952,12 @@ static void
 on_export_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	nact_assistant_export_run( BASE_WINDOW( window ));
+}
+
+static void
+on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window )
+{
+
 }
 
 static void

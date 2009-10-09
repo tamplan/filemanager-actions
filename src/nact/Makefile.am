@@ -112,6 +112,7 @@ nautilus_actions_config_tool_LDADD = \
 
 pkgdata_DATA = \
 	nautilus-actions-config-tool.actions				\
+	nautilus-actions-maintainer.actions					\
 	nact-assistant-export.ui							\
 	nautilus-actions-config-tool.ui						\
 	$(NULL)

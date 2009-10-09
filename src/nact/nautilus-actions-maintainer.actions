@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ui>
+    <menubar name="MainMenubar">
+        <menu action="MaintainerMenu">
+            <menuitem action="BriefTreeStoreDumpItem" />
+        </menu>
+    </menubar>
+</ui>
