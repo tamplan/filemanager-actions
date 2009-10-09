@@ -459,6 +459,10 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 		 * so that callbacks are triggered at last
 		 */
 		nact_iactions_list_fill( instance, items );
+
+		/* force the treeview to have the focus at start
+		 */
+		gtk_widget_grab_focus( GTK_WIDGET( treeview ));
 	}
 }
 

@@ -906,12 +906,6 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 		/* fill the IActionsList at last so that all signals are connected
 		 */
 		nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
-
-		/* forces a no-selection when the list is initially empty
-		 */
-		/*if( !g_slist_length( wnd->private->actions )){
-			set_current_action( NACT_MAIN_WINDOW( window ), NULL );
-		}*/
 	}
 }
 
