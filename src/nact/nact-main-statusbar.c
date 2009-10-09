@@ -135,5 +135,7 @@ display_timeout( StatusbarTimeoutDisplayStruct *stds )
 static void
 display_timeout_free( StatusbarTimeoutDisplayStruct *stds )
 {
+	g_debug( "nact_main_statusbar_display_timeout_free: stds=%p", ( void * ) stds );
+
 	g_free( stds );
 }

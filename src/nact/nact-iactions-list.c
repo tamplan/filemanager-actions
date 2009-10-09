@@ -82,6 +82,7 @@ enum {
 	SELECTION_CHANGED,
 	FOCUS_IN,
 	FOCUS_OUT,
+	COLUMN_EDITED,
 	LAST_SIGNAL
 };
 
@@ -135,6 +136,7 @@ static void         interface_base_init( NactIActionsListInterface *klass );
 static void         interface_base_finalize( NactIActionsListInterface *klass );
 
 static void         free_items_callback( NactIActionsList *instance, GList *items );
+static void         free_column_edited_callback( NactIActionsList *instance, NAObject *object, gchar *text, gint column );
 static void         decrement_counters( NactIActionsList *instance, IActionsListInstanceData *ialid, GList *items );
 static GtkTreePath *get_selection_first_path( GtkTreeView *treeview );
 static void         do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *path, GList **parents );
@@ -164,6 +166,7 @@ static void         on_edition_status_changed( NactIActionsList *instance, NAIDu
 static gboolean     on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance );
 static gboolean     on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance );
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
+static void         on_label_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIActionsList *instance );
 static void         on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
 static void         on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object );
 static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
@@ -315,6 +318,27 @@ interface_base_init( NactIActionsListInterface *klass )
 				1,
 				G_TYPE_POINTER );
 
+		/**
+		 * nact-iactions-list-column-edited:
+		 *
+		 * This signal is emitted byIActionsList when there has been an
+		 * inline edition in one of the columns.
+		 * The edition tabs should updates their own entries.
+		 */
+		st_signals[ COLUMN_EDITED ] = g_signal_new_class_handler(
+				IACTIONS_LIST_SIGNAL_COLUMN_EDITED,
+				G_TYPE_OBJECT,
+				G_SIGNAL_RUN_CLEANUP,
+				G_CALLBACK( free_column_edited_callback ),
+				NULL,
+				NULL,
+				nact_marshal_VOID__POINTER_POINTER_INT,
+				G_TYPE_NONE,
+				3,
+				G_TYPE_POINTER,
+				G_TYPE_POINTER,
+				G_TYPE_INT );
+
 		st_initialized = TRUE;
 	}
 }
@@ -322,8 +346,21 @@ interface_base_init( NactIActionsListInterface *klass )
 static void
 free_items_callback( NactIActionsList *instance, GList *items )
 {
-	g_debug( "free_items_callback: selection=%p (%d items)", ( void * ) items, g_list_length( items ));
+	g_debug( "nact_iactions_list_free_items_callback: selection=%p (%d items)",
+			( void * ) items, g_list_length( items ));
+
 	na_object_free_items_list( items );
+}
+
+static void
+free_column_edited_callback( NactIActionsList *instance, NAObject *object, gchar *text, gint column )
+{
+	static const gchar *thisfn = "nact_iactions_list_free_column_edited_callback";
+
+	g_debug( "%s: instance=%p, object=%p (%s), text=%s, column=%d",
+			thisfn, ( void * ) instance, ( void * ) object, G_OBJECT_TYPE_NAME( object ), text, column );
+
+	g_free( text );
 }
 
 static void
@@ -395,6 +432,7 @@ nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
 		gtk_tree_view_column_set_title( column, _( "Label" ));
 		gtk_tree_view_column_set_sort_column_id( column, IACTIONS_LIST_LABEL_COLUMN );
 		renderer = gtk_cell_renderer_text_new();
+		g_object_set( G_OBJECT( renderer ), "editable", TRUE, NULL );
 		gtk_tree_view_column_pack_start( column, renderer, TRUE );
 		gtk_tree_view_column_set_cell_data_func(
 				column, renderer, ( GtkTreeCellDataFunc ) display_label, instance, NULL );
@@ -420,6 +458,8 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 	gboolean is_proxy;
 	GtkTreeSelection *selection;
 	IActionsListInstanceData *ialid;
+	GtkTreeViewColumn *column;
+	GList *renderers;
 
 	g_debug( "%s: instance=%p, items=%p (%d items)",
 			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
@@ -489,6 +529,15 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 				G_OBJECT( treeview ),
 				"focus-out-event",
 				G_CALLBACK( on_focus_out ));
+
+		/* label edition: inform the corresponding tab */
+		column = gtk_tree_view_get_column( treeview, IACTIONS_LIST_LABEL_COLUMN );
+		renderers = gtk_tree_view_column_get_cell_renderers( column );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( renderers->data ),
+				"edited",
+				G_CALLBACK( on_label_edited ));
 
 		/* records NactIActionsList as a proxy for edition status
 		 * modification */
@@ -1800,6 +1849,32 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *i
 	}
 
 	return( stop );
+}
+
+/*
+ * path: path of the edited row, as a string
+ * text: new text
+ *
+ * - inform tabs so that they can update their fields
+ *   data = object_at_row + new_label
+ *   this will trigger set the object content, and other updates
+ */
+static void
+on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, NactIActionsList *instance )
+{
+	GtkTreeView *treeview;
+	NactTreeModel *model;
+	NAObject *object;
+	GtkTreePath *path;
+	gchar *new_text;
+
+	treeview = get_actions_list_treeview( instance );
+	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+	path = gtk_tree_path_new_from_string( path_str );
+	object = nact_tree_model_object_at_path( model, path );
+	new_text = g_strdup( text );
+
+	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_COLUMN_EDITED, object, new_text, IACTIONS_LIST_LABEL_COLUMN );
 }
 
 /*

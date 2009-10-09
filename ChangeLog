@@ -12,6 +12,11 @@
 	Briefly dump the tree store content.
 	(nact_iactions_list_runtime_init_toplevel): Grab the focus at start.
 	(on_focus_in, on_focus_out): Track the focus in the treeview.
+	Let the label be edited in place.
+
+	* src/nact/nact-iaction-tab.c (on_iactions_list_column_edited):
+	* src/nact/nact-icommand-tab.c (on_iactions_list_column_edited):
+	New functions.
 
 	* src/nact/nact-main-menubar.c (nact_main_menubar_runtime_init):
 	Display a Maintainer menu when in maintainer mode.

@@ -902,6 +902,8 @@ nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data
  * @path: the #GtkTreePath to be searched.
  *
  * Returns: the #NAObject at the given @path if any, or NULL.
+ *
+ * The reference count of the object is not modified.
  */
 NAObject *
 nact_tree_model_object_at_path( NactTreeModel *model, GtkTreePath *path )

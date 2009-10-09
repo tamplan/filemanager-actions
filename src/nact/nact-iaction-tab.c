@@ -40,6 +40,7 @@
 #include "base-window.h"
 #include "nact-application.h"
 #include "nact-main-statusbar.h"
+#include "nact-iactions-list.h"
 #include "nact-main-tab.h"
 #include "nact-iaction-tab.h"
 
@@ -68,6 +69,7 @@ static GType         register_type( void );
 static void          interface_base_init( NactIActionTabInterface *klass );
 static void          interface_base_finalize( NactIActionTabInterface *klass );
 
+static void          on_iactions_list_column_edited( NactIActionTab *instance, NAObject *object, gchar *text, gint column );
 static void          on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selected );
 static void          check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label );
 static GtkTreeModel *create_stock_icon_model( void );
@@ -220,6 +222,12 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ),
 				instance );
+
+		g_signal_connect(
+				G_OBJECT( instance ),
+				IACTIONS_LIST_SIGNAL_COLUMN_EDITED,
+				G_CALLBACK( on_iactions_list_column_edited ),
+				instance );
 	}
 }
 
@@ -272,6 +280,22 @@ nact_iaction_tab_has_label( NactIActionTab *instance )
 	}
 
 	return( has_label );
+}
+
+static void
+on_iactions_list_column_edited( NactIActionTab *instance, NAObject *object, gchar *text, gint column )
+{
+	GtkWidget *label_widget;
+
+	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		if( NA_IS_OBJECT_ACTION( object )){
+			label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionLabelEntry" );
+			gtk_entry_set_text( GTK_ENTRY( label_widget ), text );
+		}
+	}
 }
 
 static void

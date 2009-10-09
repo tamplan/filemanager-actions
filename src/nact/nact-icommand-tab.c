@@ -43,6 +43,7 @@
 #include "base-iprefs.h"
 #include "nact-application.h"
 #include "nact-main-statusbar.h"
+#include "nact-iactions-list.h"
 #include "nact-main-tab.h"
 #include "nact-icommand-tab.h"
 #include "nact-iconditions-tab.h"
@@ -72,6 +73,7 @@ static GType      register_type( void );
 static void       interface_base_init( NactICommandTabInterface *klass );
 static void       interface_base_finalize( NactICommandTabInterface *klass );
 
+static void       on_iactions_list_column_edited( NactICommandTab *instance, NAObject *object, gchar *text, gint column );
 static void       on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected );
 static void       check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label );
 static GtkWidget *get_label_entry( NactICommandTab *instance );
@@ -248,6 +250,12 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ),
 				instance );
+
+		g_signal_connect(
+				G_OBJECT( instance ),
+				IACTIONS_LIST_SIGNAL_COLUMN_EDITED,
+				G_CALLBACK( on_iactions_list_column_edited ),
+				instance );
 	}
 }
 
@@ -303,6 +311,22 @@ nact_icommand_tab_has_label( NactICommandTab *instance )
 	}
 
 	return( has_label );
+}
+
+static void
+on_iactions_list_column_edited( NactICommandTab *instance, NAObject *object, gchar *text, gint column )
+{
+	GtkWidget *label_widget;
+
+	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		if( NA_IS_OBJECT_PROFILE( object )){
+			label_widget = get_label_entry( instance );
+			gtk_entry_set_text( GTK_ENTRY( label_widget ), text );
+		}
+	}
 }
 
 static void

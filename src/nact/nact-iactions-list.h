@@ -107,6 +107,7 @@ typedef struct {
 #define IACTIONS_LIST_SIGNAL_SELECTION_CHANGED			"nact-iactions-list-selection-changed"
 #define IACTIONS_LIST_SIGNAL_FOCUS_IN					"nact-iactions-list-focus-in"
 #define IACTIONS_LIST_SIGNAL_FOCUS_OUT					"nact-iactions-list-focus-out"
+#define IACTIONS_LIST_SIGNAL_COLUMN_EDITED				"nact-iactions-list-column-edited"
 
 /* management modes
  * - edition: dnd, filter, multiple selection, item updated signal
