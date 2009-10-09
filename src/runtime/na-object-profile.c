@@ -1487,8 +1487,8 @@ object_is_valid( const NAObject *profile )
 	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
 
 		if( is_valid ){
-			path = na_object_get_path( profile );
-			parameters = na_object_get_parameters( profile );
+			path = na_object_profile_get_path( NA_OBJECT_PROFILE( profile ));
+			parameters = na_object_profile_get_parameters( NA_OBJECT_PROFILE( profile ));
 
 			is_valid = ( path && g_utf8_strlen( path, -1 ) > 0 ) ||
 						( parameters && g_utf8_strlen( parameters, -1 ) > 0 );
@@ -1498,6 +1498,7 @@ object_is_valid( const NAObject *profile )
 		}
 	}
 
+	g_debug( "na_object_profile_object_is_valid: profile=%p, valid=%s", ( void * ) profile, is_valid ? "True":"False" );
 	return( is_valid );
 }
 

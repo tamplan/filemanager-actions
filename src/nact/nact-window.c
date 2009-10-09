@@ -227,7 +227,7 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 		pivot = nact_window_get_pivot( window );
 		g_assert( NA_IS_PIVOT( pivot ));
 
-		na_object_dump_norec( item );
+		na_object_dump( item );
 
 		ret = na_pivot_write_item( pivot, NA_OBJECT( item ), &msg );
 

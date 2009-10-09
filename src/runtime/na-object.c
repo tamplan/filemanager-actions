@@ -318,7 +318,7 @@ na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b )
  * to get benefits provided by the IDuplicable interface.
  *
  * This suppose also that the edition status of @object has previously
- * been checked via na_object_check_edited_status().
+ * been checked via na_object_check_edition_status().
  *
  * Returns: %TRUE is the provided object has been modified regarding to
  * the original one, %FALSE else.

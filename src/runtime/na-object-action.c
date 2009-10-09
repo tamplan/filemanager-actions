@@ -567,7 +567,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
  * a valid NAObjectAction requires a not null, not empty label
  * this is checked here as NAObjectId doesn't have this condition
  *
- * and at least one profile
+ * and at least one valid profile
  * checked here because NAObjectItem doesn't have this condition
  */
 gboolean
@@ -575,6 +575,8 @@ object_is_valid( const NAObject *action )
 {
 	gchar *label;
 	gboolean is_valid = TRUE;
+	GList *profiles, *ip;
+	gint valid_profiles;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
 
@@ -587,7 +589,14 @@ object_is_valid( const NAObject *action )
 		}
 
 		if( is_valid ){
-			is_valid = ( na_object_get_items_count( action ) >= 1 );
+			valid_profiles = 0;
+			profiles = na_object_get_items_list( action );
+			for( ip = profiles ; ip ; ip = ip->next ){
+				if( na_iduplicable_is_valid( ip->data )){
+					valid_profiles += 1;
+				}
+			}
+			is_valid = ( valid_profiles > 0 );
 		}
 	}
 

@@ -15,9 +15,14 @@
 	Display a Maintainer menu when in maintainer mode.
 	Add BriefTreeStoreDumpItem new item.
 	Display a first toolbar.
+	(on_save_activated): Also save non-valid items.
 
 	* src/nact/nact-tree-model.c (nact_tree_model_insert):
 	Add debug traces.
+	(nact_tree_model_fill): Check validity status at load time.
+
+	* src/nact/nact-window.c (nact_window_save_item):
+	Full dump of the saved item.
 
 	* src/nact/nautilus-actions-config-tool.actions:
 	Define a placeholder for the Maintainer menu.
@@ -29,6 +34,9 @@
 	* src/nact/nautilus-actions-maintainer.actions: New file.
 
 	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/runtime/na-object-action.c (object_is_valid):
+	An action is valid if it has at least one valid profile.
 
 	* src/runtime/na-object-profile.c (object_is_valid):
 	A profile requires rather a command to be valid that a label.

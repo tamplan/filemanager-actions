@@ -555,9 +555,6 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 /*
  * saving is not only saving modified items, but also saving hierarchy
  * (and order if alpha order is not set)
- *
- * note that we only go down in the hierarchy if parent is valid and not
- * modified (or has been successfully saved)
  */
 static void
 on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
@@ -581,7 +578,7 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = nact_iactions_list_get_items( NACT_IACTIONS_LIST( window ));
 	na_pivot_write_level_zero( pivot, items );
 
-	/* recursively save the valid modified items
+	/* recursively save the modified items
 	 */
 	save_items( window, pivot, items );
 	g_list_free( items );
@@ -631,8 +628,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 		save_items( window, pivot, subitems );
 	}
 
-	if( na_object_is_modified( item ) &&
-		na_object_is_valid( item )){
+	if( na_object_is_modified( item )){
 
 		if( nact_window_save_item( NACT_WINDOW( window ), item )){
 
@@ -651,11 +647,6 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 
 			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
 			na_object_reset_origin( item, dup_pivot );
-			g_debug( "save_item: un" );
-			na_object_dump( item );
-			g_debug( "save_item: deux" );
-			na_object_dump( dup_pivot );
-			g_debug( "save_item: trois" );
 			na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
 
 			na_object_check_edition_status( item );

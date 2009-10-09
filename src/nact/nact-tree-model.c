@@ -673,6 +673,7 @@ nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions)
 
 		for( it = items ; it ; it = it->next ){
 			duplicate = na_object_duplicate( it->data );
+			na_object_check_edition_status( duplicate );
 			fill_tree_store( ts_model, model->private->treeview, duplicate, only_actions, NULL );
 			na_object_unref( duplicate );
 		}
