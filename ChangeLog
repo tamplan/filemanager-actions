@@ -7,8 +7,13 @@
 	* src/nact-main.c (main):
 	Only display traces from runtime library when in maintainer mode.
 
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h (nact_iactions_list_brief_tree_dump):
+	Briefly dump the tree store content.
+
 	* src/nact/nact-main-menubar.c (nact_main_menubar_runtime_init):
 	Display a Maintainer menu when in maintainer mode.
+	Add BriefTreeStoreDumpItem new item.
 
 	* src/nact/nact-tree-model.c (nact_tree_model_insert):
 	Add debug traces.

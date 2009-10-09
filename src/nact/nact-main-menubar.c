@@ -957,7 +957,7 @@ on_export_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window )
 {
-
+	nact_iactions_list_brief_tree_dump( NACT_IACTIONS_LIST( window ));
 }
 
 static void

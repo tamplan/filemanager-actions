@@ -506,6 +506,28 @@ nact_iactions_list_dispose( NactIActionsList *instance )
 }
 
 /**
+ * nact_iactions_list_brief_tree_dump:
+ * @instance: this #NactIActionsList implementation.
+ *
+ * Brief dump of the tree store content.
+ */
+void
+nact_iactions_list_brief_tree_dump( NactIActionsList *instance )
+{
+	GtkTreeView *treeview;
+	NactTreeModel *model;
+
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+		nact_tree_model_dump( model );
+	}
+}
+
+/**
  * nact_iactions_list_collapse_all:
  * @instance: this #NactIActionsList implementation.
  *

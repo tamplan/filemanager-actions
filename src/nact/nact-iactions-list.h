@@ -122,6 +122,7 @@ void      nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, 
 void      nact_iactions_list_all_widgets_showed( NactIActionsList *instance );
 void      nact_iactions_list_dispose( NactIActionsList *instance );
 
+void      nact_iactions_list_brief_tree_dump( NactIActionsList *instance );
 void      nact_iactions_list_collapse_all( NactIActionsList *instance );
 void      nact_iactions_list_delete( NactIActionsList *instance, GList *items );
 void      nact_iactions_list_display_order_change( NactIActionsList *instance, gint order_mode );
