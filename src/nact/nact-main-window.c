@@ -110,6 +110,7 @@ enum {
 	SELECTION_CHANGED,
 	ITEM_UPDATED,
 	UPDATE_SENSITIVITIES,
+	ORDER_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -351,6 +352,24 @@ class_init( NactMainWindowClass *klass )
 	 */
 	st_signals[ UPDATE_SENSITIVITIES ] = g_signal_new(
 			MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,					/* no default handler */
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER );
+
+	/**
+	 * main-window-level-zero-order-changed:
+	 *
+	 * This signal is emitted each time a user interaction may led the
+	 * action sensitivities to be updated.
+	 */
+	st_signals[ ORDER_CHANGED ] = g_signal_new(
+			MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
 			G_TYPE_OBJECT,
 			G_SIGNAL_RUN_LAST,
 			0,					/* no default handler */
@@ -788,7 +807,6 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 			actually_delete_item( window, item, pivot );
 		}
 
-		g_debug( "nact_main_window_remove_deleted: before free deleted" );
 		na_object_free_items_list( window->private->deleted );
 		window->private->deleted = NULL;
 	}

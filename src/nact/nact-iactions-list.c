@@ -1232,6 +1232,7 @@ do_insert_into_first( GtkTreeView *treeview, GtkTreeModel *model, GList *items, 
 	NAObject *parent;
 	gchar *insert_path_str;
 	GtkTreePath *inserted_path;
+	GList *subitems;
 
 	insert_path_str = gtk_tree_path_to_string( insert_path );
 	g_debug( "%s: treeview=%p, model=%p, items=%p (count=%d), insert_path=%p (%s), new_path=%p",
@@ -1247,6 +1248,15 @@ do_insert_into_first( GtkTreeView *treeview, GtkTreeModel *model, GList *items, 
 
 	inserted_path = nact_tree_model_insert_into( NACT_TREE_MODEL( model ), NA_OBJECT( last->data ), insert_path, &parent );
 	gtk_tree_view_expand_to_path( treeview, inserted_path );
+
+	/* recursively insert subitems
+	 */
+	if( NA_IS_OBJECT_ITEM( last->data ) && na_object_get_items_count( last->data )){
+
+		subitems = na_object_get_items_list( last->data );
+		do_insert_into_first( treeview, model, subitems, inserted_path, NULL );
+	}
+
 	do_insert_items( treeview, model, copy, inserted_path, NULL );
 
 	if( new_path ){
@@ -1984,6 +1994,7 @@ select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeMo
 
 	if( path ){
 		g_debug( "nact_iactions_list_select_row_at_path: path=%s", gtk_tree_path_to_string( path ));
+		gtk_tree_view_expand_to_path( treeview, path );
 
 		if( gtk_tree_model_get_iter( model, &iter, path )){
 			gtk_tree_view_set_cursor( treeview, path, NULL, FALSE );

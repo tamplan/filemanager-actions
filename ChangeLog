@@ -1,3 +1,18 @@
+2009-10-11 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-iactions-list.c (do_insert_into_first):
+	Recursively insert subitems.
+
+	* src/nact/nact-main-menubar.c (on_level_zero_order_changed):
+	Connect to new signal to enable save action.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h:
+	Define new signal "main-window-level-zero-order-changed".
+
+	* src/nact/nact-tree-model.c (idrag_dest_drag_data_received):
+	Fix drag and drop when reordering items.
+
 2009-10-09 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-iactions-list.c (do_insert_into_first):

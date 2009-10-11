@@ -70,6 +70,7 @@ typedef struct {
 	NactMainWindowClass;
 
 #define MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES	"main-window-update-sensitivities"
+#define MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED		"main-window-level-zero-order-changed"
 
 GType           nact_main_window_get_type( void );
 

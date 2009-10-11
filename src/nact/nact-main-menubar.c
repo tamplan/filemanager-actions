@@ -84,6 +84,7 @@ typedef struct {
 	gboolean is_modified;
 	gboolean have_exportables;
 	gboolean treeview_has_focus;
+	gboolean level_zero_order_changed;
 }
 	MenubarIndicatorsStruct;
 
@@ -93,6 +94,7 @@ static void     on_iactions_list_count_updated( NactMainWindow *window, gint men
 static void     on_iactions_list_selection_changed( NactMainWindow *window, GList *selected );
 static void     on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data );
 static void     on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data );
+static void     on_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
 static void     on_update_sensitivities( NactMainWindow *window, gpointer user_data );
 
 static void     on_new_menu_activated( GtkAction *action, NactMainWindow *window );
@@ -352,6 +354,12 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 			MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES,
 			G_CALLBACK( on_update_sensitivities ));
 
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( window ),
+			MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
+			G_CALLBACK( on_level_zero_order_changed ));
+
 	mis = g_new0( MenubarIndicatorsStruct, 1 );
 	g_object_set_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS, mis );
 }
@@ -446,6 +454,19 @@ on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data )
 }
 
 static void
+on_level_zero_order_changed( NactMainWindow *window, gpointer user_data )
+{
+	MenubarIndicatorsStruct *mis;
+
+	g_debug( "nact_main_menubar_on_level_zero_order_changed" );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	mis->level_zero_order_changed = TRUE;
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+}
+
+static void
 on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_update_sensitivities";
@@ -529,7 +550,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	/* new profile enabled if selection is relative to only one action */
 	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ));
 	/* save enabled if at least one item has been modified */
-	enable_item( window, "SaveItem", has_modified );
+	enable_item( window, "SaveItem", has_modified || mis->level_zero_order_changed );
 	/* quit always enabled */
 
 	/* edit menu (cf. above) */
@@ -624,6 +645,7 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 	GList *items;
 	NactApplication *application;
 	NAPivot *pivot;
+	MenubarIndicatorsStruct *mis;
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
@@ -643,6 +665,11 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 	 */
 	save_items( window, pivot, items );
 	g_list_free( items );
+
+	/* reset level zero indicator
+	 */
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	mis->level_zero_order_changed = FALSE;
 
 	/* required as selection has not changed
 	 */
