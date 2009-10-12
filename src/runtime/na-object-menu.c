@@ -328,12 +328,16 @@ object_are_equal( const NAObject *a, const NAObject *b )
 /*
  * a valid NAObjectMenu requires a not null, not empty label
  * this is checked here as NAObject doesn't have this condition
+ *
+ * also, a valid menu has at least one valid child
  */
 static gboolean
 object_is_valid( const NAObject *menu )
 {
 	gchar *label;
 	gboolean is_valid = TRUE;
+	gint valid_subitems;
+	GList *subitems, *ip;
 
 	g_return_val_if_fail( NA_IS_OBJECT_MENU( menu ), FALSE );
 
@@ -343,6 +347,17 @@ object_is_valid( const NAObject *menu )
 			label = na_object_get_label( menu );
 			is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
 			g_free( label );
+		}
+
+		if( is_valid ){
+			valid_subitems = 0;
+			subitems = na_object_get_items_list( menu );
+			for( ip = subitems ; ip ; ip = ip->next ){
+				if( na_iduplicable_is_valid( ip->data )){
+					valid_subitems += 1;
+				}
+			}
+			is_valid = ( valid_subitems > 0 );
 		}
 	}
 

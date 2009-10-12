@@ -3,6 +3,9 @@
 	* src/nact/nact-tree-model.c (drop_inside):
 	Adjust the dest when moving items down.
 
+	* src/runtime/na-object-menu.c (object_is_valid):
+	A valid menu has at least one valid subitem.
+
 2009-10-11 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-iactions-list.c (do_insert_into_first):
