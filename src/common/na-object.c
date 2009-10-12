@@ -42,69 +42,6 @@
 static GList *v_get_childs( const NAObject *object );
 
 /**
- * na_object_iduplicable_check_edition_status:
- * @object: the #NAObject object to be checked.
- *
- * Recursively checks for the edition status of @object and its childs
- * (if any).
- *
- * Internally set some properties which may be requested later. This
- * two-steps check-request let us optimize some work in the UI.
- *
- * na_object_check_edition_status( object )
- *  +- na_iduplicable_check_edition_status( object )
- *      +- get_origin( object )
- *      +- modified_status = v_are_equal( origin, object ) -> interface are_equal()
- *      +- valid_status = v_is_valid( object )             -> interface is_valid()
- *
- * Note that the recursivity is managed here, so that we can be sure
- * that edition status of childs is actually checked.
- */
-void
-na_object_iduplicable_check_edition_status( const NAObject *object )
-{
-	GList *childs, *ic;
-
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "na_object_iduplicable_check_edition_status: object=%p (%s)",
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));
-#endif
-	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	if( !object->private->dispose_has_run ){
-
-		childs = v_get_childs( object );
-		for( ic = childs ; ic ; ic = ic->next ){
-			na_object_iduplicable_check_edition_status( NA_OBJECT( ic->data ));
-		}
-
-		na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
-	}
-}
-
-/**
- * na_object_iduplicable_is_valid:
- * @object: the #NAObject object whose validity is to be checked.
- *
- * Gets the validity status of @object.
- *
- * Returns: %TRUE is @object is valid, %FALSE else.
- */
-gboolean
-na_object_iduplicable_is_valid( const NAObject *object )
-{
-	gboolean is_valid = FALSE;
-
-	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
-
-	if( !object->private->dispose_has_run ){
-		is_valid = na_iduplicable_is_valid( NA_IDUPLICABLE( object ));
-	}
-
-	return( is_valid );
-}
-
-/**
  * na_object_iduplicable_get_origin:
  * @object: the #NAObject object whose status is requested.
  *

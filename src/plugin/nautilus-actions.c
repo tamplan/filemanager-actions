@@ -353,8 +353,9 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, GList *files )
 
 		g_return_val_if_fail( NA_IS_OBJECT_ITEM( it->data ), NULL );
 
-		if( !na_object_is_enabled( it->data )){
-			continue;
+		if( !na_object_is_enabled( it->data ) ||
+			!na_object_is_valid( it->data )){
+				continue;
 		}
 
 		label = na_object_get_label( it->data );

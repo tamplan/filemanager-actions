@@ -58,8 +58,6 @@ G_BEGIN_DECLS
 
 /* NAIDuplicable
  */
-#define na_object_check_edition_status( object )	na_object_iduplicable_check_edition_status( NA_OBJECT( object ))
-#define na_object_is_valid( object )				na_object_iduplicable_is_valid( NA_OBJECT( object ))
 #define na_object_get_origin( object )				na_object_iduplicable_get_origin( NA_OBJECT( object ))
 #define na_object_set_origin( object, origin )		na_object_iduplicable_set_origin( NA_OBJECT( object ), NA_OBJECT( origin ))
 

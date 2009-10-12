@@ -156,7 +156,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_iio_provider_get_items_tree";
 	GList *providers;
-	GList *merged, *hierarchy;
+	GList *merged, *hierarchy, *it;
 	GSList *level_zero;
 	gint order_mode;
 
@@ -208,6 +208,10 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 			case IPREFS_ORDER_MANUAL:
 			default:
 				break;
+		}
+
+		for( it = hierarchy ; it ; it = it->next ){
+			na_object_check_edition_status( it->data );
 		}
 	}
 

@@ -1,7 +1,33 @@
 2009-10-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-object-api.h
+	(na_object_check_edition_status, na_object_is_valid):
+	Moved to src/runtime/na-object-api.h.
+
+	* src/common/na-object-fn.h:
+	* src/common/na-object.c
+	(na_object_iduplicable_check_edition_status,
+	na_object_iduplicable_is_valid): 
+	Moved to src/runtime/na-object-fn.h, src/runtime/na-object.c.
+
 	* src/nact/nact-tree-model.c (drop_inside):
 	Adjust the dest when moving items down.
+
+	* src/plugin/nautilus-actions.c (build_nautilus_menus):
+	Only display valid items.
+
+	* src/runtime/na-iio-provider.c (na_iio_provider_get_items_tree):
+	Check validity status at load time.
+
+	* src/runtime/na-object-api.h
+	(na_object_check_edition_status, na_object_is_valid):
+	Moved from src/common/na-object-api.h.
+
+	* src/runtime/na-object-fn.h:
+	* src/runtime/na-object.c
+	(na_object_iduplicable_check_edition_status,
+        na_object_iduplicable_is_valid):
+	Moved from  src/common/na-object-fn.h, src/common/na-object.c.
 
 	* src/runtime/na-object-menu.c (object_is_valid):
 	A valid menu has at least one valid subitem.
