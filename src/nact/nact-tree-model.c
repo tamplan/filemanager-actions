@@ -442,7 +442,7 @@ nact_tree_model_initial_load( BaseWindow *window, GtkTreeView *treeview )
 }
 
 /**
- * nact_tree_model_runtime_init_dnd:
+ * nact_tree_model_runtime_init:
  * @model: this #NactTreeModel instance.
  * @have_dnd: whether the tree model must implement drag and drop
  * interfaces.
@@ -739,11 +739,10 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
  * profile in an action, we may have store_iter_path="0:1" (good), but
  * iter_path="0:0" (bad) - so we'd rather return a string path.
  *
- * Note that we do not return anything here as the insertion path at
- * the beginning of the function is always valid when the function
- * returns; it points now to the newly inserted row.
+ * Returns: the actual insertion path, which may be different from the
+ * asked insertion path if tree is sorted.
  */
-void
+GtkTreePath *
 nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent )
 {
 	static const gchar *thisfn = "nact_tree_model_insert";
@@ -752,6 +751,7 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 	GtkTreeIter iter;
 	GtkTreeIter parent_iter;
 	GtkTreePath *parent_path;
+	GtkTreePath *inserted_path;
 	NAObject *parent_obj;
 	gboolean has_parent;
 	GtkTreeIter sibling_iter;
@@ -765,8 +765,10 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count,
 			( void * ) path, path_str, ( void * ) parent );
 	g_free( path_str );
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), NULL );
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+
+	inserted_path = NULL;
 
 	if( !model->private->dispose_has_run ){
 
@@ -816,7 +818,11 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 				has_sibling ? &sibling_iter : NULL );
 		gtk_tree_store_set( GTK_TREE_STORE( store ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, object, -1 );
 		display_item( GTK_TREE_STORE( store ), model->private->treeview, &iter, object );
+
+		inserted_path = gtk_tree_model_get_path( store, &iter );
 	}
+
+	return( inserted_path );
 }
 
 GtkTreePath *

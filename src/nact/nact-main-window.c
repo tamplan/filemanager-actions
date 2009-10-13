@@ -922,6 +922,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 	NactApplication *application;
 	NAPivot *pivot;
 	GList *tree;
+	gint order_mode;
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -944,6 +945,9 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_iconditions_tab_runtime_init_toplevel( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_runtime_init_toplevel( NACT_IADVANCED_TAB( window ));
 		nact_main_menubar_runtime_init( window );
+
+		order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
+		ipivot_consumer_on_display_order_changed( NA_IPIVOT_CONSUMER( window ), order_mode );
 
 		/* fill the IActionsList at last so that all signals are connected
 		 */

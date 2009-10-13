@@ -1189,6 +1189,7 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 	GList *subitems;
 	NAObject *obj_parent;
 	gpointer updatable;
+	GtkTreePath *inserted_path;
 
 	obj_parent = NULL;
 	if( list_parents ){
@@ -1199,7 +1200,7 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 
 	for( it = reversed ; it ; it = it->next ){
 
-		nact_tree_model_insert( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ), insert_path, &obj_parent );
+		inserted_path = nact_tree_model_insert( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ), insert_path, &obj_parent );
 
 		g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
 				( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
@@ -1216,8 +1217,10 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 		if( NA_IS_OBJECT_ITEM( it->data ) && na_object_get_items_count( it->data )){
 
 			subitems = na_object_get_items_list( it->data );
-			do_insert_into_first( treeview, model, subitems, insert_path, NULL );
+			do_insert_into_first( treeview, model, subitems, inserted_path, NULL );
 		}
+
+		gtk_tree_path_free( inserted_path );
 	}
 
 	/*g_list_free( reversed );*/

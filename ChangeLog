@@ -9,15 +9,18 @@
 
 	* src/nact/nact-iactions-list.c (on_tab_updatable_item_updated):
 	Recursively update the display of parents of the updated item.
+	(do_insert_items): Insert childs into the actual insertion path.
 
 	* src/nact/nact-main-menubar.c (on_update_sensitivities):
 	Only enable new menu and new action when on an action or a menu.
 
 	* src/nact/nact-main-tab.h:
 	* src/nact/nact-main-window.c: New SELECTED_ROW property.
+	(on_base_runtime_init_toplevel): Setup the order mode at init time.
 
 	* src/nact/nact-tree-model.c (sort_actions_list):
 	Do not sort profiles.
+	(nact_tree_model_insert): Returns the actual insertion path.
 
 	* src/runtime/na-gconf-provider-keys.h:
 	OBJECT_ITEM_TYPE_ENTRY: new key which defines the type of the entry.
