@@ -1921,7 +1921,7 @@ static void
 on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object )
 {
 	static const gchar *thisfn = "nact_iactions_list_on_tab_updatable_item_updated";
-	NAObject *item;
+	NAObjectId *item;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 
@@ -1931,18 +1931,8 @@ on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object )
 	if( object ){
 		treeview = get_actions_list_treeview( instance );
 		model = gtk_tree_view_get_model( treeview );
-
-		item = object;
-		if( NA_IS_OBJECT_PROFILE( object )){
-			item = NA_OBJECT( na_object_get_parent( object ));
-		}
-
+		item = na_object_get_topmost_parent( object );
 		na_object_check_edition_status( item );
-
-		nact_tree_model_display( NACT_TREE_MODEL( model ), object );
-		if( NA_IS_OBJECT_PROFILE( object )){
-			nact_tree_model_display( NACT_TREE_MODEL( model ), NA_OBJECT( item ));
-		}
 	}
 }
 

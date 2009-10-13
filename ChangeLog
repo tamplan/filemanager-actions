@@ -1,3 +1,15 @@
+2009-10-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-object-api.h (na_object_get_topmost_parent):
+	New function.
+
+	* src/common/na-object-id-fn.h:
+	* src/common/na-object-id.c (na_object_id_get_topmost_parent):
+	New function.
+
+	* src/nact/nact-iactions-list.c (on_tab_updatable_item_updated):
+	Recursively update the display of parents of the updated item.
+
 2009-10-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-object-api.h

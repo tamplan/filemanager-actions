@@ -42,6 +42,31 @@
 #include "na-iprefs.h"
 
 /**
+ * na_object_id_get_topmost_parent:
+ * @object: the #NAObject whose parent is searched.
+ *
+ * Returns: the topmost parent, maybe @object itself.
+ */
+NAObjectId *
+na_object_id_get_topmost_parent( NAObjectId *object )
+{
+	NAObjectId *parent;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), NULL );
+
+	parent = object;
+
+	if( !object->private->dispose_has_run ){
+
+		while( parent->private->parent ){
+			parent = NA_OBJECT_ID( parent->private->parent );
+		}
+	}
+
+	return( parent );
+}
+
+/**
  * na_object_id_prepare_for_paste:
  * @object: the #NAObjectId object to be pasted.
  * @pivot; the #NAPivot instance which let us access to preferences.
