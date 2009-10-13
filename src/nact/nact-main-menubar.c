@@ -501,13 +501,26 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( !profile || NA_IS_OBJECT_PROFILE( profile ));
 
 	has_modified = nact_main_window_has_modified_items( window );
-	count_list = mis->list_menus + mis->list_actions + mis->list_profiles;
-	count_selected = mis->selected_menus + mis->selected_actions + mis->selected_profiles;
 
-	clipboard_is_empty = ( mis->clipboard_menus + mis->clipboard_actions + mis->clipboard_profiles == 0 );
+	/* new menu enabled if selection is a menu or an action */
+	/* new action enabled if selection is a menu or an action */
+	new_item_enabled = ( selected_row == NULL || NA_IS_OBJECT_ITEM( selected_row ));
+	enable_item( window, "NewMenuItem", new_item_enabled );
+	enable_item( window, "NewActionItem", new_item_enabled );
+
+	/* new profile enabled if selection is relative to only one action */
+	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ));
+
+	/* save enabled if at least one item has been modified */
+	enable_item( window, "SaveItem", has_modified || mis->level_zero_order_changed );
+
+	/* quit always enabled */
 
 	/* edit menu is only enabled when the treeview has the focus
 	 */
+
+	clipboard_is_empty = ( mis->clipboard_menus + mis->clipboard_actions + mis->clipboard_profiles == 0 );
+	count_selected = mis->selected_menus + mis->selected_actions + mis->selected_profiles;
 
 	/* cut/copy/duplicate/delete enabled when selection not empty */
 	cut_enabled = mis->treeview_has_focus && count_selected > 0;
@@ -548,18 +561,6 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 		}
 	}
 
-	/* new menu always enabled */
-	/* new action always enabled */
-	new_item_enabled = ( selected_row == NULL || NA_IS_OBJECT_ITEM( selected_row ));
-	enable_item( window, "NewMenuItem", new_item_enabled );
-	enable_item( window, "NewActionItem", new_item_enabled );
-	/* new profile enabled if selection is relative to only one action */
-	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ));
-	/* save enabled if at least one item has been modified */
-	enable_item( window, "SaveItem", has_modified || mis->level_zero_order_changed );
-	/* quit always enabled */
-
-	/* edit menu (cf. above) */
 	enable_item( window, "CutItem", cut_enabled );
 	enable_item( window, "CopyItem", copy_enabled );
 	enable_item( window, "PasteItem", paste_enabled );
@@ -568,15 +569,22 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	enable_item( window, "DeleteItem", delete_enabled );
 
 	/* reload items always enabled */
+
 	/* preferences always enabled */
+
 	/* expand all/collapse all requires at least one item in the list */
+	count_list = mis->list_menus + mis->list_actions + mis->list_profiles;
 	enable_item( window, "ExpandAllItem", count_list > 0 );
 	enable_item( window, "CollapseAllItem", count_list > 0 );
+
 	/* import item always enabled */
+
 	/* export item enabled if IActionsList store contains actions */
 	enable_item( window, "ExportItem", mis->have_exportables );
+
 	/* TODO: help temporarily disabled */
 	enable_item( window, "HelpItem", FALSE );
+
 	/* about always enabled */
 }
 
