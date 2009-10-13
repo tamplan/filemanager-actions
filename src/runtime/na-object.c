@@ -247,7 +247,8 @@ instance_finalize( GObject *object )
  *      +- valid_status = v_is_valid( object )             -> interface is_valid()
  *
  * Note that the recursivity is managed here, so that we can be sure
- * that edition status of childs is actually checked.
+ * that edition status of childs is actually checked before those of
+ * the parent.
  */
 void
 na_object_iduplicable_check_status( const NAObject *object )
@@ -696,21 +697,7 @@ copy_hierarchy( NAObject *target, const NAObject *source )
 static gboolean
 do_are_equal( const NAObject *a, const NAObject *b )
 {
-	gboolean are_equal;
-
-	/* as there is no data in NAObject, they are considered here as
-	 * equal is both null or both not null
-	 */
-	are_equal = ( a && b ) || ( !a && !b );
-
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "na_object_do_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
-			( void * ) a, G_OBJECT_TYPE_NAME( a ),
-			( void * ) b, G_OBJECT_TYPE_NAME( b ),
-			are_equal ? "True":"False" );
-#endif
-
-	return( are_equal );
+	return( TRUE );
 }
 
 static void
@@ -733,8 +720,7 @@ do_dump( const NAObject *object )
 static gboolean
 do_is_valid( const NAObject *object )
 {
-	/* as there is no data in NAObject, it is always valid */
-	return( object ? TRUE : FALSE );
+	return( TRUE );
 }
 
 static void

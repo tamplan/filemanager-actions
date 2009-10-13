@@ -463,6 +463,12 @@ object_copy( NAObject *target, const NAObject *source )
 	}
 }
 
+/*
+ * note that parent is not pertinent here, as two objects may be
+ * considered as equal even if they not have the same parent
+ * (and typically when we compare a duplicated object in the treeview
+ *  against its origin in the pivot !)
+ */
 static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )
 {

@@ -268,7 +268,7 @@ object_is_valid( const NAObject *menu )
 		if( is_valid ){
 			valid_subitems = 0;
 			subitems = na_object_get_items_list( menu );
-			for( ip = subitems ; ip ; ip = ip->next ){
+			for( ip = subitems ; ip && !valid_subitems ; ip = ip->next ){
 				if( na_iduplicable_is_valid( ip->data )){
 					valid_subitems += 1;
 				}

@@ -591,7 +591,7 @@ object_is_valid( const NAObject *action )
 		if( is_valid ){
 			valid_profiles = 0;
 			profiles = na_object_get_items_list( action );
-			for( ip = profiles ; ip ; ip = ip->next ){
+			for( ip = profiles ; ip && !valid_profiles ; ip = ip->next ){
 				if( na_iduplicable_is_valid( ip->data )){
 					valid_profiles += 1;
 				}
