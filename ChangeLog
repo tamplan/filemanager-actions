@@ -1,5 +1,13 @@
 2009-10-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-object-api.h:
+	* src/common/na-object-id-fn.h:
+	* src/common/na-object-id.c (na_object_check_status_up):
+	New function.
+
+	* src/nact/nact-tree-model.c (nact_tree_model_remove):
+	Simplifies the code by only checking the status of the parent.
+
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nact-main-menubar.c:
 	* src/nact/nact-tree-model.c:

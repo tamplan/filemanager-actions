@@ -170,7 +170,7 @@ static NactTreeModel *tree_model_new( BaseWindow *window, GtkTreeView *treeview 
 static void           fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, NAObject *object, gboolean only_actions, GtkTreeIter *parent );
 static void           remove_if_exists( NactTreeModel *model, GtkTreeModel *store, const NAObject *object );
 
-static GList         *add_parent( GList *parents, GtkTreeModel *store, GtkTreeIter *obj_iter );
+/*static GList         *add_parent( GList *parents, GtkTreeModel *store, GtkTreeIter *obj_iter );*/
 static void           append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
 static void           display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, const NAObject *object );
 static gboolean       dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpStruct *ntm );
@@ -952,8 +952,7 @@ nact_tree_model_remove( NactTreeModel *model, NAObject *object )
 	static const gchar *thisfn = "nact_tree_model_remove";
 	GtkTreeIter iter;
 	GtkTreeStore *store;
-	GList *parents = NULL;
-	GList *it;
+	NAObjectItem *parent;
 	GtkTreePath *path = NULL;
 
 	g_debug( "%s: model=%p, object=%p (%s)",
@@ -965,52 +964,18 @@ nact_tree_model_remove( NactTreeModel *model, NAObject *object )
 		store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 
 		if( search_for_object( model, GTK_TREE_MODEL( store ), object, &iter )){
-			parents = add_parent( parents, GTK_TREE_MODEL( store ), &iter );
+			/*parents = add_parent( parents, GTK_TREE_MODEL( store ), &iter );*/
+			parent = na_object_get_parent( object );
+			if( parent ){
+				na_object_remove_item( parent, object );
+				na_object_check_status_up( parent );
+			}
 			path = gtk_tree_model_get_path( GTK_TREE_MODEL( store ), &iter );
 			remove_items( store, &iter );
-		}
-
-		for( it = parents ; it ; it = it->next ){
-			na_object_check_status( it->data );
 		}
 	}
 
 	return( path );
-}
-
-/*
- * iter is positionned on the row which is going to be deleted
- * remove the object from the subitems list of parent (if any)
- * add parent to the list to check its status after remove will be done
- */
-static GList *
-add_parent( GList *parents, GtkTreeModel *store, GtkTreeIter *obj_iter )
-{
-	NAObject *object;
-	GtkTreePath *path;
-	GtkTreeIter iter;
-	NAObject *parent;
-
-	gtk_tree_model_get( store, obj_iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-	path = gtk_tree_model_get_path( store, obj_iter );
-
-	if( gtk_tree_path_get_depth( path ) > 1 ){
-		gtk_tree_path_up( path );
-		gtk_tree_model_get_iter( store, &iter, path );
-		gtk_tree_model_get( store, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &parent, -1 );
-
-		if( !g_list_find( parents, parent )){
-			parents = g_list_prepend( parents, parent );
-			na_object_remove_item( parent, object );
-		}
-
-		g_object_unref( parent );
-	}
-
-	gtk_tree_path_free( path );
-	g_object_unref( object );
-
-	return( parents );
 }
 
 static void

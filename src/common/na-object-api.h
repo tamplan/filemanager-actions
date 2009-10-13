@@ -52,17 +52,18 @@
 
 G_BEGIN_DECLS
 
-/* NAObject
- */
-#define na_object_reset_origin( object, origin )	na_object_object_reset_origin( NA_OBJECT( object ), ( NAObject * ) origin )
-
 /* NAIDuplicable
  */
 #define na_object_get_origin( object )				na_object_iduplicable_get_origin( NA_OBJECT( object ))
 #define na_object_set_origin( object, origin )		na_object_iduplicable_set_origin( NA_OBJECT( object ), NA_OBJECT( origin ))
 
+/* NAObject
+ */
+#define na_object_reset_origin( object, origin )	na_object_object_reset_origin( NA_OBJECT( object ), ( NAObject * ) origin )
+
 /* NAObjectId
  */
+#define na_object_check_status_up( object )			na_object_id_check_status_up( NA_OBJECT_ID( object ))
 #define na_object_get_topmost_parent( object )		na_object_id_get_topmost_parent( NA_OBJECT_ID( object ))
 #define na_object_prepare_for_paste( object, pivot, renumber, action ) \
 													na_object_id_prepare_for_paste( NA_OBJECT_ID( object ), pivot, renumber, ( NAObjectAction * ) action )

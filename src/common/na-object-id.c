@@ -42,6 +42,28 @@
 #include "na-iprefs.h"
 
 /**
+ * na_object_id_check_status_up:
+ * @object: the object at the start of the hierarchy.
+ *
+ * Checks for modification and validity status of the @object, its
+ * parent, the parent of its parent, etc. up to the top of the hierarchy.
+ */
+void
+na_object_id_check_status_up( NAObjectId *object )
+{
+	g_return_if_fail( NA_OBJECT_ID( object ));
+
+	if( !object->private->dispose_has_run ){
+
+		na_iduplicable_check_status( NA_IDUPLICABLE( object ));
+
+		if( object->private->parent ){
+			na_object_id_check_status_up( NA_OBJECT_ID( object->private->parent ));
+		}
+	}
+}
+
+/**
  * na_object_id_get_topmost_parent:
  * @object: the #NAObject whose parent is searched.
  *
