@@ -473,6 +473,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	MenubarIndicatorsStruct *mis;
 	NAObject *item;
 	NAObject *profile;
+	NAObject *selected_row;
 	gboolean has_modified;
 	gint count_list;
 	gint count_selected;
@@ -483,6 +484,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	gboolean duplicate_enabled;
 	gboolean delete_enabled;
 	gboolean clipboard_is_empty;
+	gboolean new_item_enabled;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -493,6 +495,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 			G_OBJECT( window ),
 			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_SELECTED_ROW, &selected_row,
 			NULL );
 	g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
 	g_return_if_fail( !profile || NA_IS_OBJECT_PROFILE( profile ));
@@ -547,6 +550,9 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	/* new menu always enabled */
 	/* new action always enabled */
+	new_item_enabled = ( selected_row == NULL || NA_IS_OBJECT_ITEM( selected_row ));
+	enable_item( window, "NewMenuItem", new_item_enabled );
+	enable_item( window, "NewActionItem", new_item_enabled );
 	/* new profile enabled if selection is relative to only one action */
 	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ));
 	/* save enabled if at least one item has been modified */

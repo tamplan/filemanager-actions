@@ -87,9 +87,17 @@ struct NactMainWindowPrivate {
 	 * Conditions and Advanced ; it may be different of the row being
 	 * currently selected.
 	 *
-	 * Can be null if @edited_item is a menu or an invalid action.
+	 * Can be null if @edited_item is a menu, or an action with more
+	 * than one profile and action is selected, or an action without
+	 * any profile.
 	 */
 	NAObjectProfile *edited_profile;
+
+	/**
+	 * Currently selected row.
+	 * May be null if list is empty or selection is multiple.
+	 */
+	NAObjectId      *selected_row;
 
 	/**
 	 * The convenience clipboard object.
@@ -101,7 +109,8 @@ struct NactMainWindowPrivate {
  */
 enum {
 	PROP_EDITED_ITEM = 1,
-	PROP_EDITED_PROFILE
+	PROP_EDITED_PROFILE,
+	PROP_SELECTED_ROW
 };
 
 /* signals
@@ -289,6 +298,13 @@ class_init( NactMainWindowClass *klass )
 			"A pointer to the edited NAObjectProfile",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_EDITED_PROFILE, spec );
+
+	spec = g_param_spec_pointer(
+			TAB_UPDATABLE_PROP_SELECTED_ROW,
+			"Selected NAObjectId",
+			"A pointer to the currently selected row",
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_SELECTED_ROW, spec );
 
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
@@ -512,6 +528,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_pointer( value, self->private->edited_profile );
 				break;
 
+			case PROP_SELECTED_ROW	:
+				g_value_set_pointer( value, self->private->selected_row );
+				break;
+
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -536,6 +556,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case PROP_EDITED_PROFILE:
 				self->private->edited_profile = g_value_get_pointer( value );
+				break;
+
+			case PROP_SELECTED_ROW:
+				self->private->selected_row = g_value_get_pointer( value );
 				break;
 
 			default:
@@ -639,7 +663,7 @@ nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid 
 
 	if( !window->private->dispose_has_run ){
 
-		/* leave here this dead code, if case I change of opinion later */
+		/* leave here this dead code, in case I change of opinion later */
 		if( FALSE ){
 			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 			pivot = nact_application_get_pivot( application );
@@ -975,7 +999,10 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 	}
 
 	if( count == 1 ){
+		g_return_if_fail( NA_IS_OBJECT_ID( selected_items->data ));
 		object = NA_OBJECT( selected_items->data );
+		window->private->selected_row = NA_OBJECT_ID( object );
+
 		if( NA_IS_OBJECT_ITEM( object )){
 			window->private->edited_item = NA_OBJECT_ITEM( object );
 			set_current_object_item( window, selected_items );
@@ -987,6 +1014,7 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 		}
 
 	} else {
+		window->private->selected_row = NULL;
 		window->private->edited_item = NULL;
 		set_current_object_item( window, selected_items );
 	}

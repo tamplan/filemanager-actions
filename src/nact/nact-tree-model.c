@@ -1962,10 +1962,14 @@ sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer
 	gtk_tree_model_get( model, a, IACTIONS_LIST_NAOBJECT_COLUMN, &obj_a, -1 );
 	gtk_tree_model_get( model, b, IACTIONS_LIST_NAOBJECT_COLUMN, &obj_b, -1 );
 
-	ret = na_pivot_sort_alpha_asc( obj_a, obj_b );
-
 	g_object_unref( obj_b );
 	g_object_unref( obj_a );
+
+	if( NA_IS_OBJECT_PROFILE( obj_a )){
+		ret = 0;
+	} else {
+		ret = na_pivot_sort_alpha_asc( obj_a, obj_b );
+	}
 
 	/*g_debug( "%s: ret=%d", thisfn, ret );*/
 	return( ret );

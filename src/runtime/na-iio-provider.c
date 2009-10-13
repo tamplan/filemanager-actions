@@ -490,7 +490,7 @@ sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn )
 	/* recursively sort each level of the tree
 	 */
 	for( it = sorted ; it ; it = it->next ){
-		if( NA_IS_OBJECT_ITEM( it->data )){
+		if( NA_IS_OBJECT_MENU( it->data )){
 			items = na_object_get_items_list( it->data );
 			items = sort_tree( pivot, items, fn );
 			na_object_set_items_list( it->data, items );
