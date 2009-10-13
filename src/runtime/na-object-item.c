@@ -819,7 +819,7 @@ object_copy( NAObject *target, const NAObject *source )
  * because the equality test will stop as soon as it fails, and we so
  * cannot be sure to even come here.
  *
- * The recursivity of na_object_check_edition_status() is directly
+ * The recursivity of na_object_check_status() is directly
  * dealt with by the main entry api function.
  *
  * More, the modification status of subitems doesn't have any

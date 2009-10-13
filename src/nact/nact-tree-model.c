@@ -677,7 +677,7 @@ nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions)
 
 		for( it = items ; it ; it = it->next ){
 			duplicate = na_object_duplicate( it->data );
-			na_object_check_edition_status( duplicate );
+			na_object_check_status( duplicate );
 			fill_tree_store( ts_model, model->private->treeview, duplicate, only_actions, NULL );
 			na_object_unref( duplicate );
 		}
@@ -971,7 +971,7 @@ nact_tree_model_remove( NactTreeModel *model, NAObject *object )
 		}
 
 		for( it = parents ; it ; it = it->next ){
-			na_object_check_edition_status( it->data );
+			na_object_check_status( it->data );
 		}
 	}
 

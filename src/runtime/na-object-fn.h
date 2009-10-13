@@ -48,7 +48,7 @@ G_BEGIN_DECLS
 
 /* NAIDuplicable
  */
-void      na_object_iduplicable_check_edition_status( const NAObject *object );
+void      na_object_iduplicable_check_status( const NAObject *object );
 NAObject *na_object_iduplicable_duplicate( const NAObject *object );
 gboolean  na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b );
 gboolean  na_object_iduplicable_is_modified( const NAObject *object );

@@ -211,7 +211,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 		}
 
 		for( it = hierarchy ; it ; it = it->next ){
-			na_object_check_edition_status( it->data );
+			na_object_check_status( it->data );
 		}
 	}
 

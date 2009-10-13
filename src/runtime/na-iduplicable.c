@@ -301,7 +301,7 @@ na_iduplicable_dump( const NAIDuplicable *object )
 }
 
 /**
- * na_iduplicable_check_edition_status:
+ * na_iduplicable_check_status:
  * @object: the #NAIDuplicable object to be checked.
  *
  * Checks the edition status of the #NAIDuplicable object, and set up
@@ -313,17 +313,17 @@ na_iduplicable_dump( const NAIDuplicable *object )
  * functions na_iduplicable_is_modified() and na_iduplicable_is_valid()
  * will then only return the current value of the properties.
  *
- * na_iduplicable_check_edition_status() is not, as itself, recursive.
+ * na_iduplicable_check_status() is not, as itself, recursive.
  * That is, the modification and validity status are only set on the
  * specified object.
  * Nonetheless, a derived class may perfectly implement a recursive
  * check on childs, if any. See, e.g. #NAObject implementation.
  */
 void
-na_iduplicable_check_edition_status( const NAIDuplicable *object )
+na_iduplicable_check_status( const NAIDuplicable *object )
 {
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	static const gchar *thisfn = "na_iduplicable_check_edition_status";
+	static const gchar *thisfn = "na_iduplicable_check_status";
 #endif
 	gboolean modified = TRUE;
 	NAIDuplicable *origin;

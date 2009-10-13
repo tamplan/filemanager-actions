@@ -231,7 +231,7 @@ instance_finalize( GObject *object )
 }
 
 /**
- * na_object_iduplicable_check_edition_status:
+ * na_object_iduplicable_check_status:
  * @object: the #NAObject object to be checked.
  *
  * Recursively checks for the edition status of @object and its childs
@@ -240,8 +240,8 @@ instance_finalize( GObject *object )
  * Internally set some properties which may be requested later. This
  * two-steps check-request let us optimize some work in the UI.
  *
- * na_object_check_edition_status( object )
- *  +- na_iduplicable_check_edition_status( object )
+ * na_object_check_status( object )
+ *  +- na_iduplicable_check_status( object )
  *      +- get_origin( object )
  *      +- modified_status = v_are_equal( origin, object ) -> interface are_equal()
  *      +- valid_status = v_is_valid( object )             -> interface is_valid()
@@ -250,12 +250,12 @@ instance_finalize( GObject *object )
  * that edition status of childs is actually checked.
  */
 void
-na_object_iduplicable_check_edition_status( const NAObject *object )
+na_object_iduplicable_check_status( const NAObject *object )
 {
 	GList *childs, *ic;
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "na_object_iduplicable_check_edition_status: object=%p (%s)",
+	g_debug( "na_object_iduplicable_check_status: object=%p (%s)",
 			( void * ) object, G_OBJECT_TYPE_NAME( object ));
 #endif
 	g_return_if_fail( NA_IS_OBJECT( object ));
@@ -264,10 +264,10 @@ na_object_iduplicable_check_edition_status( const NAObject *object )
 
 		childs = v_get_childs( object );
 		for( ic = childs ; ic ; ic = ic->next ){
-			na_object_iduplicable_check_edition_status( NA_OBJECT( ic->data ));
+			na_object_iduplicable_check_status( NA_OBJECT( ic->data ));
 		}
 
-		na_iduplicable_check_edition_status( NA_IDUPLICABLE( object ));
+		na_iduplicable_check_status( NA_IDUPLICABLE( object ));
 	}
 }
 
@@ -359,7 +359,7 @@ na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b )
  * to get benefits provided by the IDuplicable interface.
  *
  * This suppose also that the edition status of @object has previously
- * been checked via na_object_check_edition_status().
+ * been checked via na_object_check_status().
  *
  * Returns: %TRUE is the provided object has been modified regarding to
  * the original one, %FALSE else.

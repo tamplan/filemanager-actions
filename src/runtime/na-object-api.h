@@ -64,7 +64,7 @@ G_BEGIN_DECLS
 
 /* NAIDuplicable
  */
-#define na_object_check_edition_status( object )	na_object_iduplicable_check_edition_status( NA_OBJECT( object ))
+#define na_object_check_status( object )			na_object_iduplicable_check_status( NA_OBJECT( object ))
 #define na_object_duplicate( object )				na_object_iduplicable_duplicate( NA_OBJECT( object ))
 #define na_object_are_equal( a, b )					na_object_iduplicable_are_equal( NA_OBJECT( a ), NA_OBJECT( b ))
 #define na_object_is_modified( object )				na_object_iduplicable_is_modified( NA_OBJECT( object ))

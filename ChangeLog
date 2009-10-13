@@ -1,5 +1,17 @@
 2009-10-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-tree-model.c:
+	* src/runtime/na-iduplicable.c:
+	* src/runtime/na-iduplicable.h:
+	* src/runtime/na-iio-provider.c:
+	* src/runtime/na-object-api.h:
+	* src/runtime/na-object-fn.h:
+	* src/runtime/na-object-item.c:
+	* src/runtime/na-object.c:
+	Renamed na_object_check_edition_status() to na_object_check_status().
+
 	* src/common/na-object-api.h (na_object_get_topmost_parent):
 	New function.
 

@@ -152,7 +152,7 @@ GType          na_iduplicable_get_type( void );
 void           na_iduplicable_init( NAIDuplicable *object );
 void           na_iduplicable_dispose( NAIDuplicable *object );
 void           na_iduplicable_dump( const NAIDuplicable *object );
-void           na_iduplicable_check_edition_status( const NAIDuplicable *object );
+void           na_iduplicable_check_status( const NAIDuplicable *object );
 NAIDuplicable *na_iduplicable_duplicate( const NAIDuplicable *object );
 
 gboolean       na_iduplicable_is_modified( const NAIDuplicable *object );

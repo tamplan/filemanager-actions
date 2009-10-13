@@ -639,7 +639,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	name = na_object_action_get_new_profile_name( action );
 	na_object_set_parent( profile, action );
 	na_object_set_id( profile, name );
-	na_object_check_edition_status( profile );
+	na_object_check_status( profile );
 
 	items = g_list_prepend( NULL, profile );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
@@ -751,7 +751,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 			na_object_reset_origin( item, dup_pivot );
 			na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
 
-			na_object_check_edition_status( item );
+			na_object_check_status( item );
 		}
 	}
 }
