@@ -46,8 +46,8 @@
 #define OBJECT_ITEM_LIST_ENTRY			"items"
 #define OBJECT_ITEM_TYPE_ENTRY			"type"
 
-#define OBJECT_ITEM_TYPE_MENU			"menu"
-#define OBJECT_ITEM_TYPE_ACTION			"action"
+#define OBJECT_ITEM_TYPE_MENU			"Menu"
+#define OBJECT_ITEM_TYPE_ACTION			"Action"
 
 /* GConf key names (specific to menu)
  */

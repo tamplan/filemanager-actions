@@ -40,6 +40,7 @@ G_BEGIN_DECLS
 GSList  *na_utils_duplicate_string_list( GSList *list );
 gboolean na_utils_find_in_list( GSList *list, const gchar *str );
 void     na_utils_free_string_list( GSList *list );
+GSList  *na_utils_remove_from_string_list( GSList *list, const gchar *str );
 gboolean na_utils_string_lists_are_equal( GSList *first, GSList *second );
 
 /* a GSList to a string [aaaa,bbbb,cccc]

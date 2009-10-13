@@ -699,7 +699,7 @@ na_object_item_rebuild_items_list( const NAObjectItem *item )
 {
 	GSList *list = NULL;
 	GList *items, *it;
-	gchar *uuid;
+	gchar *id;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
 
@@ -708,9 +708,9 @@ na_object_item_rebuild_items_list( const NAObjectItem *item )
 		items = na_object_get_items_list( item );
 
 		for( it = items ; it ; it = it->next ){
-			NAObjectItem *item = NA_OBJECT_ITEM( it->data );
-			uuid = na_object_get_id( item );
-			list = g_slist_prepend( list, uuid );
+			NAObjectId *item = NA_OBJECT_ID( it->data );
+			id = na_object_get_id( item );
+			list = g_slist_prepend( list, id );
 		}
 
 		list = g_slist_reverse( list );

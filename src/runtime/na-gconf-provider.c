@@ -75,7 +75,7 @@ static NAObjectItem  *read_item( NAGConfProvider *provider, const gchar *path );
 static void           read_item_action( NAGConfProvider *provider, const gchar *path, NAObjectAction *action );
 static void           read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjectAction *action );
 static void           read_item_action_properties_v1( NAGConfProvider *gconf, GSList *entries, NAObjectAction *action );
-static void           read_item_action_profile( NAGConfProvider *provider, const gchar *path, NAObjectProfile *profile );
+static void           read_item_action_profile( NAGConfProvider *provider, NAObjectAction *action, const gchar *path );
 static void           read_item_action_profile_properties( NAGConfProvider *provider, GSList *entries, NAObjectProfile *profile );
 static void           read_item_menu( NAGConfProvider *provider, const gchar *path, NAObjectMenu *menu );
 static void           read_item_menu_properties( NAGConfProvider *provider, GSList *entries, NAObjectMenu *menu );
@@ -489,6 +489,7 @@ read_item( NAGConfProvider *provider, const gchar *path )
 	} else if( !have_type || !strcmp( type, OBJECT_ITEM_TYPE_ACTION )){
 		item = NA_OBJECT_ITEM( na_object_action_new());
 		read_item_action( provider, path, NA_OBJECT_ACTION( item ));
+
 	} else {
 		g_warning( "%s: unknown type '%s' at %s", thisfn, type, path );
 	}
@@ -514,6 +515,8 @@ read_item( NAGConfProvider *provider, const gchar *path )
  *
  * - version = '2.0' which introduces the 'profile' notion
  *   profile += name+label
+ *
+ * Profiles are kept in the order specified in 'items' entry if it exists.
  */
 static void
 read_item_action( NAGConfProvider *provider, const gchar *path, NAObjectAction *action )
@@ -521,7 +524,8 @@ read_item_action( NAGConfProvider *provider, const gchar *path, NAObjectAction *
 	static const gchar *thisfn = "na_gconf_provider_read_item_action";
 	gchar *uuid;
 	GSList *entries, *list_profiles, *ip;
-	NAObjectProfile *profile;
+	GSList *order;
+	gchar *profile_path;
 
 	g_debug( "%s: provider=%p, path=%s, action=%p",
 			thisfn, ( void * ) provider, path, ( void * ) action );
@@ -532,24 +536,38 @@ read_item_action( NAGConfProvider *provider, const gchar *path, NAObjectAction *
 	g_free( uuid );
 
 	entries = na_gconf_utils_get_entries( provider->private->gconf, path );
-
 	read_item_action_properties( provider, entries, action  );
 
+	order = na_object_item_get_items_string_list( NA_OBJECT_ITEM( action ));
 	list_profiles = na_gconf_utils_get_subdirs( provider->private->gconf, path );
 
 	if( list_profiles ){
-		for( ip = list_profiles ; ip ; ip = ip->next ){
 
-			const gchar *profile_path = ( const gchar * ) ip->data;
-			profile = na_object_profile_new();
-			read_item_action_profile( provider, profile_path, profile );
-			na_object_action_attach_profile( action, profile );
+		/* read profiles in the specified order
+		 */
+		for( ip = order ; ip ; ip = ip->next ){
+			profile_path = gconf_concat_dir_and_key( path, ( gchar * ) ip->data );
+			read_item_action_profile( provider, action, profile_path );
+			list_profiles = na_utils_remove_from_string_list( list_profiles, profile_path );
+			g_free( profile_path );
 		}
 
+		/* read other profiles
+		 */
+		for( ip = list_profiles ; ip ; ip = ip->next ){
+			profile_path = g_strdup(( gchar * ) ip->data );
+			read_item_action_profile( provider, action, profile_path );
+			g_free( profile_path );
+		}
+
+	/* if there is no subdir, this may be a valid v1 or an invalid v2
+	 * at least try to read some properties
+	 */
 	} else {
 		read_item_action_properties_v1( provider, entries, action );
 	}
 
+	na_utils_free_string_list( order );
 	na_gconf_utils_free_subdirs( list_profiles );
 	na_gconf_utils_free_entries( entries );
 
@@ -590,12 +608,15 @@ read_item_action_properties_v1( NAGConfProvider *provider, GSList *entries, NAOb
 }
 
 static void
-read_item_action_profile( NAGConfProvider *provider, const gchar *path, NAObjectProfile *profile )
+read_item_action_profile( NAGConfProvider *provider, NAObjectAction *action, const gchar *path )
 {
+	NAObjectProfile *profile;
 	gchar *name;
 	GSList *entries;
 
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
+	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
+
+	profile = na_object_profile_new();
 
 	name = na_gconf_utils_path_to_key( path );
 	na_object_set_id( profile, name );
@@ -604,6 +625,8 @@ read_item_action_profile( NAGConfProvider *provider, const gchar *path, NAObject
 	entries = na_gconf_utils_get_entries( provider->private->gconf, path );
 	read_item_action_profile_properties( provider, entries, profile );
 	na_gconf_utils_free_entries( entries );
+
+	na_object_action_attach_profile( action, profile );
 }
 
 static void

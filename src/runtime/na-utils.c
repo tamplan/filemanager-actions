@@ -99,6 +99,33 @@ na_utils_free_string_list( GSList *list )
 }
 
 /**
+ * na_utils_remove_from_string_list:
+ * @list: the GSList to be updated.
+ * @str: the string to be removed.
+ *
+ * Removes from the @list the item which has a string which is equal to
+ * @str.
+ *
+ * Returns: the new @list start position.
+ */
+GSList *
+na_utils_remove_from_string_list( GSList *list, const gchar *str )
+{
+	GSList *is;
+
+	for( is = list ; is ; is = is->next ){
+		const gchar *istr = ( const gchar * ) is->data;
+		if( !g_utf8_collate( str, istr )){
+			g_free( is->data );
+			list = g_slist_delete_link( list, is );
+			break;
+		}
+	}
+
+	return( list );
+}
+
+/**
  * na_utils_string_lists_are_equal:
  * @first: a GSList of strings.
  * @second: another GSList of strings to be compared with @first.

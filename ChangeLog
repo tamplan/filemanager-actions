@@ -19,6 +19,7 @@
 	(read_object_item_properties, write_object_item): actions and
 	menus may have ordered subitems
 	(write_item_action, write_item_menu): Write the item's type.
+	(read_item_action): Keep the order of profiles.
 
 	* src/runtime/na-iio-provider.c (build_hierarchy):
 	Use na_object_item_get_items_string_list.
@@ -32,6 +33,10 @@
 	* src/runtime/na-object-menu-priv.h:
 	* src/runtime/na-object-menu.c:
 	List of string id of subitems is moved to NAObjectItem.
+
+	* src/runtime/na-utils.c:
+	* src/runtime/na-utils.h (na_utils_remove_from_string_list):
+	New function.
 
 2009-10-12 Pierre Wieser <pwieser@trychlos.org>
 
