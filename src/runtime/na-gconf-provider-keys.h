@@ -43,10 +43,14 @@
 #define OBJECT_ITEM_TOOLTIP_ENTRY		"tooltip"
 #define OBJECT_ITEM_ICON_ENTRY			"icon"
 #define OBJECT_ITEM_ENABLED_ENTRY		"enabled"
+#define OBJECT_ITEM_LIST_ENTRY			"items"
+#define OBJECT_ITEM_TYPE_ENTRY			"type"
+
+#define OBJECT_ITEM_TYPE_MENU			"menu"
+#define OBJECT_ITEM_TYPE_ACTION			"action"
 
 /* GConf key names (specific to menu)
  */
-#define MENU_ITEMS_ENTRY				"items"
 
 /* GConf key names (specific to action)
  */

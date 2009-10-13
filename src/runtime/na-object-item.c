@@ -307,6 +307,9 @@ instance_finalize( GObject *object )
 	g_free( self->private->tooltip );
 	g_free( self->private->icon );
 
+	/* release string list of subitems */
+	na_utils_free_string_list( self->private->items_ids );
+
 	g_free( self->private );
 
 	/* chain call to parent class */
@@ -654,6 +657,87 @@ na_object_item_remove_item( NAObjectItem *item, const NAObject *object )
 	if( !item->private->dispose_has_run ){
 
 		item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
+	}
+}
+
+/**
+ * na_object_item_get_items_string_list:
+ * @item: this #NAObjectItem object.
+ *
+ * Returns: the items_ids string list, as readen from the IIOProvider.
+ *
+ * The returned list should be na_utils_free_string_list() by the caller.
+ */
+GSList *
+na_object_item_get_items_string_list( const NAObjectItem *item )
+{
+	GSList *list = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+
+	if( !item->private->dispose_has_run ){
+		list = na_utils_duplicate_string_list( item->private->items_ids );
+	}
+
+	return( list );
+}
+
+/**
+ * na_object_item_rebuild_items_list:
+ * @item: this #NAObjectItem object.
+ *
+ * Returns: a string list which contains the ordered list of ids of
+ * subitems.
+ *
+ * Note that the returned list is built on each call to this function,
+ * and is so an exact image of the current situation.
+ *
+ * The returned list should be na_utils_free_string_list() by the caller.
+ */
+GSList *
+na_object_item_rebuild_items_list( const NAObjectItem *item )
+{
+	GSList *list = NULL;
+	GList *items, *it;
+	gchar *uuid;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+
+	if( !item->private->dispose_has_run ){
+
+		items = na_object_get_items_list( item );
+
+		for( it = items ; it ; it = it->next ){
+			NAObjectItem *item = NA_OBJECT_ITEM( it->data );
+			uuid = na_object_get_id( item );
+			list = g_slist_prepend( list, uuid );
+		}
+
+		list = g_slist_reverse( list );
+	}
+
+	return( list );
+}
+
+/**
+ * na_object_item_set_items_string_list:
+ * @item: this #NAObjectItem object.
+ * @subitems: an ordered list of UUID of subitems.
+ *
+ * Set the internal list of uuids of subitems.
+ *
+ * This function takes a copy of the provided list. This later may so
+ * be safely released by the caller after this function has returned.
+ */
+void
+na_object_item_set_items_string_list( NAObjectItem *item, GSList *subitems )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !item->private->dispose_has_run ){
+
+		na_utils_free_string_list( item->private->items_ids );
+		item->private->items_ids = na_utils_duplicate_string_list( subitems );
 	}
 }
 

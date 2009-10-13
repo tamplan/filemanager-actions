@@ -39,11 +39,6 @@ G_BEGIN_DECLS
  */
 struct NAObjectMenuPrivate {
 	gboolean dispose_has_run;
-
-	/* this is the list of subitems as a list of id strings
-	 * as readen from IIOProviders
-	 */
-	GSList  *items_ids;
 };
 
 G_END_DECLS

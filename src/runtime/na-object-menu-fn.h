@@ -48,10 +48,6 @@ G_BEGIN_DECLS
 
 NAObjectMenu *na_object_menu_new( void );
 
-GSList       *na_object_menu_get_items_string_list( const NAObjectMenu *menu );
-GSList       *na_object_menu_rebuild_items_list( const NAObjectMenu *menu );
-void          na_object_menu_set_items_string_list( NAObjectMenu *menu, GSList *items );
-
 G_END_DECLS
 
 #endif /* __NA_RUNTIME_OBJECT_MENU_FN_H__ */

@@ -50,6 +50,11 @@ struct NAObjectItemPrivate {
 	 */
 	GList         *items;
 
+	/* this is the list of subitems as a list of id strings
+	 * as readen from IIOProviders
+	 */
+	GSList        *items_ids;
+
 	/* the original provider
 	 * required to be able to edit/delete the item
 	 */

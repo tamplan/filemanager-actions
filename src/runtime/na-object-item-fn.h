@@ -66,6 +66,10 @@ void           na_object_item_set_items_list( NAObjectItem *item, GList *items )
 void           na_object_item_append_item( NAObjectItem *object, const NAObject *item );
 void           na_object_item_remove_item( NAObjectItem *object, const NAObject *item );
 
+GSList        *na_object_item_get_items_string_list( const NAObjectItem *item );
+GSList        *na_object_item_rebuild_items_list( const NAObjectItem *item );
+void           na_object_item_set_items_string_list( NAObjectItem *item, GSList *items );
+
 G_END_DECLS
 
 #endif /* __NA_RUNTIME_OBJECT_ITEM_FN_H__ */

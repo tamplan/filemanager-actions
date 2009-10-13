@@ -10,6 +10,29 @@
 	* src/nact/nact-iactions-list.c (on_tab_updatable_item_updated):
 	Recursively update the display of parents of the updated item.
 
+	* src/runtime/na-gconf-provider-keys.h:
+	OBJECT_ITEM_TYPE_ENTRY: new key which defines the type of the entry.
+	MENU_ITEMS_ENTRY: renamed to OBJECT_ITEM_LIST_ENTRY.
+
+	* src/runtime/na-gconf-provider.c (read_item):
+	Only use the item's type to distinguish between	action and menu.
+	(read_object_item_properties, write_object_item): actions and
+	menus may have ordered subitems
+	(write_item_action, write_item_menu): Write the item's type.
+
+	* src/runtime/na-iio-provider.c (build_hierarchy):
+	Use na_object_item_get_items_string_list.
+
+	* src/runtime/na-object-item-fn.h:
+	* src/runtime/na-object-item-priv.h:
+	* src/runtime/na-object-item.c:
+	List of string id of subitems is moved from NAObjectMenu.
+
+	* src/runtime/na-object-menu-fn.h:
+	* src/runtime/na-object-menu-priv.h:
+	* src/runtime/na-object-menu.c:
+	List of string id of subitems is moved to NAObjectItem.
+
 2009-10-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-object-api.h

@@ -459,45 +459,41 @@ iio_provider_read_items_list( const NAIIOProvider *provider )
 	return( items_list );
 }
 
-/*
- * if there is an "items" entry, this is a menu and there must not
- * be any subdirectories
- * else, this is an action, and there must have at least one subdir..
- */
 static NAObjectItem *
 read_item( NAGConfProvider *provider, const gchar *path )
 {
 	static const gchar *thisfn = "na_gconf_provider_read_item";
 	NAObjectItem *item;
-	gboolean have_items;
-	gboolean have_subdir;
+	gboolean have_type;
+	gchar *full_path;
+	gchar *type;
 
 	/*g_debug( "%s: provider=%p, path=%s", thisfn, ( void * ) provider, path );*/
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
-	have_subdir = na_gconf_utils_have_subdir( provider->private->gconf, path );
-	have_items = na_gconf_utils_have_entry( provider->private->gconf, path, MENU_ITEMS_ENTRY );
-	/*g_debug( "%s: have_subdir=%s, have_items=%s", thisfn, have_subdir ? "True":"False", have_items ? "True":"False" );*/
+	have_type = na_gconf_utils_have_entry( provider->private->gconf, path, OBJECT_ITEM_TYPE_ENTRY );
+	full_path = gconf_concat_dir_and_key( path, OBJECT_ITEM_TYPE_ENTRY );
+	type = na_gconf_utils_read_string( provider->private->gconf, full_path, TRUE, OBJECT_ITEM_TYPE_ACTION );
+	g_free( full_path );
 
-	if( have_subdir && have_items ){
-		g_warning( "%s: found both subdir(s) and \"items\" entry at %s", thisfn, path );
-		return( NULL );
-	}
-
-	/* it has a (maybe empty) 'items' entry: this is a menu
+	/* a menu has a 'type' = 'menu'
 	 */
-	if( have_items ){
+	if( have_type && !strcmp( type, OBJECT_ITEM_TYPE_MENU )){
 		item = NA_OBJECT_ITEM( na_object_menu_new());
 		read_item_menu( provider, path, NA_OBJECT_MENU( item ));
 
-	/* else this should be an action
+	/* else this should be an action (no type, or 'type' = 'action')
 	 */
-	} else {
+	} else if( !have_type || !strcmp( type, OBJECT_ITEM_TYPE_ACTION )){
 		item = NA_OBJECT_ITEM( na_object_action_new());
 		read_item_action( provider, path, NA_OBJECT_ACTION( item ));
+	} else {
+		g_warning( "%s: unknown type '%s' at %s", thisfn, type, path );
 	}
+
+	g_free( type );
 
 	return( item );
 }
@@ -701,14 +697,7 @@ read_item_menu( NAGConfProvider *provider, const gchar *path, NAObjectMenu *menu
 static void
 read_item_menu_properties( NAGConfProvider *provider, GSList *entries, NAObjectMenu *menu )
 {
-	GSList *items;
-
 	read_object_item_properties( provider, entries, NA_OBJECT_ITEM( menu ) );
-
-	if( na_gconf_utils_get_string_list_from_entries( entries, MENU_ITEMS_ENTRY, &items )){
-		na_object_menu_set_items_string_list( menu, items );
-		na_utils_free_string_list( items );
-	}
 }
 
 /*
@@ -720,6 +709,7 @@ read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 	static const gchar *thisfn = "na_gconf_provider_read_object_item_properties";
 	gchar *id, *label, *tooltip, *icon;
 	gboolean enabled;
+	GSList *subitems;
 
 	if( !na_gconf_utils_get_string_from_entries( entries, OBJECT_ITEM_LABEL_ENTRY, &label )){
 		id = na_object_get_id( item );
@@ -742,6 +732,11 @@ read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 
 	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_ENABLED_ENTRY, &enabled )){
 		na_object_set_enabled( item, enabled );
+	}
+
+	if( na_gconf_utils_get_string_list_from_entries( entries, OBJECT_ITEM_LIST_ENTRY, &subitems )){
+		na_object_item_set_items_string_list( item, subitems );
+		na_utils_free_string_list( subitems );
 	}
 }
 
@@ -832,13 +827,12 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 	GList *profiles, *ip;
 	NAObjectProfile *profile;
 
-	if( !write_object_item( provider, NA_OBJECT_ITEM( action ), message )){
-		return( FALSE );
-	}
-
 	uuid = na_object_get_id( action );
 
-	ret = write_str( provider, uuid, NULL, ACTION_VERSION_ENTRY, na_object_action_get_version( action ), message );
+	ret =
+		write_object_item( provider, NA_OBJECT_ITEM( action ), message ) &&
+		write_str( provider, uuid, NULL, ACTION_VERSION_ENTRY, na_object_action_get_version( action ), message ) &&
+		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_ACTION ), message );
 
 	profiles = na_object_get_items_list( action );
 
@@ -870,19 +864,17 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 static gboolean
 write_item_menu( NAGConfProvider *provider, const NAObjectMenu *menu, gchar **message )
 {
-	gchar *uuid;
 	gboolean ret;
+	gchar *uuid;
 
-	if( !write_object_item( provider, NA_OBJECT_ITEM( menu ), message )){
-		return( FALSE );
-	}
-
-	uuid = na_object_get_id( NA_OBJECT( menu ));
+	uuid = na_object_get_id( menu );
 
 	ret =
-		write_list( provider, uuid, NULL, MENU_ITEMS_ENTRY, na_object_menu_rebuild_items_list( menu ), message );
+		write_object_item( provider, NA_OBJECT_ITEM( menu ), message ) &&
+		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_MENU ), message );
 
 	g_free( uuid );
+
 	return( ret );
 }
 
@@ -898,7 +890,8 @@ write_object_item( NAGConfProvider *provider, const NAObjectItem *item, gchar **
 		write_str( provider, uuid, NULL, OBJECT_ITEM_LABEL_ENTRY, na_object_get_label( NA_OBJECT( item )), message ) &&
 		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLTIP_ENTRY, na_object_get_tooltip( item ), message ) &&
 		write_str( provider, uuid, NULL, OBJECT_ITEM_ICON_ENTRY, na_object_get_icon( item ), message ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_ENABLED_ENTRY, na_object_is_enabled( item ), message );
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_ENABLED_ENTRY, na_object_is_enabled( item ), message ) &&
+		write_list( provider, uuid, NULL, OBJECT_ITEM_LIST_ENTRY, na_object_item_rebuild_items_list( item ), message );
 
 	g_free( uuid );
 	return( ret );
