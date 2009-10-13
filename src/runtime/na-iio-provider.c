@@ -210,6 +210,9 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 				break;
 		}
 
+		/* required here because Nautilus-Actions plugin will only
+		 * display valid items, and doesn't care to have to check them
+		 */
 		for( it = hierarchy ; it ; it = it->next ){
 			na_object_check_status( it->data );
 		}
