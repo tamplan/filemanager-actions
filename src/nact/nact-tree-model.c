@@ -1492,7 +1492,8 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	parent = NULL;
 	rows = nact_clipboard_dnd_get_data( model->private->clipboard, &copy_data );
 	new_dest = drop_inside_adjust_dest( model, dest, &parent );
-	if( !copy_data ){
+
+	if( new_dest && !copy_data ){
 		drop_inside_move_dest( model, rows, &new_dest );
 	}
 
@@ -1526,7 +1527,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 
 		nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
 
-		if( !copy_data ){
+		if( !copy_data && gtk_tree_path_get_depth( new_dest ) == 1 ){
 			g_signal_emit_by_name( main_window, MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, NULL );
 		}
 
@@ -1542,97 +1543,6 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 
 	return( drop_done );
 }
-
-#if 0
-static gboolean
-drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
-{
-	static const gchar *thisfn = "nact_tree_model_inside_drag_and_drop";
-	gboolean drop_done;
-	NactApplication *application;
-	NAPivot *pivot;
-	NactMainWindow *main_window;
-	NAObjectAction *parent;
-	gboolean copy_data;
-	GList *rows;
-	GtkTreePath *new_dest;
-	GtkTreePath *path;
-	NAObject *current;
-	NAObject *inserted;
-	GList *object_list, *it;
-	GList *deletables;
-	GtkTreeIter iter;
-
-	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
-	pivot = nact_application_get_pivot( application );
-	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
-
-	/*
-	 * NACT format (may embed profiles, or not)
-	 * 	with profiles: only valid dest is inside an action
-	 *  without profile: only valid dest is outside (besides of) an action
-	 * URI format only involves actions
-	 *  ony valid dest in outside (besides of) an action
-	 */
-	drop_done = FALSE;
-	parent = NULL;
-	rows = nact_clipboard_dnd_get_data( model->private->clipboard, &copy_data );
-	new_dest = drop_inside_adjust_dest( model, dest, &parent );
-	if( 0 && !copy_data ){
-		drop_inside_move_dest( model, rows, &new_dest );
-	}
-
-	if( new_dest ){
-		g_debug( "%s: rows has %d items, copy_data=%s", thisfn, g_list_length( rows ), copy_data ? "True":"False" );
-		object_list = NULL;
-		deletables = NULL;
-		for( it = rows ; it ; it = it->next ){
-			path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
-			if( path ){
-				if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path )){
-					gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &current, -1 );
-					g_object_unref( current );
-					inserted = na_object_duplicate( current );
-					if( copy_data ){
-						na_object_reset_origin( inserted, NULL );
-						na_object_prepare_for_paste( inserted, pivot, TRUE, parent );
-					} else {
-						na_object_set_new_id( current, parent );
-						deletables = g_list_prepend( deletables, current );
-					}
-					object_list = g_list_prepend( object_list, inserted );
-					g_debug( "%s: dropped=%s", thisfn, na_object_get_label( inserted ));
-				}
-				gtk_tree_path_free( path );
-			}
-		}
-		object_list = g_list_reverse( object_list );
-
-		nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
-
-		if( !copy_data ){
-			nact_iactions_list_delete( NACT_IACTIONS_LIST( main_window ), deletables );
-		}
-
-		if( !copy_data ){
-			g_signal_emit_by_name( main_window, MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, NULL );
-		}
-
-		g_list_foreach( object_list, ( GFunc ) na_object_object_unref, NULL );
-		g_list_free( object_list );
-		g_list_foreach( deletables, ( GFunc ) na_object_object_unref, NULL );
-		g_list_free( deletables );
-		gtk_tree_path_free( new_dest );
-
-		drop_done = TRUE;
-	}
-
-	g_list_foreach( rows, ( GFunc ) gtk_tree_row_reference_free, NULL );
-	g_list_free( rows );
-
-	return( drop_done );
-}
-#endif
 
 /*
  * is a drop possible at given dest ?
@@ -1771,7 +1681,7 @@ drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest )
 		indices = gtk_tree_path_get_indices( *dest );
 		indices[0] -= before;
 		path = gtk_tree_path_new_from_indices( indices[0], -1 );
-		for( i = 1 ; i< gtk_tree_path_get_depth( *dest ); ++i ){
+		for( i = 1 ; i < gtk_tree_path_get_depth( *dest ); ++i ){
 			gtk_tree_path_append_index( path, indices[i] );
 		}
 		gtk_tree_path_free( *dest );
