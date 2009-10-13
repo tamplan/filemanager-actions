@@ -142,8 +142,7 @@ typedef struct {
 }
 	NAIDuplicableInterface;
 
-#define NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED		"na-iduplicable-modified-changed"
-#define NA_IDUPLICABLE_SIGNAL_VALID_CHANGED			"na-iduplicable-valid-changed"
+#define NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED		"na-iduplicable-status-changed"
 
 #define NA_IDUPLICABLE_EDITION_STATUS_DEBUG			0
 

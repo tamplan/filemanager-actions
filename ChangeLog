@@ -1,5 +1,9 @@
 2009-10-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/runtime/na-iduplicable.c:
+	* src/runtime/na-iduplicable.h: Only define one signal which is
+	sent when one of the status has changed.
+
 	* src/common/na-object-api.h (na_object_get_topmost_parent):
 	Removed alias.
 

@@ -548,13 +548,7 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 			base_window_signal_connect(
 					BASE_WINDOW( instance ),
 					G_OBJECT( instance ),
-					NA_IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,
-					G_CALLBACK( on_edition_status_changed ));
-
-			base_window_signal_connect(
-					BASE_WINDOW( instance ),
-					G_OBJECT( instance ),
-					NA_IDUPLICABLE_SIGNAL_VALID_CHANGED,
+					NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED,
 					G_CALLBACK( on_edition_status_changed ));
 		}
 
