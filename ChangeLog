@@ -34,6 +34,7 @@
 	* src/nact/nact-main-menubar.c (on_update_sensitivities):
 	Only enable new menu and new action when on an action or a menu.
 	Reorganize code.
+	(on_save_activated): only check status of toplevel items.
 
 	* src/nact/nact-main-tab.h:
 	* src/nact/nact-main-window.c: New SELECTED_ROW property.

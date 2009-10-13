@@ -101,7 +101,6 @@ static void     on_new_menu_activated( GtkAction *action, NactMainWindow *window
 static void     on_new_action_activated( GtkAction *action, NactMainWindow *window );
 static void     on_new_profile_activated( GtkAction *action, NactMainWindow *window );
 static void     on_save_activated( GtkAction *action, NactMainWindow *window );
-static void     save_items( NactMainWindow *window, NAPivot *pivot, GList *items );
 static void     save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item );
 static void     on_quit_activated( GtkAction *action, NactMainWindow *window );
 
@@ -656,7 +655,7 @@ static void
 on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_save_activated";
-	GList *items;
+	GList *items, *it;
 	NactApplication *application;
 	NAPivot *pivot;
 	MenubarIndicatorsStruct *mis;
@@ -677,7 +676,10 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	/* recursively save the modified items
 	 */
-	save_items( window, pivot, items );
+	for( it = items ; it ; it = it->next ){
+		save_item( window, pivot, NA_OBJECT_ITEM( it->data ));
+		na_object_check_status( it->data );
+	}
 	g_list_free( items );
 
 	/* reset level zero indicator
@@ -695,19 +697,6 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 }
 
 /*
- * only recurse in menus
- */
-static void
-save_items( NactMainWindow *window, NAPivot *pivot, GList *items )
-{
-	GList *it;
-
-	for( it = items ; it ; it = it->next ){
-		save_item( window, pivot, NA_OBJECT_ITEM( it->data ));
-	}
-}
-
-/*
  * iterates here on each and every row stored in the tree
  * - do not deal with profiles as they are directly managed by their
  *   action parent
@@ -719,7 +708,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 {
 	NAObjectItem *origin;
 	NAObjectItem *dup_pivot;
-	GList *subitems;
+	GList *subitems, *it;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
@@ -727,7 +716,9 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 
 	if( NA_IS_OBJECT_MENU( item )){
 		subitems = na_object_get_items_list( item );
-		save_items( window, pivot, subitems );
+		for( it = subitems ; it ; it = it->next ){
+			save_item( window, pivot, NA_OBJECT_ITEM( it->data ));
+		}
 	}
 
 	if( na_object_is_modified( item )){
@@ -750,8 +741,6 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
 			na_object_reset_origin( item, dup_pivot );
 			na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
-
-			na_object_check_status( item );
 		}
 	}
 }
