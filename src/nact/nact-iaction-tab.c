@@ -496,7 +496,7 @@ on_enabled_toggled( GtkToggleButton *button, NactIActionTab *instance )
 	if( edited && NA_IS_OBJECT_ACTION( edited )){
 		enabled = gtk_toggle_button_get_active( button );
 		na_object_item_set_enabled( edited, enabled );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 
@@ -514,7 +514,7 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 	if( edited ){
 		label = gtk_entry_get_text( entry );
 		na_object_set_label( NA_OBJECT( edited ), label );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, TRUE );
 		check_for_label( instance, entry, label );
 	}
 
@@ -576,7 +576,7 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 	if( edited ){
 		icon_name = gtk_entry_get_text( icon_entry );
 		na_object_item_set_icon( edited, icon_name );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, TRUE );
 
 		if( icon_name && strlen( icon_name ) > 0 ){
 			icon = na_object_item_get_pixbuf( edited, image );
@@ -598,7 +598,7 @@ on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
 
 	if( edited ){
 		na_object_item_set_tooltip( edited, gtk_entry_get_text( entry ));
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 

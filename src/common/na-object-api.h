@@ -64,7 +64,6 @@ G_BEGIN_DECLS
 /* NAObjectId
  */
 #define na_object_check_status_up( object )			na_object_id_check_status_up( NA_OBJECT_ID( object ))
-#define na_object_get_topmost_parent( object )		na_object_id_get_topmost_parent( NA_OBJECT_ID( object ))
 #define na_object_prepare_for_paste( object, pivot, renumber, action ) \
 													na_object_id_prepare_for_paste( NA_OBJECT_ID( object ), pivot, renumber, ( NAObjectAction * ) action )
 #define na_object_set_copy_of_label( object )		na_object_id_set_copy_of_label( NA_OBJECT_ID( object ))

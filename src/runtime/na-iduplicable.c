@@ -322,17 +322,12 @@ na_iduplicable_dump( const NAIDuplicable *object )
 void
 na_iduplicable_check_status( const NAIDuplicable *object )
 {
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 	static const gchar *thisfn = "na_iduplicable_check_status";
-#endif
 	gboolean modified = TRUE;
 	NAIDuplicable *origin;
 	gboolean valid;
 
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-	g_debug( "%s: object=%p (%s)", thisfn,
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));
-#endif
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( st_initialized && !st_finalized );
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 

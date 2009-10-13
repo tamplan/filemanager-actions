@@ -497,7 +497,7 @@ on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 	if( edited ){
 		label = gtk_entry_get_text( entry );
 		na_object_set_label( edited, label );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, TRUE );
 		check_for_label( instance, entry, label );
 	}
 }
@@ -525,7 +525,7 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 
 	if( edited ){
 		na_object_profile_set_parameters( edited, gtk_entry_get_text( entry ));
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 
 	update_example_label( instance, edited );
@@ -596,7 +596,7 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 
 	if( edited ){
 		na_object_profile_set_path( edited, gtk_entry_get_text( entry ));
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 
 	update_example_label( instance, edited );

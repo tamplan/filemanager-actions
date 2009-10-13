@@ -565,7 +565,7 @@ on_remove_scheme_clicked( GtkButton *button, NactIAdvancedTab *instance )
 					TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 					NULL );
 			na_object_profile_set_scheme( edited, scheme, FALSE );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 		}
 
 		g_free( scheme );
@@ -604,7 +604,7 @@ on_scheme_keyword_edited( GtkCellRendererText *renderer, const gchar *path, cons
 				NULL );
 		na_object_profile_set_scheme( edited, old_text, FALSE );
 		na_object_profile_set_scheme( edited, text, TRUE );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 
 	g_free( old_text );
@@ -663,7 +663,7 @@ on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, NactI
 
 		g_free( scheme );
 
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 

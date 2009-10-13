@@ -168,7 +168,7 @@ static gboolean     on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactI
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
 static void         on_label_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIActionsList *instance );
 static void         on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
-static void         on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object );
+static void         on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object, gboolean force_display );
 static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void         select_first_row( NactIActionsList *instance );
 static void         select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
@@ -1145,7 +1145,7 @@ nact_iactions_list_insert_into( NactIActionsList *instance, GList *items )
 
 		parent = do_insert_into_first( treeview, model, items, insert_path, &new_path );
 
-		na_object_check_status( parent );
+		na_object_check_status_up( parent );
 
 		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
 
@@ -1311,7 +1311,7 @@ update_parents_edition_status( GList *parents, GList *items )
 	}*/
 
 	for( it = parents ; it ; it = it->next ){
-		na_object_check_status( it->data );
+		na_object_check_status_up( it->data );
 	}
 
 	g_list_free( parents );
@@ -1921,21 +1921,24 @@ on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *in
  * update the treeview to reflects its new edition status
  */
 static void
-on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object )
+on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object, gboolean force_display )
 {
 	static const gchar *thisfn = "nact_iactions_list_on_tab_updatable_item_updated";
-	NAObjectId *item;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 
 	g_debug( "%s: instance=%p, object=%p (%s)", thisfn,
 			( void * ) instance, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
 	if( object ){
 		treeview = get_actions_list_treeview( instance );
 		model = gtk_tree_view_get_model( treeview );
-		item = na_object_get_topmost_parent( object );
-		na_object_check_status( item );
+		if( !na_object_check_status_up( object ) && force_display ){
+			on_edition_status_changed( instance, NA_IDUPLICABLE( object ));
+		}
 	}
 }
 

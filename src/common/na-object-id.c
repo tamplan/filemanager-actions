@@ -47,20 +47,45 @@
  *
  * Checks for modification and validity status of the @object, its
  * parent, the parent of its parent, etc. up to the top of the hierarchy.
+ *
+ * Returns: %TRUE if at least one of the status has changed, %FALSE else.
+ *
+ * Checking the modification of any of the status should be more
+ * efficient that systematically force the display of the item.
  */
-void
+gboolean
 na_object_id_check_status_up( NAObjectId *object )
 {
-	g_return_if_fail( NA_OBJECT_ID( object ));
+	gboolean changed;
+	gboolean was_modified, is_modified;
+	gboolean was_valid, is_valid;
+
+	g_return_val_if_fail( NA_OBJECT_ID( object ), FALSE );
+
+	changed = FALSE;
 
 	if( !object->private->dispose_has_run ){
 
+		was_modified = na_object_is_modified( object );
+		was_valid = na_object_is_valid( object );
+
 		na_iduplicable_check_status( NA_IDUPLICABLE( object ));
+
+		is_modified = na_object_is_modified( object );
+		is_valid = na_object_is_valid( object );
 
 		if( object->private->parent ){
 			na_object_id_check_status_up( NA_OBJECT_ID( object->private->parent ));
 		}
+
+		changed =
+			( was_modified && !is_modified ) ||
+			( !was_modified && is_modified ) ||
+			( was_valid && !is_valid ) ||
+			( !was_valid && is_valid );
 	}
+
+	return( changed );
 }
 
 /**

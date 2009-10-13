@@ -1,5 +1,18 @@
 2009-10-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-object-api.h (na_object_get_topmost_parent):
+	Removed alias.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-iconditions-tab.c:
+	Force re-display of the item if modified column is displayed in
+	the treeview.
+
+	* src/nact/nact-iactions-list.c (on_tab_updatable_item_updated):
+	Force re-display of the item if asked for and status not modified.
+
 	* src/common/na-object-api.h:
 	* src/common/na-object-id-fn.h:
 	* src/common/na-object-id.c (na_object_check_status_up):

@@ -406,7 +406,7 @@ on_basenames_changed( GtkEntry *entry, NactIConditionsTab *instance )
 		basenames = na_utils_text_to_string_list( text );
 		na_object_profile_set_basenames( edited, basenames );
 		na_utils_free_string_list( basenames );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 
@@ -430,7 +430,7 @@ on_isfiledir_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 	if( edited ){
 		nact_iconditions_tab_get_isfiledir( instance, &isfile, &isdir );
 		na_object_profile_set_isfiledir( edited, isfile, isdir );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 
@@ -448,7 +448,7 @@ on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 	if( edited ){
 		matchcase = gtk_toggle_button_get_active( button );
 		na_object_profile_set_matchcase( edited, matchcase );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 
@@ -469,7 +469,7 @@ on_mimetypes_changed( GtkEntry *entry, NactIConditionsTab *instance )
 		mimetypes = na_utils_text_to_string_list( text );
 		na_object_profile_set_mimetypes( edited, mimetypes );
 		na_utils_free_string_list( mimetypes );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 
@@ -487,7 +487,7 @@ on_multiple_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 	if( edited ){
 		multiple = gtk_toggle_button_get_active( button );
 		na_object_profile_set_multiple( edited, multiple );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 

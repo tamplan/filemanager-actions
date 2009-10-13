@@ -155,7 +155,7 @@ static void     set_current_object_item( NactMainWindow *window, GSList *selecte
 static void     set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
 static gchar   *iactions_list_get_treeview_name( NactIActionsList *instance );
 
-static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data );
+static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display );
 
 static gboolean confirm_for_giveup_from_menu( NactMainWindow *window );
 static gboolean confirm_for_giveup_from_pivot( NactMainWindow *window );
@@ -1094,7 +1094,7 @@ iactions_list_get_treeview_name( NactIActionsList *instance )
 }
 
 static void
-on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data )
+on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display )
 {
 	/*static const gchar *thisfn = "nact_main_window_on_tab_updatable_item_updated";*/
 
