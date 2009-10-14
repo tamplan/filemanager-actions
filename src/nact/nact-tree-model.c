@@ -966,6 +966,7 @@ nact_tree_model_remove( NactTreeModel *model, NAObject *object )
 		if( search_for_object( model, GTK_TREE_MODEL( store ), object, &iter )){
 			/*parents = add_parent( parents, GTK_TREE_MODEL( store ), &iter );*/
 			parent = na_object_get_parent( object );
+			g_debug( "%s: object=%p, parent=%p", thisfn, ( void * ) object, ( void * ) parent );
 			if( parent ){
 				na_object_remove_item( parent, object );
 				na_object_check_status_up( parent );
@@ -1447,6 +1448,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	NAObject *inserted;
 	GList *object_list, *it;
 	GtkTreeIter iter;
+	GList *deletable;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	pivot = nact_application_get_pivot( application );
@@ -1477,13 +1479,19 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 				if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path )){
 					gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &current, -1 );
 					g_object_unref( current );
+
 					if( copy_data ){
 						inserted = na_object_duplicate( current );
 						na_object_reset_origin( inserted, NULL );
-						na_object_prepare_for_paste( inserted, pivot, TRUE, parent );
+
 					} else {
 						inserted = na_object_ref( current );
+						deletable = g_list_prepend( NULL, inserted );
+						nact_iactions_list_delete( NACT_IACTIONS_LIST( main_window ), deletable );
+						g_list_free( deletable );
 					}
+
+					na_object_prepare_for_paste( inserted, pivot, copy_data, parent );
 					object_list = g_list_prepend( object_list, inserted );
 					g_debug( "%s: dropped=%s", thisfn, na_object_get_label( inserted ));
 				}
@@ -1491,10 +1499,6 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 			}
 		}
 		object_list = g_list_reverse( object_list );
-
-		if( !copy_data ){
-			nact_iactions_list_delete( NACT_IACTIONS_LIST( main_window ), object_list );
-		}
 
 		nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
 

@@ -11,6 +11,7 @@
 	Also used to validate when dropping an uri.
 	(drop_uri_list): Check status of imported actions.
 	(drop_inside_move_dest): Fix when moving a subitem down.
+	(drop_inside): Delete the moved item before preparing to paste.
 
 	* src/plugin/nautilus-actions.c (instance_init):
 	Check status of loaded items.

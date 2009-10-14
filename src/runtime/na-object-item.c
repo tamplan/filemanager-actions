@@ -873,6 +873,8 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			for( it = NA_OBJECT_ITEM( a )->private->items ; it && equal ; it = it->next ){
 				first_id = na_object_get_id( it->data );
 				second_obj = na_object_get_item( b, first_id );
+				first_pos = -1;
+				second_pos = -1;
 				if( second_obj ){
 					first_pos = g_list_position( NA_OBJECT_ITEM( a )->private->items, it );
 					second_list = g_list_find( NA_OBJECT_ITEM( b )->private->items, second_obj );
@@ -891,6 +893,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 					equal = FALSE;
 					/*g_debug( "first_id=%s, second not found", first_id );*/
 				}
+				/*g_debug( "first_id=%s first_pos=%d second_pos=%d", first_id, first_pos, second_pos );*/
 				g_free( first_id );
 			}
 		}
