@@ -1,3 +1,15 @@
+2009-10-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-iactions-list.c:
+	Maintains a list of modified items, cleared when saving.
+	Define a new "status-changed" signal.
+
+	* src/nact/nact-main-menubar.c:
+	Update action sensitivities when a status is changed.
+
+	* src/runtime/na-gconf-provider.c:
+	Manage unknown types.
+
 2009-10-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/runtime/na-iduplicable.c:

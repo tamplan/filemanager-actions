@@ -94,6 +94,7 @@ static void     on_iactions_list_count_updated( NactMainWindow *window, gint men
 static void     on_iactions_list_selection_changed( NactMainWindow *window, GList *selected );
 static void     on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data );
 static void     on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data );
+static void     on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data );
 static void     on_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
 static void     on_update_sensitivities( NactMainWindow *window, gpointer user_data );
 
@@ -350,6 +351,12 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	base_window_signal_connect(
 			BASE_WINDOW( window ),
 			G_OBJECT( window ),
+			IACTIONS_LIST_SIGNAL_STATUS_CHANGED,
+			G_CALLBACK( on_iactions_list_status_changed ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( window ),
 			MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES,
 			G_CALLBACK( on_update_sensitivities ));
 
@@ -449,6 +456,15 @@ on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data )
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	mis->treeview_has_focus = FALSE;
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+}
+
+static void
+on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data )
+{
+	g_debug( "nact_main_menubar_on_iactions_list_status_changed" );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
@@ -674,7 +690,12 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = nact_iactions_list_get_items( NACT_IACTIONS_LIST( window ));
 	na_pivot_write_level_zero( pivot, items );
 
+	/* remove modified items
+	 */
+	nact_iactions_list_removed_modified( NACT_IACTIONS_LIST( window ));
+
 	/* recursively save the modified items
+	 * check is useless here if item was not modified, but not very costly
 	 */
 	for( it = items ; it ; it = it->next ){
 		save_item( window, pivot, NA_OBJECT_ITEM( it->data ));
@@ -686,10 +707,6 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 	 */
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	mis->level_zero_order_changed = FALSE;
-
-	/* required as selection has not changed
-	 */
-	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 
 	/* get ride of notification messages of IOProviders
 	 */
@@ -709,6 +726,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 	NAObjectItem *origin;
 	NAObjectItem *dup_pivot;
 	GList *subitems, *it;
+	NAObjectItem *parent;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
@@ -721,9 +739,8 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 		}
 	}
 
-	if( na_object_is_modified( item )){
-
-		if( nact_window_save_item( NACT_WINDOW( window ), item )){
+	if( na_object_is_modified( item ) &&
+		nact_window_save_item( NACT_WINDOW( window ), item )){
 
 			if( NA_IS_OBJECT_ACTION( item )){
 				na_object_action_reset_last_allocated( NA_OBJECT_ACTION( item ));
@@ -733,15 +750,25 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 			 * (valid) NULL value
 			 */
 			origin = ( NAObjectItem * ) na_object_get_origin( item );
+			parent = NULL;
 
 			if( origin ){
-				na_pivot_remove_item( pivot, NA_OBJECT( origin ));
+				parent = na_object_get_parent( origin );
+				if( parent ){
+					na_object_remove_item( parent, origin );
+				} else {
+					na_pivot_remove_item( pivot, NA_OBJECT( origin ));
+				}
 			}
 
 			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
 			na_object_reset_origin( item, dup_pivot );
-			na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
-		}
+			na_object_set_parent( dup_pivot, parent );
+			if( parent ){
+				na_object_append_item( parent, dup_pivot );
+			} else {
+				na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
+			}
 	}
 }
 

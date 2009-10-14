@@ -450,7 +450,9 @@ iio_provider_read_items_list( const NAIIOProvider *provider )
 
 			const gchar *path = ( const gchar * ) ip->data;
 			item = read_item( self, path );
-			items_list = g_list_prepend( items_list, item );
+			if( item ){
+				items_list = g_list_prepend( items_list, item );
+			}
 		}
 
 		na_gconf_utils_free_subdirs( listpath );
@@ -477,14 +479,15 @@ read_item( NAGConfProvider *provider, const gchar *path )
 	full_path = gconf_concat_dir_and_key( path, OBJECT_ITEM_TYPE_ENTRY );
 	type = na_gconf_utils_read_string( provider->private->gconf, full_path, TRUE, OBJECT_ITEM_TYPE_ACTION );
 	g_free( full_path );
+	item = NULL;
 
-	/* a menu has a 'type' = 'menu'
+	/* a menu has a type='Menu'
 	 */
 	if( have_type && !strcmp( type, OBJECT_ITEM_TYPE_MENU )){
 		item = NA_OBJECT_ITEM( na_object_menu_new());
 		read_item_menu( provider, path, NA_OBJECT_MENU( item ));
 
-	/* else this should be an action (no type, or 'type' = 'action')
+	/* else this should be an action (no type, or type='Action')
 	 */
 	} else if( !have_type || !strcmp( type, OBJECT_ITEM_TYPE_ACTION )){
 		item = NA_OBJECT_ITEM( na_object_action_new());

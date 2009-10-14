@@ -503,7 +503,7 @@ na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 {
 	g_debug( "na_pivot_remove_item: pivot=%p, item=%p (%s)",
 			( void * ) pivot,
-			( void * ) item, G_OBJECT_TYPE_NAME( item ));
+			( void * ) item, G_IS_OBJECT( item ) ? G_OBJECT_TYPE_NAME( item ) : "(null)" );
 
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 

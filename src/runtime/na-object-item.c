@@ -849,15 +849,24 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			equal =
 				( g_utf8_collate( NA_OBJECT_ITEM( a )->private->tooltip, NA_OBJECT_ITEM( b )->private->tooltip ) == 0 ) &&
 				( g_utf8_collate( NA_OBJECT_ITEM( a )->private->icon, NA_OBJECT_ITEM( b )->private->icon ) == 0 );
+			/*if( !equal ){
+				g_debug( "tooltip or icon" );
+			}*/
 		}
 
 		if( equal ){
 			equal = ( NA_OBJECT_ITEM( a )->private->enabled && NA_OBJECT_ITEM( b )->private->enabled ) ||
 					( !NA_OBJECT_ITEM( a )->private->enabled && !NA_OBJECT_ITEM( b )->private->enabled );
+			/*if( !equal ){
+				g_debug( "enabled" );
+			}*/
 		}
 
 		if( equal ){
 			equal = ( g_list_length( NA_OBJECT_ITEM( a )->private->items ) == g_list_length( NA_OBJECT_ITEM( b )->private->items ));
+			if( !equal ){
+				g_debug( "length: a=%d, b=%d", g_list_length( NA_OBJECT_ITEM( a )->private->items ), g_list_length( NA_OBJECT_ITEM( b )->private->items ));
+			}
 		}
 
 		if( equal ){
@@ -873,12 +882,14 @@ object_are_equal( const NAObject *a, const NAObject *b )
 #endif
 					if( first_pos != second_pos ){
 						equal = FALSE;
+						/*g_debug( "first_id=%s, first_pos=%d, second_pos=%d", first_id, first_pos, second_pos );*/
 					}
 				} else {
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 					g_debug( "na_object_item_object_are_equal: id=%s not found in b", first_id );
 #endif
 					equal = FALSE;
+					/*g_debug( "first_id=%s, second not found", first_id );*/
 				}
 				g_free( first_id );
 			}
@@ -893,17 +904,16 @@ object_are_equal( const NAObject *a, const NAObject *b )
 					g_debug( "na_object_item_object_are_equal: id=%s not found in a", second_id );
 #endif
 					equal = FALSE;
+					/*g_debug( "second_id=%s, first not found", second_id );*/
 				}
 				g_free( second_id );
 			}
 		}
 
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
 		g_debug( "na_object_item_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
 				( void * ) a, G_OBJECT_TYPE_NAME( a ),
 				( void * ) b, G_OBJECT_TYPE_NAME( b ),
 				equal ? "True":"False" );
-#endif
 	}
 
 	return( equal );

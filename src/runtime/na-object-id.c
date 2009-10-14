@@ -494,12 +494,10 @@ object_are_equal( const NAObject *a, const NAObject *b )
 				}
 			}
 
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-			g_debug( "na_object_id_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+			/*g_debug( "na_object_id_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
 					( void * ) a, G_OBJECT_TYPE_NAME( a ),
 					( void * ) b, G_OBJECT_TYPE_NAME( b ),
-					equal ? "True":"False" );
-#endif
+					equal ? "True":"False" );*/
 	}
 
 	return( equal );

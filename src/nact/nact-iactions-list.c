@@ -70,6 +70,13 @@ typedef struct {
 	 */
 	gulong   tab_updated_handler;
 	gboolean selection_changed_send_allowed;
+
+	/* maintains a flat list of modified objects
+	 * should be faster than iterating each time this is needed
+	 * not very reliable as not all deleted items are removed from it
+	 * but enough to enable/disable save
+	 */
+	GList   *modified_items;
 }
 	IActionsListInstanceData;
 
@@ -83,6 +90,7 @@ enum {
 	FOCUS_IN,
 	FOCUS_OUT,
 	COLUMN_EDITED,
+	STATUS_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -153,7 +161,7 @@ static void         filter_selection_iter( GtkTreeModel *model, GtkTreePath *pat
 static GtkTreeView *get_actions_list_treeview( NactIActionsList *instance );
 static gboolean     get_item_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, IdToObjectIter *ito );
 static gboolean     get_items_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items );
-static gboolean     has_modified_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, gboolean *has_modified );
+/*static gboolean     has_modified_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, gboolean *has_modified );*/
 static gboolean     have_dnd_mode( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static gboolean     have_filter_selection_mode( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static gboolean     have_only_actions( NactIActionsList *instance, IActionsListInstanceData *ialid );
@@ -338,6 +346,24 @@ interface_base_init( NactIActionsListInterface *klass )
 				G_TYPE_POINTER,
 				G_TYPE_POINTER,
 				G_TYPE_INT );
+
+		/**
+		 * nact-iactions-list-status-changed:
+		 *
+		 * This signal is emitted byIActionsList to its implementor
+		 * when the status of an item is changed.
+		 */
+		st_signals[ STATUS_CHANGED ] = g_signal_new(
+				IACTIONS_LIST_SIGNAL_STATUS_CHANGED,
+				G_TYPE_OBJECT,
+				G_SIGNAL_RUN_LAST,
+				0,						/* no default handler */
+				NULL,
+				NULL,
+				g_cclosure_marshal_VOID__POINTER,
+				G_TYPE_NONE,
+				1,
+				G_TYPE_POINTER );
 
 		st_initialized = TRUE;
 	}
@@ -691,6 +717,8 @@ nact_iactions_list_delete( NactIActionsList *instance, GList *items )
 
 			path = nact_tree_model_remove( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ));
 
+			ialid->modified_items = g_list_remove( ialid->modified_items, it->data );
+
 			g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
 					( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
 		}
@@ -966,17 +994,20 @@ gboolean
 nact_iactions_list_has_modified_items( NactIActionsList *instance )
 {
 	gboolean has_modified = FALSE;
-	GtkTreeView *treeview;
-	NactTreeModel *model;
+	/*GtkTreeView *treeview;
+	NactTreeModel *model;*/
+	IActionsListInstanceData *ialid;
 
 	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), FALSE );
 
 	if( st_initialized && !st_finalized ){
 
-		treeview = get_actions_list_treeview( instance );
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+		ialid = get_instance_data( instance );
+		has_modified = ( g_list_length( ialid->modified_items ) > 0 );
 
-		nact_tree_model_iter( model, ( FnIterOnStore ) has_modified_iter, &has_modified );
+		/*treeview = get_actions_list_treeview( instance );
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+		nact_tree_model_iter( model, ( FnIterOnStore ) has_modified_iter, &has_modified );*/
 	}
 
 	return( has_modified );
@@ -1359,6 +1390,27 @@ nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item
 }
 
 /**
+ * nact_iactions_list_removed_modified:
+ * @instance: this #NactIActionsList instance.
+ *
+ * Clears the modified items list.
+ */
+void
+nact_iactions_list_removed_modified( NactIActionsList *instance )
+{
+	IActionsListInstanceData *ialid;
+
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		ialid = get_instance_data( instance );
+		g_list_free( ialid->modified_items );
+		ialid->modified_items = NULL;
+	}
+}
+
+/**
  * nact_iactions_list_set_management_mode:
  * @instance: this #NactIActionsList instance.
  * @mode: management mode.
@@ -1662,6 +1714,7 @@ get_items_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList
 /*
  * stop as soon as we have found a modified item
  */
+#if 0
 static gboolean
 has_modified_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, gboolean *has_modified )
 {
@@ -1673,6 +1726,7 @@ has_modified_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, gb
 	/* don't stop iteration if not modified */
 	return( FALSE );
 }
+#endif
 
 static gboolean
 have_dnd_mode( NactIActionsList *instance, IActionsListInstanceData *ialid )
@@ -1804,7 +1858,7 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 	IActionsListInstanceData *ialid;
 
 	ialid = get_instance_data( instance );
-	if( ialid->selection_changed_send_allowed ){
+	/*if( ialid->selection_changed_send_allowed ){*/
 
 		g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p, object=%p (%s)",
 				( void * ) instance,
@@ -1815,7 +1869,17 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 		treeview = get_actions_list_treeview( instance );
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 		nact_tree_model_display( model, NA_OBJECT( object ));
+	/*}*/
+
+	if( na_object_is_modified( object )){
+		if( !g_list_find( ialid->modified_items, object )){
+			ialid->modified_items = g_list_prepend( ialid->modified_items, object );
+		}
+	} else {
+		ialid->modified_items = g_list_remove( ialid->modified_items, object );
 	}
+
+	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_STATUS_CHANGED, NULL );
 }
 
 static gboolean
