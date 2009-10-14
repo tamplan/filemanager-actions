@@ -1,5 +1,9 @@
 2009-10-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-imenubar.c:
+	* src/nact/nautilus-actions-config-tool.actions:
+	Remove New menu and Preferences items.
+
 	* src/nact/Makefile.am:
 	New file src/nact/nact-assistant-export.ui.
 

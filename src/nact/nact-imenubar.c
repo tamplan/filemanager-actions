@@ -59,7 +59,7 @@ static void       interface_base_finalize( NactIMenubarInterface *klass );
 static void       on_file_menu_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_new_action_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_new_profile_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_new_menu_activated( GtkMenuItem *item, NactWindow *window );
+/*static void       on_new_menu_activated( GtkMenuItem *item, NactWindow *window );*/
 static void       on_save_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_quit_activated( GtkMenuItem *item, NactWindow *window );
 static void       add_profile( NactWindow *window, NAAction *action, NAActionProfile *profile );
@@ -68,7 +68,7 @@ static void       on_edit_menu_selected( GtkMenuItem *item, NactWindow *window )
 static void       on_duplicate_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_delete_activated( GtkMenuItem *item, NactWindow *window );
 static void       on_reload_activated( GtkMenuItem *item, NactWindow *window );
-static void       on_preferences_activated( GtkMenuItem *item, NactWindow *window );
+/*static void       on_preferences_activated( GtkMenuItem *item, NactWindow *window );*/
 
 static void       on_tools_menu_selected( GtkMenuItem *item, NactWindow *window );
 static void       on_import_activated( GtkMenuItem *item, NactWindow *window );
@@ -111,10 +111,6 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the 'New profile' item */
 				N_( "Define a new profile attached to the current action." ),
 				G_CALLBACK( on_new_profile_activated ) },
-		{ "NewMenuItem", NULL, N_( "_New _menu" ), "<Ctrl>M",
-				/* i18n: tooltip displayed in the status bar when selecting the 'New menu' item */
-				N_( "Insert a new menu at the current position." ),
-				G_CALLBACK( on_new_menu_activated ) },
 		{ "SaveItem", GTK_STOCK_SAVE, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting 'Save' item */
 				N_( "Record all the modified actions. Invalid actions will be silently ignored." ),
@@ -135,10 +131,6 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the 'Reload' item */
 				N_( "Cancel your current modifications and reload the list of actions." ),
 				G_CALLBACK( on_reload_activated ) },
-		{ "PreferencesItem", GTK_STOCK_PREFERENCES, NULL, "<Ctrl>P",
-				/* i18n: tooltip displayed in the status bar when selecting the 'Preferences' item */
-				N_( "Edit your preferences." ),
-				G_CALLBACK( on_preferences_activated ) },
 		{ "ImportItem" , GTK_STOCK_CONVERT, N_( "_Import assistant..." ), "",
 				/* i18n: tooltip displayed in the status bar when selecting the Import item */
 				N_( "Import one or more actions from external (XML) files into your configuration." ),
@@ -419,12 +411,12 @@ on_new_profile_activated( GtkMenuItem *item, NactWindow *window )
 	add_profile( window, action, new_profile );
 }
 
-static void
+/*static void
 on_new_menu_activated( GtkMenuItem *item, NactWindow *window )
 {
 	NAActionMenu *menu = na_action_menu_new();
 	v_insert_item( window, NA_ACTION( menu ));
-}
+}*/
 
 static void
 on_save_activated( GtkMenuItem *item, NactWindow *window )
@@ -698,11 +690,11 @@ on_reload_activated( GtkMenuItem *item, NactWindow *window )
 	}
 }
 
-static void
+/*static void
 on_preferences_activated( GtkMenuItem *item, NactWindow *window )
 {
 	nact_preferences_editor_run( window );
-}
+}*/
 
 static void
 on_tools_menu_selected( GtkMenuItem *item, NactWindow *window )
