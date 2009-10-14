@@ -63,7 +63,7 @@ typedef struct {
 	NactWindowRecordedSignal;
 
 static GObjectClass *st_parent_class = NULL;
-static gboolean      st_debug_signal_connect = FALSE;
+static gboolean      st_debug_signal_connect = TRUE;
 
 static GType    register_type( void );
 static void     class_init( NactWindowClass *klass );
@@ -193,9 +193,11 @@ instance_dispose( GObject *window )
 
 		for( is = self->private->signals ; is ; is = is->next ){
 			NactWindowRecordedSignal *str = ( NactWindowRecordedSignal * ) is->data;
-			g_signal_handler_disconnect( str->instance, str->handler_id );
-			if( st_debug_signal_connect ){
-				g_debug( "%s: disconnecting signal handler %p:%lu", thisfn, str->instance, str->handler_id );
+			if( str->instance ){
+				g_signal_handler_disconnect( str->instance, str->handler_id );
+				if( st_debug_signal_connect ){
+					g_debug( "%s: disconnecting signal handler %p:%lu", thisfn, str->instance, str->handler_id );
+				}
 			}
 			g_free( str );
 		}

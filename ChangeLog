@@ -1,5 +1,8 @@
 2009-10-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-window.c (instance_dispose):
+	Only disconnect not null handlers.
+
 	* src/nact/nact-main-window.c (get_selected_object):
 	Only returns an object when selection is unique.
 
