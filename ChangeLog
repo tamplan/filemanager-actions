@@ -7,6 +7,10 @@
 	* src/nact/nact-main-menubar.c:
 	Update action sensitivities when a status is changed.
 
+	* src/nact/nact-tree-model.c (drop_inside_adjust_dest):
+	Also used to validate when dropping an uri.
+	(drop_uri_list): Check status of imported actions.
+
 	* src/runtime/na-gconf-provider.c:
 	Manage unknown types.
 

@@ -1552,7 +1552,9 @@ drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction
 		if( model->private->drag_has_profiles ){
 			if( NA_IS_OBJECT_PROFILE( current )){
 				drop_ok = TRUE;
-				*parent = NA_OBJECT_ACTION( na_object_get_parent( current ));
+				if( parent ){
+					*parent = NA_OBJECT_ACTION( na_object_get_parent( current ));
+				}
 			} else {
 				nact_main_statusbar_display_with_timeout(
 						main_window, TREE_MODEL_STATUSBAR_CONTEXT, refuse_profile );
@@ -1591,13 +1593,17 @@ drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction
 				if( model->private->drag_has_profiles ){
 					if( NA_IS_OBJECT_ACTION( current )){
 						drop_ok = TRUE;
-						*parent = NA_OBJECT_ACTION( current );
+						if( parent ){
+							*parent = NA_OBJECT_ACTION( current );
+						}
 
 					} else if( NA_IS_OBJECT_PROFILE( current )){
 						gtk_tree_path_free( new_dest );
 						new_dest = gtk_tree_path_copy( path );
 						drop_ok = TRUE;
-						*parent = NA_OBJECT_ACTION( na_object_get_parent( current ));
+						if( parent ){
+							*parent = NA_OBJECT_ACTION( na_object_get_parent( current ));
+						}
 
 					} else {
 						nact_main_statusbar_display_with_timeout(
@@ -1681,10 +1687,17 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	NAObjectAction *action;
 	NactMainWindow *main_window;
 	GList *object_list;
+	GtkTreePath *new_dest;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	pivot = nact_application_get_pivot( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
+
+	model->private->drag_has_profiles = FALSE;
+	new_dest = drop_inside_adjust_dest( model, dest, NULL );
+	if( !new_dest ){
+		return( drop_done );
+	}
 
 	uri_list = g_slist_reverse( na_utils_lines_to_string_list(( const gchar * ) selection_data->data ));
 	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ));
@@ -1709,7 +1722,8 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 			g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
 			object_list = g_list_prepend( NULL, action );
 			na_object_dump( action );
-			nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, dest );
+			na_object_check_status( action );
+			nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
 			g_list_free( object_list );
 			drop_done = TRUE;
 		}
@@ -1720,6 +1734,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		}
 	}
 
+	gtk_tree_path_free( new_dest );
 	nact_tree_model_dump( model );
 	na_utils_free_string_list( uri_list );
 
