@@ -156,7 +156,7 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_iio_provider_get_items_tree";
 	GList *providers;
-	GList *merged, *hierarchy, *it;
+	GList *merged, *hierarchy;
 	GSList *level_zero;
 	gint order_mode;
 
@@ -189,7 +189,6 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 		}
 
 		na_utils_free_string_list( level_zero );
-		/*na_object_free_items_list( merged );*/
 
 		g_debug( "%s: tree before alphabetical reordering (if any)", thisfn );
 		na_object_dump_tree( hierarchy );
@@ -208,13 +207,6 @@ na_iio_provider_get_items_tree( const NAPivot *pivot )
 			case IPREFS_ORDER_MANUAL:
 			default:
 				break;
-		}
-
-		/* required here because Nautilus-Actions plugin will only
-		 * display valid items, and doesn't care to have to check them
-		 */
-		for( it = hierarchy ; it ; it = it->next ){
-			na_object_check_status( it->data );
 		}
 	}
 

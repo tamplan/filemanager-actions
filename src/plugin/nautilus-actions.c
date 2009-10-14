@@ -213,6 +213,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	 */
 	self->private->pivot = na_pivot_new( NA_IPIVOT_CONSUMER( self ));
 	na_pivot_set_automatic_reload( self->private->pivot, TRUE );
+	na_pivot_check_status( self->private->pivot );
 }
 
 static void

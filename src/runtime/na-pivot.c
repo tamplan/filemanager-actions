@@ -314,6 +314,29 @@ na_pivot_new( const NAIPivotConsumer *target )
 }
 
 /**
+ * na_pivot_check_status:
+ * @pivot: this #NAPivot object.
+ *
+ * Recursively checks the status of items in @pivot.
+ */
+void
+na_pivot_check_status( const NAPivot *pivot )
+{
+	static const gchar *thisfn = "na_pivot_check_status";
+	GList *it;
+
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		for( it = pivot->private->tree ; it ; it = it->next ){
+			na_object_check_status( it->data );
+		}
+	}
+}
+
+/**
  * na_pivot_dump:
  * @pivot: the #NAPivot object do be dumped.
  *
@@ -832,6 +855,7 @@ on_actions_changed_timeout( gpointer user_data )
 
 	if( pivot->private->automatic_reload ){
 		na_pivot_reload_items( pivot );
+		na_pivot_check_status( pivot );
 	}
 
 	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){

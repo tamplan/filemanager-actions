@@ -11,8 +11,17 @@
 	Also used to validate when dropping an uri.
 	(drop_uri_list): Check status of imported actions.
 
+	* src/plugin/nautilus-actions.c (instance_init):
+	Check status of loaded items.
+
 	* src/runtime/na-gconf-provider.c:
 	Manage unknown types.
+
+	* src/runtime/na-iio-provider.c (na_iio_provider_get_items_tree):
+	No more check here status of loaded items.
+
+	* src/runtime/na-pivot.c:
+	* src/runtime/na-pivot.h (na_pivot_check_status): New function.
 
 2009-10-13 Pierre Wieser <pwieser@trychlos.org>
 
