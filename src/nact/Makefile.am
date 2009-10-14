@@ -94,6 +94,7 @@ nautilus_actions_config_tool_LDADD = \
 pkgdata_DATA = \
 	nautilus-actions-config-tool.actions				\
 	nautilus-actions-config-tool.ui						\
+	nact-assistant-export.ui							\
 	$(NULL)
 
 @INTLTOOL_DESKTOP_RULE@

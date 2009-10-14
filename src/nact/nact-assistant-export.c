@@ -98,6 +98,7 @@ static NactAssistantExport *assist_new( BaseApplication *application );
 
 static gchar          *do_get_iprefs_window_id( NactWindow *window );
 static gchar          *do_get_dialog_name( BaseWindow *dialog );
+static gchar          *get_ui_fname( NactAssistant *window );
 static GSList         *get_actions( NactWindow *window );
 static void            on_initial_load_dialog( BaseWindow *dialog );
 static void            on_runtime_init_dialog( BaseWindow *dialog );
@@ -210,6 +211,7 @@ class_init( NactAssistantExportClass *klass )
 	nact_class->get_iprefs_window_id = do_get_iprefs_window_id;
 
 	assist_class = NACT_ASSISTANT_CLASS( klass );
+	assist_class->get_ui_fname = get_ui_fname;
 	assist_class->on_assistant_apply = on_apply;
 	assist_class->on_assistant_prepare = on_prepare;
 }
@@ -320,6 +322,12 @@ static gchar *
 do_get_dialog_name( BaseWindow *dialog )
 {
 	return( g_strdup( "ExportAssistant" ));
+}
+
+static gchar *
+get_ui_fname( NactAssistant *window )
+{
+	return( g_strdup( PKGDATADIR "/nact-assistant-export.ui" ));
 }
 
 static GSList *

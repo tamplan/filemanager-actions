@@ -73,6 +73,7 @@ static void       instance_finalize( GObject *application );
 
 static GtkWindow *get_dialog( BaseWindow *window, const gchar *name );
 
+static gchar     *v_get_ui_fname( BaseApplication *application, BaseWindow *window );
 static void       v_assistant_apply( GtkAssistant *assistant, NactAssistant *window );
 static void       v_assistant_cancel( GtkAssistant *assistant, NactAssistant *window );
 static void       v_assistant_close( GtkAssistant *assistant, NactAssistant *window );
@@ -277,7 +278,7 @@ get_dialog( BaseWindow *window, const gchar *name )
 
 	appli = base_window_get_application( window );
 
-	fname = base_application_get_ui_filename( appli );
+	fname = v_get_ui_fname( appli, window );
 
 	gtk_builder_add_from_file( builder, fname, NULL );
 
@@ -297,6 +298,22 @@ nact_assistant_set_warn_on_cancel( NactAssistant *window, gboolean warn )
 {
 	g_assert( NACT_IS_ASSISTANT( window ));
 	g_object_set( G_OBJECT( window ), PROP_ASSIST_WARN_ON_CANCEL_STR, warn, NULL );
+}
+
+static gchar *
+v_get_ui_fname( BaseApplication *application, BaseWindow *window )
+{
+	gchar *fname;
+	g_assert( NACT_IS_ASSISTANT( window ));
+
+	fname = NULL;
+	if( NACT_ASSISTANT_GET_CLASS( window )->get_ui_fname ){
+		fname = NACT_ASSISTANT_GET_CLASS( window )->get_ui_fname( NACT_ASSISTANT( window ));
+	} else {
+		fname = base_application_get_ui_filename( application );
+	}
+
+	return( fname );
 }
 
 static void

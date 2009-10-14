@@ -73,6 +73,7 @@ typedef struct {
 	NactAssistantClassPrivate *private;
 
 	/* api */
+	gchar  * ( *get_ui_fname )         ( NactAssistant *window );
 	void     ( *on_assistant_apply )   ( NactAssistant *window, GtkAssistant *assistant );
 	void     ( *on_assistant_cancel )  ( NactAssistant *window, GtkAssistant *assistant );
 	void     ( *on_assistant_close )   ( NactAssistant *window, GtkAssistant *assistant );

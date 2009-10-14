@@ -1,3 +1,17 @@
+2009-10-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/Makefile.am:
+	New file src/nact/nact-assistant-export.ui.
+
+	* src/nact/nact-assistant.c:
+	* src/nact/nact-assistant.h (get_ui_fname): New virtual function.
+
+	* src/nact/nact-assistant-export.c:
+	Define a specific UI filename.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Make some ids unique inside the file (why not all ??)
+
 2009-08-30 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/nautilus-actions.schemas.in:
