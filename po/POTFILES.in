@@ -16,6 +16,7 @@ src/nact/nact-imenubar.c
 src/nact/nact-main-window.c
 src/nact/nact-window.c
 src/nact/nact-xml-reader.c
+src/nact/nact-assistant-export.ui
 src/nact/nautilus-actions-config-tool.ui
 src/test/test-parse-uris.c
 src/utils/nautilus-actions-new.c

@@ -10,6 +10,7 @@
 	* src/nact/nautilus-actions-config-tool.actions:
 	Remove New menu and Preferences items.
 
+	* po/POTFILES.in:
 	* src/nact/Makefile.am:
 	New file src/nact/nact-assistant-export.ui.
 
