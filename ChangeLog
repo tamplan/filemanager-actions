@@ -1,5 +1,8 @@
 2009-10-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c (get_selected_object):
+	Only returns an object when selection is unique.
+
 	* src/nact/nact-imenubar.c:
 	* src/nact/nautilus-actions-config-tool.actions:
 	Remove New menu and Preferences items.

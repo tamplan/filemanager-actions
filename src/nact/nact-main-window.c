@@ -92,6 +92,7 @@ static void             instance_finalize( GObject *application );
 static gchar           *get_iprefs_window_id( NactWindow *window );
 static gchar           *get_toplevel_name( BaseWindow *window );
 static GSList          *get_actions( NactWindow *window );
+static NAObject        *get_selected_object( NactWindow *window );
 
 static void             on_initial_load_toplevel( BaseWindow *window );
 static void             on_runtime_init_toplevel( BaseWindow *window );
@@ -339,7 +340,7 @@ imenubar_iface_init( NactIMenubarInterface *iface )
 	iface->free_deleted_actions = free_deleted_actions;
 	iface->push_removed_action = push_removed_action;
 	iface->get_actions = get_actions;
-	iface->get_selected = nact_iactions_list_get_selected_object;
+	iface->get_selected = get_selected_object;
 	iface->setup_dialog_title = setup_dialog_title;
 	iface->update_actions_list = update_actions_list;
 	iface->select_actions_list = nact_iactions_list_set_selection;
@@ -508,6 +509,21 @@ get_actions( NactWindow *window )
 {
 	g_assert( NACT_IS_MAIN_WINDOW( window ));
 	return( NACT_MAIN_WINDOW( window )->private->actions );
+}
+
+static NAObject *
+get_selected_object( NactWindow *window )
+{
+	NAObject *object;
+	GSList *items;
+
+	object = NULL;
+	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	if( g_slist_length( items ) == 1 ){
+		object = NA_OBJECT( items->data );
+	}
+
+	return( object );
 }
 
 /*
