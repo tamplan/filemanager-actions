@@ -1640,11 +1640,15 @@ drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest )
 	gint i;
 	gint *indices;
 
+	g_return_if_fail( dest );
+
 	before = 0;
 	for( it = rows ; it ; it = it->next ){
 		path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
 		if( path ){
-			if( gtk_tree_path_compare( path, *dest ) == -1 ){
+			if( gtk_tree_path_get_depth( path ) == 1 &&
+				gtk_tree_path_compare( path, *dest ) == -1 ){
+
 				before += 1;
 			}
 			gtk_tree_path_free( path );

@@ -10,6 +10,7 @@
 	* src/nact/nact-tree-model.c (drop_inside_adjust_dest):
 	Also used to validate when dropping an uri.
 	(drop_uri_list): Check status of imported actions.
+	(drop_inside_move_dest): Fix when moving a subitem down.
 
 	* src/plugin/nautilus-actions.c (instance_init):
 	Check status of loaded items.
