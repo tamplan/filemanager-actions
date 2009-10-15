@@ -75,6 +75,7 @@ typedef struct {
 GType nact_assistant_import_ask_get_type( void );
 
 gint  nact_assistant_import_ask_user( NactMainWindow *window, const gchar *uri, NAObjectAction *new_action, NAObjectItem *current );
+void  nact_assistant_import_ask_reset_keep_mode( NactMainWindow *window );
 
 G_END_DECLS
 

@@ -223,8 +223,7 @@ assistant_import_ask_new( NactApplication *application )
 
 /**
  * nact_assistant_import_ask_run:
- * @parent: the BaseWindow parent of this dialog
- * (usually the NactMainWindow).
+ * @parent: the NactMainWindow parent of this dialog.
  *
  * Initializes and runs the dialog.
  *
@@ -268,7 +267,9 @@ nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObje
 		g_object_get( G_OBJECT( editor ), BASE_WINDOW_PROP_TOPLEVEL_WIDGET, &window, NULL );
 		if( window && GTK_IS_WINDOW( window )){
 			already_ran = ( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( window ), "nact-assistant-import-ask-user" ));
-			if( !already_ran || editor->private->keep_mode ){
+			g_debug( "%s: already_ran=%s", thisfn, already_ran ? "True":"False" );
+			g_debug( "%s: keep_mode=%s", thisfn, editor->private->keep_mode ? "True":"False" );
+			if( !already_ran || !editor->private->keep_mode ){
 				base_window_run( BASE_WINDOW( editor ));
 			}
 		}
@@ -280,6 +281,31 @@ nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObje
 	g_object_unref( editor );
 
 	return( mode );
+}
+
+/**
+ * nact_assistant_import_ask_reset_keep_mode:
+ * @parent: the NactMainWindow parent of this dialog.
+ *
+ * Reset the 'first time' flag, so taht the user will be asked next time
+ * an imort operation is done.
+ */
+void
+nact_assistant_import_ask_reset_keep_mode( NactMainWindow *parent )
+{
+	NactApplication *application;
+	NactAssistantImportAsk *editor;
+	GtkWindow *window;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
+	editor = assistant_import_ask_new( application );
+
+	if( base_window_init( BASE_WINDOW( editor ))){
+		g_object_get( G_OBJECT( editor ), BASE_WINDOW_PROP_TOPLEVEL_WIDGET, &window, NULL );
+		if( window && GTK_IS_WINDOW( window )){
+			g_object_set_data( G_OBJECT( window ), "nact-assistant-import-ask-user", GINT_TO_POINTER( FALSE ));
+		}
+	}
 }
 
 static gchar *
@@ -346,6 +372,9 @@ on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data 
 	}
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 
+	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), editor->private->keep_mode );
+
 	base_window_signal_connect_by_name(
 			BASE_WINDOW( editor ),
 			"CancelButton1",
@@ -405,6 +434,9 @@ get_mode( NactAssistantImportAsk *editor )
 	}
 
 	editor->private->mode = import_mode;
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
+	editor->private->keep_mode = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 }
 
 static gboolean

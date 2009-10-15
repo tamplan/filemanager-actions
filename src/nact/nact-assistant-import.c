@@ -47,6 +47,8 @@
 #include "nact-application.h"
 #include "nact-iactions-list.h"
 #include "nact-assistant-import.h"
+#include "nact-assistant-import-ask.h"
+#include "nact-main-window.h"
 #include "nact-xml-reader.h"
 
 /* Import Assistant
@@ -455,6 +457,7 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_import_runtime_init_duplicates";
 	NactApplication *application;
+	NactMainWindow *main_window;
 	NAPivot *pivot;
 	GtkWidget *page;
 	gint mode;
@@ -468,6 +471,9 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
+
+	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
+	nact_assistant_import_ask_reset_keep_mode( main_window );
 }
 
 static void
