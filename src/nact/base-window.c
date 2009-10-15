@@ -602,7 +602,6 @@ base_window_init( BaseWindow *window )
 			if( !is_toplevel_initialized( window, toplevel )){
 
 				g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_INITIAL_LOAD, NULL );
-
 				set_toplevel_initialized( window, toplevel, TRUE );
 			}
 			window->private->initialized = TRUE;
@@ -626,50 +625,57 @@ base_window_run( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_run";
 	GtkWidget *this_dialog;
+	gboolean run_ok;
 	gint code;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	if( !window->private->dispose_has_run ){
+	run_ok = TRUE;
 
-		if( !window->private->initialized ){
-			base_window_init( window );
-		}
+	if( window->private->dispose_has_run ){
+		run_ok = FALSE;
+	}
 
+	if( run_ok && !window->private->initialized ){
+		run_ok = base_window_init( window );
+	}
+
+	if( run_ok ){
 		this_dialog = GTK_WIDGET( window->private->toplevel_window );
-		if( this_dialog ){
+		if( !this_dialog ){
+			run_ok = FALSE;
+		}
+	}
 
-			g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	if( run_ok ){
+		g_debug( "%s: window=%p", thisfn, ( void * ) window );
+		g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_RUNTIME_INIT, NULL );
 
-			g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_RUNTIME_INIT, NULL );
+		gtk_widget_show_all( this_dialog );
+		g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED, NULL );
 
-			gtk_widget_show_all( this_dialog );
+		if( is_main_window( window )){
 
-			g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED, NULL );
-
-			if( is_main_window( window )){
-
-				if( GTK_IS_DIALOG( this_dialog )){
-					g_signal_connect( G_OBJECT( this_dialog ), "response", G_CALLBACK( v_dialog_response ), window );
-				} else {
-					g_signal_connect( G_OBJECT( this_dialog ), "delete-event", G_CALLBACK( on_delete_event ), window );
-				}
-
-				g_debug( "%s: application=%p, starting gtk_main", thisfn, ( void * ) window->private->application );
-				gtk_main();
-
-			} else if( GTK_IS_ASSISTANT( this_dialog )){
-				g_debug( "%s: starting gtk_main", thisfn );
-				gtk_main();
-
+			if( GTK_IS_DIALOG( this_dialog )){
+				g_signal_connect( G_OBJECT( this_dialog ), "response", G_CALLBACK( v_dialog_response ), window );
 			} else {
-				g_assert( GTK_IS_DIALOG( this_dialog ));
-				g_debug( "%s: starting gtk_dialog_run", thisfn );
-				do {
-					code = gtk_dialog_run( GTK_DIALOG( this_dialog ));
-				}
-				while( !v_dialog_response( GTK_DIALOG( this_dialog ), code, window ));
+				g_signal_connect( G_OBJECT( this_dialog ), "delete-event", G_CALLBACK( on_delete_event ), window );
 			}
+
+			g_debug( "%s: application=%p, starting gtk_main", thisfn, ( void * ) window->private->application );
+			gtk_main();
+
+		} else if( GTK_IS_ASSISTANT( this_dialog )){
+			g_debug( "%s: starting gtk_main", thisfn );
+			gtk_main();
+
+		} else {
+			g_assert( GTK_IS_DIALOG( this_dialog ));
+			g_debug( "%s: starting gtk_dialog_run", thisfn );
+			do {
+				code = gtk_dialog_run( GTK_DIALOG( this_dialog ));
+			}
+			while( !v_dialog_response( GTK_DIALOG( this_dialog ), code, window ));
 		}
 	}
 }

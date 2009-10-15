@@ -287,6 +287,32 @@ All schemes used by Nautilus can be used here.</long>
     </schema>
 
     <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/import-ask-user-keep-mode</key>
+      <owner>nautilus-actions</owner>
+      <type>boolean</type>
+      <locale name="C">
+        <short>Keep the last choosen import mode</short>
+        <long>Whether the last choosen import mode should be kept on next import operations.
+This value is always reinitialized at the first import operation, so that the user may choose another import mode.</long>
+      </locale>
+      <default>false</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/import-ask-user-last-mode</key>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>Last import mode choosen by the user</short>
+        <long>Last import mode choosen by the user when he is asked for in import mode. Possible values are :
+- "NoImport": do not import an action whose UUID already exists,
+- "Renumber": allocate a new UUID if the imported UUID already exists,
+- "Override": override the existing action with the imported one.</long>
+      </locale>
+      <default>NoImport</default>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/nautilus-actions/preferences/import-assistant</key>
       <owner>nautilus-actions</owner>
       <type>list</type>
@@ -312,7 +338,7 @@ All schemes used by Nautilus can be used here.</long>
     <schema>
       <key>/schemas/apps/nautilus-actions/preferences/import-mode</key>
       <owner>nautilus-actions</owner>
-      <type>int</type>
+      <type>string</type>
       <locale name="C">
         <short>Import mode</short>
         <long>Last import mode choosen in the Import assistant. Possible values are :
@@ -321,7 +347,7 @@ All schemes used by Nautilus can be used here.</long>
 - "Override": override the existing action with the imported one,
 - "Ask": ask the user each time.</long>
       </locale>
-      <default>/tmp</default>
+      <default>NoImport</default>
     </schema>
 
     <schema>

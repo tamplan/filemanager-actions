@@ -37,6 +37,8 @@
 #include <common/na-iprefs.h>
 #include <common/na-object-api.h>
 
+#include <runtime/na-pivot.h>
+
 #include "nact-application.h"
 #include "nact-assistant-import-ask.h"
 
@@ -55,6 +57,7 @@ struct NactAssistantImportAskPrivate {
 	NAObjectAction *action;
 	NAObjectItem   *exist;
 	gint            mode;
+	gboolean        keep_mode;
 };
 
 static BaseDialogClass *st_parent_class = NULL;
@@ -226,29 +229,53 @@ assistant_import_ask_new( NactApplication *application )
  * Initializes and runs the dialog.
  *
  * Returns: the mode choosen by the user ; it defaults to NO_IMPORT.
+ *
+ * A flag is set against the dialog box widget itself. When this flag
+ * is not present (the first time this dialog is ran), we ask the user
+ * for its choices. Next time, the flag will be set and we will follow
+ * the user's preferences, i.e. whether last choice should be
+ * automatically applied or not.
  */
 gint
 nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObjectAction *action, NAObjectItem *exist )
 {
 	static const gchar *thisfn = "nact_assistant_import_ask_run";
 	NactApplication *application;
+	NAPivot *pivot;
 	NactAssistantImportAsk *editor;
+	GtkWindow *window;
 	gint mode;
+	gboolean already_ran;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 	g_return_val_if_fail( BASE_IS_WINDOW( parent ), IPREFS_IMPORT_NO_IMPORT );
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
-	g_assert( NACT_IS_APPLICATION( application ));
+	g_return_val_if_fail( NACT_IS_APPLICATION( application ), IPREFS_IMPORT_NO_IMPORT );
+
+	pivot = nact_application_get_pivot( application );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), IPREFS_IMPORT_NO_IMPORT );
 
 	editor = assistant_import_ask_new( application );
 	editor->private->parent = parent;
 	editor->private->uri = uri;
 	editor->private->action = action;
 	editor->private->exist = exist;
-	editor->private->mode = IPREFS_IMPORT_NO_IMPORT;
+	editor->private->mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_LAST_MODE );
+	editor->private->keep_mode = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_KEEP_MODE, FALSE );
 
-	base_window_run( BASE_WINDOW( editor ));
+	if( base_window_init( BASE_WINDOW( editor ))){
+		g_object_get( G_OBJECT( editor ), BASE_WINDOW_PROP_TOPLEVEL_WIDGET, &window, NULL );
+		if( window && GTK_IS_WINDOW( window )){
+			already_ran = ( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( window ), "nact-assistant-import-ask-user" ));
+			if( !already_ran || editor->private->keep_mode ){
+				base_window_run( BASE_WINDOW( editor ));
+			}
+		}
+	}
+
+	na_iprefs_set_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_LAST_MODE, editor->private->mode );
+	na_iprefs_write_bool( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_KEEP_MODE, editor->private->keep_mode );
 	mode = editor->private->mode;
 	g_object_unref( editor );
 
@@ -286,6 +313,7 @@ on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data 
 	gchar *label;
 	GtkWidget *widget;
 	GtkWidget *button;
+	GtkWindow *window;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( editor ));
@@ -329,6 +357,9 @@ on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data 
 			"OKButton1",
 			"clicked",
 			G_CALLBACK( on_ok_clicked ));
+
+	window = base_window_get_toplevel( BASE_WINDOW( editor ));
+	g_object_set_data( G_OBJECT( window ), "nact-assistant-import-ask-user", GINT_TO_POINTER( TRUE ));
 }
 
 static void

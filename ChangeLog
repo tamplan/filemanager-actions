@@ -4,7 +4,10 @@
 
 	* data/nautilus-actions.schemas.in:
 	Define new 'import-ask-user' preference schema.
+	Define new 'import-ask-user-last-mode' preference schema.
+	Define new 'import-ask-user-keep-mode' preference schema.
 	Add 'Ask user' new value for 'import-mode' preference.
+	Fix type and default value of 'import-mode'.
 
 	* po/POTFILES.in:
 	* src/nact/Makefile.am:
@@ -17,6 +20,8 @@
 	Define IPREFS_IMPORT_ASK new import mode.
 	na_iprefs_get_import_mode, na_iprefs_set_import_mode now take
 	the preference name as an argument.
+	Define IPREFS_IMPORT_ASK_LAST_MODE, IPREFS_IMPORT_ASK_KEEP_MODE
+	new preferences.
 
 	* src/nact/nact-main-window.c
 	(nact_main_window_action_exists): Renamed as
@@ -26,6 +31,7 @@
 	* src/nact/nact-assistant-import-ask.c:
 	* src/nact/nact-assistant-import-ask.h:
 	New AssistantImportAsk dialog box.
+	Keep the last users's choice to prevent ask too many times.
 
 	* src/nact/nact-xml-reader.c (manager_import_mode):
 	Now may ask the user to know what to do.
