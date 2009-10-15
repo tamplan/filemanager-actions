@@ -961,19 +961,12 @@ static void
 on_runtime_init_toplevel( BaseWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "base_window_on_runtime_init_toplevel";
-	GtkWindow *parent_toplevel;
 
 	g_debug( "%s: window=%p, user_data=%p, parent_window=%p",
 			thisfn, ( void * ) window, ( void * ) user_data, ( void * ) window->private->parent );
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
-
-		if( window->private->parent ){
-			g_assert( BASE_IS_WINDOW( window->private->parent ));
-			parent_toplevel = base_window_get_toplevel( BASE_WINDOW( window->private->parent ));
-			gtk_window_set_transient_for( window->private->toplevel_window, parent_toplevel );
-		}
 
 		base_iprefs_position_window( window );
 	}
@@ -983,12 +976,24 @@ static void
 window_do_initial_load_toplevel( BaseWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "base_window_do_initial_load_toplevel";
+	GtkWindow *parent_toplevel;
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
-		/* nothing to do here */
+
+		g_debug( "%s: parent=%p (%s)", thisfn,
+				( void * ) window->private->parent,
+				window->private->parent ? G_OBJECT_TYPE_NAME( window->private->parent ) : "(null)" );
+
+		if( window->private->parent ){
+
+			g_assert( BASE_IS_WINDOW( window->private->parent ));
+			parent_toplevel = base_window_get_toplevel( BASE_WINDOW( window->private->parent ));
+			g_debug( "%s: toplevel=%p, parent_toplevel=%p", thisfn, ( void * ) window->private->toplevel_window, ( void * ) parent_toplevel );
+			gtk_window_set_transient_for( window->private->toplevel_window, parent_toplevel );
+		}
 	}
 }
 

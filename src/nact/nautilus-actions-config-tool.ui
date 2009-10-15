@@ -2105,8 +2105,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   <object class="GtkDialog" id="AssistantImportAsk">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Already existing action</property>
-    <property name="modal">True</property>
-    <property name="type_hint">normal</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox2">
         <property name="visible">True</property>

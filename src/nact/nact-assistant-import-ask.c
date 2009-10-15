@@ -68,7 +68,7 @@ static void  instance_init( GTypeInstance *instance, gpointer klass );
 static void  instance_dispose( GObject *dialog );
 static void  instance_finalize( GObject *dialog );
 
-static NactAssistantImportAsk *assistant_import_ask_new( NactApplication *application );
+static NactAssistantImportAsk *assistant_import_ask_new( BaseWindow *parent );
 
 static gchar   *base_get_iprefs_window_id( BaseWindow *window );
 static gchar   *base_get_dialog_name( BaseWindow *window );
@@ -216,9 +216,9 @@ instance_finalize( GObject *dialog )
  * Returns a newly allocated NactAssistantImportAsk object.
  */
 static NactAssistantImportAsk *
-assistant_import_ask_new( NactApplication *application )
+assistant_import_ask_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_ASSISTANT_IMPORT_ASK_TYPE, BASE_WINDOW_PROP_APPLICATION, application, NULL ));
+	return( g_object_new( NACT_ASSISTANT_IMPORT_ASK_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
 }
 
 /**
@@ -255,7 +255,7 @@ nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObje
 	pivot = nact_application_get_pivot( application );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), IPREFS_IMPORT_NO_IMPORT );
 
-	editor = assistant_import_ask_new( application );
+	editor = assistant_import_ask_new( BASE_WINDOW( parent ));
 	editor->private->parent = parent;
 	editor->private->uri = uri;
 	editor->private->action = action;
@@ -293,12 +293,10 @@ nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObje
 void
 nact_assistant_import_ask_reset_keep_mode( NactMainWindow *parent )
 {
-	NactApplication *application;
 	NactAssistantImportAsk *editor;
 	GtkWindow *window;
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
-	editor = assistant_import_ask_new( application );
+	editor = assistant_import_ask_new( BASE_WINDOW( parent ));
 
 	if( base_window_init( BASE_WINDOW( editor ))){
 		g_object_get( G_OBJECT( editor ), BASE_WINDOW_PROP_TOPLEVEL_WIDGET, &window, NULL );
@@ -324,8 +322,6 @@ static void
 on_base_initial_load_dialog( NactAssistantImportAsk *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_import_ask_on_initial_load_dialog";
-	/*GtkWindow *toplevel;
-	GtkWindow *parent_toplevel;*/
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( editor ));
