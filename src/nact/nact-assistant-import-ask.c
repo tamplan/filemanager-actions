@@ -57,7 +57,6 @@ struct NactAssistantImportAskPrivate {
 	NAObjectAction *action;
 	NAObjectItem   *exist;
 	gint            mode;
-	gboolean        keep_mode;
 };
 
 static BaseDialogClass *st_parent_class = NULL;
@@ -229,11 +228,8 @@ assistant_import_ask_new( BaseWindow *parent )
  *
  * Returns: the mode choosen by the user ; it defaults to NO_IMPORT.
  *
- * A flag is set against the dialog box widget itself. When this flag
- * is not present (the first time this dialog is ran), we ask the user
- * for its choices. Next time, the flag will be set and we will follow
- * the user's preferences, i.e. whether last choice should be
- * automatically applied or not.
+ * When the user selects 'Keep same choice without asking me', this choice
+ * becomes his preference import mode.
  */
 gint
 nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObjectAction *action, NAObjectItem *exist )
@@ -242,9 +238,7 @@ nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObje
 	NactApplication *application;
 	NAPivot *pivot;
 	NactAssistantImportAsk *editor;
-	GtkWindow *window;
 	gint mode;
-	gboolean already_ran;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 	g_return_val_if_fail( BASE_IS_WINDOW( parent ), IPREFS_IMPORT_NO_IMPORT );
@@ -261,49 +255,14 @@ nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObje
 	editor->private->action = action;
 	editor->private->exist = exist;
 	editor->private->mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_LAST_MODE );
-	editor->private->keep_mode = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_KEEP_MODE, FALSE );
 
-	if( base_window_init( BASE_WINDOW( editor ))){
-		g_object_get( G_OBJECT( editor ), BASE_WINDOW_PROP_TOPLEVEL_WIDGET, &window, NULL );
-		if( window && GTK_IS_WINDOW( window )){
-			already_ran = ( gboolean ) GPOINTER_TO_INT( g_object_get_data( G_OBJECT( window ), "nact-assistant-import-ask-user" ));
-			g_debug( "%s: already_ran=%s", thisfn, already_ran ? "True":"False" );
-			g_debug( "%s: keep_mode=%s", thisfn, editor->private->keep_mode ? "True":"False" );
-			if( !already_ran || !editor->private->keep_mode ){
-				base_window_run( BASE_WINDOW( editor ));
-			}
-		}
-	}
+	base_window_run( BASE_WINDOW( editor ));
 
 	na_iprefs_set_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_LAST_MODE, editor->private->mode );
-	na_iprefs_write_bool( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_KEEP_MODE, editor->private->keep_mode );
 	mode = editor->private->mode;
 	g_object_unref( editor );
 
 	return( mode );
-}
-
-/**
- * nact_assistant_import_ask_reset_keep_mode:
- * @parent: the NactMainWindow parent of this dialog.
- *
- * Reset the 'first time' flag, so taht the user will be asked next time
- * an imort operation is done.
- */
-void
-nact_assistant_import_ask_reset_keep_mode( NactMainWindow *parent )
-{
-	NactAssistantImportAsk *editor;
-	GtkWindow *window;
-
-	editor = assistant_import_ask_new( BASE_WINDOW( parent ));
-
-	if( base_window_init( BASE_WINDOW( editor ))){
-		g_object_get( G_OBJECT( editor ), BASE_WINDOW_PROP_TOPLEVEL_WIDGET, &window, NULL );
-		if( window && GTK_IS_WINDOW( window )){
-			g_object_set_data( G_OBJECT( window ), "nact-assistant-import-ask-user", GINT_TO_POINTER( FALSE ));
-		}
-	}
 }
 
 static gchar *
@@ -335,7 +294,6 @@ on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data 
 	gchar *label;
 	GtkWidget *widget;
 	GtkWidget *button;
-	GtkWindow *window;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( editor ));
@@ -369,7 +327,7 @@ on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data 
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), editor->private->keep_mode );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), FALSE );
 
 	base_window_signal_connect_by_name(
 			BASE_WINDOW( editor ),
@@ -382,9 +340,6 @@ on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data 
 			"OKButton1",
 			"clicked",
 			G_CALLBACK( on_ok_clicked ));
-
-	window = base_window_get_toplevel( BASE_WINDOW( editor ));
-	g_object_set_data( G_OBJECT( window ), "nact-assistant-import-ask-user", GINT_TO_POINTER( TRUE ));
 }
 
 static void
@@ -400,7 +355,6 @@ static void
 on_cancel_clicked( GtkButton *button, NactAssistantImportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
-
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
@@ -408,7 +362,6 @@ static void
 on_ok_clicked( GtkButton *button, NactAssistantImportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
-
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 
@@ -416,7 +369,10 @@ static void
 get_mode( NactAssistantImportAsk *editor )
 {
 	gint import_mode;
+	NactApplication *application;
+	NAPivot *pivot;
 	GtkWidget *button;
+	gboolean keep;
 
 	import_mode = IPREFS_IMPORT_NO_IMPORT;
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskRenumberButton" );
@@ -432,7 +388,12 @@ get_mode( NactAssistantImportAsk *editor )
 	editor->private->mode = import_mode;
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
-	editor->private->keep_mode = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	if( keep ){
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+		pivot = nact_application_get_pivot( application );
+		na_iprefs_set_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE, import_mode );
+	}
 }
 
 static gboolean
@@ -452,7 +413,6 @@ base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 		case GTK_RESPONSE_CANCEL:
 
 			editor->private->mode = IPREFS_IMPORT_NO_IMPORT;
-			editor->private->keep_mode = FALSE;
 			return( TRUE );
 			break;
 

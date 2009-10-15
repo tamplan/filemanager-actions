@@ -269,15 +269,7 @@ nact_assistant_import_run( BaseWindow *main_window )
 	assist = assist_new( main_window );
 	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );
 
-	/* Reset the 'keep_last_choice' flag before and after the assistant
-	 * has run, so that drop operation have a chance to actually ask the
-	 * user...
-	 */
-	nact_assistant_import_ask_reset_keep_mode( NACT_MAIN_WINDOW( main_window ));
-
 	base_window_run( BASE_WINDOW( assist ));
-
-	nact_assistant_import_ask_reset_keep_mode( NACT_MAIN_WINDOW( main_window ));
 }
 
 static gchar *

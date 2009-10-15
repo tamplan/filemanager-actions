@@ -10,7 +10,6 @@
 	* data/nautilus-actions.schemas.in:
 	Define new 'import-ask-user' preference schema.
 	Define new 'import-ask-user-last-mode' preference schema.
-	Define new 'import-ask-user-keep-mode' preference schema.
 	Add 'Ask user' new value for 'import-mode' preference.
 	Fix type and default value of 'import-mode'.
 
@@ -25,8 +24,7 @@
 	Define IPREFS_IMPORT_ASK new import mode.
 	na_iprefs_get_import_mode, na_iprefs_set_import_mode now take
 	the preference name as an argument.
-	Define IPREFS_IMPORT_ASK_LAST_MODE, IPREFS_IMPORT_ASK_KEEP_MODE
-	new preferences.
+	Define IPREFS_IMPORT_ASK_LAST_MODE new preference.
 	Check status of imported actions.
 
 	* src/nact/nact-main-window.c

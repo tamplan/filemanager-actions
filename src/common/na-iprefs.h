@@ -49,7 +49,6 @@ G_BEGIN_DECLS
  */
 #define IPREFS_IMPORT_ACTIONS_IMPORT_MODE	"import-mode"
 #define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
-#define IPREFS_IMPORT_ASK_KEEP_MODE			"import-ask-user-keep-mode"
 
 /* import mode
  */
