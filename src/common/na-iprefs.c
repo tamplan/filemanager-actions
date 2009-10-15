@@ -40,8 +40,9 @@
 
 static GConfEnumStringPair import_mode_table[] = {
 	{ IPREFS_IMPORT_NO_IMPORT,			"NoImport" },
-	{ IPREFS_IMPORT_RENUMBER ,			"Renumber" },
-	{ IPREFS_IMPORT_OVERRIDE ,			"Override" },
+	{ IPREFS_IMPORT_RENUMBER,			"Renumber" },
+	{ IPREFS_IMPORT_OVERRIDE,			"Override" },
+	{ IPREFS_IMPORT_ASK,				"Ask" },
 	{ 0, NULL }
 };
 
@@ -68,11 +69,13 @@ na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *ne
 	g_debug( "%s: instance=%p, old_key=%s, new_key=%s", thisfn, ( void * ) instance, old_key, new_key );
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
-	value = get_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, old_key );
-
-	if( value ){
-		set_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, new_key, value );
-		gconf_value_free( value );
+	value = get_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, new_key );
+	if( !value ){
+		value = get_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, old_key );
+		if( value ){
+			set_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, new_key, value );
+			gconf_value_free( value );
+		}
 	}
 
 	/* do not remove entries which may be always used by another,

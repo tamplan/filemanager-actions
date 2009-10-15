@@ -66,6 +66,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-assistant-export.h								\
 	nact-assistant-import.c								\
 	nact-assistant-import.h								\
+	nact-assistant-import-ask.c							\
+	nact-assistant-import-ask.h							\
 	nact-clipboard.c									\
 	nact-clipboard.h									\
 	nact-iactions-list.c								\

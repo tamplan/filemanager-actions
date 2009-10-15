@@ -1,3 +1,30 @@
+2009-10-15 Pierre Wieser <pwieser@trychlos.org>
+
+	New 'Ask user' import mode.
+
+	* data/nautilus-actions.schemas.in:
+	Define new 'import-ask-user' preference schema.
+	Add 'Ask user' new value for 'import-mode' preference.
+
+	* po/POTFILES.in:
+	* src/nact/Makefile.am:
+	Add 'src/nact/nact-assistant-import-ask.c' new file.
+
+	* src/common/na-iprefs.c:
+	* src/common/na-iprefs.h:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-preferences-editor.c:
+	Define IPREFS_IMPORT_ASK new import mode.
+
+	* src/nact/nact-main-window.c
+	(nact_main_window_action_exists): Renamed as
+	nact_main_window_get_item.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	* src/nact/nact-assistant-import-ask.c:
+	* src/nact/nact-assistant-import-ask.h:
+	New AssistantImportAsk dialog box.
+
 2009-10-14 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:

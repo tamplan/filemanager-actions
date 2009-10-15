@@ -275,13 +275,25 @@ All schemes used by Nautilus can be used here.</long>
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/import-assistant</key>
+      <key>/schemas/apps/nautilus-actions/preferences/import-ask-user</key>
       <owner>nautilus-actions</owner>
       <type>list</type>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the import assistant window</short>
         <long>Position and size of the import assistant window ; default is set by the window manager</long>
+      </locale>
+      <default>[]</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/import-assistant</key>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>int</list_type>
+      <locale name="C">
+        <short>Position and size of the interaction dialog at import time</short>
+        <long>Position and size of the interaction dialog at import time ; default is set by the window manager</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -306,7 +318,8 @@ All schemes used by Nautilus can be used here.</long>
         <long>Last import mode choosen in the Import assistant. Possible values are :
 - "NoImport": do not import an action whose UUID already exists,
 - "Renumber": allocate a new UUID if the imported UUID already exists,
-- "Override": override the existing action with the imported one.</long>
+- "Override": override the existing action with the imported one,
+- "Ask": ask the user each time.</long>
       </locale>
       <default>/tmp</default>
     </schema>

@@ -324,8 +324,8 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	 */
 	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ));
 	switch( import_mode ){
-		case IPREFS_IMPORT_NO_IMPORT:
-			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsNoImportButton" );
+		case IPREFS_IMPORT_ASK:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
 			break;
 
 		case IPREFS_IMPORT_RENUMBER:
@@ -333,8 +333,12 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 			break;
 
 		case IPREFS_IMPORT_OVERRIDE:
-		default:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsOverrideButton" );
+			break;
+
+		case IPREFS_IMPORT_NO_IMPORT:
+		default:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsNoImportButton" );
 			break;
 	}
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
@@ -433,17 +437,17 @@ save_preferences( NactPreferencesEditor *editor )
 	/* third tab: tools preferences
 	 */
 	import_mode = IPREFS_IMPORT_NO_IMPORT;
-	button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsNoImportButton" );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsRenumberButton" );
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-		import_mode = IPREFS_IMPORT_NO_IMPORT;
+		import_mode = IPREFS_IMPORT_RENUMBER;
 	} else {
-		button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsRenumberButton" );
+		button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsOverrideButton" );
 		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-			import_mode = IPREFS_IMPORT_RENUMBER;
+			import_mode = IPREFS_IMPORT_OVERRIDE;
 		} else {
-			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsOverrideButton" );
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
 			if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-				import_mode = IPREFS_IMPORT_OVERRIDE;
+				import_mode = IPREFS_IMPORT_ASK;
 			}
 		}
 	}

@@ -641,50 +641,6 @@ nact_main_window_new( BaseApplication *application )
 }
 
 /**
- * nact_main_window_action_exists:
- * @window: this #NactMainWindow instance.
- * @uuid: the uuid to check for existancy.
- *
- * Returns: %TRUE if the specified action already exists in the system,
- * %FALSE else.
- *
- * Do not check in NAPivot: actions which are not displayed in the user
- * interface are not considered as existing.
- */
-gboolean
-nact_main_window_action_exists( const NactMainWindow *window, const gchar *uuid )
-{
-	gboolean exists = FALSE;
-	NactApplication *application;
-	NAPivot *pivot;
-	NAObject *action;
-
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
-
-	if( !window->private->dispose_has_run ){
-
-		/* leave here this dead code, in case I change of opinion later */
-		if( FALSE ){
-			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-			pivot = nact_application_get_pivot( application );
-			action = na_pivot_get_item( pivot, uuid );
-			if( action ){
-				exists = TRUE;
-			}
-		}
-
-		if( !exists ){
-			action = nact_iactions_list_get_item( NACT_IACTIONS_LIST( window ), uuid );
-			if( action ){
-				exists = TRUE;
-			}
-		}
-	}
-
-	return( exists );
-}
-
-/**
  * nact_main_window_get_clipboard:
  * @window: this #NactMainWindow instance.
  *
@@ -702,6 +658,47 @@ nact_main_window_get_clipboard( const NactMainWindow *window )
 	}
 
 	return( clipboard );
+}
+
+/**
+ * nact_main_window_get_item:
+ * @window: this #NactMainWindow instance.
+ * @uuid: the uuid to check for existancy.
+ *
+ * Returns: a pointer to the #NAObjectItem if it exists in the current
+ * tree, or %NULL else.
+ *
+ * Do not check in NAPivot: actions which are not displayed in the user
+ * interface are not considered as existing.
+ *
+ * Also note that the returned object may be an action, but also a menu.
+ */
+NAObjectItem *
+nact_main_window_get_item( const NactMainWindow *window, const gchar *uuid )
+{
+	NAObjectItem *exists;
+	NactApplication *application;
+	NAPivot *pivot;
+
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
+
+	exists = NULL;
+
+	if( !window->private->dispose_has_run ){
+
+		/* leave here this dead code, in case I change of opinion later */
+		if( 0 ){
+			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+			pivot = nact_application_get_pivot( application );
+			exists = NA_OBJECT_ITEM( na_pivot_get_item( pivot, uuid ));
+		}
+
+		if( !exists ){
+			exists = NA_OBJECT_ITEM( nact_iactions_list_get_item( NACT_IACTIONS_LIST( window ), uuid ));
+		}
+	}
+
+	return( exists );
 }
 
 /**

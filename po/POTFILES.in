@@ -9,6 +9,7 @@ src/nact/nact-application.c
 src/nact/nact-assistant-export.c
 src/nact/nact-assistant-export.ui
 src/nact/nact-assistant-import.c
+src/nact/nact-assistant-import-ask.c
 src/nact/nact.desktop.in
 src/nact/nact-iactions-list.c
 src/nact/nact-iaction-tab.c

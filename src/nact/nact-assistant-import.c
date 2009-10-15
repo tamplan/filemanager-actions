@@ -476,17 +476,22 @@ set_import_mode( NactAssistantImport *window, gint mode )
 	GtkToggleButton *button;
 
 	switch( mode ){
-		case RENUMBER_MODE:
+		case IPREFS_IMPORT_ASK:
+			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ));
+			gtk_toggle_button_set_active( button, TRUE );
+			break;
+
+		case IPREFS_IMPORT_RENUMBER:
 			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ));
 			gtk_toggle_button_set_active( button, TRUE );
 			break;
 
-		case OVERRIDE_MODE:
+		case IPREFS_IMPORT_OVERRIDE:
 			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ));
 			gtk_toggle_button_set_active( button, TRUE );
 			break;
 
-		case NO_IMPORT_MODE:
+		case IPREFS_IMPORT_NO_IMPORT:
 		default:
 			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ));
 			gtk_toggle_button_set_active( button, TRUE );
@@ -561,19 +566,23 @@ get_import_mode( NactAssistantImport *window )
 	GtkToggleButton *no_import_button;
 	GtkToggleButton *renumber_button;
 	GtkToggleButton *override_button;
+	GtkToggleButton *ask_button;
 	gint mode;
 
 	no_import_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ));
 	renumber_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ));
 	override_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ));
+	ask_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ));
 
 	if( gtk_toggle_button_get_active( no_import_button )){
-		mode = NO_IMPORT_MODE;
+		mode = IPREFS_IMPORT_NO_IMPORT;
 	} else if( gtk_toggle_button_get_active( renumber_button )){
-		mode = RENUMBER_MODE;
+		mode = IPREFS_IMPORT_RENUMBER;
+	} else if( gtk_toggle_button_get_active( override_button )){
+		mode = IPREFS_IMPORT_OVERRIDE;
 	} else {
-		g_return_val_if_fail( gtk_toggle_button_get_active( override_button ), 0 );
-		mode = OVERRIDE_MODE;
+		g_return_val_if_fail( gtk_toggle_button_get_active( ask_button ), 0 );
+		mode = IPREFS_IMPORT_ASK;
 	}
 
 	return( mode );
@@ -592,19 +601,24 @@ add_import_mode( NactAssistantImport *window, const gchar *text )
 	result = NULL;
 
 	switch( mode ){
-		case NO_IMPORT_MODE:
+		case IPREFS_IMPORT_NO_IMPORT:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "NoImportLabel"))));
 			break;
 
-		case RENUMBER_MODE:
+		case IPREFS_IMPORT_RENUMBER:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "RenumberLabel"))));
 			break;
 
-		case OVERRIDE_MODE:
+		case IPREFS_IMPORT_OVERRIDE:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "OverrideLabel"))));
+			break;
+
+		case IPREFS_IMPORT_ASK:
+			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ))));
+			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AskLabel"))));
 			break;
 
 		default:
@@ -659,9 +673,11 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 		window->private->results = g_slist_prepend( window->private->results, str );
 
-		items = g_list_prepend( NULL, action );
-		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
-		na_object_free_items_list( items );
+		if( action ){
+			items = g_list_prepend( NULL, action );
+			nact_iactions_list_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
+			na_object_free_items_list( items );
+		}
 	}
 
 	na_utils_free_string_list( uris );
