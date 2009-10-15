@@ -123,7 +123,7 @@ static GConfReaderStruct reader_str[] = {
 #define ERR_INVALID_UUID			_( "Invalid UUID: waited for %s, found %s at line %d." )
 #define ERR_INVALID_KEY_PREFIX		_( "Invalid content: waited for %s prefix, found %s at line %d." )
 #define ERR_NOT_AN_UUID				_( "Invalid UUID %s found at line %d." )
-#define ERR_UUID_ALREADY_EXISTS		_( "Already existing action (UUID: %s) at line %d." )
+#define ERR_UUID_ALREADY_EXISTS		_( "Already existing action (UUID: %s)." )
 #define ERR_VALUE_ALREADY_SET		_( "Value '%s' already set: new value ignored at line %d." )
 #define ERR_UUID_NOT_FOUND			_( "UUID not found." )
 #define ERR_ACTION_LABEL_NOT_FOUND	_( "Action label not found." )
@@ -357,8 +357,11 @@ nact_xml_reader_import( BaseWindow *window, const gchar *uri, gint import_mode, 
 
 	if( reader->private->action ){
 		g_assert( NA_IS_OBJECT_ACTION( reader->private->action ));
-		action = g_object_ref( reader->private->action );
+		if( manage_import_mode( reader )){
+			action = g_object_ref( reader->private->action );
+		}
 	}
+
 	g_object_unref( reader );
 
 	return( action );
@@ -635,15 +638,8 @@ gconf_reader_parse_applyto( NactXMLReader *reader, xmlNode *node )
 
 	if( ret ){
 		if( !reader->private->uuid_set ){
-
 			na_object_set_id( reader->private->action, uuid );
-
-			if( manage_import_mode( reader )){
-				reader->private->uuid_set = TRUE;
-			} else {
-				add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid, node->line );
-				ret = FALSE;
-			}
+			reader->private->uuid_set = TRUE;
 
 		} else {
 			gchar *ref = na_object_get_id( reader->private->action );
@@ -868,14 +864,8 @@ gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist )
 	/*g_debug( "%s: uuid=%s", thisfn, uuid );*/
 
 	if( is_uuid_valid( uuid )){
-
 		na_object_set_id( reader->private->action, uuid );
-
-		if( manage_import_mode( reader )){
-			reader->private->uuid_set = TRUE;
-		} else {
-			add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid, entrylist->line );
-		}
+		reader->private->uuid_set = TRUE;
 
 	} else {
 		add_message( reader, ERR_NOT_AN_UUID, uuid, entrylist->line );
@@ -1323,6 +1313,7 @@ manage_import_mode( NactXMLReader *reader )
 
 		case IPREFS_IMPORT_NO_IMPORT:
 		default:
+			add_message( reader, ERR_UUID_ALREADY_EXISTS, uuid );
 			ret = FALSE;
 	}
 
