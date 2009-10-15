@@ -456,6 +456,7 @@ base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 		case GTK_RESPONSE_CANCEL:
 
 			editor->private->mode = IPREFS_IMPORT_NO_IMPORT;
+			editor->private->keep_mode = FALSE;
 			return( TRUE );
 			break;
 
