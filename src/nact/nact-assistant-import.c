@@ -269,9 +269,15 @@ nact_assistant_import_run( BaseWindow *main_window )
 	assist = assist_new( main_window );
 	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );
 
+	/* Reset the 'keep_last_choice' flag before and after the assistant
+	 * has run, so that drop operation have a chance to actually ask the
+	 * user...
+	 */
+	nact_assistant_import_ask_reset_keep_mode( NACT_MAIN_WINDOW( main_window ));
+
 	base_window_run( BASE_WINDOW( assist ));
 
-	/*g_object_unref( assist );*/
+	nact_assistant_import_ask_reset_keep_mode( NACT_MAIN_WINDOW( main_window ));
 }
 
 static gchar *
@@ -453,7 +459,6 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_import_runtime_init_duplicates";
 	NactApplication *application;
-	NactMainWindow *main_window;
 	NAPivot *pivot;
 	GtkWidget *page;
 	gint mode;
@@ -467,9 +472,6 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
-
-	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
-	nact_assistant_import_ask_reset_keep_mode( main_window );
 }
 
 static void
