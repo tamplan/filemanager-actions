@@ -2148,7 +2148,6 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox38">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkRadioButton" id="AskNoImportButton">
                     <property name="label" translatable="yes">Do _not import the action</property>
