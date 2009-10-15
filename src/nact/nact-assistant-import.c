@@ -101,7 +101,7 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
-static NactAssistantImport *assist_new( BaseApplication *application );
+static NactAssistantImport *assist_new( BaseWindow *parent );
 
 static gchar   *window_get_iprefs_window_id( BaseWindow *window );
 static gchar   *window_get_dialog_name( BaseWindow *dialog );
@@ -250,9 +250,9 @@ instance_finalize( GObject *window )
 }
 
 static NactAssistantImport *
-assist_new( BaseApplication *application )
+assist_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE, BASE_WINDOW_PROP_APPLICATION, application, NULL ));
+	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
 }
 
 /**
@@ -264,13 +264,9 @@ assist_new( BaseApplication *application )
 void
 nact_assistant_import_run( BaseWindow *main_window )
 {
-	BaseApplication *appli;
 	NactAssistantImport *assist;
 
-	appli = BASE_APPLICATION( base_window_get_application( main_window ));
-
-	assist = assist_new( appli );
-	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_PARENT, main_window, NULL );
+	assist = assist_new( main_window );
 	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );
 
 	base_window_run( BASE_WINDOW( assist ));

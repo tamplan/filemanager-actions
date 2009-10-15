@@ -1001,6 +1001,7 @@ Defining several profiles lets you have several commands, each applying with a d
     <property name="border_width">12</property>
     <property name="title" translatable="yes">Importing actions</property>
     <property name="modal">True</property>
+    <property name="type_hint">dialog</property>
     <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
