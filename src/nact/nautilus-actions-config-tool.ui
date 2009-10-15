@@ -1186,7 +1186,6 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <child>
                   <object class="GtkVBox" id="vbox36">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkRadioButton" id="AskButton">
                         <property name="label" translatable="yes">Ask me</property>
@@ -2111,17 +2110,14 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox2">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkVBox" id="vbox37">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkVBox" id="vbox39">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="ImportAskLabel">
                     <property name="visible">True</property>
