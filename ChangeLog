@@ -1,5 +1,8 @@
 2009-10-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/runtime/na-object-item.c (object_are_equal):
+	Remove debug trace.
+
 	* configure.ac:
 	* src/runtime/na-object-action-fn.h:
 	NAUTILUS_ACTIONS_CONFIG_VERSION from configure.ac to

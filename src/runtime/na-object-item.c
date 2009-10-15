@@ -913,10 +913,10 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			}
 		}
 
-		g_debug( "na_object_item_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
+		/*g_debug( "na_object_item_object_are_equal: a=%p (%s), b=%p (%s), are_equal=%s",
 				( void * ) a, G_OBJECT_TYPE_NAME( a ),
 				( void * ) b, G_OBJECT_TYPE_NAME( b ),
-				equal ? "True":"False" );
+				equal ? "True":"False" );*/
 	}
 
 	return( equal );
