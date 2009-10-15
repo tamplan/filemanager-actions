@@ -22,6 +22,7 @@
 	the preference name as an argument.
 	Define IPREFS_IMPORT_ASK_LAST_MODE, IPREFS_IMPORT_ASK_KEEP_MODE
 	new preferences.
+	Check status of imported actions.
 
 	* src/nact/nact-main-window.c
 	(nact_main_window_action_exists): Renamed as

@@ -680,6 +680,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		window->private->results = g_slist_prepend( window->private->results, str );
 
 		if( action ){
+			na_object_check_status( action );
 			items = g_list_prepend( NULL, action );
 			nact_iactions_list_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
 			na_object_free_items_list( items );
