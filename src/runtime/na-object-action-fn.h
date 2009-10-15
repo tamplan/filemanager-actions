@@ -53,6 +53,9 @@ G_BEGIN_DECLS
 /* i18n: default label for a newly created action */
 #define NA_OBJECT_ACTION_DEFAULT_LABEL	_( "New Nautilus action" )
 
+#define NAUTILUS_ACTIONS_CONFIG_VERSION	"2.0"
+
+
 NAObjectAction *na_object_action_new( void );
 
 gchar          *na_object_action_get_version( const NAObjectAction *action );

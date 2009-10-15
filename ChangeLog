@@ -1,5 +1,10 @@
 2009-10-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	* src/runtime/na-object-action-fn.h:
+	NAUTILUS_ACTIONS_CONFIG_VERSION from configure.ac to
+	na-object-action-fn.h as this is not a configuration information.
+
 	New 'Ask user' import mode.
 
 	* data/nautilus-actions.schemas.in:

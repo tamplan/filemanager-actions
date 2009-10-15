@@ -160,6 +160,4 @@ NA_IS_MAINTAINER_MODE
 AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)
 AC_CHECK_FUNCS(nautilus_menu_provider_emit_items_updated_signal)
 
-AC_DEFINE_UNQUOTED(NAUTILUS_ACTIONS_CONFIG_VERSION, "2.0", [Version of the configuration format])
-
 AC_OUTPUT
