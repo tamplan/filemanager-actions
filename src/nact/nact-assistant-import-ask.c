@@ -405,6 +405,8 @@ on_cancel_clicked( GtkButton *button, NactAssistantImportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 
+	editor->private->mode = IPREFS_IMPORT_NO_IMPORT;
+
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
