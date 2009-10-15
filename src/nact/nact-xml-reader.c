@@ -41,12 +41,14 @@
 #include <runtime/na-gconf-provider-keys.h>
 #include <runtime/na-gconf-utils.h>
 
+#include <common/na-iprefs.h>
 #include <common/na-object-api.h>
 #include <common/na-utils.h>
 #include <common/na-xml-names.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"
+#include "nact-assistant-import-ask.h"
 #include "nact-xml-reader.h"
 
 /* private class data
@@ -64,6 +66,7 @@ struct NactXMLReaderPrivate {
 	gboolean         dispose_has_run;
 	BaseWindow      *window;
 	gint             import_mode;
+	const gchar     *uri;
 	NAObjectAction  *action;			/* the action that we will return, or NULL */
 	GSList          *messages;
 	gboolean         uuid_set;			/* set at first uuid, then checked against */
@@ -317,6 +320,7 @@ nact_xml_reader_import( BaseWindow *window, const gchar *uri, gint import_mode, 
 	reader = gconf_reader_new();
 	reader->private->window = window;
 	reader->private->import_mode = import_mode;
+	reader->private->uri = uri;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
@@ -1282,35 +1286,42 @@ free_reader_values( NactXMLReader *reader )
 static gboolean
 manage_import_mode( NactXMLReader *reader )
 {
-	gboolean exists;
+	NAObjectItem *exists;
 	gchar *uuid;
 	BaseApplication *appli;
 	NactMainWindow *main_window;
 	gboolean ret;
+	gint mode;
 
 	appli = base_window_get_application( BASE_WINDOW( reader->private->window ));
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( appli ));
 
 	uuid = na_object_get_id( reader->private->action );
-	exists = nact_main_window_action_exists( main_window, uuid );
+	exists = nact_main_window_get_item( main_window, uuid );
 	g_free( uuid );
 
 	if( !exists ){
 		return( TRUE );
 	}
 
-	switch( reader->private->import_mode ){
-		case RENUMBER_MODE:
+	if( reader->private->import_mode == IPREFS_IMPORT_ASK ){
+		mode = nact_assistant_import_ask_user( main_window, reader->private->uri, reader->private->action, exists );
+	} else {
+		mode = reader->private->import_mode;
+	}
+
+	switch( mode ){
+		case IPREFS_IMPORT_RENUMBER:
 			na_object_set_new_id( reader->private->action, NULL );
 			reader->private->relabel = TRUE;
 			ret = TRUE;
 			break;
 
-		case OVERRIDE_MODE:
+		case IPREFS_IMPORT_OVERRIDE:
 			ret = TRUE;
 			break;
 
-		case NO_IMPORT_MODE:
+		case IPREFS_IMPORT_NO_IMPORT:
 		default:
 			ret = FALSE;
 	}

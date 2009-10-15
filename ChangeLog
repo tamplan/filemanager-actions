@@ -15,6 +15,8 @@
 	* src/nact/nact-assistant-import.c:
 	* src/nact/nact-preferences-editor.c:
 	Define IPREFS_IMPORT_ASK new import mode.
+	na_iprefs_get_import_mode, na_iprefs_set_import_mode now take
+	the preference name as an argument.
 
 	* src/nact/nact-main-window.c
 	(nact_main_window_action_exists): Renamed as
@@ -24,6 +26,12 @@
 	* src/nact/nact-assistant-import-ask.c:
 	* src/nact/nact-assistant-import-ask.h:
 	New AssistantImportAsk dialog box.
+
+	* src/nact/nact-xml-reader.c (manager_import_mode):
+	Now may ask the user to know what to do.
+
+	* src/nact/nact-xml-reader.h:
+	No more redefine import modes here !
 
 2009-10-14 Pierre Wieser <pwieser@trychlos.org>
 

@@ -1708,7 +1708,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	}
 
 	uri_list = g_slist_reverse( na_utils_lines_to_string_list(( const gchar * ) selection_data->data ));
-	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ));
+	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE );
 
 	for( is = uri_list ; is ; is = is->next ){
 

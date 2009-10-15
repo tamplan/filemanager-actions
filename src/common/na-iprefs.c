@@ -88,6 +88,7 @@ na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *ne
 /**
  * na_iprefs_get_import_mode:
  * @instance: this #NAIPrefs interface instance.
+ * @name: name of the import key to be readen
  *
  * Returns: the import mode currently set.
  *
@@ -98,7 +99,7 @@ na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *ne
  * those defined in schemas.
  */
 gint
-na_iprefs_get_import_mode( NAIPrefs *instance )
+na_iprefs_get_import_mode( NAIPrefs *instance, const gchar *name )
 {
 	gint import_mode = DEFAULT_IMPORT_MODE_INT;
 	gint import_int;
@@ -108,7 +109,7 @@ na_iprefs_get_import_mode( NAIPrefs *instance )
 
 	import_str = na_iprefs_read_string(
 			instance,
-			IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
+			name,
 			DEFAULT_IMPORT_MODE_STR );
 
 	if( gconf_string_to_enum( import_mode_table, import_str, &import_int )){
@@ -129,7 +130,7 @@ na_iprefs_get_import_mode( NAIPrefs *instance )
  * preference system.
  */
 void
-na_iprefs_set_import_mode( NAIPrefs *instance, gint mode )
+na_iprefs_set_import_mode( NAIPrefs *instance, const gchar *name, gint mode )
 {
 	const gchar *import_str;
 
@@ -139,7 +140,7 @@ na_iprefs_set_import_mode( NAIPrefs *instance, gint mode )
 
 	na_iprefs_write_string(
 			instance,
-			IPREFS_IMPORT_ACTIONS_IMPORT_MODE,
+			name,
 			import_str ? import_str : DEFAULT_IMPORT_MODE_STR );
 }
 

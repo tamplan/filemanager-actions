@@ -48,6 +48,7 @@ G_BEGIN_DECLS
 /* GConf Preference keys managed by IPrefs interface
  */
 #define IPREFS_IMPORT_ACTIONS_IMPORT_MODE	"import-mode"
+#define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
 
 /* import mode
  */
@@ -64,8 +65,8 @@ enum {
 
 void     na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key );
 
-gint     na_iprefs_get_import_mode( NAIPrefs *instance );
-void     na_iprefs_set_import_mode( NAIPrefs *instance, gint mode );
+gint     na_iprefs_get_import_mode( NAIPrefs *instance, const gchar *pref );
+void     na_iprefs_set_import_mode( NAIPrefs *instance, const gchar *pref, gint mode );
 
 G_END_DECLS
 

@@ -322,7 +322,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 
 	/* third tab: tools preferences
 	 */
-	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ));
+	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE );
 	switch( import_mode ){
 		case IPREFS_IMPORT_ASK:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
@@ -451,7 +451,7 @@ save_preferences( NactPreferencesEditor *editor )
 			}
 		}
 	}
-	na_iprefs_set_import_mode( NA_IPREFS( pivot ), import_mode );
+	na_iprefs_set_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE, import_mode );
 }
 
 static gboolean
@@ -463,8 +463,6 @@ base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, ( void * ) dialog, code, ( void * ) window );
 	g_assert( NACT_IS_PREFERENCES_EDITOR( window ));
 	editor = NACT_PREFERENCES_EDITOR( window );
-
-	/*gboolean is_modified = is_edited_modified( editor );*/
 
 	switch( code ){
 		case GTK_RESPONSE_NONE:

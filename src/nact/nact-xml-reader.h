@@ -68,14 +68,6 @@ typedef struct {
 }
 	NactXMLReaderClass;
 
-/* import mode of an existing uuid
- */
-enum {
-	NO_IMPORT_MODE = 1,
-	RENUMBER_MODE,
-	OVERRIDE_MODE
-};
-
 GType           nact_xml_reader_get_type( void );
 
 NAObjectAction *nact_xml_reader_import( BaseWindow *window, const gchar *uri, gint mode, GSList **msg );
