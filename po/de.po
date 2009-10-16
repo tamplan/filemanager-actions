@@ -6,15 +6,14 @@
 # Hendrik Brandt <heb@gnome-de.org>, 2006.
 # Andre Klapper <ak-47@gmx.net>, 2008.
 # Mario Blättermann <mariobl@gnome.org>, 2009.
-#
+# Christian Kirbach <Christian.Kirbach@googlemail.com>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions HEAD\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-08-30 14:46+0000\n"
-"PO-Revision-Date: 2009-09-08 21:49+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-10-16 18:47+0200\n"
+"PO-Revision-Date: 2009-10-16 18:50+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -67,7 +66,6 @@ msgstr ""
 "muss mindestens einem der Muster entsprechen, damit die Aktion erscheint"
 
 #: ../data/nautilus-actions.schemas.in.h:8
-#| msgid "Add items to the Nautilus popup menu"
 msgid "Add an 'About' item in the Nautilus context menu"
 msgstr "»Info«-Eintrag zum Kontextmenü von Nautilus hinzufügen"
 
@@ -77,25 +75,6 @@ msgid "Default profile"
 msgstr "Vorgabeprofil"
 
 #: ../data/nautilus-actions.schemas.in.h:10
-#, fuzzy
-#| msgid ""
-#| "Defines the list of valid GnomeVFS schemes to be matched against the "
-#| "selected items. The GnomeVFS scheme is the protocol used to access the "
-#| "files. The keyword to use is the one used in the GnomeVFS URI.\n"
-#| "\n"
-#| "Examples of GnomeVFS URI include: \n"
-#| "file:///tmp/foo.txt\n"
-#| "sftp:///root@test.example.net/tmp/foo.txt\n"
-#| "\n"
-#| "The most common schemes are:\n"
-#| "\n"
-#| "'file': local files\n"
-#| "'sftp': files accessed via SSH\n"
-#| "'ftp': files accessed via FTP\n"
-#| "'smb': files accessed via Samba (Windows share)\n"
-#| "'dav': files accessed via WebDav\n"
-#| "\n"
-#| "All GnomeVFS schemes used by Nautilus can be used here."
 msgid ""
 "Defines the list of valid schemes to be matched against the selected items. "
 "The scheme is the protocol used to access the files. The keyword to use is "
@@ -105,32 +84,32 @@ msgid ""
 "FTP 'smb': files accessed via Samba (Windows share) 'dav': files accessed via "
 "WebDAV All schemes used by Nautilus can be used here."
 msgstr ""
-"Legt die Liste der gültigen GnomeVFS-Schemata fest, die auf die markierten "
-"Elemente zutreffen. Das GnomeVFS-Schema ist das Protokoll, mit dem auf die "
-"Dateien zugegriffen wird. Das zu verwendende Schlüsselwort ist das aus der "
-"GnomeVFS-Adresse.\n"
+"Legt die Liste der gültigen Schemata fest, die auf die markierten Elemente "
+"zutreffen. Das Schema ist das Protokoll, mit dem auf die Dateien zugegriffen "
+"wird. Das zu verwendende Schlüsselwort ist das aus der Adresse. Beispiele für "
+"gültige Adressen sind:\n"
+"file:///tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt\n"
 "\n"
-"Beispiele für GnomeVFS-Adressen sind:\n"
-"file:///tmp/bla.txt\n"
-"sftp:///root@test.beispiel.net/tmp/bla.txt\n"
-"\n"
-"Die verbreitetsten Schemata sind:\n"
+"Die am meisten verbreiteten Schemata sind:\n"
 "»file« für lokale Dateien\n"
 "»sftp« für den Zugriff über SSH\n"
 "»ftp« für den Zugriff per FTP\n"
-"»smb« für Zugriff auf Windows-Datei-Server über Samba\n"
+"»smb« für Zugriff auf Windows-Dateifreigaben über Samba\n"
 "»dav« für Dateizugriff über WebDAV\n"
 "\n"
-"Alle von Nautilus verwendeten GnomeVFS-Schemata können hier verwendet werden."
+"Alle von Nautilus verwendeten Schemata können hier verwendet werden."
 
 #: ../data/nautilus-actions.schemas.in.h:11
 msgid ""
 "If TRUE, and if the user has defined a single root menu for its actions, then "
 "an 'About Nautilus Actions' will be displayed at end of the first submenu."
 msgstr ""
+"Falls wahr (TRUE) und falls der Benutzer ein einziges Menü für diese Aktion "
+"definiert hat, dann wird »Info zu Nautilus-Aktionen« am Ende des ersten "
+"Untermenüs angezeigt."
 
 #: ../data/nautilus-actions.schemas.in.h:12 ../src/common/na-xml-names.h:113
-#| msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
 msgid ""
 "If the action is disabled, it will never appear in the Nautilus context menu"
 msgstr ""
@@ -157,6 +136,8 @@ msgstr ""
 #: ../data/nautilus-actions.schemas.in.h:15
 msgid "Last folder selected when browsing for a command in the Conditions tab"
 msgstr ""
+"Der zuletzt gewählte Ordner beim Durchsuchen nach einem Befehl im "
+"Karteireiter »Befehl«"
 
 #: ../data/nautilus-actions.schemas.in.h:16
 msgid ""
@@ -177,22 +158,26 @@ msgstr "Position der Hauptleiste"
 
 #: ../data/nautilus-actions.schemas.in.h:20
 msgid "Position and size of the Legend dialog"
-msgstr ""
+msgstr "Position und Größe des Dialogs mit der Legende"
 
 #: ../data/nautilus-actions.schemas.in.h:21
 msgid ""
 "Position and size of the Legend dialog ; default is set by the UI manager"
 msgstr ""
+"Position und Größe des Dialogs mit der Legende; die Voreinstellung wird durch "
+"den UI-Manager vorgegeben"
 
 #: ../data/nautilus-actions.schemas.in.h:22
 msgid "Position and size of the command chooser window"
-msgstr ""
+msgstr "Position und Größe des Fensters mit dem Befehlswähler"
 
 #: ../data/nautilus-actions.schemas.in.h:23
 msgid ""
 "Position and size of the command chooser window in the Conditions tab ; "
 "default is set by the window manager"
 msgstr ""
+"Position und Größe des Fensters mit dem Befehlswähler im Reiter »Befehl«; die "
+"Voreinstellung wird durch die Fensterverwaltung vorgegeben"
 
 #: ../data/nautilus-actions.schemas.in.h:24
 msgid "Position and size of the export assistant window"
@@ -294,12 +279,10 @@ msgstr ""
 "MIME-Typen zutreffen müssen"
 
 #: ../data/nautilus-actions.schemas.in.h:40 ../src/common/na-xml-names.h:163
-#, fuzzy
-#| msgid ""
-#| "The list of GnomeVFS schemes where the selected files should be located"
 msgid "The list of schemes where the selected files should be located"
 msgstr ""
-"Die Liste der GnomeVFS-Schemata, unter denen sich die Dateien befinden dürfen"
+"Die Liste der Schemata, unter denen sich die gewählten Dateien befinden "
+"sollten"
 
 #: ../data/nautilus-actions.schemas.in.h:41 ../src/common/na-xml-names.h:122
 #: ../src/utils/nautilus-actions-new.c:69
@@ -307,25 +290,7 @@ msgid "The parameters of the command"
 msgstr "Die Befehlsparameter"
 
 #: ../data/nautilus-actions.schemas.in.h:43
-#, fuzzy, no-c-format
-#| msgid ""
-#| "The parameters of the command to start when the user selects the menu item "
-#| "in the Nautilus popup menu.\n"
-#| "\n"
-#| "The parameters can contain some special tokens which are replaced by "
-#| "Nautilus information before starting the command:\n"
-#| "\n"
-#| "%d: base folder of the selected file(s)\n"
-#| "%f: the name of the selected file or the first one if many are selected\n"
-#| "%m: space-separated list of the basenames of the selected file(s)/folder"
-#| "(s)\n"
-#| "%M: space-separated list of the selected file(s)/folder(s), with their "
-#| "full paths\n"
-#| "%u: GnomeVFS URI\n"
-#| "%s: scheme of the GnomeVFS URI\n"
-#| "%h: hostname of the GnomeVFS URI\n"
-#| "%U: username of the GnomeVFS URI\n"
-#| "%%: a percent sign"
+#, no-c-format
 msgid ""
 "The parameters of the command to start when the user selects the menu item in "
 "the Nautilus popup menu. The parameters can contain some special tokens which "
@@ -338,21 +303,22 @@ msgid ""
 "URI %U: username of the URI %%: a percent sign"
 msgstr ""
 "Die Parameter des zu startenden Befehls, wenn der Benutzer den Eintrag im "
-"Nautilus-Kontextmenü auswählt.\n"
-"\n"
-"Die Parameter können verschiedene Sonderzeichen enthalten, die von Nautilus "
-"vor dem Befehlsstart durch die entsprechenden Informationen ersetzt werden:\n"
+"Nautilus-Kontextmenü auswählt. Die Parameter können verschiedene "
+"Sonderzeichen enthalten, die von Nautilus vor dem Befehlsstart durch die "
+"entsprechenden Informationen ersetzt werden:\n"
 "\n"
 "%d: Basisordner der ausgewählten Datei(en)\n"
-"%f: Name der ausgewählten Datei oder der ersten Datei bei mehreren Dateien\n"
-"%m: Durch Leerzeichen getrennte List der Basisordner der ausgewählten Datei"
+"%f: Name der ausgewählten Datei oder der ersten Datei bei mehreren "
+"ausgewählten Dateien\n"
+"%h: Rechnername der Adresse\n"
+"%m: Durch Leerzeichen getrennte Liste der Basisordner der ausgewählten Datei"
 "(en) und Ordner\n"
-"%M: Durch Leerzeichen getrennte Basisordner der ausgewählten Datei(en) und "
-"Ordner mit vollständigen Pfaden\n"
-"%u: GnomeVFS-Adresse\n"
-"%s: Schema der Gnome-VFS-Adresse\n"
-"%h: Rechnername der GnomeVFS-Adresse\n"
-"%U: Benutzername der GnomeVFS-Adresse\n"
+"%M: Durch Leerzeichen getrennte Liste der Basisordner mit vollständigem Pfad\n"
+"%p: Port-Nummer der ersten Adresse\n"
+"%R: Durch Leerzeichen getrennte Liste der gewählten Adressen\n"
+"%s: Schema der Adresse\n"
+"%u: Adresse\n"
+"%U: Benutzername der Adresse\n"
 "%%: Ein Prozentzeichen"
 
 #: ../data/nautilus-actions.schemas.in.h:44 ../src/common/na-xml-names.h:119
@@ -395,15 +361,6 @@ msgstr ""
 "ermöglichen"
 
 #: ../data/nautilus-actions.schemas.in.h:50
-#, fuzzy
-#| msgid ""
-#| "The valid combinations are:\n"
-#| "\n"
-#| "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
-#| "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-#| "isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
-#| "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-#| "configuration will never appear)"
 msgid ""
 "This setting is tied in with the 'isdir' setting. The valid combinations are: "
 "isfile=TRUE and isdir=FALSE: the selection may hold only files isfile=FALSE "
@@ -412,27 +369,19 @@ msgid ""
 "isdir=FALSE: this is an invalid combination (your configuration will never "
 "appear)"
 msgstr ""
-"Folgende Kombinationen sind gültig:\n"
+"Diese Einstellung ist gekoppelt mit der Einstellung »isdir«. Folgende "
+"Kombinationen sind gültig:\n"
 "\n"
-"»isfile« ist »true« und »isdir« ist »false«: Die Auswahl darf nur Dateien "
+"»isfile« ist »TRUE« und »isdir« ist »FALSE«: Die Auswahl darf nur Dateien "
 "enthalten\n"
-"»isfile« ist »false« und »isdir« ist »true«: Die Auswahl darf nur Ordner "
+"»isfile« ist »FALSE« und »isdir« ist »TRUE«: Die Auswahl darf nur Ordner "
 "enthalten\n"
-"»isfile« ist »true« und »isdir« ist »true«: Die Auswahl darf Dateien und Ordner "
+"»isfile« ist »TRUE« und »isdir« ist »TRUE«: Die Auswahl darf Dateien und Ordner "
 "enthalten\n"
-"»isfile« ist »false« und »isdir« ist »false«: Die Kombination ist ungültig (Ihre "
+"»isfile« ist »FALSE« und »isdir« ist »FALSE«: Die Kombination ist ungültig (Ihre "
 "Konfiguration wird niemals angezeigt)"
 
 #: ../data/nautilus-actions.schemas.in.h:51
-#, fuzzy
-#| msgid ""
-#| "The valid combinations are:\n"
-#| "\n"
-#| "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
-#| "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-#| "isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
-#| "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-#| "configuration will never appear)"
 msgid ""
 "This setting is tied in with the 'isfile' setting. The valid combinations "
 "are: isfile=TRUE and isdir=FALSE: the selection may hold only files "
@@ -441,15 +390,16 @@ msgid ""
 "and isdir=FALSE: this is an invalid combination (your configuration will "
 "never appear)"
 msgstr ""
-"Folgende Kombinationen sind gültig:\n"
+"Diese Einstellung ist gekoppelt mit der Einstellung »isfile«. Folgende "
+"Kombinationen sind gültig:\n"
 "\n"
-"»isfile« ist »true« und »isdir« ist »false«: Die Auswahl darf nur Dateien "
+"»isfile« ist »TRUE« und »isdir« ist »FALSE«: Die Auswahl darf nur Dateien "
 "enthalten\n"
-"»isfile« ist »false« und »isdir« ist »true«: Die Auswahl darf nur Ordner "
+"»isfile« ist »FALSE« und »isdir« ist »TRUE«: Die Auswahl darf nur Ordner "
 "enthalten\n"
-"»isfile« ist »true« und »isdir« ist »true«: Die Auswahl darf Dateien und Ordner "
+"»isfile« ist »TRUE« und »isdir« ist »TRUE«: Die Auswahl darf Dateien und Ordner "
 "enthalten\n"
-"»isfile« ist »false« und »isdir« ist »false«: Die Kombination ist ungültig (Ihre "
+"»isfile« ist »FALSE« und »isdir« ist »FALSE«: Die Kombination ist ungültig (Ihre "
 "Konfiguration wird niemals angezeigt)"
 
 #: ../data/nautilus-actions.schemas.in.h:52
@@ -458,6 +408,9 @@ msgid ""
 "behavior). When FALSE, user is free to reorder them via Nautilus-Actions "
 "configuration tool."
 msgstr ""
+"Falls WAHR, so werden die Aktionen in alphabetischer Reihenfolge verwaltet "
+"(altes Verhalten). Falls FALSCH, so können sie mit Hilfe des Nautilus-"
+"Aktionen-Konfigurationswerkzeugs beliebig angeordnet werden."
 
 #: ../data/nautilus-actions.schemas.in.h:53 ../src/common/na-xml-names.h:112
 #: ../src/utils/nautilus-actions-new.c:67
@@ -467,6 +420,8 @@ msgstr "Legt fest, ob die Aktion aktiviert ist"
 #: ../data/nautilus-actions.schemas.in.h:54
 msgid "Width of the main window pane ; default is set by the UI manager"
 msgstr ""
+"Breite des Seitenleiste des Haupfensters; die Voreinstellung wird durch den "
+"UI-Manager vorgegeben"
 
 #: ../src/common/na-about.c:56
 msgid "Ulisse Perusin <uli.peru@gmail.com>"
@@ -491,6 +446,11 @@ msgid ""
 "published by the Free Software Foundation; either version 2 of the License, "
 "or (at your option) any later version."
 msgstr ""
+"Das Konfigurationswerkzeug für Nautilus-Aktionen ist freie Software. Sie "
+"können es weitergeben und/oder verändern, solange Sie sich an die Regeln der "
+"GNU General Public License halten, so wie sie von der Free Software "
+"Foundation festgelegt wurden; entweder in Version 2 der Lizenz oder (nach "
+"Ihrem Ermessen) in jeder folgenden Lizenz."
 
 #: ../src/common/na-about.c:76
 msgid ""
@@ -499,6 +459,11 @@ msgid ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
 "Public License for more details."
 msgstr ""
+"Das Konfigurationswerkzeug für Nautilus-Aktionen wird mit dem Ziel "
+"veröffentlicht, dass Sie es nützlich finden, jedoch OHNE JEDWEDE GARANTIE, "
+"sogar ohne eine implizite Garantie der VERKAUFBARKEIT oder der NUTZBARKEIT "
+"FÜR EINEN SPEZIELLEN ZWECK. Schauen Sie für weitere Informationen bitte in "
+"der GNU General Public License (GNU GPL) nach."
 
 #: ../src/common/na-about.c:80
 msgid ""
@@ -506,6 +471,10 @@ msgid ""
 "Nautilus Actions Configuration Tool ; if not, write to the Free Software "
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr ""
+"Mit diesem Programm sollten Sie außerdem eine Kopie der GNU General Public "
+"License erhalten haben. Wenn dem nicht so ist, so schreiben Sie bitte an die "
+"Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA "
+"02110-1301, USA."
 
 #: ../src/common/na-about.c:103
 msgid "A graphical interface to create and edit your Nautilus actions."
@@ -514,9 +483,6 @@ msgstr ""
 "Aktionen."
 
 #: ../src/common/na-about.c:104
-#| msgid ""
-#| "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
-#| "(C) 2009 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright © 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
 "Copyright © 2009 Pierre Wieser <pwieser@trychlos.org>"
@@ -529,35 +495,17 @@ msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
 msgstr ""
 "Gabriel Meier <gabriel.meier@web.de>\n"
 "Hendrik Brandt <heb@gnome-de.org>\n"
-"Andre Klapper <ak-47@gmx.net>"
+"Andre Klapper <ak-47@gmx.net>\n"
+"Mario Blättermann <mariobl@gnome.org>\n"
+"Christian Kirbach <Christian.Kirbach@googlemail.com>"
 
 #. i18n: default label for a newly created action
 #: ../src/common/na-action.h:52
-#| msgid "Nautilus Actions"
 msgid "New Nautilus action"
 msgstr "Neue Nautilus-Aktion"
 
 #. too long string for iso c: 665 (max=509)
 #: ../src/common/na-xml-names.h:124
-#, fuzzy
-#| msgid ""
-#| "The parameters of the command to start when the user selects the menu item "
-#| "in the Nautilus popup menu.\n"
-#| "\n"
-#| "The parameters can contain some special tokens which are replaced by "
-#| "Nautilus information before starting the command:\n"
-#| "\n"
-#| "%d: base folder of the selected file(s)\n"
-#| "%f: the name of the selected file or the first one if many are selected\n"
-#| "%m: space-separated list of the basenames of the selected file(s)/folder"
-#| "(s)\n"
-#| "%M: space-separated list of the selected file(s)/folder(s), with their "
-#| "full paths\n"
-#| "%u: GnomeVFS URI\n"
-#| "%s: scheme of the GnomeVFS URI\n"
-#| "%h: hostname of the GnomeVFS URI\n"
-#| "%U: username of the GnomeVFS URI\n"
-#| "%%: a percent sign"
 msgid ""
 "The parameters of the command to start when the user selects the menu item in "
 "the Nautilus popup menu.\n"
@@ -586,26 +534,19 @@ msgstr ""
 "\n"
 "%d: Basisordner der ausgewählten Datei(en)\n"
 "%f: Name der ausgewählten Datei oder der ersten Datei bei mehreren Dateien\n"
+"%h: Rechnername der Adresse\n"
 "%m: Durch Leerzeichen getrennte List der Basisordner der ausgewählten Datei"
 "(en) und Ordner\n"
 "%M: Durch Leerzeichen getrennte Basisordner der ausgewählten Datei(en) und "
 "Ordner mit vollständigen Pfaden\n"
-"%u: GnomeVFS-Adresse\n"
-"%s: Schema der Gnome-VFS-Adresse\n"
-"%h: Rechnername der GnomeVFS-Adresse\n"
-"%U: Benutzername der GnomeVFS-Adresse\n"
+"%P: Port-Nummer der ersten Adresse\n"
+"%R: Durch Leerzeichen getrennte Liste der ausgewählten Adressen\n"
+"%s: Schema der Adresse\n"
+"%u: Adresse\n"
+"%U: Benutzername der Adresse\n"
 "%%: Ein Prozentzeichen"
 
 #: ../src/common/na-xml-names.h:147
-#, fuzzy
-#| msgid ""
-#| "The valid combinations are:\n"
-#| "\n"
-#| "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
-#| "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-#| "isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
-#| "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-#| "configuration will never appear)"
 msgid ""
 "This setting is tied in with the 'isdir' setting. The valid combinations "
 "are:\n"
@@ -616,7 +557,8 @@ msgid ""
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
-"Folgende Kombinationen sind gültig:\n"
+"Diese Einstellung ist gekoppelt mit der Einstellung »isdir«. Folgende "
+"Kombinationen sind gültig:\n"
 "\n"
 "»isfile« ist »true« und »isdir« ist »false«: Die Auswahl darf nur Dateien "
 "enthalten\n"
@@ -628,15 +570,6 @@ msgstr ""
 "Konfiguration wird niemals angezeigt)"
 
 #: ../src/common/na-xml-names.h:154
-#, fuzzy
-#| msgid ""
-#| "The valid combinations are:\n"
-#| "\n"
-#| "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
-#| "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-#| "isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
-#| "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-#| "configuration will never appear)"
 msgid ""
 "This setting is tied in with the 'isfile' setting. The valid combinations "
 "are:\n"
@@ -647,7 +580,8 @@ msgid ""
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
 "configuration will never appear)"
 msgstr ""
-"Folgende Kombinationen sind gültig:\n"
+"Diese Einstellung ist gekoppelt mit der Einstellung »isfile«. Folgende "
+"Kombinationen sind gültig:\n"
 "\n"
 "»isfile« ist »true« und »isdir« ist »false«: Die Auswahl darf nur Dateien "
 "enthalten\n"
@@ -660,25 +594,6 @@ msgstr ""
 
 #. too long string for iso c: 510 (max=509)
 #: ../src/common/na-xml-names.h:165
-#, fuzzy
-#| msgid ""
-#| "Defines the list of valid GnomeVFS schemes to be matched against the "
-#| "selected items. The GnomeVFS scheme is the protocol used to access the "
-#| "files. The keyword to use is the one used in the GnomeVFS URI.\n"
-#| "\n"
-#| "Examples of GnomeVFS URI include: \n"
-#| "file:///tmp/foo.txt\n"
-#| "sftp:///root@test.example.net/tmp/foo.txt\n"
-#| "\n"
-#| "The most common schemes are:\n"
-#| "\n"
-#| "'file': local files\n"
-#| "'sftp': files accessed via SSH\n"
-#| "'ftp': files accessed via FTP\n"
-#| "'smb': files accessed via Samba (Windows share)\n"
-#| "'dav': files accessed via WebDav\n"
-#| "\n"
-#| "All GnomeVFS schemes used by Nautilus can be used here."
 msgid ""
 "Defines the list of valid schemes to be matched against the selected items. "
 "The scheme is the protocol used to access the files. The keyword to use is "
@@ -698,23 +613,21 @@ msgid ""
 "\n"
 "All schemes used by Nautilus can be used here."
 msgstr ""
-"Legt die Liste der gültigen GnomeVFS-Schemata fest, die auf die markierten "
-"Elemente zutreffen. Das GnomeVFS-Schema ist das Protokoll, mit dem auf die "
-"Dateien zugegriffen wird. Das zu verwendende Schlüsselwort ist das aus der "
-"GnomeVFS-Adresse.\n"
+"Legt die Liste der gültigen Schemata fest, die auf die markierten Elemente "
+"zutreffen. Das Schema ist das Protokoll, mit dem auf die Dateien zugegriffen "
+"wird. Das zu verwendende Schlüsselwort ist das aus der Adresse. Beispiele für "
+"gültige Adressen sind:\n"
+"file:///tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt\n"
 "\n"
-"Beispiele für GnomeVFS-Adressen sind:\n"
-"file:///tmp/bla.txt\n"
-"sftp:///root@test.beispiel.net/tmp/bla.txt\n"
-"\n"
-"Die verbreitetsten Schemata sind:\n"
+"Die am meisten verbreiteten Schemata sind:\n"
 "»file« für lokale Dateien\n"
 "»sftp« für den Zugriff über SSH\n"
 "»ftp« für den Zugriff per FTP\n"
-"»smb« für Zugriff auf Windows-Datei-Server über Samba\n"
+"»smb« für Zugriff auf Windows-Dateifreigaben über Samba\n"
 "»dav« für Dateizugriff über WebDAV\n"
 "\n"
-"Alle von Nautilus verwendeten GnomeVFS-Schemata können hier verwendet werden."
+"Alle von Nautilus verwendeten Schemata können hier verwendet werden."
 
 #. i18n: unable to load <dialog_name> dialog from XML definition in <filename>
 #: ../src/nact/base-application.c:1128
@@ -731,7 +644,6 @@ msgid "Unable to initialize the Gtk+ user interface."
 msgstr "Die Gtk+-Benutzerschnittstelle kann nicht initialisiert werden."
 
 #: ../src/nact/base-application.c:1160
-#| msgid "Another instance of Nautilus Actions Configurator is already running."
 msgid "Another instance of the application is already running."
 msgstr "Eine Instanz der Anwendung läuft bereits."
 
@@ -754,7 +666,6 @@ msgid "Unable to get the main window of the application."
 msgstr "Das Hauptfenster für die Anwendung kann nicht erstellt werden."
 
 #: ../src/nact/nact-application.c:299
-#| msgid "Another instance of Nautilus Actions Configurator is already running."
 msgid ""
 "Another instance of Nautilus Actions Configuration Tool is already running."
 msgstr "Eine Instanz des Nautilus-Aktionen-Werkzeugs läuft bereits."
@@ -772,32 +683,30 @@ msgstr "Bitte benutzen Sie die bereits laufende Instanz."
 msgid "Nautilus Actions Configuration Tool"
 msgstr "Einstellungen für Nautilus-Aktionen"
 
-#: ../src/nact/nact-assistant.c:465
+#: ../src/nact/nact-assistant.c:482
 msgid "Are you sure you want to quit this assistant ?"
 msgstr "Wollen Sie den Assistenten wirklich beenden?"
 
-#: ../src/nact/nact-assistant-export.c:438
+#: ../src/nact/nact-assistant-export.c:446
 msgid "You may not have writing permissions on selected folder."
 msgstr "Sie haben keine Schreibrechte im gewählten Ordner."
 
 #. i18n: this is the title of the confirm page of the export assistant
-#: ../src/nact/nact-assistant-export.c:698
-#, fuzzy
-#| msgid "Create a copy of the selected action."
+#: ../src/nact/nact-assistant-export.c:706
 msgid "About to export selected actions:"
-msgstr "Eine Kopie der gewählten Aktion erstellen"
+msgstr "Sie sind im Begriff die gewählten Aktionen zu exportieren:"
 
 #. i18n: all exported actions go to one destination folder
-#: ../src/nact/nact-assistant-export.c:714
+#: ../src/nact/nact-assistant-export.c:722
 msgid "Into the destination folder:"
 msgstr "In den Zielordner:"
 
 #. i18n: error message displayed in the result page of the export assistant
-#: ../src/nact/nact-assistant-export.c:781
+#: ../src/nact/nact-assistant-export.c:789
 msgid "One or more errors have been detected when exporting actions."
 msgstr "Ein oder mehrere Fehler sind beim Exportieren der Aktionen aufgetreten."
 
-#: ../src/nact/nact-assistant-export.c:782
+#: ../src/nact/nact-assistant-export.c:790
 #, c-format
 msgid ""
 "<b>%s</b>\n"
@@ -809,17 +718,16 @@ msgstr ""
 "%s"
 
 #. i18n: result of the export assistant
-#: ../src/nact/nact-assistant-export.c:788
+#: ../src/nact/nact-assistant-export.c:796
 msgid "Selected actions have been successfully exported..."
 msgstr "Die ausgewählten Aktionen wurden erfolgreich exportiert."
 
 #. i18n: the target folder is displayed in its own line
-#: ../src/nact/nact-assistant-export.c:794
-#| msgid "Save in Folder:"
+#: ../src/nact/nact-assistant-export.c:802
 msgid "... in folder:"
 msgstr "… in Ordner:"
 
-#: ../src/nact/nact-assistant-export.c:795
+#: ../src/nact/nact-assistant-export.c:803
 #, c-format
 msgid ""
 "%s<b>%s</b>\n"
@@ -833,11 +741,11 @@ msgstr ""
 "\n"
 
 #. i18n: the export file for each actions is displayed in its own line
-#: ../src/nact/nact-assistant-export.c:801
+#: ../src/nact/nact-assistant-export.c:809
 msgid "... as files:"
 msgstr "… als Dateien:"
 
-#: ../src/nact/nact-assistant-export.c:802
+#: ../src/nact/nact-assistant-export.c:810
 #, c-format
 msgid ""
 "%s<b>%s</b>\n"
@@ -849,11 +757,10 @@ msgstr ""
 #. i18n: the title of the confirm page of the import assistant
 #: ../src/nact/nact-assistant-import.c:491
 msgid "About to import selected files:"
-msgstr ""
+msgstr "Sie sind im Begriff die gewählten Dateien zu importieren:"
 
 #. i18n: result of the import assistant
 #: ../src/nact/nact-assistant-import.c:525
-#| msgid "Select the file you want to import."
 msgid "Selected files have been imported:"
 msgstr "Ausgewählte Dateien wurden importiert:"
 
@@ -879,12 +786,12 @@ msgstr "Nautilus-Aktionen"
 #. i18n: status bar message when the action label is empty
 #: ../src/nact/nact-iaction-tab.c:348
 msgid "Caution: a label is mandatory for the action."
-msgstr "Achtung: Eine Bezeichnung für die Aktion ist obligatorisch."
+msgstr ""
+"Achtung: Eine Bezeichnung für die Aktion oder das Menü ist obligatorisch."
 
 #. i18n: label in front of the GtkEntry where user enters the action label
 #. i18n: label in front of the GtkEntry where user enters the profile label
 #: ../src/nact/nact-iaction-tab.c:361 ../src/nact/nact-icommand-tab.c:366
-#| msgid "Label:"
 msgid "_Label :"
 msgstr "Be_schriftung:"
 
@@ -903,37 +810,31 @@ msgid "new-scheme"
 msgstr "Neues Schema"
 
 #: ../src/nact/nact-iadvanced-tab.c:396
-#| msgid "New Scheme Description"
 msgid "New scheme description"
 msgstr "Beschreibung des neuen Schemas"
 
 #. i18n notes : description of 'file' scheme
 #: ../src/nact/nact-iadvanced-tab.c:572
-#| msgid "%sLocal Files"
 msgid "Local files"
 msgstr "Lokale Dateien"
 
 #. i18n notes : description of 'sftp' scheme
 #: ../src/nact/nact-iadvanced-tab.c:574
-#| msgid "%sSSH Files"
 msgid "SSH files"
 msgstr "SSH-Dateien"
 
 #. i18n notes : description of 'smb' scheme
 #: ../src/nact/nact-iadvanced-tab.c:576
-#| msgid "%sWindows Files"
 msgid "Windows files"
 msgstr "Windows-Dateien"
 
 #. i18n notes : description of 'ftp' scheme
 #: ../src/nact/nact-iadvanced-tab.c:578
-#| msgid "%sFTP Files"
 msgid "FTP files"
 msgstr "FTP-Dateien"
 
 #. i18n notes : description of 'dav' scheme
 #: ../src/nact/nact-iadvanced-tab.c:580
-#| msgid "%sWebdav Files"
 msgid "WebDAV files"
 msgstr "WebDAV-Dateien"
 
@@ -966,7 +867,6 @@ msgid "file2.txt"
 msgstr "Datei2.txt"
 
 #: ../src/nact/nact-icommand-tab.c:534
-#| msgid "folder1"
 msgid " folder1"
 msgstr "Ordner1"
 
@@ -975,7 +875,6 @@ msgid "folder2"
 msgstr "Ordner2"
 
 #: ../src/nact/nact-icommand-tab.c:535
-#| msgid "file1.txt"
 msgid " file1.txt"
 msgstr "Datei1.txt"
 
@@ -1032,18 +931,15 @@ msgid "_Help"
 msgstr "_Hilfe"
 
 #: ../src/nact/nact-imenubar.c:106
-#| msgid "Add a new action"
 msgid "_New action"
 msgstr "_Neue Aktion"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New action' item
 #: ../src/nact/nact-imenubar.c:108
-#| msgid "Add a new action"
 msgid "Define a new action."
 msgstr "Eine neue Aktion hinzufügen."
 
 #: ../src/nact/nact-imenubar.c:110
-#| msgid "Add a New Profile"
 msgid "_New _profile"
 msgstr "Neues _Profil"
 
@@ -1051,18 +947,10 @@ msgstr "Neues _Profil"
 #: ../src/nact/nact-imenubar.c:112
 msgid "Define a new profile attached to the current action."
 msgstr ""
-
-#: ../src/nact/nact-imenubar.c:114
-msgid "_New _menu"
-msgstr "_Neues Menü"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
-#: ../src/nact/nact-imenubar.c:116
-msgid "Insert a new menu at the current position."
-msgstr "Ein neues Menü an der aktuellen Position einfügen."
+"Ein neues Profil definieren, das mit der aktuellen Aktion verknüpft ist."
 
 #. i18n: tooltip displayed in the status bar when selecting 'Save' item
-#: ../src/nact/nact-imenubar.c:120
+#: ../src/nact/nact-imenubar.c:116
 msgid ""
 "Record all the modified actions. Invalid actions will be silently ignored."
 msgstr ""
@@ -1070,61 +958,54 @@ msgstr ""
 "Fehlermeldung ignoriert."
 
 #. i18n: tooltip displayed in the status bar when selecting 'Quit' item
-#: ../src/nact/nact-imenubar.c:124
+#: ../src/nact/nact-imenubar.c:120
 msgid "Quit the application."
 msgstr "Die Anwendung beenden."
 
-#: ../src/nact/nact-imenubar.c:126
-#| msgid "Duplicate"
+#: ../src/nact/nact-imenubar.c:122
 msgid "D_uplicate"
 msgstr "D_uplizieren"
 
 #. i18n: tooltip displayed in the status bar when selecting the Duplicate item
-#: ../src/nact/nact-imenubar.c:128
-#| msgid "Create a copy of the selected action."
+#: ../src/nact/nact-imenubar.c:124
 msgid "Create a copy of the selected action or profile."
 msgstr "Eine Kopie der gewählten Aktion oder des gewählten Profils erstellen."
 
 #. i18n: tooltip displayed in the status bar when selecting the Delete item
-#: ../src/nact/nact-imenubar.c:132
+#: ../src/nact/nact-imenubar.c:128
 msgid "Remove the selected action or profile from your configuration."
 msgstr ""
 "Die ausgewählte Aktion oder das ausgewählte Profil aus Ihrer Konfiguration "
 "entfernen."
 
-#: ../src/nact/nact-imenubar.c:134
+#: ../src/nact/nact-imenubar.c:130
 msgid "_Reload the list of actions"
 msgstr "Liste der Aktionen neu _laden"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
-#: ../src/nact/nact-imenubar.c:136
+#: ../src/nact/nact-imenubar.c:132
 msgid "Cancel your current modifications and reload the list of actions."
 msgstr ""
 "Ihre aktuellen Änderungen verwerfen und die Liste der Aktionen neu laden."
 
-#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
-#: ../src/nact/nact-imenubar.c:140
-msgid "Edit your preferences."
-msgstr "Einstellungen bearbeiten"
-
-#: ../src/nact/nact-imenubar.c:142
+#: ../src/nact/nact-imenubar.c:134
 msgid "_Import assistant..."
 msgstr "_Importassistent …"
 
 #. i18n: tooltip displayed in the status bar when selecting the Import item
-#: ../src/nact/nact-imenubar.c:144
+#: ../src/nact/nact-imenubar.c:136
 msgid ""
 "Import one or more actions from external (XML) files into your configuration."
 msgstr ""
 "Eine oder mehrere Aktionen aus externen (XML-)Dateien in Ihre Konfiguration "
 "importieren."
 
-#: ../src/nact/nact-imenubar.c:146
+#: ../src/nact/nact-imenubar.c:138
 msgid "E_xport assistant..."
 msgstr "E_xportassistent …"
 
 #. i18n: tooltip displayed in the status bar when selecting the Export item
-#: ../src/nact/nact-imenubar.c:148
+#: ../src/nact/nact-imenubar.c:140
 msgid ""
 "Export one or more actions from your configuration to external XML files."
 msgstr ""
@@ -1132,42 +1013,42 @@ msgstr ""
 "exportieren."
 
 #. i18n: tooltip displayed in the status bar when selecting the Help item
-#: ../src/nact/nact-imenubar.c:152
+#: ../src/nact/nact-imenubar.c:144
 msgid "Display help about this program."
 msgstr "Hilfe zu diesem Programm anzeigen."
 
 #. i18n: tooltip displayed in the status bar when selecting the About item
-#: ../src/nact/nact-imenubar.c:156
+#: ../src/nact/nact-imenubar.c:148
 msgid "Display informations about this program."
 msgstr "Informationen über dieses Programm anzeigen."
 
 #. i18n: label of a duplicated action
 #. i18n: label of a duplicated profile
-#: ../src/nact/nact-imenubar.c:610 ../src/nact/nact-imenubar.c:624
+#: ../src/nact/nact-imenubar.c:602 ../src/nact/nact-imenubar.c:616
 #, c-format
 msgid "Copy of %s"
 msgstr "Kopie von %s"
 
 #. i18n: message before reloading the list of actions
-#: ../src/nact/nact-imenubar.c:687
+#: ../src/nact/nact-imenubar.c:679
 msgid "This will cancel your current modifications."
 msgstr "Dadurch werden Ihre aktuellen Änderungen verworfen."
 
-#: ../src/nact/nact-imenubar.c:688
+#: ../src/nact/nact-imenubar.c:680
 msgid "Are you sure this is what you want ?"
 msgstr "Sind Sie sicher, dass dies das ist, was Sie wollen?"
 
-#: ../src/nact/nact-main-window.c:1023
+#: ../src/nact/nact-main-window.c:1039
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
 "reload a fresh one."
 msgstr ""
 "Eine oder mehrere Aktionen wurden im Dateisystem geändert.\n"
-"Sie können mit der aktuellen Liste der Aktione  weiterarbeiten oder die Liste "
+"Sie können mit der aktuellen Liste der Aktionen weiterarbeiten oder die Liste "
 "neu laden lassen."
 
-#: ../src/nact/nact-main-window.c:1029
+#: ../src/nact/nact-main-window.c:1045
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
@@ -1175,34 +1056,34 @@ msgstr ""
 "Beachten Sie, dass beim Neuladen der Liste der Aktionen Ihre aktuellen "
 "Änderungen verworfen werden."
 
-#: ../src/nact/nact-main-window.c:1035
+#: ../src/nact/nact-main-window.c:1051
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "Wollen Sie Liste der Aktionen neu laden?"
 
-#: ../src/nact/nact-window.c:272
+#: ../src/nact/nact-window.c:274
 msgid "An error has occured when trying to save the action"
-msgstr ""
+msgstr "Es ist ein Fehler beim Speichern der Aktion ist aufgetreten"
 
-#: ../src/nact/nact-window.c:305
+#: ../src/nact/nact-window.c:307
 msgid "An error has occured when trying to delete the action"
 msgstr "Ein Fehler ist aufgetreten beim Versuch, die Aktion zu entfernen"
 
-#: ../src/nact/nact-window.c:332
+#: ../src/nact/nact-window.c:334
 #, c-format
 msgid "One action has been modified."
 msgstr "Eine Aktion wurde geändert."
 
-#: ../src/nact/nact-window.c:333
+#: ../src/nact/nact-window.c:335
 msgid "Are you sure you want to quit without saving it ?"
 msgstr "Wollen Sie wirklich beenden, ohne zu speichern?"
 
 #. first = g_strdup_printf( _( "%d actions have been modified." ), count );
-#: ../src/nact/nact-window.c:337
+#: ../src/nact/nact-window.c:339
 #, c-format
 msgid "Actions have been modified."
-msgstr "Aktionen wurden geändert."
+msgstr "Aktionen wurde geändert."
 
-#: ../src/nact/nact-window.c:338
+#: ../src/nact/nact-window.c:340
 msgid "Are you sure you want to quit without saving them ?"
 msgstr "Wollen Sie wirklich beenden, ohne zu speichern?"
 
@@ -1216,16 +1097,20 @@ msgstr "Fehler beim Verarbeiten der XML-Datei: %s"
 msgid ""
 "Invalid XML root element: waited for '%s' or '%s', found '%s' at line %d."
 msgstr ""
+"Ungültiges XML-Hauptelement: Es wurde »%s« oder »%s« erwartet, aber »%s« in "
+"Zeile %d gefunden."
 
 #: ../src/nact/nact-xml-reader.c:109
 #, c-format
 msgid "Waited for '%s' node, found (ignored) '%s' at line %d."
 msgstr ""
+"Es wurde der Knoten »%s« erwartet, aber »%s« in Zeile %d gefunden (und "
+"ignoriert)."
 
 #: ../src/nact/nact-xml-reader.c:110
 #, c-format
 msgid "Unexpected (ignored) '%s' node found at line %d."
-msgstr ""
+msgstr "Unerwarteter (und ignorierter) Knoten »%s« in Zeile %d gefunden."
 
 #: ../src/nact/nact-xml-reader.c:111
 #, c-format
@@ -1235,12 +1120,12 @@ msgstr "Schema wird in Zeile %d ignoriert."
 #: ../src/nact/nact-xml-reader.c:112
 #, c-format
 msgid "Unexpected '%s' node found at line %d."
-msgstr ""
+msgstr "Unerwarteter Knoten »%s« wurde in Zeile %d gefunden."
 
 #: ../src/nact/nact-xml-reader.c:113
 #, c-format
 msgid "Unexpected '%s' entry found at line %d."
-msgstr ""
+msgstr "Unerwarteter Eintrag »%s« wurde in Zeile %d gefunden."
 
 #: ../src/nact/nact-xml-reader.c:114
 #, c-format
@@ -1254,17 +1139,19 @@ msgstr "Kein Wert gefunden."
 #: ../src/nact/nact-xml-reader.c:116
 #, c-format
 msgid "Invalid UUID: waited for %s, found %s at line %d."
-msgstr ""
+msgstr "Ungültige UUID: Es wurde »%s« erwartet, aber »%s« in Zeile %d gefunden."
 
 #: ../src/nact/nact-xml-reader.c:117
 #, c-format
 msgid "Invalid content: waited for %s prefix, found %s at line %d."
 msgstr ""
+"Ungültiger Inhalt: Es wurde Das Präfix »%s« erwartet, aber »%s« in Zeile %d "
+"gefunden."
 
 #: ../src/nact/nact-xml-reader.c:118
 #, c-format
 msgid "Invalid UUID %s found at line %d."
-msgstr "Ungültige UUID %s gefunden in Zeile %d."
+msgstr "Ungültige UUID %s wurde in Zeile %d gefunden."
 
 #: ../src/nact/nact-xml-reader.c:119
 #, c-format
@@ -1290,9 +1177,10 @@ msgid ""
 "URIs parsing test.\n"
 "\n"
 msgstr ""
+"Verarbeitungstest der Adressen.\n"
+"\n"
 
 #: ../src/utils/nautilus-actions-new.c:64
-#| msgid "The label of the menu item"
 msgid "The label of the menu item (mandatory)"
 msgstr "Die Bezeichnung des Menüeintrags (obligatorisch)"
 
@@ -1343,24 +1231,22 @@ msgstr ""
 "müssen für jedes Muster, das Sie benötigen ein weiteres erstellen)"
 
 #: ../src/utils/nautilus-actions-new.c:73
-#| msgid "Set it if the selection can contain files"
 msgid "Set it if the selection must only contain files"
-msgstr "Gesetzt, falls die Auswahl nur Dateien enthalten darf"
+msgstr "Legt fest, ob die Auswahl nur Dateien enthalten darf"
 
 #: ../src/utils/nautilus-actions-new.c:74
 msgid ""
 "Set it if the selection must only contain folders. Specify both '--isfile' "
 "and '--isdir' options is selection can contain both types of items"
 msgstr ""
+"Legt fest, ob die Auswahl nur Ordner enthalten darf. Geben Sie beide Optionen "
+"»--isfile« als auch »--isdir« an, wenn die Auswahl beide Typen enthalten darf."
 
 #: ../src/utils/nautilus-actions-new.c:75
 msgid "Set it if the selection can have several items"
-msgstr "Gesetzt, falls die Auswahl mehrere Elemente enthalten darf"
+msgstr "Legt fest, ob die Auswahl mehrere Objekte enthalten darf"
 
 #: ../src/utils/nautilus-actions-new.c:76
-#| msgid ""
-#| "A GnomeVFS scheme where the selected files should be located (you must set "
-#| "it for each scheme you need)"
 msgid ""
 "A valid GVFS scheme where the selected files should be located (you must set "
 "one option for each scheme you need)"
@@ -1381,18 +1267,16 @@ msgid ""
 "The folder where to write the new action as a GConf dump output [default: "
 "stdout]"
 msgstr ""
+"Der Ordner, in den die neu erstellten Aktionen als GConf-Dump geschrieben "
+"werden sollen [Vorgabe: stdout]"
 
 #: ../src/utils/nautilus-actions-new.c:83
 msgid "DIR"
-msgstr ""
+msgstr "ORDNER"
 
 #: ../src/utils/nautilus-actions-new.c:115
 #: ../src/utils/nautilus-actions-schemas.c:84
 #, c-format
-#| msgid ""
-#| "Syntax error:\n"
-#| "\t- %s\n"
-#| "Try %s --help\n"
 msgid "Syntax error: %s\n"
 msgstr "Syntaxfehler: %s\n"
 
@@ -1418,6 +1302,8 @@ msgstr "Aktion »%s« wurde erfolgreich in der GConf-Datenbank gespeichert.\n"
 msgid ""
 "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n"
 msgstr ""
+"Aktion »%s« wurde erfolgreich nach »%s« gespeichert, und ist bereit nach NACT "
+"importiert zu werden.\n"
 
 #: ../src/utils/nautilus-actions-new.c:169
 msgid ""
@@ -1429,6 +1315,13 @@ msgid ""
 "  Or you may choose to directly write the action into your GConf "
 "configuration."
 msgstr ""
+"Definieren Sie eine neue Aktion.\n"
+"\n"
+" Die erstellte Aktion wird per Voreinstellung nach stdout geschrieben.\n"
+" Sie kann auch in einen Ordner als Datei geschrieben werden, die später nach "
+"NACT importiert werden kann.\n"
+" Oder Sie können auch die Aktion unmittelbar in Ihre GConf-Konfiguration "
+"schreiben lassen."
 
 #: ../src/utils/nautilus-actions-new.c:186
 #: ../src/utils/nautilus-actions-schemas.c:144
@@ -1446,454 +1339,24 @@ msgstr "Ausgabe des Programms"
 
 #: ../src/utils/nautilus-actions-new.c:194
 msgid "Choose where the program creates the action"
-msgstr ""
+msgstr "Wählen Sie, wo das Programm die Aktion erstellt"
 
 #: ../src/utils/nautilus-actions-new.c:287
 #: ../src/utils/nautilus-actions-schemas.c:254
 #, c-format
 msgid "Try %s --help for usage.\n"
-msgstr ""
+msgstr "Versuchen Sie »%s --help«, um den Aufruf zu sehen.\n"
 
 #. { "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE    , &output_gconf   , N_("Writes the Nautilus Actions schema in GConf"), NULL },
 #. { "output-filename"      , 'o', 0, G_OPTION_ARG_FILENAME, &output_fname   , N_("The file where to write the GConf schema ('-' for stdout)"), N_("FILENAME") },
 #: ../src/utils/nautilus-actions-schemas.c:53
 msgid "Output the schema on stdout"
-msgstr ""
+msgstr "Das Schema auf die Standardausgabe ausgeben"
 
 #: ../src/utils/nautilus-actions-schemas.c:127
-#, fuzzy
-#| msgid "Nautilus Actions Configuration Tool"
 msgid "Output the Nautilus Actions GConf schema on stdout."
-msgstr "Einstellungen für Nautilus-Aktionen"
-
-#~ msgid ""
-#~ "The action '%s' already exists with the name '%s', please first remove the "
-#~ "existing one before trying to add this one"
-#~ msgstr ""
-#~ "Die Aktion »%s« mit dem Namen »%s« existiert bereits. Entfernen Sie zunächst "
-#~ "die existierende Aktion, bevor Sie diese hinzufügen"
-
-#~ msgid "Can't save action '%s'"
-#~ msgstr "Aktion »%s« kann nicht gespeichert werden"
-
-#~ msgid ""
-#~ "A profile already exists with the name '%s', please first remove or rename "
-#~ "the existing one before trying to add this one"
-#~ msgstr ""
-#~ "Ein Profil mit dem Namen »%s« existiert bereits. Verschieben oder benennen "
-#~ "Sie das existierende Profil zunächst um"
-
-#~ msgid "This setting is tied in with the 'isdir' setting. "
-#~ msgstr "Diese Einstellung ist verbunden mit der Einstellung »isdir«."
-
-#~ msgid "This setting is tied in with the 'isfile' setting. "
-#~ msgstr "Diese Einstellung ist verbunden mit der Einstellung »isfile«. "
-
-#~ msgid " and some profiles are incomplete: "
-#~ msgstr " und einige Profil sind nicht komplett: "
-
-#~ msgid ","
-#~ msgstr ", "
-
-#~ msgid "%s (one missing key: %s)%s"
-#~ msgid_plural "%s (missing keys: %s)%s"
-#~ msgstr[0] "%s (fehlender Schlüssel: %s)%s"
-#~ msgstr[1] "%s (fehlende Schlüssel: %s)%s"
-
-#~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (found <%s> "
-#~ "element instead of <%s>)"
-#~ msgstr ""
-#~ "Diese XML-Datei ist keine gültige Konfigurationsdatei für Nautilus-actions "
-#~ "(Element <%s> anstelle von <%s> vorgefunden)"
-
-#~ msgid ""
-#~ "This config file is more recent than this version of Nautilus-actions can "
-#~ "support. Please upgrade Nautilus-actions to the latest version if you want "
-#~ "to be able to import it (File version: %s (max supported version : %s))"
-#~ msgstr ""
-#~ "Diese Konfigurationsdatei ist neuer als die installierte Version von "
-#~ "Nautilus-actions und wird nicht unterstützt. Bitte aktualisieren Sie "
-#~ "Nautilus-actions auf die neueste Version, um die Datei zu importieren "
-#~ "(Dateiversion: %s, maximal unterstützte Version: %s)"
-
-#~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
-#~ "s)%s"
-#~ msgid_plural ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing keys: %"
-#~ "s)%s"
-#~ msgstr[0] ""
-#~ "Diese XML-Datei ist keine gültige Konfigurationsdatei für Nautilus-actions "
-#~ "(fehlender Schlüssel: %s)%s"
-#~ msgstr[1] ""
-#~ "Diese XML-Datei ist keine gültige Konfigurationsdatei für Nautilus-actions "
-#~ "(fehlende Schlüssel: %s)%s"
-
-#~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: %s)"
-#~ msgstr ""
-#~ "Diese XML-Datei ist keine gültige Konfigurationsdatei für Nautilus-actions "
-#~ "(fehlender Schlüssel: %s)"
-
-#~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (root node is <%"
-#~ "s> instead of <%s>)"
-#~ msgstr ""
-#~ "Diese XML-Datei ist keine gültige Konfigurationsdatei für Nautilus-actions "
-#~ "(Anfangsknoten ist <%s> anstelle von <%s>)"
-
-#~ msgid "Can't duplicate action '%s'!"
-#~ msgstr "Es kann keine Kopie der Aktion »%s« erstellt werden!"
-
-#~ msgid "Icon"
-#~ msgstr "Symbol"
-
-#~ msgid "Label"
-#~ msgstr "Beschriftung"
-
-#~ msgid "Could not load interface for Nautilus Actions Config Tool"
-#~ msgstr ""
-#~ "Die grafische Benutzerschnittstelle des Nautilus-Aktionen-Werkzeugs konnte "
-#~ "nicht geladen werden"
-
-#~ msgid "Icon of the menu item in the Nautilus popup menu"
-#~ msgstr "Beschriftung des Menüpunktes im Nautilus-Kontextmenü"
-
-#~ msgid "Edit action \"%s\""
-#~ msgstr "Aktion »%s« bearbeiten"
-
-#~ msgid "Can't copy action's profile '%s'!"
-#~ msgstr "Das Profil der Aktion »%s« kann nicht kopiert werden!"
-
-#~ msgid "Can't paste action's profile '%s'!"
-#~ msgstr "Das Profil der Aktion »%s« kann nicht eingefügt werden!"
-
-#~ msgid "%s Copy"
-#~ msgstr "%s-Kopie"
-
-#~ msgid "Can't delete action's profile '%s'!"
-#~ msgstr "Das Profil der Aktion »%s« kann nicht gelöscht werden!"
-
-#~ msgid "Profile Name"
-#~ msgstr "Profilname"
-
-#~ msgid "Add a New Action"
-#~ msgstr "Neue Aktion hinzufügen"
-
-#~ msgid "Edit Action \"%s\""
-#~ msgstr "Aktion »%s« bearbeiten"
-
-#~ msgid "Can't parse file '%s' as GConf schema description file!"
-#~ msgstr ""
-#~ "Die Datei »%s« konnte nicht als GConf-Schemabeschreibung eingelesen werden!"
-
-#~ msgid "Action '%s' importation failed!"
-#~ msgstr "Import der Aktion »%s« gescheitert!"
-
-#~ msgid "Scheme"
-#~ msgstr "Schema"
-
-#~ msgid "Description"
-#~ msgstr "Beschreibung"
-
-#~ msgid "Edit Profile \"%s\""
-#~ msgstr "Profil »%s« bearbeiten"
-
-#~ msgid "<b>%%</b>: a percent sign"
-#~ msgstr "<b>%%</b>: ein Prozentzeichen"
-
-#~ msgid ""
-#~ "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with "
-#~ "their full paths"
-#~ msgstr ""
-#~ "<b>%M</b>: Liste der gewählten Datei(en)/Ordner mit ihrem vollständigen "
-#~ "Pfad, getrennt durch Leerzeichen"
-
-#~ msgid "<b>%U</b>: username of the GnomeVFS URI"
-#~ msgstr "<b>%U</b>: Benutzername der GnomeVFS-Adresse"
-
-#~ msgid "<b>%d</b>: base folder of the selected file(s)"
-#~ msgstr "<b>%d</b>: Ausgangsordner der gewählten Datei(en)"
-
-#~ msgid ""
-#~ "<b>%f</b>: the name of the selected file or the 1st one if many are "
-#~ "selected"
-#~ msgstr ""
-#~ "<b>%f</b>: Name der gewählten Datei oder der ersten Datei, wenn mehrere "
-#~ "ausgewählt sind"
-
-#~ msgid "<b>%h</b>: hostname of the GnomeVFS URI"
-#~ msgstr "<b>%h</b>: Rechnername der GnomeVFS-Adresse"
-
-#~ msgid ""
-#~ "<b>%m</b>: space-separated list of the basenames of the selected\n"
-#~ "file(s)/folder(s)"
-#~ msgstr ""
-#~ "<b>%m</b>: Liste der Ausgangsnamen der gewählten Datei(en)/Ordner,\n"
-#~ "getrennt durch Leerzeichen"
-
-#~ msgid "<b>%s</b>: scheme of the GnomeVFS URI"
-#~ msgstr "<b>%s</b>: Schema der GnomeVFS-Adresse"
-
-#~ msgid "<b>%u</b>: GnomeVFS URI"
-#~ msgstr "<b>%u</b>: GnomeVFS-Adresse"
-
-#~ msgid "<b>Action</b>"
-#~ msgstr "<b>Aktionen</b>"
-
-#~ msgid "<b>Appears if file matches</b>"
-#~ msgstr "<b>Erscheint, wenn die Datei zutrifft</b>"
-
-#~ msgid "<b>Appears if scheme is in this list</b>"
-#~ msgstr "<b>Erscheint, wenn das Schema in dieser Liste ist</b>"
-
-#~ msgid "<b>Appears if selection contains</b>"
-#~ msgstr "<b>Erscheint, wenn die Auswahl enthält</b>"
-
-#~ msgid "<b>Nautilus Menu Item</b>"
-#~ msgstr "<b>Nautilus-Menüpunkt</b>"
-
-#~ msgid "<b>Profiles</b>"
-#~ msgstr "<b>Profile</b>"
-
-#~ msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
-#~ msgstr "<span size=\"larger\"><b>Legende der Parameter</b></span>"
-
-#~ msgid ""
-#~ "<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
-#~ "\n"
-#~ "place secondary text here"
-#~ msgstr ""
-#~ "<span weight=\"bold\" size=\"larger\">Primären Text hier platzieren</"
-#~ "span>\n"
-#~ "\n"
-#~ "Sekundären Text hier platzieren"
-
-#~ msgid ""
-#~ "A string with wildcards (? or *) that will be used to match the filenames. "
-#~ "You can set several filename patterns by separating them with a semi-colon "
-#~ "(;)."
-#~ msgstr ""
-#~ "Eine Zeichenkette mit den Platzhaltern ? oder * die zum Filtern nach "
-#~ "Dateinamen genutzt wird. Sie können mehrere Dateinamenmuster getrennt "
-#~ "durch Semikolons (;) eingeben."
-
-#~ msgid ""
-#~ "A string with wildcards (? or *) that will be used to match the mimetypes "
-#~ "of files. You can set several mimetype patterns by separating them with a "
-#~ "semi-colon (;)."
-#~ msgstr ""
-#~ "Eine Zeichenkette mit den Platzhaltern ? oder * die zum Filtern nach MIME-"
-#~ "Typen von Dateien genutzt wird. Sie können mehrere MIME-Typen-Muster "
-#~ "getrennt durch Semikolons (;) eingeben."
-
-#~ msgid "Action"
-#~ msgstr "Aktion"
-
-#~ msgid "Advanced Conditions"
-#~ msgstr "Erweiterte Bedingungen"
-
-#~ msgid "Appears if selection has multiple files or folders"
-#~ msgstr "Erscheint, wenn die Auswahl mehrere Dateien oder Ordner enthält"
-
-#~ msgid "Both"
-#~ msgstr "Beides"
-
-#~ msgid "Click to add a new scheme."
-#~ msgstr "Klicken Sie hier, um ein neues Schema hinzuzufügen."
-
-#~ msgid "Click to choose a command from the file chooser dialog."
-#~ msgstr ""
-#~ "Klicken Sie hier, um einen Befehl mit Hilfe des Dateidialogs zu wählen."
-
-#~ msgid ""
-#~ "Click to choose a custom icon from a file instead of a predefined icon "
-#~ "from the drop-down list."
-#~ msgstr ""
-#~ "Klicken Sie hier, um ein eigenes Symbol aus einer Datei zu wählen anstatt "
-#~ "eines der vorgegebenen Symbole aus der Liste zu verwenden."
-
-#~ msgid "Click to remove the selected scheme."
-#~ msgstr "Klicken Sie hier, um das ausgewählte Schema zu entfernen."
-
-#~ msgid ""
-#~ "Click to toggle the display of the list of special tokens you can use in "
-#~ "the parameter field."
-#~ msgstr ""
-#~ "Klicken Sie hier, um die Liste besonderer Zeichen anzuzeigen/zu verbergen, "
-#~ "welche Sie im Paramterfeld verwenden können."
-
-#~ msgid "Conditions"
-#~ msgstr "Bedingungen"
-
-#~ msgid ""
-#~ "Delete the action without any confirmation nor the possibility to restore "
-#~ "it."
-#~ msgstr ""
-#~ "Die ausgewählte Aktion ohne Rückfrage und ohne Möglichkeit der "
-#~ "Wiederherstellung löschen."
-
-#~ msgid "Export existing configs"
-#~ msgstr "Bestehende Einstellungen exportieren"
-
-#~ msgid "File to Import:"
-#~ msgstr "Zu importierende Datei:"
-
-#~ msgid "Filenames:"
-#~ msgstr "Dateinamen:"
-
-#~ msgid "Icon:"
-#~ msgstr "Symbol:"
-
-#~ msgid ""
-#~ "If selected, the filename patterns will be matched case sensitive (eg, *."
-#~ "jpg will not match photo.JPG)"
-#~ msgstr ""
-#~ "Falls ausgewählt, wird das Dateinamenmuster unter Berücksichtigung der "
-#~ "Groß- und Kleinschreibung angewandt (z.B. die Suche nach »*.jpg« beinhaltet "
-#~ "nicht »foto.JPG«)"
-
-#~ msgid "Import new configurations"
-#~ msgstr "Neue Einstellungen importieren"
-
-#~ msgid "Import/Export"
-#~ msgstr "Import/Export"
-
-#~ msgid "Import/Export Settings"
-#~ msgstr "Im- & Exporteinstellungen"
-
-#~ msgid "Label of the menu item in the Nautilus popup menu."
-#~ msgstr "Beschriftung des Menüpunktes im Nautilus-Kontextmenü."
-
-#~ msgid ""
-#~ "Manage importation of external action configurations and exportation of "
-#~ "existing actions."
-#~ msgstr ""
-#~ "Einstellungen externer Aktionen importieren und bestehende Aktionen "
-#~ "exportieren"
-
-#~ msgid "Match case"
-#~ msgstr "Groß-/Kleinschreibung beachten"
-
-#~ msgid "Mimetypes:"
-#~ msgstr "MIME-Typen:"
-
-#~ msgid "Nautilus Action Editor"
-#~ msgstr "Nautilus-Aktionen verwalten"
-
-#~ msgid "Nautilus Action Profile Editor"
-#~ msgstr "Profile der Nautilus-Aktionen verwalten"
-
-#~ msgid ""
-#~ "Nautilus Actions Configuration Tool\n"
-#~ "Application to configure Nautilus Action extension"
-#~ msgstr ""
-#~ "Konfiguration der Nautilus-Aktionen\n"
-#~ "Werkzeug zur Konfiguration der Erweiterung für Nautilus-Aktionen"
-
-#~ msgid "Only files"
-#~ msgstr "Nur Dateien"
-
-#~ msgid "Only folders"
-#~ msgstr "Nur Ordner"
-
-#~ msgid ""
-#~ "Parameters that will be sent to the program. Click on the 'Legend' button "
-#~ "to see the different replacement tokens."
-#~ msgstr ""
-#~ "Parameter, die dem Programm übergeben werden. Klicken Sie auf die "
-#~ "Schaltfläche »Legende«, um die verschiedenen Optionen anzuzeigen."
-
-#~ msgid "Parameters:"
-#~ msgstr "Parameter:"
-
-#~ msgid "Path:"
-#~ msgstr "Pfad:"
-
-#~ msgid "Project website"
-#~ msgstr "Projekt-Webseite"
-
-#~ msgid ""
-#~ "Select the configurations you want to export. Use Shift or Ctrl key to "
-#~ "select more than one."
-#~ msgstr ""
-#~ "Wählen Sie hier die zu exportierenden Einstellungen aus. Verwenden Sie die "
-#~ "Umschalt- oder die Strg-Taste um mehrere Einträge gleichzeitig auszuwählen."
-
-#~ msgid "Select the configurations you want to export:"
-#~ msgstr "Zu exportierende Einstellung auswählen:"
-
-#~ msgid ""
-#~ "Select the folder you want your config to be saved in. This folder must "
-#~ "exist."
-#~ msgstr ""
-#~ "Wählen Sie den Ordner aus, in dem Ihre Einstellungen gespeichert werden "
-#~ "sollen. Dieser Ordner muss bereits vorhanden sein."
-
-#~ msgid ""
-#~ "Select the kind of files where you want your action to appear. If you "
-#~ "don't know what to choose, try selecting just 'file' which is the most "
-#~ "common choice. You can add a new scheme by clicking on the '+' button."
-#~ msgstr ""
-#~ "Wählen Sie den Dateityp aus bei der die Aktion erscheinen soll. Wenn Sie "
-#~ "sich nicht sicher sind welchen Typ Sie wählen sollen, versuchen Sie "
-#~ "einfach »Datei« was die umfassendste Wahl ist. Sie können ein weiteres "
-#~ "Schema hinzufügen, indem Sie auf »+« klicken"
-
-#~ msgid ""
-#~ "The command that will be launched by selecting the action in Nautilus "
-#~ "popup menu."
-#~ msgstr ""
-#~ "Der Befehl, der ausgeführt wird, wenn die Aktion im Nautilus-Kontextmenü "
-#~ "ausgewählt wird."
-
-#~ msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-#~ msgstr ""
-#~ "Diese Software ist lizenziert unter der GNU General Public License (GPL)"
-
-#~ msgid "Tooltip:"
-#~ msgstr "Minihilfe:"
-
-#~ msgid "_Browse"
-#~ msgstr "_Durchsuchen"
-
-#~ msgid "_Legend"
-#~ msgstr "_Legende"
-
-#~ msgid "Set it if the selection can contain folders"
-#~ msgstr "Gesetzt, falls die Auswahl Ordner enthalten darf"
-
-#~ msgid ""
-#~ "The path of the file where to save the new GConf schema definition file "
-#~ "[default: /tmp/config_UUID.schemas]"
-#~ msgstr ""
-#~ "Der Pfad der Datei in der die neuen GConf-Schema-Definitionen gespeichert "
-#~ "werden [Standard: /tmp/config_UUID.schemas]"
-
-#~ msgid "Creating %s..."
-#~ msgstr "%s wird erstellt …"
-
-#~ msgid " Failed: Can't create %s: %s\n"
-#~ msgstr " Gescheitert: %s konnte nicht erstellt werden: %s\n"
-
-#~ msgid "  OK, saved in %s\n"
-#~ msgstr "  Abgeschlossen, gespeichert in %s\n"
-
-#~ msgid " Failed: %s\n"
-#~ msgstr "  Gescheitert: %s\n"
-
-#~ msgid "Can't write data in file %s\n"
-#~ msgstr "Daten konnten nicht in Datei »%s« geschrieben werden\n"
-
-#~ msgid "Can't open file %s for writing\n"
-#~ msgstr "Datei »%s« konnte nicht zum Schreiben geöffnet werden\n"
-
-#~ msgid "Can't remove the old profile '%s'"
-#~ msgstr "Altes Profil »%s« kann nicht entfernt werden"
-
-#~ msgid "Can't find profile named '%s'"
-#~ msgstr "Profil mit Namen »%s« kann nicht gefunden werden"
-
-#~ msgid "Can't paste action's profile '%s' !"
-#~ msgstr "Das Profil der Aktion »%s« kann nicht eingefügt werden!"
+msgstr ""
+"Das GCONF-Schema von Nautilus-Aktionen auf die Standardausgabe ausgeben."
+
+#~ msgid "Import mode"
+#~ msgstr "Importmodus"
