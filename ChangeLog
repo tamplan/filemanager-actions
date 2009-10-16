@@ -1,3 +1,14 @@
+2009-10-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-iactions-list.c (nact_iactions_list_fill):
+	Only count items in edition mode.
+
+	* src/nact/nact-tree-model.c
+	(nact_tree_model_fill): Only check status in edition mode.
+	(fill_tree_store): Add a ref when the action is embedded in a menu.
+
+	* src/runtime/na-object-item.c (object_ref): Fix comment.
+
 2009-10-15 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/runtime/na-object-item.c (object_are_equal):

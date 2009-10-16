@@ -677,7 +677,9 @@ nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions)
 
 		for( it = items ; it ; it = it->next ){
 			duplicate = na_object_duplicate( it->data );
-			na_object_check_status( duplicate );
+			if( !only_actions ){
+				na_object_check_status( duplicate );
+			}
 			fill_tree_store( ts_model, model->private->treeview, duplicate, only_actions, NULL );
 			na_object_unref( duplicate );
 		}
@@ -717,6 +719,11 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 				na_object_append_item( object, it->data );
 				na_object_set_parent( it->data, object );
 			}
+		/* need to add a reference count if action has a parent, because
+		 * the action will be unreffed when unreffing the menu
+		 */
+		} else if( na_object_get_parent( object )){
+			g_object_ref( object );
 		}
 	}
 
@@ -964,7 +971,6 @@ nact_tree_model_remove( NactTreeModel *model, NAObject *object )
 		store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 
 		if( search_for_object( model, GTK_TREE_MODEL( store ), object, &iter )){
-			/*parents = add_parent( parents, GTK_TREE_MODEL( store ), &iter );*/
 			parent = na_object_get_parent( object );
 			g_debug( "%s: object=%p, parent=%p", thisfn, ( void * ) object, ( void * ) parent );
 			if( parent ){
@@ -982,10 +988,11 @@ nact_tree_model_remove( NactTreeModel *model, NAObject *object )
 static void
 append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object )
 {
+	/*g_debug( "nact_tree_model_append_item: object=%p (ref_count=%d), parent=%p",
+					( void * ) object, G_OBJECT( object )->ref_count, ( void * ) parent );*/
+
 	gtk_tree_store_append( model, iter, parent );
-
 	gtk_tree_store_set( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, object, -1 );
-
 	display_item( model, treeview, iter, object );
 }
 

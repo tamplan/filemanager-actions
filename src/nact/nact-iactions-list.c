@@ -836,8 +836,11 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 		ialid->menus = 0;
 		ialid->actions = 0;
 		ialid->profiles = 0;
-		na_object_item_count_items( items, &ialid->menus, &ialid->actions, &ialid->profiles, TRUE );
-		send_list_count_updated_signal( instance, ialid );
+
+		if( !only_actions ){
+			na_object_item_count_items( items, &ialid->menus, &ialid->actions, &ialid->profiles, TRUE );
+			send_list_count_updated_signal( instance, ialid );
+		}
 
 		select_first_row( instance );
 	}
@@ -971,6 +974,7 @@ nact_iactions_list_get_selected_items( NactIActionsList *instance )
 			path = ( GtkTreePath * ) it->data;
 			gtk_tree_model_get_iter( model, &iter, path );
 			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+			/*g_debug( "nact_iactions_list_get_selected_items: object=%p", ( void * ) object );*/
 			items = g_list_prepend( items, na_object_ref( object ));
 			g_object_unref( object );
 		}
@@ -1764,6 +1768,7 @@ is_iduplicable_proxy( NactIActionsList *instance, IActionsListInstanceData *iali
 	gboolean is_proxy;
 
 	is_proxy = ( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
+	g_debug( "nact_iactions_list_is_iduplicable_proxy: is_proxy=%s", is_proxy ? "True":"False" );
 
 	return( is_proxy );
 }

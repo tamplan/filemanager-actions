@@ -968,8 +968,8 @@ object_ref( NAObject *object )
 }
 
 /*
- * if we 'dispose' ic->data during the loop, the the 'ic->next' pointer
- * is no more valid for the next iteration, so we have to keep its value
+ * if we 'dispose' ic->data during the loop, the 'ic->next' pointer will
+ * no more be valid for the next iteration, so we have to keep its value
  * before actually unref the data
  */
 static void
