@@ -570,14 +570,12 @@ get_import_mode( NactAssistantImport *window )
 	override_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ));
 	ask_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ));
 
-	if( gtk_toggle_button_get_active( no_import_button )){
-		mode = IPREFS_IMPORT_NO_IMPORT;
-	} else if( gtk_toggle_button_get_active( renumber_button )){
+	mode = IPREFS_IMPORT_NO_IMPORT;
+	if( gtk_toggle_button_get_active( renumber_button )){
 		mode = IPREFS_IMPORT_RENUMBER;
 	} else if( gtk_toggle_button_get_active( override_button )){
 		mode = IPREFS_IMPORT_OVERRIDE;
-	} else {
-		g_return_val_if_fail( gtk_toggle_button_get_active( ask_button ), 0 );
+	} else if( gtk_toggle_button_get_active( ask_button )){
 		mode = IPREFS_IMPORT_ASK;
 	}
 

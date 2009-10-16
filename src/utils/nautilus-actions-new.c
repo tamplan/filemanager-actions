@@ -39,6 +39,7 @@
 #include <runtime/na-gconf-provider.h>
 #include <runtime/na-iio-provider.h>
 
+#include <common/na-iprefs.h>
 #include <common/na-object-api.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
@@ -136,7 +137,7 @@ main( int argc, char** argv )
 		}
 
 	} else {
-		gchar *output_fname = na_xml_writer_export( action, output_dir, FORMAT_GCONFENTRY, &msg );
+		gchar *output_fname = na_xml_writer_export( action, output_dir, IPREFS_EXPORT_FORMAT_GCONF_ENTRY, &msg );
 		if( output_fname ){
 			/* i18n: Action <action_label> written to <output_filename>...*/
 			g_print( _( "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n" ), label, output_fname );

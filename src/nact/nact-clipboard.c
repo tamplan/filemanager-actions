@@ -35,6 +35,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
+#include <common/na-iprefs.h>
 #include <common/na-object-api.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
@@ -501,7 +502,7 @@ get_action_xml_buffer( const NAObject *object, GList **exported, NAObjectAction 
 	if( *action ){
 		index = g_list_index( *exported, ( gconstpointer ) *action );
 		if( index == -1 ){
-			buffer = na_xml_writer_get_xml_buffer( *action, FORMAT_GCONFENTRY );
+			buffer = na_xml_writer_get_xml_buffer( *action, IPREFS_EXPORT_FORMAT_GCONF_ENTRY );
 			*exported = g_list_prepend( *exported, ( gpointer ) *action );
 		}
 	}
@@ -545,7 +546,7 @@ export_rows( NactClipboard *clipboard, NactClipboardDndData *data )
 			buffer = get_action_xml_buffer( object, &exported, &action );
 			if( buffer ){
 
-				fname = na_xml_writer_get_output_fname( NA_OBJECT_ACTION( action ), data->folder, FORMAT_GCONFENTRY );
+				fname = na_xml_writer_get_output_fname( NA_OBJECT_ACTION( action ), data->folder, IPREFS_EXPORT_FORMAT_GCONF_ENTRY );
 				na_xml_writer_output_xml( buffer, fname );
 				g_free( fname );
 				g_free( buffer );

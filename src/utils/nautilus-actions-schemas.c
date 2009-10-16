@@ -38,6 +38,7 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
+#include <common/na-iprefs.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
 
@@ -96,7 +97,7 @@ main( int argc, char** argv )
 		}
 
 	} else {*/
-		na_xml_writer_export( NULL, NULL, FORMAT_GCONFSCHEMA, &msg );
+		na_xml_writer_export( NULL, NULL, IPREFS_EXPORT_FORMAT_GCONF_SCHEMA, &msg );
 		/*if( !msg ){
 			g_print( _( "Nautilus Actions schema succesfully written to %s.\n" ), output_fname );
 			g_free( output_fname );

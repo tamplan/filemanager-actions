@@ -35,14 +35,25 @@
 
 #include "na-iprefs.h"
 
-#define DEFAULT_IMPORT_MODE_INT			IPREFS_IMPORT_NO_IMPORT
-#define DEFAULT_IMPORT_MODE_STR			"NoImport"
+#define DEFAULT_IMPORT_MODE_INT				IPREFS_IMPORT_NO_IMPORT
+#define DEFAULT_IMPORT_MODE_STR				"NoImport"
 
 static GConfEnumStringPair import_mode_table[] = {
-	{ IPREFS_IMPORT_NO_IMPORT,			"NoImport" },
-	{ IPREFS_IMPORT_RENUMBER,			"Renumber" },
-	{ IPREFS_IMPORT_OVERRIDE,			"Override" },
-	{ IPREFS_IMPORT_ASK,				"Ask" },
+	{ IPREFS_IMPORT_NO_IMPORT,				DEFAULT_IMPORT_MODE_STR },
+	{ IPREFS_IMPORT_RENUMBER,				"Renumber" },
+	{ IPREFS_IMPORT_OVERRIDE,				"Override" },
+	{ IPREFS_IMPORT_ASK,					"Ask" },
+	{ 0, NULL }
+};
+
+#define DEFAULT_EXPORT_FORMAT_INT			IPREFS_EXPORT_FORMAT_GCONF_ENTRY
+#define DEFAULT_EXPORT_FORMAT_STR			"GConfEntry"
+
+static GConfEnumStringPair export_format_table[] = {
+	{ IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1,	"GConfSchemaV1" },
+	{ IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2,	"GConfSchemaV2" },
+	{ IPREFS_EXPORT_FORMAT_GCONF_ENTRY,		DEFAULT_EXPORT_FORMAT_STR },
+	{ IPREFS_EXPORT_FORMAT_ASK,				"Ask" },
 	{ 0, NULL }
 };
 
@@ -86,6 +97,42 @@ na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *ne
 }
 
 /**
+ * na_iprefs_get_export_format:
+ * @instance: this #NAIPrefs interface instance.
+ * @name: name of the export format key to be readen
+ *
+ * Returns: the export format currently set.
+ *
+ * Note: this function returns a suitable default value even if the key
+ * is not found in GConf preferences or no schema has been installed.
+ *
+ * Note: please take care of keeping the default value synchronized with
+ * those defined in schemas.
+ */
+gint
+na_iprefs_get_export_format( NAIPrefs *instance, const gchar *name )
+{
+	gint export_format = DEFAULT_EXPORT_FORMAT_INT;
+	gint format_int;
+	gchar *format_str;
+
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), DEFAULT_EXPORT_FORMAT_INT );
+
+	format_str = na_iprefs_read_string(
+			instance,
+			name,
+			DEFAULT_EXPORT_FORMAT_STR );
+
+	if( gconf_string_to_enum( export_format_table, format_str, &format_int )){
+		export_format = format_int;
+	}
+
+	g_free( format_str );
+
+	return( export_format );
+}
+
+/**
  * na_iprefs_get_import_mode:
  * @instance: this #NAIPrefs interface instance.
  * @name: name of the import key to be readen
@@ -122,11 +169,34 @@ na_iprefs_get_import_mode( NAIPrefs *instance, const gchar *name )
 }
 
 /**
+ * na_iprefs_set_export_format:
+ * @instance: this #NAIPrefs interface instance.
+ * @format: the new value to be written.
+ *
+ * Writes the current status of 'import/export format' to the GConf
+ * preference system.
+ */
+void
+na_iprefs_set_export_format( NAIPrefs *instance, const gchar *name, gint format )
+{
+	const gchar *format_str;
+
+	g_return_if_fail( NA_IS_IPREFS( instance ));
+
+	format_str = gconf_enum_to_string( export_format_table, format );
+
+	na_iprefs_write_string(
+			instance,
+			name,
+			format_str ? format_str : DEFAULT_EXPORT_FORMAT_STR );
+}
+
+/**
  * na_iprefs_set_import_mode:
  * @instance: this #NAIPrefs interface instance.
  * @mode: the new value to be written.
  *
- * Writes the current status of 'alphabetical order' to the GConf
+ * Writes the current status of 'import mode' to the GConf
  * preference system.
  */
 void

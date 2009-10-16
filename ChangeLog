@@ -1,5 +1,24 @@
 2009-10-16 Pierre Wieser <pwieser@trychlos.org>
 
+	Record last export format as a preference.
+
+	* src/common/na-iprefs.c:
+	* src/common/na-iprefs.h
+	(na_iprefs_get_export_format, na_iprefs_set_export_format):
+	New functions.
+
+	* src/common/na-xml-names.h:
+	Move export format constantes to src/common/na-iprefs.h.
+
+	* src/common/na-xml-writer.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-export.ui:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-clipboard.c:
+	* src/utils/nautilus-actions-new.c:
+	* src/utils/nautilus-actions-schemas.c:
+	Updated accordingly.
+
 	* src/nact/nact-iactions-list.c (nact_iactions_list_fill):
 	Only count items in edition mode.
 

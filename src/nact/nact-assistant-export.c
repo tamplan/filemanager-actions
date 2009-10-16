@@ -108,9 +108,6 @@ static gchar          *window_get_ui_filename( BaseWindow *dialog );
 static void            on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data );
 static void            on_runtime_init_dialog( NactAssistantExport *dialog, gpointer user_data );
 
-static void            assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
-static void            assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
-
 static void            assist_initial_load_intro( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_intro( NactAssistantExport *window, GtkAssistant *assistant );
 
@@ -126,17 +123,21 @@ static void            on_folder_selection_changed( GtkFileChooser *chooser, gpo
 
 static void            assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant );
-static void            on_format_toggled( GtkToggleButton *button, NactAssistantExport *window );
 static GtkWidget      *get_gconfschemav1_button( NactAssistantExport *window );
 static GtkWidget      *get_gconfschemav2_button( NactAssistantExport *window );
 static GtkWidget      *get_gconfdump_button( NactAssistantExport *window );
+static GtkWidget      *get_ask_button( NactAssistantExport *window );
+static gint            get_export_format( NactAssistantExport *window );
 
 static void            assist_initial_load_confirm( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_confirm( NactAssistantExport *window, GtkAssistant *assistant );
-static void            assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
 
 static void            assist_initial_load_exportdone( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_exportdone( NactAssistantExport *window, GtkAssistant *assistant );
+
+static void            assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
+static void            assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
+static void            assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
 static void            assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
 
 #ifdef NA_MAINTAINER_MODE
@@ -380,86 +381,6 @@ on_runtime_init_dialog( NactAssistantExport *dialog, gpointer user_data )
 	assist_runtime_init_exportdone( dialog, assistant );
 }
 
-/*
- * As of 1.11, nact_gconf_writer doesn't return any error message.
- * An error is simply indicated by returning a null filename.
- * So we provide a general error message.
- */
-static void
-assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
-{
-	static const gchar *thisfn = "nact_assistant_export_on_apply";
-	NactAssistantExport *window;
-	GList *actions, *ia;
-	gchar *msg = NULL;
-	gchar *reason = NULL;
-	gchar *tmp, *fname;
-	NAObjectAction *action;
-
-	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
-	g_assert( NACT_IS_ASSISTANT_EXPORT( wnd ));
-	window = NACT_ASSISTANT_EXPORT( wnd );
-
-	actions = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-
-	g_assert( window->private->uri && strlen( window->private->uri ));
-
-	for( ia = actions ; ia ; ia = ia->next ){
-		action = NA_OBJECT_ACTION( ia->data );
-		fname = na_xml_writer_export( action, window->private->uri, window->private->format, &msg );
-
-		if( fname && strlen( fname )){
-			window->private->fnames = g_slist_prepend( window->private->fnames, fname );
-			g_debug( "%s: fname=%s", thisfn, fname );
-
-		} else {
-			window->private->errors += 1;
-			if( msg ){
-				if( reason ){
-					tmp = g_strdup_printf( "%s\n", reason );
-					g_free( reason );
-					reason = tmp;
-				}
-				tmp = g_strdup_printf( "%s%s", reason, msg );
-				g_free( reason );
-				reason = tmp;
-				g_free( msg );
-			}
-		}
-	}
-
-	na_object_free_items_list( actions );
-
-	if( window->private->errors ){
-		if( !reason ){
-			reason = g_strdup( _( "You may not have writing permissions on selected folder." ));
-		}
-		window->private->reason = reason;
-	}
-}
-
-static void
-assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page )
-{
-	/*static const gchar *thisfn = "nact_assistant_export_on_prepare";
-	g_debug( "%s: window=%p, assistant=%p, page=%p", thisfn, window, assistant, page );*/
-
-	GtkAssistantPageType type = gtk_assistant_get_page_type( assistant, page );
-
-	switch( type ){
-		case GTK_ASSISTANT_PAGE_CONFIRM:
-			assist_prepare_confirm( NACT_ASSISTANT_EXPORT( window ), assistant, page );
-			break;
-
-		case GTK_ASSISTANT_PAGE_SUMMARY:
-			assist_prepare_exportdone( NACT_ASSISTANT_EXPORT( window ), assistant, page );
-			break;
-
-		default:
-			break;
-	}
-}
-
 static void
 assist_initial_load_intro( NactAssistantExport *window, GtkAssistant *assistant )
 {
@@ -640,50 +561,41 @@ assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant
 static void
 assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant )
 {
-	GtkWidget *button;
+	GtkToggleButton *button;
 	GtkWidget *content;
+	NactApplication *application;
+	NAPivot *pivot;
+	gint format;
 
-	button = get_gconfschemav1_button( window );
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( button ),
-			"toggled",
-			G_CALLBACK( on_format_toggled ));
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+	format = na_iprefs_get_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT );
 
-	button = get_gconfschemav2_button( window );
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( button ),
-			"toggled",
-			G_CALLBACK( on_format_toggled ));
+	switch( format ){
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
+			button = GTK_TOGGLE_BUTTON( get_gconfschemav1_button( window ));
+			gtk_toggle_button_set_active( button, TRUE );
+			break;
 
-	button = get_gconfdump_button( window );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
-	window->private->format = FORMAT_GCONFENTRY;
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( button ),
-			"toggled",
-			G_CALLBACK( on_format_toggled ));
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
+			button = GTK_TOGGLE_BUTTON( get_gconfschemav2_button( window ));
+			gtk_toggle_button_set_active( button, TRUE );
+			break;
+
+		case IPREFS_EXPORT_FORMAT_ASK:
+			button = GTK_TOGGLE_BUTTON( get_ask_button( window ));
+			gtk_toggle_button_set_active( button, TRUE );
+			break;
+
+		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
+		default:
+			button = GTK_TOGGLE_BUTTON( get_gconfdump_button( window ));
+			gtk_toggle_button_set_active( button, TRUE );
+			break;
+	}
 
 	content = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
 	gtk_assistant_set_page_complete( assistant, content, TRUE );
-}
-
-static void
-on_format_toggled( GtkToggleButton *button, NactAssistantExport *window )
-{
-	g_assert( NACT_IS_ASSISTANT_EXPORT( window ));
-
-	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_gconfschemav1_button( window )))){
-		NACT_ASSISTANT_EXPORT( window )->private->format = FORMAT_GCONFSCHEMAFILE_V1;
-
-	} else if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_gconfschemav2_button( window )))){
-		NACT_ASSISTANT_EXPORT( window )->private->format = FORMAT_GCONFSCHEMAFILE_V2;
-
-	} else if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( get_gconfdump_button( window )))){
-		NACT_ASSISTANT_EXPORT( window )->private->format = FORMAT_GCONFENTRY;
-	}
 }
 
 static GtkWidget *
@@ -704,6 +616,36 @@ get_gconfdump_button( NactAssistantExport *window )
 	return( base_window_get_widget( BASE_WINDOW( window ), "ExportGConfDumpButton" ));
 }
 
+static GtkWidget *
+get_ask_button( NactAssistantExport *window )
+{
+	return( base_window_get_widget( BASE_WINDOW( window ), "ExportAskButton" ));
+}
+
+static gint
+get_export_format( NactAssistantExport *window )
+{
+	GtkToggleButton *gconf_schema_v1_button;
+	GtkToggleButton *gconf_schema_v2_button;
+	GtkToggleButton *ask_button;
+	gint format;
+
+	gconf_schema_v1_button = GTK_TOGGLE_BUTTON( get_gconfschemav1_button( window ));
+	gconf_schema_v2_button = GTK_TOGGLE_BUTTON( get_gconfschemav2_button( window ));
+	ask_button = GTK_TOGGLE_BUTTON( get_ask_button( window ));
+
+	format = IPREFS_EXPORT_FORMAT_GCONF_ENTRY;
+	if( gtk_toggle_button_get_active( gconf_schema_v1_button )){
+		format = IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1;
+	} else if( gtk_toggle_button_get_active( gconf_schema_v2_button )){
+		format = IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2;
+	} else if( gtk_toggle_button_get_active( ask_button )){
+		format = IPREFS_EXPORT_FORMAT_ASK;
+	}
+
+	return( format );
+}
+
 static void
 assist_initial_load_confirm( NactAssistantExport *window, GtkAssistant *assistant )
 {
@@ -715,12 +657,50 @@ assist_runtime_init_confirm( NactAssistantExport *window, GtkAssistant *assistan
 }
 
 static void
+assist_initial_load_exportdone( NactAssistantExport *window, GtkAssistant *assistant )
+{
+}
+
+static void
+assist_runtime_init_exportdone( NactAssistantExport *window, GtkAssistant *assistant )
+{
+}
+
+static void
+assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page )
+{
+	/*static const gchar *thisfn = "nact_assistant_export_on_prepare";
+	g_debug( "%s: window=%p, assistant=%p, page=%p", thisfn, window, assistant, page );*/
+
+	GtkAssistantPageType type = gtk_assistant_get_page_type( assistant, page );
+
+	switch( type ){
+		case GTK_ASSISTANT_PAGE_CONFIRM:
+			assist_prepare_confirm( NACT_ASSISTANT_EXPORT( window ), assistant, page );
+			break;
+
+		case GTK_ASSISTANT_PAGE_SUMMARY:
+			assist_prepare_exportdone( NACT_ASSISTANT_EXPORT( window ), assistant, page );
+			break;
+
+		default:
+			break;
+	}
+}
+
+static void
 assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
 {
 	static const gchar *thisfn = "nact_assistant_export_prepare_confirm";
 	gchar *text, *tmp, *text2;
 	gchar *label1, *label2;
 	GList *actions, *ia;
+	NactApplication *application;
+	NAPivot *pivot;
+	gint format;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -756,25 +736,34 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 
 	label1 = NULL;
 	label2 = NULL;
-	switch( window->private->format ){
-		case FORMAT_GCONFSCHEMAFILE_V1:
+	format = get_export_format( window );
+	switch( format ){
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( get_gconfschemav1_button( window ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "ExportSchemaV1Label"))));
 			break;
 
-		case FORMAT_GCONFSCHEMAFILE_V2:
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( get_gconfschemav2_button( window ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "ExportSchemaV2Label"))));
 			break;
 
-		case FORMAT_GCONFENTRY:
+		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( get_gconfdump_button( window ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "ExportGConfDumpLabel"))));
 			break;
 
+		case IPREFS_EXPORT_FORMAT_ASK:
+			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( get_ask_button( window ))));
+			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "ExportAskLabel"))));
+			break;
+
 		default:
+			g_return_if_reached();
 			break;
 	}
+	na_iprefs_set_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT, format );
+	window->private->format = format;
 
 	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label1, label2 );
 	g_free( label2 );
@@ -788,14 +777,62 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
 
+/*
+ * As of 1.11, nact_gconf_writer doesn't return any error message.
+ * An error is simply indicated by returning a null filename.
+ * So we provide a general error message.
+ */
 static void
-assist_initial_load_exportdone( NactAssistantExport *window, GtkAssistant *assistant )
+assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 {
-}
+	static const gchar *thisfn = "nact_assistant_export_on_apply";
+	NactAssistantExport *window;
+	GList *actions, *ia;
+	gchar *msg = NULL;
+	gchar *reason = NULL;
+	gchar *tmp, *fname;
+	NAObjectAction *action;
 
-static void
-assist_runtime_init_exportdone( NactAssistantExport *window, GtkAssistant *assistant )
-{
+	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
+	g_assert( NACT_IS_ASSISTANT_EXPORT( wnd ));
+	window = NACT_ASSISTANT_EXPORT( wnd );
+
+	actions = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+
+	g_assert( window->private->uri && strlen( window->private->uri ));
+
+	for( ia = actions ; ia ; ia = ia->next ){
+		action = NA_OBJECT_ACTION( ia->data );
+		fname = na_xml_writer_export( action, window->private->uri, window->private->format, &msg );
+
+		if( fname && strlen( fname )){
+			window->private->fnames = g_slist_prepend( window->private->fnames, fname );
+			g_debug( "%s: fname=%s", thisfn, fname );
+
+		} else {
+			window->private->errors += 1;
+			if( msg ){
+				if( reason ){
+					tmp = g_strdup_printf( "%s\n", reason );
+					g_free( reason );
+					reason = tmp;
+				}
+				tmp = g_strdup_printf( "%s%s", reason, msg );
+				g_free( reason );
+				reason = tmp;
+				g_free( msg );
+			}
+		}
+	}
+
+	na_object_free_items_list( actions );
+
+	if( window->private->errors ){
+		if( !reason ){
+			reason = g_strdup( _( "You may not have writing permissions on selected folder." ));
+		}
+		window->private->reason = reason;
+	}
 }
 
 static void

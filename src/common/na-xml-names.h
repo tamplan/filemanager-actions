@@ -35,28 +35,8 @@
 
 G_BEGIN_DECLS
 
-/* import/export formats
- *
- * FORMAT_GCONFSCHEMAFILE_V1: a schema with owner, short and long
- * descriptions ; each action has its own schema addressed by the uuid
- * (historical format up to v1.10.x serie)
- *
- * FORMAT_GCONFSCHEMAFILE_V2: the lightest schema still compatible
- * with gconftool-2 --install-schema-file (no owner, no short nor long
- * descriptions) - introduced in v 1.11
- *
- * FORMAT_GCONFENTRY: not a schema, but a dump of the GConf entry
- * introduced in v 1.11
- */
-enum {
-	FORMAT_GCONFSCHEMAFILE_V1 = 1,
-	FORMAT_GCONFSCHEMAFILE_V2,
-	FORMAT_GCONFENTRY,
-	FORMAT_GCONFSCHEMA
-};
-
 /* XML element names (GConf schema)
- * used in FORMAT_GCONFSCHEMAFILE_V1 and FORMAT_GCONFSCHEMAFILE_V2
+ * used in FORMAT_GCONF_SCHEMA_V1 and FORMAT_GCONF_SCHEMA_V2
  */
 #define NACT_GCONF_SCHEMA_ROOT				"gconfschemafile"
 #define NACT_GCONF_SCHEMA_LIST				"schemalist"
@@ -77,14 +57,14 @@ enum {
  * Starting with 1.11, we have introduced a lighter export schema
  * (mainly without owner and short and long descriptions)
  *
- * only used in FORMAT_GCONFSCHEMAFILE_V1
+ * only used in FORMAT_GCONF_SCHEMA_V1
  */
 #define NACT_GCONF_SCHEMA_OWNER				"owner"
 #define NACT_GCONF_SCHEMA_SHORT				"short"
 #define NACT_GCONF_SCHEMA_LONG				"long"
 
 /* XML element names (GConf dump)
- * used in FORMAT_GCONFENTRY
+ * used in FORMAT_GCONF_ENTRY
  */
 #define NACT_GCONF_DUMP_ROOT				"gconfentryfile"
 #define NACT_GCONF_DUMP_ENTRYLIST			"entrylist"

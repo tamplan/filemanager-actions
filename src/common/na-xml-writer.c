@@ -35,7 +35,9 @@
 #include <gio/gio.h>
 #include <libxml/tree.h>
 
-#include <runtime/na-object-api.h>
+#include <common/na-iprefs.h>
+#include <common/na-object-api.h>
+
 #include <runtime/na-gconf-provider-keys.h>
 
 #include "na-utils.h"
@@ -282,7 +284,7 @@ xml_writer_new( const gchar *uuid )
  * na_xml_writer_export:
  * @action: the #NAObjectAction to be exported.
  * Can be NULL when exporting schemas ; in this case, format must be
- * FORMAT_GCONFSCHEMA.
+ * FORMAT_GCONF_SCHEMA.
  * @folder: the directoy where to write the output XML file.
  * If NULL, the output will be directed to stdout.
  * @format: the export format.
@@ -300,28 +302,28 @@ na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint fo
 	gchar *xml_buffer;
 
 	g_debug( "%s: action=%p, format=%u", thisfn, ( void * ) action, format );
-	g_return_val_if_fail( action || format == FORMAT_GCONFSCHEMA, NULL );
+	g_return_val_if_fail( action || format == IPREFS_EXPORT_FORMAT_GCONF_SCHEMA, NULL );
 
 	switch( format ){
-		case FORMAT_GCONFSCHEMAFILE_V1:
-		case FORMAT_GCONFSCHEMAFILE_V2:
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
 			filename = na_xml_writer_get_output_fname( action, folder, format );
 			break;
 
 		/* this is the format used by nautilus-actions-new utility,
 		 * and that's why this option takes care of a NULL folder
 		 */
-		case FORMAT_GCONFENTRY:
+		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
 			if( folder ){
 				filename = na_xml_writer_get_output_fname( action, folder, format );
 			}
 			break;
 
-		/* this is the format used by nautilus-actions-install-schema
+		/* this is the format used by nautilus-actions-schemas
 		 * utility, and that's why this option takes care of a NULL
 		 * folder, or an output filename
 		 */
-		case FORMAT_GCONFSCHEMA:
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA:
 			if( folder ){
 				filename = g_strdup( folder );
 			}
@@ -376,17 +378,17 @@ na_xml_writer_get_output_fname( const NAObjectAction *action, const gchar *folde
 	uuid = na_object_get_id( action );
 
 	switch( format ){
-		case FORMAT_GCONFSCHEMAFILE_V1:
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
 			canonical_fname = g_strdup_printf( "config_%s", uuid );
 			canonical_ext = g_strdup( "schemas" );
 			break;
 
-		case FORMAT_GCONFSCHEMAFILE_V2:
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
 			canonical_fname = g_strdup_printf( "config-%s", uuid );
 			canonical_ext = g_strdup( "schema" );
 			break;
 
-		case FORMAT_GCONFENTRY:
+		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
 			canonical_fname = g_strdup_printf( "action-%s", uuid );
 			canonical_ext = g_strdup( "xml" );
 			break;
@@ -436,23 +438,23 @@ na_xml_writer_get_xml_buffer( const NAObjectAction *action, gint format )
 	int textlen;
 	gchar *buffer;
 
-	g_return_val_if_fail( action || format == FORMAT_GCONFSCHEMA, NULL );
+	g_return_val_if_fail( action || format == IPREFS_EXPORT_FORMAT_GCONF_SCHEMA, NULL );
 
 	uuid = action ? na_object_get_id( action ) : NULL;
 	writer = xml_writer_new( uuid );
 	g_free( uuid );
 
 	switch( format ){
-		case FORMAT_GCONFSCHEMAFILE_V1:
-		case FORMAT_GCONFSCHEMAFILE_V2:
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
 			doc = create_xml_schema( writer, format, action );
 			break;
 
-		case FORMAT_GCONFENTRY:
+		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
 			doc = create_xml_dump( writer, format, action );
 			break;
 
-		case FORMAT_GCONFSCHEMA:
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA:
 			doc = create_gconf_schema( writer );
 			break;
 	}
@@ -688,7 +690,7 @@ create_schema_entry( NAXMLWriter *writer,
 	/* fill up the historical format if asked for
 	 * add owner and short and long descriptions
 	 */
-	if( format == FORMAT_GCONFSCHEMAFILE_V1 ){
+	if( format == IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1 ){
 		xmlNewChild( schema_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
 
 		xmlNewChild( locale_node, NULL, BAD_CAST( NACT_GCONF_SCHEMA_SHORT ), BAD_CAST( short_desc ));

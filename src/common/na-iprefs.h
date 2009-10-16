@@ -47,6 +47,7 @@ G_BEGIN_DECLS
 
 /* GConf Preference keys managed by IPrefs interface
  */
+#define IPREFS_EXPORT_FORMAT				"export-format"
 #define IPREFS_IMPORT_ACTIONS_IMPORT_MODE	"import-mode"
 #define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
 
@@ -59,14 +60,40 @@ enum {
 	IPREFS_IMPORT_ASK
 };
 
+/* import/export formats
+ *
+ * FORMAT_GCONF_SCHEMA_V1: a schema with owner, short and long
+ * descriptions ; each action has its own schema addressed by the uuid
+ * (historical format up to v1.10.x serie)
+ *
+ * FORMAT_GCONF_SCHEMA_V2: the lightest schema still compatible
+ * with gconftool-2 --install-schema-file (no owner, no short nor long
+ * descriptions) - introduced in v 1.11
+ *
+ * FORMAT_GCONF_SCHEMA: exports a full schema, not an action
+ *
+ * FORMAT_GCONF_ENTRY: not a schema, but a dump of the GConf entry
+ * introduced in v 1.11
+ */
+enum {
+	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1 = 1,
+	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2,
+	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA,
+	IPREFS_EXPORT_FORMAT_GCONF_ENTRY,
+	IPREFS_EXPORT_FORMAT_ASK
+};
+
 #define IPREFS_RELABEL_MENUS				"iprefs-relabel-menus"
 #define IPREFS_RELABEL_ACTIONS				"iprefs-relabel-actions"
 #define IPREFS_RELABEL_PROFILES				"iprefs-relabel-profiles"
 
-void     na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key );
+void na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key );
 
-gint     na_iprefs_get_import_mode( NAIPrefs *instance, const gchar *pref );
-void     na_iprefs_set_import_mode( NAIPrefs *instance, const gchar *pref, gint mode );
+gint na_iprefs_get_export_format( NAIPrefs *instance, const gchar *pref );
+gint na_iprefs_get_import_mode( NAIPrefs *instance, const gchar *pref );
+
+void na_iprefs_set_export_format( NAIPrefs *instance, const gchar *pref, gint format );
+void na_iprefs_set_import_mode( NAIPrefs *instance, const gchar *pref, gint mode );
 
 G_END_DECLS
 
