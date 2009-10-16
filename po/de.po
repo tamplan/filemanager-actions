@@ -1273,9 +1273,8 @@ msgstr "Ungültige UUID %s wurde in Zeile %d gefunden."
 
 #: ../src/nact/nact-xml-reader.c:126
 #, c-format
-#| msgid "Already existing action (UUID: %s) at line %d."
 msgid "Already existing action (UUID: %s)."
-msgstr "Aktion existiert bereits (UUID: %s) in Zeile %d."
+msgstr "Aktion existiert bereits (UUID: %s)."
 
 #: ../src/nact/nact-xml-reader.c:127
 #, c-format
