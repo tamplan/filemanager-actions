@@ -295,7 +295,7 @@ xml_writer_new( const gchar *uuid )
  * Returns: the written filename, or NULL if written to stdout.
  */
 gchar *
-na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint format, gchar **msg )
+na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint format, GSList **msg )
 {
 	static const gchar *thisfn = "na_xml_writer_export";
 	gchar *filename = NULL;

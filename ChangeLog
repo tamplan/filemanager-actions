@@ -1,5 +1,12 @@
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-xml-writer.c:
+	* src/common/na-xml-writer.h (na_xml_writer_export):
+	Now returns messages as a GSList.
+
+	* src/nact/nact-assistant-export.c (assist_prepare_exportdone):
+	Enhance sumary page.
+
 	* src/common/na-utils.c:
 	* src/common/na-utils.h (na_utils_prefix_strings): New function.
 

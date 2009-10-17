@@ -41,6 +41,7 @@
 #include <common/na-iprefs.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
+#include <common/na-utils.h>
 
 /*static gchar     *output_fname = NULL;
 static gboolean   output_gconf = FALSE;*/
@@ -66,7 +67,8 @@ main( int argc, char** argv )
 	GOptionContext *context;
 	gchar *help;
 	GError *error = NULL;
-	gchar *msg = NULL;
+	GSList *msg = NULL;
+	GSList *im;
 
 	g_type_init();
 
@@ -105,8 +107,10 @@ main( int argc, char** argv )
 	/*}*/
 
 	if( msg ){
-		g_printerr( "%s\n", msg );
-		g_free( msg );
+		for( im = msg ; im ; im = im->next ){
+			g_printerr( "%s\n", ( gchar * ) im->data );
+		}
+		na_utils_free_string_list( msg );
 		status = EXIT_FAILURE;
 	}
 

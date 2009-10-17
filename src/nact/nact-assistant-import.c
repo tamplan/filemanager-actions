@@ -713,7 +713,6 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 
 	/* i18n: result of the import assistant */
 	text = g_strdup( _( "Selected files have been proceeded :" ));
-
 	tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
 	g_free( text );
 	text = tmp;

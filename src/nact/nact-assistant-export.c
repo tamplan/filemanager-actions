@@ -81,12 +81,18 @@ struct NactAssistantExportClassPrivate {
 /* private instance data
  */
 struct NactAssistantExportPrivate {
-	gboolean        dispose_has_run;
-	gchar          *uri;
-	GSList         *fnames;
-	gint            errors;
-	gchar          *reason;
+	gboolean  dispose_has_run;
+	gchar    *uri;
+	GList    *results;
 };
+
+typedef struct {
+	NAObjectAction *action;
+	GSList         *msg;
+	gchar          *fname;
+	gint            format;
+}
+	ExportStruct;
 
 #define IPREFS_EXPORT_ACTIONS_FOLDER_URI		"export-folder-uri"
 
@@ -139,10 +145,7 @@ static void            assistant_prepare( BaseAssistant *window, GtkAssistant *a
 static void            assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
 static void            assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
 static void            assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
-
-#ifdef NA_MAINTAINER_MODE
-static void            dump( NactAssistantExport *window );
-#endif
+static void            free_results( GList *list );
 
 GType
 nact_assistant_export_get_type( void )
@@ -241,8 +244,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactAssistantExportPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->fnames = NULL;
-	self->private->errors = 0;
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -288,9 +289,7 @@ instance_finalize( GObject *window )
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 	self = NACT_ASSISTANT_EXPORT( window );
 
-	g_free( self->private->uri );
-	na_utils_free_string_list( self->private->fnames );
-	g_free( self->private->reason );
+	free_results( self->private->results );
 
 	g_free( self->private );
 
@@ -693,7 +692,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 {
 	static const gchar *thisfn = "nact_assistant_export_prepare_confirm";
 	gchar *text, *tmp, *text2;
-	gchar *label1, *label2;
+	gchar *label1, *label2, *label3;
 	GList *actions, *ia;
 	NactApplication *application;
 	NAPivot *pivot;
@@ -704,10 +703,6 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
-
-#ifdef NA_MAINTAINER_MODE
-	dump( window );
-#endif
 
 	/* i18n: this is the title of the confirm page of the export assistant */
 	text = g_strdup( _( "About to export selected actions:" ));
@@ -764,7 +759,9 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	}
 	na_iprefs_set_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT, format );
 
-	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label1, label2 );
+	label3 = na_utils_prefix_strings( "\t", label2 );
+	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label1, label3 );
+	g_free( label3 );
 	g_free( label2 );
 	g_free( label1 );
 	g_free( text );
@@ -789,11 +786,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	NactApplication *application;
 	NAPivot *pivot;
 	GList *actions, *ia;
-	gchar *msg = NULL;
-	gchar *reason = NULL;
-	gchar *tmp, *fname;
-	NAObjectAction *action;
-	gint format;
+	ExportStruct *str;
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( wnd ));
@@ -807,103 +800,86 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	g_assert( window->private->uri && strlen( window->private->uri ));
 
 	for( ia = actions ; ia ; ia = ia->next ){
-		action = NA_OBJECT_ACTION( ia->data );
-		fname = NULL;
+		str = g_new0( ExportStruct, 1 );
+		window->private->results = g_list_append( window->private->results, str );
 
-		format = na_iprefs_get_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT );
-		if( format == IPREFS_EXPORT_FORMAT_ASK ){
-			format = nact_assistant_export_ask_user( BASE_WINDOW( wnd ), action );
-			if( format == IPREFS_EXPORT_NO_EXPORT ){
-				msg = g_strdup( _( "Export canceled due to user action." ));
+		str->action = NA_OBJECT_ACTION( ia->data );
+
+		str->format = na_iprefs_get_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT );
+		if( str->format == IPREFS_EXPORT_FORMAT_ASK ){
+			str->format = nact_assistant_export_ask_user( BASE_WINDOW( wnd ), str->action );
+			if( str->format == IPREFS_EXPORT_NO_EXPORT ){
+				str->msg = g_slist_append( NULL, g_strdup( _( "Export canceled due to user action." )));
 			}
 		}
 
-		if( format != IPREFS_EXPORT_NO_EXPORT ){
-			fname = na_xml_writer_export( action, window->private->uri, format, &msg );
-		}
-
-		if( fname && strlen( fname )){
-			window->private->fnames = g_slist_prepend( window->private->fnames, fname );
-			g_debug( "%s: fname=%s", thisfn, fname );
-
-		} else {
-			window->private->errors += 1;
-			if( msg ){
-				if( reason ){
-					tmp = g_strdup_printf( "%s\n", reason );
-					g_free( reason );
-					reason = tmp;
-				}
-				tmp = g_strdup_printf( "%s%s", reason ? reason : "", msg );
-				g_free( reason );
-				reason = tmp;
-				g_free( msg );
-			}
+		if( str->format != IPREFS_EXPORT_NO_EXPORT ){
+			str->fname = na_xml_writer_export( str->action, window->private->uri, str->format, &str->msg );
 		}
 	}
 
 	na_object_free_items_list( actions );
-
-	if( window->private->errors ){
-		if( !reason ){
-			reason = g_strdup( _( "You may not have writing permissions on selected folder." ));
-		}
-		window->private->reason = reason;
-	}
 }
 
 static void
 assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
 {
 	static const gchar *thisfn = "nact_assistant_export_prepare_exportdone";
-	gchar *text, *tmp, *text2, *bname;
-	GSList *ifn;
-	GFile *file;
+	gchar *text, *tmp;
+	GList *ir;
+	ExportStruct *str;
+	gchar *label;
+	GSList *is;
+	gint errors;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
-#ifdef NA_MAINTAINER_MODE
-	dump( window );
-#endif
+	/* i18n: result of the export assistant */
+	text = g_strdup( _( "Selected actions have been proceeded :" ));
+	tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
+	g_free( text );
+	text = tmp;
 
-	if( window->private->errors ){
-		/* i18n: error message displayed in the result page of the export assistant */
-		text = g_strdup( _( "One or more errors have been detected when exporting actions." ));
-		tmp = g_strdup_printf( _( "<b>%s</b>\n\n%s" ), text, window->private->reason );
+	errors = 0;
+
+	for( ir = window->private->results ; ir ; ir = ir->next ){
+		str = ( ExportStruct * ) ir->data;
+
+		label = na_object_get_label( str->action );
+		tmp = g_strdup_printf( "%s\t%s\n", text, label );
 		g_free( text );
 		text = tmp;
+		g_free( label );
 
-	} else {
-		/* i18n: result of the export assistant */
-		text = g_strdup( _( "Selected actions have been successfully exported..." ));
-		tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
-		g_free( text );
-		text = tmp;
+		if( str->fname ){
+			/* i18n: action as been successfully exported to <filename> */
+			tmp = g_strdup_printf( "%s\t\t%s\n\t\t%s\n", text, _( "Successfully exported as" ), str->fname );
+			g_free( text );
+			text = tmp;
 
-		/* i18n: the target folder is displayed in its own line */
-		text2 = g_strdup( _( "... in folder:" ));
-		tmp = g_strdup_printf( _( "%s<b>%s</b>\n\n\t%s/\n\n" ), text, text2, window->private->uri );
-		g_free( text2 );
-		g_free( text );
-		text = tmp;
+		} else if( str->format != IPREFS_EXPORT_NO_EXPORT ){
+			errors += 1;
+		}
 
-		/* i18n: the export file for each actions is displayed in its own line */
-		text2 = g_strdup( _( "... as files:" ));
-		tmp = g_strdup_printf( _( "%s<b>%s</b>\n\n" ), text, text2 );
-		g_free( text2 );
-		g_free( text );
-		text = tmp;
-
-		for( ifn = window->private->fnames ; ifn ; ifn = ifn->next ){
-			file = g_file_new_for_uri(( gchar * ) ifn->data );
-			bname = g_file_get_basename( file );
-			tmp = g_strdup_printf( "%s\t%s\n", text, bname );
-			g_free( bname );
-			g_object_unref( file );
+		/* add messages */
+		for( is = str->msg ; is ; is = is->next ){
+			tmp = g_strdup_printf( "%s\t\t%s\n", text, ( gchar * ) is->data );
 			g_free( text );
 			text = tmp;
 		}
+
+		/* add a blank line between two actions */
+		tmp = g_strdup_printf( "%s\n", text );
+		g_free( text );
+		text = tmp;
+	}
+
+	if( errors ){
+		text = g_strdup_printf( "%s%s", text,
+				_( "You may not have write permissions on selected folder." ));
+		g_free( text );
+		text = tmp;
 	}
 
 	gtk_label_set_markup( GTK_LABEL( page ), text );
@@ -914,16 +890,17 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 	base_assistant_set_warn_on_esc( BASE_ASSISTANT( window ), FALSE );
 }
 
-#ifdef NA_MAINTAINER_MODE
 static void
-dump( NactAssistantExport *window )
+free_results( GList *list )
 {
-	static const gchar *thisfn = "nact_assistant_export_dump";
-	g_debug( "%s:          window=%p", thisfn, ( void * ) window );
-	g_debug( "%s:         private=%p", thisfn, ( void * ) window->private );
-	g_debug( "%s: dispose_has_run=%s", thisfn, window->private->dispose_has_run ? "True":"False" );
-	g_debug( "%s:             uri=%s", thisfn, window->private->uri );
-	g_debug( "%s:          errors=%d", thisfn, window->private->errors );
-	na_utils_dump_string_list( window->private->fnames );
+	GList *ir;
+	ExportStruct *str;
+
+	for( ir = list ; ir ; ir = ir->next ){
+		str = ( ExportStruct * ) ir->data;
+		g_free( str->fname );
+		na_utils_free_string_list( str->msg );
+	}
+
+	g_list_free( list );
 }
-#endif

@@ -43,6 +43,7 @@
 #include <common/na-object-api.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
+#include <common/na-utils.h>
 
 static gchar     *label           = "";
 static gchar     *tooltip         = "";
@@ -87,7 +88,7 @@ static GOptionEntry output_entries[] = {
 
 static GOptionContext *init_options( void );
 static NAObjectAction *get_action_from_cmdline( void );
-static gboolean        write_to_gconf( NAObjectAction *action, gchar **msg );
+static gboolean        write_to_gconf( NAObjectAction *action, GSList **msg );
 static void            exit_with_usage( void );
 
 int
@@ -97,7 +98,8 @@ main( int argc, char** argv )
 	GOptionContext *context;
 	GError *error = NULL;
 	NAObjectAction *action;
-	gchar *msg = NULL;
+	GSList *msg = NULL;
+	GSList *im;
 	gchar *help;
 
 	g_type_init();
@@ -146,8 +148,10 @@ main( int argc, char** argv )
 	}
 
 	if( msg ){
-		g_printerr( "%s\n", msg );
-		g_free( msg );
+		for( im = msg ; im ; im = im->next ){
+			g_printerr( "%s\n", ( gchar * ) im->data );
+		}
+		na_utils_free_string_list( msg );
 		status = EXIT_FAILURE;
 	}
 
@@ -269,16 +273,22 @@ get_action_from_cmdline( void )
  * then writes the action
  */
 static gboolean
-write_to_gconf( NAObjectAction *action, gchar **msg )
+write_to_gconf( NAObjectAction *action, GSList **msg )
 {
 	NAGConfProvider *gconf;
 	guint ret;
+	gchar *str;
 
 	gconf = na_gconf_provider_new( NULL );
 
 	na_object_set_provider( action, NA_IIO_PROVIDER( gconf ));
 
-	ret = na_iio_provider_write_item( NULL, NA_OBJECT( action ), msg );
+	str = NULL;
+	ret = na_iio_provider_write_item( NULL, NA_OBJECT( action ), &str );
+	if( str ){
+		*msg = g_slist_append( *msg, str );
+		g_free( str );
+	}
 
 	return( ret == NA_IIO_PROVIDER_WRITE_OK );
 }
