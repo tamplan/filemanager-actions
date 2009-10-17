@@ -624,10 +624,11 @@ nact_iactions_list_dispose( NactIActionsList *instance )
 
 		treeview = get_actions_list_treeview( instance );
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+		ialid = get_instance_data( instance );
+		ialid->selection_changed_send_allowed = FALSE;
 
 		nact_tree_model_dispose( model );
 
-		ialid = get_instance_data( instance );
 		g_free( ialid );
 	}
 }

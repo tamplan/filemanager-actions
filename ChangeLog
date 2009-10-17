@@ -1,10 +1,15 @@
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
 	Make clipboard have an access to preferences.
+	Let the user be asked for the export format in drag and drop operations.
 
 	* src/nact/nact-clipboard.c:
 	* src/nact/nact-clipboard.h (nact_clipboard_new):
 	Now pass the BaseWindow as an argument.
+
+	* src/nact/nact-clipboard.c
+	(nact_clipboard_dnd_get_text, nact_clipboard_dnd_drag_end):
+	Ask the user if needed.
 
 	* src/nact/nact-main-window.c:
 	* src/nact/nact-tree-model.c: Updated accordingly.

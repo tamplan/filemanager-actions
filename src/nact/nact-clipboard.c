@@ -35,12 +35,16 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
+#include <runtime/na-pivot.h>
+
 #include <common/na-iprefs.h>
 #include <common/na-object-api.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
 #include <common/na-utils.h>
 
+#include "nact-application.h"
+#include "nact-assistant-export-ask.h"
 #include "nact-tree-model.h"
 #include "nact-clipboard.h"
 
@@ -54,6 +58,7 @@ struct NactClipboardClassPrivate {
  */
 struct NactClipboardPrivate {
 	gboolean      dispose_has_run;
+	BaseWindow   *window;
 	GtkClipboard *dnd;
 	GtkClipboard *primary;
 	gboolean      primary_got;
@@ -109,8 +114,8 @@ static void   instance_finalize( GObject *application );
 
 static void   get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
 static void   clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *data );
-static gchar *get_action_xml_buffer( const NAObject *object, GList **exported, NAObjectAction **action );
-static void   export_rows( NactClipboard *clipboard, NactClipboardDndData *data );
+static gchar *export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder );
+static gchar *export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported );
 
 static void   get_from_primary_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
 static void   clear_primary_clipboard_callback( GtkClipboard *clipboard, NactClipboardPrimaryData *data );
@@ -241,7 +246,11 @@ nact_clipboard_new( BaseWindow *window )
 {
 	NactClipboard *clipboard;
 
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
 	clipboard = g_object_new( NACT_CLIPBOARD_TYPE, NULL );
+
+	clipboard->private->window = window;
 
 	return( clipboard );
 }
@@ -361,57 +370,17 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
 gchar *
 nact_clipboard_dnd_get_text( NactClipboard *clipboard, GList *rows )
 {
-	GtkTreeModel *model;
-	GtkTreePath *path;
-	GtkTreeIter iter;
-	NAObject *object;
-	NAObjectAction *action;
-	GList *it;
-	GList *exported;
-	GString *data;
-	gchar *chunk;
+	gchar *buffer;
 
 	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
-	g_return_val_if_fail( rows && g_list_length( rows ), NULL );
 
-	data = g_string_new( "" );
+	buffer = NULL;
 
 	if( !clipboard->private->dispose_has_run ){
-
-		exported = NULL;
-		model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) rows->data );
-
-		for( it = rows ; it ; it = it->next ){
-
-			path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
-			if( path ){
-				gtk_tree_model_get_iter( model, &iter, path );
-				gtk_tree_path_free( path );
-
-				gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-				chunk = NULL;
-
-				if( NA_IS_OBJECT_ACTION( object )){
-					chunk = get_action_xml_buffer( object, &exported, &action );
-
-				} else if( NA_IS_OBJECT_PROFILE( object )){
-					chunk = get_action_xml_buffer( object, &exported, &action );
-				}
-
-				if( chunk ){
-					g_assert( strlen( chunk ));
-					data = g_string_append( data, chunk );
-					g_free( chunk );
-				}
-
-				g_object_unref( object );
-			}
-		}
-
-		g_list_free( exported );
+		buffer = export_rows( clipboard, rows, NULL );
 	}
 
-	return( g_string_free( data, FALSE ));
+	return( buffer );
 }
 
 /**
@@ -437,7 +406,7 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 
 			data = ( NactClipboardDndData * ) selection->data;
 			if( data->target == NACT_XCHANGE_FORMAT_XDS ){
-				export_rows( clipboard, data );
+				export_rows( clipboard, data->rows, data->folder );
 			}
 		}
 	}
@@ -483,80 +452,100 @@ clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *dat
 }
 
 static gchar *
-get_action_xml_buffer( const NAObject *object, GList **exported, NAObjectAction **action )
+export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 {
-	gchar *buffer = NULL;
-	gint index;
-
-	g_return_val_if_fail( action, NULL );
-
-	*action = NULL;
-
-	if( NA_IS_OBJECT_ACTION( object )){
-		*action = NA_OBJECT_ACTION( object );
-	}
-	if( NA_IS_OBJECT_PROFILE( object )){
-		*action = NA_OBJECT_ACTION( na_object_get_parent( NA_OBJECT_PROFILE( object )));
-	}
-
-	if( *action ){
-		index = g_list_index( *exported, ( gconstpointer ) *action );
-		if( index == -1 ){
-			buffer = na_xml_writer_get_xml_buffer( *action, IPREFS_EXPORT_FORMAT_GCONF_ENTRY );
-			*exported = g_list_prepend( *exported, ( gpointer ) *action );
-		}
-	}
-
-	return( buffer );
-}
-
-/*
- * Exports selected actions.
- *
- * This is called when we drop or paste a selection onto an application
- * willing to deal with XdndDirectSave (XDS) protocol.
- *
- * Selected items may include menus, actions and profiles.
- * For now, we only exports actions as XML files.
- */
-static void
-export_rows( NactClipboard *clipboard, NactClipboardDndData *data )
-{
+	GString *data;
 	GtkTreeModel *model;
+	GList *exported, *irow;
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	NAObject *object;
-	NAObjectAction *action;
-	GList *it;
-	GList *exported;
 	gchar *buffer;
-	gchar *fname;
 
+	buffer = NULL;
 	exported = NULL;
-	model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) data->rows->data );
+	data = g_string_new( "" );
+	model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) rows->data );
 
-	for( it = data->rows ; it ; it = it->next ){
-
-		path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
+	for( irow = rows ; irow ; irow = irow->next ){
+		path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) irow->data );
 		if( path ){
 			gtk_tree_model_get_iter( model, &iter, path );
 			gtk_tree_path_free( path );
 			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-
-			buffer = get_action_xml_buffer( object, &exported, &action );
-			if( buffer ){
-
-				fname = na_xml_writer_get_output_fname( NA_OBJECT_ACTION( action ), data->folder, IPREFS_EXPORT_FORMAT_GCONF_ENTRY );
-				na_xml_writer_output_xml( buffer, fname );
-				g_free( fname );
+			buffer = export_row_object( clipboard, object, dest_folder, &exported );
+			if( buffer && strlen( buffer )){
+				data = g_string_append( data, buffer );
 				g_free( buffer );
 			}
-
 			g_object_unref( object );
 		}
 	}
 
 	g_list_free( exported );
+	return( g_string_free( data, FALSE ));
+}
+
+static gchar *
+export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported )
+{
+	GList *subitems, *isub;
+	NAObjectAction *action;
+	gint index;
+	GString *data;
+	gchar *buffer;
+	NactApplication *application;
+	NAPivot *pivot;
+	gint format;
+	gchar *fname;
+
+	if( NA_IS_OBJECT_MENU( object )){
+		subitems = na_object_get_items_list( object );
+		data = g_string_new( "" );
+
+		for( isub = subitems ; isub ; isub = isub->next ){
+			buffer = export_row_object( clipboard, isub->data, dest_folder, exported );
+			if( buffer && strlen( buffer )){
+				data = g_string_append( data, buffer );
+				g_free( buffer );
+			}
+		}
+
+		return( g_string_free( data, FALSE ));
+	}
+
+	buffer = NULL;
+	action = ( NAObjectAction * ) object;
+	if( NA_IS_OBJECT_PROFILE( object )){
+		action = NA_OBJECT_ACTION( na_object_get_parent( object ));
+	}
+
+	index = g_list_index( *exported, ( gconstpointer ) action );
+	if( index == -1 ){
+		*exported = g_list_prepend( *exported, ( gpointer ) action );
+
+		application = NACT_APPLICATION( base_window_get_application( clipboard->private->window ));
+		pivot = nact_application_get_pivot( application );
+		format = na_iprefs_get_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT );
+
+		if( format == IPREFS_EXPORT_FORMAT_ASK ){
+			format = nact_assistant_export_ask_user( clipboard->private->window, action );
+		}
+
+		if( format != IPREFS_EXPORT_NO_EXPORT ){
+			buffer = na_xml_writer_get_xml_buffer( action, format );
+
+			if( buffer && dest_folder ){
+				fname = na_xml_writer_get_output_fname( action, dest_folder, format );
+				na_xml_writer_output_xml( buffer, fname );
+				g_free( fname );
+				g_free( buffer );
+				buffer = NULL;
+			}
+		}
+	}
+
+	return( buffer );
 }
 
 /**
