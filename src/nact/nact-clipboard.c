@@ -237,7 +237,7 @@ instance_finalize( GObject *window )
  * Returns: a new #NactClipboard object.
  */
 NactClipboard *
-nact_clipboard_new( void )
+nact_clipboard_new( BaseWindow *window )
 {
 	NactClipboard *clipboard;
 

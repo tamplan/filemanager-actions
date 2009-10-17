@@ -403,7 +403,7 @@ tree_model_new( BaseWindow *window, GtkTreeView *treeview )
 
 	model->private->window = window;
 	model->private->treeview = treeview;
-	model->private->clipboard = nact_clipboard_new();
+	model->private->clipboard = nact_clipboard_new( window );
 
 	return( model );
 }

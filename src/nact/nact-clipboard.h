@@ -43,6 +43,8 @@
 
 #include <gtk/gtk.h>
 
+#include "base-window.h"
+
 G_BEGIN_DECLS
 
 #define NACT_CLIPBOARD_TYPE					( nact_clipboard_get_type())
@@ -87,7 +89,7 @@ enum {
 
 GType          nact_clipboard_get_type( void );
 
-NactClipboard *nact_clipboard_new( void );
+NactClipboard *nact_clipboard_new( BaseWindow *window );
 
 void           nact_clipboard_dnd_set( NactClipboard *clipboard, guint target, GList *rows, const gchar *folder, gboolean copy );
 GList         *nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy );

@@ -894,8 +894,6 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 
 	if( !window->private->dispose_has_run ){
 
-		window->private->clipboard = nact_clipboard_new();
-
 		pos = base_iprefs_get_int( BASE_WINDOW( window ), "main-paned" );
 		if( pos ){
 			pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
@@ -925,6 +923,8 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
+
+		window->private->clipboard = nact_clipboard_new( BASE_WINDOW( window ));
 
 		base_window_signal_connect(
 				BASE_WINDOW( window ),

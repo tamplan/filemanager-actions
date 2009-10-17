@@ -1,3 +1,14 @@
+2009-10-17 Pierre Wieser <pwieser@trychlos.org>
+
+	Make clipboard have an access to preferences.
+
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-clipboard.h (nact_clipboard_new):
+	Now pass the BaseWindow as an argument.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-tree-model.c: Updated accordingly.
+
 2009-10-16 Pierre Wieser <pwieser@trychlos.org>
 
 	Let the user be asked when exporting actions.
