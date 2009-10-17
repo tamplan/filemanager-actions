@@ -758,6 +758,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	base_assistant_set_warn_on_cancel( BASE_ASSISTANT( window ), FALSE );
+	base_assistant_set_warn_on_esc( BASE_ASSISTANT( window ), FALSE );
 }
 
 static void
