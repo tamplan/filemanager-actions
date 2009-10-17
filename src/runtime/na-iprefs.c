@@ -252,7 +252,7 @@ na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
  * na_iprefs_should_add_about_item:
  * @instance: this #NAIPrefs interface instance.
  *
- * Returns: #TRUE if an "About Nautilus Actions" item may be added to
+ * Returns: #TRUE if an "About Nautilus Actions" item should be added to
  * the first level of Nautilus context submenus (if any), #FALSE else.
  *
  * Note: this function returns a suitable default value if the key is
@@ -291,6 +291,52 @@ na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled )
 	if( st_initialized && !st_finalized ){
 
 		na_iprefs_write_bool( instance, IPREFS_ADD_ABOUT_ITEM, enabled );
+	}
+}
+
+/**
+ * na_iprefs_should_create_root_menu:
+ * @instance: this #NAIPrefs interface instance.
+ *
+ * Returns: #TRUE if a root submenu should be created in the Nautilus
+ * context menus, #FALSE else.
+ *
+ * Note: this function returns a suitable default value if the key is
+ * not found in GConf preferences.
+ *
+ * Note: please take care of keeping the default value synchronized with
+ * those defined in schemas.
+ */
+gboolean
+na_iprefs_should_create_root_menu( NAIPrefs *instance )
+{
+	gboolean create = FALSE;
+
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
+
+	if( st_initialized && !st_finalized ){
+
+		create = na_iprefs_read_bool( instance, IPREFS_CREATE_ROOT_MENU, FALSE );
+	}
+
+	return( create );
+}
+
+/**
+ * na_iprefs_set_create_root_menu:
+ * @instance: this #NAIPrefs interface instance.
+ * @enabled: the new value to be written.
+ *
+ * Writes the new value to the GConf preference system.
+ */
+void
+na_iprefs_set_create_root_menu( NAIPrefs *instance, gboolean enabled )
+{
+	g_return_if_fail( NA_IS_IPREFS( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		na_iprefs_write_bool( instance, IPREFS_CREATE_ROOT_MENU, enabled );
 	}
 }
 

@@ -62,8 +62,9 @@
  *   When checked, an 'About Nautilus Actions' is displayed as the last
  *   item of the root submenu of Nautilus Actions actions.
  *
- *   It the user didn't have defined a root submenu, the plugin
- *   provides one.
+ *   It the user didn't have defined a root submenu, whether in the NACT
+ *   user interface or by choosing the ad-hoc preference, the plugin
+ *   doesn't provides one, and the 'About' item will not be displayed.
  */
 
 #include <glib-object.h>
@@ -99,6 +100,9 @@ void         na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
 gboolean     na_iprefs_should_add_about_item( NAIPrefs *instance );
 void         na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
 
+gboolean     na_iprefs_should_create_root_menu( NAIPrefs *instance );
+void         na_iprefs_set_create_root_menu( NAIPrefs *instance, gboolean enabled );
+
 GConfClient *na_iprefs_get_gconf_client( NAIPrefs *instance );
 
 gboolean     na_iprefs_read_bool( NAIPrefs *instance, const gchar *key, gboolean default_value );
@@ -118,6 +122,7 @@ void         na_iprefs_write_string_list( NAIPrefs *instance, const gchar *key, 
  */
 #define IPREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
 #define IPREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
+#define IPREFS_CREATE_ROOT_MENU				"iprefs-create-root-menu"
 #define IPREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
 
 /* alphabetical order values

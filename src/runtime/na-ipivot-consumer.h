@@ -69,29 +69,40 @@ typedef struct {
 	 * a bunch of modifications. At this time, the embedded list of
 	 * #NAAction has been updated to be up to date.
 	 */
-	void ( *on_actions_changed )      ( NAIPivotConsumer *instance, gpointer user_data );
+	void ( *on_actions_changed )         ( NAIPivotConsumer *instance, gpointer user_data );
+
+	/**
+	 * on_create_root_menu_changed:
+	 * @instance: the #NAIPivotConsumer instance which implements this
+	 * interface.
+	 * @enabled: whether a root menu should be created.
+	 *
+	 * This function is triggered each time the setting of the display
+	 * of an 'About' item in the Nautilus context menu is changed.
+	 */
+	void ( *on_create_root_menu_changed )( NAIPivotConsumer *instance, gboolean enabled );
 
 	/**
 	 * on_display_about_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
-	 * @order_mode: the new order mode.
+	 * @enabled: whether the 'About' may be displayed.
 	 *
 	 * This function is triggered each time the setting of the display
 	 * of an 'About' item in the Nautilus context menu is changed.
 	 */
-	void ( *on_display_about_changed )( NAIPivotConsumer *instance, gint order_mode );
+	void ( *on_display_about_changed )   ( NAIPivotConsumer *instance, gboolean enabled );
 
 	/**
 	 * on_display_order_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
-	 * @enabled: whether the 'About' item should be enabled.
+	 * @order_mode: new order mode.
 	 *
 	 * This function is triggered each time the display order preference
 	 * is changed.
 	 */
-	void ( *on_display_order_changed )( NAIPivotConsumer *instance, gboolean enabled );
+	void ( *on_display_order_changed )   ( NAIPivotConsumer *instance, gint order_mode );
 }
 	NAIPivotConsumerInterface;
 
@@ -100,8 +111,9 @@ GType na_ipivot_consumer_get_type( void );
 void  na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance );
 
 void  na_ipivot_consumer_notify_actions_changed( NAIPivotConsumer *instance );
-void  na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance, gint order_mode );
+void  na_ipivot_consumer_notify_of_create_root_menu_change( NAIPivotConsumer *instance, gboolean enabled );
 void  na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance, gboolean enabled );
+void  na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance, gint order_mode );
 
 G_END_DECLS
 

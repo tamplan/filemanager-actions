@@ -81,11 +81,13 @@ static void              attach_submenu_to_item( NautilusMenuItem *item, GList *
 
 static void              execute_action( NautilusMenuItem *item, NAObjectProfile *profile );
 
+static GList            *create_root_menu( NautilusActions *plugin, GList *nautilus_menu );
 static GList            *add_about_item( NautilusActions *plugin, GList *nautilus_menu );
 static gchar            *iabout_get_application_name( NAIAbout *instance );
 static void              execute_about( NautilusMenuItem *item, NautilusActions *plugin );
 
 static void              actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data );
+static void              create_root_menu_changed_handler( NAIPivotConsumer *instance, gboolean enabled );
 static void              display_about_changed_handler( NAIPivotConsumer *instance, gboolean enabled );
 static void              display_order_changed_handler( NAIPivotConsumer *instance, gint order_mode );
 
@@ -189,6 +191,7 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->on_actions_changed = actions_changed_handler;
+	iface->on_create_root_menu_changed = create_root_menu_changed_handler;
 	iface->on_display_about_changed = display_about_changed_handler;
 	iface->on_display_order_changed = display_order_changed_handler;
 }
@@ -303,6 +306,7 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	NautilusActions *self;
 	GList *pivot_tree;
 	gboolean add_about;
+	gboolean root_menu;
 
 	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
 			thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
@@ -325,6 +329,11 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 		nautilus_menus_list = build_nautilus_menus( self, pivot_tree, files );
 		g_debug( "%s: menus has %d level zero items", thisfn, g_list_length( nautilus_menus_list ));
+
+		root_menu = na_iprefs_should_create_root_menu( NA_IPREFS( self->private->pivot ));
+		if( root_menu ){
+			nautilus_menus_list = create_root_menu( self, nautilus_menus_list );
+		}
 
 		add_about = na_iprefs_should_add_about_item( NA_IPREFS( self->private->pivot ));
 		g_debug( "%s: add_about=%s", thisfn, add_about ? "True":"False" );
@@ -540,9 +549,40 @@ execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 }
 
 /*
+ * create a root submenu
+ */
+static GList *
+create_root_menu( NautilusActions *plugin, GList *menu )
+{
+	static const gchar *thisfn = "nautilus_actions_create_root_menu";
+	GList *nautilus_menu;
+	NautilusMenuItem *root_item;
+	gchar *icon;
+
+	g_debug( "%s: plugin=%p, menu=%p (%d items)",
+			thisfn, ( void * ) plugin, ( void * ) menu, g_list_length( menu ));
+
+	if( !menu || !g_list_length( menu )){
+		return( NULL );
+	}
+
+	icon = na_iabout_get_icon_name();
+	root_item = nautilus_menu_item_new( "NautilusActionsExtensions",
+				/* i18n: label of an automagic root submenu */
+				_( "Nautilus Actions" ),
+				/* i18n: tooltip of an automagic root submenu */
+				_( "A submenu which embeds the currently available Nautilus Actions extensions" ),
+				icon );
+	attach_submenu_to_item( root_item, menu );
+	nautilus_menu = g_list_append( NULL, root_item );
+	g_free( icon );
+
+	return( nautilus_menu );
+}
+
+/*
  * if there is a root submenu,
  * then add the about item to the end of the first level of this menu
- * else create a root submenu
  */
 static GList *
 add_about_item( NautilusActions *plugin, GList *menu )
@@ -562,8 +602,8 @@ add_about_item( NautilusActions *plugin, GList *menu )
 		return( NULL );
 	}
 
-	icon = na_iabout_get_icon_name();
 	have_root_menu = FALSE;
+	nautilus_menu = menu;
 
 	if( g_list_length( menu ) == 1 ){
 		root_item = NAUTILUS_MENU_ITEM( menu->data );
@@ -575,38 +615,24 @@ add_about_item( NautilusActions *plugin, GList *menu )
 	}
 
 	if( have_root_menu ){
-		nautilus_menu = menu;
+		icon = na_iabout_get_icon_name();
 
-	} else {
-		root_item = nautilus_menu_item_new( "NautilusActionsExtensions",
-				/* i18n: label of an automagic root submenu */
-				_( "Nautilus Actions" ),
-				/* i18n: tooltip of an automagic root submenu */
-				_( "A submenu which embeds the currently available Nautilus-Actions extensions" ),
-				icon );
-		attach_submenu_to_item( root_item, menu );
-		nautilus_menu = g_list_append( NULL, root_item );
-		g_object_get( G_OBJECT( root_item ), "menu", &first, NULL );
+		about_item = nautilus_menu_item_new( "AboutNautilusActions",
+					_( "About Nautilus Actions" ),
+					_( "Display information about Nautilus Actions" ),
+					icon );
+
+		g_signal_connect_data( about_item,
+					"activate",
+					G_CALLBACK( execute_about ),
+					plugin,
+					NULL,
+					0 );
+
+		nautilus_menu_append_item( first, about_item );
+
+		g_free( icon );
 	}
-
-	g_return_val_if_fail( g_list_length( nautilus_menu ) == 1, NULL );
-	g_return_val_if_fail( NAUTILUS_IS_MENU( first ), NULL );
-
-	about_item = nautilus_menu_item_new( "AboutNautilusActions",
-				_( "About Nautilus Actions" ),
-				_( "Display information about Nautilus Actions" ),
-				icon );
-
-	g_signal_connect_data( about_item,
-				"activate",
-				G_CALLBACK( execute_about ),
-				plugin,
-				NULL,
-				0 );
-
-	nautilus_menu_append_item( first, about_item );
-
-	g_free( icon );
 
 	return( nautilus_menu );
 }
@@ -634,6 +660,21 @@ actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data )
 	NautilusActions *self;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	self = NAUTILUS_ACTIONS( instance );
+
+	if( !self->private->dispose_has_run ){
+		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
+	}
+}
+
+static void
+create_root_menu_changed_handler( NAIPivotConsumer *instance, gboolean enabled )
+{
+	static const gchar *thisfn = "nautilus_actions_create_root_menu_changed_handler";
+	NautilusActions *self;
+
+	g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
 	self = NAUTILUS_ACTIONS( instance );
 

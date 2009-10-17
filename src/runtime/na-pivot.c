@@ -117,6 +117,7 @@ static void      monitor_runtime_preferences( NAPivot *pivot );
 
 static void      on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
 static void      display_order_changed( NAPivot *pivot );
+static void      create_root_menu_changed( NAPivot *pivot );
 static void      display_about_changed( NAPivot *pivot );
 
 GType
@@ -945,6 +946,10 @@ on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NA
 	key_entry = na_utils_path_extract_last_dir( key );
 	/*g_debug( "%s: key=%s", thisfn, key_entry );*/
 
+	if( !g_ascii_strcasecmp( key_entry, IPREFS_CREATE_ROOT_MENU )){
+		create_root_menu_changed( pivot );
+	}
+
 	if( !g_ascii_strcasecmp( key_entry, IPREFS_ADD_ABOUT_ITEM )){
 		display_about_changed( pivot );
 	}
@@ -972,6 +977,26 @@ display_order_changed( NAPivot *pivot )
 
 		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 			na_ipivot_consumer_notify_of_display_order_change( NA_IPIVOT_CONSUMER( ic->data ), order_mode );
+		}
+	}
+}
+
+static void
+create_root_menu_changed( NAPivot *pivot )
+{
+	static const gchar *thisfn = "na_pivot_create_root_menu_changed";
+	GList *ic;
+	gboolean enabled;
+
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
+	g_assert( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		enabled = na_iprefs_should_create_root_menu( NA_IPREFS( pivot ));
+
+		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
+			na_ipivot_consumer_notify_of_create_root_menu_change( NA_IPIVOT_CONSUMER( ic->data ), enabled );
 		}
 	}
 }

@@ -267,6 +267,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	NAPivot *pivot;
 	gint order_mode;
 	gboolean add_about_item;
+	gboolean create_root_menu;
 	gboolean relabel;
 	gint import_mode;
 	GtkWidget *button;
@@ -294,6 +295,10 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 			break;
 	}
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
+
+	create_root_menu = na_iprefs_should_create_root_menu( NA_IPREFS( pivot ));
+	button = base_window_get_widget( BASE_WINDOW( editor ), "CreateRootMenuButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), create_root_menu );
 
 	add_about_item = na_iprefs_should_add_about_item( NA_IPREFS( pivot ));
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
@@ -408,6 +413,10 @@ save_preferences( NactPreferencesEditor *editor )
 		}
 	}
 	na_iprefs_set_order_mode( NA_IPREFS( pivot ), order_mode );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "CreateRootMenuButton" );
+	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	na_iprefs_set_create_root_menu( NA_IPREFS( pivot ), enabled );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));

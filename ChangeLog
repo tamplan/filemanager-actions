@@ -1,5 +1,25 @@
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
+	Creation of a root menu in the Nautilus context menu is now a
+	user preference.
+
+	* data/nautilus-actions.schemas.in: Define a schema for the preference.
+
+	* src/nact/nact-preferences-editor.c: Edit the preference.
+
+	* src/nact/nautilus-actions-config-tool.ui: Define a new checkbox.
+
+	* src/plugin/nautilus-actions.c:
+	Create a root menu only if users has asked for.
+
+	* src/runtime/na-ipivot-consumer.c:
+	* src/runtime/na-ipivot-consumer.h:
+	Define new virtual which handle the monitoring of the preference.
+
+	* src/runtime/na-iprefs.c:
+	* src/runtime/na-iprefs.h:
+	Read/write the preference in GConf.
+
 	* src/nact/nact-main-window.c (setup_dialog_title):
 	Restore function which had disappeared since v 1.12.
 

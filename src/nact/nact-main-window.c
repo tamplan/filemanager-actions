@@ -459,6 +459,7 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->on_actions_changed = ipivot_consumer_on_actions_changed;
+	iface->on_create_root_menu_changed = NULL;
 	iface->on_display_about_changed = NULL;
 	iface->on_display_order_changed = ipivot_consumer_on_display_order_changed;
 }

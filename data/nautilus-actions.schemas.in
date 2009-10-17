@@ -364,6 +364,17 @@ All schemes used by Nautilus can be used here.</long>
     </schema>
 
     <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/iprefs-create-root-menu</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Define a 'Nautilus Actions' root menu.</short>
+        <long>If TRUE, then a 'Nautilus Actions' item will be defined in the Nautilus context menu, and will a root menu of all available actions.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/nautilus-actions/preferences/iprefs-level-zero</key>
       <owner>nautilus-actions</owner>
       <type>list</type>

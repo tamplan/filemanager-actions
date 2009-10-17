@@ -104,6 +104,7 @@ interface_base_init( NAIPivotConsumerInterface *klass )
 		klass->private = g_new0( NAIPivotConsumerInterfacePrivate, 1 );
 
 		klass->on_actions_changed = NULL;
+		klass->on_create_root_menu_changed = NULL;
 		klass->on_display_about_changed = NULL;
 		klass->on_display_order_changed = NULL;
 
@@ -185,15 +186,15 @@ void na_ipivot_consumer_notify_actions_changed( NAIPivotConsumer *instance )
 }
 
 /**
- * na_ipivot_consumer_notify_of_display_order_change:
+ * na_ipivot_consumer_notify_of_create_root_menu_change:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
- * @order_mode: new order mode.
+ * @enabled: whether a root menu should be created.
  *
- * Notifies the consumers that the display order has been changed.
+ * Notifies the consumers that the setting has been changed.
  */
 void
-na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance, gint order_mode )
+na_ipivot_consumer_notify_of_create_root_menu_change( NAIPivotConsumer *instance, gboolean enabled )
 {
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
@@ -201,8 +202,8 @@ na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance, g
 
 		if( is_notify_allowed( instance )){
 
-			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed ){
-				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed( instance, order_mode );
+			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_create_root_menu_changed ){
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_create_root_menu_changed( instance, enabled );
 			}
 		}
 	}
@@ -228,6 +229,30 @@ na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance, g
 
 			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed ){
 				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_about_changed( instance, enabled );
+			}
+		}
+	}
+}
+
+/**
+ * na_ipivot_consumer_notify_of_display_order_change:
+ * @instance: the #NAIPivotConsumer instance to be notified of the end
+ * of the modifications.
+ * @order_mode: new order mode.
+ *
+ * Notifies the consumers that the display order has been changed.
+ */
+void
+na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance, gint order_mode )
+{
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		if( is_notify_allowed( instance )){
+
+			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed ){
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed( instance, order_mode );
 			}
 		}
 	}
