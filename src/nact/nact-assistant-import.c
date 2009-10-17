@@ -586,7 +586,7 @@ static gchar *
 add_import_mode( NactAssistantImport *window, const gchar *text )
 {
 	gint mode;
-	gchar *label1, *label2;
+	gchar *label1, *label2, *label3;
 	gchar *result;
 
 	mode = get_import_mode( window );
@@ -620,8 +620,11 @@ add_import_mode( NactAssistantImport *window, const gchar *text )
 	}
 
 	if( label1 ){
-		result = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label1, label2 );
+		label3 = na_utils_prefix_strings( "\t", label2 );
 		g_free( label2 );
+
+		result = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label1, label3 );
+		g_free( label3 );
 		g_free( label1 );
 	}
 
@@ -654,6 +657,9 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	g_object_get( G_OBJECT( wnd ), BASE_WINDOW_PROP_PARENT, &mainwnd, NULL );
 
+	/* first import actions
+	 * getting results in the same order than uris
+	 */
 	for( is = uris ; is ; is = is->next ){
 
 		msg = NULL;
@@ -666,16 +672,24 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		na_utils_free_string_list( msg );
 
 		window->private->results = g_slist_prepend( window->private->results, str );
+	}
+	na_utils_free_string_list( uris );
+	window->private->results = g_slist_reverse( window->private->results );
 
-		if( action ){
-			na_object_check_status( action );
-			items = g_list_prepend( NULL, action );
-			nact_iactions_list_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
-			na_object_free_items_list( items );
+	/* then insert them in the list
+	 * assuring that actions will be inserted in the same order as uris
+	 */
+	items = NULL;
+	for( is = window->private->results ; is ; is = is->next ){
+		str = ( ImportUriStruct * ) is->data;
+		if( str->action ){
+			na_object_check_status( str->action );
+			items = g_list_prepend( items, str->action );
 		}
 	}
-
-	na_utils_free_string_list( uris );
+	items = g_list_reverse( items );
+	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
+	na_object_free_items_list( items );
 }
 
 static void
@@ -698,14 +712,13 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	pivot = nact_application_get_pivot( application );
 
 	/* i18n: result of the import assistant */
-	text = g_strdup( _( "Selected files have been imported:" ));
+	text = g_strdup( _( "Selected files have been proceeded :" ));
 
 	tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
 	g_free( text );
 	text = tmp;
 
 	for( is = window->private->results ; is ; is = is->next ){
-
 		str = ( ImportUriStruct * ) is->data;
 
 		file = g_file_new_for_uri( str->uri );
@@ -728,10 +741,8 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 			window->private->actions = g_slist_prepend( window->private->actions, str->action );
 
 		} else {
-			/* i18n: just indicate that the import of this file was unsuccessfull */
-			text2 = g_strdup( _( "NOT OK" ));
-			tmp = g_strdup_printf( "%s\t\t %s\n", text, text2 );
-			g_free( text2 );
+			/* i18n: indicate that the file was not iported */
+			tmp = g_strdup_printf( "%s\t\t%s\n", text, _( "Not imported" ));
 		}
 
 		g_free( text );

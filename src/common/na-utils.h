@@ -53,7 +53,12 @@ gboolean na_utils_schema_to_boolean( const gchar *value, gboolean default_value 
 /*
  * Some functions for GString manipulations.
  */
-gchar *  na_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list );
+gchar   *na_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list );
+
+/*
+ * String manipulations
+ */
+gchar   *na_utils_prefix_strings( const gchar *prefix, const gchar *str );
 
 /*
  * path manipulations

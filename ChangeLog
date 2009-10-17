@@ -1,5 +1,15 @@
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-utils.c:
+	* src/common/na-utils.h (na_utils_prefix_strings): New function.
+
+	* src/nact/nact-assistant-import.c (prepare_importdone):
+	Enhance the summary page.
+
+	* src/nact/nact-xml-reader.c:
+	Actually relabel action if required.
+	Return all messages.
+
 	* src/nact/nact-assistant-export.c (assist_prepare_exportdone):
 	* src/nact/nact-assistant-import.c (prepare_importdone):
 	At end, quit the assistant on Cancel without warning.

@@ -308,6 +308,33 @@ na_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list
 }
 
 /**
+ * na_utils_prefix_strings:
+ * @prefix: the prefix to be prepended.
+ * @str: a multiline string.
+ *
+ * Appends a prefix to each line of the string.
+ *
+ * Returns: a new string which should be g_free() by the caller.
+ */
+gchar *
+na_utils_prefix_strings( const gchar *prefix, const gchar *str )
+{
+	GSList *list, *il;
+	GString *result;
+
+	list = text_to_string_list( str, "\n", NULL );
+	result = g_string_new( "" );
+
+	for( il = list ; il ; il = il->next ){
+		g_string_append_printf( result, "%s%s", prefix, ( gchar * ) il->data );
+	}
+
+	na_utils_free_string_list( list );
+
+	return( g_string_free( result, FALSE ));
+}
+
+/**
  * na_utils_remove_last_level_from_path:
  * @path: a full path.
  *
