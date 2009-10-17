@@ -1,5 +1,12 @@
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-window.c (setup_builder):
+	A window may have its own builder, or its own UI XML definition file,
+	or both.
+
+	* src/nact/nact-assistant-export-ask.c
+	(nact_assistant_export_ask_user): The dialog uses the common builder.
+
 	Make clipboard have an access to preferences.
 	Let the user be asked for the export format in drag and drop operations.
 

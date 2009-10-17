@@ -250,7 +250,7 @@ nact_assistant_export_ask_user( BaseWindow *parent, NAObjectAction *action )
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), IPREFS_EXPORT_NO_EXPORT );
 
 	editor = assistant_export_ask_new( parent );
-	g_object_set( G_OBJECT( editor ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );
+	/*g_object_set( G_OBJECT( editor ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );*/
 
 	editor->private->parent = parent;
 	editor->private->action = action;

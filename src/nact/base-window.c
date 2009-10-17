@@ -515,8 +515,10 @@ instance_dispose( GObject *window )
 
 		/* release the Gtkbuilder, if any
 		 */
-		if( self->private->builder ){
-			g_object_unref( self->private->builder );
+		if( self->private->has_own_builder ){
+			if( self->private->builder ){
+				g_object_unref( self->private->builder );
+			}
 		}
 
 		/* chain up to the parent class */
@@ -1168,21 +1170,28 @@ set_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel, gboolean init
 
 /*
  * setup the builder of the window as a new one, or use the global one
+ * A dialog may have its own builder ,sharing the common UI XML definition file
+ * or a dialog may have its own UI XML definition file, sharing the common builder
+ * or a dialog may have both its UI XML definition file with its own builder
  */
 static void
 setup_builder( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_setup_builder";
+	BaseApplication *application;
 	gchar *fname;
 	GError *error = NULL;
 
 	if( window->private->has_own_builder ){
-
 		window->private->builder = base_builder_new();
 
-		fname = v_get_ui_filename( window );
-		g_return_if_fail( fname && strlen( fname ));
+	} else {
+		application = base_window_get_application( window );
+		window->private->builder = base_application_get_builder( application );
+	}
 
+	fname = v_get_ui_filename( window );
+	if( fname && strlen( fname )){
 		if( !base_builder_add_from_file( window->private->builder, fname, &error )){
 			g_warning( "%s: unable to load %s UI XML definition: %s", thisfn, fname, error->message );
 			g_error_free( error );
