@@ -64,6 +64,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-application.h									\
 	nact-assistant-export.c								\
 	nact-assistant-export.h								\
+	nact-assistant-export-ask.c							\
+	nact-assistant-export-ask.h							\
 	nact-assistant-import.c								\
 	nact-assistant-import.h								\
 	nact-assistant-import-ask.c							\

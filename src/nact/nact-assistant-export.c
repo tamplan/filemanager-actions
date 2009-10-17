@@ -48,6 +48,7 @@
 #include "nact-application.h"
 #include "nact-main-window.h"
 #include "nact-assistant-export.h"
+#include "nact-assistant-export-ask.h"
 #include "nact-iactions-list.h"
 
 /* Export Assistant
@@ -85,7 +86,6 @@ struct NactAssistantExportPrivate {
 	GSList         *fnames;
 	gint            errors;
 	gchar          *reason;
-	gint            format;
 };
 
 #define IPREFS_EXPORT_ACTIONS_FOLDER_URI		"export-folder-uri"
@@ -763,7 +763,6 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 			break;
 	}
 	na_iprefs_set_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT, format );
-	window->private->format = format;
 
 	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label1, label2 );
 	g_free( label2 );
@@ -787,15 +786,21 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_export_on_apply";
 	NactAssistantExport *window;
+	NactApplication *application;
+	NAPivot *pivot;
 	GList *actions, *ia;
 	gchar *msg = NULL;
 	gchar *reason = NULL;
 	gchar *tmp, *fname;
 	NAObjectAction *action;
+	gint format;
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( wnd ));
 	window = NACT_ASSISTANT_EXPORT( wnd );
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
 
 	actions = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
 
@@ -803,7 +808,19 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	for( ia = actions ; ia ; ia = ia->next ){
 		action = NA_OBJECT_ACTION( ia->data );
-		fname = na_xml_writer_export( action, window->private->uri, window->private->format, &msg );
+		fname = NULL;
+
+		format = na_iprefs_get_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT );
+		if( format == IPREFS_EXPORT_FORMAT_ASK ){
+			format = nact_assistant_export_ask_user( BASE_WINDOW( wnd ), action );
+			if( format == IPREFS_EXPORT_NO_EXPORT ){
+				msg = g_strdup( _( "Export canceled due to user action." ));
+			}
+		}
+
+		if( format != IPREFS_EXPORT_NO_EXPORT ){
+			fname = na_xml_writer_export( action, window->private->uri, format, &msg );
+		}
 
 		if( fname && strlen( fname )){
 			window->private->fnames = g_slist_prepend( window->private->fnames, fname );
@@ -817,7 +834,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 					g_free( reason );
 					reason = tmp;
 				}
-				tmp = g_strdup_printf( "%s%s", reason, msg );
+				tmp = g_strdup_printf( "%s%s", reason ? reason : "", msg );
 				g_free( reason );
 				reason = tmp;
 				g_free( msg );

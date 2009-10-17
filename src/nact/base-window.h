@@ -75,7 +75,7 @@ G_BEGIN_DECLS
 #define BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED		"nact-base-window-all-widgets-showed"
 
 gboolean         base_window_init( BaseWindow *window );
-void             base_window_run( BaseWindow *window );
+gboolean         base_window_run( BaseWindow *window );
 
 BaseApplication *base_window_get_application( BaseWindow *window );
 GtkWindow       *base_window_get_named_toplevel( BaseWindow *window, const gchar *name );

@@ -114,7 +114,10 @@ to extend a selection.</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="active">True</property>
+                <property name="tooltip_text" translatable="yes">This used to be the historical export format.
+The exported file may later be imported via :
+- Import assistant of the Nautilus Actions Configuration Tool,
+- or via the gconftool-2 --import-schema-file command-line tool.</property>
                 <property name="draw_indicator">True</property>
               </object>
               <packing>
@@ -159,8 +162,10 @@ The exported file may later be imported via :
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="tooltip_text" translatable="yes">The exported file may later be imported via :
+- Import assistant of the Nautilus Actions Configuration Tool,
+- or via the gconftool-2 --import-schema-file command-line tool.</property>
                 <property name="xalign">0</property>
-                <property name="active">True</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">ExportSchemaV1Button</property>
               </object>
@@ -205,8 +210,11 @@ The exported file may later be imported via :
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="tooltip_text" translatable="yes">This should be the preferred format for newly exported actions.
+The exported file may later be imported via :
+- Import assistant of the Nautilus Actions Configuration Tool,
+- or via the gconftool-2 --load command-line tool.</property>
                 <property name="xalign">0</property>
-                <property name="active">True</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">ExportSchemaV1Button</property>
               </object>
@@ -243,6 +251,51 @@ The exported file may later be imported via :
             <property name="position">3</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkVBox" id="vbox5">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkRadioButton" id="ExportAskButton">
+                <property name="label" translatable="yes">Ask me.</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="tooltip_text" translatable="yes">You will be asked each time an action is about to be exported.</property>
+                <property name="xalign">0</property>
+                <property name="draw_indicator">True</property>
+                <property name="group">ExportSchemaV1Button</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHBox" id="hbox1">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel" id="ExportAskLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">16</property>
+                    <property name="label" translatable="yes">You will be asked each time an action is about to be exported.</property>
+                  </object>
+                  <packing>
+                    <property name="padding">4</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
       </object>
       <packing>
         <property name="title">Selecting the export format</property>
@@ -268,5 +321,194 @@ The exported file may later be imported via :
         <property name="title">Export is done</property>
       </packing>
     </child>
+  </object>
+  <object class="GtkDialog" id="AssistantExportAsk">
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Exporting an action</property>
+    <property name="type_hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkVBox" id="vbox37">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkVBox" id="vbox39">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkLabel" id="ExportAskLabel1">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">6</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label47">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">6</property>
+                    <property name="label" translatable="yes">Which format should I choose to export it ?</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox38">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkRadioButton" id="AskGConfSchemaV1Button">
+                    <property name="label" translatable="yes">Export as a GConf schema (v_1) file</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">This used to be the historical export format.
+The exported file may later be imported via :
+- Import assistant of the Nautilus Actions Configuration Tool,
+- or via the gconftool-2 --import-schema-file command-line tool.</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkRadioButton" id="AskGConfSchemaV2Button">
+                    <property name="label" translatable="yes">Export as a GConf _schema (v2) file</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">The exported file may later be imported via :
+- Import assistant of the Nautilus Actions Configuration Tool,
+- or via the gconftool-2 --import-schema-file command-line tool.</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                    <property name="group">AskGConfSchemaV1Button</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkRadioButton" id="AskGConfEntryButton">
+                    <property name="label" translatable="yes">Export as a GConf _entry file</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">This should be the preferred format for newly exported actions.
+The exported file may later be imported via :
+- Import assistant of the Nautilus Actions Configuration Tool,
+- or via the gconftool-2 --load command-line tool.</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                    <property name="group">AskGConfSchemaV1Button</property>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHSeparator" id="hseparator1">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox40">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkCheckButton" id="AskKeepChoiceButton">
+                    <property name="label" translatable="yes">Re_member my choice in future import operations</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="CancelButton">
+                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="OKButton">
+                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">CancelButton</action-widget>
+      <action-widget response="0">OKButton</action-widget>
+    </action-widgets>
   </object>
 </interface>

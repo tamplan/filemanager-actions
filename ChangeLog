@@ -1,5 +1,21 @@
 2009-10-16 Pierre Wieser <pwieser@trychlos.org>
 
+	Let the user be asked when exporting actions.
+
+	* src/nact/base-window.c (instance_dispose):
+	Fix hiding widgets when toplevel has not been initialized.
+	(base_window_run): Now returns a boolean.
+
+	* src/nact/nact-assistant-export-ask.c:
+	* src/nact/nact-assistant-export-ask.h: New files.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-assistant-export.ui: Updated accordingly.
+
+	* src/nact/nact-assistant-export.c:
+	Ask the user if needed.
+	Reread the current export format for each action.
+
 	Record last export format as a preference.
 
 	* src/common/na-iprefs.c:

@@ -500,11 +500,15 @@ instance_dispose( GObject *window )
 		} else if( GTK_IS_ASSISTANT( self->private->toplevel_window )){
 			g_debug( "%s: quitting assistant", thisfn );
 			gtk_main_quit();
-			gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_window ));
+			if( is_toplevel_initialized( self, self->private->toplevel_window )){
+				gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_window ));
+			}
 
 		} else {
 			g_debug( "%s: quitting dialog", thisfn );
-			gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_window ));
+			if( is_toplevel_initialized( self, self->private->toplevel_window )){
+				gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_window ));
+			}
 		}
 
 		self->private->dispose_has_run = TRUE;
@@ -620,7 +624,7 @@ base_window_init( BaseWindow *window )
  *
  * Runs the window.
  */
-void
+gboolean
 base_window_run( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_run";
@@ -628,7 +632,7 @@ base_window_run( BaseWindow *window )
 	gboolean run_ok;
 	gint code;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
 
 	run_ok = TRUE;
 
@@ -678,6 +682,8 @@ base_window_run( BaseWindow *window )
 			while( !v_dialog_response( GTK_DIALOG( this_dialog ), code, window ));
 		}
 	}
+
+	return( run_ok );
 }
 
 /**

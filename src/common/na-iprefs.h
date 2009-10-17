@@ -48,6 +48,7 @@ G_BEGIN_DECLS
 /* GConf Preference keys managed by IPrefs interface
  */
 #define IPREFS_EXPORT_FORMAT				"export-format"
+#define IPREFS_EXPORT_ASK_LAST_FORMAT		"export-ask-user-last-format"
 #define IPREFS_IMPORT_ACTIONS_IMPORT_MODE	"import-mode"
 #define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
 
@@ -76,7 +77,8 @@ enum {
  * introduced in v 1.11
  */
 enum {
-	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1 = 1,
+	IPREFS_EXPORT_NO_EXPORT = 1,
+	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1,
 	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2,
 	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA,
 	IPREFS_EXPORT_FORMAT_GCONF_ENTRY,

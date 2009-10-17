@@ -328,6 +328,9 @@ na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint fo
 				filename = g_strdup( folder );
 			}
 			break;
+
+		default:
+			g_return_val_if_reached( NULL );
 	}
 
 	g_assert( filename || folder == NULL );
