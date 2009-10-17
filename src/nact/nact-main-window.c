@@ -151,9 +151,11 @@ static void     on_base_runtime_init_toplevel( NactMainWindow *window, gpointer 
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
 static void     on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
+static void     on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data );
 static void     set_current_object_item( NactMainWindow *window, GSList *selected_items );
 static void     set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
 static gchar   *iactions_list_get_treeview_name( NactIActionsList *instance );
+static void     setup_dialog_title( NactMainWindow *window );
 
 static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display );
 
@@ -949,6 +951,14 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 		/* fill the IActionsList at last so that all signals are connected
 		 */
 		nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
+
+		/* this to update the title when an item is modified
+		 */
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				IACTIONS_LIST_SIGNAL_STATUS_CHANGED,
+				G_CALLBACK( on_iactions_list_status_changed ));
 	}
 }
 
@@ -1026,7 +1036,15 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, window->private->edited_profile,
 			NULL );
 
+	setup_dialog_title( window );
+
 	g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED, GINT_TO_POINTER( count ));
+}
+
+static void
+on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data )
+{
+	setup_dialog_title( window );
 }
 
 /*
@@ -1088,6 +1106,37 @@ iactions_list_get_treeview_name( NactIActionsList *instance )
 	name = g_strdup( "ActionsList" );
 
 	return( name );
+}
+
+static void
+setup_dialog_title( NactMainWindow *window )
+{
+	GtkWindow *toplevel;
+	NactApplication *application;
+	gchar *title;
+	gchar *label;
+	gchar *tmp;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	title = base_application_get_application_name( BASE_APPLICATION( application ));
+
+	if( window->private->edited_item ){
+		label = na_object_get_label( window->private->edited_item );
+		tmp = g_strdup_printf( "%s - %s", title, label );
+		g_free( label );
+		g_free( title );
+		title = tmp;
+	}
+
+	if( nact_main_window_has_modified_items( window )){
+		tmp = g_strdup_printf( "*%s", title );
+		g_free( title );
+		title = tmp;
+	}
+
+	toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
+	gtk_window_set_title( toplevel, title );
+	g_free( title );
 }
 
 static void
