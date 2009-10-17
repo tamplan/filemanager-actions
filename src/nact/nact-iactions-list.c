@@ -458,7 +458,11 @@ nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
 		gtk_tree_view_column_set_title( column, _( "Label" ));
 		gtk_tree_view_column_set_sort_column_id( column, IACTIONS_LIST_LABEL_COLUMN );
 		renderer = gtk_cell_renderer_text_new();
-		g_object_set( G_OBJECT( renderer ), "editable", TRUE, NULL );
+
+		if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
+			g_object_set( G_OBJECT( renderer ), "editable", TRUE, NULL );
+		}
+
 		gtk_tree_view_column_pack_start( column, renderer, TRUE );
 		gtk_tree_view_column_set_cell_data_func(
 				column, renderer, ( GtkTreeCellDataFunc ) display_label, instance, NULL );

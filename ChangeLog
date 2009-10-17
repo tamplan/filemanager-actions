@@ -1,5 +1,9 @@
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iactions-list.c
+	(nact_iactions_list_initial_load_toplevel):
+	Cells are only editable in edition mode.
+
 	* src/common/na-xml-writer.c:
 	* src/common/na-xml-writer.h (na_xml_writer_export):
 	Now returns messages as a GSList.
