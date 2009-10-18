@@ -1,5 +1,9 @@
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iactions-list.c
+	(collapse_to_parent, expand_to_first_child):
+	Make left and right arrows accelerators to collapse/expand trees.
+
 	* src/nact/nact-iactions-list.c (inline_edition):
 	Make F2 an accelerator to inline edit the label.
 

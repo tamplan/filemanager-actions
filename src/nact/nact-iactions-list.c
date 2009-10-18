@@ -154,7 +154,9 @@ static void         update_parents_edition_status( GList *parents, GList *items 
 
 static gchar       *v_get_treeview_name( NactIActionsList *instance );
 
+static void         collapse_to_parent( NactIActionsList *instance );
 static void         display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *instance );
+static void         expand_to_first_child( NactIActionsList *instance );
 static void         extend_selection_to_childs( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *parent );
 static gboolean     filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactIActionsList *instance );
 static void         filter_selection_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, SelectionIter *str );
@@ -1521,6 +1523,49 @@ v_get_treeview_name( NactIActionsList *instance )
 }
 
 /*
+ * on left arrow, if we are on a first child, then collapse and go to
+ * the parent
+ */
+static void
+collapse_to_parent( NactIActionsList *instance )
+{
+	static const gchar *thisfn = "nact_iactions_list_collapse_to_parent";
+	IActionsListInstanceData *ialid;
+	GtkTreeView *treeview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GList *listrows;
+	GtkTreePath *path;
+	gint *indices;
+	GtkTreePath *parent_path;
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	ialid = get_instance_data( instance );
+	if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
+		treeview = get_actions_list_treeview( instance );
+		selection = gtk_tree_view_get_selection( treeview );
+		listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+
+		if( g_list_length( listrows ) == 1 ){
+			path = ( GtkTreePath * ) listrows->data;
+			indices = gtk_tree_path_get_indices( path );
+			if( indices[ gtk_tree_path_get_depth( path )-1 ] == 0 ){
+				parent_path = gtk_tree_path_copy( path );
+				gtk_tree_path_up( parent_path );
+				select_row_at_path( instance, treeview, model, parent_path );
+				gtk_tree_view_collapse_row( treeview, parent_path );
+				gtk_tree_path_free( parent_path );
+			}
+		}
+
+		g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+		g_list_free( listrows );
+	}
+}
+
+/*
  * item modified: italic
  * item not saveable (invalid): red
  */
@@ -1555,6 +1600,49 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 
 		g_free( label );
 		g_object_unref( object );
+	}
+}
+
+/*
+ * on right arrow, expand the parent if it has childs, and select the
+ * first child
+ */
+static void
+expand_to_first_child( NactIActionsList *instance )
+{
+	static const gchar *thisfn = "nact_iactions_list_expand_to_first_child";
+	IActionsListInstanceData *ialid;
+	GtkTreeView *treeview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GList *listrows;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	GtkTreePath *child_path;
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	ialid = get_instance_data( instance );
+	if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
+		treeview = get_actions_list_treeview( instance );
+		selection = gtk_tree_view_get_selection( treeview );
+		listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+
+		if( g_list_length( listrows ) == 1 ){
+			path = ( GtkTreePath * ) listrows->data;
+			gtk_tree_model_get_iter( model, &iter, path );
+			if( gtk_tree_model_iter_has_child( model, &iter )){
+				child_path = gtk_tree_path_copy( path );
+				gtk_tree_path_append_index( child_path, 0 );
+				gtk_tree_view_expand_row( treeview, child_path, FALSE );
+				select_row_at_path( instance, treeview, model, child_path );
+				gtk_tree_path_free( child_path );
+			}
+		}
+
+		g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+		g_list_free( listrows );
 	}
 }
 
@@ -1779,7 +1867,6 @@ inline_edition( NactIActionsList *instance )
 	IActionsListInstanceData *ialid;
 	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
-	GtkTreeModel *model;
 	GList *listrows;
 	GtkTreePath *path;
 	GtkTreeViewColumn *column;
@@ -1791,7 +1878,7 @@ inline_edition( NactIActionsList *instance )
 	if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
 		treeview = get_actions_list_treeview( instance );
 		selection = gtk_tree_view_get_selection( treeview );
-		listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+		listrows = gtk_tree_selection_get_selected_rows( selection, NULL );
 
 		if( g_list_length( listrows ) == 1 ){
 			path = ( GtkTreePath * ) listrows->data;
@@ -1970,6 +2057,16 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *i
 
 	if( event->keyval == GDK_F2 ){
 		inline_edition( instance );
+		stop = TRUE;
+	}
+
+	if( event->keyval == GDK_Right ){
+		expand_to_first_child( instance );
+		stop = TRUE;
+	}
+
+	if( event->keyval == GDK_Left ){
+		collapse_to_parent( instance );
 		stop = TRUE;
 	}
 
