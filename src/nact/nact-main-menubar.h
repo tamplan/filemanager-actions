@@ -43,6 +43,7 @@ G_BEGIN_DECLS
 
 void  nact_main_menubar_runtime_init( NactMainWindow *window );
 void  nact_main_menubar_dispose( NactMainWindow *window );
+void  nact_main_menubar_open_popup( NactMainWindow *window, GdkEventButton *event );
 
 G_END_DECLS
 

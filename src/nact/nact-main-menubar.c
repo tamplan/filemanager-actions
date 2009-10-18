@@ -259,7 +259,7 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	 * - pack menu bar in the main window
 	 */
 	ui_manager = gtk_ui_manager_new();
-	g_object_set_data_full( G_OBJECT( window ), MENUBAR_PROP_UI_MANAGER, ui_manager, ( GDestroyNotify ) on_destroy_callback  );
+	g_object_set_data_full( G_OBJECT( window ), MENUBAR_PROP_UI_MANAGER, ui_manager, ( GDestroyNotify ) on_destroy_callback );
 	g_debug( "%s: ui_manager=%p", thisfn, ( void * ) ui_manager );
 
 	base_window_signal_connect(
@@ -368,6 +368,7 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 			G_CALLBACK( on_level_zero_order_changed ));
 
 	mis = g_new0( MenubarIndicatorsStruct, 1 );
+	mis->treeview_has_focus = TRUE;
 	g_object_set_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS, mis );
 }
 
@@ -388,6 +389,25 @@ nact_main_menubar_dispose( NactMainWindow *window )
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	g_free( mis );
+}
+
+/**
+ * nact_main_menubar_open_popup:
+ * @window: this #NactMainWindow window.
+ * @event: the mouse event.
+ *
+ * Opens a popup menu.
+ */
+void
+nact_main_menubar_open_popup( NactMainWindow *instance, GdkEventButton *event )
+{
+	GtkUIManager *ui_manager;
+	GtkWidget *menu;
+
+	ui_manager = ( GtkUIManager * ) g_object_get_data( G_OBJECT( instance ), MENUBAR_PROP_UI_MANAGER );
+	menu = gtk_ui_manager_get_widget( ui_manager, "/ui/Popup" );
+
+	gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, event->button, event->time );
 }
 
 /*
@@ -439,6 +459,10 @@ on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
+/*
+ * these two functions are no more used
+ * see comment in nact-iactions-list.c::on_focus_in().
+ */
 static void
 on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data )
 {

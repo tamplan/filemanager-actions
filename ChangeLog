@@ -1,3 +1,20 @@
+2009-10-18 Pierre Wieser <pwieser@trychlos.org>
+
+	Open a popup on right click on the treeview.
+
+	* src/nact/nact-iactions-list.c
+	(on_button_press_event): Manage right mouse click.
+	(open_popup): New function.
+	(on_key_pressed_event): Only manage acclerators when treeview has the
+	focus.
+
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-menubar.h (nact_main_menubar_open_popup):
+	New function.
+
+	* src/nact/nautilus-actions-config-tool.actions:
+	Define the contextual popup menu.
+
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-menubar.c (on_iactions_list_count_updated):

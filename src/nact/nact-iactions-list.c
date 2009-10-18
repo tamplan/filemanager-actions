@@ -41,8 +41,9 @@
 #include "nact-application.h"
 #include "nact-marshal.h"
 #include "nact-main-tab.h"
+#include "nact-main-menubar.h"
+#include "nact-main-window.h"
 #include "nact-tree-model.h"
-#include "nact-window.h"
 #include "nact-iactions-list.h"
 
 /* private interface data
@@ -174,13 +175,14 @@ static GtkTreePath *object_to_path( NactIActionsList *instance, NactTreeModel *m
 static gboolean     object_to_path_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ObjectToPathIter *otp );
 static gboolean     on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsList *instance );
 static void         on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object );
+static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static gboolean     on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance );
 static gboolean     on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance );
 static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
 static void         on_label_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIActionsList *instance );
-static void         on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
 static void         on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object, gboolean force_display );
-static void         on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
+static void         on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
+static void         open_popup( NactIActionsList *instance, GdkEventButton *event );
 static void         select_first_row( NactIActionsList *instance );
 static void         select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
 static void         send_list_count_updated_signal( NactIActionsList *instance, IActionsListInstanceData *ialid );
@@ -1978,8 +1980,15 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsLis
 
 	gboolean stop = FALSE;
 
-	if( event->type == GDK_2BUTTON_PRESS ){
+	/* double-click of left button */
+	if( event->type == GDK_2BUTTON_PRESS && event->button == 1 ){
 		toggle_collapse( instance );
+		stop = TRUE;
+	}
+
+	/* single click on right button */
+	if( event->type == GDK_BUTTON_PRESS && event->button == 3 ){
+		open_popup( instance, event );
 		stop = TRUE;
 	}
 
@@ -2018,6 +2027,31 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_STATUS_CHANGED, NULL );
 }
 
+/*
+ * our handler for "selection-changed" emitted by the interface
+ * this let us transform the signal in a virtual function
+ * so that our implementors have the best of two worlds ;-)
+ */
+static void
+on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
+{
+	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->selection_changed ){
+		NACT_IACTIONS_LIST_GET_INTERFACE( instance )->selection_changed( instance, selected_items );
+	}
+}
+
+/*
+ * focus is monitored to avoid an accelerator being pressed while on a tab
+ * triggers an unwaited operation on the list
+ * e.g. when editing an entry field on the tab, pressing Del should _not_
+ * delete current row in the list !
+ *
+ * this has the disadvantage that opening a popup menu makes the treeview
+ * loses its focus, and so the edit menu is all disabled
+ *
+ * to fix that, we consider in menubar that treeview always has the focus
+ * and we check it in on_key_pressed()
+ */
 static gboolean
 on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance )
 {
@@ -2025,7 +2059,7 @@ on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance
 	gboolean stop = FALSE;
 
 	/*g_debug( "%s: widget=%p, event=%p, instance=%p", thisfn, ( void * ) widget, ( void * ) event, ( void * ) instance );*/
-	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_IN, instance );
+	/*g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_IN, instance );*/
 
 	return( stop );
 }
@@ -2037,7 +2071,7 @@ on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instanc
 	gboolean stop = FALSE;
 
 	/*g_debug( "%s: widget=%p, event=%p, instance=%p", thisfn, ( void * ) widget, ( void * ) event, ( void * ) instance );*/
-	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_OUT, instance );
+	/*g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_OUT, instance );*/
 
 	return( stop );
 }
@@ -2047,27 +2081,31 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *i
 {
 	/*static const gchar *thisfn = "nact_iactions_list_v_on_key_pressed_event";
 	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );*/
-
+	GtkTreeView *treeview;
 	gboolean stop = FALSE;
 
-	if( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ){
-		toggle_collapse( instance );
-		stop = TRUE;
-	}
+	treeview = get_actions_list_treeview( instance );
+	if( GTK_WIDGET_HAS_FOCUS( treeview )){
 
-	if( event->keyval == GDK_F2 ){
-		inline_edition( instance );
-		stop = TRUE;
-	}
+		if( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ){
+			toggle_collapse( instance );
+			stop = TRUE;
+		}
 
-	if( event->keyval == GDK_Right ){
-		expand_to_first_child( instance );
-		stop = TRUE;
-	}
+		if( event->keyval == GDK_F2 ){
+			inline_edition( instance );
+			stop = TRUE;
+		}
 
-	if( event->keyval == GDK_Left ){
-		collapse_to_parent( instance );
-		stop = TRUE;
+		if( event->keyval == GDK_Right ){
+			expand_to_first_child( instance );
+			stop = TRUE;
+		}
+
+		if( event->keyval == GDK_Left ){
+			collapse_to_parent( instance );
+			stop = TRUE;
+		}
 	}
 
 	return( stop );
@@ -2100,32 +2138,6 @@ on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gch
 }
 
 /*
- * this is our handler of "changed" signal emitted by the treeview
- * it is inhibited while filling the list (usually only at runtime init)
- * and while deleting a selection
- */
-static void
-on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance )
-{
-	GList *selected_items;
-	IActionsListInstanceData *ialid;
-
-	ialid = get_instance_data( instance );
-	if( ialid->selection_changed_send_allowed ){
-
-		g_signal_handler_block( instance, ialid->tab_updated_handler );
-
-		selected_items = nact_iactions_list_get_selected_items( instance );
-		g_debug( "on_treeview_selection_changed: selection=%p (%d items)", ( void * ) selected_items, g_list_length( selected_items ));
-		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
-
-		g_signal_handler_unblock( instance, ialid->tab_updated_handler );
-	}
-
-	/* selection list if free in cleanup handler for the signal */
-}
-
-/*
  * an item has been updated in one of the tabs
  * update the treeview to reflects its new edition status
  */
@@ -2152,15 +2164,44 @@ on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object, gbo
 }
 
 /*
- * our handler for "selection-changed" emitted by the interface
- * this let us transform the signal in a virtual function
- * so that our implementors have the best of two worlds ;-)
+ * this is our handler of "changed" signal emitted by the treeview
+ * it is inhibited while filling the list (usually only at runtime init)
+ * and while deleting a selection
  */
 static void
-on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
+on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance )
 {
-	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->selection_changed ){
-		NACT_IACTIONS_LIST_GET_INTERFACE( instance )->selection_changed( instance, selected_items );
+	GList *selected_items;
+	IActionsListInstanceData *ialid;
+
+	ialid = get_instance_data( instance );
+	if( ialid->selection_changed_send_allowed ){
+
+		g_signal_handler_block( instance, ialid->tab_updated_handler );
+
+		selected_items = nact_iactions_list_get_selected_items( instance );
+		g_debug( "on_treeview_selection_changed: selection=%p (%d items)", ( void * ) selected_items, g_list_length( selected_items ));
+		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
+
+		g_signal_handler_unblock( instance, ialid->tab_updated_handler );
+	}
+
+	/* selection list if free in cleanup handler for the signal */
+}
+
+static void
+open_popup( NactIActionsList *instance, GdkEventButton *event )
+{
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreePath *path;
+
+	treeview = get_actions_list_treeview( instance );
+	if( gtk_tree_view_get_path_at_pos( treeview, event->x, event->y, &path, NULL, NULL, NULL )){
+		model = gtk_tree_view_get_model( treeview );
+		select_row_at_path( instance, treeview, model, path );
+		gtk_tree_path_free( path );
+		nact_main_menubar_open_popup( NACT_MAIN_WINDOW( instance ), event );
 	}
 }
 

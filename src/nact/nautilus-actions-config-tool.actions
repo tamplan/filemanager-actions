@@ -37,6 +37,25 @@
         </menu>
     </menubar>
 
+    <popup name="Popup">
+            <menuitem action="NewMenuItem" />
+            <menuitem action="NewActionItem" />
+            <menuitem action="NewProfileItem" />
+            <separator />
+            <menuitem action="CutItem" />
+            <menuitem action="CopyItem" />
+            <menuitem action="PasteItem" />
+            <menuitem action="PasteIntoItem" />
+            <menuitem action="DuplicateItem" />
+            <menuitem action="DeleteItem" />
+            <separator />
+            <menuitem action="ImportItem" />
+            <menuitem action="ExportItem" />
+            <separator />
+            <menuitem action="PreferencesItem" />
+            <menuitem action="AboutItem" />
+    </popup>
+
     <toolbar name="FileToolbar">
         <toolitem action="NewActionItem" />
         <toolitem action="SaveItem" />
