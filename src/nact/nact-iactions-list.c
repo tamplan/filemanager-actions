@@ -165,6 +165,7 @@ static gboolean     get_items_iter( NactTreeModel *model, GtkTreePath *path, NAO
 static gboolean     have_dnd_mode( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static gboolean     have_filter_selection_mode( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static gboolean     have_only_actions( NactIActionsList *instance, IActionsListInstanceData *ialid );
+static void         inline_edition( NactIActionsList *instance );
 static gboolean     is_iduplicable_proxy( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static void         iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpointer user_data );
 static GtkTreePath *object_to_path( NactIActionsList *instance, NactTreeModel *model, NAObject *object );
@@ -1767,6 +1768,44 @@ have_only_actions( NactIActionsList *instance, IActionsListInstanceData *ialid )
 	return( only_actions );
 }
 
+/*
+ * triggered by 'F2' key
+ * only in edition mode
+ */
+static void
+inline_edition( NactIActionsList *instance )
+{
+	static const gchar *thisfn = "nact_iactions_list_inline_edition";
+	IActionsListInstanceData *ialid;
+	GtkTreeView *treeview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GList *listrows;
+	GtkTreePath *path;
+	GtkTreeViewColumn *column;
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	ialid = get_instance_data( instance );
+	if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
+		treeview = get_actions_list_treeview( instance );
+		selection = gtk_tree_view_get_selection( treeview );
+		listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+
+		if( g_list_length( listrows ) == 1 ){
+			path = ( GtkTreePath * ) listrows->data;
+			column = gtk_tree_view_get_column( treeview, IACTIONS_LIST_LABEL_COLUMN );
+			ialid->selection_changed_send_allowed = FALSE;
+			gtk_tree_view_set_cursor( treeview, path, column, TRUE );
+			ialid->selection_changed_send_allowed = TRUE;
+		}
+
+		g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+		g_list_free( listrows );
+	}
+}
+
 static gboolean
 is_iduplicable_proxy( NactIActionsList *instance, IActionsListInstanceData *ialid )
 {
@@ -1926,6 +1965,11 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *i
 
 	if( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ){
 		toggle_collapse( instance );
+		stop = TRUE;
+	}
+
+	if( event->keyval == GDK_F2 ){
+		inline_edition( instance );
 		stop = TRUE;
 	}
 

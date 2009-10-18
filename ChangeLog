@@ -1,5 +1,8 @@
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iactions-list.c (inline_edition):
+	Make F2 an accelerator to inline edit the label.
+
 	Creation of a root menu in the Nautilus context menu is now a
 	user preference.
 
