@@ -50,9 +50,10 @@
 #include "nact-main-tab.h"
 #include "nact-main-menubar.h"
 
-#define MENUBAR_PROP_STATUS_CONTEXT		"nact-menubar-status-context"
-#define MENUBAR_PROP_UI_MANAGER			"nact-menubar-ui-manager"
-#define MENUBAR_PROP_ACTIONS_GROUP		"nact-menubar-actions-group"
+#define MENUBAR_PROP_STATUS_CONTEXT			"nact-menubar-status-context"
+#define MENUBAR_PROP_MAIN_STATUS_CONTEXT	"nact-menubar-main-status-context"
+#define MENUBAR_PROP_UI_MANAGER				"nact-menubar-ui-manager"
+#define MENUBAR_PROP_ACTIONS_GROUP			"nact-menubar-actions-group"
 
 /* GtkActivatable
  * gtk_action_get_tooltip are only available starting with Gtk 2.16
@@ -65,7 +66,7 @@
 #endif
 
 #ifndef GTK_HAS_ACTIVATABLE
-#define MENUBAR_PROP_ITEM_ACTION		"nact-menubar-item-action"
+#define MENUBAR_PROP_ITEM_ACTION			"nact-menubar-item-action"
 #endif
 
 /* this structure is updated each time the user interacts in the
@@ -397,6 +398,7 @@ static void
 on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles )
 {
 	MenubarIndicatorsStruct *mis;
+	gchar *status;
 
 	g_debug( "nact_main_menubar_on_iactions_list_count_updated: menus=%u, actions=%u, profiles=%u", menus, actions, profiles );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -406,6 +408,10 @@ on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions
 	mis->list_actions = actions;
 	mis->list_profiles = profiles;
 	mis->have_exportables = ( mis->list_actions > 0 );
+
+	status = g_strdup_printf( _( " %d menus, %d actions, %d profiles are currently displayed" ), menus, actions, profiles );
+	nact_main_statusbar_display_status( window, MENUBAR_PROP_MAIN_STATUS_CONTEXT, status );
+	g_free( status );
 
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }

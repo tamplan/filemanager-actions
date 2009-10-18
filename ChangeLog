@@ -1,5 +1,8 @@
 2009-10-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar.c (on_iactions_list_count_updated):
+	Display the count of items in the statusbar.
+
 	* src/nact/nact-iactions-list.c
 	(collapse_to_parent, expand_to_first_child):
 	Make left and right arrows accelerators to collapse/expand trees.
