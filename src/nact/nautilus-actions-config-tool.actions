@@ -24,6 +24,13 @@
         <menu action="ViewMenu">
             <menuitem action="ExpandAllItem" />
             <menuitem action="CollapseAllItem" />
+            <separator />
+            <menuitem action="ViewFileToolbarItem" />
+            <menuitem action="ViewEditToolbarItem" />
+            <menuitem action="ViewViewToolbarItem" />
+            <menuitem action="ViewToolsToolbarItem" />
+            <menuitem action="ViewMaintainerToolbarItem" />
+            <menuitem action="ViewHelpToolbarItem" />
         </menu>
         <menu action="ToolsMenu">
             <menuitem action="ImportItem" />
@@ -57,8 +64,36 @@
     </popup>
 
     <toolbar name="FileToolbar">
-        <toolitem action="NewActionItem" />
-        <toolitem action="SaveItem" />
-        <toolitem action="QuitItem" />
+            <toolitem action="NewMenuItem" />
+            <toolitem action="NewActionItem" />
+            <toolitem action="NewProfileItem" />
+            <toolitem action="SaveItem" />
+            <toolitem action="QuitItem" />
+    </toolbar>
+
+    <toolbar name="EditToolbar">
+            <toolitem action="CutItem" />
+            <toolitem action="CopyItem" />
+            <toolitem action="PasteItem" />
+            <toolitem action="PasteIntoItem" />
+            <toolitem action="DuplicateItem" />
+            <toolitem action="DeleteItem" />
+            <toolitem action="ReloadActionsItem" />
+            <toolitem action="PreferencesItem" />
+    </toolbar>
+
+    <toolbar name="ViewToolbar">
+            <toolitem action="ExpandAllItem" />
+            <toolitem action="CollapseAllItem" />
+    </toolbar>
+
+    <toolbar name="ToolsToolbar">
+            <toolitem action="ImportItem" />
+            <toolitem action="ExportItem" />
+    </toolbar>
+
+    <toolbar name="HelpToolbar">
+            <toolitem action="HelpItem" />
+            <toolitem action="AboutItem" />
     </toolbar>
 </ui>

@@ -1,5 +1,9 @@
 2009-10-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nautilus-actions-config-tool.actions:
+	* src/nact/nautilus-actions-maintainer.actions:
+	Add toolbar items in View menu.
+
 	* src/nact/nact-assistant-import.c
 	(assistant_apply): Also checks the existancy against already imported.
 	(prepare_importdone): Actually states that the import was successfull.
