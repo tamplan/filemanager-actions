@@ -3,6 +3,7 @@
     <menubar name="MainMenubar">
         <placeholder name="MaintainerMenuPlace">
             <menu action="MaintainerMenu">
+                <menuitem action="DumpSelectionItem" />
                 <menuitem action="BriefTreeStoreDumpItem" />
             </menu>
         </placeholder>

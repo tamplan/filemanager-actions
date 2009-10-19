@@ -1,3 +1,12 @@
+2009-10-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nautilus-actions-maintainer.actions:
+	Add a 'Dump selection' item in maintainer menu.
+
+	* src/nact/nact-main-menubar.c (on_duplicate_activated):
+	Check duplicate status after having reinitialized the origin object.
+
 2009-10-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Open a popup on right click on the treeview.

@@ -123,6 +123,7 @@ static void     on_collapse_all_activated( GtkAction *action, NactMainWindow *wi
 static void     on_import_activated( GtkAction *action, NactMainWindow *window );
 static void     on_export_activated( GtkAction *action, NactMainWindow *window );
 
+static void     on_dump_selection_activated( GtkAction *action, NactMainWindow *window );
 static void     on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window );
 
 static void     on_help_activated( GtkAction *action, NactMainWindow *window );
@@ -213,6 +214,10 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the Export item */
 				N_( "Export one or more actions from your configuration to external XML files" ),
 				G_CALLBACK( on_export_activated ) },
+		{ "DumpSelectionItem", NULL, N_( "_Dump the selection" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the Dump selection item */
+				N_( "Recursively dump selected items" ),
+				G_CALLBACK( on_dump_selection_activated ) },
 		{ "BriefTreeStoreDumpItem", NULL, N_( "_Brief tree store dump" ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item */
 				N_( "Briefly dump the tree store" ),
@@ -1006,6 +1011,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 		na_object_prepare_for_paste( obj, pivot, TRUE, action );
 		na_object_set_origin( obj, NULL );
+		na_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );
 		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
 		na_object_free_items_list( dup );
@@ -1101,6 +1107,19 @@ static void
 on_export_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	nact_assistant_export_run( BASE_WINDOW( window ));
+}
+
+static void
+on_dump_selection_activated( GtkAction *action, NactMainWindow *window )
+{
+	GList *items, *it;
+
+	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	for( it = items ; it ; it = it->next ){
+		na_object_dump( it->data );
+	}
+
+	na_object_free_items_list( items );
 }
 
 static void
