@@ -1,3 +1,11 @@
+2009-10-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-imenubar.c:
+	Remove New menu and Preferences cross-references.
+
+	* src/nact/nact-window.c (nact_window_signal_connect):
+	Check GObject validity.
+
 2009-10-14 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-window.c (instance_dispose):

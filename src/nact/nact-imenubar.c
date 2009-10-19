@@ -178,13 +178,11 @@ typedef struct {
 static const MenuActionStruct menu_actions[] = {
 		{ "FileMenu", "NewActionItem" },
 		{ "FileMenu", "NewProfileItem" },
-		{ "FileMenu", "NewMenuItem" },
 		{ "FileMenu", "SaveItem" },
 		{ "FileMenu", "QuitItem" },
 		{ "EditMenu", "DuplicateItem" },
 		{ "EditMenu", "DeleteItem" },
 		{ "EditMenu", "ReloadActionsItem" },
-		{ "EditMenu", "PreferencesItem" },
 		{ "ToolsMenu", "ImportItem" },
 		{ "ToolsMenu", "ExportItem" },
 		{ "HelpMenu", "HelpItem" },
@@ -321,6 +319,7 @@ nact_imenubar_init( NactMainWindow *window )
 		GtkAction *action = gtk_ui_manager_get_action( ui_manager, path );
 		GtkWidget *widget = gtk_ui_manager_get_widget( ui_manager, path );
 		g_object_set_data( G_OBJECT( widget ), "nact-imenubar-action", action );
+		g_debug( "path=%s, widget=%p", path, ( void * ) widget );
 		nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( widget ), "select", G_CALLBACK( on_menu_item_selected ));
 		nact_window_signal_connect( NACT_WINDOW( window ), G_OBJECT( widget ), "deselect", G_CALLBACK( on_menu_item_deselected ));
 		g_free( path );

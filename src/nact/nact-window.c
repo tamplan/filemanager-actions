@@ -355,10 +355,13 @@ void
 nact_window_signal_connect( NactWindow *window, GObject *instance, const gchar *signal, GCallback fn )
 {
 	static const gchar *thisfn = "nact_window_signal_connect";
+	gulong handler_id;
+	NactWindowRecordedSignal *str;
 
-	gulong handler_id = g_signal_connect( instance, signal, fn, window );
+	g_return_if_fail( instance );
+	handler_id = g_signal_connect( instance, signal, fn, window );
 
-	NactWindowRecordedSignal *str = g_new0( NactWindowRecordedSignal, 1 );
+	str = g_new0( NactWindowRecordedSignal, 1 );
 	str->instance = instance;
 	str->handler_id = handler_id;
 	window->private->signals = g_slist_prepend( window->private->signals, str );
