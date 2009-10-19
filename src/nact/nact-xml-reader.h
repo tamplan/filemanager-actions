@@ -70,7 +70,7 @@ typedef struct {
 
 GType           nact_xml_reader_get_type( void );
 
-NAObjectAction *nact_xml_reader_import( BaseWindow *window, const gchar *uri, gint mode, GSList **msg );
+NAObjectAction *nact_xml_reader_import( BaseWindow *window, GList *items, const gchar *uri, gint mode, GSList **msg );
 
 G_END_DECLS
 

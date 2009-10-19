@@ -1717,10 +1717,12 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	uri_list = g_slist_reverse( na_utils_lines_to_string_list(( const gchar * ) selection_data->data ));
 	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE );
 
+	object_list = NULL;
 	for( is = uri_list ; is ; is = is->next ){
 
 		action = nact_xml_reader_import(
 				model->private->window,
+				object_list,
 				( const gchar * ) is->data,
 				import_mode,
 				&msg );
@@ -1733,21 +1735,19 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 					msg->data );
 			na_utils_free_string_list( msg );
 
-		} else {
-			g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
-			object_list = g_list_prepend( NULL, action );
-			na_object_dump( action );
-			na_object_check_status( action );
-			nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
-			g_list_free( object_list );
-			drop_done = TRUE;
 		}
 
 		if( action ){
 			g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
-			na_object_unref( action );
+			object_list = g_list_prepend( object_list, action );
+			na_object_check_status( action );
+			na_object_dump( action );
+			drop_done = TRUE;
 		}
 	}
+
+	nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
+	na_object_free_items_list( object_list );
 
 	gtk_tree_path_free( new_dest );
 	nact_tree_model_dump( model );

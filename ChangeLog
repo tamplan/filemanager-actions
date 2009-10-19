@@ -1,5 +1,16 @@
 2009-10-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-import.c
+	(assistant_apply): Also checks the existancy against already imported.
+	(prepare_importdone): Actually states that the import was successfull.
+
+	* src/nact/nact-tree-model.c
+	(drop_uri_list): Also checks the existancy against already imported.
+
+	* src/nact/nact-xml-reader.c:
+	* src/nact/nact-xml-reader.h (nact_xml_reader_import):
+	Also checks the existancy against already imported.
+
 	* src/common/na-utils.c (na_utils_prefix_strings):
 	Fix concatenation of prefixed strings.
 

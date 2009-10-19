@@ -657,13 +657,15 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	g_object_get( G_OBJECT( wnd ), BASE_WINDOW_PROP_PARENT, &mainwnd, NULL );
 
-	/* first import actions
+	/* import actions
 	 * getting results in the same order than uris
+	 * simultaneously building the actions list
 	 */
+	items = NULL;
 	for( is = uris ; is ; is = is->next ){
 
 		msg = NULL;
-		action = nact_xml_reader_import( BASE_WINDOW( window ), ( const gchar * ) is->data, mode, &msg );
+		action = nact_xml_reader_import( BASE_WINDOW( window ), items, ( const gchar * ) is->data, mode, &msg );
 
 		str = g_new0( ImportUriStruct, 1 );
 		str->uri = g_strdup(( const gchar * ) is->data );
@@ -671,22 +673,19 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		str->msg = na_utils_duplicate_string_list( msg );
 		na_utils_free_string_list( msg );
 
+		if( str->action ){
+			na_object_check_status( str->action );
+			items = g_list_prepend( items, str->action );
+		}
+
 		window->private->results = g_slist_prepend( window->private->results, str );
 	}
 	na_utils_free_string_list( uris );
 	window->private->results = g_slist_reverse( window->private->results );
 
-	/* then insert them in the list
+	/* then insert the list
 	 * assuring that actions will be inserted in the same order as uris
 	 */
-	items = NULL;
-	for( is = window->private->results ; is ; is = is->next ){
-		str = ( ImportUriStruct * ) is->data;
-		if( str->action ){
-			na_object_check_status( str->action );
-			items = g_list_prepend( items, str->action );
-		}
-	}
 	items = g_list_reverse( items );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
 	na_object_free_items_list( items );
@@ -729,6 +728,10 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		g_free( bname );
 
 		if( str->action ){
+			/* i18n: indicate that the file has been successfully imported */
+			tmp = g_strdup_printf( "%s\t\t%s\n", text, _( "Import OK" ));
+			g_free( text );
+			text = tmp;
 			uuid = na_object_get_id( str->action );
 			label = na_object_get_label( str->action );
 			/* i18n: this is the globally unique identifier and the label of the newly imported action */
@@ -736,16 +739,17 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 			g_free( label );
 			g_free( uuid );
 			tmp = g_strdup_printf( "%s\t\t%s\n", text, text2 );
+			g_free( text );
+			text = tmp;
 
 			window->private->actions = g_slist_prepend( window->private->actions, str->action );
 
 		} else {
 			/* i18n: indicate that the file was not iported */
 			tmp = g_strdup_printf( "%s\t\t%s\n", text, _( "Not imported" ));
+			g_free( text );
+			text = tmp;
 		}
-
-		g_free( text );
-		text = tmp;
 
 		/* add messages if any */
 		for( im = str->msg ; im ; im = im->next ){

@@ -67,6 +67,7 @@ struct NactXMLReaderPrivate {
 	BaseWindow      *window;
 	gint             import_mode;
 	const gchar     *uri;
+	GList           *auxiliaries;
 	NAObjectAction  *action;			/* the action that we will return, or NULL */
 	GSList          *messages;
 	gboolean         uuid_set;			/* set at first uuid, then checked against */
@@ -129,40 +130,41 @@ static GConfReaderStruct reader_str[] = {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NactXMLReaderClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_dispose( GObject *object );
-static void     instance_finalize( GObject *object );
+static GType          register_type( void );
+static void           class_init( NactXMLReaderClass *klass );
+static void           instance_init( GTypeInstance *instance, gpointer klass );
+static void           instance_dispose( GObject *object );
+static void           instance_finalize( GObject *object );
 
 static NactXMLReader *gconf_reader_new( void );
 
-static void     gconf_reader_parse_schema_root( NactXMLReader *reader, xmlNode *root );
-static void     gconf_reader_parse_schemalist( NactXMLReader *reader, xmlNode *schemalist );
-static gboolean gconf_reader_parse_schema( NactXMLReader *reader, xmlNode *schema );
-static gboolean gconf_reader_parse_applyto( NactXMLReader *reader, xmlNode *node );
-static gboolean gconf_reader_check_for_entry( NactXMLReader *reader, xmlNode *node, const char *entry );
-static gboolean gconf_reader_parse_locale( NactXMLReader *reader, xmlNode *node );
-static void     gconf_reader_parse_default( NactXMLReader *reader, xmlNode *node );
-static gchar   *get_profile_name_from_schema_key( const gchar *key, const gchar *uuid );
+static void           gconf_reader_parse_schema_root( NactXMLReader *reader, xmlNode *root );
+static void           gconf_reader_parse_schemalist( NactXMLReader *reader, xmlNode *schemalist );
+static gboolean       gconf_reader_parse_schema( NactXMLReader *reader, xmlNode *schema );
+static gboolean       gconf_reader_parse_applyto( NactXMLReader *reader, xmlNode *node );
+static gboolean       gconf_reader_check_for_entry( NactXMLReader *reader, xmlNode *node, const char *entry );
+static gboolean       gconf_reader_parse_locale( NactXMLReader *reader, xmlNode *node );
+static void           gconf_reader_parse_default( NactXMLReader *reader, xmlNode *node );
+static gchar         *get_profile_name_from_schema_key( const gchar *key, const gchar *uuid );
 
-static void     gconf_reader_parse_dump_root( NactXMLReader *reader, xmlNode *root );
-static void     gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist );
-static gboolean gconf_reader_parse_entry( NactXMLReader *reader, xmlNode *entry );
-static gboolean gconf_reader_parse_dump_key( NactXMLReader *reader, xmlNode *key );
-static void     gconf_reader_parse_dump_value( NactXMLReader *reader, xmlNode *key );
-static void     gconf_reader_parse_dump_value_list( NactXMLReader *reader, xmlNode *key );
-static gchar   *get_profile_name_from_dump_key( const gchar *key );
+static void           gconf_reader_parse_dump_root( NactXMLReader *reader, xmlNode *root );
+static void           gconf_reader_parse_entrylist( NactXMLReader *reader, xmlNode *entrylist );
+static gboolean       gconf_reader_parse_entry( NactXMLReader *reader, xmlNode *entry );
+static gboolean       gconf_reader_parse_dump_key( NactXMLReader *reader, xmlNode *key );
+static void           gconf_reader_parse_dump_value( NactXMLReader *reader, xmlNode *key );
+static void           gconf_reader_parse_dump_value_list( NactXMLReader *reader, xmlNode *key );
+static gchar         *get_profile_name_from_dump_key( const gchar *key );
 
-static void     apply_values( NactXMLReader *reader );
-static void     add_message( NactXMLReader *reader, const gchar *format, ... );
-static int      strxcmp( const xmlChar *a, const char *b );
-static gchar   *get_uuid_from_key( NactXMLReader *reader, const gchar *key, guint line );
-static gboolean is_uuid_valid( const gchar *uuid );
-static gchar   *get_entry_from_key( const gchar *key );
-static void     free_reader_values( NactXMLReader *reader );
-static gboolean manage_import_mode( NactXMLReader *reader );
-static void     relabel( NactXMLReader *reader );
+static void           apply_values( NactXMLReader *reader );
+static void           add_message( NactXMLReader *reader, const gchar *format, ... );
+static int            strxcmp( const xmlChar *a, const char *b );
+static gchar         *get_uuid_from_key( NactXMLReader *reader, const gchar *key, guint line );
+static gboolean       is_uuid_valid( const gchar *uuid );
+static gchar         *get_entry_from_key( const gchar *key );
+static void           free_reader_values( NactXMLReader *reader );
+static gboolean       manage_import_mode( NactXMLReader *reader );
+static NAObjectItem  *search_in_auxiliaries( NactXMLReader *reader, const gchar *uuid );
+static void           relabel( NactXMLReader *reader );
 
 GType
 nact_xml_reader_get_type( void )
@@ -295,17 +297,20 @@ gconf_reader_new( void )
 
 /**
  * nact_xml_reader_import:
- * window: the #NactAssistantImport instance.
+ * @window: the #NactAssistantImport instance.
+ * @items: an auxiliary list of NAObjectItems in which the existancy of
+ *  the imported action could be checked ; this typically correspond to
+ *  actions which were previously imported in the assistant
  * @uri: the uri of the file to import.
- * import_mode: the import mode.
- * msg: a list of error messages which may be set by this function.
+ * @import_mode: the import mode.
+ * @msg: a list of error messages which may be set by this function.
  *
  * Import the specified file as an NAAction XML description.
  *
  * Returns: the imported action, or NULL.
  */
 NAObjectAction *
-nact_xml_reader_import( BaseWindow *window, const gchar *uri, gint import_mode, GSList **msg )
+nact_xml_reader_import( BaseWindow *window, GList *items, const gchar *uri, gint import_mode, GSList **msg )
 {
 	static const gchar *thisfn = "nact_xml_reader_import";
 	NAObjectAction *action = NULL;
@@ -319,6 +324,7 @@ nact_xml_reader_import( BaseWindow *window, const gchar *uri, gint import_mode, 
 	reader->private->window = window;
 	reader->private->import_mode = import_mode;
 	reader->private->uri = uri;
+	reader->private->auxiliaries = items;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
@@ -1278,6 +1284,9 @@ manage_import_mode( NactXMLReader *reader )
 
 	uuid = na_object_get_id( reader->private->action );
 	exists = nact_main_window_get_item( main_window, uuid );
+	if( !exists ){
+		exists = search_in_auxiliaries( reader, uuid );
+	}
 
 	if( !exists ){
 		g_free( uuid );
@@ -1318,6 +1327,24 @@ manage_import_mode( NactXMLReader *reader )
 
 	g_free( uuid );
 	return( ret );
+}
+
+static NAObjectItem *
+search_in_auxiliaries( NactXMLReader *reader, const gchar *uuid )
+{
+	NAObjectItem *action;
+	gchar *aux_uuid;
+	GList *it;
+
+	action = NULL;
+	for( it = reader->private->auxiliaries ; it && !action ; it = it->next ){
+		aux_uuid = na_object_get_id( it->data );
+		if( !strcmp( aux_uuid, uuid )){
+			action = NA_OBJECT_ITEM( it->data );
+		}
+		g_free( aux_uuid );
+	}
+	return( action );
 }
 
 /*
