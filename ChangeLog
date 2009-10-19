@@ -1,5 +1,7 @@
 2009-10-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Updated.
+
 	* src/nact/nact-imenubar.c:
 	Remove New menu and Preferences cross-references.
 

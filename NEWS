@@ -1,16 +1,19 @@
-Version xxxxxx
+Version 1.12.1
 ==============
 
-	Release date
+	Release date 2009-10-19
 
-	Actions can be displayed as Nautilus submenus.
-	An 'About Nautilus Actions' item can be added to Nautilus context
-	menu.
 	Menubar items have now keyboard accelerators.
-	Preferences can be edited in NACT user interface.
-	Actions can be freely reordered in NACT user interface.
-	Actions can be exported as XML files by drag and drop to file-
-	manager, text editor, ...
+
+	Keep the actions in Nautilus context menu in the same (alphabetical)
+	order that in NACT.
+
+	Actions can now be directly dropped into Nautilus views without
+	having to run through the Export assistant.
+
+	Make (some) ids unique in Glade-generated UI XML definition file.
+	Please note that this is required to prevent 'duplicate id' bug
+	in distros which use recent versions of GtkBuilder.
 
 	Bugfixes
 
@@ -18,13 +21,31 @@ Version xxxxxx
 
 	Various code enhancements
 
-		BaseApplication base class has been rewritten to get a cleaner api.
-
 		Use Gtk+ UI Manager.
+
+		BaseApplication base class has been rewritten to get a cleaner api.
 
 		Whole program is now compiled with '-pedantic' option.
 
+		Defines a permanent work-around against #589745 (GtkAssistant)
+		so that we can safely proceed with our job in on_assistant_apply()
+		without requiring latest Gtk+ version.
+
+	Various documentation enhancements
+
+		Object hierarchy is updated.
+
 	New and updated translations
+
+		de (Mario Blättermann)
+		es (Jorge Gonzalez)
+		eu (Inaki Larranaga Murgoitio)
+		hi (Rajesh Ranjan)
+		or (Manoj Kumar Giri)
+		pa (A S Alam)
+		sl (Andrej Žnidaršič)
+		sv (Daniel Nylander)
+		te (krishnababu k)
 
 Version 1.12.0
 ==============
@@ -129,6 +150,7 @@ Version 1.11.2
          Packagers may use it to install a schema.
 
 Version 1.11.0 [unstable]
+=========================
 
 	Release date 2009-06-09
 
