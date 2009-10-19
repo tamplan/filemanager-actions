@@ -1,5 +1,8 @@
 2009-10-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-object-id.c (na_object_id_prepare_for_paste):
+	Recursively manage menu subitems.
+
 	* src/nact/nact-main-menubar.c:
 	* src/nact/nautilus-actions-maintainer.actions:
 	Add a 'Dump selection' item in maintainer menu.

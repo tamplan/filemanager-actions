@@ -137,6 +137,7 @@ na_object_id_prepare_for_paste( NAObjectId *object, NAPivot *pivot, gboolean ren
 {
 	static const gchar *thisfn = "na_object_id_prepare_for_paste";
 	gboolean user_relabel;
+	GList *subitems, *it;
 
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
@@ -169,6 +170,12 @@ na_object_id_prepare_for_paste( NAObjectId *object, NAPivot *pivot, gboolean ren
 				na_object_set_new_id( object, NULL );
 				if( user_relabel ){
 					na_object_set_copy_of_label( object );
+				}
+			}
+			if( NA_IS_OBJECT_MENU( object )){
+				subitems = na_object_get_items_list( object );
+				for( it = subitems ; it ; it = it->next ){
+					na_object_prepare_for_paste( it->data, pivot, renumber, NULL );
 				}
 			}
 		}
