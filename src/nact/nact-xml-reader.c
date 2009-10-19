@@ -1174,7 +1174,7 @@ add_message( NactXMLReader *reader, const gchar *format, ... )
 	g_debug( "nact_xml_reader_add_message: format=%s", format );
 
 	va_start( va, format );
-	tmp = g_strdup_vprintf( format, va );
+	tmp = g_markup_vprintf_escaped( format, va );
 	va_end( va );
 	reader->private->messages = g_slist_append( reader->private->messages, tmp );
 }

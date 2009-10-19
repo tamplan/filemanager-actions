@@ -760,6 +760,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		text = tmp;
 	}
 
+	/*g_debug( "%s: text='%s'", thisfn, text );*/
 	gtk_label_set_markup( GTK_LABEL( page ), text );
 	g_free( text );
 

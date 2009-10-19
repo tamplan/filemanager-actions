@@ -326,7 +326,7 @@ na_utils_prefix_strings( const gchar *prefix, const gchar *str )
 	result = g_string_new( "" );
 
 	for( il = list ; il ; il = il->next ){
-		g_string_append_printf( result, "%s%s", prefix, ( gchar * ) il->data );
+		g_string_append_printf( result, "%s%s\n", prefix, ( gchar * ) il->data );
 	}
 
 	na_utils_free_string_list( list );

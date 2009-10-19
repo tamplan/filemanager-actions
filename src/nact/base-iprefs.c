@@ -200,13 +200,10 @@ base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, cons
 			screen_width = gdk_screen_get_width( screen );
 			screen_height = gdk_screen_get_height( screen );
 
-			if(( x+width > screen_width ) ||
-				( y+height > screen_height )){
-				gtk_window_get_default_size( toplevel, &width, &height );
+			if(( x+width < screen_width ) && ( y+height < screen_height )){
+				gtk_window_move( toplevel, x, y );
+				gtk_window_resize( toplevel, width, height );
 			}
-
-			gtk_window_move( toplevel, x, y );
-			gtk_window_resize( toplevel, width, height );
 		}
 	}
 }
