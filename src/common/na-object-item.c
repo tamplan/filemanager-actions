@@ -64,8 +64,7 @@ GdkPixbuf *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *widge
 		iconname = na_object_item_get_icon( item );
 
 		/* TODO: use the same algorythm than Nautilus to find and
-		 * display an icon + move the code to NAAction class +
-		 * remove na_action_get_verified_icon_name
+		 * display an icon
 		 */
 		if( iconname ){
 			if( gtk_stock_lookup( iconname, &stock_item )){

@@ -1,3 +1,11 @@
+2009-10-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-object-item.c (na_object_item_get_pixbuf):
+	Update comment.
+
+	* src/nact/nact-iaction-tab.c (on_icon_browse):
+	Fix widget name.
+
 2009-10-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nautilus-actions-config-tool.actions:
