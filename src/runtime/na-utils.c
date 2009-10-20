@@ -191,6 +191,36 @@ na_utils_gslist_to_schema( GSList *list )
 }
 
 /**
+ * na_utils_get_first_word:
+ * @string: a space-separated string.
+ *
+ * Returns: the first word of @string, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+na_utils_get_first_word( const gchar *string )
+{
+	gchar **splitted, **iter;
+	gchar *word, *tmp;
+
+	splitted = g_strsplit( string, " ", 0 );
+	iter = splitted;
+	word = NULL;
+
+	while( *iter ){
+		tmp = g_strstrip( *iter );
+		if( g_utf8_strlen( tmp, -1 )){
+			word = g_strdup( tmp );
+			break;
+		}
+		iter++;
+	}
+
+	g_strfreev( splitted );
+	return( word );
+}
+
+/**
  * na_utils_path_extract_last_dir:
  * @path: a full path.
  *

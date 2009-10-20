@@ -635,34 +635,25 @@ read_item_action_profile( NAGConfProvider *provider, NAObjectAction *action, con
 static void
 read_item_action_profile_properties( NAGConfProvider *provider, GSList *entries, NAObjectProfile *profile )
 {
-	static const gchar *thisfn = "na_gconf_provider_read_item_action_profile_properties";
+	/*static const gchar *thisfn = "na_gconf_provider_read_item_action_profile_properties";*/
 	gchar *label, *path, *parameters;
 	GSList *basenames, *schemes, *mimetypes;
 	gboolean isfile, isdir, multiple, matchcase;
 
 	if( na_gconf_utils_get_string_from_entries( entries, ACTION_PROFILE_LABEL_ENTRY, &label )){
 		na_object_set_label( profile, label );
+		g_free( label );
 	}
 
-	path = NULL;
 	if( na_gconf_utils_get_string_from_entries( entries, ACTION_PATH_ENTRY, &path )){
 		na_object_profile_set_path( profile, path );
+		g_free( path );
 	}
 
-	parameters = NULL;
 	if( na_gconf_utils_get_string_from_entries( entries, ACTION_PARAMETERS_ENTRY, &parameters )){
 		na_object_profile_set_parameters( profile, parameters );
+		g_free( parameters );
 	}
-
-	if(( !path || !g_utf8_strlen( path, -1 )) && ( !parameters || !g_utf8_strlen( parameters, -1 ))){
-		g_warning(
-				"%s: no path nor parameters found for NAObjectProfile %p \"%s\"",
-				thisfn, ( void * ) profile, label );
-	}
-
-	g_free( label );
-	g_free( path );
-	g_free( parameters );
 
 	if( na_gconf_utils_get_string_list_from_entries( entries, ACTION_BASENAMES_ENTRY, &basenames )){
 		na_object_profile_set_basenames( profile, basenames );

@@ -90,6 +90,11 @@ static NAObject *object_new( const NAObject *profile );
 static void      object_copy( NAObject *target, const NAObject *source );
 static gboolean  object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean  object_is_valid( const NAObject *profile );
+static gboolean  is_valid_path_parameters( const NAObjectProfile *profile );
+static gboolean  is_valid_filenames( const NAObjectProfile *profile );
+static gboolean  is_valid_mimetypes( const NAObjectProfile *profile );
+static gboolean  is_valid_isfiledir( const NAObjectProfile *profile );
+static gboolean  is_valid_schemes( const NAObjectProfile *profile );
 
 static gchar    *object_id_new_id( const NAObjectId *object, const NAObjectId *new_parent );
 
@@ -1472,30 +1477,92 @@ object_are_equal( const NAObject *a, const NAObject *b )
 }
 
 /*
- * a valid NAObjectProfile requires rather a not empty command to be a
- * valid candidate to execution ; as the distinction path vs.parameters
- * is somewhat arbitrary, we check for at least one of these
+ * a valid NAObjectProfile requires :
+ * - the first word of path+parameters should be an executable file
+ * - filenames list of pseudo-regexp is not empty
+ * - mimetypes list is not empty
+ * - at least one of is_file, is_dir is set
+ * - schemes list is not empty
  */
 gboolean
 object_is_valid( const NAObject *profile )
 {
-	gboolean is_valid = TRUE;
+	gboolean is_valid = FALSE;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
 
 	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
 
-		if( is_valid ){
-			is_valid =
-				( NA_OBJECT_PROFILE( profile )->private->path &&
-						g_utf8_strlen( NA_OBJECT_PROFILE( profile )->private->path, -1 ) > 0 ) ||
-
-				( NA_OBJECT_PROFILE( profile )->private->parameters &&
-						g_utf8_strlen( NA_OBJECT_PROFILE( profile )->private->parameters, -1 ) > 0 );
-		}
+		is_valid =
+			is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
+			is_valid_filenames( NA_OBJECT_PROFILE( profile )) &&
+			is_valid_mimetypes( NA_OBJECT_PROFILE( profile )) &&
+			is_valid_isfiledir( NA_OBJECT_PROFILE( profile )) &&
+			is_valid_schemes( NA_OBJECT_PROFILE( profile ));
 	}
 
 	return( is_valid );
+}
+
+static gboolean
+is_valid_path_parameters( const NAObjectProfile *profile )
+{
+	gboolean valid;
+	gchar *command;
+	gchar *exe;
+
+	command = g_strdup_printf( "%s %s", profile->private->path, profile->private->parameters );
+	exe = na_utils_get_first_word( command );
+
+	valid =
+		g_file_test( exe, G_FILE_TEST_EXISTS ) &&
+		g_file_test( exe, G_FILE_TEST_IS_EXECUTABLE ) &&
+		!g_file_test( exe, G_FILE_TEST_IS_DIR );
+
+	g_free( exe );
+	g_free( command );
+
+	return( valid );
+}
+
+static gboolean
+is_valid_filenames( const NAObjectProfile *profile )
+{
+	gboolean valid;
+
+	valid = g_slist_length( profile->private->basenames ) > 0;
+
+	return( valid );
+}
+
+static gboolean
+is_valid_mimetypes( const NAObjectProfile *profile )
+{
+	gboolean valid;
+
+	valid = g_slist_length( profile->private->mimetypes ) > 0;
+
+	return( valid );
+}
+
+static gboolean
+is_valid_isfiledir( const NAObjectProfile *profile )
+{
+	gboolean valid;
+
+	valid = profile->private->is_file || profile->private->is_dir;
+
+	return( valid );
+}
+
+static gboolean
+is_valid_schemes( const NAObjectProfile *profile )
+{
+	gboolean valid;
+
+	valid = g_slist_length( profile->private->schemes ) > 0;
+
+	return( valid );
 }
 
 /*

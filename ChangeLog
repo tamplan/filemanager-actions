@@ -1,5 +1,19 @@
 2009-10-20 Pierre Wieser <pwieser@trychlos.org>
 
+	Enhance validity conditions of a profile.
+
+	* src/common/na-utils.c
+	(na_utils_string_list_to_text): default value is NULL.
+
+	* src/runtime/na-gconf-provider.c (read_item_action_profile_properties):
+	No more check just path and parameters.
+
+	* src/runtime/na-object-profile.c (object_is_valid):
+	Check for command, basenames, mimetypes and schemes.
+
+	* src/runtime/na-utils.c:
+	* src/runtime/na-utils.h (na_utils_get_first_word): New function.
+
 	* src/common/na-object-item.c (na_object_item_get_pixbuf):
 	Update comment.
 

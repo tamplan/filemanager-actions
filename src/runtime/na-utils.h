@@ -47,6 +47,10 @@ gboolean na_utils_string_lists_are_equal( GSList *first, GSList *second );
  */
 gchar   *na_utils_gslist_to_schema( GSList *list );
 
+/* string manipulations
+ */
+gchar   *na_utils_get_first_word( const gchar *string );
+
 /* path manipulations
  */
 gchar   *na_utils_path_extract_last_dir( const gchar *path );

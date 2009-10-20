@@ -106,7 +106,7 @@ na_utils_string_list_to_text( GSList *strlist )
 GSList *
 na_utils_text_to_string_list( const gchar *text )
 {
-	return( text_to_string_list( text, ";", "*" ));
+	return( text_to_string_list( text, ";", NULL ));
 }
 
 /**
