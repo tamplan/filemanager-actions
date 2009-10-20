@@ -1,5 +1,17 @@
 2009-10-20 Pierre Wieser <pwieser@trychlos.org>
 
+	Enable edition actions when the popup menu is open.
+	Do not apply edition actions on ActionsList when the focus is
+	in a tab.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h (nact_iactions_list_has_focus):
+	New function.
+
+	* src/nact/nact-main-menubar.c
+	(on_cut_activated, on_copy_activated, on_paste_activated,
+	on_delete_activated): Track the presence of a popup menu.
+
 	Enhance validity conditions of a profile.
 
 	* src/common/na-utils.c

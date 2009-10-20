@@ -86,6 +86,7 @@ typedef struct {
 	gboolean have_exportables;
 	gboolean treeview_has_focus;
 	gboolean level_zero_order_changed;
+	gulong   popup_handler;
 }
 	MenubarIndicatorsStruct;
 
@@ -134,6 +135,7 @@ static gboolean on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainW
 static void     on_destroy_callback( gpointer data );
 static void     on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window );
 static void     on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window );
+static void     on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow *window );
 static void     on_proxy_connect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window );
 static void     on_proxy_disconnect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window );
 
@@ -408,9 +410,13 @@ nact_main_menubar_open_popup( NactMainWindow *instance, GdkEventButton *event )
 {
 	GtkUIManager *ui_manager;
 	GtkWidget *menu;
+	MenubarIndicatorsStruct *mis;
 
 	ui_manager = ( GtkUIManager * ) g_object_get_data( G_OBJECT( instance ), MENUBAR_PROP_UI_MANAGER );
 	menu = gtk_ui_manager_get_widget( ui_manager, "/ui/Popup" );
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( instance ), MENUBAR_PROP_INDICATORS );
+	mis->popup_handler = g_signal_connect( menu, "selection-done", G_CALLBACK( on_popup_selection_done ), instance );
 
 	gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, event->button, event->time );
 }
@@ -837,22 +843,28 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_menubar_on_cut_activated";
 	GList *items;
 	NactClipboard *clipboard;
+	MenubarIndicatorsStruct *mis;
 
-	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 
-	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	nact_main_window_move_to_deleted( window, items );
-	clipboard = nact_main_window_get_clipboard( window );
-	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_CUT );
-	update_clipboard_counters( window );
-	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
+	if( nact_iactions_list_has_focus( NACT_IACTIONS_LIST( window )) || mis->popup_handler ){
 
-	/* do not unref selected items as the list has been concatenated
-	 * to main_deleted
-	 */
-	/*g_list_free( items );*/
+		g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
+		g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+		g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+		items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+		nact_main_window_move_to_deleted( window, items );
+		clipboard = nact_main_window_get_clipboard( window );
+		nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_CUT );
+		update_clipboard_counters( window );
+		nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
+
+		/* do not unref selected items as the list has been concatenated
+		 * to main_deleted
+		 */
+		/*g_list_free( items );*/
+	}
 }
 
 /*
@@ -869,18 +881,24 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_menubar_on_copy_activated";
 	GList *items;
 	NactClipboard *clipboard;
+	MenubarIndicatorsStruct *mis;
 
-	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 
-	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	clipboard = nact_main_window_get_clipboard( window );
-	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
-	update_clipboard_counters( window );
-	na_object_free_items_list( items );
+	if( nact_iactions_list_has_focus( NACT_IACTIONS_LIST( window )) || mis->popup_handler ){
 
-	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+		g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
+		g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+		g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+		items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+		clipboard = nact_main_window_get_clipboard( window );
+		nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
+		update_clipboard_counters( window );
+		na_object_free_items_list( items );
+
+		g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+	}
 }
 
 /*
@@ -900,12 +918,18 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_paste_activated";
 	GList *items;
+	MenubarIndicatorsStruct *mis;
 
-	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 
-	items = prepare_for_paste( window );
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_free_items_list( items );
+	if( nact_iactions_list_has_focus( NACT_IACTIONS_LIST( window )) || mis->popup_handler ){
+
+		g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
+
+		items = prepare_for_paste( window );
+		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
+		na_object_free_items_list( items );
+	}
 }
 
 /*
@@ -1034,22 +1058,28 @@ on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_menubar_on_delete_activated";
 	GList *items;
 	GList *it;
+	MenubarIndicatorsStruct *mis;
 
-	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 
-	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-	for( it = items ; it ; it = it->next ){
-		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+	if( nact_iactions_list_has_focus( NACT_IACTIONS_LIST( window )) || mis->popup_handler ){
+
+		g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
+		g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+		g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+		items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+		for( it = items ; it ; it = it->next ){
+			g_debug( "%s: item=%p (%s)", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+		}
+		nact_main_window_move_to_deleted( window, items );
+		nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
+
+		/* do not unref selected items as the list has been concatenated
+		 * to main_deleted
+		 */
+		/*g_list_free( items );*/
 	}
-	nact_main_window_move_to_deleted( window, items );
-	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
-
-	/* do not unref selected items as the list has been concatenated
-	 * to main_deleted
-	 */
-	/*g_list_free( items );*/
 }
 
 /*
@@ -1219,6 +1249,19 @@ static void
 on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window )
 {
 	nact_main_statusbar_hide_status( window, MENUBAR_PROP_STATUS_CONTEXT );
+}
+
+static void
+on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_menubar_on_popup_selection_done";
+	MenubarIndicatorsStruct *mis;
+
+	g_debug( "%s", thisfn );
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	g_signal_handler_disconnect( menushell, mis->popup_handler );
+	mis->popup_handler = ( gulong ) 0;
 }
 
 static void
