@@ -456,7 +456,7 @@ on_icon_browse( GtkButton *button, gpointer user_data )
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
-		icon_widget = base_window_get_widget( BASE_WINDOW( user_data ), "MenuIconComboBoxEntry" );
+		icon_widget = base_window_get_widget( BASE_WINDOW( user_data ), "ActionIconComboBoxEntry" );
 		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), filename );
 	    g_free (filename);
 	  }

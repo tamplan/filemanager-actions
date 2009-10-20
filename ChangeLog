@@ -1,3 +1,10 @@
+2009-10-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Bump version number.
+
+	* src/nact/nact-iaction-tab.c (on_icon_browse):
+	Fix widget name.
+
 2009-10-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* NEWS: Updated.
