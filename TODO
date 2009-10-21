@@ -4,10 +4,6 @@
 - (Grumz) i18n doen't works in the command line tool and for some part
   of NACT like the scheme list, it seems..?
 
-- import and export assistants are seen as a distinct application in the
-  task bar (there is a second NA icon) - gtk_window_set_transient_for()
-  has no effect of this - open a bug ?
-
 - Note about the schemas in Nautilus Actions:
   a) actions are identified by uuid
   b) so, all GConf keys have a path with the uuid of the action
@@ -22,24 +18,11 @@
 - allow users to upload/download actions directly from a web repository
   (REST services ?)
 
-- NAUTILUS_ACTIONS_CONFIG_GCONF_BASEDIR has nothing to do in configure.ac
-  (not a configuration variable)
-
 - changing conditions in IConditionsTab should trigger an update of the
   example label
 
 - propose a patch for GOptions so that the help for an option could be
   multiline (by defining an optional maximum width)
-
-- Make Nautilus conscious of modifications of preferences
-  This suppose Nautilus receive a item-updated signal
-  NACT is not conscious of Nautilus
-  -> watching GConf preferences keys (in the same model than that used
-     for reloading updated actions)
-     But I don't want wath at the whole preferences/ dir, so we'd have
-     to watch to each and every single preference which may have an
-     impact on Nautilus behavior
-  -> send a DBus message would be the most elegant solution
 
 - open a bug against glib for g_utf8_collate_key_for_filename()
   (see the 26 exported actions, and the screenshot of Nautilus view)
@@ -52,3 +35,21 @@
   recreate a small code which reproduces this bug and open in bugzilla
 
 - lot of work to do on gconf editor
+
+- for each toolbar, let the user choose which buttons are displayed
+
+- have a visual indication of the sort order in the tree
+
+- use eggsmclient
+
+- add -nounique option to not check for unicity (make easier to compare
+  two versions)
+
+- when a unique app is found, use libwnck (?) to activate it
+
+- have a preference for modified and invalid fonts
+
+- undo manager (at least Ctrl-Z)
+
+- ui preferences: escape quit the assistant 
+- ui preferences, warn on escape before quitting
