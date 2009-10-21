@@ -1362,8 +1362,6 @@ toolbar_init( NactMainWindow *window, const gchar *pref, gboolean default_value,
 	NactApplication *application;
 	NAPivot *pivot;
 	gboolean is_active;
-	GtkUIManager *ui_manager;
-	GtkWidget *hbox, *toolbar;
 	GtkActionGroup *group;
 	GtkToggleAction *action;
 
@@ -1371,12 +1369,6 @@ toolbar_init( NactMainWindow *window, const gchar *pref, gboolean default_value,
 	pivot = nact_application_get_pivot( application );
 	is_active = na_iprefs_read_bool( NA_IPREFS( pivot ), pref, default_value );
 	if( is_active ){
-		ui_manager = ( GtkUIManager * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_UI_MANAGER );
-		toolbar = gtk_ui_manager_get_widget( ui_manager, path );
-		hbox = base_window_get_widget( BASE_WINDOW( window ), "ToolbarHBox" );
-		/*gtk_box_pack_start( GTK_BOX( hbox ), toolbar, TRUE, FALSE, 0 );*/
-		gtk_container_add( GTK_CONTAINER( hbox ), toolbar );
-
 		group = g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_ACTIONS_GROUP );
 		action = GTK_TOGGLE_ACTION( gtk_action_group_get_action( group, item ));
 		gtk_toggle_action_set_active( action, TRUE );
