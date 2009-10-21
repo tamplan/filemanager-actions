@@ -63,10 +63,10 @@
             <menuitem action="AboutItem" />
     </popup>
 
+	<!-- only set in toolbars items which have an icon -->
+
     <toolbar name="FileToolbar">
-            <toolitem action="NewMenuItem" />
             <toolitem action="NewActionItem" />
-            <toolitem action="NewProfileItem" />
             <toolitem action="SaveItem" />
             <toolitem action="QuitItem" />
     </toolbar>
@@ -75,17 +75,17 @@
             <toolitem action="CutItem" />
             <toolitem action="CopyItem" />
             <toolitem action="PasteItem" />
-            <toolitem action="PasteIntoItem" />
-            <toolitem action="DuplicateItem" />
             <toolitem action="DeleteItem" />
             <toolitem action="ReloadActionsItem" />
             <toolitem action="PreferencesItem" />
     </toolbar>
 
+    <!--
     <toolbar name="ViewToolbar">
             <toolitem action="ExpandAllItem" />
             <toolitem action="CollapseAllItem" />
     </toolbar>
+    -->
 
     <toolbar name="ToolsToolbar">
             <toolitem action="ImportItem" />

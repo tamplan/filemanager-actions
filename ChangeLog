@@ -7,6 +7,9 @@
 	* src/nact/nact-main-menubar.c:
 	Enable edition items also when the popup is opened.
 
+	* src/nact/nautilus-actions-config-tool.actions:
+	Only enable in toolbars items which have an icon.
+
 2009-10-20 Pierre Wieser <pwieser@trychlos.org>
 
 	Enable edition actions when the popup menu is open.
