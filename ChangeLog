@@ -1,3 +1,12 @@
+2009-10-21 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-iactions-list.c:
+	Enable send of focus-in and focus-out messages.
+	Do not retest focus when dealing with accelerators.
+
+	* src/nact/nact-main-menubar.c:
+	Enable edition items also when the popup is opened.
+
 2009-10-20 Pierre Wieser <pwieser@trychlos.org>
 
 	Enable edition actions when the popup menu is open.

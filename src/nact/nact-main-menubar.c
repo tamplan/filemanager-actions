@@ -375,7 +375,7 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 			G_CALLBACK( on_level_zero_order_changed ));
 
 	mis = g_new0( MenubarIndicatorsStruct, 1 );
-	mis->treeview_has_focus = TRUE;
+	/*mis->treeview_has_focus = TRUE;*/
 	g_object_set_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS, mis );
 }
 
@@ -418,6 +418,8 @@ nact_main_menubar_open_popup( NactMainWindow *instance, GdkEventButton *event )
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( instance ), MENUBAR_PROP_INDICATORS );
 	mis->popup_handler = g_signal_connect( menu, "selection-done", G_CALLBACK( on_popup_selection_done ), instance );
 
+	g_signal_emit_by_name( instance, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+
 	gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, event->button, event->time );
 }
 
@@ -440,6 +442,7 @@ on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions
 	mis->list_profiles = profiles;
 	mis->have_exportables = ( mis->list_actions > 0 );
 
+	/* i18n: note the space at the beginning of the sentence */
 	status = g_strdup_printf( _( " %d menus, %d actions, %d profiles are currently displayed" ), menus, actions, profiles );
 	nact_main_statusbar_display_status( window, MENUBAR_PROP_MAIN_STATUS_CONTEXT, status );
 	g_free( status );
@@ -470,10 +473,6 @@ on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
-/*
- * these two functions are no more used
- * see comment in nact-iactions-list.c::on_focus_in().
- */
 static void
 on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data )
 {
@@ -579,17 +578,17 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	count_selected = mis->selected_menus + mis->selected_actions + mis->selected_profiles;
 
 	/* cut/copy/duplicate/delete enabled when selection not empty */
-	cut_enabled = mis->treeview_has_focus && count_selected > 0;
-	copy_enabled = mis->treeview_has_focus && count_selected > 0;
-	duplicate_enabled = mis->treeview_has_focus && count_selected > 0;
-	delete_enabled = mis->treeview_has_focus && count_selected > 0;
+	cut_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
+	copy_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
+	duplicate_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
+	delete_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
 
 	/* paste enabled if
 	 * - simple selection
 	 * - clipboard contains only profiles, and current selection is a profile
 	 * - clipboard contains actions or menus, and current selection is a menu or an action */
 	paste_enabled = FALSE;
-	if( mis->treeview_has_focus && count_selected <= 1 ){
+	if(( mis->treeview_has_focus || mis->popup_handler ) && count_selected <= 1 ){
 		if( !clipboard_is_empty ){
 			if( mis->clipboard_profiles ){
 				paste_enabled = item && NA_IS_OBJECT_ACTION( item );
@@ -605,7 +604,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	 * - or current item is a menu
 	 * do not paste into if current selection is a profile */
 	paste_into_enabled = FALSE;
-	if( mis->treeview_has_focus && count_selected <= 1 ){
+	if(( mis->treeview_has_focus || mis->popup_handler ) && count_selected <= 1 ){
 		if( mis->selected_menus + mis->selected_actions ){
 			if( !clipboard_is_empty ){
 				if( mis->clipboard_profiles ){
@@ -843,28 +842,22 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_menubar_on_cut_activated";
 	GList *items;
 	NactClipboard *clipboard;
-	MenubarIndicatorsStruct *mis;
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
+	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	if( nact_iactions_list_has_focus( NACT_IACTIONS_LIST( window )) || mis->popup_handler ){
+	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	nact_main_window_move_to_deleted( window, items );
+	clipboard = nact_main_window_get_clipboard( window );
+	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_CUT );
+	update_clipboard_counters( window );
+	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
 
-		g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-		g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-		g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-		items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-		nact_main_window_move_to_deleted( window, items );
-		clipboard = nact_main_window_get_clipboard( window );
-		nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_CUT );
-		update_clipboard_counters( window );
-		nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
-
-		/* do not unref selected items as the list has been concatenated
-		 * to main_deleted
-		 */
-		/*g_list_free( items );*/
-	}
+	/* do not unref selected items as the list has been concatenated
+	 * to main_deleted
+	 */
+	/*g_list_free( items );*/
 }
 
 /*
@@ -881,24 +874,18 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_menubar_on_copy_activated";
 	GList *items;
 	NactClipboard *clipboard;
-	MenubarIndicatorsStruct *mis;
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
+	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	if( nact_iactions_list_has_focus( NACT_IACTIONS_LIST( window )) || mis->popup_handler ){
+	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	clipboard = nact_main_window_get_clipboard( window );
+	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
+	update_clipboard_counters( window );
+	na_object_free_items_list( items );
 
-		g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-		g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-		g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-		items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-		clipboard = nact_main_window_get_clipboard( window );
-		nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
-		update_clipboard_counters( window );
-		na_object_free_items_list( items );
-
-		g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
-	}
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
 /*
@@ -918,18 +905,12 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_paste_activated";
 	GList *items;
-	MenubarIndicatorsStruct *mis;
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 
-	if( nact_iactions_list_has_focus( NACT_IACTIONS_LIST( window )) || mis->popup_handler ){
-
-		g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-
-		items = prepare_for_paste( window );
-		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-		na_object_free_items_list( items );
-	}
+	items = prepare_for_paste( window );
+	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
+	na_object_free_items_list( items );
 }
 
 /*
@@ -1058,28 +1039,22 @@ on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_menubar_on_delete_activated";
 	GList *items;
 	GList *it;
-	MenubarIndicatorsStruct *mis;
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
+	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	if( nact_iactions_list_has_focus( NACT_IACTIONS_LIST( window )) || mis->popup_handler ){
-
-		g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-		g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-		g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-		items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
-		for( it = items ; it ; it = it->next ){
-			g_debug( "%s: item=%p (%s)", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
-		}
-		nact_main_window_move_to_deleted( window, items );
-		nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
-
-		/* do not unref selected items as the list has been concatenated
-		 * to main_deleted
-		 */
-		/*g_list_free( items );*/
+	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	for( it = items ; it ; it = it->next ){
+		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
 	}
+	nact_main_window_move_to_deleted( window, items );
+	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
+
+	/* do not unref selected items as the list has been concatenated
+	 * to main_deleted
+	 */
+	/*g_list_free( items );*/
 }
 
 /*

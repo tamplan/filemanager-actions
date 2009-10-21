@@ -2068,12 +2068,6 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
  * triggers an unwaited operation on the list
  * e.g. when editing an entry field on the tab, pressing Del should _not_
  * delete current row in the list !
- *
- * this has the disadvantage that opening a popup menu makes the treeview
- * loses its focus, and so the edit menu is all disabled
- *
- * to fix that, we consider in menubar that treeview always has the focus
- * and we check it in on_key_pressed()
  */
 static gboolean
 on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance )
@@ -2082,7 +2076,7 @@ on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance
 	gboolean stop = FALSE;
 
 	/*g_debug( "%s: widget=%p, event=%p, instance=%p", thisfn, ( void * ) widget, ( void * ) event, ( void * ) instance );*/
-	/*g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_IN, instance );*/
+	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_IN, instance );
 
 	return( stop );
 }
@@ -2094,7 +2088,7 @@ on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instanc
 	gboolean stop = FALSE;
 
 	/*g_debug( "%s: widget=%p, event=%p, instance=%p", thisfn, ( void * ) widget, ( void * ) event, ( void * ) instance );*/
-	/*g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_OUT, instance );*/
+	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_FOCUS_OUT, instance );
 
 	return( stop );
 }
@@ -2104,31 +2098,26 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *i
 {
 	/*static const gchar *thisfn = "nact_iactions_list_v_on_key_pressed_event";
 	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );*/
-	GtkTreeView *treeview;
 	gboolean stop = FALSE;
 
-	treeview = get_actions_list_treeview( instance );
-	if( GTK_WIDGET_HAS_FOCUS( treeview )){
+	if( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ){
+		toggle_collapse( instance );
+		stop = TRUE;
+	}
 
-		if( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ){
-			toggle_collapse( instance );
-			stop = TRUE;
-		}
+	if( event->keyval == GDK_F2 ){
+		inline_edition( instance );
+		stop = TRUE;
+	}
 
-		if( event->keyval == GDK_F2 ){
-			inline_edition( instance );
-			stop = TRUE;
-		}
+	if( event->keyval == GDK_Right ){
+		expand_to_first_child( instance );
+		stop = TRUE;
+	}
 
-		if( event->keyval == GDK_Right ){
-			expand_to_first_child( instance );
-			stop = TRUE;
-		}
-
-		if( event->keyval == GDK_Left ){
-			collapse_to_parent( instance );
-			stop = TRUE;
-		}
+	if( event->keyval == GDK_Left ){
+		collapse_to_parent( instance );
+		stop = TRUE;
 	}
 
 	return( stop );
