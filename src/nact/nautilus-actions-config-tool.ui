@@ -19,7 +19,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="ToolbarVBox">
+          <object class="GtkHBox" id="ToolbarHBox">
             <property name="visible">True</property>
             <child>
               <placeholder/>
@@ -1017,10 +1017,10 @@ Defining several profiles lets you have several commands, each applying with a d
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <property name="local_only">False</property>
-            <property name="use_preview_label">False</property>
             <property name="select_multiple">True</property>
             <property name="preview_widget_active">False</property>
+            <property name="local_only">False</property>
+            <property name="use_preview_label">False</property>
           </object>
           <packing>
             <property name="position">0</property>

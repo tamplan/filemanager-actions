@@ -420,6 +420,39 @@ All schemes used by Nautilus can be used here.</long>
     </schema>
 
     <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/main-edit-toolbar</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Display Edit toolbar</short>
+        <long>Whether to display or not the Edit toolbar in the main window</long>
+      </locale>
+      <default>false</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/main-file-toolbar</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Display File toolbar</short>
+        <long>Whether to display or not the File toolbar in the main window</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/main-help-toolbar</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Display Help toolbar</short>
+        <long>Whether to display or not the Help toolbar in the main window</long>
+      </locale>
+      <default>false</default>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/nautilus-actions/preferences/main-paned</key>
       <owner>nautilus-actions</owner>
       <type>int</type>
@@ -428,6 +461,17 @@ All schemes used by Nautilus can be used here.</long>
         <long>Width of the main window pane ; default is set by the UI manager</long>
       </locale>
       <default>100</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/main-tools-toolbar</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Display Tools toolbar</short>
+        <long>Whether to display or not the Tools toolbar in the main window</long>
+      </locale>
+      <default>false</default>
     </schema>
 
     <schema>

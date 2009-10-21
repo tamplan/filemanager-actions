@@ -25,12 +25,12 @@
             <menuitem action="ExpandAllItem" />
             <menuitem action="CollapseAllItem" />
             <separator />
-            <menuitem action="ViewFileToolbarItem" />
-            <menuitem action="ViewEditToolbarItem" />
-            <menuitem action="ViewViewToolbarItem" />
-            <menuitem action="ViewToolsToolbarItem" />
-            <menuitem action="ViewMaintainerToolbarItem" />
-            <menuitem action="ViewHelpToolbarItem" />
+            <menu action="ViewToolbarMenu">
+                <menuitem action="ViewFileToolbarItem" />
+                <menuitem action="ViewEditToolbarItem" />
+                <menuitem action="ViewToolsToolbarItem" />
+                <menuitem action="ViewHelpToolbarItem" />
+            </menu>
         </menu>
         <menu action="ToolsMenu">
             <menuitem action="ImportItem" />

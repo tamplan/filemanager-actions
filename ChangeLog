@@ -1,5 +1,15 @@
 2009-10-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/nautilus-actions.schemas.in:
+	Define new preferences for displaying toolbars.
+
+	* src/nact/nact-main-menubar.c:
+	Define new View/Toolbars menu.
+	Display the toolbars depending on user preferences.
+
+	* src/nact/nautilus-actions-config-tool.actions:
+	Toolbar placeholder is now a HBox.
+
 	* src/nact/nact-iactions-list.c:
 	Enable send of focus-in and focus-out messages.
 	Do not retest focus when dealing with accelerators.
