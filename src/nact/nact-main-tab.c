@@ -1,6 +1,6 @@
 /*
- * Nautilus ObjectItems
- * A Nautilus extension which offers configurable context menu object_items.
+ * Nautilus Actions
+ * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
@@ -28,47 +28,22 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_ITEM_PRIV_H__
-#define __NA_RUNTIME_OBJECT_ITEM_PRIV_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include "na-object-item-class.h"
+#include "nact-main-tab.h"
 
-G_BEGIN_DECLS
+void
+nact_main_tab_enable_page( NactMainWindow *window, gint num_page, gboolean enabled )
+{
+	GtkNotebook *notebook;
+	GtkWidget *page, *label;
 
-/* private instance data
- */
-struct NAObjectItemPrivate {
-	gboolean       dispose_has_run;
+	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
+	page = gtk_notebook_get_nth_page( notebook, num_page );
+	gtk_widget_set_sensitive( page, enabled );
 
-	/* object_item properties
-	 */
-	gchar         *tooltip;
-	gchar         *icon;
-	gboolean       enabled;
-
-	/* which targets does this item target ?
-	 * note that targeting toolbar is (as of Nautilus 2.26) an
-	 * action-only attribute
-	 */
-	gboolean       target_selection;
-	gboolean       target_background;
-	gboolean       target_toolbar;
-
-	/* list of NAObjectId subitems
-	 */
-	GList         *items;
-
-	/* this is the list of subitems as a list of id strings
-	 * as readen from IIOProviders
-	 */
-	GSList        *items_ids;
-
-	/* the original provider
-	 * required to be able to edit/delete the item
-	 */
-	NAIIOProvider *provider;
-};
-
-G_END_DECLS
-
-#endif /* __NA_RUNTIME_OBJECT_ITEM_PRIV_H__ */
+	label = gtk_notebook_get_tab_label( notebook, page );
+	gtk_widget_set_sensitive( label, enabled );
+}

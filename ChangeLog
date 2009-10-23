@@ -1,24 +1,70 @@
-2009-10-21 Pierre Wieser <pwieser@trychlos.org>
+2009-10-23 Pierre Wieser <pwieser@trychlos.org>
+
+	Populates Nautilus background menus and Nautilus toolbar.
+	Defines required new properties:
+	- target_selection: whether the action is candidate to selection menus
+	- target_background: whether the action is candidate to background menus
+	- target_toolbar: whether the action is candidate to toolbar display
+	- short_label: the toolbar label
+	- use_same_label: whether the toolbar label is the same that those of the
+	action.
 
 	* data/nautilus-actions.schemas.in:
-	Define new preferences for displaying toolbars.
+	* src/common/na-xml-names.h:
+	Define the new keys.
+	Make sure key descriptions are equal to those in nact-xml-names.h.
 
-	* src/nact/nact-main-menubar.c:
-	Define new View/Toolbars menu.
-	Display the toolbars depending on user preferences.
+	* src/common/na-xml-writer.c
+	(create_xml_schema, create_xml_dump): Export the new keys.
+	(create_gconf_schema): Export the new schemas.
 
-	* src/nact/nautilus-actions-config-tool.actions:
-	Toolbar placeholder is now a HBox.
+	* src/nact/nact-ibackground-tab.c:
+	* src/nact/nact-ibackground-tab.h:
+	* src/nact/nact-main-tab.c: New files
 
-	* src/nact/nact-iactions-list.c:
-	Enable send of focus-in and focus-out messages.
-	Do not retest focus when dealing with accelerators.
+	* src/nact/Makefile.am: Updated accordingly.
 
-	* src/nact/nact-main-menubar.c:
-	Enable edition items also when the popup is opened.
+	* src/nact/nact-assistant-export.c
+	(assistant_apply): Exported action is actually the original one,
+	not those displayed in assistant because it has no profiles.
 
-	* src/nact/nautilus-actions-config-tool.actions:
-	Only enable in toolbars items which have an icon.
+	* src/nact/nact-iaction-tab.c:
+	Define three new toggle buttons for the three target properties.
+
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-iconditions-tab.c:
+	Set sensitivity depending on current selection.
+
+	* src/nact/nact-main-window.c:
+	Define new "enable-tab" signal.
+	Implements new NactIBackgroundTab interface.
+
+	* src/nact/nact-xml-reader.c
+	(apply_values): Import the new keys.
+	No more assert on not processed entry.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Define three new toggle buttons to select the available targets.
+	Define new Background notebook tab.
+	Define Toolbar frame.
+
+	* src/plugin/nautilus-actions.c:
+	Implements the two other nautilus API get_background_items and
+	get_toolbar_items, both on current_folder.
+
+	* src/runtime/na-gconf-provider-keys.h:
+	* src/runtime/na-gconf-provider.c:
+	Read/write the new keys from/to IO Provider.
+
+	* src/runtime/na-object-api.h:
+	* src/runtime/na-object-item-priv.h:
+	* src/runtime/na-object-item.c:
+	* src/runtime/na-object-item-fn.h:
+	* src/runtime/na-object-action-priv.h:
+	* src/runtime/na-object-action.c:
+	* src/runtime/na-object-action-fn.h:
+	Implements the new properties.
 
 2009-10-20 Pierre Wieser <pwieser@trychlos.org>
 

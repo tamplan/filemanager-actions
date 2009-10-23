@@ -31,6 +31,8 @@
 #ifndef __NACT_MAIN_TAB_H__
 #define __NACT_MAIN_TAB_H__
 
+#include "nact-main-window.h"
+
 /**
  * SECTION: nact_main_tab
  * @short_description: Signals and properties.
@@ -49,6 +51,20 @@
  */
 #define TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED			"nact-tab-updatable-selection-changed"
 #define TAB_UPDATABLE_SIGNAL_ITEM_UPDATED				"nact-tab-updatable-item-updated"
+#define TAB_UPDATABLE_SIGNAL_ENABLE_TAB					"nact-tab-updatable-enable-tab"
+
+/* notebook tabs
+ */
+
+enum {
+	TAB_ACTION = 0,
+	TAB_COMMAND,
+	TAB_BACKGROUND,
+	TAB_CONDITIONS,
+	TAB_ADVANCED
+};
+
+void nact_main_tab_enable_page( NactMainWindow *window, gint page, gboolean enabled );
 
 G_END_DECLS
 

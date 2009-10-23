@@ -75,6 +75,8 @@ static void       interface_base_finalize( NactICommandTabInterface *klass );
 
 static void       on_iactions_list_column_edited( NactICommandTab *instance, NAObject *object, gchar *text, gint column );
 static void       on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected );
+static gboolean   tab_set_sensitive( NactICommandTab *instance );
+
 static void       check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label );
 static GtkWidget *get_label_entry( NactICommandTab *instance );
 static GtkButton *get_legend_button( NactICommandTab *instance );
@@ -333,10 +335,11 @@ static void
 on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected )
 {
 	static const gchar *thisfn = "nact_icommand_tab_on_tab_updatable_selection_changed";
-	NAObjectProfile *profile = NULL;
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	gboolean enable_tab;
 	GtkWidget *label_entry, *path_entry, *parameters_entry;
 	gchar *label, *path, *parameters;
-	GtkButton *path_button, *legend_button;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
@@ -345,34 +348,47 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 
 		g_object_get(
 				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				NULL );
 
+		enable_tab = tab_set_sensitive( instance );
+
 		label_entry = get_label_entry( instance );
-		label = profile ? na_object_get_label( profile ) : g_strdup( "" );
+		label = enable_tab ? na_object_get_label( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
-		gtk_widget_set_sensitive( label_entry, profile != NULL );
 		check_for_label( instance, GTK_ENTRY( label_entry ), label );
 		g_free( label );
 
 		path_entry = get_path_entry( instance );
-		path = profile ? na_object_profile_get_path( profile ) : g_strdup( "" );
+		path = enable_tab ? na_object_profile_get_path( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
-		gtk_widget_set_sensitive( path_entry, profile != NULL );
 		g_free( path );
 
 		parameters_entry = get_parameters_entry( instance );
-		parameters = profile ? na_object_profile_get_parameters( profile ) : g_strdup( "" );
+		parameters = enable_tab ? na_object_profile_get_parameters( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
-		gtk_widget_set_sensitive( parameters_entry, profile != NULL );
 		g_free( parameters );
-
-		path_button = get_path_button( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile != NULL );
-
-		legend_button = get_legend_button( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );
 	}
+}
+
+static gboolean
+tab_set_sensitive( NactICommandTab *instance )
+{
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	gboolean enable_tab;
+
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			NULL );
+
+	enable_tab = ( profile != NULL );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_COMMAND, enable_tab );
+
+	return( enable_tab );
 }
 
 static void

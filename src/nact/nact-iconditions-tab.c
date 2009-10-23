@@ -39,7 +39,7 @@
 #include <common/na-utils.h>
 
 #include "base-iprefs.h"
-#include "base-window.h"
+#include "nact-main-window.h"
 #include "nact-main-tab.h"
 #include "nact-iconditions-tab.h"
 
@@ -57,6 +57,9 @@ static void       interface_base_init( NactIConditionsTabInterface *klass );
 static void       interface_base_finalize( NactIConditionsTabInterface *klass );
 
 static void       on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_selected );
+static void       on_tab_updatable_enable_tab( NactIConditionsTab *instance, NAObjectItem *item );
+static gboolean   tab_set_sensitive( NactIConditionsTab *instance );
+
 static GtkWidget *get_basenames_entry( NactIConditionsTab *instance );
 static GtkButton *get_both_button( NactIConditionsTab *instance );
 static GtkButton *get_isdir_button( NactIConditionsTab *instance );
@@ -219,6 +222,12 @@ nact_iconditions_tab_runtime_init_toplevel( NactIConditionsTab *instance )
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ),
 				instance );
+
+		g_signal_connect(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
+				G_CALLBACK( on_tab_updatable_enable_tab ),
+				instance );
 	}
 }
 
@@ -289,13 +298,13 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 {
 	static const gchar *thisfn = "nact_iconditions_tab_on_tab_updatable_selection_changed";
 	NAObjectProfile *profile;
+	gboolean enable_tab;
 	GtkWidget *basenames_widget, *mimetypes_widget;
 	GSList *basenames, *mimetypes;
 	gchar *basenames_text, *mimetypes_text;
 	GtkButton *matchcase_button;
 	gboolean matchcase;
 	gboolean isfile, isdir;
-	GtkButton *files_button, *dir_button, *both_button;
 	GtkButton *multiple_button;
 	gboolean multiple;
 
@@ -309,42 +318,68 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				NULL );
 
+		enable_tab = tab_set_sensitive( instance );
+
 		basenames_widget = get_basenames_entry( instance );
-		basenames = profile ? na_object_profile_get_basenames( profile ) : NULL;
+		basenames = enable_tab ? na_object_profile_get_basenames( profile ) : NULL;
 		basenames_text = profile ? na_utils_string_list_to_text( basenames ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( basenames_widget ), basenames_text );
 		g_free( basenames_text );
 		na_utils_free_string_list( basenames );
-		gtk_widget_set_sensitive( basenames_widget, profile != NULL );
 
 		matchcase_button = get_matchcase_button( instance );
-		matchcase = profile ? na_object_profile_get_matchcase( profile ) : FALSE;
+		matchcase = enable_tab ? na_object_profile_get_matchcase( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
-		gtk_widget_set_sensitive( GTK_WIDGET( matchcase_button ), profile != NULL );
 
 		mimetypes_widget = get_mimetypes_entry( instance );
-		mimetypes = profile ? na_object_profile_get_mimetypes( profile ) : NULL;
+		mimetypes = enable_tab ? na_object_profile_get_mimetypes( profile ) : NULL;
 		mimetypes_text = profile ? na_utils_string_list_to_text( mimetypes ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( mimetypes_widget ), mimetypes_text );
 		g_free( mimetypes_text );
 		na_utils_free_string_list( mimetypes );
-		gtk_widget_set_sensitive( mimetypes_widget, profile != NULL );
 
-		isfile = profile ? na_object_profile_get_is_file( profile ) : FALSE;
-		isdir = profile ? na_object_profile_get_is_dir( profile ) : FALSE;
+		isfile = enable_tab ? na_object_profile_get_is_file( profile ) : FALSE;
+		isdir = enable_tab ? na_object_profile_get_is_dir( profile ) : FALSE;
 		set_isfiledir( instance, isfile, isdir );
-		files_button = get_isfile_button( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( files_button ), profile != NULL );
-		dir_button = get_isdir_button( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( dir_button ), profile != NULL );
-		both_button = get_both_button( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( both_button ), profile != NULL );
 
 		multiple_button = get_multiple_button( instance );
-		multiple = profile ? na_object_profile_get_multiple( profile ) : FALSE;
+		multiple = enable_tab ? na_object_profile_get_multiple( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( multiple_button ), multiple );
-		gtk_widget_set_sensitive( GTK_WIDGET( multiple_button ), profile != NULL );
 	}
+}
+
+static void
+on_tab_updatable_enable_tab( NactIConditionsTab *instance, NAObjectItem *item )
+{
+	static const gchar *thisfn = "nact_iconditions_tab_on_tab_updatable_enable_tab";
+
+	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
+		g_return_if_fail( NACT_IS_ICONDITIONS_TAB( instance ));
+
+		tab_set_sensitive( instance );
+
+	}
+}
+
+static gboolean
+tab_set_sensitive( NactIConditionsTab *instance )
+{
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	gboolean enable_tab;
+
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			NULL );
+
+	enable_tab = ( profile != NULL && na_object_is_target_selection( item ));
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_CONDITIONS, enable_tab );
+
+	return( enable_tab );
 }
 
 static GtkWidget *
@@ -413,7 +448,8 @@ on_basenames_changed( GtkEntry *entry, NactIConditionsTab *instance )
 /*
  * Note that this callback is triggered twice: first, for the
  * deactivated button, then a second time for the newly activated one.
- * I don't know what to do to be triggered only once..?
+ * To avoid a double execution, we only run the code when the button
+ * becomes active
  */
 static void
 on_isfiledir_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
@@ -422,15 +458,18 @@ on_isfiledir_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 	NAObjectProfile *edited;
 	gboolean isfile, isdir;
 
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
-			NULL );
+	if( gtk_toggle_button_get_active( button )){
 
-	if( edited ){
-		nact_iconditions_tab_get_isfiledir( instance, &isfile, &isdir );
-		na_object_profile_set_isfiledir( edited, isfile, isdir );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+				NULL );
+
+		if( edited ){
+			nact_iconditions_tab_get_isfiledir( instance, &isfile, &isdir );
+			na_object_profile_set_isfiledir( edited, isfile, isdir );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+		}
 	}
 }
 

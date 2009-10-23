@@ -53,14 +53,20 @@ enum {
 	NAOBJECT_ITEM_PROP_ICON_ID,
 	NAOBJECT_ITEM_PROP_ENABLED_ID,
 	NAOBJECT_ITEM_PROP_PROVIDER_ID,
-	NAOBJECT_ITEM_PROP_ITEMS_ID
+	NAOBJECT_ITEM_PROP_ITEMS_ID,
+	NAOBJECT_ITEM_PROP_TARGET_SELECTION_ID,
+	NAOBJECT_ITEM_PROP_TARGET_BACKGROUND_ID,
+	NAOBJECT_ITEM_PROP_TARGET_TOOLBAR_ID,
 };
 
-#define NAOBJECT_ITEM_PROP_TOOLTIP		"na-object-item-tooltip"
-#define NAOBJECT_ITEM_PROP_ICON			"na-object-item-icon"
-#define NAOBJECT_ITEM_PROP_ENABLED		"na-object-item-enabled"
-#define NAOBJECT_ITEM_PROP_PROVIDER		"na-object-item-provider"
-#define NAOBJECT_ITEM_PROP_ITEMS		"na-object-item-items"
+#define NAOBJECT_ITEM_PROP_TOOLTIP				"na-object-item-tooltip"
+#define NAOBJECT_ITEM_PROP_ICON					"na-object-item-icon"
+#define NAOBJECT_ITEM_PROP_ENABLED				"na-object-item-enabled"
+#define NAOBJECT_ITEM_PROP_PROVIDER				"na-object-item-provider"
+#define NAOBJECT_ITEM_PROP_ITEMS				"na-object-item-items"
+#define NAOBJECT_ITEM_PROP_TARGET_SELECTION		"na-object-item-target-selection"
+#define NAOBJECT_ITEM_PROP_TARGET_BACKGROUND	"na-object-item-target-background"
+#define NAOBJECT_ITEM_PROP_TARGET_TOOLBAR		"na-object-item-target-toolbar"
 
 static NAObjectIdClass *st_parent_class = NULL;
 
@@ -163,6 +169,27 @@ class_init( NAObjectItemClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_PROVIDER_ID, spec );
 
+	spec = g_param_spec_boolean(
+			NAOBJECT_ITEM_PROP_TARGET_SELECTION,
+			"Target file selection",
+			"Whether the NAObjectItem is candidate on file selection menus", TRUE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_TARGET_SELECTION_ID, spec );
+
+	spec = g_param_spec_boolean(
+			NAOBJECT_ITEM_PROP_TARGET_BACKGROUND,
+			"Target background",
+			"Whether the NAObjectItem is candidate on background menus", FALSE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_TARGET_BACKGROUND_ID, spec );
+
+	spec = g_param_spec_boolean(
+			NAOBJECT_ITEM_PROP_TARGET_TOOLBAR,
+			"Target toolbar",
+			"Whether the NAObjectItem is candidate on toolbar display", TRUE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_TARGET_TOOLBAR_ID, spec );
+
 	klass->private = g_new0( NAObjectItemClassPrivate, 1 );
 
 	naobject_class = NA_OBJECT_CLASS( klass );
@@ -198,6 +225,9 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->tooltip = g_strdup( "" );
 	self->private->icon = g_strdup( "" );
 	self->private->enabled = TRUE;
+	self->private->target_selection = TRUE;
+	self->private->target_background = FALSE;
+	self->private->target_toolbar = FALSE;
 	self->private->provider = NULL;
 }
 
@@ -226,6 +256,18 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
 				g_value_set_pointer( value, self->private->provider );
+				break;
+
+			case NAOBJECT_ITEM_PROP_TARGET_SELECTION_ID:
+				g_value_set_boolean( value, self->private->target_selection );
+				break;
+
+			case NAOBJECT_ITEM_PROP_TARGET_BACKGROUND_ID:
+				g_value_set_boolean( value, self->private->target_background );
+				break;
+
+			case NAOBJECT_ITEM_PROP_TARGET_TOOLBAR_ID:
+				g_value_set_boolean( value, self->private->target_toolbar );
 				break;
 
 			default:
@@ -262,6 +304,18 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
 				self->private->provider = g_value_get_pointer( value );
+				break;
+
+			case NAOBJECT_ITEM_PROP_TARGET_SELECTION_ID:
+				self->private->target_selection = g_value_get_boolean( value );
+				break;
+
+			case NAOBJECT_ITEM_PROP_TARGET_BACKGROUND_ID:
+				self->private->target_background = g_value_get_boolean( value );
+				break;
+
+			case NAOBJECT_ITEM_PROP_TARGET_TOOLBAR_ID:
+				self->private->target_toolbar = g_value_get_boolean( value );
 				break;
 
 			default:
@@ -412,6 +466,30 @@ na_object_item_get_provider( const NAObjectItem *item )
 }
 
 /**
+ * na_object_item_is_enabled:
+ * @item: the #NAObjectItem object to be requested.
+ *
+ * Is the specified item enabled ?
+ * When disabled, the item, nor its subitems if any, is/are never
+ * candidate to any selection.
+ *
+ * Returns: %TRUE if the item is enabled, %FALSE else.
+ */
+gboolean
+na_object_item_is_enabled( const NAObjectItem *item )
+{
+	gboolean enabled = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, &enabled, NULL );
+	}
+
+	return( enabled );
+}
+
+/**
  * na_object_item_get_item:
  * @item: the #NAObjectItem from which we want retrieve a subitem.
  * @id: the id of the searched subitem.
@@ -491,27 +569,77 @@ na_object_item_get_items_count( const NAObjectItem *item )
 }
 
 /**
- * na_object_item_is_enabled:
- * @item: the #NAObjectItem object to be requested.
+ * na_object_item_is_target_selection:
+ * @item: the #NAObjectItem to be requested.
  *
- * Is the specified item enabled ?
- * When disabled, the item, nor its subitems if any, is/are never
- * candidate to any selection.
+ * Returns: %TRUE if @item is candidate for being displayed in file
+ * selection menus, %FALSE else.
  *
- * Returns: %TRUE if the item is enabled, %FALSE else.
+ * This was the historical only target of Nautilus-Actions actions.
+ * It so defaults to %TRUE at object creation.
  */
 gboolean
-na_object_item_is_enabled( const NAObjectItem *item )
+na_object_item_is_target_selection( const NAObjectItem *item )
 {
-	gboolean enabled = FALSE;
+	gboolean is_target = FALSE;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
 
 	if( !item->private->dispose_has_run ){
-		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, &enabled, NULL );
+
+		is_target = item->private->target_selection;
 	}
 
-	return( enabled );
+	return( is_target );
+}
+
+/**
+ * na_object_item_is_target_background:
+ * @item: the #NAObjectItem to be requested.
+ *
+ * Returns: %TRUE if @item is candidate for being displayed in
+ * background menus, %FALSE else.
+ */
+gboolean
+na_object_item_is_target_background( const NAObjectItem *item )
+{
+	gboolean is_target = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
+
+	if( !item->private->dispose_has_run ){
+
+		is_target = item->private->target_background;
+	}
+
+	return( is_target );
+}
+
+/**
+ * na_object_item_is_target_toolbar:
+ * @item: the #NAObjectItem to be requested.
+ *
+ * Returns: %TRUE if @item is candidate for being displayed in file
+ * toolbar menus, %FALSE else.
+ *
+ * As of Nautilus 2.26, targeting toolbar is only available to the
+ * #NAObjectAction, as Nautilus doesn't care of displaying menus in
+ * its toolbar. Also, toolbar display uses same profile properties
+ * (folders) that background (cf. Nautilus API).
+ */
+gboolean
+na_object_item_is_target_toolbar( const NAObjectItem *item )
+{
+	gboolean is_target = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
+
+	if( !item->private->dispose_has_run ){
+
+		is_target = item->private->target_toolbar;
+	}
+
+	return( is_target );
 }
 
 /**
@@ -557,23 +685,6 @@ na_object_item_set_icon( NAObjectItem *item, const gchar *icon )
 }
 
 /**
- * na_object_item_set_enabled:
- * @item: the #NAObjectItem object to be updated.
- * @enabled: the indicator to be set.
- *
- * Sets whether the item, and its subitems if any, is/are enabled or not.
- */
-void
-na_object_item_set_enabled( NAObjectItem *item, gboolean enabled )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !item->private->dispose_has_run ){
-		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, enabled, NULL );
-	}
-}
-
-/**
  * na_object_item_set_provider:
  * @item: the #NAObjectItem object to be updated.
  * @provider: the #NAIIOProvider to be set.
@@ -587,6 +698,23 @@ na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider )
 
 	if( !item->private->dispose_has_run ){
 		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER, provider, NULL );
+	}
+}
+
+/**
+ * na_object_item_set_enabled:
+ * @item: the #NAObjectItem object to be updated.
+ * @enabled: the indicator to be set.
+ *
+ * Sets whether the item, and its subitems if any, is/are enabled or not.
+ */
+void
+na_object_item_set_enabled( NAObjectItem *item, gboolean enabled )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !item->private->dispose_has_run ){
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, enabled, NULL );
 	}
 }
 
@@ -613,6 +741,60 @@ na_object_item_set_items_list( NAObjectItem *item, GList *items )
 		for( is = items ; is ; is = is->next ){
 			na_object_set_parent( is->data, item );
 		}
+	}
+}
+
+/**
+ * na_object_item_set_target_selection:
+ * @item: the #NAObjectItem to be updated.
+ * @targeting: whether @item targets selection menus.
+ *
+ * Set the flag for this target.
+ */
+void
+na_object_item_set_target_selection( NAObjectItem *item, gboolean targeting )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !item->private->dispose_has_run ){
+
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TARGET_SELECTION, targeting, NULL );
+	}
+}
+
+/**
+ * na_object_item_set_target_background:
+ * @item: the #NAObjectItem to be updated.
+ * @targeting: whether @item targets background menus.
+ *
+ * Set the flag for this target.
+ */
+void
+na_object_item_set_target_background( NAObjectItem *item, gboolean targeting )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !item->private->dispose_has_run ){
+
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TARGET_BACKGROUND, targeting, NULL );
+	}
+}
+
+/**
+ * na_object_item_set_target_toolbar:
+ * @item: the #NAObjectItem to be updated.
+ * @targeting: whether @item targets toolbar display.
+ *
+ * Set the flag for this target.
+ */
+void
+na_object_item_set_target_toolbar( NAObjectItem *item, gboolean targeting )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !item->private->dispose_has_run ){
+
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TARGET_TOOLBAR, targeting, NULL );
 	}
 }
 
@@ -750,10 +932,13 @@ object_dump( const NAObject *item )
 
 	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
 
-		g_debug( "%s:  tooltip='%s'", thisfn, NA_OBJECT_ITEM( item )->private->tooltip );
-		g_debug( "%s:     icon='%s'", thisfn, NA_OBJECT_ITEM( item )->private->icon );
-		g_debug( "%s:  enabled='%s'", thisfn, NA_OBJECT_ITEM( item )->private->enabled ? "True" : "False" );
-		g_debug( "%s: provider=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider );
+		g_debug( "%s:           tooltip='%s'", thisfn, NA_OBJECT_ITEM( item )->private->tooltip );
+		g_debug( "%s:              icon='%s'", thisfn, NA_OBJECT_ITEM( item )->private->icon );
+		g_debug( "%s:           enabled='%s'", thisfn, NA_OBJECT_ITEM( item )->private->enabled ? "True" : "False" );
+		g_debug( "%s:  target-selection='%s'", thisfn, NA_OBJECT_ITEM( item )->private->target_selection ? "True" : "False" );
+		g_debug( "%s: target-background='%s'", thisfn, NA_OBJECT_ITEM( item )->private->target_background ? "True" : "False" );
+		g_debug( "%s:    target-toolbar='%s'", thisfn, NA_OBJECT_ITEM( item )->private->target_toolbar ? "True" : "False" );
+		g_debug( "%s:          provider=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider );
 
 		/* dump subitems */
 		g_debug( "%s: %d subitem(s) at %p",
@@ -775,6 +960,7 @@ object_copy( NAObject *target, const NAObject *source )
 	gboolean enabled;
 	gpointer provider;
 	GList *subitems, *it;
+	gboolean target_selection, target_background, target_toolbar;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( target ));
 	g_return_if_fail( NA_IS_OBJECT_ITEM( source ));
@@ -786,6 +972,9 @@ object_copy( NAObject *target, const NAObject *source )
 				NAOBJECT_ITEM_PROP_TOOLTIP, &tooltip,
 				NAOBJECT_ITEM_PROP_ICON, &icon,
 				NAOBJECT_ITEM_PROP_ENABLED, &enabled,
+				NAOBJECT_ITEM_PROP_TARGET_SELECTION, &target_selection,
+				NAOBJECT_ITEM_PROP_TARGET_BACKGROUND, &target_background,
+				NAOBJECT_ITEM_PROP_TARGET_TOOLBAR, &target_toolbar,
 				NAOBJECT_ITEM_PROP_PROVIDER, &provider,
 				NULL );
 
@@ -793,6 +982,9 @@ object_copy( NAObject *target, const NAObject *source )
 				NAOBJECT_ITEM_PROP_TOOLTIP, tooltip,
 				NAOBJECT_ITEM_PROP_ICON, icon,
 				NAOBJECT_ITEM_PROP_ENABLED, enabled,
+				NAOBJECT_ITEM_PROP_TARGET_SELECTION, target_selection,
+				NAOBJECT_ITEM_PROP_TARGET_BACKGROUND, target_background,
+				NAOBJECT_ITEM_PROP_TARGET_TOOLBAR, target_toolbar,
 				NAOBJECT_ITEM_PROP_PROVIDER, provider,
 				NULL );
 
@@ -860,6 +1052,21 @@ object_are_equal( const NAObject *a, const NAObject *b )
 			/*if( !equal ){
 				g_debug( "enabled" );
 			}*/
+		}
+
+		if( equal ){
+			equal = ( NA_OBJECT_ITEM( a )->private->target_selection && NA_OBJECT_ITEM( b )->private->target_selection ) ||
+					( !NA_OBJECT_ITEM( a )->private->target_selection && !NA_OBJECT_ITEM( b )->private->target_selection );
+		}
+
+		if( equal ){
+			equal = ( NA_OBJECT_ITEM( a )->private->target_background && NA_OBJECT_ITEM( b )->private->target_background ) ||
+					( !NA_OBJECT_ITEM( a )->private->target_background && !NA_OBJECT_ITEM( b )->private->target_background );
+		}
+
+		if( equal ){
+			equal = ( NA_OBJECT_ITEM( a )->private->target_toolbar && NA_OBJECT_ITEM( b )->private->target_toolbar ) ||
+					( !NA_OBJECT_ITEM( a )->private->target_toolbar && !NA_OBJECT_ITEM( b )->private->target_toolbar );
 		}
 
 		if( equal ){

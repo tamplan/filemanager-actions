@@ -46,22 +46,28 @@ G_BEGIN_DECLS
 
 /* #NAObjectAction properties
  */
-#define NAACTION_PROP_VERSION			"na-action-version"
-#define NAACTION_PROP_READONLY			"na-action-read-only"
-#define NAACTION_PROP_LAST_ALLOCATED	"na-action-last-allocated"
+#define NAACTION_PROP_VERSION				"na-action-version"
+#define NAACTION_PROP_READONLY				"na-action-read-only"
+#define NAACTION_PROP_LAST_ALLOCATED		"na-action-last-allocated"
+#define NAACTION_PROP_TOOLBAR_SAME_LABEL	"na-action-toolbar-use-same-label"
+#define NAACTION_PROP_TOOLBAR_LABEL			"na-action-toolbar-label"
 
 /* i18n: default label for a newly created action */
-#define NA_OBJECT_ACTION_DEFAULT_LABEL	_( "New Nautilus action" )
+#define NA_OBJECT_ACTION_DEFAULT_LABEL		_( "New Nautilus action" )
 
-#define NAUTILUS_ACTIONS_CONFIG_VERSION	"2.0"
+#define NAUTILUS_ACTIONS_CONFIG_VERSION		"2.0"
 
 
 NAObjectAction *na_object_action_new( void );
 
 gchar          *na_object_action_get_version( const NAObjectAction *action );
+gboolean        na_object_action_toolbar_use_same_label( const NAObjectAction *action );
+gchar          *na_object_action_toolbar_get_label( const NAObjectAction *action );
 
 void            na_object_action_set_version( NAObjectAction *action, const gchar *version );
 void            na_object_action_set_readonly( NAObjectAction *action, gboolean readonly );
+void            na_object_action_toolbar_set_same_label( NAObjectAction *action, gboolean same_label );
+void            na_object_action_toolbar_set_label( NAObjectAction *action, const gchar *label );
 
 gchar          *na_object_action_get_new_profile_name( const NAObjectAction *action );
 void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );

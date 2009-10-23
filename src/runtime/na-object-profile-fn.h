@@ -44,6 +44,14 @@
 
 G_BEGIN_DECLS
 
+/* targets
+ */
+enum {
+	ITEM_TARGET_SELECTION = 1,
+	ITEM_TARGET_BACKGROUND,
+	ITEM_TARGET_TOOLBAR
+};
+
 /* internal identifier of profiles must begin with the following prefix
  * this let us identify a profile key versus an action key
  * corollarily, no action entry must begin with this same prefix
@@ -64,6 +72,7 @@ gboolean         na_object_profile_get_is_file( const NAObjectProfile *profile )
 gboolean         na_object_profile_get_is_dir( const NAObjectProfile *profile );
 gboolean         na_object_profile_get_multiple( const NAObjectProfile *profile );
 GSList          *na_object_profile_get_schemes( const NAObjectProfile *profile );
+GSList          *na_object_profile_get_folders( const NAObjectProfile *profile );
 
 void             na_object_profile_set_path( NAObjectProfile *profile, const gchar *path );
 void             na_object_profile_set_parameters( NAObjectProfile *profile, const gchar *parameters );
@@ -75,9 +84,10 @@ void             na_object_profile_set_isdir( NAObjectProfile *profile, gboolean
 void             na_object_profile_set_isfiledir( NAObjectProfile *profile, gboolean isfile, gboolean isdir );
 void             na_object_profile_set_multiple( NAObjectProfile *profile, gboolean multiple );
 void             na_object_profile_set_schemes( NAObjectProfile *profile, GSList *schemes );
+void             na_object_profile_set_folders( NAObjectProfile *profile, GSList *folders );
 
-gboolean         na_object_profile_is_candidate( const NAObjectProfile *profile, GList *files );
-gchar           *na_object_profile_parse_parameters( const NAObjectProfile *profile, GList *files );
+gboolean         na_object_profile_is_candidate( const NAObjectProfile *profile, gint target, GList *files );
+gchar           *na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target, GList *files );
 
 G_END_DECLS
 

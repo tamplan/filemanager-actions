@@ -50,7 +50,9 @@ struct NAObjectActionClassPrivate {
 enum {
 	NAACTION_PROP_VERSION_ID = 1,
 	NAACTION_PROP_READONLY_ID,
-	NAACTION_PROP_LAST_ALLOCATED_ID
+	NAACTION_PROP_LAST_ALLOCATED_ID,
+	NAACTION_PROP_TOOLBAR_SAME_LABEL_ID,
+	NAACTION_PROP_TOOLBAR_LABEL_ID
 };
 
 static NAObjectItemClass *st_parent_class = NULL;
@@ -68,6 +70,8 @@ static NAObject *object_new( const NAObject *action );
 static void      object_copy( NAObject *target, const NAObject *source );
 static gboolean  object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean  object_is_valid( const NAObject *object );
+static gboolean  is_valid_label( const NAObjectAction *action );
+static gboolean  is_valid_short_label( const NAObjectAction *action );
 
 GType
 na_object_action_get_type( void )
@@ -142,6 +146,20 @@ class_init( NAObjectActionClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAACTION_PROP_LAST_ALLOCATED_ID, spec );
 
+	spec = g_param_spec_boolean(
+			NAACTION_PROP_TOOLBAR_SAME_LABEL,
+			"Use same label",
+			"Whether the icon label in the toolbar is the same that the action main label", FALSE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAACTION_PROP_TOOLBAR_SAME_LABEL_ID, spec );
+
+	spec = g_param_spec_string(
+			NAACTION_PROP_TOOLBAR_LABEL,
+			"Toolbar label",
+			"The label which is displayed besides of the icon in the Nautilus toolbar", "",
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAACTION_PROP_TOOLBAR_LABEL_ID, spec );
+
 	klass->private = g_new0( NAObjectActionClassPrivate, 1 );
 
 	naobject_class = NA_OBJECT_CLASS( klass );
@@ -172,6 +190,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->version = g_strdup( NAUTILUS_ACTIONS_CONFIG_VERSION );
 	self->private->read_only = FALSE;
 	self->private->last_allocated = 0;
+	self->private->use_same_label = FALSE;
+	self->private->toolbar_label = g_strdup( "" );
 }
 
 static void
@@ -195,6 +215,14 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 			case NAACTION_PROP_LAST_ALLOCATED_ID:
 				g_value_set_int( value, self->private->last_allocated );
+				break;
+
+			case NAACTION_PROP_TOOLBAR_SAME_LABEL_ID:
+				g_value_set_boolean( value, self->private->use_same_label );
+				break;
+
+			case NAACTION_PROP_TOOLBAR_LABEL_ID:
+				g_value_set_string( value, self->private->toolbar_label );
 				break;
 
 			default:
@@ -226,6 +254,15 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case NAACTION_PROP_LAST_ALLOCATED_ID:
 				self->private->last_allocated = g_value_get_int( value );
+				break;
+
+			case NAACTION_PROP_TOOLBAR_SAME_LABEL_ID:
+				self->private->use_same_label = g_value_get_boolean( value );
+				break;
+
+			case NAACTION_PROP_TOOLBAR_LABEL_ID:
+				g_free( self->private->toolbar_label );
+				self->private->toolbar_label = g_value_dup_string( value );
 				break;
 
 			default:
@@ -269,6 +306,7 @@ instance_finalize( GObject *object )
 	self = NA_OBJECT_ACTION( object );
 
 	g_free( self->private->version );
+	g_free( self->private->toolbar_label );
 
 	g_free( self->private );
 
@@ -330,6 +368,57 @@ na_object_action_get_version( const NAObjectAction *action )
 }
 
 /**
+ * na_object_action_toolbar_use_same_label:
+ * @action: the #NAObjectAction object to be requested.
+ *
+ * When displayed in the toolbar, does the specified @action use the
+ * same label that the main action label ?
+ *
+ * Returns: %TRUE if the label are sames, %FALSE else.
+ *
+ * Defaults to %FALSE because toolbar labels should really be smaller
+ * that those of menu items.
+ */
+gboolean
+na_object_action_toolbar_use_same_label( const NAObjectAction *action )
+{
+	gboolean use_same_label = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
+
+	if( !action->private->dispose_has_run ){
+
+		g_object_get( G_OBJECT( action ), NAACTION_PROP_TOOLBAR_SAME_LABEL, &use_same_label, NULL );
+	}
+
+	return( use_same_label );
+}
+
+/**
+ * na_object_action_toolbar_get_label:
+ * @action: the #NAObjectAction object to be requested.
+ *
+ * Returns: the label which would be displayed besides of the icon in
+ * the Nautilus toolbar.
+ *
+ * The returned string should be g_free() by the caller.
+ */
+gchar *
+na_object_action_toolbar_get_label( const NAObjectAction *action )
+{
+	gchar *label = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
+
+	if( !action->private->dispose_has_run ){
+
+		g_object_get( G_OBJECT( action ), NAACTION_PROP_TOOLBAR_LABEL, &label, NULL );
+	}
+
+	return( label );
+}
+
+/**
  * na_object_action_set_version:
  * @action: the #NAObjectAction object to be updated.
  * @label: the label to be set.
@@ -371,6 +460,48 @@ na_object_action_set_readonly( NAObjectAction *action, gboolean readonly )
 
 	if( !action->private->dispose_has_run ){
 		g_object_set( G_OBJECT( action ), NAACTION_PROP_READONLY, readonly, NULL );
+	}
+}
+
+/**
+ * na_object_action_toolbar_set_same_label:
+ * @action: the #NAObjectAction object to be updated.
+ * @use_same_label: whether the icon label is the same that the action label.
+ *
+ * Sets the new value.
+ *
+ * Please note that this value is only used in NACT user interface, which
+ * takes care of maintaining the main action label along with the toolbar
+ * item label.
+ *
+ * At runtime, we only ask for the toolbar item label.
+ */
+void
+na_object_action_toolbar_set_same_label( NAObjectAction *action, gboolean use_same_label )
+{
+	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
+
+	if( !action->private->dispose_has_run ){
+
+		g_object_set( G_OBJECT( action ), NAACTION_PROP_TOOLBAR_SAME_LABEL, use_same_label, NULL );
+	}
+}
+
+/**
+ * na_object_action_toolbar_set_label:
+ * @action: the #NAObjectAction object to be updated.
+ * @label: the label to be set.
+ *
+ * Sets the new value.
+ */
+void
+na_object_action_toolbar_set_label( NAObjectAction *action, const gchar *label )
+{
+	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
+
+	if( !action->private->dispose_has_run ){
+
+		g_object_set( G_OBJECT( action ), NAACTION_PROP_TOOLBAR_LABEL, label, NULL );
 	}
 }
 
@@ -457,6 +588,8 @@ object_dump( const NAObject *action )
 		g_debug( "%s:        version='%s'", thisfn, self->private->version );
 		g_debug( "%s:      read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
 		g_debug( "%s: last-allocated=%d", thisfn, self->private->last_allocated );
+		g_debug( "%s: use-same-label='%s'", thisfn, self->private->use_same_label ? "True" : "False" );
+		g_debug( "%s:  toolbar-label='%s'", thisfn, self->private->toolbar_label );
 	}
 }
 
@@ -473,6 +606,8 @@ object_copy( NAObject *target, const NAObject *source )
 	gboolean readonly;
 	gint last_allocated;
 	GList *profiles, *ip;
+	gboolean toolbar_same_label;
+	gchar *toolbar_label;
 
 	g_return_if_fail( NA_IS_OBJECT_ACTION( target ));
 	g_return_if_fail( NA_IS_OBJECT_ACTION( source ));
@@ -484,12 +619,16 @@ object_copy( NAObject *target, const NAObject *source )
 				NAACTION_PROP_VERSION, &version,
 				NAACTION_PROP_READONLY, &readonly,
 				NAACTION_PROP_LAST_ALLOCATED, &last_allocated,
+				NAACTION_PROP_TOOLBAR_SAME_LABEL, &toolbar_same_label,
+				NAACTION_PROP_TOOLBAR_LABEL, &toolbar_label,
 				NULL );
 
 		g_object_set( G_OBJECT( target ),
 				NAACTION_PROP_VERSION, version,
 				NAACTION_PROP_READONLY, readonly,
 				NAACTION_PROP_LAST_ALLOCATED, last_allocated,
+				NAACTION_PROP_TOOLBAR_SAME_LABEL, toolbar_same_label,
+				NAACTION_PROP_TOOLBAR_LABEL, toolbar_label,
 				NULL );
 
 		g_free( version );
@@ -536,6 +675,16 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		}
 
 		if( equal ){
+			equal = ( NA_OBJECT_ACTION( a )->private->use_same_label && NA_OBJECT_ACTION( b )->private->use_same_label ) ||
+					( !NA_OBJECT_ACTION( a )->private->use_same_label && !NA_OBJECT_ACTION( b )->private->use_same_label );
+		}
+
+		if( equal ){
+			equal =
+				( g_utf8_collate( NA_OBJECT_ACTION( a )->private->toolbar_label, NA_OBJECT_ACTION( b )->private->toolbar_label ) == 0 );
+		}
+
+		if( equal ){
 			profiles = na_object_get_items_list( a );
 			for( ip = profiles ; ip && equal ; ip = ip->next ){
 				id = na_object_get_id( ip->data );
@@ -573,7 +722,6 @@ object_are_equal( const NAObject *a, const NAObject *b )
 gboolean
 object_is_valid( const NAObject *action )
 {
-	gchar *label;
 	gboolean is_valid = TRUE;
 	GList *profiles, *ip;
 	gint valid_profiles;
@@ -582,10 +730,13 @@ object_is_valid( const NAObject *action )
 
 	if( !NA_OBJECT_ACTION( action )->private->dispose_has_run ){
 
-		if( is_valid ){
-			label = na_object_get_label( NA_OBJECT_ACTION( action ));
-			is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
-			g_free( label );
+		if( na_object_is_target_toolbar( action )){
+			is_valid =
+				is_valid_short_label( NA_OBJECT_ACTION( action ));
+
+		} else {
+			is_valid =
+				is_valid_label( NA_OBJECT_ACTION( action ));
 		}
 
 		if( is_valid ){
@@ -599,6 +750,32 @@ object_is_valid( const NAObject *action )
 			is_valid = ( valid_profiles > 0 );
 		}
 	}
+
+	return( is_valid );
+}
+
+static gboolean
+is_valid_label( const NAObjectAction *action )
+{
+	gboolean is_valid;
+	gchar *label;
+
+	label = na_object_get_label( action );
+	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+	g_free( label );
+
+	return( is_valid );
+}
+
+static gboolean
+is_valid_short_label( const NAObjectAction *action )
+{
+	gboolean is_valid;
+	gchar *label;
+
+	label = na_object_action_toolbar_get_label( action );
+	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+	g_free( label );
 
 	return( is_valid );
 }

@@ -90,183 +90,266 @@
                         <property name="border_width">6</property>
                         <property name="spacing">10</property>
                         <child>
-                          <object class="GtkVBox" id="vbox4">
+                          <object class="GtkFrame" id="frame7">
                             <property name="visible">True</property>
-                            <property name="spacing">10</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">in</property>
                             <child>
-                              <object class="GtkLabel" id="label2">
+                              <object class="GtkAlignment" id="alignment7">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
+                                <property name="top_padding">6</property>
+                                <property name="bottom_padding">6</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkTable" id="table1">
+                                    <property name="visible">True</property>
+                                    <property name="n_rows">4</property>
+                                    <property name="n_columns">2</property>
+                                    <property name="column_spacing">6</property>
+                                    <property name="row_spacing">6</property>
+                                    <child>
+                                      <object class="GtkLabel" id="ActionLabelLabel">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes">_Label :</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="mnemonic_widget">ActionLabelEntry</property>
+                                      </object>
+                                      <packing>
+                                        <property name="top_attach">1</property>
+                                        <property name="bottom_attach">2</property>
+                                        <property name="x_options">GTK_FILL</property>
+                                        <property name="y_options"></property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ActionTooltipLabel">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes">_Tooltip :</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="mnemonic_widget">ActionTooltipEntry</property>
+                                      </object>
+                                      <packing>
+                                        <property name="top_attach">2</property>
+                                        <property name="bottom_attach">3</property>
+                                        <property name="x_options">GTK_FILL</property>
+                                        <property name="y_options"></property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ActionIconLabel">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes">_Icon :</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="mnemonic_widget">ActionIconComboBoxEntry</property>
+                                      </object>
+                                      <packing>
+                                        <property name="top_attach">3</property>
+                                        <property name="bottom_attach">4</property>
+                                        <property name="x_options">GTK_FILL</property>
+                                        <property name="y_options"></property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkEntry" id="ActionLabelEntry">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">Label of the menu item in the Nautilus popup menu.</property>
+                                        <property name="invisible_char">&#x25CF;</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                        <property name="top_attach">1</property>
+                                        <property name="bottom_attach">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkEntry" id="ActionTooltipEntry">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">Tooltip of the menu item that will appear in the Nautilus statusbar.</property>
+                                        <property name="invisible_char">&#x25CF;</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                        <property name="top_attach">2</property>
+                                        <property name="bottom_attach">3</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkHBox" id="hbox2">
+                                        <property name="visible">True</property>
+                                        <property name="spacing">6</property>
+                                        <child>
+                                          <object class="GtkAspectFrame" id="ActionIconFrame">
+                                            <property name="width_request">24</property>
+                                            <property name="height_request">24</property>
+                                            <property name="visible">True</property>
+                                            <property name="label_xalign">0</property>
+                                            <property name="shadow_type">in</property>
+                                            <property name="obey_child">False</property>
+                                            <child>
+                                              <object class="GtkImage" id="ActionIconImage">
+                                                <property name="stock">gnome-stock-blank</property>
+                                                <property name="icon-size">4</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">False</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkComboBoxEntry" id="ActionIconComboBoxEntry">
+                                            <property name="visible">True</property>
+                                            <property name="tooltip_text" translatable="yes">Select the icon which will appear in the Nautilus context menu.</property>
+                                            <child>
+                                              <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                                              <attributes>
+                                                <attribute name="text">0</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkButton" id="ActionIconBrowseButton">
+                                            <property name="label" translatable="yes">_Browse...</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">True</property>
+                                            <property name="tooltip_text" translatable="yes">Click to choose a custom icon from a file instead of a predefined icon from the drop-down list.</property>
+                                            <property name="image">image3</property>
+                                            <property name="use_underline">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="position">2</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                        <property name="top_attach">3</property>
+                                        <property name="bottom_attach">4</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ActionItemID">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkLabel" id="label52">
+                                <property name="visible">True</property>
+                                <property name="xpad">5</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Nautilus Menu Item&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkTable" id="table1">
-                                <property name="visible">True</property>
-                                <property name="n_rows">3</property>
-                                <property name="n_columns">2</property>
-                                <property name="column_spacing">6</property>
-                                <property name="row_spacing">6</property>
-                                <child>
-                                  <object class="GtkLabel" id="ActionLabelLabel">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">1</property>
-                                    <property name="label" translatable="yes">_Label :</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="mnemonic_widget">ActionLabelEntry</property>
-                                  </object>
-                                  <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="ActionTooltipLabel">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">1</property>
-                                    <property name="label" translatable="yes">_Tooltip :</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="mnemonic_widget">ActionTooltipEntry</property>
-                                  </object>
-                                  <packing>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="ActionIconLabel">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">1</property>
-                                    <property name="label" translatable="yes">_Icon :</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="mnemonic_widget">ActionIconComboBoxEntry</property>
-                                  </object>
-                                  <packing>
-                                    <property name="top_attach">2</property>
-                                    <property name="bottom_attach">3</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="ActionLabelEntry">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="tooltip_text" translatable="yes">Label of the menu item in the Nautilus popup menu.</property>
-                                    <property name="invisible_char">&#x25CF;</property>
-                                  </object>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="ActionTooltipEntry">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="tooltip_text" translatable="yes">Tooltip of the menu item that will appear in the Nautilus statusbar.</property>
-                                    <property name="invisible_char">&#x25CF;</property>
-                                  </object>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkHBox" id="hbox2">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">6</property>
-                                    <child>
-                                      <object class="GtkAspectFrame" id="ActionIconFrame">
-                                        <property name="width_request">24</property>
-                                        <property name="height_request">24</property>
-                                        <property name="visible">True</property>
-                                        <property name="label_xalign">0</property>
-                                        <property name="shadow_type">in</property>
-                                        <property name="obey_child">False</property>
-                                        <child>
-                                          <object class="GtkImage" id="ActionIconImage">
-                                            <property name="stock">gnome-stock-blank</property>
-                                            <property name="icon-size">4</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkComboBoxEntry" id="ActionIconComboBoxEntry">
-                                        <property name="visible">True</property>
-                                        <property name="tooltip_text" translatable="yes">Select the icon which will appear in the Nautilus context menu.</property>
-                                        <child>
-                                          <object class="GtkCellRendererText" id="cellrenderertext1"/>
-                                          <attributes>
-                                            <attribute name="text">0</attribute>
-                                          </attributes>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="ActionIconBrowseButton">
-                                        <property name="label" translatable="yes">_Browse...</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <property name="tooltip_text" translatable="yes">Click to choose a custom icon from a file instead of a predefined icon from the drop-down list.</property>
-                                        <property name="image">image3</property>
-                                        <property name="use_underline">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">2</property>
-                                    <property name="bottom_attach">3</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="position">1</property>
-                              </packing>
                             </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="padding">10</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkVBox" id="vbox15">
+                          <object class="GtkHBox" id="hbox1">
                             <property name="visible">True</property>
                             <property name="spacing">10</property>
                             <child>
-                              <object class="GtkLabel" id="ActionPropertiesGroupTitle">
+                              <object class="GtkFrame" id="frame13">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Action properties&lt;/b&gt;</property>
-                                <property name="use_markup">True</property>
+                                <property name="label_xalign">0</property>
+                                <property name="shadow_type">in</property>
+                                <child>
+                                  <object class="GtkAlignment" id="alignment13">
+                                    <property name="visible">True</property>
+                                    <property name="top_padding">6</property>
+                                    <property name="bottom_padding">6</property>
+                                    <property name="left_padding">12</property>
+                                    <property name="right_padding">6</property>
+                                    <child>
+                                      <object class="GtkVBox" id="vbox7">
+                                        <property name="visible">True</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkCheckButton" id="ActionTargetSelectionButton">
+                                            <property name="label" translatable="yes">Targets _selection menus</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">When checked, the action or menu will be candidate to be displayed in Nautilus context menus when there is a selection. The item will also appear in Nautilus Edit menu.</property>
+                                            <property name="use_underline">True</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkCheckButton" id="ActionTargetBackgroundButton">
+                                            <property name="label" translatable="yes">Targets _background menus</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">When checked, the item will be candidate to be displayed in Nautilus context menu when there is no selection. The item will also appear in Nautilus File menu.</property>
+                                            <property name="use_underline">True</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkCheckButton" id="ActionTargetToolbarButton">
+                                            <property name="label" translatable="yes">Targets _toolbar display</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">When checked, the action will be displayed in Nautilus toolbar.
+Note that this only applies for now to actions which target background menus.</property>
+                                            <property name="use_underline">True</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">2</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkLabel" id="ActionTargetsTitle">
+                                    <property name="visible">True</property>
+                                    <property name="xpad">5</property>
+                                    <property name="label" translatable="yes">&lt;b&gt;Action targets&lt;/b&gt;</property>
+                                    <property name="use_markup">True</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -274,64 +357,61 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkTable" id="table4">
+                              <object class="GtkFrame" id="frame8">
                                 <property name="visible">True</property>
-                                <property name="n_rows">2</property>
-                                <property name="n_columns">2</property>
+                                <property name="label_xalign">0</property>
+                                <property name="shadow_type">in</property>
                                 <child>
-                                  <object class="GtkCheckButton" id="ActionEnabledButton">
-                                    <property name="label" translatable="yes">E_nabled</property>
+                                  <object class="GtkAlignment" id="alignment8">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">When the action is disabled, it will never appear in the Nautilus context menu.</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="draw_indicator">True</property>
+                                    <property name="top_padding">6</property>
+                                    <property name="bottom_padding">6</property>
+                                    <property name="left_padding">12</property>
+                                    <property name="right_padding">6</property>
+                                    <child>
+                                      <object class="GtkVBox" id="vbox43">
+                                        <property name="visible">True</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkCheckButton" id="ActionEnabledButton">
+                                            <property name="label" translatable="yes">E_nabled</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">When the action is disabled, it will never appear in the Nautilus context menu.</property>
+                                            <property name="use_underline">True</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkCheckButton" id="ActionReadonlyButton">
+                                            <property name="label" translatable="yes">_Read-only</property>
+                                            <property name="visible">True</property>
+                                            <property name="sensitive">False</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">If only readable, the action cannot be edited.</property>
+                                            <property name="use_underline">True</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">2</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
                                   </object>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                  </packing>
                                 </child>
-                                <child>
-                                  <object class="GtkCheckButton" id="ActionReadonlyButton">
-                                    <property name="label" translatable="yes">_Read-only</property>
+                                <child type="label">
+                                  <object class="GtkLabel" id="ActionPropertiesTitle">
                                     <property name="visible">True</property>
-                                    <property name="sensitive">False</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">If only readable, the action cannot be edited.</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="draw_indicator">True</property>
+                                    <property name="xpad">5</property>
+                                    <property name="label" translatable="yes">&lt;b&gt;Action properties&lt;/b&gt;</property>
+                                    <property name="use_markup">True</property>
                                   </object>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="label4">
-                                    <property name="width_request">20</property>
-                                    <property name="visible">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="x_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="label8">
-                                    <property name="width_request">20</property>
-                                    <property name="visible">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                    <property name="x_options"></property>
-                                  </packing>
                                 </child>
                               </object>
                               <packing>
@@ -341,6 +421,7 @@
                             </child>
                           </object>
                           <packing>
+                            <property name="fill">False</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
@@ -361,25 +442,19 @@
                       <object class="GtkVBox" id="vbox5">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
+                        <property name="spacing">10</property>
                         <child>
-                          <object class="GtkVBox" id="vbox6">
+                          <object class="GtkFrame" id="frame9">
                             <property name="visible">True</property>
-                            <property name="spacing">10</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">in</property>
                             <child>
-                              <object class="GtkVBox" id="vbox7">
+                              <object class="GtkAlignment" id="alignment9">
                                 <property name="visible">True</property>
-                                <property name="spacing">10</property>
-                                <child>
-                                  <object class="GtkLabel" id="label10">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">&lt;b&gt;Profile&lt;/b&gt;</property>
-                                    <property name="use_markup">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
+                                <property name="top_padding">6</property>
+                                <property name="bottom_padding">6</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
                                 <child>
                                   <object class="GtkHBox" id="hbox3">
                                     <property name="visible">True</property>
@@ -401,7 +476,7 @@
                                       <object class="GtkEntry" id="ProfileLabelEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
-                                        <property name="tooltip_text" translatable="yes">The name of the profile.</property>
+                                        <property name="tooltip_text" translatable="yes">The name of the profile. It is only used in Nautilus Actions Configuration Tool user interface.</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -409,34 +484,39 @@
                                       </packing>
                                     </child>
                                   </object>
-                                  <packing>
-                                    <property name="position">1</property>
-                                  </packing>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="position">0</property>
-                              </packing>
                             </child>
-                            <child>
-                              <object class="GtkVBox" id="vbox8">
+                            <child type="label">
+                              <object class="GtkLabel" id="label53">
                                 <property name="visible">True</property>
-                                <property name="spacing">10</property>
-                                <child>
-                                  <object class="GtkLabel" id="label12">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">&lt;b&gt;Command&lt;/b&gt;</property>
-                                    <property name="use_markup">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
+                                <property name="xpad">5</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Profile&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFrame" id="frame10">
+                            <property name="visible">True</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <object class="GtkAlignment" id="alignment10">
+                                <property name="visible">True</property>
+                                <property name="top_padding">6</property>
+                                <property name="bottom_padding">6</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
                                 <child>
                                   <object class="GtkTable" id="table2">
                                     <property name="visible">True</property>
-                                    <property name="n_rows">2</property>
+                                    <property name="n_rows">3</property>
                                     <property name="n_columns">3</property>
                                     <property name="column_spacing">6</property>
                                     <property name="row_spacing">6</property>
@@ -455,6 +535,7 @@
                                     <child>
                                       <object class="GtkLabel" id="CommandParametersLabel">
                                         <property name="visible">True</property>
+                                        <property name="xalign">1</property>
                                         <property name="label" translatable="yes">P_arameters :</property>
                                         <property name="use_underline">True</property>
                                         <property name="mnemonic_widget">CommandParametersEntry</property>
@@ -527,50 +608,41 @@
                                         <property name="y_options"></property>
                                       </packing>
                                     </child>
-                                  </object>
-                                  <packing>
-                                    <property name="fill">False</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkHBox" id="hbox1">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <object class="GtkLabel" id="CommandExamplePreLabel">
-                                        <property name="visible">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
                                     <child>
                                       <object class="GtkLabel" id="CommandExampleLabel">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="use_markup">True</property>
-                                        <property name="wrap">True</property>
                                       </object>
                                       <packing>
-                                        <property name="position">1</property>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                        <property name="top_attach">2</property>
+                                        <property name="bottom_attach">3</property>
                                       </packing>
                                     </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
                                   </object>
-                                  <packing>
-                                    <property name="position">2</property>
-                                  </packing>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
+                            </child>
+                            <child type="label">
+                              <object class="GtkLabel" id="label54">
+                                <property name="visible">True</property>
+                                <property name="xpad">5</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Command&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </object>
                             </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="padding">10</property>
-                            <property name="position">0</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </object>
@@ -592,35 +664,138 @@ Defining several profiles lets you have several commands, each applying with a d
                       </packing>
                     </child>
                     <child>
+                      <object class="GtkVBox" id="vbox6">
+                        <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <object class="GtkFrame" id="BackgroundToolbarFrame">
+                            <property name="visible">True</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <object class="GtkAlignment" id="alignment6">
+                                <property name="visible">True</property>
+                                <property name="top_padding">6</property>
+                                <property name="bottom_padding">6</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkTable" id="table4">
+                                    <property name="visible">True</property>
+                                    <property name="n_rows">2</property>
+                                    <property name="n_columns">2</property>
+                                    <property name="column_spacing">6</property>
+                                    <child>
+                                      <object class="GtkCheckButton" id="ToolbarSameLabelButton">
+                                        <property name="label" translatable="yes">Use _same label for icon in the toolbar</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">When checked, the text besides the icon in the toolbar will be the same that those of the action itself.
+You shouldn't do this as text in toolbars should be really short.</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="draw_indicator">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ActionShortLabelLabel">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes">S_hort label :</property>
+                                        <property name="use_underline">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="top_attach">1</property>
+                                        <property name="bottom_attach">2</property>
+                                        <property name="x_options">GTK_FILL</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkEntry" id="ToolbarLabelEntry">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">Text which will be displayed in the toolbar besides of the icon.
+The actual display may depend of your Gnome preferences.</property>
+                                        <property name="max_length">32</property>
+                                        <property name="invisible_char">&#x25CF;</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                        <property name="top_attach">1</property>
+                                        <property name="bottom_attach">2</property>
+                                        <property name="x_options">GTK_FILL</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkLabel" id="label51">
+                                <property name="visible">True</property>
+                                <property name="xpad">5</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Nautilus toolbar&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="label15">
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This advanced tab lets you precisely choose on which schemes the selection will apply.</property>
+                        <property name="label" translatable="yes">_Background</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">4</property>
+                        <property name="tab_fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
                       <object class="GtkVBox" id="vbox9">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
+                        <property name="spacing">10</property>
                         <child>
-                          <object class="GtkVBox" id="vbox10">
+                          <object class="GtkFrame" id="frame11">
                             <property name="visible">True</property>
-                            <property name="spacing">10</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">in</property>
                             <child>
-                              <object class="GtkVBox" id="vbox11">
+                              <object class="GtkAlignment" id="alignment11">
                                 <property name="visible">True</property>
-                                <property name="spacing">10</property>
-                                <child>
-                                  <object class="GtkLabel" id="label16">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">&lt;b&gt;Appears if file matches&lt;/b&gt;</property>
-                                    <property name="use_markup">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
+                                <property name="top_padding">6</property>
+                                <property name="bottom_padding">6</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
                                 <child>
                                   <object class="GtkTable" id="table3">
                                     <property name="visible">True</property>
                                     <property name="n_rows">3</property>
                                     <property name="n_columns">2</property>
                                     <property name="column_spacing">6</property>
-                                    <property name="row_spacing">6</property>
+                                    <property name="row_spacing">3</property>
                                     <child>
                                       <object class="GtkLabel" id="ConditionsFilenamesLabel">
                                         <property name="visible">True</property>
@@ -696,123 +871,131 @@ Defining several profiles lets you have several commands, each applying with a d
                                       <placeholder/>
                                     </child>
                                   </object>
-                                  <packing>
-                                    <property name="position">1</property>
-                                  </packing>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="position">0</property>
-                              </packing>
                             </child>
-                            <child>
-                              <object class="GtkVBox" id="vbox12">
+                            <child type="label">
+                              <object class="GtkLabel" id="label10">
                                 <property name="visible">True</property>
-                                <property name="spacing">10</property>
+                                <property name="xpad">5</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Appears if file matches&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFrame" id="frame12">
+                            <property name="visible">True</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <object class="GtkAlignment" id="alignment12">
+                                <property name="visible">True</property>
+                                <property name="top_padding">6</property>
+                                <property name="bottom_padding">6</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
                                 <child>
-                                  <object class="GtkLabel" id="label19">
+                                  <object class="GtkVBox" id="vbox4">
                                     <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">&lt;b&gt;Appears if selection contains&lt;/b&gt;</property>
-                                    <property name="use_markup">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkHBox" id="hbox4">
-                                    <property name="visible">True</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">6</property>
                                     <child>
-                                      <object class="GtkRadioButton" id="ConditionsOnlyFilesButton">
-                                        <property name="label" translatable="yes">Only _files</property>
+                                      <object class="GtkHBox" id="hbox4">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">If selected, item will appear in the Nautilus context menu if and only if the selection contains only files.</property>
-                                        <property name="use_underline">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
+                                        <child>
+                                          <object class="GtkRadioButton" id="ConditionsOnlyFilesButton">
+                                            <property name="label" translatable="yes">Only _files</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">If selected, item will appear in the Nautilus context menu if and only if the selection contains only files.</property>
+                                            <property name="use_underline">True</property>
+                                            <property name="xalign">0</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkRadioButton" id="ConditionsOnlyFoldersButton">
+                                            <property name="label" translatable="yes">Only f_olders</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">If selected, item will appear in the Nautilus context menu if and only if the selection contains only folders.</property>
+                                            <property name="use_underline">True</property>
+                                            <property name="xalign">0</property>
+                                            <property name="draw_indicator">True</property>
+                                            <property name="group">ConditionsOnlyFilesButton</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkRadioButton" id="ConditionsBothButton">
+                                            <property name="label" translatable="yes">_Both</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">If selected, item will always appear in the Nautilus context menu.</property>
+                                            <property name="use_underline">True</property>
+                                            <property name="xalign">0</property>
+                                            <property name="draw_indicator">True</property>
+                                            <property name="group">ConditionsOnlyFilesButton</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">2</property>
+                                          </packing>
+                                        </child>
                                       </object>
                                       <packing>
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkRadioButton" id="ConditionsOnlyFoldersButton">
-                                        <property name="label" translatable="yes">Only f_olders</property>
+                                      <object class="GtkCheckButton" id="ConditionsMultipleButton">
+                                        <property name="label" translatable="yes">Appears if selection has m_ultiple files or folders</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">If selected, item will appear in the Nautilus context menu if and only if the selection contains only folders.</property>
+                                        <property name="tooltip_text" translatable="yes">If selected, item will always appear in the Nautilus context menu. Else it will appear if and only if the selection contains only one file or folder.</property>
                                         <property name="use_underline">True</property>
-                                        <property name="xalign">0</property>
                                         <property name="draw_indicator">True</property>
-                                        <property name="group">ConditionsOnlyFilesButton</property>
                                       </object>
                                       <packing>
                                         <property name="position">1</property>
                                       </packing>
                                     </child>
-                                    <child>
-                                      <object class="GtkRadioButton" id="ConditionsBothButton">
-                                        <property name="label" translatable="yes">_Both</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">If selected, item will always appear in the Nautilus context menu.</property>
-                                        <property name="use_underline">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="draw_indicator">True</property>
-                                        <property name="group">ConditionsOnlyFilesButton</property>
-                                      </object>
-                                      <packing>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
                                   </object>
-                                  <packing>
-                                    <property name="position">1</property>
-                                  </packing>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
                             </child>
-                            <child>
-                              <object class="GtkVBox" id="vbox13">
+                            <child type="label">
+                              <object class="GtkLabel" id="label12">
                                 <property name="visible">True</property>
-                                <child>
-                                  <object class="GtkCheckButton" id="ConditionsMultipleButton">
-                                    <property name="label" translatable="yes">Appears if selection has m_ultiple files or folders</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">If selected, item will always appear in the Nautilus context menu. Else it will appear if and only if the selection contains only one file or folder.</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="draw_indicator">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
+                                <property name="xpad">5</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Appears if selection contains&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
                               </object>
-                              <packing>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="padding">10</property>
-                            <property name="position">0</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </object>
                       <packing>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                     <child type="tab">
@@ -823,7 +1006,7 @@ Defining several profiles lets you have several commands, each applying with a d
                         <property name="use_underline">True</property>
                       </object>
                       <packing>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                         <property name="tab_fill">False</property>
                       </packing>
                     </child>
@@ -938,18 +1121,18 @@ Defining several profiles lets you have several commands, each applying with a d
                         </child>
                       </object>
                       <packing>
-                        <property name="position">3</property>
+                        <property name="position">4</property>
                       </packing>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="label15">
+                      <object class="GtkLabel" id="label50">
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">This advanced tab lets you precisely choose on which schemes the selection will apply.</property>
                         <property name="label" translatable="yes">A_dvanced conditions</property>
                         <property name="use_underline">True</property>
                       </object>
                       <packing>
-                        <property name="position">3</property>
+                        <property name="position">4</property>
                         <property name="tab_fill">False</property>
                       </packing>
                     </child>
@@ -982,21 +1165,6 @@ Defining several profiles lets you have several commands, each applying with a d
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
-    <property name="icon-size">4</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
-    <property name="icon-size">4</property>
-  </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="stock">gtk-help</property>
-    <property name="icon-size">4</property>
-  </object>
   <object class="GtkAssistant" id="ImportAssistant">
     <property name="border_width">12</property>
     <property name="title" translatable="yes">Importing actions</property>
@@ -1018,9 +1186,9 @@ Defining several profiles lets you have several commands, each applying with a d
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
             <property name="select_multiple">True</property>
-            <property name="preview_widget_active">False</property>
             <property name="local_only">False</property>
             <property name="use_preview_label">False</property>
+            <property name="preview_widget_active">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -1727,7 +1895,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                         <child type="label">
                           <object class="GtkLabel" id="label1">
                             <property name="visible">True</property>
-                            <property name="xpad">4</property>
+                            <property name="xpad">5</property>
                             <property name="label" translatable="yes">&lt;b&gt;Items ordering&lt;/b&gt;</property>
                             <property name="use_markup">True</property>
                           </object>
@@ -1795,7 +1963,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                         <child type="label">
                           <object class="GtkLabel" id="label41">
                             <property name="visible">True</property>
-                            <property name="xpad">4</property>
+                            <property name="xpad">5</property>
                             <property name="label" translatable="yes">&lt;b&gt;Nautilus menu layout&lt;/b&gt;</property>
                             <property name="use_markup">True</property>
                           </object>
@@ -1910,7 +2078,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                         <child type="label">
                           <object class="GtkLabel" id="label42">
                             <property name="visible">True</property>
-                            <property name="xpad">4</property>
+                            <property name="xpad">5</property>
                             <property name="label" translatable="yes">&lt;b&gt;Relabeling items&lt;/b&gt;</property>
                             <property name="use_markup">True</property>
                           </object>
@@ -2030,7 +2198,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                         <child type="label">
                           <object class="GtkLabel" id="label44">
                             <property name="visible">True</property>
-                            <property name="xpad">4</property>
+                            <property name="xpad">5</property>
                             <property name="label" translatable="yes">&lt;b&gt;Import mode&lt;/b&gt;</property>
                             <property name="use_markup">True</property>
                           </object>
@@ -2064,7 +2232,6 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox41">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame5">
                     <property name="visible">True</property>
@@ -2079,7 +2246,6 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                           <object class="GtkVBox" id="vbox42">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="GtkRadioButton" id="PrefsNoImportButton1">
@@ -2144,7 +2310,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                     <child type="label">
                       <object class="GtkLabel" id="label49">
                         <property name="visible">True</property>
-                        <property name="xpad">4</property>
+                        <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Export mode&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
@@ -2408,18 +2574,32 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
       <action-widget response="0">OKButton1</action-widget>
     </action-widgets>
   </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+    <property name="icon-size">4</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+    <property name="icon-size">4</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="stock">gtk-help</property>
+    <property name="icon-size">4</property>
+  </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="CommandParametersLabel"/>
-      <widget name="CommandExamplePreLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
 </interface>

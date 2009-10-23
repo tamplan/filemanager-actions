@@ -54,6 +54,13 @@ struct NAObjectActionPrivate {
 	 * reset to zero when saving the action
 	 */
 	gint     last_allocated;
+
+	/* toolbar display
+	 * only for actions as of Nautilus-2.26
+	 * note that 'use_same_label' is just a NACT preference
+	 */
+	gboolean use_same_label;
+	gchar   *toolbar_label;
 };
 
 G_END_DECLS

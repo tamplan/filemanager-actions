@@ -121,12 +121,12 @@ main( int argc, char** argv )
 	}
 
 	if( !label || !g_utf8_strlen( label, -1 )){
-		g_printerr( _( "Error: an action label is mandatory." ));
+		g_printerr( _( "Error: an action label is mandatory.\n" ));
 		exit_with_usage();
 	}
 
 	if( output_gconf && output_dir ){
-		g_printerr( _( "Error: only one output option may be specified." ));
+		g_printerr( _( "Error: only one output option may be specified.\n" ));
 		exit_with_usage();
 	}
 

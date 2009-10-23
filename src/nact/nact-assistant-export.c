@@ -803,7 +803,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		str = g_new0( ExportStruct, 1 );
 		window->private->results = g_list_append( window->private->results, str );
 
-		str->action = NA_OBJECT_ACTION( ia->data );
+		str->action = NA_OBJECT_ACTION( na_iduplicable_get_origin( NA_IDUPLICABLE( ia->data )));
 
 		str->format = na_iprefs_get_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT );
 		if( str->format == IPREFS_EXPORT_FORMAT_ASK ){

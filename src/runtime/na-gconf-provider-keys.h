@@ -39,12 +39,17 @@
 
 /* GConf key names (common to menu and actions)
  */
-#define OBJECT_ITEM_LABEL_ENTRY			"label"
-#define OBJECT_ITEM_TOOLTIP_ENTRY		"tooltip"
-#define OBJECT_ITEM_ICON_ENTRY			"icon"
-#define OBJECT_ITEM_ENABLED_ENTRY		"enabled"
-#define OBJECT_ITEM_LIST_ENTRY			"items"
-#define OBJECT_ITEM_TYPE_ENTRY			"type"
+#define OBJECT_ITEM_LABEL_ENTRY					"label"
+#define OBJECT_ITEM_TOOLTIP_ENTRY				"tooltip"
+#define OBJECT_ITEM_ICON_ENTRY					"icon"
+#define OBJECT_ITEM_ENABLED_ENTRY				"enabled"
+#define OBJECT_ITEM_LIST_ENTRY					"items"
+#define OBJECT_ITEM_TYPE_ENTRY					"type"
+#define OBJECT_ITEM_TARGET_SELECTION_ENTRY		"target-selection"
+#define OBJECT_ITEM_TARGET_BACKGROUND_ENTRY		"target-background"
+#define OBJECT_ITEM_TARGET_TOOLBAR_ENTRY		"target-toolbar"
+#define OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY	"toolbar-same-label"
+#define OBJECT_ITEM_TOOLBAR_LABEL_ENTRY			"toolbar-label"
 
 #define OBJECT_ITEM_TYPE_MENU			"Menu"
 #define OBJECT_ITEM_TYPE_ACTION			"Action"
@@ -68,5 +73,6 @@
 #define ACTION_ISDIR_ENTRY				"isdir"
 #define ACTION_MULTIPLE_ENTRY			"accept-multiple-files"
 #define ACTION_SCHEMES_ENTRY			"schemes"
+#define ACTION_FOLDERS_ENTRY			"folders"
 
 #endif /* __NA_RUNTIME_GCONF_PROVIDER_KEYS_H__ */

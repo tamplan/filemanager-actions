@@ -72,9 +72,10 @@ static void              instance_finalize( GObject *object );
 
 static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
-static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, GList *files );
-static NAObjectProfile  *is_action_candidate( NautilusActions *plugin, NAObjectAction *action, GList *files );
-static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, GList *files );
+static GList            *get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
+static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *files );
+static NAObjectProfile  *is_action_candidate( NautilusActions *plugin, NAObjectAction *action, gint target, GList *files );
+static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, gint target, GList *files );
 static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems );
 static NautilusMenuItem *create_menu_item( NAObjectItem *item );
 static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
@@ -171,6 +172,7 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 
 	iface->get_file_items = get_file_items;
 	iface->get_background_items = get_background_items;
+	iface->get_toolbar_items = get_toolbar_items;
 }
 
 static void
@@ -280,24 +282,42 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
 /*
  * this function is called when nautilus has to paint a folder background
  * one of the first calls is with current_folder = 'x-nautilus-desktop:///'
- * we have nothing to do here ; the function is left as a placeholder
- * (and as an historic remainder)
- * .../...
- * until we have some actions defined as specific to backgrounds !
+ * the menu items are available :
+ * a) in File menu
+ * b) in contextual menu of the folder if there is no current selection
  */
 static GList *
 get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
 {
-#ifdef NA_MAINTAINER_MODE
 	static const gchar *thisfn = "nautilus_actions_get_background_items";
-	gchar *uri = nautilus_file_info_get_uri( current_folder );
-	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
-			thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
-	g_free( uri );
-#endif
-	return(( GList * ) NULL );
+	GList *nautilus_menus_list = NULL;
+	gchar *uri;
+	GList *files;
+	GList *pivot_tree;
+
+	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
+
+		uri = nautilus_file_info_get_uri( current_folder );
+		g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
+				thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
+		g_free( uri );
+
+		files = g_list_prepend( NULL, current_folder );
+		pivot_tree = na_pivot_get_items( NAUTILUS_ACTIONS( provider )->private->pivot );
+		nautilus_menus_list = build_nautilus_menus(
+				NAUTILUS_ACTIONS( provider ), pivot_tree, ITEM_TARGET_BACKGROUND, files );
+		g_list_free( files );
+	}
+
+	return( nautilus_menus_list );
 }
 
+/*
+ * this function is called each time the selection changed
+ * menus items are available :
+ * a) in Edit menu while the selection stays unchanged
+ * b) in contextual menu while the selection stays unchanged
+ */
 static GList *
 get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
@@ -327,8 +347,9 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 
 		pivot_tree = na_pivot_get_items( self->private->pivot );
 
-		nautilus_menus_list = build_nautilus_menus( self, pivot_tree, files );
-		g_debug( "%s: menus has %d level zero items", thisfn, g_list_length( nautilus_menus_list ));
+		nautilus_menus_list = build_nautilus_menus(
+				self, pivot_tree, ITEM_TARGET_SELECTION, files );
+		/*g_debug( "%s: menus has %d level zero items", thisfn, g_list_length( nautilus_menus_list ));*/
 
 		root_menu = na_iprefs_should_create_root_menu( NA_IPREFS( self->private->pivot ));
 		if( root_menu ){
@@ -336,7 +357,7 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 		}
 
 		add_about = na_iprefs_should_add_about_item( NA_IPREFS( self->private->pivot ));
-		g_debug( "%s: add_about=%s", thisfn, add_about ? "True":"False" );
+		/*g_debug( "%s: add_about=%s", thisfn, add_about ? "True":"False" );*/
 		if( add_about ){
 			nautilus_menus_list = add_about_item( self, nautilus_menus_list );
 		}
@@ -345,19 +366,53 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 	return( nautilus_menus_list );
 }
 
+/*
+ * as of 2.26, this function is only called for folders, but for the
+ * desktop (x-nautilus-desktop:///) which seems to be only called by
+ * get_background_items ; also, only actions (not menus) are displayed
+ */
 static GList *
-build_nautilus_menus( NautilusActions *plugin, GList *tree, GList *files )
+get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
 {
-	static const gchar *thisfn = "nautilus_actions_build_nautilus_menus";
+	static const gchar *thisfn = "nautilus_actions_get_toolbar_items";
+	GList *nautilus_menus_list = NULL;
+	gchar *uri;
+	GList *files;
+	GList *pivot_tree;
+
+	uri = nautilus_file_info_get_uri( current_folder );
+	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
+			thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
+	g_free( uri );
+
+	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
+
+		files = g_list_prepend( NULL, current_folder );
+		pivot_tree = na_pivot_get_items( NAUTILUS_ACTIONS( provider )->private->pivot );
+		nautilus_menus_list = build_nautilus_menus(
+				NAUTILUS_ACTIONS( provider ), pivot_tree, ITEM_TARGET_TOOLBAR, files );
+		g_list_free( files );
+	}
+
+	return( nautilus_menus_list );
+}
+
+/*
+ * when building a menu for the toolbar, do not use menus hierarchy
+ */
+static GList *
+build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *files )
+{
+	static const gchar *thisfn = "nautilus_actions_build_file_selection_menus";
 	GList *menus_list = NULL;
 	GList *subitems, *submenu;
 	GList *it;
 	NAObjectProfile *profile;
 	NautilusMenuItem *item;
-	gchar *label;
 
-	g_debug( "%s: plugin=%p, tree=%p, files=%p",
-			thisfn, ( void * ) plugin, ( void * ) tree, ( void * ) files );
+	g_debug( "%s: plugin=%p, tree=%p, target=%d, files=%p (count=%d)",
+			thisfn, ( void * ) plugin, ( void * ) tree, target,
+			( void * ) files, g_list_length( files ));
 
 	for( it = tree ; it ; it = it->next ){
 
@@ -368,26 +423,26 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, GList *files )
 				continue;
 		}
 
-		label = na_object_get_label( it->data );
-		g_debug( "%s: %s - %s", thisfn, G_OBJECT_TYPE_NAME( it->data ), label );
-		g_free( label );
-
 		if( NA_IS_OBJECT_MENU( it->data )){
 			subitems = na_object_get_items_list( it->data );
-			submenu = build_nautilus_menus( plugin, subitems, files );
+			submenu = build_nautilus_menus( plugin, subitems, target, files );
 			/*g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));*/
 			if( submenu ){
-				item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu );
-				menus_list = g_list_append( menus_list, item );
+				if( target != ITEM_TARGET_TOOLBAR ){
+					item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu );
+					menus_list = g_list_append( menus_list, item );
+				} else {
+					menus_list = g_list_concat( menus_list, submenu );
+				}
 			}
 			continue;
 		}
 
 		g_return_val_if_fail( NA_IS_OBJECT_ACTION( it->data ), NULL );
 
-		profile = is_action_candidate( plugin, NA_OBJECT_ACTION( it->data ), files );
+		profile = is_action_candidate( plugin, NA_OBJECT_ACTION( it->data ), target, files );
 		if( profile ){
-			item = create_item_from_profile( profile, files );
+			item = create_item_from_profile( profile, target, files );
 			menus_list = g_list_append( menus_list, item );
 		}
 	}
@@ -399,7 +454,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, GList *files )
  * could also be a NAObjectAction method - but this is not used elsewhere
  */
 static NAObjectProfile *
-is_action_candidate( NautilusActions *plugin, NAObjectAction *action, GList *files )
+is_action_candidate( NautilusActions *plugin, NAObjectAction *action, gint target, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_is_action_candidate";
 	NAObjectProfile *candidate = NULL;
@@ -420,7 +475,7 @@ is_action_candidate( NautilusActions *plugin, NAObjectAction *action, GList *fil
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 
 		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
-		if( na_object_profile_is_candidate( profile, files )){
+		if( na_object_profile_is_candidate( profile, target, files )){
 
 			profile_label = na_object_get_label( profile );
 			g_debug( "%s: selecting %s - %s", thisfn, action_label, profile_label );
@@ -436,7 +491,7 @@ is_action_candidate( NautilusActions *plugin, NAObjectAction *action, GList *fil
 }
 
 static NautilusMenuItem *
-create_item_from_profile( NAObjectProfile *profile, GList *files )
+create_item_from_profile( NAObjectProfile *profile, gint target, GList *files )
 {
 	NautilusMenuItem *item;
 	NAObjectAction *action;
@@ -456,9 +511,13 @@ create_item_from_profile( NAObjectProfile *profile, GList *files )
 				0 );
 
 	g_object_set_data_full( G_OBJECT( item ),
-			"files",
+			"nautilus-actions-files",
 			nautilus_file_info_list_copy( files ),
 			( GDestroyNotify ) nautilus_file_info_list_free );
+
+	g_object_set_data( G_OBJECT( item ),
+			"nautilus-actions-target",
+			GINT_TO_POINTER( target ));
 
 	return( item );
 }
@@ -526,15 +585,17 @@ execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 	GList *files;
 	GString *cmd;
 	gchar *param, *path;
+	gint target;
 
 	g_debug( "%s: item=%p, profile=%p", thisfn, ( void * ) item, ( void * ) profile );
 
-	files = ( GList* ) g_object_get_data( G_OBJECT( item ), "files" );
+	files = ( GList * ) g_object_get_data( G_OBJECT( item ), "nautilus-actions-files" );
+	target = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ), "nautilus-actions-target" ));
 
 	path = na_object_profile_get_path( profile );
 	cmd = g_string_new( path );
 
-	param = na_object_profile_parse_parameters( profile, files );
+	param = na_object_profile_parse_parameters( profile, target, files );
 
 	if( param != NULL ){
 		g_string_append_printf( cmd, " %s", param );

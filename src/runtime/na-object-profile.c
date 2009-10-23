@@ -59,7 +59,8 @@ enum {
 	NAPROFILE_PROP_ISFILE_ID,
 	NAPROFILE_PROP_ISDIR_ID,
 	NAPROFILE_PROP_ACCEPT_MULTIPLE_ID,
-	NAPROFILE_PROP_SCHEMES_ID
+	NAPROFILE_PROP_SCHEMES_ID,
+	NAPROFILE_PROP_FOLDERS_ID
 };
 
 #define NAPROFILE_PROP_PATH					"na-profile-path"
@@ -71,6 +72,7 @@ enum {
 #define NAPROFILE_PROP_ISDIR				"na-profile-isdir"
 #define NAPROFILE_PROP_ACCEPT_MULTIPLE		"na-profile-accept-multiple"
 #define NAPROFILE_PROP_SCHEMES				"na-profile-schemes"
+#define NAPROFILE_PROP_FOLDERS				"na-profile-folders"
 
 static NAObjectClass *st_parent_class = NULL;
 
@@ -82,7 +84,10 @@ static void      instance_set_property( GObject *object, guint property_id, cons
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
-static int       validate_schemes( GSList* schemes2test, NautilusFileInfo* file );
+static gboolean  is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
+static gboolean  is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
+static gboolean  is_target_selection_candidate( const NAObjectProfile *profile, GList *files );
+static int       validate_schemes( GSList *schemes2test, NautilusFileInfo *file );
 
 static void      object_dump( const NAObject *profile );
 static void      object_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
@@ -95,6 +100,7 @@ static gboolean  is_valid_filenames( const NAObjectProfile *profile );
 static gboolean  is_valid_mimetypes( const NAObjectProfile *profile );
 static gboolean  is_valid_isfiledir( const NAObjectProfile *profile );
 static gboolean  is_valid_schemes( const NAObjectProfile *profile );
+static gboolean  is_valid_folders( const NAObjectProfile *profile );
 
 static gchar    *object_id_new_id( const NAObjectId *object, const NAObjectId *new_parent );
 
@@ -208,9 +214,16 @@ class_init( NAObjectProfileClass *klass )
 	spec = g_param_spec_pointer(
 			NAPROFILE_PROP_SCHEMES,
 			"Schemes",
-			"list of selectable schemes",
+			"List of selectable schemes",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAPROFILE_PROP_SCHEMES_ID, spec );
+
+	spec = g_param_spec_pointer(
+			NAPROFILE_PROP_FOLDERS,
+			"Folders",
+			"List of folders to which a Background profile applies",
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAPROFILE_PROP_FOLDERS_ID, spec );
 
 	klass->private = g_new0( NAObjectProfileClassPrivate, 1 );
 
@@ -242,16 +255,14 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	 */
 	self->private->path = g_strdup( "" );
 	self->private->parameters = g_strdup( "" );
-	self->private->basenames = NULL;
-	self->private->basenames = g_slist_append( self->private->basenames, g_strdup( "*" ));
+	self->private->basenames = g_slist_append( NULL, g_strdup( "*" ));
 	self->private->match_case = TRUE;
-	self->private->mimetypes = NULL;
-	self->private->mimetypes = g_slist_append( self->private->mimetypes, g_strdup( "*/*" ));
+	self->private->mimetypes = g_slist_append( NULL, g_strdup( "*/*" ));
 	self->private->is_file = TRUE;
 	self->private->is_dir = FALSE;
 	self->private->accept_multiple = FALSE;
-	self->private->schemes = NULL;
-	self->private->schemes = g_slist_append( self->private->schemes, g_strdup( "file" ));
+	self->private->schemes = g_slist_append( NULL, g_strdup( "file" ));
+	self->private->folders = g_slist_append( NULL, g_strdup( "*" ));
 }
 
 static void
@@ -302,6 +313,11 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 			case NAPROFILE_PROP_SCHEMES_ID:
 				list = na_utils_duplicate_string_list( self->private->schemes );
+				g_value_set_pointer( value, list );
+				break;
+
+			case NAPROFILE_PROP_FOLDERS_ID:
+				list = na_utils_duplicate_string_list( self->private->folders );
 				g_value_set_pointer( value, list );
 				break;
 
@@ -364,6 +380,11 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 				self->private->schemes = na_utils_duplicate_string_list( g_value_get_pointer( value ));
 				break;
 
+			case NAPROFILE_PROP_FOLDERS_ID:
+				na_utils_free_string_list( self->private->folders );
+				self->private->folders = na_utils_duplicate_string_list( g_value_get_pointer( value ));
+				break;
+
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -407,6 +428,7 @@ instance_finalize( GObject *object )
 	na_utils_free_string_list( self->private->basenames );
 	na_utils_free_string_list( self->private->mimetypes );
 	na_utils_free_string_list( self->private->schemes );
+	na_utils_free_string_list( self->private->folders );
 
 	g_free( self->private );
 
@@ -663,6 +685,32 @@ na_object_profile_get_schemes( const NAObjectProfile *profile )
 }
 
 /**
+ * na_object_profile_get_folders:
+ * @profile: the #NAObjectProfile to be requested.
+ *
+ * Returns the list of folders this profile applies to.
+ *
+ * Returns: a GSList of newly allocated strings. The list must be
+ * na_utils_free_string_list() by the caller.
+ *
+ * See na_object_profile_set_folders() for some rationale about
+ * folders.
+ */
+GSList *
+na_object_profile_get_folders( const NAObjectProfile *profile )
+{
+	GSList *folders = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
+
+	if( !profile->private->dispose_has_run ){
+		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_FOLDERS, &folders, NULL );
+	}
+
+	return( folders );
+}
+
+/**
  * na_object_profile_set_path:
  * @profile: the #NAObjectProfile to be updated.
  * @path: the command path to be set.
@@ -855,7 +903,7 @@ na_object_profile_set_multiple( NAObjectProfile *profile, gboolean multiple )
  *
  * Sets the schemes on which this profile applies.
  *
- * #NAObjectProfile takes a copy of the provided mimetypes. This later
+ * #NAObjectProfile takes a copy of the provided schemes. This later
  * may so be na_utils_free_string_list() by the caller after this
  * function returns.
  *
@@ -873,8 +921,30 @@ na_object_profile_set_schemes( NAObjectProfile *profile, GSList *schemes )
 }
 
 /**
+ * na_object_profile_set_folders:
+ * @profile: the #NAObjectProfile to be updated.
+ * @folders: list of folders which apply.
+ *
+ * Sets the folders on which this profile applies.
+ *
+ * #NAObjectProfile takes a copy of the provided folders. This later
+ * may so be na_utils_free_string_list() by the caller after this
+ * function returns.
+ */
+void
+na_object_profile_set_folders( NAObjectProfile *profile, GSList *folders )
+{
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
+
+	if( !profile->private->dispose_has_run ){
+		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_FOLDERS, folders, NULL );
+	}
+}
+
+/**
  * na_object_profile_is_candidate:
  * @profile: the #NAObjectProfile to be checked.
+ * @target: the current target.
  * @files: the currently selected items, as provided by Nautilus.
  *
  * Determines if the given profile is candidate to be displayed in the
@@ -885,13 +955,47 @@ na_object_profile_set_schemes( NAObjectProfile *profile, GSList *schemes )
  * valid candidate to be displayed in Nautilus context menu, %FALSE
  * else.
  *
- * This method could have been leaved outside of the #NAObjectProfile
+ * This method could have been left outside of the #NAObjectProfile
  * class, as it is only called by the plugin. Nonetheless, it is much
  * more easier to code here (because we don't need all get methods, nor
  * free the parameters after).
  */
 gboolean
-na_object_profile_is_candidate( const NAObjectProfile *profile, GList* files )
+na_object_profile_is_candidate( const NAObjectProfile *profile, gint target, GList *files )
+{
+	gboolean is_candidate;
+
+	switch( target ){
+		case ITEM_TARGET_BACKGROUND:
+			is_candidate = is_target_background_candidate( profile, ( NautilusFileInfo * ) files->data );
+			break;
+
+		case ITEM_TARGET_TOOLBAR:
+			is_candidate = is_target_toolbar_candidate( profile, ( NautilusFileInfo * ) files->data );
+			break;
+
+		case ITEM_TARGET_SELECTION:
+		default:
+			is_candidate = is_target_selection_candidate( profile, files );
+	}
+
+	return( is_candidate );
+}
+
+static gboolean
+is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder )
+{
+	return( TRUE );
+}
+
+static gboolean
+is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder )
+{
+	return( TRUE );
+}
+
+static gboolean
+is_target_selection_candidate( const NAObjectProfile *profile, GList *files )
 {
 	gboolean retv = FALSE;
 	gboolean test_multiple_file = FALSE;
@@ -1119,7 +1223,7 @@ na_object_profile_is_candidate( const NAObjectProfile *profile, GList* files )
  * Expands the parameters path, in function of the found tokens.
  *
  * @profile: the selected profile.
- *
+ * @target: the current target.
  * @files: the list of currently selected items, as provided by Nautilus.
  *
  * Valid parameters are :
@@ -1143,7 +1247,7 @@ na_object_profile_is_candidate( const NAObjectProfile *profile, GList* files )
  * - src/nact/nautilus-actions-config-tool.ui:LegendDialog
  */
 gchar *
-na_object_profile_parse_parameters( const NAObjectProfile *profile, GList* files )
+na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target, GList* files )
 {
 	gchar *parsed = NULL;
 	GString *string;
@@ -1488,17 +1592,34 @@ gboolean
 object_is_valid( const NAObject *profile )
 {
 	gboolean is_valid = FALSE;
+	NAObjectItem *parent;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
 
 	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
 
 		is_valid =
-			is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
-			is_valid_filenames( NA_OBJECT_PROFILE( profile )) &&
-			is_valid_mimetypes( NA_OBJECT_PROFILE( profile )) &&
-			is_valid_isfiledir( NA_OBJECT_PROFILE( profile )) &&
-			is_valid_schemes( NA_OBJECT_PROFILE( profile ));
+			is_valid_path_parameters( NA_OBJECT_PROFILE( profile ));
+
+		if( is_valid ){
+			parent = na_object_get_parent( profile );
+
+			if( na_object_is_target_background( parent )){
+				is_valid =
+					is_valid_folders( NA_OBJECT_PROFILE( profile ));
+
+			} else if( na_object_is_target_toolbar( parent )){
+				is_valid =
+					is_valid_folders( NA_OBJECT_PROFILE( profile ));
+
+			} else {
+				is_valid =
+					is_valid_filenames( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_mimetypes( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_isfiledir( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_schemes( NA_OBJECT_PROFILE( profile ));
+			}
+		}
 	}
 
 	return( is_valid );
@@ -1561,6 +1682,16 @@ is_valid_schemes( const NAObjectProfile *profile )
 	gboolean valid;
 
 	valid = g_slist_length( profile->private->schemes ) > 0;
+
+	return( valid );
+}
+
+static gboolean
+is_valid_folders( const NAObjectProfile *profile )
+{
+	gboolean valid;
+
+	valid = g_slist_length( profile->private->folders ) > 0;
 
 	return( valid );
 }

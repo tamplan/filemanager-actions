@@ -68,7 +68,11 @@ static void          interface_base_finalize( NactIAdvancedTabInterface *klass )
 static void          initial_load_create_schemes_selection_list( NactIAdvancedTab *instance );
 static void          runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview );
 static void          runtime_init_setup_values( NactIAdvancedTab *instance, GtkTreeView *listview );
+
 static void          on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selected );
+static void          on_tab_updatable_enable_tab( NactIAdvancedTab *instance, NAObjectItem *item );
+static gboolean      tab_set_sensitive( NactIAdvancedTab *instance );
+
 static gboolean      get_action_schemes_list( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, GSList **schemes_list );
 static GtkButton    *get_add_button( NactIAdvancedTab *instance );
 static GtkButton    *get_button( NactIAdvancedTab *instance, const gchar *name );
@@ -299,6 +303,12 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ),
 				instance );
+
+		g_signal_connect(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
+				G_CALLBACK( on_tab_updatable_enable_tab ),
+				instance );
 	}
 }
 
@@ -385,11 +395,10 @@ static void
 on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selected )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_on_tab_updatable_selection_changed";
-	NAObjectProfile *profile = NULL;
-	GtkTreeModel *scheme_model;
+	NAObjectProfile *profile;
+	gboolean enable_tab;
 	GSList *schemes;
-	GtkTreeView *listview;
-	GtkButton *add, *remove;
+	GtkTreeModel *scheme_model;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
@@ -404,20 +413,46 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				NULL );
 
-		if( profile ){
+		enable_tab = tab_set_sensitive( instance );
+
+		if( enable_tab ){
 			schemes = na_object_profile_get_schemes( profile );
 			g_slist_foreach( schemes, ( GFunc ) set_action_schemes, scheme_model );
 		}
-
-		listview = get_schemes_tree_view( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( listview ), profile != NULL );
-
-		add = get_add_button( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( add ), profile != NULL );
-
-		remove = get_remove_button( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( remove ), profile != NULL );
 	}
+}
+
+static void
+on_tab_updatable_enable_tab( NactIAdvancedTab *instance, NAObjectItem *item )
+{
+	static const gchar *thisfn = "nact_iadvanced_tab_on_tab_updatable_enable_tab";
+
+	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
+		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+
+		tab_set_sensitive( instance );
+	}
+}
+
+static gboolean
+tab_set_sensitive( NactIAdvancedTab *instance )
+{
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	gboolean enable_tab;
+
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			NULL );
+
+	enable_tab = ( profile != NULL && na_object_is_target_selection( item ));
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ADVANCED, enable_tab );
+
+	return( enable_tab );
 }
 
 /*

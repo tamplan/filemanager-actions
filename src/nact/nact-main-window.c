@@ -50,6 +50,7 @@
 #include "nact-iactions-list.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
+#include "nact-ibackground-tab.h"
 #include "nact-iconditions-tab.h"
 #include "nact-iadvanced-tab.h"
 #include "nact-main-tab.h"
@@ -118,6 +119,7 @@ enum {
 enum {
 	SELECTION_CHANGED,
 	ITEM_UPDATED,
+	ENABLE_TAB,
 	UPDATE_SENSITIVITIES,
 	ORDER_CHANGED,
 	LAST_SIGNAL
@@ -131,6 +133,7 @@ static void     class_init( NactMainWindowClass *klass );
 static void     iactions_list_iface_init( NactIActionsListInterface *iface );
 static void     iaction_tab_iface_init( NactIActionTabInterface *iface );
 static void     icommand_tab_iface_init( NactICommandTabInterface *iface );
+static void     ibackground_tab_iface_init( NactIBackgroundTabInterface *iface );
 static void     iconditions_tab_iface_init( NactIConditionsTabInterface *iface );
 static void     iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
 static void     iabout_iface_init( NAIAboutInterface *iface );
@@ -215,6 +218,12 @@ register_type( void )
 		NULL
 	};
 
+	static const GInterfaceInfo ibackground_tab_iface_info = {
+		( GInterfaceInitFunc ) ibackground_tab_iface_init,
+		NULL,
+		NULL
+	};
+
 	static const GInterfaceInfo iconditions_tab_iface_info = {
 		( GInterfaceInitFunc ) iconditions_tab_iface_init,
 		NULL,
@@ -254,6 +263,8 @@ register_type( void )
 	g_type_add_interface_static( type, NACT_IACTION_TAB_TYPE, &iaction_tab_iface_info );
 
 	g_type_add_interface_static( type, NACT_ICOMMAND_TAB_TYPE, &icommand_tab_iface_info );
+
+	g_type_add_interface_static( type, NACT_IBACKGROUND_TAB_TYPE, &ibackground_tab_iface_info );
 
 	g_type_add_interface_static( type, NACT_ICONDITIONS_TAB_TYPE, &iconditions_tab_iface_info );
 
@@ -362,6 +373,25 @@ class_init( NactMainWindowClass *klass )
 			G_TYPE_POINTER );
 
 	/**
+	 * nact-tab-updatable-enable-tab:
+	 *
+	 * This signal is emitted by the IActionTab when the nature of the
+	 * item has been modified: some tabs should probably be enabled or
+	 * disabled
+	 */
+	st_signals[ ENABLE_TAB ] = g_signal_new(
+			TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,					/* no default handler */
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER );
+
+	/**
 	 * main-window-update-sensitivities:
 	 *
 	 * This signal is emitted each time a user interaction may led the
@@ -421,6 +451,14 @@ static void
 icommand_tab_iface_init( NactICommandTabInterface *iface )
 {
 	static const gchar *thisfn = "nact_main_window_icommand_tab_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+}
+
+static void
+ibackground_tab_iface_init( NactIBackgroundTabInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_ibackground_tab_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
@@ -602,6 +640,7 @@ instance_dispose( GObject *window )
 		nact_iactions_list_dispose( NACT_IACTIONS_LIST( window ));
 		nact_iaction_tab_dispose( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_dispose( NACT_ICOMMAND_TAB( window ));
+		nact_ibackground_tab_dispose( NACT_IBACKGROUND_TAB( window ));
 		nact_iconditions_tab_dispose( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_dispose( NACT_IADVANCED_TAB( window ));
 		nact_main_menubar_dispose( self );
@@ -907,6 +946,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 
 		nact_iaction_tab_initial_load_toplevel( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_initial_load_toplevel( NACT_ICOMMAND_TAB( window ));
+		nact_ibackground_tab_initial_load_toplevel( NACT_IBACKGROUND_TAB( window ));
 		nact_iconditions_tab_initial_load_toplevel( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_initial_load_toplevel( NACT_IADVANCED_TAB( window ));
 	}
@@ -941,6 +981,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 
 		nact_iaction_tab_runtime_init_toplevel( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_runtime_init_toplevel( NACT_ICOMMAND_TAB( window ));
+		nact_ibackground_tab_runtime_init_toplevel( NACT_IBACKGROUND_TAB( window ));
 		nact_iconditions_tab_runtime_init_toplevel( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_runtime_init_toplevel( NACT_IADVANCED_TAB( window ));
 		nact_main_menubar_runtime_init( window );
@@ -972,6 +1013,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( window ));
 	g_return_if_fail( NACT_IS_IACTION_TAB( window ));
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( window ));
+	g_return_if_fail( NACT_IS_IBACKGROUND_TAB( window ));
 	g_return_if_fail( NACT_IS_ICONDITIONS_TAB( window ));
 	g_return_if_fail( NACT_IS_IADVANCED_TAB( window ));
 
@@ -980,6 +1022,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 		nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));
 		nact_iaction_tab_all_widgets_showed( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_all_widgets_showed( NACT_ICOMMAND_TAB( window ));
+		nact_ibackground_tab_all_widgets_showed( NACT_IBACKGROUND_TAB( window ));
 		nact_iconditions_tab_all_widgets_showed( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_all_widgets_showed( NACT_IADVANCED_TAB( window ));
 	}

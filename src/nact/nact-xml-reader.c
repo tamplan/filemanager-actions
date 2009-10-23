@@ -98,6 +98,13 @@ static GConfReaderStruct reader_str[] = {
 	{ OBJECT_ITEM_TOOLTIP_ENTRY , FALSE,  TRUE, FALSE, FALSE },
 	{ OBJECT_ITEM_ICON_ENTRY    , FALSE, FALSE, FALSE, FALSE },
 	{ OBJECT_ITEM_ENABLED_ENTRY , FALSE, FALSE, FALSE, FALSE },
+	{ OBJECT_ITEM_LIST_ENTRY    , FALSE, FALSE, FALSE, FALSE },
+	{ OBJECT_ITEM_TYPE_ENTRY    , FALSE, FALSE, FALSE, FALSE },
+	{ OBJECT_ITEM_TARGET_SELECTION_ENTRY  , FALSE, FALSE, FALSE, FALSE },
+	{ OBJECT_ITEM_TARGET_BACKGROUND_ENTRY , FALSE, FALSE, FALSE, FALSE },
+	{ OBJECT_ITEM_TARGET_TOOLBAR_ENTRY    , FALSE, FALSE, FALSE, FALSE },
+	{ OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, FALSE, FALSE, FALSE, FALSE },
+	{ OBJECT_ITEM_TOOLBAR_LABEL_ENTRY     ,  TRUE, FALSE, FALSE, FALSE },
 	{ ACTION_PROFILE_LABEL_ENTRY, FALSE,  TRUE,  TRUE, FALSE },
 	{ ACTION_PATH_ENTRY         , FALSE, FALSE,  TRUE, FALSE },
 	{ ACTION_PARAMETERS_ENTRY   , FALSE, FALSE,  TRUE, FALSE },
@@ -108,6 +115,7 @@ static GConfReaderStruct reader_str[] = {
 	{ ACTION_MULTIPLE_ENTRY     , FALSE, FALSE,  TRUE, FALSE },
 	{ ACTION_MIMETYPES_ENTRY    , FALSE, FALSE,  TRUE,  TRUE },
 	{ ACTION_SCHEMES_ENTRY      , FALSE, FALSE,  TRUE,  TRUE },
+	{ ACTION_FOLDERS_ENTRY      , FALSE, FALSE,  TRUE,  TRUE },
 	{                       NULL, FALSE, FALSE, FALSE, FALSE },
 };
 
@@ -1114,7 +1122,7 @@ get_profile_name_from_dump_key( const gchar *key )
 static void
 apply_values( NactXMLReader *reader )
 {
-	static const gchar *thisfn = "gconf_reader_apply_values";
+	static const gchar *thisfn = "nact_xml_reader_apply_values";
 
 	g_debug( "%s: reader=%p, entry=%s, value=%s",
 			thisfn, ( void * ) reader, reader->private->entry, reader->private->value );
@@ -1134,6 +1142,30 @@ apply_values( NactXMLReader *reader )
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_ENABLED_ENTRY )){
 			na_object_set_enabled( NA_OBJECT_ITEM( reader->private->action ), na_utils_schema_to_boolean( reader->private->value, TRUE ));
+
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_LIST_ENTRY )){
+			na_object_item_set_items_string_list( NA_OBJECT_ITEM( reader->private->action ), reader->private->list_value );
+
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TYPE_ENTRY )){
+			/* type (Action, Menu) is not set here, because this must has been
+			 * decided at object construction (it is so too late !)
+			 */
+			;
+
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TARGET_SELECTION_ENTRY )){
+			na_object_set_target_selection( reader->private->action, na_utils_schema_to_boolean( reader->private->value, TRUE ));
+
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY )){
+			na_object_set_target_background( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
+
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY )){
+			na_object_set_target_toolbar( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
+
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY )){
+			na_object_action_toolbar_set_same_label( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
+
+		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY )){
+			na_object_action_toolbar_set_label( reader->private->action, reader->private->value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_PROFILE_LABEL_ENTRY )){
 			na_object_set_label( reader->private->profile, reader->private->value );
@@ -1165,8 +1197,11 @@ apply_values( NactXMLReader *reader )
 		} else if( !strcmp( reader->private->entry, ACTION_SCHEMES_ENTRY )){
 			na_object_profile_set_schemes( reader->private->profile, reader->private->list_value );
 
+		} else if( !strcmp( reader->private->entry, ACTION_FOLDERS_ENTRY )){
+			na_object_profile_set_folders( reader->private->profile, reader->private->list_value );
+
 		} else {
-			g_assert_not_reached();
+			g_warning( "%s: unprocessed entry %s", thisfn, reader->private->entry );
 		}
 	}
 }

@@ -585,12 +585,23 @@ static void
 read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjectAction *action )
 {
 	gchar *version;
+	gboolean toolbar_same_label;
+	gchar *toolbar_label;
 
 	read_object_item_properties( provider, entries, NA_OBJECT_ITEM( action ) );
 
 	if( na_gconf_utils_get_string_from_entries( entries, ACTION_VERSION_ENTRY, &version )){
 		na_object_action_set_version( action, version );
 		g_free( version );
+	}
+
+	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, &toolbar_same_label )){
+		na_object_action_toolbar_set_same_label( action, toolbar_same_label );
+	}
+
+	if( na_gconf_utils_get_string_from_entries( entries, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, &toolbar_label )){
+		na_object_action_toolbar_set_label( action, toolbar_label );
+		g_free( toolbar_label );
 	}
 }
 
@@ -639,6 +650,7 @@ read_item_action_profile_properties( NAGConfProvider *provider, GSList *entries,
 	gchar *label, *path, *parameters;
 	GSList *basenames, *schemes, *mimetypes;
 	gboolean isfile, isdir, multiple, matchcase;
+	GSList *folders;
 
 	if( na_gconf_utils_get_string_from_entries( entries, ACTION_PROFILE_LABEL_ENTRY, &label )){
 		na_object_set_label( profile, label );
@@ -689,6 +701,11 @@ read_item_action_profile_properties( NAGConfProvider *provider, GSList *entries,
 		na_object_profile_set_mimetypes( profile, mimetypes );
 		na_utils_free_string_list( mimetypes );
 	}
+
+	if( na_gconf_utils_get_string_list_from_entries( entries, ACTION_FOLDERS_ENTRY, &folders )){
+		na_object_profile_set_folders( profile, folders );
+		na_utils_free_string_list( folders );
+	}
 }
 
 static void
@@ -727,6 +744,7 @@ read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 	gchar *id, *label, *tooltip, *icon;
 	gboolean enabled;
 	GSList *subitems;
+	gboolean target_selection, target_background, target_toolbar;
 
 	if( !na_gconf_utils_get_string_from_entries( entries, OBJECT_ITEM_LABEL_ENTRY, &label )){
 		id = na_object_get_id( item );
@@ -754,6 +772,18 @@ read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 	if( na_gconf_utils_get_string_list_from_entries( entries, OBJECT_ITEM_LIST_ENTRY, &subitems )){
 		na_object_item_set_items_string_list( item, subitems );
 		na_utils_free_string_list( subitems );
+	}
+
+	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TARGET_SELECTION_ENTRY, &target_selection )){
+		na_object_set_target_selection( item, target_selection );
+	}
+
+	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, &target_background )){
+		na_object_set_target_background( item, target_background );
+	}
+
+	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, &target_toolbar )){
+		na_object_set_target_toolbar( item, target_toolbar );
 	}
 }
 
@@ -849,6 +879,8 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 	ret =
 		write_object_item( provider, NA_OBJECT_ITEM( action ), message ) &&
 		write_str( provider, uuid, NULL, ACTION_VERSION_ENTRY, na_object_action_get_version( action ), message ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, na_object_action_toolbar_use_same_label( action ), message ) &&
+		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, na_object_action_toolbar_get_label( action ), message ) &&
 		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_ACTION ), message );
 
 	profiles = na_object_get_items_list( action );
@@ -868,7 +900,8 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 			write_bool( provider, uuid, name, ACTION_ISFILE_ENTRY, na_object_profile_get_is_file( profile ), message ) &&
 			write_bool( provider, uuid, name, ACTION_ISDIR_ENTRY, na_object_profile_get_is_dir( profile ), message ) &&
 			write_bool( provider, uuid, name, ACTION_MULTIPLE_ENTRY, na_object_profile_get_multiple( profile ), message ) &&
-			write_list( provider, uuid, name, ACTION_SCHEMES_ENTRY, na_object_profile_get_schemes( profile ), message );
+			write_list( provider, uuid, name, ACTION_SCHEMES_ENTRY, na_object_profile_get_schemes( profile ), message ) &&
+			write_list( provider, uuid, name, ACTION_FOLDERS_ENTRY, na_object_profile_get_folders( profile ), message );
 
 		g_free( name );
 	}
@@ -908,6 +941,9 @@ write_object_item( NAGConfProvider *provider, const NAObjectItem *item, gchar **
 		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLTIP_ENTRY, na_object_get_tooltip( item ), message ) &&
 		write_str( provider, uuid, NULL, OBJECT_ITEM_ICON_ENTRY, na_object_get_icon( item ), message ) &&
 		write_bool( provider, uuid, NULL, OBJECT_ITEM_ENABLED_ENTRY, na_object_is_enabled( item ), message ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, na_object_is_target_selection( item ), message ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, na_object_is_target_background( item ), message ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, na_object_is_target_toolbar( item ), message ) &&
 		write_list( provider, uuid, NULL, OBJECT_ITEM_LIST_ENTRY, na_object_item_rebuild_items_list( item ), message );
 
 	g_free( uuid );

@@ -38,19 +38,26 @@ G_BEGIN_DECLS
 /* private instance data
  */
 struct NAObjectProfilePrivate {
-	gboolean        dispose_has_run;
+	gboolean  dispose_has_run;
 
 	/* profile properties
 	 */
-	gchar          *path;
-	gchar          *parameters;
-	GSList         *basenames;
-	gboolean        match_case;
-	GSList         *mimetypes;
-	gboolean        is_file;
-	gboolean        is_dir;
-	gboolean        accept_multiple;
-	GSList         *schemes;
+	gchar    *path;
+	gchar    *parameters;
+
+	/* ... for nature 'FileSelection'
+	 */
+	GSList   *basenames;
+	gboolean  match_case;
+	GSList   *mimetypes;
+	gboolean  is_file;
+	gboolean  is_dir;
+	gboolean  accept_multiple;
+	GSList   *schemes;
+
+	/* ... for nature 'Background'
+	 */
+	GSList   *folders;
 };
 
 G_END_DECLS

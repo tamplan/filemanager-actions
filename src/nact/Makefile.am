@@ -78,6 +78,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iaction-tab.h									\
 	nact-iadvanced-tab.c								\
 	nact-iadvanced-tab.h								\
+	nact-ibackground-tab.c								\
+	nact-ibackground-tab.h								\
 	nact-icommand-tab.c									\
 	nact-icommand-tab.h									\
 	nact-iconditions-tab.c								\
@@ -87,6 +89,7 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-main-menubar.h									\
 	nact-main-statusbar.c								\
 	nact-main-statusbar.h								\
+	nact-main-tab.c										\
 	nact-main-tab.h										\
 	nact-main-window.c									\
 	nact-main-window.h									\

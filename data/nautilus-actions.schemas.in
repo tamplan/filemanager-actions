@@ -11,7 +11,7 @@
       <type>string</type>
       <locale name="C">
         <short>The version of the configuration format</short>
-        <long>The version of the configuration format that will be used to manage backward compatibility</long>
+        <long>The version of the configuration format that will be used to manage backward compatibility.</long>
       </locale>
       <default>2.0</default>
     </schema>
@@ -23,7 +23,7 @@
       <locale name="C">
         <default></default>
         <short>The label of the menu item</short>
-        <long>The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings</long>
+        <long>The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings.</long>
       </locale>
       <default></default>
     </schema>
@@ -35,7 +35,7 @@
       <locale name="C">
         <default></default>
         <short>The tooltip of the menu item</short>
-        <long>The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse</long>
+        <long>The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse.</long>
       </locale>
       <default></default>
     </schema>
@@ -46,7 +46,7 @@
       <type>string</type>
       <locale name="C">
         <short>The icon of the menu item</short>
-        <long>The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings</long>
+        <long>The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings.</long>
       </locale>
       <default></default>
     </schema>
@@ -57,9 +57,93 @@
       <type>bool</type>
       <locale name="C">
         <short>Whether the action is enabled</short>
-        <long>If the action is disabled, it will never appear in the Nautilus context menu</long>
+        <long>If the action is disabled, it will never appear in the Nautilus context menu.</long>
       </locale>
       <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/target_selection</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Targets selection</short>
+        <long>Whether the action of menu targets the selection Nautilus menus. This is the historical behavior.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/target_background</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Targets background</short>
+        <long>Whether the action of menu targets the background Nautilus menus.</long>
+      </locale>
+      <default>false</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/target_toolbar</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Targets toolbar</short>
+        <long>Whether the action is candidate to be displayed in Nautilus toolbar.
+Note, that as of Nautilus -2.26, menus can not be candidate to toolbar display.</long>
+      </locale>
+      <default>false</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/items</key>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>List of subitem ids</short>
+        <long>Ordered list of the IDs of the subitems. This may be actions or menus if the item is a menu, or profiles if the item is an action.
+If this list doesn't exist or is empty for an action, we load the found profiles in the order of the read operations.</long>
+      </locale>
+      <default>[]</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/type</key>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>Type of the item</short>
+        <long>Defines if the item is an action or a menu. Possible values are :
+- "Action",
+- "Menu".
+The value is case sensitive and must not be localized.</long>
+      </locale>
+      <default>Action</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/toolbar-same-label</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether the labels are the sames</short>
+        <long>Whether the label displayed in the Nautilus toolbar besides of the icon is the same that the main item label.</long>
+      </locale>
+      <default>false</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/toolbar-label</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Label of the item in the toolbar</short>
+        <long>The label displayed besides of the icon in the Nautilus toolbar.
+Note that actual display may depend of your own Gnome preferences.</long>
+      </locale>
+      <default></default>
     </schema>
 
     <schema>
@@ -69,7 +153,7 @@
       <locale name="C">
         <default>Default profile</default>
         <short>A description name of the profile</short>
-        <long>The field is here to give the user a human readable name for a profile in the Nact interface. If not set there will be a default auto generated string set by default</long>
+        <long>The field is here to give the user a human readable name for a profile in the NACT interface. If not set there will be a default auto generated string set.</long>
       </locale>
       <default>Default profile</default>
     </schema>
@@ -80,7 +164,7 @@
       <type>string</type>
       <locale name="C">
         <short>The path of the command</short>
-        <long>The path of the command to start when the user select the menu item in the Nautilus popup menu</long>
+        <long>The path of the command to start when the user select the menu item in the Nautilus popup menu.</long>
       </locale>
       <default></default>
     </schema>
@@ -105,7 +189,7 @@ The parameters can contain some special tokens which are replaced by Nautilus in
 %s: scheme of the URI
 %u: URI
 %U: username of the URI
-%%: a percent sign</long>
+%%: a percent sign.</long>
       </locale>
       <default></default>
     </schema>
@@ -117,7 +201,7 @@ The parameters can contain some special tokens which are replaced by Nautilus in
       <list_type>string</list_type>
       <locale name="C">
         <short>The list of pattern to match the selected file(s)/folder(s)</short>
-        <long>A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear</long>
+        <long>A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear. This only applies when targeting selection.</long>
       </locale>
       <default>[*]</default>
     </schema>
@@ -128,7 +212,7 @@ The parameters can contain some special tokens which are replaced by Nautilus in
       <type>bool</type>
       <locale name="C">
         <short>'true' if the filename patterns have to be case sensitive, 'false' otherwise</short>
-        <long>If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'</long>
+        <long>If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'. This only applies when targeting selection.</long>
       </locale>
       <default>true</default>
     </schema>
@@ -140,7 +224,7 @@ The parameters can contain some special tokens which are replaced by Nautilus in
       <list_type>string</list_type>
       <locale name="C">
         <short>The list of patterns to match the mimetypes of the selected file(s)</short>
-        <long>A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear</long>
+        <long>A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear. This only applies when targeting selection.</long>
       </locale>
       <default>[*/*]</default>
     </schema>
@@ -151,12 +235,12 @@ The parameters can contain some special tokens which are replaced by Nautilus in
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have files, 'false' otherwise</short>
-        <long>This setting is tied in with the 'isdir' setting. The valid combinations are:
-
-isfile=TRUE and isdir=FALSE: the selection may hold only files
-isfile=FALSE and isdir=TRUE: the selection may hold only folders
-isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
-isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)</long>
+        <long>This setting is tied in with the 'isdir' setting. The valid combinations are :
+- isfile=TRUE and isdir=FALSE: the selection may hold only files
+- isfile=FALSE and isdir=TRUE: the selection may hold only folders
+- isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
+- isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear).
+This only applies when targeting selection.</long>
       </locale>
       <default>true</default>
     </schema>
@@ -167,12 +251,12 @@ isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have folders, 'false' otherwise</short>
-        <long>This setting is tied in with the 'isfile' setting. The valid combinations are:
-
-isfile=TRUE and isdir=FALSE: the selection may hold only files
-isfile=FALSE and isdir=TRUE: the selection may hold only folders
-isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
-isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)</long>
+        <long>This setting is tied in with the 'isfile' setting. The valid combinations are :
+- isfile=TRUE and isdir=FALSE: the selection may hold only files
+- isfile=FALSE and isdir=TRUE: the selection may hold only folders
+- isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
+- isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear).
+This only applies when targeting selection.</long>
       </locale>
       <default>false</default>
     </schema>
@@ -183,7 +267,7 @@ isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have several items, 'false' otherwise</short>
-        <long>If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'</long>
+        <long>If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'. This only applies when targeting selection.</long>
       </locale>
       <default>false</default>
     </schema>
@@ -196,22 +280,32 @@ isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration
       <locale name="C">
         <short>The list of schemes where the selected files should be located</short>
         <long>Defines the list of valid schemes to be matched against the selected items. The scheme is the protocol used to access the files. The keyword to use is the one used in the URI.
+Examples of valid URI include :
+- file:///tmp/foo.txt
+- sftp:///root@test.example.net/tmp/foo.txt
 
-Examples of valid URI include:
-file:///tmp/foo.txt
-sftp:///root@test.example.net/tmp/foo.txt
+The most common schemes are :
+- 'file': local files
+- 'sftp': files accessed via SSH
+- 'ftp' : files accessed via FTP
+- 'smb' : files accessed via Samba (Windows share)
+- 'dav' : files accessed via WebDAV
 
-The most common schemes are:
-
-'file': local files
-'sftp': files accessed via SSH
-'ftp': files accessed via FTP
-'smb': files accessed via Samba (Windows share)
-'dav': files accessed via WebDAV
-
-All schemes used by Nautilus can be used here.</long>
+All schemes used by Nautilus can be used here. This only applies when targeting selection.</long>
       </locale>
       <default>[file]</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/configurations/folders</key>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>The list of URIs on which the Background item applies</short>
+        <long>Defines the list of valid URIs to be matched against the current folder. This is only used when targeting background or toolbar. All folders 'under' the specified URI are considered valid.</long>
+      </locale>
+      <default>[]</default>
     </schema>
 
     <!-- schemas for preferences -->
@@ -223,7 +317,7 @@ All schemes used by Nautilus can be used here.</long>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the export assistant window</short>
-        <long>Position and size of the export assistant window ; default is set by the window manager</long>
+        <long>Position and size of the export assistant window ; default is set by the window manager.</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -234,7 +328,7 @@ All schemes used by Nautilus can be used here.</long>
       <type>string</type>
       <locale name="C">
         <short>Last selected folder</short>
-        <long>Last folder selected when choosing a folder where to export the actions</long>
+        <long>Last folder selected when choosing a folder where to export the actions.</long>
       </locale>
       <default>/tmp</default>
     </schema>
@@ -246,7 +340,7 @@ All schemes used by Nautilus can be used here.</long>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the command chooser window</short>
-        <long>Position and size of the command chooser window in the Command tab ; default is set by the window manager</long>
+        <long>Position and size of the command chooser window in the Command tab ; default is set by the window manager.</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -257,7 +351,7 @@ All schemes used by Nautilus can be used here.</long>
       <type>string</type>
       <locale name="C">
         <short>Last selected folder</short>
-        <long>Last folder selected when browsing for a command in the Command tab</long>
+        <long>Last folder selected when browsing for a command in the Command tab.</long>
       </locale>
       <default>/bin</default>
     </schema>
@@ -269,7 +363,7 @@ All schemes used by Nautilus can be used here.</long>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the Legend dialog</short>
-        <long>Position and size of the Legend dialog ; default is set by the UI manager</long>
+        <long>Position and size of the Legend dialog ; default is set by the UI manager.</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -281,7 +375,7 @@ All schemes used by Nautilus can be used here.</long>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the import assistant window</short>
-        <long>Position and size of the import assistant window ; default is set by the window manager</long>
+        <long>Position and size of the import assistant window ; default is set by the window manager.</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -307,7 +401,7 @@ All schemes used by Nautilus can be used here.</long>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the interaction dialog at import time</short>
-        <long>Position and size of the interaction dialog at import time ; default is set by the window manager</long>
+        <long>Position and size of the interaction dialog at import time ; default is set by the window manager.</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -318,7 +412,7 @@ All schemes used by Nautilus can be used here.</long>
       <type>string</type>
       <locale name="C">
         <short>Last selected folder</short>
-        <long>Last folder selected when choosing a folder from where import new actions</long>
+        <long>Last folder selected when choosing a folder from where import new actions.</long>
       </locale>
       <default>/tmp</default>
     </schema>
@@ -425,7 +519,7 @@ All schemes used by Nautilus can be used here.</long>
       <type>bool</type>
       <locale name="C">
         <short>Display Edit toolbar</short>
-        <long>Whether to display or not the Edit toolbar in the main window</long>
+        <long>Whether to display or not the Edit toolbar in the main window.</long>
       </locale>
       <default>false</default>
     </schema>
@@ -436,7 +530,7 @@ All schemes used by Nautilus can be used here.</long>
       <type>bool</type>
       <locale name="C">
         <short>Display File toolbar</short>
-        <long>Whether to display or not the File toolbar in the main window</long>
+        <long>Whether to display or not the File toolbar in the main window.</long>
       </locale>
       <default>true</default>
     </schema>
@@ -447,7 +541,7 @@ All schemes used by Nautilus can be used here.</long>
       <type>bool</type>
       <locale name="C">
         <short>Display Help toolbar</short>
-        <long>Whether to display or not the Help toolbar in the main window</long>
+        <long>Whether to display or not the Help toolbar in the main window.</long>
       </locale>
       <default>false</default>
     </schema>
@@ -458,7 +552,7 @@ All schemes used by Nautilus can be used here.</long>
       <type>int</type>
       <locale name="C">
         <short>Main pane position</short>
-        <long>Width of the main window pane ; default is set by the UI manager</long>
+        <long>Width of the main window pane ; default is set by the UI manager.</long>
       </locale>
       <default>100</default>
     </schema>
@@ -469,7 +563,7 @@ All schemes used by Nautilus can be used here.</long>
       <type>bool</type>
       <locale name="C">
         <short>Display Tools toolbar</short>
-        <long>Whether to display or not the Tools toolbar in the main window</long>
+        <long>Whether to display or not the Tools toolbar in the main window.</long>
       </locale>
       <default>false</default>
     </schema>
@@ -481,7 +575,7 @@ All schemes used by Nautilus can be used here.</long>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the main window</short>
-        <long>Position and size of the main window ; default is set by the window manager</long>
+        <long>Position and size of the main window ; default is set by the window manager.</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -493,7 +587,7 @@ All schemes used by Nautilus can be used here.</long>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the preferences dialog</short>
-        <long>Position and size of the preferences dialog ; default is set by the window manager</long>
+        <long>Position and size of the preferences dialog ; default is set by the window manager.</long>
       </locale>
       <default>[]</default>
     </schema>
