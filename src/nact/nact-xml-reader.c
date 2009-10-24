@@ -1162,7 +1162,7 @@ apply_values( NactXMLReader *reader )
 			na_object_action_set_target_toolbar( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY )){
-			na_object_action_toolbar_set_same_label( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
+			na_object_action_toolbar_set_same_label( reader->private->action, na_utils_schema_to_boolean( reader->private->value, TRUE ));
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY )){
 			na_object_action_toolbar_set_label( reader->private->action, reader->private->value );

@@ -998,7 +998,7 @@ create_gconf_schema( NAXMLWriter *writer )
 	create_gconf_schema_entry( writer, OBJECT_ITEM_TARGET_SELECTION_ENTRY  , doc, list_node,   "bool", ACTION_TARGET_SELECTION_DESC_SHORT  , ACTION_TARGET_SELECTION_DESC_LONG  ,  "true", FALSE );
 	create_gconf_schema_entry( writer, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY , doc, list_node,   "bool", ACTION_TARGET_BACKGROUND_DESC_SHORT , ACTION_TARGET_BACKGROUND_DESC_LONG , "false", FALSE );
 	create_gconf_schema_entry( writer, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY    , doc, list_node,   "bool", ACTION_TARGET_TOOLBAR_DESC_SHORT    , ACTION_TARGET_TOOLBAR_DESC_LONG    , "false", FALSE );
-	create_gconf_schema_entry( writer, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, doc, list_node,   "bool", ACTION_TOOLBAR_SAME_LABEL_DESC_SHORT, ACTION_TOOLBAR_SAME_LABEL_DESC_LONG, "false", FALSE );
+	create_gconf_schema_entry( writer, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, doc, list_node,   "bool", ACTION_TOOLBAR_SAME_LABEL_DESC_SHORT, ACTION_TOOLBAR_SAME_LABEL_DESC_LONG,  "true", FALSE );
 	create_gconf_schema_entry( writer, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY     , doc, list_node, "string", ACTION_TOOLBAR_LABEL_DESC_SHORT     , ACTION_TOOLBAR_LABEL_DESC_LONG     , "", TRUE );
 	create_gconf_schema_entry( writer, ACTION_PROFILE_LABEL_ENTRY , doc, list_node, "string", ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, NA_OBJECT_PROFILE_DEFAULT_LABEL, TRUE );
 	create_gconf_schema_entry( writer, ACTION_PATH_ENTRY          , doc, list_node, "string", ACTION_PATH_DESC_SHORT        , ACTION_PATH_DESC_LONG        , "", FALSE );

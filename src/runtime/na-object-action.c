@@ -381,6 +381,7 @@ NAObjectAction *
 na_object_action_new( void )
 {
 	NAObjectAction *action;
+	gchar *label;
 
 	action = g_object_new( NA_OBJECT_ACTION_TYPE, NULL );
 
@@ -388,6 +389,14 @@ na_object_action_new( void )
 
 	/* i18n: default label for a new action */
 	na_object_set_label( action, NA_OBJECT_ACTION_DEFAULT_LABEL );
+
+	/* when flag is set, forces toolbar label to be the same that action label
+	 */
+	if( action->private->use_same_label ){
+		label = na_object_get_label( action );
+		na_object_action_toolbar_set_label( action, label );
+		g_free( label );
+	}
 
 	return( action );
 }
