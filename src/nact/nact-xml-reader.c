@@ -1153,13 +1153,13 @@ apply_values( NactXMLReader *reader )
 			;
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TARGET_SELECTION_ENTRY )){
-			na_object_set_target_selection( reader->private->action, na_utils_schema_to_boolean( reader->private->value, TRUE ));
+			na_object_action_set_target_selection( reader->private->action, na_utils_schema_to_boolean( reader->private->value, TRUE ));
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY )){
-			na_object_set_target_background( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
+			na_object_action_set_target_background( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY )){
-			na_object_set_target_toolbar( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
+			na_object_action_set_target_toolbar( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY )){
 			na_object_action_toolbar_set_same_label( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));

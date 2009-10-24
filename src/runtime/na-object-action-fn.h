@@ -51,21 +51,37 @@ G_BEGIN_DECLS
 #define NAACTION_PROP_LAST_ALLOCATED		"na-action-last-allocated"
 #define NAACTION_PROP_TOOLBAR_SAME_LABEL	"na-action-toolbar-use-same-label"
 #define NAACTION_PROP_TOOLBAR_LABEL			"na-action-toolbar-label"
+#define NAACTION_PROP_TARGET_SELECTION		"na-action-target-selection"
+#define NAACTION_PROP_TARGET_BACKGROUND		"na-action-target-background"
+#define NAACTION_PROP_TARGET_TOOLBAR		"na-action-target-toolbar"
 
 /* i18n: default label for a newly created action */
 #define NA_OBJECT_ACTION_DEFAULT_LABEL		_( "New Nautilus action" )
 
 #define NAUTILUS_ACTIONS_CONFIG_VERSION		"2.0"
 
+/* targets
+ */
+enum {
+	ITEM_TARGET_SELECTION = 1,
+	ITEM_TARGET_BACKGROUND,
+	ITEM_TARGET_TOOLBAR
+};
 
 NAObjectAction *na_object_action_new( void );
 
 gchar          *na_object_action_get_version( const NAObjectAction *action );
+gboolean        na_object_action_is_target_selection( const NAObjectAction *action );
+gboolean        na_object_action_is_target_background( const NAObjectAction *action );
+gboolean        na_object_action_is_target_toolbar( const NAObjectAction *action );
 gboolean        na_object_action_toolbar_use_same_label( const NAObjectAction *action );
 gchar          *na_object_action_toolbar_get_label( const NAObjectAction *action );
 
 void            na_object_action_set_version( NAObjectAction *action, const gchar *version );
 void            na_object_action_set_readonly( NAObjectAction *action, gboolean readonly );
+void            na_object_action_set_target_selection( NAObjectAction *action, gboolean targeting );
+void            na_object_action_set_target_background( NAObjectAction *action, gboolean targeting );
+void            na_object_action_set_target_toolbar( NAObjectAction *action, gboolean targeting );
 void            na_object_action_toolbar_set_same_label( NAObjectAction *action, gboolean same_label );
 void            na_object_action_toolbar_set_label( NAObjectAction *action, const gchar *label );
 

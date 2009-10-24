@@ -375,13 +375,11 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 static gboolean
 tab_set_sensitive( NactICommandTab *instance )
 {
-	NAObjectItem *item;
 	NAObjectProfile *profile;
 	gboolean enable_tab;
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
@@ -554,6 +552,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 	gchar *uri = NULL;
 	NactApplication *application;
 	NAPivot *pivot;
+	GtkWindow *toplevel;
 	GtkWidget *dialog;
 	GtkWidget *path_entry;
 	const gchar *path;
@@ -561,10 +560,11 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
 	pivot = nact_application_get_pivot( application );
+	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
 
 	dialog = gtk_file_chooser_dialog_new(
 			_( "Choosing a command" ),
-			NULL,
+			toplevel,
 			GTK_FILE_CHOOSER_ACTION_OPEN,
 			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,

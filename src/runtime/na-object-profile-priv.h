@@ -45,7 +45,7 @@ struct NAObjectProfilePrivate {
 	gchar    *path;
 	gchar    *parameters;
 
-	/* ... for nature 'FileSelection'
+	/* ... for target 'FileSelection'
 	 */
 	GSList   *basenames;
 	gboolean  match_case;
@@ -55,7 +55,7 @@ struct NAObjectProfilePrivate {
 	gboolean  accept_multiple;
 	GSList   *schemes;
 
-	/* ... for nature 'Background'
+	/* ... for targets 'Background' and 'Toolbar'
 	 */
 	GSList   *folders;
 };

@@ -585,6 +585,7 @@ static void
 read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjectAction *action )
 {
 	gchar *version;
+	gboolean target_selection, target_background, target_toolbar;
 	gboolean toolbar_same_label;
 	gchar *toolbar_label;
 
@@ -593,6 +594,18 @@ read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 	if( na_gconf_utils_get_string_from_entries( entries, ACTION_VERSION_ENTRY, &version )){
 		na_object_action_set_version( action, version );
 		g_free( version );
+	}
+
+	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TARGET_SELECTION_ENTRY, &target_selection )){
+		na_object_action_set_target_selection( action, target_selection );
+	}
+
+	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, &target_background )){
+		na_object_action_set_target_background( action, target_background );
+	}
+
+	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, &target_toolbar )){
+		na_object_action_set_target_toolbar( action, target_toolbar );
 	}
 
 	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, &toolbar_same_label )){
@@ -744,7 +757,6 @@ read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 	gchar *id, *label, *tooltip, *icon;
 	gboolean enabled;
 	GSList *subitems;
-	gboolean target_selection, target_background, target_toolbar;
 
 	if( !na_gconf_utils_get_string_from_entries( entries, OBJECT_ITEM_LABEL_ENTRY, &label )){
 		id = na_object_get_id( item );
@@ -772,18 +784,6 @@ read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 	if( na_gconf_utils_get_string_list_from_entries( entries, OBJECT_ITEM_LIST_ENTRY, &subitems )){
 		na_object_item_set_items_string_list( item, subitems );
 		na_utils_free_string_list( subitems );
-	}
-
-	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TARGET_SELECTION_ENTRY, &target_selection )){
-		na_object_set_target_selection( item, target_selection );
-	}
-
-	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, &target_background )){
-		na_object_set_target_background( item, target_background );
-	}
-
-	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, &target_toolbar )){
-		na_object_set_target_toolbar( item, target_toolbar );
 	}
 }
 
@@ -879,6 +879,9 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 	ret =
 		write_object_item( provider, NA_OBJECT_ITEM( action ), message ) &&
 		write_str( provider, uuid, NULL, ACTION_VERSION_ENTRY, na_object_action_get_version( action ), message ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, na_object_action_is_target_selection( action ), message ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, na_object_action_is_target_background( action ), message ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, na_object_action_is_target_toolbar( action ), message ) &&
 		write_bool( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, na_object_action_toolbar_use_same_label( action ), message ) &&
 		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, na_object_action_toolbar_get_label( action ), message ) &&
 		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_ACTION ), message );
@@ -941,9 +944,6 @@ write_object_item( NAGConfProvider *provider, const NAObjectItem *item, gchar **
 		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLTIP_ENTRY, na_object_get_tooltip( item ), message ) &&
 		write_str( provider, uuid, NULL, OBJECT_ITEM_ICON_ENTRY, na_object_get_icon( item ), message ) &&
 		write_bool( provider, uuid, NULL, OBJECT_ITEM_ENABLED_ENTRY, na_object_is_enabled( item ), message ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, na_object_is_target_selection( item ), message ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, na_object_is_target_background( item ), message ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, na_object_is_target_toolbar( item ), message ) &&
 		write_list( provider, uuid, NULL, OBJECT_ITEM_LIST_ENTRY, na_object_item_rebuild_items_list( item ), message );
 
 	g_free( uuid );

@@ -589,19 +589,19 @@ create_xml_schema( NAXMLWriter *writer, gint format, const NAObjectAction *actio
 	g_free( type );
 
 	/* target selection */
-	target_selection = na_object_is_target_selection( action );
+	target_selection = na_object_action_is_target_selection( action );
 	text = na_utils_boolean_to_schema( target_selection );
 	create_schema_entry( writer, format, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_TARGET_SELECTION_DESC_SHORT, ACTION_TARGET_SELECTION_DESC_LONG );
 	g_free( text );
 
 	/* target background */
-	target_background = na_object_is_target_background( action );
+	target_background = na_object_action_is_target_background( action );
 	text = na_utils_boolean_to_schema( target_background );
 	create_schema_entry( writer, format, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_TARGET_BACKGROUND_DESC_SHORT, ACTION_TARGET_BACKGROUND_DESC_LONG );
 	g_free( text );
 
 	/* target toolbar */
-	target_toolbar = na_object_is_target_toolbar( action );
+	target_toolbar = na_object_action_is_target_toolbar( action );
 	text = na_utils_boolean_to_schema( target_toolbar );
 	create_schema_entry( writer, format, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_TARGET_TOOLBAR_DESC_SHORT, ACTION_TARGET_TOOLBAR_DESC_LONG );
 	g_free( text );
@@ -827,19 +827,19 @@ create_xml_dump( NAXMLWriter *writer, gint format, const NAObjectAction *action 
 	g_free( type );
 
 	/* target selection */
-	target_selection = na_object_is_target_selection( action );
+	target_selection = na_object_action_is_target_selection( action );
 	text = na_utils_boolean_to_schema( target_selection );
 	create_dump_entry( writer, format, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, text, doc, list_node, "bool" );
 	g_free( text );
 
 	/* target background */
-	target_background = na_object_is_target_background( action );
+	target_background = na_object_action_is_target_background( action );
 	text = na_utils_boolean_to_schema( target_background );
 	create_dump_entry( writer, format, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, text, doc, list_node, "bool" );
 	g_free( text );
 
 	/* target toolbar */
-	target_toolbar = na_object_is_target_toolbar( action );
+	target_toolbar = na_object_action_is_target_toolbar( action );
 	text = na_utils_boolean_to_schema( target_toolbar );
 	create_dump_entry( writer, format, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, text, doc, list_node, "bool" );
 	g_free( text );

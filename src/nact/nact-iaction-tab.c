@@ -332,14 +332,15 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 {
 	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
+	gboolean enable_tab;
 	GtkWidget *label_widget, *tooltip_widget, *icon_widget, *title_widget;
 	gchar *label, *tooltip, *icon;
 	GtkButton *enabled_button;
 	gboolean enabled_item;
-	gboolean enable_tab;
 	gboolean target_background_active;
 	gboolean target_toolbar_active;
 	GtkToggleButton *toggle;
+	GtkWidget *frame;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( BASE_IS_WINDOW( instance ));
@@ -355,10 +356,6 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
 
 		enable_tab = ( count_selected == 1 );
-		if( item && !enable_tab ){
-			g_warning( "%s:item=%p (%s), but count_selected=%d",
-					thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ), count_selected );
-		}
 		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemID" );
@@ -391,18 +388,27 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 			gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Action targets</b>" ));
 		}
 
+		frame = base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetFrame" );
+		gtk_widget_set_sensitive( frame, item && NA_IS_OBJECT_ACTION( item ));
+
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" ));
-		gtk_toggle_button_set_active( toggle, item ? na_object_is_target_selection( item ) : FALSE );
+		gtk_toggle_button_set_active( toggle,
+				item && NA_IS_OBJECT_ACTION( item )
+						? na_object_action_is_target_selection( NA_OBJECT_ACTION( item ))
+						: FALSE );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetBackgroundButton" ));
-		target_background_active = ( item ? na_object_is_target_background( item ) : FALSE );
+		target_background_active = (
+				item && NA_IS_OBJECT_ACTION( item )
+					? na_object_action_is_target_background( NA_OBJECT_ACTION( item ))
+					: FALSE );
 		gtk_toggle_button_set_active( toggle, target_background_active );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetToolbarButton" ));
-		target_toolbar_active = ( item ? na_object_is_target_toolbar( item ) : FALSE );
-		if( target_toolbar_active && item && NA_IS_OBJECT_MENU( item )){
-			g_warning( "%s: targeting toolbar is irrelevant for a menu", thisfn );
-		}
+		target_toolbar_active = (
+				item && NA_IS_OBJECT_ACTION( item )
+					? na_object_action_is_target_toolbar( NA_OBJECT_ACTION( item ))
+					: FALSE );
 		gtk_toggle_button_set_active( toggle, target_toolbar_active );
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
 
@@ -474,7 +480,7 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 		check_for_label( instance, entry, label );
 
 		if( NA_IS_OBJECT_ACTION( edited )){
-			target_toolbar = na_object_is_target_toolbar( edited );
+			target_toolbar = na_object_action_is_target_toolbar( NA_OBJECT_ACTION( edited ));
 			if( target_toolbar ){
 				toolbar_same_label = na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( edited ));
 				if( toolbar_same_label ){
@@ -597,12 +603,15 @@ static void
 on_icon_browse( GtkButton *button, NactIActionTab *instance )
 {
 	GtkWidget *dialog;
+	GtkWindow *toplevel;
 	gchar *filename;
 	GtkWidget *icon_widget;
 
+	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
+
 	dialog = gtk_file_chooser_dialog_new(
 			_( "Choosing an icon" ),
-			NULL,
+			toplevel,
 			GTK_FILE_CHOOSER_ACTION_OPEN,
 			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -706,22 +715,24 @@ static void
 on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 {
 	static const gchar *thisfn = "nact_iaction_tab_on_target_selection_toggled";
-	NAObjectItem *item;
+	NAObjectAction *action;
 	gboolean is_target;
 
 	g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
 			NULL );
 
-	if( item ){
-		is_target = gtk_toggle_button_get_active( button );
-		na_object_set_target_selection( item, is_target );
+	g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
 
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, item );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+	if( action ){
+		is_target = gtk_toggle_button_get_active( button );
+		na_object_action_set_target_selection( action, is_target );
+
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 	}
 }
 
@@ -729,26 +740,24 @@ static void
 on_target_background_toggled( GtkToggleButton *button, NactIActionTab *instance )
 {
 	static const gchar *thisfn = "nact_iaction_tab_on_target_background_toggled";
-	NAObjectItem *item;
+	NAObjectAction *action;
 	gboolean is_target;
-	GtkWidget *toolbar;
 
 	g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
 			NULL );
 
-	if( item ){
+	g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
+
+	if( action ){
 		is_target = gtk_toggle_button_get_active( button );
-		na_object_set_target_background( item, is_target );
+		na_object_action_set_target_background( action, is_target );
 
-		toolbar = base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetToolbarButton" );
-		gtk_widget_set_sensitive( toolbar, is_target && NA_IS_OBJECT_ACTION( item ));
-
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, item );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 	}
 }
 
@@ -756,22 +765,24 @@ static void
 on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 {
 	static const gchar *thisfn = "nact_iaction_tab_on_target_toolbar_toggled";
-	NAObjectItem *item;
+	NAObjectAction *action;
 	gboolean is_target;
 
 	g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
 			NULL );
 
-	if( item ){
-		is_target = gtk_toggle_button_get_active( button );
-		na_object_set_target_toolbar( item, is_target );
+	g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
 
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, item );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+	if( action ){
+		is_target = gtk_toggle_button_get_active( button );
+		na_object_action_set_target_toolbar( action, is_target );
+
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 	}
 }
 

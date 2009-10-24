@@ -682,6 +682,7 @@ on_new_menu_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	menu = na_object_menu_new();
+	na_object_check_status( menu );
 	items = g_list_prepend( NULL, menu );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items_list( items );
@@ -697,6 +698,7 @@ on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	action = na_object_action_new_with_profile();
+	na_object_check_status( action );
 	items = g_list_prepend( NULL, action );
 	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items_list( items );

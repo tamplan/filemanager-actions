@@ -46,21 +46,10 @@ struct NAObjectItemPrivate {
 	gchar         *icon;
 	gboolean       enabled;
 
-	/* which targets does this item target ?
-	 * note that targeting toolbar is (as of Nautilus 2.26) an
-	 * action-only attribute
-	 */
-	gboolean       target_selection;
-	gboolean       target_background;
-	gboolean       target_toolbar;
-
 	/* list of NAObjectId subitems
+	 * + list of id strings as readen from IIOProviders
 	 */
 	GList         *items;
-
-	/* this is the list of subitems as a list of id strings
-	 * as readen from IIOProviders
-	 */
 	GSList        *items_ids;
 
 	/* the original provider

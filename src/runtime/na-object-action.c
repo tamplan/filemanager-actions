@@ -51,6 +51,9 @@ enum {
 	NAACTION_PROP_VERSION_ID = 1,
 	NAACTION_PROP_READONLY_ID,
 	NAACTION_PROP_LAST_ALLOCATED_ID,
+	NAACTION_PROP_TARGET_SELECTION_ID,
+	NAACTION_PROP_TARGET_BACKGROUND_ID,
+	NAACTION_PROP_TARGET_TOOLBAR_ID,
 	NAACTION_PROP_TOOLBAR_SAME_LABEL_ID,
 	NAACTION_PROP_TOOLBAR_LABEL_ID
 };
@@ -147,6 +150,27 @@ class_init( NAObjectActionClass *klass )
 	g_object_class_install_property( object_class, NAACTION_PROP_LAST_ALLOCATED_ID, spec );
 
 	spec = g_param_spec_boolean(
+			NAACTION_PROP_TARGET_SELECTION,
+			"Target file selection",
+		"Whether the NAObjectAction is candidate on file selection menus", TRUE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAACTION_PROP_TARGET_SELECTION_ID, spec );
+
+	spec = g_param_spec_boolean(
+			NAACTION_PROP_TARGET_BACKGROUND,
+			"Target background",
+			"Whether the NAObjectAction is candidate on background menus", FALSE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAACTION_PROP_TARGET_BACKGROUND_ID, spec );
+
+	spec = g_param_spec_boolean(
+			NAACTION_PROP_TARGET_TOOLBAR,
+			"Target toolbar",
+			"Whether the NAObjectAction is candidate on toolbar display", TRUE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAACTION_PROP_TARGET_TOOLBAR_ID, spec );
+
+	spec = g_param_spec_boolean(
 			NAACTION_PROP_TOOLBAR_SAME_LABEL,
 			"Use same label",
 			"Whether the icon label in the toolbar is the same that the action main label", FALSE,
@@ -190,7 +214,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->version = g_strdup( NAUTILUS_ACTIONS_CONFIG_VERSION );
 	self->private->read_only = FALSE;
 	self->private->last_allocated = 0;
-	self->private->use_same_label = FALSE;
+	self->private->target_selection = TRUE;
+	self->private->target_background = FALSE;
+	self->private->target_toolbar = FALSE;
+	self->private->use_same_label = TRUE;
 	self->private->toolbar_label = g_strdup( "" );
 }
 
@@ -215,6 +242,18 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 			case NAACTION_PROP_LAST_ALLOCATED_ID:
 				g_value_set_int( value, self->private->last_allocated );
+				break;
+
+			case NAACTION_PROP_TARGET_SELECTION_ID:
+				g_value_set_boolean( value, self->private->target_selection );
+				break;
+
+			case NAACTION_PROP_TARGET_BACKGROUND_ID:
+				g_value_set_boolean( value, self->private->target_background );
+				break;
+
+			case NAACTION_PROP_TARGET_TOOLBAR_ID:
+				g_value_set_boolean( value, self->private->target_toolbar );
 				break;
 
 			case NAACTION_PROP_TOOLBAR_SAME_LABEL_ID:
@@ -254,6 +293,18 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case NAACTION_PROP_LAST_ALLOCATED_ID:
 				self->private->last_allocated = g_value_get_int( value );
+				break;
+
+			case NAACTION_PROP_TARGET_SELECTION_ID:
+				self->private->target_selection = g_value_get_boolean( value );
+				break;
+
+			case NAACTION_PROP_TARGET_BACKGROUND_ID:
+				self->private->target_background = g_value_get_boolean( value );
+				break;
+
+			case NAACTION_PROP_TARGET_TOOLBAR_ID:
+				self->private->target_toolbar = g_value_get_boolean( value );
 				break;
 
 			case NAACTION_PROP_TOOLBAR_SAME_LABEL_ID:
@@ -368,6 +419,75 @@ na_object_action_get_version( const NAObjectAction *action )
 }
 
 /**
+ * na_object_action_is_target_selection:
+ * @action: the #NAObjectAction to be requested.
+ *
+ * Returns: %TRUE if @action is candidate for being displayed in file
+ * selection menus, %FALSE else.
+ *
+ * This was the historical only target of Nautilus-Actions actions.
+ * It so defaults to %TRUE at object creation.
+ */
+gboolean
+na_object_action_is_target_selection( const NAObjectAction *action )
+{
+	gboolean is_target = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), 0 );
+
+	if( !action->private->dispose_has_run ){
+
+		is_target = action->private->target_selection;
+	}
+
+	return( is_target );
+}
+
+/**
+ * na_object_action_is_target_background:
+ * @action: the #NAObjectAction to be requested.
+ *
+ * Returns: %TRUE if @item is candidate for being displayed in
+ * background menus, %FALSE else.
+ */
+gboolean
+na_object_action_is_target_background( const NAObjectAction *action )
+{
+	gboolean is_target = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), 0 );
+
+	if( !action->private->dispose_has_run ){
+
+		is_target = action->private->target_background;
+	}
+
+	return( is_target );
+}
+
+/**
+ * na_object_action_is_target_toolbar:
+ * @action: the #NAObjectAction to be requested.
+ *
+ * Returns: %TRUE if @item is candidate for being displayed in file
+ * toolbar menus, %FALSE else.
+ */
+gboolean
+na_object_action_is_target_toolbar( const NAObjectAction *action )
+{
+	gboolean is_target = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), 0 );
+
+	if( !action->private->dispose_has_run ){
+
+		is_target = action->private->target_toolbar;
+	}
+
+	return( is_target );
+}
+
+/**
  * na_object_action_toolbar_use_same_label:
  * @action: the #NAObjectAction object to be requested.
  *
@@ -460,6 +580,60 @@ na_object_action_set_readonly( NAObjectAction *action, gboolean readonly )
 
 	if( !action->private->dispose_has_run ){
 		g_object_set( G_OBJECT( action ), NAACTION_PROP_READONLY, readonly, NULL );
+	}
+}
+
+/**
+ * na_object_action_set_target_selection:
+ * @action: the #NAObjectAction to be updated.
+ * @targeting: whether @action targets selection menus.
+ *
+ * Set the flag for this target.
+ */
+void
+na_object_action_set_target_selection( NAObjectAction *action, gboolean targeting )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( action ));
+
+	if( !action->private->dispose_has_run ){
+
+		g_object_set( G_OBJECT( action ), NAACTION_PROP_TARGET_SELECTION, targeting, NULL );
+	}
+}
+
+/**
+ * na_object_action_set_target_background:
+ * @action: the #NAObjectAction to be updated.
+ * @targeting: whether @action targets background menus.
+ *
+ * Set the flag for this target.
+ */
+void
+na_object_action_set_target_background( NAObjectAction *action, gboolean targeting )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( action ));
+
+	if( !action->private->dispose_has_run ){
+
+		g_object_set( G_OBJECT( action ), NAACTION_PROP_TARGET_BACKGROUND, targeting, NULL );
+	}
+}
+
+/**
+ * na_object_action_set_target_toolbar:
+ * @action: the #NAObjectAction to be updated.
+ * @targeting: whether @action targets toolbar display.
+ *
+ * Set the flag for this target.
+ */
+void
+na_object_action_set_target_toolbar( NAObjectAction *action, gboolean targeting )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( action ));
+
+	if( !action->private->dispose_has_run ){
+
+		g_object_set( G_OBJECT( action ), NAACTION_PROP_TARGET_TOOLBAR, targeting, NULL );
 	}
 }
 
@@ -585,11 +759,14 @@ object_dump( const NAObject *action )
 
 	if( !self->private->dispose_has_run ){
 
-		g_debug( "%s:        version='%s'", thisfn, self->private->version );
-		g_debug( "%s:      read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
-		g_debug( "%s: last-allocated=%d", thisfn, self->private->last_allocated );
-		g_debug( "%s: use-same-label='%s'", thisfn, self->private->use_same_label ? "True" : "False" );
-		g_debug( "%s:  toolbar-label='%s'", thisfn, self->private->toolbar_label );
+		g_debug( "%s:           version='%s'", thisfn, self->private->version );
+		g_debug( "%s:         read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
+		g_debug( "%s:    last-allocated=%d", thisfn, self->private->last_allocated );
+		g_debug( "%s:  target-selection='%s'", thisfn, self->private->target_selection ? "True" : "False" );
+		g_debug( "%s: target-background='%s'", thisfn, self->private->target_background ? "True" : "False" );
+		g_debug( "%s:    target-toolbar='%s'", thisfn, self->private->target_toolbar ? "True" : "False" );
+		g_debug( "%s:    use-same-label='%s'", thisfn, self->private->use_same_label ? "True" : "False" );
+		g_debug( "%s:     toolbar-label='%s'", thisfn, self->private->toolbar_label );
 	}
 }
 
@@ -606,6 +783,7 @@ object_copy( NAObject *target, const NAObject *source )
 	gboolean readonly;
 	gint last_allocated;
 	GList *profiles, *ip;
+	gboolean target_selection, target_background, target_toolbar;
 	gboolean toolbar_same_label;
 	gchar *toolbar_label;
 
@@ -619,6 +797,9 @@ object_copy( NAObject *target, const NAObject *source )
 				NAACTION_PROP_VERSION, &version,
 				NAACTION_PROP_READONLY, &readonly,
 				NAACTION_PROP_LAST_ALLOCATED, &last_allocated,
+				NAACTION_PROP_TARGET_SELECTION, &target_selection,
+				NAACTION_PROP_TARGET_BACKGROUND, &target_background,
+				NAACTION_PROP_TARGET_TOOLBAR, &target_toolbar,
 				NAACTION_PROP_TOOLBAR_SAME_LABEL, &toolbar_same_label,
 				NAACTION_PROP_TOOLBAR_LABEL, &toolbar_label,
 				NULL );
@@ -627,6 +808,9 @@ object_copy( NAObject *target, const NAObject *source )
 				NAACTION_PROP_VERSION, version,
 				NAACTION_PROP_READONLY, readonly,
 				NAACTION_PROP_LAST_ALLOCATED, last_allocated,
+				NAACTION_PROP_TARGET_SELECTION, target_selection,
+				NAACTION_PROP_TARGET_BACKGROUND, target_background,
+				NAACTION_PROP_TARGET_TOOLBAR, target_toolbar,
 				NAACTION_PROP_TOOLBAR_SAME_LABEL, toolbar_same_label,
 				NAACTION_PROP_TOOLBAR_LABEL, toolbar_label,
 				NULL );
@@ -672,6 +856,21 @@ object_are_equal( const NAObject *a, const NAObject *b )
 
 		if( equal ){
 			equal = ( strcmp( first->private->version, second->private->version ) == 0 );
+		}
+
+		if( equal ){
+			equal = ( NA_OBJECT_ACTION( a )->private->target_selection && NA_OBJECT_ACTION( b )->private->target_selection ) ||
+					( !NA_OBJECT_ACTION( a )->private->target_selection && !NA_OBJECT_ACTION( b )->private->target_selection );
+		}
+
+		if( equal ){
+			equal = ( NA_OBJECT_ACTION( a )->private->target_background && NA_OBJECT_ACTION( b )->private->target_background ) ||
+					( !NA_OBJECT_ACTION( a )->private->target_background && !NA_OBJECT_ACTION( b )->private->target_background );
+		}
+
+		if( equal ){
+			equal = ( NA_OBJECT_ACTION( a )->private->target_toolbar && NA_OBJECT_ACTION( b )->private->target_toolbar ) ||
+					( !NA_OBJECT_ACTION( a )->private->target_toolbar && !NA_OBJECT_ACTION( b )->private->target_toolbar );
 		}
 
 		if( equal ){
@@ -730,7 +929,7 @@ object_is_valid( const NAObject *action )
 
 	if( !NA_OBJECT_ACTION( action )->private->dispose_has_run ){
 
-		if( na_object_is_target_toolbar( action )){
+		if( na_object_action_is_target_toolbar( NA_OBJECT_ACTION( action ))){
 			is_valid =
 				is_valid_short_label( NA_OBJECT_ACTION( action ));
 

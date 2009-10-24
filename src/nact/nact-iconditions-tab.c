@@ -376,7 +376,7 @@ tab_set_sensitive( NactIConditionsTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
-	enable_tab = ( profile != NULL && na_object_is_target_selection( item ));
+	enable_tab = ( profile != NULL && na_object_action_is_target_selection( NA_OBJECT_ACTION( item )));
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_CONDITIONS, enable_tab );
 
 	return( enable_tab );

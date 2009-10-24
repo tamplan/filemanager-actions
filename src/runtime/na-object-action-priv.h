@@ -55,9 +55,13 @@ struct NAObjectActionPrivate {
 	 */
 	gint     last_allocated;
 
+	/* which targets does this item target ?
+	 */
+	gboolean target_selection;
+	gboolean target_background;
+	gboolean target_toolbar;
+
 	/* toolbar display
-	 * only for actions as of Nautilus-2.26
-	 * note that 'use_same_label' is just a NACT preference
 	 */
 	gboolean use_same_label;
 	gchar   *toolbar_label;

@@ -221,7 +221,7 @@ class_init( NAObjectProfileClass *klass )
 	spec = g_param_spec_pointer(
 			NAPROFILE_PROP_FOLDERS,
 			"Folders",
-			"List of folders to which a Background profile applies",
+			"List of folders to which the item applies",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAPROFILE_PROP_FOLDERS_ID, spec );
 
@@ -688,7 +688,7 @@ na_object_profile_get_schemes( const NAObjectProfile *profile )
  * na_object_profile_get_folders:
  * @profile: the #NAObjectProfile to be requested.
  *
- * Returns the list of folders this profile applies to.
+ * Returns the list of folders this item applies to.
  *
  * Returns: a GSList of newly allocated strings. The list must be
  * na_utils_free_string_list() by the caller.
@@ -704,6 +704,7 @@ na_object_profile_get_folders( const NAObjectProfile *profile )
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), NULL );
 
 	if( !profile->private->dispose_has_run ){
+
 		g_object_get( G_OBJECT( profile ), NAPROFILE_PROP_FOLDERS, &folders, NULL );
 	}
 
@@ -921,6 +922,26 @@ na_object_profile_set_schemes( NAObjectProfile *profile, GSList *schemes )
 }
 
 /**
+ * na_object_profile_replace_folder_uri:
+ * @profile: the #NAObjectProfile to be updated.
+ * @old: the old uri.
+ * @new: the new uri.
+ *
+ * Replaces the @old URI by the @new one.
+ */
+void
+na_object_profile_replace_folder_uri( NAObjectProfile *profile, const gchar *old, const gchar *new )
+{
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
+
+	if( !profile->private->dispose_has_run ){
+
+		profile->private->folders = na_utils_remove_from_string_list( profile->private->folders, old );
+		profile->private->folders = g_slist_append( profile->private->folders, ( gpointer ) new );
+	}
+}
+
+/**
  * na_object_profile_set_folders:
  * @profile: the #NAObjectProfile to be updated.
  * @folders: list of folders which apply.
@@ -937,6 +958,7 @@ na_object_profile_set_folders( NAObjectProfile *profile, GSList *folders )
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
 
 	if( !profile->private->dispose_has_run ){
+
 		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_FOLDERS, folders, NULL );
 	}
 }
@@ -1467,6 +1489,7 @@ object_dump( const NAObject *object )
 		object_dump_list( thisfn, "basenames", self->private->basenames );
 		object_dump_list( thisfn, "mimetypes", self->private->mimetypes );
 		object_dump_list( thisfn, "  schemes", self->private->schemes );
+		object_dump_list( thisfn, "  folders", self->private->folders );
 	}
 }
 
@@ -1490,6 +1513,7 @@ object_copy( NAObject *target, const NAObject *source )
 	gchar *path, *parameters;
 	gboolean matchcase, isfile, isdir, multiple;
 	GSList *basenames, *mimetypes, *schemes;
+	GSList *folders;
 
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( target ));
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( source ));
@@ -1507,6 +1531,7 @@ object_copy( NAObject *target, const NAObject *source )
 				NAPROFILE_PROP_ISDIR, &isdir,
 				NAPROFILE_PROP_ACCEPT_MULTIPLE, &multiple,
 				NAPROFILE_PROP_SCHEMES, &schemes,
+				NAPROFILE_PROP_FOLDERS, &folders,
 				NULL );
 
 		g_object_set( G_OBJECT( target ),
@@ -1519,6 +1544,7 @@ object_copy( NAObject *target, const NAObject *source )
 				NAPROFILE_PROP_ISDIR, isdir,
 				NAPROFILE_PROP_ACCEPT_MULTIPLE, multiple,
 				NAPROFILE_PROP_SCHEMES, schemes,
+				NAPROFILE_PROP_FOLDERS, folders,
 				NULL );
 
 		g_free( path );
@@ -1566,7 +1592,8 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		if( equal ){
 			equal = na_utils_string_lists_are_equal( first->private->basenames, second->private->basenames ) &&
 					na_utils_string_lists_are_equal( first->private->mimetypes, second->private->mimetypes ) &&
-					na_utils_string_lists_are_equal( first->private->schemes, second->private->schemes );
+					na_utils_string_lists_are_equal( first->private->schemes, second->private->schemes ) &&
+					na_utils_string_lists_are_equal( first->private->folders, second->private->folders );
 		}
 
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
@@ -1598,27 +1625,22 @@ object_is_valid( const NAObject *profile )
 
 	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
 
-		is_valid =
-			is_valid_path_parameters( NA_OBJECT_PROFILE( profile ));
+		parent = na_object_get_parent( profile );
 
-		if( is_valid ){
-			parent = na_object_get_parent( profile );
+		if( na_object_action_is_target_background( NA_OBJECT_ACTION( parent )) ||
+			na_object_action_is_target_toolbar( NA_OBJECT_ACTION( parent ))){
 
-			if( na_object_is_target_background( parent )){
-				is_valid =
-					is_valid_folders( NA_OBJECT_PROFILE( profile ));
+			is_valid =
+				is_valid_folders( NA_OBJECT_PROFILE( profile ));
 
-			} else if( na_object_is_target_toolbar( parent )){
-				is_valid =
-					is_valid_folders( NA_OBJECT_PROFILE( profile ));
+		} else {
 
-			} else {
-				is_valid =
-					is_valid_filenames( NA_OBJECT_PROFILE( profile )) &&
-					is_valid_mimetypes( NA_OBJECT_PROFILE( profile )) &&
-					is_valid_isfiledir( NA_OBJECT_PROFILE( profile )) &&
-					is_valid_schemes( NA_OBJECT_PROFILE( profile ));
-			}
+			is_valid =
+				is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
+				is_valid_filenames( NA_OBJECT_PROFILE( profile )) &&
+				is_valid_mimetypes( NA_OBJECT_PROFILE( profile )) &&
+				is_valid_isfiledir( NA_OBJECT_PROFILE( profile )) &&
+				is_valid_schemes( NA_OBJECT_PROFILE( profile ));
 		}
 	}
 

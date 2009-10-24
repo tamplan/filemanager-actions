@@ -92,18 +92,12 @@ G_BEGIN_DECLS
 #define na_object_get_item( object, id )			na_object_item_get_item( NA_OBJECT_ITEM( object ), id )
 #define na_object_get_items_list( object )			na_object_item_get_items_list( NA_OBJECT_ITEM( object ))
 #define na_object_get_items_count( object )			na_object_item_get_items_count( NA_OBJECT_ITEM( object ))
-#define na_object_is_target_selection( object )		na_object_item_is_target_selection( NA_OBJECT_ITEM( object ))
-#define na_object_is_target_background( object )	na_object_item_is_target_background( NA_OBJECT_ITEM( object ))
-#define na_object_is_target_toolbar( object )		na_object_item_is_target_toolbar( NA_OBJECT_ITEM( object ))
 
 #define na_object_set_tooltip( object, tooltip )	na_object_item_set_tooltip( NA_OBJECT_ITEM( object ), tooltip )
 #define na_object_set_icon( object, icon )			na_object_item_set_icon( NA_OBJECT_ITEM( object ), icon )
 #define na_object_set_provider( object, provider )	na_object_item_set_provider( NA_OBJECT_ITEM( object ), provider )
 #define na_object_set_enabled( object, enabled )	na_object_item_set_enabled( NA_OBJECT_ITEM( object ), enabled )
 #define na_object_set_items_list( object, list )	na_object_item_set_items_list( NA_OBJECT_ITEM( object ), list )
-#define na_object_set_target_selection( object, b )	na_object_item_set_target_selection( NA_OBJECT_ITEM( object ), b )
-#define na_object_set_target_background( object, b ) na_object_item_set_target_background( NA_OBJECT_ITEM( object ), b )
-#define na_object_set_target_toolbar( object, b )	na_object_item_set_target_toolbar( NA_OBJECT_ITEM( object ), b )
 
 #define na_object_append_item( object, item )		na_object_item_append_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
 #define na_object_remove_item( object, item )		na_object_item_remove_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))

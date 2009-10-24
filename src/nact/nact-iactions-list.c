@@ -841,7 +841,9 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 
 		ialid->selection_changed_send_allowed = FALSE;
 		nact_tree_model_fill( model, items, only_actions );
+
 		ialid->selection_changed_send_allowed = TRUE;
+		select_first_row( instance );
 
 		ialid->menus = 0;
 		ialid->actions = 0;
@@ -851,8 +853,6 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 			na_object_item_count_items( items, &ialid->menus, &ialid->actions, &ialid->profiles, TRUE );
 			send_list_count_updated_signal( instance, ialid );
 		}
-
-		select_first_row( instance );
 	}
 }
 
@@ -2026,18 +2026,16 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 	IActionsListInstanceData *ialid;
 
 	ialid = get_instance_data( instance );
-	/*if( ialid->selection_changed_send_allowed ){*/
 
-		g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p, object=%p (%s)",
-				( void * ) instance,
-				( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_debug( "nact_iactions_list_on_edition_status_changed: instance=%p, object=%p (%s)",
+			( void * ) instance,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-		g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( NA_IS_OBJECT( object ));
 
-		treeview = get_actions_list_treeview( instance );
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-		nact_tree_model_display( model, NA_OBJECT( object ));
-	/*}*/
+	treeview = get_actions_list_treeview( instance );
+	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+	nact_tree_model_display( model, NA_OBJECT( object ));
 
 	if( na_object_is_modified( object )){
 		if( !g_list_find( ialid->modified_items, object )){
@@ -2047,7 +2045,11 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 		ialid->modified_items = g_list_remove( ialid->modified_items, object );
 	}
 
-	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_STATUS_CHANGED, NULL );
+	/* do not send status-changed signal while filling the tree
+	 */
+	if( ialid->selection_changed_send_allowed ){
+		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_STATUS_CHANGED, NULL );
+	}
 }
 
 /*

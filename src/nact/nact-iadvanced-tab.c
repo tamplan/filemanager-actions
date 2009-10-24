@@ -219,6 +219,8 @@ initial_load_create_schemes_selection_list( NactIAdvancedTab *instance )
 				"text", SCHEMES_DESC_COLUMN,
 				NULL );
 		gtk_tree_view_append_column( listview, column );
+
+		gtk_tree_view_set_headers_visible( listview, FALSE );
 	}
 }
 
@@ -449,7 +451,7 @@ tab_set_sensitive( NactIAdvancedTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
-	enable_tab = ( profile != NULL && na_object_is_target_selection( item ));
+	enable_tab = ( profile != NULL && na_object_action_is_target_selection( NA_OBJECT_ACTION( item )));
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ADVANCED, enable_tab );
 
 	return( enable_tab );
