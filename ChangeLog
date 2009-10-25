@@ -7,6 +7,9 @@
 	* src/runtime/na-iabout.c (na_iabout_display):
 	Do not mark authors names and emails for translating (#599520).
 
+	* src/runtime/na-object-profile.c (is_current_folder_inside):
+	Actually checks if current folder is inside one of specified folders.
+
 	* src/nact/nact-iactions-list.c
 	(nact_iactions_list_dispose): free list of modified items.
 	(nact_iactions_list_fill): reset level_zero_order_changed flag.

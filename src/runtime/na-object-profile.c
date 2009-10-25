@@ -86,6 +86,7 @@ static void      instance_finalize( GObject *object );
 
 static gboolean  is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
 static gboolean  is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
+static gboolean  is_current_folder_inside( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
 static gboolean  is_target_selection_candidate( const NAObjectProfile *profile, GList *files );
 static int       validate_schemes( GSList *schemes2test, NautilusFileInfo *file );
 
@@ -1007,13 +1008,49 @@ na_object_profile_is_candidate( const NAObjectProfile *profile, gint target, GLi
 static gboolean
 is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder )
 {
-	return( TRUE );
+	gboolean is_candidate;
+
+	is_candidate = is_current_folder_inside( profile, current_folder );
+
+	return( is_candidate );
 }
 
 static gboolean
 is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder )
 {
-	return( TRUE );
+	gboolean is_candidate;
+
+	is_candidate = is_current_folder_inside( profile, current_folder );
+
+	return( is_candidate );
+}
+
+static gboolean
+is_current_folder_inside( const NAObjectProfile *profile, NautilusFileInfo *current_folder )
+{
+	gboolean is_inside;
+	GSList *ifold;
+	const gchar *path;
+	gchar *current_folder_uri;
+
+	is_inside = FALSE;
+	current_folder_uri = nautilus_file_info_get_uri( current_folder );
+
+	for( ifold = profile->private->folders ; ifold && !is_inside ; ifold = ifold->next ){
+		path = ( const gchar * ) ifold->data;
+		if( path && g_utf8_strlen( path, -1 )){
+			if( !strcmp( path, "*" )){
+				is_inside = TRUE;
+			} else {
+				is_inside = g_str_has_prefix( current_folder_uri, path );
+				g_debug( "na_object_profile_is_current_folder_inside: current_folder_uri=%s, path=%s, is_inside=%s", current_folder_uri, path, is_inside ? "True":"False" );
+			}
+		}
+	}
+
+	g_free( current_folder_uri );
+
+	return( is_inside );
 }
 
 static gboolean
