@@ -1,16 +1,96 @@
-Version xxxxxx
+Version 2.29.1
 ==============
 
-	Release date
+	Release date 2009-10-25
 
-	Actions can be displayed as Nautilus submenus.
-	An 'About Nautilus Actions' item can be added to Nautilus context
-	menu.
+	This version brings up several major enhancements :
+	- implements full API as defined for use by Nautilus menu extensions :
+	  this let the user define items which will be available when there is
+	  no selection, and will apply to current folder, either as a 'folder'
+	  menu or in the toolbar ;
+	- the ability for the user to define a full hierarchy of actions
+	  with menus, submenus, and so on ;
+	- drag and drop ;
+	- full cut/copy/paste clipboard support.
+
+	Other enhancements :
+	- items are freely reorderable ;
+	- an 'About Nautilus Actions' item can be added to Nautilus menus ;
+    - preferences can be edited through the NACT user interface ;
+	- actions can be imported and exported by drag and drop ;
+	- one toolbar is defined for each menu, and can be displayed in NACT ;
+	- let the user quit the assistants with Cancel without emitting a
+	  warning ;
+	- remove terminating dot from radio button labels ;
+	- when importing, let the user be asked for its preferred import mode ;
+	- when exporting, let the user be asked for its preferred export format ;
+	- summary pages in import and export assistants have been enhanced ;
+	- checks the unicity of an imported action against those just imported
+	  in the same session ;
+	- let the labels be edited in place in Actions list ;
+	- define F2 as a keyboard accelerator for in-place edition ;
+	- save even non-valid items
+	- requires rather a command that a label for a profile to be valid.
+
+	Bugfixes
+
+		#325528 reported by Frederic Ruaudel (bloated  contextual menu)
+		#325587 reported by Frederic Ruaudel (drag & drop support)
+		#326699 reported by Frederic Ruaudel (action items do not remain
+				in user defined order)
+		#353353 reported by Frederic Ruaudel (check if command exist
+				and if not warn user)
+		#588482 reported by Sean (ordering in actions list)
+		#590400 reported by Pierre Wieser (have some sort of warnings in
+				the ui)
+		#599520 reported by António Lima (do not mark authors names and
+				emails for translating)
+
+	Various code enhancements
+
+		- code has been reachitectured to better distinguish between
+		  code required by plugin from those only required by NACT,
+		  thus creating two 'runtime' and 'common' convenience libraries
+		- validity and modification status checking has been optimized
+		- all dialogs are now transient relatively to the main window
+		- a window may have its own XML UI definition file while sharing
+		  the common GtkBuilder object
+		- fix reference count in tree stores
+		- no more consider NAUTILUS_ACTIONS_CONFIG_VERSION as a
+		  configure.ac variable
+		- all subitem lists are moved from GSList to GList (more
+		  efficient, easyer to type)
+		- doesn't update selection while adding or removing items to or
+		  from the Actions list
+
+	New and updated translations
+
+		de (Mario Blättermann, Christian Kirbach)
+		es (Jorge Gonzalez)
+
+Version 1.12.2
+==============
+
+	Release date 2009-10-20
+
+	Fix browsing for a file icon.
+
+Version 1.12.1
+==============
+
+	Release date 2009-10-19
+
 	Menubar items have now keyboard accelerators.
-	Preferences can be edited in NACT user interface.
-	Actions can be freely reordered in NACT user interface.
-	Actions can be exported as XML files by drag and drop to file-
-	manager, text editor, ...
+
+	Keep the actions in Nautilus context menu in the same (alphabetical)
+	order that in NACT.
+
+	Actions can now be directly dropped into Nautilus views without
+	having to run through the Export assistant.
+
+	Make (some) ids unique in Glade-generated UI XML definition file.
+	Please note that this is required to prevent 'duplicate id' bug
+	in distros which use recent versions of GtkBuilder.
 
 	Bugfixes
 
@@ -18,13 +98,31 @@ Version xxxxxx
 
 	Various code enhancements
 
-		BaseApplication base class has been rewritten to get a cleaner api.
-
 		Use Gtk+ UI Manager.
+
+		BaseApplication base class has been rewritten to get a cleaner api.
 
 		Whole program is now compiled with '-pedantic' option.
 
+		Defines a permanent work-around against #589745 (GtkAssistant)
+		so that we can safely proceed with our job in on_assistant_apply()
+		without requiring latest Gtk+ version.
+
+	Various documentation enhancements
+
+		Object hierarchy is updated.
+
 	New and updated translations
+
+		de (Mario Blättermann)
+		es (Jorge Gonzalez)
+		eu (Inaki Larranaga Murgoitio)
+		hi (Rajesh Ranjan)
+		or (Manoj Kumar Giri)
+		pa (A S Alam)
+		sl (Andrej Žnidaršič)
+		sv (Daniel Nylander)
+		te (krishnababu k)
 
 Version 1.12.0
 ==============
