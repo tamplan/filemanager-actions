@@ -417,7 +417,7 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 
 		enable_tab = tab_set_sensitive( instance );
 
-		if( enable_tab ){
+		if( profile ){
 			schemes = na_object_profile_get_schemes( profile );
 			g_slist_foreach( schemes, ( GFunc ) set_action_schemes, scheme_model );
 		}

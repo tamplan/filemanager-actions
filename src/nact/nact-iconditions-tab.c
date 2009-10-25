@@ -321,29 +321,29 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		enable_tab = tab_set_sensitive( instance );
 
 		basenames_widget = get_basenames_entry( instance );
-		basenames = enable_tab ? na_object_profile_get_basenames( profile ) : NULL;
+		basenames = profile ? na_object_profile_get_basenames( profile ) : NULL;
 		basenames_text = profile ? na_utils_string_list_to_text( basenames ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( basenames_widget ), basenames_text );
 		g_free( basenames_text );
 		na_utils_free_string_list( basenames );
 
 		matchcase_button = get_matchcase_button( instance );
-		matchcase = enable_tab ? na_object_profile_get_matchcase( profile ) : FALSE;
+		matchcase = profile ? na_object_profile_get_matchcase( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
 
 		mimetypes_widget = get_mimetypes_entry( instance );
-		mimetypes = enable_tab ? na_object_profile_get_mimetypes( profile ) : NULL;
+		mimetypes = profile ? na_object_profile_get_mimetypes( profile ) : NULL;
 		mimetypes_text = profile ? na_utils_string_list_to_text( mimetypes ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( mimetypes_widget ), mimetypes_text );
 		g_free( mimetypes_text );
 		na_utils_free_string_list( mimetypes );
 
-		isfile = enable_tab ? na_object_profile_get_is_file( profile ) : FALSE;
-		isdir = enable_tab ? na_object_profile_get_is_dir( profile ) : FALSE;
+		isfile = profile ? na_object_profile_get_is_file( profile ) : FALSE;
+		isdir = profile ? na_object_profile_get_is_dir( profile ) : FALSE;
 		set_isfiledir( instance, isfile, isdir );
 
 		multiple_button = get_multiple_button( instance );
-		multiple = enable_tab ? na_object_profile_get_multiple( profile ) : FALSE;
+		multiple = profile ? na_object_profile_get_multiple( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( multiple_button ), multiple );
 	}
 }

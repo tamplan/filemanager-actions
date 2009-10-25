@@ -610,9 +610,17 @@ read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 
 	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, &toolbar_same_label )){
 		na_object_action_toolbar_set_same_label( action, toolbar_same_label );
+
+	} else {
+		toolbar_same_label = na_object_action_toolbar_use_same_label( action );
 	}
 
 	if( na_gconf_utils_get_string_from_entries( entries, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, &toolbar_label )){
+		na_object_action_toolbar_set_label( action, toolbar_label );
+		g_free( toolbar_label );
+
+	} else if( toolbar_same_label ){
+		toolbar_label = na_object_get_label( action );
 		na_object_action_toolbar_set_label( action, toolbar_label );
 		g_free( toolbar_label );
 	}

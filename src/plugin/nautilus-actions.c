@@ -458,30 +458,26 @@ is_action_candidate( NautilusActions *plugin, NAObjectAction *action, gint targe
 {
 	static const gchar *thisfn = "nautilus_actions_is_action_candidate";
 	NAObjectProfile *candidate = NULL;
-	gchar *action_label, *uuid;
+	gchar *action_label;
 	gchar *profile_label;
 	GList *profiles, *ip;
 
-	action_label = na_object_get_label( action );
+	if( na_object_action_is_candidate( action, target )){
 
-	if( !action_label || !g_utf8_strlen( action_label, -1 )){
-		uuid = na_object_get_id( action );
-		g_warning( "%s: label null or empty for uuid=%s", thisfn, uuid );
-		g_free( uuid );
-		return( NULL );
-	}
+		action_label = na_object_get_label( action );
 
-	profiles = na_object_get_items_list( action );
-	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
+		profiles = na_object_get_items_list( action );
+		for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 
-		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
-		if( na_object_profile_is_candidate( profile, target, files )){
+			NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
+			if( na_object_profile_is_candidate( profile, target, files )){
 
-			profile_label = na_object_get_label( profile );
-			g_debug( "%s: selecting %s - %s", thisfn, action_label, profile_label );
-			g_free( profile_label );
+				profile_label = na_object_get_label( profile );
+				g_debug( "%s: selecting %s - %s", thisfn, action_label, profile_label );
+				g_free( profile_label );
 
-			candidate = profile;
+				candidate = profile;
+			}
  		}
  	}
 

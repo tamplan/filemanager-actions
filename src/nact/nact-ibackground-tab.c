@@ -85,10 +85,6 @@ static void         reset_folders( NactIBackgroundTab *instance );
 static void         setup_folders( NactIBackgroundTab *instance );
 static void         treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, const gchar *text, gint column, gboolean *state, gchar **old_text );
 
-static void         on_toolbar_same_label_toggled( GtkToggleButton *button, NactIBackgroundTab *instance );
-
-static void         on_toolbar_label_changed( GtkEntry *entry, NactIBackgroundTab *instance );
-
 GType
 nact_ibackground_tab_get_type( void )
 {
@@ -197,8 +193,6 @@ nact_ibackground_tab_runtime_init_toplevel( NactIBackgroundTab *instance )
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	GtkWidget *add_button, *remove_button;
-	GtkWidget *label_widget;
-	GtkWidget *toolbar_same_label_button;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IBACKGROUND_TAB( instance ));
@@ -245,20 +239,6 @@ nact_ibackground_tab_runtime_init_toplevel( NactIBackgroundTab *instance )
 				"changed",
 				G_CALLBACK( on_folders_selection_changed ),
 				instance );
-
-		toolbar_same_label_button = base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" );
-		g_signal_connect(
-				G_OBJECT( toolbar_same_label_button ),
-				"toggled",
-				G_CALLBACK( on_toolbar_same_label_toggled ),
-				instance );
-
-		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ToolbarLabelEntry" );
-		g_signal_connect(
-				G_OBJECT( label_widget ),
-				"changed",
-				G_CALLBACK( on_toolbar_label_changed ),
-				instance );
 	}
 }
 
@@ -294,10 +274,6 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 	static const gchar *thisfn = "nact_ibackground_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	gboolean enable_tab;
-	GtkToggleButton *same_label_button;
-	gboolean same_label;
-	GtkWidget *short_label_widget;
-	gchar *short_label;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_IBACKGROUND_TAB( instance ));
@@ -315,19 +291,9 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 
 		enable_tab = tab_set_sensitive( instance );
 
-		if( enable_tab ){
+		if( item && NA_IS_OBJECT_ACTION( item )){
 			setup_folders( instance );
 		}
-
-		/* only actions go to toolbar */
-		same_label_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
-		same_label = enable_tab && NA_IS_OBJECT_ACTION( item ) ? na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( item )) : FALSE;
-		gtk_toggle_button_set_active( same_label_button, same_label );
-
-		short_label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ToolbarLabelEntry" );
-		short_label = enable_tab && NA_IS_OBJECT_ACTION( item ) ? na_object_action_toolbar_get_label( NA_OBJECT_ACTION( item )) : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( short_label_widget ), short_label );
-		g_free( short_label );
 	}
 }
 
@@ -350,11 +316,7 @@ tab_set_sensitive( NactIBackgroundTab *instance )
 {
 	NAObjectAction *action;
 	NAObjectProfile *profile;
-	gboolean is_action;
-	gboolean enable_tab, enable_folders_frame, enable_toolbar_frame;
-	GtkWidget *toolbar_frame_widget;
-	gboolean enable_toolbar_label_entry;
-	GtkWidget *toolbar_label_entry;
+	gboolean enable_tab;
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -362,20 +324,10 @@ tab_set_sensitive( NactIBackgroundTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
-	is_action = ( action && NA_IS_OBJECT_ACTION( action ));
-	enable_toolbar_frame = ( is_action && na_object_action_is_target_toolbar( action ));
-	enable_folders_frame = ( profile != NULL &&
-			( na_object_action_is_target_background( action ) || enable_toolbar_frame ));
-	enable_tab = enable_folders_frame || enable_toolbar_frame;
+	enable_tab = ( profile != NULL &&
+			( na_object_action_is_target_background( action ) || na_object_action_is_target_toolbar( action )));
 
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_BACKGROUND, enable_tab );
-
-	toolbar_frame_widget = base_window_get_widget( BASE_WINDOW( instance ), "BackgroundToolbarFrame" );
-	gtk_widget_set_sensitive( toolbar_frame_widget, enable_toolbar_frame );
-
-	enable_toolbar_label_entry = ( enable_toolbar_frame && !na_object_action_toolbar_use_same_label( action ));
-	toolbar_label_entry = base_window_get_widget( BASE_WINDOW( instance ), "ToolbarLabelEntry" );
-	gtk_widget_set_sensitive( toolbar_label_entry, enable_toolbar_label_entry );
 
 	return( enable_tab );
 }
@@ -417,7 +369,7 @@ add_uri_to_folders( NactIBackgroundTab *instance, const gchar *uri )
 	na_object_profile_set_folders( edited, folders );
 	na_utils_free_string_list( folders );
 
-	g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
+	g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 }
 
 static GtkTreeView *
@@ -533,7 +485,7 @@ on_remove_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
 		na_utils_free_string_list( folders );
 		g_free( uri );
 
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 
 	g_list_foreach( selected_path, ( GFunc ) gtk_tree_path_free, NULL );
@@ -602,58 +554,5 @@ treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, co
 
 	na_object_profile_replace_folder_uri( edited, *old_text, text );
 
-	g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
-}
-
-static void
-on_toolbar_same_label_toggled( GtkToggleButton *button, NactIBackgroundTab *instance )
-{
-	NAObjectItem *edited;
-	gboolean same_label;
-	GtkWidget *label_widget;
-	gchar *text;
-
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
-			NULL );
-
-	if( edited ){
-		g_return_if_fail( NA_IS_OBJECT_ACTION( edited ));
-
-		same_label = gtk_toggle_button_get_active( button );
-		na_object_action_toolbar_set_same_label( NA_OBJECT_ACTION( edited ), same_label );
-
-		tab_set_sensitive( instance );
-
-		if( same_label ){
-			label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ToolbarLabelEntry" );
-			text = na_object_get_label( edited );
-			gtk_entry_set_text( GTK_ENTRY( label_widget ), text );
-			g_free( text );
-		}
-
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
-	}
-}
-
-static void
-on_toolbar_label_changed( GtkEntry *entry, NactIBackgroundTab *instance )
-{
-	NAObjectItem *edited;
-	const gchar *label;
-
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
-			NULL );
-
-	if( edited ){
-		g_return_if_fail( NA_IS_OBJECT_ACTION( edited ));
-
-		label = gtk_entry_get_text( entry );
-		na_object_action_toolbar_set_label( NA_OBJECT_ACTION( edited ), label );
-
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
-	}
+	g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 }

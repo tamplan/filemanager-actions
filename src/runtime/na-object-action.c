@@ -757,6 +757,31 @@ na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profil
 	}
 }
 
+/**
+ * na_object_action_is_candidate:
+ * @action: the #NAObjectAction to be tested.
+ * @target: the current target.
+ *
+ * Returns: %TRUE if the @action may be candidate for this @target.
+ */
+gboolean
+na_object_action_is_candidate( const NAObjectAction *action, gint target )
+{
+	gboolean is_candidate = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), is_candidate );
+
+	if( !action->private->dispose_has_run ){
+
+		is_candidate =
+			( action->private->target_selection && target == ITEM_TARGET_SELECTION ) ||
+			( action->private->target_background && target == ITEM_TARGET_BACKGROUND ) ||
+			( action->private->target_toolbar && target == ITEM_TARGET_TOOLBAR );
+	}
+
+	return( is_candidate );
+}
+
 static void
 object_dump( const NAObject *action )
 {

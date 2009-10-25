@@ -355,18 +355,18 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		enable_tab = tab_set_sensitive( instance );
 
 		label_entry = get_label_entry( instance );
-		label = enable_tab ? na_object_get_label( profile ) : g_strdup( "" );
+		label = profile ? na_object_get_label( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
 		check_for_label( instance, GTK_ENTRY( label_entry ), label );
 		g_free( label );
 
 		path_entry = get_path_entry( instance );
-		path = enable_tab ? na_object_profile_get_path( profile ) : g_strdup( "" );
+		path = profile ? na_object_profile_get_path( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
 		g_free( path );
 
 		parameters_entry = get_parameters_entry( instance );
-		parameters = enable_tab ? na_object_profile_get_parameters( profile ) : g_strdup( "" );
+		parameters = profile ? na_object_profile_get_parameters( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
 		g_free( parameters );
 	}

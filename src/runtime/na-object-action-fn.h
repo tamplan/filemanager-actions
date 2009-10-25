@@ -87,6 +87,7 @@ void            na_object_action_toolbar_set_label( NAObjectAction *action, cons
 
 gchar          *na_object_action_get_new_profile_name( const NAObjectAction *action );
 void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );
+gboolean        na_object_action_is_candidate( const NAObjectAction *action, gint target );
 
 G_END_DECLS
 
