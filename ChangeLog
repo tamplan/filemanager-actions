@@ -1,5 +1,8 @@
 2009-10-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/runtime/na-iabout.c (na_iabout_display):
+	Do not mark authors names and emails for translating (#599520).
+
 	* src/nact/nact-preferences-editor.c
 	(on_base_runtime_init_dialog, save_preferences):
 	Let the user edit its preferred export format.

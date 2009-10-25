@@ -158,14 +158,14 @@ na_iabout_display( NAIAbout *instance )
 	GtkWindow *toplevel;
 
 	static const gchar *artists[] = {
-		N_( "Ulisse Perusin <uli.peru@gmail.com>" ),
+		"Ulisse Perusin <uli.peru@gmail.com>",
 		NULL
 	};
 
 	static const gchar *authors[] = {
-		N_( "Frederic Ruaudel <grumz@grumz.net>" ),
-		N_( "Rodrigo Moya <rodrigo@gnome-db.org>" ),
-		N_( "Pierre Wieser <pwieser@trychlos.org>" ),
+		"Frederic Ruaudel <grumz@grumz.net>",
+		"Rodrigo Moya <rodrigo@gnome-db.org>",
+		"Pierre Wieser <pwieser@trychlos.org>",
 		NULL
 	};
 
