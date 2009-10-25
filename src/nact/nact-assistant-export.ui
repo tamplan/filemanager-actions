@@ -86,10 +86,10 @@ to extend a selection.</property>
         <child>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
-            <property name="preview_widget_active">False</property>
-            <property name="action">select-folder</property>
             <property name="use_preview_label">False</property>
+            <property name="action">select-folder</property>
             <property name="local_only">False</property>
+            <property name="preview_widget_active">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -110,7 +110,7 @@ to extend a selection.</property>
             <property name="visible">True</property>
             <child>
               <object class="GtkRadioButton" id="ExportSchemaV1Button">
-                <property name="label" translatable="yes">Export as a GConf schema file with full key descriptions.</property>
+                <property name="label" translatable="yes">Export as a GConf schema file with full key descriptions</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -158,7 +158,7 @@ The exported file may later be imported via :
             <property name="visible">True</property>
             <child>
               <object class="GtkRadioButton" id="ExportSchemaV2Button">
-                <property name="label" translatable="yes">Export as a light GConf schema file.</property>
+                <property name="label" translatable="yes">Export as a light GConf schema file</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -206,7 +206,7 @@ The exported file may later be imported via :
             <property name="visible">True</property>
             <child>
               <object class="GtkRadioButton" id="ExportGConfDumpButton">
-                <property name="label" translatable="yes">Export as a GConf dump file.</property>
+                <property name="label" translatable="yes">Export as a GConf dump file</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -254,10 +254,9 @@ The exported file may later be imported via :
         <child>
           <object class="GtkVBox" id="vbox5">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="ExportAskButton">
-                <property name="label" translatable="yes">Ask me.</property>
+                <property name="label" translatable="yes">Ask me</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -329,17 +328,14 @@ The exported file may later be imported via :
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkVBox" id="vbox37">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkVBox" id="vbox39">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkLabel" id="ExportAskLabel1">
@@ -365,13 +361,13 @@ The exported file may later be imported via :
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkVBox" id="vbox38">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkRadioButton" id="AskGConfSchemaV1Button">
                     <property name="label" translatable="yes">Export as a GConf schema (v_1) file</property>
@@ -426,6 +422,7 @@ The exported file may later be imported via :
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -441,7 +438,6 @@ The exported file may later be imported via :
             <child>
               <object class="GtkVBox" id="vbox40">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkCheckButton" id="AskKeepChoiceButton">
                     <property name="label" translatable="yes">Re_member my choice in future import operations</property>
@@ -457,11 +453,13 @@ The exported file may later be imported via :
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">3</property>
               </packing>
             </child>
           </object>
           <packing>
+            <property name="expand">False</property>
             <property name="position">1</property>
           </packing>
         </child>
