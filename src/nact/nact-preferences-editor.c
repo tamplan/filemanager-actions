@@ -269,7 +269,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	gboolean add_about_item;
 	gboolean create_root_menu;
 	gboolean relabel;
-	gint import_mode;
+	gint import_mode, export_format;
 	GtkWidget *button;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
@@ -318,7 +318,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 
-	/* third tab: tools preferences
+	/* third tab: import tool
 	 */
 	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE );
 	switch( import_mode ){
@@ -337,6 +337,29 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 		case IPREFS_IMPORT_NO_IMPORT:
 		default:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsNoImportButton" );
+			break;
+	}
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
+
+	/* fourth tab: export tool
+	 */
+	export_format = na_iprefs_get_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT );
+	switch( export_format ){
+		case IPREFS_EXPORT_FORMAT_ASK:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsExportAskButton" );
+			break;
+
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsExportGConfSchemaV2Button" );
+			break;
+
+		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsExportGConfSchemaV1Button" );
+			break;
+
+		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
+		default:
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsExportGConfDumpButton" );
 			break;
 	}
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
@@ -390,7 +413,7 @@ save_preferences( NactPreferencesEditor *editor )
 	gint order_mode;
 	gboolean enabled;
 	gboolean relabel;
-	gint import_mode;
+	gint import_mode, export_format;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	pivot = nact_application_get_pivot( application );
@@ -436,7 +459,7 @@ save_preferences( NactPreferencesEditor *editor )
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	na_iprefs_write_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, relabel );
 
-	/* third tab: tools preferences
+	/* third tab: import tool
 	 */
 	import_mode = IPREFS_IMPORT_NO_IMPORT;
 	button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsRenumberButton" );
@@ -454,6 +477,25 @@ save_preferences( NactPreferencesEditor *editor )
 		}
 	}
 	na_iprefs_set_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE, import_mode );
+
+	/* fourth tab: export tool
+	 */
+	export_format = IPREFS_EXPORT_FORMAT_GCONF_ENTRY;
+	button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsExportGConfSchemaV1Button" );
+	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+		export_format = IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1;
+	} else {
+		button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsExportGConfSchemaV2Button" );
+		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+			export_format = IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2;
+		} else {
+			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsExportAskButton" );
+			if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+				export_format = IPREFS_EXPORT_FORMAT_ASK;
+			}
+		}
+	}
+	na_iprefs_set_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT, export_format );
 }
 
 static gboolean

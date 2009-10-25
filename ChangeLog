@@ -1,3 +1,12 @@
+2009-10-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-preferences-editor.c
+	(on_base_runtime_init_dialog, save_preferences):
+	Let the user edit its preferred export format.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Add Export tab to Preferences dialog.
+
 2009-10-23 Pierre Wieser <pwieser@trychlos.org>
 
 	Populates Nautilus background menus and Nautilus toolbar.
