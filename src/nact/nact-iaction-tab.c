@@ -467,8 +467,7 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
 			NULL );
 
-	if( action ){
-		g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
+	if( action && NA_IS_OBJECT_ACTION( action )){
 
 		is_target = gtk_toggle_button_get_active( button );
 		na_object_action_set_target_selection( action, is_target );
@@ -492,8 +491,7 @@ on_target_background_toggled( GtkToggleButton *button, NactIActionTab *instance 
 			TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
 			NULL );
 
-	if( action ){
-		g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
+	if( action && NA_IS_OBJECT_ACTION( action )){
 
 		is_target = gtk_toggle_button_get_active( button );
 		na_object_action_set_target_background( action, is_target );
@@ -595,18 +593,17 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
 			NULL );
 
-	if( action ){
-		g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
+	if( action && NA_IS_OBJECT_ACTION( action )){
 
 		is_target = gtk_toggle_button_get_active( button );
 		na_object_action_set_target_toolbar( action, is_target );
 
-		toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( action ));
-		toolbar_label_set_sensitive( instance, NA_OBJECT_ITEM( action ));
-
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 	}
+
+	toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( action ));
+	toolbar_label_set_sensitive( instance, NA_OBJECT_ITEM( action ));
 }
 
 static void
@@ -620,16 +617,16 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
 			NULL );
 
-	if( edited ){
-		g_return_if_fail( NA_IS_OBJECT_ACTION( edited ));
+	if( edited && NA_IS_OBJECT_ACTION( edited )){
 
 		same_label = gtk_toggle_button_get_active( button );
 		na_object_action_toolbar_set_same_label( NA_OBJECT_ACTION( edited ), same_label );
 
-		toolbar_label_set_sensitive( instance, edited );
-
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
+
+	toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( edited ));
+	toolbar_label_set_sensitive( instance, NA_OBJECT_ITEM( edited ));
 }
 
 static void
@@ -667,12 +664,14 @@ on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance )
 static void
 toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item )
 {
+	gboolean is_action;
 	gboolean same_label;
 	GtkWidget *label_widget;
 
-	same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( item )) : FALSE;
+	is_action = item && NA_IS_OBJECT_ACTION( item );
+	same_label = is_action ? na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( item )) : FALSE;
 	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
-	gtk_widget_set_sensitive( label_widget, !same_label );
+	gtk_widget_set_sensitive( label_widget, is_action && !same_label );
 }
 
 static void
