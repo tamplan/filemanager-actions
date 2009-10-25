@@ -1,5 +1,7 @@
 2009-10-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in: Update list of translatable files.
+
 	* src/runtime/na-iabout.c (na_iabout_display):
 	Do not mark authors names and emails for translating (#599520).
 
