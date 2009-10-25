@@ -635,6 +635,7 @@ nact_iactions_list_dispose( NactIActionsList *instance )
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 		ialid = get_instance_data( instance );
 		ialid->selection_changed_send_allowed = FALSE;
+		g_list_free( ialid->modified_items );
 
 		nact_tree_model_dispose( model );
 
@@ -840,10 +841,19 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 		only_actions = have_only_actions( instance, ialid );
 
 		ialid->selection_changed_send_allowed = FALSE;
+
 		nact_tree_model_fill( model, items, only_actions );
 
+		g_list_free( ialid->modified_items );
+		ialid->modified_items = NULL;
 		ialid->selection_changed_send_allowed = TRUE;
+
 		select_first_row( instance );
+
+		g_signal_emit_by_name(
+				instance,
+				MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
+				GINT_TO_POINTER( FALSE ));
 
 		ialid->menus = 0;
 		ialid->actions = 0;

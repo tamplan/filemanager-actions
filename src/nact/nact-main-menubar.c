@@ -546,7 +546,7 @@ on_level_zero_order_changed( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	mis->level_zero_order_changed = TRUE;
+	mis->level_zero_order_changed = GPOINTER_TO_INT( user_data );
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 

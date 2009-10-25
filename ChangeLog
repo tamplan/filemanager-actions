@@ -7,6 +7,16 @@
 	* src/runtime/na-iabout.c (na_iabout_display):
 	Do not mark authors names and emails for translating (#599520).
 
+	* src/nact/nact-iactions-list.c
+	(nact_iactions_list_dispose): free list of modified items.
+	(nact_iactions_list_fill): reset level_zero_order_changed flag.
+
+	* src/nact/nact-main-menubar.c (on_level_zero_order_changed):
+	The message now brings up the flag to be set.
+
+	* src/nact/nact-tree-model.c (drop_inside):
+	Set the level_zero_order_changed flag to TRUE.
+
 	* src/nact/nact-preferences-editor.c
 	(on_base_runtime_init_dialog, save_preferences):
 	Let the user edit its preferred export format.

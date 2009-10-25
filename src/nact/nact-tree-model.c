@@ -1510,7 +1510,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 		nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
 
 		if( !copy_data && gtk_tree_path_get_depth( new_dest ) == 1 ){
-			g_signal_emit_by_name( main_window, MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, NULL );
+			g_signal_emit_by_name( main_window, MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
 		}
 
 		g_list_foreach( object_list, ( GFunc ) na_object_object_unref, NULL );
