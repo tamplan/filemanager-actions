@@ -657,8 +657,7 @@ on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
 			NULL );
 
-	if( edited ){
-		g_return_if_fail( NA_IS_OBJECT_ACTION( edited ));
+	if( edited && NA_IS_OBJECT_ACTION( edited )){
 
 		label = gtk_entry_get_text( entry );
 		na_object_action_toolbar_set_label( NA_OBJECT_ACTION( edited ), label );

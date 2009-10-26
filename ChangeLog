@@ -1,5 +1,8 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iaction-tab.c (on_toolbar_label_changed):
+	Only setup the label when current item is an action.
+
 	* src/nact/nact-ibackground-tab.c (setup_folders):
 	Only tries to setup folders when there is a current profile.
 
