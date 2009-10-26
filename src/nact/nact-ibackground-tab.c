@@ -199,46 +199,46 @@ nact_ibackground_tab_runtime_init_toplevel( NactIBackgroundTab *instance )
 
 	if( st_initialized && !st_finalized ){
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ),
-				instance );
+				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-				G_CALLBACK( on_tab_updatable_enable_tab ),
-				instance );
+				G_CALLBACK( on_tab_updatable_enable_tab ));
 
 		listview = get_folders_treeview( instance );
 		column = gtk_tree_view_get_column( listview, BACKGROUND_URI_COLUMN );
 		renderers = gtk_tree_view_column_get_cell_renderers( column );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( renderers->data ),
 				"edited",
-				G_CALLBACK( on_folder_uri_edited ),
-				instance );
+				G_CALLBACK( on_folder_uri_edited ));
 
 		add_button = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton");
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( add_button ),
 				"clicked",
-				G_CALLBACK( on_add_folder_clicked ),
-				instance );
+				G_CALLBACK( on_add_folder_clicked ));
 
 		remove_button = base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton");
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( remove_button ),
 				"clicked",
-				G_CALLBACK( on_remove_folder_clicked ),
-				instance );
+				G_CALLBACK( on_remove_folder_clicked ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( gtk_tree_view_get_selection( listview )),
 				"changed",
-				G_CALLBACK( on_folders_selection_changed ),
-				instance );
+				G_CALLBACK( on_folders_selection_changed ));
 	}
 }
 

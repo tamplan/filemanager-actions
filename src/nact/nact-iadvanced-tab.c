@@ -259,59 +259,59 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 
 		column = gtk_tree_view_get_column( listview, SCHEMES_CHECKBOX_COLUMN );
 		renderers = gtk_tree_view_column_get_cell_renderers( column );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( renderers->data ),
 				"toggled",
-				G_CALLBACK( on_scheme_selection_toggled ),
-				instance );
+				G_CALLBACK( on_scheme_selection_toggled ));
 
 		column = gtk_tree_view_get_column( listview, SCHEMES_KEYWORD_COLUMN );
 		renderers = gtk_tree_view_column_get_cell_renderers( column );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( renderers->data ),
 				"edited",
-				G_CALLBACK( on_scheme_keyword_edited ),
-				instance );
+				G_CALLBACK( on_scheme_keyword_edited ));
 
 		column = gtk_tree_view_get_column( listview, SCHEMES_DESC_COLUMN );
 		renderers = gtk_tree_view_column_get_cell_renderers( column );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( renderers->data ),
 				"edited",
-				G_CALLBACK( on_scheme_desc_edited ),
-				instance );
+				G_CALLBACK( on_scheme_desc_edited ));
 
 		add_button = get_add_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( add_button ),
 				"clicked",
-				G_CALLBACK( on_add_scheme_clicked ),
-				instance );
+				G_CALLBACK( on_add_scheme_clicked ));
 
 		remove_button = get_remove_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( remove_button ),
 				"clicked",
-				G_CALLBACK( on_remove_scheme_clicked ),
-				instance );
+				G_CALLBACK( on_remove_scheme_clicked ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( gtk_tree_view_get_selection( listview )),
 				"changed",
-				G_CALLBACK( on_scheme_list_selection_changed ),
-				instance );
+				G_CALLBACK( on_scheme_list_selection_changed ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ),
-				instance );
+				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-				G_CALLBACK( on_tab_updatable_enable_tab ),
-				instance );
+				G_CALLBACK( on_tab_updatable_enable_tab ));
 	}
 }
 

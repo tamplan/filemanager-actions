@@ -1,5 +1,11 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iadvanced-tab.c (runtime_init_connect_signals):
+	* src/nact/nact-ibackground-tab.c
+	(nact_ibackground_tab_runtime_init_toplevel):
+	Replace g_signal_connect with base_window_signal_connect to
+	better handle signal deconnections.
+
 	* src/nact/nact-ibackground-tab.c (treeview_cell_edited):
 	Only setup previous text if a non null pointer is provided.
 
