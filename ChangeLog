@@ -2,6 +2,7 @@
 
 	* src/nact/nact-assistant-export.ui:
 	Make the Export assistant be transient relatively to main window.
+	Make the Import assistant be transient relatively to main window.
 
 	Fix crash when running Export assistant.
 
