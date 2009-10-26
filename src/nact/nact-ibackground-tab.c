@@ -83,7 +83,7 @@ static void         on_add_folder_clicked( GtkButton *button, NactIBackgroundTab
 static void         on_remove_folder_clicked( GtkButton *button, NactIBackgroundTab *instance );
 static void         reset_folders( NactIBackgroundTab *instance );
 static void         setup_folders( NactIBackgroundTab *instance );
-static void         treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, const gchar *text, gint column, gboolean *state, gchar **old_text );
+static void         treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, const gchar *text, gint column, gchar **old_text );
 
 GType
 nact_ibackground_tab_get_type( void )
@@ -434,7 +434,7 @@ on_add_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
 static void
 on_folder_uri_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIBackgroundTab *instance )
 {
-	treeview_cell_edited( instance, path, text, BACKGROUND_URI_COLUMN, NULL, NULL );
+	treeview_cell_edited( instance, path, text, BACKGROUND_URI_COLUMN, NULL );
 }
 
 static void
@@ -527,14 +527,19 @@ setup_folders( NactIBackgroundTab *instance )
 }
 
 static void
-treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, const gchar *text, gint column, gboolean *state, gchar **old_text )
+treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, const gchar *text, gint column, gchar **old_text )
 {
+	static const gchar *thisfn = "nact_ibackground_tab_treeview_cell_edited";
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreePath *path;
 	NAObjectAction *action;
 	NAObjectProfile *edited;
+	gchar *previous_text;
+
+	g_debug( "%s: instance=%p, path_string=%s, text=%s, column=%d",
+			thisfn, ( void * ) instance, path_string, text, column );
 
 	listview = get_folders_treeview( instance );
 	model = gtk_tree_view_get_model( listview );
@@ -542,9 +547,7 @@ treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, co
 	gtk_tree_model_get_iter( model, &iter, path );
 	gtk_tree_path_free( path );
 
-	if( state && old_text ){
-		gtk_tree_model_get( model, &iter, BACKGROUND_URI_COLUMN, old_text, -1 );
-	}
+	gtk_tree_model_get( model, &iter, BACKGROUND_URI_COLUMN, &previous_text, -1 );
 
 	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, column, text, -1 );
 
@@ -554,7 +557,12 @@ treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, co
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 			NULL );
 
-	na_object_profile_replace_folder_uri( edited, *old_text, text );
+	na_object_profile_replace_folder_uri( edited, previous_text, text );
+
+	if( old_text ){
+		*old_text = g_strdup( previous_text );
+	}
+	g_free( previous_text );
 
 	g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 }

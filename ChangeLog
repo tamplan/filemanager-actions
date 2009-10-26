@@ -1,5 +1,8 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-ibackground-tab.c (treeview_cell_edited):
+	Only setup previous text if a non null pointer is provided.
+
 	* src/nact/nact-iaction-tab.c (set_label_label):
 	* src/nact/nact-icommand-tab.c (set_label_label):
 	Only set color foreground for the normal state.
