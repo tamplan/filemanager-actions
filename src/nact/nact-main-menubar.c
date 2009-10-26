@@ -940,8 +940,10 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 
 	items = prepare_for_paste( window );
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_free_items_list( items );
+	if( items ){
+		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
+		na_object_free_items_list( items );
+	}
 }
 
 /*
@@ -965,8 +967,10 @@ on_paste_into_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 
 	items = prepare_for_paste( window );
-	nact_iactions_list_insert_into( NACT_IACTIONS_LIST( window ), items );
-	na_object_free_items_list( items );
+	if( items ){
+		nact_iactions_list_insert_into( NACT_IACTIONS_LIST( window ), items );
+		na_object_free_items_list( items );
+	}
 }
 
 static GList *

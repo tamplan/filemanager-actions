@@ -1,5 +1,12 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-clipboard.c (get_from_primary_clipboard_callback):
+	Provides text content.
+
+	* src/nact/nact-main-menubar.c
+	(on_paste_activated, on_paste_into_activated):
+	Only inserts if items provided by clipboard are not null.
+
 	* src/nact/nact-iaction-tab.c (on_toolbar_label_changed):
 	Only setup the label when current item is an action.
 

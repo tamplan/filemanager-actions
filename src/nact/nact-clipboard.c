@@ -56,12 +56,30 @@ struct NactClipboardClassPrivate {
 
 /* private instance data
  */
+typedef struct {
+	guint    target;
+	gchar   *folder;
+	GList   *rows;
+	gboolean copy;
+}
+	NactClipboardDndData;
+
+typedef struct {
+	guint    nb_actions;
+	guint    nb_profiles;
+	guint    nb_menus;
+	GList   *items;
+	gint     mode;
+}
+	NactClipboardPrimaryData;
+
 struct NactClipboardPrivate {
-	gboolean      dispose_has_run;
-	BaseWindow   *window;
-	GtkClipboard *dnd;
-	GtkClipboard *primary;
-	gboolean      primary_got;
+	gboolean                  dispose_has_run;
+	BaseWindow               *window;
+	GtkClipboard             *dnd;
+	GtkClipboard             *primary;
+	NactClipboardPrimaryData *primary_data;
+	gboolean                  primary_got;
 };
 
 #define NACT_CLIPBOARD_ATOM				gdk_atom_intern( "_NACT_CLIPBOARD", FALSE )
@@ -87,23 +105,6 @@ static GtkTargetEntry clipboard_formats[] = {
 	{ "text/plain",               0, NACT_CLIPBOARD_FORMAT_TEXT_PLAIN },
 };
 
-typedef struct {
-	guint    target;
-	gchar   *folder;
-	GList   *rows;
-	gboolean copy;
-}
-	NactClipboardDndData;
-
-typedef struct {
-	guint    nb_actions;
-	guint    nb_profiles;
-	guint    nb_menus;
-	GList   *items;
-	gint     mode;
-}
-	NactClipboardPrimaryData;
-
 static GObjectClass *st_parent_class = NULL;
 
 static GType  register_type( void );
@@ -115,10 +116,11 @@ static void   instance_finalize( GObject *application );
 static void   get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
 static void   clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *data );
 static gchar *export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder );
+static gchar *export_objects( NactClipboard *clipboard, GList *objects, const gchar *dest_folder );
 static gchar *export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported );
 
-static void   get_from_primary_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
-static void   clear_primary_clipboard_callback( GtkClipboard *clipboard, NactClipboardPrimaryData *data );
+static void   get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard );
+static void   clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, NactClipboard *clipboard );
 
 GType
 nact_clipboard_get_type( void )
@@ -191,7 +193,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	display = gdk_display_get_default();
 	self->private->dnd = gtk_clipboard_get_for_display( display, NACT_CLIPBOARD_ATOM );
-	self->private->primary = gtk_clipboard_get_for_display( display, GDK_SELECTION_PRIMARY );
+	self->private->primary = gtk_clipboard_get_for_display( display, GDK_SELECTION_CLIPBOARD );
 }
 
 static void
@@ -405,6 +407,7 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 		if( selection ){
 
 			data = ( NactClipboardDndData * ) selection->data;
+			g_debug( "%s: data=%p (NactClipboardDndData)", thisfn, ( void * ) data );
 			if( data->target == NACT_XCHANGE_FORMAT_XDS ){
 				export_rows( clipboard, data->rows, data->folder );
 			}
@@ -487,6 +490,33 @@ export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 }
 
 static gchar *
+export_objects( NactClipboard *clipboard, GList *objects, const gchar *dest_folder )
+{
+	gchar *buffer;
+	GString *data;
+	GList *exported;
+	GList *iobj;
+	NAObject *object;
+
+	buffer = NULL;
+	exported = NULL;
+	data = g_string_new( "" );
+
+	for( iobj = objects ; iobj ; iobj = iobj->next ){
+		object = NA_OBJECT( iobj->data );
+		buffer = export_row_object( clipboard, object, dest_folder, &exported );
+		if( buffer && strlen( buffer )){
+			data = g_string_append( data, buffer );
+			g_free( buffer );
+		}
+		g_object_unref( object );
+	}
+
+	g_list_free( exported );
+	return( g_string_free( data, FALSE ));
+}
+
+static gchar *
 export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported )
 {
 	GList *subitems, *isub;
@@ -559,7 +589,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
  *
  * Rationale: when cutting an item to the clipboard, the next paste
  * will keep its same original id, and it is safe because this is
- * actually what we we want when we cut/paste.
+ * actually what we want when we cut/paste.
  *
  * Contrarily, when we copy/paste, we are waiting for a new element
  * which has the same characteristics that the previous one ; we so
@@ -572,12 +602,17 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 void
 nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 {
+	static const gchar *thisfn = "nact_clipboard_primary_set";
 	NactClipboardPrimaryData *data;
 	GList *it;
 
+	g_debug( "%s: clipboard=%p, items=%p (count=%d), mode=%d",
+			thisfn, ( void * ) clipboard, ( void * ) items, g_list_length( items ), mode );
 	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
 
 	if( !clipboard->private->dispose_has_run ){
+
+		g_return_if_fail( clipboard->private->primary_data == NULL );
 
 		data = g_new0( NactClipboardPrimaryData, 1 );
 
@@ -591,13 +626,15 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 
 		data->mode = mode;
 
+		clipboard->private->primary_data = data;
 		clipboard->private->primary_got = FALSE;
+		g_debug( "%s: data=%p (NactClipboardPrimaryData)", thisfn, ( void * ) data );
 
 		gtk_clipboard_set_with_data( clipboard->private->primary,
 				clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
 				( GtkClipboardGetFunc ) get_from_primary_clipboard_callback,
 				( GtkClipboardClearFunc ) clear_primary_clipboard_callback,
-				data );
+				clipboard );
 	}
 }
 
@@ -614,12 +651,14 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 GList *
 nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 {
+	static const gchar *thisfn = "nact_clipboard_primary_get";
 	GtkSelectionData *selection;
 	NactClipboardPrimaryData *data;
 	GList *items = NULL;
 	GList *it;
 	NAObject *obj;
 
+	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
 	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
 	g_return_val_if_fail( relabel, NULL );
 
@@ -629,6 +668,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 
 		if( selection ){
 			data = ( NactClipboardPrimaryData * ) selection->data;
+			g_debug( "%s: data=%p (NactClipboardPrimaryData)", thisfn, ( void * ) data );
 
 			for( it = data->items ; it ; it = it->next ){
 				obj = na_object_duplicate( it->data );
@@ -681,25 +721,40 @@ nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *
 }
 
 static void
-get_from_primary_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data )
+get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard )
 {
 	static const gchar *thisfn = "nact_clipboard_get_from_primary_clipboard_callback";
+	NactClipboardPrimaryData *data;
+	gchar *buffer;
 
-	g_debug( "%s: clipboard=%p, selection_data=%p, target=%s, info=%d, data=%p",
-			thisfn, ( void * ) clipboard,
-			( void * ) selection_data, gdk_atom_name( selection_data->target ), info, ( void * ) data );
+	g_debug( "%s: gtk_clipboard=%p, selection_data=%p, target=%s, info=%d, clipboard=%p",
+			thisfn, ( void * ) gtk_clipboard,
+			( void * ) selection_data, gdk_atom_name( selection_data->target ), info, ( void * ) clipboard );
 
-	gtk_selection_data_set( selection_data, selection_data->target, 8, data, sizeof( NactClipboardPrimaryData ));
+	data = clipboard->private->primary_data;
+
+	if( info == NACT_CLIPBOARD_FORMAT_TEXT_PLAIN ){
+		buffer = export_objects( clipboard, data->items, NULL );
+		gtk_selection_data_set( selection_data, selection_data->target, 8, ( const guchar * ) buffer, strlen( buffer ));
+		g_free( buffer );
+
+	} else {
+		gtk_selection_data_set( selection_data, selection_data->target, 8, ( const guchar * ) data, sizeof( NactClipboardPrimaryData ));
+	}
 }
 
 static void
-clear_primary_clipboard_callback( GtkClipboard *clipboard, NactClipboardPrimaryData *data )
+clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, NactClipboard *clipboard )
 {
 	static const gchar *thisfn = "nact_clipboard_clear_primary_clipboard_callback";
+	NactClipboardPrimaryData *data;
 
-	g_debug( "%s: clipboard=%p, data=%p", thisfn, ( void * ) clipboard, ( void * ) data );
+	g_debug( "%s: gtk_clipboard=%p, clipboard=%p",
+			thisfn, ( void * ) gtk_clipboard, ( void * ) clipboard );
 
+	data = clipboard->private->primary_data;
 	g_list_foreach( data->items, ( GFunc ) g_object_unref, NULL );
 	g_list_free( data->items );
 	g_free( data );
+	clipboard->private->primary_data = NULL;
 }
