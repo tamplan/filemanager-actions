@@ -96,6 +96,7 @@ static void          on_icon_browse( GtkButton *button, NactIActionTab *instance
 static void          on_icon_changed( GtkEntry *entry, NactIActionTab *instance );
 static gint          sort_stock_ids( gconstpointer a, gconstpointer b );
 static gchar        *strip_underscore( const gchar *text );
+static void          release_icon_combobox( NactIActionTab *instance );
 
 static GtkButton    *get_enabled_button( NactIActionTab *instance );
 static void          on_enabled_toggled( GtkToggleButton *button, NactIActionTab *instance );
@@ -172,6 +173,7 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 {
 	static const gchar *thisfn = "nact_iaction_tab_initial_load_toplevel";
 	GtkWidget *icon_widget;
+	GtkTreeModel *model;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
@@ -179,7 +181,9 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 	if( st_initialized && !st_finalized ){
 
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
-		gtk_combo_box_set_model( GTK_COMBO_BOX( icon_widget ), create_stock_icon_model());
+		model = create_stock_icon_model();
+		gtk_combo_box_set_model( GTK_COMBO_BOX( icon_widget ), model );
+		g_object_unref( model );
 		icon_combo_list_fill( GTK_COMBO_BOX_ENTRY( icon_widget ));
 	}
 }
@@ -302,6 +306,8 @@ nact_iaction_tab_dispose( NactIActionTab *instance )
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		release_icon_combobox( instance );
 	}
 }
 
@@ -878,6 +884,17 @@ strip_underscore( const gchar *text )
 	*q = '\0';
 
 	return( result );
+}
+
+static void
+release_icon_combobox( NactIActionTab *instance )
+{
+	GtkWidget *combo;
+	GtkTreeModel *model;
+
+	combo = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
+	model = gtk_combo_box_get_model( GTK_COMBO_BOX( combo ));
+	gtk_list_store_clear( GTK_LIST_STORE( model ));
 }
 
 static GtkButton *

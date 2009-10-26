@@ -1,5 +1,10 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iaction-tab.c
+	(nact_iaction_tab_initial_load_toplevel):
+	Unref model after having initialized the combobox listview.
+	(release_icon_combobox): Clear the list store in dialog dispose.
+
 	* src/nact/nact-icommand-tab.c:
 	* src/nact/nact-icommand-tab.h (nact_icommand_tab_has_label):
 	Remove unused function.
