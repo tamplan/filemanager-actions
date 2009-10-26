@@ -1,5 +1,8 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-ibackground-tab.c (setup_folders):
+	Only tries to setup folders when there is a current profile.
+
 	* src/nact/nact-iadvanced-tab.c (release_schemes_list):
 	Clear the list store on dialog dispose.
 

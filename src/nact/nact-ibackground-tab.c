@@ -517,11 +517,13 @@ setup_folders( NactIBackgroundTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 			NULL );
 
-	folders = na_object_profile_get_folders( edited );
-	for( is = folders ; is ; is = is->next ){
-		add_row( instance, listview, ( const gchar * ) is->data );
+	if( edited ){
+		folders = na_object_profile_get_folders( edited );
+		for( is = folders ; is ; is = is->next ){
+			add_row( instance, listview, ( const gchar * ) is->data );
+		}
+		na_utils_free_string_list( folders );
 	}
-	na_utils_free_string_list( folders );
 }
 
 static void
