@@ -113,7 +113,7 @@
                                         <property name="column_spacing">5</property>
                                         <child>
                                           <object class="GtkCheckButton" id="ActionTargetSelectionButton">
-                                            <property name="label" translatable="yes">Display item in selection context menu</property>
+                                            <property name="label" translatable="yes">Display item in _selection context menu</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
@@ -128,7 +128,7 @@
                                         </child>
                                         <child>
                                           <object class="GtkCheckButton" id="ActionTargetBackgroundButton">
-                                            <property name="label" translatable="yes">Display item in background folder context menu</property>
+                                            <property name="label" translatable="yes">Display item in background _folder context menu</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
@@ -194,7 +194,7 @@
                                         <property name="column_spacing">5</property>
                                         <child>
                                           <object class="GtkCheckButton" id="ActionTargetToolbarButton">
-                                            <property name="label" translatable="yes">Display item as an icon in toolbar</property>
+                                            <property name="label" translatable="yes">Display item as an icon in the _toolbar</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
@@ -1291,8 +1291,8 @@ Defining several profiles lets you have several commands, each applying with a d
             <property name="visible">True</property>
             <property name="use_preview_label">False</property>
             <property name="select_multiple">True</property>
-            <property name="local_only">False</property>
             <property name="preview_widget_active">False</property>
+            <property name="local_only">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -2745,25 +2745,25 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="label4"/>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="label4"/>
-      <widget name="ActionMenuLabelLabel"/>
       <widget name="ActionIconLabelLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="label4"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
+      <widget name="label4"/>
     </widgets>
   </object>
 </interface>

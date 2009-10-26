@@ -1,5 +1,8 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nautilus-actions-config-tool.ui:
+	Add mnemonics to target radio button labels.
+
 	* src/nact/nact-clipboard.c (get_from_primary_clipboard_callback):
 	Provides text content.
 
