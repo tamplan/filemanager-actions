@@ -1,5 +1,8 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-xml-reader.c (add_message):
+	Use XML markup to print messages embedding XML tags.
+
 	* src/nact/nact-assistant-export.ui:
 	Make the Export assistant be transient relatively to main window.
 	Make the Import assistant be transient relatively to main window.
