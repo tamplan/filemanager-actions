@@ -292,29 +292,6 @@ nact_icommand_tab_dispose( NactICommandTab *instance )
 	}
 }
 
-/**
- * A profile can only be saved if it has at least a label.
- * Returns TRUE if the label of the profile is not empty.
- */
-gboolean
-nact_icommand_tab_has_label( NactICommandTab *instance )
-{
-	gboolean has_label = FALSE;
-	GtkWidget *label_entry;
-	const gchar *label;
-
-	g_return_val_if_fail( NACT_IS_ICOMMAND_TAB( instance ), FALSE );
-
-	if( st_initialized && !st_finalized ){
-
-		label_entry = get_label_entry( instance );
-		label = gtk_entry_get_text( GTK_ENTRY( label_entry ));
-		has_label = ( g_utf8_strlen( label, -1 ) > 0 );
-	}
-
-	return( has_label );
-}
-
 static void
 on_iactions_list_column_edited( NactICommandTab *instance, NAObject *object, gchar *text, gint column )
 {

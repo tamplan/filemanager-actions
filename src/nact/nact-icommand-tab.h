@@ -66,8 +66,6 @@ void     nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance );
 void     nact_icommand_tab_all_widgets_showed( NactICommandTab *instance );
 void     nact_icommand_tab_dispose( NactICommandTab *instance );
 
-gboolean nact_icommand_tab_has_label( NactICommandTab *instance );
-
 G_END_DECLS
 
 #endif /* __NACT_ICOMMAND_TAB_H__ */

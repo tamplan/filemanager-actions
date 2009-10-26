@@ -1,5 +1,9 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icommand-tab.h (nact_icommand_tab_has_label):
+	Remove unused function.
+
 	* configure.ac: Bump version number to 2.29.2.
 
 2009-10-25 Pierre Wieser <pwieser@trychlos.org>
