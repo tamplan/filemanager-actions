@@ -1,5 +1,8 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iadvanced-tab.c (release_schemes_list):
+	Clear the list store on dialog dispose.
+
 	* src/nact/nact-iaction-tab.c
 	(nact_iaction_tab_initial_load_toplevel):
 	Unref model after having initialized the combobox listview.

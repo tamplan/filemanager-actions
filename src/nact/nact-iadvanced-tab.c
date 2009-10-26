@@ -89,6 +89,7 @@ static void          on_scheme_selection_toggled( GtkCellRendererToggle *rendere
 static gboolean      reset_schemes_list( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data );
 static void          scheme_cell_edited( NactIAdvancedTab *instance, const gchar *path_string, const gchar *text, gint column, gboolean *state, gchar **old_text );
 static void          set_action_schemes( gchar *scheme, GtkTreeModel *model );
+static void          release_schemes_list( NactIAdvancedTab *instance );
 
 GType
 nact_iadvanced_tab_get_type( void )
@@ -370,6 +371,8 @@ nact_iadvanced_tab_dispose( NactIAdvancedTab *instance )
 	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		release_schemes_list( instance );
 	}
 }
 
@@ -762,4 +765,13 @@ set_action_schemes( gchar *scheme, GtkTreeModel *model )
 				SCHEMES_DESC_COLUMN, "",
 				-1 );
 	}
+}
+
+static void
+release_schemes_list( NactIAdvancedTab *instance )
+{
+	GtkTreeModel *model;
+
+	model = get_schemes_tree_model( instance );
+	gtk_list_store_clear( GTK_LIST_STORE( model ));
 }
