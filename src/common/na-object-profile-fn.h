@@ -44,6 +44,8 @@
 
 G_BEGIN_DECLS
 
+void    na_object_profile_replace_folder_uri( NAObjectProfile *profile, const gchar *old, const gchar *new );
+
 void    na_object_profile_set_scheme( NAObjectProfile *profile, const gchar *scheme, gboolean selected );
 
 G_END_DECLS

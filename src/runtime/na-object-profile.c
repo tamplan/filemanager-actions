@@ -923,26 +923,6 @@ na_object_profile_set_schemes( NAObjectProfile *profile, GSList *schemes )
 }
 
 /**
- * na_object_profile_replace_folder_uri:
- * @profile: the #NAObjectProfile to be updated.
- * @old: the old uri.
- * @new: the new uri.
- *
- * Replaces the @old URI by the @new one.
- */
-void
-na_object_profile_replace_folder_uri( NAObjectProfile *profile, const gchar *old, const gchar *new )
-{
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-
-	if( !profile->private->dispose_has_run ){
-
-		profile->private->folders = na_utils_remove_from_string_list( profile->private->folders, old );
-		profile->private->folders = g_slist_append( profile->private->folders, ( gpointer ) new );
-	}
-}
-
-/**
  * na_object_profile_set_folders:
  * @profile: the #NAObjectProfile to be updated.
  * @folders: list of folders which apply.

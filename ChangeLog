@@ -1,5 +1,15 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-object-profile-fn.h:
+	* src/common/na-object-profile.c:
+	* src/runtime/na-object-profile-fn.h:
+	* src/runtime/na-object-profile.c:
+	na_object_profile_replace_folder_uri moved from runtime to common
+	library.
+
+	* src/nact/nact-ibackground-tab.c:
+	Implements F2, Insert and Del keyboard accelerators.
+
 	* src/nact/nact-iadvanced-tab.c (runtime_init_connect_signals):
 	* src/nact/nact-ibackground-tab.c
 	(nact_ibackground_tab_runtime_init_toplevel):

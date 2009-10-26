@@ -76,7 +76,6 @@ void             na_object_profile_set_isdir( NAObjectProfile *profile, gboolean
 void             na_object_profile_set_isfiledir( NAObjectProfile *profile, gboolean isfile, gboolean isdir );
 void             na_object_profile_set_multiple( NAObjectProfile *profile, gboolean multiple );
 void             na_object_profile_set_schemes( NAObjectProfile *profile, GSList *schemes );
-void             na_object_profile_replace_folder_uri( NAObjectProfile *profile, const gchar *old, const gchar *new );
 void             na_object_profile_set_folders( NAObjectProfile *profile, GSList *folders );
 
 gboolean         na_object_profile_is_candidate( const NAObjectProfile *profile, gint target, GList *files );
