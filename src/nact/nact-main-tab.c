@@ -34,6 +34,14 @@
 
 #include "nact-main-tab.h"
 
+/**
+ * nact_main_tab_enable_page:
+ * @window: the #NactMainWindow.
+ * @num_page: the page number, starting from zero.
+ * @enabled: whether the tab should be set sensitive or not.
+ *
+ * Set the sensitivity of the tab.
+ */
 void
 nact_main_tab_enable_page( NactMainWindow *window, gint num_page, gboolean enabled )
 {
@@ -46,4 +54,27 @@ nact_main_tab_enable_page( NactMainWindow *window, gint num_page, gboolean enabl
 
 	label = gtk_notebook_get_tab_label( notebook, page );
 	gtk_widget_set_sensitive( label, enabled );
+}
+
+/**
+ * nact_main_tab_is_page_enabled:
+ * @window: the #NactMainWindow.
+ * @num_page: the page number, starting from zero.
+ *
+ * Returns: %TRUE if the tab is sensitive, %FALSE else.
+ */
+gboolean
+nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
+{
+	gboolean is_sensitive;
+	GtkNotebook *notebook;
+	GtkWidget *page;
+
+	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
+	page = gtk_notebook_get_nth_page( notebook, num_page );
+
+	is_sensitive = GTK_WIDGET_IS_SENSITIVE( page );
+	g_debug( "nact_main_tab_is_page_enabled: num_page=%d, is_sensitive=%s", num_page, is_sensitive ? "True":"False" );
+
+	return( is_sensitive );
 }

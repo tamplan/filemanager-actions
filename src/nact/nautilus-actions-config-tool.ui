@@ -246,6 +246,7 @@
                                             <property name="xalign">1</property>
                                             <property name="label" translatable="yes">_Icon label :</property>
                                             <property name="use_underline">True</property>
+                                            <property name="mnemonic_widget">ActionIconLabelEntry</property>
                                           </object>
                                           <packing>
                                             <property name="top_attach">2</property>

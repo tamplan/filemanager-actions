@@ -64,7 +64,8 @@ enum {
 	TAB_ADVANCED
 };
 
-void nact_main_tab_enable_page( NactMainWindow *window, gint page, gboolean enabled );
+void     nact_main_tab_enable_page( NactMainWindow *window, gint page, gboolean enabled );
+gboolean nact_main_tab_is_page_enabled( NactMainWindow *window, gint page );
 
 G_END_DECLS
 

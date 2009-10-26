@@ -1,5 +1,13 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iaction-tab.c (set_label_label):
+	* src/nact/nact-icommand-tab.c (set_label_label):
+	Only set color foreground for the normal state.
+
+	* src/nact/nact-main-tab.c:
+	* src/nact/nact-main-tab.h (nact_main_tab_is_page_enabled):
+	New function.
+
 	* src/nact/nautilus-actions-config-tool.ui:
 	Add mnemonics to target radio button labels.
 

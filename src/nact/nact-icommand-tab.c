@@ -775,12 +775,14 @@ parse_parameters( NactICommandTab *instance )
 }
 
 static void
-set_label_label( NactICommandTab *instance, const gchar *color )
+set_label_label( NactICommandTab *instance, const gchar *color_str )
 {
-	GtkWidget *label = base_window_get_widget( BASE_WINDOW( instance ), "ProfileLabelLabel" );
-	/* i18n: label in front of the GtkEntry where user enters the profile label */
-	gchar *text = g_markup_printf_escaped( "<span color=\"%s\">%s</span>", color, _( "_Label :" ));
-	gtk_label_set_markup_with_mnemonic( GTK_LABEL( label ), text );
+	GtkWidget *label;
+	GdkColor color;
+
+	label = base_window_get_widget( BASE_WINDOW( instance ), "ProfileLabelLabel" );
+	gdk_color_parse( color_str, &color );
+	gtk_widget_modify_fg( label, GTK_STATE_NORMAL, &color );
 }
 
 static void
