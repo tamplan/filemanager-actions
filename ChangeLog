@@ -1,3 +1,7 @@
+2009-10-26 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Bump version number to 2.29.2.
+
 2009-10-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* NEWS: Updated.
