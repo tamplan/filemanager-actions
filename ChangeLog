@@ -1,5 +1,9 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.ui:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Remove terminating dot from radio button labels.
+
 	* src/common/na-about.c (na_about_display):
 	Do not mark authors names and emails for translating (#599520).
 
