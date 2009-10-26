@@ -49,7 +49,7 @@
 
 #include <gtk/gtk.h>
 
-#include "nact-main-window.h"
+#include "nact-window.h"
 
 G_BEGIN_DECLS
 
@@ -87,8 +87,8 @@ enum {
 
 GType          nact_tree_model_get_type( void );
 
-NactTreeModel *nact_tree_model_new( NactMainWindow *window );
-void           nact_tree_model_runtime_init_dnd( NactMainWindow *window, GtkTreeView *widget );
+NactTreeModel *nact_tree_model_new( NactWindow *window );
+void           nact_tree_model_runtime_init_dnd( NactWindow *window, GtkTreeView *widget );
 
 G_END_DECLS
 

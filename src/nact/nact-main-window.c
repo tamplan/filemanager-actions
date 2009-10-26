@@ -84,7 +84,6 @@ static void             iconditions_tab_iface_init( NactIConditionsTabInterface 
 static void             iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
 static void             imenubar_iface_init( NactIMenubarInterface *iface );
 static void             ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
-static void             iprefs_iface_init( NAIPrefsInterface *iface );
 static void             instance_init( GTypeInstance *instance, gpointer klass );
 static void             instance_dispose( GObject *application );
 static void             instance_finalize( GObject *application );
@@ -204,12 +203,6 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo iprefs_iface_info = {
-		( GInterfaceInitFunc ) iprefs_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( NACT_WINDOW_TYPE, "NactMainWindow", &info, 0 );
@@ -227,8 +220,6 @@ register_type( void )
 	g_type_add_interface_static( type, NACT_IMENUBAR_TYPE, &imenubar_iface_info );
 
 	g_type_add_interface_static( type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
-
-	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_iface_info );
 
 	return( type );
 }
@@ -358,14 +349,6 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 
 	iface->on_actions_changed = on_actions_changed;
 	iface->on_display_order_changed = on_display_order_changed;
-}
-
-static void
-iprefs_iface_init( NAIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "nact_main_window_iprefs_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void

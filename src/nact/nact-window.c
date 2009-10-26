@@ -36,6 +36,7 @@
 #include <glib/gi18n.h>
 
 #include <common/na-iio-provider.h>
+#include <common/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-iprefs.h"
@@ -68,6 +69,7 @@ static gboolean      st_debug_signal_connect = TRUE;
 static GType    register_type( void );
 static void     class_init( NactWindowClass *klass );
 static void     iprefs_iface_init( NactIPrefsInterface *iface );
+static void     iprefs_common_iface_init( NAIPrefsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
@@ -113,11 +115,19 @@ register_type( void )
 		NULL
 	};
 
+	static const GInterfaceInfo iprefs_common_iface_info = {
+		( GInterfaceInitFunc ) iprefs_common_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( BASE_WINDOW_TYPE, "NactWindow", &info, 0 );
 
 	g_type_add_interface_static( type, NACT_IPREFS_TYPE, &prefs_iface_info );
+
+	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_common_iface_info );
 
 	return( type );
 }
@@ -154,6 +164,14 @@ iprefs_iface_init( NactIPrefsInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_iprefs_window_id = v_get_iprefs_window_id;
+}
+
+static void
+iprefs_common_iface_init( NAIPrefsInterface *iface )
+{
+	static const gchar *thisfn = "nact_window_iprefs_common_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void

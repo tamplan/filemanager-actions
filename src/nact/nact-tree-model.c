@@ -75,10 +75,10 @@ struct NactTreeModelClassPrivate {
 /* private instance data
  */
 struct NactTreeModelPrivate {
-	gboolean        dispose_has_run;
-	NactMainWindow *window;
-	gchar          *drag_dest_uri;
-	GSList         *drag_items;
+	gboolean    dispose_has_run;
+	NactWindow *window;
+	gchar      *drag_dest_uri;
+	GSList     *drag_items;
 };
 
 #define MAX_XDS_ATOM_VAL_LEN			4096
@@ -296,7 +296,7 @@ instance_finalize( GObject *object )
 }
 
 NactTreeModel *
-nact_tree_model_new( NactMainWindow *window )
+nact_tree_model_new( NactWindow *window )
 {
 	GtkTreeStore  *ts_model;
 	NactTreeModel *model;
@@ -331,7 +331,7 @@ nact_tree_model_new( NactMainWindow *window )
 
 /**
  * nact_tree_model_runtime_init_dnd:
- * @window: the #NactMainWindow window.
+ * @window: the #NactWindow window.
  * @widget: the #GtkTreeView which implements this #NactTreeModel.
  *
  * Initializes the drag & drop features.
@@ -343,7 +343,7 @@ nact_tree_model_new( NactMainWindow *window )
  * - from outside world (e.g. Nautilus) to import actions
  */
 void
-nact_tree_model_runtime_init_dnd( NactMainWindow *window, GtkTreeView *widget )
+nact_tree_model_runtime_init_dnd( NactWindow *window, GtkTreeView *widget )
 {
 	NactTreeModel *model;
 
@@ -351,13 +351,13 @@ nact_tree_model_runtime_init_dnd( NactMainWindow *window, GtkTreeView *widget )
 	g_assert( NACT_IS_TREE_MODEL( model ));
 
 	nact_window_signal_connect(
-			NACT_WINDOW( window ),
+			window,
 			G_OBJECT( widget ),
 			"drag_begin",
 			G_CALLBACK( on_drag_begin ));
 
 	nact_window_signal_connect(
-			NACT_WINDOW( window ),
+			window,
 			G_OBJECT( widget ),
 			"drag_end",
 			G_CALLBACK( on_drag_end ));

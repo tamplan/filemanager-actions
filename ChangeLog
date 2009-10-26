@@ -1,5 +1,22 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix crash when running Export assistant.
+
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h
+	(nact_tree_model_new, nact_tree_model_runtime_init_dnd):
+	Takes a NactWindow as argument instead of NactMainWindow.
+
+	* src/nact/nact-iactions-list.c
+	(nact_iactions_list_initial_load, nact_iactions_list_runtime_init):
+	Updated accordingly.
+
+	* src/nact/nact-main-window.c (register_type):
+	No more implements the NAIPrefs interface (moved to NactWindow).
+
+	* src/nact/nact-window.c (register_type):
+	Implements NAIPrefs interface.
+
 	* src/nact/nact-assistant-export.ui:
 	* src/nact/nautilus-actions-config-tool.ui:
 	Remove terminating dot from radio button labels.

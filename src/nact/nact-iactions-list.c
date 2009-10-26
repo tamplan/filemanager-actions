@@ -177,7 +177,7 @@ nact_iactions_list_initial_load( NactWindow *window )
 	nact_iactions_list_set_send_selection_changed_on_fill_list( window, FALSE );
 	nact_iactions_list_set_is_filling_list( window, FALSE );
 
-	model = nact_tree_model_new( NACT_MAIN_WINDOW( window ));
+	model = nact_tree_model_new( window );
 	gtk_tree_view_set_model( GTK_TREE_VIEW( widget ), GTK_TREE_MODEL( model ));
 	gtk_tree_view_set_enable_tree_lines( GTK_TREE_VIEW( widget ), TRUE );
 	g_object_unref( model );
@@ -217,7 +217,7 @@ nact_iactions_list_runtime_init( NactWindow *window )
 	g_assert( GTK_IS_WIDGET( widget ));
 
 	nact_iactions_list_fill( window, TRUE );
-	nact_tree_model_runtime_init_dnd( NACT_MAIN_WINDOW( window ), GTK_TREE_VIEW( widget ));
+	nact_tree_model_runtime_init_dnd( window, GTK_TREE_VIEW( widget ));
 
 	/* set up selection control */
 	nact_window_signal_connect(
