@@ -1,5 +1,8 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-about.c (na_about_display):
+	Do not mark authors names and emails for translating (#599520).
+
 	* configure.ac: Bump version number to 1.12.3.
 
 2009-10-20 Pierre Wieser <pwieser@trychlos.org>
