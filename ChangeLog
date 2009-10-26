@@ -1,5 +1,8 @@
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.ui:
+	Make the Export assistant be transient relatively to main window.
+
 	Fix crash when running Export assistant.
 
 	* src/nact/nact-tree-model.c:
