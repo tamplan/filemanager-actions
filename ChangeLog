@@ -1,5 +1,7 @@
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iaction-tab.c
+	(nact_iaction_tab_runtime_init_toplevel):
 	* src/nact/nact-icommand-tab.c
 	(nact_icommand_tab_runtime_init_toplevel):
 	* src/nact/nact-iconditions-tab.c

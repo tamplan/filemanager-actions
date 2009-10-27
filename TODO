@@ -58,9 +58,6 @@
 - ui preferences: create root menu for background items
 - ui preferences: add about item for background items
 
-- nact_iconditions_tab_runtime_init_toplevel: use base_window_signal_connect
-  and in all tabs
-
 - check g_signal_emit_by_name TAB_UPDATABLE_SIGNAL_ITEM_UPDATED against
   its marshalling and against the signal definition
 

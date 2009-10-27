@@ -201,87 +201,87 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 
 	if( st_initialized && !st_finalized ){
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ),
-				instance );
+				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				IACTIONS_LIST_SIGNAL_COLUMN_EDITED,
-				G_CALLBACK( on_iactions_list_column_edited ),
-				instance );
+				G_CALLBACK( on_iactions_list_column_edited ));
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( button ),
 				"toggled",
-				G_CALLBACK( on_target_selection_toggled ),
-				instance );
+				G_CALLBACK( on_target_selection_toggled ));
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetBackgroundButton" );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( button ),
 				"toggled",
-				G_CALLBACK( on_target_background_toggled ),
-				instance );
+				G_CALLBACK( on_target_background_toggled ));
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( label_widget ),
 				"changed",
-				G_CALLBACK( on_label_changed ),
-				instance );
+				G_CALLBACK( on_label_changed ));
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetToolbarButton" );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( button ),
 				"toggled",
-				G_CALLBACK( on_target_toolbar_toggled ),
-				instance );
+				G_CALLBACK( on_target_toolbar_toggled ));
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( button ),
 				"toggled",
-				G_CALLBACK( on_toolbar_same_label_toggled ),
-				instance );
+				G_CALLBACK( on_toolbar_same_label_toggled ));
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( label_widget ),
 				"changed",
-				G_CALLBACK( on_toolbar_label_changed ),
-				instance );
+				G_CALLBACK( on_toolbar_label_changed ));
 
 		tooltip_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionTooltipEntry" );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( tooltip_widget ),
 				"changed",
-				G_CALLBACK( on_tooltip_changed ),
-				instance );
+				G_CALLBACK( on_tooltip_changed ));
 
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( GTK_BIN( icon_widget )->child ),
 				"changed",
-				G_CALLBACK( on_icon_changed ),
-				instance );
+				G_CALLBACK( on_icon_changed ));
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( button ),
 				"clicked",
-				G_CALLBACK( on_icon_browse ),
-				instance );
+				G_CALLBACK( on_icon_browse ));
 
 		enabled_button = get_enabled_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( enabled_button ),
 				"toggled",
-				G_CALLBACK( on_enabled_toggled ),
-				instance );
+				G_CALLBACK( on_enabled_toggled ));
 	}
 }
 
