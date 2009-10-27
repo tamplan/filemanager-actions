@@ -1,5 +1,9 @@
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/nautilus-actions-new.c:
+	Add new action data as arguments (target-selection, target-folders,
+	target-toolbar, toolbar-label, folders).
+
 	* src/common/na-utils.c:
 	* src/common/na-utils.c (na_utils_print_version):
 	New function.
