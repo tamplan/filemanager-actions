@@ -154,7 +154,7 @@ na_iabout_display( NAIAbout *instance )
 {
 	static const gchar *thisfn = "na_iabout_display";
 	gchar *application_name;
-	gchar *icon_name, *license_i18n;
+	gchar *icon_name, *license_i18n, *copyright;
 	GtkWindow *toplevel;
 
 	static const gchar *artists[] = {
@@ -198,14 +198,14 @@ na_iabout_display( NAIAbout *instance )
 		toplevel = v_get_toplevel( instance );
 
 		icon_name = na_iabout_get_icon_name();
-
+		copyright = na_iabout_get_copyright( FALSE );
 		license_i18n = g_strjoinv( "\n\n", license );
 
 		gtk_show_about_dialog( toplevel,
 				"artists", artists,
 				"authors", authors,
 				"comments", _( "A graphical interface to create and edit your Nautilus actions." ),
-				"copyright", _( "Copyright \xc2\xa9 2005-2007 Frederic Ruaudel <grumz@grumz.net>\nCopyright \xc2\xa9 2009 Pierre Wieser <pwieser@trychlos.org>" ),
+				"copyright", copyright,
 				"documenters", documenters,
 				"license", license_i18n,
 				"logo-icon-name", icon_name,
@@ -218,6 +218,7 @@ na_iabout_display( NAIAbout *instance )
 
 		g_free( application_name );
 		g_free( license_i18n );
+		g_free( copyright );
 		g_free( icon_name );
 	}
 }
@@ -225,10 +226,35 @@ na_iabout_display( NAIAbout *instance )
 /**
  * na_iabout_get_icon_name:
  *
- * Returns the name of the default icon for the application.
+ * Returns: the name of the default icon for the application, as a newly
+ * allocated string which should be g_free() by the caller.
  */
 gchar *
 na_iabout_get_icon_name( void )
 {
 	return( g_strdup( PACKAGE ));
+}
+
+/**
+ * na_iabout_get_copyright:
+ * @console: whether the string is to be printed on a console.
+ *
+ * Returns: the copyright string, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+na_iabout_get_copyright( gboolean console )
+{
+	gchar *copyright;
+	gchar *symbol;
+
+	symbol = g_strdup( console ? "(C)" : "\xc2\xa9");
+
+	copyright = g_strdup_printf(
+			_( "Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+				"Copyright %s 2009 Pierre Wieser <pwieser@trychlos.org>" ), symbol, symbol );
+
+	g_free( symbol );
+
+	return( copyright );
 }

@@ -1,5 +1,12 @@
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/runtime/na-iabout.c:
+	* src/runtime/na-iabout.h (na_iabout_get_copyright):
+	New function.
+
+	* src/utils/nautilus-actions-new.c:
+	Add --version command-line argument.
+
 	* src/nact/nact-ibackground-tab.c (insert_new_row):
 	Optimizes because the list is sorted on uris.
 

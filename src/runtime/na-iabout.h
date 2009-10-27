@@ -83,6 +83,7 @@ GType  na_iabout_get_type( void );
 void   na_iabout_display( NAIAbout *instance );
 
 gchar *na_iabout_get_icon_name( void );
+gchar *na_iabout_get_copyright( gboolean console );
 
 G_END_DECLS
 

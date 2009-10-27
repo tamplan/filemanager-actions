@@ -36,6 +36,7 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
+#include <runtime/na-iabout.h>
 #include <runtime/na-gconf-provider.h>
 #include <runtime/na-iio-provider.h>
 
@@ -60,34 +61,58 @@ static gboolean   accept_multiple = FALSE;
 static gchar    **schemes_array   = NULL;
 static gchar     *output_dir      = NULL;
 static gboolean   output_gconf    = FALSE;
+static gboolean   version         = FALSE;
 
 static GOptionEntry entries[] = {
 
-	{ "label"                , 'l', 0, G_OPTION_ARG_STRING      , &label          ,	N_("The label of the menu item (mandatory)"), N_("LABEL") },
-	{ "tooltip"              , 't', 0, G_OPTION_ARG_STRING      , &tooltip        , N_("The tooltip of the menu item"), N_("TOOLTIP") },
-	{ "icon"                 , 'i', 0, G_OPTION_ARG_STRING      , &icon           , N_("The icon of the menu item (filename or GTK stock ID)"), N_("ICON") },
-	{ "enabled"              , 'e', 0, G_OPTION_ARG_NONE        , &enabled        , N_("Whether the action is enabled"), NULL },
-	{ "command"              , 'c', 0, G_OPTION_ARG_FILENAME    , &command        , N_("The path of the command"), N_("PATH") },
-	{ "parameters"           , 'p', 0, G_OPTION_ARG_STRING      , &parameters     , N_("The parameters of the command"), N_("PARAMS") },
-	{ "match"                , 'm', 0, G_OPTION_ARG_STRING_ARRAY, &basenames_array, N_("A pattern to match selected files against. May include wildcards (* or ?) (you must set one option for each pattern you need)"), N_("EXPR") },
-	{ "match-case"           , 'C', 0, G_OPTION_ARG_NONE        , &matchcase      , N_("The path of the command"), N_("PATH") },
-	{ "mimetypes"            , 'T', 0, G_OPTION_ARG_STRING_ARRAY, &mimetypes_array, N_("A pattern to match selected files' mimetype against. May include wildcards (* or ?) (you must set one option for each pattern you need)"), N_("EXPR") },
-	{ "accept-files"         , 'f', 0, G_OPTION_ARG_NONE        , &isfile         , N_("Set it if the selection must only contain files"), NULL },
-	{ "accept-dirs"          , 'd', 0, G_OPTION_ARG_NONE        , &isdir          , N_("Set it if the selection must only contain folders. Specify both '--isfile' and '--isdir' options is selection can contain both types of items"), NULL },
-	{ "accept-multiple-files", 'M', 0, G_OPTION_ARG_NONE        , &accept_multiple, N_("Set it if the selection can have several items"), NULL },
-	{ "scheme"               , 's', 0, G_OPTION_ARG_STRING_ARRAY, &schemes_array  , N_("A valid GVFS scheme where the selected files should be located (you must set one option for each scheme you need)"), N_("SCHEME") },
+	{ "label"                , 'l', 0, G_OPTION_ARG_STRING      , &label,
+			N_("The label of the menu item (mandatory)"), N_("<STRING>") },
+	{ "tooltip"              , 't', 0, G_OPTION_ARG_STRING      , &tooltip,
+			N_("The tooltip of the menu item"), N_("<STRING>") },
+	{ "icon"                 , 'i', 0, G_OPTION_ARG_STRING      , &icon,
+			N_("The icon of the menu item (filename or GTK stock ID)"), N_("<PATH|NAME>") },
+	{ "enabled"              , 'e', 0, G_OPTION_ARG_NONE        , &enabled,
+			N_("Whether the action is enabled"), NULL },
+	{ "command"              , 'c', 0, G_OPTION_ARG_FILENAME    , &command,
+			N_("The path of the command"), N_("<PATH>") },
+	{ "parameters"           , 'p', 0, G_OPTION_ARG_STRING      , &parameters,
+			N_("The parameters of the command"), N_("<PARAMETERS>") },
+	{ "match"                , 'm', 0, G_OPTION_ARG_STRING_ARRAY, &basenames_array,
+			N_("A pattern to match selected files against. May include wildcards (* or ?) (you must set one option for each pattern you need)"), N_("EXPR") },
+	{ "match-case"           , 'C', 0, G_OPTION_ARG_NONE        , &matchcase,
+			N_("Set it if the previous patterns are case sensitive"), NULL },
+	{ "mimetypes"            , 'T', 0, G_OPTION_ARG_STRING_ARRAY, &mimetypes_array,
+			N_("A pattern to match selected files' mimetype against. May include wildcards (* or ?) (you must set one option for each pattern you need)"), N_("EXPR") },
+	{ "accept-files"         , 'f', 0, G_OPTION_ARG_NONE        , &isfile,
+			N_("Set it if the selection must only contain files"), NULL },
+	{ "accept-dirs"          , 'd', 0, G_OPTION_ARG_NONE        , &isdir,
+			N_("Set it if the selection must only contain folders. Specify both '--isfile' and '--isdir' options is selection can contain both types of items"), NULL },
+	{ "accept-multiple-files", 'M', 0, G_OPTION_ARG_NONE        , &accept_multiple,
+			N_("Set it if the selection can have several items"), NULL },
+	{ "scheme"               , 's', 0, G_OPTION_ARG_STRING_ARRAY, &schemes_array,
+			N_("A valid GIO scheme where the selected files should be located (you must set one option for each scheme you need)"), N_("SCHEME") },
 	{ NULL }
 };
 
 static GOptionEntry output_entries[] = {
 
-	{ "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE        , &output_gconf   , N_("Directly import the newly created action in GConf configuration"), NULL },
-	{ "output-dir"           , 'o', 0, G_OPTION_ARG_FILENAME    , &output_dir     , N_("The folder where to write the new action as a GConf dump output [default: stdout]"), N_("DIR") },
+	{ "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE        , &output_gconf,
+			N_("Directly import the newly created action in GConf configuration"), NULL },
+	{ "output-dir"           , 'o', 0, G_OPTION_ARG_FILENAME    , &output_dir,
+			N_("The folder where to write the new action as a GConf dump output [default: stdout]"), N_("DIR") },
+	{ NULL }
+};
+
+static GOptionEntry misc_entries[] = {
+
+	{ "version"              , 'v', 0, G_OPTION_ARG_NONE        , &version,
+			N_("Output the version number"), NULL },
 	{ NULL }
 };
 
 static GOptionContext *init_options( void );
 static NAObjectAction *get_action_from_cmdline( void );
+static void            print_version( void );
 static gboolean        write_to_gconf( NAObjectAction *action, GSList **msg );
 static void            exit_with_usage( void );
 
@@ -118,6 +143,11 @@ main( int argc, char** argv )
 		g_printerr( _("Syntax error: %s\n" ), error->message );
 		g_error_free (error);
 		exit_with_usage();
+	}
+
+	if( version ){
+		print_version();
+		exit( status );
 	}
 
 	if( !label || !g_utf8_strlen( label, -1 )){
@@ -170,6 +200,7 @@ init_options( void )
 	GOptionContext *context;
 	gchar* description;
 	GOptionGroup *output_group;
+	GOptionGroup *misc_group;
 
 	context = g_option_context_new( _( "Define a new action.\n\n"
 			"  The created action defaults to be written to stdout.\n"
@@ -197,10 +228,13 @@ init_options( void )
 
 	output_group = g_option_group_new(
 			"output", _( "Output of the program" ), _( "Choose where the program creates the action" ), NULL, NULL );
-
 	g_option_group_add_entries( output_group, output_entries );
-
 	g_option_context_add_group( context, output_group );
+
+	misc_group = g_option_group_new(
+			"misc", _( "Miscellaneous options" ), _( "Miscellaneous options" ), NULL, NULL );
+	g_option_group_add_entries( misc_group, misc_entries );
+	g_option_context_add_group( context, misc_group );
 
 	return( context );
 }
@@ -266,6 +300,29 @@ get_action_from_cmdline( void )
 	g_slist_free( schemes );
 
 	return( action );
+}
+
+/*
+ * nautilus-actions-new (Nautilus-Actions) v 2.29.1
+ * Copyright (C) 2005-2007 Frederic Ruaudel
+ * Copyright (C) 2009 Pierre Wieser
+ * Nautilus-Actions is free software, licensed under GPLv2 or later.
+ */
+static void
+print_version( void )
+{
+	gchar *copyright;
+
+	g_print( "\n" );
+	g_print( "%s (%s) v %s\n", g_get_prgname(), PACKAGE_NAME, PACKAGE_VERSION );
+	copyright = na_iabout_get_copyright( TRUE );
+	g_print( "%s\n", copyright );
+	g_free( copyright );
+
+	g_print( "%s is free software, and is provided without any warranty. You may\n", PACKAGE_NAME );
+	g_print( "redistribute copies of %s under the terms of the GNU General Public\n", PACKAGE_NAME );
+	g_print( "License (see COPYING).\n" );
+	g_print( "\n" );
 }
 
 /*
