@@ -81,9 +81,3 @@
   b. to export what we see)
 
 - export: add a overwrite page: what to do if file already exists ?
-
-- For entry fields, one should not connect to "changed" signal, as it is
-  triggered for each and envery key pressed (or just to check for emptyness)
-  instead connect to focus-in-event and focus-out-event for each field let us
-  take an image of field before and after modification
-  if field modified, send the item-updated signal and record into the undo manager
