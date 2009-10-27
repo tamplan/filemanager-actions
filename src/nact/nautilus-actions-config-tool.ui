@@ -1919,6 +1919,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
     <property name="title" translatable="yes">Nautilus Actions Preferences</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
+    <property name="has_separator">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
@@ -2746,25 +2747,25 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabelLabel"/>
-      <widget name="ActionMenuLabelLabel"/>
       <widget name="label4"/>
-      <widget name="ActionTooltipLabel"/>
       <widget name="ActionIconLabel"/>
+      <widget name="ActionTooltipLabel"/>
       <widget name="label4"/>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionIconLabelLabel"/>
     </widgets>
   </object>
 </interface>

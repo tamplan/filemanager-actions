@@ -1,5 +1,8 @@
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nautilus-actions-config-tool.ui:
+	Remove separator from Preferences dialog.
+
 	* src/utils/nautilus-actions-new.c:
 	Add new action data as arguments (target-selection, target-folders,
 	target-toolbar, toolbar-label, folders).
