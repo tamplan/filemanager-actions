@@ -67,6 +67,11 @@ gchar   *na_utils_remove_last_level_from_path( const gchar *path );
 gboolean na_utils_is_writable_dir( const gchar *uri );
 gboolean na_utils_exist_file( const gchar *uri );
 
+/*
+ * misc
+ */
+void     na_utils_print_version( void );
+
 G_END_DECLS
 
 #endif /* __NA_COMMON_UTILS_H__ */

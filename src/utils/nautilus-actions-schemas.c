@@ -46,12 +46,20 @@
 /*static gchar     *output_fname = NULL;
 static gboolean   output_gconf = FALSE;*/
 static gboolean   output_stdout = FALSE;
+static gboolean   version       = FALSE;
 
 static GOptionEntry entries[] = {
 
 	/*{ "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE    , &output_gconf   , N_("Writes the Nautilus Actions schema in GConf"), NULL },
 	{ "output-filename"      , 'o', 0, G_OPTION_ARG_FILENAME, &output_fname   , N_("The file where to write the GConf schema ('-' for stdout)"), N_("FILENAME") },*/
 	{ "stdout", 's', 0, G_OPTION_ARG_NONE, &output_stdout, N_("Output the schema on stdout"), NULL },
+	{ NULL }
+};
+
+static GOptionEntry misc_entries[] = {
+
+	{ "version"              , 'v', 0, G_OPTION_ARG_NONE        , &version,
+			N_("Output the version number"), NULL },
 	{ NULL }
 };
 
@@ -86,6 +94,11 @@ main( int argc, char** argv )
 		g_printerr( _("Syntax error: %s\n" ), error->message );
 		g_error_free (error);
 		exit_with_usage();
+	}
+
+	if( version ){
+		na_utils_print_version();
+		exit( status );
 	}
 
 	/*if( output_gconf && output_fname ){
@@ -127,6 +140,7 @@ init_options( void )
 {
 	GOptionContext *context;
 	gchar *description;
+	GOptionGroup *misc_group;
 
 	context = g_option_context_new( _( "Output the Nautilus Actions GConf schema on stdout." ));
 			/*"  The schema can be written to stdout.\n"
@@ -151,6 +165,11 @@ init_options( void )
 	g_option_context_set_description( context, description );
 
 	g_free( description );
+
+	misc_group = g_option_group_new(
+			"misc", _( "Miscellaneous options" ), _( "Miscellaneous options" ), NULL, NULL );
+	g_option_group_add_entries( misc_group, misc_entries );
+	g_option_context_add_group( context, misc_group );
 
 	return( context );
 }

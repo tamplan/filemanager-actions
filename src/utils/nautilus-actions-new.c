@@ -36,7 +36,6 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
-#include <runtime/na-iabout.h>
 #include <runtime/na-gconf-provider.h>
 #include <runtime/na-iio-provider.h>
 
@@ -112,7 +111,6 @@ static GOptionEntry misc_entries[] = {
 
 static GOptionContext *init_options( void );
 static NAObjectAction *get_action_from_cmdline( void );
-static void            print_version( void );
 static gboolean        write_to_gconf( NAObjectAction *action, GSList **msg );
 static void            exit_with_usage( void );
 
@@ -146,7 +144,7 @@ main( int argc, char** argv )
 	}
 
 	if( version ){
-		print_version();
+		na_utils_print_version();
 		exit( status );
 	}
 
@@ -300,29 +298,6 @@ get_action_from_cmdline( void )
 	g_slist_free( schemes );
 
 	return( action );
-}
-
-/*
- * nautilus-actions-new (Nautilus-Actions) v 2.29.1
- * Copyright (C) 2005-2007 Frederic Ruaudel
- * Copyright (C) 2009 Pierre Wieser
- * Nautilus-Actions is free software, licensed under GPLv2 or later.
- */
-static void
-print_version( void )
-{
-	gchar *copyright;
-
-	g_print( "\n" );
-	g_print( "%s (%s) v %s\n", g_get_prgname(), PACKAGE_NAME, PACKAGE_VERSION );
-	copyright = na_iabout_get_copyright( TRUE );
-	g_print( "%s\n", copyright );
-	g_free( copyright );
-
-	g_print( "%s is free software, and is provided without any warranty. You may\n", PACKAGE_NAME );
-	g_print( "redistribute copies of %s under the terms of the GNU General Public\n", PACKAGE_NAME );
-	g_print( "License (see COPYING).\n" );
-	g_print( "\n" );
 }
 
 /*

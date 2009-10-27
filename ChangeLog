@@ -1,5 +1,13 @@
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-utils.c:
+	* src/common/na-utils.c (na_utils_print_version):
+	New function.
+
+	* src/utils/nautilus-actions-new.c:
+	* src/utils/nautilus-actions-schemas.c:
+	Make use of na_utils_print_version() new function.
+
 	* src/runtime/na-iabout.c:
 	* src/runtime/na-iabout.h (na_iabout_get_copyright):
 	New function.
