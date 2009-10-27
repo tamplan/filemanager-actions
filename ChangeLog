@@ -2,7 +2,8 @@
 
 	* src/nact/nautilus-actions-config-tool.ui:
 	Remove separator from Preferences dialog.
-	Add plural mark to a label.
+	Add plural mark to a label in Runtime tab.
+	Fix a typo in Import tab.
 
 	* src/utils/nautilus-actions-new.c:
 	Add new action data as arguments (target-selection, target-folders,
