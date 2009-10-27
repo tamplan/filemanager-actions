@@ -1,5 +1,8 @@
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-ibackground-tab.c (insert_new_row):
+	Optimizes because the list is sorted on uris.
+
 	* src/nact/nact-iadvanced-tab.c:
 	Implements F2, Insert and Del keyboard accelerators.
 

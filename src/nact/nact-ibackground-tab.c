@@ -395,50 +395,31 @@ inline_edition( NactIBackgroundTab *instance )
 	g_list_free( listrows );
 }
 
+/*
+ * the list is sorted on uri : it is no worth to try to insert a row
+ * before currently selected item...
+ */
 static void
 insert_new_row( NactIBackgroundTab *instance )
 {
 	GtkTreeView *listview;
 	GtkTreeModel *model;
-	GtkTreeSelection *selection;
-	GList *listrows;
-	GtkTreePath *path;
-	GtkTreeIter iter, sibling;
-	gboolean inserted;
+	GtkTreeIter iter;
 	const gchar *uri = "file:///";
+	GtkTreePath *path;
+	GtkTreeViewColumn *column;
 
 	listview = get_folders_treeview( instance );
 	model = gtk_tree_view_get_model( listview );
-	selection = gtk_tree_view_get_selection( listview );
-	listrows = gtk_tree_selection_get_selected_rows( selection, NULL );
-	inserted = FALSE;
 
-	if( g_list_length( listrows ) == 1 ){
-		path = ( GtkTreePath * ) listrows->data;
-		if( gtk_tree_model_get_iter( model, &sibling, path )){
-			/* though the path of sibling is correct, the new row is always
-			 * inserted at path=0 !
-			 */
-			/*g_debug( "insert_new_row: sibling=%s", gtk_tree_model_get_string_from_iter( &sibling ));*/
-			gtk_list_store_insert_before( GTK_LIST_STORE( model ), &iter, &sibling );
-			inserted = TRUE;
-		}
-	}
-
-	if( !inserted ){
-		gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
-	}
-
-	path = gtk_tree_model_get_path( model, &iter );
-	gtk_tree_view_set_cursor( listview, path, NULL, FALSE );
+	gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
 	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, BACKGROUND_URI_COLUMN, uri, -1 );
 	add_uri_to_folders( instance, uri );
+
+	path = gtk_tree_model_get_path( model, &iter );
+	column = gtk_tree_view_get_column( listview, BACKGROUND_URI_COLUMN );
+	gtk_tree_view_set_cursor( listview, path, column, TRUE );
 	gtk_tree_path_free( path );
-
-	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
-	g_list_free( listrows );
-
-	inline_edition( instance );
 }
 
 static void
