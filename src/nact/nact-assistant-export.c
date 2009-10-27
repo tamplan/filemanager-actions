@@ -344,9 +344,12 @@ on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_on_initial_load_dialog";
 	GtkAssistant *assistant;
+	NactApplication *application;
+	NAPivot *pivot;
+	gboolean esc_quit, esc_confirm;
 
 	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
-	g_assert( NACT_IS_ASSISTANT_EXPORT( dialog ));
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( dialog ));
 
 	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
 
@@ -357,8 +360,12 @@ on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data )
 	assist_initial_load_confirm( dialog, assistant );
 	assist_initial_load_exportdone( dialog, assistant );
 
-	base_assistant_set_cancel_on_esc( BASE_ASSISTANT( dialog ), TRUE );
-	base_assistant_set_warn_on_esc( BASE_ASSISTANT( dialog ), TRUE );
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
+	pivot = nact_application_get_pivot( application );
+	esc_quit = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_ASSIST_ESC_QUIT, TRUE );
+	base_assistant_set_cancel_on_esc( BASE_ASSISTANT( dialog ), esc_quit );
+	esc_confirm = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_ASSIST_ESC_CONFIRM, TRUE );
+	base_assistant_set_warn_on_esc( BASE_ASSISTANT( dialog ), esc_confirm );
 }
 
 static void

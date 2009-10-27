@@ -49,7 +49,7 @@ struct NactPreferencesEditorClassPrivate {
 /* private instance data
  */
 struct NactPreferencesEditorPrivate {
-	gboolean         dispose_has_run;
+	gboolean dispose_has_run;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -67,6 +67,7 @@ static gchar   *base_get_dialog_name( BaseWindow *window );
 static void     on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data );
+static void     on_esc_quit_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void     on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     save_preferences( NactPreferencesEditor *editor );
@@ -271,6 +272,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	gboolean relabel;
 	gint import_mode, export_format;
 	GtkWidget *button;
+	gboolean esc_quit, esc_confirm;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
@@ -317,6 +319,21 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, FALSE );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "EscCloseButton" );
+
+	base_window_signal_connect(
+			BASE_WINDOW( editor ),
+			G_OBJECT( button ),
+			"toggled",
+			G_CALLBACK( on_esc_quit_toggled ));
+
+	esc_quit = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_ASSIST_ESC_QUIT, TRUE );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), esc_quit );
+
+	esc_confirm = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_ASSIST_ESC_CONFIRM, TRUE );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "EscConfirmButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), esc_confirm );
 
 	/* third tab: import tool
 	 */
@@ -389,6 +406,17 @@ on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data )
 }
 
 static void
+on_esc_quit_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+{
+	gboolean is_active;
+	GtkWidget *toggle;
+
+	is_active = gtk_toggle_button_get_active( button );
+	toggle = base_window_get_widget( BASE_WINDOW( editor ), "EscConfirmButton" );
+	gtk_widget_set_sensitive( toggle, is_active );
+}
+
+static void
 on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
@@ -414,6 +442,7 @@ save_preferences( NactPreferencesEditor *editor )
 	gboolean enabled;
 	gboolean relabel;
 	gint import_mode, export_format;
+	gboolean esc_quit, esc_confirm;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	pivot = nact_application_get_pivot( application );
@@ -458,6 +487,14 @@ save_preferences( NactPreferencesEditor *editor )
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	na_iprefs_write_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, relabel );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "EscCloseButton" );
+	esc_quit = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	na_iprefs_write_bool( NA_IPREFS( pivot ), IPREFS_ASSIST_ESC_QUIT, esc_quit );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "EscConfirmButton" );
+	esc_confirm = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	na_iprefs_write_bool( NA_IPREFS( pivot ), IPREFS_ASSIST_ESC_CONFIRM, esc_confirm );
 
 	/* third tab: import tool
 	 */

@@ -55,8 +55,6 @@
 
 - undo manager (at least Ctrl-Z)
 
-- ui preferences: escape quit the assistant 
-- ui preferences: warn on escape before quitting
 - ui preferences: create root menu for background items
 - ui preferences: add about item for background items
 
@@ -76,8 +74,6 @@
 - IActionTab: check_label has became useless since validity is global
   to the action - remove, or extend to each field which can led to
   unvalidity
-
-- action-new: add targets, folders, toolbar label
 
 - data factory: put together each property of each elementary data (id, label, etc.)
 

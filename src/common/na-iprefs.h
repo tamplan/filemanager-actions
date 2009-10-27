@@ -52,6 +52,9 @@ G_BEGIN_DECLS
 #define IPREFS_IMPORT_ACTIONS_IMPORT_MODE	"import-mode"
 #define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
 
+#define IPREFS_ASSIST_ESC_QUIT				"assistant-esc-quit"
+#define IPREFS_ASSIST_ESC_CONFIRM			"assistant-esc-confirm"
+
 /* import mode
  */
 enum {

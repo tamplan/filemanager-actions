@@ -1,5 +1,19 @@
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/nautilus-actions.schemas.in:
+	* src/common/na-iprefs.h:
+	Define two new preferences: quit_on_esc, confirm_when_quit_on_esc.
+
+	* src/nact/nact-assistant-export.c (on_initial_load_dialog):
+	* src/nact/nact-assistant-import.c (on_initial_load_dialog):
+	Read the user preferences from GConf.
+
+	* src/nact/nact-preferences-editor.c:
+	Edit the two new user preferences.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Add a frame to edit the two new user preferences.
+
 	* src/nact/nautilus-actions-config-tool.ui:
 	Remove separator from Preferences dialog.
 	Add plural mark to a label in Runtime tab.

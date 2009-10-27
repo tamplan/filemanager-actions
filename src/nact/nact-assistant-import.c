@@ -106,6 +106,7 @@ static NactAssistantImport *assist_new( BaseWindow *parent );
 static gchar   *window_get_iprefs_window_id( BaseWindow *window );
 static gchar   *window_get_dialog_name( BaseWindow *dialog );
 
+static void     on_initial_load_dialog( NactAssistantImport *dialog, gpointer user_data );
 static void     on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data );
 static void     runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant );
 static void     runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant );
@@ -204,6 +205,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
 			G_OBJECT( instance ),
+			BASE_WINDOW_SIGNAL_INITIAL_LOAD,
+			G_CALLBACK( on_initial_load_dialog ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
 			BASE_WINDOW_SIGNAL_RUNTIME_INIT,
 			G_CALLBACK( on_runtime_init_dialog ));
 }
@@ -285,6 +292,25 @@ window_get_dialog_name( BaseWindow *dialog )
 }
 
 static void
+on_initial_load_dialog( NactAssistantImport *dialog, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_assistant_import_on_initial_load_dialog";
+	NactApplication *application;
+	NAPivot *pivot;
+	gboolean esc_quit, esc_confirm;
+
+	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
+	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( dialog ));
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
+	pivot = nact_application_get_pivot( application );
+	esc_quit = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_ASSIST_ESC_QUIT, TRUE );
+	base_assistant_set_cancel_on_esc( BASE_ASSISTANT( dialog ), esc_quit );
+	esc_confirm = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_ASSIST_ESC_CONFIRM, TRUE );
+	base_assistant_set_warn_on_esc( BASE_ASSISTANT( dialog ), esc_confirm );
+}
+
+static void
 on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_import_on_runtime_init_dialog";
@@ -294,9 +320,6 @@ on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data )
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
-
-		base_assistant_set_cancel_on_esc( BASE_ASSISTANT( dialog ), TRUE );
-		base_assistant_set_warn_on_esc( BASE_ASSISTANT( dialog ), TRUE );
 
 		assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
 
