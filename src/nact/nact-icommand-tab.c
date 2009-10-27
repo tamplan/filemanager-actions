@@ -213,51 +213,51 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 	if( st_initialized && !st_finalized ){
 
 		label_entry = get_label_entry( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( label_entry ),
 				"changed",
-				G_CALLBACK( on_label_changed ),
-				instance );
+				G_CALLBACK( on_label_changed ));
 
 		path_entry = get_path_entry( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( path_entry ),
 				"changed",
-				G_CALLBACK( on_path_changed ),
-				instance );
+				G_CALLBACK( on_path_changed ));
 
 		path_button = get_path_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( path_button ),
 				"clicked",
-				G_CALLBACK( on_path_browse ),
-				instance );
+				G_CALLBACK( on_path_browse ));
 
 		parameters_entry = get_parameters_entry( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( parameters_entry ),
 				"changed",
-				G_CALLBACK( on_parameters_changed ),
-				instance );
+				G_CALLBACK( on_parameters_changed ));
 
 		legend_button = get_legend_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( legend_button ),
 				"clicked",
-				G_CALLBACK( on_legend_clicked ),
-				instance );
+				G_CALLBACK( on_legend_clicked ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ),
-				instance );
+				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				IACTIONS_LIST_SIGNAL_COLUMN_EDITED,
-				G_CALLBACK( on_iactions_list_column_edited ),
-				instance );
+				G_CALLBACK( on_iactions_list_column_edited ));
 	}
 }
 

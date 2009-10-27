@@ -169,65 +169,65 @@ nact_iconditions_tab_runtime_init_toplevel( NactIConditionsTab *instance )
 	if( st_initialized && !st_finalized ){
 
 		basenames_widget = get_basenames_entry( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( basenames_widget ),
 				"changed",
-				G_CALLBACK( on_basenames_changed ),
-				instance );
+				G_CALLBACK( on_basenames_changed ));
 
 		matchcase_button = get_matchcase_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( matchcase_button ),
 				"toggled",
-				G_CALLBACK( on_matchcase_toggled ),
-				instance );
+				G_CALLBACK( on_matchcase_toggled ));
 
 		mimetypes_widget = get_mimetypes_entry( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( mimetypes_widget ),
 				"changed",
-				G_CALLBACK( on_mimetypes_changed ),
-				instance );
+				G_CALLBACK( on_mimetypes_changed ));
 
 		isfile_button = get_isfile_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( isfile_button ),
 				"toggled",
-				G_CALLBACK( on_isfiledir_toggled ),
-				instance );
+				G_CALLBACK( on_isfiledir_toggled ));
 
 		isdir_button = get_isdir_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( isdir_button ),
 				"toggled",
-				G_CALLBACK( on_isfiledir_toggled ),
-				instance );
+				G_CALLBACK( on_isfiledir_toggled ));
 
 		both_button = get_both_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( both_button ),
 				"toggled",
-				G_CALLBACK( on_isfiledir_toggled ),
-				instance );
+				G_CALLBACK( on_isfiledir_toggled ));
 
 		multiple_button = get_multiple_button( instance );
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( multiple_button ),
 				"toggled",
-				G_CALLBACK( on_multiple_toggled ),
-				instance );
+				G_CALLBACK( on_multiple_toggled ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ),
-				instance );
+				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		g_signal_connect(
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-				G_CALLBACK( on_tab_updatable_enable_tab ),
-				instance );
+				G_CALLBACK( on_tab_updatable_enable_tab ));
 	}
 }
 

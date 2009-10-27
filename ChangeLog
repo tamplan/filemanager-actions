@@ -1,5 +1,11 @@
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-icommand-tab.c
+	(nact_icommand_tab_runtime_init_toplevel):
+	* src/nact/nact-iconditions-tab.c
+	(nact_iconditions_tab_runtime_init_toplevel):
+	Replace g_signal_connect with base_window_signal_connect.
+
 	* data/nautilus-actions.schemas.in:
 	* src/common/na-iprefs.h:
 	Define two new preferences: quit_on_esc, confirm_when_quit_on_esc.
