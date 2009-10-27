@@ -2051,7 +2051,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                                 </child>
                                 <child>
                                   <object class="GtkCheckButton" id="AddAboutButton">
-                                    <property name="label" translatable="yes">Add an 'A_bout Nautilus Actions' item in the Nautilus context menu</property>
+                                    <property name="label" translatable="yes">Add an 'A_bout Nautilus Actions' item in the Nautilus context menus</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
