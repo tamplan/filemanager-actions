@@ -27,6 +27,10 @@
 - open a bug against glib for g_utf8_collate_key_for_filename()
   (see the 26 exported actions, and the screenshot of Nautilus view)
 
+- bug: Nautilus doesn't display the actions in the order of the provided GSList
+  in its context menu (seems as if a cache would keep the actions which were
+  already here the previous time - to be confirmed)
+
 - open a bug against gnome-packagekit: keep the last window size and position
 
 - gtk_tree_path_up returns TRUE even if there is no parent
@@ -34,7 +38,7 @@
   function nact-tree-model.c::add_parent
   recreate a small code which reproduces this bug and open in bugzilla
 
-- lot of work to do on gconf editor
+- gconf editor: one should be able to refresh the hierarchy (F5 ?)
 
 - for each toolbar, let the user choose which buttons are displayed
 
@@ -70,11 +74,16 @@
   unvalidity
 
 - data factory: put together each property of each elementary data (id, label, etc.)
+  along with their methods
 
 - AssistantExport exports what it finds in Pivot, but should take its origin
   from current IActionsList (a. to have same perimeter than drag and drop and
   b. to export what we see)
 
-- AssistantExport: report
-  str->action = NA_OBJECT_ACTION( na_iduplicable_get_origin( 	NA_IDUPLICABLE( ia->data )));
-  to gnome-2-28
+- export: add a overwrite page: what to do if file already exists ?
+
+- For entry fields, one should not connect to "changed" signal, as it is
+  triggered for each and envery key pressed (or just to check for emptyness)
+  instead connect to focus-in-event and focus-out-event for each field let us
+  take an image of field before and after modification
+  if field modified, send the item-updated signal and record into the undo manager
