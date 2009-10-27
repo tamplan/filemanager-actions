@@ -58,9 +58,6 @@
 - ui preferences: create root menu for background items
 - ui preferences: add about item for background items
 
-- check g_signal_emit_by_name TAB_UPDATABLE_SIGNAL_ITEM_UPDATED against
-  its marshalling and against the signal definition
-
 - have a single place where a schema is written
   (see src/utils/nautilus-actions-schemas.c)
   more: have a single place where the schema is _described_

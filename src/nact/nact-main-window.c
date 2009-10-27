@@ -55,6 +55,7 @@
 #include "nact-iadvanced-tab.h"
 #include "nact-main-tab.h"
 #include "nact-main-menubar.h"
+#include "nact-marshal.h"
 #include "nact-main-window.h"
 
 /* private class data
@@ -367,10 +368,11 @@ class_init( NactMainWindowClass *klass )
 			0,					/* no default handler */
 			NULL,
 			NULL,
-			g_cclosure_marshal_VOID__POINTER,
+			nact_marshal_VOID__POINTER_BOOLEAN,
 			G_TYPE_NONE,
-			1,
-			G_TYPE_POINTER );
+			2,
+			G_TYPE_POINTER,
+			G_TYPE_BOOLEAN );
 
 	/**
 	 * nact-tab-updatable-enable-tab:

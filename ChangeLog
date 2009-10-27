@@ -1,5 +1,8 @@
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c (class_init):
+	Make use of actual marshaller with two arguments.
+
 	* src/nact/nact-iaction-tab.c
 	(nact_iaction_tab_runtime_init_toplevel):
 	* src/nact/nact-icommand-tab.c

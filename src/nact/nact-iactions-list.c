@@ -2172,8 +2172,9 @@ on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object, gbo
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 
-	g_debug( "%s: instance=%p, object=%p (%s)", thisfn,
-			( void * ) instance, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_debug( "%s: instance=%p, object=%p (%s), force_display=%s", thisfn,
+			( void * ) instance, ( void * ) object, G_OBJECT_TYPE_NAME( object ),
+			force_display ? "True":"False" );
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 	g_return_if_fail( NA_IS_OBJECT( object ));
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
