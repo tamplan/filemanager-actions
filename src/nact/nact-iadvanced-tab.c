@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 #include <string.h>
 
@@ -72,6 +73,11 @@ static void          runtime_init_setup_values( NactIAdvancedTab *instance, GtkT
 static void          on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selected );
 static void          on_tab_updatable_enable_tab( NactIAdvancedTab *instance, NAObjectItem *item );
 static gboolean      tab_set_sensitive( NactIAdvancedTab *instance );
+
+static gboolean      on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIAdvancedTab *instance );
+static void          inline_edition( NactIAdvancedTab *instance );
+static void          insert_new_row( NactIAdvancedTab *instance );
+static void          delete_row( NactIAdvancedTab *instance );
 
 static gboolean      get_action_schemes_list( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, GSList **schemes_list );
 static GtkButton    *get_add_button( NactIAdvancedTab *instance );
@@ -184,6 +190,7 @@ initial_load_create_schemes_selection_list( NactIAdvancedTab *instance )
 	GtkCellRenderer *toggled_cell;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *text_cell;
+	GtkTreeSelection *selection;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
@@ -222,6 +229,9 @@ initial_load_create_schemes_selection_list( NactIAdvancedTab *instance )
 		gtk_tree_view_append_column( listview, column );
 
 		gtk_tree_view_set_headers_visible( listview, FALSE );
+
+		selection = gtk_tree_view_get_selection( listview );
+		gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 	}
 }
 
@@ -312,6 +322,12 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
 				G_CALLBACK( on_tab_updatable_enable_tab ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( listview ),
+				"key-press-event",
+				G_CALLBACK( on_key_pressed_event ));
 	}
 }
 
@@ -460,6 +476,156 @@ tab_set_sensitive( NactIAdvancedTab *instance )
 	return( enable_tab );
 }
 
+static gboolean
+on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIAdvancedTab *instance )
+{
+	gboolean stop = FALSE;
+
+	if( event->keyval == GDK_F2 ){
+		inline_edition( instance );
+		stop = TRUE;
+	}
+
+	if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
+		insert_new_row( instance );
+		stop = TRUE;
+	}
+
+	if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
+		delete_row( instance );
+		stop = TRUE;
+	}
+
+	return( stop );
+}
+
+static void
+inline_edition( NactIAdvancedTab *instance )
+{
+	GtkTreeView *listview;
+	GtkTreeSelection *selection;
+	GList *listrows;
+	GtkTreePath *path;
+	GtkTreeViewColumn *column;
+
+	listview = get_schemes_tree_view( instance );
+	selection = gtk_tree_view_get_selection( listview );
+	listrows = gtk_tree_selection_get_selected_rows( selection, NULL );
+
+	if( g_list_length( listrows ) == 1 ){
+		gtk_tree_view_get_cursor( listview, &path, &column );
+		gtk_tree_view_set_cursor( listview, path, column, TRUE );
+		gtk_tree_path_free( path );
+	}
+
+	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+	g_list_free( listrows );
+}
+
+static void
+insert_new_row( NactIAdvancedTab *instance )
+{
+	GtkTreeView *listview;
+	GtkTreeModel *model;
+	GtkTreeSelection *selection;
+	GList *listrows;
+	GtkTreePath *path;
+	GtkTreeIter iter, sibling;
+	gboolean inserted;
+	GtkTreeViewColumn *column;
+
+	listview = get_schemes_tree_view( instance );
+	model = gtk_tree_view_get_model( listview );
+	selection = gtk_tree_view_get_selection( listview );
+	listrows = gtk_tree_selection_get_selected_rows( selection, NULL );
+	inserted = FALSE;
+	column = NULL;
+
+	if( g_list_length( listrows ) == 1 ){
+		gtk_tree_view_get_cursor( listview, &path, &column );
+		if( gtk_tree_model_get_iter( model, &sibling, path )){
+			/* though the path of sibling is correct, the new row is always
+			 * inserted at path=0 !
+			 */
+			/*g_debug( "insert_new_row: sibling=%s", gtk_tree_model_get_string_from_iter( &sibling ));*/
+			gtk_list_store_insert_before( GTK_LIST_STORE( model ), &iter, &sibling );
+			inserted = TRUE;
+		}
+		gtk_tree_path_free( path );
+	}
+
+	if( !inserted ){
+		gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
+	}
+
+	if( !column || column == gtk_tree_view_get_column( listview, SCHEMES_CHECKBOX_COLUMN )){
+		column = gtk_tree_view_get_column( listview, SCHEMES_KEYWORD_COLUMN );
+	}
+
+	gtk_list_store_set( GTK_LIST_STORE( model ), &iter,
+			SCHEMES_CHECKBOX_COLUMN, FALSE,
+			/* i18n notes : scheme name set for a new entry in the scheme list */
+			SCHEMES_KEYWORD_COLUMN, _( "new-scheme" ),
+			SCHEMES_DESC_COLUMN, _( "New scheme description" ),
+			-1 );
+
+	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+	g_list_free( listrows );
+
+	path = gtk_tree_model_get_path( model, &iter );
+	gtk_tree_view_set_cursor( listview, path, column, TRUE );
+	gtk_tree_path_free( path );
+}
+
+static void
+delete_row( NactIAdvancedTab *instance )
+{
+	NAObjectProfile *edited;
+	GtkTreeView *listview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GList *rows;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	gboolean toggle_state;
+	gchar *scheme;
+
+	listview = get_schemes_tree_view( instance );
+	selection = gtk_tree_view_get_selection( listview );
+	model = get_schemes_tree_model( instance );
+
+	rows = gtk_tree_selection_get_selected_rows( selection, &model );
+
+	if( g_list_length( rows ) == 1 ){
+		path = ( GtkTreePath * ) rows->data;
+		gtk_tree_model_get_iter( model, &iter, path );
+		gtk_tree_model_get( model, &iter,
+				SCHEMES_CHECKBOX_COLUMN, &toggle_state,
+				SCHEMES_KEYWORD_COLUMN, &scheme, -1 );
+		gtk_list_store_remove( GTK_LIST_STORE( model ), &iter );
+
+		if( toggle_state ){
+			g_object_get(
+					G_OBJECT( instance ),
+					TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+					NULL );
+			na_object_profile_set_scheme( edited, scheme, FALSE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+		}
+
+		g_free( scheme );
+
+		if( gtk_tree_model_get_iter( model, &iter, path ) ||
+			gtk_tree_path_prev( path )){
+
+			gtk_tree_view_set_cursor( listview, path, NULL, FALSE );
+		}
+	}
+
+	g_list_foreach( rows, ( GFunc ) gtk_tree_path_free, NULL );
+	g_list_free( rows );
+}
+
 /*
  * CommandExampleLabel is updated each time a field is modified
  * And at each time, we need the list of selected schemes
@@ -552,67 +718,16 @@ get_schemes_tree_view( NactIAdvancedTab *instance )
 	return( GTK_TREE_VIEW( treeview ));
 }
 
-/* TODO: set the selection on the newly created scheme */
 static void
 on_add_scheme_clicked( GtkButton *button, NactIAdvancedTab *instance )
 {
-	GtkTreeModel *model = get_schemes_tree_model( instance );
-	GtkTreeIter row;
-
-	gtk_list_store_append(
-			GTK_LIST_STORE( model ),
-			&row );
-
-	gtk_list_store_set(
-			GTK_LIST_STORE( model ),
-			&row,
-			SCHEMES_CHECKBOX_COLUMN, FALSE,
-			/* i18n notes : scheme name set for a new entry in the scheme list */
-			SCHEMES_KEYWORD_COLUMN, _( "new-scheme" ),
-			SCHEMES_DESC_COLUMN, _( "New scheme description" ),
-			-1 );
+	insert_new_row( instance );
 }
 
 static void
 on_remove_scheme_clicked( GtkButton *button, NactIAdvancedTab *instance )
 {
-	NAObjectProfile *edited;
-	GtkTreeView *listview;
-	GtkTreeSelection *selection;
-	GtkTreeModel *model;
-	GList *selected_values_path = NULL;
-	GtkTreeIter iter;
-	GtkTreePath *path;
-	GList *il;
-	gboolean toggle_state;
-	gchar *scheme;
-
-	listview = get_schemes_tree_view( instance );
-	selection = gtk_tree_view_get_selection( listview );
-	model = get_schemes_tree_model( instance );
-
-	selected_values_path = gtk_tree_selection_get_selected_rows( selection, &model );
-
-	for( il = selected_values_path ; il ; il = il->next ){
-		path = ( GtkTreePath * ) il->data;
-		gtk_tree_model_get_iter( model, &iter, path );
-		gtk_tree_model_get( model, &iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state, SCHEMES_KEYWORD_COLUMN, &scheme, -1 );
-		gtk_list_store_remove( GTK_LIST_STORE( model ), &iter );
-
-		if( toggle_state ){
-			g_object_get(
-					G_OBJECT( instance ),
-					TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
-					NULL );
-			na_object_profile_set_scheme( edited, scheme, FALSE );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
-		}
-
-		g_free( scheme );
-	}
-
-	g_list_foreach( selected_values_path, ( GFunc ) gtk_tree_path_free, NULL );
-	g_list_free( selected_values_path );
+	delete_row( instance );
 }
 
 static void

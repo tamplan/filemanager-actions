@@ -88,5 +88,3 @@
 - AssistantExport: report
   str->action = NA_OBJECT_ACTION( na_iduplicable_get_origin( 	NA_IDUPLICABLE( ia->data )));
   to gnome-2-28
-
-- gtk_list_store_insert_before doesn't work ? see ibackground-tab::insert_new_row

@@ -1,3 +1,8 @@
+2009-10-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-iadvanced-tab.c:
+	Implements F2, Insert and Del keyboard accelerators.
+
 2009-10-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-object-profile-fn.h:
