@@ -1,5 +1,16 @@
 2009-10-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-object-api.h
+	(na_object_get_position, na_object_insert_at): New functions.
+
+	* src/common/na-object-item-fn.h:
+	* src/common/na-object-item.c
+	(na_object_item_get_position, na_object_item_insert_at):
+	New functions.
+
+	* src/nact/nact-main-menubar.c (save_item):
+	Insert the new origin at the same position that the previous one.
+
 	* src/nact/nautilus-actions-config-tool.ui:
 	Add a label in front of the internal item id.
 

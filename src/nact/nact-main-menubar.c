@@ -751,19 +751,22 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	/* delete the removed actions
+	/* delete removed and modified items
 	 * so that new actions with same id do not risk to be deleted later
 	 */
 	nact_main_window_remove_deleted( window );
+	nact_iactions_list_removed_modified( NACT_IACTIONS_LIST( window ));
 
+	/* always write the level zero list of items
+	 * and reset the corresponding modification flag
+	 */
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( application );
 	items = nact_iactions_list_get_items( NACT_IACTIONS_LIST( window ));
 	na_pivot_write_level_zero( pivot, items );
 
-	/* remove modified items
-	 */
-	nact_iactions_list_removed_modified( NACT_IACTIONS_LIST( window ));
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	mis->level_zero_order_changed = FALSE;
 
 	/* recursively save the modified items
 	 * check is useless here if item was not modified, but not very costly
@@ -773,11 +776,6 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 		na_object_check_status( it->data );
 	}
 	g_list_free( items );
-
-	/* reset level zero indicator
-	 */
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	mis->level_zero_order_changed = FALSE;
 
 	/* get ride of notification messages of IOProviders
 	 */
@@ -798,6 +796,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 	NAObjectItem *dup_pivot;
 	GList *subitems, *it;
 	NAObjectItem *parent;
+	gint pos;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
@@ -822,10 +821,12 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 			 */
 			origin = ( NAObjectItem * ) na_object_get_origin( item );
 			parent = NULL;
+			pos = -1;
 
 			if( origin ){
 				parent = na_object_get_parent( origin );
 				if( parent ){
+					pos = na_object_get_position( parent, origin );
 					na_object_remove_item( parent, origin );
 				} else {
 					na_pivot_remove_item( pivot, NA_OBJECT( origin ));
@@ -836,7 +837,11 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 			na_object_reset_origin( item, dup_pivot );
 			na_object_set_parent( dup_pivot, parent );
 			if( parent ){
-				na_object_append_item( parent, dup_pivot );
+				if( pos == -1 ){
+					na_object_append_item( parent, dup_pivot );
+				} else {
+					na_object_insert_at( parent, dup_pivot, pos );
+				}
 			} else {
 				na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
 			}

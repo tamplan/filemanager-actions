@@ -50,7 +50,9 @@
 G_BEGIN_DECLS
 
 GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *object, GtkWidget *widget );
+gint           na_object_item_get_position( const NAObjectItem *object, const NAObject *child );
 
+void           na_object_item_insert_at( NAObjectItem *object, const NAObject *item, gint pos );
 void           na_object_item_insert_item( NAObjectItem *object, const NAObject *item, const NAObject *before );
 
 void           na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );

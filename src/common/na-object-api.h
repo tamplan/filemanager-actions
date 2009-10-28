@@ -70,6 +70,8 @@ G_BEGIN_DECLS
 
 /* NAObjectItem
  */
+#define na_object_get_position( object, child )		na_object_item_get_position( NA_OBJECT_ITEM( object ), NA_OBJECT( child ))
+#define na_object_insert_at( object, child, pos )	na_object_item_insert_at( NA_OBJECT_ITEM( object ), NA_OBJECT( child ), pos )
 #define na_object_insert_item( object, item, before ) \
 													na_object_item_insert_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ), ( NAObject * ) before )
 

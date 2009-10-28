@@ -91,6 +91,70 @@ GdkPixbuf *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *widge
 }
 
 /**
+ * na_object_item_get_position:
+ * @object: this #NAObjectItem object.
+ * @child: a #NAObject child.
+ *
+ * Returns: the position of @child in the subitems list of @object,
+ * starting from zero, or -1 if not found.
+ */
+gint
+na_object_item_get_position( const NAObjectItem *object, const NAObject *child )
+{
+	gint pos = -1;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), pos );
+	g_return_val_if_fail( !child || NA_IS_OBJECT( child ), pos );
+
+	if( !child ){
+		return( pos );
+	}
+
+	if( !object->private->dispose_has_run ){
+
+		pos = g_list_index( object->private->items, ( gconstpointer ) child );
+	}
+
+	return( pos );
+}
+
+/**
+ * na_object_item_insert_at:
+ * @item: the #NAObjectItem in which add the subitem.
+ * @object: a #NAObject to be inserted in the list of subitems.
+ * @pos: the position at which the @object child should be inserted.
+ *
+ * Inserts a new @object in the list of subitems of @item.
+ *
+ * Doesn't modify the reference count on @object.
+ */
+void
+na_object_item_insert_at( NAObjectItem *item, const NAObject *object, gint pos )
+{
+	GList *it;
+	gint i;
+
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( NA_IS_OBJECT( object ));
+
+	if( !item->private->dispose_has_run ){
+
+		if( pos == -1 || pos >= g_list_length( item->private->items )){
+			na_object_append_item( item, object );
+
+		} else {
+			i = 0;
+			for( it = item->private->items ; it && i <= pos ; it = it->next ){
+				if( i == pos ){
+					item->private->items = g_list_insert_before( item->private->items, it, ( gpointer ) object );
+				}
+				i += 1;
+			}
+		}
+	}
+}
+
+/**
  * na_object_item_insert_item:
  * @item: the #NAObjectItem to which add the subitem.
  * @object: a #NAObject to be inserted in the list of subitems.
