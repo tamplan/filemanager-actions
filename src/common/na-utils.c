@@ -36,8 +36,6 @@
 #include <glib-object.h>
 #include <string.h>
 
-#include <runtime/na-iabout.h>
-
 #include "na-utils.h"
 
 static GSList *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
@@ -446,33 +444,4 @@ na_utils_exist_file( const gchar *uri )
 	g_object_unref( file );
 
 	return( exists );
-}
-
-/**
- * na_utils_print_version:
- *
- * Prints the current version of the program to stdout. This function
- * is to be used by console programs.
- */
-/*
- * nautilus-actions-new (Nautilus-Actions) v 2.29.1
- * Copyright (C) 2005-2007 Frederic Ruaudel
- * Copyright (C) 2009 Pierre Wieser
- * Nautilus-Actions is free software, licensed under GPLv2 or later.
- */
-void
-na_utils_print_version( void )
-{
-	gchar *copyright;
-
-	g_print( "\n" );
-	g_print( "%s (%s) v %s\n", g_get_prgname(), PACKAGE_NAME, PACKAGE_VERSION );
-	copyright = na_iabout_get_copyright( TRUE );
-	g_print( "%s\n", copyright );
-	g_free( copyright );
-
-	g_print( "%s is free software, and is provided without any warranty. You may\n", PACKAGE_NAME );
-	g_print( "redistribute copies of %s under the terms of the GNU General Public\n", PACKAGE_NAME );
-	g_print( "License (see COPYING).\n" );
-	g_print( "\n" );
 }

@@ -34,12 +34,17 @@
 
 #include <glib.h>
 
+#include <runtime/na-iabout.h>
+
 #include "console-utils.h"
 
 static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
 
 /**
  * console_init_log_handler:
+ *
+ * Initialize log handler so that debug messages are not outputed when
+ * not in maintainer mode.
  */
 void
 console_init_log_handler( void )
@@ -47,6 +52,34 @@ console_init_log_handler( void )
 	g_log_set_handler( NA_LOGDOMAIN_COMMON, G_LOG_LEVEL_DEBUG, log_handler, NULL );
 	g_log_set_handler( NA_LOGDOMAIN_RUNTIME, G_LOG_LEVEL_DEBUG, log_handler, NULL );
 	g_log_set_handler( NA_LOGDOMAIN_UTILS, G_LOG_LEVEL_DEBUG, log_handler, NULL );
+}
+
+/**
+ * console_print_version:
+ *
+ * Prints the current version of the program to stdout.
+ */
+/*
+ * nautilus-actions-new (Nautilus-Actions) v 2.29.1
+ * Copyright (C) 2005-2007 Frederic Ruaudel
+ * Copyright (C) 2009 Pierre Wieser
+ * Nautilus-Actions is free software, licensed under GPLv2 or later.
+ */
+void
+console_print_version( void )
+{
+	gchar *copyright;
+
+	g_print( "\n" );
+	g_print( "%s (%s) v %s\n", g_get_prgname(), PACKAGE_NAME, PACKAGE_VERSION );
+	copyright = na_iabout_get_copyright( TRUE );
+	g_print( "%s\n", copyright );
+	g_free( copyright );
+
+	g_print( "%s is free software, and is provided without any warranty. You may\n", PACKAGE_NAME );
+	g_print( "redistribute copies of %s under the terms of the GNU General Public\n", PACKAGE_NAME );
+	g_print( "License (see COPYING).\n" );
+	g_print( "\n" );
 }
 
 static void

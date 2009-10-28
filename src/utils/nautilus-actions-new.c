@@ -166,7 +166,7 @@ main( int argc, char** argv )
 	}
 
 	if( version ){
-		na_utils_print_version();
+		console_print_version();
 		exit( status );
 	}
 
