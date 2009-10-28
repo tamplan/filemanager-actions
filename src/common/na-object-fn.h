@@ -55,6 +55,7 @@ void      na_object_iduplicable_set_origin( NAObject *object, const NAObject *or
 /* NAObject
  */
 void      na_object_object_reset_origin( NAObject *object, const NAObject *origin );
+void      na_object_object_reset_status( NAObject *object );
 
 G_END_DECLS
 

@@ -134,6 +134,33 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 	}
 }
 
+/**
+ * na_object_object_reset_status:
+ * @object: a #NAObject-derived object.
+ *
+ * Recursively reset status of @object and its childs.
+ *
+ * This is typically used when we want display a clean list of current
+ * items (e.g. in Export assistant).
+ */
+void
+na_object_object_reset_status( NAObject *object )
+{
+	GList *object_childs, *iobj;
+
+	g_return_if_fail( NA_IS_OBJECT( object ));
+
+	if( !object->private->dispose_has_run ){
+
+		object_childs = v_get_childs( object );
+		for( iobj = object_childs ; iobj ; iobj = iobj->next ){
+			na_iduplicable_reset_status( NA_IDUPLICABLE( iobj->data ));
+		}
+
+		na_iduplicable_reset_status( NA_IDUPLICABLE( object ));
+	}
+}
+
 static GList *
 v_get_childs( const NAObject *object )
 {

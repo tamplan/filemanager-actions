@@ -95,6 +95,7 @@ class_init( NAObjectMenuClass *klass )
 {
 	static const gchar *thisfn = "na_object_menu_class_init";
 	GObjectClass *object_class;
+	NAObjectClass *naobject_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -106,12 +107,15 @@ class_init( NAObjectMenuClass *klass )
 
 	klass->private = g_new0( NAObjectMenuClassPrivate, 1 );
 
-	NA_OBJECT_CLASS( klass )->dump = object_dump;
-	NA_OBJECT_CLASS( klass )->new = object_new;
-	NA_OBJECT_CLASS( klass )->copy = object_copy;
-	NA_OBJECT_CLASS( klass )->are_equal = object_are_equal;
-	NA_OBJECT_CLASS( klass )->is_valid = object_is_valid;
-	NA_OBJECT_CLASS( klass )->get_childs = NULL;
+	naobject_class = NA_OBJECT_CLASS( klass );
+	naobject_class->dump = object_dump;
+	naobject_class->new = object_new;
+	naobject_class->copy = object_copy;
+	naobject_class->are_equal = object_are_equal;
+	naobject_class->is_valid = object_is_valid;
+	naobject_class->get_childs = NULL;
+	naobject_class->ref = NULL;
+	naobject_class->unref = NULL;
 }
 
 static void

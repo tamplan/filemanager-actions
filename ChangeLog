@@ -1,5 +1,29 @@
 2009-10-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-object-api.h (na_object_reset_status):
+	New function.
+
+	* src/common/na-object-fn.h:
+	* src/common/na-object.c (na_object_object_reset_status):
+	New function.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h (base_window_get_parent): New function.
+
+	* src/nact/nact-assistant-export.c
+	(instance_dispose): Clear the tree model.
+	(assist_initial_load_actions_list): Export current actions list.
+
+	* src/nact/nact-iactions-list.c (display_label):
+	Only display status in edition mode.
+
+	* src/nact/nact-tree-model.c (fill_tree_store):
+	Clean up the code to avoid memory leaks.
+
+	* src/runtime/na-iduplicable.c:
+	* src/runtime/na-iduplicable.h (na_iduplicable_reset_status):
+	New function.
+
 	* src/common/na-object-api.h
 	(na_object_get_position, na_object_insert_at): New functions.
 

@@ -60,6 +60,7 @@ G_BEGIN_DECLS
 /* NAObject
  */
 #define na_object_reset_origin( object, origin )	na_object_object_reset_origin( NA_OBJECT( object ), ( NAObject * ) origin )
+#define na_object_reset_status( object )			na_object_object_reset_status( NA_OBJECT( object ) )
 
 /* NAObjectId
  */

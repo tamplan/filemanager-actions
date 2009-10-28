@@ -193,6 +193,8 @@ class_init( NAObjectActionClass *klass )
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
 	naobject_class->get_childs = NULL;
+	naobject_class->ref = NULL;
+	naobject_class->unref = NULL;
 }
 
 static void

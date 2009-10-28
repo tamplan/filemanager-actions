@@ -153,6 +153,8 @@ class_init( NAObjectIdClass *klass )
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
 	naobject_class->get_childs = NULL;
+	naobject_class->ref = NULL;
+	naobject_class->unref = NULL;
 
 	klass->new_id = NULL;
 }
@@ -239,6 +241,8 @@ instance_dispose( GObject *object )
 	if( !self->private->dispose_has_run ){
 
 		if( self->private->parent ){
+			/*g_debug( "na_object_id_instance_dispose: object=%p, parent=%p",
+					( void * ) object, ( void * ) self->private->parent );*/
 			na_object_remove_item( self->private->parent, object );
 			self->private->parent = NULL;
 		}

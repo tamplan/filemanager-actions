@@ -704,26 +704,19 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 		subitems = na_object_get_items_list( object );
 		for( it = subitems ; it ; it = it->next ){
 			fill_tree_store( model, treeview, it->data, only_actions, only_actions ? NULL : &iter );
-			na_object_append_item( object, it->data );
-			na_object_set_parent( it->data, object );
 		}
 	}
 
 	if( NA_IS_OBJECT_ACTION( object )){
 		g_return_if_fail( na_object_get_items_count( object ) >= 1 );
 		append_item( model, treeview, parent, &iter, object );
-		if( !only_actions ){
+		if( only_actions ){
+			na_object_set_parent( object, NULL );
+		} else {
 			subitems = na_object_get_items_list( object );
 			for( it = subitems ; it ; it = it->next ){
 				fill_tree_store( model, treeview, it->data, only_actions, &iter );
-				na_object_append_item( object, it->data );
-				na_object_set_parent( it->data, object );
 			}
-		/* need to add a reference count if action has a parent, because
-		 * the action will be unreffed when unreffing the menu
-		 */
-		} else if( na_object_get_parent( object )){
-			g_object_ref( object );
 		}
 	}
 

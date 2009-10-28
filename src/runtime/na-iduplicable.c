@@ -356,6 +356,22 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
 }
 
 /**
+ * na_iduplicable_reset_status:
+ * @object: the #NAIDuplicable object whose status is to be reset.
+ *
+ * Reset validity and modification status of the object.
+ */
+void
+na_iduplicable_reset_status( NAIDuplicable *object )
+{
+	g_return_if_fail( st_initialized && !st_finalized );
+	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
+
+	set_valid( object, TRUE );
+	set_modified( object, FALSE );
+}
+
+/**
  * na_iduplicable_is_modified:
  * @object: the #NAIDuplicable object whose status is to be returned.
  *

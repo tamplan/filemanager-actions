@@ -1611,31 +1611,32 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	gchar *label;
 	gboolean modified = FALSE;
 	gboolean valid = TRUE;
+	IActionsListInstanceData *ialid;
 
 	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+	g_object_unref( object );
+	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	if( object ){
-		g_assert( NA_IS_OBJECT( object ));
-		label = na_object_get_label( object );
+	ialid = get_instance_data( instance );
+	label = na_object_get_label( object );
+	g_object_set( cell, "style-set", FALSE, NULL );
+	g_object_set( cell, "foreground-set", FALSE, NULL );
+
+	if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
+
 		modified = na_object_is_modified( object );
 		valid = na_object_is_valid( object );
 
 		if( modified ){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
-		} else {
-			g_object_set( cell, "style-set", FALSE, NULL );
 		}
-		if( valid ){
-			g_object_set( cell, "foreground-set", FALSE, NULL );
-		} else {
+		if( !valid ){
 			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
 		}
-
-		g_object_set( cell, "text", label, NULL );
-
-		g_free( label );
-		g_object_unref( object );
 	}
+
+	g_object_set( cell, "text", label, NULL );
+	g_free( label );
 }
 
 /*

@@ -740,6 +740,29 @@ base_window_get_named_toplevel( BaseWindow *window, const gchar *name )
 }
 
 /**
+ * base_window_get_parent:
+ * @window: this #BaseWindow instance..
+ *
+ * Returns the #BaseWindow parent of @window.
+ *
+ * The returned object is owned by @window, and should not be freed.
+ */
+BaseWindow *
+base_window_get_parent( BaseWindow *window )
+{
+	BaseWindow *parent = NULL;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+
+		parent = window->private->parent;
+	}
+
+	return( parent );
+}
+
+/**
  * base_window_get_toplevel:
  * @window: this #BaseWindow instance..
  *

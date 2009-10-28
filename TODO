@@ -76,8 +76,4 @@
 - data factory: put together each property of each elementary data (id, label, etc.)
   along with their methods
 
-- AssistantExport exports what it finds in Pivot, but should take its origin
-  from current IActionsList (a. to have same perimeter than drag and drop and
-  b. to export what we see)
-
 - export: add a overwrite page: what to do if file already exists ?

@@ -36,13 +36,13 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include <runtime/na-object-api.h>
-#include <runtime/na-pivot.h>
-
+#include <common/na-object-api.h>
 #include <common/na-iprefs.h>
 #include <common/na-utils.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
+
+#include <runtime/na-pivot.h>
 
 #include "base-iprefs.h"
 #include "nact-application.h"
@@ -272,6 +272,8 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
+		nact_iactions_list_dispose( NACT_IACTIONS_LIST( window ));
+
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( window );
@@ -416,14 +418,14 @@ assist_initial_load_actions_list( NactAssistantExport *window, GtkAssistant *ass
 static void
 assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *assistant )
 {
-	GtkWidget *content;
-	NactApplication *appli;
-	NAPivot *pivot;
+	BaseWindow *parent;
 	GList *tree;
+	GtkWidget *content;
 
-	appli = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( appli );
-	tree = na_pivot_get_items( pivot );
+	parent = base_window_get_parent( BASE_WINDOW( window ));
+	g_assert( NACT_IS_MAIN_WINDOW( parent ));
+	g_assert( NACT_IS_IACTIONS_LIST( parent ));
+	tree = nact_iactions_list_get_items( NACT_IACTIONS_LIST( parent ));
 
 	nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
 

@@ -79,6 +79,7 @@ gboolean         base_window_run( BaseWindow *window );
 
 BaseApplication *base_window_get_application( BaseWindow *window );
 GtkWindow       *base_window_get_named_toplevel( BaseWindow *window, const gchar *name );
+BaseWindow      *base_window_get_parent( BaseWindow *window );
 GtkWindow       *base_window_get_toplevel( BaseWindow *window );
 GtkWidget       *base_window_get_widget( BaseWindow *window, const gchar *name );
 
