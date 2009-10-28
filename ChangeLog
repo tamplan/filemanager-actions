@@ -1,5 +1,8 @@
 2009-10-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/nautilus-actions-new.c:
+	Update command-line args to specify an URI.
+
 	* src/common/na-xml-writer.c (na_xml_writer_output_xml):
 	Write XML buffer to stdout when asked for.
 	Update comment.
