@@ -1,5 +1,8 @@
 2009-10-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nautilus-actions-config-tool.ui:
+	Add a label in front of the internal item id.
+
 	* src/runtime/na-iduplicable.c (na_iduplicable_duplicate):
 	Duplicated object inherits same attributes that the original.
 
