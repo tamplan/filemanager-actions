@@ -1268,7 +1268,7 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 		*list_parents = NULL;
 	}
 
-	reversed = g_list_reverse( items );
+	reversed = g_list_reverse( g_list_copy( items ));
 
 	for( it = reversed ; it ; it = it->next ){
 
@@ -1295,7 +1295,7 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 		gtk_tree_path_free( inserted_path );
 	}
 
-	/*g_list_free( reversed );*/
+	g_list_free( reversed );
 }
 
 static NAObject *
@@ -1350,8 +1350,8 @@ increment_counters( NactIActionsList *instance, IActionsListInstanceData *ialid,
 	static const gchar *thisfn = "nact_iactions_list_increment_counters";
 	gint menus, actions, profiles;
 
-	g_debug( "%s: instance=%p, ialid=%p, items=%p",
-			thisfn, ( void * ) instance, ( void * ) ialid, ( void * ) items );
+	g_debug( "%s: instance=%p, ialid=%p, items=%p (count=%d)",
+			thisfn, ( void * ) instance, ( void * ) ialid, ( void * ) items, items ? g_list_length( items ) : 0 );
 
 	menus = 0;
 	actions = 0;

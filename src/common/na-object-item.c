@@ -147,22 +147,24 @@ na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *prof
 {
 	GList *it;
 
-	for( it = items ; it ; it = it->next ){
+	/*g_debug( "na_object_item_count_items: items=%p (count=%d), menus=%d, actions=%d, profiles=%d",
+			( void * ) items, items ? g_list_length( items ) : 0, *menus, *actions, *profiles );*/
 
-		/*g_debug( "na_object_item_count_items: item is %s", G_OBJECT_TYPE_NAME( it->data ));*/
-		if( NA_IS_OBJECT_MENU( it->data )){
-			*menus += 1;
-		} else if( NA_IS_OBJECT_ACTION( it->data )){
-			*actions += 1;
-		} else if( NA_IS_OBJECT_PROFILE( it->data )){
-			*profiles += 1;
-		}
+	for( it = items ; it ; it = it->next ){
 
 		if( recurse ){
 			if( NA_IS_OBJECT_ITEM( it->data )){
 				na_object_item_count_items(
 						NA_OBJECT_ITEM( it->data )->private->items, menus, actions, profiles, recurse );
 			}
+		}
+
+		if( NA_IS_OBJECT_MENU( it->data )){
+			*menus += 1;
+		} else if( NA_IS_OBJECT_ACTION( it->data )){
+			*actions += 1;
+		} else if( NA_IS_OBJECT_PROFILE( it->data )){
+			*profiles += 1;
 		}
 	}
 }

@@ -1,5 +1,11 @@
 2009-10-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iactions-list.c (do_insert_items):
+	Take a copy before reverting the list, and free the copy at end.
+
+	* src/common/na-object-item.c (na_object_item_count_items):
+	Recurse into subitems before counting the current level.
+
 	* src/common/na-xml-writer.c:
 	* src/common/na-xml-writer.h:
 	(na_xml_writer_export): Returns a NULL filename if errors.
