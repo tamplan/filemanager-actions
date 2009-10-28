@@ -1,5 +1,13 @@
 2009-10-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/common/na-xml-writer.c:
+	* src/common/na-xml-writer.h:
+	(na_xml_writer_export): Returns a NULL filename if errors.
+	(na_xml_writer_output_xml): Returns error messages.
+
+	* src/nact/nact-clipboard.c
+	(export_row_object): Updated accordingly.
+
 	* src/utils/nautilus-actions-new.c:
 	Specify that the output directory must be specified as an URI.
 

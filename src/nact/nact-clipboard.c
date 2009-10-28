@@ -528,6 +528,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	NAPivot *pivot;
 	gint format;
 	gchar *fname;
+	GSList *msg;
 
 	if( NA_IS_OBJECT_MENU( object )){
 		subitems = na_object_get_items_list( object );
@@ -544,6 +545,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 		return( g_string_free( data, FALSE ));
 	}
 
+	msg = NULL;
 	buffer = NULL;
 	action = ( NAObjectAction * ) object;
 	if( NA_IS_OBJECT_PROFILE( object )){
@@ -567,7 +569,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 
 			if( buffer && dest_folder ){
 				fname = na_xml_writer_get_output_fname( action, dest_folder, format );
-				na_xml_writer_output_xml( buffer, fname );
+				na_xml_writer_output_xml( buffer, fname, &msg );
 				g_free( fname );
 				g_free( buffer );
 				buffer = NULL;

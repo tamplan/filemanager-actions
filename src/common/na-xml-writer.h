@@ -74,7 +74,7 @@ GType  na_xml_writer_get_type( void );
 gchar *na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint format, GSList **msg );
 gchar *na_xml_writer_get_output_fname( const NAObjectAction *action, const gchar *folder, gint format );
 gchar *na_xml_writer_get_xml_buffer( const NAObjectAction *action, gint format );
-void   na_xml_writer_output_xml( const gchar *xml, const gchar *filename );
+void   na_xml_writer_output_xml( const gchar *xml, const gchar *filename, GSList **msg );
 
 G_END_DECLS
 

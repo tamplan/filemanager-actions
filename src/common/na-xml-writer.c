@@ -286,13 +286,16 @@ xml_writer_new( const gchar *uuid )
  * Can be NULL when exporting schemas ; in this case, format must be
  * FORMAT_GCONF_SCHEMA.
  * @folder: the directoy where to write the output XML file.
- * If NULL, the output will be directed to stdout.
+ *  If NULL, the output will be directed to stdout.
+ *  If not NULL, must be specified as an URI (e.g. file:///tmp)
  * @format: the export format.
- * @msg: pointer to a buffer which will receive error messages.
+ * @msg: pointer to a #GSList which will receive error messages.
+ *  The #GSList should be initialized to an empty list (NULL) before
+ *  calling the function.
  *
  * Export the specified action as an XML file.
  *
- * Returns: the written filename, or NULL if written to stdout.
+ * Returns: the written filename, or NULL if written to stdout or errors.
  */
 gchar *
 na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint format, GSList **msg )
@@ -338,9 +341,14 @@ na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint fo
 	xml_buffer = na_xml_writer_get_xml_buffer( action, format );
 
 	if( folder ){
-		na_xml_writer_output_xml( xml_buffer, filename );
+		na_xml_writer_output_xml( xml_buffer, filename, msg );
 	} else {
 		g_print( "%s", xml_buffer );
+	}
+
+	if( *msg ){
+		g_free( filename );
+		filename = NULL;
 	}
 
 	g_free( xml_buffer );
@@ -483,30 +491,37 @@ na_xml_writer_get_xml_buffer( const NAObjectAction *action, gint format )
  * Exports an action to the given filename.
  */
 void
-na_xml_writer_output_xml( const gchar *xml, const gchar *filename )
+na_xml_writer_output_xml( const gchar *xml, const gchar *filename, GSList **msg )
 {
 	static const gchar *thisfn = "na_xml_writer_output_xml";
 	GFile *file;
 	GFileOutputStream *stream;
 	GError *error = NULL;
+	gchar *errmsg;
 
 	g_return_if_fail( xml );
 	g_return_if_fail( filename && g_utf8_strlen( filename, -1 ));
 
 	file = g_file_new_for_uri( filename );
 
-	stream = g_file_create( file, G_FILE_CREATE_REPLACE_DESTINATION, NULL, &error );
+	stream = g_file_replace( file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &error );
 	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
+		errmsg = g_strdup_printf( "%s: g_file_replace: %s", thisfn, error->message );
+		g_warning( errmsg );
+		*msg = g_slist_append( *msg, errmsg );
 		g_error_free( error );
-		g_object_unref( stream );
+		if( stream ){
+			g_object_unref( stream );
+		}
 		g_object_unref( file );
 		return;
 	}
 
 	g_output_stream_write( G_OUTPUT_STREAM( stream ), xml, g_utf8_strlen( xml, -1 ), NULL, &error );
 	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
+		errmsg = g_strdup_printf( "%s: g_output_stream_write: %s", thisfn, error->message );
+		g_warning( errmsg );
+		*msg = g_slist_append( *msg, errmsg );
 		g_error_free( error );
 		g_object_unref( stream );
 		g_object_unref( file );
@@ -515,7 +530,9 @@ na_xml_writer_output_xml( const gchar *xml, const gchar *filename )
 
 	g_output_stream_close( G_OUTPUT_STREAM( stream ), NULL, &error );
 	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
+		errmsg = g_strdup_printf( "%s: g_output_stream_close: %s", thisfn, error->message );
+		g_warning( errmsg );
+		*msg = g_slist_append( *msg, errmsg );
 		g_error_free( error );
 		g_object_unref( stream );
 		g_object_unref( file );
