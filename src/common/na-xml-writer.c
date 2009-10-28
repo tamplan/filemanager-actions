@@ -272,6 +272,7 @@ xml_writer_new( const gchar *uuid )
  * @action: the #NAAction to be exported.
  * @folder: the directoy where to write the output XML file.
  *  If NULL, the output will be directed to stdout.
+ *  If not NULL, must be specified as an URI (e.g. file:///tmp)
  * @format: the export format.
  * @msg: pointer to a buffer which will receive error message.
  *
