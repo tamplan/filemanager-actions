@@ -40,6 +40,8 @@ AM_CPPFLAGS += \
 
 nautilus_actions_new_SOURCES = \
 	nautilus-actions-new.c							\
+	console-utils.c									\
+	console-utils.h									\
 	$(NULL)
 
 nautilus_actions_new_LDADD = \
@@ -49,6 +51,8 @@ nautilus_actions_new_LDADD = \
 
 nautilus_actions_schemas_SOURCES = \
 	nautilus-actions-schemas.c						\
+	console-utils.c									\
+	console-utils.h									\
 	$(NULL)
 
 nautilus_actions_schemas_LDADD = \

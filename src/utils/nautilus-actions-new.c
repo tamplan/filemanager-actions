@@ -43,6 +43,8 @@
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
 
+#include "console-utils.h"
+
 static gchar     *label           = "";
 static gchar     *tooltip         = "";
 static gchar     *icon            = "";
@@ -100,6 +102,7 @@ main( int argc, char** argv )
 	gchar *help;
 
 	g_type_init();
+	console_init_log_handler();
 
 	context = init_options();
 
