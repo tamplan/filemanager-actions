@@ -348,8 +348,8 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
 	if( dup ){
 		v_copy( dup, object );
 		set_origin( dup, object );
-		set_modified( dup, FALSE );
-		set_valid( dup, TRUE );
+		set_modified( dup, get_modified( object ));
+		set_valid( dup, get_valid( object ));
 	}
 
 	return( dup );

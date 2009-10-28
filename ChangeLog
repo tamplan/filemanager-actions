@@ -1,5 +1,8 @@
 2009-10-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/runtime/na-iduplicable.c (na_iduplicable_duplicate):
+	Duplicated object inherits same attributes that the original.
+
 	* src/nact/nact-iactions-list.c (do_insert_items):
 	Take a copy before reverting the list, and free the copy at end.
 
