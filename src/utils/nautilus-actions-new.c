@@ -118,7 +118,7 @@ static GOptionEntry output_entries[] = {
 	{ "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE        , &output_gconf,
 			N_( "Store the newly created action as a GConf configuration" ), NULL },
 	{ "output-dir"           , 'o', 0, G_OPTION_ARG_FILENAME    , &output_dir,
-			N_( "The folder where to write the new action as a GConf dump output [default: stdout]" ), N_( "DIR" ) },
+			N_( "The URI of the folder where to write the new action as a GConf dump output [default: stdout]" ), N_( "<URI>" ) },
 	{ NULL }
 };
 
