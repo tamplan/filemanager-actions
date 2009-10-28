@@ -271,19 +271,18 @@ xml_writer_new( const gchar *uuid )
  * na_xml_writer_export:
  * @action: the #NAAction to be exported.
  * @folder: the directoy where to write the output XML file.
- * If NULL, the output will be directed to stdout.
+ *  If NULL, the output will be directed to stdout.
  * @format: the export format.
- * @msg: pointer to a buffer which will receive error messages.
+ * @msg: pointer to a buffer which will receive error message.
  *
  * Export the specified action as an XML file.
  *
- * Returns: the written filename, or NULL if written to stdout.
+ * Returns: the written filename, or NULL if written to stdout or error.
  */
 gchar *
 na_xml_writer_export( const NAAction *action, const gchar *folder, gint format, gchar **msg )
 {
 	gchar *filename = NULL;
-	gboolean free_filename = FALSE;
 	gchar *xml_buffer;
 
 	switch( format ){
@@ -298,9 +297,6 @@ na_xml_writer_export( const NAAction *action, const gchar *folder, gint format, 
 		case FORMAT_GCONFENTRY:
 			if( folder ){
 				filename = na_xml_writer_get_output_fname( action, folder, format );
-			} else {
-				filename = g_strdup( "-" );
-				free_filename = TRUE;
 			}
 			break;
 
@@ -311,25 +307,17 @@ na_xml_writer_export( const NAAction *action, const gchar *folder, gint format, 
 		case FORMAT_GCONFSCHEMA:
 			if( folder ){
 				filename = g_strdup( folder );
-			} else {
-				filename = g_strdup( "-" );
-				free_filename = TRUE;
 			}
 			break;
 	}
 
-	g_assert( filename );
+	g_return_val_if_fail( !folder || filename, NULL );
 
 	xml_buffer = na_xml_writer_get_xml_buffer( action, format );
 
 	na_xml_writer_output_xml( xml_buffer, filename );
 
 	g_free( xml_buffer );
-
-	if( free_filename ){
-		g_free( filename );
-		filename = NULL;
-	}
 
 	return( filename );
 }
@@ -464,7 +452,8 @@ na_xml_writer_get_xml_buffer( const NAAction *action, gint format )
 /**
  * na_xml_writer_output_xml:
  * @action: the #NAAction to be exported.
- * @filename: the uri of the output filename
+ * @filename: the uri of the output filename.
+ *  If NULL, the XML buffer is written to stdout.
  *
  * Exports an action to the given filename.
  */
@@ -476,39 +465,47 @@ na_xml_writer_output_xml( const gchar *xml, const gchar *filename )
 	GFileOutputStream *stream;
 	GError *error = NULL;
 
-	g_assert( filename );
+	g_debug( "%s: xml=%p (length=%ld), filename=%s",
+			thisfn, ( void * ) xml, g_utf8_strlen( xml, -1 ), filename ? filename : "(null)" );
 
-	file = g_file_new_for_uri( filename );
+	if( filename ){
+		file = g_file_new_for_uri( filename );
 
-	stream = g_file_create( file, G_FILE_CREATE_REPLACE_DESTINATION, NULL, &error );
-	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
-		g_error_free( error );
+		stream = g_file_replace( file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &error );
+		if( error ){
+			g_warning( "%s: g_file_replace: %s", thisfn, error->message );
+			g_error_free( error );
+			if( stream ){
+				g_object_unref( stream );
+			}
+			g_object_unref( file );
+			return;
+		}
+
+		g_output_stream_write( G_OUTPUT_STREAM( stream ), xml, g_utf8_strlen( xml, -1 ), NULL, &error );
+		if( error ){
+			g_warning( "%s: g_output_stream_write: %s", thisfn, error->message );
+			g_error_free( error );
+			g_object_unref( stream );
+			g_object_unref( file );
+			return;
+		}
+
+		g_output_stream_close( G_OUTPUT_STREAM( stream ), NULL, &error );
+		if( error ){
+			g_warning( "%s: g_output_stream_close: %s", thisfn, error->message );
+			g_error_free( error );
+			g_object_unref( stream );
+			g_object_unref( file );
+			return;
+		}
+
 		g_object_unref( stream );
 		g_object_unref( file );
-		return;
-	}
 
-	g_output_stream_write( G_OUTPUT_STREAM( stream ), xml, g_utf8_strlen( xml, -1 ), NULL, &error );
-	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
-		g_error_free( error );
-		g_object_unref( stream );
-		g_object_unref( file );
-		return;
+	} else {
+		g_print( "%s\n", xml );
 	}
-
-	g_output_stream_close( G_OUTPUT_STREAM( stream ), NULL, &error );
-	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
-		g_error_free( error );
-		g_object_unref( stream );
-		g_object_unref( file );
-		return;
-	}
-
-	g_object_unref( stream );
-	g_object_unref( file );
 }
 
 static xmlDocPtr
