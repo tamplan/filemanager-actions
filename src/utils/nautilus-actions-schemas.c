@@ -43,6 +43,8 @@
 #include <common/na-xml-writer.h>
 #include <common/na-utils.h>
 
+#include "console-utils.h"
+
 /*static gchar     *output_fname = NULL;
 static gboolean   output_gconf = FALSE;*/
 static gboolean   output_stdout = FALSE;
@@ -79,6 +81,7 @@ main( int argc, char** argv )
 	GSList *im;
 
 	g_type_init();
+	console_init_log_handler();
 
 	context = init_options();
 

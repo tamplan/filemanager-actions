@@ -45,6 +45,8 @@
 #include <common/na-xml-writer.h>
 #include <common/na-utils.h>
 
+#include "console-utils.h"
+
 static gchar     *label            = "";
 static gchar     *tooltip          = "";
 static gchar     *icon             = "";
@@ -145,6 +147,7 @@ main( int argc, char** argv )
 	gint errors;
 
 	g_type_init();
+	console_init_log_handler();
 
 	context = init_options();
 

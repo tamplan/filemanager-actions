@@ -1,3 +1,14 @@
+2009-10-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/utils/console-utils.c:
+	* src/utils/console-utils.h: New files.
+
+	* src/utils/Makefile.am: Updated accordingly.
+
+	* src/utils/nautilus-actions-new.c:
+	* src/utils/nautilus-actions-schemas.c: Initialize log handler
+	to not emit debug messages when not in maintainer mode.
+
 2009-10-27 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-window.c (class_init):
