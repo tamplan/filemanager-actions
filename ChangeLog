@@ -1,3 +1,7 @@
+2009-10-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/common/na-action.c (object_copy): Fix copy of profiles.
+
 2009-10-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/utils/nautilus-actions-new.c:

@@ -939,6 +939,9 @@ object_copy( NAObject *target, const NAObject *source )
 
 	g_free( version );
 
+	na_action_free_profiles( NA_ACTION( target )->private->profiles );
+	NA_ACTION( target )->private->profiles = NULL;
+
 	for( ip = NA_ACTION( source )->private->profiles ; ip ; ip = ip->next ){
 		profile = NA_ACTION_PROFILE( na_object_duplicate( NA_OBJECT( ip->data )));
 		na_action_attach_profile( NA_ACTION( target ), profile );
