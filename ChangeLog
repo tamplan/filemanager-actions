@@ -1,3 +1,7 @@
+2009-11-07 Pierre Wieser <pwieser@trychlos.org>
+
+	* NEWS: Udated.
+
 2009-10-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-action.c (object_copy): Fix copy of profiles.

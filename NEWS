@@ -1,3 +1,34 @@
+Version 1.12.3
+==============
+
+	Release date 2009-11-07
+
+	This is the third bugfix release of the 1.12 serie.
+
+	Bugfixes
+
+		#599520 reported by Antonio Lima (do not mark author names for
+		translating)
+		#600712 reported by Deji Akingunola (NACT crashes on export)
+		#599913 reported by Vincent (menubar is not visible)
+
+	Other Code enhancements
+
+		Remove terminating dot from radio button labels.
+
+		Make the assistants transient relatively to the main window.
+
+		Initialize console utils log handlers.
+
+		Use XML markup to print messages embedding XML tags.
+
+		Fix copy of profiles of an action by reinitializing the target
+		list of profiles before duplicating the source one.
+
+	New and updated translations
+
+		None at this time.
+
 Version 1.12.2
 ==============
 
