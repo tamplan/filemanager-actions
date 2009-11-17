@@ -1,0 +1,7 @@
+This is the Nautilus-Actions extension interface.
+
+These files are used by dynamic extensions (e.g. I/O providers).
+
+Headers are to be installed as part of a development environment of
+such a dynamic extension. They are to be included by the extension
+as '#include <nautilus-actions/api/header.h>'.
