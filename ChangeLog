@@ -1,5 +1,12 @@
 2009-11-17 Pierre Wieser <pwieser@trychlos.org>
 
+	Dynamically loads Nautilus-Actions extensions.
+
+	* nautilus-actions/runtime/na-module.c:
+	* nautilus-actions/runtime/na-module.h: New files.
+
+	* nautilus-actions/runtime/Makefile.am: Updated accordingly.
+
 	Make libna-runtime a dynamically loaded library.
 	Initialize the API directory.
 

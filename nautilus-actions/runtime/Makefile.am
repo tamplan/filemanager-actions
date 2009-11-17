@@ -29,6 +29,7 @@
 pkglib_LTLIBRARIES = libna-runtime.la
 
 AM_CPPFLAGS += \
+	-DPKGLIBDIR=\""$(pkglibdir)"\"				\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_RUNTIME}\"	\
 	$(NAUTILUS_ACTIONS_CFLAGS)					\
@@ -55,6 +56,8 @@ libna_runtime_la_SOURCES = \
 	na-ipivot-consumer.h						\
 	na-iprefs.c									\
 	na-iprefs.h									\
+	na-module.c									\
+	na-module.h									\
 	na-object-api.h								\
 	na-object.c									\
 	na-object-class.h							\
