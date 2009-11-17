@@ -37,7 +37,6 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include <runtime/na-iio-provider.h>
 #include <runtime/na-pivot.h>
 
 #include <common/na-object-api.h>

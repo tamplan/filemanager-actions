@@ -36,10 +36,11 @@
 #include <uuid/uuid.h>
 
 #include "na-object-api.h"
-#include "na-iio-provider.h"
+#include "na-io-provider.h"
 #include "na-gconf-monitor.h"
 #include "na-gconf-provider.h"
 #include "na-iprefs.h"
+#include "na-module.h"
 #include "na-pivot.h"
 #include "na-utils.h"
 
@@ -53,6 +54,10 @@ struct NAPivotClassPrivate {
  */
 struct NAPivotPrivate {
 	gboolean dispose_has_run;
+
+	/* dynamically loaded modules
+	 */
+	GList   *modules;
 
 	/* list of instances to be notified of repository updates
 	 * these are called 'consumers' of NAPivot
@@ -219,6 +224,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NAPivotPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+	self->private->modules = NULL;
 	self->private->consumers = NULL;
 	self->private->providers = NULL;
 	self->private->tree = NULL;
@@ -238,6 +244,10 @@ instance_dispose( GObject *object )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
+
+		/* release modules */
+		na_module_release_modules( self->private->modules );
+		self->private->modules = NULL;
 
 		/* release list of NAIPivotConsumers */
 		free_consumers( self->private->consumers );
@@ -295,11 +305,14 @@ na_pivot_new( const NAIPivotConsumer *target )
 {
 	static const gchar *thisfn = "na_pivot_new";
 	NAPivot *pivot;
+	GSList *messages, *im;
 
 	g_debug( "%s: target=%p", thisfn, ( void * ) target );
 	g_return_val_if_fail( NA_IS_IPIVOT_CONSUMER( target ) || !target, NULL );
 
 	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
+
+	pivot->private->modules = na_module_load_modules();
 
 	register_io_providers( pivot );
 
@@ -309,7 +322,11 @@ na_pivot_new( const NAIPivotConsumer *target )
 
 	monitor_runtime_preferences( pivot );
 
-	pivot->private->tree = na_iio_provider_get_items_tree( pivot );
+	pivot->private->tree = na_io_provider_read_items( pivot, &messages );
+	for( im = messages ; im ; im = im->next ){
+		g_warning( "%s: %s", thisfn, ( const gchar * ) im->data );
+	}
+	na_utils_free_string_list( messages );
 
 	return( pivot );
 }
@@ -352,6 +369,7 @@ na_pivot_dump( const NAPivot *pivot )
 
 	if( !pivot->private->dispose_has_run ){
 
+		g_debug( "%s:   modules=%p (%d elts)", thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));
 		g_debug( "%s: consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
 		g_debug( "%s: providers=%p (%d elts)", thisfn, ( void * ) pivot->private->providers, g_list_length( pivot->private->providers ));
 		g_debug( "%s:      tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
@@ -446,13 +464,20 @@ na_pivot_get_items( const NAPivot *pivot )
 void
 na_pivot_reload_items( NAPivot *pivot )
 {
+	static const gchar *thisfn = "na_pivot_reload_items";
+	GSList *messages, *im;
+
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
 
 		na_object_free_items_list( pivot->private->tree );
 
-		pivot->private->tree = na_iio_provider_get_items_tree( pivot );
+		pivot->private->tree = na_io_provider_read_items( pivot, &messages );
+		for( im = messages ; im ; im = im->next ){
+			g_warning( "%s: %s", thisfn, ( const gchar * ) im->data );
+		}
+		na_utils_free_string_list( messages );
 	}
 }
 
@@ -545,24 +570,24 @@ na_pivot_remove_item( NAPivot *pivot, NAObject *item )
  * na_pivot_delete_item:
  * @pivot: this #NAPivot instance.
  * @item: the #NAObjectItem to be deleted from the storage subsystem.
- * @message: the I/O provider can allocate and store here an error
- * message.
+ * @messages: the I/O provider can allocate and store here its error
+ * messages.
  *
  * Deletes an action from the I/O storage subsystem.
  *
  * Returns: the #NAIIOProvider return code.
  */
 guint
-na_pivot_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message )
+na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages )
 {
 	guint ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( message, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( messages, NA_IIO_PROVIDER_PROGRAM_ERROR );
 
 	if( !pivot->private->dispose_has_run ){
-		ret = na_iio_provider_delete_item( pivot, item, message );
+		ret = na_io_provider_delete_item( pivot, item, messages );
 	}
 
 	return( ret );
@@ -572,24 +597,24 @@ na_pivot_delete_item( const NAPivot *pivot, const NAObject *item, gchar **messag
  * na_pivot_write_item:
  * @pivot: this #NAPivot instance.
  * @item: a #NAObjectItem to be written by the storage subsystem.
- * @message: the I/O provider can allocate and store here an error
- * message.
+ * @messages: the I/O provider can allocate and store here its error
+ * messages.
  *
  * Writes an item (an action or a menu).
  *
  * Returns: the #NAIIOProvider return code.
  */
 guint
-na_pivot_write_item( const NAPivot *pivot, NAObject *item, gchar **message )
+na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages )
 {
 	guint ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( message, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( messages, NA_IIO_PROVIDER_PROGRAM_ERROR );
 
 	if( !pivot->private->dispose_has_run ){
-		ret = na_iio_provider_write_item( pivot, item, message );
+		ret = na_io_provider_write_item( pivot, item, messages );
 	}
 
 	return( ret );

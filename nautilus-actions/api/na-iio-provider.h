@@ -28,23 +28,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_IIO_PROVIDER_H__
-#define __NA_RUNTIME_IIO_PROVIDER_H__
+#ifndef __NAUTILUS_ACTIONS_NA_IIO_PROVIDER_H__
+#define __NAUTILUS_ACTIONS_NA_IIO_PROVIDER_H__
 
 /**
  * SECTION: na_iio_provider
  * @short_description: #NAIIOProvider interface definition.
- * @include: runtime/na-iio-provider.h
+ * @include: nautilus-actions/api/na-iio-provider.h
  *
- * This is the API all storage subsystems should implement in order to
- * provide I/O resources to NautilusActions.
- *
- * In a near or far future, provider subsystems may be extended by
- * creating extension libraries, this class loading the modules at
- * startup time (e.g. on the model of provider interfaces in Nautilus).
+ * This is the API all I/O Providers should implement in order to
+ * provide I/O storage resources to Nautilus-Actions.
  */
 
-#include "na-pivot.h"
+#include <nautilus-actions/runtime/na-object-item-class.h>
 
 G_BEGIN_DECLS
 
@@ -61,16 +57,23 @@ typedef struct {
 	GTypeInterface                 parent;
 	NAIIOProviderInterfacePrivate *private;
 
+	/*
+	 * This is the API the provider has to implement.
+	 */
+
 	/**
-	 * read_items_list:
+	 * read_items:
 	 * @instance: the #NAIIOProvider provider.
+	 * @messages: a pointer to a #GSList which has been initialized to
+	 * NULL before calling this function ; the provider may append error
+	 * messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Reads the whole items list from the specified I/O provider.
 	 *
-	 * Returns: a unordered #GSList of menus, actions and
-	 * profiles as #NAObject-derived objects.
+	 * Returns: a unordered flat #GList of NAObjectItem-derived objects
+	 * (menus or actions) ; the actions embed their own profiles.
 	 */
-	GList *  ( *read_items_list )    ( const NAIIOProvider *instance );
+	GList *  ( *read_items )         ( const NAIIOProvider *instance, GSList **messages );
 
 	/**
 	 * is_willing_to_write:
@@ -78,8 +81,8 @@ typedef struct {
 	 *
 	 * Checks for global writability of the I/O provider.
 	 *
-	 * Returns: %TRUE if we are able to update/write/delete a #NAAction
-	 * into this I/O provider, %FALSE else.
+	 * Returns: %TRUE if we are able to update/write/delete a #NAObjectItem
+	 * (menu or action) into this I/O provider, %FALSE else.
 	 *
 	 * Note that the I/O provider may return a positive writability
 	 * flag when considering the whole I/O storage subsystem, while not
@@ -90,54 +93,59 @@ typedef struct {
 	/**
 	 * is_writable:
 	 * @instance: the #NAIIOProvider provider.
-	 * @item: a #NAObject action or menu.
+	 * @item: a #NAObjectItem-derived menu or action.
 	 *
 	 * Checks for writability of this particular @item.
 	 *
 	 * Returns: %TRUE if we are able to update/write/delete the
 	 * @item, %FALSE else.
 	 */
-	gboolean ( *is_writable )        ( const NAIIOProvider *instance, const NAObject *item );
+	gboolean ( *is_writable )        ( const NAIIOProvider *instance, const NAObjectItem *item );
 
 	/**
-	 * write_tree_item:
+	 * write_item:
 	 * @instance: the #NAIIOProvider provider.
-	 * @item: a #NAObject to be written.
-	 * @message: warning/error messages detected in the operation.
+	 * @item: a #NAObjectItem-derived menu or action.
+	 * @messages: a pointer to a #GSList which has been initialized to
+	 * NULL before calling this function ; the provider may append error
+	 * messages to this list, but shouldn't reinitialize it.
 	 *
-	 * Updates an existing @item or writes a new one.
+	 * Writes a new @item.
 	 *
-	 * Returns: %NA_IIO_PROVIDER_WRITE_OK if the update/write operation
+	 * Returns: %NA_IIO_PROVIDER_WRITE_OK if the write operation
 	 * was successfull, or another code depending of the detected error.
+	 *
+	 * Note: there is no update_item function ; it is the responsability
+	 * of the provider to delete the previous version of an item before
+	 * writing the new version.
 	 */
-	guint    ( *write_item )         ( const NAIIOProvider *instance, NAObject *item, gchar **message );
+	guint    ( *write_item )         ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 
 	/**
-	 * delete_tree_item:
+	 * delete_item:
 	 * @instance: the #NAIIOProvider provider.
-	 * @item: a #NAObject to be deleted.
-	 * @message: warning/error messages detected in the operation.
+	 * @item: a #NAObjectItem-derived menu or action.
+	 * @messages: a pointer to a #GSList which has been initialized to
+	 * NULL before calling this function ; the provider may append error
+	 * messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Deletes an existing @item from the I/O subsystem.
 	 *
 	 * Returns: %NA_IIO_PROVIDER_WRITE_OK if the delete operation was
 	 * successfull, or another code depending of the detected error.
 	 */
-	guint    ( *delete_item )        ( const NAIIOProvider *instance, const NAObject *item, gchar **message );
+	guint    ( *delete_item )        ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 }
 	NAIIOProviderInterface;
 
-GType  na_iio_provider_get_type( void );
+GType na_iio_provider_get_type       ( void );
 
-GList *na_iio_provider_get_items_tree( const NAPivot *pivot );
-guint  na_iio_provider_write_item( const NAPivot *pivot, NAObject *item, gchar **message );
-guint  na_iio_provider_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message );
-
-/* notification message to NAPivot
+/* This function is to be called by the I/O provider when it detects a
+ * modification of one of its objects in its underlying storage subsystem.
  */
-#define NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED			"notify-consumer-of-action-change"
+void  na_iio_provider_config_changed ( const NAIIOProvider *instance );
 
-/* return code of update/write/delete operations
+/* return code of write/delete operations
  */
 enum {
 	NA_IIO_PROVIDER_WRITE_OK = 0,
@@ -150,4 +158,4 @@ enum {
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_IIO_PROVIDER_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_IIO_PROVIDER_H__ */

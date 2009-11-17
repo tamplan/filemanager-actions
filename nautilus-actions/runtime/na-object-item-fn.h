@@ -42,8 +42,9 @@
  * in na-object-api.h
  */
 
+#include <nautilus-actions/api/na-iio-provider.h>
+
 #include "na-object-item-class.h"
-#include "na-iio-provider.h"
 
 G_BEGIN_DECLS
 

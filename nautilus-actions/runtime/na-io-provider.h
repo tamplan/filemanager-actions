@@ -28,20 +28,30 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_GCONF_KEYS_H__
-#define __NAUTILUS_ACTIONS_NA_GCONF_KEYS_H__
+#ifndef __NA_RUNTIME_IO_PROVIDER_H__
+#define __NA_RUNTIME_IO_PROVIDER_H__
 
 /**
- * SECTION: na_gconf
- * @short_description: GConf general information.
- * @include: nautilus-actions/api/na-gconf-keys.h
+ * SECTION: na_iio_provider
+ * @short_description: #NAIIOProvider internal API.
+ * @include: runtime/na-io-provider.h
  *
- * These keys are used both:
- * - by GConf as a NAIIOProvider
- * - by GConf as the preferences storage system
- * - as a part of schemas path in import/export operations
+ * This is the API which is used by Nautilus-Actions to manage the actual
+ * NAIIOProvider interface.
  */
-#define NAUTILUS_ACTIONS_GCONF_BASEDIR			"/apps/nautilus-actions"
-#define NAUTILUS_ACTIONS_GCONF_SCHEMASDIR		"/schemas"
 
-#endif /* __NAUTILUS_ACTIONS_NA_GCONF_KEYS_H__ */
+#include "na-pivot.h"
+
+G_BEGIN_DECLS
+
+GList *na_io_provider_read_items ( const NAPivot *pivot, GSList **messages );
+guint  na_io_provider_write_item ( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
+guint  na_io_provider_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
+
+/* notification message to NAPivot
+ */
+#define NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED			"notify-consumer-of-action-change"
+
+G_END_DECLS
+
+#endif /* __NA_RUNTIME_IO_PROVIDER_H__ */

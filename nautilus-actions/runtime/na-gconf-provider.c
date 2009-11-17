@@ -39,7 +39,6 @@
 #include "na-gconf-provider.h"
 #include "na-gconf-provider-keys.h"
 #include "na-gconf-utils.h"
-#include "na-iio-provider.h"
 #include "na-utils.h"
 
 /* private class data
@@ -70,7 +69,7 @@ static void           install_monitors( NAGConfProvider *provider );
 static void           config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAGConfProvider *provider );
 static NAPivotNotify *entry_to_notify( const GConfEntry *entry );
 
-static GList         *iio_provider_read_items_list( const NAIIOProvider *provider );
+static GList         *iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
 static NAObjectItem  *read_item( NAGConfProvider *provider, const gchar *path );
 static void           read_item_action( NAGConfProvider *provider, const gchar *path, NAObjectAction *action );
 static void           read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjectAction *action );
@@ -83,20 +82,20 @@ static void           read_object_item_properties( NAGConfProvider *provider, GS
 
 static gboolean       iio_provider_is_willing_to_write( const NAIIOProvider *provider );
 
-static gboolean       iio_provider_is_writable( const NAIIOProvider *provider, const NAObject *item );
+static gboolean       iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item );
 
-static guint          iio_provider_write_item( const NAIIOProvider *provider, NAObject *item, gchar **message );
-static gboolean       write_item_action( NAGConfProvider *gconf, const NAObjectAction *action, gchar **message );
-static gboolean       write_item_menu( NAGConfProvider *gconf, const NAObjectMenu *menu, gchar **message );
-static gboolean       write_object_item( NAGConfProvider *gconf, const NAObjectItem *item, gchar **message );
+static guint          iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+static gboolean       write_item_action( NAGConfProvider *gconf, const NAObjectAction *action, GSList **messages );
+static gboolean       write_item_menu( NAGConfProvider *gconf, const NAObjectMenu *menu, GSList **messages );
+static gboolean       write_object_item( NAGConfProvider *gconf, const NAObjectItem *item, GSList **messages );
 
-static guint          iio_provider_delete_item( const NAIIOProvider *provider, const NAObject *item, gchar **message );
+static guint          iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
 
 static gboolean       key_is_writable( NAGConfProvider *gconf, const gchar *path );
 
-static gboolean       write_str( NAGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, gchar **message );
-static gboolean       write_bool( NAGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, gchar **message );
-static gboolean       write_list( NAGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, gchar **message );
+static gboolean       write_str( NAGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **messages );
+static gboolean       write_bool( NAGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **messages );
+static gboolean       write_list( NAGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **messages );
 
 GType
 na_gconf_provider_get_type( void )
@@ -167,7 +166,7 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->read_items_list = iio_provider_read_items_list;
+	iface->read_items = iio_provider_read_items;
 	iface->is_willing_to_write = iio_provider_is_willing_to_write;
 	iface->is_writable = iio_provider_is_writable;
 	iface->write_item = iio_provider_write_item;
@@ -328,7 +327,8 @@ config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, N
 
 	if( !provider->private->dispose_has_run ){
 		npn = entry_to_notify( entry );
-		g_signal_emit_by_name( provider->private->pivot, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );
+		/*g_signal_emit_by_name( provider->private->pivot, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );*/
+		na_iio_provider_config_changed( NA_IIO_PROVIDER( provider ));
 	}
 }
 
@@ -428,15 +428,15 @@ entry_to_notify( const GConfEntry *entry )
  * latest, version of these classes.
  */
 static GList *
-iio_provider_read_items_list( const NAIIOProvider *provider )
+iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 {
-	static const gchar *thisfn = "na_gconf_provider_iio_provider_read_items_list";
+	static const gchar *thisfn = "na_gconf_provider_iio_provider_read_items";
 	NAGConfProvider *self;
 	GList *items_list = NULL;
 	GSList *listpath, *ip;
 	NAObjectItem *item;
 
-	g_debug( "%s: provider=%p", thisfn, ( void * ) provider );
+	g_debug( "%s: provider=%p, messages=%p", thisfn, ( void * ) provider, ( void * ) messages );
 
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NULL );
@@ -814,7 +814,7 @@ iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 }
 
 static gboolean
-iio_provider_is_writable( const NAIIOProvider *provider, const NAObject *item )
+iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
 {
 	NAGConfProvider *self;
 	gboolean willing_to = FALSE;
@@ -833,49 +833,43 @@ iio_provider_is_writable( const NAIIOProvider *provider, const NAObject *item )
 }
 
 static guint
-iio_provider_write_item( const NAIIOProvider *provider, NAObject *item, gchar **message )
+iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages )
 {
 	static const gchar *thisfn = "na_gconf_provider_iio_provider_write_item";
 	NAGConfProvider *self;
 
-	g_debug( "%s: provider=%p, item=%p (%s), message=%p",
+	g_debug( "%s: provider=%p, item=%p (%s), messages=%p",
 			thisfn, ( void * ) provider,
-			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) message );
+			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) messages );
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 
 	self = NA_GCONF_PROVIDER( provider );
 
-	if( message ){
-		*message = NULL;
-	}
-
 	if( self->private->dispose_has_run ){
 		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
 	}
 
 	if( NA_IS_OBJECT_ACTION( item )){
-		if( !write_item_action( self, NA_OBJECT_ACTION( item ), message )){
+		if( !write_item_action( self, NA_OBJECT_ACTION( item ), messages )){
 			return( NA_IIO_PROVIDER_WRITE_ERROR );
 		}
 	}
 
 	if( NA_IS_OBJECT_MENU( item )){
-		if( !write_item_menu( self, NA_OBJECT_MENU( item ), message )){
+		if( !write_item_menu( self, NA_OBJECT_MENU( item ), messages )){
 			return( NA_IIO_PROVIDER_WRITE_ERROR );
 		}
 	}
 
 	gconf_client_suggest_sync( self->private->gconf, NULL );
 
-	na_object_set_provider( item, provider );
-
 	return( NA_IIO_PROVIDER_WRITE_OK );
 }
 
 static gboolean
-write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gchar **message )
+write_item_action( NAGConfProvider *provider, const NAObjectAction *action, GSList **messages )
 {
 	gchar *uuid, *name;
 	gboolean ret;
@@ -885,14 +879,14 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 	uuid = na_object_get_id( action );
 
 	ret =
-		write_object_item( provider, NA_OBJECT_ITEM( action ), message ) &&
-		write_str( provider, uuid, NULL, ACTION_VERSION_ENTRY, na_object_action_get_version( action ), message ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, na_object_action_is_target_selection( action ), message ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, na_object_action_is_target_background( action ), message ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, na_object_action_is_target_toolbar( action ), message ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, na_object_action_toolbar_use_same_label( action ), message ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, na_object_action_toolbar_get_label( action ), message ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_ACTION ), message );
+		write_object_item( provider, NA_OBJECT_ITEM( action ), messages ) &&
+		write_str( provider, uuid, NULL, ACTION_VERSION_ENTRY, na_object_action_get_version( action ), messages ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, na_object_action_is_target_selection( action ), messages ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, na_object_action_is_target_background( action ), messages ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, na_object_action_is_target_toolbar( action ), messages ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, na_object_action_toolbar_use_same_label( action ), messages ) &&
+		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, na_object_action_toolbar_get_label( action ), messages ) &&
+		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_ACTION ), messages );
 
 	profiles = na_object_get_items_list( action );
 
@@ -902,17 +896,17 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 		name = na_object_get_id( profile );
 
 		ret =
-			write_str( provider, uuid, name, ACTION_PROFILE_LABEL_ENTRY, na_object_get_label( profile ), message ) &&
-			write_str( provider, uuid, name, ACTION_PATH_ENTRY, na_object_profile_get_path( profile ), message ) &&
-			write_str( provider, uuid, name, ACTION_PARAMETERS_ENTRY, na_object_profile_get_parameters( profile ), message ) &&
-			write_list( provider, uuid, name, ACTION_BASENAMES_ENTRY, na_object_profile_get_basenames( profile ), message ) &&
-			write_bool( provider, uuid, name, ACTION_MATCHCASE_ENTRY, na_object_profile_get_matchcase( profile ), message ) &&
-			write_list( provider, uuid, name, ACTION_MIMETYPES_ENTRY, na_object_profile_get_mimetypes( profile ), message ) &&
-			write_bool( provider, uuid, name, ACTION_ISFILE_ENTRY, na_object_profile_get_is_file( profile ), message ) &&
-			write_bool( provider, uuid, name, ACTION_ISDIR_ENTRY, na_object_profile_get_is_dir( profile ), message ) &&
-			write_bool( provider, uuid, name, ACTION_MULTIPLE_ENTRY, na_object_profile_get_multiple( profile ), message ) &&
-			write_list( provider, uuid, name, ACTION_SCHEMES_ENTRY, na_object_profile_get_schemes( profile ), message ) &&
-			write_list( provider, uuid, name, ACTION_FOLDERS_ENTRY, na_object_profile_get_folders( profile ), message );
+			write_str( provider, uuid, name, ACTION_PROFILE_LABEL_ENTRY, na_object_get_label( profile ), messages ) &&
+			write_str( provider, uuid, name, ACTION_PATH_ENTRY, na_object_profile_get_path( profile ), messages ) &&
+			write_str( provider, uuid, name, ACTION_PARAMETERS_ENTRY, na_object_profile_get_parameters( profile ), messages ) &&
+			write_list( provider, uuid, name, ACTION_BASENAMES_ENTRY, na_object_profile_get_basenames( profile ), messages ) &&
+			write_bool( provider, uuid, name, ACTION_MATCHCASE_ENTRY, na_object_profile_get_matchcase( profile ), messages ) &&
+			write_list( provider, uuid, name, ACTION_MIMETYPES_ENTRY, na_object_profile_get_mimetypes( profile ), messages ) &&
+			write_bool( provider, uuid, name, ACTION_ISFILE_ENTRY, na_object_profile_get_is_file( profile ), messages ) &&
+			write_bool( provider, uuid, name, ACTION_ISDIR_ENTRY, na_object_profile_get_is_dir( profile ), messages ) &&
+			write_bool( provider, uuid, name, ACTION_MULTIPLE_ENTRY, na_object_profile_get_multiple( profile ), messages ) &&
+			write_list( provider, uuid, name, ACTION_SCHEMES_ENTRY, na_object_profile_get_schemes( profile ), messages ) &&
+			write_list( provider, uuid, name, ACTION_FOLDERS_ENTRY, na_object_profile_get_folders( profile ), messages );
 
 		g_free( name );
 	}
@@ -923,7 +917,7 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, gcha
 }
 
 static gboolean
-write_item_menu( NAGConfProvider *provider, const NAObjectMenu *menu, gchar **message )
+write_item_menu( NAGConfProvider *provider, const NAObjectMenu *menu, GSList **messages )
 {
 	gboolean ret;
 	gchar *uuid;
@@ -931,8 +925,8 @@ write_item_menu( NAGConfProvider *provider, const NAObjectMenu *menu, gchar **me
 	uuid = na_object_get_id( menu );
 
 	ret =
-		write_object_item( provider, NA_OBJECT_ITEM( menu ), message ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_MENU ), message );
+		write_object_item( provider, NA_OBJECT_ITEM( menu ), messages ) &&
+		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_MENU ), messages );
 
 	g_free( uuid );
 
@@ -940,7 +934,7 @@ write_item_menu( NAGConfProvider *provider, const NAObjectMenu *menu, gchar **me
 }
 
 static gboolean
-write_object_item( NAGConfProvider *provider, const NAObjectItem *item, gchar **message )
+write_object_item( NAGConfProvider *provider, const NAObjectItem *item, GSList **messages )
 {
 	gchar *uuid;
 	gboolean ret;
@@ -948,11 +942,11 @@ write_object_item( NAGConfProvider *provider, const NAObjectItem *item, gchar **
 	uuid = na_object_get_id( NA_OBJECT( item ));
 
 	ret =
-		write_str( provider, uuid, NULL, OBJECT_ITEM_LABEL_ENTRY, na_object_get_label( NA_OBJECT( item )), message ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLTIP_ENTRY, na_object_get_tooltip( item ), message ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_ICON_ENTRY, na_object_get_icon( item ), message ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_ENABLED_ENTRY, na_object_is_enabled( item ), message ) &&
-		write_list( provider, uuid, NULL, OBJECT_ITEM_LIST_ENTRY, na_object_item_rebuild_items_list( item ), message );
+		write_str( provider, uuid, NULL, OBJECT_ITEM_LABEL_ENTRY, na_object_get_label( NA_OBJECT( item )), messages ) &&
+		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLTIP_ENTRY, na_object_get_tooltip( item ), messages ) &&
+		write_str( provider, uuid, NULL, OBJECT_ITEM_ICON_ENTRY, na_object_get_icon( item ), messages ) &&
+		write_bool( provider, uuid, NULL, OBJECT_ITEM_ENABLED_ENTRY, na_object_is_enabled( item ), messages ) &&
+		write_list( provider, uuid, NULL, OBJECT_ITEM_LIST_ENTRY, na_object_item_rebuild_items_list( item ), messages );
 
 	g_free( uuid );
 	return( ret );
@@ -963,7 +957,7 @@ write_object_item( NAGConfProvider *provider, const NAObjectItem *item, gchar **
  * cf. http://bugzilla.gnome.org/show_bug.cgi?id=325585
  */
 static guint
-iio_provider_delete_item( const NAIIOProvider *provider, const NAObject *item, gchar **message )
+iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages )
 {
 	static const gchar *thisfn = "na_gconf_provider_iio_provider_delete_item";
 	NAGConfProvider *self;
@@ -971,9 +965,9 @@ iio_provider_delete_item( const NAIIOProvider *provider, const NAObject *item, g
 	gchar *uuid, *path;
 	GError *error = NULL;
 
-	g_debug( "%s: provider=%p, item=%p (%s), message=%p",
+	g_debug( "%s: provider=%p, item=%p (%s), messages=%p",
 			thisfn, ( void * ) provider,
-			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) message );
+			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) messages );
 
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
@@ -983,10 +977,6 @@ iio_provider_delete_item( const NAIIOProvider *provider, const NAObject *item, g
 
 	if( self->private->dispose_has_run ){
 		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
-	}
-
-	if( message ){
-		*message = NULL;
 	}
 
 	ret = NA_IIO_PROVIDER_WRITE_OK;
@@ -1005,7 +995,7 @@ iio_provider_delete_item( const NAIIOProvider *provider, const NAObject *item, g
 	path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
 	if( !gconf_client_recursive_unset( self->private->gconf, path, 0, &error )){
 		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
-		*message = g_strdup( error->message );
+		/* TODO: *message = g_strdup( error->message );*/
 		g_error_free( error );
 		ret = NA_IIO_PROVIDER_WRITE_ERROR;
 
@@ -1075,10 +1065,11 @@ key_is_writable( NAGConfProvider *gconf, const gchar *path )
 }
 
 static gboolean
-write_str( NAGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, gchar **message )
+write_str( NAGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **messages )
 {
 	gchar *path;
 	gboolean ret;
+	gchar *msg;
 
 	if( name && strlen( name )){
 		path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
@@ -1086,7 +1077,12 @@ write_str( NAGConfProvider *provider, const gchar *uuid, const gchar *name, cons
 		path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
 	}
 
-	ret = na_gconf_utils_write_string( provider->private->gconf, path, value, message );
+	msg = NULL;
+	ret = na_gconf_utils_write_string( provider->private->gconf, path, value, &msg );
+	if( msg ){
+		*messages = g_slist_append( *messages, msg );
+		g_free( msg );
+	}
 
 	g_free( value );
 	g_free( path );
@@ -1095,10 +1091,11 @@ write_str( NAGConfProvider *provider, const gchar *uuid, const gchar *name, cons
 }
 
 static gboolean
-write_bool( NAGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, gchar **message )
+write_bool( NAGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **messages )
 {
 	gboolean ret;
 	gchar *path;
+	gchar *msg;
 
 	if( name && strlen( name )){
 		path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
@@ -1106,7 +1103,12 @@ write_bool( NAGConfProvider *provider, const gchar *uuid, const gchar *name, con
 		path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
 	}
 
-	ret = na_gconf_utils_write_bool( provider->private->gconf, path, value, message );
+	msg = NULL;
+	ret = na_gconf_utils_write_bool( provider->private->gconf, path, value, &msg );
+	if( msg ){
+		*messages = g_slist_append( *messages, msg );
+		g_free( msg );
+	}
 
 	g_free( path );
 
@@ -1114,10 +1116,11 @@ write_bool( NAGConfProvider *provider, const gchar *uuid, const gchar *name, con
 }
 
 static gboolean
-write_list( NAGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, gchar **message )
+write_list( NAGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **messages )
 {
 	gboolean ret;
 	gchar *path;
+	gchar *msg;
 
 	if( name && strlen( name )){
 		path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
@@ -1125,7 +1128,12 @@ write_list( NAGConfProvider *provider, const gchar *uuid, const gchar *name, con
 		path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
 	}
 
-	ret = na_gconf_utils_write_string_list( provider->private->gconf, path, value, message );
+	msg = NULL;
+	ret = na_gconf_utils_write_string_list( provider->private->gconf, path, value, &msg );
+	if( msg ){
+		*messages = g_slist_append( *messages, msg );
+		g_free( msg );
+	}
 
 	na_utils_free_string_list( value );
 	g_free( path );

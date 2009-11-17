@@ -261,7 +261,7 @@ module_unload( GTypeModule *gmodule )
 }
 
 /**
- * na_modules_load_modules:
+ * na_module_load_modules:
  *
  * Load availables dynamic libraries.
  *
@@ -269,9 +269,9 @@ module_unload( GTypeModule *gmodule )
  * loaded library.
  */
 GList *
-na_modules_load_modules( void )
+na_module_load_modules( void )
 {
-	static const gchar *thisfn = "na_modules_load_modules";
+	static const gchar *thisfn = "na_module_load_modules";
 	const gchar *dirname = PKGLIBDIR;
 	GList *modules;
 	GDir *api_dir;
@@ -298,6 +298,7 @@ na_modules_load_modules( void )
 				module = module_new( fname );
 				if( module ){
 					modules = g_list_prepend( modules, module );
+					g_debug( "%s: module %s successfully loaded", thisfn, fname );
 				}
 				g_free( fname );
 			}

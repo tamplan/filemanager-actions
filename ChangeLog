@@ -1,9 +1,41 @@
 2009-11-17 Pierre Wieser <pwieser@trychlos.org>
 
+	Move NAIIOProvider interface to api/.
+
+	* nautilus-actions/api/na-api.h:
+	* nautilus-actions/api/na-gconf-keys.h: Fix doc typo.
+
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-main-window.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-window.h:
+	* nautilus-actions/runtime/na-gconf-provider.c:
+	* nautilus-actions/runtime/na-object-item-fn.h:
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h:
+	* nautilus-actions/utils/nautilus-actions-new.c: Updated accordingly,
+	modifying path to headers,
+	fixing calls to NAIIOProvider interface.
+
+	* nautilus-actions/runtime/na-module.c:
+	* nautilus-actions/runtime/na-module.h: Fix typo.
+
+	* nautilus-actions/api/Makefile.am:
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/plugin/Makefile.am:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/test/Makefile.am:
+	* nautilus-actions/utils/Makefile.am: Updated accordingly,
+	adding -I $(top_srcdir),
+	adding -L$(top_builddir)/nautilus-actions/api -lna-api.
+
 	Dynamically loads Nautilus-Actions extensions.
 
 	* nautilus-actions/runtime/na-module.c:
 	* nautilus-actions/runtime/na-module.h: New files.
+
+	* nautilus-actions/runtime/na-pivot.c: Load modules.
 
 	* nautilus-actions/runtime/Makefile.am: Updated accordingly.
 

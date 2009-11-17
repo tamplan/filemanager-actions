@@ -35,7 +35,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 
-#include <runtime/na-iio-provider.h>
+#include <api/na-iio-provider.h>
 
 #include <common/na-object-api.h>
 #include <common/na-iprefs.h>
@@ -214,7 +214,7 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 	static const gchar *thisfn = "nact_window_save_item";
 	gboolean save_ok = FALSE;
 	NAPivot *pivot;
-	gchar *msg = NULL;
+	GSList *messages = NULL;
 	guint ret;
 
 	g_debug( "%s: window=%p, item=%p (%s)", thisfn,
@@ -229,13 +229,15 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 
 		na_object_dump( item );
 
-		ret = na_pivot_write_item( pivot, NA_OBJECT( item ), &msg );
+		ret = na_pivot_write_item( pivot, item, &messages );
 
-		if( msg ){
+		if( messages ){
 			base_window_error_dlg(
 					BASE_WINDOW( window ),
-					GTK_MESSAGE_WARNING, _( "An error has occured when trying to save the item" ), msg );
-			g_free( msg );
+					GTK_MESSAGE_WARNING,
+					_( "An error has occured when trying to save the item" ),
+					( const gchar * ) messages->data );
+			na_utils_free_string_list( messages );
 		}
 
 		save_ok = ( ret == NA_IIO_PROVIDER_WRITE_OK );
@@ -252,12 +254,12 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
  * Deleted an item from the I/O storage subsystem.
  */
 gboolean
-nact_window_delete_item( NactWindow *window, NAObjectItem *item )
+nact_window_delete_item( NactWindow *window, const NAObjectItem *item )
 {
 	static const gchar *thisfn = "nact_window_delete_item";
 	gboolean delete_ok = FALSE;
 	NAPivot *pivot;
-	gchar *msg = NULL;
+	GSList *messages = NULL;
 	guint ret;
 
 	g_debug( "%s: window=%p, item=%p (%s)", thisfn,
@@ -272,13 +274,15 @@ nact_window_delete_item( NactWindow *window, NAObjectItem *item )
 
 		na_object_dump_norec( item );
 
-		ret = na_pivot_delete_item( pivot, NA_OBJECT( item ), &msg );
+		ret = na_pivot_delete_item( pivot, item, &messages );
 
-		if( msg ){
+		if( messages ){
 			base_window_error_dlg(
 					BASE_WINDOW( window ),
-					GTK_MESSAGE_WARNING, _( "An error has occured when trying to delete the item" ), msg );
-			g_free( msg );
+					GTK_MESSAGE_WARNING,
+					_( "An error has occured when trying to delete the item" ),
+					( const gchar * ) messages->data );
+			na_utils_free_string_list( messages );
 		}
 
 		delete_ok = ( ret == NA_IIO_PROVIDER_WRITE_OK );

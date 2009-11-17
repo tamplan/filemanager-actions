@@ -29,6 +29,7 @@
 pkglib_LTLIBRARIES=libna-api.la
 
 AM_CPPFLAGS += \
+	-I $(top_srcdir)									\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_API}\"				\
 	$(NULL)
@@ -38,9 +39,11 @@ libna_api_includedir = $(pkgincludedir)/api
 libna_api_include_HEADERS = \
 	na-api.h											\
 	na-gconf-keys.h										\
+	na-iio-provider.h									\
 	$(NULL)
 
 libna_api_la_SOURCES = \
+	na-iio-provider.c									\
 	$(NULL)
 
 libna_api_la_LIBADD = \

@@ -76,6 +76,7 @@
 
 #include "na-object-class.h"
 #include "na-object-id-class.h"
+#include "na-object-item-class.h"
 #include "na-ipivot-consumer.h"
 
 G_BEGIN_DECLS
@@ -119,8 +120,8 @@ void      na_pivot_add_item( NAPivot *pivot, const NAObject *item );
 NAObject *na_pivot_get_item( const NAPivot *pivot, const gchar *uuid );
 void      na_pivot_remove_item( NAPivot *pivot, NAObject *item );
 
-guint     na_pivot_delete_item( const NAPivot *pivot, const NAObject *item, gchar **message );
-guint     na_pivot_write_item( const NAPivot *pivot, NAObject *item, gchar **message );
+guint     na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
+guint     na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
 
 void      na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
 

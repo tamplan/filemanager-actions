@@ -39,7 +39,6 @@
 
 #include <runtime/na-pivot.h>
 #include <runtime/na-iabout.h>
-#include <runtime/na-iio-provider.h>
 #include <runtime/na-ipivot-consumer.h>
 
 #include <common/na-object-api.h>

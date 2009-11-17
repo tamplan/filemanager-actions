@@ -36,8 +36,10 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
+#include <api/na-iio-provider.h>
+
+#include <runtime/na-io-provider.h>
 #include <runtime/na-gconf-provider.h>
-#include <runtime/na-iio-provider.h>
 
 #include <common/na-iprefs.h>
 #include <common/na-object-api.h>
@@ -369,18 +371,12 @@ write_to_gconf( NAObjectAction *action, GSList **msg )
 {
 	NAGConfProvider *gconf;
 	guint ret;
-	gchar *str;
 
 	gconf = na_gconf_provider_new( NULL );
 
 	na_object_set_provider( action, NA_IIO_PROVIDER( gconf ));
 
-	str = NULL;
-	ret = na_iio_provider_write_item( NULL, NA_OBJECT( action ), &str );
-	if( str ){
-		*msg = g_slist_append( *msg, str );
-		g_free( str );
-	}
+	ret = na_io_provider_write_item( NULL, NA_OBJECT_ITEM( action ), msg );
 
 	return( ret == NA_IIO_PROVIDER_WRITE_OK );
 }

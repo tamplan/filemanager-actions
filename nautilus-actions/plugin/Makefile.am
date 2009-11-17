@@ -27,6 +27,7 @@
 #   ... and many others (see AUTHORS)
 
 AM_CPPFLAGS += \
+	-I $(top_srcdir)											\
 	-I $(top_srcdir)/nautilus-actions							\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PLUGIN}\"					\
 	$(NAUTILUS_ACTIONS_CFLAGS)									\

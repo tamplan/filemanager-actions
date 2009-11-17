@@ -70,7 +70,7 @@ typedef struct {
 
 GType  na_module_get_type               ( void );
 
-GList *na_modules_load_modules          ( void );
+GList *na_module_load_modules           ( void );
 GList *na_module_get_extensions_for_type( GList *modules, GType type );
 gchar *na_module_get_name               ( NAModule *module, GType type );
 void   na_module_release_modules        ( GList *modules );

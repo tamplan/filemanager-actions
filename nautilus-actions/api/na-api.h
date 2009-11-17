@@ -34,7 +34,7 @@
 /**
  * SECTION: na_api
  * @short_description: #NAAPI interface definition.
- * @include: api/na-api.h
+ * @include: nautilus-actions/api/na-api.h
  *
  * These are common functions a Nautilus-Actions extension should
  * implement in order to be dynamically registered and identified.

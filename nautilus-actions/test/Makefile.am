@@ -34,6 +34,7 @@ noinst_PROGRAMS = \
 	$(NULL)
 
 AM_CPPFLAGS += \
+	-I $(top_srcdir)											\
 	-I $(top_srcdir)/nautilus-actions							\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"						\
@@ -59,7 +60,8 @@ test_parse_uris_SOURCES = \
 	$(NULL)
 
 test_parse_uris_LDADD = \
-	-L$(top_builddir)/nautilus-actions/runtime -lna-runtime		\
+	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 

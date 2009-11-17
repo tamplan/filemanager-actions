@@ -32,6 +32,7 @@ bin_PROGRAMS = \
 	$(NULL)
 
 AM_CPPFLAGS += \
+	-I $(top_srcdir)											\
 	-I $(top_srcdir)/nautilus-actions							\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"					\
@@ -46,7 +47,8 @@ nautilus_actions_new_SOURCES = \
 
 nautilus_actions_new_LDADD = \
 	$(top_builddir)/nautilus-actions/common/libna-common.la		\
-	-L$(top_builddir)/nautilus-actions/runtime -lna-runtime		\
+	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
@@ -58,6 +60,7 @@ nautilus_actions_schemas_SOURCES = \
 
 nautilus_actions_schemas_LDADD = \
 	$(top_builddir)/nautilus-actions/common/libna-common.la		\
-	-L$(top_builddir)/nautilus-actions/runtime -lna-runtime		\
+	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
