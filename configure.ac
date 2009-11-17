@@ -48,6 +48,7 @@ AC_CONFIG_FILES([
 	icons/48x48/Makefile
 	icons/scalable/Makefile
 	nautilus-actions/Makefile
+	nautilus-actions/api/Makefile
 	nautilus-actions/common/Makefile
 	nautilus-actions/nact/Makefile
 	nautilus-actions/plugin/Makefile

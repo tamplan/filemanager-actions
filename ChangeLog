@@ -1,5 +1,21 @@
 2009-11-17 Pierre Wieser <pwieser@trychlos.org>
 
+	Make libna-runtime a dynamically loaded library.
+	Initialize the API directory.
+
+	* nautilus-actions/api: New directory.
+
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/plugin/Makefile.am:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/test/Makefile.am:
+	* nautilus-actions/utils/Makefile.am: Updated accordingly.
+
+	* po/POTFILES.in: Updated to reflect src/ directory renaming.
+
+2009-11-17 Pierre Wieser <pwieser@trychlos.org>
+
 	Rename all src/ tree to nautilus-actions/.
 
 	This will make easier to have an API installed on a host system,

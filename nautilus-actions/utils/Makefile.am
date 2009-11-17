@@ -27,37 +27,37 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
-	nautilus-actions-new							\
-	nautilus-actions-schemas						\
+	nautilus-actions-new										\
+	nautilus-actions-schemas									\
 	$(NULL)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)/src							\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
-	$(NAUTILUS_ACTIONS_CFLAGS)						\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"		\
+	-I $(top_srcdir)/nautilus-actions							\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"					\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
 nautilus_actions_new_SOURCES = \
-	nautilus-actions-new.c							\
-	console-utils.c									\
-	console-utils.h									\
+	nautilus-actions-new.c										\
+	console-utils.c												\
+	console-utils.h												\
 	$(NULL)
 
 nautilus_actions_new_LDADD = \
-	$(top_builddir)/src/common/libna-common.la		\
-	$(top_builddir)/src/runtime/libna-runtime.la	\
-	$(NAUTILUS_ACTIONS_LIBS)						\
+	$(top_builddir)/nautilus-actions/common/libna-common.la		\
+	-L$(top_builddir)/nautilus-actions/runtime -lna-runtime		\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
 nautilus_actions_schemas_SOURCES = \
-	nautilus-actions-schemas.c						\
-	console-utils.c									\
-	console-utils.h									\
+	nautilus-actions-schemas.c									\
+	console-utils.c												\
+	console-utils.h												\
 	$(NULL)
 
 nautilus_actions_schemas_LDADD = \
-	$(top_builddir)/src/common/libna-common.la		\
-	$(top_builddir)/src/runtime/libna-runtime.la	\
-	$(NAUTILUS_ACTIONS_LIBS)						\
+	$(top_builddir)/nautilus-actions/common/libna-common.la		\
+	-L$(top_builddir)/nautilus-actions/runtime -lna-runtime		\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)

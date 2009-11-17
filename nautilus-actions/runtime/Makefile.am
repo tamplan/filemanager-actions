@@ -26,7 +26,7 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-noinst_LTLIBRARIES = libna-runtime.la
+pkglib_LTLIBRARIES = libna-runtime.la
 
 AM_CPPFLAGS += \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
@@ -87,4 +87,11 @@ libna_runtime_la_SOURCES = \
 	$(NULL)
 
 libna_runtime_la_LIBADD = \
+	$(NULL)
+
+VERSION_INFO = 1:0:0
+libna_runtime_la_LDFLAGS = \
+	-module										\
+	-no-undefined								\
+	-version-number $(VERSION_INFO)				\
 	$(NULL)

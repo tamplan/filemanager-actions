@@ -27,81 +27,81 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
-	nautilus-actions-config-tool						\
+	nautilus-actions-config-tool								\
 	$(NULL)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)/src								\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
-	-DPKGDATADIR=\"$(pkgdatadir)\"						\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"				\
-	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	-I $(top_srcdir)/nautilus-actions							\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
+	-DPKGDATADIR=\"$(pkgdatadir)\"								\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"						\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
 BUILT_SOURCES = \
-	nact-marshal.c										\
-	nact-marshal.h										\
+	nact-marshal.c												\
+	nact-marshal.h												\
 	$(NULL)
 
 nautilus_actions_config_tool_SOURCES = \
-	base-application.c									\
-	base-application.h									\
-	base-application-class.h							\
-	base-assistant.c									\
-	base-assistant.h									\
-	base-builder.c										\
-	base-builder.h										\
-	base-dialog.c										\
-	base-dialog.h										\
-	base-iprefs.c										\
-	base-iprefs.h										\
-	base-window.c										\
-	base-window.h										\
-	base-window-class.h									\
-	egg-tree-multi-dnd.c								\
-	egg-tree-multi-dnd.h								\
-	nact-application.c									\
-	nact-application.h									\
-	nact-assistant-export.c								\
-	nact-assistant-export.h								\
-	nact-assistant-export-ask.c							\
-	nact-assistant-export-ask.h							\
-	nact-assistant-import.c								\
-	nact-assistant-import.h								\
-	nact-assistant-import-ask.c							\
-	nact-assistant-import-ask.h							\
-	nact-clipboard.c									\
-	nact-clipboard.h									\
-	nact-iactions-list.c								\
-	nact-iactions-list.h								\
-	nact-iaction-tab.c									\
-	nact-iaction-tab.h									\
-	nact-iadvanced-tab.c								\
-	nact-iadvanced-tab.h								\
-	nact-ibackground-tab.c								\
-	nact-ibackground-tab.h								\
-	nact-icommand-tab.c									\
-	nact-icommand-tab.h									\
-	nact-iconditions-tab.c								\
-	nact-iconditions-tab.h								\
-	nact-main.c											\
-	nact-main-menubar.c									\
-	nact-main-menubar.h									\
-	nact-main-statusbar.c								\
-	nact-main-statusbar.h								\
-	nact-main-tab.c										\
-	nact-main-tab.h										\
-	nact-main-window.c									\
-	nact-main-window.h									\
-	nact-preferences-editor.c							\
-	nact-preferences-editor.h							\
-	nact-tree-model.c									\
-	nact-tree-model.h									\
-	nact-window.c										\
-	nact-window.h										\
-	nact-xml-reader.c									\
-	nact-xml-reader.h									\
-	$(BUILT_SOURCES)									\
+	base-application.c											\
+	base-application.h											\
+	base-application-class.h									\
+	base-assistant.c											\
+	base-assistant.h											\
+	base-builder.c												\
+	base-builder.h												\
+	base-dialog.c												\
+	base-dialog.h												\
+	base-iprefs.c												\
+	base-iprefs.h												\
+	base-window.c												\
+	base-window.h												\
+	base-window-class.h											\
+	egg-tree-multi-dnd.c										\
+	egg-tree-multi-dnd.h										\
+	nact-application.c											\
+	nact-application.h											\
+	nact-assistant-export.c										\
+	nact-assistant-export.h										\
+	nact-assistant-export-ask.c									\
+	nact-assistant-export-ask.h									\
+	nact-assistant-import.c										\
+	nact-assistant-import.h										\
+	nact-assistant-import-ask.c									\
+	nact-assistant-import-ask.h									\
+	nact-clipboard.c											\
+	nact-clipboard.h											\
+	nact-iactions-list.c										\
+	nact-iactions-list.h										\
+	nact-iaction-tab.c											\
+	nact-iaction-tab.h											\
+	nact-iadvanced-tab.c										\
+	nact-iadvanced-tab.h										\
+	nact-ibackground-tab.c										\
+	nact-ibackground-tab.h										\
+	nact-icommand-tab.c											\
+	nact-icommand-tab.h											\
+	nact-iconditions-tab.c										\
+	nact-iconditions-tab.h										\
+	nact-main.c													\
+	nact-main-menubar.c											\
+	nact-main-menubar.h											\
+	nact-main-statusbar.c										\
+	nact-main-statusbar.h										\
+	nact-main-tab.c												\
+	nact-main-tab.h												\
+	nact-main-window.c											\
+	nact-main-window.h											\
+	nact-preferences-editor.c									\
+	nact-preferences-editor.h									\
+	nact-tree-model.c											\
+	nact-tree-model.h											\
+	nact-window.c												\
+	nact-window.h												\
+	nact-xml-reader.c											\
+	nact-xml-reader.h											\
+	$(BUILT_SOURCES)											\
 	$(NULL)
 
 nact-marshal.h: nact-marshal.list $(GLIB_GENMARSHAL)
@@ -112,16 +112,16 @@ nact-marshal.c: nact-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=nact_marshal >> $@
 
 nautilus_actions_config_tool_LDADD = \
-	$(top_builddir)/src/common/libna-common.la			\
-	$(top_builddir)/src/runtime/libna-runtime.la		\
-	$(NAUTILUS_ACTIONS_LIBS)							\
+	$(top_builddir)/nautilus-actions/common/libna-common.la		\
+	-L$(top_builddir)/nautilus-actions/runtime -lna-runtime		\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
 pkgdata_DATA = \
-	nautilus-actions-config-tool.actions				\
-	nautilus-actions-maintainer.actions					\
-	nact-assistant-export.ui							\
-	nautilus-actions-config-tool.ui						\
+	nautilus-actions-config-tool.actions						\
+	nautilus-actions-maintainer.actions							\
+	nact-assistant-export.ui									\
+	nautilus-actions-config-tool.ui								\
 	$(NULL)
 
 @INTLTOOL_DESKTOP_RULE@
@@ -135,14 +135,14 @@ applicationsdir = $(datadir)/applications
 applications_DATA = $(applications_files)
 
 CLEANFILES = \
-	$(applications_files)								\
-	$(BUILT_SOURCES)									\
+	$(applications_files)										\
+	$(BUILT_SOURCES)											\
 	$(NULL)
 
 EXTRA_DIST = \
-	$(applications_in_files)							\
-	$(pkgdata_DATA)										\
-	nact-marshal.list									\
+	$(applications_in_files)									\
+	$(pkgdata_DATA)												\
+	nact-marshal.list											\
 	$(NULL)
 
 uninstall-hook:

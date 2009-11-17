@@ -27,9 +27,9 @@
 #   ... and many others (see AUTHORS)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)/src								\
-	$(NAUTILUS_ACTIONS_CFLAGS)							\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PLUGIN}\"			\
+	-I $(top_srcdir)/nautilus-actions							\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PLUGIN}\"					\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
 nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
@@ -37,14 +37,14 @@ nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
 nautilus_extension_LTLIBRARIES = libnautilus-actions.la
 
 libnautilus_actions_la_SOURCES = \
-	nautilus-module.c									\
-	nautilus-actions.c									\
-	nautilus-actions.h									\
+	nautilus-module.c											\
+	nautilus-actions.c											\
+	nautilus-actions.h											\
 	$(NULL)
 
 libnautilus_actions_la_LDFLAGS = -module -avoid-version
 
 libnautilus_actions_la_LIBADD = \
-	$(top_builddir)/src/runtime/libna-runtime.la		\
-	$(NAUTILUS_ACTIONS_LIBS)							\
+	-L$(top_builddir)/nautilus-actions/runtime -lna-runtime		\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)

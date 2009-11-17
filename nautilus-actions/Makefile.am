@@ -29,6 +29,7 @@
 SUBDIRS = \
 	common						\
 	runtime						\
+	api							\
 	nact						\
 	plugin						\
 	test						\

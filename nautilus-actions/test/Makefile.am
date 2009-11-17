@@ -27,55 +27,54 @@
 #   ... and many others (see AUTHORS)
 
 noinst_PROGRAMS = \
-	test-iface										\
-	test-parse-uris									\
-	test-virtuals									\
-	test-virtuals-without-test						\
+	test-iface													\
+	test-parse-uris												\
+	test-virtuals												\
+	test-virtuals-without-test									\
 	$(NULL)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)/src							\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
-	$(NAUTILUS_ACTIONS_CFLAGS)						\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"			\
+	-I $(top_srcdir)/nautilus-actions							\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"						\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
 test_iface_SOURCES = \
-	test-iface.c									\
-	test-iface-iface.c								\
-	test-iface-iface.h								\
-	test-iface-base.c								\
-	test-iface-base.h								\
-	test-iface-derived.c							\
-	test-iface-derived.h							\
+	test-iface.c												\
+	test-iface-iface.c											\
+	test-iface-iface.h											\
+	test-iface-base.c											\
+	test-iface-base.h											\
+	test-iface-derived.c										\
+	test-iface-derived.h										\
 	$(NULL)
 
 test_iface_LDADD = \
-	$(NAUTILUS_ACTIONS_LIBS)						\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
 test_parse_uris_SOURCES = \
-	test-parse-uris.c								\
+	test-parse-uris.c											\
 	$(NULL)
 
 test_parse_uris_LDADD = \
-	$(top_builddir)/src/runtime/libna-runtime.la	\
-	$(NAUTILUS_ACTIONS_LIBS)						\
+	-L$(top_builddir)/nautilus-actions/runtime -lna-runtime		\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
 test_virtuals_SOURCES = \
-	test-virtuals.c									\
+	test-virtuals.c												\
 	$(NULL)
 
 test_virtuals_LDADD = \
-	$(NAUTILUS_ACTIONS_LIBS)						\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
 test_virtuals_without_test_SOURCES = \
-	test-virtuals-without-test.c					\
+	test-virtuals-without-test.c								\
 	$(NULL)
 
 test_virtuals_Lwithout_test_DADD = \
-	$(NAUTILUS_ACTIONS_LIBS)						\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
-	
