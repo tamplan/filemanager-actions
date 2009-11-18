@@ -36,8 +36,7 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
-#include <runtime/na-object-api.h>
-#include <runtime/na-object-profile-priv.h>
+#include <private/na-object-profile-priv.h>
 
 #include "na-object-api.h"
 #include "na-utils.h"

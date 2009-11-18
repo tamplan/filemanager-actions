@@ -1,5 +1,75 @@
 2009-11-18 Pierre Wieser <pwieser@trychlos.org>
 
+	Move runtime/na-object-* stuff to private/ subdirectory.
+
+	* nautilus-actions/runtime/na-gnome-vfs-uri.c:
+	* nautilus-actions/runtime/na-gnome-vfs-uri.h:
+	* nautilus-actions/runtime/na-iduplicable.c:
+	* nautilus-actions/runtime/na-iduplicable.h:
+	* nautilus-actions/runtime/na-object-action-class.h:
+	* nautilus-actions/runtime/na-object-action-fn.h:
+	* nautilus-actions/runtime/na-object-action-priv.h:
+	* nautilus-actions/runtime/na-object-action.c:
+	* nautilus-actions/runtime/na-object-api.h:
+	* nautilus-actions/runtime/na-object-class.h:
+	* nautilus-actions/runtime/na-object-fn.h:
+	* nautilus-actions/runtime/na-object-id-class.h:
+	* nautilus-actions/runtime/na-object-id-fn.h:
+	* nautilus-actions/runtime/na-object-id-priv.h:
+	* nautilus-actions/runtime/na-object-id.c:
+	* nautilus-actions/runtime/na-object-item-class.h:
+	* nautilus-actions/runtime/na-object-item-fn.h:
+	* nautilus-actions/runtime/na-object-item-priv.h:
+	* nautilus-actions/runtime/na-object-item.c:
+	* nautilus-actions/runtime/na-object-menu-class.h:
+	* nautilus-actions/runtime/na-object-menu-fn.h:
+	* nautilus-actions/runtime/na-object-menu-priv.h:
+	* nautilus-actions/runtime/na-object-menu.c:
+	* nautilus-actions/runtime/na-object-priv.h:
+	* nautilus-actions/runtime/na-object-profile-class.h:
+	* nautilus-actions/runtime/na-object-profile-fn.h:
+	* nautilus-actions/runtime/na-object-profile-priv.h:
+	* nautilus-actions/runtime/na-object-profile.c:
+	* nautilus-actions/runtime/na-object.c: Moved to private/
+
+	* nautilus-actions/api/na-iio-provider.h:
+	* nautilus-actions/common/na-object-action-fn.h:
+	* nautilus-actions/common/na-object-action.c:
+	* nautilus-actions/common/na-object-api.h:
+	* nautilus-actions/common/na-object-fn.h:
+	* nautilus-actions/common/na-object-id-fn.h:
+	* nautilus-actions/common/na-object-id.c:
+	* nautilus-actions/common/na-object-item-fn.h:
+	* nautilus-actions/common/na-object-item.c:
+	* nautilus-actions/common/na-object-menu-fn.h:
+	* nautilus-actions/common/na-object-menu.c:
+	* nautilus-actions/common/na-object-profile-fn.h:
+	* nautilus-actions/common/na-object-profile.c:
+	* nautilus-actions/common/na-object.c:
+	* nautilus-actions/common/na-xml-writer.h:
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/nact/nact-application.c:
+	* nautilus-actions/nact/nact-assistant-export-ask.h:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import-ask.h:
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iactions-list.h:
+	* nautilus-actions/nact/nact-main-window.h:
+	* nautilus-actions/nact/nact-window.h:
+	* nautilus-actions/nact/nact-xml-reader.h:
+	* nautilus-actions/plugin/Makefile.am:
+	* nautilus-actions/plugin/nautilus-actions.c:
+	* nautilus-actions/private/Makefile.am:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/na-gconf-provider.c:
+	* nautilus-actions/runtime/na-io-provider.c:
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h:
+	* nautilus-actions/test/Makefile.am:
+	* nautilus-actions/test/test-parse-uris.c:
+	* nautilus-actions/utils/Makefile.am:
+	* po/POTFILES.in: Updated accordingly.
+
 	Create private/ directory to host installed though private headers.
 
 	* configure.ac:

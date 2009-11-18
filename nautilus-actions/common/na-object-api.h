@@ -41,7 +41,7 @@
  * Nautilus Actions plugin.
  */
 
-#include <runtime/na-object-api.h>
+#include <private/na-object-api.h>
 
 #include "na-object-fn.h"
 #include "na-object-id-fn.h"

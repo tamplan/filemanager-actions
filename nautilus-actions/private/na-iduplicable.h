@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_IDUPLICABLE_H__
-#define __NA_RUNTIME_IDUPLICABLE_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_IDUPLICABLE_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_IDUPLICABLE_H__
 
 /**
  * SECTION: na_iduplicable
  * @short_description: #NAIDuplicable interface.
- * @include: runtime/na-iduplicable.h
+ * @include: nautilus-actions/private/na-iduplicable.h
  *
  * This interface is implemented by #NAObject in order to let
  * #NAObject-derived instance duplication be easily tracked. This works
@@ -164,4 +164,4 @@ void           na_iduplicable_register_consumer( GObject *consumer );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_IDUPLICABLE_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_IDUPLICABLE_H__ */

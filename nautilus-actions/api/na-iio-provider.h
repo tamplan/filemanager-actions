@@ -40,7 +40,7 @@
  * provide I/O storage resources to Nautilus-Actions.
  */
 
-#include <nautilus-actions/runtime/na-object-item-class.h>
+#include <nautilus-actions/private/na-object-item-class.h>
 
 G_BEGIN_DECLS
 

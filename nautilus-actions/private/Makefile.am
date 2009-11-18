@@ -30,6 +30,7 @@ pkglib_LTLIBRARIES = libna-private.la
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)							\
+	-I $(top_srcdir)/nautilus-actions			\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"				\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PRIVATE}\"	\
@@ -39,9 +40,38 @@ AM_CPPFLAGS += \
 libna_private_includedir = $(pkgincludedir)/private
 
 libna_private_include_HEADERS = \
+	na-object-api.h								\
+	na-object-class.h							\
+	na-object-fn.h								\
+	na-object-id-class.h						\
+	na-object-id-fn.h							\
+	na-object-item-class.h						\
+	na-object-item-fn.h							\
+	na-object-action-class.h					\
+	na-object-action-fn.h						\
+	na-object-menu-class.h						\
+	na-object-menu-fn.h							\
+	na-object-profile-class.h					\
+	na-object-profile-fn.h						\
 	$(NULL)
 
 libna_private_la_SOURCES = \
+	na-gnome-vfs-uri.c							\
+	na-gnome-vfs-uri.h							\
+	na-iduplicable.c							\
+	na-iduplicable.h							\
+	na-object.c									\
+	na-object-priv.h							\
+	na-object-id.c								\
+	na-object-id-priv.h							\
+	na-object-item.c							\
+	na-object-item-priv.h						\
+	na-object-action.c							\
+	na-object-action-priv.h						\
+	na-object-menu.c							\
+	na-object-menu-priv.h						\
+	na-object-profile.c							\
+	na-object-profile-priv.h					\
 	$(NULL)
 
 libna_private_la_LIBADD = \

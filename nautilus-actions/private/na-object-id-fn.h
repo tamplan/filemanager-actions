@@ -28,26 +28,33 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_MENU_FN_H__
-#define __NA_RUNTIME_OBJECT_MENU_FN_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ID_FN_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ID_FN_H__
 
 /**
- * SECTION: na_object_menu
- * @short_description: #NAObjectMenu class definition.
- * @include: runtime/na-object-menu.h
+ * SECTION: na_object_id
+ * @short_description: #NAObjectId public function declarations.
+ * @include: nautilus-actions/private/na-object-id-fn.h
  *
- * This is a menu. It embeds other menus and/or actions.
+ * Define here the public functions of the #NAObjectId class.
+ *
+ * Note that most users of the class should rather use macros defined
+ * in na-object-api.h
  */
 
-#include "na-object-menu-class.h"
+#include "na-object-item-class.h"
 
 G_BEGIN_DECLS
 
-/* i18n: default label for a newly created menu */
-#define NA_OBJECT_MENU_DEFAULT_LABEL	_( "New Nautilus menu" )
+gchar        *na_object_id_get_id( const NAObjectId *object );
+void          na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent );
+gchar        *na_object_id_get_label( const NAObjectId *object );
+NAObjectItem *na_object_id_get_parent( NAObjectId *object );
 
-NAObjectMenu *na_object_menu_new( void );
+void          na_object_id_set_id( NAObjectId *object, const gchar *id );
+void          na_object_id_set_label( NAObjectId *object, const gchar *label );
+void          na_object_id_set_parent( NAObjectId *object, NAObjectItem *parent );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_MENU_FN_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ID_FN_H__ */

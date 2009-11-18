@@ -32,9 +32,11 @@
 #include <config.h>
 #endif
 
+#include <runtime/na-utils.h>
+
 #include "na-object-api.h"
+#include "na-iduplicable.h"
 #include "na-object-menu-priv.h"
-#include "na-utils.h"
 
 /* private class data
  */

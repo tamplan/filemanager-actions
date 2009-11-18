@@ -35,8 +35,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include <runtime/na-object-api.h>
-#include <runtime/na-object-item-priv.h>
+#include <private/na-object-item-priv.h>
 
 #include "na-object-api.h"
 

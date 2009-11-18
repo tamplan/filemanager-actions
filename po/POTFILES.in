@@ -24,10 +24,10 @@ nautilus-actions/nact/nact-window.c
 nautilus-actions/nact/nact-xml-reader.c
 nautilus-actions/nact/nautilus-actions-config-tool.ui
 nautilus-actions/plugin/nautilus-actions.c
+nautilus-actions/private/na-object-action-fn.h
+nautilus-actions/private/na-object-menu-fn.h
+nautilus-actions/private/na-object-profile-fn.h
 nautilus-actions/runtime/na-iabout.c
-nautilus-actions/runtime/na-object-action-fn.h
-nautilus-actions/runtime/na-object-menu-fn.h
-nautilus-actions/runtime/na-object-profile-fn.h
 nautilus-actions/test/test-parse-uris.c
 nautilus-actions/utils/nautilus-actions-new.c
 nautilus-actions/utils/nautilus-actions-schemas.c

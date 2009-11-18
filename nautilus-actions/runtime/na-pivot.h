@@ -74,9 +74,10 @@
  *    subsystem.
  */
 
-#include "na-object-class.h"
-#include "na-object-id-class.h"
-#include "na-object-item-class.h"
+#include <private/na-object-class.h>
+#include <private/na-object-id-class.h>
+#include <private/na-object-item-class.h>
+
 #include "na-ipivot-consumer.h"
 
 G_BEGIN_DECLS

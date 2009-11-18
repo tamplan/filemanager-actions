@@ -34,8 +34,7 @@
 
 #include <string.h>
 
-#include <runtime/na-object-api.h>
-#include <runtime/na-object-action-priv.h>
+#include <private/na-object-action-priv.h>
 
 #include "na-object-api.h"
 

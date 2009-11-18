@@ -46,6 +46,7 @@ libnautilus_actions_la_SOURCES = \
 libnautilus_actions_la_LDFLAGS = -module -avoid-version
 
 libnautilus_actions_la_LIBADD = \
-	-L$(top_builddir)/nautilus-actions/runtime -lna-runtime		\
+	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
+	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)

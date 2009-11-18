@@ -28,19 +28,38 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_MENU_PRIV_H__
-#define __NA_RUNTIME_OBJECT_MENU_PRIV_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_PRIV_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_PRIV_H__
 
-#include "na-object-menu-class.h"
+#include "na-object-profile-class.h"
 
 G_BEGIN_DECLS
 
 /* private instance data
  */
-struct NAObjectMenuPrivate {
-	gboolean dispose_has_run;
+struct NAObjectProfilePrivate {
+	gboolean  dispose_has_run;
+
+	/* profile properties
+	 */
+	gchar    *path;
+	gchar    *parameters;
+
+	/* ... for target 'FileSelection'
+	 */
+	GSList   *basenames;
+	gboolean  match_case;
+	GSList   *mimetypes;
+	gboolean  is_file;
+	gboolean  is_dir;
+	gboolean  accept_multiple;
+	GSList   *schemes;
+
+	/* ... for targets 'Background' and 'Toolbar'
+	 */
+	GSList   *folders;
 };
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_MENU_PRIV_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_PRIV_H__ */

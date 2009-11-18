@@ -34,9 +34,10 @@
 
 #include <string.h>
 
-#include <nautilus-actions/api/na-iio-provider.h>
+#include <api/na-iio-provider.h>
 
-#include "na-object-api.h"
+#include <private/na-object-api.h>
+
 #include "na-io-provider.h"
 #include "na-iprefs.h"
 #include "na-utils.h"

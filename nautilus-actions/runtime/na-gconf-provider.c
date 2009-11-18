@@ -34,7 +34,8 @@
 
 #include <string.h>
 
-#include "na-object-api.h"
+#include <private/na-object-api.h>
+
 #include "na-gconf-monitor.h"
 #include "na-gconf-provider.h"
 #include "na-gconf-provider-keys.h"

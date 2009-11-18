@@ -38,6 +38,8 @@
 #include <common/na-object-api.h>
 #include <common/na-iprefs.h>
 
+#include <private/na-iduplicable.h>
+
 #include "nact-application.h"
 #include "nact-marshal.h"
 #include "nact-main-tab.h"

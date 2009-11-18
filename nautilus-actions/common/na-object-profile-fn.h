@@ -40,7 +40,7 @@
  * are not shared by the Nautilus Actions plugin.
  */
 
-#include <runtime/na-object-profile-class.h>
+#include <private/na-object-profile-class.h>
 
 G_BEGIN_DECLS
 

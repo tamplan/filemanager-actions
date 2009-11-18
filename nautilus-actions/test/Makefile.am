@@ -61,6 +61,7 @@ test_parse_uris_SOURCES = \
 
 test_parse_uris_LDADD = \
 	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
 	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)

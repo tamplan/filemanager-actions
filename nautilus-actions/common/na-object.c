@@ -34,8 +34,8 @@
 
 #include <string.h>
 
-#include <runtime/na-object-api.h>
-#include <runtime/na-object-priv.h>
+#include <private/na-object-priv.h>
+#include <private/na-iduplicable.h>
 
 #include "na-object-api.h"
 

@@ -48,6 +48,7 @@ nautilus_actions_new_SOURCES = \
 nautilus_actions_new_LDADD = \
 	$(top_builddir)/nautilus-actions/common/libna-common.la		\
 	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
 	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
@@ -61,6 +62,7 @@ nautilus_actions_schemas_SOURCES = \
 nautilus_actions_schemas_LDADD = \
 	$(top_builddir)/nautilus-actions/common/libna-common.la		\
 	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
 	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)

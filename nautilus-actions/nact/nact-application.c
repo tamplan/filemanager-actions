@@ -35,9 +35,10 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include <private/na-object-action-fn.h>
+
 #include <runtime/na-iabout.h>
 #include <runtime/na-ipivot-consumer.h>
-#include <runtime/na-object-action-fn.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"

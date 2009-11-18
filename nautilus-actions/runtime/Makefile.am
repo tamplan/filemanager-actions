@@ -30,6 +30,7 @@ pkglib_LTLIBRARIES = libna-runtime.la
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)							\
+	-I $(top_srcdir)/nautilus-actions			\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"				\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_RUNTIME}\"	\
@@ -45,12 +46,8 @@ libna_runtime_la_SOURCES = \
 	na-gconf-provider-keys.h					\
 	na-gconf-utils.c							\
 	na-gconf-utils.h							\
-	na-gnome-vfs-uri.c							\
-	na-gnome-vfs-uri.h							\
 	na-iabout.c									\
 	na-iabout.h									\
-	na-iduplicable.c							\
-	na-iduplicable.h							\
 	na-io-provider.c							\
 	na-io-provider.h							\
 	na-ipivot-consumer.c						\
@@ -59,31 +56,6 @@ libna_runtime_la_SOURCES = \
 	na-iprefs.h									\
 	na-module.c									\
 	na-module.h									\
-	na-object-api.h								\
-	na-object.c									\
-	na-object-class.h							\
-	na-object-fn.h								\
-	na-object-priv.h							\
-	na-object-id.c								\
-	na-object-id-class.h						\
-	na-object-id-fn.h							\
-	na-object-id-priv.h							\
-	na-object-item.c							\
-	na-object-item-class.h						\
-	na-object-item-fn.h							\
-	na-object-item-priv.h						\
-	na-object-action.c							\
-	na-object-action-class.h					\
-	na-object-action-fn.h						\
-	na-object-action-priv.h						\
-	na-object-menu.c							\
-	na-object-menu-class.h						\
-	na-object-menu-fn.h							\
-	na-object-menu-priv.h						\
-	na-object-profile.c							\
-	na-object-profile-class.h					\
-	na-object-profile-fn.h						\
-	na-object-profile-priv.h					\
 	na-pivot.c									\
 	na-pivot.h									\
 	na-utils.c									\

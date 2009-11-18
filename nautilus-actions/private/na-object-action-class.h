@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_ACTION_CLASS_H__
-#define __NA_RUNTIME_OBJECT_ACTION_CLASS_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_CLASS_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_CLASS_H__
 
 /**
  * SECTION: na_object_action
  * @short_description: #NAObjectAction class definition.
- * @include: runtime/na-object-action-class.h
+ * @include: nautilus-actions/private/na-object-action-class.h
  *
  * This is the class which maintains data and properties of an Nautilus
  * action.
@@ -89,4 +89,4 @@ GType na_object_action_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_ACTION_CLASS_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_CLASS_H__ */

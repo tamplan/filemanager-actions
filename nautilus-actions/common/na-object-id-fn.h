@@ -43,7 +43,8 @@
  * in na-object-api.h
  */
 
-#include <runtime/na-object-action-class.h>
+#include <private/na-object-action-class.h>
+
 #include <runtime/na-pivot.h>
 
 G_BEGIN_DECLS

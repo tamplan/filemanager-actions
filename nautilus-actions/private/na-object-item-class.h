@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_ITEM_CLASS_H__
-#define __NA_RUNTIME_OBJECT_ITEM_CLASS_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ITEM_CLASS_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ITEM_CLASS_H__
 
 /**
  * SECTION: na_object_item
  * @short_description: #NAObjectItem class definition.
- * @include: runtime/na-object-item-class.h
+ * @include: nautilus-actions/private/na-object-item-class.h
  *
  * Derived from #NAObjectId class, this class implements objects which
  * have :
@@ -86,4 +86,4 @@ GType na_object_item_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_ITEM_CLASS_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ITEM_CLASS_H__ */

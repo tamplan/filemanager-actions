@@ -42,6 +42,8 @@
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
 
+#include <private/na-iduplicable.h>
+
 #include <runtime/na-pivot.h>
 
 #include "base-iprefs.h"

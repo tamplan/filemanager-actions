@@ -28,23 +28,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_ID_PRIV_H__
-#define __NA_RUNTIME_OBJECT_ID_PRIV_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_MENU_PRIV_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_MENU_PRIV_H__
 
-#include "na-object-id-class.h"
-#include "na-object-item-class.h"
+#include "na-object-menu-class.h"
 
 G_BEGIN_DECLS
 
 /* private instance data
  */
-struct NAObjectIdPrivate {
-	gboolean      dispose_has_run;
-	NAObjectItem *parent;
-	gchar        *id;
-	gchar        *label;
+struct NAObjectMenuPrivate {
+	gboolean dispose_has_run;
 };
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_ID_PRIV_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_MENU_PRIV_H__ */

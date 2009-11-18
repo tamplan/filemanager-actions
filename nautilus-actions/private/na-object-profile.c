@@ -36,11 +36,12 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
+#include <runtime/na-utils.h>
+
 #include "na-iduplicable.h"
 #include "na-object-api.h"
 #include "na-object-profile-priv.h"
 #include "na-gnome-vfs-uri.h"
-#include "na-utils.h"
 
 /* private class data
  */

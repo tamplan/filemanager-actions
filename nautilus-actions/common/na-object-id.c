@@ -35,8 +35,8 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <runtime/na-object-api.h>
-#include <runtime/na-object-id-priv.h>
+#include <private/na-object-id-priv.h>
+#include <private/na-iduplicable.h>
 
 #include "na-object-api.h"
 #include "na-iprefs.h"

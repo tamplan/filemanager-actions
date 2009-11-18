@@ -42,7 +42,7 @@
  * with it.
  */
 
-#include <runtime/na-object-action-class.h>
+#include <private/na-object-action-class.h>
 
 #include "base-dialog.h"
 #include "nact-main-window.h"

@@ -28,33 +28,45 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_ID_FN_H__
-#define __NA_RUNTIME_OBJECT_ID_FN_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_PRIV_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_PRIV_H__
 
-/**
- * SECTION: na_object_id
- * @short_description: #NAObjectId public function declarations.
- * @include: runtime/na-object-id-fn.h
- *
- * Define here the public functions of the #NAObjectId class.
- *
- * Note that most users of the class should rather use macros defined
- * in na-object-api.h
- */
-
-#include "na-object-item-class.h"
+#include "na-object-action-class.h"
 
 G_BEGIN_DECLS
 
-gchar        *na_object_id_get_id( const NAObjectId *object );
-void          na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent );
-gchar        *na_object_id_get_label( const NAObjectId *object );
-NAObjectItem *na_object_id_get_parent( NAObjectId *object );
+/* private instance data
+ */
+struct NAObjectActionPrivate {
+	gboolean dispose_has_run;
 
-void          na_object_id_set_id( NAObjectId *object, const gchar *id );
-void          na_object_id_set_label( NAObjectId *object, const gchar *label );
-void          na_object_id_set_parent( NAObjectId *object, NAObjectItem *parent );
+	/* action properties
+	 */
+	gchar   *version;
+
+	/* dynamically set when reading the actions from the I/O storage
+	 * subsystem
+	 * defaults to FALSE unless a write has already returned an error
+	 */
+	gboolean read_only;
+
+	/* last allocated profile name in na_object_action_get_new_profile_name()
+	 * reset to zero when saving the action
+	 */
+	gint     last_allocated;
+
+	/* which targets does this item target ?
+	 */
+	gboolean target_selection;
+	gboolean target_background;
+	gboolean target_toolbar;
+
+	/* toolbar display
+	 */
+	gboolean use_same_label;
+	gchar   *toolbar_label;
+};
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_ID_FN_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_PRIV_H__ */

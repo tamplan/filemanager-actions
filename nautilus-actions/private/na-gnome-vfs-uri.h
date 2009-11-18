@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_GNOME_VFS_URI_H__
-#define __NA_RUNTIME_GNOME_VFS_URI_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_GNOME_VFS_URI_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_GNOME_VFS_URI_H__
 
 /*
  * pwi 2009-07-29
@@ -105,4 +105,4 @@ void na_gnome_vfs_uri_free( NAGnomeVFSURI *vfs );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_GNOME_VFS_URI_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_GNOME_VFS_URI_H__ */

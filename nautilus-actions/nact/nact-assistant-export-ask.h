@@ -41,7 +41,7 @@
  * to be ask to choose the export format.
  */
 
-#include <runtime/na-object-action-class.h>
+#include <private/na-object-action-class.h>
 
 #include "base-dialog.h"
 

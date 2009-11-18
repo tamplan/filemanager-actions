@@ -43,7 +43,7 @@
  * in common/na-object-api.h, which itself includes runtime/na-object-api.h.
  */
 
-#include <runtime/na-object-class.h>
+#include <private/na-object-class.h>
 
 G_BEGIN_DECLS
 

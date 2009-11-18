@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_PROFILE_FN_H__
-#define __NA_RUNTIME_OBJECT_PROFILE_FN_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_FN_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_FN_H__
 
 /**
  * SECTION: na_object_profile
  * @short_description: #NAObjectProfile public function declarations.
- * @include: runtime/na-object-profile.h
+ * @include: nautilus-actions/private/na-object-profile.h
  */
 
 #include <glib/gi18n.h>
@@ -83,4 +83,4 @@ gchar           *na_object_profile_parse_parameters( const NAObjectProfile *prof
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_PROFILE_FN_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_FN_H__ */

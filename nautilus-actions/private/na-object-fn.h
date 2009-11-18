@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_FN_H__
-#define __NA_RUNTIME_OBJECT_FN_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_FN_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_FN_H__
 
 /**
  * SECTION: na_object
  * @short_description: #NAObject public functions declarations.
- * @include: runtime/na-object-fn.h
+ * @include: nautilus-actions/private/na-object-fn.h
  *
  * Define here the public functions of the #NAObject class.
  *
@@ -68,4 +68,4 @@ void      na_object_free_hierarchy( GList *hierarchy );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_FN_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_FN_H__ */

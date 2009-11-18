@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_CLASS_H__
-#define __NA_RUNTIME_OBJECT_CLASS_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_CLASS_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_CLASS_H__
 
 /**
  * SECTION: na_object
  * @short_description: #NAObject class definition.
- * @include: runtime/na-object-class.h
+ * @include: nautilus-actions/private/na-object-class.h
  *
  * This is the base class for managed objects.
  *
@@ -186,4 +186,4 @@ GType     na_object_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_CLASS_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_CLASS_H__ */

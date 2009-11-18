@@ -1,6 +1,6 @@
 /*
- * Nautilus ObjectItems
- * A Nautilus extension which offers configurable context menu object_items.
+ * Nautilus Actions
+ * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
@@ -28,36 +28,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_ITEM_PRIV_H__
-#define __NA_RUNTIME_OBJECT_ITEM_PRIV_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PRIV_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PRIV_H__
 
-#include "na-object-item-class.h"
+#include "na-object-class.h"
 
 G_BEGIN_DECLS
 
 /* private instance data
  */
-struct NAObjectItemPrivate {
-	gboolean       dispose_has_run;
-
-	/* object_item properties
-	 */
-	gchar         *tooltip;
-	gchar         *icon;
-	gboolean       enabled;
-
-	/* list of NAObjectId subitems
-	 * + list of id strings as readen from IIOProviders
-	 */
-	GList         *items;
-	GSList        *items_ids;
-
-	/* the original provider
-	 * required to be able to edit/delete the item
-	 */
-	NAIIOProvider *provider;
+struct NAObjectPrivate {
+	gboolean dispose_has_run;
 };
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_ITEM_PRIV_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PRIV_H__ */

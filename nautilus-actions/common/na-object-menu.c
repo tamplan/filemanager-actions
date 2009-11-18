@@ -32,7 +32,6 @@
 #include <config.h>
 #endif
 
-#include <runtime/na-object-api.h>
-#include <runtime/na-object-menu-priv.h>
+#include <private/na-object-menu-priv.h>
 
 #include "na-object-api.h"

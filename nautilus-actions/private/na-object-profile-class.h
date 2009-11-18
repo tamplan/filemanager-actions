@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_PROFILE_CLASS_H__
-#define __NA_RUNTIME_OBJECT_PROFILE_CLASS_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_CLASS_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_CLASS_H__
 
 /**
  * SECTION: na_object_profile
  * @short_description: #NAObjectProfile class definition.
- * @include: runtime/na-object-profile-class.h
+ * @include: nautilus-actions/private/na-object-profile-class.h
  *
  * This is a companion class of NAObjectAction. It embeds the profile
  * definition of an action.
@@ -74,4 +74,4 @@ GType na_object_profile_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_PROFILE_CLASS_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_CLASS_H__ */

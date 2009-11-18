@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_ACTION_FN_H__
-#define __NA_RUNTIME_OBJECT_ACTION_FN_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_FN_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_FN_H__
 
 /**
  * SECTION: na_object_action
  * @short_description: #NAObjectAction public function declaration.
- * @include: runtime/na-object-action.h
+ * @include: nautilus-actions/private/na-object-action.h
  */
 
 #include <glib/gi18n.h>
@@ -91,4 +91,4 @@ gboolean        na_object_action_is_candidate( const NAObjectAction *action, gin
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_ACTION_FN_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_FN_H__ */

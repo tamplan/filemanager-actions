@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_ID_CLASS_H__
-#define __NA_RUNTIME_OBJECT_ID_CLASS_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ID_CLASS_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ID_CLASS_H__
 
 /**
  * SECTION: na_object_id
  * @short_description: #NAObjectId class definition.
- * @include: runtime/na-object-id-class.h
+ * @include: nautilus-actions/private/na-object-id-class.h
  *
  * A #NAObjectId object is characterized by :
  * - an internal identifiant (ASCII, case insensitive)
@@ -92,4 +92,4 @@ GType  na_object_id_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_ID_CLASS_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ID_CLASS_H__ */

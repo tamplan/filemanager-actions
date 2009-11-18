@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_OBJECT_API_H__
-#define __NA_RUNTIME_OBJECT_API_H__
+#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_API_H__
+#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_API_H__
 
 /**
  * SECTION: na_object
  * @short_description: #NAObject public API.
- * @include: runtime/na-object-api.h
+ * @include: nautilus-actions/private/na-object-api.h
  *
  * We define here a common API which makes easier to write (and read)
  * the code ; all object functions are named na_object ; all arguments
@@ -42,8 +42,6 @@
  *
  * Only define here the API which is relevant in libna-runtime library.
  */
-
-#include "na-iduplicable.h"
 
 #include "na-object-fn.h"
 #include "na-object-id-fn.h"
@@ -104,4 +102,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_OBJECT_API_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_API_H__ */
