@@ -39,11 +39,13 @@ libna_api_includedir = $(pkgincludedir)/api
 libna_api_include_HEADERS = \
 	na-api.h											\
 	na-gconf-keys.h										\
+	na-gconf-monitor.h									\
 	na-iio-provider.h									\
 	na-object-api.h										\
 	$(NULL)
 
 libna_api_la_SOURCES = \
+	na-gconf-monitor.c									\
 	na-iio-provider.c									\
 	$(NULL)
 

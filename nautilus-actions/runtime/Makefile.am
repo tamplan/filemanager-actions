@@ -38,8 +38,6 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libna_runtime_la_SOURCES = \
-	na-gconf-monitor.c											\
-	na-gconf-monitor.h											\
 	na-gconf-provider.c											\
 	na-gconf-provider.h											\
 	na-gconf-provider-keys.h									\

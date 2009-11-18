@@ -36,9 +36,9 @@
 #include <uuid/uuid.h>
 
 #include <api/na-object-api.h>
+#include <api/na-gconf-monitor.h>
 
 #include "na-io-provider.h"
-#include "na-gconf-monitor.h"
 #include "na-gconf-provider.h"
 #include "na-iprefs.h"
 #include "na-module.h"

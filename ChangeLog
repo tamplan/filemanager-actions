@@ -1,5 +1,17 @@
 2009-11-18 Pierre Wieser <pwieser@trychlos.org>
 
+	Move runtime/na-gconf-monitor.{c,h} to api/.
+
+	* nautilus-actions/runtime/na-gconf-monitor.c:
+	* nautilus-actions/runtime/na-gconf-monitor.h:
+	Moved to api/, thus removed from runtime/.
+
+	* nautilus-actions/api/Makefile.am:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/na-gconf-provider.c:
+	* nautilus-actions/runtime/na-pivot.c:
+	Upated accordingly.
+
 	Move private/na-object-api.h to private/.
 
 	* nautilus-actions/private/na-object-api.h:

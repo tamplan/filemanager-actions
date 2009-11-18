@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_GCONF_MONITOR_H__
-#define __NA_RUNTIME_GCONF_MONITOR_H__
+#ifndef __NAUTILUS_ACTIONS_NA_GCONF_MONITOR_H__
+#define __NAUTILUS_ACTIONS_NA_GCONF_MONITOR_H__
 
 /**
  * SECTION: na_gconf_monitor
  * @short_description: #NAGConfMonitor class definition.
- * @include: runtime/na-gconf-monitor.h
+ * @include: nautilus-actions/api/na-gconf-monitor.h
  *
  * This class manages the GConf monitoring.
  * It is used to monitor both the GConf provider and the GConf runtime
@@ -76,4 +76,4 @@ void            na_gconf_monitor_release_monitors( GList *monitors );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_GCONF_MONITOR_MONITOR_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_GCONF_MONITOR_H__ */
