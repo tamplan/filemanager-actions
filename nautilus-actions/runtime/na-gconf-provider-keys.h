@@ -31,7 +31,7 @@
 #ifndef __NA_RUNTIME_GCONF_PROVIDER_KEYS_H__
 #define __NA_RUNTIME_GCONF_PROVIDER_KEYS_H__
 
-#include "na-gconf-keys.h"
+#include <api/na-gconf-keys.h>
 
 /* GConf general information
  */

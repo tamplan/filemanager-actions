@@ -34,7 +34,7 @@
 
 #include <glib/gi18n.h>
 
-#include <common/na-iprefs.h>
+#include <runtime/na-iprefs.h>
 
 #include "base-iprefs.h"
 #include "nact-application.h"

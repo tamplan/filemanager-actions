@@ -34,7 +34,7 @@
 /**
  * SECTION: na_iprefs
  * @short_description: #NAIPrefs interface definition.
- * @include: common/na-iprefs.h
+ * @include: runtime/na-iprefs.h
  *
  * This interface should only be implemented by #NAPivot. This is
  * because the interface stores as an implementor structure some data
@@ -70,7 +70,7 @@
 #include <glib-object.h>
 #include <gconf/gconf-client.h>
 
-#include "na-gconf-keys.h"
+#include <api/na-gconf-keys.h>
 
 G_BEGIN_DECLS
 
@@ -88,6 +88,69 @@ typedef struct {
 	NAIPrefsInterfacePrivate *private;
 }
 	NAIPrefsInterface;
+
+/* GConf Preference keys managed by IPrefs interface
+ */
+#define NA_GCONF_PREFERENCES				"preferences"
+#define NA_GCONF_PREFS_PATH					NAUTILUS_ACTIONS_GCONF_BASEDIR "/" NA_GCONF_PREFERENCES
+
+#define IPREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
+#define IPREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
+#define IPREFS_CREATE_ROOT_MENU				"iprefs-create-root-menu"
+#define IPREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
+
+#define IPREFS_EXPORT_FORMAT				"export-format"
+#define IPREFS_EXPORT_ASK_LAST_FORMAT		"export-ask-user-last-format"
+#define IPREFS_IMPORT_ACTIONS_IMPORT_MODE	"import-mode"
+#define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
+
+#define IPREFS_ASSIST_ESC_QUIT				"assistant-esc-quit"
+#define IPREFS_ASSIST_ESC_CONFIRM			"assistant-esc-confirm"
+
+#define IPREFS_RELABEL_MENUS				"iprefs-relabel-menus"
+#define IPREFS_RELABEL_ACTIONS				"iprefs-relabel-actions"
+#define IPREFS_RELABEL_PROFILES				"iprefs-relabel-profiles"
+
+/* alphabetical order values
+ */
+enum {
+	IPREFS_ORDER_ALPHA_ASCENDING = 1,
+	IPREFS_ORDER_ALPHA_DESCENDING,
+	IPREFS_ORDER_MANUAL
+};
+
+/* import mode
+ */
+enum {
+	IPREFS_IMPORT_NO_IMPORT = 1,
+	IPREFS_IMPORT_RENUMBER,
+	IPREFS_IMPORT_OVERRIDE,
+	IPREFS_IMPORT_ASK
+};
+
+/* import/export formats
+ *
+ * FORMAT_GCONF_SCHEMA_V1: a schema with owner, short and long
+ * descriptions ; each action has its own schema addressed by the uuid
+ * (historical format up to v1.10.x serie)
+ *
+ * FORMAT_GCONF_SCHEMA_V2: the lightest schema still compatible
+ * with gconftool-2 --install-schema-file (no owner, no short nor long
+ * descriptions) - introduced in v 1.11
+ *
+ * FORMAT_GCONF_SCHEMA: exports a full schema, not an action
+ *
+ * FORMAT_GCONF_ENTRY: not a schema, but a dump of the GConf entry
+ * introduced in v 1.11
+ */
+enum {
+	IPREFS_EXPORT_NO_EXPORT = 1,
+	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1,
+	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2,
+	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA,
+	IPREFS_EXPORT_FORMAT_GCONF_ENTRY,
+	IPREFS_EXPORT_FORMAT_ASK
+};
 
 GType        na_iprefs_get_type( void );
 
@@ -113,25 +176,13 @@ void         na_iprefs_write_bool( NAIPrefs *instance, const gchar *key, gboolea
 void         na_iprefs_write_string( NAIPrefs *instance, const gchar *key, const gchar *value );
 void         na_iprefs_write_string_list( NAIPrefs *instance, const gchar *key, GSList *value );
 
-/* GConf keys
- */
-#define NA_GCONF_PREFERENCES				"preferences"
-#define NA_GCONF_PREFS_PATH					NAUTILUS_ACTIONS_GCONF_BASEDIR "/" NA_GCONF_PREFERENCES
+void         na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key );
 
-/* GConf preference keys managed by IPrefs interface
- */
-#define IPREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
-#define IPREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
-#define IPREFS_CREATE_ROOT_MENU				"iprefs-create-root-menu"
-#define IPREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
+gint         na_iprefs_get_export_format( NAIPrefs *instance, const gchar *pref );
+gint         na_iprefs_get_import_mode( NAIPrefs *instance, const gchar *pref );
 
-/* alphabetical order values
- */
-enum {
-	IPREFS_ORDER_ALPHA_ASCENDING = 1,
-	IPREFS_ORDER_ALPHA_DESCENDING,
-	IPREFS_ORDER_MANUAL
-};
+void         na_iprefs_set_export_format( NAIPrefs *instance, const gchar *pref, gint format );
+void         na_iprefs_set_import_mode( NAIPrefs *instance, const gchar *pref, gint mode );
 
 G_END_DECLS
 

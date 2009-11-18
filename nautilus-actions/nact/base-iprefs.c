@@ -34,8 +34,7 @@
 #endif
 
 #include <runtime/na-gconf-utils.h>
-
-#include <common/na-iprefs.h>
+#include <runtime/na-iprefs.h>
 
 #include "base-iprefs.h"
 

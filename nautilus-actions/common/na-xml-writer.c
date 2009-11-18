@@ -35,11 +35,10 @@
 #include <gio/gio.h>
 #include <libxml/tree.h>
 
-#include <common/na-iprefs.h>
-
 #include <private/na-object-api.h>
 
 #include <runtime/na-gconf-provider-keys.h>
+#include <runtime/na-iprefs.h>
 
 #include "na-utils.h"
 #include "na-xml-names.h"

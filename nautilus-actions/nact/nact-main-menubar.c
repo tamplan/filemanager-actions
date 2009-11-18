@@ -34,11 +34,10 @@
 
 #include <glib/gi18n.h>
 
-#include <common/na-iprefs.h>
-
 #include <private/na-object-api.h>
 
 #include <runtime/na-iabout.h>
+#include <runtime/na-iprefs.h>
 #include <runtime/na-ipivot-consumer.h>
 
 #include "nact-application.h"

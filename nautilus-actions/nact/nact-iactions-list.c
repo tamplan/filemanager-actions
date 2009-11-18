@@ -35,8 +35,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
-#include <common/na-iprefs.h>
-
 #include <private/na-object-api.h>
 #include <private/na-iduplicable.h>
 

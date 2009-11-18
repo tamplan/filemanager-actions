@@ -1,6 +1,40 @@
 2009-11-18 Pierre Wieser <pwieser@trychlos.org>
 
-	Merge common/na-object-* stuff to private/ subdirectory.
+	Merge common/na-iprefs.{c,h} into runtime/na-iprefs.{c,h}.
+
+	* nautilus-actions/common/na-iprefs.c:
+	* nautilus-actions/common/na-iprefs.h:
+	Merged into runtime/na-iprefs.{c,h}, thus deleted from common/.
+
+	* nautilus-actions/runtime/na-gconf-keys.h: Removed file
+	as duplicate from api/.
+
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/common/na-xml-writer.c:
+	* nautilus-actions/nact/base-iprefs.c:
+	* nautilus-actions/nact/nact-assistant-export-ask.c:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import-ask.c:
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-ibackground-tab.c:
+	* nautilus-actions/nact/nact-icommand-tab.c:
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-window.c:
+	* nautilus-actions/nact/nact-preferences-editor.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/na-gconf-provider-keys.h:
+	* nautilus-actions/runtime/na-iprefs.c:
+	* nautilus-actions/runtime/na-iprefs.h:
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* nautilus-actions/utils/nautilus-actions-schemas.c:
+	Updated	accordingly.
+
+	Merge common/na-object-* stuff into private/ subdirectory.
 
 	* nautilus-actions/common/na-object-action-fn.h:
 	* nautilus-actions/common/na-object-action.c:

@@ -37,11 +37,11 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include <common/na-iprefs.h>
 #include <common/na-utils.h>
 
 #include <private/na-object-api.h>
 
+#include <runtime/na-iprefs.h>
 #include <runtime/na-pivot.h>
 
 #include "nact-application.h"
