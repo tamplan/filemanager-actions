@@ -26,13 +26,30 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-SUBDIRS = \
-	api							\
-	private						\
-	common						\
-	runtime						\
-	nact						\
-	plugin						\
-	test						\
-	utils						\
+pkglib_LTLIBRARIES = libna-private.la
+
+AM_CPPFLAGS += \
+	-I $(top_srcdir)							\
+	-DPKGLIBDIR=\""$(pkglibdir)"\"				\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PRIVATE}\"	\
+	$(NAUTILUS_ACTIONS_CFLAGS)					\
+	$(NULL)
+
+libna_private_includedir = $(pkgincludedir)/private
+
+libna_private_include_HEADERS = \
+	$(NULL)
+
+libna_private_la_SOURCES = \
+	$(NULL)
+
+libna_private_la_LIBADD = \
+	$(NULL)
+
+VERSION_INFO = 1:0:0
+libna_private_la_LDFLAGS = \
+	-module										\
+	-no-undefined								\
+	-version-number $(VERSION_INFO)				\
 	$(NULL)

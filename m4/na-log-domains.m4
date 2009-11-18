@@ -5,6 +5,12 @@ dnl when not in development mode
 # serial 2 define NA-runtime log domain
 
 AC_DEFUN([NA_LOG_DOMAINS],[
+	AC_SUBST([NA_LOGDOMAIN_API],[NA-api])
+	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_API],["NA-api"],[Log domain of API library])
+
+	AC_SUBST([NA_LOGDOMAIN_PRIVATE],[NA-private])
+	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_PRIVATE],["NA-private"],[Log domain of private library])
+
 	AC_SUBST([NA_LOGDOMAIN_RUNTIME],[NA-runtime])
 	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_RUNTIME],["NA-runtime"],[Log domain of runtime library])
 

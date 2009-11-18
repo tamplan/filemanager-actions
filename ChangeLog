@@ -1,3 +1,16 @@
+2009-11-18 Pierre Wieser <pwieser@trychlos.org>
+
+	Create private/ directory to host installed though private headers.
+
+	* configure.ac:
+	* nautilus-actions/Makefile.am: Updated accordingly.
+
+	* m4/na-log-domains.m4:
+	Define new log domains for API and private libraries.
+
+	* nautilus-actions/private/Makefile.am:
+	* nautilus-actions/private/README: New files.
+
 2009-11-17 Pierre Wieser <pwieser@trychlos.org>
 
 	Move NAIIOProvider interface to api/.

@@ -52,6 +52,7 @@ AC_CONFIG_FILES([
 	nautilus-actions/common/Makefile
 	nautilus-actions/nact/Makefile
 	nautilus-actions/plugin/Makefile
+	nautilus-actions/private/Makefile
 	nautilus-actions/runtime/Makefile
 	nautilus-actions/test/Makefile
 	nautilus-actions/utils/Makefile
