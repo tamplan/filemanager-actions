@@ -1,5 +1,4 @@
 data/nautilus-actions.schemas.in
-nautilus-actions/common/na-xml-names.h
 nautilus-actions/nact/base-application.c
 nautilus-actions/nact/base-assistant.c
 nautilus-actions/nact/base-window.c
@@ -28,6 +27,7 @@ nautilus-actions/private/na-object-id.c
 nautilus-actions/private/na-object-menu-fn.h
 nautilus-actions/private/na-object-profile-fn.h
 nautilus-actions/runtime/na-iabout.c
+nautilus-actions/runtime/na-xml-names.h
 nautilus-actions/test/test-parse-uris.c
 nautilus-actions/utils/nautilus-actions-new.c
 nautilus-actions/utils/nautilus-actions-schemas.c

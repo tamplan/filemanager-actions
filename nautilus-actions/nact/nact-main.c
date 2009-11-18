@@ -43,7 +43,7 @@ main( int argc, char *argv[] )
 	int ret;
 
 	g_log_set_handler( NA_LOGDOMAIN_NACT, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
-	g_log_set_handler( NA_LOGDOMAIN_COMMON, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
+	g_log_set_handler( NA_LOGDOMAIN_PRIVATE, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
 	g_log_set_handler( NA_LOGDOMAIN_RUNTIME, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
 
 	app = nact_application_new_with_args( argc, argv );

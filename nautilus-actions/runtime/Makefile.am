@@ -29,44 +29,48 @@
 pkglib_LTLIBRARIES = libna-runtime.la
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)							\
-	-I $(top_srcdir)/nautilus-actions			\
-	-DPKGLIBDIR=\""$(pkglibdir)"\"				\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_RUNTIME}\"	\
-	$(NAUTILUS_ACTIONS_CFLAGS)					\
+	-I $(top_srcdir)											\
+	-I $(top_srcdir)/nautilus-actions							\
+	-DPKGLIBDIR=\""$(pkglibdir)"\"								\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_RUNTIME}\"					\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
 libna_runtime_la_SOURCES = \
-	na-gconf-monitor.c							\
-	na-gconf-monitor.h							\
-	na-gconf-provider.c							\
-	na-gconf-provider.h							\
-	na-gconf-provider-keys.h					\
-	na-gconf-utils.c							\
-	na-gconf-utils.h							\
-	na-iabout.c									\
-	na-iabout.h									\
-	na-io-provider.c							\
-	na-io-provider.h							\
-	na-ipivot-consumer.c						\
-	na-ipivot-consumer.h						\
-	na-iprefs.c									\
-	na-iprefs.h									\
-	na-module.c									\
-	na-module.h									\
-	na-pivot.c									\
-	na-pivot.h									\
-	na-utils.c									\
-	na-utils.h									\
+	na-gconf-monitor.c											\
+	na-gconf-monitor.h											\
+	na-gconf-provider.c											\
+	na-gconf-provider.h											\
+	na-gconf-provider-keys.h									\
+	na-gconf-utils.c											\
+	na-gconf-utils.h											\
+	na-iabout.c													\
+	na-iabout.h													\
+	na-io-provider.c											\
+	na-io-provider.h											\
+	na-ipivot-consumer.c										\
+	na-ipivot-consumer.h										\
+	na-iprefs.c													\
+	na-iprefs.h													\
+	na-module.c													\
+	na-module.h													\
+	na-pivot.c													\
+	na-pivot.h													\
+	na-utils.c													\
+	na-utils.h													\
+	na-xml-names.h												\
+	na-xml-writer.c												\
+	na-xml-writer.h												\
 	$(NULL)
 
 libna_runtime_la_LIBADD = \
+	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
 	$(NULL)
 
 VERSION_INFO = 1:0:0
 libna_runtime_la_LDFLAGS = \
-	-module										\
-	-no-undefined								\
-	-version-number $(VERSION_INFO)				\
+	-module														\
+	-no-undefined												\
+	-version-number $(VERSION_INFO)								\
 	$(NULL)

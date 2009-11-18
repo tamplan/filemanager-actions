@@ -1,5 +1,29 @@
 2009-11-18 Pierre Wieser <pwieser@trychlos.org>
 
+	Move na-xml-* to runtime library, thus removing common/.
+
+	* nautilus-actions/common/na-xml-names.h:
+	* nautilus-actions/common/na-xml-writer.c:
+	* nautilus-actions/common/na-xml-writer.h:
+	Moved to runtime/ directory, thus removed from common.
+
+	* configure.ac:
+	* m4/na-log-domains.m4:
+	* nautilus-actions/Makefile.am:
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-main.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/README:
+	* nautilus-actions/utils/Makefile.am:
+	* nautilus-actions/utils/console-utils.c:
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* nautilus-actions/utils/nautilus-actions-schemas.c:
+	* po/POTFILES.in: Updated accordingly.
+
 	Merge common/na-utils.{c,h} into runtime/na-utils.{c,h}.
 
 	* nautilus-actions/common/na-utils.c:

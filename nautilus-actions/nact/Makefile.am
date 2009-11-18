@@ -113,8 +113,6 @@ nact-marshal.c: nact-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=nact_marshal >> $@
 
 nautilus_actions_config_tool_LDADD = \
-	$(top_builddir)/nautilus-actions/common/libna-common.la		\
-	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
 	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
 	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\

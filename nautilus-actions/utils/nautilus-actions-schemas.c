@@ -38,11 +38,10 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
-#include <common/na-xml-names.h>
-#include <common/na-xml-writer.h>
-
 #include <runtime/na-iprefs.h>
 #include <runtime/na-utils.h>
+#include <runtime/na-xml-names.h>
+#include <runtime/na-xml-writer.h>
 
 #include "console-utils.h"
 

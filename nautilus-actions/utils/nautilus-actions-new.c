@@ -38,15 +38,14 @@
 
 #include <api/na-iio-provider.h>
 
-#include <common/na-xml-names.h>
-#include <common/na-xml-writer.h>
-
 #include <private/na-object-api.h>
 
 #include <runtime/na-gconf-provider.h>
 #include <runtime/na-io-provider.h>
 #include <runtime/na-iprefs.h>
 #include <runtime/na-utils.h>
+#include <runtime/na-xml-names.h>
+#include <runtime/na-xml-writer.h>
 
 #include "console-utils.h"
 

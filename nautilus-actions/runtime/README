@@ -1,6 +1,4 @@
-This is a runtime convenience library linked against the plugin.
+This is the runtime dynamic library for Nautilus-Actions.
 
-in order to keep the plugin as light as possible, thus with as less as
-possible bugs, and, if any, as easy as possible to fix, please only put
-here code which is used by the plugin, and shared by some other part of
-the package.
+Come here which is not in the API nor in private, but should yet be
+shared between several N-A components.

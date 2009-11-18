@@ -49,7 +49,7 @@ static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, cons
 void
 console_init_log_handler( void )
 {
-	g_log_set_handler( NA_LOGDOMAIN_COMMON, G_LOG_LEVEL_DEBUG, log_handler, NULL );
+	g_log_set_handler( NA_LOGDOMAIN_PRIVATE, G_LOG_LEVEL_DEBUG, log_handler, NULL );
 	g_log_set_handler( NA_LOGDOMAIN_RUNTIME, G_LOG_LEVEL_DEBUG, log_handler, NULL );
 	g_log_set_handler( NA_LOGDOMAIN_UTILS, G_LOG_LEVEL_DEBUG, log_handler, NULL );
 }

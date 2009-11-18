@@ -28,7 +28,6 @@
 
 SUBDIRS = \
 	api							\
-	common						\
 	private						\
 	runtime						\
 	nact						\

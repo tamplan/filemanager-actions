@@ -38,14 +38,13 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include <common/na-xml-names.h>
-
 #include <private/na-object-api.h>
 
 #include <runtime/na-gconf-provider-keys.h>
 #include <runtime/na-gconf-utils.h>
 #include <runtime/na-iprefs.h>
 #include <runtime/na-utils.h>
+#include <runtime/na-xml-names.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"
