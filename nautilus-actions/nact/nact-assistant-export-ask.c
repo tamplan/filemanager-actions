@@ -35,7 +35,8 @@
 #include <glib/gi18n.h>
 
 #include <common/na-iprefs.h>
-#include <common/na-object-api.h>
+
+#include <private/na-object-api.h>
 
 #include <runtime/na-pivot.h>
 

@@ -34,14 +34,16 @@
 
 #include <string.h>
 
-#include <common/na-object-api.h>
 #include <common/na-iprefs.h>
 #include <common/na-utils.h>
 #include <common/na-xml-writer.h>
 
+#include <private/na-object-api.h>
+
 #include "egg-tree-multi-dnd.h"
 #include "nact-application.h"
 #include "nact-iactions-list.h"
+#include "nact-main-menubar.h"
 #include "nact-main-statusbar.h"
 #include "nact-main-window.h"
 #include "nact-clipboard.h"
@@ -1449,6 +1451,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	GList *object_list, *it;
 	GtkTreeIter iter;
 	GList *deletable;
+	gboolean relabel;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	pivot = nact_application_get_pivot( application );
@@ -1491,7 +1494,8 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 						g_list_free( deletable );
 					}
 
-					na_object_prepare_for_paste( inserted, pivot, copy_data, parent );
+					relabel = nact_main_menubar_is_pasted_object_relabeled( inserted, pivot );
+					na_object_prepare_for_paste( inserted, relabel, copy_data, parent );
 					object_list = g_list_prepend( object_list, inserted );
 					g_debug( "%s: dropped=%s", thisfn, na_object_get_label( inserted ));
 				}

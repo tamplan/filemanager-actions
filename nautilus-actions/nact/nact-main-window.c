@@ -37,12 +37,13 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include <common/na-iprefs.h>
+
+#include <private/na-object-api.h>
+
 #include <runtime/na-pivot.h>
 #include <runtime/na-iabout.h>
 #include <runtime/na-ipivot-consumer.h>
-
-#include <common/na-object-api.h>
-#include <common/na-iprefs.h>
 
 #include "base-iprefs.h"
 #include "nact-application.h"

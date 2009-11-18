@@ -36,7 +36,8 @@
 #include <libxml/tree.h>
 
 #include <common/na-iprefs.h>
-#include <common/na-object-api.h>
+
+#include <private/na-object-api.h>
 
 #include <runtime/na-gconf-provider-keys.h>
 

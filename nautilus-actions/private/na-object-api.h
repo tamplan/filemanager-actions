@@ -58,18 +58,23 @@ G_BEGIN_DECLS
 #define na_object_dump_norec( object )				na_object_object_dump_norec( NA_OBJECT( object ))
 #define na_object_dump_tree( tree )					na_object_object_dump_tree( tree )
 #define na_object_ref( object )						na_object_object_ref( NA_OBJECT( object ))
+#define na_object_reset_origin( object, origin )	na_object_object_reset_origin( NA_OBJECT( object ), ( NAObject * ) origin )
+#define na_object_reset_status( object )			na_object_object_reset_status( NA_OBJECT( object ) )
 #define na_object_unref( object )					na_object_object_unref( NA_OBJECT( object ))
 
 /* NAIDuplicable
  */
 #define na_object_check_status( object )			na_object_iduplicable_check_status( NA_OBJECT( object ))
 #define na_object_duplicate( object )				na_object_iduplicable_duplicate( NA_OBJECT( object ))
+#define na_object_get_origin( object )				na_object_iduplicable_get_origin( NA_OBJECT( object ))
+#define na_object_set_origin( object, origin )		na_object_iduplicable_set_origin( NA_OBJECT( object ), NA_OBJECT( origin ))
 #define na_object_are_equal( a, b )					na_object_iduplicable_are_equal( NA_OBJECT( a ), NA_OBJECT( b ))
 #define na_object_is_modified( object )				na_object_iduplicable_is_modified( NA_OBJECT( object ))
 #define na_object_is_valid( object )				na_object_iduplicable_is_valid( NA_OBJECT( object ))
 
 /* NAObjectId
  */
+#define na_object_check_status_up( object )			na_object_id_check_status_up( NA_OBJECT_ID( object ))
 #define na_object_get_id( object )					na_object_id_get_id( NA_OBJECT_ID( object ))
 #define na_object_get_label( object )				na_object_id_get_label( NA_OBJECT_ID( object ))
 #define na_object_get_parent( object )				na_object_id_get_parent( NA_OBJECT_ID( object ))
@@ -78,6 +83,10 @@ G_BEGIN_DECLS
 #define na_object_set_new_id( object, parent )		na_object_id_set_new_id( NA_OBJECT_ID( object ), ( NAObjectId * ) parent )
 #define na_object_set_label( object, label )		na_object_id_set_label( NA_OBJECT_ID( object ), label )
 #define na_object_set_parent( object, parent )		na_object_id_set_parent( NA_OBJECT_ID( object ), ( NAObjectItem * ) parent )
+
+#define na_object_prepare_for_paste( object, pivot, renumber, action ) \
+													na_object_id_prepare_for_paste( NA_OBJECT_ID( object ), pivot, renumber, ( NAObjectAction * ) action )
+#define na_object_set_copy_of_label( object )		na_object_id_set_copy_of_label( NA_OBJECT_ID( object ))
 
 /* NAObjectItem
  */
@@ -98,6 +107,10 @@ G_BEGIN_DECLS
 #define na_object_set_items_list( object, list )	na_object_item_set_items_list( NA_OBJECT_ITEM( object ), list )
 
 #define na_object_append_item( object, item )		na_object_item_append_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
+#define na_object_get_position( object, child )		na_object_item_get_position( NA_OBJECT_ITEM( object ), NA_OBJECT( child ))
+#define na_object_insert_at( object, child, pos )	na_object_item_insert_at( NA_OBJECT_ITEM( object ), NA_OBJECT( child ), pos )
+#define na_object_insert_item( object, item, before ) \
+													na_object_item_insert_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ), ( NAObject * ) before )
 #define na_object_remove_item( object, item )		na_object_item_remove_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
 
 G_END_DECLS

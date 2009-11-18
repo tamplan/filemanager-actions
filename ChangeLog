@@ -1,5 +1,62 @@
 2009-11-18 Pierre Wieser <pwieser@trychlos.org>
 
+	Merge common/na-object-* stuff to private/ subdirectory.
+
+	* nautilus-actions/common/na-object-action-fn.h:
+	* nautilus-actions/common/na-object-action.c:
+	* nautilus-actions/common/na-object-api.h:
+	* nautilus-actions/common/na-object-fn.h:
+	* nautilus-actions/common/na-object-id-fn.h:
+	* nautilus-actions/common/na-object-id.c:
+	* nautilus-actions/common/na-object-item-fn.h:
+	* nautilus-actions/common/na-object-item.c:
+	* nautilus-actions/common/na-object-menu-fn.h:
+	* nautilus-actions/common/na-object-menu.c:
+	* nautilus-actions/common/na-object-profile-fn.h:
+	* nautilus-actions/common/na-object-profile.c:
+	* nautilus-actions/common/na-object.c:
+	Merged into private/ directory, thus deleted from common/ one.
+
+	* nautilus-actions/Makefile.am:
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/common/na-xml-writer.c:
+	* nautilus-actions/nact/nact-assistant-export-ask.c:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import-ask.c:
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-iaction-tab.c:
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iadvanced-tab.c:
+	* nautilus-actions/nact/nact-ibackground-tab.c:
+	* nautilus-actions/nact/nact-icommand-tab.c:
+	* nautilus-actions/nact/nact-iconditions-tab.c:
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-menubar.h:
+	* nautilus-actions/nact/nact-main-window.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/private/Makefile.am:
+	* nautilus-actions/private/na-object-action-fn.h:
+	* nautilus-actions/private/na-object-action.c:
+	* nautilus-actions/private/na-object-api.h:
+	* nautilus-actions/private/na-object-fn.h:
+	* nautilus-actions/private/na-object-id-fn.h:
+	* nautilus-actions/private/na-object-id.c:
+	* nautilus-actions/private/na-object-item-fn.h:
+	* nautilus-actions/private/na-object-item.c:
+	* nautilus-actions/private/na-object-profile-fn.h:
+	* nautilus-actions/private/na-object-profile.c:
+	* nautilus-actions/private/na-object.c:
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* po/POTFILES.in: Updated accordingly.
+
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-menubar.h
+	(nact_main_menubar_is_pasted_object_relabeled): New function
+	to avoid moving also NAPivot class to private directory.
+
 	Move runtime/na-object-* stuff to private/ subdirectory.
 
 	* nautilus-actions/runtime/na-gnome-vfs-uri.c:

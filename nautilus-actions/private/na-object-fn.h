@@ -50,6 +50,8 @@ G_BEGIN_DECLS
  */
 void      na_object_iduplicable_check_status( const NAObject *object );
 NAObject *na_object_iduplicable_duplicate( const NAObject *object );
+NAObject *na_object_iduplicable_get_origin( const NAObject *object );
+void      na_object_iduplicable_set_origin( NAObject *object, const NAObject *origin );
 gboolean  na_object_iduplicable_are_equal( const NAObject *a, const NAObject *b );
 gboolean  na_object_iduplicable_is_modified( const NAObject *object );
 gboolean  na_object_iduplicable_is_valid( const NAObject *object );
@@ -60,6 +62,8 @@ void      na_object_object_dump( const NAObject *object );
 void      na_object_object_dump_norec( const NAObject *object );
 void      na_object_object_dump_tree( GList *tree );
 NAObject *na_object_object_ref( NAObject *object );
+void      na_object_object_reset_origin( NAObject *object, const NAObject *origin );
+void      na_object_object_reset_status( NAObject *object );
 void      na_object_object_unref( NAObject *object );
 
 GList    *na_object_most_derived_get_childs( const NAObject *object );

@@ -39,19 +39,6 @@ AM_CPPFLAGS += \
 libna_common_la_SOURCES = \
 	na-iprefs.c									\
 	na-iprefs.h									\
-	na-object.c									\
-	na-object-api.h								\
-	na-object-fn.h								\
-	na-object-id.c								\
-	na-object-id-fn.h							\
-	na-object-item.c							\
-	na-object-item-fn.h							\
-	na-object-action.c							\
-	na-object-action-fn.h						\
-	na-object-menu.c							\
-	na-object-menu-fn.h							\
-	na-object-profile.c							\
-	na-object-profile-fn.h						\
 	na-utils.c									\
 	na-utils.h									\
 	na-xml-names.h								\

@@ -276,6 +276,53 @@ instance_finalize( GObject *object )
 }
 
 /**
+ * na_object_id_check_status_up:
+ * @object: the object at the start of the hierarchy.
+ *
+ * Checks for modification and validity status of the @object, its
+ * parent, the parent of its parent, etc. up to the top of the hierarchy.
+ *
+ * Returns: %TRUE if at least one of the status has changed, %FALSE else.
+ *
+ * Checking the modification of any of the status should be more
+ * efficient that systematically force the display of the item.
+ */
+gboolean
+na_object_id_check_status_up( NAObjectId *object )
+{
+	gboolean changed;
+	gboolean was_modified, is_modified;
+	gboolean was_valid, is_valid;
+
+	g_return_val_if_fail( NA_OBJECT_ID( object ), FALSE );
+
+	changed = FALSE;
+
+	if( !object->private->dispose_has_run ){
+
+		was_modified = na_object_is_modified( object );
+		was_valid = na_object_is_valid( object );
+
+		na_iduplicable_check_status( NA_IDUPLICABLE( object ));
+
+		is_modified = na_object_is_modified( object );
+		is_valid = na_object_is_valid( object );
+
+		if( object->private->parent ){
+			na_object_id_check_status_up( NA_OBJECT_ID( object->private->parent ));
+		}
+
+		changed =
+			( was_modified && !is_modified ) ||
+			( !was_modified && is_modified ) ||
+			( was_valid && !is_valid ) ||
+			( !was_valid && is_valid );
+	}
+
+	return( changed );
+}
+
+/**
  * na_object_id_get_id:
  * @object: the #NAObjectId object whose internal identifiant is
  * requested.
@@ -337,6 +384,31 @@ na_object_id_get_parent( NAObjectId *object )
 
 	if( !object->private->dispose_has_run ){
 		parent = object->private->parent;
+	}
+
+	return( parent );
+}
+
+/**
+ * na_object_id_get_topmost_parent:
+ * @object: the #NAObject whose parent is searched.
+ *
+ * Returns: the topmost parent, maybe @object itself.
+ */
+NAObjectId *
+na_object_id_get_topmost_parent( NAObjectId *object )
+{
+	NAObjectId *parent;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), NULL );
+
+	parent = object;
+
+	if( !object->private->dispose_has_run ){
+
+		while( parent->private->parent ){
+			parent = NA_OBJECT_ID( parent->private->parent );
+		}
 	}
 
 	return( parent );
@@ -423,6 +495,84 @@ na_object_id_set_parent( NAObjectId *object, NAObjectItem *parent )
 
 	if( !object->private->dispose_has_run ){
 		object->private->parent = parent;
+	}
+}
+
+/**
+ * na_object_id_prepare_for_paste:
+ * @object: the #NAObjectId object to be pasted.
+ * @relabel: whether this object should be relabeled when pasted.
+ * @relabel: whether this item should be renumbered ?
+ * @action: if @object is a #NAObjectProfile, the attached #NAObjectAction.
+ *
+ * Prepares @object to be pasted.
+ *
+ * If a #NAObjectProfile, then @object is attached to the specified
+ * #NAObjectAction @action. The identifier is always renumbered to be
+ * suitable with the already existing profiles.
+ *
+ * If a #NAObjectAction or a #NAObjectMenu, a new UUID is allocated if
+ * and only if @relabel is %TRUE.
+ *
+ * Actual relabeling takes place if @relabel is %TRUE, depending of the
+ * user preferences.
+ */
+void
+na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectAction *action )
+{
+	static const gchar *thisfn = "na_object_id_prepare_for_paste";
+	GList *subitems, *it;
+
+	g_debug( "%s: object=%p, relabel=%s, renumber=%s, action=%p",
+			thisfn, ( void * ) object, relabel ? "True":"False", renumber ? "True":"False", ( void * ) action );
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
+
+	if( !object->private->dispose_has_run ){
+
+		if( NA_IS_OBJECT_PROFILE( object )){
+			na_object_set_parent( object, action );
+			na_object_set_new_id( object, action );
+			if( renumber && relabel ){
+				na_object_set_copy_of_label( object );
+			}
+
+		} else {
+			if( renumber ){
+				na_object_set_new_id( object, NULL );
+				if( relabel ){
+					na_object_set_copy_of_label( object );
+				}
+			}
+			if( NA_IS_OBJECT_MENU( object )){
+				subitems = na_object_get_items_list( object );
+				for( it = subitems ; it ; it = it->next ){
+					na_object_prepare_for_paste( it->data, relabel, renumber, NULL );
+				}
+			}
+		}
+	}
+}
+
+/**
+ * na_object_id_set_copy_of_label:
+ * @object: the #NAObjectId object whose label is to be changed.
+ *
+ * Sets the 'Copy of' label.
+ */
+void
+na_object_id_set_copy_of_label( NAObjectId *object )
+{
+	gchar *new_label;
+
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+
+	if( !object->private->dispose_has_run ){
+
+		/* i18n: copied items have a label as 'Copy of original label' */
+		new_label = g_strdup_printf( _( "Copy of %s" ), object->private->label );
+		g_free( object->private->label );
+		object->private->label = new_label;
 	}
 }
 

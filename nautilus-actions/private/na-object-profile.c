@@ -36,7 +36,7 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
-#include <runtime/na-utils.h>
+#include <common/na-utils.h>
 
 #include "na-iduplicable.h"
 #include "na-object-api.h"
@@ -904,6 +904,36 @@ na_object_profile_set_multiple( NAObjectProfile *profile, gboolean multiple )
 }
 
 /**
+ * na_object_profile_set_scheme:
+ * @profile: the #NAObjectProfile to be updated.
+ * @scheme: name of the scheme.
+ * @selected: whether this scheme is candidate to this profile.
+ *
+ * Sets the status of a scheme relative to this profile.
+ */
+void
+na_object_profile_set_scheme( NAObjectProfile *profile, const gchar *scheme, gboolean selected )
+{
+	/*static const gchar *thisfn = "na_object_profile_set_scheme";*/
+	gboolean exist;
+
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
+
+	if( !profile->private->dispose_has_run ){
+
+		exist = na_utils_find_in_list( profile->private->schemes, scheme );
+		/*g_debug( "%s: scheme=%s exist=%s", thisfn, scheme, exist ? "True":"False" );*/
+
+		if( selected && !exist ){
+			profile->private->schemes = g_slist_prepend( profile->private->schemes, g_strdup( scheme ));
+		}
+		if( !selected && exist ){
+			profile->private->schemes = na_utils_remove_ascii_from_string_list( profile->private->schemes, scheme );
+		}
+	}
+}
+
+/**
  * na_object_profile_set_schemes:
  * @profile: the #NAObjectProfile to be updated.
  * @schemes: list of schemes which apply.
@@ -946,6 +976,26 @@ na_object_profile_set_folders( NAObjectProfile *profile, GSList *folders )
 	if( !profile->private->dispose_has_run ){
 
 		g_object_set( G_OBJECT( profile ), NAPROFILE_PROP_FOLDERS, folders, NULL );
+	}
+}
+
+/**
+ * na_object_profile_replace_folder_uri:
+ * @profile: the #NAObjectProfile to be updated.
+ * @old: the old uri.
+ * @new: the new uri.
+ *
+ * Replaces the @old URI by the @new one.
+ */
+void
+na_object_profile_replace_folder_uri( NAObjectProfile *profile, const gchar *old, const gchar *new )
+{
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
+
+	if( !profile->private->dispose_has_run ){
+
+		profile->private->folders = na_utils_remove_from_string_list( profile->private->folders, old );
+		profile->private->folders = g_slist_append( profile->private->folders, ( gpointer ) g_strdup( new ));
 	}
 }
 

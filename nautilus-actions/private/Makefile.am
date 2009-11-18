@@ -75,6 +75,7 @@ libna_private_la_SOURCES = \
 	$(NULL)
 
 libna_private_la_LIBADD = \
+	$(top_builddir)/nautilus-actions/common/libna-common.la		\
 	$(NULL)
 
 VERSION_INFO = 1:0:0

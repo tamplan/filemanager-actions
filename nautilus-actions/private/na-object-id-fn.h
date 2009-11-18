@@ -42,18 +42,24 @@
  * in na-object-api.h
  */
 
-#include "na-object-item-class.h"
+#include "na-object-action-class.h"
 
 G_BEGIN_DECLS
+
+gboolean      na_object_id_check_status_up( NAObjectId *object );
 
 gchar        *na_object_id_get_id( const NAObjectId *object );
 void          na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent );
 gchar        *na_object_id_get_label( const NAObjectId *object );
 NAObjectItem *na_object_id_get_parent( NAObjectId *object );
+NAObjectId   *na_object_id_get_topmost_parent( NAObjectId *object );
 
 void          na_object_id_set_id( NAObjectId *object, const gchar *id );
 void          na_object_id_set_label( NAObjectId *object, const gchar *label );
 void          na_object_id_set_parent( NAObjectId *object, NAObjectItem *parent );
+
+void          na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectAction *action );
+void          na_object_id_set_copy_of_label( NAObjectId *object );
 
 G_END_DECLS
 

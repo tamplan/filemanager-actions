@@ -34,11 +34,12 @@
 
 #include <glib/gi18n.h>
 
+#include <common/na-iprefs.h>
+
+#include <private/na-object-api.h>
+
 #include <runtime/na-iabout.h>
 #include <runtime/na-ipivot-consumer.h>
-
-#include <common/na-object-api.h>
-#include <common/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-assistant-export.h"
@@ -425,6 +426,33 @@ nact_main_menubar_dispose( NactMainWindow *window )
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	g_free( mis );
+}
+
+/**
+ * Whether the specified object should be relabeled when pasted ?
+ * @object: the considered #NAObject-derived object.
+ * @pivot: the #NAPivot instance.
+ *
+ * Returns: %TRUE if the object should be relabeled, %FALSE else.
+ */
+gboolean
+nact_main_menubar_is_pasted_object_relabeled( NAObject *object, NAPivot *pivot )
+{
+	static const gchar *thisfn = "nact_main_menubar_is_pasted_object_relabeled";
+	gboolean relabel;
+
+	if( NA_IS_OBJECT_MENU( object )){
+		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_MENUS, FALSE );
+	} else if( NA_IS_OBJECT_ACTION( object )){
+		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_ACTIONS, FALSE );
+	} else if( NA_IS_OBJECT_PROFILE( object )){
+		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, FALSE );
+	} else {
+		g_warning( "%s: unknown object type at %p", thisfn, ( void * ) object );
+		g_return_val_if_reached( FALSE );
+	}
+
+	return( relabel );
 }
 
 /**
@@ -985,6 +1013,7 @@ prepare_for_paste( NactMainWindow *window )
 	GList *items, *it;
 	NactClipboard *clipboard;
 	NAObjectAction *action;
+	gboolean relabel;
 	gboolean renumber;
 	NactApplication *application;
 	NAPivot *pivot;
@@ -1007,7 +1036,8 @@ prepare_for_paste( NactMainWindow *window )
 			}
 		}
 
-		na_object_prepare_for_paste( it->data, pivot, renumber, action );
+		relabel = nact_main_menubar_is_pasted_object_relabeled( NA_OBJECT( it->data ), pivot );
+		na_object_prepare_for_paste( it->data, relabel, renumber, action );
 	}
 
 	g_debug( "%s: action=%p (%s)",
@@ -1034,6 +1064,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 	GList *items, *it;
 	GList *dup;
 	NAObject *obj;
+	gboolean relabel;
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
@@ -1054,7 +1085,8 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 			action = NA_OBJECT_ACTION( na_object_get_parent( NA_OBJECT_PROFILE( obj )));
 		}
 
-		na_object_prepare_for_paste( obj, pivot, TRUE, action );
+		relabel = nact_main_menubar_is_pasted_object_relabeled( obj, pivot );
+		na_object_prepare_for_paste( obj, relabel, TRUE, action );
 		na_object_set_origin( obj, NULL );
 		na_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );

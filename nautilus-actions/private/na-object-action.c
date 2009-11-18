@@ -405,6 +405,30 @@ na_object_action_new( void )
 }
 
 /**
+ * na_object_action_new_with_profile:
+ *
+ * Allocates a new #NAObjectAction object along with a default profile.
+ *
+ * Returns: the newly allocated #NAObjectAction action.
+ */
+NAObjectAction *
+na_object_action_new_with_profile( void )
+{
+	NAObjectAction *action;
+	NAObjectProfile *profile;
+
+	action = na_object_action_new();
+
+	profile = na_object_profile_new();
+
+	/* i18n: name of the default profile when creating an action */
+	na_object_set_label( profile, _( "Default profile" ));
+	na_object_action_attach_profile( action, profile );
+
+	return( action );
+}
+
+/**
  * na_object_action_get_version:
  * @action: the #NAObjectAction object to be requested.
  *
@@ -428,6 +452,30 @@ na_object_action_get_version( const NAObjectAction *action )
 	}
 
 	return( version );
+}
+
+/**
+ * na_object_action_is_readonly:
+ * @action: the #NAObjectAction object to be requested.
+ *
+ * Is the specified action only readable ?
+ * Or, in other words, may this action be edited and then saved to the
+ * original I/O storage subsystem ?
+ *
+ * Returns: %TRUE if the action is read-only, %FALSE else.
+ */
+gboolean
+na_object_action_is_readonly( const NAObjectAction *action )
+{
+	gboolean readonly = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
+
+	if( !action->private->dispose_has_run ){
+		g_object_get( G_OBJECT( action ), NAACTION_PROP_READONLY, &readonly, NULL );
+	}
+
+	return( readonly );
 }
 
 /**
@@ -688,6 +736,25 @@ na_object_action_toolbar_set_label( NAObjectAction *action, const gchar *label )
 	if( !action->private->dispose_has_run ){
 
 		g_object_set( G_OBJECT( action ), NAACTION_PROP_TOOLBAR_LABEL, label, NULL );
+	}
+}
+
+/**
+ * na_object_action_reset_last_allocated:
+ * @action: the #NAObjectAction object.
+ *
+ * Resets the last_allocated counter for computing new profile names.
+ *
+ * This should be called after having successfully saved the action.
+ */
+void
+na_object_action_reset_last_allocated( NAObjectAction *action )
+{
+	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
+
+	if( !action->private->dispose_has_run ){
+
+		action->private->last_allocated = 0;
 	}
 }
 

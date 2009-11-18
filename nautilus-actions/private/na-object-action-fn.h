@@ -69,8 +69,10 @@ enum {
 };
 
 NAObjectAction *na_object_action_new( void );
+NAObjectAction *na_object_action_new_with_profile( void );
 
 gchar          *na_object_action_get_version( const NAObjectAction *action );
+gboolean        na_object_action_is_readonly( const NAObjectAction *action );
 gboolean        na_object_action_is_target_selection( const NAObjectAction *action );
 gboolean        na_object_action_is_target_background( const NAObjectAction *action );
 gboolean        na_object_action_is_target_toolbar( const NAObjectAction *action );
@@ -84,6 +86,8 @@ void            na_object_action_set_target_background( NAObjectAction *action, 
 void            na_object_action_set_target_toolbar( NAObjectAction *action, gboolean targeting );
 void            na_object_action_toolbar_set_same_label( NAObjectAction *action, gboolean same_label );
 void            na_object_action_toolbar_set_label( NAObjectAction *action, const gchar *label );
+
+void            na_object_action_reset_last_allocated( NAObjectAction *action );
 
 gchar          *na_object_action_get_new_profile_name( const NAObjectAction *action );
 void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );

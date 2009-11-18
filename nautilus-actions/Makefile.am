@@ -28,8 +28,8 @@
 
 SUBDIRS = \
 	api							\
-	private						\
 	common						\
+	private						\
 	runtime						\
 	nact						\
 	plugin						\
