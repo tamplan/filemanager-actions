@@ -40,7 +40,6 @@ AM_CPPFLAGS += \
 libna_private_includedir = $(pkgincludedir)/private
 
 libna_private_include_HEADERS = \
-	na-object-api.h								\
 	na-object-class.h							\
 	na-object-fn.h								\
 	na-object-id-class.h						\

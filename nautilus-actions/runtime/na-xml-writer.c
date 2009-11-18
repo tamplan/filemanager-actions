@@ -35,7 +35,7 @@
 #include <gio/gio.h>
 #include <libxml/tree.h>
 
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
 
 #include <runtime/na-gconf-provider-keys.h>
 #include <runtime/na-iprefs.h>

@@ -37,7 +37,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
 
 #include <runtime/na-iabout.h>
 #include <runtime/na-ipivot-consumer.h>

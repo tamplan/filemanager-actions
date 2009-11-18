@@ -37,8 +37,7 @@
 #include <stdlib.h>
 
 #include <api/na-iio-provider.h>
-
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
 
 #include <runtime/na-gconf-provider.h>
 #include <runtime/na-io-provider.h>

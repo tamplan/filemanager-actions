@@ -35,8 +35,9 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include <api/na-object-api.h>
+
 #include "na-iduplicable.h"
-#include "na-object-api.h"
 #include "na-object-id-priv.h"
 
 /* private class data

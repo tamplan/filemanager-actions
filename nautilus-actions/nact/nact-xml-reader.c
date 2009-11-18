@@ -38,7 +38,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
 
 #include <runtime/na-gconf-provider-keys.h>
 #include <runtime/na-gconf-utils.h>

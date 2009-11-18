@@ -38,7 +38,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
 
 #include <runtime/na-pivot.h>
 #include <runtime/na-iabout.h>

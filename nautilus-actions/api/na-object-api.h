@@ -28,27 +28,25 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_API_H__
-#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_API_H__
+#ifndef __NAUTILUS_ACTIONS_NA_OBJECT_API_H__
+#define __NAUTILUS_ACTIONS_NA_OBJECT_API_H__
 
 /**
  * SECTION: na_object
  * @short_description: #NAObject public API.
- * @include: nautilus-actions/private/na-object-api.h
+ * @include: nautilus-actions/api/na-object-api.h
  *
  * We define here a common API which makes easier to write (and read)
  * the code ; all object functions are named na_object ; all arguments
  * are casted directly in the macro.
- *
- * Only define here the API which is relevant in libna-runtime library.
  */
 
-#include "na-object-fn.h"
-#include "na-object-id-fn.h"
-#include "na-object-item-fn.h"
-#include "na-object-menu-fn.h"
-#include "na-object-action-fn.h"
-#include "na-object-profile-fn.h"
+#include <nautilus-actions/private/na-object-fn.h>
+#include <nautilus-actions/private/na-object-id-fn.h>
+#include <nautilus-actions/private/na-object-item-fn.h>
+#include <nautilus-actions/private/na-object-menu-fn.h>
+#include <nautilus-actions/private/na-object-action-fn.h>
+#include <nautilus-actions/private/na-object-profile-fn.h>
 
 G_BEGIN_DECLS
 
@@ -115,4 +113,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_API_H__ */
+#endif /* __NAUTILUS_ACTIONS_NA_OBJECT_API_H__ */

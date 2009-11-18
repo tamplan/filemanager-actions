@@ -35,8 +35,7 @@
 #include <string.h>
 
 #include <api/na-iio-provider.h>
-
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
 
 #include "na-io-provider.h"
 #include "na-iprefs.h"

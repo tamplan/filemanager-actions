@@ -35,7 +35,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
 
 #include "na-io-provider.h"
 #include "na-gconf-monitor.h"

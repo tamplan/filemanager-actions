@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
 
 #include "base-window.h"
 #include "nact-application.h"

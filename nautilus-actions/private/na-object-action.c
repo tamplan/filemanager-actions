@@ -34,10 +34,11 @@
 
 #include <string.h>
 
+#include <api/na-object-api.h>
+
 #include <runtime/na-utils.h>
 
 #include "na-iduplicable.h"
-#include "na-object-api.h"
 #include "na-object-action-priv.h"
 
 /* private class data

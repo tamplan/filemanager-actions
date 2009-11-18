@@ -36,7 +36,8 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
+
 #include <private/na-iduplicable.h>
 
 #include <runtime/na-iprefs.h>

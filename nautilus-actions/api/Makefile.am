@@ -40,6 +40,7 @@ libna_api_include_HEADERS = \
 	na-api.h											\
 	na-gconf-keys.h										\
 	na-iio-provider.h									\
+	na-object-api.h										\
 	$(NULL)
 
 libna_api_la_SOURCES = \

@@ -35,10 +35,11 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
+#include <api/na-object-api.h>
+
 #include <runtime/na-utils.h>
 
 #include "na-iduplicable.h"
-#include "na-object-api.h"
 #include "na-object-item-priv.h"
 
 /* private class data

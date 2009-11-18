@@ -35,7 +35,8 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
-#include <private/na-object-api.h>
+#include <api/na-object-api.h>
+
 #include <private/na-iduplicable.h>
 
 #include "nact-application.h"
