@@ -39,8 +39,8 @@
 
 #include <runtime/na-gconf-provider-keys.h>
 #include <runtime/na-iprefs.h>
+#include <runtime/na-utils.h>
 
-#include "na-utils.h"
 #include "na-xml-names.h"
 #include "na-xml-writer.h"
 

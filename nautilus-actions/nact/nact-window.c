@@ -37,11 +37,10 @@
 
 #include <api/na-iio-provider.h>
 
-#include <common/na-utils.h>
-
 #include <private/na-object-api.h>
 
 #include <runtime/na-iprefs.h>
+#include <runtime/na-utils.h>
 
 #include "nact-application.h"
 #include "nact-window.h"

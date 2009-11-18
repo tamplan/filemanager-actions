@@ -36,9 +36,9 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <common/na-utils.h>
-
 #include <private/na-object-api.h>
+
+#include <runtime/na-utils.h>
 
 #include "base-window.h"
 #include "base-iprefs.h"

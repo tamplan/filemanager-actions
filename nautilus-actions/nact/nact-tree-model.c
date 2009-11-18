@@ -34,12 +34,12 @@
 
 #include <string.h>
 
-#include <common/na-utils.h>
 #include <common/na-xml-writer.h>
 
 #include <private/na-object-api.h>
 
 #include <runtime/na-iprefs.h>
+#include <runtime/na-utils.h>
 
 #include "egg-tree-multi-dnd.h"
 #include "nact-application.h"

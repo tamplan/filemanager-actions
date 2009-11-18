@@ -37,8 +37,6 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libna_common_la_SOURCES = \
-	na-utils.c									\
-	na-utils.h									\
 	na-xml-names.h								\
 	na-xml-writer.c								\
 	na-xml-writer.h								\

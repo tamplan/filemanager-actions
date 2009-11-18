@@ -37,23 +37,41 @@ G_BEGIN_DECLS
 
 /* some functions to ease the GSList list manipulations
  */
+void     na_utils_dump_string_list( GSList *list );
 GSList  *na_utils_duplicate_string_list( GSList *list );
 gboolean na_utils_find_in_list( GSList *list, const gchar *str );
 void     na_utils_free_string_list( GSList *list );
+GSList  *na_utils_lines_to_string_list( const gchar *text );
+GSList  *na_utils_remove_ascii_from_string_list( GSList *list, const gchar *text );
 GSList  *na_utils_remove_from_string_list( GSList *list, const gchar *str );
 gboolean na_utils_string_lists_are_equal( GSList *first, GSList *second );
+gchar   *na_utils_string_list_to_text( GSList *list );
+GSList  *na_utils_text_to_string_list( const gchar *text );
 
 /* a GSList to a string [aaaa,bbbb,cccc]
  */
 gchar   *na_utils_gslist_to_schema( GSList *list );
+GSList  *na_utils_schema_to_gslist( const gchar *value );
+
+gchar   *na_utils_boolean_to_schema( gboolean b );
+gboolean na_utils_schema_to_boolean( const gchar *value, gboolean default_value );
+
+/*
+ * Some functions for GString manipulations.
+ */
+gchar   *na_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list );
 
 /* string manipulations
  */
 gchar   *na_utils_get_first_word( const gchar *string );
+gchar   *na_utils_prefix_strings( const gchar *prefix, const gchar *str );
 
 /* path manipulations
  */
+gboolean na_utils_exist_file( const gchar *uri );
+gboolean na_utils_is_writable_dir( const gchar *uri );
 gchar   *na_utils_path_extract_last_dir( const gchar *path );
+gchar   *na_utils_remove_last_level_from_path( const gchar *path );
 
 G_END_DECLS
 

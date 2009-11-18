@@ -36,7 +36,7 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
-#include <common/na-utils.h>
+#include <runtime/na-utils.h>
 
 #include "na-iduplicable.h"
 #include "na-object-api.h"

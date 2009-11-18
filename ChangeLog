@@ -1,5 +1,32 @@
 2009-11-18 Pierre Wieser <pwieser@trychlos.org>
 
+	Merge common/na-utils.{c,h} into runtime/na-utils.{c,h}.
+
+	* nautilus-actions/common/na-utils.c:
+	* nautilus-actions/common/na-utils.h:
+	Merged into runtime/na-utils.{c,h}, thus deleted from common/.
+
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/common/na-xml-writer.c:
+	* nautilus-actions/nact/base-builder.c:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-iadvanced-tab.c:
+	* nautilus-actions/nact/nact-ibackground-tab.c:
+	* nautilus-actions/nact/nact-icommand-tab.c:
+	* nautilus-actions/nact/nact-iconditions-tab.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/private/Makefile.am:
+	* nautilus-actions/private/na-object-profile.c:
+	* nautilus-actions/runtime/na-utils.c:
+	* nautilus-actions/runtime/na-utils.h:
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* nautilus-actions/utils/nautilus-actions-schemas.c:
+	Updated accordingly.
+
 	Merge common/na-iprefs.{c,h} into runtime/na-iprefs.{c,h}.
 
 	* nautilus-actions/common/na-iprefs.c:

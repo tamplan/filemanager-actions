@@ -36,7 +36,6 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include <common/na-utils.h>
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
 
@@ -45,6 +44,7 @@
 
 #include <runtime/na-iprefs.h>
 #include <runtime/na-pivot.h>
+#include <runtime/na-utils.h>
 
 #include "base-iprefs.h"
 #include "nact-application.h"

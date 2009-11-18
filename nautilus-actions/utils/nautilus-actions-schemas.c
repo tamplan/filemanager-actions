@@ -40,9 +40,9 @@
 
 #include <common/na-xml-names.h>
 #include <common/na-xml-writer.h>
-#include <common/na-utils.h>
 
 #include <runtime/na-iprefs.h>
+#include <runtime/na-utils.h>
 
 #include "console-utils.h"
 

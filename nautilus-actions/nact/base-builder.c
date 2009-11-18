@@ -32,7 +32,7 @@
 #include <config.h>
 #endif
 
-#include <common/na-utils.h>
+#include <runtime/na-utils.h>
 
 #include "base-builder.h"
 
