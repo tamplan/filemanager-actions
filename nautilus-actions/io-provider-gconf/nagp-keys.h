@@ -28,10 +28,10 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_GCONF_PROVIDER_KEYS_H__
-#define __NA_RUNTIME_GCONF_PROVIDER_KEYS_H__
+#ifndef __NAGP_GCONF_PROVIDER_KEYS_H__
+#define __NAGP_GCONF_PROVIDER_KEYS_H__
 
-#include <api/na-gconf-keys.h>
+#include <nautilus-actions/api/na-gconf-keys.h>
 
 /* GConf general information
  */
@@ -51,28 +51,28 @@
 #define OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY	"toolbar-same-label"
 #define OBJECT_ITEM_TOOLBAR_LABEL_ENTRY			"toolbar-label"
 
-#define OBJECT_ITEM_TYPE_MENU			"Menu"
-#define OBJECT_ITEM_TYPE_ACTION			"Action"
+#define OBJECT_ITEM_TYPE_MENU					"Menu"
+#define OBJECT_ITEM_TYPE_ACTION					"Action"
 
 /* GConf key names (specific to menu)
  */
 
 /* GConf key names (specific to action)
  */
-#define ACTION_VERSION_ENTRY			"version"
+#define ACTION_VERSION_ENTRY					"version"
 
 /* GConf key names (specific to profile)
  */
-#define ACTION_PROFILE_LABEL_ENTRY		"desc-name"
-#define ACTION_PATH_ENTRY				"path"
-#define ACTION_PARAMETERS_ENTRY			"parameters"
-#define ACTION_BASENAMES_ENTRY			"basenames"
-#define ACTION_MATCHCASE_ENTRY			"matchcase"
-#define ACTION_MIMETYPES_ENTRY			"mimetypes"
-#define ACTION_ISFILE_ENTRY				"isfile"
-#define ACTION_ISDIR_ENTRY				"isdir"
-#define ACTION_MULTIPLE_ENTRY			"accept-multiple-files"
-#define ACTION_SCHEMES_ENTRY			"schemes"
-#define ACTION_FOLDERS_ENTRY			"folders"
+#define ACTION_PROFILE_LABEL_ENTRY				"desc-name"
+#define ACTION_PATH_ENTRY						"path"
+#define ACTION_PARAMETERS_ENTRY					"parameters"
+#define ACTION_BASENAMES_ENTRY					"basenames"
+#define ACTION_MATCHCASE_ENTRY					"matchcase"
+#define ACTION_MIMETYPES_ENTRY					"mimetypes"
+#define ACTION_ISFILE_ENTRY						"isfile"
+#define ACTION_ISDIR_ENTRY						"isdir"
+#define ACTION_MULTIPLE_ENTRY					"accept-multiple-files"
+#define ACTION_SCHEMES_ENTRY					"schemes"
+#define ACTION_FOLDERS_ENTRY					"folders"
 
-#endif /* __NA_RUNTIME_GCONF_PROVIDER_KEYS_H__ */
+#endif /* __NAGP_GCONF_PROVIDER_KEYS_H__ */

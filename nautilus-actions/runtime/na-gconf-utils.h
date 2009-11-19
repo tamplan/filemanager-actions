@@ -40,13 +40,8 @@
 #include <gconf/gconf.h>
 #include <gconf/gconf-client.h>
 
-GSList  *na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path );
-void     na_gconf_utils_free_subdirs( GSList *subdirs );
-gboolean na_gconf_utils_have_subdir( GConfClient *gconf, const gchar *path );
-
 GSList  *na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path );
 void     na_gconf_utils_free_entries( GSList *entries );
-gboolean na_gconf_utils_have_entry( GConfClient *gconf, const gchar *path, const gchar *entry );
 gboolean na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gboolean *value );
 gboolean na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gchar **value );
 gboolean na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry, GSList **value );

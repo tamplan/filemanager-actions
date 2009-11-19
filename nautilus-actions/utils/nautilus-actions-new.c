@@ -39,7 +39,8 @@
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
-#include <runtime/na-gconf-provider.h>
+#include <io-provider-gconf/nagp-keys.h>
+
 #include <runtime/na-io-provider.h>
 #include <runtime/na-iprefs.h>
 #include <runtime/na-utils.h>
@@ -368,7 +369,7 @@ get_action_from_cmdline( void )
 static gboolean
 write_to_gconf( NAObjectAction *action, GSList **msg )
 {
-	NAGConfProvider *gconf;
+	/*NAGConfProvider *gconf;
 	guint ret;
 
 	gconf = na_gconf_provider_new( NULL );
@@ -377,7 +378,8 @@ write_to_gconf( NAObjectAction *action, GSList **msg )
 
 	ret = na_io_provider_write_item( NULL, NA_OBJECT_ITEM( action ), msg );
 
-	return( ret == NA_IIO_PROVIDER_WRITE_OK );
+	return( ret == NA_IIO_PROVIDER_WRITE_OK );*/
+	return( TRUE );
 }
 
 /*

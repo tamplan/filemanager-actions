@@ -41,69 +41,6 @@ static GConfValue *read_value( GConfClient *gconf, const gchar *path, gboolean u
 static gboolean    sync_gconf( GConfClient *gconf, gchar **message );
 
 /**
- * na_gconf_utils_get_subdirs:
- * @gconf: a  #GConfClient instance.
- * @path: a full path to be readen.
- *
- * Loads the subdirs of the given path.
- *
- * Returns: a GSList of full path subdirectories.
- *
- * The returned list should be na_gconf_utils_free_subdirs() by the
- * caller.
- */
-GSList *
-na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
-{
-	static const gchar *thisfn = "na_gconf_utils_get_subdirs";
-	GError *error = NULL;
-	GSList *list_subdirs;
-
-	list_subdirs = gconf_client_all_dirs( gconf, path, &error );
-
-	if( error ){
-		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
-		g_error_free( error );
-		return(( GSList * ) NULL );
-	}
-
-	return( list_subdirs );
-}
-
-/**
- * na_gconf_utils_free_subdirs:
- * @subdirs: a list of subdirs as returned by na_gconf_utils_get_subdirs().
- *
- * Release the list of subdirs.
- */
-void
-na_gconf_utils_free_subdirs( GSList *subdirs )
-{
-	na_utils_free_string_list( subdirs );
-}
-
-/**
- * na_gconf_utils_have_subdir:
- * @gconf: a  #GConfClient instance.
- * @path: a full path to be readen.
- *
- * Returns: %TRUE if the specified path has at least one subdirectory,
- * %FALSE else.
- */
-gboolean
-na_gconf_utils_have_subdir( GConfClient *gconf, const gchar *path )
-{
-	GSList *listpath;
-	gboolean have_subdir;
-
-	listpath = na_gconf_utils_get_subdirs( gconf, path );
-	have_subdir = ( listpath && g_slist_length( listpath ));
-	na_gconf_utils_free_subdirs( listpath );
-
-	return( have_subdir );
-}
-
-/**
  * na_gconf_utils_get_entries:
  * @gconf: a  #GConfClient instance.
  * @path: a full path to be readen.
@@ -145,47 +82,6 @@ na_gconf_utils_free_entries( GSList *list )
 {
 	g_slist_foreach( list, ( GFunc ) gconf_entry_unref, NULL );
 	g_slist_free( list );
-}
-
-/**
- * na_gconf_utils_have_entry:
- * @gconf: a  #GConfClient instance.
- * @path: the full path of a key.
- * @entry: the entry to be tested.
- *
- * Returns: %TRUE if the given @entry exists for the given @path,
- * %FALSE else.
- */
-gboolean
-na_gconf_utils_have_entry( GConfClient *gconf, const gchar *path, const gchar *entry )
-{
-	static const gchar *thisfn = "na_gconf_utils_have_entry";
-	gboolean have_entry = FALSE;
-	GError *error = NULL;
-	gchar *key;
-	GConfValue *value;
-
-	key = g_strdup_printf( "%s/%s", path, entry );
-
-	value = gconf_client_get_without_default( gconf, key, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, error=%s", thisfn, key, error->message );
-		g_error_free( error );
-		if( value ){
-			gconf_value_free( value );
-			value = NULL;
-		}
-	}
-
-	if( value ){
-		have_entry = TRUE;
-		gconf_value_free( value );
-	}
-
-	g_free( key );
-
-	return( have_entry );
 }
 
 /**

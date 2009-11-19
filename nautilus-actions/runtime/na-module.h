@@ -34,10 +34,14 @@
 /**
  * SECTION: na_module
  * @short_description: #NAModule class definition.
- * @include: common/na-module.h
+ * @include: runtime/na-module.h
  *
  * The NAModule class manages Nautilus-Actions extensions as dynamically
- * loadable modules.
+ * loadable modules (plugins).
+ *
+ * NAModule
+ *  +- is derived from GTypeModule
+ *      +- which itself implements GTypePlugin
  */
 
 #include <glib.h>
@@ -71,7 +75,10 @@ typedef struct {
 GType  na_module_get_type               ( void );
 
 GList *na_module_load_modules           ( void );
+
 GList *na_module_get_extensions_for_type( GList *modules, GType type );
+void   na_module_free_extensions_list   ( GList *extensions );
+
 gchar *na_module_get_name               ( NAModule *module, GType type );
 void   na_module_release_modules        ( GList *modules );
 

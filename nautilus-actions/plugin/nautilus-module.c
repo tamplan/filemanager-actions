@@ -69,6 +69,8 @@ nautilus_module_initialize( GTypeModule *module )
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
+	g_type_module_set_name( module, PACKAGE_STRING );
+
 	nautilus_actions_register_type( module );
 }
 

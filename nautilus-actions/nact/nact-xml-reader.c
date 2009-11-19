@@ -40,7 +40,8 @@
 
 #include <api/na-object-api.h>
 
-#include <runtime/na-gconf-provider-keys.h>
+#include <io-provider-gconf/nagp-keys.h>
+
 #include <runtime/na-gconf-utils.h>
 #include <runtime/na-iprefs.h>
 #include <runtime/na-utils.h>

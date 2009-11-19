@@ -1,3 +1,44 @@
+2009-11-19 Pierre Wieser <pwieser@trychlos.org>
+
+	Create GConf IO Provider as a plugin.
+
+	* nautilus-actions/runtime/na-gconf-provider-keys.h:
+	* nautilus-actions/runtime/na-gconf-provider.c:
+	* nautilus-actions/runtime/na-gconf-provider.h:
+	Moved to io-provider-gconf/, and thus removed from runtime/.
+
+	* configure.ac:
+	* nautilus-actions/Makefile.am:
+	Maage io-provider-gconf/ new directory.
+
+	* m4/na-log-domains.m4:
+	Define new NA_LOGDOMAIN_IO_PROVIDER_GCONF log domain.
+
+	* nautilus-actions/api/na-api.c:
+	* nautilus-actions/api/na-api.h (na_api_module_init):
+	Now returns a boolean.
+
+	* nautilus-actions/plugin/nautilus-module.c:
+	Set module name.
+
+	* nautilus-actions/runtime/na-gconf-utils.c:
+	* nautilus-actions/runtime/na-gconf-utils.h
+	(na_gconf_utils_get_subdirs, na_gconf_utils_free_subdirs,
+	na_gconf_utils_have_entry:): Move functions to NagpIOProvider class.
+
+	* nautilus-actions/runtime/na-module.c:
+	Fix dynamic loading of the modules.
+
+	* nautilus-actions/runtime/na-gconf-utils.c:
+	* nautilus-actions/runtime/na-gconf-utils.h
+	(na_gconf_utils_have_subdir): Removed function.
+
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-xml-writer.c:
+	Updated accordingly.
+
 2009-11-18 Pierre Wieser <pwieser@trychlos.org>
 
 	Move runtime/na-gconf-monitor.{c,h} to api/.

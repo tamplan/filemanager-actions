@@ -34,96 +34,98 @@
 
 #include <string.h>
 
-#include <api/na-object-api.h>
-#include <api/na-gconf-monitor.h>
+#include <nautilus-actions/api/na-iio-provider.h>
+#include <nautilus-actions/api/na-object-api.h>
+#include <nautilus-actions/api/na-gconf-monitor.h>
 
-#include "na-gconf-provider.h"
-#include "na-gconf-provider-keys.h"
-#include "na-gconf-utils.h"
-#include "na-utils.h"
+/* only possible because we are an internal plugin */
+#include <runtime/na-gconf-utils.h>
+#include <runtime/na-utils.h>
+
+#include "nagp-gconf-provider.h"
+#include "nagp-keys.h"
 
 /* private class data
  */
-struct NAGConfProviderClassPrivate {
+struct NagpGConfProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAGConfProviderPrivate {
+struct NagpGConfProviderPrivate {
 	gboolean     dispose_has_run;
 	GConfClient *gconf;
-	NAPivot     *pivot;
 	GList       *monitors;
 };
 
+static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 
-static GType          register_type( void );
-static void           class_init( NAGConfProviderClass *klass );
+static void           class_init( NagpGConfProviderClass *klass );
 static void           iio_provider_iface_init( NAIIOProviderInterface *iface );
 static void           instance_init( GTypeInstance *instance, gpointer klass );
 static void           instance_dispose( GObject *object );
 static void           instance_finalize( GObject *object );
 
-static void           install_monitors( NAGConfProvider *provider );
-static void           config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAGConfProvider *provider );
+static GList         *install_monitors( NagpGConfProvider *provider );
+static void           config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
+#if 0
 static NAPivotNotify *entry_to_notify( const GConfEntry *entry );
+#endif
 
 static GList         *iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
-static NAObjectItem  *read_item( NAGConfProvider *provider, const gchar *path );
-static void           read_item_action( NAGConfProvider *provider, const gchar *path, NAObjectAction *action );
-static void           read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjectAction *action );
-static void           read_item_action_properties_v1( NAGConfProvider *gconf, GSList *entries, NAObjectAction *action );
-static void           read_item_action_profile( NAGConfProvider *provider, NAObjectAction *action, const gchar *path );
-static void           read_item_action_profile_properties( NAGConfProvider *provider, GSList *entries, NAObjectProfile *profile );
-static void           read_item_menu( NAGConfProvider *provider, const gchar *path, NAObjectMenu *menu );
-static void           read_item_menu_properties( NAGConfProvider *provider, GSList *entries, NAObjectMenu *menu );
-static void           read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjectItem *item );
+static NAObjectItem  *read_item( NagpGConfProvider *provider, const gchar *path );
+static void           read_item_action( NagpGConfProvider *provider, const gchar *path, NAObjectAction *action );
+static void           read_item_action_properties( NagpGConfProvider *provider, GSList *entries, NAObjectAction *action );
+static void           read_item_action_properties_v1( NagpGConfProvider *gconf, GSList *entries, NAObjectAction *action );
+static void           read_item_action_profile( NagpGConfProvider *provider, NAObjectAction *action, const gchar *path );
+static void           read_item_action_profile_properties( NagpGConfProvider *provider, GSList *entries, NAObjectProfile *profile );
+static void           read_item_menu( NagpGConfProvider *provider, const gchar *path, NAObjectMenu *menu );
+static void           read_item_menu_properties( NagpGConfProvider *provider, GSList *entries, NAObjectMenu *menu );
+static void           read_object_item_properties( NagpGConfProvider *provider, GSList *entries, NAObjectItem *item );
 
 static gboolean       iio_provider_is_willing_to_write( const NAIIOProvider *provider );
 
 static gboolean       iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item );
 
-static guint          iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
-static gboolean       write_item_action( NAGConfProvider *gconf, const NAObjectAction *action, GSList **messages );
-static gboolean       write_item_menu( NAGConfProvider *gconf, const NAObjectMenu *menu, GSList **messages );
-static gboolean       write_object_item( NAGConfProvider *gconf, const NAObjectItem *item, GSList **messages );
+static guint          iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **message );
+static gboolean       write_item_action( NagpGConfProvider *gconf, const NAObjectAction *action, GSList **message );
+static gboolean       write_item_menu( NagpGConfProvider *gconf, const NAObjectMenu *menu, GSList **message );
+static gboolean       write_object_item( NagpGConfProvider *gconf, const NAObjectItem *item, GSList **message );
 
-static guint          iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+static guint          iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **message );
 
-static gboolean       key_is_writable( NAGConfProvider *gconf, const gchar *path );
+static gboolean       key_is_writable( NagpGConfProvider *gconf, const gchar *path );
 
-static gboolean       write_str( NAGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **messages );
-static gboolean       write_bool( NAGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **messages );
-static gboolean       write_list( NAGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **messages );
+static gboolean       write_str( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **message );
+static gboolean       write_bool( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **message );
+static gboolean       write_list( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **message );
+
+static GSList  *na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path );
+static void     na_gconf_utils_free_subdirs( GSList *subdirs );
+/*static gboolean na_gconf_utils_have_subdir( GConfClient *gconf, const gchar *path );*/
+static gboolean na_gconf_utils_have_entry( GConfClient *gconf, const gchar *path, const gchar *entry );
 
 GType
-na_gconf_provider_get_type( void )
+nagp_gconf_provider_get_type( void )
 {
-	static GType object_type = 0;
-
-	if( !object_type ){
-		object_type = register_type();
-	}
-
-	return( object_type );
+	return( st_module_type );
 }
 
-static GType
-register_type( void )
+void
+nagp_gconf_provider_register_type( GTypeModule *module )
 {
-	static const gchar *thisfn = "na_gconf_provider_register_type";
-	GType type;
+	static const gchar *thisfn = "nagp_gconf_provider_register_type";
 
 	static GTypeInfo info = {
-		sizeof( NAGConfProviderClass ),
+		sizeof( NagpGConfProviderClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAGConfProvider ),
+		sizeof( NagpGConfProvider ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -136,17 +138,15 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NAGConfProvider", &info, 0 );
+	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NagpGConfProvider", &info, 0 );
 
-	g_type_add_interface_static( type, NA_IIO_PROVIDER_TYPE, &iio_provider_iface_info );
-
-	return( type );
+	g_type_module_add_interface( module, st_module_type, NA_IIO_PROVIDER_TYPE, &iio_provider_iface_info );
 }
 
 static void
-class_init( NAGConfProviderClass *klass )
+class_init( NagpGConfProviderClass *klass )
 {
-	static const gchar *thisfn = "na_gconf_provider_class_init";
+	static const gchar *thisfn = "nagp_gconf_provider_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -157,13 +157,13 @@ class_init( NAGConfProviderClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAGConfProviderClassPrivate, 1 );
+	klass->private = g_new0( NagpGConfProviderClassPrivate, 1 );
 }
 
 static void
 iio_provider_iface_init( NAIIOProviderInterface *iface )
 {
-	static const gchar *thisfn = "na_gconf_provider_iio_provider_iface_init";
+	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -177,30 +177,29 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_gconf_provider_instance_init";
-	NAGConfProvider *self;
+	static const gchar *thisfn = "nagp_gconf_provider_instance_init";
+	NagpGConfProvider *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-	g_return_if_fail( NA_IS_GCONF_PROVIDER( instance ));
-	self = NA_GCONF_PROVIDER( instance );
+	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( instance ));
+	self = NAGP_GCONF_PROVIDER( instance );
 
-	self->private = g_new0( NAGConfProviderPrivate, 1 );
+	self->private = g_new0( NagpGConfProviderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->pivot = NULL;
-	self->private->gconf = NULL;
-	self->private->monitors = NULL;
+	self->private->gconf = gconf_client_get_default();
+	self->private->monitors = install_monitors( self );
 }
 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_gconf_provider_instance_dispose";
-	NAGConfProvider *self;
+	static const gchar *thisfn = "nagp_gconf_provider_instance_dispose";
+	NagpGConfProvider *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NA_IS_GCONF_PROVIDER( object ));
-	self = NA_GCONF_PROVIDER( object );
+	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( object ));
+	self = NAGP_GCONF_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -222,10 +221,10 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	NAGConfProvider *self;
+	NagpGConfProvider *self;
 
-	g_assert( NA_IS_GCONF_PROVIDER( object ));
-	self = NA_GCONF_PROVIDER( object );
+	g_assert( NAGP_IS_GCONF_PROVIDER( object ));
+	self = NAGP_GCONF_PROVIDER( object );
 
 	g_free( self->private );
 
@@ -235,45 +234,14 @@ instance_finalize( GObject *object )
 	}
 }
 
-/**
- * na_gconf_provider_new:
- * @handler: the #NAPivot which is to be notified when an
- * item is added, modified or removed in underlying GConf system.
- *
- * Allocates a new #NAGConfProvider object.
- *
- * The specified #NAPivot object will receive a
- * "notify-consumer-of-action-change" message for each detected
- * modification, with a pointer to a newly allocated #NAPivotNotify
- * structure describing the change.
- */
-NAGConfProvider *
-na_gconf_provider_new( NAPivot *handler )
-{
-	NAGConfProvider *provider;
-
-	g_return_val_if_fail( NA_IS_PIVOT( handler ), NULL );
-
-	provider = g_object_new( NA_GCONF_PROVIDER_TYPE, NULL );
-
-	provider->private->gconf = gconf_client_get_default();
-
-	if( handler ){
-		provider->private->pivot = handler;
-		install_monitors( provider );
-	}
-
-	return( provider );
-}
-
-static void
-install_monitors( NAGConfProvider *provider )
+static GList *
+install_monitors( NagpGConfProvider *provider )
 {
 	GList *list = NULL;
 
-	g_return_if_fail( NA_IS_GCONF_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
-	g_return_if_fail( !provider->private->dispose_has_run );
+	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
 	/* monitor the configurations/ directory which contains all menus,
 	 * actions and profiles definitions
@@ -284,7 +252,7 @@ install_monitors( NAGConfProvider *provider )
 					( GConfClientNotifyFunc ) config_path_changed_cb,
 					provider ));
 
-	provider->private->monitors = list;
+	return( list );
 }
 
 /*
@@ -310,31 +278,37 @@ install_monitors( NAGConfProvider *provider )
  * xml file in gconf, or gconf is directly edited), we'd have to rely
  * only on the standard monitor (GConf watch) mechanism
  *
- * this is what we do below, thus triggering NAPivot for each and every
- * modification in the GConf underlying system ; this is the prerogative
- * of NAPivot to decide what to do with them
+ * this is what we do below, thus triggering the NAIIOProvider interface
+ * for each and every modification in the GConf underlying system ; this
+ * is the prerogative of NAIIOProvider to decide what to do with them
  */
 static void
-config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAGConfProvider *provider )
+config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider )
 {
-	/*static const gchar *thisfn = "na_gconf_provider_config_path_changed_cb";*/
+	/*static const gchar *thisfn = "nagp_gconf_provider_config_path_changed_cb";*/
+#if 0
 	NAPivotNotify *npn;
+#endif
 
 	/*g_debug( "%s: client=%p, cnxnid=%u, entry=%p, provider=%p",
 			thisfn, ( void * ) client, cnxn_id, ( void * ) entry, ( void * ) provider );*/
 
-	g_return_if_fail( NA_IS_GCONF_PROVIDER( provider ));
+	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
 	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
 
 	if( !provider->private->dispose_has_run ){
+
+#if 0
 		npn = entry_to_notify( entry );
-		/*g_signal_emit_by_name( provider->private->pivot, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );*/
+		g_signal_emit_by_name( provider->private->pivot, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );
+#endif
 		na_iio_provider_config_changed( NA_IIO_PROVIDER( provider ));
 	}
 }
 
 /*
- * convert a GConfEntry to a structure suitable to notify NAPivot
+ * convert a GConfEntry to a structure suitable to notify NAIIOProvider
+ * interface
  *
  * when created or modified, the entry can be of the forms :
  *  key=path/uuid/parm
@@ -346,17 +320,19 @@ config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, N
  *  key=path/uuid/profile
  *  key=path/uuid/profile/parm with a null value
  *
- * I don't know any way to choose between key/parm and key/profile (*)
+ * I don't see any way to choose between key/parm and key/profile (*)
  * as the entry no more exists in GConf and thus cannot be tested
- * -> we will set this as key/parm, letting pivot try to interpret it
+ * -> we will set this as key/parm, letting the interface try to
+ *    interpret it
  *
  * (*) other than assuming that a profile name begins with 'profile-'
  * (see action-profile.h)
  */
+#if 0
 static NAPivotNotify *
 entry_to_notify( const GConfEntry *entry )
 {
-	/*static const gchar *thisfn = "na_gconf_entry_to_notify";*/
+	/*static const gchar *thisfn = "nagp_gconf_entry_to_notify";*/
 	GSList *listvalues, *iv, *strings;
 	NAPivotNotify *npn;
 	gchar **split;
@@ -420,9 +396,10 @@ entry_to_notify( const GConfEntry *entry )
 	}
 	return( npn );
 }
+#endif
 
 /**
- * iio_provider_read_items_list:
+ * iio_provider_read_items:
  *
  * Note that whatever be the version of the readen action, it will be
  * stored as a #NAObjectAction and its set of #NAObjectProfile of the same,
@@ -431,8 +408,8 @@ entry_to_notify( const GConfEntry *entry )
 static GList *
 iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 {
-	static const gchar *thisfn = "na_gconf_provider_iio_provider_read_items";
-	NAGConfProvider *self;
+	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_read_items";
+	NagpGConfProvider *self;
 	GList *items_list = NULL;
 	GSList *listpath, *ip;
 	NAObjectItem *item;
@@ -440,8 +417,8 @@ iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 	g_debug( "%s: provider=%p, messages=%p", thisfn, ( void * ) provider, ( void * ) messages );
 
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
-	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NULL );
-	self = NA_GCONF_PROVIDER( provider );
+	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
+	self = NAGP_GCONF_PROVIDER( provider );
 
 	if( !self->private->dispose_has_run ){
 
@@ -450,6 +427,7 @@ iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 		for( ip = listpath ; ip ; ip = ip->next ){
 
 			const gchar *path = ( const gchar * ) ip->data;
+			g_debug( "path=%s", path );
 			item = read_item( self, path );
 			if( item ){
 				items_list = g_list_prepend( items_list, item );
@@ -463,16 +441,16 @@ iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 }
 
 static NAObjectItem *
-read_item( NAGConfProvider *provider, const gchar *path )
+read_item( NagpGConfProvider *provider, const gchar *path )
 {
-	static const gchar *thisfn = "na_gconf_provider_read_item";
+	static const gchar *thisfn = "nagp_gconf_provider_read_item";
 	NAObjectItem *item;
 	gboolean have_type;
 	gchar *full_path;
 	gchar *type;
 
-	/*g_debug( "%s: provider=%p, path=%s", thisfn, ( void * ) provider, path );*/
-	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NULL );
+	g_debug( "%s: provider=%p, path=%s", thisfn, ( void * ) provider, path );
+	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
@@ -523,9 +501,9 @@ read_item( NAGConfProvider *provider, const gchar *path )
  * Profiles are kept in the order specified in 'items' entry if it exists.
  */
 static void
-read_item_action( NAGConfProvider *provider, const gchar *path, NAObjectAction *action )
+read_item_action( NagpGConfProvider *provider, const gchar *path, NAObjectAction *action )
 {
-	static const gchar *thisfn = "na_gconf_provider_read_item_action";
+	static const gchar *thisfn = "nagp_gconf_provider_read_item_action";
 	gchar *uuid;
 	GSList *entries, *list_profiles, *ip;
 	GSList *order;
@@ -583,7 +561,7 @@ read_item_action( NAGConfProvider *provider, const gchar *path, NAObjectAction *
  * versions
  */
 static void
-read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjectAction *action )
+read_item_action_properties( NagpGConfProvider *provider, GSList *entries, NAObjectAction *action )
 {
 	gchar *version;
 	gboolean target_selection, target_background, target_toolbar;
@@ -634,7 +612,7 @@ read_item_action_properties( NAGConfProvider *provider, GSList *entries, NAObjec
  * if version greater than "1.0", we have also matchcase+mimetypes
  */
 static void
-read_item_action_properties_v1( NAGConfProvider *provider, GSList *entries, NAObjectAction *action )
+read_item_action_properties_v1( NagpGConfProvider *provider, GSList *entries, NAObjectAction *action )
 {
 	NAObjectProfile *profile = na_object_profile_new();
 
@@ -644,7 +622,7 @@ read_item_action_properties_v1( NAGConfProvider *provider, GSList *entries, NAOb
 }
 
 static void
-read_item_action_profile( NAGConfProvider *provider, NAObjectAction *action, const gchar *path )
+read_item_action_profile( NagpGConfProvider *provider, NAObjectAction *action, const gchar *path )
 {
 	NAObjectProfile *profile;
 	gchar *name;
@@ -666,9 +644,9 @@ read_item_action_profile( NAGConfProvider *provider, NAObjectAction *action, con
 }
 
 static void
-read_item_action_profile_properties( NAGConfProvider *provider, GSList *entries, NAObjectProfile *profile )
+read_item_action_profile_properties( NagpGConfProvider *provider, GSList *entries, NAObjectProfile *profile )
 {
-	/*static const gchar *thisfn = "na_gconf_provider_read_item_action_profile_properties";*/
+	/*static const gchar *thisfn = "nagp_gconf_provider_read_item_action_profile_properties";*/
 	gchar *label, *path, *parameters;
 	GSList *basenames, *schemes, *mimetypes;
 	gboolean isfile, isdir, multiple, matchcase;
@@ -731,9 +709,9 @@ read_item_action_profile_properties( NAGConfProvider *provider, GSList *entries,
 }
 
 static void
-read_item_menu( NAGConfProvider *provider, const gchar *path, NAObjectMenu *menu )
+read_item_menu( NagpGConfProvider *provider, const gchar *path, NAObjectMenu *menu )
 {
-	static const gchar *thisfn = "na_gconf_provider_read_item_menu";
+	static const gchar *thisfn = "nagp_gconf_provider_read_item_menu";
 	gchar *uuid;
 	GSList *entries;
 
@@ -751,7 +729,7 @@ read_item_menu( NAGConfProvider *provider, const gchar *path, NAObjectMenu *menu
 }
 
 static void
-read_item_menu_properties( NAGConfProvider *provider, GSList *entries, NAObjectMenu *menu )
+read_item_menu_properties( NagpGConfProvider *provider, GSList *entries, NAObjectMenu *menu )
 {
 	read_object_item_properties( provider, entries, NA_OBJECT_ITEM( menu ) );
 }
@@ -760,9 +738,9 @@ read_item_menu_properties( NAGConfProvider *provider, GSList *entries, NAObjectM
  * set the properties into the NAObjectItem
  */
 static void
-read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjectItem *item )
+read_object_item_properties( NagpGConfProvider *provider, GSList *entries, NAObjectItem *item )
 {
-	static const gchar *thisfn = "na_gconf_provider_read_object_item_properties";
+	static const gchar *thisfn = "nagp_gconf_provider_read_object_item_properties";
 	gchar *id, *label, *tooltip, *icon;
 	gboolean enabled;
 	GSList *subitems;
@@ -799,14 +777,14 @@ read_object_item_properties( NAGConfProvider *provider, GSList *entries, NAObjec
 static gboolean
 iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 {
-	NAGConfProvider *self;
+	NagpGConfProvider *self;
 	gboolean willing_to = FALSE;
 
-	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), FALSE );
+	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), FALSE );
-	self = NA_GCONF_PROVIDER( provider );
+	self = NAGP_GCONF_PROVIDER( provider );
 
-	/* TODO: na_gconf_provider_iio_provider_is_willing_to_write */
+	/* TODO: nagp_gconf_provider_iio_provider_is_willing_to_write */
 	if( !self->private->dispose_has_run ){
 		willing_to = TRUE;
 	}
@@ -817,15 +795,15 @@ iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 static gboolean
 iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
 {
-	NAGConfProvider *self;
+	NagpGConfProvider *self;
 	gboolean willing_to = FALSE;
 
-	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), FALSE );
+	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
-	self = NA_GCONF_PROVIDER( provider );
+	self = NAGP_GCONF_PROVIDER( provider );
 
-	/* TODO: na_gconf_provider_iio_provider_is_writable */
+	/* TODO: nagp_gconf_provider_iio_provider_is_writable */
 	if( !self->private->dispose_has_run ){
 		willing_to = TRUE;
 	}
@@ -836,17 +814,17 @@ iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *ite
 static guint
 iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "na_gconf_provider_iio_provider_write_item";
-	NAGConfProvider *self;
+	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_write_item";
+	NagpGConfProvider *self;
 
 	g_debug( "%s: provider=%p, item=%p (%s), messages=%p",
 			thisfn, ( void * ) provider,
 			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) messages );
-	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 
-	self = NA_GCONF_PROVIDER( provider );
+	self = NAGP_GCONF_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
 		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
@@ -870,7 +848,7 @@ iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item
 }
 
 static gboolean
-write_item_action( NAGConfProvider *provider, const NAObjectAction *action, GSList **messages )
+write_item_action( NagpGConfProvider *provider, const NAObjectAction *action, GSList **messages )
 {
 	gchar *uuid, *name;
 	gboolean ret;
@@ -918,7 +896,7 @@ write_item_action( NAGConfProvider *provider, const NAObjectAction *action, GSLi
 }
 
 static gboolean
-write_item_menu( NAGConfProvider *provider, const NAObjectMenu *menu, GSList **messages )
+write_item_menu( NagpGConfProvider *provider, const NAObjectMenu *menu, GSList **messages )
 {
 	gboolean ret;
 	gchar *uuid;
@@ -935,7 +913,7 @@ write_item_menu( NAGConfProvider *provider, const NAObjectMenu *menu, GSList **m
 }
 
 static gboolean
-write_object_item( NAGConfProvider *provider, const NAObjectItem *item, GSList **messages )
+write_object_item( NagpGConfProvider *provider, const NAObjectItem *item, GSList **messages )
 {
 	gchar *uuid;
 	gboolean ret;
@@ -960,8 +938,8 @@ write_object_item( NAGConfProvider *provider, const NAObjectItem *item, GSList *
 static guint
 iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "na_gconf_provider_iio_provider_delete_item";
-	NAGConfProvider *self;
+	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_delete_item";
+	NagpGConfProvider *self;
 	guint ret;
 	gchar *uuid, *path;
 	GError *error = NULL;
@@ -971,10 +949,10 @@ iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *ite
 			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) messages );
 
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
 
-	self = NA_GCONF_PROVIDER( provider );
+	self = NAGP_GCONF_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
 		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
@@ -987,6 +965,7 @@ iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *ite
 	gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
 	if( error ){
 		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
+		*messages = g_slist_append( *messages, g_strdup( error->message ));
 		g_error_free( error );
 		error = NULL;
 	}
@@ -996,8 +975,9 @@ iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *ite
 	path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
 	if( !gconf_client_recursive_unset( self->private->gconf, path, 0, &error )){
 		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
-		/* TODO: *message = g_strdup( error->message );*/
+		*messages = g_slist_append( *messages, g_strdup( error->message ));
 		g_error_free( error );
+		error = NULL;
 		ret = NA_IIO_PROVIDER_WRITE_ERROR;
 
 	} else {
@@ -1032,9 +1012,9 @@ iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *ite
  *    present.
  */
 static gboolean
-key_is_writable( NAGConfProvider *gconf, const gchar *path )
+key_is_writable( NagpGConfProvider *gconf, const gchar *path )
 {
-	/*static const gchar *thisfn = "na_gconf_provider_key_is_writable";
+	/*static const gchar *thisfn = "nagp_gconf_provider_key_is_writable";
 	GError *error = NULL;
 
 	remove_gconf_watched_dir( gconf );
@@ -1066,7 +1046,7 @@ key_is_writable( NAGConfProvider *gconf, const gchar *path )
 }
 
 static gboolean
-write_str( NAGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **messages )
+write_str( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **messages )
 {
 	gchar *path;
 	gboolean ret;
@@ -1081,7 +1061,7 @@ write_str( NAGConfProvider *provider, const gchar *uuid, const gchar *name, cons
 	msg = NULL;
 	ret = na_gconf_utils_write_string( provider->private->gconf, path, value, &msg );
 	if( msg ){
-		*messages = g_slist_append( *messages, msg );
+		*messages = g_slist_append( *messages, g_strdup( msg ));
 		g_free( msg );
 	}
 
@@ -1092,7 +1072,7 @@ write_str( NAGConfProvider *provider, const gchar *uuid, const gchar *name, cons
 }
 
 static gboolean
-write_bool( NAGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **messages )
+write_bool( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **messages )
 {
 	gboolean ret;
 	gchar *path;
@@ -1107,7 +1087,7 @@ write_bool( NAGConfProvider *provider, const gchar *uuid, const gchar *name, con
 	msg = NULL;
 	ret = na_gconf_utils_write_bool( provider->private->gconf, path, value, &msg );
 	if( msg ){
-		*messages = g_slist_append( *messages, msg );
+		*messages = g_slist_append( *messages, g_strdup( msg ));
 		g_free( msg );
 	}
 
@@ -1117,7 +1097,7 @@ write_bool( NAGConfProvider *provider, const gchar *uuid, const gchar *name, con
 }
 
 static gboolean
-write_list( NAGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **messages )
+write_list( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **messages )
 {
 	gboolean ret;
 	gchar *path;
@@ -1132,7 +1112,7 @@ write_list( NAGConfProvider *provider, const gchar *uuid, const gchar *name, con
 	msg = NULL;
 	ret = na_gconf_utils_write_string_list( provider->private->gconf, path, value, &msg );
 	if( msg ){
-		*messages = g_slist_append( *messages, msg );
+		*messages = g_slist_append( *messages, g_strdup( msg ));
 		g_free( msg );
 	}
 
@@ -1140,4 +1120,108 @@ write_list( NAGConfProvider *provider, const gchar *uuid, const gchar *name, con
 	g_free( path );
 
 	return( ret );
+}
+
+/**
+ * na_gconf_utils_get_subdirs:
+ * @gconf: a  #GConfClient instance.
+ * @path: a full path to be readen.
+ *
+ * Loads the subdirs of the given path.
+ *
+ * Returns: a GSList of full path subdirectories.
+ *
+ * The returned list should be na_gconf_utils_free_subdirs() by the
+ * caller.
+ */
+static GSList *
+na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
+{
+	static const gchar *thisfn = "na_gconf_utils_get_subdirs";
+	GError *error = NULL;
+	GSList *list_subdirs;
+
+	list_subdirs = gconf_client_all_dirs( gconf, path, &error );
+
+	if( error ){
+		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
+		g_error_free( error );
+		return(( GSList * ) NULL );
+	}
+
+	return( list_subdirs );
+}
+
+/**
+ * na_gconf_utils_free_subdirs:
+ * @subdirs: a list of subdirs as returned by na_gconf_utils_get_subdirs().
+ *
+ * Release the list of subdirs.
+ */
+static void
+na_gconf_utils_free_subdirs( GSList *subdirs )
+{
+	na_utils_free_string_list( subdirs );
+}
+
+/**
+ * na_gconf_utils_have_subdir:
+ * @gconf: a  #GConfClient instance.
+ * @path: a full path to be readen.
+ *
+ * Returns: %TRUE if the specified path has at least one subdirectory,
+ * %FALSE else.
+ */
+/*static gboolean
+na_gconf_utils_have_subdir( GConfClient *gconf, const gchar *path )
+{
+	GSList *listpath;
+	gboolean have_subdir;
+
+	listpath = na_gconf_utils_get_subdirs( gconf, path );
+	have_subdir = ( listpath && g_slist_length( listpath ));
+	na_gconf_utils_free_subdirs( listpath );
+
+	return( have_subdir );
+}*/
+
+/**
+ * na_gconf_utils_have_entry:
+ * @gconf: a  #GConfClient instance.
+ * @path: the full path of a key.
+ * @entry: the entry to be tested.
+ *
+ * Returns: %TRUE if the given @entry exists for the given @path,
+ * %FALSE else.
+ */
+static gboolean
+na_gconf_utils_have_entry( GConfClient *gconf, const gchar *path, const gchar *entry )
+{
+	static const gchar *thisfn = "na_gconf_utils_have_entry";
+	gboolean have_entry = FALSE;
+	GError *error = NULL;
+	gchar *key;
+	GConfValue *value;
+
+	key = g_strdup_printf( "%s/%s", path, entry );
+
+	value = gconf_client_get_without_default( gconf, key, &error );
+
+	if( error ){
+		g_warning( "%s: key=%s, error=%s", thisfn, key, error->message );
+		g_error_free( error );
+		if( value ){
+			gconf_value_free( value );
+			value = NULL;
+		}
+	}
+
+	if( value ){
+		have_entry = TRUE;
+		gconf_value_free( value );
+	}
+
+	g_free( key );
+
+	return( have_entry );
 }

@@ -39,7 +39,6 @@
 #include <api/na-gconf-monitor.h>
 
 #include "na-io-provider.h"
-#include "na-gconf-provider.h"
 #include "na-iprefs.h"
 #include "na-module.h"
 #include "na-pivot.h"
@@ -56,7 +55,7 @@ struct NAPivotClassPrivate {
 struct NAPivotPrivate {
 	gboolean dispose_has_run;
 
-	/* dynamically loaded modules
+	/* dynamically loaded modules (extension plugins)
 	 */
 	GList   *modules;
 
@@ -64,13 +63,6 @@ struct NAPivotPrivate {
 	 * these are called 'consumers' of NAPivot
 	 */
 	GList   *consumers;
-
-	/* list of NAIIOProvider interface providers
-	 * needs to be in the instance rather than in the class to be able
-	 * to pass NAPivot object to the IO provider, so that the later
-	 * is able to have access to the former (and its list of actions)
-	 */
-	GList   *providers;
 
 	/* configuration tree
 	 */
@@ -113,7 +105,6 @@ static NAObject *get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t u
 static void      free_consumers( GList *list );
 
 /* NAIIOProvider management */
-static void      register_io_providers( NAPivot *pivot );
 static void      action_changed_handler( NAPivot *pivot, gpointer user_data );
 static gboolean  on_actions_changed_timeout( gpointer user_data );
 static gulong    time_val_diff( const GTimeVal *recent, const GTimeVal *old );
@@ -227,7 +218,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->dispose_has_run = FALSE;
 	self->private->modules = NULL;
 	self->private->consumers = NULL;
-	self->private->providers = NULL;
 	self->private->tree = NULL;
 	self->private->automatic_reload = FALSE;
 }
@@ -253,10 +243,6 @@ instance_dispose( GObject *object )
 		/* release list of NAIPivotConsumers */
 		free_consumers( self->private->consumers );
 		self->private->consumers = NULL;
-
-		/* release list of NAIIOProviders */
-		na_pivot_free_providers( self->private->providers );
-		self->private->providers = NULL;
 
 		/* release item tree */
 		na_object_free_items_list( self->private->tree );
@@ -314,8 +300,8 @@ na_pivot_new( const NAIPivotConsumer *target )
 	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
 
 	pivot->private->modules = na_module_load_modules();
-
-	register_io_providers( pivot );
+	/*g_debug( "%s: modules=%p, count=%d",
+			thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));*/
 
 	if( target ){
 		na_pivot_register_consumer( pivot, target );
@@ -372,7 +358,6 @@ na_pivot_dump( const NAPivot *pivot )
 
 		g_debug( "%s:   modules=%p (%d elts)", thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));
 		g_debug( "%s: consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
-		g_debug( "%s: providers=%p (%d elts)", thisfn, ( void * ) pivot->private->providers, g_list_length( pivot->private->providers ));
 		g_debug( "%s:      tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
 
 		for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
@@ -399,18 +384,14 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 {
 	static const gchar *thisfn = "na_pivot_get_providers";
 	GList *list = NULL;
-	GList *ip;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	if( !pivot->private->dispose_has_run ){
 
-		for( ip = pivot->private->providers ; ip ; ip = ip->next ){
-			if( G_TYPE_CHECK_INSTANCE_TYPE( G_OBJECT( ip->data ), type )){
-				list = g_list_prepend( list, g_object_ref( ip->data ));
-			}
-		}
+		list = na_module_get_extensions_for_type( pivot->private->modules, type );
+		g_debug( "%s: list=%p, count=%d", thisfn, ( void * ) list, list ? g_list_length( list ) : 0 );
 	}
 
 	return( list );
@@ -429,8 +410,7 @@ na_pivot_free_providers( GList *providers )
 
 	g_debug( "%s: providers=%p", thisfn, ( void * ) providers );
 
-	g_list_foreach( providers, ( GFunc ) g_object_unref, NULL );
-	g_list_free( providers );
+	na_module_free_extensions_list( providers );
 }
 
 /**
@@ -809,6 +789,7 @@ free_consumers( GList *consumers )
  * notification messages to this NAPivot, letting this later redirect
  * them to appropriate NAIPivotConsumers.
  */
+/*
 static void
 register_io_providers( NAPivot *pivot )
 {
@@ -822,7 +803,7 @@ register_io_providers( NAPivot *pivot )
 	list = g_list_prepend( list, na_gconf_provider_new( pivot ));
 
 	pivot->private->providers = list;
-}
+}*/
 
 /*
  * this handler is trigerred by IIOProviders when an action is changed

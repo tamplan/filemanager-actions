@@ -54,8 +54,9 @@ G_BEGIN_DECLS
  *
  * The dynamically loaded library may benefit of being triggered by
  * initializing itself, registering its internal GTypes, etc.
+ * It should at least register module GTypes it provides.
  */
-void         na_api_module_init      ( GTypeModule *module );
+gboolean     na_api_module_init      ( GTypeModule *module );
 
 /**
  * na_api_module_list_types:
