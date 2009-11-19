@@ -43,6 +43,7 @@
 
 #include <runtime/na-io-provider.h>
 #include <runtime/na-iprefs.h>
+#include <runtime/na-pivot.h>
 #include <runtime/na-utils.h>
 #include <runtime/na-xml-names.h>
 #include <runtime/na-xml-writer.h>
@@ -369,17 +370,21 @@ get_action_from_cmdline( void )
 static gboolean
 write_to_gconf( NAObjectAction *action, GSList **msg )
 {
-	/*NAGConfProvider *gconf;
+	NAPivot *pivot;
+	GObject *provider;
 	guint ret;
 
-	gconf = na_gconf_provider_new( NULL );
+	pivot = na_pivot_new( NULL );
+	provider = na_pivot_get_provider( pivot, NA_IIO_PROVIDER_TYPE );
 
-	na_object_set_provider( action, NA_IIO_PROVIDER( gconf ));
+	na_object_set_provider( action, NA_IIO_PROVIDER( provider ));
 
-	ret = na_io_provider_write_item( NULL, NA_OBJECT_ITEM( action ), msg );
+	ret = na_io_provider_write_item( pivot, NA_OBJECT_ITEM( action ), msg );
 
-	return( ret == NA_IIO_PROVIDER_WRITE_OK );*/
-	return( TRUE );
+	na_pivot_release_provider( provider );
+	g_object_unref( pivot );
+
+	return( ret == NA_IIO_PROVIDER_WRITE_OK );
 }
 
 /*

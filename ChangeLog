@@ -26,18 +26,27 @@
 	(na_gconf_utils_get_subdirs, na_gconf_utils_free_subdirs,
 	na_gconf_utils_have_entry:): Move functions to NagpIOProvider class.
 
-	* nautilus-actions/runtime/na-module.c:
-	Fix dynamic loading of the modules.
-
 	* nautilus-actions/runtime/na-gconf-utils.c:
 	* nautilus-actions/runtime/na-gconf-utils.h
 	(na_gconf_utils_have_subdir): Removed function.
+
+	* nautilus-actions/runtime/na-module.c:
+	Fix dynamic loading of the modules.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h
+	(na_pivot_get_provider, na_pivot_release_provider):
+	New functions.
 
 	* nautilus-actions/nact/nact-xml-reader.c:
 	* nautilus-actions/runtime/Makefile.am:
 	* nautilus-actions/runtime/na-pivot.c:
 	* nautilus-actions/runtime/na-xml-writer.c:
 	Updated accordingly.
+
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	Use NAPivot to find an adequate provider instead of directly
+	instantiating a NAGConfProvider object.
 
 2009-11-18 Pierre Wieser <pwieser@trychlos.org>
 

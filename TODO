@@ -80,5 +80,3 @@
 - export: add a overwrite page: what to do if file already exists ?
 
 - na_object_id_get_topmost_parent: should it return a NAObjectItem ?
-
-- nautilus-actions-new: write to GConf

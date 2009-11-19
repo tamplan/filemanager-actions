@@ -112,6 +112,8 @@ void      na_pivot_check_status( const NAPivot *pivot );
 void      na_pivot_dump( const NAPivot *pivot );
 
 GList    *na_pivot_get_providers( const NAPivot *pivot, GType type );
+GObject  *na_pivot_get_provider( const NAPivot *pivot, GType type );
+void      na_pivot_release_provider( const GObject *provider );
 void      na_pivot_free_providers( GList *providers );
 
 GList    *na_pivot_get_items( const NAPivot *pivot );

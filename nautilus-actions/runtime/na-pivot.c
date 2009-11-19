@@ -398,6 +398,43 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 }
 
 /**
+ * na_pivot_get_provider:
+ * @pivot: this #NAPivot instance.
+ * @type: the type of searched interface.
+ *
+ * Returns: the first available provider for this interface.
+ *
+ * The returned #GObject should be released by calling na_pivot_release_provider().
+ */
+GObject *
+na_pivot_get_provider( const NAPivot *pivot, GType type )
+{
+	GList *providers;
+	GObject *provider;
+
+	provider = NULL;
+	providers = na_pivot_get_providers( pivot, type );
+	if( providers ){
+		provider = g_object_ref( G_OBJECT( providers->data ));
+		na_pivot_free_providers( providers );
+	}
+
+	return( provider );
+}
+
+/**
+ * na_pivot_release_provider:
+ * @provider: a provider.
+ *
+ * Release the given provider.
+ */
+void
+na_pivot_release_provider( const GObject *provider )
+{
+	g_object_unref(( gpointer ) provider );
+}
+
+/**
  * na_pivot_free_providers:
  * @providers: a list of providers.
  *
