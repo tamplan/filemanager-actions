@@ -86,8 +86,10 @@
 
 - na_pivot_new: shouldn't take an argument (use add_consumer)
 
-- gconf monitor doesn't work when creating with nautilus-actions-new
-
 - in 64bits arch, pkglibdir=/lib ??
 
 - NACT: unable to really delete an action imported with schemas
+
+- na_pivot_get_item: should return NAObjectItem
+
+- review log handlers (cf. nact for a ref)

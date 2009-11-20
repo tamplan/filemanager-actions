@@ -57,10 +57,15 @@ struct NagpGConfProviderPrivate {
 	gboolean     dispose_has_run;
 	GConfClient *gconf;
 	GList       *monitors;
+	GTimeVal     last_event;
+	guint        event_source_id;
+	gchar       *last_triggered_id;
 };
 
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
+static gint          st_timeout_msec = 100;
+static gint          st_timeout_usec = 100000;
 
 static void           class_init( NagpGConfProviderClass *klass );
 static void           iio_provider_iface_init( NAIIOProviderInterface *iface );
@@ -70,9 +75,11 @@ static void           instance_finalize( GObject *object );
 
 static GList         *install_monitors( NagpGConfProvider *provider );
 static void           config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
-#if 0
-static NAPivotNotify *entry_to_notify( const GConfEntry *entry );
-#endif
+static void           config_path_changed_reset_timeout( NagpGConfProvider *provider );
+static void           config_path_changed_set_timeout( NagpGConfProvider *provider, const gchar *uuid );
+static gboolean       config_path_changed_trigger_interface( NagpGConfProvider *provider );
+static gulong         time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+static gchar         *entry2uuid( GConfEntry *entry );
 
 static GList         *iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
 static NAObjectItem  *read_item( NagpGConfProvider *provider, const gchar *path );
@@ -278,17 +285,21 @@ install_monitors( NagpGConfProvider *provider )
  * xml file in gconf, or gconf is directly edited), we'd have to rely
  * only on the standard monitor (GConf watch) mechanism
  *
- * this is what we do below, thus triggering the NAIIOProvider interface
- * for each and every modification in the GConf underlying system ; this
- * is the prerogative of NAIIOProvider to decide what to do with them
+ * this is what we do below, in three phases:
+ * - first, GConf underlying subsystem advertises us, through the watch
+ *   mechanism, of each and every modification ; this leads us to be
+ *   triggered for each new/modified/deleted _entry_
+ * - as we would trigger the NAIIOProvider interface only once for each
+ *   modified _object_, we install a timer in order to wait for all
+ *   entries have been modified, or another object is concerned
+ * - as soon as one of the two previous conditions is met, we trigger
+ *   the NAIIOProvider interface with the corresponding object id
  */
 static void
 config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider )
 {
 	/*static const gchar *thisfn = "nagp_gconf_provider_config_path_changed_cb";*/
-#if 0
-	NAPivotNotify *npn;
-#endif
+	gchar *uuid;
 
 	/*g_debug( "%s: client=%p, cnxnid=%u, entry=%p, provider=%p",
 			thisfn, ( void * ) client, cnxn_id, ( void * ) entry, ( void * ) provider );*/
@@ -298,105 +309,117 @@ config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, N
 
 	if( !provider->private->dispose_has_run ){
 
-#if 0
-		npn = entry_to_notify( entry );
-		g_signal_emit_by_name( provider->private->pivot, NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED, npn );
-#endif
-		na_iio_provider_config_changed( NA_IIO_PROVIDER( provider ));
+		uuid = entry2uuid( entry );
+		/*g_debug( "%s: uuid=%s", thisfn, uuid );*/
+
+		if( provider->private->event_source_id ){
+			if( g_ascii_strcasecmp( uuid, provider->private->last_triggered_id )){
+
+				/* there already has a timeout, but on another object
+				 * so trigger the interface for the previous object
+				 * and set the timeout for the new object
+				 */
+				config_path_changed_trigger_interface( provider );
+				config_path_changed_set_timeout( provider, uuid );
+			}
+
+			/* there already has a timeout for this same object
+			 * do nothing
+			 */
+
+		} else {
+			/* there was not yet any timeout: set it
+			 */
+			config_path_changed_set_timeout( provider, uuid );
+		}
+
+		g_free( uuid );
 	}
+}
+
+static void
+config_path_changed_reset_timeout( NagpGConfProvider *provider )
+{
+	g_free( provider->private->last_triggered_id );
+	provider->private->last_triggered_id = NULL;
+	/*provider->private->last_event = ( GTimeVal ) 0;*/
+	provider->private->event_source_id = 0;
+}
+
+static void
+config_path_changed_set_timeout( NagpGConfProvider *provider, const gchar *uuid )
+{
+	config_path_changed_reset_timeout( provider );
+	provider->private->last_triggered_id = g_strdup( uuid );
+	g_get_current_time( &provider->private->last_event );
+	provider->private->event_source_id =
+		g_timeout_add(
+				st_timeout_msec,
+				( GSourceFunc ) config_path_changed_trigger_interface,
+				provider );
 }
 
 /*
- * convert a GConfEntry to a structure suitable to notify NAIIOProvider
- * interface
- *
- * when created or modified, the entry can be of the forms :
- *  key=path/uuid/parm
- *  key=path/uuid/profile/parm with a not null value
- *
- * but when removing an entry, it will be of the form :
- *  key=path/uuid
- *  key=path/uuid/parm
- *  key=path/uuid/profile
- *  key=path/uuid/profile/parm with a null value
- *
- * I don't see any way to choose between key/parm and key/profile (*)
- * as the entry no more exists in GConf and thus cannot be tested
- * -> we will set this as key/parm, letting the interface try to
- *    interpret it
- *
- * (*) other than assuming that a profile name begins with 'profile-'
- * (see action-profile.h)
+ * this timer is set when we receive the first event of a serie
+ * we continue to loop until last event is at least one half of a
+ * second old
+ * there is no race condition here as we are not multithreaded
+ * or .. is there ?
  */
-#if 0
-static NAPivotNotify *
-entry_to_notify( const GConfEntry *entry )
+static gboolean
+config_path_changed_trigger_interface( NagpGConfProvider *provider )
 {
-	/*static const gchar *thisfn = "nagp_gconf_entry_to_notify";*/
-	GSList *listvalues, *iv, *strings;
-	NAPivotNotify *npn;
-	gchar **split;
+	/*static const gchar *thisfn = "nagp_gconf_provider_config_path_changed_trigger_interface";*/
+	GTimeVal now;
+	gulong diff;
+
+	/*g_debug( "%s: provider=%p", thisfn, ( void * ) provider );*/
+
+	g_get_current_time( &now );
+	diff = time_val_diff( &now, &provider->private->last_event );
+	if( diff < st_timeout_usec ){
+		return( TRUE );
+	}
+
+	na_iio_provider_config_changed( NA_IIO_PROVIDER( provider ), provider->private->last_triggered_id );
+
+	config_path_changed_reset_timeout( provider );
+	return( FALSE );
+}
+
+/*
+ * returns the difference in microseconds.
+ */
+static gulong
+time_val_diff( const GTimeVal *recent, const GTimeVal *old )
+{
+	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
+	microsec += recent->tv_usec  - old->tv_usec;
+	return( microsec );
+}
+
+/*
+ * gets the uuid from an entry
+ */
+static gchar *
+entry2uuid( GConfEntry *entry )
+{
 	const gchar *path;
 	const gchar *subpath;
-	const GConfValue *value;
+	gchar **split;
+	gchar *uuid;
 
-	g_assert( entry );
+	g_return_val_if_fail( entry, NULL );
+
 	path = gconf_entry_get_key( entry );
-	g_assert( path );
-
-	npn = g_new0( NAPivotNotify, 1 );
-
 	subpath = path + strlen( NA_GCONF_CONFIG_PATH ) + 1;
 	split = g_strsplit( subpath, "/", -1 );
 	/*g_debug( "%s: [0]=%s, [1]=%s", thisfn, split[0], split[1] );*/
-	npn->uuid = g_strdup( split[0] );
-
-	if( g_strv_length( split ) == 2 ){
-		npn->parm = g_strdup( split[1] );
-
-	} else if( g_strv_length( split ) == 3 ){
-		npn->profile = g_strdup( split[1] );
-		npn->parm = g_strdup( split[2] );
-	}
-
+	uuid = g_strdup( split[0] );
 	g_strfreev( split );
 
-	value = gconf_entry_get_value( entry );
-
-	if( value ){
-		switch( value->type ){
-
-			case GCONF_VALUE_STRING:
-				npn->type = NA_PIVOT_STR;
-				npn->data = ( gpointer ) g_strdup( gconf_value_get_string( value ));
-				break;
-
-			case GCONF_VALUE_BOOL:
-				npn->type = NA_PIVOT_BOOL;
-				npn->data = GINT_TO_POINTER( gconf_value_get_bool( value ));
-				break;
-
-			case GCONF_VALUE_LIST:
-				listvalues = gconf_value_get_list( value );
-				strings = NULL;
-				for( iv = listvalues ; iv != NULL ; iv = iv->next ){
-					strings = g_slist_prepend( strings,
-							( gpointer ) gconf_value_get_string(( GConfValue * ) iv->data ));
-				}
-
-				npn->type = NA_PIVOT_STRLIST;
-				npn->data = ( gpointer ) na_utils_duplicate_string_list( strings );
-				/*na_utils_free_string_list( strings );*/
-				break;
-
-			default:
-				g_assert_not_reached();
-				break;
-		}
-	}
-	return( npn );
+	return( uuid );
 }
-#endif
 
 /**
  * iio_provider_read_items:

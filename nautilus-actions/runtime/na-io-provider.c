@@ -50,6 +50,31 @@ static guint    try_write_item( const NAIIOProvider *instance, NAObjectItem *ite
 static GList   *sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn );
 
 /**
+ * na_io_provider_register_callbacks:
+ * @pivot: the current #NAPivot instance.
+ *
+ * Registers an handler for the item-changed signal for each loaded
+ * NAIIOProvider plugin.
+ */
+void
+na_io_provider_register_callbacks( const NAPivot *pivot )
+{
+	GList *providers, *ip;
+
+	providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+
+	for( ip = providers ; ip ; ip = ip->next ){
+		g_signal_connect(
+				( gpointer ) ip->data,
+				NA_PIVOT_SIGNAL_ACTION_CHANGED,
+				( GCallback ) na_pivot_item_changed_handler,
+				( gpointer ) pivot );
+	}
+
+	na_pivot_free_providers( providers );
+}
+
+/**
  * na_io_provider_read_items:
  * @pivot: the #NAPivot object which owns the list of registered I/O
  * storage providers.

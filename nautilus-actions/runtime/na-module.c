@@ -324,7 +324,7 @@ plugin_check( NAModule *module, const gchar *symbol, gpointer *pfn )
 	ok = g_module_symbol( module->private->library, symbol, pfn );
 
 	if( !ok ){
-		g_debug("%s: %s: %s: symbol", thisfn, module->private->path, symbol );
+		g_debug("%s: %s: %s: symbol not found", thisfn, module->private->path, symbol );
 	}
 
 	return( ok );

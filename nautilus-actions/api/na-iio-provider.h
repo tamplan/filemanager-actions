@@ -140,10 +140,11 @@ typedef struct {
 
 GType na_iio_provider_get_type       ( void );
 
-/* This function is to be called by the I/O provider when it detects a
- * modification of one of its objects in its underlying storage subsystem.
+/* This function is to be called by the I/O provider when it detects
+ * that the specified object has been modified in its underlying storage
+ * subsystem.
  */
-void  na_iio_provider_config_changed ( const NAIIOProvider *instance );
+void  na_iio_provider_config_changed ( const NAIIOProvider *instance, const gchar *id );
 
 /* return code of write/delete operations
  */

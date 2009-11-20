@@ -38,13 +38,6 @@
 
 #include "nagp-gconf-provider.h"
 
-static guint st_log_handler_api = 0;
-static guint st_log_handler_plugin = 0;
-
-static void setup_log_handler( const gchar *log_domain, guint *handler_id );
-static void remove_log_handler( guint *handler_id );
-static void nagp_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
-
 /*
  * A Nautilus-Actions extension must implement four functions :
  *
@@ -55,7 +48,8 @@ static void nagp_log_handler( const gchar *log_domain, GLogLevelFlags log_level,
  *
  * The first two functions are called at Nautilus-Actions startup.
  *
- * The prototypes for these functions are defined in nautilus-actions/na-api.h
+ * The prototypes for these functions are defined in
+ * nautilus-actions/api/na-api.h
  */
 
 gboolean
@@ -64,14 +58,7 @@ na_api_module_init( GTypeModule *module )
 	static const gchar *thisfn = "nagp_module_na_api_module_initialize";
 	static const gchar *name = "NagpGConfIOProvider";
 
-	syslog( LOG_USER | LOG_INFO, "%s initializing...", name );
-
-	openlog( G_LOG_DOMAIN, LOG_PID, LOG_USER );
-
-	setup_log_handler( NA_LOGDOMAIN_API, &st_log_handler_api );
-	setup_log_handler( NA_LOGDOMAIN_IO_PROVIDER_GCONF, &st_log_handler_plugin );
-
-	g_debug( "%s: module=%p", thisfn, ( void * ) module );
+	g_debug( "%s: module=%p, %s initializing...", thisfn, ( void * ) module, name );
 
 	g_type_module_set_name( module, name );
 
@@ -103,7 +90,7 @@ na_api_module_get_name( GType type )
 	g_debug( "%s: type=%ld", thisfn, ( gulong ) type );
 
 	if( type == NAGP_GCONF_PROVIDER_TYPE ){
-		return( "Nautilus Actions GConf Provider" );
+		return( "Nautilus-Actions GConf IO Provider" );
 	}
 
 	return( NULL );
@@ -115,46 +102,4 @@ na_api_module_shutdown( void )
 	static const gchar *thisfn = "nagp_module_na_api_module_shutdown";
 
 	g_debug( "%s", thisfn );
-
-	/* remove the log handler
-	 * almost useless as the process is nonetheless terminating at this time
-	 * but this is the art of coding...
-	 */
-	remove_log_handler( &st_log_handler_api );
-	remove_log_handler( &st_log_handler_plugin );
-}
-
-static void
-setup_log_handler( const gchar *log_domain, guint *handler_id )
-{
-	*handler_id = g_log_set_handler( log_domain, G_LOG_LEVEL_DEBUG, nagp_log_handler, NULL );
-}
-
-static void
-remove_log_handler( guint *handler_id )
-{
-	if( *handler_id ){
-		g_log_remove_handler( G_LOG_DOMAIN, *handler_id );
-		*handler_id = 0;
-	}
-}
-
-/*
- * a log handler that we install when in development mode in order to be
- * able to log plugin runtime
- * TODO: the debug flag should be dynamic, so that an advanced user could
- * setup a given key and obtain a full log to send to Bugzilla..
- * For now, is always install when compiled in maintainer mode, never else
- */
-static void
-nagp_log_handler( const gchar *log_domain,
-					GLogLevelFlags log_level,
-					const gchar *message,
-					gpointer user_data )
-{
-#ifdef NA_MAINTAINER_MODE
-	syslog( LOG_USER | LOG_DEBUG, "%s", message );
-#else
-	/* do nothing */
-#endif
 }

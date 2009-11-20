@@ -4,6 +4,30 @@
 	Update compilation order as io-provider-gconf plugin depends on
 	runtime.
 
+	* nautilus-actions/api/na-iio-provider.c:
+	* nautilus-actions/api/na-iio-provider.h (na_iio_provider_config_changed):
+	Advertise interface with id of modified item.
+
+	* nautilus-actions/io-provider-gconf/nagp-gconf-provider.c:
+	Add a timeout to only trigger NAIIOProvider when all modifications
+	on an item have been made.
+
+	* nautilus-actions/io-provider-gconf/nagp-module.c (na_api_module_init):
+	Remove log handler management, no more syslog at initialization.
+
+	* nautilus-actions/nact/nact-main.c:
+	Simplify log management.
+
+	* nautilus-actions/runtime/na-io-provider.c:
+	* nautilus-actions/runtime/na-io-provider.h
+	(na_io_provider_register_callbacks): New function.
+
+	* nautilus-actions/runtime/na-module.c (plugin_check):
+	Fix error message.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	Move static variables to the instance.
+
 	* nautilus-actions/nact/nact-iaction-tab.c
 	(on_tab_updatable_selection_changed):
 	Fix label display when the widget is disabled.

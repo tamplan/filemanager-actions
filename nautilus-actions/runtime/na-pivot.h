@@ -52,7 +52,8 @@
  * 1. When an I/O storage subsystem detects a change on an action, it
  *    should emit the "notify-consumer-of-action-change" signal to
  *    notify #NAPivot of this change. The user data associated with the
- *    message should be a #gpointer to a #NAPivotNotify structure.
+ *    message is the internal id of the #NAObjectItem-derived modified
+ *    object.
  *
  *    When this signal is received, #NAPivot updates accordingly the
  *    list of actions it maintains.
@@ -62,8 +63,7 @@
  *    sends only one message for a whole, maybe coherent, set of
  *    updates.
  *
- *    This first stage message is defined in na-iio-provider.h,
- *    as NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED.
+ *    This first stage message is defined below as NA_PIVOT_SIGNAL_ACTION_CHANGED.
  *
  * 2. When #NAPivot has successfully updated its list of actions, it
  *    notifies its consumers in order they update themselves.
@@ -71,8 +71,10 @@
  *    Note that #NAPivot tries to factorize notification messages, and
  *    to notify its consumers only once even if it has itself received
  *    many elementary notifications from the underlying I/O storage
- *    subsystem.
+ *    subsystems.
  */
+
+#include <api/na-iio-provider.h>
 
 #include <private/na-object-class.h>
 #include <private/na-object-id-class.h>
@@ -111,6 +113,8 @@ NAPivot  *na_pivot_new( const NAIPivotConsumer *notified );
 void      na_pivot_check_status( const NAPivot *pivot );
 void      na_pivot_dump( const NAPivot *pivot );
 
+void      na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
+
 GList    *na_pivot_get_providers( const NAPivot *pivot, GType type );
 GObject  *na_pivot_get_provider( const NAPivot *pivot, GType type );
 void      na_pivot_release_provider( const GObject *provider );
@@ -136,24 +140,9 @@ gint      na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
 
 void      na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
 
-/* data passed from the storage subsystem when an action is changed
+/* notification message from NAIIOProvider to NAPivot
  */
-enum {
-	NA_PIVOT_STR = 1,
-	NA_PIVOT_BOOL,
-	NA_PIVOT_STRLIST
-};
-
-typedef struct {
-	gchar   *uuid;
-	gchar   *profile;
-	gchar   *parm;
-	guint    type;
-	gpointer data;
-}
-	NAPivotNotify;
-
-void       na_pivot_free_notify( NAPivotNotify *data );
+#define NA_PIVOT_SIGNAL_ACTION_CHANGED	"notify-consumer-of-action-change"
 
 G_END_DECLS
 

@@ -74,6 +74,9 @@ struct NAPivotPrivate {
 	 * defaults to FALSE
 	 */
 	gboolean automatic_reload;
+	GTimeVal last_event;
+	guint    event_source_id;
+	gulong   action_changed_handler;
 
 	/* list of monitoring objects on runtime preferences
 	 */
@@ -87,8 +90,6 @@ enum {
 
 static GObjectClass *st_parent_class = NULL;
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
-static GTimeVal      st_last_event;
-static guint         st_event_source_id = 0;
 static gint          st_timeout_msec = 100;
 static gint          st_timeout_usec = 100000;
 
@@ -101,13 +102,12 @@ static void      instance_finalize( GObject *object );
 
 static NAObject *get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid );
 
+/* NAIIOProvider management */
+static gboolean  on_item_changed_timeout( NAPivot *pivot );
+static gulong    time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+
 /* NAIPivotConsumer management */
 static void      free_consumers( GList *list );
-
-/* NAIIOProvider management */
-static void      action_changed_handler( NAPivot *pivot, gpointer user_data );
-static gboolean  on_actions_changed_timeout( gpointer user_data );
-static gulong    time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 /* NAGConf runtime preferences management */
 static void      monitor_runtime_preferences( NAPivot *pivot );
@@ -179,14 +179,14 @@ class_init( NAPivotClass *klass )
 	klass->private = g_new0( NAPivotClassPrivate, 1 );
 
 	/* register the signal and its default handler
-	 * this signal should be sent by the IIOProvider when an action
+	 * this signal should be sent by the IOProvider when an object
 	 * has changed in the underlying storage subsystem
 	 */
-	st_signals[ ACTION_CHANGED ] = g_signal_new_class_handler(
-				NA_IIO_PROVIDER_SIGNAL_ACTION_CHANGED,
-				G_TYPE_FROM_CLASS( klass ),
-				G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
-				( GCallback ) action_changed_handler,
+	st_signals[ ACTION_CHANGED ] = g_signal_new(
+				NA_PIVOT_SIGNAL_ACTION_CHANGED,
+				NA_IIO_PROVIDER_TYPE,
+				G_SIGNAL_RUN_LAST,
+				0,
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
@@ -220,6 +220,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->consumers = NULL;
 	self->private->tree = NULL;
 	self->private->automatic_reload = FALSE;
+	self->private->event_source_id = 0;
 }
 
 static void
@@ -250,6 +251,10 @@ instance_dispose( GObject *object )
 
 		/* release the GConf monitoring */
 		na_gconf_monitor_release_monitors( self->private->monitors );
+
+		if( g_signal_handler_is_connected( self, self->private->action_changed_handler )){
+			g_signal_handler_disconnect( self, self->private->action_changed_handler );
+		}
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -300,6 +305,7 @@ na_pivot_new( const NAIPivotConsumer *target )
 	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
 
 	pivot->private->modules = na_module_load_modules();
+	na_io_provider_register_callbacks( pivot );
 	/*g_debug( "%s: modules=%p, count=%d",
 			thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));*/
 
@@ -362,6 +368,36 @@ na_pivot_dump( const NAPivot *pivot )
 
 		for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
 			g_debug( "%s:     [%d]: %p", thisfn, i++, it->data );
+		}
+	}
+}
+
+/*
+ * this handler is trigerred by IIOProviders when an action is changed
+ * in the underlying storage subsystems
+ * we don't care of updating our internal list with each and every
+ * atomic modification
+ * instead we wait for the end of notifications serie, and then reload
+ * the whole list of actions
+ */
+void
+na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  )
+{
+	static const gchar *thisfn = "na_pivot_item_changed_handler";
+
+	g_debug( "%s: provider=%p, id=%s, pivot=%p", thisfn, ( void * ) provider, id, ( void * ) pivot );
+
+	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		/* set a timeout to notify clients at the end of the serie */
+		g_get_current_time( &pivot->private->last_event );
+
+		if( !pivot->private->event_source_id ){
+			pivot->private->event_source_id =
+				g_timeout_add( st_timeout_msec, ( GSourceFunc ) on_item_changed_timeout, pivot );
 		}
 	}
 }
@@ -485,6 +521,7 @@ na_pivot_reload_items( NAPivot *pivot )
 	static const gchar *thisfn = "na_pivot_reload_items";
 	GSList *messages, *im;
 
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
@@ -811,66 +848,6 @@ get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid )
 	return( found );
 }
 
-static void
-free_consumers( GList *consumers )
-{
-	/*g_list_foreach( consumers, ( GFunc ) g_object_unref, NULL );*/
-	g_list_free( consumers );
-}
-
-/*
- * Note that each implementation of NAIIOProvider interface must have
- * this same type of constructor, which accepts as parameter a pointer
- * to this NAPivot object.
- * This is required because NAIIOProviders will send all their
- * notification messages to this NAPivot, letting this later redirect
- * them to appropriate NAIPivotConsumers.
- */
-/*
-static void
-register_io_providers( NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_register_io_providers";
-	GList *list = NULL;
-
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-	g_return_if_fail( !pivot->private->dispose_has_run );
-
-	list = g_list_prepend( list, na_gconf_provider_new( pivot ));
-
-	pivot->private->providers = list;
-}*/
-
-/*
- * this handler is trigerred by IIOProviders when an action is changed
- * in the underlying storage subsystems
- * we don't care of updating our internal list with each and every
- * atomic modification
- * instead we wait for the end of notifications serie, and then reload
- * the whole list of actions
- */
-static void
-action_changed_handler( NAPivot *self, gpointer user_data  )
-{
-	/*static const gchar *thisfn = "na_pivot_action_changed_handler";
-	g_debug( "%s: self=%p, data=%p", thisfn, self, user_data );*/
-
-	g_return_if_fail( NA_IS_PIVOT( self ));
-	g_return_if_fail( !self->private->dispose_has_run );
-	g_return_if_fail( user_data );
-
-	if( self->private->dispose_has_run ){
-		return;
-	}
-
-	/* set a timeout to notify clients at the end of the serie */
-	g_get_current_time( &st_last_event );
-	if( !st_event_source_id ){
-		st_event_source_id = g_timeout_add( st_timeout_msec, ( GSourceFunc ) on_actions_changed_timeout, self );
-	}
-}
-
 /*
  * this timer is set when we receive the first event of a serie
  * we continue to loop until last event is at least one half of a
@@ -880,20 +857,18 @@ action_changed_handler( NAPivot *self, gpointer user_data  )
  * or .. is there ?
  */
 static gboolean
-on_actions_changed_timeout( gpointer user_data )
+on_item_changed_timeout( NAPivot *pivot )
 {
-	/*static const gchar *thisfn = "na_pivot_on_actions_changed_timeout";
-	g_debug( "%s: pivot=%p", thisfn, user_data );*/
+	static const gchar *thisfn = "na_pivot_on_item_changed_timeout";
 	GTimeVal now;
-	NAPivot *pivot;
 	gulong diff;
 	GList *ic;
 
-	g_return_val_if_fail( NA_IS_PIVOT( user_data ), FALSE );
-	pivot = NA_PIVOT( user_data );
+	g_debug( "%s: pivot=%p", thisfn, pivot );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
 
 	g_get_current_time( &now );
-	diff = time_val_diff( &now, &st_last_event );
+	diff = time_val_diff( &now, &pivot->private->last_event );
 	if( diff < st_timeout_usec ){
 		return( TRUE );
 	}
@@ -907,7 +882,7 @@ on_actions_changed_timeout( gpointer user_data )
 		na_ipivot_consumer_notify_actions_changed( NA_IPIVOT_CONSUMER( ic->data ));
 	}
 
-	st_event_source_id = 0;
+	pivot->private->event_source_id = 0;
 	return( FALSE );
 }
 
@@ -922,42 +897,11 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
 	return( microsec );
 }
 
-/**
- * na_pivot_free_notify:
- * @npn: a #NAPivotNotify structure.
- *
- * Frees a #NAPivotNotify structure and its content.
- */
-void
-na_pivot_free_notify( NAPivotNotify *npn )
+static void
+free_consumers( GList *consumers )
 {
-	if( npn ){
-		if( npn->type ){
-			switch( npn->type ){
-
-				case NA_PIVOT_STR:
-					g_free(( gchar * ) npn->data );
-					break;
-
-				case NA_PIVOT_BOOL:
-					break;
-
-				case NA_PIVOT_STRLIST:
-					na_utils_free_string_list(( GSList * ) npn->data );
-					break;
-
-				default:
-					g_debug( "na_pivot_free_notify: uuid=%s, profile=%s, parm=%s, type=%d",
-							npn->uuid, npn->profile, npn->parm, npn->type );
-					g_assert_not_reached();
-					break;
-			}
-		}
-		g_free( npn->uuid );
-		g_free( npn->profile );
-		g_free( npn->parm );
-		g_free( npn );
-	}
+	/*g_list_foreach( consumers, ( GFunc ) g_object_unref, NULL );*/
+	g_list_free( consumers );
 }
 
 static void

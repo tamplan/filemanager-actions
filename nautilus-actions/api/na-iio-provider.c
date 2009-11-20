@@ -142,12 +142,20 @@ do_is_writable( const NAIIOProvider *instance, const NAObjectItem *item )
 /**
  * na_iio_provider_config_changed:
  * @instance: the calling NAIIOProvider.
+ * @id: the id of the modified #NAObjectItem-derived object.
  *
  * Advertises Nautilus-Actions that this #NAIIOProvider @instance has
  * detected a modification in one of its configurations (menu or action).
+ *
+ * This function should be triggered for each and every #NAObjectItem-
+ * derived modified objects, but only once for each one.
  */
 void
-na_iio_provider_config_changed( const NAIIOProvider *instance )
+na_iio_provider_config_changed( const NAIIOProvider *instance, const gchar *id )
 {
+	static const gchar *thisfn = "na_iio_provider_config_changed";
 
+	g_debug( "%s: instance=%p, id=%s", thisfn, ( void * ) instance, id );
+
+	g_signal_emit_by_name(( gpointer ) instance, "notify-consumer-of-action-change", id );
 }
