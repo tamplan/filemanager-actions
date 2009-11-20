@@ -93,29 +93,29 @@ static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 static gint          st_timeout_msec = 100;
 static gint          st_timeout_usec = 100000;
 
-static GType     register_type( void );
-static void      class_init( NAPivotClass *klass );
-static void      iprefs_iface_init( NAIPrefsInterface *iface );
-static void      instance_init( GTypeInstance *instance, gpointer klass );
-static void      instance_dispose( GObject *object );
-static void      instance_finalize( GObject *object );
+static GType         register_type( void );
+static void          class_init( NAPivotClass *klass );
+static void          iprefs_iface_init( NAIPrefsInterface *iface );
+static void          instance_init( GTypeInstance *instance, gpointer klass );
+static void          instance_dispose( GObject *object );
+static void          instance_finalize( GObject *object );
 
-static NAObject *get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid );
+static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid );
 
 /* NAIIOProvider management */
-static gboolean  on_item_changed_timeout( NAPivot *pivot );
-static gulong    time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+static gboolean      on_item_changed_timeout( NAPivot *pivot );
+static gulong        time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 /* NAIPivotConsumer management */
-static void      free_consumers( GList *list );
+static void          free_consumers( GList *list );
 
 /* NAGConf runtime preferences management */
-static void      monitor_runtime_preferences( NAPivot *pivot );
+static void          monitor_runtime_preferences( NAPivot *pivot );
 
-static void      on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
-static void      display_order_changed( NAPivot *pivot );
-static void      create_root_menu_changed( NAPivot *pivot );
-static void      display_about_changed( NAPivot *pivot );
+static void          on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
+static void          display_order_changed( NAPivot *pivot );
+static void          create_root_menu_changed( NAPivot *pivot );
+static void          display_about_changed( NAPivot *pivot );
 
 GType
 na_pivot_get_type( void )
@@ -547,7 +547,7 @@ na_pivot_reload_items( NAPivot *pivot )
  * be g_object_unref() by the caller.
  */
 void
-na_pivot_add_item( NAPivot *pivot, const NAObject *item )
+na_pivot_add_item( NAPivot *pivot, const NAObjectItem *item )
 {
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
@@ -564,15 +564,16 @@ na_pivot_add_item( NAPivot *pivot, const NAObject *item )
  *
  * Returns the specified action.
  *
- * Returns: the required #NAAction object, or NULL if not found.
+ * Returns: the required #NAObjectItem-derived object, or NULL if not
+ * found.
  * The returned pointer is owned by #NAPivot, and should not be
  * g_free() nor g_object_unref() by the caller.
  */
-NAObject *
+NAObjectItem *
 na_pivot_get_item( const NAPivot *pivot, const gchar *uuid )
 {
 	uuid_t uuid_bin;
-	NAObject *object = NULL;
+	NAObjectItem *object = NULL;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
@@ -822,12 +823,12 @@ na_pivot_write_level_zero( const NAPivot *pivot, GList *items )
 	}
 }
 
-static NAObject *
+static NAObjectItem *
 get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid )
 {
 	uuid_t i_uuid_bin;
 	GList *subitems, *ia;
-	NAObject *found = NULL;
+	NAObjectItem *found = NULL;
 
 	for( ia = tree ; ia && !found ; ia = ia->next ){
 
@@ -836,7 +837,7 @@ get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid )
 		g_free( i_uuid );
 
 		if( !uuid_compare( uuid, i_uuid_bin )){
-			found = NA_OBJECT( ia->data );
+			found = NA_OBJECT_ITEM( ia->data );
 		}
 
 		if( !found && NA_IS_OBJECT_ITEM( ia->data )){

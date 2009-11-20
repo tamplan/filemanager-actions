@@ -107,38 +107,38 @@ typedef struct {
 }
 	NAPivotClass;
 
-GType     na_pivot_get_type( void );
+GType         na_pivot_get_type( void );
 
-NAPivot  *na_pivot_new( const NAIPivotConsumer *notified );
-void      na_pivot_check_status( const NAPivot *pivot );
-void      na_pivot_dump( const NAPivot *pivot );
+NAPivot      *na_pivot_new( const NAIPivotConsumer *notified );
+void          na_pivot_check_status( const NAPivot *pivot );
+void          na_pivot_dump( const NAPivot *pivot );
 
-void      na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
+void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
 
-GList    *na_pivot_get_providers( const NAPivot *pivot, GType type );
-GObject  *na_pivot_get_provider( const NAPivot *pivot, GType type );
-void      na_pivot_release_provider( const GObject *provider );
-void      na_pivot_free_providers( GList *providers );
+GList        *na_pivot_get_providers( const NAPivot *pivot, GType type );
+GObject      *na_pivot_get_provider( const NAPivot *pivot, GType type );
+void          na_pivot_release_provider( const GObject *provider );
+void          na_pivot_free_providers( GList *providers );
 
-GList    *na_pivot_get_items( const NAPivot *pivot );
-void      na_pivot_reload_items( NAPivot *pivot );
+GList        *na_pivot_get_items( const NAPivot *pivot );
+void          na_pivot_reload_items( NAPivot *pivot );
 
-void      na_pivot_add_item( NAPivot *pivot, const NAObject *item );
-NAObject *na_pivot_get_item( const NAPivot *pivot, const gchar *uuid );
-void      na_pivot_remove_item( NAPivot *pivot, NAObject *item );
+void          na_pivot_add_item( NAPivot *pivot, const NAObjectItem *item );
+NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *uuid );
+void          na_pivot_remove_item( NAPivot *pivot, NAObject *item );
 
-guint     na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
-guint     na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
+guint         na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
+guint         na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
 
-void      na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
+void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
 
-gboolean  na_pivot_get_automatic_reload( const NAPivot *pivot );
-void      na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
+gboolean      na_pivot_get_automatic_reload( const NAPivot *pivot );
+void          na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
 
-gint      na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b );
-gint      na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
+gint          na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b );
+gint          na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
 
-void      na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
+void          na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
 
 /* notification message from NAIIOProvider to NAPivot
  */

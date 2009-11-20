@@ -872,7 +872,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 					na_object_insert_at( parent, dup_pivot, pos );
 				}
 			} else {
-				na_pivot_add_item( pivot, NA_OBJECT( dup_pivot ));
+				na_pivot_add_item( pivot, dup_pivot );
 			}
 	}
 }

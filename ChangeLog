@@ -1,5 +1,15 @@
 2009-11-20 Pierre Wieser <pwieser@trychlos.org>
 
+	Define functions with actual type for arguments.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h
+	(na_pivot_add_item,	na_pivot_get_item):	Take/return a NAObjectItem.
+
+	* nautilus-actions/nact/nact-main-menubar.c (save_item):
+	* nautilus-actions/nact/nact-main-window.c (nact_main_window_get_item):
+	Updated accordingly.
+
 	Get ride of "unsolicitated invocation of g_object_dispose() on
 	GTypeModule" error message.
 

@@ -732,7 +732,7 @@ nact_main_window_get_item( const NactMainWindow *window, const gchar *uuid )
 		if( 0 ){
 			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 			pivot = nact_application_get_pivot( application );
-			exists = NA_OBJECT_ITEM( na_pivot_get_item( pivot, uuid ));
+			exists = na_pivot_get_item( pivot, uuid );
 		}
 
 		if( !exists ){

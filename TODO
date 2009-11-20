@@ -79,8 +79,6 @@
 
 - export: add a overwrite page: what to do if file already exists ?
 
-- na_object_id_get_topmost_parent: should it return a NAObjectItem ?
-
 - nautilus-actions-new:
   give same defaults that when creating an action in NACT
 
@@ -89,5 +87,3 @@
 - in 64bits arch, pkglibdir=/lib ??
 
 - NACT: unable to really delete an action imported with schemas
-
-- na_pivot_get_item: should return NAObjectItem
