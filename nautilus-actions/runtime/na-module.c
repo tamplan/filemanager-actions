@@ -486,7 +486,9 @@ na_module_release_modules( GList *modules )
 	GList *im;
 
 	for( im = modules ; im ; im = im->next ){
-		g_object_unref( NA_MODULE( im->data ));
+		/* GLib-GObject-WARNING **: gtypemodule.c:112:
+		 * unsolicitated invocation of g_object_dispose() on GTypeModule */
+		/*g_object_unref( NA_MODULE( im->data ));*/
 	}
 
 	g_list_free( modules );

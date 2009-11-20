@@ -1,5 +1,11 @@
 2009-11-20 Pierre Wieser <pwieser@trychlos.org>
 
+	Get ride of "unsolicitated invocation of g_object_dispose() on
+	GTypeModule" error message.
+
+	* nautilus-actions/runtime/na-module.c (na_module_release_modules):
+	No more unref the module.
+
 	Review log handlers.
 
 	* nautilus-actions/io-provider-gconf/nagp-module.c
