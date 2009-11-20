@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <string.h>
 #include <syslog.h>
 
 #include <libnautilus-extension/nautilus-extension-types.h>
@@ -114,13 +115,30 @@ set_log_handler( void )
 	st_default_log_func = g_log_set_default_handler(( GLogFunc ) log_handler, NULL );
 }
 
+/*
+ * we used to install a log handler for each and every log domain used
+ * in Nautilus-Actions ; this led to a fastidious enumeration
+ * instead we install a default log handler which will receive all
+ * debug messages, i.e. not only from N-A, but also from other code
+ * in the Nautilus process
+ */
 static void
 log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data )
 {
+	gchar *tmp;
+
+	tmp = g_strdup( "" );
+	if( log_domain && strlen( log_domain )){
+		g_free( tmp );
+		tmp = g_strdup_printf( "[%s] ", log_domain );
+	}
+
 #ifdef NA_MAINTAINER_MODE
 	/*( *st_default_log_func )( log_domain, log_level, message, user_data );*/
-	syslog( LOG_USER | LOG_DEBUG, "[%s] %s", log_domain, message );
+	syslog( LOG_USER | LOG_DEBUG, "%s%s", tmp, message );
 #else
 	/* do nothing */
 #endif
+
+	g_free( tmp );
 }

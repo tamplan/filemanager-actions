@@ -91,6 +91,3 @@
 - NACT: unable to really delete an action imported with schemas
 
 - na_pivot_get_item: should return NAObjectItem
-
-- error message in syslog
-  [(null)] Unable to add monitor: Not supported
