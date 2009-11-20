@@ -86,8 +86,6 @@
 
 - na_pivot_new: shouldn't take an argument (use add_consumer)
 
-- NACT: deleting an action, then saving, doesn't reset modif indicator (*)
-
 - gconf monitor doesn't work when creating with nautilus-actions-new
 
 - in 64bits arch, pkglibdir=/lib ??

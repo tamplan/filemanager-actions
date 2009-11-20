@@ -872,6 +872,8 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 
 		na_object_free_items_list( window->private->deleted );
 		window->private->deleted = NULL;
+
+		setup_dialog_title( window );
 	}
 }
 

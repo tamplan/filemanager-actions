@@ -797,6 +797,8 @@ on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	/* recursively save the modified items
 	 * check is useless here if item was not modified, but not very costly
+	 * above all, it is cheaper to check the status here, than to check
+	 * recursively each and every modified item
 	 */
 	for( it = items ; it ; it = it->next ){
 		save_item( window, pivot, NA_OBJECT_ITEM( it->data ));

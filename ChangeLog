@@ -11,6 +11,13 @@
 	* nautilus-actions/nact/nact-iactions-list.c
 	(on_treeview_selection_changed): Fix typo.
 
+	* nautilus-actions/nact/nact-main-menubar.c (on_save_activated):
+	Complete comment about status check.
+
+	* nautilus-actions/nact/nact-main-window.c
+	(nact_main_window_remove_deleted): Setup dialog title is required
+	here when this is the only modification to be saved.
+
 2009-11-19 Pierre Wieser <pwieser@trychlos.org>
 
 	Create GConf IO Provider as a plugin.
