@@ -29,8 +29,8 @@
 SUBDIRS = \
 	api							\
 	private						\
-	io-provider-gconf			\
 	runtime						\
+	io-provider-gconf			\
 	nact						\
 	plugin						\
 	test						\

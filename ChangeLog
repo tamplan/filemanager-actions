@@ -1,3 +1,9 @@
+2009-11-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/Makefile.am:
+	Update compilation order as io-provider-gconf plugin depends on
+	runtime.
+
 2009-11-19 Pierre Wieser <pwieser@trychlos.org>
 
 	Create GConf IO Provider as a plugin.
