@@ -92,4 +92,5 @@
 
 - na_pivot_get_item: should return NAObjectItem
 
-- review log handlers (cf. nact for a ref)
+- error message in syslog
+  [(null)] Unable to add monitor: Not supported

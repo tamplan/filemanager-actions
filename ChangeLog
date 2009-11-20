@@ -1,5 +1,17 @@
 2009-11-20 Pierre Wieser <pwieser@trychlos.org>
 
+	Review log handlers.
+
+	* nautilus-actions/io-provider-gconf/nagp-module.c
+	(na_api_module_init): standardize debug message.
+
+	* nautilus-actions/nact/nact-main.c:
+	Better name the static variable which holds the default handler.
+
+	* nautilus-actions/plugin/nautilus-module.c:
+	* nautilus-actions/utils/console-utils.c:
+	Simplify log handler management on NACT model.
+
 	* src/Makefile.am:
 	Update compilation order as io-provider-gconf plugin depends on
 	runtime.

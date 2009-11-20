@@ -58,7 +58,7 @@ na_api_module_init( GTypeModule *module )
 	static const gchar *thisfn = "nagp_module_na_api_module_initialize";
 	static const gchar *name = "NagpGConfIOProvider";
 
-	g_debug( "%s: module=%p, %s initializing...", thisfn, ( void * ) module, name );
+	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
 	g_type_module_set_name( module, name );
 

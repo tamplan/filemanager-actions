@@ -38,9 +38,10 @@
 
 #include "nautilus-actions.h"
 
-static guint st_log_handler = 0;
+static void set_log_handler( void );
+static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
 
-static void na_log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
+static GLogFunc st_default_log_func = NULL;
 
 /*
  * A nautilus extension must implement three functions :
@@ -61,11 +62,7 @@ nautilus_module_initialize( GTypeModule *module )
 
 	syslog( LOG_USER | LOG_INFO, "%s initializing...", PACKAGE_STRING );
 
-	if( !st_log_handler ){
-		openlog( G_LOG_DOMAIN, LOG_PID, LOG_USER );
-		st_log_handler = g_log_set_handler( NA_LOGDOMAIN_PLUGIN, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
-		g_log_set_handler( NA_LOGDOMAIN_RUNTIME, G_LOG_LEVEL_DEBUG, na_log_handler, NULL );
-	}
+	set_log_handler();
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
@@ -98,9 +95,9 @@ nautilus_module_shutdown( void )
 	 * almost useless as the process is nonetheless terminating at this time
 	 * but this is the art of coding...
 	 */
-	if( st_log_handler ){
-		g_log_remove_handler( G_LOG_DOMAIN, st_log_handler );
-		st_log_handler = 0;
+	if( st_default_log_func ){
+		g_log_set_default_handler( st_default_log_func, NULL );
+		st_default_log_func = NULL;
 	}
 }
 
@@ -112,13 +109,17 @@ nautilus_module_shutdown( void )
  * For now, is always install when compiled in maintainer mode, never else
  */
 static void
-na_log_handler( const gchar *log_domain,
-					GLogLevelFlags log_level,
-					const gchar *message,
-					gpointer user_data )
+set_log_handler( void )
+{
+	st_default_log_func = g_log_set_default_handler(( GLogFunc ) log_handler, NULL );
+}
+
+static void
+log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data )
 {
 #ifdef NA_MAINTAINER_MODE
-	syslog( LOG_USER | LOG_DEBUG, "%s", message );
+	/*( *st_default_log_func )( log_domain, log_level, message, user_data );*/
+	syslog( LOG_USER | LOG_DEBUG, "[%s] %s", log_domain, message );
 #else
 	/* do nothing */
 #endif

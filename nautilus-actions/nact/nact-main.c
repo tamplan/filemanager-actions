@@ -37,7 +37,7 @@
 static void set_log_handler( void );
 static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
 
-static GLogFunc st_log_func = NULL;
+static GLogFunc st_default_log_func = NULL;
 
 int
 main( int argc, char *argv[] )
@@ -59,14 +59,14 @@ main( int argc, char *argv[] )
 static void
 set_log_handler( void )
 {
-	st_log_func = g_log_set_default_handler(( GLogFunc ) log_handler, NULL );
+	st_default_log_func = g_log_set_default_handler(( GLogFunc ) log_handler, NULL );
 }
 
 static void
 log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data )
 {
 #ifdef NA_MAINTAINER_MODE
-	( *st_log_func )( log_domain, log_level, message, user_data );
+	( *st_default_log_func )( log_domain, log_level, message, user_data );
 #else
 	/* do nothing */
 #endif
