@@ -2213,7 +2213,7 @@ on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *in
 		g_signal_handler_unblock( instance, ialid->tab_updated_handler );
 	}
 
-	/* selection list if free in cleanup handler for the signal */
+	/* selection list is freed in cleanup handler for the signal */
 }
 
 static void

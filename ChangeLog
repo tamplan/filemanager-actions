@@ -4,6 +4,13 @@
 	Update compilation order as io-provider-gconf plugin depends on
 	runtime.
 
+	* nautilus-actions/nact/nact-iaction-tab.c
+	(on_tab_updatable_selection_changed):
+	Fix label display when the widget is disabled.
+
+	* nautilus-actions/nact/nact-iactions-list.c
+	(on_treeview_selection_changed): Fix typo.
+
 2009-11-19 Pierre Wieser <pwieser@trychlos.org>
 
 	Create GConf IO Provider as a plugin.

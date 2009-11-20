@@ -82,13 +82,6 @@
 - na_object_id_get_topmost_parent: should it return a NAObjectItem ?
 
 - nautilus-actions-new:
-  the label disappears when selected in NACT via bottom arrow ??
-  but not when right clicking on the row
-  neither if target selection is set
-  neither when target folder is set
-  but also if target toolbar is set
-
-- nautilus-actions-new:
   give same defaults that when creating an action in NACT
 
 - na_pivot_new: shouldn't take an argument (use add_consumer)
@@ -96,3 +89,7 @@
 - NACT: deleting an action, then saving, doesn't reset modif indicator (*)
 
 - gconf monitor doesn't work when creating with nautilus-actions-new
+
+- in 64bits arch, pkglibdir=/lib ??
+
+- NACT: unable to really delete an action imported with schemas
