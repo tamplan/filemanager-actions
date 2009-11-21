@@ -72,6 +72,7 @@ struct NactXMLReaderPrivate {
 	NAObjectAction  *action;			/* the action that we will return, or NULL */
 	GSList          *messages;
 	gboolean         uuid_set;			/* set at first uuid, then checked against */
+	gboolean         toolbar_label_set;
 
 	/* following values are reset at each schema/entry node
 	 */
@@ -172,6 +173,7 @@ static gboolean       is_uuid_valid( const gchar *uuid );
 static gchar         *get_entry_from_key( const gchar *key );
 static void           free_reader_values( NactXMLReader *reader );
 static gboolean       manage_import_mode( NactXMLReader *reader );
+static void           propagate_default_values( NactXMLReader *reader );
 static NAObjectItem  *search_in_auxiliaries( NactXMLReader *reader, const gchar *uuid );
 static void           relabel( NactXMLReader *reader );
 
@@ -249,6 +251,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->locale_waited = FALSE;
 	self->private->entry = NULL;
 	self->private->value = NULL;
+	self->private->toolbar_label_set = FALSE;
 }
 
 static void
@@ -369,6 +372,7 @@ nact_xml_reader_import( BaseWindow *window, GList *items, const gchar *uri, gint
 
 	if( reader->private->action ){
 		g_assert( NA_IS_OBJECT_ACTION( reader->private->action ));
+		propagate_default_values( reader );
 		if( manage_import_mode( reader )){
 			action = g_object_ref( reader->private->action );
 		}
@@ -1166,6 +1170,7 @@ apply_values( NactXMLReader *reader )
 			na_object_action_toolbar_set_same_label( reader->private->action, na_utils_schema_to_boolean( reader->private->value, TRUE ));
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY )){
+			reader->private->toolbar_label_set = TRUE;
 			na_object_action_toolbar_set_label( reader->private->action, reader->private->value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_PROFILE_LABEL_ENTRY )){
@@ -1363,6 +1368,18 @@ manage_import_mode( NactXMLReader *reader )
 
 	g_free( uuid );
 	return( ret );
+}
+
+static void
+propagate_default_values( NactXMLReader *reader )
+{
+	gchar *label;
+
+	if( !reader->private->toolbar_label_set ){
+		label = na_object_get_label( reader->private->action );
+		na_object_action_toolbar_set_label( reader->private->action, label );
+		g_free( label );
+	}
 }
 
 static NAObjectItem *

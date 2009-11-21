@@ -4,6 +4,9 @@
 	(on_tab_updatable_selection_changed):
 	Display empty label when item not set.
 
+	* nautilus-actions/nact/nact-xml-reader.c (propagate_default_values):
+	Propagate default values to the newly imported action.
+
 2009-11-20 Pierre Wieser <pwieser@trychlos.org>
 
 	Define functions with actual type for arguments.
