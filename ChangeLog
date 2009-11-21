@@ -1,3 +1,513 @@
+2009-11-21 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/nact/nact-iaction-tab.c
+	(on_tab_updatable_selection_changed):
+	Display empty label when item not set.
+
+	* nautilus-actions/nact/nact-xml-reader.c (propagate_default_values):
+	Propagate default values to the newly imported action.
+
+	Fix list of modified items in NACT.
+
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iactions-list.h
+	(nact_iactions_list_list_modified_items): New maintainer function.
+
+	* nautilus-actions/nact/nact-iactions-list.c (remove_rec):
+	Recursively remove no-more modified sub-objects.
+
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nautilus-actions-maintainer.actions:
+	New maintainer function.
+
+	* nautilus-actions/private/Makefile.am:
+	Remove useless -DPKGLIBDIR.
+
+	Allow the user to run multiple instances of NACT.
+
+	* nautilus-actions/nact/base-application-class.h (manage_options):
+	New virtual function.
+
+	* nautilus-actions/nact/base-application.c:
+	* nautilus-actions/nact/base-application.h: New entries property.
+
+	* nautilus-actions/nact/base-application.c:
+	argc and argv are now 'contruct only' properties.
+	Accept now an GOptionEntry list as a 'contruct only property'.
+	Check args if GOptionEntry list is not null.
+
+	* nautilus-actions/nact/nact-application.c:
+	Define --version option.
+	Define --non-unique command-line option.
+
+	* nautilus-actions/runtime/na-utils.c:
+	* nautilus-actions/runtime/na-utils.h:
+	* nautilus-actions/utils/console-utils.c:
+	* nautilus-actions/utils/console-utils.h:
+	Move console_print_version() function to na_utils_print_version().
+
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* nautilus-actions/utils/nautilus-actions-schemas.c:
+	Updated accordingly.
+
+2009-11-20 Pierre Wieser <pwieser@trychlos.org>
+
+	Define functions with actual type for arguments.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h
+	(na_pivot_add_item,	na_pivot_get_item):	Take/return a NAObjectItem.
+
+	* nautilus-actions/nact/nact-main-menubar.c (save_item):
+	* nautilus-actions/nact/nact-main-window.c (nact_main_window_get_item):
+	Updated accordingly.
+
+	Get ride of "unsolicitated invocation of g_object_dispose() on
+	GTypeModule" error message.
+
+	* nautilus-actions/runtime/na-module.c (na_module_release_modules):
+	No more unref the module.
+
+	Review log handlers.
+
+	* nautilus-actions/io-provider-gconf/nagp-module.c
+	(na_api_module_init): standardize debug message.
+
+	* nautilus-actions/nact/nact-main.c:
+	Better name the static variable which holds the default handler.
+
+	* nautilus-actions/plugin/nautilus-module.c:
+	* nautilus-actions/utils/console-utils.c:
+	Simplify log handler management on NACT model.
+
+	* src/Makefile.am:
+	Update compilation order as io-provider-gconf plugin depends on
+	runtime.
+
+	* nautilus-actions/api/na-iio-provider.c:
+	* nautilus-actions/api/na-iio-provider.h (na_iio_provider_config_changed):
+	Advertise interface with id of modified item.
+
+	* nautilus-actions/io-provider-gconf/nagp-gconf-provider.c:
+	Add a timeout to only trigger NAIIOProvider when all modifications
+	on an item have been made.
+
+	* nautilus-actions/io-provider-gconf/nagp-module.c (na_api_module_init):
+	Remove log handler management, no more syslog at initialization.
+
+	* nautilus-actions/nact/nact-main.c:
+	Simplify log management.
+
+	* nautilus-actions/runtime/na-io-provider.c:
+	* nautilus-actions/runtime/na-io-provider.h
+	(na_io_provider_register_callbacks): New function.
+
+	* nautilus-actions/runtime/na-module.c (plugin_check):
+	Fix error message.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	Move static variables to the instance.
+
+	* nautilus-actions/nact/nact-iaction-tab.c
+	(on_tab_updatable_selection_changed):
+	Fix label display when the widget is disabled.
+
+	* nautilus-actions/nact/nact-iactions-list.c
+	(on_treeview_selection_changed): Fix typo.
+
+	* nautilus-actions/nact/nact-main-menubar.c (on_save_activated):
+	Complete comment about status check.
+
+	* nautilus-actions/nact/nact-main-window.c
+	(nact_main_window_remove_deleted): Setup dialog title is required
+	here when this is the only modification to be saved.
+
+2009-11-19 Pierre Wieser <pwieser@trychlos.org>
+
+	Create GConf IO Provider as a plugin.
+
+	* nautilus-actions/runtime/na-gconf-provider-keys.h:
+	* nautilus-actions/runtime/na-gconf-provider.c:
+	* nautilus-actions/runtime/na-gconf-provider.h:
+	Moved to io-provider-gconf/, and thus removed from runtime/.
+
+	* configure.ac:
+	* nautilus-actions/Makefile.am:
+	Maage io-provider-gconf/ new directory.
+
+	* m4/na-log-domains.m4:
+	Define new NA_LOGDOMAIN_IO_PROVIDER_GCONF log domain.
+
+	* nautilus-actions/api/na-api.c:
+	* nautilus-actions/api/na-api.h (na_api_module_init):
+	Now returns a boolean.
+
+	* nautilus-actions/plugin/nautilus-module.c:
+	Set module name.
+
+	* nautilus-actions/runtime/na-gconf-utils.c:
+	* nautilus-actions/runtime/na-gconf-utils.h
+	(na_gconf_utils_get_subdirs, na_gconf_utils_free_subdirs,
+	na_gconf_utils_have_entry:): Move functions to NagpIOProvider class.
+
+	* nautilus-actions/runtime/na-gconf-utils.c:
+	* nautilus-actions/runtime/na-gconf-utils.h
+	(na_gconf_utils_have_subdir): Removed function.
+
+	* nautilus-actions/runtime/na-module.c:
+	Fix dynamic loading of the modules.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h
+	(na_pivot_get_provider, na_pivot_release_provider):
+	New functions.
+
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-xml-writer.c:
+	Updated accordingly.
+
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	Use NAPivot to find an adequate provider instead of directly
+	instantiating a NAGConfProvider object.
+
+2009-11-18 Pierre Wieser <pwieser@trychlos.org>
+
+	Move runtime/na-gconf-monitor.{c,h} to api/.
+
+	* nautilus-actions/runtime/na-gconf-monitor.c:
+	* nautilus-actions/runtime/na-gconf-monitor.h:
+	Moved to api/, thus removed from runtime/.
+
+	* nautilus-actions/api/Makefile.am:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/na-gconf-provider.c:
+	* nautilus-actions/runtime/na-pivot.c:
+	Upated accordingly.
+
+	Move private/na-object-api.h to private/.
+
+	* nautilus-actions/private/na-object-api.h:
+	Moved to private/.
+
+	* nautilus-actions/api/Makefile.am:
+	* nautilus-actions/nact/nact-assistant-export-ask.c:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import-ask.c:
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-iaction-tab.c:
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iadvanced-tab.c:
+	* nautilus-actions/nact/nact-ibackground-tab.c:
+	* nautilus-actions/nact/nact-icommand-tab.c:
+	* nautilus-actions/nact/nact-iconditions-tab.c:
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-window.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/plugin/nautilus-actions.c:
+	* nautilus-actions/private/Makefile.am:
+	* nautilus-actions/private/na-object-action.c:
+	* nautilus-actions/private/na-object-id.c:
+	* nautilus-actions/private/na-object-item.c:
+	* nautilus-actions/private/na-object-menu.c:
+	* nautilus-actions/private/na-object-profile.c:
+	* nautilus-actions/private/na-object.c:
+	* nautilus-actions/runtime/na-gconf-provider.c:
+	* nautilus-actions/runtime/na-io-provider.c:
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-xml-writer.c:
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	Updated accordingly.
+
+	Move na-xml-* to runtime library, thus removing common/.
+
+	* nautilus-actions/common/na-xml-names.h:
+	* nautilus-actions/common/na-xml-writer.c:
+	* nautilus-actions/common/na-xml-writer.h:
+	Moved to runtime/ directory, thus removed from common.
+
+	* configure.ac:
+	* m4/na-log-domains.m4:
+	* nautilus-actions/Makefile.am:
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-main.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/README:
+	* nautilus-actions/utils/Makefile.am:
+	* nautilus-actions/utils/console-utils.c:
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* nautilus-actions/utils/nautilus-actions-schemas.c:
+	* po/POTFILES.in: Updated accordingly.
+
+	Merge common/na-utils.{c,h} into runtime/na-utils.{c,h}.
+
+	* nautilus-actions/common/na-utils.c:
+	* nautilus-actions/common/na-utils.h:
+	Merged into runtime/na-utils.{c,h}, thus deleted from common/.
+
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/common/na-xml-writer.c:
+	* nautilus-actions/nact/base-builder.c:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-iadvanced-tab.c:
+	* nautilus-actions/nact/nact-ibackground-tab.c:
+	* nautilus-actions/nact/nact-icommand-tab.c:
+	* nautilus-actions/nact/nact-iconditions-tab.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/private/Makefile.am:
+	* nautilus-actions/private/na-object-profile.c:
+	* nautilus-actions/runtime/na-utils.c:
+	* nautilus-actions/runtime/na-utils.h:
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* nautilus-actions/utils/nautilus-actions-schemas.c:
+	Updated accordingly.
+
+	Merge common/na-iprefs.{c,h} into runtime/na-iprefs.{c,h}.
+
+	* nautilus-actions/common/na-iprefs.c:
+	* nautilus-actions/common/na-iprefs.h:
+	Merged into runtime/na-iprefs.{c,h}, thus deleted from common/.
+
+	* nautilus-actions/runtime/na-gconf-keys.h: Removed file
+	as duplicate from api/.
+
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/common/na-xml-writer.c:
+	* nautilus-actions/nact/base-iprefs.c:
+	* nautilus-actions/nact/nact-assistant-export-ask.c:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import-ask.c:
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-ibackground-tab.c:
+	* nautilus-actions/nact/nact-icommand-tab.c:
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-window.c:
+	* nautilus-actions/nact/nact-preferences-editor.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/na-gconf-provider-keys.h:
+	* nautilus-actions/runtime/na-iprefs.c:
+	* nautilus-actions/runtime/na-iprefs.h:
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* nautilus-actions/utils/nautilus-actions-schemas.c:
+	Updated	accordingly.
+
+	Merge common/na-object-* stuff into private/ subdirectory.
+
+	* nautilus-actions/common/na-object-action-fn.h:
+	* nautilus-actions/common/na-object-action.c:
+	* nautilus-actions/common/na-object-api.h:
+	* nautilus-actions/common/na-object-fn.h:
+	* nautilus-actions/common/na-object-id-fn.h:
+	* nautilus-actions/common/na-object-id.c:
+	* nautilus-actions/common/na-object-item-fn.h:
+	* nautilus-actions/common/na-object-item.c:
+	* nautilus-actions/common/na-object-menu-fn.h:
+	* nautilus-actions/common/na-object-menu.c:
+	* nautilus-actions/common/na-object-profile-fn.h:
+	* nautilus-actions/common/na-object-profile.c:
+	* nautilus-actions/common/na-object.c:
+	Merged into private/ directory, thus deleted from common/ one.
+
+	* nautilus-actions/Makefile.am:
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/common/na-xml-writer.c:
+	* nautilus-actions/nact/nact-assistant-export-ask.c:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import-ask.c:
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-iaction-tab.c:
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iadvanced-tab.c:
+	* nautilus-actions/nact/nact-ibackground-tab.c:
+	* nautilus-actions/nact/nact-icommand-tab.c:
+	* nautilus-actions/nact/nact-iconditions-tab.c:
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-menubar.h:
+	* nautilus-actions/nact/nact-main-window.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-xml-reader.c:
+	* nautilus-actions/private/Makefile.am:
+	* nautilus-actions/private/na-object-action-fn.h:
+	* nautilus-actions/private/na-object-action.c:
+	* nautilus-actions/private/na-object-api.h:
+	* nautilus-actions/private/na-object-fn.h:
+	* nautilus-actions/private/na-object-id-fn.h:
+	* nautilus-actions/private/na-object-id.c:
+	* nautilus-actions/private/na-object-item-fn.h:
+	* nautilus-actions/private/na-object-item.c:
+	* nautilus-actions/private/na-object-profile-fn.h:
+	* nautilus-actions/private/na-object-profile.c:
+	* nautilus-actions/private/na-object.c:
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* po/POTFILES.in: Updated accordingly.
+
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-menubar.h
+	(nact_main_menubar_is_pasted_object_relabeled): New function
+	to avoid moving also NAPivot class to private directory.
+
+	Move runtime/na-object-* stuff to private/ subdirectory.
+
+	* nautilus-actions/runtime/na-gnome-vfs-uri.c:
+	* nautilus-actions/runtime/na-gnome-vfs-uri.h:
+	* nautilus-actions/runtime/na-iduplicable.c:
+	* nautilus-actions/runtime/na-iduplicable.h:
+	* nautilus-actions/runtime/na-object-action-class.h:
+	* nautilus-actions/runtime/na-object-action-fn.h:
+	* nautilus-actions/runtime/na-object-action-priv.h:
+	* nautilus-actions/runtime/na-object-action.c:
+	* nautilus-actions/runtime/na-object-api.h:
+	* nautilus-actions/runtime/na-object-class.h:
+	* nautilus-actions/runtime/na-object-fn.h:
+	* nautilus-actions/runtime/na-object-id-class.h:
+	* nautilus-actions/runtime/na-object-id-fn.h:
+	* nautilus-actions/runtime/na-object-id-priv.h:
+	* nautilus-actions/runtime/na-object-id.c:
+	* nautilus-actions/runtime/na-object-item-class.h:
+	* nautilus-actions/runtime/na-object-item-fn.h:
+	* nautilus-actions/runtime/na-object-item-priv.h:
+	* nautilus-actions/runtime/na-object-item.c:
+	* nautilus-actions/runtime/na-object-menu-class.h:
+	* nautilus-actions/runtime/na-object-menu-fn.h:
+	* nautilus-actions/runtime/na-object-menu-priv.h:
+	* nautilus-actions/runtime/na-object-menu.c:
+	* nautilus-actions/runtime/na-object-priv.h:
+	* nautilus-actions/runtime/na-object-profile-class.h:
+	* nautilus-actions/runtime/na-object-profile-fn.h:
+	* nautilus-actions/runtime/na-object-profile-priv.h:
+	* nautilus-actions/runtime/na-object-profile.c:
+	* nautilus-actions/runtime/na-object.c: Moved to private/
+
+	* nautilus-actions/api/na-iio-provider.h:
+	* nautilus-actions/common/na-object-action-fn.h:
+	* nautilus-actions/common/na-object-action.c:
+	* nautilus-actions/common/na-object-api.h:
+	* nautilus-actions/common/na-object-fn.h:
+	* nautilus-actions/common/na-object-id-fn.h:
+	* nautilus-actions/common/na-object-id.c:
+	* nautilus-actions/common/na-object-item-fn.h:
+	* nautilus-actions/common/na-object-item.c:
+	* nautilus-actions/common/na-object-menu-fn.h:
+	* nautilus-actions/common/na-object-menu.c:
+	* nautilus-actions/common/na-object-profile-fn.h:
+	* nautilus-actions/common/na-object-profile.c:
+	* nautilus-actions/common/na-object.c:
+	* nautilus-actions/common/na-xml-writer.h:
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/nact/nact-application.c:
+	* nautilus-actions/nact/nact-assistant-export-ask.h:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import-ask.h:
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iactions-list.h:
+	* nautilus-actions/nact/nact-main-window.h:
+	* nautilus-actions/nact/nact-window.h:
+	* nautilus-actions/nact/nact-xml-reader.h:
+	* nautilus-actions/plugin/Makefile.am:
+	* nautilus-actions/plugin/nautilus-actions.c:
+	* nautilus-actions/private/Makefile.am:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/runtime/na-gconf-provider.c:
+	* nautilus-actions/runtime/na-io-provider.c:
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h:
+	* nautilus-actions/test/Makefile.am:
+	* nautilus-actions/test/test-parse-uris.c:
+	* nautilus-actions/utils/Makefile.am:
+	* po/POTFILES.in: Updated accordingly.
+
+	Create private/ directory to host installed though private headers.
+
+	* configure.ac:
+	* nautilus-actions/Makefile.am: Updated accordingly.
+
+	* m4/na-log-domains.m4:
+	Define new log domains for API and private libraries.
+
+	* nautilus-actions/private/Makefile.am:
+	* nautilus-actions/private/README: New files.
+
+2009-11-17 Pierre Wieser <pwieser@trychlos.org>
+
+	Move NAIIOProvider interface to api/.
+
+	* nautilus-actions/api/na-api.h:
+	* nautilus-actions/api/na-gconf-keys.h: Fix doc typo.
+
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-main-window.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-window.h:
+	* nautilus-actions/runtime/na-gconf-provider.c:
+	* nautilus-actions/runtime/na-object-item-fn.h:
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h:
+	* nautilus-actions/utils/nautilus-actions-new.c: Updated accordingly,
+	modifying path to headers,
+	fixing calls to NAIIOProvider interface.
+
+	* nautilus-actions/runtime/na-module.c:
+	* nautilus-actions/runtime/na-module.h: Fix typo.
+
+	* nautilus-actions/api/Makefile.am:
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/plugin/Makefile.am:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/test/Makefile.am:
+	* nautilus-actions/utils/Makefile.am: Updated accordingly,
+	adding -I $(top_srcdir),
+	adding -L$(top_builddir)/nautilus-actions/api -lna-api.
+
+	Dynamically loads Nautilus-Actions extensions.
+
+	* nautilus-actions/runtime/na-module.c:
+	* nautilus-actions/runtime/na-module.h: New files.
+
+	* nautilus-actions/runtime/na-pivot.c: Load modules.
+
+	* nautilus-actions/runtime/Makefile.am: Updated accordingly.
+
+	Make libna-runtime a dynamically loaded library.
+	Initialize the API directory.
+
+	* nautilus-actions/api: New directory.
+
+	* nautilus-actions/common/Makefile.am:
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/plugin/Makefile.am:
+	* nautilus-actions/runtime/Makefile.am:
+	* nautilus-actions/test/Makefile.am:
+	* nautilus-actions/utils/Makefile.am: Updated accordingly.
+
+	* po/POTFILES.in: Updated to reflect src/ directory renaming.
+
+2009-11-17 Pierre Wieser <pwieser@trychlos.org>
+
+	Rename all src/ tree to nautilus-actions/.
+
+	This will make easier to have an API installed on a host system,
+	all headers being included with #include <nautilus-actions/header.h>.
+
 2009-10-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/common/na-object-api.h (na_object_reset_status):

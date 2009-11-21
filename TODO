@@ -50,9 +50,6 @@
 
 - use eggsmclient
 
-- add -nounique option to not check for unicity (make easier to compare
-  two versions)
-
 - when a unique app is found, use libwnck (?) to activate it
 
 - have a preference for modified and invalid fonts
@@ -78,3 +75,16 @@
   along with their methods
 
 - export: add a overwrite page: what to do if file already exists ?
+
+- nautilus-actions-new:
+  give same defaults that when creating an action in NACT
+
+- na_pivot_new: shouldn't take an argument (use add_consumer)
+
+- NACT: unable to really delete an action imported with schemas
+  2009-11-21 (2.29.2-provider) not able to reproduce this, whether the
+  action is imported via Import assistant or by drag and drop from
+  Nautilus
+
+- bug when dnd to nautilus
+  see https://bugzilla.gnome.org/show_bug.cgi?id=593453

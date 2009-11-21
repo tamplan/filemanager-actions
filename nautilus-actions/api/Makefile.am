@@ -26,52 +26,36 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-ACLOCAL_AMFLAGS = -I m4
+pkglib_LTLIBRARIES=libna-api.la
 
-SUBDIRS = \
-	data						\
-	doc							\
-	m4							\
-	icons						\
-	nautilus-actions			\
-	po							\
+AM_CPPFLAGS += \
+	-I $(top_srcdir)									\
+	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_API}\"				\
 	$(NULL)
 
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
-DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
+libna_api_includedir = $(pkgincludedir)/api
 
-# do not try to install schemas when making distcheck
-DISTCHECK_CONFIGURE_FLAGS += \
-	--disable-schemas-install	\
+libna_api_include_HEADERS = \
+	na-api.h											\
+	na-gconf-keys.h										\
+	na-gconf-monitor.h									\
+	na-iio-provider.h									\
+	na-object-api.h										\
 	$(NULL)
 
-EXTRA_DIST = \
-	intltool-extract.in			\
-	intltool-merge.in			\
-	intltool-update.in			\
+libna_api_la_SOURCES = \
+	na-gconf-monitor.c									\
+	na-iio-provider.c									\
 	$(NULL)
 
-DISTCLEANFILES = \
-	intltool-extract			\
-	intltool-merge				\
-	intltool-update				\
+libna_api_la_LIBADD = \
 	$(NULL)
 
-pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
-
-dist_pkgdoc_DATA = \
-	AUTHORS						\
-	ChangeLog					\
-	ChangeLog-2008				\
-	COPYING						\
-	INSTALL						\
-	MAINTAINERS					\
-	NEWS						\
-	README						\
-	TODO						\
+#VERSION_INFO = `echo @VERSION@ | $(SED) -e 's/\./:/g' -e 's/[a-aA-Z]//g'`
+VERSION_INFO = 1:0:0
+libna_api_la_LDFLAGS = \
+	-module 											\
+	-no-undefined										\
+	-version-number $(VERSION_INFO)						\
 	$(NULL)
-
-uninstall-hook:
-	-\rm -fr $(DESTDIR)$(pkgdocdir)

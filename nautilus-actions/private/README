@@ -1,0 +1,10 @@
+This is a Nautilus Actions private library.
+
+This is so called just because headers are or may be required by public
+Nautilus-Action API or by extensions who use this API.
+
+It so appears a bit more cleaner to put the corresponding code just
+besides of these headers, and to build with them a dynamic library.
+
+It is called private because headers are installed as part of N-A
+development, but should not be directly included by external extensions.

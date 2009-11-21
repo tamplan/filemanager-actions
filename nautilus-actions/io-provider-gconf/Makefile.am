@@ -26,52 +26,32 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-ACLOCAL_AMFLAGS = -I m4
+pluginsdir = $(pkglibdir)
 
-SUBDIRS = \
-	data						\
-	doc							\
-	m4							\
-	icons						\
-	nautilus-actions			\
-	po							\
+plugins_LTLIBRARIES=libna-io-provider-gconf.la
+
+AM_CPPFLAGS += \
+	-I $(top_srcdir)											\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_PROVIDER_GCONF}\"		\
 	$(NULL)
 
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
-DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
-
-# do not try to install schemas when making distcheck
-DISTCHECK_CONFIGURE_FLAGS += \
-	--disable-schemas-install	\
+libna_io_provider_gconf_la_SOURCES = \
+	nagp-gconf-provider.c										\
+	nagp-gconf-provider.h										\
+	nagp-keys.h													\
+	nagp-module.c												\
 	$(NULL)
 
-EXTRA_DIST = \
-	intltool-extract.in			\
-	intltool-merge.in			\
-	intltool-update.in			\
+libna_io_provider_gconf_la_LIBADD = \
+	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
+	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NULL)
 
-DISTCLEANFILES = \
-	intltool-extract			\
-	intltool-merge				\
-	intltool-update				\
+VERSION_INFO = 1:0:0
+libna_io_provider_gconf_la_LDFLAGS = \
+	-module 													\
+	-no-undefined												\
+	-version-number $(VERSION_INFO)								\
 	$(NULL)
-
-pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
-
-dist_pkgdoc_DATA = \
-	AUTHORS						\
-	ChangeLog					\
-	ChangeLog-2008				\
-	COPYING						\
-	INSTALL						\
-	MAINTAINERS					\
-	NEWS						\
-	README						\
-	TODO						\
-	$(NULL)
-
-uninstall-hook:
-	-\rm -fr $(DESTDIR)$(pkgdocdir)

@@ -26,52 +26,13 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-ACLOCAL_AMFLAGS = -I m4
-
 SUBDIRS = \
-	data						\
-	doc							\
-	m4							\
-	icons						\
-	nautilus-actions			\
-	po							\
+	api							\
+	private						\
+	runtime						\
+	io-provider-gconf			\
+	nact						\
+	plugin						\
+	test						\
+	utils						\
 	$(NULL)
-
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
-DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
-
-# do not try to install schemas when making distcheck
-DISTCHECK_CONFIGURE_FLAGS += \
-	--disable-schemas-install	\
-	$(NULL)
-
-EXTRA_DIST = \
-	intltool-extract.in			\
-	intltool-merge.in			\
-	intltool-update.in			\
-	$(NULL)
-
-DISTCLEANFILES = \
-	intltool-extract			\
-	intltool-merge				\
-	intltool-update				\
-	$(NULL)
-
-pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
-
-dist_pkgdoc_DATA = \
-	AUTHORS						\
-	ChangeLog					\
-	ChangeLog-2008				\
-	COPYING						\
-	INSTALL						\
-	MAINTAINERS					\
-	NEWS						\
-	README						\
-	TODO						\
-	$(NULL)
-
-uninstall-hook:
-	-\rm -fr $(DESTDIR)$(pkgdocdir)

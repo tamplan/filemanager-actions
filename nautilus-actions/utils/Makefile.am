@@ -26,52 +26,41 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-ACLOCAL_AMFLAGS = -I m4
-
-SUBDIRS = \
-	data						\
-	doc							\
-	m4							\
-	icons						\
-	nautilus-actions			\
-	po							\
+bin_PROGRAMS = \
+	nautilus-actions-new										\
+	nautilus-actions-schemas									\
 	$(NULL)
 
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
-DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
-
-# do not try to install schemas when making distcheck
-DISTCHECK_CONFIGURE_FLAGS += \
-	--disable-schemas-install	\
+AM_CPPFLAGS += \
+	-I $(top_srcdir)											\
+	-I $(top_srcdir)/nautilus-actions							\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"					\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
-EXTRA_DIST = \
-	intltool-extract.in			\
-	intltool-merge.in			\
-	intltool-update.in			\
+nautilus_actions_new_SOURCES = \
+	nautilus-actions-new.c										\
+	console-utils.c												\
+	console-utils.h												\
 	$(NULL)
 
-DISTCLEANFILES = \
-	intltool-extract			\
-	intltool-merge				\
-	intltool-update				\
+nautilus_actions_new_LDADD = \
+	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
+	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
-pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
-
-dist_pkgdoc_DATA = \
-	AUTHORS						\
-	ChangeLog					\
-	ChangeLog-2008				\
-	COPYING						\
-	INSTALL						\
-	MAINTAINERS					\
-	NEWS						\
-	README						\
-	TODO						\
+nautilus_actions_schemas_SOURCES = \
+	nautilus-actions-schemas.c									\
+	console-utils.c												\
+	console-utils.h												\
 	$(NULL)
 
-uninstall-hook:
-	-\rm -fr $(DESTDIR)$(pkgdocdir)
+nautilus_actions_schemas_LDADD = \
+	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
+	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
+	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NULL)

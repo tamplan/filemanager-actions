@@ -26,52 +26,27 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-ACLOCAL_AMFLAGS = -I m4
-
-SUBDIRS = \
-	data						\
-	doc							\
-	m4							\
-	icons						\
-	nautilus-actions			\
-	po							\
+AM_CPPFLAGS += \
+	-I $(top_srcdir)											\
+	-I $(top_srcdir)/nautilus-actions							\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PLUGIN}\"					\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
-DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
+nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
 
-# do not try to install schemas when making distcheck
-DISTCHECK_CONFIGURE_FLAGS += \
-	--disable-schemas-install	\
+nautilus_extension_LTLIBRARIES = libnautilus-actions.la
+
+libnautilus_actions_la_SOURCES = \
+	nautilus-module.c											\
+	nautilus-actions.c											\
+	nautilus-actions.h											\
 	$(NULL)
 
-EXTRA_DIST = \
-	intltool-extract.in			\
-	intltool-merge.in			\
-	intltool-update.in			\
+libnautilus_actions_la_LDFLAGS = -module -avoid-version
+
+libnautilus_actions_la_LIBADD = \
+	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
+	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
+	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
-
-DISTCLEANFILES = \
-	intltool-extract			\
-	intltool-merge				\
-	intltool-update				\
-	$(NULL)
-
-pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
-
-dist_pkgdoc_DATA = \
-	AUTHORS						\
-	ChangeLog					\
-	ChangeLog-2008				\
-	COPYING						\
-	INSTALL						\
-	MAINTAINERS					\
-	NEWS						\
-	README						\
-	TODO						\
-	$(NULL)
-
-uninstall-hook:
-	-\rm -fr $(DESTDIR)$(pkgdocdir)

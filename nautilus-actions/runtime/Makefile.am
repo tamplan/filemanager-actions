@@ -26,52 +26,46 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-ACLOCAL_AMFLAGS = -I m4
+pkglib_LTLIBRARIES = libna-runtime.la
 
-SUBDIRS = \
-	data						\
-	doc							\
-	m4							\
-	icons						\
-	nautilus-actions			\
-	po							\
+AM_CPPFLAGS += \
+	-I $(top_srcdir)											\
+	-I $(top_srcdir)/nautilus-actions							\
+	-DPKGLIBDIR=\""$(pkglibdir)"\"								\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_RUNTIME}\"					\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
-DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
-
-# do not try to install schemas when making distcheck
-DISTCHECK_CONFIGURE_FLAGS += \
-	--disable-schemas-install	\
+libna_runtime_la_SOURCES = \
+	na-gconf-utils.c											\
+	na-gconf-utils.h											\
+	na-iabout.c													\
+	na-iabout.h													\
+	na-io-provider.c											\
+	na-io-provider.h											\
+	na-ipivot-consumer.c										\
+	na-ipivot-consumer.h										\
+	na-iprefs.c													\
+	na-iprefs.h													\
+	na-module.c													\
+	na-module.h													\
+	na-pivot.c													\
+	na-pivot.h													\
+	na-utils.c													\
+	na-utils.h													\
+	na-xml-names.h												\
+	na-xml-writer.c												\
+	na-xml-writer.h												\
 	$(NULL)
 
-EXTRA_DIST = \
-	intltool-extract.in			\
-	intltool-merge.in			\
-	intltool-update.in			\
+libna_runtime_la_LIBADD = \
+	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
 	$(NULL)
 
-DISTCLEANFILES = \
-	intltool-extract			\
-	intltool-merge				\
-	intltool-update				\
+VERSION_INFO = 1:0:0
+libna_runtime_la_LDFLAGS = \
+	-module														\
+	-no-undefined												\
+	-version-number $(VERSION_INFO)								\
 	$(NULL)
-
-pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
-
-dist_pkgdoc_DATA = \
-	AUTHORS						\
-	ChangeLog					\
-	ChangeLog-2008				\
-	COPYING						\
-	INSTALL						\
-	MAINTAINERS					\
-	NEWS						\
-	README						\
-	TODO						\
-	$(NULL)
-
-uninstall-hook:
-	-\rm -fr $(DESTDIR)$(pkgdocdir)
