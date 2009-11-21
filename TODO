@@ -87,3 +87,10 @@
 - in 64bits arch, pkglibdir=/lib ??
 
 - NACT: unable to really delete an action imported with schemas
+
+- bug when dnd to nautilus
+  see https://bugzilla.gnome.org/show_bug.cgi?id=593453
+
+- nact: dnd an action into nact, then deleting it: the '*' is always here
+
+- nact: importing an action doesn't set toolbar label

@@ -406,7 +406,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 
 		enable_label = ( item && ( NA_IS_OBJECT_MENU( item ) || target_selection || target_background ));
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
-		label = na_object_get_label( item );
+		label = item ? na_object_get_label( item ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		if( item ){
 			check_for_label( instance, GTK_ENTRY( label_widget ), label );
