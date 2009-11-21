@@ -84,9 +84,10 @@
 
 - na_pivot_new: shouldn't take an argument (use add_consumer)
 
-- in 64bits arch, pkglibdir=/lib ??
-
 - NACT: unable to really delete an action imported with schemas
+  2009-11-21 (2.29.2-provider) not able to reproduce this, whether the
+  action is imported via Import assistant or by drag and drop from
+  Nautilus
 
 - bug when dnd to nautilus
   see https://bugzilla.gnome.org/show_bug.cgi?id=593453

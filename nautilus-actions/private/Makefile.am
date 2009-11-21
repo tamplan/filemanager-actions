@@ -31,7 +31,6 @@ pkglib_LTLIBRARIES = libna-private.la
 AM_CPPFLAGS += \
 	-I $(top_srcdir)							\
 	-I $(top_srcdir)/nautilus-actions			\
-	-DPKGLIBDIR=\""$(pkglibdir)"\"				\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"	\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PRIVATE}\"	\
 	$(NAUTILUS_ACTIONS_CFLAGS)					\

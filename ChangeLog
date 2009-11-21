@@ -20,6 +20,9 @@
 	* nautilus-actions/nact/nautilus-actions-maintainer.actions:
 	New maintainer function.
 
+	* nautilus-actions/private/Makefile.am:
+	Remove useless -DPKGLIBDIR.
+
 2009-11-20 Pierre Wieser <pwieser@trychlos.org>
 
 	Define functions with actual type for arguments.
