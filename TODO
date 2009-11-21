@@ -90,5 +90,3 @@
 
 - bug when dnd to nautilus
   see https://bugzilla.gnome.org/show_bug.cgi?id=593453
-
-- nact: dnd an action into nact, then deleting it: the '*' is always here

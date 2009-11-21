@@ -142,6 +142,7 @@ void      nact_iactions_list_insert_at_path( NactIActionsList *instance, GList *
 void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling );
 void      nact_iactions_list_insert_into( NactIActionsList *instance, GList *items );
 gboolean  nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item );
+void      nact_iactions_list_list_modified_items( NactIActionsList *instance );
 void      nact_iactions_list_removed_modified( NactIActionsList *instance );
 void      nact_iactions_list_set_management_mode( NactIActionsList *instance, gint mode );
 void      nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *item );

@@ -5,6 +5,7 @@
             <menu action="MaintainerMenu">
                 <menuitem action="DumpSelectionItem" />
                 <menuitem action="BriefTreeStoreDumpItem" />
+                <menuitem action="ListModifiedItems" />
             </menu>
         </placeholder>
     </menubar>
@@ -12,5 +13,6 @@
     <toolbar name="MaintainerToolbar">
                 <toolitem action="DumpSelectionItem" />
                 <toolitem action="BriefTreeStoreDumpItem" />
+                <toolitem action="ListModifiedItems" />
     </toolbar>
 </ui>

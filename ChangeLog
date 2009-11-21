@@ -7,6 +7,19 @@
 	* nautilus-actions/nact/nact-xml-reader.c (propagate_default_values):
 	Propagate default values to the newly imported action.
 
+	Fix list of modified items in NACT.
+
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iactions-list.h
+	(nact_iactions_list_list_modified_items): New maintainer function.
+
+	* nautilus-actions/nact/nact-iactions-list.c (remove_rec):
+	Recursively remove no-more modified sub-objects.
+
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nautilus-actions-maintainer.actions:
+	New maintainer function.
+
 2009-11-20 Pierre Wieser <pwieser@trychlos.org>
 
 	Define functions with actual type for arguments.

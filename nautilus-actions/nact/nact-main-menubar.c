@@ -134,6 +134,7 @@ static void     on_export_activated( GtkAction *action, NactMainWindow *window )
 
 static void     on_dump_selection_activated( GtkAction *action, NactMainWindow *window );
 static void     on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window );
+static void     on_list_modified_items_activated( GtkAction *action, NactMainWindow *window );
 
 static void     on_help_activated( GtkAction *action, NactMainWindow *window );
 static void     on_about_activated( GtkAction *action, NactMainWindow *window );
@@ -235,6 +236,10 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item */
 				N_( "Briefly dump the tree store" ),
 				G_CALLBACK( on_brief_tree_store_dump_activated ) },
+		{ "ListModifiedItems", NULL, N_( "_List modified items" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item */
+				N_( "List the modified items" ),
+				G_CALLBACK( on_list_modified_items_activated ) },
 		{ "HelpItem" , GTK_STOCK_HELP, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Help item */
 				N_( "Display help about this program" ),
@@ -1228,6 +1233,12 @@ static void
 on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window )
 {
 	nact_iactions_list_brief_tree_dump( NACT_IACTIONS_LIST( window ));
+}
+
+static void
+on_list_modified_items_activated( GtkAction *action, NactMainWindow *window )
+{
+	nact_iactions_list_list_modified_items( NACT_IACTIONS_LIST( window ));
 }
 
 static void

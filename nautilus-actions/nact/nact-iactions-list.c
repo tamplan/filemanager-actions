@@ -184,6 +184,7 @@ static void         on_label_edited( GtkCellRendererText *renderer, const gchar 
 static void         on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object, gboolean force_display );
 static void         on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
 static void         open_popup( NactIActionsList *instance, GdkEventButton *event );
+static GList       *remove_rec( GList *list, NAObject *object );
 static void         select_first_row( NactIActionsList *instance );
 static void         select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
 static void         send_list_count_updated_signal( NactIActionsList *instance, IActionsListInstanceData *ialid );
@@ -729,7 +730,7 @@ nact_iactions_list_delete( NactIActionsList *instance, GList *items )
 
 			path = nact_tree_model_remove( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ));
 
-			ialid->modified_items = g_list_remove( ialid->modified_items, it->data );
+			ialid->modified_items = remove_rec( ialid->modified_items, NA_OBJECT( it->data ));
 
 			g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
 					( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
@@ -1438,6 +1439,31 @@ nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item
 }
 
 /**
+ * nact_iactions_list_list_modified_items:
+ * @instance: this #NactIActionsList instance.
+ *
+ * Dumps the modified items list.
+ */
+void
+nact_iactions_list_list_modified_items( NactIActionsList *instance )
+{
+	static const gchar *thisfn = "nact_iactions_list_list_modified_items";
+	IActionsListInstanceData *ialid;
+	GList *it;
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		ialid = get_instance_data( instance );
+		for( it = ialid->modified_items ; it ; it = it->next ){
+			na_object_dump( it->data );
+		}
+	}
+}
+
+/**
  * nact_iactions_list_removed_modified:
  * @instance: this #NactIActionsList instance.
  *
@@ -2054,7 +2080,7 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 			ialid->modified_items = g_list_prepend( ialid->modified_items, object );
 		}
 	} else {
-		ialid->modified_items = g_list_remove( ialid->modified_items, object );
+		ialid->modified_items = remove_rec( ialid->modified_items, NA_OBJECT( object ));
 	}
 
 	/* do not send status-changed signal while filling the tree
@@ -2230,6 +2256,27 @@ open_popup( NactIActionsList *instance, GdkEventButton *event )
 		gtk_tree_path_free( path );
 		nact_main_menubar_open_popup( NACT_MAIN_WINDOW( instance ), event );
 	}
+}
+
+/*
+ * when removing from modified list an object which is no more modified,
+ * then all subitems of the object have also to be removed
+ */
+static GList *
+remove_rec( GList *list, NAObject *object )
+{
+	GList *subitems, *it;
+
+	if( NA_IS_OBJECT_ITEM( object )){
+		subitems = na_object_get_items_list( object );
+		for( it = subitems ; it ; it = it->next ){
+			list = remove_rec( list, it->data );
+		}
+	}
+
+	list = g_list_remove( list, object );
+
+	return( list );
 }
 
 static void
