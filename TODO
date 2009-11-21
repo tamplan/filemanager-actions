@@ -50,9 +50,6 @@
 
 - use eggsmclient
 
-- add -nounique option to not check for unicity (make easier to compare
-  two versions)
-
 - when a unique app is found, use libwnck (?) to activate it
 
 - have a preference for modified and invalid fonts

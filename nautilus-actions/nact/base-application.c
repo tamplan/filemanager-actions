@@ -49,16 +49,17 @@ struct BaseApplicationClassPrivate {
 /* private instance data
  */
 struct BaseApplicationPrivate {
-	gboolean     dispose_has_run;
-	int          argc;
-	gpointer     argv;
-	gboolean     is_gtk_initialized;
-	UniqueApp   *unique_app_handle;
-	int          exit_code;
-	gchar       *exit_message1;
-	gchar       *exit_message2;
-	BaseBuilder *builder;
-	BaseWindow  *main_window;
+	gboolean      dispose_has_run;
+	int           argc;
+	gpointer      argv;
+	GOptionEntry *options;
+	gboolean      is_gtk_initialized;
+	UniqueApp    *unique_app_handle;
+	int           exit_code;
+	gchar        *exit_message1;
+	gchar        *exit_message2;
+	BaseBuilder  *builder;
+	BaseWindow   *main_window;
 };
 
 /* instance properties
@@ -66,6 +67,7 @@ struct BaseApplicationPrivate {
 enum {
 	BASE_APPLICATION_PROP_ARGC_ID = 1,
 	BASE_APPLICATION_PROP_ARGV_ID,
+	BASE_APPLICATION_PROP_OPTIONS_ID,
 	BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID,
 	BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID,
 	BASE_APPLICATION_PROP_EXIT_CODE_ID,
@@ -88,6 +90,7 @@ static void           instance_finalize( GObject *application );
 static gboolean       v_initialize( BaseApplication *application );
 static gboolean       v_initialize_i18n( BaseApplication *application );
 static gboolean       v_initialize_gtk( BaseApplication *application );
+static gboolean       v_manage_options( BaseApplication *application );
 static gboolean       v_initialize_application_name( BaseApplication *application );
 static gboolean       v_initialize_unique_app( BaseApplication *application );
 static gboolean       v_initialize_ui( BaseApplication *application );
@@ -98,6 +101,7 @@ static int            application_do_run( BaseApplication *application );
 static gboolean       application_do_initialize( BaseApplication *application );
 static gboolean       application_do_initialize_i18n( BaseApplication *application );
 static gboolean       application_do_initialize_gtk( BaseApplication *application );
+static gboolean       application_do_manage_options( BaseApplication *application );
 static gboolean       application_do_initialize_application_name( BaseApplication *application );
 static gboolean       application_do_initialize_unique_app( BaseApplication *application );
 static gboolean       application_do_initialize_ui( BaseApplication *application );
@@ -109,6 +113,7 @@ static gboolean       check_for_unique_app( BaseApplication *application );
 static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
 
 static void           display_error_message( BaseApplication *application );
+static gboolean       init_with_args( BaseApplication *application, int *argc, char ***argv, GOptionEntry *entries );
 static void           set_initialize_i18n_error( BaseApplication *application );
 static void           set_initialize_gtk_error( BaseApplication *application );
 static void           set_initialize_unique_app_error( BaseApplication *application );
@@ -177,15 +182,22 @@ class_init( BaseApplicationClass *klass )
 			BASE_APPLICATION_PROP_ARGC,
 			"Command-line arguments count",
 			"Command-line arguments count", 0, 65535, 0,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_ARGC_ID, spec );
 
 	spec = g_param_spec_pointer(
 			BASE_APPLICATION_PROP_ARGV,
 			"Command-line arguments",
 			"A pointer to command-line arguments",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_ARGV_ID, spec );
+
+	spec = g_param_spec_pointer(
+			BASE_APPLICATION_PROP_OPTIONS,
+			"Command-line options",
+			"A pointer to command-line options",
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_OPTIONS_ID, spec );
 
 	spec = g_param_spec_boolean(
 			BASE_APPLICATION_PROP_IS_GTK_INITIALIZED,
@@ -242,6 +254,7 @@ class_init( BaseApplicationClass *klass )
 	klass->initialize = application_do_initialize;
 	klass->initialize_i18n = application_do_initialize_i18n;
 	klass->initialize_gtk = application_do_initialize_gtk;
+	klass->manage_options = application_do_manage_options;
 	klass->initialize_application_name = application_do_initialize_application_name;
 	klass->initialize_unique_app = application_do_initialize_unique_app;
 	klass->initialize_ui = application_do_initialize_ui;
@@ -288,6 +301,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 			case BASE_APPLICATION_PROP_ARGV_ID:
 				g_value_set_pointer( value, self->private->argv );
+				break;
+
+			case BASE_APPLICATION_PROP_OPTIONS_ID:
+				g_value_set_pointer( value, self->private->options );
 				break;
 
 			case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
@@ -342,6 +359,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case BASE_APPLICATION_PROP_ARGV_ID:
 				self->private->argv = g_value_get_pointer( value );
+				break;
+
+			case BASE_APPLICATION_PROP_OPTIONS_ID:
+				self->private->options = g_value_get_pointer( value );
 				break;
 
 			case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
@@ -766,6 +787,19 @@ v_initialize_gtk( BaseApplication *application )
 }
 
 static gboolean
+v_manage_options( BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_v_manage_options";
+	gboolean ok;
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	ok = BASE_APPLICATION_GET_CLASS( application )->manage_options( application );
+
+	return( ok );
+}
+
+static gboolean
 v_initialize_application_name( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_application_name";
@@ -880,8 +914,9 @@ application_do_initialize( BaseApplication *application )
 
 	return(
 			v_initialize_i18n( application ) &&
-			v_initialize_gtk( application ) &&
 			v_initialize_application_name( application ) &&
+			v_initialize_gtk( application ) &&
+			v_manage_options( application ) &&
 			v_initialize_unique_app( application ) &&
 			v_initialize_ui( application ) &&
 			v_initialize_default_icon( application ) &&
@@ -913,18 +948,38 @@ application_do_initialize_gtk( BaseApplication *application )
 	int argc;
 	gpointer argv;
 	gboolean ret;
+	GOptionEntry *options;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	g_object_get( G_OBJECT( application ), BASE_APPLICATION_PROP_ARGC, &argc, BASE_APPLICATION_PROP_ARGV, &argv, NULL );
+	g_object_get( G_OBJECT( application ),
+			BASE_APPLICATION_PROP_ARGC, &argc,
+			BASE_APPLICATION_PROP_ARGV, &argv,
+			BASE_APPLICATION_PROP_OPTIONS, &options,
+			NULL );
 
-	ret = gtk_init_check( &argc, ( char *** ) &argv );
+	if( options ){
+		ret = init_with_args( application, &argc, ( char *** ) &argv, options );
+	} else {
+		ret = gtk_init_check( &argc, ( char *** ) &argv );
+	}
 
 	if( ret ){
-		g_object_set( G_OBJECT( application ), BASE_APPLICATION_PROP_ARGC, argc, BASE_APPLICATION_PROP_ARGV, argv, NULL );
+		application->private->argc = argc;
+		application->private->argv = argv;
 	}
 
 	return( ret );
+}
+
+static gboolean
+application_do_manage_options( BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_do_manage_options";
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	return( TRUE );
 }
 
 static gboolean
@@ -1121,6 +1176,29 @@ display_error_message( BaseApplication *application )
 			}
 		}
 	}
+}
+
+static gboolean
+init_with_args( BaseApplication *application, int *argc, char ***argv, GOptionEntry *entries )
+{
+	static const gchar *thisfn = "base_application_init_with_args";
+	gboolean ret;
+	char *parameter_string;
+	GError *error;
+
+	parameter_string = g_strdup( g_get_application_name());
+	error = NULL;
+
+	ret = gtk_init_with_args( argc, argv, parameter_string, entries, GETTEXT_PACKAGE, &error );
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		ret = FALSE;
+	}
+
+	g_free( parameter_string );
+
+	return( ret );
 }
 
 static void

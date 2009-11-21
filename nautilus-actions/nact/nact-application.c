@@ -39,6 +39,7 @@
 
 #include <runtime/na-iabout.h>
 #include <runtime/na-ipivot-consumer.h>
+#include <runtime/na-utils.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"
@@ -64,6 +65,17 @@ enum {
 
 #define NACT_APPLICATION_PROP_PIVOT		"nact-application-pivot"
 
+static gboolean              st_non_unique_opt = FALSE;
+static gboolean              st_version_opt    = FALSE;
+
+static GOptionEntry          st_entries[] = {
+	{ "non-unique", 'n', 0, G_OPTION_ARG_NONE, &st_non_unique_opt,
+			N_( "Set it to run multiple instances of the program [unique]" ), NULL },
+	{ "version"   , 'v', 0, G_OPTION_ARG_NONE, &st_version_opt,
+			N_( "Output the version number, and exit gracefully [no]" ), NULL },
+	{ NULL }
+};
+
 static BaseApplicationClass *st_parent_class = NULL;
 
 static GType    register_type( void );
@@ -74,6 +86,7 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
+static gboolean appli_manage_options( BaseApplication *application );
 static gboolean appli_initialize_unique_app( BaseApplication *application );
 static gboolean appli_initialize_application( BaseApplication *application );
 static gchar   *appli_get_application_name( BaseApplication *application );
@@ -147,6 +160,7 @@ class_init( NactApplicationClass *klass )
 	klass->private = g_new0( NactApplicationClassPrivate, 1 );
 
 	appli_class = BASE_APPLICATION_CLASS( klass );
+	appli_class->manage_options = appli_manage_options;
 	appli_class->initialize_unique_app = appli_initialize_unique_app;
 	appli_class->initialize_application = appli_initialize_application;
 	appli_class->get_application_name = appli_get_application_name;
@@ -273,6 +287,7 @@ nact_application_new_with_args( int argc, char **argv )
 					NACT_APPLICATION_TYPE,
 					BASE_APPLICATION_PROP_ARGC, argc,
 					BASE_APPLICATION_PROP_ARGV, argv,
+					BASE_APPLICATION_PROP_OPTIONS, st_entries,
 					NULL )
 	);
 }
@@ -297,6 +312,27 @@ nact_application_get_pivot( NactApplication *application )
 	}
 
 	return( pivot );
+}
+
+/*
+ * overriden to manage command-line options
+ */
+static gboolean
+appli_manage_options( BaseApplication *application )
+{
+	gboolean ok;
+
+	/* call parent class */
+	ok = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application );
+
+	if( ok ){
+		if( st_version_opt ){
+			na_utils_print_version();
+			ok = FALSE;
+		}
+	}
+
+	return( ok );
 }
 
 /*
@@ -393,6 +429,10 @@ appli_get_unique_app_name( BaseApplication *application )
 	static const gchar *thisfn = "nact_application_appli_get_unique_app_name";
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	if( st_non_unique_opt ){
+		return( g_strdup( "" ));
+	}
 
 	return( g_strdup( "org.nautilus-actions.ConfigurationTool" ));
 }

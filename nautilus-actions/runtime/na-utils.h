@@ -73,6 +73,10 @@ gboolean na_utils_is_writable_dir( const gchar *uri );
 gchar   *na_utils_path_extract_last_dir( const gchar *path );
 gchar   *na_utils_remove_last_level_from_path( const gchar *path );
 
+/* console utilities
+ */
+void     na_utils_print_version( void );
+
 G_END_DECLS
 
 #endif /* __NA_RUNTIME_UTILS_H__ */

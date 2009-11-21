@@ -39,6 +39,4 @@
 
 void console_init_log_handler( void );
 
-void console_print_version( void );
-
 #endif /* __CONSOLE_UTILS_H__ */

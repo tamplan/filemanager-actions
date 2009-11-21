@@ -152,6 +152,18 @@ typedef struct {
 	gboolean  ( *initialize_gtk )             ( BaseApplication *appli );
 
 	/**
+	 * manage_options:
+	 * @appli: this #BaseApplication instance.
+	 *
+	 * Lets the application an opportunity to manage options entered
+	 * in command-line.
+	 *
+	 * Returns: %TRUE to continue initialization process,
+	 * %FALSE to stop it.
+	 */
+	gboolean  ( *manage_options )             ( BaseApplication *appli );
+
+	/**
 	 * initialize_application_name:
 	 * @appli: this #BaseApplication instance.
 	 *

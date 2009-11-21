@@ -67,6 +67,13 @@ enum {
 #define BASE_APPLICATION_PROP_ARGV					"base-application-argv"
 
 /**
+ * @BASE_APPLICATION_PROP_OPTIONS: command-line options.
+ *
+ * Can be provided at instanciation time only.
+ */
+#define BASE_APPLICATION_PROP_OPTIONS				"base-application-options"
+
+/**
  * @BASE_APPLICATION_PROP_IS_GTK_INITIALIZED: set to %TRUE after
  * successfully returning from the application_initialize_gtk() virtual
  * function.

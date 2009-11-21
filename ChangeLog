@@ -23,6 +23,33 @@
 	* nautilus-actions/private/Makefile.am:
 	Remove useless -DPKGLIBDIR.
 
+	Allow the user to run multiple instances of NACT.
+
+	* nautilus-actions/nact/base-application-class.h (manage_options):
+	New virtual function.
+
+	* nautilus-actions/nact/base-application.c:
+	* nautilus-actions/nact/base-application.h: New entries property.
+
+	* nautilus-actions/nact/base-application.c:
+	argc and argv are now 'contruct only' properties.
+	Accept now an GOptionEntry list as a 'contruct only property'.
+	Check args if GOptionEntry list is not null.
+
+	* nautilus-actions/nact/nact-application.c:
+	Define --version option.
+	Define --non-unique command-line option.
+
+	* nautilus-actions/runtime/na-utils.c:
+	* nautilus-actions/runtime/na-utils.h:
+	* nautilus-actions/utils/console-utils.c:
+	* nautilus-actions/utils/console-utils.h:
+	Move console_print_version() function to na_utils_print_version().
+
+	* nautilus-actions/utils/nautilus-actions-new.c:
+	* nautilus-actions/utils/nautilus-actions-schemas.c:
+	Updated accordingly.
+
 2009-11-20 Pierre Wieser <pwieser@trychlos.org>
 
 	Define functions with actual type for arguments.
