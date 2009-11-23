@@ -161,7 +161,7 @@
                                           <object class="GtkLabel" id="ActionMenuLabelLabel">
                                             <property name="visible">True</property>
                                             <property name="xalign">1</property>
-                                            <property name="label" translatable="yes">_Menu label :</property>
+                                            <property name="label" translatable="yes">_Context label :</property>
                                             <property name="use_underline">True</property>
                                             <property name="mnemonic_widget">ActionMenuLabelEntry</property>
                                           </object>
@@ -244,7 +244,7 @@
                                           <object class="GtkLabel" id="ActionIconLabelLabel">
                                             <property name="visible">True</property>
                                             <property name="xalign">1</property>
-                                            <property name="label" translatable="yes">_Icon label :</property>
+                                            <property name="label" translatable="yes">_Toolbar label :</property>
                                             <property name="use_underline">True</property>
                                             <property name="mnemonic_widget">ActionIconLabelEntry</property>
                                           </object>
