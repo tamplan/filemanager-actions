@@ -82,6 +82,7 @@ GtkWindow       *base_window_get_named_toplevel( BaseWindow *window, const gchar
 BaseWindow      *base_window_get_parent( BaseWindow *window );
 GtkWindow       *base_window_get_toplevel( BaseWindow *window );
 GtkWidget       *base_window_get_widget( BaseWindow *window, const gchar *name );
+gboolean         base_window_is_willing_to_quit( BaseWindow *window );
 
 void             base_window_set_save_window_position( BaseWindow *window, gboolean save );
 

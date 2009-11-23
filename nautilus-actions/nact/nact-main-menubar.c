@@ -774,13 +774,28 @@ static void
 on_save_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_save_activated";
+
+	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
+	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	nact_main_menubar_save_items( window );
+}
+
+/*
+ * saving is not only saving modified items, but also saving hierarchy
+ * (and order if alpha order is not set)
+ */
+void
+nact_main_menubar_save_items( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_menubar_save_items";
 	GList *items, *it;
 	NactApplication *application;
 	NAPivot *pivot;
 	MenubarIndicatorsStruct *mis;
 
-	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	/* delete removed and modified items

@@ -165,6 +165,21 @@ typedef struct {
 	 * the caller.
 	 */
 	gchar *           ( *get_ui_filename )      ( BaseWindow *window );
+
+	/**
+	 * is_willing_to_quit:
+	 * @window: this #BaseWindow instance.
+	 *
+	 * Asks the derived class for the filename of the XML definition of
+	 * the user interface for this window. This XML definition must be
+	 * suitable in order to be loaded via GtkBuilder.
+	 *
+	 * Defaults to application UI filename.
+	 *
+	 * Returns: the filename of the XML definition, to be g_free() by
+	 * the caller.
+	 */
+	gboolean          ( *is_willing_to_quit )   ( BaseWindow *window );
 }
 	BaseWindowClass;
 

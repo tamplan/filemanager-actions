@@ -56,6 +56,7 @@
 #include "nact-main-menubar.h"
 #include "nact-marshal.h"
 #include "nact-main-window.h"
+#include "nact-confirm-logout.h"
 
 /* private class data
  */
@@ -149,6 +150,7 @@ static void     actually_delete_item( NactMainWindow *window, NAObject *item, NA
 
 static gchar   *base_get_toplevel_name( BaseWindow *window );
 static gchar   *base_get_iprefs_window_id( BaseWindow *window );
+static gboolean base_is_willing_to_quit( BaseWindow *window );
 static void     on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data );
 static void     on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data );
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
@@ -323,6 +325,7 @@ class_init( NactMainWindowClass *klass )
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->get_toplevel_name = base_get_toplevel_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
+	base_class->is_willing_to_quit = base_is_willing_to_quit;
 
 	/**
 	 * nact-tab-updatable-selection-changed:
@@ -918,6 +921,22 @@ static gchar *
 base_get_iprefs_window_id( BaseWindow *window )
 {
 	return( g_strdup( "main-window" ));
+}
+
+static gboolean
+base_is_willing_to_quit( BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_is_willing_to_quit";
+	gboolean willing_to;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	willing_to = TRUE;
+	if( nact_main_window_has_modified_items( NACT_MAIN_WINDOW( window ))){
+		willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
+	}
+
+	return( willing_to );
 }
 
 /*

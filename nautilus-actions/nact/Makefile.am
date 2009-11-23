@@ -30,12 +30,15 @@ bin_PROGRAMS = \
 	nautilus-actions-config-tool								\
 	$(NULL)
 
+egg_platform_defines = -DEGG_SM_CLIENT_BACKEND_XSMP
+
 AM_CPPFLAGS += \
 	-I $(top_srcdir)											\
 	-I $(top_srcdir)/nautilus-actions							\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
 	-DPKGDATADIR=\"$(pkgdatadir)\"								\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"						\
+	$(egg_platform_defines)										\
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
@@ -59,6 +62,12 @@ nautilus_actions_config_tool_SOURCES = \
 	base-window.c												\
 	base-window.h												\
 	base-window-class.h											\
+	egg-desktop-file.c											\
+	egg-desktop-file.h											\
+	egg-sm-client.c												\
+	egg-sm-client.h												\
+	egg-sm-client-private.h										\
+	egg-sm-client-xsmp.c										\
 	egg-tree-multi-dnd.c										\
 	egg-tree-multi-dnd.h										\
 	nact-application.c											\
@@ -73,6 +82,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-assistant-import-ask.h									\
 	nact-clipboard.c											\
 	nact-clipboard.h											\
+	nact-confirm-logout.c										\
+	nact-confirm-logout.h										\
 	nact-iactions-list.c										\
 	nact-iactions-list.h										\
 	nact-iaction-tab.c											\

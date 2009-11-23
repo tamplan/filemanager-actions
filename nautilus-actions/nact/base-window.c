@@ -123,6 +123,7 @@ static void             window_do_runtime_init_toplevel( BaseWindow *window, gpo
 static void             window_do_all_widgets_showed( BaseWindow *window, gpointer user_data );
 static gboolean         window_do_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 static gboolean         window_do_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
+static gboolean         window_do_is_willing_to_quit( BaseWindow *window );
 
 static gboolean         is_main_window( BaseWindow *window );
 static gboolean         is_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel );
@@ -262,6 +263,7 @@ class_init( BaseWindowClass *klass )
 	klass->get_toplevel_name = NULL;
 	klass->get_iprefs_window_id = NULL;
 	klass->get_ui_filename = NULL;
+	klass->is_willing_to_quit = window_do_is_willing_to_quit;
 
 	/**
 	 * nact-signal-base-window-initial-load:
@@ -813,6 +815,32 @@ base_window_get_widget( BaseWindow *window, const gchar *name )
 	return( widget );
 }
 
+/**
+ * base_window_is_willing_to_quit:
+ * @window: this #BaseWindow instance.
+ *
+ * Returns: %TRUE if the application is willing to quit, %FALSE else.
+ *
+ * This function is called when the session manager detects the end of
+ * session and thus asks its client if they are willing to quit.
+ */
+gboolean
+base_window_is_willing_to_quit( BaseWindow *window )
+{
+	gboolean willing_to = TRUE;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), willing_to );
+
+	if( !window->private->dispose_has_run ){
+
+		if( BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit ){
+			willing_to = BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit( window );
+		}
+	}
+
+	return( willing_to );
+}
+
 /*
  * handler of "delete-event" message
  * let a chance to derived class to handle it
@@ -1084,6 +1112,16 @@ window_do_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event
 	g_return_val_if_fail( GTK_IS_WINDOW( toplevel ), FALSE );
 
 	return( FALSE );
+}
+
+static gboolean
+window_do_is_willing_to_quit( BaseWindow *window )
+{
+	static const gchar *thisfn = "base_window_do_is_willing_to_quit";
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	return( TRUE );
 }
 
 static gboolean

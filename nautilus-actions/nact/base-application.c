@@ -39,6 +39,7 @@
 
 #include "base-application.h"
 #include "base-window.h"
+#include "egg-sm-client.h"
 
 /* private class data
  */
@@ -60,6 +61,7 @@ struct BaseApplicationPrivate {
 	gchar        *exit_message2;
 	BaseBuilder  *builder;
 	BaseWindow   *main_window;
+	EggSMClient  *sm_client;
 };
 
 /* instance properties
@@ -92,6 +94,7 @@ static gboolean       v_initialize_i18n( BaseApplication *application );
 static gboolean       v_initialize_gtk( BaseApplication *application );
 static gboolean       v_manage_options( BaseApplication *application );
 static gboolean       v_initialize_application_name( BaseApplication *application );
+static gboolean       v_initialize_session_manager( BaseApplication *application );
 static gboolean       v_initialize_unique_app( BaseApplication *application );
 static gboolean       v_initialize_ui( BaseApplication *application );
 static gboolean       v_initialize_default_icon( BaseApplication *application );
@@ -103,6 +106,7 @@ static gboolean       application_do_initialize_i18n( BaseApplication *applicati
 static gboolean       application_do_initialize_gtk( BaseApplication *application );
 static gboolean       application_do_manage_options( BaseApplication *application );
 static gboolean       application_do_initialize_application_name( BaseApplication *application );
+static gboolean       application_do_initialize_session_manager( BaseApplication *application );
 static gboolean       application_do_initialize_unique_app( BaseApplication *application );
 static gboolean       application_do_initialize_ui( BaseApplication *application );
 static gboolean       application_do_initialize_default_icon( BaseApplication *application );
@@ -110,8 +114,9 @@ static gboolean       application_do_initialize_application( BaseApplication *ap
 
 static gboolean       check_for_unique_app( BaseApplication *application );
 /*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
-static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
 
+static void           client_quit_requested_cb( EggSMClient *client, BaseApplication *application );
+static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
 static void           display_error_message( BaseApplication *application );
 static gboolean       init_with_args( BaseApplication *application, int *argc, char ***argv, GOptionEntry *entries );
 static void           set_initialize_i18n_error( BaseApplication *application );
@@ -256,6 +261,7 @@ class_init( BaseApplicationClass *klass )
 	klass->initialize_gtk = application_do_initialize_gtk;
 	klass->manage_options = application_do_manage_options;
 	klass->initialize_application_name = application_do_initialize_application_name;
+	klass->initialize_session_manager = application_do_initialize_session_manager;
 	klass->initialize_unique_app = application_do_initialize_unique_app;
 	klass->initialize_ui = application_do_initialize_ui;
 	klass->initialize_default_icon = application_do_initialize_default_icon;
@@ -422,6 +428,10 @@ instance_dispose( GObject *application )
 
 		if( GTK_IS_BUILDER( self->private->builder )){
 			g_object_unref( self->private->builder );
+		}
+
+		if( self->private->sm_client ){
+			g_object_unref( self->private->sm_client );
 		}
 
 		/* chain up to the parent class */
@@ -813,6 +823,19 @@ v_initialize_application_name( BaseApplication *application )
 }
 
 static gboolean
+v_initialize_session_manager( BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_v_initialize_session_manager";
+	gboolean ok;
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	ok = BASE_APPLICATION_GET_CLASS( application )->initialize_session_manager( application );
+
+	return( ok );
+}
+
+static gboolean
 v_initialize_unique_app( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_unique_app";
@@ -917,6 +940,7 @@ application_do_initialize( BaseApplication *application )
 			v_initialize_application_name( application ) &&
 			v_initialize_gtk( application ) &&
 			v_manage_options( application ) &&
+			v_initialize_session_manager( application ) &&
 			v_initialize_unique_app( application ) &&
 			v_initialize_ui( application ) &&
 			v_initialize_default_icon( application ) &&
@@ -997,6 +1021,28 @@ application_do_initialize_application_name( BaseApplication *application )
 	g_free( name );
 
 	return( TRUE );
+}
+
+static gboolean
+application_do_initialize_session_manager( BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_do_initialize_session_manager";
+	gboolean ret = TRUE;
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	egg_sm_client_set_mode( EGG_SM_CLIENT_MODE_NO_RESTART );
+	application->private->sm_client = egg_sm_client_get();
+	egg_sm_client_startup();
+	g_debug( "%s: sm_client=%p", thisfn, ( void * ) application->private->sm_client );
+
+	g_signal_connect(
+			application->private->sm_client,
+	        "quit-requested",
+	        G_CALLBACK( client_quit_requested_cb ),
+	        application );
+
+	return( ret );
 }
 
 static gboolean
@@ -1130,6 +1176,21 @@ on_unique_message_received(
 
 	return( resp );
 }*/
+
+static void
+client_quit_requested_cb( EggSMClient *client, BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_client_quit_requested_cb";
+	gboolean willing_to = TRUE;
+
+	g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
+
+	if( BASE_IS_WINDOW( application->private->main_window )){
+		willing_to = base_window_is_willing_to_quit( application->private->main_window );
+	}
+
+	egg_sm_client_will_quit( client, willing_to );
+}
 
 static gint
 display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second )

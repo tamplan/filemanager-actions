@@ -48,8 +48,6 @@
 
 - have a visual indication of the sort order in the tree
 
-- use eggsmclient
-
 - when a unique app is found, use libwnck (?) to activate it
 
 - have a preference for modified and invalid fonts
@@ -88,3 +86,5 @@
 
 - bug when dnd to nautilus
   see https://bugzilla.gnome.org/show_bug.cgi?id=593453
+
+- nact: menu label/icon label -> context label/toolbar label

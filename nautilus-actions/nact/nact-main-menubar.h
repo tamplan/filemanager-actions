@@ -49,6 +49,7 @@ void     nact_main_menubar_runtime_init( NactMainWindow *window );
 void     nact_main_menubar_dispose( NactMainWindow *window );
 gboolean nact_main_menubar_is_pasted_object_relabeled( NAObject *object, NAPivot *pivot );
 void     nact_main_menubar_open_popup( NactMainWindow *window, GdkEventButton *event );
+void     nact_main_menubar_save_items( NactMainWindow *window );
 
 G_END_DECLS
 

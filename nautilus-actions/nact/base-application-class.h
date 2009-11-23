@@ -199,6 +199,16 @@ typedef struct {
 	gboolean  ( *initialize_unique_app )      ( BaseApplication *appli );
 
 	/**
+	 * initialize_session_manager:
+	 * @appli: this #BaseApplication instance.
+	 *
+	 * Initializes the Egg session manager.
+	 *
+	 * Returns: %TRUE.
+	 */
+	gboolean  ( *initialize_session_manager ) ( BaseApplication *appli );
+
+	/**
 	 * initialize_ui:
 	 * @appli: this #BaseApplication instance.
 	 *

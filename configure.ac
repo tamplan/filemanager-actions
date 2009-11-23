@@ -28,7 +28,7 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([Nautilus-Actions],[2.29.2-provider],[maintainer@nautilus-actions.org])
+AC_INIT([Nautilus-Actions],[1.13.3],[maintainer@nautilus-actions.org])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
 
@@ -142,6 +142,7 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 	gconf-2.0				>= ${GCONF_REQUIRED}		\
 	libxml-2.0				>= ${LIBXML_REQUIRED}		\
 	libnautilus-extension	>= ${NAUTILUS_EXTENSION}	\
+	sm						>= 1.0.0					\
 	uuid												\
 	unique-1.0
 )

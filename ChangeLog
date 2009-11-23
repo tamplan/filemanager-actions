@@ -1,3 +1,41 @@
+2009-11-23 Pierre Wieser <pwieser@trychlos.org>
+
+	Ask the user to confirm on logout.
+
+	* nautilus-actions/nact/base-application-class.h:
+	* nautilus-actions/nact/base-application.c
+	(initialize_session_manager): New class function.
+	Instantiate and initialize an EggSMClient-derived object.
+
+	* nautilus-actions/nact/base-window-class.h:
+	* nautilus-actions/nact/base-window.c
+	(is_willing_to_quit): New class function.
+
+	* nautilus-actions/nact/base-window.h (base_window_is_willing_to_quit):
+	Returns TRUE if application is willing to quit on logout.
+
+	* nautilus-actions/nact/nact-main-window.c:
+	Ask the user for a confirmation when sessions ends will modifications
+	are pending.
+
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-menubar.h
+	(nact_main_menubar_save_items): New public function.
+
+	* nautilus-actions/nact/egg-desktop-file.c:
+	* nautilus-actions/nact/egg-desktop-file.h:
+	* nautilus-actions/nact/egg-sm-client-private.h:
+	* nautilus-actions/nact/egg-sm-client-xsmp.c:
+	* nautilus-actions/nact/egg-sm-client.c:
+	* nautilus-actions/nact/egg-sm-client.h:
+	* nautilus-actions/nact/nact-confirm-logout.c:
+	* nautilus-actions/nact/nact-confirm-logout.h: New files.
+
+	* nautilus-actions/nact/Makefile.am: Updated accordingly.
+
+	* nautilus-actions/nact/nautilus-actions-config-tool.ui
+	(ConfirmLogoutDialog): New dialog.
+
 2009-11-21 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nact-iaction-tab.c
