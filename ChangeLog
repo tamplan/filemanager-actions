@@ -1,5 +1,15 @@
 2009-11-24 Pierre Wieser <pwieser@trychlos.org>
 
+	Have smaller sources in NagpGConfProvider.
+	Remove na-utils dependancy.
+
+	* nautilus-actions/io-provider-gconf/nagp-read.c:
+	* nautilus-actions/io-provider-gconf/nagp-read.h:
+	* nautilus-actions/io-provider-gconf/nagp-write.c:
+	* nautilus-actions/io-provider-gconf/nagp-write.h: New files.
+
+	* nautilus-actions/io-provider-gconf/Makefile.am: Updated accordingly.
+
 	* configure.ac: Remove useless gthread dependancy.
 
 	* nautilus-actions/io-provider-gconf/Makefile.am:

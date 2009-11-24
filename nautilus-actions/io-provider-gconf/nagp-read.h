@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_GCONF_PROVIDER_H__
-#define __NAGP_GCONF_PROVIDER_H__
+#ifndef __NAGP_READ_H__
+#define __NAGP_READ_H__
 
 /**
  * SECTION: nagp_gconf_provider
@@ -44,48 +44,12 @@
  * tree. Modifications are notified to the NAIIOProvider interface.
  */
 
-#include <glib.h>
-#include <glib-object.h>
-#include <gconf/gconf-client.h>
+#include <nautilus-actions/api/na-iio-provider.h>
 
 G_BEGIN_DECLS
 
-#define NAGP_GCONF_PROVIDER_TYPE				( nagp_gconf_provider_get_type())
-#define NAGP_GCONF_PROVIDER( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NAGP_GCONF_PROVIDER_TYPE, NagpGConfProvider ))
-#define NAGP_GCONF_PROVIDER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NAGP_GCONF_PROVIDER_TYPE, NagpGConfProviderClass ))
-#define NAGP_IS_GCONF_PROVIDER( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NAGP_GCONF_PROVIDER_TYPE ))
-#define NAGP_IS_GCONF_PROVIDER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAGP_GCONF_PROVIDER_TYPE ))
-#define NAGP_GCONF_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAGP_GCONF_PROVIDER_TYPE, NagpGConfProviderClass ))
-
-/* private instance data
- */
-typedef struct NagpGConfProviderPrivate {
-	gboolean     dispose_has_run;
-	GConfClient *gconf;
-	GList       *monitors;
-	GTimeVal     last_event;
-	guint        event_source_id;
-	gchar       *last_triggered_id;
-}
-	NagpGConfProviderPrivate;
-
-typedef struct {
-	GObject                   parent;
-	NagpGConfProviderPrivate *private;
-}
-	NagpGConfProvider;
-
-typedef struct NagpGConfProviderClassPrivate NagpGConfProviderClassPrivate;
-
-typedef struct {
-	GObjectClass                   parent;
-	NagpGConfProviderClassPrivate *private;
-}
-	NagpGConfProviderClass;
-
-GType nagp_gconf_provider_get_type     ( void );
-void  nagp_gconf_provider_register_type( GTypeModule *module );
+GList *nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
 
 G_END_DECLS
 
-#endif /* __NAGP_GCONF_PROVIDER_H__ */
+#endif /* __NAGP_READ_H__ */

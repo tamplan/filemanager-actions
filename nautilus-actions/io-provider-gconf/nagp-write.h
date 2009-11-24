@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_GCONF_PROVIDER_H__
-#define __NAGP_GCONF_PROVIDER_H__
+#ifndef __NAGP_WRITE_H__
+#define __NAGP_WRITE_H__
 
 /**
  * SECTION: nagp_gconf_provider
@@ -44,48 +44,23 @@
  * tree. Modifications are notified to the NAIIOProvider interface.
  */
 
-#include <glib.h>
-#include <glib-object.h>
-#include <gconf/gconf-client.h>
+#include <nautilus-actions/api/na-iio-provider.h>
+#include <nautilus-actions/api/na-object-api.h>
+
+#include "nagp-gconf-provider.h"
 
 G_BEGIN_DECLS
 
-#define NAGP_GCONF_PROVIDER_TYPE				( nagp_gconf_provider_get_type())
-#define NAGP_GCONF_PROVIDER( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NAGP_GCONF_PROVIDER_TYPE, NagpGConfProvider ))
-#define NAGP_GCONF_PROVIDER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NAGP_GCONF_PROVIDER_TYPE, NagpGConfProviderClass ))
-#define NAGP_IS_GCONF_PROVIDER( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NAGP_GCONF_PROVIDER_TYPE ))
-#define NAGP_IS_GCONF_PROVIDER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAGP_GCONF_PROVIDER_TYPE ))
-#define NAGP_GCONF_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAGP_GCONF_PROVIDER_TYPE, NagpGConfProviderClass ))
+gboolean nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider );
 
-/* private instance data
- */
-typedef struct NagpGConfProviderPrivate {
-	gboolean     dispose_has_run;
-	GConfClient *gconf;
-	GList       *monitors;
-	GTimeVal     last_event;
-	guint        event_source_id;
-	gchar       *last_triggered_id;
-}
-	NagpGConfProviderPrivate;
+gboolean nagp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item );
 
-typedef struct {
-	GObject                   parent;
-	NagpGConfProviderPrivate *private;
-}
-	NagpGConfProvider;
+gboolean nagp_key_is_writable( NagpGConfProvider *gconf, const gchar *path );
 
-typedef struct NagpGConfProviderClassPrivate NagpGConfProviderClassPrivate;
+guint    nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **message );
 
-typedef struct {
-	GObjectClass                   parent;
-	NagpGConfProviderClassPrivate *private;
-}
-	NagpGConfProviderClass;
-
-GType nagp_gconf_provider_get_type     ( void );
-void  nagp_gconf_provider_register_type( GTypeModule *module );
+guint    nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **message );
 
 G_END_DECLS
 
-#endif /* __NAGP_GCONF_PROVIDER_H__ */
+#endif /* __NAGP_WRITE_H__ */

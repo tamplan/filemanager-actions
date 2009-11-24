@@ -42,6 +42,10 @@ libna_io_provider_gconf_la_SOURCES = \
 	nagp-gconf-provider.h										\
 	nagp-keys.h													\
 	nagp-module.c												\
+	nagp-read.c													\
+	nagp-read.h													\
+	nagp-write.c												\
+	nagp-write.h												\
 	$(NULL)
 
 libna_io_provider_gconf_la_LIBADD = \
