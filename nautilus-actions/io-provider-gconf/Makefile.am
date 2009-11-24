@@ -32,6 +32,7 @@ plugins_LTLIBRARIES=libna-io-provider-gconf.la
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)											\
+	-I $(top_srcdir)/nautilus-actions							\
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_PROVIDER_GCONF}\"		\
 	$(NULL)

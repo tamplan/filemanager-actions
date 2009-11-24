@@ -1,5 +1,12 @@
 2009-11-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Remove useless gthread dependancy.
+
+	* nautilus-actions/io-provider-gconf/Makefile.am:
+	Add nautilus-actions/ to include path (fix make distcheck).
+
+	* po/POTFILES.in: Add two new files (fix make distcheck).
+
 	na_pivot_new no more takes an argument.
 
 	* nautilus-actions/nact/nact-application.c

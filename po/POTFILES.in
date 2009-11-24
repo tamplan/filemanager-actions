@@ -2,6 +2,8 @@ data/nautilus-actions.schemas.in
 nautilus-actions/nact/base-application.c
 nautilus-actions/nact/base-assistant.c
 nautilus-actions/nact/base-window.c
+nautilus-actions/nact/egg-desktop-file.c
+nautilus-actions/nact/egg-sm-client.c
 nautilus-actions/nact/nact-application.c
 nautilus-actions/nact/nact-assistant-export.c
 nautilus-actions/nact/nact-assistant-export.ui
