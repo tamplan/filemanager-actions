@@ -26,14 +26,30 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-SUBDIRS = \
-	api							\
-	private						\
-	runtime						\
-	io-provider-desktop			\
-	io-provider-gconf			\
-	nact						\
-	plugin						\
-	test						\
-	utils						\
+pluginsdir = $(pkglibdir)
+
+plugins_LTLIBRARIES=libna-io-provider-desktop.la
+
+AM_CPPFLAGS += \
+	-I $(top_srcdir)											\
+	$(NAUTILUS_ACTIONS_CFLAGS)									\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_PROVIDER_DESKTOP}\"		\
+	$(NULL)
+
+libna_io_provider_desktop_la_SOURCES = \
+	nadp-desktop-provider.c										\
+	nadp-desktop-provider.h										\
+	nadp-module.c												\
+	$(NULL)
+
+libna_io_provider_desktop_la_LIBADD = \
+	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
+	$(NULL)
+
+VERSION_INFO = 1:0:0
+libna_io_provider_desktop_la_LDFLAGS = \
+	-module 													\
+	-no-undefined												\
+	-version-number $(VERSION_INFO)								\
 	$(NULL)

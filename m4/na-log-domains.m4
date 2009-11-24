@@ -8,6 +8,9 @@ AC_DEFUN([NA_LOG_DOMAINS],[
 	AC_SUBST([NA_LOGDOMAIN_API],[NA-api])
 	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_API],["NA-api"],[Log domain of API library])
 
+	AC_SUBST([NA_LOGDOMAIN_IO_PROVIDER_DESKTOP],[NA-io-provider-desktop])
+	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_IO_PROVIDER_DESKTOP],["NA-io-provider-desktop"],[Log domain of desktop IO Provider])
+
 	AC_SUBST([NA_LOGDOMAIN_IO_PROVIDER_GCONF],[NA-io-provider-gconf])
 	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_IO_PROVIDER_GCONF],["NA-io-provider-gconf"],[Log domain of GConf IO Provider])
 

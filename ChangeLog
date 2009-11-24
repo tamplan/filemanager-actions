@@ -1,5 +1,18 @@
 2009-11-24 Pierre Wieser <pwieser@trychlos.org>
 
+	Create NadpDesktopProvider module.
+
+	* nautilus-actions/io-provider-desktop/Makefile.am:
+	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.c:
+	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.h:
+	* nautilus-actions/io-provider-desktop/nadp-module.c: New files.
+
+	* configure.ac:
+	* nautilus-actions/Makefile.am: Updated accordingly.
+
+	* m4/na-log-domains.m4:
+	Define new NA_LOGDOMAIN_DESKTOP_PROVIDER log domain.
+
 	Have smaller sources in NagpGConfProvider.
 	Remove na-utils dependancy.
 
