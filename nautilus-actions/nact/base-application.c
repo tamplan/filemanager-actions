@@ -115,6 +115,7 @@ static gboolean       application_do_initialize_application( BaseApplication *ap
 static gboolean       check_for_unique_app( BaseApplication *application );
 /*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
 
+static void           client_quit_cb( EggSMClient *client, BaseApplication *application );
 static void           client_quit_requested_cb( EggSMClient *client, BaseApplication *application );
 static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
 static void           display_error_message( BaseApplication *application );
@@ -1042,6 +1043,12 @@ application_do_initialize_session_manager( BaseApplication *application )
 	        G_CALLBACK( client_quit_requested_cb ),
 	        application );
 
+	g_signal_connect(
+			application->private->sm_client,
+	        "quit",
+	        G_CALLBACK( client_quit_cb ),
+	        application );
+
 	return( ret );
 }
 
@@ -1176,6 +1183,19 @@ on_unique_message_received(
 
 	return( resp );
 }*/
+
+static void
+client_quit_cb( EggSMClient *client, BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_client_quit_cb";
+
+	g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
+
+	if( BASE_IS_WINDOW( application->private->main_window )){
+		g_object_unref( application->private->main_window );
+		application->private->main_window = NULL;
+	}
+}
 
 static void
 client_quit_requested_cb( EggSMClient *client, BaseApplication *application )

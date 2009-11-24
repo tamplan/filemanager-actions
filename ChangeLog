@@ -1,3 +1,8 @@
+2009-11-24 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/nact/base-application.c:
+	Gracefully terminates the application on SMClient quit signal.
+
 2009-11-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nautilus-actions-config-tool.ui:
@@ -18,7 +23,7 @@
 	Returns TRUE if application is willing to quit on logout.
 
 	* nautilus-actions/nact/nact-main-window.c:
-	Ask the user for a confirmation when sessions ends will modifications
+	Ask the user for a confirmation when sessions ends while modifications
 	are pending.
 
 	* nautilus-actions/nact/nact-main-menubar.c:
