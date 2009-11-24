@@ -672,4 +672,9 @@ na_utils_print_version( void )
 	g_print( "redistribute copies of %s under the terms of the GNU General Public\n", PACKAGE_NAME );
 	g_print( "License (see COPYING).\n" );
 	g_print( "\n" );
+
+	g_debug( "Current system runs Glib %d.%d.%d, Gtk+ %d.%d.%d",
+			glib_major_version, glib_minor_version, glib_micro_version,
+			gtk_major_version, gtk_minor_version, gtk_micro_version );
+	g_debug( "%s", "" );
 }
