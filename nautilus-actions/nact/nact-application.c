@@ -394,7 +394,7 @@ appli_initialize_application( BaseApplication *application )
 	fake = na_object_action_new();
 	g_object_unref( fake );
 
-	NACT_APPLICATION( application )->private->pivot = na_pivot_new( NULL );
+	NACT_APPLICATION( application )->private->pivot = na_pivot_new();
 
 	/* call parent class */
 	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_application( application );

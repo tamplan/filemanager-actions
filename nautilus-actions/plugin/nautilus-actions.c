@@ -217,7 +217,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	/* initialize NAPivot and load actions through NAIIOProvider interface
 	 * forwarding notification messages from NAPivot to NautilusActions
 	 */
-	self->private->pivot = na_pivot_new( NA_IPIVOT_CONSUMER( self ));
+	self->private->pivot = na_pivot_new();
+	na_pivot_register_consumer( self->private->pivot, NA_IPIVOT_CONSUMER( self ));
 	na_pivot_set_automatic_reload( self->private->pivot, TRUE );
 	na_pivot_check_status( self->private->pivot );
 }

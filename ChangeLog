@@ -1,5 +1,15 @@
 2009-11-24 Pierre Wieser <pwieser@trychlos.org>
 
+	na_pivot_new no more takes an argument.
+
+	* nautilus-actions/nact/nact-application.c
+	(appli_initialize_application):
+	* nautilus-actions/plugin/nautilus-actions.c (instance_init):
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h (na_pivot_new):
+	* nautilus-actions/utils/nautilus-actions-new.c (write_to_gconf):
+	Updated accordingly.
+
 	* nautilus-actions/runtime/na-utils.c (na_utils_print_version):
 	Displays current GLib and Gtk+ runtime library versions.
 

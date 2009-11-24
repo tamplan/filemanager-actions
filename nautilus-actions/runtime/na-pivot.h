@@ -109,7 +109,7 @@ typedef struct {
 
 GType         na_pivot_get_type( void );
 
-NAPivot      *na_pivot_new( const NAIPivotConsumer *notified );
+NAPivot      *na_pivot_new( void );
 void          na_pivot_check_status( const NAPivot *pivot );
 void          na_pivot_dump( const NAPivot *pivot );
 

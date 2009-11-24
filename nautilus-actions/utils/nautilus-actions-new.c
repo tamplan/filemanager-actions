@@ -374,7 +374,7 @@ write_to_gconf( NAObjectAction *action, GSList **msg )
 	GObject *provider;
 	guint ret;
 
-	pivot = na_pivot_new( NULL );
+	pivot = na_pivot_new();
 	provider = na_pivot_get_provider( pivot, NA_IIO_PROVIDER_TYPE );
 
 	na_object_set_provider( action, NA_IIO_PROVIDER( provider ));

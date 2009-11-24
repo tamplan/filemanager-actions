@@ -283,24 +283,20 @@ instance_finalize( GObject *object )
 
 /**
  * na_pivot_new:
- * @target: a GObject which wishes be notified of any modification of
- * an action in any of the underlying I/O storage subsystems.
  *
- * Allocates a new #NAPivot object.
+ * Returns: a newly allocated #NAPivot object.
  *
- * The target object should implement NAIPivotConsumer interface.
- * It will be triggered on changes on IIOProviders and runtime
- * preferences.
+ * The returned #NAPivot is initialized with the current list of
+ * #NAObjectItem-derived object.
  */
 NAPivot *
-na_pivot_new( const NAIPivotConsumer *target )
+na_pivot_new( void )
 {
 	static const gchar *thisfn = "na_pivot_new";
 	NAPivot *pivot;
 	GSList *messages, *im;
 
-	g_debug( "%s: target=%p", thisfn, ( void * ) target );
-	g_return_val_if_fail( NA_IS_IPIVOT_CONSUMER( target ) || !target, NULL );
+	g_debug( "%s", thisfn );
 
 	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
 
@@ -308,10 +304,6 @@ na_pivot_new( const NAIPivotConsumer *target )
 	na_io_provider_register_callbacks( pivot );
 	/*g_debug( "%s: modules=%p, count=%d",
 			thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));*/
-
-	if( target ){
-		na_pivot_register_consumer( pivot, target );
-	}
 
 	monitor_runtime_preferences( pivot );
 
