@@ -86,3 +86,7 @@
   see https://bugzilla.gnome.org/show_bug.cgi?id=593453
 
 - nautilus: doesn't refresh toolbar when an item is updated
+
+- have a preference to record default schemes
+
+- have a preference to record order of IO Providers

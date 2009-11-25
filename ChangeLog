@@ -1,3 +1,12 @@
+2009-11-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/io-provider-desktop/egg-desktop-file.c:
+	* nautilus-actions/io-provider-desktop/egg-desktop-file.h:
+	New files.
+
+	* nautilus-actions/io-provider-desktop/Makefile.am:
+	Updated accordingly.
+
 2009-11-24 Pierre Wieser <pwieser@trychlos.org>
 
 	Create NadpDesktopProvider module.
