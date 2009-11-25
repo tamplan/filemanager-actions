@@ -88,6 +88,8 @@ nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 		g_free( key );
 	}
 
+	g_debug( "%s: provider=%p, willing_to=%s", thisfn, ( void * ) provider, willing_to ? "True":"False" );
+
 	return( willing_to );
 }
 
@@ -102,6 +104,7 @@ nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 gboolean
 nagp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
 {
+	static const gchar *thisfn = "nagp_write_iio_provider_is_writable";
 	NagpGConfProvider *self;
 	gboolean willing_to = FALSE;
 	NAIIOProvider *origin;
@@ -120,6 +123,9 @@ nagp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem
 			willing_to = nagp_iio_provider_is_willing_to_write( provider );
 		}
 	}
+
+	g_debug( "%s: provider=%p, item=%p, writable=%s",
+			thisfn, ( void * ) provider, ( void * ) item, willing_to ? "True":"False" );
 
 	return( willing_to );
 }
