@@ -51,7 +51,6 @@ struct NAObjectActionClassPrivate {
  */
 enum {
 	NAACTION_PROP_VERSION_ID = 1,
-	NAACTION_PROP_READONLY_ID,
 	NAACTION_PROP_LAST_ALLOCATED_ID,
 	NAACTION_PROP_TARGET_SELECTION_ID,
 	NAACTION_PROP_TARGET_BACKGROUND_ID,
@@ -137,13 +136,6 @@ class_init( NAObjectActionClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAACTION_PROP_VERSION_ID, spec );
 
-	spec = g_param_spec_boolean(
-			NAACTION_PROP_READONLY,
-			"Read-only flag",
-			"Is this action only readable", FALSE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAACTION_PROP_READONLY_ID, spec );
-
 	spec = g_param_spec_int(
 			NAACTION_PROP_LAST_ALLOCATED,
 			"Last allocated counter",
@@ -216,7 +208,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	/* initialize suitable default values
 	 */
 	self->private->version = g_strdup( NAUTILUS_ACTIONS_CONFIG_VERSION );
-	self->private->read_only = FALSE;
 	self->private->last_allocated = 0;
 	self->private->target_selection = TRUE;
 	self->private->target_background = FALSE;
@@ -238,10 +229,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 		switch( property_id ){
 			case NAACTION_PROP_VERSION_ID:
 				g_value_set_string( value, self->private->version );
-				break;
-
-			case NAACTION_PROP_READONLY_ID:
-				g_value_set_boolean( value, self->private->read_only );
 				break;
 
 			case NAACTION_PROP_LAST_ALLOCATED_ID:
@@ -289,10 +276,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			case NAACTION_PROP_VERSION_ID:
 				g_free( self->private->version );
 				self->private->version = g_value_dup_string( value );
-				break;
-
-			case NAACTION_PROP_READONLY_ID:
-				self->private->read_only = g_value_get_boolean( value );
 				break;
 
 			case NAACTION_PROP_LAST_ALLOCATED_ID:
@@ -456,30 +439,6 @@ na_object_action_get_version( const NAObjectAction *action )
 }
 
 /**
- * na_object_action_is_readonly:
- * @action: the #NAObjectAction object to be requested.
- *
- * Is the specified action only readable ?
- * Or, in other words, may this action be edited and then saved to the
- * original I/O storage subsystem ?
- *
- * Returns: %TRUE if the action is read-only, %FALSE else.
- */
-gboolean
-na_object_action_is_readonly( const NAObjectAction *action )
-{
-	gboolean readonly = FALSE;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
-
-	if( !action->private->dispose_has_run ){
-		g_object_get( G_OBJECT( action ), NAACTION_PROP_READONLY, &readonly, NULL );
-	}
-
-	return( readonly );
-}
-
-/**
  * na_object_action_is_target_selection:
  * @action: the #NAObjectAction to be requested.
  *
@@ -624,23 +583,6 @@ na_object_action_set_version( NAObjectAction *action, const gchar *version )
 
 	if( !action->private->dispose_has_run ){
 		g_object_set( G_OBJECT( action ), NAACTION_PROP_VERSION, version, NULL );
-	}
-}
-
-/**
- * na_object_action_set_readonly:
- * @action: the #NAObjectAction object to be updated.
- * @readonly: the indicator to be set.
- *
- * Sets whether the action is readonly.
- */
-void
-na_object_action_set_readonly( NAObjectAction *action, gboolean readonly )
-{
-	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
-
-	if( !action->private->dispose_has_run ){
-		g_object_set( G_OBJECT( action ), NAACTION_PROP_READONLY, readonly, NULL );
 	}
 }
 
@@ -865,7 +807,6 @@ object_dump( const NAObject *action )
 	if( !self->private->dispose_has_run ){
 
 		g_debug( "%s:           version='%s'", thisfn, self->private->version );
-		g_debug( "%s:         read-only='%s'", thisfn, self->private->read_only ? "True" : "False" );
 		g_debug( "%s:    last-allocated=%d", thisfn, self->private->last_allocated );
 		g_debug( "%s:  target-selection='%s'", thisfn, self->private->target_selection ? "True" : "False" );
 		g_debug( "%s: target-background='%s'", thisfn, self->private->target_background ? "True" : "False" );
@@ -885,7 +826,6 @@ void
 object_copy( NAObject *target, const NAObject *source )
 {
 	gchar *version;
-	gboolean readonly;
 	gint last_allocated;
 	GList *profiles, *ip;
 	gboolean target_selection, target_background, target_toolbar;
@@ -900,7 +840,6 @@ object_copy( NAObject *target, const NAObject *source )
 
 		g_object_get( G_OBJECT( source ),
 				NAACTION_PROP_VERSION, &version,
-				NAACTION_PROP_READONLY, &readonly,
 				NAACTION_PROP_LAST_ALLOCATED, &last_allocated,
 				NAACTION_PROP_TARGET_SELECTION, &target_selection,
 				NAACTION_PROP_TARGET_BACKGROUND, &target_background,
@@ -911,7 +850,6 @@ object_copy( NAObject *target, const NAObject *source )
 
 		g_object_set( G_OBJECT( target ),
 				NAACTION_PROP_VERSION, version,
-				NAACTION_PROP_READONLY, readonly,
 				NAACTION_PROP_LAST_ALLOCATED, last_allocated,
 				NAACTION_PROP_TARGET_SELECTION, target_selection,
 				NAACTION_PROP_TARGET_BACKGROUND, target_background,

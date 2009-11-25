@@ -90,3 +90,8 @@
 - have a preference to record default schemes
 
 - have a preference to record order of IO Providers
+
+- nact: add provider orig to displayed item properties
+
+- may we have a read-only menu ?
+  this implies dnd of an action inside of the menu would be forbidden

@@ -44,12 +44,6 @@ struct NAObjectActionPrivate {
 	 */
 	gchar   *version;
 
-	/* dynamically set when reading the actions from the I/O storage
-	 * subsystem
-	 * defaults to FALSE unless a write has already returned an error
-	 */
-	gboolean read_only;
-
 	/* last allocated profile name in na_object_action_get_new_profile_name()
 	 * reset to zero when saving the action
 	 */

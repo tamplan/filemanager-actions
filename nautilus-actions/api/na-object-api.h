@@ -94,6 +94,7 @@ G_BEGIN_DECLS
 #define na_object_get_icon( object )				na_object_item_get_icon( NA_OBJECT_ITEM( object ))
 #define na_object_get_provider( object )			na_object_item_get_provider( NA_OBJECT_ITEM( object ))
 #define na_object_is_enabled( object )				na_object_item_is_enabled( NA_OBJECT_ITEM( object ))
+#define na_object_is_readonly( object )				na_object_item_is_readonly( NA_OBJECT_ITEM( object ))
 #define na_object_get_item( object, id )			na_object_item_get_item( NA_OBJECT_ITEM( object ), id )
 #define na_object_get_items_list( object )			na_object_item_get_items_list( NA_OBJECT_ITEM( object ))
 #define na_object_get_items_count( object )			na_object_item_get_items_count( NA_OBJECT_ITEM( object ))
@@ -102,6 +103,7 @@ G_BEGIN_DECLS
 #define na_object_set_icon( object, icon )			na_object_item_set_icon( NA_OBJECT_ITEM( object ), icon )
 #define na_object_set_provider( object, provider )	na_object_item_set_provider( NA_OBJECT_ITEM( object ), provider )
 #define na_object_set_enabled( object, enabled )	na_object_item_set_enabled( NA_OBJECT_ITEM( object ), enabled )
+#define na_object_set_readonly( object, readonly )	na_object_item_set_readonly( NA_OBJECT_ITEM( object ), readonly )
 #define na_object_set_items_list( object, list )	na_object_item_set_items_list( NA_OBJECT_ITEM( object ), list )
 
 #define na_object_append_item( object, item )		na_object_item_append_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))

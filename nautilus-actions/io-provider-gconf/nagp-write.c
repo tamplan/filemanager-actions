@@ -49,14 +49,17 @@ static gboolean       write_list( NagpGConfProvider *gconf, const gchar *uuid, c
 static void           free_gslist( GSList *list );
 
 /*
- *
+ * always returns TRUE because user _should_ be able to write its own
+ * configurations into ~/.gconf
  */
 gboolean
 nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 {
+	static const gchar *thisfn = "nagp_iio_provider_is_willing_to_write";
 	NagpGConfProvider *self;
 	gboolean willing_to = FALSE;
 
+	g_debug( "%s: provider=%p", thisfn, ( void * ) provider );
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), FALSE );
 	self = NAGP_GCONF_PROVIDER( provider );
@@ -293,22 +296,36 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
  * -> the UI may use the pivot inside of Nautilus extension via a sort
  *    of API, falling back to its own pivot, when the extension is not
  *    present.
+ *
+ * 2009-11-25 - it appears that gconf_client_key_is_writable() returns
+ * - FALSE for an existant dir (provided 'path')
+ * - FALSE for a non-existant entry
+ * - TRUE for an existant entry
  */
 gboolean
 nagp_key_is_writable( NagpGConfProvider *gconf, const gchar *path )
 {
-	/*static const gchar *thisfn = "nagp_gconf_provider_key_is_writable";
+	static const gchar *thisfn = "nagp_gconf_provider_key_is_writable";
 	GError *error = NULL;
+	gboolean is_writable;
+	gchar *key;
 
-	remove_gconf_watched_dir( gconf );
+	g_debug( "%s: gconf=%p, path=%s", thisfn, ( void * ) gconf, path );
 
-	gboolean ret_gconf = gconf_client_key_is_writable( gconf->private->gconf, path, &error );
+	/*remove_gconf_watched_dir( gconf );*/
+
+	key = gconf_concat_dir_and_key( path, "foo" );
+	is_writable = gconf_client_key_is_writable( gconf->private->gconf, key, &error );
+	g_debug( "%s: gconf_client_key_is_writable returns is_writable=%s", thisfn, is_writable ? "True":"False" );
 	if( error ){
 		g_warning( "%s: gconf_client_key_is_writable: %s", thisfn, error->message );
 		g_error_free( error );
 		error = NULL;
+		is_writable = FALSE;
 	}
-	gboolean ret_try = FALSE;
+	g_free( key );
+
+	/*gboolean ret_try = FALSE;
 	gchar *path_try = g_strdup_printf( "%s/%s", path, "fake_key" );
 	ret_try = gconf_client_set_string( gconf->private->gconf, path_try, "fake_value", &error );
 	if( error ){
@@ -325,7 +342,7 @@ nagp_key_is_writable( NagpGConfProvider *gconf, const gchar *path )
 	install_gconf_watched_dir( gconf );
 	return( ret_try );*/
 
-	return( TRUE );
+	return( is_writable );
 }
 
 static gboolean

@@ -54,6 +54,7 @@ enum {
 	NAOBJECT_ITEM_PROP_TOOLTIP_ID = 1,
 	NAOBJECT_ITEM_PROP_ICON_ID,
 	NAOBJECT_ITEM_PROP_ENABLED_ID,
+	NAOBJECT_ITEM_PROP_READONLY_ID,
 	NAOBJECT_ITEM_PROP_PROVIDER_ID,
 	NAOBJECT_ITEM_PROP_ITEMS_ID,
 };
@@ -61,6 +62,7 @@ enum {
 #define NAOBJECT_ITEM_PROP_TOOLTIP				"na-object-item-tooltip"
 #define NAOBJECT_ITEM_PROP_ICON					"na-object-item-icon"
 #define NAOBJECT_ITEM_PROP_ENABLED				"na-object-item-enabled"
+#define NAOBJECT_ITEM_PROP_READONLY				"na-object-item-read-only"
 #define NAOBJECT_ITEM_PROP_PROVIDER				"na-object-item-provider"
 #define NAOBJECT_ITEM_PROP_ITEMS				"na-object-item-items"
 
@@ -158,6 +160,13 @@ class_init( NAObjectItemClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_ENABLED_ID, spec );
 
+	spec = g_param_spec_boolean(
+			NAOBJECT_ITEM_PROP_READONLY,
+			"Read-only flag",
+			"Is this item only readable", FALSE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_READONLY_ID, spec );
+
 	spec = g_param_spec_pointer(
 			NAOBJECT_ITEM_PROP_PROVIDER,
 			"Original provider",
@@ -200,6 +209,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->tooltip = g_strdup( "" );
 	self->private->icon = g_strdup( "" );
 	self->private->enabled = TRUE;
+	self->private->read_only = FALSE;
 	self->private->provider = NULL;
 }
 
@@ -224,6 +234,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 			case NAOBJECT_ITEM_PROP_ENABLED_ID:
 				g_value_set_boolean( value, self->private->enabled );
+				break;
+
+			case NAOBJECT_ITEM_PROP_READONLY_ID:
+				g_value_set_boolean( value, self->private->read_only );
 				break;
 
 			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
@@ -260,6 +274,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case NAOBJECT_ITEM_PROP_ENABLED_ID:
 				self->private->enabled = g_value_get_boolean( value );
+				break;
+
+			case NAOBJECT_ITEM_PROP_READONLY_ID:
+				self->private->read_only = g_value_get_boolean( value );
 				break;
 
 			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
@@ -516,6 +534,30 @@ na_object_item_is_enabled( const NAObjectItem *item )
 }
 
 /**
+ * na_object_item_is_readonly:
+ * @item: the #NAObjectItem-derived object to be requested.
+ *
+ * Is the specified item only readable ?
+ * Or, in other words, may this item be edited and then saved to the
+ * original I/O storage subsystem ?
+ *
+ * Returns: %TRUE if the item is read-only, %FALSE else.
+ */
+gboolean
+na_object_item_is_readonly( const NAObjectItem *item )
+{
+	gboolean readonly = FALSE;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_READONLY, &readonly, NULL );
+	}
+
+	return( readonly );
+}
+
+/**
  * na_object_item_get_item:
  * @item: the #NAObjectItem from which we want retrieve a subitem.
  * @id: the id of the searched subitem.
@@ -708,6 +750,23 @@ na_object_item_set_enabled( NAObjectItem *item, gboolean enabled )
 
 	if( !item->private->dispose_has_run ){
 		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, enabled, NULL );
+	}
+}
+
+/**
+ * na_object_item_set_readonly:
+ * @item: the #NAObjectItem-derived object to be updated.
+ * @readonly: the indicator to be set.
+ *
+ * Sets whether the item is readonly.
+ */
+void
+na_object_item_set_readonly( NAObjectItem *item, gboolean readonly )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !item->private->dispose_has_run ){
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_READONLY, readonly, NULL );
 	}
 }
 
@@ -945,10 +1004,11 @@ object_dump( const NAObject *item )
 
 	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
 
-		g_debug( "%s:  tooltip='%s'", thisfn, NA_OBJECT_ITEM( item )->private->tooltip );
-		g_debug( "%s:     icon='%s'", thisfn, NA_OBJECT_ITEM( item )->private->icon );
-		g_debug( "%s:  enabled='%s'", thisfn, NA_OBJECT_ITEM( item )->private->enabled ? "True" : "False" );
-		g_debug( "%s: provider=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider );
+		g_debug( "%s:   tooltip='%s'", thisfn, NA_OBJECT_ITEM( item )->private->tooltip );
+		g_debug( "%s:      icon='%s'", thisfn, NA_OBJECT_ITEM( item )->private->icon );
+		g_debug( "%s:   enabled='%s'", thisfn, NA_OBJECT_ITEM( item )->private->enabled ? "True" : "False" );
+		g_debug( "%s: read-only='%s'", thisfn, NA_OBJECT_ITEM( item )->private->read_only ? "True" : "False" );
+		g_debug( "%s:  provider=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider );
 
 		/* dump subitems */
 		g_debug( "%s: %d subitem(s) at %p",
@@ -968,6 +1028,7 @@ object_copy( NAObject *target, const NAObject *source )
 {
 	gchar *tooltip, *icon;
 	gboolean enabled;
+	gboolean readonly;
 	gpointer provider;
 	GList *subitems, *it;
 
@@ -981,6 +1042,7 @@ object_copy( NAObject *target, const NAObject *source )
 				NAOBJECT_ITEM_PROP_TOOLTIP, &tooltip,
 				NAOBJECT_ITEM_PROP_ICON, &icon,
 				NAOBJECT_ITEM_PROP_ENABLED, &enabled,
+				NAOBJECT_ITEM_PROP_READONLY, &readonly,
 				NAOBJECT_ITEM_PROP_PROVIDER, &provider,
 				NULL );
 
@@ -988,6 +1050,7 @@ object_copy( NAObject *target, const NAObject *source )
 				NAOBJECT_ITEM_PROP_TOOLTIP, tooltip,
 				NAOBJECT_ITEM_PROP_ICON, icon,
 				NAOBJECT_ITEM_PROP_ENABLED, enabled,
+				NAOBJECT_ITEM_PROP_READONLY, readonly,
 				NAOBJECT_ITEM_PROP_PROVIDER, provider,
 				NULL );
 
@@ -1008,7 +1071,7 @@ object_copy( NAObject *target, const NAObject *source )
  * @b: the object which has been initially duplicated from @a, and is
  * being checked for modification status.
  *
- * note 1: The provider is not considered as pertinent here
+ * note 1: The provider is not considered as relevant here
  *
  * note 2: as a particular case, this function is not recursive
  * because the equality test will stop as soon as it fails, and we so
@@ -1023,6 +1086,8 @@ object_copy( NAObject *target, const NAObject *source )
  * note 3: #NAObjectAction is considered as modified when at least one
  * of the profiles is itself modified (because they are saved as a
  * whole). See #NAObjectAction.
+ *
+ * note 4: the 'read-only' flag is not considered as relevant here
  */
 static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )

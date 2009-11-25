@@ -1,5 +1,21 @@
 2009-11-25 Pierre Wieser <pwieser@trychlos.org>
 
+	Read-only flag is moved to NAObjectItem: action and menu may be
+	read-only.
+
+	* nautilus-actions/api/na-object-api.h
+	(na_object_is_readonly, na_object_set_readonly): New functions.
+
+	* nautilus-actions/private/na-object-action-fn.h:
+	* nautilus-actions/private/na-object-action-priv.h:
+	* nautilus-actions/private/na-object-action.c:
+	* nautilus-actions/private/na-object-item-fn.h:
+	* nautilus-actions/private/na-object-item-priv.h:
+	* nautilus-actions/private/na-object-item.c:
+	"read-only" property is moved from NAObjectAction to NAObjectItem.
+	(na_object_action_is_readonly): Renamed to na_object_item_is_readonly.
+	(na_object_action_set_readonly): Renamed to na_object_item_set_readonly.
+
 	* nautilus-actions/io-provider-desktop/egg-desktop-file.c:
 	* nautilus-actions/io-provider-desktop/egg-desktop-file.h:
 	New files.

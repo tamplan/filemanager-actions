@@ -214,7 +214,7 @@ read_item_action( NagpGConfProvider *provider, const gchar *path, NAObjectAction
 	free_subdirs( list_profiles );
 	na_gconf_utils_free_entries( entries );
 
-	na_object_action_set_readonly( action, !nagp_key_is_writable( provider, path ));
+	/*na_object_action_set_readonly( action, !nagp_key_is_writable( provider, path ));*/
 }
 
 /*

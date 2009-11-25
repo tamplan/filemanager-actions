@@ -54,6 +54,12 @@ struct NAObjectItemPrivate {
 	GList         *items;
 	GSList        *items_ids;
 
+	/* dynamically set when reading the actions from the I/O storage
+	 * subsystem
+	 * defaults to FALSE unless a write has already returned an error
+	 */
+	gboolean read_only;
+
 	/* the original provider
 	 * required to be able to edit/delete the item
 	 */

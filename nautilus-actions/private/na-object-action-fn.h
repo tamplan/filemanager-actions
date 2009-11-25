@@ -47,7 +47,6 @@ G_BEGIN_DECLS
 /* #NAObjectAction properties
  */
 #define NAACTION_PROP_VERSION				"na-action-version"
-#define NAACTION_PROP_READONLY				"na-action-read-only"
 #define NAACTION_PROP_LAST_ALLOCATED		"na-action-last-allocated"
 #define NAACTION_PROP_TOOLBAR_SAME_LABEL	"na-action-toolbar-use-same-label"
 #define NAACTION_PROP_TOOLBAR_LABEL			"na-action-toolbar-label"
@@ -72,7 +71,6 @@ NAObjectAction *na_object_action_new( void );
 NAObjectAction *na_object_action_new_with_profile( void );
 
 gchar          *na_object_action_get_version( const NAObjectAction *action );
-gboolean        na_object_action_is_readonly( const NAObjectAction *action );
 gboolean        na_object_action_is_target_selection( const NAObjectAction *action );
 gboolean        na_object_action_is_target_background( const NAObjectAction *action );
 gboolean        na_object_action_is_target_toolbar( const NAObjectAction *action );
@@ -80,7 +78,6 @@ gboolean        na_object_action_toolbar_use_same_label( const NAObjectAction *a
 gchar          *na_object_action_toolbar_get_label( const NAObjectAction *action );
 
 void            na_object_action_set_version( NAObjectAction *action, const gchar *version );
-void            na_object_action_set_readonly( NAObjectAction *action, gboolean readonly );
 void            na_object_action_set_target_selection( NAObjectAction *action, gboolean targeting );
 void            na_object_action_set_target_background( NAObjectAction *action, gboolean targeting );
 void            na_object_action_set_target_toolbar( NAObjectAction *action, gboolean targeting );
