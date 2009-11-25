@@ -55,8 +55,6 @@ gboolean nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider );
 
 gboolean nagp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item );
 
-gboolean nagp_key_is_writable( NagpGConfProvider *gconf, const gchar *path );
-
 guint    nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **message );
 
 guint    nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **message );

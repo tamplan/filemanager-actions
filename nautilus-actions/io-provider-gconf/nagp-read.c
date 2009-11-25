@@ -53,6 +53,7 @@ static void           read_item_menu( NagpGConfProvider *provider, const gchar *
 static void           read_item_menu_properties( NagpGConfProvider *provider, GSList *entries, NAObjectMenu *menu );
 static void           read_object_item_properties( NagpGConfProvider *provider, GSList *entries, NAObjectItem *item );
 
+static gboolean       is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 static GSList        *get_subdirs( GConfClient *gconf, const gchar *path );
 static void           free_subdirs( GSList *subdirs );
 static gboolean       has_entry( GConfClient *gconf, const gchar *path, const gchar *entry );
@@ -213,8 +214,6 @@ read_item_action( NagpGConfProvider *provider, const gchar *path, NAObjectAction
 	free_gslist( order );
 	free_subdirs( list_profiles );
 	na_gconf_utils_free_entries( entries );
-
-	/*na_object_action_set_readonly( action, !nagp_key_is_writable( provider, path ));*/
 }
 
 /*
@@ -397,6 +396,10 @@ read_item_menu_properties( NagpGConfProvider *provider, GSList *entries, NAObjec
 
 /*
  * set the properties into the NAObjectItem
+ *
+ * The NAObjectItem is set to 'read-only' if at least one the entries is
+ * not writable ; in other words, a writable NAObjectItem has all its
+ * entries writable.
  */
 static void
 read_object_item_properties( NagpGConfProvider *provider, GSList *entries, NAObjectItem *item )
@@ -405,6 +408,10 @@ read_object_item_properties( NagpGConfProvider *provider, GSList *entries, NAObj
 	gchar *id, *label, *tooltip, *icon;
 	gboolean enabled;
 	GSList *subitems;
+	GSList *ie;
+	GConfEntry *gconf_entry;
+	const gchar *key;
+	gboolean writable;
 
 	if( !na_gconf_utils_get_string_from_entries( entries, OBJECT_ITEM_LABEL_ENTRY, &label )){
 		id = na_object_get_id( item );
@@ -433,9 +440,39 @@ read_object_item_properties( NagpGConfProvider *provider, GSList *entries, NAObj
 		na_object_item_set_items_string_list( item, subitems );
 		free_gslist( subitems );
 	}
+
+	writable = TRUE;
+	for( ie = entries ; ie && writable ; ie = ie->next ){
+		gconf_entry = ( GConfEntry * ) ie->data;
+		key = gconf_entry_get_key( gconf_entry );
+		writable = is_key_writable( provider, key );
+	}
+	na_object_set_readonly( item, !writable );
 }
 
-/**
+/*
+ * key must be an existing entry (not a dir) to get a relevant return
+ * value ; else we get FALSE
+ */
+static gboolean
+is_key_writable( NagpGConfProvider *gconf, const gchar *key )
+{
+	static const gchar *thisfn = "nagp_read_is_key_writable";
+	GError *error = NULL;
+	gboolean is_writable;
+
+	is_writable = gconf_client_key_is_writable( gconf->private->gconf, key, &error );
+	if( error ){
+		g_warning( "%s: gconf_client_key_is_writable: %s", thisfn, error->message );
+		g_error_free( error );
+		error = NULL;
+		is_writable = FALSE;
+	}
+
+	return( is_writable );
+}
+
+/*
  * get_subdirs:
  * @gconf: a  #GConfClient instance.
  * @path: a full path to be readen.
@@ -465,7 +502,7 @@ get_subdirs( GConfClient *gconf, const gchar *path )
 	return( list_subdirs );
 }
 
-/**
+/*
  * free_subdirs:
  * @subdirs: a list of subdirs as returned by get_subdirs().
  *
@@ -477,7 +514,7 @@ free_subdirs( GSList *subdirs )
 	free_gslist( subdirs );
 }
 
-/**
+/*
  * na_gconf_utils_have_subdir:
  * @gconf: a  #GConfClient instance.
  * @path: a full path to be readen.
@@ -498,7 +535,7 @@ na_gconf_utils_have_subdir( GConfClient *gconf, const gchar *path )
 	return( have_subdir );
 }*/
 
-/**
+/*
  * has_entry:
  * @gconf: a  #GConfClient instance.
  * @path: the full path of a key.

@@ -49,46 +49,76 @@ static gboolean       write_list( NagpGConfProvider *gconf, const gchar *uuid, c
 static void           free_gslist( GSList *list );
 
 /*
- * always returns TRUE because user _should_ be able to write its own
- * configurations into ~/.gconf
+ * Rationale: gconf reads its storage path in /etc/gconf/2/path ;
+ * there is there a 'xml:readwrite:$(HOME)/.gconf' line, but I do not
+ * known any way to get it programatically, so an admin may have set a
+ * readwrite space elsewhere..
+ *
+ * So, I try to write a 'foo' key somewhere: if it is ok, then the
+ * provider is supposed willing to write...
  */
 gboolean
 nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 {
 	static const gchar *thisfn = "nagp_iio_provider_is_willing_to_write";
+	static const gchar *path = "/apps/no-nautilus-actions";
 	NagpGConfProvider *self;
 	gboolean willing_to = FALSE;
+	gchar *key;
 
 	g_debug( "%s: provider=%p", thisfn, ( void * ) provider );
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), FALSE );
 	self = NAGP_GCONF_PROVIDER( provider );
 
-	/* TODO: nagp_gconf_provider_iio_provider_is_willing_to_write */
 	if( !self->private->dispose_has_run ){
-		willing_to = TRUE;
+
+		key = gconf_concat_dir_and_key( path, thisfn );
+
+		if( !na_gconf_utils_write_string( self->private->gconf, key, "1", NULL )){
+			willing_to = FALSE;
+
+		} else if( !gconf_client_recursive_unset( self->private->gconf, path, 0, NULL )){
+			willing_to = FALSE;
+
+		} else {
+			willing_to = TRUE;
+		}
+
+		g_free( key );
 	}
 
 	return( willing_to );
 }
 
 /*
+ * Though the provider writability has already been checked by the
+ * program, we can only returns TRUE if the provider is willing to write.
+ * We so have to re-check it here.
  *
+ * If the provider is set, we are able to use the 'read-only' flag of
+ * the object. Else, we returns the provider itself writability status.
  */
 gboolean
 nagp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
 {
 	NagpGConfProvider *self;
 	gboolean willing_to = FALSE;
+	NAIIOProvider *origin;
 
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
 	self = NAGP_GCONF_PROVIDER( provider );
 
-	/* TODO: nagp_gconf_provider_iio_provider_is_writable */
 	if( !self->private->dispose_has_run ){
-		willing_to = TRUE;
+
+		origin = na_object_get_provider( item );
+		if( origin ){
+			willing_to = !na_object_is_readonly( item );
+		} else {
+			willing_to = nagp_iio_provider_is_willing_to_write( provider );
+		}
 	}
 
 	return( willing_to );
@@ -274,75 +304,6 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	g_free( uuid );
 
 	return( ret );
-}
-
-/*
- * gconf_client_key_is_writable doesn't work as I expect: it returns
- * FALSE without error for our keys !
- * So I have to actually try a fake write to the key to get the real
- * writability status...
- *
- * TODO: having a NAPivot as Nautilus extension and another NAPivot in
- * the UI leads to a sort of notification loop: extension's pivot is
- * not aware of UI's one, and so get notifications from GConf, reloads
- * the list of actions, retrying to test the writability.
- * In the meanwhile, UI's pivot has reauthorized notifications, and is
- * notified of extension's pivot tests, and so on......
- *
- * -> Nautilus extension's pivot should not test for writability, as it
- *    uses actions as read-only, reloading the whole list when one
- *    action is modified ; this can break the loop
- *
- * -> the UI may use the pivot inside of Nautilus extension via a sort
- *    of API, falling back to its own pivot, when the extension is not
- *    present.
- *
- * 2009-11-25 - it appears that gconf_client_key_is_writable() returns
- * - FALSE for an existant dir (provided 'path')
- * - FALSE for a non-existant entry
- * - TRUE for an existant entry
- */
-gboolean
-nagp_key_is_writable( NagpGConfProvider *gconf, const gchar *path )
-{
-	static const gchar *thisfn = "nagp_gconf_provider_key_is_writable";
-	GError *error = NULL;
-	gboolean is_writable;
-	gchar *key;
-
-	g_debug( "%s: gconf=%p, path=%s", thisfn, ( void * ) gconf, path );
-
-	/*remove_gconf_watched_dir( gconf );*/
-
-	key = gconf_concat_dir_and_key( path, "foo" );
-	is_writable = gconf_client_key_is_writable( gconf->private->gconf, key, &error );
-	g_debug( "%s: gconf_client_key_is_writable returns is_writable=%s", thisfn, is_writable ? "True":"False" );
-	if( error ){
-		g_warning( "%s: gconf_client_key_is_writable: %s", thisfn, error->message );
-		g_error_free( error );
-		error = NULL;
-		is_writable = FALSE;
-	}
-	g_free( key );
-
-	/*gboolean ret_try = FALSE;
-	gchar *path_try = g_strdup_printf( "%s/%s", path, "fake_key" );
-	ret_try = gconf_client_set_string( gconf->private->gconf, path_try, "fake_value", &error );
-	if( error ){
-		g_warning( "%s: gconf_client_set_string: %s", thisfn, error->message );
-		g_error_free( error );
-		error = NULL;
-	}
-	if( ret_try ){
-		gconf_client_unset( gconf->private->gconf, path_try, NULL );
-	}
-	g_free( path_try );
-	g_debug( "%s: ret_gconf=%s, ret_try=%s", thisfn, ret_gconf ? "True":"False", ret_try ? "True":"False" );
-
-	install_gconf_watched_dir( gconf );
-	return( ret_try );*/
-
-	return( is_writable );
 }
 
 static gboolean

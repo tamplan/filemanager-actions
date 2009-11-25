@@ -16,6 +16,15 @@
 	(na_object_action_is_readonly): Renamed to na_object_item_is_readonly.
 	(na_object_action_set_readonly): Renamed to na_object_item_set_readonly.
 
+	* nautilus-actions/io-provider-gconf/nagp-read.c
+	(read_object_item_properties): Set the 'read-only' flag for the object.
+
+	* nautilus-actions/io-provider-gconf/nagp-write.c
+	(nagp_iio_provider_is_writable): Set the writability status of the
+	object.
+	(nagp_iio_provider_is_willing_to_write): Set the writability status of
+	the provider.
+
 	* nautilus-actions/io-provider-desktop/egg-desktop-file.c:
 	* nautilus-actions/io-provider-desktop/egg-desktop-file.h:
 	New files.
