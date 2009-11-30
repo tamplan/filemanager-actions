@@ -28,15 +28,22 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_READ_H__
-#define __NAGP_READ_H__
-
 #include <nautilus-actions/api/na-iio-provider.h>
+#include <nautilus-actions/api/na-object-api.h>
+
+#ifndef __NADP_WRITE_H__
+#define __NADP_WRITE_H__
 
 G_BEGIN_DECLS
 
-GList *nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
+gboolean nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider );
+
+gboolean nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item );
+
+guint    nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+
+guint    nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
 
 G_END_DECLS
 
-#endif /* __NAGP_READ_H__ */
+#endif /* __NADP_WRITE_H__ */

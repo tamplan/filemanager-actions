@@ -31,19 +31,6 @@
 #ifndef __NAGP_WRITE_H__
 #define __NAGP_WRITE_H__
 
-/**
- * SECTION: nagp_gconf_provider
- * @short_description: #NagpGConfProvider class definition.
- * @include: na-gconf-provider.h
- *
- * This class manages the GConf I/O storage subsystem, or, in other words,
- * the GConf subsystem as an NAIIOProvider. As this, it should only be
- * used through the NAIIOProvider interface.
- *
- * #NagpGConfProvider uses #NAGConfMonitor to watch at the configuration
- * tree. Modifications are notified to the NAIIOProvider interface.
- */
-
 #include <nautilus-actions/api/na-iio-provider.h>
 #include <nautilus-actions/api/na-object-api.h>
 

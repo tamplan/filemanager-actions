@@ -44,8 +44,9 @@
  * tree. Modifications are notified to the NAIIOProvider interface.
  */
 
-#include <glib.h>
 #include <glib-object.h>
+
+#include "egg-desktop-file.h"
 
 G_BEGIN_DECLS
 
@@ -59,7 +60,8 @@ G_BEGIN_DECLS
 /* private instance data
  */
 typedef struct NadpDesktopProviderPrivate {
-	gboolean     dispose_has_run;
+	gboolean        dispose_has_run;
+	EggDesktopFile *egg_desktop_file;
 }
 	NadpDesktopProviderPrivate;
 
@@ -76,6 +78,12 @@ typedef struct {
 	NadpDesktopProviderClassPrivate *private;
 }
 	NadpDesktopProviderClass;
+
+/* this is a ':'-separated list of subdirs searched for actions desktop
+ * files.
+ */
+#define NADP_DESKTOP_PROVIDER_SUBDIRS		"file-manager/actions"
+#define NADP_DESKTOP_SUFFIX					".desktop"
 
 GType nadp_desktop_provider_get_type     ( void );
 void  nadp_desktop_provider_register_type( GTypeModule *module );

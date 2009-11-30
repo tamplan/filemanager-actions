@@ -39,9 +39,19 @@ AM_CPPFLAGS += \
 libna_io_provider_desktop_la_SOURCES = \
 	egg-desktop-file.c											\
 	egg-desktop-file.h											\
+	nadp-desktop-file.c											\
+	nadp-desktop-file.h											\
 	nadp-desktop-provider.c										\
 	nadp-desktop-provider.h										\
 	nadp-module.c												\
+	nadp-read.c													\
+	nadp-read.h													\
+	nadp-utils.c												\
+	nadp-utils.h												\
+	nadp-write.c												\
+	nadp-write.h												\
+	nadp-xdg-data-dirs.c										\
+	nadp-xdg-data-dirs.h										\
 	$(NULL)
 
 libna_io_provider_desktop_la_LIBADD = \

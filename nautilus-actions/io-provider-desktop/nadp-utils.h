@@ -28,15 +28,33 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_READ_H__
-#define __NAGP_READ_H__
+#include "egg-desktop-file.h"
 
-#include <nautilus-actions/api/na-iio-provider.h>
+#ifndef __NADP_UTILS_H__
+#define __NADP_UTILS_H__
 
 G_BEGIN_DECLS
 
-GList *nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
+typedef struct {
+	gchar          *id;
+	EggDesktopFile *edf;
+}
+	NadpPropertiesStruct;
+
+GSList  *nadp_utils_split_path_list( const gchar *path_list );
+
+void     nadp_utils_gslist_free( GSList *list );
+
+gchar   *nadp_utils_remove_suffix( const gchar *string, const gchar *suffix );
+
+gboolean nadp_utils_is_writable_dir( const gchar *path );
+
+gchar   *nadp_utils_path2id( const gchar *path );
+
+gboolean nadp_utils_is_writable_file( const gchar *path );
+
+gboolean nadp_utils_delete_file( const gchar *path );
 
 G_END_DECLS
 
-#endif /* __NAGP_READ_H__ */
+#endif /* __NADP_UTILS_H__ */

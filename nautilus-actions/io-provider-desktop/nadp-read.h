@@ -28,15 +28,15 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_READ_H__
-#define __NAGP_READ_H__
-
 #include <nautilus-actions/api/na-iio-provider.h>
+
+#ifndef __NADP_READ_H__
+#define __NADP_READ_H__
 
 G_BEGIN_DECLS
 
-GList *nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
+GList *nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
 
 G_END_DECLS
 
-#endif /* __NAGP_READ_H__ */
+#endif /* __NADP_READ_H__ */

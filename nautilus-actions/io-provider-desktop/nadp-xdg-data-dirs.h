@@ -28,15 +28,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_READ_H__
-#define __NAGP_READ_H__
+#include "nadp-desktop-provider.h"
 
-#include <nautilus-actions/api/na-iio-provider.h>
+#ifndef __NADP_XDG_DATA_DIRS_H__
+#define __NADP_XDG_DATA_DIRS_H__
 
 G_BEGIN_DECLS
 
-GList *nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
+GSList *nadp_xdg_data_dirs_get_dirs( const NadpDesktopProvider *provider, GSList **messages );
+
+gchar  *nadp_xdg_data_dirs_get_user_dir( const NadpDesktopProvider *provider, GSList **messages );
+
+GSList *nadp_xdg_data_dirs_get_data_dirs( const NadpDesktopProvider *provider, GSList **messages );
 
 G_END_DECLS
 
-#endif /* __NAGP_READ_H__ */
+#endif /* __NADP_XDG_DATA_DIRS_H__ */

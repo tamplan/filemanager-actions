@@ -32,7 +32,8 @@ typedef enum {
 	EGG_DESKTOP_FILE_TYPE_APPLICATION,
 	EGG_DESKTOP_FILE_TYPE_LINK,
 	EGG_DESKTOP_FILE_TYPE_DIRECTORY
-} EggDesktopFileType;
+}
+	EggDesktopFileType;
 
 EggDesktopFile     *egg_desktop_file_new                (const char   *desktop_file_path,
 							 GError      **error);
@@ -88,27 +89,27 @@ typedef enum {
 } EggDesktopFileLaunchOption;
 
 /* Standard Keys */
-#define EGG_DESKTOP_FILE_GROUP			"Desktop Entry"
+#define EGG_DESKTOP_FILE_GROUP					"Desktop Entry"
 
-#define EGG_DESKTOP_FILE_KEY_TYPE		"Type"
-#define EGG_DESKTOP_FILE_KEY_VERSION		"Version"
-#define EGG_DESKTOP_FILE_KEY_NAME		"Name"
-#define EGG_DESKTOP_FILE_KEY_GENERIC_NAME	"GenericName"
-#define EGG_DESKTOP_FILE_KEY_NO_DISPLAY		"NoDisplay"
-#define EGG_DESKTOP_FILE_KEY_COMMENT		"Comment"
-#define EGG_DESKTOP_FILE_KEY_ICON		"Icon"
-#define EGG_DESKTOP_FILE_KEY_HIDDEN		"Hidden"
-#define EGG_DESKTOP_FILE_KEY_ONLY_SHOW_IN	"OnlyShowIn"
-#define EGG_DESKTOP_FILE_KEY_NOT_SHOW_IN	"NotShowIn"
-#define EGG_DESKTOP_FILE_KEY_TRY_EXEC		"TryExec"
-#define EGG_DESKTOP_FILE_KEY_EXEC		"Exec"
-#define EGG_DESKTOP_FILE_KEY_PATH		"Path"
-#define EGG_DESKTOP_FILE_KEY_TERMINAL		"Terminal"
-#define EGG_DESKTOP_FILE_KEY_MIME_TYPE		"MimeType"
-#define EGG_DESKTOP_FILE_KEY_CATEGORIES		"Categories"
-#define EGG_DESKTOP_FILE_KEY_STARTUP_NOTIFY	"StartupNotify"
+#define EGG_DESKTOP_FILE_KEY_TYPE				"Type"
+#define EGG_DESKTOP_FILE_KEY_VERSION			"Version"
+#define EGG_DESKTOP_FILE_KEY_NAME				"Name"
+#define EGG_DESKTOP_FILE_KEY_GENERIC_NAME		"GenericName"
+#define EGG_DESKTOP_FILE_KEY_NO_DISPLAY			"NoDisplay"
+#define EGG_DESKTOP_FILE_KEY_COMMENT			"Comment"
+#define EGG_DESKTOP_FILE_KEY_ICON				"Icon"
+#define EGG_DESKTOP_FILE_KEY_HIDDEN				"Hidden"
+#define EGG_DESKTOP_FILE_KEY_ONLY_SHOW_IN		"OnlyShowIn"
+#define EGG_DESKTOP_FILE_KEY_NOT_SHOW_IN		"NotShowIn"
+#define EGG_DESKTOP_FILE_KEY_TRY_EXEC			"TryExec"
+#define EGG_DESKTOP_FILE_KEY_EXEC				"Exec"
+#define EGG_DESKTOP_FILE_KEY_PATH				"Path"
+#define EGG_DESKTOP_FILE_KEY_TERMINAL			"Terminal"
+#define EGG_DESKTOP_FILE_KEY_MIME_TYPE			"MimeType"
+#define EGG_DESKTOP_FILE_KEY_CATEGORIES			"Categories"
+#define EGG_DESKTOP_FILE_KEY_STARTUP_NOTIFY		"StartupNotify"
 #define EGG_DESKTOP_FILE_KEY_STARTUP_WM_CLASS	"StartupWMClass"
-#define EGG_DESKTOP_FILE_KEY_URL		"URL"
+#define EGG_DESKTOP_FILE_KEY_URL				"URL"
 
 /* Accessors */
 gboolean  egg_desktop_file_has_key                (EggDesktopFile  *desktop_file,
@@ -136,7 +137,6 @@ char    **egg_desktop_file_get_locale_string_list (EggDesktopFile  *desktop_file
 						   const char      *locale,
 						   gsize           *length,
 						   GError         **error) G_GNUC_MALLOC;
-
 
 /* Errors */
 #define EGG_DESKTOP_FILE_ERROR egg_desktop_file_error_quark()

@@ -37,6 +37,8 @@
 #include <nautilus-actions/api/na-iio-provider.h>
 
 #include "nadp-desktop-provider.h"
+#include "nadp-read.h"
+#include "nadp-write.h"
 
 /* private class data
  */
@@ -113,11 +115,11 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->read_items = NULL;
-	iface->is_willing_to_write = NULL;
-	iface->is_writable = NULL;
-	iface->write_item = NULL;
-	iface->delete_item = NULL;
+	iface->read_items = nadp_iio_provider_read_items;
+	iface->is_willing_to_write = nadp_iio_provider_is_willing_to_write;
+	iface->is_writable = nadp_iio_provider_is_writable;
+	iface->write_item = nadp_iio_provider_write_item;
+	iface->delete_item = nadp_iio_provider_delete_item;
 }
 
 static void

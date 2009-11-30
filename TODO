@@ -95,3 +95,5 @@
 
 - may we have a read-only menu ?
   this implies dnd of an action inside of the menu would be forbidden
+
+- nact: if item is read-only, all fields should be disabled

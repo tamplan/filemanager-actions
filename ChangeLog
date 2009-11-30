@@ -1,3 +1,23 @@
+2009-11-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/io-provider-desktop/nadp-desktop-file.c:
+	* utilus-actions/io-provider-desktop/nadp-desktop-file.h:
+	* nautilus-actions/io-provider-desktop/nadp-read.c:
+	* nautilus-actions/io-provider-desktop/nadp-read.h:
+	* nautilus-actions/io-provider-desktop/nadp-utils.c:
+	* nautilus-actions/io-provider-desktop/nadp-utils.h:
+	* nautilus-actions/io-provider-desktop/nadp-write.c:
+	* nautilus-actions/io-provider-desktop/nadp-write.h:
+	* nautilus-actions/io-provider-desktop/nadp-xdg-data-dirs.c:
+	* nautilus-actions/io-provider-desktop/nadp-xdg-data-dirs.h:
+	New files.
+
+	* nautilus-actions/io-provider-desktop/Makefile.am:
+	Updated accordingly.
+
+	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.h:
+	Define NADP_DESKTOP_PROVIDER_SUBDIRS.
+
 2009-11-25 Pierre Wieser <pwieser@trychlos.org>
 
 	Read-only flag is moved to NAObjectItem: action and menu may be
