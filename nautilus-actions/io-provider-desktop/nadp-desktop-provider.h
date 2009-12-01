@@ -46,8 +46,6 @@
 
 #include <glib-object.h>
 
-#include "egg-desktop-file.h"
-
 G_BEGIN_DECLS
 
 #define NADP_DESKTOP_PROVIDER_TYPE					( nadp_desktop_provider_get_type())
@@ -56,14 +54,6 @@ G_BEGIN_DECLS
 #define NADP_IS_DESKTOP_PROVIDER( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NADP_DESKTOP_PROVIDER_TYPE ))
 #define NADP_IS_DESKTOP_PROVIDER_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NADP_DESKTOP_PROVIDER_TYPE ))
 #define NADP_DESKTOP_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NADP_DESKTOP_PROVIDER_TYPE, NadpDesktopProviderClass ))
-
-/* private instance data
- */
-typedef struct NadpDesktopProviderPrivate {
-	gboolean        dispose_has_run;
-	EggDesktopFile *egg_desktop_file;
-}
-	NadpDesktopProviderPrivate;
 
 typedef struct {
 	GObject                     parent;

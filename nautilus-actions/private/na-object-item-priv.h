@@ -58,7 +58,7 @@ struct NAObjectItemPrivate {
 	 * subsystem
 	 * defaults to FALSE unless a write has already returned an error
 	 */
-	gboolean read_only;
+	gboolean       read_only;
 
 	/* the original provider
 	 * required to be able to edit/delete the item

@@ -37,8 +37,6 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libna_io_provider_desktop_la_SOURCES = \
-	egg-desktop-file.c											\
-	egg-desktop-file.h											\
 	nadp-desktop-file.c											\
 	nadp-desktop-file.h											\
 	nadp-desktop-provider.c										\

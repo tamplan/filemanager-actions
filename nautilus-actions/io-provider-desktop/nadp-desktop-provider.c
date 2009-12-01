@@ -46,6 +46,13 @@ struct NadpDesktopProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+/* private instance data
+ */
+typedef struct NadpDesktopProviderPrivate {
+	gboolean dispose_has_run;
+}
+	NadpDesktopProviderPrivate;
+
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 

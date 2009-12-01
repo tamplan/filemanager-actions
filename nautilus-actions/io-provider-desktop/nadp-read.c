@@ -52,6 +52,7 @@ static gboolean        is_already_loaded( const NadpDesktopProvider *provider, G
 static GList          *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
 static NAObjectAction *action_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
 static void            read_action_properties( const NadpDesktopProvider *provider, NAObjectAction *action, NadpDesktopFile *ndf, GSList **messages );
+static void            read_item_properties( const NadpDesktopProvider *provider, NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages );
 static void            free_desktop_paths( GList *paths );
 
 /*
@@ -130,6 +131,7 @@ get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, c
 
 	error = NULL;
 	dir_handle = NULL;
+
 	/* do not warn when the directory just doesn't exist
 	 */
 	if( g_file_test( dir, G_FILE_TEST_IS_DIR )){
@@ -226,22 +228,38 @@ action_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps,
 static void
 read_action_properties( const NadpDesktopProvider *provider, NAObjectAction *action, NadpDesktopFile *ndf, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_action_item_properties";
-	EggDesktopFile *edf;
+	read_item_properties( provider, NA_OBJECT_ITEM( action ), ndf, messages );
+}
+
+static void
+read_item_properties( const NadpDesktopProvider *provider, NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages )
+{
+	static const gchar *thisfn = "nadp_read_read_item_properties";
 	gchar *id;
 	gchar *label;
+	gchar *tooltip;
+	gchar *path;
+	gboolean writable;
 
-	edf = nadp_desktop_file_get_egg_desktop_file( ndf );
 	id = nadp_desktop_file_get_id( ndf );
 
-	label = ( gchar * ) egg_desktop_file_get_name( edf );
+	label = ( gchar * ) nadp_desktop_file_get_label( ndf );
 	if( !label || !g_utf8_strlen( label, -1 )){
 		g_warning( "%s: id=%s, label not found or empty", thisfn, id );
 		g_free( label );
 		label = g_strdup( "" );
 	}
-	na_object_set_label( action, label );
+	na_object_set_label( item, label );
 	g_free( label );
+
+	tooltip = ( gchar * ) nadp_desktop_file_get_tooltip( ndf );
+	na_object_set_tooltip( item, tooltip );
+	g_free( tooltip );
+
+	path = nadp_desktop_file_get_key_file_path( ndf );
+	writable = nadp_utils_is_writable_file( path );
+	g_free( path );
+	na_object_set_readonly( item, !writable );
 
 	g_free( id );
 }

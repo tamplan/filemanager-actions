@@ -44,8 +44,6 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#include "egg-desktop-file.h"
-
 G_BEGIN_DECLS
 
 #define NADP_DESKTOP_FILE_TYPE					( nadp_desktop_file_get_type())
@@ -73,11 +71,19 @@ typedef struct {
 
 GType            nadp_desktop_file_get_type( void );
 
+NadpDesktopFile *nadp_desktop_file_new_for_write( const gchar *path );
 NadpDesktopFile *nadp_desktop_file_new_from_path( const gchar *path );
 
-gchar           *nadp_desktop_file_get_id              ( const NadpDesktopFile *ndf );
+gchar           *nadp_desktop_file_get_key_file_path( const NadpDesktopFile *ndf );
 
-EggDesktopFile  *nadp_desktop_file_get_egg_desktop_file( const NadpDesktopFile *ndf );
+gchar           *nadp_desktop_file_get_id( const NadpDesktopFile *ndf );
+gchar           *nadp_desktop_file_get_label( const NadpDesktopFile *ndf );
+gchar           *nadp_desktop_file_get_tooltip( const NadpDesktopFile *ndf );
+
+void             nadp_desktop_file_set_label( NadpDesktopFile *ndf, const gchar *label );
+void             nadp_desktop_file_set_tooltip( NadpDesktopFile *ndf, const gchar *tooltip );
+
+gboolean         nadp_desktop_file_write( NadpDesktopFile *ndf );
 
 G_END_DECLS
 
