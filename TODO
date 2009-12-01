@@ -91,12 +91,12 @@
 
 - have a preference to record order of IO Providers
 
-- nact: add provider orig to displayed item properties
-
-- may we have a read-only menu ?
+- do we may have a read-only menu ?
   this implies dnd of an action inside of the menu would be forbidden
   id. for reordering if subitems
 
 - nact: if item is read-only, all fields should be disabled
 
 - nact: new action assistant
+
+- check that having an id which is not a UUID is supported

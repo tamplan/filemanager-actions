@@ -395,6 +395,24 @@ na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot
 }
 
 /**
+ * na_pivot_get_module_name:
+ * @pivot: this #NAPivot instance.
+ * @provider: a #GObject as instantiated by a #NAModule.
+ *
+ * Returns: the name of the #NAModule, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+na_pivot_get_module_name( const NAPivot *pivot, GObject *provider )
+{
+	gchar *name;
+
+	name = na_module_get_name_for_object( pivot->private->modules, provider );
+
+	return( name );
+}
+
+/**
  * na_pivot_get_providers:
  * @pivot: this #NAPivot instance.
  * @type: the type of searched interface.

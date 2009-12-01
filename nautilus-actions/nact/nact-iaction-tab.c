@@ -37,6 +37,8 @@
 
 #include <api/na-object-api.h>
 
+#include <runtime/na-io-provider.h>
+
 #include "base-window.h"
 #include "nact-application.h"
 #include "nact-main-statusbar.h"
@@ -359,6 +361,8 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 {
 	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
+	NAPivot *pivot;
+	NactApplication *application;
 	gboolean enable_tab;
 	gboolean target_selection, target_background, target_toolbar;
 	gboolean enable_label;
@@ -368,12 +372,16 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 	GtkButton *enabled_button;
 	gboolean enabled_item;
 	GtkToggleButton *toggle;
+	NAIIOProvider *provider;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( BASE_IS_WINDOW( instance ));
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+		pivot = nact_application_get_pivot( application );
 
 		g_object_get(
 				G_OBJECT( instance ),
@@ -452,6 +460,20 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemID" );
 		label = item ? na_object_get_id( item ) : g_strdup( "" );
+		gtk_label_set_text( GTK_LABEL( label_widget ), label );
+		g_free( label );
+
+		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemProvider" );
+		label = NULL;
+		if( item ){
+			provider = na_object_get_provider( item );
+			if( provider ){
+				label = na_io_provider_get_name( pivot, provider );
+			}
+		}
+		if( !label ){
+			label = g_strdup( "" );
+		}
 		gtk_label_set_text( GTK_LABEL( label_widget ), label );
 		g_free( label );
 

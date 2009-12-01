@@ -76,6 +76,8 @@ static void      object_weak_notify( NAModule *module, GObject *object );
 
 static void      module_unload( GTypeModule *gmodule );
 
+static NAModule *find_module_for_object( GList *modules, GObject *object, GType *type );
+
 GType
 na_module_get_type( void )
 {
@@ -363,6 +365,7 @@ add_module_type( NAModule *module, GType type )
 	GObject *object;
 
 	object = g_object_new( type, NULL );
+	g_object_set_data( object, "na-module-type", ( gpointer ) type );
 
 	g_object_weak_ref( object,
 			( GWeakNotify ) object_weak_notify,
@@ -456,7 +459,7 @@ na_module_free_extensions_list( GList *extensions )
  * na_module_get_name:
  * @module: the #NAModule instance corresponding to a dynamically
  *  loaded library.
- * @type: one the #GType this @module advertizes it implements.
+ * @type: one of the #GType this @module advertizes it implements.
  *
  * Returns: the name the #NAModule @module applies to itself for this
  * @type, as a newly allocated string which should be g_free() by the
@@ -472,6 +475,50 @@ na_module_get_name( NAModule *module, GType type )
 	name = g_strdup( module->private->get_name( type ));
 
 	return( name );
+}
+
+/**
+ * na_module_get_name_for_object:
+ * @modules: the list of dynamically loaded modules.
+ * @object: an object instantiated by one of these modules.
+ *
+ * Returns: the name of the #NAModule for this @object, as a newly
+ * allocated string which should be g_free() by the caller.
+ */
+gchar *
+na_module_get_name_for_object( GList *modules, GObject *object )
+{
+	gchar *name;
+	GType type;
+	NAModule *module;
+
+	name = NULL;
+	type = ( GType ) 0;
+	module = find_module_for_object( modules, object, &type );
+	if( type ){
+		name = na_module_get_name( module, type );
+	}
+
+	return( name );
+}
+
+static NAModule *
+find_module_for_object( GList *modules, GObject *object, GType *type )
+{
+	GList *im;
+	GList *io;
+	NAModule *module = NULL;
+
+	for( im = modules ; im && !module ; im = im->next ){
+		for( io = NA_MODULE( im->data )->private->objects ; io && !module ; io = io->next ){
+			if( io->data == object ){
+				module = NA_MODULE( im->data );
+				*type = ( GType ) g_object_get_data( object, "na-module-type" );
+			}
+		}
+	}
+
+	return( module );
 }
 
 /**

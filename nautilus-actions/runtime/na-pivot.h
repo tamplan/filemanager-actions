@@ -115,6 +115,8 @@ void          na_pivot_dump( const NAPivot *pivot );
 
 void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
 
+gchar        *na_pivot_get_module_name( const NAPivot *pivot, GObject *provider );
+
 GList        *na_pivot_get_providers( const NAPivot *pivot, GType type );
 GObject      *na_pivot_get_provider( const NAPivot *pivot, GType type );
 void          na_pivot_release_provider( const GObject *provider );

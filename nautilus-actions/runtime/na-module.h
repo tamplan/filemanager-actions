@@ -80,6 +80,8 @@ GList *na_module_get_extensions_for_type( GList *modules, GType type );
 void   na_module_free_extensions_list   ( GList *extensions );
 
 gchar *na_module_get_name               ( NAModule *module, GType type );
+gchar *na_module_get_name_for_object    ( GList *modules, GObject *object );
+
 void   na_module_release_modules        ( GList *modules );
 
 G_END_DECLS

@@ -75,6 +75,23 @@ na_io_provider_register_callbacks( const NAPivot *pivot )
 }
 
 /**
+ * na_io_provider_get_name:
+ * @provider: the #NAIIOProvider whose name is to be returned.
+ *
+ * Returns: a displayble name for the provider, as a newly allocated
+ * string which should be g_free() by the caller.
+ */
+gchar *
+na_io_provider_get_name( const NAPivot *pivot, const NAIIOProvider *provider )
+{
+	gchar *name;
+
+	name = na_pivot_get_module_name( pivot, G_OBJECT( provider ));
+
+	return( name );
+}
+
+/**
  * na_io_provider_read_items:
  * @pivot: the #NAPivot object which owns the list of registered I/O
  * storage providers.

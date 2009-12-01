@@ -46,8 +46,10 @@ G_BEGIN_DECLS
 
 void   na_io_provider_register_callbacks( const NAPivot *pivot );
 
-GList *na_io_provider_read_items ( const NAPivot *pivot, GSList **messages );
-guint  na_io_provider_write_item ( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
+gchar *na_io_provider_get_name( const NAPivot *pivot, const NAIIOProvider *provider );
+
+GList *na_io_provider_read_items( const NAPivot *pivot, GSList **messages );
+guint  na_io_provider_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
 guint  na_io_provider_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
 
 G_END_DECLS
