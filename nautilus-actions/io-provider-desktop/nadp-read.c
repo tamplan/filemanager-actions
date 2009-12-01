@@ -210,6 +210,7 @@ action_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps,
 {
 	NadpDesktopFile *ndf;
 	NAObjectAction *action;
+	NAObjectProfile *profile;
 
 	ndf = nadp_desktop_file_new_from_path( dps->path );
 	if( !ndf ){
@@ -221,6 +222,12 @@ action_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps,
 
 	g_object_set_data( G_OBJECT( action ), "nadp-desktop-file", ndf );
 	g_object_weak_ref( G_OBJECT( action ), ( GWeakNotify ) g_object_unref, ndf );
+
+	/* have at least one profile */
+	if( !na_object_get_items_count( action )){
+		profile = na_object_profile_new();
+		na_object_action_attach_profile( action, profile );
+	}
 
 	return( action );
 }

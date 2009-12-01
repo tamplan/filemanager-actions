@@ -1,5 +1,8 @@
 2009-12-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/io-provider-desktop/nadp-read.c
+	(action_from_desktop_path): Have at least one profile for the action.
+
 	* nautilus-actions/io-provider-desktop/nadp-desktop-file.c
 	(check_key_file): Fix check of required keys.
 
