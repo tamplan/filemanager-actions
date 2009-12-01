@@ -279,7 +279,7 @@ check_key_file( NadpDesktopFile *ndf )
 
 	/* start group must be 'Desktop Entry' */
 	start_group = g_key_file_get_start_group( ndf->private->key_file );
-	if( !strcmp( start_group, G_KEY_FILE_DESKTOP_GROUP )){
+	if( strcmp( start_group, G_KEY_FILE_DESKTOP_GROUP )){
 		g_warning( "%s: %s: invalid start group, found %s, waited for %s",
 				thisfn, ndf->private->path, start_group, G_KEY_FILE_DESKTOP_GROUP );
 		ret = FALSE;
@@ -295,7 +295,7 @@ check_key_file( NadpDesktopFile *ndf )
 			g_warning( "%s: %s: %s", thisfn, ndf->private->path, error->message );
 			g_error_free( error );
 			ret = FALSE;
-		} else if( !strcmp( type, G_KEY_FILE_DESKTOP_TYPE_APPLICATION )){
+		} else if( strcmp( type, G_KEY_FILE_DESKTOP_TYPE_APPLICATION )){
 			ret = FALSE;
 		}
 		g_free( type );
