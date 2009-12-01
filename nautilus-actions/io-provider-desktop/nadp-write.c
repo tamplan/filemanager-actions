@@ -86,6 +86,7 @@ nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 gboolean
 nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
 {
+	static const gchar *thisfn = "nadp_iio_provider_is_writable";
 	gboolean writable;
 	NadpDesktopFile *ndf;
 	gchar *path;
@@ -93,6 +94,11 @@ nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem
 	writable = FALSE;
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), writable );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), writable );
+
+	if( NA_IS_OBJECT_MENU( item )){
+		g_warning( "%s: menu are not yet handled by Desktop provider", thisfn );
+		return( FALSE );
+	}
 
 	ndf = ( NadpDesktopFile * ) g_object_get_data( G_OBJECT( item ), "nadp-desktop-file" );
 
