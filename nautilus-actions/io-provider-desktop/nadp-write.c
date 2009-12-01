@@ -64,7 +64,7 @@ nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 	if( g_file_test( userdir, G_FILE_TEST_IS_DIR )){
 		willing_to = nadp_utils_is_writable_dir( userdir );
 
-	} else if( g_mkdir_with_parents( userdir, 700 )){
+	} else if( g_mkdir_with_parents( userdir, 0700 )){
 		g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));
 
 	} else {
@@ -119,14 +119,17 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 	gchar *userdir;
 	gchar *id;
 	gchar *bname;
+	GSList *subdirs;
+	gchar *fulldir;
+	gboolean dir_ok;
 
-	ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
+	ret = NA_IIO_PROVIDER_NOT_WRITABLE;
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
 
 	if( na_object_is_readonly( item )){
 		g_warning( "%s: item=%p is read-only", thisfn, ( void * ) item );
-		return( NA_IIO_PROVIDER_NOT_WRITABLE );
+		return( ret );
 	}
 
 	ndf = ( NadpDesktopFile * ) g_object_get_data( G_OBJECT( item ), "nadp-desktop-file" );
@@ -137,21 +140,38 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 
 	} else {
 		userdir = nadp_xdg_data_dirs_get_user_dir( NADP_DESKTOP_PROVIDER( provider ), messages );
-		id = na_object_get_id( item );
-		bname = g_strdup_printf( "%s%s", id, NADP_DESKTOP_SUFFIX );
-		g_free( id );
-		path = g_build_filename( userdir, NADP_DESKTOP_PROVIDER_SUBDIRS, bname, NULL );
-		g_free( bname );
+		subdirs = nadp_utils_split_path_list( NADP_DESKTOP_PROVIDER_SUBDIRS );
+		fulldir = g_build_filename( userdir, ( gchar * ) subdirs->data, NULL );
+		dir_ok = TRUE;
+		if( !g_file_test( fulldir, G_FILE_TEST_IS_DIR )){
+			if( g_mkdir_with_parents( fulldir, 0700 )){
+				g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));
+				dir_ok = FALSE;
+			}
+		}
 		g_free( userdir );
+		nadp_utils_gslist_free( subdirs );
 
-		ndf = nadp_desktop_file_new_for_write( path );
-		g_object_set_data( G_OBJECT( item ), "nadp-desktop-file", ndf );
-		g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
+		if( dir_ok ){
+			id = na_object_get_id( item );
+			bname = g_strdup_printf( "%s%s", id, NADP_DESKTOP_SUFFIX );
+			g_free( id );
+			path = g_build_filename( fulldir, bname, NULL );
+			g_free( bname );
+		}
+		g_free( fulldir );
 
-		g_free( path );
+		if( dir_ok ){
+			ndf = nadp_desktop_file_new_for_write( path );
+			g_object_set_data( G_OBJECT( item ), "nadp-desktop-file", ndf );
+			g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
+			g_free( path );
+		}
 	}
 
-	ret = write_item( provider, item, ndf, messages );
+	if( ndf ){
+		ret = write_item( provider, item, ndf, messages );
+	}
 
 	return( ret );
 }

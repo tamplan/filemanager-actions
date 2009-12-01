@@ -55,6 +55,8 @@ G_BEGIN_DECLS
 #define NADP_IS_DESKTOP_PROVIDER_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NADP_DESKTOP_PROVIDER_TYPE ))
 #define NADP_DESKTOP_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NADP_DESKTOP_PROVIDER_TYPE, NadpDesktopProviderClass ))
 
+typedef struct NadpDesktopProviderPrivate NadpDesktopProviderPrivate;
+
 typedef struct {
 	GObject                     parent;
 	NadpDesktopProviderPrivate *private;
@@ -69,10 +71,12 @@ typedef struct {
 }
 	NadpDesktopProviderClass;
 
-/* this is a ':'-separated list of subdirs searched for actions desktop
- * files.
+/* this is a ':'-separated list of subdirs searched for actions desktop files.
  */
 #define NADP_DESKTOP_PROVIDER_SUBDIRS		"file-manager/actions"
+
+/* standard suffix for action desktop files
+ */
 #define NADP_DESKTOP_SUFFIX					".desktop"
 
 GType nadp_desktop_provider_get_type     ( void );

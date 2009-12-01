@@ -1,5 +1,20 @@
 2009-12-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/io-provider-desktop/nadp-desktop-file.c
+	(nadp_desktop_file_set_label, nadp_desktop_file_set_tooltip):
+	Fix locale.
+
+	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.c:
+	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.h:
+	Fix NadpDesktopProviderPrivate typedef definition.
+
+	* nautilus-actions/io-provider-desktop/nadp-utils.h:
+	Remove egg-desktop-file.h include.
+
+	* nautilus-actions/io-provider-desktop/nadp-write.c
+	(nadp_iio_provider_is_willing_to_write): Fix permissions.
+	(nadp_iio_provider_write_item): Create directory if it doesn't exist.
+
 	* nautilus-actions/private/na-object-item-priv.h: Fix typo.
 
 	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.h:

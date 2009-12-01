@@ -28,18 +28,10 @@
  *   ... and many others (see AUTHORS)
  */
 
-#include "egg-desktop-file.h"
-
 #ifndef __NADP_UTILS_H__
 #define __NADP_UTILS_H__
 
 G_BEGIN_DECLS
-
-typedef struct {
-	gchar          *id;
-	EggDesktopFile *edf;
-}
-	NadpPropertiesStruct;
 
 GSList  *nadp_utils_split_path_list( const gchar *path_list );
 
