@@ -95,9 +95,8 @@
 
 - may we have a read-only menu ?
   this implies dnd of an action inside of the menu would be forbidden
+  id. for reordering if subitems
 
 - nact: if item is read-only, all fields should be disabled
 
-- nact: creation assistant
-
-- toolbar label: if not set, initialize to item label
+- nact: new action assistant

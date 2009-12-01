@@ -249,6 +249,7 @@ read_item_properties( const NadpDesktopProvider *provider, NAObjectItem *item, N
 	gboolean writable;
 
 	id = nadp_desktop_file_get_id( ndf );
+	na_object_set_id( item, id );
 
 	label = ( gchar * ) nadp_desktop_file_get_label( ndf );
 	if( !label || !g_utf8_strlen( label, -1 )){
