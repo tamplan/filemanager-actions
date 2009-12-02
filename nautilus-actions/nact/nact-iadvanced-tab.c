@@ -417,10 +417,13 @@ static void
 on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selected )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_on_tab_updatable_selection_changed";
+	NAObjectItem *item;
 	NAObjectProfile *profile;
 	gboolean enable_tab;
 	GSList *schemes;
 	GtkTreeModel *scheme_model;
+	gboolean readonly;
+	GtkWidget *widget;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
@@ -432,8 +435,11 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 
 		g_object_get(
 				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				NULL );
+
+		readonly = item ? na_object_is_readonly( item ) : FALSE;
 
 		enable_tab = tab_set_sensitive( instance );
 
@@ -441,6 +447,15 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 			schemes = na_object_profile_get_schemes( profile );
 			g_slist_foreach( schemes, ( GFunc ) set_action_schemes, scheme_model );
 		}
+
+		widget = GTK_WIDGET( get_schemes_tree_view( instance ));
+		gtk_widget_set_sensitive( widget, item && !readonly );
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "AddSchemeButton" );
+		gtk_widget_set_sensitive( widget, item && !readonly );
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "RemoveSchemeButton" );
+		gtk_widget_set_sensitive( widget, item && !readonly );
 	}
 }
 

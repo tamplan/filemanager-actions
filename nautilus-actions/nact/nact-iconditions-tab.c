@@ -73,7 +73,7 @@ static void       on_isfiledir_toggled( GtkToggleButton *button, NactIConditions
 static void       on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance );
 static void       on_mimetypes_changed( GtkEntry *entry, NactIConditionsTab *instance );
 static void       on_multiple_toggled( GtkToggleButton *button, NactIConditionsTab *instance );
-static void       set_isfiledir( NactIConditionsTab *instance, gboolean isfile, gboolean isdir );
+static void       set_isfiledir( NactIConditionsTab *instance, gboolean isfile, gboolean isdir, gboolean readonly );
 
 GType
 nact_iconditions_tab_get_type( void )
@@ -298,6 +298,7 @@ static void
 on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_selected )
 {
 	static const gchar *thisfn = "nact_iconditions_tab_on_tab_updatable_selection_changed";
+	NAObjectItem *item;
 	NAObjectProfile *profile;
 	gboolean enable_tab;
 	GtkWidget *basenames_widget, *mimetypes_widget;
@@ -308,6 +309,7 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 	gboolean isfile, isdir;
 	GtkButton *multiple_button;
 	gboolean multiple;
+	gboolean readonly;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_ICONDITIONS_TAB( instance ));
@@ -316,8 +318,11 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 
 		g_object_get(
 				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				NULL );
+
+		readonly = item ? na_object_is_readonly( item ) : FALSE;
 
 		enable_tab = tab_set_sensitive( instance );
 
@@ -327,10 +332,12 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		gtk_entry_set_text( GTK_ENTRY( basenames_widget ), basenames_text );
 		g_free( basenames_text );
 		na_utils_free_string_list( basenames );
+		gtk_widget_set_sensitive( basenames_widget, item && !readonly );
 
 		matchcase_button = get_matchcase_button( instance );
 		matchcase = profile ? na_object_profile_get_matchcase( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
+		gtk_widget_set_sensitive( GTK_WIDGET( matchcase_button ), item && !readonly );
 
 		mimetypes_widget = get_mimetypes_entry( instance );
 		mimetypes = profile ? na_object_profile_get_mimetypes( profile ) : NULL;
@@ -338,14 +345,16 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		gtk_entry_set_text( GTK_ENTRY( mimetypes_widget ), mimetypes_text );
 		g_free( mimetypes_text );
 		na_utils_free_string_list( mimetypes );
+		gtk_widget_set_sensitive( mimetypes_widget, item && !readonly );
 
 		isfile = profile ? na_object_profile_get_is_file( profile ) : FALSE;
 		isdir = profile ? na_object_profile_get_is_dir( profile ) : FALSE;
-		set_isfiledir( instance, isfile, isdir );
+		set_isfiledir( instance, isfile, isdir, readonly );
 
 		multiple_button = get_multiple_button( instance );
 		multiple = profile ? na_object_profile_get_multiple( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( multiple_button ), multiple );
+		gtk_widget_set_sensitive( GTK_WIDGET( multiple_button ), item && !readonly );
 	}
 }
 
@@ -532,15 +541,27 @@ on_multiple_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 }
 
 static void
-set_isfiledir( NactIConditionsTab *instance, gboolean isfile, gboolean isdir )
+set_isfiledir( NactIConditionsTab *instance, gboolean isfile, gboolean isdir, gboolean readonly )
 {
+	GtkButton *both_button;
+	GtkButton *file_button;
+	GtkButton *dirs_button;
+
+	both_button = get_both_button( instance );
+	file_button = get_isfile_button( instance );
+	dirs_button = get_isdir_button( instance );
+
 	if( isfile && isdir ){
-		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( get_both_button( instance )), TRUE );
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( both_button ), TRUE );
 
 	} else if( isfile ){
-		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( get_isfile_button( instance )), TRUE );
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( file_button ), TRUE );
 
 	} else if( isdir ){
-		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( get_isdir_button( instance )), TRUE );
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( dirs_button ), TRUE );
 	}
+
+	gtk_widget_set_sensitive( GTK_WIDGET( both_button ), !readonly );
+	gtk_widget_set_sensitive( GTK_WIDGET( file_button ), !readonly );
+	gtk_widget_set_sensitive( GTK_WIDGET( dirs_button ), !readonly );
 }

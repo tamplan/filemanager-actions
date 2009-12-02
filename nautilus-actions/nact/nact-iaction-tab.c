@@ -369,10 +369,13 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 	gboolean same_label;
 	GtkWidget *label_widget, *tooltip_widget, *icon_widget, *title_widget;
 	gchar *label, *tooltip, *icon;
+	GtkButton *icon_button;
 	GtkButton *enabled_button;
+	GtkToggleButton *readonly_button;
 	gboolean enabled_item;
 	GtkToggleButton *toggle;
 	NAIIOProvider *provider;
+	gboolean readonly;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( BASE_IS_WINDOW( instance ));
@@ -404,13 +407,15 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		target_toolbar = (item && (
 				( NA_IS_OBJECT_ACTION( item ) && na_object_action_is_target_toolbar( NA_OBJECT_ACTION( item )))));
 
+		readonly = item ? na_object_is_readonly( item ) : FALSE;
+
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" ));
 		gtk_toggle_button_set_active( toggle, target_selection );
-		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
+		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ) && !readonly );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetBackgroundButton" ));
 		gtk_toggle_button_set_active( toggle, target_background );
-		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
+		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ) && !readonly );
 
 		enable_label = ( item && ( NA_IS_OBJECT_MENU( item ) || target_selection || target_background ));
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
@@ -420,11 +425,11 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 			check_for_label( instance, GTK_ENTRY( label_widget ), label );
 		}
 		g_free( label );
-		gtk_widget_set_sensitive( label_widget, enable_label );
+		gtk_widget_set_sensitive( label_widget, enable_label && !readonly );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetToolbarButton" ));
 		gtk_toggle_button_set_active( toggle, target_toolbar );
-		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
+		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ) && !readonly );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
 		same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( item )) : FALSE;
@@ -441,11 +446,16 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		tooltip = item ? na_object_get_tooltip( item ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
 		g_free( tooltip );
+		gtk_widget_set_sensitive( tooltip_widget, item && !readonly );
 
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 		icon = item ? na_object_get_icon( item ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
 		g_free( icon );
+		gtk_widget_set_sensitive( icon_widget, item && !readonly );
+
+		icon_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" ));
+		gtk_widget_set_sensitive( GTK_WIDGET( icon_button ), item && !readonly );
 
 		title_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionPropertiesTitle" );
 		if( item && NA_IS_OBJECT_MENU( item )){
@@ -457,11 +467,17 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		enabled_button = get_enabled_button( instance );
 		enabled_item = item ? na_object_is_enabled( NA_OBJECT_ITEM( item )) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( enabled_button ), enabled_item );
+		gtk_widget_set_sensitive( GTK_WIDGET( enabled_button ), item && !readonly );
+
+		readonly_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionReadonlyButton" ));
+		gtk_toggle_button_set_active( readonly_button, readonly );
+		gtk_widget_set_sensitive( GTK_WIDGET( readonly_button ), FALSE );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemID" );
 		label = item ? na_object_get_id( item ) : g_strdup( "" );
 		gtk_label_set_text( GTK_LABEL( label_widget ), label );
 		g_free( label );
+		gtk_widget_set_sensitive( label_widget, item && !readonly );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemProvider" );
 		label = NULL;
@@ -476,8 +492,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		}
 		gtk_label_set_text( GTK_LABEL( label_widget ), label );
 		g_free( label );
-
-		/* TODO: manage read-only flag */
+		gtk_widget_set_sensitive( label_widget, item && !readonly );
 	}
 }
 
@@ -661,10 +676,12 @@ toolbar_same_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item )
 {
 	GtkToggleButton *toggle;
 	gboolean target_toolbar;
+	gboolean readonly;
 
+	readonly = item ? na_object_is_readonly( item ) : FALSE;
 	toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
 	target_toolbar = item && NA_IS_OBJECT_ACTION( item ) ? na_object_action_is_target_toolbar( NA_OBJECT_ACTION( item )) : FALSE;
-	gtk_widget_set_sensitive( GTK_WIDGET( toggle ), target_toolbar );
+	gtk_widget_set_sensitive( GTK_WIDGET( toggle ), target_toolbar && !readonly );
 }
 
 static void
@@ -692,12 +709,14 @@ toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item )
 {
 	gboolean is_action;
 	gboolean same_label;
+	gboolean readonly;
 	GtkWidget *label_widget;
 
 	is_action = item && NA_IS_OBJECT_ACTION( item );
+	readonly = item ? na_object_is_readonly( item ) : FALSE;
 	same_label = is_action ? na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( item )) : FALSE;
 	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
-	gtk_widget_set_sensitive( label_widget, is_action && !same_label );
+	gtk_widget_set_sensitive( label_widget, is_action && !same_label && !readonly );
 }
 
 static void

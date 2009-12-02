@@ -95,8 +95,6 @@
   this implies dnd of an action inside of the menu would be forbidden
   id. for reordering if subitems
 
-- nact: if item is read-only, all fields should be disabled
-
 - nact: new action assistant
 
 - check that having an id which is not a UUID is supported

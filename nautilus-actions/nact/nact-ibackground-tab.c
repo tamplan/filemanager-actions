@@ -291,6 +291,8 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 	static const gchar *thisfn = "nact_ibackground_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	gboolean enable_tab;
+	gboolean readonly;
+	GtkWidget *widget;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_IBACKGROUND_TAB( instance ));
@@ -306,11 +308,22 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 
 		g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
 
+		readonly = item ? na_object_is_readonly( item ) : FALSE;
+
 		enable_tab = tab_set_sensitive( instance );
 
 		if( item && NA_IS_OBJECT_ACTION( item )){
 			setup_folders( instance );
 		}
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" );
+		gtk_widget_set_sensitive( widget, item && !readonly );
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" );
+		gtk_widget_set_sensitive( widget, item && !readonly );
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton" );
+		gtk_widget_set_sensitive( widget, item && !readonly );
 	}
 }
 

@@ -601,6 +601,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	gboolean delete_enabled;
 	gboolean clipboard_is_empty;
 	gboolean new_item_enabled;
+	gboolean readonly;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -617,6 +618,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( !profile || NA_IS_OBJECT_PROFILE( profile ));
 
 	has_modified = nact_main_window_has_modified_items( window );
+	readonly = item ? na_object_is_readonly( item ) : FALSE;
 
 	/* new menu enabled if selection is a menu or an action */
 	/* new action enabled if selection is a menu or an action */
@@ -624,8 +626,8 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	enable_item( window, "NewMenuItem", new_item_enabled );
 	enable_item( window, "NewActionItem", new_item_enabled );
 
-	/* new profile enabled if selection is relative to only one action */
-	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ));
+	/* new profile enabled if selection is relative to only one writable action */
+	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ) && !readonly );
 
 	/* save enabled if at least one item has been modified */
 	enable_item( window, "SaveItem", has_modified || mis->level_zero_order_changed );
@@ -639,10 +641,11 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	count_selected = mis->selected_menus + mis->selected_actions + mis->selected_profiles;
 
 	/* cut/copy/duplicate/delete enabled when selection not empty */
-	cut_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
+	/* cut/delete require a writable item */
+	cut_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !readonly;
 	copy_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
 	duplicate_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
-	delete_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
+	delete_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !readonly;
 
 	/* paste enabled if
 	 * - simple selection

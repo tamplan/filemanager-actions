@@ -319,6 +319,9 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 	gboolean enable_tab;
 	GtkWidget *label_entry, *path_entry, *parameters_entry;
 	gchar *label, *path, *parameters;
+	gboolean readonly;
+	GtkButton *path_button;
+	GtkButton *legend_button;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
@@ -333,21 +336,32 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 
 		enable_tab = tab_set_sensitive( instance );
 
+		readonly = item ? na_object_is_readonly( item ) : FALSE;
+
 		label_entry = get_label_entry( instance );
 		label = profile ? na_object_get_label( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
 		check_for_label( instance, GTK_ENTRY( label_entry ), label );
 		g_free( label );
+		gtk_widget_set_sensitive( label_entry, profile && !readonly );
 
 		path_entry = get_path_entry( instance );
 		path = profile ? na_object_profile_get_path( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
 		g_free( path );
+		gtk_widget_set_sensitive( path_entry, profile && !readonly );
+
+		path_button = get_path_button( instance );
+		gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile && !readonly );
 
 		parameters_entry = get_parameters_entry( instance );
 		parameters = profile ? na_object_profile_get_parameters( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
 		g_free( parameters );
+		gtk_widget_set_sensitive( parameters_entry, profile && !readonly );
+
+		legend_button = get_legend_button( instance );
+		gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile && !readonly );
 	}
 }
 
