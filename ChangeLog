@@ -1,5 +1,8 @@
 2009-12-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/private/na-object-profile.c (object_is_valid):
+	Fix validity check of the profile.
+
 	Add a maintainer menu option to dump the clipboard.
 
 	* nautilus-actions/nact/nact-clipboard.c:

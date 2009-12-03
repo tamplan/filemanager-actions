@@ -1698,22 +1698,27 @@ object_is_valid( const NAObject *profile )
 
 	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
 
+		is_valid = TRUE;
 		parent = na_object_get_parent( profile );
 
-		if( na_object_action_is_target_background( NA_OBJECT_ACTION( parent )) ||
-			na_object_action_is_target_toolbar( NA_OBJECT_ACTION( parent ))){
+		if( is_valid ){
+			if( na_object_action_is_target_background( NA_OBJECT_ACTION( parent )) ||
+				na_object_action_is_target_toolbar( NA_OBJECT_ACTION( parent ))){
+				is_valid =
+					is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_folders( NA_OBJECT_PROFILE( profile ));
+			}
+		}
 
-			is_valid =
-				is_valid_folders( NA_OBJECT_PROFILE( profile ));
-
-		} else {
-
-			is_valid =
-				is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
-				is_valid_filenames( NA_OBJECT_PROFILE( profile )) &&
-				is_valid_mimetypes( NA_OBJECT_PROFILE( profile )) &&
-				is_valid_isfiledir( NA_OBJECT_PROFILE( profile )) &&
-				is_valid_schemes( NA_OBJECT_PROFILE( profile ));
+		if( is_valid ){
+			if( na_object_action_is_target_selection( NA_OBJECT_ACTION( parent ))){
+				is_valid =
+					is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_filenames( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_mimetypes( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_isfiledir( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_schemes( NA_OBJECT_PROFILE( profile ));
+			}
 		}
 	}
 
