@@ -122,6 +122,8 @@ static gchar *export_row_object( NactClipboard *clipboard, NAObject *object, con
 static void   get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard );
 static void   clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, NactClipboard *clipboard );
 
+static gchar *clipboard_mode_to_string( gint mode );
+
 GType
 nact_clipboard_get_type( void )
 {
@@ -759,4 +761,64 @@ clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, NactClipboard *cl
 	g_list_free( data->items );
 	g_free( data );
 	clipboard->private->primary_data = NULL;
+}
+
+/**
+ * nact_clipboard_dump:
+ * @clipboard: this #NactClipboard instance.
+ *
+ * Dumps the content of the primary clipboard.
+ */
+void
+nact_clipboard_dump( NactClipboard *clipboard )
+{
+	static const gchar *thisfn = "nact_clipboard_dump";
+	gchar *mode;
+	GList *it;
+
+	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+
+	if( !clipboard->private->dispose_has_run ){
+
+		g_debug( "%s:       window=%p (%s)", thisfn, ( void * ) clipboard->private->window, G_OBJECT_TYPE_NAME( clipboard->private->window ));
+		g_debug( "%s:          dnd=%p", thisfn, ( void * ) clipboard->private->dnd );
+		g_debug( "%s:      primary=%p", thisfn, ( void * ) clipboard->private->primary );
+		g_debug( "%s: primary_data=%p", thisfn, ( void * ) clipboard->private->primary_data );
+		g_debug( "%s:  primary_data->nb_actions=%d", thisfn, clipboard->private->primary_data->nb_actions );
+		g_debug( "%s: primary_data->nb_profiles=%d", thisfn, clipboard->private->primary_data->nb_profiles );
+		g_debug( "%s:    primary_data->nb_menus=%d", thisfn, clipboard->private->primary_data->nb_menus );
+		g_debug( "%s:       primary_data->items=%p (count=%d)",
+				thisfn,
+				( void * ) clipboard->private->primary_data->items,
+				clipboard->private->primary_data->items ? g_list_length( clipboard->private->primary_data->items ) : 0 );
+		mode = clipboard_mode_to_string( clipboard->private->primary_data->mode );
+		g_debug( "%s:       primary_data->mode=%d (%s)", thisfn, clipboard->private->primary_data->mode, mode );
+		g_free( mode );
+		g_debug( "%s:  primary_got=%s", thisfn, ( void * ) clipboard->private->primary_got ? "True":"False" );
+		for( it = clipboard->private->primary_data->items ; it ; it = it->next ){
+			na_object_object_dump( NA_OBJECT( it->data ));
+		}
+	}
+}
+
+static gchar *
+clipboard_mode_to_string( gint mode )
+{
+	gchar *mode_str;
+
+	switch( mode ){
+		case CLIPBOARD_MODE_CUT:
+			mode_str = g_strdup( "CutMode" );
+			break;
+
+		case CLIPBOARD_MODE_COPY:
+			mode_str = g_strdup( "CopyMode" );
+			break;
+
+		default:
+			mode_str = g_strdup( "unknown mode" );
+			break;
+	}
+
+	return( mode_str );
 }

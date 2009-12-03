@@ -97,4 +97,8 @@
 
 - nact: new action assistant
 
-- check that having an id which is not a UUID is supported
+- nact: copy/paste: only the action is copied without its profiles
+
+- nact: shouldn't be able to paste into a read-only item
+
+- nact: when pasting an item, should reset provider and read-only flag

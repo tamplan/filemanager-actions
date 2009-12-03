@@ -6,6 +6,7 @@
                 <menuitem action="DumpSelectionItem" />
                 <menuitem action="BriefTreeStoreDumpItem" />
                 <menuitem action="ListModifiedItems" />
+                <menuitem action="DumpClipboard" />
             </menu>
         </placeholder>
     </menubar>
@@ -14,5 +15,6 @@
                 <toolitem action="DumpSelectionItem" />
                 <toolitem action="BriefTreeStoreDumpItem" />
                 <toolitem action="ListModifiedItems" />
+                <toolitem action="DumpClipboard" />
     </toolbar>
 </ui>

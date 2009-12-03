@@ -135,6 +135,7 @@ static void     on_export_activated( GtkAction *action, NactMainWindow *window )
 static void     on_dump_selection_activated( GtkAction *action, NactMainWindow *window );
 static void     on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window );
 static void     on_list_modified_items_activated( GtkAction *action, NactMainWindow *window );
+static void     on_dump_clipboard_activated( GtkAction *action, NactMainWindow *window );
 
 static void     on_help_activated( GtkAction *action, NactMainWindow *window );
 static void     on_about_activated( GtkAction *action, NactMainWindow *window );
@@ -240,6 +241,10 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item */
 				N_( "List the modified items" ),
 				G_CALLBACK( on_list_modified_items_activated ) },
+		{ "DumpClipboard", NULL, N_( "_Dump the clipboard" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the DumpClipboard item */
+				N_( "Dump the content of the clipboard object" ),
+				G_CALLBACK( on_dump_clipboard_activated ) },
 		{ "HelpItem" , GTK_STOCK_HELP, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Help item */
 				N_( "Display help about this program" ),
@@ -1257,6 +1262,12 @@ static void
 on_list_modified_items_activated( GtkAction *action, NactMainWindow *window )
 {
 	nact_iactions_list_list_modified_items( NACT_IACTIONS_LIST( window ));
+}
+
+static void
+on_dump_clipboard_activated( GtkAction *action, NactMainWindow *window )
+{
+	nact_clipboard_dump( nact_main_window_get_clipboard( window ));
 }
 
 static void

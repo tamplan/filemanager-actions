@@ -1,3 +1,15 @@
+2009-12-03 Pierre Wieser <pwieser@trychlos.org>
+
+	Add a maintainer menu option to dump the clipboard.
+
+	* nautilus-actions/nact/nact-clipboard.c:
+	* nautilus-actions/nact/nact-clipboard.h (nact_clipboard_dump):
+	New function.
+
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nautilus-actions-maintainer.actions:
+	Define the a new 'Dump the clipboard' option.
+
 2009-12-02 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nact-iaction-tab.c

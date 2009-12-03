@@ -101,6 +101,8 @@ void           nact_clipboard_primary_set( NactClipboard *clipboard, GList *item
 GList         *nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel );
 void           nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *profiles, guint *menus );
 
+void           nact_clipboard_dump( NactClipboard *clipboard );
+
 G_END_DECLS
 
 #endif /* __NACT_CLIPBOARD_H__ */
