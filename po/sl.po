@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-11-21 18:01+0000\n"
-"PO-Revision-Date: 2009-11-27 11:04+0100\n"
+"POT-Creation-Date: 2009-11-30 19:25+0000\n"
+"PO-Revision-Date: 2009-12-01 19:46+0100\n"
 "Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +62,7 @@ msgstr "Vprašaj za potrditev ob končanju z Esc"
 
 #. i18n: name of the default profile when creating an action
 #: ../data/nautilus-actions.schemas.in.h:10
-#: ../nautilus-actions/private/na-object-action.c:426
+#: ../nautilus-actions/private/na-object-action.c:409
 msgid "Default profile"
 msgstr "Privzet profil"
 
@@ -245,11 +245,11 @@ msgstr "Položaj in velikost glavnega okna ; privzeto vrednost nastavi upravljal
 
 #: ../data/nautilus-actions.schemas.in.h:54
 msgid "Position and size of the preferences dialog"
-msgstr "Položaj in velikost pogovornega okna nastavitev"
+msgstr "Položaj in velikost pogovornega okna možnosti"
 
 #: ../data/nautilus-actions.schemas.in.h:55
 msgid "Position and size of the preferences dialog ; default is set by the window manager."
-msgstr "Položaj in velikost pogovornega okna nastavitev; privzeto vrednost nastavi upravljalnik oken."
+msgstr "Položaj in velikost pogovornega okna možnosti; privzeto vrednost nastavi upravljalnik oken."
 
 #: ../data/nautilus-actions.schemas.in.h:56
 msgid "Sort mode"
@@ -287,7 +287,7 @@ msgstr "Ikona predmeta menija, ki se bo pojavila ob oznaki v Nautilusovem pojavn
 
 #: ../data/nautilus-actions.schemas.in.h:63
 msgid "The label displayed besides of the icon in the Nautilus toolbar. Note that actual display may depend of your own Gnome preferences."
-msgstr "Oznaka prikazana poleg ikone v orodni vrstici Nautilusa. Dejanski prikaz je lahko odvisen od nastavitev Gnome."
+msgstr "Oznaka prikazana poleg ikone v orodni vrstici Nautilusa. Dejanski prikaz je lahko odvisen od možnosti Gnome."
 
 #. GConf schema descriptions
 #.
@@ -462,33 +462,33 @@ msgstr "Ali naj bo orodna vrstica orodij prikazana v glavnem oknu."
 msgid "Width of the main window pane ; default is set by the UI manager."
 msgstr "Širina pladnja glavnega okna ; privzeto vrednost nastavi upravljalnik uporabniškega vmesnika."
 
-#: ../nautilus-actions/nact/base-application.c:1210
+#: ../nautilus-actions/nact/base-application.c:1291
 msgid "Unable to initialize the internationalization environment."
 msgstr "Okolja z ustreznimi jezikovnimi določili ni mogoče zagnati. "
 
-#: ../nautilus-actions/nact/base-application.c:1219
+#: ../nautilus-actions/nact/base-application.c:1300
 msgid "Unable to initialize the Gtk+ user interface."
 msgstr "Gtk+ uporabniškega vmesnika ni mogoče zagnati."
 
-#: ../nautilus-actions/nact/base-application.c:1228
+#: ../nautilus-actions/nact/base-application.c:1309
 msgid "Another instance of the application is already running."
 msgstr "Drug primer programa že teče."
 
-#: ../nautilus-actions/nact/base-application.c:1237
+#: ../nautilus-actions/nact/base-application.c:1318
 msgid "No filename provided for the UI XML definition."
 msgstr "Ime datoteke za UI XML definicijo ni določeno."
 
 #. i18n: Unable to load the XML definition from <filename>
-#: ../nautilus-actions/nact/base-application.c:1247
+#: ../nautilus-actions/nact/base-application.c:1328
 #, c-format
 msgid "Unable to load the XML definition from %s."
 msgstr "Ni mogoče naložiti XML definicije iz %s."
 
-#: ../nautilus-actions/nact/base-application.c:1260
+#: ../nautilus-actions/nact/base-application.c:1341
 msgid "Unable to set the default icon for the application."
 msgstr "Ni mogoče nastaviti privzete ikone za program."
 
-#: ../nautilus-actions/nact/base-application.c:1269
+#: ../nautilus-actions/nact/base-application.c:1350
 msgid "Unable to get the main window of the application."
 msgstr "Ni mogoče dobiti glavnega okna programa."
 
@@ -496,10 +496,73 @@ msgstr "Ni mogoče dobiti glavnega okna programa."
 msgid "Are you sure you want to quit this assistant ?"
 msgstr "Ali ste prepričani, da želite končati pomočnika?"
 
-#: ../nautilus-actions/nact/base-window.c:1137
+#: ../nautilus-actions/nact/base-window.c:1175
 #, c-format
 msgid "Unable to load %s XML definition."
 msgstr "Ni mogoče naložiti XML definicije iz %s."
+
+#: ../nautilus-actions/nact/egg-desktop-file.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "Datoteka ni veljavna .desktop datoteka"
+
+#: ../nautilus-actions/nact/egg-desktop-file.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "Nepoznana različica namizne datoteke '%s' "
+
+#: ../nautilus-actions/nact/egg-desktop-file.c:958
+#, c-format
+msgid "Starting %s"
+msgstr "Zaganjanje %s"
+
+#: ../nautilus-actions/nact/egg-desktop-file.c:1100
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "Program ne sprejema dokumentov preko ukazne vrstice"
+
+#: ../nautilus-actions/nact/egg-desktop-file.c:1168
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "Nepoznana možnost zagona: %d"
+
+#: ../nautilus-actions/nact/egg-desktop-file.c:1373
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "URI-jev dokumenta ni mogoče poslati na namizni vnos 'Type=Link'"
+
+#: ../nautilus-actions/nact/egg-desktop-file.c:1394
+#, c-format
+msgid "Not a launchable item"
+msgstr "Ni izvedljiv predmet"
+
+#: ../nautilus-actions/nact/egg-sm-client.c:239
+msgid "Disable connection to session manager"
+msgstr "Onemogoči povezavo z upravljalnikom seje"
+
+#: ../nautilus-actions/nact/egg-sm-client.c:242
+msgid "Specify file containing saved configuration"
+msgstr "Določitev datoteke s shranjenimi nastavitvami"
+
+#: ../nautilus-actions/nact/egg-sm-client.c:242
+msgid "FILE"
+msgstr "DATOTEKA"
+
+#: ../nautilus-actions/nact/egg-sm-client.c:245
+msgid "Specify session management ID"
+msgstr "Določi ID upravljalnika seje"
+
+#: ../nautilus-actions/nact/egg-sm-client.c:245
+msgid "ID"
+msgstr "ID"
+
+#: ../nautilus-actions/nact/egg-sm-client.c:267
+msgid "Session management options:"
+msgstr "Možnosti upravljanja seje:"
+
+#: ../nautilus-actions/nact/egg-sm-client.c:268
+msgid "Show session management options"
+msgstr "Pokaži možnosti upravljanja seje"
 
 #: ../nautilus-actions/nact/nact-application.c:73
 msgid "Set it to run multiple instances of the program [unique]"
@@ -857,7 +920,7 @@ msgstr "Preklic trenutnih sprememb in ponovno nalaganje seznama dejanj"
 #. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
 #: ../nautilus-actions/nact/nact-main-menubar.c:213
 msgid "Edit your preferences"
-msgstr "Urejanje vaših nastavitev"
+msgstr "Urejanje vaših možnosti"
 
 #: ../nautilus-actions/nact/nact-main-menubar.c:215
 msgid "_Expand all"
@@ -958,15 +1021,15 @@ msgstr "Prikaz orodne vrstice pomoči"
 msgid " %d menus, %d actions, %d profiles are currently displayed"
 msgstr "%d menijev, %d dejanj, %d profilov je trenutno prikazanih"
 
-#: ../nautilus-actions/nact/nact-main-window.c:1213
+#: ../nautilus-actions/nact/nact-main-window.c:1232
 msgid "Reloading a fresh list of actions requires that you give up with your current modifications."
 msgstr "S ponovnim nalaganjem svežega seznama dejanj, bodo trenutne spremembe izgubljene."
 
-#: ../nautilus-actions/nact/nact-main-window.c:1216
+#: ../nautilus-actions/nact/nact-main-window.c:1235
 msgid "Do you really want to do this ?"
 msgstr "Ali ste prepričani, da želite nadaljevati?"
 
-#: ../nautilus-actions/nact/nact-main-window.c:1239
+#: ../nautilus-actions/nact/nact-main-window.c:1258
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to reload a fresh one."
@@ -974,11 +1037,11 @@ msgstr ""
 "Eno ali več dejanj v datotečnem sistemu je bilo spremenjenih.\n"
 "Delo je mogoče nadaljevati s trenutnim seznamom dejanj, ali pa ga osvežiti."
 
-#: ../nautilus-actions/nact/nact-main-window.c:1246
+#: ../nautilus-actions/nact/nact-main-window.c:1265
 msgid "Note that reloading a fresh list of actions requires that you give up with your current modifications."
 msgstr "S ponovnim nalaganje svežega seznama dejanj, bodo izgubljene trenutne spremembe."
 
-#: ../nautilus-actions/nact/nact-main-window.c:1252
+#: ../nautilus-actions/nact/nact-main-window.c:1271
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "Ali želite ponovno naložiti svež seznam dejanj?"
 
@@ -1103,26 +1166,26 @@ msgstr "(ponovno oštevilčeno)"
 
 #. i18n: label of an automagic root submenu
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
-#: ../nautilus-actions/plugin/nautilus-actions.c:630
-#: ../nautilus-actions/plugin/nautilus-actions.c:702
+#: ../nautilus-actions/plugin/nautilus-actions.c:631
+#: ../nautilus-actions/plugin/nautilus-actions.c:703
 msgid "Nautilus Actions"
 msgstr "Dejanja Nautilusa"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../nautilus-actions/plugin/nautilus-actions.c:632
+#: ../nautilus-actions/plugin/nautilus-actions.c:633
 msgid "A submenu which embeds the currently available Nautilus Actions extensions"
 msgstr "Podmeni ki vključuje trenutno razpoložljive razširitve dejanj Nautilusa"
 
-#: ../nautilus-actions/plugin/nautilus-actions.c:679
+#: ../nautilus-actions/plugin/nautilus-actions.c:680
 msgid "About Nautilus Actions"
 msgstr "O programu"
 
-#: ../nautilus-actions/plugin/nautilus-actions.c:680
+#: ../nautilus-actions/plugin/nautilus-actions.c:681
 msgid "Display information about Nautilus Actions"
 msgstr "Prikaz podrobnosti o programu"
 
 #. i18n: default label for a newly created action
-#: ../nautilus-actions/private/na-object-action-fn.h:59
+#: ../nautilus-actions/private/na-object-action-fn.h:58
 msgid "New Nautilus action"
 msgstr "Novo dejanje Nautilusa"
 
@@ -1205,7 +1268,7 @@ msgid ""
 "Note that actual display may depend of your own Gnome preferences."
 msgstr ""
 "Oznaka prikazana poleg ikone v orodni vrstici Nautilusa.\n"
-"Dejanski prikaz je lahko odvisen od Gnome nastavitev."
+"Dejanski prikaz je lahko odvisen od Gnome možnosti."
 
 #. too long string for iso c: 665 (max=509)
 #: ../nautilus-actions/runtime/na-xml-names.h:129
