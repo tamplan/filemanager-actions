@@ -660,7 +660,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	if(( mis->treeview_has_focus || mis->popup_handler ) && count_selected <= 1 ){
 		if( !clipboard_is_empty ){
 			if( mis->clipboard_profiles ){
-				paste_enabled = item && NA_IS_OBJECT_ACTION( item );
+				paste_enabled = item && NA_IS_OBJECT_ACTION( item ) && !readonly;
 			} else {
 				paste_enabled = ( item != NULL );
 			}
@@ -677,7 +677,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 		if( mis->selected_menus + mis->selected_actions ){
 			if( !clipboard_is_empty ){
 				if( mis->clipboard_profiles ){
-					paste_into_enabled = item && NA_IS_OBJECT_ACTION( item );
+					paste_into_enabled = item && NA_IS_OBJECT_ACTION( item ) && !readonly;
 				} else {
 					paste_into_enabled = item && NA_IS_OBJECT_MENU( item );
 				}
