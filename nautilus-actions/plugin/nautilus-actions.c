@@ -412,6 +412,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *
 	GList *it;
 	NAObjectProfile *profile;
 	NautilusMenuItem *item;
+	gchar *label;
 
 	g_debug( "%s: plugin=%p, tree=%p, target=%d, files=%p (count=%d)",
 			thisfn, ( void * ) plugin, ( void * ) tree, target,
@@ -423,6 +424,12 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *
 
 		if( !na_object_is_enabled( it->data ) ||
 			!na_object_is_valid( it->data )){
+
+				label = na_object_get_label( it->data );
+				g_warning( "%s: '%s' item: enabled=%s, valid=%s", thisfn, label,
+						na_object_is_enabled( it->data ) ? "True":"False",
+						na_object_is_valid( it->data ) ? "True":"False" );
+				g_free( label );
 				continue;
 		}
 

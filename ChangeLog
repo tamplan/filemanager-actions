@@ -1,5 +1,8 @@
 2009-12-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/plugin/nautilus-actions.c (build_nautilus_menus):
+	Emits a warning when finding a disabled or invalid item.
+
 	* nautilus-actions/nact/nact-clipboard.c (nact_clipboard_dump):
 	Allow dump when clipboard has not been yet used.
 
