@@ -1,5 +1,8 @@
 2009-12-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-clipboard.c (nact_clipboard_dump):
+	Allow dump when clipboard has not been yet used.
+
 	* nautilus-actions/api/na-object-api.h:
 	All arguments have parenthesis around them.
 

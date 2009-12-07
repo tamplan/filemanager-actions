@@ -784,20 +784,24 @@ nact_clipboard_dump( NactClipboard *clipboard )
 		g_debug( "%s:          dnd=%p", thisfn, ( void * ) clipboard->private->dnd );
 		g_debug( "%s:      primary=%p", thisfn, ( void * ) clipboard->private->primary );
 		g_debug( "%s: primary_data=%p", thisfn, ( void * ) clipboard->private->primary_data );
-		g_debug( "%s:  primary_data->nb_actions=%d", thisfn, clipboard->private->primary_data->nb_actions );
-		g_debug( "%s: primary_data->nb_profiles=%d", thisfn, clipboard->private->primary_data->nb_profiles );
-		g_debug( "%s:    primary_data->nb_menus=%d", thisfn, clipboard->private->primary_data->nb_menus );
-		g_debug( "%s:       primary_data->items=%p (count=%d)",
-				thisfn,
-				( void * ) clipboard->private->primary_data->items,
-				clipboard->private->primary_data->items ? g_list_length( clipboard->private->primary_data->items ) : 0 );
-		mode = clipboard_mode_to_string( clipboard->private->primary_data->mode );
-		g_debug( "%s:       primary_data->mode=%d (%s)", thisfn, clipboard->private->primary_data->mode, mode );
-		g_free( mode );
-		g_debug( "%s:  primary_got=%s", thisfn, ( void * ) clipboard->private->primary_got ? "True":"False" );
-		for( it = clipboard->private->primary_data->items ; it ; it = it->next ){
-			na_object_object_dump( NA_OBJECT( it->data ));
+
+		if( clipboard->private->primary_data ){
+			g_debug( "%s:  primary_data->nb_actions=%d", thisfn, clipboard->private->primary_data->nb_actions );
+			g_debug( "%s: primary_data->nb_profiles=%d", thisfn, clipboard->private->primary_data->nb_profiles );
+			g_debug( "%s:    primary_data->nb_menus=%d", thisfn, clipboard->private->primary_data->nb_menus );
+			g_debug( "%s:       primary_data->items=%p (count=%d)",
+					thisfn,
+					( void * ) clipboard->private->primary_data->items,
+					clipboard->private->primary_data->items ? g_list_length( clipboard->private->primary_data->items ) : 0 );
+			mode = clipboard_mode_to_string( clipboard->private->primary_data->mode );
+			g_debug( "%s:       primary_data->mode=%d (%s)", thisfn, clipboard->private->primary_data->mode, mode );
+			g_free( mode );
+			for( it = clipboard->private->primary_data->items ; it ; it = it->next ){
+				na_object_object_dump( NA_OBJECT( it->data ));
+			}
 		}
+
+		g_debug( "%s:  primary_got=%s", thisfn, ( void * ) clipboard->private->primary_got ? "True":"False" );
 	}
 }
 

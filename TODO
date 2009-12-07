@@ -104,5 +104,3 @@
 - nact: when pasting an item, should reset provider and read-only flag
 
 - desktop provider: fix default toolbar label
-
-- dump clipboard: test if null
