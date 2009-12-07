@@ -1,5 +1,8 @@
 2009-12-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/api/na-object-api.h:
+	All arguments have parenthesis around them.
+
 	Only load in the Nautilus plugin valid and enabled candidate items.
 
 	* nautilus-actions/nact/nact-application.c

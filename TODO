@@ -106,5 +106,3 @@
 - desktop provider: fix default toolbar label
 
 - dump clipboard: test if null
-
-- na-object-api: set parenthesis around args
