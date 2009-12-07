@@ -1320,7 +1320,7 @@ reload( NactMainWindow *window )
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		pivot = nact_application_get_pivot( application );
-		na_pivot_reload_items( pivot );
+		na_pivot_load_items( pivot );
 		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( pivot ));
 
 		na_object_free_items_list( window->private->deleted );

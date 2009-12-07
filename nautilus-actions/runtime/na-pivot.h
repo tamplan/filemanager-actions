@@ -109,8 +109,14 @@ typedef struct {
 
 GType         na_pivot_get_type( void );
 
+enum {
+	PIVOT_LOAD_DISABLED = 1 << 0,
+	PIVOT_LOAD_INVALID  = 1 << 1,
+	PIVOT_LOAD_ALL      = 0xff,
+};
+
+
 NAPivot      *na_pivot_new( void );
-void          na_pivot_check_status( const NAPivot *pivot );
 void          na_pivot_dump( const NAPivot *pivot );
 
 void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
@@ -123,7 +129,7 @@ void          na_pivot_release_provider( const GObject *provider );
 void          na_pivot_free_providers( GList *providers );
 
 GList        *na_pivot_get_items( const NAPivot *pivot );
-void          na_pivot_reload_items( NAPivot *pivot );
+void          na_pivot_load_items( NAPivot *pivot );
 
 void          na_pivot_add_item( NAPivot *pivot, const NAObjectItem *item );
 NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *uuid );
@@ -136,6 +142,10 @@ void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer
 
 gboolean      na_pivot_get_automatic_reload( const NAPivot *pivot );
 void          na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
+
+void          na_pivot_set_population( NAPivot *pivot, gint population );
+gboolean      na_pivot_is_disable_loadable( const NAPivot *pivot );
+gboolean      na_pivot_is_invalid_loadable( const NAPivot *pivot );
 
 gint          na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b );
 gint          na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );

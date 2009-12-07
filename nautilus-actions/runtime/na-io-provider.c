@@ -41,13 +41,14 @@
 #include "na-iprefs.h"
 #include "na-utils.h"
 
-static GList   *build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty );
-static gint     search_item( const NAObject *obj, const gchar *uuid );
-static GList   *get_merged_items_list( const NAPivot *pivot, GList *providers, GSList **messages );
+static GList *get_merged_items_list( const NAPivot *pivot, GList *providers, GSList **messages );
+static GList *build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty );
+static gint   search_item( const NAObject *obj, const gchar *uuid );
+static GList *sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn );
+static GList *filter_unwanted_items( const NAPivot *pivot, GList *merged );
+static GList *filter_unwanted_items_rec( GList *merged, gboolean load_disabled, gboolean load_invalid );
 
-static guint    try_write_item( const NAIIOProvider *instance, NAObjectItem *item, GSList **messages );
-
-static GList   *sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn );
+static guint  try_write_item( const NAIIOProvider *instance, NAObjectItem *item, GSList **messages );
 
 /**
  * na_io_provider_register_callbacks:
@@ -108,7 +109,7 @@ na_io_provider_read_items( const NAPivot *pivot, GSList **messages )
 {
 	static const gchar *thisfn = "na_io_provider_read_items";
 	GList *providers;
-	GList *merged, *hierarchy;
+	GList *merged, *hierarchy, *filtered;
 	GSList *level_zero;
 	gint order_mode;
 
@@ -141,10 +142,6 @@ na_io_provider_read_items( const NAPivot *pivot, GSList **messages )
 
 	na_utils_free_string_list( level_zero );
 
-	g_debug( "%s: tree before alphabetical reordering (if any)", thisfn );
-	na_object_dump_tree( hierarchy );
-	g_debug( "%s: end of tree", thisfn );
-
 	order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
 	switch( order_mode ){
 		case IPREFS_ORDER_ALPHA_ASCENDING:
@@ -160,7 +157,45 @@ na_io_provider_read_items( const NAPivot *pivot, GSList **messages )
 			break;
 	}
 
-	return( hierarchy );
+	filtered = filter_unwanted_items( pivot, hierarchy );
+	g_list_free( hierarchy );
+
+	g_debug( "%s: tree after filtering and reordering (if any)", thisfn );
+	na_object_dump_tree( filtered );
+	g_debug( "%s: end of tree", thisfn );
+
+	return( filtered );
+}
+
+/*
+ * returns a concatened list of readen actions / menus
+ */
+static GList *
+get_merged_items_list( const NAPivot *pivot, GList *providers, GSList **messages )
+{
+	GList *ip;
+	GList *merged = NULL;
+	GList *list, *item;
+	NAIIOProvider *instance;
+
+	for( ip = providers ; ip ; ip = ip->next ){
+
+		instance = NA_IIO_PROVIDER( ip->data );
+		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_items ){
+
+			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_items( instance, messages );
+
+			for( item = list ; item ; item = item->next ){
+
+				na_object_set_provider( item->data, instance );
+				na_object_dump( item->data );
+			}
+
+			merged = g_list_concat( merged, list );
+		}
+	}
+
+	return( merged );
 }
 
 /*
@@ -233,35 +268,96 @@ search_item( const NAObject *obj, const gchar *uuid )
 	return( ret );
 }
 
-/*
- * returns a concatened list of readen actions / menus
- */
 static GList *
-get_merged_items_list( const NAPivot *pivot, GList *providers, GSList **messages )
+sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn )
 {
-	GList *ip;
-	GList *merged = NULL;
-	GList *list, *item;
-	NAIIOProvider *instance;
+	GList *sorted;
+	GList *items, *it;
 
-	for( ip = providers ; ip ; ip = ip->next ){
+	sorted = g_list_sort( tree, fn );
 
-		instance = NA_IIO_PROVIDER( ip->data );
-		if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_items ){
-
-			list = NA_IIO_PROVIDER_GET_INTERFACE( instance )->read_items( instance, messages );
-
-			for( item = list ; item ; item = item->next ){
-
-				na_object_set_provider( item->data, instance );
-				na_object_dump( item->data );
-			}
-
-			merged = g_list_concat( merged, list );
+	/* recursively sort each level of the tree
+	 */
+	for( it = sorted ; it ; it = it->next ){
+		if( NA_IS_OBJECT_MENU( it->data )){
+			items = na_object_get_items_list( it->data );
+			items = sort_tree( pivot, items, fn );
+			na_object_set_items_list( it->data, items );
 		}
 	}
 
-	return( merged );
+	return( sorted );
+}
+
+static GList *
+filter_unwanted_items( const NAPivot *pivot, GList *hierarchy )
+{
+	gboolean load_disabled;
+	gboolean load_invalid;
+	GList *it;
+	GList *filtered;
+
+	load_disabled = na_pivot_is_disable_loadable( pivot );
+	load_invalid = na_pivot_is_invalid_loadable( pivot );
+
+	for( it = hierarchy ; it ; it = it->next ){
+		na_object_check_status( it->data );
+	}
+
+	filtered = filter_unwanted_items_rec( hierarchy, load_disabled, load_invalid );
+
+	return( filtered );
+}
+
+/*
+ * build a dest tree from a source tree, removing filtered items
+ * an item is filtered if it is invalid (and not loading invalid ones)
+ * or disabled (and not loading disabled ones)
+ */
+static GList *
+filter_unwanted_items_rec( GList *hierarchy, gboolean load_disabled, gboolean load_invalid )
+{
+	static const gchar *thisfn = "na_io_provider_filter_unwanted_items_rec";
+	GList *subitems, *subitems_f;
+	GList *it, *itnext;
+	GList *filtered;
+	gboolean selected;
+	gchar *label;
+
+	filtered = NULL;
+	for( it = hierarchy ; it ; it = itnext ){
+
+		itnext = it->next;
+		selected = FALSE;
+
+		if( NA_IS_OBJECT_PROFILE( it->data )){
+			if( na_object_is_valid( it->data ) || load_invalid ){
+				filtered = g_list_append( filtered, it->data );
+				selected = TRUE;
+			}
+		}
+
+		if( NA_IS_OBJECT_ITEM( it->data )){
+			if(( na_object_is_enabled( it->data ) || load_disabled ) &&
+				( na_object_is_valid( it->data ) || load_invalid )){
+
+				subitems = na_object_get_items_list( it->data );
+				subitems_f = filter_unwanted_items_rec( subitems, load_disabled, load_invalid );
+				na_object_set_items_list( it->data, subitems_f );
+				filtered = g_list_append( filtered, it->data );
+				selected = TRUE;
+			}
+		}
+
+		if( !selected ){
+			label = na_object_get_label( it->data );
+			g_debug( "%s: filtering %p (%s) '%s'", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), label );
+			g_free( label );
+			na_object_unref( it->data );
+		}
+	}
+
+	return( filtered );
 }
 
 /**
@@ -401,25 +497,4 @@ na_io_provider_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSLi
 	}
 
 	return( ret );
-}
-
-static GList *
-sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn )
-{
-	GList *sorted;
-	GList *items, *it;
-
-	sorted = g_list_sort( tree, fn );
-
-	/* recursively sort each level of the tree
-	 */
-	for( it = sorted ; it ; it = it->next ){
-		if( NA_IS_OBJECT_MENU( it->data )){
-			items = na_object_get_items_list( it->data );
-			items = sort_tree( pivot, items, fn );
-			na_object_set_items_list( it->data, items );
-		}
-	}
-
-	return( sorted );
 }

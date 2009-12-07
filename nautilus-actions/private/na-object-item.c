@@ -788,6 +788,10 @@ na_object_item_set_items_list( NAObjectItem *item, GList *items )
 
 	if( !item->private->dispose_has_run ){
 
+		if( item->private->items ){
+			g_list_free( item->private->items );
+		}
+
 		item->private->items = items;
 
 		for( is = items ; is ; is = is->next ){

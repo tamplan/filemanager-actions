@@ -78,6 +78,10 @@ struct NAPivotPrivate {
 	guint    event_source_id;
 	gulong   action_changed_handler;
 
+	/* whether to load all items, or only a part
+	 */
+	gint     population;
+
 	/* list of monitoring objects on runtime preferences
 	 */
 	GList   *monitors;
@@ -221,6 +225,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->tree = NULL;
 	self->private->automatic_reload = FALSE;
 	self->private->event_source_id = 0;
+	self->private->population = PIVOT_LOAD_ALL;
 }
 
 static void
@@ -294,49 +299,20 @@ na_pivot_new( void )
 {
 	static const gchar *thisfn = "na_pivot_new";
 	NAPivot *pivot;
-	GSList *messages, *im;
 
 	g_debug( "%s", thisfn );
 
 	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
 
 	pivot->private->modules = na_module_load_modules();
+
 	na_io_provider_register_callbacks( pivot );
 	/*g_debug( "%s: modules=%p, count=%d",
 			thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));*/
 
 	monitor_runtime_preferences( pivot );
 
-	pivot->private->tree = na_io_provider_read_items( pivot, &messages );
-	for( im = messages ; im ; im = im->next ){
-		g_warning( "%s: %s", thisfn, ( const gchar * ) im->data );
-	}
-	na_utils_free_string_list( messages );
-
 	return( pivot );
-}
-
-/**
- * na_pivot_check_status:
- * @pivot: this #NAPivot object.
- *
- * Recursively checks the status of items in @pivot.
- */
-void
-na_pivot_check_status( const NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_check_status";
-	GList *it;
-
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		for( it = pivot->private->tree ; it ; it = it->next ){
-			na_object_check_status( it->data );
-		}
-	}
 }
 
 /**
@@ -354,9 +330,11 @@ na_pivot_dump( const NAPivot *pivot )
 
 	if( !pivot->private->dispose_has_run ){
 
-		g_debug( "%s:   modules=%p (%d elts)", thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));
-		g_debug( "%s: consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
-		g_debug( "%s:      tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
+		g_debug( "%s:          modules=%p (%d elts)", thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));
+		g_debug( "%s:        consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
+		g_debug( "%s:             tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
+		g_debug( "%s: automatic_reload=%s", thisfn, pivot->private->automatic_reload ? "True":"False" );
+		g_debug( "%s:       population=%d", thisfn, pivot->private->population );
 
 		for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
 			g_debug( "%s:     [%d]: %p", thisfn, i++, it->data );
@@ -520,15 +498,15 @@ na_pivot_get_items( const NAPivot *pivot )
 }
 
 /**
- * na_pivot_reload_items:
+ * na_pivot_load_items:
  * @pivot: this #NAPivot instance.
  *
- * Reloads the hierarchical list of items from I/O providers.
+ * Loads the hierarchical list of items from I/O providers.
  */
 void
-na_pivot_reload_items( NAPivot *pivot )
+na_pivot_load_items( NAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_reload_items";
+	static const gchar *thisfn = "na_pivot_load_items";
 	GSList *messages, *im;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
@@ -754,6 +732,69 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 }
 
 /**
+ * na_pivot_set_population:
+ * @pivot: this #NAPivot instance.
+ * @population: an indicator of the population to be loaded.
+ *
+ * @population may be a OR of PIVOT_LOAD_DISABLED and PIVOT_LOAD_INVALID.
+ * It is initialized to PIVOT_LOAD_DISABLED | PIVOT_LOAD_INVALID,
+ * which mean 'loads all'.
+ */
+void
+na_pivot_set_population( NAPivot *pivot, gint population )
+{
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+		pivot->private->population = population;
+	}
+}
+
+/**
+ * na_pivot_is_disable_loadable:
+ * @pivot: this #NAPivot instance.
+ *
+ * Returns: %TRUE if disabled items should be loaded, %FALSE else.
+ */
+gboolean
+na_pivot_is_disable_loadable( const NAPivot *pivot )
+{
+	gboolean is_loadable;
+
+	is_loadable = FALSE;
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), is_loadable );
+
+	if( !pivot->private->dispose_has_run ){
+
+		is_loadable = ( pivot->private->population & PIVOT_LOAD_DISABLED );
+	}
+
+	return( is_loadable );
+}
+
+/**
+ * na_pivot_is_invalid_loadable:
+ * @pivot: this #NAPivot instance.
+ *
+ * Returns: %TRUE if invalid items should be loaded, %FALSE else.
+ */
+gboolean
+na_pivot_is_invalid_loadable( const NAPivot *pivot )
+{
+	gboolean is_loadable;
+
+	is_loadable = FALSE;
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), is_loadable );
+
+	if( !pivot->private->dispose_has_run ){
+
+		is_loadable = ( pivot->private->population & PIVOT_LOAD_INVALID );
+	}
+
+	return( is_loadable );
+}
+
+/**
  * na_pivot_sort_alpha_asc:
  * @a: first #NAObjectId.
  * @b: second #NAObjectId.
@@ -885,8 +926,7 @@ on_item_changed_timeout( NAPivot *pivot )
 	}
 
 	if( pivot->private->automatic_reload ){
-		na_pivot_reload_items( pivot );
-		na_pivot_check_status( pivot );
+		na_pivot_load_items( pivot );
 	}
 
 	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){

@@ -1,3 +1,29 @@
+2009-12-07 Pierre Wieser <pwieser@trychlos.org>
+
+	Only load in the Nautilus plugin valid and enabled candidate items.
+
+	* nautilus-actions/nact/nact-application.c
+	(appli_initialize_application): Explicitely load items.
+
+	* nautilus-actions/nact/nact-main-window.c (reload):
+	Call na_pivot_load_items() function.
+
+	* nautilus-actions/plugin/nautilus-actions.c (instance_init):
+	Explicitely load items after having set filtering criteria.
+
+	* nautilus-actions/private/na-object-item.c
+	(na_object_item_set_items_list): Free previous GList structure.
+
+	* nautilus-actions/runtime/na-io-provider.c
+	(na_io_provider_read_items): Filter the returned hierarchy.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h
+	(na_pivot_check_status): Removed function.
+	(na_pivot_reload_items): Renamed as na_pivot_load_items().
+	(na_pivot_set_population, na_pivot_is_disable_loadable,
+	na_pivot_is_invalid_loadable): New functions.
+
 2009-12-03 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/private/na-object-profile.c (object_is_valid):
