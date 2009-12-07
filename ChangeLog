@@ -1,5 +1,9 @@
 2009-12-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/io-provider-desktop/nadp-desktop-file.c
+	(nadp_desktop_file_get_label, nadp_desktop_file_get_tooltip,
+	nadp_desktop_file_get_icon): Return an empty string rather than NULL.
+
 	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
 	Do not paste into a read-only action.
 

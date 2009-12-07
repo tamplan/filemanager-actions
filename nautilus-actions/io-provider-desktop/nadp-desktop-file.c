@@ -366,6 +366,10 @@ nadp_desktop_file_get_label( const NadpDesktopFile *ndf )
 	if( !ndf->private->dispose_has_run ){
 		label = g_key_file_get_locale_string(
 				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, NULL, NULL );
+
+		if( !label ){
+			label = g_strdup( "" );
+		}
 	}
 
 	return( label );
@@ -389,6 +393,10 @@ nadp_desktop_file_get_tooltip( const NadpDesktopFile *ndf )
 	if( !ndf->private->dispose_has_run ){
 		tooltip = g_key_file_get_locale_string(
 				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, NULL, NULL );
+
+		if( !tooltip ){
+			tooltip = g_strdup( "" );
+		}
 	}
 
 	return( tooltip );
@@ -412,6 +420,10 @@ nadp_desktop_file_get_icon( const NadpDesktopFile *ndf )
 	if( !ndf->private->dispose_has_run ){
 		icon = g_key_file_get_locale_string(
 				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL, NULL );
+
+		if( !icon ){
+			icon = g_strdup( "" );
+		}
 	}
 
 	return( icon );
