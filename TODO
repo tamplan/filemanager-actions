@@ -97,8 +97,6 @@
 
 - nact: new action assistant
 
-- nact: copy/paste: only the action is copied without its profiles
-
 - nact: when pasting an item, should reset provider and read-only flag
 
 - desktop provider: fix default toolbar label

@@ -1067,6 +1067,7 @@ prepare_for_paste( NactMainWindow *window )
 
 		relabel = nact_main_menubar_is_pasted_object_relabeled( NA_OBJECT( it->data ), pivot );
 		na_object_prepare_for_paste( it->data, relabel, renumber, action );
+		na_object_check_status( it->data );
 	}
 
 	g_debug( "%s: action=%p (%s)",
