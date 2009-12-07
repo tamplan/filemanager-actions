@@ -1,5 +1,7 @@
 2009-12-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump version number.
+
 	* nautilus-actions/private/na-object-id.c
 	(na_object_id_prepare_for_paste):
 	Reset provider and read-only flag when pasting a new object.
