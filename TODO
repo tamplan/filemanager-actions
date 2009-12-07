@@ -97,6 +97,4 @@
 
 - nact: new action assistant
 
-- nact: when pasting an item, should reset provider and read-only flag
-
 - desktop provider: fix default toolbar label

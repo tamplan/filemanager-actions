@@ -1,5 +1,9 @@
 2009-12-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/private/na-object-id.c
+	(na_object_id_prepare_for_paste):
+	Reset provider and read-only flag when pasting a new object.
+
 	* nautilus-actions/nact/nact-main-menubar.c (prepare_for_paste):
 	Recheck status of pasted items.
 
