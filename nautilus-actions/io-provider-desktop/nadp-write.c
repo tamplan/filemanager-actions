@@ -191,6 +191,8 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 	guint ret;
 	gchar *label;
 	gchar *tooltip;
+	gchar *icon;
+	gboolean enabled;
 
 	ret = NA_IIO_PROVIDER_WRITE_OK;
 
@@ -201,6 +203,13 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 	tooltip = na_object_get_tooltip( item );
 	nadp_desktop_file_set_tooltip( ndf, tooltip );
 	g_free( tooltip );
+
+	icon = na_object_get_icon( item );
+	nadp_desktop_file_set_icon( ndf, icon );
+	g_free( icon );
+
+	enabled = na_object_is_enabled( item );
+	nadp_desktop_file_set_enabled( ndf, enabled );
 
 	if( !nadp_desktop_file_write( ndf )){
 		ret = NA_IIO_PROVIDER_WRITE_ERROR;

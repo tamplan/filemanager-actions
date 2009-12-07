@@ -395,6 +395,58 @@ nadp_desktop_file_get_tooltip( const NadpDesktopFile *ndf )
 }
 
 /**
+ * nadp_desktop_file_get_icon:
+ * @ndf: the #NadpDesktopFile instance.
+ *
+ * Returns: the icon of the action, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+nadp_desktop_file_get_icon( const NadpDesktopFile *ndf )
+{
+	gchar *icon;
+
+	icon = NULL;
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), icon );
+
+	if( !ndf->private->dispose_has_run ){
+		icon = g_key_file_get_locale_string(
+				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL, NULL );
+	}
+
+	return( icon );
+}
+
+/**
+ * nadp_desktop_file_get_enabled:
+ * @ndf: the #NadpDesktopFile instance.
+ *
+ * Returns: %TRUE if the action is enabled, %FALSE else.
+ *
+ * Defaults to TRUE if the key is not specified.
+ */
+gboolean
+nadp_desktop_file_get_enabled( const NadpDesktopFile *ndf )
+{
+	gboolean enabled;
+
+	enabled = TRUE;
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), enabled );
+
+	if( !ndf->private->dispose_has_run ){
+
+		if( g_key_file_has_key(
+				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NO_DISPLAY, NULL )){
+
+			enabled = !g_key_file_get_boolean(
+				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NO_DISPLAY, NULL );
+		}
+	}
+
+	return( enabled );
+}
+
+/**
  * nadp_desktop_file_set_label:
  * @ndf: the #NadpDesktopFile instance.
  * @label: the label to be set.
@@ -435,6 +487,50 @@ nadp_desktop_file_set_tooltip( NadpDesktopFile *ndf, const gchar *tooltip )
 		locales = ( char ** ) g_get_language_names();
 		g_key_file_set_locale_string(
 				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, locales[0], tooltip );
+	}
+}
+
+/**
+ * nadp_desktop_file_set_icon:
+ * @ndf: the #NadpDesktopFile instance.
+ * @icon: the icon name or path to be set.
+ *
+ * Sets the icon.
+ */
+void
+nadp_desktop_file_set_icon( NadpDesktopFile *ndf, const gchar *icon )
+{
+	char **locales;
+
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+
+	if( !ndf->private->dispose_has_run ){
+
+		locales = ( char ** ) g_get_language_names();
+		g_key_file_set_locale_string(
+				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, locales[0], icon );
+	}
+}
+
+/**
+ * nadp_desktop_file_set_enabled:
+ * @ndf: the #NadpDesktopFile instance.
+ * @enabled: whether the action is enabled.
+ *
+ * Sets the enabled status of the item.
+ *
+ * Note that the NoDisplay key has an inversed logic regards to enabled
+ * status.
+ */
+void
+nadp_desktop_file_set_enabled( NadpDesktopFile *ndf, gboolean enabled )
+{
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+
+	if( !ndf->private->dispose_has_run ){
+
+		g_key_file_set_boolean(
+				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NO_DISPLAY, !enabled );
 	}
 }
 

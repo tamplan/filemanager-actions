@@ -245,13 +245,15 @@ read_item_properties( const NadpDesktopProvider *provider, NAObjectItem *item, N
 	gchar *id;
 	gchar *label;
 	gchar *tooltip;
+	gchar *icon;
+	gboolean enabled;
 	gchar *path;
 	gboolean writable;
 
 	id = nadp_desktop_file_get_id( ndf );
 	na_object_set_id( item, id );
 
-	label = ( gchar * ) nadp_desktop_file_get_label( ndf );
+	label = nadp_desktop_file_get_label( ndf );
 	if( !label || !g_utf8_strlen( label, -1 )){
 		g_warning( "%s: id=%s, label not found or empty", thisfn, id );
 		g_free( label );
@@ -260,9 +262,16 @@ read_item_properties( const NadpDesktopProvider *provider, NAObjectItem *item, N
 	na_object_set_label( item, label );
 	g_free( label );
 
-	tooltip = ( gchar * ) nadp_desktop_file_get_tooltip( ndf );
+	tooltip = nadp_desktop_file_get_tooltip( ndf );
 	na_object_set_tooltip( item, tooltip );
 	g_free( tooltip );
+
+	icon = nadp_desktop_file_get_icon( ndf );
+	na_object_set_icon( item, icon );
+	g_free( icon );
+
+	enabled = nadp_desktop_file_get_enabled( ndf );
+	na_object_set_enabled( item, enabled );
 
 	path = nadp_desktop_file_get_key_file_path( ndf );
 	writable = nadp_utils_is_writable_file( path );

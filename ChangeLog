@@ -1,5 +1,17 @@
 2009-12-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/io-provider-desktop/nadp-desktop-file.c:
+	* nautilus-actions/io-provider-desktop/nadp-desktop-file.h
+	(nadp_desktop_file_get_icon, nadp_desktop_file_get_enabled,
+	nadp_desktop_file_set_icon, nadp_desktop_file_set_enabled):
+	New functions.
+
+	* nautilus-actions/io-provider-desktop/nadp-read.c
+	(read_item_properties): Read icon and enabled status.
+
+	* nautilus-actions/io-provider-desktop/nadp-write.c (write_item):
+	Write icon name or path and enabled status.
+
 	* nautilus-actions/plugin/nautilus-actions.c (build_nautilus_menus):
 	Emits a warning when finding a disabled or invalid item.
 

@@ -79,9 +79,13 @@ gchar           *nadp_desktop_file_get_key_file_path( const NadpDesktopFile *ndf
 gchar           *nadp_desktop_file_get_id( const NadpDesktopFile *ndf );
 gchar           *nadp_desktop_file_get_label( const NadpDesktopFile *ndf );
 gchar           *nadp_desktop_file_get_tooltip( const NadpDesktopFile *ndf );
+gchar           *nadp_desktop_file_get_icon( const NadpDesktopFile *ndf );
+gboolean         nadp_desktop_file_get_enabled( const NadpDesktopFile *ndf );
 
 void             nadp_desktop_file_set_label( NadpDesktopFile *ndf, const gchar *label );
 void             nadp_desktop_file_set_tooltip( NadpDesktopFile *ndf, const gchar *tooltip );
+void             nadp_desktop_file_set_icon( NadpDesktopFile *ndf, const gchar *icon );
+void             nadp_desktop_file_set_enabled( NadpDesktopFile *ndf, gboolean enabled );
 
 gboolean         nadp_desktop_file_write( NadpDesktopFile *ndf );
 
