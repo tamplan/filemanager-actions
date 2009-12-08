@@ -38,6 +38,7 @@
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
+#include <runtime/na-gconf-utils.h>
 #include <runtime/na-iprefs.h>
 #include <runtime/na-utils.h>
 
@@ -208,6 +209,7 @@ nact_window_is_lockdown( NactWindow *window )
 	static const gchar *thisfn = "nact_window_is_lockdown";
 	gboolean locked;
 	NAPivot *pivot;
+	GConfClient *gconf;
 
 	locked = FALSE;
 
@@ -216,7 +218,8 @@ nact_window_is_lockdown( NactWindow *window )
 	if( !window->private->dispose_has_run ){
 
 		pivot = nact_window_get_pivot( window );
-		locked = na_iprefs_read_bool( NA_IPREFS( pivot ), NAUTILUS_ACTIONS_GCONF_BASEDIR "/mandatory/lockdown", locked );
+		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
+		locked = na_gconf_utils_read_bool( gconf, NAUTILUS_ACTIONS_GCONF_BASEDIR "/mandatory/lockdown", TRUE, locked );
 		g_debug( "%s: locked=%s", thisfn, locked ? "True":"False" );
 	}
 
