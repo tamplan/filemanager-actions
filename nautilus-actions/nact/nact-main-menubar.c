@@ -607,11 +607,13 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	gboolean clipboard_is_empty;
 	gboolean new_item_enabled;
 	gboolean readonly;
+	gboolean locked;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+	locked = nact_window_is_lockdown( NACT_WINDOW( window ));
 
 	g_object_get(
 			G_OBJECT( window ),
@@ -628,11 +630,11 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	/* new menu enabled if selection is a menu or an action */
 	/* new action enabled if selection is a menu or an action */
 	new_item_enabled = ( selected_row == NULL || NA_IS_OBJECT_ITEM( selected_row ));
-	enable_item( window, "NewMenuItem", new_item_enabled );
-	enable_item( window, "NewActionItem", new_item_enabled );
+	enable_item( window, "NewMenuItem", new_item_enabled && !locked );
+	enable_item( window, "NewActionItem", new_item_enabled && !locked );
 
 	/* new profile enabled if selection is relative to only one writable action */
-	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ) && !readonly );
+	enable_item( window, "NewProfileItem", item != NULL && !NA_IS_OBJECT_MENU( item ) && !readonly && !locked );
 
 	/* save enabled if at least one item has been modified */
 	enable_item( window, "SaveItem", has_modified || mis->level_zero_order_changed );
@@ -649,15 +651,15 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	/* cut/delete require a writable item */
 	cut_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !readonly;
 	copy_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
-	duplicate_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
-	delete_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !readonly;
+	duplicate_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !locked;
+	delete_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !readonly && !locked;
 
 	/* paste enabled if
 	 * - simple selection
 	 * - clipboard contains only profiles, and current selection is a profile
 	 * - clipboard contains actions or menus, and current selection is a menu or an action */
 	paste_enabled = FALSE;
-	if(( mis->treeview_has_focus || mis->popup_handler ) && count_selected <= 1 ){
+	if(( mis->treeview_has_focus || mis->popup_handler ) && count_selected <= 1 && !locked ){
 		if( !clipboard_is_empty ){
 			if( mis->clipboard_profiles ){
 				paste_enabled = item && NA_IS_OBJECT_ACTION( item ) && !readonly;
@@ -673,7 +675,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	 * - or current item is a menu
 	 * do not paste into if current selection is a profile */
 	paste_into_enabled = FALSE;
-	if(( mis->treeview_has_focus || mis->popup_handler ) && count_selected <= 1 ){
+	if(( mis->treeview_has_focus || mis->popup_handler ) && count_selected <= 1 && !locked ){
 		if( mis->selected_menus + mis->selected_actions ){
 			if( !clipboard_is_empty ){
 				if( mis->clipboard_profiles ){

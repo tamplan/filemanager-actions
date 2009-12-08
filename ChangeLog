@@ -1,3 +1,14 @@
+2009-12-08 Pierre Wieser <pwieser@trychlos.org>
+
+	A try to implement a lockdown key in GConf mandatory settings.
+
+	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
+	Disable most of File and Edit menu items if lockdown key is set.
+
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-window.h (nact_window_is_lockdown):
+	New function.
+
 2009-12-07 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump version number.

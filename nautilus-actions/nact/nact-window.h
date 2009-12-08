@@ -75,6 +75,8 @@ GType    nact_window_get_type( void );
 
 NAPivot *nact_window_get_pivot( NactWindow *window );
 
+gboolean nact_window_is_lockdown( NactWindow *window );
+
 gboolean nact_window_save_item( NactWindow *window, NAObjectItem *item );
 gboolean nact_window_delete_item( NactWindow *window, const NAObjectItem *item );
 

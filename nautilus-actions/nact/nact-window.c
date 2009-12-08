@@ -36,7 +36,6 @@
 #include <glib/gi18n.h>
 
 #include <api/na-iio-provider.h>
-
 #include <api/na-object-api.h>
 
 #include <runtime/na-iprefs.h>
@@ -194,6 +193,34 @@ nact_window_get_pivot( NactWindow *window )
 	}
 
 	return( pivot );
+}
+
+/**
+ * nact_window_is_lockdown:
+ * @window: this #NactWindow instance.
+ *
+ * Returns: %TRUE if the configuration is locked to be read-only, %FALSE
+ * else.
+ */
+gboolean
+nact_window_is_lockdown( NactWindow *window )
+{
+	static const gchar *thisfn = "nact_window_is_lockdown";
+	gboolean locked;
+	NAPivot *pivot;
+
+	locked = FALSE;
+
+	g_return_val_if_fail( NACT_IS_WINDOW( window ), locked );
+
+	if( !window->private->dispose_has_run ){
+
+		pivot = nact_window_get_pivot( window );
+		locked = na_iprefs_read_bool( NA_IPREFS( pivot ), NAUTILUS_ACTIONS_GCONF_BASEDIR "/mandatory/lockdown", locked );
+		g_debug( "%s: locked=%s", thisfn, locked ? "True":"False" );
+	}
+
+	return( locked );
 }
 
 /**
