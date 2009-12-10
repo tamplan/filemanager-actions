@@ -35,5 +35,6 @@ SUBDIRS = \
 	nact						\
 	plugin						\
 	test						\
+	tracker						\
 	utils						\
 	$(NULL)

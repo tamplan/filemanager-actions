@@ -1,4 +1,6 @@
 nautilus-actions-check-actions-change
 nautilus-actions-new-config
 nautilus-actions-new
+nautilus-actions-run
+nautilus-actions-run-bindings.h
 nautilus-actions-schemas

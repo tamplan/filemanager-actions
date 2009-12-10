@@ -29,6 +29,9 @@ AC_DEFUN([NA_LOG_DOMAINS],[
 	AC_SUBST([NA_LOGDOMAIN_TEST],[NA-test])
 	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_TEST],["NA-test"],[Log domain of test programs])
 
+	AC_SUBST([NA_LOGDOMAIN_TRACKER],[NA-tracker])
+	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_TRACKER],["NA-tracker"],[Log domain of tracker plugin])
+
 	AC_SUBST([NA_LOGDOMAIN_UTILS],[NA-utils])
 	AC_DEFINE_UNQUOTED([NA_LOGDOMAIN_UTILS],["NA-utils"],[Log domain of utilities])
 ])

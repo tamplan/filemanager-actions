@@ -98,3 +98,7 @@
 - nact: new action assistant
 
 - desktop provider: fix default toolbar label
+
+- lockdown: cut should be disabled
+  inline edition should be disabled
+  all entry fields should be readonly

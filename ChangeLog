@@ -1,3 +1,31 @@
+2009-12-10 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h (get_item_from_tree):
+	No more require an UUID.
+
+	Be able to get the current Nautilus selection into an external
+	program via a DBus interface in the new Tracker plugin.
+
+	* configure.ac:
+	* nautilus-actions/Makefile.am:
+	Define new tracker subdirectory.
+
+	* m4/na-log-domains.m4:
+	Define new NA-tracker log domain.
+
+	* nautilus-actions/tracker/Makefile.am:
+	* nautilus-actions/tracker/na-tracker-dbus.c:
+	* nautilus-actions/tracker/na-tracker-dbus.h:
+	* nautilus-actions/tracker/na-tracker-dbus.xml:
+	* nautilus-actions/tracker/na-tracker-plugin.c:
+	* nautilus-actions/tracker/na-tracker.c:
+	* nautilus-actions/tracker/na-tracker.h: New files.
+
+	* nautilus-actions/utils/nautilus-actions-run.c: New file.
+
+	* nautilus-actions/utils/Makefile.am: Updated accordingly.
+
 2009-12-08 Pierre Wieser <pwieser@trychlos.org>
 
 	A try to implement a lockdown key in GConf mandatory settings.

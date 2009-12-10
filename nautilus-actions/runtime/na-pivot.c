@@ -33,7 +33,6 @@
 #endif
 
 #include <string.h>
-#include <uuid/uuid.h>
 
 #include <api/na-object-api.h>
 #include <api/na-gconf-monitor.h>
@@ -104,7 +103,7 @@ static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_dispose( GObject *object );
 static void          instance_finalize( GObject *object );
 
-static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid );
+static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id );
 
 /* NAIIOProvider management */
 static gboolean      on_item_changed_timeout( NAPivot *pivot );
@@ -548,7 +547,7 @@ na_pivot_add_item( NAPivot *pivot, const NAObjectItem *item )
 /**
  * na_pivot_get_action:
  * @pivot: this #NAPivot instance.
- * @uuid: the required globally unique identifier (uuid).
+ * @id: the required item identifier.
  *
  * Returns the specified action.
  *
@@ -558,22 +557,19 @@ na_pivot_add_item( NAPivot *pivot, const NAObjectItem *item )
  * g_free() nor g_object_unref() by the caller.
  */
 NAObjectItem *
-na_pivot_get_item( const NAPivot *pivot, const gchar *uuid )
+na_pivot_get_item( const NAPivot *pivot, const gchar *id )
 {
-	uuid_t uuid_bin;
 	NAObjectItem *object = NULL;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	if( !pivot->private->dispose_has_run ){
 
-		if( !uuid || !strlen( uuid )){
+		if( !id || !strlen( id )){
 			return( NULL );
 		}
 
-		uuid_parse( uuid, uuid_bin );
-
-		object = get_item_from_tree( pivot, pivot->private->tree, uuid_bin );
+		object = get_item_from_tree( pivot, pivot->private->tree, id );
 	}
 
 	return( object );
@@ -875,25 +871,22 @@ na_pivot_write_level_zero( const NAPivot *pivot, GList *items )
 }
 
 static NAObjectItem *
-get_item_from_tree( const NAPivot *pivot, GList *tree, uuid_t uuid )
+get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id )
 {
-	uuid_t i_uuid_bin;
 	GList *subitems, *ia;
 	NAObjectItem *found = NULL;
 
 	for( ia = tree ; ia && !found ; ia = ia->next ){
 
-		gchar *i_uuid = na_object_get_id( NA_OBJECT( ia->data ));
-		uuid_parse( i_uuid, i_uuid_bin );
-		g_free( i_uuid );
+		gchar *i_id = na_object_get_id( NA_OBJECT( ia->data ));
 
-		if( !uuid_compare( uuid, i_uuid_bin )){
+		if( !g_ascii_strcasecmp( id, i_id )){
 			found = NA_OBJECT_ITEM( ia->data );
 		}
 
 		if( !found && NA_IS_OBJECT_ITEM( ia->data )){
 			subitems = na_object_get_items_list( ia->data );
-			found = get_item_from_tree( pivot, subitems, uuid );
+			found = get_item_from_tree( pivot, subitems, id );
 		}
 	}
 

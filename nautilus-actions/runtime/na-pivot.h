@@ -132,7 +132,7 @@ GList        *na_pivot_get_items( const NAPivot *pivot );
 void          na_pivot_load_items( NAPivot *pivot );
 
 void          na_pivot_add_item( NAPivot *pivot, const NAObjectItem *item );
-NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *uuid );
+NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *id );
 void          na_pivot_remove_item( NAPivot *pivot, NAObject *item );
 
 guint         na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );

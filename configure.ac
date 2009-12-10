@@ -56,6 +56,7 @@ AC_CONFIG_FILES([
 	nautilus-actions/private/Makefile
 	nautilus-actions/runtime/Makefile
 	nautilus-actions/test/Makefile
+	nautilus-actions/tracker/Makefile
 	nautilus-actions/utils/Makefile
 	po/Makefile.in
 ])

@@ -26,61 +26,35 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-bin_PROGRAMS = \
-	nautilus-actions-new										\
-	nautilus-actions-run										\
-	nautilus-actions-schemas									\
-	$(NULL)
-
 AM_CPPFLAGS += \
 	-I $(top_srcdir)											\
 	-I $(top_srcdir)/nautilus-actions							\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"					\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TRACKER}\"					\
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
-nautilus_actions_new_SOURCES = \
-	nautilus-actions-new.c										\
-	console-utils.c												\
-	console-utils.h												\
-	$(NULL)
+nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
 
-nautilus_actions_new_LDADD = \
-	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
-	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
-	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
-	$(NAUTILUS_ACTIONS_LIBS)									\
-	$(NULL)
+nautilus_extension_LTLIBRARIES = libnautilus-actions-tracker.la
 
 BUILT_SOURCES = \
-	nautilus-actions-run-bindings.h								\
+	na-tracker-dbus-glue.h										\
 	$(NULL)
 
-nautilus-actions-run-bindings.h: $(top_srcdir)/nautilus-actions/tracker/na-tracker-dbus.xml
-	dbus-binding-tool --mode=glib-client $< > $@
+na-tracker-dbus-glue.h: na-tracker-dbus.xml
+	dbus-binding-tool --mode=glib-server --prefix=na_tracker_dbus $< > $@
 
-nautilus_actions_run_SOURCES = \
-	nautilus-actions-run.c										\
-	console-utils.c												\
-	console-utils.h												\
+libnautilus_actions_tracker_la_SOURCES = \
+	na-tracker.c												\
+	na-tracker.h												\
+	na-tracker-dbus.c											\
+	na-tracker-dbus.h											\
+	na-tracker-plugin.c											\
 	$(NULL)
 
-nautilus_actions_run_LDADD = \
-	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
-	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
-	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
-	$(NAUTILUS_ACTIONS_LIBS)									\
-	$(NULL)
+libnautilus_actions_tracker_la_LDFLAGS = -module -avoid-version
 
-nautilus_actions_schemas_SOURCES = \
-	nautilus-actions-schemas.c									\
-	console-utils.c												\
-	console-utils.h												\
-	$(NULL)
-
-nautilus_actions_schemas_LDADD = \
-	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
+libnautilus_actions_tracker_la_LIBADD = \
 	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
 	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
