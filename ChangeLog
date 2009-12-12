@@ -1,5 +1,9 @@
 2009-12-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-iactions-list.c
+	(nact_iactions_list_initial_load_toplevel, display_label):
+	Label column is not editable when read-only or locked down.
+
 	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
 	Do not enable 'cut' if locked down.
 

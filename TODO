@@ -100,5 +100,4 @@
 - desktop provider: fix default toolbar label
 
 - lockdown:
-  inline edition should be disabled
   all entry fields should be readonly
