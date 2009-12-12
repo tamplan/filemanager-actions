@@ -55,11 +55,14 @@ struct NadpDesktopProviderPrivate {
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 
-static void           class_init( NadpDesktopProviderClass *klass );
-static void           iio_provider_iface_init( NAIIOProviderInterface *iface );
-static void           instance_init( GTypeInstance *instance, gpointer klass );
-static void           instance_dispose( GObject *object );
-static void           instance_finalize( GObject *object );
+static void   class_init( NadpDesktopProviderClass *klass );
+static void   iio_provider_iface_init( NAIIOProviderInterface *iface );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *object );
+static void   instance_finalize( GObject *object );
+
+static gchar *get_id( NadpDesktopProvider *provider );
+static guint  get_version( NadpDesktopProvider *provider );
 
 GType
 nadp_desktop_provider_get_type( void )
@@ -121,6 +124,8 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
+	iface->get_id = get_id;
+	iface->get_version = get_version;
 	iface->read_items = nadp_iio_provider_read_items;
 	iface->is_willing_to_write = nadp_iio_provider_is_willing_to_write;
 	iface->is_writable = nadp_iio_provider_is_writable;
@@ -178,4 +183,16 @@ instance_finalize( GObject *object )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
+}
+
+static gchar *
+get_id( NadpDesktopProvider *provider )
+{
+	return( g_strdup( "na-desktop" ));
+}
+
+static guint
+get_version( NadpDesktopProvider *provider )
+{
+	return( 1 );
 }
