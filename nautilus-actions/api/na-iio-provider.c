@@ -102,6 +102,8 @@ interface_base_init( NAIIOProviderInterface *klass )
 
 		klass->private = g_new0( NAIIOProviderInterfacePrivate, 1 );
 
+		klass->get_id = NULL;
+		klass->get_version = NULL;
 		klass->read_items = NULL;
 		klass->is_willing_to_write = do_is_willing_to_write;
 		klass->is_writable = do_is_writable;

@@ -46,6 +46,9 @@ G_BEGIN_DECLS
 
 void   na_io_provider_register_callbacks( const NAPivot *pivot );
 
+gchar *na_io_provider_get_id( const NAPivot *pivot, const NAIIOProvider *provider );
+guint  na_io_provider_get_version( const NAPivot *pivot, const NAIIOProvider *provider );
+
 gchar *na_io_provider_get_name( const NAPivot *pivot, const NAIIOProvider *provider );
 
 GList *na_io_provider_read_items( const NAPivot *pivot, GSList **messages );

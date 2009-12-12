@@ -1,0 +1,10 @@
+Id's of I/O providers.
+
+These Id's are allocated by the Nautilus-Actions maintainer team.
+If you wish develop a new I/O provider, and so need a unique id,
+please contact the maintainers (see nautilus-actions.doap).
+
+id          label                   holder
+----------  ----------------------  ----------------
+na-desktop  NA Desktop IO Provider  Nautilus-Actions
+na-gconf    NA GConf IO Provider    Nautilus-Actions

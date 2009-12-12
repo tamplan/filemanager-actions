@@ -1,5 +1,15 @@
 2009-12-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/io-provider-id: New file to handle allocated providers ids.
+
+	* nautilus-actions/api/na-iio-provider.c:
+	* nautilus-actions/api/na-iio-provider.h (get_id, get_version):
+	New API functions.
+
+	* nautilus-actions/runtime/na-io-provider.c:
+	* nautilus-actions/runtime/na-io-provider.h
+	(na_io_provider_get_id,	na_io_provider_get_version): New functions.
+
 	* nautilus-actions/nact/nact-iactions-list.c
 	(nact_iactions_list_initial_load_toplevel, display_label):
 	Label column is not editable when read-only or locked down.

@@ -38,6 +38,8 @@
  *
  * This is the API all I/O Providers should implement in order to
  * provide I/O storage resources to Nautilus-Actions.
+ *
+ * Nautilus-Actions v 2.30 - API version:  1
  */
 
 #include <nautilus-actions/private/na-object-item-class.h>
@@ -60,6 +62,28 @@ typedef struct {
 	/*
 	 * This is the API the provider has to implement.
 	 */
+
+	/**
+	 * get_id:
+	 * @instance: the #NAIIOProvider provider.
+	 *
+	 * Returns: the id of the IO provider as a newly allocated string
+	 * which should be g_free() by the caller.
+	 *
+	 * To avoid any collision, the IO provider id is allocated by the
+	 * Nautilus-Actions maintainer team. If you wish develop a new IO
+	 * provider, and so need a new provider id, please contact the
+	 * maintainers (see nautilus-actions.doap)
+	 */
+	gchar *  ( *get_id )             ( const NAIIOProvider *instance );
+
+	/**
+	 * get_version:
+	 * @instance: the #NAIIOProvider provider.
+	 *
+	 * Returns: the version of this API supported by the IO provider.
+	 */
+	guint    ( *get_version )        ( const NAIIOProvider *instance );
 
 	/**
 	 * read_items:

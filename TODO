@@ -101,3 +101,12 @@
 
 - lockdown:
   all entry fields should be readonly
+
+- actually, each provider may be unwritable
+  a) because it returns FALSE on na_io_provider_is_writable
+  b) because the sysadmin has put a special key in GConf to lock this provider
+  So:
+  - each provider must be adressable by an id
+  - we have mandatory/io-provider/id/lockdown key
+
+- add a get_version to module api

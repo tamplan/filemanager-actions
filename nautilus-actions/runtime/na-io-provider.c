@@ -76,6 +76,45 @@ na_io_provider_register_callbacks( const NAPivot *pivot )
 }
 
 /**
+ * na_io_provider_get_id:
+ * @provider: the #NAIIOProvider whose id is to be returned.
+ *
+ * Returns: the provider's id as a newly allocated string which should
+ * be g_free() by the caller, or NULL.
+ */
+gchar *
+na_io_provider_get_id( const NAPivot *pivot, const NAIIOProvider *provider )
+{
+	gchar *id;
+
+	id = NULL;
+	if( NA_IIO_PROVIDER_GET_INTERFACE( provider )->get_id ){
+		id = NA_IIO_PROVIDER_GET_INTERFACE( provider )->get_id( provider );
+	}
+
+	return( id );
+}
+
+/**
+ * na_io_provider_get_version:
+ * @provider: the #NAIIOProvider whose id is to be returned.
+ *
+ * Returns: the API's version the provider supports.
+ */
+guint
+na_io_provider_get_version( const NAPivot *pivot, const NAIIOProvider *provider )
+{
+	guint version;
+
+	version = 0;
+	if( NA_IIO_PROVIDER_GET_INTERFACE( provider )->get_version ){
+		version = NA_IIO_PROVIDER_GET_INTERFACE( provider )->get_version( provider );
+	}
+
+	return( version );
+}
+
+/**
  * na_io_provider_get_name:
  * @provider: the #NAIIOProvider whose name is to be returned.
  *
