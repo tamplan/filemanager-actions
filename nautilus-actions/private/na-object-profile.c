@@ -1031,6 +1031,12 @@ na_object_profile_is_candidate( const NAObjectProfile *profile, gint target, GLi
 {
 	gboolean is_candidate;
 
+	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
+
+	if( !na_object_is_valid( profile )){
+		return( FALSE );
+	}
+
 	switch( target ){
 		case ITEM_TARGET_BACKGROUND:
 			is_candidate = is_target_background_candidate( profile, ( NautilusFileInfo * ) files->data );
@@ -1117,6 +1123,12 @@ gboolean
 na_object_profile_is_candidate_for_tracked( const NAObjectProfile *profile, GList *tracked_items )
 {
 	gboolean is_candidate;
+
+	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
+
+	if( !na_object_is_valid( profile )){
+		return( FALSE );
+	}
 
 	is_candidate = is_target_selection_candidate( profile, tracked_items, FALSE );
 

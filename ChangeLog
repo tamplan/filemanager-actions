@@ -1,5 +1,10 @@
 2009-12-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/private/na-object-profile.c
+	(na_object_profile_is_candidate,
+	na_object_profile_is_candidate_for_tracked):
+	Profile must be valid in order to be candidate.
+
 	* nautilus-actions/api/na-dbus.h: New file.
 
 	* nautilus-actions/api/Makefile.am: Updated accordingly.
