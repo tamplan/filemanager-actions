@@ -649,7 +649,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	/* cut/copy/duplicate/delete enabled when selection not empty */
 	/* cut/delete require a writable item */
-	cut_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !readonly;
+	cut_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !readonly &&!locked;
 	copy_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0;
 	duplicate_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !locked;
 	delete_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && !readonly && !locked;

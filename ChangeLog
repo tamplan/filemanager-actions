@@ -1,5 +1,8 @@
 2009-12-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
+	Do not enable 'cut' if locked down.
+
 	* nautilus-actions/private/na-object-profile.c
 	(object_are_equal, object_is_valid): Now marked as static.
 
