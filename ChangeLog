@@ -1,3 +1,43 @@
+2009-12-12 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/api/na-dbus.h: New file.
+
+	* nautilus-actions/api/Makefile.am: Updated accordingly.
+
+	* nautilus-actions/nact/nact-clipboard.c (nact_clipboard_dump):
+	Fix debug parameters to have pointer of correct size.
+
+	* nautilus-actions/private/na-gnome-vfs-uri.c:
+	* nautilus-actions/private/na-gnome-vfs-uri.h:
+	Rename uri field to path.
+
+	* nautilus-actions/private/na-object-profile-class.h:
+	Define NATrackedItem structure.
+
+	* nautilus-actions/private/na-object-profile-fn.h:
+	* nautilus-actions/private/na-object-profile.c
+	(na_object_profile_is_candidate_for_tracked,
+	na_object_profile_parse_parameters_for_tracked): New functions.
+
+	* nautilus-actions/test/test-parse-uris.c:
+	Add a new test case.
+
+	* nautilus-actions/tracker/Makefile.am:
+	* nautilus-actions/utils/Makefile.am:
+	Fix make distcheck.
+	Install XML service definition and cleanup built files.
+
+	* nautilus-actions/tracker/na-tracker-dbus.c:
+	Take a reference on NautilusFileInfo provided list.
+
+	* nautilus-actions/tracker/na-tracker.c:
+	* nautilus-actions/tracker/na-tracker.h:
+	Move DBus service name to api/na-dbus.h header.
+
+	* nautilus-actions/utils/nautilus-actions-run.c:
+	Remove '--parameters' and '--current' useless options.
+	Execute action on candidate profile.
+
 2009-12-10 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/runtime/na-pivot.c:

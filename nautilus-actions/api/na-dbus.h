@@ -28,46 +28,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#ifndef __NAUTILUS_ACTIONS_NA_DBUS_H__
+#define __NAUTILUS_ACTIONS_NA_DBUS_H__
 
-#include <glib-object.h>
-#include <glib/gprintf.h>
-#include <glib/gi18n.h>
-#include <stdlib.h>
+/**
+ * SECTION: na_dbus
+ * @short_description: Nautilus-Actions DBus description.
+ * @include: nautilus-actions/api/na-dbus.h
+ */
 
-#include <private/na-gnome-vfs-uri.h>
+G_BEGIN_DECLS
 
-static const gchar *uris[] = {
-		"http://robert:azerty01@mon.domain.com/path/to/a/document?query#anchor",
-		"ssh://pwi.dyndns.biz:2207",
-		"sftp://kde.org:1234/pub/kde",
-		"/usr/bin/nautilus-actions-config-tool",
-		"file:///home/pierre/data/eclipse/nautilus-actions/AUTHORS",
-		NULL
-};
+#define NAUTILUS_ACTIONS_DBUS_SERVICE	"org.nautilus-actions.DBus"
 
-int
-main( int argc, char** argv )
-{
-	int i;
+G_END_DECLS
 
-	g_type_init();
-	g_printf( _( "URIs parsing test.\n\n" ));
-
-	for( i = 0 ; uris[i] ; ++i ){
-		NAGnomeVFSURI *vfs = g_new0( NAGnomeVFSURI, 1 );
-		na_gnome_vfs_uri_parse( vfs, uris[i] );
-		g_printf( "original  uri=%s\n", uris[i] );
-		g_printf( "vfs      path=%s\n", vfs->path );
-		g_printf( "vfs    scheme=%s\n", vfs->scheme );
-		g_printf( "vfs host_name=%s\n", vfs->host_name );
-		g_printf( "vfs host_port=%d\n", vfs->host_port );
-		g_printf( "vfs user_name=%s\n", vfs->user_name );
-		g_printf( "vfs  password=%s\n", vfs->password );
-		g_printf( "\n" );
-	}
-
-	return( EXIT_SUCCESS );
-}
+#endif /* __NAUTILUS_ACTIONS_NA_DBUS_H__ */

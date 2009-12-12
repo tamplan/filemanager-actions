@@ -85,7 +85,7 @@ na_gnome_vfs_uri_parse( NAGnomeVFSURI *vfs, const gchar *text_uri )
 	const gchar *method_scanner;
 	gchar *extension_scanner;
 
-	vfs->uri = NULL;
+	vfs->path = NULL;
 	vfs->scheme = NULL;
 	vfs->host_name = NULL;
 	vfs->host_port = 0;
@@ -120,6 +120,7 @@ na_gnome_vfs_uri_parse( NAGnomeVFSURI *vfs, const gchar *text_uri )
 void
 na_gnome_vfs_uri_free( NAGnomeVFSURI *vfs )
 {
+	g_free( vfs->path );
 	g_free( vfs->scheme );
 	g_free( vfs->host_name );
 	g_free( vfs->user_name );
@@ -577,18 +578,18 @@ set_uri_element (NAGnomeVFSURI *vfs,
 	char *escaped_text;
 
 	if (text == NULL || len == 0) {
-		vfs->uri = g_strdup ("/");
+		vfs->path = g_strdup ("/");
 		return;
 	}
 
 	if ( text[0] == '/' && text[1] == '/') {
-		vfs->uri = split_toplevel_uri (text + 2, len - 2,
+		vfs->path = split_toplevel_uri (text + 2, len - 2,
 						&vfs->host_name,
 						&vfs->user_name,
 						&vfs->host_port,
 						&vfs->password);
 	} else {
-		vfs->uri = g_strndup (text, len);
+		vfs->path = g_strndup (text, len);
 	}
 
 	/* FIXME: this should be handled/supported by the specific method.
@@ -608,13 +609,13 @@ set_uri_element (NAGnomeVFSURI *vfs,
 	        || strcmp (vfs->scheme, "help") == 0
 		)) {
 
-		escaped_text = gnome_vfs_escape_set (vfs->uri, ";?&=+$,");
-		g_free (vfs->uri);
-		vfs->uri = escaped_text;
+		escaped_text = gnome_vfs_escape_set (vfs->path, ";?&=+$,");
+		g_free (vfs->path);
+		vfs->path = escaped_text;
 	}
 
-	gnome_vfs_remove_optional_escapes (vfs->uri);
-	gnome_vfs_canonicalize_pathname (vfs->uri);
+	gnome_vfs_remove_optional_escapes (vfs->path);
+	gnome_vfs_canonicalize_pathname (vfs->path);
 }
 
 /*

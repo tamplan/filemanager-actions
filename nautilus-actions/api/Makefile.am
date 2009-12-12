@@ -38,6 +38,7 @@ libna_api_includedir = $(pkgincludedir)/api
 
 libna_api_include_HEADERS = \
 	na-api.h											\
+	na-dbus.h											\
 	na-gconf-keys.h										\
 	na-gconf-monitor.h									\
 	na-iio-provider.h									\

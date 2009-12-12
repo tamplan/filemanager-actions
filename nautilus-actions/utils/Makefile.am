@@ -85,3 +85,7 @@ nautilus_actions_schemas_LDADD = \
 	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
+
+CLEANFILES = \
+	$(BUILT_SOURCES)											\
+	$(NULL)

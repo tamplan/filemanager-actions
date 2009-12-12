@@ -801,7 +801,7 @@ nact_clipboard_dump( NactClipboard *clipboard )
 			}
 		}
 
-		g_debug( "%s:  primary_got=%s", thisfn, ( void * ) clipboard->private->primary_got ? "True":"False" );
+		g_debug( "%s:  primary_got=%s", thisfn, clipboard->private->primary_got ? "True":"False" );
 	}
 }
 

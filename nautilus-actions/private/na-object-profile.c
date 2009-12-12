@@ -89,8 +89,15 @@ static void      instance_finalize( GObject *object );
 static gboolean  is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
 static gboolean  is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
 static gboolean  is_current_folder_inside( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
-static gboolean  is_target_selection_candidate( const NAObjectProfile *profile, GList *files );
-static int       validate_schemes( GSList *schemes2test, NautilusFileInfo *file );
+static gboolean  is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus );
+static gboolean  tracked_is_directory( void *iter, gboolean from_nautilus );
+static gchar    *tracked_to_basename( void *iter, gboolean from_nautilus );
+static GFile    *tracked_to_location( void *iter, gboolean from_nautilus );
+static gchar    *tracked_to_scheme( void *iter, gboolean from_nautilus );
+static gchar    *tracked_to_mimetype( void *iter, gboolean from_nautilus );
+static gchar    *tracked_to_uri( void *iter, gboolean from_nautilus );
+static int       validate_schemes( GSList *schemes2test, void *iter, gboolean from_nautilus );
+static gchar    *parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gboolean from_nautilus );
 
 static void      object_dump( const NAObject *profile );
 static void      object_dump_list( const gchar *thisfn, const gchar *label, GSList *list );
@@ -1035,7 +1042,7 @@ na_object_profile_is_candidate( const NAObjectProfile *profile, gint target, GLi
 
 		case ITEM_TARGET_SELECTION:
 		default:
-			is_candidate = is_target_selection_candidate( profile, files );
+			is_candidate = is_target_selection_candidate( profile, files, TRUE );
 	}
 
 	return( is_candidate );
@@ -1089,8 +1096,35 @@ is_current_folder_inside( const NAObjectProfile *profile, NautilusFileInfo *curr
 	return( is_inside );
 }
 
+/**
+ * na_object_profile_is_candidate_for_tracked:
+ * @profile: the #NAObjectProfile to be checked.
+ * @files: the currently selected items, as a list of uris.
+ *
+ * Determines if the given profile is candidate to be displayed in the
+ * Nautilus context menu, regarding the list of currently selected
+ * items.
+ *
+ * Returns: %TRUE if this profile succeeds to all tests and is so a
+ * valid candidate to be displayed in Nautilus context menu, %FALSE
+ * else.
+ *
+ * The case where we only have URIs for target files is when we have
+ * got this list through the org.nautilus_actions.DBus service (or
+ * another equivalent) - typically for use in a command-line tool.
+ */
+gboolean
+na_object_profile_is_candidate_for_tracked( const NAObjectProfile *profile, GList *tracked_items )
+{
+	gboolean is_candidate;
+
+	is_candidate = is_target_selection_candidate( profile, tracked_items, FALSE );
+
+	return( is_candidate );
+}
+
 static gboolean
-is_target_selection_candidate( const NAObjectProfile *profile, GList *files )
+is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus )
 {
 	gboolean retv = FALSE;
 	gboolean test_multiple_file = FALSE;
@@ -1167,13 +1201,13 @@ is_target_selection_candidate( const NAObjectProfile *profile, GList *files )
 		}
 	}
 
-	for (iter1 = files; iter1; iter1 = iter1->next)
-	{
-		tmp_filename = nautilus_file_info_get_name ((NautilusFileInfo *)iter1->data);
+	for( iter1 = files; iter1; iter1 = iter1->next ){
+
+		tmp_filename = tracked_to_basename( iter1->data, from_nautilus );
 
 		if (tmp_filename)
 		{
-			tmp_mimetype = nautilus_file_info_get_mime_type ((NautilusFileInfo *)iter1->data);
+			tmp_mimetype = tracked_to_mimetype( iter1->data, from_nautilus );
 
 			if (!profile->private->match_case)
 			{
@@ -1191,16 +1225,13 @@ is_target_selection_candidate( const NAObjectProfile *profile, GList *files )
 			g_free (tmp_mimetype);
 			tmp_mimetype = tmp_mimetype2;
 
-			if (nautilus_file_info_is_directory ((NautilusFileInfo *)iter1->data))
-			{
+			if( tracked_is_directory( iter1->data, from_nautilus )){
 				dir_count++;
-			}
-			else
-			{
+			} else {
 				file_count++;
 			}
 
-			scheme_ok_count += validate_schemes (profile->private->schemes, (NautilusFileInfo*)iter1->data);
+			scheme_ok_count += validate_schemes( profile->private->schemes, iter1->data, from_nautilus );
 
 			if (!test_basename) /* if it is already ok, skip the test to improve performance */
 			{
@@ -1242,7 +1273,6 @@ is_target_selection_candidate( const NAObjectProfile *profile, GList *files )
 
 			g_free (tmp_mimetype);
 			g_free (tmp_filename);
-
 		}
 
 		total_count++;
@@ -1314,6 +1344,146 @@ is_target_selection_candidate( const NAObjectProfile *profile, GList *files )
 	return retv;
 }
 
+static gboolean
+tracked_is_directory( void *iter, gboolean from_nautilus )
+{
+	gboolean is_dir;
+	GFile *file;
+	GFileType type;
+
+	if( from_nautilus ){
+		is_dir = nautilus_file_info_is_directory(( NautilusFileInfo * ) iter );
+
+	} else {
+		file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
+		type = g_file_query_file_type( file, G_FILE_QUERY_INFO_NONE, NULL );
+		is_dir = ( type == G_FILE_TYPE_DIRECTORY );
+		g_object_unref( file );
+	}
+
+	return( is_dir );
+}
+
+static gchar *
+tracked_to_basename( void *iter, gboolean from_nautilus )
+{
+	gchar *bname;
+	GFile *file;
+
+	if( from_nautilus ){
+		bname = nautilus_file_info_get_name(( NautilusFileInfo * ) iter );
+	} else {
+		file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
+		bname = g_file_get_basename( file );
+		g_object_unref( file );
+	}
+
+	return( bname );
+}
+
+static GFile *
+tracked_to_location( void *iter, gboolean from_nautilus )
+{
+	GFile *file;
+
+	if( from_nautilus ){
+		file = nautilus_file_info_get_location(( NautilusFileInfo * ) iter );
+	} else {
+		file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
+	}
+
+	return( file );
+}
+
+static gchar *
+tracked_to_mimetype( void *iter, gboolean from_nautilus )
+{
+	gchar *type;
+	NATrackedItem *tracked;
+	GFile *file;
+	GFileInfo *info;
+
+	type = NULL;
+	if( from_nautilus ){
+		type = nautilus_file_info_get_mime_type(( NautilusFileInfo * ) iter );
+
+	} else {
+		tracked = ( NATrackedItem * ) iter;
+		if( tracked->mimetype ){
+			type = g_strdup( tracked->mimetype );
+
+		} else {
+			file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
+			info = g_file_query_info( file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, G_FILE_QUERY_INFO_NONE, NULL, NULL );
+			if( info ){
+				type = g_strdup( g_file_info_get_content_type( info ));
+				g_object_unref( info );
+			}
+			g_object_unref( file );
+		}
+	}
+
+	return( type );
+}
+
+static gchar *
+tracked_to_scheme( void *iter, gboolean from_nautilus )
+{
+	gchar *scheme;
+	NAGnomeVFSURI *vfs;
+
+	if( from_nautilus ){
+		scheme = nautilus_file_info_get_uri_scheme(( NautilusFileInfo * ) iter );
+
+	} else {
+		vfs = g_new0( NAGnomeVFSURI, 1 );
+		na_gnome_vfs_uri_parse( vfs, (( NATrackedItem * ) iter )->uri );
+		scheme = g_strdup( vfs->scheme );
+		na_gnome_vfs_uri_free( vfs );
+	}
+
+	return( scheme );
+}
+
+static gchar *
+tracked_to_uri( void *iter, gboolean from_nautilus )
+{
+	gchar *uri;
+
+	if( from_nautilus ){
+		uri = nautilus_file_info_get_uri(( NautilusFileInfo * ) iter );
+	} else {
+		uri = g_strdup((( NATrackedItem * ) iter )->uri );
+	}
+
+	return( uri );
+}
+
+static int
+validate_schemes( GSList* schemes2test, void* tracked_iter, gboolean from_nautilus )
+{
+	int retv = 0;
+	GSList* iter;
+	gboolean found = FALSE;
+	gchar *scheme;
+
+	iter = schemes2test;
+	while( iter && !found ){
+
+		scheme = tracked_to_scheme( tracked_iter, from_nautilus );
+
+		if( g_ascii_strncasecmp( scheme, ( gchar * ) iter->data, strlen(( gchar * ) iter->data )) == 0 ){
+			found = TRUE;
+			retv = 1;
+		}
+
+		g_free( scheme );
+		iter = iter->next;
+	}
+
+	return retv;
+}
+
 /**
  * Expands the parameters path, in function of the found tokens.
  *
@@ -1336,13 +1506,33 @@ is_target_selection_candidate( const NAObjectProfile *profile, GList *files )
  * %% : a percent sign
  *
  * Adding a parameter requires updating of :
- * - src/common/na/na-action-profile.c:na_object_profile_parse_parameters()
- * - src/common/na/na-xml-names.h
- * - src/nact/nact-icommand-tab.c:parse_parameters()
- * - src/nact/nautilus-actions-config-tool.ui:LegendDialog
+ * - nautilus-actions/private/na-action-profile.c:na_object_profile_parse_parameters()
+ * - nautilus-actions/runtime/na-xml-names.h
+ * - nautilus-actions/nact/nact-icommand-tab.c:parse_parameters()
+ * - nautilus-actions/nact/nautilus-actions-config-tool.ui:LegendDialog
  */
 gchar *
 na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target, GList* files )
+{
+	return( parse_parameters( profile, target, files, TRUE ));
+}
+
+/**
+ * na_object_profile_parse_parameters_for_tracked:
+ * @profile: the selected profile.
+ * @tracked_items: current selection.
+ */
+gchar *
+na_object_profile_parse_parameters_for_tracked( const NAObjectProfile *profile, GList *tracked_items )
+{
+	return( parse_parameters( profile, ITEM_TARGET_SELECTION, tracked_items, FALSE ));
+}
+
+/*
+ * Expands the parameters path, in function of the found tokens.
+ */
+static gchar *
+parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gboolean from_nautilus )
 {
 	gchar *parsed = NULL;
 	GString *string;
@@ -1375,8 +1565,8 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target,
 
 	for( ifi = files ; ifi ; ifi = ifi->next ){
 
-		iuri = nautilus_file_info_get_uri(( NautilusFileInfo * ) ifi->data );
-		iloc = nautilus_file_info_get_location(( NautilusFileInfo * ) ifi->data );
+		iuri = tracked_to_uri( ifi->data, from_nautilus );
+		iloc = tracked_to_location( ifi->data, from_nautilus );
 		ipath = g_file_get_path( iloc );
 		ibname = g_file_get_basename( iloc );
 
@@ -1387,7 +1577,7 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target,
 
 			uri = g_strdup( iuri );
 			dirname = g_path_get_dirname( ipath );
-			scheme = nautilus_file_info_get_uri_scheme(( NautilusFileInfo * ) ifi->data );
+			scheme = g_strdup( vfs->scheme );
 			filename = g_strdup( ibname );
 			hostname = g_strdup( vfs->host_name );
 			username = g_strdup( vfs->user_name );
@@ -1514,32 +1704,6 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target,
 
 	parsed = g_string_free( string, FALSE );
 	return( parsed );
-}
-
-static int
-validate_schemes( GSList* schemes2test, NautilusFileInfo* file )
-{
-	int retv = 0;
-	GSList* iter;
-	gboolean found = FALSE;
-	gchar *scheme;
-
-	iter = schemes2test;
-	while (iter && !found)
-	{
-		scheme = nautilus_file_info_get_uri_scheme (file);
-
-		if (g_ascii_strncasecmp (scheme, (gchar*)iter->data, strlen ((gchar*)iter->data)) == 0)
-		{
-			found = TRUE;
-			retv = 1;
-		}
-
-		g_free (scheme);
-		iter = iter->next;
-	}
-
-	return retv;
 }
 
 static void

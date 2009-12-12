@@ -59,3 +59,11 @@ libnautilus_actions_tracker_la_LIBADD = \
 	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
+
+EXTRA_DIST = \
+	na-tracker-dbus.xml											\
+	$(NULL)
+
+CLEANFILES = \
+	$(BUILT_SOURCES)											\
+	$(NULL)

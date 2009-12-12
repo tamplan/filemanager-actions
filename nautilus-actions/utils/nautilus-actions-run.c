@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <api/na-dbus.h>
 #include <api/na-object-api.h>
 
 #include <runtime/na-pivot.h>
@@ -49,21 +50,15 @@
 #include "nautilus-actions-run-bindings.h"
 
 static gchar     *id               = "";
-static gchar     *parms            = "";
 static gchar    **targets_array    = NULL;
-static gboolean   current          = FALSE;
 static gboolean   version          = FALSE;
 
 static GOptionEntry entries[] = {
 
-	{ "id"                   , 'i', 0, G_OPTION_ARG_STRING      , &id,
+	{ "id"                   , 'i', 0, G_OPTION_ARG_STRING        , &id,
 			N_( "The internal identifiant of the action to be launched" ), N_( "<STRING>" ) },
-	{ "parameters"           , 'p', 0, G_OPTION_ARG_STRING      , &parms,
-			N_( "The parameters to be applied to the action" ), N_( "<STRING>" ) },
-	{ "target"               , 't', 0, G_OPTION_ARG_STRING      , &targets_array,
-			N_( "A target of the action. More than one options may be specified. Incompatible with '--current' option" ), N_( "<STRING>" ) },
-	{ "current"              , 'c', 0, G_OPTION_ARG_NONE        , &current,
-			N_( "Whether the action should be executed on current Nautilus selection [default]. Incompatible with '--target' option" ), NULL },
+	{ "target"               , 't', 0, G_OPTION_ARG_FILENAME_ARRAY, &targets_array,
+			N_( "A target, file or folder, for the action. More than one options may be specified" ), N_( "<URI>" ) },
 	{ NULL }
 };
 
@@ -74,13 +69,15 @@ static GOptionEntry misc_entries[] = {
 	{ NULL }
 };
 
-static GOptionContext *init_options( void );
-static NAObjectAction *get_action( const gchar *id );
-static GList          *get_current_selection( void );
-static GList          *targets_from_commandline( void );
-static void            dump_targets( GList *targets );
-static void            free_targets( GList *targets );
-static void            exit_with_usage( void );
+static GOptionContext  *init_options( void );
+static NAObjectAction  *get_action( const gchar *id );
+static GList           *targets_from_selection( void );
+static GList           *targets_from_commandline( void );
+static NAObjectProfile *get_profile_for_targets( NAObjectAction *action, GList *targets );
+static void             execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets );
+static void             dump_targets( GList *targets );
+static void             free_targets( GList *targets );
+static void             exit_with_usage( void );
 
 int
 main( int argc, char** argv )
@@ -92,6 +89,7 @@ main( int argc, char** argv )
 	gchar *help;
 	gint errors;
 	NAObjectAction *action;
+	NAObjectProfile *profile;
 	GList *targets;
 
 	g_type_init();
@@ -127,34 +125,41 @@ main( int argc, char** argv )
 		errors += 1;
 	}
 
-	if( current && targets_array ){
-		g_printerr( _( "Error: '--target' and '--current' options cannot both be specified.\n" ));
-		errors += 1;
-	}
-
-	if( !current && !targets_array ){
-		current = TRUE;
-	}
-
 	action = get_action( id );
 	if( !action ){
 		errors += 1;
+	} else {
+		g_debug( "%s: action %s have been found, and is enabled and valid", thisfn, id );
 	}
-	g_debug( "%s: action %s have been found, and is enabled and valid", thisfn, id );
 
 	if( errors ){
 		exit_with_usage();
 	}
 
-	if( current ){
-		targets = get_current_selection();
-	} else {
+	if( targets_array ){
 		targets = targets_from_commandline();
+
+	} else {
+		targets = targets_from_selection();
 	}
 
 	dump_targets( targets );
-	free_targets( targets );
 
+	if( g_list_length( targets ) == 0 ){
+		g_print( "No current selection. Nothing to do. Exiting...\n" );
+		exit( status );
+	}
+
+	profile = get_profile_for_targets( action, targets );
+	if( !profile ){
+		g_print( "No valid profile is candidate to execution. Exiting...\n" );
+		exit( status );
+	}
+	g_debug( "%s: profile %p found", thisfn, ( void * ) profile );
+
+	execute_action( action, profile, targets );
+
+	free_targets( targets );
 	exit( status );
 }
 
@@ -235,11 +240,18 @@ get_action( const gchar *id )
 	return( action );
 }
 
+/*
+ * the DBus.Tracker.Status interface returns a list of strings
+ * each item has two slots in this list:
+ * - uri
+ * - mimetype
+ */
 static GList *
-get_current_selection( void )
+targets_from_selection( void )
 {
-	static const gchar *thisfn = "nautilus_actions_run_get_current_selection";
+	static const gchar *thisfn = "nautilus_actions_run_targets_from_selection";
 	GList *selection;
+	NATrackedItem *tracked;
 	DBusGConnection *connection;
 	DBusGProxy *proxy;
 	GError *error;
@@ -285,8 +297,12 @@ get_current_selection( void )
 
 	iter = paths;
 	while( *iter ){
-		selection = g_list_prepend( selection, g_strdup( *iter ));
+		tracked = g_new0( NATrackedItem, 1 );
+		tracked->uri = g_strdup( *iter );
 		iter++;
+		tracked->mimetype = g_strdup( *iter );
+		iter++;
+		selection = g_list_prepend( selection, tracked );
 	}
 	g_strfreev( paths );
 	selection = g_list_reverse( selection );
@@ -303,14 +319,21 @@ get_current_selection( void )
 static GList *
 targets_from_commandline( void )
 {
+	static const gchar *thisfn = "nautilus_actions_run_targets_from_commandline";
 	GList *targets;
+	NATrackedItem *tracked;
 	gchar **iter;
+
+	g_debug( "%s", thisfn );
 
 	targets = NULL;
 	iter = targets_array;
+
 	while( *iter ){
-		targets = g_list_prepend( targets, g_strdup( *iter ));
+		tracked = g_new0( NATrackedItem, 1 );
+		tracked->uri = g_strdup( *iter );
 		iter++;
+		targets = g_list_prepend( targets, tracked );
 	}
 
 	targets = g_list_reverse( targets );
@@ -319,15 +342,64 @@ targets_from_commandline( void )
 }
 
 /*
+ * find a profile candidate to be executed for the given uris
+ */
+static NAObjectProfile *
+get_profile_for_targets( NAObjectAction *action, GList *targets )
+{
+	/*static const gchar *thisfn = "nautilus_actions_run_get_profile_for_targets";*/
+	NAObjectProfile *candidate;
+	GList *profiles, *ip;
+
+	candidate = NULL;
+	profiles = na_object_get_items_list( action );
+	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
+
+		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
+		if( na_object_profile_is_candidate_for_tracked( profile, targets )){
+			candidate = profile;
+		}
+	}
+
+	return( candidate );
+}
+
+static void
+execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets )
+{
+	static const gchar *thisfn = "nautilus_action_run_execute_action";
+	GString *cmd;
+	gchar *param, *path;
+
+	path = na_object_profile_get_path( profile );
+	cmd = g_string_new( path );
+
+	param = na_object_profile_parse_parameters_for_tracked( profile, targets );
+
+	if( param != NULL ){
+		g_string_append_printf( cmd, " %s", param );
+		g_free( param );
+	}
+
+	g_debug( "%s: executing '%s'", thisfn, cmd->str );
+	g_spawn_command_line_async( cmd->str, NULL );
+
+	g_string_free (cmd, TRUE);
+	g_free( path );
+}
+
+/*
  *
  */
 static void
 dump_targets( GList *targets )
 {
+	NATrackedItem *tracked;
 	GList *it;
 
 	for( it = targets ; it ; it = it->next ){
-		g_print( "%s\n", ( gchar * ) it->data );
+		tracked = ( NATrackedItem * ) it->data;
+		g_print( "%s\t[%s]\n", tracked->uri, tracked->mimetype );
 	}
 }
 
@@ -337,10 +409,14 @@ dump_targets( GList *targets )
 static void
 free_targets( GList *targets )
 {
+	NATrackedItem *tracked;
 	GList *it;
 
 	for( it = targets ; it ; it = it->next ){
-		g_free(( gchar * ) it->data );
+		tracked = ( NATrackedItem * ) it->data;
+		g_free( tracked->uri );
+		g_free( tracked->mimetype );
+		g_free( tracked );
 	}
 
 	g_list_free( targets );

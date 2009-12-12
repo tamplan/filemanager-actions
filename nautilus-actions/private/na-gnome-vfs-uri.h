@@ -62,7 +62,7 @@
 G_BEGIN_DECLS
 
 typedef struct {
-	gchar *uri;
+	gchar *path;
 	gchar *scheme;
 	gchar *host_name;
 	guint  host_port;

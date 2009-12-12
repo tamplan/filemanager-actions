@@ -41,6 +41,8 @@
 
 #include <dbus/dbus-glib.h>
 
+#include <api/na-dbus.h>
+
 #include "na-tracker-dbus.h"
 #include "na-tracker-dbus-glue.h"
 
@@ -54,7 +56,7 @@ struct NATrackerDBusClassPrivate {
  */
 struct NATrackerDBusPrivate {
 	gboolean  dispose_has_run;
-	GList    *uris;
+	GList    *selected;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -65,7 +67,7 @@ static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
-static GList *free_uris( GList *uris );
+static GList *free_selected( GList *selected );
 
 GType
 na_tracker_dbus_get_type( void )
@@ -143,7 +145,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NATrackerDBusPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
-	self->private->uris = NULL;
+	self->private->selected = NULL;
 }
 
 static void
@@ -177,7 +179,7 @@ instance_finalize( GObject *object )
 	g_return_if_fail( NA_IS_TRACKER_DBUS( object ));
 	self = NA_TRACKER_DBUS( object );
 
-	self->private->uris = free_uris( self->private->uris );
+	self->private->selected = free_selected( self->private->selected );
 
 	g_free( self->private );
 
@@ -197,29 +199,28 @@ instance_finalize( GObject *object )
 void
 na_tracker_dbus_set_uris( NATrackerDBus *tracker, GList *files )
 {
-	GList *it;
-	gchar *uri;
-
 	if( !tracker->private->dispose_has_run ){
 
-		tracker->private->uris = free_uris( tracker->private->uris );
-
-		for( it = files ; it ; it = it->next ){
-			uri = nautilus_file_info_get_uri(( NautilusFileInfo * ) it->data );
-			tracker->private->uris = g_list_prepend( tracker->private->uris, uri );
-		}
-
-		tracker->private->uris = g_list_reverse( tracker->private->uris );
+		tracker->private->selected = free_selected( tracker->private->selected );
+		tracker->private->selected = nautilus_file_info_list_copy( files );
 	}
 }
 
 /**
  * na_tracker_dbus_get_selected_paths:
- * @tracker:
- * @paths:
- * @error:
+ * @tracker: this #NATrackerDBus object.
+ * @paths: the location in which copy the strings to be sent.
+ * @error: the location of a GError.
  *
- * Exported as GetSelectedPaths method.
+ * Send on session DBus the list of currently selected items, as two
+ * strings for each item :
+ * - its uri
+ * - its mimetype.
+ *
+ * Note that this _must_ correspond to the content of the NATrackedItem
+ * structure, as described in private/na-object-profile-class.h
+ *
+ * Exported as GetSelectedPaths method on Tracker.Status interface.
  */
 gboolean
 na_tracker_dbus_get_selected_paths( NATrackerDBus *tracker, char ***paths, GError **error )
@@ -237,12 +238,15 @@ na_tracker_dbus_get_selected_paths( NATrackerDBus *tracker, char ***paths, GErro
 
 	if( !tracker->private->dispose_has_run ){
 
-		count = g_list_length( tracker->private->uris );
+		count = 2 * g_list_length( tracker->private->selected );
 		*paths = ( char ** ) g_new0( gchar *, 1+count );
 		iter = *paths;
 
-		for( it = tracker->private->uris ; it ; it = it->next ){
-			*iter = g_strdup(( gchar * ) it->data );
+		for( it = tracker->private->selected ; it ; it = it->next ){
+
+			*iter = nautilus_file_info_get_uri(( NautilusFileInfo * ) it->data );
+			iter++;
+			*iter = nautilus_file_info_get_mime_type(( NautilusFileInfo * ) it->data );
 			iter++;
 		}
 	}
@@ -251,15 +255,9 @@ na_tracker_dbus_get_selected_paths( NATrackerDBus *tracker, char ***paths, GErro
 }
 
 static GList *
-free_uris( GList *uris )
+free_selected( GList *selected )
 {
-	GList *it;
-
-	for( it = uris ; it ; it = it->next ){
-		g_free(( gchar * ) it->data );
-	}
-
-	g_list_free( uris );
+	nautilus_file_info_list_free( selected );
 
 	return( NULL );
 }

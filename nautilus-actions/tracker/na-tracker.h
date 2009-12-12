@@ -76,8 +76,6 @@ typedef struct
 GType na_tracker_get_type( void );
 void  na_tracker_register_type( GTypeModule *module );
 
-#define NAUTILUS_ACTIONS_DBUS_SERVICE	"org.nautilus-actions.DBus"
-
 G_END_DECLS
 
 #endif /* __NA_TRACKER_H__ */

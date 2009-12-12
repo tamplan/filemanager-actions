@@ -102,3 +102,10 @@
 - lockdown: cut should be disabled
   inline edition should be disabled
   all entry fields should be readonly
+
+- naobjectprofile: object_are_equal, object_is_valid should be static
+
+- dbus send: do we should free the strings after their emission ?
+
+- when looking to see if an action is candidate, we only look at valid action, yes ?
+  but when searching for a profile, we also should check that the profile is valid

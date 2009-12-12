@@ -82,7 +82,9 @@ void             na_object_profile_set_folders( NAObjectProfile *profile, GSList
 void             na_object_profile_replace_folder_uri( NAObjectProfile *profile, const gchar *old, const gchar *new );
 
 gboolean         na_object_profile_is_candidate( const NAObjectProfile *profile, gint target, GList *files );
+gboolean         na_object_profile_is_candidate_for_tracked( const NAObjectProfile *profile, GList *tracked );
 gchar           *na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target, GList *files );
+gchar           *na_object_profile_parse_parameters_for_tracked( const NAObjectProfile *profile, GList *tracked );
 
 G_END_DECLS
 

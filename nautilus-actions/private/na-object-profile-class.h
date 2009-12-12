@@ -72,6 +72,15 @@ typedef struct {
 
 GType na_object_profile_get_type( void );
 
+/* a structure used by the org.nautilus_actions.DBus service,
+ * in its Tracker.Status interface
+ */
+typedef struct {
+	gchar *uri;
+	gchar *mimetype;
+}
+	NATrackedItem;
+
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_CLASS_H__ */
