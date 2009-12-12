@@ -53,19 +53,22 @@ static GObjectClass *st_parent_class = NULL;
 static gint          st_timeout_msec = 100;
 static gint          st_timeout_usec = 100000;
 
-static void           class_init( NagpGConfProviderClass *klass );
-static void           iio_provider_iface_init( NAIIOProviderInterface *iface );
-static void           instance_init( GTypeInstance *instance, gpointer klass );
-static void           instance_dispose( GObject *object );
-static void           instance_finalize( GObject *object );
+static void     class_init( NagpGConfProviderClass *klass );
+static void     iio_provider_iface_init( NAIIOProviderInterface *iface );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
 
-static GList         *install_monitors( NagpGConfProvider *provider );
-static void           config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
-static void           config_path_changed_reset_timeout( NagpGConfProvider *provider );
-static void           config_path_changed_set_timeout( NagpGConfProvider *provider, const gchar *uuid );
-static gboolean       config_path_changed_trigger_interface( NagpGConfProvider *provider );
-static gulong         time_val_diff( const GTimeVal *recent, const GTimeVal *old );
-static gchar         *entry2uuid( GConfEntry *entry );
+static gchar   *get_id( const NAIIOProvider *provider );
+static guint    get_version( const NAIIOProvider *provider );
+
+static GList   *install_monitors( NagpGConfProvider *provider );
+static void     config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
+static void     config_path_changed_reset_timeout( NagpGConfProvider *provider );
+static void     config_path_changed_set_timeout( NagpGConfProvider *provider, const gchar *uuid );
+static gboolean config_path_changed_trigger_interface( NagpGConfProvider *provider );
+static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+static gchar   *entry2uuid( GConfEntry *entry );
 
 GType
 nagp_gconf_provider_get_type( void )
@@ -127,6 +130,8 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
+	iface->get_id = get_id;
+	iface->get_version = get_version;
 	iface->read_items = nagp_iio_provider_read_items;
 	iface->is_willing_to_write = nagp_iio_provider_is_willing_to_write;
 	iface->is_writable = nagp_iio_provider_is_writable;
@@ -192,6 +197,18 @@ instance_finalize( GObject *object )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
+}
+
+static gchar *
+get_id( const NAIIOProvider *provider )
+{
+	return( g_strdup( "na-gconf" ));
+}
+
+static guint
+get_version( const NAIIOProvider *provider )
+{
+	return( 1 );
 }
 
 static GList *

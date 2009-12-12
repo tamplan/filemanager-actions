@@ -61,8 +61,8 @@ static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
-static gchar *get_id( NadpDesktopProvider *provider );
-static guint  get_version( NadpDesktopProvider *provider );
+static gchar *get_id( const NAIIOProvider *provider );
+static guint  get_version( const NAIIOProvider *provider );
 
 GType
 nadp_desktop_provider_get_type( void )
@@ -186,13 +186,13 @@ instance_finalize( GObject *object )
 }
 
 static gchar *
-get_id( NadpDesktopProvider *provider )
+get_id( const NAIIOProvider *provider )
 {
 	return( g_strdup( "na-desktop" ));
 }
 
 static guint
-get_version( NadpDesktopProvider *provider )
+get_version( const NAIIOProvider *provider )
 {
 	return( 1 );
 }
