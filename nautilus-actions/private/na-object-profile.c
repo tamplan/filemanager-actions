@@ -1804,7 +1804,7 @@ object_copy( NAObject *target, const NAObject *source )
 	}
 }
 
-gboolean
+static gboolean
 object_are_equal( const NAObject *a, const NAObject *b )
 {
 	NAObjectProfile *first = NA_OBJECT_PROFILE( a );
@@ -1864,7 +1864,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
  * - at least one of is_file, is_dir is set
  * - schemes list is not empty
  */
-gboolean
+static gboolean
 object_is_valid( const NAObject *profile )
 {
 	gboolean is_valid = FALSE;

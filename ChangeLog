@@ -1,6 +1,9 @@
 2009-12-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/private/na-object-profile.c
+	(object_are_equal, object_is_valid): Now marked as static.
+
+	* nautilus-actions/private/na-object-profile.c
 	(na_object_profile_is_candidate,
 	na_object_profile_is_candidate_for_tracked):
 	Profile must be valid in order to be candidate.
