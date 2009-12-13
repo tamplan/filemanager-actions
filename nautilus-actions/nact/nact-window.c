@@ -39,6 +39,7 @@
 #include <api/na-object-api.h>
 
 #include <runtime/na-gconf-utils.h>
+#include <runtime/na-io-provider.h>
 #include <runtime/na-iprefs.h>
 #include <runtime/na-utils.h>
 
@@ -199,28 +200,44 @@ nact_window_get_pivot( NactWindow *window )
 /**
  * nact_window_is_lockdown:
  * @window: this #NactWindow instance.
+ * @item: the current item.
  *
- * Returns: %TRUE if the configuration is locked to be read-only, %FALSE
- * else.
+ * Returns: %TRUE if the configuration of the item's provider is locked
+ * to be read-only, %FALSE else.
+ *
+ * If the provider item has not yet any provider, i.e. has never been
+ * saved elsewhere, then we return %FALSE, assuming that we eventually
+ * find a willing-to-write provider.
  */
 gboolean
-nact_window_is_lockdown( NactWindow *window )
+nact_window_is_lockdown( NactWindow *window, const NAObjectItem *item )
 {
 	static const gchar *thisfn = "nact_window_is_lockdown";
 	gboolean locked;
 	NAPivot *pivot;
+	NAIIOProvider *provider;
+	gchar *id;
+	gchar *key;
 	GConfClient *gconf;
 
 	locked = FALSE;
 
 	g_return_val_if_fail( NACT_IS_WINDOW( window ), locked );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), locked );
 
 	if( !window->private->dispose_has_run ){
 
 		pivot = nact_window_get_pivot( window );
-		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
-		locked = na_gconf_utils_read_bool( gconf, NAUTILUS_ACTIONS_GCONF_BASEDIR "/mandatory/lockdown", TRUE, locked );
-		g_debug( "%s: locked=%s", thisfn, locked ? "True":"False" );
+		provider = na_object_get_provider( item );
+		if( provider ){
+			id = na_io_provider_get_id( pivot, provider );
+			key = g_strdup_printf( "%s/mandatory/%s/lockdown", NAUTILUS_ACTIONS_GCONF_BASEDIR, id );
+			gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
+			locked = na_gconf_utils_read_bool( gconf, key, TRUE, locked );
+			g_debug( "%s: id=%s, locked=%s", thisfn, id, locked ? "True":"False" );
+			g_free( key );
+			g_free( id );
+		}
 	}
 
 	return( locked );

@@ -1641,7 +1641,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	g_object_unref( object );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	lockdown = nact_window_is_lockdown( NACT_WINDOW( instance ));
+	lockdown = nact_window_is_lockdown( NACT_WINDOW( instance ), NA_OBJECT_ITEM( object ));
 
 	ialid = get_instance_data( instance );
 	label = na_object_get_label( object );

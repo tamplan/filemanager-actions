@@ -613,7 +613,6 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	locked = nact_window_is_lockdown( NACT_WINDOW( window ));
 
 	g_object_get(
 			G_OBJECT( window ),
@@ -626,6 +625,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	has_modified = nact_main_window_has_modified_items( window );
 	readonly = item ? na_object_is_readonly( item ) : FALSE;
+	locked = item ? nact_window_is_lockdown( NACT_WINDOW( window ), NA_OBJECT_ITEM( item )) : FALSE;
 
 	/* new menu enabled if selection is a menu or an action */
 	/* new action enabled if selection is a menu or an action */

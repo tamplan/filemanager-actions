@@ -1,5 +1,13 @@
 2009-12-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-window.h (nact_window_is_lockdown):
+	Check if the provider of the current item is locked down.
+
+	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
+	* nautilus-actions/nact/nact-iactions-list.c (display_label):
+	Updated accordingly.
+
 	* nautilus-actions/io-provider-gconf/nagp-gconf-provider.c:
 	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.c
 	(get_id, get_version): New functions.
