@@ -37,6 +37,7 @@
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
+#include "na-gconf-utils.h"
 #include "na-io-provider.h"
 #include "na-iprefs.h"
 #include "na-utils.h"
@@ -77,6 +78,7 @@ na_io_provider_register_callbacks( const NAPivot *pivot )
 
 /**
  * na_io_provider_get_id:
+ * @pivot: the current #NAPivot instance.
  * @provider: the #NAIIOProvider whose id is to be returned.
  *
  * Returns: the provider's id as a newly allocated string which should
@@ -96,7 +98,26 @@ na_io_provider_get_id( const NAPivot *pivot, const NAIIOProvider *provider )
 }
 
 /**
+ * na_io_provider_get_name:
+ * @pivot: the current #NAPivot instance.
+ * @provider: the #NAIIOProvider whose name is to be returned.
+ *
+ * Returns: a displayble name for the provider, as a newly allocated
+ * string which should be g_free() by the caller.
+ */
+gchar *
+na_io_provider_get_name( const NAPivot *pivot, const NAIIOProvider *provider )
+{
+	gchar *name;
+
+	name = na_pivot_get_module_name( pivot, G_OBJECT( provider ));
+
+	return( name );
+}
+
+/**
  * na_io_provider_get_version:
+ * @pivot: the current #NAPivot instance.
  * @provider: the #NAIIOProvider whose id is to be returned.
  *
  * Returns: the API's version the provider supports.
@@ -115,20 +136,42 @@ na_io_provider_get_version( const NAPivot *pivot, const NAIIOProvider *provider 
 }
 
 /**
- * na_io_provider_get_name:
+ * na_io_provider_is_willing_to_write:
+ * @pivot: the current #NAPivot instance.
  * @provider: the #NAIIOProvider whose name is to be returned.
  *
- * Returns: a displayble name for the provider, as a newly allocated
- * string which should be g_free() by the caller.
+ * Returns: %TRUE if the I/O provider is willing to write _and_ it didn't
+ * has been locked down by a sysadmin.
  */
-gchar *
-na_io_provider_get_name( const NAPivot *pivot, const NAIIOProvider *provider )
+gboolean
+na_io_provider_is_willing_to_write( const NAPivot *pivot, const NAIIOProvider *provider )
 {
-	gchar *name;
+	static const gchar *thisfn = "na_io_provider_is_willing_to_write";
+	gboolean writable;
+	gboolean locked;
+	GConfClient *gconf;
+	gchar *id;
+	gchar *key;
 
-	name = na_pivot_get_module_name( pivot, G_OBJECT( provider ));
+	writable = FALSE;
+	locked = FALSE;
 
-	return( name );
+	if( NA_IIO_PROVIDER_GET_INTERFACE( provider )->is_willing_to_write ){
+
+		writable = NA_IIO_PROVIDER_GET_INTERFACE( provider )->is_willing_to_write( provider );
+
+		if( writable ){
+			id = na_io_provider_get_id( pivot, provider );
+			key = g_strdup_printf( "%s/mandatory/%s/locked", NAUTILUS_ACTIONS_GCONF_BASEDIR, id );
+			gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
+			locked = na_gconf_utils_read_bool( gconf, key, TRUE, locked );
+			g_debug( "%s: id=%s, locked=%s", thisfn, id, locked ? "True":"False" );
+			g_free( key );
+			g_free( id );
+		}
+	}
+
+	return( writable && !locked );
 }
 
 /**

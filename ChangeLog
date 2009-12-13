@@ -1,6 +1,20 @@
 2009-12-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-window.h
+	(nact_window_is_lockdown): Removed function.
+	(nact_window_is_writable_provider, nact_window_has_writable_providers):
+	New functions.
+
+	* nautilus-actions/runtime/na-io-provider.c:
+	* nautilus-actions/runtime/na-io-provider.h
+	(na_io_provider_is_willing_to_write): New function.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h (na_pivot_has_writable_providers):
+	New function.
+
+	* nautilus-actions/nact/nact-window.c:
 	* nautilus-actions/nact/nact-window.h (nact_window_is_lockdown):
 	Check if the provider of the current item is locked down.
 

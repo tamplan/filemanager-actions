@@ -73,7 +73,9 @@ typedef struct {
 	 * To avoid any collision, the IO provider id is allocated by the
 	 * Nautilus-Actions maintainer team. If you wish develop a new IO
 	 * provider, and so need a new provider id, please contact the
-	 * maintainers (see nautilus-actions.doap)
+	 * maintainers (see nautilus-actions.doap).
+	 *
+	 * The provider must implement this function.
 	 */
 	gchar *  ( *get_id )             ( const NAIIOProvider *instance );
 
@@ -82,6 +84,8 @@ typedef struct {
 	 * @instance: the #NAIIOProvider provider.
 	 *
 	 * Returns: the version of this API supported by the IO provider.
+	 *
+	 * The provider must implement this function.
 	 */
 	guint    ( *get_version )        ( const NAIIOProvider *instance );
 
@@ -110,7 +114,13 @@ typedef struct {
 	 *
 	 * Note that the I/O provider may return a positive writability
 	 * flag when considering the whole I/O storage subsystem, while not
-	 * being able to update/write/delete a particular item.
+	 * being able to update/write/delete a particular item
+	 * (see is_writable function below).
+	 *
+	 * Note also that, even if the I/O provider is willing to write,
+	 * a sysadmin may have locked down it, by putting a 'true' value
+	 * in the key '/apps/nautilus-actions/mandatory/<provider_id>/locked'
+	 * (see na_io_provider_is_willing_to_write).
 	 */
 	gboolean ( *is_willing_to_write )( const NAIIOProvider *instance );
 

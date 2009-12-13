@@ -474,6 +474,34 @@ na_pivot_free_providers( GList *providers )
 }
 
 /**
+ * na_pivot_has_writable_providers:
+ * @pivot: this #NAPivot instance.
+ *
+ * Returns: %TRUE if at least one I/O provider is writable, %FALSE else.
+ */
+gboolean
+na_pivot_has_writable_providers( const NAPivot *pivot )
+{
+	gboolean has_writable;
+	GList *providers, *ip;
+
+	has_writable = FALSE;
+
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), has_writable );
+
+	if( !pivot->private->dispose_has_run ){
+
+		providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+		for( ip = providers ; ip && !has_writable ; ip = ip->next ){
+			has_writable = na_io_provider_is_willing_to_write( pivot, NA_IIO_PROVIDER( ip->data ));
+		}
+		na_pivot_free_providers( providers );
+	}
+
+	return( has_writable );
+}
+
+/**
  * na_pivot_get_items:
  * @pivot: this #NAPivot instance.
  *

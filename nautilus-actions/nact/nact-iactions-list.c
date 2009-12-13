@@ -1634,14 +1634,12 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	gboolean modified = FALSE;
 	gboolean valid = TRUE;
 	IActionsListInstanceData *ialid;
-	gboolean locked;
-	gboolean readonly;
+	gboolean writable_provider;
+	gboolean readonly_item;
 
 	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 	g_object_unref( object );
 	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	locked = nact_window_is_locked( NACT_WINDOW( instance ), NA_OBJECT_ITEM( object ));
 
 	ialid = get_instance_data( instance );
 	label = na_object_get_label( object );
@@ -1652,7 +1650,8 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 
 		modified = na_object_is_modified( object );
 		valid = na_object_is_valid( object );
-		readonly = na_object_is_readonly( object );
+		readonly_item = na_object_is_readonly( object );
+		writable_provider = nact_window_is_writable_provider( NACT_WINDOW( instance ), NA_OBJECT_ITEM( object ));
 
 		if( modified ){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
@@ -1660,7 +1659,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		if( !valid ){
 			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
 		}
-		if( !locked && !readonly ){
+		if( writable_provider && !readonly_item ){
 			g_object_set( cell, "editable", TRUE, NULL );
 		}
 	}

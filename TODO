@@ -99,14 +99,13 @@
 
 - desktop provider: fix default toolbar label
 
-- lockdown:
-  all entry fields should be readonly
+- readonly_item or locked_provider:
+  all entry/button fields should be readonly
 
-- actually, each provider may be unwritable
-  a) because it returns FALSE on na_io_provider_is_writable
-  b) because the sysadmin has put a special key in GConf to lock this provider
-  So:
-  - each provider must be adressable by an id
-  - we have mandatory/io-provider/id/lockdown key
+- add get_id/get_version to module api
 
-- add a get_version to module api
+- when duplicating a profile
+  na_object_item_is_readonly: assertion `NA_IS_OBJECT_ITEM( item )' failed
+  GLib-GObject-WARNING **: invalid cast from `NAObjectProfile' to `NAObjectItem'
+
+- new/edit options depend of writability status of the parent menu if any

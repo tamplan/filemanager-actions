@@ -38,7 +38,6 @@
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
-#include <runtime/na-gconf-utils.h>
 #include <runtime/na-io-provider.h>
 #include <runtime/na-iprefs.h>
 #include <runtime/na-utils.h>
@@ -198,49 +197,63 @@ nact_window_get_pivot( NactWindow *window )
 }
 
 /**
- * nact_window_is_lockdown:
+ * nact_window_is_writable_provider:
  * @window: this #NactWindow instance.
  * @item: the current item.
  *
- * Returns: %TRUE if the configuration of the item's provider is locked
- * to be read-only, %FALSE else.
+ * Returns: %TRUE if the item's provider is willing to write, %FALSE else.
  *
  * If the provider item has not yet any provider, i.e. has never been
  * saved elsewhere, then we return %FALSE, assuming that we eventually
- * find a willing-to-write provider.
+ * find at least one willing-to-write provider.
  */
 gboolean
-nact_window_is_lockdown( NactWindow *window, const NAObjectItem *item )
+nact_window_is_writable_provider( NactWindow *window, const NAObjectItem *item )
 {
-	static const gchar *thisfn = "nact_window_is_lockdown";
-	gboolean locked;
+	gboolean writable;
 	NAPivot *pivot;
 	NAIIOProvider *provider;
-	gchar *id;
-	gchar *key;
-	GConfClient *gconf;
 
-	locked = FALSE;
+	writable = FALSE;
 
-	g_return_val_if_fail( NACT_IS_WINDOW( window ), locked );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), locked );
+	g_return_val_if_fail( NACT_IS_WINDOW( window ), writable );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), writable );
 
 	if( !window->private->dispose_has_run ){
 
 		pivot = nact_window_get_pivot( window );
 		provider = na_object_get_provider( item );
 		if( provider ){
-			id = na_io_provider_get_id( pivot, provider );
-			key = g_strdup_printf( "%s/mandatory/%s/lockdown", NAUTILUS_ACTIONS_GCONF_BASEDIR, id );
-			gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
-			locked = na_gconf_utils_read_bool( gconf, key, TRUE, locked );
-			g_debug( "%s: id=%s, locked=%s", thisfn, id, locked ? "True":"False" );
-			g_free( key );
-			g_free( id );
+			writable = na_io_provider_is_willing_to_write( pivot, provider );
 		}
 	}
 
-	return( locked );
+	return( writable );
+}
+
+/**
+ * nact_window_has_writable_providers:
+ * @window: this #NactWindow instance.
+ *
+ * Returns: %TRUE if at least one I/O provider is writable, %FALSE else.
+ */
+gboolean
+nact_window_has_writable_providers( NactWindow *window )
+{
+	gboolean has_writables;
+	NAPivot *pivot;
+
+	has_writables = FALSE;
+
+	g_return_val_if_fail( NACT_IS_WINDOW( window ), has_writables );
+
+	if( !window->private->dispose_has_run ){
+
+		pivot = nact_window_get_pivot( window );
+		has_writables = na_pivot_has_writable_providers( pivot );
+	}
+
+	return( has_writables );
 }
 
 /**
