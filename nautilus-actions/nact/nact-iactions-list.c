@@ -1634,14 +1634,14 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	gboolean modified = FALSE;
 	gboolean valid = TRUE;
 	IActionsListInstanceData *ialid;
-	gboolean lockdown;
+	gboolean locked;
 	gboolean readonly;
 
 	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 	g_object_unref( object );
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	lockdown = nact_window_is_lockdown( NACT_WINDOW( instance ), NA_OBJECT_ITEM( object ));
+	locked = nact_window_is_locked( NACT_WINDOW( instance ), NA_OBJECT_ITEM( object ));
 
 	ialid = get_instance_data( instance );
 	label = na_object_get_label( object );
@@ -1660,7 +1660,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		if( !valid ){
 			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
 		}
-		if( !lockdown && !readonly ){
+		if( !locked && !readonly ){
 			g_object_set( cell, "editable", TRUE, NULL );
 		}
 	}
