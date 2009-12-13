@@ -96,6 +96,19 @@ na_api_module_get_name( GType type )
 	return( NULL );
 }
 
+guint
+na_api_module_get_version( void )
+{
+	static const gchar *thisfn = "nadp_module_na_api_module_get_version";
+	guint version;
+
+	version = 1;
+
+	g_debug( "%s: version=%d", thisfn, version );
+
+	return( version );
+}
+
 void
 na_api_module_shutdown( void )
 {

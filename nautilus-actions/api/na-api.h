@@ -38,6 +38,8 @@
  *
  * These are common functions a Nautilus-Actions extension should
  * implement in order to be dynamically registered and identified.
+ *
+ * Nautilus-Actions v 2.30 - API version:  1
  */
 
 #include <glib.h>
@@ -56,7 +58,7 @@ G_BEGIN_DECLS
  * initializing itself, registering its internal GTypes, etc.
  * It should at least register module GTypes it provides.
  */
-gboolean     na_api_module_init      ( GTypeModule *module );
+gboolean     na_api_module_init       ( GTypeModule *module );
 
 /**
  * na_api_module_list_types:
@@ -74,7 +76,7 @@ gboolean     na_api_module_init      ( GTypeModule *module );
  *
  * Returns: the number of GTypes item in the @types array.
  */
-gint         na_api_module_list_types( const GType **types );
+gint         na_api_module_list_types ( const GType **types );
 
 /**
  * na_api_module_get_name:
@@ -87,7 +89,17 @@ gint         na_api_module_list_types( const GType **types );
  * This is generally to be displayed in a user interface ; the name
  * may be localized.
  */
-const gchar *na_api_module_get_name  ( GType type );
+const gchar *na_api_module_get_name   ( GType type );
+
+/**
+ * na_api_module_get_version:
+ *
+ * Returns: the version of this API supported by the module.
+ *
+ * The module should really implement this function as the default is
+ * to not implement any API at all.
+ */
+guint        na_api_module_get_version( void );
 
 /**
  * na_api_module_shutdown:
@@ -98,7 +110,7 @@ const gchar *na_api_module_get_name  ( GType type );
  * The dynamicaly loaded library may benefit of this call to release
  * any resource it may have previously allocated.
  */
-void         na_api_module_shutdown  ( void );
+void         na_api_module_shutdown   ( void );
 
 G_END_DECLS
 

@@ -101,5 +101,3 @@
 
 - readonly_item or locked_provider:
   all entry/button fields should be readonly
-
-- add get_id/get_version to module api
