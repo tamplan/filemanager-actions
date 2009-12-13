@@ -146,7 +146,7 @@ na_io_provider_get_version( const NAPivot *pivot, const NAIIOProvider *provider 
 gboolean
 na_io_provider_is_willing_to_write( const NAPivot *pivot, const NAIIOProvider *provider )
 {
-	static const gchar *thisfn = "na_io_provider_is_willing_to_write";
+	/*static const gchar *thisfn = "na_io_provider_is_willing_to_write";*/
 	gboolean writable;
 	gboolean locked;
 	GConfClient *gconf;
@@ -165,7 +165,7 @@ na_io_provider_is_willing_to_write( const NAPivot *pivot, const NAIIOProvider *p
 			key = g_strdup_printf( "%s/mandatory/%s/locked", NAUTILUS_ACTIONS_GCONF_BASEDIR, id );
 			gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
 			locked = na_gconf_utils_read_bool( gconf, key, TRUE, locked );
-			g_debug( "%s: id=%s, locked=%s", thisfn, id, locked ? "True":"False" );
+			/*g_debug( "%s: id=%s, locked=%s", thisfn, id, locked ? "True":"False" );*/
 			g_free( key );
 			g_free( id );
 		}

@@ -1,3 +1,22 @@
+2009-12-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/io-provider-desktop/nadp-write.c
+	(nadp_iio_provider_is_willing_to_write):
+	* nautilus-actions/io-provider-gconf/nagp-write.c
+	(nagp_iio_provider_is_willing_to_write):
+	* nautilus-actions/runtime/na-io-provider.c
+	(na_io_provider_is_willing_to_write):
+	Remove too verbose debug traces.
+
+	* nautilus-actions/runtime/na-pivot.c
+	(na_pivot_has_writable_providers): Add a debug trace.
+
+	* nautilus-actions/nact/nact-iactions-list.c (display_label):
+	Profile label is editable only if parent action is writable.
+
+	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
+	Enable item insertion only if parent is writable.
+
 2009-12-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nact-window.c:

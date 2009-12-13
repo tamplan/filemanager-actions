@@ -610,6 +610,8 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	gboolean writable_provider;
 	gboolean writable_item;
 	gboolean has_writables;
+	NAObjectItem *parent;
+	gboolean writable_parent;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -631,11 +633,20 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	writable_provider = item ? nact_window_is_writable_provider( NACT_WINDOW( window ), NA_OBJECT_ITEM( item )) : FALSE;
 	writable_item = writable_provider && !readonly_item;
 
-	/* new menu enabled if selection is a menu or an action */
-	/* new action enabled if selection is a menu or an action */
+	parent = item ? na_object_get_parent( item ) : NULL;
+	writable_parent = parent
+		? nact_window_is_writable_provider( NACT_WINDOW( window ), parent ) && !na_object_is_readonly( parent )
+		: FALSE;
+
+	/* new menu enabled if selection is a menu or an action
+	 * new action enabled if selection is a menu or an action
+	 * adding a new item requires that parent be writable
+	 */
 	new_item_enabled = ( selected_row == NULL || NA_IS_OBJECT_ITEM( selected_row ));
-	enable_item( window, "NewMenuItem", new_item_enabled && has_writables );
-	enable_item( window, "NewActionItem", new_item_enabled && has_writables );
+	new_item_enabled = new_item_enabled && has_writables;
+	new_item_enabled = new_item_enabled && ( parent ? writable_parent : TRUE );
+	enable_item( window, "NewMenuItem", new_item_enabled );
+	enable_item( window, "NewActionItem", new_item_enabled );
 
 	/* new profile enabled if selection is relative to only one writable action */
 	enable_item( window, "NewProfileItem",
@@ -669,7 +680,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 			if( mis->clipboard_profiles ){
 				paste_enabled = item && NA_IS_OBJECT_ACTION( item ) && writable_item;
 			} else {
-				paste_enabled = ( item != NULL ) && has_writables;
+				paste_enabled = ( item != NULL ) && has_writables && ( parent ? writable_parent : TRUE );
 			}
 		}
 	}
@@ -1120,7 +1131,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 		 * as we insert in sibling mode, the parent doesn't change
 		 */
 		if( NA_IS_OBJECT_PROFILE( obj )){
-			action = NA_OBJECT_ACTION( na_object_get_parent( NA_OBJECT_PROFILE( obj )));
+			action = NA_OBJECT_ACTION( na_object_get_parent( it->data ));
 		}
 
 		relabel = nact_main_menubar_is_pasted_object_relabeled( obj, pivot );
@@ -1420,7 +1431,7 @@ on_proxy_connect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *pr
 static void
 on_proxy_disconnect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window )
 {
-	/* signal handlers will be automagically disconnected on NactWindow::dispose */
+	/* signal handlers will be automagically disconnected on BaseWindow::dispose */
 }
 
 static void

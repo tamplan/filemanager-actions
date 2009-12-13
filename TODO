@@ -103,9 +103,3 @@
   all entry/button fields should be readonly
 
 - add get_id/get_version to module api
-
-- when duplicating a profile
-  na_object_item_is_readonly: assertion `NA_IS_OBJECT_ITEM( item )' failed
-  GLib-GObject-WARNING **: invalid cast from `NAObjectProfile' to `NAObjectItem'
-
-- new/edit options depend of writability status of the parent menu if any

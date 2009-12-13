@@ -482,23 +482,25 @@ na_pivot_free_providers( GList *providers )
 gboolean
 na_pivot_has_writable_providers( const NAPivot *pivot )
 {
-	gboolean has_writable;
+	static const gchar *thisfn = "na_pivot_has_writable_providers";
+	gboolean writable;
 	GList *providers, *ip;
 
-	has_writable = FALSE;
+	writable = FALSE;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), has_writable );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), writable );
 
 	if( !pivot->private->dispose_has_run ){
 
 		providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
-		for( ip = providers ; ip && !has_writable ; ip = ip->next ){
-			has_writable = na_io_provider_is_willing_to_write( pivot, NA_IIO_PROVIDER( ip->data ));
+		for( ip = providers ; ip && !writable ; ip = ip->next ){
+			writable = na_io_provider_is_willing_to_write( pivot, NA_IIO_PROVIDER( ip->data ));
 		}
 		na_pivot_free_providers( providers );
 	}
 
-	return( has_writable );
+	g_debug( "%s: pivot=%p, writable=%s", thisfn, ( void * ) pivot, writable ? "True":"False" );
+	return( writable );
 }
 
 /**

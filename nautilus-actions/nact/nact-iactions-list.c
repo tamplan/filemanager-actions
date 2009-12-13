@@ -1634,6 +1634,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	gboolean modified = FALSE;
 	gboolean valid = TRUE;
 	IActionsListInstanceData *ialid;
+	NAObjectItem *item;
 	gboolean writable_provider;
 	gboolean readonly_item;
 
@@ -1650,8 +1651,9 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 
 		modified = na_object_is_modified( object );
 		valid = na_object_is_valid( object );
-		readonly_item = na_object_is_readonly( object );
-		writable_provider = nact_window_is_writable_provider( NACT_WINDOW( instance ), NA_OBJECT_ITEM( object ));
+		item = NA_IS_OBJECT_PROFILE( object ) ? na_object_get_parent( object ) : NA_OBJECT_ITEM( object );
+		readonly_item = na_object_is_readonly( item );
+		writable_provider = nact_window_is_writable_provider( NACT_WINDOW( instance ), item );
 
 		if( modified ){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );

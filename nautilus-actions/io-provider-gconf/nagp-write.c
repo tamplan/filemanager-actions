@@ -60,22 +60,20 @@ static void           free_gslist( GSList *list );
 gboolean
 nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 {
-	static const gchar *thisfn = "nagp_iio_provider_is_willing_to_write";
-	static const gchar *path = "/apps/no-nautilus-actions";
+	/*static const gchar *thisfn = "nagp_iio_provider_is_willing_to_write";*/
+	static const gchar *path = "/apps/nautilus-actions/foo";
 	NagpGConfProvider *self;
 	gboolean willing_to = FALSE;
-	gchar *key;
 
-	g_debug( "%s: provider=%p", thisfn, ( void * ) provider );
+	/*g_debug( "%s: provider=%p", thisfn, ( void * ) provider );*/
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), FALSE );
+
 	self = NAGP_GCONF_PROVIDER( provider );
 
 	if( !self->private->dispose_has_run ){
 
-		key = gconf_concat_dir_and_key( path, thisfn );
-
-		if( !na_gconf_utils_write_string( self->private->gconf, key, "1", NULL )){
+		if( !na_gconf_utils_write_string( self->private->gconf, path, "1", NULL )){
 			willing_to = FALSE;
 
 		} else if( !gconf_client_recursive_unset( self->private->gconf, path, 0, NULL )){
@@ -84,12 +82,9 @@ nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 		} else {
 			willing_to = TRUE;
 		}
-
-		g_free( key );
 	}
 
-	g_debug( "%s: provider=%p, willing_to=%s", thisfn, ( void * ) provider, willing_to ? "True":"False" );
-
+	/*g_debug( "%s: provider=%p, willing_to=%s", thisfn, ( void * ) provider, willing_to ? "True":"False" );*/
 	return( willing_to );
 }
 

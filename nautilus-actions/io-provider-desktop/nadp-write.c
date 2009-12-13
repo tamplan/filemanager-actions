@@ -56,7 +56,8 @@ nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 
 	willing_to = FALSE;
 	messages = NULL;
-	g_debug( "%s: provider=%p", thisfn, ( void * ) provider );
+
+	/*g_debug( "%s: provider=%p", thisfn, ( void * ) provider );*/
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), willing_to );
 
 	userdir = nadp_xdg_data_dirs_get_user_dir( NADP_DESKTOP_PROVIDER( provider ), &messages );
