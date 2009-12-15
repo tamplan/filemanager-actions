@@ -84,6 +84,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-clipboard.h											\
 	nact-confirm-logout.c										\
 	nact-confirm-logout.h										\
+	nact-gtk-utils.c											\
+	nact-gtk-utils.h											\
 	nact-iactions-list.c										\
 	nact-iactions-list.h										\
 	nact-iaction-tab.c											\

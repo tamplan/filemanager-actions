@@ -99,5 +99,4 @@
 
 - desktop provider: fix default toolbar label
 
-- readonly_item or locked_provider:
-  all entry/button fields should be readonly
+- setup tree-model dnd code when item or parent is readonly

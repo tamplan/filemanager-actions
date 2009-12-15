@@ -42,6 +42,7 @@
 
 #include "base-window.h"
 #include "base-iprefs.h"
+#include "nact-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-iadvanced-tab.h"
 
@@ -62,6 +63,7 @@ enum {
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
+static gboolean st_on_selection_change = FALSE;
 
 static GType         register_type( void );
 static void          interface_base_init( NactIAdvancedTabInterface *klass );
@@ -212,7 +214,6 @@ initial_load_create_schemes_selection_list( NactIAdvancedTab *instance )
 		gtk_tree_view_append_column( listview, column );
 
 		text_cell = gtk_cell_renderer_text_new();
-		g_object_set( G_OBJECT( text_cell ), "editable", TRUE, NULL );
 		column = gtk_tree_view_column_new_with_attributes(
 				"scheme-code",
 				text_cell,
@@ -221,7 +222,6 @@ initial_load_create_schemes_selection_list( NactIAdvancedTab *instance )
 		gtk_tree_view_append_column( listview, column );
 
 		text_cell = gtk_cell_renderer_text_new();
-		g_object_set( G_OBJECT( text_cell ), "editable", TRUE, NULL );
 		column = gtk_tree_view_column_new_with_attributes(
 				"scheme-description",
 				text_cell,
@@ -422,13 +422,17 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 	gboolean enable_tab;
 	GSList *schemes;
 	GtkTreeModel *scheme_model;
-	gboolean readonly;
+	gboolean readonly_item;
+	gboolean writable_provider;
 	GtkWidget *widget;
+	GtkTreeViewColumn *column;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		st_on_selection_change = TRUE;
 
 		scheme_model = get_schemes_tree_model( instance );
 		gtk_tree_model_foreach( scheme_model, ( GtkTreeModelForeachFunc ) reset_schemes_list, NULL );
@@ -437,9 +441,9 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
 				NULL );
-
-		readonly = item ? na_object_is_readonly( item ) : FALSE;
 
 		enable_tab = tab_set_sensitive( instance );
 
@@ -449,13 +453,23 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 		}
 
 		widget = GTK_WIDGET( get_schemes_tree_view( instance ));
-		gtk_widget_set_sensitive( widget, item && !readonly );
+		gtk_widget_set_sensitive( widget, item != NULL );
+
+		column = gtk_tree_view_get_column( GTK_TREE_VIEW( widget ), SCHEMES_KEYWORD_COLUMN );
+		nact_gtk_utils_set_editable( GTK_OBJECT( column ), writable_provider && !readonly_item );
+
+		column = gtk_tree_view_get_column( GTK_TREE_VIEW( widget ), SCHEMES_DESC_COLUMN );
+		nact_gtk_utils_set_editable( GTK_OBJECT( column ), writable_provider && !readonly_item );
 
 		widget = base_window_get_widget( BASE_WINDOW( instance ), "AddSchemeButton" );
-		gtk_widget_set_sensitive( widget, item && !readonly );
+		gtk_widget_set_sensitive( widget, item != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( widget ), writable_provider && !readonly_item );
 
 		widget = base_window_get_widget( BASE_WINDOW( instance ), "RemoveSchemeButton" );
-		gtk_widget_set_sensitive( widget, item && !readonly );
+		gtk_widget_set_sensitive( widget, item != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( widget ), writable_provider && !readonly_item );
+
+		st_on_selection_change = FALSE;
 	}
 }
 
@@ -495,21 +509,34 @@ tab_set_sensitive( NactIAdvancedTab *instance )
 static gboolean
 on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIAdvancedTab *instance )
 {
-	gboolean stop = FALSE;
+	gboolean stop;
+	gboolean readonly_item;
+	gboolean writable_provider;
 
-	if( event->keyval == GDK_F2 ){
-		inline_edition( instance );
-		stop = TRUE;
-	}
+	stop = FALSE;
 
-	if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
-		insert_new_row( instance );
-		stop = TRUE;
-	}
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+			TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+			NULL );
 
-	if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
-		delete_row( instance );
-		stop = TRUE;
+	if( writable_provider && !readonly_item ){
+
+		if( event->keyval == GDK_F2 ){
+			inline_edition( instance );
+			stop = TRUE;
+		}
+
+		if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
+			insert_new_row( instance );
+			stop = TRUE;
+		}
+
+		if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
+			delete_row( instance );
+			stop = TRUE;
+		}
 	}
 
 	return( stop );
@@ -787,14 +814,25 @@ on_scheme_list_selection_changed( GtkTreeSelection *selection, NactIAdvancedTab 
 	/*static const gchar *thisfn = "nact_iadvanced_tab_on_scheme_list_selection_changed";
 	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );*/
 
+	gboolean readonly_item;
+	gboolean writable_provider;
 	GtkButton *button;
 
-	button = get_remove_button( instance );
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+			TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+			NULL );
 
-	if( gtk_tree_selection_count_selected_rows( selection )){
-		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
-	} else {
-		gtk_widget_set_sensitive( GTK_WIDGET( button ), FALSE );
+	if( writable_provider && !readonly_item ){
+
+		button = get_remove_button( instance );
+
+		if( gtk_tree_selection_count_selected_rows( selection )){
+			gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
+		} else {
+			gtk_widget_set_sensitive( GTK_WIDGET( button ), FALSE );
+		}
 	}
 }
 
@@ -810,31 +848,43 @@ on_scheme_selection_toggled( GtkCellRendererToggle *renderer, gchar *path, NactI
 	GtkTreePath *tree_path;
 	gboolean state;
 	gchar *scheme;
+	gboolean readonly_item;
+	gboolean writable_provider;
 
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
-			NULL );
+	if( !st_on_selection_change ){
 
-	if( edited ){
-		model = get_schemes_tree_model( instance );
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				NULL );
 
-		tree_path = gtk_tree_path_new_from_string( path );
-		gtk_tree_model_get_iter( model, &iter, tree_path );
-		gtk_tree_path_free( tree_path );
+		if( edited ){
+			model = get_schemes_tree_model( instance );
 
-		gtk_tree_model_get( model, &iter, SCHEMES_CHECKBOX_COLUMN, &state, SCHEMES_KEYWORD_COLUMN, &scheme, -1 );
+			tree_path = gtk_tree_path_new_from_string( path );
+			gtk_tree_model_get_iter( model, &iter, tree_path );
+			gtk_tree_path_free( tree_path );
 
-		/* gtk_tree_model_get: returns the previous state
-		g_debug( "%s: gtk_tree_model_get returns keyword=%s state=%s", thisfn, scheme, state ? "True":"False" );*/
+			gtk_tree_model_get( model, &iter, SCHEMES_CHECKBOX_COLUMN, &state, SCHEMES_KEYWORD_COLUMN, &scheme, -1 );
 
-		gtk_list_store_set( GTK_LIST_STORE( model ), &iter, SCHEMES_CHECKBOX_COLUMN, !state, -1 );
+			/* gtk_tree_model_get: returns the previous state
+			g_debug( "%s: gtk_tree_model_get returns keyword=%s state=%s", thisfn, scheme, state ? "True":"False" );*/
 
-		na_object_profile_set_scheme( edited, scheme, !state );
+			if( readonly_item || !writable_provider ){
+				g_signal_handlers_block_by_func(( gpointer ) renderer, on_scheme_selection_toggled, instance );
+				gtk_cell_renderer_toggle_set_active( renderer, state );
+				g_signal_handlers_unblock_by_func(( gpointer ) renderer, on_scheme_selection_toggled, instance );
 
-		g_free( scheme );
+			} else {
+				gtk_list_store_set( GTK_LIST_STORE( model ), &iter, SCHEMES_CHECKBOX_COLUMN, !state, -1 );
+				na_object_profile_set_scheme( edited, scheme, !state );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+			}
 
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+			g_free( scheme );
+		}
 	}
 }
 

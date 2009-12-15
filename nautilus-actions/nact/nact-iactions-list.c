@@ -1658,12 +1658,12 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		if( modified ){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 		}
+
 		if( !valid ){
 			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
 		}
-		if( writable_provider && !readonly_item ){
-			g_object_set( cell, "editable", TRUE, NULL );
-		}
+
+		g_object_set( cell, "editable", writable_provider && !readonly_item, NULL );
 	}
 
 	g_object_set( cell, "text", label, NULL );

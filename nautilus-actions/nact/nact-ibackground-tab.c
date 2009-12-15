@@ -44,6 +44,7 @@
 
 #include "base-iprefs.h"
 #include "base-window.h"
+#include "nact-gtk-utils.h"
 #include "nact-application.h"
 #include "nact-main-tab.h"
 #include "nact-ibackground-tab.h"
@@ -66,6 +67,7 @@ enum {
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
+static gboolean st_on_selection_change = FALSE;
 
 static GType        register_type( void );
 static void         interface_base_init( NactIBackgroundTabInterface *klass );
@@ -181,7 +183,6 @@ nact_ibackground_tab_initial_load_toplevel( NactIBackgroundTab *instance )
 		g_object_unref( model );
 
 		text_cell = gtk_cell_renderer_text_new();
-		g_object_set( G_OBJECT( text_cell ), "editable", TRUE, NULL );
 		column = gtk_tree_view_column_new_with_attributes(
 				"folder-uri",
 				text_cell,
@@ -290,8 +291,12 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 {
 	static const gchar *thisfn = "nact_ibackground_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
+	NAObjectProfile *profile;
 	gboolean enable_tab;
-	gboolean readonly;
+	gboolean readonly_item;
+	gboolean writable_provider;
+	GtkTreeView *treeview;
+	GtkTreeViewColumn *column;
 	GtkWidget *widget;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
@@ -299,16 +304,19 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 
 	if( st_initialized && !st_finalized ){
 
+		st_on_selection_change = TRUE;
+
 		reset_folders( instance );
 
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
 				NULL );
 
 		g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
-
-		readonly = item ? na_object_is_readonly( item ) : FALSE;
 
 		enable_tab = tab_set_sensitive( instance );
 
@@ -316,14 +324,20 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 			setup_folders( instance );
 		}
 
-		widget = base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" );
-		gtk_widget_set_sensitive( widget, item && !readonly );
+		treeview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" ));
+		gtk_widget_set_sensitive( GTK_WIDGET( treeview ), profile != NULL );
+		column = gtk_tree_view_get_column( treeview, BACKGROUND_URI_COLUMN );
+		nact_gtk_utils_set_editable( GTK_OBJECT( column ), writable_provider && !readonly_item );
 
 		widget = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" );
-		gtk_widget_set_sensitive( widget, item && !readonly );
+		gtk_widget_set_sensitive( widget, profile != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( widget ), writable_provider && !readonly_item );
 
 		widget = base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton" );
-		gtk_widget_set_sensitive( widget, item && !readonly );
+		gtk_widget_set_sensitive( widget, profile != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( widget ), writable_provider && !readonly_item );
+
+		st_on_selection_change = FALSE;
 	}
 }
 
@@ -365,21 +379,34 @@ tab_set_sensitive( NactIBackgroundTab *instance )
 static gboolean
 on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIBackgroundTab *instance )
 {
-	gboolean stop = FALSE;
+	gboolean stop;
+	gboolean readonly_item;
+	gboolean writable_provider;
 
-	if( event->keyval == GDK_F2 ){
-		inline_edition( instance );
-		stop = TRUE;
-	}
+	stop = FALSE;
 
-	if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
-		insert_new_row( instance );
-		stop = TRUE;
-	}
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+			TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+			NULL );
 
-	if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
-		delete_row( instance );
-		stop = TRUE;
+	if( writable_provider && !readonly_item ){
+
+		if( event->keyval == GDK_F2 ){
+			inline_edition( instance );
+			stop = TRUE;
+		}
+
+		if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
+			insert_new_row( instance );
+			stop = TRUE;
+		}
+
+		if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
+			delete_row( instance );
+			stop = TRUE;
+		}
 	}
 
 	return( stop );
@@ -537,7 +564,7 @@ on_add_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
 	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
 
 	/* i18n: title of the FileChoose dialog when selecting an URI which
-	 * will be comparent to Nautilus 'current_folder'
+	 * will be compare to Nautilus 'current_folder'
 	 */
 	dialog = gtk_file_chooser_dialog_new( _( "Select a folder" ),
 			toplevel,
@@ -579,11 +606,21 @@ on_folder_uri_edited( GtkCellRendererText *renderer, const gchar *path, const gc
 static void
 on_folders_selection_changed( GtkTreeSelection *selection, NactIBackgroundTab *instance )
 {
+	gboolean readonly_item;
+	gboolean writable_provider;
 	GtkWidget *button;
 
-	button = base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton");
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+			TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+			NULL );
 
-	gtk_widget_set_sensitive( button, gtk_tree_selection_count_selected_rows( selection ) > 0 );
+	if( writable_provider && !readonly_item ){
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton");
+		gtk_widget_set_sensitive( button, gtk_tree_selection_count_selected_rows( selection ) > 0 );
+	}
 }
 
 static void

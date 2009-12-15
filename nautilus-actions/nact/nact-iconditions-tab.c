@@ -42,6 +42,7 @@
 #include "base-iprefs.h"
 #include "nact-main-window.h"
 #include "nact-main-tab.h"
+#include "nact-gtk-utils.h"
 #include "nact-iconditions-tab.h"
 
 /* private interface data
@@ -52,6 +53,7 @@ struct NactIConditionsTabInterfacePrivate {
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
+static gboolean st_on_selection_change = FALSE;
 
 static GType      register_type( void );
 static void       interface_base_init( NactIConditionsTabInterface *klass );
@@ -309,20 +311,23 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 	gboolean isfile, isdir;
 	GtkButton *multiple_button;
 	gboolean multiple;
-	gboolean readonly;
+	gboolean readonly_item;
+	gboolean writable_provider;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_ICONDITIONS_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
+		st_on_selection_change = TRUE;
+
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
 				NULL );
-
-		readonly = item ? na_object_is_readonly( item ) : FALSE;
 
 		enable_tab = tab_set_sensitive( instance );
 
@@ -332,12 +337,14 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		gtk_entry_set_text( GTK_ENTRY( basenames_widget ), basenames_text );
 		g_free( basenames_text );
 		na_utils_free_string_list( basenames );
-		gtk_widget_set_sensitive( basenames_widget, item && !readonly );
+		gtk_widget_set_sensitive( basenames_widget, item != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( basenames_widget ), writable_provider && !readonly_item );
 
 		matchcase_button = get_matchcase_button( instance );
 		matchcase = profile ? na_object_profile_get_matchcase( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
-		gtk_widget_set_sensitive( GTK_WIDGET( matchcase_button ), item && !readonly );
+		gtk_widget_set_sensitive( GTK_WIDGET( matchcase_button ), item != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( matchcase_button ), writable_provider && !readonly_item );
 
 		mimetypes_widget = get_mimetypes_entry( instance );
 		mimetypes = profile ? na_object_profile_get_mimetypes( profile ) : NULL;
@@ -345,16 +352,20 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		gtk_entry_set_text( GTK_ENTRY( mimetypes_widget ), mimetypes_text );
 		g_free( mimetypes_text );
 		na_utils_free_string_list( mimetypes );
-		gtk_widget_set_sensitive( mimetypes_widget, item && !readonly );
+		gtk_widget_set_sensitive( mimetypes_widget, item != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( mimetypes_widget ), writable_provider && !readonly_item );
 
 		isfile = profile ? na_object_profile_get_is_file( profile ) : FALSE;
 		isdir = profile ? na_object_profile_get_is_dir( profile ) : FALSE;
-		set_isfiledir( instance, isfile, isdir, readonly );
+		set_isfiledir( instance, isfile, isdir, writable_provider && !readonly_item );
 
 		multiple_button = get_multiple_button( instance );
 		multiple = profile ? na_object_profile_get_multiple( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( multiple_button ), multiple );
-		gtk_widget_set_sensitive( GTK_WIDGET( multiple_button ), item && !readonly );
+		gtk_widget_set_sensitive( GTK_WIDGET( multiple_button ), item != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( multiple_button ), writable_provider && !readonly_item );
+
+		st_on_selection_change = FALSE;
 	}
 }
 
@@ -467,18 +478,34 @@ on_isfiledir_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 	/*static const gchar *thisfn = "nact_iconditions_tab_on_isfiledir_toggled";*/
 	NAObjectProfile *edited;
 	gboolean isfile, isdir;
+	gboolean readonly_item;
+	gboolean writable_provider;
 
-	if( gtk_toggle_button_get_active( button )){
+	if( !st_on_selection_change ){
 
-		g_object_get(
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
-				NULL );
+		if( gtk_toggle_button_get_active( button )){
 
-		if( edited ){
-			nact_iconditions_tab_get_isfiledir( instance, &isfile, &isdir );
-			na_object_profile_set_isfiledir( edited, isfile, isdir );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+			g_object_get(
+					G_OBJECT( instance ),
+					TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+					TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+					TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+					NULL );
+
+			g_return_if_fail( NA_IS_OBJECT_PROFILE( edited ));
+
+			if( readonly_item || !writable_provider ){
+				g_signal_handlers_block_by_func(( gpointer ) button, on_isfiledir_toggled, instance );
+				isfile = na_object_profile_get_is_file( edited );
+				isdir = na_object_profile_get_is_dir( edited );
+				set_isfiledir( instance, isfile, isdir, readonly_item || !writable_provider );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_isfiledir_toggled, instance );
+
+			} else if( gtk_toggle_button_get_active( button )){
+				nact_iconditions_tab_get_isfiledir( instance, &isfile, &isdir );
+				na_object_profile_set_isfiledir( edited, isfile, isdir );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+			}
 		}
 	}
 }
@@ -488,16 +515,32 @@ on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 {
 	NAObjectProfile *edited;
 	gboolean matchcase;
+	gboolean readonly_item;
+	gboolean writable_provider;
 
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
-			NULL );
+	if( !st_on_selection_change ){
 
-	if( edited ){
-		matchcase = gtk_toggle_button_get_active( button );
-		na_object_profile_set_matchcase( edited, matchcase );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				NULL );
+
+		if( edited ){
+
+			matchcase = gtk_toggle_button_get_active( button );
+
+			if( readonly_item || !writable_provider ){
+				g_signal_handlers_block_by_func(( gpointer ) button, on_matchcase_toggled, instance );
+				gtk_toggle_button_set_active( button, !matchcase );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_matchcase_toggled, instance );
+
+			} else {
+				na_object_profile_set_matchcase( edited, matchcase );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+			}
+		}
 	}
 }
 
@@ -527,16 +570,31 @@ on_multiple_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 {
 	NAObjectProfile *edited;
 	gboolean multiple;
+	gboolean readonly_item;
+	gboolean writable_provider;
 
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
-			NULL );
+	if( !st_on_selection_change ){
 
-	if( edited ){
-		multiple = gtk_toggle_button_get_active( button );
-		na_object_profile_set_multiple( edited, multiple );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
+				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				NULL );
+
+		if( edited ){
+			multiple = gtk_toggle_button_get_active( button );
+
+			if( readonly_item || !writable_provider ){
+				g_signal_handlers_block_by_func(( gpointer ) button, on_multiple_toggled, instance );
+				gtk_toggle_button_set_active( button, !multiple );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_multiple_toggled, instance );
+
+			} else {
+				na_object_profile_set_multiple( edited, multiple );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+			}
+		}
 	}
 }
 
@@ -561,7 +619,7 @@ set_isfiledir( NactIConditionsTab *instance, gboolean isfile, gboolean isdir, gb
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( dirs_button ), TRUE );
 	}
 
-	gtk_widget_set_sensitive( GTK_WIDGET( both_button ), !readonly );
-	gtk_widget_set_sensitive( GTK_WIDGET( file_button ), !readonly );
-	gtk_widget_set_sensitive( GTK_WIDGET( dirs_button ), !readonly );
+	nact_gtk_utils_set_editable( GTK_OBJECT( both_button ), !readonly );
+	nact_gtk_utils_set_editable( GTK_OBJECT( file_button ), !readonly );
+	nact_gtk_utils_set_editable( GTK_OBJECT( dirs_button ), !readonly );
 }

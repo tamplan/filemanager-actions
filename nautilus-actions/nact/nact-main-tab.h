@@ -46,6 +46,8 @@
 #define TAB_UPDATABLE_PROP_EDITED_ACTION				"nact-tab-updatable-edited-action"
 #define TAB_UPDATABLE_PROP_EDITED_PROFILE				"nact-tab-updatable-edited-profile"
 #define TAB_UPDATABLE_PROP_SELECTED_ROW					"nact-tab-updatable-selected-row"
+#define TAB_UPDATABLE_PROP_READONLY_ITEM				"nact-tab-updatable-readonly-item"
+#define TAB_UPDATABLE_PROP_WRITABLE_PROVIDER			"nact-tab-updatable-writable-provider"
 
 /* signals
  */

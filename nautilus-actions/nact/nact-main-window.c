@@ -81,6 +81,8 @@ struct NactMainWindowPrivate {
 	 * Can be null, and this implies that edited_profile is also null.
 	 */
 	NAObjectItem    *edited_item;
+	gboolean         readonly_item;
+	gboolean         writable_provider;
 
 	/**
 	 * Currently edited profile.
@@ -108,11 +110,14 @@ struct NactMainWindowPrivate {
 };
 
 /* action properties
+ * these are set when selection changes as an optimization try
  */
 enum {
 	PROP_EDITED_ITEM = 1,
 	PROP_EDITED_PROFILE,
-	PROP_SELECTED_ROW
+	PROP_SELECTED_ROW,
+	PROP_READONLY_ITEM,
+	PROP_WRITABLE_PROVIDER
 };
 
 /* signals
@@ -319,6 +324,20 @@ class_init( NactMainWindowClass *klass )
 			"A pointer to the currently selected row",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, PROP_SELECTED_ROW, spec );
+
+	spec = g_param_spec_boolean(
+			TAB_UPDATABLE_PROP_READONLY_ITEM,
+			"Read-only item ?",
+			"Whether the item itself is read-only", FALSE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_READONLY_ITEM, spec );
+
+	spec = g_param_spec_boolean(
+			TAB_UPDATABLE_PROP_WRITABLE_PROVIDER,
+			"Writable provider",
+			"Whether the provider of the item is writable", TRUE,
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, PROP_WRITABLE_PROVIDER, spec );
 
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
@@ -572,8 +591,16 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_pointer( value, self->private->edited_profile );
 				break;
 
-			case PROP_SELECTED_ROW	:
+			case PROP_SELECTED_ROW:
 				g_value_set_pointer( value, self->private->selected_row );
+				break;
+
+			case PROP_READONLY_ITEM:
+				g_value_set_boolean( value, self->private->readonly_item );
+				break;
+
+			case PROP_WRITABLE_PROVIDER:
+				g_value_set_boolean( value, self->private->writable_provider );
 				break;
 
 			default:
@@ -604,6 +631,14 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case PROP_SELECTED_ROW:
 				self->private->selected_row = g_value_get_pointer( value );
+				break;
+
+			case PROP_READONLY_ITEM:
+				self->private->readonly_item = g_value_get_boolean( value );
+				break;
+
+			case PROP_WRITABLE_PROVIDER:
+				self->private->writable_provider = g_value_get_boolean( value );
 				break;
 
 			default:
@@ -1099,6 +1134,9 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 			G_OBJECT( window ),
 			TAB_UPDATABLE_PROP_EDITED_ACTION, window->private->edited_item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, window->private->edited_profile,
+			TAB_UPDATABLE_PROP_SELECTED_ROW, window->private->selected_row,
+			TAB_UPDATABLE_PROP_READONLY_ITEM, window->private->readonly_item,
+			TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, window->private->writable_provider,
 			NULL );
 
 	setup_dialog_title( window );
@@ -1132,8 +1170,12 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 	 */
 	window->private->edited_profile = NULL;
 
-	if( window->private->edited_item &&
-		NA_IS_OBJECT_ACTION( window->private->edited_item )){
+	if( window->private->edited_item ){
+
+		window->private->readonly_item = na_object_is_readonly( window->private->edited_item );
+		window->private->writable_provider = nact_window_is_writable_provider( NACT_WINDOW( window ), window->private->edited_item );
+
+		if( NA_IS_OBJECT_ACTION( window->private->edited_item )){
 
 			count_profiles = na_object_get_items_count( NA_OBJECT_ACTION( window->private->edited_item ));
 			/*g_return_if_fail( count_profiles >= 1 );*/
@@ -1142,6 +1184,7 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 				profiles = na_object_get_items_list( window->private->edited_item );
 				window->private->edited_profile = NA_OBJECT_PROFILE( profiles->data );
 			}
+		}
 	}
 
 	set_current_profile( window, FALSE, selected_items );
@@ -1156,8 +1199,11 @@ set_current_profile( NactMainWindow *window, gboolean set_action, GSList *select
 			thisfn, ( void * ) window, set_action ? "True":"False", ( void * ) selected_items );
 
 	if( window->private->edited_profile && set_action ){
+
 		NAObjectAction *action = NA_OBJECT_ACTION( na_object_get_parent( window->private->edited_profile ));
 		window->private->edited_item = NA_OBJECT_ITEM( action );
+		window->private->readonly_item = na_object_is_readonly( window->private->edited_item );
+		window->private->writable_provider = nact_window_is_writable_provider( NACT_WINDOW( window ), window->private->edited_item );
 	}
 }
 
