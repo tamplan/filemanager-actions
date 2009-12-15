@@ -709,7 +709,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	 * assuring that actions will be inserted in the same order as uris
 	 */
 	items = g_list_reverse( items );
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
+	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
 	na_object_free_items_list( items );
 }
 

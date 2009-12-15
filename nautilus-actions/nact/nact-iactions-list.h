@@ -128,23 +128,30 @@ void      nact_iactions_list_dispose( NactIActionsList *instance );
 
 void      nact_iactions_list_brief_tree_dump( NactIActionsList *instance );
 void      nact_iactions_list_collapse_all( NactIActionsList *instance );
-void      nact_iactions_list_delete( NactIActionsList *instance, GList *items );
 void      nact_iactions_list_display_order_change( NactIActionsList *instance, gint order_mode );
 void      nact_iactions_list_expand_all( NactIActionsList *instance );
 void      nact_iactions_list_fill( NactIActionsList *instance, GList *items );
-NAObject *nact_iactions_list_get_item( NactIActionsList *instance, const gchar *uuid );
-GList    *nact_iactions_list_get_items( NactIActionsList *instance );
 gint      nact_iactions_list_get_management_mode( NactIActionsList *instance );
-GList    *nact_iactions_list_get_selected_items( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_modified_items( NactIActionsList *instance );
-void      nact_iactions_list_insert_at_path( NactIActionsList *instance, GList *items, GtkTreePath *path );
-void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling );
-void      nact_iactions_list_insert_into( NactIActionsList *instance, GList *items );
-gboolean  nact_iactions_list_is_expanded( NactIActionsList *instance, const NAObject *item );
-void      nact_iactions_list_list_modified_items( NactIActionsList *instance );
-void      nact_iactions_list_removed_modified( NactIActionsList *instance );
+void      nact_iactions_list_on_treeview_selection_changed( GtkTreeSelection *selection, NactIActionsList *instance );
+GList    *nact_iactions_list_remove_rec( GList *list, NAObject *object );
 void      nact_iactions_list_set_management_mode( NactIActionsList *instance, gint mode );
-void      nact_iactions_list_toggle_collapse( NactIActionsList *instance, const NAObject *item );
+
+void      nact_iactions_list_bis_collapse_to_parent( NactIActionsList *instance );
+void      nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items );
+void      nact_iactions_list_bis_expand_to_first_child( NactIActionsList *instance );
+NAObject *nact_iactions_list_bis_get_item( NactIActionsList *instance, const gchar *uuid );
+GList    *nact_iactions_list_bis_get_items( NactIActionsList *instance );
+GList    *nact_iactions_list_bis_get_selected_items( NactIActionsList *instance );
+void      nact_iactions_list_bis_insert_at_path( NactIActionsList *instance, GList *items, GtkTreePath *path );
+void      nact_iactions_list_bis_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling );
+void      nact_iactions_list_bis_insert_into( NactIActionsList *instance, GList *items );
+void      nact_iactions_list_bis_list_modified_items( NactIActionsList *instance );
+void      nact_iactions_list_bis_removed_modified( NactIActionsList *instance );
+void      nact_iactions_list_bis_select_first_row( NactIActionsList *instance );
+void      nact_iactions_list_bis_select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
+void      nact_iactions_list_bis_toggle_collapse( NactIActionsList *instance );
+void      nact_iactions_list_bis_toggle_collapse_object( NactIActionsList *instance, const NAObject *item );
 
 G_END_DECLS
 

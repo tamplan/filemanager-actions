@@ -774,7 +774,7 @@ nact_main_window_get_item( const NactMainWindow *window, const gchar *uuid )
 		}
 
 		if( !exists ){
-			exists = NA_OBJECT_ITEM( nact_iactions_list_get_item( NACT_IACTIONS_LIST( window ), uuid ));
+			exists = NA_OBJECT_ITEM( nact_iactions_list_bis_get_item( NACT_IACTIONS_LIST( window ), uuid ));
 		}
 	}
 

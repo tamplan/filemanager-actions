@@ -88,6 +88,9 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-gtk-utils.h											\
 	nact-iactions-list.c										\
 	nact-iactions-list.h										\
+	nact-iactions-list-bis.c									\
+	nact-iactions-list-priv.c									\
+	nact-iactions-list-priv.h									\
 	nact-iaction-tab.c											\
 	nact-iaction-tab.h											\
 	nact-iadvanced-tab.c										\

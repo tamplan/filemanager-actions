@@ -743,7 +743,7 @@ on_new_menu_activated( GtkAction *gtk_action, NactMainWindow *window )
 	menu = na_object_menu_new();
 	na_object_check_status( menu );
 	items = g_list_prepend( NULL, menu );
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
+	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items_list( items );
 }
 
@@ -759,7 +759,7 @@ on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 	action = na_object_action_new_with_profile();
 	na_object_check_status( action );
 	items = g_list_prepend( NULL, action );
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
+	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 	na_object_free_items_list( items );
 }
 
@@ -787,7 +787,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	na_object_check_status( profile );
 
 	items = g_list_prepend( NULL, profile );
-	nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
+	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 
 	na_object_free_items_list( items );
 	g_free( name );
@@ -829,14 +829,14 @@ nact_main_menubar_save_items( NactMainWindow *window )
 	 * so that new actions with same id do not risk to be deleted later
 	 */
 	nact_main_window_remove_deleted( window );
-	nact_iactions_list_removed_modified( NACT_IACTIONS_LIST( window ));
+	nact_iactions_list_bis_removed_modified( NACT_IACTIONS_LIST( window ));
 
 	/* always write the level zero list of items
 	 * and reset the corresponding modification flag
 	 */
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( application );
-	items = nact_iactions_list_get_items( NACT_IACTIONS_LIST( window ));
+	items = nact_iactions_list_bis_get_items( NACT_IACTIONS_LIST( window ));
 	na_pivot_write_level_zero( pivot, items );
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
@@ -959,12 +959,12 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 	nact_main_window_move_to_deleted( window, items );
 	clipboard = nact_main_window_get_clipboard( window );
 	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_CUT );
 	update_clipboard_counters( window );
-	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
+	nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), items );
 
 	/* do not unref selected items as the list has been concatenated
 	 * to main_deleted
@@ -991,7 +991,7 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 	clipboard = nact_main_window_get_clipboard( window );
 	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
 	update_clipboard_counters( window );
@@ -1022,7 +1022,7 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	items = prepare_for_paste( window );
 	if( items ){
-		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
+		nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 		na_object_free_items_list( items );
 	}
 }
@@ -1049,7 +1049,7 @@ on_paste_into_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	items = prepare_for_paste( window );
 	if( items ){
-		nact_iactions_list_insert_into( NACT_IACTIONS_LIST( window ), items );
+		nact_iactions_list_bis_insert_into( NACT_IACTIONS_LIST( window ), items );
 		na_object_free_items_list( items );
 	}
 }
@@ -1122,7 +1122,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( application );
 
-	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 	for( it = items ; it ; it = it->next ){
 		obj = NA_OBJECT( na_object_duplicate( it->data ));
 		action = NULL;
@@ -1139,7 +1139,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 		na_object_set_origin( obj, NULL );
 		na_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );
-		nact_iactions_list_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
+		nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
 		na_object_free_items_list( dup );
 	}
 
@@ -1165,12 +1165,12 @@ on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 	for( it = items ; it ; it = it->next ){
 		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
 	}
 	nact_main_window_move_to_deleted( window, items );
-	nact_iactions_list_delete( NACT_IACTIONS_LIST( window ), items );
+	nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), items );
 
 	/* do not unref selected items as the list has been concatenated
 	 * to main_deleted
@@ -1264,7 +1264,7 @@ on_dump_selection_activated( GtkAction *action, NactMainWindow *window )
 {
 	GList *items, *it;
 
-	items = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 	for( it = items ; it ; it = it->next ){
 		na_object_dump( it->data );
 	}
@@ -1281,7 +1281,7 @@ on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window )
 static void
 on_list_modified_items_activated( GtkAction *action, NactMainWindow *window )
 {
-	nact_iactions_list_list_modified_items( NACT_IACTIONS_LIST( window ));
+	nact_iactions_list_bis_list_modified_items( NACT_IACTIONS_LIST( window ));
 }
 
 static void

@@ -1490,7 +1490,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 					} else {
 						inserted = na_object_ref( current );
 						deletable = g_list_prepend( NULL, inserted );
-						nact_iactions_list_delete( NACT_IACTIONS_LIST( main_window ), deletable );
+						nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( main_window ), deletable );
 						g_list_free( deletable );
 					}
 
@@ -1504,7 +1504,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 		}
 		object_list = g_list_reverse( object_list );
 
-		nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
+		nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
 
 		if( !copy_data && gtk_tree_path_get_depth( new_dest ) == 1 ){
 			g_signal_emit_by_name( main_window, MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
@@ -1743,7 +1743,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		}
 	}
 
-	nact_iactions_list_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
+	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
 	na_object_free_items_list( object_list );
 
 	gtk_tree_path_free( new_dest );

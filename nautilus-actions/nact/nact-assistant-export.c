@@ -427,7 +427,7 @@ assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *ass
 	parent = base_window_get_parent( BASE_WINDOW( window ));
 	g_assert( NACT_IS_MAIN_WINDOW( parent ));
 	g_assert( NACT_IS_IACTIONS_LIST( parent ));
-	tree = nact_iactions_list_get_items( NACT_IACTIONS_LIST( parent ));
+	tree = nact_iactions_list_bis_get_items( NACT_IACTIONS_LIST( parent ));
 
 	nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
 
@@ -721,7 +721,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	g_free( text );
 	text = tmp;
 
-	actions = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	actions = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 
 	for( ia = actions ; ia ; ia = ia->next ){
 		tmp = g_strdup_printf( "%s\t%s\n", text, na_object_get_label( ia->data ));
@@ -806,7 +806,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( application );
 
-	actions = nact_iactions_list_get_selected_items( NACT_IACTIONS_LIST( window ));
+	actions = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 
 	g_assert( window->private->uri && strlen( window->private->uri ));
 

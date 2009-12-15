@@ -47,6 +47,8 @@
 
 #include <gtk/gtk.h>
 
+#include <private/na-object-class.h>
+
 #include "base-window.h"
 
 G_BEGIN_DECLS

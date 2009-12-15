@@ -1,5 +1,20 @@
 2009-12-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Split too big file nact-iactions-list.c.
+
+	* nautilus-actions/nact/nact-iactions-list-bis.c:
+	* nautilus-actions/nact/nact-iactions-list-priv.c:
+	* nautilus-actions/nact/nact-iactions-list-priv.h: New files.
+
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/nact/nact-assistant-export.c:
+	* nautilus-actions/nact/nact-assistant-import.c:
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iactions-list.h:
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-window.c:
+	* nautilus-actions/nact/nact-tree-model.c: Updated accordingly.
+
 	* nautilus-actions/nact/nact-iactions-list.c:
 	* nautilus-actions/nact/nact-iactions-list.h
 	(nact_iactions_list_has_focus): Removed unused function.
