@@ -1,5 +1,9 @@
 2009-12-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iactions-list.h
+	(nact_iactions_list_has_focus): Removed unused function.
+
 	* nautilus-actions/nact/nact-gtk-utils.c:
 	* nautilus-actions/nact/nact-gtk-utils.h: New files.
 

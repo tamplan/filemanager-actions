@@ -136,7 +136,6 @@ NAObject *nact_iactions_list_get_item( NactIActionsList *instance, const gchar *
 GList    *nact_iactions_list_get_items( NactIActionsList *instance );
 gint      nact_iactions_list_get_management_mode( NactIActionsList *instance );
 GList    *nact_iactions_list_get_selected_items( NactIActionsList *instance );
-gboolean  nact_iactions_list_has_focus( NactIActionsList *instance );
 gboolean  nact_iactions_list_has_modified_items( NactIActionsList *instance );
 void      nact_iactions_list_insert_at_path( NactIActionsList *instance, GList *items, GtkTreePath *path );
 void      nact_iactions_list_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling );

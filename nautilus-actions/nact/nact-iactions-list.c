@@ -1006,29 +1006,6 @@ nact_iactions_list_get_selected_items( NactIActionsList *instance )
 }
 
 /**
- * nact_iactions_list_has_focus:
- * @window: this #NactIActionsList instance.
- *
- * Returns: %TRUE if the treeview has the focus, %FALSE else.
- */
-gboolean
-nact_iactions_list_has_focus( NactIActionsList *instance )
-{
-	gboolean has_focus = FALSE;
-	GtkTreeView *treeview;
-
-	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), FALSE );
-
-	if( st_initialized && !st_finalized ){
-
-		treeview = get_actions_list_treeview( instance );
-		has_focus = GTK_WIDGET_HAS_FOCUS( treeview );
-	}
-
-	return( has_focus );
-}
-
-/**
  * nact_iactions_list_has_modified_items:
  * @window: this #NactIActionsList instance.
  *
