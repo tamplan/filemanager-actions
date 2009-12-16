@@ -65,6 +65,8 @@ gchar   *na_utils_gstring_joinv( const gchar *start, const gchar *separator, gch
  */
 gchar   *na_utils_get_first_word( const gchar *string );
 gchar   *na_utils_prefix_strings( const gchar *prefix, const gchar *str );
+gchar   *na_utils_remove_suffix( const gchar *string, const gchar *suffix );
+
 
 /* path manipulations
  */

@@ -77,6 +77,70 @@ na_io_provider_register_callbacks( const NAPivot *pivot )
 }
 
 /**
+ * na_io_provider_get_provider:
+ * @pivot: the #NAPivot object.
+ * @id: the id of the searched I/O provider.
+ *
+ * Returns: the found I/O provider, or NULL.
+ *
+ * The returned provider should be g_object_unref() by the caller.
+ */
+NAIIOProvider *
+na_io_provider_get_provider( const NAPivot *pivot, const gchar *id )
+{
+	NAIIOProvider *provider;
+	GList *providers, *ip;
+	gchar *ip_id;
+
+	provider = NULL;
+	providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+
+	for( ip = providers ; ip && !provider ; ip = ip->next ){
+		ip_id = na_io_provider_get_id( pivot, NA_IIO_PROVIDER( ip->data ));
+		if( ip_id ){
+			if( !strcmp( ip_id, id )){
+				provider = NA_IIO_PROVIDER( ip->data );
+				g_object_ref( provider );
+			}
+			g_free( ip_id );
+		}
+	}
+
+	na_pivot_free_providers( providers );
+
+	return( provider );
+}
+
+/**
+ * na_io_provider_get_writable_provider:
+ * @pivot: the #NAPivot object.
+ *
+ * Returns: the first willing to write I/O provider, or NULL.
+ *
+ * The returned provider should be g_object_unref() by the caller.
+ */
+NAIIOProvider *
+na_io_provider_get_writable_provider( const NAPivot *pivot )
+{
+	NAIIOProvider *provider;
+	GList *providers, *ip;
+
+	provider = NULL;
+	providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+
+	for( ip = providers ; ip && !provider ; ip = ip->next ){
+		if( !na_io_provider_is_willing_to_write( pivot, NA_IIO_PROVIDER( ip->data ))){
+			provider = NA_IIO_PROVIDER( ip->data );
+			g_object_ref( provider );
+		}
+	}
+
+	na_pivot_free_providers( providers );
+
+	return( provider );
+}
+
+/**
  * na_io_provider_get_id:
  * @pivot: the current #NAPivot instance.
  * @provider: the #NAIIOProvider whose id is to be returned.
@@ -110,7 +174,12 @@ na_io_provider_get_name( const NAPivot *pivot, const NAIIOProvider *provider )
 {
 	gchar *name;
 
-	name = na_pivot_get_module_name( pivot, G_OBJECT( provider ));
+	name = NULL;
+	if( NA_IIO_PROVIDER_GET_INTERFACE( provider )->get_name ){
+		name = NA_IIO_PROVIDER_GET_INTERFACE( provider )->get_name( provider );
+	} else {
+		name = g_strdup( "" );
+	}
 
 	return( name );
 }
@@ -127,7 +196,7 @@ na_io_provider_get_version( const NAPivot *pivot, const NAIIOProvider *provider 
 {
 	guint version;
 
-	version = 0;
+	version = 1;
 	if( NA_IIO_PROVIDER_GET_INTERFACE( provider )->get_version ){
 		version = NA_IIO_PROVIDER_GET_INTERFACE( provider )->get_version( provider );
 	}

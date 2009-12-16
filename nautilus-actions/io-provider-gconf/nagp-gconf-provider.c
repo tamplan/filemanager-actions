@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
 #include <nautilus-actions/api/na-iio-provider.h>
@@ -60,6 +61,7 @@ static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
 static gchar   *get_id( const NAIIOProvider *provider );
+static gchar   *get_name( const NAIIOProvider *provider );
 static guint    get_version( const NAIIOProvider *provider );
 
 static GList   *install_monitors( NagpGConfProvider *provider );
@@ -131,6 +133,7 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_id = get_id;
+	iface->get_name = get_name;
 	iface->get_version = get_version;
 	iface->read_items = nagp_iio_provider_read_items;
 	iface->is_willing_to_write = nagp_iio_provider_is_willing_to_write;
@@ -203,6 +206,12 @@ static gchar *
 get_id( const NAIIOProvider *provider )
 {
 	return( g_strdup( "na-gconf" ));
+}
+
+static gchar *
+get_name( const NAIIOProvider *provider )
+{
+	return( g_strdup( _( "Nautilus-Actions GConf I/O Provider" )));
 }
 
 static guint

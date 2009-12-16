@@ -372,24 +372,6 @@ na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot
 }
 
 /**
- * na_pivot_get_module_name:
- * @pivot: this #NAPivot instance.
- * @provider: a #GObject as instantiated by a #NAModule.
- *
- * Returns: the name of the #NAModule, as a newly allocated string which
- * should be g_free() by the caller.
- */
-gchar *
-na_pivot_get_module_name( const NAPivot *pivot, GObject *provider )
-{
-	gchar *name;
-
-	name = na_module_get_name_for_object( pivot->private->modules, provider );
-
-	return( name );
-}
-
-/**
  * na_pivot_get_providers:
  * @pivot: this #NAPivot instance.
  * @type: the type of searched interface.
@@ -421,43 +403,6 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 }
 
 /**
- * na_pivot_get_provider:
- * @pivot: this #NAPivot instance.
- * @type: the type of searched interface.
- *
- * Returns: the first available provider for this interface.
- *
- * The returned #GObject should be released by calling na_pivot_release_provider().
- */
-GObject *
-na_pivot_get_provider( const NAPivot *pivot, GType type )
-{
-	GList *providers;
-	GObject *provider;
-
-	provider = NULL;
-	providers = na_pivot_get_providers( pivot, type );
-	if( providers ){
-		provider = g_object_ref( G_OBJECT( providers->data ));
-		na_pivot_free_providers( providers );
-	}
-
-	return( provider );
-}
-
-/**
- * na_pivot_release_provider:
- * @provider: a provider.
- *
- * Release the given provider.
- */
-void
-na_pivot_release_provider( const GObject *provider )
-{
-	g_object_unref(( gpointer ) provider );
-}
-
-/**
  * na_pivot_free_providers:
  * @providers: a list of providers.
  *
@@ -471,36 +416,6 @@ na_pivot_free_providers( GList *providers )
 	g_debug( "%s: providers=%p", thisfn, ( void * ) providers );
 
 	na_module_free_extensions_list( providers );
-}
-
-/**
- * na_pivot_has_writable_providers:
- * @pivot: this #NAPivot instance.
- *
- * Returns: %TRUE if at least one I/O provider is writable, %FALSE else.
- */
-gboolean
-na_pivot_has_writable_providers( const NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_has_writable_providers";
-	gboolean writable;
-	GList *providers, *ip;
-
-	writable = FALSE;
-
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), writable );
-
-	if( !pivot->private->dispose_has_run ){
-
-		providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
-		for( ip = providers ; ip && !writable ; ip = ip->next ){
-			writable = na_io_provider_is_willing_to_write( pivot, NA_IIO_PROVIDER( ip->data ));
-		}
-		na_pivot_free_providers( providers );
-	}
-
-	g_debug( "%s: pivot=%p, writable=%s", thisfn, ( void * ) pivot, writable ? "True":"False" );
-	return( writable );
 }
 
 /**
@@ -865,6 +780,35 @@ gint
 na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
 {
 	return( -1 * na_pivot_sort_alpha_asc( a, b ));
+}
+
+/**
+ * na_pivot_is_level_zero_writable:
+ * @pivot: this #NAPivot instance.
+ *
+ * Returns: %TRUE if we are able to update the level-zero list of items,
+ * %FALSE else.
+ */
+gboolean
+na_pivot_is_level_zero_writable( const NAPivot *pivot )
+{
+	static const gchar *thisfn = "na_pivot_is_level_zero_writable";
+	gboolean writable;
+	NAIIOProvider *provider;
+
+	writable = FALSE;
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), writable );
+
+	if( !pivot->private->dispose_has_run ){
+		provider = na_io_provider_get_provider( pivot, "na-gconf" );
+		if( provider ){
+			writable = na_io_provider_is_willing_to_write( pivot, provider );
+			g_debug( "%s: writable=%s", thisfn, writable ? "True":"False" );
+			g_object_unref( provider );
+		}
+	}
+
+	return( writable );
 }
 
 /**

@@ -39,35 +39,46 @@
 #include "nagp-gconf-provider.h"
 
 /*
- * A Nautilus-Actions extension must implement four functions :
+ * na_api_module_init:
  *
- * - na_api_module_init
- * - na_api_module_list_types
- * - na_api_module_get_name
- * - na_api_module_shutdown
- *
- * The first two functions are called at Nautilus-Actions startup.
- *
- * The prototypes for these functions are defined in
- * nautilus-actions/api/na-api.h
+ * mandatory starting with API v. 1.
  */
-
 gboolean
 na_api_module_init( GTypeModule *module )
 {
 	static const gchar *thisfn = "nagp_module_na_api_module_initialize";
-	static const gchar *name = "NagpGConfIOProvider";
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
-
-	g_type_module_set_name( module, name );
 
 	nagp_gconf_provider_register_type( module );
 
 	return( TRUE );
 }
 
-gint
+/*
+ * na_api_module_get_version:
+ *
+ * optional, defaults to 1.
+ */
+guint
+na_api_module_get_version( void )
+{
+	static const gchar *thisfn = "nagp_module_na_api_module_get_version";
+	guint version;
+
+	version = 1;
+
+	g_debug( "%s: version=%d", thisfn, version );
+
+	return( version );
+}
+
+/*
+ * na_api_module_list_types:
+ *
+ * mandatory starting with v. 1.
+ */
+guint
 na_api_module_list_types( const GType **types )
 {
 	static const gchar *thisfn = "nagp_module_na_api_module_list_types";
@@ -82,33 +93,11 @@ na_api_module_list_types( const GType **types )
 	return( count );
 }
 
-const gchar *
-na_api_module_get_name( GType type )
-{
-	static const gchar *thisfn = "nagp_module_na_api_module_get_name";
-
-	g_debug( "%s: type=%ld", thisfn, ( gulong ) type );
-
-	if( type == NAGP_GCONF_PROVIDER_TYPE ){
-		return( "Nautilus-Actions GConf IO Provider" );
-	}
-
-	return( NULL );
-}
-
-guint
-na_api_module_get_version( void )
-{
-	static const gchar *thisfn = "nagp_module_na_api_module_get_version";
-	guint version;
-
-	version = 1;
-
-	g_debug( "%s: version=%d", thisfn, version );
-
-	return( version );
-}
-
+/*
+ * na_api_module_shutdown:
+ *
+ * mandatory starting with v. 1.
+ */
 void
 na_api_module_shutdown( void )
 {

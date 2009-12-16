@@ -1,3 +1,50 @@
+2009-12-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/api/na-api.h (na_api_module_get_name):
+	* nautilus-actions/api/na-iio-provider.h (get_name):
+	The na_api_module_get_name() function is moved to NAIIOProvider
+	interface as get_name().
+
+	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.c
+	* nautilus-actions/io-provider-gconf/nagp-gconf-provider.c
+	(get_name): New function.
+
+	* nautilus-actions/io-provider-desktop/nadp-module.c
+	* nautilus-actions/io-provider-gconf/nagp-module.c
+	(na_api_module_get_name): Removed function.
+
+	* nautilus-actions/nact/nact-tree-model-dnd.c
+	(is_parent_accept_new_childs): New function.
+	Prevent drop inside of a read-only parent.
+
+	* nautilus-actions/nact/nact-window.c
+	(nact_window_has_writable_providers):
+	Updated to no more use na_pivot_has_writable_providers().
+
+	* nautilus-actions/runtime/na-io-provider.c
+	* nautilus-actions/runtime/na-io-provider.h
+	(na_io_provider_get_provider, na_io_provider_get_writable_provider):
+	New functions.
+
+	* nautilus-actions/runtime/na-module.c
+	* nautilus-actions/runtime/na-module.h
+	(na_module_dump): New function.
+	(na_module_get_name): Removed function.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h
+	(na_pivot_get_module_name, na_pivot_get_provider,
+	na_pivot_release_provider, na_pivot_has_writable_providers):
+	Removed functions.
+	(na_pivot_is_level_zero_writable): New function.
+
+	* nautilus-actions/runtime/na-utils.c:
+	* nautilus-actions/runtime/na-utils.h
+	(na_utils_remove_suffix): New function.
+
+	* nautilus-actions/utils/nautilus-actions-new.c (write_to_gconf):
+	Updated to find a writable provider.
+
 2009-12-15 Pierre Wieser <pwieser@trychlos.org>
 
 	Split too big file nact-tree-model.c.

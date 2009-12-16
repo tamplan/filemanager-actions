@@ -42,6 +42,27 @@
  * NAModule
  *  +- is derived from GTypeModule
  *      +- which itself implements GTypePlugin
+ *
+ * Each NAModule physically corresponds to a dynamically loadable library
+ * (i.e. a plugin). A NAModule implements one or more interfaces, and/or
+ * provides one or more services.
+ *
+ * Interfaces (resp. services) are implemented (resp. provided) by GObjects
+ * which are dynamically instantiated at plugin initial-load time.
+ *
+ * So the dynamic is as follows:
+ * - NAPivot scans for the PKGLIBDIR directory, trying to dynamically
+ *   load all found libraries
+ * - to be considered as a N-A plugin, a library must implement some
+ *   functions (see api/na-api.h)
+ * - for each found plugin, NAPivot calls na_api_list_types() which
+ *   returns the type of GObjects implemented in the plugin
+ * - NAPivot dynamically instantiates a GObject for each returned GType.
+ *
+ * After that, when NAPivot wants to access, say to NAIIOProvider
+ * interfaces, it asks each module for its list of objects which implement
+ * this given interface.
+ * Interface API is then called against the returned GObject.
  */
 
 #include <glib.h>
@@ -72,17 +93,17 @@ typedef struct {
 }
 	NAModuleClass;
 
-GType  na_module_get_type               ( void );
+GType    na_module_get_type               ( void );
 
-GList *na_module_load_modules           ( void );
+void     na_module_dump                   ( const NAModule *module );
+GList   *na_module_load_modules           ( void );
 
-GList *na_module_get_extensions_for_type( GList *modules, GType type );
-void   na_module_free_extensions_list   ( GList *extensions );
+GList   *na_module_get_extensions_for_type( GList *modules, GType type );
+void     na_module_free_extensions_list   ( GList *extensions );
 
-gchar *na_module_get_name               ( NAModule *module, GType type );
-gchar *na_module_get_name_for_object    ( GList *modules, GObject *object );
+gboolean na_module_has_id                 ( NAModule *module, const gchar *id );
 
-void   na_module_release_modules        ( GList *modules );
+void     na_module_release_modules        ( GList *modules );
 
 G_END_DECLS
 

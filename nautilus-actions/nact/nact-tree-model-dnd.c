@@ -35,6 +35,7 @@
 #include <api/na-object-api.h>
 
 #include <runtime/na-iprefs.h>
+#include <runtime/na-io-provider.h>
 #include <runtime/na-utils.h>
 
 #include "nact-application.h"
@@ -111,11 +112,17 @@ GtkTargetEntry tree_model_dnd_dest_formats[] = {
 
 guint tree_model_dnd_dest_formats_count = G_N_ELEMENTS( tree_model_dnd_dest_formats );
 
+static const gchar *st_refuse_profile = N_( "Unable to drop a profile here" );
+static const gchar *st_refuse_action_menu = N_( "Unable to drop an action or a menu here" );
+static const gchar *st_parent_not_writable = N_( "Unable to drop here as parent is not writable" );
+static const gchar *st_level_zero_not_writable = N_( "Unable to drop here as level zero is not writable" );
+
 static gboolean     drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
 static GtkTreePath *drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction **parent );
 static void         drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest );
 static gboolean     drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
 static char        *get_xds_atom_value( GdkDragContext *context );
+static gboolean     is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path );
 static guint        target_atom_to_id( GdkAtom atom );
 
 /**
@@ -198,7 +205,9 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
  * @dest_path:
  * @selection_data:
  *
- * Called when the source and the dest are not at the same tree level ?
+ * Seems to only be called when the drop in _on_ a row (a square is
+ * displayed), but not when dropped between two rows (a line is displayed),
+ * nor during the motion.
  */
 gboolean
 nact_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, GtkTreePath *dest_path, GtkSelectionData *selection_data )
@@ -398,9 +407,12 @@ nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *dr
 
 /**
  * nact_tree_model_dnd_on_drag_begin:
- * @widget:
+ * @widget: the GtkTreeView from which item is to be dragged.
  * @context:
- * @window:
+ * @window: the parent #NactMainWindow instance.
+ *
+ * This function is called once, at the beginning of the drag operation,
+ * when we are dragging from the IActionsList treeview.
  */
 void
 nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, BaseWindow *window )
@@ -499,8 +511,6 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	 * NACT format (may embed profiles, or not)
 	 * 	with profiles: only valid dest is inside an action
 	 *  without profile: only valid dest is outside (besides of) an action
-	 * URI format only involves actions
-	 *  ony valid dest in outside (besides of) an action
 	 */
 	drop_done = FALSE;
 	parent = NULL;
@@ -569,8 +579,6 @@ static GtkTreePath *
 drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction **parent )
 {
 	static const gchar *thisfn = "nact_tree_model_drop_inside_adjust_dest";
-	static const gchar *refuse_profile = N_( "Unable to drop a profile here" );
-	static const gchar *refuse_action_menu = N_( "Unable to drop an action or a menu here" );
 	GtkTreePath *new_dest;
 	gboolean drop_ok;
 	NactApplication *application;
@@ -603,7 +611,7 @@ drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction
 				}
 			} else {
 				nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, refuse_profile );
+						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_profile );
 			}
 
 		} else {
@@ -611,7 +619,7 @@ drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction
 				drop_ok = TRUE;
 			} else {
 				nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, refuse_action_menu );
+						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_action_menu );
 			}
 		}
 
@@ -620,7 +628,7 @@ drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction
 	} else if( gtk_tree_path_get_depth( dest ) == 1 ){
 		if( model->private->drag_has_profiles ){
 			nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, refuse_profile );
+						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_profile );
 		} else {
 			drop_ok = TRUE;
 		}
@@ -653,7 +661,7 @@ drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction
 
 					} else {
 						nact_main_statusbar_display_with_timeout(
-								main_window, TREE_MODEL_STATUSBAR_CONTEXT, refuse_profile );
+								main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_profile );
 					}
 
 				} else {
@@ -661,12 +669,16 @@ drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction
 						drop_ok = TRUE;
 					} else {
 						nact_main_statusbar_display_with_timeout(
-								main_window, TREE_MODEL_STATUSBAR_CONTEXT, refuse_action_menu );
+								main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_action_menu );
 					}
 				}
 			}
 		}
 		gtk_tree_path_free( path );
+	}
+
+	if( drop_ok && !is_parent_accept_new_childs( model, new_dest )){
+		drop_ok = FALSE;
 	}
 
 	if( !drop_ok ){
@@ -724,6 +736,9 @@ drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest )
  *
  * Returns: %TRUE if the specified rows were successfully inserted at
  * the given dest, %FALSE else.
+ *
+ * URI format only involves actions
+ *  so ony valid dest in outside (besides of) an action
  */
 static gboolean
 drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
@@ -908,6 +923,65 @@ get_xds_atom_value( GdkDragContext *context )
 						(unsigned char **) &ret);
 
 	return ret;
+}
+
+/*
+ * when dropping something somewhere, we must ensure that we will be able
+ * to register the new child
+ */
+static gboolean
+is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path )
+{
+	gboolean accept_ok;
+	GtkTreePath *parent_path;
+	GtkTreeIter iter;
+	NAObjectItem *parent_item;
+	NactApplication *application;
+	NAPivot *pivot;
+	NAIIOProvider *provider;
+	NactMainWindow *main_window;
+
+	accept_ok = FALSE;
+	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
+	pivot = nact_application_get_pivot( application );
+	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
+
+	/* inserting as a level zero item
+	 * ensure that level zero is writable
+	 */
+	if( gtk_tree_path_get_depth( path ) == 1 ){
+
+		if( na_pivot_is_level_zero_writable( pivot )){
+			accept_ok = TRUE;
+
+		} else {
+			nact_main_statusbar_display_with_timeout(
+						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_level_zero_not_writable );
+		}
+
+	/* see if the parent is writable
+	 */
+	} else {
+		parent_path = gtk_tree_path_copy( path );
+		if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, parent_path )){
+			gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &parent_item, -1 );
+			if( !na_object_is_readonly( parent_item )){
+				provider = na_object_get_provider( parent_item );
+				if( na_io_provider_is_willing_to_write( pivot, provider )){
+					accept_ok = TRUE;
+				}
+			}
+			g_object_unref( parent_item );
+		}
+		gtk_tree_path_free( parent_path );
+
+		if( !accept_ok ){
+			nact_main_statusbar_display_with_timeout(
+						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_parent_not_writable );
+		}
+	}
+
+	return( accept_ok );
 }
 
 static guint

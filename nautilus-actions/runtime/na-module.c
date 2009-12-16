@@ -34,6 +34,7 @@
 
 #include <gmodule.h>
 
+#include "na-utils.h"
 #include "na-module.h"
 
 /* private class data
@@ -47,15 +48,16 @@ struct NAModuleClassPrivate {
 struct NAModulePrivate {
 	gboolean  dispose_has_run;
 	gchar    *path;						/* full pathname of the plugin */
+	gchar    *name;						/* basename without the extension */
 	GModule  *library;
 	GList    *objects;
 
 	/* api
 	 */
-	gboolean      ( * initialize )( GTypeModule *module );
-	gint          ( * list_types )( const GType **types );
-	const gchar * ( * get_name )  ( GType type );
-	void          ( * shutdown )  ( void );
+	gboolean ( * initialize ) ( GTypeModule *module );
+	guint    ( * get_version )( void );
+	gint     ( * list_types ) ( const GType **types );
+	void     ( * shutdown )   ( void );
 };
 
 static GTypeModuleClass *st_parent_class = NULL;
@@ -75,8 +77,6 @@ static void      add_module_type( NAModule *module, GType type );
 static void      object_weak_notify( NAModule *module, GObject *object );
 
 static void      module_unload( GTypeModule *gmodule );
-
-static NAModule *find_module_for_object( GList *modules, GObject *object, GType *type );
 
 GType
 na_module_get_type( void )
@@ -186,12 +186,34 @@ instance_finalize( GObject *object )
 	self = NA_MODULE( object );
 
 	g_free( self->private->path );
+	g_free( self->private->name );
 
 	g_free( self->private );
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
+	}
+}
+
+/**
+ * na_module_dump:
+ * @module: this #NAModule instance.
+ *
+ * Dumps the content of the module.
+ */
+void
+na_module_dump( const NAModule *module )
+{
+	static const gchar *thisfn = "na_module_dump";
+	GList *iobj;
+
+	g_debug( "%s:    path=%s", thisfn, module->private->path );
+	g_debug( "%s:    name=%s", thisfn, module->private->name );
+	g_debug( "%s: library=%p", thisfn, ( void * ) module->private->library );
+	g_debug( "%s: objects=%p (count=%d)", thisfn, ( void * ) module->private->objects, g_list_length( module->private->objects ));
+	for( iobj = module->private->objects ; iobj ; iobj = iobj->next ){
+		g_debug( "%s:    iobj=%p (%s)", thisfn, ( void * ) iobj->data, G_OBJECT_TYPE_NAME( iobj->data ));
 	}
 }
 
@@ -208,6 +230,7 @@ na_module_load_modules( void )
 {
 	static const gchar *thisfn = "na_module_load_modules";
 	const gchar *dirname = PKGLIBDIR;
+	const gchar *suffix = ".so";
 	GList *modules;
 	GDir *api_dir;
 	GError *error;
@@ -228,10 +251,11 @@ na_module_load_modules( void )
 
 	} else {
 		while(( entry = g_dir_read_name( api_dir )) != NULL ){
-			if( g_str_has_suffix( entry, ".so" )){
+			if( g_str_has_suffix( entry, suffix )){
 				fname = g_build_filename( dirname, entry, NULL );
 				module = module_new( fname );
 				if( module ){
+					module->private->name = na_utils_remove_suffix( entry, suffix );
 					modules = g_list_prepend( modules, module );
 					g_debug( "%s: module %s successfully loaded", thisfn, fname );
 				}
@@ -308,10 +332,10 @@ is_a_na_plugin( NAModule *module )
 	gboolean ok;
 
 	ok =
-		plugin_check( module, "na_api_module_init"      , ( gpointer * ) &module->private->initialize) &&
-		plugin_check( module, "na_api_module_list_types", ( gpointer * ) &module->private->list_types ) &&
-		plugin_check( module, "na_api_module_get_name"  , ( gpointer * ) &module->private->get_name ) &&
-		plugin_check( module, "na_api_module_shutdown"  , ( gpointer * ) &module->private->shutdown ) &&
+		plugin_check( module, "na_api_module_init"       , ( gpointer * ) &module->private->initialize) &&
+		plugin_check( module, "na_api_module_get_version", ( gpointer * ) &module->private->get_version ) &&
+		plugin_check( module, "na_api_module_list_types" , ( gpointer * ) &module->private->list_types ) &&
+		plugin_check( module, "na_api_module_shutdown"   , ( gpointer * ) &module->private->shutdown ) &&
 		module->private->initialize( G_TYPE_MODULE( module ));
 
 	return( ok );
@@ -345,7 +369,7 @@ static void
 register_module_types( NAModule *module )
 {
 	const GType *types;
-	gint count, i;
+	guint count, i;
 
 	count = module->private->list_types( &types );
 	module->private->objects = NULL;
@@ -365,7 +389,7 @@ add_module_type( NAModule *module, GType type )
 	GObject *object;
 
 	object = g_object_new( type, NULL );
-	g_object_set_data( object, "na-module-type", ( gpointer ) type );
+	g_debug( "na_module_add_module_type: allocating object=%p (%s)", ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	g_object_weak_ref( object,
 			( GWeakNotify ) object_weak_notify,
@@ -409,8 +433,8 @@ module_unload( GTypeModule *gmodule )
 	}
 
 	module->private->initialize = NULL;
+	module->private->get_version = NULL;
 	module->private->list_types = NULL;
-	module->private->get_name = NULL;
 	module->private->shutdown = NULL;
 }
 
@@ -456,69 +480,25 @@ na_module_free_extensions_list( GList *extensions )
 }
 
 /**
- * na_module_get_name:
- * @module: the #NAModule instance corresponding to a dynamically
- *  loaded library.
- * @type: one of the #GType this @module advertizes it implements.
+ * na_module_has_id:
+ * @module: this #NAModule object.
+ * @id: the searched id.
  *
- * Returns: the name the #NAModule @module applies to itself for this
- * @type, as a newly allocated string which should be g_free() by the
- * caller.
+ * Returns: %TRUE if one of the interfaces advertised by the module has
+ * the given id, %FALSE else.
  */
-gchar *
-na_module_get_name( NAModule *module, GType type )
+gboolean
+na_module_has_id( NAModule *module, const gchar *id )
 {
-	gchar *name = NULL;
+	gboolean id_ok;
+	GList *iobj;
 
-	g_return_val_if_fail( NA_IS_MODULE( module ), name );
-
-	name = g_strdup( module->private->get_name( type ));
-
-	return( name );
-}
-
-/**
- * na_module_get_name_for_object:
- * @modules: the list of dynamically loaded modules.
- * @object: an object instantiated by one of these modules.
- *
- * Returns: the name of the #NAModule for this @object, as a newly
- * allocated string which should be g_free() by the caller.
- */
-gchar *
-na_module_get_name_for_object( GList *modules, GObject *object )
-{
-	gchar *name;
-	GType type;
-	NAModule *module;
-
-	name = NULL;
-	type = ( GType ) 0;
-	module = find_module_for_object( modules, object, &type );
-	if( type ){
-		name = na_module_get_name( module, type );
+	id_ok = FALSE;
+	for( iobj = module->private->objects ; iobj && !id_ok ; iobj = iobj->next ){
+		g_debug( "na_module_has_id: object=%s", G_OBJECT_TYPE_NAME( iobj->data ));
 	}
 
-	return( name );
-}
-
-static NAModule *
-find_module_for_object( GList *modules, GObject *object, GType *type )
-{
-	GList *im;
-	GList *io;
-	NAModule *module = NULL;
-
-	for( im = modules ; im && !module ; im = im->next ){
-		for( io = NA_MODULE( im->data )->private->objects ; io && !module ; io = io->next ){
-			if( io->data == object ){
-				module = NA_MODULE( im->data );
-				*type = ( GType ) g_object_get_data( object, "na-module-type" );
-			}
-		}
-	}
-
-	return( module );
+	return( id_ok );
 }
 
 /**

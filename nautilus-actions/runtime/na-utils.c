@@ -518,6 +518,33 @@ na_utils_prefix_strings( const gchar *prefix, const gchar *str )
 }
 
 /**
+ * na_utils_remove_suffix:
+ * @string: source string.
+ * @suffix: suffix to be removed from @string.
+ *
+ * Returns: a newly allocated string, which is a copy of the source @string,
+ * minus the removed @suffix if present. If @strings doesn't terminate with
+ * @suffix, then the returned string is equal to source @string.
+ *
+ * The returned string should be g_free() by the caller.
+ */
+gchar *
+na_utils_remove_suffix( const gchar *string, const gchar *suffix )
+{
+	gchar *removed;
+	gchar *ptr;
+
+	removed = g_strdup( string );
+
+	if( g_str_has_suffix( string, suffix )){
+		ptr = g_strrstr( removed, suffix );
+		ptr[0] = '\0';
+	}
+
+	return( removed );
+}
+
+/**
  * na_utils_exist_file:
  * @uri: an uri which points to a file.
  *

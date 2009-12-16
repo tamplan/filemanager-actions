@@ -57,8 +57,23 @@ G_BEGIN_DECLS
  * The dynamically loaded library may benefit of being triggered by
  * initializing itself, registering its internal GTypes, etc.
  * It should at least register module GTypes it provides.
+ *
+ * All N-A modules must implement this function.
+ *
+ * Returns: %TRUE if the initialization is successfull, %FALSE else.
+ * In this later case, the plugin is unloaded.
  */
 gboolean     na_api_module_init       ( GTypeModule *module );
+
+/**
+ * na_api_module_get_version:
+ *
+ * Returns: the version of this API supported by the module.
+ *
+ * If this function is not implemented by the plugin, the loader
+ * considers that the plugin only implements version 1 of this API.
+ */
+guint        na_api_module_get_version( void );
 
 /**
  * na_api_module_list_types:
@@ -68,38 +83,18 @@ gboolean     na_api_module_init       ( GTypeModule *module );
  * internal GTypes implemented by the dynamically loaded library.
  *
  * Returned GTypes should already have been registered in GType system
- * (e.g. via na_api_module_init), and may implement one or more of the
- * interfaces defined in Nautilus-Actions API.
+ * (e.g. at na_api_module_init() time), and may implement one or more of
+ * the interfaces defined in Nautilus-Actions API.
  *
- * One object will be instantiated by Nautilus-Actions for each returned
+ * One GObject will be instantiated by Nautilus-Actions for each returned
  * GType.
+ *
+ * All N-A modules must implement this functon, possibly returning an
+ * empty list.
  *
  * Returns: the number of GTypes item in the @types array.
  */
-gint         na_api_module_list_types ( const GType **types );
-
-/**
- * na_api_module_get_name:
- * @type: the library #GType for which Nautilus-Actions wish the name.
- *
- * Returns: the name to be associated with this @type.
- *
- * Nautilus-Actions may ask the dynamically loadable library for a
- * name associated to each #GType the library had previously declared.
- * This is generally to be displayed in a user interface ; the name
- * may be localized.
- */
-const gchar *na_api_module_get_name   ( GType type );
-
-/**
- * na_api_module_get_version:
- *
- * Returns: the version of this API supported by the module.
- *
- * The module should really implement this function as the default is
- * to not implement any API at all.
- */
-guint        na_api_module_get_version( void );
+guint        na_api_module_list_types ( const GType **types );
 
 /**
  * na_api_module_shutdown:
@@ -109,6 +104,8 @@ guint        na_api_module_get_version( void );
  *
  * The dynamicaly loaded library may benefit of this call to release
  * any resource it may have previously allocated.
+ *
+ * All N-A modules must implement this function.
  */
 void         na_api_module_shutdown   ( void );
 

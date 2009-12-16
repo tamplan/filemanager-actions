@@ -121,13 +121,8 @@ void          na_pivot_dump( const NAPivot *pivot );
 
 void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
 
-gchar        *na_pivot_get_module_name( const NAPivot *pivot, GObject *provider );
-
 GList        *na_pivot_get_providers( const NAPivot *pivot, GType type );
-GObject      *na_pivot_get_provider( const NAPivot *pivot, GType type );
-void          na_pivot_release_provider( const GObject *provider );
 void          na_pivot_free_providers( GList *providers );
-gboolean      na_pivot_has_writable_providers( const NAPivot *pivot );
 
 GList        *na_pivot_get_items( const NAPivot *pivot );
 void          na_pivot_load_items( NAPivot *pivot );
@@ -151,6 +146,7 @@ gboolean      na_pivot_is_invalid_loadable( const NAPivot *pivot );
 gint          na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b );
 gint          na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
 
+gboolean      na_pivot_is_level_zero_writable( const NAPivot *pivot );
 void          na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
 
 /* notification message from NAIIOProvider to NAPivot

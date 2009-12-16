@@ -76,6 +76,7 @@
 
 - nautilus-actions-new:
   give same defaults that when creating an action in NACT
+  choose the target I/O provider
 
 - NACT: unable to really delete an action imported with schemas
   2009-11-21 (2.29.2-provider) not able to reproduce this, whether the
@@ -91,12 +92,12 @@
 
 - have a preference to record order of IO Providers
 
-- do we may have a read-only menu ?
-  this implies dnd of an action inside of the menu would be forbidden
-  id. for reordering if subitems
-
 - nact: new action assistant
 
 - desktop provider: fix default toolbar label
 
-- setup tree-model dnd code when item or parent is readonly
+- DBus service: list current I/O providers
+
+- DBus service: import/export an action or a menu
+
+- tracker: have auto-introspection

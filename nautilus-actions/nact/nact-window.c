@@ -242,6 +242,7 @@ nact_window_has_writable_providers( NactWindow *window )
 {
 	gboolean has_writables;
 	NAPivot *pivot;
+	NAIIOProvider *provider;
 
 	has_writables = FALSE;
 
@@ -250,7 +251,9 @@ nact_window_has_writable_providers( NactWindow *window )
 	if( !window->private->dispose_has_run ){
 
 		pivot = nact_window_get_pivot( window );
-		has_writables = na_pivot_has_writable_providers( pivot );
+		provider = na_io_provider_get_writable_provider( pivot );
+		has_writables = ( provider != NULL );
+		g_object_unref( provider );
 	}
 
 	return( has_writables );

@@ -1,4 +1,6 @@
 data/nautilus-actions.schemas.in
+nautilus-actions/io-provider-desktop/nadp-desktop-provider.c
+nautilus-actions/io-provider-gconf/nadp-gconf-provider.c
 nautilus-actions/nact/base-application.c
 nautilus-actions/nact/base-assistant.c
 nautilus-actions/nact/base-window.c

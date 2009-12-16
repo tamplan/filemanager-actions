@@ -60,7 +60,7 @@ typedef struct {
 	NAIIOProviderInterfacePrivate *private;
 
 	/*
-	 * This is the API the provider has to implement.
+	 * This is the API the I/O providers have to implement.
 	 */
 
 	/**
@@ -75,9 +75,20 @@ typedef struct {
 	 * provider, and so need a new provider id, please contact the
 	 * maintainers (see nautilus-actions.doap).
 	 *
-	 * The provider must implement this function.
+	 * The I/O provider must implement this function.
 	 */
 	gchar *  ( *get_id )             ( const NAIIOProvider *instance );
+
+	/**
+	 * get_name:
+	 * @instance: the #NAIIOProvider provider.
+	 *
+	 * Returns: the name to be displayed for this I/O provider as a
+	 * newly allocated string which should be g_free() by the caller.
+	 *
+	 * Defaults to an empty string.
+	 */
+	gchar *  ( *get_name )           ( const NAIIOProvider *instance );
 
 	/**
 	 * get_version:
@@ -85,7 +96,7 @@ typedef struct {
 	 *
 	 * Returns: the version of this API supported by the IO provider.
 	 *
-	 * The provider must implement this function.
+	 * Defaults to 1.
 	 */
 	guint    ( *get_version )        ( const NAIIOProvider *instance );
 
