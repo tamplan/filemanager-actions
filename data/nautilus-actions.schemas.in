@@ -637,5 +637,23 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
       <default>[]</default>
     </schema>
 
+	<!-- sysadmin reserved keys -->
+	<!-- these keys are thought to be set as mandatory keys -->
+	<!-- each I/O provider has its own key, identified by the I/O provider internal id. -->
+	<!-- note that level-zero order of items is written as a GConf preference -->
+	<!-- setting the GConf as read-only (locked) will also prevent any reordering of level-zero items -->
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/mandatory/na-gconf/locked</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <list_type>int</list_type>
+      <locale name="C">
+        <short>Whether the GConf I/O provider is locked</short>
+        <long>When set to true (most probably as a mandatory key), this prevents all items readen from GConf to being modified in NACT.</long>
+      </locale>
+      <default>false</default>
+    </schema>
+
   </schemalist>
 </gconfschemafile>

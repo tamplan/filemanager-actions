@@ -1,5 +1,8 @@
 2009-12-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/nautilus-actions.schemas.in:
+	Add locked key.
+
 	* NEWS:
 	* README: Updated files.
 
