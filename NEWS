@@ -1,3 +1,127 @@
+Version 2.29.2
+==============
+
+	Release date 2009-12-16
+
+	This version brings up several major enhancements:
+
+		- An API is defined, which let us have more than one I/O provider;
+		  this prepare in particular the arrival of a desktop I/O provider.
+
+		- GConf I/O provider is now a dynamically loaded plugin.
+
+		- Gracefully manage the read-only items, whether the action has
+		  been made mandatory by a sysadmin, or the I/O provider
+		  being itself not writable at all.
+
+		- Ability to assign a keyboard accelerator to a predefined action
+		  via the nautilus-actions-run new program.
+		  nautilus-actions-run will automagically take into account the
+		  current Nautilus selection and apply it to your action (#435820
+		  reported by Frederic Ruaudel).
+
+		- Let actions be defined to appear in Nautilus toolbar (#110288
+		  reported by danny_milo@yahoo.com).
+
+		- Let a sysadmin lock down its configuration by setting a mandatory
+		  GConf key "/apps/nautilus-actions/mandatory/na-gcond/locked" to
+		  true (#325520 reported by Frederic Ruaudel).
+
+	Other enhancements:
+
+		- Ask the user for a confirmation on session ending when there
+		  is not yet saved modifications.
+		- nautilus-actions-config-tool (NACT) is no more tied to a
+		  single instance: '--non-unique' argument let the user
+		  run several instance.
+		- When exporting, export the current content of Actions list.
+		- Define two new user preferences for assistants management.
+		- Update nautilus-actions-new to be able to define actions which
+		  target toolbar and folder menus.
+		- Add '--version' command-line argument to all programs:
+			. nautilus-actions-config-tool
+			. nautilus-actions-new
+			. nautilus-actions-schemas.
+		- Add mnemonics to target radio button labels in Action tab.
+		- Only set foreground color for normal state.
+		- Implement keyboard accelerators in Folders listview.
+		- Implement keyboard accelerators in Advanced conditions tab.
+		- As an help to bug reporter, displays GLib and Gtk+ current
+		  versions on '--version' argument.
+
+	Bugfixes:
+
+		- Propagate default values to imported actions.
+		- Fix dialog title not reset after save.
+		- Fix the item counters when importing.
+		- Fix a typo in Import tab of Preferences dialog.
+		- Add plural mark in the Preferences dialog.
+		- Fix memory leaks in Action tab.
+		- Fix memory leaks in Advanced conditions tab.
+		- Only tries to setup folders when there is a current profile.
+		- Only setup toolbar label when current item is an action.
+		- Safely handle signal deconnexions.
+		- na_xml_writer_output_xml() now returns error messages.
+		- Fix #599913 reported by Vincent (unable to create an action).
+		- Fix #600712 reported by Deji Akingunola
+		  (crash in nautilus-actions-config-tool).
+
+	Architecture modifications:
+
+		- Private and runtime libraries are now dynamic libraries.
+		- A Nautilus-Actions development environment might be set for
+		  developing new plugins.
+		- Nautilus-Actions plugins are installed in PKGLIBDIR (for now,
+		  libna-io-provider-desktop.so and libna-io-provider-gconf.so).
+		- New nautilus-actions-run command-line program.
+		- New libnautilus-actions-tracker Nautilus extension.
+		- Removed useless gthread dependancy.
+
+		Please note, that for now, the new Desktop I/O provider is
+		only available in maintainer mode, as it is far to being
+		ready for a production use.
+
+	New and updated translations:
+
+		de (Mario Blättermann, Christian Kirbach)
+		es (Jorge González)
+		pt (António Lima)
+		sl (Andrej Žnidaršič)
+		sv (Daniel Nylander)
+		ta (ifeli)
+		te (krishnababu k)
+
+Version 1.12.3
+==============
+
+	Release date 2009-11-07
+
+	This is the third bugfix release of the 1.12 serie.
+
+	Bugfixes
+
+		#599520 reported by Antonio Lima (do not mark author names for
+		translating)
+		#600712 reported by Deji Akingunola (NACT crashes on export)
+		#599913 reported by Vincent (menubar is not visible)
+
+	Other Code enhancements
+
+		Remove terminating dot from radio button labels.
+
+		Make the assistants transient relatively to the main window.
+
+		Initialize console utils log handlers.
+
+		Use XML markup to print messages embedding XML tags.
+
+		Fix copy of profiles of an action by reinitializing the target
+		list of profiles before duplicating the source one.
+
+	New and updated translations
+
+		None at this time.
+
 Version 2.29.1
 ==============
 

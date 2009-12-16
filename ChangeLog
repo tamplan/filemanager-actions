@@ -1,5 +1,8 @@
 2009-12-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS:
+	* README: Updated files.
+
 	* nautilus-actions/io-provider-desktop/nadp-module.c:
 	Make the desktop I/O provider only loadable in maintainer mode.
 
