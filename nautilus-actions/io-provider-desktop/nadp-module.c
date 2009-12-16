@@ -43,6 +43,8 @@
  *
  * mandatory starting with API v. 1.
  */
+/* TODO: remove this when we will be ready to release the desktop provider */
+#ifdef NA_MAINTAINER_MODE
 gboolean
 na_api_module_init( GTypeModule *module )
 {
@@ -54,6 +56,7 @@ na_api_module_init( GTypeModule *module )
 
 	return( TRUE );
 }
+#endif
 
 /*
  * na_api_module_get_version:
