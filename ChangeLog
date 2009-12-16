@@ -1,5 +1,7 @@
 2009-12-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in: Fix typo.
+
 	* nautilus-actions/api/na-api.h (na_api_module_get_name):
 	* nautilus-actions/api/na-iio-provider.h (get_name):
 	The na_api_module_get_name() function is moved to NAIIOProvider
