@@ -1,5 +1,7 @@
 2009-12-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump version number.
+
 	* data/nautilus-actions.schemas.in:
 	Add locked key.
 
