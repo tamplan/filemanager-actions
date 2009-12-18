@@ -99,5 +99,3 @@
 - DBus service: list current I/O providers
 
 - DBus service: import/export an action or a menu
-
-- tracker: have auto-introspection

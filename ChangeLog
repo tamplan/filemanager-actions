@@ -1,3 +1,7 @@
+2009-12-17 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/test/dbus-introspect.sh: New file.
+
 2009-12-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump version number.
