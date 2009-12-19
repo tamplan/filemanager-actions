@@ -142,6 +142,7 @@ pkgdata_DATA = \
 	nautilus-actions-maintainer.actions							\
 	nact-assistant-export.ui									\
 	nautilus-actions-config-tool.ui								\
+	locked.png													\
 	$(NULL)
 
 @INTLTOOL_DESKTOP_RULE@

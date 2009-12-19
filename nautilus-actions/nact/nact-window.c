@@ -225,6 +225,8 @@ nact_window_is_writable_provider( NactWindow *window, const NAObjectItem *item )
 		provider = na_object_get_provider( item );
 		if( provider ){
 			writable = na_io_provider_is_willing_to_write( pivot, provider );
+		} else {
+			writable = nact_window_has_writable_providers( window );
 		}
 	}
 

@@ -1,5 +1,32 @@
 2009-12-19 Pierre Wieser <pwieser@trychlos.org>
 
+	Display the writability status in the status bar.
+
+	* nautilus-actions/nact/locked.png: New file.
+
+	* nautilus-actions/nact/Makefile.am: Updated accordingly.
+
+	* nautilus-actions/nact/base-window.c (base_window_get_widget):
+	Add a warning when widget is not found.
+
+	* nautilus-actions/nact/nact-main-statusbar.c:
+	* nautilus-actions/nact/nact-main-statusbar.h
+	(nact_main_statusbar_set_locked): New function.
+
+	* nautilus-actions/runtime/na-iabout.c (na_iabout_display):
+	Credit the author of the locked image.
+
+	* nautilus-actions/nact/nautilus-actions-config-tool.ui:
+	Add an image in the status bar.
+
+	* nautilus-actions/nact/nact-main-window.c (set_current_object_item):
+	Update the locked image depending of the writability status of the
+	current item.
+
+	* nautilus-actions/nact/nact-window.c
+	(nact_window_is_writable_provider): Return default writability status
+	when the (new) item doesn't have yet a provider.
+
 	* nautilus-actions/plugin/nautilus-module.c
 	(nautilus_module_initialize):
 	* nautilus-actions/tracker/na-tracker-plugin.c

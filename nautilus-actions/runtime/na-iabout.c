@@ -159,6 +159,7 @@ na_iabout_display( NAIAbout *instance )
 
 	static const gchar *artists[] = {
 		"Ulisse Perusin <uli.peru@gmail.com>",
+		"DragonArtz - http://www.dragonartz.net/",
 		NULL
 	};
 

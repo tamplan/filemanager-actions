@@ -108,3 +108,7 @@
   > remove in n-a-c-t
   > remove in n-a-n
   > remove in action class
+
+- when saving a new item, do not save it in a non-writable provider!
+
+- the locked image is moved to the right (under the grip) at the first item

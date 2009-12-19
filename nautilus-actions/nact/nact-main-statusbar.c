@@ -41,14 +41,27 @@ typedef struct {
 }
 	StatusbarTimeoutDisplayStruct;
 
+#define LOCKED_IMAGE					PKGDATADIR "/locked.png"
+
 static GtkStatusbar *get_statusbar( const NactMainWindow *window );
 static gboolean      display_timeout( StatusbarTimeoutDisplayStruct *stds );
 static void          display_timeout_free( StatusbarTimeoutDisplayStruct *stds );
 
+/**
+ * nact_main_statusbar_display_status:
+ * @window: the #NactMainWindow instance.
+ * @context: the context to be displayed.
+ * @status: the message.
+ *
+ * Push a message.
+ */
 void
 nact_main_statusbar_display_status( NactMainWindow *window, const gchar *context, const gchar *status )
 {
+	static const gchar *thisfn = "nact_main_statusbar_display_status";
 	GtkStatusbar *bar;
+
+	g_debug( "%s: window=%p, context=%s, status=%s", thisfn, ( void * ) window, context, status );
 
 	if( !status || !g_utf8_strlen( status, -1 )){
 		return;
@@ -62,17 +75,25 @@ nact_main_statusbar_display_status( NactMainWindow *window, const gchar *context
 	}
 }
 
-/*
- * push a message
- * automatically pop it after a timeout
- * the timeout is not suspended when another message is pushed onto the
- * previous one
+/**
+ * nact_main_statusbar_display_with_timeout:
+ * @window: the #NactMainWindow instance.
+ * @context: the context to be displayed.
+ * @status: the message.
+ *
+ * Push a message.
+ * Automatically pop it after a timeout.
+ * The timeout is not suspended when another message is pushed onto the
+ * previous one.
  */
 void
 nact_main_statusbar_display_with_timeout( NactMainWindow *window, const gchar *context, const gchar *status )
 {
+	static const gchar *thisfn = "nact_main_statusbar_display_with_timeout";
 	GtkStatusbar *bar;
 	StatusbarTimeoutDisplayStruct *stds;
+
+	g_debug( "%s: window=%p, context=%s, status=%s", thisfn, ( void * ) window, context, status );
 
 	if( !status || !g_utf8_strlen( status, -1 )){
 		return;
@@ -96,16 +117,62 @@ nact_main_statusbar_display_with_timeout( NactMainWindow *window, const gchar *c
 	}
 }
 
+/**
+ * nact_main_statusbar_hide_status:
+ * @window: the #NactMainWindow instance.
+ * @context: the context to be hidden.
+ *
+ * Hide the specified context.
+ */
 void
 nact_main_statusbar_hide_status( NactMainWindow *window, const gchar *context )
 {
+	static const gchar *thisfn = "nact_main_statusbar_hide_status";
 	GtkStatusbar *bar;
+
+	g_debug( "%s: window=%p, context=%s", thisfn, ( void * ) window, context );
 
 	bar = get_statusbar( window );
 
 	if( bar ){
 		guint context_id = gtk_statusbar_get_context_id( bar, context );
 		gtk_statusbar_pop( bar, context_id );
+	}
+}
+
+/**
+ * nact_main_statusbar_set_locked:
+ * @window: the #NactMainWindow instance.
+ * @locked: whether the current item is locked.
+ *
+ * Displays the writability status of the current item as an image.
+ */
+void
+nact_main_statusbar_set_locked( NactMainWindow *window, gboolean locked )
+{
+	static const gchar *thisfn = "nact_main_statusbar_set_locked";
+	GtkStatusbar *bar;
+	GtkFrame *frame;
+	GtkImage *image;
+
+	g_debug( "%s: window=%p, locked=%s", thisfn, ( void * ) window, locked ? "True":"False" );
+
+	bar = get_statusbar( window );
+	frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedFrame" ));
+	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedImage" ));
+
+	if( bar && frame && image ){
+
+		if( locked ){
+			gtk_image_set_from_file( image, LOCKED_IMAGE );
+			gtk_widget_show( GTK_WIDGET( image ));
+			gtk_frame_set_shadow_type( frame, GTK_SHADOW_NONE );
+
+		} else {
+			gtk_image_set_from_icon_name( image, "gnome-stock-blank", GTK_ICON_SIZE_MENU );
+			gtk_widget_hide( GTK_WIDGET( image ));
+			gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
+		}
 	}
 }
 
@@ -117,7 +184,7 @@ get_statusbar( const NactMainWindow *window )
 {
 	GtkWidget *statusbar;
 
-	statusbar = base_window_get_widget( BASE_WINDOW( window ), "StatusBar" );
+	statusbar = base_window_get_widget( BASE_WINDOW( window ), "MainStatusbar" );
 
 	return( GTK_STATUSBAR( statusbar ));
 }

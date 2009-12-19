@@ -1289,9 +1289,33 @@ Defining several profiles lets you have several commands, each applying with a d
           </packing>
         </child>
         <child>
-          <object class="GtkStatusbar" id="StatusBar">
+          <object class="GtkStatusbar" id="MainStatusbar">
             <property name="visible">True</property>
             <property name="spacing">2</property>
+            <child>
+              <object class="GtkAspectFrame" id="ActionLockedFrame">
+                <property name="width_request">24</property>
+                <property name="height_request">24</property>
+                <property name="visible">True</property>
+                <property name="label_xalign">0</property>
+                <property name="shadow_type">none</property>
+                <property name="obey_child">False</property>
+                <child>
+                  <object class="GtkImage" id="ActionLockedImage">
+                    <property name="visible">True</property>
+                    <property name="stock">gnome-stock-blank</property>
+                    <property name="icon-size">1</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="padding">4</property>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -1322,9 +1346,9 @@ Defining several profiles lets you have several commands, each applying with a d
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
             <property name="local_only">False</property>
-            <property name="use_preview_label">False</property>
             <property name="select_multiple">True</property>
             <property name="preview_widget_active">False</property>
+            <property name="use_preview_label">False</property>
           </object>
           <packing>
             <property name="position">0</property>

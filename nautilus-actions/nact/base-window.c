@@ -810,6 +810,9 @@ base_window_get_widget( BaseWindow *window, const gchar *name )
 	if( !window->private->dispose_has_run ){
 		toplevel = window->private->toplevel_window;
 		widget = search_for_widget( toplevel, name );
+		if( !widget ){
+			g_warning( "%s: widget not found", name );
+		}
 	}
 
 	return( widget );
