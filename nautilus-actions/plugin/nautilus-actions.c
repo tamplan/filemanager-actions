@@ -288,6 +288,12 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
  * the menu items are available :
  * a) in File menu
  * b) in contextual menu of the folder if there is no current selection
+ *
+ * get_background_items is very similar, from the user point of view, to
+ * get_file_items when:
+ * - either there is zero item selected - current_folder should so be the
+ *   folder currently displayed in the file manager view
+ * - or when there is only one selected directory
  */
 static GList *
 get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )

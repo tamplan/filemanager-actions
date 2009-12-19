@@ -99,3 +99,13 @@
 - DBus service: list current I/O providers
 
 - DBus service: import/export an action or a menu
+
+- reunion of TargetSelection and TargetFolder
+  as TargetFolder is just a special case of TargetSelection
+  > add special case 'x-nautilus-desktop:///' as a special folder
+  > remove GConf entry
+  > remove importing
+  > remove exporting
+  > remove in n-a-c-t
+  > remove in n-a-n
+  > remove in action class
