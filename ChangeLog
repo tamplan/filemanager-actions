@@ -1,5 +1,16 @@
 2009-12-20 Pierre Wieser <pwieser@trychlos.org>
 
+	Some cosmetic changes.
+
+	* nautilus-actions/nact/nact-iactions-list.c (nact_iactions_list_fill):
+	Report selection of first row at the very end of the function.
+
+	* nautilus-actions/nact/nact-main-menubar.c
+	(on_iactions_list_selection_changed): Improve debug messages.
+
+	* nautilus-actions/nact/nautilus-actions-config-tool.ui:
+	Remove size request for ActionLockedFrame.
+
 	Add a tooltip to the writability status image.
 
 	* nautilus-actions/nact/nact-main-statusbar.c:

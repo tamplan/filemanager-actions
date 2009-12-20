@@ -674,8 +674,6 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 		ialid->modified_items = NULL;
 		ialid->selection_changed_send_allowed = TRUE;
 
-		nact_iactions_list_bis_select_first_row( instance );
-
 		g_signal_emit_by_name(
 				instance,
 				MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
@@ -689,6 +687,8 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 			na_object_item_count_items( items, &ialid->menus, &ialid->actions, &ialid->profiles, TRUE );
 			nact_iactions_list_priv_send_list_count_updated_signal( instance, ialid );
 		}
+
+		nact_iactions_list_bis_select_first_row( instance );
 	}
 }
 

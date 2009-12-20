@@ -524,7 +524,7 @@ on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 {
 	MenubarIndicatorsStruct *mis;
 
-	g_debug( "nact_main_menubar_on_iactions_list_selection_changed: selected=%p (%d)",
+	g_debug( "nact_main_menubar_on_iactions_list_selection_changed: selected=%p (count=%d)",
 			( void * ) selected, g_list_length( selected ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
