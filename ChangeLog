@@ -1,3 +1,16 @@
+2009-12-20 Pierre Wieser <pwieser@trychlos.org>
+
+	Add a tooltip to the writability status image.
+
+	* nautilus-actions/nact/nact-main-statusbar.c:
+	* nautilus-actions/nact/nact-main-statusbar.h
+	(nact_main_statusbar_set_locked):
+	Displays a tooltip whether the provider or the item is read-only.
+
+	* nautilus-actions/nact/nact-main-window.c:	Updated accordingly.
+
+	* po/POTFILES.in: Add nautilus-actions/nact/nact-main-statusbar.c.
+
 2009-12-19 Pierre Wieser <pwieser@trychlos.org>
 
 	Display the writability status in the status bar.

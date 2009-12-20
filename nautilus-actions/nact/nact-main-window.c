@@ -1008,7 +1008,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_iconditions_tab_initial_load_toplevel( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_initial_load_toplevel( NACT_IADVANCED_TAB( window ));
 
-		nact_main_statusbar_set_locked( window, FALSE );
+		nact_main_statusbar_set_locked( window, FALSE, FALSE );
 	}
 }
 
@@ -1112,7 +1112,7 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 		return;
 	}
 
-	nact_main_statusbar_set_locked( window, FALSE );
+	nact_main_statusbar_set_locked( window, FALSE, FALSE );
 
 	if( count == 1 ){
 		g_return_if_fail( NA_IS_OBJECT_ID( selected_items->data ));
@@ -1180,7 +1180,7 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 		window->private->readonly_item = na_object_is_readonly( window->private->edited_item );
 		window->private->writable_provider = nact_window_is_writable_provider( NACT_WINDOW( window ), window->private->edited_item );
 
-		nact_main_statusbar_set_locked( window, window->private->readonly_item || !window->private->writable_provider );
+		nact_main_statusbar_set_locked( window, !window->private->writable_provider, window->private->readonly_item );
 
 		if( NA_IS_OBJECT_ACTION( window->private->edited_item )){
 

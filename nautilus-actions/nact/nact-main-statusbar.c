@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include "nact-main-statusbar.h"
 
 typedef struct {
@@ -143,19 +145,25 @@ nact_main_statusbar_hide_status( NactMainWindow *window, const gchar *context )
 /**
  * nact_main_statusbar_set_locked:
  * @window: the #NactMainWindow instance.
- * @locked: whether the current item is locked.
+ * @provider: whether the current provider is locked (read-only).
+ * @item: whether the current item is locked (read-only).
  *
  * Displays the writability status of the current item as an image.
+ * Installs the corresponding tooltip.
  */
 void
-nact_main_statusbar_set_locked( NactMainWindow *window, gboolean locked )
+nact_main_statusbar_set_locked( NactMainWindow *window, gboolean provider, gboolean item )
 {
 	static const gchar *thisfn = "nact_main_statusbar_set_locked";
+	static const gchar *tooltip_provider = N_( "I/O Provider is locked down." );
+	static const gchar *tooltip_item = N_( "Item is read-only." );
 	GtkStatusbar *bar;
 	GtkFrame *frame;
 	GtkImage *image;
+	gchar *tooltip;
+	gchar *tmp;
 
-	g_debug( "%s: window=%p, locked=%s", thisfn, ( void * ) window, locked ? "True":"False" );
+	g_debug( "%s: window=%p, provider=%s, item=%s", thisfn, ( void * ) window, provider ? "True":"False", item ? "True":"False" );
 
 	bar = get_statusbar( window );
 	frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedFrame" ));
@@ -163,16 +171,36 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean locked )
 
 	if( bar && frame && image ){
 
-		if( locked ){
+		tooltip = g_strdup( "" );
+
+		if( provider || item ){
 			gtk_image_set_from_file( image, LOCKED_IMAGE );
 			gtk_widget_show( GTK_WIDGET( image ));
 			gtk_frame_set_shadow_type( frame, GTK_SHADOW_NONE );
+
+			if( provider ){
+				g_free( tooltip );
+				tooltip = g_strdup( tooltip_provider );
+			}
+			if( item ){
+				if( provider ){
+					tmp = g_strdup_printf( "%s\n%s", tooltip, tooltip_item );
+					g_free( tooltip );
+					tooltip = tmp;
+				} else {
+					g_free( tooltip );
+					tooltip = g_strdup( tooltip_item );
+				}
+			}
 
 		} else {
 			gtk_image_set_from_icon_name( image, "gnome-stock-blank", GTK_ICON_SIZE_MENU );
 			gtk_widget_hide( GTK_WIDGET( image ));
 			gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 		}
+
+		gtk_widget_set_tooltip_text( GTK_WIDGET( image ), tooltip );
+		g_free( tooltip );
 	}
 }
 
