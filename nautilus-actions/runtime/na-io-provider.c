@@ -129,7 +129,7 @@ na_io_provider_get_writable_provider( const NAPivot *pivot )
 	providers = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
 
 	for( ip = providers ; ip && !provider ; ip = ip->next ){
-		if( !na_io_provider_is_willing_to_write( pivot, NA_IIO_PROVIDER( ip->data ))){
+		if( na_io_provider_is_willing_to_write( pivot, NA_IIO_PROVIDER( ip->data ))){
 			provider = NA_IIO_PROVIDER( ip->data );
 			g_object_ref( provider );
 		}

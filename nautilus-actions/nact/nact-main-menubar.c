@@ -618,6 +618,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	has_writables = nact_window_has_writable_providers( NACT_WINDOW( window ));
+	/*g_debug( "%s: has_writables=%s", thisfn, has_writables ? "True":"False" );*/
 
 	g_object_get(
 			G_OBJECT( window ),

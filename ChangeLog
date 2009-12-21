@@ -1,3 +1,14 @@
+2009-12-21 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
+	Add - commented for now - debug message.
+
+	* nautilus-actions/nact/nact-window.c
+	(nact_window_has_writable_providers): Only unref the object if not null.
+
+	* nautilus-actions/runtime/na-io-provider.c
+	(na_io_provider_get_writable_provider): Fix writability check.
+
 2009-12-20 Pierre Wieser <pwieser@trychlos.org>
 
 	Some cosmetic changes.

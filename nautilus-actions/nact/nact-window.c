@@ -254,8 +254,11 @@ nact_window_has_writable_providers( NactWindow *window )
 
 		pivot = nact_window_get_pivot( window );
 		provider = na_io_provider_get_writable_provider( pivot );
-		has_writables = ( provider != NULL );
-		g_object_unref( provider );
+
+		if( provider ){
+			has_writables = TRUE;
+			g_object_unref( provider );
+		}
 	}
 
 	return( has_writables );
