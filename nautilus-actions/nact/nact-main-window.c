@@ -1029,7 +1029,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_iconditions_tab_initial_load_toplevel( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_initial_load_toplevel( NACT_IADVANCED_TAB( window ));
 
-		nact_main_statusbar_set_locked( window, FALSE, FALSE );
+		nact_main_statusbar_initial_load_toplevel( window );
 	}
 }
 

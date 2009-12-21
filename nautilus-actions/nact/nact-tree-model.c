@@ -869,7 +869,7 @@ display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, con
 	g_free( label );
 
 	if( NA_IS_OBJECT_ITEM( object )){
-		GdkPixbuf *icon = na_object_item_get_pixbuf( NA_OBJECT_ITEM( object ), GTK_WIDGET( treeview ));
+		GdkPixbuf *icon = na_object_item_get_pixbuf( NA_OBJECT_ITEM( object ));
 		gtk_tree_store_set( model, iter, IACTIONS_LIST_ICON_COLUMN, icon, -1 );
 	}
 }

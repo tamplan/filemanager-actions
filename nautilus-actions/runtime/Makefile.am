@@ -32,6 +32,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)											\
 	-I $(top_srcdir)/nautilus-actions							\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"								\
+	-DPKGDATADIR=\"$(pkgdatadir)\"								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_RUNTIME}\"					\
 	$(NAUTILUS_ACTIONS_CFLAGS)									\

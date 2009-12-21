@@ -675,6 +675,55 @@ na_utils_remove_last_level_from_path( const gchar *path )
 }
 
 /**
+ * na_utils_get_pixbuf:
+ * @name: the name of the file or an icon.
+ * @size: the desired size (width=height).
+ *
+ * Returns a #GdkPixbuf of the given size.
+ */
+GdkPixbuf *
+na_utils_get_pixbuf( const gchar *name, gint size )
+{
+	static const gchar *thisfn = "na_utils_get_pixbuf";
+	GdkPixbuf* pixbuf;
+	GIcon *icon;
+	GtkIconTheme *theme;
+	GError *error;
+
+	error = NULL;
+	pixbuf = NULL;
+
+	if( name && strlen( name )){
+		if( g_path_is_absolute( name )){
+			pixbuf = gdk_pixbuf_new_from_file_at_size( name, size, size, &error );
+			if( error ){
+				g_warning( "%s: gdk_pixbuf_new_from_file_at_size: name=%s, error=%s", thisfn, name, error->message );
+				g_error_free( error );
+				error = NULL;
+				pixbuf = NULL;
+			}
+
+		} else {
+			icon = g_themed_icon_new( name );
+			theme = gtk_icon_theme_get_default();
+			pixbuf = gtk_icon_theme_load_icon( theme, name, size, GTK_ICON_LOOKUP_GENERIC_FALLBACK, &error );
+			if( error ){
+				g_warning( "%s: gtk_icon_theme_load_icon: name=%s, error=%s", thisfn, name, error->message );
+				g_error_free( error );
+				error = NULL;
+				pixbuf = NULL;
+			}
+		}
+	}
+
+	if( !pixbuf ){
+		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", size, size, NULL );
+	}
+
+	return( pixbuf );
+}
+
+/**
  * na_utils_print_version:
  *
  * Print a version message on the console

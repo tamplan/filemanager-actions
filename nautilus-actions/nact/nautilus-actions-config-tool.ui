@@ -1296,6 +1296,8 @@ Defining several profiles lets you have several commands, each applying with a d
               <object class="GtkAspectFrame" id="ActionLockedFrame">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
+                <property name="shadow_type">in</property>
+                <property name="obey_child">False</property>
                 <child>
                   <object class="GtkImage" id="ActionLockedImage">
                     <property name="visible">True</property>
@@ -2928,24 +2930,24 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionIdLabel"/>
-      <widget name="ActionMenuLabelLabel"/>
       <widget name="ActionIconLabelLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionIdLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
     </widgets>
   </object>
 </interface>

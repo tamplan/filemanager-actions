@@ -43,7 +43,6 @@
  */
 
 #include <gdk/gdk.h>
-#include <gtk/gtk.h>
 
 #include <nautilus-actions/api/na-iio-provider.h>
 
@@ -55,7 +54,7 @@ void           na_object_item_free_items_list( GList *items );
 
 gchar         *na_object_item_get_tooltip( const NAObjectItem *item );
 gchar         *na_object_item_get_icon( const NAObjectItem *item );
-GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *object, GtkWidget *widget );
+GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *object );
 gint           na_object_item_get_position( const NAObjectItem *object, const NAObject *child );
 NAIIOProvider *na_object_item_get_provider( const NAObjectItem *item );
 gboolean       na_object_item_is_enabled( const NAObjectItem *item );

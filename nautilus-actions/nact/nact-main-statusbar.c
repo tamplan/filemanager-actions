@@ -34,6 +34,8 @@
 
 #include <glib/gi18n.h>
 
+#include <runtime/na-utils.h>
+
 #include "nact-main-statusbar.h"
 
 typedef struct {
@@ -48,6 +50,34 @@ typedef struct {
 static GtkStatusbar *get_statusbar( const NactMainWindow *window );
 static gboolean      display_timeout( StatusbarTimeoutDisplayStruct *stds );
 static void          display_timeout_free( StatusbarTimeoutDisplayStruct *stds );
+
+/**
+ * nact_main_statusbar_initial_load_toplevel:
+ * @window: the #NactMainWindow.
+ *
+ * Initial loading of the UI.
+ */
+void
+nact_main_statusbar_initial_load_toplevel( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_statusbar_initial_load_toplevel";
+	gint width, height;
+	GtkStatusbar *bar;
+	GtkRequisition requisition;
+	GtkFrame *frame;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	gtk_icon_size_lookup( GTK_ICON_SIZE_MENU, &width, &height );
+
+	bar = get_statusbar( window );
+	gtk_widget_size_request( GTK_WIDGET( bar ), &requisition );
+	gtk_widget_set_size_request( GTK_WIDGET( bar ), requisition.width, height+8 );
+
+	frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedFrame" ));
+	gtk_widget_set_size_request( GTK_WIDGET( frame ), width+4, height+4 );
+	gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
+}
 
 /**
  * nact_main_statusbar_display_status:
@@ -160,11 +190,15 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean provider, gbool
 	GtkStatusbar *bar;
 	GtkFrame *frame;
 	GtkImage *image;
+	GdkPixbuf *pixbuf;
 	gchar *tooltip;
 	gchar *tmp;
+	gboolean set_pixbuf;
 
 	g_debug( "%s: window=%p, provider=%s, item=%s", thisfn, ( void * ) window, provider ? "True":"False", item ? "True":"False" );
 
+	pixbuf = NULL;
+	set_pixbuf = TRUE;
 	bar = get_statusbar( window );
 	frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedFrame" ));
 	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedImage" ));
@@ -175,8 +209,7 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean provider, gbool
 
 		if( provider || item ){
 			gtk_image_set_from_file( image, LOCKED_IMAGE );
-			gtk_widget_show( GTK_WIDGET( image ));
-			gtk_frame_set_shadow_type( frame, GTK_SHADOW_NONE );
+			set_pixbuf = FALSE;
 
 			if( provider ){
 				g_free( tooltip );
@@ -192,15 +225,15 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean provider, gbool
 					tooltip = g_strdup( tooltip_item );
 				}
 			}
-
-		} else {
-			gtk_image_set_from_icon_name( image, "gnome-stock-blank", GTK_ICON_SIZE_MENU );
-			gtk_widget_hide( GTK_WIDGET( image ));
-			gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 		}
 
 		gtk_widget_set_tooltip_text( GTK_WIDGET( image ), tooltip );
 		g_free( tooltip );
+	}
+
+	if( set_pixbuf ){
+		pixbuf = na_utils_get_pixbuf( NULL, GTK_ICON_SIZE_MENU );
+		gtk_image_set_from_pixbuf( image, pixbuf );
 	}
 }
 

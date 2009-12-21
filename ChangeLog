@@ -1,5 +1,29 @@
 2009-12-21 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix placement of writability icon.
+
+	* nautilus-actions/runtime/na-utils.c:
+	* nautilus-actions/runtime/na-utils.h (na_utils_get_pixbuf):
+	New function.
+
+	* nautilus-actions/runtime/Makefile.am: Add PKDGATADIR.
+
+	* nautilus-actions/nact/nact-iaction-tab.c:
+	Updated accordingly.
+
+	* nautilus-actions/nact/nact-main-statusbar.c:
+	* nautilus-actions/nact/nact-main-statusbar.h
+	(nact_main_statusbar_initial_load_toplevel): New function.
+
+	* nautilus-actions/nact/nact-main-window.c
+	(on_base_initial_load_toplevel): Initial statusbar size.
+
+	* nautilus-actions/private/na-object-item-fn.h:
+	* nautilus-actions/private/na-object-item.c
+	(na_object_item_get_pixbuf): Update prototype, removing GtkWidget.
+
+	* nautilus-actions/nact/nact-tree-model.c: Updated accordingly.
+
 	Fix reload of items.
 
 	* nautilus-actions/nact/nact-main-window.c (reload):

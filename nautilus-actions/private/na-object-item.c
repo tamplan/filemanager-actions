@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <gtk/gtk.h>
 #include <string.h>
 #include <uuid/uuid.h>
 
@@ -412,49 +413,16 @@ na_object_item_get_icon( const NAObjectItem *item )
  * Returns the #GdkPixbuf image corresponding to the icon.
  * The image has a size of %GTK_ICON_SIZE_MENU.
  */
-GdkPixbuf *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *widget )
+GdkPixbuf *na_object_item_get_pixbuf( const NAObjectItem *item )
 {
-	static const gchar *thisfn = "na_object_item_get_pixbuf";
-	gint size;
 	gchar *icon_name;
 	GdkPixbuf* pixbuf;
-	GIcon *icon;
-	GtkIconTheme *theme;
-	GError *error;
 
-	error = NULL;
-	pixbuf = NULL;
-	size = GTK_ICON_SIZE_MENU;
 	icon_name = na_object_item_get_icon( item );
 
-	if( icon_name && strlen( icon_name )){
-		if( g_path_is_absolute( icon_name )){
-			pixbuf = gdk_pixbuf_new_from_file_at_size( icon_name, size, size, &error );
-			if( error ){
-				g_warning( "%s: gdk_pixbuf_new_from_file_at_size: icon_name=%s, error=%s", thisfn, icon_name, error->message );
-				g_error_free( error );
-				error = NULL;
-				pixbuf = NULL;
-			}
-
-		} else {
-			icon = g_themed_icon_new( icon_name );
-			theme = gtk_icon_theme_get_default();
-			pixbuf = gtk_icon_theme_load_icon( theme, icon_name, size, GTK_ICON_LOOKUP_GENERIC_FALLBACK, &error );
-			if( error ){
-				g_warning( "%s: gtk_icon_theme_load_icon: icon_name=%s, error=%s", thisfn, icon_name, error->message );
-				g_error_free( error );
-				error = NULL;
-				pixbuf = NULL;
-			}
-		}
-	}
+	pixbuf = na_utils_get_pixbuf( icon_name, GTK_ICON_SIZE_MENU );
 
 	g_free( icon_name );
-
-	/*if( gtk_stock_lookup( icon_name, &icon_stock )){
-		icon_pixbuf = gtk_widget_render_icon( widget, icon_name, stock_size, &error );
-	}*/
 
 	return( pixbuf );
 }
