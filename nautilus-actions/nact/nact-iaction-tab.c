@@ -75,6 +75,7 @@ static void          interface_base_finalize( NactIActionTabInterface *klass );
 
 static void          on_iactions_list_column_edited( NactIActionTab *instance, NAObject *object, gchar *text, gint column );
 static void          on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selected );
+static void          on_tab_updatable_provider_changed( NactIActionTab *instance, NAObjectItem *item );
 
 static void          on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance );
 static void          on_target_background_toggled( GtkToggleButton *button, NactIActionTab *instance );
@@ -106,6 +107,8 @@ static GtkButton    *get_enabled_button( NactIActionTab *instance );
 static void          on_enabled_toggled( GtkToggleButton *button, NactIActionTab *instance );
 
 static void          on_readonly_toggled( GtkToggleButton *button, NactIActionTab *instance );
+
+static void          display_provider_name( NactIActionTab *instance, NAPivot *pivot, NAObjectItem *item );
 
 GType
 nact_iaction_tab_get_type( void )
@@ -212,6 +215,12 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED,
+				G_CALLBACK( on_tab_updatable_provider_changed ));
 
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
@@ -385,7 +394,6 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 	GtkToggleButton *readonly_button;
 	gboolean enabled_item;
 	GtkToggleButton *toggle;
-	NAIIOProvider *provider;
 	gboolean readonly;
 	gboolean readonly_item, writable_provider;
 
@@ -508,22 +516,26 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		g_free( label );
 		gtk_widget_set_sensitive( label_widget, item != NULL );
 
-		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemProvider" );
-		label = NULL;
-		if( item ){
-			provider = na_object_get_provider( item );
-			if( provider ){
-				label = na_io_provider_get_name( pivot, provider );
-			}
-		}
-		if( !label ){
-			label = g_strdup( "" );
-		}
-		gtk_label_set_text( GTK_LABEL( label_widget ), label );
-		g_free( label );
-		gtk_widget_set_sensitive( label_widget, item != NULL );
+		display_provider_name( instance, pivot, item );
 
 		st_on_selection_change = FALSE;
+	}
+}
+
+static void
+on_tab_updatable_provider_changed( NactIActionTab *instance, NAObjectItem *item )
+{
+	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_provider_changed";
+	NactApplication *application;
+	NAPivot *pivot;
+
+	g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
+
+	if( st_initialized && !st_finalized ){
+
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+		pivot = nact_application_get_pivot( application );
+		display_provider_name( instance, pivot, item );
 	}
 }
 
@@ -1079,4 +1091,27 @@ on_readonly_toggled( GtkToggleButton *button, NactIActionTab *instance )
 		gtk_toggle_button_set_active( button, !active );
 		g_signal_handlers_unblock_by_func(( gpointer ) button, on_readonly_toggled, instance );
 	}
+}
+
+static void
+display_provider_name( NactIActionTab *instance, NAPivot *pivot, NAObjectItem *item )
+{
+	GtkWidget *label_widget;
+	gchar *label;
+	NAIIOProvider *provider;
+
+	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemProvider" );
+	label = NULL;
+	if( item ){
+		provider = na_object_get_provider( item );
+		if( provider ){
+			label = na_io_provider_get_name( pivot, provider );
+		}
+	}
+	if( !label ){
+		label = g_strdup( "" );
+	}
+	gtk_label_set_text( GTK_LABEL( label_widget ), label );
+	g_free( label );
+	gtk_widget_set_sensitive( label_widget, item != NULL );
 }

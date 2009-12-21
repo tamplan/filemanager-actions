@@ -1,5 +1,16 @@
 2009-12-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-iaction-tab.c
+	(on_tab_updatable_provider_changed, display_provider_name):
+	New functions.
+
+	* nautilus-actions/nact/nact-main-menubar.c (save_item):
+	Notice provider change at save time.
+
+	* nautilus-actions/nact/nact-main-tab.h:
+	* nautilus-actions/nact/nact-main-window.c:
+	Define new TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED signal.
+
 	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
 	Add - commented for now - debug message.
 

@@ -874,6 +874,8 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 	GList *subitems, *it;
 	NAObjectItem *parent;
 	gint pos;
+	NAIIOProvider *provider_before;
+	NAIIOProvider *provider_after;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
@@ -885,6 +887,8 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 			save_item( window, pivot, NA_OBJECT_ITEM( it->data ));
 		}
 	}
+
+	provider_before = na_object_get_provider( item );
 
 	if( na_object_is_modified( item ) &&
 		nact_window_save_item( NACT_WINDOW( window ), item )){
@@ -921,6 +925,11 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 				}
 			} else {
 				na_pivot_add_item( pivot, dup_pivot );
+			}
+
+			provider_after = na_object_get_provider( item );
+			if( provider_after != provider_before ){
+				g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED, item );
 			}
 	}
 }

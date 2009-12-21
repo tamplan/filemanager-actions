@@ -124,6 +124,7 @@ enum {
 /* signals
  */
 enum {
+	PROVIDER_CHANGED,
 	SELECTION_CHANGED,
 	ITEM_UPDATED,
 	ENABLE_TAB,
@@ -346,6 +347,26 @@ class_init( NactMainWindowClass *klass )
 	base_class->get_toplevel_name = base_get_toplevel_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
 	base_class->is_willing_to_quit = base_is_willing_to_quit;
+
+	/**
+	 * nact-tab-updatable-provider-changed:
+	 *
+	 * This signal is emitted at save time, when we are noticing that
+	 * the save operation has led to a modification of the I/O provider.
+	 * This signal may be caught by a tab in order to display the
+	 * new provider's name.
+	 */
+	st_signals[ PROVIDER_CHANGED ] = g_signal_new(
+			TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,					/* no default handler */
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER );
 
 	/**
 	 * nact-tab-updatable-selection-changed:
