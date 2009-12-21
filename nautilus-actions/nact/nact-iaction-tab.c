@@ -95,7 +95,6 @@ static void          toolbar_label_set_sensitive( NactIActionTab *instance, NAOb
 static void          on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance );
 
 static GtkTreeModel *create_stock_icon_model( void );
-static void          display_icon( NactIActionTab *instance, GtkWidget *image, gboolean display );
 static void          icon_combo_list_fill( GtkComboBoxEntry* combo );
 static void          on_icon_browse( GtkButton *button, NactIActionTab *instance );
 static void          on_icon_changed( GtkEntry *entry, NactIActionTab *instance );
@@ -177,17 +176,38 @@ interface_base_finalize( NactIActionTabInterface *klass )
 	}
 }
 
+/*
+ * GTK_ICON_SIZE_MENU         : 16x16
+ * GTK_ICON_SIZE_SMALL_TOOLBAR: 18x18
+ * GTK_ICON_SIZE_LARGE_TOOLBAR: 24x24
+ * GTK_ICON_SIZE_BUTTON       : 20x20
+ * GTK_ICON_SIZE_DND          : 32x32
+ * GTK_ICON_SIZE_DIALOG       : 48x48
+ *
+ * icon is rendered for GTK_ICON_SIZE_MENU (na_object_item_get_pixbuf)
+ */
 void
 nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 {
 	static const gchar *thisfn = "nact_iaction_tab_initial_load_toplevel";
 	GtkWidget *icon_widget;
 	GtkTreeModel *model;
+	GtkButton *button;
+	GtkRequisition requisition;
+	GtkFrame *frame;
+	gint size;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" ));
+		gtk_widget_size_request( GTK_WIDGET( button ), &requisition );
+		g_debug( "%s: button requisition width=%d, height=%d", thisfn, requisition.width, requisition.height );
+		frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconFrame" ));
+		size = requisition.height - 4;
+		gtk_widget_set_size_request( GTK_WIDGET( frame ), size, size );
 
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 		model = create_stock_icon_model();
@@ -202,8 +222,8 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 {
 	static const gchar *thisfn = "nact_iaction_tab_runtime_init_toplevel";
 	GtkWidget *label_widget, *tooltip_widget, *icon_widget;
-	GtkWidget *button;
 	GtkButton *enabled_button;
+	GtkWidget *button;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
@@ -875,21 +895,6 @@ create_stock_icon_model( void )
 }
 
 static void
-display_icon( NactIActionTab *instance, GtkWidget *image, gboolean show )
-{
-	GtkFrame *frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconFrame" ));
-
-	if( show ){
-		gtk_widget_show( image );
-		gtk_frame_set_shadow_type( frame, GTK_SHADOW_NONE );
-
-	} else {
-		gtk_widget_hide( image );
-		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
-	}
-}
-
-static void
 icon_combo_list_fill( GtkComboBoxEntry* combo )
 {
 	GtkCellRenderer *cell_renderer_pix;
@@ -943,15 +948,18 @@ on_icon_browse( GtkButton *button, NactIActionTab *instance )
 static void
 on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 {
-	/*static const gchar *thisfn = "nact_iaction_tab_on_icon_changed";*/
+	static const gchar *thisfn = "nact_iaction_tab_on_icon_changed";
 	GtkWidget *image;
-	GdkPixbuf *icon;
+	GdkPixbuf *pixbuf;
 	NAObjectItem *edited;
 	const gchar *icon_name;
 
+	g_debug( "%s: entry=%p, instance=%p", thisfn, ( void * ) icon_entry, ( void * ) instance );
+
+	pixbuf = NULL;
+	icon_name = NULL;
 	image = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" );
 	g_assert( GTK_IS_WIDGET( image ));
-	display_icon( instance, image, FALSE );
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -963,11 +971,15 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 		na_object_item_set_icon( edited, icon_name );
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, TRUE );
 
-		if( icon_name && strlen( icon_name ) > 0 ){
-			icon = na_object_item_get_pixbuf( edited, image );
-			gtk_image_set_from_pixbuf( GTK_IMAGE( image ), icon );
-			display_icon( instance, image, TRUE );
-		}
+		pixbuf = na_object_item_get_pixbuf( edited, image );
+	}
+
+	if( !pixbuf ){
+		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", GTK_ICON_SIZE_MENU, GTK_ICON_SIZE_MENU, NULL );
+	}
+
+	if( pixbuf ){
+		gtk_image_set_from_pixbuf( GTK_IMAGE( image ), pixbuf );
 	}
 }
 

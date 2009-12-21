@@ -1100,12 +1100,13 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 
 	if( !window->private->dispose_has_run ){
 
-		nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));
 		nact_iaction_tab_all_widgets_showed( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_all_widgets_showed( NACT_ICOMMAND_TAB( window ));
 		nact_ibackground_tab_all_widgets_showed( NACT_IBACKGROUND_TAB( window ));
 		nact_iconditions_tab_all_widgets_showed( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_all_widgets_showed( NACT_IADVANCED_TAB( window ));
+
+		nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));
 	}
 }
 

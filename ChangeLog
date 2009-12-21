@@ -1,5 +1,28 @@
 2009-12-21 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix the display of item's icon.
+
+	* nautilus-actions/nact/transparent.png: New file.
+
+	* nautilus-actions/nact/Makefile.am: Updated accordingly.
+
+	* nautilus-actions/nact/nact-iaction-tab.c
+	(display_icon): Removed function.
+	(nact_iaction_tab_initial_load_toplevel):
+	Set the frame the same height that the row.
+	(on_icon_changed):
+	Displays a transparent image instead of hiding the widget.
+
+	* nautilus-actions/nact/nact-iactions-list.c
+	(nact_iactions_list_all_widgets_showed):
+	Only select the first item when all widgets have been showed.
+
+	* nautilus-actions/nact/nact-main-window.c
+	(on_base_all_widgets_showed): Initialize the tree after the tabs.
+
+	* nautilus-actions/private/na-object-item.c
+	(na_object_item_get_pixbuf): Use GThemedIcon.
+
 	* nautilus-actions/nact/nact-main-window.c
 	(on_iactions_list_selection_changed): Remove useless properties setup.
 	Provider writability status is also displayed for profiles.

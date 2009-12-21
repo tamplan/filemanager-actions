@@ -516,6 +516,8 @@ nact_iactions_list_all_widgets_showed( NactIActionsList *instance )
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
 	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
+
+		nact_iactions_list_bis_select_first_row( instance );
 	}
 }
 
@@ -687,8 +689,6 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 			na_object_item_count_items( items, &ialid->menus, &ialid->actions, &ialid->profiles, TRUE );
 			nact_iactions_list_priv_send_list_count_updated_signal( instance, ialid );
 		}
-
-		nact_iactions_list_bis_select_first_row( instance );
 	}
 }
 

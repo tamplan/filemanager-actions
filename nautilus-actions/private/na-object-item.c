@@ -415,43 +415,48 @@ na_object_item_get_icon( const NAObjectItem *item )
 GdkPixbuf *na_object_item_get_pixbuf( const NAObjectItem *item, GtkWidget *widget )
 {
 	static const gchar *thisfn = "na_object_item_get_pixbuf";
-	gchar *iconname;
-	GtkStockItem stock_item;
-	GdkPixbuf* icon = NULL;
-	gint width, height;
-	GError* error = NULL;
+	gint size;
+	gchar *icon_name;
+	GdkPixbuf* pixbuf;
+	GIcon *icon;
+	GtkIconTheme *theme;
+	GError *error;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+	error = NULL;
+	pixbuf = NULL;
+	size = GTK_ICON_SIZE_MENU;
+	icon_name = na_object_item_get_icon( item );
 
-	if( !item->private->dispose_has_run ){
+	if( icon_name && strlen( icon_name )){
+		if( g_path_is_absolute( icon_name )){
+			pixbuf = gdk_pixbuf_new_from_file_at_size( icon_name, size, size, &error );
+			if( error ){
+				g_warning( "%s: gdk_pixbuf_new_from_file_at_size: icon_name=%s, error=%s", thisfn, icon_name, error->message );
+				g_error_free( error );
+				error = NULL;
+				pixbuf = NULL;
+			}
 
-		iconname = na_object_item_get_icon( item );
-
-		/* TODO: use the same algorythm than Nautilus to find and
-		 * display an icon
-		 */
-		if( iconname ){
-			if( gtk_stock_lookup( iconname, &stock_item )){
-				icon = gtk_widget_render_icon( widget, iconname, GTK_ICON_SIZE_MENU, NULL );
-
-			} else if( g_file_test( iconname, G_FILE_TEST_EXISTS )
-				   && g_file_test( iconname, G_FILE_TEST_IS_REGULAR )){
-
-				gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
-				icon = gdk_pixbuf_new_from_file_at_size( iconname, width, height, &error );
-				if( error ){
-					g_warning( "%s: iconname=%s, error=%s", thisfn, iconname, error->message );
-					g_error_free( error );
-					error = NULL;
-					icon = NULL;
-				}
+		} else {
+			icon = g_themed_icon_new( icon_name );
+			theme = gtk_icon_theme_get_default();
+			pixbuf = gtk_icon_theme_load_icon( theme, icon_name, size, GTK_ICON_LOOKUP_GENERIC_FALLBACK, &error );
+			if( error ){
+				g_warning( "%s: gtk_icon_theme_load_icon: icon_name=%s, error=%s", thisfn, icon_name, error->message );
+				g_error_free( error );
+				error = NULL;
+				pixbuf = NULL;
 			}
 		}
-
-		g_free( iconname );
 	}
 
-	return( icon );
+	g_free( icon_name );
+
+	/*if( gtk_stock_lookup( icon_name, &icon_stock )){
+		icon_pixbuf = gtk_widget_render_icon( widget, icon_name, stock_size, &error );
+	}*/
+
+	return( pixbuf );
 }
 
 /**
