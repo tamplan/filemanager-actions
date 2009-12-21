@@ -81,19 +81,12 @@ nadp_xdg_data_dirs_get_dirs( const NadpDesktopProvider *provider, GSList **messa
 gchar *
 nadp_xdg_data_dirs_get_user_dir( const NadpDesktopProvider *provider, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_xdg_data_dirs_get_user_dir";
+	/*static const gchar *thisfn = "nadp_xdg_data_dirs_get_user_dir";*/
 	gchar *dir;
-
-	/*dir = g_strdup( g_getenv( "XDG_DATA_HOME" ));
-
-	if( !dir || !g_utf8_strlen( dir, -1 )){
-		g_free( dir );
-		dir = g_strdup_printf( "%s/.local/share", )
-	}*/
 
 	dir = g_strdup( g_get_user_data_dir());
 
-	g_debug( "%s: provider=%p, messages=%p, user_dir=%s", thisfn, ( void * ) provider, ( void * ) messages, dir );
+	/*g_debug( "%s: provider=%p, messages=%p, user_dir=%s", thisfn, ( void * ) provider, ( void * ) messages, dir );*/
 
 	return( dir );
 }

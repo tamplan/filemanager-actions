@@ -1,5 +1,8 @@
 2009-12-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/io-provider-desktop/nadp-xdg-data-dirs.c
+	(nadp_xdg_data_dirs_get_dirs): Remove debug messages.
+
 	Fix placement of writability icon.
 
 	* nautilus-actions/runtime/na-utils.c:
