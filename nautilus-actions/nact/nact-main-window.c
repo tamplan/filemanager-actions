@@ -1156,15 +1156,6 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 		set_current_object_item( window, selected_items );
 	}
 
-	g_object_set(
-			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, window->private->edited_item,
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, window->private->edited_profile,
-			TAB_UPDATABLE_PROP_SELECTED_ROW, window->private->selected_row,
-			TAB_UPDATABLE_PROP_READONLY_ITEM, window->private->readonly_item,
-			TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, window->private->writable_provider,
-			NULL );
-
 	setup_dialog_title( window );
 
 	g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED, GINT_TO_POINTER( count ));

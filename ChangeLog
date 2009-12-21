@@ -1,5 +1,8 @@
 2009-12-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-main-window.c
+	(on_iactions_list_selection_changed): Remove useless properties setup.
+
 	* nautilus-actions/nact/nact-iaction-tab.c
 	(on_tab_updatable_provider_changed, display_provider_name):
 	New functions.
