@@ -1150,6 +1150,10 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 			set_current_profile( window, TRUE, selected_items );
 		}
 
+		window->private->readonly_item = na_object_is_readonly( window->private->edited_item );
+		window->private->writable_provider = nact_window_is_writable_provider( NACT_WINDOW( window ), window->private->edited_item );
+		nact_main_statusbar_set_locked( window, !window->private->writable_provider, window->private->readonly_item );
+
 	} else {
 		window->private->selected_row = NULL;
 		window->private->edited_item = NULL;
@@ -1188,11 +1192,6 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 	window->private->edited_profile = NULL;
 
 	if( window->private->edited_item ){
-
-		window->private->readonly_item = na_object_is_readonly( window->private->edited_item );
-		window->private->writable_provider = nact_window_is_writable_provider( NACT_WINDOW( window ), window->private->edited_item );
-
-		nact_main_statusbar_set_locked( window, !window->private->writable_provider, window->private->readonly_item );
 
 		if( NA_IS_OBJECT_ACTION( window->private->edited_item )){
 
