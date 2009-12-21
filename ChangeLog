@@ -1,5 +1,10 @@
 2009-12-21 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix reload of items.
+
+	* nautilus-actions/nact/nact-main-window.c (reload):
+	Reinitialize the properties for current selection.
+
 	Fix the display of item's icon.
 
 	* nautilus-actions/nact/transparent.png: New file.

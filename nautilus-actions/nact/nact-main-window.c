@@ -1383,10 +1383,15 @@ reload( NactMainWindow *window )
 
 	if( !window->private->dispose_has_run ){
 
+		window->private->edited_item = NULL;
+		window->private->edited_profile = NULL;
+		window->private->selected_row = NULL;
+
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		pivot = nact_application_get_pivot( application );
 		na_pivot_load_items( pivot );
 		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( pivot ));
+		nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
 
 		na_object_free_items_list( window->private->deleted );
 		window->private->deleted = NULL;

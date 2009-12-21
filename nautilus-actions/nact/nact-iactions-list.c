@@ -674,6 +674,7 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 
 		g_list_free( ialid->modified_items );
 		ialid->modified_items = NULL;
+
 		ialid->selection_changed_send_allowed = TRUE;
 
 		g_signal_emit_by_name(
