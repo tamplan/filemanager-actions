@@ -220,7 +220,7 @@ action_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps,
 	action = na_object_action_new();
 	read_action_properties( provider, action, ndf, messages );
 
-	g_object_set_data( G_OBJECT( action ), "nadp-desktop-file", ndf );
+	na_object_set_provider_data( action, ndf );
 	g_object_weak_ref( G_OBJECT( action ), ( GWeakNotify ) g_object_unref, ndf );
 
 	/* have at least one profile */

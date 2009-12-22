@@ -1,5 +1,14 @@
 2009-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix write/delete operations in NAIIODesktopProvider.
+
+	* nautilus-actions/io-provider-desktop/nadp-read.c
+	(action_from_desktop_path): Set provider data.
+
+	* nautilus-actions/io-provider-desktop/nadp-write.c
+	(nadp_iio_provider_is_writable, nadp_iio_provider_write_item,
+	nadp_iio_provider_delete_item): Get provider data.
+
 	Let the I/O provider set specific data into NAObjectItem.
 
 	* nautilus-actions/api/na-object-api.h

@@ -101,7 +101,7 @@ nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem
 		return( FALSE );
 	}
 
-	ndf = ( NadpDesktopFile * ) g_object_get_data( G_OBJECT( item ), "nadp-desktop-file" );
+	ndf = ( NadpDesktopFile * ) na_object_get_provider_data( item );
 
 	if( ndf ){
 		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), writable );
@@ -139,7 +139,7 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 		return( ret );
 	}
 
-	ndf = ( NadpDesktopFile * ) g_object_get_data( G_OBJECT( item ), "nadp-desktop-file" );
+	ndf = ( NadpDesktopFile * ) na_object_get_provider_data( item );
 
 	/* write into the current key file and write it to current path */
 	if( ndf ){
@@ -227,6 +227,9 @@ nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	NadpDesktopFile *ndf;
 	gchar *path;
 
+	g_debug( "%s: provider=%p, item=%p (%s), messages=%p",
+			thisfn, ( void * ) provider, ( void * ) item, G_OBJECT_TYPE_NAME( item ), messages );
+
 	ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
@@ -236,7 +239,7 @@ nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 		return( NA_IIO_PROVIDER_NOT_WRITABLE );
 	}
 
-	ndf = ( NadpDesktopFile * ) g_object_get_data( G_OBJECT( item ), "nadp-desktop-file" );
+	ndf = ( NadpDesktopFile * ) na_object_get_provider_data( item );
 
 	if( ndf ){
 		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
@@ -247,6 +250,7 @@ nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 		g_free( path );
 
 	} else {
+		g_warning( "%s: NadpDesktopFile is null", thisfn );
 		ret = NA_IIO_PROVIDER_WRITE_OK;
 	}
 
