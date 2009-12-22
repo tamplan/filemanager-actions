@@ -1,3 +1,17 @@
+2009-12-22 Pierre Wieser <pwieser@trychlos.org>
+
+	Let the I/O provider set specific data into NAObjectItem.
+
+	* nautilus-actions/api/na-object-api.h
+	(na_object_get_provider_data, na_object_set_provider_data):
+	New aliases.
+
+	* nautilus-actions/private/na-object-item-fn.h:
+	* nautilus-actions/private/na-object-item-priv.h:
+	* nautilus-actions/private/na-object-item.c
+	(na_object_item_get_provider_data, na_object_item_set_provider_data):
+	New functions.
+
 2009-12-21 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/io-provider-desktop/nadp-xdg-data-dirs.c

@@ -57,6 +57,7 @@ enum {
 	NAOBJECT_ITEM_PROP_ENABLED_ID,
 	NAOBJECT_ITEM_PROP_READONLY_ID,
 	NAOBJECT_ITEM_PROP_PROVIDER_ID,
+	NAOBJECT_ITEM_PROP_PROVIDER_DATA_ID,
 	NAOBJECT_ITEM_PROP_ITEMS_ID,
 };
 
@@ -65,6 +66,7 @@ enum {
 #define NAOBJECT_ITEM_PROP_ENABLED				"na-object-item-enabled"
 #define NAOBJECT_ITEM_PROP_READONLY				"na-object-item-read-only"
 #define NAOBJECT_ITEM_PROP_PROVIDER				"na-object-item-provider"
+#define NAOBJECT_ITEM_PROP_PROVIDER_DATA		"na-object-item-provider-data"
 #define NAOBJECT_ITEM_PROP_ITEMS				"na-object-item-items"
 
 static NAObjectIdClass *st_parent_class = NULL;
@@ -175,6 +177,13 @@ class_init( NAObjectItemClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_PROVIDER_ID, spec );
 
+	spec = g_param_spec_pointer(
+			NAOBJECT_ITEM_PROP_PROVIDER_DATA,
+			"Provider data",
+			"Data specific to the provider",
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_PROVIDER_DATA_ID, spec );
+
 	klass->private = g_new0( NAObjectItemClassPrivate, 1 );
 
 	naobject_class = NA_OBJECT_CLASS( klass );
@@ -212,6 +221,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->enabled = TRUE;
 	self->private->read_only = FALSE;
 	self->private->provider = NULL;
+	self->private->provider_data = NULL;
 }
 
 static void
@@ -243,6 +253,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
 				g_value_set_pointer( value, self->private->provider );
+				break;
+
+			case NAOBJECT_ITEM_PROP_PROVIDER_DATA_ID:
+				g_value_set_pointer( value, self->private->provider_data );
 				break;
 
 			default:
@@ -283,6 +297,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
 				self->private->provider = g_value_get_pointer( value );
+				break;
+
+			case NAOBJECT_ITEM_PROP_PROVIDER_DATA_ID:
+				self->private->provider_data = g_value_get_pointer( value );
 				break;
 
 			default:
@@ -480,6 +498,26 @@ na_object_item_get_provider( const NAObjectItem *item )
 	}
 
 	return( provider );
+}
+
+/**
+ * na_object_item_get_provider_data:
+ * @item: the #NAObjectItem object to be requested.
+ *
+ * Returns: the provider's specific data.
+ */
+void *
+na_object_item_get_provider_data( const NAObjectItem *item )
+{
+	void *provider_data = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+
+	if( !item->private->dispose_has_run ){
+		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER_DATA, &provider_data, NULL );
+	}
+
+	return( provider_data );
 }
 
 /**
@@ -706,6 +744,23 @@ na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider )
 
 	if( !item->private->dispose_has_run ){
 		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER, provider, NULL );
+	}
+}
+
+/**
+ * na_object_item_set_provider_data:
+ * @item: the #NAObjectItem object to be updated.
+ * @provider_data: a pointer to provider's specific data.
+ *
+ * Sets the I/O provider's data for this #NAObjectItem.
+ */
+void
+na_object_item_set_provider_data( NAObjectItem *item, const void *provider_data )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !item->private->dispose_has_run ){
+		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER_DATA, provider_data, NULL );
 	}
 }
 
@@ -981,11 +1036,12 @@ object_dump( const NAObject *item )
 
 	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
 
-		g_debug( "%s:   tooltip='%s'", thisfn, NA_OBJECT_ITEM( item )->private->tooltip );
-		g_debug( "%s:      icon='%s'", thisfn, NA_OBJECT_ITEM( item )->private->icon );
-		g_debug( "%s:   enabled='%s'", thisfn, NA_OBJECT_ITEM( item )->private->enabled ? "True" : "False" );
-		g_debug( "%s: read-only='%s'", thisfn, NA_OBJECT_ITEM( item )->private->read_only ? "True" : "False" );
-		g_debug( "%s:  provider=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider );
+		g_debug( "%s:       tooltip='%s'", thisfn, NA_OBJECT_ITEM( item )->private->tooltip );
+		g_debug( "%s:          icon='%s'", thisfn, NA_OBJECT_ITEM( item )->private->icon );
+		g_debug( "%s:       enabled='%s'", thisfn, NA_OBJECT_ITEM( item )->private->enabled ? "True" : "False" );
+		g_debug( "%s:     read-only='%s'", thisfn, NA_OBJECT_ITEM( item )->private->read_only ? "True" : "False" );
+		g_debug( "%s:      provider=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider );
+		g_debug( "%s: provider_data=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider_data );
 
 		/* dump subitems */
 		g_debug( "%s: %d subitem(s) at %p",
@@ -1007,6 +1063,7 @@ object_copy( NAObject *target, const NAObject *source )
 	gboolean enabled;
 	gboolean readonly;
 	gpointer provider;
+	gpointer provider_data;
 	GList *subitems, *it;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( target ));
@@ -1021,6 +1078,7 @@ object_copy( NAObject *target, const NAObject *source )
 				NAOBJECT_ITEM_PROP_ENABLED, &enabled,
 				NAOBJECT_ITEM_PROP_READONLY, &readonly,
 				NAOBJECT_ITEM_PROP_PROVIDER, &provider,
+				NAOBJECT_ITEM_PROP_PROVIDER_DATA, &provider_data,
 				NULL );
 
 		g_object_set( G_OBJECT( target ),
@@ -1029,6 +1087,7 @@ object_copy( NAObject *target, const NAObject *source )
 				NAOBJECT_ITEM_PROP_ENABLED, enabled,
 				NAOBJECT_ITEM_PROP_READONLY, readonly,
 				NAOBJECT_ITEM_PROP_PROVIDER, provider,
+				NAOBJECT_ITEM_PROP_PROVIDER_DATA, provider_data,
 				NULL );
 
 		g_free( tooltip );
@@ -1048,7 +1107,8 @@ object_copy( NAObject *target, const NAObject *source )
  * @b: the object which has been initially duplicated from @a, and is
  * being checked for modification status.
  *
- * note 1: The provider is not considered as relevant here
+ * note 1: The provider is not considered as relevant here; neither is
+ * the provider_data
  *
  * note 2: as a particular case, this function is not recursive
  * because the equality test will stop as soon as it fails, and we so

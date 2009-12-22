@@ -64,6 +64,7 @@ struct NAObjectItemPrivate {
 	 * required to be able to edit/delete the item
 	 */
 	NAIIOProvider *provider;
+	void          *provider_data;
 };
 
 G_END_DECLS

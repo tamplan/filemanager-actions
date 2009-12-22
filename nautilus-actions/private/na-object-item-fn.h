@@ -57,6 +57,7 @@ gchar         *na_object_item_get_icon( const NAObjectItem *item );
 GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *object );
 gint           na_object_item_get_position( const NAObjectItem *object, const NAObject *child );
 NAIIOProvider *na_object_item_get_provider( const NAObjectItem *item );
+void          *na_object_item_get_provider_data( const NAObjectItem *item );
 gboolean       na_object_item_is_enabled( const NAObjectItem *item );
 gboolean       na_object_item_is_readonly( const NAObjectItem *action );
 NAObject      *na_object_item_get_item( const NAObjectItem *item, const gchar *id );
@@ -68,6 +69,7 @@ void           na_object_item_count_items( GList *items, gint *menus, gint *acti
 void           na_object_item_set_tooltip( NAObjectItem *item, const gchar *tooltip );
 void           na_object_item_set_icon( NAObjectItem *item, const gchar *icon_name );
 void           na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider );
+void           na_object_item_set_provider_data( NAObjectItem *item, const void *provider_data );
 void           na_object_item_set_enabled( NAObjectItem *item, gboolean enabled );
 void           na_object_item_set_readonly( NAObjectItem *action, gboolean readonly );
 void           na_object_item_set_items_list( NAObjectItem *item, GList *items );
