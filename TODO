@@ -41,8 +41,6 @@
 
 - for each toolbar, let the user choose which buttons are displayed
 
-- make toolbars detachable
-
 - make tabs moveable and detachable
 
 - have a visual indication of the sort order in the tree
@@ -108,3 +106,5 @@
   > remove in n-a-c-t
   > remove in n-a-n
   > remove in action class
+
+- toolbar position should not be absolute, but relative

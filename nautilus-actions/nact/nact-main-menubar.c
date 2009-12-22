@@ -59,6 +59,13 @@
 #define MENUBAR_IPREFS_TOOLS_TOOLBAR		"main-tools-toolbar"
 #define MENUBAR_IPREFS_HELP_TOOLBAR			"main-help-toolbar"
 
+enum {
+	MENUBAR_FILE_TOOLBAR_POS = 0,
+	MENUBAR_EDIT_TOOLBAR_POS,
+	MENUBAR_TOOLS_TOOLBAR_POS,
+	MENUBAR_HELP_TOOLBAR_POS
+};
+
 /* GtkActivatable
  * gtk_action_get_tooltip are only available starting with Gtk 2.16
  * until this is a required level, we must have some code to do the
@@ -149,7 +156,10 @@ static void     on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow 
 static void     on_proxy_connect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window );
 static void     on_proxy_disconnect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window );
 static void     on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, const gchar *pref, const gchar *path, int pos );
-static void     toolbar_init( NactMainWindow *window, const gchar *pref, gboolean default_value, const gchar *path, const gchar *item );
+static void     on_handle_finalize( gpointer data, GObject *handle );
+static void     on_attach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
+static void     on_detach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
+static void     toolbar_init( NactMainWindow *window, const gchar *pref, gboolean default_value, const gchar *item );
 
 static const GtkActionEntry entries[] = {
 
@@ -205,9 +215,9 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the Delete item */
 				N_( "Delete the selected item(s)" ),
 				G_CALLBACK( on_delete_activated ) },
-		{ "ReloadActionsItem", GTK_STOCK_REFRESH, N_( "_Reload the list of actions" ), "F5",
+		{ "ReloadActionsItem", GTK_STOCK_REFRESH, N_( "_Reload the items" ), "F5",
 				/* i18n: tooltip displayed in the status bar when selecting the 'Reload' item */
-				N_( "Cancel your current modifications and reload the list of actions" ),
+				N_( "Cancel your current modifications and reload the initial list of menus and actions" ),
 				G_CALLBACK( on_reload_activated ) },
 		{ "PreferencesItem", GTK_STOCK_PREFERENCES, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the 'Preferences' item */
@@ -412,10 +422,10 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	mis = g_new0( MenubarIndicatorsStruct, 1 );
 	g_object_set_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS, mis );
 
-	toolbar_init( window, MENUBAR_IPREFS_FILE_TOOLBAR, TRUE, "/ui/FileToolbar", "ViewFileToolbarItem" );
-	toolbar_init( window, MENUBAR_IPREFS_EDIT_TOOLBAR, FALSE, "/ui/EditToolbar", "ViewEditToolbarItem" );
-	toolbar_init( window, MENUBAR_IPREFS_TOOLS_TOOLBAR, FALSE, "/ui/ToolsToolbar", "ViewToolsToolbarItem" );
-	toolbar_init( window, MENUBAR_IPREFS_HELP_TOOLBAR, FALSE, "/ui/HelpToolbar", "ViewHelpToolbarItem" );
+	toolbar_init( window, MENUBAR_IPREFS_FILE_TOOLBAR, TRUE, "ViewFileToolbarItem" );
+	toolbar_init( window, MENUBAR_IPREFS_EDIT_TOOLBAR, FALSE, "ViewEditToolbarItem" );
+	toolbar_init( window, MENUBAR_IPREFS_TOOLS_TOOLBAR, FALSE, "ViewToolsToolbarItem" );
+	toolbar_init( window, MENUBAR_IPREFS_HELP_TOOLBAR, TRUE, "ViewHelpToolbarItem" );
 }
 
 /**
@@ -1236,25 +1246,25 @@ on_collapse_all_activated( GtkAction *gtk_action, NactMainWindow *window )
 static void
 on_view_file_toolbar_activated( GtkToggleAction *action, NactMainWindow *window )
 {
-	on_view_toolbar_activated( action, window, MENUBAR_IPREFS_FILE_TOOLBAR, "/ui/FileToolbar", 0 );
+	on_view_toolbar_activated( action, window, MENUBAR_IPREFS_FILE_TOOLBAR, "/ui/FileToolbar", MENUBAR_FILE_TOOLBAR_POS );
 }
 
 static void
 on_view_edit_toolbar_activated( GtkToggleAction *action, NactMainWindow *window )
 {
-	on_view_toolbar_activated( action, window, MENUBAR_IPREFS_EDIT_TOOLBAR, "/ui/EditToolbar", 1 );
+	on_view_toolbar_activated( action, window, MENUBAR_IPREFS_EDIT_TOOLBAR, "/ui/EditToolbar", MENUBAR_EDIT_TOOLBAR_POS );
 }
 
 static void
 on_view_tools_toolbar_activated( GtkToggleAction *action, NactMainWindow *window )
 {
-	on_view_toolbar_activated( action, window, MENUBAR_IPREFS_TOOLS_TOOLBAR, "/ui/ToolsToolbar", 2 );
+	on_view_toolbar_activated( action, window, MENUBAR_IPREFS_TOOLS_TOOLBAR, "/ui/ToolsToolbar", MENUBAR_TOOLS_TOOLBAR_POS );
 }
 
 static void
 on_view_help_toolbar_activated( GtkToggleAction *action, NactMainWindow *window )
 {
-	on_view_toolbar_activated( action, window, MENUBAR_IPREFS_HELP_TOOLBAR, "/ui/HelpToolbar", 3 );
+	on_view_toolbar_activated( action, window, MENUBAR_IPREFS_HELP_TOOLBAR, "/ui/HelpToolbar", MENUBAR_HELP_TOOLBAR_POS );
 }
 
 static void
@@ -1447,31 +1457,86 @@ on_proxy_disconnect( GtkActionGroup *action_group, GtkAction *action, GtkWidget 
 static void
 on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, const gchar *pref, const gchar *path, int pos )
 {
+	static const gchar *thisfn = "nact_main_menubar_on_view_toolbar_activated";
 	NactApplication *application;
 	NAPivot *pivot;
 	gboolean is_active;
 	GtkUIManager *ui_manager;
-	GtkWidget *hbox, *toolbar;
+	GtkWidget *hbox, *toolbar, *handle;
+	gulong attach_id, detach_id;
 
 	is_active = gtk_toggle_action_get_active( action );
 
 	ui_manager = ( GtkUIManager * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_UI_MANAGER );
 	toolbar = gtk_ui_manager_get_widget( ui_manager, path );
+	g_debug( "%s: toolbar=%p, path=%s, ref=%d", thisfn, ( void * ) toolbar, path, G_OBJECT( toolbar )->ref_count );
 	hbox = base_window_get_widget( BASE_WINDOW( window ), "ToolbarHBox" );
+
 	if( is_active ){
-		/*gtk_box_pack_start( GTK_BOX( hbox ), toolbar, FALSE, FALSE, 0 );*/
-		gtk_container_add( GTK_CONTAINER( hbox ), toolbar );
-		gtk_box_reorder_child( GTK_BOX( hbox ), toolbar, pos );
+
+		handle = gtk_handle_box_new();
+		gtk_handle_box_set_snap_edge( GTK_HANDLE_BOX( handle ), GTK_POS_LEFT );
+		g_object_set_data( G_OBJECT( toolbar ), "nact-main-menubar-handle", handle );
+		attach_id = g_signal_connect( handle, "child-attached", (GCallback ) on_attach_toolbar, window );
+		g_object_set_data( G_OBJECT( handle ), "nact-handle-attach-id", ( gpointer ) attach_id );
+		detach_id = g_signal_connect( handle, "child-detached", (GCallback ) on_detach_toolbar, window );
+		g_object_set_data( G_OBJECT( handle ), "nact-handle-detach-id", ( gpointer ) detach_id );
+		g_object_weak_ref( G_OBJECT( handle ), ( GWeakNotify ) on_handle_finalize, NULL );
+		gtk_container_add( GTK_CONTAINER( handle ), toolbar );
+		gtk_container_add( GTK_CONTAINER( hbox ), handle );
+		gtk_box_reorder_child( GTK_BOX( hbox ), handle, pos );
+		gtk_widget_show_all( handle );
+		g_debug( "%s: ref=%d", thisfn, G_OBJECT( toolbar )->ref_count );
+
 	} else {
-		gtk_container_remove( GTK_CONTAINER( hbox ), toolbar );
+		handle = ( GtkWidget * ) g_object_get_data( G_OBJECT( toolbar ), "nact-main-menubar-handle" );
+		detach_id = ( gulong ) g_object_get_data( G_OBJECT( handle ), "nact-handle-detach-id" );
+		g_signal_handler_disconnect( handle, detach_id );
+		attach_id = ( gulong ) g_object_get_data( G_OBJECT( handle ), "nact-handle-attach-id" );
+		g_signal_handler_disconnect( handle, attach_id );
+		gtk_container_remove( GTK_CONTAINER( handle ), toolbar );
+		gtk_container_remove( GTK_CONTAINER( hbox ), handle );
+		g_debug( "%s: ref=%d", thisfn, G_OBJECT( toolbar )->ref_count );
 	}
+
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	pivot = nact_application_get_pivot( application );
 	na_iprefs_write_bool( NA_IPREFS( pivot ), pref, is_active );
 }
 
 static void
-toolbar_init( NactMainWindow *window, const gchar *pref, gboolean default_value, const gchar *path, const gchar *item )
+on_handle_finalize( gpointer data, GObject *handle )
+{
+	g_debug( "nact_main_menubar_on_handle_finalize: handle=%p", ( void * ) handle );
+}
+
+static void
+on_attach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_menubar_on_attach_toolbar";
+
+	g_debug( "%s: handle=%p, toolbar=%p, window=%p", thisfn, ( void * ) handle, ( void * ) toolbar, ( void * ) window );
+
+	gtk_toolbar_set_show_arrow( toolbar, TRUE );
+}
+
+static void
+on_detach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_menubar_on_detach_toolbar";
+
+	g_debug( "%s: handle=%p, toolbar=%p, window=%p", thisfn, ( void * ) handle, ( void * ) toolbar, ( void * ) window );
+
+	gtk_toolbar_set_show_arrow( toolbar, FALSE );
+}
+
+/*
+ * this set the initial state of the toggle options in View > Toolbars menu
+ * when an option is activated, this will trigger the on_view_toolbar_activated()
+ * which will actually display the toolbar
+ */
+static void
+toolbar_init( NactMainWindow *window, const gchar *pref, gboolean default_value, const gchar *item )
 {
 	NactApplication *application;
 	NAPivot *pivot;

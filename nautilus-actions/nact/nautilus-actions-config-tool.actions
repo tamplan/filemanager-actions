@@ -89,7 +89,9 @@
 
     <toolbar name="ToolsToolbar">
             <toolitem action="ImportItem" />
+            <!-- not yet an icon: do not set in toolbar
             <toolitem action="ExportItem" />
+            -->
     </toolbar>
 
     <toolbar name="HelpToolbar">

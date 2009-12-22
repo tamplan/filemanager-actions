@@ -26,7 +26,6 @@
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -2930,24 +2929,24 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabelLabel"/>
-      <widget name="ActionMenuLabelLabel"/>
-      <widget name="ActionIdLabel"/>
-      <widget name="ActionTooltipLabel"/>
       <widget name="ActionIconLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIdLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionIconLabelLabel"/>
     </widgets>
   </object>
 </interface>

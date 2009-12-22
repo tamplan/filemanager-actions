@@ -1,5 +1,14 @@
 2009-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	Make the toolbars detacheable.
+
+	* nautilus-actions/nact/nact-main-menubar.c
+	(GtkActionEntry): Modify menu item and tooltip labels.
+	(toolbar_init): Create GtkHandleBox to host toolbars.
+
+	* nautilus-actions/nact/nautilus-actions-config-tool.actions:
+	Do not let Export assistant go to the toolbar (no icon).
+
 	Fix write/delete operations in NAIIODesktopProvider.
 
 	* nautilus-actions/io-provider-desktop/nadp-read.c
