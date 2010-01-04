@@ -114,6 +114,10 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-main-window.h											\
 	nact-preferences-editor.c									\
 	nact-preferences-editor.h									\
+	nact-scheme.c												\
+	nact-scheme.h												\
+	nact-schemes-list.c											\
+	nact-schemes-list.h											\
 	nact-tree-model.c											\
 	nact-tree-model.h											\
 	nact-tree-model-dnd.c										\
@@ -143,6 +147,7 @@ pkgdata_DATA = \
 	nautilus-actions-config-tool.actions						\
 	nautilus-actions-maintainer.actions							\
 	nact-assistant-export.ui									\
+	nact-preferences.ui											\
 	nautilus-actions-config-tool.ui								\
 	locked.png													\
 	transparent.png												\

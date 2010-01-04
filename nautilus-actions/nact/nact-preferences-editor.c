@@ -64,6 +64,7 @@ static NactPreferencesEditor *preferences_editor_new( BaseWindow *parent );
 
 static gchar   *base_get_iprefs_window_id( BaseWindow *window );
 static gchar   *base_get_dialog_name( BaseWindow *window );
+static gchar   *base_get_ui_filename( BaseWindow *dialog );
 static void     on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data );
@@ -132,6 +133,7 @@ class_init( NactPreferencesEditorClass *klass )
 	base_class->dialog_response = base_dialog_response;
 	base_class->get_toplevel_name = base_get_dialog_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
+	base_class->get_ui_filename = base_get_ui_filename;
 }
 
 static void
@@ -249,6 +251,12 @@ static gchar *
 base_get_dialog_name( BaseWindow *window )
 {
 	return( g_strdup( "PreferencesDialog" ));
+}
+
+static gchar *
+base_get_ui_filename( BaseWindow *dialog )
+{
+	return( g_strdup( PKGDATADIR "/nact-preferences.ui" ));
 }
 
 static void

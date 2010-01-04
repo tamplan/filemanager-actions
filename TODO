@@ -107,6 +107,7 @@
   > remove in n-a-n
   > remove in action class
 
+<<<<<<< HEAD
 - optim: what about between base_builder_instance_init and
   base_application_v_initialize_default_icon ?
 
