@@ -1,3 +1,20 @@
+2009-01-05 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Add -Wformat=2 compilation option.
+
+	* nautilus-actions/nact/nact-gtk-utils.c (nact_gtk_utils_set_editable):
+	* nautilus-actions/nact/nact-iactions-list.c
+	(nact_iactions_list_runtime_init_toplevel):
+	* nautilus-actions/nact/nact-iadvanced-tab.c
+	(runtime_init_connect_signals):
+	* nautilus-actions/nact/nact-ibackground-tab.c
+	(nact_ibackground_tab_runtime_init_toplevel):
+	Substitute gtk_cell_layout_get_cells to obsoleted
+	gtk_tree_view_column_get_cell_renderers.
+
+	* nautilus-actions/runtime/na-xml-writer.c (na_xml_writer_output_xml):
+	Use correct printf format.
+
 2009-12-22 Pierre Wieser <pwieser@trychlos.org>
 
 	Make the toolbars detacheable.

@@ -74,7 +74,7 @@ nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
 		gtk_combo_box_set_button_sensitivity( GTK_COMBO_BOX( widget ), editable ? GTK_SENSITIVITY_ON : GTK_SENSITIVITY_OFF );
 
 	} else if( GTK_IS_TREE_VIEW_COLUMN( widget )){
-		renderers = gtk_tree_view_column_get_cell_renderers( GTK_TREE_VIEW_COLUMN( widget ));
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( GTK_TREE_VIEW_COLUMN( widget )));
 		for( irender = renderers ; irender ; irender = irender->next ){
 			if( GTK_IS_CELL_RENDERER_TEXT( irender->data )){
 				g_object_set( G_OBJECT( irender->data ), "editable", editable, "editable-set", TRUE, NULL );

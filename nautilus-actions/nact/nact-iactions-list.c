@@ -472,7 +472,7 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 
 		/* label edition: inform the corresponding tab */
 		column = gtk_tree_view_get_column( treeview, IACTIONS_LIST_LABEL_COLUMN );
-		renderers = gtk_tree_view_column_get_cell_renderers( column );
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( renderers->data ),

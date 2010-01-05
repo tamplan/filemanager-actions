@@ -508,7 +508,7 @@ na_xml_writer_output_xml( const gchar *xml, const gchar *filename, GSList **msg 
 	stream = g_file_replace( file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &error );
 	if( error ){
 		errmsg = g_strdup_printf( "%s: g_file_replace: %s", thisfn, error->message );
-		g_warning( errmsg );
+		g_warning( "%s", errmsg );
 		*msg = g_slist_append( *msg, errmsg );
 		g_error_free( error );
 		if( stream ){
@@ -521,7 +521,7 @@ na_xml_writer_output_xml( const gchar *xml, const gchar *filename, GSList **msg 
 	g_output_stream_write( G_OUTPUT_STREAM( stream ), xml, g_utf8_strlen( xml, -1 ), NULL, &error );
 	if( error ){
 		errmsg = g_strdup_printf( "%s: g_output_stream_write: %s", thisfn, error->message );
-		g_warning( errmsg );
+		g_warning( "%s", errmsg );
 		*msg = g_slist_append( *msg, errmsg );
 		g_error_free( error );
 		g_object_unref( stream );
@@ -532,7 +532,7 @@ na_xml_writer_output_xml( const gchar *xml, const gchar *filename, GSList **msg 
 	g_output_stream_close( G_OUTPUT_STREAM( stream ), NULL, &error );
 	if( error ){
 		errmsg = g_strdup_printf( "%s: g_output_stream_close: %s", thisfn, error->message );
-		g_warning( errmsg );
+		g_warning( "%s", errmsg );
 		*msg = g_slist_append( *msg, errmsg );
 		g_error_free( error );
 		g_object_unref( stream );

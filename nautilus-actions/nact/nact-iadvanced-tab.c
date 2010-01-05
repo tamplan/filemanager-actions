@@ -269,7 +269,7 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 	if( st_initialized && !st_finalized ){
 
 		column = gtk_tree_view_get_column( listview, SCHEMES_CHECKBOX_COLUMN );
-		renderers = gtk_tree_view_column_get_cell_renderers( column );
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( renderers->data ),
@@ -277,7 +277,7 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 				G_CALLBACK( on_scheme_selection_toggled ));
 
 		column = gtk_tree_view_get_column( listview, SCHEMES_KEYWORD_COLUMN );
-		renderers = gtk_tree_view_column_get_cell_renderers( column );
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( renderers->data ),
@@ -285,7 +285,7 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 				G_CALLBACK( on_scheme_keyword_edited ));
 
 		column = gtk_tree_view_get_column( listview, SCHEMES_DESC_COLUMN );
-		renderers = gtk_tree_view_column_get_cell_renderers( column );
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( renderers->data ),
