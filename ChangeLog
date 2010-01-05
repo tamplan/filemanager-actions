@@ -1,5 +1,9 @@
 2009-01-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump version number.
+
+2009-01-05 Pierre Wieser <pwieser@trychlos.org>
+
 	* configure.ac: Add -Wformat=2 compilation option.
 
 	* nautilus-actions/nact/nact-gtk-utils.c (nact_gtk_utils_set_editable):
