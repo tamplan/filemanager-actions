@@ -53,9 +53,9 @@ static void           read_item_menu( NagpGConfProvider *provider, const gchar *
 static void           read_item_menu_properties( NagpGConfProvider *provider, GSList *entries, NAObjectMenu *menu );
 static void           read_object_item_properties( NagpGConfProvider *provider, GSList *entries, NAObjectItem *item );
 
-static gboolean       is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 static GSList        *get_subdirs( GConfClient *gconf, const gchar *path );
 static void           free_subdirs( GSList *subdirs );
+static gboolean       is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 static gboolean       has_entry( GConfClient *gconf, const gchar *path, const gchar *entry );
 static GSList        *remove_from_gslist( GSList *list, const gchar *str );
 static void           free_gslist( GSList *list );
@@ -477,17 +477,15 @@ is_key_writable( NagpGConfProvider *gconf, const gchar *key )
  * @gconf: a  #GConfClient instance.
  * @path: a full path to be readen.
  *
- * Loads the subdirs of the given path.
- *
  * Returns: a GSList of full path subdirectories.
  *
- * The returned list should be free_subdirs() by the
+ * The returned list should be na_gconf_utils_free_subdirs() by the
  * caller.
  */
 static GSList *
 get_subdirs( GConfClient *gconf, const gchar *path )
 {
-	static const gchar *thisfn = "get_subdirs";
+	static const gchar *thisfn = "nagp_read_get_subdirs";
 	GError *error = NULL;
 	GSList *list_subdirs;
 

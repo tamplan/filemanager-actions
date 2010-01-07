@@ -139,7 +139,7 @@ nact_iadvanced_tab_initial_load_toplevel( NactIAdvancedTab *instance )
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
-		nact_schemes_list_create_model( get_schemes_tree_view( instance ));
+		nact_schemes_list_create_model( get_schemes_tree_view( instance ), TRUE );
 	}
 }
 
@@ -170,6 +170,7 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 		g_debug( "%s: instance=%p, listview=%p", thisfn, ( void * ) instance, ( void * ) listview );
 		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
+#if 0
 		column = gtk_tree_view_get_column( listview, SCHEMES_CHECKBOX_COLUMN );
 		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
@@ -213,6 +214,7 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 				G_OBJECT( gtk_tree_view_get_selection( listview )),
 				"changed",
 				G_CALLBACK( on_scheme_list_selection_changed ));
+#endif
 
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),

@@ -38,6 +38,7 @@
 
 #include "base-iprefs.h"
 #include "nact-application.h"
+#include "nact-schemes-list.h"
 #include "nact-preferences-editor.h"
 
 /* private class data
@@ -263,9 +264,13 @@ static void
 on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_initial_load_dialog";
+	GtkTreeView *listview;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
+
+	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
+	nact_schemes_list_create_model( listview, FALSE );
 }
 
 static void
@@ -281,6 +286,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	gint import_mode, export_format;
 	GtkWidget *button;
 	gboolean esc_quit, esc_confirm;
+	GtkTreeView *listview;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
@@ -388,6 +394,11 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 			break;
 	}
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
+
+	/* fifth tab: default schemes
+	 */
+	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
+	nact_schemes_list_init_view( listview, BASE_WINDOW( editor ));
 
 	base_window_signal_connect_by_name(
 			BASE_WINDOW( editor ),
