@@ -108,3 +108,10 @@
   > remove in action class
 
 - toolbar position should not be absolute, but relative
+
+- get back the TODO list of schemes branch
+
+- unable to cut multiple selection
+
+- unable to dnd multiple selection into a menu
+- after cut, the pasted content is not updated
