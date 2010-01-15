@@ -646,8 +646,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	is_clipboard_empty = ( mis->clipboard_menus + mis->clipboard_actions + mis->clipboard_profiles == 0 );
-	count_selected = mis->selected_menus + mis->selected_actions + mis->selected_profiles;
-	g_return_if_fail( selected_items == NULL || count_selected == g_list_length( selected_items ));
+	count_selected = selected_items ? g_list_length( selected_items ) : 0;
 
 	/* new menu / new action
 	 * new item will be inserted just before beginning of selection

@@ -90,6 +90,22 @@ static void         toggle_collapse_row( GtkTreeView *treeview, GtkTreePath *pat
 static void         update_parents_edition_status( GList *parents, GList *items );
 
 /**
+ * nact_iactions_list_bis_clear_selection:
+ * @instance: this instance of the #NactIActionsList interface.
+ * @treeview: the #GtkTreeView.
+ *
+ * Clears the current selection.
+ */
+void
+nact_iactions_list_bis_clear_selection( NactIActionsList *instance, GtkTreeView *treeview )
+{
+	GtkTreeSelection *selection;
+
+	selection = gtk_tree_view_get_selection( treeview );
+	gtk_tree_selection_unselect_all( selection );
+}
+
+/**
  * nact_iactions_list_bis_collapse_to_parent:
  * @instance: this instance of the #NactIActionsList interface.
  *
@@ -587,9 +603,12 @@ nact_iactions_list_bis_removed_modified( NactIActionsList *instance )
 void
 nact_iactions_list_bis_select_first_row( NactIActionsList *instance )
 {
+	static const gchar *thisfn = "nact_iactions_list_bis_select_first_row";
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreePath *path;
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 	treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
 	model = gtk_tree_view_get_model( treeview );

@@ -667,6 +667,8 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 		treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 
+		nact_iactions_list_bis_clear_selection( instance, treeview );
+
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
 		only_actions = have_only_actions( instance, ialid );
 

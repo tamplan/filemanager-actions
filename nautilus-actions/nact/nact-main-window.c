@@ -1376,9 +1376,11 @@ ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_da
 static void
 reload( NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_window_reload";
 	NactApplication *application;
 	NAPivot *pivot;
 
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){

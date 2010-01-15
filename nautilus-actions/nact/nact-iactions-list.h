@@ -137,6 +137,7 @@ void      nact_iactions_list_on_treeview_selection_changed( GtkTreeSelection *se
 GList    *nact_iactions_list_remove_rec( GList *list, NAObject *object );
 void      nact_iactions_list_set_management_mode( NactIActionsList *instance, gint mode );
 
+void      nact_iactions_list_bis_clear_selection( NactIActionsList *instance, GtkTreeView *treeview );
 void      nact_iactions_list_bis_collapse_to_parent( NactIActionsList *instance );
 void      nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items );
 void      nact_iactions_list_bis_expand_to_first_child( NactIActionsList *instance );

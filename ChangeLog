@@ -1,5 +1,15 @@
 2009-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-iactions-list-bis.c:
+	* nautilus-actions/nact/nact-iactions-list.h
+	(nact_iactions_list_bis_clear_selection): New function.
+
+	* nautilus-actions/nact/nact-iactions-list.c (nact_iactions_list_fill):
+	Clear the selection before filling the tree view.
+
+	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
+	Force the count of selected items to be consistant with the list.
+
 	* nautilus-actions/nact/nact-tree-model-dnd.c (drop_inside):
 	Dropped new item is set as new.
 
