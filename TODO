@@ -109,12 +109,27 @@
 
 - toolbar position should not be absolute, but relative
 
-- unable to cut multiple selection
-
-- unable to dnd multiple selection into a menu
-- after cut, the pasted content is not updated
-
 - notebook page should be labeled 'Action' or 'Menu' depending of current item
 
 - what about between base_builder_instance_init and
   base_application_v_initialize_default_icon ?
+
+- na_pivot_is_level_zero_writable: the provider which hosts the level-zero
+  list of items should be a configuration option
+
+- dnd an action with several profiles loses the profiles: only one profile
+  stays after the dnd
+
+- review statusbar layout
+
+- review toolbars layout
+
+- we should be able to fully export a configuration: this implies exporting
+  menus and full tree
+
+- unable to right-click on a multiple selection
+
+- rows implicitely selected should have a special display
+  (as a sort of 'transparent' selection)
+
+- after cut, the pasted content is not updated

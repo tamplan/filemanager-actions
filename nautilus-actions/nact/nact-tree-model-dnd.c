@@ -533,7 +533,8 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 
 					if( copy_data ){
 						inserted = na_object_duplicate( current );
-						na_object_reset_origin( inserted, NULL );
+						na_object_set_origin( inserted, NULL );
+						na_object_check_status( inserted );
 
 					} else {
 						inserted = na_object_ref( current );

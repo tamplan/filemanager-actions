@@ -1,5 +1,8 @@
 2009-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-tree-model-dnd.c (drop_inside):
+	Dropped new item is set as new.
+
 	* nautilus-actions/nact/nact-iactions-list.c (filter_selection):
 	Review selection criteria, introducing implicit selection.
 
