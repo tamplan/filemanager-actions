@@ -55,9 +55,7 @@ struct NactIActionsListInterfacePrivate {
 /* when iterating through a selection
  */
 typedef struct {
-	guint nb_profiles;
-	guint nb_actions;
-	guint nb_menus;
+	gboolean has_menu_or_action;
 }
 	SelectionIter;
 
@@ -86,7 +84,11 @@ static void     free_column_edited_callback( NactIActionsList *instance, NAObjec
 
 static void     display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *instance );
 static gboolean filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactIActionsList *instance );
+static gboolean filter_selection_is_homogeneous( GtkTreeSelection *selection, NAObject *object );
 static void     filter_selection_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, SelectionIter *str );
+static gboolean filter_selection_has_menu_or_action( GtkTreeSelection *selection );
+static gboolean filter_selection_is_implicitely_selected( NAObject *object );
+static void     filter_selection_set_implicitely_selected_childs( NAObject *object, gboolean select );
 static gboolean have_dnd_mode( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static gboolean have_filter_selection_mode( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static gboolean have_only_actions( NactIActionsList *instance, IActionsListInstanceData *ialid );
@@ -889,66 +891,95 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
  * and to hope that this will be easily copyable anywhere after.
  * We know how to insert profiles, or how to insert actions or menus,
  * but not how nor where to insert e.g. a mix selection.
- * So the selection allows :
- * - only profiles, maybe from different actions
- * - or only actions or menus.
  *
- * Note that we do not allow here a selection to be made or not. What
- * we actually allow is only toggle the selection state. And so, we
- * only deal with "do we allow to toggle from non-selected ?"
+ * So a selection must first be homogeneous, i.e. it only contains
+ * explicitely selected profiles _or_ menus or actions (and their childs).
+ *
+ * To simplify the selection management while letting the user actually
+ * select almost anything, we are doing following assumptions:
+ * - when the user selects one row, all childs are also automatically
+ *   selected ; visible childs are setup so that they are known as
+ *   'indirectly' selected
+ * - when a row is set as 'indirectly' selected, user cannot select
+ *   nor unselect it (sort of readonly or mandatory implied selection)
+ *   while the parent stays itself selected
  */
 static gboolean
 filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactIActionsList *instance )
 {
-	SelectionIter *str;
+	static const gchar *thisfn = "nact_iactions_list_filter_selection";
+	GList *selected_paths;
 	GtkTreeIter iter;
 	NAObject *object;
-	gboolean select_ok;
-
-	if( path_currently_selected ){
-		return( TRUE );
-	}
-
-	/* iter through the selection: does it contain profiles ? actions or
-	 * menus ? or both ?
-	 */
-	str = g_new0( SelectionIter, 1 );
-	str->nb_profiles = 0;
-	str->nb_actions = 0;
-	str->nb_menus = 0;
-
-	gtk_tree_selection_selected_foreach( selection, ( GtkTreeSelectionForeachFunc ) filter_selection_iter, str );
-
-	/* if there is not yet any selection, then anything is allowed
-	 */
-	if( str->nb_profiles + str->nb_actions + str->nb_menus == 0 ){
-		return( TRUE );
-	}
 
 	gtk_tree_model_get_iter( model, &iter, path );
 	gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-
 	g_return_val_if_fail( object, FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), FALSE );
 
-	select_ok = FALSE;
-
-	/* selecting a profile is only ok if a profile is already selected
+	/* if there is not yet any selection, then anything is allowed
 	 */
-	if( NA_IS_OBJECT_PROFILE( object )){
-		select_ok = ( str->nb_actions + str->nb_menus == 0 );
+	selected_paths = gtk_tree_selection_get_selected_rows( selection, NULL );
+	if( !selected_paths || !g_list_length( selected_paths )){
+		/*g_debug( "%s: current selection is empty: allowing this one", thisfn );*/
+		filter_selection_set_implicitely_selected_childs( object, !path_currently_selected );
+		return( TRUE );
 	}
 
-	/* selecting an action or a menu is only ok if no profile is selected
+	/* if the object at the row is already 'implicitely' selected, i.e.
+	 * selected because of the selection of one of its parents, then
+	 * nothing is allowed
 	 */
-	if( NA_IS_OBJECT_ITEM( object )){
-		select_ok = ( str->nb_profiles == 0 );
+	if( filter_selection_is_implicitely_selected( object )){
+		g_debug( "%s: implicitely selected item: selection not allowed", thisfn );
+		g_object_unref( object );
+		return( FALSE );
 	}
 
-	g_free( str );
+	/* object at the row is not 'implicitely' selected: we may so select
+	 * or unselect it while the selection stays homogeneous
+	 * (rather we set its childs to the corresponding implied status)
+	 */
+	if( path_currently_selected ||
+		filter_selection_is_homogeneous( selection, object )){
+
+			filter_selection_set_implicitely_selected_childs( object, !path_currently_selected );
+	}
 	g_object_unref( object );
+	return( TRUE );
+}
 
-	return( select_ok );
+/*
+ * does the selection stay homogeneous when adding this object ?
+ */
+static gboolean
+filter_selection_is_homogeneous( GtkTreeSelection *selection, NAObject *object )
+{
+	gboolean homogeneous;
+
+	if( filter_selection_has_menu_or_action( selection )){
+		homogeneous = !NA_IS_OBJECT_PROFILE( object );
+	} else {
+		homogeneous = NA_IS_OBJECT_PROFILE( object );
+	}
+
+	return( homogeneous );
+}
+
+static gboolean
+filter_selection_has_menu_or_action( GtkTreeSelection *selection )
+{
+	gboolean has_menu_or_action;
+	SelectionIter *str;
+
+	has_menu_or_action = FALSE;
+	str = g_new0( SelectionIter, 1 );
+	str->has_menu_or_action = has_menu_or_action;
+	gtk_tree_selection_selected_foreach( selection, ( GtkTreeSelectionForeachFunc ) filter_selection_iter, str );
+	has_menu_or_action = str->has_menu_or_action;
+	g_free( str );
+
+	return( has_menu_or_action );
 }
 
 static void
@@ -958,20 +989,39 @@ filter_selection_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter
 
 	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 
-	g_return_if_fail( object );
-	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-
-	if( NA_IS_OBJECT_PROFILE( object )){
-		str->nb_profiles += 1;
-
-	} else if( NA_IS_OBJECT_ACTION( object )){
-		str->nb_actions += 1;
-
-	} else if( NA_IS_OBJECT_MENU( object )){
-		str->nb_menus += 1;
+	if( NA_IS_OBJECT_ITEM( object )){
+		str->has_menu_or_action = TRUE;
 	}
 
 	g_object_unref( object );
+}
+
+static gboolean
+filter_selection_is_implicitely_selected( NAObject *object )
+{
+	gboolean selected;
+
+	selected = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( object), "nact-implicit-selection" ));
+
+	return( selected );
+}
+
+/*
+ * the object is being selected (resp. unselected)
+ * recursively set the 'implicit selection' flag for all its childs
+ */
+static void
+filter_selection_set_implicitely_selected_childs( NAObject *object, gboolean select )
+{
+	GList *childs, *ic;
+
+	if( NA_IS_OBJECT_ITEM( object )){
+		childs = na_object_get_items_list( object );
+		for( ic = childs ; ic ; ic = ic->next ){
+			g_object_set_data( G_OBJECT( ic->data ), "nact-implicit-selection", GUINT_TO_POINTER(( guint ) select ));
+			filter_selection_set_implicitely_selected_childs( NA_OBJECT( ic->data ), select );
+		}
+	}
 }
 
 static gboolean

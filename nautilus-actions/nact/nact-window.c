@@ -197,6 +197,36 @@ nact_window_get_pivot( NactWindow *window )
 }
 
 /**
+ * nact_window_is_writable_item:
+ * @window: this #NactWindow instance.
+ * @item: the item, which may be a profile, an action or a menu.
+ *
+ * Returns: %TRUE if the item is writable, %FALSE else.
+ */
+gboolean
+nact_window_is_writable_item( NactWindow *window, const NAObjectId *item )
+{
+	gboolean writable;
+	NAObjectItem *parent;
+
+	writable = FALSE;
+
+	g_return_val_if_fail( NACT_IS_WINDOW( window ), writable );
+	g_return_val_if_fail( NA_IS_OBJECT_ID( item ), writable );
+
+	if( !window->private->dispose_has_run ){
+
+		parent = NA_IS_OBJECT_PROFILE( item ) ? na_object_get_parent( item ) : NA_OBJECT_ITEM( item );
+
+		writable =
+				!na_object_is_readonly( parent ) &&
+				nact_window_is_writable_provider( window, parent );
+	}
+
+	return( writable );
+}
+
+/**
  * nact_window_is_writable_provider:
  * @window: this #NactWindow instance.
  * @item: the current item.
@@ -204,8 +234,8 @@ nact_window_get_pivot( NactWindow *window )
  * Returns: %TRUE if the item's provider is willing to write, %FALSE else.
  *
  * If the provider item has not yet any provider, i.e. has never been
- * saved elsewhere, then we return %FALSE, assuming that we eventually
- * find at least one willing-to-write provider.
+ * saved elsewhere, then we test if we have at least one
+ * willing-to-write provider.
  */
 gboolean
 nact_window_is_writable_provider( NactWindow *window, const NAObjectItem *item )

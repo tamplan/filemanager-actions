@@ -601,124 +601,219 @@ static void
 on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_update_sensitivities";
+	NactApplication *application;
+	NAPivot *pivot;
+	gboolean is_level_zero_writable;
+	gboolean has_writable_providers;
+	gboolean has_modified_items;
+	GList *selected_items, *is;
+	NAObject *first_parent;
+	gboolean is_first_parent_writable;
+	gboolean new_item_enabled;
+	gboolean new_profile_enabled;
+	NAObject *selected_action;
+	NAObject *parent_item;
 	MenubarIndicatorsStruct *mis;
-	NAObject *item;
-	NAObject *profile;
-	NAObject *selected_row;
-	gboolean has_modified;
-	gint count_list;
+	gboolean is_clipboard_empty;
 	gint count_selected;
+	gboolean are_parents_writable;
+	NAObject *selected_item;
 	gboolean cut_enabled;
 	gboolean copy_enabled;
 	gboolean paste_enabled;
 	gboolean paste_into_enabled;
 	gboolean duplicate_enabled;
 	gboolean delete_enabled;
-	gboolean clipboard_is_empty;
-	gboolean new_item_enabled;
-	gboolean readonly_item;
-	gboolean writable_provider;
-	gboolean writable_item;
-	gboolean has_writables;
-	NAObjectItem *parent;
-	gboolean writable_parent;
+	gint count_list;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	pivot = nact_application_get_pivot( application );
+	is_level_zero_writable = na_pivot_is_level_zero_writable( pivot );
+
+	has_writable_providers = nact_window_has_writable_providers( NACT_WINDOW( window ));
+	has_modified_items = nact_main_window_has_modified_items( window );
+
+	selected_items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
+	first_parent = selected_items && g_list_length( selected_items )
+			? ( NAObject * ) na_object_get_parent( selected_items->data )
+			: NULL;
+	is_first_parent_writable = first_parent
+			? nact_window_is_writable_item( NACT_WINDOW( window ), NA_OBJECT_ID( first_parent ))
+			: is_level_zero_writable;
+
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	has_writables = nact_window_has_writable_providers( NACT_WINDOW( window ));
-	/*g_debug( "%s: has_writables=%s", thisfn, has_writables ? "True":"False" );*/
+	is_clipboard_empty = ( mis->clipboard_menus + mis->clipboard_actions + mis->clipboard_profiles == 0 );
+	count_selected = mis->selected_menus + mis->selected_actions + mis->selected_profiles;
+	g_return_if_fail( selected_items == NULL || count_selected == g_list_length( selected_items ));
 
-	g_object_get(
-			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-			TAB_UPDATABLE_PROP_SELECTED_ROW, &selected_row,
-			NULL );
-	g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( !profile || NA_IS_OBJECT_PROFILE( profile ));
-
-	has_modified = nact_main_window_has_modified_items( window );
-	readonly_item = item ? na_object_is_readonly( item ) : FALSE;
-	writable_provider = item ? nact_window_is_writable_provider( NACT_WINDOW( window ), NA_OBJECT_ITEM( item )) : FALSE;
-	writable_item = writable_provider && !readonly_item;
-
-	parent = item ? na_object_get_parent( item ) : NULL;
-	writable_parent = parent
-		? nact_window_is_writable_provider( NACT_WINDOW( window ), parent ) && !na_object_is_readonly( parent )
-		: FALSE;
-
-	/* new menu enabled if selection is a menu or an action
-	 * new action enabled if selection is a menu or an action
-	 * adding a new item requires that parent be writable
+	/* new menu / new action
+	 * new item will be inserted just before beginning of selection
+	 * parent of the first selected row must be writable
+	 * we must have at least one writable provider
 	 */
-	new_item_enabled = ( selected_row == NULL || NA_IS_OBJECT_ITEM( selected_row ));
-	new_item_enabled = new_item_enabled && has_writables;
-	new_item_enabled = new_item_enabled && ( parent ? writable_parent : TRUE );
+	new_item_enabled = is_first_parent_writable && has_writable_providers;
 	enable_item( window, "NewMenuItem", new_item_enabled );
 	enable_item( window, "NewActionItem", new_item_enabled );
 
-	/* new profile enabled if selection is relative to only one writable action */
-	enable_item( window, "NewProfileItem",
-			item != NULL && !NA_IS_OBJECT_MENU( item ) && writable_item );
+	/* new profile enabled if selection is relative to only one writable action
+	 * i.e. contains profile(s) of the same action, or only contains one action
+	 * action must be writable
+	 */
+	new_profile_enabled = TRUE;
+	selected_action = NULL;
+	for( is = selected_items ; is ; is = is->next ){
 
-	/* save enabled if at least one item has been modified */
-	enable_item( window, "SaveItem", has_modified || mis->level_zero_order_changed );
+		if( NA_IS_OBJECT_MENU( is->data )){
+			new_profile_enabled = FALSE;
+			break;
+
+		} else if( NA_IS_OBJECT_ACTION( is->data )){
+			if( !selected_action ){
+				selected_action = NA_OBJECT( is->data );
+			} else if( selected_action != is->data ){
+				new_profile_enabled = FALSE;
+				break;
+			}
+
+		} else if( NA_IS_OBJECT_PROFILE( is->data )){
+			parent_item = NA_OBJECT( na_object_get_parent( is->data ));
+			if( !selected_action ){
+				selected_action = parent_item;
+			} else if( selected_action != parent_item ){
+				new_profile_enabled = FALSE;
+				break;
+			}
+		}
+	}
+	enable_item( window, "NewProfileItem",
+			new_profile_enabled &&
+			selected_action != NULL &&
+			nact_window_is_writable_item( NACT_WINDOW( window ), NA_OBJECT_ID( selected_action )));
+
+	/* save enabled if at least one item has been modified
+	 * or level-zero has been resorted and is writable
+	 */
+	enable_item( window, "SaveItem",
+			has_modified_items || ( mis->level_zero_order_changed && is_level_zero_writable ));
 
 	/* quit always enabled */
 
-	/* edit menu is only enabled when the treeview has the focus
+	/* cut requires a non-empty selection
+	 * and that all parents are writable (as implies a delete operation)
 	 */
+	cut_enabled = mis->treeview_has_focus || mis->popup_handler;
+	cut_enabled &= count_selected;
+	are_parents_writable = TRUE;
+	for( is = selected_items ; is ; is = is->next ){
+		parent_item = ( NAObject * ) na_object_get_parent( is->data );
+		if( parent_item ){
+			if( !nact_window_is_writable_item( NACT_WINDOW( window ), NA_OBJECT_ID( parent_item ))){
+				are_parents_writable = FALSE;
+				break;
+			}
+		} else if( !is_level_zero_writable ){
+			are_parents_writable = FALSE;
+			break;
+		}
+	}
+	cut_enabled &= are_parents_writable;
+	enable_item( window, "CutItem", cut_enabled );
 
-	clipboard_is_empty = ( mis->clipboard_menus + mis->clipboard_actions + mis->clipboard_profiles == 0 );
-	count_selected = mis->selected_menus + mis->selected_actions + mis->selected_profiles;
-
-	/* cut/copy/duplicate/delete enabled when selection not empty */
-	/* cut/delete require a writable item */
-	cut_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && writable_item && has_writables;
-	copy_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && has_writables;
-	duplicate_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && has_writables;
-	delete_enabled = ( mis->treeview_has_focus || mis->popup_handler ) && count_selected > 0 && writable_item;
+	/* copy only requires a non-empty selection */
+	copy_enabled = mis->treeview_has_focus || mis->popup_handler;
+	copy_enabled &= count_selected;
+	enable_item( window, "CopyItem", copy_enabled );
 
 	/* paste enabled if
-	 * - simple selection
-	 * - clipboard contains only profiles, and current selection is a profile
-	 * - clipboard contains actions or menus, and current selection is a menu or an action */
-	paste_enabled = FALSE;
-	if(( mis->treeview_has_focus || mis->popup_handler ) && count_selected <= 1 ){
-		if( !clipboard_is_empty ){
-			if( mis->clipboard_profiles ){
-				paste_enabled = item && NA_IS_OBJECT_ACTION( item ) && writable_item;
-			} else {
-				paste_enabled = ( item != NULL ) && has_writables && ( parent ? writable_parent : TRUE );
+	 * - clipboard is not empty
+	 * - current selection is not multiple
+	 * - if clipboard contains only profiles,
+	 *   then current selection must be a profile or an action
+	 *   and the action must be writable
+	 * - if clipboard contains actions or menus,
+	 *   then current selection (if any) must be a menu or an action
+	 *   and its parent must be writable
+	 */
+	paste_enabled = mis->treeview_has_focus || mis->popup_handler;
+	paste_enabled &= !is_clipboard_empty;
+	paste_enabled &= count_selected <= 1;
+	if( mis->clipboard_profiles ){
+		paste_enabled &= count_selected == 1;
+		if( paste_enabled ){
+			selected_action = NA_OBJECT(
+					NA_IS_OBJECT_PROFILE( selected_items->data )
+							? na_object_get_parent( selected_items->data )
+							: selected_items->data );
+			paste_enabled &= NA_IS_OBJECT_ACTION( selected_action );
+			paste_enabled &= nact_window_is_writable_item( NACT_WINDOW( window ), NA_OBJECT_ID( selected_action ));
+		}
+	} else {
+		paste_enabled &= has_writable_providers;
+		if( count_selected ){
+			selected_item = NA_OBJECT( selected_items->data );
+			paste_enabled &= NA_IS_OBJECT_ITEM( selected_item );
+			if( paste_enabled ){
+				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
+				paste_enabled &= parent_item
+						? nact_window_is_writable_item( NACT_WINDOW( window ), NA_OBJECT_ID( parent_item ))
+						: is_level_zero_writable;
 			}
+		} else {
+			paste_enabled &= is_level_zero_writable;
 		}
 	}
+	enable_item( window, "PasteItem", paste_enabled );
 
 	/* paste into enabled if
-	 * - simple selection
-	 * - clipboard has profiles and current item is an action
-	 * - or current item is a menu
-	 * do not paste into if current selection is a profile */
-	paste_into_enabled = FALSE;
-	if(( mis->treeview_has_focus || mis->popup_handler ) && count_selected <= 1 ){
-		if( mis->selected_menus + mis->selected_actions ){
-			if( !clipboard_is_empty ){
-				if( mis->clipboard_profiles ){
-					paste_into_enabled = item && NA_IS_OBJECT_ACTION( item ) && writable_item;
-				} else {
-					paste_into_enabled = item && NA_IS_OBJECT_MENU( item ) && writable_item && has_writables;
-				}
+	 * - clipboard is not empty
+	 * - current selection is not multiple
+	 * - if clipboard contains only profiles,
+	 *   then current selection must be an action
+	 *   and the action must be writable
+	 * - if clipboard contains actions or menus,
+	 *   then current selection (if any) must be a menu
+	 *   and its parent must be writable
+	 */
+	paste_into_enabled = mis->treeview_has_focus || mis->popup_handler;
+	paste_into_enabled &= !is_clipboard_empty;
+	paste_into_enabled &= count_selected <= 1;
+	if( mis->clipboard_profiles ){
+		paste_enabled &= count_selected == 1;
+		if( paste_enabled ){
+			selected_action = NA_OBJECT( selected_items->data );
+			paste_enabled &= NA_IS_OBJECT_ACTION( selected_action );
+			paste_enabled &= nact_window_is_writable_item( NACT_WINDOW( window ), NA_OBJECT_ID( selected_action ));
+		}
+	} else {
+		paste_enabled &= has_writable_providers;
+		if( count_selected ){
+			selected_item = NA_OBJECT( selected_items->data );
+			paste_enabled &= NA_IS_OBJECT_MENU( selected_item );
+			if( paste_enabled ){
+				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
+				paste_enabled &= parent_item
+						? nact_window_is_writable_item( NACT_WINDOW( window ), NA_OBJECT_ID( parent_item ))
+						: is_level_zero_writable;
 			}
+		} else {
+			paste_enabled &= is_level_zero_writable;
 		}
 	}
-
-	enable_item( window, "CutItem", cut_enabled );
-	enable_item( window, "CopyItem", copy_enabled );
-	enable_item( window, "PasteItem", paste_enabled );
 	enable_item( window, "PasteIntoItem", paste_into_enabled );
+
+	/* duplicate items will be duplicated besides each one
+	 * selection must be non-empty
+	 * each parent must be writable
+	 * -> so this is the same than cut
+	 */
+	duplicate_enabled = cut_enabled;
 	enable_item( window, "DuplicateItem", duplicate_enabled );
+
+	/* delete is same that cut */
+	delete_enabled = cut_enabled;
 	enable_item( window, "DeleteItem", delete_enabled );
 
 	/* reload items always enabled */
@@ -731,7 +826,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	enable_item( window, "CollapseAllItem", count_list > 0 );
 
 	/* import item enabled if at least one writable provider */
-	enable_item( window, "ImportItem", has_writables );
+	enable_item( window, "ImportItem", has_writable_providers );
 
 	/* export item enabled if IActionsList store contains actions */
 	enable_item( window, "ExportItem", mis->have_exportables );
@@ -740,6 +835,8 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	enable_item( window, "HelpItem", FALSE );
 
 	/* about always enabled */
+
+	na_object_free_items_list( selected_items );
 }
 
 static void

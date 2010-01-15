@@ -1,3 +1,16 @@
+2009-01-15 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/nact/nact-iactions-list.c (filter_selection):
+	Review selection criteria, introducing implicit selection.
+
+	* nautilus-actions/nact/nact-main-menubar.c (on_update_sensitivities):
+	Review menu items sensitivity, especially when provider is not writable.
+	Enable new item even when selection is multiple.
+
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-window.h (nact_window_is_writable_item):
+	New function.
+
 2009-01-05 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump version number.
