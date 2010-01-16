@@ -1,3 +1,11 @@
+2009-01-16 Pierre Wieser <pwieser@trychlos.org>
+
+	Fix cut/copy/paste dynamic.
+
+	* nautilus-actions/nact/nact-clipboard.c
+	(nact_clipboard_primary_set): Copy data into a private dynamically allocated buffer.
+	(nact_clipboard_primary_get): Get data from the user_data buffer.
+
 2009-01-15 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nact-iactions-list-bis.c:

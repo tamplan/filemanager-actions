@@ -65,21 +65,21 @@ typedef struct {
 	NactClipboardDndData;
 
 typedef struct {
-	guint    nb_actions;
-	guint    nb_profiles;
-	guint    nb_menus;
-	GList   *items;
-	gint     mode;
+	GList *items;
+	gint   mode;
+	guint  nb_actions;
+	guint  nb_profiles;
+	guint  nb_menus;
 }
-	NactClipboardPrimaryData;
+	PrimaryData;
 
 struct NactClipboardPrivate {
-	gboolean                  dispose_has_run;
-	BaseWindow               *window;
-	GtkClipboard             *dnd;
-	GtkClipboard             *primary;
-	NactClipboardPrimaryData *primary_data;
-	gboolean                  primary_got;
+	gboolean      dispose_has_run;
+	BaseWindow   *window;
+	GtkClipboard *dnd;
+	GtkClipboard *primary;
+	PrimaryData  *primary_data;
+	gboolean      primary_got;
 };
 
 #define NACT_CLIPBOARD_ATOM				gdk_atom_intern( "_NACT_CLIPBOARD", FALSE )
@@ -120,7 +120,9 @@ static gchar *export_objects( NactClipboard *clipboard, GList *objects, const gc
 static gchar *export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported );
 
 static void   get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard );
+static void   clear_primary_clipboard( NactClipboard *clipboard );
 static void   clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, NactClipboard *clipboard );
+static void   dump_primary_clipboard( NactClipboard *clipboard );
 
 static gchar *clipboard_mode_to_string( gint mode );
 
@@ -196,6 +198,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	display = gdk_display_get_default();
 	self->private->dnd = gtk_clipboard_get_for_display( display, NACT_CLIPBOARD_ATOM );
 	self->private->primary = gtk_clipboard_get_for_display( display, GDK_SELECTION_CLIPBOARD );
+	self->private->primary_data = NULL;
 }
 
 static void
@@ -231,6 +234,11 @@ instance_finalize( GObject *window )
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_assert( NACT_IS_CLIPBOARD( window ));
 	self = NACT_CLIPBOARD( window );
+
+	if( self->private->primary_data ){
+		clear_primary_clipboard( self );
+		g_free( self->private->primary_data );
+	}
 
 	g_free( self->private );
 
@@ -351,6 +359,7 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
 				*copy_data = data->copy;
 			}
 		}
+		gtk_selection_data_free( selection );
 	}
 
 	return( rows );
@@ -414,6 +423,7 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 				export_rows( clipboard, data->rows, data->folder );
 			}
 		}
+		gtk_selection_data_free( selection );
 	}
 }
 
@@ -607,7 +617,7 @@ void
 nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 {
 	static const gchar *thisfn = "nact_clipboard_primary_set";
-	NactClipboardPrimaryData *data;
+	PrimaryData *user_data;
 	GList *it;
 
 	g_debug( "%s: clipboard=%p, items=%p (count=%d), mode=%d",
@@ -616,29 +626,38 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 
 	if( !clipboard->private->dispose_has_run ){
 
-		g_return_if_fail( clipboard->private->primary_data == NULL );
+		user_data = clipboard->private->primary_data;
 
-		data = g_new0( NactClipboardPrimaryData, 1 );
+		if( user_data == NULL ){
+			user_data = g_new0( PrimaryData, 1 );
+			clipboard->private->primary_data = user_data;
+			g_debug( "%s: allocating PrimaryData=%p", thisfn, ( void * ) user_data );
+
+		} else {
+			clear_primary_clipboard( clipboard );
+		}
 
 		na_object_item_count_items( items,
-				( gint * ) &data->nb_menus, ( gint * ) &data->nb_actions, ( gint * ) &data->nb_profiles, FALSE );
+				( gint * ) &user_data->nb_menus,
+				( gint * ) &user_data->nb_actions,
+				( gint * ) &user_data->nb_profiles,
+				FALSE );
 
 		for( it = items ; it ; it = it->next ){
-			data->items = g_list_prepend( data->items, na_object_duplicate( it->data ));
+			user_data->items =
+					g_list_prepend( user_data->items, na_object_duplicate( it->data ));
 		}
-		data->items = g_list_reverse( data->items );
+		user_data->items = g_list_reverse( user_data->items );
 
-		data->mode = mode;
-
-		clipboard->private->primary_data = data;
-		clipboard->private->primary_got = FALSE;
-		g_debug( "%s: data=%p (NactClipboardPrimaryData)", thisfn, ( void * ) data );
+		user_data->mode = mode;
 
 		gtk_clipboard_set_with_data( clipboard->private->primary,
 				clipboard_formats, G_N_ELEMENTS( clipboard_formats ),
 				( GtkClipboardGetFunc ) get_from_primary_clipboard_callback,
 				( GtkClipboardClearFunc ) clear_primary_clipboard_callback,
 				clipboard );
+
+		clipboard->private->primary_got = FALSE;
 	}
 }
 
@@ -656,9 +675,9 @@ GList *
 nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 {
 	static const gchar *thisfn = "nact_clipboard_primary_get";
-	GtkSelectionData *selection;
-	NactClipboardPrimaryData *data;
 	GList *items = NULL;
+	GtkSelectionData *selection;
+	PrimaryData *user_data;
 	GList *it;
 	NAObject *obj;
 
@@ -671,20 +690,24 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
 
 		if( selection ){
-			data = ( NactClipboardPrimaryData * ) selection->data;
-			g_debug( "%s: data=%p (NactClipboardPrimaryData)", thisfn, ( void * ) data );
+			user_data = ( PrimaryData * ) selection->data;
+			g_debug( "%s: retrieving PrimaryData=%p", thisfn, ( void * ) user_data );
 
-			for( it = data->items ; it ; it = it->next ){
-				obj = na_object_duplicate( it->data );
-				na_object_set_origin( obj, NULL );
-				items = g_list_prepend( items, obj );
+			if( user_data ){
+				for( it = user_data->items ; it ; it = it->next ){
+					obj = na_object_duplicate( it->data );
+					na_object_set_origin( obj, NULL );
+					items = g_list_prepend( items, obj );
+				}
+				items = g_list_reverse( items );
+
+				*relabel = (( user_data->mode == CLIPBOARD_MODE_CUT && clipboard->private->primary_got ) ||
+								user_data->mode == CLIPBOARD_MODE_COPY );
+
+				clipboard->private->primary_got = TRUE;
 			}
-			items = g_list_reverse( items );
 
-			*relabel = (( data->mode == CLIPBOARD_MODE_CUT && clipboard->private->primary_got ) ||
-							data->mode == CLIPBOARD_MODE_COPY );
-
-			clipboard->private->primary_got = TRUE;
+			gtk_selection_data_free( selection );
 		}
 	}
 
@@ -700,8 +723,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 void
 nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *profiles, guint *menus )
 {
-	GtkSelectionData *selection;
-	NactClipboardPrimaryData *data;
+	PrimaryData *user_data;
 
 	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
 	g_return_if_fail( actions && profiles && menus );
@@ -712,14 +734,12 @@ nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *
 		*profiles = 0;
 		*menus = 0;
 
-		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
+		user_data = clipboard->private->primary_data;
+		if( user_data ){
 
-		if( selection ){
-			data = ( NactClipboardPrimaryData * ) selection->data;
-
-			*actions = data->nb_actions;
-			*profiles = data->nb_profiles;
-			*menus = data->nb_menus;
+			*actions = user_data->nb_actions;
+			*profiles = user_data->nb_profiles;
+			*menus = user_data->nb_menus;
 		}
 	}
 }
@@ -728,39 +748,49 @@ static void
 get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard )
 {
 	static const gchar *thisfn = "nact_clipboard_get_from_primary_clipboard_callback";
-	NactClipboardPrimaryData *data;
+	PrimaryData *user_data;
 	gchar *buffer;
 
 	g_debug( "%s: gtk_clipboard=%p, selection_data=%p, target=%s, info=%d, clipboard=%p",
 			thisfn, ( void * ) gtk_clipboard,
 			( void * ) selection_data, gdk_atom_name( selection_data->target ), info, ( void * ) clipboard );
 
-	data = clipboard->private->primary_data;
+	user_data = clipboard->private->primary_data;
 
 	if( info == NACT_CLIPBOARD_FORMAT_TEXT_PLAIN ){
-		buffer = export_objects( clipboard, data->items, NULL );
+		buffer = export_objects( clipboard, user_data->items, NULL );
 		gtk_selection_data_set( selection_data, selection_data->target, 8, ( const guchar * ) buffer, strlen( buffer ));
 		g_free( buffer );
 
 	} else {
-		gtk_selection_data_set( selection_data, selection_data->target, 8, ( const guchar * ) data, sizeof( NactClipboardPrimaryData ));
+		gtk_selection_data_set( selection_data, selection_data->target, 8, ( const guchar * ) user_data, sizeof( PrimaryData ));
 	}
+}
+
+static void
+clear_primary_clipboard( NactClipboard *clipboard )
+{
+	static const gchar *thisfn = "nact_clipboard_clear_primary_clipboard";
+	PrimaryData *user_data;
+
+	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
+
+	user_data = clipboard->private->primary_data;
+	g_return_if_fail( user_data != NULL );
+
+	g_list_foreach( user_data->items, ( GFunc ) g_object_unref, NULL );
+	g_list_free( user_data->items );
+	user_data->items = NULL;
+	user_data->nb_menus = 0;
+	user_data->nb_actions = 0;
+	user_data->nb_profiles = 0;
+
+	clipboard->private->primary_got = FALSE;
 }
 
 static void
 clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, NactClipboard *clipboard )
 {
-	static const gchar *thisfn = "nact_clipboard_clear_primary_clipboard_callback";
-	NactClipboardPrimaryData *data;
-
-	g_debug( "%s: gtk_clipboard=%p, clipboard=%p",
-			thisfn, ( void * ) gtk_clipboard, ( void * ) clipboard );
-
-	data = clipboard->private->primary_data;
-	g_list_foreach( data->items, ( GFunc ) g_object_unref, NULL );
-	g_list_free( data->items );
-	g_free( data );
-	clipboard->private->primary_data = NULL;
 }
 
 /**
@@ -773,8 +803,6 @@ void
 nact_clipboard_dump( NactClipboard *clipboard )
 {
 	static const gchar *thisfn = "nact_clipboard_dump";
-	gchar *mode;
-	GList *it;
 
 	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
 
@@ -786,22 +814,42 @@ nact_clipboard_dump( NactClipboard *clipboard )
 		g_debug( "%s: primary_data=%p", thisfn, ( void * ) clipboard->private->primary_data );
 
 		if( clipboard->private->primary_data ){
-			g_debug( "%s:  primary_data->nb_actions=%d", thisfn, clipboard->private->primary_data->nb_actions );
-			g_debug( "%s: primary_data->nb_profiles=%d", thisfn, clipboard->private->primary_data->nb_profiles );
-			g_debug( "%s:    primary_data->nb_menus=%d", thisfn, clipboard->private->primary_data->nb_menus );
-			g_debug( "%s:       primary_data->items=%p (count=%d)",
+			dump_primary_clipboard( clipboard );
+		}
+	}
+}
+
+static void
+dump_primary_clipboard( NactClipboard *clipboard )
+{
+	static const gchar *thisfn = "nact_clipboard_dump_primary";
+	PrimaryData *user_data;
+	gchar *mode;
+	GList *it;
+
+	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+
+	if( !clipboard->private->dispose_has_run ){
+
+		user_data = clipboard->private->primary_data;
+
+		if( user_data ){
+			g_debug( "%s:           user_data->nb_actions=%d", thisfn, user_data->nb_actions );
+			g_debug( "%s:          user_data->nb_profiles=%d", thisfn, user_data->nb_profiles );
+			g_debug( "%s:             user_data->nb_menus=%d", thisfn, user_data->nb_menus );
+			g_debug( "%s:                user_data->items=%p (count=%d)",
 					thisfn,
-					( void * ) clipboard->private->primary_data->items,
-					clipboard->private->primary_data->items ? g_list_length( clipboard->private->primary_data->items ) : 0 );
-			mode = clipboard_mode_to_string( clipboard->private->primary_data->mode );
-			g_debug( "%s:       primary_data->mode=%d (%s)", thisfn, clipboard->private->primary_data->mode, mode );
+					( void * ) user_data->items,
+					user_data->items ? g_list_length( user_data->items ) : 0 );
+			mode = clipboard_mode_to_string( user_data->mode );
+			g_debug( "%s:                 user_data->mode=%d (%s)", thisfn, user_data->mode, mode );
 			g_free( mode );
-			for( it = clipboard->private->primary_data->items ; it ; it = it->next ){
+			for( it = user_data->items ; it ; it = it->next ){
 				na_object_object_dump( NA_OBJECT( it->data ));
 			}
 		}
 
-		g_debug( "%s:  primary_got=%s", thisfn, clipboard->private->primary_got ? "True":"False" );
+		g_debug( "%s: clipboard->private->primary_got=%s", thisfn, clipboard->private->primary_got ? "True":"False" );
 	}
 }
 

@@ -647,6 +647,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	is_clipboard_empty = ( mis->clipboard_menus + mis->clipboard_actions + mis->clipboard_profiles == 0 );
 	count_selected = selected_items ? g_list_length( selected_items ) : 0;
+	g_debug( "%s: count_selected=%d", thisfn, count_selected );
 
 	/* new menu / new action
 	 * new item will be inserted just before beginning of selection
@@ -704,7 +705,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	 * and that all parents are writable (as implies a delete operation)
 	 */
 	cut_enabled = mis->treeview_has_focus || mis->popup_handler;
-	cut_enabled &= count_selected;
+	cut_enabled &= count_selected > 0;
 	are_parents_writable = TRUE;
 	for( is = selected_items ; is ; is = is->next ){
 		parent_item = ( NAObject * ) na_object_get_parent( is->data );
@@ -723,7 +724,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	/* copy only requires a non-empty selection */
 	copy_enabled = mis->treeview_has_focus || mis->popup_handler;
-	copy_enabled &= count_selected;
+	copy_enabled &= count_selected > 0;
 	enable_item( window, "CopyItem", copy_enabled );
 
 	/* paste enabled if
