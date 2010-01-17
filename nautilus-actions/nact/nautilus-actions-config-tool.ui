@@ -6,6 +6,7 @@
     <child>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <child>
           <object class="GtkVBox" id="MenubarVBox">
             <property name="visible">True</property>
@@ -33,6 +34,7 @@
         <child>
           <object class="GtkVBox" id="MainVBox">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkHPaned" id="MainPaned">
                 <property name="visible">True</property>
@@ -40,6 +42,7 @@
                 <child>
                   <object class="GtkVBox" id="vbox2">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkLabel" id="ActionsListLabel">
                         <property name="visible">True</property>
@@ -88,6 +91,7 @@
                       <object class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
+                        <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
                         <child>
                           <object class="GtkFrame" id="frame7">
@@ -104,6 +108,7 @@
                                 <child>
                                   <object class="GtkVBox" id="vbox7">
                                     <property name="visible">True</property>
+                                    <property name="orientation">vertical</property>
                                     <property name="spacing">10</property>
                                     <child>
                                       <object class="GtkTable" id="table7">
@@ -555,6 +560,7 @@
                       <object class="GtkVBox" id="vbox5">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
+                        <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
                         <child>
                           <object class="GtkFrame" id="frame9">
@@ -782,10 +788,12 @@ Defining several profiles lets you have several commands, each applying with a d
                       <object class="GtkVBox" id="vbox6">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
+                        <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
                         <child>
                           <object class="GtkVBox" id="vbox10">
                             <property name="visible">True</property>
+                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel" id="label2">
                                 <property name="visible">True</property>
@@ -806,6 +814,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                 <child>
                                   <object class="GtkVBox" id="vbox11">
                                     <property name="visible">True</property>
+                                    <property name="orientation">vertical</property>
                                     <property name="spacing">10</property>
                                     <child>
                                       <object class="GtkScrolledWindow" id="scrolledwindow2">
@@ -835,6 +844,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                 <child>
                                   <object class="GtkVBox" id="vbox8">
                                     <property name="visible">True</property>
+                                    <property name="orientation">vertical</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkButton" id="AddFolderButton">
@@ -912,6 +922,7 @@ Defining several profiles lets you have several commands, each applying with a d
                       <object class="GtkVBox" id="vbox9">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
+                        <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
                         <child>
                           <object class="GtkFrame" id="frame11">
@@ -1039,6 +1050,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                 <child>
                                   <object class="GtkVBox" id="vbox4">
                                     <property name="visible">True</property>
+                                    <property name="orientation">vertical</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkHBox" id="hbox4">
@@ -1149,10 +1161,12 @@ Defining several profiles lets you have several commands, each applying with a d
                       <object class="GtkVBox" id="vbox14">
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
+                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkVBox" id="vbox340">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
+                            <property name="orientation">vertical</property>
                             <property name="spacing">10</property>
                             <child>
                               <object class="GtkLabel" id="label46">
@@ -1195,6 +1209,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                 <child>
                                   <object class="GtkVBox" id="vbox345">
                                     <property name="visible">True</property>
+                                    <property name="orientation">vertical</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkButton" id="AddSchemeButton">
@@ -1326,6 +1341,9 @@ Defining several profiles lets you have several commands, each applying with a d
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing actions.</property>
@@ -1337,13 +1355,14 @@ Defining several profiles lets you have several commands, each applying with a d
     <child>
       <object class="GtkVBox" id="vbox18">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <property name="select_multiple">True</property>
             <property name="use_preview_label">False</property>
-            <property name="preview_widget_active">False</property>
+            <property name="select_multiple">True</property>
             <property name="local_only">False</property>
+            <property name="preview_widget_active">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -1358,10 +1377,12 @@ Defining several profiles lets you have several commands, each applying with a d
       <object class="GtkVBox" id="vbox19">
         <property name="visible">True</property>
         <property name="border_width">10</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkVBox" id="vbox20">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <object class="GtkLabel" id="label38">
@@ -1375,10 +1396,12 @@ Defining several profiles lets you have several commands, each applying with a d
             <child>
               <object class="GtkVBox" id="vbox21">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">10</property>
                 <child>
                   <object class="GtkVBox" id="vbox22">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkRadioButton" id="NoImportButton">
                         <property name="label" translatable="yes">Do not import the action which UUID already exists</property>
@@ -1421,6 +1444,7 @@ The existing action will not be modified.</property>
                 <child>
                   <object class="GtkVBox" id="vbox23">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkRadioButton" id="RenumberButton">
                         <property name="label" translatable="yes">Allocate a new identifiant for the imported action</property>
@@ -1464,6 +1488,7 @@ The existing action will not be modified.</property>
                 <child>
                   <object class="GtkVBox" id="vbox24">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkRadioButton" id="OverrideButton">
                         <property name="label" translatable="yes">Override the existing action</property>
@@ -1507,6 +1532,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <child>
                   <object class="GtkVBox" id="vbox36">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkRadioButton" id="AskButton">
                         <property name="label" translatable="yes">Ask me</property>
@@ -1586,6 +1612,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
       <object class="GtkVBox" id="vbox16">
         <property name="visible">True</property>
         <property name="border_width">12</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkHBox" id="hbox11">
@@ -1972,6 +1999,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkNotebook" id="PreferencesNotebook">
@@ -1980,6 +2008,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox33">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame3">
                     <property name="visible">True</property>
@@ -1994,6 +2023,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                           <object class="GtkVBox" id="vbox30">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
+                            <property name="orientation">vertical</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="GtkRadioButton" id="OrderAlphaAscButton">
@@ -2072,6 +2102,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                           <object class="GtkVBox" id="vbox17">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
+                            <property name="orientation">vertical</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="GtkCheckButton" id="CreateRootMenuButton">
@@ -2135,6 +2166,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox34">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame2">
                     <property name="visible">True</property>
@@ -2148,6 +2180,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                         <child>
                           <object class="GtkVBox" id="vbox25">
                             <property name="visible">True</property>
+                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel" id="label45">
                                 <property name="visible">True</property>
@@ -2164,6 +2197,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                               <object class="GtkVBox" id="vbox27">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
+                                <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkCheckButton" id="RelabelMenuButton">
                                     <property name="label" translatable="yes">Relabel _menus</property>
@@ -2243,6 +2277,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                           <object class="GtkVBox" id="vbox43">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
+                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkCheckButton" id="EscCloseButton">
                                 <property name="label" translatable="yes">Esc key quits the assistant</property>
@@ -2312,9 +2347,11 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox35">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkVBox" id="vbox26">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame4">
                         <property name="visible">True</property>
@@ -2328,6 +2365,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                             <child>
                               <object class="GtkVBox" id="vbox13">
                                 <property name="visible">True</property>
+                                <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkLabel" id="label8">
                                     <property name="visible">True</property>
@@ -2344,6 +2382,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                                   <object class="GtkVBox" id="vbox32">
                                     <property name="visible">True</property>
                                     <property name="border_width">6</property>
+                                    <property name="orientation">vertical</property>
                                     <property name="homogeneous">True</property>
                                     <child>
                                       <object class="GtkRadioButton" id="PrefsNoImportButton">
@@ -2453,9 +2492,11 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox41">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkVBox" id="vbox12">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFrame" id="frame5">
                         <property name="visible">True</property>
@@ -2469,10 +2510,12 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                             <child>
                               <object class="GtkVBox" id="vbox15">
                                 <property name="visible">True</property>
+                                <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkVBox" id="vbox42">
                                     <property name="visible">True</property>
                                     <property name="border_width">6</property>
+                                    <property name="orientation">vertical</property>
                                     <property name="homogeneous">True</property>
                                     <child>
                                       <object class="GtkRadioButton" id="PrefsExportGConfSchemaV1Button">
@@ -2646,14 +2689,17 @@ The exported file may later be imported via :
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox2">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkVBox" id="vbox37">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkVBox" id="vbox39">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkLabel" id="ImportAskLabel">
@@ -2686,6 +2732,7 @@ The exported file may later be imported via :
             <child>
               <object class="GtkVBox" id="vbox38">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkRadioButton" id="AskNoImportButton">
                     <property name="label" translatable="yes">Do _not import the action</property>
@@ -2752,6 +2799,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox40">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkCheckButton" id="AskKeepChoiceButton">
                     <property name="label" translatable="yes">Re_member my choice in future import operations</property>
@@ -2851,6 +2899,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox3">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
           <object class="GtkHButtonBox" id="dialog-action_area3">
@@ -2925,24 +2974,24 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabelLabel"/>
-      <widget name="ActionMenuLabelLabel"/>
-      <widget name="ActionIdLabel"/>
-      <widget name="ActionTooltipLabel"/>
       <widget name="ActionIconLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIdLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionIconLabelLabel"/>
     </widgets>
   </object>
 </interface>

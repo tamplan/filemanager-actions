@@ -1,5 +1,9 @@
 2009-01-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-assistant-export.ui:
+	* nautilus-actions/nact/nautilus-actions-config-tool.ui:
+	Forces default orientation of vboxes (fix #607218).
+
 	* nautilus-actions/nact/nact-main-toolbar.c:
 	* nautilus-actions/nact/nact-main-toolbar.h: New files.
 

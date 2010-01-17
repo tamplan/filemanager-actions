@@ -9,6 +9,9 @@
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label20">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of exporting actions.</property>
@@ -23,6 +26,7 @@
         <child>
           <object class="GtkVBox" id="vbox16">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel" id="ActionsListLabel">
                 <property name="visible">True</property>
@@ -86,8 +90,8 @@ to extend a selection.</property>
         <child>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
-            <property name="use_preview_label">False</property>
             <property name="action">select-folder</property>
+            <property name="use_preview_label">False</property>
             <property name="local_only">False</property>
             <property name="preview_widget_active">False</property>
           </object>
@@ -104,10 +108,12 @@ to extend a selection.</property>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <property name="border_width">10</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkVBox" id="vbox2">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="ExportSchemaV1Button">
                 <property name="label" translatable="yes">Export as a GConf schema file with full key descriptions</property>
@@ -156,6 +162,7 @@ The exported file may later be imported via :
         <child>
           <object class="GtkVBox" id="vbox3">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="ExportSchemaV2Button">
                 <property name="label" translatable="yes">Export as a light GConf schema file</property>
@@ -204,6 +211,7 @@ The exported file may later be imported via :
         <child>
           <object class="GtkVBox" id="vbox4">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="ExportGConfDumpButton">
                 <property name="label" translatable="yes">Export as a GConf dump file</property>
@@ -254,6 +262,7 @@ The exported file may later be imported via :
         <child>
           <object class="GtkVBox" id="vbox5">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="ExportAskButton">
                 <property name="label" translatable="yes">Ask me</property>
@@ -328,14 +337,17 @@ The exported file may later be imported via :
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkVBox" id="vbox37">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkVBox" id="vbox39">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkLabel" id="ExportAskLabel1">
@@ -368,6 +380,7 @@ The exported file may later be imported via :
             <child>
               <object class="GtkVBox" id="vbox38">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkRadioButton" id="AskGConfSchemaV1Button">
                     <property name="label" translatable="yes">Export as a GConf schema (v_1) file</property>
@@ -438,6 +451,7 @@ The exported file may later be imported via :
             <child>
               <object class="GtkVBox" id="vbox40">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkCheckButton" id="AskKeepChoiceButton">
                     <property name="label" translatable="yes">Re_member my choice in future import operations</property>
@@ -469,7 +483,7 @@ The exported file may later be imported via :
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="CancelButton">
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -483,7 +497,7 @@ The exported file may later be imported via :
             </child>
             <child>
               <object class="GtkButton" id="OKButton">
-                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
