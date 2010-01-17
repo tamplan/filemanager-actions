@@ -26,6 +26,7 @@
             </child>
           </object>
           <packing>
+            <property name="expand">False</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -845,7 +846,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                           <object class="GtkImage" id="image4">
                                             <property name="visible">True</property>
                                             <property name="stock">gtk-add</property>
-                                            <property name="icon-size">4</property>
                                           </object>
                                         </child>
                                       </object>
@@ -865,7 +865,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                           <object class="GtkImage" id="image5">
                                             <property name="visible">True</property>
                                             <property name="stock">gtk-remove</property>
-                                            <property name="icon-size">4</property>
                                           </object>
                                         </child>
                                       </object>
@@ -1207,7 +1206,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                           <object class="GtkImage" id="image16">
                                             <property name="visible">True</property>
                                             <property name="stock">gtk-add</property>
-                                            <property name="icon-size">4</property>
                                           </object>
                                         </child>
                                       </object>
@@ -1227,7 +1225,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                           <object class="GtkImage" id="image17">
                                             <property name="visible">True</property>
                                             <property name="stock">gtk-remove</property>
-                                            <property name="icon-size">4</property>
                                           </object>
                                         </child>
                                       </object>
@@ -1326,6 +1323,9 @@ Defining several profiles lets you have several commands, each applying with a d
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing actions.</property>
@@ -1340,8 +1340,8 @@ Defining several profiles lets you have several commands, each applying with a d
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <property name="use_preview_label">False</property>
             <property name="select_multiple">True</property>
+            <property name="use_preview_label">False</property>
             <property name="preview_widget_active">False</property>
             <property name="local_only">False</property>
           </object>
@@ -1595,7 +1595,6 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
               <object class="GtkImage" id="image9">
                 <property name="visible">True</property>
                 <property name="stock">gtk-help</property>
-                <property name="icon-size">4</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2600,7 +2599,7 @@ The exported file may later be imported via :
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="CancelButton">
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -2614,7 +2613,7 @@ The exported file may later be imported via :
             </child>
             <child>
               <object class="GtkButton" id="OKButton">
-                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -2784,7 +2783,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="CancelButton1">
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -2798,7 +2797,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             </child>
             <child>
               <object class="GtkButton" id="OKButton1">
-                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -2827,17 +2826,14 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="stock">gtk-find-and-replace</property>
-    <property name="icon-size">4</property>
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="stock">gtk-help</property>
-    <property name="icon-size">4</property>
   </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
     <property name="stock">gtk-find-and-replace</property>
-    <property name="icon-size">4</property>
   </object>
   <object class="GtkMessageDialog" id="ConfirmLogoutDialog">
     <property name="border_width">5</property>
@@ -2892,7 +2888,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             </child>
             <child>
               <object class="GtkButton" id="CancelQuitButton">
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -2929,24 +2925,24 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionIdLabel"/>
-      <widget name="ActionMenuLabelLabel"/>
       <widget name="ActionIconLabelLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionIdLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
     </widgets>
   </object>
 </interface>

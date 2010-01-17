@@ -114,8 +114,11 @@
   the provider which hosts the level-zero list of items should be a configuration option
 
 - enhancement.ui: review statusbar layout
+  do not add extra height to statusbar
+  better encapsulate statusbar, lock indicator, possibly other indicators
 
 - enhancement.ui: review toolbars layout
+  so that detacheable toolbars do not take so such big extra space
 
 - enhancement.management: we should be able to fully export a configuration
   this implies exporting menus and full tree
