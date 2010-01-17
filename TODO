@@ -124,8 +124,3 @@
   (as a sort of 'transparent' selection)
 
 - enhancement.ui: notebook page should be labeled 'Action' or 'Menu' depending of current item
-
-- bug: toolbar position should not be absolute, but relative
-
-- bug: dnd an action with several profiles loses the profiles: only one profile
-  stays after the dnd

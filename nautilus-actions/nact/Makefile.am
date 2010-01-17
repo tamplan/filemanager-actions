@@ -108,6 +108,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-main-statusbar.h										\
 	nact-main-tab.c												\
 	nact-main-tab.h												\
+	nact-main-toolbar.c											\
+	nact-main-toolbar.h											\
 	nact-main-window.c											\
 	nact-main-window.h											\
 	nact-preferences-editor.c									\

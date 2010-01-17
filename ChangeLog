@@ -1,10 +1,18 @@
+2009-01-17 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/nact/nact-main-toolbar.c:
+	* nautilus-actions/nact/nact-main-toolbar.h: New files.
+
+	* nautilus-actions/nact/Makefile.am:
+	* nautilus-actions/nact/nact-main-menubar.c: Updated accordingly.
+
 2009-01-16 Pierre Wieser <pwieser@trychlos.org>
 
-	Fix cut/copy/paste dynamic.
+	* nautilus-actions/nact/nact-clipboard.c:
+	Fix primary clipboard management.
 
-	* nautilus-actions/nact/nact-clipboard.c
-	(nact_clipboard_primary_set): Copy data into a private dynamically allocated buffer.
-	(nact_clipboard_primary_get): Get data from the user_data buffer.
+	* nautilus-actions/nact/nact-main-menubar.c	(on_update_sensitivities):
+	Fix cut/copy/duplicate/delete sensitivity when selection is	multiple.
 
 2009-01-15 Pierre Wieser <pwieser@trychlos.org>
 
