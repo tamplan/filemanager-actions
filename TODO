@@ -53,7 +53,6 @@
 
 - ui preferences: create root menu for background items
 - ui preferences: add about item for background items
-- ui preferences: default schemes
 
 - have a single place where a schema is written
   (see src/utils/nautilus-actions-schemas.c)
@@ -84,8 +83,6 @@
   see https://bugzilla.gnome.org/show_bug.cgi?id=593453
 
 - Nautilus bug: doesn't refresh toolbar when an item is updated
-
-- have a preference to record default schemes
 
 - have a preference to record order of IO Providers
 
@@ -127,3 +124,11 @@
   (as a sort of 'transparent' selection)
 
 - enhancement.ui: notebook page should be labeled 'Action' or 'Menu' depending of current item
+
+- schema: add a key for na-desktop/locked
+
+- rationale: when na-gconf is set by an admin as locked, does this really
+  mean that all GConf must be considered as read-only ? Not really. It should
+  rather be considered as GConf actions are read-only. Preferences stay editable.
+  Does the level-zero is a preference (so editable) or a sort of action (ro) !?
+  see the comment in schema.in

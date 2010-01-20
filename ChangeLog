@@ -1,3 +1,17 @@
+2009-01-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* data/nautilus-actions.schemas.in:
+	Fix default value for level zero key.
+	Describe the new 'schemes' preference key.
+
+	* nautilus-actions/nact/nact-preferences.ui:
+	* nautilus-actions/nact/nact-schemes-list.c:
+	* nautilus-actions/nact/nact-schemes-list.h: New files.
+
+	* nautilus-actions/nact/nact-iadvanced-tab.c:
+	* nautilus-actions/nact/nact-preferences-editor.c:
+	* nautilus-actions/nact/Makefile.am: Updated accordingly.
+
 2009-01-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nact-assistant-export.ui:
