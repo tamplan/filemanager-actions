@@ -23,6 +23,9 @@
 
 2009-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/nautilus-actions.schemas.in:
+	Add a schema for 'na-desktop/locked' mandatory key.
+
 	* .gitignore:
 	Ignore eclipse-specific files.
 

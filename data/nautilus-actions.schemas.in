@@ -660,10 +660,20 @@ A default default list is harcoded in nautilus-actions-config-tool, which may be
       <key>/schemas/apps/nautilus-actions/mandatory/na-gconf/locked</key>
       <owner>nautilus-actions</owner>
       <type>bool</type>
-      <list_type>int</list_type>
       <locale name="C">
         <short>Whether the GConf I/O provider is locked</short>
         <long>When set to true (most probably as a mandatory key), this prevents all items readen from GConf to being modified in NACT.</long>
+      </locale>
+      <default>false</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/mandatory/na-desktop/locked</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether the Desktop I/O provider is locked</short>
+        <long>When set to true (most probably as a mandatory key), this prevents all items readen as .desktop files to being modified in NACT.</long>
       </locale>
       <default>false</default>
     </schema>

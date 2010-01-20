@@ -125,8 +125,6 @@
 
 - enhancement.ui: notebook page should be labeled 'Action' or 'Menu' depending of current item
 
-- schema: add a key for na-desktop/locked
-
 - rationale: when na-gconf is set by an admin as locked, does this really
   mean that all GConf must be considered as read-only ? Not really. It should
   rather be considered as GConf actions are read-only. Preferences stay editable.
