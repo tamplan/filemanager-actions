@@ -2,8 +2,10 @@
 .cproject
 .project
 .deps/
+.externalToolBuilders/
 .libs/
 .install/
+.settings/
 Makefile
 Makefile.in
 aclocal.m4
@@ -17,6 +19,7 @@ config.status
 config.sub
 configure
 depcomp
+install/
 install-sh
 intltool-extract.in
 intltool-merge.in
@@ -26,10 +29,11 @@ ltmain.sh
 missing
 mkinstalldirs
 stamp-h1
+*~
 *.o
 *.la
 *.lo
 *.bak
 *.gladep
 nautilus-actions-*.tar.gz
-config.h.in~
+trash/
