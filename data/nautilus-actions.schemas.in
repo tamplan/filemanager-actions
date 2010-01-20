@@ -522,7 +522,7 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
         <short>List of items at first level of the hierarchy</short>
         <long>UUID of the items at the first level of the hierarchy. If this key is not found or empty, then all found items are considered as a flat list.</long>
       </locale>
-      <default></default>
+      <default>[]</default>
     </schema>
 
     <schema>
@@ -633,6 +633,19 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
       <locale name="C">
         <short>Position and size of the preferences dialog</short>
         <long>Position and size of the preferences dialog ; default is set by the window manager.</long>
+      </locale>
+      <default>[]</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/schemes</key>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>List of default schemes</short>
+        <long>The list of schemes proposed by default on each new profile.
+A default default list is harcoded in nautilus-actions-config-tool, which may be updated by the user.</long>
       </locale>
       <default>[]</default>
     </schema>

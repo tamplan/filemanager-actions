@@ -1199,6 +1199,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                         <property name="tooltip_text" translatable="yes">Select the kind of files where you want your action to appear. If you don't know what to choose, try selecting just 'file' which is the most common choice. You can add a new scheme by clicking on the '+' button.</property>
                                         <property name="headers_visible">False</property>
                                         <property name="rules_hint">True</property>
+                                        <property name="show_expanders">False</property>
                                       </object>
                                     </child>
                                   </object>
@@ -1344,6 +1345,9 @@ Defining several profiles lets you have several commands, each applying with a d
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing actions.</property>
@@ -1359,9 +1363,9 @@ Defining several profiles lets you have several commands, each applying with a d
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <property name="use_preview_label">False</property>
-            <property name="select_multiple">True</property>
             <property name="local_only">False</property>
+            <property name="select_multiple">True</property>
+            <property name="use_preview_label">False</property>
             <property name="preview_widget_active">False</property>
           </object>
           <packing>
@@ -2282,24 +2286,24 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabelLabel"/>
-      <widget name="ActionMenuLabelLabel"/>
-      <widget name="ActionIdLabel"/>
-      <widget name="ActionTooltipLabel"/>
       <widget name="ActionIconLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIdLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionIconLabelLabel"/>
     </widgets>
   </object>
 </interface>

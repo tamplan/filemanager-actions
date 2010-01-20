@@ -252,7 +252,7 @@ nact_iadvanced_tab_dispose( NactIAdvancedTab *instance )
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
-		nact_schemes_list_dispose( get_schemes_tree_view( instance ));
+		nact_schemes_list_dispose( BASE_WINDOW( instance ));
 	}
 }
 

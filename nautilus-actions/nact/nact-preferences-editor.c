@@ -182,6 +182,8 @@ instance_dispose( GObject *dialog )
 
 	if( !self->private->dispose_has_run ){
 
+		nact_schemes_list_dispose( BASE_WINDOW( self ));
+
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
@@ -400,6 +402,8 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
 	nact_schemes_list_init_view( listview, BASE_WINDOW( editor ));
 
+	/* dialog buttons
+	 */
 	base_window_signal_connect_by_name(
 			BASE_WINDOW( editor ),
 			"CancelButton",
@@ -552,6 +556,10 @@ save_preferences( NactPreferencesEditor *editor )
 		}
 	}
 	na_iprefs_set_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT, export_format );
+
+	/* fifth tab: list of default schemes
+	 */
+	nact_schemes_list_save_defaults( BASE_WINDOW( editor ));
 }
 
 static gboolean
