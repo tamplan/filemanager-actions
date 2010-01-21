@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-01-17 16:02+0000\n"
-"PO-Revision-Date: 2010-01-13 15:30+0100\n"
+"POT-Creation-Date: 2010-01-20 22:39+0000\n"
+"PO-Revision-Date: 2010-01-21 00:43+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -274,19 +274,23 @@ msgid "Last selected folder"
 msgstr "Poslední vybraná složka"
 
 #: ../data/nautilus-actions.schemas.in.h:36
+msgid "List of default schemes"
+msgstr "Seznam výchozích schémat"
+
+#: ../data/nautilus-actions.schemas.in.h:37
 msgid "List of items at first level of the hierarchy"
 msgstr "Seznam položek v první úrovni hierarchie"
 
-#: ../data/nautilus-actions.schemas.in.h:37
+#: ../data/nautilus-actions.schemas.in.h:38
 #: ../nautilus-actions/runtime/na-xml-names.h:95
 msgid "List of subitem ids"
 msgstr "Seznam id podřízených položek"
 
-#: ../data/nautilus-actions.schemas.in.h:38
+#: ../data/nautilus-actions.schemas.in.h:39
 msgid "Main pane position"
 msgstr "Umístění hlavního panelu"
 
-#: ../data/nautilus-actions.schemas.in.h:39
+#: ../data/nautilus-actions.schemas.in.h:40
 msgid ""
 "Ordered list of the IDs of the subitems. This may be actions or menus if the "
 "item is a menu, or profiles if the item is an action. If this list doesn't "
@@ -298,22 +302,22 @@ msgstr ""
 "Pokud tento seznam neexistuje nebo je prázdný, načtou se nalezené profily v "
 "pořadí, v jakém je vrátí operace čtení."
 
-#: ../data/nautilus-actions.schemas.in.h:40
+#: ../data/nautilus-actions.schemas.in.h:41
 msgid "Position and size of the Legend dialog"
 msgstr "Umístění a velikost dialogového okna Legenda"
 
-#: ../data/nautilus-actions.schemas.in.h:41
+#: ../data/nautilus-actions.schemas.in.h:42
 msgid ""
 "Position and size of the Legend dialog ; default is set by the UI manager."
 msgstr ""
 "Umístění a velikost dialogového okna Legenda; výchozí hodnoty jsou nastavené "
 "správcem uživatelského rozhraní."
 
-#: ../data/nautilus-actions.schemas.in.h:42
+#: ../data/nautilus-actions.schemas.in.h:43
 msgid "Position and size of the URI chooser window"
 msgstr "Umístění a velikost okna pro výběr URI"
 
-#: ../data/nautilus-actions.schemas.in.h:43
+#: ../data/nautilus-actions.schemas.in.h:44
 msgid ""
 "Position and size of the URI chooser window in the Background tab ; default "
 "is set by the window manager."
@@ -321,11 +325,11 @@ msgstr ""
 "Umístění a velikost okna pro výběr URI na kartě Pozadí; výchozí hodnoty jsou "
 "nastavené okenním správcem."
 
-#: ../data/nautilus-actions.schemas.in.h:44
+#: ../data/nautilus-actions.schemas.in.h:45
 msgid "Position and size of the command chooser window"
 msgstr "Umístění a velikost okna pro výběr příkazu"
 
-#: ../data/nautilus-actions.schemas.in.h:45
+#: ../data/nautilus-actions.schemas.in.h:46
 msgid ""
 "Position and size of the command chooser window in the Command tab ; default "
 "is set by the window manager."
@@ -333,11 +337,11 @@ msgstr ""
 "Umístění a velikost okna pro výběr příkazu na kartě Příkaz; výchozí hodnoty "
 "jsou nastavené okenním správcem."
 
-#: ../data/nautilus-actions.schemas.in.h:46
+#: ../data/nautilus-actions.schemas.in.h:47
 msgid "Position and size of the export assistant window"
 msgstr "Umístění a velikost okna průvodce exportem"
 
-#: ../data/nautilus-actions.schemas.in.h:47
+#: ../data/nautilus-actions.schemas.in.h:48
 msgid ""
 "Position and size of the export assistant window ; default is set by the "
 "window manager."
@@ -345,11 +349,11 @@ msgstr ""
 "Umístění a velikost okna průvodce exportem; výchozí hodnoty jsou nastavené "
 "okenním správcem."
 
-#: ../data/nautilus-actions.schemas.in.h:48
+#: ../data/nautilus-actions.schemas.in.h:49
 msgid "Position and size of the import assistant window"
 msgstr "Umístění a velikost okna průvodce importem"
 
-#: ../data/nautilus-actions.schemas.in.h:49
+#: ../data/nautilus-actions.schemas.in.h:50
 msgid ""
 "Position and size of the import assistant window ; default is set by the "
 "window manager."
@@ -357,11 +361,11 @@ msgstr ""
 "Umístění a velikost okna průvodce importem; výchozí hodnoty jsou nastavené "
 "okenním správcem."
 
-#: ../data/nautilus-actions.schemas.in.h:50
+#: ../data/nautilus-actions.schemas.in.h:51
 msgid "Position and size of the interaction dialog at import time"
 msgstr "Umístění a velikost interaktivního dialogového okna během importu"
 
-#: ../data/nautilus-actions.schemas.in.h:51
+#: ../data/nautilus-actions.schemas.in.h:52
 msgid ""
 "Position and size of the interaction dialog at import time ; default is set "
 "by the window manager."
@@ -369,22 +373,22 @@ msgstr ""
 "Umístění a velikost interaktivního dialogového okna během importu; výchozí "
 "hodnoty jsou nastavené okenním správcem."
 
-#: ../data/nautilus-actions.schemas.in.h:52
+#: ../data/nautilus-actions.schemas.in.h:53
 msgid "Position and size of the main window"
 msgstr "Umístění a velikost hlavního okna"
 
-#: ../data/nautilus-actions.schemas.in.h:53
+#: ../data/nautilus-actions.schemas.in.h:54
 msgid ""
 "Position and size of the main window ; default is set by the window manager."
 msgstr ""
 "Umístění a velikost hlavního okna; výchozí hodnoty jsou nastavené okenním "
 "správcem."
 
-#: ../data/nautilus-actions.schemas.in.h:54
+#: ../data/nautilus-actions.schemas.in.h:55
 msgid "Position and size of the preferences dialog"
 msgstr "Umístění a velikost dialogového okna předvoleb"
 
-#: ../data/nautilus-actions.schemas.in.h:55
+#: ../data/nautilus-actions.schemas.in.h:56
 msgid ""
 "Position and size of the preferences dialog ; default is set by the window "
 "manager."
@@ -392,26 +396,26 @@ msgstr ""
 "Umístění a velikost dialogového okna předvoleb; výchozí hodnoty jsou "
 "nastavené okenním správcem."
 
-#: ../data/nautilus-actions.schemas.in.h:56
+#: ../data/nautilus-actions.schemas.in.h:57
 msgid "Sort mode"
 msgstr "Režim řazení"
 
-#: ../data/nautilus-actions.schemas.in.h:57
+#: ../data/nautilus-actions.schemas.in.h:58
 #: ../nautilus-actions/runtime/na-xml-names.h:107
 msgid "Targets background"
 msgstr "Cíle pozadí"
 
-#: ../data/nautilus-actions.schemas.in.h:58
+#: ../data/nautilus-actions.schemas.in.h:59
 #: ../nautilus-actions/runtime/na-xml-names.h:104
 msgid "Targets selection"
 msgstr "Cíle výběru"
 
-#: ../data/nautilus-actions.schemas.in.h:59
+#: ../data/nautilus-actions.schemas.in.h:60
 #: ../nautilus-actions/runtime/na-xml-names.h:109
 msgid "Targets toolbar"
 msgstr "Cíle panelu nástrojů"
 
-#: ../data/nautilus-actions.schemas.in.h:60
+#: ../data/nautilus-actions.schemas.in.h:61
 #: ../nautilus-actions/runtime/na-xml-names.h:121
 msgid ""
 "The field is here to give the user a human readable name for a profile in "
@@ -422,12 +426,12 @@ msgstr ""
 "Nástroje pro nastavení Akcí Nautilus. Pokud není nastavené, nastaví se "
 "výchozí automaticky vygenerovaný řetězec."
 
-#: ../data/nautilus-actions.schemas.in.h:61
+#: ../data/nautilus-actions.schemas.in.h:62
 #: ../nautilus-actions/runtime/na-xml-names.h:88
 msgid "The icon of the menu item"
 msgstr "Ikona položky v nabídce"
 
-#: ../data/nautilus-actions.schemas.in.h:62
+#: ../data/nautilus-actions.schemas.in.h:63
 #: ../nautilus-actions/runtime/na-xml-names.h:89
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
@@ -437,7 +441,7 @@ msgstr ""
 "aplikace Nautilus za předpokladu, že výběr vyhovuje výskytu nastavené "
 "podmínky."
 
-#: ../data/nautilus-actions.schemas.in.h:63
+#: ../data/nautilus-actions.schemas.in.h:64
 msgid ""
 "The label displayed besides of the icon in the Nautilus toolbar. Note that "
 "actual display may depend of your own Gnome preferences."
@@ -448,12 +452,12 @@ msgstr ""
 
 #. GConf schema descriptions
 #.
-#: ../data/nautilus-actions.schemas.in.h:64
+#: ../data/nautilus-actions.schemas.in.h:65
 #: ../nautilus-actions/runtime/na-xml-names.h:81
 msgid "The label of the menu item"
 msgstr "Popisek položky v nabídce"
 
-#: ../data/nautilus-actions.schemas.in.h:65
+#: ../data/nautilus-actions.schemas.in.h:66
 #: ../nautilus-actions/runtime/na-xml-names.h:82
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
@@ -462,35 +466,45 @@ msgstr ""
 "Popisek položky nabídky, která se objeví ve vyskakovací nabídce aplikace "
 "Nautilus za předpokladu, že výběr vyhovuje výskytu nastavené podmínky."
 
-#: ../data/nautilus-actions.schemas.in.h:66
+#: ../data/nautilus-actions.schemas.in.h:67
 #: ../nautilus-actions/runtime/na-xml-names.h:181
 msgid "The list of URIs on which the Background item applies"
 msgstr "Seznam URI, na která se použije položka pozadí."
 
-#: ../data/nautilus-actions.schemas.in.h:67
+#: ../data/nautilus-actions.schemas.in.h:68
 #: ../nautilus-actions/runtime/na-xml-names.h:139
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr ""
 "Seznam vzorů, kterým má odpovídat vybraný soubor/složka či soubory/složky"
 
-#: ../data/nautilus-actions.schemas.in.h:68
+#: ../data/nautilus-actions.schemas.in.h:69
 #: ../nautilus-actions/runtime/na-xml-names.h:148
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr ""
 "Seznam vzorů, kterým má odpovídat typ MIME vybraného souboru či souborů"
 
-#: ../data/nautilus-actions.schemas.in.h:69
+#: ../data/nautilus-actions.schemas.in.h:70
+msgid ""
+"The list of schemes proposed by default on each new profile. A default "
+"default list is harcoded in nautilus-actions-config-tool, which may be "
+"updated by the user."
+msgstr ""
+"Seznam schémat navrhovaných jako výchozí v každém novém profilu. Výchozí "
+"výchozí seznam je napevno zabudován v programu nautilus-actions-config-tool, "
+"ale uživatel si jej může aktualizovat."
+
+#: ../data/nautilus-actions.schemas.in.h:71
 #: ../nautilus-actions/runtime/na-xml-names.h:171
 msgid "The list of schemes where the selected files should be located"
 msgstr "Seznam schémat , kde by vybrané soubory měly být umístěny"
 
-#: ../data/nautilus-actions.schemas.in.h:70
+#: ../data/nautilus-actions.schemas.in.h:72
 #: ../nautilus-actions/runtime/na-xml-names.h:127
 #: ../nautilus-actions/utils/nautilus-actions-new.c:99
 msgid "The parameters of the command"
 msgstr "Parametry příkazu"
 
-#: ../data/nautilus-actions.schemas.in.h:72
+#: ../data/nautilus-actions.schemas.in.h:74
 #, no-c-format
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
@@ -513,13 +527,13 @@ msgstr ""
 "číslo portu prvního URI %R: mezerami oddělovaný seznam vybraných URI %s: "
 "schéma URI %u: URI %U: uživatelské jméno URI %%: znak procenta."
 
-#: ../data/nautilus-actions.schemas.in.h:73
+#: ../data/nautilus-actions.schemas.in.h:75
 #: ../nautilus-actions/runtime/na-xml-names.h:124
 #: ../nautilus-actions/utils/nautilus-actions-new.c:97
 msgid "The path of the command"
 msgstr "Cesta příkazu"
 
-#: ../data/nautilus-actions.schemas.in.h:74
+#: ../data/nautilus-actions.schemas.in.h:76
 #: ../nautilus-actions/runtime/na-xml-names.h:125
 msgid ""
 "The path of the command to start when the user select the menu item in the "
@@ -528,13 +542,13 @@ msgstr ""
 "Cesta příkazu, který se spustí, když uživatel vybere položku z vyskakovací "
 "nabídky aplikace Nautilus."
 
-#: ../data/nautilus-actions.schemas.in.h:75
+#: ../data/nautilus-actions.schemas.in.h:77
 #: ../nautilus-actions/runtime/na-xml-names.h:84
 #: ../nautilus-actions/utils/nautilus-actions-new.c:81
 msgid "The tooltip of the menu item"
 msgstr "Nápověda k položce v nabídce"
 
-#: ../data/nautilus-actions.schemas.in.h:76
+#: ../data/nautilus-actions.schemas.in.h:78
 #: ../nautilus-actions/runtime/na-xml-names.h:85
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
@@ -544,12 +558,12 @@ msgstr ""
 "Nautilus, když uživatel ukáže svojí myší na položku vyskakovací nabídky "
 "Nautilus."
 
-#: ../data/nautilus-actions.schemas.in.h:77
+#: ../data/nautilus-actions.schemas.in.h:79
 #: ../nautilus-actions/runtime/na-xml-names.h:185
 msgid "The version of the configuration format"
 msgstr "Verze formátu nastavení"
 
-#: ../data/nautilus-actions.schemas.in.h:78
+#: ../data/nautilus-actions.schemas.in.h:80
 #: ../nautilus-actions/runtime/na-xml-names.h:186
 msgid ""
 "The version of the configuration format that will be used to manage backward "
@@ -558,7 +572,7 @@ msgstr ""
 "Verze formátu nastavení, která bude použita pro zajištění zpětné "
 "kompatibility."
 
-#: ../data/nautilus-actions.schemas.in.h:79
+#: ../data/nautilus-actions.schemas.in.h:81
 msgid ""
 "This preference indicates the preferred sort mode. Possible values are : - "
 "\"AscendingOrder\": the actions are maintained in ascending alphabetical "
@@ -572,7 +586,7 @@ msgstr ""
 "sestupně podle abecedy. - „ManualOrder“: uživatel může volně určovat pořadí "
 "pomocí nástroje pro nastavené Akcí Nautilus."
 
-#: ../data/nautilus-actions.schemas.in.h:80
+#: ../data/nautilus-actions.schemas.in.h:82
 msgid ""
 "This setting is tied in with the 'isdir' setting. The valid combinations "
 "are : - isfile=TRUE and isdir=FALSE: the selection may hold only files - "
@@ -589,7 +603,7 @@ msgstr ""
 "kombinace (vaše nastavení se neobjeví). Toto nastavení se použije jen když "
 "je cílem výběr."
 
-#: ../data/nautilus-actions.schemas.in.h:81
+#: ../data/nautilus-actions.schemas.in.h:83
 msgid ""
 "This setting is tied in with the 'isfile' setting. The valid combinations "
 "are : - isfile=TRUE and isdir=FALSE: the selection may hold only files - "
@@ -606,12 +620,12 @@ msgstr ""
 "kombinace (vaše nastavení se neobjeví). Toto nastavení se použije jen když "
 "je cílem výběr."
 
-#: ../data/nautilus-actions.schemas.in.h:82
+#: ../data/nautilus-actions.schemas.in.h:84
 #: ../nautilus-actions/runtime/na-xml-names.h:100
 msgid "Type of the item"
 msgstr "Typ položky"
 
-#: ../data/nautilus-actions.schemas.in.h:83
+#: ../data/nautilus-actions.schemas.in.h:85
 msgid ""
 "UUID of the items at the first level of the hierarchy. If this key is not "
 "found or empty, then all found items are considered as a flat list."
@@ -619,7 +633,7 @@ msgstr ""
 "UUID položek v první úrovni hierarchie. Pokud tento klíč není nalezen nebo "
 "je prázdný, pak jsou všechny nalezené položky považované za prostý seznam."
 
-#: ../data/nautilus-actions.schemas.in.h:84
+#: ../data/nautilus-actions.schemas.in.h:86
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all items "
 "readen from GConf to being modified in NACT."
@@ -627,51 +641,51 @@ msgstr ""
 "Když je zapnuto (nejpravděpodobněji jako povinný klíč), brání v Nástroji pro "
 "nastavení Akcí Nautilus změnám všech položek přečteným z GConf."
 
-#: ../data/nautilus-actions.schemas.in.h:85
+#: ../data/nautilus-actions.schemas.in.h:87
 msgid "Whether actions should be relabeled when pasted or duplicated"
 msgstr ""
 "Zda by se měl u akce změnit popisek, když je vložena nebo nebo je z ní "
 "vytvořena kopie"
 
-#: ../data/nautilus-actions.schemas.in.h:86
+#: ../data/nautilus-actions.schemas.in.h:88
 msgid "Whether actions should be relabeled when pasted or duplicated."
 msgstr ""
 "Zda by se měl u akce změnit popisek, když je vložena nebo nebo je z ní "
 "vytvořena kopie."
 
-#: ../data/nautilus-actions.schemas.in.h:87
+#: ../data/nautilus-actions.schemas.in.h:89
 msgid "Whether menus should be relabeled when pasted or duplicated"
 msgstr ""
 "Zda by se měl u nabídky změnit popisek, když je vložena nebo nebo je z ní "
 "vytvořena kopie"
 
-#: ../data/nautilus-actions.schemas.in.h:88
+#: ../data/nautilus-actions.schemas.in.h:90
 msgid "Whether menus should be relabeled when pasted or duplicated."
 msgstr ""
 "Zda by se měl u nabídky změnit popisek, když je vložena nebo nebo je z ní "
 "vytvořena kopie."
 
-#: ../data/nautilus-actions.schemas.in.h:89
+#: ../data/nautilus-actions.schemas.in.h:91
 msgid "Whether profiles should be relabeled when pasted or duplicated"
 msgstr ""
 "Zda by se měl u profilu změnit popisek, když je vložen nebo nebo je z něj "
 "vytvořena kopie"
 
-#: ../data/nautilus-actions.schemas.in.h:90
+#: ../data/nautilus-actions.schemas.in.h:92
 msgid "Whether profiles should be relabeled when pasted or duplicated."
 msgstr ""
 "Zda by se měl u profilu změnit popisek, když je vložen nebo nebo je z něj "
 "vytvořena kopie."
 
-#: ../data/nautilus-actions.schemas.in.h:91
+#: ../data/nautilus-actions.schemas.in.h:93
 msgid "Whether the Esc key should close the assistants"
 msgstr "Zda by klávesa Esc měla zavřít průvodce"
 
-#: ../data/nautilus-actions.schemas.in.h:92
+#: ../data/nautilus-actions.schemas.in.h:94
 msgid "Whether the GConf I/O provider is locked"
 msgstr "Zda je zprostředkovatel V/V GConf zamknutý"
 
-#: ../data/nautilus-actions.schemas.in.h:93
+#: ../data/nautilus-actions.schemas.in.h:95
 msgid ""
 "Whether the action is candidate to be displayed in Nautilus toolbar. Note, "
 "that as of Nautilus -2.26, menus can not be candidate to toolbar display."
@@ -680,17 +694,17 @@ msgstr ""
 "Upozorněme, že ve verzi Nautilus - 2.26, nemohou být nabídky kandidáty na "
 "zobrazení v panelu nástrojů."
 
-#: ../data/nautilus-actions.schemas.in.h:94
+#: ../data/nautilus-actions.schemas.in.h:96
 #: ../nautilus-actions/runtime/na-xml-names.h:92
 msgid "Whether the action is enabled"
 msgstr "Zda je akce povolená"
 
-#: ../data/nautilus-actions.schemas.in.h:95
+#: ../data/nautilus-actions.schemas.in.h:97
 #: ../nautilus-actions/runtime/na-xml-names.h:108
 msgid "Whether the action of menu targets the background Nautilus menus."
 msgstr "Zda je akce nabídky cílená na nabídky pozadí aplikace Nautilus."
 
-#: ../data/nautilus-actions.schemas.in.h:96
+#: ../data/nautilus-actions.schemas.in.h:98
 #: ../nautilus-actions/runtime/na-xml-names.h:105
 msgid ""
 "Whether the action of menu targets the selection Nautilus menus. This is the "
@@ -699,7 +713,7 @@ msgstr ""
 "Zda je akce nabídky cílená na nabídky výběru aplikace Nautilus. Jedná se o "
 "historické chování."
 
-#: ../data/nautilus-actions.schemas.in.h:97
+#: ../data/nautilus-actions.schemas.in.h:99
 #: ../nautilus-actions/runtime/na-xml-names.h:114
 msgid ""
 "Whether the label displayed in the Nautilus toolbar besides of the icon is "
@@ -708,28 +722,28 @@ msgstr ""
 "Zda je popisek zobrazený po straně ikony v panelu nástrojů aplikace Nautilus "
 "stejný jako popisek hlavní položky."
 
-#: ../data/nautilus-actions.schemas.in.h:98
+#: ../data/nautilus-actions.schemas.in.h:100
 #: ../nautilus-actions/runtime/na-xml-names.h:113
 msgid "Whether the labels are the sames"
 msgstr "Zda jsou popisky stejné"
 
-#: ../data/nautilus-actions.schemas.in.h:99
+#: ../data/nautilus-actions.schemas.in.h:101
 msgid "Whether to display or not the Edit toolbar in the main window."
 msgstr "Zda zobrazit, nebo ne, panel úprav v hlavním okně."
 
-#: ../data/nautilus-actions.schemas.in.h:100
+#: ../data/nautilus-actions.schemas.in.h:102
 msgid "Whether to display or not the File toolbar in the main window."
 msgstr "Zda zobrazit, nebo ne, panel souboru v hlavním okně."
 
-#: ../data/nautilus-actions.schemas.in.h:101
+#: ../data/nautilus-actions.schemas.in.h:103
 msgid "Whether to display or not the Help toolbar in the main window."
 msgstr "Zda zobrazit, nebo ne, panel nápovědy v hlavním okně."
 
-#: ../data/nautilus-actions.schemas.in.h:102
+#: ../data/nautilus-actions.schemas.in.h:104
 msgid "Whether to display or not the Tools toolbar in the main window."
 msgstr "Zda zobrazit, nebo ne, panel nástrojů v hlavním okně."
 
-#: ../data/nautilus-actions.schemas.in.h:103
+#: ../data/nautilus-actions.schemas.in.h:105
 msgid "Width of the main window pane ; default is set by the UI manager."
 msgstr ""
 "Šířka panelu hlavního okna; výchozí hodnota je nastavená správcem "
@@ -975,40 +989,6 @@ msgstr "Žádná"
 #: ../nautilus-actions/nact/nact-iaction-tab.c:932
 msgid "Choosing an icon"
 msgstr "Výběr ikony"
-
-#. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:611
-msgid "new-scheme"
-msgstr "nové-schéma"
-
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:612
-msgid "New scheme description"
-msgstr "Popis nového schématu"
-
-#. i18n notes : description of 'file' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:728
-msgid "Local files"
-msgstr "Místní soubory"
-
-#. i18n notes : description of 'sftp' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:730
-msgid "SSH files"
-msgstr "Soubory SSH"
-
-#. i18n notes : description of 'smb' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:732
-msgid "Windows files"
-msgstr "Soubory Windows"
-
-#. i18n notes : description of 'ftp' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:734
-msgid "FTP files"
-msgstr "Soubory FTP"
-
-#. i18n notes : description of 'dav' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:736
-msgid "WebDAV files"
-msgstr "Soubory WebDAV"
 
 #. i18n: title of the FileChoose dialog when selecting an URI which
 #. * will be compare to Nautilus 'current_folder'
