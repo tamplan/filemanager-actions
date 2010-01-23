@@ -21,6 +21,7 @@ nautilus-actions/nact/nact-icommand-tab.c
 nautilus-actions/nact/nact-main-menubar.c
 nautilus-actions/nact/nact-main-statusbar.c
 nautilus-actions/nact/nact-main-window.c
+nautilus-actions/nact/nact-preferences.ui
 nautilus-actions/nact/nact-tree-model.c
 nautilus-actions/nact/nact-window.c
 nautilus-actions/nact/nact-xml-reader.c

@@ -1,5 +1,8 @@
 2009-01-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in:
+	Add nautilus-actions/nact/nact-preferences.ui file.
+
 	* configure.ac:
 	Add a dependancy on dbus-lib-1 for tracker.
 
