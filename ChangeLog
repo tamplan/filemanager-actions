@@ -1,5 +1,9 @@
 2009-01-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump version number.
+
+2009-01-23 Pierre Wieser <pwieser@trychlos.org>
+
 	* NEWS: Updated for release.
 
 	* po/POTFILES.in:
