@@ -1,3 +1,34 @@
+Version 2.29.4
+==============
+
+	Release date 2010-01-23
+
+	Enhancements:
+
+		- Allow default schemes to be parameterized in the NACT user
+		  interface.
+
+	Bug fixes:
+
+		- Fix #607218 reported by Pierre Wieser
+		  (default vbox orientation in glade XML definition files).
+		- Fix #607704 reported by Sense Hofstede
+		  (use GtkBuildable interface instead of 'name' field).
+		- Fix toolbars relative position.
+
+	New dependancies:
+
+		dbus-glib-1 (required by tracker Nautilus plugin).
+
+	New and updated translations:
+
+		cs (Marek Černocký, Petr Kovar, Andre Klapper)
+		de (Mario Blättermann)
+
+	Please note, that for now, the new Desktop I/O provider is only
+	available in maintainer mode, as it is far to be ready for a
+	production use.
+
 Version 2.29.3
 ==============
 

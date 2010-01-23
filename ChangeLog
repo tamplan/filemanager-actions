@@ -1,5 +1,7 @@
 2009-01-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Updated for release.
+
 	* po/POTFILES.in:
 	Add nautilus-actions/nact/nact-preferences.ui file.
 
