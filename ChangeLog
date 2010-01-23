@@ -1,5 +1,8 @@
 2009-01-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	Add a dependancy on dbus-lib-1 for tracker.
+
 	* nautilus-actions/nact/base-window.c (search_for_child_widget):
 	Use GtkBuildable interface instead of 'name' field (fix #607704).
 

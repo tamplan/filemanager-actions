@@ -144,7 +144,8 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 	libnautilus-extension	>= ${NAUTILUS_EXTENSION}	\
 	sm						>= 1.0.0					\
 	uuid												\
-	unique-1.0
+	unique-1.0											\
+	dbus-glib-1
 )
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
