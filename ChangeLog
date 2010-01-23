@@ -5,6 +5,14 @@
 	* nautilus-actions/nact/nact-preferences.ui:
 	Reset tooltips in all preference pages.
 
+	* nautilus-actions/nact/nact-providers-list.c:
+	* nautilus-actions/nact/nact-providers-list.h: New files.
+
+	* nautilus-actions/nact/Makefile.am: Updated accordingly.
+
+	* nautilus-actions/nact/nact-preferences-editor.c:
+	Updated to handle a sixth tab.
+
 2009-01-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump version number.

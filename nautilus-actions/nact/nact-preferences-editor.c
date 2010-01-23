@@ -183,6 +183,7 @@ instance_dispose( GObject *dialog )
 	if( !self->private->dispose_has_run ){
 
 		nact_schemes_list_dispose( BASE_WINDOW( self ));
+		nact_providers_list_dispose( BASE_WINDOW( self ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -273,6 +274,9 @@ on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
 
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
 	nact_schemes_list_create_model( listview, FALSE );
+
+	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
+	nact_providers_list_create_model( listview );
 }
 
 static void
@@ -401,6 +405,11 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	 */
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
 	nact_schemes_list_init_view( listview, BASE_WINDOW( editor ));
+
+	/* sixth tab: I/O providers priorities
+	 */
+	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
+	nact_providers_list_init_view( listview, BASE_WINDOW( editor ));
 
 	/* dialog buttons
 	 */
@@ -560,6 +569,10 @@ save_preferences( NactPreferencesEditor *editor )
 	/* fifth tab: list of default schemes
 	 */
 	nact_schemes_list_save_defaults( BASE_WINDOW( editor ));
+
+	/* sixth tab: priorities of I/O providers
+	 */
+	nact_providers_list_save( BASE_WINDOW( editor ));
 }
 
 static gboolean

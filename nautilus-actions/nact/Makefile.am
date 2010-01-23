@@ -114,6 +114,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-main-window.h											\
 	nact-preferences-editor.c									\
 	nact-preferences-editor.h									\
+	nact-providers-list.c										\
+	nact-providers-list.h										\
 	nact-schemes-list.c											\
 	nact-schemes-list.h											\
 	nact-tree-model.c											\
