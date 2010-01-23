@@ -1202,13 +1202,15 @@ search_for_child_widget( GtkContainer *container, const gchar *name )
 	GList *ic;
 	GtkWidget *found = NULL;
 	GtkWidget *child;
+	const gchar *child_name;
 
 	for( ic = children ; ic ; ic = ic->next ){
 		if( GTK_IS_WIDGET( ic->data )){
 			child = GTK_WIDGET( ic->data );
-			if( child->name && strlen( child->name )){
-				/*g_debug( "%s: child=%s", thisfn, child->name );*/
-				if( !g_ascii_strcasecmp( name, child->name )){
+			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
+			if( child_name && strlen( child_name )){
+				/*g_debug( "%s: child=%s", thisfn, child_name );*/
+				if( !g_ascii_strcasecmp( name, child_name )){
 					found = child;
 					break;
 
