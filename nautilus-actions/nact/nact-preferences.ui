@@ -43,6 +43,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Menus and actions will be displayed in the ascending alphabetical order of their label, both in the Nautilus context menu and in the NACT user interface.</property>
                                 <property name="use_underline">True</property>
                                 <property name="active">True</property>
                                 <property name="draw_indicator">True</property>
@@ -57,6 +58,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Menus and actions will be displayed in the descending alphabetical order of their label, both in the Nautilus context menu and in the NACT user interface.</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                                 <property name="group">OrderAlphaAscButton</property>
@@ -71,6 +73,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Display order of menus and actions, both in the Nautilus context menu and in the NACT user interface, must be manually adjusted.</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                                 <property name="group">OrderAlphaAscButton</property>
@@ -119,6 +122,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">When this option is checked, menus and actions will actually be displayed as sub-items of a root 'Nautilus Actions' menu in the Nautilus context menu.</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -132,6 +136,8 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">When this option is checked, an 'About Nautilus Actions' item will be added to the root Nautilus Actions menu in the Nautilus context menu.
+Note that this item will be displayed only if a unique menu is defined in the Nautilus context menu (e.g. when having checked the root 'Nautilus Actions' menu option above).</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -162,6 +168,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label39">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">This tab lets you choose how the actions are ordered in the displayed list as well as in the Nautilus context menu. You may also choose here how actions will be displayed in the Nautilus context menu.</property>
                 <property name="label" translatable="yes">_Runtime preferences</property>
                 <property name="use_underline">True</property>
               </object>
@@ -210,6 +217,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">When a menu is copied/pasted, or duplicated, the new menu will be relabeled as 'Copy of ...'.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -223,6 +231,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">When an action is copied/pasted, or duplicated, the new action will be relabeled as 'Copy of ...'.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -236,6 +245,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">When a profile is copied/pasted, or duplicated, the new profile will be relabeled as 'Copy of ...'.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -287,6 +297,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">When this option is checked, the 'Escape' key will let you quit the current assistant. Else, quitting the assistant is only possible by hitting the 'Cancel' button.</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -300,6 +311,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">This option is only relevant when the 'Escape' key lets the user quit the assistant. When checked, a confirmation will be asked to the user in order to help prevent erroneous hits.</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -336,6 +348,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label40">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">This tab acts on some user preferences relatively to the configuration user interface.</property>
                 <property name="label" translatable="yes">_UI Preferences</property>
                 <property name="use_underline">True</property>
               </object>
@@ -386,6 +399,9 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">This used to be the historical behavior.
+The selected file will be marked as "NOT OK" in the Summary page.
+The existing action will not be modified.</property>
                                     <property name="use_underline">True</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
@@ -400,6 +416,8 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">The selected file will be imported with a slightly modified label indicating the renumbering.
+The existing action will not be modified.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsNoImportButton</property>
@@ -414,6 +432,8 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">The action found in the selected file will silently override the current action which has the same identifiant.
+Be warned: this mode may be dangerous. You will not be prompted another time.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsNoImportButton</property>
@@ -428,6 +448,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">You will be asked each time an imported UUID already exists.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsNoImportButton</property>
@@ -467,6 +488,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label48">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">This tab lets you decide of some default behaviors on import operations.</property>
                 <property name="label" translatable="yes">_Import</property>
                 <property name="use_underline">True</property>
               </object>
@@ -505,6 +527,10 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">This used to be the historical export format.
+The exported file may later be imported via :
+- Import assistant of the Nautilus Actions Configuration Tool,
+- or via the gconftool-2 --import-schema-file command-line tool.</property>
                                     <property name="use_underline">True</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
@@ -519,6 +545,9 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">The exported file may later be imported via :
+- Import assistant of the Nautilus Actions Configuration Tool,
+- or via the gconftool-2 --import-schema-file command-line tool.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsExportGConfSchemaV1Button</property>
@@ -533,6 +562,10 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">This should be the preferred format for newly exported actions.
+The exported file may later be imported via :
+- Import assistant of the Nautilus Actions Configuration Tool,
+- or via the gconftool-2 --load command-line tool.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsExportGConfSchemaV1Button</property>
@@ -547,6 +580,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">You will be asked each time an action is about to be exported.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsExportGConfSchemaV1Button</property>
@@ -587,6 +621,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label51">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">This tab lets you decide of some default behaviors on export operations.</property>
                 <property name="label" translatable="yes">_Export</property>
                 <property name="use_underline">True</property>
               </object>
@@ -627,6 +662,9 @@
                                   <object class="GtkTreeView" id="SchemesTreeView">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">You may define here any number of scheme. They will be proposed as available schemes when defining conditions for an action.
+If the list becomes empty, NACT will automatically refill in with a default list.
+You can add a new scheme by clicking on the '+' button.</property>
                                     <property name="headers_visible">False</property>
                                     <property name="rules_hint">True</property>
                                     <property name="show_expanders">False</property>
@@ -713,6 +751,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">This tab lets you decide which schemes are proposed by default when editing advanced conditions for an item.</property>
                 <property name="label" translatable="yes">_Schemes</property>
                 <property name="use_underline">True</property>
               </object>
@@ -753,6 +792,7 @@
                                   <object class="GtkTreeView" id="ProvidersTreeView">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">Define here, for available I/O providers, if you want them to be read at startup, to be writable, and the order in which they will be tested when trying to write a new menu or action.</property>
                                     <property name="headers_visible">False</property>
                                     <property name="rules_hint">True</property>
                                     <property name="show_expanders">False</property>
@@ -769,17 +809,15 @@
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
                                 <child>
-                                  <object class="GtkButton" id="AddSchemeButton1">
+                                  <object class="GtkButton" id="ProviderButtonDow">
+                                    <property name="label" translatable="yes">_Down</property>
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
-                                    <child>
-                                      <object class="GtkImage" id="image1">
-                                        <property name="visible">True</property>
-                                        <property name="stock">gtk-add</property>
-                                      </object>
-                                    </child>
+                                    <property name="tooltip_text" translatable="yes">Move down the selected I/O provider in the order of priority when trying to write a new item.</property>
+                                    <property name="image">image2</property>
+                                    <property name="use_underline">True</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -788,17 +826,15 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="RemoveSchemeButton1">
+                                  <object class="GtkButton" id="ProviderButtonUp">
+                                    <property name="label" translatable="yes">_Up</property>
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
-                                    <child>
-                                      <object class="GtkImage" id="image2">
-                                        <property name="visible">True</property>
-                                        <property name="stock">gtk-remove</property>
-                                      </object>
-                                    </child>
+                                    <property name="tooltip_text" translatable="yes">Move up the selected I/O provider in the order of priority when trying to write a new item.</property>
+                                    <property name="image">image3</property>
+                                    <property name="use_underline">True</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -820,7 +856,7 @@
                       <object class="GtkLabel" id="label3">
                         <property name="visible">True</property>
                         <property name="xpad">5</property>
-                        <property name="label" translatable="yes">&lt;b&gt;I/O Providers&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Activation and priority&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
                     </child>
@@ -837,6 +873,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label43">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">This tab lets you decide whether the I/O providers are enabled or not, and in which order they will be tried when writing a new item.</property>
                 <property name="label" translatable="yes">I/O _Providers</property>
                 <property name="use_underline">True</property>
               </object>
@@ -895,5 +932,17 @@
       <action-widget response="0">CancelButton</action-widget>
       <action-widget response="0">OKButton</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="stock">gtk-missing-image</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="stock">gtk-sort-descending</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="stock">gtk-sort-ascending</property>
   </object>
 </interface>

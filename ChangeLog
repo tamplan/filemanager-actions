@@ -2,6 +2,9 @@
 
 	* nautilus-actions/nact/nact-schemes-list.c: Cleanup the source file.
 
+	* nautilus-actions/nact/nact-preferences.ui:
+	Reset tooltips in all preference pages.
+
 2009-01-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump version number.
