@@ -69,7 +69,6 @@ static GSList    *get_default_default_schemes_list( BaseWindow *window );
 static void       init_view_connect_signals( GtkTreeView *treeview, BaseWindow *window );
 static void       init_view_select_first_row( GtkTreeView *treeview );
 
-/*static gboolean   iter_for_reset( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data );*/
 static void       iter_for_setup( gchar *scheme, GtkTreeModel *model );
 static gboolean   iter_for_get( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, GSList **schemes_list );
 static GSList    *get_list_schemes( GtkTreeView *treeview );
@@ -90,9 +89,6 @@ static void       delete_row( BaseWindow *window );
 
 static GtkButton *get_add_button( BaseWindow *window );
 static GtkButton *get_remove_button( BaseWindow *window );
-/*static GSList    *get_gconf_subdirs( GConfClient *gconf, const gchar *path );
-static void       free_gconf_subdirs( GSList *subdirs );
-static void       free_gslist( GSList *list );*/
 
 /**
  * nact_schemes_list_create_schemes_list:
@@ -384,16 +380,6 @@ nact_schemes_list_setup_values( GtkTreeView *treeview, BaseWindow *window, GSLis
 
 	init_view_select_first_row( treeview );
 }
-
-#if 0
-static gboolean
-iter_for_reset( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data )
-{
-	gtk_list_store_set( GTK_LIST_STORE( model ), iter, SCHEMES_CHECKBOX_COLUMN, FALSE, -1 );
-
-	return( FALSE ); /* don't stop looping */
-}
-#endif
 
 static void
 iter_for_setup( gchar *scheme, GtkTreeModel *model )
@@ -879,60 +865,3 @@ get_remove_button( BaseWindow *window )
 
 	return( button );
 }
-
-#if 0
-/*
- * get_subdirs:
- * @gconf: a  #GConfClient instance.
- * @path: a full path to be readen.
- *
- * Loads the subdirs of the given path.
- *
- * Returns: a GSList of full path subdirectories.
- *
- * The returned list should be free_subdirs() by the
- * caller.
- */
-static GSList *
-get_gconf_subdirs( GConfClient *gconf, const gchar *path )
-{
-	static const gchar *thisfn = "get_subdirs";
-	GError *error = NULL;
-	GSList *list_subdirs;
-
-	list_subdirs = gconf_client_all_dirs( gconf, path, &error );
-
-	if( error ){
-		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
-		g_error_free( error );
-		return(( GSList * ) NULL );
-	}
-
-	return( list_subdirs );
-}
-
-/*
- * free_subdirs:
- * @subdirs: a list of subdirs as returned by get_subdirs().
- *
- * Release the list of subdirs.
- */
-static void
-free_gconf_subdirs( GSList *subdirs )
-{
-	free_gslist( subdirs );
-}
-
-/*
- * free_gslist:
- * @list: the GSList to be freed.
- *
- * Frees a GSList of strings.
- */
-static void
-free_gslist( GSList *list )
-{
-	g_slist_foreach( list, ( GFunc ) g_free, NULL );
-	g_slist_free( list );
-}
-#endif

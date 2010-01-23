@@ -1,5 +1,9 @@
 2009-01-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-schemes-list.c: Cleanup the source file.
+
+2009-01-23 Pierre Wieser <pwieser@trychlos.org>
+
 	* configure.ac: Bump version number.
 
 	* All source files: Updated copyright notice.
