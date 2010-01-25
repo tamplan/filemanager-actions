@@ -143,7 +143,6 @@ void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer
 
 /* NAPivot properties and configuration
  */
-gboolean      na_pivot_get_automatic_reload( const NAPivot *pivot );
 void          na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
 
 void          na_pivot_set_loadable_population( NAPivot *pivot, NAPivotLoadable loadable );

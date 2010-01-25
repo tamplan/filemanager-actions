@@ -631,26 +631,6 @@ na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer )
 }
 
 /**
- * na_pivot_get_automatic_reload:
- * @pivot: this #NAPivot instance.
- *
- * Returns: the automatic reload flag.
- */
-gboolean
-na_pivot_get_automatic_reload( const NAPivot *pivot )
-{
-	gboolean auto_reload = FALSE;
-
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
-
-	if( !pivot->private->dispose_has_run ){
-		auto_reload = pivot->private->automatic_reload;
-	}
-
-	return( auto_reload );
-}
-
-/**
  * na_pivot_set_automatic_reload:
  * @pivot: this #NAPivot instance.
  * @reload: whether this #NAPivot instance should automatically reload
@@ -670,6 +650,7 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
+
 		pivot->private->automatic_reload = reload;
 	}
 }

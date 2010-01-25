@@ -1,6 +1,10 @@
 2009-01-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h (na_pivot_get_automatic_reload):
+	Remove unused function.
+
+	* nautilus-actions/runtime/na-pivot.c:
 	* nautilus-actions/runtime/na-pivot.h (na_pivot_set_population):
 	Function is renamed to na_pivot_set_loadable_population().
 	The enum is named NAPivotLoadable.
