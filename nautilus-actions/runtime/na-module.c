@@ -54,10 +54,10 @@ struct NAModulePrivate {
 
 	/* api
 	 */
-	gboolean ( * initialize ) ( GTypeModule *module );
-	guint    ( * get_version )( void );
-	gint     ( * list_types ) ( const GType **types );
-	void     ( * shutdown )   ( void );
+	gboolean ( *initialize ) ( GTypeModule *module );
+	guint    ( *get_version )( void );
+	gint     ( *list_types ) ( const GType **types );
+	void     ( *shutdown )   ( void );
 };
 
 static GTypeModuleClass *st_parent_class = NULL;

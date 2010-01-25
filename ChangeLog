@@ -1,3 +1,7 @@
+2009-01-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/runtime/na-module.c: Source slight adjustment.
+
 2009-01-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nact-schemes-list.c: Cleanup the source file.
