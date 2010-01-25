@@ -52,38 +52,38 @@ struct NAPivotClassPrivate {
 /* private instance data
  */
 struct NAPivotPrivate {
-	gboolean dispose_has_run;
+	gboolean        dispose_has_run;
 
 	/* dynamically loaded modules (extension plugins)
 	 */
-	GList   *modules;
+	GList          *modules;
 
 	/* list of instances to be notified of repository updates
 	 * these are called 'consumers' of NAPivot
 	 */
-	GList   *consumers;
+	GList          *consumers;
 
 	/* configuration tree
 	 */
-	GList   *tree;
+	GList          *tree;
 
 	/* whether to automatically reload the whole configuration tree
 	 * when a modification has been detected in one of the underlying
 	 * I/O storage subsystems
 	 * defaults to FALSE
 	 */
-	gboolean automatic_reload;
-	GTimeVal last_event;
-	guint    event_source_id;
-	gulong   action_changed_handler;
+	gboolean        automatic_reload;
+	GTimeVal        last_event;
+	guint           event_source_id;
+	gulong          action_changed_handler;
 
 	/* whether to load all items, or only a part
 	 */
-	gint     population;
+	NAPivotLoadable loadable_population;
 
 	/* list of monitoring objects on runtime preferences
 	 */
-	GList   *monitors;
+	GList          *monitors;
 };
 
 enum {
@@ -218,13 +218,15 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NAPivotPrivate, 1 );
 
+	/* these defaults are suitable for the NACT management user interface
+	 */
 	self->private->dispose_has_run = FALSE;
 	self->private->modules = NULL;
 	self->private->consumers = NULL;
 	self->private->tree = NULL;
 	self->private->automatic_reload = FALSE;
 	self->private->event_source_id = 0;
-	self->private->population = PIVOT_LOAD_ALL;
+	self->private->loadable_population = PIVOT_LOAD_ALL;
 }
 
 static void
@@ -673,7 +675,7 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 }
 
 /**
- * na_pivot_set_population:
+ * na_pivot_set_loadable_population:
  * @pivot: this #NAPivot instance.
  * @population: an indicator of the population to be loaded.
  *
@@ -682,12 +684,13 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
  * which mean 'loads all'.
  */
 void
-na_pivot_set_population( NAPivot *pivot, gint population )
+na_pivot_set_loadable_population( NAPivot *pivot, NAPivotLoadable population )
 {
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
-		pivot->private->population = population;
+
+		pivot->private->loadable_population = population;
 	}
 }
 

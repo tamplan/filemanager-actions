@@ -1,5 +1,14 @@
 2009-01-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h (na_pivot_set_population):
+	Function is renamed to na_pivot_set_loadable_population().
+	The enum is named NAPivotLoadable.
+
+	* nautilus-actions/plugin/nautilus-actions.c (instance_init):
+	* nautilus-actions/utils/nautilus-actions-run.c (get_action):
+	Adjusted accordingly.
+
 	* nautilus-actions/runtime/na-module.c: Source slight adjustment.
 
 2009-01-23 Pierre Wieser <pwieser@trychlos.org>

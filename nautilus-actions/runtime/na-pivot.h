@@ -109,11 +109,16 @@ typedef struct {
 
 GType         na_pivot_get_type( void );
 
-enum {
+/* Loadable population
+ * NACT management user interface defaults to PIVOT_LOAD_ALL
+ * N-A plugin set the loadable population to !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID
+ */
+typedef enum {
 	PIVOT_LOAD_DISABLED = 1 << 0,
 	PIVOT_LOAD_INVALID  = 1 << 1,
 	PIVOT_LOAD_ALL      = 0xff,
-};
+}
+	NAPivotLoadable;
 
 
 NAPivot      *na_pivot_new( void );
@@ -136,10 +141,12 @@ guint         na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSL
 
 void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
 
+/* NAPivot properties and configuration
+ */
 gboolean      na_pivot_get_automatic_reload( const NAPivot *pivot );
 void          na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
 
-void          na_pivot_set_population( NAPivot *pivot, gint population );
+void          na_pivot_set_loadable_population( NAPivot *pivot, NAPivotLoadable loadable );
 gboolean      na_pivot_is_disable_loadable( const NAPivot *pivot );
 gboolean      na_pivot_is_invalid_loadable( const NAPivot *pivot );
 
