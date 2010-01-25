@@ -124,10 +124,14 @@ typedef enum {
 NAPivot      *na_pivot_new( void );
 void          na_pivot_dump( const NAPivot *pivot );
 
-void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
-
+/* providers management of any NAIxxxxProvider interface
+ */
 GList        *na_pivot_get_providers( const NAPivot *pivot, GType type );
 void          na_pivot_free_providers( GList *providers );
+
+/* menus/actions items management
+ */
+void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
 
 GList        *na_pivot_get_items( const NAPivot *pivot );
 void          na_pivot_load_items( NAPivot *pivot );
@@ -139,6 +143,8 @@ void          na_pivot_remove_item( NAPivot *pivot, NAObject *item );
 guint         na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
 guint         na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
 
+/* NAIPivotConsumer interface management
+ */
 void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
 
 /* NAPivot properties and configuration

@@ -1,6 +1,9 @@
 2009-01-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h: Source reorganization.
+
+	* nautilus-actions/runtime/na-pivot.c:
 	* nautilus-actions/runtime/na-pivot.h (na_pivot_get_automatic_reload):
 	Remove unused function.
 

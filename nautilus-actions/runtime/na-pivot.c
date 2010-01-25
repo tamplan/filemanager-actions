@@ -68,8 +68,8 @@ struct NAPivotPrivate {
 	GList          *tree;
 
 	/* whether to automatically reload the whole configuration tree
-	 * when a modification has been detected in one of the underlying
-	 * I/O storage subsystems
+	 * when a modification is detected in one of the underlying I/O
+	 * storage subsystems
 	 * defaults to FALSE
 	 */
 	gboolean        automatic_reload;
@@ -84,6 +84,14 @@ struct NAPivotPrivate {
 	/* list of monitoring objects on runtime preferences
 	 */
 	GList          *monitors;
+
+	/* list of I/O providers
+	 * note that the N-A plugin is only interested about providers which are
+	 * present at runtime and should be read at startup, while the NACT user
+	 * interface wants all i/o providers, those available at runtime as well
+	 * as those described in preferences
+	 */
+	GList          *io_providers;
 };
 
 enum {
@@ -343,36 +351,6 @@ na_pivot_dump( const NAPivot *pivot )
 	}
 }
 
-/*
- * this handler is trigerred by IIOProviders when an action is changed
- * in the underlying storage subsystems
- * we don't care of updating our internal list with each and every
- * atomic modification
- * instead we wait for the end of notifications serie, and then reload
- * the whole list of actions
- */
-void
-na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  )
-{
-	static const gchar *thisfn = "na_pivot_item_changed_handler";
-
-	g_debug( "%s: provider=%p, id=%s, pivot=%p", thisfn, ( void * ) provider, id, ( void * ) pivot );
-
-	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		/* set a timeout to notify clients at the end of the serie */
-		g_get_current_time( &pivot->private->last_event );
-
-		if( !pivot->private->event_source_id ){
-			pivot->private->event_source_id =
-				g_timeout_add( st_timeout_msec, ( GSourceFunc ) on_item_changed_timeout, pivot );
-		}
-	}
-}
-
 /**
  * na_pivot_get_providers:
  * @pivot: this #NAPivot instance.
@@ -418,6 +396,36 @@ na_pivot_free_providers( GList *providers )
 	g_debug( "%s: providers=%p", thisfn, ( void * ) providers );
 
 	na_module_free_extensions_list( providers );
+}
+
+/*
+ * this handler is trigerred by IIOProviders when an action is changed
+ * in the underlying storage subsystems
+ * we don't care of updating our internal list with each and every
+ * atomic modification
+ * instead we wait for the end of notifications serie, and then reload
+ * the whole list of actions
+ */
+void
+na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  )
+{
+	static const gchar *thisfn = "na_pivot_item_changed_handler";
+
+	g_debug( "%s: provider=%p, id=%s, pivot=%p", thisfn, ( void * ) provider, id, ( void * ) pivot );
+
+	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		/* set a timeout to notify clients at the end of the serie */
+		g_get_current_time( &pivot->private->last_event );
+
+		if( !pivot->private->event_source_id ){
+			pivot->private->event_source_id =
+				g_timeout_add( st_timeout_msec, ( GSourceFunc ) on_item_changed_timeout, pivot );
+		}
+	}
 }
 
 /**
