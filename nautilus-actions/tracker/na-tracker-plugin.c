@@ -61,7 +61,7 @@ nautilus_module_initialize( GTypeModule *module )
 {
 	static const gchar *thisfn = "nautilus_module_initialize";
 
-	syslog( LOG_USER | LOG_INFO, "%s Tracker %s initializing...", PACKAGE_NAME, PACKAGE_VERSION );
+	syslog( LOG_USER | LOG_INFO, "[N-A] %s Tracker %s initializing...", PACKAGE_NAME, PACKAGE_VERSION );
 
 	set_log_handler();
 

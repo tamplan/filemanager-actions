@@ -375,9 +375,12 @@ write_to_gconf( NAObjectAction *action, GSList **msg )
 	guint ret;
 
 	ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
-	pivot = na_pivot_new();
-	provider = na_io_provider_get_writable_provider( pivot );
 
+	pivot = na_pivot_new(
+			PIVOT_LOAD_NONE,
+			PIVOT_IO_PROVIDER_AVAILABLE | PIVOT_IO_PROVIDER_WRITABLE );
+
+	provider = na_io_provider_get_writable_provider( pivot );
 	if( provider ){
 
 		na_object_set_provider( action, NA_IIO_PROVIDER( provider ));

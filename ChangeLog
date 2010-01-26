@@ -1,3 +1,48 @@
+2009-01-26 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/io-provider-gconf/nagp-read.c
+	(nagp_iio_provider_read_items): Remove path trace.
+
+	* nautilus-actions/nact/nact-application.c
+	(appli_initialize_application):
+	* nautilus-actions/plugin/nautilus-actions.c (instance_init):
+	* nautilus-actions/utils/nautilus-actions-new.c (write_to_gconf):
+	* nautilus-actions/utils/nautilus-actions-run.c (get_action):
+	Adapt to new na_pivot_new().
+
+	* nautilus-actions/nact/nact-iaction-tab.c (display_provider_name):
+	Adapt to the temporary new NAIOProvider API.
+
+	* nautilus-actions/nact/nact-preferences-editor.c:
+	Fix compilation error by adding nact-providers-list.h include file.
+
+	* nautilus-actions/nact/nact-providers-list.c:
+	Display list of providers with their initial state.
+
+	* nautilus-actions/plugin/nautilus-module.c:
+	* nautilus-actions/tracker/na-tracker-plugin.c:
+	(nautilus_module_initialize):
+	Prefix the log message with "[N-A]".
+
+	* nautilus-actions/runtime/na-gconf-utils.c:
+	* nautilus-actions/runtime/na-gconf-utils.h
+	(na_gconf_utils_get_subdirs, na_gconf_utils_free_subdirs):
+	New functions.
+
+	* nautilus-actions/runtime/na-io-provider.c:
+	* nautilus-actions/runtime/na-io-provider.h:
+	Refactoring to keep a static list of capable I/O providers.
+
+	* nautilus-actions/runtime/na-module.c
+	(na_module_load_modules): Only displays the name of the loaded module.
+	(is_a_na_plugin): Add a trace with the full path of the module.
+
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h:
+	Define loadable_set and io_provider_set as construct-only properties.
+	Remove unused action_changed_handler stuff.
+	No more maintain the list of capable I/O providers.
+
 2009-01-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/runtime/na-pivot.c:

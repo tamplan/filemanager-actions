@@ -46,6 +46,9 @@ gboolean na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *ent
 gboolean na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gchar **value );
 gboolean na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry, GSList **value );
 
+GSList  *na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path );
+void     na_gconf_utils_free_subdirs( GSList *subdirs );
+
 gchar   *na_gconf_utils_path_to_key( const gchar *path );
 
 gboolean na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_schema, gboolean default_value );

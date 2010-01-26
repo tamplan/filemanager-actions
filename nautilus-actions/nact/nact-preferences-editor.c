@@ -39,6 +39,7 @@
 #include "base-iprefs.h"
 #include "nact-application.h"
 #include "nact-schemes-list.h"
+#include "nact-providers-list.h"
 #include "nact-preferences-editor.h"
 
 /* private class data

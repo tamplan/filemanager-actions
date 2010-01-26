@@ -52,51 +52,50 @@ struct NAPivotClassPrivate {
 /* private instance data
  */
 struct NAPivotPrivate {
-	gboolean        dispose_has_run;
+	gboolean             dispose_has_run;
+
+	NAPivotLoadableSet   loadable_set;
+	NAPivotIOProviderSet io_provider_set;
 
 	/* dynamically loaded modules (extension plugins)
 	 */
-	GList          *modules;
+	GList               *modules;
 
 	/* list of instances to be notified of repository updates
 	 * these are called 'consumers' of NAPivot
 	 */
-	GList          *consumers;
+	GList               *consumers;
 
 	/* configuration tree
 	 */
-	GList          *tree;
+	GList               *tree;
 
 	/* whether to automatically reload the whole configuration tree
 	 * when a modification is detected in one of the underlying I/O
 	 * storage subsystems
 	 * defaults to FALSE
 	 */
-	gboolean        automatic_reload;
-	GTimeVal        last_event;
-	guint           event_source_id;
-	gulong          action_changed_handler;
-
-	/* whether to load all items, or only a part
-	 */
-	NAPivotLoadable loadable_population;
+	gboolean             automatic_reload;
+	GTimeVal             last_event;
+	guint                event_source_id;
 
 	/* list of monitoring objects on runtime preferences
 	 */
-	GList          *monitors;
-
-	/* list of I/O providers
-	 * note that the N-A plugin is only interested about providers which are
-	 * present at runtime and should be read at startup, while the NACT user
-	 * interface wants all i/o providers, those available at runtime as well
-	 * as those described in preferences
-	 */
-	GList          *io_providers;
+	GList               *monitors;
 };
 
+/* signals
+ */
 enum {
 	ACTION_CHANGED,
 	LAST_SIGNAL
+};
+
+/* NAPivot properties
+ */
+enum {
+	NAPIVOT_PROP_LOADABLE_SET_ID = 1,
+	NAPIVOT_PROP_IO_PROVIDER_SET_ID
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -108,21 +107,22 @@ static GType         register_type( void );
 static void          class_init( NAPivotClass *klass );
 static void          iprefs_iface_init( NAIPrefsInterface *iface );
 static void          instance_init( GTypeInstance *instance, gpointer klass );
+static void          instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void          instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void          instance_dispose( GObject *object );
 static void          instance_finalize( GObject *object );
-
-static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id );
 
 /* NAIIOProvider management */
 static gboolean      on_item_changed_timeout( NAPivot *pivot );
 static gulong        time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+
+static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id );
 
 /* NAIPivotConsumer management */
 static void          free_consumers( GList *list );
 
 /* NAGConf runtime preferences management */
 static void          monitor_runtime_preferences( NAPivot *pivot );
-
 static void          on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
 static void          display_order_changed( NAPivot *pivot );
 static void          create_root_menu_changed( NAPivot *pivot );
@@ -178,14 +178,31 @@ class_init( NAPivotClass *klass )
 {
 	static const gchar *thisfn = "na_pivot_class_init";
 	GObjectClass *object_class;
+	GParamSpec *spec;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->set_property = instance_set_property;
+	object_class->get_property = instance_get_property;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
+
+	spec = g_param_spec_int(
+			NAPIVOT_PROP_LOADABLE_SET,
+			"Loadable population set",
+			"Nature of population to be loaded", 0, INT_MAX, 0,
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAPIVOT_PROP_LOADABLE_SET_ID, spec );
+
+	spec = g_param_spec_int(
+			NAPIVOT_PROP_IO_PROVIDER_SET,
+			"I/O providers set",
+			"The nature of the I/O providers we are concerned about", 0, INT_MAX, 0,
+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAPIVOT_PROP_IO_PROVIDER_SET_ID, spec );
 
 	klass->private = g_new0( NAPivotClassPrivate, 1 );
 
@@ -226,15 +243,67 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NAPivotPrivate, 1 );
 
-	/* these defaults are suitable for the NACT management user interface
-	 */
 	self->private->dispose_has_run = FALSE;
+	self->private->loadable_set = 0;
+	self->private->io_provider_set = 0;
 	self->private->modules = NULL;
 	self->private->consumers = NULL;
 	self->private->tree = NULL;
 	self->private->automatic_reload = FALSE;
 	self->private->event_source_id = 0;
-	self->private->loadable_population = PIVOT_LOAD_ALL;
+	self->private->monitors = NULL;
+}
+
+static void
+instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
+{
+	NAPivot *self;
+
+	g_return_if_fail( NA_IS_PIVOT( object ));
+	self = NA_PIVOT( object );
+
+	if( !self->private->dispose_has_run ){
+
+		switch( property_id ){
+			case NAPIVOT_PROP_LOADABLE_SET_ID:
+				g_value_set_int( value, self->private->loadable_set );
+				break;
+
+			case NAPIVOT_PROP_IO_PROVIDER_SET_ID:
+				g_value_set_int( value, self->private->io_provider_set );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
+	}
+}
+
+static void
+instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
+{
+	NAPivot *self;
+
+	g_return_if_fail( NA_IS_PIVOT( object ));
+	self = NA_PIVOT( object );
+
+	if( !self->private->dispose_has_run ){
+
+		switch( property_id ){
+			case NAPIVOT_PROP_LOADABLE_SET_ID:
+				self->private->loadable_set = g_value_get_int( value );
+				break;
+
+			case NAPIVOT_PROP_IO_PROVIDER_SET_ID:
+				self->private->io_provider_set = g_value_get_int( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
+	}
 }
 
 static void
@@ -266,9 +335,8 @@ instance_dispose( GObject *object )
 		/* release the GConf monitoring */
 		na_gconf_monitor_release_monitors( self->private->monitors );
 
-		if( g_signal_handler_is_connected( self, self->private->action_changed_handler )){
-			g_signal_handler_disconnect( self, self->private->action_changed_handler );
-		}
+		/* release the I/O Provider objects */
+		na_io_provider_terminate();
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -304,20 +372,20 @@ instance_finalize( GObject *object )
  * #NAObjectItem-derived object.
  */
 NAPivot *
-na_pivot_new( void )
+na_pivot_new( NAPivotLoadableSet loadable, NAPivotIOProviderSet provider )
 {
 	static const gchar *thisfn = "na_pivot_new";
 	NAPivot *pivot;
 
 	g_debug( "%s", thisfn );
 
-	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
+	pivot = g_object_new(
+			NA_PIVOT_TYPE,
+			NAPIVOT_PROP_LOADABLE_SET, loadable,
+			NAPIVOT_PROP_IO_PROVIDER_SET, provider,
+			NULL );
 
 	pivot->private->modules = na_module_load_modules();
-
-	na_io_provider_register_callbacks( pivot );
-	/*g_debug( "%s: modules=%p, count=%d",
-			thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));*/
 
 	monitor_runtime_preferences( pivot );
 
@@ -339,11 +407,13 @@ na_pivot_dump( const NAPivot *pivot )
 
 	if( !pivot->private->dispose_has_run ){
 
+		g_debug( "%s:     loadable_set=%d", thisfn, pivot->private->loadable_set );
+		g_debug( "%s:  io_provider_set=%d", thisfn, pivot->private->io_provider_set );
 		g_debug( "%s:          modules=%p (%d elts)", thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));
 		g_debug( "%s:        consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
 		g_debug( "%s:             tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
 		g_debug( "%s: automatic_reload=%s", thisfn, pivot->private->automatic_reload ? "True":"False" );
-		g_debug( "%s:       population=%d", thisfn, pivot->private->population );
+		g_debug( "%s:         monitors=%p (%d elts)", thisfn, ( void * ) pivot->private->monitors, g_list_length( pivot->private->monitors ));
 
 		for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
 			g_debug( "%s:     [%d]: %p", thisfn, i++, it->data );
@@ -400,7 +470,7 @@ na_pivot_free_providers( GList *providers )
 
 /*
  * this handler is trigerred by IIOProviders when an action is changed
- * in the underlying storage subsystems
+ * in their underlying storage subsystems
  * we don't care of updating our internal list with each and every
  * atomic modification
  * instead we wait for the end of notifications serie, and then reload
@@ -426,6 +496,54 @@ na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot
 				g_timeout_add( st_timeout_msec, ( GSourceFunc ) on_item_changed_timeout, pivot );
 		}
 	}
+}
+
+/*
+ * this timer is set when we receive the first event of a serie
+ * we continue to loop until last event is at least one half of a
+ * second old
+ *
+ * there is no race condition here as we are not multithreaded
+ * or .. is there ?
+ */
+static gboolean
+on_item_changed_timeout( NAPivot *pivot )
+{
+	static const gchar *thisfn = "na_pivot_on_item_changed_timeout";
+	GTimeVal now;
+	gulong diff;
+	GList *ic;
+
+	g_debug( "%s: pivot=%p", thisfn, pivot );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+
+	g_get_current_time( &now );
+	diff = time_val_diff( &now, &pivot->private->last_event );
+	if( diff < st_timeout_usec ){
+		return( TRUE );
+	}
+
+	if( pivot->private->automatic_reload ){
+		na_pivot_load_items( pivot );
+	}
+
+	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
+		na_ipivot_consumer_notify_actions_changed( NA_IPIVOT_CONSUMER( ic->data ));
+	}
+
+	pivot->private->event_source_id = 0;
+	return( FALSE );
+}
+
+/*
+ * returns the difference in microseconds.
+ */
+static gulong
+time_val_diff( const GTimeVal *recent, const GTimeVal *old )
+{
+	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
+	microsec += recent->tv_usec  - old->tv_usec;
+	return( microsec );
 }
 
 /**
@@ -471,9 +589,11 @@ na_pivot_load_items( NAPivot *pivot )
 		na_object_free_items_list( pivot->private->tree );
 
 		pivot->private->tree = na_io_provider_read_items( pivot, &messages );
+
 		for( im = messages ; im ; im = im->next ){
 			g_warning( "%s: %s", thisfn, ( const gchar * ) im->data );
 		}
+
 		na_utils_free_string_list( messages );
 	}
 }
@@ -664,26 +784,6 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 }
 
 /**
- * na_pivot_set_loadable_population:
- * @pivot: this #NAPivot instance.
- * @population: an indicator of the population to be loaded.
- *
- * @population may be a OR of PIVOT_LOAD_DISABLED and PIVOT_LOAD_INVALID.
- * It is initialized to PIVOT_LOAD_DISABLED | PIVOT_LOAD_INVALID,
- * which mean 'loads all'.
- */
-void
-na_pivot_set_loadable_population( NAPivot *pivot, NAPivotLoadable population )
-{
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		pivot->private->loadable_population = population;
-	}
-}
-
-/**
  * na_pivot_is_disable_loadable:
  * @pivot: this #NAPivot instance.
  *
@@ -699,7 +799,7 @@ na_pivot_is_disable_loadable( const NAPivot *pivot )
 
 	if( !pivot->private->dispose_has_run ){
 
-		is_loadable = ( pivot->private->population & PIVOT_LOAD_DISABLED );
+		is_loadable = ( pivot->private->loadable_set & PIVOT_LOAD_DISABLED );
 	}
 
 	return( is_loadable );
@@ -721,10 +821,32 @@ na_pivot_is_invalid_loadable( const NAPivot *pivot )
 
 	if( !pivot->private->dispose_has_run ){
 
-		is_loadable = ( pivot->private->population & PIVOT_LOAD_INVALID );
+		is_loadable = ( pivot->private->loadable_set & PIVOT_LOAD_INVALID );
 	}
 
 	return( is_loadable );
+}
+
+/**
+ * na_pivot_get_io_provider_set:
+ * @pivot: this #NAPivot instance.
+ *
+ * Returns: the I/O providers we are concerned about.
+ */
+NAPivotIOProviderSet
+na_pivot_get_io_provider_set( const NAPivot *pivot )
+{
+	NAPivotIOProviderSet set;
+
+	set = 0;
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), set );
+
+	if( !pivot->private->dispose_has_run ){
+
+		set = pivot->private->io_provider_set;
+	}
+
+	return( set );
 }
 
 /**
@@ -859,54 +981,6 @@ get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id )
 	return( found );
 }
 
-/*
- * this timer is set when we receive the first event of a serie
- * we continue to loop until last event is at least one half of a
- * second old
- *
- * there is no race condition here as we are not multithreaded
- * or .. is there ?
- */
-static gboolean
-on_item_changed_timeout( NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_on_item_changed_timeout";
-	GTimeVal now;
-	gulong diff;
-	GList *ic;
-
-	g_debug( "%s: pivot=%p", thisfn, pivot );
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
-
-	g_get_current_time( &now );
-	diff = time_val_diff( &now, &pivot->private->last_event );
-	if( diff < st_timeout_usec ){
-		return( TRUE );
-	}
-
-	if( pivot->private->automatic_reload ){
-		na_pivot_load_items( pivot );
-	}
-
-	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-		na_ipivot_consumer_notify_actions_changed( NA_IPIVOT_CONSUMER( ic->data ));
-	}
-
-	pivot->private->event_source_id = 0;
-	return( FALSE );
-}
-
-/*
- * returns the difference in microseconds.
- */
-static gulong
-time_val_diff( const GTimeVal *recent, const GTimeVal *old )
-{
-	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
-	microsec += recent->tv_usec  - old->tv_usec;
-	return( microsec );
-}
-
 static void
 free_consumers( GList *consumers )
 {
@@ -917,8 +991,10 @@ free_consumers( GList *consumers )
 static void
 monitor_runtime_preferences( NAPivot *pivot )
 {
+	static const gchar *thisfn = "na_pivot_monitor_runtime_preferences";
 	GList *list = NULL;
 
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 	g_return_if_fail( !pivot->private->dispose_has_run );
 

@@ -229,6 +229,45 @@ na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry
 }
 
 /**
+ * na_gconf_utils_get_subdirs:
+ * @gconf: a  #GConfClient instance.
+ * @path: a full path to be readen.
+ *
+ * Returns: a list of full path subdirectories.
+ *
+ * The returned list should be na_gconf_utils_free_subdirs() by the caller.
+ */
+GSList *
+na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
+{
+	static const gchar *thisfn = "na_gconf_utils_get_subdirs";
+	GError *error = NULL;
+	GSList *list_subdirs;
+
+	list_subdirs = gconf_client_all_dirs( gconf, path, &error );
+
+	if( error ){
+		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
+		g_error_free( error );
+		return(( GSList * ) NULL );
+	}
+
+	return( list_subdirs );
+}
+
+/**
+ * na_gconf_utils_free_subdirs:
+ * @subdirs: the subdirectory list as returned from #na_gconf_utils_get_subdirs().
+ *
+ * Release the list.
+ */
+void
+na_gconf_utils_free_subdirs( GSList *subdirs )
+{
+	na_utils_free_string_list( subdirs );
+}
+
+/**
  * na_gconf_utils_path_to_key:
  * @path: the full path of a key.
  *

@@ -257,7 +257,7 @@ na_module_load_modules( void )
 				if( module ){
 					module->private->name = na_utils_remove_suffix( entry, suffix );
 					modules = g_list_prepend( modules, module );
-					g_debug( "%s: module %s successfully loaded", thisfn, fname );
+					g_debug( "%s: module %s successfully loaded", thisfn, entry );
 				}
 				g_free( fname );
 			}
@@ -329,6 +329,7 @@ module_load( GTypeModule *gmodule )
 static gboolean
 is_a_na_plugin( NAModule *module )
 {
+	static const gchar *thisfn = "na_module_is_a_na_plugin";
 	gboolean ok;
 
 	ok =
@@ -337,6 +338,10 @@ is_a_na_plugin( NAModule *module )
 		plugin_check( module, "na_api_module_list_types" , ( gpointer * ) &module->private->list_types ) &&
 		plugin_check( module, "na_api_module_shutdown"   , ( gpointer * ) &module->private->shutdown ) &&
 		module->private->initialize( G_TYPE_MODULE( module ));
+
+	if( ok ){
+		g_debug( "%s: %s: ok", thisfn, module->private->path );
+	}
 
 	return( ok );
 }

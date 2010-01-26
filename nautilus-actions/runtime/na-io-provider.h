@@ -32,29 +32,63 @@
 #define __NA_RUNTIME_IO_PROVIDER_H__
 
 /**
- * SECTION: na_iio_provider
- * @short_description: #NAIIOProvider internal API.
+ * SECTION: na_io_provider
+ * @short_description: #NAIOProvider class definition.
  * @include: runtime/na-io-provider.h
  *
- * This is the API which is used by Nautilus-Actions to manage the actual
- * NAIIOProvider interface.
+ * NAIOProvider is the Nautilus-Actions class which is used to manage
+ * external I/O Providers which implement NAIIOProvider interface.
  */
 
 #include "na-pivot.h"
 
 G_BEGIN_DECLS
 
-void           na_io_provider_register_callbacks( const NAPivot *pivot );
+#define NA_IO_PROVIDER_TYPE					( na_io_provider_get_type())
+#define NA_IO_PROVIDER( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IO_PROVIDER_TYPE, NAIOProvider ))
+#define NA_IO_PROVIDER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_IO_PROVIDER_TYPE, NAIOProviderClass ))
+#define NA_IS_IO_PROVIDER( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IO_PROVIDER_TYPE ))
+#define NA_IS_IO_PROVIDER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_IO_PROVIDER_TYPE ))
+#define NA_IO_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_IO_PROVIDER_TYPE, NAIOProviderClass ))
+
+typedef struct NAIOProviderPrivate NAIOProviderPrivate;
+
+typedef struct {
+	GObject              parent;
+	NAIOProviderPrivate *private;
+}
+	NAIOProvider;
+
+typedef struct NAIOProviderClassPrivate NAIOProviderClassPrivate;
+
+typedef struct {
+	GObjectClass              parent;
+	NAIOProviderClassPrivate *private;
+}
+	NAIOProviderClass;
+
+GType    na_io_provider_get_type( void );
+void     na_io_provider_terminate( void );
+
+GList   *na_io_provider_get_providers_list( const NAPivot *pivot );
+
+GList   *na_io_provider_read_items( const NAPivot *pivot, GSList **messages );
+
+gboolean na_io_provider_is_to_be_read( const NAIOProvider *provider );
+gboolean na_io_provider_is_writable  ( const NAIOProvider *provider );
+gchar   *na_io_provider_get_name     ( const NAIOProvider *provider );
+
+gchar   *na_io_provider_get_provider_name( const NAIIOProvider *provider );
+
+/* ... */
 
 NAIIOProvider *na_io_provider_get_provider( const NAPivot *pivot, const gchar *id );
 NAIIOProvider *na_io_provider_get_writable_provider( const NAPivot *pivot );
 
 gchar         *na_io_provider_get_id( const NAPivot *pivot, const NAIIOProvider *provider );
-gchar         *na_io_provider_get_name( const NAPivot *pivot, const NAIIOProvider *provider );
 guint          na_io_provider_get_version( const NAPivot *pivot, const NAIIOProvider *provider );
 gboolean       na_io_provider_is_willing_to_write( const NAPivot *pivot, const NAIIOProvider *provider );
 
-GList         *na_io_provider_read_items( const NAPivot *pivot, GSList **messages );
 guint          na_io_provider_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
 guint          na_io_provider_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
 

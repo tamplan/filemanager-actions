@@ -1119,7 +1119,7 @@ display_provider_name( NactIActionTab *instance, NAPivot *pivot, NAObjectItem *i
 	if( item ){
 		provider = na_object_get_provider( item );
 		if( provider ){
-			label = na_io_provider_get_name( pivot, provider );
+			label = na_io_provider_get_provider_name( provider );
 		}
 	}
 	if( !label ){

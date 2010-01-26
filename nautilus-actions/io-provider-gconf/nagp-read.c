@@ -88,9 +88,7 @@ nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 
 		for( ip = listpath ; ip ; ip = ip->next ){
 
-			const gchar *path = ( const gchar * ) ip->data;
-			g_debug( "path=%s", path );
-			item = read_item( self, path );
+			item = read_item( self, ( const gchar * ) ip->data );
 			if( item ){
 				items_list = g_list_prepend( items_list, item );
 			}
