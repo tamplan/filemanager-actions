@@ -809,23 +809,6 @@ You can add a new scheme by clicking on the '+' button.</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
                                 <child>
-                                  <object class="GtkButton" id="ProviderButtonDown">
-                                    <property name="label" translatable="yes">_Down</property>
-                                    <property name="visible">True</property>
-                                    <property name="sensitive">False</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                    <property name="tooltip_text" translatable="yes">Move down the selected I/O provider in the order of priority when trying to write a new item.</property>
-                                    <property name="image">image2</property>
-                                    <property name="use_underline">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
                                   <object class="GtkButton" id="ProviderButtonUp">
                                     <property name="label" translatable="yes">_Up</property>
                                     <property name="visible">True</property>
@@ -840,6 +823,22 @@ You can add a new scheme by clicking on the '+' button.</property>
                                     <property name="expand">False</property>
                                     <property name="fill">False</property>
                                     <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="ProviderButtonDown">
+                                    <property name="label" translatable="yes">_Down</property>
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="image">image2</property>
+                                    <property name="use_underline">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
@@ -937,12 +936,12 @@ You can add a new scheme by clicking on the '+' button.</property>
     <property name="visible">True</property>
     <property name="stock">gtk-missing-image</property>
   </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="stock">gtk-sort-descending</property>
-  </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
     <property name="stock">gtk-sort-ascending</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="stock">gtk-sort-descending</property>
   </object>
 </interface>

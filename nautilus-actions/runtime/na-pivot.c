@@ -906,20 +906,20 @@ na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
 gboolean
 na_pivot_is_level_zero_writable( const NAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_is_level_zero_writable";
+	/*static const gchar *thisfn = "na_pivot_is_level_zero_writable";*/
 	gboolean writable;
-	NAIIOProvider *provider;
+	/*NAIIOProvider *provider;*/
 
 	writable = FALSE;
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), writable );
 
 	if( !pivot->private->dispose_has_run ){
-		provider = na_io_provider_get_provider( pivot, "na-gconf" );
+		/*provider = na_io_provider_get_provider( pivot, "na-gconf" );
 		if( provider ){
 			writable = na_io_provider_is_willing_to_write( pivot, provider );
 			g_debug( "%s: writable=%s", thisfn, writable ? "True":"False" );
 			g_object_unref( provider );
-		}
+		}*/
 	}
 
 	return( writable );

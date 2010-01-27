@@ -2,9 +2,15 @@
 
 	* nautilus-actions/nact/nact-preferences.ui:
 	Fix the name of the Down button.
+	Invert buttons so that Up is at the top, and Down at the bottom.
 
 	* nautilus-actions/nact/nact-providers-list.c:
 	Activate up/down buttons.
+	Save the I/O providers individual preferences.
+	Load and save in order.
+
+	* nautilus-actions/runtime/na-io-provider.c:
+	Order the I/O providers in write priority.
 
 2009-01-26 Pierre Wieser <pwieser@trychlos.org>
 

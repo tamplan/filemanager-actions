@@ -67,25 +67,38 @@ typedef struct {
 }
 	NAIOProviderClass;
 
-GType    na_io_provider_get_type( void );
-void     na_io_provider_terminate( void );
+/* GConf preferences key
+ */
+#define IO_PROVIDER_KEY_ROOT			"io-providers"
+#define IO_PROVIDER_KEY_READABLE		"read-at-startup"
+#define IO_PROVIDER_KEY_WRITABLE		"writable"
+#define IO_PROVIDER_KEY_ORDER			"io-providers-order"
 
-GList   *na_io_provider_get_providers_list( const NAPivot *pivot );
+GType          na_io_provider_get_type ( void );
 
-GList   *na_io_provider_read_items( const NAPivot *pivot, GSList **messages );
+void           na_io_provider_terminate( void );
 
-gboolean na_io_provider_is_to_be_read( const NAIOProvider *provider );
-gboolean na_io_provider_is_writable  ( const NAIOProvider *provider );
-gchar   *na_io_provider_get_name     ( const NAIOProvider *provider );
+GList         *na_io_provider_get_providers_list( const NAPivot *pivot );
+void           na_io_provider_dump_providers_list( GList *providers );
+NAIOProvider  *na_io_provider_find_provider_by_id( GList *providers, const gchar *id );
 
-gchar   *na_io_provider_get_provider_name( const NAIIOProvider *provider );
+GList         *na_io_provider_read_items( const NAPivot *pivot, GSList **messages );
+
+gchar         *na_io_provider_get_id                ( const NAIOProvider *provider );
+gchar         *na_io_provider_get_name              ( const NAIOProvider *provider );
+gboolean       na_io_provider_is_readable_at_startup( const NAIOProvider *provider );
+gboolean       na_io_provider_is_writable           ( const NAIOProvider *provider );
+NAIIOProvider *na_io_provider_get_provider          ( const NAIOProvider *provider );
+
+void           na_io_provider_set_readable_at_startup( NAIOProvider *provider, gboolean readable );
+void           na_io_provider_set_writable           ( NAIOProvider *provider, gboolean writable );
 
 /* ... */
 
-NAIIOProvider *na_io_provider_get_provider( const NAPivot *pivot, const gchar *id );
 NAIIOProvider *na_io_provider_get_writable_provider( const NAPivot *pivot );
 
-gchar         *na_io_provider_get_id( const NAPivot *pivot, const NAIIOProvider *provider );
+gchar     *na_io_provider_get_provider_name( const NAIIOProvider *provider );
+
 guint          na_io_provider_get_version( const NAPivot *pivot, const NAIIOProvider *provider );
 gboolean       na_io_provider_is_willing_to_write( const NAPivot *pivot, const NAIIOProvider *provider );
 
