@@ -809,7 +809,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
                                 <child>
-                                  <object class="GtkButton" id="ProviderButtonDow">
+                                  <object class="GtkButton" id="ProviderButtonDown">
                                     <property name="label" translatable="yes">_Down</property>
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>

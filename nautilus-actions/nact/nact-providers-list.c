@@ -49,10 +49,10 @@
 /* column ordering
  */
 enum {
-	PROVIDERS_READABLE_COLUMN = 0,
-	PROVIDERS_WRITABLE_COLUMN,
-	PROVIDERS_LIBELLE_COLUMN,
-	PROVIDERS_N_COLUMN
+	PROVIDER_READABLE_COLUMN = 0,
+	PROVIDER_WRITABLE_COLUMN,
+	PROVIDER_LIBELLE_COLUMN,
+	PROVIDER_N_COLUMN
 };
 
 #define PROVIDERS_LIST_TREEVIEW			"nact-providers-list-treeview"
@@ -63,9 +63,6 @@ static void       init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *w
 static void       init_view_connect_signals( GtkTreeView *treeview, BaseWindow *window );
 static void       init_view_select_first_row( GtkTreeView *treeview );
 
-/*static gboolean   iter_for_reset( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data );*/
-/*static void       iter_for_setup( gchar *scheme, GtkTreeModel *model );
-static gboolean   iter_for_get( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, GSList **schemes_list );*/
 static GList     *get_list_providers( GtkTreeView *treeview );
 static gboolean   get_list_providers_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GList **list );
 
@@ -77,9 +74,6 @@ static void       on_down_clicked( GtkButton *button, BaseWindow *window );
 
 static GtkButton *get_up_button( BaseWindow *window );
 static GtkButton *get_down_button( BaseWindow *window );
-/*static GSList    *get_gconf_subdirs( GConfClient *gconf, const gchar *path );
-static void       free_gconf_subdirs( GSList *subdirs );
-static void       free_gslist( GSList *list );*/
 
 /**
  * nact_providers_list_create_providers_list:
@@ -101,7 +95,7 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 	g_debug( "%s: treeview=%p", thisfn, ( void * ) treeview );
 	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
 
-	model = gtk_list_store_new( PROVIDERS_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_STRING );
+	model = gtk_list_store_new( PROVIDER_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_STRING );
 	gtk_tree_view_set_model( treeview, GTK_TREE_MODEL( model ));
 	g_object_unref( model );
 
@@ -109,7 +103,7 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 	column = gtk_tree_view_column_new_with_attributes(
 			_( "To be read" ),
 			toggled_cell,
-			"active", PROVIDERS_READABLE_COLUMN,
+			"active", PROVIDER_READABLE_COLUMN,
 			NULL );
 	gtk_tree_view_append_column( treeview, column );
 
@@ -117,7 +111,7 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 	column = gtk_tree_view_column_new_with_attributes(
 			_( "Writable" ),
 			toggled_cell,
-			"active", PROVIDERS_WRITABLE_COLUMN,
+			"active", PROVIDER_WRITABLE_COLUMN,
 			NULL );
 	gtk_tree_view_append_column( treeview, column );
 
@@ -125,7 +119,7 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 	column = gtk_tree_view_column_new_with_attributes(
 			_( "I/O Provider" ),
 			text_cell,
-			"text", PROVIDERS_LIBELLE_COLUMN,
+			"text", PROVIDER_LIBELLE_COLUMN,
 			NULL );
 	gtk_tree_view_append_column( treeview, column );
 
@@ -181,9 +175,9 @@ init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window )
 		gtk_list_store_append( model, &row );
 		libelle = na_io_provider_get_name( NA_IO_PROVIDER( iter->data ));
 		gtk_list_store_set( model, &row,
-				PROVIDERS_READABLE_COLUMN, na_io_provider_is_to_be_read( NA_IO_PROVIDER( iter->data )),
-				PROVIDERS_WRITABLE_COLUMN, na_io_provider_is_writable( NA_IO_PROVIDER( iter->data )),
-				PROVIDERS_LIBELLE_COLUMN, libelle,
+				PROVIDER_READABLE_COLUMN, na_io_provider_is_to_be_read( NA_IO_PROVIDER( iter->data )),
+				PROVIDER_WRITABLE_COLUMN, na_io_provider_is_writable( NA_IO_PROVIDER( iter->data )),
+				PROVIDER_LIBELLE_COLUMN, libelle,
 				-1 );
 		g_free( libelle );
 	}
@@ -196,7 +190,7 @@ init_view_connect_signals( GtkTreeView *treeview, BaseWindow *window )
 	GList *renderers;
 	GtkButton *up_button, *down_button;
 
-	column = gtk_tree_view_get_column( treeview, PROVIDERS_READABLE_COLUMN );
+	column = gtk_tree_view_get_column( treeview, PROVIDER_READABLE_COLUMN );
 	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 	base_window_signal_connect(
 			window,
@@ -204,7 +198,7 @@ init_view_connect_signals( GtkTreeView *treeview, BaseWindow *window )
 			"toggled",
 			G_CALLBACK( on_readable_toggled ));
 
-	column = gtk_tree_view_get_column( treeview, PROVIDERS_WRITABLE_COLUMN );
+	column = gtk_tree_view_get_column( treeview, PROVIDER_WRITABLE_COLUMN );
 	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 	base_window_signal_connect(
 			window,
@@ -240,24 +234,30 @@ init_view_select_first_row( GtkTreeView *treeview )
 	GtkTreePath *path;
 
 	path = gtk_tree_path_new_first();
-	selection = gtk_tree_view_get_selection( treeview );
-	gtk_tree_selection_select_path( selection, path );
-	gtk_tree_path_free( path );
+	if( path ){
+		selection = gtk_tree_view_get_selection( treeview );
+		gtk_tree_selection_select_path( selection, path );
+		gtk_tree_path_free( path );
+	}
 }
 
 /**
  * nact_providers_list_save:
  * @window: the #BaseWindow which embeds this treeview.
  *
- * Save the I/O provider status as a GConf preference.
+ * Save the I/O provider status as a GConf preference,
+ * and update the I/O providers list maintained by #NAIOProvider class.
  */
 void
 nact_providers_list_save( BaseWindow *window )
 {
+	static const gchar *thisfn = "nact_providers_list_save";
 	GtkTreeView *treeview;
 	GList *providers;
 	NactApplication *application;
 	NAPivot *pivot;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
 	providers = get_list_providers( treeview );
@@ -301,6 +301,8 @@ get_list_providers_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* it
 /**
  * nact_providers_list_dispose:
  * @treeview: the #GtkTreeView.
+ *
+ * Release the content of the page when we are closing the Preferences dialog.
  */
 void
 nact_providers_list_dispose( BaseWindow *window )
@@ -323,53 +325,116 @@ nact_providers_list_dispose( BaseWindow *window )
 static void
 on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 {
-	/*static const gchar *thisfn = "nact_providers_list_on_selection_changed";*/
-	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkButton *button;
+	GtkTreePath *path;
+	gboolean may_up, may_down;
 
-	/*g_debug( "%s: selection=%p, window=%p", thisfn, ( void * ) selection, ( void * ) window );*/
+	may_up = FALSE;
+	may_down = FALSE;
 
-	/*g_debug( "%s: getting data on window=%p", thisfn, ( void * ) window );*/
-	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
+	if( gtk_tree_selection_get_selected( selection, &model, &iter )){
+		path = gtk_tree_model_get_path( model, &iter );
+		may_up = gtk_tree_path_prev( path );
+		gtk_tree_path_free( path );
 
-	/*button = get_remove_button( window );
-	gtk_widget_set_sensitive( GTK_WIDGET( button ), editable && gtk_tree_selection_count_selected_rows( selection ) > 0);
-	*/
+		may_down = gtk_tree_model_iter_next( model, &iter );
+	}
+
+	button = get_up_button( window );
+	gtk_widget_set_sensitive( GTK_WIDGET( button ), may_up );
+
+	button = get_down_button( window );
+	gtk_widget_set_sensitive( GTK_WIDGET( button ), may_down );
 }
 
 static void
-on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window )
+on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWindow *window )
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
+	GtkTreeIter iter;
+	gboolean state;
 
 	if( !st_on_selection_change ){
 
 		treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
 		model = gtk_tree_view_get_model( treeview );
+		if( gtk_tree_model_get_iter_from_string( model, &iter, path_string )){
+			gtk_tree_model_get( model, &iter, PROVIDER_READABLE_COLUMN, &state, -1 );
+			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, PROVIDER_READABLE_COLUMN, !state, -1 );
+		}
 	}
 }
 
 static void
-on_writable_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window )
+on_writable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWindow *window )
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
+	GtkTreeIter iter;
+	gboolean state;
 
 	if( !st_on_selection_change ){
 
 		treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
 		model = gtk_tree_view_get_model( treeview );
+		if( gtk_tree_model_get_iter_from_string( model, &iter, path_string )){
+			gtk_tree_model_get( model, &iter, PROVIDER_WRITABLE_COLUMN, &state, -1 );
+			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, PROVIDER_WRITABLE_COLUMN, !state, -1 );
+		}
 	}
 }
 
 static void
 on_up_clicked( GtkButton *button, BaseWindow *window )
 {
+	GtkTreeView *treeview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GtkTreeIter iter_selected;
+	GtkTreePath *path_prev;
+	GtkTreeIter iter_prev;
+
+	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
+	selection = gtk_tree_view_get_selection( treeview );
+	if( gtk_tree_selection_get_selected( selection, &model, &iter_selected )){
+		path_prev = gtk_tree_model_get_path( model, &iter_selected );
+		if( gtk_tree_path_prev( path_prev )){
+			if( gtk_tree_model_get_iter( model, &iter_prev, path_prev )){
+				gtk_list_store_move_before( GTK_LIST_STORE( model ), &iter_selected, &iter_prev );
+				gtk_tree_selection_unselect_all( selection );
+				gtk_tree_selection_select_path( selection, path_prev );
+			}
+		}
+		gtk_tree_path_free( path_prev );
+	}
 }
 
 static void
 on_down_clicked( GtkButton *button, BaseWindow *window )
 {
+	GtkTreeView *treeview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GtkTreeIter iter_selected;
+	GtkTreeIter *iter_next;
+	GtkTreePath *path_next;
+
+	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
+	selection = gtk_tree_view_get_selection( treeview );
+	if( gtk_tree_selection_get_selected( selection, &model, &iter_selected )){
+		iter_next = gtk_tree_iter_copy( &iter_selected );
+		if( gtk_tree_model_iter_next( model, iter_next )){
+			path_next = gtk_tree_model_get_path( model, iter_next );
+			gtk_list_store_move_after( GTK_LIST_STORE( model ), &iter_selected, iter_next );
+			gtk_tree_selection_unselect_all( selection );
+			gtk_tree_selection_select_path( selection, path_next );
+			gtk_tree_path_free( path_next );
+		}
+		gtk_tree_iter_free( iter_next );
+	}
 }
 
 static GtkButton *
@@ -391,30 +456,3 @@ get_down_button( BaseWindow *window )
 
 	return( button );
 }
-
-#if 0
-/*
- * free_subdirs:
- * @subdirs: a list of subdirs as returned by get_subdirs().
- *
- * Release the list of subdirs.
- */
-static void
-free_gconf_subdirs( GSList *subdirs )
-{
-	free_gslist( subdirs );
-}
-
-/*
- * free_gslist:
- * @list: the GSList to be freed.
- *
- * Frees a GSList of strings.
- */
-static void
-free_gslist( GSList *list )
-{
-	g_slist_foreach( list, ( GFunc ) g_free, NULL );
-	g_slist_free( list );
-}
-#endif

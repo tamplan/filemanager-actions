@@ -1,3 +1,11 @@
+2009-01-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/nact/nact-preferences.ui:
+	Fix the name of the Down button.
+
+	* nautilus-actions/nact/nact-providers-list.c:
+	Activate up/down buttons.
+
 2009-01-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/io-provider-gconf/nagp-read.c

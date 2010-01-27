@@ -130,3 +130,6 @@
   rather be considered as GConf actions are read-only. Preferences stay editable.
   Does the level-zero is a preference (so editable) or a sort of action (ro) !?
   see the comment in schema.in
+
+- set the order of i/o providers (when setting up the list)
+- review the searches for writable providers and how this property is set and requested
