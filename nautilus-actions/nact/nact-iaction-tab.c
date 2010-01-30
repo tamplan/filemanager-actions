@@ -417,6 +417,8 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 	gboolean enabled_item;
 	GtkToggleButton *toggle;
 	gboolean editable;
+	GtkNotebook *notebook;
+	GtkWidget *page;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( BASE_IS_WINDOW( instance ));
@@ -507,11 +509,17 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		gtk_widget_set_sensitive( GTK_WIDGET( icon_button ), item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( icon_button ), editable );
 
-		title_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionPropertiesTitle" );
-		if( item && NA_IS_OBJECT_MENU( item )){
-			gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Menu properties</b>" ));
-		} else {
-			gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Action properties</b>" ));
+		if( enable_tab ){
+			notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( instance ), "MainNotebook" ));
+			page = gtk_notebook_get_nth_page( notebook, TAB_ACTION );
+			title_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionPropertiesTitle" );
+			if( item && NA_IS_OBJECT_MENU( item )){
+				gtk_notebook_set_tab_label_text( notebook, page, _( "Menu" ));
+				gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Menu properties</b>" ));
+			} else {
+				gtk_notebook_set_tab_label_text( notebook, page, _( "Action" ));
+				gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Action properties</b>" ));
+			}
 		}
 
 		enabled_button = get_enabled_button( instance );
@@ -520,7 +528,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		gtk_widget_set_sensitive( GTK_WIDGET( enabled_button ), item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( enabled_button ), editable );
 
-		/* read-only toggle only indicates the writability status of this item
+		/* read-only toggle only indicates the intrinsic writability status of this item
 		 * _not_ the writability status of the provider
 		 */
 		readonly_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionReadonlyButton" ));

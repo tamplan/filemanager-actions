@@ -121,8 +121,6 @@
 - enhancement.ui: rows implicitely selected should have a special display
   (as a sort of 'transparent' selection)
 
-- enhancement.ui: notebook page should be labeled 'Action' or 'Menu' depending of current item
-
 - nact-iactions-list.c: display_label
   the 'editable' cell property should be set only once, instead of at each redraw
   and more because we also compute this on selection change

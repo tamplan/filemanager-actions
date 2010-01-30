@@ -1,5 +1,12 @@
 2009-01-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nact-iaction-tab.c
+	(on_tab_updatable_selection_changed):
+	Update tab label depending on the currently selected item.
+
+	* nautilus-actions/nact/nautilus-actions-config-tool.ui:
+	No more give a special name to Action tab label.
+
 	* nautilus-actions/nact/nautilus-actions-config-tool.ui:
 	Fix Action tab layout.
 
