@@ -219,10 +219,10 @@ action_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps,
 	}
 
 	action = na_object_action_new();
-	read_action_properties( provider, action, ndf, messages );
-
 	na_object_set_provider_data( action, ndf );
 	g_object_weak_ref( G_OBJECT( action ), ( GWeakNotify ) g_object_unref, ndf );
+
+	read_action_properties( provider, action, ndf, messages );
 
 	/* have at least one profile */
 	if( !na_object_get_items_count( action )){
