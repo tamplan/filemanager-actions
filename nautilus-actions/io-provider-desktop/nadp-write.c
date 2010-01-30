@@ -43,46 +43,60 @@
 static guint write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages );
 
 /*
- * NadpDesktopProvider is willing to write if user data dir exists (or
- * can be created) and is writable
+ * API function: should only be called through NAIIOProvider interface
  */
 gboolean
 nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 {
-	static const gchar *thisfn = "nadp_write_iio_provider_is_willing_to_write";
-	gboolean willing_to;
+	return( TRUE );
+}
+
+/*
+ * NadpDesktopProvider is able to write if user data dir exists (or
+ * can be created) and is writable
+ *
+ * API function: should only be called through NAIIOProvider interface
+ */
+gboolean
+nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
+{
+	static const gchar *thisfn = "nadp_write_iio_provider_is_able_to_write";
+	gboolean able_to;
 	gchar *userdir;
 	GSList *messages;
 
-	willing_to = FALSE;
+	able_to = FALSE;
 	messages = NULL;
 
-	/*g_debug( "%s: provider=%p", thisfn, ( void * ) provider );*/
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), willing_to );
+	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), able_to );
 
 	userdir = nadp_xdg_data_dirs_get_user_dir( NADP_DESKTOP_PROVIDER( provider ), &messages );
 
 	if( g_file_test( userdir, G_FILE_TEST_IS_DIR )){
-		willing_to = nadp_utils_is_writable_dir( userdir );
+		able_to = nadp_utils_is_writable_dir( userdir );
 
 	} else if( g_mkdir_with_parents( userdir, 0700 )){
 		g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));
 
 	} else {
-		willing_to = nadp_utils_is_writable_dir( userdir );
+		able_to = nadp_utils_is_writable_dir( userdir );
 	}
 
 	g_free( userdir );
 
-	return( willing_to );
+	return( able_to );
 }
 
 /*
- * the item has been initially readen from a desktop file
- * -> see if this initial desktop file is writable ?
+ * the item comes from being readen from a desktop file
+ * -> see if this desktop file is writable ?
  *
- * else we are going to write a new desktop file in user data dir
- * -> see writability status of the desktop provider
+ * This is only used to setup the 'read-only' initial status of the
+ * NAObjectItem - We don't care of all events which can suddenly make
+ * this item becomes readonly (eventually we will deal for errors,
+ * and reset the flag at this time)
+ *
+ * Internal function: do not call from outside the instance.
  */
 gboolean
 nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
@@ -108,9 +122,6 @@ nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem
 		path = nadp_desktop_file_get_key_file_path( ndf );
 		writable = nadp_utils_is_writable_file( path );
 		g_free( path );
-
-	} else {
-		writable = nadp_iio_provider_is_willing_to_write( provider );
 	}
 
 	return( writable );
@@ -130,7 +141,8 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 	gchar *fulldir;
 	gboolean dir_ok;
 
-	ret = NA_IIO_PROVIDER_NOT_WRITABLE;
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
 
@@ -189,13 +201,33 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 static guint
 write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages )
 {
+	static const gchar *thisfn = "nadp_iio_provider_write_item";
 	guint ret;
+	NadpDesktopProvider *self;
 	gchar *label;
 	gchar *tooltip;
 	gchar *icon;
 	gboolean enabled;
 
-	ret = NA_IIO_PROVIDER_WRITE_OK;
+	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
+			thisfn,
+			( void * ) provider, G_OBJECT_TYPE_NAME( provider ),
+			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			( void * ) messages );
+
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
+
+	self = NADP_DESKTOP_PROVIDER( provider );
+
+	if( self->private->dispose_has_run ){
+		return( NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
+	}
+
+	ret = NA_IIO_PROVIDER_CODE_OK;
 
 	label = na_object_get_label( item );
 	nadp_desktop_file_set_label( ndf, label );
@@ -213,7 +245,7 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 	nadp_desktop_file_set_enabled( ndf, enabled );
 
 	if( !nadp_desktop_file_write( ndf )){
-		ret = NA_IIO_PROVIDER_WRITE_ERROR;
+		ret = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
 	}
 
 	return( ret );
@@ -224,19 +256,26 @@ nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 {
 	static const gchar *thisfn = "nadp_iio_provider_delete_item";
 	guint ret;
+	NadpDesktopProvider *self;
 	NadpDesktopFile *ndf;
 	gchar *path;
 
-	g_debug( "%s: provider=%p, item=%p (%s), messages=%p",
-			thisfn, ( void * ) provider, ( void * ) item, G_OBJECT_TYPE_NAME( item ), messages );
+	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
+			thisfn,
+			( void * ) provider, G_OBJECT_TYPE_NAME( provider ),
+			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			( void * ) messages );
 
-	ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
 
-	if( na_object_is_readonly( item )){
-		g_warning( "%s: item=%p is read-only", thisfn, ( void * ) item );
-		return( NA_IIO_PROVIDER_NOT_WRITABLE );
+	self = NADP_DESKTOP_PROVIDER( provider );
+
+	if( self->private->dispose_has_run ){
+		return( NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
 	ndf = ( NadpDesktopFile * ) na_object_get_provider_data( item );
@@ -245,13 +284,13 @@ nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
 		path = nadp_desktop_file_get_key_file_path( ndf );
 		if( nadp_utils_delete_file( path )){
-			ret = NA_IIO_PROVIDER_WRITE_OK;
+			ret = NA_IIO_PROVIDER_CODE_OK;
 		}
 		g_free( path );
 
 	} else {
 		g_warning( "%s: NadpDesktopFile is null", thisfn );
-		ret = NA_IIO_PROVIDER_WRITE_OK;
+		ret = NA_IIO_PROVIDER_CODE_OK;
 	}
 
 	return( ret );

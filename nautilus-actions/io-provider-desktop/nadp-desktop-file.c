@@ -124,7 +124,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nadp_desktop_file_instance_init";
 	NadpDesktopFile *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NADP_IS_DESKTOP_FILE( instance ));
 	self = NADP_DESKTOP_FILE( instance );
 
@@ -140,7 +141,7 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "nadp_desktop_file_instance_dispose";
 	NadpDesktopFile *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NADP_IS_DESKTOP_FILE( object ));
 	self = NADP_DESKTOP_FILE( object );
 

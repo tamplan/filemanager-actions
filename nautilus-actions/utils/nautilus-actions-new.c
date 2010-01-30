@@ -371,26 +371,15 @@ static gboolean
 write_to_gconf( NAObjectAction *action, GSList **msg )
 {
 	NAPivot *pivot;
-	NAIIOProvider *provider;
 	guint ret;
 
-	ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
+	pivot = na_pivot_new( PIVOT_LOAD_NONE );
 
-	pivot = na_pivot_new(
-			PIVOT_LOAD_NONE,
-			PIVOT_IO_PROVIDER_AVAILABLE | PIVOT_IO_PROVIDER_WRITABLE );
-
-	provider = na_io_provider_get_writable_provider( pivot );
-	if( provider ){
-
-		na_object_set_provider( action, NA_IIO_PROVIDER( provider ));
-		ret = na_io_provider_write_item( pivot, NA_OBJECT_ITEM( action ), msg );
-		g_object_unref( provider );
-	}
+	ret = na_pivot_write_item( pivot, NA_OBJECT_ITEM( action ), msg );
 
 	g_object_unref( pivot );
 
-	return( ret == NA_IIO_PROVIDER_WRITE_OK );
+	return( ret == NA_IIO_PROVIDER_CODE_OK );
 }
 
 /*

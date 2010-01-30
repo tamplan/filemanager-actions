@@ -567,6 +567,13 @@ nact_iactions_list_bis_list_modified_items( NactIActionsList *instance )
 	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
 
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
+
+		g_debug( "%s: raw list", thisfn );
+		for( it = ialid->modified_items ; it ; it = it->next ){
+			g_debug( "%s: %p (%s)", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+		}
+
+		g_debug( "%s: detailed list", thisfn );
 		for( it = ialid->modified_items ; it ; it = it->next ){
 			na_object_dump( it->data );
 		}
@@ -577,10 +584,10 @@ nact_iactions_list_bis_list_modified_items( NactIActionsList *instance )
  * nact_iactions_list_bis_removed_modified:
  * @instance: this #NactIActionsList instance.
  *
- * Clears the modified items list.
+ * Removes the saved item from the modified items list.
  */
 void
-nact_iactions_list_bis_removed_modified( NactIActionsList *instance )
+nact_iactions_list_bis_removed_modified( NactIActionsList *instance, const NAObjectItem *item )
 {
 	IActionsListInstanceData *ialid;
 
@@ -589,8 +596,11 @@ nact_iactions_list_bis_removed_modified( NactIActionsList *instance )
 	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
 
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
-		g_list_free( ialid->modified_items );
-		ialid->modified_items = NULL;
+		ialid->modified_items = g_list_remove( ialid->modified_items, item );
+		if( g_list_length( ialid->modified_items ) == 0 ){
+			g_list_free( ialid->modified_items );
+			ialid->modified_items = NULL;
+		}
 	}
 }
 

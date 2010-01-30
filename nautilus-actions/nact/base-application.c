@@ -275,15 +275,16 @@ class_init( BaseApplicationClass *klass )
 }
 
 static void
-instance_init( GTypeInstance *instance, gpointer klass )
+instance_init( GTypeInstance *application, gpointer klass )
 {
 	static const gchar *thisfn = "base_application_instance_init";
 	BaseApplication *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: application=%p (%s), klass=%p",
+			thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ), ( void * ) klass );
 
-	g_return_if_fail( BASE_IS_APPLICATION( instance ));
-	self = BASE_APPLICATION( instance );
+	g_return_if_fail( BASE_IS_APPLICATION( application ));
+	self = BASE_APPLICATION( application );
 
 	self->private = g_new0( BaseApplicationPrivate, 1 );
 
@@ -415,7 +416,7 @@ instance_dispose( GObject *application )
 	static const gchar *thisfn = "base_application_instance_dispose";
 	BaseApplication *self;
 
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+	g_debug( "%s: application=%p (%s)", thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ));
 	g_return_if_fail( BASE_IS_APPLICATION( application ));
 	self = BASE_APPLICATION( application );
 

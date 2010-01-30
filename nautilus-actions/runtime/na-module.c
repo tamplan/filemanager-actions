@@ -143,7 +143,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_module_instance_init";
 	NAModule *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NA_IS_MODULE( instance ));
 	self = NA_MODULE( instance );
 
@@ -158,7 +159,7 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_module_instance_dispose";
 	NAModule *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_MODULE( object ));
 	self = NA_MODULE( object );
 
@@ -166,9 +167,6 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_type_module_unuse( G_TYPE_MODULE( self ));
-
-		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
 		}
@@ -510,17 +508,19 @@ na_module_has_id( NAModule *module, const gchar *id )
  * na_module_release_modules:
  * @modules: the list of loaded modules.
  *
- * Release resources allocated to the loaded modules.
+ * Release resources allocated to the loaded modules on #NAPivot dispose.
  */
 void
 na_module_release_modules( GList *modules )
 {
-	GList *im;
+	GList *imod;
+	GList *iobj;
 
-	for( im = modules ; im ; im = im->next ){
-		/* GLib-GObject-WARNING **: gtypemodule.c:112:
-		 * unsolicitated invocation of g_object_dispose() on GTypeModule */
-		/*g_object_unref( NA_MODULE( im->data ));*/
+	for( imod = modules ; imod ; imod = imod->next ){
+
+		for( iobj = NA_MODULE( imod->data )->private->objects ; iobj ; iobj = iobj->next ){
+			g_object_unref( iobj->data );
+		}
 	}
 
 	g_list_free( modules );

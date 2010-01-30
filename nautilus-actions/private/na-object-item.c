@@ -173,7 +173,7 @@ class_init( NAObjectItemClass *klass )
 	spec = g_param_spec_pointer(
 			NAOBJECT_ITEM_PROP_PROVIDER,
 			"Original provider",
-			"Original provider of the NAObjectItem",
+			"Original NAIOProvider of the NAObjectItem",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_PROVIDER_ID, spec );
 
@@ -477,19 +477,18 @@ na_object_item_get_position( const NAObjectItem *object, const NAObject *child )
  * na_object_item_get_provider:
  * @item: the #NAObjectItem object to be requested.
  *
- * Returns the initial provider of the item (or the last which has
- * accepted a write operation). At the time of this request, this is
- * the most probable provider willing to accept a next writing
- * operation.
+ * Returns the #NAIOProvider for this item, from which it has been
+ * initially readen, or to which it has been wrote in the case of a
+ * newly created item.
  *
- * Returns: a #NAIIOProvider object. The reference is
+ * Returns: a #NAIOProvider object. The reference is
  * owned by #NAPivot pivot and should not be g_object_unref() by the
  * caller.
  */
-NAIIOProvider *
+NAIOProvider *
 na_object_item_get_provider( const NAObjectItem *item )
 {
-	NAIIOProvider *provider = NULL;
+	NAIOProvider *provider = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
 
@@ -553,6 +552,17 @@ na_object_item_is_enabled( const NAObjectItem *item )
  * original I/O storage subsystem ?
  *
  * Returns: %TRUE if the item is read-only, %FALSE else.
+ *
+ * This status is initially set when the item has been readen by the
+ * I/O provider. It indicates whether this item was able, at this time,
+ * to be updated, i.e. GConf keys (resp. .desktop file) was writable.
+ *
+ * It is an intrinsic status, not a composite one. Whether the item
+ * should eventually be considered as read-only also depends of the
+ * provider, the admin, the user...
+ *
+ * This status corresponds to the NA_IIO_PROVIDER_STATUS_ITEM_NOT_WRITABLE
+ * reason.
  */
 gboolean
 na_object_item_is_readonly( const NAObjectItem *item )
@@ -733,12 +743,12 @@ na_object_item_set_icon( NAObjectItem *item, const gchar *icon )
 /**
  * na_object_item_set_provider:
  * @item: the #NAObjectItem object to be updated.
- * @provider: the #NAIIOProvider to be set.
+ * @provider: the #NAIOProvider to be set.
  *
  * Sets the I/O provider for this #NAObjectItem.
  */
 void
-na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider )
+na_object_item_set_provider( NAObjectItem *item, const NAIOProvider *provider )
 {
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
@@ -787,6 +797,8 @@ na_object_item_set_enabled( NAObjectItem *item, gboolean enabled )
  * @readonly: the indicator to be set.
  *
  * Sets whether the item is readonly.
+ *
+ * See #na_object_item_is_readonly() for a discussion about this status.
  */
 void
 na_object_item_set_readonly( NAObjectItem *item, gboolean readonly )

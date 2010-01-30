@@ -1,3 +1,91 @@
+2009-01-30 Pierre Wieser <pwieser@trychlos.org>
+
+	A full rewriting of the writability of items vs. providers.
+
+	* data/nautilus-actions.schemas.in:
+	Describe 'export-format' and 'io-providers-order' keys.
+	Define 'mandatory/all/locked' key to lock all configuration.
+
+	* doc/io-provider-id: Reserve 'all' special provider_id.
+
+	* nautilus-actions/api/na-gconf-monitor.c
+	* nautilus-actions/io-provider-desktop/nadp-desktop-file.c
+	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.c
+	* nautilus-actions/nact/base-application.c
+	* nautilus-actions/nact/base-assistant.c
+	* nautilus-actions/nact/base-builder.c
+	* nautilus-actions/nact/base-dialog.c
+	* nautilus-actions/nact/base-window.c
+	* nautilus-actions/nact/nact-application.c
+	* nautilus-actions/nact/nact-assistant-export-ask.c
+	* nautilus-actions/nact/nact-assistant-export.c
+	* nautilus-actions/nact/nact-assistant-import-ask.c
+	* nautilus-actions/nact/nact-assistant-import.c
+	* nautilus-actions/nact/nact-clipboard.c
+	* nautilus-actions/nact/nact-confirm-logout.c
+	* nautilus-actions/nact/nact-window.c
+	* nautilus-actions/runtime/na-module.c
+	(instance_init, instance_dispose):
+	Review debug messages formatting.
+
+	* nautilus-actions/api/na-iio-provider.c:
+	* nautilus-actions/api/na-iio-provider.h
+	(is_writable): Removed API.
+	(is_able_to_write): New API.
+	Review operations return codes.
+	Add provider status.
+
+	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.c:
+	* nautilus-actions/io-provider-desktop/nadp-desktop-provider.h:
+	* nautilus-actions/io-provider-desktop/nadp-read.c:
+	* nautilus-actions/io-provider-desktop/nadp-write.c:
+	* nautilus-actions/io-provider-desktop/nadp-write.h:
+	* nautilus-actions/io-provider-gconf/nagp-gconf-provider.c:
+	* nautilus-actions/io-provider-gconf/nagp-write.c:
+	* nautilus-actions/io-provider-gconf/nagp-write.h:
+	Updated to new NAIIOProvider API.
+
+	* nautilus-actions/nact/nact-iaction-tab.c:
+	* nautilus-actions/nact/nact-iactions-list.c:
+	* nautilus-actions/nact/nact-iactions-list.h:
+	* nautilus-actions/nact/nact-iadvanced-tab.c:
+	* nautilus-actions/nact/nact-ibackground-tab.c:
+	* nautilus-actions/nact/nact-icommand-tab.c:
+	* nautilus-actions/nact/nact-iconditions-tab.c:
+	* nautilus-actions/nact/nact-main-menubar.c:
+	* nautilus-actions/nact/nact-main-tab.h:
+	* nautilus-actions/nact/nact-main-window.c:
+	* nautilus-actions/nact/nact-providers-list.c:
+	* nautilus-actions/nact/nact-tree-model-dnd.c:
+	* nautilus-actions/nact/nact-tree-model.c:
+	* nautilus-actions/nact/nact-window.c:
+	* nautilus-actions/nact/nact-window.h:
+	Take advantage of the new global item writability status.
+
+	* nautilus-actions/nact/nact-main-statusbar.c:
+	* nautilus-actions/nact/nact-main-statusbar.h
+	(nact_main_statusbar_set_locked): Display the reason.
+
+	* nautilus-actions/nact/nact-iactions-list-bis.c
+	(nact_iactions_list_bis_list_modified_items):
+	Dump the raw content of the list.
+
+	* nautilus-actions/plugin/nautilus-actions.c (instance_init):
+	* nautilus-actions/runtime/na-pivot.c:
+	* nautilus-actions/runtime/na-pivot.h(na_pivot_new):
+	* nautilus-actions/utils/nautilus-actions-new.c (write_to_gconf):
+	* nautilus-actions/utils/nautilus-actions-run.c (get_action):
+	New na_pivot_new() signature.
+
+	* nautilus-actions/private/na-object-item-fn.h:
+	* nautilus-actions/private/na-object-item-priv.h:
+	* nautilus-actions/private/na-object-item.c:
+	The NAObjectItem now embeds a NAIOProvider pointer.
+
+	* nautilus-actions/runtime/na-io-provider.c:
+	* nautilus-actions/runtime/na-io-provider.h:
+	Load all available and defined I/O providers.
+
 2009-01-27 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nact-preferences.ui:

@@ -40,31 +40,32 @@ G_BEGIN_DECLS
 /* private instance data
  */
 struct NAObjectItemPrivate {
-	gboolean       dispose_has_run;
+	gboolean      dispose_has_run;
 
 	/* object_item properties
 	 */
-	gchar         *tooltip;
-	gchar         *icon;
-	gboolean       enabled;
+	gchar        *tooltip;
+	gchar        *icon;
+	gboolean      enabled;
 
 	/* list of NAObjectId subitems
 	 * + list of id strings as readen from IIOProviders
 	 */
-	GList         *items;
-	GSList        *items_ids;
+	GList        *items;
+	GSList       *items_ids;
 
 	/* dynamically set when reading the actions from the I/O storage
-	 * subsystem
-	 * defaults to FALSE unless a write has already returned an error
+	 * subsystem; may be reset from FALSE to TRUE if a write operation
+	 * has returned an error.
+	 * defaults to FALSE for new, not yet written to a provider, items
 	 */
-	gboolean       read_only;
+	gboolean      read_only;
 
 	/* the original provider
 	 * required to be able to edit/delete the item
 	 */
-	NAIIOProvider *provider;
-	void          *provider_data;
+	NAIOProvider *provider;
+	void         *provider_data;
 };
 
 G_END_DECLS

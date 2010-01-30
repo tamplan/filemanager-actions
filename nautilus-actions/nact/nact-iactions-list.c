@@ -853,8 +853,8 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	gboolean valid = TRUE;
 	IActionsListInstanceData *ialid;
 	NAObjectItem *item;
-	gboolean writable_provider;
-	gboolean readonly_item;
+	NAPivot *pivot;
+	gboolean writable_item;
 
 	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 	g_object_unref( object );
@@ -870,8 +870,8 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		modified = na_object_is_modified( object );
 		valid = na_object_is_valid( object );
 		item = NA_IS_OBJECT_PROFILE( object ) ? na_object_get_parent( object ) : NA_OBJECT_ITEM( object );
-		readonly_item = na_object_is_readonly( item );
-		writable_provider = nact_window_is_writable_provider( NACT_WINDOW( instance ), item );
+		pivot = nact_window_get_pivot( NACT_WINDOW( instance ));
+		writable_item = na_pivot_is_item_writable( pivot, item, NULL );
 
 		if( modified ){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
@@ -881,7 +881,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
 		}
 
-		g_object_set( cell, "editable", writable_provider && !readonly_item, NULL );
+		g_object_set( cell, "editable", writable_item, NULL );
 	}
 
 	g_object_set( cell, "text", label, NULL );

@@ -121,66 +121,52 @@ typedef enum {
 }
 	NAPivotLoadableSet;
 
-/* Which are the I/O providers we are concerned about ?
- * NACT management user interface wants all
- * N-A plugin is only concerned about those are actually available at
- * runtime and marked as readable in the preferences (or not marked at all)
- * nautilus-actions-new wants those which are available and marked as
- * writable in the preferences (or not marked as all)
- */
-typedef enum {
-	PIVOT_IO_PROVIDER_AVAILABLE           = 1 << 0,
-	PIVOT_IO_PROVIDER_READABLE_AT_STARTUP = 1 << 1,
-	PIVOT_IO_PROVIDER_WRITABLE            = 1 << 2,
-	PIVOT_IO_PROVIDER_ALL                 = 0
-}
-	NAPivotIOProviderSet;
-
 /* these properties must be set at construction time
  */
 #define NAPIVOT_PROP_LOADABLE_SET		"na-pivot-prop-loadable-set"
-#define NAPIVOT_PROP_IO_PROVIDER_SET	"na-pivot-prop-io-provider-set"
 
-NAPivot             *na_pivot_new( NAPivotLoadableSet loadable, NAPivotIOProviderSet provider );
-void                 na_pivot_dump( const NAPivot *pivot );
+NAPivot      *na_pivot_new( NAPivotLoadableSet loadable );
+void          na_pivot_dump( const NAPivot *pivot );
 
 /* providers management of any NAIxxxxProvider interface
  */
-GList               *na_pivot_get_providers( const NAPivot *pivot, GType type );
-void                 na_pivot_free_providers( GList *providers );
+GList        *na_pivot_get_providers( const NAPivot *pivot, GType type );
+void          na_pivot_free_providers( GList *providers );
 
 /* menus/actions items management
  */
-void                 na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
+void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
 
-GList               *na_pivot_get_items( const NAPivot *pivot );
-void                 na_pivot_load_items( NAPivot *pivot );
+GList        *na_pivot_get_items( const NAPivot *pivot );
+void          na_pivot_load_items( NAPivot *pivot );
 
-void                 na_pivot_add_item( NAPivot *pivot, const NAObjectItem *item );
-NAObjectItem        *na_pivot_get_item( const NAPivot *pivot, const gchar *id );
-void                 na_pivot_remove_item( NAPivot *pivot, NAObject *item );
+void          na_pivot_add_item( NAPivot *pivot, const NAObjectItem *item );
+NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *id );
+void          na_pivot_remove_item( NAPivot *pivot, NAObject *item );
 
-guint                na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
-guint                na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
+gboolean      na_pivot_is_item_writable( const NAPivot *pivot, const NAObjectItem *item, gint *reason );
+
+guint         na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
+guint         na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
 
 /* NAIPivotConsumer interface management
  */
-void                 na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
+void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
 
 /* NAPivot properties and configuration
  */
-void                 na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
+void          na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
 
-gboolean             na_pivot_is_disable_loadable( const NAPivot *pivot );
-gboolean             na_pivot_is_invalid_loadable( const NAPivot *pivot );
+gboolean      na_pivot_is_disable_loadable( const NAPivot *pivot );
+gboolean      na_pivot_is_invalid_loadable( const NAPivot *pivot );
 
-NAPivotIOProviderSet na_pivot_get_io_provider_set( const NAPivot *pivot );
+gint          na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b );
+gint          na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
 
-gint                 na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b );
-gint                 na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
+gboolean      na_pivot_is_level_zero_writable( const NAPivot *pivot );
+void          na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
 
-gboolean             na_pivot_is_level_zero_writable( const NAPivot *pivot );
-void                 na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
+gboolean      na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot );
 
 /* notification message from NAIIOProvider to NAPivot
  */

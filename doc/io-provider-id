@@ -9,5 +9,6 @@ id          label                   holder            allocated
 ----------  ----------------------  ----------------  ----------
 na-desktop  NA Desktop IO Provider  Nautilus-Actions  2009-12-16
 na-gconf    NA GConf IO Provider    Nautilus-Actions  2009-12-16
+all         reserved id             Nautilus-Actions  2010-01-28
 
-Last updated: 2009, Dec. 16th.
+Last updated: 2010, Jan. 28th

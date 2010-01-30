@@ -145,7 +145,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nact_assistant_import_ask_instance_init";
 	NactAssistantImportAsk *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( instance ));
 	self = NACT_ASSISTANT_IMPORT_ASK( instance );
 
@@ -178,7 +179,7 @@ instance_dispose( GObject *dialog )
 	static const gchar *thisfn = "nact_assistant_import_ask_instance_dispose";
 	NactAssistantImportAsk *self;
 
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
+	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( dialog ));
 	self = NACT_ASSISTANT_IMPORT_ASK( dialog );
 

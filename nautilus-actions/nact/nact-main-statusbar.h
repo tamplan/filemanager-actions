@@ -46,7 +46,7 @@ void  nact_main_statusbar_initial_load_toplevel( NactMainWindow *window );
 void  nact_main_statusbar_display_status( NactMainWindow *window, const gchar *context, const gchar *status );
 void  nact_main_statusbar_display_with_timeout( NactMainWindow *window, const gchar *context, const gchar *status );
 void  nact_main_statusbar_hide_status( NactMainWindow *window, const gchar *context );
-void  nact_main_statusbar_set_locked( NactMainWindow *window, gboolean provider, gboolean item );
+void  nact_main_statusbar_set_locked( NactMainWindow *window, gboolean readonly, gint reason );
 
 G_END_DECLS
 

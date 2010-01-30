@@ -38,6 +38,8 @@ G_BEGIN_DECLS
 
 gboolean nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider );
 
+gboolean nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider );
+
 gboolean nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item );
 
 guint    nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );

@@ -73,7 +73,7 @@ typedef struct {
 
 static gboolean st_on_selection_change = FALSE;
 
-static void       init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window );
+static void       init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window );
 static void       init_view_connect_signals( GtkTreeView *treeview, BaseWindow *window );
 static void       init_view_select_first_row( GtkTreeView *treeview );
 
@@ -173,14 +173,14 @@ nact_providers_list_init_view( GtkTreeView *treeview, BaseWindow *window )
 
 	g_object_set_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW, treeview );
 
-	init_view_setup_defaults( treeview, window );
+	init_view_setup_providers( treeview, window );
 	init_view_connect_signals( treeview, window );
 
 	init_view_select_first_row( treeview );
 }
 
 static void
-init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window )
+init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 {
 	NactApplication *application;
 	NAPivot *pivot;
@@ -188,7 +188,6 @@ init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window )
 	GList *providers, *iter;
 	GtkTreeIter row;
 	gchar *id, *libelle;
-	NAIIOProvider *instance;
 
 	model = GTK_LIST_STORE( gtk_tree_view_get_model( treeview ));
 
@@ -199,20 +198,32 @@ init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window )
 	for( iter = providers ; iter ; iter = iter->next ){
 
 		gtk_list_store_append( model, &row );
+
 		id = na_io_provider_get_id( NA_IO_PROVIDER( iter->data ));
-		instance = na_io_provider_get_provider( NA_IO_PROVIDER( iter->data ));
-		if( instance ){
-			libelle = na_io_provider_get_name( NA_IO_PROVIDER( iter->data ));
-		} else {
-			libelle = g_strdup_printf( "<%s: %s>", id, _( "unavailable I/O provider" ));
+		libelle = na_io_provider_get_name( NA_IO_PROVIDER( iter->data ));
+
+		if( !libelle || !g_utf8_strlen( libelle, -1 )){
+
+			g_free( libelle );
+			if( na_io_provider_get_provider( NA_IO_PROVIDER( iter->data ))){
+
+				/* i18n: default name when the I/O providers doesn't provide one */
+				libelle = g_strdup_printf( "<%s: %s>", id, _( "no name" ));
+			} else {
+
+				/* i18n: name displayed when the corresponding I/O provider is unavailable at runtime */
+				libelle = g_strdup_printf( "<%s: %s>", id, _( "unavailable I/O provider" ));
+			}
 		}
+
 		gtk_list_store_set( model, &row,
-				PROVIDER_READABLE_COLUMN, na_io_provider_is_readable_at_startup( NA_IO_PROVIDER( iter->data )),
-				PROVIDER_WRITABLE_COLUMN, na_io_provider_is_writable( NA_IO_PROVIDER( iter->data )),
+				PROVIDER_READABLE_COLUMN, na_io_provider_is_user_readable_at_startup( NA_IO_PROVIDER( iter->data ), pivot ),
+				PROVIDER_WRITABLE_COLUMN, na_io_provider_is_user_writable( NA_IO_PROVIDER( iter->data ), pivot ),
 				PROVIDER_LIBELLE_COLUMN, libelle,
 				PROVIDER_ID_COLUMN, id,
-				PROVIDER_PROVIDER_COLUMN, instance,
+				PROVIDER_PROVIDER_COLUMN, iter->data,
 				-1 );
+
 		g_free( libelle );
 		g_free( id );
 	}
@@ -313,6 +324,7 @@ nact_providers_list_save( BaseWindow *window )
 
 	plsd->order = g_slist_reverse( plsd->order );
 	na_iprefs_write_string_list( NA_IPREFS( pivot ), IO_PROVIDER_KEY_ORDER, plsd->order );
+	na_io_provider_reorder_providers_list( pivot );
 
 	na_utils_free_string_list( plsd->order );
 	g_free( plsd->path );
@@ -331,13 +343,8 @@ providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* i
 			PROVIDER_ID_COLUMN, &id,
 			PROVIDER_READABLE_COLUMN, &readable,
 			PROVIDER_WRITABLE_COLUMN, &writable,
+			PROVIDER_PROVIDER_COLUMN, &provider,
 			-1 );
-
-	provider = na_io_provider_find_provider_by_id( plsd->providers, id );
-	if( provider ){
-		na_io_provider_set_readable_at_startup( provider, readable );
-		na_io_provider_set_writable( provider, writable );
-	}
 
 	key = gconf_concat_dir_and_key( plsd->path, id );
 
@@ -351,6 +358,7 @@ providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* i
 
 	plsd->order = g_slist_prepend( plsd->order, g_strdup( id ));
 
+	g_object_unref( provider );
 	g_free( id );
 	g_free( key );
 
@@ -502,21 +510,22 @@ on_down_clicked( GtkButton *button, BaseWindow *window )
 static void
 display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, GtkTreeView *treeview )
 {
-	NAIIOProvider *instance;
+	NAIOProvider *provider;
 	gchar *name;
 
-	gtk_tree_model_get( model, iter, PROVIDER_LIBELLE_COLUMN, &name, PROVIDER_PROVIDER_COLUMN, &instance, -1 );
+	gtk_tree_model_get( model, iter, PROVIDER_LIBELLE_COLUMN, &name, PROVIDER_PROVIDER_COLUMN, &provider, -1 );
 
 	g_object_set( cell, "style-set", FALSE, NULL );
 	g_object_set( cell, "foreground-set", FALSE, NULL );
 
-	if( !instance ){
+	if( !na_io_provider_get_provider( provider )){
+
 		g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 		g_object_set( cell, "foreground", "grey", "foreground-set", TRUE, NULL );
 
-	} else {
-		g_object_unref( instance );
 	}
+
+	g_object_unref( provider );
 
 	g_object_set( cell, "text", name, NULL );
 	g_free( name );

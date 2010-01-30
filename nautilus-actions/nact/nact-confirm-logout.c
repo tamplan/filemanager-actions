@@ -140,7 +140,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nact_confirm_logout_instance_init";
 	NactConfirmLogout *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( instance ));
 	self = NACT_CONFIRM_LOGOUT( instance );
 
@@ -173,7 +174,7 @@ instance_dispose( GObject *dialog )
 	static const gchar *thisfn = "nact_confirm_logout_instance_dispose";
 	NactConfirmLogout *self;
 
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
+	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( dialog ));
 	self = NACT_CONFIRM_LOGOUT( dialog );
 

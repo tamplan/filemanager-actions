@@ -38,6 +38,7 @@
 #include <api/na-gconf-monitor.h>
 
 #include "na-io-provider.h"
+#include "na-gconf-utils.h"
 #include "na-iprefs.h"
 #include "na-module.h"
 #include "na-pivot.h"
@@ -52,36 +53,35 @@ struct NAPivotClassPrivate {
 /* private instance data
  */
 struct NAPivotPrivate {
-	gboolean             dispose_has_run;
+	gboolean           dispose_has_run;
 
-	NAPivotLoadableSet   loadable_set;
-	NAPivotIOProviderSet io_provider_set;
+	NAPivotLoadableSet loadable_set;
 
 	/* dynamically loaded modules (extension plugins)
 	 */
-	GList               *modules;
+	GList             *modules;
 
 	/* list of instances to be notified of repository updates
 	 * these are called 'consumers' of NAPivot
 	 */
-	GList               *consumers;
+	GList             *consumers;
 
 	/* configuration tree
 	 */
-	GList               *tree;
+	GList             *tree;
 
 	/* whether to automatically reload the whole configuration tree
 	 * when a modification is detected in one of the underlying I/O
 	 * storage subsystems
 	 * defaults to FALSE
 	 */
-	gboolean             automatic_reload;
-	GTimeVal             last_event;
-	guint                event_source_id;
+	gboolean           automatic_reload;
+	GTimeVal           last_event;
+	guint              event_source_id;
 
 	/* list of monitoring objects on runtime preferences
 	 */
-	GList               *monitors;
+	GList             *monitors;
 };
 
 /* signals
@@ -95,7 +95,6 @@ enum {
  */
 enum {
 	NAPIVOT_PROP_LOADABLE_SET_ID = 1,
-	NAPIVOT_PROP_IO_PROVIDER_SET_ID
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -197,13 +196,6 @@ class_init( NAPivotClass *klass )
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAPIVOT_PROP_LOADABLE_SET_ID, spec );
 
-	spec = g_param_spec_int(
-			NAPIVOT_PROP_IO_PROVIDER_SET,
-			"I/O providers set",
-			"The nature of the I/O providers we are concerned about", 0, INT_MAX, 0,
-			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAPIVOT_PROP_IO_PROVIDER_SET_ID, spec );
-
 	klass->private = g_new0( NAPivotClassPrivate, 1 );
 
 	/* register the signal and its default handler
@@ -237,7 +229,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_pivot_instance_init";
 	NAPivot *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NA_IS_PIVOT( instance ));
 	self = NA_PIVOT( instance );
 
@@ -245,7 +238,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->dispose_has_run = FALSE;
 	self->private->loadable_set = 0;
-	self->private->io_provider_set = 0;
 	self->private->modules = NULL;
 	self->private->consumers = NULL;
 	self->private->tree = NULL;
@@ -267,10 +259,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 		switch( property_id ){
 			case NAPIVOT_PROP_LOADABLE_SET_ID:
 				g_value_set_int( value, self->private->loadable_set );
-				break;
-
-			case NAPIVOT_PROP_IO_PROVIDER_SET_ID:
-				g_value_set_int( value, self->private->io_provider_set );
 				break;
 
 			default:
@@ -295,10 +283,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 				self->private->loadable_set = g_value_get_int( value );
 				break;
 
-			case NAPIVOT_PROP_IO_PROVIDER_SET_ID:
-				self->private->io_provider_set = g_value_get_int( value );
-				break;
-
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -312,7 +296,7 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_pivot_instance_dispose";
 	NAPivot *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_PIVOT( object ));
 	self = NA_PIVOT( object );
 
@@ -372,7 +356,7 @@ instance_finalize( GObject *object )
  * #NAObjectItem-derived object.
  */
 NAPivot *
-na_pivot_new( NAPivotLoadableSet loadable, NAPivotIOProviderSet provider )
+na_pivot_new( NAPivotLoadableSet loadable )
 {
 	static const gchar *thisfn = "na_pivot_new";
 	NAPivot *pivot;
@@ -382,7 +366,6 @@ na_pivot_new( NAPivotLoadableSet loadable, NAPivotIOProviderSet provider )
 	pivot = g_object_new(
 			NA_PIVOT_TYPE,
 			NAPIVOT_PROP_LOADABLE_SET, loadable,
-			NAPIVOT_PROP_IO_PROVIDER_SET, provider,
 			NULL );
 
 	pivot->private->modules = na_module_load_modules();
@@ -408,7 +391,6 @@ na_pivot_dump( const NAPivot *pivot )
 	if( !pivot->private->dispose_has_run ){
 
 		g_debug( "%s:     loadable_set=%d", thisfn, pivot->private->loadable_set );
-		g_debug( "%s:  io_provider_set=%d", thisfn, pivot->private->io_provider_set );
 		g_debug( "%s:          modules=%p (%d elts)", thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));
 		g_debug( "%s:        consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
 		g_debug( "%s:             tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
@@ -682,30 +664,113 @@ na_pivot_remove_item( NAPivot *pivot, NAObject *item )
 }
 
 /**
- * na_pivot_delete_item:
- * @pivot: this #NAPivot instance.
- * @item: the #NAObjectItem to be deleted from the storage subsystem.
- * @messages: the I/O provider can allocate and store here its error
- * messages.
+ * na_pivot_is_item_writable:
+ * @pivot: this #NAPivot object.
+ * @item: the #NAObjectItem to be written.
+ * @reason: the reason for what @item may not be writable.
  *
- * Deletes an action from the I/O storage subsystem.
+ * Returns: %TRUE: if @item is actually writable, given the current
+ * status of its provider, %FALSE else.
  *
- * Returns: the #NAIIOProvider return code.
+ * For an item be actually writable:
+ * - the item must not be itself in a read-only store, which has been
+ *   checked when first reading it
+ * - the provider must be willing (resp. able) to write
+ * - the provider must not has been locked by the admin
+ * - the writability of the provider must not have been removed by the user
+ * - the whole configuration must not have been locked by the admin.
  */
-guint
-na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages )
+gboolean
+na_pivot_is_item_writable( const NAPivot *pivot, const NAObjectItem *item, gint *reason )
 {
-	guint ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
+	gboolean writable;
+	NAIOProvider *provider;
+	gboolean is_new;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( messages, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
 
-	if( !pivot->private->dispose_has_run ){
-		ret = na_io_provider_delete_item( pivot, item, messages );
+	writable = FALSE;
+	if( reason ){
+		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
 	}
 
-	return( ret );
+	if( !pivot->private->dispose_has_run ){
+
+		writable = TRUE;
+		if( reason ){
+			*reason = NA_IIO_PROVIDER_STATUS_WRITABLE;
+		}
+
+		if( writable ){
+			if( na_object_is_readonly( item )){
+				writable = FALSE;
+				if( reason ){
+					*reason = NA_IIO_PROVIDER_STATUS_ITEM_READONLY;
+				}
+			}
+		}
+
+		if( writable ){
+			provider = na_object_get_provider( item );
+			if( provider ){
+				is_new = FALSE;
+				if( !na_io_provider_is_willing_to_write( provider )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO;
+					}
+				}
+			} else {
+				is_new = TRUE;
+				provider = na_io_provider_get_writable_provider( pivot );
+				if( !provider ){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
+					}
+				}
+			}
+		}
+
+		if( writable ){
+			if( na_io_provider_is_locked_by_admin( provider, pivot )){
+				writable = FALSE;
+				if( reason ){
+					*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
+				}
+			}
+		}
+
+		if( writable ){
+			if( is_new && !na_io_provider_is_user_writable( provider, pivot )){
+				writable = FALSE;
+				if( reason ){
+					*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;
+				}
+			}
+		}
+
+		if( writable ){
+			if( na_pivot_is_configuration_locked_by_admin( pivot )){
+				writable = FALSE;
+				if( reason ){
+					*reason = NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN;
+				}
+			}
+		}
+
+		if( writable ){
+			if( !na_io_provider_has_write_api( provider )){
+				writable = FALSE;
+				if( reason ){
+					*reason = NA_IIO_PROVIDER_STATUS_NO_API;
+				}
+			}
+		}
+	}
+
+	return( writable );
 }
 
 /**
@@ -722,14 +787,84 @@ na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **m
 guint
 na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages )
 {
-	guint ret = NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE;
+	guint ret;
+	gint reason;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( messages, NA_IIO_PROVIDER_PROGRAM_ERROR );
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
+	g_return_val_if_fail( messages, ret );
 
 	if( !pivot->private->dispose_has_run ){
-		ret = na_io_provider_write_item( pivot, item, messages );
+
+		NAIOProvider *provider = na_object_item_get_provider( item );
+		if( !provider ){
+			provider = na_io_provider_get_writable_provider( pivot );
+
+			if( !provider ){
+				ret = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
+
+			} else {
+				na_object_set_provider( item, provider );
+			}
+		}
+
+		if( provider ){
+
+			if( !na_pivot_is_item_writable( pivot, item, &reason )){
+				ret = ( guint ) reason;
+
+			} else {
+				ret = na_io_provider_write_item( provider, item, messages );
+			}
+		}
+	}
+
+	return( ret );
+}
+
+/**
+ * na_pivot_delete_item:
+ * @pivot: this #NAPivot instance.
+ * @item: the #NAObjectItem to be deleted from the storage subsystem.
+ * @messages: the I/O provider can allocate and store here its error
+ * messages.
+ *
+ * Deletes an action from the I/O storage subsystem.
+ *
+ * Returns: the #NAIIOProvider return code.
+ *
+ * Note that a new item, not already written to an I/O subsystem,
+ * doesn't have any attached provider. We so do nothing and return OK...
+ */
+guint
+na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages )
+{
+	guint ret;
+	gint reason;
+
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
+	g_return_val_if_fail( messages, ret );
+
+	if( !pivot->private->dispose_has_run ){
+
+		NAIOProvider *provider = na_object_item_get_provider( item );
+		if( provider ){
+
+			if( !na_pivot_is_item_writable( pivot, item, &reason )){
+				ret = ( guint ) reason;
+
+			} else {
+				ret = na_io_provider_delete_item( provider, item, messages );
+			}
+
+		} else {
+			ret = NA_IIO_PROVIDER_CODE_OK;
+		}
 	}
 
 	return( ret );
@@ -828,28 +963,6 @@ na_pivot_is_invalid_loadable( const NAPivot *pivot )
 }
 
 /**
- * na_pivot_get_io_provider_set:
- * @pivot: this #NAPivot instance.
- *
- * Returns: the I/O providers we are concerned about.
- */
-NAPivotIOProviderSet
-na_pivot_get_io_provider_set( const NAPivot *pivot )
-{
-	NAPivotIOProviderSet set;
-
-	set = 0;
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), set );
-
-	if( !pivot->private->dispose_has_run ){
-
-		set = pivot->private->io_provider_set;
-	}
-
-	return( set );
-}
-
-/**
  * na_pivot_sort_alpha_asc:
  * @a: first #NAObjectId.
  * @b: second #NAObjectId.
@@ -906,20 +1019,14 @@ na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
 gboolean
 na_pivot_is_level_zero_writable( const NAPivot *pivot )
 {
-	/*static const gchar *thisfn = "na_pivot_is_level_zero_writable";*/
 	gboolean writable;
-	/*NAIIOProvider *provider;*/
 
 	writable = FALSE;
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), writable );
 
 	if( !pivot->private->dispose_has_run ){
-		/*provider = na_io_provider_get_provider( pivot, "na-gconf" );
-		if( provider ){
-			writable = na_io_provider_is_willing_to_write( pivot, provider );
-			g_debug( "%s: writable=%s", thisfn, writable ? "True":"False" );
-			g_object_unref( provider );
-		}*/
+
+		writable = !na_pivot_is_configuration_locked_by_admin( pivot );
 	}
 
 	return( writable );
@@ -956,6 +1063,36 @@ na_pivot_write_level_zero( const NAPivot *pivot, GList *items )
 
 		na_utils_free_string_list( content );
 	}
+}
+
+/**
+ * na_pivot_is_configuration_locked_by_admin:
+ * @pivot: this #NAPivot.
+ *
+ * Returns: %TRUE if the whole configuration has been locked by an
+ * administrator, %FALSE else.
+ */
+gboolean
+na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot )
+{
+	gboolean locked;
+	GConfClient *gconf;
+	gchar *path;
+
+	locked = FALSE;
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+
+	if( !pivot->private->dispose_has_run ){
+
+		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
+		path = gconf_concat_dir_and_key( NAUTILUS_ACTIONS_GCONF_BASEDIR, "mandatory/all/locked" );
+
+		locked = na_gconf_utils_read_bool( gconf, path, FALSE, FALSE );
+
+		g_free( path );
+	}
+
+	return( locked );
 }
 
 static NAObjectItem *

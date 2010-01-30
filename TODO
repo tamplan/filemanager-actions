@@ -125,10 +125,11 @@
 
 - enhancement.ui: notebook page should be labeled 'Action' or 'Menu' depending of current item
 
-- rationale: when na-gconf is set by an admin as locked, does this really
-  mean that all GConf must be considered as read-only ? Not really. It should
-  rather be considered as GConf actions are read-only. Preferences stay editable.
-  Does the level-zero is a preference (so editable) or a sort of action (ro) !?
-  see the comment in schema.in
+- nact-iactions-list.c: display_label
+  the 'editable' cell property should be set only once, instead of at each redraw
+  and more because we also compute this on selection change
+  what we should do: compute once, and monitor to only change when needed
 
-- review the searches for writable providers and how this property is set and requested
+- use nact_window_get_pivot
+
+- not all objects are disposed

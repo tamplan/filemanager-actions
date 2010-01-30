@@ -48,7 +48,7 @@ static void     interface_base_init( NAIIOProviderInterface *klass );
 static void     interface_base_finalize( NAIIOProviderInterface *klass );
 
 static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
-static gboolean do_is_writable( const NAIIOProvider *instance, const NAObjectItem *item );
+static gboolean do_is_able_to_write( const NAIIOProvider *instance );
 
 /**
  * Registers the GType of this interface.
@@ -106,7 +106,7 @@ interface_base_init( NAIIOProviderInterface *klass )
 		klass->get_version = NULL;
 		klass->read_items = NULL;
 		klass->is_willing_to_write = do_is_willing_to_write;
-		klass->is_writable = do_is_writable;
+		klass->is_able_to_write = do_is_able_to_write;
 		klass->write_item = NULL;
 		klass->delete_item = NULL;
 
@@ -136,7 +136,7 @@ do_is_willing_to_write( const NAIIOProvider *instance )
 }
 
 static gboolean
-do_is_writable( const NAIIOProvider *instance, const NAObjectItem *item )
+do_is_able_to_write( const NAIIOProvider *instance )
 {
 	return( FALSE );
 }
@@ -150,7 +150,7 @@ do_is_writable( const NAIIOProvider *instance, const NAObjectItem *item )
  * detected a modification in one of its configurations (menu or action).
  *
  * This function should be triggered for each and every #NAObjectItem-
- * derived modified objects, but only once for each one.
+ * derived modified objects, but (if possible) only once for each one.
  */
 void
 na_iio_provider_config_changed( const NAIIOProvider *instance, const gchar *id )

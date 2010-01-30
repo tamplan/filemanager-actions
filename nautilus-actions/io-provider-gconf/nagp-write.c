@@ -49,21 +49,32 @@ static gboolean       write_list( NagpGConfProvider *gconf, const gchar *uuid, c
 static void           free_gslist( GSList *list );
 
 /*
- * Rationale: gconf reads its storage path in /etc/gconf/2/path ;
- * there is there a 'xml:readwrite:$(HOME)/.gconf' line, but I do not
- * known any way to get it programatically, so an admin may have set a
- * readwrite space elsewhere..
- *
- * So, I try to write a 'foo' key somewhere: if it is ok, then the
- * provider is supposed willing to write...
+ * API function: should only be called through NAIIOProvider interface
  */
 gboolean
 nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 {
-	/*static const gchar *thisfn = "nagp_iio_provider_is_willing_to_write";*/
+	return( TRUE );
+}
+
+/*
+ * Rationale: gconf reads its storage path from /etc/gconf/2/path ;
+ * there is there a 'xml:readwrite:$(HOME)/.gconf' line, but I do not
+ * known any way to get it programatically, so an admin may have set a
+ * readwrite space elsewhere..
+ *
+ * So, we try to write a 'foo' key somewhere: if it is ok, then the
+ * provider is supposed able to write...
+ *
+ * API function: should only be called through NAIIOProvider interface
+ */
+gboolean
+nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
+{
+	/*static const gchar *thisfn = "nagp_iio_provider_is_able_to_write";*/
 	static const gchar *path = "/apps/nautilus-actions/foo";
 	NagpGConfProvider *self;
-	gboolean willing_to = FALSE;
+	gboolean able_to = FALSE;
 
 	/*g_debug( "%s: provider=%p", thisfn, ( void * ) provider );*/
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), FALSE );
@@ -74,55 +85,18 @@ nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 	if( !self->private->dispose_has_run ){
 
 		if( !na_gconf_utils_write_string( self->private->gconf, path, "1", NULL )){
-			willing_to = FALSE;
+			able_to = FALSE;
 
 		} else if( !gconf_client_recursive_unset( self->private->gconf, path, 0, NULL )){
-			willing_to = FALSE;
+			able_to = FALSE;
 
 		} else {
-			willing_to = TRUE;
+			able_to = TRUE;
 		}
 	}
 
-	/*g_debug( "%s: provider=%p, willing_to=%s", thisfn, ( void * ) provider, willing_to ? "True":"False" );*/
-	return( willing_to );
-}
-
-/*
- * Though the provider writability has already been checked by the
- * program, we can only returns TRUE if the provider is willing to write.
- * We so have to re-check it here.
- *
- * If the provider is set, we are able to use the 'read-only' flag of
- * the object. Else, we returns the provider itself writability status.
- */
-gboolean
-nagp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
-{
-	static const gchar *thisfn = "nagp_write_iio_provider_is_writable";
-	NagpGConfProvider *self;
-	gboolean willing_to = FALSE;
-	NAIIOProvider *origin;
-
-	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
-	self = NAGP_GCONF_PROVIDER( provider );
-
-	if( !self->private->dispose_has_run ){
-
-		origin = na_object_get_provider( item );
-		if( origin ){
-			willing_to = !na_object_is_readonly( item );
-		} else {
-			willing_to = nagp_iio_provider_is_willing_to_write( provider );
-		}
-	}
-
-	g_debug( "%s: provider=%p, item=%p, writable=%s",
-			thisfn, ( void * ) provider, ( void * ) item, willing_to ? "True":"False" );
-
-	return( willing_to );
+	/*g_debug( "%s: provider=%p, able_to=%s", thisfn, ( void * ) provider, able_to ? "True":"False" );*/
+	return( able_to );
 }
 
 /*
@@ -133,35 +107,46 @@ nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 {
 	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_write_item";
 	NagpGConfProvider *self;
+	guint ret;
 
-	g_debug( "%s: provider=%p, item=%p (%s), messages=%p",
-			thisfn, ( void * ) provider,
-			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) messages );
-	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
+			thisfn,
+			( void * ) provider, G_OBJECT_TYPE_NAME( provider ),
+			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			( void * ) messages );
+
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
 
 	self = NAGP_GCONF_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
-		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
+		return( NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
-	if( NA_IS_OBJECT_ACTION( item )){
-		if( !write_item_action( self, NA_OBJECT_ACTION( item ), messages )){
-			return( NA_IIO_PROVIDER_WRITE_ERROR );
+	ret = nagp_iio_provider_delete_item( provider, item, messages );
+
+	if( ret == NA_IIO_PROVIDER_CODE_OK ){
+
+		if( NA_IS_OBJECT_ACTION( item )){
+			if( !write_item_action( self, NA_OBJECT_ACTION( item ), messages )){
+				return( NA_IIO_PROVIDER_CODE_WRITE_ERROR );
+			}
 		}
-	}
 
-	if( NA_IS_OBJECT_MENU( item )){
-		if( !write_item_menu( self, NA_OBJECT_MENU( item ), messages )){
-			return( NA_IIO_PROVIDER_WRITE_ERROR );
+		if( NA_IS_OBJECT_MENU( item )){
+			if( !write_item_menu( self, NA_OBJECT_MENU( item ), messages )){
+				return( NA_IIO_PROVIDER_CODE_WRITE_ERROR );
+			}
 		}
 	}
 
 	gconf_client_suggest_sync( self->private->gconf, NULL );
 
-	return( NA_IIO_PROVIDER_WRITE_OK );
+	return( ret );
 }
 
 static gboolean
@@ -261,21 +246,25 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	gchar *uuid, *path;
 	GError *error = NULL;
 
-	g_debug( "%s: provider=%p, item=%p (%s), messages=%p",
-			thisfn, ( void * ) provider,
-			( void * ) item, G_OBJECT_TYPE_NAME( item ), ( void * ) messages );
+	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
+			thisfn,
+			( void * ) provider, G_OBJECT_TYPE_NAME( provider ),
+			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			( void * ) messages );
 
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NA_IIO_PROVIDER_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_PROGRAM_ERROR );
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
 
 	self = NAGP_GCONF_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
-		return( NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE );
+		return( NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
-	ret = NA_IIO_PROVIDER_WRITE_OK;
+	ret = NA_IIO_PROVIDER_CODE_OK;
 	uuid = na_object_get_id( NA_OBJECT( item ));
 
 	path = g_strdup_printf( "%s%s/%s", NAUTILUS_ACTIONS_GCONF_SCHEMASDIR, NA_GCONF_CONFIG_PATH, uuid );
@@ -285,23 +274,25 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 		*messages = g_slist_append( *messages, g_strdup( error->message ));
 		g_error_free( error );
 		error = NULL;
+		ret = NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR;
 	}
 	g_free( path );
 
-
-	path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
-	if( !gconf_client_recursive_unset( self->private->gconf, path, 0, &error )){
-		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
-		*messages = g_slist_append( *messages, g_strdup( error->message ));
-		g_error_free( error );
-		error = NULL;
-		ret = NA_IIO_PROVIDER_WRITE_ERROR;
-
-	} else {
-		gconf_client_suggest_sync( self->private->gconf, NULL );
+	if( ret == NA_IIO_PROVIDER_CODE_OK ){
+		path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
+		gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
+		if( error ){
+			g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
+			*messages = g_slist_append( *messages, g_strdup( error->message ));
+			g_error_free( error );
+			error = NULL;
+			ret = NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR;
+		}
 	}
-	g_free( path );
 
+	gconf_client_suggest_sync( self->private->gconf, NULL );
+
+	g_free( path );
 	g_free( uuid );
 
 	return( ret );

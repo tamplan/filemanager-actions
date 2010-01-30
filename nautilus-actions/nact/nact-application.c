@@ -171,14 +171,15 @@ class_init( NactApplicationClass *klass )
 }
 
 static void
-instance_init( GTypeInstance *instance, gpointer klass )
+instance_init( GTypeInstance *application, gpointer klass )
 {
 	static const gchar *thisfn = "nact_application_instance_init";
 	NactApplication *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-	g_assert( NACT_IS_APPLICATION( instance ));
-	self = NACT_APPLICATION( instance );
+	g_debug( "%s: application=%p (%s), klass=%p",
+			thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ), ( void * ) klass );
+	g_assert( NACT_IS_APPLICATION( application ));
+	self = NACT_APPLICATION( application );
 
 	self->private = g_new0( NactApplicationPrivate, 1 );
 
@@ -235,7 +236,7 @@ instance_dispose( GObject *application )
 	static const gchar *thisfn = "nact_application_instance_dispose";
 	NactApplication *self;
 
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+	g_debug( "%s: application=%p (%s)", thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ));
 	g_return_if_fail( NACT_IS_APPLICATION( application ));
 	self = NACT_APPLICATION( application );
 
@@ -394,7 +395,7 @@ appli_initialize_application( BaseApplication *application )
 	fake = na_object_action_new();
 	g_object_unref( fake );
 
-	NACT_APPLICATION( application )->private->pivot = na_pivot_new( PIVOT_LOAD_ALL, PIVOT_IO_PROVIDER_ALL );
+	NACT_APPLICATION( application )->private->pivot = na_pivot_new( PIVOT_LOAD_ALL );
 	na_pivot_load_items( NACT_APPLICATION( application )->private->pivot );
 
 	/* call parent class */

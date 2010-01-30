@@ -125,7 +125,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nact_window_instance_init";
 	NactWindow *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NACT_IS_WINDOW( instance ));
 	self = NACT_WINDOW( instance );
 
@@ -140,7 +141,7 @@ instance_dispose( GObject *window )
 	static const gchar *thisfn = "nact_window_instance_dispose";
 	NactWindow *self;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 	g_return_if_fail( NACT_IS_WINDOW( window ));
 	self = NACT_WINDOW( window );
 
@@ -174,7 +175,10 @@ instance_finalize( GObject *window )
 }
 
 /**
- * Returns a pointer to the list of actions.
+ * nact_window_get_pivot:
+ * @window: this #NactWindow object.
+ *
+ * Returns a pointer to the #NAPivot object of the application.
  */
 NAPivot *
 nact_window_get_pivot( NactWindow *window )
@@ -197,73 +201,6 @@ nact_window_get_pivot( NactWindow *window )
 }
 
 /**
- * nact_window_is_writable_item:
- * @window: this #NactWindow instance.
- * @item: the item, which may be a profile, an action or a menu.
- *
- * Returns: %TRUE if the item is writable, %FALSE else.
- */
-gboolean
-nact_window_is_writable_item( NactWindow *window, const NAObjectId *item )
-{
-	gboolean writable;
-	NAObjectItem *parent;
-
-	writable = FALSE;
-
-	g_return_val_if_fail( NACT_IS_WINDOW( window ), writable );
-	g_return_val_if_fail( NA_IS_OBJECT_ID( item ), writable );
-
-	if( !window->private->dispose_has_run ){
-
-		parent = NA_IS_OBJECT_PROFILE( item ) ? na_object_get_parent( item ) : NA_OBJECT_ITEM( item );
-
-		writable =
-				!na_object_is_readonly( parent ) &&
-				nact_window_is_writable_provider( window, parent );
-	}
-
-	return( writable );
-}
-
-/**
- * nact_window_is_writable_provider:
- * @window: this #NactWindow instance.
- * @item: the current item.
- *
- * Returns: %TRUE if the item's provider is willing to write, %FALSE else.
- *
- * If the provider item has not yet any provider, i.e. has never been
- * saved elsewhere, then we test if we have at least one
- * willing-to-write provider.
- */
-gboolean
-nact_window_is_writable_provider( NactWindow *window, const NAObjectItem *item )
-{
-	gboolean writable;
-	NAPivot *pivot;
-	NAIIOProvider *provider;
-
-	writable = FALSE;
-
-	g_return_val_if_fail( NACT_IS_WINDOW( window ), writable );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), writable );
-
-	if( !window->private->dispose_has_run ){
-
-		pivot = nact_window_get_pivot( window );
-		provider = na_object_get_provider( item );
-		if( provider ){
-			writable = na_io_provider_is_willing_to_write( pivot, provider );
-		} else {
-			writable = nact_window_has_writable_providers( window );
-		}
-	}
-
-	return( writable );
-}
-
-/**
  * nact_window_has_writable_providers:
  * @window: this #NactWindow instance.
  *
@@ -274,7 +211,7 @@ nact_window_has_writable_providers( NactWindow *window )
 {
 	gboolean has_writables;
 	NAPivot *pivot;
-	NAIIOProvider *provider;
+	NAIOProvider *provider;
 
 	has_writables = FALSE;
 
@@ -287,7 +224,6 @@ nact_window_has_writable_providers( NactWindow *window )
 
 		if( provider ){
 			has_writables = TRUE;
-			g_object_unref( provider );
 		}
 	}
 
@@ -330,6 +266,9 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 
 		ret = na_pivot_write_item( pivot, item, &messages );
 
+		g_debug( "nact_window_save_item: ret=%d", ret );
+		na_object_dump( item );
+
 		if( messages ){
 			base_window_error_dlg(
 					BASE_WINDOW( window ),
@@ -339,7 +278,7 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 			na_utils_free_string_list( messages );
 		}
 
-		save_ok = ( ret == NA_IIO_PROVIDER_WRITE_OK );
+		save_ok = ( ret == NA_IIO_PROVIDER_CODE_OK );
 	}
 
 	return( save_ok );
@@ -384,7 +323,7 @@ nact_window_delete_item( NactWindow *window, const NAObjectItem *item )
 			na_utils_free_string_list( messages );
 		}
 
-		delete_ok = ( ret == NA_IIO_PROVIDER_WRITE_OK );
+		delete_ok = ( ret == NA_IIO_PROVIDER_CODE_OK );
 	}
 
 	return( delete_ok );

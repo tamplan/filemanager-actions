@@ -311,23 +311,23 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
     <!-- schemas for preferences -->
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/assistant-esc-quit</key>
-      <owner>nautilus-actions</owner>
-      <type>bool</type>
-      <locale name="C">
-        <short>Whether the Esc key should close the assistants</short>
-        <long>If TRUE, assistant may be closed by hitting the Esc key.</long>
-      </locale>
-      <default>true</default>
-    </schema>
-
-    <schema>
       <key>/schemas/apps/nautilus-actions/preferences/assistant-esc-confirm</key>
       <owner>nautilus-actions</owner>
       <type>bool</type>
       <locale name="C">
         <short>Ask for a confirmation when quitting by Esc</short>
         <long>If TRUE, a confirmation will be requested when quitting an assistant by hitting the Esc key.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/assistant-esc-quit</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether the Esc key should close the assistants</short>
+        <long>If TRUE, assistant may be closed by hitting the Esc key.</long>
       </locale>
       <default>true</default>
     </schema>
@@ -351,6 +351,22 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
       <locale name="C">
         <short>Last selected folder</short>
         <long>Last folder selected when choosing a folder where to export the actions.</long>
+      </locale>
+      <default>/tmp</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/export-format</key>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>Preferred export format</short>
+        <long>This is the preferred export format, used as a default when exporting items, or dropping them outside of the application.
+Possible values are:
+- "GConfSchemaV1": this used to be the historical export format. The exported file may later be imported via Import assistant of the Nautilus Actions Configuration Tool, or via the gconftool-2 --import-schema-file command-line tool.
+- "GConfSchemaV2": a lighter while still compatible schema. The exported file may later be imported via Import assistant of the Nautilus Actions Configuration Tool, or via the gconftool-2 --import-schema-file command-line tool.
+- "GConfEntry": this should be the preferred format for newly exported actions. The exported file may later be imported via Import assistant of the Nautilus Actions Configuration Tool, or via the gconftool-2 --load command-line tool.
+- "Ask": the user will be asked at runtime for the format he wishes use.</long>
       </locale>
       <default>/tmp</default>
     </schema>
@@ -431,7 +447,7 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
       <type>string</type>
       <locale name="C">
         <short>Last import mode choosen by the user</short>
-        <long>Last import mode choosen by the user when he is asked for in import mode. Possible values are :
+        <long>Last import mode choosen by the user when he is asked for in import mode. Possible values are:
 - "NoImport": do not import an action whose UUID already exists,
 - "Renumber": allocate a new UUID if the imported UUID already exists,
 - "Override": override the existing action with the imported one.</long>
@@ -475,6 +491,18 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
 - "Ask": ask the user each time.</long>
       </locale>
       <default>NoImport</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/io-providers-order</key>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>I/O providers Write priority</short>
+        <long>The order in which I/O providers are tested when we need to write a new item down to a storage subsystem.</long>
+      </locale>
+      <default>[]</default>
     </schema>
 
     <schema>
@@ -526,23 +554,23 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/iprefs-relabel-menus</key>
-      <owner>nautilus-actions</owner>
-      <type>bool</type>
-      <locale name="C">
-        <short>Whether menus should be relabeled when pasted or duplicated</short>
-        <long>Whether menus should be relabeled when pasted or duplicated.</long>
-      </locale>
-      <default>true</default>
-    </schema>
-
-    <schema>
       <key>/schemas/apps/nautilus-actions/preferences/iprefs-relabel-actions</key>
       <owner>nautilus-actions</owner>
       <type>bool</type>
       <locale name="C">
         <short>Whether actions should be relabeled when pasted or duplicated</short>
         <long>Whether actions should be relabeled when pasted or duplicated.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/iprefs-relabel-menus</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether menus should be relabeled when pasted or duplicated</short>
+        <long>Whether menus should be relabeled when pasted or duplicated.</long>
       </locale>
       <default>true</default>
     </schema>
@@ -653,8 +681,19 @@ A default default list is harcoded in nautilus-actions-config-tool, which may be
 	<!-- sysadmin reserved keys -->
 	<!-- these keys are thought to be set as mandatory keys -->
 	<!-- each I/O provider has its own key, identified by the I/O provider internal id. -->
-	<!-- note that level-zero order of items is written as a GConf preference -->
-	<!-- setting the GConf as read-only (locked) will also prevent any reordering of level-zero items -->
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/mandatory/all/locked</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether the whole configuration is locked</short>
+        <long>The whole configuration must be understood here as the global set and order of menus and actions.
+When this configuration is locked, then the user is no more able to modify nor create or delete any menu or action. All items are read-only.
+As the order of items is also locked, the level zero itself cannot be modified, and the user is unable to reorder the items.</long>
+      </locale>
+      <default>false</default>
+    </schema>
 
     <schema>
       <key>/schemas/apps/nautilus-actions/mandatory/na-gconf/locked</key>
@@ -662,7 +701,7 @@ A default default list is harcoded in nautilus-actions-config-tool, which may be
       <type>bool</type>
       <locale name="C">
         <short>Whether the GConf I/O provider is locked</short>
-        <long>When set to true (most probably as a mandatory key), this prevents all items readen from GConf to being modified in NACT.</long>
+        <long>When set to true (most probably as a mandatory key), this prevents all items, menus and actions, readen from GConf to being modified in NACT.</long>
       </locale>
       <default>false</default>
     </schema>
@@ -673,7 +712,7 @@ A default default list is harcoded in nautilus-actions-config-tool, which may be
       <type>bool</type>
       <locale name="C">
         <short>Whether the Desktop I/O provider is locked</short>
-        <long>When set to true (most probably as a mandatory key), this prevents all items readen as .desktop files to being modified in NACT.</long>
+        <long>When set to true (most probably as a mandatory key), this prevents all items, menus and actions, readen from .desktop files to being modified in NACT.</long>
       </locale>
       <default>false</default>
     </schema>

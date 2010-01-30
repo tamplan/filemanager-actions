@@ -57,6 +57,12 @@ G_BEGIN_DECLS
 
 typedef struct NadpDesktopProviderPrivate NadpDesktopProviderPrivate;
 
+/* private instance data
+ */
+struct NadpDesktopProviderPrivate {
+	gboolean dispose_has_run;
+};
+
 typedef struct {
 	GObject                     parent;
 	NadpDesktopProviderPrivate *private;

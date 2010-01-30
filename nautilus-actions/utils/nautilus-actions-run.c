@@ -213,9 +213,7 @@ get_action( const gchar *id )
 
 	action = NULL;
 
-	pivot = na_pivot_new(
-			!PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID,
-			PIVOT_IO_PROVIDER_AVAILABLE | PIVOT_IO_PROVIDER_READABLE_AT_STARTUP );
+	pivot = na_pivot_new( !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
 
 	na_pivot_load_items( pivot );
 

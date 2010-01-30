@@ -321,8 +321,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 	gboolean enable_tab;
 	GtkWidget *label_entry, *path_entry, *parameters_entry;
 	gchar *label, *path, *parameters;
-	gboolean readonly_item;
-	gboolean writable_provider;
+	gboolean editable;
 	GtkButton *path_button;
 	GtkButton *legend_button;
 
@@ -337,8 +336,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
-				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
 		enable_tab = tab_set_sensitive( instance );
@@ -349,25 +347,25 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		check_for_label( instance, GTK_ENTRY( label_entry ), label );
 		g_free( label );
 		gtk_widget_set_sensitive( label_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( label_entry ), writable_provider && !readonly_item );
+		nact_gtk_utils_set_editable( GTK_OBJECT( label_entry ), editable );
 
 		path_entry = get_path_entry( instance );
 		path = profile ? na_object_profile_get_path( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
 		g_free( path );
 		gtk_widget_set_sensitive( path_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( path_entry ), writable_provider && !readonly_item );
+		nact_gtk_utils_set_editable( GTK_OBJECT( path_entry ), editable );
 
 		path_button = get_path_button( instance );
 		gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( path_button ), writable_provider && !readonly_item );
+		nact_gtk_utils_set_editable( GTK_OBJECT( path_button ), editable );
 
 		parameters_entry = get_parameters_entry( instance );
 		parameters = profile ? na_object_profile_get_parameters( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
 		g_free( parameters );
 		gtk_widget_set_sensitive( parameters_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( parameters_entry ), writable_provider && !readonly_item );
+		nact_gtk_utils_set_editable( GTK_OBJECT( parameters_entry ), editable );
 
 		legend_button = get_legend_button( instance );
 		gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );

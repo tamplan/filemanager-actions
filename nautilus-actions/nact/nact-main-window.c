@@ -80,10 +80,13 @@ struct NactMainWindowPrivate {
 	 * it may be different of the row being currently selected.
 	 *
 	 * Can be null, and this implies that edited_profile is also null.
+	 *
+	 * 'editable_item' property is computed on selection change;
+	 * This is the real writability status of the item.
 	 */
 	NAObjectItem    *edited_item;
-	gboolean         readonly_item;
-	gboolean         writable_provider;
+	gboolean         editable;
+	gint             reason;
 
 	/**
 	 * Currently edited profile.
@@ -117,8 +120,8 @@ enum {
 	PROP_EDITED_ITEM = 1,
 	PROP_EDITED_PROFILE,
 	PROP_SELECTED_ROW,
-	PROP_READONLY_ITEM,
-	PROP_WRITABLE_PROVIDER
+	PROP_EDITABLE,
+	PROP_REASON
 };
 
 /* signals
@@ -328,18 +331,18 @@ class_init( NactMainWindowClass *klass )
 	g_object_class_install_property( object_class, PROP_SELECTED_ROW, spec );
 
 	spec = g_param_spec_boolean(
-			TAB_UPDATABLE_PROP_READONLY_ITEM,
-			"Read-only item ?",
-			"Whether the item itself is read-only", FALSE,
+			TAB_UPDATABLE_PROP_EDITABLE,
+			"Editable item ?",
+			"Whether the item will be able to be updated against its I/O provider", FALSE,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_READONLY_ITEM, spec );
+	g_object_class_install_property( object_class, PROP_EDITABLE, spec );
 
-	spec = g_param_spec_boolean(
-			TAB_UPDATABLE_PROP_WRITABLE_PROVIDER,
-			"Writable provider",
-			"Whether the provider of the item is writable", TRUE,
+	spec = g_param_spec_int(
+			TAB_UPDATABLE_PROP_REASON,
+			"No edition reason",
+			"Why is this item not editable", 0, 255, 0,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_WRITABLE_PROVIDER, spec );
+	g_object_class_install_property( object_class, PROP_REASON, spec );
 
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
@@ -561,7 +564,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nact_main_window_instance_init";
 	NactMainWindow *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
 	self = NACT_MAIN_WINDOW( instance );
 
@@ -617,12 +621,12 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_pointer( value, self->private->selected_row );
 				break;
 
-			case PROP_READONLY_ITEM:
-				g_value_set_boolean( value, self->private->readonly_item );
+			case PROP_EDITABLE:
+				g_value_set_boolean( value, self->private->editable );
 				break;
 
-			case PROP_WRITABLE_PROVIDER:
-				g_value_set_boolean( value, self->private->writable_provider );
+			case PROP_REASON:
+				g_value_set_int( value, self->private->reason );
 				break;
 
 			default:
@@ -655,12 +659,12 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 				self->private->selected_row = g_value_get_pointer( value );
 				break;
 
-			case PROP_READONLY_ITEM:
-				self->private->readonly_item = g_value_get_boolean( value );
+			case PROP_EDITABLE:
+				self->private->editable = g_value_get_boolean( value );
 				break;
 
-			case PROP_WRITABLE_PROVIDER:
-				self->private->writable_provider = g_value_get_boolean( value );
+			case PROP_REASON:
+				self->private->reason = g_value_get_int( value );
 				break;
 
 			default:
@@ -679,7 +683,7 @@ instance_dispose( GObject *window )
 	gint pos;
 	GList *it;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 	self = NACT_MAIN_WINDOW( window );
 
@@ -816,8 +820,6 @@ nact_main_window_get_item( const NactMainWindow *window, const gchar *uuid )
  *    we can create any new actions, deleting them, and so on
  *    if we have eventually deleted all newly created actions, then the
  *    final count of modified actions should be zero... don't it ?
- *
- * Note also that we don't count invalid items as they are not saveable.
  */
 gboolean
 nact_main_window_has_modified_items( const NactMainWindow *window )
@@ -1122,6 +1124,7 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 	NactMainWindow *window;
 	NAObject *object;
 	gint count;
+	NAPivot *pivot;
 
 	count = g_slist_length( selected_items );
 
@@ -1134,7 +1137,11 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 		return;
 	}
 
-	nact_main_statusbar_set_locked( window, FALSE, FALSE );
+	window->private->selected_row = NULL;
+	window->private->edited_item = NULL;
+	window->private->editable = FALSE;
+	window->private->reason = 0;
+	nact_main_statusbar_set_locked( window, FALSE, 0 );
 
 	if( count == 1 ){
 		g_return_if_fail( NA_IS_OBJECT_ID( selected_items->data ));
@@ -1151,13 +1158,11 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 			set_current_profile( window, TRUE, selected_items );
 		}
 
-		window->private->readonly_item = na_object_is_readonly( window->private->edited_item );
-		window->private->writable_provider = nact_window_is_writable_provider( NACT_WINDOW( window ), window->private->edited_item );
-		nact_main_statusbar_set_locked( window, !window->private->writable_provider, window->private->readonly_item );
+		pivot = nact_window_get_pivot( NACT_WINDOW( instance ));
+		window->private->editable = na_pivot_is_item_writable( pivot, window->private->edited_item, &window->private->reason );
+		nact_main_statusbar_set_locked( window, !window->private->editable, window->private->reason );
 
 	} else {
-		window->private->selected_row = NULL;
-		window->private->edited_item = NULL;
 		set_current_object_item( window, selected_items );
 	}
 
@@ -1220,9 +1225,9 @@ set_current_profile( NactMainWindow *window, gboolean set_action, GSList *select
 	if( window->private->edited_profile && set_action ){
 
 		NAObjectAction *action = NA_OBJECT_ACTION( na_object_get_parent( window->private->edited_profile ));
+		NAPivot *pivot = nact_window_get_pivot( NACT_WINDOW( window ));
 		window->private->edited_item = NA_OBJECT_ITEM( action );
-		window->private->readonly_item = na_object_is_readonly( window->private->edited_item );
-		window->private->writable_provider = nact_window_is_writable_provider( NACT_WINDOW( window ), window->private->edited_item );
+		window->private->editable = na_pivot_is_item_writable( pivot, window->private->edited_item, &window->private->reason );
 	}
 }
 

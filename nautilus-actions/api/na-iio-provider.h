@@ -109,7 +109,7 @@ typedef struct {
 	 *
 	 * Reads the whole items list from the specified I/O provider.
 	 *
-	 * Returns: a unordered flat #GList of NAObjectItem-derived objects
+	 * Returns: a unordered flat #GList of #NAObjectItem-derived objects
 	 * (menus or actions) ; the actions embed their own profiles.
 	 */
 	GList *  ( *read_items )         ( const NAIIOProvider *instance, GSList **messages );
@@ -118,34 +118,47 @@ typedef struct {
 	 * is_willing_to_write:
 	 * @instance: the #NAIIOProvider provider.
 	 *
-	 * Checks for global writability of the I/O provider.
+	 * Returns: %TRUE if this I/O provider is willing to write,
+	 *  %FALSE else.
 	 *
-	 * Returns: %TRUE if we are able to update/write/delete a #NAObjectItem
-	 * (menu or action) into this I/O provider, %FALSE else.
+	 * The 'willing_to_write' property is intrinsic to the I/O provider.
+	 * It shouldn't do any supposition against the actual runtime
+	 * environment.
+	 * It just says that the developer/maintainer has released the needed
+	 * code in order to update/create/delete #NAObjectItem-derived objects.
 	 *
-	 * Note that the I/O provider may return a positive writability
-	 * flag when considering the whole I/O storage subsystem, while not
-	 * being able to update/write/delete a particular item
-	 * (see is_writable function below).
-	 *
-	 * Note also that, even if the I/O provider is willing to write,
-	 * a sysadmin may have locked down it, by putting a 'true' value
-	 * in the key '/apps/nautilus-actions/mandatory/<provider_id>/locked'
-	 * (see na_io_provider_is_willing_to_write).
+	 * Note that even if this property is %TRUE, there is yet several
+	 * reasons for not being able to update/delete existing items or
+	 * create new ones (see e.g. #is_able_to_write() below).
 	 */
 	gboolean ( *is_willing_to_write )( const NAIIOProvider *instance );
 
 	/**
-	 * is_writable:
+	 * is_able_to_write:
 	 * @instance: the #NAIIOProvider provider.
-	 * @item: a #NAObjectItem-derived menu or action.
 	 *
-	 * Checks for writability of this particular @item.
+	 * Returns: %TRUE if this I/O provider is able to do write
+	 * operations at runtime, %FALSE else.
 	 *
-	 * Returns: %TRUE if we are able to update/write/delete the
-	 * @item, %FALSE else.
+	 * The 'able_to_write' property is a runtime one.
+	 * When returning %TRUE, the I/O provider insures that it has
+	 * sucessfully checked that it was able to write some things
+	 * down to its storage subsystems.
+	 *
+	 * The 'able_to_write' property is independant of the
+	 * 'willing_to_write' above.
+	 *
+	 * This condition is only relevant when trying to define new items,
+	 * to see if a willing_to provider is actually able to do write
+	 * operations. It it not relevant for updating/deleting already
+	 * existings items as they have already checked their own runtime
+	 * writability status when readen from the storage subsystems.
+	 *
+	 * Note that even if this property is %TRUE, there is yet several
+	 * reasons for not being able to update/delete existing items or
+	 * create new ones (see e.g. #is_willing_to_write() above).
 	 */
-	gboolean ( *is_writable )        ( const NAIIOProvider *instance, const NAObjectItem *item );
+	gboolean ( *is_able_to_write )   ( const NAIIOProvider *instance );
 
 	/**
 	 * write_item:
@@ -191,15 +204,32 @@ GType na_iio_provider_get_type       ( void );
  */
 void  na_iio_provider_config_changed ( const NAIIOProvider *instance, const gchar *id );
 
-/* return code of write/delete operations
+/* the reasons for which an item may not be writable
+ * adding a new status here should imply also adding a new tooltip
+ * in nact_main_statusbar_set_locked().
  */
 enum {
-	NA_IIO_PROVIDER_WRITE_OK = 0,
-	NA_IIO_PROVIDER_NOT_WRITABLE,
-	NA_IIO_PROVIDER_NOT_WILLING_TO_WRITE,
-	NA_IIO_PROVIDER_WRITE_ERROR,
-	NA_IIO_PROVIDER_NO_PROVIDER,
-	NA_IIO_PROVIDER_PROGRAM_ERROR
+	NA_IIO_PROVIDER_STATUS_UNDETERMINED = 0,
+	NA_IIO_PROVIDER_STATUS_WRITABLE,
+	NA_IIO_PROVIDER_STATUS_ITEM_READONLY,
+	NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO,
+	NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND,
+	NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN,
+	NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER,
+	NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN,
+	NA_IIO_PROVIDER_STATUS_NO_API,
+	NA_IIO_PROVIDER_STATUS_LAST,
+};
+
+/* return code of operations
+ */
+enum {
+	NA_IIO_PROVIDER_CODE_OK = 0,
+	NA_IIO_PROVIDER_CODE_PROGRAM_ERROR = 1 + NA_IIO_PROVIDER_STATUS_LAST,
+	NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN,
+	NA_IIO_PROVIDER_CODE_WRITE_ERROR,
+	NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR,
+	NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR,
 };
 
 G_END_DECLS

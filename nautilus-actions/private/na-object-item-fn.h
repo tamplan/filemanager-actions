@@ -44,44 +44,44 @@
 
 #include <gdk/gdk.h>
 
-#include <nautilus-actions/api/na-iio-provider.h>
+#include <runtime/na-io-provider.h>
 
 #include "na-object-item-class.h"
 
 G_BEGIN_DECLS
 
-void           na_object_item_free_items_list( GList *items );
+void          na_object_item_free_items_list( GList *items );
 
-gchar         *na_object_item_get_tooltip( const NAObjectItem *item );
-gchar         *na_object_item_get_icon( const NAObjectItem *item );
-GdkPixbuf     *na_object_item_get_pixbuf( const NAObjectItem *object );
-gint           na_object_item_get_position( const NAObjectItem *object, const NAObject *child );
-NAIIOProvider *na_object_item_get_provider( const NAObjectItem *item );
-void          *na_object_item_get_provider_data( const NAObjectItem *item );
-gboolean       na_object_item_is_enabled( const NAObjectItem *item );
-gboolean       na_object_item_is_readonly( const NAObjectItem *action );
-NAObject      *na_object_item_get_item( const NAObjectItem *item, const gchar *id );
-GList         *na_object_item_get_items_list( const NAObjectItem *item );
-guint          na_object_item_get_items_count( const NAObjectItem *item );
+gchar        *na_object_item_get_tooltip( const NAObjectItem *item );
+gchar        *na_object_item_get_icon( const NAObjectItem *item );
+GdkPixbuf    *na_object_item_get_pixbuf( const NAObjectItem *object );
+gint          na_object_item_get_position( const NAObjectItem *object, const NAObject *child );
+NAIOProvider *na_object_item_get_provider( const NAObjectItem *item );
+void         *na_object_item_get_provider_data( const NAObjectItem *item );
+gboolean      na_object_item_is_enabled( const NAObjectItem *item );
+gboolean      na_object_item_is_readonly( const NAObjectItem *action );
+NAObject     *na_object_item_get_item( const NAObjectItem *item, const gchar *id );
+GList        *na_object_item_get_items_list( const NAObjectItem *item );
+guint         na_object_item_get_items_count( const NAObjectItem *item );
 
-void           na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
+void          na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
 
-void           na_object_item_set_tooltip( NAObjectItem *item, const gchar *tooltip );
-void           na_object_item_set_icon( NAObjectItem *item, const gchar *icon_name );
-void           na_object_item_set_provider( NAObjectItem *item, const NAIIOProvider *provider );
-void           na_object_item_set_provider_data( NAObjectItem *item, const void *provider_data );
-void           na_object_item_set_enabled( NAObjectItem *item, gboolean enabled );
-void           na_object_item_set_readonly( NAObjectItem *action, gboolean readonly );
-void           na_object_item_set_items_list( NAObjectItem *item, GList *items );
+void          na_object_item_set_tooltip( NAObjectItem *item, const gchar *tooltip );
+void          na_object_item_set_icon( NAObjectItem *item, const gchar *icon_name );
+void          na_object_item_set_provider( NAObjectItem *item, const NAIOProvider *provider );
+void          na_object_item_set_provider_data( NAObjectItem *item, const void *provider_data );
+void          na_object_item_set_enabled( NAObjectItem *item, gboolean enabled );
+void          na_object_item_set_readonly( NAObjectItem *action, gboolean readonly );
+void          na_object_item_set_items_list( NAObjectItem *item, GList *items );
 
-void           na_object_item_append_item( NAObjectItem *object, const NAObject *item );
-void           na_object_item_insert_at( NAObjectItem *object, const NAObject *item, gint pos );
-void           na_object_item_insert_item( NAObjectItem *object, const NAObject *item, const NAObject *before );
-void           na_object_item_remove_item( NAObjectItem *object, const NAObject *item );
+void          na_object_item_append_item( NAObjectItem *object, const NAObject *item );
+void          na_object_item_insert_at( NAObjectItem *object, const NAObject *item, gint pos );
+void          na_object_item_insert_item( NAObjectItem *object, const NAObject *item, const NAObject *before );
+void          na_object_item_remove_item( NAObjectItem *object, const NAObject *item );
 
-GSList        *na_object_item_get_items_string_list( const NAObjectItem *item );
-GSList        *na_object_item_rebuild_items_list( const NAObjectItem *item );
-void           na_object_item_set_items_string_list( NAObjectItem *item, GSList *items );
+GSList       *na_object_item_get_items_string_list( const NAObjectItem *item );
+GSList       *na_object_item_rebuild_items_list( const NAObjectItem *item );
+void          na_object_item_set_items_string_list( NAObjectItem *item, GSList *items );
 
 G_END_DECLS
 

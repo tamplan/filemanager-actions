@@ -47,12 +47,6 @@ struct NadpDesktopProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-/* private instance data
- */
-struct NadpDesktopProviderPrivate {
-	gboolean dispose_has_run;
-};
-
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 
@@ -131,7 +125,7 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	iface->get_version = get_version;
 	iface->read_items = nadp_iio_provider_read_items;
 	iface->is_willing_to_write = nadp_iio_provider_is_willing_to_write;
-	iface->is_writable = nadp_iio_provider_is_writable;
+	iface->is_able_to_write = nadp_iio_provider_is_able_to_write;
 	iface->write_item = nadp_iio_provider_write_item;
 	iface->delete_item = nadp_iio_provider_delete_item;
 }
@@ -142,7 +136,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nadp_desktop_provider_instance_init";
 	NadpDesktopProvider *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( instance ));
 	self = NADP_DESKTOP_PROVIDER( instance );
 
@@ -157,7 +152,7 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "nadp_desktop_provider_instance_dispose";
 	NadpDesktopProvider *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( object ));
 	self = NADP_DESKTOP_PROVIDER( object );
 

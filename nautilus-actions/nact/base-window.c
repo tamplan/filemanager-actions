@@ -344,7 +344,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "base_window_instance_init";
 	BaseWindow *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( BASE_IS_WINDOW( instance ));
 	self = BASE_WINDOW( instance );
 
@@ -470,7 +471,7 @@ instance_dispose( GObject *window )
 	BaseWindow *self;
 	GSList *is;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	self = BASE_WINDOW( window );
 

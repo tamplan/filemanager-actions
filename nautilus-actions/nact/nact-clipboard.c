@@ -187,7 +187,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NactClipboard *self;
 	GdkDisplay *display;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_assert( NACT_IS_CLIPBOARD( instance ));
 	self = NACT_CLIPBOARD( instance );
 
@@ -202,14 +203,14 @@ instance_init( GTypeInstance *instance, gpointer klass )
 }
 
 static void
-instance_dispose( GObject *window )
+instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "nact_clipboard_instance_dispose";
 	NactClipboard *self;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( NACT_IS_CLIPBOARD( window ));
-	self = NACT_CLIPBOARD( window );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_assert( NACT_IS_CLIPBOARD( object ));
+	self = NACT_CLIPBOARD( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -220,7 +221,7 @@ instance_dispose( GObject *window )
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
-			G_OBJECT_CLASS( st_parent_class )->dispose( window );
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
 		}
 	}
 }

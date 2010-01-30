@@ -123,7 +123,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_gconf_monitor_instance_init";
 	NAGConfMonitor *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NA_IS_GCONF_MONITOR( instance ));
 	self = NA_GCONF_MONITOR( instance );
 
@@ -136,7 +137,7 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_gconf_monitor_instance_dispose";
 	NAGConfMonitor *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_GCONF_MONITOR( object ));
 	self = NA_GCONF_MONITOR( object );
 

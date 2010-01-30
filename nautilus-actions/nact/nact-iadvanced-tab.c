@@ -284,8 +284,7 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 	NAObjectProfile *profile;
 	gboolean enable_tab;
 	GSList *schemes;
-	gboolean readonly_item;
-	gboolean writable_provider;
+	gboolean editable;
 
 	schemes = NULL;
 	if( st_initialized && !st_finalized ){
@@ -297,8 +296,7 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
-				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
 		enable_tab = tab_set_sensitive( instance );
@@ -312,7 +310,7 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 				BASE_WINDOW( instance ),
 				schemes,
 				item && NA_IS_OBJECT_ACTION( item ),
-				writable_provider && !readonly_item );
+				editable );
 	}
 }
 

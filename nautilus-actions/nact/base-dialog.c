@@ -114,7 +114,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "base_dialog_instance_init";
 	BaseDialog *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( BASE_IS_DIALOG( instance ));
 	self = BASE_DIALOG( instance );
 
@@ -129,7 +130,7 @@ instance_dispose( GObject *window )
 	static const gchar *thisfn = "base_dialog_instance_dispose";
 	BaseDialog *self;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 	g_return_if_fail( BASE_IS_DIALOG( window ));
 	self = BASE_DIALOG( window );
 

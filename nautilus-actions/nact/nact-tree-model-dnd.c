@@ -35,7 +35,6 @@
 #include <api/na-object-api.h>
 
 #include <runtime/na-iprefs.h>
-#include <runtime/na-io-provider.h>
 #include <runtime/na-utils.h>
 
 #include "nact-application.h"
@@ -939,7 +938,6 @@ is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path )
 	NAObjectItem *parent_item;
 	NactApplication *application;
 	NAPivot *pivot;
-	NAIIOProvider *provider;
 	NactMainWindow *main_window;
 
 	accept_ok = FALSE;
@@ -966,11 +964,8 @@ is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path )
 		parent_path = gtk_tree_path_copy( path );
 		if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, parent_path )){
 			gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &parent_item, -1 );
-			if( !na_object_is_readonly( parent_item )){
-				provider = na_object_get_provider( parent_item );
-				if( na_io_provider_is_willing_to_write( pivot, provider )){
-					accept_ok = TRUE;
-				}
+			if( na_pivot_is_item_writable( pivot, parent_item, NULL )){
+				accept_ok = TRUE;
 			}
 			g_object_unref( parent_item );
 		}

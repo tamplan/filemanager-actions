@@ -52,7 +52,7 @@
 
 #include <gtk/gtk.h>
 
-#include <private/na-object-class.h>
+#include <private/na-object-item-class.h>
 
 G_BEGIN_DECLS
 
@@ -148,7 +148,7 @@ void      nact_iactions_list_bis_insert_at_path( NactIActionsList *instance, GLi
 void      nact_iactions_list_bis_insert_items( NactIActionsList *instance, GList *items, NAObject *sibling );
 void      nact_iactions_list_bis_insert_into( NactIActionsList *instance, GList *items );
 void      nact_iactions_list_bis_list_modified_items( NactIActionsList *instance );
-void      nact_iactions_list_bis_removed_modified( NactIActionsList *instance );
+void      nact_iactions_list_bis_removed_modified( NactIActionsList *instance, const NAObjectItem *item );
 void      nact_iactions_list_bis_select_first_row( NactIActionsList *instance );
 void      nact_iactions_list_bis_select_row_at_path( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
 void      nact_iactions_list_bis_toggle_collapse( NactIActionsList *instance );

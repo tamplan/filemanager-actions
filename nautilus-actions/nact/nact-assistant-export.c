@@ -239,7 +239,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nact_assistant_export_instance_init";
 	NactAssistantExport *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( instance ));
 	self = NACT_ASSISTANT_EXPORT( instance );
 
@@ -266,7 +267,7 @@ instance_dispose( GObject *window )
 	static const gchar *thisfn = "nact_assistant_export_instance_dispose";
 	NactAssistantExport *self;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 	self = NACT_ASSISTANT_EXPORT( window );
 

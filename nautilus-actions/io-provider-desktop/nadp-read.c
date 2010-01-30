@@ -37,6 +37,7 @@
 #include "nadp-desktop-file.h"
 #include "nadp-desktop-provider.h"
 #include "nadp-read.h"
+#include "nadp-write.h"
 #include "nadp-utils.h"
 #include "nadp-xdg-data-dirs.h"
 
@@ -247,7 +248,6 @@ read_item_properties( const NadpDesktopProvider *provider, NAObjectItem *item, N
 	gchar *tooltip;
 	gchar *icon;
 	gboolean enabled;
-	gchar *path;
 	gboolean writable;
 
 	id = nadp_desktop_file_get_id( ndf );
@@ -273,9 +273,7 @@ read_item_properties( const NadpDesktopProvider *provider, NAObjectItem *item, N
 	enabled = nadp_desktop_file_get_enabled( ndf );
 	na_object_set_enabled( item, enabled );
 
-	path = nadp_desktop_file_get_key_file_path( ndf );
-	writable = nadp_utils_is_writable_file( path );
-	g_free( path );
+	writable = nadp_iio_provider_is_writable( NA_IIO_PROVIDER( provider ), item );
 	na_object_set_readonly( item, !writable );
 
 	g_free( id );

@@ -79,31 +79,27 @@ GType          na_io_provider_get_type ( void );
 void           na_io_provider_terminate( void );
 
 GList         *na_io_provider_get_providers_list( const NAPivot *pivot );
+void           na_io_provider_reorder_providers_list( const NAPivot *pivot );
 void           na_io_provider_dump_providers_list( GList *providers );
+
 NAIOProvider  *na_io_provider_find_provider_by_id( GList *providers, const gchar *id );
 
 GList         *na_io_provider_read_items( const NAPivot *pivot, GSList **messages );
 
-gchar         *na_io_provider_get_id                ( const NAIOProvider *provider );
-gchar         *na_io_provider_get_name              ( const NAIOProvider *provider );
-gboolean       na_io_provider_is_readable_at_startup( const NAIOProvider *provider );
-gboolean       na_io_provider_is_writable           ( const NAIOProvider *provider );
-NAIIOProvider *na_io_provider_get_provider          ( const NAIOProvider *provider );
+gchar         *na_io_provider_get_id                     ( const NAIOProvider *provider );
+gchar         *na_io_provider_get_name                   ( const NAIOProvider *provider );
+gboolean       na_io_provider_is_user_readable_at_startup( const NAIOProvider *provider, const NAPivot *pivot );
+gboolean       na_io_provider_is_user_writable           ( const NAIOProvider *provider, const NAPivot *pivot );
+gboolean       na_io_provider_is_locked_by_admin         ( const NAIOProvider *provider, const NAPivot *pivot );
+NAIIOProvider *na_io_provider_get_provider               ( const NAIOProvider *provider );
+gboolean       na_io_provider_is_willing_to_write        ( const NAIOProvider *provider );
+gboolean       na_io_provider_is_able_to_write           ( const NAIOProvider *provider );
+gboolean       na_io_provider_has_write_api              ( const NAIOProvider *provider );
 
-void           na_io_provider_set_readable_at_startup( NAIOProvider *provider, gboolean readable );
-void           na_io_provider_set_writable           ( NAIOProvider *provider, gboolean writable );
+NAIOProvider  *na_io_provider_get_writable_provider( const NAPivot *pivot );
 
-/* ... */
-
-NAIIOProvider *na_io_provider_get_writable_provider( const NAPivot *pivot );
-
-gchar     *na_io_provider_get_provider_name( const NAIIOProvider *provider );
-
-guint          na_io_provider_get_version( const NAPivot *pivot, const NAIIOProvider *provider );
-gboolean       na_io_provider_is_willing_to_write( const NAPivot *pivot, const NAIIOProvider *provider );
-
-guint          na_io_provider_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
-guint          na_io_provider_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
+guint          na_io_provider_write_item ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint          na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
 
 G_END_DECLS
 

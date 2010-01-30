@@ -75,8 +75,6 @@ GType    nact_window_get_type( void );
 
 NAPivot *nact_window_get_pivot( NactWindow *window );
 
-gboolean nact_window_is_writable_item( NactWindow *window, const NAObjectId *item );
-gboolean nact_window_is_writable_provider( NactWindow *window, const NAObjectItem *item );
 gboolean nact_window_has_writable_providers( NactWindow *window );
 
 gboolean nact_window_save_item( NactWindow *window, NAObjectItem *item );

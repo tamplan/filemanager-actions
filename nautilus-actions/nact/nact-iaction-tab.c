@@ -416,8 +416,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 	GtkToggleButton *readonly_button;
 	gboolean enabled_item;
 	GtkToggleButton *toggle;
-	gboolean readonly;
-	gboolean readonly_item, writable_provider;
+	gboolean editable;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( BASE_IS_WINDOW( instance ));
@@ -432,8 +431,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
-				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
-				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
 		g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
@@ -452,17 +450,15 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		target_toolbar = ( item && (
 				( NA_IS_OBJECT_ACTION( item ) && na_object_action_is_target_toolbar( NA_OBJECT_ACTION( item )))));
 
-		readonly = readonly_item || !writable_provider;
-
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" ));
 		gtk_toggle_button_set_active( toggle, target_selection );
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetBackgroundButton" ));
 		gtk_toggle_button_set_active( toggle, target_background );
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
 		enable_label = ( item && ( NA_IS_OBJECT_MENU( item ) || target_selection || target_background ));
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
@@ -473,43 +469,43 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		}
 		g_free( label );
 		gtk_widget_set_sensitive( label_widget, enable_label );
-		nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetToolbarButton" ));
 		gtk_toggle_button_set_active( toggle, target_toolbar );
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
 		same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( item )) : FALSE;
 		gtk_toggle_button_set_active( toggle, same_label );
 		toolbar_same_label_set_sensitive( instance, item );
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
 		label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_action_toolbar_get_label( NA_OBJECT_ACTION( item )) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		g_free( label );
 		toolbar_label_set_sensitive( instance, item );
-		nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
 
 		tooltip_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionTooltipEntry" );
 		tooltip = item ? na_object_get_tooltip( item ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
 		g_free( tooltip );
 		gtk_widget_set_sensitive( tooltip_widget, item != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( tooltip_widget ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( tooltip_widget ), editable );
 
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 		icon = item ? na_object_get_icon( item ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
 		g_free( icon );
 		gtk_widget_set_sensitive( icon_widget, item != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( icon_widget ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( icon_widget ), editable );
 
 		icon_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" ));
 		gtk_widget_set_sensitive( GTK_WIDGET( icon_button ), item != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( icon_button ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( icon_button ), editable );
 
 		title_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionPropertiesTitle" );
 		if( item && NA_IS_OBJECT_MENU( item )){
@@ -522,13 +518,13 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		enabled_item = item ? na_object_is_enabled( NA_OBJECT_ITEM( item )) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( enabled_button ), enabled_item );
 		gtk_widget_set_sensitive( GTK_WIDGET( enabled_button ), item != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( enabled_button ), !readonly );
+		nact_gtk_utils_set_editable( GTK_OBJECT( enabled_button ), editable );
 
 		/* read-only toggle only indicates the writability status of this item
 		 * _not_ the writability status of the provider
 		 */
 		readonly_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionReadonlyButton" ));
-		gtk_toggle_button_set_active( readonly_button, readonly_item );
+		gtk_toggle_button_set_active( readonly_button, item ? na_object_is_readonly( item ) : FALSE );
 		gtk_widget_set_sensitive( GTK_WIDGET( readonly_button ), item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( readonly_button ), FALSE );
 
@@ -567,8 +563,7 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 	static const gchar *thisfn = "nact_iaction_tab_on_target_selection_toggled";
 	NAObjectAction *action;
 	gboolean is_target;
-	gboolean readonly_item;
-	gboolean writable_provider;
+	gboolean editable;
 
 	if( !st_on_selection_change ){
 		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
@@ -576,27 +571,26 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
-				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
-				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
-		g_debug( "%s: item=%p (%s), readonly_item=%s, writable_provider=%s",
+		g_debug( "%s: item=%p (%s), editable=%s",
 				thisfn, ( void * ) action, action ? G_OBJECT_TYPE_NAME( action ) : "(null)",
-				readonly_item ? "True":"False", writable_provider ? "True":"False" );
+				editable ? "True":"False" );
 
 		if( action && NA_IS_OBJECT_ACTION( action )){
 
 			is_target = gtk_toggle_button_get_active( button );
 
-			if( readonly_item || !writable_provider ){
-				g_signal_handlers_block_by_func(( gpointer ) button, on_target_selection_toggled, instance );
-				gtk_toggle_button_set_active( button, !is_target );
-				g_signal_handlers_unblock_by_func(( gpointer ) button, on_target_selection_toggled, instance );
-
-			} else {
+			if( editable ){
 				na_object_action_set_target_selection( action, is_target );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
+
+			} else {
+				g_signal_handlers_block_by_func(( gpointer ) button, on_target_selection_toggled, instance );
+				gtk_toggle_button_set_active( button, !is_target );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_target_selection_toggled, instance );
 			}
 		}
 	}
@@ -608,8 +602,7 @@ on_target_background_toggled( GtkToggleButton *button, NactIActionTab *instance 
 	static const gchar *thisfn = "nact_iaction_tab_on_target_background_toggled";
 	NAObjectAction *action;
 	gboolean is_target;
-	gboolean readonly_item;
-	gboolean writable_provider;
+	gboolean editable;
 
 	if( !st_on_selection_change ){
 		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
@@ -617,23 +610,22 @@ on_target_background_toggled( GtkToggleButton *button, NactIActionTab *instance 
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
-				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
-				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
 		if( action && NA_IS_OBJECT_ACTION( action )){
 
 			is_target = gtk_toggle_button_get_active( button );
 
-			if( readonly_item || !writable_provider ){
-				g_signal_handlers_block_by_func(( gpointer ) button, on_target_background_toggled, instance );
-				gtk_toggle_button_set_active( button, !is_target );
-				g_signal_handlers_unblock_by_func(( gpointer ) button, on_target_background_toggled, instance );
-
-			} else {
+			if( editable ){
 				na_object_action_set_target_background( action, is_target );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
+
+			} else {
+				g_signal_handlers_block_by_func(( gpointer ) button, on_target_background_toggled, instance );
+				gtk_toggle_button_set_active( button, !is_target );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_target_background_toggled, instance );
 			}
 		}
 	}
@@ -722,8 +714,7 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 	static const gchar *thisfn = "nact_iaction_tab_on_target_toolbar_toggled";
 	NAObjectAction *action;
 	gboolean is_target;
-	gboolean readonly_item;
-	gboolean writable_provider;
+	gboolean editable;
 
 	if( !st_on_selection_change ){
 		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
@@ -731,25 +722,24 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
-				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
-				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
 		if( action && NA_IS_OBJECT_ACTION( action )){
 
 			is_target = gtk_toggle_button_get_active( button );
 
-			if( readonly_item || !writable_provider ){
-				g_signal_handlers_block_by_func(( gpointer ) button, on_target_toolbar_toggled, instance );
-				gtk_toggle_button_set_active( button, !is_target );
-				g_signal_handlers_unblock_by_func(( gpointer ) button, on_target_toolbar_toggled, instance );
-
-			} else {
+			if( editable ){
 				na_object_action_set_target_toolbar( action, is_target );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 				toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( action ));
 				toolbar_label_set_sensitive( instance, NA_OBJECT_ITEM( action ));
+
+			} else {
+				g_signal_handlers_block_by_func(( gpointer ) button, on_target_toolbar_toggled, instance );
+				gtk_toggle_button_set_active( button, !is_target );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_target_toolbar_toggled, instance );
 			}
 		}
 	}
@@ -761,8 +751,7 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 	static const gchar *thisfn = "nact_iaction_tab_on_toolbar_same_label_toggled";
 	NAObjectItem *edited;
 	gboolean same_label;
-	gboolean readonly_item;
-	gboolean writable_provider;
+	gboolean editable;
 
 	if( !st_on_selection_change ){
 		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
@@ -770,24 +759,23 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
-				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
-				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
 		if( edited && NA_IS_OBJECT_ACTION( edited )){
 
 			same_label = gtk_toggle_button_get_active( button );
 
-			if( readonly_item || !writable_provider ){
-				g_signal_handlers_block_by_func(( gpointer ) button, on_toolbar_same_label_toggled, instance );
-				gtk_toggle_button_set_active( button, !same_label );
-				g_signal_handlers_unblock_by_func(( gpointer ) button, on_toolbar_same_label_toggled, instance );
-
-			} else {
+			if( editable ){
 				na_object_action_toolbar_set_same_label( NA_OBJECT_ACTION( edited ), same_label );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 				toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( edited ));
 				toolbar_label_set_sensitive( instance, NA_OBJECT_ITEM( edited ));
+
+			} else {
+				g_signal_handlers_block_by_func(( gpointer ) button, on_toolbar_same_label_toggled, instance );
+				gtk_toggle_button_set_active( button, !same_label );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_toolbar_same_label_toggled, instance );
 			}
 		}
 	}
@@ -1060,8 +1048,7 @@ on_enabled_toggled( GtkToggleButton *button, NactIActionTab *instance )
 	static const gchar *thisfn = "nact_iaction_tab_on_enabled_toggled";
 	NAObjectItem *edited;
 	gboolean enabled;
-	gboolean readonly_item;
-	gboolean writable_provider;
+	gboolean editable;
 
 	if( !st_on_selection_change ){
 		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
@@ -1069,22 +1056,21 @@ on_enabled_toggled( GtkToggleButton *button, NactIActionTab *instance )
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
-				TAB_UPDATABLE_PROP_READONLY_ITEM, &readonly_item,
-				TAB_UPDATABLE_PROP_WRITABLE_PROVIDER, &writable_provider,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
 		if( edited && NA_IS_OBJECT_ITEM( edited )){
 
 			enabled = gtk_toggle_button_get_active( button );
 
-			if( readonly_item || !writable_provider ){
+			if( editable ){
+				na_object_item_set_enabled( edited, enabled );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+
+			} else {
 				g_signal_handlers_block_by_func(( gpointer ) button, on_enabled_toggled, instance );
 				gtk_toggle_button_set_active( button, !enabled );
 				g_signal_handlers_unblock_by_func(( gpointer ) button, on_enabled_toggled, instance );
-
-			} else {
-				na_object_item_set_enabled( edited, enabled );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 			}
 		}
 	}
@@ -1112,14 +1098,14 @@ display_provider_name( NactIActionTab *instance, NAPivot *pivot, NAObjectItem *i
 {
 	GtkWidget *label_widget;
 	gchar *label;
-	NAIIOProvider *provider;
+	NAIOProvider *provider;
 
 	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemProvider" );
 	label = NULL;
 	if( item ){
 		provider = na_object_get_provider( item );
 		if( provider ){
-			label = na_io_provider_get_provider_name( provider );
+			label = na_io_provider_get_name( provider );
 		}
 	}
 	if( !label ){

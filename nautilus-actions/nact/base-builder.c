@@ -119,7 +119,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "base_builder_instance_init";
 	BaseBuilder *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	g_return_if_fail( BASE_IS_BUILDER( instance ));
 	self = BASE_BUILDER( instance );
@@ -130,14 +131,14 @@ instance_init( GTypeInstance *instance, gpointer klass )
 }
 
 static void
-instance_dispose( GObject *window )
+instance_dispose( GObject *instance )
 {
 	static const gchar *thisfn = "base_builder_instance_dispose";
 	BaseBuilder *self;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_return_if_fail( BASE_IS_BUILDER( window ));
-	self = BASE_BUILDER( window );
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_return_if_fail( BASE_IS_BUILDER( instance ));
+	self = BASE_BUILDER( instance );
 
 	if( !self->private->dispose_has_run ){
 
@@ -145,7 +146,7 @@ instance_dispose( GObject *window )
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
-			G_OBJECT_CLASS( st_parent_class )->dispose( window );
+			G_OBJECT_CLASS( st_parent_class )->dispose( instance );
 		}
 	}
 }

@@ -137,7 +137,7 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	iface->get_version = get_version;
 	iface->read_items = nagp_iio_provider_read_items;
 	iface->is_willing_to_write = nagp_iio_provider_is_willing_to_write;
-	iface->is_writable = nagp_iio_provider_is_writable;
+	iface->is_able_to_write = nagp_iio_provider_is_able_to_write;
 	iface->write_item = nagp_iio_provider_write_item;
 	iface->delete_item = nagp_iio_provider_delete_item;
 }
@@ -148,7 +148,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nagp_gconf_provider_instance_init";
 	NagpGConfProvider *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( instance ));
 	self = NAGP_GCONF_PROVIDER( instance );
 
@@ -165,7 +166,7 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "nagp_gconf_provider_instance_dispose";
 	NagpGConfProvider *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( object ));
 	self = NAGP_GCONF_PROVIDER( object );
 
