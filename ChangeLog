@@ -1,5 +1,8 @@
 2009-01-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions/nact/nautilus-actions-config-tool.ui:
+	Fix Action tab layout.
+
 	A full rewriting of the writability of items vs. providers.
 
 	* data/nautilus-actions.schemas.in:
