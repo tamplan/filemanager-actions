@@ -86,6 +86,8 @@
 	* nautilus-actions/runtime/na-io-provider.h:
 	Load all available and defined I/O providers.
 
+	* nautilus-actions/test/init-dispose-diff.sh: New file.
+
 2009-01-27 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/nact/nact-preferences.ui:
