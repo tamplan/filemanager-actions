@@ -1156,6 +1156,7 @@ na_io_provider_get_writable_provider( const NAPivot *pivot )
 
 		if( na_io_provider_is_willing_to_write( NA_IO_PROVIDER( ip->data )) &&
 			na_io_provider_is_able_to_write( NA_IO_PROVIDER( ip->data )) &&
+			na_io_provider_has_write_api( NA_IO_PROVIDER( ip->data )) &&
 			na_io_provider_is_user_writable( NA_IO_PROVIDER( ip->data ), pivot ) &&
 			!na_io_provider_is_locked_by_admin( NA_IO_PROVIDER( ip->data ), pivot ) &&
 			!na_pivot_is_configuration_locked_by_admin( pivot )){

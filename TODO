@@ -84,8 +84,6 @@
 
 - Nautilus bug: doesn't refresh toolbar when an item is updated
 
-- have a preference to record order of IO Providers
-
 - nact: new action assistant
 
 - desktop provider: fix default toolbar label
@@ -129,7 +127,3 @@
   the 'editable' cell property should be set only once, instead of at each redraw
   and more because we also compute this on selection change
   what we should do: compute once, and monitor to only change when needed
-
-- use nact_window_get_pivot
-
-- not all objects are disposed

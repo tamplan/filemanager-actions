@@ -685,7 +685,6 @@ na_pivot_is_item_writable( const NAPivot *pivot, const NAObjectItem *item, gint 
 {
 	gboolean writable;
 	NAIOProvider *provider;
-	gboolean is_new;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
@@ -714,57 +713,42 @@ na_pivot_is_item_writable( const NAPivot *pivot, const NAObjectItem *item, gint 
 		if( writable ){
 			provider = na_object_get_provider( item );
 			if( provider ){
-				is_new = FALSE;
 				if( !na_io_provider_is_willing_to_write( provider )){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO;
 					}
+				} else if( na_io_provider_is_locked_by_admin( provider, pivot )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
+					}
+				} else if( !na_io_provider_is_user_writable( provider, pivot )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;
+					}
+				} else if( na_pivot_is_configuration_locked_by_admin( pivot )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN;
+					}
+				} else if( !na_io_provider_has_write_api( provider )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_NO_API;
+					}
 				}
+
+			/* the get_writable_provider() api already takes above checks
+			 */
 			} else {
-				is_new = TRUE;
 				provider = na_io_provider_get_writable_provider( pivot );
 				if( !provider ){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
 					}
-				}
-			}
-		}
-
-		if( writable ){
-			if( na_io_provider_is_locked_by_admin( provider, pivot )){
-				writable = FALSE;
-				if( reason ){
-					*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
-				}
-			}
-		}
-
-		if( writable ){
-			if( is_new && !na_io_provider_is_user_writable( provider, pivot )){
-				writable = FALSE;
-				if( reason ){
-					*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;
-				}
-			}
-		}
-
-		if( writable ){
-			if( na_pivot_is_configuration_locked_by_admin( pivot )){
-				writable = FALSE;
-				if( reason ){
-					*reason = NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN;
-				}
-			}
-		}
-
-		if( writable ){
-			if( !na_io_provider_has_write_api( provider )){
-				writable = FALSE;
-				if( reason ){
-					*reason = NA_IIO_PROVIDER_STATUS_NO_API;
 				}
 			}
 		}
