@@ -124,24 +124,14 @@ The value is case sensitive and must not be localized.</long>
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/toolbar-same-label</key>
-      <owner>nautilus-actions</owner>
-      <type>bool</type>
-      <locale name="C">
-        <short>Whether the labels are the sames</short>
-        <long>Whether the label displayed in the Nautilus toolbar besides of the icon is the same that the main item label.</long>
-      </locale>
-      <default>true</default>
-    </schema>
-
-    <schema>
       <key>/schemas/apps/nautilus-actions/configurations/toolbar-label</key>
       <owner>nautilus-actions</owner>
       <type>bool</type>
       <locale name="C">
         <short>Label of the item in the toolbar</short>
         <long>The label displayed besides of the icon in the Nautilus toolbar.
-Note that actual display may depend of your own Gnome preferences.</long>
+An empty label here defaults to the item label.
+Note that actual display (only icon, only label or both) may depend of your own Gnome preferences.</long>
       </locale>
       <default></default>
     </schema>

@@ -760,6 +760,8 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 	NAObjectItem *edited;
 	gboolean same_label;
 	gboolean editable;
+	gchar *label;
+	GtkWidget *label_widget;
 
 	if( !st_on_selection_change ){
 		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
@@ -776,6 +778,12 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 
 			if( editable ){
 				na_object_action_toolbar_set_same_label( NA_OBJECT_ACTION( edited ), same_label );
+				if( same_label ){
+					label = na_object_get_label( edited );
+					label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
+					gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
+					g_free( label );
+				}
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 				toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( edited ));
 				toolbar_label_set_sensitive( instance, NA_OBJECT_ITEM( edited ));

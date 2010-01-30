@@ -1,5 +1,32 @@
 2009-01-30 Pierre Wieser <pwieser@trychlos.org>
 
+	No more record the toolbar_same_label indicator.
+
+	* nautilus-actions.schemas.in:
+	Remove schema for 'toolbar-same-label' key.
+
+	* nautilus-actions/io-provider-gconf/nagp-read.c
+	(read_item_action_properties):
+	No more read the 'toolbar-same-label' entry.
+
+	* nautilus-actions/io-provider-gconf/nagp-write.c (write_item_action):
+	No more write the 'toolbar-same-label' entry.
+	Remove the key if undeeded.
+
+	* nautilus-actions/nact/nact-iaction-tab.c
+	(on_toolbar_same_label_toggled): Fix toolbar label setup.
+
+	* nautilus-actions/nact/nact-xml-reader.c (apply_values):
+	No more read OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY node.
+
+	* nautilus-actions/runtime/na-gconf-utils.c:
+	* nautilus-actions/runtime/na-gconf-utils.h
+	(na_gconf_utils_remove_entry): New function.
+
+	* nautilus-actions/runtime/na-xml-writer.c
+	(create_schema_entry, create_dump_entry):
+	No more write the 'toolbar-same-label' entry.
+
 	* nautilus-actions/nact/nact-iaction-tab.c
 	(on_tab_updatable_selection_changed):
 	Update tab label depending on the currently selected item.

@@ -61,6 +61,8 @@ gboolean na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint v
 gboolean na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message );
 gboolean na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList *value, gchar **message );
 
+gboolean na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **message );
+
 G_END_DECLS
 
 #endif /* __NA_RUNTIME_GCONF_UTILS_H__ */

@@ -39,14 +39,17 @@
 #include "nagp-write.h"
 #include "nagp-keys.h"
 
-static gboolean       write_item_action( NagpGConfProvider *gconf, const NAObjectAction *action, GSList **message );
-static gboolean       write_item_menu( NagpGConfProvider *gconf, const NAObjectMenu *menu, GSList **message );
-static gboolean       write_object_item( NagpGConfProvider *gconf, const NAObjectItem *item, GSList **message );
+static gboolean write_item_action( NagpGConfProvider *gconf, const NAObjectAction *action, GSList **message );
+static gboolean write_item_menu( NagpGConfProvider *gconf, const NAObjectMenu *menu, GSList **message );
+static gboolean write_object_item( NagpGConfProvider *gconf, const NAObjectItem *item, GSList **message );
 
-static gboolean       write_str( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **message );
-static gboolean       write_bool( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **message );
-static gboolean       write_list( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **message );
-static void           free_gslist( GSList *list );
+static gboolean write_str( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **message );
+static gboolean write_bool( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **message );
+static gboolean write_list( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **message );
+
+static gboolean remove_key( NagpGConfProvider *provider, const gchar *uuid, const gchar *key, GSList **messages );
+
+static void     free_gslist( GSList *list );
 
 /*
  * API function: should only be called through NAIIOProvider interface
@@ -165,9 +168,19 @@ write_item_action( NagpGConfProvider *provider, const NAObjectAction *action, GS
 		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, na_object_action_is_target_selection( action ), messages ) &&
 		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, na_object_action_is_target_background( action ), messages ) &&
 		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, na_object_action_is_target_toolbar( action ), messages ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, na_object_action_toolbar_use_same_label( action ), messages ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, na_object_action_toolbar_get_label( action ), messages ) &&
 		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_ACTION ), messages );
+
+	/* key was used between 2.29.1 and 2.29.4, but is removed since 2.29.5 */
+	remove_key( provider, uuid, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, messages );
+
+	/* only write toolbar_label if not same label than action itself */
+	if( ret ){
+		if( na_object_action_toolbar_use_same_label( action )){
+			remove_key( provider, uuid, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, messages );
+		} else {
+			ret = write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, na_object_action_toolbar_get_label( action ), messages );
+		}
+	}
 
 	profiles = na_object_get_items_list( action );
 
@@ -370,6 +383,28 @@ write_list( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, c
 	}
 
 	free_gslist( value );
+	g_free( path );
+
+	return( ret );
+}
+
+static gboolean
+remove_key( NagpGConfProvider *provider, const gchar *uuid, const gchar *key, GSList **messages )
+{
+	gboolean ret;
+	gchar *path;
+	gchar *msg;
+
+	path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
+	msg = NULL;
+
+	ret = na_gconf_utils_remove_entry( provider->private->gconf, path, &msg );
+
+	if( msg ){
+		*messages = g_slist_append( *messages, g_strdup( msg ));
+		g_free( msg );
+	}
+
 	g_free( path );
 
 	return( ret );

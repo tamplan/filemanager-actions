@@ -559,7 +559,6 @@ create_xml_schema( NAXMLWriter *writer, gint format, const NAObjectAction *actio
 	gchar *type;
 	GSList *items;
 	gboolean target_selection, target_background, target_toolbar;
-	gboolean toolbar_same_label;
 	gchar *toolbar_label;
 	GSList *folders;
 
@@ -624,13 +623,17 @@ create_xml_schema( NAXMLWriter *writer, gint format, const NAObjectAction *actio
 	create_schema_entry( writer, format, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_TARGET_TOOLBAR_DESC_SHORT, ACTION_TARGET_TOOLBAR_DESC_LONG );
 	g_free( text );
 
-	/* toolbar same label */
-	toolbar_same_label = na_object_action_toolbar_use_same_label( action );
+	/* toolbar same label
+	 * only used between 2.29.1 and 2.29.4 - removed starting with 2.29.5
+	 */
+	/*toolbar_same_label = na_object_action_toolbar_use_same_label( action );
 	text = na_utils_boolean_to_schema( toolbar_same_label );
 	create_schema_entry( writer, format, NULL, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, text, doc, list_node, "bool", FALSE, ACTION_TOOLBAR_SAME_LABEL_DESC_SHORT, ACTION_TOOLBAR_SAME_LABEL_DESC_LONG );
-	g_free( text );
+	g_free( text );*/
 
-	/* toolbar label */
+	/* toolbar label
+	 * starting with 2.29.5: we always export the toolbar label
+	 */
 	toolbar_label = na_object_action_toolbar_get_label( action );
 	create_schema_entry( writer, format, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, toolbar_label, doc, list_node, "string", TRUE, ACTION_TOOLBAR_LABEL_DESC_SHORT, ACTION_TOOLBAR_LABEL_DESC_LONG );
 	g_free( toolbar_label );
@@ -793,7 +796,6 @@ create_xml_dump( NAXMLWriter *writer, gint format, const NAObjectAction *action 
 	gchar *type;
 	GSList *items;
 	gboolean target_selection, target_background, target_toolbar;
-	gboolean toolbar_same_label;
 	gchar *toolbar_label;
 	GSList *folders;
 
@@ -862,13 +864,17 @@ create_xml_dump( NAXMLWriter *writer, gint format, const NAObjectAction *action 
 	create_dump_entry( writer, format, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, text, doc, list_node, "bool" );
 	g_free( text );
 
-	/* toolbar same label */
-	toolbar_same_label = na_object_action_toolbar_use_same_label( action );
+	/* toolbar same label
+	 * only used between 2.29.1 and 2.29.4 - removed starting with 2.29.5
+	 */
+	/*toolbar_same_label = na_object_action_toolbar_use_same_label( action );
 	text = na_utils_boolean_to_schema( toolbar_same_label );
 	create_dump_entry( writer, format, NULL, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, text, doc, list_node, "bool" );
-	g_free( text );
+	g_free( text );*/
 
-	/* toolbar label */
+	/* toolbar label
+	 * starting with 2.29.5: we always export the toolbar label
+	 */
 	toolbar_label = na_object_action_toolbar_get_label( action );
 	create_dump_entry( writer, format, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, toolbar_label, doc, list_node, "string" );
 	g_free( toolbar_label );
@@ -1016,7 +1022,7 @@ create_gconf_schema( NAXMLWriter *writer )
 	create_gconf_schema_entry( writer, OBJECT_ITEM_TARGET_SELECTION_ENTRY  , doc, list_node,   "bool", ACTION_TARGET_SELECTION_DESC_SHORT  , ACTION_TARGET_SELECTION_DESC_LONG  ,  "true", FALSE );
 	create_gconf_schema_entry( writer, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY , doc, list_node,   "bool", ACTION_TARGET_BACKGROUND_DESC_SHORT , ACTION_TARGET_BACKGROUND_DESC_LONG , "false", FALSE );
 	create_gconf_schema_entry( writer, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY    , doc, list_node,   "bool", ACTION_TARGET_TOOLBAR_DESC_SHORT    , ACTION_TARGET_TOOLBAR_DESC_LONG    , "false", FALSE );
-	create_gconf_schema_entry( writer, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, doc, list_node,   "bool", ACTION_TOOLBAR_SAME_LABEL_DESC_SHORT, ACTION_TOOLBAR_SAME_LABEL_DESC_LONG,  "true", FALSE );
+	/*create_gconf_schema_entry( writer, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, doc, list_node,   "bool", ACTION_TOOLBAR_SAME_LABEL_DESC_SHORT, ACTION_TOOLBAR_SAME_LABEL_DESC_LONG,  "true", FALSE );*/
 	create_gconf_schema_entry( writer, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY     , doc, list_node, "string", ACTION_TOOLBAR_LABEL_DESC_SHORT     , ACTION_TOOLBAR_LABEL_DESC_LONG     , "", TRUE );
 	create_gconf_schema_entry( writer, ACTION_PROFILE_LABEL_ENTRY , doc, list_node, "string", ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, NA_OBJECT_PROFILE_DEFAULT_LABEL, TRUE );
 	create_gconf_schema_entry( writer, ACTION_PATH_ENTRY          , doc, list_node, "string", ACTION_PATH_DESC_SHORT        , ACTION_PATH_DESC_LONG        , "", FALSE );

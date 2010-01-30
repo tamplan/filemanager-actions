@@ -464,7 +464,7 @@ na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gch
 		if( message ){
 			*message = g_strdup( error->message );
 		}
-		g_warning( "%s: path=%s, value=%s, error=%s", thisfn, path, value ? "True":"False", error->message );
+		g_warning( "%s: path=%s, value=%d, error=%s", thisfn, path, value, error->message );
 		g_error_free( error );
 		ret = FALSE;
 	}
@@ -499,7 +499,7 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
 		if( message ){
 			*message = g_strdup( error->message );
 		}
-		g_warning( "%s: path=%s, value=%s, error=%s", thisfn, path, value ? "True":"False", error->message );
+		g_warning( "%s: path=%s, value=%s, error=%s", thisfn, path, value, error->message );
 		g_error_free( error );
 		ret = FALSE;
 	}
@@ -534,9 +534,43 @@ na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList 
 		if( message ){
 			*message = g_strdup( error->message );
 		}
-		g_warning( "%s: path=%s, value=%s, error=%s", thisfn, path, value ? "True":"False", error->message );
+		g_warning( "%s: path=%s, value=%p (count=%d), error=%s",
+				thisfn, path, ( void * ) value, g_slist_length( value ), error->message );
 		g_error_free( error );
 		ret = FALSE;
+	}
+
+	if( ret ){
+		ret = sync_gconf( gconf, message );
+	}
+
+	return( ret );
+}
+
+/**
+ * na_gconf_utils_remove_entry:
+ * @gconf: a #GConfClient instance.
+ * @path: the full path to the entry.
+ * @message: a pointer to a gchar * which will be allocated if needed.
+ *
+ * Removes an entry from user preferences.
+ */
+gboolean
+na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **message )
+{
+	static const gchar *thisfn = "na_gconf_utils_remove_entry";
+	gboolean ret;
+	GError *error = NULL;
+
+	g_return_val_if_fail( GCONF_IS_CLIENT( gconf ), FALSE );
+
+	ret = gconf_client_unset( gconf, path, &error );
+	if( !ret ){
+		if( message ){
+			*message = g_strdup( error->message );
+		}
+		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
+		g_error_free( error );
 	}
 
 	if( ret ){

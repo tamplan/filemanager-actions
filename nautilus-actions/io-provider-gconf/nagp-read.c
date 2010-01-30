@@ -224,6 +224,7 @@ read_item_action_properties( NagpGConfProvider *provider, GSList *entries, NAObj
 	gchar *version;
 	gboolean target_selection, target_background, target_toolbar;
 	gboolean toolbar_same_label;
+	gchar *action_label;
 	gchar *toolbar_label;
 
 	read_object_item_properties( provider, entries, NA_OBJECT_ITEM( action ) );
@@ -245,22 +246,21 @@ read_item_action_properties( NagpGConfProvider *provider, GSList *entries, NAObj
 		na_object_action_set_target_toolbar( action, target_toolbar );
 	}
 
-	if( na_gconf_utils_get_bool_from_entries( entries, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, &toolbar_same_label )){
-		na_object_action_toolbar_set_same_label( action, toolbar_same_label );
-
-	} else {
-		toolbar_same_label = na_object_action_toolbar_use_same_label( action );
+	/* toolbar label is the same that action if empty */
+	action_label = na_object_get_label( action );
+	toolbar_same_label = FALSE;
+	na_gconf_utils_get_string_from_entries( entries, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, &toolbar_label );
+	if( !toolbar_label || !g_utf8_strlen( toolbar_label, -1 ) || !g_utf8_collate( toolbar_label, action_label )){
+		toolbar_same_label = TRUE;
 	}
-
-	if( na_gconf_utils_get_string_from_entries( entries, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, &toolbar_label )){
-		na_object_action_toolbar_set_label( action, toolbar_label );
+	if( toolbar_same_label ){
 		g_free( toolbar_label );
-
-	} else if( toolbar_same_label ){
-		toolbar_label = na_object_get_label( action );
-		na_object_action_toolbar_set_label( action, toolbar_label );
-		g_free( toolbar_label );
+		toolbar_label = g_strdup( action_label );
 	}
+	na_object_action_toolbar_set_label( action, toolbar_label );
+	na_object_action_toolbar_set_same_label( action, toolbar_same_label );
+	g_free( action_label );
+	g_free( toolbar_label );
 }
 
 /*

@@ -72,7 +72,6 @@ struct NactXMLReaderPrivate {
 	NAObjectAction  *action;			/* the action that we will return, or NULL */
 	GSList          *messages;
 	gboolean         uuid_set;			/* set at first uuid, then checked against */
-	gboolean         toolbar_label_set;
 
 	/* following values are reset at each schema/entry node
 	 */
@@ -251,7 +250,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->locale_waited = FALSE;
 	self->private->entry = NULL;
 	self->private->value = NULL;
-	self->private->toolbar_label_set = FALSE;
 }
 
 static void
@@ -1167,10 +1165,12 @@ apply_values( NactXMLReader *reader )
 			na_object_action_set_target_toolbar( reader->private->action, na_utils_schema_to_boolean( reader->private->value, FALSE ));
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY )){
+			/* only used between 2.29.1 and 2.29.4, removed starting with 2.29.5
 			na_object_action_toolbar_set_same_label( reader->private->action, na_utils_schema_to_boolean( reader->private->value, TRUE ));
+			*/
+			;
 
 		} else if( !strcmp( reader->private->entry, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY )){
-			reader->private->toolbar_label_set = TRUE;
 			na_object_action_toolbar_set_label( reader->private->action, reader->private->value );
 
 		} else if( !strcmp( reader->private->entry, ACTION_PROFILE_LABEL_ENTRY )){
@@ -1373,13 +1373,22 @@ manage_import_mode( NactXMLReader *reader )
 static void
 propagate_default_values( NactXMLReader *reader )
 {
-	gchar *label;
+	gchar *action_label, *toolbar_label;
+	gboolean same_label;
 
-	if( !reader->private->toolbar_label_set ){
-		label = na_object_get_label( reader->private->action );
-		na_object_action_toolbar_set_label( reader->private->action, label );
-		g_free( label );
+	/* between 2.29.1 and 2.29.4, we use to have a toolbar_same_label indicator
+	 * starting with 2.29.5, we no more have this flag
+	 */
+	same_label = FALSE;
+	action_label = na_object_get_label( reader->private->action );
+	toolbar_label = na_object_action_toolbar_get_label( reader->private->action );
+	if( !toolbar_label || !g_utf8_strlen( toolbar_label, -1 ) || !g_utf8_collate( toolbar_label, action_label )){
+		same_label = TRUE;
+		na_object_action_toolbar_set_label( reader->private->action, action_label );
 	}
+	na_object_action_toolbar_set_same_label( reader->private->action, same_label );
+	g_free( toolbar_label );
+	g_free( action_label );
 }
 
 static NAObjectItem *
