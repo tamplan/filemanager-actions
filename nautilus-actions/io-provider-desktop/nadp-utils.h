@@ -35,7 +35,10 @@ G_BEGIN_DECLS
 
 GSList  *nadp_utils_split_path_list( const gchar *path_list );
 
+GSList  *nadp_utils_to_slist( const gchar **list );
+
 void     nadp_utils_gslist_free( GSList *list );
+GSList  *nadp_utils_gslist_remove_from( GSList *list, const gchar *string );
 
 gchar   *nadp_utils_remove_suffix( const gchar *string, const gchar *suffix );
 

@@ -63,7 +63,7 @@ static GSList *
 text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value )
 {
 	GSList *strlist = NULL;
-	gchar **tokens, **iter;
+	gchar **tokens;
 	gchar *tmp;
 	gchar *source = g_strdup( text );
 
@@ -72,19 +72,36 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
 		strlist = g_slist_append( strlist, g_strdup( default_value ));
 
 	} else {
-		tokens = g_strsplit( source, separator, -1 );
-		iter = tokens;
-
-		while( *iter ){
-			tmp = g_strstrip( *iter );
-			strlist = g_slist_append( strlist, g_strdup( tmp ));
-			iter++;
-		}
-
+		tokens = g_strsplit( tmp, separator, -1 );
+		strlist = nadp_utils_to_slist(( const gchar ** ) tokens );
 		g_strfreev( tokens );
 	}
 
 	g_free( source );
+	return( strlist );
+}
+
+/**
+ * nadp_utils_to_slist:
+ * @list: a gchar ** list of strings.
+ *
+ * Returns: a #GSList.
+ */
+GSList *
+nadp_utils_to_slist( const gchar **list )
+{
+	GSList *strlist = NULL;
+	gchar **iter;
+	gchar *tmp;
+
+	iter = ( gchar ** ) list;
+
+	while( *iter ){
+		tmp = g_strstrip( *iter );
+		strlist = g_slist_append( strlist, g_strdup( tmp ));
+		iter++;
+	}
+
 	return( strlist );
 }
 
@@ -99,6 +116,30 @@ nadp_utils_gslist_free( GSList *list )
 {
 	g_slist_foreach( list, ( GFunc ) g_free, NULL );
 	g_slist_free( list );
+}
+
+/**
+ * nadp_utils_gslist_remove_from:
+ * @list: the #GSList from which remove the @string.
+ * @string: the string to be removed.
+ *
+ * Removes a @string from a string list, then frees the removed @string.
+ */
+GSList *
+nadp_utils_gslist_remove_from( GSList *list, const gchar *string )
+{
+	GSList *is;
+
+	for( is = list ; is ; is = is->next ){
+		const gchar *istr = ( const gchar * ) is->data;
+		if( !g_utf8_collate( string, istr )){
+			g_free( is->data );
+			list = g_slist_delete_link( list, is );
+			break;
+		}
+	}
+
+	return( list );
 }
 
 /**

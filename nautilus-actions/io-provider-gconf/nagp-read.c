@@ -194,7 +194,8 @@ read_item_action( NagpGConfProvider *provider, const gchar *path, NAObjectAction
 			g_free( profile_path );
 		}
 
-		/* read other profiles
+		/* append other profiles
+		 * but this may be an inconvenient for the runtime plugin ?
 		 */
 		for( ip = list_profiles ; ip ; ip = ip->next ){
 			profile_path = g_strdup(( gchar * ) ip->data );
