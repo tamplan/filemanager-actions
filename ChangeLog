@@ -1,3 +1,8 @@
+2009-01-31 Pierre Wieser <pwieser@trychlos.org>
+
+	* nautilus-actions/io-provider-gconf/nagp-write.c (write_item_action):
+	Always writes the 'OBJECT_ITEM_TOOLBAR_LABEL_ENTRY' key.
+
 2009-01-30 Pierre Wieser <pwieser@trychlos.org>
 
 	No more record the toolbar_same_label indicator.

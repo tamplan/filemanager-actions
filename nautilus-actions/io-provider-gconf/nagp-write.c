@@ -168,19 +168,11 @@ write_item_action( NagpGConfProvider *provider, const NAObjectAction *action, GS
 		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, na_object_action_is_target_selection( action ), messages ) &&
 		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, na_object_action_is_target_background( action ), messages ) &&
 		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, na_object_action_is_target_toolbar( action ), messages ) &&
+		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, na_object_action_toolbar_get_label( action ), messages ) &&
 		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_ACTION ), messages );
 
 	/* key was used between 2.29.1 and 2.29.4, but is removed since 2.29.5 */
 	remove_key( provider, uuid, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, messages );
-
-	/* only write toolbar_label if not same label than action itself */
-	if( ret ){
-		if( na_object_action_toolbar_use_same_label( action )){
-			remove_key( provider, uuid, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, messages );
-		} else {
-			ret = write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, na_object_action_toolbar_get_label( action ), messages );
-		}
-	}
 
 	profiles = na_object_get_items_list( action );
 
