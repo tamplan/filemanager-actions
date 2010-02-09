@@ -4,12 +4,14 @@
 # This file is distributed under the same license as the nautilus-actions package.
 # Tomas Kyjovsky <tomas.kyjovsky@mail.muni.cz>, 2006.
 # Marek Černocký <marek@manet.cz>, 2009, 2010.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-04 21:00+0100\n"
-"PO-Revision-Date: 2010-01-23 16:46+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=nautilus-actions&component=general\n"
+"POT-Creation-Date: 2010-02-04 20:01+0000\n"
+"PO-Revision-Date: 2010-02-04 22:56+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -150,7 +152,7 @@ msgstr "Zobrazovat panel nástrojů"
 
 #: ../data/nautilus-actions.schemas.in.h:19
 msgid "I/O providers Write priority"
-msgstr ""
+msgstr "Priorita zápisu zprostředkovatele V/V"
 
 #: ../data/nautilus-actions.schemas.in.h:20
 msgid ""
@@ -247,7 +249,6 @@ msgid "Last import mode choosen by the user"
 msgstr "Poslední režim importu vybraný uživatelem"
 
 #: ../data/nautilus-actions.schemas.in.h:34
-#, fuzzy
 msgid ""
 "Last import mode choosen by the user when he is asked for in import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
@@ -402,7 +403,7 @@ msgstr ""
 
 #: ../data/nautilus-actions.schemas.in.h:58
 msgid "Preferred export format"
-msgstr ""
+msgstr "Upřednostňovaný formát exportu"
 
 #: ../data/nautilus-actions.schemas.in.h:59
 msgid "Sort mode"
@@ -511,6 +512,8 @@ msgid ""
 "The order in which I/O providers are tested when we need to write a new item "
 "down to a storage subsystem."
 msgstr ""
+"Pořadí, ve kterém jsou zprostředkovatelé V/V testováni, když je zapotřebí "
+"zapsat novou položku do úložného subsystému."
 
 #: ../data/nautilus-actions.schemas.in.h:75
 #: ../nautilus-actions/runtime/na-xml-names.h:127
@@ -594,6 +597,11 @@ msgid ""
 "read-only. As the order of items is also locked, the level zero itself "
 "cannot be modified, and the user is unable to reorder the items."
 msgstr ""
+"Celé nastavení musí být chápáno jako globální sada a pořadí nabídek a akcí. "
+"Když je toto nastavení uzamknuté, nemůže v něm již uživatel dělat žádné "
+"změny, ani vytvářet nebo mazat nabídky nebo akce. Všechny položky jsou pouze "
+"ke čtení. Stejně tak je uzamknuté pořadí položek, nultou úroveň nelze samu o "
+"sobě upravit a uživatel nemá možnost položky přehazovat."
 
 #: ../data/nautilus-actions.schemas.in.h:85
 msgid ""
@@ -611,6 +619,19 @@ msgid ""
 "gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
 "runtime for the format he wishes use."
 msgstr ""
+"Toto je upřednostňovaný formát exportu, použitý jako výchozí při exportování "
+"položek nebo jejich vyřazování z aplikace. Možné hodnoty jsou: - "
+"„GConfSchemaV1“: toto býval historický exportní formát. Exportované soubory "
+"mohou být později naimportovány pomocí Průvodce importem v Nástroji "
+"nastavení Akcí Nautilus nebo pomocí nástroje příkazového řádku gconftool-2 --"
+"import-schema-file. -  „GConfSchemaV2“: odlehčené, ale přesto stále "
+"kompatibilní schéma. Exportované soubory mohou být později naimportovány "
+"pomocí Průvodce importem v Nástroji nastavení Akcí Nautilus nebo pomocí "
+"nástroje příkazového řádku gconftool-2 --import-schema-file. - „GConfEntry“: "
+"toto by měl být upřednostněný formát pro nově exportované akce. Exportované "
+"soubory mohou být později naimportovány pomocí Průvodce importem v Nástroji "
+"nastavení Akcí Nautilus nebo pomocí nástroje příkazového řádku gconftool-2 --"
+"load. - „Ask“: uživatel bude za běhu dotázán, který formát si přeje použít."
 
 #: ../data/nautilus-actions.schemas.in.h:86
 msgid ""
@@ -674,23 +695,23 @@ msgstr ""
 "je prázdný, pak jsou všechny nalezené položky považované za prostý seznam."
 
 #: ../data/nautilus-actions.schemas.in.h:91
-#, fuzzy
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, readen from .desktop files to being modified in "
 "NACT."
 msgstr ""
 "Když je zapnuto (nejpravděpodobněji jako povinný klíč), brání v Nástroji pro "
-"nastavení Akcí Nautilus změnám všech položek přečteným z GConf."
+"nastavení Akcí Nautilus změnám všech položek, nabídek a akcí přečteným ze "
+"souboru .desktop."
 
 #: ../data/nautilus-actions.schemas.in.h:92
-#, fuzzy
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, readen from GConf to being modified in NACT."
 msgstr ""
 "Když je zapnuto (nejpravděpodobněji jako povinný klíč), brání v Nástroji pro "
-"nastavení Akcí Nautilus změnám všech položek přečteným z GConf."
+"nastavení Akcí Nautilus změnám všech položek, nabídek a akcí přečteným z "
+"GConf."
 
 #: ../data/nautilus-actions.schemas.in.h:93
 msgid "Whether actions should be relabeled when pasted or duplicated"
@@ -729,9 +750,8 @@ msgstr ""
 "vytvořena kopie."
 
 #: ../data/nautilus-actions.schemas.in.h:99
-#, fuzzy
 msgid "Whether the Desktop I/O provider is locked"
-msgstr "Zda je zprostředkovatel V/V GConf zamknutý"
+msgstr "Zda je V/V pracovního prostředí uzamknuté"
 
 #: ../data/nautilus-actions.schemas.in.h:100
 msgid "Whether the Esc key should close the assistants"
@@ -784,9 +804,8 @@ msgid "Whether the labels are the sames"
 msgstr "Zda jsou popisky stejné"
 
 #: ../data/nautilus-actions.schemas.in.h:108
-#, fuzzy
 msgid "Whether the whole configuration is locked"
-msgstr "Zda je akce povolená"
+msgstr "Zda je celé nastavení uzamknuté"
 
 #: ../data/nautilus-actions.schemas.in.h:109
 msgid "Whether to display or not the Edit toolbar in the main window."
@@ -1032,7 +1051,7 @@ msgstr "Popisek"
 
 #: ../nautilus-actions/nact/nact-iaction-tab.c:517
 msgid "Menu"
-msgstr ""
+msgstr "Nabídka"
 
 #: ../nautilus-actions/nact/nact-iaction-tab.c:518
 msgid "<b>Menu properties</b>"
@@ -1040,7 +1059,7 @@ msgstr "<b>Vlastnosti nabídky</b>"
 
 #: ../nautilus-actions/nact/nact-iaction-tab.c:520
 msgid "Action"
-msgstr ""
+msgstr "Akce"
 
 #: ../nautilus-actions/nact/nact-iaction-tab.c:521
 msgid "<b>Action properties</b>"
@@ -1380,31 +1399,28 @@ msgid "Item is read-only."
 msgstr "Položka je pouze ke čtení"
 
 #: ../nautilus-actions/nact/nact-main-statusbar.c:190
-#, fuzzy
 msgid "I/O provider is not willing to write."
-msgstr "Zprostředkovatel V/V je zamknutý."
+msgstr "Zprostředkovatel V/V nedovoluje zápis."
 
 #: ../nautilus-actions/nact/nact-main-statusbar.c:191
 msgid "No writable I/O provider found."
-msgstr ""
+msgstr "Nebyl nalezen žádný zprostředkovatel zapisovatelného V/V."
 
 #: ../nautilus-actions/nact/nact-main-statusbar.c:192
-#, fuzzy
 msgid "I/O provider has been locked down by an administrator."
-msgstr "Zprostředkovatel V/V je zamknutý."
+msgstr "Zprostředkovatel V/V byl uzamčen správcem."
 
 #: ../nautilus-actions/nact/nact-main-statusbar.c:193
-#, fuzzy
 msgid "I/O provider has been locked down by the user."
-msgstr "Zprostředkovatel V/V je zamknutý."
+msgstr "Zprostředkovatel V/V byl uzamčen uživatelem."
 
 #: ../nautilus-actions/nact/nact-main-statusbar.c:194
 msgid "I/O provider implementation lacks of required API."
-msgstr ""
+msgstr "Implementace zprostředkovatele V/V postrádá požadované API."
 
 #: ../nautilus-actions/nact/nact-main-statusbar.c:195
 msgid "The whole configuration has been locked down by an administrator."
-msgstr ""
+msgstr "Celé nastavení bylo uzamknuto správcem."
 
 #: ../nautilus-actions/nact/nact-main-window.c:1302
 msgid ""
@@ -2066,3 +2082,4 @@ msgstr "Vypsat schéma na standardní výstup"
 #: ../nautilus-actions/utils/nautilus-actions-schemas.c:148
 msgid "Output the Nautilus Actions GConf schema on stdout."
 msgstr "Výpis schématu GConf pro Akce Nautilus na standardní výstup"
+
