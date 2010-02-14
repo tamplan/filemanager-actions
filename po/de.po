@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-01-30 18:19+0000\n"
-"PO-Revision-Date: 2010-02-04 14:03+0100\n"
+"POT-Creation-Date: 2010-02-04 13:05+0000\n"
+"PO-Revision-Date: 2010-02-14 12:15+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -258,12 +258,6 @@ msgid "Last import mode choosen by the user"
 msgstr "Letzter von Benutzer gewählter Importmodus"
 
 #: ../data/nautilus-actions.schemas.in.h:34
-#| msgid ""
-#| "Last import mode choosen by the user when he is asked for in import mode. "
-#| "Possible values are : - \"NoImport\": do not import an action whose UUID "
-#| "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
-#| "already exists, - \"Override\": override the existing action with the "
-#| "imported one."
 msgid ""
 "Last import mode choosen by the user when he is asked for in import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
@@ -296,7 +290,6 @@ msgid "Last selected folder"
 msgstr "Zuletzt gewählter Ordner"
 
 #: ../data/nautilus-actions.schemas.in.h:37
-#| msgid "List of subitem ids"
 msgid "List of default schemes"
 msgstr "Liste vorgegebener Schemata"
 
@@ -516,6 +509,9 @@ msgid ""
 "default list is harcoded in nautilus-actions-config-tool, which may be "
 "updated by the user."
 msgstr ""
+"Die Liste der Schemata, die als Standard für jedes neue Profil vorgeschlagen "
+"wird. Eine Standardliste ist als Vorgabe bereits im Nautilus-Aktionen-"
+"Konfigurationswerkzeug eingebaut und kann durch den Benutzer angepasst werden."
 
 #: ../data/nautilus-actions.schemas.in.h:73
 #: ../nautilus-actions/runtime/na-xml-names.h:171
@@ -638,6 +634,20 @@ msgid ""
 "--load command-line tool. - \"Ask\": the user will be asked at runtime for "
 "the format he wishes use."
 msgstr ""
+"Dies ist das bevorzugte Exportformat, welches als Standard beim Exportieren "
+"oder der Nutzung von Objekten außerhalb dieser Anwendung verwendet wird. "
+"Mögliche Werte sind: »GConfSchemaV1«: Dies ist das historische Exportformat. "
+"Die exportierte Datei kann später über den Importassistenten des Nautilus-"
+"Aktionen-Konfigurationswerkzeugs oder mit dem Befehlszeilenwerkzeug "
+"»gconftool-2 --import-schema-file« importiert werden. - »GConfSchemaV2«: Ein "
+"leichteres, doch noch kompatibles Schema. Die exportierte Datei kann später "
+"über den Importassistenten des Nautilus-Aktionen-Konfigurationswerkzeugs oder "
+"mit dem Befehlszeilenwerkzeug »gconftool-2 --import-schema-file« importiert "
+"werden. - »GConfEntry«: Dies sollte das bevorzugte Format für neu exportierte "
+"Aktionen sein. Die exportierte Datei kann später über den Importassistenten "
+"des Nautilus-Aktionen-Konfigurationswerkzeugs oder mit dem "
+"Befehlszeilenwerkzeug »gconftool-2 --load« importiert werden. »Ask«: Der "
+"Benutzer wird jedes Mal nach dem gewünschten Format gefragt."
 
 #: ../data/nautilus-actions.schemas.in.h:86
 msgid ""
@@ -713,9 +723,6 @@ msgstr ""
 "einer einzigen Ebene angenommen."
 
 #: ../data/nautilus-actions.schemas.in.h:91
-#| msgid ""
-#| "When set to true (most probably as a mandatory key), this prevents all "
-#| "items readen from GConf to being modified in NACT."
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all items, "
 "menus and actions, readen from .desktop files to being modified in NACT."
@@ -725,9 +732,6 @@ msgstr ""
 "Menüs und Aktionen durch Nautilus-Aktionen."
 
 #: ../data/nautilus-actions.schemas.in.h:92
-#| msgid ""
-#| "When set to true (most probably as a mandatory key), this prevents all "
-#| "items readen from GConf to being modified in NACT."
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all items, "
 "menus and actions, readen from GConf to being modified in NACT."
@@ -768,7 +772,6 @@ msgstr ""
 "Legt fest, ob Profile bei Einfügen oder Duplizieren neu benannt werden sollen."
 
 #: ../data/nautilus-actions.schemas.in.h:99
-#| msgid "Whether the GConf I/O provider is locked"
 msgid "Whether the Desktop I/O provider is locked"
 msgstr "Legt fest, ob der Ein-/Ausgabetreiber des Desktops gesperrt ist."
 
@@ -825,7 +828,6 @@ msgid "Whether the labels are the sames"
 msgstr "Legt fest, ob die Beschriftungen die gleichen sind"
 
 #: ../data/nautilus-actions.schemas.in.h:108
-#| msgid "Whether the action is enabled"
 msgid "Whether the whole configuration is locked"
 msgstr "Legt fest, ob die gesamte Konfiguration gesperrt ist"
 
@@ -1437,7 +1439,6 @@ msgid "Item is read-only."
 msgstr "Objekt ist schreibgeschützt."
 
 #: ../nautilus-actions/nact/nact-main-statusbar.c:190
-#| msgid "I/O Provider is locked down."
 msgid "I/O provider is not willing to write."
 msgstr "Ein-/Ausgabetreiber ist nicht schreibfähig."
 
@@ -1446,12 +1447,10 @@ msgid "No writable I/O provider found."
 msgstr "Kein schreibfähiger Ein-/Ausgabetreiber gefunden."
 
 #: ../nautilus-actions/nact/nact-main-statusbar.c:192
-#| msgid "I/O Provider is locked down."
 msgid "I/O provider has been locked down by an administrator."
 msgstr "Ein-/Ausgabetreiber ist durch einen Systemverwalter gesperrt."
 
 #: ../nautilus-actions/nact/nact-main-statusbar.c:193
-#| msgid "I/O Provider is locked down."
 msgid "I/O provider has been locked down by the user."
 msgstr "Ein-/Ausgabetreiber ist durch den Benutzer gesperrt."
 
@@ -1714,9 +1713,6 @@ msgstr ""
 
 #: ../nautilus-actions/runtime/na-iabout.c:255
 #, c-format
-#| msgid ""
-#| "Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
-#| "Copyright %s 2009 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
 "Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
