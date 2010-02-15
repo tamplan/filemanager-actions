@@ -26,37 +26,16 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-pkglib_LTLIBRARIES=libna-api.la
+api_includedir = $(pkgincludedir)
 
-AM_CPPFLAGS += \
-	-I $(top_srcdir)									\
-	$(NAUTILUS_ACTIONS_CFLAGS)							\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_API}\"				\
-	$(NULL)
-
-libna_api_includedir = $(pkgincludedir)/api
-
-libna_api_include_HEADERS = \
-	na-api.h											\
+api_include_HEADERS = \
+	na-extension.h										\
+	\
+	\
+	na-core-utils.h										\
 	na-dbus.h											\
 	na-gconf-keys.h										\
 	na-gconf-monitor.h									\
 	na-iio-provider.h									\
 	na-object-api.h										\
-	$(NULL)
-
-libna_api_la_SOURCES = \
-	na-gconf-monitor.c									\
-	na-iio-provider.c									\
-	$(NULL)
-
-libna_api_la_LIBADD = \
-	$(NULL)
-
-#VERSION_INFO = `echo @VERSION@ | $(SED) -e 's/\./:/g' -e 's/[a-aA-Z]//g'`
-VERSION_INFO = 1:0:0
-libna_api_la_LDFLAGS = \
-	-module 											\
-	-no-undefined										\
-	-version-number $(VERSION_INFO)						\
 	$(NULL)

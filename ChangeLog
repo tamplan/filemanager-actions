@@ -1,5 +1,14 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename src/core/na-utils.h to src/api/na-core-utils.h
+	Rename src/core/na-utils.c to src/core/na-core-utils.c
+
+	* src/api/Makefile.am:
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/core/na-core-utils.c:
+	* src/core/na-core-utils.h: Normalize functions names.
+
 	Merge src/private/ and src/runtime to src/core/
 	Rename src/api/na-api.h to src/api/na-extension.h
 
