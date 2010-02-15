@@ -111,11 +111,11 @@ interface_base_finalize( NAIAboutInterface *klass )
 {
 	static const gchar *thisfn = "na_iabout_interface_base_finalize";
 
-	if( !st_finalized ){
-
-		st_finalized = TRUE;
+	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+
+		st_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -141,8 +141,6 @@ v_get_toplevel( NAIAbout *instance )
 	return( NULL );
 }
 
-/* TODO: make the website url and the mail addresses clickables
- */
 /**
  * na_iabout_display:
  * @instance: the #NAIAbout implementor.

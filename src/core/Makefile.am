@@ -45,6 +45,8 @@ libna_core_la_SOURCES = \
 	na-dbus-tracker.h									\
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
+	na-iabout.c											\
+	na-iabout.h											\
 	na-iduplicable.c									\
 	na-idata-factory.c									\
 	na-iexporter.c										\
@@ -65,8 +67,6 @@ libna_core_la_SOURCES = \
 	na-object-menu.c									\
 	na-object-menu-enum.c								\
 	\
-	na-iabout.c											\
-	na-iabout.h											\
 	na-io-provider.h									\
 	na-ipivot-consumer.c								\
 	na-ipivot-consumer.h								\

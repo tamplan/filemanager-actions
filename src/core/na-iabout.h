@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_IABOUT_H__
-#define __NA_RUNTIME_IABOUT_H__
+#ifndef __CORE_NA_IABOUT_H__
+#define __CORE_NA_IABOUT_H__
 
 /**
  * SECTION: na_iabout
@@ -50,7 +50,7 @@ G_BEGIN_DECLS
 #define NA_IS_IABOUT( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IABOUT_TYPE ))
 #define NA_IABOUT_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IABOUT_TYPE, NAIAboutInterface ))
 
-typedef struct NAIAbout NAIAbout;
+typedef struct NAIAbout                 NAIAbout;
 
 typedef struct NAIAboutInterfacePrivate NAIAboutInterfacePrivate;
 
@@ -87,4 +87,4 @@ gchar *na_iabout_get_copyright( gboolean console );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_IABOUT_H__ */
+#endif /* __CORE_NA_IABOUT_H__ */
