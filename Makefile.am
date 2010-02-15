@@ -33,7 +33,7 @@ SUBDIRS = \
 	doc							\
 	m4							\
 	icons						\
-	nautilus-actions			\
+	src							\
 	po							\
 	$(NULL)
 

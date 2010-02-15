@@ -1,3 +1,11 @@
+2009-02-15 Pierre Wieser <pwieser@trychlos.org>
+
+	Rename source tree from nautilus-actions/ to src/
+
+	* Makefile.am:
+	* configure.ac:
+	* po/POTFILES.in: Updated accordingly.
+
 2009-01-31 Pierre Wieser <pwieser@trychlos.org>
 
 	* nautilus-actions/io-provider-desktop/nadp-desktop-file.c:
