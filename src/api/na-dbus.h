@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_DBUS_H__
-#define __NAUTILUS_ACTIONS_NA_DBUS_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_DBUS_H__
+#define __NAUTILUS_ACTIONS_API_NA_DBUS_H__
 
 /**
  * SECTION: na_dbus
  * @short_description: Nautilus-Actions DBus description.
- * @include: nautilus-actions/api/na-dbus.h
+ * @include: nautilus-actions/na-dbus.h
  */
 
 G_BEGIN_DECLS
@@ -43,4 +43,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_DBUS_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_DBUS_H__ */

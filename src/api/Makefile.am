@@ -31,10 +31,10 @@ api_includedir = $(pkgincludedir)
 api_include_HEADERS = \
 	na-extension.h										\
 	\
+	na-dbus.h											\
 	\
 	na-core-utils.h										\
 	na-gconf-monitor.h									\
-	na-dbus.h											\
 	na-gconf-keys.h										\
 	na-iio-provider.h									\
 	na-object-api.h										\

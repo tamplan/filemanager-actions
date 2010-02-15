@@ -1,5 +1,7 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-dbus.h: Update defined name.
+
 	* m4/na-log-domains.m4: Update log domains with new subdirs.
 
 	* doc/io-provider-id: Reference na-xml XML provider.
