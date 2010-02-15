@@ -1,5 +1,10 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Define NADataElement class.
+
+	* src/core/na-data-element.c:
+	* src/core/na-data-element.h: New files.
+
 	Define NAIDataFactory interface.
 
 	* src/api/na-idata-factory.h:
