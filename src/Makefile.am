@@ -28,8 +28,7 @@
 
 SUBDIRS = \
 	api									\
-	private								\
-	runtime								\
+	core								\
 	io-desktop							\
 	io-gconf							\
 	io-xml								\

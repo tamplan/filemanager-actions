@@ -32,7 +32,7 @@ AC_INIT([Nautilus-Actions],[2.29.5],[maintainer@nautilus-actions.org])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
 
-AC_CONFIG_SRCDIR([src/plugin/nautilus-module.c])
+AC_CONFIG_SRCDIR([src/plugin-menu/nautilus-module.c])
 
 AC_CONFIG_HEADERS([src/config.h])
 
@@ -49,13 +49,13 @@ AC_CONFIG_FILES([
 	icons/scalable/Makefile
 	src/Makefile
 	src/api/Makefile
+	src/core/Makefile
 	src/io-desktop/Makefile
 	src/io-gconf/Makefile
-	src/nact/Makefile
+	src/io-xml/Makefile
 	src/plugin-menu/Makefile
 	src/plugin-tracker/Makefile
-	src/private/Makefile
-	src/runtime/Makefile
+	src/nact/Makefile
 	src/test/Makefile
 	src/utils/Makefile
 	po/Makefile.in

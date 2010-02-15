@@ -1,5 +1,6 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Merge src/private/ and src/runtime to src/core/
 	Rename src/api/na-api.h to src/api/na-extension.h
 
 	* src/api/README:
