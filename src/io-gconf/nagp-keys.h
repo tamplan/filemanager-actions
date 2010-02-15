@@ -31,48 +31,37 @@
 #ifndef __NAGP_GCONF_PROVIDER_KEYS_H__
 #define __NAGP_GCONF_PROVIDER_KEYS_H__
 
-#include <nautilus-actions/api/na-gconf-keys.h>
+#define NAGP_CONFIGURATIONS_PATH		"/apps/nautilus-actions/configurations"
+#define NAGP_SCHEMAS_PATH				"/schemas/apps/nautilus-actions"
 
-/* GConf general information
- */
-#define NA_GCONF_CONFIG_PATH			NAUTILUS_ACTIONS_GCONF_BASEDIR "/configurations"
+#define NAGP_ENTRY_TYPE					"type"
+#define NAGP_VALUE_TYPE_MENU			"Menu"
+#define NAGP_VALUE_TYPE_ACTION			"Action"
 
-/* GConf key names (common to menu and actions)
- */
-#define OBJECT_ITEM_LABEL_ENTRY					"label"
-#define OBJECT_ITEM_TOOLTIP_ENTRY				"tooltip"
-#define OBJECT_ITEM_ICON_ENTRY					"icon"
-#define OBJECT_ITEM_ENABLED_ENTRY				"enabled"
-#define OBJECT_ITEM_LIST_ENTRY					"items"
-#define OBJECT_ITEM_TYPE_ENTRY					"type"
-#define OBJECT_ITEM_TARGET_SELECTION_ENTRY		"target-selection"
-#define OBJECT_ITEM_TARGET_BACKGROUND_ENTRY		"target-background"
-#define OBJECT_ITEM_TARGET_TOOLBAR_ENTRY		"target-toolbar"
-#define OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY	"toolbar-same-label"
-#define OBJECT_ITEM_TOOLBAR_LABEL_ENTRY			"toolbar-label"
+#define NAGP_ENTRY_LABEL				"label"
+#define NAGP_ENTRY_TOOLTIP				"tooltip"
+#define NAGP_ENTRY_ICON					"icon"
+#define NAGP_ENTRY_ENABLED				"enabled"
+#define NAGP_ENTRY_ITEMS_LIST			"items"
 
-#define OBJECT_ITEM_TYPE_MENU					"Menu"
-#define OBJECT_ITEM_TYPE_ACTION					"Action"
+#define NAGP_ENTRY_VERSION				"version"
+#define NAGP_ENTRY_TARGET_SELECTION		"target-selection"
+#define NAGP_ENTRY_TARGET_CONTEXT		"target-context"
+#define NAGP_ENTRY_TARGET_BACKGROUND	"target-background"
+#define NAGP_ENTRY_TARGET_TOOLBAR		"target-toolbar"
+#define NAGP_ENTRY_TOOLBAR_LABEL		"toolbar-label"
+#define NAGP_ENTRY_TOOLBAR_SAME_LABEL	"toolbar-same-label"
 
-/* GConf key names (specific to menu)
- */
-
-/* GConf key names (specific to action)
- */
-#define ACTION_VERSION_ENTRY					"version"
-
-/* GConf key names (specific to profile)
- */
-#define ACTION_PROFILE_LABEL_ENTRY				"desc-name"
-#define ACTION_PATH_ENTRY						"path"
-#define ACTION_PARAMETERS_ENTRY					"parameters"
-#define ACTION_BASENAMES_ENTRY					"basenames"
-#define ACTION_MATCHCASE_ENTRY					"matchcase"
-#define ACTION_MIMETYPES_ENTRY					"mimetypes"
-#define ACTION_ISFILE_ENTRY						"isfile"
-#define ACTION_ISDIR_ENTRY						"isdir"
-#define ACTION_MULTIPLE_ENTRY					"accept-multiple-files"
-#define ACTION_SCHEMES_ENTRY					"schemes"
-#define ACTION_FOLDERS_ENTRY					"folders"
+#define NAGP_ENTRY_PROFILE_LABEL		"desc-name"
+#define NAGP_ENTRY_PATH					"path"
+#define NAGP_ENTRY_PARAMETERS			"parameters"
+#define NAGP_ENTRY_BASENAMES			"basenames"
+#define NAGP_ENTRY_MATCHCASE			"matchcase"
+#define NAGP_ENTRY_MIMETYPES			"mimetypes"
+#define NAGP_ENTRY_ISFILE				"isfile"
+#define NAGP_ENTRY_ISDIR				"isdir"
+#define NAGP_ENTRY_MULTIPLE				"accept-multiple-files"
+#define NAGP_ENTRY_SCHEMES				"schemes"
+#define NAGP_ENTRY_FOLDERS				"folders"
 
 #endif /* __NAGP_GCONF_PROVIDER_KEYS_H__ */

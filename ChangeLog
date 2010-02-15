@@ -1,5 +1,6 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Create src/io-gconf/nagp-keys.c
 	Rename src/io-gconf/nagp-write.{c,h} to src/io-gconf/nagp-writer.{c,h}
 	Rename src/io-gconf/nagp-read.{c,h} to src/io-gconf/nagp-reader.{c,h}
 
