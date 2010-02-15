@@ -30,8 +30,8 @@ SUBDIRS = \
 	api							\
 	private						\
 	runtime						\
-	io-provider-desktop			\
-	io-provider-gconf			\
+	io-desktop					\
+	io-gconf					\
 	nact						\
 	plugin						\
 	test						\

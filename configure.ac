@@ -49,8 +49,8 @@ AC_CONFIG_FILES([
 	icons/scalable/Makefile
 	src/Makefile
 	src/api/Makefile
-	src/io-provider-desktop/Makefile
-	src/io-provider-gconf/Makefile
+	src/io-desktop/Makefile
+	src/io-gconf/Makefile
 	src/nact/Makefile
 	src/plugin/Makefile
 	src/private/Makefile
