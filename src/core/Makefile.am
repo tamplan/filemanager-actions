@@ -44,6 +44,7 @@ libna_core_la_SOURCES = \
 	na-iio-provider.c									\
 	na-object.c											\
 	na-object-id.c										\
+	na-object-item.c									\
 	\
 	na-iabout.c											\
 	na-iabout.h											\

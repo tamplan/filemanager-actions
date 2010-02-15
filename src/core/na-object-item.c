@@ -1,6 +1,6 @@
 /*
- * Nautilus ObjectItems
- * A Nautilus extension which offers configurable context menu object_items.
+ * Nautilus Actions
+ * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
@@ -32,16 +32,9 @@
 #include <config.h>
 #endif
 
-#include <gtk/gtk.h>
 #include <string.h>
-#include <uuid/uuid.h>
 
 #include <api/na-object-api.h>
-
-#include <runtime/na-utils.h>
-
-#include "na-iduplicable.h"
-#include "na-object-item-priv.h"
 
 /* private class data
  */
@@ -49,67 +42,51 @@ struct NAObjectItemClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-/* object properties
+/* private instance data
  */
-enum {
-	NAOBJECT_ITEM_PROP_TOOLTIP_ID = 1,
-	NAOBJECT_ITEM_PROP_ICON_ID,
-	NAOBJECT_ITEM_PROP_ENABLED_ID,
-	NAOBJECT_ITEM_PROP_READONLY_ID,
-	NAOBJECT_ITEM_PROP_PROVIDER_ID,
-	NAOBJECT_ITEM_PROP_PROVIDER_DATA_ID,
-	NAOBJECT_ITEM_PROP_ITEMS_ID,
-};
+struct NAObjectItemPrivate {
+	gboolean   dispose_has_run;
 
-#define NAOBJECT_ITEM_PROP_TOOLTIP				"na-object-item-tooltip"
-#define NAOBJECT_ITEM_PROP_ICON					"na-object-item-icon"
-#define NAOBJECT_ITEM_PROP_ENABLED				"na-object-item-enabled"
-#define NAOBJECT_ITEM_PROP_READONLY				"na-object-item-read-only"
-#define NAOBJECT_ITEM_PROP_PROVIDER				"na-object-item-provider"
-#define NAOBJECT_ITEM_PROP_PROVIDER_DATA		"na-object-item-provider-data"
-#define NAOBJECT_ITEM_PROP_ITEMS				"na-object-item-items"
+	void      *provider_data;
+
+	/* dynamically set when reading the item from the I/O storage
+	 * subsystem; may be reset from FALSE to TRUE if a write operation
+	 * has returned an error.
+	 * defaults to FALSE for snew, not yet written to a provider, item
+	 */
+	gboolean   readonly;
+};
 
 static NAObjectIdClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NAObjectItemClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void     instance_dispose( GObject *object );
-static void     instance_finalize( GObject *object );
-
-static void     object_dump( const NAObject *object );
-static void     object_copy( NAObject *target, const NAObject *source );
-static gboolean object_are_equal( const NAObject *a, const NAObject *b );
-static gboolean object_is_valid( const NAObject *object );
-static GList   *object_get_childs( const NAObject *object );
-static void     object_ref( NAObject *object );
-static void     object_unref( NAObject *object );
-
-static gchar   *object_id_new_id( const NAObjectId *object, const NAObjectId *new_parent );
+static GType register_type( void );
+static void  class_init( NAObjectItemClass *klass );
+static void  instance_init( GTypeInstance *instance, gpointer klass );
+static void  instance_dispose( GObject *object );
+static void  instance_finalize( GObject *object );
 
 GType
 na_object_item_get_type( void )
 {
-	static GType object_type = 0;
+	static GType item_type = 0;
 
-	if( !object_type ){
-		object_type = register_type();
+	if( item_type == 0 ){
+		item_type = register_type();
 	}
 
-	return( object_type );
+	return( item_type );
 }
 
 static GType
 register_type( void )
 {
 	static const gchar *thisfn = "na_object_item_register_type";
+	GType type;
 
 	static GTypeInfo info = {
 		sizeof( NAObjectItemClass ),
-		( GBaseInitFunc ) NULL,
-		( GBaseFinalizeFunc ) NULL,
+		NULL,
+		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
@@ -120,7 +97,9 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	return( g_type_register_static( NA_OBJECT_ID_TYPE, "NAObjectItem", &info, 0 ));
+	type = g_type_register_static( NA_OBJECT_ID_TYPE, "NAObjectItem", &info, 0 );
+
+	return( type );
 }
 
 static void
@@ -129,8 +108,6 @@ class_init( NAObjectItemClass *klass )
 	static const gchar *thisfn = "na_object_item_class_init";
 	GObjectClass *object_class;
 	NAObjectClass *naobject_class;
-	NAObjectIdClass *objectid_class;
-	GParamSpec *spec;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -139,192 +116,47 @@ class_init( NAObjectItemClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-	object_class->set_property = instance_set_property;
-	object_class->get_property = instance_get_property;
-
-	spec = g_param_spec_string(
-			NAOBJECT_ITEM_PROP_TOOLTIP,
-			"Item tooltip",
-			"Context menu tooltip of the item", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_TOOLTIP_ID, spec );
-
-	spec = g_param_spec_string(
-			NAOBJECT_ITEM_PROP_ICON,
-			"Icon name",
-			"Context menu displayable icon for the item", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_ICON_ID, spec );
-
-	spec = g_param_spec_boolean(
-			NAOBJECT_ITEM_PROP_ENABLED,
-			"Enabled",
-			"Whether this item, and recursively its subitems, is/are enabled", TRUE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_ENABLED_ID, spec );
-
-	spec = g_param_spec_boolean(
-			NAOBJECT_ITEM_PROP_READONLY,
-			"Read-only flag",
-			"Is this item only readable", FALSE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_READONLY_ID, spec );
-
-	spec = g_param_spec_pointer(
-			NAOBJECT_ITEM_PROP_PROVIDER,
-			"Original provider",
-			"Original NAIOProvider of the NAObjectItem",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_PROVIDER_ID, spec );
-
-	spec = g_param_spec_pointer(
-			NAOBJECT_ITEM_PROP_PROVIDER_DATA,
-			"Provider data",
-			"Data specific to the provider",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAOBJECT_ITEM_PROP_PROVIDER_DATA_ID, spec );
-
-	klass->private = g_new0( NAObjectItemClassPrivate, 1 );
 
 	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->dump = object_dump;
-	naobject_class->new = NULL;
-	naobject_class->copy = object_copy;
-	naobject_class->are_equal = object_are_equal;
-	naobject_class->is_valid = object_is_valid;
-	naobject_class->get_childs = object_get_childs;
-	naobject_class->ref = object_ref;
-	naobject_class->unref = object_unref;
+	naobject_class->dump = NULL;
+	naobject_class->copy = NULL;
+	naobject_class->are_equal = NULL;
+	naobject_class->is_valid = NULL;
 
-	objectid_class = NA_OBJECT_ID_CLASS( klass );
-	objectid_class->new_id = object_id_new_id;
+	klass->private = g_new0( NAObjectItemClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	/*static const gchar *thisfn = "na_object_item_instance_init";*/
+	static const gchar *thisfn = "na_object_item_instance_init";
 	NAObjectItem *self;
 
-	/*g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );*/
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
 	g_return_if_fail( NA_IS_OBJECT_ITEM( instance ));
+
 	self = NA_OBJECT_ITEM( instance );
 
 	self->private = g_new0( NAObjectItemPrivate, 1 );
-
-	self->private->dispose_has_run = FALSE;
-
-	/* initialize suitable default values
-	 */
-	self->private->tooltip = g_strdup( "" );
-	self->private->icon = g_strdup( "" );
-	self->private->enabled = TRUE;
-	self->private->read_only = FALSE;
-	self->private->provider = NULL;
-	self->private->provider_data = NULL;
-}
-
-static void
-instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
-{
-	NAObjectItem *self;
-
-	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
-	self = NA_OBJECT_ITEM( object );
-
-	if( !self->private->dispose_has_run ){
-
-		switch( property_id ){
-			case NAOBJECT_ITEM_PROP_TOOLTIP_ID:
-				g_value_set_string( value, self->private->tooltip );
-				break;
-
-			case NAOBJECT_ITEM_PROP_ICON_ID:
-				g_value_set_string( value, self->private->icon );
-				break;
-
-			case NAOBJECT_ITEM_PROP_ENABLED_ID:
-				g_value_set_boolean( value, self->private->enabled );
-				break;
-
-			case NAOBJECT_ITEM_PROP_READONLY_ID:
-				g_value_set_boolean( value, self->private->read_only );
-				break;
-
-			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
-				g_value_set_pointer( value, self->private->provider );
-				break;
-
-			case NAOBJECT_ITEM_PROP_PROVIDER_DATA_ID:
-				g_value_set_pointer( value, self->private->provider_data );
-				break;
-
-			default:
-				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-				break;
-		}
-	}
-}
-
-static void
-instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
-{
-	NAObjectItem *self;
-
-	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
-	self = NA_OBJECT_ITEM( object );
-
-	if( !self->private->dispose_has_run ){
-
-		switch( property_id ){
-			case NAOBJECT_ITEM_PROP_TOOLTIP_ID:
-				g_free( self->private->tooltip );
-				self->private->tooltip = g_value_dup_string( value );
-				break;
-
-			case NAOBJECT_ITEM_PROP_ICON_ID:
-				g_free( self->private->icon );
-				self->private->icon = g_value_dup_string( value );
-				break;
-
-			case NAOBJECT_ITEM_PROP_ENABLED_ID:
-				self->private->enabled = g_value_get_boolean( value );
-				break;
-
-			case NAOBJECT_ITEM_PROP_READONLY_ID:
-				self->private->read_only = g_value_get_boolean( value );
-				break;
-
-			case NAOBJECT_ITEM_PROP_PROVIDER_ID:
-				self->private->provider = g_value_get_pointer( value );
-				break;
-
-			case NAOBJECT_ITEM_PROP_PROVIDER_DATA_ID:
-				self->private->provider_data = g_value_get_pointer( value );
-				break;
-
-			default:
-				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-				break;
-		}
-	}
 }
 
 static void
 instance_dispose( GObject *object )
 {
-	/*static const gchar *thisfn = "na_object_item_instance_dispose";*/
+	static const gchar *thisfn = "na_object_item_instance_dispose";
 	NAObjectItem *self;
 
-	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+
 	self = NA_OBJECT_ITEM( object );
 
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
-
-		na_object_item_free_items_list( self->private->items );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -336,18 +168,11 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	/*static const gchar *thisfn = "na_object_item_instance_finalize";*/
 	NAObjectItem *self;
 
-	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
 	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+
 	self = NA_OBJECT_ITEM( object );
-
-	g_free( self->private->tooltip );
-	g_free( self->private->icon );
-
-	/* release string list of subitems */
-	na_utils_free_string_list( self->private->items_ids );
 
 	g_free( self->private );
 
@@ -358,838 +183,99 @@ instance_finalize( GObject *object )
 }
 
 /**
- * na_object_item_free_items_list:
- * @list: a list of #NAObject items.
+ * na_object_item_copy:
+ * @item: the target #NAObjectItem instance.
+ * @source: the source #NAObjectItem instance.
  *
- * Recursively unref the #NAObject of the list, freeing the list at last.
+ * Copies data from @source to @item.
+ *
+ * This function participates to the #na_iduplicable_duplicate() stack,
+ * and is triggered after all copyable elementary data (in #NAIDataFactory
+ * sense) have already been copied themselves.
+ *
+ * We have to deal here with the subitems: duplicating childs from @source
+ * to @item.
  */
 void
-na_object_item_free_items_list( GList *items )
+na_object_item_copy( NAObjectItem *item, const NAObjectItem *source )
 {
-	GList *it;
+	static const gchar *thisfn = "na_object_item_copy";
+	GList *tgt_childs, *src_childs, *ic;
+	NAObject *dup;
 
-	for( it = items ; it ; it = it->next ){
-		na_object_unref( it->data );
+	tgt_childs = na_object_get_items( item );
+	if( tgt_childs ){
+
+		g_warning( "%s: target %s has already %d childs",
+				thisfn, G_OBJECT_TYPE_NAME( item ), g_list_length( tgt_childs ));
+		na_object_unref_items( tgt_childs );
+		tgt_childs = NULL;
 	}
 
-	g_list_free( items );
+	src_childs = na_object_get_items( source );
+	for( ic = src_childs ; ic ; ic = ic->next ){
+
+		dup = ( NAObject * ) na_object_duplicate( ic->data );
+		na_object_set_parent( dup, item );
+		tgt_childs = g_list_prepend( tgt_childs, dup );
+	}
+
+	tgt_childs = g_list_reverse( tgt_childs );
+	na_object_set_items( item, tgt_childs );
 }
 
 /**
- * na_object_item_get_tooltip:
- * @item: the #NAObjectItem object to be requested.
+ * na_object_item_are_equal:
+ * @a: the first #NAObjectItem instance.
+ * @b: the second #NAObjectItem instance.
  *
- * Returns the tooltip which will be display in the Nautilus context
- * menu item for this @item.
+ * Returns: %TRUE if @a is equal to @b.
  *
- * Returns: the tooltip of the @item as a newly allocated string. This
- * returned string must be g_free() by the caller.
- */
-gchar *
-na_object_item_get_tooltip( const NAObjectItem *item )
-{
-	gchar *tooltip = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-
-	if( !item->private->dispose_has_run ){
-		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TOOLTIP, &tooltip, NULL );
-	}
-
-	return( tooltip );
-}
-
-/**
- * na_object_item_get_icon:
- * @item: the #NAObjectItem object to be requested.
+ * This function participates to the #na_iduplicable_check_status() stack,
+ * and is triggered after all comparable elementary data (in #NAIDataFactory
+ * sense) have already been successfully compared.
  *
- * Returns the name of the icon attached to the Nautilus context menu
- * item for this @item.
- *
- * Returns: the icon name as a newly allocated string. This returned
- * string must be g_free() by the caller.
- */
-gchar *
-na_object_item_get_icon( const NAObjectItem *item )
-{
-	gchar *icon = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-
-	if( !item->private->dispose_has_run ){
-		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ICON, &icon, NULL );
-	}
-
-	return( icon );
-}
-
-/**
- * na_object_item_get_pixbuf:
- * @item: this #NAObjectItem.
- * @widget: the widget for which the icon must be rendered.
- *
- * Returns the #GdkPixbuf image corresponding to the icon.
- * The image has a size of %GTK_ICON_SIZE_MENU.
- */
-GdkPixbuf *na_object_item_get_pixbuf( const NAObjectItem *item )
-{
-	gchar *icon_name;
-	GdkPixbuf* pixbuf;
-
-	icon_name = na_object_item_get_icon( item );
-
-	pixbuf = na_utils_get_pixbuf( icon_name, GTK_ICON_SIZE_MENU );
-
-	g_free( icon_name );
-
-	return( pixbuf );
-}
-
-/**
- * na_object_item_get_position:
- * @object: this #NAObjectItem object.
- * @child: a #NAObject child.
- *
- * Returns: the position of @child in the subitems list of @object,
- * starting from zero, or -1 if not found.
- */
-gint
-na_object_item_get_position( const NAObjectItem *object, const NAObject *child )
-{
-	gint pos = -1;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), pos );
-	g_return_val_if_fail( !child || NA_IS_OBJECT( child ), pos );
-
-	if( !child ){
-		return( pos );
-	}
-
-	if( !object->private->dispose_has_run ){
-
-		pos = g_list_index( object->private->items, ( gconstpointer ) child );
-	}
-
-	return( pos );
-}
-
-/**
- * na_object_item_get_provider:
- * @item: the #NAObjectItem object to be requested.
- *
- * Returns the #NAIOProvider for this item, from which it has been
- * initially readen, or to which it has been wrote in the case of a
- * newly created item.
- *
- * Returns: a #NAIOProvider object. The reference is
- * owned by #NAPivot pivot and should not be g_object_unref() by the
- * caller.
- */
-NAIOProvider *
-na_object_item_get_provider( const NAObjectItem *item )
-{
-	NAIOProvider *provider = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-
-	if( !item->private->dispose_has_run ){
-		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER, &provider, NULL );
-	}
-
-	return( provider );
-}
-
-/**
- * na_object_item_get_provider_data:
- * @item: the #NAObjectItem object to be requested.
- *
- * Returns: the provider's specific data.
- */
-void *
-na_object_item_get_provider_data( const NAObjectItem *item )
-{
-	void *provider_data = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-
-	if( !item->private->dispose_has_run ){
-		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER_DATA, &provider_data, NULL );
-	}
-
-	return( provider_data );
-}
-
-/**
- * na_object_item_is_enabled:
- * @item: the #NAObjectItem object to be requested.
- *
- * Is the specified item enabled ?
- * When disabled, the item, nor its subitems if any, is/are never
- * candidate to any selection.
- *
- * Returns: %TRUE if the item is enabled, %FALSE else.
+ * We have to deal here with the subitems: comparing childs by their ids
+ * between @a and @b.
  */
 gboolean
-na_object_item_is_enabled( const NAObjectItem *item )
+na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b )
 {
-	gboolean enabled = FALSE;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
-
-	if( !item->private->dispose_has_run ){
-		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, &enabled, NULL );
-	}
-
-	return( enabled );
-}
-
-/**
- * na_object_item_is_readonly:
- * @item: the #NAObjectItem-derived object to be requested.
- *
- * Is the specified item only readable ?
- * Or, in other words, may this item be edited and then saved to the
- * original I/O storage subsystem ?
- *
- * Returns: %TRUE if the item is read-only, %FALSE else.
- *
- * This status is initially set when the item has been readen by the
- * I/O provider. It indicates whether this item was able, at this time,
- * to be updated, i.e. GConf keys (resp. .desktop file) was writable.
- *
- * It is an intrinsic status, not a composite one. Whether the item
- * should eventually be considered as read-only also depends of the
- * provider, the admin, the user...
- *
- * This status corresponds to the NA_IIO_PROVIDER_STATUS_ITEM_NOT_WRITABLE
- * reason.
- */
-gboolean
-na_object_item_is_readonly( const NAObjectItem *item )
-{
-	gboolean readonly = FALSE;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
-
-	if( !item->private->dispose_has_run ){
-		g_object_get( G_OBJECT( item ), NAOBJECT_ITEM_PROP_READONLY, &readonly, NULL );
-	}
-
-	return( readonly );
-}
-
-/**
- * na_object_item_get_item:
- * @item: the #NAObjectItem from which we want retrieve a subitem.
- * @id: the id of the searched subitem.
- *
- * Returns: a pointer to the #NAObject subitem with the required id.
- *
- * The returned #NAObject is owned by the @item object ; the
- * caller should not try to g_free() nor g_object_unref() it.
- */
-NAObject *
-na_object_item_get_item( const NAObjectItem *item, const gchar *id )
-{
-	GList *it;
-	NAObject *found = NULL;
-	NAObject *isub;
-	gchar *isubid;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-
-	if( !item->private->dispose_has_run ){
-
-		for( it = item->private->items ; it && !found ; it = it->next ){
-			isub = NA_OBJECT( it->data );
-			isubid = na_object_get_id( isub );
-			if( !strcmp( id, isubid )){
-				found = isub;
-			}
-			g_free( isubid );
-		}
-	}
-
-	return( found );
-}
-
-/**
- * na_object_item_get_items_list:
- * @item: the #NAObjectItem from which we want a list of subitems.
- *
- * Returns: the list of child objects.
- *
- * The returned pointer is owned by @item, and must not be released
- * by the caller.
- */
-GList *
-na_object_item_get_items_list( const NAObjectItem *item )
-{
-	GList *items = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-
-	if( !item->private->dispose_has_run ){
-		items = item->private->items;
-	}
-
-	return( items );
-}
-
-/**
- * na_object_item_get_items_count:
- * @item: the #NAObjectItem from which we want a count of subitems.
- *
- * Returns: the count of subitems of @item.
- */
-guint
-na_object_item_get_items_count( const NAObjectItem *item )
-{
-	guint count = 0;
-
-	/*g_debug( "na_object_item_get_items_count: item=%p (%s)", ( void * ) item, G_OBJECT_TYPE_NAME( item ));*/
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
-
-	if( !item->private->dispose_has_run ){
-		count = item->private->items ? g_list_length( item->private->items ) : 0;
-	}
-
-	return( count );
-}
-
-/**
- * na_object_item_count_items:
- * @items: a list if #NAObject to be counted.
- * @menus: will be set to the count of menus.
- * @actions: will be set to the count of actions.
- * @profiles: will be set to the count of profiles.
- * @recurse: whether to recursively count all items, or only those in
- *  level zero of the list.
- *
- * Count the numbers of items if the provided list.
- *
- * As this function is recursive, the counters should be initialized by
- * the caller before calling it.
- */
-void
-na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse )
-{
-	GList *it;
-
-	/*g_debug( "na_object_item_count_items: items=%p (count=%d), menus=%d, actions=%d, profiles=%d",
-			( void * ) items, items ? g_list_length( items ) : 0, *menus, *actions, *profiles );*/
-
-	for( it = items ; it ; it = it->next ){
-
-		if( recurse ){
-			if( NA_IS_OBJECT_ITEM( it->data )){
-				na_object_item_count_items(
-						NA_OBJECT_ITEM( it->data )->private->items, menus, actions, profiles, recurse );
-			}
-		}
-
-		if( NA_IS_OBJECT_MENU( it->data )){
-			*menus += 1;
-		} else if( NA_IS_OBJECT_ACTION( it->data )){
-			*actions += 1;
-		} else if( NA_IS_OBJECT_PROFILE( it->data )){
-			*profiles += 1;
-		}
-	}
-}
-
-/**
- * na_object_item_set_tooltip:
- * @item: the #NAObjectItem object to be updated.
- * @tooltip: the tooltip to be set.
- *
- * Sets a new tooltip for the @item. Tooltip will be displayed by
- * Nautilus when the user move its mouse over the Nautilus context menu
- * item.
- *
- * #NAObjectItem takes a copy of the provided tooltip. This later may
- * so be g_free() by the caller after this function returns.
- */
-void
-na_object_item_set_tooltip( NAObjectItem *item, const gchar *tooltip )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !item->private->dispose_has_run ){
-		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_TOOLTIP, tooltip, NULL );
-	}
-}
-
-/**
- * na_object_item_set_icon:
- * @item: the #NAObjectItem object to be updated.
- * @icon: the icon name to be set.
- *
- * Sets a new icon name for the @item.
- *
- * #NAObjectItem takes a copy of the provided icon name. This later may
- * so be g_free() by the caller after this function returns.
- */
-void
-na_object_item_set_icon( NAObjectItem *item, const gchar *icon )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !item->private->dispose_has_run ){
-		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ICON, icon, NULL );
-	}
-}
-
-/**
- * na_object_item_set_provider:
- * @item: the #NAObjectItem object to be updated.
- * @provider: the #NAIOProvider to be set.
- *
- * Sets the I/O provider for this #NAObjectItem.
- */
-void
-na_object_item_set_provider( NAObjectItem *item, const NAIOProvider *provider )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !item->private->dispose_has_run ){
-		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER, provider, NULL );
-	}
-}
-
-/**
- * na_object_item_set_provider_data:
- * @item: the #NAObjectItem object to be updated.
- * @provider_data: a pointer to provider's specific data.
- *
- * Sets the I/O provider's data for this #NAObjectItem.
- */
-void
-na_object_item_set_provider_data( NAObjectItem *item, const void *provider_data )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !item->private->dispose_has_run ){
-		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_PROVIDER_DATA, provider_data, NULL );
-	}
-}
-
-/**
- * na_object_item_set_enabled:
- * @item: the #NAObjectItem object to be updated.
- * @enabled: the indicator to be set.
- *
- * Sets whether the item, and its subitems if any, is/are enabled or not.
- */
-void
-na_object_item_set_enabled( NAObjectItem *item, gboolean enabled )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !item->private->dispose_has_run ){
-		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_ENABLED, enabled, NULL );
-	}
-}
-
-/**
- * na_object_item_set_readonly:
- * @item: the #NAObjectItem-derived object to be updated.
- * @readonly: the indicator to be set.
- *
- * Sets whether the item is readonly.
- *
- * See #na_object_item_is_readonly() for a discussion about this status.
- */
-void
-na_object_item_set_readonly( NAObjectItem *item, gboolean readonly )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !item->private->dispose_has_run ){
-		g_object_set( G_OBJECT( item ), NAOBJECT_ITEM_PROP_READONLY, readonly, NULL );
-	}
-}
-
-/**
- * na_object_item_set_items_list:
- * @item: the #NAObjectItem whose subitems have to be set.
- * @list: a #GList list of #NAObject subitems to be installed.
- *
- * Sets the list of the subitems for the @item.
- *
- * The provided list pointer simply overrides the existing one.
- */
-void
-na_object_item_set_items_list( NAObjectItem *item, GList *items )
-{
-	GList *is;
-
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !item->private->dispose_has_run ){
-
-		if( item->private->items ){
-			g_list_free( item->private->items );
-		}
-
-		item->private->items = items;
-
-		for( is = items ; is ; is = is->next ){
-			na_object_set_parent( is->data, item );
-		}
-	}
-}
-
-/**
- * na_object_item_append_item:
- * @item: the #NAObjectItem to which add the subitem.
- * @object: a #NAObject to be added to list of subitems.
- *
- * Appends a new @object to the list of subitems of @item.
- *
- * Doesn't modify the reference count on @object.
- */
-void
-na_object_item_append_item( NAObjectItem *item, const NAObject *object )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	if( !item->private->dispose_has_run ){
-
-		if( !g_list_find( item->private->items, ( gpointer ) object )){
-			item->private->items = g_list_append( item->private->items, ( gpointer ) object );
-		}
-	}
-}
-
-/**
- * na_object_item_insert_at:
- * @item: the #NAObjectItem in which add the subitem.
- * @object: a #NAObject to be inserted in the list of subitems.
- * @pos: the position at which the @object child should be inserted.
- *
- * Inserts a new @object in the list of subitems of @item.
- *
- * Doesn't modify the reference count on @object.
- */
-void
-na_object_item_insert_at( NAObjectItem *item, const NAObject *object, gint pos )
-{
-	GList *it;
-	gint i;
-
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	if( !item->private->dispose_has_run ){
-
-		if( pos == -1 || pos >= g_list_length( item->private->items )){
-			na_object_append_item( item, object );
-
-		} else {
-			i = 0;
-			for( it = item->private->items ; it && i <= pos ; it = it->next ){
-				if( i == pos ){
-					item->private->items = g_list_insert_before( item->private->items, it, ( gpointer ) object );
-				}
-				i += 1;
-			}
-		}
-	}
-}
-
-/**
- * na_object_item_insert_item:
- * @item: the #NAObjectItem to which add the subitem.
- * @object: a #NAObject to be inserted in the list of subitems.
- * @before: the #NAObject before which the @object should be inserted.
- *
- * Inserts a new @object in the list of subitems of @item.
- *
- * Doesn't modify the reference count on @object.
- */
-void
-na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before )
-{
-	GList *before_list;
-
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( !before || NA_IS_OBJECT( before ));
-
-	if( !item->private->dispose_has_run ){
-
-		if( !g_list_find( item->private->items, ( gpointer ) object )){
-
-			before_list = NULL;
-
-			if( before ){
-				before_list = g_list_find( item->private->items, ( gconstpointer ) before );
-			}
-
-			if( before_list ){
-				item->private->items = g_list_insert_before( item->private->items, before_list, ( gpointer ) object );
-			} else {
-				item->private->items = g_list_prepend( item->private->items, ( gpointer ) object );
-			}
-		}
-	}
-}
-
-/**
- * na_object_item_remove_item:
- * @item: the #NAObjectItem from which the subitem must be removed.
- * @object: a #NAObject to be removed from the list of subitems.
- *
- * Removes an @object from the list of subitems of @item.
- *
- * Doesn't modify the reference count on @object.
- */
-void
-na_object_item_remove_item( NAObjectItem *item, const NAObject *object )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	if( !item->private->dispose_has_run ){
-
-		item->private->items = g_list_remove( item->private->items, ( gconstpointer ) object );
-	}
-}
-
-/**
- * na_object_item_get_items_string_list:
- * @item: this #NAObjectItem object.
- *
- * Returns: the items_ids string list, as readen from the IIOProvider.
- *
- * The returned list should be na_utils_free_string_list() by the caller.
- */
-GSList *
-na_object_item_get_items_string_list( const NAObjectItem *item )
-{
-	GSList *list = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-
-	if( !item->private->dispose_has_run ){
-		list = na_utils_duplicate_string_list( item->private->items_ids );
-	}
-
-	return( list );
-}
-
-/**
- * na_object_item_rebuild_items_list:
- * @item: this #NAObjectItem object.
- *
- * Returns: a string list which contains the ordered list of ids of
- * subitems.
- *
- * Note that the returned list is built on each call to this function,
- * and is so an exact image of the current situation.
- *
- * The returned list should be na_utils_free_string_list() by the caller.
- */
-GSList *
-na_object_item_rebuild_items_list( const NAObjectItem *item )
-{
-	GSList *list = NULL;
-	GList *items, *it;
-	gchar *id;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-
-	if( !item->private->dispose_has_run ){
-
-		items = na_object_get_items_list( item );
-
-		for( it = items ; it ; it = it->next ){
-			NAObjectId *item = NA_OBJECT_ID( it->data );
-			id = na_object_get_id( item );
-			list = g_slist_prepend( list, id );
-		}
-
-		list = g_slist_reverse( list );
-	}
-
-	return( list );
-}
-
-/**
- * na_object_item_set_items_string_list:
- * @item: this #NAObjectItem object.
- * @subitems: an ordered list of UUID of subitems.
- *
- * Set the internal list of uuids of subitems.
- *
- * This function takes a copy of the provided list. This later may so
- * be safely released by the caller after this function has returned.
- */
-void
-na_object_item_set_items_string_list( NAObjectItem *item, GSList *subitems )
-{
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !item->private->dispose_has_run ){
-
-		na_utils_free_string_list( item->private->items_ids );
-		item->private->items_ids = na_utils_duplicate_string_list( subitems );
-	}
-}
-
-static void
-object_dump( const NAObject *item )
-{
-	static const gchar *thisfn = "na_object_item_object_dump";
-
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
-
-		g_debug( "%s:       tooltip='%s'", thisfn, NA_OBJECT_ITEM( item )->private->tooltip );
-		g_debug( "%s:          icon='%s'", thisfn, NA_OBJECT_ITEM( item )->private->icon );
-		g_debug( "%s:       enabled='%s'", thisfn, NA_OBJECT_ITEM( item )->private->enabled ? "True" : "False" );
-		g_debug( "%s:     read-only='%s'", thisfn, NA_OBJECT_ITEM( item )->private->read_only ? "True" : "False" );
-		g_debug( "%s:      provider=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider );
-		g_debug( "%s: provider_data=%p", thisfn, ( void * ) NA_OBJECT_ITEM( item )->private->provider_data );
-
-		/* dump subitems */
-		g_debug( "%s: %d subitem(s) at %p",
-				thisfn,
-				NA_OBJECT_ITEM( item )->private->items ? g_list_length( NA_OBJECT_ITEM( item )->private->items ) : 0,
-				( void * ) NA_OBJECT_ITEM( item )->private->items );
-
-		/* do not recurse here, as this is actually dealt with by
-		 * na_object_dump() api ; else, we would have the action body
-		 * being dumped after its childs
-		 */
-	}
-}
-
-static void
-object_copy( NAObject *target, const NAObject *source )
-{
-	gchar *tooltip, *icon;
-	gboolean enabled;
-	gboolean readonly;
-	gpointer provider;
-	gpointer provider_data;
-	GList *subitems, *it;
-
-	g_return_if_fail( NA_IS_OBJECT_ITEM( target ));
-	g_return_if_fail( NA_IS_OBJECT_ITEM( source ));
-
-	if( !NA_OBJECT_ITEM( target )->private->dispose_has_run &&
-		!NA_OBJECT_ITEM( source )->private->dispose_has_run ){
-
-		g_object_get( G_OBJECT( source ),
-				NAOBJECT_ITEM_PROP_TOOLTIP, &tooltip,
-				NAOBJECT_ITEM_PROP_ICON, &icon,
-				NAOBJECT_ITEM_PROP_ENABLED, &enabled,
-				NAOBJECT_ITEM_PROP_READONLY, &readonly,
-				NAOBJECT_ITEM_PROP_PROVIDER, &provider,
-				NAOBJECT_ITEM_PROP_PROVIDER_DATA, &provider_data,
-				NULL );
-
-		g_object_set( G_OBJECT( target ),
-				NAOBJECT_ITEM_PROP_TOOLTIP, tooltip,
-				NAOBJECT_ITEM_PROP_ICON, icon,
-				NAOBJECT_ITEM_PROP_ENABLED, enabled,
-				NAOBJECT_ITEM_PROP_READONLY, readonly,
-				NAOBJECT_ITEM_PROP_PROVIDER, provider,
-				NAOBJECT_ITEM_PROP_PROVIDER_DATA, provider_data,
-				NULL );
-
-		g_free( tooltip );
-		g_free( icon );
-
-		subitems = NULL;
-		for( it = NA_OBJECT_ITEM( source )->private->items ; it ; it = it->next ){
-			subitems = g_list_prepend( subitems, na_object_duplicate( it->data ));
-		}
-		subitems = g_list_reverse( subitems );
-		na_object_set_items_list( target, subitems );
-	}
-}
-
-/*
- * @a: original object.
- * @b: the object which has been initially duplicated from @a, and is
- * being checked for modification status.
- *
- * note 1: The provider is not considered as relevant here; neither is
- * the provider_data
- *
- * note 2: as a particular case, this function is not recursive
- * because the equality test will stop as soon as it fails, and we so
- * cannot be sure to even come here.
- * So the recursivity of na_object_check_status() is directly dealt
- * with by the main entry api function.
- *
- * More, the modification status of subitems doesn't have any
- * impact on this object itself, provided that subitems lists are
- * themselves identical
- *
- * note 3: #NAObjectAction is considered as modified when at least one
- * of the profiles is itself modified (because they are saved as a
- * whole). See #NAObjectAction.
- *
- * note 4: the 'read-only' flag is not considered as relevant here
- */
-static gboolean
-object_are_equal( const NAObject *a, const NAObject *b )
-{
-	gboolean equal = TRUE;
-	GList *it;
+	gboolean equal;
+	GList *a_childs, *b_childs, *it;
 	gchar *first_id, *second_id;
-	NAObject *first_obj, *second_obj;
+	NAObjectId *first_obj, *second_obj;
 	gint first_pos, second_pos;
 	GList *second_list;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( a ), FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( b ), FALSE );
 
+	equal = FALSE;
+
 	if( !NA_OBJECT_ITEM( a )->private->dispose_has_run &&
 		!NA_OBJECT_ITEM( b )->private->dispose_has_run ){
 
+		equal = TRUE;
+
 		if( equal ){
-			equal =
-				( g_utf8_collate( NA_OBJECT_ITEM( a )->private->tooltip, NA_OBJECT_ITEM( b )->private->tooltip ) == 0 ) &&
-				( g_utf8_collate( NA_OBJECT_ITEM( a )->private->icon, NA_OBJECT_ITEM( b )->private->icon ) == 0 );
-			/*if( !equal ){
-				g_debug( "tooltip or icon" );
-			}*/
+			a_childs = na_object_get_items( a );
+			b_childs = na_object_get_items( b );
+			equal = ( g_list_length( a_childs ) == g_list_length( b_childs ));
 		}
 
 		if( equal ){
-			equal = ( NA_OBJECT_ITEM( a )->private->enabled && NA_OBJECT_ITEM( b )->private->enabled ) ||
-					( !NA_OBJECT_ITEM( a )->private->enabled && !NA_OBJECT_ITEM( b )->private->enabled );
-			/*if( !equal ){
-				g_debug( "enabled" );
-			}*/
-		}
-
-		if( equal ){
-			equal = ( g_list_length( NA_OBJECT_ITEM( a )->private->items ) == g_list_length( NA_OBJECT_ITEM( b )->private->items ));
-			if( !equal ){
-				g_debug( "length: a=%d, b=%d", g_list_length( NA_OBJECT_ITEM( a )->private->items ), g_list_length( NA_OBJECT_ITEM( b )->private->items ));
-			}
-		}
-
-		if( equal ){
-			for( it = NA_OBJECT_ITEM( a )->private->items ; it && equal ; it = it->next ){
+			for( it = a_childs ; it && equal ; it = it->next ){
 				first_id = na_object_get_id( it->data );
 				second_obj = na_object_get_item( b, first_id );
 				first_pos = -1;
 				second_pos = -1;
 				if( second_obj ){
-					first_pos = g_list_position( NA_OBJECT_ITEM( a )->private->items, it );
-					second_list = g_list_find( NA_OBJECT_ITEM( b )->private->items, second_obj );
-					second_pos = g_list_position( NA_OBJECT_ITEM( b )->private->items, second_list );
+					first_pos = g_list_position( a_childs, it );
+					second_list = g_list_find( b_childs, second_obj );
+					second_pos = g_list_position( b_childs, second_list );
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-					g_debug( "na_object_item_object_are_equal: first_pos=%u, second_pos=%u", first_pos, second_pos );
+					g_debug( "na_object_item_are_equal: first_pos=%u, second_pos=%u", first_pos, second_pos );
 #endif
 					if( first_pos != second_pos ){
 						equal = FALSE;
@@ -1197,7 +283,7 @@ object_are_equal( const NAObject *a, const NAObject *b )
 					}
 				} else {
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-					g_debug( "na_object_item_object_are_equal: id=%s not found in b", first_id );
+					g_debug( "na_object_item_are_equal: id=%s not found in b", first_id );
 #endif
 					equal = FALSE;
 					/*g_debug( "first_id=%s, second not found", first_id );*/
@@ -1208,12 +294,12 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		}
 
 		if( equal ){
-			for( it = NA_OBJECT_ITEM( b )->private->items ; it && equal ; it = it->next ){
+			for( it = b_childs ; it && equal ; it = it->next ){
 				second_id = na_object_get_id( it->data );
 				first_obj = na_object_get_item( a, second_id );
 				if( !first_obj ){
 #if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-					g_debug( "na_object_item_object_are_equal: id=%s not found in a", second_id );
+					g_debug( "na_object_item_are_equal: id=%s not found in a", second_id );
 #endif
 					equal = FALSE;
 					/*g_debug( "second_id=%s, first not found", second_id );*/
@@ -1231,101 +317,127 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	return( equal );
 }
 
-/*
- * from NAObjectItem point of view, all objects are valid
+/**
+ * na_object_item_get_item:
+ * @item: the #NAObjectItem from which we want retrieve a subitem.
+ * @id: the id of the searched subitem.
+ *
+ * Returns: a pointer to the #NAObjectId-derived child with the required id.
+ *
+ * The returned #NAObjectId is owned by the @item object ; the
+ * caller should not try to g_free() nor g_object_unref() it.
  */
-static gboolean
-object_is_valid( const NAObject *object )
+NAObjectId *
+na_object_item_get_item( const NAObjectItem *item, const gchar *id )
 {
-	gboolean valid = TRUE;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), FALSE );
-
-	if( !NA_OBJECT_ITEM( object )->private->dispose_has_run ){
-		;
-	}
-
-	return( valid );
-}
-
-static GList *
-object_get_childs( const NAObject *object )
-{
-	GList *childs = NULL;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), NULL );
-
-	if( !NA_OBJECT_ITEM( object )->private->dispose_has_run ){
-		childs = NA_OBJECT_ITEM( object )->private->items;
-	}
-
-	return( childs );
-}
-
-static void
-object_ref( NAObject *object )
-{
-	GList *childs, *ic;
-
-	childs = object_get_childs( object );
-	for( ic = childs ; ic ; ic = ic->next ){
-		/*g_debug( "na_object_item_object_unref: object=%p (%s, ref_count=%d)",
-				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );*/
-		na_object_ref( ic->data );
-	}
-}
-
-/*
- * if we 'dispose' ic->data during the loop, the 'ic->next' pointer will
- * no more be valid for the next iteration, so we have to keep its value
- * before actually unref the data
- */
-static void
-object_unref( NAObject *object )
-{
-	GList *childs, *ic, *icnext;
-
-	childs = object_get_childs( object );
-	for( ic = childs ; ic ; ic = icnext ){
-		/*g_debug( "na_object_item_object_unref: object=%p (%s, ref_count=%d)",
-				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );*/
-		icnext = ic->next;
-		na_object_unref( ic->data );
-	}
-}
-
-/*
- * new_parent is not relevant when allocating a new UUID for an action
- * or a menu ; it may safely be left as NULL though there is no gain to
- * check this
- */
-static gchar *
-object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
-{
-	GList *it;
-	uuid_t uuid;
-	gchar uuid_str[64];
-	gchar *new_uuid = NULL;
+	GList *childs, *it;
+	NAObjectId *found = NULL;
+	NAObjectId *isub;
+	gchar *isubid;
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
 
-	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
+	if( !item->private->dispose_has_run ){
 
-		/* recurse into NAObjectItems childs
-		 * i.e., if a menu, recurse into embedded actions
-		 */
-		if( NA_OBJECT_ITEM( item )->private->items &&
-			NA_IS_OBJECT_ITEM( NA_OBJECT_ITEM( item )->private->items->data )){
-
-			for( it = NA_OBJECT_ITEM( item )->private->items ; it ; it = it->next ){
-				na_object_set_new_id( it->data, new_parent );
+		childs = na_object_get_items( item );
+		for( it = childs ; it && !found ; it = it->next ){
+			isub = NA_OBJECT_ID( it->data );
+			isubid = na_object_get_id( isub );
+			if( !strcmp( id, isubid )){
+				found = isub;
 			}
+			g_free( isubid );
 		}
-
-		uuid_generate( uuid );
-		uuid_unparse_lower( uuid, uuid_str );
-		new_uuid = g_strdup( uuid_str );
 	}
 
-	return( new_uuid );
+	return( found );
+}
+
+/**
+ * na_object_item_append_item:
+ * @item: the #NAObjectItem to which add the subitem.
+ * @child: a #NAObjectId to be added to list of subitems.
+ *
+ * Appends a new @child to the list of subitems of @item,
+ * and setup the parent pointer of the child to its new parent.
+ *
+ * Doesn't modify the reference count on @object.
+ */
+void
+na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
+{
+	GList *childs_list;
+
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( NA_IS_OBJECT_ID( child ));
+
+	if( !item->private->dispose_has_run ){
+
+		childs_list = na_object_get_items( item );
+
+		if( !g_list_find( childs_list, ( gpointer ) child )){
+
+			childs_list = g_list_append( childs_list, ( gpointer ) child );
+			na_object_set_parent( child, item );
+			na_object_set_items( item, childs_list );
+		}
+	}
+}
+
+/**
+ * na_object_item_build_items_slist:
+ * @item: this #NAObjectItem object.
+ *
+ * Returns: a string list which contains the ordered list of ids of
+ * subitems.
+ *
+ * Note that the returned list is built on each call to this function,
+ * and is so an exact image of the current situation.
+ *
+ * The returned list should be na_core_utils_slist_free() by the caller.
+ */
+GSList *
+na_object_item_build_items_slist( const NAObjectItem *item )
+{
+	GSList *slist;
+	GList *subitems, *it;
+	gchar *id;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+
+	slist = NULL;
+
+	if( !item->private->dispose_has_run ){
+
+		subitems = na_object_get_items( item );
+
+		for( it = subitems ; it ; it = it->next ){
+			NAObjectId *item = NA_OBJECT_ID( it->data );
+			id = na_object_get_id( item );
+			slist = g_slist_prepend( slist, id );
+		}
+
+		slist = g_slist_reverse( slist );
+	}
+
+	return( slist );
+}
+
+/**
+ * na_object_item_unref_items:
+ * @list: a list of #NAObject-derived items.
+ *
+ * Recursively unref the #NAObject of the list, freeing the list at last.
+ */
+void
+na_object_item_unref_items( GList *items )
+{
+	GList *it;
+
+	for( it = items ; it ; it = it->next ){
+
+		na_object_unref( it->data );
+	}
+
+	g_list_free( items );
 }
