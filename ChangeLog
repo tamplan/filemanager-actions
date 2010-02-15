@@ -1,5 +1,6 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename src/core/na-gconf-utils.h to src/api/na-gconf-utils.h
 	Rename src/api/na-iio-provider.c to src/core/na-iio-provider.c
 
 	* src/api/na-dbus.h: Update defined name.
