@@ -34,16 +34,19 @@
 
 #include <errno.h>
 
+#include <api/na-core-utils.h>
+#include <api/na-object-api.h>
+#include <api/na-iio-factory.h>
+
 #include "nadp-desktop-file.h"
 #include "nadp-desktop-provider.h"
-#include "nadp-write.h"
-#include "nadp-utils.h"
-#include "nadp-xdg-data-dirs.h"
+#include "nadp-writer.h"
+#include "nadp-xdg-dirs.h"
 
 static guint write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages );
 
 /*
- * API function: should only be called through NAIIOProvider interface
+ * This is implementation of NAIIOProvider::is_willing_to_write method
  */
 gboolean
 nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
@@ -55,31 +58,31 @@ nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
  * NadpDesktopProvider is able to write if user data dir exists (or
  * can be created) and is writable
  *
- * API function: should only be called through NAIIOProvider interface
+ * This is implementation of NAIIOProvider::is_able_to_write method
  */
 gboolean
 nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 {
-	static const gchar *thisfn = "nadp_write_iio_provider_is_able_to_write";
+	static const gchar *thisfn = "nadp_writer_iio_provider_is_able_to_write";
 	gboolean able_to;
 	gchar *userdir;
 	GSList *messages;
 
+	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), FALSE );
+
 	able_to = FALSE;
 	messages = NULL;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), able_to );
-
-	userdir = nadp_xdg_data_dirs_get_user_dir( NADP_DESKTOP_PROVIDER( provider ), &messages );
+	userdir = nadp_xdg_dirs_get_user_data_dir();
 
 	if( g_file_test( userdir, G_FILE_TEST_IS_DIR )){
-		able_to = nadp_utils_is_writable_dir( userdir );
+		able_to = na_core_utils_dir_is_writable( userdir );
 
 	} else if( g_mkdir_with_parents( userdir, 0700 )){
 		g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));
 
 	} else {
-		able_to = nadp_utils_is_writable_dir( userdir );
+		able_to = na_core_utils_dir_is_writable( userdir );
 	}
 
 	g_free( userdir );
@@ -98,6 +101,7 @@ nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
  *
  * Internal function: do not call from outside the instance.
  */
+/*
 gboolean
 nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
 {
@@ -126,7 +130,11 @@ nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem
 
 	return( writable );
 }
+*/
 
+/*
+ * This is implementation of NAIIOProvider::write_item method
+ */
 guint
 nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages )
 {
@@ -158,8 +166,8 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
 
 	} else {
-		userdir = nadp_xdg_data_dirs_get_user_dir( NADP_DESKTOP_PROVIDER( provider ), messages );
-		subdirs = nadp_utils_split_path_list( NADP_DESKTOP_PROVIDER_SUBDIRS );
+		userdir = nadp_xdg_dirs_get_user_data_dir();
+		subdirs = na_core_utils_slist_from_split( NADP_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
 		fulldir = g_build_filename( userdir, ( gchar * ) subdirs->data, NULL );
 		dir_ok = TRUE;
 		if( !g_file_test( fulldir, G_FILE_TEST_IS_DIR )){
@@ -169,11 +177,11 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 			}
 		}
 		g_free( userdir );
-		nadp_utils_gslist_free( subdirs );
+		na_core_utils_slist_free( subdirs );
 
 		if( dir_ok ){
 			id = na_object_get_id( item );
-			bname = g_strdup_printf( "%s%s", id, NADP_DESKTOP_SUFFIX );
+			bname = g_strdup_printf( "%s%s", id, NADP_DESKTOP_FILE_SUFFIX );
 			g_free( id );
 			path = g_build_filename( fulldir, bname, NULL );
 			g_free( bname );
@@ -182,7 +190,7 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 
 		if( dir_ok ){
 			ndf = nadp_desktop_file_new_for_write( path );
-			g_object_set_data( G_OBJECT( item ), "nadp-desktop-file", ndf );
+			na_object_set_provider_data( item, ndf );
 			g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
 			g_free( path );
 		}
@@ -196,7 +204,9 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 }
 
 /*
- *
+ * actually writes the item to the existing NadpDesktopFile
+ * as we have choosen to take advantage of data factory management system
+ * we do not need to enumerate each and every elementary data
  */
 static guint
 write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages )
@@ -204,22 +214,24 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 	static const gchar *thisfn = "nadp_iio_provider_write_item";
 	guint ret;
 	NadpDesktopProvider *self;
-	gchar *label;
-	gchar *tooltip;
-	gchar *icon;
-	gboolean enabled;
 
-	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
+	g_debug( "%s: provider=%p (%s), item=%p (%s), ndf=%p, messages=%p",
 			thisfn,
 			( void * ) provider, G_OBJECT_TYPE_NAME( provider ),
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			( void * ) ndf,
 			( void * ) messages );
 
 	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NA_IS_IIO_FACTORY( provider ), ret );
+
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
+	g_return_val_if_fail( NA_IS_IDATA_FACTORY( item ), ret );
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
 
 	self = NADP_DESKTOP_PROVIDER( provider );
 
@@ -229,20 +241,7 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 
 	ret = NA_IIO_PROVIDER_CODE_OK;
 
-	label = na_object_get_label( item );
-	nadp_desktop_file_set_label( ndf, label );
-	g_free( label );
-
-	tooltip = na_object_get_tooltip( item );
-	nadp_desktop_file_set_tooltip( ndf, tooltip );
-	g_free( tooltip );
-
-	icon = na_object_get_icon( item );
-	nadp_desktop_file_set_icon( ndf, icon );
-	g_free( icon );
-
-	enabled = na_object_is_enabled( item );
-	nadp_desktop_file_set_enabled( ndf, enabled );
+	na_iio_factory_write_item( NA_IIO_FACTORY( provider ), ndf, NA_IDATA_FACTORY( item ), messages );
 
 	if( !nadp_desktop_file_write( ndf )){
 		ret = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
@@ -283,7 +282,7 @@ nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	if( ndf ){
 		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
 		path = nadp_desktop_file_get_key_file_path( ndf );
-		if( nadp_utils_delete_file( path )){
+		if( na_core_utils_file_delete( path )){
 			ret = NA_IIO_PROVIDER_CODE_OK;
 		}
 		g_free( path );

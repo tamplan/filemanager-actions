@@ -28,11 +28,10 @@
  *   ... and many others (see AUTHORS)
  */
 
-#include <nautilus-actions/api/na-iio-provider.h>
-#include <nautilus-actions/api/na-object-api.h>
+#ifndef __NADP_WRITER_H__
+#define __NADP_WRITER_H__
 
-#ifndef __NADP_WRITE_H__
-#define __NADP_WRITE_H__
+#include <api/na-iio-provider.h>
 
 G_BEGIN_DECLS
 
@@ -40,12 +39,10 @@ gboolean nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider );
 
 gboolean nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider );
 
-gboolean nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item );
-
 guint    nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
 
 guint    nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
 
 G_END_DECLS
 
-#endif /* __NADP_WRITE_H__ */
+#endif /* __NADP_WRITER_H__ */

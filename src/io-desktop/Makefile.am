@@ -44,8 +44,8 @@ libna_io_desktop_la_SOURCES = \
 	nadp-reader.h										\
 	nadp-utils.c										\
 	nadp-utils.h										\
-	nadp-write.c										\
-	nadp-write.h										\
+	nadp-writer.c										\
+	nadp-writer.h										\
 	nadp-xdg-data-dirs.c								\
 	nadp-xdg-data-dirs.h								\
 	$(NULL)
