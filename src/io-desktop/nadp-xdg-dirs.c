@@ -32,13 +32,12 @@
 #include <config.h>
 #endif
 
-#include "nadp-desktop-provider.h"
-#include "nadp-xdg-data-dirs.h"
+#include <api/na-core-utils.h>
+
+#include "nadp-xdg-dirs.h"
 
 /**
- * nadp_xdg_data_dirs_get_dirs:
- * @provider: this #NadpDesktopProvider instance.
- * @messages: error messages go here.
+ * nadp_xdg_dirs_get_data_dirs:
  *
  * Returns: the ordered list of data directories, most important first,
  * as a GSList of newly allocated strings.
@@ -47,25 +46,23 @@
  * freed by the caller.
  */
 GSList *
-nadp_xdg_data_dirs_get_dirs( const NadpDesktopProvider *provider, GSList **messages )
+nadp_xdg_dirs_get_data_dirs( void )
 {
 	GSList *listdirs;
 	gchar *userdir;
 	GSList *datadirs;
 
-	userdir = nadp_xdg_data_dirs_get_user_dir( provider, messages );
+	userdir = nadp_xdg_dirs_get_user_data_dir();
 	listdirs = g_slist_prepend( NULL, userdir );
 
-	datadirs = nadp_xdg_data_dirs_get_data_dirs( provider, messages );
+	datadirs = nadp_xdg_dirs_get_system_data_dirs();
 	listdirs = g_slist_concat( listdirs, datadirs );
 
 	return( listdirs );
 }
 
 /**
- * nadp_xdg_data_dirs_get_user_dir:
- * @provider: this #NadpDesktopProvider instance.
- * @messages: error messages go here.
+ * nadp_xdg_dirs_get_user_data_dir:
  *
  * Returns: the path to the single base directory relative to which
  * user-specific data files should be written, as a newly allocated
@@ -73,28 +70,22 @@ nadp_xdg_data_dirs_get_dirs( const NadpDesktopProvider *provider, GSList **messa
  *
  * This directory is defined by the environment variable XDG_DATA_HOME.
  * It defaults to ~/.local/share.
- *
- * source: http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
+ * cf. http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
  *
  * The returned string should be g_free() by the caller.
  */
 gchar *
-nadp_xdg_data_dirs_get_user_dir( const NadpDesktopProvider *provider, GSList **messages )
+nadp_xdg_dirs_get_user_data_dir( void )
 {
-	/*static const gchar *thisfn = "nadp_xdg_data_dirs_get_user_dir";*/
 	gchar *dir;
 
 	dir = g_strdup( g_get_user_data_dir());
-
-	/*g_debug( "%s: provider=%p, messages=%p, user_dir=%s", thisfn, ( void * ) provider, ( void * ) messages, dir );*/
 
 	return( dir );
 }
 
 /**
- * nadp_xdg_data_dirs_get_data_dirs:
- * @provider: this #NadpDesktopProvider instance.
- * @messages: error messages go here.
+ * nadp_xdg_dirs_get_system_data_dirs:
  *
  * Returns: the set of preference ordered base directories relative to
  * which data files should be written, as a GSList of newly allocated
@@ -109,27 +100,14 @@ nadp_xdg_data_dirs_get_user_dir( const NadpDesktopProvider *provider, GSList **m
  * by the caller.
  */
 GSList *
-nadp_xdg_data_dirs_get_data_dirs( const NadpDesktopProvider *provider, GSList **messages )
+nadp_xdg_dirs_get_system_data_dirs( void )
 {
-	static const gchar *thisfn = "nadp_xdg_data_dirs_get_data_dirs";
-	gchar **dirs;
-	gchar **id;
-	GSList *paths, *ip;
+	const gchar **dirs;
+	GSList *paths;
 
-	paths = NULL;
-	dirs = ( gchar ** ) g_get_system_data_dirs();
-	id = dirs;
-	while( *id ){
-		paths = g_slist_prepend( paths, g_strdup( *id ));
-		id++;
-	}
+	dirs = ( const gchar ** ) g_get_system_data_dirs();
 
-	paths = g_slist_reverse( paths );
-
-	for( ip = paths ; ip ; ip = ip->next ){
-		g_debug( "%s: provider=%p, messages=%p, data_dir=%s",
-				thisfn, ( void * ) provider, ( void * ) messages, ( const gchar * ) ip->data );
-	}
+	paths = na_core_utils_slist_from_str_array( dirs );
 
 	return( paths );
 }

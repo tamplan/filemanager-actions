@@ -28,19 +28,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#include "nadp-desktop-provider.h"
+#ifndef __NADP_XDG_DIRS_H__
+#define __NADP_XDG_DIRS_H__
 
-#ifndef __NADP_XDG_DATA_DIRS_H__
-#define __NADP_XDG_DATA_DIRS_H__
+#include <glib.h>
 
 G_BEGIN_DECLS
 
-GSList *nadp_xdg_data_dirs_get_dirs( const NadpDesktopProvider *provider, GSList **messages );
+GSList *nadp_xdg_dirs_get_data_dirs( void );
 
-gchar  *nadp_xdg_data_dirs_get_user_dir( const NadpDesktopProvider *provider, GSList **messages );
+gchar  *nadp_xdg_dirs_get_user_data_dir( void );
 
-GSList *nadp_xdg_data_dirs_get_data_dirs( const NadpDesktopProvider *provider, GSList **messages );
+GSList *nadp_xdg_dirs_get_system_data_dirs( void );
 
 G_END_DECLS
 
-#endif /* __NADP_XDG_DATA_DIRS_H__ */
+#endif /* __NADP_XDG_DIRS_H__ */
