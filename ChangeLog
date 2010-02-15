@@ -1,5 +1,14 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Define NAIDataFactory interface.
+
+	* src/api/na-idata-factory.h:
+	* src/api/na-idata-factory-enum.h:
+	* src/api/na-idata-factory-str.h:
+	* src/core/na-idata-factory.c:
+	* src/core/na-data-factory.c:
+	* src/core/na-data-factory.h: New files.
+
 	Define NAIIOFactory interface.
 
 	* src/api/na-iio-factory.h:

@@ -38,9 +38,12 @@ AM_CPPFLAGS += \
 
 libna_core_la_SOURCES = \
 	na-core-utils.c										\
+	na-data-factory.c									\
+	na-data-factory.h									\
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
 	na-iduplicable.c									\
+	na-idata-factory.c									\
 	na-iio-factory.c									\
 	na-iio-provider.c									\
 	na-io-factory.c										\
