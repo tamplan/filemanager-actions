@@ -34,7 +34,8 @@
 
 #include <gmodule.h>
 
-#include "na-utils.h"
+#include <api/na-core-utils.h>
+
 #include "na-module.h"
 
 /* private class data
@@ -54,7 +55,7 @@ struct NAModulePrivate {
 
 	/* api
 	 */
-	gboolean ( *initialize ) ( GTypeModule *module );
+	gboolean ( *startup )    ( GTypeModule *module );
 	guint    ( *get_version )( void );
 	gint     ( *list_types ) ( const GType **types );
 	void     ( *shutdown )   ( void );
@@ -253,7 +254,7 @@ na_module_load_modules( void )
 				fname = g_build_filename( dirname, entry, NULL );
 				module = module_new( fname );
 				if( module ){
-					module->private->name = na_utils_remove_suffix( entry, suffix );
+					module->private->name = na_core_utils_str_remove_suffix( entry, suffix );
 					modules = g_list_prepend( modules, module );
 					g_debug( "%s: module %s successfully loaded", thisfn, entry );
 				}
@@ -331,11 +332,9 @@ is_a_na_plugin( NAModule *module )
 	gboolean ok;
 
 	ok =
-		plugin_check( module, "na_api_module_init"       , ( gpointer * ) &module->private->initialize) &&
-		plugin_check( module, "na_api_module_get_version", ( gpointer * ) &module->private->get_version ) &&
-		plugin_check( module, "na_api_module_list_types" , ( gpointer * ) &module->private->list_types ) &&
-		plugin_check( module, "na_api_module_shutdown"   , ( gpointer * ) &module->private->shutdown ) &&
-		module->private->initialize( G_TYPE_MODULE( module ));
+		plugin_check( module, "na_extension_startup"    , ( gpointer * ) &module->private->startup) &&
+		plugin_check( module, "na_extension_list_types" , ( gpointer * ) &module->private->list_types ) &&
+		module->private->startup( G_TYPE_MODULE( module ));
 
 	if( ok ){
 		g_debug( "%s: %s: ok", thisfn, module->private->path );
@@ -360,9 +359,9 @@ plugin_check( NAModule *module, const gchar *symbol, gpointer *pfn )
 }
 
 /*
- * the 'na_api_module_init' function of the plugin has been already
- * called ; the GTypes the plugin provides have so already been declared
- * in the GType system
+ * the 'na_extension_startup' function of the plugin has been already
+ * called ; the GType types the plugin provides have so already been
+ * registered in the GType system
  *
  * we ask here the plugin to give us a list of these GTypes
  * for each GType, we allocate a new object of the given class
@@ -435,7 +434,7 @@ module_unload( GTypeModule *gmodule )
 		g_module_close( module->private->library );
 	}
 
-	module->private->initialize = NULL;
+	module->private->startup = NULL;
 	module->private->get_version = NULL;
 	module->private->list_types = NULL;
 	module->private->shutdown = NULL;

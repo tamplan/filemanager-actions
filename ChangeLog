@@ -1,5 +1,12 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename src/api/na-api.h to src/api/na-extension.h
+
+	* src/api/README:
+	* src/io-desktop/nadp-module.c:
+	* src/io-gconf/nagp-module.c:
+	* src/runtime/na-module.c: Updated accordingly.
+
 	Define XML provider as a dynamic module.
 	
 	* io-xml/Makefile.am:

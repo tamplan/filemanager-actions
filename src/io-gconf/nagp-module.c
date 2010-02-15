@@ -32,21 +32,26 @@
 #include <config.h>
 #endif
 
-#include <syslog.h>
-
-#include <nautilus-actions/api/na-api.h>
+#include <api/na-extension.h>
 
 #include "nagp-gconf-provider.h"
 
+/* the count of GType types provided by this extension
+ * each new GType type must
+ * - be registered in na_extension_startup()
+ * - be addressed in na_extension_list_types().
+ */
+#define NAGP_TYPES_COUNT	1
+
 /*
- * na_api_module_init:
+ * na_extension_startup:
  *
  * mandatory starting with API v. 1.
  */
 gboolean
-na_api_module_init( GTypeModule *module )
+na_extension_startup( GTypeModule *module )
 {
-	static const gchar *thisfn = "nagp_module_na_api_module_initialize";
+	static const gchar *thisfn = "nagp_module_na_extension_startup";
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
@@ -56,14 +61,14 @@ na_api_module_init( GTypeModule *module )
 }
 
 /*
- * na_api_module_get_version:
+ * na_extension_get_version:
  *
  * optional, defaults to 1.
  */
 guint
-na_api_module_get_version( void )
+na_extension_get_version( void )
 {
-	static const gchar *thisfn = "nagp_module_na_api_module_get_version";
+	static const gchar *thisfn = "nagp_module_na_extension_get_version";
 	guint version;
 
 	version = 1;
@@ -74,34 +79,35 @@ na_api_module_get_version( void )
 }
 
 /*
- * na_api_module_list_types:
+ * na_extension_list_types:
  *
  * mandatory starting with v. 1.
  */
 guint
-na_api_module_list_types( const GType **types )
+na_extension_list_types( const GType **types )
 {
-	static const gchar *thisfn = "nagp_module_na_api_module_list_types";
-	#define count 1
-	static GType type_list[count];
+	static const gchar *thisfn = "nagp_module_na_extension_list_types";
+	static GType types_list [1+NAGP_TYPES_COUNT];
 
 	g_debug( "%s: types=%p", thisfn, ( void * ) types );
 
-	type_list[0] = NAGP_GCONF_PROVIDER_TYPE;
-	*types = type_list;
+	types_list[0] = NAGP_GCONF_PROVIDER_TYPE;
 
-	return( count );
+	types_list[NAGP_TYPES_COUNT] = 0;
+	*types = types_list;
+
+	return( NAGP_TYPES_COUNT );
 }
 
 /*
- * na_api_module_shutdown:
+ * na_extension_shutdown:
  *
  * mandatory starting with v. 1.
  */
 void
-na_api_module_shutdown( void )
+na_extension_shutdown( void )
 {
-	static const gchar *thisfn = "nagp_module_na_api_module_shutdown";
+	static const gchar *thisfn = "nagp_module_na_extension_shutdown";
 
 	g_debug( "%s", thisfn );
 }
