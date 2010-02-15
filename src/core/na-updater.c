@@ -1,0 +1,333 @@
+/*
+ * Nautilus Actions
+ * A Nautilus extension which offers configurable context menu actions.
+ *
+ * Copyright (C) 2005 The GNOME Foundation
+ * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+ * Copyright (C) 2009, 2010 Pierre Wieser and others (see AUTHORS)
+ *
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this Library; see the file COPYING.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Authors:
+ *   Frederic Ruaudel <grumz@grumz.net>
+ *   Rodrigo Moya <rodrigo@gnome-db.org>
+ *   Pierre Wieser <pwieser@trychlos.org>
+ *   ... and many others (see AUTHORS)
+ */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <api/na-gconf-utils.h>
+#include <api/na-object-api.h>
+
+#include "na-io-provider.h"
+#include "na-updater.h"
+
+/* private class data
+ */
+struct NAUpdaterClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
+};
+
+/* private instance data
+ */
+struct NAUpdaterPrivate {
+	gboolean           dispose_has_run;
+};
+
+static NAPivotClass *st_parent_class = NULL;
+
+static GType    register_type( void );
+static void     class_init( NAUpdaterClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
+
+GType
+na_updater_get_type( void )
+{
+	static GType object_type = 0;
+
+	if( !object_type ){
+		object_type = register_type();
+	}
+
+	return( object_type );
+}
+
+static GType
+register_type( void )
+{
+	static const gchar *thisfn = "na_updater_register_type";
+	GType type;
+
+	static GTypeInfo info = {
+		sizeof( NAUpdaterClass ),
+		( GBaseInitFunc ) NULL,
+		( GBaseFinalizeFunc ) NULL,
+		( GClassInitFunc ) class_init,
+		NULL,
+		NULL,
+		sizeof( NAUpdater ),
+		0,
+		( GInstanceInitFunc ) instance_init
+	};
+
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( NA_PIVOT_TYPE, "NAUpdater", &info, 0 );
+
+	return( type );
+}
+
+static void
+class_init( NAUpdaterClass *klass )
+{
+	static const gchar *thisfn = "na_updater_class_init";
+	GObjectClass *object_class;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+
+	st_parent_class = g_type_class_peek_parent( klass );
+
+	object_class = G_OBJECT_CLASS( klass );
+	object_class->dispose = instance_dispose;
+	object_class->finalize = instance_finalize;
+
+	klass->private = g_new0( NAUpdaterClassPrivate, 1 );
+}
+
+static void
+instance_init( GTypeInstance *instance, gpointer klass )
+{
+	static const gchar *thisfn = "na_updater_instance_init";
+	NAUpdater *self;
+
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+	g_return_if_fail( NA_IS_UPDATER( instance ));
+	self = NA_UPDATER( instance );
+
+	self->private = g_new0( NAUpdaterPrivate, 1 );
+
+	self->private->dispose_has_run = FALSE;
+}
+
+static void
+instance_dispose( GObject *object )
+{
+	static const gchar *thisfn = "na_updater_instance_dispose";
+	NAUpdater *self;
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_return_if_fail( NA_IS_UPDATER( object ));
+	self = NA_UPDATER( object );
+
+	if( !self->private->dispose_has_run ){
+
+		self->private->dispose_has_run = TRUE;
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		}
+	}
+}
+
+static void
+instance_finalize( GObject *object )
+{
+	static const gchar *thisfn = "na_updater_instance_finalize";
+	NAUpdater *self;
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_return_if_fail( NA_IS_UPDATER( object ));
+	self = NA_UPDATER( object );
+
+	g_free( self->private );
+
+	/* chain call to parent class */
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
+		G_OBJECT_CLASS( st_parent_class )->finalize( object );
+	}
+}
+
+/**
+ * na_updater_new:
+ *
+ * Returns: a newly allocated #NAUpdater object.
+ */
+NAUpdater *
+na_updater_new( NAPivotLoadableSet loadable )
+{
+	static const gchar *thisfn = "na_updater_new";
+	NAUpdater *updater;
+
+	g_debug( "%s", thisfn );
+
+	updater = g_object_new( NA_UPDATER_TYPE,
+			NAPIVOT_PROP_LOADABLE_SET, GUINT_TO_POINTER( loadable ),
+			NULL );
+
+	return( updater );
+}
+
+/**
+ * na_updater_is_item_writable:
+ * @updater: this #NAUpdater object.
+ * @item: the #NAObjectItem to be written.
+ * @reason: the reason for why @item may not be writable.
+ *
+ * Returns: %TRUE: if @item is actually writable, given the current
+ * status of its provider, %FALSE else.
+ *
+ * For an item be actually writable:
+ * - the item must not be itself in a read-only store, which has been
+ *   checked when first reading it
+ * - the provider must be willing (resp. able) to write
+ * - the provider must not has been locked by the admin
+ * - the writability of the provider must not have been removed by the user
+ * - the whole configuration must not have been locked by the admin.
+ */
+gboolean
+na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, gint *reason )
+{
+	gboolean writable;
+	NAIOProvider *provider;
+
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+
+	writable = FALSE;
+	if( reason ){
+		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
+	}
+
+	if( !updater->private->dispose_has_run ){
+
+		writable = TRUE;
+		if( reason ){
+			*reason = NA_IIO_PROVIDER_STATUS_WRITABLE;
+		}
+
+		if( writable ){
+			if( na_object_is_readonly( item )){
+				writable = FALSE;
+				if( reason ){
+					*reason = NA_IIO_PROVIDER_STATUS_ITEM_READONLY;
+				}
+			}
+		}
+
+		if( writable ){
+			provider = na_object_get_provider( item );
+			if( provider ){
+				if( !na_io_provider_is_willing_to_write( provider )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO;
+					}
+				} else if( na_io_provider_is_locked_by_admin( provider, NA_IPREFS( updater ))){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
+					}
+				} else if( !na_io_provider_is_user_writable( provider, NA_IPREFS( updater ))){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;
+					}
+				} else if( na_pivot_is_configuration_locked_by_admin( NA_PIVOT( updater ))){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN;
+					}
+				} else if( !na_io_provider_has_write_api( provider )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_NO_API;
+					}
+				}
+
+			/* the get_writable_provider() api already takes above checks
+			 */
+			} else {
+				provider = na_io_provider_get_writable_provider( NA_PIVOT( updater ));
+				if( !provider ){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
+					}
+				}
+			}
+		}
+	}
+
+	return( writable );
+}
+
+/**
+ * na_updater_write_item:
+ * @updater: this #NAUpdater instance.
+ * @item: a #NAObjectItem to be written down to the storage subsystem.
+ * @messages: the I/O provider can allocate and store here its error
+ * messages.
+ *
+ * Writes an item (an action or a menu).
+ *
+ * Returns: the #NAIIOProvider return code.
+ */
+guint
+na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **messages )
+{
+	guint ret;
+	gint reason;
+
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
+	g_return_val_if_fail( messages, ret );
+
+	if( !updater->private->dispose_has_run ){
+
+		NAIOProvider *provider = na_object_get_provider( item );
+		if( !provider ){
+			provider = na_io_provider_get_writable_provider( NA_PIVOT( updater ));
+
+			if( !provider ){
+				ret = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
+
+			} else {
+				na_object_set_provider( item, provider );
+			}
+		}
+
+		if( provider ){
+
+			if( !na_updater_is_item_writable( updater, item, &reason )){
+				ret = ( guint ) reason;
+
+			} else {
+				ret = na_io_provider_write_item( provider, item, messages );
+			}
+		}
+	}
+
+	return( ret );
+}

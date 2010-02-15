@@ -1,5 +1,10 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Define NAUpdater class.
+
+	* src/core/na-updater.c:
+	* src/core/na-updater.h: New files.
+
 	Update src/core/na-pivot.{c,h}
 	Update src/core/na-module.{c,h}
 	Update src/core/na-iprefs.{c,h}
