@@ -41,8 +41,8 @@ libna_io_gconf_la_SOURCES = \
 	nagp-module.c										\
 	nagp-reader.c										\
 	nagp-reader.h										\
-	nagp-write.c										\
-	nagp-write.h										\
+	nagp-writer.c										\
+	nagp-writer.h										\
 	$(NULL)
 
 libna_io_gconf_la_LIBADD = \

@@ -32,11 +32,15 @@
 #include <config.h>
 #endif
 
-/* only possible because we are an internal plugin */
-#include <runtime/na-gconf-utils.h>
+#include <string.h>
+
+#include <api/na-iio-provider.h>
+#include <api/na-object-api.h>
+#include <api/na-core-utils.h>
+#include <api/na-gconf-utils.h>
 
 #include "nagp-gconf-provider.h"
-#include "nagp-write.h"
+#include "nagp-writer.h"
 #include "nagp-keys.h"
 
 static gboolean write_item_action( NagpGConfProvider *gconf, const NAObjectAction *action, GSList **message );
@@ -48,8 +52,6 @@ static gboolean write_bool( NagpGConfProvider *gconf, const gchar *uuid, const g
 static gboolean write_list( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **message );
 
 static gboolean remove_key( NagpGConfProvider *provider, const gchar *uuid, const gchar *key, GSList **messages );
-
-static void     free_gslist( GSList *list );
 
 /*
  * API function: should only be called through NAIIOProvider interface
@@ -164,17 +166,17 @@ write_item_action( NagpGConfProvider *provider, const NAObjectAction *action, GS
 
 	ret =
 		write_object_item( provider, NA_OBJECT_ITEM( action ), messages ) &&
-		write_str( provider, uuid, NULL, ACTION_VERSION_ENTRY, na_object_action_get_version( action ), messages ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_SELECTION_ENTRY, na_object_action_is_target_selection( action ), messages ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_BACKGROUND_ENTRY, na_object_action_is_target_background( action ), messages ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_TARGET_TOOLBAR_ENTRY, na_object_action_is_target_toolbar( action ), messages ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLBAR_LABEL_ENTRY, na_object_action_toolbar_get_label( action ), messages ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_ACTION ), messages );
+		write_str( provider, uuid, NULL, NAGP_ENTRY_VERSION, na_object_get_version( action ), messages ) &&
+		write_bool( provider, uuid, NULL, NAGP_ENTRY_TARGET_SELECTION, na_object_is_target_selection( action ), messages ) &&
+		write_bool( provider, uuid, NULL, NAGP_ENTRY_TARGET_BACKGROUND, na_object_is_target_background( action ), messages ) &&
+		write_bool( provider, uuid, NULL, NAGP_ENTRY_TARGET_TOOLBAR, na_object_is_target_toolbar( action ), messages ) &&
+		write_str( provider, uuid, NULL, NAGP_ENTRY_TOOLBAR_LABEL, na_object_get_toolbar_label( action ), messages ) &&
+		write_str( provider, uuid, NULL, NAGP_ENTRY_TYPE, g_strdup( NAGP_VALUE_TYPE_ACTION ), messages );
 
 	/* key was used between 2.29.1 and 2.29.4, but is removed since 2.29.5 */
-	remove_key( provider, uuid, OBJECT_ITEM_TOOLBAR_SAME_LABEL_ENTRY, messages );
+	remove_key( provider, uuid, NAGP_ENTRY_TOOLBAR_SAME_LABEL, messages );
 
-	profiles = na_object_get_items_list( action );
+	profiles = na_object_get_items( action );
 
 	for( ip = profiles ; ip && ret ; ip = ip->next ){
 
@@ -182,17 +184,17 @@ write_item_action( NagpGConfProvider *provider, const NAObjectAction *action, GS
 		name = na_object_get_id( profile );
 
 		ret =
-			write_str( provider, uuid, name, ACTION_PROFILE_LABEL_ENTRY, na_object_get_label( profile ), messages ) &&
-			write_str( provider, uuid, name, ACTION_PATH_ENTRY, na_object_profile_get_path( profile ), messages ) &&
-			write_str( provider, uuid, name, ACTION_PARAMETERS_ENTRY, na_object_profile_get_parameters( profile ), messages ) &&
-			write_list( provider, uuid, name, ACTION_BASENAMES_ENTRY, na_object_profile_get_basenames( profile ), messages ) &&
-			write_bool( provider, uuid, name, ACTION_MATCHCASE_ENTRY, na_object_profile_get_matchcase( profile ), messages ) &&
-			write_list( provider, uuid, name, ACTION_MIMETYPES_ENTRY, na_object_profile_get_mimetypes( profile ), messages ) &&
-			write_bool( provider, uuid, name, ACTION_ISFILE_ENTRY, na_object_profile_get_is_file( profile ), messages ) &&
-			write_bool( provider, uuid, name, ACTION_ISDIR_ENTRY, na_object_profile_get_is_dir( profile ), messages ) &&
-			write_bool( provider, uuid, name, ACTION_MULTIPLE_ENTRY, na_object_profile_get_multiple( profile ), messages ) &&
-			write_list( provider, uuid, name, ACTION_SCHEMES_ENTRY, na_object_profile_get_schemes( profile ), messages ) &&
-			write_list( provider, uuid, name, ACTION_FOLDERS_ENTRY, na_object_profile_get_folders( profile ), messages );
+			write_str( provider, uuid, name, NAGP_ENTRY_PROFILE_LABEL, na_object_get_label( profile ), messages ) &&
+			write_str( provider, uuid, name, NAGP_ENTRY_PATH, na_object_get_path( profile ), messages ) &&
+			write_str( provider, uuid, name, NAGP_ENTRY_PARAMETERS, na_object_get_parameters( profile ), messages ) &&
+			write_list( provider, uuid, name, NAGP_ENTRY_BASENAMES, na_object_get_basenames( profile ), messages ) &&
+			write_bool( provider, uuid, name, NAGP_ENTRY_MATCHCASE, na_object_is_matchcase( profile ), messages ) &&
+			write_list( provider, uuid, name, NAGP_ENTRY_MIMETYPES, na_object_get_mimetypes( profile ), messages ) &&
+			write_bool( provider, uuid, name, NAGP_ENTRY_ISFILE, na_object_is_file( profile ), messages ) &&
+			write_bool( provider, uuid, name, NAGP_ENTRY_ISDIR, na_object_is_dir( profile ), messages ) &&
+			write_bool( provider, uuid, name, NAGP_ENTRY_MULTIPLE, na_object_is_multiple( profile ), messages ) &&
+			write_list( provider, uuid, name, NAGP_ENTRY_SCHEMES, na_object_get_schemes( profile ), messages ) &&
+			write_list( provider, uuid, name, NAGP_ENTRY_FOLDERS, na_object_get_folders( profile ), messages );
 
 		g_free( name );
 	}
@@ -212,7 +214,7 @@ write_item_menu( NagpGConfProvider *provider, const NAObjectMenu *menu, GSList *
 
 	ret =
 		write_object_item( provider, NA_OBJECT_ITEM( menu ), messages ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_TYPE_ENTRY, g_strdup( OBJECT_ITEM_TYPE_MENU ), messages );
+		write_str( provider, uuid, NULL, NAGP_ENTRY_TYPE, g_strdup( NAGP_VALUE_TYPE_MENU ), messages );
 
 	g_free( uuid );
 
@@ -228,11 +230,11 @@ write_object_item( NagpGConfProvider *provider, const NAObjectItem *item, GSList
 	uuid = na_object_get_id( NA_OBJECT( item ));
 
 	ret =
-		write_str( provider, uuid, NULL, OBJECT_ITEM_LABEL_ENTRY, na_object_get_label( NA_OBJECT( item )), messages ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_TOOLTIP_ENTRY, na_object_get_tooltip( item ), messages ) &&
-		write_str( provider, uuid, NULL, OBJECT_ITEM_ICON_ENTRY, na_object_get_icon( item ), messages ) &&
-		write_bool( provider, uuid, NULL, OBJECT_ITEM_ENABLED_ENTRY, na_object_is_enabled( item ), messages ) &&
-		write_list( provider, uuid, NULL, OBJECT_ITEM_LIST_ENTRY, na_object_item_rebuild_items_list( item ), messages );
+		write_str( provider, uuid, NULL, NAGP_ENTRY_LABEL, na_object_get_label( NA_OBJECT( item )), messages ) &&
+		write_str( provider, uuid, NULL, NAGP_ENTRY_TOOLTIP, na_object_get_tooltip( item ), messages ) &&
+		write_str( provider, uuid, NULL, NAGP_ENTRY_ICON, na_object_get_icon( item ), messages ) &&
+		write_bool( provider, uuid, NULL, NAGP_ENTRY_ENABLED, na_object_is_enabled( item ), messages ) &&
+		write_list( provider, uuid, NULL, NAGP_ENTRY_ITEMS_LIST, na_object_build_items_slist( item ), messages );
 
 	g_free( uuid );
 	return( ret );
@@ -272,7 +274,7 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	ret = NA_IIO_PROVIDER_CODE_OK;
 	uuid = na_object_get_id( NA_OBJECT( item ));
 
-	path = g_strdup_printf( "%s%s/%s", NAUTILUS_ACTIONS_GCONF_SCHEMASDIR, NA_GCONF_CONFIG_PATH, uuid );
+	path = gconf_concat_dir_and_key( NAGP_SCHEMAS_PATH, uuid );
 	gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
 	if( error ){
 		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
@@ -284,7 +286,7 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	g_free( path );
 
 	if( ret == NA_IIO_PROVIDER_CODE_OK ){
-		path = g_strdup_printf( "%s/%s", NA_GCONF_CONFIG_PATH, uuid );
+		path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, uuid );
 		gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
 		if( error ){
 			g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
@@ -311,9 +313,9 @@ write_str( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, co
 	gchar *msg;
 
 	if( name && strlen( name )){
-		path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
+		path = g_strdup_printf( "%s/%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, name, key );
 	} else {
-		path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
+		path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, key );
 	}
 
 	msg = NULL;
@@ -337,9 +339,9 @@ write_bool( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, c
 	gchar *msg;
 
 	if( name && strlen( name )){
-		path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
+		path = g_strdup_printf( "%s/%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, name, key );
 	} else {
-		path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
+		path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, key );
 	}
 
 	msg = NULL;
@@ -362,9 +364,9 @@ write_list( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, c
 	gchar *msg;
 
 	if( name && strlen( name )){
-		path = g_strdup_printf( "%s/%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, name, key );
+		path = g_strdup_printf( "%s/%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, name, key );
 	} else {
-		path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
+		path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, key );
 	}
 
 	msg = NULL;
@@ -374,7 +376,7 @@ write_list( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, c
 		g_free( msg );
 	}
 
-	free_gslist( value );
+	na_core_utils_slist_free( value );
 	g_free( path );
 
 	return( ret );
@@ -387,7 +389,7 @@ remove_key( NagpGConfProvider *provider, const gchar *uuid, const gchar *key, GS
 	gchar *path;
 	gchar *msg;
 
-	path = g_strdup_printf( "%s/%s/%s", NA_GCONF_CONFIG_PATH, uuid, key );
+	path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, key );
 	msg = NULL;
 
 	ret = na_gconf_utils_remove_entry( provider->private->gconf, path, &msg );
@@ -400,17 +402,4 @@ remove_key( NagpGConfProvider *provider, const gchar *uuid, const gchar *key, GS
 	g_free( path );
 
 	return( ret );
-}
-
-/*
- * free_gslist:
- * @list: the GSList to be freed.
- *
- * Frees a GSList of strings.
- */
-static void
-free_gslist( GSList *list )
-{
-	g_slist_foreach( list, ( GFunc ) g_free, NULL );
-	g_slist_free( list );
 }

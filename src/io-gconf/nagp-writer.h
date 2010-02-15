@@ -31,10 +31,7 @@
 #ifndef __NAGP_WRITE_H__
 #define __NAGP_WRITE_H__
 
-#include <nautilus-actions/api/na-iio-provider.h>
-#include <nautilus-actions/api/na-object-api.h>
-
-#include "nagp-gconf-provider.h"
+#include <api/na-iio-provider.h>
 
 G_BEGIN_DECLS
 
