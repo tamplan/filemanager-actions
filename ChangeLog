@@ -1,5 +1,7 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Remove useless src/private directory.
+
 	Define NAUpdater class.
 
 	* src/core/na-updater.c:
