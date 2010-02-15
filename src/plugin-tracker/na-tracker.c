@@ -32,14 +32,14 @@
 #include <config.h>
 #endif
 
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-bindings.h>
+
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
-#include <api/na-dbus.h>
-
-#include <dbus/dbus-glib.h>
-#include <dbus/dbus-glib-bindings.h>
+#include <api/na-dbus-names.h>
 
 #include "na-tracker.h"
 #include "na-tracker-dbus.h"
@@ -231,6 +231,8 @@ instance_dispose( GObject *object )
 
 	if( !self->private->dispose_has_run ){
 
+		self->private->dispose_has_run = TRUE;
+
 		g_object_unref( self->private->tracker );
 		self->private->tracker = NULL;
 
@@ -238,8 +240,6 @@ instance_dispose( GObject *object )
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
 		}
-
-		self->private->dispose_has_run = TRUE;
 	}
 }
 

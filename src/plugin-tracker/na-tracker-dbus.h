@@ -56,7 +56,7 @@ G_BEGIN_DECLS
 #define NA_IS_TRACKER_DBUS_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TRACKER_DBUS_TYPE ))
 #define NA_TRACKER_DBUS_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TRACKER_DBUS_TYPE, NATrackerDBusClass ))
 
-typedef struct NATrackerDBusPrivate NATrackerDBusPrivate;
+typedef struct NATrackerDBusPrivate      NATrackerDBusPrivate;
 
 typedef struct
 {

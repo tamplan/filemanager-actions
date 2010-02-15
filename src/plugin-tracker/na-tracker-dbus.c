@@ -41,7 +41,7 @@
 
 #include <dbus/dbus-glib.h>
 
-#include <api/na-dbus.h>
+#include <core/na-dbus.h>
 
 #include "na-tracker-dbus.h"
 #include "na-tracker-dbus-glue.h"
@@ -160,12 +160,12 @@ instance_dispose( GObject *object )
 
 	if( !self->private->dispose_has_run ){
 
+		self->private->dispose_has_run = TRUE;
+
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
 		}
-
-		self->private->dispose_has_run = TRUE;
 	}
 }
 
