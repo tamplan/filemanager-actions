@@ -99,11 +99,11 @@ interface_base_init( NAIPivotConsumerInterface *klass )
 	static const gchar *thisfn = "na_ipivot_consumer_interface_base_init";
 
 	if( !st_initialized ){
-		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+		g_debug( "%s: klass=%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
 		klass->private = g_new0( NAIPivotConsumerInterfacePrivate, 1 );
 
-		klass->on_actions_changed = NULL;
+		klass->on_items_changed = NULL;
 		klass->on_create_root_menu_changed = NULL;
 		klass->on_display_about_changed = NULL;
 		klass->on_display_order_changed = NULL;
@@ -117,11 +117,11 @@ interface_base_finalize( NAIPivotConsumerInterface *klass )
 {
 	static const gchar *thisfn = "na_ipivot_consumer_interface_base_finalize";
 
-	if( !st_finalized ){
-
-		st_finalized = TRUE;
+	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+
+		st_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -159,16 +159,16 @@ na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance )
 }
 
 /**
- * na_ipivot_consumer_notify_actions_changed:
+ * na_ipivot_consumer_notify_of_items_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
  *
  * Notifies the consumers that the actions have been modified on one of
  * the underlying storage subsystems.
  */
-void na_ipivot_consumer_notify_actions_changed( NAIPivotConsumer *instance )
+void na_ipivot_consumer_notify_of_items_changed( NAIPivotConsumer *instance )
 {
-	static const gchar *thisfn = "na_ipivot_consumer_notify";
+	static const gchar *thisfn = "na_ipivot_consumer_notify_of_items_changed";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
@@ -178,15 +178,15 @@ void na_ipivot_consumer_notify_actions_changed( NAIPivotConsumer *instance )
 
 		if( is_notify_allowed( instance )){
 
-			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed ){
-				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_actions_changed( instance, NULL );
+			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_items_changed ){
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_items_changed( instance, NULL );
 			}
 		}
 	}
 }
 
 /**
- * na_ipivot_consumer_notify_of_create_root_menu_change:
+ * na_ipivot_consumer_notify_of_create_root_menu_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
  * @enabled: whether a root menu should be created.
@@ -194,7 +194,7 @@ void na_ipivot_consumer_notify_actions_changed( NAIPivotConsumer *instance )
  * Notifies the consumers that the setting has been changed.
  */
 void
-na_ipivot_consumer_notify_of_create_root_menu_change( NAIPivotConsumer *instance, gboolean enabled )
+na_ipivot_consumer_notify_of_create_root_menu_changed( NAIPivotConsumer *instance, gboolean enabled )
 {
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
@@ -210,7 +210,7 @@ na_ipivot_consumer_notify_of_create_root_menu_change( NAIPivotConsumer *instance
 }
 
 /**
- * na_ipivot_consumer_notify_of_display_about_change:
+ * na_ipivot_consumer_notify_of_display_about_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
  * @enabled: whether the 'About' item should be enabled.
@@ -219,7 +219,7 @@ na_ipivot_consumer_notify_of_create_root_menu_change( NAIPivotConsumer *instance
  * item in the Nautilus context menu has been changed.
  */
 void
-na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance, gboolean enabled )
+na_ipivot_consumer_notify_of_display_about_changed( NAIPivotConsumer *instance, gboolean enabled )
 {
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
@@ -235,7 +235,7 @@ na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance, g
 }
 
 /**
- * na_ipivot_consumer_notify_of_display_order_change:
+ * na_ipivot_consumer_notify_of_display_order_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
  * @order_mode: new order mode.
@@ -243,7 +243,7 @@ na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance, g
  * Notifies the consumers that the display order has been changed.
  */
 void
-na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance, gint order_mode )
+na_ipivot_consumer_notify_of_display_order_changed( NAIPivotConsumer *instance, gint order_mode )
 {
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 

@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_IPIVOT_CONSUMER_H__
-#define __NA_RUNTIME_IPIVOT_CONSUMER_H__
+#ifndef __CORE_NA_IPIVOT_CONSUMER_H__
+#define __CORE_NA_IPIVOT_CONSUMER_H__
 
 /**
  * SECTION: na_ipivot_consumer
@@ -50,7 +50,7 @@ G_BEGIN_DECLS
 #define NA_IS_IPIVOT_CONSUMER( object )					( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPIVOT_CONSUMER_TYPE ))
 #define NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPIVOT_CONSUMER_TYPE, NAIPivotConsumerInterface ))
 
-typedef struct NAIPivotConsumer NAIPivotConsumer;
+typedef struct NAIPivotConsumer                 NAIPivotConsumer;
 
 typedef struct NAIPivotConsumerInterfacePrivate NAIPivotConsumerInterfacePrivate;
 
@@ -59,7 +59,7 @@ typedef struct {
 	NAIPivotConsumerInterfacePrivate *private;
 
 	/**
-	 * on_actions_changed:
+	 * on_items_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
 	 * user_data: user data set when emitting the message. Currently,
@@ -69,7 +69,7 @@ typedef struct {
 	 * a bunch of modifications. At this time, the embedded list of
 	 * #NAAction has been updated to be up to date.
 	 */
-	void ( *on_actions_changed )         ( NAIPivotConsumer *instance, gpointer user_data );
+	void ( *on_items_changed )           ( NAIPivotConsumer *instance, gpointer user_data );
 
 	/**
 	 * on_create_root_menu_changed:
@@ -110,11 +110,11 @@ GType na_ipivot_consumer_get_type( void );
 
 void  na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance );
 
-void  na_ipivot_consumer_notify_actions_changed( NAIPivotConsumer *instance );
-void  na_ipivot_consumer_notify_of_create_root_menu_change( NAIPivotConsumer *instance, gboolean enabled );
-void  na_ipivot_consumer_notify_of_display_about_change( NAIPivotConsumer *instance, gboolean enabled );
-void  na_ipivot_consumer_notify_of_display_order_change( NAIPivotConsumer *instance, gint order_mode );
+void  na_ipivot_consumer_notify_of_items_changed           ( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_create_root_menu_changed( NAIPivotConsumer *instance, gboolean enabled );
+void  na_ipivot_consumer_notify_of_display_about_changed   ( NAIPivotConsumer *instance, gboolean enabled );
+void  na_ipivot_consumer_notify_of_display_order_changed   ( NAIPivotConsumer *instance, gint order_mode );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_IPIVOT_CONSUMER_H__ */
+#endif /* __CORE_NA_IPIVOT_CONSUMER_H__ */
