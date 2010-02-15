@@ -1,5 +1,7 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename src/io-desktop/nadp-read.{c,h} to src/io-desktop/nadp-reader.{c,h}
+
 	NAObject-derived classes implement NAIDataFactory interface.
 
 	* src/core/na-object-id-enum.c:

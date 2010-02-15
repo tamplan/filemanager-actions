@@ -28,10 +28,10 @@
  *   ... and many others (see AUTHORS)
  */
 
-#include <nautilus-actions/api/na-iio-provider.h>
+#ifndef __NADP_READER_H__
+#define __NADP_READER_H__
 
-#ifndef __NADP_READ_H__
-#define __NADP_READ_H__
+#include <api/na-iio-provider.h>
 
 G_BEGIN_DECLS
 
@@ -39,4 +39,4 @@ GList *nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **mes
 
 G_END_DECLS
 
-#endif /* __NADP_READ_H__ */
+#endif /* __NADP_READER_H__ */

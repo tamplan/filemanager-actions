@@ -34,14 +34,15 @@
 
 #include <string.h>
 
-#include <nautilus-actions/api/na-object-api.h>
+#include <api/na-core-utils.h>
+#include <api/na-idata-factory-enum.h>
+#include <api/na-iio-factory.h>
+#include <api/na-object-api.h>
 
-#include "nadp-desktop-file.h"
 #include "nadp-desktop-provider.h"
-#include "nadp-read.h"
-#include "nadp-write.h"
-#include "nadp-utils.h"
-#include "nadp-xdg-data-dirs.h"
+#include "nadp-keys.h"
+#include "nadp-reader.h"
+#include "nadp-xdg-dirs.h"
 
 typedef struct {
 	gchar *path;
@@ -53,46 +54,61 @@ static GList          *get_list_of_desktop_paths( const NadpDesktopProvider *pro
 static void            get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
 static gboolean        is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id );
 static GList          *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
-static NAObjectItem   *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
+static NAIDataFactory *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
+#if 0
 static void            read_menu_from_desktop_file( const NadpDesktopProvider *provider, NAObjectMenu *menu, NadpDesktopFile *ndf, GSList **messages );
 static void            read_action_from_desktop_file( const NadpDesktopProvider *provider, NAObjectAction *action, NadpDesktopFile *ndf, GSList **messages );
 static void            read_item_properties_from_ndf( const NadpDesktopProvider *provider, NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages );
 static void            append_profile( NAObjectAction *action, NadpDesktopFile *ndf, const gchar *profile_id, GSList **messages );
 static void            exec_to_path_parameters( const gchar *command, gchar **path, gchar **parameters );
+#endif
 static void            free_desktop_paths( GList *paths );
 
 /*
- * Returns an unordered list of NAObjectItem-derived objects
+ * Returns an unordered list of NAIDataFactory-derived objects
+ *
+ * This is implementation of NAIIOProvider::read_items method
  */
 GList *
 nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_read_iio_provider_read_items";
+	static const gchar *thisfn = "nadp_iio_provider_read_items";
 	GList *items;
-	GList *paths, *ip;
-	DesktopPath *dps;
-	NAObjectItem *item;
+	GList *desktop_paths, *ip;
+	NAIDataFactory *item;
 
-	g_debug( "%s: provider=%p, messages=%p", thisfn, ( void * ) provider, ( void * ) messages );
+	g_debug( "%s: provider=%p (%s), messages=%p",
+			thisfn, ( void * ) provider, G_OBJECT_TYPE_NAME( provider ), ( void * ) messages );
+
+	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
 
 	items = NULL;
 
-	paths = get_list_of_desktop_paths( NADP_DESKTOP_PROVIDER( provider ), messages );
-	for( ip = paths ; ip ; ip = ip->next ){
-		dps = ( DesktopPath * ) ip->data;
-		item = item_from_desktop_path( NADP_DESKTOP_PROVIDER( provider ), dps, messages );
+	desktop_paths = get_list_of_desktop_paths( NADP_DESKTOP_PROVIDER( provider ), messages );
+	for( ip = desktop_paths ; ip ; ip = ip->next ){
+
+		item = item_from_desktop_path( NADP_DESKTOP_PROVIDER( provider ), ( DesktopPath * ) ip->data, messages );
+
 		if( item ){
 			items = g_list_prepend( items, item );
 		}
 	}
 
-	free_desktop_paths( paths );
+	free_desktop_paths( desktop_paths );
 
+	g_debug( "%s: count=%d", thisfn, g_list_length( items ));
 	return( items );
 }
 
 /*
  * returns a list of DesktopPath items
+ *
+ * we get the ordered list of XDG_DATA_DIRS, and the ordered list of
+ *  subdirs to add; then for each item of each list, we search for
+ *  .desktop files in the resulted built path
+ *
+ * the returned list is so a list of DesktopPath struct, in
+ * the ordered of preference (most preferred first)
  */
 static GList *
 get_list_of_desktop_paths( const NadpDesktopProvider *provider, GSList **messages )
@@ -103,30 +119,37 @@ get_list_of_desktop_paths( const NadpDesktopProvider *provider, GSList **message
 	gchar *dir;
 
 	files = NULL;
-	xdg_dirs = nadp_xdg_data_dirs_get_dirs( provider, messages );
-	subdirs = nadp_utils_split_path_list( NADP_DESKTOP_PROVIDER_SUBDIRS );
+	xdg_dirs = nadp_xdg_dirs_get_data_dirs();
+	subdirs = na_core_utils_slist_from_split( NADP_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
 
+	/* explore each directory from XDG_DATA_DIRS
+	 */
 	for( idir = xdg_dirs ; idir ; idir = idir->next ){
+
+		/* explore chaque N-A candidate subdirectory for each XDG dir
+		 */
 		for( isub = subdirs ; isub ; isub = isub->next ){
+
 			dir = g_build_filename(( gchar * ) idir->data, ( gchar * ) isub->data, NULL );
 			get_list_of_desktop_files( provider, &files, dir, messages );
 			g_free( dir );
 		}
 	}
 
-	nadp_utils_gslist_free( subdirs );
-	nadp_utils_gslist_free( xdg_dirs );
+	na_core_utils_slist_free( subdirs );
+	na_core_utils_slist_free( xdg_dirs );
 
 	return( files );
 }
 
 /*
- * scans the directory for a list of not yet loaded .desktop files
+ * scans the directory for .desktop files
+ * only adds to the list those which have not been yet loaded
  */
 static void
 get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_read_get_list_of_desktop_files";
+	static const gchar *thisfn = "nadp_reader_get_list_of_desktop_files";
 	GDir *dir_handle;
 	GError *error;
 	const gchar *name;
@@ -153,8 +176,8 @@ get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, c
 
 	if( dir_handle ){
 		while(( name = g_dir_read_name( dir_handle ))){
-			if( g_str_has_suffix( name, NADP_DESKTOP_SUFFIX )){
-				desktop_id = nadp_utils_remove_suffix( name, NADP_DESKTOP_SUFFIX );
+			if( g_str_has_suffix( name, NADP_DESKTOP_FILE_SUFFIX )){
+				desktop_id = na_core_utils_str_remove_suffix( name, NADP_DESKTOP_FILE_SUFFIX );
 				if( !is_already_loaded( provider, *files, desktop_id )){
 					*files = desktop_path_from_id( provider, *files, dir, desktop_id );
 				}
@@ -196,48 +219,73 @@ desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const g
 
 	dps = g_new0( DesktopPath, 1 );
 
-	bname = g_strdup_printf( "%s%s", id, NADP_DESKTOP_SUFFIX );
+	bname = g_strdup_printf( "%s%s", id, NADP_DESKTOP_FILE_SUFFIX );
 	dps->path = g_build_filename( dir, bname, NULL );
 	g_free( bname );
 
 	dps->id = g_strdup( id );
 
-	list = g_list_append( files, dps );
+	list = g_list_prepend( files, dps );
 
 	return( list );
 }
 
 /*
- * Returns a newly allocated NAObjectItem object, initialized from the
- * .desktop file pointed to by DesktopPath struct
- * A menu is identified by the Type=Menu.
- * If not found, we presume that the .desktop describes an action.
+ * Returns a newly allocated NAIDataFactory-derived object, initialized
+ * from the .desktop file pointed to by DesktopPath struct
  */
-static NAObjectItem *
+static NAIDataFactory *
 item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages )
 {
+	static const gchar *thisfn = "nadp_reader_item_from_desktop_path";
+	NAIDataFactory *item;
 	NadpDesktopFile *ndf;
-	NAObjectItem *item;
 	gchar *type;
+	GType reader_type;
+	NadpReaderData *reader_data;
+	gchar *id;
 
 	ndf = nadp_desktop_file_new_from_path( dps->path );
 	if( !ndf ){
 		return( NULL );
 	}
 
+	item = NULL;
+	reader_type = 0;
 	type = nadp_desktop_file_get_file_type( ndf );
-	if( !strcmp( type, "Menu" )){
-		item = NA_OBJECT_ITEM( na_object_menu_new());
-		read_menu_from_desktop_file( provider, NA_OBJECT_MENU( item ), ndf, messages );
 
-	} else if( !type || !strlen( type ) || !strcmp( type, "Action" )){
-		item = NA_OBJECT_ITEM( na_object_action_new());
-		read_action_from_desktop_file( provider, NA_OBJECT_ACTION( item ), ndf, messages );
+	if( !strcmp( type, NADP_VALUE_TYPE_MENU )){
+		reader_type = NA_OBJECT_MENU_TYPE;
+
+	} else if( !type || !strlen( type ) || !strcmp( type, NADP_VALUE_TYPE_ACTION )){
+		reader_type = NA_OBJECT_ACTION_TYPE;
+
+	} else {
+		g_warning( "%s: unknown type=%s", thisfn, type );
+	}
+
+	if( reader_type ){
+
+		reader_data = g_new0( NadpReaderData, 1 );
+		reader_data->ndf = ndf;
+
+		item = na_iio_factory_read_item( NA_IIO_FACTORY( provider ), reader_data, reader_type, messages );
+
+		if( item ){
+			id = nadp_desktop_file_get_id( ndf );
+			na_object_set_id( item, id );
+			g_free( id );
+			na_object_set_provider_data( item, ndf );
+			g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
+		}
+
+		g_free( reader_data );
 	}
 
 	return( item );
 }
 
+#if 0
 static void
 read_menu_from_desktop_file( const NadpDesktopProvider *provider, NAObjectMenu *menu, NadpDesktopFile *ndf, GSList **messages )
 {
@@ -331,7 +379,7 @@ read_item_properties_from_ndf( const NadpDesktopProvider *provider, NAObjectItem
 	na_object_set_provider_data( item, ndf );
 	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
 
-	id = nadp_desktop_file_get_id( ndf );
+	id = nadp_desktop_file_get_id2( ndf );
 	na_object_set_id( item, id );
 
 	label = nadp_desktop_file_get_name( ndf );
@@ -461,6 +509,7 @@ exec_to_path_parameters( const gchar *command, gchar **path, gchar **parameters 
 
 	g_free( source );
 }
+#endif
 
 static void
 free_desktop_paths( GList *paths )
