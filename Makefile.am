@@ -65,6 +65,7 @@ dist_pkgdoc_DATA = \
 	AUTHORS								\
 	ChangeLog							\
 	ChangeLog-2008						\
+	ChangeLog-2009						\
 	COPYING								\
 	INSTALL								\
 	MAINTAINERS							\
