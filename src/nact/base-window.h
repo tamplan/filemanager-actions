@@ -77,17 +77,15 @@ G_BEGIN_DECLS
 gboolean         base_window_init( BaseWindow *window );
 gboolean         base_window_run( BaseWindow *window );
 
-BaseApplication *base_window_get_application( BaseWindow *window );
-GtkWindow       *base_window_get_named_toplevel( BaseWindow *window, const gchar *name );
-BaseWindow      *base_window_get_parent( BaseWindow *window );
-GtkWindow       *base_window_get_toplevel( BaseWindow *window );
-GtkWidget       *base_window_get_widget( BaseWindow *window, const gchar *name );
-gboolean         base_window_is_willing_to_quit( BaseWindow *window );
+BaseApplication *base_window_get_application( const BaseWindow *window );
+GtkWindow       *base_window_get_named_toplevel( const BaseWindow *window, const gchar *name );
+BaseWindow      *base_window_get_parent( const BaseWindow *window );
+GtkWindow       *base_window_get_toplevel( const BaseWindow *window );
+GtkWidget       *base_window_get_widget( const BaseWindow *window, const gchar *name );
+gboolean         base_window_is_willing_to_quit( const BaseWindow *window );
 
-void             base_window_set_save_window_position( BaseWindow *window, gboolean save );
-
-void             base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );
-gboolean         base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second );
+void             base_window_error_dlg( const BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );
+gboolean         base_window_yesno_dlg( const BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second );
 
 gulong           base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
 gulong           base_window_signal_connect_after( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );

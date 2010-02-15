@@ -36,10 +36,10 @@
 
 #include <api/na-object-api.h>
 
-#include <runtime/na-iprefs.h>
-#include <runtime/na-pivot.h>
+#include <core/na-iprefs.h>
 
 #include "nact-application.h"
+#include "nact-iprefs.h"
 #include "nact-assistant-import-ask.h"
 
 /* private class data
@@ -54,7 +54,7 @@ struct NactAssistantImportAskPrivate {
 	gboolean        dispose_has_run;
 	NactMainWindow *parent;
 	const gchar    *uri;
-	NAObjectAction *action;
+	NAObjectItem   *item;
 	NAObjectItem   *exist;
 	gint            mode;
 };
@@ -69,8 +69,8 @@ static void     instance_finalize( GObject *dialog );
 
 static NactAssistantImportAsk *assistant_import_ask_new( BaseWindow *parent );
 
-static gchar   *base_get_iprefs_window_id( BaseWindow *window );
-static gchar   *base_get_dialog_name( BaseWindow *window );
+static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
+static gchar   *base_get_dialog_name( const BaseWindow *window );
 static void     on_base_initial_load_dialog( NactAssistantImportAsk *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactAssistantImportAsk *editor, gpointer user_data );
@@ -224,6 +224,9 @@ assistant_import_ask_new( BaseWindow *parent )
 /**
  * nact_assistant_import_ask_run:
  * @parent: the NactMainWindow parent of this dialog.
+ * @uri:
+ * @item:
+ * @exist:
  *
  * Initializes and runs the dialog.
  *
@@ -233,7 +236,7 @@ assistant_import_ask_new( BaseWindow *parent )
  * becomes his preference import mode.
  */
 gint
-nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObjectAction *action, NAObjectItem *exist )
+nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObjectItem *item, NAObjectItem *exist )
 {
 	static const gchar *thisfn = "nact_assistant_import_ask_run";
 	NactApplication *application;
@@ -253,7 +256,7 @@ nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObje
 	editor = assistant_import_ask_new( BASE_WINDOW( parent ));
 	editor->private->parent = parent;
 	editor->private->uri = uri;
-	editor->private->action = action;
+	editor->private->item = item;
 	editor->private->exist = exist;
 	editor->private->mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_LAST_MODE );
 
@@ -267,13 +270,13 @@ nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObje
 }
 
 static gchar *
-base_get_iprefs_window_id( BaseWindow *window )
+base_get_iprefs_window_id( const BaseWindow *window )
 {
 	return( g_strdup( "import-ask-user" ));
 }
 
 static gchar *
-base_get_dialog_name( BaseWindow *window )
+base_get_dialog_name( const BaseWindow *window )
 {
 	return( g_strdup( "AssistantImportAsk" ));
 }

@@ -35,11 +35,10 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include <private/na-object-action-fn.h>
+#include <api/na-core-utils.h>
 
-#include <runtime/na-iabout.h>
-#include <runtime/na-ipivot-consumer.h>
-#include <runtime/na-utils.h>
+#include <core/na-iabout.h>
+#include <core/na-ipivot-consumer.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"
@@ -53,22 +52,22 @@ struct NactApplicationClassPrivate {
 /* private instance data
  */
 struct NactApplicationPrivate {
-	gboolean  dispose_has_run;
-	NAPivot  *pivot;
+	gboolean   dispose_has_run;
+	NAUpdater *updater;
 };
 
 /* private instance properties
  */
 enum {
-	NACT_APPLICATION_PROP_PIVOT_ID = 1
+	NACT_APPLICATION_PROP_UPDATER_ID = 1
 };
 
-#define NACT_APPLICATION_PROP_PIVOT		"nact-application-pivot"
+#define NACT_APPLICATION_PROP_UPDATER	"nact-application-prop-updater"
 
-static gboolean              st_non_unique_opt = FALSE;
-static gboolean              st_version_opt    = FALSE;
+static gboolean     st_non_unique_opt = FALSE;
+static gboolean     st_version_opt    = FALSE;
 
-static GOptionEntry          st_entries[] = {
+static GOptionEntry st_entries[] = {
 	{ "non-unique", 'n', 0, G_OPTION_ARG_NONE, &st_non_unique_opt,
 			N_( "Set it to run multiple instances of the program [unique]" ), NULL },
 	{ "version"   , 'v', 0, G_OPTION_ARG_NONE, &st_version_opt,
@@ -151,11 +150,11 @@ class_init( NactApplicationClass *klass )
 	object_class->set_property = instance_set_property;
 
 	spec = g_param_spec_pointer(
-			NACT_APPLICATION_PROP_PIVOT,
-			NACT_APPLICATION_PROP_PIVOT,
-			"NAPivot object pointer",
+			NACT_APPLICATION_PROP_UPDATER,
+			NACT_APPLICATION_PROP_UPDATER,
+			"NAUpdater object pointer",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NACT_APPLICATION_PROP_PIVOT_ID, spec );
+	g_object_class_install_property( object_class, NACT_APPLICATION_PROP_UPDATER_ID, spec );
 
 	klass->private = g_new0( NactApplicationClassPrivate, 1 );
 
@@ -197,8 +196,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NACT_APPLICATION_PROP_PIVOT_ID:
-				g_value_set_pointer( value, self->private->pivot );
+			case NACT_APPLICATION_PROP_UPDATER_ID:
+				g_value_set_pointer( value, self->private->updater );
 				break;
 
 			default:
@@ -219,8 +218,8 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NACT_APPLICATION_PROP_PIVOT_ID:
-				self->private->pivot = g_value_get_pointer( value );
+			case NACT_APPLICATION_PROP_UPDATER_ID:
+				self->private->updater = g_value_get_pointer( value );
 				break;
 
 			default:
@@ -242,16 +241,16 @@ instance_dispose( GObject *application )
 
 	if( !self->private->dispose_has_run ){
 
-		if( self->private->pivot ){
-			g_object_unref( self->private->pivot );
+		self->private->dispose_has_run = TRUE;
+
+		if( self->private->updater ){
+			g_object_unref( self->private->updater );
 		}
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( application );
 		}
-
-		self->private->dispose_has_run = TRUE;
 	}
 }
 
@@ -294,25 +293,27 @@ nact_application_new_with_args( int argc, char **argv )
 }
 
 /**
- * Returns a pointer on the NAPivot object.
- *
+ * nact_application_get_updater:
  * @application: this NactApplication object.
  *
- * The returned pointer is owned by the NactApplication object.
- * It should not be freed not unref by the caller.
+ * Returns a pointer on the #NAUpdater object.
+ *
+ * The returned pointer is owned by the #NactApplication object.
+ * It should not be g_free() not g_object_unref() by the caller.
  */
-NAPivot *
-nact_application_get_pivot( NactApplication *application )
+NAUpdater *
+nact_application_get_updater( NactApplication *application )
 {
-	NAPivot *pivot = NULL;
+	NAUpdater *updater = NULL;
 
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
 	if( !application->private->dispose_has_run ){
-		pivot = application->private->pivot;
+
+		updater = application->private->updater;
 	}
 
-	return( pivot );
+	return( updater );
 }
 
 /*
@@ -328,7 +329,7 @@ appli_manage_options( BaseApplication *application )
 
 	if( ok ){
 		if( st_version_opt ){
-			na_utils_print_version();
+			na_core_utils_print_version();
 			ok = FALSE;
 		}
 	}
@@ -388,15 +389,11 @@ appli_initialize_application( BaseApplication *application )
 {
 	static const gchar *thisfn = "nact_application_appli_initialize_application";
 	gboolean ok;
-	NAObjectAction *fake;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	fake = na_object_action_new();
-	g_object_unref( fake );
-
-	NACT_APPLICATION( application )->private->pivot = na_pivot_new( PIVOT_LOAD_ALL );
-	na_pivot_load_items( NACT_APPLICATION( application )->private->pivot );
+	NACT_APPLICATION( application )->private->updater = na_updater_new( PIVOT_LOAD_ALL );
+	na_pivot_load_items( NA_PIVOT( NACT_APPLICATION( application )->private->updater ));
 
 	/* call parent class */
 	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_application( application );
@@ -460,7 +457,7 @@ appli_get_main_window( BaseApplication *application )
 	window = BASE_WINDOW( nact_main_window_new( application ));
 
 	na_pivot_register_consumer(
-			nact_application_get_pivot( NACT_APPLICATION( application )),
+			NA_PIVOT( nact_application_get_updater( NACT_APPLICATION( application ))),
 			NA_IPIVOT_CONSUMER( window ));
 
 	return( G_OBJECT( window ));

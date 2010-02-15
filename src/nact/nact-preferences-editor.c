@@ -183,10 +183,10 @@ instance_dispose( GObject *dialog )
 
 	if( !self->private->dispose_has_run ){
 
+		self->private->dispose_has_run = TRUE;
+
 		nact_schemes_list_dispose( BASE_WINDOW( self ));
 		nact_providers_list_dispose( BASE_WINDOW( self ));
-
-		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){

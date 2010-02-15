@@ -149,6 +149,7 @@ interface_base_init( NactIActionsListInterface *klass )
 	static const gchar *thisfn = "nact_iactions_list_interface_base_init";
 
 	if( !st_iactions_list_initialized ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIActionsListInterfacePrivate, 1 );
@@ -311,12 +312,13 @@ interface_base_finalize( NactIActionsListInterface *klass )
 {
 	static const gchar *thisfn = "nact_iactions_list_interface_base_finalize";
 
-	if( !st_iactions_list_finalized ){
+	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		g_free( klass->private );
-
 		st_iactions_list_finalized = TRUE;
+
+		g_free( klass->private );
 	}
 }
 

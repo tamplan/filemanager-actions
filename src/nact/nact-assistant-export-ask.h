@@ -41,7 +41,7 @@
  * to be ask to choose the export format.
  */
 
-#include <private/na-object-action-class.h>
+#include <api/na-object-item.h>
 
 #include "base-dialog.h"
 
@@ -72,7 +72,7 @@ typedef struct {
 
 GType nact_assistant_export_ask_get_type( void );
 
-gint  nact_assistant_export_ask_user( BaseWindow *window, NAObjectAction *action );
+gint  nact_assistant_export_ask_user( BaseWindow *window, NAObjectItem *item );
 
 G_END_DECLS
 

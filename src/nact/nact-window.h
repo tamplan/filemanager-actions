@@ -40,9 +40,9 @@
  * It is a common base class for all Nautilus Actions window documents.
  */
 
-#include <private/na-object-item-class.h>
+#include <api/na-object-item.h>
 
-#include <runtime/na-pivot.h>
+#include <core/na-updater.h>
 
 #include "base-window.h"
 
@@ -55,7 +55,7 @@ G_BEGIN_DECLS
 #define NACT_IS_WINDOW_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_WINDOW_TYPE ))
 #define NACT_WINDOW_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_WINDOW_TYPE, NactWindowClass ))
 
-typedef struct NactWindowPrivate NactWindowPrivate;
+typedef struct NactWindowPrivate      NactWindowPrivate;
 
 typedef struct {
 	BaseWindow         parent;
@@ -71,18 +71,18 @@ typedef struct {
 }
 	NactWindowClass;
 
-GType    nact_window_get_type( void );
+GType      nact_window_get_type( void );
 
-NAPivot *nact_window_get_pivot( NactWindow *window );
+NAUpdater *nact_window_get_updater( NactWindow *window );
 
-gboolean nact_window_has_writable_providers( NactWindow *window );
+gboolean   nact_window_has_writable_providers( NactWindow *window );
 
-gboolean nact_window_save_item( NactWindow *window, NAObjectItem *item );
-gboolean nact_window_delete_item( NactWindow *window, const NAObjectItem *item );
+gboolean   nact_window_save_item  ( NactWindow *window, NAObjectItem *item );
+gboolean   nact_window_delete_item( NactWindow *window, const NAObjectItem *item );
 
-void     nact_window_count_level_zero_items( GList *items, guint *actions, guint *profiles, guint *menus );
+void       nact_window_count_level_zero_items( GList *items, guint *actions, guint *profiles, guint *menus );
 
-gboolean nact_window_warn_modified( NactWindow *window );
+gboolean   nact_window_warn_modified( NactWindow *window );
 
 G_END_DECLS
 

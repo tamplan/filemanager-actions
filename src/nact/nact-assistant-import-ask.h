@@ -42,7 +42,7 @@
  * with it.
  */
 
-#include <private/na-object-action-class.h>
+#include <api/na-object-item.h>
 
 #include "base-dialog.h"
 #include "nact-main-window.h"
@@ -74,7 +74,7 @@ typedef struct {
 
 GType nact_assistant_import_ask_get_type( void );
 
-gint  nact_assistant_import_ask_user( NactMainWindow *window, const gchar *uri, NAObjectAction *new_action, NAObjectItem *current );
+gint  nact_assistant_import_ask_user( NactMainWindow *window, const gchar *uri, NAObjectItem *new_item, NAObjectItem *current );
 
 G_END_DECLS
 

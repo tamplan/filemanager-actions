@@ -144,6 +144,7 @@ interface_base_init( NactICommandTabInterface *klass )
 	static const gchar *thisfn = "nact_icommand_tab_interface_base_init";
 
 	if( !st_initialized ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactICommandTabInterfacePrivate, 1 );
@@ -157,12 +158,13 @@ interface_base_finalize( NactICommandTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_icommand_tab_interface_base_finalize";
 
-	if( !st_finalized ){
+	if( st_initialized && !st_finalized ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		g_free( klass->private );
-
 		st_finalized = TRUE;
+
+		g_free( klass->private );
 	}
 }
 

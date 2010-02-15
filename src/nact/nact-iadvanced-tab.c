@@ -119,13 +119,13 @@ interface_base_finalize( NactIAdvancedTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_iadvanced_tab_interface_base_finalize";
 
-	if( !st_finalized ){
+	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		g_free( klass->private );
-
 		st_finalized = TRUE;
+
+		g_free( klass->private );
 	}
 }
 

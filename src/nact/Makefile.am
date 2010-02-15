@@ -70,6 +70,12 @@ nautilus_actions_config_tool_SOURCES = \
 	egg-sm-client-xsmp.c										\
 	egg-tree-multi-dnd.c										\
 	egg-tree-multi-dnd.h										\
+	na-exporter.c												\
+	na-exporter.h												\
+	na-iexporter.c												\
+	na-importer.c												\
+	na-importer.h												\
+	na-iimporter.c												\
 	nact-application.c											\
 	nact-application.h											\
 	nact-assistant-export.c										\
@@ -101,6 +107,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-icommand-tab.h											\
 	nact-iconditions-tab.c										\
 	nact-iconditions-tab.h										\
+	nact-iprefs.c												\
+	nact-iprefs.h												\
 	nact-main.c													\
 	nact-main-menubar.c											\
 	nact-main-menubar.h											\

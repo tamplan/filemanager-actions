@@ -39,6 +39,7 @@
 
 #include "base-application.h"
 #include "base-iprefs.h"
+#include "nact-iprefs.h"
 #include "base-window.h"
 
 /* private class data
@@ -99,7 +100,8 @@ static gboolean      st_debug_signal_connect = FALSE;
 
 static GType            register_type( void );
 static void             class_init( BaseWindowClass *klass );
-static void             iprefs_iface_init( BaseIPrefsInterface *iface );
+static void             iprefs_base_iface_init( BaseIPrefsInterface *iface );
+static void             iprefs_nact_iface_init( NactIPrefsInterface *iface );
 static void             instance_init( GTypeInstance *instance, gpointer klass );
 static void             instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void             instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -112,9 +114,9 @@ static void             v_initial_load_toplevel( BaseWindow *window, gpointer us
 static void             v_runtime_init_toplevel( BaseWindow *window, gpointer user_data );
 static void             v_all_widgets_showed( BaseWindow *window, gpointer user_data );
 static gboolean         v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
-static gchar           *v_get_toplevel_name( BaseWindow *window );
-static gchar           *v_get_iprefs_window_id( BaseWindow *window );
-static gchar           *v_get_ui_filename( BaseWindow *window );
+static gchar           *v_get_toplevel_name( const BaseWindow *window );
+static gchar           *v_get_iprefs_window_id( const BaseWindow *window );
+static gchar           *v_get_ui_filename( const BaseWindow *window );
 
 static void             on_runtime_init_toplevel( BaseWindow *window, gpointer user_data );
 
@@ -123,11 +125,11 @@ static void             window_do_runtime_init_toplevel( BaseWindow *window, gpo
 static void             window_do_all_widgets_showed( BaseWindow *window, gpointer user_data );
 static gboolean         window_do_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 static gboolean         window_do_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
-static gboolean         window_do_is_willing_to_quit( BaseWindow *window );
+static gboolean         window_do_is_willing_to_quit( const BaseWindow *window );
 
 static gboolean         is_main_window( BaseWindow *window );
 static gboolean         is_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel );
-static GtkWindow       *load_named_toplevel( BaseWindow *window, const gchar *name );
+static GtkWindow       *load_named_toplevel( const BaseWindow *window, const gchar *name );
 static GtkWidget       *search_for_widget( GtkWindow *toplevel, const gchar *name );
 static GtkWidget       *search_for_child_widget( GtkContainer *container, const gchar *name );
 static void             set_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel, gboolean init );
@@ -165,8 +167,14 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo prefs_iface_info = {
-		( GInterfaceInitFunc ) iprefs_iface_init,
+	static const GInterfaceInfo iprefs_base_iface_info = {
+		( GInterfaceInitFunc ) iprefs_base_iface_init,
+		NULL,
+		NULL
+	};
+
+	static const GInterfaceInfo iprefs_nact_iface_info = {
+		( GInterfaceInitFunc ) iprefs_nact_iface_init,
 		NULL,
 		NULL
 	};
@@ -175,7 +183,9 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_OBJECT, "BaseWindow", &info, 0 );
 
-	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &prefs_iface_info );
+	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &iprefs_base_iface_info );
+
+	g_type_add_interface_static( type, NACT_IPREFS_TYPE, &iprefs_nact_iface_info );
 
 	return( type );
 }
@@ -329,13 +339,21 @@ class_init( BaseWindowClass *klass )
 }
 
 static void
-iprefs_iface_init( BaseIPrefsInterface *iface )
+iprefs_base_iface_init( BaseIPrefsInterface *iface )
 {
-	static const gchar *thisfn = "base_window_iprefs_iface_init";
+	static const gchar *thisfn = "base_window_iprefs_base_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->iprefs_get_window_id = v_get_iprefs_window_id;
+}
+
+static void
+iprefs_nact_iface_init( NactIPrefsInterface *iface )
+{
+	static const gchar *thisfn = "base_window_iprefs_nact_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void
@@ -477,6 +495,8 @@ instance_dispose( GObject *window )
 
 	if( !self->private->dispose_has_run ){
 
+		self->private->dispose_has_run = TRUE;
+
 		if( self->private->save_window_position ){
 			base_iprefs_save_window_position( self );
 		}
@@ -513,8 +533,6 @@ instance_dispose( GObject *window )
 				gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_window ));
 			}
 		}
-
-		self->private->dispose_has_run = TRUE;
 
 		/* release the Gtkbuilder, if any
 		 */
@@ -702,7 +720,7 @@ base_window_run( BaseWindow *window )
  * caller.
  */
 BaseApplication *
-base_window_get_application( BaseWindow *window )
+base_window_get_application( const BaseWindow *window )
 {
 	BaseApplication *application = NULL;
 
@@ -729,7 +747,7 @@ base_window_get_application( BaseWindow *window )
  * #GtkWindow.
  */
 GtkWindow *
-base_window_get_named_toplevel( BaseWindow *window, const gchar *name )
+base_window_get_named_toplevel( const BaseWindow *window, const gchar *name )
 {
 	GtkWindow *toplevel = NULL;
 
@@ -751,7 +769,7 @@ base_window_get_named_toplevel( BaseWindow *window, const gchar *name )
  * The returned object is owned by @window, and should not be freed.
  */
 BaseWindow *
-base_window_get_parent( BaseWindow *window )
+base_window_get_parent( const BaseWindow *window )
 {
 	BaseWindow *parent = NULL;
 
@@ -775,7 +793,7 @@ base_window_get_parent( BaseWindow *window )
  * #GtkWindow.
  */
 GtkWindow *
-base_window_get_toplevel( BaseWindow *window )
+base_window_get_toplevel( const BaseWindow *window )
 {
 	GtkWindow *toplevel = NULL;
 
@@ -801,7 +819,7 @@ base_window_get_toplevel( BaseWindow *window )
  * g_free() nor g_object_unref() by the caller.
  */
 GtkWidget *
-base_window_get_widget( BaseWindow *window, const gchar *name )
+base_window_get_widget( const BaseWindow *window, const gchar *name )
 {
 	GtkWindow *toplevel;
 	GtkWidget *widget = NULL;
@@ -829,7 +847,7 @@ base_window_get_widget( BaseWindow *window, const gchar *name )
  * session and thus asks its client if they are willing to quit.
  */
 gboolean
-base_window_is_willing_to_quit( BaseWindow *window )
+base_window_is_willing_to_quit( const BaseWindow *window )
 {
 	gboolean willing_to = TRUE;
 
@@ -838,6 +856,7 @@ base_window_is_willing_to_quit( BaseWindow *window )
 	if( !window->private->dispose_has_run ){
 
 		if( BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit ){
+
 			willing_to = BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit( window );
 		}
 	}
@@ -961,7 +980,7 @@ v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 }
 
 static gchar *
-v_get_toplevel_name( BaseWindow *window )
+v_get_toplevel_name( const BaseWindow *window )
 {
 	gchar *name = NULL;
 
@@ -982,7 +1001,7 @@ v_get_toplevel_name( BaseWindow *window )
 }
 
 static gchar *
-v_get_iprefs_window_id( BaseWindow *window )
+v_get_iprefs_window_id( const BaseWindow *window )
 {
 	gchar *id = NULL;
 
@@ -999,7 +1018,7 @@ v_get_iprefs_window_id( BaseWindow *window )
 }
 
 static gchar *
-v_get_ui_filename( BaseWindow *window )
+v_get_ui_filename( const BaseWindow *window )
 {
 	gchar *filename = NULL;
 	BaseApplication *application;
@@ -1119,7 +1138,7 @@ window_do_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event
 }
 
 static gboolean
-window_do_is_willing_to_quit( BaseWindow *window )
+window_do_is_willing_to_quit( const BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_do_is_willing_to_quit";
 
@@ -1157,7 +1176,7 @@ is_toplevel_initialized( BaseWindow *window, GtkWindow *toplevel )
 }
 
 static GtkWindow *
-load_named_toplevel( BaseWindow *window, const gchar *name )
+load_named_toplevel( const BaseWindow *window, const gchar *name )
 {
 	GtkWindow *toplevel = NULL;
 	BaseApplication *application;
@@ -1268,7 +1287,7 @@ setup_builder( BaseWindow *window )
 }
 
 void
-base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary )
+base_window_error_dlg( const BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary )
 {
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
@@ -1278,7 +1297,7 @@ base_window_error_dlg( BaseWindow *window, GtkMessageType type, const gchar *pri
 }
 
 gboolean
-base_window_yesno_dlg( BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second )
+base_window_yesno_dlg( const BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second )
 {
 	gboolean yesno = FALSE;
 

@@ -36,10 +36,7 @@
 
 #include <api/na-object-api.h>
 
-#include <runtime/na-iprefs.h>
-#include <runtime/na-pivot.h>
-
-#include "nact-application.h"
+#include "nact-iprefs.h"
 #include "nact-assistant-export-ask.h"
 
 /* private class data
@@ -51,10 +48,10 @@ struct NactAssistantExportAskClassPrivate {
 /* private instance data
  */
 struct NactAssistantExportAskPrivate {
-	gboolean        dispose_has_run;
-	BaseWindow     *parent;
-	NAObjectAction *action;
-	gint            format;
+	gboolean      dispose_has_run;
+	BaseWindow   *parent;
+	NAObjectItem *item;
+	gint          format;
 };
 
 static BaseDialogClass *st_parent_class = NULL;
@@ -67,9 +64,9 @@ static void     instance_finalize( GObject *dialog );
 
 static NactAssistantExportAsk *assistant_export_ask_new( BaseWindow *parent );
 
-static gchar   *base_get_iprefs_window_id( BaseWindow *window );
-static gchar   *base_get_dialog_name( BaseWindow *window );
-static gchar   *base_get_ui_filename( BaseWindow *dialog );
+static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
+static gchar   *base_get_dialog_name( const BaseWindow *window );
+static gchar   *base_get_ui_filename( const BaseWindow *dialog );
 static void     on_base_initial_load_dialog( NactAssistantExportAsk *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactAssistantExportAsk *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactAssistantExportAsk *editor, gpointer user_data );
@@ -233,55 +230,49 @@ assistant_export_ask_new( BaseWindow *parent )
  * becomes his preference export format.
  */
 gint
-nact_assistant_export_ask_user( BaseWindow *parent, NAObjectAction *action )
+nact_assistant_export_ask_user( BaseWindow *parent, NAObjectItem *item )
 {
 	static const gchar *thisfn = "nact_assistant_export_ask_run";
-	NactApplication *application;
-	NAPivot *pivot;
 	NactAssistantExportAsk *editor;
 	gint format;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
-	g_return_val_if_fail( BASE_IS_WINDOW( parent ), IPREFS_EXPORT_NO_EXPORT );
 
-	application = NACT_APPLICATION( base_window_get_application( parent ));
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), IPREFS_EXPORT_NO_EXPORT );
+	format = IPREFS_EXPORT_NO_EXPORT;
 
-	pivot = nact_application_get_pivot( application );
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), IPREFS_EXPORT_NO_EXPORT );
+	g_return_val_if_fail( BASE_IS_WINDOW( parent ), format );
 
 	editor = assistant_export_ask_new( parent );
-	/*g_object_set( G_OBJECT( editor ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );*/
 
 	editor->private->parent = parent;
-	editor->private->action = action;
-	editor->private->format = na_iprefs_get_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_ASK_LAST_FORMAT );
+	editor->private->item = item;
+	editor->private->format = nact_iprefs_get_export_format( BASE_WINDOW( parent ), IPREFS_EXPORT_ASK_LAST_FORMAT );
 
-	if( !base_window_run( BASE_WINDOW( editor ))){
-		editor->private->format = IPREFS_EXPORT_NO_EXPORT;
+	if( base_window_run( BASE_WINDOW( editor ))){
+
+		format = editor->private->format;
+		nact_iprefs_set_export_format( BASE_WINDOW( parent ), IPREFS_EXPORT_ASK_LAST_FORMAT, format );
 	}
 
-	na_iprefs_set_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_ASK_LAST_FORMAT, editor->private->format );
-	format = editor->private->format;
 	g_object_unref( editor );
 
 	return( format );
 }
 
 static gchar *
-base_get_iprefs_window_id( BaseWindow *window )
+base_get_iprefs_window_id( const BaseWindow *window )
 {
 	return( g_strdup( "export-ask-user" ));
 }
 
 static gchar *
-base_get_dialog_name( BaseWindow *window )
+base_get_dialog_name( const BaseWindow *window )
 {
 	return( g_strdup( "AssistantExportAsk" ));
 }
 
 static gchar *
-base_get_ui_filename( BaseWindow *dialog )
+base_get_ui_filename( const BaseWindow *dialog )
 {
 	return( g_strdup( PKGDATADIR "/nact-assistant-export.ui" ));
 }
@@ -299,7 +290,7 @@ static void
 on_base_runtime_init_dialog( NactAssistantExportAsk *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_ask_on_runtime_init_dialog";
-	gchar *action_label;
+	gchar *item_label;
 	gchar *label;
 	GtkWidget *widget;
 	GtkWidget *button;
@@ -307,10 +298,10 @@ on_base_runtime_init_dialog( NactAssistantExportAsk *editor, gpointer user_data 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT_ASK( editor ));
 
-	action_label = na_object_get_label( editor->private->action );
+	item_label = na_object_get_label( editor->private->item );
 
-	/* i18n: The action <action_label> is about to be exported */
-	label = g_strdup_printf( _( "The action \"%s\" is about to be exported." ), action_label );
+	/* i18n: The item <label> is about to be exported */
+	label = g_strdup_printf( _( "The item \"%s\" is about to be exported." ), item_label );
 
 	widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportAskLabel1" );
 	gtk_label_set_text( GTK_LABEL( widget ), label );
@@ -375,8 +366,6 @@ static gint
 get_format( NactAssistantExportAsk *editor )
 {
 	gint export_format;
-	NactApplication *application;
-	NAPivot *pivot;
 	GtkWidget *button;
 	gboolean keep;
 
@@ -394,9 +383,7 @@ get_format( NactAssistantExportAsk *editor )
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	if( keep ){
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-		pivot = nact_application_get_pivot( application );
-		na_iprefs_set_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT, export_format );
+		nact_iprefs_set_export_format( BASE_WINDOW( editor ), IPREFS_EXPORT_FORMAT, export_format );
 	}
 
 	return( export_format );

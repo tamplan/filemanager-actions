@@ -42,6 +42,8 @@
  * to this function.
  */
 
+#include <core/na-iprefs.h>
+
 #include "base-window.h"
 
 G_BEGIN_DECLS
@@ -51,30 +53,26 @@ G_BEGIN_DECLS
 #define BASE_IS_IPREFS( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_IPREFS_TYPE ))
 #define BASE_IPREFS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), BASE_IPREFS_TYPE, BaseIPrefsInterface ))
 
-typedef struct BaseIPrefs BaseIPrefs;
+typedef struct BaseIPrefs                 BaseIPrefs;
 
 typedef struct BaseIPrefsInterfacePrivate BaseIPrefsInterfacePrivate;
 
 typedef struct {
-	GTypeInterface              parent;
+	NAIPrefsInterface           parent;
 	BaseIPrefsInterfacePrivate *private;
 
 	/* api */
-	gchar * ( *iprefs_get_window_id )( BaseWindow *window );
+	gchar * ( *iprefs_get_window_id )( const BaseWindow *window );
 }
 	BaseIPrefsInterface;
 
 GType base_iprefs_get_type( void );
 
-void  base_iprefs_position_window( BaseWindow *window );
-void  base_iprefs_position_named_window( BaseWindow *window, GtkWindow *toplevel, const gchar *name );
+void  base_iprefs_position_window( const BaseWindow *window );
+void  base_iprefs_position_named_window( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );
 
-void  base_iprefs_save_window_position( BaseWindow *window );
-void  base_iprefs_save_named_window_position( BaseWindow *window, GtkWindow *toplevel, const gchar *name );
-
-gint  base_iprefs_get_int( BaseWindow *window, const gchar *name );
-void  base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value );
-
+void  base_iprefs_save_window_position( const BaseWindow *window );
+void  base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );
 
 G_END_DECLS
 

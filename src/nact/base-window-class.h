@@ -137,7 +137,7 @@ typedef struct {
 	 *
 	 * Pure virtual function.
 	 */
-	gchar *           ( *get_toplevel_name )    ( BaseWindow *window );
+	gchar *           ( *get_toplevel_name )    ( const BaseWindow *window );
 
 	/**
 	 * get_iprefs_window_id:
@@ -149,7 +149,7 @@ typedef struct {
 	 * This delegates to #BaseWindow-derived classes the NactIPrefs
 	 * interface virtual function.
 	 */
-	gchar *           ( *get_iprefs_window_id ) ( BaseWindow *window );
+	gchar *           ( *get_iprefs_window_id ) ( const BaseWindow *window );
 
 	/**
 	 * get_ui_filename:
@@ -164,7 +164,7 @@ typedef struct {
 	 * Returns: the filename of the XML definition, to be g_free() by
 	 * the caller.
 	 */
-	gchar *           ( *get_ui_filename )      ( BaseWindow *window );
+	gchar *           ( *get_ui_filename )      ( const BaseWindow *window );
 
 	/**
 	 * is_willing_to_quit:
@@ -179,7 +179,7 @@ typedef struct {
 	 * Returns: the filename of the XML definition, to be g_free() by
 	 * the caller.
 	 */
-	gboolean          ( *is_willing_to_quit )   ( BaseWindow *window );
+	gboolean          ( *is_willing_to_quit )   ( const BaseWindow *window );
 }
 	BaseWindowClass;
 

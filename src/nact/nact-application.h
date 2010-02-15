@@ -39,7 +39,7 @@
  * This is the main class for nautilus-actions-config-tool program.
  */
 
-#include <runtime/na-pivot.h>
+#include <core/na-updater.h>
 
 #include "base-application.h"
 
@@ -52,7 +52,7 @@ G_BEGIN_DECLS
 #define NACT_IS_APPLICATION_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_APPLICATION_TYPE ))
 #define NACT_APPLICATION_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_APPLICATION_TYPE, NactApplicationClass ))
 
-typedef struct NactApplicationPrivate NactApplicationPrivate;
+typedef struct NactApplicationPrivate      NactApplicationPrivate;
 
 typedef struct {
 	BaseApplication         parent;
@@ -72,7 +72,7 @@ GType            nact_application_get_type( void );
 
 NactApplication *nact_application_new_with_args( int argc, char **argv );
 
-NAPivot         *nact_application_get_pivot( NactApplication *application );
+NAUpdater       *nact_application_get_updater( NactApplication *application );
 
 G_END_DECLS
 

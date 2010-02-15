@@ -139,6 +139,7 @@ interface_base_init( NactIBackgroundTabInterface *klass )
 	static const gchar *thisfn = "nact_ibackground_tab_interface_base_init";
 
 	if( !st_initialized ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIBackgroundTabInterfacePrivate, 1 );
@@ -152,12 +153,13 @@ interface_base_finalize( NactIBackgroundTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_ibackground_tab_interface_base_finalize";
 
-	if( !st_finalized ){
+	if( st_initialized && !st_finalized ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		g_free( klass->private );
-
 		st_finalized = TRUE;
+
+		g_free( klass->private );
 	}
 }
 
