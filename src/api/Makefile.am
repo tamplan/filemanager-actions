@@ -32,6 +32,8 @@ api_include_HEADERS = \
 	na-extension.h										\
 	\
 	na-dbus.h											\
+	na-iio-factory.h									\
+	na-iio-factory-factory.h							\
 	na-iio-provider.h									\
 	\
 	na-core-utils.h										\

@@ -41,7 +41,10 @@ libna_core_la_SOURCES = \
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
 	na-iduplicable.c									\
+	na-iio-factory.c									\
 	na-iio-provider.c									\
+	na-io-factory.c										\
+	na-io-factory.h										\
 	na-object.c											\
 	na-object-id.c										\
 	na-object-item.c									\

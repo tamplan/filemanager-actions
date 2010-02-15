@@ -1,5 +1,13 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Define NAIIOFactory interface.
+
+	* src/api/na-iio-factory.h:
+	* src/api/na-iio-factory-factory.h:
+	* src/core/na-iio-factory.c:
+	* src/core/na-io-factory.c:
+	* src/core/na-io-factory.h: New files.
+
 	Rename src/core/na-object-menu-class.h to src/api/na-object-menu.h
 	Rename src/core/na-object-profile-class.h to src/api/na-object-profile.h
 	Rename src/core/na-object-action-class.h to src/api/na-object-action.h
