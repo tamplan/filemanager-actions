@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_IPREFS_H__
-#define __NA_RUNTIME_IPREFS_H__
+#ifndef __CORE_NA_IPREFS_H__
+#define __CORE_NA_IPREFS_H__
 
 /**
  * SECTION: na_iprefs
  * @short_description: #NAIPrefs interface definition.
- * @include: runtime/na-iprefs.h
+ * @include: core/na-iprefs.h
  *
  * This interface should only be implemented by #NAPivot. This is
  * because the interface stores as an implementor structure some data
@@ -70,8 +70,6 @@
 #include <glib-object.h>
 #include <gconf/gconf-client.h>
 
-#include <api/na-gconf-keys.h>
-
 G_BEGIN_DECLS
 
 #define NA_IPREFS_TYPE						( na_iprefs_get_type())
@@ -91,21 +89,14 @@ typedef struct {
 
 /* GConf Preference keys managed by IPrefs interface
  */
-#define NA_GCONF_PREFERENCES				"preferences"
-#define NA_GCONF_PREFS_PATH					NAUTILUS_ACTIONS_GCONF_BASEDIR "/" NA_GCONF_PREFERENCES
+#define IPREFS_GCONF_BASEDIR				"/apps/nautilus-actions"
+#define IPREFS_GCONF_PREFERENCES			"preferences"
+#define IPREFS_GCONF_PREFS_PATH				IPREFS_GCONF_BASEDIR "/" IPREFS_GCONF_PREFERENCES
 
 #define IPREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
 #define IPREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
 #define IPREFS_CREATE_ROOT_MENU				"iprefs-create-root-menu"
 #define IPREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
-
-#define IPREFS_EXPORT_FORMAT				"export-format"
-#define IPREFS_EXPORT_ASK_LAST_FORMAT		"export-ask-user-last-format"
-#define IPREFS_IMPORT_ACTIONS_IMPORT_MODE	"import-mode"
-#define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
-
-#define IPREFS_ASSIST_ESC_QUIT				"assistant-esc-quit"
-#define IPREFS_ASSIST_ESC_CONFIRM			"assistant-esc-confirm"
 
 #define IPREFS_RELABEL_MENUS				"iprefs-relabel-menus"
 #define IPREFS_RELABEL_ACTIONS				"iprefs-relabel-actions"
@@ -154,36 +145,29 @@ enum {
 
 GType        na_iprefs_get_type( void );
 
-GSList      *na_iprefs_get_level_zero_items( NAIPrefs *instance );
-void         na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order );
+/*GSList      *na_iprefs_get_level_zero_items( NAIPrefs *instance );*/
+/*void         na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order );*/
 
 gint         na_iprefs_get_order_mode( NAIPrefs *instance );
-void         na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
+/*void         na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );*/
 
-gboolean     na_iprefs_should_add_about_item( NAIPrefs *instance );
-void         na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );
+/*gboolean     na_iprefs_should_add_about_item( NAIPrefs *instance );*/
+/*void         na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );*/
 
-gboolean     na_iprefs_should_create_root_menu( NAIPrefs *instance );
-void         na_iprefs_set_create_root_menu( NAIPrefs *instance, gboolean enabled );
+/*gboolean     na_iprefs_should_create_root_menu( NAIPrefs *instance );*/
+/*void         na_iprefs_set_create_root_menu( NAIPrefs *instance, gboolean enabled );*/
 
-GConfClient *na_iprefs_get_gconf_client( NAIPrefs *instance );
+GConfClient *na_iprefs_get_gconf_client ( const NAIPrefs *instance );
 
-gboolean     na_iprefs_read_bool( NAIPrefs *instance, const gchar *key, gboolean default_value );
-gchar       *na_iprefs_read_string( NAIPrefs *instance, const gchar *key, const gchar *default_value );
-GSList      *na_iprefs_read_string_list( NAIPrefs *instance, const gchar *key, const gchar *default_value );
+gboolean     na_iprefs_read_bool        ( const NAIPrefs *instance, const gchar *key, gboolean default_value );
+gchar       *na_iprefs_read_string      ( const NAIPrefs *instance, const gchar *key, const gchar *default_value );
+GSList      *na_iprefs_read_string_list ( const NAIPrefs *instance, const gchar *key, const gchar *default_value );
 
-void         na_iprefs_write_bool( NAIPrefs *instance, const gchar *key, gboolean value );
-void         na_iprefs_write_string( NAIPrefs *instance, const gchar *key, const gchar *value );
-void         na_iprefs_write_string_list( NAIPrefs *instance, const gchar *key, GSList *value );
+/*void         na_iprefs_write_bool( NAIPrefs *instance, const gchar *key, gboolean value );*/
+void         na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *key, GSList *value );
 
-void         na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key );
-
-gint         na_iprefs_get_export_format( NAIPrefs *instance, const gchar *pref );
-gint         na_iprefs_get_import_mode( NAIPrefs *instance, const gchar *pref );
-
-void         na_iprefs_set_export_format( NAIPrefs *instance, const gchar *pref, gint format );
-void         na_iprefs_set_import_mode( NAIPrefs *instance, const gchar *pref, gint mode );
+/*void         na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key );*/
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_IPREFS_H__ */
+#endif /* __CORE_NA_IPREFS_H__ */
