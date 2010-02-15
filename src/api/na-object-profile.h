@@ -28,22 +28,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_CLASS_H__
-#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_CLASS_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_OBJECT_PROFILE_H__
+#define __NAUTILUS_ACTIONS_API_NA_OBJECT_PROFILE_H__
 
 /**
  * SECTION: na_object_profile
  * @short_description: #NAObjectProfile class definition.
- * @include: nautilus-actions/private/na-object-profile-class.h
+ * @include: nautilus-actions/na-object-item.h
  *
- * This is a companion class of NAObjectAction. It embeds the profile
- * definition of an action.
- *
- * As NAObjectAction itself, NAObjectProfile class is derived from
- * NAObject class, which takes care of IDuplicable interface management.
+ * This is a pure virtual class, i.e. not an instantiatable one, but
+ * serves as the base class for #NAObjectAction and #NAObjectMenu.
  */
 
-#include "na-object-id-class.h"
+#include "na-object-id.h"
 
 G_BEGIN_DECLS
 
@@ -54,7 +51,7 @@ G_BEGIN_DECLS
 #define NA_IS_OBJECT_PROFILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_PROFILE_TYPE ))
 #define NA_OBJECT_PROFILE_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_PROFILE_TYPE, NAObjectProfileClass ))
 
-typedef struct NAObjectProfilePrivate NAObjectProfilePrivate;
+typedef struct NAObjectProfilePrivate      NAObjectProfilePrivate;
 
 typedef struct {
 	NAObjectId              parent;
@@ -70,17 +67,16 @@ typedef struct {
 }
 	NAObjectProfileClass;
 
-GType na_object_profile_get_type( void );
+GType            na_object_profile_get_type( void );
 
-/* a structure used by the org.nautilus_actions.DBus service,
- * in its Tracker.Status interface
- */
-typedef struct {
-	gchar *uri;
-	gchar *mimetype;
-}
-	NATrackedItem;
+NAObjectProfile *na_object_profile_new( void );
+
+gboolean         na_object_profile_is_candidate                ( const NAObjectProfile *profile, gint target, GList *files );
+gboolean         na_object_profile_is_candidate_for_tracked    ( const NAObjectProfile *profile, GList *tracked );
+
+gchar           *na_object_profile_parse_parameters            ( const NAObjectProfile *profile, gint target, GList *files );
+gchar           *na_object_profile_parse_parameters_for_tracked( const NAObjectProfile *profile, GList *tracked );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_PROFILE_CLASS_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_PROFILE_H__ */
