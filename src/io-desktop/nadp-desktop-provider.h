@@ -34,17 +34,16 @@
 /**
  * SECTION: nadp_desktop_provider
  * @short_description: #NadpDesktopProvider class definition.
- * @include: na-gconf-provider.h
+ * @include: nadp-desktop-provider.h
  *
- * This class manages the GConf I/O storage subsystem, or, in other words,
- * the GConf subsystem as an NAIIOProvider. As this, it should only be
- * used through the NAIIOProvider interface.
- *
- * #NadpDesktopProvider uses #NAGConfMonitor to watch at the configuration
- * tree. Modifications are notified to the NAIIOProvider interface.
+ * This class manages .desktop files I/O storage subsystem, or, in
+ * other words, .desktop files as NAIIOProvider providers. As this, it
+ * should only be used through the NAIIOProvider interface.
  */
 
-#include <glib-object.h>
+#include <api/na-object-item.h>
+
+#include "nadp-desktop-file.h"
 
 G_BEGIN_DECLS
 
@@ -55,7 +54,7 @@ G_BEGIN_DECLS
 #define NADP_IS_DESKTOP_PROVIDER_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NADP_DESKTOP_PROVIDER_TYPE ))
 #define NADP_DESKTOP_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NADP_DESKTOP_PROVIDER_TYPE, NadpDesktopProviderClass ))
 
-typedef struct NadpDesktopProviderPrivate NadpDesktopProviderPrivate;
+typedef struct NadpDesktopProviderPrivate      NadpDesktopProviderPrivate;
 
 /* private instance data
  */
@@ -77,15 +76,21 @@ typedef struct {
 }
 	NadpDesktopProviderClass;
 
-/* this is a ':'-separated list of subdirs searched for actions desktop files.
+/* the structure passed as reader data to NAIDataFactory
+ */
+typedef struct {
+	NadpDesktopFile *ndf;
+	NAObjectItem    *action;
+}
+	NadpReaderData;
+
+/* this is a ':'-separated list of XDG_DATA_DIRS/subdirs searched for
+ * menus or actions .desktop files.
  */
 #define NADP_DESKTOP_PROVIDER_SUBDIRS		"file-manager/actions"
 
-/* standard suffix for action desktop files
- */
-#define NADP_DESKTOP_SUFFIX					".desktop"
-
 GType nadp_desktop_provider_get_type     ( void );
+
 void  nadp_desktop_provider_register_type( GTypeModule *module );
 
 G_END_DECLS

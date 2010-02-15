@@ -1,5 +1,10 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Update I/O desktop provider.
+
+	* src/io-desktop/nadp-keys.c:
+	* src/io-desktop/nadp-keys.h: New files.
+
 	Rename src/io-desktop/nadp-xdg-data-dirs.{c,h} to src/io-desktop/nadp-xdg-dirs.{c,h}
 	Rename src/io-desktop/nadp-write.{c,h} to src/io-desktop/nadp-writer.{c,h}
 	Rename src/io-desktop/nadp-read.{c,h} to src/io-desktop/nadp-reader.{c,h}

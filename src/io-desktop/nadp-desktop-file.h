@@ -41,7 +41,6 @@
  * every #NAObjectItem for this provider.
  */
 
-#include <glib.h>
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -69,15 +68,32 @@ typedef struct {
 }
 	NadpDesktopFileClass;
 
-GType            nadp_desktop_file_get_type( void );
+/* standard suffix for desktop files
+ */
+#define NADP_DESKTOP_FILE_SUFFIX		".desktop"
 
-NadpDesktopFile *nadp_desktop_file_new_for_write( const gchar *path );
-NadpDesktopFile *nadp_desktop_file_new_from_path( const gchar *path );
+GType            nadp_desktop_file_get_type         ( void );
 
-gchar           *nadp_desktop_file_get_key_file_path     ( const NadpDesktopFile *ndf );
+NadpDesktopFile *nadp_desktop_file_new_from_path    ( const gchar *path );
+NadpDesktopFile *nadp_desktop_file_new_for_write    ( const gchar *path );
 
-gchar           *nadp_desktop_file_get_file_type         ( const NadpDesktopFile *ndf );
-gchar           *nadp_desktop_file_get_id                ( const NadpDesktopFile *ndf );
+gchar           *nadp_desktop_file_get_key_file_path( const NadpDesktopFile *ndf );
+gboolean         nadp_desktop_file_write            ( NadpDesktopFile *ndf );
+
+gchar           *nadp_desktop_file_get_file_type    ( const NadpDesktopFile *ndf );
+
+gchar           *nadp_desktop_file_get_id           ( const NadpDesktopFile *ndf );
+gboolean         nadp_desktop_file_get_boolean      ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean default_value );
+gchar           *nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *default_value );
+gchar           *nadp_desktop_file_get_string       ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *default_value );
+GSList          *nadp_desktop_file_get_string_list  ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *default_value );
+
+/* ... */
+
+#if 0
+
+/*gchar           *nadp_desktop_file_get_file_type         ( const NadpDesktopFile *ndf );*/
+gchar           *nadp_desktop_file_get_id2                ( const NadpDesktopFile *ndf );
 gchar           *nadp_desktop_file_get_name              ( const NadpDesktopFile *ndf );
 gchar           *nadp_desktop_file_get_tooltip           ( const NadpDesktopFile *ndf );
 gchar           *nadp_desktop_file_get_icon              ( const NadpDesktopFile *ndf );
@@ -102,7 +118,7 @@ void             nadp_desktop_file_set_tooltip( NadpDesktopFile *ndf, const gcha
 void             nadp_desktop_file_set_icon( NadpDesktopFile *ndf, const gchar *icon );
 void             nadp_desktop_file_set_enabled( NadpDesktopFile *ndf, gboolean enabled );
 
-gboolean         nadp_desktop_file_write( NadpDesktopFile *ndf );
+#endif
 
 G_END_DECLS
 

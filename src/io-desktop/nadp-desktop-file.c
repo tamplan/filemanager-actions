@@ -32,11 +32,14 @@
 #include <config.h>
 #endif
 
-#include <gio/gio.h>
 #include <string.h>
 
+#include <gio/gio.h>
+
+#include <api/na-core-utils.h>
+
 #include "nadp-desktop-file.h"
-#include "nadp-utils.h"
+#include "nadp-keys.h"
 
 /* private class data
  */
@@ -53,18 +56,6 @@ struct NadpDesktopFilePrivate {
 	GKeyFile  *key_file;
 };
 
-#define NADP_KEY_TOOLTIP				"Tooltip"
-#define NADP_KEY_ITEMS_LIST				"ItemsList"
-#define NADP_KEY_TARGET_CONTEXT			"TargetContext"
-#define NADP_KEY_TARGET_TOOLBAR			"TargetToolbar"
-#define NADP_KEY_TOOLBAR_LABEL			"ToolbarLabel"
-#define NADP_KEY_PROFILES				"Profiles"
-#define NADP_KEY_PROFILE_GROUP			"X-Action-Profile"
-#define NADP_KEY_BASENAMES				"Basenames"
-#define NADP_KEY_MIMETYPES				"Mimetypes"
-#define NADP_KEY_SCHEMES				"Schemes"
-#define NADP_KEY_FOLDERS				"Folders"
-
 static GObjectClass *st_parent_class = NULL;
 
 static GType            register_type( void );
@@ -74,14 +65,15 @@ static void             instance_dispose( GObject *object );
 static void             instance_finalize( GObject *object );
 
 static NadpDesktopFile *ndf_new( const gchar *path );
+static gchar           *path2id( const gchar *path );
 static gboolean         check_key_file( NadpDesktopFile *ndf );
 #if 0
 static gboolean         ndf_has_entry( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry );
-#endif
 static gboolean         ndf_read_bool( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean default_value );
 static gchar           *ndf_read_profile_string( const NadpDesktopFile *ndf, const gchar *profile_id, const gchar *entry );
 static GSList          *ndf_read_profile_string_list( const NadpDesktopFile *ndf, const gchar *profile_id, const gchar *entry );
 static gchar           *group_name_to_profile_id( const gchar *group_name );
+#endif
 
 GType
 nadp_desktop_file_get_type( void )
@@ -183,19 +175,11 @@ instance_finalize( GObject *object )
 	g_assert( NADP_IS_DESKTOP_FILE( object ));
 	self = NADP_DESKTOP_FILE( object );
 
-	if( self->private->id ){
-		g_free( self->private->id );
-		self->private->id = NULL;
-	}
-
-	if( self->private->path ){
-		g_free( self->private->path );
-		self->private->path = NULL;
-	}
+	g_free( self->private->id );
+	g_free( self->private->path );
 
 	if( self->private->key_file ){
 		g_key_file_free( self->private->key_file );
-		self->private->key_file = NULL;
 	}
 
 	g_free( self->private );
@@ -204,48 +188,6 @@ instance_finalize( GObject *object )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
-}
-
-/*
- * ndf_new:
- * @path: the full pathname of a .desktop file.
- *
- * Retuns: a newly allocated #NadpDesktopFile object.
- */
-static NadpDesktopFile *
-ndf_new( const gchar *path )
-{
-	NadpDesktopFile *ndf;
-
-	ndf = g_object_new( NADP_DESKTOP_FILE_TYPE, NULL );
-
-	ndf->private->id = nadp_utils_path2id( path );
-	ndf->private->path = g_strdup( path );
-
-	return( ndf );
-}
-
-/**
- * nadp_desktop_file_new_for_write:
- * @path: the full pathname of a .desktop file.
- *
- * Retuns: a newly allocated #NadpDesktopFile object.
- */
-NadpDesktopFile *
-nadp_desktop_file_new_for_write( const gchar *path )
-{
-	static const gchar *thisfn = "nadp_desktop_file_new_for_write";
-	NadpDesktopFile *ndf;
-
-	ndf = NULL;
-	g_debug( "%s: path=%s", thisfn, path );
-	g_return_val_if_fail( path && g_utf8_strlen( path, -1 ) && g_path_is_absolute( path ), ndf );
-
-	ndf = ndf_new( path );
-
-	g_key_file_set_string( ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TYPE, G_KEY_FILE_DESKTOP_TYPE_APPLICATION );
-
-	return( ndf );
 }
 
 /**
@@ -286,44 +228,312 @@ nadp_desktop_file_new_from_path( const gchar *path )
 	return( ndf );
 }
 
+/**
+ * nadp_desktop_file_new_for_write:
+ * @path: the full pathname of a .desktop file.
+ *
+ * Retuns: a newly allocated #NadpDesktopFile object.
+ */
+NadpDesktopFile *
+nadp_desktop_file_new_for_write( const gchar *path )
+{
+	static const gchar *thisfn = "nadp_desktop_file_new_for_write";
+	NadpDesktopFile *ndf;
+
+	ndf = NULL;
+	g_debug( "%s: path=%s", thisfn, path );
+	g_return_val_if_fail( path && g_utf8_strlen( path, -1 ) && g_path_is_absolute( path ), ndf );
+
+	ndf = ndf_new( path );
+
+	return( ndf );
+}
+
+/*
+ * ndf_new:
+ * @path: the full pathname of a .desktop file.
+ *
+ * Retuns: a newly allocated #NadpDesktopFile object.
+ */
+static NadpDesktopFile *
+ndf_new( const gchar *path )
+{
+	NadpDesktopFile *ndf;
+
+	ndf = g_object_new( NADP_DESKTOP_FILE_TYPE, NULL );
+
+	ndf->private->id = path2id( path );
+	ndf->private->path = g_strdup( path );
+
+	return( ndf );
+}
+
+/*
+ * path2id:
+ * @path: a full pathname.
+ *
+ * Returns: the id of the file, as a newly allocated string which
+ * should be g_free() by the caller.
+ *
+ * The id of the file is equal to the basename, minus the suffix.
+ */
+static gchar *
+path2id( const gchar *path )
+{
+	gchar *bname;
+	gchar *id;
+
+	bname = g_path_get_basename( path );
+	id = na_core_utils_str_remove_suffix( bname, NADP_DESKTOP_FILE_SUFFIX );
+	g_free( bname );
+
+	return( id );
+}
+
 static gboolean
 check_key_file( NadpDesktopFile *ndf )
 {
 	static const gchar *thisfn = "nadp_desktop_file_check_key_file";
 	gboolean ret;
 	gchar *start_group;
-	gchar *type;
-	GError *error;
 
 	ret = TRUE;
 
 	/* start group must be 'Desktop Entry' */
 	start_group = g_key_file_get_start_group( ndf->private->key_file );
-	if( strcmp( start_group, G_KEY_FILE_DESKTOP_GROUP )){
+	if( strcmp( start_group, NADP_GROUP_DESKTOP )){
+
 		g_warning( "%s: %s: invalid start group, found %s, waited for %s",
-				thisfn, ndf->private->path, start_group, G_KEY_FILE_DESKTOP_GROUP );
+				thisfn, ndf->private->path, start_group, NADP_GROUP_DESKTOP );
 		ret = FALSE;
 	}
-	g_free( start_group );
 
-	/* Type is required
-	 * only deal with 'Application' type */
-	if( ret ){
-		error = NULL;
-		type = g_key_file_get_string( ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TYPE, &error );
-		if( error ){
-			g_warning( "%s: %s: %s", thisfn, ndf->private->path, error->message );
-			g_error_free( error );
-			ret = FALSE;
-		} else if( strcmp( type, G_KEY_FILE_DESKTOP_TYPE_APPLICATION )){
-			ret = FALSE;
-		}
-		g_free( type );
-	}
+	g_free( start_group );
 
 	return( ret );
 }
 
+/**
+ * nadp_desktop_file_get_type:
+ * @ndf: the #NadpDesktopFile instance.
+ *
+ * Returns: the value for the Type entry as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+nadp_desktop_file_get_file_type( const NadpDesktopFile *ndf )
+{
+	static const gchar *thisfn = "nadp_desktop_file_get_type";
+	gchar *type;
+	GError *error;
+
+	type = NULL;
+	error = NULL;
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+
+	if( !ndf->private->dispose_has_run ){
+
+		type = g_key_file_get_string( ndf->private->key_file, NADP_GROUP_DESKTOP, NADP_KEY_TYPE, &error );
+
+		if( error ){
+			g_warning( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+			g_free( type );
+			type = NULL;
+		}
+	}
+
+	return( type );
+}
+
+/**
+ * nadp_desktop_file_get_id:
+ * @ndf: the #NadpDesktopFile instance.
+ *
+ * Returns: a newly allocated string which holds the id of the Desktop
+ * File.
+ */
+gchar *
+nadp_desktop_file_get_id( const NadpDesktopFile *ndf )
+{
+	gchar *value;
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+
+	value = NULL;
+
+	if( !ndf->private->dispose_has_run ){
+
+		value = g_strdup( ndf->private->id );
+	}
+
+	return( value );
+}
+
+/**
+ * nadp_desktop_file_get_boolean:
+ */
+gboolean
+nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean default_value )
+{
+	static const gchar *thisfn = "nadp_desktop_file_get_boolean";
+	gboolean value;
+	gboolean read_value;
+	gboolean has_entry;
+	GError *error;
+
+	value = default_value;
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), FALSE );
+
+	if( !ndf->private->dispose_has_run ){
+
+		error = NULL;
+		has_entry = g_key_file_has_key( ndf->private->key_file, group, entry, &error );
+		if( error ){
+			g_warning( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+
+		} else if( has_entry ){
+			read_value = g_key_file_get_boolean( ndf->private->key_file, group, entry, &error );
+			if( error ){
+				g_warning( "%s: %s", thisfn, error->message );
+				g_error_free( error );
+
+			} else {
+				value = read_value;
+			}
+		}
+	}
+
+	return( value );
+}
+
+/**
+ * nadp_desktop_file_get_locale_string:
+ */
+gchar *
+nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, const gchar *default_value )
+{
+	static const gchar *thisfn = "nadp_desktop_file_get_locale_string";
+	gchar *value;
+	gchar *read_value;
+	gboolean has_entry;
+	GError *error;
+
+	value = g_strdup( default_value );
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+
+	if( !ndf->private->dispose_has_run ){
+
+		error = NULL;
+		has_entry = g_key_file_has_key( ndf->private->key_file, group, entry, &error );
+		if( error ){
+			g_warning( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+
+		} else if( has_entry ){
+			read_value = g_key_file_get_locale_string( ndf->private->key_file, group, entry, NULL, &error );
+			if( error ){
+				g_warning( "%s: %s", thisfn, error->message );
+				g_error_free( error );
+				g_free( read_value );
+
+			} else {
+				g_free( value );
+				value = read_value;
+			}
+		}
+	}
+
+	return( value );
+}
+
+/**
+ * nadp_desktop_file_get_string:
+ */
+gchar *
+nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, const gchar *default_value )
+{
+	static const gchar *thisfn = "nadp_desktop_file_get_string";
+	gchar *value;
+	gchar *read_value;
+	gboolean has_entry;
+	GError *error;
+
+	value = g_strdup( default_value );
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+
+	if( !ndf->private->dispose_has_run ){
+
+		error = NULL;
+		has_entry = g_key_file_has_key( ndf->private->key_file, group, entry, &error );
+		if( error ){
+			g_warning( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+
+		} else if( has_entry ){
+			read_value = g_key_file_get_string( ndf->private->key_file, group, entry, &error );
+			if( error ){
+				g_warning( "%s: %s", thisfn, error->message );
+				g_error_free( error );
+				g_free( read_value );
+
+			} else {
+				g_free( value );
+				value = read_value;
+			}
+		}
+	}
+
+	return( value );
+}
+
+/**
+ * nadp_desktop_file_get_string_list:
+ */
+GSList *
+nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, const gchar *default_value )
+{
+	static const gchar *thisfn = "nadp_desktop_file_get_string_list";
+	GSList *value;
+	gchar **read_array;
+	gboolean has_entry;
+	GError *error;
+
+	value = g_slist_append( NULL, g_strdup( default_value ));
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+
+	if( !ndf->private->dispose_has_run ){
+
+		error = NULL;
+		has_entry = g_key_file_has_key( ndf->private->key_file, group, entry, &error );
+		if( error ){
+			g_warning( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+
+		} else if( has_entry ){
+			read_array = g_key_file_get_string_list( ndf->private->key_file, group, entry, NULL, &error );
+			if( error ){
+				g_warning( "%s: %s", thisfn, error->message );
+				g_error_free( error );
+
+			} else {
+				na_core_utils_slist_free( value );
+				value = na_core_utils_slist_from_str_array(( const gchar ** ) read_array );
+			}
+
+			g_strfreev( read_array );
+		}
+	}
+
+	return( value );
+}
+
+#if 0
 /**
  * nadp_desktop_file_get_key_file_path:
  * @ndf: the #NadpDesktopFile instance.
@@ -380,7 +590,7 @@ nadp_desktop_file_get_file_type( const NadpDesktopFile *ndf )
  * be g_free() by the caller.
  */
 gchar *
-nadp_desktop_file_get_id( const NadpDesktopFile *ndf )
+nadp_desktop_file_get_id2( const NadpDesktopFile *ndf )
 {
 	gchar *id;
 
@@ -905,7 +1115,7 @@ ndf_read_profile_string( const NadpDesktopFile *ndf, const gchar *profile_id, co
 	gchar *string;
 	gchar *group_name;
 
-	group_name = g_strdup_printf( "%s %s", NADP_KEY_PROFILE_GROUP, profile_id );
+	group_name = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, profile_id );
 
 	string = g_key_file_get_locale_string( ndf->private->key_file, group_name, entry, NULL, NULL );
 
@@ -922,7 +1132,7 @@ ndf_read_profile_string_list( const NadpDesktopFile *ndf, const gchar *profile_i
 	gchar *group_name;
 
 	strlist = NULL;
-	group_name = g_strdup_printf( "%s %s", NADP_KEY_PROFILE_GROUP, profile_id );
+	group_name = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, profile_id );
 
 	string_list = g_key_file_get_string_list( ndf->private->key_file, group_name, entry, NULL, NULL );
 	if( string_list ){
@@ -942,7 +1152,7 @@ group_name_to_profile_id( const gchar *group_name )
 
 	profile_id = NULL;
 
-	if( g_str_has_prefix( group_name, NADP_KEY_PROFILE_GROUP )){
+	if( g_str_has_prefix( group_name, NADP_GROUP_PROFILE )){
 
 		gchar **tokens, **iter;
 		gchar *tmp;
@@ -1051,6 +1261,7 @@ nadp_desktop_file_set_enabled( NadpDesktopFile *ndf, gboolean enabled )
 				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NO_DISPLAY, !enabled );
 	}
 }
+#endif
 
 /**
  * nadp_desktop_file_write:

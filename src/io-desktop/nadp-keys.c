@@ -28,15 +28,48 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NADP_UTILS_H__
-#define __NADP_UTILS_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-G_BEGIN_DECLS
+#include <api/na-idata-factory-enum.h>
 
-GSList  *nadp_utils_gslist_remove_from( GSList *list, const gchar *string );
+#include "nadp-keys.h"
 
-gboolean nadp_utils_is_writable_file( const gchar *path );
+static NadpIdKey id_key [] = {
+	{ NADF_DATA_LABEL,   NADP_GROUP_DESKTOP, NADP_KEY_NAME },
+	{ NADF_DATA_TOOLTIP, NADP_GROUP_DESKTOP, NADP_KEY_TOOLTIP },
+	{ NADF_DATA_ICON,    NADP_GROUP_DESKTOP, NADP_KEY_ICON },
+	{ 0, NULL, NULL }
+};
 
-G_END_DECLS
+/**
+ * nadp_keys_get_group_and_key:
+ * @iddef:
+ *
+ * Set: the group and the key to be used for this @iddef.
+ *
+ * Returns: %TRUE if the data has been found, %FALSE else.
+ */
+gboolean
+nadp_keys_get_group_and_key( const NadfIdType *iddef, gchar **group, gchar **key )
+{
+	gboolean found;
+	int i;
 
-#endif /* __NADP_UTILS_H__ */
+	found = FALSE;
+	*group = NULL;
+	*key = NULL;
+
+	for( i = 0 ; id_key[i].data_id && !found ; ++i ){
+
+		if( id_key[i].data_id == iddef->id ){
+
+			*group = g_strdup( id_key[i].group );
+			*key = g_strdup( id_key[i].key );
+			found = TRUE;
+		}
+	}
+
+	return( found );
+}
