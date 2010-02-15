@@ -1,5 +1,7 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* m4/na-log-domains.m4: Update log domains with new subdirs.
+
 	* doc/io-provider-id: Reference na-xml XML provider.
 
 	Rename src/api/na-gconf-monitor.c to src/core/na-gconf-monitor.c
