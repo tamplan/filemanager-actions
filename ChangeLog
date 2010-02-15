@@ -1,5 +1,10 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Define NAIImporter interface.
+
+	* src/api/na-iimporter.h:
+	* src/core/na-iimporter.c: New files.
+
 	Define NAIExporter interface.
 
 	* src/api/na-iexporter.h:

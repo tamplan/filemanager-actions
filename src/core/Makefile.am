@@ -48,6 +48,7 @@ libna_core_la_SOURCES = \
 	na-iduplicable.c									\
 	na-idata-factory.c									\
 	na-iexporter.c										\
+	na-iimporter.c										\
 	na-iio-factory.c									\
 	na-iio-provider.c									\
 	na-io-factory.c										\
