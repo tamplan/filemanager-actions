@@ -1,5 +1,7 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/io-provider-id: Reference na-xml XML provider.
+
 	Rename src/api/na-gconf-monitor.c to src/core/na-gconf-monitor.c
 	Rename src/core/na-utils.h to src/api/na-core-utils.h
 	Rename src/core/na-utils.c to src/core/na-core-utils.c

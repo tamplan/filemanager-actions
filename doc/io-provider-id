@@ -6,9 +6,10 @@ If you wish develop a new I/O provider, and so need a unique id,
 please contact the maintainers (see nautilus-actions.doap).
 
 id          label                   holder            allocated
-----------  ----------------------  ----------------  ----------
-na-desktop  NA Desktop IO Provider  Nautilus-Actions  2009-12-16
-na-gconf    NA GConf IO Provider    Nautilus-Actions  2009-12-16
-all         reserved id             Nautilus-Actions  2010-01-28
+----------  -----------------------  ----------------  ----------
+na-desktop  NA Desktop I/O Provider  Nautilus-Actions  2009-12-16
+na-gconf    NA GConf IoO Provider    Nautilus-Actions  2009-12-16
+na-xml      NA XML I/O Provider      Nautilus-Actions  2010-02-14
+all         reserved id              Nautilus-Actions  2010-01-28
 
-Last updated: 2010, Jan. 28th
+Last updated: 2010, Feb. 14th
