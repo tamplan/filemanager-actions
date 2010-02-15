@@ -27,66 +27,63 @@
 #   ... and many others (see AUTHORS)
 
 noinst_PROGRAMS = \
-	test-iface													\
-	test-include												\
-	test-parse-uris												\
-	test-virtuals												\
-	test-virtuals-without-test									\
+	test-iface											\
+	test-include										\
+	test-parse-uris										\
+	test-virtuals										\
+	test-virtuals-without-test							\
 	$(NULL)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)											\
-	-I $(top_srcdir)/nautilus-actions							\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"						\
-	$(NAUTILUS_ACTIONS_CFLAGS)									\
+	-I $(top_srcdir)									\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"				\
+	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
 test_iface_SOURCES = \
-	test-iface.c												\
-	test-iface-iface.c											\
-	test-iface-iface.h											\
-	test-iface-base.c											\
-	test-iface-base.h											\
-	test-iface-derived.c										\
-	test-iface-derived.h										\
+	test-iface.c										\
+	test-iface-iface.c									\
+	test-iface-iface.h									\
+	test-iface-base.c									\
+	test-iface-base.h									\
+	test-iface-derived.c								\
+	test-iface-derived.h								\
 	$(NULL)
 
 test_iface_LDADD = \
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 test_include_SOURCES = \
-	test-include.c												\
+	test-include.c										\
 	$(NULL)
 
 test_include_LDADD = \
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 test_parse_uris_SOURCES = \
-	test-parse-uris.c											\
+	test-parse-uris.c									\
 	$(NULL)
 
 test_parse_uris_LDADD = \
-	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
-	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
-	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(top_builddir)/src/core/libna-core.la				\
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 test_virtuals_SOURCES = \
-	test-virtuals.c												\
+	test-virtuals.c										\
 	$(NULL)
 
 test_virtuals_LDADD = \
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 test_virtuals_without_test_SOURCES = \
-	test-virtuals-without-test.c								\
+	test-virtuals-without-test.c						\
 	$(NULL)
 
-test_virtuals_Lwithout_test_DADD = \
-	$(NAUTILUS_ACTIONS_LIBS)									\
+test_virtuals_without_test_LDADD = \
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
