@@ -26,37 +26,31 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-pluginsdir = $(pkglibdir)
-
-plugins_LTLIBRARIES=libna-io-provider-gconf.la
+pkglib_LTLIBRARIES = libna-io-gconf.la
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)											\
-	-I $(top_srcdir)/nautilus-actions							\
-	$(NAUTILUS_ACTIONS_CFLAGS)									\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_PROVIDER_GCONF}\"		\
+	-I $(top_srcdir)									\
+	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_GCONF}\"			\
 	$(NULL)
 
-libna_io_provider_gconf_la_SOURCES = \
-	nagp-gconf-provider.c										\
-	nagp-gconf-provider.h										\
-	nagp-keys.h													\
-	nagp-module.c												\
-	nagp-read.c													\
-	nagp-read.h													\
-	nagp-write.c												\
-	nagp-write.h												\
+libna_io_gconf_la_SOURCES = \
+	nagp-gconf-provider.c								\
+	nagp-gconf-provider.h								\
+	nagp-keys.h											\
+	nagp-module.c										\
+	nagp-reader.c										\
+	nagp-reader.h										\
+	nagp-write.c										\
+	nagp-write.h										\
 	$(NULL)
 
-libna_io_provider_gconf_la_LIBADD = \
-	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
-	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
-	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
+libna_io_gconf_la_LIBADD = \
+	$(top_builddir)/src/core/libna-core.la				\
 	$(NULL)
 
-VERSION_INFO = 1:0:0
-libna_io_provider_gconf_la_LDFLAGS = \
-	-module 													\
-	-no-undefined												\
-	-version-number $(VERSION_INFO)								\
+libna_io_gconf_la_LDFLAGS = \
+	-module 											\
+	-no-undefined										\
+	-avoid-version										\
 	$(NULL)

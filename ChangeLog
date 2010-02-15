@@ -1,5 +1,7 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename src/io-gconf/nagp-read.{c,h} to src/io-gconf/nagp-reader.{c,h}
+
 	Update I/O desktop provider.
 
 	* src/io-desktop/nadp-keys.c:
