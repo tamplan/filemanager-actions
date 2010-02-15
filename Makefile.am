@@ -29,12 +29,12 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = \
-	data						\
-	doc							\
-	m4							\
-	icons						\
-	src							\
-	po							\
+	data								\
+	doc									\
+	m4									\
+	icons								\
+	src									\
+	po									\
 	$(NULL)
 
 # a foo directory so that make distcheck has a vpath which is prefixed
@@ -44,33 +44,33 @@ DISTCHECK_CONFIGURE_FLAGS = \
 
 # do not try to install schemas when making distcheck
 DISTCHECK_CONFIGURE_FLAGS += \
-	--disable-schemas-install	\
+	--disable-schemas-install			\
 	$(NULL)
 
 EXTRA_DIST = \
-	intltool-extract.in			\
-	intltool-merge.in			\
-	intltool-update.in			\
+	intltool-extract.in					\
+	intltool-merge.in					\
+	intltool-update.in					\
 	$(NULL)
 
 DISTCLEANFILES = \
-	intltool-extract			\
-	intltool-merge				\
-	intltool-update				\
+	intltool-extract					\
+	intltool-merge						\
+	intltool-update						\
 	$(NULL)
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
 dist_pkgdoc_DATA = \
-	AUTHORS						\
-	ChangeLog					\
-	ChangeLog-2008				\
-	COPYING						\
-	INSTALL						\
-	MAINTAINERS					\
-	NEWS						\
-	README						\
-	TODO						\
+	AUTHORS								\
+	ChangeLog							\
+	ChangeLog-2008						\
+	COPYING								\
+	INSTALL								\
+	MAINTAINERS							\
+	NEWS								\
+	README								\
+	TODO								\
 	$(NULL)
 
 uninstall-hook:
