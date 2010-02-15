@@ -50,5 +50,4 @@ api_include_HEADERS = \
 	na-object-action.h									\
 	na-object-profile.h									\
 	na-object-menu.h									\
-	na-gconf-keys.h										\
 	$(NULL)
