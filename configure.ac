@@ -52,11 +52,11 @@ AC_CONFIG_FILES([
 	src/io-desktop/Makefile
 	src/io-gconf/Makefile
 	src/nact/Makefile
-	src/plugin/Makefile
+	src/plugin-menu/Makefile
+	src/plugin-tracker/Makefile
 	src/private/Makefile
 	src/runtime/Makefile
 	src/test/Makefile
-	src/tracker/Makefile
 	src/utils/Makefile
 	po/Makefile.in
 ])

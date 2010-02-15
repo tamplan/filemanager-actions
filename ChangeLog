@@ -3,6 +3,8 @@
 	Rename source tree from nautilus-actions/ to src/
 	Rename src/io-provider-desktop/ to src/io-desktop/
 	Rename src/io-provider-gconf/ to src/io-gconf/
+	Rename src/plugin to src/plugin-menu/
+	Rename src/tracker to src/plugin-tracker/
 
 	* Makefile.am:
 	* configure.ac:
