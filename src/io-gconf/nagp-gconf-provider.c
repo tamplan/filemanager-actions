@@ -35,12 +35,13 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <nautilus-actions/api/na-iio-provider.h>
-#include <nautilus-actions/api/na-gconf-monitor.h>
+#include <api/na-iio-factory.h>
+#include <api/na-iio-provider.h>
+#include <api/na-gconf-monitor.h>
 
 #include "nagp-gconf-provider.h"
-#include "nagp-read.h"
-#include "nagp-write.h"
+#include "nagp-reader.h"
+#include "nagp-writer.h"
 #include "nagp-keys.h"
 
 /* private class data
@@ -55,14 +56,17 @@ static gint          st_timeout_msec = 100;
 static gint          st_timeout_usec = 100000;
 
 static void     class_init( NagpGConfProviderClass *klass );
-static void     iio_provider_iface_init( NAIIOProviderInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
-static gchar   *get_id( const NAIIOProvider *provider );
-static gchar   *get_name( const NAIIOProvider *provider );
-static guint    get_version( const NAIIOProvider *provider );
+static void     iio_provider_iface_init( NAIIOProviderInterface *iface );
+static gchar   *iio_provider_get_id( const NAIIOProvider *provider );
+static gchar   *iio_provider_get_name( const NAIIOProvider *provider );
+static guint    iio_provider_get_version( const NAIIOProvider *provider );
+
+static void     iio_factory_iface_init( NAIIOFactoryInterface *iface );
+static guint    iio_factory_get_version( const NAIIOFactory *provider );
 
 static GList   *install_monitors( NagpGConfProvider *provider );
 static void     config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
@@ -101,11 +105,19 @@ nagp_gconf_provider_register_type( GTypeModule *module )
 		NULL
 	};
 
+	static const GInterfaceInfo iio_factory_iface_info = {
+		( GInterfaceInitFunc ) iio_factory_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NagpGConfProvider", &info, 0 );
 
 	g_type_module_add_interface( module, st_module_type, NA_IIO_PROVIDER_TYPE, &iio_provider_iface_info );
+
+	g_type_module_add_interface( module, st_module_type, NA_IIO_FACTORY_TYPE, &iio_factory_iface_info );
 }
 
 static void
@@ -123,23 +135,6 @@ class_init( NagpGConfProviderClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NagpGConfProviderClassPrivate, 1 );
-}
-
-static void
-iio_provider_iface_init( NAIIOProviderInterface *iface )
-{
-	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_id = get_id;
-	iface->get_name = get_name;
-	iface->get_version = get_version;
-	iface->read_items = nagp_iio_provider_read_items;
-	iface->is_willing_to_write = nagp_iio_provider_is_willing_to_write;
-	iface->is_able_to_write = nagp_iio_provider_is_able_to_write;
-	iface->write_item = nagp_iio_provider_write_item;
-	iface->delete_item = nagp_iio_provider_delete_item;
 }
 
 static void
@@ -203,20 +198,53 @@ instance_finalize( GObject *object )
 	}
 }
 
+static void
+iio_provider_iface_init( NAIIOProviderInterface *iface )
+{
+	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_id = iio_provider_get_id;
+	iface->get_name = iio_provider_get_name;
+	iface->get_version = iio_provider_get_version;
+	iface->read_items = nagp_iio_provider_read_items;
+	iface->is_willing_to_write = nagp_iio_provider_is_willing_to_write;
+	iface->is_able_to_write = nagp_iio_provider_is_able_to_write;
+	iface->write_item = nagp_iio_provider_write_item;
+	iface->delete_item = nagp_iio_provider_delete_item;
+}
+
 static gchar *
-get_id( const NAIIOProvider *provider )
+iio_provider_get_id( const NAIIOProvider *provider )
 {
 	return( g_strdup( "na-gconf" ));
 }
 
 static gchar *
-get_name( const NAIIOProvider *provider )
+iio_provider_get_name( const NAIIOProvider *provider )
 {
 	return( g_strdup( _( "Nautilus-Actions GConf I/O Provider" )));
 }
 
 static guint
-get_version( const NAIIOProvider *provider )
+iio_provider_get_version( const NAIIOProvider *provider )
+{
+	return( 1 );
+}
+
+static void
+iio_factory_iface_init( NAIIOFactoryInterface *iface )
+{
+	static const gchar *thisfn = "nagp_gconf_provider_iio_factory_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_version = iio_factory_get_version;
+}
+
+static guint
+iio_factory_get_version( const NAIIOFactory *provider )
 {
 	return( 1 );
 }
@@ -235,7 +263,7 @@ install_monitors( NagpGConfProvider *provider )
 	 */
 	list = g_list_prepend( list,
 			na_gconf_monitor_new(
-					NA_GCONF_CONFIG_PATH,
+					NAGP_CONFIGURATIONS_PATH,
 					( GConfClientNotifyFunc ) config_path_changed_cb,
 					provider ));
 
@@ -361,7 +389,7 @@ config_path_changed_trigger_interface( NagpGConfProvider *provider )
 		return( TRUE );
 	}
 
-	na_iio_provider_config_changed( NA_IIO_PROVIDER( provider ), provider->private->last_triggered_id );
+	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ), provider->private->last_triggered_id );
 
 	config_path_changed_reset_timeout( provider );
 	return( FALSE );
@@ -392,7 +420,7 @@ entry2uuid( GConfEntry *entry )
 	g_return_val_if_fail( entry, NULL );
 
 	path = gconf_entry_get_key( entry );
-	subpath = path + strlen( NA_GCONF_CONFIG_PATH ) + 1;
+	subpath = path + strlen( NAGP_CONFIGURATIONS_PATH ) + 1;
 	split = g_strsplit( subpath, "/", -1 );
 	/*g_debug( "%s: [0]=%s, [1]=%s", thisfn, split[0], split[1] );*/
 	uuid = g_strdup( split[0] );

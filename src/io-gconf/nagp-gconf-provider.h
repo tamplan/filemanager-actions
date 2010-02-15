@@ -37,14 +37,13 @@
  * @include: na-gconf-provider.h
  *
  * This class manages the GConf I/O storage subsystem, or, in other words,
- * the GConf subsystem as an NAIIOProvider. As this, it should only be
- * used through the NAIIOProvider interface.
+ * the GConf subsystem as an #NAIIOProvider. As this, it should only be
+ * used through the #NAIIOProvider interface.
  *
  * #NagpGConfProvider uses #NAGConfMonitor to watch at the configuration
- * tree. Modifications are notified to the NAIIOProvider interface.
+ * tree. Modifications are notified to the #NAIIOProvider interface.
  */
 
-#include <glib.h>
 #include <glib-object.h>
 #include <gconf/gconf-client.h>
 
@@ -57,17 +56,18 @@ G_BEGIN_DECLS
 #define NAGP_IS_GCONF_PROVIDER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAGP_GCONF_PROVIDER_TYPE ))
 #define NAGP_GCONF_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAGP_GCONF_PROVIDER_TYPE, NagpGConfProviderClass ))
 
+typedef struct NagpGConfProviderPrivate      NagpGConfProviderPrivate;
+
 /* private instance data
  */
-typedef struct NagpGConfProviderPrivate {
+struct NagpGConfProviderPrivate {
 	gboolean     dispose_has_run;
 	GConfClient *gconf;
 	GList       *monitors;
 	GTimeVal     last_event;
 	guint        event_source_id;
 	gchar       *last_triggered_id;
-}
-	NagpGConfProviderPrivate;
+};
 
 typedef struct {
 	GObject                   parent;
