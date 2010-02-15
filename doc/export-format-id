@@ -1,0 +1,15 @@
+Ids of export formats.
+======================
+
+These ids are allocated by the Nautilus-Actions maintainer team.
+If you wish develop a new export format, and so need a unique id,
+please contact the maintainers (see nautilus-actions.doap).
+
+format id      module              holder            allocated
+-------------  ------------------  ----------------  ----------
+Ask            reserved id         Nautilus-Actions  2010-02-15
+GConfSchemaV1  NA XML module       Nautilus-Actions  2010-02-15
+GConfSchemaV1  NA XML module       Nautilus-Actions  2010-02-15
+GConfEntry     NA XML module       Nautilus-Actions  2010-02-15
+
+Last updated: 2010, Feb. 15th

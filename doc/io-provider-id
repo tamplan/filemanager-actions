@@ -7,9 +7,9 @@ please contact the maintainers (see nautilus-actions.doap).
 
 id          label                   holder            allocated
 ----------  -----------------------  ----------------  ----------
-na-desktop  NA Desktop I/O Provider  Nautilus-Actions  2009-12-16
-na-gconf    NA GConf IoO Provider    Nautilus-Actions  2009-12-16
-na-xml      NA XML I/O Provider      Nautilus-Actions  2010-02-14
 all         reserved id              Nautilus-Actions  2010-01-28
+na-desktop  NA Desktop I/O Provider  Nautilus-Actions  2009-12-16
+na-gconf    NA GConf I/O Provider    Nautilus-Actions  2009-12-16
+na-xml      NA XML module            Nautilus-Actions  2010-02-14
 
 Last updated: 2010, Feb. 14th

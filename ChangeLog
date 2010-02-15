@@ -1,5 +1,11 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Now install defined ids in docdir.
+
+	* doc/export-format-id: New file.
+
+	* doc/Makefile.am: Updated accordingly.
+
 	Define NactIPrefs interface.
 
 	* src/nact/nact-iprefs.c:
