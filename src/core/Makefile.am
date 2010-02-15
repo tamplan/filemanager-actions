@@ -74,11 +74,9 @@ libna_core_la_SOURCES = \
 	na-object-profile-enum.c							\
 	na-object-menu.c									\
 	na-object-menu-enum.c								\
-	\
 	na-pivot.c											\
 	na-pivot.h											\
-	na-utils.c											\
-	na-utils.h											\
+	\
 	na-xml-names.h										\
 	na-xml-writer.c										\
 	na-xml-writer.h										\

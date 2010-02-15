@@ -28,20 +28,20 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_PIVOT_H__
-#define __NA_RUNTIME_PIVOT_H__
+#ifndef __CORE_NA_PIVOT_H__
+#define __CORE_NA_PIVOT_H__
 
 /**
  * SECTION: na_pivot
  * @short_description: #NAPivot class definition.
- * @include: common/na-pivot.h
+ * @include: core/na-pivot.h
  *
  * A consuming program should allocate one new NAPivot object in its
- * startup phase. The class takes care of declaring the I/O interface,
+ * startup phase. The class takes care of declaring the I/O interfaces,
  * while registering the known providers. The object will then load
  * itself the existing list of actions.
  *
- * Notification system
+ * Notification system.
  *
  * Each I/O storage provider should monitor modifications/deletions of
  * actions, and advertize this #NAPivot, which itself will then
@@ -50,7 +50,7 @@
  * This notification system is so a double-stage one :
  *
  * 1. When an I/O storage subsystem detects a change on an action, it
- *    should emit the "notify-consumer-of-action-change" signal to
+ *    should emit the "na-iio-provider-notify-pivot" signal to
  *    notify #NAPivot of this change. The user data associated with the
  *    message is the internal id of the #NAObjectItem-derived modified
  *    object.
@@ -63,8 +63,6 @@
  *    sends only one message for a whole, maybe coherent, set of
  *    updates.
  *
- *    This first stage message is defined below as NA_PIVOT_SIGNAL_ACTION_CHANGED.
- *
  * 2. When #NAPivot has successfully updated its list of actions, it
  *    notifies its consumers in order they update themselves.
  *
@@ -75,10 +73,7 @@
  */
 
 #include <api/na-iio-provider.h>
-
-#include <private/na-object-class.h>
-#include <private/na-object-id-class.h>
-#include <private/na-object-item-class.h>
+#include <api/na-object-api.h>
 
 #include "na-ipivot-consumer.h"
 
@@ -91,7 +86,7 @@ G_BEGIN_DECLS
 #define NA_IS_PIVOT_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_PIVOT_TYPE ))
 #define NA_PIVOT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_PIVOT_TYPE, NAPivotClass ))
 
-typedef struct NAPivotPrivate NAPivotPrivate;
+typedef struct NAPivotPrivate      NAPivotPrivate;
 
 typedef struct {
 	GObject         parent;
@@ -107,7 +102,7 @@ typedef struct {
 }
 	NAPivotClass;
 
-GType         na_pivot_get_type( void );
+GType    na_pivot_get_type( void );
 
 /* Loadable population
  * NACT management user interface defaults to PIVOT_LOAD_ALL
@@ -135,19 +130,13 @@ void          na_pivot_free_providers( GList *providers );
 
 /* menus/actions items management
  */
-void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot );
-
+NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *id );
 GList        *na_pivot_get_items( const NAPivot *pivot );
 void          na_pivot_load_items( NAPivot *pivot );
 
-void          na_pivot_add_item( NAPivot *pivot, const NAObjectItem *item );
-NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *id );
-void          na_pivot_remove_item( NAPivot *pivot, NAObject *item );
+void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  );
 
-gboolean      na_pivot_is_item_writable( const NAPivot *pivot, const NAObjectItem *item, gint *reason );
-
-guint         na_pivot_write_item( const NAPivot *pivot, NAObjectItem *item, GSList **messages );
-guint         na_pivot_delete_item( const NAPivot *pivot, const NAObjectItem *item, GSList **messages );
+gboolean      na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
 
 /* NAIPivotConsumer interface management
  */
@@ -157,21 +146,11 @@ void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer
  */
 void          na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
 
-gboolean      na_pivot_is_disable_loadable( const NAPivot *pivot );
-gboolean      na_pivot_is_invalid_loadable( const NAPivot *pivot );
-
-gint          na_pivot_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b );
-gint          na_pivot_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
-
-gboolean      na_pivot_is_level_zero_writable( const NAPivot *pivot );
-void          na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
-
+gboolean      na_pivot_is_disable_loadable             ( const NAPivot *pivot );
+gboolean      na_pivot_is_invalid_loadable             ( const NAPivot *pivot );
+gboolean      na_pivot_is_level_zero_writable          ( const NAPivot *pivot );
 gboolean      na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot );
-
-/* notification message from NAIIOProvider to NAPivot
- */
-#define NA_PIVOT_SIGNAL_ACTION_CHANGED	"notify-consumer-of-action-change"
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_PIVOT_H__ */
+#endif /* __CORE_NA_PIVOT_H__ */
