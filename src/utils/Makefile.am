@@ -34,7 +34,6 @@ bin_PROGRAMS = \
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)											\
-	-I $(top_srcdir)/nautilus-actions							\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"					\
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
@@ -47,9 +46,7 @@ nautilus_actions_new_SOURCES = \
 	$(NULL)
 
 nautilus_actions_new_LDADD = \
-	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
-	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
-	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
+	$(top_builddir)/src/core/libna-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
@@ -57,7 +54,7 @@ BUILT_SOURCES = \
 	nautilus-actions-run-bindings.h								\
 	$(NULL)
 
-nautilus-actions-run-bindings.h: $(top_srcdir)/nautilus-actions/tracker/na-tracker-dbus.xml
+nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-dbus.xml
 	dbus-binding-tool --mode=glib-client $< > $@
 
 nautilus_actions_run_SOURCES = \
@@ -67,9 +64,7 @@ nautilus_actions_run_SOURCES = \
 	$(NULL)
 
 nautilus_actions_run_LDADD = \
-	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
-	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
-	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
+	$(top_builddir)/src/core/libna-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
@@ -80,9 +75,7 @@ nautilus_actions_schemas_SOURCES = \
 	$(NULL)
 
 nautilus_actions_schemas_LDADD = \
-	-L$(top_builddir)/nautilus-actions/api		-lna-api		\
-	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
-	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
+	$(top_builddir)/src/core/libna-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 

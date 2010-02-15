@@ -1,3 +1,7 @@
+2009-02-15 Pierre Wieser <pwieser@trychlos.org>
+
+	Update src/utils.
+
 2009-02-15 Deji Akingunola <dakingun@gmail.com>
 
 	* src/test/Makefile.am: Fix typo.

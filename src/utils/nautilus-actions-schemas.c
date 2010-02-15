@@ -38,10 +38,13 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
-#include <runtime/na-iprefs.h>
-#include <runtime/na-utils.h>
-#include <runtime/na-xml-names.h>
-#include <runtime/na-xml-writer.h>
+#include <api/na-core-utils.h>
+
+#include <core/na-iprefs.h>
+#if 0
+#include <core/na-xml-names.h>
+#include <core/na-xml-writer.h>
+#endif
 
 #include "console-utils.h"
 
@@ -100,7 +103,7 @@ main( int argc, char** argv )
 	}
 
 	if( version ){
-		na_utils_print_version();
+		na_core_utils_print_version();
 		exit( status );
 	}
 
@@ -114,9 +117,9 @@ main( int argc, char** argv )
 			g_print( _( "Nautilus Actions schema succesfully written to GConf.\n" ));
 		}
 
-	} else {*/
+	} else {
 		na_xml_writer_export( NULL, NULL, IPREFS_EXPORT_FORMAT_GCONF_SCHEMA, &msg );
-		/*if( !msg ){
+		if( !msg ){
 			g_print( _( "Nautilus Actions schema succesfully written to %s.\n" ), output_fname );
 			g_free( output_fname );
 		}*/
@@ -126,7 +129,7 @@ main( int argc, char** argv )
 		for( im = msg ; im ; im = im->next ){
 			g_printerr( "%s\n", ( gchar * ) im->data );
 		}
-		na_utils_free_string_list( msg );
+		na_core_utils_slist_free( msg );
 		status = EXIT_FAILURE;
 	}
 

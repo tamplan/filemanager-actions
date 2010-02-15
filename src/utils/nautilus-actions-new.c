@@ -36,17 +36,18 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
-#include <io-provider-gconf/nagp-keys.h>
+#include <io-gconf/nagp-keys.h>
 
-#include <runtime/na-io-provider.h>
-#include <runtime/na-iprefs.h>
-#include <runtime/na-pivot.h>
-#include <runtime/na-utils.h>
-#include <runtime/na-xml-names.h>
-#include <runtime/na-xml-writer.h>
+#include <core/na-io-provider.h>
+#include <core/na-updater.h>
+#if 0
+#include <core/na-xml-names.h>
+#include <core/na-xml-writer.h>
+#endif
 
 #include "console-utils.h"
 
@@ -169,7 +170,7 @@ main( int argc, char** argv )
 	}
 
 	if( version ){
-		na_utils_print_version();
+		na_core_utils_print_version();
 		exit( status );
 	}
 
@@ -204,6 +205,7 @@ main( int argc, char** argv )
 			g_print( _( "Action '%s' succesfully written to GConf configuration.\n" ), label );
 		}
 
+#if 0
 	} else {
 		gchar *output_fname = na_xml_writer_export( action, output_dir, IPREFS_EXPORT_FORMAT_GCONF_ENTRY, &msg );
 		if( output_fname ){
@@ -211,13 +213,14 @@ main( int argc, char** argv )
 			g_print( _( "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n" ), label, output_fname );
 			g_free( output_fname );
 		}
+#endif
 	}
 
 	if( msg ){
 		for( im = msg ; im ; im = im->next ){
 			g_printerr( "%s\n", ( gchar * ) im->data );
 		}
-		na_utils_free_string_list( msg );
+		na_core_utils_slist_free( msg );
 		status = EXIT_FAILURE;
 	}
 
@@ -281,84 +284,84 @@ init_options( void )
 static NAObjectAction *
 get_action_from_cmdline( void )
 {
-	NAObjectAction *action = na_object_action_new_with_profile();
-	GList *profiles;
+	NAObjectAction *action;
 	NAObjectProfile *profile;
-	int i = 0;
-	GSList *basenames = NULL;
-	GSList *mimetypes = NULL;
-	GSList *schemes = NULL;
-	GSList *folders = NULL;
+	int i;
+	GSList *basenames;
+	GSList *mimetypes;
+	GSList *schemes;
+	GSList *folders;
 
-	profiles = na_object_get_items_list( action );
-	profile = NA_OBJECT_PROFILE( profiles->data );
+	action = na_object_action_new_with_profile();
+	profile = NA_OBJECT_PROFILE(( GList * ) na_object_get_items( action )->data );
 
 	na_object_set_label( action, label );
 	na_object_set_tooltip( action, tooltip );
 	na_object_set_icon( action, icon );
-	na_object_set_enabled( NA_OBJECT_ITEM( action ), enabled );
-	na_object_action_set_target_selection( action, target_selection );
-	na_object_action_set_target_background( action, target_folders );
-	na_object_action_set_target_toolbar( action, target_toolbar );
+	na_object_set_enabled( action, enabled );
+	na_object_set_target_selection( action, target_selection );
+	na_object_set_target_background( action, target_folders );
+	na_object_set_target_toolbar( action, target_toolbar );
 
 	if( target_toolbar ){
 		if( label_toolbar && g_utf8_strlen( label_toolbar, -1 )){
-			na_object_action_toolbar_set_same_label( action, FALSE );
-			na_object_action_toolbar_set_label( action, label_toolbar );
+			na_object_set_toolbar_same_label( action, FALSE );
+			na_object_set_toolbar_label( action, label_toolbar );
 		} else {
-			na_object_action_toolbar_set_same_label( action, TRUE );
-			na_object_action_toolbar_set_label( action, label );
+			na_object_set_toolbar_same_label( action, TRUE );
+			na_object_set_toolbar_label( action, label );
 		}
 	} else {
-		na_object_action_toolbar_set_label( action, "" );
+		na_object_set_toolbar_label( action, "" );
 	}
 
-	na_object_profile_set_path( profile, command );
-	na_object_profile_set_parameters( profile, parameters );
+	na_object_set_path( profile, command );
+	na_object_set_parameters( profile, parameters );
 
+	i = 0;
+	basenames = NULL;
 	while( basenames_array != NULL && basenames_array[i] != NULL ){
 		basenames = g_slist_append( basenames, g_strdup( basenames_array[i] ));
 		i++;
 	}
-	na_object_profile_set_basenames( profile, basenames );
-	g_slist_foreach( basenames, ( GFunc ) g_free, NULL );
-	g_slist_free( basenames );
+	na_object_set_basenames( profile, basenames );
+	na_core_utils_slist_free( basenames );
 
-	na_object_profile_set_matchcase( profile, matchcase );
+	na_object_set_matchcase( profile, matchcase );
 
 	i = 0;
+	mimetypes = NULL;
 	while( mimetypes_array != NULL && mimetypes_array[i] != NULL ){
 		mimetypes = g_slist_append( mimetypes, g_strdup( mimetypes_array[i] ));
 		i++;
 	}
-	na_object_profile_set_mimetypes( profile, mimetypes );
-	g_slist_foreach( mimetypes, ( GFunc ) g_free, NULL );
-	g_slist_free( mimetypes );
+	na_object_set_mimetypes( profile, mimetypes );
+	na_core_utils_slist_free( mimetypes );
 
 	if( !isfile && !isdir ){
 		isfile = TRUE;
 	}
-	na_object_profile_set_isfile( profile, isfile );
-	na_object_profile_set_isdir( profile, isdir );
-	na_object_profile_set_multiple( profile, accept_multiple );
+	na_object_set_isfile( profile, isfile );
+	na_object_set_isdir( profile, isdir );
+	na_object_set_multiple( profile, accept_multiple );
 
 	i = 0;
+	schemes = NULL;
 	while( schemes_array != NULL && schemes_array[i] != NULL ){
 		schemes = g_slist_append( schemes, g_strdup( schemes_array[i] ));
 		i++;
 	}
-	na_object_profile_set_schemes( profile, schemes );
-	g_slist_foreach( schemes, ( GFunc ) g_free, NULL );
-	g_slist_free( schemes );
+	na_object_set_schemes( profile, schemes );
+	na_core_utils_slist_free( schemes );
 
 	i = 0;
+	folders = NULL;
 	while( folders_array != NULL && folders_array[i] != NULL ){
 		folders = g_slist_append( folders, g_strdup( folders_array[i] ));
 		i++;
 	}
-	na_object_profile_set_folders( profile, folders );
-	g_slist_foreach( folders, ( GFunc ) g_free, NULL );
-	g_slist_free( folders );
+	na_object_set_folders( profile, folders );
+	na_core_utils_slist_free( folders );
 
 	return( action );
 }
@@ -370,14 +373,14 @@ get_action_from_cmdline( void )
 static gboolean
 write_to_gconf( NAObjectAction *action, GSList **msg )
 {
-	NAPivot *pivot;
+	NAUpdater *updater;
 	guint ret;
 
-	pivot = na_pivot_new( PIVOT_LOAD_NONE );
+	updater = na_updater_new( PIVOT_LOAD_NONE );
 
-	ret = na_pivot_write_item( pivot, NA_OBJECT_ITEM( action ), msg );
+	ret = na_updater_write_item( updater, NA_OBJECT_ITEM( action ), msg );
 
-	g_object_unref( pivot );
+	g_object_unref( updater );
 
 	return( ret == NA_IIO_PROVIDER_CODE_OK );
 }

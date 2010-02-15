@@ -37,14 +37,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <api/na-dbus.h>
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
-#include <runtime/na-pivot.h>
-#include <runtime/na-utils.h>
+#include <core/na-dbus.h>
+#include <core/na-pivot.h>
 
-#include <tracker/na-tracker.h>
-#include <tracker/na-tracker-dbus.h>
+#include <plugin-tracker/na-tracker.h>
+#include <plugin-tracker/na-tracker-dbus.h>
 
 #include "console-utils.h"
 #include "nautilus-actions-run-bindings.h"
@@ -114,7 +114,7 @@ main( int argc, char** argv )
 	g_option_context_free( context );
 
 	if( version ){
-		na_utils_print_version();
+		na_core_utils_print_version();
 		exit( status );
 	}
 
@@ -213,7 +213,8 @@ get_action( const gchar *id )
 
 	action = NULL;
 
-	pivot = na_pivot_new( !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
+	/*pivot = na_pivot_new( !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );*/
+	pivot = na_pivot_new( PIVOT_LOAD_ALL );
 
 	na_pivot_load_items( pivot );
 
@@ -354,7 +355,7 @@ get_profile_for_targets( NAObjectAction *action, GList *targets )
 	GList *profiles, *ip;
 
 	candidate = NULL;
-	profiles = na_object_get_items_list( action );
+	profiles = na_object_get_items( action );
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 
 		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
@@ -373,7 +374,7 @@ execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets
 	GString *cmd;
 	gchar *param, *path;
 
-	path = na_object_profile_get_path( profile );
+	path = na_object_get_path( profile );
 	cmd = g_string_new( path );
 
 	param = na_object_profile_parse_parameters_for_tracked( profile, targets );
