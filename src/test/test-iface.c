@@ -54,6 +54,11 @@ main( int argc, char **argv )
 
 	g_debug( "allocating TestDerived ----------------------------------" );
 	derived = test_derived_new();
+	if( TEST_IS_IFACE( derived )){
+		g_debug( "Derived is also an IFace" );
+	} else {
+		g_debug( "Derived is NOT an IFace" );
+	}
 	g_debug( "calling test_iface_fna on Derived object ----------------" );
 	test_iface_fna( TEST_IFACE( derived ));
 	g_debug( "calling test_iface_fnb on Derived object ----------------" );
@@ -61,9 +66,9 @@ main( int argc, char **argv )
 
 	g_debug( "allocating TestBase -------------------------------------" );
 	base2 = test_base_new();
-	g_debug( "calling test_iface_fna on Base object -------------------" );
+	g_debug( "calling test_iface_fna on another Base object -------------------" );
 	test_iface_fna( TEST_IFACE( base2 ));
-	g_debug( "calling test_iface_fnb on Base object -------------------" );
+	g_debug( "calling test_iface_fnb on another Base object -------------------" );
 	test_iface_fnb( TEST_IFACE( base2 ));
 
 	g_debug( "end -----------------------------------------------------" );

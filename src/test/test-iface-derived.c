@@ -111,16 +111,23 @@ class_init( TestDerivedClass *klass )
 
 	klass->private = g_new0( TestDerivedClassPrivate, 1 );
 
-	if( 1 ){
-		iface_iface_init( klass );
-	}
-
 	/* there is no error message but this has no effect
 	 * event in a TestDerived object, these are TestBase functions which are called
 	 */
 	if( 0 ){
 		(( TestIFaceInterface * ) klass )->fna = iface_fna;
 		(( TestIFaceInterface * ) klass )->fnb = iface_fnb;
+	}
+
+	/* idem
+	 */
+	if( 0 ){
+		(( TestIFaceInterface * ) st_parent_class )->fna = iface_fna;
+		(( TestIFaceInterface * ) st_parent_class )->fnb = iface_fnb;
+	}
+
+	if( 1 ){
+		iface_iface_init( klass );
 	}
 }
 
@@ -138,6 +145,9 @@ iface_iface_init( TestDerivedClass *klass )
 	(( TestIFaceInterface * ) iface )->fna = iface_fna;
 	(( TestIFaceInterface * ) iface )->fnb = iface_fnb;*/
 
+	/* this segfault
+	 */
+	/*
 	GTypeInterface *iface;
 	iface = g_type_interface_peek( klass, TEST_IFACE_TYPE );
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
@@ -145,7 +155,18 @@ iface_iface_init( TestDerivedClass *klass )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 	g_debug( "%s: iface=%s at %p", thisfn, g_type_name( G_TYPE_FROM_INTERFACE( iface )), ( void * ) iface );
 	(( TestIFaceInterface * ) iface )->fna = iface_fna;
-	(( TestIFaceInterface * ) iface )->fnb = iface_fnb;
+	(( TestIFaceInterface * ) iface )->fnb = iface_fnb;*/
+
+	/* this has the effect of totally overriding the interface api
+	 * and both TestBase and TestDerived objects will only call TestDerived functions
+	 */
+	if( 0 ){
+		GTypeInterface *iface;
+		iface = g_type_interface_peek( st_parent_class, TEST_IFACE_TYPE );
+		g_debug( "%s: iface=%s at %p", thisfn, g_type_name( G_TYPE_FROM_INTERFACE( iface )), ( void * ) iface );
+		(( TestIFaceInterface * ) iface )->fna = iface_fna;
+		(( TestIFaceInterface * ) iface )->fnb = iface_fnb;
+	}
 }
 
 static void

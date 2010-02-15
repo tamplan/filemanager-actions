@@ -51,11 +51,11 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType register_type( void );
 static void  class_init( TestBaseClass *klass );
-static void  iface_iface_init( TestIFaceInterface *iface );
 static void  instance_init( GTypeInstance *instance, gpointer klass );
 static void  instance_dispose( GObject *object );
 static void  instance_finalize( GObject *object );
 
+static void  iface_iface_init( TestIFaceInterface *iface );
 static void  iface_fna( TestIFace *object );
 static void  iface_fnb( TestIFace *object );
 
@@ -122,17 +122,6 @@ class_init( TestBaseClass *klass )
 }
 
 static void
-iface_iface_init( TestIFaceInterface *iface )
-{
-	static const gchar *thisfn = "test_iface_base_iface_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->fna = iface_fna;
-	iface->fnb = iface_fnb;
-}
-
-static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "test_iface_base_instance_init";
@@ -190,6 +179,17 @@ test_base_new( void )
 	TestBase *object = g_object_new( TEST_BASE_TYPE, NULL );
 
 	return( object );
+}
+
+static void
+iface_iface_init( TestIFaceInterface *iface )
+{
+	static const gchar *thisfn = "test_iface_base_iface_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->fna = iface_fna;
+	iface->fnb = iface_fnb;
 }
 
 static void

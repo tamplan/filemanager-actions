@@ -36,8 +36,9 @@
  * @short_description: #TestDerived class definition.
  * @include: test-iface-derived.h
  *
- * Derivation of TestDerived class.
+ * Derivation of TestBae class.
  * Are we able to define our own implementation of testIFace interface ?
+ * Also, the derived class is it recognized as implementing the interface ?
  */
 
 #include "test-iface-base.h"

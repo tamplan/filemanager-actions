@@ -28,6 +28,7 @@
 
 noinst_PROGRAMS = \
 	test-iface													\
+	test-include												\
 	test-parse-uris												\
 	test-virtuals												\
 	test-virtuals-without-test									\
@@ -52,6 +53,14 @@ test_iface_SOURCES = \
 	$(NULL)
 
 test_iface_LDADD = \
+	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NULL)
+
+test_include_SOURCES = \
+	test-include.c												\
+	$(NULL)
+
+test_include_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
