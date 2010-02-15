@@ -34,16 +34,18 @@
 
 #include <string.h>
 
+#include <glib/gi18n.h>
+
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
 #include <api/na-object-api.h>
 
-#include <runtime/na-pivot.h>
-#include <runtime/na-iabout.h>
-#include <runtime/na-iprefs.h>
-#include <runtime/na-ipivot-consumer.h>
+#include <core/na-pivot.h>
+#include <core/na-iabout.h>
+#include <core/na-iprefs.h>
+#include <core/na-ipivot-consumer.h>
 
 #include "nautilus-actions.h"
 
@@ -64,12 +66,21 @@ static GObjectClass *st_parent_class = NULL;
 static GType         st_actions_type = 0;
 
 static void              class_init( NautilusActionsClass *klass );
-static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static void              iabout_iface_init( NAIAboutInterface *iface );
-static void              ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
+static void              instance_constructed( GObject *object );
 static void              instance_dispose( GObject *object );
 static void              instance_finalize( GObject *object );
+
+static void              iabout_iface_init( NAIAboutInterface *iface );
+static gchar            *iabout_get_application_name( NAIAbout *instance );
+
+static void              ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
+static void              ipivot_consumer_items_changed( NAIPivotConsumer *instance, gpointer user_data );
+static void              ipivot_consumer_create_root_menu_changed( NAIPivotConsumer *instance, gboolean enabled );
+static void              ipivot_consumer_display_about_changed( NAIPivotConsumer *instance, gboolean enabled );
+static void              ipivot_consumer_display_order_changed( NAIPivotConsumer *instance, gint order_mode );
+
+static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
 
 static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
@@ -85,13 +96,7 @@ static void              execute_action( NautilusMenuItem *item, NAObjectProfile
 
 static GList            *create_root_menu( NautilusActions *plugin, GList *nautilus_menu );
 static GList            *add_about_item( NautilusActions *plugin, GList *nautilus_menu );
-static gchar            *iabout_get_application_name( NAIAbout *instance );
 static void              execute_about( NautilusMenuItem *item, NautilusActions *plugin );
-
-static void              actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data );
-static void              create_root_menu_changed_handler( NAIPivotConsumer *instance, gboolean enabled );
-static void              display_about_changed_handler( NAIPivotConsumer *instance, gboolean enabled );
-static void              display_order_changed_handler( NAIPivotConsumer *instance, gint order_mode );
 
 GType
 nautilus_actions_get_type( void )
@@ -158,45 +163,11 @@ class_init( NautilusActionsClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	gobject_class = G_OBJECT_CLASS( klass );
+	gobject_class->constructed = instance_constructed;
 	gobject_class->dispose = instance_dispose;
 	gobject_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NautilusActionsClassPrivate, 1 );
-}
-
-static void
-menu_provider_iface_init( NautilusMenuProviderIface *iface )
-{
-	static const gchar *thisfn = "nautilus_actions_menu_provider_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_file_items = get_file_items;
-	iface->get_background_items = get_background_items;
-	iface->get_toolbar_items = get_toolbar_items;
-}
-
-static void
-iabout_iface_init( NAIAboutInterface *iface )
-{
-	static const gchar *thisfn = "nautilus_actions_iabout_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_application_name = iabout_get_application_name;
-}
-
-static void
-ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
-{
-	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->on_actions_changed = actions_changed_handler;
-	iface->on_create_root_menu_changed = create_root_menu_changed_handler;
-	iface->on_display_about_changed = display_about_changed_handler;
-	iface->on_display_order_changed = display_order_changed_handler;
 }
 
 static void
@@ -212,17 +183,39 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NAUTILUS_ACTIONS( instance );
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
+
 	self->private->dispose_has_run = FALSE;
 
 	/* initialize NAPivot and load actions through NAIIOProvider interface
 	 * forwarding notification messages from NAPivot to NautilusActions
 	 */
 	self->private->pivot = na_pivot_new( !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
+}
 
-	na_pivot_register_consumer( self->private->pivot, NA_IPIVOT_CONSUMER( self ));
-	na_pivot_set_automatic_reload( self->private->pivot, TRUE );
+static void
+instance_constructed( GObject *object )
+{
+	static const gchar *thisfn = "nautilus_actions_instance_constructed";
+	NautilusActions *self;
 
-	na_pivot_load_items( self->private->pivot );
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( object ));
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( object ));
+
+	self = NAUTILUS_ACTIONS( object );
+
+	if( !self->private->dispose_has_run ){
+
+		na_pivot_register_consumer( self->private->pivot, NA_IPIVOT_CONSUMER( self ));
+		na_pivot_set_automatic_reload( self->private->pivot, TRUE );
+		na_pivot_load_items( self->private->pivot );
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( object );
+		}
+	}
 }
 
 static void
@@ -237,14 +230,14 @@ instance_dispose( GObject *object )
 
 	if( !self->private->dispose_has_run ){
 
+		self->private->dispose_has_run = TRUE;
+
 		g_object_unref( self->private->pivot );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
 		}
-
-		self->private->dispose_has_run = TRUE;
 	}
 }
 
@@ -282,6 +275,112 @@ static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvid
 	 */
 }
 #endif
+
+static void
+iabout_iface_init( NAIAboutInterface *iface )
+{
+	static const gchar *thisfn = "nautilus_actions_iabout_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_application_name = iabout_get_application_name;
+}
+
+static gchar *
+iabout_get_application_name( NAIAbout *instance )
+{
+	/* i18n: title of the About dialog box, when seen from Nautilus file manager */
+	return( g_strdup( _( "Nautilus Actions" )));
+}
+
+static void
+ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
+{
+	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->on_items_changed = ipivot_consumer_items_changed;
+	iface->on_create_root_menu_changed = ipivot_consumer_create_root_menu_changed;
+	iface->on_display_about_changed = ipivot_consumer_display_about_changed;
+	iface->on_display_order_changed = ipivot_consumer_display_order_changed;
+}
+
+static void
+ipivot_consumer_items_changed( NAIPivotConsumer *instance, gpointer user_data )
+{
+	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_items_changed";
+	NautilusActions *self;
+
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	self = NAUTILUS_ACTIONS( instance );
+
+	if( !self->private->dispose_has_run ){
+
+		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
+	}
+}
+
+static void
+ipivot_consumer_create_root_menu_changed( NAIPivotConsumer *instance, gboolean enabled )
+{
+	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_create_root_menu_changed";
+	NautilusActions *self;
+
+	g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	self = NAUTILUS_ACTIONS( instance );
+
+	if( !self->private->dispose_has_run ){
+
+		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
+	}
+}
+
+static void
+ipivot_consumer_display_about_changed( NAIPivotConsumer *instance, gboolean enabled )
+{
+	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_display_about_changed";
+	NautilusActions *self;
+
+	g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	self = NAUTILUS_ACTIONS( instance );
+
+	if( !self->private->dispose_has_run ){
+
+		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
+	}
+}
+
+static void
+ipivot_consumer_display_order_changed( NAIPivotConsumer *instance, gint order_mode )
+{
+	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_display_order_changed";
+	NautilusActions *self;
+
+	g_debug( "%s: instance=%p, order_mode=%d", thisfn, ( void * ) instance, order_mode );
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	self = NAUTILUS_ACTIONS( instance );
+
+	if( !self->private->dispose_has_run ){
+
+		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
+	}
+}
+
+static void
+menu_provider_iface_init( NautilusMenuProviderIface *iface )
+{
+	static const gchar *thisfn = "nautilus_actions_menu_provider_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_file_items = get_file_items;
+	iface->get_background_items = get_background_items;
+	iface->get_toolbar_items = get_toolbar_items;
+}
 
 /*
  * this function is called when nautilus has to paint a folder background
@@ -361,12 +460,12 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
 				self, pivot_tree, ITEM_TARGET_SELECTION, files );
 		/*g_debug( "%s: menus has %d level zero items", thisfn, g_list_length( nautilus_menus_list ));*/
 
-		root_menu = na_iprefs_should_create_root_menu( NA_IPREFS( self->private->pivot ));
+		root_menu = na_iprefs_read_bool( NA_IPREFS( self->private->pivot ), IPREFS_CREATE_ROOT_MENU, FALSE );
 		if( root_menu ){
 			nautilus_menus_list = create_root_menu( self, nautilus_menus_list );
 		}
 
-		add_about = na_iprefs_should_add_about_item( NA_IPREFS( self->private->pivot ));
+		add_about = na_iprefs_read_bool( NA_IPREFS( self->private->pivot ), IPREFS_ADD_ABOUT_ITEM, TRUE );
 		/*g_debug( "%s: add_about=%s", thisfn, add_about ? "True":"False" );*/
 		if( add_about ){
 			nautilus_menus_list = add_about_item( self, nautilus_menus_list );
@@ -441,7 +540,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *
 		}
 
 		if( NA_IS_OBJECT_MENU( it->data )){
-			subitems = na_object_get_items_list( it->data );
+			subitems = na_object_get_items( it->data );
 			submenu = build_nautilus_menus( plugin, subitems, target, files );
 			/*g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));*/
 			if( submenu ){
@@ -483,7 +582,7 @@ is_action_candidate( NautilusActions *plugin, NAObjectAction *action, gint targe
 
 		action_label = na_object_get_label( action );
 
-		profiles = na_object_get_items_list( action );
+		profiles = na_object_get_items( action );
 		for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 
 			NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
@@ -605,7 +704,7 @@ execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 	files = ( GList * ) g_object_get_data( G_OBJECT( item ), "nautilus-actions-files" );
 	target = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ), "nautilus-actions-target" ));
 
-	path = na_object_profile_get_path( profile );
+	path = na_object_get_path( profile );
 	cmd = g_string_new( path );
 
 	param = na_object_profile_parse_parameters( profile, target, files );
@@ -711,13 +810,6 @@ add_about_item( NautilusActions *plugin, GList *menu )
 	return( nautilus_menu );
 }
 
-static gchar *
-iabout_get_application_name( NAIAbout *instance )
-{
-	/* i18n: title of the About dialog box, when seen from Nautilus file manager */
-	return( g_strdup( _( "Nautilus Actions" )));
-}
-
 static void
 execute_about( NautilusMenuItem *item, NautilusActions *plugin )
 {
@@ -725,64 +817,4 @@ execute_about( NautilusMenuItem *item, NautilusActions *plugin )
 	g_return_if_fail( NA_IS_IABOUT( plugin ));
 
 	na_iabout_display( NA_IABOUT( plugin ));
-}
-
-static void
-actions_changed_handler( NAIPivotConsumer *instance, gpointer user_data )
-{
-	static const gchar *thisfn = "nautilus_actions_actions_changed_handler";
-	NautilusActions *self;
-
-	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
-	self = NAUTILUS_ACTIONS( instance );
-
-	if( !self->private->dispose_has_run ){
-		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
-	}
-}
-
-static void
-create_root_menu_changed_handler( NAIPivotConsumer *instance, gboolean enabled )
-{
-	static const gchar *thisfn = "nautilus_actions_create_root_menu_changed_handler";
-	NautilusActions *self;
-
-	g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
-	self = NAUTILUS_ACTIONS( instance );
-
-	if( !self->private->dispose_has_run ){
-		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
-	}
-}
-
-static void
-display_about_changed_handler( NAIPivotConsumer *instance, gboolean enabled )
-{
-	static const gchar *thisfn = "nautilus_actions_display_about_changed_handler";
-	NautilusActions *self;
-
-	g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
-	self = NAUTILUS_ACTIONS( instance );
-
-	if( !self->private->dispose_has_run ){
-		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
-	}
-}
-
-static void
-display_order_changed_handler( NAIPivotConsumer *instance, gint order_mode )
-{
-	static const gchar *thisfn = "nautilus_actions_display_order_changed_handler";
-	NautilusActions *self;
-
-	g_debug( "%s: instance=%p, order_mode=%d", thisfn, ( void * ) instance, order_mode );
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
-	self = NAUTILUS_ACTIONS( instance );
-
-	if( !self->private->dispose_has_run ){
-		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
-	}
 }

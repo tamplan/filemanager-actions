@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_H__
-#define __NAUTILUS_ACTIONS_H__
+#ifndef __PLUGIN_MENU_NAUTILUS_ACTIONS_H__
+#define __PLUGIN_MENU_NAUTILUS_ACTIONS_H__
 
 /**
  * SECTION: nautilus_actions
@@ -59,7 +59,7 @@ G_BEGIN_DECLS
 #define NAUTILUS_IS_ACTIONS_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAUTILUS_ACTIONS_TYPE ))
 #define NAUTILUS_ACTIONS_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass ))
 
-typedef struct NautilusActionsPrivate NautilusActionsPrivate;
+typedef struct NautilusActionsPrivate      NautilusActionsPrivate;
 
 typedef struct
 {
@@ -82,4 +82,4 @@ void  nautilus_actions_register_type( GTypeModule *module );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_H__ */
+#endif /* __PLUGIN_MENU_NAUTILUS_ACTIONS_H__ */

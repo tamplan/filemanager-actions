@@ -28,7 +28,6 @@
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)											\
-	-I $(top_srcdir)/nautilus-actions							\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PLUGIN}\"					\
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
@@ -43,10 +42,13 @@ libnautilus_actions_la_SOURCES = \
 	nautilus-actions.h											\
 	$(NULL)
 
-libnautilus_actions_la_LDFLAGS = -module -avoid-version
-
 libnautilus_actions_la_LIBADD = \
-	-L$(top_builddir)/nautilus-actions/private	-lna-private	\
-	-L$(top_builddir)/nautilus-actions/runtime	-lna-runtime	\
+	$(top_builddir)/src/core/libna-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NULL)
+
+libnautilus_actions_la_LDFLAGS = \
+	-module 													\
+	-no-undefined												\
+	-avoid-version 												\
 	$(NULL)
