@@ -38,6 +38,7 @@ api_include_HEADERS = \
 	na-gconf-monitor.h									\
 	na-gconf-utils.h									\
 	na-iduplicable.h									\
-	na-gconf-keys.h										\
 	na-object-api.h										\
+	na-object.h											\
+	na-gconf-keys.h										\
 	$(NULL)

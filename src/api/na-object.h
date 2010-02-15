@@ -28,35 +28,29 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_CLASS_H__
-#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_CLASS_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_OBJECT_H__
+#define __NAUTILUS_ACTIONS_API_NA_OBJECT_H__
 
 /**
  * SECTION: na_object
  * @short_description: #NAObject class definition.
- * @include: nautilus-actions/private/na-object-class.h
+ * @include: nautilus-actions/na-object.h
  *
- * This is the base class for managed objects.
- *
- * It implements the #NAIDuplicable interface in order to have easily
- * duplicable derived objects. All the public API of the interface is
- * converted to #NAObject virtual functions.
- *
- * The #NAObject class is a pure virtual class.
+ * This is the base class of all our data object hierarchy.
  */
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_TYPE					( na_object_get_type())
+#define NA_OBJECT_TYPE					( na_object_object_get_type())
 #define NA_OBJECT( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_TYPE, NAObject ))
 #define NA_OBJECT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_TYPE, NAObjectClass ))
 #define NA_IS_OBJECT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_TYPE ))
 #define NA_IS_OBJECT_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_TYPE ))
 #define NA_OBJECT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_TYPE, NAObjectClass ))
 
-typedef struct NAObjectPrivate NAObjectPrivate;
+typedef struct NAObjectPrivate      NAObjectPrivate;
 
 typedef struct {
 	GObject          parent;
@@ -81,22 +75,7 @@ typedef struct {
 	 * derived one. Each derived class has so only to take care of
 	 * dumping its own data.
 	 */
-	void       ( *dump )            ( const NAObject *object );
-
-	/**
-	 * new:
-	 * @object: a #NAObject-derived object of the class that we want
-	 * be returned.
-	 *
-	 * Returns: a newly allocated #NAObject of the same class that
-	 * @object.
-	 *
-	 * This is a pure virtual function: the most derived class should
-	 * implement it. #NAObject class defaults to return the object
-	 * allocated by the most derived class which implement this
-	 * function.
-	 */
-	NAObject * ( *new )             ( const NAObject *object );
+	void     ( *dump )     ( const NAObject *object );
 
 	/**
 	 * copy:
@@ -111,7 +90,7 @@ typedef struct {
 	 * base class up to the most-derived one. Each class has so only to
 	 * take care of dumping its own data.
 	 */
-	void       ( *copy )            ( NAObject *target, const NAObject *source );
+	void     ( *copy )     ( NAObject *target, const NAObject *source );
 
 	/**
 	 * are_equal:
@@ -130,7 +109,7 @@ typedef struct {
 	 * As soon as a difference is detected, the calling sequence will
 	 * be stopped, and the result returned.
 	 */
-	gboolean   ( *are_equal )       ( const NAObject *a, const NAObject *b );
+	gboolean ( *are_equal )( const NAObject *a, const NAObject *b );
 
 	/**
 	 * is_valid:
@@ -150,40 +129,24 @@ typedef struct {
 	 * As soon as a difference is detected, the calling sequence will
 	 * be stopped, and the result returned.
 	 */
-	gboolean   ( *is_valid )        ( const NAObject *object );
-
-	/**
-	 * get_childs:
-	 * @object: the #NAObject object whose childs are to be retrieved.
-	 *
-	 * Returns: a list of childs of @object, or NULL.
-	 *
-	 * As the returned list will not be freed by the caller, the
-	 * implementation should really returns its own list of childs,
-	 * if any.
-	 */
-	GList *    ( *get_childs )      ( const NAObject *object );
-
-	/**
-	 * ref:
-	 * @object: the #NAObject object.
-	 *
-	 * Recursively ref the @object and all its childs.
-	 */
-	void       ( *ref )             ( NAObject *object );
-
-	/**
-	 * unref:
-	 * @object: the #NAObject object.
-	 *
-	 * Recursively unref the @object and all its childs.
-	 */
-	void       ( *unref )           ( NAObject *object );
+	gboolean ( *is_valid ) ( const NAObject *object );
 }
 	NAObjectClass;
 
-GType     na_object_get_type( void );
+GType  na_object_object_get_type( void );
+
+void   na_object_object_check_status( const NAObject *object );
+
+void   na_object_object_unref( NAObject *object );
+
+void   na_object_object_dump      ( const NAObject *object );
+void   na_object_object_dump_norec( const NAObject *object );
+void   na_object_object_dump_tree ( GList *tree );
+
+#if 0
+GList *na_object_object_get_hierarchy( const NAObject *object );
+#endif
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_CLASS_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_H__ */

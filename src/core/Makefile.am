@@ -42,6 +42,7 @@ libna_core_la_SOURCES = \
 	na-gconf-utils.c									\
 	na-iduplicable.c									\
 	na-iio-provider.c									\
+	na-object.c											\
 	\
 	na-iabout.c											\
 	na-iabout.h											\
