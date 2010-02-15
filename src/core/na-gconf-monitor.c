@@ -32,7 +32,7 @@
 #include <config.h>
 #endif
 
-#include "na-gconf-monitor.h"
+#include <api/na-gconf-monitor.h>
 
 /* private class data
  */
@@ -266,18 +266,20 @@ release_monitor( NAGConfMonitor *monitor )
 
 	g_debug( "%s: monitor=%p", thisfn, ( void * ) monitor );
 	g_return_if_fail( NA_IS_GCONF_MONITOR( monitor ));
-	g_return_if_fail( !monitor->private->dispose_has_run );
 
-	if( monitor->private->monitor_id ){
-		gconf_client_notify_remove( monitor->private->gconf, monitor->private->monitor_id );
+	if( !monitor->private->dispose_has_run ){
+
+		if( monitor->private->monitor_id ){
+			gconf_client_notify_remove( monitor->private->gconf, monitor->private->monitor_id );
+		}
+
+		gconf_client_remove_dir( monitor->private->gconf, monitor->private->path, &error );
+
+		if( error ){
+			g_warning( "%s: path=%s, error=%s", thisfn, monitor->private->path, error->message );
+			g_error_free( error );
+		}
+
+		g_object_unref( monitor->private->gconf );
 	}
-
-	gconf_client_remove_dir( monitor->private->gconf, monitor->private->path, &error );
-
-	if( error ){
-		g_warning( "%s: path=%s, error=%s", thisfn, monitor->private->path, error->message );
-		g_error_free( error );
-	}
-
-	g_object_unref( monitor->private->gconf );
 }

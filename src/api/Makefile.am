@@ -33,9 +33,9 @@ api_include_HEADERS = \
 	\
 	\
 	na-core-utils.h										\
+	na-gconf-monitor.h									\
 	na-dbus.h											\
 	na-gconf-keys.h										\
-	na-gconf-monitor.h									\
 	na-iio-provider.h									\
 	na-object-api.h										\
 	$(NULL)
