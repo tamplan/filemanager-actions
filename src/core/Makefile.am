@@ -55,6 +55,14 @@ libna_core_la_SOURCES = \
 	na-iio-provider.c									\
 	na-io-factory.c										\
 	na-io-factory.h										\
+	na-io-provider.c									\
+	na-io-provider.h									\
+	na-ipivot-consumer.c								\
+	na-ipivot-consumer.h								\
+	na-iprefs.c											\
+	na-iprefs.h											\
+	na-module.c											\
+	na-module.h											\
 	na-object.c											\
 	na-object-id.c										\
 	na-object-id-enum.c									\
@@ -67,13 +75,6 @@ libna_core_la_SOURCES = \
 	na-object-menu.c									\
 	na-object-menu-enum.c								\
 	\
-	na-io-provider.h									\
-	na-ipivot-consumer.c								\
-	na-ipivot-consumer.h								\
-	na-iprefs.c											\
-	na-iprefs.h											\
-	na-module.c											\
-	na-module.h											\
 	na-pivot.c											\
 	na-pivot.h											\
 	na-utils.c											\

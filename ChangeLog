@@ -1,5 +1,6 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Update src/core/na-module.{c,h}
 	Update src/core/na-iprefs.{c,h}
 	Update src/core/na-ipivot-consumer.{c,h}
 	Update src/core/na-io-factory.{c,h}

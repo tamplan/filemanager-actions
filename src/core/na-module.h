@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_RUNTIME_MODULE_H__
-#define __NA_RUNTIME_MODULE_H__
+#ifndef __CORE_NA_MODULE_H__
+#define __CORE_NA_MODULE_H__
 
 /**
  * SECTION: na_module
  * @short_description: #NAModule class definition.
- * @include: runtime/na-module.h
+ * @include: core/na-module.h
  *
  * The NAModule class manages Nautilus-Actions extensions as dynamically
  * loadable modules (plugins).
@@ -65,7 +65,6 @@
  * Interface API is then called against the returned GObject.
  */
 
-#include <glib.h>
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -107,4 +106,4 @@ void     na_module_release_modules        ( GList *modules );
 
 G_END_DECLS
 
-#endif /* __NA_RUNTIME_MODULE_H__ */
+#endif /* __CORE_NA_MODULE_H__ */
