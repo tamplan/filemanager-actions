@@ -29,5 +29,5 @@
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
 dist_pkgdoc_DATA = \
-	objects-hierarchy.odg			\
+	objects-hierarchy.odg				\
 	$(NULL)
