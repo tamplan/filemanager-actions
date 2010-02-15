@@ -42,5 +42,6 @@ api_include_HEADERS = \
 	na-object.h											\
 	na-object-id.h										\
 	na-object-item.h									\
+	na-object-action.h									\
 	na-gconf-keys.h										\
 	$(NULL)

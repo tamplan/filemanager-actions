@@ -1,5 +1,5 @@
 /*
- * Nautilus ObjectActions
+ * Nautilus Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -28,37 +28,25 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_CLASS_H__
-#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_CLASS_H__
+#ifndef __NAUTILUS_OBJECT_ACTIONS_API_NA_OBJECT_ACTION_H__
+#define __NAUTILUS_OBJECT_ACTIONS_API_NA_OBJECT_ACTION_H__
 
 /**
  * SECTION: na_object_action
  * @short_description: #NAObjectAction class definition.
- * @include: nautilus-actions/private/na-object-action-class.h
+ * @include: nautilus-actions/na-object-action.h
  *
- * This is the class which maintains data and properties of an Nautilus
+ * This is the class which maintains data and properties of a Nautilus
  * action.
  *
- * Note about the UUID :
- *
- * The uuid is only required when writing the action to GConf in order
- * to ensure unicity of subdirectories.
- *
- * UUID is transfered through import/export operations.
- *
- * Note that a user may import an action, translate it and then
- * reexport it : we so may have two different actions with the same
- * uuid. The user has so to modify the UUID before import, or to
- * select the appropriate option as an import mode.
- *
- * Note about edition status :
- *
- * As a particular rule of #NAObjectItem derived class, an action is
+ * Note about edition status:
+ * As a particular rule of #NAItem derived class, a #NAObjectAction is
  * considered modified as soon as any of its profiles has been modified
  * itself (because they are saved as a whole).
  */
 
-#include "na-object-item-class.h"
+#include "na-object-item.h"
+#include "na-object-profile.h"
 
 G_BEGIN_DECLS
 
@@ -69,7 +57,7 @@ G_BEGIN_DECLS
 #define NA_IS_OBJECT_ACTION_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ACTION_TYPE ))
 #define NA_OBJECT_ACTION_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ACTION_TYPE, NAObjectActionClass ))
 
-typedef struct NAObjectActionPrivate NAObjectActionPrivate;
+typedef struct NAObjectActionPrivate      NAObjectActionPrivate;
 
 typedef struct {
 	NAObjectItem           parent;
@@ -85,8 +73,15 @@ typedef struct {
 }
 	NAObjectActionClass;
 
-GType na_object_action_get_type( void );
+GType           na_object_action_get_type( void );
+
+NAObjectAction *na_object_action_new( void );
+NAObjectAction *na_object_action_new_with_profile( void );
+
+void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );
+
+gboolean        na_object_action_is_candidate( const NAObjectAction *action, gint target );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ACTION_CLASS_H__ */
+#endif /* __NAUTILUS_OBJECT_ACTIONS_API_NA_OBJECT_ACTION_H__ */
