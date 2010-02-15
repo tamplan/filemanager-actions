@@ -42,6 +42,7 @@ libna_core_la_SOURCES = \
 	na-data-element.h									\
 	na-data-factory.c									\
 	na-data-factory.h									\
+	na-dbus-tracker.h									\
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
 	na-iduplicable.c									\

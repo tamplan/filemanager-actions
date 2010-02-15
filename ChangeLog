@@ -1,5 +1,7 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-dbus-tracker.h: New file.
+
 	Remove useless src/api/na-gconf-keys.h
 	Update GConf I/O provider.
 	Create src/io-gconf/nagp-keys.c
