@@ -36,11 +36,11 @@
 
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
+#include <api/na-core-utils.h>
+#include <api/na-gconf-utils.h>
 
-#include "na-gconf-utils.h"
 #include "na-io-provider.h"
-#include "na-iprefs.h"
-#include "na-utils.h"
+#include "na-updater.h"
 
 /* private class data
  */
@@ -62,11 +62,9 @@ struct NAIOProviderPrivate {
  */
 enum {
 	IO_PROVIDER_PROP_ID_ID = 1,
-	IO_PROVIDER_PROP_PROVIDER_ID,
 };
 
 #define IO_PROVIDER_PROP_ID				"na-io-provider-prop-id"
-#define IO_PROVIDER_PROP_PROVIDER		"na-io-provider-prop-provider"
 
 static GObjectClass *st_parent_class = NULL;
 static GList        *st_io_providers = NULL;
@@ -157,13 +155,6 @@ class_init( NAIOProviderClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, IO_PROVIDER_PROP_ID_ID, spec );
 
-	spec = g_param_spec_pointer(
-			IO_PROVIDER_PROP_PROVIDER,
-			"NAIIOProvider",
-			"A reference on the NAIIOProvider plugin module",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, IO_PROVIDER_PROP_PROVIDER_ID, spec );
-
 	klass->private = g_new0( NAIOProviderClassPrivate, 1 );
 }
 
@@ -221,10 +212,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_string( value, self->private->id );
 				break;
 
-			case IO_PROVIDER_PROP_PROVIDER_ID:
-				g_value_set_pointer( value, self->private->provider );
-				break;
-
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -246,10 +233,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			case IO_PROVIDER_PROP_ID_ID:
 				g_free( self->private->id );
 				self->private->id = g_value_dup_string( value );
-				break;
-
-			case IO_PROVIDER_PROP_PROVIDER_ID:
-				self->private->provider = g_value_get_pointer( value );
 				break;
 		}
 	}
@@ -340,7 +323,7 @@ na_io_provider_get_providers_list( const NAPivot *pivot )
 
 		order = na_iprefs_read_string_list( NA_IPREFS( pivot ), IO_PROVIDER_KEY_ORDER, NULL );
 		setup_io_providers( pivot, order );
-		na_utils_free_string_list( order );
+		na_core_utils_slist_free( order );
 	}
 
 	return( st_io_providers );
@@ -456,7 +439,7 @@ io_provider_set_provider( const NAPivot *pivot, NAIOProvider *provider, NAIIOPro
 	provider->private->item_changed_handler =
 			g_signal_connect(
 					instance,
-					NA_PIVOT_SIGNAL_ACTION_CHANGED,
+					IIO_PROVIDER_SIGNAL_ITEM_CHANGED,
 					( GCallback ) na_pivot_item_changed_handler,
 					( gpointer ) pivot );
 }
@@ -471,13 +454,13 @@ add_io_providers_from_prefs( const NAPivot *pivot, GList *runtime_providers )
 	NAIOProvider *provider;
 
 	providers = runtime_providers;
-	path = gconf_concat_dir_and_key( NAUTILUS_ACTIONS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
 	gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
 
 	ids = na_gconf_utils_get_subdirs( gconf, path );
 
 	for( iid = ids ; iid ; iid = iid->next ){
-		id = na_utils_path_extract_last_dir(( const gchar * ) iid->data );
+		id = g_path_get_basename(( const gchar * ) iid->data );
 		provider = na_io_provider_find_provider_by_id( providers, id );
 
 		if( !provider ){
@@ -489,7 +472,6 @@ add_io_providers_from_prefs( const NAPivot *pivot, GList *runtime_providers )
 	}
 
 	na_gconf_utils_free_subdirs( ids );
-
 	g_free( path );
 
 	return( providers );
@@ -522,7 +504,7 @@ na_io_provider_reorder_providers_list( const NAPivot *pivot )
 
 	st_io_providers = g_list_reverse( new_list );
 
-	na_utils_free_string_list( order );
+	na_core_utils_slist_free( order );
 }
 
 /**
@@ -552,7 +534,7 @@ dump( const NAIOProvider *provider )
 	g_debug( "%s:                   id=%s", thisfn, provider->private->id );
 	g_debug( "%s:                 name=%s", thisfn, provider->private->name );
 	g_debug( "%s:             provider=%p", thisfn, ( void * ) provider->private->provider );
-	g_debug( "%s: item_changed_handler=%ld", thisfn, provider->private->item_changed_handler );
+	g_debug( "%s: item_changed_handler=%lu", thisfn, provider->private->item_changed_handler );
 }
 
 /**
@@ -578,6 +560,39 @@ na_io_provider_find_provider_by_id( GList *providers, const gchar *id )
 		if( !strcmp( NA_IO_PROVIDER( ip->data )->private->id, id )){
 
 			provider = NA_IO_PROVIDER( ip->data );
+		}
+	}
+
+	return( provider );
+}
+
+/**
+ * na_io_provider_get_writable_provider:
+ * @iprefs: an implementor of the #NAIPrefs interface.
+ *
+ * Returns: the first willing and able to write I/O provider, or NULL.
+ *
+ * The returned provider should not be g_object_unref() by the caller.
+ */
+NAIOProvider *
+na_io_provider_get_writable_provider( const NAPivot *pivot )
+{
+	NAIOProvider *provider;
+	GList *providers, *ip;
+
+	providers = na_io_provider_get_providers_list( pivot );
+	provider = NULL;
+
+	for( ip = providers ; ip && !provider ; ip = ip->next ){
+
+		if( na_io_provider_is_willing_to_write( NA_IO_PROVIDER( ip->data )) &&
+			na_io_provider_is_able_to_write( NA_IO_PROVIDER( ip->data )) &&
+			na_io_provider_has_write_api( NA_IO_PROVIDER( ip->data )) &&
+			na_io_provider_is_user_writable( NA_IO_PROVIDER( ip->data ), NA_IPREFS( pivot )) &&
+			!na_io_provider_is_locked_by_admin( NA_IO_PROVIDER( ip->data ), NA_IPREFS( pivot )) &&
+			!na_pivot_is_configuration_locked_by_admin( pivot )){
+
+				provider = NA_IO_PROVIDER( ip->data );
 		}
 	}
 
@@ -615,7 +630,7 @@ na_io_provider_read_items( const NAPivot *pivot, GSList **messages )
 	providers = na_io_provider_get_providers_list( pivot );
 
 	merged = get_merged_items_list( pivot, providers, messages );
-	level_zero = na_iprefs_get_level_zero_items( NA_IPREFS( pivot ));
+	level_zero = na_iprefs_read_string_list( NA_IPREFS( pivot ), IPREFS_LEVEL_ZERO_ITEMS, NULL );
 	hierarchy = build_hierarchy( &merged, level_zero, TRUE );
 
 	/* items that stay left in the merged list are simply appended
@@ -628,19 +643,21 @@ na_io_provider_read_items( const NAPivot *pivot, GSList **messages )
 
 	if( merged || !level_zero || !g_slist_length( level_zero )){
 		g_debug( "%s: rewriting level-zero", thisfn );
-		na_pivot_write_level_zero( pivot, hierarchy );
+		if( !na_pivot_write_level_zero( pivot, hierarchy )){
+			g_warning( "%s: unable to update level-zero", thisfn );
+		}
 	}
 
-	na_utils_free_string_list( level_zero );
+	na_core_utils_slist_free( level_zero );
 
 	order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
 	switch( order_mode ){
 		case IPREFS_ORDER_ALPHA_ASCENDING:
-			hierarchy = sort_tree( pivot, hierarchy, ( GCompareFunc ) na_pivot_sort_alpha_asc );
+			hierarchy = sort_tree( pivot, hierarchy, ( GCompareFunc ) na_object_id_sort_alpha_asc );
 			break;
 
 		case IPREFS_ORDER_ALPHA_DESCENDING:
-			hierarchy = sort_tree( pivot, hierarchy, ( GCompareFunc ) na_pivot_sort_alpha_desc );
+			hierarchy = sort_tree( pivot, hierarchy, ( GCompareFunc ) na_object_id_sort_alpha_desc );
 			break;
 
 		case IPREFS_ORDER_MANUAL:
@@ -671,7 +688,7 @@ get_merged_items_list( const NAPivot *pivot, GList *providers, GSList **messages
 
 	for( ip = providers ; ip ; ip = ip->next ){
 
-		if( na_io_provider_is_user_readable_at_startup( NA_IO_PROVIDER( ip->data ), pivot )){
+		if( na_io_provider_is_user_readable_at_startup( NA_IO_PROVIDER( ip->data ), NA_IPREFS( pivot ))){
 
 			instance = NA_IO_PROVIDER( ip->data )->private->provider;
 			if( instance ){
@@ -704,7 +721,7 @@ get_merged_items_list( const NAPivot *pivot, GList *providers, GSList **messages
 static GList *
 build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty )
 {
-	static const gchar *thisfn = "na_iio_provider_build_hierarchy";
+	static const gchar *thisfn = "na_io_provider_build_hierarchy";
 	GList *hierarchy, *it;
 	GSList *ilevel;
 	GSList *subitems_ids;
@@ -716,7 +733,9 @@ build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty )
 		for( ilevel = level_zero ; ilevel ; ilevel = ilevel->next ){
 			g_debug( "%s: uuid=%s", thisfn, ( gchar * ) ilevel->data );
 			it = g_list_find_custom( *tree, ilevel->data, ( GCompareFunc ) search_item );
+			g_debug( "un" );
 			if( it ){
+				g_debug( "deux" );
 				hierarchy = g_list_append( hierarchy, it->data );
 
 				g_debug( "%s: uuid=%s: %s (%p) appended to hierarchy %p",
@@ -725,10 +744,10 @@ build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty )
 				*tree = g_list_remove_link( *tree, it );
 
 				if( NA_IS_OBJECT_MENU( it->data )){
-					subitems_ids = na_object_item_get_items_string_list( NA_OBJECT_ITEM( it->data ));
+					subitems_ids = na_object_get_items_slist( NA_OBJECT_ITEM( it->data ));
 					subitems = build_hierarchy( tree, subitems_ids, FALSE );
-					na_object_set_items_list( it->data, subitems );
-					na_utils_free_string_list( subitems_ids );
+					na_object_set_items( it->data, subitems );
+					na_core_utils_slist_free( subitems_ids );
 				}
 			}
 		}
@@ -758,8 +777,10 @@ search_item( const NAObject *obj, const gchar *uuid )
 
 	if( NA_IS_OBJECT_ITEM( obj )){
 		obj_id = na_object_get_id( obj );
+		g_debug( "objid=%s", obj_id );
 		ret = strcmp( obj_id, uuid );
 		g_free( obj_id );
+		g_debug( "ret=%d", ret );
 	}
 
 	return( ret );
@@ -777,9 +798,9 @@ sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn )
 	 */
 	for( it = sorted ; it ; it = it->next ){
 		if( NA_IS_OBJECT_MENU( it->data )){
-			items = na_object_get_items_list( it->data );
+			items = na_object_get_items( it->data );
 			items = sort_tree( pivot, items, fn );
-			na_object_set_items_list( it->data, items );
+			na_object_set_items( it->data, items );
 		}
 	}
 
@@ -838,9 +859,9 @@ filter_unwanted_items_rec( GList *hierarchy, gboolean load_disabled, gboolean lo
 			if(( na_object_is_enabled( it->data ) || load_disabled ) &&
 				( na_object_is_valid( it->data ) || load_invalid )){
 
-				subitems = na_object_get_items_list( it->data );
+				subitems = na_object_get_items( it->data );
 				subitems_f = filter_unwanted_items_rec( subitems, load_disabled, load_invalid );
-				na_object_set_items_list( it->data, subitems_f );
+				na_object_set_items( it->data, subitems_f );
 				filtered = g_list_append( filtered, it->data );
 				selected = TRUE;
 			}
@@ -900,6 +921,7 @@ na_io_provider_get_name( const NAIOProvider *provider )
 	if( !provider->private->dispose_has_run ){
 
 		if( provider->private->name ){
+
 			name = g_strdup( provider->private->name );
 		}
 	}
@@ -910,7 +932,7 @@ na_io_provider_get_name( const NAIOProvider *provider )
 /**
  * na_io_provider_is_user_readable_at_startup:
  * @provider: this #NAIOProvider.
- * @pivot: the #NAPivot of the application.
+ * @iprefs: an implementor of the #NAIPrefs interface.
  *
  * Returns: %TRUE is this I/O provider should be read at startup, and so
  * may participate to the global list of menus and actions.
@@ -922,7 +944,7 @@ na_io_provider_get_name( const NAIOProvider *provider )
  * the corresponding flag to %FALSE.
  */
 gboolean
-na_io_provider_is_user_readable_at_startup( const NAIOProvider *provider, const NAPivot *pivot )
+na_io_provider_is_user_readable_at_startup( const NAIOProvider *provider, const NAIPrefs *iprefs )
 {
 	gboolean to_be_read;
 	GConfClient *gconf;
@@ -930,13 +952,13 @@ na_io_provider_is_user_readable_at_startup( const NAIOProvider *provider, const 
 
 	to_be_read = FALSE;
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_val_if_fail( NA_IS_IPREFS( iprefs ), FALSE );
 
 	if( !provider->private->dispose_has_run ){
 
-		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
+		gconf = na_iprefs_get_gconf_client( iprefs );
 
-		path = gconf_concat_dir_and_key( NAUTILUS_ACTIONS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
 		key = gconf_concat_dir_and_key( path, provider->private->id );
 		entry = gconf_concat_dir_and_key( key, IO_PROVIDER_KEY_READABLE );
 
@@ -953,7 +975,7 @@ na_io_provider_is_user_readable_at_startup( const NAIOProvider *provider, const 
 /**
  * na_io_provider_is_user_writable:
  * @provider: this #NAIOProvider.
- * @pivot: the #NAPivot of the application.
+ * @iprefs: an implementor of the #NAIPrefs interface.
  *
  * Returns: %TRUE is this I/O provider is writable.
  *
@@ -961,7 +983,7 @@ na_io_provider_is_user_readable_at_startup( const NAIOProvider *provider, const 
  * will actually be writable or not.
  */
 gboolean
-na_io_provider_is_user_writable( const NAIOProvider *provider, const NAPivot *pivot )
+na_io_provider_is_user_writable( const NAIOProvider *provider, const NAIPrefs *iprefs )
 {
 	gboolean writable;
 	GConfClient *gconf;
@@ -969,13 +991,13 @@ na_io_provider_is_user_writable( const NAIOProvider *provider, const NAPivot *pi
 
 	writable = FALSE;
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_val_if_fail( NA_IS_IPREFS( iprefs ), FALSE );
 
 	if( !provider->private->dispose_has_run ){
 
-		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
+		gconf = na_iprefs_get_gconf_client( iprefs );
 
-		path = gconf_concat_dir_and_key( NAUTILUS_ACTIONS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
 		key = gconf_concat_dir_and_key( path, provider->private->id );
 		entry = gconf_concat_dir_and_key( key, IO_PROVIDER_KEY_WRITABLE );
 
@@ -992,12 +1014,12 @@ na_io_provider_is_user_writable( const NAIOProvider *provider, const NAPivot *pi
 /**
  * na_io_provider_is_locked_by_admin:
  * @provider: this #NAIOProvider.
- * @pivot: the #NAPivot of the application.
+ * @iprefs: an implementor of the #NAIPrefs interface.
  *
  * Returns: %TRUE is this I/O provider has been locked by an admin.
  */
 gboolean
-na_io_provider_is_locked_by_admin( const NAIOProvider *provider, const NAPivot *pivot )
+na_io_provider_is_locked_by_admin( const NAIOProvider *provider, const NAIPrefs *iprefs )
 {
 	gboolean locked;
 	GConfClient *gconf;
@@ -1005,13 +1027,13 @@ na_io_provider_is_locked_by_admin( const NAIOProvider *provider, const NAPivot *
 
 	locked = FALSE;
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_val_if_fail( NA_IS_IPREFS( iprefs ), FALSE );
 
 	if( !provider->private->dispose_has_run ){
 
-		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
+		gconf = na_iprefs_get_gconf_client( iprefs );
 
-		path = g_strdup_printf( "%s/mandatory/%s/locked", NAUTILUS_ACTIONS_GCONF_BASEDIR, provider->private->id );
+		path = g_strdup_printf( "%s/mandatory/%s/locked", IPREFS_GCONF_BASEDIR, provider->private->id );
 
 		locked = na_gconf_utils_read_bool( gconf, path, FALSE, FALSE );
 
@@ -1133,39 +1155,6 @@ na_io_provider_has_write_api( const NAIOProvider *provider )
 	}
 
 	return( has_api );
-}
-
-/**
- * na_io_provider_get_writable_provider:
- * @pivot: the #NAPivot object.
- *
- * Returns: the first willing and able to write I/O provider, or NULL.
- *
- * The returned provider should not be g_object_unref() by the caller.
- */
-NAIOProvider *
-na_io_provider_get_writable_provider( const NAPivot *pivot )
-{
-	NAIOProvider *provider;
-	GList *providers, *ip;
-
-	providers = na_io_provider_get_providers_list( pivot );
-	provider = NULL;
-
-	for( ip = providers ; ip && !provider ; ip = ip->next ){
-
-		if( na_io_provider_is_willing_to_write( NA_IO_PROVIDER( ip->data )) &&
-			na_io_provider_is_able_to_write( NA_IO_PROVIDER( ip->data )) &&
-			na_io_provider_has_write_api( NA_IO_PROVIDER( ip->data )) &&
-			na_io_provider_is_user_writable( NA_IO_PROVIDER( ip->data ), pivot ) &&
-			!na_io_provider_is_locked_by_admin( NA_IO_PROVIDER( ip->data ), pivot ) &&
-			!na_pivot_is_configuration_locked_by_admin( pivot )){
-
-				provider = NA_IO_PROVIDER( ip->data );
-		}
-	}
-
-	return( provider );
 }
 
 /**
