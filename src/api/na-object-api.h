@@ -28,93 +28,122 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_OBJECT_API_H__
-#define __NAUTILUS_ACTIONS_NA_OBJECT_API_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_OBJECT_API_H__
+#define __NAUTILUS_ACTIONS_API_NA_OBJECT_API_H__
 
 /**
  * SECTION: na_object
  * @short_description: #NAObject public API.
- * @include: nautilus-actions/api/na-object-api.h
+ * @include: nautilus-actions/na-object-api.h
  *
  * We define here a common API which makes easier to write (and read)
  * the code ; all object functions are named na_object ; all arguments
  * are casted directly in the macro.
  */
 
-#include <nautilus-actions/private/na-object-fn.h>
-#include <nautilus-actions/private/na-object-id-fn.h>
-#include <nautilus-actions/private/na-object-item-fn.h>
-#include <nautilus-actions/private/na-object-menu-fn.h>
-#include <nautilus-actions/private/na-object-action-fn.h>
-#include <nautilus-actions/private/na-object-profile-fn.h>
+#include "na-idata-factory.h"
+#include "na-idata-factory-enum.h"
+#include "na-iduplicable.h"
+#include "na-object-action.h"
+#include "na-object-profile.h"
+#include "na-object-menu.h"
 
 G_BEGIN_DECLS
 
-/* NAObject
- */
-#define na_object_dump( object )					na_object_object_dump( NA_OBJECT( object ))
-#define na_object_dump_norec( object )				na_object_object_dump_norec( NA_OBJECT( object ))
-#define na_object_dump_tree( tree )					na_object_object_dump_tree( tree )
-#define na_object_ref( object )						na_object_object_ref( NA_OBJECT( object ))
-#define na_object_reset_origin( object, origin )	na_object_object_reset_origin( NA_OBJECT( object ), (( NAObject * )( origin )))
-#define na_object_reset_status( object )			na_object_object_reset_status( NA_OBJECT( object ))
-#define na_object_unref( object )					na_object_object_unref( NA_OBJECT( object ))
-
 /* NAIDuplicable
  */
-#define na_object_check_status( object )			na_object_iduplicable_check_status( NA_OBJECT( object ))
-#define na_object_duplicate( object )				na_object_iduplicable_duplicate( NA_OBJECT( object ))
-#define na_object_get_origin( object )				na_object_iduplicable_get_origin( NA_OBJECT( object ))
-#define na_object_set_origin( object, origin )		na_object_iduplicable_set_origin( NA_OBJECT( object ), NA_OBJECT( origin ))
-#define na_object_are_equal( a, b )					na_object_iduplicable_are_equal( NA_OBJECT( a ), NA_OBJECT( b ))
-#define na_object_is_modified( object )				na_object_iduplicable_is_modified( NA_OBJECT( object ))
-#define na_object_is_valid( object )				na_object_iduplicable_is_valid( NA_OBJECT( object ))
+#define na_object_duplicate( obj )						na_iduplicable_duplicate( NA_IDUPLICABLE( obj ))
+#define na_object_check_status( obj )					na_object_object_check_status( NA_OBJECT( obj ))
+#define na_object_get_origin( obj )						na_iduplicable_get_origin( NA_IDUPLICABLE( obj ))
+#define na_object_is_valid( obj )						na_iduplicable_is_valid( NA_IDUPLICABLE( obj ))
+
+/* NAObject
+ */
+#define na_object_dump( obj )							na_object_object_dump( NA_OBJECT( obj ))
+#define na_object_dump_norec( obj )						na_object_object_dump_norec( NA_OBJECT( obj ))
+#define na_object_dump_tree( tree )						na_object_object_dump_tree( tree )
+#define na_object_get_hierarchy( obj )					na_object_object_get_hierarchy( NA_OBJECT( obj ))
+#define na_object_unref( obj )							na_object_object_unref( NA_OBJECT( obj ))
 
 /* NAObjectId
  */
-#define na_object_check_status_up( object )			na_object_id_check_status_up( NA_OBJECT_ID( object ))
-#define na_object_get_id( object )					na_object_id_get_id( NA_OBJECT_ID( object ))
-#define na_object_get_label( object )				na_object_id_get_label( NA_OBJECT_ID( object ))
-#define na_object_get_parent( object )				na_object_id_get_parent( NA_OBJECT_ID( object ))
+#define na_object_get_id( obj )							(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ID ))
+#define na_object_get_label( obj )						(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_LABEL ))
+#define na_object_get_parent( obj )						(( NAObjectItem * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PARENT ))
 
-#define na_object_set_id( object, id )				na_object_id_set_id( NA_OBJECT_ID( object ), ( id ))
-#define na_object_set_new_id( object, parent )		na_object_id_set_new_id( NA_OBJECT_ID( object ), (( NAObjectId * )( parent )))
-#define na_object_set_label( object, label )		na_object_id_set_label( NA_OBJECT_ID( object ), ( label ))
-#define na_object_set_parent( object, parent )		na_object_id_set_parent( NA_OBJECT_ID( object ), (( NAObjectItem * )( parent )))
+#define na_object_set_id( obj, id )						na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_ID, ( const void * )( id ))
+#define na_object_set_label( obj, label )				na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_LABEL, ( const void * )( label ))
+#define na_object_set_parent( obj, parent )				na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_PARENT, ( const void * )( parent ))
 
-#define na_object_prepare_for_paste( object, pivot, renumber, action ) \
-													na_object_id_prepare_for_paste( NA_OBJECT_ID( object ), ( pivot ), ( renumber ), (( NAObjectAction * )( action )))
-#define na_object_set_copy_of_label( object )		na_object_id_set_copy_of_label( NA_OBJECT_ID( object ))
+#define na_object_sort_alpha_asc( a, b )				na_object_id_sort_alpha_asc( NA_OBJECT_ID( a ), NA_OBJECT_ID( b ))
+#define na_object_sort_alpha_desc( a, b )				na_object_id_sort_alpha_desc( NA_OBJECT_ID( a ), NA_OBJECT_ID( b ))
 
 /* NAObjectItem
  */
-#define na_object_free_items_list( list )			na_object_item_free_items_list( list )
+#define na_object_get_tooltip( obj )					(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLTIP ))
+#define na_object_get_icon( obj )						(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ICON ))
+#define na_object_get_items( obj )						(( GList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_SUBITEMS ))
+#define na_object_get_items_slist( obj )				(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_SUBITEMS_SLIST ))
+#define na_object_is_enabled( obj )						(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ENABLED )))
+#define na_object_is_readonly( obj )					(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_READONLY )))
+#define na_object_get_provider( obj )					na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PROVIDER )
+#define na_object_get_provider_data( obj )				na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PROVIDER_DATA )
 
-#define na_object_get_tooltip( object )				na_object_item_get_tooltip( NA_OBJECT_ITEM( object ))
-#define na_object_get_icon( object )				na_object_item_get_icon( NA_OBJECT_ITEM( object ))
-#define na_object_get_provider( object )			na_object_item_get_provider( NA_OBJECT_ITEM( object ))
-#define na_object_get_provider_data( object )		na_object_item_get_provider_data( NA_OBJECT_ITEM( object ))
-#define na_object_is_enabled( object )				na_object_item_is_enabled( NA_OBJECT_ITEM( object ))
-#define na_object_is_readonly( object )				na_object_item_is_readonly( NA_OBJECT_ITEM( object ))
-#define na_object_get_item( object, id )			na_object_item_get_item( NA_OBJECT_ITEM( object ), ( id ))
-#define na_object_get_items_list( object )			na_object_item_get_items_list( NA_OBJECT_ITEM( object ))
-#define na_object_get_items_count( object )			na_object_item_get_items_count( NA_OBJECT_ITEM( object ))
+#define na_object_set_tooltip( obj, tooltip )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLTIP, ( const void * )( tooltip ))
+#define na_object_set_icon( obj, icon )					na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_ICON, ( const void * )( icon ))
+#define na_object_set_items( obj, list )				na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_SUBITEMS, ( const void * )( list ))
+#define na_object_set_items_slist( obj, slist )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_SUBITEMS_SLIST, ( const void * )( slist ))
+#define na_object_set_enabled( obj, enabled )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_ENABLED, ( const void * ) GUINT_TO_POINTER( enabled ))
+#define na_object_set_readonly( obj, readonly )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_READONLY, ( const void * ) GUINT_TO_POINTER( readonly ))
+#define na_object_set_provider( obj, provider )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_PROVIDER, ( const void * )( provider ))
+#define na_object_set_provider_data( obj, data )		na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_PROVIDER_DATA, ( const void * )( data ))
 
-#define na_object_set_tooltip( object, tooltip )	na_object_item_set_tooltip( NA_OBJECT_ITEM( object ), ( tooltip ))
-#define na_object_set_icon( object, icon )			na_object_item_set_icon( NA_OBJECT_ITEM( object ), ( icon ))
-#define na_object_set_provider( object, provider )	na_object_item_set_provider( NA_OBJECT_ITEM( object ), ( provider ))
-#define na_object_set_provider_data( object, data )	na_object_item_set_provider_data( NA_OBJECT_ITEM( object ),( const void * )( data ))
-#define na_object_set_enabled( object, enabled )	na_object_item_set_enabled( NA_OBJECT_ITEM( object ), ( enabled ))
-#define na_object_set_readonly( object, readonly )	na_object_item_set_readonly( NA_OBJECT_ITEM( object ), ( readonly ))
-#define na_object_set_items_list( object, list )	na_object_item_set_items_list( NA_OBJECT_ITEM( object ), ( list ))
+#define na_object_get_item( obj, id )					na_object_item_get_item( NA_OBJECT_ITEM( obj ),( const gchar * )( id ))
+#define na_object_append_item( obj, child )				na_object_item_append_item( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
+#define na_object_build_items_slist( obj )				na_object_item_build_items_slist( NA_OBJECT_ITEM( obj ))
+#define na_object_unref_items( tree )					na_object_item_unref_items( tree )
 
-#define na_object_append_item( object, item )		na_object_item_append_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
-#define na_object_get_position( object, child )		na_object_item_get_position( NA_OBJECT_ITEM( object ), NA_OBJECT( child ))
-#define na_object_insert_at( object, child, pos )	na_object_item_insert_at( NA_OBJECT_ITEM( object ), NA_OBJECT( child ), ( pos ))
-#define na_object_insert_item( object, item, before ) \
-													na_object_item_insert_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ), (( NAObject * )( before )))
-#define na_object_remove_item( object, item )		na_object_item_remove_item( NA_OBJECT_ITEM( object ), NA_OBJECT( item ))
+/* NAObjectAction
+ */
+#define na_object_get_version( obj )					(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_VERSION ))
+#define na_object_is_target_selection( obj )			(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_SELECTION )))
+#define na_object_is_target_background( obj )			(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_BACKGROUND )))
+#define na_object_is_target_toolbar( obj )				(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_TOOLBAR )))
+#define na_object_get_toolbar_label( obj )				(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_LABEL ))
+
+#define na_object_set_version( obj, version )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_VERSION, ( const void * )( version ))
+#define na_object_set_target_selection( obj, target )	na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_SELECTION, ( const void * ) GUINT_TO_POINTER( target ))
+#define na_object_set_target_background( obj, target )	na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_BACKGROUND, ( const void * ) GUINT_TO_POINTER( target ))
+#define na_object_set_target_toolbar( obj, target )		na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_TOOLBAR, ( const void * ) GUINT_TO_POINTER( target ))
+#define na_object_set_toolbar_label( obj, label )		na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_LABEL, ( const void * )( label ))
+#define na_object_set_toolbar_same_label( obj, same )	na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_SAME_LABEL, ( const void * ) GUINT_TO_POINTER( same ))
+
+#define na_object_attach_profile( obj, profile )		na_object_action_attach_profile( NA_OBJECT_ACTION( obj ), NA_OBJECT_PROFILE( profile ))
+
+/* NAObjectProfile
+ */
+#define na_object_get_path( obj )						(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PATH ))
+#define na_object_get_parameters( obj )					(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PARAMETERS ))
+#define na_object_get_basenames( obj )					(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_BASENAMES ))
+#define na_object_is_matchcase( obj )					(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_MATCHCASE )))
+#define na_object_get_mimetypes( obj )					(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_MIMETYPES ))
+#define na_object_is_file( obj )						(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ISFILE )))
+#define na_object_is_dir( obj )							(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ISDIR )))
+#define na_object_is_multiple( obj )					(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_MULTIPLE )))
+#define na_object_get_schemes( obj )					(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_SCHEMES ))
+#define na_object_get_folders( obj )					(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_FOLDERS ))
+
+#define na_object_set_path( obj, path )					na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_PATH, ( const void * )( path ))
+#define na_object_set_parameters( obj, parms )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_PARAMETERS, ( const void * )( parms ))
+#define na_object_set_basenames( obj, bnames )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_BASENAMES, ( const void * )( bnames ))
+#define na_object_set_matchcase( obj, match )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_MATCHCASE, ( const void * ) GUINT_TO_POINTER( match ))
+#define na_object_set_mimetypes( obj, types )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_MIMETYPES, ( const void * )( types ))
+#define na_object_set_isfile( obj, isfile )				na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_ISFILE, ( const void * ) GUINT_TO_POINTER( isfile ))
+#define na_object_set_isdir( obj, isdir )				na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_ISDIR, ( const void * ) GUINT_TO_POINTER( isdir ))
+#define na_object_set_multiple( obj, multiple )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_MULTIPLE, ( const void * ) GUINT_TO_POINTER( multiple ))
+#define na_object_set_schemes( obj, schemes )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_SCHEMES, ( const void * )( schemes ))
+#define na_object_set_folders( obj, folders )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_FOLDERS, ( const void * )( folders ))
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_OBJECT_API_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_API_H__ */
