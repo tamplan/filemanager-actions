@@ -28,22 +28,20 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ID_CLASS_H__
-#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ID_CLASS_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_OBJECT_ID_H__
+#define __NAUTILUS_ACTIONS_API_NA_OBJECT_ID_H__
 
 /**
  * SECTION: na_object_id
  * @short_description: #NAObjectId class definition.
- * @include: nautilus-actions/private/na-object-id-class.h
+ * @include: nautilus-actions/na-object-id.h
  *
- * A #NAObjectId object is characterized by :
- * - an internal identifiant (ASCII, case insensitive)
- * - a libelle (UTF8, localizable).
- *
- * The #NAObjectId class is a pure virtual class.
+ * This is a pure virtual class, i.e. not an instantiatable one.
+ * It serves as the base class for #NAObject-derived object which have
+ * a unique Id, i.e. for #NAObjectItem and #NAObjectProfile.
  */
 
-#include "na-object-class.h"
+#include "na-object.h"
 
 G_BEGIN_DECLS
 
@@ -54,7 +52,7 @@ G_BEGIN_DECLS
 #define NA_IS_OBJECT_ID_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ID_TYPE ))
 #define NA_OBJECT_ID_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ID_TYPE, NAObjectIdClass ))
 
-typedef struct NAObjectIdPrivate NAObjectIdPrivate;
+typedef struct NAObjectIdPrivate      NAObjectIdPrivate;
 
 typedef struct {
 	NAObject           parent;
@@ -67,29 +65,14 @@ typedef struct NAObjectIdClassPrivate NAObjectIdClassPrivate;
 typedef struct {
 	NAObjectClass           parent;
 	NAObjectIdClassPrivate *private;
-
-	/**
-	 * new_id:
-	 * @object: a #NAObjectId object.
-	 * @new_parent: possibly the new #NAObjectId parent, or NULL.
-	 * If not NULL, this should actually be a #NAObjectItem.
-	 *
-	 * Returns: a new id suitable for this @object.
-	 *
-	 * If @object is a #NAObjectProfile, then @new_parent must be a
-	 * not null #NAObjectAction. This function ensures that the new
-	 * profile name does not already exist in the given @new_parent.
-	 *
-	 * This is a pure virtual function which should be implemented by
-	 * the actual class. Actually, we asks for the most-derived class
-	 * which implements this function.
-	 */
-	gchar * ( *new_id )( const NAObjectId *object, const NAObjectId *new_parent );
 }
 	NAObjectIdClass;
 
 GType  na_object_id_get_type( void );
 
+gint   na_object_id_sort_alpha_asc ( const NAObjectId *a, const NAObjectId *b );
+gint   na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
+
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_ID_CLASS_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_ID_H__ */

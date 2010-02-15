@@ -43,6 +43,7 @@ libna_core_la_SOURCES = \
 	na-iduplicable.c									\
 	na-iio-provider.c									\
 	na-object.c											\
+	na-object-id.c										\
 	\
 	na-iabout.c											\
 	na-iabout.h											\

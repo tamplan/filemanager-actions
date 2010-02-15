@@ -1,5 +1,6 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename src/core/na-object-id-class.h to src/api/na-object-id.h
 	Rename src/core/na-object-class.h to src/api/na-object.h
 	Rename src/core/na-iduplicable.h to src/api/na-iduplicable.h
 	Rename src/core/na-gconf-utils.h to src/api/na-gconf-utils.h

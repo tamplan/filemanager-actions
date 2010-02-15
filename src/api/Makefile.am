@@ -40,5 +40,6 @@ api_include_HEADERS = \
 	na-iduplicable.h									\
 	na-object-api.h										\
 	na-object.h											\
+	na-object-id.h										\
 	na-gconf-keys.h										\
 	$(NULL)
