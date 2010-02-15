@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_IDUPLICABLE_H__
-#define __NAUTILUS_ACTIONS_NA_PRIVATE_IDUPLICABLE_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_IDUPLICABLE_H__
+#define __NAUTILUS_ACTIONS_API_NA_IDUPLICABLE_H__
 
 /**
  * SECTION: na_iduplicable
@@ -69,29 +69,13 @@ G_BEGIN_DECLS
 #define NA_IS_IDUPLICABLE( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IDUPLICABLE_TYPE ))
 #define NA_IDUPLICABLE_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IDUPLICABLE_TYPE, NAIDuplicableInterface ))
 
-typedef struct NAIDuplicable NAIDuplicable;
+typedef struct NAIDuplicable                 NAIDuplicable;
 
 typedef struct NAIDuplicableInterfacePrivate NAIDuplicableInterfacePrivate;
 
 typedef struct {
 	GTypeInterface                 parent;
 	NAIDuplicableInterfacePrivate *private;
-
-	/**
-	 * new:
-	 * @object: a #NAIDuplicable instance of the class of which we
-	 * want a new instance.
-	 *
-	 * Returns: a newly allocated #NAIDuplicable object.
-	 *
-	 * The most derived class of the implementation should define this
-	 * virtual function in order to get advantage of #NAIDuplicable
-	 * interface.
-	 *
-	 * This let the target class to do some initialization on the newly
-	 * created object.
-	 */
-	NAIDuplicable * ( *new )      ( const NAIDuplicable *object );
 
 	/**
 	 * copy:
@@ -106,7 +90,7 @@ typedef struct {
 	 * care itself of calling each function in the class hierarchy,
 	 * from topmost base class to most-derived one.
 	 */
-	void            ( *copy )     ( NAIDuplicable *target, const NAIDuplicable *source );
+	void     ( *copy )     ( NAIDuplicable *target, const NAIDuplicable *source );
 
 	/**
 	 * are_equal:
@@ -123,7 +107,7 @@ typedef struct {
 	 * care itself of calling each function in the class hierarchy,
 	 * from topmost base class to most-derived one.
 	 */
-	gboolean        ( *are_equal )( const NAIDuplicable *a, const NAIDuplicable *b );
+	gboolean ( *are_equal )( const NAIDuplicable *a, const NAIDuplicable *b );
 
 	/**
 	 * is_valid:
@@ -138,30 +122,33 @@ typedef struct {
 	 * care itself of calling each function in the class hierarchy,
 	 * from topmost base class to most-derived one.
 	 */
-	gboolean        ( *is_valid )   ( const NAIDuplicable *object );
+	gboolean ( *is_valid )   ( const NAIDuplicable *object );
 }
 	NAIDuplicableInterface;
 
-#define NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED		"na-iduplicable-status-changed"
-
-#define NA_IDUPLICABLE_EDITION_STATUS_DEBUG			0
+#define NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED	"na-iduplicable-status-changed"
 
 GType          na_iduplicable_get_type( void );
 
-void           na_iduplicable_init( NAIDuplicable *object );
-void           na_iduplicable_dispose( NAIDuplicable *object );
-void           na_iduplicable_dump( const NAIDuplicable *object );
+void           na_iduplicable_dispose     ( const NAIDuplicable *object );
+void           na_iduplicable_dump        ( const NAIDuplicable *object );
+NAIDuplicable *na_iduplicable_duplicate   ( const NAIDuplicable *object );
 void           na_iduplicable_check_status( const NAIDuplicable *object );
-NAIDuplicable *na_iduplicable_duplicate( const NAIDuplicable *object );
+
+NAIDuplicable *na_iduplicable_get_origin  ( const NAIDuplicable *object );
+gboolean       na_iduplicable_is_valid    ( const NAIDuplicable *object );
+
+#if 0
+void           na_iduplicable_init        ( NAIDuplicable *object );
+
 void           na_iduplicable_reset_status( NAIDuplicable *object );
 
 gboolean       na_iduplicable_is_modified( const NAIDuplicable *object );
-gboolean       na_iduplicable_is_valid( const NAIDuplicable *object );
-NAIDuplicable *na_iduplicable_get_origin( const NAIDuplicable *object );
 void           na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin );
 
 void           na_iduplicable_register_consumer( GObject *consumer );
+#endif
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_IDUPLICABLE_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_IDUPLICABLE_H__ */

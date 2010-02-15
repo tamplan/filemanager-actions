@@ -40,6 +40,7 @@ libna_core_la_SOURCES = \
 	na-core-utils.c										\
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
+	na-iduplicable.c									\
 	na-iio-provider.c									\
 	\
 	na-iabout.c											\
