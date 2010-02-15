@@ -43,6 +43,8 @@ libna_core_la_SOURCES = \
 	na-data-factory.c									\
 	na-data-factory.h									\
 	na-dbus-tracker.h									\
+	na-exporter.c										\
+	na-exporter.h										\
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
 	na-iabout.c											\
@@ -57,6 +59,8 @@ libna_core_la_SOURCES = \
 	na-io-factory.h										\
 	na-io-provider.c									\
 	na-io-provider.h									\
+	na-importer.c										\
+	na-importer.h										\
 	na-ipivot-consumer.c								\
 	na-ipivot-consumer.h								\
 	na-iprefs.c											\
@@ -78,10 +82,6 @@ libna_core_la_SOURCES = \
 	na-pivot.h											\
 	na-updater.c										\
 	na-updater.h										\
-	\
-	na-xml-names.h										\
-	na-xml-writer.c										\
-	na-xml-writer.h										\
 	$(NULL)
 
 libna_core_la_LIBADD = \

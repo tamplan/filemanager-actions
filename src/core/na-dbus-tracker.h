@@ -39,7 +39,7 @@
 
 #include <glib-object.h>
 
-#include <api/na-dbus-names.h>
+#include <api/na-dbus.h>
 
 G_BEGIN_DECLS
 

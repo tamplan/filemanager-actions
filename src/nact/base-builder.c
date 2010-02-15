@@ -32,7 +32,7 @@
 #include <config.h>
 #endif
 
-#include <runtime/na-utils.h>
+#include <api/na-core-utils.h>
 
 #include "base-builder.h"
 
@@ -161,7 +161,7 @@ instance_finalize( GObject *window )
 	g_return_if_fail( BASE_IS_BUILDER( window ));
 	self = BASE_BUILDER( window );
 
-	na_utils_free_string_list( self->private->fnames );
+	na_core_utils_slist_free( self->private->fnames );
 
 	g_free( self->private );
 

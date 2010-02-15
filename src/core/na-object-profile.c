@@ -44,7 +44,7 @@
 
 #include "na-io-factory.h"
 #include "na-data-factory.h"
-#include "na-dbus.h"
+#include "na-dbus-tracker.h"
 #include "na-gnome-vfs-uri.h"
 
 /* private class data

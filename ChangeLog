@@ -1,5 +1,10 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Define NactIPrefs interface.
+
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h: New files.
+
 	Update src/nact/
 	Remove useless src/private directory.
 
