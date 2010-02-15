@@ -1,5 +1,12 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Define XML provider as a dynamic module.
+	
+	* io-xml/Makefile.am:
+	* io-xml/naxml-module.c:
+	* io-xml/naxml-provider.c:
+	* io-xml/naxml-provider.h: New files.
+
 	Rename source tree from nautilus-actions/ to src/
 	Rename src/io-provider-desktop/ to src/io-desktop/
 	Rename src/io-provider-gconf/ to src/io-gconf/

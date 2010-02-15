@@ -26,16 +26,26 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-SUBDIRS = \
-	api									\
-	private								\
-	runtime								\
-	io-desktop							\
-	io-gconf							\
-	io-xml								\
-	nact								\
-	plugin-menu							\
-	plugin-tracker						\
-	test								\
-	utils								\
+pkglib_LTLIBRARIES = libna-io-xml.la
+
+AM_CPPFLAGS += \
+	-I $(top_srcdir)									\
+	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_XML}\"			\
+	$(NULL)
+
+libna_io_xml_la_SOURCES = \
+	naxml-module.c										\
+	naxml-provider.c									\
+	naxml-provider.h									\
+	$(NULL)
+
+libna_io_xml_la_LIBADD = \
+	$(top_builddir)/src/core/libna-core.la				\
+	$(NULL)
+
+libna_io_xml_la_LDFLAGS = \
+	-module 											\
+	-no-undefined										\
+	-avoid-version										\
 	$(NULL)
