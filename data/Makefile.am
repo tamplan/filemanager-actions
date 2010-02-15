@@ -43,7 +43,7 @@ NA_INSTALL_SCHEMAS = no
 endif
 
 EXTRA_DIST = \
-	$(schemas_in_files)						\
+	$(schemas_in_files)					\
 	$(NULL)
 
 install-data-hook:
