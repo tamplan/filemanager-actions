@@ -1,5 +1,6 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Update src/nact/
 	Remove useless src/private directory.
 
 	Define NAUpdater class.
