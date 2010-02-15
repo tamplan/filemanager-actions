@@ -28,27 +28,32 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_IIO_PROVIDER_H__
-#define __NAUTILUS_ACTIONS_NA_IIO_PROVIDER_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_IIO_PROVIDER_H__
+#define __NAUTILUS_ACTIONS_API_NA_IIO_PROVIDER_H__
 
 /**
  * SECTION: na_iio_provider
  * @short_description: #NAIIOProvider interface definition.
- * @include: nautilus-actions/api/na-iio-provider.h
+ * @include: nautilus-actions/na-iio-provider.h
  *
- * This is the API all I/O Providers should implement in order to
- * provide I/O storage resources to Nautilus-Actions.
+ * The #NAIIOProvider interface provides two types of services:
+ * - load all items at startup
+ * - create, update or delete items via the management user interface.
+ *
+ * These services may be fully implemented by the I/O provider itself.
+ * Or, the I/O provider may also prefer to take advantage of the data
+ * factory management (see #NAIDataFactory and #NAIIOFactory interfaces).
  *
  * Nautilus-Actions v 2.30 - API version:  1
  */
 
-#include <nautilus-actions/private/na-object-item-class.h>
+#include "na-object-item.h"
 
 G_BEGIN_DECLS
 
 #define NA_IIO_PROVIDER_TYPE						( na_iio_provider_get_type())
-#define NA_IIO_PROVIDER( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IIO_PROVIDER_TYPE, NAIIOProvider ))
-#define NA_IS_IIO_PROVIDER( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IIO_PROVIDER_TYPE ))
+#define NA_IIO_PROVIDER( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IIO_PROVIDER_TYPE, NAIIOProvider ))
+#define NA_IS_IIO_PROVIDER( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIO_PROVIDER_TYPE ))
 #define NA_IIO_PROVIDER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIO_PROVIDER_TYPE, NAIIOProviderInterface ))
 
 typedef struct NAIIOProvider                 NAIIOProvider;
@@ -59,21 +64,27 @@ typedef struct {
 	GTypeInterface                 parent;
 	NAIIOProviderInterfacePrivate *private;
 
-	/*
-	 * This is the API the I/O providers have to implement.
+	/**
+	 * get_version:
+	 * @instance: the #NAIIOProvider provider.
+	 *
+	 * Returns: the version of this interface supported by the I/O provider.
+	 *
+	 * Defaults to 1.
 	 */
+	guint    ( *get_version )        ( const NAIIOProvider *instance );
 
 	/**
 	 * get_id:
 	 * @instance: the #NAIIOProvider provider.
 	 *
-	 * Returns: the id of the IO provider as a newly allocated string
+	 * Returns: the id of the I/O provider, as a newly allocated string
 	 * which should be g_free() by the caller.
 	 *
-	 * To avoid any collision, the IO provider id is allocated by the
-	 * Nautilus-Actions maintainer team. If you wish develop a new IO
+	 * To avoid any collision, the I/O provider id is allocated by the
+	 * Nautilus-Actions maintainer team. If you wish develop a new I/O
 	 * provider, and so need a new provider id, please contact the
-	 * maintainers (see nautilus-actions.doap).
+	 * maintainers (see #nautilus-actions.doap).
 	 *
 	 * The I/O provider must implement this function.
 	 */
@@ -83,7 +94,7 @@ typedef struct {
 	 * get_name:
 	 * @instance: the #NAIIOProvider provider.
 	 *
-	 * Returns: the name to be displayed for this I/O provider as a
+	 * Returns: the name to be displayed for this I/O provider, as a
 	 * newly allocated string which should be g_free() by the caller.
 	 *
 	 * Defaults to an empty string.
@@ -91,26 +102,15 @@ typedef struct {
 	gchar *  ( *get_name )           ( const NAIIOProvider *instance );
 
 	/**
-	 * get_version:
-	 * @instance: the #NAIIOProvider provider.
-	 *
-	 * Returns: the version of this API supported by the IO provider.
-	 *
-	 * Defaults to 1.
-	 */
-	guint    ( *get_version )        ( const NAIIOProvider *instance );
-
-	/**
 	 * read_items:
 	 * @instance: the #NAIIOProvider provider.
-	 * @messages: a pointer to a #GSList which has been initialized to
-	 * NULL before calling this function ; the provider may append error
-	 * messages to this list, but shouldn't reinitialize it.
+	 * @messages: a pointer to a #GSList list of strings; the provider
+	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Reads the whole items list from the specified I/O provider.
 	 *
-	 * Returns: a unordered flat #GList of #NAObjectItem-derived objects
-	 * (menus or actions) ; the actions embed their own profiles.
+	 * Returns: a unordered flat #GList of #NAIDataFactory-derived objects
+	 * (menus or actions); the actions embed their own profiles.
 	 */
 	GList *  ( *read_items )         ( const NAIIOProvider *instance, GSList **messages );
 
@@ -122,12 +122,13 @@ typedef struct {
 	 *  %FALSE else.
 	 *
 	 * The 'willing_to_write' property is intrinsic to the I/O provider.
-	 * It shouldn't do any supposition against the actual runtime
-	 * environment.
-	 * It just says that the developer/maintainer has released the needed
-	 * code in order to update/create/delete #NAObjectItem-derived objects.
+	 * It is not supposed to make any assumption on the environment it is
+	 * currently running on.
+	 * This property just says that the developer/maintainer has released
+	 * the needed code in order to update/create/delete #NAIDataFactory-
+	 * derived objects.
 	 *
-	 * Note that even if this property is %TRUE, there is yet several
+	 * Note that even if this property is %TRUE, there is yet many
 	 * reasons for not being able to update/delete existing items or
 	 * create new ones (see e.g. #is_able_to_write() below).
 	 */
@@ -146,7 +147,8 @@ typedef struct {
 	 * down to its storage subsystems.
 	 *
 	 * The 'able_to_write' property is independant of the
-	 * 'willing_to_write' above.
+	 * 'willing_to_write' above, though it is only checked if the
+	 * I/O provider is actually willing to write.
 	 *
 	 * This condition is only relevant when trying to define new items,
 	 * to see if a willing_to provider is actually able to do write
@@ -154,57 +156,57 @@ typedef struct {
 	 * existings items as they have already checked their own runtime
 	 * writability status when readen from the storage subsystems.
 	 *
-	 * Note that even if this property is %TRUE, there is yet several
+	 * Note that even if this property is %TRUE, there is yet many
 	 * reasons for not being able to update/delete existing items or
-	 * create new ones (see e.g. #is_willing_to_write() above).
+	 * create new ones (see e.g. 'locked' preference key).
 	 */
 	gboolean ( *is_able_to_write )   ( const NAIIOProvider *instance );
 
 	/**
 	 * write_item:
 	 * @instance: the #NAIIOProvider provider.
-	 * @item: a #NAObjectItem-derived menu or action.
-	 * @messages: a pointer to a #GSList which has been initialized to
-	 * NULL before calling this function ; the provider may append error
-	 * messages to this list, but shouldn't reinitialize it.
+	 * @item: a #NAObjectItem-derived item, menu or action.
+	 * @messages: a pointer to a #GSList list of strings; the provider
+	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Writes a new @item.
 	 *
-	 * Returns: %NA_IIO_PROVIDER_WRITE_OK if the write operation
+	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the write operation
 	 * was successfull, or another code depending of the detected error.
 	 *
 	 * Note: there is no update_item function ; it is the responsability
 	 * of the provider to delete the previous version of an item before
-	 * writing the new version.
+	 * actually writing the new one.
 	 */
 	guint    ( *write_item )         ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 
 	/**
 	 * delete_item:
 	 * @instance: the #NAIIOProvider provider.
-	 * @item: a #NAObjectItem-derived menu or action.
-	 * @messages: a pointer to a #GSList which has been initialized to
-	 * NULL before calling this function ; the provider may append error
-	 * messages to this list, but shouldn't reinitialize it.
+	 * @item: a #NAObjectItem-derived item, menu or action.
+	 * @messages: a pointer to a #GSList list of strings; the provider
+	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Deletes an existing @item from the I/O subsystem.
 	 *
-	 * Returns: %NA_IIO_PROVIDER_WRITE_OK if the delete operation was
+	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the delete operation was
 	 * successfull, or another code depending of the detected error.
 	 */
 	guint    ( *delete_item )        ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 }
 	NAIIOProviderInterface;
 
-GType na_iio_provider_get_type       ( void );
+GType na_iio_provider_get_type( void );
 
 /* This function is to be called by the I/O provider when it detects
  * that the specified object has been modified in its underlying storage
- * subsystem.
+ * subsystem. It eventually ends up by sending a messages to the consumers.
  */
-void  na_iio_provider_config_changed ( const NAIIOProvider *instance, const gchar *id );
+void  na_iio_provider_item_changed ( const NAIIOProvider *instance, const gchar *id );
 
-/* the reasons for which an item may not be writable
+#define IIO_PROVIDER_SIGNAL_ITEM_CHANGED	"na-iio-provider-notify-pivot"
+
+/* The reasons for which an item may not be writable
  * adding a new status here should imply also adding a new tooltip
  * in nact_main_statusbar_set_locked().
  */
@@ -234,4 +236,4 @@ enum {
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_IIO_PROVIDER_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_IIO_PROVIDER_H__ */

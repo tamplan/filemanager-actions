@@ -32,19 +32,19 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_RUNTIME}\"			\
+	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_CORE}\"				\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
 libna_core_la_SOURCES = \
 	na-core-utils.c										\
 	na-gconf-monitor.c									\
+	na-iio-provider.c									\
 	\
 	na-gconf-utils.c									\
 	na-gconf-utils.h									\
 	na-iabout.c											\
 	na-iabout.h											\
-	na-io-provider.c									\
 	na-io-provider.h									\
 	na-ipivot-consumer.c								\
 	na-ipivot-consumer.h								\

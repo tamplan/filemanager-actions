@@ -32,10 +32,10 @@ api_include_HEADERS = \
 	na-extension.h										\
 	\
 	na-dbus.h											\
+	na-iio-provider.h									\
 	\
 	na-core-utils.h										\
 	na-gconf-monitor.h									\
 	na-gconf-keys.h										\
-	na-iio-provider.h									\
 	na-object-api.h										\
 	$(NULL)
