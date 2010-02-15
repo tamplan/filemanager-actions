@@ -32,12 +32,13 @@
 #include <config.h>
 #endif
 
-#include <api/na-object-api.h>
+#include <glib/gi18n.h>
 
-#include <runtime/na-utils.h>
+#include <api/na-idata-factory.h>
+#include <api/na-object-menu.h>
 
-#include "na-iduplicable.h"
-#include "na-object-menu-priv.h"
+#include "na-io-factory.h"
+#include "na-data-factory.h"
 
 /* private class data
  */
@@ -45,41 +46,58 @@ struct NAObjectMenuClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-static NAObjectClass *st_parent_class = NULL;
+/* private instance data
+ */
+struct NAObjectMenuPrivate {
+	gboolean dispose_has_run;
+};
 
-static GType     register_type( void );
-static void      class_init( NAObjectMenuClass *klass );
-static void      instance_init( GTypeInstance *instance, gpointer klass );
-static void      instance_dispose( GObject *object );
-static void      instance_finalize( GObject *object );
+										/* i18n: default label for a new menu */
+#define NEW_NAUTILUS_MENU				N_( "New Nautilus menu" )
 
-static void      object_dump( const NAObject *menu );
-static NAObject *object_new( const NAObject *menu );
-static void      object_copy( NAObject *target, const NAObject *source );
-static gboolean  object_are_equal( const NAObject *a, const NAObject *b );
-static gboolean  object_is_valid( const NAObject *menu );
+extern NadfIdGroup menu_id_groups [];	/* defined in na-item-menu-enum.c */
+
+static NAObjectItemClass *st_parent_class = NULL;
+
+static GType    register_type( void );
+static void     class_init( NAObjectMenuClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
+
+static void     idata_factory_iface_init( NAIDataFactoryInterface *iface );
+static guint    idata_factory_get_version( const NAIDataFactory *instance );
+static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef );
+static void     idata_factory_copy( NAIDataFactory *target, const NAIDataFactory *source );
+static gboolean idata_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b );
+static void     idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
+static void     idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
 
 GType
 na_object_menu_get_type( void )
 {
-	static GType action_type = 0;
+	static GType menu_type = 0;
 
-	if( !action_type ){
-		action_type = register_type();
+	if( menu_type == 0 ){
+
+		menu_type = register_type();
 	}
 
-	return( action_type );
+	return( menu_type );
 }
 
 static GType
 register_type( void )
 {
 	static const gchar *thisfn = "na_object_menu_register_type";
+	GType type;
 
 	static GTypeInfo info = {
 		sizeof( NAObjectMenuClass ),
-		( GBaseInitFunc ) NULL,
-		( GBaseFinalizeFunc ) NULL,
+		NULL,
+		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
@@ -88,9 +106,21 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo idata_factory_iface_info = {
+		( GInterfaceInitFunc ) idata_factory_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
-	return( g_type_register_static( NA_OBJECT_ITEM_TYPE, "NAObjectMenu", &info, 0 ));
+	type = g_type_register_static( NA_OBJECT_ITEM_TYPE, "NAObjectMenu", &info, 0 );
+
+	g_type_add_interface_static( type, NA_IDATA_FACTORY_TYPE, &idata_factory_iface_info );
+
+	na_io_factory_register( type, menu_id_groups );
+
+	return( type );
 }
 
 static void
@@ -105,45 +135,74 @@ class_init( NAObjectMenuClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->set_property = instance_set_property;
+	object_class->get_property = instance_get_property;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
+	naobject_class = NA_OBJECT_CLASS( klass );
+	naobject_class->dump = NULL;
+	naobject_class->copy = NULL;
+	naobject_class->are_equal = NULL;
+	naobject_class->is_valid = NULL;
+
 	klass->private = g_new0( NAObjectMenuClassPrivate, 1 );
 
-	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->dump = object_dump;
-	naobject_class->new = object_new;
-	naobject_class->copy = object_copy;
-	naobject_class->are_equal = object_are_equal;
-	naobject_class->is_valid = object_is_valid;
-	naobject_class->get_childs = NULL;
-	naobject_class->ref = NULL;
-	naobject_class->unref = NULL;
+	na_data_factory_properties( object_class );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	/*static const gchar *thisfn = "na_object_menu_instance_init";*/
+	static const gchar *thisfn = "na_object_menu_instance_init";
 	NAObjectMenu *self;
 
-	/*g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );*/
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
 	g_return_if_fail( NA_IS_OBJECT_MENU( instance ));
+
 	self = NA_OBJECT_MENU( instance );
 
 	self->private = g_new0( NAObjectMenuPrivate, 1 );
 
-	self->private->dispose_has_run = FALSE;
+	na_data_factory_init( NA_IDATA_FACTORY( instance ));
+}
+
+static void
+instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
+{
+	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+
+	if( !NA_OBJECT_MENU( object )->private->dispose_has_run ){
+
+		na_data_factory_set_value( NA_IDATA_FACTORY( object ), property_id, value, spec );
+	}
+}
+
+static void
+instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
+{
+	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+
+	if( !NA_OBJECT_MENU( object )->private->dispose_has_run ){
+
+		na_data_factory_get_value( NA_IDATA_FACTORY( object ), property_id, value, spec );
+	}
 }
 
 static void
 instance_dispose( GObject *object )
 {
-	/*static const gchar *thisfn = "na_object_menu_instance_dispose";*/
+	static const gchar *thisfn = "na_object_menu_instance_dispose";
 	NAObjectMenu *self;
 
-	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+
 	self = NA_OBJECT_MENU( object );
 
 	if( !self->private->dispose_has_run ){
@@ -160,19 +219,85 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	/*static const gchar *thisfn = "na_object_menu_instance_finalize";*/
+	static const gchar *thisfn = "na_object_menu_instance_finalize";
 	NAObjectMenu *self;
 
-	/*g_debug( "%s: object=%p", thisfn, ( void * ) object );*/
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+
 	self = NA_OBJECT_MENU( object );
 
 	g_free( self->private );
+
+	na_data_factory_finalize( NA_IDATA_FACTORY( object ));
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
+}
+
+static void
+idata_factory_iface_init( NAIDataFactoryInterface *iface )
+{
+	static const gchar *thisfn = "na_object_menu_idata_factory_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_version = idata_factory_get_version;
+	iface->get_default = idata_factory_get_default;
+	iface->copy = idata_factory_copy;
+	iface->are_equal = idata_factory_are_equal;
+	iface->read_done = idata_factory_read_done;
+	iface->write_done = idata_factory_write_done;
+}
+
+static guint
+idata_factory_get_version( const NAIDataFactory *instance )
+{
+	return( 1 );
+}
+
+static gchar *
+idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef )
+{
+	gchar *value;
+
+	value = NULL;
+
+	switch( iddef->id ){
+
+		case NADF_DATA_LABEL:
+			value = g_strdup( NEW_NAUTILUS_MENU );
+			break;
+	}
+
+	return( value );
+}
+
+static void
+idata_factory_copy( NAIDataFactory *target, const NAIDataFactory *source )
+{
+	na_object_item_copy( NA_OBJECT_ITEM( target ), NA_OBJECT_ITEM( source ));
+}
+
+static gboolean
+idata_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
+{
+	return( na_object_item_are_equal( NA_OBJECT_ITEM( a ), NA_OBJECT_ITEM( b )));
+}
+
+static void
+idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages )
+{
+
+}
+
+static void
+idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages )
+{
+
 }
 
 /**
@@ -192,97 +317,5 @@ na_object_menu_new( void )
 
 	menu = g_object_new( NA_OBJECT_MENU_TYPE, NULL );
 
-	na_object_set_new_id( menu, NULL );
-	na_object_set_label( menu, NA_OBJECT_MENU_DEFAULT_LABEL );
-
 	return( menu );
-}
-
-static void
-object_dump( const NAObject *menu )
-{
-	static const gchar *thisfn = "na_object_menu_object_dump";
-	/*NAObjectMenu *self;*/
-
-	g_return_if_fail( NA_IS_OBJECT_MENU( menu ));
-
-	if( !NA_OBJECT_MENU( menu )->private->dispose_has_run ){
-
-		g_debug( "%s: (nothing to dump)", thisfn );
-	}
-}
-
-static NAObject *
-object_new( const NAObject *menu )
-{
-	return( NA_OBJECT( na_object_menu_new()));
-}
-
-static void
-object_copy( NAObject *target, const NAObject *source )
-{
-	g_return_if_fail( NA_IS_OBJECT_MENU( target ));
-	g_return_if_fail( NA_IS_OBJECT_MENU( source ));
-
-	if( !NA_OBJECT_MENU( target )->private->dispose_has_run &&
-		!NA_OBJECT_MENU( source )->private->dispose_has_run ){
-
-		/* nothing to do */
-	}
-}
-
-static gboolean
-object_are_equal( const NAObject *a, const NAObject *b )
-{
-	gboolean equal = TRUE;
-
-	g_return_val_if_fail( NA_IS_OBJECT_MENU( a ), FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT_MENU( b ), FALSE );
-
-	if( !NA_OBJECT_MENU( a )->private->dispose_has_run &&
-		!NA_OBJECT_MENU( b )->private->dispose_has_run ){
-
-		/* nothing to compare */
-	}
-
-	return( equal );
-}
-
-/*
- * a valid NAObjectMenu requires a not null, not empty label
- * this is checked here as NAObject doesn't have this condition
- *
- * also, a valid menu has at least one valid child
- */
-static gboolean
-object_is_valid( const NAObject *menu )
-{
-	gchar *label;
-	gboolean is_valid = TRUE;
-	gint valid_subitems;
-	GList *subitems, *ip;
-
-	g_return_val_if_fail( NA_IS_OBJECT_MENU( menu ), FALSE );
-
-	if( !NA_OBJECT_MENU( menu )->private->dispose_has_run ){
-
-		if( is_valid ){
-			label = na_object_get_label( menu );
-			is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
-			g_free( label );
-		}
-
-		if( is_valid ){
-			valid_subitems = 0;
-			subitems = na_object_get_items_list( menu );
-			for( ip = subitems ; ip && !valid_subitems ; ip = ip->next ){
-				if( na_iduplicable_is_valid( ip->data )){
-					valid_subitems += 1;
-				}
-			}
-			is_valid = ( valid_subitems > 0 );
-		}
-	}
-
-	return( is_valid );
 }

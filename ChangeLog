@@ -1,5 +1,6 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename src/core/na-object-menu-class.h to src/api/na-object-menu.h
 	Rename src/core/na-object-profile-class.h to src/api/na-object-profile.h
 	Rename src/core/na-object-action-class.h to src/api/na-object-action.h
 	Rename src/core/na-object-item-class.h to src/api/na-object-item.h

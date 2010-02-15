@@ -47,6 +47,7 @@ libna_core_la_SOURCES = \
 	na-object-item.c									\
 	na-object-action.c									\
 	na-object-profile.c									\
+	na-object-menu.c									\
 	\
 	na-iabout.c											\
 	na-iabout.h											\

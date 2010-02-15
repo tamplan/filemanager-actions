@@ -28,18 +28,16 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_MENU_CLASS_H__
-#define __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_MENU_CLASS_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_OBJECT_MENU_H__
+#define __NAUTILUS_ACTIONS_API_NA_OBJECT_MENU_H__
 
 /**
  * SECTION: na_object_menu
  * @short_description: #NAObjectMenu class definition.
- * @include: nautilus-actions/private/na-object-menu.h
- *
- * This is a menu. It embeds other menus and/or actions.
+ * @include: nautilus-actions/na-object-menu.h
  */
 
-#include "na-object-item-class.h"
+#include "na-object-item.h"
 
 G_BEGIN_DECLS
 
@@ -50,7 +48,7 @@ G_BEGIN_DECLS
 #define NA_IS_OBJECT_MENU_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_MENU_TYPE ))
 #define NA_OBJECT_MENU_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_MENU_TYPE, NAObjectMenuClass ))
 
-typedef struct NAObjectMenuPrivate NAObjectMenuPrivate;
+typedef struct NAObjectMenuPrivate      NAObjectMenuPrivate;
 
 typedef struct {
 	NAObjectItem         parent;
@@ -68,6 +66,8 @@ typedef struct {
 
 GType         na_object_menu_get_type( void );
 
+NAObjectMenu *na_object_menu_new( void );
+
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_OBJECT_MENU_CLASS_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_MENU_H__ */
