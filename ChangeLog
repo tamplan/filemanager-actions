@@ -1,5 +1,13 @@
 2009-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	NAObject-derived classes implement NAIDataFactory interface.
+
+	* src/core/na-object-id-enum.c:
+	* src/core/na-object-item-enum.c:
+	* src/core/na-object-action-enum.c:
+	* src/core/na-object-profile-enum.c:
+	* src/core/na-object-menu-enum.c: New files.
+
 	Define NADataElement class.
 
 	* src/core/na-data-element.c:

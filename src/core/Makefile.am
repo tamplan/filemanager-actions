@@ -52,10 +52,15 @@ libna_core_la_SOURCES = \
 	na-io-factory.h										\
 	na-object.c											\
 	na-object-id.c										\
+	na-object-id-enum.c									\
 	na-object-item.c									\
+	na-object-item-enum.c								\
 	na-object-action.c									\
+	na-object-action-enum.c								\
 	na-object-profile.c									\
+	na-object-profile-enum.c							\
 	na-object-menu.c									\
+	na-object-menu-enum.c								\
 	\
 	na-iabout.c											\
 	na-iabout.h											\
