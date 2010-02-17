@@ -516,79 +516,11 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                             <property name="visible">True</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkVBox" id="vbox42">
+                              <object class="GtkVBox" id="PreferencesExportFormatVBox">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
                                 <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
-                                <child>
-                                  <object class="GtkRadioButton" id="PrefsExportGConfSchemaV1Button">
-                                    <property name="label" translatable="yes">Export as a _full GConf schema</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">This used to be the historical export format.
-The exported file may later be imported via :
-- Import assistant of the Nautilus Actions Configuration Tool,
-- or via the gconftool-2 --import-schema-file command-line tool.</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="active">True</property>
-                                    <property name="draw_indicator">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkRadioButton" id="PrefsExportGConfSchemaV2Button">
-                                    <property name="label" translatable="yes">Export as a _light GConf schema</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">The exported file may later be imported via :
-- Import assistant of the Nautilus Actions Configuration Tool,
-- or via the gconftool-2 --import-schema-file command-line tool.</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="draw_indicator">True</property>
-                                    <property name="group">PrefsExportGConfSchemaV1Button</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkRadioButton" id="PrefsExportGConfDumpButton">
-                                    <property name="label" translatable="yes">Export as a GConf _dump file</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">This should be the preferred format for newly exported actions.
-The exported file may later be imported via :
-- Import assistant of the Nautilus Actions Configuration Tool,
-- or via the gconftool-2 --load command-line tool.</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="draw_indicator">True</property>
-                                    <property name="group">PrefsExportGConfSchemaV1Button</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkRadioButton" id="PrefsExportAskButton">
-                                    <property name="label" translatable="yes">_Ask me</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">You will be asked each time an action is about to be exported.</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="draw_indicator">True</property>
-                                    <property name="group">PrefsExportGConfSchemaV1Button</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">3</property>
-                                  </packing>
-                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

@@ -122,13 +122,7 @@ enum {
 GType        na_iprefs_get_type( void );
 
 gint         na_iprefs_get_order_mode( NAIPrefs *instance );
-/*void         na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );*/
-
-/*gboolean     na_iprefs_should_add_about_item( NAIPrefs *instance );*/
-/*void         na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled );*/
-
-/*gboolean     na_iprefs_should_create_root_menu( NAIPrefs *instance );*/
-/*void         na_iprefs_set_create_root_menu( NAIPrefs *instance, gboolean enabled );*/
+void         na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
 
 GConfClient *na_iprefs_get_gconf_client ( const NAIPrefs *instance );
 

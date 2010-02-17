@@ -1,5 +1,14 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-export-format.c:
+	* src/nact/nact-export-format.h:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-preferences.ui: Update NactPreferencesEditor class.
+
 	* src/nact/base-iprefs.c:
 	* src/nact/base-iprefs.h:
 	* src/nact/nact-main-window.c:

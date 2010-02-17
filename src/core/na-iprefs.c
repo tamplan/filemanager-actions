@@ -59,6 +59,8 @@ static GType register_type( void );
 static void  interface_base_init( NAIPrefsInterface *klass );
 static void  interface_base_finalize( NAIPrefsInterface *klass );
 
+static void  write_string( NAIPrefs *instance, const gchar *name, const gchar *value );
+
 GType
 na_iprefs_get_type( void )
 {
@@ -133,53 +135,6 @@ interface_base_finalize( NAIPrefsInterface *klass )
 }
 
 /**
- * na_iprefs_get_level_zero_items:
- * @instance: this #NAIPrefs interface instance.
- *
- * Returns: the ordered list of UUID's of items which are to be
- * displayed at level zero of the hierarchy.
- *
- * The returned list should be na_utils_free_string_list() by the caller.
- */
-/*
-GSList *
-na_iprefs_get_level_zero_items( NAIPrefs *instance )
-{
-	static const gchar *thisfn = "na_iprefs_get_level_zero_items";
-	GSList *level_zero = NULL;
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-	g_return_val_if_fail( NA_IS_IPREFS( instance ), NULL );
-
-	if( st_initialized && !st_finalized ){
-
-		level_zero = na_iprefs_read_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS, NULL );
-	}
-
-	return( level_zero );
-}
-*/
-
-/**
- * na_iprefs_set_level_zero_items:
- * @instance: this #NAIPrefs interface instance.
- * @order: the ordered #GSList of item UUIDs.
- *
- * Writes the order and the content of the level-zero UUID's.
- */
-/*
-void
-na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order )
-{
-	g_return_if_fail( NA_IS_IPREFS( instance ));
-
-	if( st_initialized && !st_finalized ){
-
-		na_iprefs_write_string_list( instance, IPREFS_LEVEL_ZERO_ITEMS, order );
-	}
-}*/
-
-/**
  * na_iprefs_get_order_mode:
  * @instance: this #NAIPrefs interface instance.
  *
@@ -225,7 +180,6 @@ na_iprefs_get_order_mode( NAIPrefs *instance )
  * Writes the current status of 'alphabetical order' to the GConf
  * preference system.
  */
-/*
 void
 na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 {
@@ -237,110 +191,12 @@ na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 
 		order_str = gconf_enum_to_string( order_mode_table, mode );
 
-		na_iprefs_write_string(
+		write_string(
 				instance,
 				IPREFS_DISPLAY_ALPHABETICAL_ORDER,
 				order_str ? order_str : DEFAULT_ORDER_MODE_STR );
 	}
-}*/
-
-/**
- * na_iprefs_should_add_about_item:
- * @instance: this #NAIPrefs interface instance.
- *
- * Returns: #TRUE if an "About Nautilus Actions" item should be added to
- * the first level of Nautilus context submenus (if any), #FALSE else.
- *
- * Note: this function returns a suitable default value if the key is
- * not found in GConf preferences.
- *
- * Note: please take care of keeping the default value synchronized with
- * those defined in schemas.
- */
-#if 0
-gboolean
-na_iprefs_should_add_about_item( NAIPrefs *instance )
-{
-	gboolean about = FALSE;
-
-	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
-
-	if( st_initialized && !st_finalized ){
-
-		about = na_iprefs_read_bool( instance, IPREFS_ADD_ABOUT_ITEM, TRUE );
-	}
-
-	return( about );
 }
-#endif
-
-/**
- * na_iprefs_set_add_about_item:
- * @instance: this #NAIPrefs interface instance.
- * @enabled: the new value to be written.
- *
- * Writes the new value to the GConf preference system.
- */
-/*
-void
-na_iprefs_set_add_about_item( NAIPrefs *instance, gboolean enabled )
-{
-	g_return_if_fail( NA_IS_IPREFS( instance ));
-
-	if( st_initialized && !st_finalized ){
-
-		na_iprefs_write_bool( instance, IPREFS_ADD_ABOUT_ITEM, enabled );
-	}
-}*/
-
-/**
- * na_iprefs_should_create_root_menu:
- * @instance: this #NAIPrefs interface instance.
- *
- * Returns: #TRUE if a root submenu should be created in the Nautilus
- * context menus, #FALSE else.
- *
- * Note: this function returns a suitable default value if the key is
- * not found in GConf preferences.
- *
- * Note: please take care of keeping the default value synchronized with
- * those defined in schemas.
- */
-#if 0
-gboolean
-na_iprefs_should_create_root_menu( NAIPrefs *instance )
-{
-	gboolean create = FALSE;
-
-	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
-
-	if( st_initialized && !st_finalized ){
-
-		create = na_iprefs_read_bool( instance, IPREFS_CREATE_ROOT_MENU, FALSE );
-	}
-
-	return( create );
-}
-#endif
-
-/**
- * na_iprefs_set_create_root_menu:
- * @instance: this #NAIPrefs interface instance.
- * @enabled: the new value to be written.
- *
- * Writes the new value to the GConf preference system.
- */
-/*
-void
-na_iprefs_set_create_root_menu( NAIPrefs *instance, gboolean enabled )
-{
-	g_return_if_fail( NA_IS_IPREFS( instance ));
-
-	if( st_initialized && !st_finalized ){
-
-		na_iprefs_write_bool( instance, IPREFS_CREATE_ROOT_MENU, enabled );
-	}
-}*/
 
 /**
  * na_iprefs_get_gconf_client:
@@ -460,8 +316,7 @@ na_iprefs_read_string_list( const NAIPrefs *instance, const gchar *name, const g
 	return( list );
 }
 
-#if O
-/**
+/*
  * na_iprefs_write_string:
  * @instance: this #NAIPrefs interface instance.
  * @name: the preference key.
@@ -469,18 +324,20 @@ na_iprefs_read_string_list( const NAIPrefs *instance, const gchar *name, const g
  *
  * Writes the value as the given GConf preference.
  */
-void
-na_iprefs_write_string( NAIPrefs *instance, const gchar *name, const gchar *value )
+static void
+write_string( NAIPrefs *instance, const gchar *name, const gchar *value )
 {
 	gchar *path;
 
 	g_return_if_fail( NA_IS_IPREFS( instance ));
 
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_string( na_iprefs_get_gconf_client( instance ), path, value, NULL );
-	g_free( path );
+	if( st_initialized && !st_finalized ){
+
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+		na_gconf_utils_write_string( na_iprefs_get_gconf_client( instance ), path, value, NULL );
+		g_free( path );
+	}
 }
-#endif
 
 /**
  * na_iprefs_write_string_list

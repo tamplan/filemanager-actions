@@ -37,6 +37,7 @@
 #include <core/na-exporter.h>
 #include <core/na-export-format.h>
 
+#include "nact-iprefs.h"
 #include "nact-export-format.h"
 
 #define EXPORT_FORMAT_PROP_QUARK_ID		"nact-export-format-prop-quark-id"
@@ -57,7 +58,9 @@ typedef struct {
 }
 	NactExportFormatStr;
 
-static void draw_in_vbox( const NAExportFormat *format, GtkWidget *vbox, guint mode );
+static const NAExporterStr ask_str = { NULL, ASKME_LABEL, ASKME_LABEL, ASKME_DESCRIPTION };
+
+static void draw_in_vbox( const NAExportFormat *format, GtkWidget *vbox, guint mode, gint id );
 static void select_default_iter( GtkWidget *widget, NactExportFormatStr *str );
 static void get_selected_iter( GtkWidget *widget, NactExportFormatStr *str );
 static void get_label_iter( GtkWidget *widget, NactExportFormatStr *str );
@@ -73,15 +76,33 @@ static void get_label_iter( GtkWidget *widget, NactExportFormatStr *str );
 void
 nact_export_format_display( const NAPivot *pivot, GtkWidget *vbox, guint mode )
 {
+	static const gchar *thisfn = "nact_export_format_display";
 	GList *formats, *ifmt;
+	NAExportFormat *format;
 
 	formats = na_exporter_get_formats( pivot );
 
 	for( ifmt = formats ; ifmt ; ifmt = ifmt->next ){
-		draw_in_vbox( NA_EXPORT_FORMAT( ifmt->data ), vbox, mode );
+		draw_in_vbox( NA_EXPORT_FORMAT( ifmt->data ), vbox, mode, -1 );
 	}
 
 	na_exporter_free_formats( formats );
+
+	switch( mode ){
+
+		case EXPORT_FORMAT_DISPLAY_PREFERENCES:
+		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
+			format = na_export_format_new( &ask_str, NULL );
+			draw_in_vbox( format, vbox, mode, IPREFS_EXPORT_FORMAT_ASK );
+			g_object_unref( format );
+			break;
+
+		case EXPORT_FORMAT_DISPLAY_ASK:
+			break;
+
+		default:
+			g_warning( "%s: mode=%d: unknown mode", thisfn, mode );
+	}
 }
 
 /*
@@ -94,9 +115,8 @@ nact_export_format_display( const NAPivot *pivot, GtkWidget *vbox, guint mode )
  *  |   |   +- description
  */
 static void
-draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
+draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode, gint id )
 {
-	static const gchar *thisfn = "nact_export_format_draw_in_vbox";
 	static GtkRadioButton *first_button = NULL;
 	GtkVBox *vbox;
 	gchar *description;
@@ -106,6 +126,7 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
 	GtkLabel *radio_label;
 	gchar *markup, *label;
 	GtkLabel *desc_label;
+	GQuark quark_id;
 
 	vbox = GTK_VBOX( gtk_vbox_new( FALSE, 0 ));
 	gtk_box_pack_start( GTK_BOX( container ), GTK_WIDGET( vbox ), FALSE, TRUE, 0 );
@@ -129,6 +150,7 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
 	switch( mode ){
 
 		case EXPORT_FORMAT_DISPLAY_ASK:
+		case EXPORT_FORMAT_DISPLAY_PREFERENCES:
 			label = na_export_format_get_ask_label( format );
 			markup = g_markup_printf_escaped( "%s", label );
 			break;
@@ -137,9 +159,6 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
 			label = na_export_format_get_label( format );
 			markup = g_markup_printf_escaped( "<b>%s</b>", label );
 			break;
-
-		default:
-			g_warning( "%s: mode=%d: unknown mode", thisfn, mode );
 	}
 	if( markup ){
 		gtk_label_set_markup( radio_label, markup );
@@ -162,7 +181,8 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
 			break;
 	}
 
-	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_QUARK_ID, GUINT_TO_POINTER( na_export_format_get_id( format )));
+	quark_id = ( id == -1 ) ? na_export_format_get_quark( format ) : id;
+	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_QUARK_ID, GUINT_TO_POINTER( quark_id ));
 	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_BUTTON, button );
 	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_LABEL, radio_label );
 	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_DESCRIPTION, desc_label );
@@ -209,13 +229,13 @@ select_default_iter( GtkWidget *widget, NactExportFormatStr *str )
 }
 
 /**
- * nact_export_format_get_select:
+ * nact_export_format_get_selected:
  * @container: the #GtkVBox in which the display has been drawn.
  *
  * Returns: the currently selected value, as a #GQuark.
  */
 GQuark
-nact_export_format_get_select( const GtkWidget *container )
+nact_export_format_get_selected( const GtkWidget *container )
 {
 	GQuark format;
 	NactExportFormatStr *str;

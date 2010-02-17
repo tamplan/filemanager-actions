@@ -380,7 +380,7 @@ get_format( NactExportAsk *editor )
 	gboolean keep;
 
 	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-	export_format = nact_export_format_get_select( container );
+	export_format = nact_export_format_get_selected( container );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));

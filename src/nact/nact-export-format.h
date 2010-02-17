@@ -57,11 +57,18 @@ enum {
 	 * propose the 'Ask me' choice
 	 */
 	EXPORT_FORMAT_DISPLAY_ASSISTANT,
+
+	/* preferences editor
+	 * display the assistant short label
+	 * do not display the full description
+	 * propose the 'Ask me' choice
+	 */
+	EXPORT_FORMAT_DISPLAY_PREFERENCES,
 };
 
 void   nact_export_format_display( const NAPivot *pivot, GtkWidget *container, guint mode );
 void   nact_export_format_select( const GtkWidget *container, GQuark format );
-GQuark nact_export_format_get_select( const GtkWidget *container );
+GQuark nact_export_format_get_selected( const GtkWidget *container );
 
 gchar *nact_export_format_get_label      ( const GtkWidget *container, GQuark format );
 gchar *nact_export_format_get_description( const GtkWidget *container, GQuark format );

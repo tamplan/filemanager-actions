@@ -587,7 +587,7 @@ get_export_format( NactAssistantExport *window )
 	GQuark format;
 
 	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
-	format = nact_export_format_get_select( container );
+	format = nact_export_format_get_selected( container );
 
 	return( format );
 }
