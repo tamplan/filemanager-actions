@@ -1,5 +1,8 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* * src/plugin-tracker/na-tracker-dbus.c:
+	* src/plugin-tracker/na-tracker.c: Update NATracker plugin.
+
 	* src/core/Makefile.am:
 	* src/core/na-updater.c:
 	* src/core/na-updater.h:

@@ -39,7 +39,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
-#include <api/na-dbus-names.h>
+#include <api/na-dbus.h>
 
 #include "na-tracker.h"
 #include "na-tracker-dbus.h"

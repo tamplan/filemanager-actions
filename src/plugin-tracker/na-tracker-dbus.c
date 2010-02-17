@@ -41,7 +41,7 @@
 
 #include <dbus/dbus-glib.h>
 
-#include <core/na-dbus.h>
+#include <core/na-dbus-tracker.h>
 
 #include "na-tracker-dbus.h"
 #include "na-tracker-dbus-glue.h"
