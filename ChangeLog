@@ -1,5 +1,7 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	Refactor: move all XML code to src/io-xml plugin.
+
 	* src/nact/Makefile.am:
 	* src/nact/base-application-class.h:
 	* src/nact/base-assistant.h:
