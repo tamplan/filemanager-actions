@@ -1,5 +1,10 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/Makefile.am:
+	* src/core/na-iimporter.c:
+	* src/core/na-io-provider.c:
+	* src/core/na-iprefs.h: Update core library.
+
 	* src/nact/nact-export-format.h:
 	* src/nact/nact-export-format.c:
 	* src/core/na-exporter.h:

@@ -45,6 +45,8 @@ libna_core_la_SOURCES = \
 	na-dbus-tracker.h									\
 	na-exporter.c										\
 	na-exporter.h										\
+	na-export-format.c									\
+	na-export-format.h									\
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
 	na-iabout.c											\

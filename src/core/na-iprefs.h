@@ -119,34 +119,7 @@ enum {
 	IPREFS_IMPORT_ASK
 };
 
-/* import/export formats
- *
- * FORMAT_GCONF_SCHEMA_V1: a schema with owner, short and long
- * descriptions ; each action has its own schema addressed by the uuid
- * (historical format up to v1.10.x serie)
- *
- * FORMAT_GCONF_SCHEMA_V2: the lightest schema still compatible
- * with gconftool-2 --install-schema-file (no owner, no short nor long
- * descriptions) - introduced in v 1.11
- *
- * FORMAT_GCONF_SCHEMA: exports a full schema, not an action
- *
- * FORMAT_GCONF_ENTRY: not a schema, but a dump of the GConf entry
- * introduced in v 1.11
- */
-enum {
-	IPREFS_EXPORT_NO_EXPORT = 1,
-	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1,
-	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2,
-	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA,
-	IPREFS_EXPORT_FORMAT_GCONF_ENTRY,
-	IPREFS_EXPORT_FORMAT_ASK
-};
-
 GType        na_iprefs_get_type( void );
-
-/*GSList      *na_iprefs_get_level_zero_items( NAIPrefs *instance );*/
-/*void         na_iprefs_set_level_zero_items( NAIPrefs *instance, GSList *order );*/
 
 gint         na_iprefs_get_order_mode( NAIPrefs *instance );
 /*void         na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );*/

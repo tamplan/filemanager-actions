@@ -40,8 +40,8 @@ struct NAIImporterInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized   = FALSE;
+gboolean iimporter_initialized = FALSE;
+gboolean iimporter_finalized   = FALSE;
 
 static GType  register_type( void );
 static void   interface_base_init( NAIImporterInterface *klass );
@@ -103,7 +103,7 @@ interface_base_init( NAIImporterInterface *klass )
 {
 	static const gchar *thisfn = "na_iimporter_interface_base_init";
 
-	if( !st_initialized ){
+	if( !iimporter_initialized ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
@@ -111,7 +111,7 @@ interface_base_init( NAIImporterInterface *klass )
 
 		klass->get_version = iimporter_get_version;
 
-		st_initialized = TRUE;
+		iimporter_initialized = TRUE;
 	}
 }
 
@@ -120,11 +120,11 @@ interface_base_finalize( NAIImporterInterface *klass )
 {
 	static const gchar *thisfn = "na_iimporter_interface_base_finalize";
 
-	if( st_initialized && !st_finalized ){
+	if( iimporter_initialized && !iimporter_finalized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		st_finalized = TRUE;
+		iimporter_finalized = TRUE;
 
 		g_free( klass->private );
 	}

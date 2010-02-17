@@ -59,8 +59,6 @@
   more: have a single place where the schema is _described_
   so that we may generalize export, import, new, etc.
 
-- import/export menus ?
-
 - IActionTab: check_label has became useless since validity is global
   to the action - remove, or extend to each field which can led to
   unvalidity
@@ -157,3 +155,8 @@
   to be editable in NACT, but not used in runtime plugin
 
 - profile path and parameters should be set together as only one variable
+
+- AssistantExport and AssistantExportAsk should be dynamically displayed
+  depending of available formats provided by NAIExporter modules
+
+- one should be able to import/export menus
