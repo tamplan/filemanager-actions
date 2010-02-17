@@ -41,7 +41,11 @@
 
 G_BEGIN_DECLS
 
-void nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable );
+void       nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable );
+
+/* pixbuf utilities
+ */
+GdkPixbuf *nact_gtk_utils_get_pixbuf( const gchar *name, gint size );
 
 G_END_DECLS
 

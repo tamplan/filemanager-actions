@@ -77,10 +77,10 @@ enum {
 
 GType       na_object_item_get_type( void );
 
-void        na_object_item_copy( NAObjectItem *item, const NAObjectItem *source );
+void        na_object_item_copy     ( NAObjectItem *item, const NAObjectItem *source );
 gboolean    na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b );
 
-NAObjectId *na_object_item_get_item( const NAObjectItem *item, const gchar *id );
+NAObjectId *na_object_item_get_item   ( const NAObjectItem *item, const gchar *id );
 void        na_object_item_append_item( NAObjectItem *object, const NAObjectId *item );
 
 GSList     *na_object_item_build_items_slist( const NAObjectItem *item );

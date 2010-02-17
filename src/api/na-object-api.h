@@ -118,6 +118,7 @@ G_BEGIN_DECLS
 #define na_object_is_target_background( obj )			(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_BACKGROUND )))
 #define na_object_is_target_toolbar( obj )				(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_TOOLBAR )))
 #define na_object_get_toolbar_label( obj )				(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_LABEL ))
+#define na_object_is_toolbar_same_label( obj )			(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_SAME_LABEL )))
 
 #define na_object_set_version( obj, version )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_VERSION, ( const void * )( version ))
 #define na_object_set_target_selection( obj, target )	na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_SELECTION, ( const void * ) GUINT_TO_POINTER( target ))

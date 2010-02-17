@@ -1,5 +1,11 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-object-api.h:
+	* src/api/na-object-item.h:
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h:
+	* src/nact/nact-iaction-tab.c: Update NactIActionTab interface.
+
 	* core/na-object-action-fn.h:
 	* core/na-object-action-priv.h:
 	* core/na-object-fn.h:

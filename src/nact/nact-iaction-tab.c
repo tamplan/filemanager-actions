@@ -35,10 +35,10 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
-#include <runtime/na-io-provider.h>
-#include <runtime/na-utils.h>
+#include <core/na-io-provider.h>
 
 #include "base-window.h"
 #include "nact-application.h"
@@ -108,7 +108,7 @@ static void          on_enabled_toggled( GtkToggleButton *button, NactIActionTab
 
 static void          on_readonly_toggled( GtkToggleButton *button, NactIActionTab *instance );
 
-static void          display_provider_name( NactIActionTab *instance, NAPivot *pivot, NAObjectItem *item );
+static void          display_provider_name( NactIActionTab *instance, NAObjectItem *item );
 
 GType
 nact_iaction_tab_get_type( void )
@@ -405,8 +405,6 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 {
 	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
-	NAPivot *pivot;
-	NactApplication *application;
 	gboolean enable_tab;
 	gboolean target_selection, target_background, target_toolbar;
 	gboolean enable_label;
@@ -428,8 +426,6 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 
 	if( st_initialized && !st_finalized ){
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-		pivot = nact_application_get_pivot( application );
 		st_on_selection_change = TRUE;
 
 		g_object_get(
@@ -444,15 +440,15 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );
 
 		target_selection = ( item && (
-				( NA_IS_OBJECT_ACTION( item ) && na_object_action_is_target_selection( NA_OBJECT_ACTION( item ))) ||
+				( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_selection( NA_OBJECT_ACTION( item ))) ||
 				( NA_IS_OBJECT_MENU( item ))));
 
 		target_background = ( item && (
-				( NA_IS_OBJECT_ACTION( item ) && na_object_action_is_target_background( NA_OBJECT_ACTION( item ))) ||
+				( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_background( NA_OBJECT_ACTION( item ))) ||
 				( NA_IS_OBJECT_MENU( item ))));
 
 		target_toolbar = ( item && (
-				( NA_IS_OBJECT_ACTION( item ) && na_object_action_is_target_toolbar( NA_OBJECT_ACTION( item )))));
+				( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_toolbar( NA_OBJECT_ACTION( item )))));
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" ));
 		gtk_toggle_button_set_active( toggle, target_selection );
@@ -481,13 +477,13 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
-		same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( item )) : FALSE;
+		same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_is_toolbar_same_label( NA_OBJECT_ACTION( item )) : FALSE;
 		gtk_toggle_button_set_active( toggle, same_label );
 		toolbar_same_label_set_sensitive( instance, item );
 		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
-		label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_action_toolbar_get_label( NA_OBJECT_ACTION( item )) : g_strdup( "" );
+		label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_get_toolbar_label( NA_OBJECT_ACTION( item )) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		g_free( label );
 		toolbar_label_set_sensitive( instance, item );
@@ -544,7 +540,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		g_free( label );
 		gtk_widget_set_sensitive( label_widget, item != NULL );
 
-		display_provider_name( instance, pivot, item );
+		display_provider_name( instance, item );
 
 		st_on_selection_change = FALSE;
 	}
@@ -554,16 +550,12 @@ static void
 on_tab_updatable_provider_changed( NactIActionTab *instance, NAObjectItem *item )
 {
 	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_provider_changed";
-	NactApplication *application;
-	NAPivot *pivot;
 
 	g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
 
 	if( st_initialized && !st_finalized ){
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-		pivot = nact_application_get_pivot( application );
-		display_provider_name( instance, pivot, item );
+		display_provider_name( instance, item );
 	}
 }
 
@@ -593,7 +585,7 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 			is_target = gtk_toggle_button_get_active( button );
 
 			if( editable ){
-				na_object_action_set_target_selection( action, is_target );
+				na_object_set_target_selection( action, is_target );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 
@@ -628,7 +620,7 @@ on_target_background_toggled( GtkToggleButton *button, NactIActionTab *instance 
 			is_target = gtk_toggle_button_get_active( button );
 
 			if( editable ){
-				na_object_action_set_target_background( action, is_target );
+				na_object_set_target_background( action, is_target );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 
@@ -694,11 +686,11 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 		check_for_label( instance, entry, label );
 
 		if( NA_IS_OBJECT_ACTION( edited )){
-			target_toolbar = na_object_action_is_target_toolbar( NA_OBJECT_ACTION( edited ));
+			target_toolbar = na_object_is_target_toolbar( NA_OBJECT_ACTION( edited ));
 			if( target_toolbar ){
-				toolbar_same_label = na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( edited ));
+				toolbar_same_label = na_object_is_toolbar_same_label( NA_OBJECT_ACTION( edited ));
 				if( toolbar_same_label ){
-					na_object_action_toolbar_set_label( NA_OBJECT_ACTION( edited ), label );
+					na_object_set_toolbar_label( NA_OBJECT_ACTION( edited ), label );
 				}
 			}
 		}
@@ -740,7 +732,7 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 			is_target = gtk_toggle_button_get_active( button );
 
 			if( editable ){
-				na_object_action_set_target_toolbar( action, is_target );
+				na_object_set_target_toolbar( action, is_target );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 				toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( action ));
@@ -779,7 +771,7 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 			same_label = gtk_toggle_button_get_active( button );
 
 			if( editable ){
-				na_object_action_toolbar_set_same_label( NA_OBJECT_ACTION( edited ), same_label );
+				na_object_set_toolbar_same_label( NA_OBJECT_ACTION( edited ), same_label );
 				if( same_label ){
 					label = na_object_get_label( edited );
 					label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
@@ -808,7 +800,7 @@ toolbar_same_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item )
 
 	readonly = item ? na_object_is_readonly( item ) : FALSE;
 	toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
-	target_toolbar = item && NA_IS_OBJECT_ACTION( item ) ? na_object_action_is_target_toolbar( NA_OBJECT_ACTION( item )) : FALSE;
+	target_toolbar = item && NA_IS_OBJECT_ACTION( item ) ? na_object_is_target_toolbar( NA_OBJECT_ACTION( item )) : FALSE;
 	gtk_widget_set_sensitive( GTK_WIDGET( toggle ), target_toolbar && !readonly );
 }
 
@@ -826,7 +818,7 @@ on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance )
 	if( edited && NA_IS_OBJECT_ACTION( edited )){
 
 		label = gtk_entry_get_text( entry );
-		na_object_action_toolbar_set_label( NA_OBJECT_ACTION( edited ), label );
+		na_object_set_toolbar_label( NA_OBJECT_ACTION( edited ), label );
 
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
@@ -840,7 +832,7 @@ toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item )
 	GtkWidget *label_widget;
 
 	is_action = item && NA_IS_OBJECT_ACTION( item );
-	same_label = is_action ? na_object_action_toolbar_use_same_label( NA_OBJECT_ACTION( item )) : FALSE;
+	same_label = is_action ? na_object_is_toolbar_same_label( NA_OBJECT_ACTION( item )) : FALSE;
 	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
 	gtk_widget_set_sensitive( label_widget, is_action && !same_label );
 }
@@ -856,7 +848,7 @@ on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
 			NULL );
 
 	if( edited ){
-		na_object_item_set_tooltip( edited, gtk_entry_get_text( entry ));
+		na_object_set_tooltip( edited, gtk_entry_get_text( entry ));
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
@@ -964,7 +956,6 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 
 	g_debug( "%s: entry=%p, instance=%p", thisfn, ( void * ) icon_entry, ( void * ) instance );
 
-	pixbuf = NULL;
 	icon_name = NULL;
 
 	g_object_get(
@@ -974,15 +965,11 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 
 	if( edited ){
 		icon_name = gtk_entry_get_text( icon_entry );
-		na_object_item_set_icon( edited, icon_name );
+		na_object_set_icon( edited, icon_name );
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, TRUE );
-
-		pixbuf = na_object_item_get_pixbuf( edited );
 	}
 
-	if( !pixbuf ){
-		pixbuf = na_utils_get_pixbuf( NULL, GTK_ICON_SIZE_MENU );
-	}
+	pixbuf = nact_gtk_utils_get_pixbuf( icon_name, GTK_ICON_SIZE_MENU );
 
 	if( pixbuf ){
 		image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
@@ -1082,7 +1069,7 @@ on_enabled_toggled( GtkToggleButton *button, NactIActionTab *instance )
 			enabled = gtk_toggle_button_get_active( button );
 
 			if( editable ){
-				na_object_item_set_enabled( edited, enabled );
+				na_object_set_enabled( edited, enabled );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 
 			} else {
@@ -1112,7 +1099,7 @@ on_readonly_toggled( GtkToggleButton *button, NactIActionTab *instance )
 }
 
 static void
-display_provider_name( NactIActionTab *instance, NAPivot *pivot, NAObjectItem *item )
+display_provider_name( NactIActionTab *instance, NAObjectItem *item )
 {
 	GtkWidget *label_widget;
 	gchar *label;
