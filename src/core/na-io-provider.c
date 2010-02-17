@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
 #include <api/na-iio-provider.h>
@@ -1224,4 +1225,59 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
 	ret = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item( provider->private->provider, item, messages );
 
 	return( ret );
+}
+
+/**
+ * na_io_provider_get_tooltip:
+ * @reason: the reason for why an item is not writable.
+ *
+ * Returns: the associated tooltip, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+na_io_provider_get_tooltip( guint reason )
+{
+	gchar *tooltip;
+
+	tooltip = NULL;
+
+	switch( reason ){
+		case NA_IIO_PROVIDER_STATUS_ITEM_READONLY:
+			tooltip = g_strdup( _( "Item is read-only." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO:
+			tooltip = g_strdup( _( "I/O provider is not willing to write." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND:
+			tooltip = g_strdup( _( "No writable I/O provider found." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN:
+			tooltip = g_strdup( _( "I/O provider has been locked down by an administrator." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER:
+			tooltip = g_strdup( _( "I/O provider has been locked down by the user." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_NO_API:
+			tooltip = g_strdup( _( "I/O provider implementation lacks of required API." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN:
+			tooltip = g_strdup( _( "The whole configuration has been locked down by an administrator." ));
+			break;
+
+		case 0:
+			tooltip = g_strdup( "" );
+			break;
+
+		default:
+			tooltip = g_strdup_printf( _( "Item is not writable for an unknown reason (%d)" ), reason );
+			break;
+	}
+
+	return( tooltip );
 }

@@ -101,6 +101,8 @@ gboolean       na_io_provider_has_write_api              ( const NAIOProvider *p
 guint          na_io_provider_write_item ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
 guint          na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
 
+gchar         *na_io_provider_get_tooltip( guint reason );
+
 G_END_DECLS
 
 #endif /* __CORE_NA_IO_PROVIDER_H__ */

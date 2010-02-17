@@ -34,8 +34,9 @@
 
 #include <glib/gi18n.h>
 
-#include <runtime/na-utils.h>
+#include <core/na-io-provider.h>
 
+#include "nact-gtk-utils.h"
 #include "nact-main-statusbar.h"
 
 typedef struct {
@@ -185,15 +186,6 @@ void
 nact_main_statusbar_set_locked( NactMainWindow *window, gboolean readonly, gint reason )
 {
 	static const gchar *thisfn = "nact_main_statusbar_set_locked";
-
-	static const gchar *tooltip_item_read_only = N_( "Item is read-only." );
-	static const gchar *tooltip_provider_not_willing_to = N_( "I/O provider is not willing to write." );
-	static const gchar *tooltip_provider_not_found = N_( "No writable I/O provider found." );
-	static const gchar *tooltip_provider_locked_by_admin = N_( "I/O provider has been locked down by an administrator." );
-	static const gchar *tooltip_provider_locked_by_user = N_( "I/O provider has been locked down by the user." );
-	static const gchar *tooltip_provider_no_api = N_( "I/O provider implementation lacks of required API." );
-	static const gchar *tooltip_config_locked = N_( "The whole configuration has been locked down by an administrator." );
-
 	GtkStatusbar *bar;
 	GtkFrame *frame;
 	GtkImage *image;
@@ -216,46 +208,8 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean readonly, gint 
 		if( readonly ){
 			gtk_image_set_from_file( image, LOCKED_IMAGE );
 			set_pixbuf = FALSE;
-
-			switch( reason ){
-				case NA_IIO_PROVIDER_STATUS_ITEM_READONLY:
-					g_free( tooltip );
-					tooltip = g_strdup( tooltip_item_read_only );
-					break;
-
-				case NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO:
-					g_free( tooltip );
-					tooltip = g_strdup( tooltip_provider_not_willing_to );
-					break;
-
-				case NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND:
-					g_free( tooltip );
-					tooltip = g_strdup( tooltip_provider_not_found );
-					break;
-
-				case NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN:
-					g_free( tooltip );
-					tooltip = g_strdup( tooltip_provider_locked_by_admin );
-					break;
-
-				case NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER:
-					g_free( tooltip );
-					tooltip = g_strdup( tooltip_provider_locked_by_user );
-					break;
-
-				case NA_IIO_PROVIDER_STATUS_NO_API:
-					g_free( tooltip );
-					tooltip = g_strdup( tooltip_provider_no_api );
-					break;
-
-				case NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN:
-					g_free( tooltip );
-					tooltip = g_strdup( tooltip_config_locked );
-					break;
-
-				default:
-					break;
-			}
+			g_free( tooltip );
+			tooltip = na_io_provider_get_tooltip( reason );
 		}
 
 		gtk_widget_set_tooltip_text( GTK_WIDGET( image ), tooltip );
@@ -263,7 +217,7 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean readonly, gint 
 	}
 
 	if( set_pixbuf ){
-		pixbuf = na_utils_get_pixbuf( NULL, GTK_ICON_SIZE_MENU );
+		pixbuf = nact_gtk_utils_get_pixbuf( NULL, GTK_ICON_SIZE_MENU );
 		gtk_image_set_from_pixbuf( image, pixbuf );
 	}
 }
