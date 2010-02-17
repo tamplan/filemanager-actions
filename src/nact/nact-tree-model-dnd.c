@@ -32,21 +32,24 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+#include <string.h>
+
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
-#include <runtime/na-iprefs.h>
-#include <runtime/na-utils.h>
+#include <core/na-importer.h>
 
 #include "nact-application.h"
 #include "nact-clipboard.h"
 #include "nact-iactions-list.h"
+#include "nact-iprefs.h"
 #include "nact-main-menubar.h"
 #include "nact-main-statusbar.h"
 #include "nact-main-window.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-dnd.h"
 #include "nact-tree-model-priv.h"
-#include "nact-xml-reader.h"
 
 /*
  * call once egg_tree_multi_drag_add_drag_support( treeview ) at init time (before gtk_main)
@@ -293,9 +296,9 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 
 			case NACT_XCHANGE_FORMAT_XDS:
 				folder = get_xds_atom_value( context );
-				dest_folder = na_utils_remove_last_level_from_path( folder );
+				dest_folder = g_path_get_dirname( folder );
 				g_free( folder );
-				is_writable = na_utils_is_writable_dir( dest_folder );
+				is_writable = na_core_utils_dir_is_writable( dest_folder );
 				gtk_selection_data_set( selection_data, selection_data->target, 8, ( guchar * )( is_writable ? "S" : "F" ), 1 );
 				if( is_writable ){
 					nact_clipboard_dnd_set( model->private->clipboard, info, rows, dest_folder, TRUE );
@@ -488,7 +491,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	static const gchar *thisfn = "nact_tree_model_inside_drag_and_drop";
 	gboolean drop_done;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	NactMainWindow *main_window;
 	NAObjectAction *parent;
 	gboolean copy_data;
@@ -503,7 +506,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	gboolean relabel;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
-	pivot = nact_application_get_pivot( application );
+	updater = nact_application_get_updater( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
 	/*
@@ -531,7 +534,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 					g_object_unref( current );
 
 					if( copy_data ){
-						inserted = na_object_duplicate( current );
+						inserted = ( NAObject * ) na_object_duplicate( current );
 						na_object_set_origin( inserted, NULL );
 						na_object_check_status( inserted );
 
@@ -542,7 +545,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 						g_list_free( deletable );
 					}
 
-					relabel = nact_main_menubar_is_pasted_object_relabeled( inserted, pivot );
+					relabel = nact_main_menubar_is_pasted_object_relabeled( inserted, NA_PIVOT( updater ));
 					na_object_prepare_for_paste( inserted, relabel, copy_data, parent );
 					object_list = g_list_prepend( object_list, inserted );
 					g_debug( "%s: dropped=%s", thisfn, na_object_get_label( inserted ));
@@ -582,14 +585,12 @@ drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction
 	GtkTreePath *new_dest;
 	gboolean drop_ok;
 	NactApplication *application;
-	NAPivot *pivot;
 	NactMainWindow *main_window;
 	GtkTreeIter iter;
 	NAObject *current;
 	GtkTreePath *path;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
-	pivot = nact_application_get_pivot( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
 	new_dest = gtk_tree_path_copy( dest );
@@ -747,15 +748,13 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	gboolean drop_done = FALSE;
 	GSList *uri_list, *is, *msg;
 	NactApplication *application;
-	NAPivot *pivot;
 	gint import_mode;
-	NAObjectAction *action;
+	NAObjectItem *item;
 	NactMainWindow *main_window;
 	GList *object_list;
 	GtkTreePath *new_dest;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
-	pivot = nact_application_get_pivot( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
 	model->private->drag_has_profiles = FALSE;
@@ -764,14 +763,13 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		return( drop_done );
 	}
 
-	uri_list = g_slist_reverse( na_utils_lines_to_string_list(( const gchar * ) selection_data->data ));
-	import_mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE );
+	uri_list = g_slist_reverse( na_core_utils_slist_from_split(( const gchar * ) selection_data->data, "\n" ));
+	import_mode = nact_iprefs_get_import_mode( BASE_WINDOW( main_window ), IPREFS_IMPORT_ITEMS_IMPORT_MODE );
 
 	object_list = NULL;
 	for( is = uri_list ; is ; is = is->next ){
 
-		action = nact_xml_reader_import(
-				model->private->window,
+		item = na_importer_import(
 				object_list,
 				( const gchar * ) is->data,
 				import_mode,
@@ -783,25 +781,24 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 					main_window,
 					TREE_MODEL_STATUSBAR_CONTEXT,
 					msg->data );
-			na_utils_free_string_list( msg );
-
+			na_core_utils_slist_free( msg );
 		}
 
-		if( action ){
-			g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
-			object_list = g_list_prepend( object_list, action );
-			na_object_check_status( action );
-			na_object_dump( action );
+		if( item ){
+			g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+			object_list = g_list_prepend( object_list, item );
+			na_object_check_status( item );
+			na_object_dump( item );
 			drop_done = TRUE;
 		}
 	}
 
 	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
-	na_object_free_items_list( object_list );
+	na_object_unref_items( object_list );
 
 	gtk_tree_path_free( new_dest );
 	nact_tree_model_dump( model );
-	na_utils_free_string_list( uri_list );
+	na_core_utils_slist_free( uri_list );
 
 	return( drop_done );
 }
@@ -937,12 +934,12 @@ is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path )
 	GtkTreeIter iter;
 	NAObjectItem *parent_item;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	NactMainWindow *main_window;
 
 	accept_ok = FALSE;
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
-	pivot = nact_application_get_pivot( application );
+	updater = nact_application_get_updater( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
 	/* inserting as a level zero item
@@ -950,7 +947,7 @@ is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path )
 	 */
 	if( gtk_tree_path_get_depth( path ) == 1 ){
 
-		if( na_pivot_is_level_zero_writable( pivot )){
+		if( na_pivot_is_level_zero_writable( NA_PIVOT( updater ))){
 			accept_ok = TRUE;
 
 		} else {
@@ -964,7 +961,7 @@ is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path )
 		parent_path = gtk_tree_path_copy( path );
 		if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, parent_path )){
 			gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &parent_item, -1 );
-			if( na_pivot_is_item_writable( pivot, parent_item, NULL )){
+			if( na_updater_is_item_writable( updater, parent_item, NULL )){
 				accept_ok = TRUE;
 			}
 			g_object_unref( parent_item );

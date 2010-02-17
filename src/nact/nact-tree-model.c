@@ -32,12 +32,15 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include <api/na-object-api.h>
 
-#include <runtime/na-iprefs.h>
+#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-clipboard.h"
+#include "nact-gtk-utils.h"
 #include "nact-iactions-list.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-dnd.h"
@@ -282,7 +285,7 @@ tree_model_new( BaseWindow *window, GtkTreeView *treeview )
 	GtkTreeStore *ts_model;
 	NactTreeModel *model;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	gint order_mode;
 
 	g_debug( "%s: window=%p, treeview=%p", thisfn, ( void * ) window, ( void * ) treeview );
@@ -303,8 +306,8 @@ tree_model_new( BaseWindow *window, GtkTreeView *treeview )
 	/* initialize the sortable interface
 	 */
 	application = NACT_APPLICATION( base_window_get_application( window ));
-	pivot = nact_application_get_pivot( application );
-	order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
+	updater = nact_application_get_updater( application );
+	order_mode = na_iprefs_get_order_mode( NA_IPREFS( updater ));
 	nact_tree_model_display_order_change( model, order_mode );
 
 	model->private->window = window;
@@ -595,7 +598,7 @@ nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions)
 		gtk_tree_store_clear( ts_model );
 
 		for( it = items ; it ; it = it->next ){
-			duplicate = na_object_duplicate( it->data );
+			duplicate = ( NAObject * ) na_object_duplicate( it->data );
 			if( !only_actions ){
 				na_object_check_status( duplicate );
 			}
@@ -870,7 +873,8 @@ display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, con
 	g_free( label );
 
 	if( NA_IS_OBJECT_ITEM( object )){
-		GdkPixbuf *icon = na_object_item_get_pixbuf( NA_OBJECT_ITEM( object ));
+		gchar *icon_name = na_object_get_icon( object );
+		GdkPixbuf *icon = nact_gtk_utils_get_pixbuf( icon_name, GTK_ICON_SIZE_MENU );
 		gtk_tree_store_set( model, iter, IACTIONS_LIST_ICON_COLUMN, icon, -1 );
 	}
 }
@@ -918,7 +922,7 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 		if( !only_actions ){
 			append_item( model, treeview, parent, &iter, object );
 		}
-		subitems = na_object_get_items_list( object );
+		subitems = na_object_get_items( object );
 		for( it = subitems ; it ; it = it->next ){
 			fill_tree_store( model, treeview, it->data, only_actions, only_actions ? NULL : &iter );
 		}
@@ -930,7 +934,7 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 		if( only_actions ){
 			na_object_set_parent( object, NULL );
 		} else {
-			subitems = na_object_get_items_list( object );
+			subitems = na_object_get_items( object );
 			for( it = subitems ; it ; it = it->next ){
 				fill_tree_store( model, treeview, it->data, only_actions, &iter );
 			}
@@ -1167,7 +1171,7 @@ sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer
 	if( NA_IS_OBJECT_PROFILE( obj_a )){
 		ret = 0;
 	} else {
-		ret = na_pivot_sort_alpha_asc( obj_a, obj_b );
+		ret = na_object_sort_alpha_asc( obj_a, obj_b );
 	}
 
 	/*g_debug( "%s: ret=%d", thisfn, ret );*/

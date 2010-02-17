@@ -1,5 +1,11 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-object-api.h:
+	* src/api/na-object-item.h:
+	* src/core/na-object-item.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/nact/nact-tree-model.c: Update NactTreeModel class.
+
 	* src/api/na-core-utils.h:
 	* src/api/na-object-api.h:
 	* src/api/na-object-profile.h:

@@ -493,6 +493,48 @@ na_object_item_insert_at( NAObjectItem *item, const NAObjectId *object, gint pos
 }
 
 /**
+ * na_object_item_insert_item:
+ * @item: the #NAObjectItem to which add the subitem.
+ * @object: a #NAObject to be inserted in the list of subitems.
+ * @before: the #NAObject before which the @object should be inserted.
+ *
+ * Inserts a new @object in the list of subitems of @item.
+ *
+ * Doesn't modify the reference count on @object.
+ */
+void
+na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before )
+{
+	GList *childs;
+	GList *before_list;
+
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( NA_IS_OBJECT( object ));
+	g_return_if_fail( !before || NA_IS_OBJECT( before ));
+
+	if( !item->private->dispose_has_run ){
+
+		childs = na_object_get_items( item );
+		if( !g_list_find( childs, ( gpointer ) object )){
+
+			before_list = NULL;
+
+			if( before ){
+				before_list = g_list_find( childs, ( gconstpointer ) before );
+			}
+
+			if( before_list ){
+				childs = g_list_insert_before( childs, before_list, ( gpointer ) object );
+			} else {
+				childs = g_list_prepend( childs, ( gpointer ) object );
+			}
+
+			na_object_set_items( item, childs );
+		}
+	}
+}
+
+/**
  * na_object_item_remove_item:
  * @item: the #NAObjectItem from which the subitem must be removed.
  * @object: a #NAObjectId-derived to be removed from the list of subitems.
