@@ -1,5 +1,8 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-importer.c:
+	* src/core/na-importer.h: New files.
+
 	* src/core/Makefile.am:
 	* src/core/na-iimporter.c:
 	* src/core/na-io-provider.c:
