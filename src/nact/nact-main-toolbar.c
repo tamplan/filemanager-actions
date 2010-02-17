@@ -32,9 +32,8 @@
 #include <config.h>
 #endif
 
-#include <runtime/na-iprefs.h>
-
 #include "nact-application.h"
+#include "nact-iprefs.h"
 #include "nact-main-toolbar.h"
 
 typedef struct {
@@ -98,16 +97,16 @@ static void
 init_toolbar( NactMainWindow *window, GtkActionGroup *group, int toolbar_id )
 {
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	ToolbarProps *props;
 	gboolean is_active;
 	GtkToggleAction *action;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
+	updater = nact_application_get_updater( application );
 	props = get_toolbar_properties( toolbar_id );
 	if( props ){
-		is_active = na_iprefs_read_bool( NA_IPREFS( pivot ), props->prefs_key, props->displayed_per_default );
+		is_active = na_iprefs_read_bool( NA_IPREFS( updater ), props->prefs_key, props->displayed_per_default );
 		if( is_active ){
 			action = GTK_TOGGLE_ACTION( gtk_action_group_get_action( group, props->ui_item ));
 			gtk_toggle_action_set_active( action, TRUE );
@@ -131,8 +130,6 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 	ToolbarProps *props;
 	GtkWidget *toolbar, *hbox, *handle;
 	gulong attach_id, detach_id;
-	NactApplication *application;
-	NAPivot *pivot;
 
 	props = get_toolbar_properties( toolbar_id );
 	if( !props ){
@@ -169,9 +166,7 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 		g_debug( "%s: ref=%d", thisfn, G_OBJECT( toolbar )->ref_count );
 	}
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
-	na_iprefs_write_bool( NA_IPREFS( pivot ), props->prefs_key, is_active );
+	nact_iprefs_write_bool( BASE_WINDOW( window ), props->prefs_key, is_active );
 }
 
 /*

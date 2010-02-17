@@ -1,5 +1,16 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h:
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h:
+	* src/nact/nact-main-toolbar.c: Update toolbar.
+
+	* src/api/na-iio-provider.h:
+	* src/core/na-io-provider.c:
+	* src/core/na-io-provider.h:
+	* src/nact/nact-main-statusbar.c: Update status bar.
+
 	* src/api/na-object-action.h:
 	* src/api/na-object-api.h:
 	* src/api/na-object-id.h:

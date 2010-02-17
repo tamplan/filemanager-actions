@@ -460,27 +460,7 @@ na_iprefs_read_string_list( const NAIPrefs *instance, const gchar *name, const g
 	return( list );
 }
 
-/**
- * na_iprefs_write_bool:
- * @instance: this #NAIPrefs interface instance.
- * @name: the preference entry.
- * @value: the value to be written.
- *
- * Writes the given boolean value.
- */
-#if 0
-void
-na_iprefs_write_bool( NAIPrefs *instance, const gchar *name, gboolean value )
-{
-	gchar *path;
-
-	g_return_if_fail( NA_IS_IPREFS( instance ));
-
-	path = gconf_concat_dir_and_key( NA_GCONF_PREFS_PATH, name );
-	na_gconf_utils_write_bool( na_iprefs_get_gconf_client( instance ), path, value, NULL );
-	g_free( path );
-}
-
+#if O
 /**
  * na_iprefs_write_string:
  * @instance: this #NAIPrefs interface instance.

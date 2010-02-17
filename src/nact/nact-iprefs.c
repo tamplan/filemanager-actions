@@ -309,6 +309,30 @@ nact_iprefs_migrate_key( const BaseWindow *window, const gchar *old_key, const g
 }
 
 /**
+ * nact_iprefs_write_bool:
+ * @window: this #BaseWindow-derived window.
+ * @name: the preference entry.
+ * @value: the value to be written.
+ *
+ * Writes the given boolean value.
+ */
+void
+nact_iprefs_write_bool( const BaseWindow *window, const gchar *name, gboolean value )
+{
+	gchar *path;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+		na_gconf_utils_write_bool( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, value, NULL );
+		g_free( path );
+	}
+}
+
+/**
  * nact_iprefs_write_string:
  * @window: this #BaseWindow-derived window.
  * @name: the preference key.
