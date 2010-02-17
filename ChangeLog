@@ -1,5 +1,7 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iprefs.c: Update NactIPrefs interface.
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c:
 	* src/nact/nact-iconditions-tab.c:

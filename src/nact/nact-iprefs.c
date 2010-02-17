@@ -35,6 +35,7 @@
 
 #include <api/na-gconf-utils.h>
 
+#include "nact-application.h"
 #include "nact-iprefs.h"
 
 /* private interface data
@@ -84,8 +85,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NactIPrefsInterface ),
-		( GNactInitFunc ) interface_base_init,
-		( GNactFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_base_init,
+		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -121,7 +122,7 @@ interface_base_init( NactIPrefsInterface *klass )
 }
 
 static void
-interface_nact_finalize( NactIPrefsInterface *klass )
+interface_base_finalize( NactIPrefsInterface *klass )
 {
 	static const gchar *thisfn = "nact_iprefs_interface_base_finalize";
 
@@ -155,11 +156,9 @@ nact_iprefs_get_export_format( const BaseWindow *window, const gchar *name )
 	NAUpdater *updater;
 	gchar *format_str;
 
-	guint format_int;
-
 	export_format = g_quark_from_static_string( IPREFS_EXPORT_FORMAT_DEFAULT );
 
-	g_return_val_if_fail( BASE_IS_WINDOW, export_format );
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), export_format );
 
 	if( st_initialized && !st_finalized ){
 
@@ -189,9 +188,7 @@ nact_iprefs_get_export_format( const BaseWindow *window, const gchar *name )
 void
 nact_iprefs_set_export_format( const BaseWindow *window, const gchar *name, GQuark format )
 {
-	const gchar *format_str;
-
-	g_return_if_fail( NA_IS_IPREFS( instance ));
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( st_initialized && !st_finalized ){
 
@@ -224,7 +221,7 @@ nact_iprefs_get_import_mode( const BaseWindow *window, const gchar *name )
 	NactApplication *application;
 	NAUpdater *updater;
 
-	g_return_val_if_fail( NA_IS_IPREFS( instance ), DEFAULT_IMPORT_MODE_INT );
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), DEFAULT_IMPORT_MODE_INT );
 
 	if( st_initialized && !st_finalized ){
 
@@ -259,7 +256,7 @@ nact_iprefs_set_import_mode( const BaseWindow *window, const gchar *name, gint m
 {
 	const gchar *import_str;
 
-	g_return_if_fail( NA_IS_IPREFS( instance ));
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( st_initialized && !st_finalized ){
 
@@ -291,7 +288,7 @@ nact_iprefs_migrate_key( const BaseWindow *window, const gchar *old_key, const g
 	GConfValue *value;
 
 	g_debug( "%s: window=%p, old_key=%s, new_key=%s", thisfn, ( void * ) window, old_key, new_key );
-	g_return_if_fail( NA_IS_IPREFS( instance ));
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( st_initialized && !st_finalized ){
 
