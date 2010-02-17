@@ -35,9 +35,8 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
-
-#include <runtime/na-utils.h>
 
 #include "base-iprefs.h"
 #include "nact-main-window.h"
@@ -332,35 +331,35 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		enable_tab = tab_set_sensitive( instance );
 
 		basenames_widget = get_basenames_entry( instance );
-		basenames = profile ? na_object_profile_get_basenames( profile ) : NULL;
-		basenames_text = profile ? na_utils_string_list_to_text( basenames ) : g_strdup( "" );
+		basenames = profile ? na_object_get_basenames( profile ) : NULL;
+		basenames_text = profile ? na_core_utils_slist_to_text( basenames ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( basenames_widget ), basenames_text );
 		g_free( basenames_text );
-		na_utils_free_string_list( basenames );
+		na_core_utils_slist_free( basenames );
 		gtk_widget_set_sensitive( basenames_widget, item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( basenames_widget ), editable );
 
 		matchcase_button = get_matchcase_button( instance );
-		matchcase = profile ? na_object_profile_get_matchcase( profile ) : FALSE;
+		matchcase = profile ? na_object_is_matchcase( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
 		gtk_widget_set_sensitive( GTK_WIDGET( matchcase_button ), item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( matchcase_button ), editable );
 
 		mimetypes_widget = get_mimetypes_entry( instance );
-		mimetypes = profile ? na_object_profile_get_mimetypes( profile ) : NULL;
-		mimetypes_text = profile ? na_utils_string_list_to_text( mimetypes ) : g_strdup( "" );
+		mimetypes = profile ? na_object_get_mimetypes( profile ) : NULL;
+		mimetypes_text = profile ? na_core_utils_slist_to_text( mimetypes ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( mimetypes_widget ), mimetypes_text );
 		g_free( mimetypes_text );
-		na_utils_free_string_list( mimetypes );
+		na_core_utils_slist_free( mimetypes );
 		gtk_widget_set_sensitive( mimetypes_widget, item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( mimetypes_widget ), editable );
 
-		isfile = profile ? na_object_profile_get_is_file( profile ) : FALSE;
-		isdir = profile ? na_object_profile_get_is_dir( profile ) : FALSE;
+		isfile = profile ? na_object_is_file( profile ) : FALSE;
+		isdir = profile ? na_object_is_dir( profile ) : FALSE;
 		set_isfiledir( instance, isfile, isdir, editable );
 
 		multiple_button = get_multiple_button( instance );
-		multiple = profile ? na_object_profile_get_multiple( profile ) : FALSE;
+		multiple = profile ? na_object_is_multiple( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( multiple_button ), multiple );
 		gtk_widget_set_sensitive( GTK_WIDGET( multiple_button ), item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( multiple_button ), editable );
@@ -397,7 +396,7 @@ tab_set_sensitive( NactIConditionsTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
-	enable_tab = ( profile != NULL && na_object_action_is_target_selection( NA_OBJECT_ACTION( item )));
+	enable_tab = ( profile != NULL && na_object_is_target_selection( NA_OBJECT_ACTION( item )));
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_CONDITIONS, enable_tab );
 
 	return( enable_tab );
@@ -459,9 +458,9 @@ on_basenames_changed( GtkEntry *entry, NactIConditionsTab *instance )
 
 	if( edited ){
 		text = gtk_entry_get_text( entry );
-		basenames = na_utils_text_to_string_list( text );
-		na_object_profile_set_basenames( edited, basenames );
-		na_utils_free_string_list( basenames );
+		basenames = na_core_utils_slist_from_split( text, ";" );
+		na_object_set_basenames( edited, basenames );
+		na_core_utils_slist_free( basenames );
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
@@ -494,13 +493,14 @@ on_isfiledir_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 
 			if( editable ){
 				nact_iconditions_tab_get_isfiledir( instance, &isfile, &isdir );
-				na_object_profile_set_isfiledir( edited, isfile, isdir );
+				na_object_set_isfile( edited, isfile );
+				na_object_set_isdir( edited, isdir );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 
 			} else if( gtk_toggle_button_get_active( button )){
 				g_signal_handlers_block_by_func(( gpointer ) button, on_isfiledir_toggled, instance );
-				isfile = na_object_profile_get_is_file( edited );
-				isdir = na_object_profile_get_is_dir( edited );
+				isfile = na_object_is_file( edited );
+				isdir = na_object_is_dir( edited );
 				set_isfiledir( instance, isfile, isdir, !editable );
 				g_signal_handlers_unblock_by_func(( gpointer ) button, on_isfiledir_toggled, instance );
 			}
@@ -528,7 +528,7 @@ on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 			matchcase = gtk_toggle_button_get_active( button );
 
 			if( editable ){
-				na_object_profile_set_matchcase( edited, matchcase );
+				na_object_set_matchcase( edited, matchcase );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 
 			} else {
@@ -554,9 +554,9 @@ on_mimetypes_changed( GtkEntry *entry, NactIConditionsTab *instance )
 
 	if( edited ){
 		text = gtk_entry_get_text( entry );
-		mimetypes = na_utils_text_to_string_list( text );
-		na_object_profile_set_mimetypes( edited, mimetypes );
-		na_utils_free_string_list( mimetypes );
+		mimetypes = na_core_utils_slist_from_split( text, ";" );
+		na_object_set_mimetypes( edited, mimetypes );
+		na_core_utils_slist_free( mimetypes );
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
@@ -580,7 +580,7 @@ on_multiple_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 			multiple = gtk_toggle_button_get_active( button );
 
 			if( editable ){
-				na_object_profile_set_multiple( edited, multiple );
+				na_object_set_multiple( edited, multiple );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 
 			} else {

@@ -2,6 +2,11 @@
 
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c:
+	* src/nact/nact-iconditions-tab.c:
+	Update NactIConditionsTab interface.
+
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c:
 	* src/core/na-iprefs.c:
 	* src/core/na-iprefs.h:
 	* src/nact/nact-icommand-tab.c:

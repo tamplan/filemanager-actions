@@ -57,6 +57,7 @@ void     na_core_utils_slist_dump( GSList *list );
 GSList  *na_core_utils_slist_from_split( const gchar *string, const gchar *separator );
 GSList  *na_core_utils_slist_from_str_array( const gchar **str_array );
 GSList  *na_core_utils_slist_remove_string( GSList *list, const gchar *string );
+gchar   *na_core_utils_slist_to_text( GSList *list );
 gboolean na_core_utils_slist_find( GSList *list, const gchar *str );
 gboolean na_core_utils_slist_are_equal( GSList *a, GSList *b );
 void     na_core_utils_slist_free( GSList *slist );

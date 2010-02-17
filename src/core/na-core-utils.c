@@ -242,6 +242,37 @@ na_core_utils_slist_remove_string( GSList *list, const gchar *str )
 }
 
 /**
+ * na_core_utils_slist_to_text:
+ * @strlist: a list of strings.
+ *
+ * Concatenates a string list to a semi-colon-separated text
+ * suitable for an entry in the user interface
+ *
+ * Returns: a newly allocated string, which should be g_free() by the
+ * caller.
+ */
+gchar *
+na_core_utils_slist_to_text( GSList *strlist )
+{
+	GSList *ib;
+	gchar *tmp;
+	gchar *text = g_strdup( "" );
+
+	for( ib = strlist ; ib ; ib = ib->next ){
+		if( strlen( text )){
+			tmp = g_strdup_printf( "%s; ", text );
+			g_free( text );
+			text = tmp;
+		}
+		tmp = g_strdup_printf( "%s%s", text, ( gchar * ) ib->data );
+		g_free( text );
+		text = tmp;
+	}
+
+	return( text );
+}
+
+/**
  * na_core_utils_slist_find:
  * @list: the GSList of strings to be searched.
  * @str: the searched string.
