@@ -43,6 +43,7 @@ struct NactIPrefsInterfacePrivate {
 	GConfClient *client;
 };
 
+#if 0
 #define DEFAULT_EXPORT_FORMAT_INT			IPREFS_EXPORT_FORMAT_GCONF_ENTRY
 #define DEFAULT_EXPORT_FORMAT_STR			"GConfEntry"
 
@@ -53,6 +54,7 @@ static GConfEnumStringPair export_format_table[] = {
 	{ IPREFS_EXPORT_FORMAT_ASK,				"Ask" },
 	{ 0, NULL }
 };
+#endif
 
 #define DEFAULT_IMPORT_MODE_INT				IPREFS_IMPORT_NO_IMPORT
 #define DEFAULT_IMPORT_MODE_STR				"NoImport"
@@ -148,24 +150,24 @@ interface_nact_finalize( NactIPrefsInterface *klass )
  * @window: this #BaseWindow-derived window.
  * @name: name of the export format key to be readen
  *
- * Returns: the export format currently set.
+ * Returns: the export format currently set as a #GQuark.
  *
- * Note: this function returns a suitable default value even if the key
- * is not found in GConf preferences or no schema has been installed.
+ * Defaults to exporting as a GConfEntry (see. #nact-iprefs.h)
  *
  * Note: please take care of keeping the default value synchronized with
  * those defined in schemas.
  */
-guint
+GQuark
 nact_iprefs_get_export_format( const BaseWindow *window, const gchar *name )
 {
-	guint export_format;
-	guint format_int;
-	gchar *format_str;
+	GQuark export_format;
 	NactApplication *application;
 	NAUpdater *updater;
+	gchar *format_str;
 
-	export_format = DEFAULT_EXPORT_FORMAT_INT;
+	guint format_int;
+
+	export_format = g_quark_from_static_string( IPREFS_EXPORT_FORMAT_DEFAULT );
 
 	g_return_val_if_fail( BASE_IS_WINDOW, export_format );
 
@@ -177,16 +179,37 @@ nact_iprefs_get_export_format( const BaseWindow *window, const gchar *name )
 		format_str = na_iprefs_read_string(
 				NA_IPREFS( updater ),
 				name,
-				DEFAULT_EXPORT_FORMAT_STR );
+				IPREFS_EXPORT_FORMAT_DEFAULT );
 
-		if( gconf_string_to_enum( export_format_table, format_str, &format_int )){
-			export_format = format_int;
-		}
+		export_format = g_quark_from_string( format_str );
 
 		g_free( format_str );
 	}
 
 	return( export_format );
+}
+
+/**
+ * nact_iprefs_set_export_format:
+ * @window: this #BaseWindow-derived window.
+ * @format: the new value to be written.
+ *
+ * Writes the preferred export format' to the GConf preference system.
+ */
+void
+nact_iprefs_set_export_format( const BaseWindow *window, const gchar *name, GQuark format )
+{
+	const gchar *format_str;
+
+	g_return_if_fail( NA_IS_IPREFS( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		nact_iprefs_write_string(
+				window,
+				name,
+				g_quark_to_string( format ));
+	}
 }
 
 /**
@@ -231,32 +254,6 @@ nact_iprefs_get_import_mode( const BaseWindow *window, const gchar *name )
 	}
 
 	return( import_mode );
-}
-
-/**
- * nact_iprefs_set_export_format:
- * @window: this #BaseWindow-derived window.
- * @format: the new value to be written.
- *
- * Writes the current status of 'import/export format' to the GConf
- * preference system.
- */
-void
-nact_iprefs_set_export_format( const BaseWindow *window, const gchar *name, gint format )
-{
-	const gchar *format_str;
-
-	g_return_if_fail( NA_IS_IPREFS( instance ));
-
-	if( st_initialized && !st_finalized ){
-
-		format_str = gconf_enum_to_string( export_format_table, format );
-
-		nact_iprefs_write_string(
-				window,
-				name,
-				format_str ? format_str : DEFAULT_EXPORT_FORMAT_STR );
-	}
 }
 
 /**

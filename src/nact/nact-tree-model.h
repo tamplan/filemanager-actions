@@ -47,7 +47,7 @@
 
 #include <gtk/gtk.h>
 
-#include <private/na-object-class.h>
+#include <api/na-object.h>
 
 #include "base-window.h"
 

@@ -1,5 +1,15 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-export.h:
+	* src/nact/nact-assistant-export.ui:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-import-ask.c:
+	* src/nact/nact-import-ask.h:
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h:
+	* src/nact/nact-tree-model.h: Update Nact classes.
+
 	Refactor: move all XML code to src/io-xml plugin.
 
 	* src/nact/Makefile.am:

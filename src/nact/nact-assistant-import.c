@@ -38,13 +38,13 @@
 #include <api/na-object-api.h>
 #include <api/na-core-utils.h>
 
+#include <core/na-importer.h>
+
 #include "nact-application.h"
 #include "nact-iprefs.h"
 #include "nact-iactions-list.h"
 #include "nact-assistant-import.h"
-#include "nact-assistant-import-ask.h"
 #include "nact-main-window.h"
-#include "na-importer.h"
 
 /* Import Assistant
  *
@@ -674,7 +674,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	for( is = uris ; is ; is = is->next ){
 
 		msg = NULL;
-		item = na_importer_import( BASE_WINDOW( window ), items, ( const gchar * ) is->data, mode, &msg );
+		item = na_importer_import( items, ( const gchar * ) is->data, mode, &msg );
 
 		str = g_new0( ImportUriStruct, 1 );
 		str->uri = g_strdup(( const gchar * ) is->data );

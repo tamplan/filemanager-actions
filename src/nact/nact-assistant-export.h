@@ -73,7 +73,7 @@ G_BEGIN_DECLS
 #define NACT_IS_ASSISTANT_EXPORT_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ASSISTANT_EXPORT_TYPE ))
 #define NACT_ASSISTANT_EXPORT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ASSISTANT_EXPORT_TYPE, NactAssistantExportClass ))
 
-typedef struct NactAssistantExportPrivate NactAssistantExportPrivate;
+typedef struct NactAssistantExportPrivate      NactAssistantExportPrivate;
 
 typedef struct {
 	BaseAssistant               parent;
@@ -91,7 +91,7 @@ typedef struct {
 
 GType nact_assistant_export_get_type( void );
 
-void  nact_assistant_export_run( BaseWindow *main );
+void  nact_assistant_export_run( BaseWindow *parent );
 
 G_END_DECLS
 

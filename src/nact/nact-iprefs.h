@@ -64,6 +64,8 @@ typedef struct {
 #define IPREFS_EXPORT_FORMAT					"export-format"
 #define IPREFS_EXPORT_ASK_LAST_FORMAT			"export-ask-user-last-format"
 
+#define IPREFS_EXPORT_FORMAT_DEFAULT			"GConfEntry"
+
 #define IPREFS_IMPORT_ITEMS_FOLDER_URI			"import-folder-uri"
 #define IPREFS_IMPORT_ITEMS_IMPORT_MODE			"import-mode"
 #define IPREFS_IMPORT_ASK_LAST_MODE				"import-ask-user-last-mode"
@@ -71,12 +73,21 @@ typedef struct {
 #define IPREFS_ASSIST_ESC_QUIT					"assistant-esc-quit"
 #define IPREFS_ASSIST_ESC_CONFIRM				"assistant-esc-confirm"
 
+/* these are special export formats
+ */
+enum {
+	IPREFS_EXPORT_NO_EXPORT = 1,
+	IPREFS_EXPORT_FORMAT_ASK,
+	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA
+};
+
 GType nact_iprefs_get_type( void );
 
-guint nact_iprefs_get_export_format( const BaseWindow *window, const gchar *pref );
+GQuark nact_iprefs_get_export_format( const BaseWindow *window, const gchar *pref );
+void   nact_iprefs_set_export_format( const BaseWindow *window, const gchar *pref, GQuark format );
+
 gint  nact_iprefs_get_import_mode  ( const BaseWindow *window, const gchar *pref );
 
-void  nact_iprefs_set_export_format( const BaseWindow *window, const gchar *pref, gint format );
 void  nact_iprefs_set_import_mode  ( const BaseWindow *window, const gchar *pref, gint mode );
 
 void  nact_iprefs_write_string( const BaseWindow *window, const gchar *name, const gchar *value );

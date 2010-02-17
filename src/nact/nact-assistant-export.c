@@ -40,15 +40,16 @@
 #include <api/na-object-api.h>
 
 #include <core/na-iprefs.h>
+#include <core/na-exporter.h>
 
 #include "base-iprefs.h"
 #include "nact-application.h"
 #include "nact-iprefs.h"
 #include "nact-main-window.h"
 #include "nact-assistant-export.h"
-#include "nact-assistant-export-ask.h"
+#include "nact-export-ask.h"
+#include "nact-export-format.h"
 #include "nact-iactions-list.h"
-#include "na-exporter.h"
 
 /* Export Assistant
  *
@@ -86,10 +87,10 @@ struct NactAssistantExportPrivate {
 };
 
 typedef struct {
-	NAObjectAction *action;
-	GSList         *msg;
-	gchar          *fname;
-	gint            format;
+	NAObjectItem *item;
+	GSList       *msg;
+	gchar        *fname;
+	GQuark        format;
 }
 	ExportStruct;
 
@@ -126,11 +127,7 @@ static void            on_folder_selection_changed( GtkFileChooser *chooser, gpo
 
 static void            assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant );
-static GtkWidget      *get_gconfschemav1_button( NactAssistantExport *window );
-static GtkWidget      *get_gconfschemav2_button( NactAssistantExport *window );
-static GtkWidget      *get_gconfdump_button( NactAssistantExport *window );
-static GtkWidget      *get_ask_button( NactAssistantExport *window );
-static gint            get_export_format( NactAssistantExport *window );
+static GQuark          get_export_format( NactAssistantExport *window );
 
 static void            assist_initial_load_confirm( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_confirm( NactAssistantExport *window, GtkAssistant *assistant );
@@ -558,88 +555,39 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 static void
 assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant )
 {
+	NactApplication *application;
+	NAUpdater *updater;
+	GtkWidget *container;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
+	nact_export_format_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_ASSISTANT );
 }
 
 static void
 assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant )
 {
-	GtkToggleButton *button;
 	GtkWidget *content;
-	guint format;
+	GtkWidget *container;
+	GQuark format;
 
 	format = nact_iprefs_get_export_format( BASE_WINDOW( window ), IPREFS_EXPORT_FORMAT );
-
-	switch( format ){
-		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
-			button = GTK_TOGGLE_BUTTON( get_gconfschemav1_button( window ));
-			gtk_toggle_button_set_active( button, TRUE );
-			break;
-
-		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
-			button = GTK_TOGGLE_BUTTON( get_gconfschemav2_button( window ));
-			gtk_toggle_button_set_active( button, TRUE );
-			break;
-
-		case IPREFS_EXPORT_FORMAT_ASK:
-			button = GTK_TOGGLE_BUTTON( get_ask_button( window ));
-			gtk_toggle_button_set_active( button, TRUE );
-			break;
-
-		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
-		default:
-			button = GTK_TOGGLE_BUTTON( get_gconfdump_button( window ));
-			gtk_toggle_button_set_active( button, TRUE );
-			break;
-	}
+	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
+	nact_export_format_select( container, format );
 
 	content = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
 	gtk_assistant_set_page_complete( assistant, content, TRUE );
 }
 
-static GtkWidget *
-get_gconfschemav1_button( NactAssistantExport *window )
-{
-	return( base_window_get_widget( BASE_WINDOW( window ), "ExportSchemaV1Button" ));
-}
-
-static GtkWidget *
-get_gconfschemav2_button( NactAssistantExport *window )
-{
-	return( base_window_get_widget( BASE_WINDOW( window ), "ExportSchemaV2Button" ));
-}
-
-static GtkWidget *
-get_gconfdump_button( NactAssistantExport *window )
-{
-	return( base_window_get_widget( BASE_WINDOW( window ), "ExportGConfDumpButton" ));
-}
-
-static GtkWidget *
-get_ask_button( NactAssistantExport *window )
-{
-	return( base_window_get_widget( BASE_WINDOW( window ), "ExportAskButton" ));
-}
-
-static gint
+static GQuark
 get_export_format( NactAssistantExport *window )
 {
-	GtkToggleButton *gconf_schema_v1_button;
-	GtkToggleButton *gconf_schema_v2_button;
-	GtkToggleButton *ask_button;
-	gint format;
+	GtkWidget *container;
+	GQuark format;
 
-	gconf_schema_v1_button = GTK_TOGGLE_BUTTON( get_gconfschemav1_button( window ));
-	gconf_schema_v2_button = GTK_TOGGLE_BUTTON( get_gconfschemav2_button( window ));
-	ask_button = GTK_TOGGLE_BUTTON( get_ask_button( window ));
-
-	format = IPREFS_EXPORT_FORMAT_GCONF_ENTRY;
-	if( gtk_toggle_button_get_active( gconf_schema_v1_button )){
-		format = IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1;
-	} else if( gtk_toggle_button_get_active( gconf_schema_v2_button )){
-		format = IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2;
-	} else if( gtk_toggle_button_get_active( ask_button )){
-		format = IPREFS_EXPORT_FORMAT_ASK;
-	}
+	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
+	format = nact_export_format_get_select( container );
 
 	return( format );
 }
@@ -726,31 +674,8 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	label1 = NULL;
 	label2 = NULL;
 	format = get_export_format( window );
-	switch( format ){
-		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
-			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( get_gconfschemav1_button( window ))));
-			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "ExportSchemaV1Label"))));
-			break;
-
-		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
-			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( get_gconfschemav2_button( window ))));
-			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "ExportSchemaV2Label"))));
-			break;
-
-		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
-			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( get_gconfdump_button( window ))));
-			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "ExportGConfDumpLabel"))));
-			break;
-
-		case IPREFS_EXPORT_FORMAT_ASK:
-			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( get_ask_button( window ))));
-			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "ExportAskLabel"))));
-			break;
-
-		default:
-			g_return_if_reached();
-			break;
-	}
+	label1 = nact_export_format_get_label( format );
+	label2 = nact_export_format_get_description( format );
 	nact_iprefs_set_export_format( BASE_WINDOW( window ), IPREFS_EXPORT_FORMAT, format );
 
 	label3 = na_core_utils_str_add_prefix( "\t", label2 );
@@ -792,18 +717,18 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		str = g_new0( ExportStruct, 1 );
 		window->private->results = g_list_append( window->private->results, str );
 
-		str->action = NA_OBJECT_ACTION( na_iduplicable_get_origin( NA_IDUPLICABLE( ia->data )));
+		str->item = NA_OBJECT_ITEM( na_object_get_origin( NA_IDUPLICABLE( ia->data )));
 
 		str->format = nact_iprefs_get_export_format( BASE_WINDOW( wnd ), IPREFS_EXPORT_FORMAT );
 		if( str->format == IPREFS_EXPORT_FORMAT_ASK ){
-			str->format = nact_assistant_export_ask_user( BASE_WINDOW( wnd ), NA_OBJECT_ITEM( str->action ));
+			str->format = nact_export_ask_user( BASE_WINDOW( wnd ), str->item );
 			if( str->format == IPREFS_EXPORT_NO_EXPORT ){
 				str->msg = g_slist_append( NULL, g_strdup( _( "Export canceled due to user action." )));
 			}
 		}
 
 		if( str->format != IPREFS_EXPORT_NO_EXPORT ){
-			str->fname = na_exporter_export( NA_OBJECT_ITEM( str->action ), window->private->uri, str->format, &str->msg );
+			str->fname = na_exporter_export( str->item, window->private->uri, str->format, &str->msg );
 		}
 	}
 
@@ -835,7 +760,7 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 	for( ir = window->private->results ; ir ; ir = ir->next ){
 		str = ( ExportStruct * ) ir->data;
 
-		label = na_object_get_label( str->action );
+		label = na_object_get_label( str->item );
 		tmp = g_strdup_printf( "%s\t%s\n", text, label );
 		g_free( text );
 		text = tmp;

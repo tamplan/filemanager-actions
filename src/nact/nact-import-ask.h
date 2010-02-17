@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_ASSISTANT_IMPORT_ASK_H__
-#define __NACT_ASSISTANT_IMPORT_ASK_H__
+#ifndef __NACT_IMPORT_ASK_H__
+#define __NACT_IMPORT_ASK_H__
 
 /**
- * SECTION: nact_assistant_import_ask
- * @short_description: #NactAssistantImportAsk class definition.
- * @include: nact/nact-assistant-import-ask.h
+ * SECTION: nact_import_ask
+ * @short_description: #NactImportAsk class definition.
+ * @include: nact/nact-import-ask.h
  *
  * This class is derived from BaseDialog.
  * It is ran each time an imported action as the same UUID as an
@@ -49,33 +49,33 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ASSISTANT_IMPORT_ASK_TYPE					( nact_assistant_import_ask_get_type())
-#define NACT_ASSISTANT_IMPORT_ASK( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ASSISTANT_IMPORT_ASK_TYPE, NactAssistantImportAsk ))
-#define NACT_ASSISTANT_IMPORT_ASK_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ASSISTANT_IMPORT_ASK_TYPE, NactAssistantImportAskClass ))
-#define NACT_IS_ASSISTANT_IMPORT_ASK( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ASSISTANT_IMPORT_ASK_TYPE ))
-#define NACT_IS_ASSISTANT_IMPORT_ASK_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ASSISTANT_IMPORT_ASK_TYPE ))
-#define NACT_ASSISTANT_IMPORT_ASK_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ASSISTANT_IMPORT_ASK_TYPE, NactAssistantImportAskClass ))
+#define NACT_IMPORT_ASK_TYPE				( nact_import_ask_get_type())
+#define NACT_IMPORT_ASK( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IMPORT_ASK_TYPE, NactImportAsk ))
+#define NACT_IMPORT_ASK_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_IMPORT_ASK_TYPE, NactImportAskClass ))
+#define NACT_IS_IMPORT_ASK( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IMPORT_ASK_TYPE ))
+#define NACT_IS_IMPORT_ASK_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_IMPORT_ASK_TYPE ))
+#define NACT_IMPORT_ASK_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_IMPORT_ASK_TYPE, NactImportAskClass ))
 
-typedef struct NactAssistantImportAskPrivate NactAssistantImportAskPrivate;
-
-typedef struct {
-	BaseDialog                     parent;
-	NactAssistantImportAskPrivate *private;
-}
-	NactAssistantImportAsk;
-
-typedef struct NactAssistantImportAskClassPrivate NactAssistantImportAskClassPrivate;
+typedef struct NactImportAskPrivate      NactImportAskPrivate;
 
 typedef struct {
-	BaseDialogClass                     parent;
-	NactAssistantImportAskClassPrivate *private;
+	BaseDialog            parent;
+	NactImportAskPrivate *private;
 }
-	NactAssistantImportAskClass;
+	NactImportAsk;
 
-GType nact_assistant_import_ask_get_type( void );
+typedef struct NactImportAskClassPrivate NactImportAskClassPrivate;
 
-gint  nact_assistant_import_ask_user( NactMainWindow *window, const gchar *uri, NAObjectItem *new_item, NAObjectItem *current );
+typedef struct {
+	BaseDialogClass            parent;
+	NactImportAskClassPrivate *private;
+}
+	NactImportAskClass;
+
+GType nact_import_ask_get_type( void );
+
+gint  nact_import_ask_user( NactMainWindow *window, const gchar *uri, NAObjectItem *new_item, NAObjectItem *current );
 
 G_END_DECLS
 
-#endif /* __NACT_ASSISTANT_IMPORT_ASK_H__ */
+#endif /* __NACT_IMPORT_ASK_H__ */

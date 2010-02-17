@@ -36,21 +36,19 @@
 
 #include <api/na-object-api.h>
 
-#include <core/na-iprefs.h>
-
 #include "nact-application.h"
 #include "nact-iprefs.h"
-#include "nact-assistant-import-ask.h"
+#include "nact-import-ask.h"
 
 /* private class data
  */
-struct NactAssistantImportAskClassPrivate {
+struct NactImportAskClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactAssistantImportAskPrivate {
+struct NactImportAskPrivate {
 	gboolean        dispose_has_run;
 	NactMainWindow *parent;
 	const gchar    *uri;
@@ -62,25 +60,25 @@ struct NactAssistantImportAskPrivate {
 static BaseDialogClass *st_parent_class = NULL;
 
 static GType    register_type( void );
-static void     class_init( NactAssistantImportAskClass *klass );
+static void     class_init( NactImportAskClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static NactAssistantImportAsk *assistant_import_ask_new( BaseWindow *parent );
+static NactImportAsk *import_ask_new( BaseWindow *parent );
 
 static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
 static gchar   *base_get_dialog_name( const BaseWindow *window );
-static void     on_base_initial_load_dialog( NactAssistantImportAsk *editor, gpointer user_data );
-static void     on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data );
-static void     on_base_all_widgets_showed( NactAssistantImportAsk *editor, gpointer user_data );
-static void     on_cancel_clicked( GtkButton *button, NactAssistantImportAsk *editor );
-static void     on_ok_clicked( GtkButton *button, NactAssistantImportAsk *editor );
-static void     get_mode( NactAssistantImportAsk *editor );
+static void     on_base_initial_load_dialog( NactImportAsk *editor, gpointer user_data );
+static void     on_base_runtime_init_dialog( NactImportAsk *editor, gpointer user_data );
+static void     on_base_all_widgets_showed( NactImportAsk *editor, gpointer user_data );
+static void     on_cancel_clicked( GtkButton *button, NactImportAsk *editor );
+static void     on_ok_clicked( GtkButton *button, NactImportAsk *editor );
+static void     get_mode( NactImportAsk *editor );
 static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 GType
-nact_assistant_import_ask_get_type( void )
+nact_import_ask_get_type( void )
 {
 	static GType dialog_type = 0;
 
@@ -94,32 +92,32 @@ nact_assistant_import_ask_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_register_type";
+	static const gchar *thisfn = "nact_import_ask_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactAssistantImportAskClass ),
+		sizeof( NactImportAskClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactAssistantImportAsk ),
+		sizeof( NactImportAsk ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_DIALOG_TYPE, "NactAssistantImportAsk", &info, 0 );
+	type = g_type_register_static( BASE_DIALOG_TYPE, "NactImportAsk", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactAssistantImportAskClass *klass )
+class_init( NactImportAskClass *klass )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_class_init";
+	static const gchar *thisfn = "nact_import_ask_class_init";
 	GObjectClass *object_class;
 	BaseWindowClass *base_class;
 
@@ -131,7 +129,7 @@ class_init( NactAssistantImportAskClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NactAssistantImportAskClassPrivate, 1 );
+	klass->private = g_new0( NactImportAskClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->dialog_response = base_dialog_response;
@@ -142,15 +140,15 @@ class_init( NactAssistantImportAskClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_instance_init";
-	NactAssistantImportAsk *self;
+	static const gchar *thisfn = "nact_import_ask_instance_init";
+	NactImportAsk *self;
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( instance ));
-	self = NACT_ASSISTANT_IMPORT_ASK( instance );
+	g_return_if_fail( NACT_IS_IMPORT_ASK( instance ));
+	self = NACT_IMPORT_ASK( instance );
 
-	self->private = g_new0( NactAssistantImportAskPrivate, 1 );
+	self->private = g_new0( NactImportAskPrivate, 1 );
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -176,12 +174,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_instance_dispose";
-	NactAssistantImportAsk *self;
+	static const gchar *thisfn = "nact_import_ask_instance_dispose";
+	NactImportAsk *self;
 
 	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( dialog ));
-	self = NACT_ASSISTANT_IMPORT_ASK( dialog );
+	g_return_if_fail( NACT_IS_IMPORT_ASK( dialog ));
+	self = NACT_IMPORT_ASK( dialog );
 
 	if( !self->private->dispose_has_run ){
 
@@ -197,12 +195,12 @@ instance_dispose( GObject *dialog )
 static void
 instance_finalize( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_instance_finalize";
-	NactAssistantImportAsk *self;
+	static const gchar *thisfn = "nact_import_ask_instance_finalize";
+	NactImportAsk *self;
 
 	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( dialog ));
-	self = NACT_ASSISTANT_IMPORT_ASK( dialog );
+	g_return_if_fail( NACT_IS_IMPORT_ASK( dialog ));
+	self = NACT_IMPORT_ASK( dialog );
 
 	g_free( self->private );
 
@@ -213,16 +211,16 @@ instance_finalize( GObject *dialog )
 }
 
 /*
- * Returns a newly allocated NactAssistantImportAsk object.
+ * Returns a newly allocated NactImportAsk object.
  */
-static NactAssistantImportAsk *
-assistant_import_ask_new( BaseWindow *parent )
+static NactImportAsk *
+import_ask_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_ASSISTANT_IMPORT_ASK_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_IMPORT_ASK_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
 }
 
 /**
- * nact_assistant_import_ask_run:
+ * nact_import_ask_run:
  * @parent: the NactMainWindow parent of this dialog.
  * @uri:
  * @item:
@@ -236,33 +234,25 @@ assistant_import_ask_new( BaseWindow *parent )
  * becomes his preference import mode.
  */
 gint
-nact_assistant_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObjectItem *item, NAObjectItem *exist )
+nact_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObjectItem *item, NAObjectItem *exist )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_run";
-	NactApplication *application;
-	NAPivot *pivot;
-	NactAssistantImportAsk *editor;
+	static const gchar *thisfn = "nact_import_ask_run";
+	NactImportAsk *editor;
 	gint mode;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 	g_return_val_if_fail( BASE_IS_WINDOW( parent ), IPREFS_IMPORT_NO_IMPORT );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( parent )));
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), IPREFS_IMPORT_NO_IMPORT );
-
-	pivot = nact_application_get_pivot( application );
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), IPREFS_IMPORT_NO_IMPORT );
-
-	editor = assistant_import_ask_new( BASE_WINDOW( parent ));
+	editor = import_ask_new( BASE_WINDOW( parent ));
 	editor->private->parent = parent;
 	editor->private->uri = uri;
 	editor->private->item = item;
 	editor->private->exist = exist;
-	editor->private->mode = na_iprefs_get_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_LAST_MODE );
+	editor->private->mode = nact_iprefs_get_import_mode( BASE_WINDOW( parent ), IPREFS_IMPORT_ASK_LAST_MODE );
 
 	base_window_run( BASE_WINDOW( editor ));
 
-	na_iprefs_set_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ASK_LAST_MODE, editor->private->mode );
+	nact_iprefs_set_import_mode( BASE_WINDOW( parent ), IPREFS_IMPORT_ASK_LAST_MODE, editor->private->mode );
 	mode = editor->private->mode;
 	g_object_unref( editor );
 
@@ -278,31 +268,31 @@ base_get_iprefs_window_id( const BaseWindow *window )
 static gchar *
 base_get_dialog_name( const BaseWindow *window )
 {
-	return( g_strdup( "AssistantImportAsk" ));
+	return( g_strdup( "ImportAsk" ));
 }
 
 static void
-on_base_initial_load_dialog( NactAssistantImportAsk *editor, gpointer user_data )
+on_base_initial_load_dialog( NactImportAsk *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_on_initial_load_dialog";
+	static const gchar *thisfn = "nact_import_ask_on_initial_load_dialog";
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( editor ));
+	g_return_if_fail( NACT_IS_IMPORT_ASK( editor ));
 }
 
 static void
-on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data )
+on_base_runtime_init_dialog( NactImportAsk *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_on_runtime_init_dialog";
+	static const gchar *thisfn = "nact_import_ask_on_runtime_init_dialog";
 	gchar *action_label, *exist_label;
 	gchar *label;
 	GtkWidget *widget;
 	GtkWidget *button;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( editor ));
+	g_return_if_fail( NACT_IS_IMPORT_ASK( editor ));
 
-	action_label = na_object_get_label( editor->private->action );
+	action_label = na_object_get_label( editor->private->item );
 	exist_label = na_object_get_label( editor->private->exist );
 
 	/* i18n: The action <action_label> imported from <file> has the same id than <existing_label> */
@@ -347,34 +337,32 @@ on_base_runtime_init_dialog( NactAssistantImportAsk *editor, gpointer user_data 
 }
 
 static void
-on_base_all_widgets_showed( NactAssistantImportAsk *editor, gpointer user_data )
+on_base_all_widgets_showed( NactImportAsk *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_on_all_widgets_showed";
+	static const gchar *thisfn = "nact_import_ask_on_all_widgets_showed";
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT_ASK( editor ));
+	g_return_if_fail( NACT_IS_IMPORT_ASK( editor ));
 }
 
 static void
-on_cancel_clicked( GtkButton *button, NactAssistantImportAsk *editor )
+on_cancel_clicked( GtkButton *button, NactImportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static void
-on_ok_clicked( GtkButton *button, NactAssistantImportAsk *editor )
+on_ok_clicked( GtkButton *button, NactImportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 
 static void
-get_mode( NactAssistantImportAsk *editor )
+get_mode( NactImportAsk *editor )
 {
 	gint import_mode;
-	NactApplication *application;
-	NAPivot *pivot;
 	GtkWidget *button;
 	gboolean keep;
 
@@ -394,21 +382,19 @@ get_mode( NactAssistantImportAsk *editor )
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	if( keep ){
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-		pivot = nact_application_get_pivot( application );
-		na_iprefs_set_import_mode( NA_IPREFS( pivot ), IPREFS_IMPORT_ACTIONS_IMPORT_MODE, import_mode );
+		nact_iprefs_set_import_mode( BASE_WINDOW( editor ), IPREFS_IMPORT_ITEMS_IMPORT_MODE, import_mode );
 	}
 }
 
 static gboolean
 base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_assistant_import_ask_on_dialog_response";
-	NactAssistantImportAsk *editor;
+	static const gchar *thisfn = "nact_import_ask_on_dialog_response";
+	NactImportAsk *editor;
 
 	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, ( void * ) dialog, code, ( void * ) window );
-	g_assert( NACT_IS_ASSISTANT_IMPORT_ASK( window ));
-	editor = NACT_ASSISTANT_IMPORT_ASK( window );
+	g_assert( NACT_IS_IMPORT_ASK( window ));
+	editor = NACT_IMPORT_ASK( window );
 
 	switch( code ){
 		case GTK_RESPONSE_NONE:
