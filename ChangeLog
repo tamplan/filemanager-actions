@@ -1,5 +1,8 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/console-utils.c:
+	* src/utils/nautilus-actions-run.c: Update command-line utilities.
+
 	* src/test/test-include.c:
 	* src/test/test-parse-uris.c: Update test utilities.
 
