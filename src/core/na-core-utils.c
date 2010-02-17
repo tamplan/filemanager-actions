@@ -215,7 +215,34 @@ na_core_utils_slist_from_str_array( const gchar **str_array )
 }
 
 /**
- * na_core_utils_slist_remove_string:
+ * na_core_utils_slist_remove_ascii:
+ * @list: the GSList to be updated.
+ * @text: string to remove.
+ *
+ * Removes a string from a GSList of strings.
+ *
+ * Returns the new list after update.
+ */
+GSList *
+na_core_utils_slist_remove_ascii( GSList *list, const gchar *text )
+{
+	GSList *il;
+
+	for( il = list ; il ; il = il->next ){
+
+		const gchar *istr = ( const gchar * ) il->data;
+		if( !g_ascii_strcasecmp( text, istr )){
+
+			list = g_slist_remove( list, ( gconstpointer ) istr );
+			return( list );
+		}
+	}
+
+	return( list );
+}
+
+/**
+ * na_core_utils_slist_remove_utf8:
  * @list: the GSList to be updated.
  * @str: the string to be removed.
  *
@@ -225,7 +252,7 @@ na_core_utils_slist_from_str_array( const gchar **str_array )
  * Returns: the new @list start position.
  */
 GSList *
-na_core_utils_slist_remove_string( GSList *list, const gchar *str )
+na_core_utils_slist_remove_utf8( GSList *list, const gchar *str )
 {
 	GSList *is;
 

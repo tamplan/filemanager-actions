@@ -637,7 +637,7 @@ remove_uri_from_folders( NactIBackgroundTab *instance, const gchar *uri )
 			NULL );
 
 	folders = na_object_get_folders( edited );
-	folders = na_core_utils_slist_remove_string( folders, uri );
+	folders = na_core_utils_slist_remove_utf8( folders, uri );
 	na_object_set_folders( edited, folders );
 
 	na_core_utils_slist_free( folders );

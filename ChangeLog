@@ -1,5 +1,14 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/api/na-object-api.h:
+	* src/api/na-object-profile.h:
+	* src/core/na-core-utils.c:
+	* src/core/na-object-profile.c:
+	* src/io-gconf/nagp-reader.c:
+	* src/nact/nact-ibackground-tab.c:
+	* src/nact/nact-schemes-list.c: Update schemes list.
+
 	* src/nact/nact-providers-list.c: Update providers list.
 
 	* src/core/na-iprefs.c:

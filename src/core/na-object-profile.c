@@ -358,6 +358,40 @@ na_object_profile_new( void )
 }
 
 /**
+ * na_object_profile_set_scheme:
+ * @profile: the #NAObjectProfile to be updated.
+ * @scheme: name of the scheme.
+ * @selected: whether this scheme is candidate to this profile.
+ *
+ * Sets the status of a scheme relative to this profile.
+ */
+void
+na_object_profile_set_scheme( NAObjectProfile *profile, const gchar *scheme, gboolean selected )
+{
+	/*static const gchar *thisfn = "na_object_profile_set_scheme";*/
+	gboolean exist;
+	GSList *schemes;
+
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
+
+	if( !profile->private->dispose_has_run ){
+
+		schemes = na_object_get_schemes( profile );
+		exist = na_core_utils_slist_find( schemes, scheme );
+		/*g_debug( "%s: scheme=%s exist=%s", thisfn, scheme, exist ? "True":"False" );*/
+
+		if( selected && !exist ){
+			schemes = g_slist_prepend( schemes, g_strdup( scheme ));
+		}
+		if( !selected && exist ){
+			schemes = na_core_utils_slist_remove_ascii( schemes, scheme );
+		}
+		na_object_set_schemes( profile, schemes );
+		na_core_utils_slist_free( schemes );
+	}
+}
+
+/**
  * na_object_profile_replace_folder:
  * @profile: the #NAObjectProfile to be updated.
  * @old: the old uri.
@@ -375,7 +409,7 @@ na_object_profile_replace_folder( NAObjectProfile *profile, const gchar *old, co
 	if( !profile->private->dispose_has_run ){
 
 		folders = na_object_get_folders( profile );
-		folders = na_core_utils_slist_remove_string( folders, old );
+		folders = na_core_utils_slist_remove_utf8( folders, old );
 		folders = g_slist_append( folders, ( gpointer ) g_strdup( new ));
 		na_object_set_folders( profile, folders );
 		na_core_utils_slist_free( folders );

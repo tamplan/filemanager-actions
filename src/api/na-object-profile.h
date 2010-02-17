@@ -75,6 +75,7 @@ GType            na_object_profile_get_type( void );
 
 NAObjectProfile *na_object_profile_new( void );
 
+void             na_object_profile_set_scheme( NAObjectProfile *profile, const gchar *scheme, gboolean selected );
 void             na_object_profile_replace_folder( NAObjectProfile *profile, const gchar *old, const gchar *new );
 
 gboolean         na_object_profile_is_candidate                ( const NAObjectProfile *profile, gint target, GList *files );

@@ -167,6 +167,7 @@ G_BEGIN_DECLS
 #define na_object_set_schemes( obj, schemes )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_SCHEMES, ( const void * )( schemes ))
 #define na_object_set_folders( obj, folders )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_FOLDERS, ( const void * )( folders ))
 
+#define na_object_set_scheme( obj, scheme, add )		na_object_profile_set_scheme( NA_OBJECT_PROFILE( obj ), ( const gchar * )( scheme ), ( add ))
 #define na_object_replace_folder( obj, old, new )		na_object_profile_replace_folder( NA_OBJECT_PROFILE( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
 
 G_END_DECLS

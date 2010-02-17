@@ -189,7 +189,7 @@ read_item_action( NagpGConfProvider *provider, const gchar *path, NAObjectAction
 		for( ip = order ; ip ; ip = ip->next ){
 			profile_path = gconf_concat_dir_and_key( path, ( gchar * ) ip->data );
 			read_item_action_profile( provider, action, profile_path );
-			list_profiles = na_core_utils_slist_remove_string( list_profiles, profile_path );
+			list_profiles = na_core_utils_slist_remove_utf8( list_profiles, profile_path );
 			g_free( profile_path );
 		}
 

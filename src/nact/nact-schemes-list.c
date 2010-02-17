@@ -36,10 +36,10 @@
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
-#include <runtime/na-iprefs.h>
-#include <runtime/na-utils.h>
+#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-gtk-utils.h"
@@ -211,23 +211,23 @@ init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window )
 		g_strfreev( tokens );
 	}
 
-	na_utils_free_string_list( schemes );
+	na_core_utils_slist_free( schemes );
 }
 
 /*
  * return default schemes list
- * the returned list must be released with na_utils_free_string_list()
+ * the returned list must be released with #na_core_utils_slist_free()
  */
 static GSList *
 get_default_schemes_list( BaseWindow *window )
 {
 	GSList *list = NULL;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
-	pivot = nact_application_get_pivot( application );
-	list = na_iprefs_read_string_list( NA_IPREFS( pivot ), "schemes", NULL );
+	updater = nact_application_get_updater( application );
+	list = na_iprefs_read_string_list( NA_IPREFS( updater ), "schemes", NULL );
 	if( !list ){
 		list = get_default_default_schemes_list( window );
 	}
@@ -420,7 +420,7 @@ iter_for_setup( gchar *scheme, GtkTreeModel *model )
  * @treeview: the #GtkTreeView.
  *
  * Returns selected schemes as a list of strings.
- * The caller should call na_utils_free_string_list after use.
+ * The caller should call #na_core_utils_slist_free() after use.
  */
 GSList *
 nact_schemes_list_get_schemes( GtkTreeView *treeview )
@@ -449,16 +449,16 @@ nact_schemes_list_save_defaults( BaseWindow *window )
 	GtkTreeView *treeview;
 	GSList *schemes;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
 	schemes = get_list_schemes( treeview );
 	application = NACT_APPLICATION( base_window_get_application( window ));
-	pivot = nact_application_get_pivot( application );
+	updater = nact_application_get_updater( application );
 
-	na_iprefs_write_string_list( NA_IPREFS( pivot ), "schemes", schemes );
+	na_iprefs_write_string_list( NA_IPREFS( updater ), "schemes", schemes );
 
-	na_utils_free_string_list( schemes );
+	na_core_utils_slist_free( schemes );
 }
 
 static GSList *
@@ -630,8 +630,8 @@ on_keyword_edited( GtkCellRendererText *renderer, const gchar *path, const gchar
 					TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 					NULL );
 			if( edited ){
-				na_object_profile_set_scheme( edited, old_text, FALSE );
-				na_object_profile_set_scheme( edited, text, TRUE );
+				na_object_set_scheme( edited, old_text, FALSE );
+				na_object_set_scheme( edited, text, TRUE );
 				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 			}
 		}
