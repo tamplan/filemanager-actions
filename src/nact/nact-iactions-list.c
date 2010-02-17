@@ -33,10 +33,9 @@
 #endif
 
 #include <gdk/gdkkeysyms.h>
+#include <glib/gi18n.h>
 
 #include <api/na-object-api.h>
-
-#include <private/na-iduplicable.h>
 
 #include "base-window.h"
 #include "nact-main-menubar.h"
@@ -293,7 +292,7 @@ free_items_callback( NactIActionsList *instance, GList *items )
 	g_debug( "nact_iactions_list_free_items_callback: selection=%p (%d items)",
 			( void * ) items, g_list_length( items ));
 
-	na_object_free_items_list( items );
+	na_object_unref_items( items );
 }
 
 static void
@@ -797,7 +796,7 @@ nact_iactions_list_remove_rec( GList *list, NAObject *object )
 	GList *subitems, *it;
 
 	if( NA_IS_OBJECT_ITEM( object )){
-		subitems = na_object_get_items_list( object );
+		subitems = na_object_get_items( object );
 		for( it = subitems ; it ; it = it->next ){
 			list = nact_iactions_list_remove_rec( list, it->data );
 		}
@@ -855,7 +854,6 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	gboolean valid = TRUE;
 	IActionsListInstanceData *ialid;
 	NAObjectItem *item;
-	NAPivot *pivot;
 	gboolean writable_item;
 
 	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
@@ -872,8 +870,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		modified = na_object_is_modified( object );
 		valid = na_object_is_valid( object );
 		item = NA_IS_OBJECT_PROFILE( object ) ? na_object_get_parent( object ) : NA_OBJECT_ITEM( object );
-		pivot = nact_window_get_pivot( NACT_WINDOW( instance ));
-		writable_item = na_pivot_is_item_writable( pivot, item, NULL );
+		writable_item = nact_window_is_item_writable( NACT_WINDOW( instance ), item, NULL );
 
 		if( modified ){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
@@ -1020,7 +1017,7 @@ filter_selection_set_implicitely_selected_childs( NAObject *object, gboolean sel
 	GList *childs, *ic;
 
 	if( NA_IS_OBJECT_ITEM( object )){
-		childs = na_object_get_items_list( object );
+		childs = na_object_get_items( object );
 		for( ic = childs ; ic ; ic = ic->next ){
 			g_object_set_data( G_OBJECT( ic->data ), "nact-implicit-selection", GUINT_TO_POINTER(( guint ) select ));
 			filter_selection_set_implicitely_selected_childs( NA_OBJECT( ic->data ), select );

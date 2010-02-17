@@ -133,15 +133,17 @@ typedef struct {
 }
 	NAObjectClass;
 
-GType  na_object_object_get_type( void );
+GType     na_object_object_get_type( void );
 
-void   na_object_object_check_status( const NAObject *object );
+void      na_object_object_check_status   ( const NAObject *object );
+gboolean  na_object_object_check_status_up( const NAObject *object );
 
-void   na_object_object_unref( NAObject *object );
+NAObject *na_object_object_ref  ( NAObject *object );
+void      na_object_object_unref( NAObject *object );
 
-void   na_object_object_dump      ( const NAObject *object );
-void   na_object_object_dump_norec( const NAObject *object );
-void   na_object_object_dump_tree ( GList *tree );
+void      na_object_object_dump      ( const NAObject *object );
+void      na_object_object_dump_norec( const NAObject *object );
+void      na_object_object_dump_tree ( GList *tree );
 
 #if 0
 GList *na_object_object_get_hierarchy( const NAObject *object );

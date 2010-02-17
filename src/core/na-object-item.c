@@ -424,6 +424,30 @@ na_object_item_build_items_slist( const NAObjectItem *item )
 }
 
 /**
+ * na_object_item_get_items_count:
+ * @item: the #NAObjectItem from which we want a count of subitems.
+ *
+ * Returns: the count of subitems of @item.
+ */
+guint
+na_object_item_get_items_count( const NAObjectItem *item )
+{
+	guint count = 0;
+	GList *childs;
+
+	/*g_debug( "na_object_item_get_items_count: item=%p (%s)", ( void * ) item, G_OBJECT_TYPE_NAME( item ));*/
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
+
+	if( !item->private->dispose_has_run ){
+
+		childs = na_object_get_items( item );
+		count = childs ? g_list_length( childs ) : 0;
+	}
+
+	return( count );
+}
+
+/**
  * na_object_item_count_items:
  * @items: a list if #NAObject-derived to be counted.
  * @menus: will be set to the count of menus.

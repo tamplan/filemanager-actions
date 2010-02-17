@@ -35,12 +35,12 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
-#include <runtime/na-io-provider.h>
-#include <runtime/na-iprefs.h>
-#include <runtime/na-utils.h>
+#include <core/na-io-provider.h>
+#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-window.h"
@@ -174,6 +174,7 @@ instance_finalize( GObject *window )
 	}
 }
 
+#if 0
 /**
  * nact_window_get_pivot:
  * @window: this #NactWindow object.
@@ -199,6 +200,7 @@ nact_window_get_pivot( NactWindow *window )
 
 	return( pivot );
 }
+#endif
 
 /**
  * nact_window_has_writable_providers:
@@ -228,6 +230,100 @@ nact_window_has_writable_providers( NactWindow *window )
 	}
 
 	return( has_writables );
+}
+
+/**
+ * nact_window_is_item_writable:
+ * @window: this #NactWindow object.
+ * @item: the #NAObjectItem to be evaluated.
+ * @reason: the reason for what @item may not be writable.
+ *
+ * Returns: %TRUE: if @item is actually writable, given the current
+ * status of its provider, %FALSE else.
+ *
+ * For an item be actually writable:
+ * - the item must not be itself in a read-only store, which has been
+ *   checked when first reading it
+ * - the provider must be willing (resp. able) to write
+ * - the provider must not has been locked by the admin
+ * - the writability of the provider must not have been removed by the user
+ * - the whole configuration must not have been locked by the admin.
+ */
+gboolean
+nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item, guint *reason )
+{
+	gboolean writable;
+	NAIOProvider *provider;
+
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+
+	writable = FALSE;
+	if( reason ){
+		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
+	}
+
+	if( !pivot->private->dispose_has_run ){
+
+		writable = TRUE;
+		if( reason ){
+			*reason = NA_IIO_PROVIDER_STATUS_WRITABLE;
+		}
+
+		if( writable ){
+			if( na_object_is_readonly( item )){
+				writable = FALSE;
+				if( reason ){
+					*reason = NA_IIO_PROVIDER_STATUS_ITEM_READONLY;
+				}
+			}
+		}
+
+		if( writable ){
+			provider = na_object_get_provider( item );
+			if( provider ){
+				if( !na_io_provider_is_willing_to_write( provider )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO;
+					}
+				} else if( na_io_provider_is_locked_by_admin( provider, pivot )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
+					}
+				} else if( !na_io_provider_is_user_writable( provider, pivot )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;
+					}
+				} else if( na_pivot_is_configuration_locked_by_admin( pivot )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN;
+					}
+				} else if( !na_io_provider_has_write_api( provider )){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_NO_API;
+					}
+				}
+
+			/* the get_writable_provider() api already takes above checks
+			 */
+			} else {
+				provider = na_io_provider_get_writable_provider( pivot );
+				if( !provider ){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
+					}
+				}
+			}
+		}
+	}
+
+	return( writable );
 }
 
 /**

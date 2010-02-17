@@ -137,17 +137,15 @@ void           na_iduplicable_check_status( const NAIDuplicable *object );
 
 NAIDuplicable *na_iduplicable_get_origin  ( const NAIDuplicable *object );
 gboolean       na_iduplicable_is_valid    ( const NAIDuplicable *object );
+gboolean       na_iduplicable_is_modified ( const NAIDuplicable *object );
 
 void           na_iduplicable_set_origin  ( NAIDuplicable *object, const NAIDuplicable *origin );
 
+void           na_iduplicable_register_consumer( GObject *consumer );
+
 #if 0
 void           na_iduplicable_init        ( NAIDuplicable *object );
-
 void           na_iduplicable_reset_status( NAIDuplicable *object );
-
-gboolean       na_iduplicable_is_modified( const NAIDuplicable *object );
-
-void           na_iduplicable_register_consumer( GObject *consumer );
 #endif
 
 G_END_DECLS

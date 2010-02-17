@@ -387,6 +387,55 @@ na_object_object_check_status( const NAObject *object )
 }
 
 /**
+ * na_object_object_check_status_up:
+ * @object: the object at the start of the hierarchy.
+ *
+ * Checks for modification and validity status of the @object, its
+ * parent, the parent of its parent, etc. up to the top of the hierarchy.
+ *
+ * Returns: %TRUE if at least one of the status has changed, %FALSE else.
+ *
+ * Checking the modification of any of the status should be more
+ * efficient that systematically force the display of the item.
+ */
+gboolean
+na_object_object_check_status_up( const NAObject *object )
+{
+	gboolean changed;
+	gboolean was_modified, is_modified;
+	gboolean was_valid, is_valid;
+	NAObjectItem *parent;
+
+	g_return_val_if_fail( NA_OBJECT( object ), FALSE );
+
+	changed = FALSE;
+
+	if( !object->private->dispose_has_run ){
+
+		was_modified = na_object_is_modified( object );
+		was_valid = na_object_is_valid( object );
+
+		na_iduplicable_check_status( NA_IDUPLICABLE( object ));
+
+		is_modified = na_object_is_modified( object );
+		is_valid = na_object_is_valid( object );
+
+		parent = na_object_get_parent( object );
+		if( parent ){
+			na_object_check_status_up( parent );
+		}
+
+		changed =
+			( was_modified && !is_modified ) ||
+			( !was_modified && is_modified ) ||
+			( was_valid && !is_valid ) ||
+			( !was_valid && is_valid );
+	}
+
+	return( changed );
+}
+
+/**
  * na_object_object_dump:
  * @object: the #NAObject-derived object to be dumped.
  *
@@ -528,6 +577,42 @@ na_object_object_get_hierarchy( const NAObject *object )
 	return( hierarchy );
 }
 #endif
+
+/**
+ * na_object_object_ref:
+ * @object: a #NAObject-derived object.
+ *
+ * Recursively ref the @object and all its children, incrementing their
+ * reference_count by 1.
+ *
+ * Returns: a reference on the @pbject.
+ */
+NAObject *
+na_object_object_ref( NAObject *object )
+{
+	NAObject *ref = NULL;
+	GList *childs, *ic;
+
+	g_debug( "na_object_object_ref: object=%p (%s, ref_count=%d)",
+			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+
+	if( !object->private->dispose_has_run ){
+
+		if( NA_IS_OBJECT_ITEM( object )){
+
+			childs = na_object_get_items( object );
+			for( ic = childs ; ic ; ic = ic->next ){
+
+				na_object_ref( ic->data );
+			}
+		}
+
+		ref = g_object_ref( object );
+	}
+
+	return( ref );
+}
 
 /**
  * na_object_object_unref:

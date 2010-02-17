@@ -84,10 +84,11 @@ static gboolean       set_modified( const NAIDuplicable *object, gboolean is_mod
 static void           set_origin( const NAIDuplicable *object, const NAIDuplicable *origin );
 static gboolean       set_valid( const NAIDuplicable *object, gboolean is_valid );
 
+#endif
+
 static void           status_changed_handler( NAIDuplicable *instance, gpointer user_data );
 static void           propagate_signal_to_consumers( const gchar *signal, NAIDuplicable *instance, gpointer user_data );
 static void           release_signal_consumers( GList *consumers );
-#endif
 
 GType
 na_iduplicable_get_type( void )
@@ -180,9 +181,7 @@ interface_base_finalize( NAIDuplicableInterface *klass )
 
 		st_finalized = TRUE;
 
-#if 0
 		release_signal_consumers( klass->private->consumers );
-#endif
 
 		g_free( klass->private );
 	}
@@ -213,10 +212,16 @@ na_iduplicable_init( NAIDuplicable *object )
 		str->modified = FALSE;
 		str->valid = TRUE;
 
+		str->status_changed_handler_id = g_signal_connect(
+				G_OBJECT( object ),
+				NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED,
+				G_CALLBACK( status_changed_handler ),
+				object );
+
 		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE, str );
 	}
 }
-#endif
+ #endif
 
 /**
  * na_iduplicable_dispose:
@@ -411,8 +416,6 @@ na_iduplicable_get_origin( const NAIDuplicable *object )
 gboolean
 na_iduplicable_is_valid( const NAIDuplicable *object )
 {
-	/*static const gchar *thisfn = "na_iduplicable_is_valid";
-	g_debug( "%s: object=%p", thisfn, object );*/
 	gboolean is_valid;
 	DuplicableStr *str;
 
@@ -427,6 +430,35 @@ na_iduplicable_is_valid( const NAIDuplicable *object )
 	}
 
 	return( is_valid );
+}
+
+/**
+ * na_iduplicable_is_modified:
+ * @object: the #NAIDuplicable object whose status is to be returned.
+ *
+ * Returns the current value of the %PROP_IDUPLICABLE_ISMODIFIED
+ * property without rechecking the edition status itself.
+ *
+ * Returns: %TRUE is the provided object has been modified regarding of
+ * the original one.
+ */
+gboolean
+na_iduplicable_is_modified( const NAIDuplicable *object )
+{
+	gboolean is_modified;
+	DuplicableStr *str;
+
+	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), FALSE );
+
+	is_modified = FALSE;
+
+	if( st_initialized && !st_finalized ){
+
+		str = get_duplicable_str( object );
+		is_modified = str->modified;
+	}
+
+	return( is_modified );
 }
 
 /**
@@ -479,6 +511,24 @@ v_is_valid( const NAIDuplicable *object )
 	return( FALSE );
 }
 
+/**
+ * na_iduplicable_register_consumer:
+ * @consumer: the target instance.
+ *
+ * This function registers a consumer, i.e. an instance to which edition
+ * status signals will be propagated.
+ */
+void
+na_iduplicable_register_consumer( GObject *consumer )
+{
+	if( st_initialized && !st_finalized ){
+
+		g_return_if_fail( st_interface );
+		g_debug( "na_iduplicable_register_consumer: consumer=%p", ( void * ) consumer );
+		st_interface->private->consumers = g_list_prepend( st_interface->private->consumers, consumer );
+	}
+}
+
 #if 0
 /**
  * na_iduplicable_reset_status:
@@ -494,48 +544,6 @@ na_iduplicable_reset_status( NAIDuplicable *object )
 
 	set_valid( object, TRUE );
 	set_modified( object, FALSE );
-}
-
-/**
- * na_iduplicable_is_modified:
- * @object: the #NAIDuplicable object whose status is to be returned.
- *
- * Returns the current value of the %PROP_IDUPLICABLE_ISMODIFIED
- * property without rechecking the edition status itself.
- *
- * Returns: %TRUE is the provided object has been modified regarding of
- * the original one.
- */
-gboolean
-na_iduplicable_is_modified( const NAIDuplicable *object )
-{
-	/*static const gchar *thisfn = "na_iduplicable_is_modified";
-	g_debug( "%s: object=%p", thisfn, object );*/
-	gboolean is_modified = FALSE;
-
-	g_return_val_if_fail( st_initialized && !st_finalized, FALSE );
-	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), FALSE );
-
-	is_modified = get_modified( object );
-
-	return( is_modified );
-}
-
-/**
- * na_iduplicable_register_consumer:
- * @consumer: the target instance.
- *
- * This function registers a consumer, i.e. an instance to which edition
- * status signals will be propagated.
- */
-void
-na_iduplicable_register_consumer( GObject *consumer )
-{
-	if( st_initialized && !st_finalized ){
-		g_return_if_fail( st_interface );
-		g_debug( "na_iduplicable_register_consumer: consumer=%p", ( void * ) consumer );
-		st_interface->private->consumers = g_list_prepend( st_interface->private->consumers, consumer );
-	}
 }
 
 static NAIDuplicable *
@@ -619,6 +627,7 @@ set_valid( const NAIDuplicable *object, gboolean is_valid )
 
 	return( was_valid );
 }
+#endif
 
 static void
 status_changed_handler( NAIDuplicable *instance, gpointer user_data )
@@ -639,8 +648,10 @@ propagate_signal_to_consumers( const gchar *signal, NAIDuplicable *instance, gpo
 	GList *ic;
 
 	if( st_initialized && !st_finalized ){
+
 		g_return_if_fail( st_interface );
 		for( ic = st_interface->private->consumers ; ic ; ic = ic->next ){
+
 			g_signal_emit_by_name( ic->data, signal, user_data );
 		}
 	}
@@ -651,7 +662,6 @@ release_signal_consumers( GList *consumers )
 {
 	g_list_free( consumers );
 }
-#endif
 
 static DuplicableStr *
 get_duplicable_str( const NAIDuplicable *object )
@@ -667,13 +677,11 @@ get_duplicable_str( const NAIDuplicable *object )
 		str->modified = FALSE;
 		str->valid = TRUE;
 
-#if 0
 		str->status_changed_handler_id = g_signal_connect(
 				G_OBJECT( object ),
 				NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED,
 				G_CALLBACK( status_changed_handler ),
-				object );
-#endif
+				( gpointer ) object );
 
 		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE, str );
 	}

@@ -811,7 +811,7 @@ do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTr
 		 */
 		if( NA_IS_OBJECT_ITEM( it->data ) && na_object_get_items_count( it->data )){
 
-			subitems = na_object_get_items_list( it->data );
+			subitems = na_object_get_items( it->data );
 			do_insert_into_first( treeview, model, subitems, inserted_path, NULL );
 		}
 
@@ -851,7 +851,7 @@ do_insert_into_first( GtkTreeView *treeview, GtkTreeModel *model, GList *items, 
 	 */
 	if( NA_IS_OBJECT_ITEM( last->data ) && na_object_get_items_count( last->data )){
 
-		subitems = na_object_get_items_list( last->data );
+		subitems = na_object_get_items( last->data );
 		do_insert_into_first( treeview, model, subitems, inserted_path, NULL );
 	}
 

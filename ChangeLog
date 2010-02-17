@@ -3,6 +3,18 @@
 	* src/api/na-iduplicable.h:
 	* src/api/na-object-api.h:
 	* src/api/na-object-item.h:
+	* src/api/na-object.h:
+	* src/core/na-iduplicable.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object.c:
+	* src/nact/nact-iactions-list-bis.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h: Update NactIActionsList interface.
+
+	* src/api/na-iduplicable.h:
+	* src/api/na-object-api.h:
+	* src/api/na-object-item.h:
 	* src/core/na-exporter.c:
 	* src/core/na-exporter.h:
 	* src/core/na-iduplicable.c:

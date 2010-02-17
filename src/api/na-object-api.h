@@ -54,9 +54,11 @@ G_BEGIN_DECLS
  */
 #define na_object_duplicate( obj )						na_iduplicable_duplicate( NA_IDUPLICABLE( obj ))
 #define na_object_check_status( obj )					na_object_object_check_status( NA_OBJECT( obj ))
+#define na_object_check_status_up( obj )				na_object_object_check_status_up( NA_OBJECT( obj ))
 
 #define na_object_get_origin( obj )						na_iduplicable_get_origin( NA_IDUPLICABLE( obj ))
 #define na_object_is_valid( obj )						na_iduplicable_is_valid( NA_IDUPLICABLE( obj ))
+#define na_object_is_modified( obj )					na_iduplicable_is_modified( NA_IDUPLICABLE( obj ))
 
 #define na_object_set_origin( obj, origin )				na_iduplicable_set_origin( NA_IDUPLICABLE( obj ), ( NAIDuplicable * )( origin ))
 
@@ -66,6 +68,7 @@ G_BEGIN_DECLS
 #define na_object_dump_norec( obj )						na_object_object_dump_norec( NA_OBJECT( obj ))
 #define na_object_dump_tree( tree )						na_object_object_dump_tree( tree )
 #define na_object_get_hierarchy( obj )					na_object_object_get_hierarchy( NA_OBJECT( obj ))
+#define na_object_ref( obj )							na_object_object_ref( NA_OBJECT( obj ))
 #define na_object_unref( obj )							na_object_object_unref( NA_OBJECT( obj ))
 
 /* NAObjectId
@@ -104,6 +107,7 @@ G_BEGIN_DECLS
 #define na_object_get_item( obj, id )					na_object_item_get_item( NA_OBJECT_ITEM( obj ),( const gchar * )( id ))
 #define na_object_append_item( obj, child )				na_object_item_append_item( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
 #define na_object_build_items_slist( obj )				na_object_item_build_items_slist( NA_OBJECT_ITEM( obj ))
+#define na_object_get_items_count( obj )				na_object_item_get_items_count( NA_OBJECT_ITEM( obj ))
 #define na_object_count_items( list, cm, ca, cp, brec )	na_object_item_count_items( list, ( cm ), ( ca ), ( cp ), ( brec ))
 #define na_object_unref_items( tree )					na_object_item_unref_items( tree )
 
