@@ -1,6 +1,9 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
-	* * src/plugin-tracker/na-tracker-dbus.c:
+	* src/test/test-include.c:
+	* src/test/test-parse-uris.c: Update test utilities.
+
+	* src/plugin-tracker/na-tracker-dbus.c:
 	* src/plugin-tracker/na-tracker.c: Update NATracker plugin.
 
 	* src/core/Makefile.am:

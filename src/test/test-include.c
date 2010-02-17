@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include <api/na-data-factory.h>
+#include <api/na-idata-factory.h>
 
 int
 main()
