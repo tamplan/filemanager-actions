@@ -34,8 +34,6 @@
 
 #include <api/na-object-api.h>
 
-#include <runtime/na-utils.h>
-
 #include "base-window.h"
 #include "nact-main-tab.h"
 #include "nact-schemes-list.h"
@@ -258,7 +256,7 @@ nact_iadvanced_tab_dispose( NactIAdvancedTab *instance )
 
 /**
  * Returns selected schemes as a list of strings.
- * The caller should call na_utils_free_string_list after use.
+ * The caller should call na_core_utils_slist_free() after use.
  */
 GSList *
 nact_iadvanced_tab_get_schemes( NactIAdvancedTab *instance )
@@ -302,7 +300,7 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 		enable_tab = tab_set_sensitive( instance );
 
 		if( profile ){
-			schemes = na_object_profile_get_schemes( profile );
+			schemes = na_object_get_schemes( profile );
 		}
 
 		nact_schemes_list_setup_values(
@@ -341,7 +339,7 @@ tab_set_sensitive( NactIAdvancedTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
-	enable_tab = ( profile != NULL && na_object_action_is_target_selection( NA_OBJECT_ACTION( item )));
+	enable_tab = ( profile != NULL && na_object_is_target_selection( NA_OBJECT_ACTION( item )));
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ADVANCED, enable_tab );
 
 	return( enable_tab );

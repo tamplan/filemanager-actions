@@ -71,6 +71,8 @@ GType            na_object_profile_get_type( void );
 
 NAObjectProfile *na_object_profile_new( void );
 
+void             na_object_profile_replace_folder( NAObjectProfile *profile, const gchar *old, const gchar *new );
+
 gboolean         na_object_profile_is_candidate                ( const NAObjectProfile *profile, gint target, GList *files );
 gboolean         na_object_profile_is_candidate_for_tracked    ( const NAObjectProfile *profile, GList *tracked );
 

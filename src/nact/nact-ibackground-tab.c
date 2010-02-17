@@ -36,15 +36,15 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
-#include <runtime/na-iprefs.h>
-#include <runtime/na-pivot.h>
-#include <runtime/na-utils.h>
+#include <core/na-iprefs.h>
 
 #include "base-iprefs.h"
 #include "base-window.h"
 #include "nact-gtk-utils.h"
+#include "nact-iprefs.h"
 #include "nact-application.h"
 #include "nact-main-tab.h"
 #include "nact-ibackground-tab.h"
@@ -369,7 +369,7 @@ tab_set_sensitive( NactIBackgroundTab *instance )
 			NULL );
 
 	enable_tab = ( profile != NULL &&
-			( na_object_action_is_target_background( action ) || na_object_action_is_target_toolbar( action )));
+			( na_object_is_target_background( action ) || na_object_is_target_toolbar( action )));
 
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_BACKGROUND, enable_tab );
 
@@ -528,10 +528,10 @@ add_uri_to_folders( NactIBackgroundTab *instance, const gchar *uri )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 			NULL );
 
-	folders = na_object_profile_get_folders( edited );
+	folders = na_object_get_folders( edited );
 	folders = g_slist_prepend( folders, ( gpointer ) g_strdup( uri ));
-	na_object_profile_set_folders( edited, folders );
-	na_utils_free_string_list( folders );
+	na_object_set_folders( edited, folders );
+	na_core_utils_slist_free( folders );
 
 	g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 }
@@ -553,7 +553,7 @@ on_add_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
 	GtkWidget *dialog;
 	GtkWindow *toplevel;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	gchar *uri;
 	GtkTreeView *listview;
 
@@ -572,11 +572,11 @@ on_add_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
 			NULL );
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-	pivot = nact_application_get_pivot( application );
+	updater = nact_application_get_updater( application );
 
 	base_iprefs_position_named_window( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_BACKGROUND_DIALOG );
 
-	uri = na_iprefs_read_string( NA_IPREFS( pivot ), IPREFS_BACKGROUND_URI, "x-nautilus-desktop:///" );
+	uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_BACKGROUND_URI, "x-nautilus-desktop:///" );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_uri( GTK_FILE_CHOOSER( dialog ), uri );
 	}
@@ -584,7 +584,7 @@ on_add_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		uri = gtk_file_chooser_get_uri( GTK_FILE_CHOOSER( dialog ));
-		na_iprefs_write_string( NA_IPREFS( pivot ), IPREFS_BACKGROUND_URI, uri );
+		nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_BACKGROUND_URI, uri );
 		add_row( instance, listview, uri );
 		add_uri_to_folders( instance, uri );
 		g_free( uri );
@@ -636,11 +636,11 @@ remove_uri_from_folders( NactIBackgroundTab *instance, const gchar *uri )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 			NULL );
 
-	folders = na_object_profile_get_folders( edited );
-	folders = na_utils_remove_from_string_list( folders, uri );
-	na_object_profile_set_folders( edited, folders );
+	folders = na_object_get_folders( edited );
+	folders = na_core_utils_slist_remove_string( folders, uri );
+	na_object_set_folders( edited, folders );
 
-	na_utils_free_string_list( folders );
+	na_core_utils_slist_free( folders );
 
 	g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 }
@@ -671,11 +671,11 @@ setup_folders( NactIBackgroundTab *instance )
 			NULL );
 
 	if( edited ){
-		folders = na_object_profile_get_folders( edited );
+		folders = na_object_get_folders( edited );
 		for( is = folders ; is ; is = is->next ){
 			add_row( instance, listview, ( const gchar * ) is->data );
 		}
-		na_utils_free_string_list( folders );
+		na_core_utils_slist_free( folders );
 	}
 }
 
@@ -710,7 +710,7 @@ treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, co
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 			NULL );
 
-	na_object_profile_replace_folder_uri( edited, previous_text, text );
+	na_object_profile_replace_folder( edited, previous_text, text );
 
 	if( old_text ){
 		*old_text = g_strdup( previous_text );

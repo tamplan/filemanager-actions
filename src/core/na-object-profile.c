@@ -332,6 +332,31 @@ na_object_profile_new( void )
 }
 
 /**
+ * na_object_profile_replace_folder:
+ * @profile: the #NAObjectProfile to be updated.
+ * @old: the old uri.
+ * @new: the new uri.
+ *
+ * Replaces the @old URI by the @new one.
+ */
+void
+na_object_profile_replace_folder( NAObjectProfile *profile, const gchar *old, const gchar *new )
+{
+	GSList *folders;
+
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
+
+	if( !profile->private->dispose_has_run ){
+
+		folders = na_object_get_folders( profile );
+		folders = na_core_utils_slist_remove_string( folders, old );
+		folders = g_slist_append( folders, ( gpointer ) g_strdup( new ));
+		na_object_set_folders( profile, folders );
+		na_core_utils_slist_free( folders );
+	}
+}
+
+/**
  * na_object_profile_is_candidate:
  * @profile: the #NAObjectProfile to be checked.
  * @target: the current target.
