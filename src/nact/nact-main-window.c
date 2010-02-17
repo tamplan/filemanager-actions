@@ -39,10 +39,10 @@
 
 #include <api/na-object-api.h>
 
-#include <runtime/na-iabout.h>
-#include <runtime/na-ipivot-consumer.h>
-#include <runtime/na-iprefs.h>
-#include <runtime/na-pivot.h>
+#include <core/na-iabout.h>
+#include <core/na-ipivot-consumer.h>
+#include <core/na-iprefs.h>
+#include <core/na-pivot.h>
 
 #include "base-iprefs.h"
 #include "nact-application.h"
@@ -156,11 +156,11 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
-static void     actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot );
+static void     actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater );
 
-static gchar   *base_get_toplevel_name( BaseWindow *window );
-static gchar   *base_get_iprefs_window_id( BaseWindow *window );
-static gboolean base_is_willing_to_quit( BaseWindow *window );
+static gchar   *base_get_toplevel_name( const BaseWindow *window );
+static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
+static gboolean base_is_willing_to_quit( const BaseWindow *window );
 static void     on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data );
 static void     on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data );
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
@@ -176,7 +176,7 @@ static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer 
 
 static gboolean confirm_for_giveup_from_menu( NactMainWindow *window );
 static gboolean confirm_for_giveup_from_pivot( NactMainWindow *window );
-static void     ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_data );
+static void     ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data );
 static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode );
 static void     reload( NactMainWindow *window );
 
@@ -544,7 +544,7 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->on_actions_changed = ipivot_consumer_on_actions_changed;
+	iface->on_items_changed = ipivot_consumer_on_items_changed;
 	iface->on_create_root_menu_changed = NULL;
 	iface->on_display_about_changed = NULL;
 	iface->on_display_order_changed = ipivot_consumer_on_display_order_changed;
@@ -700,7 +700,7 @@ instance_dispose( GObject *window )
 		for( it = self->private->deleted ; it ; it = it->next ){
 			g_debug( "nact_main_window_instance_dispose: %p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
 		}
-		na_object_free_items_list( self->private->deleted );
+		na_object_unref_items( self->private->deleted );
 
 		nact_iactions_list_dispose( NACT_IACTIONS_LIST( window ));
 		nact_iaction_tab_dispose( NACT_IACTION_TAB( window ));
@@ -784,7 +784,7 @@ nact_main_window_get_item( const NactMainWindow *window, const gchar *uuid )
 {
 	NAObjectItem *exists;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
 
@@ -795,8 +795,8 @@ nact_main_window_get_item( const NactMainWindow *window, const gchar *uuid )
 		/* leave here this dead code, in case I change of opinion later */
 		if( 0 ){
 			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-			pivot = nact_application_get_pivot( application );
-			exists = na_pivot_get_item( pivot, uuid );
+			updater = nact_application_get_updater( application );
+			exists = na_pivot_get_item( NA_PIVOT( updater ), uuid );
 		}
 
 		if( !exists ){
@@ -916,7 +916,7 @@ void
 nact_main_window_remove_deleted( NactMainWindow *window )
 {
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	GList *it;
 	NAObject *item;
 
@@ -925,14 +925,14 @@ nact_main_window_remove_deleted( NactMainWindow *window )
 	if( !window->private->dispose_has_run ){
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		pivot = nact_application_get_pivot( application );
+		updater = nact_application_get_updater( application );
 
 		for( it = window->private->deleted ; it ; it = it->next ){
 			item = NA_OBJECT( it->data );
-			actually_delete_item( window, item, pivot );
+			actually_delete_item( window, item, updater );
 		}
 
-		na_object_free_items_list( window->private->deleted );
+		na_object_unref_items( window->private->deleted );
 		window->private->deleted = NULL;
 
 		setup_dialog_title( window );
@@ -945,7 +945,7 @@ nact_main_window_remove_deleted( NactMainWindow *window )
  * and thus updated in the storage subsystem as well as in the pivot
  */
 static void
-actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot )
+actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater )
 {
 	GList *items, *it;
 	NAObject *origin;
@@ -957,33 +957,33 @@ actually_delete_item( NactMainWindow *window, NAObject *item, NAPivot *pivot )
 		nact_window_delete_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ));
 
 		if( NA_IS_OBJECT_MENU( item )){
-			items = na_object_get_items_list( item );
+			items = na_object_get_items( item );
 			for( it = items ; it ; it = it->next ){
-				actually_delete_item( window, NA_OBJECT( it->data ), pivot );
+				actually_delete_item( window, NA_OBJECT( it->data ), updater );
 			}
 		}
 
-		origin = na_object_get_origin( item );
+		origin = ( NAObject * ) na_object_get_origin( item );
 		if( origin ){
-			na_pivot_remove_item( pivot, origin );
+			na_updater_remove_item( updater, origin );
 		}
 	}
 }
 
 static gchar *
-base_get_toplevel_name( BaseWindow *window )
+base_get_toplevel_name( const BaseWindow *window )
 {
 	return( g_strdup( "MainWindow" ));
 }
 
 static gchar *
-base_get_iprefs_window_id( BaseWindow *window )
+base_get_iprefs_window_id( const BaseWindow *window )
 {
 	return( g_strdup( "main-window" ));
 }
 
 static gboolean
-base_is_willing_to_quit( BaseWindow *window )
+base_is_willing_to_quit( const BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_is_willing_to_quit";
 	gboolean willing_to;
@@ -1040,7 +1040,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_runtime_init_toplevel";
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	GList *tree;
 	gint order_mode;
 
@@ -1058,8 +1058,8 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 				G_CALLBACK( on_iactions_list_selection_changed ));
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		pivot = nact_application_get_pivot( application );
-		tree = na_pivot_get_items( pivot );
+		updater = nact_application_get_updater( application );
+		tree = na_pivot_get_items( NA_PIVOT( updater ));
 		g_debug( "%s: pivot_tree=%p", thisfn, ( void * ) tree );
 
 		nact_iaction_tab_runtime_init_toplevel( NACT_IACTION_TAB( window ));
@@ -1069,7 +1069,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_iadvanced_tab_runtime_init_toplevel( NACT_IADVANCED_TAB( window ));
 		nact_main_menubar_runtime_init( window );
 
-		order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
+		order_mode = na_iprefs_get_order_mode( NA_IPREFS( updater ));
 		ipivot_consumer_on_display_order_changed( NA_IPIVOT_CONSUMER( window ), order_mode );
 
 		/* fill the IActionsList at last so that all signals are connected
@@ -1124,7 +1124,8 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 	NactMainWindow *window;
 	NAObject *object;
 	gint count;
-	NAPivot *pivot;
+	NactApplication *application;
+	NAUpdater *updater;
 
 	count = g_slist_length( selected_items );
 
@@ -1158,8 +1159,9 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 			set_current_profile( window, TRUE, selected_items );
 		}
 
-		pivot = nact_window_get_pivot( NACT_WINDOW( instance ));
-		window->private->editable = na_pivot_is_item_writable( pivot, window->private->edited_item, &window->private->reason );
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+		updater = nact_application_get_updater( application );
+		window->private->editable = na_updater_is_item_writable( updater, window->private->edited_item, &window->private->reason );
 		nact_main_statusbar_set_locked( window, !window->private->editable, window->private->reason );
 
 	} else {
@@ -1201,11 +1203,11 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 
 		if( NA_IS_OBJECT_ACTION( window->private->edited_item )){
 
-			count_profiles = na_object_get_items_count( NA_OBJECT_ACTION( window->private->edited_item ));
+			count_profiles = na_object_get_items_count( window->private->edited_item );
 			/*g_return_if_fail( count_profiles >= 1 );*/
 
 			if( count_profiles == 1 ){
-				profiles = na_object_get_items_list( window->private->edited_item );
+				profiles = na_object_get_items( window->private->edited_item );
 				window->private->edited_profile = NA_OBJECT_PROFILE( profiles->data );
 			}
 		}
@@ -1225,9 +1227,10 @@ set_current_profile( NactMainWindow *window, gboolean set_action, GSList *select
 	if( window->private->edited_profile && set_action ){
 
 		NAObjectAction *action = NA_OBJECT_ACTION( na_object_get_parent( window->private->edited_profile ));
-		NAPivot *pivot = nact_window_get_pivot( NACT_WINDOW( window ));
+		NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		NAUpdater *updater = nact_application_get_updater( application );
 		window->private->edited_item = NA_OBJECT_ITEM( action );
-		window->private->editable = na_pivot_is_item_writable( pivot, window->private->edited_item, &window->private->reason );
+		window->private->editable = na_updater_is_item_writable( updater, window->private->edited_item, &window->private->reason );
 	}
 }
 
@@ -1358,9 +1361,9 @@ confirm_for_giveup_from_pivot( NactMainWindow *window )
  * reset - saving is handled on a per-action basis.
  */
 static void
-ipivot_consumer_on_actions_changed( NAIPivotConsumer *instance, gpointer user_data )
+ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_actions_changed";
+	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_items_changed";
 	NactMainWindow *window;
 	gboolean reload_ok;
 
@@ -1383,7 +1386,7 @@ reload( NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_reload";
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -1395,12 +1398,12 @@ reload( NactMainWindow *window )
 		window->private->selected_row = NULL;
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		pivot = nact_application_get_pivot( application );
-		na_pivot_load_items( pivot );
-		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( pivot ));
+		updater = nact_application_get_updater( application );
+		na_pivot_load_items( NA_PIVOT( updater ));
+		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( NA_PIVOT( updater )));
 		nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
 
-		na_object_free_items_list( window->private->deleted );
+		na_object_unref_items( window->private->deleted );
 		window->private->deleted = NULL;
 	}
 }

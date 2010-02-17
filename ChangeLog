@@ -1,5 +1,10 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-iprefs.c:
+	* src/nact/base-iprefs.h:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h: Update NactMainWindow class.
+
 	* src/core/na-iprefs.c:
 	* src/core/na-iprefs.h:
 	* src/nact/nact-iprefs.c:

@@ -68,11 +68,13 @@ typedef struct {
 
 GType base_iprefs_get_type( void );
 
-void  base_iprefs_position_window( const BaseWindow *window );
-void  base_iprefs_position_named_window( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );
-
-void  base_iprefs_save_window_position( const BaseWindow *window );
+void  base_iprefs_position_window           ( const BaseWindow *window );
+void  base_iprefs_position_named_window     ( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );
+void  base_iprefs_save_window_position      ( const BaseWindow *window );
 void  base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );
+
+gint  base_iprefs_get_int( BaseWindow *window, const gchar *name );
+void  base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value );
 
 G_END_DECLS
 

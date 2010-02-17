@@ -53,7 +53,7 @@ G_BEGIN_DECLS
 #define NACT_IS_MAIN_WINDOW_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_MAIN_WINDOW_TYPE ))
 #define NACT_MAIN_WINDOW_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_MAIN_WINDOW_TYPE, NactMainWindowClass ))
 
-typedef struct NactMainWindowPrivate NactMainWindowPrivate;
+typedef struct NactMainWindowPrivate      NactMainWindowPrivate;
 
 typedef struct {
 	NactWindow             parent;
@@ -76,12 +76,12 @@ GType           nact_main_window_get_type( void );
 
 NactMainWindow *nact_main_window_new( BaseApplication *application );
 
-NactClipboard  *nact_main_window_get_clipboard( const NactMainWindow *window );
-NAObjectItem   *nact_main_window_get_item( const NactMainWindow *window, const gchar *uuid );
+NactClipboard  *nact_main_window_get_clipboard     ( const NactMainWindow *window );
+NAObjectItem   *nact_main_window_get_item          ( const NactMainWindow *window, const gchar *uuid );
 gboolean        nact_main_window_has_modified_items( const NactMainWindow *window );
-void            nact_main_window_move_to_deleted( NactMainWindow *window, GList *items );
-void            nact_main_window_reload( NactMainWindow *window );
-void            nact_main_window_remove_deleted( NactMainWindow *window );
+void            nact_main_window_move_to_deleted   ( NactMainWindow *window, GList *items );
+void            nact_main_window_reload            ( NactMainWindow *window );
+void            nact_main_window_remove_deleted    ( NactMainWindow *window );
 
 G_END_DECLS
 

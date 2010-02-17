@@ -54,7 +54,9 @@ static void    interface_base_finalize( BaseIPrefsInterface *klass );
 
 static gchar  *v_iprefs_get_window_id( const BaseWindow *window );
 
+static gint    read_int( BaseWindow *window, const gchar *name );
 static GSList *read_int_list( const BaseWindow *window, const gchar *key );
+static void    write_int( BaseWindow *window, const gchar *name, gint value );
 static void    write_int_list( const BaseWindow *window, const gchar *key, GSList *list );
 static void    int_list_to_position( const BaseWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height );
 static GSList *position_to_int_list( const BaseWindow *window, gint x, gint y, gint width, gint height );
@@ -265,7 +267,48 @@ base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *top
 		}
 	}
 }
+/**
+ * base_iprefs_get_int:
+ * @window: this BaseWindow-derived window.
+ * @name: the entry to be readen.
+ *
+ * Returns: the named integer.
+ */
+gint
+base_iprefs_get_int( BaseWindow *window, const gchar *name )
+{
+	gint ret = 0;
 
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), 0 );
+	g_return_val_if_fail( BASE_IS_IPREFS( window ), 0 );
+
+	if( st_initialized && !st_finalized ){
+
+		ret = read_int( window, name );
+	}
+
+	return( ret );
+}
+
+/**
+ * base_iprefs_set_int:
+ * @window: this BaseWindow-derived window.
+ * @name: the entry to be written.
+ * @value: the integer to be set.
+ *
+ * Writes an integer in the GConf system.
+ */
+void
+base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value )
+{
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( BASE_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+
+		write_int( window, name, value );
+	}
+}
 static gchar *
 v_iprefs_get_window_id( const BaseWindow *window )
 {
@@ -276,6 +319,27 @@ v_iprefs_get_window_id( const BaseWindow *window )
 	}
 
 	return( NULL );
+}
+
+static gint
+read_int( BaseWindow *window, const gchar *name )
+{
+	static const gchar *thisfn = "base_iprefs_read_key_int";
+	GError *error = NULL;
+	gchar *path;
+	gint value;
+
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+
+	value = gconf_client_get_int( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
+
+	if( error ){
+		g_warning( "%s: name=%s, %s", thisfn, name, error->message );
+		g_error_free( error );
+	}
+
+	g_free( path );
+	return( value );
 }
 
 /*
@@ -302,6 +366,25 @@ read_int_list( const BaseWindow *window, const gchar *key )
 
 	g_free( path );
 	return( list );
+}
+
+static void
+write_int( BaseWindow *window, const gchar *name, gint value )
+{
+	static const gchar *thisfn = "base_iprefs_write_int";
+	GError *error = NULL;
+	gchar *path;
+
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+
+	gconf_client_set_int( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, value, &error );
+
+	if( error ){
+		g_warning( "%s: name=%s, %s", thisfn, name, error->message );
+		g_error_free( error );
+	}
+
+	g_free( path );
 }
 
 static void
