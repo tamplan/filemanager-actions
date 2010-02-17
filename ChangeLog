@@ -1,5 +1,10 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	Define NAExportFormat new class.
+
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h: New files.
+
 	Rename src/nact/nact-assistant-export-ask.{c,h} to
 	src/nact/nact-export-ask.{c,h}
 
