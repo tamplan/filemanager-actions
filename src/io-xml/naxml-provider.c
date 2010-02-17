@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <api/na-iio-factory.h>
-#include <api/na-iio-provider.h>
+#include <api/na-iexporter.h>
 
 #include "naxml-provider.h"
 
@@ -51,24 +51,58 @@ struct NaxmlProviderPrivate {
 	gboolean dispose_has_run;
 };
 
+static NAExporterStr st_formats[] = {
+
+	/* GCONF_SCHEMA_V1: a schema with owner, short and long descriptions;
+	 * each action has its own schema addressed by the id
+	 * (historical format up to v1.10.x serie)
+	 */
+	{ "GConfSchemaV1",
+			N_( "Export as a full GConf schema (v_1) file" ),
+			N_( "Export as a GConf schema file with full key descriptions" ),
+			N_( "This used to be the historical export format. " \
+				"The exported file may later be imported via :\n" \
+				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
+				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
+
+	/* GCONF_SCHEMA_V2: the lightest schema still compatible with gconftool-2 --install-schema-file
+	 * (no owner, no short nor long descriptions) - introduced in v 1.11
+	 */
+	{ "GConfSchemaV2",
+			N_( "Export as a light GConf _schema (v2) file" ),
+			N_( "Export as a light GConf schema file" ),
+			N_( "The exported file may later be imported via :\n" \
+				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
+				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
+
+	/* GCONF_ENTRY: not a schema, but a dump of the GConf entry
+	 * introduced in v 1.11
+	 */
+	{ "GConfEntry",
+			N_( "Export as a GConf _entry file" ),
+			N_( "Export as a GConf entry file" ),
+			N_( "This should be the preferred format for newly exported actions.\n" \
+				"The exported file may later be imported via :\n" \
+				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
+				"- or via the gconftool-2 --load command-line tool." ) },
+
+	{ NULL, NULL, NULL }
+};
+
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 
-static void     class_init( NaxmlProviderClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_dispose( GObject *object );
-static void     instance_finalize( GObject *object );
+static void                 class_init( NaxmlProviderClass *klass );
+static void                 instance_init( GTypeInstance *instance, gpointer klass );
+static void                 instance_dispose( GObject *object );
+static void                 instance_finalize( GObject *object );
 
-static void     iio_provider_iface_init( NAIIOProviderInterface *iface );
-static gchar   *iio_provider_get_id( const NAIIOProvider *provider );
-static gchar   *iio_provider_get_name( const NAIIOProvider *provider );
-static guint    iio_provider_get_version( const NAIIOProvider *provider );
-static gboolean iio_provider_is_willing_to_write( const NAIIOProvider *instance );
-static gboolean iio_provider_is_able_to_write( const NAIIOProvider *instance );
-static guint    iio_provider_write_item( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
+static void                 iexporter_iface_init( NAIExporterInterface *iface );
+static guint                iexporter_get_version( const NAIExporter *provider );
+static const NAExporterStr *iexporter_get_formats( const NAIExporter *instance );
 
-static void     iio_factory_iface_init( NAIIOFactoryInterface *iface );
-static guint    iio_factory_get_version( const NAIIOFactory *provider );
+static void                 iio_factory_iface_init( NAIIOFactoryInterface *iface );
+static guint                iio_factory_get_version( const NAIIOFactory *provider );
 
 GType
 naxml_provider_get_type( void )
@@ -93,8 +127,8 @@ naxml_provider_register_type( GTypeModule *module )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo iio_provider_iface_info = {
-		( GInterfaceInitFunc ) iio_provider_iface_init,
+	static const GInterfaceInfo iexporter_iface_info = {
+		( GInterfaceInitFunc ) iexporter_iface_init,
 		NULL,
 		NULL
 	};
@@ -109,7 +143,7 @@ naxml_provider_register_type( GTypeModule *module )
 
 	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NaxmlProvider", &info, 0 );
 
-	g_type_module_add_interface( module, st_module_type, NA_IIO_PROVIDER_TYPE, &iio_provider_iface_info );
+	g_type_module_add_interface( module, st_module_type, NA_IEXPORTER_TYPE, &iexporter_iface_info );
 
 	g_type_module_add_interface( module, st_module_type, NA_IIO_FACTORY_TYPE, &iio_factory_iface_info );
 }
@@ -185,56 +219,28 @@ instance_finalize( GObject *object )
 }
 
 static void
-iio_provider_iface_init( NAIIOProviderInterface *iface )
+iexporter_iface_init( NAIExporterInterface *iface )
 {
-	static const gchar *thisfn = "naxml_provider_iio_provider_iface_init";
+	static const gchar *thisfn = "naxml_provider_iexporter_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_id = iio_provider_get_id;
-	iface->get_name = iio_provider_get_name;
-	iface->get_version = iio_provider_get_version;
-	iface->read_items = NULL;
-	iface->is_willing_to_write = iio_provider_is_willing_to_write;
-	iface->is_able_to_write = iio_provider_is_able_to_write;
-	iface->write_item = iio_provider_write_item;
-	iface->delete_item = NULL;
-}
-
-static gchar *
-iio_provider_get_id( const NAIIOProvider *provider )
-{
-	return( g_strdup( "na-xml" ));
-}
-
-static gchar *
-iio_provider_get_name( const NAIIOProvider *provider )
-{
-	return( g_strdup( _( "Nautilus-Actions XML I/O Provider" )));
+	iface->get_version = iexporter_get_version;
+	iface->get_formats = iexporter_get_formats;
+	iface->to_file = NULL;
+	iface->to_buffer = NULL;
 }
 
 static guint
-iio_provider_get_version( const NAIIOProvider *provider )
+iexporter_get_version( const NAIExporter *provider )
 {
 	return( 1 );
 }
 
-static gboolean
-iio_provider_is_willing_to_write( const NAIIOProvider *instance )
+static const NAExporterStr *
+iexporter_get_formats( const NAIExporter *instance )
 {
-	return( TRUE );
-}
-
-static gboolean
-iio_provider_is_able_to_write( const NAIIOProvider *instance )
-{
-	return( TRUE );
-}
-
-static guint
-iio_provider_write_item( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages )
-{
-	return( NA_IIO_PROVIDER_CODE_OK );
+	return( st_formats );
 }
 
 static void

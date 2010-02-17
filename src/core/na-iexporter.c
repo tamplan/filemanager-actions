@@ -40,15 +40,15 @@ struct NAIExporterInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized   = FALSE;
+gboolean iexporter_initialized = FALSE;
+gboolean iexporter_finalized   = FALSE;
 
-static GType  register_type( void );
-static void   interface_base_init( NAIExporterInterface *klass );
-static void   interface_base_finalize( NAIExporterInterface *klass );
+static GType                register_type( void );
+static void                 interface_base_init( NAIExporterInterface *klass );
+static void                 interface_base_finalize( NAIExporterInterface *klass );
 
-static guint  iexporter_get_version( const NAIExporter *instance );
-static GList *iexporter_get_formats( const NAIExporter *instance );
+static guint                iexporter_get_version( const NAIExporter *instance );
+static const NAExporterStr *iexporter_get_formats( const NAIExporter *instance );
 
 /**
  * na_iexporter_get_type:
@@ -104,7 +104,7 @@ interface_base_init( NAIExporterInterface *klass )
 {
 	static const gchar *thisfn = "na_iexporter_interface_base_init";
 
-	if( !st_initialized ){
+	if( !iexporter_initialized ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
@@ -112,9 +112,10 @@ interface_base_init( NAIExporterInterface *klass )
 
 		klass->get_version = iexporter_get_version;
 		klass->get_formats = iexporter_get_formats;
-		klass->export = NULL;
+		klass->to_file = NULL;
+		klass->to_buffer = NULL;
 
-		st_initialized = TRUE;
+		iexporter_initialized = TRUE;
 	}
 }
 
@@ -123,11 +124,11 @@ interface_base_finalize( NAIExporterInterface *klass )
 {
 	static const gchar *thisfn = "na_iexporter_interface_base_finalize";
 
-	if( st_initialized && !st_finalized ){
+	if( iexporter_initialized && !iexporter_finalized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		st_finalized = TRUE;
+		iexporter_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -139,7 +140,7 @@ iexporter_get_version( const NAIExporter *instance )
 	return( 1 );
 }
 
-static GList *
+static const NAExporterStr *
 iexporter_get_formats( const NAIExporter *instance )
 {
 	return( NULL );

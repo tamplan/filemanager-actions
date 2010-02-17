@@ -48,7 +48,6 @@
  *
  * mandatory starting with API v. 1.
  */
-/* TODO: remove this when we will be ready to release the desktop provider */
 gboolean
 na_extension_startup( GTypeModule *module )
 {

@@ -1,5 +1,10 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iexporter.h:
+	* src/core/na-iexporter.c:
+	* src/io-xml/naxml-module.c:
+	* src/io-xml/naxml-provider.c: Update NAIExporter interface.
+
 	Define NAExportFormat new class.
 
 	* src/core/na-export-format.c:

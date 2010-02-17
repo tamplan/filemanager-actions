@@ -54,6 +54,17 @@ typedef struct NAIExporter                 NAIExporter;
 
 typedef struct NAIExporterInterfacePrivate NAIExporterInterfacePrivate;
 
+/* When listing available export formats, the instance returns a GList
+ * of these structures
+ */
+typedef struct {
+	gchar *format;					/* format identifier (ascii) */
+	gchar *dlg_label;				/* label to be displayed in the NactExportAsk dialog (UTF-8 locale) */
+	gchar *wnd_label;				/* short label to be displayed in the UI (UTF-8 locale) */
+	gchar *description;				/* full description of the format (UTF-8 locale) */
+}
+	NAExporterStr;
+
 typedef struct {
 	GTypeInterface             parent;
 	NAIExporterInterfacePrivate *private;
@@ -66,7 +77,7 @@ typedef struct {
 	 *
 	 * Defaults to 1.
 	 */
-	guint    ( *get_version )( const NAIExporter *instance );
+	guint                 ( *get_version )( const NAIExporter *instance );
 
 	/**
 	 * get_formats:
@@ -77,14 +88,18 @@ typedef struct {
 	 *
 	 * Defaults to %NULL (no format at all).
 	 *
-	 * #NAExporterStr structures addressed in the returned list are
-	 * owned by the @instance. They must not be released by the caller.
-	 * Only the list itself should be g_list_free().
+	 * The returned list is owned by the @instance. It must not be
+	 * released by the caller.
+	 *
+	 * To avoid any collision, the format id is allocated by the
+	 * Nautilus-Actions maintainer team. If you wish develop a new
+	 * export format, and so need a new format id, please contact the
+	 * maintainers (see #nautilus-actions.doap).
 	 */
-	GList *  ( *get_formats )( const NAIExporter *instance );
+	const NAExporterStr * ( *get_formats )( const NAIExporter *instance );
 
 	/**
-	 * export:
+	 * to_file:
 	 * @instance: this #NAIExporter instance.
 	 * @item: a #NAObjectItem-derived object.
 	 * @uri: the target directory URI.
@@ -97,21 +112,25 @@ typedef struct {
 	 *
 	 * Returns: the status of the operation.
 	 */
-	guint    ( *export )     ( const NAIExporter *instance, const NAObjectItem *item, const gchar *uri, const gchar *format, gchar **fname );
+	guint                 ( *to_file )    ( const NAIExporter *instance, const NAObjectItem *item, const gchar *uri, const gchar *format, gchar **fname );
+
+	/**
+	 * to_buffer:
+	 * @instance: this #NAIExporter instance.
+	 * @item: a #NAObjectItem-derived object.
+	 * @format: the target format.
+	 * @buffer: the place where allocate a new buffer to store the output.
+	 *
+	 * Exports the specified @item to the target @buffer in the required
+	 * @format.
+	 *
+	 * Returns: the status of the operation.
+	 */
+	guint                 ( *to_buffer )  ( const NAIExporter *instance, const NAObjectItem *item, const gchar *format, gchar **buffer );
 }
 	NAIExporterInterface;
 
 GType na_iexporter_get_type( void );
-
-/* When listing available export formats, the instance returns a GList
- * of these structures
- */
-typedef struct {
-	gchar *format;						/* format identifier (ascii) */
-	gchar *ui_label;					/* short label to be displayed in the UI (UTF-8 locale) */
-	gchar *ui_description;				/* full description of the format (UTF-8 locale) */
-}
-	NAExporterStr;
 
 /* The reasons for which an item may not have been exported
  */
