@@ -36,47 +36,49 @@
 
 #include <api/na-object-api.h>
 
+#include <core/na-exporter.h>
+
 #include "nact-iprefs.h"
-#include "nact-assistant-export-ask.h"
+#include "nact-export-ask.h"
 
 /* private class data
  */
-struct NactAssistantExportAskClassPrivate {
+struct NactExportAskClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactAssistantExportAskPrivate {
+struct NactExportAskPrivate {
 	gboolean      dispose_has_run;
 	BaseWindow   *parent;
 	NAObjectItem *item;
-	gint          format;
+	GQuark        format;
 };
 
 static BaseDialogClass *st_parent_class = NULL;
 
 static GType    register_type( void );
-static void     class_init( NactAssistantExportAskClass *klass );
+static void     class_init( NactExportAskClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static NactAssistantExportAsk *assistant_export_ask_new( BaseWindow *parent );
+static NactExportAsk *export_ask_new( BaseWindow *parent );
 
 static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
 static gchar   *base_get_dialog_name( const BaseWindow *window );
 static gchar   *base_get_ui_filename( const BaseWindow *dialog );
-static void     on_base_initial_load_dialog( NactAssistantExportAsk *editor, gpointer user_data );
-static void     on_base_runtime_init_dialog( NactAssistantExportAsk *editor, gpointer user_data );
-static void     on_base_all_widgets_showed( NactAssistantExportAsk *editor, gpointer user_data );
-static void     on_cancel_clicked( GtkButton *button, NactAssistantExportAsk *editor );
-static void     on_ok_clicked( GtkButton *button, NactAssistantExportAsk *editor );
-static gint     get_format( NactAssistantExportAsk *editor );
+static void     on_base_initial_load_dialog( NactExportAsk *editor, gpointer user_data );
+static void     on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data );
+static void     on_base_all_widgets_showed( NactExportAsk *editor, gpointer user_data );
+static void     on_cancel_clicked( GtkButton *button, NactExportAsk *editor );
+static void     on_ok_clicked( GtkButton *button, NactExportAsk *editor );
+static GQuark   get_format( NactExportAsk *editor );
 static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 GType
-nact_assistant_export_ask_get_type( void )
+nact_export_ask_get_type( void )
 {
 	static GType dialog_type = 0;
 
@@ -90,32 +92,32 @@ nact_assistant_export_ask_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_register_type";
+	static const gchar *thisfn = "nact_export_ask_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactAssistantExportAskClass ),
+		sizeof( NactExportAskClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactAssistantExportAsk ),
+		sizeof( NactExportAsk ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_DIALOG_TYPE, "NactAssistantExportAsk", &info, 0 );
+	type = g_type_register_static( BASE_DIALOG_TYPE, "NactExportAsk", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactAssistantExportAskClass *klass )
+class_init( NactExportAskClass *klass )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_class_init";
+	static const gchar *thisfn = "nact_export_ask_class_init";
 	GObjectClass *object_class;
 	BaseWindowClass *base_class;
 
@@ -127,7 +129,7 @@ class_init( NactAssistantExportAskClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NactAssistantExportAskClassPrivate, 1 );
+	klass->private = g_new0( NactExportAskClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->dialog_response = base_dialog_response;
@@ -139,15 +141,15 @@ class_init( NactAssistantExportAskClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_instance_init";
-	NactAssistantExportAsk *self;
+	static const gchar *thisfn = "nact_export_ask_instance_init";
+	NactExportAsk *self;
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT_ASK( instance ));
-	self = NACT_ASSISTANT_EXPORT_ASK( instance );
+	g_return_if_fail( NACT_IS_EXPORT_ASK( instance ));
+	self = NACT_EXPORT_ASK( instance );
 
-	self->private = g_new0( NactAssistantExportAskPrivate, 1 );
+	self->private = g_new0( NactExportAskPrivate, 1 );
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -173,12 +175,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_instance_dispose";
-	NactAssistantExportAsk *self;
+	static const gchar *thisfn = "nact_export_ask_instance_dispose";
+	NactExportAsk *self;
 
 	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT_ASK( dialog ));
-	self = NACT_ASSISTANT_EXPORT_ASK( dialog );
+	g_return_if_fail( NACT_IS_EXPORT_ASK( dialog ));
+	self = NACT_EXPORT_ASK( dialog );
 
 	if( !self->private->dispose_has_run ){
 
@@ -194,12 +196,12 @@ instance_dispose( GObject *dialog )
 static void
 instance_finalize( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_instance_finalize";
-	NactAssistantExportAsk *self;
+	static const gchar *thisfn = "nact_export_ask_instance_finalize";
+	NactExportAsk *self;
 
 	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT_ASK( dialog ));
-	self = NACT_ASSISTANT_EXPORT_ASK( dialog );
+	g_return_if_fail( NACT_IS_EXPORT_ASK( dialog ));
+	self = NACT_EXPORT_ASK( dialog );
 
 	g_free( self->private );
 
@@ -210,39 +212,45 @@ instance_finalize( GObject *dialog )
 }
 
 /*
- * Returns a newly allocated NactAssistantExportAsk object.
+ * Returns a newly allocated NactExportAsk object.
  */
-static NactAssistantExportAsk *
-assistant_export_ask_new( BaseWindow *parent )
+static NactExportAsk *
+export_ask_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_ASSISTANT_EXPORT_ASK_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_EXPORT_ASK_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
 }
 
 /**
- * nact_assistant_export_ask_run:
+ * nact_export_ask_run:
  * @parent: the NactAssistant parent of this dialog.
  *
  * Initializes and runs the dialog.
  *
- * Returns: the mode choosen by the user ; it defaults to 'none' (no export).
+ * This is a small dialog which is to be ran during export operations,
+ * when the set export format is 'Ask me'. Each exported file runs this
+ * dialog, unless the user selects the 'keep same choice' box.
+ *
+ * Returns: the mode choosen by the user as a #GQuark which identifies
+ * the export mode.
+ * The function defaults to returning IPREFS_EXPORT_NO_EXPORT.
  *
  * When the user selects 'Keep same choice without asking me', this choice
- * becomes his preference export format.
+ * becomes his new preferred export format.
  */
-gint
-nact_assistant_export_ask_user( BaseWindow *parent, NAObjectItem *item )
+GQuark
+nact_export_ask_user( BaseWindow *parent, NAObjectItem *item )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_run";
-	NactAssistantExportAsk *editor;
-	gint format;
+	static const gchar *thisfn = "nact_export_ask_run";
+	NactExportAsk *editor;
+	GQuark format;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 
-	format = IPREFS_EXPORT_NO_EXPORT;
+	format = ( GQuark ) IPREFS_EXPORT_NO_EXPORT;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( parent ), format );
 
-	editor = assistant_export_ask_new( parent );
+	editor = export_ask_new( parent );
 
 	editor->private->parent = parent;
 	editor->private->item = item;
@@ -250,8 +258,11 @@ nact_assistant_export_ask_user( BaseWindow *parent, NAObjectItem *item )
 
 	if( base_window_run( BASE_WINDOW( editor ))){
 
-		format = editor->private->format;
-		nact_iprefs_set_export_format( BASE_WINDOW( parent ), IPREFS_EXPORT_ASK_LAST_FORMAT, format );
+		if( editor->private->format ){
+
+			format = editor->private->format;
+			nact_iprefs_set_export_format( BASE_WINDOW( parent ), IPREFS_EXPORT_ASK_LAST_FORMAT, format );
+		}
 	}
 
 	g_object_unref( editor );
@@ -268,7 +279,7 @@ base_get_iprefs_window_id( const BaseWindow *window )
 static gchar *
 base_get_dialog_name( const BaseWindow *window )
 {
-	return( g_strdup( "AssistantExportAsk" ));
+	return( g_strdup( "ExportAsk" ));
 }
 
 static gchar *
@@ -278,25 +289,30 @@ base_get_ui_filename( const BaseWindow *dialog )
 }
 
 static void
-on_base_initial_load_dialog( NactAssistantExportAsk *editor, gpointer user_data )
+on_base_initial_load_dialog( NactExportAsk *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_on_initial_load_dialog";
+	static const gchar *thisfn = "nact_export_ask_on_initial_load_dialog";
+	NactApplication *application;
+	NAUpdater *updater;
+	GtkWidget *container;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT_ASK( editor ));
+	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+	updater = nact_application_get_updater( application );
+	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+	nact_export_format_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_ASK );
 }
 
 static void
-on_base_runtime_init_dialog( NactAssistantExportAsk *editor, gpointer user_data )
+on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_on_runtime_init_dialog";
-	gchar *item_label;
-	gchar *label;
-	GtkWidget *widget;
-	GtkWidget *button;
+	static const gchar *thisfn = "nact_export_ask_on_runtime_init_dialog";
+	GtkWidget *container;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT_ASK( editor ));
+	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
 
 	item_label = na_object_get_label( editor->private->item );
 
@@ -306,25 +322,13 @@ on_base_runtime_init_dialog( NactAssistantExportAsk *editor, gpointer user_data 
 	widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportAskLabel1" );
 	gtk_label_set_text( GTK_LABEL( widget ), label );
 	g_free( label );
-
-	switch( editor->private->format ){
-		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
-			button = base_window_get_widget( BASE_WINDOW( editor ), "AskGConfSchemaV1Button" );
-			break;
-
-		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
-			button = base_window_get_widget( BASE_WINDOW( editor ), "AskGConfSchemaV2Button" );
-			break;
-
-		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
-		default:
-			button = base_window_get_widget( BASE_WINDOW( editor ), "AskGConfEntryButton" );
-			break;
-	}
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
+	g_free( item_label );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), FALSE );
+
+	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+	nact_export_format_select( container, editor->private->format );
 
 	base_window_signal_connect_by_name(
 			BASE_WINDOW( editor ),
@@ -340,45 +344,36 @@ on_base_runtime_init_dialog( NactAssistantExportAsk *editor, gpointer user_data 
 }
 
 static void
-on_base_all_widgets_showed( NactAssistantExportAsk *editor, gpointer user_data )
+on_base_all_widgets_showed( NactExportAsk *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_on_all_widgets_showed";
+	static const gchar *thisfn = "nact_export_ask_on_all_widgets_showed";
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT_ASK( editor ));
+	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
 }
 
 static void
-on_cancel_clicked( GtkButton *button, NactAssistantExportAsk *editor )
+on_cancel_clicked( GtkButton *button, NactExportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static void
-on_ok_clicked( GtkButton *button, NactAssistantExportAsk *editor )
+on_ok_clicked( GtkButton *button, NactExportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 
-static gint
-get_format( NactAssistantExportAsk *editor )
+static GQuark
+get_format( NactExportAsk *editor )
 {
-	gint export_format;
-	GtkWidget *button;
-	gboolean keep;
+	GtkWidget *container;
+	GQuark export_format;
 
-	export_format = IPREFS_EXPORT_FORMAT_GCONF_ENTRY;
-	button = base_window_get_widget( BASE_WINDOW( editor ), "AskGConfSchemaV1Button" );
-	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-		export_format = IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1;
-	} else {
-		button = base_window_get_widget( BASE_WINDOW( editor ), "AskGConfSchemaV2Button" );
-		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-			export_format = IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2;
-		}
-	}
+	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+	export_format = nact_export_format_get_select( container );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
@@ -392,12 +387,12 @@ get_format( NactAssistantExportAsk *editor )
 static gboolean
 base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_assistant_export_ask_on_dialog_response";
-	NactAssistantExportAsk *editor;
+	static const gchar *thisfn = "nact_export_ask_on_dialog_response";
+	NactExportAsk *editor;
 
 	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, ( void * ) dialog, code, ( void * ) window );
-	g_assert( NACT_IS_ASSISTANT_EXPORT_ASK( window ));
-	editor = NACT_ASSISTANT_EXPORT_ASK( window );
+	g_assert( NACT_IS_EXPORT_ASK( window ));
+	editor = NACT_EXPORT_ASK( window );
 
 	switch( code ){
 		case GTK_RESPONSE_NONE:
@@ -405,7 +400,7 @@ base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 		case GTK_RESPONSE_CLOSE:
 		case GTK_RESPONSE_CANCEL:
 
-			editor->private->format = IPREFS_EXPORT_NO_EXPORT;
+			editor->private->format = 0;
 			return( TRUE );
 			break;
 
