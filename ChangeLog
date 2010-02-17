@@ -1,5 +1,7 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in: Update list of translatable files.
+
 	* src/utils/console-utils.c:
 	* src/utils/nautilus-actions-run.c: Update command-line utilities.
 
