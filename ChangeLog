@@ -1,5 +1,13 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c:
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h: Update NactICommandTab interface.
+
 	* src/api/na-object-api.h:
 	* src/api/na-object-profile.h:
 	* src/core/na-object-profile.c:

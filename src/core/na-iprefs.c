@@ -52,22 +52,12 @@ static GConfEnumStringPair order_mode_table[] = {
 	{ 0, NULL }
 };
 
-#if 0
-#define NA_IPREFS_PRIVATE_DATA				"na-runtime-iprefs-private-data"
-#endif
-
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
-static GType       register_type( void );
-static void        interface_base_init( NAIPrefsInterface *klass );
-static void        interface_base_finalize( NAIPrefsInterface *klass );
-
-#if 0
-static void        setup_private_data( const NAIPrefs *instance );
-static GConfValue *get_value( GConfClient *client, const gchar *path, const gchar *entry );
-static void        set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value );
-#endif
+static GType register_type( void );
+static void  interface_base_init( NAIPrefsInterface *klass );
+static void  interface_base_finalize( NAIPrefsInterface *klass );
 
 GType
 na_iprefs_get_type( void )
@@ -534,101 +524,3 @@ na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *name, GSList
 		g_free( path );
 	}
 }
-
-#if 0
-/**
- * na_iprefs_migrate_key:
- * @instance: the #NAIPrefs implementor.
- * @old_key: the old preference entry.
- * @new_key: the new preference entry.
- *
- * Migrates the content of an entry from an obsoleted key to a new one.
- * Removes the old key, along with the schema associated to it,
- * considering that the version which asks for this migration has
- * installed a schema corresponding to the new key.
- */
-void
-na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key )
-{
-	static const gchar *thisfn = "na_iprefs_migrate_key";
-	GConfValue *value;
-
-	g_debug( "%s: instance=%p, old_key=%s, new_key=%s", thisfn, ( void * ) instance, old_key, new_key );
-	g_return_if_fail( NA_IS_IPREFS( instance ));
-
-	value = get_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, new_key );
-	if( !value ){
-		value = get_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, old_key );
-		if( value ){
-			set_value( na_iprefs_get_gconf_client( instance ), NA_GCONF_PREFS_PATH, new_key, value );
-			gconf_value_free( value );
-		}
-	}
-
-	/* do not remove entries which may be always used by another,
-	 * while older, version of NACT
-	 */
-	/*remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, NA_GCONF_PREFS_PATH, old_key );*/
-	/*remove_entry( BASE_IPREFS_GET_INTERFACE( window )->private->client, BASE_IPREFS_SCHEMAS_PATH, old_key );*/
-}
-
-static void
-setup_private_data( const NAIPrefs *instance )
-{
-	NAIPrefsPrivate *ipp;
-
-	ipp = ( NAIPrefsPrivate * ) g_object_get_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA );
-	if( !ipp ){
-		ipp = g_new0( NAIPrefsPrivate, 1 );
-		ipp->client = gconf_client_get_default();
-		g_object_set_data( G_OBJECT( instance ), NA_IPREFS_PRIVATE_DATA, ipp );
-	}
-}
-
-static GConfValue *
-get_value( GConfClient *client, const gchar *path, const gchar *entry )
-{
-	static const gchar *thisfn = "na_iprefs_get_value";
-	GError *error = NULL;
-	gchar *fullpath;
-	GConfValue *value;
-
-	fullpath = gconf_concat_dir_and_key( path, entry );
-
-	value = gconf_client_get_without_default( client, fullpath, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
-		g_error_free( error );
-		if( value ){
-			gconf_value_free( value );
-			value = NULL;
-		}
-	}
-
-	g_free( fullpath );
-
-	return( value );
-}
-
-static void
-set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value )
-{
-	static const gchar *thisfn = "na_iprefs_set_value";
-	GError *error = NULL;
-	gchar *fullpath;
-
-	g_return_if_fail( value );
-
-	fullpath = gconf_concat_dir_and_key( path, entry );
-
-	gconf_client_set( client, fullpath, value, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
-		g_error_free( error );
-	}
-
-	g_free( fullpath );
-}
-#endif

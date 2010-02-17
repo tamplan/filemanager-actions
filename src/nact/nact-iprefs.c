@@ -43,19 +43,6 @@ struct NactIPrefsInterfacePrivate {
 	GConfClient *client;
 };
 
-#if 0
-#define DEFAULT_EXPORT_FORMAT_INT			IPREFS_EXPORT_FORMAT_GCONF_ENTRY
-#define DEFAULT_EXPORT_FORMAT_STR			"GConfEntry"
-
-static GConfEnumStringPair export_format_table[] = {
-	{ IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1,	"GConfSchemaV1" },
-	{ IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2,	"GConfSchemaV2" },
-	{ IPREFS_EXPORT_FORMAT_GCONF_ENTRY,		DEFAULT_EXPORT_FORMAT_STR },
-	{ IPREFS_EXPORT_FORMAT_ASK,				"Ask" },
-	{ 0, NULL }
-};
-#endif
-
 #define DEFAULT_IMPORT_MODE_INT				IPREFS_IMPORT_NO_IMPORT
 #define DEFAULT_IMPORT_MODE_STR				"NoImport"
 
@@ -70,9 +57,12 @@ static GConfEnumStringPair import_mode_table[] = {
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
-static GType   register_type( void );
-static void    interface_base_init( NactIPrefsInterface *klass );
-static void    interface_base_finalize( NactIPrefsInterface *klass );
+static GType       register_type( void );
+static void        interface_base_init( NactIPrefsInterface *klass );
+static void        interface_base_finalize( NactIPrefsInterface *klass );
+
+static GConfValue *get_value( GConfClient *client, const gchar *path, const gchar *entry );
+static void        set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value );
 
 GType
 nact_iprefs_get_type( void )
@@ -283,6 +273,45 @@ nact_iprefs_set_import_mode( const BaseWindow *window, const gchar *name, gint m
 }
 
 /**
+ * nact_iprefs_migrate_key:
+ * @window: a #BaseWindow window.
+ * @old_key: the old preference entry.
+ * @new_key: the new preference entry.
+ *
+ * Migrates the content of an entry from an obsoleted key to a new one.
+ * Removes the old key, along with the schema associated to it,
+ * considering that the version which asks for this migration has
+ * installed a schema corresponding to the new key.
+ */
+void
+nact_iprefs_migrate_key( const BaseWindow *window, const gchar *old_key, const gchar *new_key )
+{
+	static const gchar *thisfn = "nact_iprefs_migrate_key";
+	GConfClient *gconf_client;
+	GConfValue *value;
+
+	g_debug( "%s: window=%p, old_key=%s, new_key=%s", thisfn, ( void * ) window, old_key, new_key );
+	g_return_if_fail( NA_IS_IPREFS( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		gconf_client = NACT_IPREFS_GET_INTERFACE( window )->private->client;
+
+		value = get_value( gconf_client, IPREFS_GCONF_PREFS_PATH, new_key );
+		if( !value ){
+			value = get_value( gconf_client, IPREFS_GCONF_PREFS_PATH, old_key );
+			if( value ){
+				set_value( gconf_client, IPREFS_GCONF_PREFS_PATH, new_key, value );
+				gconf_value_free( value );
+			}
+		}
+
+		/* do not remove entries which may still be used by an older N-A version
+		 */
+	}
+}
+
+/**
  * nact_iprefs_write_string:
  * @window: this #BaseWindow-derived window.
  * @name: the preference key.
@@ -306,4 +335,51 @@ nact_iprefs_write_string( const BaseWindow *window, const gchar *name, const gch
 
 		g_free( path );
 	}
+}
+
+static GConfValue *
+get_value( GConfClient *client, const gchar *path, const gchar *entry )
+{
+	static const gchar *thisfn = "na_iprefs_get_value";
+	GError *error = NULL;
+	gchar *fullpath;
+	GConfValue *value;
+
+	fullpath = gconf_concat_dir_and_key( path, entry );
+
+	value = gconf_client_get_without_default( client, fullpath, &error );
+
+	if( error ){
+		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
+		g_error_free( error );
+		if( value ){
+			gconf_value_free( value );
+			value = NULL;
+		}
+	}
+
+	g_free( fullpath );
+
+	return( value );
+}
+
+static void
+set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value )
+{
+	static const gchar *thisfn = "na_iprefs_set_value";
+	GError *error = NULL;
+	gchar *fullpath;
+
+	g_return_if_fail( value );
+
+	fullpath = gconf_concat_dir_and_key( path, entry );
+
+	gconf_client_set( client, fullpath, value, &error );
+
+	if( error ){
+		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
+		g_error_free( error );
+	}
+
+	g_free( fullpath );
 }

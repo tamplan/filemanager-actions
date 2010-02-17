@@ -89,6 +89,8 @@ void   nact_iprefs_set_export_format( const BaseWindow *window, const gchar *pre
 gint  nact_iprefs_get_import_mode   ( const BaseWindow *window, const gchar *pref );
 void  nact_iprefs_set_import_mode   ( const BaseWindow *window, const gchar *pref, gint mode );
 
+void  nact_iprefs_migrate_key       ( const BaseWindow *window, const gchar *old_key, const gchar *new_key );
+
 void  nact_iprefs_write_string      ( const BaseWindow *window, const gchar *name, const gchar *value );
 
 G_END_DECLS

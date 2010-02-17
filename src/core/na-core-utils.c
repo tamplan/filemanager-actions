@@ -309,6 +309,42 @@ na_core_utils_slist_free( GSList *slist )
 	g_slist_free( slist );
 }
 
+/**
+ * na_core_utils_gstring_joinv:
+ * @start: a prefix to be written at the beginning of the output string.
+ * @separator: a string to be used as separator.
+ * @list: the list of strings to be concatenated.
+ *
+ * Concatenates a gchar **list of strings to a new string.
+ *
+ * Returns: a newly allocated string which should be g_free() by the caller.
+ */
+gchar *
+na_core_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list )
+{
+	GString *tmp_string = g_string_new( "" );
+	int i;
+
+	g_return_val_if_fail( list != NULL, NULL );
+
+	if( start != NULL ){
+		tmp_string = g_string_append( tmp_string, start );
+	}
+
+	if( list[0] != NULL ){
+		tmp_string = g_string_append( tmp_string, list[0] );
+	}
+
+	for( i = 1 ; list[i] != NULL ; i++ ){
+		if( separator ){
+			tmp_string = g_string_append( tmp_string, separator );
+		}
+		tmp_string = g_string_append( tmp_string, list[i] );
+	}
+
+	return( g_string_free( tmp_string, FALSE ));
+}
+
 /*
  * split a text buffer in lines
  */

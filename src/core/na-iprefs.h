@@ -139,8 +139,6 @@ GSList      *na_iprefs_read_string_list ( const NAIPrefs *instance, const gchar 
 /*void         na_iprefs_write_bool( NAIPrefs *instance, const gchar *key, gboolean value );*/
 void         na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *key, GSList *value );
 
-/*void         na_iprefs_migrate_key( NAIPrefs *instance, const gchar *old_key, const gchar *new_key );*/
-
 G_END_DECLS
 
 #endif /* __CORE_NA_IPREFS_H__ */

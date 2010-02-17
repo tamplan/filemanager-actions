@@ -61,6 +61,10 @@ gboolean na_core_utils_slist_find( GSList *list, const gchar *str );
 gboolean na_core_utils_slist_are_equal( GSList *a, GSList *b );
 void     na_core_utils_slist_free( GSList *slist );
 
+/* some functions for GString manipulations.
+ */
+gchar   *na_core_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list );
+
 /* directory management
  */
 gboolean na_core_utils_dir_is_writable( const gchar *path );

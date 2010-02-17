@@ -35,17 +35,15 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
-
-#include <runtime/na-iprefs.h>
-#include <runtime/na-pivot.h>
-#include <runtime/na-utils.h>
 
 #include "base-window.h"
 #include "base-iprefs.h"
 #include "nact-application.h"
 #include "nact-main-statusbar.h"
 #include "nact-gtk-utils.h"
+#include "nact-iprefs.h"
 #include "nact-iactions-list.h"
 #include "nact-main-tab.h"
 #include "nact-icommand-tab.h"
@@ -182,20 +180,15 @@ void
 nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance )
 {
 	static const gchar *thisfn = "nact_icommand_tab_initial_load_toplevel";
-	NactApplication *application;
-	NAPivot *pivot;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-		pivot = nact_application_get_pivot( application );
-
-		na_iprefs_migrate_key( NA_IPREFS( pivot ), "iconditions-legend-dialog", IPREFS_LEGEND_DIALOG );
-		na_iprefs_migrate_key( NA_IPREFS( pivot ), "iconditions-command-chooser", IPREFS_COMMAND_CHOOSER );
-		na_iprefs_migrate_key( NA_IPREFS( pivot ), "iconditions-folder-uri", IPREFS_FOLDER_URI );
+		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-legend-dialog", IPREFS_LEGEND_DIALOG );
+		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-command-chooser", IPREFS_COMMAND_CHOOSER );
+		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-folder-uri", IPREFS_FOLDER_URI );
 	}
 }
 
@@ -352,7 +345,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		nact_gtk_utils_set_editable( GTK_OBJECT( label_entry ), editable );
 
 		path_entry = get_path_entry( instance );
-		path = profile ? na_object_profile_get_path( profile ) : g_strdup( "" );
+		path = profile ? na_object_get_path( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
 		g_free( path );
 		gtk_widget_set_sensitive( path_entry, profile != NULL );
@@ -363,7 +356,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		nact_gtk_utils_set_editable( GTK_OBJECT( path_button ), editable );
 
 		parameters_entry = get_parameters_entry( instance );
-		parameters = profile ? na_object_profile_get_parameters( profile ) : g_strdup( "" );
+		parameters = profile ? na_object_get_parameters( profile ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
 		g_free( parameters );
 		gtk_widget_set_sensitive( parameters_entry, profile != NULL );
@@ -548,7 +541,7 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 
 		if( edited ){
 
-			na_object_profile_set_parameters( edited, gtk_entry_get_text( entry ));
+			na_object_set_parameters( edited, gtk_entry_get_text( entry ));
 			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 			update_example_label( instance, edited );
 		}
@@ -561,7 +554,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 	gboolean set_current_location = FALSE;
 	gchar *uri = NULL;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	GtkWindow *toplevel;
 	GtkWidget *dialog;
 	GtkWidget *path_entry;
@@ -569,7 +562,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 	gchar *filename;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-	pivot = nact_application_get_pivot( application );
+	updater = nact_application_get_updater( application );
 	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
 
 	dialog = gtk_file_chooser_dialog_new(
@@ -590,7 +583,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
 
 	} else {
-		uri = na_iprefs_read_string( NA_IPREFS( pivot ), IPREFS_FOLDER_URI, "file:///bin" );
+		uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDER_URI, "file:///bin" );
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 		g_free( uri );
 	}
@@ -602,7 +595,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	na_iprefs_write_string( NA_IPREFS( pivot ), IPREFS_FOLDER_URI, uri );
+	nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_FOLDER_URI, uri );
 	g_free( uri );
 
 	base_iprefs_save_named_window_position( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_COMMAND_CHOOSER );
@@ -624,7 +617,7 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 
 		if( edited ){
 
-			na_object_profile_set_path( edited, gtk_entry_get_text( entry ));
+			na_object_set_path( edited, gtk_entry_get_text( entry ));
 			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 			update_example_label( instance, edited );
 		}
@@ -696,20 +689,20 @@ parse_parameters( NactICommandTab *instance )
 	if( accept_multiple ){
 		if( is_file && is_dir ){
 			ex_one = ex_files[0];
-			ex_list = na_utils_gstring_joinv( NULL, " ", ex_mixed );
-			ex_path_list = na_utils_gstring_joinv( start, separator, ex_mixed );
+			ex_list = na_core_utils_gstring_joinv( NULL, " ", ex_mixed );
+			ex_path_list = na_core_utils_gstring_joinv( start, separator, ex_mixed );
 			ex_uri_list = g_strjoin( " ", ex_uri_file1, ex_uri_folder1, NULL );
 
 		} else if( is_dir ){
 			ex_one = ex_dirs[0];
-			ex_list = na_utils_gstring_joinv( NULL, " ", ex_dirs );
-			ex_path_list = na_utils_gstring_joinv( start, separator, ex_dirs );
+			ex_list = na_core_utils_gstring_joinv( NULL, " ", ex_dirs );
+			ex_path_list = na_core_utils_gstring_joinv( start, separator, ex_dirs );
 			ex_uri_list = g_strjoin( " ", ex_uri_folder1, ex_uri_folder2, NULL );
 
 		} else if( is_file ){
 			ex_one = ex_files[0];
-			ex_list = na_utils_gstring_joinv( NULL, " ", ex_files );
-			ex_path_list = na_utils_gstring_joinv( start, separator, ex_files );
+			ex_list = na_core_utils_gstring_joinv( NULL, " ", ex_files );
+			ex_path_list = na_core_utils_gstring_joinv( start, separator, ex_files );
 			ex_uri_list = g_strjoin( " ", ex_uri_file1, ex_uri_file2, NULL );
 		}
 	} else {
@@ -800,7 +793,7 @@ parse_parameters( NactICommandTab *instance )
 	}
 	tmp_string = g_string_append_len( tmp_string, old_iter, strlen( old_iter ));
 
-	na_utils_free_string_list( scheme_list );
+	na_core_utils_slist_free( scheme_list );
 
 	g_free( ex_list );
 	g_free( ex_path_list );
