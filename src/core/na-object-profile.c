@@ -277,7 +277,9 @@ idata_factory_iface_init( NAIDataFactoryInterface *iface )
 	iface->get_default = idata_factory_get_default;
 	iface->copy = NULL;
 	iface->are_equal = NULL;
+	iface->read_start = NULL;
 	iface->read_done = idata_factory_read_done;
+	iface->write_start = NULL;
 	iface->write_done = idata_factory_write_done;
 }
 

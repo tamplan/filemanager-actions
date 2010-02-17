@@ -65,6 +65,7 @@ static guint   iio_provider_get_version( const NAIIOProvider *provider );
 
 static void    iio_factory_iface_init( NAIIOFactoryInterface *iface );
 static guint   iio_factory_get_version( const NAIIOFactory *reader );
+static void    iio_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
 static GValue *iio_factory_read_value( const NAIIOFactory *reader, void *reader_data, const NadfIdType *iddef, GSList **messages );
 static void    iio_factory_read_done( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
 
@@ -225,16 +226,43 @@ iio_factory_iface_init( NAIIOFactoryInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = iio_factory_get_version;
+	iface->read_start = iio_factory_read_start;
 	iface->read_value = iio_factory_read_value;
 	iface->read_done = iio_factory_read_done;
-	/*iface->write_value = iio_factory_write_value;
-	iface->write_done = iio_factory_write_done;*/
+	iface->write_start = NULL;
+	iface->write_value = NULL;
+	iface->write_done = NULL;
 }
 
 static guint
 iio_factory_get_version( const NAIIOFactory *reader )
 {
 	return( 1 );
+}
+
+/*
+ * called before starting with reading an object
+ */
+static void
+iio_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
+{
+	static const gchar *thisfn = "nadp_desktop_provider_iio_factory_read_start";
+	/*NAObjectProfile *profile;*/
+
+	g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
+			thisfn,
+			( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
+			( void * ) reader_data,
+			( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
+			( void * ) messages );
+
+	g_return_if_fail( NA_IS_IIO_FACTORY( reader ));
+	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
+	g_return_if_fail( NA_IS_IDATA_FACTORY( serializable ));
+
+	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
+
+	}
 }
 
 /*

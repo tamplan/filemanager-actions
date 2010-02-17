@@ -48,7 +48,9 @@ static void  interface_base_finalize( NAIIOFactoryInterface *klass );
 
 static guint iio_factory_get_version( const NAIIOFactory *instance );
 
+static void  v_io_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
 static void  v_io_factory_read_done( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
+static void  v_io_factory_write_start( const NAIIOFactory *writer, void *writer_data, NAIDataFactory *serializable, GSList **messages );
 static void  v_io_factory_write_done( const NAIIOFactory *writer, void *writer_data, NAIDataFactory *serializable, GSList **messages );
 
 /**
@@ -170,6 +172,7 @@ na_iio_factory_read_item( const NAIIOFactory *reader, void *reader_data, GType t
 		serializable = na_data_factory_new( type );
 
 		if( serializable ){
+			v_io_factory_read_start( reader, reader_data, serializable, messages );
 			na_data_factory_read( serializable, reader, reader_data, messages );
 			v_io_factory_read_done( reader, reader_data, serializable, messages );
 
@@ -201,8 +204,17 @@ na_iio_factory_write_item( const NAIIOFactory *writer, void *writer_data, NAIDat
 
 	if( iio_factory_initialized && !iio_factory_finalized ){
 
+		v_io_factory_write_start( writer, writer_data, serializable, messages );
 		na_data_factory_write( serializable, writer, writer_data, messages );
 		v_io_factory_write_done( writer, writer_data, serializable, messages );
+	}
+}
+
+static void
+v_io_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
+{
+	if( NA_IIO_FACTORY_GET_INTERFACE( reader )->read_start ){
+		NA_IIO_FACTORY_GET_INTERFACE( reader )->read_start( reader, reader_data, serializable, messages );
 	}
 }
 
@@ -211,6 +223,14 @@ v_io_factory_read_done( const NAIIOFactory *reader, void *reader_data, NAIDataFa
 {
 	if( NA_IIO_FACTORY_GET_INTERFACE( reader )->read_done ){
 		NA_IIO_FACTORY_GET_INTERFACE( reader )->read_done( reader, reader_data, serializable, messages );
+	}
+}
+
+static void
+v_io_factory_write_start( const NAIIOFactory *writer, void *writer_data, NAIDataFactory *serializable, GSList **messages )
+{
+	if( NA_IIO_FACTORY_GET_INTERFACE( writer )->write_start ){
+		NA_IIO_FACTORY_GET_INTERFACE( writer )->write_start( writer, writer_data, serializable, messages );
 	}
 }
 

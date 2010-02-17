@@ -71,6 +71,18 @@ typedef struct {
 	guint    ( *get_version )( const NAIIOFactory *instance );
 
 	/**
+	 * read_start:
+	 * @reader: this #NAIIOFactory instance.
+	 * @reader_data: the data associated to this instance.
+	 * @object: the #NAIDataFactory object which comes to be readen.
+	 * @messages: a pointer to a #GSList list of strings; the provider
+	 *  may append messages to this list, but shouldn't reinitialize it.
+	 *
+	 * API called by #NAIDataFactory just before starting with reading data.
+	 */
+	void     ( *read_start ) ( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *object, GSList **messages  );
+
+	/**
 	 * read_value:
 	 * @reader: this #NAIIOFactory instance.
 	 * @reader_data: the data associated to this instance.
@@ -104,6 +116,18 @@ typedef struct {
 	void     ( *read_done )  ( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *object, GSList **messages  );
 
 	/**
+	 * write_start:
+	 * @writer: this #NAIIOFactory instance.
+	 * @writer_data: the data associated to this instance.
+	 * @object: the #NAIDataFactory object which comes to be written.
+	 * @messages: a pointer to a #GSList list of strings; the provider
+	 *  may append messages to this list, but shouldn't reinitialize it.
+	 *
+	 * API called by #NAIDataFactory just before starting with writing data.
+	 */
+	void     ( *write_start )( const NAIIOFactory *writer, void *writer_data, NAIDataFactory *object, GSList **messages  );
+
+	/**
 	 * write_value:
 	 * @writer: this #NAIIOFactory instance.
 	 * @writer_data: the data associated to this instance.
@@ -135,8 +159,7 @@ typedef struct {
 
 GType           na_iio_factory_get_type( void );
 
-NAIDataFactory *na_iio_factory_read_item  ( const NAIIOFactory *reader, void *reader_data, GType type, GSList **messages );
-
+NAIDataFactory *na_iio_factory_read_item ( const NAIIOFactory *reader, void *reader_data, GType type, GSList **messages );
 void            na_iio_factory_write_item( const NAIIOFactory *writer, void *writer_data, NAIDataFactory *serializable, GSList **messages );
 
 G_END_DECLS

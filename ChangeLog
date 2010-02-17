@@ -1,5 +1,18 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-idata-factory.h:
+	* src/api/na-iio-factory.h:
+	* src/core/na-data-factory.c:
+	* src/core/na-iio-factory.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile.c:
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-gconf/nagp-gconf-provider.c:
+	* src/io-xml/naxml-provider.c:
+	Add read_start() and write_start() to NAIIOFactory and 
+	NAIDataFactory interfaces.
+
 	* po/POTFILES.in: Update list of translatable files.
 
 	* src/utils/console-utils.c:

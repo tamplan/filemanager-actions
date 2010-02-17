@@ -115,6 +115,18 @@ typedef struct {
 	gboolean ( *are_equal )  ( const NAIDataFactory *a, const NAIDataFactory *b );
 
 	/**
+	 * read_start:
+	 * @instance: this #NAIDataFactory instance.
+	 * @reader: the instance which has provided read services.
+	 * @reader_data: the data associated to @reader.
+	 * @messages: a pointer to a #GSList list of strings; the instance
+	 *  may append messages to this list, but shouldn't reinitialize it.
+	 *
+	 * Called just before the object is unserialized.
+	 */
+	void     ( *read_start ) ( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
+
+	/**
 	 * read_done:
 	 * @instance: this #NAIDataFactory instance.
 	 * @reader: the instance which has provided read services.
@@ -125,6 +137,18 @@ typedef struct {
 	 * Called when the object has been unserialized.
 	 */
 	void     ( *read_done )  ( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
+
+	/**
+	 * write_start:
+	 * @instance: this #NAIDataFactory instance.
+	 * @writer: the instance which has provided writing services.
+	 * @writer_data: the data associated to @writer.
+	 * @messages: a pointer to a #GSList list of strings; the instance
+	 *  may append messages to this list, but shouldn't reinitialize it.
+	 *
+	 * Called just before the object is serialized.
+	 */
+	void     ( *write_start )( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
 
 	/**
 	 * write_done:

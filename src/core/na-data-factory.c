@@ -82,9 +82,11 @@ static void           v_copy( NAIDataFactory *target, const NAIDataFactory *sour
 static gboolean       v_are_equal( const NAIDataFactory *a, const NAIDataFactory *b );
 static void           data_factory_read_data( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, NadfIdGroup *groups, GSList **messages );
 static gboolean       data_factory_read_data_iter( NadfIdType *iddef, NadfRWIter *iter );
+static void           v_read_start( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static void           v_read_done( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static void           data_factory_write_data( NAIDataFactory *serializable, const NAIIOFactory *writer, void *writer_data, NadfIdGroup *groups, GSList **messages );
 static gboolean       data_factory_write_data_iter( NadfIdType *iddef, NadfRWIter *iter );
+static void           v_write_start( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static void           v_write_done( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static NADataElement *data_element_from_id( const NAIDataFactory *object, guint data_id );
 static void           iter_on_id_groups( const NadfIdGroup *idgroups, gboolean serializable_only, IdGroupIterFunc pfn, void *user_data );
@@ -428,6 +430,7 @@ na_data_factory_read( NAIDataFactory *serializable, const NAIIOFactory *reader, 
 		groups = na_io_factory_get_groups( G_OBJECT_TYPE( serializable ));
 
 		if( groups ){
+			v_read_start( serializable, reader, reader_data, messages );
 			data_factory_read_data( serializable, reader, reader_data, groups, messages );
 			v_read_done( serializable, reader, reader_data, messages );
 
@@ -492,6 +495,14 @@ data_factory_read_data_iter( NadfIdType *iddef, NadfRWIter *iter )
 }
 
 static void
+v_read_start( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages )
+{
+	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_start ){
+		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_start( serializable, reader, reader_data, messages );
+	}
+}
+
+static void
 v_read_done( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages )
 {
 	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_done ){
@@ -522,6 +533,7 @@ na_data_factory_write( NAIDataFactory *serializable, const NAIIOFactory *writer,
 	groups = na_io_factory_get_groups( G_OBJECT_TYPE( serializable ));
 
 	if( groups ){
+		v_write_start( serializable, writer, writer_data, messages );
 		data_factory_write_data( serializable, writer, writer_data, groups, messages );
 		v_write_done( serializable, writer, writer_data, messages );
 
@@ -570,6 +582,14 @@ data_factory_write_data_iter( NadfIdType *iddef, NadfRWIter *iter )
 	/*na_io_factory_set_value( iter->reader, iter->reader_data, iddef, iter->messages );*/
 
 	return( stop );
+}
+
+static void
+v_write_start( NAIDataFactory *serializable, const NAIIOFactory *writer, void *writer_data, GSList **messages )
+{
+	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_start ){
+		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_start( serializable, writer, writer_data, messages );
+	}
 }
 
 static void

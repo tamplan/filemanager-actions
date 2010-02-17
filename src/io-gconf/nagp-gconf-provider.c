@@ -241,6 +241,12 @@ iio_factory_iface_init( NAIIOFactoryInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = iio_factory_get_version;
+	iface->read_start = NULL;
+	iface->read_value = NULL;
+	iface->read_done = NULL;
+	iface->write_start = NULL;
+	iface->write_value = NULL;
+	iface->write_done = NULL;
 }
 
 static guint
