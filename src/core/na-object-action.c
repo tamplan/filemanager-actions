@@ -344,6 +344,57 @@ na_object_action_new_with_profile( void )
 }
 
 /**
+ * na_object_action_get_new_profile_name:
+ * @action: the #NAObjectAction object which will receive a new profile.
+ *
+ * Returns a name suitable as a new profile name.
+ *
+ * The search is made by iterating over the standard profile name
+ * prefix : basically, we increment a counter until finding a name
+ * which is not yet allocated. The provided name is so only suitable
+ * for the specified @action.
+ *
+ * Returns: a newly allocated profile name, which should be g_free() by
+ * the caller.
+ *
+ * When inserting a list of profiles in the action, we iter first for
+ * new names, before actually do the insertion. We so keep the last
+ * allocated name to avoid to allocate the same one twice.
+ */
+gchar *
+na_object_action_get_new_profile_name( const NAObjectAction *action )
+{
+	int i;
+	gboolean ok = FALSE;
+	gchar *candidate = NULL;
+	guint last_allocated;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
+
+	if( !action->private->dispose_has_run ){
+
+		last_allocated = na_object_get_last_allocated( action );
+		for( i = last_allocated + 1 ; !ok ; ++i ){
+
+			g_free( candidate );
+			candidate = g_strdup_printf( "%s%d", NA_PROFILE_DEFAULT_PREFIX, i );
+
+			if( !na_object_get_item( action, candidate )){
+				ok = TRUE;
+				na_object_set_last_allocated( action, i );
+			}
+		}
+
+		if( !ok ){
+			g_free( candidate );
+			candidate = NULL;
+		}
+	}
+
+	return( candidate );
+}
+
+/**
  * na_object_action_attach_profile:
  * @action: the #NAObjectAction action to which the profile will be attached.
  * @profile: the #NAObjectProfile profile to be attached to @action.

@@ -116,9 +116,10 @@ typedef enum {
 }
 	NAPivotLoadableSet;
 
-/* these properties must be set at construction time
+/* properties
  */
 #define NAPIVOT_PROP_LOADABLE_SET		"na-pivot-prop-loadable-set"
+#define NAPIVOT_PROP_TREE				"na-pivot-prop-tree"
 
 NAPivot      *na_pivot_new( NAPivotLoadableSet loadable );
 void          na_pivot_dump( const NAPivot *pivot );

@@ -87,6 +87,7 @@ struct NAPivotPrivate {
  */
 enum {
 	NAPIVOT_PROP_LOADABLE_SET_ID = 1,
+	NAPIVOT_PROP_TREE_ID,
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -191,6 +192,13 @@ class_init( NAPivotClass *klass )
 			"Nature of population to be loaded", 0, UINT_MAX, 0,
 			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAPIVOT_PROP_LOADABLE_SET_ID, spec );
+
+	spec = g_param_spec_pointer(
+			NAPIVOT_PROP_TREE,
+			"Items tree",
+			"Hierarchical tree of items",
+			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+	g_object_class_install_property( object_class, NAPIVOT_PROP_TREE_ID, spec );
 }
 
 static void
@@ -254,6 +262,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_uint( value, self->private->loadable_set );
 				break;
 
+			case NAPIVOT_PROP_TREE_ID:
+				g_value_set_pointer( value, self->private->tree );
+				break;
+
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -274,6 +286,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 		switch( property_id ){
 			case NAPIVOT_PROP_LOADABLE_SET_ID:
 				self->private->loadable_set = g_value_get_uint( value );
+				break;
+
+			case NAPIVOT_PROP_TREE_ID:
+				self->private->tree = g_value_get_pointer( value );
 				break;
 
 			default:

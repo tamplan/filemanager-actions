@@ -188,6 +188,67 @@ na_updater_new( NAPivotLoadableSet loadable )
 }
 
 /**
+ * na_updater_add_item:
+ * @updater: this #NAUpdater instance.
+ * @item: the #NAObjectItem to be added to the list.
+ *
+ * Adds a new item to the list.
+ *
+ * We take the provided pointer. The provided @item should so not
+ * be g_object_unref() by the caller.
+ */
+void
+na_updater_add_item( NAUpdater *updater, const NAObjectItem *item )
+{
+	GList *tree;
+
+	g_return_if_fail( NA_IS_UPDATER( updater ));
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !updater->private->dispose_has_run ){
+
+		g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+		tree = g_list_append( tree, ( gpointer ) item );
+		g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+	}
+}
+
+/**
+ * na_updater_remove_item:
+ * @updater: this #NAPivot instance.
+ * @item: the #NAObjectItem to be removed from the list.
+ *
+ * Removes a #NAObjectItem from the hierarchical tree.
+ *
+ * Note that #NAUpdater also g_object_unref() the removed #NAObjectItem.
+ *
+ * Last, note that the @item may have been already deleted, when its
+ * parents has itself been removed from @updater.
+ */
+void
+na_updater_remove_item( NAUpdater *updater, NAObject *item )
+{
+	GList *tree;
+
+	g_debug( "na_updater_remove_item: updater=%p, item=%p (%s)",
+			( void * ) updater,
+			( void * ) item, G_IS_OBJECT( item ) ? G_OBJECT_TYPE_NAME( item ) : "(null)" );
+
+	g_return_if_fail( NA_IS_PIVOT( updater ));
+
+	if( !updater->private->dispose_has_run ){
+
+		g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+		tree = g_list_remove( tree, ( gconstpointer ) item );
+		g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+
+		if( G_IS_OBJECT( item )){
+			na_object_unref( item );
+		}
+	}
+}
+
+/**
  * na_updater_is_item_writable:
  * @updater: this #NAUpdater object.
  * @item: the #NAObjectItem to be written.

@@ -36,9 +36,10 @@
 
 #include <api/na-object-api.h>
 
-#include <runtime/na-iabout.h>
-#include <runtime/na-iprefs.h>
-#include <runtime/na-ipivot-consumer.h>
+#include <core/na-iabout.h>
+#include <core/na-iprefs.h>
+#include <core/na-ipivot-consumer.h>
+#include <core/na-io-provider.h>
 
 #include "nact-application.h"
 #include "nact-assistant-export.h"
@@ -116,7 +117,7 @@ static void     on_new_menu_activated( GtkAction *action, NactMainWindow *window
 static void     on_new_action_activated( GtkAction *action, NactMainWindow *window );
 static void     on_new_profile_activated( GtkAction *action, NactMainWindow *window );
 static void     on_save_activated( GtkAction *action, NactMainWindow *window );
-static void     save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item );
+static void     save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item );
 static void     on_quit_activated( GtkAction *action, NactMainWindow *window );
 
 static void     on_cut_activated( GtkAction *action, NactMainWindow *window );
@@ -596,7 +597,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_update_sensitivities";
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	gboolean is_level_zero_writable;
 	gboolean has_writable_providers;
 	gboolean has_modified_items;
@@ -624,8 +625,8 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
-	is_level_zero_writable = na_pivot_is_level_zero_writable( pivot );
+	updater = nact_application_get_updater( application );
+	is_level_zero_writable = na_pivot_is_level_zero_writable( NA_PIVOT( updater ));
 
 	has_writable_providers = nact_window_has_writable_providers( NACT_WINDOW( window ));
 	g_debug( "%s: has_writable_providers=%s", thisfn, has_writable_providers ? "True":"False" );
@@ -638,7 +639,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 			? ( NAObject * ) na_object_get_parent( selected_items->data )
 			: NULL;
 	is_first_parent_writable = first_parent
-			? na_pivot_is_item_writable( pivot, NA_OBJECT_ITEM( first_parent ), NULL )
+			? nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( first_parent ), NULL )
 			: is_level_zero_writable;
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
@@ -688,7 +689,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	enable_item( window, "NewProfileItem",
 			new_profile_enabled &&
 			selected_action != NULL &&
-			na_pivot_is_item_writable( pivot, NA_OBJECT_ITEM( selected_action ), NULL ));
+			nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( selected_action ), NULL ));
 
 	/* save enabled if at least one item has been modified
 	 * or level-zero has been resorted and is writable
@@ -707,7 +708,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	for( is = selected_items ; is ; is = is->next ){
 		parent_item = ( NAObject * ) na_object_get_parent( is->data );
 		if( parent_item ){
-			if( !na_pivot_is_item_writable( pivot, NA_OBJECT_ITEM( parent_item ), NULL )){
+			if( !na_updater_is_item_writable( updater, NA_OBJECT_ITEM( parent_item ), NULL )){
 				are_parents_writable = FALSE;
 				break;
 			}
@@ -745,7 +746,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 							? na_object_get_parent( selected_items->data )
 							: selected_items->data );
 			paste_enabled &= NA_IS_OBJECT_ACTION( selected_action );
-			paste_enabled &= na_pivot_is_item_writable( pivot, NA_OBJECT_ITEM( selected_action ), NULL );
+			paste_enabled &= na_updater_is_item_writable( updater, NA_OBJECT_ITEM( selected_action ), NULL );
 		}
 	} else {
 		paste_enabled &= has_writable_providers;
@@ -755,7 +756,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 			if( paste_enabled ){
 				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
 				paste_enabled &= parent_item
-						? na_pivot_is_item_writable( pivot, NA_OBJECT_ITEM( parent_item ), NULL )
+						? nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( parent_item ), NULL )
 						: is_level_zero_writable;
 			}
 		} else {
@@ -782,7 +783,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 		if( paste_enabled ){
 			selected_action = NA_OBJECT( selected_items->data );
 			paste_enabled &= NA_IS_OBJECT_ACTION( selected_action );
-			paste_enabled &= na_pivot_is_item_writable( pivot, NA_OBJECT_ITEM( selected_action ), NULL );
+			paste_enabled &= nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( selected_action ), NULL );
 		}
 	} else {
 		paste_enabled &= has_writable_providers;
@@ -792,7 +793,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 			if( paste_enabled ){
 				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
 				paste_enabled &= parent_item
-						? na_pivot_is_item_writable( pivot, NA_OBJECT_ITEM( parent_item ), NULL )
+						? nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( parent_item ), NULL )
 						: is_level_zero_writable;
 			}
 		} else {
@@ -833,7 +834,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	/* about always enabled */
 
-	na_object_free_items_list( selected_items );
+	na_object_unref_items( selected_items );
 }
 
 static void
@@ -849,7 +850,7 @@ on_new_menu_activated( GtkAction *gtk_action, NactMainWindow *window )
 	na_object_check_status( menu );
 	items = g_list_prepend( NULL, menu );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_free_items_list( items );
+	na_object_unref_items( items );
 }
 
 static void
@@ -865,7 +866,7 @@ on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 	na_object_check_status( action );
 	items = g_list_prepend( NULL, action );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_free_items_list( items );
+	na_object_unref_items( items );
 }
 
 static void
@@ -894,7 +895,7 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = g_list_prepend( NULL, profile );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
 
-	na_object_free_items_list( items );
+	na_object_unref_items( items );
 	g_free( name );
 }
 
@@ -924,7 +925,7 @@ nact_main_menubar_save_items( NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_menubar_save_items";
 	GList *items, *it;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	MenubarIndicatorsStruct *mis;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
@@ -939,9 +940,9 @@ nact_main_menubar_save_items( NactMainWindow *window )
 	 * and reset the corresponding modification flag
 	 */
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
+	updater = nact_application_get_updater( application );
 	items = nact_iactions_list_bis_get_items( NACT_IACTIONS_LIST( window ));
-	na_pivot_write_level_zero( pivot, items );
+	na_pivot_write_level_zero( NA_PIVOT( updater ), items );
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	mis->level_zero_order_changed = FALSE;
@@ -952,7 +953,7 @@ nact_main_menubar_save_items( NactMainWindow *window )
 	 * recursively each and every modified item
 	 */
 	for( it = items ; it ; it = it->next ){
-		save_item( window, pivot, NA_OBJECT_ITEM( it->data ));
+		save_item( window, updater, NA_OBJECT_ITEM( it->data ));
 		na_object_check_status( it->data );
 	}
 	g_list_free( items );
@@ -970,7 +971,7 @@ nact_main_menubar_save_items( NactMainWindow *window )
  *   for save their subitems
  */
 static void
-save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
+save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 {
 	NAObjectItem *origin;
 	NAObjectItem *dup_pivot;
@@ -981,13 +982,13 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 	NAIOProvider *provider_after;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( NA_IS_UPDATER( updater ));
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
 	if( NA_IS_OBJECT_MENU( item )){
-		subitems = na_object_get_items_list( item );
+		subitems = na_object_get_items( item );
 		for( it = subitems ; it ; it = it->next ){
-			save_item( window, pivot, NA_OBJECT_ITEM( it->data ));
+			save_item( window, updater, NA_OBJECT_ITEM( it->data ));
 		}
 	}
 
@@ -997,7 +998,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 		nact_window_save_item( NACT_WINDOW( window ), item )){
 
 			if( NA_IS_OBJECT_ACTION( item )){
-				na_object_action_reset_last_allocated( NA_OBJECT_ACTION( item ));
+				na_object_reset_last_allocated( item );
 			}
 
 			/* do not use NA_OBJECT_ITEM macro as this may return a
@@ -1013,7 +1014,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 					pos = na_object_get_position( parent, origin );
 					na_object_remove_item( parent, origin );
 				} else {
-					na_pivot_remove_item( pivot, NA_OBJECT( origin ));
+					na_updater_remove_item( updater, NA_OBJECT( origin ));
 				}
 			}
 
@@ -1027,7 +1028,7 @@ save_item( NactMainWindow *window, NAPivot *pivot, NAObjectItem *item )
 					na_object_insert_at( parent, dup_pivot, pos );
 				}
 			} else {
-				na_pivot_add_item( pivot, dup_pivot );
+				na_updater_add_item( updater, dup_pivot );
 			}
 
 			nact_iactions_list_bis_removed_modified( NACT_IACTIONS_LIST( window ), item );
@@ -1110,7 +1111,7 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 	clipboard = nact_main_window_get_clipboard( window );
 	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
 	update_clipboard_counters( window );
-	na_object_free_items_list( items );
+	na_object_unref_items( items );
 
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
@@ -1138,7 +1139,7 @@ on_paste_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = prepare_for_paste( window );
 	if( items ){
 		nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-		na_object_free_items_list( items );
+		na_object_unref_items( items );
 	}
 }
 
@@ -1165,7 +1166,7 @@ on_paste_into_activated( GtkAction *gtk_action, NactMainWindow *window )
 	items = prepare_for_paste( window );
 	if( items ){
 		nact_iactions_list_bis_insert_into( NACT_IACTIONS_LIST( window ), items );
-		na_object_free_items_list( items );
+		na_object_unref_items( items );
 	}
 }
 
@@ -1179,10 +1180,10 @@ prepare_for_paste( NactMainWindow *window )
 	gboolean relabel;
 	gboolean renumber;
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
+	updater = nact_application_get_updater( application );
 
 	clipboard = nact_main_window_get_clipboard( window );
 	items = nact_clipboard_primary_get( clipboard, &renumber );
@@ -1199,7 +1200,7 @@ prepare_for_paste( NactMainWindow *window )
 			}
 		}
 
-		relabel = nact_main_menubar_is_pasted_object_relabeled( NA_OBJECT( it->data ), pivot );
+		relabel = nact_main_menubar_is_pasted_object_relabeled( NA_OBJECT( it->data ), NA_PIVOT( updater ));
 		na_object_prepare_for_paste( it->data, relabel, renumber, action );
 		na_object_check_status( it->data );
 	}
@@ -1223,7 +1224,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_duplicate_activated";
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	NAObjectAction *action;
 	GList *items, *it;
 	GList *dup;
@@ -1235,7 +1236,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	pivot = nact_application_get_pivot( application );
+	updater = nact_application_get_updater( application );
 
 	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 	for( it = items ; it ; it = it->next ){
@@ -1249,16 +1250,16 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 			action = NA_OBJECT_ACTION( na_object_get_parent( it->data ));
 		}
 
-		relabel = nact_main_menubar_is_pasted_object_relabeled( obj, pivot );
+		relabel = nact_main_menubar_is_pasted_object_relabeled( obj, NA_PIVOT( updater ));
 		na_object_prepare_for_paste( obj, relabel, TRUE, action );
 		na_object_set_origin( obj, NULL );
 		na_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );
 		nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
-		na_object_free_items_list( dup );
+		na_object_unref_items( dup );
 	}
 
-	na_object_free_items_list( items );
+	na_object_unref_items( items );
 }
 
 /*
@@ -1400,7 +1401,7 @@ on_dump_selection_activated( GtkAction *action, NactMainWindow *window )
 		na_object_dump( it->data );
 	}
 
-	na_object_free_items_list( items );
+	na_object_unref_items( items );
 }
 
 static void

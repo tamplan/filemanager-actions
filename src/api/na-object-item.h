@@ -80,8 +80,11 @@ GType       na_object_item_get_type( void );
 void        na_object_item_copy     ( NAObjectItem *item, const NAObjectItem *source );
 gboolean    na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b );
 
-NAObjectId *na_object_item_get_item   ( const NAObjectItem *item, const gchar *id );
-void        na_object_item_append_item( NAObjectItem *object, const NAObjectId *item );
+NAObjectId *na_object_item_get_item    ( const NAObjectItem *item, const gchar *id );
+gint        na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child );
+void        na_object_item_append_item ( NAObjectItem *object, const NAObjectId *item );
+void        na_object_item_insert_at   ( NAObjectItem *object, const NAObjectId *item, gint pos );
+void        na_object_item_remove_item ( NAObjectItem *object, const NAObjectId *item );
 
 GSList     *na_object_item_build_items_slist( const NAObjectItem *item );
 

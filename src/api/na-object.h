@@ -138,6 +138,8 @@ GType     na_object_object_get_type( void );
 void      na_object_object_check_status   ( const NAObject *object );
 gboolean  na_object_object_check_status_up( const NAObject *object );
 
+void      na_object_object_reset_origin   ( NAObject *object, const NAObject *origin );
+
 NAObject *na_object_object_ref  ( NAObject *object );
 void      na_object_object_unref( NAObject *object );
 
@@ -145,9 +147,8 @@ void      na_object_object_dump      ( const NAObject *object );
 void      na_object_object_dump_norec( const NAObject *object );
 void      na_object_object_dump_tree ( GList *tree );
 
-#if 0
-GList *na_object_object_get_hierarchy( const NAObject *object );
-#endif
+GList    *na_object_object_get_hierarchy( const NAObject *object );
+void      na_object_free_hierarchy( GList *hierarchy );
 
 G_END_DECLS
 

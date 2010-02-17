@@ -71,9 +71,15 @@ GType      na_updater_get_type( void );
 
 NAUpdater *na_updater_new( NAPivotLoadableSet loadable );
 
-gboolean   na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, gint *reason );
+/* update the tree in memory
+ */
+void       na_updater_add_item   ( NAUpdater *updater, const NAObjectItem *item );
+void       na_updater_remove_item( NAUpdater *updater, NAObject *item );
 
-guint      na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **messages );
+/* read from / write to the physical storage subsystem
+ */
+gboolean   na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, gint *reason );
+guint      na_updater_write_item      ( const NAUpdater *updater, NAObjectItem *item, GSList **messages );
 
 G_END_DECLS
 

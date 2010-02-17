@@ -62,6 +62,8 @@ G_BEGIN_DECLS
 
 #define na_object_set_origin( obj, origin )				na_iduplicable_set_origin( NA_IDUPLICABLE( obj ), ( NAIDuplicable * )( origin ))
 
+#define na_object_reset_origin( obj, origin )			na_object_object_reset_origin( NA_OBJECT( obj ), ( NAObject * )( origin ))
+
 /* NAObject
  */
 #define na_object_dump( obj )							na_object_object_dump( NA_OBJECT( obj ))
@@ -84,6 +86,11 @@ G_BEGIN_DECLS
 #define na_object_sort_alpha_asc( a, b )				na_object_id_sort_alpha_asc( NA_OBJECT_ID( a ), NA_OBJECT_ID( b ))
 #define na_object_sort_alpha_desc( a, b )				na_object_id_sort_alpha_desc( NA_OBJECT_ID( a ), NA_OBJECT_ID( b ))
 
+#define na_object_prepare_for_paste( obj, relabel, renumber, action ) \
+														na_object_id_prepare_for_paste( NA_OBJECT_ID( obj ), ( relabel ), ( renumber ), ( NAObjectId * )( action ))
+#define na_object_set_copy_of_label( obj )				na_object_id_set_copy_of_label( NA_OBJECT_ID( obj ))
+#define na_object_set_new_id( obj, parent )				na_object_id_set_new_id( NA_OBJECT_ID( obj ), ( NAObjectId * )( parent ))
+
 /* NAObjectItem
  */
 #define na_object_get_tooltip( obj )					(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLTIP ))
@@ -105,7 +112,11 @@ G_BEGIN_DECLS
 #define na_object_set_provider_data( obj, data )		na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_PROVIDER_DATA, ( const void * )( data ))
 
 #define na_object_get_item( obj, id )					na_object_item_get_item( NA_OBJECT_ITEM( obj ),( const gchar * )( id ))
+#define na_object_get_position( obj, child )			na_object_item_get_position( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
 #define na_object_append_item( obj, child )				na_object_item_append_item( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
+#define na_object_insert_at( obj, child, pos )			na_object_item_insert_at( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ), ( pos ))
+#define na_object_remove_item( obj, child )				na_object_item_remove_item( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
+
 #define na_object_build_items_slist( obj )				na_object_item_build_items_slist( NA_OBJECT_ITEM( obj ))
 #define na_object_get_items_count( obj )				na_object_item_get_items_count( NA_OBJECT_ITEM( obj ))
 #define na_object_count_items( list, cm, ca, cp, brec )	na_object_item_count_items( list, ( cm ), ( ca ), ( cp ), ( brec ))
@@ -119,6 +130,7 @@ G_BEGIN_DECLS
 #define na_object_is_target_toolbar( obj )				(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_TOOLBAR )))
 #define na_object_get_toolbar_label( obj )				(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_LABEL ))
 #define na_object_is_toolbar_same_label( obj )			(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_SAME_LABEL )))
+#define na_object_get_last_allocated( obj )				(( guint ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_LAST_ALLOCATED )))
 
 #define na_object_set_version( obj, version )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_VERSION, ( const void * )( version ))
 #define na_object_set_target_selection( obj, target )	na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_SELECTION, ( const void * ) GUINT_TO_POINTER( target ))
@@ -126,7 +138,9 @@ G_BEGIN_DECLS
 #define na_object_set_target_toolbar( obj, target )		na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_TOOLBAR, ( const void * ) GUINT_TO_POINTER( target ))
 #define na_object_set_toolbar_label( obj, label )		na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_LABEL, ( const void * )( label ))
 #define na_object_set_toolbar_same_label( obj, same )	na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_SAME_LABEL, ( const void * ) GUINT_TO_POINTER( same ))
+#define na_object_set_last_allocated( obj, last )		na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_LAST_ALLOCATED, ( const void * ) GUINT_TO_POINTER( last ))
 
+#define na_object_reset_last_allocated( obj )			na_idata_factory_set( NA_IDATA_FACTORY( obj ), NADF_DATA_LAST_ALLOCATED, ( const void * ) GUINT_TO_POINTER( 0 ))
 #define na_object_attach_profile( obj, profile )		na_object_action_attach_profile( NA_OBJECT_ACTION( obj ), NA_OBJECT_PROFILE( profile ))
 
 /* NAObjectProfile

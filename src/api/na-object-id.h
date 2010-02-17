@@ -65,6 +65,24 @@ typedef struct NAObjectIdClassPrivate NAObjectIdClassPrivate;
 typedef struct {
 	NAObjectClass           parent;
 	NAObjectIdClassPrivate *private;
+
+	/**
+	 * new_id:
+	 * @object: a #NAObjectId object.
+	 * @new_parent: possibly the new #NAObjectId parent, or NULL.
+	 * If not NULL, this should actually be a #NAObjectItem.
+	 *
+	 * Returns: a new id suitable for this @object.
+	 *
+	 * If @object is a #NAObjectProfile, then @new_parent must be a
+	 * not null #NAObjectAction. This function ensures that the new
+	 * profile name does not already exist in the given @new_parent.
+	 *
+	 * This is a pure virtual function which should be implemented by
+	 * the actual class. Actually, we asks for the most-derived class
+	 * which implements this function.
+	 */
+	gchar * ( *new_id )( const NAObjectId *object, const NAObjectId *new_parent );
 }
 	NAObjectIdClass;
 
@@ -72,6 +90,10 @@ GType  na_object_id_get_type( void );
 
 gint   na_object_id_sort_alpha_asc ( const NAObjectId *a, const NAObjectId *b );
 gint   na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
+
+void   na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *action );
+void   na_object_id_set_copy_of_label( NAObjectId *object );
+void   na_object_id_set_new_id       ( NAObjectId *object, const NAObjectId *new_parent );
 
 G_END_DECLS
 

@@ -545,38 +545,44 @@ dump_tree( GList *tree, gint level )
 }
 
 /**
- * na_object_get_hierarchy:
+ * na_object_object_reset_origin:
+ * @object: a #NAObject-derived object.
+ * @origin: must be a duplication of @object.
  *
- * Returns the class hierarchy,
- * from the topmost base class, to the most-derived one.
+ * Recursively reset origin of @object and its childs to @origin and
+ * its childs), so that @origin appear as the actual origin of @object.
  *
- * The returned list should be released with g_list_free() by the caller.
+ * The origin of @origin itself is set to NULL.
+ *
+ * This only works if @origin has just been duplicated from @object,
+ * and thus we do not have to check if childs lists are equal.
  */
-#if 0
-GList *
-na_object_object_get_hierarchy( const NAObject *object )
+void
+na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 {
-	GList *hierarchy = NULL;
-	GObjectClass *class;
+	GList *origin_childs, *iorig;
+	GList *object_childs, *iobj;
+	NAObject *orig_object;
 
-	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+	g_return_if_fail( NA_IS_OBJECT( origin ));
+	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	if( !object->private->dispose_has_run ){
+	if( !object->private->dispose_has_run && !origin->private->dispose_has_run ){
 
-		class = G_OBJECT_GET_CLASS( object );
-
-		while( G_OBJECT_CLASS_TYPE( class ) != NA_OBJECT_TYPE ){
-
-			hierarchy = g_list_prepend( hierarchy, class );
-			class = g_type_class_peek_parent( class );
+		origin_childs = na_object_get_items( origin );
+		object_childs = na_object_get_items( object );
+		for( iorig = origin_childs, iobj = object_childs ; iorig && iobj ; iorig = iorig->next, iobj = iobj->next ){
+			orig_object = ( NAObject * ) na_object_get_origin( iorig->data );
+			g_return_if_fail( orig_object == iobj->data );
+			na_object_reset_origin( iobj->data, iorig->data );
 		}
 
-		hierarchy = g_list_prepend( hierarchy, class );
+		orig_object = ( NAObject * ) na_object_get_origin( origin );
+		g_return_if_fail( orig_object == object );
+		na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
+		na_iduplicable_set_origin( NA_IDUPLICABLE( origin ), NULL );
 	}
-
-	return( hierarchy );
 }
-#endif
 
 /**
  * na_object_object_ref:
@@ -692,4 +698,36 @@ build_class_hierarchy( const NAObject *object )
 	hierarchy = g_list_prepend( hierarchy, class );
 
 	return( hierarchy );
+}
+
+/**
+ * na_object_object_get_hierarchy:
+ *
+ * Returns the class hierarchy,
+ * from the topmost base class, to the most-derived one.
+ */
+GList *
+na_object_object_get_hierarchy( const NAObject *object )
+{
+	GList *hierarchy;
+
+	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
+
+	hierarchy = NULL;
+
+	if( !object->private->dispose_has_run ){
+
+		hierarchy = build_class_hierarchy( object );
+	}
+
+	return( hierarchy );
+}
+
+/**
+ * na_object_free_hierarchy:
+ */
+void
+na_object_free_hierarchy( GList *hierarchy )
+{
+	g_list_free( hierarchy );
 }

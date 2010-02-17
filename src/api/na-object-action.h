@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_OBJECT_ACTIONS_API_NA_OBJECT_ACTION_H__
-#define __NAUTILUS_OBJECT_ACTIONS_API_NA_OBJECT_ACTION_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_OBJECT_ACTION_H__
+#define __NAUTILUS_ACTIONS_API_NA_OBJECT_ACTION_H__
 
 /**
  * SECTION: na_object_action
@@ -73,15 +73,16 @@ typedef struct {
 }
 	NAObjectActionClass;
 
-GType           na_object_action_get_type( void );
+GType na_object_action_get_type( void );
 
 NAObjectAction *na_object_action_new( void );
 NAObjectAction *na_object_action_new_with_profile( void );
 
+gchar          *na_object_action_get_new_profile_name( const NAObjectAction *action );
 void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );
 
 gboolean        na_object_action_is_candidate( const NAObjectAction *action, gint target );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_OBJECT_ACTIONS_API_NA_OBJECT_ACTION_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_ACTION_H__ */

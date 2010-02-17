@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include <api/na-object-api.h>
 
 /* private class data
@@ -52,11 +54,13 @@ struct NAObjectIdPrivate {
 
 static NAObjectClass *st_parent_class = NULL;
 
-static GType register_type( void );
-static void  class_init( NAObjectIdClass *klass );
-static void  instance_init( GTypeInstance *instance, gpointer klass );
-static void  instance_dispose( GObject *object );
-static void  instance_finalize( GObject *object );
+static GType  register_type( void );
+static void   class_init( NAObjectIdClass *klass );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *object );
+static void   instance_finalize( GObject *object );
+
+static gchar *v_new_id( const NAObjectId *object, const NAObjectId *new_parent );
 
 GType
 na_object_id_get_type( void )
@@ -115,6 +119,8 @@ class_init( NAObjectIdClass *klass )
 	naobject_class->copy = NULL;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = NULL;
+
+	klass->new_id = NULL;
 
 	klass->private = g_new0( NAObjectIdClassPrivate, 1 );
 }
@@ -222,4 +228,147 @@ gint
 na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
 {
 	return( -1 * na_object_id_sort_alpha_asc( a, b ));
+}
+
+/**
+ * na_object_id_prepare_for_paste:
+ * @object: the #NAObjectId object to be pasted.
+ * @relabel: whether this object should be relabeled when pasted.
+ * @relabel: whether this item should be renumbered ?
+ * @action: if @object is a #NAObjectProfile, the parent #NAObjectAction.
+ *
+ * Prepares @object to be pasted.
+ *
+ * If a #NAObjectProfile, then @object is attached to the specified
+ * #NAObjectAction @action. The identifier is always renumbered to be
+ * suitable with the already existing profiles.
+ *
+ * If a #NAObjectAction or a #NAObjectMenu, a new UUID is allocated if
+ * and only if @relabel is %TRUE.
+ *
+ * Actual relabeling takes place if @relabel is %TRUE, depending of the
+ * user preferences.
+ */
+void
+na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *action )
+{
+	static const gchar *thisfn = "na_object_id_prepare_for_paste";
+	GList *subitems, *it;
+
+	g_debug( "%s: object=%p, relabel=%s, renumber=%s, action=%p",
+			thisfn, ( void * ) object, relabel ? "True":"False", renumber ? "True":"False", ( void * ) action );
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
+
+	if( !object->private->dispose_has_run ){
+
+		if( NA_IS_OBJECT_PROFILE( object )){
+			na_object_set_parent( object, action );
+			na_object_set_new_id( object, action );
+			if( renumber && relabel ){
+				na_object_set_copy_of_label( object );
+			}
+
+		} else {
+			if( renumber ){
+				na_object_set_new_id( object, NULL );
+				if( relabel ){
+					na_object_set_copy_of_label( object );
+				}
+				na_object_set_provider( object, NULL );
+				na_object_set_readonly( object, FALSE );
+			}
+			if( NA_IS_OBJECT_MENU( object )){
+				subitems = na_object_get_items( object );
+				for( it = subitems ; it ; it = it->next ){
+					na_object_prepare_for_paste( it->data, relabel, renumber, NULL );
+				}
+			}
+		}
+	}
+}
+
+/**
+ * na_object_id_set_copy_of_label:
+ * @object: the #NAObjectId object whose label is to be changed.
+ *
+ * Sets the 'Copy of' label.
+ */
+void
+na_object_id_set_copy_of_label( NAObjectId *object )
+{
+	gchar *label, *new_label;
+
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+
+	if( !object->private->dispose_has_run ){
+
+		label = na_object_get_label( object );
+
+		/* i18n: copied items have a label as 'Copy of original label' */
+		new_label = g_strdup_printf( _( "Copy of %s" ), label );
+
+		na_object_set_label( object, new_label );
+
+		g_free( new_label );
+		g_free( label );
+	}
+}
+
+/**
+ * na_object_id_set_new_id:
+ * @object: the #NAObjectId object whose internal identifiant is to be
+ * set.
+ * @new_parent: if @object is a #NAObjectProfile, then @new_parent
+ * should be set to the #NAObjectActio new parent. Else, it would not
+ * be possible to allocate a new profile id compatible with already
+ * existing ones.
+ *
+ * Request a new id to the derived class, and set it.
+ */
+void
+na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent )
+{
+	gchar *id;
+
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( !new_parent || NA_IS_OBJECT_ID( new_parent ));
+
+	if( !object->private->dispose_has_run ){
+
+		id = v_new_id( object, new_parent );
+
+		if( id ){
+			na_object_set_id( object, id );
+			g_free( id );
+		}
+	}
+}
+
+static gchar *
+v_new_id( const NAObjectId *object, const NAObjectId *new_parent )
+{
+	gchar *new_id;
+	GList *hierarchy, *ih;
+	gboolean found;
+
+	found = FALSE;
+	new_id = NULL;
+	hierarchy = g_list_reverse( na_object_get_hierarchy( NA_OBJECT( object )));
+	/*g_debug( "na_object_id_most_derived_id: object=%p (%s)",
+					( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
+
+	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
+		if( NA_OBJECT_ID_CLASS( ih->data )->new_id ){
+			new_id = NA_OBJECT_ID_CLASS( ih->data )->new_id( object, new_parent );
+			found = TRUE;
+		}
+		if( G_OBJECT_CLASS_TYPE( ih->data ) == NA_OBJECT_ID_TYPE ){
+			break;
+		}
+	}
+
+	na_object_free_hierarchy( hierarchy );
+
+	return( new_id );
 }

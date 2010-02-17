@@ -1,5 +1,23 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-object-action.h:
+	* src/api/na-object-api.h:
+	* src/api/na-object-id.h:
+	* src/api/na-object-item.h:
+	* src/api/na-object-profile.h:
+	* src/api/na-object.h:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object-profile.c:
+	* src/core/na-object.c:
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h:
+	* src/core/na-updater.c:
+	* src/core/na-updater.h:
+	* src/nact/nact-export-format.c:
+	* src/nact/nact-main-menubar.c: Update menu bar.
+
 	* src/nact/nact-iprefs.c: Update NactIPrefs interface.
 
 	* src/api/na-core-utils.h:

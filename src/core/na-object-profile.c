@@ -82,6 +82,8 @@ static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const
 static void     idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static void     idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
 
+static gchar   *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
+
 static gboolean is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
 static gboolean is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
 static gboolean is_current_folder_inside( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
@@ -149,6 +151,7 @@ class_init( NAObjectProfileClass *klass )
 	static const gchar *thisfn = "na_object_profile_class_init";
 	GObjectClass *object_class;
 	NAObjectClass *naobject_class;
+	NAObjectIdClass *naobjectid_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -165,6 +168,9 @@ class_init( NAObjectProfileClass *klass )
 	naobject_class->copy = NULL;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = NULL;
+
+	naobjectid_class = NA_OBJECT_ID_CLASS( klass );
+	naobjectid_class->new_id = object_id_new_id;
 
 	klass->private = g_new0( NAObjectProfileClassPrivate, 1 );
 
@@ -312,6 +318,26 @@ static void
 idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages )
 {
 
+}
+
+/*
+ * new_parent is specifically set to be able to allocate a new id for
+ * the current profile into the target parent
+ */
+static gchar *
+object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
+{
+	gchar *id = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( item ), NULL );
+	g_return_val_if_fail( new_parent && NA_IS_OBJECT_ACTION( new_parent ), NULL );
+
+	if( !NA_OBJECT_PROFILE( item )->private->dispose_has_run ){
+
+		id = na_object_action_get_new_profile_name( NA_OBJECT_ACTION( new_parent ));
+	}
+
+	return( id );
 }
 
 /**

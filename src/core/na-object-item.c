@@ -33,6 +33,7 @@
 #endif
 
 #include <string.h>
+#include <uuid/uuid.h>
 
 #include <api/na-object-api.h>
 
@@ -59,11 +60,13 @@ struct NAObjectItemPrivate {
 
 static NAObjectIdClass *st_parent_class = NULL;
 
-static GType register_type( void );
-static void  class_init( NAObjectItemClass *klass );
-static void  instance_init( GTypeInstance *instance, gpointer klass );
-static void  instance_dispose( GObject *object );
-static void  instance_finalize( GObject *object );
+static GType  register_type( void );
+static void   class_init( NAObjectItemClass *klass );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *object );
+static void   instance_finalize( GObject *object );
+
+static gchar *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
 GType
 na_object_item_get_type( void )
@@ -108,6 +111,7 @@ class_init( NAObjectItemClass *klass )
 	static const gchar *thisfn = "na_object_item_class_init";
 	GObjectClass *object_class;
 	NAObjectClass *naobject_class;
+	NAObjectIdClass *naobjectid_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -122,6 +126,9 @@ class_init( NAObjectItemClass *klass )
 	naobject_class->copy = NULL;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = NULL;
+
+	naobjectid_class = NA_OBJECT_ID_CLASS( klass );
+	naobjectid_class->new_id = object_id_new_id;
 
 	klass->private = g_new0( NAObjectItemClassPrivate, 1 );
 }
@@ -180,6 +187,39 @@ instance_finalize( GObject *object )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
+}
+
+/*
+ * new_parent is not relevant when allocating a new UUID for an action
+ * or a menu ; it may safely be left as NULL though there is no gain to
+ * check this
+ */
+static gchar *
+object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
+{
+	GList *childs, *it;
+	uuid_t uuid;
+	gchar uuid_str[64];
+	gchar *new_uuid = NULL;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+
+	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
+
+		/* recurse into NAObjectItems childs
+		 * i.e., if a menu, recurse into embedded actions
+		 */
+		childs = na_object_get_items( item );
+		for( it = childs ; it ; it = it->next ){
+			na_object_set_new_id( it->data, new_parent );
+		}
+
+		uuid_generate( uuid );
+		uuid_unparse_lower( uuid, uuid_str );
+		new_uuid = g_strdup( uuid_str );
+	}
+
+	return( new_uuid );
 }
 
 /**
@@ -354,6 +394,36 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
 }
 
 /**
+ * na_object_item_get_position:
+ * @object: this #NAObjectItem object.
+ * @child: a #NAObjectId-derived child.
+ *
+ * Returns: the position of @child in the subitems list of @object,
+ * starting from zero, or -1 if not found.
+ */
+gint
+na_object_item_get_position( const NAObjectItem *object, const NAObjectId *child )
+{
+	gint pos = -1;
+	GList *childs;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), pos );
+	g_return_val_if_fail( NA_IS_OBJECT_ID( child ), pos );
+
+	if( !child ){
+		return( pos );
+	}
+
+	if( !object->private->dispose_has_run ){
+
+		childs = na_object_get_items( object );
+		pos = g_list_index( childs, ( gconstpointer ) child );
+	}
+
+	return( pos );
+}
+
+/**
  * na_object_item_append_item:
  * @item: the #NAObjectItem to which add the subitem.
  * @child: a #NAObjectId to be added to list of subitems.
@@ -381,6 +451,69 @@ na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
 			na_object_set_parent( child, item );
 			na_object_set_items( item, childs_list );
 		}
+	}
+}
+
+/**
+ * na_object_item_insert_at:
+ * @item: the #NAObjectItem in which add the subitem.
+ * @object: a #NAObjectId-derived to be inserted in the list of subitems.
+ * @pos: the position at which the @object child should be inserted.
+ *
+ * Inserts a new @object in the list of subitems of @item.
+ *
+ * Doesn't modify the reference count on @object.
+ */
+void
+na_object_item_insert_at( NAObjectItem *item, const NAObjectId *object, gint pos )
+{
+	GList *childs, *it;
+	gint i;
+
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+
+	if( !item->private->dispose_has_run ){
+
+		childs = na_object_get_items( item );
+		if( pos == -1 || pos >= g_list_length( childs )){
+			na_object_append_item( item, object );
+
+		} else {
+			i = 0;
+			for( it = childs ; it && i <= pos ; it = it->next ){
+				if( i == pos ){
+					childs = g_list_insert_before( childs, it, ( gpointer ) object );
+				}
+				i += 1;
+			}
+			na_object_set_items( item, childs );
+		}
+	}
+}
+
+/**
+ * na_object_item_remove_item:
+ * @item: the #NAObjectItem from which the subitem must be removed.
+ * @object: a #NAObjectId-derived to be removed from the list of subitems.
+ *
+ * Removes an @object from the list of subitems of @item.
+ *
+ * Doesn't modify the reference count on @object.
+ */
+void
+na_object_item_remove_item( NAObjectItem *item, const NAObjectId *object )
+{
+	GList *childs;
+
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+
+	if( !item->private->dispose_has_run ){
+
+		childs = na_object_get_items( item );
+		childs = g_list_remove( childs, ( gconstpointer ) object );
+		na_object_set_items( item, childs );
 	}
 }
 

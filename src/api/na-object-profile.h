@@ -67,6 +67,10 @@ typedef struct {
 }
 	NAObjectProfileClass;
 
+/* default prefix for profile name
+ */
+#define NA_PROFILE_DEFAULT_PREFIX		"profile-"
+
 GType            na_object_profile_get_type( void );
 
 NAObjectProfile *na_object_profile_new( void );

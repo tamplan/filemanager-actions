@@ -102,7 +102,7 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
 	gchar *description;
 	GtkHBox *hbox1, *hbox2;
 	GtkRadioButton *button;
-	guint indicator_size;
+	guint size, spacing;
 	GtkLabel *radio_label;
 	gchar *markup, *label;
 	GtkLabel *desc_label;
@@ -151,13 +151,13 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
 	switch( mode ){
 
 		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
-			/* TODO: get radio button indicator size */
-			/*g_object_get( G_OBJECT( GTK_CHECK_BUTTON( button )), "indicator-size", &indicator_size, NULL );*/
-			indicator_size = 17;
+			gtk_widget_style_get( GTK_WIDGET( button ), "indicator-size", &size, NULL );
+			gtk_widget_style_get( GTK_WIDGET( button ), "indicator-spacing", &spacing, NULL );
+			size += 2*spacing;
 			hbox2 = GTK_HBOX( gtk_hbox_new( TRUE, 0 ));
 			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox2 ), FALSE, TRUE, 0 );
 			desc_label = GTK_LABEL( gtk_label_new( description ));
-			g_object_set( G_OBJECT( desc_label ), "xpad", indicator_size, NULL );
+			g_object_set( G_OBJECT( desc_label ), "xpad", size, NULL );
 			gtk_box_pack_start( GTK_BOX( hbox2 ), GTK_WIDGET( desc_label ), TRUE, TRUE, 4 );
 			break;
 	}
