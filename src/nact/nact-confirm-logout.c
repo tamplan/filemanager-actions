@@ -64,7 +64,7 @@ static void     instance_finalize( GObject *dialog );
 
 static NactConfirmLogout *confirm_logout_new( BaseWindow *parent );
 
-static gchar   *base_get_dialog_name( BaseWindow *window );
+static gchar   *base_get_dialog_name( const BaseWindow *window );
 static void     on_base_initial_load_dialog( NactConfirmLogout *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactConfirmLogout *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactConfirmLogout *editor, gpointer user_data );
@@ -246,7 +246,7 @@ nact_confirm_logout_run( NactMainWindow *parent )
 }
 
 static gchar *
-base_get_dialog_name( BaseWindow *window )
+base_get_dialog_name( const BaseWindow *window )
 {
 	return( g_strdup( "ConfirmLogoutDialog" ));
 }

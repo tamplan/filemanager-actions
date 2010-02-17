@@ -60,11 +60,11 @@ enum {
 };
 
 void   nact_export_format_display( const NAPivot *pivot, GtkWidget *container, guint mode );
-void   nact_export_format_select( GtkWidget *container, GQuark format );
-GQuark nact_export_format_get_select( GtkWidget *container );
+void   nact_export_format_select( const GtkWidget *container, GQuark format );
+GQuark nact_export_format_get_select( const GtkWidget *container );
 
-gchar *nact_export_format_get_label( GQuark format );
-gchar *nact_export_format_get_description( GQuark format );
+gchar *nact_export_format_get_label      ( const GtkWidget *container, GQuark format );
+gchar *nact_export_format_get_description( const GtkWidget *container, GQuark format );
 
 G_END_DECLS
 

@@ -38,7 +38,9 @@
 
 #include <core/na-exporter.h>
 
+#include "nact-application.h"
 #include "nact-iprefs.h"
+#include "nact-export-format.h"
 #include "nact-export-ask.h"
 
 /* private class data
@@ -310,6 +312,9 @@ on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_export_ask_on_runtime_init_dialog";
 	GtkWidget *container;
+	gchar *item_label, *label;
+	GtkWidget *widget;
+	GtkWidget *button;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
@@ -371,6 +376,8 @@ get_format( NactExportAsk *editor )
 {
 	GtkWidget *container;
 	GQuark export_format;
+	GtkWidget *button;
+	gboolean keep;
 
 	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
 	export_format = nact_export_format_get_select( container );

@@ -128,8 +128,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-tree-model-priv.h								\
 	nact-window.c										\
 	nact-window.h										\
-	nact-xml-reader.c									\
-	nact-xml-reader.h									\
 	$(BUILT_SOURCES)									\
 	$(NULL)
 

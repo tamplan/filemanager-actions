@@ -37,9 +37,9 @@
  * @include: nact/nact-main-menubar.h
  */
 
-#include <private/na-object-class.h>
+#include <api/na-object.h>
 
-#include <runtime/na-pivot.h>
+#include <core/na-pivot.h>
 
 #include "nact-main-window.h"
 

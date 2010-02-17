@@ -85,6 +85,7 @@ void        na_object_item_append_item( NAObjectItem *object, const NAObjectId *
 
 GSList     *na_object_item_build_items_slist( const NAObjectItem *item );
 
+void        na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
 void        na_object_item_unref_items( GList *items );
 
 G_END_DECLS

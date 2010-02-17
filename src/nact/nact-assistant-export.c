@@ -638,6 +638,7 @@ static void
 assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
 {
 	static const gchar *thisfn = "nact_assistant_export_prepare_confirm";
+	GtkWidget *container;
 	gchar *text, *tmp, *text2;
 	gchar *label1, *label2, *label3;
 	GList *actions, *ia;
@@ -674,8 +675,9 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	label1 = NULL;
 	label2 = NULL;
 	format = get_export_format( window );
-	label1 = nact_export_format_get_label( format );
-	label2 = nact_export_format_get_description( format );
+	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
+	label1 = nact_export_format_get_label( container, format );
+	label2 = nact_export_format_get_description( container, format );
 	nact_iprefs_set_export_format( BASE_WINDOW( window ), IPREFS_EXPORT_FORMAT, format );
 
 	label3 = na_core_utils_str_add_prefix( "\t", label2 );
@@ -728,7 +730,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		}
 
 		if( str->format != IPREFS_EXPORT_NO_EXPORT ){
-			str->fname = na_exporter_export( str->item, window->private->uri, str->format, &str->msg );
+			str->fname = na_exporter_to_file( str->item, window->private->uri, str->format, &str->msg );
 		}
 	}
 

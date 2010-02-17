@@ -37,6 +37,8 @@
 #include <core/na-exporter.h>
 #include <core/na-export-format.h>
 
+#include "nact-export-format.h"
+
 #define EXPORT_FORMAT_PROP_QUARK_ID		"nact-export-format-prop-quark-id"
 #define EXPORT_FORMAT_PROP_BUTTON		"nact-export-format-prop-button"
 #define EXPORT_FORMAT_PROP_LABEL		"nact-export-format-prop-label"
@@ -51,7 +53,7 @@ typedef struct {
 	GQuark   format;
 	gboolean found;
 	gchar   *label;
-	guint    prop;
+	gchar   *prop;
 }
 	NactExportFormatStr;
 
@@ -72,7 +74,6 @@ void
 nact_export_format_display( const NAPivot *pivot, GtkWidget *vbox, guint mode )
 {
 	GList *formats, *ifmt;
-	NAExporterStr *str;
 
 	formats = na_exporter_get_formats( pivot );
 
@@ -96,7 +97,7 @@ static void
 draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
 {
 	static const gchar *thisfn = "nact_export_format_draw_in_vbox";
-	static GtkRadioButton first_button = NULL;
+	static GtkRadioButton *first_button = NULL;
 	GtkVBox *vbox;
 	gchar *description;
 	GtkHBox *hbox1, *hbox2;
@@ -107,7 +108,7 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
 	GtkLabel *desc_label;
 
 	vbox = GTK_VBOX( gtk_vbox_new( FALSE, 0 ));
-	gtk_box_pack_start( container, GTK_WIDGET( vbox ), FALSE, TRUE, 0 );
+	gtk_box_pack_start( GTK_BOX( container ), GTK_WIDGET( vbox ), FALSE, TRUE, 0 );
 	description = na_export_format_get_description( format );
 	g_object_set( G_OBJECT( vbox ), "tooltip-text", description, NULL );
 
@@ -178,7 +179,7 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode )
  * Select the default value.
  */
 void
-nact_export_format_select( GtkWidget *container, GQuark format )
+nact_export_format_select( const GtkWidget *container, GQuark format )
 {
 	NactExportFormatStr *str;
 
@@ -186,7 +187,7 @@ nact_export_format_select( GtkWidget *container, GQuark format )
 	str->format = format;
 	str->found = FALSE;
 
-	gtk_container_foreach( GTK_CONTAINER( container ), G_CALLBACK( select_default_iter ), str );
+	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) select_default_iter, str );
 
 	g_free( str );
 }
@@ -214,7 +215,7 @@ select_default_iter( GtkWidget *widget, NactExportFormatStr *str )
  * Returns: the currently selected value, as a #GQuark.
  */
 GQuark
-nact_export_format_get_select( GtkWidget *container )
+nact_export_format_get_select( const GtkWidget *container )
 {
 	GQuark format;
 	NactExportFormatStr *str;
@@ -225,7 +226,7 @@ nact_export_format_get_select( GtkWidget *container )
 	str->format = 0;
 	str->found = FALSE;
 
-	gtk_container_foreach( GTK_CONTAINER( container ), G_CALLBACK( get_selected_iter ), str );
+	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) get_selected_iter, str );
 
 	if( str->found ){
 		format = str->format;
@@ -239,7 +240,6 @@ nact_export_format_get_select( GtkWidget *container )
 static void
 get_selected_iter( GtkWidget *widget, NactExportFormatStr *str )
 {
-	GQuark format;
 	GtkRadioButton *button;
 
 	if( !str->found ){
@@ -259,7 +259,7 @@ get_selected_iter( GtkWidget *widget, NactExportFormatStr *str )
  * should be g_free() by the caller.
  */
 gchar *
-nact_export_format_get_label( GQuark format )
+nact_export_format_get_label( const GtkWidget *container, GQuark format )
 {
 	gchar *label;
 	NactExportFormatStr *str;
@@ -271,7 +271,7 @@ nact_export_format_get_label( GQuark format )
 	str->found = FALSE;
 	str->prop = EXPORT_FORMAT_PROP_LABEL;
 
-	gtk_container_foreach( GTK_CONTAINER( container ), G_CALLBACK( get_label_iter ), str );
+	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) get_label_iter, str );
 
 	if( str->found ){
 		label = str->label;
@@ -290,7 +290,7 @@ nact_export_format_get_label( GQuark format )
  * should be g_free() by the caller.
  */
 gchar *
-nact_export_format_get_description( GQuark format )
+nact_export_format_get_description( const GtkWidget *container, GQuark format )
 {
 	gchar *label;
 	NactExportFormatStr *str;
@@ -302,7 +302,7 @@ nact_export_format_get_description( GQuark format )
 	str->found = FALSE;
 	str->prop = EXPORT_FORMAT_PROP_DESCRIPTION;
 
-	gtk_container_foreach( GTK_CONTAINER( container ), G_CALLBACK( get_label_iter ), str );
+	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) get_label_iter, str );
 
 	if( str->found ){
 		label = str->label;
@@ -318,7 +318,6 @@ get_label_iter( GtkWidget *widget, NactExportFormatStr *str )
 {
 	GQuark format;
 	GtkLabel *gtk_label;
-	gchar *label;
 
 	if( !str->found ){
 		format = ( GQuark ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( widget ), EXPORT_FORMAT_PROP_QUARK_ID ));

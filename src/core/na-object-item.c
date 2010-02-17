@@ -424,6 +424,47 @@ na_object_item_build_items_slist( const NAObjectItem *item )
 }
 
 /**
+ * na_object_item_count_items:
+ * @items: a list if #NAObject-derived to be counted.
+ * @menus: will be set to the count of menus.
+ * @actions: will be set to the count of actions.
+ * @profiles: will be set to the count of profiles.
+ * @recurse: whether to recursively count all items, or only those in
+ *  level zero of the list.
+ *
+ * Count the numbers of items if the provided list.
+ *
+ * As this function is recursive, the counters should be initialized by
+ * the caller before calling it.
+ */
+void
+na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse )
+{
+	GList *it;
+
+	/*g_debug( "na_object_item_count_items: items=%p (count=%d), menus=%d, actions=%d, profiles=%d",
+			( void * ) items, items ? g_list_length( items ) : 0, *menus, *actions, *profiles );*/
+
+	for( it = items ; it ; it = it->next ){
+
+		if( recurse ){
+			if( NA_IS_OBJECT_ITEM( it->data )){
+				GList *subitems = na_object_get_items( it->data );
+				na_object_count_items( subitems, menus, actions, profiles, recurse );
+			}
+		}
+
+		if( NA_IS_OBJECT_MENU( it->data )){
+			*menus += 1;
+		} else if( NA_IS_OBJECT_ACTION( it->data )){
+			*actions += 1;
+		} else if( NA_IS_OBJECT_PROFILE( it->data )){
+			*profiles += 1;
+		}
+	}
+}
+
+/**
  * na_object_item_unref_items:
  * @list: a list of #NAObject-derived items.
  *

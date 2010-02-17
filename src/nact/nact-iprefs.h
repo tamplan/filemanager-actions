@@ -86,11 +86,10 @@ GType nact_iprefs_get_type( void );
 GQuark nact_iprefs_get_export_format( const BaseWindow *window, const gchar *pref );
 void   nact_iprefs_set_export_format( const BaseWindow *window, const gchar *pref, GQuark format );
 
-gint  nact_iprefs_get_import_mode  ( const BaseWindow *window, const gchar *pref );
+gint  nact_iprefs_get_import_mode   ( const BaseWindow *window, const gchar *pref );
+void  nact_iprefs_set_import_mode   ( const BaseWindow *window, const gchar *pref, gint mode );
 
-void  nact_iprefs_set_import_mode  ( const BaseWindow *window, const gchar *pref, gint mode );
-
-void  nact_iprefs_write_string( const BaseWindow *window, const gchar *name, const gchar *value );
+void  nact_iprefs_write_string      ( const BaseWindow *window, const gchar *name, const gchar *value );
 
 G_END_DECLS
 

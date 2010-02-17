@@ -37,14 +37,11 @@
 
 #include <api/na-object-api.h>
 
-#include <runtime/na-iprefs.h>
-#include <runtime/na-pivot.h>
-#include <runtime/na-utils.h>
-#include <runtime/na-xml-names.h>
-#include <runtime/na-xml-writer.h>
+#include <core/na-exporter.h>
 
 #include "nact-application.h"
-#include "nact-assistant-export-ask.h"
+#include "nact-iprefs.h"
+#include "nact-export-ask.h"
 #include "nact-tree-model.h"
 #include "nact-clipboard.h"
 
@@ -529,6 +526,10 @@ export_objects( NactClipboard *clipboard, GList *objects, const gchar *dest_fold
 	return( g_string_free( data, FALSE ));
 }
 
+/*
+ * export to a buffer if dest_folder is null
+ * else export to a new file in the target directory
+ */
 static gchar *
 export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported )
 {
@@ -537,14 +538,12 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	gint index;
 	GString *data;
 	gchar *buffer;
-	NactApplication *application;
-	NAPivot *pivot;
-	gint format;
+	GQuark format;
 	gchar *fname;
 	GSList *msg;
 
 	if( NA_IS_OBJECT_MENU( object )){
-		subitems = na_object_get_items_list( object );
+		subitems = na_object_get_items( object );
 		data = g_string_new( "" );
 
 		for( isub = subitems ; isub ; isub = isub->next ){
@@ -567,25 +566,22 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 
 	index = g_list_index( *exported, ( gconstpointer ) action );
 	if( index == -1 ){
-		*exported = g_list_prepend( *exported, ( gpointer ) action );
 
-		application = NACT_APPLICATION( base_window_get_application( clipboard->private->window ));
-		pivot = nact_application_get_pivot( application );
-		format = na_iprefs_get_export_format( NA_IPREFS( pivot ), IPREFS_EXPORT_FORMAT );
+		*exported = g_list_prepend( *exported, ( gpointer ) action );
+		format = nact_iprefs_get_export_format( clipboard->private->window, IPREFS_EXPORT_FORMAT );
 
 		if( format == IPREFS_EXPORT_FORMAT_ASK ){
-			format = nact_assistant_export_ask_user( clipboard->private->window, action );
+			format = nact_export_ask_user( clipboard->private->window, NA_OBJECT_ITEM( action ));
 		}
 
 		if( format != IPREFS_EXPORT_NO_EXPORT ){
-			buffer = na_xml_writer_get_xml_buffer( action, format );
 
-			if( buffer && dest_folder ){
-				fname = na_xml_writer_get_output_fname( action, dest_folder, format );
-				na_xml_writer_output_xml( buffer, fname, &msg );
+			if( dest_folder ){
+				fname = na_exporter_to_file( NA_OBJECT_ITEM( action), dest_folder, format, &msg );
 				g_free( fname );
-				g_free( buffer );
-				buffer = NULL;
+
+			} else {
+				buffer = na_exporter_to_buffer( NA_OBJECT_ITEM( action ), format, NULL );
 			}
 		}
 	}
@@ -638,7 +634,7 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 			clear_primary_clipboard( clipboard );
 		}
 
-		na_object_item_count_items( items,
+		na_object_count_items( items,
 				( gint * ) &user_data->nb_menus,
 				( gint * ) &user_data->nb_actions,
 				( gint * ) &user_data->nb_profiles,
@@ -696,7 +692,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 
 			if( user_data ){
 				for( it = user_data->items ; it ; it = it->next ){
-					obj = na_object_duplicate( it->data );
+					obj = NA_OBJECT( na_object_duplicate( it->data ));
 					na_object_set_origin( obj, NULL );
 					items = g_list_prepend( items, obj );
 				}

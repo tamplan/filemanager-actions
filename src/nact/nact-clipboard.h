@@ -54,7 +54,7 @@ G_BEGIN_DECLS
 #define NACT_IS_CLIPBOARD_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_CLIPBOARD_TYPE ))
 #define NACT_CLIPBOARD_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_CLIPBOARD_TYPE, NactClipboardClass ))
 
-typedef struct NactClipboardPrivate NactClipboardPrivate;
+typedef struct NactClipboardPrivate      NactClipboardPrivate;
 
 typedef struct {
 	GObject               parent;

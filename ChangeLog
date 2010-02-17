@@ -1,5 +1,22 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iduplicable.h:
+	* src/api/na-object-api.h:
+	* src/api/na-object-item.h:
+	* src/core/na-exporter.c:
+	* src/core/na-exporter.h:
+	* src/core/na-iduplicable.c:
+	* src/core/na-object-item.c:
+	* src/nact/Makefile.am:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-clipboard.h:
+	* src/nact/nact-confirm-logout.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-export-format.c:
+	* src/nact/nact-export-format.h:
+	* src/nact/nact-iprefs.h:
+	* src/nact/nact-main-menubar.h:
 	* src/nact/nact-assistant-export.c:
 	* src/nact/nact-assistant-export.h:
 	* src/nact/nact-assistant-export.ui:

@@ -429,6 +429,28 @@ na_iduplicable_is_valid( const NAIDuplicable *object )
 	return( is_valid );
 }
 
+/**
+ * na_iduplicable_set_origin:
+ * @object: the #NAIDuplicable object whose origin is to be set.
+ * @origin: the new original #NAIDuplicable.
+ *
+ * Sets the new origin of a duplicated #NAIDuplicable.
+ */
+void
+na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
+{
+	DuplicableStr *str;
+
+	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( NA_IS_IDUPLICABLE( origin ) || !origin );
+
+	if( st_initialized && !st_finalized ){
+
+		str = get_duplicable_str( object );
+		str->origin = ( NAIDuplicable * ) origin;
+	}
+}
+
 static void
 v_copy( NAIDuplicable *target, const NAIDuplicable *source )
 {
@@ -497,26 +519,6 @@ na_iduplicable_is_modified( const NAIDuplicable *object )
 	is_modified = get_modified( object );
 
 	return( is_modified );
-}
-
-/**
- * na_iduplicable_set_origin:
- * @object: the #NAIDuplicable object whose origin is to be set.
- * @origin: the new original #NAIDuplicable.
- *
- * Sets the new origin of a duplicated #NAIDuplicable.
- */
-void
-na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
-{
-	/*static const gchar *thisfn = "na_iduplicable_is_valid";
-	g_debug( "%s: object=%p", thisfn, object );*/
-
-	g_return_if_fail( st_initialized && !st_finalized );
-	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
-	g_return_if_fail( NA_IS_IDUPLICABLE( origin ) || !origin );
-
-	set_origin( object, origin );
 }
 
 /**

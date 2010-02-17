@@ -108,10 +108,10 @@ na_exporter_free_formats( GList *formats )
 }
 
 /**
- * na_exporter_export:
+ * na_exporter_to_file:
  * @item: a #NAObjectItem-derived object.
  * @uri: the target URI.
- * @format: the target format.
+ * @format: the #GQuark target format.
  * @messages: a pointer to a #GSList list of strings; the provider
  *  may append messages to this list, but shouldn't reinitialize it.
  *
@@ -121,7 +121,7 @@ na_exporter_free_formats( GList *formats )
  * should be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-na_exporter_export( const NAObjectItem *item, const gchar *uri, guint format, GSList **messages )
+na_exporter_to_file( const NAObjectItem *item, const gchar *uri, GQuark format, GSList **messages )
 {
 	gchar *fname;
 
@@ -131,4 +131,29 @@ na_exporter_export( const NAObjectItem *item, const gchar *uri, guint format, GS
 	}
 
 	return( fname );
+}
+
+/**
+ * na_exporter_to_buffer:
+ * @item: a #NAObjectItem-derived object.
+ * @format: the #GQuark target format.
+ * @messages: a pointer to a #GSList list of strings; the provider
+ *  may append messages to this list, but shouldn't reinitialize it.
+ *
+ * Exports the specified @item in the required @format.
+ *
+ * Returns: the output buffer, as a newly allocated string which should
+ * be g_free() by the caller, or %NULL if an error has been detected.
+ */
+gchar *
+na_exporter_to_buffer( const NAObjectItem *item, GQuark format, GSList **messages )
+{
+	gchar *buffer;
+
+	buffer = NULL;
+
+	if( iexporter_initialized && !iexporter_finalized ){
+	}
+
+	return( buffer );
 }
