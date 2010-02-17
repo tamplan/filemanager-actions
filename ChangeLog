@@ -1,5 +1,17 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* core/na-object-action-fn.h:
+	* core/na-object-action-priv.h:
+	* core/na-object-fn.h:
+	* core/na-object-id-fn.h:
+	* core/na-object-id-priv.h:
+	* core/na-object-item-fn.h:
+	* core/na-object-item-priv.h:
+	* core/na-object-menu-fn.h:
+	* core/na-object-menu-priv.h:
+	* core/na-object-profile-fn.h:
+	* core/na-object-profile-priv.h: Remove no more used files.
+
 	* src/api/na-iduplicable.h:
 	* src/api/na-object-api.h:
 	* src/api/na-object-item.h:
