@@ -82,7 +82,7 @@ G_BEGIN_DECLS
 #define BASE_IS_WINDOW_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_WINDOW_TYPE ))
 #define BASE_WINDOW_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_WINDOW_TYPE, BaseWindowClass ))
 
-typedef struct BaseWindowPrivate BaseWindowPrivate;
+typedef struct BaseWindowPrivate      BaseWindowPrivate;
 
 typedef struct {
 	GObject            parent;

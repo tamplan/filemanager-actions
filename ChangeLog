@@ -1,5 +1,14 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/Makefile.am:
+	* src/nact/base-application-class.h:
+	* src/nact/base-assistant.h:
+	* src/nact/base-assistant.h:
+	* src/nact/base-builder.h:
+	* src/nact/base-dialog.h:
+	* src/nact/base-iprefs.c:
+	* src/nact/base-window-class.h:	Update typo in Base class headers.
+
 	* src/core/na-importer.c:
 	* src/core/na-importer.h: New files.
 

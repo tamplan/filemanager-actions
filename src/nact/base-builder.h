@@ -54,7 +54,7 @@ G_BEGIN_DECLS
 #define BASE_IS_BUILDER_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_BUILDER_TYPE ))
 #define BASE_BUILDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_BUILDER_TYPE, BaseBuilderClass ))
 
-typedef struct BaseBuilderPrivate BaseBuilderPrivate;
+typedef struct BaseBuilderPrivate      BaseBuilderPrivate;
 
 typedef struct {
 	GtkBuilder          parent;

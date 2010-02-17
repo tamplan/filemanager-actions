@@ -58,7 +58,7 @@ G_BEGIN_DECLS
 #define BASE_IS_ASSISTANT_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_ASSISTANT_TYPE ))
 #define BASE_ASSISTANT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_ASSISTANT_TYPE, BaseAssistantClass ))
 
-typedef struct BaseAssistantPrivate BaseAssistantPrivate;
+typedef struct BaseAssistantPrivate      BaseAssistantPrivate;
 
 typedef struct {
 	BaseWindow            parent;

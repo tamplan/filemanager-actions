@@ -73,16 +73,16 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-application.h									\
 	nact-assistant-export.c								\
 	nact-assistant-export.h								\
-	nact-assistant-export-ask.c							\
-	nact-assistant-export-ask.h							\
 	nact-assistant-import.c								\
 	nact-assistant-import.h								\
-	nact-assistant-import-ask.c							\
-	nact-assistant-import-ask.h							\
 	nact-clipboard.c									\
 	nact-clipboard.h									\
 	nact-confirm-logout.c								\
 	nact-confirm-logout.h								\
+	nact-export-ask.c									\
+	nact-export-ask.h									\
+	nact-export-format.c								\
+	nact-export-format.h								\
 	nact-gtk-utils.c									\
 	nact-gtk-utils.h									\
 	nact-iactions-list.c								\
@@ -100,6 +100,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-icommand-tab.h									\
 	nact-iconditions-tab.c								\
 	nact-iconditions-tab.h								\
+	nact-import-ask.c									\
+	nact-import-ask.h									\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
 	nact-main.c											\

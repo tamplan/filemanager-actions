@@ -50,7 +50,7 @@ G_BEGIN_DECLS
 #define BASE_IS_APPLICATION_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_APPLICATION_TYPE ))
 #define BASE_APPLICATION_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_APPLICATION_TYPE, BaseApplicationClass ))
 
-typedef struct BaseApplicationPrivate BaseApplicationPrivate;
+typedef struct BaseApplicationPrivate      BaseApplicationPrivate;
 
 typedef struct {
 	GObject                 parent;

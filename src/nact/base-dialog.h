@@ -51,7 +51,7 @@ G_BEGIN_DECLS
 #define BASE_IS_DIALOG_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_DIALOG_TYPE ))
 #define BASE_DIALOG_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_DIALOG_TYPE, BaseDialogClass ))
 
-typedef struct BaseDialogPrivate BaseDialogPrivate;
+typedef struct BaseDialogPrivate      BaseDialogPrivate;
 
 typedef struct {
 	BaseWindow         parent;
