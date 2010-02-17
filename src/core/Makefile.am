@@ -49,6 +49,8 @@ libna_core_la_SOURCES = \
 	na-export-format.h									\
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
+	na-gnome-vfs-uri.c									\
+	na-gnome-vfs-uri.h									\
 	na-iabout.c											\
 	na-iabout.h											\
 	na-iduplicable.c									\

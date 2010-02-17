@@ -392,3 +392,49 @@ na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **me
 
 	return( ret );
 }
+
+/**
+ * na_updater_delete_item:
+ * @updater: this #NAUpdater instance.
+ * @item: the #NAObjectItem to be deleted from the storage subsystem.
+ * @messages: the I/O provider can allocate and store here its error
+ * messages.
+ *
+ * Deletes an item, action or menu, from the I/O storage subsystem.
+ *
+ * Returns: the #NAIIOProvider return code.
+ *
+ * Note that a new item, not already written to an I/O subsystem,
+ * doesn't have any attached provider. We so do nothing and return OK...
+ */
+guint
+na_updater_delete_item( const NAUpdater *updater, const NAObjectItem *item, GSList **messages )
+{
+	guint ret;
+	gint reason;
+
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
+	g_return_val_if_fail( messages, ret );
+
+	if( !updater->private->dispose_has_run ){
+
+		NAIOProvider *provider = na_object_get_provider( item );
+		if( provider ){
+
+			if( !na_updater_is_item_writable( updater, item, &reason )){
+				ret = ( guint ) reason;
+
+			} else {
+				ret = na_io_provider_delete_item( provider, item, messages );
+			}
+
+		} else {
+			ret = NA_IIO_PROVIDER_CODE_OK;
+		}
+	}
+
+	return( ret );
+}

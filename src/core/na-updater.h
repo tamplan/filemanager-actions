@@ -80,6 +80,7 @@ void       na_updater_remove_item( NAUpdater *updater, NAObject *item );
  */
 gboolean   na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, gint *reason );
 guint      na_updater_write_item      ( const NAUpdater *updater, NAObjectItem *item, GSList **messages );
+guint      na_updater_delete_item     ( const NAUpdater *updater, const NAObjectItem *item, GSList **messages );
 
 G_END_DECLS
 

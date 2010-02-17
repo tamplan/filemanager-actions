@@ -42,8 +42,6 @@
 
 #include <api/na-object-item.h>
 
-/* #include <core/na-updater.h> */
-
 #include "base-window.h"
 
 G_BEGIN_DECLS
@@ -72,8 +70,6 @@ typedef struct {
 	NactWindowClass;
 
 GType      nact_window_get_type( void );
-
-/* NAUpdater *nact_window_get_updater( NactWindow *window ); */
 
 gboolean   nact_window_has_writable_providers( NactWindow *window );
 

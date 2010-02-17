@@ -174,34 +174,6 @@ instance_finalize( GObject *window )
 	}
 }
 
-#if 0
-/**
- * nact_window_get_pivot:
- * @window: this #NactWindow object.
- *
- * Returns a pointer to the #NAPivot object of the application.
- */
-NAPivot *
-nact_window_get_pivot( NactWindow *window )
-{
-	NAPivot *pivot = NULL;
-	NactApplication *application;
-
-	g_return_val_if_fail( NACT_IS_WINDOW( window ), NULL );
-
-	if( !window->private->dispose_has_run ){
-
-		g_object_get( G_OBJECT( window ), BASE_WINDOW_PROP_APPLICATION, &application, NULL );
-		g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
-
-		pivot = nact_application_get_pivot( application );
-		g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
-	}
-
-	return( pivot );
-}
-#endif
-
 /**
  * nact_window_has_writable_providers:
  * @window: this #NactWindow instance.
@@ -212,7 +184,8 @@ gboolean
 nact_window_has_writable_providers( NactWindow *window )
 {
 	gboolean has_writables;
-	NAPivot *pivot;
+	NactApplication *application;
+	NAUpdater *updater;
 	NAIOProvider *provider;
 
 	has_writables = FALSE;
@@ -221,8 +194,9 @@ nact_window_has_writable_providers( NactWindow *window )
 
 	if( !window->private->dispose_has_run ){
 
-		pivot = nact_window_get_pivot( window );
-		provider = na_io_provider_get_writable_provider( pivot );
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		updater = nact_application_get_updater( application );
+		provider = na_io_provider_get_writable_provider( NA_PIVOT( updater ));
 
 		if( provider ){
 			has_writables = TRUE;
@@ -253,9 +227,10 @@ gboolean
 nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item, guint *reason )
 {
 	gboolean writable;
+	NactApplication *application;
+	NAUpdater *updater;
 	NAIOProvider *provider;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
 
 	writable = FALSE;
@@ -263,7 +238,10 @@ nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item
 		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
 	}
 
-	if( !pivot->private->dispose_has_run ){
+	if( !window->private->dispose_has_run ){
+
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		updater = nact_application_get_updater( application );
 
 		writable = TRUE;
 		if( reason ){
@@ -287,17 +265,17 @@ nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO;
 					}
-				} else if( na_io_provider_is_locked_by_admin( provider, pivot )){
+				} else if( na_io_provider_is_locked_by_admin( provider, NA_IPREFS( updater ))){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
 					}
-				} else if( !na_io_provider_is_user_writable( provider, pivot )){
+				} else if( !na_io_provider_is_user_writable( provider, NA_IPREFS( updater ))){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;
 					}
-				} else if( na_pivot_is_configuration_locked_by_admin( pivot )){
+				} else if( na_pivot_is_configuration_locked_by_admin( NA_PIVOT( updater ))){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN;
@@ -312,7 +290,7 @@ nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item
 			/* the get_writable_provider() api already takes above checks
 			 */
 			} else {
-				provider = na_io_provider_get_writable_provider( pivot );
+				provider = na_io_provider_get_writable_provider( NA_PIVOT( updater ));
 				if( !provider ){
 					writable = FALSE;
 					if( reason ){
@@ -344,7 +322,8 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 {
 	static const gchar *thisfn = "nact_window_save_item";
 	gboolean save_ok = FALSE;
-	NAPivot *pivot;
+	NactApplication *application;
+	NAUpdater *updater;
 	GSList *messages = NULL;
 	guint ret;
 
@@ -355,12 +334,12 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 
 	if( !window->private->dispose_has_run ){
 
-		pivot = nact_window_get_pivot( window );
-		g_assert( NA_IS_PIVOT( pivot ));
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		updater = nact_application_get_updater( application );
 
 		na_object_dump( item );
 
-		ret = na_pivot_write_item( pivot, item, &messages );
+		ret = na_updater_write_item( updater, item, &messages );
 
 		g_debug( "nact_window_save_item: ret=%d", ret );
 		na_object_dump( item );
@@ -371,7 +350,7 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 					GTK_MESSAGE_WARNING,
 					_( "An error has occured when trying to save the item" ),
 					( const gchar * ) messages->data );
-			na_utils_free_string_list( messages );
+			na_core_utils_slist_free( messages );
 		}
 
 		save_ok = ( ret == NA_IIO_PROVIDER_CODE_OK );
@@ -392,7 +371,8 @@ nact_window_delete_item( NactWindow *window, const NAObjectItem *item )
 {
 	static const gchar *thisfn = "nact_window_delete_item";
 	gboolean delete_ok = FALSE;
-	NAPivot *pivot;
+	NactApplication *application;
+	NAUpdater *updater;
 	GSList *messages = NULL;
 	guint ret;
 
@@ -403,12 +383,12 @@ nact_window_delete_item( NactWindow *window, const NAObjectItem *item )
 
 	if( !window->private->dispose_has_run ){
 
-		pivot = nact_window_get_pivot( window );
-		g_assert( NA_IS_PIVOT( pivot ));
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		updater = nact_application_get_updater( application );
 
 		na_object_dump_norec( item );
 
-		ret = na_pivot_delete_item( pivot, item, &messages );
+		ret = na_updater_delete_item( updater, item, &messages );
 
 		if( messages ){
 			base_window_error_dlg(
@@ -416,7 +396,7 @@ nact_window_delete_item( NactWindow *window, const NAObjectItem *item )
 					GTK_MESSAGE_WARNING,
 					_( "An error has occured when trying to delete the item" ),
 					( const gchar * ) messages->data );
-			na_utils_free_string_list( messages );
+			na_core_utils_slist_free( messages );
 		}
 
 		delete_ok = ( ret == NA_IIO_PROVIDER_CODE_OK );
