@@ -36,12 +36,12 @@
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 
+#include <api/na-core-utils.h>
+#include <api/na-gconf-utils.h>
 #include <api/na-object-api.h>
 
-#include <runtime/na-io-provider.h>
-#include <runtime/na-gconf-utils.h>
-#include <runtime/na-iprefs.h>
-#include <runtime/na-utils.h>
+#include <core/na-io-provider.h>
+#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-gtk-utils.h"
@@ -61,7 +61,6 @@ enum {
 /* some data needed when saving the list sore
  */
 typedef struct {
-	NAPivot     *pivot;
 	GList       *providers;
 	GConfClient *gconf;
 	gchar       *path;
@@ -183,7 +182,7 @@ static void
 init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 {
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	GtkListStore *model;
 	GList *providers, *iter;
 	GtkTreeIter row;
@@ -192,8 +191,8 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 	model = GTK_LIST_STORE( gtk_tree_view_get_model( treeview ));
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
-	pivot = nact_application_get_pivot( application );
-	providers = na_io_provider_get_providers_list( pivot );
+	updater = nact_application_get_updater( application );
+	providers = na_io_provider_get_providers_list( NA_PIVOT( updater ));
 
 	for( iter = providers ; iter ; iter = iter->next ){
 
@@ -217,8 +216,8 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 		}
 
 		gtk_list_store_set( model, &row,
-				PROVIDER_READABLE_COLUMN, na_io_provider_is_user_readable_at_startup( NA_IO_PROVIDER( iter->data ), pivot ),
-				PROVIDER_WRITABLE_COLUMN, na_io_provider_is_user_writable( NA_IO_PROVIDER( iter->data ), pivot ),
+				PROVIDER_READABLE_COLUMN, na_io_provider_is_user_readable_at_startup( NA_IO_PROVIDER( iter->data ), NA_IPREFS( updater )),
+				PROVIDER_WRITABLE_COLUMN, na_io_provider_is_user_writable( NA_IO_PROVIDER( iter->data ), NA_IPREFS( updater )),
 				PROVIDER_LIBELLE_COLUMN, libelle,
 				PROVIDER_ID_COLUMN, id,
 				PROVIDER_PROVIDER_COLUMN, iter->data,
@@ -299,7 +298,7 @@ nact_providers_list_save( BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_providers_list_save";
 	NactApplication *application;
-	NAPivot *pivot;
+	NAUpdater *updater;
 	GList *providers;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
@@ -308,14 +307,13 @@ nact_providers_list_save( BaseWindow *window )
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
-	pivot = nact_application_get_pivot( application );
-	providers = na_io_provider_get_providers_list( pivot );
+	updater = nact_application_get_updater( application );
+	providers = na_io_provider_get_providers_list( NA_PIVOT( updater ));
 
 	plsd = g_new0( ProvidersListSaveData, 1 );
-	plsd->pivot = pivot;
 	plsd->providers = providers;
-	plsd->gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
-	plsd->path = gconf_concat_dir_and_key( NAUTILUS_ACTIONS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
+	plsd->gconf = na_iprefs_get_gconf_client( NA_IPREFS( updater ));
+	plsd->path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
 	plsd->order = NULL;
 
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
@@ -323,10 +321,10 @@ nact_providers_list_save( BaseWindow *window )
 	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) providers_list_save_iter, plsd );
 
 	plsd->order = g_slist_reverse( plsd->order );
-	na_iprefs_write_string_list( NA_IPREFS( pivot ), IO_PROVIDER_KEY_ORDER, plsd->order );
-	na_io_provider_reorder_providers_list( pivot );
+	na_iprefs_write_string_list( NA_IPREFS( updater ), IO_PROVIDER_KEY_ORDER, plsd->order );
+	na_io_provider_reorder_providers_list( NA_PIVOT( updater ));
 
-	na_utils_free_string_list( plsd->order );
+	na_core_utils_slist_free( plsd->order );
 	g_free( plsd->path );
 	g_free( plsd );
 }
