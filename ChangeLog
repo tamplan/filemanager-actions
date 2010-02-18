@@ -1,5 +1,23 @@
 2009-02-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c:
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-desktop/nadp-xdg-dirs.c:
+	Fix reading of localized values in the desktop file.
+
+	* src/nact/base-iprefs.c:
+	* src/nact/base-iprefs.h:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-import-ask.c:
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h:
+	* src/nact/nact-main-toolbar.c:
+	* src/nact/nact-preferences-editor.c:
+	Fix bad inheritance of interfaces.
+
 	* src/api/na-object-api.h:
 	* src/api/na-object.h:
 	* src/core/na-data-factory.c:

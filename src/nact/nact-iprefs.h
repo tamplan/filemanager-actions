@@ -39,8 +39,6 @@
  * This interface cooperates with #NactWindow to manage preferences.
  */
 
-#include <core/na-iprefs.h>
-
 #include "base-window.h"
 
 G_BEGIN_DECLS
@@ -55,7 +53,7 @@ typedef struct NactIPrefs                 NactIPrefs;
 typedef struct NactIPrefsInterfacePrivate NactIPrefsInterfacePrivate;
 
 typedef struct {
-	NAIPrefsInterface           parent;
+	GTypeInterface              parent;
 	NactIPrefsInterfacePrivate *private;
 }
 	NactIPrefsInterface;

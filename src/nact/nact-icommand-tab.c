@@ -38,6 +38,8 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
+#include <core/na-iprefs.h>
+
 #include "base-window.h"
 #include "base-iprefs.h"
 #include "nact-application.h"

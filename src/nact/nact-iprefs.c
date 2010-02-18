@@ -35,6 +35,8 @@
 
 #include <api/na-gconf-utils.h>
 
+#include <core/na-iprefs.h>
+
 #include "nact-application.h"
 #include "nact-iprefs.h"
 
@@ -97,7 +99,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_IPREFS_TYPE, "NactIPrefs", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "NactIPrefs", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 

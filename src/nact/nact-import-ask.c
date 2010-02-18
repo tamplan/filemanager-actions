@@ -36,6 +36,8 @@
 
 #include <api/na-object-api.h>
 
+#include <core/na-iprefs.h>
+
 #include "nact-application.h"
 #include "nact-iprefs.h"
 #include "nact-import-ask.h"

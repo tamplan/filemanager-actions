@@ -42,8 +42,6 @@
  * to this function.
  */
 
-#include <core/na-iprefs.h>
-
 #include "base-window.h"
 
 G_BEGIN_DECLS
@@ -58,7 +56,7 @@ typedef struct BaseIPrefs                 BaseIPrefs;
 typedef struct BaseIPrefsInterfacePrivate BaseIPrefsInterfacePrivate;
 
 typedef struct {
-	NAIPrefsInterface           parent;
+	GTypeInterface              parent;
 	BaseIPrefsInterfacePrivate *private;
 
 	/* api */

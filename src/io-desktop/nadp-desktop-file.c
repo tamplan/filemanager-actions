@@ -411,6 +411,10 @@ nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, c
 
 /**
  * nadp_desktop_file_get_locale_string:
+ *
+ * Note that g_key_file_has_key doesn't deal correctly with localized
+ * strings which have a key[modifier] (it recognizes them as the key
+ *  "key[modifier]", not "key")
  */
 gchar *
 nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, const gchar *default_value )
@@ -418,7 +422,6 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 	static const gchar *thisfn = "nadp_desktop_file_get_locale_string";
 	gchar *value;
 	gchar *read_value;
-	gboolean has_entry;
 	GError *error;
 
 	value = g_strdup( default_value );
@@ -428,22 +431,17 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 	if( !ndf->private->dispose_has_run ){
 
 		error = NULL;
-		has_entry = g_key_file_has_key( ndf->private->key_file, group, entry, &error );
-		if( error ){
-			g_warning( "%s: %s", thisfn, error->message );
-			g_error_free( error );
 
-		} else if( has_entry ){
-			read_value = g_key_file_get_locale_string( ndf->private->key_file, group, entry, NULL, &error );
-			if( error ){
+		read_value = g_key_file_get_locale_string( ndf->private->key_file, group, entry, NULL, &error );
+		if( !read_value || error ){
+			if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND ){
 				g_warning( "%s: %s", thisfn, error->message );
 				g_error_free( error );
 				g_free( read_value );
-
-			} else {
-				g_free( value );
-				value = read_value;
 			}
+		} else {
+			g_free( value );
+			value = read_value;
 		}
 	}
 
@@ -523,7 +521,7 @@ nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *grou
 
 			} else {
 				na_core_utils_slist_free( value );
-				value = na_core_utils_slist_from_str_array(( const gchar ** ) read_array );
+				value = na_core_utils_slist_from_array(( const gchar ** ) read_array );
 			}
 
 			g_strfreev( read_array );

@@ -310,21 +310,24 @@ iio_factory_read_value( const NAIIOFactory *reader, void *reader_data, const Nad
 				case NADF_TYPE_LOCALE_STRING:
 					g_value_init( value, G_TYPE_STRING );
 					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, key, iddef->default_value );
-					g_value_set_string( value, str_value );
-					/*g_free( str_value );*/
+					/*g_value_set_string( value, str_value );*/
+					g_debug( "%s: %s=%s", thisfn, iddef->name, str_value );
+					g_free( str_value );
 					break;
 
 				case NADF_TYPE_STRING:
 					g_value_init( value, G_TYPE_STRING );
 					str_value = nadp_desktop_file_get_string( nrd->ndf, group, key, iddef->default_value );
 					g_value_set_string( value, str_value );
-					/*g_free( str_value );*/
+					/*g_debug( "%s: %s=%s", thisfn, iddef->name, str_value );*/
+					g_free( str_value );
 					break;
 
 				case NADF_TYPE_BOOLEAN:
 					g_value_init( value, G_TYPE_BOOLEAN );
 					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, key, na_core_utils_boolean_from_string( iddef->default_value ));
 					g_value_set_boolean( value, bool_value );
+					/*g_debug( "%s: %s=%s", thisfn, iddef->name, bool_value ? "True":"False" );*/
 					break;
 
 				case NADF_TYPE_STRING_LIST:
@@ -339,6 +342,7 @@ iio_factory_read_value( const NAIIOFactory *reader, void *reader_data, const Nad
 					*messages = g_slist_append( *messages, msg );
 			}
 
+			/*g_debug( "%s: group=%s, key=%s", thisfn, group, key );*/
 			g_free( key );
 			g_free( group );
 		}

@@ -107,7 +107,7 @@ nadp_xdg_dirs_get_system_data_dirs( void )
 
 	dirs = ( const gchar ** ) g_get_system_data_dirs();
 
-	paths = na_core_utils_slist_from_str_array( dirs );
+	paths = na_core_utils_slist_from_array( dirs );
 
 	return( paths );
 }

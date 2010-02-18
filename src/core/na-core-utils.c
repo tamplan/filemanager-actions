@@ -179,9 +179,9 @@ na_core_utils_slist_dump( GSList *list )
 	int c;
 
 	g_debug( "%s: list at %p has %d elements", thisfn, ( void * ) list, g_slist_length( list ));
-	for( i=list, c=0 ; i ; i=i->next, c++ ){
-		gchar *s = ( gchar * ) i->data;
-		g_debug( "%s: %2d - %s", thisfn, c, s );
+
+	for( i=list, c=0 ; i ; i=i->next ){
+		g_debug( "%s: [%2d] %s", thisfn, c++, ( gchar * ) i->data );
 	}
 }
 
@@ -212,7 +212,7 @@ na_core_utils_slist_from_split( const gchar *text, const gchar *separator )
 	}
 
 	tokens = g_strsplit( tmp, separator, -1 );
-	slist = na_core_utils_slist_from_str_array(( const gchar ** ) tokens );
+	slist = na_core_utils_slist_from_array(( const gchar ** ) tokens );
 	g_strfreev( tokens );
 
 	g_free( source );
@@ -221,14 +221,14 @@ na_core_utils_slist_from_split( const gchar *text, const gchar *separator )
 }
 
 /**
- * na_core_utils_slist_from_str_array:
+ * na_core_utils_slist_from_array:
  * @str_array: an NULL-terminated array of strings.
  *
  * Returns: a #GSList list of strings, which should be #na_core_utils_slist_free()
  * by the caller.
  */
 GSList *
-na_core_utils_slist_from_str_array( const gchar **str_array )
+na_core_utils_slist_from_array( const gchar **str_array )
 {
 	GSList *slist;
 	gchar **idx;
@@ -450,7 +450,7 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
 
 	} else {
 		tokens = g_strsplit( source, separator, -1 );
-		strlist = na_core_utils_slist_from_str_array(( const gchar ** ) tokens );
+		strlist = na_core_utils_slist_from_array(( const gchar ** ) tokens );
 		g_strfreev( tokens );
 	}
 
