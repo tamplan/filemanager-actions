@@ -32,7 +32,6 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n.h>
 #include <string.h>
 
 #include <api/na-core-utils.h>

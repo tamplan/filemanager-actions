@@ -32,8 +32,6 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n.h>
-
 #include <core/na-io-provider.h>
 
 #include "nact-gtk-utils.h"

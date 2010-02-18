@@ -71,8 +71,12 @@ static guint    idata_factory_get_version( const NAIDataFactory *instance );
 static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef );
 static void     idata_factory_copy( NAIDataFactory *target, const NAIDataFactory *source );
 static gboolean idata_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b );
+static gboolean idata_factory_is_valid( const NAIDataFactory *object );
 static void     idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static void     idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
+
+static gboolean is_valid_label( const NAObjectAction *action );
+static gboolean is_valid_toolbar_label( const NAObjectAction *action );
 
 GType
 na_object_action_get_type( void )
@@ -248,6 +252,7 @@ idata_factory_iface_init( NAIDataFactoryInterface *iface )
 	iface->get_default = idata_factory_get_default;
 	iface->copy = idata_factory_copy;
 	iface->are_equal = idata_factory_are_equal;
+	iface->is_valid = idata_factory_is_valid;
 	iface->read_start = NULL;
 	iface->read_done = idata_factory_read_done;
 	iface->write_start = NULL;
@@ -290,6 +295,48 @@ idata_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
 	return( na_object_item_are_equal( NA_OBJECT_ITEM( a ), NA_OBJECT_ITEM( b )));
 }
 
+static gboolean
+idata_factory_is_valid( const NAIDataFactory *action )
+{
+	gboolean is_valid;
+	GList *profiles, *ip;
+	gint valid_profiles;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
+
+	is_valid = FALSE;
+
+	if( !NA_OBJECT_ACTION( action )->private->dispose_has_run ){
+
+		is_valid = TRUE;
+
+		if( is_valid ){
+			if( na_object_is_target_toolbar( action )){
+				is_valid = is_valid_toolbar_label( NA_OBJECT_ACTION( action ));
+			}
+		}
+
+		if( is_valid ){
+			if( na_object_is_target_selection( action ) || na_object_is_target_background( action )){
+				is_valid = is_valid_label( NA_OBJECT_ACTION( action ));
+			}
+		}
+
+		if( is_valid ){
+			valid_profiles = 0;
+			profiles = na_object_get_items( action );
+			for( ip = profiles ; ip && !valid_profiles ; ip = ip->next ){
+				if( na_object_is_valid( ip->data )){
+					valid_profiles += 1;
+				}
+			}
+			is_valid = ( valid_profiles > 0 );
+		}
+	}
+
+	return( is_valid );
+}
+
 static void
 idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages )
 {
@@ -302,6 +349,32 @@ static void
 idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages )
 {
 
+}
+
+static gboolean
+is_valid_label( const NAObjectAction *action )
+{
+	gboolean is_valid;
+	gchar *label;
+
+	label = na_object_get_label( action );
+	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+	g_free( label );
+
+	return( is_valid );
+}
+
+static gboolean
+is_valid_toolbar_label( const NAObjectAction *action )
+{
+	gboolean is_valid;
+	gchar *label;
+
+	label = na_object_get_toolbar_label( action );
+	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
+	g_free( label );
+
+	return( is_valid );
 }
 
 /**

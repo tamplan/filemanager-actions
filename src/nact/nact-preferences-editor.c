@@ -32,8 +32,6 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n.h>
-
 #include "nact-application.h"
 #include "nact-iprefs.h"
 #include "nact-export-format.h"

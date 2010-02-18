@@ -106,7 +106,12 @@ interface_base_init( NAIDataFactoryInterface *klass )
 
 		klass->get_version = idata_factory_get_version;
 		klass->get_default = NULL;
+		klass->copy = NULL;
+		klass->are_equal = NULL;
+		klass->is_valid = NULL;
+		klass->read_start = NULL;
 		klass->read_done = NULL;
+		klass->write_start = NULL;
 		klass->write_done = NULL;
 
 		idata_factory_initialized = TRUE;

@@ -45,7 +45,8 @@ NadfIdType item_iddef [] = {
 				NADF_TYPE_LOCALE_STRING,
 				"",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_ICON,
 				"na-object-icon",
@@ -56,7 +57,8 @@ NadfIdType item_iddef [] = {
 				NADF_TYPE_LOCALE_STRING,
 				"",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_DESCRIPTION,
 				"na-object-description",
@@ -67,7 +69,8 @@ NadfIdType item_iddef [] = {
 				NADF_TYPE_LOCALE_STRING,
 				"",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_SUBITEMS,
 				"na-object-subitems",
@@ -76,6 +79,7 @@ NadfIdType item_iddef [] = {
 				"List of subitems objects",
 				NADF_TYPE_POINTER,
 				NULL,
+				FALSE,
 				FALSE,
 				FALSE },
 
@@ -87,6 +91,7 @@ NadfIdType item_iddef [] = {
 				"as readen from corresponding entry from the storage subsystem.",
 				NADF_TYPE_STRING_LIST,
 				"",
+				FALSE,
 				FALSE,
 				FALSE },
 
@@ -100,7 +105,8 @@ NadfIdType item_iddef [] = {
 				NADF_TYPE_BOOLEAN,
 				"TRUE",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_READONLY,
 				"na-object-readonly",
@@ -115,6 +121,7 @@ NadfIdType item_iddef [] = {
 				NADF_TYPE_BOOLEAN,
 				"FALSE",
 				TRUE,
+				FALSE,
 				FALSE },
 
 	{ NADF_DATA_PROVIDER,
@@ -125,6 +132,7 @@ NadfIdType item_iddef [] = {
 				NADF_TYPE_POINTER,
 				NULL,
 				TRUE,
+				FALSE,
 				FALSE },
 
 	{ NADF_DATA_PROVIDER_DATA,
@@ -135,6 +143,7 @@ NadfIdType item_iddef [] = {
 				NADF_TYPE_POINTER,
 				NULL,
 				TRUE,
+				FALSE,
 				FALSE },
 
 	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE },

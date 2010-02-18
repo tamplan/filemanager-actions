@@ -213,9 +213,7 @@ get_action( const gchar *id )
 
 	action = NULL;
 
-	/*pivot = na_pivot_new( !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );*/
-	pivot = na_pivot_new( PIVOT_LOAD_ALL );
-
+	pivot = na_pivot_new( !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
 	na_pivot_load_items( pivot );
 
 	action = ( NAObjectAction * ) na_pivot_get_item( pivot, id );

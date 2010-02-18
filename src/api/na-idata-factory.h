@@ -115,6 +115,17 @@ typedef struct {
 	gboolean ( *are_equal )  ( const NAIDataFactory *a, const NAIDataFactory *b );
 
 	/**
+	 * is_valid:
+	 * @object: the #NAIDataFactory instance whose validity is to be checked.
+	 *
+	 * Returns: %TRUE if @object is valid.
+	 *
+	 * This function is triggered after all elementary data comparisons
+	 * have been sucessfully made.
+	 */
+	gboolean ( *is_valid )   ( const NAIDataFactory *object );
+
+	/**
 	 * read_start:
 	 * @instance: this #NAIDataFactory instance.
 	 * @reader: the instance which has provided read services.

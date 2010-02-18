@@ -41,7 +41,6 @@
 #include <api/na-gconf-utils.h>
 
 #include "na-io-provider.h"
-#include "na-updater.h"
 
 /* private class data
  */
@@ -82,7 +81,7 @@ static void   instance_finalize( GObject *object );
 static void   setup_io_providers( const NAPivot *pivot, GSList *priority );
 static GList *allocate_ordered_providers( GSList *priority );
 static GList *merge_available_io_providers( const NAPivot *pivot, GList *ordered_providers );
-static void   io_provider_set_provider( const NAPivot *pivot, NAIOProvider *provider, NAIIOProvider *instance );
+static void   io_provider_set_provider( NAIOProvider *provider, NAIIOProvider *instance, const NAPivot *pivot );
 static GList *add_io_providers_from_prefs( const NAPivot *pivot, GList *runtime_providers );
 
 static void   dump( const NAIOProvider *provider );
@@ -323,6 +322,10 @@ na_io_provider_get_providers_list( const NAPivot *pivot )
 	if( !st_io_providers ){
 
 		order = na_iprefs_read_string_list( NA_IPREFS( pivot ), IO_PROVIDER_KEY_ORDER, NULL );
+
+		g_debug( "na_io_provider_get_providers_list: dumping providers order" );
+		na_core_utils_slist_dump( order );
+
 		setup_io_providers( pivot, order );
 		na_core_utils_slist_free( order );
 	}
@@ -368,11 +371,12 @@ allocate_ordered_providers( GSList *priority )
 	providers = NULL;
 
 	for( ip = priority ; ip ; ip = ip->next ){
+
 		provider = g_object_new( NA_IO_PROVIDER_TYPE, IO_PROVIDER_PROP_ID, ( const gchar * ) ip->data, NULL );
-		providers = g_list_append( providers, provider );
+		providers = g_list_prepend( providers, provider );
 	}
 
-	return( providers );
+	return( g_list_reverse( providers ));
 }
 
 /*
@@ -396,6 +400,7 @@ merge_available_io_providers( const NAPivot *pivot, GList *ordered )
 		id = NULL;
 		if( NA_IIO_PROVIDER_GET_INTERFACE( NA_IIO_PROVIDER( im->data ))->get_id ){
 			id = NA_IIO_PROVIDER_GET_INTERFACE( NA_IIO_PROVIDER( im->data ))->get_id( NA_IIO_PROVIDER( im->data ));
+
 		} else {
 			g_warning( "%s: NAIIOProvider %p doesn't support get_id() interface", thisfn, ( void * ) im->data );
 		}
@@ -406,11 +411,16 @@ merge_available_io_providers( const NAPivot *pivot, GList *ordered )
 			provider = na_io_provider_find_provider_by_id( merged, id );
 			if( !provider ){
 
+				g_debug( "%s: no provider already allocated in ordered list for id=%s", thisfn, id );
 				provider = g_object_new( NA_IO_PROVIDER_TYPE, IO_PROVIDER_PROP_ID, id, NULL );
 				merged = g_list_append( merged, provider );
+
+			} else {
+				g_debug( "%s: found NAIOProvider=%p (NAIIOProvider=%p) for id=%s",
+						thisfn, ( void * ) provider, ( void * ) im->data, id );
 			}
 
-			io_provider_set_provider( pivot, provider, NA_IIO_PROVIDER( im->data ));
+			io_provider_set_provider( provider, NA_IIO_PROVIDER( im->data ), pivot );
 
 			g_free( id );
 		}
@@ -422,7 +432,7 @@ merge_available_io_providers( const NAPivot *pivot, GList *ordered )
 }
 
 static void
-io_provider_set_provider( const NAPivot *pivot, NAIOProvider *provider, NAIIOProvider *instance )
+io_provider_set_provider( NAIOProvider *provider, NAIIOProvider *instance, const NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_io_provider_set_provider";
 
@@ -734,9 +744,7 @@ build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty )
 		for( ilevel = level_zero ; ilevel ; ilevel = ilevel->next ){
 			g_debug( "%s: uuid=%s", thisfn, ( gchar * ) ilevel->data );
 			it = g_list_find_custom( *tree, ilevel->data, ( GCompareFunc ) search_item );
-			g_debug( "un" );
 			if( it ){
-				g_debug( "deux" );
 				hierarchy = g_list_append( hierarchy, it->data );
 
 				g_debug( "%s: uuid=%s: %s (%p) appended to hierarchy %p",
@@ -778,10 +786,8 @@ search_item( const NAObject *obj, const gchar *uuid )
 
 	if( NA_IS_OBJECT_ITEM( obj )){
 		obj_id = na_object_get_id( obj );
-		g_debug( "objid=%s", obj_id );
 		ret = strcmp( obj_id, uuid );
 		g_free( obj_id );
-		g_debug( "ret=%d", ret );
 	}
 
 	return( ret );

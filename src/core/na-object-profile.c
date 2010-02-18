@@ -79,8 +79,15 @@ static void     instance_finalize( GObject *object );
 static void     idata_factory_iface_init( NAIDataFactoryInterface *iface );
 static guint    idata_factory_get_version( const NAIDataFactory *instance );
 static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef );
+static gboolean idata_factory_is_valid( const NAIDataFactory *object );
 static void     idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static void     idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
+static gboolean is_valid_path_parameters( const NAObjectProfile *profile );
+static gboolean is_valid_basenames( const NAObjectProfile *profile );
+static gboolean is_valid_mimetypes( const NAObjectProfile *profile );
+static gboolean is_valid_isfiledir( const NAObjectProfile *profile );
+static gboolean is_valid_schemes( const NAObjectProfile *profile );
+static gboolean is_valid_folders( const NAObjectProfile *profile );
 
 static gchar   *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
@@ -277,6 +284,7 @@ idata_factory_iface_init( NAIDataFactoryInterface *iface )
 	iface->get_default = idata_factory_get_default;
 	iface->copy = NULL;
 	iface->are_equal = NULL;
+	iface->is_valid = idata_factory_is_valid;
 	iface->read_start = NULL;
 	iface->read_done = idata_factory_read_done;
 	iface->write_start = NULL;
@@ -310,6 +318,42 @@ idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *idd
 	return( value );
 }
 
+static gboolean
+idata_factory_is_valid( const NAIDataFactory *profile )
+{
+	gboolean is_valid;
+	NAObjectItem *parent;
+
+	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
+
+	is_valid = FALSE;
+
+	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
+
+		is_valid = TRUE;
+		parent = na_object_get_parent( profile );
+
+		if( is_valid && na_object_is_target_background( parent )){
+			is_valid =
+					is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_folders( NA_OBJECT_PROFILE( profile ));
+		}
+
+		if( is_valid ){
+			if( na_object_is_target_selection( parent ) || na_object_is_target_toolbar( parent )){
+				is_valid =
+					is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_basenames( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_mimetypes( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_isfiledir( NA_OBJECT_PROFILE( profile )) &&
+					is_valid_schemes( NA_OBJECT_PROFILE( profile ));
+			}
+		}
+	}
+
+	return( is_valid );
+}
+
 static void
 idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages )
 {
@@ -320,6 +364,98 @@ static void
 idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages )
 {
 
+}
+
+static gboolean
+is_valid_path_parameters( const NAObjectProfile *profile )
+{
+	gboolean valid;
+	gchar *path, *parameters;
+	gchar *command, *exe;
+
+	path = na_object_get_path( profile );
+	parameters = na_object_get_parameters( profile );
+
+	command = g_strdup_printf( "%s %s", path, parameters );
+	exe = na_core_utils_str_get_first_word( command );
+
+	valid =
+		g_file_test( exe, G_FILE_TEST_EXISTS ) &&
+		g_file_test( exe, G_FILE_TEST_IS_EXECUTABLE ) &&
+		!g_file_test( exe, G_FILE_TEST_IS_DIR );
+
+	g_free( exe );
+	g_free( command );
+	g_free( parameters );
+	g_free( path );
+
+	return( valid );
+}
+
+static gboolean
+is_valid_basenames( const NAObjectProfile *profile )
+{
+	gboolean valid;
+	GSList *basenames;
+
+	basenames = na_object_get_basenames( profile );
+	valid = basenames && g_slist_length( basenames ) > 0;
+	na_core_utils_slist_free( basenames );
+
+	return( valid );
+}
+
+static gboolean
+is_valid_mimetypes( const NAObjectProfile *profile )
+{
+	gboolean valid;
+	GSList *mimetypes;
+
+	mimetypes = na_object_get_mimetypes( profile );
+	valid = mimetypes && g_slist_length( mimetypes ) > 0;
+	na_core_utils_slist_free( mimetypes );
+
+	return( valid );
+}
+
+static gboolean
+is_valid_isfiledir( const NAObjectProfile *profile )
+{
+	gboolean valid;
+	gboolean isfile, isdir;
+
+	isfile = na_object_is_file( profile );
+	isdir = na_object_is_dir( profile );
+
+	valid = isfile || isdir;
+
+	return( valid );
+}
+
+static gboolean
+is_valid_schemes( const NAObjectProfile *profile )
+{
+	gboolean valid;
+	GSList *schemes;
+
+	schemes = na_object_get_schemes( profile );
+	valid = schemes && g_slist_length( schemes ) > 0;
+	na_core_utils_slist_free( schemes );
+
+	return( valid );
+}
+
+static gboolean
+is_valid_folders( const NAObjectProfile *profile )
+{
+	gboolean valid;
+	GSList *folders;
+
+	folders = na_object_get_folders( profile );
+	valid = folders && g_slist_length( folders ) > 0;
+	na_core_utils_slist_free( folders );
+
+	return( valid );
 }
 
 /*

@@ -48,7 +48,8 @@ static NadfIdType action_iddef [] = {
 				NADF_TYPE_STRING,
 				"2.0",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_TARGET_SELECTION,
 				"na-object-target-selection",
@@ -58,7 +59,8 @@ static NadfIdType action_iddef [] = {
 				NADF_TYPE_BOOLEAN,
 				"TRUE",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_TARGET_BACKGROUND,
 				"na-object-target-background",
@@ -68,7 +70,8 @@ static NadfIdType action_iddef [] = {
 				NADF_TYPE_BOOLEAN,
 				"FALSE",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_TARGET_TOOLBAR,
 				"na-object-target-toolbar",
@@ -80,7 +83,8 @@ static NadfIdType action_iddef [] = {
 				NADF_TYPE_BOOLEAN,
 				"FALSE",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_TOOLBAR_LABEL,
 				"na-object-toolbar-label",
@@ -91,7 +95,8 @@ static NadfIdType action_iddef [] = {
 				NADF_TYPE_LOCALE_STRING,
 				"",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_TOOLBAR_SAME_LABEL,
 				"na-object-toolbar-same-label",
@@ -101,7 +106,8 @@ static NadfIdType action_iddef [] = {
 				NADF_TYPE_BOOLEAN,
 				"true",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_LAST_ALLOCATED,
 				"na-object-last-allocated",
@@ -112,6 +118,7 @@ static NadfIdType action_iddef [] = {
 				NADF_TYPE_UINT,
 				"0",
 				TRUE,
+				FALSE,
 				FALSE },
 
 	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE },

@@ -47,8 +47,9 @@ gboolean na_core_utils_boolean_from_string( const gchar *string );
 
 /* string manipulation
  */
-gchar   *na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix );
 gchar   *na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str );
+gchar   *na_core_utils_str_get_first_word( const gchar *string );
+gchar   *na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix );
 
 /* some functions to get or set GSList list of strings
  */

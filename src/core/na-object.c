@@ -295,18 +295,23 @@ iduplicable_are_equal_iter( GObjectClass *class, const NAObject *a, HierarchyIte
 static gboolean
 iduplicable_is_valid( const NAIDuplicable *object )
 {
-	gboolean is_valid = FALSE;
+	gboolean is_valid;
 	HierarchyIter *str;
+
+	is_valid = FALSE;
 
 	if( !NA_OBJECT( object )->private->dispose_has_run ){
 
-		str = g_new0( HierarchyIter, 1 );
+		if( NA_IS_IDATA_FACTORY( object )){
+			na_data_factory_is_valid( NA_IDATA_FACTORY( object ));
 
-		iter_on_class_hierarchy( NA_OBJECT( object ), ( HierarchyIterFunc ) &iduplicable_is_valid_iter, str );
-
-		is_valid = str->result;
-
-		g_free( str );
+		} else {
+			str = g_new0( HierarchyIter, 1 );
+			str->result = TRUE;
+			iter_on_class_hierarchy( NA_OBJECT( object ), ( HierarchyIterFunc ) &iduplicable_is_valid_iter, str );
+			is_valid = str->result;
+			g_free( str );
+		}
 	}
 
 	return( is_valid );
@@ -318,6 +323,7 @@ iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter
 	gboolean stop = FALSE;
 
 	if( NA_OBJECT_CLASS( class )->is_valid ){
+
 		str->result = NA_OBJECT_CLASS( class )->is_valid( a );
 		stop = !str->result;
 	}

@@ -143,11 +143,6 @@ void           na_iduplicable_set_origin  ( NAIDuplicable *object, const NAIDupl
 
 void           na_iduplicable_register_consumer( GObject *consumer );
 
-#if 0
-void           na_iduplicable_init        ( NAIDuplicable *object );
-void           na_iduplicable_reset_status( NAIDuplicable *object );
-#endif
-
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_API_NA_IDUPLICABLE_H__ */

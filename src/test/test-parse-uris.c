@@ -34,7 +34,6 @@
 
 #include <glib-object.h>
 #include <glib/gprintf.h>
-#include <glib/gi18n.h>
 #include <stdlib.h>
 
 #include <core/na-gnome-vfs-uri.h>
@@ -54,7 +53,7 @@ main( int argc, char** argv )
 	int i;
 
 	g_type_init();
-	g_printf( _( "URIs parsing test.\n\n" ));
+	g_printf( "URIs parsing test.\n\n" );
 
 	for( i = 0 ; uris[i] ; ++i ){
 		NAGnomeVFSURI *vfs = g_new0( NAGnomeVFSURI, 1 );

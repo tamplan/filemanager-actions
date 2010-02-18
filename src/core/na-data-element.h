@@ -74,9 +74,7 @@ NADataElement *na_data_element_new( guint type );
 void           na_data_element_dump( const NADataElement *element, const gchar *name );
 
 void           na_data_element_set             ( NADataElement *element, const NADataElement *value );
-/*void           na_data_element_set_from_boolean( NADataElement *element, gboolean value );*/
 void           na_data_element_set_from_string ( NADataElement *element, const gchar *value );
-/*void           na_data_element_set_from_slist  ( NADataElement *element, GSList *value );*/
 void           na_data_element_set_from_value  ( NADataElement *element, const GValue *value );
 void           na_data_element_set_from_void   ( NADataElement *element, const void *value );
 
@@ -84,6 +82,7 @@ void          *na_data_element_get             ( const NADataElement *element );
 void           na_data_element_set_to_value    ( const NADataElement *element, GValue *value );
 
 gboolean       na_data_element_are_equal       ( const NADataElement *a, const NADataElement *b );
+gboolean       na_data_element_is_valid        ( const NADataElement *element );
 
 G_END_DECLS
 

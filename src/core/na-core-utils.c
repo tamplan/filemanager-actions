@@ -58,33 +58,6 @@ na_core_utils_boolean_from_string( const gchar *string )
 }
 
 /**
- * na_core_utils_str_remove_suffix:
- * @string: source string.
- * @suffix: suffix to be removed from @string.
- *
- * Returns: a newly allocated string, which is a copy of the source @string,
- * minus the removed @suffix if present. If @strings doesn't terminate with
- * @suffix, then the returned string is equal to source @string.
- *
- * The returned string should be g_free() by the caller.
- */
-gchar *
-na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
-{
-	gchar *removed;
-	gchar *ptr;
-
-	removed = g_strdup( string );
-
-	if( g_str_has_suffix( string, suffix )){
-		ptr = g_strrstr( removed, suffix );
-		ptr[0] = '\0';
-	}
-
-	return( removed );
-}
-
-/**
  * na_core_utils_str_add_prefix:
  * @prefix: the prefix to be prepended.
  * @str: a multiline string.
@@ -109,6 +82,63 @@ na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str )
 	na_core_utils_slist_free( list );
 
 	return( g_string_free( result, FALSE ));
+}
+
+/**
+ * na_core_utils_str_get_first_word:
+ * @string: a space-separated string.
+ *
+ * Returns: the first word of @string, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+na_core_utils_str_get_first_word( const gchar *string )
+{
+	gchar **splitted, **iter;
+	gchar *word, *tmp;
+
+	splitted = g_strsplit( string, " ", 0 );
+	iter = splitted;
+	word = NULL;
+
+	while( *iter ){
+		tmp = g_strstrip( *iter );
+		if( g_utf8_strlen( tmp, -1 )){
+			word = g_strdup( tmp );
+			break;
+		}
+		iter++;
+	}
+
+	g_strfreev( splitted );
+	return( word );
+}
+
+/**
+ * na_core_utils_str_remove_suffix:
+ * @string: source string.
+ * @suffix: suffix to be removed from @string.
+ *
+ * Returns: a newly allocated string, which is a copy of the source @string,
+ * minus the removed @suffix if present. If @strings doesn't terminate with
+ * @suffix, then the returned string is equal to source @string.
+ *
+ * The returned string should be g_free() by the caller.
+ */
+gchar *
+na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
+{
+	gchar *removed;
+	gchar *ptr;
+
+	removed = g_strdup( string );
+
+	if( g_str_has_suffix( string, suffix )){
+		ptr = g_strrstr( removed, suffix );
+		ptr[0] = '\0';
+	}
+
+	return( removed );
 }
 
 /**

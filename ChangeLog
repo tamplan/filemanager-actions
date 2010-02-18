@@ -1,5 +1,37 @@
 2009-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in:
+	* src/test/test-parse-uris.c:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-main-statusbar.c:
+	* src/nact/nact-iconditions-tab.c: Update list of translatable files.
+
+	* src/api/na-core-utils.h:
+	* src/api/na-idata-factory-str.h:
+	* src/api/na-idata-factory.h:
+	* src/api/na-iduplicable.h:
+	* src/core/na-core-utils.c:
+	* src/core/na-data-element.c:
+	* src/core/na-data-element.h:
+	* src/core/na-data-factory.c:
+	* src/core/na-data-factory.h:
+	* src/core/na-idata-factory.c:
+	* src/core/na-iduplicable.c:
+	* src/core/na-io-provider.c:
+	* src/core/na-iprefs.c:
+	* src/core/na-object-action-enum.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id-enum.c:
+	* src/core/na-object-item-enum.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile-enum.c:
+	* src/core/na-object-profile.c:
+	* src/core/na-object.c:
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-gconf/nagp-reader.c: Add is_valid() functions.
+
+	* src/utils/nautilus-actions-run.c: Restore production loadable set.
+
 	* src/api/na-idata-factory.h:
 	* src/api/na-iio-factory.h:
 	* src/core/na-data-factory.c:

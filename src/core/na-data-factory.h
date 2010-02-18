@@ -47,6 +47,7 @@ NAIDataFactory *na_data_factory_new       ( GType type );
 void            na_data_factory_init      ( NAIDataFactory *object );
 void            na_data_factory_copy      ( NAIDataFactory *target, const NAIDataFactory *source );
 gboolean        na_data_factory_are_equal ( const NAIDataFactory *a, const NAIDataFactory *b );
+gboolean        na_data_factory_is_valid  ( const NAIDataFactory *object );
 void            na_data_factory_dump      ( const NAIDataFactory *object );
 void            na_data_factory_finalize  ( NAIDataFactory *object );
 

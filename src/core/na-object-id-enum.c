@@ -47,6 +47,7 @@ NadfIdType id_iddef [] = {
 				NADF_TYPE_STRING,
 				NULL,
 				TRUE,
+				TRUE,
 				TRUE },
 
 	{ NADF_DATA_LABEL,
@@ -58,7 +59,8 @@ NadfIdType id_iddef [] = {
 				NADF_TYPE_LOCALE_STRING,
 				"",
 				TRUE,
-				TRUE },
+				TRUE,
+				FALSE },
 
 	{ NADF_DATA_PARENT,
 				"na-object-parent",
@@ -67,6 +69,7 @@ NadfIdType id_iddef [] = {
 				"The NAObjectItem which is the parent of this object.",
 				NADF_TYPE_POINTER,
 				NULL,
+				FALSE,
 				FALSE,
 				FALSE },
 

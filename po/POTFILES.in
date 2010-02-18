@@ -36,7 +36,6 @@ src/nact/nact-tree-model-dnd.c
 src/nact/nact-window.c
 src/nact/nautilus-actions-config-tool.ui
 src/plugin-menu/nautilus-actions.c
-src/test/test-parse-uris.c
 src/utils/nautilus-actions-new.c
 src/utils/nautilus-actions-run.c
 src/utils/nautilus-actions-schemas.c

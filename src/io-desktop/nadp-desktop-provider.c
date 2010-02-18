@@ -247,7 +247,6 @@ static void
 iio_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_iio_factory_read_start";
-	/*NAObjectProfile *profile;*/
 
 	g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
 			thisfn,
@@ -312,14 +311,14 @@ iio_factory_read_value( const NAIIOFactory *reader, void *reader_data, const Nad
 					g_value_init( value, G_TYPE_STRING );
 					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, key, iddef->default_value );
 					g_value_set_string( value, str_value );
-					g_free( str_value );
+					/*g_free( str_value );*/
 					break;
 
 				case NADF_TYPE_STRING:
 					g_value_init( value, G_TYPE_STRING );
 					str_value = nadp_desktop_file_get_string( nrd->ndf, group, key, iddef->default_value );
 					g_value_set_string( value, str_value );
-					g_free( str_value );
+					/*g_free( str_value );*/
 					break;
 
 				case NADF_TYPE_BOOLEAN:

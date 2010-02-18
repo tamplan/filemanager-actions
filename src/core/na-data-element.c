@@ -303,33 +303,6 @@ na_data_element_set( NADataElement *element, const NADataElement *value )
 	}
 }
 
-#if 0
-/**
- * na_data_element_set_from_boolean:
- * @element: the #NADataElement whose value is to be set.
- * @value: the boolean to be set.
- *
- * Set the boolean, if @element is of type NADF_TYPE_BOOLEAN.
- */
-void
-na_data_element_set_from_boolean( NADataElement *element, gboolean value )
-{
-	static const gchar *thisfn = "na_data_element_set_from_boolean";
-
-	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
-
-	if( !element->private->dispose_has_run ){
-
-		if( element->private->type == NADF_TYPE_BOOLEAN ){
-			element->private->u.boolean = value;
-
-		} else {
-			g_warning( "%s: element is of type %d", thisfn, element->private->type );
-		}
-	}
-}
-#endif
-
 /**
  * na_data_element_set_from_string:
  * @element: the #NADataElement whose value is to be set.
@@ -378,34 +351,6 @@ na_data_element_set_from_string( NADataElement *element, const gchar *value )
 		}
 	}
 }
-
-#if 0
-/**
- * na_data_element_set_from_slist:
- * @element: the #NADataElement whose value is to be set.
- * @value: the string list to be set.
- *
- * Set the string list, if @element is of type NADF_TYPE_STRING_LIST.
- */
-void
-na_data_element_set_from_slist( NADataElement *element, GSList *value )
-{
-	static const gchar *thisfn = "na_data_element_set_from_slist";
-
-	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
-
-	if( !element->private->dispose_has_run ){
-
-		if( element->private->type == NADF_TYPE_STRING_LIST ){
-			na_core_utils_slist_free( element->private->u.slist );
-			element->private->u.slist = na_core_utils_slist_duplicate( value );
-
-		} else {
-			g_warning( "%s: element is of type=%d", thisfn, element->private->type );
-		}
-	}
-}
-#endif
 
 /**
  * na_data_element_set_from_value:
@@ -658,4 +603,55 @@ na_data_element_are_equal( const NADataElement *a, const NADataElement *b )
 	}
 
 	return( are_equal );
+}
+
+/**
+ * na_data_element_is_valid:
+ * @object: the #NADataElement object whose validity is to be checked.
+ *
+ * Returns: %TRUE if the element is valid, %FALSE else.
+ */
+gboolean
+na_data_element_is_valid( const NADataElement *object )
+{
+	static const gchar *thisfn = "na_data_element_is_valid";
+	gboolean is_valid;
+
+	g_return_val_if_fail( NA_IS_DATA_ELEMENT( object ), FALSE );
+
+	is_valid = FALSE;
+
+	if( !object->private->dispose_has_run ){
+
+		is_valid = TRUE;
+
+		switch( object->private->type ){
+
+			case NADF_TYPE_STRING:
+			case NADF_TYPE_LOCALE_STRING:
+				is_valid = object->private->u.string && strlen( object->private->u.string ) > 0;
+				break;
+
+			case NADF_TYPE_STRING_LIST:
+				is_valid = object->private->u.slist && g_slist_length( object->private->u.slist ) > 0;
+				break;
+
+			case NADF_TYPE_BOOLEAN:
+				break;
+
+			case NADF_TYPE_POINTER:
+				is_valid = ( object->private->u.pointer != NULL );
+				break;
+
+			case NADF_TYPE_UINT:
+				is_valid = ( object->private->u.uint > 0 );
+				break;
+
+			default:
+				g_warning( "%s: unmanaged type=%d", thisfn, object->private->type );
+				is_valid = FALSE;
+		}
+	}
+
+	return( is_valid );
 }

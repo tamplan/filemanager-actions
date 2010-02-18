@@ -105,7 +105,7 @@ interface_base_init( NAIPrefsInterface *klass )
 {
 	static const gchar *thisfn = "na_iprefs_interface_base_init";
 
-	if( st_initialized && !st_initialized ){
+	if( !st_initialized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 

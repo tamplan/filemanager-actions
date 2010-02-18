@@ -80,6 +80,7 @@ static gboolean       data_factory_init_iter( const NadfIdType *iddef, NAIDataFa
 static gchar         *v_get_default( const NAIDataFactory *object, const NadfIdType *iddef );
 static void           v_copy( NAIDataFactory *target, const NAIDataFactory *source );
 static gboolean       v_are_equal( const NAIDataFactory *a, const NAIDataFactory *b );
+static gboolean       v_is_valid( const NAIDataFactory *object );
 static void           data_factory_read_data( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, NadfIdGroup *groups, GSList **messages );
 static gboolean       data_factory_read_data_iter( NadfIdType *iddef, NadfRWIter *iter );
 static void           v_read_start( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages );
@@ -360,6 +361,54 @@ v_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
 	}
 
 	return( are_equal );
+}
+
+/**
+ * na_data_factory_is_valid:
+ * @object: the #NAIDataFactory instance whose validity is to be checked.
+ *
+ * Returns: %TRUE if @object is valid, %FALSE else.
+ */
+gboolean
+na_data_factory_is_valid( const NAIDataFactory *object )
+{
+	gboolean is_valid;
+	GList *list_values, *iv;
+	NadfDataValue *a_data;
+
+	g_return_val_if_fail( NA_IS_IDATA_FACTORY( object ), FALSE );
+
+	list_values = g_object_get_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA );
+	is_valid = TRUE;
+
+	for( iv = list_values ; iv && is_valid ; iv = iv->next ){
+
+		a_data = ( NadfDataValue * ) iv->data;
+		if( a_data->iddef->mandatory ){
+
+			is_valid = na_data_element_is_valid( a_data->element );
+		}
+	}
+
+	if( is_valid ){
+		is_valid = v_is_valid( object );
+	}
+
+	return( is_valid );
+}
+
+static gboolean
+v_is_valid( const NAIDataFactory *object )
+{
+	gboolean is_valid;
+
+	is_valid = TRUE;
+
+	if( NA_IDATA_FACTORY_GET_INTERFACE( object )->is_valid ){
+		is_valid = NA_IDATA_FACTORY_GET_INTERFACE( object )->is_valid( object );
+	}
+
+	return( is_valid );
 }
 
 /**

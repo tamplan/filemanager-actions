@@ -103,6 +103,9 @@ typedef struct {
 
 	gboolean comparable;				/* whether this data should be compared when we
 										 * are testing two objects for equality */
+
+	gboolean mandatory;					/* whether this data must be not null and not empty
+										 * when we are testing for validity of an object */
 }
 	NadfIdType;
 
