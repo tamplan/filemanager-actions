@@ -1,5 +1,8 @@
 2009-02-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-data-element.c (na_data_element_set):
+	Fix value->type inverted assertion.
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c:
 	* src/io-desktop/nadp-desktop-file.c:

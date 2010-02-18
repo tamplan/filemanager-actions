@@ -268,7 +268,7 @@ na_data_element_set( NADataElement *element, const NADataElement *value )
 
 	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
 	g_return_if_fail( NA_IS_DATA_ELEMENT( value ));
-	g_return_if_fail( element->private->type != value->private->type );
+	g_return_if_fail( element->private->type == value->private->type );
 
 	if( !element->private->dispose_has_run ){
 
