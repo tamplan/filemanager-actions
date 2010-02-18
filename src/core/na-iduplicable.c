@@ -192,7 +192,9 @@ na_iduplicable_dispose( const NAIDuplicable *object )
 
 		str = get_duplicable_str( object );
 
-		g_signal_handler_disconnect(( gpointer ) object, str->status_changed_handler_id );
+		if( g_signal_handler_is_connected(( gpointer ) object, str->status_changed_handler_id )){
+			g_signal_handler_disconnect(( gpointer ) object, str->status_changed_handler_id );
+		}
 
 		g_free( str );
 	}

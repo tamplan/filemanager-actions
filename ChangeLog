@@ -1,5 +1,11 @@
 2009-02-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-exporter.c (na_exporter_get_formats):
+	Fix infinite loop.
+
+	* src/core/na-iduplicable.c (na_iduplicable_dispose):
+	Test for effective connexion before trying to disconnect.
+
 	* src/core/na-data-element.c (na_data_element_set):
 	Fix value->type inverted assertion.
 

@@ -70,6 +70,7 @@ na_exporter_get_formats( const NAPivot *pivot )
 
 				format = na_export_format_new( str, NA_IEXPORTER( imod->data ));
 				formats = g_list_prepend( formats, format );
+				str++;
 			}
 		}
 
