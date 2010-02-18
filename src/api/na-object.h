@@ -150,6 +150,8 @@ void      na_object_object_dump_tree ( GList *tree );
 GList    *na_object_object_get_hierarchy( const NAObject *object );
 void      na_object_free_hierarchy( GList *hierarchy );
 
+void      na_object_object_debug_invalid( const NAObject *object, const gchar *reason );
+
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_H__ */

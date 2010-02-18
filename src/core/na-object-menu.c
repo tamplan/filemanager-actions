@@ -67,6 +67,8 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
+static gboolean object_is_valid( const NAObject *object );
+
 static void     idata_factory_iface_init( NAIDataFactoryInterface *iface );
 static guint    idata_factory_get_version( const NAIDataFactory *instance );
 static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef );
@@ -76,6 +78,7 @@ static gboolean idata_factory_is_valid( const NAIDataFactory *object );
 static void     idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static void     idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
 
+static gboolean menu_is_valid( const NAObjectMenu *menu );
 static gboolean is_valid_label( const NAObjectMenu *menu );
 
 GType
@@ -147,7 +150,7 @@ class_init( NAObjectMenuClass *klass )
 	naobject_class->dump = NULL;
 	naobject_class->copy = NULL;
 	naobject_class->are_equal = NULL;
-	naobject_class->is_valid = NULL;
+	naobject_class->is_valid = object_is_valid;
 
 	klass->private = g_new0( NAObjectMenuClassPrivate, 1 );
 
@@ -241,6 +244,14 @@ instance_finalize( GObject *object )
 	}
 }
 
+static gboolean
+object_is_valid( const NAObject *object )
+{
+	g_return_val_if_fail( NA_IS_OBJECT_MENU( object ), FALSE );
+
+	return( menu_is_valid( NA_OBJECT_MENU( object )));
+}
+
 static void
 idata_factory_iface_init( NAIDataFactoryInterface *iface )
 {
@@ -295,37 +306,11 @@ idata_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
 }
 
 static gboolean
-idata_factory_is_valid( const NAIDataFactory *menu )
+idata_factory_is_valid( const NAIDataFactory *object )
 {
-	gboolean is_valid;
-	gint valid_subitems;
-	GList *subitems, *ip;
+	g_return_val_if_fail( NA_IS_OBJECT_MENU( object ), FALSE );
 
-	g_return_val_if_fail( NA_IS_OBJECT_MENU( menu ), FALSE );
-
-	is_valid = FALSE;
-
-	if( !NA_OBJECT_MENU( menu )->private->dispose_has_run ){
-
-		is_valid = TRUE;
-
-		if( is_valid ){
-			is_valid = is_valid_label( NA_OBJECT_MENU( menu ));
-		}
-
-		if( is_valid ){
-			valid_subitems = 0;
-			subitems = na_object_get_items( menu );
-			for( ip = subitems ; ip && !valid_subitems ; ip = ip->next ){
-				if( na_object_is_valid( ip->data )){
-					valid_subitems += 1;
-				}
-			}
-			is_valid = ( valid_subitems > 0 );
-		}
-	}
-
-	return( is_valid );
+	return( menu_is_valid( NA_OBJECT_MENU( object )));
 }
 
 static void
@@ -341,6 +326,41 @@ idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, 
 }
 
 static gboolean
+menu_is_valid( const NAObjectMenu *menu )
+{
+	gboolean is_valid;
+	gint valid_subitems;
+	GList *subitems, *ip;
+
+	is_valid = FALSE;
+
+	if( !menu->private->dispose_has_run ){
+
+		is_valid = TRUE;
+
+		if( is_valid ){
+			is_valid = is_valid_label( menu );
+		}
+
+		if( is_valid ){
+			valid_subitems = 0;
+			subitems = na_object_get_items( menu );
+			for( ip = subitems ; ip && !valid_subitems ; ip = ip->next ){
+				if( na_object_is_valid( ip->data )){
+					valid_subitems += 1;
+				}
+			}
+			is_valid = ( valid_subitems > 0 );
+			if( !is_valid ){
+				na_object_debug_invalid( menu, "no valid subitem" );
+			}
+		}
+	}
+
+	return( is_valid );
+}
+
+static gboolean
 is_valid_label( const NAObjectMenu *menu )
 {
 	gboolean is_valid;
@@ -349,6 +369,10 @@ is_valid_label( const NAObjectMenu *menu )
 	label = na_object_get_label( menu );
 	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
 	g_free( label );
+
+	if( !is_valid ){
+		na_object_debug_invalid( menu, "label" );
+	}
 
 	return( is_valid );
 }

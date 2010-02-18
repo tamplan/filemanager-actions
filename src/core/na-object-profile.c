@@ -76,12 +76,16 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
+static gboolean object_is_valid( const NAObject *object );
+
 static void     idata_factory_iface_init( NAIDataFactoryInterface *iface );
 static guint    idata_factory_get_version( const NAIDataFactory *instance );
 static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef );
 static gboolean idata_factory_is_valid( const NAIDataFactory *object );
 static void     idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static void     idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
+
+static gboolean profile_is_valid( const NAObjectProfile *profile );
 static gboolean is_valid_path_parameters( const NAObjectProfile *profile );
 static gboolean is_valid_basenames( const NAObjectProfile *profile );
 static gboolean is_valid_mimetypes( const NAObjectProfile *profile );
@@ -174,7 +178,7 @@ class_init( NAObjectProfileClass *klass )
 	naobject_class->dump = NULL;
 	naobject_class->copy = NULL;
 	naobject_class->are_equal = NULL;
-	naobject_class->is_valid = NULL;
+	naobject_class->is_valid = object_is_valid;
 
 	naobjectid_class = NA_OBJECT_ID_CLASS( klass );
 	naobjectid_class->new_id = object_id_new_id;
@@ -273,6 +277,14 @@ instance_finalize( GObject *object )
 	}
 }
 
+static gboolean
+object_is_valid( const NAObject *object )
+{
+	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( object ), FALSE );
+
+	return( profile_is_valid( NA_OBJECT_PROFILE( object )));
+}
+
 static void
 idata_factory_iface_init( NAIDataFactoryInterface *iface )
 {
@@ -319,39 +331,16 @@ idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *idd
 }
 
 static gboolean
-idata_factory_is_valid( const NAIDataFactory *profile )
+idata_factory_is_valid( const NAIDataFactory *object )
 {
-	gboolean is_valid;
-	NAObjectItem *parent;
+	static const gchar *thisfn = "na_object_profile_idata_factory_is_valid: object";
 
-	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
+	g_debug( "%s: object=%p (%s)",
+			thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	is_valid = FALSE;
+	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( object ), FALSE );
 
-	if( !NA_OBJECT_PROFILE( profile )->private->dispose_has_run ){
-
-		is_valid = TRUE;
-		parent = na_object_get_parent( profile );
-
-		if( is_valid && na_object_is_target_background( parent )){
-			is_valid =
-					is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
-					is_valid_folders( NA_OBJECT_PROFILE( profile ));
-		}
-
-		if( is_valid ){
-			if( na_object_is_target_selection( parent ) || na_object_is_target_toolbar( parent )){
-				is_valid =
-					is_valid_path_parameters( NA_OBJECT_PROFILE( profile )) &&
-					is_valid_basenames( NA_OBJECT_PROFILE( profile )) &&
-					is_valid_mimetypes( NA_OBJECT_PROFILE( profile )) &&
-					is_valid_isfiledir( NA_OBJECT_PROFILE( profile )) &&
-					is_valid_schemes( NA_OBJECT_PROFILE( profile ));
-			}
-		}
-	}
-
-	return( is_valid );
+	return( profile_is_valid( NA_OBJECT_PROFILE( object )));
 }
 
 static void
@@ -364,6 +353,40 @@ static void
 idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages )
 {
 
+}
+
+static gboolean
+profile_is_valid( const NAObjectProfile *profile )
+{
+	gboolean is_valid;
+	NAObjectItem *parent;
+
+	is_valid = FALSE;
+
+	if( !profile->private->dispose_has_run ){
+
+		is_valid = TRUE;
+		parent = na_object_get_parent( profile );
+
+		if( is_valid && na_object_is_target_background( parent )){
+			is_valid =
+					is_valid_path_parameters( profile ) &&
+					is_valid_folders( profile );
+		}
+
+		if( is_valid ){
+			if( na_object_is_target_selection( parent ) || na_object_is_target_toolbar( parent )){
+				is_valid =
+					is_valid_path_parameters( profile ) &&
+					is_valid_basenames( profile ) &&
+					is_valid_mimetypes( profile ) &&
+					is_valid_isfiledir( profile ) &&
+					is_valid_schemes( profile );
+			}
+		}
+	}
+
+	return( is_valid );
 }
 
 static gboolean
@@ -389,6 +412,10 @@ is_valid_path_parameters( const NAObjectProfile *profile )
 	g_free( parameters );
 	g_free( path );
 
+	if( !valid ){
+		na_object_debug_invalid( profile, "command" );
+	}
+
 	return( valid );
 }
 
@@ -402,6 +429,10 @@ is_valid_basenames( const NAObjectProfile *profile )
 	valid = basenames && g_slist_length( basenames ) > 0;
 	na_core_utils_slist_free( basenames );
 
+	if( !valid ){
+		na_object_debug_invalid( profile, "basenames" );
+	}
+
 	return( valid );
 }
 
@@ -414,6 +445,10 @@ is_valid_mimetypes( const NAObjectProfile *profile )
 	mimetypes = na_object_get_mimetypes( profile );
 	valid = mimetypes && g_slist_length( mimetypes ) > 0;
 	na_core_utils_slist_free( mimetypes );
+
+	if( !valid ){
+		na_object_debug_invalid( profile, "mimetypes" );
+	}
 
 	return( valid );
 }
@@ -429,6 +464,10 @@ is_valid_isfiledir( const NAObjectProfile *profile )
 
 	valid = isfile || isdir;
 
+	if( !valid ){
+		na_object_debug_invalid( profile, "isfiledir" );
+	}
+
 	return( valid );
 }
 
@@ -442,6 +481,10 @@ is_valid_schemes( const NAObjectProfile *profile )
 	valid = schemes && g_slist_length( schemes ) > 0;
 	na_core_utils_slist_free( schemes );
 
+	if( !valid ){
+		na_object_debug_invalid( profile, "schemes" );
+	}
+
 	return( valid );
 }
 
@@ -454,6 +497,10 @@ is_valid_folders( const NAObjectProfile *profile )
 	folders = na_object_get_folders( profile );
 	valid = folders && g_slist_length( folders ) > 0;
 	na_core_utils_slist_free( folders );
+
+	if( !valid ){
+		na_object_debug_invalid( profile, "folders" );
+	}
 
 	return( valid );
 }

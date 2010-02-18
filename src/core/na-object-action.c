@@ -66,6 +66,8 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
+static gboolean object_is_valid( const NAObject *object );
+
 static void     idata_factory_iface_init( NAIDataFactoryInterface *iface );
 static guint    idata_factory_get_version( const NAIDataFactory *instance );
 static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef );
@@ -75,6 +77,7 @@ static gboolean idata_factory_is_valid( const NAIDataFactory *object );
 static void     idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 static void     idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
 
+static gboolean object_object_is_valid( const NAObjectAction *action );
 static gboolean is_valid_label( const NAObjectAction *action );
 static gboolean is_valid_toolbar_label( const NAObjectAction *action );
 
@@ -147,7 +150,7 @@ class_init( NAObjectActionClass *klass )
 	naobject_class->dump = NULL;
 	naobject_class->copy = NULL;
 	naobject_class->are_equal = NULL;
-	naobject_class->is_valid = NULL;
+	naobject_class->is_valid = object_is_valid;
 
 	klass->private = g_new0( NAObjectActionClassPrivate, 1 );
 
@@ -241,6 +244,14 @@ instance_finalize( GObject *object )
 	}
 }
 
+static gboolean
+object_is_valid( const NAObject *object )
+{
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( object ), FALSE );
+
+	return( object_object_is_valid( NA_OBJECT_ACTION( object )));
+}
+
 static void
 idata_factory_iface_init( NAIDataFactoryInterface *iface )
 {
@@ -296,45 +307,11 @@ idata_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
 }
 
 static gboolean
-idata_factory_is_valid( const NAIDataFactory *action )
+idata_factory_is_valid( const NAIDataFactory *object )
 {
-	gboolean is_valid;
-	GList *profiles, *ip;
-	gint valid_profiles;
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( object ), FALSE );
 
-	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), FALSE );
-
-	is_valid = FALSE;
-
-	if( !NA_OBJECT_ACTION( action )->private->dispose_has_run ){
-
-		is_valid = TRUE;
-
-		if( is_valid ){
-			if( na_object_is_target_toolbar( action )){
-				is_valid = is_valid_toolbar_label( NA_OBJECT_ACTION( action ));
-			}
-		}
-
-		if( is_valid ){
-			if( na_object_is_target_selection( action ) || na_object_is_target_background( action )){
-				is_valid = is_valid_label( NA_OBJECT_ACTION( action ));
-			}
-		}
-
-		if( is_valid ){
-			valid_profiles = 0;
-			profiles = na_object_get_items( action );
-			for( ip = profiles ; ip && !valid_profiles ; ip = ip->next ){
-				if( na_object_is_valid( ip->data )){
-					valid_profiles += 1;
-				}
-			}
-			is_valid = ( valid_profiles > 0 );
-		}
-	}
-
-	return( is_valid );
+	return( object_object_is_valid( NA_OBJECT_ACTION( object )));
 }
 
 static void
@@ -352,6 +329,49 @@ idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, 
 }
 
 static gboolean
+object_object_is_valid( const NAObjectAction *action )
+{
+	gboolean is_valid;
+	GList *profiles, *ip;
+	gint valid_profiles;
+
+	is_valid = FALSE;
+
+	if( !action->private->dispose_has_run ){
+
+		is_valid = TRUE;
+
+		if( is_valid ){
+			if( na_object_is_target_toolbar( action )){
+				is_valid = is_valid_toolbar_label( action );
+			}
+		}
+
+		if( is_valid ){
+			if( na_object_is_target_selection( action ) || na_object_is_target_background( action )){
+				is_valid = is_valid_label( action );
+			}
+		}
+
+		if( is_valid ){
+			valid_profiles = 0;
+			profiles = na_object_get_items( action );
+			for( ip = profiles ; ip && !valid_profiles ; ip = ip->next ){
+				if( na_object_is_valid( ip->data )){
+					valid_profiles += 1;
+				}
+			}
+			is_valid = ( valid_profiles > 0 );
+			if( !is_valid ){
+				na_object_debug_invalid( action, "no valid profile" );
+			}
+		}
+	}
+
+	return( is_valid );
+}
+
+static gboolean
 is_valid_label( const NAObjectAction *action )
 {
 	gboolean is_valid;
@@ -360,6 +380,10 @@ is_valid_label( const NAObjectAction *action )
 	label = na_object_get_label( action );
 	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
 	g_free( label );
+
+	if( !is_valid ){
+		na_object_debug_invalid( action, "label" );
+	}
 
 	return( is_valid );
 }
@@ -373,6 +397,10 @@ is_valid_toolbar_label( const NAObjectAction *action )
 	label = na_object_get_toolbar_label( action );
 	is_valid = ( label && g_utf8_strlen( label, -1 ) > 0 );
 	g_free( label );
+
+	if( !is_valid ){
+		na_object_debug_invalid( action, "toolbar-label" );
+	}
 
 	return( is_valid );
 }

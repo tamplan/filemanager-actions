@@ -295,17 +295,26 @@ iduplicable_are_equal_iter( GObjectClass *class, const NAObject *a, HierarchyIte
 static gboolean
 iduplicable_is_valid( const NAIDuplicable *object )
 {
+	static const gchar *thisfn = "na_object_iduplicable_is_valid";
 	gboolean is_valid;
 	HierarchyIter *str;
+
+	g_debug( "%s: object=%p (%s)",
+			thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
 
 	is_valid = FALSE;
 
 	if( !NA_OBJECT( object )->private->dispose_has_run ){
 
 		if( NA_IS_IDATA_FACTORY( object )){
-			na_data_factory_is_valid( NA_IDATA_FACTORY( object ));
+			is_valid = na_data_factory_is_valid( NA_IDATA_FACTORY( object ));
 
 		} else {
+			g_debug( "%s: object=%p (%s): iterating on class hierarchy",
+					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 			str = g_new0( HierarchyIter, 1 );
 			str->result = TRUE;
 			iter_on_class_hierarchy( NA_OBJECT( object ), ( HierarchyIterFunc ) &iduplicable_is_valid_iter, str );
@@ -356,7 +365,7 @@ object_dump( const NAObject *object )
  * Internally set some properties which may be requested later. This
  * two-steps check-request let us optimize some work in the UI.
  *
- * na_object_editable_check_status( object )
+ * na_object_object_check_status( object )
  *  +- na_iduplicable_check_status( object )
  *      +- get_origin( object )
  *      +- modified_status = v_are_equal( origin, object ) -> interface are_equal()
@@ -736,4 +745,18 @@ void
 na_object_free_hierarchy( GList *hierarchy )
 {
 	g_list_free( hierarchy );
+}
+
+/**
+ * na_object_object_debug_invalid:
+ * @object: the #NAObject-derived object which is invalid.
+ * @reason: the reason.
+ *
+ * Dump the object with the invalidity reason.
+ */
+void
+na_object_object_debug_invalid( const NAObject *object, const gchar *reason )
+{
+	g_debug( "na_object_object_debug_invalid: object is marked invalid for reason \"%s\"", reason );
+	na_object_dump_norec( object );
 }

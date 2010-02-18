@@ -742,7 +742,7 @@ build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty )
 
 	if( g_slist_length( level_zero )){
 		for( ilevel = level_zero ; ilevel ; ilevel = ilevel->next ){
-			g_debug( "%s: uuid=%s", thisfn, ( gchar * ) ilevel->data );
+			/*g_debug( "%s: uuid=%s", thisfn, ( gchar * ) ilevel->data );*/
 			it = g_list_find_custom( *tree, ilevel->data, ( GCompareFunc ) search_item );
 			if( it ){
 				hierarchy = g_list_append( hierarchy, it->data );

@@ -73,6 +73,8 @@ G_BEGIN_DECLS
 #define na_object_ref( obj )							na_object_object_ref( NA_OBJECT( obj ))
 #define na_object_unref( obj )							na_object_object_unref( NA_OBJECT( obj ))
 
+#define na_object_debug_invalid( obj, reason )			na_object_object_debug_invalid( NA_OBJECT( obj ), ( const gchar * )( reason ))
+
 /* NAObjectId
  */
 #define na_object_get_id( obj )							(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ID ))

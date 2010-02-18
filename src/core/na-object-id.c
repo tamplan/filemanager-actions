@@ -46,21 +46,19 @@ struct NAObjectIdClassPrivate {
  */
 struct NAObjectIdPrivate {
 	gboolean   dispose_has_run;
-
-	gchar     *id;
 };
-
-#define NA_OBJECT_PROP_ID				"na-object-prop-id"
 
 static NAObjectClass *st_parent_class = NULL;
 
-static GType  register_type( void );
-static void   class_init( NAObjectIdClass *klass );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *object );
-static void   instance_finalize( GObject *object );
+static GType    register_type( void );
+static void     class_init( NAObjectIdClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
 
-static gchar *v_new_id( const NAObjectId *object, const NAObjectId *new_parent );
+static gboolean object_is_valid( const NAObject *object );
+
+static gchar   *v_new_id( const NAObjectId *object, const NAObjectId *new_parent );
 
 GType
 na_object_id_get_type( void )
@@ -118,9 +116,7 @@ class_init( NAObjectIdClass *klass )
 	naobject_class->dump = NULL;
 	naobject_class->copy = NULL;
 	naobject_class->are_equal = NULL;
-	naobject_class->is_valid = NULL;
-
-	klass->new_id = NULL;
+	naobject_class->is_valid = object_is_valid;
 
 	klass->private = g_new0( NAObjectIdClassPrivate, 1 );
 }
@@ -173,14 +169,32 @@ instance_finalize( GObject *object )
 
 	self = NA_OBJECT_ID( object );
 
-	g_free( self->private->id );
-
 	g_free( self->private );
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
+}
+
+/*
+ * a NAObjectId is valid if it has a non-null id
+ */
+static gboolean
+object_is_valid( const NAObject *object )
+{
+	gboolean is_valid;
+	gchar *id;
+
+	is_valid = TRUE;
+
+	if( is_valid ){
+		id = na_object_get_id( object );
+		is_valid = ( id != NULL && strlen( id ) > 0 );
+		g_free( id );
+	}
+
+	return( is_valid );
 }
 
 /**

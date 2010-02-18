@@ -372,9 +372,13 @@ v_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
 gboolean
 na_data_factory_is_valid( const NAIDataFactory *object )
 {
+	static const gchar *thisfn = "na_data_factory_is_valid";
 	gboolean is_valid;
 	GList *list_values, *iv;
 	NadfDataValue *a_data;
+
+	g_debug( "%s: object=%p (%s)",
+			thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	g_return_val_if_fail( NA_IS_IDATA_FACTORY( object ), FALSE );
 
@@ -387,6 +391,9 @@ na_data_factory_is_valid( const NAIDataFactory *object )
 		if( a_data->iddef->mandatory ){
 
 			is_valid = na_data_element_is_valid( a_data->element );
+			if( !is_valid ){
+				g_debug( "%s: invalid element: %s", thisfn, a_data->iddef->name );
+			}
 		}
 	}
 
