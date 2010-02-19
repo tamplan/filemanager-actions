@@ -76,13 +76,13 @@ nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 	userdir = nadp_xdg_dirs_get_user_data_dir();
 
 	if( g_file_test( userdir, G_FILE_TEST_IS_DIR )){
-		able_to = na_core_utils_dir_is_writable( userdir );
+		able_to = na_core_utils_dir_is_writable_path( userdir );
 
 	} else if( g_mkdir_with_parents( userdir, 0700 )){
 		g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));
 
 	} else {
-		able_to = na_core_utils_dir_is_writable( userdir );
+		able_to = na_core_utils_dir_is_writable_path( userdir );
 	}
 
 	g_free( userdir );

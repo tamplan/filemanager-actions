@@ -49,7 +49,8 @@ static NadfIdType action_iddef [] = {
 				"2.0",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_TARGET_SELECTION,
 				"na-object-target-selection",
@@ -60,7 +61,8 @@ static NadfIdType action_iddef [] = {
 				"TRUE",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_TARGET_BACKGROUND,
 				"na-object-target-background",
@@ -71,7 +73,8 @@ static NadfIdType action_iddef [] = {
 				"FALSE",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_TARGET_TOOLBAR,
 				"na-object-target-toolbar",
@@ -84,7 +87,8 @@ static NadfIdType action_iddef [] = {
 				"FALSE",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_TOOLBAR_LABEL,
 				"na-object-toolbar-label",
@@ -96,7 +100,8 @@ static NadfIdType action_iddef [] = {
 				"",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_TOOLBAR_SAME_LABEL,
 				"na-object-toolbar-same-label",
@@ -107,7 +112,8 @@ static NadfIdType action_iddef [] = {
 				"true",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_LAST_ALLOCATED,
 				"na-object-last-allocated",
@@ -119,9 +125,10 @@ static NadfIdType action_iddef [] = {
 				"0",
 				TRUE,
 				FALSE,
-				FALSE },
+				FALSE,
+				NULL },
 
-	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE },
+	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE, FALSE, NULL },
 };
 
 NadfIdGroup action_id_groups [] = {

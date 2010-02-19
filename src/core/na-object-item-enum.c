@@ -35,6 +35,8 @@
 #include <api/na-idata-factory-enum.h>
 #include <api/na-idata-factory-str.h>
 
+static void free_items_list( void * list );
+
 NadfIdType item_iddef [] = {
 
 	{ NADF_DATA_TOOLTIP,
@@ -46,7 +48,8 @@ NadfIdType item_iddef [] = {
 				"",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_ICON,
 				"na-object-icon",
@@ -58,7 +61,8 @@ NadfIdType item_iddef [] = {
 				"",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_DESCRIPTION,
 				"na-object-description",
@@ -70,7 +74,8 @@ NadfIdType item_iddef [] = {
 				"",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_SUBITEMS,
 				"na-object-subitems",
@@ -81,7 +86,8 @@ NadfIdType item_iddef [] = {
 				NULL,
 				FALSE,
 				FALSE,
-				FALSE },
+				FALSE,
+				free_items_list },
 
 	{ NADF_DATA_SUBITEMS_SLIST,
 				"na-object-subitems-slist",
@@ -90,10 +96,11 @@ NadfIdType item_iddef [] = {
 				"List of subitems ids, " \
 				"as readen from corresponding entry from the storage subsystem.",
 				NADF_TYPE_STRING_LIST,
-				"",
+				NULL,
 				FALSE,
 				FALSE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_ENABLED,
 				"na-object-enabled",
@@ -106,7 +113,8 @@ NadfIdType item_iddef [] = {
 				"TRUE",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_READONLY,
 				"na-object-readonly",
@@ -122,7 +130,8 @@ NadfIdType item_iddef [] = {
 				"FALSE",
 				TRUE,
 				FALSE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_PROVIDER,
 				"na-object-provider",
@@ -133,7 +142,8 @@ NadfIdType item_iddef [] = {
 				NULL,
 				TRUE,
 				FALSE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_PROVIDER_DATA,
 				"na-object-provider-data",
@@ -144,7 +154,20 @@ NadfIdType item_iddef [] = {
 				NULL,
 				TRUE,
 				FALSE,
-				FALSE },
+				FALSE,
+				NULL },
 
-	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE },
+	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE, FALSE, NULL },
 };
+
+static void
+free_items_list( void * list )
+{
+	static const gchar *thisfn = "na_object_item_enum_free_items_list";
+
+	g_debug( "%s: list=%p (count=%d)", thisfn, list, g_list_length(( GList * ) list ));
+
+	if( list ){
+		/*g_list_free(( GList * ) list );*/
+	}
+}

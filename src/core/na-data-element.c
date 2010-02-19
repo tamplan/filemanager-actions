@@ -49,8 +49,8 @@ struct NADataElementClassPrivate {
 /* private instance data
  */
 struct NADataElementPrivate {
-	gboolean dispose_has_run;
-	guint    type;
+	gboolean      dispose_has_run;
+	NadfIdType   *iddef ;
 	union {
 		gboolean  boolean;
 		gchar    *string;
@@ -60,6 +60,22 @@ struct NADataElementPrivate {
 	} u;
 };
 
+typedef struct {
+	guint           type;
+	GParamSpec * ( *spec )            ( const NadfIdType * );
+	void         ( *free )            ( const NADataElement * );
+	void         ( *dump )            ( const NADataElement * );
+	gboolean     ( *are_equal )       ( const NADataElement *, const NADataElement * );
+	gboolean     ( *is_valid )        ( const NADataElement * );
+	void *       ( *get )             ( const NADataElement * );
+	void         ( *get_via_value )   ( const NADataElement *, GValue *value );
+	void         ( *set_from_element )( NADataElement *, const NADataElement * );
+	void         ( *set_from_string ) ( NADataElement *, const gchar *string );
+	void         ( *set_from_value )  ( NADataElement *, const GValue *value );
+	void         ( *set_from_void )   ( NADataElement *, const void *value );
+}
+	DataElementFn;
+
 static GObjectClass *st_parent_class   = NULL;
 
 static GType register_type( void );
@@ -67,6 +83,153 @@ static void  class_init( NADataElementClass *klass );
 static void  instance_init( GTypeInstance *instance, gpointer klass );
 static void  instance_dispose( GObject *object );
 static void  instance_finalize( GObject *object );
+
+static DataElementFn *get_data_element_fn( guint type );
+
+static GParamSpec *string_spec( const NadfIdType *idtype );
+static void        string_free( const NADataElement *element );
+static void        string_dump( const NADataElement *element );
+static gboolean    string_are_equal( const NADataElement *a, const NADataElement *b );
+static gboolean    string_is_valid( const NADataElement *element );
+static void       *string_get( const NADataElement *element );
+static void        string_get_via_value( const NADataElement *element, GValue *value );
+static void        string_set_from_element( NADataElement *element, const NADataElement *source );
+static void        string_set_from_string( NADataElement *element, const gchar *string );
+static void        string_set_from_value( NADataElement *element, const GValue *value );
+static void        string_set_from_void( NADataElement *element, const void *value );
+
+static gboolean    locale_are_equal( const NADataElement *a, const NADataElement *b );
+static gboolean    locale_is_valid( const NADataElement *element );
+
+static GParamSpec *slist_spec( const NadfIdType *idtype );
+static void        slist_free( const NADataElement *element );
+static void        slist_dump( const NADataElement *element );
+static gboolean    slist_are_equal( const NADataElement *a, const NADataElement *b );
+static gboolean    slist_is_valid( const NADataElement *element );
+static void       *slist_get( const NADataElement *element );
+static void        slist_get_via_value( const NADataElement *element, GValue *value );
+static void        slist_set_from_element( NADataElement *element, const NADataElement *source );
+static void        slist_set_from_string( NADataElement *element, const gchar *string );
+static void        slist_set_from_value( NADataElement *element, const GValue *value );
+static void        slist_set_from_void( NADataElement *element, const void *value );
+
+static GParamSpec *bool_spec( const NadfIdType *idtype );
+static void        bool_free( const NADataElement *element );
+static void        bool_dump( const NADataElement *element );
+static gboolean    bool_are_equal( const NADataElement *a, const NADataElement *b );
+static gboolean    bool_is_valid( const NADataElement *element );
+static void       *bool_get( const NADataElement *element );
+static void        bool_get_via_value( const NADataElement *element, GValue *value );
+static void        bool_set_from_element( NADataElement *element, const NADataElement *source );
+static void        bool_set_from_string( NADataElement *element, const gchar *string );
+static void        bool_set_from_value( NADataElement *element, const GValue *value );
+static void        bool_set_from_void( NADataElement *element, const void *value );
+
+static GParamSpec *pointer_spec( const NadfIdType *idtype );
+static void        pointer_free( const NADataElement *element );
+static void        pointer_dump( const NADataElement *element );
+static gboolean    pointer_are_equal( const NADataElement *a, const NADataElement *b );
+static gboolean    pointer_is_valid( const NADataElement *element );
+static void       *pointer_get( const NADataElement *element );
+static void        pointer_get_via_value( const NADataElement *element, GValue *value );
+static void        pointer_set_from_element( NADataElement *element, const NADataElement *source );
+static void        pointer_set_from_string( NADataElement *element, const gchar *string );
+static void        pointer_set_from_value( NADataElement *element, const GValue *value );
+static void        pointer_set_from_void( NADataElement *element, const void *value );
+
+static GParamSpec *uint_spec( const NadfIdType *idtype );
+static void        uint_free( const NADataElement *element );
+static void        uint_dump( const NADataElement *element );
+static gboolean    uint_are_equal( const NADataElement *a, const NADataElement *b );
+static gboolean    uint_is_valid( const NADataElement *element );
+static void       *uint_get( const NADataElement *element );
+static void        uint_get_via_value( const NADataElement *element, GValue *value );
+static void        uint_set_from_element( NADataElement *element, const NADataElement *source );
+static void        uint_set_from_string( NADataElement *element, const gchar *string );
+static void        uint_set_from_value( NADataElement *element, const GValue *value );
+static void        uint_set_from_void( NADataElement *element, const void *value );
+
+static DataElementFn st_data_element_fn[] = {
+		{ NADF_TYPE_STRING,
+				string_spec,
+				string_free,
+				string_dump,
+				string_are_equal,
+				string_is_valid,
+				string_get,
+				string_get_via_value,
+				string_set_from_element,
+				string_set_from_string,
+				string_set_from_value,
+				string_set_from_void
+				},
+		{ NADF_TYPE_LOCALE_STRING,
+				string_spec,
+				string_free,
+				string_dump,
+				locale_are_equal,
+				locale_is_valid,
+				string_get,
+				string_get_via_value,
+				string_set_from_element,
+				string_set_from_string,
+				string_set_from_value,
+				string_set_from_void
+				},
+		{ NADF_TYPE_STRING_LIST,
+				slist_spec,
+				slist_free,
+				slist_dump,
+				slist_are_equal,
+				slist_is_valid,
+				slist_get,
+				slist_get_via_value,
+				slist_set_from_element,
+				slist_set_from_string,
+				slist_set_from_value,
+				slist_set_from_void
+				},
+		{ NADF_TYPE_BOOLEAN,
+				bool_spec,
+				bool_free,
+				bool_dump,
+				bool_are_equal,
+				bool_is_valid,
+				bool_get,
+				bool_get_via_value,
+				bool_set_from_element,
+				bool_set_from_string,
+				bool_set_from_value,
+				bool_set_from_void
+				},
+		{ NADF_TYPE_POINTER,
+				pointer_spec,
+				pointer_free,
+				pointer_dump,
+				pointer_are_equal,
+				pointer_is_valid,
+				pointer_get,
+				pointer_get_via_value,
+				pointer_set_from_element,
+				pointer_set_from_string,
+				pointer_set_from_value,
+				pointer_set_from_void
+				},
+		{ NADF_TYPE_UINT,
+				uint_spec,
+				uint_free,
+				uint_dump,
+				uint_are_equal,
+				uint_is_valid,
+				uint_get,
+				uint_get_via_value,
+				uint_set_from_element,
+				uint_set_from_string,
+				uint_set_from_value,
+				uint_set_from_void
+				},
+		{ 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
+};
 
 GType
 na_data_element_get_type( void )
@@ -170,20 +333,9 @@ instance_finalize( GObject *object )
 
 	self = NA_DATA_ELEMENT( object );
 
-	switch( self->private->type ){
-
-		case NADF_TYPE_STRING:
-		case NADF_TYPE_LOCALE_STRING:
-			g_free( self->private->u.string );
-			break;
-
-		case NADF_TYPE_STRING_LIST:
-			na_core_utils_slist_free( self->private->u.slist );
-			break;
-
-		case NADF_TYPE_BOOLEAN:
-		case NADF_TYPE_POINTER:
-			break;
+	DataElementFn *fn = get_data_element_fn( self->private->iddef->type );
+	if( fn->free ){
+		( *fn->free )( self );
 	}
 
 	g_free( self->private );
@@ -194,20 +346,42 @@ instance_finalize( GObject *object )
 	}
 }
 
+static DataElementFn *
+get_data_element_fn( guint type )
+{
+	static const gchar *thisfn = "na_data_element_get_data_element_fn";
+	int i;
+	DataElementFn *fn;
+
+	fn = NULL;
+
+	for( i = 0 ; st_data_element_fn[i].type && !fn ; ++i ){
+		if( st_data_element_fn[i].type == type ){
+			fn = st_data_element_fn+i;
+		}
+	}
+
+	if( !fn ){
+		g_warning( "%s: unmanaged type=%d", thisfn, type );
+	}
+
+	return( fn );
+}
+
 /**
  * na_data_element_new:
- * @type: a #NAIDataFactory standard type.
+ * @iddef: the #NadfIdType definition structure for this element.
  *
  * Returns: a newly allocated #NADataElement.
  */
 NADataElement *
-na_data_element_new( guint type )
+na_data_element_new( const NadfIdType *iddef )
 {
 	NADataElement *element;
 
 	element = g_object_new( NA_DATA_ELEMENT_TYPE, NULL );
 
-	element->private->type = type;
+	element->private->iddef = ( NadfIdType * ) iddef;
 
 	return( element );
 }
@@ -215,233 +389,19 @@ na_data_element_new( guint type )
 /**
  * na_data_element_dump:
  * @element: this #NADataElement object.
- * @name: the name attributed to this element.
  *
  * Dump the content of @element.
  */
 void
-na_data_element_dump( const NADataElement *element, const gchar *name )
+na_data_element_dump( const NADataElement *element )
 {
-	static const gchar *thisfn = "na_data_element_dump";
+	DataElementFn *fn;
 
-	switch( element->private->type ){
+	fn = get_data_element_fn( element->private->iddef->type );
 
-		case NADF_TYPE_STRING:
-		case NADF_TYPE_LOCALE_STRING:
-			g_debug( "%s: %s=%s", thisfn, name, element->private->u.string );
-			break;
-
-		case NADF_TYPE_STRING_LIST:
-			g_debug( "%s: %s:", thisfn, name );
-			na_core_utils_slist_dump( element->private->u.slist );
-			break;
-
-		case NADF_TYPE_BOOLEAN:
-			g_debug( "%s: %s=%s", thisfn, name, element->private->u.boolean ? "True":"False" );
-			break;
-
-		case NADF_TYPE_POINTER:
-			g_debug( "%s: %s=%p", thisfn, name, ( void * ) element->private->u.pointer );
-			break;
-
-		case NADF_TYPE_UINT:
-			g_debug( "%s: %s=%d", thisfn, name, element->private->u.uint );
-			break;
-
-		default:
-			g_warning( "%s: unmanaged type=%d", thisfn, element->private->type );
-
-	}
-}
-
-/**
- * na_data_element_set:
- * @element: the #NADataElement whose value is to be set.
- * @value: the source #NADataElement.
- *
- * Copy value from @value to @element.
- */
-void
-na_data_element_set( NADataElement *element, const NADataElement *value )
-{
-	static const gchar *thisfn = "na_data_element_set";
-
-	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
-	g_return_if_fail( NA_IS_DATA_ELEMENT( value ));
-	g_return_if_fail( element->private->type == value->private->type );
-
-	if( !element->private->dispose_has_run ){
-
-		switch( element->private->type ){
-
-			case NADF_TYPE_STRING:
-			case NADF_TYPE_LOCALE_STRING:
-				g_free( element->private->u.string );
-				element->private->u.string = g_strdup( value->private->u.string );
-				break;
-
-			case NADF_TYPE_STRING_LIST:
-				na_core_utils_slist_free( element->private->u.slist );
-				element->private->u.slist = na_core_utils_slist_duplicate( value->private->u.slist );
-				break;
-
-			case NADF_TYPE_BOOLEAN:
-				element->private->u.boolean = value->private->u.boolean;
-				break;
-
-			case NADF_TYPE_POINTER:
-				element->private->u.pointer = value->private->u.pointer;
-				break;
-
-			case NADF_TYPE_UINT:
-				element->private->u.uint = value->private->u.uint;
-				break;
-
-			default:
-				g_warning( "%s: unmanaged type=%d", thisfn, element->private->type );
-		}
-	}
-}
-
-/**
- * na_data_element_set_from_string:
- * @element: the #NADataElement whose value is to be set.
- * @value: the string to be set.
- *
- * Evaluates the @value and set it to the @element.
- */
-void
-na_data_element_set_from_string( NADataElement *element, const gchar *value )
-{
-	static const gchar *thisfn = "na_data_element_set_from_string";
-
-	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
-
-	if( !element->private->dispose_has_run ){
-
-		switch( element->private->type ){
-
-			case NADF_TYPE_STRING:
-			case NADF_TYPE_LOCALE_STRING:
-				g_free( element->private->u.string );
-				element->private->u.string = g_strdup( value );
-				break;
-
-			case NADF_TYPE_STRING_LIST:
-				na_core_utils_slist_free( element->private->u.slist );
-				element->private->u.slist = g_slist_append( NULL, g_strdup( value ));
-				break;
-
-			case NADF_TYPE_BOOLEAN:
-				element->private->u.boolean = na_core_utils_boolean_from_string( value );
-				break;
-
-			/* only a NULL value may be relevant here
-			 */
-			case NADF_TYPE_POINTER:
-				element->private->u.pointer = NULL;
-				break;
-
-			case NADF_TYPE_UINT:
-				element->private->u.uint = atoi( value );
-				break;
-
-			default:
-				g_warning( "%s: unmanaged type=%d", thisfn, element->private->type );
-		}
-	}
-}
-
-/**
- * na_data_element_set_from_value:
- * @element: the #NADataElement whose value is to be set.
- * @value: the value whose content is to be got.
- *
- * Evaluates the @value and set it to the @element.
- */
-void
-na_data_element_set_from_value( NADataElement *element, const GValue *value )
-{
-	static const gchar *thisfn = "na_data_element_set_from_value";
-
-	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
-
-	if( !element->private->dispose_has_run ){
-
-		switch( element->private->type ){
-
-			case NADF_TYPE_STRING:
-			case NADF_TYPE_LOCALE_STRING:
-				g_free( element->private->u.string );
-				element->private->u.string = g_value_dup_string( value );
-				break;
-
-			case NADF_TYPE_STRING_LIST:
-				na_core_utils_slist_free( element->private->u.slist );
-				element->private->u.slist = na_core_utils_slist_duplicate( g_value_get_pointer( value ));
-				break;
-
-			case NADF_TYPE_BOOLEAN:
-				element->private->u.boolean = g_value_get_boolean( value );
-				break;
-
-			case NADF_TYPE_POINTER:
-				element->private->u.pointer = g_value_get_pointer( value );
-				break;
-
-			case NADF_TYPE_UINT:
-				element->private->u.uint = g_value_get_uint( value );
-				break;
-
-			default:
-				g_warning( "%s: unmanaged type=%d", thisfn, element->private->type );
-		}
-	}
-}
-
-/**
- * na_data_element_set_from_void:
- * @element: the #NADataElement whose value is to be set.
- * @value: the value whose content is to be got.
- *
- * Evaluates the @value and set it to the @element.
- */
-void
-na_data_element_set_from_void( NADataElement *element, const void *value )
-{
-	static const gchar *thisfn = "na_data_element_set_from_void";
-
-	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
-
-	if( !element->private->dispose_has_run ){
-
-		switch( element->private->type ){
-
-			case NADF_TYPE_STRING:
-			case NADF_TYPE_LOCALE_STRING:
-				g_free( element->private->u.string );
-				element->private->u.string = g_strdup(( const gchar * ) value );
-				break;
-
-			case NADF_TYPE_STRING_LIST:
-				na_core_utils_slist_free( element->private->u.slist );
-				element->private->u.slist = na_core_utils_slist_duplicate(( GSList * ) value );
-				break;
-
-			case NADF_TYPE_BOOLEAN:
-				element->private->u.boolean = GPOINTER_TO_UINT( value );
-				break;
-
-			case NADF_TYPE_POINTER:
-				element->private->u.pointer = ( void * ) value;
-				break;
-
-			case NADF_TYPE_UINT:
-				element->private->u.uint = GPOINTER_TO_UINT( value );
-				break;
-
-			default:
-				g_warning( "%s: unmanaged type=%d", thisfn, element->private->type );
+	if( fn ){
+		if( fn->dump ){
+			( *fn->dump )( element );
 		}
 	}
 }
@@ -459,7 +419,7 @@ na_data_element_set_from_void( NADataElement *element, const void *value )
 void *
 na_data_element_get( const NADataElement *element )
 {
-	static const gchar *thisfn = "na_data_element_set_to_value";
+	DataElementFn *fn;
 	void *value;
 
 	g_return_val_if_fail( NA_IS_DATA_ELEMENT( element ), NULL );
@@ -468,31 +428,12 @@ na_data_element_get( const NADataElement *element )
 
 	if( !element->private->dispose_has_run ){
 
-		switch( element->private->type ){
+		fn = get_data_element_fn( element->private->iddef->type );
 
-			case NADF_TYPE_STRING:
-			case NADF_TYPE_LOCALE_STRING:
-				value = g_strdup( element->private->u.string );
-				break;
-
-			case NADF_TYPE_STRING_LIST:
-				value = na_core_utils_slist_duplicate( element->private->u.slist );
-				break;
-
-			case NADF_TYPE_BOOLEAN:
-				value = GUINT_TO_POINTER( element->private->u.boolean );
-				break;
-
-			case NADF_TYPE_POINTER:
-				value = element->private->u.pointer;
-				break;
-
-			case NADF_TYPE_UINT:
-				value = GUINT_TO_POINTER( element->private->u.uint );
-				break;
-
-			default:
-				g_warning( "%s: unmanaged type=%d", thisfn, element->private->type );
+		if( fn ){
+			if( fn->get ){
+				value = ( *fn->get )( element );
+			}
 		}
 	}
 
@@ -509,37 +450,136 @@ na_data_element_get( const NADataElement *element )
 void
 na_data_element_set_to_value( const NADataElement *element, GValue *value )
 {
-	static const gchar *thisfn = "na_data_element_set_to_value";
+	DataElementFn *fn;
 
 	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
 
 	if( !element->private->dispose_has_run ){
 
-		switch( element->private->type ){
+		fn = get_data_element_fn( element->private->iddef->type );
 
-			case NADF_TYPE_STRING:
-			case NADF_TYPE_LOCALE_STRING:
-				g_value_set_string( value, element->private->u.string );
-				break;
+		if( fn ){
+			if( fn->get_via_value ){
+				( *fn->get_via_value )( element, value );
+			}
+		}
+	}
+}
 
-			case NADF_TYPE_STRING_LIST:
-				g_value_set_pointer( value, na_core_utils_slist_duplicate( element->private->u.slist ));
-				break;
+/**
+ * na_data_element_set:
+ * @element: the #NADataElement whose value is to be set.
+ * @value: the source #NADataElement.
+ *
+ * Copy value from @value to @element.
+ */
+void
+na_data_element_set( NADataElement *element, const NADataElement *value )
+{
+	DataElementFn *fn;
 
-			case NADF_TYPE_BOOLEAN:
-				g_value_set_boolean( value, element->private->u.boolean );
-				break;
+	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
+	g_return_if_fail( NA_IS_DATA_ELEMENT( value ));
+	g_return_if_fail( element->private->iddef->type == value->private->iddef->type );
 
-			case NADF_TYPE_POINTER:
-				g_value_set_pointer( value, element->private->u.pointer );
-				break;
+	if( !element->private->dispose_has_run ){
 
-			case NADF_TYPE_UINT:
-				g_value_set_uint( value, element->private->u.uint );
-				break;
+		fn = get_data_element_fn( element->private->iddef->type );
 
-			default:
-				g_warning( "%s: unmanaged type=%d", thisfn, element->private->type );
+		if( fn ){
+			if( fn->free ){
+				( *fn->free )( element );
+			}
+			if( fn->set_from_element ){
+				( *fn->set_from_element )( element, value );
+			}
+		}
+	}
+}
+
+/**
+ * na_data_element_set_from_string:
+ * @element: the #NADataElement whose value is to be set.
+ * @value: the string to be set.
+ *
+ * Evaluates the @value and set it to the @element.
+ */
+void
+na_data_element_set_from_string( NADataElement *element, const gchar *value )
+{
+	DataElementFn *fn;
+
+	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
+
+	if( !element->private->dispose_has_run ){
+
+		fn = get_data_element_fn( element->private->iddef->type );
+
+		if( fn ){
+			if( fn->free ){
+				( *fn->free )( element );
+			}
+			if( fn->set_from_string ){
+				( *fn->set_from_string )( element, value );
+			}
+		}
+	}
+}
+
+/**
+ * na_data_element_set_from_value:
+ * @element: the #NADataElement whose value is to be set.
+ * @value: the value whose content is to be got.
+ *
+ * Evaluates the @value and set it to the @element.
+ */
+void
+na_data_element_set_from_value( NADataElement *element, const GValue *value )
+{
+	DataElementFn *fn;
+
+	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
+
+	if( !element->private->dispose_has_run ){
+
+		fn = get_data_element_fn( element->private->iddef->type );
+
+		if( fn ){
+			if( fn->free ){
+				( *fn->free )( element );
+			}
+			if( fn->set_from_value ){
+				( *fn->set_from_value )( element, value );
+			}
+		}
+	}
+}
+
+/**
+ * na_data_element_set_from_void:
+ * @element: the #NADataElement whose value is to be set.
+ * @value: the value whose content is to be got.
+ *
+ * Evaluates the @value and set it to the @element.
+ */
+void
+na_data_element_set_from_void( NADataElement *element, const void *value )
+{
+	DataElementFn *fn;
+
+	g_return_if_fail( NA_IS_DATA_ELEMENT( element ));
+
+	if( !element->private->dispose_has_run ){
+
+		fn = get_data_element_fn( element->private->iddef->type );
+
+		if( fn ){
+			if( fn->free ){
+				( *fn->free )( element );
+			}
+			if( fn->set_from_void ){
+				( *fn->set_from_void )( element, value );
+			}
 		}
 	}
 }
@@ -554,7 +594,7 @@ na_data_element_set_to_value( const NADataElement *element, GValue *value )
 gboolean
 na_data_element_are_equal( const NADataElement *a, const NADataElement *b )
 {
-	static const gchar *thisfn = "na_data_element_are_equal";
+	DataElementFn *fn;
 	gboolean are_equal;
 
 	g_return_val_if_fail( NA_IS_DATA_ELEMENT( a ), FALSE );
@@ -565,39 +605,14 @@ na_data_element_are_equal( const NADataElement *a, const NADataElement *b )
 	if( !a->private->dispose_has_run &&
 		!b->private->dispose_has_run ){
 
-		if( a->private->type == b->private->type ){
+		if( a->private->iddef->type == b->private->iddef->type ){
 
-			are_equal = TRUE;
+			fn = get_data_element_fn( a->private->iddef->type );
 
-			switch( a->private->type ){
-
-				case NADF_TYPE_STRING:
-					are_equal = ( strcmp( a->private->u.string, b->private->u.string ) == 0 );
-					break;
-
-				case NADF_TYPE_LOCALE_STRING:
-					are_equal = ( g_utf8_collate( a->private->u.string, b->private->u.string ) == 0 );
-					break;
-
-				case NADF_TYPE_STRING_LIST:
-					are_equal = na_core_utils_slist_are_equal( a->private->u.slist, b->private->u.slist );
-					break;
-
-				case NADF_TYPE_BOOLEAN:
-					are_equal = ( a->private->u.boolean == b->private->u.boolean );
-					break;
-
-				case NADF_TYPE_POINTER:
-					are_equal = ( a->private->u.pointer == b->private->u.pointer );
-					break;
-
-				case NADF_TYPE_UINT:
-					are_equal = ( a->private->u.uint == b->private->u.uint );
-					break;
-
-				default:
-					g_warning( "%s: unmanaged type=%d", thisfn, a->private->type );
-					are_equal = FALSE;
+			if( fn ){
+				if( fn->are_equal ){
+					are_equal = ( *fn->are_equal )( a, b );
+				}
 			}
 		}
 	}
@@ -612,46 +627,425 @@ na_data_element_are_equal( const NADataElement *a, const NADataElement *b )
  * Returns: %TRUE if the element is valid, %FALSE else.
  */
 gboolean
-na_data_element_is_valid( const NADataElement *object )
+na_data_element_is_valid( const NADataElement *element )
 {
-	static const gchar *thisfn = "na_data_element_is_valid";
+	DataElementFn *fn;
 	gboolean is_valid;
 
-	g_return_val_if_fail( NA_IS_DATA_ELEMENT( object ), FALSE );
+	g_return_val_if_fail( NA_IS_DATA_ELEMENT( element ), FALSE );
 
 	is_valid = FALSE;
 
-	if( !object->private->dispose_has_run ){
+	if( !element->private->dispose_has_run ){
 
-		is_valid = TRUE;
+		fn = get_data_element_fn( element->private->iddef->type );
 
-		switch( object->private->type ){
-
-			case NADF_TYPE_STRING:
-			case NADF_TYPE_LOCALE_STRING:
-				is_valid = object->private->u.string && strlen( object->private->u.string ) > 0;
-				break;
-
-			case NADF_TYPE_STRING_LIST:
-				is_valid = object->private->u.slist && g_slist_length( object->private->u.slist ) > 0;
-				break;
-
-			case NADF_TYPE_BOOLEAN:
-				break;
-
-			case NADF_TYPE_POINTER:
-				is_valid = ( object->private->u.pointer != NULL );
-				break;
-
-			case NADF_TYPE_UINT:
-				is_valid = ( object->private->u.uint > 0 );
-				break;
-
-			default:
-				g_warning( "%s: unmanaged type=%d", thisfn, object->private->type );
-				is_valid = FALSE;
+		if( fn ){
+			if( fn->is_valid ){
+				is_valid = ( *fn->is_valid )( element );
+			}
 		}
 	}
 
 	return( is_valid );
+}
+
+static GParamSpec *
+string_spec( const NadfIdType *idtype )
+{
+	return( NULL );
+}
+
+static void
+string_free( const NADataElement *element )
+{
+	if( element->private->iddef->free ){
+		( *element->private->iddef->free )( element->private->u.string );
+	} else {
+		g_free( element->private->u.string );
+	}
+	element->private->u.string = NULL;
+}
+
+static void
+string_dump( const NADataElement *element )
+{
+	g_debug( "na-data-element: %s=%s", element->private->iddef->name, element->private->u.string );
+}
+
+static gboolean
+string_are_equal( const NADataElement *a, const NADataElement *b )
+{
+	if( !a->private->u.string && !b->private->u.string ){
+		return( TRUE );
+	}
+	if( !a->private->u.string || !b->private->u.string ){
+		return( FALSE );
+	}
+	return( strcmp( a->private->u.string, b->private->u.string ) == 0 );
+}
+
+static gboolean
+string_is_valid( const NADataElement *element )
+{
+	return( element->private->u.string && strlen( element->private->u.string ) > 0 );
+}
+
+static void *
+string_get( const NADataElement *element )
+{
+	void *value = NULL;
+
+	if( element->private->u.string ){
+		value = g_strdup( element->private->u.string );
+	}
+
+	return( value );
+}
+
+static void
+string_get_via_value( const NADataElement *element, GValue *value )
+{
+	g_value_set_string( value, element->private->u.string );
+}
+
+static void
+string_set_from_element( NADataElement *element, const NADataElement *source )
+{
+	element->private->u.string = g_strdup( source->private->u.string );
+}
+
+static void
+string_set_from_string( NADataElement *element, const gchar *string )
+{
+	if( string ){
+		element->private->u.string = g_strdup( string );
+	}
+}
+
+static void
+string_set_from_value( NADataElement *element, const GValue *value )
+{
+	if( g_value_get_string( value )){
+		element->private->u.string = g_value_dup_string( value );
+	}
+}
+
+static void
+string_set_from_void( NADataElement *element, const void *value )
+{
+	if( value ){
+		element->private->u.string = g_strdup(( const gchar * ) value );
+	}
+}
+
+static gboolean
+locale_are_equal( const NADataElement *a, const NADataElement *b )
+{
+	if( !a->private->u.string && !b->private->u.string ){
+		return( TRUE );
+	}
+	if( !a->private->u.string || !b->private->u.string ){
+		return( FALSE );
+	}
+	return( g_utf8_collate( a->private->u.string, b->private->u.string ) == 0 );
+}
+
+static gboolean
+locale_is_valid( const NADataElement *element )
+{
+	return( element->private->u.string && g_utf8_strlen( element->private->u.string, -1 ) > 0 );
+}
+
+static GParamSpec *
+slist_spec( const NadfIdType *idtype )
+{
+	return( NULL );
+}
+
+static void
+slist_free( const NADataElement *element )
+{
+	if( element->private->iddef->free ){
+		( *element->private->iddef->free )( element->private->u.slist );
+	} else {
+		na_core_utils_slist_free( element->private->u.slist );
+	}
+	element->private->u.slist = NULL;
+}
+
+static void
+slist_dump( const NADataElement *element )
+{
+	g_debug( "na-data-element: %s=", element->private->iddef->name );
+	na_core_utils_slist_dump( element->private->u.slist );
+}
+
+static gboolean
+slist_are_equal( const NADataElement *a, const NADataElement *b )
+{
+	if( !a->private->u.slist && !b->private->u.slist ){
+		return( TRUE );
+	}
+	if( !a->private->u.slist || !b->private->u.slist ){
+		return( FALSE );
+	}
+	return( na_core_utils_slist_are_equal( a->private->u.slist, b->private->u.slist ));
+}
+
+static gboolean
+slist_is_valid( const NADataElement *element )
+{
+	return( element->private->u.slist && g_slist_length( element->private->u.slist ) > 0 );
+}
+
+static void *
+slist_get( const NADataElement *element )
+{
+	void *value = NULL;
+
+	if( element->private->u.slist ){
+		value = na_core_utils_slist_duplicate( element->private->u.slist );
+	}
+
+	return( value );
+}
+
+static void
+slist_get_via_value( const NADataElement *element, GValue *value )
+{
+	g_value_set_pointer( value, na_core_utils_slist_duplicate( element->private->u.slist ));
+}
+
+static void
+slist_set_from_element( NADataElement *element, const NADataElement *source )
+{
+	element->private->u.slist = na_core_utils_slist_duplicate( source->private->u.slist );
+}
+
+static void
+slist_set_from_string( NADataElement *element, const gchar *string )
+{
+	if( string ){
+		element->private->u.slist = g_slist_append( NULL, g_strdup( string ));
+	}
+}
+
+static void
+slist_set_from_value( NADataElement *element, const GValue *value )
+{
+	if( g_value_get_pointer( value )){
+		element->private->u.slist = na_core_utils_slist_duplicate( g_value_get_pointer( value ));
+	}
+}
+
+static void
+slist_set_from_void( NADataElement *element, const void *value )
+{
+	if( value ){
+		element->private->u.slist = na_core_utils_slist_duplicate(( GSList * ) value );
+	}
+}
+
+static GParamSpec *
+bool_spec( const NadfIdType *idtype )
+{
+	return( NULL );
+}
+
+static void
+bool_free( const NADataElement *element )
+{
+	/* n/a */
+}
+
+static void
+bool_dump( const NADataElement *element )
+{
+	g_debug( "na-data-element: %s=%s",
+			element->private->iddef->name, element->private->u.boolean ? "True":"False" );
+}
+
+static gboolean
+bool_are_equal( const NADataElement *a, const NADataElement *b )
+{
+	return( a->private->u.boolean == b->private->u.boolean );
+}
+
+static gboolean
+bool_is_valid( const NADataElement *element )
+{
+	return( TRUE );
+}
+
+static void *
+bool_get( const NADataElement *element )
+{
+	return( GUINT_TO_POINTER( element->private->u.boolean ));
+}
+
+static void
+bool_get_via_value( const NADataElement *element, GValue *value )
+{
+	g_value_set_boolean( value, element->private->u.boolean );
+}
+
+static void
+bool_set_from_element( NADataElement *element, const NADataElement *source )
+{
+	element->private->u.boolean = source->private->u.boolean;
+}
+
+static void
+bool_set_from_string( NADataElement *element, const gchar *string )
+{
+	element->private->u.boolean = na_core_utils_boolean_from_string( string );
+}
+
+static void
+bool_set_from_value( NADataElement *element, const GValue *value )
+{
+	element->private->u.boolean = g_value_get_boolean( value );
+}
+
+static void
+bool_set_from_void( NADataElement *element, const void *value )
+{
+	element->private->u.boolean = GPOINTER_TO_UINT( value );
+}
+
+static GParamSpec *
+pointer_spec( const NadfIdType *idtype )
+{
+	return( NULL );
+}
+
+static void
+pointer_free( const NADataElement *element )
+{
+	if( element->private->iddef->free ){
+		( *element->private->iddef->free )( element->private->u.pointer );
+	}
+	element->private->u.pointer = NULL;
+}
+
+static void
+pointer_dump( const NADataElement *element )
+{
+	g_debug( "na-data-element: %s=%p",
+			element->private->iddef->name, ( void * ) element->private->u.pointer );
+}
+
+static gboolean
+pointer_are_equal( const NADataElement *a, const NADataElement *b )
+{
+	return( a->private->u.pointer == b->private->u.pointer );
+}
+
+static gboolean
+pointer_is_valid( const NADataElement *element )
+{
+	return( element->private->u.pointer != NULL );
+}
+
+static void *
+pointer_get( const NADataElement *element )
+{
+	return( element->private->u.pointer );
+}
+
+static void
+pointer_get_via_value( const NADataElement *element, GValue *value )
+{
+	g_value_set_pointer( value, element->private->u.pointer );
+}
+
+static void
+pointer_set_from_element( NADataElement *element, const NADataElement *source )
+{
+	element->private->u.pointer = source->private->u.pointer;
+}
+
+static void
+pointer_set_from_string( NADataElement *element, const gchar *pointer )
+{
+}
+
+static void
+pointer_set_from_value( NADataElement *element, const GValue *value )
+{
+	element->private->u.pointer = g_value_get_pointer( value );
+}
+
+static void
+pointer_set_from_void( NADataElement *element, const void *value )
+{
+	element->private->u.pointer = ( void * ) value;
+}
+
+static GParamSpec *
+uint_spec( const NadfIdType *idtype )
+{
+	return( NULL );
+}
+
+static void
+uint_free( const NADataElement *element )
+{
+	/* n/a */
+}
+
+static void
+uint_dump( const NADataElement *element )
+{
+	g_debug( "na-data-element: %s=%d",
+			element->private->iddef->name, element->private->u.uint );
+}
+
+static gboolean
+uint_are_equal( const NADataElement *a, const NADataElement *b )
+{
+	return( a->private->u.uint == b->private->u.uint );
+}
+
+static gboolean
+uint_is_valid( const NADataElement *element )
+{
+	return( element->private->u.uint > 0 );
+}
+
+static void *
+uint_get( const NADataElement *element )
+{
+	return( GUINT_TO_POINTER( element->private->u.uint ));
+}
+
+static void
+uint_get_via_value( const NADataElement *element, GValue *value )
+{
+	g_value_set_uint( value, element->private->u.uint );
+}
+
+static void
+uint_set_from_element( NADataElement *element, const NADataElement *source )
+{
+	element->private->u.uint = source->private->u.uint;
+}
+
+static void
+uint_set_from_string( NADataElement *element, const gchar *string )
+{
+	element->private->u.uint = atoi( string );
+}
+
+static void
+uint_set_from_value( NADataElement *element, const GValue *value )
+{
+	element->private->u.uint = g_value_get_uint( value );
+}
+
+static void
+uint_set_from_void( NADataElement *element, const void *value )
+{
+	element->private->u.uint = GPOINTER_TO_UINT( value );
 }

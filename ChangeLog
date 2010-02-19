@@ -1,5 +1,31 @@
 2009-02-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/api/na-idata-factory-str.h:
+	* src/core/na-core-utils.c:
+	* src/core/na-data-element.c:
+	* src/core/na-data-element.h:
+	* src/core/na-data-factory.c:
+	* src/core/na-io-provider.c:
+	* src/core/na-io-provider.h:
+	* src/core/na-object-action-enum.c:
+	* src/core/na-object-id-enum.c:
+	* src/core/na-object-item-enum.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object-menu-enum.c:
+	* src/core/na-object-profile-enum.c:
+	* src/core/na-object.c:
+	* src/io-desktop/nadp-writer.c:
+	* src/io-gconf/nagp-reader.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-iactions-list-bis.c:
+	* src/nact/nact-main-statusbar.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/nact/nact-tree-model.c:
+	Fix non empty string list.
+	Fix under reference in export assistant.
+	Refactor NADataElement class.
+
 	* src/core/na-exporter.c (na_exporter_get_formats):
 	Fix infinite loop.
 

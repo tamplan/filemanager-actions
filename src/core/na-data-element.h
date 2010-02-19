@@ -42,6 +42,8 @@
 
 #include <glib-object.h>
 
+#include <api/na-idata-factory-str.h>
+
 G_BEGIN_DECLS
 
 #define NA_DATA_ELEMENT_TYPE				( na_data_element_get_type())
@@ -69,17 +71,17 @@ typedef struct {
 
 GType          na_data_element_get_type( void );
 
-NADataElement *na_data_element_new( guint type );
+NADataElement *na_data_element_new( const NadfIdType *iddef );
 
-void           na_data_element_dump( const NADataElement *element, const gchar *name );
+void           na_data_element_dump( const NADataElement *element );
+
+void          *na_data_element_get             ( const NADataElement *element );
+void           na_data_element_set_to_value    ( const NADataElement *element, GValue *value );
 
 void           na_data_element_set             ( NADataElement *element, const NADataElement *value );
 void           na_data_element_set_from_string ( NADataElement *element, const gchar *value );
 void           na_data_element_set_from_value  ( NADataElement *element, const GValue *value );
 void           na_data_element_set_from_void   ( NADataElement *element, const void *value );
-
-void          *na_data_element_get             ( const NADataElement *element );
-void           na_data_element_set_to_value    ( const NADataElement *element, GValue *value );
 
 gboolean       na_data_element_are_equal       ( const NADataElement *a, const NADataElement *b );
 gboolean       na_data_element_is_valid        ( const NADataElement *element );

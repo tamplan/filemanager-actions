@@ -66,6 +66,8 @@ static void           instance_init( GTypeInstance *instance, gpointer klass );
 static void           instance_dispose( GObject *object );
 static void           instance_finalize( GObject *object );
 
+static void           object_dump( const NAObject *object );
+
 static void           iduplicable_iface_init( NAIDuplicableInterface *iface );
 static void           iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
 static gboolean       iduplicable_copy_iter( GObjectClass *class, const NAObject *target, NAObject *source );
@@ -73,8 +75,6 @@ static gboolean       iduplicable_are_equal( const NAIDuplicable *a, const NAIDu
 static gboolean       iduplicable_are_equal_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
 static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
 static gboolean       iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
-
-static void           object_dump( const NAObject *object );
 
 static gboolean       dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *user_data );
 static void           dump_tree( GList *tree, gint level );
@@ -200,6 +200,21 @@ instance_finalize( GObject *object )
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
+	}
+}
+
+static void
+object_dump( const NAObject *object )
+{
+	static const char *thisfn = "na_object_do_dump";
+
+	g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+
+	na_iduplicable_dump( NA_IDUPLICABLE( object ));
+
+	if( NA_IS_IDATA_FACTORY( object )){
+		na_data_factory_dump( NA_IDATA_FACTORY( object ));
 	}
 }
 
@@ -338,21 +353,6 @@ iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter
 	}
 
 	return( stop );
-}
-
-static void
-object_dump( const NAObject *object )
-{
-	static const char *thisfn = "na_object_do_dump";
-
-	g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
-			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
-
-	na_iduplicable_dump( NA_IDUPLICABLE( object ));
-
-	if( NA_IS_IDATA_FACTORY( object )){
-		na_data_factory_dump( NA_IDATA_FACTORY( object ));
-	}
 }
 
 /**
@@ -612,18 +612,23 @@ NAObject *
 na_object_object_ref( NAObject *object )
 {
 	NAObject *ref = NULL;
-	GList *childs, *ic;
+	GList *children, *ic;
 
 	g_debug( "na_object_object_ref: object=%p (%s, ref_count=%d)",
 			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+
 	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
 
 	if( !object->private->dispose_has_run ){
 
 		if( NA_IS_OBJECT_ITEM( object )){
 
-			childs = na_object_get_items( object );
-			for( ic = childs ; ic ; ic = ic->next ){
+			children = na_object_get_items( object );
+
+			for( ic = children ; ic ; ic = ic->next ){
+
+				g_debug( "na_object_object_ref: child=%p (%s, ref_count=%d)",
+							( void * ) ic->data, G_OBJECT_TYPE_NAME( ic->data ), G_OBJECT( ic->data )->ref_count );
 
 				na_object_ref( ic->data );
 			}
@@ -639,13 +644,13 @@ na_object_object_ref( NAObject *object )
  * na_object_object_unref:
  * @object: a #NAObject-derived object.
  *
- * Recursively unref the @object and all its childs, decrementing their
+ * Recursively unref the @object and all its children, decrementing their
  * reference_count by 1.
  */
 void
 na_object_object_unref( NAObject *object )
 {
-	GList *childs, *ic;
+	GList *children, *ic;
 
 	g_debug( "na_object_object_unref: object=%p (%s, ref_count=%d)",
 			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
@@ -656,9 +661,9 @@ na_object_object_unref( NAObject *object )
 
 		if( NA_IS_OBJECT_ITEM( object )){
 
-			childs = na_object_get_items( object );
-			for( ic = childs ; ic ; ic = ic->next ){
+			children = na_object_get_items( object );
 
+			for( ic = children ; ic ; ic = ic->next ){
 				na_object_unref( ic->data );
 			}
 		}

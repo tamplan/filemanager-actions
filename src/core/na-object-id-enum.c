@@ -48,7 +48,8 @@ NadfIdType id_iddef [] = {
 				NULL,
 				TRUE,
 				TRUE,
-				TRUE },
+				TRUE,
+				NULL },
 
 	{ NADF_DATA_LABEL,
 				"na-object-label",
@@ -60,7 +61,8 @@ NadfIdType id_iddef [] = {
 				"",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_PARENT,
 				"na-object-parent",
@@ -71,7 +73,8 @@ NadfIdType id_iddef [] = {
 				NULL,
 				FALSE,
 				FALSE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE },
 };

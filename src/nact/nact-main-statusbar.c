@@ -207,7 +207,7 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean readonly, gint 
 			gtk_image_set_from_file( image, LOCKED_IMAGE );
 			set_pixbuf = FALSE;
 			g_free( tooltip );
-			tooltip = na_io_provider_get_tooltip( reason );
+			tooltip = na_io_provider_get_readonly_tooltip( reason );
 		}
 
 		gtk_widget_set_tooltip_text( GTK_WIDGET( image ), tooltip );

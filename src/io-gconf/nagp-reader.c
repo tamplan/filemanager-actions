@@ -282,6 +282,7 @@ read_item_action_properties_v1( NagpGConfProvider *provider, GSList *entries, NA
 static void
 read_item_action_profile( NagpGConfProvider *provider, NAObjectAction *action, const gchar *path )
 {
+	/*static const gchar *thisfn = "nagp_reader_read_item_action_profile";*/
 	NAObjectProfile *profile;
 	gchar *name;
 	GSList *entries;

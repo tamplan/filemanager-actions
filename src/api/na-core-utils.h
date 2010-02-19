@@ -70,7 +70,8 @@ gchar   *na_core_utils_gstring_joinv( const gchar *start, const gchar *separator
 
 /* directory management
  */
-gboolean na_core_utils_dir_is_writable( const gchar *path );
+gboolean na_core_utils_dir_is_writable_path( const gchar *path );
+gboolean na_core_utils_dir_is_writable_uri( const gchar *uri );
 
 /* file management
  */

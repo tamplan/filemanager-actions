@@ -1234,14 +1234,14 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
 }
 
 /**
- * na_io_provider_get_tooltip:
+ * na_io_provider_get_readonly_tooltip:
  * @reason: the reason for why an item is not writable.
  *
  * Returns: the associated tooltip, as a newly allocated string which
  * should be g_free() by the caller.
  */
 gchar *
-na_io_provider_get_tooltip( guint reason )
+na_io_provider_get_readonly_tooltip( guint reason )
 {
 	gchar *tooltip;
 

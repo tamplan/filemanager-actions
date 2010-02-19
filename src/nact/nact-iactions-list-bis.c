@@ -366,7 +366,7 @@ nact_iactions_list_bis_get_selected_items( NactIActionsList *instance )
 			path = ( GtkTreePath * ) it->data;
 			gtk_tree_model_get_iter( model, &iter, path );
 			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-			/*g_debug( "nact_iactions_list_get_selected_items: object=%p", ( void * ) object );*/
+			g_debug( "nact_iactions_list_get_selected_items: object=%p", ( void * ) object );
 			items = g_list_prepend( items, na_object_ref( object ));
 			g_object_unref( object );
 		}

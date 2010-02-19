@@ -40,7 +40,7 @@ extern NadfIdType item_iddef [];		/* defined in na-object-item-enum.c */
 
 static NadfIdType menu_iddef [] = {
 
-	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE },
+	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE, FALSE, NULL },
 };
 
 NadfIdGroup menu_id_groups [] = {

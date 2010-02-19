@@ -432,8 +432,10 @@ assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *ass
 static void
 on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
 {
-	/*static const gchar *thisfn = "nact_assistant_export_on_actions_list_selection_changed";
-	g_debug( "%s: selection=%p, user_data=%p", thisfn, selection, user_data );*/
+	static const gchar *thisfn = "nact_assistant_export_on_actions_list_selection_changed";
+
+	g_debug( "%s: selection=%p, selected_items=%p (count=%d)",
+			thisfn, ( void * ) instance, ( void * ) selected_items, g_slist_length( selected_items ));
 
 	GtkAssistant *assistant;
 	gint pos;
@@ -536,7 +538,7 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 
 		uri = gtk_file_chooser_get_uri( chooser );
 		g_debug( "%s: uri=%s", thisfn, uri );
-		enabled = ( uri && strlen( uri ) && na_core_utils_dir_is_writable( uri ));
+		enabled = ( uri && strlen( uri ) && na_core_utils_dir_is_writable_uri( uri ));
 
 		if( enabled ){
 			g_free( assist->private->uri );

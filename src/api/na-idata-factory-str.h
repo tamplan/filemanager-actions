@@ -106,6 +106,16 @@ typedef struct {
 
 	gboolean mandatory;					/* whether this data must be not null and not empty
 										 * when we are testing for validity of an object */
+
+	void ( *free )( void * );			/* a pointer to a function to free the element data
+										 * a default function is provided for main elementary
+										 * data types:
+										 * - STRING and LOCALE_STRING: g_free
+										 * - STRING_LIST: na_core_utils_slist_free
+										 * - BOOLEAN, UINT, POINTER: none
+										 *
+										 * This may be used mainly when POINTER type is used
+										 * to cast e.g. a GList of items */
 }
 	NadfIdType;
 

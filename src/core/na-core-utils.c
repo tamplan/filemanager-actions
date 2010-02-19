@@ -42,7 +42,8 @@
 
 #include "na-iabout.h"
 
-static GSList *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
+static GSList  *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
+static gboolean info_dir_is_writable( GFile *file, const gchar *path );
 
 /**
  * na_core_utils_boolean_from_string
@@ -178,7 +179,7 @@ na_core_utils_slist_dump( GSList *list )
 	GSList *i;
 	int c;
 
-	g_debug( "%s: list at %p has %d elements", thisfn, ( void * ) list, g_slist_length( list ));
+	g_debug( "%s: list at %p has %d element(s)", thisfn, ( void * ) list, g_slist_length( list ));
 
 	for( i=list, c=0 ; i ; i=i->next ){
 		g_debug( "%s: [%2d] %s", thisfn, c++, ( gchar * ) i->data );
@@ -459,7 +460,7 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
 }
 
 /**
- * na_core_utils_dir_is_writable:
+ * na_core_utils_dir_is_writable_path:
  * @path: the path of the directory to be tested.
  *
  * Returns: %TRUE if the directory is writable, %FALSE else.
@@ -471,20 +472,64 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
  * There is no "super-test". Just try...
  */
 gboolean
-na_core_utils_dir_is_writable( const gchar *path )
+na_core_utils_dir_is_writable_path( const gchar *path )
 {
-	static const gchar *thisfn = "na_core_utils_dir_is_writable";
+	static const gchar *thisfn = "na_core_utils_path_is_writable";
 	GFile *file;
+	gboolean writable;
+
+	if( !path || !g_utf8_strlen( path, -1 )){
+		g_warning( "%s: empty path", thisfn );
+		return( FALSE );
+	}
+
+	file = g_file_new_for_path( path );
+	writable = info_dir_is_writable( file, path );
+	g_object_unref( file );
+
+	return( writable );
+}
+
+/**
+ * na_core_utils_dir_is_writable_uri:
+ * @uri: the URI of the directory to be tested.
+ *
+ * Returns: %TRUE if the directory is writable, %FALSE else.
+ *
+ * Please note that this type of test is subject to race conditions,
+ * as the directory may become unwritable after a successful test,
+ * but before the caller has been able to actually write into it.
+ *
+ * There is no "super-test". Just try...
+ */
+gboolean
+na_core_utils_dir_is_writable_uri( const gchar *uri )
+{
+	static const gchar *thisfn = "na_core_utils_dir_is_writable_uri";
+	GFile *file;
+	gboolean writable;
+
+	if( !uri || !g_utf8_strlen( uri, -1 )){
+		g_warning( "%s: empty uri", thisfn );
+		return( FALSE );
+	}
+
+	file = g_file_new_for_uri( uri );
+	writable = info_dir_is_writable( file, uri );
+	g_object_unref( file );
+
+	return( writable );
+}
+
+static gboolean
+info_dir_is_writable( GFile *file, const gchar *path )
+{
+	static const gchar *thisfn = "na_core_utils_info_dir_is_writable";
 	GError *error = NULL;
 	GFileInfo *info;
 	GFileType type;
 	gboolean writable;
 
-	if( !path || !g_utf8_strlen( path, -1 )){
-		return( FALSE );
-	}
-
-	file = g_file_new_for_path( path );
 	info = g_file_query_info( file,
 			G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE "," G_FILE_ATTRIBUTE_STANDARD_TYPE,
 			G_FILE_QUERY_INFO_NONE, NULL, &error );
@@ -492,7 +537,6 @@ na_core_utils_dir_is_writable( const gchar *path )
 	if( error ){
 		g_warning( "%s: g_file_query_info error: %s", thisfn, error->message );
 		g_error_free( error );
-		g_object_unref( file );
 		return( FALSE );
 	}
 

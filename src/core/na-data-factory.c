@@ -235,7 +235,7 @@ data_factory_init_iter( const NadfIdType *iddef, NAIDataFactory *object )
 	stop = FALSE;
 
 	default_value = v_get_default( object, iddef );
-	element = na_data_element_new( iddef->type );
+	element = na_data_element_new( iddef );
 	na_data_element_set_from_string( element, ( const void * )( default_value ? default_value : iddef->default_value ));
 	g_free( default_value );
 
@@ -248,20 +248,6 @@ data_factory_init_iter( const NadfIdType *iddef, NAIDataFactory *object )
 	g_object_set_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA, list );
 
 	return( stop );
-}
-
-static gchar *
-v_get_default( const NAIDataFactory *object, const NadfIdType *iddef )
-{
-	gchar *default_value;
-
-	default_value = NULL;
-
-	if( NA_IDATA_FACTORY_GET_INTERFACE( object )->get_default ){
-		default_value = NA_IDATA_FACTORY_GET_INTERFACE( object )->get_default( object, iddef );
-	}
-
-	return( default_value );
 }
 
 /**
@@ -293,6 +279,20 @@ na_data_factory_copy( NAIDataFactory *target, const NAIDataFactory *source )
 	}
 
 	v_copy( target, source );
+}
+
+static gchar *
+v_get_default( const NAIDataFactory *object, const NadfIdType *iddef )
+{
+	gchar *default_value;
+
+	default_value = NULL;
+
+	if( NA_IDATA_FACTORY_GET_INTERFACE( object )->get_default ){
+		default_value = NA_IDATA_FACTORY_GET_INTERFACE( object )->get_default( object, iddef );
+	}
+
+	return( default_value );
 }
 
 static void
@@ -431,10 +431,11 @@ na_data_factory_dump( const NAIDataFactory *object )
 	NadfDataValue *str;
 
 	list = g_object_get_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA );
+
 	for( it = list ; it ; it = it->next ){
 
 		str = ( NadfDataValue * ) it->data;
-		na_data_element_dump( str->element, str->iddef->name );
+		na_data_element_dump( str->element );
 	}
 }
 
@@ -451,6 +452,7 @@ na_data_factory_finalize( NAIDataFactory *object )
 	NadfDataValue *str;
 
 	list = g_object_get_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA );
+
 	for( it = list ; it ; it = it->next ){
 
 		str = ( NadfDataValue * ) it->data;

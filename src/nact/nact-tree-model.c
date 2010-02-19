@@ -603,7 +603,7 @@ nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean only_actions)
 				na_object_check_status( duplicate );
 			}
 			fill_tree_store( ts_model, model->private->treeview, duplicate, only_actions, NULL );
-			na_object_unref( duplicate );
+			g_object_unref( duplicate );
 		}
 	}
 }

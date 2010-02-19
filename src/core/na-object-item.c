@@ -436,20 +436,20 @@ na_object_item_get_position( const NAObjectItem *object, const NAObjectId *child
 void
 na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
 {
-	GList *childs_list;
+	GList *children;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 	g_return_if_fail( NA_IS_OBJECT_ID( child ));
 
 	if( !item->private->dispose_has_run ){
 
-		childs_list = na_object_get_items( item );
+		children = na_object_get_items( item );
 
-		if( !g_list_find( childs_list, ( gpointer ) child )){
+		if( !g_list_find( children, ( gpointer ) child )){
 
-			childs_list = g_list_append( childs_list, ( gpointer ) child );
+			children = g_list_append( children, ( gpointer ) child );
 			na_object_set_parent( child, item );
-			na_object_set_items( item, childs_list );
+			na_object_set_items( item, children );
 		}
 	}
 }

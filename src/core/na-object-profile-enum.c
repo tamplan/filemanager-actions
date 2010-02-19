@@ -48,7 +48,8 @@ static NadfIdType profile_iddef [] = {
 				"",
 				TRUE,
 				TRUE,
-				TRUE },
+				TRUE,
+				NULL },
 
 	{ NADF_DATA_PARAMETERS,
 				"na-object-parameters",
@@ -59,7 +60,8 @@ static NadfIdType profile_iddef [] = {
 				"",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_BASENAMES,
 				"na-object-basenames",
@@ -71,7 +73,8 @@ static NadfIdType profile_iddef [] = {
 				"*",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_MATCHCASE,
 				"na-object-matchcase",
@@ -83,7 +86,8 @@ static NadfIdType profile_iddef [] = {
 				"TRUE",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_MIMETYPES,
 				"na-object-mimetypes",
@@ -95,7 +99,8 @@ static NadfIdType profile_iddef [] = {
 				"*",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_ISFILE,
 				"na-object-isfile",
@@ -107,7 +112,8 @@ static NadfIdType profile_iddef [] = {
 				"TRUE",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_ISDIR,
 				"na-object-isdir",
@@ -119,7 +125,8 @@ static NadfIdType profile_iddef [] = {
 				"FALSE",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_MULTIPLE,
 				"na-object-multiple",
@@ -131,7 +138,8 @@ static NadfIdType profile_iddef [] = {
 				"FALSE",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_SCHEMES,
 				"na-object-schemes",
@@ -143,7 +151,8 @@ static NadfIdType profile_iddef [] = {
 				"file",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
 	{ NADF_DATA_FOLDERS,
 				"na-object-folders",
@@ -155,9 +164,10 @@ static NadfIdType profile_iddef [] = {
 				"/",
 				TRUE,
 				TRUE,
-				FALSE },
+				FALSE,
+				NULL },
 
-	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE },
+	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE, FALSE, NULL },
 };
 
 NadfIdGroup profile_id_groups [] = {
