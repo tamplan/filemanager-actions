@@ -43,6 +43,7 @@ G_BEGIN_DECLS
 
 void         na_io_factory_register  ( GType type, const NadfIdGroup *groups );
 NadfIdGroup *na_io_factory_get_groups( GType type );
+NadfIdType  *na_io_factory_get_idtype_from_gconf_key( const gchar *entry );
 
 GValue      *na_io_factory_read_value( const NAIIOFactory *reader, void *reader_data, const NadfIdType *iddef, GSList **messages );
 

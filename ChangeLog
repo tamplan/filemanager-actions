@@ -1,3 +1,53 @@
+2009-02-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* po/POTFILES.in:
+	* src/api/na-idata-factory-str.h:
+	* src/api/na-idata-factory.h:
+	* src/api/na-iimporter.h:
+	* src/api/na-iio-factory.h:
+	* src/api/na-object-api.h:
+	* src/core/Makefile.am:
+	* src/core/na-data-factory.c:
+	* src/core/na-data-factory.h:
+	* src/core/na-idata-factory.c:
+	* src/core/na-iio-factory.c:
+	* src/core/na-importer.c:
+	* src/core/na-importer.h:
+	* src/core/na-io-factory.c:
+	* src/core/na-io-factory.h:
+	* src/core/na-iprefs.h:
+	* src/core/na-module.c:
+	* src/core/na-object-action-enum.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id-enum.c:
+	* src/core/na-object-item-enum.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object-menu-enum.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile-enum.c:
+	* src/core/na-object-profile.c:
+	* src/core/na-pivot.c:
+	* src/io-desktop/Makefile.am:
+	* src/io-gconf/Makefile.am:
+	* src/io-xml/Makefile.am:
+	* src/io-xml/naxml-keys.c:
+	* src/io-xml/naxml-keys.h:
+	* src/io-xml/naxml-provider.c:
+	* src/io-xml/naxml-provider.h:
+	* src/io-xml/naxml-reader.c:
+	* src/io-xml/naxml-reader.h:
+	* src/nact/Makefile.am:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-import-ask.c:
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/plugin-menu/Makefile.am:
+	* src/plugin-tracker/Makefile.am:
+	* src/test/.gitignore:
+	* src/test/Makefile.am:
+	* src/utils/Makefile.am: Implement NAXMLReader.
+
 2009-02-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-core-utils.h:

@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <api/na-iimporter.h>
+
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
@@ -369,19 +371,19 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	 */
 	import_mode = nact_iprefs_get_import_mode( BASE_WINDOW( editor ), IPREFS_IMPORT_ITEMS_IMPORT_MODE );
 	switch( import_mode ){
-		case IPREFS_IMPORT_ASK:
+		case IMPORTER_MODE_ASK:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
 			break;
 
-		case IPREFS_IMPORT_RENUMBER:
+		case IMPORTER_MODE_RENUMBER:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsRenumberButton" );
 			break;
 
-		case IPREFS_IMPORT_OVERRIDE:
+		case IMPORTER_MODE_OVERRIDE:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsOverrideButton" );
 			break;
 
-		case IPREFS_IMPORT_NO_IMPORT:
+		case IMPORTER_MODE_NO_IMPORT:
 		default:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsNoImportButton" );
 			break;
@@ -525,18 +527,18 @@ save_preferences( NactPreferencesEditor *editor )
 
 	/* third tab: import tool
 	 */
-	import_mode = IPREFS_IMPORT_NO_IMPORT;
+	import_mode = IMPORTER_MODE_NO_IMPORT;
 	button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsRenumberButton" );
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-		import_mode = IPREFS_IMPORT_RENUMBER;
+		import_mode = IMPORTER_MODE_RENUMBER;
 	} else {
 		button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsOverrideButton" );
 		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-			import_mode = IPREFS_IMPORT_OVERRIDE;
+			import_mode = IMPORTER_MODE_OVERRIDE;
 		} else {
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
 			if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-				import_mode = IPREFS_IMPORT_ASK;
+				import_mode = IMPORTER_MODE_ASK;
 			}
 		}
 	}

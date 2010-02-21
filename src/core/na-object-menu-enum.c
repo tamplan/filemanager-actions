@@ -39,8 +39,7 @@ extern NadfIdType id_iddef [];			/* defined in na-object-id-enum.c */
 extern NadfIdType item_iddef [];		/* defined in na-object-item-enum.c */
 
 static NadfIdType menu_iddef [] = {
-
-	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE, FALSE, NULL },
+	{ 0 },
 };
 
 NadfIdGroup menu_id_groups [] = {
@@ -48,5 +47,5 @@ NadfIdGroup menu_id_groups [] = {
 	{ NA_DATA_FACTORY_ITEM_GROUP,       item_iddef },
 	{ NA_DATA_FACTORY_MENU_GROUP,       menu_iddef },
 	{ NA_DATA_FACTORY_CONDITIONS_GROUP, NULL },
-	{ 0, NULL }
+	{ 0 }
 };

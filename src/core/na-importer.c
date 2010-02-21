@@ -39,27 +39,39 @@ extern gboolean iimporter_finalized;		/* defined in na-iimporter.c */
 
 /**
  * na_importer_import:
- * @items: a #GList of already loaded items.
+ * @pivot: the #NAPivot pivot for this application.
  * @uri: the source filename URI.
  * @mode: the import mode.
+ * @fn: a function to check the existance of the imported item.
+ * @fn_data: function data
  * @messages: a pointer to a #GSList list of strings; the provider
  *  may append messages to this list, but shouldn't reinitialize it.
- *
- * Exports the specified @item to the target @uri in the required
- * @format.
  *
  * Returns: a newly allocated #NAObjectItem-derived object, or %NULL
  * if an error has been detected.
  */
 NAObjectItem *
-na_importer_import( GList *items, const gchar *uri, guint mode, GSList **messages )
+na_importer_import( const NAPivot *pivot, const gchar *uri, guint mode, ImporterCheckFn fn, void *fn_data, GSList **messages )
 {
+	static const gchar *thisfn = "na_importer_import";
 	NAObjectItem *item;
+	GList *modules;
+
+	g_debug( "%s: pivot=%p, uri=%s, mode=%d, fn=%p, fn_data=%p, messages=%p",
+			thisfn, ( void * ) pivot, uri, mode, ( void * ) fn, ( void * ) fn_data, ( void * ) messages );
 
 	item = NULL;
 
 	if( iimporter_initialized && !iimporter_finalized ){
 
+		modules = na_pivot_get_providers( pivot, NA_IIMPORTER_TYPE );
+		g_debug( "na_importer_import: modules_count=%d", g_list_length( modules ));
+		if( g_list_length( modules )){
+			if( NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( modules->data ))->import_uri ){
+				item = NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( modules->data ))->import_uri( NA_IIMPORTER( modules->data ), uri, mode, fn, fn_data, messages );
+			}
+		}
+		na_pivot_free_providers( modules );
 	}
 
 	return( item );

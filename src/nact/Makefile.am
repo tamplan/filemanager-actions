@@ -34,6 +34,7 @@ egg_platform_defines = -DEGG_SM_CLIENT_BACKEND_XSMP
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
+	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DPKGDATADIR=\"$(pkgdatadir)\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"				\

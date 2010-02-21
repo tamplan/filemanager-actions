@@ -28,53 +28,77 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_COMMON_XML_NAMES_H__
-#define __NA_COMMON_XML_NAMES_H__
+#ifndef __NAXML_KEYS_H__
+#define __NAXML_KEYS_H__
 
 #include <glib/gi18n.h>
+
+#include <api/na-idata-factory-str.h>
 
 G_BEGIN_DECLS
 
 /* XML element names (GConf schema)
- * used in FORMAT_GCONF_SCHEMA_V1 and FORMAT_GCONF_SCHEMA_V2
- */
-#define NACT_GCONF_SCHEMA_ROOT				"gconfschemafile"
-#define NACT_GCONF_SCHEMA_LIST				"schemalist"
-#define NACT_GCONF_SCHEMA_ENTRY				"schema"
-#define NACT_GCONF_SCHEMA_KEY				"key"
-#define NACT_GCONF_SCHEMA_APPLYTO			"applyto"
-#define NACT_GCONF_SCHEMA_TYPE				"type"
-#define NACT_GCONF_SCHEMA_LIST_TYPE			"list_type"
-#define NACT_GCONF_SCHEMA_LOCALE			"locale"
-#define NACT_GCONF_SCHEMA_DEFAULT			"default"
-
-/* Previouly used keys
+ * used in GCONF_SCHEMA_V1 and GCONF_SCHEMA_V2
  *
  * Up to v 1.10, export used to contain a full schema description,
  * while import only checked for applyto keys (along with locale
  * and default)
  *
  * Starting with 1.11, we have introduced a lighter export schema
- * (mainly without owner and short and long descriptions)
- *
- * only used in FORMAT_GCONF_SCHEMA_V1
+ * (without owner and short and long descriptions)
  */
-#define NACT_GCONF_SCHEMA_OWNER				"owner"
-#define NACT_GCONF_SCHEMA_SHORT				"short"
-#define NACT_GCONF_SCHEMA_LONG				"long"
+#define NAXML_KEY_SCHEMA_ROOT					"gconfschemafile"
+#define NAXML_KEY_SCHEMA_LIST					"schemalist"
+#define NAXML_KEY_SCHEMA_NODE					"schema"
+
+#define NAXML_KEY_SCHEMA_NODE_KEY				"key"
+#define NAXML_KEY_SCHEMA_NODE_APPLYTO			"applyto"
+#define NAXML_KEY_SCHEMA_NODE_OWNER				"owner"			/* v1 only */
+#define NAXML_KEY_SCHEMA_NODE_TYPE				"type"
+#define NAXML_KEY_SCHEMA_NODE_LISTTYPE			"list_type"
+#define NAXML_KEY_SCHEMA_NODE_LOCALE			"locale"
+#define NAXML_KEY_SCHEMA_NODE_DEFAULT			"default"
+
+#define NAXML_KEY_SCHEMA_NODE_LOCALE_DEFAULT	"default"
+#define NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT		"short"			/* v1 only */
+#define NAXML_KEY_SCHEMA_NODE_LOCALE_LONG		"long"			/* v1 only */
+
+/* this structure is statically allocated (cf. naxml-keys.c)
+ * and let us check the validity of each element node
+ */
+typedef struct {
+	gchar   *key;						/* static data */
+	gboolean v2;
+
+	gboolean reader_found;				/* dynamic data */
+}
+	NAXMLKeyStr;
+
+/* this structure is allocated once for each element readen
+ * and kept in a GList for interpretation in the second run
+ */
+typedef struct {
+	gchar      *key_path;
+	gchar      *key_value;
+	NadfIdType *iddef;
+}
+	NAXMLElementStr;
 
 /* XML element names (GConf dump)
  * used in FORMAT_GCONF_ENTRY
  */
-#define NACT_GCONF_DUMP_ROOT				"gconfentryfile"
-#define NACT_GCONF_DUMP_ENTRYLIST			"entrylist"
-#define NACT_GCONF_DUMP_ENTRYLIST_BASE		"base"
-#define NACT_GCONF_DUMP_ENTRY				"entry"
-#define NACT_GCONF_DUMP_KEY					"key"
-#define NACT_GCONF_DUMP_VALUE				"value"
-#define NACT_GCONF_DUMP_STRING				"string"
-#define NACT_GCONF_DUMP_LIST				"list"
-#define NACT_GCONF_DUMP_LIST_TYPE			"type"
+#define NAXML_KEY_DUMP_ROOT							"gconfentryfile"
+#define NAXML_KEY_DUMP_LIST							"entrylist"
+#define NAXML_KEY_DUMP_NODE							"entry"
+
+#define NAXML_KEY_DUMP_LIST_PARM_BASE				"base"
+
+#define NAXML_KEY_DUMP_NODE_KEY						"key"
+#define NAXML_KEY_DUMP_NODE_VALUE					"value"
+
+#define NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING		"string"
+#define NAXML_KEY_DUMP_NODE_VALUE_LIST				"list"
+#define NAXML_KEY_DUMP_NODE_VALUE_LIST_PARM_TYPE	"type"
 
 /* GConf schema descriptions
  */
@@ -188,4 +212,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __NA_COMMON_XML_NAMES_H__ */
+#endif /* __NAXML_KEYS_H__ */

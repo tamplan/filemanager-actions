@@ -175,11 +175,12 @@ typedef struct {
 }
 	NAIDataFactoryInterface;
 
-GType  na_idata_factory_get_type( void );
+GType       na_idata_factory_get_type( void );
 
-void  *na_idata_factory_get( const NAIDataFactory *object, guint data_id );
+void       *na_idata_factory_get( const NAIDataFactory *object, guint data_id );
 
-void   na_idata_factory_set( NAIDataFactory *object, guint data_id, const void *data );
+void        na_idata_factory_set_from_string( NAIDataFactory *object, guint data_id, const gchar *data );
+void        na_idata_factory_set_from_void  ( NAIDataFactory *object, guint data_id, const void *data );
 
 G_END_DECLS
 

@@ -28,24 +28,26 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_NA_IMPORTER_H__
-#define __NACT_NA_IMPORTER_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-/**
- * SECTION: na_iimport
- * @short_description: #NAIImport internal functions.
- * @include: nact/na-import.h
- */
+#include "naxml-keys.h"
 
-#include <api/na-object-item.h>
-#include <api/na-iimporter.h>
+NAXMLKeyStr naxml_schema_key_schema_str [] = {
+		{ NAXML_KEY_SCHEMA_NODE_KEY,             TRUE, FALSE },
+		{ NAXML_KEY_SCHEMA_NODE_APPLYTO,         TRUE, FALSE },
+		{ NAXML_KEY_SCHEMA_NODE_OWNER,          FALSE, FALSE },
+		{ NAXML_KEY_SCHEMA_NODE_TYPE,            TRUE, FALSE },
+		{ NAXML_KEY_SCHEMA_NODE_LISTTYPE,        TRUE, FALSE },
+		{ NAXML_KEY_SCHEMA_NODE_LOCALE,          TRUE, FALSE },
+		{ NAXML_KEY_SCHEMA_NODE_DEFAULT,         TRUE, FALSE },
+		{ NULL }
+};
 
-#include <core/na-pivot.h>
-
-G_BEGIN_DECLS
-
-NAObjectItem *na_importer_import( const NAPivot *pivot, const gchar *uri, guint mode, ImporterCheckFn fn, void *fn_data, GSList **messages );
-
-G_END_DECLS
-
-#endif /* __NACT_NA_IMPORTER_H__ */
+NAXMLKeyStr naxml_schema_key_locale_str [] = {
+		{ NAXML_KEY_SCHEMA_NODE_LOCALE_DEFAULT,  TRUE, FALSE },
+		{ NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT,   FALSE, FALSE },
+		{ NAXML_KEY_SCHEMA_NODE_LOCALE_LONG,    FALSE, FALSE },
+		{ NULL }
+};

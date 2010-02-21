@@ -228,7 +228,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 	if( !NA_OBJECT_PROFILE( object )->private->dispose_has_run ){
 
-		na_data_factory_get_value( NA_IDATA_FACTORY( object ), property_id, value, spec );
+		na_data_factory_set_from_value( NA_IDATA_FACTORY( object ), property_id, value );
 	}
 }
 

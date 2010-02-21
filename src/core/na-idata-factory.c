@@ -160,7 +160,7 @@ na_idata_factory_get( const NAIDataFactory *object, guint data_id )
 }
 
 /**
- * na_idata_factory_set:
+ * na_idata_factory_set_from_string:
  * @object: this #NAIDataFactory instance.
  * @data_id: the elementary data whose value is to be set.
  * @data: the value to set.
@@ -168,9 +168,25 @@ na_idata_factory_get( const NAIDataFactory *object, guint data_id )
  * Set the elementary data with the given value.
  */
 void
-na_idata_factory_set( NAIDataFactory *object, guint data_id, const void *data )
+na_idata_factory_set_from_string( NAIDataFactory *object, guint data_id, const gchar *data )
 {
 	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
 
-	na_data_factory_set( object, data_id, data );
+	na_data_factory_set_from_string( object, data_id, data );
+}
+
+/**
+ * na_idata_factory_set_from_void:
+ * @object: this #NAIDataFactory instance.
+ * @data_id: the elementary data whose value is to be set.
+ * @data: the value to set.
+ *
+ * Set the elementary data with the given value.
+ */
+void
+na_idata_factory_set_from_void( NAIDataFactory *object, guint data_id, const void *data )
+{
+	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+
+	na_data_factory_set_from_void( object, data_id, data );
 }

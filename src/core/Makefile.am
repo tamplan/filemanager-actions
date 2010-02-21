@@ -30,6 +30,7 @@ pkglib_LTLIBRARIES = libna-core.la
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
+	-I $(top_srcdir)/src								\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_CORE}\"				\
@@ -58,6 +59,7 @@ libna_core_la_SOURCES = \
 	na-iexporter.c										\
 	na-iimporter.c										\
 	na-iio-factory.c									\
+	na-iio-factory-priv.h								\
 	na-iio-provider.c									\
 	na-io-factory.c										\
 	na-io-factory.h										\

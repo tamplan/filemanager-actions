@@ -7,8 +7,8 @@ src/core/na-object-menu.c
 src/core/na-object-profile.c
 src/io-desktop/nadp-desktop-provider.c
 src/io-gconf/nagp-gconf-provider.c
-src/io-xml/nact-xml-reader.c
-src/io-xml/na-xml-names.h
+src/io-xml/naxml-keys.h
+src/io-xml/naxml-reader.c
 src/io-xml/naxml-provider.c
 src/nact/base-application.c
 src/nact/base-assistant.c

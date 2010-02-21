@@ -49,6 +49,8 @@ NadfIdType item_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				TRUE,
+				"tooltip",
 				NULL },
 
 	{ NADF_DATA_ICON,
@@ -62,6 +64,8 @@ NadfIdType item_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				TRUE,
+				"icon",
 				NULL },
 
 	{ NADF_DATA_DESCRIPTION,
@@ -75,6 +79,8 @@ NadfIdType item_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				TRUE,
+				"description",
 				NULL },
 
 	{ NADF_DATA_SUBITEMS,
@@ -87,6 +93,8 @@ NadfIdType item_iddef [] = {
 				FALSE,
 				FALSE,
 				FALSE,
+				FALSE,
+				NULL,
 				free_items_list },
 
 	{ NADF_DATA_SUBITEMS_SLIST,
@@ -100,6 +108,8 @@ NadfIdType item_iddef [] = {
 				FALSE,
 				FALSE,
 				FALSE,
+				FALSE,
+				"items",
 				NULL },
 
 	{ NADF_DATA_ENABLED,
@@ -114,6 +124,8 @@ NadfIdType item_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"enabled",
 				NULL },
 
 	{ NADF_DATA_READONLY,
@@ -131,6 +143,8 @@ NadfIdType item_iddef [] = {
 				TRUE,
 				FALSE,
 				FALSE,
+				FALSE,
+				NULL,
 				NULL },
 
 	{ NADF_DATA_PROVIDER,
@@ -143,6 +157,8 @@ NadfIdType item_iddef [] = {
 				TRUE,
 				FALSE,
 				FALSE,
+				FALSE,
+				NULL,
 				NULL },
 
 	{ NADF_DATA_PROVIDER_DATA,
@@ -155,9 +171,11 @@ NadfIdType item_iddef [] = {
 				TRUE,
 				FALSE,
 				FALSE,
+				FALSE,
+				NULL,
 				NULL },
 
-	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE, FALSE, NULL },
+	{ 0 },
 };
 
 static void

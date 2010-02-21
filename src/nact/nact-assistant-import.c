@@ -482,22 +482,22 @@ set_import_mode( NactAssistantImport *window, gint mode )
 	GtkToggleButton *button;
 
 	switch( mode ){
-		case IPREFS_IMPORT_ASK:
+		case IMPORTER_MODE_ASK:
 			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ));
 			gtk_toggle_button_set_active( button, TRUE );
 			break;
 
-		case IPREFS_IMPORT_RENUMBER:
+		case IMPORTER_MODE_RENUMBER:
 			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ));
 			gtk_toggle_button_set_active( button, TRUE );
 			break;
 
-		case IPREFS_IMPORT_OVERRIDE:
+		case IMPORTER_MODE_OVERRIDE:
 			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ));
 			gtk_toggle_button_set_active( button, TRUE );
 			break;
 
-		case IPREFS_IMPORT_NO_IMPORT:
+		case IMPORTER_MODE_NO_IMPORT:
 		default:
 			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ));
 			gtk_toggle_button_set_active( button, TRUE );
@@ -580,13 +580,13 @@ get_import_mode( NactAssistantImport *window )
 	override_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ));
 	ask_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ));
 
-	mode = IPREFS_IMPORT_NO_IMPORT;
+	mode = IMPORTER_MODE_NO_IMPORT;
 	if( gtk_toggle_button_get_active( renumber_button )){
-		mode = IPREFS_IMPORT_RENUMBER;
+		mode = IMPORTER_MODE_RENUMBER;
 	} else if( gtk_toggle_button_get_active( override_button )){
-		mode = IPREFS_IMPORT_OVERRIDE;
+		mode = IMPORTER_MODE_OVERRIDE;
 	} else if( gtk_toggle_button_get_active( ask_button )){
-		mode = IPREFS_IMPORT_ASK;
+		mode = IMPORTER_MODE_ASK;
 	}
 
 	return( mode );
@@ -605,22 +605,22 @@ add_import_mode( NactAssistantImport *window, const gchar *text )
 	result = NULL;
 
 	switch( mode ){
-		case IPREFS_IMPORT_NO_IMPORT:
+		case IMPORTER_MODE_NO_IMPORT:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "NoImportLabel"))));
 			break;
 
-		case IPREFS_IMPORT_RENUMBER:
+		case IMPORTER_MODE_RENUMBER:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "RenumberLabel"))));
 			break;
 
-		case IPREFS_IMPORT_OVERRIDE:
+		case IMPORTER_MODE_OVERRIDE:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "OverrideLabel"))));
 			break;
 
-		case IPREFS_IMPORT_ASK:
+		case IMPORTER_MODE_ASK:
 			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ))));
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AskLabel"))));
 			break;
@@ -656,6 +656,8 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	GList *items;
 	BaseWindow *mainwnd;
 	gint mode;
+	NactApplication *application;
+	NAUpdater *updater;
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	g_assert( NACT_IS_ASSISTANT_IMPORT( wnd ));
@@ -667,6 +669,9 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	g_object_get( G_OBJECT( wnd ), BASE_WINDOW_PROP_PARENT, &mainwnd, NULL );
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( wnd )));
+	updater = nact_application_get_updater( application );
+
 	/* import actions
 	 * getting results in the same order than uris
 	 * simultaneously building the actions list
@@ -675,7 +680,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	for( is = uris ; is ; is = is->next ){
 
 		msg = NULL;
-		item = na_importer_import( items, ( const gchar * ) is->data, mode, &msg );
+		item = na_importer_import( NA_PIVOT( updater ), ( const gchar * ) is->data, mode, NULL, NULL, &msg );
 
 		str = g_new0( ImportUriStruct, 1 );
 		str->uri = g_strdup(( const gchar * ) is->data );

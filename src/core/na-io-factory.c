@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include "na-iio-factory-priv.h"
 #include "na-io-factory.h"
 
@@ -57,7 +59,8 @@ na_io_factory_register( GType type, const NadfIdGroup *groups )
 
 	if( iio_factory_initialized && !iio_factory_finalized ){
 
-		g_debug( "%s: type=%lu, groups=%p", thisfn, ( unsigned long ) type, ( void * ) groups );
+		g_debug( "%s: type=%lu, groups=%p",
+				thisfn, ( unsigned long ) type, ( void * ) groups );
 
 		g_return_if_fail( groups != NULL );
 
@@ -94,6 +97,62 @@ na_io_factory_get_groups( GType type )
 		for( it = iio_factory_klass->private->registered ; it ; it = it->next ){
 			if((( NadfImplement * ) it->data )->type == type ){
 				return((( NadfImplement * ) it->data )->groups );
+			}
+		}
+	}
+
+	return( NULL );
+}
+
+/**
+ * na_io_factory_get_idtype_from_gconf_key:
+ * @entry: the name of the GConf entry we are searching for.
+ *
+ * Returns: the definition of the data which is exported as @entry in GConf,
+ * or %NULL if not found.
+ */
+NadfIdType *
+na_io_factory_get_idtype_from_gconf_key( const gchar *entry )
+{
+	static const gboolean debug = FALSE;
+	GList *imp;
+
+	if( iio_factory_initialized && !iio_factory_finalized ){
+
+		if( debug ){
+			g_debug( "na_io_factory_get_idtype_from_gconf_key: entry=%s", entry );
+		}
+
+		for( imp = iio_factory_klass->private->registered ; imp ; imp = imp->next ){
+
+			NadfImplement *implement = ( NadfImplement * ) imp->data;
+			if( debug ){
+				g_debug( "implement=%p, type=%lu, groups=%p",
+						( void * ) implement, ( gulong ) implement->type, ( void * ) implement->groups );
+			}
+
+			NadfIdGroup *group = implement->groups;
+			while( group->idgroup ){
+				if( debug ){
+					g_debug( "group=%p, idgroup=%d, iddefs=%p", ( void * ) group, group->idgroup, ( void * ) group->iddef );
+				}
+
+				NadfIdType *iddef = group->iddef;
+				if( iddef ){
+					while( iddef->id ){
+						if( debug ){
+							g_debug( "iddef=%p, id=%d, gconf_entry=%s", ( void * ) iddef, iddef->id, iddef->gconf_entry );
+						}
+
+						if( iddef->gconf_entry && !strcmp( iddef->gconf_entry, entry )){
+							return( iddef );
+						}
+
+						iddef++;
+					}
+				}
+
+				group++;
 			}
 		}
 	}

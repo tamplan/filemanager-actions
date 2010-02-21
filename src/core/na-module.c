@@ -463,9 +463,7 @@ na_module_get_extensions_for_type( GList *modules, GType type )
 		}
 	}
 
-	willing_to = g_list_reverse( willing_to );
-
-	return( willing_to );
+	return( g_list_reverse( willing_to ));
 }
 
 /**

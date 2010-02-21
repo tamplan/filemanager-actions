@@ -34,6 +34,7 @@
 #endif
 
 #include <api/na-gconf-utils.h>
+#include <api/na-iimporter.h>
 
 #include <core/na-iprefs.h>
 
@@ -46,14 +47,14 @@ struct NactIPrefsInterfacePrivate {
 	GConfClient *client;
 };
 
-#define DEFAULT_IMPORT_MODE_INT				IPREFS_IMPORT_NO_IMPORT
+#define DEFAULT_IMPORT_MODE_INT				IMPORTER_MODE_NO_IMPORT
 #define DEFAULT_IMPORT_MODE_STR				"NoImport"
 
 static GConfEnumStringPair import_mode_table[] = {
-	{ IPREFS_IMPORT_NO_IMPORT,				DEFAULT_IMPORT_MODE_STR },
-	{ IPREFS_IMPORT_RENUMBER,				"Renumber" },
-	{ IPREFS_IMPORT_OVERRIDE,				"Override" },
-	{ IPREFS_IMPORT_ASK,					"Ask" },
+	{ IMPORTER_MODE_NO_IMPORT,				DEFAULT_IMPORT_MODE_STR },
+	{ IMPORTER_MODE_RENUMBER,				"Renumber" },
+	{ IMPORTER_MODE_OVERRIDE,				"Override" },
+	{ IMPORTER_MODE_ASK,					"Ask" },
 	{ 0, NULL }
 };
 

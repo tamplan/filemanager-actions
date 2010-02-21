@@ -240,6 +240,11 @@ instance_constructed( GObject *object )
 
 		monitor_runtime_preferences( self );
 
+		/* force class initialization and io-factory registration
+		 */
+		g_object_unref( na_object_action_new_with_profile());
+		g_object_unref( na_object_menu_new());
+
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
 			G_OBJECT_CLASS( st_parent_class )->constructed( object );
@@ -434,7 +439,7 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 	static const gchar *thisfn = "na_pivot_get_providers";
 	GList *list = NULL;
 
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
+	g_debug( "%s: pivot=%p, type=%lu (%s)", thisfn, ( void * ) pivot, ( unsigned long ) type, g_type_name( type ));
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	if( !pivot->private->dispose_has_run ){

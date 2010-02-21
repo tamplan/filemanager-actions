@@ -154,6 +154,7 @@ instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "na_object_item_instance_dispose";
 	NAObjectItem *self;
+	GList *items, *it;
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -164,6 +165,13 @@ instance_dispose( GObject *object )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
+
+		items = na_object_get_items( self );
+		for( it = items ; it ; it = it->next ){
+			g_object_unref( it->data );
+		}
+		g_list_free( items );
+		na_object_set_items( self, NULL );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){

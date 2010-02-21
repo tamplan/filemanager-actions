@@ -35,6 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <api/na-object-api.h>
+#include <api/na-iimporter.h>
 
 #include <core/na-iprefs.h>
 
@@ -243,7 +244,7 @@ nact_import_ask_user( NactMainWindow *parent, const gchar *uri, NAObjectItem *it
 	gint mode;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
-	g_return_val_if_fail( BASE_IS_WINDOW( parent ), IPREFS_IMPORT_NO_IMPORT );
+	g_return_val_if_fail( BASE_IS_WINDOW( parent ), IMPORTER_MODE_NO_IMPORT );
 
 	editor = import_ask_new( BASE_WINDOW( parent ));
 	editor->private->parent = parent;
@@ -307,15 +308,15 @@ on_base_runtime_init_dialog( NactImportAsk *editor, gpointer user_data )
 	g_free( label );
 
 	switch( editor->private->mode ){
-		case IPREFS_IMPORT_RENUMBER:
+		case IMPORTER_MODE_RENUMBER:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "AskRenumberButton" );
 			break;
 
-		case IPREFS_IMPORT_OVERRIDE:
+		case IMPORTER_MODE_OVERRIDE:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "AskOverrideButton" );
 			break;
 
-		case IPREFS_IMPORT_NO_IMPORT:
+		case IMPORTER_MODE_NO_IMPORT:
 		default:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "AskNoImportButton" );
 			break;
@@ -368,14 +369,14 @@ get_mode( NactImportAsk *editor )
 	GtkWidget *button;
 	gboolean keep;
 
-	import_mode = IPREFS_IMPORT_NO_IMPORT;
+	import_mode = IMPORTER_MODE_NO_IMPORT;
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskRenumberButton" );
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-		import_mode = IPREFS_IMPORT_RENUMBER;
+		import_mode = IMPORTER_MODE_RENUMBER;
 	} else {
 		button = base_window_get_widget( BASE_WINDOW( editor ), "AskOverrideButton" );
 		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-			import_mode = IPREFS_IMPORT_OVERRIDE;
+			import_mode = IMPORTER_MODE_OVERRIDE;
 		}
 	}
 
@@ -404,7 +405,7 @@ base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 		case GTK_RESPONSE_CLOSE:
 		case GTK_RESPONSE_CANCEL:
 
-			editor->private->mode = IPREFS_IMPORT_NO_IMPORT;
+			editor->private->mode = IMPORTER_MODE_NO_IMPORT;
 			return( TRUE );
 			break;
 

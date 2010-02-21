@@ -162,6 +162,8 @@ GType           na_iio_factory_get_type( void );
 NAIDataFactory *na_iio_factory_read_item ( const NAIIOFactory *reader, void *reader_data, GType type, GSList **messages );
 void            na_iio_factory_write_item( const NAIIOFactory *writer, void *writer_data, NAIDataFactory *serializable, GSList **messages );
 
+NadfIdType     *na_iio_factory_get_idtype_from_gconf_key( const gchar *xml_entry );
+
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_API_NA_IIO_FACTORY_H__ */

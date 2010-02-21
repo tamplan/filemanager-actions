@@ -1,5 +1,6 @@
 test-include
 test-parse-uris
+test-reader
 test-virtuals
 test-virtuals-without-test
 test-iface

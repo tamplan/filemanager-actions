@@ -33,7 +33,7 @@
 
 /**
  * SECTION: naxml_provider
- * @short_description: #NaxmlProvider class definition.
+ * @short_description: #NAXMLProvider class definition.
  * @include: naxml-provider.h
  *
  * This class manages I/O in XML formats.
@@ -43,28 +43,28 @@
 
 G_BEGIN_DECLS
 
-#define NAXML_PROVIDER_TYPE						( naxml_provider_get_type())
-#define NAXML_PROVIDER( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NAXML_PROVIDER_TYPE, NaxmlProvider ))
-#define NAXML_PROVIDER_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NAXML_PROVIDER_TYPE, NaxmlProviderClass ))
-#define NAGP_IS_GCONF_PROVIDER( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NAXML_PROVIDER_TYPE ))
-#define NAGP_IS_GCONF_PROVIDER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAXML_PROVIDER_TYPE ))
-#define NAXML_PROVIDER_GET_CLASS( object )		( G_TYPE_INSTANCE_GET_CLASS(( object ), NAXML_PROVIDER_TYPE, NaxmlProviderClass ))
+#define NAXML_PROVIDER_TYPE					( naxml_provider_get_type())
+#define NAXML_PROVIDER( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NAXML_PROVIDER_TYPE, NAXMLProvider ))
+#define NAXML_PROVIDER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NAXML_PROVIDER_TYPE, NAXMLProviderClass ))
+#define NA_IS_XML_PROVIDER( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NAXML_PROVIDER_TYPE ))
+#define NA_IS_XML_PROVIDER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAXML_PROVIDER_TYPE ))
+#define NAXML_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAXML_PROVIDER_TYPE, NAXMLProviderClass ))
 
-typedef struct NaxmlProviderPrivate      NaxmlProviderPrivate;
+typedef struct NAXMLProviderPrivate      NAXMLProviderPrivate;
 
 typedef struct {
 	GObject               parent;
-	NaxmlProviderPrivate *private;
+	NAXMLProviderPrivate *private;
 }
-	NaxmlProvider;
+	NAXMLProvider;
 
-typedef struct NaxmlProviderClassPrivate NaxmlProviderClassPrivate;
+typedef struct NAXMLProviderClassPrivate NAXMLProviderClassPrivate;
 
 typedef struct {
 	GObjectClass               parent;
-	NaxmlProviderClassPrivate *private;
+	NAXMLProviderClassPrivate *private;
 }
-	NaxmlProviderClass;
+	NAXMLProviderClass;
 
 GType naxml_provider_get_type     ( void );
 void  naxml_provider_register_type( GTypeModule *module );

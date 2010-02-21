@@ -50,6 +50,8 @@ static NadfIdType action_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"version",
 				NULL },
 
 	{ NADF_DATA_TARGET_SELECTION,
@@ -62,6 +64,8 @@ static NadfIdType action_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"target-selection",
 				NULL },
 
 	{ NADF_DATA_TARGET_BACKGROUND,
@@ -74,6 +78,8 @@ static NadfIdType action_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"target-background",
 				NULL },
 
 	{ NADF_DATA_TARGET_TOOLBAR,
@@ -88,6 +94,8 @@ static NadfIdType action_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"target-toolbar",
 				NULL },
 
 	{ NADF_DATA_TOOLBAR_LABEL,
@@ -101,6 +109,8 @@ static NadfIdType action_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				TRUE,
+				"toolbar-label",
 				NULL },
 
 	{ NADF_DATA_TOOLBAR_SAME_LABEL,
@@ -113,6 +123,8 @@ static NadfIdType action_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"toolbar-same-label",
 				NULL },
 
 	{ NADF_DATA_LAST_ALLOCATED,
@@ -126,9 +138,11 @@ static NadfIdType action_iddef [] = {
 				TRUE,
 				FALSE,
 				FALSE,
+				FALSE,
+				NULL,
 				NULL },
 
-	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE, FALSE, NULL },
+	{ 0 },
 };
 
 NadfIdGroup action_id_groups [] = {
@@ -136,5 +150,5 @@ NadfIdGroup action_id_groups [] = {
 	{ NA_DATA_FACTORY_ITEM_GROUP,       item_iddef },
 	{ NA_DATA_FACTORY_ACTION_GROUP,     action_iddef },
 	{ NA_DATA_FACTORY_CONDITIONS_GROUP, NULL },
-	{ 0, NULL }
+	{ 0 }
 };

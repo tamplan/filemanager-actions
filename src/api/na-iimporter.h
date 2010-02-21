@@ -54,6 +54,8 @@ typedef struct NAIImporter                 NAIImporter;
 
 typedef struct NAIImporterInterfacePrivate NAIImporterInterfacePrivate;
 
+typedef gboolean ( *ImporterCheckFn )( const gchar *, void *fn_data );
+
 typedef struct {
 	GTypeInterface               parent;
 	NAIImporterInterfacePrivate *private;
@@ -67,8 +69,35 @@ typedef struct {
 	 * Defaults to 1.
 	 */
 	guint          ( *get_version )( const NAIImporter *instance );
+
+	/**
+	 * import_uri:
+	 * @instance: the #NAIImporter provider.
+	 * @uri: the URI of the file to be imported.
+	 * @mode: import mode.
+	 * @fn: a pointer to the function to be used to check for existancy of
+	 *  imported id.
+	 * @fn_data: data to be passed to @fn.
+	 * @messages: a pointer to a #GSList list of strings; the provider
+	 *  may append messages to this list, but shouldn't reinitialize it.
+	 *
+	 * Imports an item.
+	 *
+	 * Returns: a #NAObjectItem-derived object, or %NULL if an error has
+	 * been detected.
+	 */
+	NAObjectItem * ( *import_uri ) ( const NAIImporter *instance, const gchar *uri, guint mode, ImporterCheckFn fn, void *fn_data, GSList **messages );
 }
 	NAIImporterInterface;
+
+/* import mode
+ */
+enum {
+	IMPORTER_MODE_NO_IMPORT = 1,		/* this is a "do not import anything" mode */
+	IMPORTER_MODE_RENUMBER,
+	IMPORTER_MODE_OVERRIDE,
+	IMPORTER_MODE_ASK
+};
 
 GType na_iimporter_get_type( void );
 

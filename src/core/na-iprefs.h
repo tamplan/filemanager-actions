@@ -110,15 +110,6 @@ enum {
 	IPREFS_ORDER_MANUAL
 };
 
-/* import mode
- */
-enum {
-	IPREFS_IMPORT_NO_IMPORT = 1,
-	IPREFS_IMPORT_RENUMBER,
-	IPREFS_IMPORT_OVERRIDE,
-	IPREFS_IMPORT_ASK
-};
-
 GType        na_iprefs_get_type( void );
 
 gint         na_iprefs_get_order_mode( NAIPrefs *instance );

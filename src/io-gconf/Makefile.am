@@ -30,6 +30,7 @@ pkglib_LTLIBRARIES = libna-io-gconf.la
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
+	-I $(top_srcdir)/src								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_GCONF}\"			\
 	$(NULL)

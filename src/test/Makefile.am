@@ -27,6 +27,7 @@
 #   ... and many others (see AUTHORS)
 
 noinst_PROGRAMS = \
+	test-reader											\
 	test-iface											\
 	test-include										\
 	test-parse-uris										\
@@ -36,9 +37,19 @@ noinst_PROGRAMS = \
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
+	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"				\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	$(NULL)
+
+test_reader_SOURCES = \
+	test-reader.c										\
+	$(NULL)
+
+test_reader_LDADD = \
+	$(top_builddir)/src/core/libna-core.la				\
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 test_iface_SOURCES = \

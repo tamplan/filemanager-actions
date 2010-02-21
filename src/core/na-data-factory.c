@@ -659,7 +659,60 @@ v_write_done( NAIDataFactory *serializable, const NAIIOFactory *writer, void *wr
 }
 
 /**
- * na_data_factory_set:
+ * na_data_factory_set_from_string:
+ * @object: this #NAIDataFactory instance.
+ * @property_id: the elementary data id.
+ * @string: the string to be set in the element.
+ *
+ * Set the @object with the @string.
+ */
+void
+na_data_factory_set_from_string( NAIDataFactory *object, guint data_id, const gchar *string )
+{
+	static const gchar *thisfn = "na_data_factory_set_from_string";
+	NADataElement *element;
+
+	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+
+	element = data_element_from_id( object, data_id );
+	if( element ){
+		na_data_element_set_from_string( element, string );
+
+	} else {
+		g_warning( "%s: unknown property id %d", thisfn, data_id );
+	}
+}
+
+/**
+ * na_data_factory_set_from_value:
+ * @object: this #NAIDataFactory instance.
+ * @property_id: the elementary data id.
+ * @value: the #GValue whose content is to be got.
+ *
+ * Get from the @value the content to be set in the #NADataElement
+ * attached to @property_id.
+ *
+ * This is to be readen as "set data element from value".
+ */
+void
+na_data_factory_set_from_value( NAIDataFactory *object, guint data_id, const GValue *value )
+{
+	static const gchar *thisfn = "na_data_factory_set_from_value";
+	NADataElement *element;
+
+	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+
+	element = data_element_from_id( object, data_id );
+	if( element ){
+		na_data_element_set_from_value( element, value );
+
+	} else {
+		g_warning( "%s: unknown property id %d", thisfn, data_id );
+	}
+}
+
+/**
+ * na_data_factory_set_from_void:
  * @object: this #NAIDataFactory instance.
  * @data_id: the elementary data whose value is to be set.
  * @data: the value to set.
@@ -667,9 +720,9 @@ v_write_done( NAIDataFactory *serializable, const NAIIOFactory *writer, void *wr
  * Set the elementary data with the given value.
  */
 void
-na_data_factory_set( NAIDataFactory *object, guint data_id, const void *data )
+na_data_factory_set_from_void( NAIDataFactory *object, guint data_id, const void *data )
 {
-	static const gchar *thisfn = "na_data_factory_set";
+	static const gchar *thisfn = "na_data_factory_set_from_void";
 	NADataElement *element;
 
 	/*g_debug( "%s: object=%p (%s), data_id=%d, data=%p",
@@ -683,35 +736,6 @@ na_data_factory_set( NAIDataFactory *object, guint data_id, const void *data )
 
 	} else {
 		g_warning( "%s: unknown property id %d", thisfn, data_id );
-	}
-}
-
-/**
- * na_data_factory_get_value:
- * @object: this #NAIDataFactory instance.
- * @property_id: the elementary data id.
- * @value: the #GValue whose content is to be got.
- * @spec: the #GParamSpec which describes this data.
- *
- * Get from the @value the content to be set in the #NADataElement
- * attached to @property_id.
- *
- * This is to be readen as "set data element from value".
- */
-void
-na_data_factory_get_value( NAIDataFactory *object, guint property_id, const GValue *value, GParamSpec *spec )
-{
-	static const gchar *thisfn = "na_data_factory_get_value";
-	NADataElement *element;
-
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
-
-	element = data_element_from_id( object, property_id );
-	if( element ){
-		na_data_element_set_from_value( element, value );
-
-	} else {
-		g_warning( "%s: unknown property id %d", thisfn, property_id );
 	}
 }
 

@@ -54,8 +54,10 @@ void            na_data_factory_finalize  ( NAIDataFactory *object );
 void            na_data_factory_read      ( NAIDataFactory *object, const NAIIOFactory *reader, void *reader_data, GSList **messages );
 void            na_data_factory_write     ( NAIDataFactory *object, const NAIIOFactory *writer, void *writer_data, GSList **messages );
 
-void            na_data_factory_set       ( NAIDataFactory *object, guint data_id, const void *data );
-void            na_data_factory_get_value ( NAIDataFactory *object, guint property_id, const GValue *value, GParamSpec *spec );
+void            na_data_factory_set_from_string( NAIDataFactory *object, guint data_id, const gchar *data );
+void            na_data_factory_set_from_value ( NAIDataFactory *object, guint data_id, const GValue *value );
+void            na_data_factory_set_from_void  ( NAIDataFactory *object, guint data_id, const void *data );
+
 void           *na_data_factory_get       ( const NAIDataFactory *object, guint data_id );
 void            na_data_factory_set_value ( const NAIDataFactory *object, guint property_id, GValue *value, GParamSpec *spec );
 

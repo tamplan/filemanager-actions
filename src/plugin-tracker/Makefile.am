@@ -28,6 +28,7 @@
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)											\
+	-I $(top_srcdir)/src										\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TRACKER}\"					\
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)

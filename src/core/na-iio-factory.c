@@ -210,6 +210,19 @@ na_iio_factory_write_item( const NAIIOFactory *writer, void *writer_data, NAIDat
 	}
 }
 
+/**
+ * na_iio_factory_get_idtype_from_gconf_key:
+ * @entry: the name of the node we are searching for.
+ *
+ * Returns: the definition of the data which is exported as @entry in GConf,
+ * or %NULL if not found.
+ */
+NadfIdType *
+na_iio_factory_get_idtype_from_gconf_key( const gchar *entry )
+{
+	return( na_io_factory_get_idtype_from_gconf_key( entry ));
+}
+
 static void
 v_io_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
 {

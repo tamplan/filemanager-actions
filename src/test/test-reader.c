@@ -28,24 +28,24 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_NA_IMPORTER_H__
-#define __NACT_NA_IMPORTER_H__
-
-/**
- * SECTION: na_iimport
- * @short_description: #NAIImport internal functions.
- * @include: nact/na-import.h
- */
-
-#include <api/na-object-item.h>
-#include <api/na-iimporter.h>
+#include <api/na-core-utils.h>
 
 #include <core/na-pivot.h>
+#include <core/na-importer.h>
 
-G_BEGIN_DECLS
+int
+main( int argc, char **argv )
+{
+	g_type_init();
 
-NAObjectItem *na_importer_import( const NAPivot *pivot, const gchar *uri, guint mode, ImporterCheckFn fn, void *fn_data, GSList **messages );
-
-G_END_DECLS
-
-#endif /* __NACT_NA_IMPORTER_H__ */
+	NAPivot *pivot = na_pivot_new( PIVOT_LOAD_NONE );
+	GSList *msg = NULL;
+	gchar *uri = "file:///net/pierre/eclipse/nautilus-actions/exports/config_0af5a47e-96d9-441c-a3b8-d1185ced0351.schemas";
+	NAObjectItem *item = na_importer_import( pivot, uri, IMPORTER_MODE_ASK, NULL, NULL, &msg );
+	if( item ){
+		na_object_dump( item );
+		g_object_unref( item );
+	}
+	na_core_utils_slist_dump( msg );
+	return( 0 );
+}

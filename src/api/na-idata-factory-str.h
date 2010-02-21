@@ -71,43 +71,56 @@ enum {
 	NADF_TYPE_UINT,						/* an unsigned integer */
 };
 
+/* attach here a xml document root with the corresponding node for the data
+ */
+typedef struct {
+	gchar *doc_id;
+	gchar *key;
+}
+	NadfDocKey;
+
 /**
  * The structure which fully describe an elementary data
  * Each #NAIDataFactory item definition may include several groups of
  * this structure
  */
 typedef struct {
-	guint    id;						/* the id of the object data item
+	guint     id;						/* the id of the object data item
 										 * must only be unique inside of the given group */
 
-	gchar   *name;						/* canonical name, used when getting/setting properties */
+	gchar    *name;						/* canonical name, used when getting/setting properties */
 
-	gboolean serializable;				/* whether the data is serializable
+	gboolean  serializable;				/* whether the data is serializable
 										 * if FALSE, then no attempt will be made to read/write it
 										 * and the data will must be set dynamically */
 
-	gchar   *short_label;				/* short descriptive name, used in GParamSpec */
+	gchar    *short_label;				/* short descriptive name, used in GParamSpec */
 
-	gchar   *long_label;				/* long, if not complete, description, used in GParamSpec */
+	gchar    *long_label;				/* long, if not complete, description, used in GParamSpec */
 
-	guint    type;						/* the elementary NADF_TYPE_xxx data type */
+	guint     type;						/* the elementary NADF_TYPE_xxx data type */
 
-	gchar   *default_value;				/* the default to assign when creating a new object
+	gchar    *default_value;			/* the default to assign when creating a new object
 										 * this default is also displayed in command-line help
 										 * of nautilus-actions-new utility */
 
-	gboolean copyable;					/* whether this data should be automatically copied when
+	gboolean  copyable;					/* whether this data should be automatically copied when
 										 * we are duplicating an object to another
 										 * in all cases, the implementation is always triggered
 										 * by the copy() interface method */
 
-	gboolean comparable;				/* whether this data should be compared when we
+	gboolean  comparable;				/* whether this data should be compared when we
 										 * are testing two objects for equality */
 
-	gboolean mandatory;					/* whether this data must be not null and not empty
+	gboolean  mandatory;				/* whether this data must be not null and not empty
 										 * when we are testing for validity of an object */
 
-	void ( *free )( void * );			/* a pointer to a function to free the element data
+	gboolean  localizable;				/* whether this is a localizable data
+										 * when serializing or exporting */
+
+	gchar    *gconf_entry;				/* same entry is also used for GConf-based XML docs */
+
+	void   ( *free )( void * );			/* a pointer to a function to free the element data
 										 * a default function is provided for main elementary
 										 * data types:
 										 * - STRING and LOCALE_STRING: g_free

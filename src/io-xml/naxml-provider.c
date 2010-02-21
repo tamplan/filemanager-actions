@@ -36,18 +36,20 @@
 
 #include <api/na-iio-factory.h>
 #include <api/na-iexporter.h>
+#include <api/na-iimporter.h>
 
 #include "naxml-provider.h"
+#include "naxml-reader.h"
 
 /* private class data
  */
-struct NaxmlProviderClassPrivate {
+struct NAXMLProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NaxmlProviderPrivate {
+struct NAXMLProviderPrivate {
 	gboolean dispose_has_run;
 };
 
@@ -92,17 +94,20 @@ static NAExporterStr st_formats[] = {
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 
-static void                 class_init( NaxmlProviderClass *klass );
+static void                 class_init( NAXMLProviderClass *klass );
 static void                 instance_init( GTypeInstance *instance, gpointer klass );
 static void                 instance_dispose( GObject *object );
 static void                 instance_finalize( GObject *object );
 
+static void                 iimporter_iface_init( NAIImporterInterface *iface );
+static guint                iimporter_get_version( const NAIImporter *importer );
+
 static void                 iexporter_iface_init( NAIExporterInterface *iface );
-static guint                iexporter_get_version( const NAIExporter *provider );
-static const NAExporterStr *iexporter_get_formats( const NAIExporter *instance );
+static guint                iexporter_get_version( const NAIExporter *exporter );
+static const NAExporterStr *iexporter_get_formats( const NAIExporter *exporter );
 
 static void                 iio_factory_iface_init( NAIIOFactoryInterface *iface );
-static guint                iio_factory_get_version( const NAIIOFactory *provider );
+static guint                iio_factory_get_version( const NAIIOFactory *factory );
 
 GType
 naxml_provider_get_type( void )
@@ -116,15 +121,21 @@ naxml_provider_register_type( GTypeModule *module )
 	static const gchar *thisfn = "naxml_provider_register_type";
 
 	static GTypeInfo info = {
-		sizeof( NaxmlProviderClass ),
+		sizeof( NAXMLProviderClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NaxmlProvider ),
+		sizeof( NAXMLProvider ),
 		0,
 		( GInstanceInitFunc ) instance_init
+	};
+
+	static const GInterfaceInfo iimporter_iface_info = {
+		( GInterfaceInitFunc ) iimporter_iface_init,
+		NULL,
+		NULL
 	};
 
 	static const GInterfaceInfo iexporter_iface_info = {
@@ -141,7 +152,9 @@ naxml_provider_register_type( GTypeModule *module )
 
 	g_debug( "%s", thisfn );
 
-	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NaxmlProvider", &info, 0 );
+	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NAXMLProvider", &info, 0 );
+
+	g_type_module_add_interface( module, st_module_type, NA_IIMPORTER_TYPE, &iimporter_iface_info );
 
 	g_type_module_add_interface( module, st_module_type, NA_IEXPORTER_TYPE, &iexporter_iface_info );
 
@@ -149,7 +162,7 @@ naxml_provider_register_type( GTypeModule *module )
 }
 
 static void
-class_init( NaxmlProviderClass *klass )
+class_init( NAXMLProviderClass *klass )
 {
 	static const gchar *thisfn = "naxml_provider_class_init";
 	GObjectClass *object_class;
@@ -162,21 +175,21 @@ class_init( NaxmlProviderClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NaxmlProviderClassPrivate, 1 );
+	klass->private = g_new0( NAXMLProviderClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "naxml_provider_instance_init";
-	NaxmlProvider *self;
+	NAXMLProvider *self;
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( instance ));
+	g_return_if_fail( NA_IS_XML_PROVIDER( instance ));
 	self = NAXML_PROVIDER( instance );
 
-	self->private = g_new0( NaxmlProviderPrivate, 1 );
+	self->private = g_new0( NAXMLProviderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -185,10 +198,10 @@ static void
 instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "naxml_provider_instance_dispose";
-	NaxmlProvider *self;
+	NAXMLProvider *self;
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( object ));
+	g_return_if_fail( NA_IS_XML_PROVIDER( object ));
 	self = NAXML_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
@@ -205,9 +218,9 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	NaxmlProvider *self;
+	NAXMLProvider *self;
 
-	g_assert( NAGP_IS_GCONF_PROVIDER( object ));
+	g_assert( NA_IS_XML_PROVIDER( object ));
 	self = NAXML_PROVIDER( object );
 
 	g_free( self->private );
@@ -216,6 +229,23 @@ instance_finalize( GObject *object )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
+}
+
+static void
+iimporter_iface_init( NAIImporterInterface *iface )
+{
+	static const gchar *thisfn = "naxml_provider_iimporter_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_version = iimporter_get_version;
+	iface->import_uri = naxml_reader_import_uri;
+}
+
+static guint
+iimporter_get_version( const NAIImporter *importer )
+{
+	return( 1 );
 }
 
 static void
@@ -232,13 +262,13 @@ iexporter_iface_init( NAIExporterInterface *iface )
 }
 
 static guint
-iexporter_get_version( const NAIExporter *provider )
+iexporter_get_version( const NAIExporter *exporter )
 {
 	return( 1 );
 }
 
 static const NAExporterStr *
-iexporter_get_formats( const NAIExporter *instance )
+iexporter_get_formats( const NAIExporter *exporter )
 {
 	return( st_formats );
 }
@@ -260,7 +290,7 @@ iio_factory_iface_init( NAIIOFactoryInterface *iface )
 }
 
 static guint
-iio_factory_get_version( const NAIIOFactory *provider )
+iio_factory_get_version( const NAIIOFactory *factory )
 {
 	return( 1 );
 }

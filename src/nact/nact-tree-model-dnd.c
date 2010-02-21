@@ -748,13 +748,15 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	gboolean drop_done = FALSE;
 	GSList *uri_list, *is, *msg;
 	NactApplication *application;
+	NAUpdater *updater;
 	gint import_mode;
 	NAObjectItem *item;
 	NactMainWindow *main_window;
-	GList *object_list;
 	GtkTreePath *new_dest;
+	GList *object_list;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
+	updater = nact_application_get_updater( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
 	model->private->drag_has_profiles = FALSE;
@@ -765,14 +767,16 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 
 	uri_list = g_slist_reverse( na_core_utils_slist_from_split(( const gchar * ) selection_data->data, "\n" ));
 	import_mode = nact_iprefs_get_import_mode( BASE_WINDOW( main_window ), IPREFS_IMPORT_ITEMS_IMPORT_MODE );
-
 	object_list = NULL;
+
 	for( is = uri_list ; is ; is = is->next ){
 
 		item = na_importer_import(
-				object_list,
+				NA_PIVOT( updater ),
 				( const gchar * ) is->data,
 				import_mode,
+				NULL,
+				NULL,
 				&msg );
 
 		if( msg ){

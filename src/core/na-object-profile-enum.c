@@ -49,6 +49,8 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				TRUE,
+				FALSE,
+				"path",
 				NULL },
 
 	{ NADF_DATA_PARAMETERS,
@@ -61,6 +63,8 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"parameters",
 				NULL },
 
 	{ NADF_DATA_BASENAMES,
@@ -74,6 +78,8 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"basenames",
 				NULL },
 
 	{ NADF_DATA_MATCHCASE,
@@ -87,6 +93,8 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"matchcase",
 				NULL },
 
 	{ NADF_DATA_MIMETYPES,
@@ -100,6 +108,8 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"mimetypes",
 				NULL },
 
 	{ NADF_DATA_ISFILE,
@@ -113,6 +123,8 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"isfile",
 				NULL },
 
 	{ NADF_DATA_ISDIR,
@@ -126,6 +138,8 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"isdir",
 				NULL },
 
 	{ NADF_DATA_MULTIPLE,
@@ -139,6 +153,8 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"accept-multiple-files",
 				NULL },
 
 	{ NADF_DATA_SCHEMES,
@@ -152,6 +168,8 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"schemes",
 				NULL },
 
 	{ NADF_DATA_FOLDERS,
@@ -165,14 +183,16 @@ static NadfIdType profile_iddef [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				FALSE,
+				"folders",
 				NULL },
 
-	{ 0, NULL, FALSE, NULL, NULL, 0, NULL, FALSE, FALSE, FALSE, NULL },
+	{ 0 },
 };
 
 NadfIdGroup profile_id_groups [] = {
 	{ NA_DATA_FACTORY_ID_GROUP,         id_iddef },
 	{ NA_DATA_FACTORY_PROFILE_GROUP,    profile_iddef },
 	{ NA_DATA_FACTORY_CONDITIONS_GROUP, NULL },
-	{ 0, NULL }
+	{ 0 }
 };
