@@ -392,8 +392,8 @@ appli_initialize_application( BaseApplication *application )
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	NACT_APPLICATION( application )->private->updater = na_updater_new( PIVOT_LOAD_ALL );
-	na_pivot_load_items( NA_PIVOT( NACT_APPLICATION( application )->private->updater ));
+	NACT_APPLICATION( application )->private->updater = na_updater_new();
+	na_pivot_load_items( NA_PIVOT( NACT_APPLICATION( application )->private->updater ), PIVOT_LOAD_ALL );
 
 	/* call parent class */
 	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_application( application );

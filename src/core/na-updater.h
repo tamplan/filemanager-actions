@@ -69,7 +69,7 @@ typedef struct {
 
 GType      na_updater_get_type( void );
 
-NAUpdater *na_updater_new( NAPivotLoadableSet loadable );
+NAUpdater *na_updater_new( void );
 
 /* update the tree in memory
  */

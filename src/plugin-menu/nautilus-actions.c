@@ -185,11 +185,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-
-	/* initialize NAPivot and load actions through NAIIOProvider interface
-	 * forwarding notification messages from NAPivot to NautilusActions
-	 */
-	self->private->pivot = na_pivot_new( !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
 }
 
 static void
@@ -207,9 +202,10 @@ instance_constructed( GObject *object )
 
 	if( !self->private->dispose_has_run ){
 
+		self->private->pivot = na_pivot_new();
 		na_pivot_register_consumer( self->private->pivot, NA_IPIVOT_CONSUMER( self ));
 		na_pivot_set_automatic_reload( self->private->pivot, TRUE );
-		na_pivot_load_items( self->private->pivot );
+		na_pivot_load_items( self->private->pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){

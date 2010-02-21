@@ -173,16 +173,14 @@ instance_finalize( GObject *object )
  * Returns: a newly allocated #NAUpdater object.
  */
 NAUpdater *
-na_updater_new( NAPivotLoadableSet loadable )
+na_updater_new( void )
 {
 	static const gchar *thisfn = "na_updater_new";
 	NAUpdater *updater;
 
 	g_debug( "%s", thisfn );
 
-	updater = g_object_new( NA_UPDATER_TYPE,
-			NAPIVOT_PROP_LOADABLE_SET, GUINT_TO_POINTER( loadable ),
-			NULL );
+	updater = g_object_new( NA_UPDATER_TYPE, NULL );
 
 	return( updater );
 }

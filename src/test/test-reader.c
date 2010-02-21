@@ -38,7 +38,7 @@ main( int argc, char **argv )
 {
 	g_type_init();
 
-	NAPivot *pivot = na_pivot_new( PIVOT_LOAD_NONE );
+	NAPivot *pivot = na_pivot_new();
 	GSList *msg = NULL;
 	gchar *uri = "file:///net/pierre/eclipse/nautilus-actions/exports/config_0af5a47e-96d9-441c-a3b8-d1185ced0351.schemas";
 	NAObjectItem *item = na_importer_import( pivot, uri, IMPORTER_MODE_ASK, NULL, NULL, &msg );

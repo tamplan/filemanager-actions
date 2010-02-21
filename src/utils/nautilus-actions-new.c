@@ -376,7 +376,7 @@ write_to_gconf( NAObjectAction *action, GSList **msg )
 	NAUpdater *updater;
 	guint ret;
 
-	updater = na_updater_new( PIVOT_LOAD_NONE );
+	updater = na_updater_new();
 
 	ret = na_updater_write_item( updater, NA_OBJECT_ITEM( action ), msg );
 

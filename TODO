@@ -160,3 +160,14 @@
   depending of available formats provided by NAIExporter modules
 
 - one should be able to import/export menus
+
+- icon: is defined as localestring in desktop entry spec
+  but path is defined as string in this same spec
+  and icon may be a path -> so what to do with this ?
+
+- NAIDataFactory -> NAIObjectFactory
+  NADataFactory  -> NAObjectFactory
+  NADataElement  -> NADataFactory
+  NadfIdType     -> NADataDef
+  na-idata-factory-enum -> na-idata-factory-def + merge na-idata-factory-str
+  NADataDef: id is suppressed, use name instead

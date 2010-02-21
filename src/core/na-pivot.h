@@ -38,8 +38,12 @@
  *
  * A consuming program should allocate one new NAPivot object in its
  * startup phase. The class takes care of declaring the I/O interfaces,
- * while registering the known providers. The object will then load
- * itself the existing list of actions.
+ * while registering the known providers.
+ * 		NAPivot *pivot = na_pivot_new();
+ *
+ * With this newly allocated #NAPivot object, the consuming program
+ * is then able to ask for loading the items.
+ * 		na_pivot_load_items( pivot, PIVOT_LOADABLE_SET );
  *
  * Notification system.
  *
@@ -104,24 +108,22 @@ typedef struct {
 
 GType    na_pivot_get_type( void );
 
+/* properties
+ */
+#define NAPIVOT_PROP_TREE				"na-pivot-prop-tree"
+
 /* Loadable population
  * NACT management user interface defaults to PIVOT_LOAD_ALL
  * N-A plugin set the loadable population to !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID
  */
-typedef enum {
+enum {
 	PIVOT_LOAD_NONE     = 0,
 	PIVOT_LOAD_DISABLED = 1 << 0,
 	PIVOT_LOAD_INVALID  = 1 << 1,
 	PIVOT_LOAD_ALL      = 0xff
-}
-	NAPivotLoadableSet;
+};
 
-/* properties
- */
-#define NAPIVOT_PROP_LOADABLE_SET		"na-pivot-prop-loadable-set"
-#define NAPIVOT_PROP_TREE				"na-pivot-prop-tree"
-
-NAPivot      *na_pivot_new( NAPivotLoadableSet loadable );
+NAPivot      *na_pivot_new( void );
 void          na_pivot_dump( const NAPivot *pivot );
 
 /* providers management of any NAIxxxxProvider interface
@@ -133,7 +135,8 @@ void          na_pivot_free_providers( GList *providers );
  */
 NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *id );
 GList        *na_pivot_get_items( const NAPivot *pivot );
-void          na_pivot_load_items( NAPivot *pivot );
+void          na_pivot_load_items( NAPivot *pivot, guint loadable );
+void          na_pivot_reload_items( NAPivot *pivot );
 
 void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  );
 

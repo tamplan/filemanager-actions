@@ -1399,7 +1399,7 @@ reload( NactMainWindow *window )
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
-		na_pivot_load_items( NA_PIVOT( updater ));
+		na_pivot_reload_items( NA_PIVOT( updater ));
 		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( NA_PIVOT( updater )));
 		nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
 

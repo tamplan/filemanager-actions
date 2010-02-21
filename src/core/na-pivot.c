@@ -52,43 +52,43 @@ struct NAPivotClassPrivate {
 /* private instance data
  */
 struct NAPivotPrivate {
-	gboolean           dispose_has_run;
+	gboolean  dispose_has_run;
 
-	NAPivotLoadableSet loadable_set;
+	guint     loadable_set;
 
 	/* dynamically loaded modules (extension plugins)
 	 */
-	GList             *modules;
+	GList    *modules;
 
 	/* list of instances to be notified of configuration updates
 	 * these are called 'consumers' of NAPivot
 	 */
-	GList             *consumers;
+	GList    *consumers;
 
 	/* configuration tree of actions and menus
 	 */
-	GList             *tree;
+	GList    *tree;
 
 	/* whether to automatically reload the whole configuration tree
 	 * when a modification is detected in one of the underlying I/O
 	 * storage subsystems
 	 * defaults to FALSE
 	 */
-	gboolean           automatic_reload;
-	GTimeVal           last_event;
-	guint              event_source_id;
+	gboolean  automatic_reload;
+	GTimeVal  last_event;
+	guint     event_source_id;
 
 	/* list of monitoring objects on runtime preferences
 	 */
-	GList             *monitors;
+	GList    *monitors;
 };
 
 /* NAPivot properties
  */
 enum {
-	NAPIVOT_PROP_LOADABLE_SET_ID = 1,
-	NAPIVOT_PROP_TREE_ID,
+	NAPIVOT_PROP_TREE_ID = 1,
 };
+
 
 static GObjectClass *st_parent_class = NULL;
 static gint          st_timeout_msec = 100;
@@ -184,21 +184,14 @@ class_init( NAPivotClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAPivotClassPrivate, 1 );
-
-	spec = g_param_spec_uint(
-			NAPIVOT_PROP_LOADABLE_SET,
-			"Loadable population set",
-			"Nature of population to be loaded", 0, UINT_MAX, 0,
-			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAPIVOT_PROP_LOADABLE_SET_ID, spec );
-
 	spec = g_param_spec_pointer(
 			NAPIVOT_PROP_TREE,
 			"Items tree",
 			"Hierarchical tree of items",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, NAPIVOT_PROP_TREE_ID, spec );
+
+	klass->private = g_new0( NAPivotClassPrivate, 1 );
 }
 
 static void
@@ -215,7 +208,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NAPivotPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->loadable_set = 0;
+	self->private->loadable_set = PIVOT_LOAD_NONE;
 	self->private->modules = NULL;
 	self->private->consumers = NULL;
 	self->private->tree = NULL;
@@ -263,10 +256,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NAPIVOT_PROP_LOADABLE_SET_ID:
-				g_value_set_uint( value, self->private->loadable_set );
-				break;
-
 			case NAPIVOT_PROP_TREE_ID:
 				g_value_set_pointer( value, self->private->tree );
 				break;
@@ -289,10 +278,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NAPIVOT_PROP_LOADABLE_SET_ID:
-				self->private->loadable_set = g_value_get_uint( value );
-				break;
-
 			case NAPIVOT_PROP_TREE_ID:
 				self->private->tree = g_value_get_pointer( value );
 				break;
@@ -373,21 +358,16 @@ iprefs_iface_init( NAIPrefsInterface *iface )
  * na_pivot_new:
  *
  * Returns: a newly allocated #NAPivot object.
- *
- * The returned #NAPivot is initialized with the current list of
- * #NAObjectItem-derived object.
  */
 NAPivot *
-na_pivot_new( NAPivotLoadableSet loadable )
+na_pivot_new( void )
 {
 	static const gchar *thisfn = "na_pivot_new";
 	NAPivot *pivot;
 
 	g_debug( "%s", thisfn );
 
-	pivot = g_object_new( NA_PIVOT_TYPE,
-			NAPIVOT_PROP_LOADABLE_SET, GUINT_TO_POINTER( loadable ),
-			NULL );
+	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
 
 	return( pivot );
 }
@@ -551,11 +531,35 @@ na_pivot_get_items( const NAPivot *pivot )
 /**
  * na_pivot_load_items:
  * @pivot: this #NAPivot instance.
+ * @loadable: the loadable set of items population.
  *
  * Loads the hierarchical list of items from I/O providers.
  */
 void
-na_pivot_load_items( NAPivot *pivot )
+na_pivot_load_items( NAPivot *pivot, guint loadable )
+{
+	static const gchar *thisfn = "na_pivot_load_items";
+
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		pivot->private->loadable_set = loadable;
+
+		na_pivot_reload_items( pivot );
+	}
+}
+
+/**
+ * na_pivot_reload_items:
+ * @pivot: this #NAPivot instance.
+ *
+ * Reloads the hierarchical list of items from I/O providers, using
+ * the same loadable set that the previous time.
+ */
+void
+na_pivot_reload_items( NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_pivot_load_items";
 	GSList *messages, *im;
@@ -637,7 +641,7 @@ on_item_changed_timeout( NAPivot *pivot )
 	}
 
 	if( pivot->private->automatic_reload ){
-		na_pivot_load_items( pivot );
+		na_pivot_reload_items( pivot );
 	}
 
 	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){

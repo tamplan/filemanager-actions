@@ -1,3 +1,18 @@
+2009-02-21 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h:
+	* src/core/na-updater.c:
+	* src/core/na-updater.h:
+	* src/nact/nact-application.c:
+	* src/nact/nact-main-window.c:
+	* src/plugin-menu/nautilus-actions.c:
+	* src/test/test-reader.c:
+	* src/utils/nautilus-actions-new.c:
+	* src/utils/nautilus-actions-run.c:
+	No more define the loadable set at NAPivot construction time,
+	but deffer this when actually loading items.
+
 2009-02-20 Pierre Wieser <pwieser@trychlos.org>
 
 	* po/POTFILES.in:
