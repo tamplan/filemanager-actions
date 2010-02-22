@@ -135,8 +135,7 @@ void          na_pivot_free_providers( GList *providers );
  */
 NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *id );
 GList        *na_pivot_get_items( const NAPivot *pivot );
-void          na_pivot_load_items( NAPivot *pivot, guint loadable );
-void          na_pivot_reload_items( NAPivot *pivot );
+void          na_pivot_load_items( NAPivot *pivot );
 
 void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  );
 
@@ -148,10 +147,12 @@ void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer
 
 /* NAPivot properties and configuration
  */
-void          na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload );
+void          na_pivot_set_automatic_reload            ( NAPivot *pivot, gboolean reload );
 
 gboolean      na_pivot_is_disable_loadable             ( const NAPivot *pivot );
 gboolean      na_pivot_is_invalid_loadable             ( const NAPivot *pivot );
+void          na_pivot_set_loadable                    ( NAPivot *pivot, guint loadable );
+
 gboolean      na_pivot_is_level_zero_writable          ( const NAPivot *pivot );
 gboolean      na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot );
 

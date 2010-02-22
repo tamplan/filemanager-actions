@@ -1,3 +1,15 @@
+2009-02-22 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-io-provider.c:
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h:
+	* src/nact/nact-application.c:
+	* src/nact/nact-main-window.c:
+	* src/plugin-menu/nautilus-actions.c:
+	* src/utils/nautilus-actions-run.c
+	(na_pivot_set_loadable): New function.
+	(na_pivot_reload_items): Removed function.
+
 2009-02-21 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-pivot.c:

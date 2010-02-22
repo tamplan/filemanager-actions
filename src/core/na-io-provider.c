@@ -635,9 +635,6 @@ na_io_provider_read_items( const NAPivot *pivot, GSList **messages )
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( NA_IS_IPREFS( pivot ), NULL );
 
-	hierarchy = NULL;
-	*messages = NULL;
-
 	providers = na_io_provider_get_providers_list( pivot );
 
 	merged = get_merged_items_list( pivot, providers, messages );

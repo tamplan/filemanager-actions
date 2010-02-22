@@ -531,35 +531,11 @@ na_pivot_get_items( const NAPivot *pivot )
 /**
  * na_pivot_load_items:
  * @pivot: this #NAPivot instance.
- * @loadable: the loadable set of items population.
  *
  * Loads the hierarchical list of items from I/O providers.
  */
 void
-na_pivot_load_items( NAPivot *pivot, guint loadable )
-{
-	static const gchar *thisfn = "na_pivot_load_items";
-
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		pivot->private->loadable_set = loadable;
-
-		na_pivot_reload_items( pivot );
-	}
-}
-
-/**
- * na_pivot_reload_items:
- * @pivot: this #NAPivot instance.
- *
- * Reloads the hierarchical list of items from I/O providers, using
- * the same loadable set that the previous time.
- */
-void
-na_pivot_reload_items( NAPivot *pivot )
+na_pivot_load_items( NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_pivot_load_items";
 	GSList *messages, *im;
@@ -570,6 +546,8 @@ na_pivot_reload_items( NAPivot *pivot )
 	if( !pivot->private->dispose_has_run ){
 
 		na_object_unref_items( pivot->private->tree );
+
+		messages = NULL;
 
 		pivot->private->tree = na_io_provider_read_items( pivot, &messages );
 
@@ -641,7 +619,7 @@ on_item_changed_timeout( NAPivot *pivot )
 	}
 
 	if( pivot->private->automatic_reload ){
-		na_pivot_reload_items( pivot );
+		na_pivot_load_items( pivot );
 	}
 
 	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
@@ -809,6 +787,24 @@ na_pivot_is_invalid_loadable( const NAPivot *pivot )
 	}
 
 	return( is_loadable );
+}
+
+/**
+ * na_pivot_set_loadable:
+ * @pivot: this #NAPivot instance.
+ * @loadable: the population of items to be loaded.
+ *
+ * Sets the loadable set.
+ */
+void
+na_pivot_set_loadable( NAPivot *pivot, guint loadable )
+{
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		pivot->private->loadable_set = loadable;
+	}
 }
 
 /**

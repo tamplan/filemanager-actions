@@ -205,7 +205,8 @@ instance_constructed( GObject *object )
 		self->private->pivot = na_pivot_new();
 		na_pivot_register_consumer( self->private->pivot, NA_IPIVOT_CONSUMER( self ));
 		na_pivot_set_automatic_reload( self->private->pivot, TRUE );
-		na_pivot_load_items( self->private->pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
+		na_pivot_set_loadable( self->private->pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
+		na_pivot_load_items( self->private->pivot );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
