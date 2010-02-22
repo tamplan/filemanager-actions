@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-idata-factory-str.h>
+#include <api/na-ifactory-object-str.h>
 
 G_BEGIN_DECLS
 

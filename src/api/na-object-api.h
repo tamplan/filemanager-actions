@@ -41,8 +41,8 @@
  * are casted directly in the macro.
  */
 
-#include "na-idata-factory.h"
-#include "na-idata-factory-enum.h"
+#include "na-ifactory-object.h"
+#include "na-ifactory-object-enum.h"
 #include "na-iduplicable.h"
 #include "na-object-action.h"
 #include "na-object-profile.h"
@@ -77,13 +77,13 @@ G_BEGIN_DECLS
 
 /* NAObjectId
  */
-#define na_object_get_id( obj )							(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ID ))
-#define na_object_get_label( obj )						(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_LABEL ))
-#define na_object_get_parent( obj )						(( NAObjectItem * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PARENT ))
+#define na_object_get_id( obj )							(( gchar * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ID ))
+#define na_object_get_label( obj )						(( gchar * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_LABEL ))
+#define na_object_get_parent( obj )						(( NAObjectItem * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PARENT ))
 
-#define na_object_set_id( obj, id )						na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_ID, ( const void * )( id ))
-#define na_object_set_label( obj, label )				na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_LABEL, ( const void * )( label ))
-#define na_object_set_parent( obj, parent )				na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_PARENT, ( const void * )( parent ))
+#define na_object_set_id( obj, id )						na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ID, ( const void * )( id ))
+#define na_object_set_label( obj, label )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_LABEL, ( const void * )( label ))
+#define na_object_set_parent( obj, parent )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PARENT, ( const void * )( parent ))
 
 #define na_object_sort_alpha_asc( a, b )				na_object_id_sort_alpha_asc( NA_OBJECT_ID( a ), NA_OBJECT_ID( b ))
 #define na_object_sort_alpha_desc( a, b )				na_object_id_sort_alpha_desc( NA_OBJECT_ID( a ), NA_OBJECT_ID( b ))
@@ -95,23 +95,23 @@ G_BEGIN_DECLS
 
 /* NAObjectItem
  */
-#define na_object_get_tooltip( obj )					(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLTIP ))
-#define na_object_get_icon( obj )						(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ICON ))
-#define na_object_get_items( obj )						(( GList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_SUBITEMS ))
-#define na_object_get_items_slist( obj )				(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_SUBITEMS_SLIST ))
-#define na_object_is_enabled( obj )						(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ENABLED )))
-#define na_object_is_readonly( obj )					(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_READONLY )))
-#define na_object_get_provider( obj )					na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PROVIDER )
-#define na_object_get_provider_data( obj )				na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PROVIDER_DATA )
+#define na_object_get_tooltip( obj )					(( gchar * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TOOLTIP ))
+#define na_object_get_icon( obj )						(( gchar * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ICON ))
+#define na_object_get_items( obj )						(( GList * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_SUBITEMS ))
+#define na_object_get_items_slist( obj )				(( GSList * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_SUBITEMS_SLIST ))
+#define na_object_is_enabled( obj )						(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ENABLED )))
+#define na_object_is_readonly( obj )					(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_READONLY )))
+#define na_object_get_provider( obj )					na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PROVIDER )
+#define na_object_get_provider_data( obj )				na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PROVIDER_DATA )
 
-#define na_object_set_tooltip( obj, tooltip )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLTIP, ( const void * )( tooltip ))
-#define na_object_set_icon( obj, icon )					na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_ICON, ( const void * )( icon ))
-#define na_object_set_items( obj, list )				na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_SUBITEMS, ( const void * )( list ))
-#define na_object_set_items_slist( obj, slist )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_SUBITEMS_SLIST, ( const void * )( slist ))
-#define na_object_set_enabled( obj, enabled )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_ENABLED, ( const void * ) GUINT_TO_POINTER( enabled ))
-#define na_object_set_readonly( obj, readonly )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_READONLY, ( const void * ) GUINT_TO_POINTER( readonly ))
-#define na_object_set_provider( obj, provider )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_PROVIDER, ( const void * )( provider ))
-#define na_object_set_provider_data( obj, data )		na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_PROVIDER_DATA, ( const void * )( data ))
+#define na_object_set_tooltip( obj, tooltip )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TOOLTIP, ( const void * )( tooltip ))
+#define na_object_set_icon( obj, icon )					na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ICON, ( const void * )( icon ))
+#define na_object_set_items( obj, list )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_SUBITEMS, ( const void * )( list ))
+#define na_object_set_items_slist( obj, slist )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_SUBITEMS_SLIST, ( const void * )( slist ))
+#define na_object_set_enabled( obj, enabled )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ENABLED, ( const void * ) GUINT_TO_POINTER( enabled ))
+#define na_object_set_readonly( obj, readonly )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_READONLY, ( const void * ) GUINT_TO_POINTER( readonly ))
+#define na_object_set_provider( obj, provider )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PROVIDER, ( const void * )( provider ))
+#define na_object_set_provider_data( obj, data )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PROVIDER_DATA, ( const void * )( data ))
 
 #define na_object_get_item( obj, id )					na_object_item_get_item( NA_OBJECT_ITEM( obj ),( const gchar * )( id ))
 #define na_object_get_position( obj, child )			na_object_item_get_position( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
@@ -127,48 +127,48 @@ G_BEGIN_DECLS
 
 /* NAObjectAction
  */
-#define na_object_get_version( obj )					(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_VERSION ))
-#define na_object_is_target_selection( obj )			(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_SELECTION )))
-#define na_object_is_target_background( obj )			(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_BACKGROUND )))
-#define na_object_is_target_toolbar( obj )				(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_TOOLBAR )))
-#define na_object_get_toolbar_label( obj )				(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_LABEL ))
-#define na_object_is_toolbar_same_label( obj )			(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_SAME_LABEL )))
-#define na_object_get_last_allocated( obj )				(( guint ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_LAST_ALLOCATED )))
+#define na_object_get_version( obj )					(( gchar * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_VERSION ))
+#define na_object_is_target_selection( obj )			(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TARGET_SELECTION )))
+#define na_object_is_target_background( obj )			(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TARGET_BACKGROUND )))
+#define na_object_is_target_toolbar( obj )				(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TARGET_TOOLBAR )))
+#define na_object_get_toolbar_label( obj )				(( gchar * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TOOLBAR_LABEL ))
+#define na_object_is_toolbar_same_label( obj )			(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TOOLBAR_SAME_LABEL )))
+#define na_object_get_last_allocated( obj )				(( guint ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_LAST_ALLOCATED )))
 
-#define na_object_set_version( obj, version )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_VERSION, ( const void * )( version ))
-#define na_object_set_target_selection( obj, target )	na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_SELECTION, ( const void * ) GUINT_TO_POINTER( target ))
-#define na_object_set_target_background( obj, target )	na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_BACKGROUND, ( const void * ) GUINT_TO_POINTER( target ))
-#define na_object_set_target_toolbar( obj, target )		na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_TARGET_TOOLBAR, ( const void * ) GUINT_TO_POINTER( target ))
-#define na_object_set_toolbar_label( obj, label )		na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_LABEL, ( const void * )( label ))
-#define na_object_set_toolbar_same_label( obj, same )	na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_TOOLBAR_SAME_LABEL, ( const void * ) GUINT_TO_POINTER( same ))
-#define na_object_set_last_allocated( obj, last )		na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_LAST_ALLOCATED, ( const void * ) GUINT_TO_POINTER( last ))
+#define na_object_set_version( obj, version )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_VERSION, ( const void * )( version ))
+#define na_object_set_target_selection( obj, target )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TARGET_SELECTION, ( const void * ) GUINT_TO_POINTER( target ))
+#define na_object_set_target_background( obj, target )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TARGET_BACKGROUND, ( const void * ) GUINT_TO_POINTER( target ))
+#define na_object_set_target_toolbar( obj, target )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TARGET_TOOLBAR, ( const void * ) GUINT_TO_POINTER( target ))
+#define na_object_set_toolbar_label( obj, label )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TOOLBAR_LABEL, ( const void * )( label ))
+#define na_object_set_toolbar_same_label( obj, same )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_TOOLBAR_SAME_LABEL, ( const void * ) GUINT_TO_POINTER( same ))
+#define na_object_set_last_allocated( obj, last )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_LAST_ALLOCATED, ( const void * ) GUINT_TO_POINTER( last ))
 
-#define na_object_reset_last_allocated( obj )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_LAST_ALLOCATED, ( const void * ) GUINT_TO_POINTER( 0 ))
+#define na_object_reset_last_allocated( obj )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_LAST_ALLOCATED, ( const void * ) GUINT_TO_POINTER( 0 ))
 #define na_object_attach_profile( obj, profile )		na_object_action_attach_profile( NA_OBJECT_ACTION( obj ), NA_OBJECT_PROFILE( profile ))
 
 /* NAObjectProfile
  */
-#define na_object_get_path( obj )						(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PATH ))
-#define na_object_get_parameters( obj )					(( gchar * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_PARAMETERS ))
-#define na_object_get_basenames( obj )					(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_BASENAMES ))
-#define na_object_is_matchcase( obj )					(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_MATCHCASE )))
-#define na_object_get_mimetypes( obj )					(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_MIMETYPES ))
-#define na_object_is_file( obj )						(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ISFILE )))
-#define na_object_is_dir( obj )							(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_ISDIR )))
-#define na_object_is_multiple( obj )					(( gboolean ) GPOINTER_TO_UINT( na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_MULTIPLE )))
-#define na_object_get_schemes( obj )					(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_SCHEMES ))
-#define na_object_get_folders( obj )					(( GSList * ) na_idata_factory_get( NA_IDATA_FACTORY( obj ), NADF_DATA_FOLDERS ))
+#define na_object_get_path( obj )						(( gchar * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PATH ))
+#define na_object_get_parameters( obj )					(( gchar * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PARAMETERS ))
+#define na_object_get_basenames( obj )					(( GSList * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_BASENAMES ))
+#define na_object_is_matchcase( obj )					(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_MATCHCASE )))
+#define na_object_get_mimetypes( obj )					(( GSList * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_MIMETYPES ))
+#define na_object_is_file( obj )						(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ISFILE )))
+#define na_object_is_dir( obj )							(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ISDIR )))
+#define na_object_is_multiple( obj )					(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_MULTIPLE )))
+#define na_object_get_schemes( obj )					(( GSList * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_SCHEMES ))
+#define na_object_get_folders( obj )					(( GSList * ) na_ifactory_object_get( NA_IFACTORY_OBJECT( obj ), NADF_DATA_FOLDERS ))
 
-#define na_object_set_path( obj, path )					na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_PATH, ( const void * )( path ))
-#define na_object_set_parameters( obj, parms )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_PARAMETERS, ( const void * )( parms ))
-#define na_object_set_basenames( obj, bnames )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_BASENAMES, ( const void * )( bnames ))
-#define na_object_set_matchcase( obj, match )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_MATCHCASE, ( const void * ) GUINT_TO_POINTER( match ))
-#define na_object_set_mimetypes( obj, types )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_MIMETYPES, ( const void * )( types ))
-#define na_object_set_isfile( obj, isfile )				na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_ISFILE, ( const void * ) GUINT_TO_POINTER( isfile ))
-#define na_object_set_isdir( obj, isdir )				na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_ISDIR, ( const void * ) GUINT_TO_POINTER( isdir ))
-#define na_object_set_multiple( obj, multiple )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_MULTIPLE, ( const void * ) GUINT_TO_POINTER( multiple ))
-#define na_object_set_schemes( obj, schemes )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_SCHEMES, ( const void * )( schemes ))
-#define na_object_set_folders( obj, folders )			na_idata_factory_set_from_void( NA_IDATA_FACTORY( obj ), NADF_DATA_FOLDERS, ( const void * )( folders ))
+#define na_object_set_path( obj, path )					na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PATH, ( const void * )( path ))
+#define na_object_set_parameters( obj, parms )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_PARAMETERS, ( const void * )( parms ))
+#define na_object_set_basenames( obj, bnames )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_BASENAMES, ( const void * )( bnames ))
+#define na_object_set_matchcase( obj, match )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_MATCHCASE, ( const void * ) GUINT_TO_POINTER( match ))
+#define na_object_set_mimetypes( obj, types )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_MIMETYPES, ( const void * )( types ))
+#define na_object_set_isfile( obj, isfile )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ISFILE, ( const void * ) GUINT_TO_POINTER( isfile ))
+#define na_object_set_isdir( obj, isdir )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_ISDIR, ( const void * ) GUINT_TO_POINTER( isdir ))
+#define na_object_set_multiple( obj, multiple )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_MULTIPLE, ( const void * ) GUINT_TO_POINTER( multiple ))
+#define na_object_set_schemes( obj, schemes )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_SCHEMES, ( const void * )( schemes ))
+#define na_object_set_folders( obj, folders )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NADF_DATA_FOLDERS, ( const void * )( folders ))
 
 #define na_object_set_scheme( obj, scheme, add )		na_object_profile_set_scheme( NA_OBJECT_PROFILE( obj ), ( const gchar * )( scheme ), ( add ))
 #define na_object_replace_folder( obj, old, new )		na_object_profile_replace_folder( NA_OBJECT_PROFILE( obj ), ( const gchar * )( old ), ( const gchar * )( new ))

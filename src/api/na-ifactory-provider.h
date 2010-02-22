@@ -44,7 +44,7 @@
  * Nautilus-Actions v 2.30 - API version:  1
  */
 
-#include "na-idata-factory.h"
+#include "na-ifactory-object.h"
 #include "na-ifactory-provider-provider.h"
 
 G_BEGIN_DECLS
@@ -74,13 +74,13 @@ typedef struct {
 	 * read_start:
 	 * @reader: this #NAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance.
-	 * @object: the #NAIDataFactory object which comes to be readen.
+	 * @object: the #NAIFactoryObject object which comes to be readen.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * API called by #NAIDataFactory just before starting with reading data.
+	 * API called by #NAIFactoryObject just before starting with reading data.
 	 */
-	void     ( *read_start ) ( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *object, GSList **messages  );
+	void     ( *read_start ) ( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * read_value:
@@ -106,26 +106,26 @@ typedef struct {
 	 * read_done:
 	 * @reader: this #NAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance.
-	 * @object: the #NAIDataFactory object which comes to be readen.
+	 * @object: the #NAIFactoryObject object which comes to be readen.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * API called by #NAIDataFactory when all data have been readen.
+	 * API called by #NAIFactoryObject when all data have been readen.
 	 * Implementor may take advantage of this to do some cleanup.
 	 */
-	void     ( *read_done )  ( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *object, GSList **messages  );
+	void     ( *read_done )  ( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * write_start:
 	 * @writer: this #NAIFactoryProvider instance.
 	 * @writer_data: the data associated to this instance.
-	 * @object: the #NAIDataFactory object which comes to be written.
+	 * @object: the #NAIFactoryObject object which comes to be written.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * API called by #NAIDataFactory just before starting with writing data.
+	 * API called by #NAIFactoryObject just before starting with writing data.
 	 */
-	void     ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, NAIDataFactory *object, GSList **messages  );
+	void     ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * write_value:
@@ -146,21 +146,21 @@ typedef struct {
 	 * write_done:
 	 * @writer: this #NAIFactoryProvider instance.
 	 * @writer_data: the data associated to this instance.
-	 * @object: the #NAIDataFactory object which comes to be written.
+	 * @object: the #NAIFactoryObject object which comes to be written.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * API called by #NAIDataFactory when all data have been written.
+	 * API called by #NAIFactoryObject when all data have been written.
 	 * Implementor may take advantage of this to do some cleanup.
 	 */
-	void     ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, NAIDataFactory *object, GSList **messages  );
+	void     ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages  );
 }
 	NAIFactoryProviderInterface;
 
 GType           na_ifactory_provider_get_type( void );
 
-NAIDataFactory *na_ifactory_provider_read_item ( const NAIFactoryProvider *reader, void *reader_data, GType type, GSList **messages );
-void            na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIDataFactory *serializable, GSList **messages );
+NAIFactoryObject *na_ifactory_provider_read_item ( const NAIFactoryProvider *reader, void *reader_data, GType type, GSList **messages );
+void            na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages );
 
 NadfIdType     *na_ifactory_provider_get_idtype_from_gconf_key( const gchar *xml_entry );
 

@@ -36,7 +36,7 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-idata-factory-str.h>
+#include <api/na-ifactory-object-str.h>
 
 #include "na-data-element.h"
 

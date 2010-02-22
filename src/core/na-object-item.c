@@ -238,7 +238,7 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
  * Copies data from @source to @item.
  *
  * This function participates to the #na_iduplicable_duplicate() stack,
- * and is triggered after all copyable elementary data (in #NAIDataFactory
+ * and is triggered after all copyable elementary data (in #NAIFactoryObject
  * sense) have already been copied themselves.
  *
  * We have to deal here with the subitems: duplicating childs from @source
@@ -280,7 +280,7 @@ na_object_item_copy( NAObjectItem *item, const NAObjectItem *source )
  * Returns: %TRUE if @a is equal to @b.
  *
  * This function participates to the #na_iduplicable_check_status() stack,
- * and is triggered after all comparable elementary data (in #NAIDataFactory
+ * and is triggered after all comparable elementary data (in #NAIFactoryObject
  * sense) have already been successfully compared.
  *
  * We have to deal here with the subitems: comparing childs by their ids

@@ -782,7 +782,7 @@ iter_on_elements_list( NAXMLReader *reader )
 		/* this is for the action or menu body
 		 */
 		if( path_length == 2+PATH_ID_IDX ){
-			na_idata_factory_set_from_string( NA_IDATA_FACTORY( reader->private->item ), str->iddef->id, str->key_value );
+			na_ifactory_object_set_from_string( NA_IFACTORY_OBJECT( reader->private->item ), str->iddef->id, str->key_value );
 
 		/* this is for a profile
 		 */
@@ -803,7 +803,7 @@ iter_on_elements_list( NAXMLReader *reader )
 					na_object_set_id( profile, profile_name );
 					na_object_action_attach_profile( NA_OBJECT_ACTION( reader->private->item ), profile );
 				}
-				na_idata_factory_set_from_string( NA_IDATA_FACTORY( profile ), str->iddef->id, str->key_value );
+				na_ifactory_object_set_from_string( NA_IFACTORY_OBJECT( profile ), str->iddef->id, str->key_value );
 				g_free( profile_name );
 			}
 		}

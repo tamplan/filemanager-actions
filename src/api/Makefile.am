@@ -32,9 +32,6 @@ api_include_HEADERS = \
 	na-extension.h										\
 	\
 	na-dbus.h											\
-	na-idata-factory.h									\
-	na-idata-factory-enum.h								\
-	na-idata-factory-str.h								\
 	na-iexporter.h										\
 	na-iimporter.h										\
 	na-ifactory-provider.h								\
@@ -45,6 +42,9 @@ api_include_HEADERS = \
 	na-gconf-monitor.h									\
 	na-gconf-utils.h									\
 	na-iduplicable.h									\
+	na-ifactory-object.h								\
+	na-ifactory-object-enum.h							\
+	na-ifactory-object-str.h							\
 	na-object-api.h										\
 	na-object.h											\
 	na-object-id.h										\

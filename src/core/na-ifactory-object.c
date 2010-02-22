@@ -32,30 +32,30 @@
 #include <config.h>
 #endif
 
-#include <api/na-idata-factory.h>
+#include <api/na-ifactory-object.h>
 
-#include "na-data-factory.h"
+#include "na-factory-object.h"
 
 /* private interface data
  */
-struct NAIDataFactoryInterfacePrivate {
+struct NAIFactoryObjectInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-gboolean idata_factory_initialized = FALSE;
-gboolean idata_factory_finalized   = FALSE;
+gboolean ifactory_object_initialized = FALSE;
+gboolean ifactory_object_finalized   = FALSE;
 
 static GType register_type( void );
-static void  interface_base_init( NAIDataFactoryInterface *klass );
-static void  interface_base_finalize( NAIDataFactoryInterface *klass );
+static void  interface_base_init( NAIFactoryObjectInterface *klass );
+static void  interface_base_finalize( NAIFactoryObjectInterface *klass );
 
-static guint idata_factory_get_version( const NAIDataFactory *instance );
+static guint ifactory_object_get_version( const NAIFactoryObject *instance );
 
 /**
  * Registers the GType of this interface.
  */
 GType
-na_idata_factory_get_type( void )
+na_ifactory_object_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -69,11 +69,11 @@ na_idata_factory_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_idata_factory_register_type";
+	static const gchar *thisfn = "na_ifactory_object_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIDataFactoryInterface ),
+		sizeof( NAIFactoryObjectInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -86,7 +86,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIDataFactory", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "NAIFactoryObject", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -94,17 +94,17 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIDataFactoryInterface *klass )
+interface_base_init( NAIFactoryObjectInterface *klass )
 {
-	static const gchar *thisfn = "na_idata_factory_interface_base_init";
+	static const gchar *thisfn = "na_ifactory_object_interface_base_init";
 
-	if( !idata_factory_initialized ){
+	if( !ifactory_object_initialized ){
 
 		g_debug( "%s: klass=%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
-		klass->private = g_new0( NAIDataFactoryInterfacePrivate, 1 );
+		klass->private = g_new0( NAIFactoryObjectInterfacePrivate, 1 );
 
-		klass->get_version = idata_factory_get_version;
+		klass->get_version = ifactory_object_get_version;
 		klass->get_default = NULL;
 		klass->copy = NULL;
 		klass->are_equal = NULL;
@@ -114,34 +114,34 @@ interface_base_init( NAIDataFactoryInterface *klass )
 		klass->write_start = NULL;
 		klass->write_done = NULL;
 
-		idata_factory_initialized = TRUE;
+		ifactory_object_initialized = TRUE;
 	}
 }
 
 static void
-interface_base_finalize( NAIDataFactoryInterface *klass )
+interface_base_finalize( NAIFactoryObjectInterface *klass )
 {
-	static const gchar *thisfn = "na_idata_factory_interface_base_finalize";
+	static const gchar *thisfn = "na_ifactory_object_interface_base_finalize";
 
-	if( idata_factory_initialized && !idata_factory_finalized ){
+	if( ifactory_object_initialized && !ifactory_object_finalized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		idata_factory_finalized = TRUE;
+		ifactory_object_finalized = TRUE;
 
 		g_free( klass->private );
 	}
 }
 
 static guint
-idata_factory_get_version( const NAIDataFactory *instance )
+ifactory_object_get_version( const NAIFactoryObject *instance )
 {
 	return( 1 );
 }
 
 /**
- * na_idata_factory_get:
- * @object: this #NAIDataFactory instance.
+ * na_ifactory_object_get:
+ * @object: this #NAIFactoryObject instance.
  * @data_id: the elementary data whose value is to be got.
  *
  * Returns: the searched value.
@@ -152,41 +152,41 @@ idata_factory_get_version( const NAIDataFactory *instance )
  * caller.
  */
 void *
-na_idata_factory_get( const NAIDataFactory *object, guint data_id )
+na_ifactory_object_get( const NAIFactoryObject *object, guint data_id )
 {
-	g_return_val_if_fail( NA_IS_IDATA_FACTORY( object ), NULL );
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
-	return( na_data_factory_get( object, data_id ));
+	return( na_factory_object_get( object, data_id ));
 }
 
 /**
- * na_idata_factory_set_from_string:
- * @object: this #NAIDataFactory instance.
+ * na_ifactory_object_set_from_string:
+ * @object: this #NAIFactoryObject instance.
  * @data_id: the elementary data whose value is to be set.
  * @data: the value to set.
  *
  * Set the elementary data with the given value.
  */
 void
-na_idata_factory_set_from_string( NAIDataFactory *object, guint data_id, const gchar *data )
+na_ifactory_object_set_from_string( NAIFactoryObject *object, guint data_id, const gchar *data )
 {
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-	na_data_factory_set_from_string( object, data_id, data );
+	na_factory_object_set_from_string( object, data_id, data );
 }
 
 /**
- * na_idata_factory_set_from_void:
- * @object: this #NAIDataFactory instance.
+ * na_ifactory_object_set_from_void:
+ * @object: this #NAIFactoryObject instance.
  * @data_id: the elementary data whose value is to be set.
  * @data: the value to set.
  *
  * Set the elementary data with the given value.
  */
 void
-na_idata_factory_set_from_void( NAIDataFactory *object, guint data_id, const void *data )
+na_ifactory_object_set_from_void( NAIFactoryObject *object, guint data_id, const void *data )
 {
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-	na_data_factory_set_from_void( object, data_id, data );
+	na_factory_object_set_from_void( object, data_id, data );
 }

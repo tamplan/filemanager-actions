@@ -42,7 +42,7 @@
  *
  * These services may be fully implemented by the I/O provider itself.
  * Or, the I/O provider may also prefer to take advantage of the data
- * factory management (see #NAIDataFactory and #NAIFactoryProvider interfaces).
+ * factory management (see #NAIFactoryObject and #NAIFactoryProvider interfaces).
  *
  * Nautilus-Actions v 2.30 - API version:  1
  */
@@ -109,7 +109,7 @@ typedef struct {
 	 *
 	 * Reads the whole items list from the specified I/O provider.
 	 *
-	 * Returns: a unordered flat #GList of #NAIDataFactory-derived objects
+	 * Returns: a unordered flat #GList of #NAIFactoryObject-derived objects
 	 * (menus or actions); the actions embed their own profiles.
 	 */
 	GList *  ( *read_items )         ( const NAIIOProvider *instance, GSList **messages );
@@ -125,7 +125,7 @@ typedef struct {
 	 * It is not supposed to make any assumption on the environment it is
 	 * currently running on.
 	 * This property just says that the developer/maintainer has released
-	 * the needed code in order to update/create/delete #NAIDataFactory-
+	 * the needed code in order to update/create/delete #NAIFactoryObject-
 	 * derived objects.
 	 *
 	 * Note that even if this property is %TRUE, there is yet many

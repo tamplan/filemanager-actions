@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-idata-factory-enum.h>
+#include <api/na-ifactory-object-enum.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
 
@@ -54,7 +54,7 @@ static GList          *get_list_of_desktop_paths( const NadpDesktopProvider *pro
 static void            get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
 static gboolean        is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id );
 static GList          *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
-static NAIDataFactory *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
+static NAIFactoryObject *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
 #if 0
 static void            read_menu_from_desktop_file( const NadpDesktopProvider *provider, NAObjectMenu *menu, NadpDesktopFile *ndf, GSList **messages );
 static void            read_action_from_desktop_file( const NadpDesktopProvider *provider, NAObjectAction *action, NadpDesktopFile *ndf, GSList **messages );
@@ -65,7 +65,7 @@ static void            exec_to_path_parameters( const gchar *command, gchar **pa
 static void            free_desktop_paths( GList *paths );
 
 /*
- * Returns an unordered list of NAIDataFactory-derived objects
+ * Returns an unordered list of NAIFactoryObject-derived objects
  *
  * This is implementation of NAIIOProvider::read_items method
  */
@@ -75,7 +75,7 @@ nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 	static const gchar *thisfn = "nadp_iio_provider_read_items";
 	GList *items;
 	GList *desktop_paths, *ip;
-	NAIDataFactory *item;
+	NAIFactoryObject *item;
 
 	g_debug( "%s: provider=%p (%s), messages=%p",
 			thisfn, ( void * ) provider, G_OBJECT_TYPE_NAME( provider ), ( void * ) messages );
@@ -231,14 +231,14 @@ desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const g
 }
 
 /*
- * Returns a newly allocated NAIDataFactory-derived object, initialized
+ * Returns a newly allocated NAIFactoryObject-derived object, initialized
  * from the .desktop file pointed to by DesktopPath struct
  */
-static NAIDataFactory *
+static NAIFactoryObject *
 item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_item_from_desktop_path";
-	NAIDataFactory *item;
+	NAIFactoryObject *item;
 	NadpDesktopFile *ndf;
 	gchar *type;
 	GType reader_type;

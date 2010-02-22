@@ -28,56 +28,56 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_IDATA_FACTORY_H__
-#define __NAUTILUS_ACTIONS_API_NA_IDATA_FACTORY_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__
+#define __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__
 
 /**
- * SECTION: na_idata_factory
- * @short_description: #NAIDataFactory interface definition.
- * @include: nautilus-actions/na-idata_factory.h
+ * SECTION: na_ifactory_object
+ * @short_description: #NAIFactoryObject interface definition.
+ * @include: nautilus-actions/na-ifactory_object.h
  *
  * This interface must be implemented by #NAObject-derived objects which
  * should take advantage of data factory management system.
  *
- * A #NAObject which would implement this #NAIDataFactory interface
+ * A #NAObject which would implement this #NAIFactoryObject interface
  * must meet following conditions:
  * - must accept an empty constructor
  *
  * Nautilus-Actions v 2.30 - API version:  1
  */
 
-#include "na-idata-factory-enum.h"
-#include "na-idata-factory-str.h"
+#include "na-ifactory-object-enum.h"
+#include "na-ifactory-object-str.h"
 #include "na-ifactory-provider-provider.h"
 
 G_BEGIN_DECLS
 
-#define NA_IDATA_FACTORY_TYPE						( na_idata_factory_get_type())
-#define NA_IDATA_FACTORY( instance )				( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IDATA_FACTORY_TYPE, NAIDataFactory ))
-#define NA_IS_IDATA_FACTORY( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IDATA_FACTORY_TYPE ))
-#define NA_IDATA_FACTORY_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IDATA_FACTORY_TYPE, NAIDataFactoryInterface ))
+#define NA_IFACTORY_OBJECT_TYPE						( na_ifactory_object_get_type())
+#define NA_IFACTORY_OBJECT( instance )				( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_OBJECT_TYPE, NAIFactoryObject ))
+#define NA_IS_IFACTORY_OBJECT( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_OBJECT_TYPE ))
+#define NA_IFACTORY_OBJECT_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_OBJECT_TYPE, NAIFactoryObjectInterface ))
 
-typedef struct NAIDataFactory                 NAIDataFactory;
+typedef struct NAIFactoryObject                 NAIFactoryObject;
 
-typedef struct NAIDataFactoryInterfacePrivate NAIDataFactoryInterfacePrivate;
+typedef struct NAIFactoryObjectInterfacePrivate NAIFactoryObjectInterfacePrivate;
 
 typedef struct {
 	GTypeInterface                  parent;
-	NAIDataFactoryInterfacePrivate *private;
+	NAIFactoryObjectInterfacePrivate *private;
 
 	/**
 	 * get_version:
-	 * @instance: this #NAIDataFactory instance.
+	 * @instance: this #NAIFactoryObject instance.
 	 *
 	 * Returns: the version of this interface supported by @instance implementation.
 	 *
 	 * Defaults to 1.
 	 */
-	guint    ( *get_version )( const NAIDataFactory *instance );
+	guint    ( *get_version )( const NAIFactoryObject *instance );
 
 	/**
 	 * get_default:
-	 * @instance: this #NAIDataFactory instance.
+	 * @instance: this #NAIFactoryObject instance.
 	 * @iddef: the #NadfIdType structure which defines the data whose
 	 * default value is searched for.
 	 *
@@ -88,46 +88,46 @@ typedef struct {
 	 * Returns: a newly allocated string which defines the suitable
 	 * default value, or %NULL.
 	 */
-	gchar *  ( *get_default )( const NAIDataFactory *instance, const NadfIdType *iddef );
+	gchar *  ( *get_default )( const NAIFactoryObject *instance, const NadfIdType *iddef );
 
 	/**
 	 * copy:
-	 * @instance: the target #NAIDataFactory instance.
-	 * @source: the source #NAIDataFactory instance.
+	 * @instance: the target #NAIFactoryObject instance.
+	 * @source: the source #NAIFactoryObject instance.
 	 *
 	 * This function is triggered when copying one instance to another,
 	 * after all copyable elementary dats have been copied themselves.
 	 * The target @instance may take advantage of this call to do some
 	 * particular copy tasks.
 	 */
-	void     ( *copy )       ( NAIDataFactory *instance, const NAIDataFactory *source );
+	void     ( *copy )       ( NAIFactoryObject *instance, const NAIFactoryObject *source );
 
 	/**
 	 * are_equal:
-	 * @a: the first #NAIDataFactory instance.
-	 * @b: the second #NAIDataFactory instance.
+	 * @a: the first #NAIFactoryObject instance.
+	 * @b: the second #NAIFactoryObject instance.
 	 *
 	 * Returns: %TRUE if @a is equal to @b.
 	 *
 	 * This function is triggered after all elementary data comparisons
 	 * have been sucessfully made.
 	 */
-	gboolean ( *are_equal )  ( const NAIDataFactory *a, const NAIDataFactory *b );
+	gboolean ( *are_equal )  ( const NAIFactoryObject *a, const NAIFactoryObject *b );
 
 	/**
 	 * is_valid:
-	 * @object: the #NAIDataFactory instance whose validity is to be checked.
+	 * @object: the #NAIFactoryObject instance whose validity is to be checked.
 	 *
 	 * Returns: %TRUE if @object is valid.
 	 *
 	 * This function is triggered after all elementary data comparisons
 	 * have been sucessfully made.
 	 */
-	gboolean ( *is_valid )   ( const NAIDataFactory *object );
+	gboolean ( *is_valid )   ( const NAIFactoryObject *object );
 
 	/**
 	 * read_start:
-	 * @instance: this #NAIDataFactory instance.
+	 * @instance: this #NAIFactoryObject instance.
 	 * @reader: the instance which has provided read services.
 	 * @reader_data: the data associated to @reader.
 	 * @messages: a pointer to a #GSList list of strings; the instance
@@ -135,11 +135,11 @@ typedef struct {
 	 *
 	 * Called just before the object is unserialized.
 	 */
-	void     ( *read_start ) ( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void     ( *read_start ) ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * read_done:
-	 * @instance: this #NAIDataFactory instance.
+	 * @instance: this #NAIFactoryObject instance.
 	 * @reader: the instance which has provided read services.
 	 * @reader_data: the data associated to @reader.
 	 * @messages: a pointer to a #GSList list of strings; the instance
@@ -147,11 +147,11 @@ typedef struct {
 	 *
 	 * Called when the object has been unserialized.
 	 */
-	void     ( *read_done )  ( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void     ( *read_done )  ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * write_start:
-	 * @instance: this #NAIDataFactory instance.
+	 * @instance: this #NAIFactoryObject instance.
 	 * @writer: the instance which has provided writing services.
 	 * @writer_data: the data associated to @writer.
 	 * @messages: a pointer to a #GSList list of strings; the instance
@@ -159,11 +159,11 @@ typedef struct {
 	 *
 	 * Called just before the object is serialized.
 	 */
-	void     ( *write_start )( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	void     ( *write_start )( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 	/**
 	 * write_done:
-	 * @instance: this #NAIDataFactory instance.
+	 * @instance: this #NAIFactoryObject instance.
 	 * @writer: the instance which has provided writing services.
 	 * @writer_data: the data associated to @writer.
 	 * @messages: a pointer to a #GSList list of strings; the instance
@@ -171,17 +171,17 @@ typedef struct {
 	 *
 	 * Called when the object has been serialized.
 	 */
-	void     ( *write_done ) ( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	void     ( *write_done ) ( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 }
-	NAIDataFactoryInterface;
+	NAIFactoryObjectInterface;
 
-GType       na_idata_factory_get_type( void );
+GType       na_ifactory_object_get_type( void );
 
-void       *na_idata_factory_get( const NAIDataFactory *object, guint data_id );
+void       *na_ifactory_object_get( const NAIFactoryObject *object, guint data_id );
 
-void        na_idata_factory_set_from_string( NAIDataFactory *object, guint data_id, const gchar *data );
-void        na_idata_factory_set_from_void  ( NAIDataFactory *object, guint data_id, const void *data );
+void        na_ifactory_object_set_from_string( NAIFactoryObject *object, guint data_id, const gchar *data );
+void        na_ifactory_object_set_from_void  ( NAIFactoryObject *object, guint data_id, const void *data );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IDATA_FACTORY_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__ */

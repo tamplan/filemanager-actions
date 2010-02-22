@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_IDATA_FACTORY_STR_H__
-#define __NAUTILUS_ACTIONS_API_NA_IDATA_FACTORY_STR_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_STR_H__
+#define __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_STR_H__
 
 /**
- * SECTION: na_idata_factory
+ * SECTION: na_ifactory_object
  * @short_description: Data Factory Definitions.
- * @include: nautilus-actions/na-data-factory-str.h
+ * @include: nautilus-actions/na-factory-object-str.h
  */
 
 #include <glib-object.h>
@@ -81,7 +81,7 @@ typedef struct {
 
 /**
  * The structure which fully describe an elementary data
- * Each #NAIDataFactory item definition may include several groups of
+ * Each #NAIFactoryObject item definition may include several groups of
  * this structure
  */
 typedef struct {
@@ -134,15 +134,15 @@ typedef struct {
 
 /**
  * The structure which fully describe a logical group of data
- * Each #NAIDataFactory item may definition may be built from a list of
+ * Each #NAIFactoryObject item may definition may be built from a list of
  * these groups
  */
 typedef struct {
-	guint       idgroup;				/* cf. na-idata-factory-enum.h */
+	guint       idgroup;				/* cf. na-ifactory-object-enum.h */
 	NadfIdType *iddef;
 }
 	NadfIdGroup;
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IDATA_FACTORY_STR_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_STR_H__ */

@@ -34,7 +34,7 @@
 
 #include <api/na-object-api.h>
 
-#include "na-data-factory.h"
+#include "na-factory-object.h"
 
 /* private class data
  */
@@ -213,8 +213,8 @@ object_dump( const NAObject *object )
 
 	na_iduplicable_dump( NA_IDUPLICABLE( object ));
 
-	if( NA_IS_IDATA_FACTORY( object )){
-		na_data_factory_dump( NA_IDATA_FACTORY( object ));
+	if( NA_IS_IFACTORY_OBJECT( object )){
+		na_factory_object_dump( NA_IFACTORY_OBJECT( object ));
 	}
 }
 
@@ -239,8 +239,8 @@ iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
 	if( !NA_OBJECT( source )->private->dispose_has_run &&
 		!NA_OBJECT( target )->private->dispose_has_run ){
 
-		if( NA_IS_IDATA_FACTORY( source )){
-			na_data_factory_copy( NA_IDATA_FACTORY( target ), NA_IDATA_FACTORY( source ));
+		if( NA_IS_IFACTORY_OBJECT( source )){
+			na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
 
 		} else {
 			iter_on_class_hierarchy( NA_OBJECT( source ),
@@ -275,8 +275,8 @@ iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 	if( !NA_OBJECT( a )->private->dispose_has_run &&
 		!NA_OBJECT( b )->private->dispose_has_run ){
 
-		if( NA_IS_IDATA_FACTORY( a )){
-			are_equal = na_data_factory_are_equal( NA_IDATA_FACTORY( a ), NA_IDATA_FACTORY( b ));
+		if( NA_IS_IFACTORY_OBJECT( a )){
+			are_equal = na_factory_object_are_equal( NA_IFACTORY_OBJECT( a ), NA_IFACTORY_OBJECT( b ));
 
 		} else {
 			str = g_new0( HierarchyIter, 1 );
@@ -323,8 +323,8 @@ iduplicable_is_valid( const NAIDuplicable *object )
 
 	if( !NA_OBJECT( object )->private->dispose_has_run ){
 
-		if( NA_IS_IDATA_FACTORY( object )){
-			is_valid = na_data_factory_is_valid( NA_IDATA_FACTORY( object ));
+		if( NA_IS_IFACTORY_OBJECT( object )){
+			is_valid = na_factory_object_is_valid( NA_IFACTORY_OBJECT( object ));
 
 		} else {
 			g_debug( "%s: object=%p (%s): iterating on class hierarchy",

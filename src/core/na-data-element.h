@@ -36,13 +36,13 @@
  * @short_description: #NADataElement class definition.
  * @include: core/na-data-element.h
  *
- * The object which encapsulates an elementary data of #NAIDataFactory.
+ * The object which encapsulates an elementary data of #NAIFactoryObject.
  * A #NADataElement object has a type and a value.
  */
 
 #include <glib-object.h>
 
-#include <api/na-idata-factory-str.h>
+#include <api/na-ifactory-object-str.h>
 
 G_BEGIN_DECLS
 

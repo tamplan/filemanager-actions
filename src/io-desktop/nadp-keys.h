@@ -31,7 +31,7 @@
 #ifndef __NADP_KEYS_H__
 #define __NADP_KEYS_H__
 
-#include <api/na-idata-factory-str.h>
+#include <api/na-ifactory-object-str.h>
 
 G_BEGIN_DECLS
 

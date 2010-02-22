@@ -65,9 +65,9 @@ static guint   iio_provider_get_version( const NAIIOProvider *provider );
 
 static void    ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
 static guint   ifactory_provider_get_version( const NAIFactoryProvider *reader );
-static void    ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
+static void    ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages );
 static GValue *ifactory_provider_read_value( const NAIFactoryProvider *reader, void *reader_data, const NadfIdType *iddef, GSList **messages );
-static void    ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
+static void    ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages );
 
 GType
 nadp_desktop_provider_get_type( void )
@@ -244,7 +244,7 @@ ifactory_provider_get_version( const NAIFactoryProvider *reader )
  * called before starting with reading an object
  */
 static void
-ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
+ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_read_start";
 
@@ -257,7 +257,7 @@ ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_dat
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
-	g_return_if_fail( NA_IS_IDATA_FACTORY( serializable ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
 
 	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
@@ -352,11 +352,11 @@ ifactory_provider_read_value( const NAIFactoryProvider *reader, void *reader_dat
 }
 
 /*
- * called when each NAIDataFactory object has been readen
+ * called when each NAIFactoryObject object has been readen
  * nothing to do here
  */
 static void
-ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
+ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_read_done";
 	/*NAObjectProfile *profile;*/
@@ -370,7 +370,7 @@ ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
-	g_return_if_fail( NA_IS_IDATA_FACTORY( serializable ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
 
 	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 

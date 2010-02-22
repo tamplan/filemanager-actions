@@ -37,12 +37,12 @@
  * @include: core/na-ifactory-priv.h
  */
 
-#include <api/na-idata-factory-str.h>
+#include <api/na-ifactory-object-str.h>
 
 G_BEGIN_DECLS
 
 /* the structure of registered types
- * a list of this structure is stored in #NAIDataFactory interface
+ * a list of this structure is stored in #NAIFactoryObject interface
  */
 typedef struct {
 	GType        type;

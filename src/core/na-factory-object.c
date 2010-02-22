@@ -39,7 +39,7 @@
 #include <api/na-ifactory-provider.h>
 
 #include "na-data-element.h"
-#include "na-data-factory.h"
+#include "na-factory-object.h"
 #include "na-factory-provider.h"
 
 typedef gboolean ( *IdGroupIterFunc )( NadfIdType *iddef, void *user_data );
@@ -47,7 +47,7 @@ typedef gboolean ( *IdGroupIterFunc )( NadfIdType *iddef, void *user_data );
 /* while iterating on read/write item
  */
 typedef struct {
-	NAIDataFactory *object;
+	NAIFactoryObject *object;
 	NAIFactoryProvider   *reader;
 	void           *reader_data;
 	GSList        **messages;
@@ -57,7 +57,7 @@ typedef struct {
 /* while iterating on set defaults
  */
 typedef struct {
-	NAIDataFactory *object;
+	NAIFactoryObject *object;
 	gboolean        creation;
 }
 	NadfNewIter;
@@ -70,42 +70,42 @@ typedef struct {
 }
 	NadfDataValue;
 
-#define NA_IDATA_FACTORY_PROP_DATA				"na-idata-factory-prop-data"
+#define NA_IFACTORY_OBJECT_PROP_DATA				"na-ifactory-object-prop-data"
 
-extern gboolean idata_factory_initialized;		/* defined in na-idata-factory.c */
-extern gboolean idata_factory_finalized;		/* defined in na-idata-factory.c */
+extern gboolean ifactory_object_initialized;		/* defined in na-ifactory-object.c */
+extern gboolean ifactory_object_finalized;		/* defined in na-ifactory-object.c */
 
 static gboolean       define_class_properties_iter( const NadfIdType *iddef, GObjectClass *class );
-static gboolean       data_factory_init_iter( const NadfIdType *iddef, NAIDataFactory *object );
-static gchar         *v_get_default( const NAIDataFactory *object, const NadfIdType *iddef );
-static void           v_copy( NAIDataFactory *target, const NAIDataFactory *source );
-static gboolean       v_are_equal( const NAIDataFactory *a, const NAIDataFactory *b );
-static gboolean       v_is_valid( const NAIDataFactory *object );
-static void           data_factory_read_data( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, NadfIdGroup *groups, GSList **messages );
-static gboolean       data_factory_read_data_iter( NadfIdType *iddef, NadfRWIter *iter );
-static void           v_read_start( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void           v_read_done( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void           data_factory_write_data( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, NadfIdGroup *groups, GSList **messages );
-static gboolean       data_factory_write_data_iter( NadfIdType *iddef, NadfRWIter *iter );
-static void           v_write_start( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void           v_write_done( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static NADataElement *data_element_from_id( const NAIDataFactory *object, guint data_id );
+static gboolean       factory_object_init_iter( const NadfIdType *iddef, NAIFactoryObject *object );
+static gchar         *v_get_default( const NAIFactoryObject *object, const NadfIdType *iddef );
+static void           v_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
+static gboolean       v_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
+static gboolean       v_is_valid( const NAIFactoryObject *object );
+static void           factory_object_read_data( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, NadfIdGroup *groups, GSList **messages );
+static gboolean       factory_object_read_data_iter( NadfIdType *iddef, NadfRWIter *iter );
+static void           v_read_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void           v_read_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void           factory_object_write_data( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, NadfIdGroup *groups, GSList **messages );
+static gboolean       factory_object_write_data_iter( NadfIdType *iddef, NadfRWIter *iter );
+static void           v_write_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void           v_write_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static NADataElement *data_element_from_id( const NAIFactoryObject *object, guint data_id );
 static void           iter_on_id_groups( const NadfIdGroup *idgroups, gboolean serializable_only, IdGroupIterFunc pfn, void *user_data );
 static void           free_gvalue( GValue *value, guint type );
 
 /**
- * na_data_factory_properties:
+ * na_factory_object_properties:
  * @class: the #GObjectClass.
  *
  * Initializes the serializable properties.
  */
 void
-na_data_factory_properties( GObjectClass *class )
+na_factory_object_properties( GObjectClass *class )
 {
-	static const gchar *thisfn = "na_data_factory_properties";
+	static const gchar *thisfn = "na_factory_object_properties";
 	NadfIdGroup *groups;
 
-	if( idata_factory_initialized && !idata_factory_finalized ){
+	if( ifactory_object_initialized && !ifactory_object_finalized ){
 
 		g_debug( "%s: class=%p (%s)",
 				thisfn, ( void * ) class, G_OBJECT_CLASS_NAME( class ));
@@ -128,7 +128,7 @@ na_data_factory_properties( GObjectClass *class )
 static gboolean
 define_class_properties_iter( const NadfIdType *iddef, GObjectClass *class )
 {
-	static const gchar *thisfn = "na_data_factory_define_class_properties_iter";
+	static const gchar *thisfn = "na_factory_object_define_class_properties_iter";
 	gboolean stop;
 	GParamSpec *spec;
 
@@ -170,19 +170,19 @@ define_class_properties_iter( const NadfIdType *iddef, GObjectClass *class )
 }
 
 /**
- * na_data_factory_new:
+ * na_factory_object_new:
  * @type: the GType type of the object we want allocate.
  *
  * Returns: a newly allocated #NAObject-derived object, or %NULL.
  *
  * The function checks that @type has been previously registered in the
- * data factory management system (cf. #na_data_factory_init_class()),
+ * data factory management system (cf. #na_factory_object_init_class()),
  * and if so invoke an empty constructor with this @type.
  */
-NAIDataFactory *
-na_data_factory_new( GType type )
+NAIFactoryObject *
+na_factory_object_new( GType type )
 {
-	NAIDataFactory *object;
+	NAIFactoryObject *object;
 	NadfIdGroup *groups;
 
 	object = NULL;
@@ -192,15 +192,15 @@ na_data_factory_new( GType type )
 	groups = na_factory_provider_get_groups( type );
 	if( groups ){
 
-		object = NA_IDATA_FACTORY( g_object_new( type, NULL ));
+		object = NA_IFACTORY_OBJECT( g_object_new( type, NULL ));
 	}
 
 	return( object );
 }
 
 /**
- * na_data_factory_init:
- * @object: the #NAIDataFactory being initialized.
+ * na_factory_object_init:
+ * @object: the #NAIFactoryObject being initialized.
  *
  * Initializes properties attached to the @object.
  *
@@ -208,23 +208,23 @@ na_data_factory_new( GType type )
  * defined elementary data, initializing it to its default value.
  */
 void
-na_data_factory_init( NAIDataFactory *object )
+na_factory_object_init( NAIFactoryObject *object )
 {
-	static const gchar *thisfn = "na_data_factory_init";
+	static const gchar *thisfn = "na_factory_object_init";
 	NadfIdGroup *groups;
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	groups = na_factory_provider_get_groups( G_OBJECT_TYPE( object ));
 	if( groups ){
 
-		iter_on_id_groups( groups, FALSE, ( IdGroupIterFunc ) &data_factory_init_iter, object );
+		iter_on_id_groups( groups, FALSE, ( IdGroupIterFunc ) &factory_object_init_iter, object );
 	}
 }
 
 static gboolean
-data_factory_init_iter( const NadfIdType *iddef, NAIDataFactory *object )
+factory_object_init_iter( const NadfIdType *iddef, NAIFactoryObject *object )
 {
 	gboolean stop;
 	GList *list;
@@ -243,28 +243,28 @@ data_factory_init_iter( const NadfIdType *iddef, NAIDataFactory *object )
 	data->iddef = ( NadfIdType * ) iddef;
 	data->element = element;
 
-	list = g_object_get_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA );
+	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 	list = g_list_prepend( list, data );
-	g_object_set_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA, list );
+	g_object_set_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA, list );
 
 	return( stop );
 }
 
 /**
- * na_data_factory_copy:
- * @target: the target #NAIDataFactory instance.
- * @source: the source #NAIDataFactory instance.
+ * na_factory_object_copy:
+ * @target: the target #NAIFactoryObject instance.
+ * @source: the source #NAIFactoryObject instance.
  *
  * Copies one instance to another.
  */
 void
-na_data_factory_copy( NAIDataFactory *target, const NAIDataFactory *source )
+na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
 {
 	GList *src_list, *isrc;
 	NadfDataValue *src_data;
 	NADataElement *tgt_element;
 
-	src_list = g_object_get_data( G_OBJECT( source ), NA_IDATA_FACTORY_PROP_DATA );
+	src_list = g_object_get_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA );
 	for( isrc = src_list ; isrc ; isrc = isrc->next ){
 
 		src_data = ( NadfDataValue * ) isrc->data;
@@ -282,36 +282,36 @@ na_data_factory_copy( NAIDataFactory *target, const NAIDataFactory *source )
 }
 
 static gchar *
-v_get_default( const NAIDataFactory *object, const NadfIdType *iddef )
+v_get_default( const NAIFactoryObject *object, const NadfIdType *iddef )
 {
 	gchar *default_value;
 
 	default_value = NULL;
 
-	if( NA_IDATA_FACTORY_GET_INTERFACE( object )->get_default ){
-		default_value = NA_IDATA_FACTORY_GET_INTERFACE( object )->get_default( object, iddef );
+	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_default ){
+		default_value = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_default( object, iddef );
 	}
 
 	return( default_value );
 }
 
 static void
-v_copy( NAIDataFactory *target, const NAIDataFactory *source )
+v_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
 {
-	if( NA_IDATA_FACTORY_GET_INTERFACE( target )->copy ){
-		NA_IDATA_FACTORY_GET_INTERFACE( target )->copy( target, source );
+	if( NA_IFACTORY_OBJECT_GET_INTERFACE( target )->copy ){
+		NA_IFACTORY_OBJECT_GET_INTERFACE( target )->copy( target, source );
 	}
 }
 
 /**
- * na_data_factory_are_equal:
- * @a: the first #NAIDataFactory instance.
- * @b: the second #NAIDataFactory isntance.
+ * na_factory_object_are_equal:
+ * @a: the first #NAIFactoryObject instance.
+ * @b: the second #NAIFactoryObject isntance.
  *
  * Returns: %TRUE if @a is equal to @b, %FALSE else.
  */
 gboolean
-na_data_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
+na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
 {
 	gboolean are_equal;
 	GList *a_list, *b_list, *ia;
@@ -320,8 +320,8 @@ na_data_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
 
 	are_equal = FALSE;
 
-	a_list = g_object_get_data( G_OBJECT( a ), NA_IDATA_FACTORY_PROP_DATA );
-	b_list = g_object_get_data( G_OBJECT( b ), NA_IDATA_FACTORY_PROP_DATA );
+	a_list = g_object_get_data( G_OBJECT( a ), NA_IFACTORY_OBJECT_PROP_DATA );
+	b_list = g_object_get_data( G_OBJECT( b ), NA_IFACTORY_OBJECT_PROP_DATA );
 
 	if( g_list_length( a_list ) == g_list_length( b_list )){
 
@@ -350,29 +350,29 @@ na_data_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
 }
 
 static gboolean
-v_are_equal( const NAIDataFactory *a, const NAIDataFactory *b )
+v_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
 {
 	gboolean are_equal;
 
 	are_equal = TRUE;
 
-	if( NA_IDATA_FACTORY_GET_INTERFACE( a )->are_equal ){
-		are_equal = NA_IDATA_FACTORY_GET_INTERFACE( a )->are_equal( a, b );
+	if( NA_IFACTORY_OBJECT_GET_INTERFACE( a )->are_equal ){
+		are_equal = NA_IFACTORY_OBJECT_GET_INTERFACE( a )->are_equal( a, b );
 	}
 
 	return( are_equal );
 }
 
 /**
- * na_data_factory_is_valid:
- * @object: the #NAIDataFactory instance whose validity is to be checked.
+ * na_factory_object_is_valid:
+ * @object: the #NAIFactoryObject instance whose validity is to be checked.
  *
  * Returns: %TRUE if @object is valid, %FALSE else.
  */
 gboolean
-na_data_factory_is_valid( const NAIDataFactory *object )
+na_factory_object_is_valid( const NAIFactoryObject *object )
 {
-	static const gchar *thisfn = "na_data_factory_is_valid";
+	static const gchar *thisfn = "na_factory_object_is_valid";
 	gboolean is_valid;
 	GList *list_values, *iv;
 	NadfDataValue *a_data;
@@ -380,9 +380,9 @@ na_data_factory_is_valid( const NAIDataFactory *object )
 	g_debug( "%s: object=%p (%s)",
 			thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	g_return_val_if_fail( NA_IS_IDATA_FACTORY( object ), FALSE );
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), FALSE );
 
-	list_values = g_object_get_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA );
+	list_values = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 	is_valid = TRUE;
 
 	for( iv = list_values ; iv && is_valid ; iv = iv->next ){
@@ -405,32 +405,32 @@ na_data_factory_is_valid( const NAIDataFactory *object )
 }
 
 static gboolean
-v_is_valid( const NAIDataFactory *object )
+v_is_valid( const NAIFactoryObject *object )
 {
 	gboolean is_valid;
 
 	is_valid = TRUE;
 
-	if( NA_IDATA_FACTORY_GET_INTERFACE( object )->is_valid ){
-		is_valid = NA_IDATA_FACTORY_GET_INTERFACE( object )->is_valid( object );
+	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid ){
+		is_valid = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid( object );
 	}
 
 	return( is_valid );
 }
 
 /**
- * na_data_factory_dump:
- * @object: this #NAIDataFactory instance.
+ * na_factory_object_dump:
+ * @object: this #NAIFactoryObject instance.
  *
  * Dumps the content of @object.
  */
 void
-na_data_factory_dump( const NAIDataFactory *object )
+na_factory_object_dump( const NAIFactoryObject *object )
 {
 	GList *list, *it;
 	NadfDataValue *str;
 
-	list = g_object_get_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA );
+	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 
 	for( it = list ; it ; it = it->next ){
 
@@ -440,18 +440,18 @@ na_data_factory_dump( const NAIDataFactory *object )
 }
 
 /**
- * na_data_factory_finalize:
- * @object: the #NAIDataFactory being finalized.
+ * na_factory_object_finalize:
+ * @object: the #NAIFactoryObject being finalized.
  *
  * Clears all data associated with this @object.
  */
 void
-na_data_factory_finalize( NAIDataFactory *object )
+na_factory_object_finalize( NAIFactoryObject *object )
 {
 	GList *list, *it;
 	NadfDataValue *str;
 
-	list = g_object_get_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA );
+	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 
 	for( it = list ; it ; it = it->next ){
 
@@ -464,8 +464,8 @@ na_data_factory_finalize( NAIDataFactory *object )
 }
 
 /**
- * na_data_factory_read:
- * @serializable: this #NAIDataFactory instance.
+ * na_factory_object_read:
+ * @serializable: this #NAIFactoryObject instance.
  * @reader: the #NAIFactoryProvider which is at the origin of this read.
  * @reader_data: reader data.
  * @messages: a pointer to a #GSList list of strings; the implementation
@@ -474,22 +474,22 @@ na_data_factory_finalize( NAIDataFactory *object )
  * Unserializes the object.
  */
 void
-na_data_factory_read( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+na_factory_object_read( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	static const gchar *thisfn = "na_data_factory_read";
+	static const gchar *thisfn = "na_factory_object_read";
 	NadfIdGroup *groups;
 	gchar *msg;
 
-	if( idata_factory_initialized && !idata_factory_finalized ){
+	if( ifactory_object_initialized && !ifactory_object_finalized ){
 
-		g_return_if_fail( NA_IS_IDATA_FACTORY( serializable ));
+		g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
 		g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 
 		groups = na_factory_provider_get_groups( G_OBJECT_TYPE( serializable ));
 
 		if( groups ){
 			v_read_start( serializable, reader, reader_data, messages );
-			data_factory_read_data( serializable, reader, reader_data, groups, messages );
+			factory_object_read_data( serializable, reader, reader_data, groups, messages );
 			v_read_done( serializable, reader, reader_data, messages );
 
 		} else {
@@ -502,8 +502,8 @@ na_data_factory_read( NAIDataFactory *serializable, const NAIFactoryProvider *re
 }
 
 /*
- * data_factory_read_data:
- * @serializable: this #NAIDataFactory instance.
+ * factory_object_read_data:
+ * @serializable: this #NAIFactoryObject instance.
  * @reader: the #NAIFactoryProvider which is at the origin of this read.
  * @reader_data: reader data.
  * @groups: the list of NadfIdGroup structure which define @serializable.
@@ -513,7 +513,7 @@ na_data_factory_read( NAIDataFactory *serializable, const NAIFactoryProvider *re
  * Unserializes the object.
  */
 static void
-data_factory_read_data( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, NadfIdGroup *groups, GSList **messages )
+factory_object_read_data( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, NadfIdGroup *groups, GSList **messages )
 {
 	NadfRWIter *iter;
 
@@ -523,13 +523,13 @@ data_factory_read_data( NAIDataFactory *serializable, const NAIFactoryProvider *
 	iter->reader_data = reader_data;
 	iter->messages = messages;
 
-	iter_on_id_groups( groups, TRUE, ( IdGroupIterFunc ) &data_factory_read_data_iter, iter );
+	iter_on_id_groups( groups, TRUE, ( IdGroupIterFunc ) &factory_object_read_data_iter, iter );
 
 	g_free( iter );
 }
 
 static gboolean
-data_factory_read_data_iter( NadfIdType *iddef, NadfRWIter *iter )
+factory_object_read_data_iter( NadfIdType *iddef, NadfRWIter *iter )
 {
 	gboolean stop;
 	GValue *value;
@@ -553,24 +553,24 @@ data_factory_read_data_iter( NadfIdType *iddef, NadfRWIter *iter )
 }
 
 static void
-v_read_start( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+v_read_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_start ){
-		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_start( serializable, reader, reader_data, messages );
+	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_start ){
+		NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_start( serializable, reader, reader_data, messages );
 	}
 }
 
 static void
-v_read_done( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+v_read_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_done ){
-		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_done( serializable, reader, reader_data, messages );
+	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_done ){
+		NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_done( serializable, reader, reader_data, messages );
 	}
 }
 
 /**
- * na_data_factory_write:
- * @serializable: this #NAIDataFactory instance.
+ * na_factory_object_write:
+ * @serializable: this #NAIFactoryObject instance.
  * @writer: the #NAIFactoryProvider which is at the origin of this write.
  * @writer_data: writer data.
  * @messages: a pointer to a #GSList list of strings; the implementation
@@ -579,20 +579,20 @@ v_read_done( NAIDataFactory *serializable, const NAIFactoryProvider *reader, voi
  * Serializes the object down to the @writer.
  */
 void
-na_data_factory_write( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+na_factory_object_write( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	static const gchar *thisfn = "na_data_factory_write";
+	static const gchar *thisfn = "na_factory_object_write";
 	NadfIdGroup *groups;
 	gchar *msg;
 
-	g_return_if_fail( NA_IS_IDATA_FACTORY( serializable ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( writer ));
 
 	groups = na_factory_provider_get_groups( G_OBJECT_TYPE( serializable ));
 
 	if( groups ){
 		v_write_start( serializable, writer, writer_data, messages );
-		data_factory_write_data( serializable, writer, writer_data, groups, messages );
+		factory_object_write_data( serializable, writer, writer_data, groups, messages );
 		v_write_done( serializable, writer, writer_data, messages );
 
 	} else {
@@ -604,8 +604,8 @@ na_data_factory_write( NAIDataFactory *serializable, const NAIFactoryProvider *w
 }
 
 /*
- * data_factory_write_data:
- * @serializable: this #NAIDataFactory instance.
+ * factory_object_write_data:
+ * @serializable: this #NAIFactoryObject instance.
  * @writer: the #NAIFactoryProvider which is at the origin of this writ.
  * @writer_data: writer data.
  * @groups: the list of NadfIdGroup structure which define @serializable.
@@ -615,7 +615,7 @@ na_data_factory_write( NAIDataFactory *serializable, const NAIFactoryProvider *w
  * Serializes the object.
  */
 static void
-data_factory_write_data( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, NadfIdGroup *groups, GSList **messages )
+factory_object_write_data( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, NadfIdGroup *groups, GSList **messages )
 {
 	NadfRWIter *iter;
 
@@ -625,13 +625,13 @@ data_factory_write_data( NAIDataFactory *serializable, const NAIFactoryProvider 
 	iter->reader_data = writer_data;
 	iter->messages = messages;
 
-	iter_on_id_groups( groups, TRUE, ( IdGroupIterFunc ) &data_factory_write_data_iter, iter );
+	iter_on_id_groups( groups, TRUE, ( IdGroupIterFunc ) &factory_object_write_data_iter, iter );
 
 	g_free( iter );
 }
 
 static gboolean
-data_factory_write_data_iter( NadfIdType *iddef, NadfRWIter *iter )
+factory_object_write_data_iter( NadfIdType *iddef, NadfRWIter *iter )
 {
 	gboolean stop;
 
@@ -643,36 +643,36 @@ data_factory_write_data_iter( NadfIdType *iddef, NadfRWIter *iter )
 }
 
 static void
-v_write_start( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+v_write_start( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_start ){
-		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_start( serializable, writer, writer_data, messages );
+	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start ){
+		NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start( serializable, writer, writer_data, messages );
 	}
 }
 
 static void
-v_write_done( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+v_write_done( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_done ){
-		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_done( serializable, writer, writer_data, messages );
+	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done ){
+		NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done( serializable, writer, writer_data, messages );
 	}
 }
 
 /**
- * na_data_factory_set_from_string:
- * @object: this #NAIDataFactory instance.
+ * na_factory_object_set_from_string:
+ * @object: this #NAIFactoryObject instance.
  * @property_id: the elementary data id.
  * @string: the string to be set in the element.
  *
  * Set the @object with the @string.
  */
 void
-na_data_factory_set_from_string( NAIDataFactory *object, guint data_id, const gchar *string )
+na_factory_object_set_from_string( NAIFactoryObject *object, guint data_id, const gchar *string )
 {
-	static const gchar *thisfn = "na_data_factory_set_from_string";
+	static const gchar *thisfn = "na_factory_object_set_from_string";
 	NADataElement *element;
 
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	element = data_element_from_id( object, data_id );
 	if( element ){
@@ -684,8 +684,8 @@ na_data_factory_set_from_string( NAIDataFactory *object, guint data_id, const gc
 }
 
 /**
- * na_data_factory_set_from_value:
- * @object: this #NAIDataFactory instance.
+ * na_factory_object_set_from_value:
+ * @object: this #NAIFactoryObject instance.
  * @property_id: the elementary data id.
  * @value: the #GValue whose content is to be got.
  *
@@ -695,12 +695,12 @@ na_data_factory_set_from_string( NAIDataFactory *object, guint data_id, const gc
  * This is to be readen as "set data element from value".
  */
 void
-na_data_factory_set_from_value( NAIDataFactory *object, guint data_id, const GValue *value )
+na_factory_object_set_from_value( NAIFactoryObject *object, guint data_id, const GValue *value )
 {
-	static const gchar *thisfn = "na_data_factory_set_from_value";
+	static const gchar *thisfn = "na_factory_object_set_from_value";
 	NADataElement *element;
 
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	element = data_element_from_id( object, data_id );
 	if( element ){
@@ -712,23 +712,23 @@ na_data_factory_set_from_value( NAIDataFactory *object, guint data_id, const GVa
 }
 
 /**
- * na_data_factory_set_from_void:
- * @object: this #NAIDataFactory instance.
+ * na_factory_object_set_from_void:
+ * @object: this #NAIFactoryObject instance.
  * @data_id: the elementary data whose value is to be set.
  * @data: the value to set.
  *
  * Set the elementary data with the given value.
  */
 void
-na_data_factory_set_from_void( NAIDataFactory *object, guint data_id, const void *data )
+na_factory_object_set_from_void( NAIFactoryObject *object, guint data_id, const void *data )
 {
-	static const gchar *thisfn = "na_data_factory_set_from_void";
+	static const gchar *thisfn = "na_factory_object_set_from_void";
 	NADataElement *element;
 
 	/*g_debug( "%s: object=%p (%s), data_id=%d, data=%p",
 			thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ), data_id, ( void * ) data );*/
 
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	element = data_element_from_id( object, data_id );
 	if( element ){
@@ -740,8 +740,8 @@ na_data_factory_set_from_void( NAIDataFactory *object, guint data_id, const void
 }
 
 /**
- * na_data_factory_get:
- * @object: this #NAIDataFactory instance.
+ * na_factory_object_get:
+ * @object: this #NAIFactoryObject instance.
  * @data_id: the elementary data whose value is to be got.
  *
  * Returns: the searched value.
@@ -752,13 +752,13 @@ na_data_factory_set_from_void( NAIDataFactory *object, guint data_id, const void
  * caller.
  */
 void *
-na_data_factory_get( const NAIDataFactory *object, guint data_id )
+na_factory_object_get( const NAIFactoryObject *object, guint data_id )
 {
-	static const gchar *thisfn = "na_data_factory_get";
+	static const gchar *thisfn = "na_factory_object_get";
 	void *value;
 	NADataElement *element;
 
-	g_return_val_if_fail( NA_IS_IDATA_FACTORY( object ), NULL );
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	value = NULL;
 
@@ -774,8 +774,8 @@ na_data_factory_get( const NAIDataFactory *object, guint data_id )
 }
 
 /**
- * na_data_factory_set_value:
- * @object: this #NAIDataFactory instance.
+ * na_factory_object_set_value:
+ * @object: this #NAIFactoryObject instance.
  * @property_id: the elementary data id.
  * @value: the #GValue to be set.
  * @spec: the #GParamSpec which describes this data.
@@ -786,12 +786,12 @@ na_data_factory_get( const NAIDataFactory *object, guint data_id )
  * This is to be readen as "set value from data element".
  */
 void
-na_data_factory_set_value( const NAIDataFactory *object, guint property_id, GValue *value, GParamSpec *spec )
+na_factory_object_set_value( const NAIFactoryObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	static const gchar *thisfn = "na_data_factory_set_value";
+	static const gchar *thisfn = "na_factory_object_set_value";
 	NADataElement *element;
 
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	element = data_element_from_id( object, property_id );
 	if( element ){
@@ -803,14 +803,14 @@ na_data_factory_set_value( const NAIDataFactory *object, guint property_id, GVal
 }
 
 static NADataElement *
-data_element_from_id( const NAIDataFactory *object, guint data_id )
+data_element_from_id( const NAIFactoryObject *object, guint data_id )
 {
 	GList *list, *ip;
 	NADataElement *element;
 
 	element = NULL;
 
-	list = g_object_get_data( G_OBJECT( object ), NA_IDATA_FACTORY_PROP_DATA );
+	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 
 	for( ip = list ; ip && !element ; ip = ip->next ){
 		NadfDataValue *ndv = ( NadfDataValue * ) ip->data;

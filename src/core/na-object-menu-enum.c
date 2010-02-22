@@ -32,8 +32,8 @@
 #include <config.h>
 #endif
 
-#include <api/na-idata-factory-enum.h>
-#include <api/na-idata-factory-str.h>
+#include <api/na-ifactory-object-enum.h>
+#include <api/na-ifactory-object-str.h>
 
 extern NadfIdType id_iddef [];			/* defined in na-object-id-enum.c */
 extern NadfIdType item_iddef [];		/* defined in na-object-item-enum.c */
@@ -43,9 +43,9 @@ static NadfIdType menu_iddef [] = {
 };
 
 NadfIdGroup menu_id_groups [] = {
-	{ NA_DATA_FACTORY_ID_GROUP,         id_iddef },
-	{ NA_DATA_FACTORY_ITEM_GROUP,       item_iddef },
-	{ NA_DATA_FACTORY_MENU_GROUP,       menu_iddef },
-	{ NA_DATA_FACTORY_CONDITIONS_GROUP, NULL },
+	{ NA_FACTORY_OBJECT_ID_GROUP,         id_iddef },
+	{ NA_FACTORY_OBJECT_ITEM_GROUP,       item_iddef },
+	{ NA_FACTORY_OBJECT_MENU_GROUP,       menu_iddef },
+	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, NULL },
 	{ 0 }
 };

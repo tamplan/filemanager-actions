@@ -39,11 +39,11 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-idata-factory.h>
+#include <api/na-ifactory-object.h>
 #include <api/na-object-api.h>
 
 #include "na-factory-provider.h"
-#include "na-data-factory.h"
+#include "na-factory-object.h"
 #include "na-dbus-tracker.h"
 #include "na-gnome-vfs-uri.h"
 
@@ -78,12 +78,12 @@ static void     instance_finalize( GObject *object );
 
 static gboolean object_is_valid( const NAObject *object );
 
-static void     idata_factory_iface_init( NAIDataFactoryInterface *iface );
-static guint    idata_factory_get_version( const NAIDataFactory *instance );
-static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef );
-static gboolean idata_factory_is_valid( const NAIDataFactory *object );
-static void     idata_factory_read_done( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void     idata_factory_write_done( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void     ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
+static guint    ifactory_object_get_version( const NAIFactoryObject *instance );
+static gchar   *ifactory_object_get_default( const NAIFactoryObject *instance, const NadfIdType *iddef );
+static gboolean ifactory_object_is_valid( const NAIFactoryObject *object );
+static void     ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void     ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static gboolean profile_is_valid( const NAObjectProfile *profile );
 static gboolean is_valid_path_parameters( const NAObjectProfile *profile );
@@ -139,8 +139,8 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo idata_factory_iface_info = {
-		( GInterfaceInitFunc ) idata_factory_iface_init,
+	static const GInterfaceInfo ifactory_object_iface_info = {
+		( GInterfaceInitFunc ) ifactory_object_iface_init,
 		NULL,
 		NULL
 	};
@@ -149,7 +149,7 @@ register_type( void )
 
 	type = g_type_register_static( NA_OBJECT_ID_TYPE, "NAObjectProfile", &info, 0 );
 
-	g_type_add_interface_static( type, NA_IDATA_FACTORY_TYPE, &idata_factory_iface_info );
+	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
 	na_factory_provider_register( type, profile_id_groups );
 
@@ -185,7 +185,7 @@ class_init( NAObjectProfileClass *klass )
 
 	klass->private = g_new0( NAObjectProfileClassPrivate, 1 );
 
-	na_data_factory_properties( object_class );
+	na_factory_object_properties( object_class );
 }
 
 static void
@@ -205,18 +205,18 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->dispose_has_run = FALSE;
 
-	na_data_factory_init( NA_IDATA_FACTORY( instance ));
+	na_factory_object_init( NA_IFACTORY_OBJECT( instance ));
 }
 
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	if( !NA_OBJECT_PROFILE( object )->private->dispose_has_run ){
 
-		na_data_factory_set_value( NA_IDATA_FACTORY( object ), property_id, value, spec );
+		na_factory_object_set_value( NA_IFACTORY_OBJECT( object ), property_id, value, spec );
 	}
 }
 
@@ -224,11 +224,11 @@ static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
 	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
-	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	if( !NA_OBJECT_PROFILE( object )->private->dispose_has_run ){
 
-		na_data_factory_set_from_value( NA_IDATA_FACTORY( object ), property_id, value );
+		na_factory_object_set_from_value( NA_IFACTORY_OBJECT( object ), property_id, value );
 	}
 }
 
@@ -269,7 +269,7 @@ instance_finalize( GObject *object )
 
 	g_free( self->private );
 
-	na_data_factory_finalize( NA_IDATA_FACTORY( object ));
+	na_factory_object_finalize( NA_IFACTORY_OBJECT( object ));
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
@@ -286,31 +286,31 @@ object_is_valid( const NAObject *object )
 }
 
 static void
-idata_factory_iface_init( NAIDataFactoryInterface *iface )
+ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 {
-	static const gchar *thisfn = "na_object_menu_idata_factory_iface_init";
+	static const gchar *thisfn = "na_object_menu_ifactory_object_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_version = idata_factory_get_version;
-	iface->get_default = idata_factory_get_default;
+	iface->get_version = ifactory_object_get_version;
+	iface->get_default = ifactory_object_get_default;
 	iface->copy = NULL;
 	iface->are_equal = NULL;
-	iface->is_valid = idata_factory_is_valid;
+	iface->is_valid = ifactory_object_is_valid;
 	iface->read_start = NULL;
-	iface->read_done = idata_factory_read_done;
+	iface->read_done = ifactory_object_read_done;
 	iface->write_start = NULL;
-	iface->write_done = idata_factory_write_done;
+	iface->write_done = ifactory_object_write_done;
 }
 
 static guint
-idata_factory_get_version( const NAIDataFactory *instance )
+ifactory_object_get_version( const NAIFactoryObject *instance )
 {
 	return( 1 );
 }
 
 static gchar *
-idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef )
+ifactory_object_get_default( const NAIFactoryObject *instance, const NadfIdType *iddef )
 {
 	gchar *value;
 
@@ -331,9 +331,9 @@ idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *idd
 }
 
 static gboolean
-idata_factory_is_valid( const NAIDataFactory *object )
+ifactory_object_is_valid( const NAIFactoryObject *object )
 {
-	static const gchar *thisfn = "na_object_profile_idata_factory_is_valid: object";
+	static const gchar *thisfn = "na_object_profile_ifactory_object_is_valid: object";
 
 	g_debug( "%s: object=%p (%s)",
 			thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
@@ -344,13 +344,13 @@ idata_factory_is_valid( const NAIDataFactory *object )
 }
 
 static void
-idata_factory_read_done( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 
 }
 
 static void
-idata_factory_write_done( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 
 }

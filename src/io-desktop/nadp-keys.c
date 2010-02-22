@@ -32,7 +32,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-idata-factory-enum.h>
+#include <api/na-ifactory-object-enum.h>
 
 #include "nadp-keys.h"
 

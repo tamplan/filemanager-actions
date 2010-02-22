@@ -229,7 +229,7 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), ret );
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
-	g_return_val_if_fail( NA_IS_IDATA_FACTORY( item ), ret );
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( item ), ret );
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
 
@@ -241,7 +241,7 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 
 	ret = NA_IIO_PROVIDER_CODE_OK;
 
-	na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), ndf, NA_IDATA_FACTORY( item ), messages );
+	na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), ndf, NA_IFACTORY_OBJECT( item ), messages );
 
 	if( !nadp_desktop_file_write( ndf )){
 		ret = NA_IIO_PROVIDER_CODE_WRITE_ERROR;

@@ -76,7 +76,7 @@ typedef struct {
 }
 	NadpDesktopProviderClass;
 
-/* the structure passed as reader data to NAIDataFactory
+/* the structure passed as reader data to NAIFactoryObject
  */
 typedef struct {
 	NadpDesktopFile *ndf;

@@ -32,8 +32,8 @@
 #include <config.h>
 #endif
 
-#include <api/na-idata-factory-enum.h>
-#include <api/na-idata-factory-str.h>
+#include <api/na-ifactory-object-enum.h>
+#include <api/na-ifactory-object-str.h>
 
 static void free_items_list( void * list );
 

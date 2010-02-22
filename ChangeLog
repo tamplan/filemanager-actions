@@ -1,6 +1,42 @@
 2009-02-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/Makefile.am:
+	* src/api/na-ifactory-object-enum.h:
+	* src/api/na-ifactory-object-str.h:
+	* src/api/na-ifactory-object.h:
+	* src/api/na-ifactory-provider.h:
+	* src/api/na-iio-provider.h:
+	* src/api/na-object-api.h:
+	* src/core/Makefile.am:
+	* src/core/na-data-element.c:
+	* src/core/na-data-element.h:
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h:
+	* src/core/na-ifactory-object.c:
+	* src/core/na-ifactory-provider-priv.h:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-object-action-enum.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id-enum.c:
+	* src/core/na-object-item-enum.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object-menu-enum.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile-enum.c:
+	* src/core/na-object-profile.c:
+	* src/core/na-object.c:
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-desktop/nadp-desktop-provider.h:
+	* src/io-desktop/nadp-keys.c:
+	* src/io-desktop/nadp-keys.h:
+	* src/io-desktop/nadp-reader.c:
+	* src/io-desktop/nadp-writer.c:
+	* src/io-xml/naxml-keys.h:
+	* src/io-xml/naxml-reader.c:
+	* src/test/test-include.c:
+	Rename NAIDataFactory interface as NAIFactoryObject.
+
+	* src/api/Makefile.am:
 	* src/api/na-idata-factory-str.h:
 	* src/api/na-idata-factory.h:
 	* src/api/na-ifactory-provider-provider.h:

@@ -41,13 +41,13 @@ libna_core_la_SOURCES = \
 	na-core-utils.c										\
 	na-data-element.c									\
 	na-data-element.h									\
-	na-data-factory.c									\
-	na-data-factory.h									\
 	na-dbus-tracker.h									\
 	na-exporter.c										\
 	na-exporter.h										\
 	na-export-format.c									\
 	na-export-format.h									\
+	na-factory-object.c									\
+	na-factory-object.h									\
 	na-factory-provider.c								\
 	na-factory-provider.h								\
 	na-gconf-monitor.c									\
@@ -57,12 +57,12 @@ libna_core_la_SOURCES = \
 	na-iabout.c											\
 	na-iabout.h											\
 	na-iduplicable.c									\
-	na-idata-factory.c									\
 	na-iexporter.c										\
-	na-iimporter.c										\
-	na-iio-provider.c									\
+	na-ifactory-object.c								\
 	na-ifactory-provider.c								\
 	na-ifactory-provider-priv.h							\
+	na-iimporter.c										\
+	na-iio-provider.c									\
 	na-io-provider.c									\
 	na-io-provider.h									\
 	na-importer.c										\
