@@ -36,11 +36,11 @@
 #include <stdlib.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-iio-factory.h>
+#include <api/na-ifactory-provider.h>
 
 #include "na-data-element.h"
 #include "na-data-factory.h"
-#include "na-io-factory.h"
+#include "na-factory-provider.h"
 
 typedef gboolean ( *IdGroupIterFunc )( NadfIdType *iddef, void *user_data );
 
@@ -48,7 +48,7 @@ typedef gboolean ( *IdGroupIterFunc )( NadfIdType *iddef, void *user_data );
  */
 typedef struct {
 	NAIDataFactory *object;
-	NAIIOFactory   *reader;
+	NAIFactoryProvider   *reader;
 	void           *reader_data;
 	GSList        **messages;
 }
@@ -81,14 +81,14 @@ static gchar         *v_get_default( const NAIDataFactory *object, const NadfIdT
 static void           v_copy( NAIDataFactory *target, const NAIDataFactory *source );
 static gboolean       v_are_equal( const NAIDataFactory *a, const NAIDataFactory *b );
 static gboolean       v_is_valid( const NAIDataFactory *object );
-static void           data_factory_read_data( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, NadfIdGroup *groups, GSList **messages );
+static void           data_factory_read_data( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, NadfIdGroup *groups, GSList **messages );
 static gboolean       data_factory_read_data_iter( NadfIdType *iddef, NadfRWIter *iter );
-static void           v_read_start( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages );
-static void           v_read_done( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages );
-static void           data_factory_write_data( NAIDataFactory *serializable, const NAIIOFactory *writer, void *writer_data, NadfIdGroup *groups, GSList **messages );
+static void           v_read_start( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void           v_read_done( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void           data_factory_write_data( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, NadfIdGroup *groups, GSList **messages );
 static gboolean       data_factory_write_data_iter( NadfIdType *iddef, NadfRWIter *iter );
-static void           v_write_start( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages );
-static void           v_write_done( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages );
+static void           v_write_start( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void           v_write_done( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static NADataElement *data_element_from_id( const NAIDataFactory *object, guint data_id );
 static void           iter_on_id_groups( const NadfIdGroup *idgroups, gboolean serializable_only, IdGroupIterFunc pfn, void *user_data );
 static void           free_gvalue( GValue *value, guint type );
@@ -114,7 +114,7 @@ na_data_factory_properties( GObjectClass *class )
 
 		/* define class properties
 		 */
-		groups = na_io_factory_get_groups( G_OBJECT_CLASS_TYPE( class ));
+		groups = na_factory_provider_get_groups( G_OBJECT_CLASS_TYPE( class ));
 		if( groups ){
 			iter_on_id_groups(
 					groups,
@@ -189,7 +189,7 @@ na_data_factory_new( GType type )
 
 	/* check that @type has been registered
 	 */
-	groups = na_io_factory_get_groups( type );
+	groups = na_factory_provider_get_groups( type );
 	if( groups ){
 
 		object = NA_IDATA_FACTORY( g_object_new( type, NULL ));
@@ -216,7 +216,7 @@ na_data_factory_init( NAIDataFactory *object )
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_IDATA_FACTORY( object ));
 
-	groups = na_io_factory_get_groups( G_OBJECT_TYPE( object ));
+	groups = na_factory_provider_get_groups( G_OBJECT_TYPE( object ));
 	if( groups ){
 
 		iter_on_id_groups( groups, FALSE, ( IdGroupIterFunc ) &data_factory_init_iter, object );
@@ -466,7 +466,7 @@ na_data_factory_finalize( NAIDataFactory *object )
 /**
  * na_data_factory_read:
  * @serializable: this #NAIDataFactory instance.
- * @reader: the #NAIIOFactory which is at the origin of this read.
+ * @reader: the #NAIFactoryProvider which is at the origin of this read.
  * @reader_data: reader data.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
@@ -474,7 +474,7 @@ na_data_factory_finalize( NAIDataFactory *object )
  * Unserializes the object.
  */
 void
-na_data_factory_read( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages )
+na_data_factory_read( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	static const gchar *thisfn = "na_data_factory_read";
 	NadfIdGroup *groups;
@@ -483,9 +483,9 @@ na_data_factory_read( NAIDataFactory *serializable, const NAIIOFactory *reader, 
 	if( idata_factory_initialized && !idata_factory_finalized ){
 
 		g_return_if_fail( NA_IS_IDATA_FACTORY( serializable ));
-		g_return_if_fail( NA_IS_IIO_FACTORY( reader ));
+		g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 
-		groups = na_io_factory_get_groups( G_OBJECT_TYPE( serializable ));
+		groups = na_factory_provider_get_groups( G_OBJECT_TYPE( serializable ));
 
 		if( groups ){
 			v_read_start( serializable, reader, reader_data, messages );
@@ -504,7 +504,7 @@ na_data_factory_read( NAIDataFactory *serializable, const NAIIOFactory *reader, 
 /*
  * data_factory_read_data:
  * @serializable: this #NAIDataFactory instance.
- * @reader: the #NAIIOFactory which is at the origin of this read.
+ * @reader: the #NAIFactoryProvider which is at the origin of this read.
  * @reader_data: reader data.
  * @groups: the list of NadfIdGroup structure which define @serializable.
  * @messages: a pointer to a #GSList list of strings; the implementation
@@ -513,13 +513,13 @@ na_data_factory_read( NAIDataFactory *serializable, const NAIIOFactory *reader, 
  * Unserializes the object.
  */
 static void
-data_factory_read_data( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, NadfIdGroup *groups, GSList **messages )
+data_factory_read_data( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, NadfIdGroup *groups, GSList **messages )
 {
 	NadfRWIter *iter;
 
 	iter = g_new0( NadfRWIter, 1 );
 	iter->object = serializable;
-	iter->reader = ( NAIIOFactory * ) reader;
+	iter->reader = ( NAIFactoryProvider * ) reader;
 	iter->reader_data = reader_data;
 	iter->messages = messages;
 
@@ -537,7 +537,7 @@ data_factory_read_data_iter( NadfIdType *iddef, NadfRWIter *iter )
 
 	stop = FALSE;
 
-	value = na_io_factory_read_value( iter->reader, iter->reader_data, iddef, iter->messages );
+	value = na_factory_provider_read_value( iter->reader, iter->reader_data, iddef, iter->messages );
 	if( value ){
 
 		element = data_element_from_id( iter->object, iddef->id );
@@ -553,7 +553,7 @@ data_factory_read_data_iter( NadfIdType *iddef, NadfRWIter *iter )
 }
 
 static void
-v_read_start( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages )
+v_read_start( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_start ){
 		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_start( serializable, reader, reader_data, messages );
@@ -561,7 +561,7 @@ v_read_start( NAIDataFactory *serializable, const NAIIOFactory *reader, void *re
 }
 
 static void
-v_read_done( NAIDataFactory *serializable, const NAIIOFactory *reader, void *reader_data, GSList **messages )
+v_read_done( NAIDataFactory *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_done ){
 		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->read_done( serializable, reader, reader_data, messages );
@@ -571,7 +571,7 @@ v_read_done( NAIDataFactory *serializable, const NAIIOFactory *reader, void *rea
 /**
  * na_data_factory_write:
  * @serializable: this #NAIDataFactory instance.
- * @writer: the #NAIIOFactory which is at the origin of this write.
+ * @writer: the #NAIFactoryProvider which is at the origin of this write.
  * @writer_data: writer data.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
@@ -579,16 +579,16 @@ v_read_done( NAIDataFactory *serializable, const NAIIOFactory *reader, void *rea
  * Serializes the object down to the @writer.
  */
 void
-na_data_factory_write( NAIDataFactory *serializable, const NAIIOFactory *writer, void *writer_data, GSList **messages )
+na_data_factory_write( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	static const gchar *thisfn = "na_data_factory_write";
 	NadfIdGroup *groups;
 	gchar *msg;
 
 	g_return_if_fail( NA_IS_IDATA_FACTORY( serializable ));
-	g_return_if_fail( NA_IS_IIO_FACTORY( writer ));
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( writer ));
 
-	groups = na_io_factory_get_groups( G_OBJECT_TYPE( serializable ));
+	groups = na_factory_provider_get_groups( G_OBJECT_TYPE( serializable ));
 
 	if( groups ){
 		v_write_start( serializable, writer, writer_data, messages );
@@ -606,7 +606,7 @@ na_data_factory_write( NAIDataFactory *serializable, const NAIIOFactory *writer,
 /*
  * data_factory_write_data:
  * @serializable: this #NAIDataFactory instance.
- * @writer: the #NAIIOFactory which is at the origin of this writ.
+ * @writer: the #NAIFactoryProvider which is at the origin of this writ.
  * @writer_data: writer data.
  * @groups: the list of NadfIdGroup structure which define @serializable.
  * @messages: a pointer to a #GSList list of strings; the implementation
@@ -615,13 +615,13 @@ na_data_factory_write( NAIDataFactory *serializable, const NAIIOFactory *writer,
  * Serializes the object.
  */
 static void
-data_factory_write_data( NAIDataFactory *serializable, const NAIIOFactory *writer, void *writer_data, NadfIdGroup *groups, GSList **messages )
+data_factory_write_data( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, NadfIdGroup *groups, GSList **messages )
 {
 	NadfRWIter *iter;
 
 	iter = g_new0( NadfRWIter, 1 );
 	iter->object = serializable;
-	iter->reader = ( NAIIOFactory * ) writer;
+	iter->reader = ( NAIFactoryProvider * ) writer;
 	iter->reader_data = writer_data;
 	iter->messages = messages;
 
@@ -637,13 +637,13 @@ data_factory_write_data_iter( NadfIdType *iddef, NadfRWIter *iter )
 
 	stop = FALSE;
 
-	/*na_io_factory_set_value( iter->reader, iter->reader_data, iddef, iter->messages );*/
+	/*na_factory_provider_set_value( iter->reader, iter->reader_data, iddef, iter->messages );*/
 
 	return( stop );
 }
 
 static void
-v_write_start( NAIDataFactory *serializable, const NAIIOFactory *writer, void *writer_data, GSList **messages )
+v_write_start( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_start ){
 		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_start( serializable, writer, writer_data, messages );
@@ -651,7 +651,7 @@ v_write_start( NAIDataFactory *serializable, const NAIIOFactory *writer, void *w
 }
 
 static void
-v_write_done( NAIDataFactory *serializable, const NAIIOFactory *writer, void *writer_data, GSList **messages )
+v_write_done( NAIDataFactory *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	if( NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_done ){
 		NA_IDATA_FACTORY_GET_INTERFACE( serializable )->write_done( serializable, writer, writer_data, messages );

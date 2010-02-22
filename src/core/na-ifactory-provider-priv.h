@@ -28,25 +28,34 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_IO_FACTORY_H__
-#define __CORE_NA_IO_FACTORY_H__
+#ifndef __CORE_NA_IFACTORY_PROVIDER_PRIV_H__
+#define __CORE_NA_IFACTORY_PROVIDER_PRIV_H__
 
 /**
- * SECTION: na_iio_factory
- * @short_description: #NAIIOFactory interface definition.
- * @include: core/na-io-factory.h
+ * SECTION: na_ifactory_provider
+ * @short_description: #NAIFactoryProvider interface private structure declaration.
+ * @include: core/na-ifactory-priv.h
  */
 
-#include <api/na-iio-factory.h>
+#include <api/na-idata-factory-str.h>
 
 G_BEGIN_DECLS
 
-void         na_io_factory_register  ( GType type, const NadfIdGroup *groups );
-NadfIdGroup *na_io_factory_get_groups( GType type );
-NadfIdType  *na_io_factory_get_idtype_from_gconf_key( const gchar *entry );
+/* the structure of registered types
+ * a list of this structure is stored in #NAIDataFactory interface
+ */
+typedef struct {
+	GType        type;
+	NadfIdGroup *groups;
+}
+	NadfImplement;
 
-GValue      *na_io_factory_read_value( const NAIIOFactory *reader, void *reader_data, const NadfIdType *iddef, GSList **messages );
+/* private interface data
+ */
+struct NAIFactoryProviderInterfacePrivate {
+	GList *registered;
+};
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IO_FACTORY_H__ */
+#endif /* __CORE_NA_IFACTORY_PROVIDER_PRIV_H__ */

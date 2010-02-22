@@ -37,8 +37,8 @@ api_include_HEADERS = \
 	na-idata-factory-str.h								\
 	na-iexporter.h										\
 	na-iimporter.h										\
-	na-iio-factory.h									\
-	na-iio-factory-factory.h							\
+	na-ifactory-provider.h								\
+	na-ifactory-provider-provider.h						\
 	na-iio-provider.h									\
 	\
 	na-core-utils.h										\

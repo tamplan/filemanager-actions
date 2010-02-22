@@ -48,6 +48,8 @@ libna_core_la_SOURCES = \
 	na-exporter.h										\
 	na-export-format.c									\
 	na-export-format.h									\
+	na-factory-provider.c								\
+	na-factory-provider.h								\
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
 	na-gnome-vfs-uri.c									\
@@ -58,11 +60,9 @@ libna_core_la_SOURCES = \
 	na-idata-factory.c									\
 	na-iexporter.c										\
 	na-iimporter.c										\
-	na-iio-factory.c									\
-	na-iio-factory-priv.h								\
 	na-iio-provider.c									\
-	na-io-factory.c										\
-	na-io-factory.h										\
+	na-ifactory-provider.c								\
+	na-ifactory-provider-priv.h							\
 	na-io-provider.c									\
 	na-io-provider.h									\
 	na-importer.c										\

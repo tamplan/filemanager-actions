@@ -37,7 +37,7 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-iio-factory.h>
+#include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
 
 #include <io-gconf/nagp-keys.h>
@@ -899,7 +899,7 @@ set_schema_applyto_value( NAXMLReader *reader, xmlNode *node, const gchar *entry
 {
 	gchar *value;
 
-	NadfIdType *iddef = na_iio_factory_get_idtype_from_gconf_key( entry );
+	NadfIdType *iddef = na_ifactory_provider_get_idtype_from_gconf_key( entry );
 	if( iddef ){
 		reader->private->iddef = iddef;
 		g_debug( "%s: localizable=%s", iddef->name, iddef->localizable ? "True":"False" );

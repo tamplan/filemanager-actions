@@ -44,7 +44,7 @@ G_BEGIN_DECLS
 /**
  * Elementary data types
  * Each object data item must be typed as one of these
- * IIOFactory implementations should provide a primitive for reading
+ * IFactoryProvider implementations should provide a primitive for reading
  * (resp. writing) a value for each of these elementary data types.
  *
  * IMPORTANT NOTE

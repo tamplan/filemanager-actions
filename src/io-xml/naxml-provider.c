@@ -34,7 +34,7 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-iio-factory.h>
+#include <api/na-ifactory-provider.h>
 #include <api/na-iexporter.h>
 #include <api/na-iimporter.h>
 
@@ -106,8 +106,8 @@ static void                 iexporter_iface_init( NAIExporterInterface *iface );
 static guint                iexporter_get_version( const NAIExporter *exporter );
 static const NAExporterStr *iexporter_get_formats( const NAIExporter *exporter );
 
-static void                 iio_factory_iface_init( NAIIOFactoryInterface *iface );
-static guint                iio_factory_get_version( const NAIIOFactory *factory );
+static void                 ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
+static guint                ifactory_provider_get_version( const NAIFactoryProvider *factory );
 
 GType
 naxml_provider_get_type( void )
@@ -144,8 +144,8 @@ naxml_provider_register_type( GTypeModule *module )
 		NULL
 	};
 
-	static const GInterfaceInfo iio_factory_iface_info = {
-		( GInterfaceInitFunc ) iio_factory_iface_init,
+	static const GInterfaceInfo ifactory_provider_iface_info = {
+		( GInterfaceInitFunc ) ifactory_provider_iface_init,
 		NULL,
 		NULL
 	};
@@ -158,7 +158,7 @@ naxml_provider_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_module_type, NA_IEXPORTER_TYPE, &iexporter_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_IIO_FACTORY_TYPE, &iio_factory_iface_info );
+	g_type_module_add_interface( module, st_module_type, NA_IFACTORY_PROVIDER_TYPE, &ifactory_provider_iface_info );
 }
 
 static void
@@ -274,13 +274,13 @@ iexporter_get_formats( const NAIExporter *exporter )
 }
 
 static void
-iio_factory_iface_init( NAIIOFactoryInterface *iface )
+ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 {
-	static const gchar *thisfn = "naxml_provider_iio_factory_iface_init";
+	static const gchar *thisfn = "naxml_provider_ifactory_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_version = iio_factory_get_version;
+	iface->get_version = ifactory_provider_get_version;
 	iface->read_start = NULL;
 	iface->read_value = NULL;
 	iface->read_done = NULL;
@@ -290,7 +290,7 @@ iio_factory_iface_init( NAIIOFactoryInterface *iface )
 }
 
 static guint
-iio_factory_get_version( const NAIIOFactory *factory )
+ifactory_provider_get_version( const NAIFactoryProvider *factory )
 {
 	return( 1 );
 }

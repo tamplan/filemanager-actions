@@ -42,7 +42,7 @@
 #include <api/na-idata-factory.h>
 #include <api/na-object-api.h>
 
-#include "na-io-factory.h"
+#include "na-factory-provider.h"
 #include "na-data-factory.h"
 #include "na-dbus-tracker.h"
 #include "na-gnome-vfs-uri.h"
@@ -82,8 +82,8 @@ static void     idata_factory_iface_init( NAIDataFactoryInterface *iface );
 static guint    idata_factory_get_version( const NAIDataFactory *instance );
 static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const NadfIdType *iddef );
 static gboolean idata_factory_is_valid( const NAIDataFactory *object );
-static void     idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
-static void     idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
+static void     idata_factory_read_done( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void     idata_factory_write_done( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static gboolean profile_is_valid( const NAObjectProfile *profile );
 static gboolean is_valid_path_parameters( const NAObjectProfile *profile );
@@ -151,7 +151,7 @@ register_type( void )
 
 	g_type_add_interface_static( type, NA_IDATA_FACTORY_TYPE, &idata_factory_iface_info );
 
-	na_io_factory_register( type, profile_id_groups );
+	na_factory_provider_register( type, profile_id_groups );
 
 	return( type );
 }
@@ -344,13 +344,13 @@ idata_factory_is_valid( const NAIDataFactory *object )
 }
 
 static void
-idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages )
+idata_factory_read_done( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 
 }
 
 static void
-idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages )
+idata_factory_write_done( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 
 }

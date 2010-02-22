@@ -36,7 +36,7 @@
 
 #include <api/na-object-api.h>
 
-#include "na-io-factory.h"
+#include "na-factory-provider.h"
 #include "na-data-factory.h"
 
 /* private class data
@@ -74,8 +74,8 @@ static gchar   *idata_factory_get_default( const NAIDataFactory *instance, const
 static void     idata_factory_copy( NAIDataFactory *target, const NAIDataFactory *source );
 static gboolean idata_factory_are_equal( const NAIDataFactory *a, const NAIDataFactory *b );
 static gboolean idata_factory_is_valid( const NAIDataFactory *object );
-static void     idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
-static void     idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
+static void     idata_factory_read_done( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void     idata_factory_write_done( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static gboolean object_object_is_valid( const NAObjectAction *action );
 static gboolean is_valid_label( const NAObjectAction *action );
@@ -124,7 +124,7 @@ register_type( void )
 
 	g_type_add_interface_static( type, NA_IDATA_FACTORY_TYPE, &idata_factory_iface_info );
 
-	na_io_factory_register( type, action_id_groups );
+	na_factory_provider_register( type, action_id_groups );
 
 	return( type );
 }
@@ -315,7 +315,7 @@ idata_factory_is_valid( const NAIDataFactory *object )
 }
 
 static void
-idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages )
+idata_factory_read_done( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	g_debug( "na_object_action_idata_factory_read_done: instance=%p", ( void * ) instance );
 
@@ -323,7 +323,7 @@ idata_factory_read_done( NAIDataFactory *instance, const NAIIOFactory *reader, v
 }
 
 static void
-idata_factory_write_done( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages )
+idata_factory_write_done( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 
 }

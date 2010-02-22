@@ -48,7 +48,7 @@
 
 #include "na-idata-factory-enum.h"
 #include "na-idata-factory-str.h"
-#include "na-iio-factory-factory.h"
+#include "na-ifactory-provider-provider.h"
 
 G_BEGIN_DECLS
 
@@ -135,7 +135,7 @@ typedef struct {
 	 *
 	 * Called just before the object is unserialized.
 	 */
-	void     ( *read_start ) ( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
+	void     ( *read_start ) ( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * read_done:
@@ -147,7 +147,7 @@ typedef struct {
 	 *
 	 * Called when the object has been unserialized.
 	 */
-	void     ( *read_done )  ( NAIDataFactory *instance, const NAIIOFactory *reader, void *reader_data, GSList **messages );
+	void     ( *read_done )  ( NAIDataFactory *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * write_start:
@@ -159,7 +159,7 @@ typedef struct {
 	 *
 	 * Called just before the object is serialized.
 	 */
-	void     ( *write_start )( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
+	void     ( *write_start )( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 	/**
 	 * write_done:
@@ -171,7 +171,7 @@ typedef struct {
 	 *
 	 * Called when the object has been serialized.
 	 */
-	void     ( *write_done ) ( NAIDataFactory *instance, const NAIIOFactory *writer, void *writer_data, GSList **messages );
+	void     ( *write_done ) ( NAIDataFactory *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 }
 	NAIDataFactoryInterface;
 

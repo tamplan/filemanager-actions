@@ -37,7 +37,7 @@
  * @include: core/na-data-factory.h
  */
 
-#include <api/na-iio-factory.h>
+#include <api/na-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
@@ -51,8 +51,8 @@ gboolean        na_data_factory_is_valid  ( const NAIDataFactory *object );
 void            na_data_factory_dump      ( const NAIDataFactory *object );
 void            na_data_factory_finalize  ( NAIDataFactory *object );
 
-void            na_data_factory_read      ( NAIDataFactory *object, const NAIIOFactory *reader, void *reader_data, GSList **messages );
-void            na_data_factory_write     ( NAIDataFactory *object, const NAIIOFactory *writer, void *writer_data, GSList **messages );
+void            na_data_factory_read      ( NAIDataFactory *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+void            na_data_factory_write     ( NAIDataFactory *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 void            na_data_factory_set_from_string( NAIDataFactory *object, guint data_id, const gchar *data );
 void            na_data_factory_set_from_value ( NAIDataFactory *object, guint data_id, const GValue *value );

@@ -1,5 +1,29 @@
 2009-02-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/Makefile.am:
+	* src/api/na-idata-factory-str.h:
+	* src/api/na-idata-factory.h:
+	* src/api/na-ifactory-provider-provider.h:
+	* src/api/na-ifactory-provider.h:
+	* src/api/na-iio-provider.h:
+	* src/core/Makefile.am:
+	* src/core/na-data-factory.c:
+	* src/core/na-data-factory.h:
+	* src/core/na-factory-provider.c:
+	* src/core/na-factory-provider.h:
+	* src/core/na-ifactory-provider-priv.h:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile.c:
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-desktop/nadp-reader.c:
+	* src/io-desktop/nadp-writer.c:
+	* src/io-gconf/nagp-gconf-provider.c:
+	* src/io-xml/naxml-provider.c:
+	* src/io-xml/naxml-reader.c:
+	Rename NAIIOFactory interface as NAIFactoryProvider.
+
 	* src/core/na-io-provider.c:
 	* src/core/na-pivot.c:
 	* src/core/na-pivot.h:

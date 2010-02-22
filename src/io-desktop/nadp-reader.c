@@ -36,7 +36,7 @@
 
 #include <api/na-core-utils.h>
 #include <api/na-idata-factory-enum.h>
-#include <api/na-iio-factory.h>
+#include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
 
 #include "nadp-desktop-provider.h"
@@ -269,7 +269,7 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
 		reader_data = g_new0( NadpReaderData, 1 );
 		reader_data->ndf = ndf;
 
-		item = na_iio_factory_read_item( NA_IIO_FACTORY( provider ), reader_data, reader_type, messages );
+		item = na_ifactory_provider_read_item( NA_IFACTORY_PROVIDER( provider ), reader_data, reader_type, messages );
 
 		if( item ){
 			id = nadp_desktop_file_get_id( ndf );

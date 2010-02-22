@@ -37,7 +37,7 @@
 
 #include <api/na-core-utils.h>
 #include <api/na-iio-provider.h>
-#include <api/na-iio-factory.h>
+#include <api/na-ifactory-provider.h>
 
 #include "nadp-desktop-provider.h"
 #include "nadp-keys.h"
@@ -63,11 +63,11 @@ static gchar  *iio_provider_get_id( const NAIIOProvider *provider );
 static gchar  *iio_provider_get_name( const NAIIOProvider *provider );
 static guint   iio_provider_get_version( const NAIIOProvider *provider );
 
-static void    iio_factory_iface_init( NAIIOFactoryInterface *iface );
-static guint   iio_factory_get_version( const NAIIOFactory *reader );
-static void    iio_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
-static GValue *iio_factory_read_value( const NAIIOFactory *reader, void *reader_data, const NadfIdType *iddef, GSList **messages );
-static void    iio_factory_read_done( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
+static void    ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
+static guint   ifactory_provider_get_version( const NAIFactoryProvider *reader );
+static void    ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
+static GValue *ifactory_provider_read_value( const NAIFactoryProvider *reader, void *reader_data, const NadfIdType *iddef, GSList **messages );
+static void    ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages );
 
 GType
 nadp_desktop_provider_get_type( void )
@@ -98,8 +98,8 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 		NULL
 	};
 
-	static const GInterfaceInfo iio_factory_iface_info = {
-		( GInterfaceInitFunc ) iio_factory_iface_init,
+	static const GInterfaceInfo ifactory_provider_iface_info = {
+		( GInterfaceInitFunc ) ifactory_provider_iface_init,
 		NULL,
 		NULL
 	};
@@ -110,7 +110,7 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_module_type, NA_IIO_PROVIDER_TYPE, &iio_provider_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_IIO_FACTORY_TYPE, &iio_factory_iface_info );
+	g_type_module_add_interface( module, st_module_type, NA_IFACTORY_PROVIDER_TYPE, &ifactory_provider_iface_info );
 }
 
 static void
@@ -219,23 +219,23 @@ iio_provider_get_name( const NAIIOProvider *provider )
 }
 
 static void
-iio_factory_iface_init( NAIIOFactoryInterface *iface )
+ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_iio_factory_iface_init";
+	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_version = iio_factory_get_version;
-	iface->read_start = iio_factory_read_start;
-	iface->read_value = iio_factory_read_value;
-	iface->read_done = iio_factory_read_done;
+	iface->get_version = ifactory_provider_get_version;
+	iface->read_start = ifactory_provider_read_start;
+	iface->read_value = ifactory_provider_read_value;
+	iface->read_done = ifactory_provider_read_done;
 	iface->write_start = NULL;
 	iface->write_value = NULL;
 	iface->write_done = NULL;
 }
 
 static guint
-iio_factory_get_version( const NAIIOFactory *reader )
+ifactory_provider_get_version( const NAIFactoryProvider *reader )
 {
 	return( 1 );
 }
@@ -244,9 +244,9 @@ iio_factory_get_version( const NAIIOFactory *reader )
  * called before starting with reading an object
  */
 static void
-iio_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
+ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_iio_factory_read_start";
+	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_read_start";
 
 	g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
 			thisfn,
@@ -255,7 +255,7 @@ iio_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFa
 			( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
 			( void * ) messages );
 
-	g_return_if_fail( NA_IS_IIO_FACTORY( reader ));
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
 	g_return_if_fail( NA_IS_IDATA_FACTORY( serializable ));
 
@@ -272,9 +272,9 @@ iio_factory_read_start( const NAIIOFactory *reader, void *reader_data, NAIDataFa
  * - group and key names
  */
 static GValue *
-iio_factory_read_value( const NAIIOFactory *reader, void *reader_data, const NadfIdType *iddef, GSList **messages )
+ifactory_provider_read_value( const NAIFactoryProvider *reader, void *reader_data, const NadfIdType *iddef, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_iio_factory_read_value";
+	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_read_value";
 	NadpReaderData *nrd;
 	GValue *value;
 	gchar *group, *key;
@@ -290,7 +290,7 @@ iio_factory_read_value( const NAIIOFactory *reader, void *reader_data, const Nad
 			( void * ) iddef,
 			( void * ) messages );*/
 
-	g_return_val_if_fail( NA_IS_IIO_FACTORY( reader ), NULL );
+	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( iddef->serializable, NULL );
 
@@ -356,9 +356,9 @@ iio_factory_read_value( const NAIIOFactory *reader, void *reader_data, const Nad
  * nothing to do here
  */
 static void
-iio_factory_read_done( const NAIIOFactory *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
+ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, NAIDataFactory *serializable, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_iio_factory_read_done";
+	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_read_done";
 	/*NAObjectProfile *profile;*/
 
 	g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
@@ -368,7 +368,7 @@ iio_factory_read_done( const NAIIOFactory *reader, void *reader_data, NAIDataFac
 			( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
 			( void * ) messages );
 
-	g_return_if_fail( NA_IS_IIO_FACTORY( reader ));
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
 	g_return_if_fail( NA_IS_IDATA_FACTORY( serializable ));
 

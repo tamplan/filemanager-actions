@@ -42,7 +42,7 @@
  *
  * These services may be fully implemented by the I/O provider itself.
  * Or, the I/O provider may also prefer to take advantage of the data
- * factory management (see #NAIDataFactory and #NAIIOFactory interfaces).
+ * factory management (see #NAIDataFactory and #NAIFactoryProvider interfaces).
  *
  * Nautilus-Actions v 2.30 - API version:  1
  */

@@ -34,15 +34,15 @@
 
 #include <string.h>
 
-#include "na-iio-factory-priv.h"
-#include "na-io-factory.h"
+#include "na-ifactory-provider-priv.h"
+#include "na-factory-provider.h"
 
-extern gboolean               iio_factory_initialized;		/* defined in na-iio-factory.c */
-extern gboolean               iio_factory_finalized;		/* defined in na-iio-factory.c */
-extern NAIIOFactoryInterface *iio_factory_klass;			/* defined in na-iio-factory.c */
+extern gboolean               ifactory_provider_initialized;		/* defined in na-ifactory.c */
+extern gboolean               ifactory_provider_finalized;		/* defined in na-ifactory.c */
+extern NAIFactoryProviderInterface *ifactory_provider_klass;			/* defined in na-ifactory.c */
 
 /**
- * na_io_factory_register:
+ * na_factory_provider_register:
  * @type: the #GType of the implementation class.
  * @groups: a table of #NadfIdGroup structures which defines the
  *  serializable properties which will be attached to each instance of
@@ -51,20 +51,20 @@ extern NAIIOFactoryInterface *iio_factory_klass;			/* defined in na-iio-factory.
  * Registers the implementation #GType @type.
  */
 void
-na_io_factory_register( GType type, const NadfIdGroup *groups )
+na_factory_provider_register( GType type, const NadfIdGroup *groups )
 {
-	static const gchar *thisfn = "na_io_factory_register";
+	static const gchar *thisfn = "na_factory_provider_register";
 	NadfImplement *known;
 	NadfIdGroup *registered;
 
-	if( iio_factory_initialized && !iio_factory_finalized ){
+	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
 		g_debug( "%s: type=%lu, groups=%p",
 				thisfn, ( unsigned long ) type, ( void * ) groups );
 
 		g_return_if_fail( groups != NULL );
 
-		registered = na_io_factory_get_groups( type );
+		registered = na_factory_provider_get_groups( type );
 		if( registered ){
 			g_warning( "%s: type=%lu: already registered", thisfn, ( unsigned long ) type );
 
@@ -75,26 +75,26 @@ na_io_factory_register( GType type, const NadfIdGroup *groups )
 			known->type = type;
 			known->groups = ( NadfIdGroup * ) groups;
 
-			iio_factory_klass->private->registered = g_list_prepend( iio_factory_klass->private->registered, known );
+			ifactory_provider_klass->private->registered = g_list_prepend( ifactory_provider_klass->private->registered, known );
 		}
 	}
 }
 
 /**
- * na_io_factory_get_groups:
+ * na_factory_provider_get_groups:
  * @type: a previously registered #GType.
  *
  * Returns the #NadfIdGroups table which has been registered for this @type,
  * or %NULL.
  */
 NadfIdGroup *
-na_io_factory_get_groups( GType type )
+na_factory_provider_get_groups( GType type )
 {
 	GList *it;
 
-	if( iio_factory_initialized && !iio_factory_finalized ){
+	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
-		for( it = iio_factory_klass->private->registered ; it ; it = it->next ){
+		for( it = ifactory_provider_klass->private->registered ; it ; it = it->next ){
 			if((( NadfImplement * ) it->data )->type == type ){
 				return((( NadfImplement * ) it->data )->groups );
 			}
@@ -105,25 +105,25 @@ na_io_factory_get_groups( GType type )
 }
 
 /**
- * na_io_factory_get_idtype_from_gconf_key:
+ * na_factory_provider_get_idtype_from_gconf_key:
  * @entry: the name of the GConf entry we are searching for.
  *
  * Returns: the definition of the data which is exported as @entry in GConf,
  * or %NULL if not found.
  */
 NadfIdType *
-na_io_factory_get_idtype_from_gconf_key( const gchar *entry )
+na_factory_provider_get_idtype_from_gconf_key( const gchar *entry )
 {
 	static const gboolean debug = FALSE;
 	GList *imp;
 
-	if( iio_factory_initialized && !iio_factory_finalized ){
+	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
 		if( debug ){
-			g_debug( "na_io_factory_get_idtype_from_gconf_key: entry=%s", entry );
+			g_debug( "na_factory_provider_get_idtype_from_gconf_key: entry=%s", entry );
 		}
 
-		for( imp = iio_factory_klass->private->registered ; imp ; imp = imp->next ){
+		for( imp = ifactory_provider_klass->private->registered ; imp ; imp = imp->next ){
 
 			NadfImplement *implement = ( NadfImplement * ) imp->data;
 			if( debug ){
@@ -161,8 +161,8 @@ na_io_factory_get_idtype_from_gconf_key( const gchar *entry )
 }
 
 /**
- * na_io_factory_read_value:
- * @reader: the instance which implements this #NAIIOFactory interface.
+ * na_factory_provider_read_value:
+ * @reader: the instance which implements this #NAIFactoryProvider interface.
  * @reader_data: instance data.
  * @iddef: a NadfIdType structure which identifies the data to be unserialized.
  * @messages: a pointer to a #GSList list of strings; the implementation
@@ -171,19 +171,19 @@ na_io_factory_get_idtype_from_gconf_key( const gchar *entry )
  * Returns: the desired value, as a newly allocated #GValue, or NULL.
  */
 GValue *
-na_io_factory_read_value( const NAIIOFactory *reader, void *reader_data, const NadfIdType *iddef, GSList **messages )
+na_factory_provider_read_value( const NAIFactoryProvider *reader, void *reader_data, const NadfIdType *iddef, GSList **messages )
 {
 	GValue *value;
 
-	g_return_val_if_fail( NA_IS_IIO_FACTORY( reader ), NULL );
+	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
 
 	value = NULL;
 
-	if( iio_factory_initialized && !iio_factory_finalized ){
+	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
-		if( NA_IIO_FACTORY_GET_INTERFACE( reader )->read_value ){
+		if( NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_value ){
 
-			value = NA_IIO_FACTORY_GET_INTERFACE( reader )->read_value( reader, reader_data, iddef, messages );
+			value = NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_value( reader, reader_data, iddef, messages );
 		}
 	}
 

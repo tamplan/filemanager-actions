@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <api/na-iio-factory.h>
+#include <api/na-ifactory-provider.h>
 #include <api/na-iio-provider.h>
 #include <api/na-gconf-monitor.h>
 
@@ -65,8 +65,8 @@ static gchar   *iio_provider_get_id( const NAIIOProvider *provider );
 static gchar   *iio_provider_get_name( const NAIIOProvider *provider );
 static guint    iio_provider_get_version( const NAIIOProvider *provider );
 
-static void     iio_factory_iface_init( NAIIOFactoryInterface *iface );
-static guint    iio_factory_get_version( const NAIIOFactory *provider );
+static void     ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
+static guint    ifactory_provider_get_version( const NAIFactoryProvider *provider );
 
 static GList   *install_monitors( NagpGConfProvider *provider );
 static void     config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
@@ -105,8 +105,8 @@ nagp_gconf_provider_register_type( GTypeModule *module )
 		NULL
 	};
 
-	static const GInterfaceInfo iio_factory_iface_info = {
-		( GInterfaceInitFunc ) iio_factory_iface_init,
+	static const GInterfaceInfo ifactory_provider_iface_info = {
+		( GInterfaceInitFunc ) ifactory_provider_iface_init,
 		NULL,
 		NULL
 	};
@@ -117,7 +117,7 @@ nagp_gconf_provider_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_module_type, NA_IIO_PROVIDER_TYPE, &iio_provider_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_IIO_FACTORY_TYPE, &iio_factory_iface_info );
+	g_type_module_add_interface( module, st_module_type, NA_IFACTORY_PROVIDER_TYPE, &ifactory_provider_iface_info );
 }
 
 static void
@@ -234,13 +234,13 @@ iio_provider_get_version( const NAIIOProvider *provider )
 }
 
 static void
-iio_factory_iface_init( NAIIOFactoryInterface *iface )
+ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_iio_factory_iface_init";
+	static const gchar *thisfn = "nagp_gconf_provider_ifactory_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_version = iio_factory_get_version;
+	iface->get_version = ifactory_provider_get_version;
 	iface->read_start = NULL;
 	iface->read_value = NULL;
 	iface->read_done = NULL;
@@ -250,7 +250,7 @@ iio_factory_iface_init( NAIIOFactoryInterface *iface )
 }
 
 static guint
-iio_factory_get_version( const NAIIOFactory *provider )
+ifactory_provider_get_version( const NAIFactoryProvider *provider )
 {
 	return( 1 );
 }

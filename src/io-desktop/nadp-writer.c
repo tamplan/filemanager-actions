@@ -36,7 +36,7 @@
 
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
-#include <api/na-iio-factory.h>
+#include <api/na-ifactory-provider.h>
 
 #include "nadp-desktop-file.h"
 #include "nadp-desktop-provider.h"
@@ -226,7 +226,7 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
-	g_return_val_if_fail( NA_IS_IIO_FACTORY( provider ), ret );
+	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), ret );
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( NA_IS_IDATA_FACTORY( item ), ret );
@@ -241,7 +241,7 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 
 	ret = NA_IIO_PROVIDER_CODE_OK;
 
-	na_iio_factory_write_item( NA_IIO_FACTORY( provider ), ndf, NA_IDATA_FACTORY( item ), messages );
+	na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), ndf, NA_IDATA_FACTORY( item ), messages );
 
 	if( !nadp_desktop_file_write( ndf )){
 		ret = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
