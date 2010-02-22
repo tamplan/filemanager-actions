@@ -5,7 +5,7 @@ These ids are allocated by the Nautilus-Actions maintainer team.
 If you wish develop a new I/O provider, and so need a unique id,
 please contact the maintainers (see nautilus-actions.doap).
 
-id          label                   holder            allocated
+id          label                    holder            allocated
 ----------  -----------------------  ----------------  ----------
 all         reserved id              Nautilus-Actions  2010-01-28
 na-desktop  NA Desktop I/O Provider  Nautilus-Actions  2009-12-16
