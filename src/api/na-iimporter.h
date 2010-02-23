@@ -51,10 +51,9 @@ G_BEGIN_DECLS
 #define NA_IIMPORTER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIMPORTER_TYPE, NAIImporterInterface ))
 
 typedef struct NAIImporter                 NAIImporter;
+typedef struct NAIImporterParms            NAIImporterParms;
 
 typedef struct NAIImporterInterfacePrivate NAIImporterInterfacePrivate;
-
-typedef gboolean ( *ImporterCheckFn )( const gchar *, void *fn_data );
 
 typedef struct {
 	GTypeInterface               parent;
@@ -68,10 +67,10 @@ typedef struct {
 	 *
 	 * Defaults to 1.
 	 */
-	guint          ( *get_version )( const NAIImporter *instance );
+	guint ( *get_version )    ( const NAIImporter *instance );
 
 	/**
-	 * import_uri:
+	 * import_from_uri:
 	 * @instance: the #NAIImporter provider.
 	 * @uri: the URI of the file to be imported.
 	 * @mode: import mode.
@@ -86,7 +85,7 @@ typedef struct {
 	 * Returns: a #NAObjectItem-derived object, or %NULL if an error has
 	 * been detected.
 	 */
-	NAObjectItem * ( *import_uri ) ( const NAIImporter *instance, const gchar *uri, guint mode, ImporterCheckFn fn, void *fn_data, GSList **messages );
+	guint ( *import_from_uri )( const NAIImporter *instance, NAIImporterParms *parms );
 }
 	NAIImporterInterface;
 
@@ -97,6 +96,34 @@ enum {
 	IMPORTER_MODE_RENUMBER,
 	IMPORTER_MODE_OVERRIDE,
 	IMPORTER_MODE_ASK
+};
+
+/* return code
+ */
+enum {
+	IMPORTER_CODE_OK = 0,
+	IMPORTER_CODE_PROGRAM_ERROR,
+	IMPORTER_CODE_NOT_WILLING_TO,
+	IMPORTER_CODE_NO_ITEM_ID,
+	IMPORTER_CODE_NO_ITEM_TYPE,
+	IMPORTER_CODE_UNKNOWN_ITEM_TYPE,
+	IMPORTER_CODE_CANCELLED
+};
+
+/* parameters via a structure
+ */
+typedef gboolean ( *NAIImporterCheckFn )( const NAObjectItem *, void *fn_data );
+
+struct NAIImporterParms {
+	guint              version;			/* i 1: version of this structure */
+	gchar             *uri;				/* i 1: uri of the file to be imported */
+	guint              mode;			/* i 1: import mode */
+	NAObjectItem      *item;			/*  o1: imported NAObjectItem-derived object */
+	NAIImporterCheckFn fn;				/* i 1: a function to check the existance of the imported item */
+	void              *fn_data;			/* i 1: data function */
+	GSList            *messages;		/* io1: a #GSList list of localized strings;
+										 *       the provider may append messages to this list,
+										 *       but shouldn't reinitialize it. */
 };
 
 GType na_iimporter_get_type( void );

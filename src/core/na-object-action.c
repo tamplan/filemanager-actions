@@ -33,6 +33,7 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <string.h>
 
 #include <api/na-object-api.h>
 
@@ -51,35 +52,46 @@ struct NAObjectActionPrivate {
 	gboolean dispose_has_run;
 };
 
-										/* i18n: default label for a new action */
+/* while iterating when searching for obsoleted boxed
+ */
+typedef struct {
+	NAObjectProfile *profile;
+	GList           *moved;
+}
+	IterForObsoletedParms;
+
+/* i18n: default label for a new action */
 #define NEW_NAUTILUS_ACTION				N_( "New Nautilus action" )
 
-extern NadfIdGroup action_id_groups [];	/* defined in na-item-action-enum.c */
+extern NADataGroup action_data_groups [];		/* defined in na-item-action-factory.c */
 
 static NAObjectItemClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NAObjectActionClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void     instance_dispose( GObject *object );
-static void     instance_finalize( GObject *object );
+static GType        register_type( void );
+static void         class_init( NAObjectActionClass *klass );
+static void         instance_init( GTypeInstance *instance, gpointer klass );
+static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void         instance_dispose( GObject *object );
+static void         instance_finalize( GObject *object );
 
-static gboolean object_is_valid( const NAObject *object );
+static gboolean     object_is_valid( const NAObject *object );
 
-static void     ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
-static guint    ifactory_object_get_version( const NAIFactoryObject *instance );
-static gchar   *ifactory_object_get_default( const NAIFactoryObject *instance, const NadfIdType *iddef );
-static void     ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
-static gboolean ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
-static gboolean ifactory_object_is_valid( const NAIFactoryObject *object );
-static void     ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void     ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
+static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
+static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
+static gchar       *ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *iddef );
+static void         ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
+static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
+static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
+static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void         ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static gboolean object_object_is_valid( const NAObjectAction *action );
-static gboolean is_valid_label( const NAObjectAction *action );
-static gboolean is_valid_toolbar_label( const NAObjectAction *action );
+static gboolean     check_for_obsoleted_iter( const NAIFactoryObject *object, NADataBoxed *boxed, IterForObsoletedParms *parms );
+
+static gboolean     object_object_is_valid( const NAObjectAction *action );
+static gboolean     is_valid_label( const NAObjectAction *action );
+static gboolean     is_valid_toolbar_label( const NAObjectAction *action );
 
 GType
 na_object_action_get_type( void )
@@ -124,7 +136,9 @@ register_type( void )
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
-	na_factory_provider_register( type, action_id_groups );
+#if 0
+	na_factory_object_register_type( type, action_id_groups );
+#endif
 
 	return( type );
 }
@@ -154,7 +168,7 @@ class_init( NAObjectActionClass *klass )
 
 	klass->private = g_new0( NAObjectActionClassPrivate, 1 );
 
-	na_factory_object_properties( object_class );
+	na_factory_object_define_properties( object_class, action_data_groups );
 }
 
 static void
@@ -171,8 +185,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_OBJECT_ACTION( instance );
 
 	self->private = g_new0( NAObjectActionPrivate, 1 );
-
-	na_factory_object_init( NA_IFACTORY_OBJECT( instance ));
 }
 
 static void
@@ -183,7 +195,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 	if( !NA_OBJECT_ACTION( object )->private->dispose_has_run ){
 
-		na_factory_object_set_value( NA_IFACTORY_OBJECT( object ), property_id, value, spec );
+		na_factory_object_get_as_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -195,7 +207,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 	if( !NA_OBJECT_ACTION( object )->private->dispose_has_run ){
 
-		na_factory_object_set_from_value( NA_IFACTORY_OBJECT( object ), property_id, value );
+		na_factory_object_set_from_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -236,7 +248,7 @@ instance_finalize( GObject *object )
 
 	g_free( self->private );
 
-	na_factory_object_finalize( NA_IFACTORY_OBJECT( object ));
+	na_factory_object_finalize_instance( NA_IFACTORY_OBJECT( object ));
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
@@ -260,6 +272,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = ifactory_object_get_version;
+	iface->get_groups = ifactory_object_get_groups;
 	iface->get_default = ifactory_object_get_default;
 	iface->copy = ifactory_object_copy;
 	iface->are_equal = ifactory_object_are_equal;
@@ -276,19 +289,23 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
 	return( 1 );
 }
 
+static NADataGroup *
+ifactory_object_get_groups( const NAIFactoryObject *instance )
+{
+	return( action_data_groups );
+}
+
 static gchar *
-ifactory_object_get_default( const NAIFactoryObject *instance, const NadfIdType *iddef )
+ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *def )
 {
 	gchar *value;
 
 	value = NULL;
 
-	switch( iddef->id ){
+	if( !strcmp( def->name, NAFO_DATA_LABEL ) ||
+		!strcmp( def->name, NAFO_DATA_TOOLBAR_LABEL )){
 
-		case NADF_DATA_LABEL:
-		case NADF_DATA_TOOLBAR_LABEL:
 			value = g_strdup( NEW_NAUTILUS_ACTION );
-			break;
 	}
 
 	return( value );
@@ -317,15 +334,54 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
+	IterForObsoletedParms parms;
+	GList *ibox;
+
 	g_debug( "na_object_action_ifactory_object_read_done: instance=%p", ( void * ) instance );
 
-	na_object_dump( instance );
+	/* do we have a pre-v2 action ?
+	 *  i.e. an action without profile, with some data in its body
+	 *  -> do we have read some obsoleted data which are now in the profile
+	 */
+	parms.profile = na_object_profile_new();
+	parms.moved = NULL;
+
+	na_factory_object_iter_on_boxed( instance, ( NAFactoryObjectIterBoxedFn ) check_for_obsoleted_iter, &parms );
+
+	if( parms.moved ){
+		na_object_set_id( parms.profile, "profile-pre-v2" );
+		na_object_set_label( parms.profile, _( "Profile automatically created from pre-v2 action" ));
+		na_object_attach_profile( instance, parms.profile );
+
+		for( ibox = parms.moved ; ibox ; ibox = ibox->next ){
+			na_factory_object_move_boxed( NA_IFACTORY_OBJECT( parms.profile ), instance, NA_DATA_BOXED( ibox->data ));
+		}
+
+	} else {
+		g_object_unref( parms.profile );
+	}
 }
 
 static void
 ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 
+}
+
+static gboolean
+check_for_obsoleted_iter( const NAIFactoryObject *object, NADataBoxed *boxed, IterForObsoletedParms *parms )
+{
+	NADataDef *def = na_data_boxed_get_data_def( boxed );
+
+	if( def->obsoleted ){
+		NADataDef *profile_def = na_factory_object_get_data_def( NA_IFACTORY_OBJECT( parms->profile ), def->name );
+
+		if( profile_def ){
+			parms->moved =g_list_prepend( parms->moved, boxed );
+		}
+	}
+
+	return( FALSE );
 }
 
 static gboolean
@@ -477,10 +533,10 @@ na_object_action_get_new_profile_name( const NAObjectAction *action )
 	if( !action->private->dispose_has_run ){
 
 		last_allocated = na_object_get_last_allocated( action );
-		for( i = last_allocated + 1 ; !ok ; ++i ){
 
+		for( i = last_allocated + 1 ; !ok ; ++i ){
 			g_free( candidate );
-			candidate = g_strdup_printf( "%s%d", NA_PROFILE_DEFAULT_PREFIX, i );
+			candidate = g_strdup_printf( "profile-%d", i );
 
 			if( !na_object_get_item( action, candidate )){
 				ok = TRUE;
@@ -494,6 +550,7 @@ na_object_action_get_new_profile_name( const NAObjectAction *action )
 		}
 	}
 
+	/*g_debug( "returning candidate=%s", candidate );*/
 	return( candidate );
 }
 

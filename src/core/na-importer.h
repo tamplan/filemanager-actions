@@ -44,7 +44,7 @@
 
 G_BEGIN_DECLS
 
-NAObjectItem *na_importer_import( const NAPivot *pivot, const gchar *uri, guint mode, ImporterCheckFn fn, void *fn_data, GSList **messages );
+guint na_importer_import_from_uri( const NAPivot *pivot, NAIImporterParms *parms );
 
 G_END_DECLS
 

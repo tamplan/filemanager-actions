@@ -32,15 +32,17 @@
 #include <config.h>
 #endif
 
-#include <api/na-ifactory-object-enum.h>
+#include <string.h>
+
+#include <api/na-ifactory-object-data.h>
 
 #include "nadp-keys.h"
 
 static NadpIdKey id_key [] = {
-	{ NADF_DATA_LABEL,   NADP_GROUP_DESKTOP, NADP_KEY_NAME },
-	{ NADF_DATA_TOOLTIP, NADP_GROUP_DESKTOP, NADP_KEY_TOOLTIP },
-	{ NADF_DATA_ICON,    NADP_GROUP_DESKTOP, NADP_KEY_ICON },
-	{ 0, NULL, NULL }
+	{ NAFO_DATA_LABEL,   NADP_GROUP_DESKTOP, NADP_KEY_NAME },
+	{ NAFO_DATA_TOOLTIP, NADP_GROUP_DESKTOP, NADP_KEY_TOOLTIP },
+	{ NAFO_DATA_ICON,    NADP_GROUP_DESKTOP, NADP_KEY_ICON },
+	{ NULL }
 };
 
 /**
@@ -52,7 +54,7 @@ static NadpIdKey id_key [] = {
  * Returns: %TRUE if the data has been found, %FALSE else.
  */
 gboolean
-nadp_keys_get_group_and_key( const NadfIdType *iddef, gchar **group, gchar **key )
+nadp_keys_get_group_and_key( const NADataDef *def, gchar **group, gchar **key )
 {
 	gboolean found;
 	int i;
@@ -63,7 +65,7 @@ nadp_keys_get_group_and_key( const NadfIdType *iddef, gchar **group, gchar **key
 
 	for( i = 0 ; id_key[i].data_id && !found ; ++i ){
 
-		if( id_key[i].data_id == iddef->id ){
+		if( !strcmp( id_key[i].data_id, def->name )){
 
 			*group = g_strdup( id_key[i].group );
 			*key = g_strdup( id_key[i].key );

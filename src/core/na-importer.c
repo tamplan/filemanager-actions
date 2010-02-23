@@ -40,39 +40,34 @@ extern gboolean iimporter_finalized;		/* defined in na-iimporter.c */
 /**
  * na_importer_import:
  * @pivot: the #NAPivot pivot for this application.
- * @uri: the source filename URI.
- * @mode: the import mode.
- * @fn: a function to check the existance of the imported item.
- * @fn_data: function data
- * @messages: a pointer to a #GSList list of strings; the provider
- *  may append messages to this list, but shouldn't reinitialize it.
+ * @parms: a #NAIImporterParms structure.
  *
- * Returns: a newly allocated #NAObjectItem-derived object, or %NULL
- * if an error has been detected.
+ * Returns: the import operation code.
  */
-NAObjectItem *
-na_importer_import( const NAPivot *pivot, const gchar *uri, guint mode, ImporterCheckFn fn, void *fn_data, GSList **messages )
+guint
+na_importer_import_from_uri( const NAPivot *pivot, NAIImporterParms *parms )
 {
-	static const gchar *thisfn = "na_importer_import";
-	NAObjectItem *item;
-	GList *modules;
+	static const gchar *thisfn = "na_importer_import_from_uri";
+	GList *modules, *im;
+	guint code;
 
-	g_debug( "%s: pivot=%p, uri=%s, mode=%d, fn=%p, fn_data=%p, messages=%p",
-			thisfn, ( void * ) pivot, uri, mode, ( void * ) fn, ( void * ) fn_data, ( void * ) messages );
+	g_debug( "%s: pivot=%p, parms=%p", thisfn, ( void * ) pivot, ( void * ) parms );
 
-	item = NULL;
+	code = IMPORTER_CODE_NOT_WILLING_TO;
 
 	if( iimporter_initialized && !iimporter_finalized ){
 
 		modules = na_pivot_get_providers( pivot, NA_IIMPORTER_TYPE );
-		g_debug( "na_importer_import: modules_count=%d", g_list_length( modules ));
-		if( g_list_length( modules )){
-			if( NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( modules->data ))->import_uri ){
-				item = NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( modules->data ))->import_uri( NA_IIMPORTER( modules->data ), uri, mode, fn, fn_data, messages );
+
+		for( im = modules ; im && code == IMPORTER_CODE_NOT_WILLING_TO ; im = im->next ){
+
+			if( NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( im->data ))->import_from_uri ){
+				code = NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( im->data ))->import_from_uri( NA_IIMPORTER( im->data ), parms );
 			}
 		}
+
 		na_pivot_free_providers( modules );
 	}
 
-	return( item );
+	return( code );
 }

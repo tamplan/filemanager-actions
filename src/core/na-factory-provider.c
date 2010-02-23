@@ -32,160 +32,39 @@
 #include <config.h>
 #endif
 
-#include <string.h>
-
-#include "na-ifactory-provider-priv.h"
 #include "na-factory-provider.h"
 
-extern gboolean               ifactory_provider_initialized;		/* defined in na-ifactory.c */
-extern gboolean               ifactory_provider_finalized;		/* defined in na-ifactory.c */
-extern NAIFactoryProviderInterface *ifactory_provider_klass;			/* defined in na-ifactory.c */
-
-/**
- * na_factory_provider_register:
- * @type: the #GType of the implementation class.
- * @groups: a table of #NadfIdGroup structures which defines the
- *  serializable properties which will be attached to each instance of
- *  this class at serialization time.
- *
- * Registers the implementation #GType @type.
- */
-void
-na_factory_provider_register( GType type, const NadfIdGroup *groups )
-{
-	static const gchar *thisfn = "na_factory_provider_register";
-	NadfImplement *known;
-	NadfIdGroup *registered;
-
-	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
-
-		g_debug( "%s: type=%lu, groups=%p",
-				thisfn, ( unsigned long ) type, ( void * ) groups );
-
-		g_return_if_fail( groups != NULL );
-
-		registered = na_factory_provider_get_groups( type );
-		if( registered ){
-			g_warning( "%s: type=%lu: already registered", thisfn, ( unsigned long ) type );
-
-		} else {
-			/* register the implementation
-			 */
-			known = g_new0( NadfImplement, 1 );
-			known->type = type;
-			known->groups = ( NadfIdGroup * ) groups;
-
-			ifactory_provider_klass->private->registered = g_list_prepend( ifactory_provider_klass->private->registered, known );
-		}
-	}
-}
-
-/**
- * na_factory_provider_get_groups:
- * @type: a previously registered #GType.
- *
- * Returns the #NadfIdGroups table which has been registered for this @type,
- * or %NULL.
- */
-NadfIdGroup *
-na_factory_provider_get_groups( GType type )
-{
-	GList *it;
-
-	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
-
-		for( it = ifactory_provider_klass->private->registered ; it ; it = it->next ){
-			if((( NadfImplement * ) it->data )->type == type ){
-				return((( NadfImplement * ) it->data )->groups );
-			}
-		}
-	}
-
-	return( NULL );
-}
-
-/**
- * na_factory_provider_get_idtype_from_gconf_key:
- * @entry: the name of the GConf entry we are searching for.
- *
- * Returns: the definition of the data which is exported as @entry in GConf,
- * or %NULL if not found.
- */
-NadfIdType *
-na_factory_provider_get_idtype_from_gconf_key( const gchar *entry )
-{
-	static const gboolean debug = FALSE;
-	GList *imp;
-
-	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
-
-		if( debug ){
-			g_debug( "na_factory_provider_get_idtype_from_gconf_key: entry=%s", entry );
-		}
-
-		for( imp = ifactory_provider_klass->private->registered ; imp ; imp = imp->next ){
-
-			NadfImplement *implement = ( NadfImplement * ) imp->data;
-			if( debug ){
-				g_debug( "implement=%p, type=%lu, groups=%p",
-						( void * ) implement, ( gulong ) implement->type, ( void * ) implement->groups );
-			}
-
-			NadfIdGroup *group = implement->groups;
-			while( group->idgroup ){
-				if( debug ){
-					g_debug( "group=%p, idgroup=%d, iddefs=%p", ( void * ) group, group->idgroup, ( void * ) group->iddef );
-				}
-
-				NadfIdType *iddef = group->iddef;
-				if( iddef ){
-					while( iddef->id ){
-						if( debug ){
-							g_debug( "iddef=%p, id=%d, gconf_entry=%s", ( void * ) iddef, iddef->id, iddef->gconf_entry );
-						}
-
-						if( iddef->gconf_entry && !strcmp( iddef->gconf_entry, entry )){
-							return( iddef );
-						}
-
-						iddef++;
-					}
-				}
-
-				group++;
-			}
-		}
-	}
-
-	return( NULL );
-}
+extern gboolean ifactory_provider_initialized;		/* defined in na-ifactory-provider.c */
+extern gboolean ifactory_provider_finalized;
 
 /**
  * na_factory_provider_read_value:
  * @reader: the instance which implements this #NAIFactoryProvider interface.
  * @reader_data: instance data.
- * @iddef: a NadfIdType structure which identifies the data to be unserialized.
+ * @object: the #NAIFactoryobject being unserialized.
+ * @def: a #NADataDef structure which identifies the data to be unserialized.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
  *
- * Returns: the desired value, as a newly allocated #GValue, or NULL.
+ * Reads the specified data and set it up into the @boxed.
  */
-GValue *
-na_factory_provider_read_value( const NAIFactoryProvider *reader, void *reader_data, const NadfIdType *iddef, GSList **messages )
+NADataBoxed *
+na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, const NADataDef *def, GSList **messages )
 {
-	GValue *value;
+	NADataBoxed *boxed;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
-	value = NULL;
+	boxed = NULL;
 
 	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
-		if( NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_value ){
+		if( NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data ){
 
-			value = NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_value( reader, reader_data, iddef, messages );
+			boxed = NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data( reader, reader_data, object, def, messages );
 		}
 	}
 
-	return( value );
+	return( boxed );
 }

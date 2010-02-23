@@ -32,9 +32,8 @@
 #include <config.h>
 #endif
 
-#include <string.h>
-
 #include <glib/gi18n.h>
+#include <string.h>
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
@@ -59,55 +58,56 @@ struct NAObjectProfilePrivate {
 	gboolean dispose_has_run;
 };
 
-											/* i18n: default label for a new profile */
+/* i18n: default label for a new profile */
 #define DEFAULT_PROFILE						N_( "Default profile" )
 
 #define PROFILE_NAME_PREFIX					"profile-"
 
-extern NadfIdGroup profile_id_groups [];	/* defined in na-item-profile-enum.c */
+extern NADataGroup profile_data_groups [];	/* defined in na-item-profile-factory.c */
 
 static NAObjectIdClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NAObjectProfileClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void     instance_dispose( GObject *object );
-static void     instance_finalize( GObject *object );
+static GType        register_type( void );
+static void         class_init( NAObjectProfileClass *klass );
+static void         instance_init( GTypeInstance *instance, gpointer klass );
+static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void         instance_dispose( GObject *object );
+static void         instance_finalize( GObject *object );
 
-static gboolean object_is_valid( const NAObject *object );
+static gboolean     object_is_valid( const NAObject *object );
 
-static void     ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
-static guint    ifactory_object_get_version( const NAIFactoryObject *instance );
-static gchar   *ifactory_object_get_default( const NAIFactoryObject *instance, const NadfIdType *iddef );
-static gboolean ifactory_object_is_valid( const NAIFactoryObject *object );
-static void     ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void     ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
+static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
+static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
+static gchar       *ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *iddef );
+static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
+static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void         ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static gboolean profile_is_valid( const NAObjectProfile *profile );
-static gboolean is_valid_path_parameters( const NAObjectProfile *profile );
-static gboolean is_valid_basenames( const NAObjectProfile *profile );
-static gboolean is_valid_mimetypes( const NAObjectProfile *profile );
-static gboolean is_valid_isfiledir( const NAObjectProfile *profile );
-static gboolean is_valid_schemes( const NAObjectProfile *profile );
-static gboolean is_valid_folders( const NAObjectProfile *profile );
+static gboolean     profile_is_valid( const NAObjectProfile *profile );
+static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
+static gboolean     is_valid_basenames( const NAObjectProfile *profile );
+static gboolean     is_valid_mimetypes( const NAObjectProfile *profile );
+static gboolean     is_valid_isfiledir( const NAObjectProfile *profile );
+static gboolean     is_valid_schemes( const NAObjectProfile *profile );
+static gboolean     is_valid_folders( const NAObjectProfile *profile );
 
-static gchar   *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
+static gchar       *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
-static gboolean is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
-static gboolean is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
-static gboolean is_current_folder_inside( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
-static gboolean is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus );
+static gboolean     is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
+static gboolean     is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
+static gboolean     is_current_folder_inside( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
+static gboolean     is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus );
 
-static gchar   *parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gboolean from_nautilus );
-static gboolean tracked_is_directory( void *iter, gboolean from_nautilus );
-static gchar   *tracked_to_basename( void *iter, gboolean from_nautilus );
-static GFile   *tracked_to_location( void *iter, gboolean from_nautilus );
-static gchar   *tracked_to_mimetype( void *iter, gboolean from_nautilus );
-static gchar   *tracked_to_scheme( void *iter, gboolean from_nautilus );
-static gchar   *tracked_to_uri( void *iter, gboolean from_nautilus );
-static int      validate_schemes( GSList *schemes2test, void *iter, gboolean from_nautilus );
+static gchar       *parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gboolean from_nautilus );
+static gboolean     tracked_is_directory( void *iter, gboolean from_nautilus );
+static gchar       *tracked_to_basename( void *iter, gboolean from_nautilus );
+static GFile       *tracked_to_location( void *iter, gboolean from_nautilus );
+static gchar       *tracked_to_mimetype( void *iter, gboolean from_nautilus );
+static gchar       *tracked_to_scheme( void *iter, gboolean from_nautilus );
+static gchar       *tracked_to_uri( void *iter, gboolean from_nautilus );
+static int          validate_schemes( GSList *schemes2test, void *iter, gboolean from_nautilus );
 
 GType
 na_object_profile_get_type( void )
@@ -151,7 +151,9 @@ register_type( void )
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
-	na_factory_provider_register( type, profile_id_groups );
+#if 0
+	na_factory_object_register_type( type, profile_id_groups );
+#endif
 
 	return( type );
 }
@@ -185,7 +187,7 @@ class_init( NAObjectProfileClass *klass )
 
 	klass->private = g_new0( NAObjectProfileClassPrivate, 1 );
 
-	na_factory_object_properties( object_class );
+	na_factory_object_define_properties( object_class, profile_data_groups );
 }
 
 static void
@@ -204,8 +206,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NAObjectProfilePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-
-	na_factory_object_init( NA_IFACTORY_OBJECT( instance ));
 }
 
 static void
@@ -216,7 +216,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 	if( !NA_OBJECT_PROFILE( object )->private->dispose_has_run ){
 
-		na_factory_object_set_value( NA_IFACTORY_OBJECT( object ), property_id, value, spec );
+		na_factory_object_get_as_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -228,7 +228,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 	if( !NA_OBJECT_PROFILE( object )->private->dispose_has_run ){
 
-		na_factory_object_set_from_value( NA_IFACTORY_OBJECT( object ), property_id, value );
+		na_factory_object_set_from_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -269,7 +269,7 @@ instance_finalize( GObject *object )
 
 	g_free( self->private );
 
-	na_factory_object_finalize( NA_IFACTORY_OBJECT( object ));
+	na_factory_object_finalize_instance( NA_IFACTORY_OBJECT( object ));
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
@@ -293,6 +293,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = ifactory_object_get_version;
+	iface->get_groups = ifactory_object_get_groups;
 	iface->get_default = ifactory_object_get_default;
 	iface->copy = NULL;
 	iface->are_equal = NULL;
@@ -309,22 +310,24 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
 	return( 1 );
 }
 
+static NADataGroup *
+ifactory_object_get_groups( const NAIFactoryObject *instance )
+{
+	return( profile_data_groups );
+}
+
 static gchar *
-ifactory_object_get_default( const NAIFactoryObject *instance, const NadfIdType *iddef )
+ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *def )
 {
 	gchar *value;
 
 	value = NULL;
 
-	switch( iddef->id ){
+	if( !strcmp( def->name, NAFO_DATA_ID )){
+		value = g_strdup( PROFILE_NAME_PREFIX "zero" );
 
-		case NADF_DATA_ID:
-			value = g_strdup( PROFILE_NAME_PREFIX "zero" );
-			break;
-
-		case NADF_DATA_LABEL:
-			value = g_strdup( DEFAULT_PROFILE );
-			break;
+	} else if( !strcmp( def->name, NAFO_DATA_LABEL )){
+		value = g_strdup( DEFAULT_PROFILE );
 	}
 
 	return( value );

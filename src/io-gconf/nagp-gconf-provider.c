@@ -242,10 +242,10 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 
 	iface->get_version = ifactory_provider_get_version;
 	iface->read_start = NULL;
-	iface->read_value = NULL;
+	iface->read_data = NULL;
 	iface->read_done = NULL;
 	iface->write_start = NULL;
-	iface->write_value = NULL;
+	iface->write_data = NULL;
 	iface->write_done = NULL;
 }
 

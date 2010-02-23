@@ -33,11 +33,13 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <api/na-core-utils.h>
 #include <api/na-iio-provider.h>
 #include <api/na-ifactory-provider.h>
+#include <api/na-data-types.h>
 
 #include "nadp-desktop-provider.h"
 #include "nadp-keys.h"
@@ -53,21 +55,21 @@ struct NadpDesktopProviderClassPrivate {
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 
-static void    class_init( NadpDesktopProviderClass *klass );
-static void    instance_init( GTypeInstance *instance, gpointer klass );
-static void    instance_dispose( GObject *object );
-static void    instance_finalize( GObject *object );
+static void         class_init( NadpDesktopProviderClass *klass );
+static void         instance_init( GTypeInstance *instance, gpointer klass );
+static void         instance_dispose( GObject *object );
+static void         instance_finalize( GObject *object );
 
-static void    iio_provider_iface_init( NAIIOProviderInterface *iface );
-static gchar  *iio_provider_get_id( const NAIIOProvider *provider );
-static gchar  *iio_provider_get_name( const NAIIOProvider *provider );
-static guint   iio_provider_get_version( const NAIIOProvider *provider );
+static void         iio_provider_iface_init( NAIIOProviderInterface *iface );
+static gchar       *iio_provider_get_id( const NAIIOProvider *provider );
+static gchar       *iio_provider_get_name( const NAIIOProvider *provider );
+static guint        iio_provider_get_version( const NAIIOProvider *provider );
 
-static void    ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
-static guint   ifactory_provider_get_version( const NAIFactoryProvider *reader );
-static void    ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages );
-static GValue *ifactory_provider_read_value( const NAIFactoryProvider *reader, void *reader_data, const NadfIdType *iddef, GSList **messages );
-static void    ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages );
+static void         ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
+static guint        ifactory_provider_get_version( const NAIFactoryProvider *reader );
+static void         ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages );
+static NADataBoxed *ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, const NADataDef *iddef, GSList **messages );
+static void         ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages );
 
 GType
 nadp_desktop_provider_get_type( void )
@@ -227,10 +229,10 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 
 	iface->get_version = ifactory_provider_get_version;
 	iface->read_start = ifactory_provider_read_start;
-	iface->read_value = ifactory_provider_read_value;
+	iface->read_data = ifactory_provider_read_data;
 	iface->read_done = ifactory_provider_read_done;
 	iface->write_start = NULL;
-	iface->write_value = NULL;
+	iface->write_data = NULL;
 	iface->write_done = NULL;
 }
 
@@ -244,7 +246,7 @@ ifactory_provider_get_version( const NAIFactoryProvider *reader )
  * called before starting with reading an object
  */
 static void
-ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages )
+ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_read_start";
 
@@ -270,74 +272,92 @@ ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_dat
  *   -> has been attached to the NAObjectItem in get_item() above
  * - the data type (+ reading default value)
  * - group and key names
+ *
+ * Returns: NULL if the key has not been found
+ * letting the caller deal with default values
  */
-static GValue *
-ifactory_provider_read_value( const NAIFactoryProvider *reader, void *reader_data, const NadfIdType *iddef, GSList **messages )
+static NADataBoxed *
+ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_read_value";
+	NADataBoxed *boxed;
+	gboolean found;
 	NadpReaderData *nrd;
-	GValue *value;
 	gchar *group, *key;
 	gchar *msg;
 	gchar *str_value;
 	gboolean bool_value;
 	GSList *slist_value;
+	guint uint_value;
 
-	/*g_debug( "%s: reader=%p (%s), reader_data=%p, iddef=%p, messages=%p",
+	/*g_debug( "%s: reader=%p (%s), reader_data=%p, def=%p, messages=%p",
 			thisfn,
 			( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
 			( void * ) reader_data,
-			( void * ) iddef,
+			( void * ) def,
 			( void * ) messages );*/
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ), NULL );
-	g_return_val_if_fail( iddef->serializable, NULL );
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( def->serializable, NULL );
 
-	value = NULL;
+	boxed = NULL;
 
 	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
 		nrd = ( NadpReaderData * ) reader_data;
 		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( nrd->ndf ), NULL );
 
-		if( nadp_keys_get_group_and_key( iddef, &group, &key )){
+		if( nadp_keys_get_group_and_key( def, &group, &key )){
 
-			value = g_new0( GValue, 1 );
+			switch( def->type ){
 
-			switch( iddef->type ){
-
-				case NADF_TYPE_LOCALE_STRING:
-					g_value_init( value, G_TYPE_STRING );
-					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, key, iddef->default_value );
-					/*g_value_set_string( value, str_value );*/
-					g_debug( "%s: %s=%s", thisfn, iddef->name, str_value );
+				case NAFD_TYPE_LOCALE_STRING:
+					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, key, &found, def->default_value );
+					if( str_value && found ){
+						boxed = na_data_boxed_new( def );
+						na_data_boxed_set_from_void( boxed, str_value );
+					}
 					g_free( str_value );
 					break;
 
-				case NADF_TYPE_STRING:
-					g_value_init( value, G_TYPE_STRING );
-					str_value = nadp_desktop_file_get_string( nrd->ndf, group, key, iddef->default_value );
-					g_value_set_string( value, str_value );
-					/*g_debug( "%s: %s=%s", thisfn, iddef->name, str_value );*/
+				case NAFD_TYPE_STRING:
+					str_value = nadp_desktop_file_get_string( nrd->ndf, group, key, &found, def->default_value );
+					if( str_value && found ){
+						boxed = na_data_boxed_new( def );
+						na_data_boxed_set_from_void( boxed, str_value );
+					}
 					g_free( str_value );
 					break;
 
-				case NADF_TYPE_BOOLEAN:
-					g_value_init( value, G_TYPE_BOOLEAN );
-					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, key, na_core_utils_boolean_from_string( iddef->default_value ));
-					g_value_set_boolean( value, bool_value );
-					/*g_debug( "%s: %s=%s", thisfn, iddef->name, bool_value ? "True":"False" );*/
+				case NAFD_TYPE_BOOLEAN:
+					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, key, &found, na_core_utils_boolean_from_string( def->default_value ));
+					if( found ){
+						boxed = na_data_boxed_new( def );
+						na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( bool_value ));
+					}
 					break;
 
-				case NADF_TYPE_STRING_LIST:
-					g_value_init( value, G_TYPE_POINTER );
-					slist_value = nadp_desktop_file_get_string_list( nrd->ndf, group, key, iddef->default_value );
-					g_value_set_pointer( value, slist_value );
+				case NAFD_TYPE_STRING_LIST:
+					slist_value = nadp_desktop_file_get_string_list( nrd->ndf, group, key, &found, def->default_value );
+					if( slist_value && found ){
+						boxed = na_data_boxed_new( def );
+						na_data_boxed_set_from_void( boxed, slist_value );
+					}
+					na_core_utils_slist_free( slist_value );
+					break;
+
+				case NAFD_TYPE_UINT:
+					uint_value = nadp_desktop_file_get_uint( nrd->ndf, group, key, &found, atoi( def->default_value ));
+					if( found ){
+						boxed = na_data_boxed_new( def );
+						na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( uint_value ));
+					}
 					break;
 
 				default:
-					msg = g_strdup_printf( "%s: %d: unknown data type.", thisfn, iddef->type );
+					msg = g_strdup_printf( "%s: %d: invalid data type.", thisfn, def->type );
 					g_warning( "%s", msg );
 					*messages = g_slist_append( *messages, msg );
 			}
@@ -348,7 +368,7 @@ ifactory_provider_read_value( const NAIFactoryProvider *reader, void *reader_dat
 		}
 	}
 
-	return( value );
+	return( boxed );
 }
 
 /*
@@ -356,7 +376,7 @@ ifactory_provider_read_value( const NAIFactoryProvider *reader, void *reader_dat
  * nothing to do here
  */
 static void
-ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages )
+ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_read_done";
 	/*NAObjectProfile *profile;*/

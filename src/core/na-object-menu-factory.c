@@ -32,55 +32,21 @@
 #include <config.h>
 #endif
 
-#include <api/na-ifactory-object-enum.h>
-#include <api/na-ifactory-object-str.h>
+#include <api/na-ifactory-object-data.h>
+#include <api/na-data-def.h>
+#include <api/na-data-types.h>
 
-NadfIdType id_iddef [] = {
+extern NADataDef data_def_id [];			/* defined in na-object-id-factory.c */
+extern NADataDef data_def_item [];			/* defined in na-object-item-factory.c */
 
-	{ NADF_DATA_ID,
-				"na-object-id",
-				FALSE,
-				"NAObjectId identifiant",
-				"Internal identifiant of the NAObjectId object. " \
-				"Historically a UUID used as a GConf directory (thus ASCII, case insensitive), " \
-				"it is also the basename of the .desktop file (thus UTF-8, case sensitive).",
-				NADF_TYPE_STRING,
-				NULL,
-				TRUE,
-				TRUE,
-				TRUE,
-				FALSE,
-				NULL,
-				NULL },
+static NADataDef data_def_menu [] = {
+	{ NULL },
+};
 
-	{ NADF_DATA_LABEL,
-				"na-object-label",
-				TRUE,
-				"NAObjectId label",
-				"Main label of the NAObjectId object. " \
-				"Serves as a default for the toolbar label of an action.",
-				NADF_TYPE_LOCALE_STRING,
-				"",
-				TRUE,
-				TRUE,
-				FALSE,
-				TRUE,
-				"label",
-				NULL },
-
-	{ NADF_DATA_PARENT,
-				"na-object-parent",
-				FALSE,
-				"NAObjectId Parent",
-				"The NAObjectItem which is the parent of this object.",
-				NADF_TYPE_POINTER,
-				NULL,
-				FALSE,
-				FALSE,
-				FALSE,
-				FALSE,
-				NULL,
-				NULL },
-
-	{ 0 },
+NADataGroup menu_data_groups [] = {
+	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
+	{ NA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
+	{ NA_FACTORY_OBJECT_MENU_GROUP,       data_def_menu },
+	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, NULL },
+	{ NULL }
 };

@@ -83,10 +83,11 @@ gboolean         nadp_desktop_file_write            ( NadpDesktopFile *ndf );
 gchar           *nadp_desktop_file_get_file_type    ( const NadpDesktopFile *ndf );
 
 gchar           *nadp_desktop_file_get_id           ( const NadpDesktopFile *ndf );
-gboolean         nadp_desktop_file_get_boolean      ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean default_value );
-gchar           *nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *default_value );
-gchar           *nadp_desktop_file_get_string       ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *default_value );
-GSList          *nadp_desktop_file_get_string_list  ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *default_value );
+gboolean         nadp_desktop_file_get_boolean      ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, gboolean default_value );
+gchar           *nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, const gchar *default_value );
+gchar           *nadp_desktop_file_get_string       ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, const gchar *default_value );
+GSList          *nadp_desktop_file_get_string_list  ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, const gchar *default_value );
+guint            nadp_desktop_file_get_uint         ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, guint default_value );
 
 /* ... */
 

@@ -37,10 +37,16 @@
  * @include: naxml-reader.h
  *
  * This is the base class for importing items from XML files.
+ *
+ * If the imported file is not an XML one, with a known document root,
+ * then we returned IMPORTER_CODE_NOT_WILLING_TO.
+ * In all other cases, errors or inconsistancies are signaled, but
+ * we do our best to actually import the file and produce a valuable
+ * #NAObjectItem-derived object.
  */
 
+#include <api/na-data-boxed.h>
 #include <api/na-iimporter.h>
-#include <api/na-object-item.h>
 
 G_BEGIN_DECLS
 
@@ -67,9 +73,13 @@ typedef struct {
 }
 	NAXMLReaderClass;
 
-GType         naxml_reader_get_type( void );
+GType        naxml_reader_get_type( void );
 
-NAObjectItem *naxml_reader_import_uri( const NAIImporter *instance, const gchar *uri, guint mode, ImporterCheckFn fn, void *fn_data, GSList **messages );
+guint        naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterParms *parms );
+
+NADataBoxed *naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
+
+void         naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
 
 G_END_DECLS
 

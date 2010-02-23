@@ -750,7 +750,7 @@ build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty )
 				*tree = g_list_remove_link( *tree, it );
 
 				if( NA_IS_OBJECT_MENU( it->data )){
-					subitems_ids = na_object_get_items_slist( NA_OBJECT_ITEM( it->data ));
+					subitems_ids = na_object_get_items_slist( it->data );
 					subitems = build_hierarchy( tree, subitems_ids, FALSE );
 					na_object_set_items( it->data, subitems );
 					na_core_utils_slist_free( subitems_ids );

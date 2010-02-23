@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-ifactory-object-str.h>
+#include <api/na-data-def.h>
 
 G_BEGIN_DECLS
 
@@ -73,16 +73,6 @@ typedef struct {
 	gboolean reader_found;				/* dynamic data */
 }
 	NAXMLKeyStr;
-
-/* this structure is allocated once for each element readen
- * and kept in a GList for interpretation in the second run
- */
-typedef struct {
-	gchar      *key_path;
-	gchar      *key_value;
-	NadfIdType *iddef;
-}
-	NAXMLElementStr;
 
 /* XML element names (GConf dump)
  * used in FORMAT_GCONF_ENTRY

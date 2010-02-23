@@ -51,46 +51,46 @@ struct NAXMLReaderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+/* the association between a document root node key and the functions
+ */
+typedef struct {
+	gchar     *root_key;
+	gchar     *list_key;
+	gchar     *element_key;
+	guint   ( *fn_root_parms )     ( NAXMLReader *, xmlNode * );
+	guint   ( *fn_list_parms )     ( NAXMLReader *, xmlNode * );
+	guint   ( *fn_element_parms )  ( NAXMLReader *, xmlNode * );
+	guint   ( *fn_element_content )( NAXMLReader *, xmlNode * );
+	gchar * ( *fn_get_value )      ( NAXMLReader *, xmlNode *, const NADataDef *def );
+}
+	RootNodeStr;
+
 /* private instance data
- * main naxml_reader_import_uri() function is called once for each file
+ * main naxml_reader_import_from_uri() function is called once for each file
  * to import. We thus have one NAXMLReader object per import operation.
  */
 struct NAXMLReaderPrivate {
-	gboolean      dispose_has_run;
+	gboolean          dispose_has_run;
 
 	/* data provided by the caller
 	 */
-	const gchar  *uri;
-	gint          mode;
+	NAIImporter      *importer;
+	NAIImporterParms *parms;
 
 	/* data dynamically set during the import operation
 	 */
-	gchar        *xml_root;
-	NAObjectItem *item;
-	GSList       *messages;
 	gboolean      type_found;
-	GList        *elements;
+	GList        *nodes;
+	RootNodeStr  *root_node_str;
+	gchar        *item_id;
 
 	/* following values are reset and reused while iterating on each
-	 * element nodes of the imported item (cf. reset_element_data())
+	 * element nodes of the imported item (cf. reset_node_data())
 	 */
-	gboolean      ok;
-	gchar        *applyto_key;
-	gchar        *applyto_value;
-	NadfIdType   *iddef;
-
-	/* --- */
-
-	NAObjectProfile *profile;			/* profile */
-	gboolean         locale_waited;		/* does this require a locale ? */
-	gboolean         profile_waited;	/* does this entry apply to a profile ? */
-	gboolean         list_waited;
-	gchar           *entry;
-	gchar           *value;				/* found value */
-	GSList          *list_value;
+	gboolean      node_ok;
 };
 
-#define PATH_ID_IDX		4				/* index of item id in a GConf key path */
+#define SCHEMA_PATH_ID_IDX		4		/* index of item id in a GConf schema key path */
 
 extern NAXMLKeyStr naxml_schema_key_schema_str[];
 
@@ -102,38 +102,39 @@ static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_dispose( GObject *object );
 static void          instance_finalize( GObject *object );
 
-/* the association of a document root node key and the functions
- */
-typedef struct {
-	gchar  *root_key;
-	gchar  *list_key;
-	gchar  *element_key;
-	void ( *fn_root_parms )     ( NAXMLReader *, xmlNode * );
-	void ( *fn_list_parms )     ( NAXMLReader *, xmlNode * );
-	void ( *fn_element_parms )  ( NAXMLReader *, xmlNode * );
-	void ( *fn_element_content )( NAXMLReader *, xmlNode * );
-}
-	RootNodeStr;
+static NAXMLReader  *reader_new( void );
 
-static void          reader_parse_schema_schema_content( NAXMLReader *reader, xmlNode *node );
-static void          reader_parse_dump_list_parms( NAXMLReader *reader, xmlNode *node );
-static void          reader_parse_dump_entry_content( NAXMLReader *reader, xmlNode *node );
+static guint         schema_parse_schema_content( NAXMLReader *reader, xmlNode *node );
+static void          schema_check_for_id( NAXMLReader *reader, xmlNode *iter );
+static void          schema_check_for_type( NAXMLReader *reader, xmlNode *iter );
+static gchar        *schema_get_value( xmlNode *node );
+static gchar        *schema_get_locale_value( xmlNode *node );
+static gchar        *schema_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def );
+
+static guint         dump_parse_list_parms( NAXMLReader *reader, xmlNode *node );
+static guint         dump_parse_entry_content( NAXMLReader *reader, xmlNode *node );
+static gchar        *dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def );
 
 static RootNodeStr st_root_node_str[] = {
+
 	{ NAXML_KEY_SCHEMA_ROOT,
 			NAXML_KEY_SCHEMA_LIST,
 			NAXML_KEY_SCHEMA_NODE,
 			NULL,
 			NULL,
 			NULL,
-			reader_parse_schema_schema_content },
+			schema_parse_schema_content,
+			schema_read_value },
+
 	{ NAXML_KEY_DUMP_ROOT,
 			NAXML_KEY_DUMP_LIST,
 			NAXML_KEY_DUMP_NODE,
 			NULL,
-			reader_parse_dump_list_parms,
+			dump_parse_list_parms,
 			NULL,
-			reader_parse_dump_entry_content },
+			dump_parse_entry_content,
+			dump_read_value },
+
 	{ NULL }
 };
 
@@ -183,40 +184,43 @@ static GConfReaderStruct reader_str[] = {
 #define ERR_NODE_UNKNOWN_TYPE		_( "Unknown type %s found at line %d, while waiting for Action or Menu." )
 #define ERR_PATH_LENGTH				_( "Too many elements in key path %s." )
 #define ERR_MENU_UNWAITED			_( "Unwaited key path %s while importing a menu." )
-#define ERR_ID_NOT_FOUND			_( "Item ID not found." )
-#define ERR_ITEM_LABEL_NOT_FOUND	_( "Item label not found." )
+#define ERR_ITEM_ID_NOT_FOUND		_( "Item ID not found." )
+#define ERR_NODE_INVALID_ID			_( "Invalid Item ID: waited for %s, found %s at line %d." )
 
 #if 0
+#define ERR_ITEM_LABEL_NOT_FOUND	_( "Item label not found." )
 #define ERR_IGNORED_SCHEMA			_( "Schema is ignored at line %d." )
 #define ERR_UNEXPECTED_NODE			_( "Unexpected '%s' node found at line %d." )
 #define ERR_UNEXPECTED_ENTRY		_( "Unexpected '%s' entry found at line %d." )
 #define ERR_NODE_NOT_FOUND			_( "Mandatory node '%s' not found." )
 #define ERR_NO_VALUE_FOUND			_( "No value found." )
-#define ERR_INVALID_UUID			_( "Invalid UUID: waited for %s, found %s at line %d." )
 #define ERR_INVALID_KEY_PREFIX		_( "Invalid content: waited for %s prefix, found %s at line %d." )
 #define ERR_NOT_AN_UUID				_( "Invalid UUID %s found at line %d." )
 #define ERR_UUID_ALREADY_EXISTS		_( "Already existing action (UUID: %s)." )
 #define ERR_VALUE_ALREADY_SET		_( "Value '%s' already set: new value ignored at line %d." )
 #endif
 
-static NAXMLReader  *reader_new( void );
+static void          factory_provider_read_done_action( NAXMLReader *reader, GSList **messages );
 
-static void          reader_parse_xmldoc( NAXMLReader *reader );
+static guint         reader_parse_xmldoc( NAXMLReader *reader );
+static guint         iter_on_root_children( NAXMLReader *reader, xmlNode *root );
+static guint         iter_on_list_children( NAXMLReader *reader, xmlNode *first );
+
 static void          add_message( NAXMLReader *reader, const gchar *format, ... );
-static gchar        *build_root_node_list( void );
 static gchar        *build_key_node_list( NAXMLKeyStr *strlist );
-static gchar        *get_default_value( xmlNode *node );
-static gchar        *get_locale_default_value( xmlNode *node );
-static void          iter_on_root_children( NAXMLReader *reader, xmlNode *root, RootNodeStr *str );
-static void          iter_on_list_children( NAXMLReader *reader, xmlNode *first, RootNodeStr *str );
-static void          iter_on_list_children_run( NAXMLReader *reader, xmlNode *list, RootNodeStr *str );
-static void          iter_on_elements_list( NAXMLReader *reader );
-static void          reset_element_data( NAXMLReader *reader );
-static void          reset_item_data( NAXMLReader *reader );
-static void          set_schema_applyto_value( NAXMLReader *reader, xmlNode *node, const gchar *entry );
-static void          free_naxml_element_str( NAXMLElementStr *str, void *data );
+static gchar        *build_root_node_list( void );
+static void          reset_node_data( NAXMLReader *reader );
 static xmlNode      *search_for_child_node( xmlNode *node, const gchar *key );
 static int           strxcmp( const xmlChar *a, const char *b );
+
+
+#if 0
+static void          iter_on_list_children_run( NAXMLReader *reader, xmlNode *list );
+static void          iter_on_elements_list( NAXMLReader *reader );
+#endif
+#if 0
+static void          set_schema_applyto_value( NAXMLReader *reader, xmlNode *node, const gchar *entry );
+#endif
 
 
 #if 0
@@ -241,7 +245,7 @@ static gboolean      is_uuid_valid( const gchar *uuid );
 static gchar        *get_entry_from_key( const gchar *key );
 
 #endif
-static gboolean      manage_import_mode( NAXMLReader *reader );
+static guint      manage_import_mode( NAXMLReader *reader );
 #if 0
 static void          propagate_default_values( NAXMLReader *reader );
 static NAObjectItem *search_in_auxiliaries( NAXMLReader *reader, const gchar *uuid );
@@ -315,19 +319,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NAXMLReaderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->uri = NULL;
-	self->private->mode = 0;
-	self->private->item = NULL;
-	self->private->messages = NULL;
+	self->private->importer = NULL;
+	self->private->parms = NULL;
 	self->private->type_found = FALSE;
-	self->private->elements = NULL;
-
-	reset_item_data( self );
-
-	self->private->profile = NULL;
-	self->private->locale_waited = FALSE;
-	self->private->entry = NULL;
-	self->private->value = NULL;
+	self->private->nodes = NULL;
+	self->private->root_node_str = NULL;
 }
 
 static void
@@ -344,15 +340,7 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_free( self->private->xml_root );
-
-		if( self->private->item ){
-			g_return_if_fail( NA_IS_OBJECT_ITEM( self->private->item ));
-			na_object_unref( self->private->item );
-		}
-
-		g_list_foreach( self->private->elements, ( GFunc ) free_naxml_element_str, NULL );
-		g_list_free( self->private->elements );
+		g_list_free( self->private->nodes );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -371,7 +359,9 @@ instance_finalize( GObject *object )
 	g_return_if_fail( NAXML_IS_READER( object ));
 	self = NAXML_READER( object );
 
-	na_core_utils_slist_free( self->private->messages );
+	g_free( self->private->item_id );
+
+	reset_node_data( self );
 
 	g_free( self->private );
 
@@ -390,77 +380,63 @@ reader_new( void )
 /**
  * naxml_reader_import_uri:
  * @instance: the #NAIImporter provider.
- * @uri: the URI of the file to be imported.
- * @mode: the import mode.
- * @fn: a pointer to the function to be used to check for existancy of
- *  imported id.
- * @fn_data: data to be passed to @fn.
- * @messages: a pointer to a #GSList list of strings; the provider
- *  may append messages to this list, but shouldn't reinitialize it.
+ * @parms: a #NAIImporterParms structure.
  *
  * Imports an item.
  *
- * Returns: a #NAObjectItem-derived object, or %NULL if an error has
- * been detected.
+ * Returns: the import operation code.
  */
-NAObjectItem *
-naxml_reader_import_uri( const NAIImporter *instance, const gchar *uri, guint mode, ImporterCheckFn fn, void *fn_data, GSList **messages )
+guint
+naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterParms *parms )
 {
-	static const gchar *thisfn = "naxml_reader_import_uri";
-	NAObjectItem *item;
+	static const gchar *thisfn = "naxml_reader_import_from_uri";
 	NAXMLReader *reader;
-	GSList *im;
+	guint code;
 
-	g_debug( "%s: instance=%p, uri=%s, mode=%d, fn=%p, fn_data=%p, messages=%p",
-			thisfn, ( void * ) instance, uri, mode, ( void * ) fn, ( void * ) fn_data, ( void * ) messages );
+	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
-	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), NULL );
+	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 
 	reader = reader_new();
-	reader->private->uri = uri;
-	reader->private->mode = mode;
+	reader->private->importer = ( NAIImporter * ) instance;
+	reader->private->parms = parms;
 
-	reader_parse_xmldoc( reader );
+	parms->item = NULL;
 
-	item = NULL;
-	if( reader->private->item ){
-		g_assert( NA_IS_OBJECT_ITEM( reader->private->item ));
+	code = reader_parse_xmldoc( reader );
+
+	if( code == IMPORTER_CODE_OK ){
+		g_assert( NA_IS_OBJECT_ITEM( reader->private->parms->item ));
 #if 0
 		propagate_default_values( reader );
 #endif
-		if( manage_import_mode( reader )){
-			item = NA_OBJECT_ITEM( na_object_ref( reader->private->item ));
-		}
-	}
-
-	if( messages ){
-		for( im = reader->private->messages ; im ; im = im->next ){
-			*messages = g_slist_append( *messages, g_strdup(( const gchar * ) im->data ));
-		}
+		code = manage_import_mode( reader );
 	}
 
 	g_object_unref( reader );
 
-	return( item );
+	return( code );
 }
 
 /*
  * check that the file is a valid XML document
  * and that the root node can be identified as a schema or a dump
  */
-static void
+static guint
 reader_parse_xmldoc( NAXMLReader *reader )
 {
 	RootNodeStr *istr;
 	gboolean found;
+	guint code;
 
-	xmlDoc *doc = xmlParseFile( reader->private->uri );
+	xmlDoc *doc = xmlParseFile( reader->private->parms->uri );
 
 	if( !doc ){
 		xmlErrorPtr error = xmlGetLastError();
 		add_message( reader,
 				ERR_XMLDOC_UNABLE_TOPARSE, error->message );
 		xmlResetError( error );
+		code = IMPORTER_CODE_NOT_WILLING_TO;
 
 	} else {
 		xmlNode *root_node = xmlDocGetRootElement( doc );
@@ -468,10 +444,11 @@ reader_parse_xmldoc( NAXMLReader *reader )
 		istr = st_root_node_str;
 		found = FALSE;
 
-		while( istr->root_key ){
+		while( istr->root_key && !found ){
 			if( !strxcmp( root_node->name, istr->root_key )){
 				found = TRUE;
-				iter_on_root_children( reader, root_node, istr );
+				reader->private->root_node_str = istr;
+				code = iter_on_root_children( reader, root_node );
 			}
 			istr++;
 		}
@@ -482,39 +459,228 @@ reader_parse_xmldoc( NAXMLReader *reader )
 						ERR_ROOT_UNKNOWN,
 						( const char * ) root_node->name, root_node->line, node_list );
 			g_free( node_list );
+			code = IMPORTER_CODE_NOT_WILLING_TO;
 		}
 
 		xmlFreeDoc (doc);
 	}
 
 	xmlCleanupParser();
+	return( code );
 }
 
-static gchar *
-build_root_node_list( void )
+/*
+ * parse a XML tree
+ * - must have one child on the named 'first_child' key (others are warned)
+ * - then iter on child nodes of this previous first named which must ne 'next_child'
+ */
+static guint
+iter_on_root_children( NAXMLReader *reader, xmlNode *root )
 {
-	RootNodeStr *next;
+	static const gchar *thisfn = "naxml_reader_iter_on_root_children";
+	xmlNodePtr iter;
+	gboolean found;
+	guint code;
 
-	RootNodeStr *istr = st_root_node_str;
-	GString *string = g_string_new( "" );
+	g_debug( "%s: reader=%p, root=%p", thisfn, ( void * ) reader, ( void * ) root );
 
-	while( istr->root_key ){
-		next = istr+1;
-		if( string->len ){
-			if( next->root_key ){
-				string = g_string_append( string, ", " );
-			} else {
-				string = g_string_append( string, " or " );
-			}
-		}
-		string = g_string_append( string, istr->root_key );
-		istr++;
+	code = IMPORTER_CODE_OK;
+
+	/* deal with properties attached to the root node
+	 */
+	if( reader->private->root_node_str->fn_root_parms ){
+		code = ( *reader->private->root_node_str->fn_root_parms )( reader, root );
 	}
 
-	return( g_string_free( string, FALSE ));
+	/* iter through the first level of children (list)
+	 * we must have only one occurrence of this first 'list' child
+	 */
+	found = FALSE;
+	for( iter = root->children ; iter && code == IMPORTER_CODE_OK ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+
+		if( strxcmp( iter->name, reader->private->root_node_str->list_key )){
+			add_message( reader,
+					ERR_NODE_UNKNOWN,
+					( const char * ) iter->name, iter->line, reader->private->root_node_str->list_key );
+			continue;
+		}
+
+		if( found ){
+			add_message( reader, ERR_NODE_ALREADY_FOUND, ( const char * ) iter->name, iter->line );
+			continue;
+		}
+
+		found = TRUE;
+		code = iter_on_list_children( reader, iter );
+	}
+
+	return( code );
+}
+
+/*
+ * iter on 'schema/entry' element nodes
+ * each node should correspond to an elementary data of the imported item
+ * other nodes are warned (and ignored)
+ *
+ * we have to iterate a first time through all nodes to be sure to find
+ * a potential 'type' indication - this is needed in order to allocate an
+ * action or a menu - if not found at the end of this first pass, we default
+ * to allocate an action
+ *
+ * this first pass is also used to check nodes
+ *
+ * - for each node, check that
+ *   > 'schema/entry' childs are in the list of known schema/entry child nodes
+ *   > 'schema/entry' childs appear only once per node
+ *     -> this requires a per-node 'found' flag which is reset for each node
+ *   > schema has an 'applyto' child node
+ *     -> only checkable at the end of the schema
+ *
+ * - check that each data, identified by the 'applyto' value, appears only once
+ *   applyto node -> elementary data + id item + (optionally) id profile
+ *   elementary data -> group (action,  menu, profile)
+ *   -> this requires a 'found' flag for each group+data reset at item level
+ *      as the item may not be allocated yet, we cannot check that data
+ *      is actually relevant with the to-be-imported item
+ *
+ * each schema 'applyto' node let us identify a data and its value
+ */
+static guint
+iter_on_list_children( NAXMLReader *reader, xmlNode *list )
+{
+	static const gchar *thisfn = "naxml_reader_iter_on_list_children";
+	guint code;
+	xmlNode *iter;
+
+	g_debug( "%s: reader=%p, list=%p", thisfn, ( void * ) reader, ( void * ) list );
+
+	code = IMPORTER_CODE_OK;
+
+	/* deal with properties attached to the list node
+	 */
+	if( reader->private->root_node_str->fn_list_parms ){
+		code = ( *reader->private->root_node_str->fn_list_parms )( reader, list );
+	}
+
+	/* each occurrence should correspond to an elementary data
+	 * we run first to determine the type, and allocate the object
+	 * we then rely on NAIFactoryProvider to actually read the data
+	 */
+	for( iter = list->children ; iter && code == IMPORTER_CODE_OK ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+
+		if( strxcmp( iter->name, reader->private->root_node_str->element_key )){
+			add_message( reader,
+					ERR_NODE_UNKNOWN,
+					( const char * ) iter->name, iter->line, reader->private->root_node_str->element_key );
+			continue;
+		}
+
+		reset_node_data( reader );
+
+		if( reader->private->root_node_str->fn_element_parms ){
+			code = ( *reader->private->root_node_str->fn_element_parms )( reader, iter );
+			if( code != IMPORTER_CODE_OK ){
+				continue;
+			}
+		}
+
+		if( reader->private->root_node_str->fn_element_content ){
+			code = ( *reader->private->root_node_str->fn_element_content )( reader, iter );
+			if( code != IMPORTER_CODE_OK ){
+				continue;
+			}
+		}
+
+		if( reader->private->node_ok ){
+			reader->private->nodes = g_list_prepend( reader->private->nodes, iter );
+		}
+	}
+
+	/* check that we have a not empty id
+	 */
+	if( code == IMPORTER_CODE_OK ){
+		if( !reader->private->item_id || !strlen( reader->private->item_id )){
+			add_message( reader, ERR_ITEM_ID_NOT_FOUND );
+			code = 	IMPORTER_CODE_NO_ITEM_ID;
+		}
+	}
+
+	/* if type not found, then suppose that we have an action
+	 */
+	if( code == IMPORTER_CODE_OK ){
+
+		if( !reader->private->type_found ){
+			reader->private->parms->item = NA_OBJECT_ITEM( na_object_action_new());
+		}
+
+		/* now load the data
+		 */
+		na_object_set_id( reader->private->parms->item, reader->private->item_id );
+
+		na_ifactory_provider_read_item(
+				NA_IFACTORY_PROVIDER( reader->private->importer ),
+				reader,
+				NA_IFACTORY_OBJECT( reader->private->parms->item ),
+				&reader->private->parms->messages );
+	}
+
+	return( code );
 }
 
 #if 0
+/*
+ * iter on list child nodes
+ * each 'schema/entry' node should correspond to an elementary data of
+ * the imported item - other nodes are warned (and ignored)
+ * invalid nodes are just ignored
+ * the id of the item must have been set during this run
+ */
+static void
+iter_on_list_children_run( NAXMLReader *reader, xmlNode *list )
+{
+	xmlNode *iter;
+
+	for( iter = list->children ; iter ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+
+		if( strxcmp( iter->name, reader->private->root_node_str->element_key )){
+			add_message( reader,
+					ERR_NODE_UNKNOWN,
+					( const char * ) iter->name, iter->line, reader->private->root_node_str->element_key );
+			continue;
+		}
+
+		reset_node_data( reader );
+
+		if( reader->private->root_node_str->fn_element_parms ){
+			( *reader->private->root_node_str->fn_element_parms )( reader, iter );
+		}
+
+		if( reader->private->root_node_str->fn_element_content ){
+			( *reader->private->root_node_str->fn_element_content )( reader, iter );
+		}
+
+		if( reader->private->node_ok ){
+
+			NAXMLElementStr *str = g_new0( NAXMLElementStr, 1 );
+			str->node = reader->private->node_ptr;
+			str->key = g_strdup( reader->private->node_key );
+			reader->private->elements = g_list_prepend( reader->private->elements, str );
+		}
+	}
+}
+
 /*
  * parse a XML schema
  * root = "gconfschemafile" (already tested)
@@ -558,196 +724,7 @@ reader_parse_schema_root( NAXMLReader *reader, xmlNode *root )
 }
 #endif
 
-/*
- * parse a XML tree
- * - must have one child on the named 'first_child' key (others are warned)
- * - then iter on child nodes of this previous first named which must ne 'next_child'
- */
-static void
-iter_on_root_children( NAXMLReader *reader, xmlNode *root, RootNodeStr *str )
-{
-	static const gchar *thisfn = "naxml_reader_iter_on_root_children";
-	xmlNodePtr iter;
-	gboolean found;
-
-	g_debug( "%s: reader=%p, root=%p, str=%p",
-			thisfn, ( void * ) reader, ( void * ) root, ( void * ) str );
-
-	reader->private->xml_root = g_strdup(( const gchar * ) root->name );
-
-	/* deal with properties attached to the root node
-	 */
-	if( str->fn_root_parms ){
-		( *str->fn_root_parms )( reader, root );
-	}
-
-	/* iter through the first level of children (list)
-	 * we must have only one occurrence of this first 'list' child
-	 */
-	found = FALSE;
-	for( iter = root->children ; iter ; iter = iter->next ){
-
-		if( iter->type != XML_ELEMENT_NODE ){
-			continue;
-		}
-
-		if( strxcmp( iter->name, str->list_key )){
-			add_message( reader,
-					ERR_NODE_UNKNOWN,
-					( const char * ) iter->name, iter->line, str->list_key );
-			continue;
-		}
-
-		if( found ){
-			add_message( reader, ERR_NODE_ALREADY_FOUND, ( const char * ) iter->name, iter->line );
-			continue;
-		}
-
-		found = TRUE;
-		iter_on_list_children( reader, iter, str );
-	}
-}
-
-/*
- * iter on 'schema' element nodes
- * each node should correspond to an elementary data of the imported item
- * other nodes are warned (and ignored)
- *
- * we have to iterate a first time through all schemas to be sure to find
- * a potential 'type' indication - this is needed in order to allocate an
- * action or a menu - if not found at the end of this first pass, we default
- * to allocate an action
- *
- * this first pass is also used to check schemas
- *
- * - for each schema, check that
- *   > 'schema' childs are in the list of known schema child nodes
- *   > 'schema' childs appear only once per schema
- *     -> this requires a per-node 'found' flag which is reset for each schema
- *   > has an 'applyto' child node
- *     -> only checkable at the end of the schema
- *
- * - check that each data, identified by the 'applyto' value, appears only once
- *   applyto node -> elementary data + id item + (optionally) id profile
- *   elementary data -> group (action,  menu, profile)
- *   -> this requires a 'found' flag for each group+data reset at item level
- *      as the item may not be allocated yet, we cannot check that data
- *      is actually relevant with the to-be-imported item
- *
- * - search for type, and allocate the object
- *   default value (allocating an Action) is set between the two runs
- *
- * each schema 'applyto' node let us identify a data and its value
- */
-static void
-iter_on_list_children( NAXMLReader *reader, xmlNode *list, RootNodeStr *str )
-{
-	static const gchar *thisfn = "naxml_reader_iter_on_list_children";
-	gboolean ok;
-
-	g_debug( "%s: reader=%p, list=%p, str=%p",
-			thisfn, ( void * ) reader, ( void * ) list, ( void * ) str );
-
-	/* deal with properties attached to the list node
-	 */
-	if( str->fn_list_parms ){
-		( *str->fn_list_parms )( reader, list );
-	}
-
-	/* each occurrence should correspond to an elementary data
-	 * we run twice:
-	 * - first to determine the type, and allocate the object
-	 * - second (if ok), to actually read data
-	 */
-	ok = FALSE;
-	iter_on_list_children_run( reader, list, str );
-
-	/* if type not found, then suppose that we have an action
-	 */
-	if( !reader->private->type_found ){
-		reader->private->item = NA_OBJECT_ITEM( na_object_action_new());
-	}
-
-	/* now load the data
-	 */
-	if( reader->private->item ){
-
-		ok = TRUE;
-		iter_on_elements_list( reader );
-
-		if( ok ){
-			gchar *id = na_object_get_id( reader->private->item );
-			if( !id || !strlen( id )){
-				ok = FALSE;
-				add_message( reader, ERR_ID_NOT_FOUND );
-			}
-			g_free( id );
-		}
-
-		if( ok ){
-			gchar *label = na_object_get_label( reader->private->item );
-			if( !label || !g_utf8_strlen( label, -1 )){
-				ok = FALSE;
-				add_message( reader, ERR_ITEM_LABEL_NOT_FOUND );
-			}
-			g_free( label );
-		}
-
-		if( !ok ){
-			g_object_unref( reader->private->item );
-			reader->private->item = NULL;
-		}
-	}
-}
-
-/*
- * iter on list child nodes
- * each 'schema' node should correspond to an elementary data of the imported item
- * other nodes are warned (and ignored)
- */
-static void
-iter_on_list_children_run( NAXMLReader *reader, xmlNode *list, RootNodeStr *str )
-{
-	xmlNode *iter;
-
-	for( iter = list->children ; iter ; iter = iter->next ){
-
-		if( iter->type != XML_ELEMENT_NODE ){
-			continue;
-		}
-
-		if( strxcmp( iter->name, str->element_key )){
-			add_message( reader,
-					ERR_NODE_UNKNOWN,
-					( const char * ) iter->name, iter->line, str->element_key );
-			continue;
-		}
-
-		reset_element_data( reader );
-
-		if( str->fn_element_parms ){
-			( *str->fn_element_parms )( reader, iter );
-		}
-
-		if( str->fn_element_content ){
-			( *str->fn_element_content )( reader, iter );
-		}
-
-		if( !reader->private->applyto_key || !reader->private->iddef ){
-			reader->private->ok = FALSE;
-		}
-
-		if( reader->private->ok ){
-
-			NAXMLElementStr *str = g_new0( NAXMLElementStr, 1 );
-			str->key_path = g_strdup( reader->private->applyto_key );
-			str->key_value = g_strdup( reader->private->applyto_value );
-			str->iddef = reader->private->iddef;
-			reader->private->elements = g_list_prepend( reader->private->elements, str );
-		}
-	}
-}
-
+#if 0
 static void
 iter_on_elements_list( NAXMLReader *reader )
 {
@@ -817,20 +794,107 @@ iter_on_elements_list( NAXMLReader *reader )
 		reader->private->item = NULL;
 	}
 }
+#endif
 
 /*
- * first run: only search for a 'Type' key, and allocate the item
- * this suppose that the entry 'key' is found _before_ the 'applyto' one
- * second run: load data
+ * this callback function is called by NAIFactoryObject once for each
+ * serializable data for the object
  */
+NADataBoxed *
+naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
+{
+	static const gchar *thisfn = "naxml_reader_read_data";
+	GList *ielt;
+
+	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+
+	g_debug( "%s: data=%s", thisfn, def->name );
+
+	if( !def->gconf_entry || !strlen( def->gconf_entry )){
+		g_warning( "%s: GConf entry is not set for NADataDef %s", thisfn, def->name );
+		return( NULL );
+	}
+
+	gboolean found = FALSE;
+	NADataBoxed *boxed = NULL;
+	NAXMLReader *reader = NAXML_READER( reader_data );
+
+	for( ielt = reader->private->nodes ; ielt && !found ; ielt = ielt->next ){
+
+		xmlNode *schema = ( xmlNode * ) ielt->data;
+		xmlNode *applyto = search_for_child_node( schema, NAXML_KEY_SCHEMA_NODE_APPLYTO );
+
+		if( !applyto ){
+			g_warning( "%s: no 'applyto' node in schema at line %u", thisfn, schema->line );
+
+		} else {
+			xmlChar *text = xmlNodeGetContent( applyto );
+			gchar *entry = g_path_get_basename(( const gchar * ) text );
+
+			if( !strcmp( entry, def->gconf_entry )){
+				found = TRUE;
+
+				if( reader->private->root_node_str->fn_get_value ){
+					gchar *value = ( *reader->private->root_node_str->fn_get_value )( reader, schema, def );
+					boxed = na_data_boxed_new( def );
+					na_data_boxed_set_from_string( boxed, value );
+					g_free( value );
+				}
+			}
+
+			g_free( entry );
+			xmlFree( text );
+		}
+	}
+
+	return( boxed );
+}
+
+/*
+ * all serializable data of the object has been readen
+ */
+void
+naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  )
+{
+	static const gchar *thisfn = "naxml_reader_read_done";
+
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+
+	g_debug( "%s: provider=%p, reader_data=%p, object=%p, messages=%p",
+			thisfn, ( void * ) provider, ( void * ) reader_data, ( void * ) object, ( void * ) messages );
+
+	if( NA_IS_OBJECT_ACTION( object )){
+		factory_provider_read_done_action( NAXML_READER( reader_data ), messages );
+	}
+}
+
 static void
-reader_parse_schema_schema_content( NAXMLReader *reader, xmlNode *schema )
+factory_provider_read_done_action( NAXMLReader *reader, GSList **messages )
+{
+	/* do we have a pre-v2 action ?
+	 */
+
+}
+/*
+ * 'key' and 'applyto' keys: check the id
+ * 'applyto' key: check for type
+ * returns set node_ok if:
+ * - each key appears is known and appears only once
+ * - there is an applyto key
+ */
+static guint
+schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 {
 	xmlNode *iter;
 	NAXMLKeyStr *str;
 	int i;
+	guint code;
 
-	for( iter = schema->children ; iter && reader->private->ok ; iter = iter->next ){
+	code = IMPORTER_CODE_OK;
+
+	for( iter = schema->children ; iter && code == IMPORTER_CODE_OK ; iter = iter->next ){
 
 		if( iter->type != XML_ELEMENT_NODE ){
 			continue;
@@ -843,77 +907,119 @@ reader_parse_schema_schema_content( NAXMLReader *reader, xmlNode *schema )
 			}
 		}
 
-		if( str ){
-			if( str->reader_found ){
-				add_message( reader,
-						ERR_NODE_ALREADY_FOUND,
-						( const char * ) iter->name, iter->line );
-				reader->private->ok = FALSE;
-
-			} else {
-				str->reader_found = TRUE;
-
-				if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_APPLYTO )){
-					xmlChar *text = xmlNodeGetContent( iter );
-					reader->private->applyto_key = g_strdup(( const gchar * ) text );
-					xmlFree( text );
-
-					gchar *entry = g_path_get_basename( reader->private->applyto_key );
-
-					if( !strcmp( entry, NAGP_ENTRY_TYPE )){
-						reader->private->type_found = TRUE;
-						gchar *type = get_default_value( iter->parent );
-
-						if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
-							reader->private->item = NA_OBJECT_ITEM( na_object_action_new());
-
-						} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
-							reader->private->item = NA_OBJECT_ITEM( na_object_menu_new());
-
-						} else {
-							add_message( reader, ERR_NODE_UNKNOWN_TYPE, type, iter->line );
-							reader->private->ok = FALSE;
-						}
-						g_free( type );
-					}
-
-					set_schema_applyto_value( reader, iter->parent, entry );
-
-					g_free( entry );
-				}
-			}
-
-		} else {
+		if( !str ){
 			gchar *node_list = build_key_node_list( naxml_schema_key_schema_str );
 			add_message( reader,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, node_list );
 			g_free( node_list );
-			reader->private->ok = FALSE;
+			reader->private->node_ok = FALSE;
+			continue;
+		}
+
+		if( str->reader_found ){
+			add_message( reader,
+					ERR_NODE_ALREADY_FOUND,
+					( const char * ) iter->name, iter->line );
+			reader->private->node_ok = FALSE;
+			continue;
+		}
+
+		str->reader_found = TRUE;
+
+		/* set the item id the first time, check after
+		 */
+		if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_KEY ) ||
+			!strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_APPLYTO )){
+
+			schema_check_for_id( reader, iter );
+
+			if( !reader->private->node_ok ){
+				continue;
+			}
+		}
+
+		/* search for the type of the item
+		 */
+		if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_APPLYTO )){
+
+			schema_check_for_type( reader, iter );
+
+			if( !reader->private->node_ok ){
+				continue;
+			}
 		}
 	}
+
+	return( code );
 }
 
+/*
+ * check the id on 'key' and 'applyto' keys
+ */
 static void
-set_schema_applyto_value( NAXMLReader *reader, xmlNode *node, const gchar *entry )
+schema_check_for_id( NAXMLReader *reader, xmlNode *iter )
 {
-	gchar *value;
+	guint idx = 1;
 
-	NadfIdType *iddef = na_ifactory_provider_get_idtype_from_gconf_key( entry );
-	if( iddef ){
-		reader->private->iddef = iddef;
-		g_debug( "%s: localizable=%s", iddef->name, iddef->localizable ? "True":"False" );
-		if( iddef->localizable ){
-			value = get_locale_default_value( node );
-		} else {
-			value = get_default_value( node );
-		}
-		reader->private->applyto_value = value;
+	if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_KEY )){
+		idx = 2;
 	}
+
+	xmlChar *text = xmlNodeGetContent( iter );
+	gchar **path_elts = g_strsplit(( const gchar * ) text, "/", -1 );
+	gchar *id = g_strdup( path_elts[ SCHEMA_PATH_ID_IDX+idx-1 ] );
+	g_strfreev( path_elts );
+	xmlFree( text );
+
+	if( reader->private->item_id ){
+		if( strcmp( reader->private->item_id, id ) != 0 ){
+			add_message( reader,
+					ERR_NODE_INVALID_ID,
+					reader->private->item_id, id, iter->line );
+			reader->private->node_ok = FALSE;
+		}
+	} else {
+		reader->private->item_id = g_strdup( id );
+	}
+
+	g_free( id );
+}
+
+/*
+ * check 'applyto' key for 'Type'
+ */
+static void
+schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
+{
+	xmlChar *text = xmlNodeGetContent( iter );
+
+	gchar *entry = g_path_get_basename(( const gchar * ) text );
+
+	if( !strcmp( entry, NAGP_ENTRY_TYPE )){
+		reader->private->type_found = TRUE;
+		gchar *type = schema_get_value( iter->parent );
+
+		if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
+			reader->private->parms->item = NA_OBJECT_ITEM( na_object_action_new());
+
+		} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
+			reader->private->parms->item = NA_OBJECT_ITEM( na_object_menu_new());
+
+		} else {
+			add_message( reader, ERR_NODE_UNKNOWN_TYPE, type, iter->line );
+			reader->private->node_ok = FALSE;
+		}
+
+		g_free( type );
+	}
+
+	g_free( entry );
+	xmlFree( text );
 }
 
 static gchar *
-get_default_value( xmlNode *node )
+schema_get_value( xmlNode *node )
 {
 	gchar *value = NULL;
 
@@ -930,7 +1036,7 @@ get_default_value( xmlNode *node )
 }
 
 static gchar *
-get_locale_default_value( xmlNode *node )
+schema_get_locale_value( xmlNode *node )
 {
 	gchar *value = NULL;
 
@@ -949,63 +1055,52 @@ get_locale_default_value( xmlNode *node )
 	return( value );
 }
 
-static xmlNode *
-search_for_child_node( xmlNode *node, const gchar *key )
-{
-	xmlNode *iter;
-
-	for( iter = node->children ; iter ; iter = iter->next ){
-		if( iter->type == XML_ELEMENT_NODE ){
-			if( !strxcmp( iter->name, key )){
-				return( iter );
-			}
-		}
-	}
-
-	return( NULL );
-}
-
 static gchar *
-build_key_node_list( NAXMLKeyStr *strlist )
+schema_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 {
-	NAXMLKeyStr *next;
+	gchar *value;
 
-	NAXMLKeyStr *istr = strlist;
-	GString *string = g_string_new( "" );
-
-	while( istr->key ){
-		next = istr+1;
-		if( string->len ){
-			if( next->key ){
-				string = g_string_append( string, ", " );
-			} else {
-				string = g_string_append( string, " or " );
-			}
-		}
-		string = g_string_append( string, istr->key );
-		istr++;
+	if( def->localizable ){
+		value = schema_get_locale_value( node );
+	} else {
+		value = schema_get_value( node );
 	}
 
-	return( g_string_free( string, FALSE ));
+	return( value );
 }
 
 /*
  * first run: do nothing
  * second run: get the id
  */
-static void
-reader_parse_dump_list_parms( NAXMLReader *reader, xmlNode *node )
+static guint
+dump_parse_list_parms( NAXMLReader *reader, xmlNode *node )
 {
+	guint code;
 
+	code = IMPORTER_CODE_OK;
+
+	return( code );
 }
 
 /*
  * first_run: only search for a 'Type' key, and allocate the item
  * second run: load data
  */
-static void
-reader_parse_dump_entry_content( NAXMLReader *reader, xmlNode *node )
+static guint
+dump_parse_entry_content( NAXMLReader *reader, xmlNode *node )
 {
+	guint code;
+
+	code = IMPORTER_CODE_OK;
+
+	return( code );
+}
+
+static gchar *
+dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
+{
+	return( NULL );
 }
 
 #if 0
@@ -1820,12 +1915,111 @@ add_message( NAXMLReader *reader, const gchar *format, ... )
 	va_list va;
 	gchar *tmp;
 
-	g_debug( "naxml_reader_add_message: format=%s", format );
-
 	va_start( va, format );
 	tmp = g_markup_vprintf_escaped( format, va );
 	va_end( va );
-	reader->private->messages = g_slist_append( reader->private->messages, tmp );
+
+	reader->private->parms->messages = g_slist_append( reader->private->parms->messages, tmp );
+}
+
+static gchar *
+build_key_node_list( NAXMLKeyStr *strlist )
+{
+	NAXMLKeyStr *next;
+
+	NAXMLKeyStr *istr = strlist;
+	GString *string = g_string_new( "" );
+
+	while( istr->key ){
+		next = istr+1;
+		if( string->len ){
+			if( next->key ){
+				string = g_string_append( string, ", " );
+			} else {
+				string = g_string_append( string, " or " );
+			}
+		}
+		string = g_string_append( string, istr->key );
+		istr++;
+	}
+
+	return( g_string_free( string, FALSE ));
+}
+
+static gchar *
+build_root_node_list( void )
+{
+	RootNodeStr *next;
+
+	RootNodeStr *istr = st_root_node_str;
+	GString *string = g_string_new( "" );
+
+	while( istr->root_key ){
+		next = istr+1;
+		if( string->len ){
+			if( next->root_key ){
+				string = g_string_append( string, ", " );
+			} else {
+				string = g_string_append( string, " or " );
+			}
+		}
+		string = g_string_append( string, istr->root_key );
+		istr++;
+	}
+
+	return( g_string_free( string, FALSE ));
+}
+
+#if 0
+static void
+free_naxml_element_str( NAXMLElementStr *str, void *data )
+{
+	g_free( str->key );
+	g_free( str );
+}
+#endif
+
+/*
+ * data are reset before first run on nodes for an item
+ */
+static void
+reset_node_data( NAXMLReader *reader )
+{
+	int i;
+
+	for( i=0 ; naxml_schema_key_schema_str[i].key ; ++i ){
+		naxml_schema_key_schema_str[i].reader_found = FALSE;
+	}
+
+	reader->private->node_ok = TRUE;
+}
+
+#if 0
+/*
+ * reset here static data which should be reset before each object
+ * (so, obviously, not reader data as a new reader is reallocated
+ *  for each import operation)
+ */
+static void
+reset_item_data( NAXMLReader *reader )
+{
+}
+#endif
+
+static xmlNode *
+search_for_child_node( xmlNode *node, const gchar *key )
+{
+	xmlNode *iter;
+
+	for( iter = node->children ; iter ; iter = iter->next ){
+		if( iter->type == XML_ELEMENT_NODE ){
+			if( !strxcmp( iter->name, key )){
+				return( iter );
+			}
+		}
+	}
+
+	return( NULL );
 }
 
 /*
@@ -1887,53 +2081,12 @@ get_entry_from_key( const gchar *key )
 #endif
 
 /*
- * data are reset before first run on nodes for an item
- */
-static void
-reset_element_data( NAXMLReader *reader )
-{
-	int i;
-
-	for( i=0 ; naxml_schema_key_schema_str[i].key ; ++i ){
-		naxml_schema_key_schema_str[i].reader_found = FALSE;
-	}
-
-	reader->private->ok = TRUE;
-
-	g_free( reader->private->applyto_key );
-	reader->private->applyto_key = NULL;
-
-	g_free( reader->private->applyto_value );
-	reader->private->applyto_value = NULL;
-
-	reader->private->iddef = NULL;
-}
-
-/*
- * reset here static data which should be reset before each object
- * (so, obviously, not reader data as a new reader is reallocated
- *  for each import operation)
- */
-static void
-reset_item_data( NAXMLReader *reader )
-{
-}
-
-static void
-free_naxml_element_str( NAXMLElementStr *str, void *data )
-{
-	g_free( str->key_path );
-	g_free( str->key_value );
-	g_free( str );
-}
-
-/*
- * returns TRUE if we can safely insert the action
+ * returns IMPORTER_CODE_OK if we can safely insert the action
  * - the id doesn't already exist
  * - the id already exist, but import mode is renumber
  * - the id already exists, but import mode is override
  */
-static gboolean
+static guint
 manage_import_mode( NAXMLReader *reader )
 {
 #if 0
@@ -1993,7 +2146,7 @@ manage_import_mode( NAXMLReader *reader )
 	g_free( uuid );
 	return( ret );
 #endif
-	return( TRUE );
+	return( IMPORTER_CODE_OK );
 }
 
 #if 0

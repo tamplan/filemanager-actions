@@ -746,14 +746,15 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 {
 	/*static const gchar *thisfn = "nact_tree_model_drop_uri_list";*/
 	gboolean drop_done = FALSE;
-	GSList *uri_list, *is, *msg;
+	GSList *uri_list, *is;
 	NactApplication *application;
 	NAUpdater *updater;
 	gint import_mode;
-	NAObjectItem *item;
 	NactMainWindow *main_window;
 	GtkTreePath *new_dest;
 	GList *object_list;
+	NAIImporterParms parms;
+	guint code;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	updater = nact_application_get_updater( application );
@@ -771,28 +772,30 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 
 	for( is = uri_list ; is ; is = is->next ){
 
-		item = na_importer_import(
-				NA_PIVOT( updater ),
-				( const gchar * ) is->data,
-				import_mode,
-				NULL,
-				NULL,
-				&msg );
+		parms.version = 1;
+		parms.uri = ( gchar * ) is->data;
+		parms.mode = import_mode;
+		parms.messages = NULL;
+		parms.item = NULL;
+		parms.fn = NULL;
+		parms.fn_data = NULL;
 
-		if( msg ){
+		code = na_importer_import_from_uri( NA_PIVOT( updater ), &parms );
+
+		if( parms.messages ){
 			main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 			nact_main_statusbar_display_with_timeout(
 					main_window,
 					TREE_MODEL_STATUSBAR_CONTEXT,
-					msg->data );
-			na_core_utils_slist_free( msg );
+					parms.messages->data );
+			na_core_utils_slist_free( parms.messages );
 		}
 
-		if( item ){
-			g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
-			object_list = g_list_prepend( object_list, item );
-			na_object_check_status( item );
-			na_object_dump( item );
+		if( parms.item ){
+			g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms.item ), FALSE );
+			object_list = g_list_prepend( object_list, parms.item );
+			na_object_check_status( parms.item );
+			na_object_dump( parms.item );
 			drop_done = TRUE;
 		}
 	}

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include <api/na-ifactory-object.h>
+#include <api/na-iimporter.h>
 
 int
 main()

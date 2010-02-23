@@ -1,3 +1,51 @@
+2009-02-24 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/Makefile.am:
+	* src/api/na-data-boxed.h:
+	* src/api/na-data-types.h:
+	* src/api/na-gconf-utils.h:
+	* src/api/na-ifactory-object-data.h:
+	* src/api/na-ifactory-object.h:
+	* src/api/na-ifactory-provider.h:
+	* src/api/na-iimporter.h:
+	* src/api/na-object-api.h:
+	* src/api/na-object-profile.h:
+	* src/core/Makefile.am:
+	* src/core/na-data-boxed.c:
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h:
+	* src/core/na-factory-provider.c:
+	* src/core/na-factory-provider.h:
+	* src/core/na-gconf-utils.c:
+	* src/core/na-ifactory-object.c:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-importer.c:
+	* src/core/na-importer.h:
+	* src/core/na-io-provider.c:
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-menu-factory.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile-factory.c:
+	* src/core/na-object-profile.c:
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h:
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-desktop/nadp-keys.c:
+	* src/io-desktop/nadp-keys.h:
+	* src/io-desktop/nadp-reader.c:
+	* src/io-gconf/nagp-gconf-provider.c:
+	* src/io-xml/naxml-keys.h:
+	* src/io-xml/naxml-provider.c:
+	* src/io-xml/naxml-reader.c:
+	* src/io-xml/naxml-reader.h:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/test/test-include.c:
+	* src/test/test-reader.c: Able to import a pre-v2 action.
+
 2009-02-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/Makefile.am:

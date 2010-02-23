@@ -31,7 +31,7 @@
 #ifndef __NADP_KEYS_H__
 #define __NADP_KEYS_H__
 
-#include <api/na-ifactory-object-str.h>
+#include <api/na-data-def.h>
 
 G_BEGIN_DECLS
 
@@ -93,13 +93,13 @@ G_BEGIN_DECLS
 #define NADP_VALUE_CAPABILITY_LOCAL					"Local"
 
 typedef struct {
-	guint  data_id;
+	gchar *data_id;
 	gchar *group;
 	gchar *key;
 }
 	NadpIdKey;
 
-gboolean nadp_keys_get_group_and_key( const NadfIdType *iddef, gchar **group, gchar **key );
+gboolean nadp_keys_get_group_and_key( const NADataDef *iddef, gchar **group, gchar **key );
 
 G_END_DECLS
 

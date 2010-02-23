@@ -44,6 +44,7 @@
  * Nautilus-Actions v 2.30 - API version:  1
  */
 
+#include "na-data-boxed.h"
 #include "na-ifactory-object.h"
 #include "na-ifactory-provider-provider.h"
 
@@ -68,7 +69,7 @@ typedef struct {
 	 *
 	 * Defaults to 1.
 	 */
-	guint    ( *get_version )( const NAIFactoryProvider *instance );
+	guint         ( *get_version )( const NAIFactoryProvider *instance );
 
 	/**
 	 * read_start:
@@ -80,27 +81,23 @@ typedef struct {
 	 *
 	 * API called by #NAIFactoryObject just before starting with reading data.
 	 */
-	void     ( *read_start ) ( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages  );
+	void          ( *read_start ) ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
 
 	/**
-	 * read_value:
+	 * read_data:
 	 * @reader: this #NAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance.
-	 * @iddef: the description of the data to be readen.
+	 * @object: the #NAIFactoryobject being unserialized.
+	 * @def: a #NADataDef structure which identifies the data to be unserialized.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * Returns: a newly allocated #GValue, or %NULL if an error has occurred.
-	 *
-	 * Note that a string list should be returned as a #GValue of type
-	 * G_TYPE_POINTER, which itself must be a GSList pointer.
-	 *
-	 * The returned #GValue, and its content if apply, will be freed
-	 * by the caller.
+	 * Returns: a newly allocated NADataBoxed which contains the readen value.
+	 * Should return %NULL if data is not found.
 	 *
 	 * This method must be implemented in order any data be read.
 	 */
-	GValue * ( *read_value ) ( const NAIFactoryProvider *reader, void *reader_data, const NadfIdType *iddef, GSList **messages );
+	NADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
 
 	/**
 	 * read_done:
@@ -113,7 +110,7 @@ typedef struct {
 	 * API called by #NAIFactoryObject when all data have been readen.
 	 * Implementor may take advantage of this to do some cleanup.
 	 */
-	void     ( *read_done )  ( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages  );
+	void          ( *read_done )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * write_start:
@@ -125,14 +122,15 @@ typedef struct {
 	 *
 	 * API called by #NAIFactoryObject just before starting with writing data.
 	 */
-	void     ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages  );
+	void          ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 
 	/**
-	 * write_value:
+	 * write_data:
 	 * @writer: this #NAIFactoryProvider instance.
 	 * @writer_data: the data associated to this instance.
-	 * @iddef: the description of the data to be written.
-	 * @value: the #NADataElement to be written down.
+	 * @object: the #NAIFactoryObject object being written.
+	 * @def: the description of the data to be written.
+	 * @value: the #NADataBoxed to be written down.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
@@ -140,7 +138,7 @@ typedef struct {
 	 *
 	 * This method must be implemented in order any data be written.
 	 */
-	void     ( *write_value )( const NAIFactoryProvider *writer, void *writer_data, const NadfIdType *iddef, GValue *value, GSList **messages );
+	void          ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataDef *iddef, NADataBoxed *value, GSList **messages );
 
 	/**
 	 * write_done:
@@ -153,16 +151,14 @@ typedef struct {
 	 * API called by #NAIFactoryObject when all data have been written.
 	 * Implementor may take advantage of this to do some cleanup.
 	 */
-	void     ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages  );
+	void          ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 }
 	NAIFactoryProviderInterface;
 
-GType           na_ifactory_provider_get_type( void );
+GType na_ifactory_provider_get_type( void );
 
-NAIFactoryObject *na_ifactory_provider_read_item ( const NAIFactoryProvider *reader, void *reader_data, GType type, GSList **messages );
-void            na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages );
-
-NadfIdType     *na_ifactory_provider_get_idtype_from_gconf_key( const gchar *xml_entry );
+void  na_ifactory_provider_read_item ( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages );
+void  na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages );
 
 G_END_DECLS
 

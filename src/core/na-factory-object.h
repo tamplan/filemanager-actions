@@ -35,31 +35,48 @@
  * SECTION: na_ifactory_object
  * @short_description: #NAIFactoryObject internal functions.
  * @include: core/na-factory-object.h
+ *
+ * Declare the function only accessed from core library, i.e. not
+ * published as API.
  */
 
 #include <api/na-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
-void            na_factory_object_properties( GObjectClass *class );
-NAIFactoryObject *na_factory_object_new       ( GType type );
+typedef gboolean ( *NAFactoryObjectIterBoxedFn )( const NAIFactoryObject *object, NADataBoxed *boxed, void *data );
 
-void            na_factory_object_init      ( NAIFactoryObject *object );
-void            na_factory_object_copy      ( NAIFactoryObject *target, const NAIFactoryObject *source );
-gboolean        na_factory_object_are_equal ( const NAIFactoryObject *a, const NAIFactoryObject *b );
-gboolean        na_factory_object_is_valid  ( const NAIFactoryObject *object );
-void            na_factory_object_dump      ( const NAIFactoryObject *object );
-void            na_factory_object_finalize  ( NAIFactoryObject *object );
+#if 0
+void         na_factory_object_register_type    ( GType type, const NADataGroup *groups );
+#endif
+void         na_factory_object_define_properties  ( GObjectClass *class, const NADataGroup *groups );
+NADataDef   *na_factory_object_get_data_def       ( const NAIFactoryObject *object, const gchar *name );
+NADataGroup *na_factory_object_get_data_groups    ( const NAIFactoryObject *object );
+void         na_factory_object_iter_on_boxed      ( const NAIFactoryObject *object, NAFactoryObjectIterBoxedFn pfn, void *data );
 
-void            na_factory_object_read      ( NAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-void            na_factory_object_write     ( NAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+void         na_factory_object_attach_with_default( NAIFactoryObject *object, const gchar *name );
 
-void            na_factory_object_set_from_string( NAIFactoryObject *object, guint data_id, const gchar *data );
-void            na_factory_object_set_from_value ( NAIFactoryObject *object, guint data_id, const GValue *value );
-void            na_factory_object_set_from_void  ( NAIFactoryObject *object, guint data_id, const void *data );
+void         na_factory_object_move_boxed         ( NAIFactoryObject *target, const NAIFactoryObject *source, NADataBoxed *boxed );
 
+void         na_factory_object_copy               ( NAIFactoryObject *target, const NAIFactoryObject *source );
+gboolean     na_factory_object_are_equal          ( const NAIFactoryObject *a, const NAIFactoryObject *b );
+gboolean     na_factory_object_is_valid           ( const NAIFactoryObject *object );
+void         na_factory_object_dump               ( const NAIFactoryObject *object );
+void         na_factory_object_finalize_instance  ( NAIFactoryObject *object );
+
+void         na_factory_object_read_item          ( NAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+void         na_factory_object_write_item         ( NAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+
+void        *na_factory_object_get_as_void        ( const NAIFactoryObject *object, const gchar *name );
+void         na_factory_object_get_as_value       ( const NAIFactoryObject *object, const gchar *name, GValue *value );
+
+void         na_factory_object_set_from_value     ( NAIFactoryObject *object, const gchar *name, const GValue *value );
+void         na_factory_object_set_from_void      ( NAIFactoryObject *object, const gchar *name, const void *data );
+
+#if 0
+void         na_factory_object_set_from_string  ( NAIFactoryObject *object, const gchar *name, const gchar *data );
 void           *na_factory_object_get       ( const NAIFactoryObject *object, guint data_id );
-void            na_factory_object_set_value ( const NAIFactoryObject *object, guint property_id, GValue *value, GParamSpec *spec );
+#endif
 
 G_END_DECLS
 

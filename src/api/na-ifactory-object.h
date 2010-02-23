@@ -39,21 +39,22 @@
  * This interface must be implemented by #NAObject-derived objects which
  * should take advantage of data factory management system.
  *
- * A #NAObject which would implement this #NAIFactoryObject interface
- * must meet following conditions:
+ * A #NAObject-derived which should implement this #NAIFactoryObject
+ * interface must meet following conditions:
  * - must accept an empty constructor
+ *
+ * Elementary data are implemented as a GList of NADataBoxed objects.
  *
  * Nautilus-Actions v 2.30 - API version:  1
  */
 
-#include "na-ifactory-object-enum.h"
-#include "na-ifactory-object-str.h"
+#include "na-data-def.h"
 #include "na-ifactory-provider-provider.h"
 
 G_BEGIN_DECLS
 
-#define NA_IFACTORY_OBJECT_TYPE						( na_ifactory_object_get_type())
-#define NA_IFACTORY_OBJECT( instance )				( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_OBJECT_TYPE, NAIFactoryObject ))
+#define NA_IFACTORY_OBJECT_TYPE							( na_ifactory_object_get_type())
+#define NA_IFACTORY_OBJECT( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_OBJECT_TYPE, NAIFactoryObject ))
 #define NA_IS_IFACTORY_OBJECT( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_OBJECT_TYPE ))
 #define NA_IFACTORY_OBJECT_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_OBJECT_TYPE, NAIFactoryObjectInterface ))
 
@@ -62,7 +63,7 @@ typedef struct NAIFactoryObject                 NAIFactoryObject;
 typedef struct NAIFactoryObjectInterfacePrivate NAIFactoryObjectInterfacePrivate;
 
 typedef struct {
-	GTypeInterface                  parent;
+	GTypeInterface                    parent;
 	NAIFactoryObjectInterfacePrivate *private;
 
 	/**
@@ -73,22 +74,30 @@ typedef struct {
 	 *
 	 * Defaults to 1.
 	 */
-	guint    ( *get_version )( const NAIFactoryObject *instance );
+	guint         ( *get_version )( const NAIFactoryObject *instance );
+
+	/**
+	 * get_groups:
+	 * @instance: this #NAIFactoryObject instance.
+	 *
+	 * Returns: a pointer to the NADataGroup which defines this object.
+	 */
+	NADataGroup * ( *get_groups ) ( const NAIFactoryObject *instance );
 
 	/**
 	 * get_default:
 	 * @instance: this #NAIFactoryObject instance.
-	 * @iddef: the #NadfIdType structure which defines the data whose
+	 * @iddef: the #NADataDef structure which defines the data whose
 	 * default value is searched for.
 	 *
 	 * The @instance may take advantage of this method to setup a default
 	 * value for a specific instance, or even for instances of a class when
-	 * several classes share some elementary data via common #NadfIdGroup.
+	 * several classes share some elementary data via common #NADataGroup.
 	 *
 	 * Returns: a newly allocated string which defines the suitable
 	 * default value, or %NULL.
 	 */
-	gchar *  ( *get_default )( const NAIFactoryObject *instance, const NadfIdType *iddef );
+	gchar *       ( *get_default )( const NAIFactoryObject *instance, const NADataDef *iddef );
 
 	/**
 	 * copy:
@@ -100,7 +109,7 @@ typedef struct {
 	 * The target @instance may take advantage of this call to do some
 	 * particular copy tasks.
 	 */
-	void     ( *copy )       ( NAIFactoryObject *instance, const NAIFactoryObject *source );
+	void          ( *copy )       ( NAIFactoryObject *instance, const NAIFactoryObject *source );
 
 	/**
 	 * are_equal:
@@ -112,7 +121,7 @@ typedef struct {
 	 * This function is triggered after all elementary data comparisons
 	 * have been sucessfully made.
 	 */
-	gboolean ( *are_equal )  ( const NAIFactoryObject *a, const NAIFactoryObject *b );
+	gboolean      ( *are_equal )  ( const NAIFactoryObject *a, const NAIFactoryObject *b );
 
 	/**
 	 * is_valid:
@@ -123,7 +132,7 @@ typedef struct {
 	 * This function is triggered after all elementary data comparisons
 	 * have been sucessfully made.
 	 */
-	gboolean ( *is_valid )   ( const NAIFactoryObject *object );
+	gboolean      ( *is_valid )   ( const NAIFactoryObject *object );
 
 	/**
 	 * read_start:
@@ -135,7 +144,7 @@ typedef struct {
 	 *
 	 * Called just before the object is unserialized.
 	 */
-	void     ( *read_start ) ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void          ( *read_start ) ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * read_done:
@@ -147,7 +156,7 @@ typedef struct {
 	 *
 	 * Called when the object has been unserialized.
 	 */
-	void     ( *read_done )  ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void          ( *read_done )  ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * write_start:
@@ -159,7 +168,7 @@ typedef struct {
 	 *
 	 * Called just before the object is serialized.
 	 */
-	void     ( *write_start )( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	void          ( *write_start )( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 	/**
 	 * write_done:
@@ -171,16 +180,24 @@ typedef struct {
 	 *
 	 * Called when the object has been serialized.
 	 */
-	void     ( *write_done ) ( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	void          ( *write_done ) ( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 }
 	NAIFactoryObjectInterface;
 
-GType       na_ifactory_object_get_type( void );
+GType      na_ifactory_object_get_type( void );
 
-void       *na_ifactory_object_get( const NAIFactoryObject *object, guint data_id );
+void      *na_ifactory_object_get_as_void  ( const NAIFactoryObject *object, const gchar *name );
 
+void       na_ifactory_object_set_from_void( NAIFactoryObject *object, const gchar *name, const void *data );
+
+#if 0
 void        na_ifactory_object_set_from_string( NAIFactoryObject *object, guint data_id, const gchar *data );
-void        na_ifactory_object_set_from_void  ( NAIFactoryObject *object, guint data_id, const void *data );
+#endif
+
+#if 0
+NADataDef *na_ifactory_object_get_data_def_from_name     ( const NAIFactoryObject *object, const gchar *name );
+NADataDef *na_ifactory_object_get_data_def_from_gconf_key( const NAIFactoryObject *object, const gchar *entry );
+#endif
 
 G_END_DECLS
 

@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_STR_H__
-#define __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_STR_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_DEF_H__
+#define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_DEF_H__
 
 /**
  * SECTION: na_ifactory_object
@@ -42,63 +42,29 @@
 G_BEGIN_DECLS
 
 /**
- * Elementary data types
- * Each object data item must be typed as one of these
- * IFactoryProvider implementations should provide a primitive for reading
- * (resp. writing) a value for each of these elementary data types.
- *
- * IMPORTANT NOTE
- * Please note that this enumeration may  be compiled in by extensions.
- * They must so remain fixed, unless you want see strange effects (e.g.
- * an extension has been compiled with NADF_TYPE_STRING = 2, while you
- * have inserted another element, making it to 3 !) - or you know what
- * you are doing...
- */
-
-enum {
-	NADF_TYPE_STRING = 1,				/* an ASCII string */
-
-	NADF_TYPE_LOCALE_STRING,			/* a localized UTF-8 string */
-
-	NADF_TYPE_BOOLEAN,					/* a boolean
-										 * can be initialized with "true" or "false" (case insensitive) */
-
-	NADF_TYPE_STRING_LIST,				/* a list of ASCII strings */
-
-	NADF_TYPE_POINTER,					/* a ( void * ) pointer
-										 * should be initialized to NULL */
-
-	NADF_TYPE_UINT,						/* an unsigned integer */
-};
-
-/* attach here a xml document root with the corresponding node for the data
- */
-typedef struct {
-	gchar *doc_id;
-	gchar *key;
-}
-	NadfDocKey;
-
-/**
- * The structure which fully describe an elementary data
+ * The structure which fully describes an elementary factory data
  * Each #NAIFactoryObject item definition may include several groups of
  * this structure
  */
 typedef struct {
-	guint     id;						/* the id of the object data item
-										 * must only be unique inside of the given group */
-
-	gchar    *name;						/* canonical name, used when getting/setting properties */
+	gchar    *name;						/* both the id and the canonical name
+										 * used when getting/setting properties
+										 * must be globally unique
+										 * must also be an invariant as it is known from plugin extensions */
 
 	gboolean  serializable;				/* whether the data is serializable
 										 * if FALSE, then no attempt will be made to read/write it
-										 * and the data will must be set dynamically */
+										 * and the data will must be set dynamically
+										 * when a data has been set serializable once, it remains so
+										 * even if it has becomen obsolete (for backward compatibility) */
 
-	gchar    *short_label;				/* short descriptive name, used in GParamSpec */
+	gchar    *short_label;				/* short descriptive name
+										 * used in GParamSpec and in schemas */
 
-	gchar    *long_label;				/* long, if not complete, description, used in GParamSpec */
+	gchar    *long_label;				/* long, if not complete, description
+										 * used in GParamSpec and in schemas */
 
-	guint     type;						/* the elementary NADF_TYPE_xxx data type */
+	guint     type;						/* the elementary NAFD_TYPE_xxx data type */
 
 	gchar    *default_value;			/* the default to assign when creating a new object
 										 * this default is also displayed in command-line help
@@ -129,20 +95,24 @@ typedef struct {
 										 *
 										 * This may be used mainly when POINTER type is used
 										 * to cast e.g. a GList of items */
+
+	gboolean  obsoleted;				/* whether this data has been obsoleted ?
+										 * if TRUE, then no property will be defined for it
+										 * and the data will not be written when serializing */
 }
-	NadfIdType;
+	NADataDef;
 
 /**
- * The structure which fully describe a logical group of data
- * Each #NAIFactoryObject item may definition may be built from a list of
+ * The structure which fully describes a logical group of data
+ * Each #NAIFactoryObject item definition is built from a list of
  * these groups
  */
 typedef struct {
-	guint       idgroup;				/* cf. na-ifactory-object-enum.h */
-	NadfIdType *iddef;
+	gchar     *group;					/* defined in na-ifactory-object-data.h */
+	NADataDef *def;
 }
-	NadfIdGroup;
+	NADataGroup;
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_STR_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_DEF_H__ */

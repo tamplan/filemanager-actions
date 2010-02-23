@@ -39,12 +39,14 @@ api_include_HEADERS = \
 	na-iio-provider.h									\
 	\
 	na-core-utils.h										\
+	na-data-boxed.h										\
+	na-data-def.h										\
+	na-data-types.h										\
 	na-gconf-monitor.h									\
 	na-gconf-utils.h									\
 	na-iduplicable.h									\
 	na-ifactory-object.h								\
-	na-ifactory-object-enum.h							\
-	na-ifactory-object-str.h							\
+	na-ifactory-object-data.h							\
 	na-object-api.h										\
 	na-object.h											\
 	na-object-id.h										\

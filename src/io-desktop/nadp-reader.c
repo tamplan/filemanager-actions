@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-ifactory-object-enum.h>
+#include <api/na-ifactory-object-data.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
 
@@ -241,7 +241,6 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
 	NAIFactoryObject *item;
 	NadpDesktopFile *ndf;
 	gchar *type;
-	GType reader_type;
 	NadpReaderData *reader_data;
 	gchar *id;
 
@@ -251,33 +250,30 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
 	}
 
 	item = NULL;
-	reader_type = 0;
 	type = nadp_desktop_file_get_file_type( ndf );
 
 	if( !strcmp( type, NADP_VALUE_TYPE_MENU )){
-		reader_type = NA_OBJECT_MENU_TYPE;
+		item = NA_IFACTORY_OBJECT( na_object_menu_new());
 
 	} else if( !type || !strlen( type ) || !strcmp( type, NADP_VALUE_TYPE_ACTION )){
-		reader_type = NA_OBJECT_ACTION_TYPE;
+		item = NA_IFACTORY_OBJECT( na_object_action_new());
 
 	} else {
 		g_warning( "%s: unknown type=%s", thisfn, type );
 	}
 
-	if( reader_type ){
+	if( item ){
+		id = nadp_desktop_file_get_id( ndf );
+		na_object_set_id( item, id );
+		g_free( id );
 
 		reader_data = g_new0( NadpReaderData, 1 );
 		reader_data->ndf = ndf;
 
-		item = na_ifactory_provider_read_item( NA_IFACTORY_PROVIDER( provider ), reader_data, reader_type, messages );
+		na_ifactory_provider_read_item( NA_IFACTORY_PROVIDER( provider ), reader_data, item, messages );
 
-		if( item ){
-			id = nadp_desktop_file_get_id( ndf );
-			na_object_set_id( item, id );
-			g_free( id );
-			na_object_set_provider_data( item, ndf );
-			g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
-		}
+		na_object_set_provider_data( item, ndf );
+		g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
 
 		g_free( reader_data );
 	}

@@ -39,8 +39,7 @@ AM_CPPFLAGS += \
 
 libna_core_la_SOURCES = \
 	na-core-utils.c										\
-	na-data-element.c									\
-	na-data-element.h									\
+	na-data-boxed.c										\
 	na-dbus-tracker.h									\
 	na-exporter.c										\
 	na-exporter.h										\
@@ -60,7 +59,6 @@ libna_core_la_SOURCES = \
 	na-iexporter.c										\
 	na-ifactory-object.c								\
 	na-ifactory-provider.c								\
-	na-ifactory-provider-priv.h							\
 	na-iimporter.c										\
 	na-iio-provider.c									\
 	na-io-provider.c									\
@@ -75,15 +73,15 @@ libna_core_la_SOURCES = \
 	na-module.h											\
 	na-object.c											\
 	na-object-id.c										\
-	na-object-id-enum.c									\
+	na-object-id-factory.c								\
 	na-object-item.c									\
-	na-object-item-enum.c								\
+	na-object-item-factory.c							\
 	na-object-action.c									\
-	na-object-action-enum.c								\
+	na-object-action-factory.c							\
 	na-object-profile.c									\
-	na-object-profile-enum.c							\
+	na-object-profile-factory.c							\
 	na-object-menu.c									\
-	na-object-menu-enum.c								\
+	na-object-menu-factory.c							\
 	na-pivot.c											\
 	na-pivot.h											\
 	na-updater.c										\

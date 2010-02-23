@@ -35,17 +35,18 @@
  * SECTION: na_ifactory_provider
  * @short_description: #NAIFactoryProvider interface definition.
  * @include: core/na-factory-provider.h
+ *
+ * Declare the function only accessed from core library (not published as API).
  */
 
+#include <api/na-data-boxed.h>
 #include <api/na-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
-void         na_factory_provider_register  ( GType type, const NadfIdGroup *groups );
-NadfIdGroup *na_factory_provider_get_groups( GType type );
-NadfIdType  *na_factory_provider_get_idtype_from_gconf_key( const gchar *entry );
-
-GValue      *na_factory_provider_read_value( const NAIFactoryProvider *reader, void *reader_data, const NadfIdType *iddef, GSList **messages );
+NADataBoxed *na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data,
+									NAIFactoryObject *object, const NADataDef *def,
+									GSList **messages );
 
 G_END_DECLS
 

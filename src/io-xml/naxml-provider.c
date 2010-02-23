@@ -239,7 +239,7 @@ iimporter_iface_init( NAIImporterInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = iimporter_get_version;
-	iface->import_uri = naxml_reader_import_uri;
+	iface->import_from_uri = naxml_reader_import_from_uri;
 }
 
 static guint
@@ -282,10 +282,10 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 
 	iface->get_version = ifactory_provider_get_version;
 	iface->read_start = NULL;
-	iface->read_value = NULL;
-	iface->read_done = NULL;
+	iface->read_data = naxml_reader_read_data;
+	iface->read_done = naxml_reader_read_done;
 	iface->write_start = NULL;
-	iface->write_value = NULL;
+	iface->write_data = NULL;
 	iface->write_done = NULL;
 }
 

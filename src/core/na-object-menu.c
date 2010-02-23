@@ -33,6 +33,7 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <string.h>
 
 #include <api/na-ifactory-object.h>
 #include <api/na-object-api.h>
@@ -52,34 +53,35 @@ struct NAObjectMenuPrivate {
 	gboolean dispose_has_run;
 };
 
-										/* i18n: default label for a new menu */
+/* i18n: default label for a new menu */
 #define NEW_NAUTILUS_MENU				N_( "New Nautilus menu" )
 
-extern NadfIdGroup menu_id_groups [];	/* defined in na-item-menu-enum.c */
+extern NADataGroup menu_data_groups [];			/* defined in na-item-menu-factory.c */
 
 static NAObjectItemClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NAObjectMenuClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void     instance_dispose( GObject *object );
-static void     instance_finalize( GObject *object );
+static GType        register_type( void );
+static void         class_init( NAObjectMenuClass *klass );
+static void         instance_init( GTypeInstance *instance, gpointer klass );
+static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void         instance_dispose( GObject *object );
+static void         instance_finalize( GObject *object );
 
-static gboolean object_is_valid( const NAObject *object );
+static gboolean     object_is_valid( const NAObject *object );
 
-static void     ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
-static guint    ifactory_object_get_version( const NAIFactoryObject *instance );
-static gchar   *ifactory_object_get_default( const NAIFactoryObject *instance, const NadfIdType *iddef );
-static void     ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
-static gboolean ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
-static gboolean ifactory_object_is_valid( const NAIFactoryObject *object );
-static void     ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void     ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
+static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
+static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
+static gchar       *ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *iddef );
+static void         ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
+static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
+static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
+static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void         ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static gboolean menu_is_valid( const NAObjectMenu *menu );
-static gboolean is_valid_label( const NAObjectMenu *menu );
+static gboolean     menu_is_valid( const NAObjectMenu *menu );
+static gboolean     is_valid_label( const NAObjectMenu *menu );
 
 GType
 na_object_menu_get_type( void )
@@ -124,7 +126,9 @@ register_type( void )
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
-	na_factory_provider_register( type, menu_id_groups );
+#if 0
+	na_factory_object_register_type( type, menu_id_groups );
+#endif
 
 	return( type );
 }
@@ -154,7 +158,7 @@ class_init( NAObjectMenuClass *klass )
 
 	klass->private = g_new0( NAObjectMenuClassPrivate, 1 );
 
-	na_factory_object_properties( object_class );
+	na_factory_object_define_properties( object_class, menu_data_groups );
 }
 
 static void
@@ -171,8 +175,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_OBJECT_MENU( instance );
 
 	self->private = g_new0( NAObjectMenuPrivate, 1 );
-
-	na_factory_object_init( NA_IFACTORY_OBJECT( instance ));
 }
 
 static void
@@ -183,7 +185,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 	if( !NA_OBJECT_MENU( object )->private->dispose_has_run ){
 
-		na_factory_object_set_value( NA_IFACTORY_OBJECT( object ), property_id, value, spec );
+		na_factory_object_get_as_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -195,7 +197,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 	if( !NA_OBJECT_MENU( object )->private->dispose_has_run ){
 
-		na_factory_object_set_from_value( NA_IFACTORY_OBJECT( object ), property_id, value );
+		na_factory_object_set_from_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -236,7 +238,7 @@ instance_finalize( GObject *object )
 
 	g_free( self->private );
 
-	na_factory_object_finalize( NA_IFACTORY_OBJECT( object ));
+	na_factory_object_finalize_instance( NA_IFACTORY_OBJECT( object ));
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
@@ -260,6 +262,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = ifactory_object_get_version;
+	iface->get_groups = ifactory_object_get_groups;
 	iface->get_default = ifactory_object_get_default;
 	iface->copy = ifactory_object_copy;
 	iface->are_equal = ifactory_object_are_equal;
@@ -276,18 +279,22 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
 	return( 1 );
 }
 
+static NADataGroup *
+ifactory_object_get_groups( const NAIFactoryObject *instance )
+{
+	return( menu_data_groups );
+}
+
 static gchar *
-ifactory_object_get_default( const NAIFactoryObject *instance, const NadfIdType *iddef )
+ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *def )
 {
 	gchar *value;
 
 	value = NULL;
 
-	switch( iddef->id ){
+	if( !strcmp( def->name, NAFO_DATA_LABEL )){
 
-		case NADF_DATA_LABEL:
-			value = g_strdup( NEW_NAUTILUS_MENU );
-			break;
+		value = g_strdup( NEW_NAUTILUS_MENU );
 	}
 
 	return( value );

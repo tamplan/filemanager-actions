@@ -28,71 +28,49 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_ENUM_H__
-#define __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_ENUM_H__
-
-#include <glib.h>
+#ifndef __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
+#define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
 
 /**
- * SECTION: na_ifactory_object
- * @short_description: Enumeration of all serializable elementary datas.
- * @include: nautilus-actions/na-ifactory-object-enum.h
+ * SECTION: na_data
+ * @short_description: NADataBoxed type definitions.
+ * @include: nautilus-actions/na-data-types.h
  */
+
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
-/*
+/**
+ * Elementary factory data types
+ * Each elementary factory data must be typed as one of these
+ * IFactoryProvider implementations should provide a primitive for reading
+ * (resp. writing) a value for each of these elementary data types.
+ *
  * IMPORTANT NOTE
  * Please note that this enumeration may  be compiled in by extensions.
  * They must so remain fixed, unless you want see strange effects (e.g.
- * an extension has been compiled with NADF_TYPE_STRING = 2, while you
+ * an extension has been compiled with NAFD_TYPE_STRING = 2, while you
  * have inserted another element, making it to 3 !) - or you know what
  * you are doing...
  */
 
 enum {
-	NA_FACTORY_OBJECT_ID_GROUP = 1,
-	NADF_DATA_ID,
-	NADF_DATA_LABEL,
-	NADF_DATA_PARENT,
+	NAFD_TYPE_STRING = 1,				/* an ASCII string */
 
-	NA_FACTORY_OBJECT_ITEM_GROUP = 20,
-	NADF_DATA_TOOLTIP,
-	NADF_DATA_ICON,
-	NADF_DATA_DESCRIPTION,
-	NADF_DATA_SUBITEMS,
-	NADF_DATA_SUBITEMS_SLIST,
-	NADF_DATA_ENABLED,
-	NADF_DATA_READONLY,
-	NADF_DATA_PROVIDER,
-	NADF_DATA_PROVIDER_DATA,
+	NAFD_TYPE_LOCALE_STRING,			/* a localized UTF-8 string */
 
-	NA_FACTORY_OBJECT_ACTION_GROUP = 40,
-	NADF_DATA_VERSION,
-	NADF_DATA_TARGET_SELECTION,
-	NADF_DATA_TARGET_BACKGROUND,
-	NADF_DATA_TARGET_TOOLBAR,
-	NADF_DATA_TOOLBAR_LABEL,
-	NADF_DATA_TOOLBAR_SAME_LABEL,
-	NADF_DATA_LAST_ALLOCATED,
+	NAFD_TYPE_BOOLEAN,					/* a boolean
+										 * can be initialized with "true" or "false" (case insensitive) */
 
-	NA_FACTORY_OBJECT_MENU_GROUP = 60,
+	NAFD_TYPE_STRING_LIST,				/* a list of ASCII strings */
 
-	NA_FACTORY_OBJECT_PROFILE_GROUP = 80,
-	NADF_DATA_PATH,
-	NADF_DATA_PARAMETERS,
-	NADF_DATA_BASENAMES,
-	NADF_DATA_MATCHCASE,
-	NADF_DATA_MIMETYPES,
-	NADF_DATA_ISFILE,
-	NADF_DATA_ISDIR,
-	NADF_DATA_MULTIPLE,
-	NADF_DATA_SCHEMES,
-	NADF_DATA_FOLDERS,
+	NAFD_TYPE_POINTER,					/* a ( void * ) pointer
+										 * should be initialized to NULL */
 
-	NA_FACTORY_OBJECT_CONDITIONS_GROUP = 100,
+	NAFD_TYPE_UINT,						/* an unsigned integer */
 };
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_ENUM_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__ */

@@ -28,34 +28,60 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_IFACTORY_PROVIDER_PRIV_H__
-#define __CORE_NA_IFACTORY_PROVIDER_PRIV_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-/**
- * SECTION: na_ifactory_provider
- * @short_description: #NAIFactoryProvider interface private structure declaration.
- * @include: core/na-ifactory-priv.h
- */
+#include <api/na-ifactory-object-data.h>
+#include <api/na-data-def.h>
+#include <api/na-data-types.h>
 
-#include <api/na-ifactory-object-str.h>
+NADataDef data_def_id [] = {
 
-G_BEGIN_DECLS
+	{ NAFO_DATA_ID,
+				FALSE,
+				"NAObjectId identifiant",
+				"Internal identifiant of the NAObjectId object. " \
+				"Historically a UUID used as a GConf directory (thus ASCII, case insensitive), " \
+				"it is also the basename of the .desktop file (thus UTF-8, case sensitive).",
+				NAFD_TYPE_STRING,
+				NULL,
+				TRUE,
+				TRUE,
+				TRUE,
+				FALSE,
+				NULL,
+				NULL,
+				FALSE },
 
-/* the structure of registered types
- * a list of this structure is stored in #NAIFactoryObject interface
- */
-typedef struct {
-	GType        type;
-	NadfIdGroup *groups;
-}
-	NadfImplement;
+	{ NAFO_DATA_LABEL,
+				TRUE,
+				"NAObjectId label",
+				"Main label of the NAObjectId object. " \
+				"Serves as a default for the toolbar label of an action.",
+				NAFD_TYPE_LOCALE_STRING,
+				"",
+				TRUE,
+				TRUE,
+				FALSE,
+				TRUE,
+				"label",
+				NULL,
+				FALSE },
 
-/* private interface data
- */
-struct NAIFactoryProviderInterfacePrivate {
-	GList *registered;
+	{ NAFO_DATA_PARENT,
+				FALSE,
+				"NAObjectId Parent",
+				"The NAObjectItem which is the parent of this object.",
+				NAFD_TYPE_POINTER,
+				NULL,
+				FALSE,
+				FALSE,
+				FALSE,
+				FALSE,
+				NULL,
+				NULL,
+				FALSE },
+
+	{ NULL },
 };
-
-G_END_DECLS
-
-#endif /* __CORE_NA_IFACTORY_PROVIDER_PRIV_H__ */

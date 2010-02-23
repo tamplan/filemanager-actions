@@ -640,6 +640,43 @@ na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **mess
 	return( ret );
 }
 
+/**
+ * na_gconf_utils_slist_from_string:
+ * @value: a string of the form [xxx,yyy,...] as read from GConf.
+ *
+ * Converts a string representing a list of strings in a GConf format
+ * to a list of strings.
+ *
+ * Returns: a newly allocated list of strings, which should be
+ * na_core_utils_slist_free() by the caller, or %NULL if the provided
+ * string was not of the GConf form.
+ */
+GSList *
+na_gconf_utils_slist_from_string( const gchar *value )
+{
+	GSList *slist;
+	gchar *tmp_string;
+
+	tmp_string = g_strdup( value );
+	g_strstrip( tmp_string );
+
+	if( !tmp_string || strlen( tmp_string ) < 3 ){
+		g_free( tmp_string );
+		return( NULL );
+	}
+
+	if( tmp_string[0] != '[' || tmp_string[strlen(tmp_string)-1] != ']' ){
+		g_free( tmp_string );
+		return( NULL );
+	}
+
+	tmp_string += 1;
+	tmp_string[strlen(tmp_string)-1] = '\0';
+	slist = na_core_utils_slist_from_split( tmp_string, "," );
+
+	return( slist );
+}
+
 static gboolean
 sync_gconf( GConfClient *gconf, gchar **message )
 {

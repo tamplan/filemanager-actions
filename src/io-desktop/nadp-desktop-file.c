@@ -372,9 +372,17 @@ nadp_desktop_file_get_id( const NadpDesktopFile *ndf )
 
 /**
  * nadp_desktop_file_get_boolean:
+ * @ndf: this #NadpDesktopFile instance.
+ * @group: the searched group.
+ * @entry: the searched entry.
+ * @key_found: set to %TRUE if the key has been found, to %FALSE else.
+ * @default_value: value to be set if key has not been found.
+ *
+ * Returns: the readen value, or the default value if the entry has not
+ * been found in the given group.
  */
 gboolean
-nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean default_value )
+nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, gboolean default_value )
 {
 	static const gchar *thisfn = "nadp_desktop_file_get_boolean";
 	gboolean value;
@@ -383,6 +391,7 @@ nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, c
 	GError *error;
 
 	value = default_value;
+	*key_found = FALSE;
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), FALSE );
 
@@ -402,6 +411,7 @@ nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, c
 
 			} else {
 				value = read_value;
+				*key_found = TRUE;
 			}
 		}
 	}
@@ -411,13 +421,21 @@ nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, c
 
 /**
  * nadp_desktop_file_get_locale_string:
+ * @ndf: this #NadpDesktopFile instance.
+ * @group: the searched group.
+ * @entry: the searched entry.
+ * @key_found: set to %TRUE if the key has been found, to %FALSE else.
+ * @default_value: value to be set if key has not been found.
+ *
+ * Returns: the readen value, or the default value if the entry has not
+ * been found in the given group.
  *
  * Note that g_key_file_has_key doesn't deal correctly with localized
  * strings which have a key[modifier] (it recognizes them as the key
  *  "key[modifier]", not "key")
  */
 gchar *
-nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, const gchar *default_value )
+nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
 {
 	static const gchar *thisfn = "nadp_desktop_file_get_locale_string";
 	gchar *value;
@@ -425,6 +443,7 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 	GError *error;
 
 	value = g_strdup( default_value );
+	*key_found = FALSE;
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
 
@@ -442,6 +461,7 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 		} else {
 			g_free( value );
 			value = read_value;
+			*key_found = TRUE;
 		}
 	}
 
@@ -450,9 +470,17 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 
 /**
  * nadp_desktop_file_get_string:
+ * @ndf: this #NadpDesktopFile instance.
+ * @group: the searched group.
+ * @entry: the searched entry.
+ * @key_found: set to %TRUE if the key has been found, to %FALSE else.
+ * @default_value: value to be set if key has not been found.
+ *
+ * Returns: the readen value, or the default value if the entry has not
+ * been found in the given group.
  */
 gchar *
-nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, const gchar *default_value )
+nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
 {
 	static const gchar *thisfn = "nadp_desktop_file_get_string";
 	gchar *value;
@@ -461,6 +489,7 @@ nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, co
 	GError *error;
 
 	value = g_strdup( default_value );
+	*key_found = FALSE;
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
 
@@ -482,6 +511,7 @@ nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, co
 			} else {
 				g_free( value );
 				value = read_value;
+				*key_found = TRUE;
 			}
 		}
 	}
@@ -491,9 +521,17 @@ nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, co
 
 /**
  * nadp_desktop_file_get_string_list:
+ * @ndf: this #NadpDesktopFile instance.
+ * @group: the searched group.
+ * @entry: the searched entry.
+ * @key_found: set to %TRUE if the key has been found, to %FALSE else.
+ * @default_value: value to be set if key has not been found.
+ *
+ * Returns: the readen value, or the default value if the entry has not
+ * been found in the given group.
  */
 GSList *
-nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, const gchar *default_value )
+nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
 {
 	static const gchar *thisfn = "nadp_desktop_file_get_string_list";
 	GSList *value;
@@ -502,6 +540,7 @@ nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *grou
 	GError *error;
 
 	value = g_slist_append( NULL, g_strdup( default_value ));
+	*key_found = FALSE;
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
 
@@ -522,9 +561,57 @@ nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *grou
 			} else {
 				na_core_utils_slist_free( value );
 				value = na_core_utils_slist_from_array(( const gchar ** ) read_array );
+				*key_found = TRUE;
 			}
 
 			g_strfreev( read_array );
+		}
+	}
+
+	return( value );
+}
+
+/**
+ * nadp_desktop_file_get_uint:
+ * @ndf: this #NadpDesktopFile instance.
+ * @group: the searched group.
+ * @entry: the searched entry.
+ * @key_found: set to %TRUE if the key has been found, to %FALSE else.
+ * @default_value: value to be set if key has not been found.
+ *
+ * Returns: the readen value, or the default value if the entry has not
+ * been found in the given group.
+ */
+guint
+nadp_desktop_file_get_uint( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, guint default_value )
+{
+	static const gchar *thisfn = "nadp_desktop_file_get_uint";
+	guint value;
+	gboolean has_entry;
+	GError *error;
+
+	value = default_value;
+	*key_found = FALSE;
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), 0 );
+
+	if( !ndf->private->dispose_has_run ){
+
+		error = NULL;
+		has_entry = g_key_file_has_key( ndf->private->key_file, group, entry, &error );
+		if( error ){
+			g_warning( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+
+		} else if( has_entry ){
+			value = ( guint ) g_key_file_get_integer( ndf->private->key_file, group, entry, &error );
+			if( error ){
+				g_warning( "%s: %s", thisfn, error->message );
+				g_error_free( error );
+
+			} else {
+				*key_found = TRUE;
+			}
 		}
 	}
 

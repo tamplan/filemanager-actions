@@ -35,12 +35,16 @@
 #include <api/na-ifactory-provider.h>
 
 #include "na-factory-object.h"
-#include "na-ifactory-provider-priv.h"
 #include "na-factory-provider.h"
 
-gboolean               ifactory_provider_initialized = FALSE;
-gboolean               ifactory_provider_finalized   = FALSE;
-NAIFactoryProviderInterface *ifactory_provider_klass       = NULL;
+/* private interface data
+ */
+struct NAIFactoryProviderInterfacePrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
+};
+
+gboolean ifactory_provider_initialized = FALSE;
+gboolean ifactory_provider_finalized   = FALSE;
 
 static GType register_type( void );
 static void  interface_base_init( NAIFactoryProviderInterface *klass );
@@ -107,12 +111,13 @@ interface_base_init( NAIFactoryProviderInterface *klass )
 		klass->private = g_new0( NAIFactoryProviderInterfacePrivate, 1 );
 
 		klass->get_version = ifactory_provider_get_version;
-		klass->read_value = NULL;
+		klass->read_start = NULL;
+		klass->read_data = NULL;
 		klass->read_done = NULL;
-		klass->write_value = NULL;
+		klass->write_start = NULL;
+		klass->write_data = NULL;
 		klass->write_done = NULL;
 
-		ifactory_provider_klass = klass;
 		ifactory_provider_initialized = TRUE;
 	}
 }
@@ -121,20 +126,12 @@ static void
 interface_base_finalize( NAIFactoryProviderInterface *klass )
 {
 	static const gchar *thisfn = "na_ifactory_provider_interface_base_finalize";
-	GList *ip;
-	NadfImplement *known;
 
 	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		ifactory_provider_finalized = TRUE;
-
-		for( ip = klass->private->registered ; ip ; ip = ip->next ){
-			known = ( NadfImplement * ) ip->data;
-			g_free( known );
-		}
-		g_list_free( klass->private->registered );
 
 		g_free( klass->private );
 	}
@@ -150,40 +147,27 @@ ifactory_provider_get_version( const NAIFactoryProvider *instance )
  * na_ifactory_provider_read_item:
  * @reader: the instance which implements this #NAIFactoryProvider interface.
  * @reader_data: instance data.
- * @type: the #GType which identifies the #NAIFactoryObject type.
+ * @object: the #NAIFactoryObject object to be unserialilzed.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
  *
  * Returns: a newly instantiated #NAIFactoryObject object just readen from @reader.
  */
-NAIFactoryObject *
-na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_data, GType type, GSList **messages )
+void
+na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages )
 {
-	static const gchar *thisfn = "na_ifactory_provider_read_item";
-	NAIFactoryObject *serializable;
-	gchar *msg;
-
-	serializable = NULL;
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
-		g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
+		g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
+		g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-		serializable = na_factory_object_new( type );
-
-		if( serializable ){
-			v_factory_provider_read_start( reader, reader_data, serializable, messages );
-			na_factory_object_read( serializable, reader, reader_data, messages );
-			v_factory_provider_read_done( reader, reader_data, serializable, messages );
-
-		} else {
-			msg = g_strdup_printf( "%s: %ld: unknown type", thisfn, ( long ) type );
-			g_warning( "%s", msg );
-			*messages = g_slist_append( *messages, msg );
-		}
+		v_factory_provider_read_start( reader, reader_data, object, messages );
+		na_factory_object_read_item( object, reader, reader_data, messages );
+		v_factory_provider_read_done( reader, reader_data, object, messages );
 	}
-
-	return( serializable );
 }
 
 /**
@@ -197,30 +181,17 @@ na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_d
  * Writes the data down to the FactoryProvider.
  */
 void
-na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages )
+na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages )
 {
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( writer ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
-		v_factory_provider_write_start( writer, writer_data, serializable, messages );
-		na_factory_object_write( serializable, writer, writer_data, messages );
-		v_factory_provider_write_done( writer, writer_data, serializable, messages );
+		v_factory_provider_write_start( writer, writer_data, object, messages );
+		na_factory_object_write_item( object, writer, writer_data, messages );
+		v_factory_provider_write_done( writer, writer_data, object, messages );
 	}
-}
-
-/**
- * na_ifactory_provider_get_idtype_from_gconf_key:
- * @entry: the name of the node we are searching for.
- *
- * Returns: the definition of the data which is exported as @entry in GConf,
- * or %NULL if not found.
- */
-NadfIdType *
-na_ifactory_provider_get_idtype_from_gconf_key( const gchar *entry )
-{
-	return( na_factory_provider_get_idtype_from_gconf_key( entry ));
 }
 
 static void

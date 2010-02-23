@@ -63,6 +63,8 @@ gboolean na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path
 
 gboolean na_gconf_utils_remove_entry     ( GConfClient *gconf, const gchar *path, gchar **message );
 
+GSList  *na_gconf_utils_slist_from_string( const gchar *string );
+
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__ */

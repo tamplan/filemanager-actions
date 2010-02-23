@@ -650,14 +650,15 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	static const gchar *thisfn = "nact_assistant_import_assistant_apply";
 	NactAssistantImport *window;
 	GtkWidget *chooser;
-	GSList *uris, *is, *msg;
-	NAObjectItem *item;
+	GSList *uris, *is;
 	ImportUriStruct *str;
 	GList *items;
 	BaseWindow *mainwnd;
-	gint mode;
+	guint mode;
 	NactApplication *application;
 	NAUpdater *updater;
+	NAIImporterParms parms;
+	guint code;
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	g_assert( NACT_IS_ASSISTANT_IMPORT( wnd ));
@@ -679,14 +680,20 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	items = NULL;
 	for( is = uris ; is ; is = is->next ){
 
-		msg = NULL;
-		item = na_importer_import( NA_PIVOT( updater ), ( const gchar * ) is->data, mode, NULL, NULL, &msg );
+		parms.version = 1;
+		parms.uri = ( gchar * ) is->data;
+		parms.mode = mode;
+		parms.messages = NULL;
+		parms.item = NULL;
+		parms.fn = NULL;
+		parms.fn_data = NULL;
+
+		code = na_importer_import_from_uri( NA_PIVOT( updater ), &parms );
 
 		str = g_new0( ImportUriStruct, 1 );
-		str->uri = g_strdup(( const gchar * ) is->data );
-		str->item = item;
-		str->msg = na_core_utils_slist_duplicate( msg );
-		na_core_utils_slist_free( msg );
+		str->uri = g_strdup( parms.uri );
+		str->item = parms.item;
+		str->msg = parms.messages;
 
 		if( str->item ){
 			na_object_check_status( str->item );
