@@ -1,5 +1,12 @@
 2009-02-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* exports/action-5c4fa203-b5d0_post_v1.11_type_3.xml:
+	* exports/config-4c4fa203-b5d0_post_v1.11_type_2.schema:
+	* exports/config_1af5a47e-96d9_v1.schemas:
+	* exports/config_2af5a47e-96d9_pre_v1.11.schemas:
+	* exports/config_3c4fa203-b5d0_post_v1.11_type_1.schemas:
+	Refactor export files to better suit test-reader needs.
+
 	* src/api/Makefile.am:
 	* src/api/na-data-boxed.h:
 	* src/api/na-data-types.h:
