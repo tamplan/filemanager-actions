@@ -68,6 +68,7 @@ G_BEGIN_DECLS
  */
 typedef struct {
 	gchar   *key;						/* static data */
+	gboolean v1;
 	gboolean v2;
 
 	gboolean reader_found;				/* dynamic data */

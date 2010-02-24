@@ -37,6 +37,8 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-gconf-utils.h>
+#include <api/na-data-types.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
 
@@ -93,6 +95,7 @@ struct NAXMLReaderPrivate {
 };
 
 extern NAXMLKeyStr naxml_schema_key_schema_str[];
+extern NAXMLKeyStr naxml_dump_key_entry_str[];
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -107,12 +110,11 @@ static NAXMLReader  *reader_new( void );
 static guint         schema_parse_schema_content( NAXMLReader *reader, xmlNode *node );
 static void          schema_check_for_id( NAXMLReader *reader, xmlNode *iter );
 static void          schema_check_for_type( NAXMLReader *reader, xmlNode *iter );
-static gchar        *schema_get_value( xmlNode *node );
-static gchar        *schema_get_locale_value( xmlNode *node );
 static gchar        *schema_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def );
 
 static guint         dump_parse_list_parms( NAXMLReader *reader, xmlNode *node );
 static guint         dump_parse_entry_content( NAXMLReader *reader, xmlNode *node );
+static void          dump_check_for_type( NAXMLReader *reader, xmlNode *key_node );
 static gchar        *dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def );
 
 static RootNodeStr st_root_node_str[] = {
@@ -218,6 +220,8 @@ static guint         iter_on_list_children( NAXMLReader *reader, xmlNode *first 
 static void          add_message( NAXMLReader *reader, const gchar *format, ... );
 static gchar        *build_key_node_list( NAXMLKeyStr *strlist );
 static gchar        *build_root_node_list( void );
+static gchar        *get_value_from_child_node( xmlNode *node, const gchar *child );
+static gchar        *get_value_from_child_child_node( xmlNode *node, const gchar *first, const gchar *second );
 static gboolean      is_profile_path( NAXMLReader *reader, xmlChar *text );
 static void          reset_node_data( NAXMLReader *reader );
 static xmlNode      *search_for_child_node( xmlNode *node, const gchar *key );
@@ -1201,7 +1205,7 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 
 	if( !strcmp( entry, NAGP_ENTRY_TYPE )){
 		reader->private->type_found = TRUE;
-		gchar *type = schema_get_value( iter->parent );
+		gchar *type = get_value_from_child_node( iter->parent, NAXML_KEY_SCHEMA_NODE_DEFAULT );
 
 		if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
 			reader->private->parms->item = NA_OBJECT_ITEM( na_object_action_new());
@@ -1222,51 +1226,14 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 }
 
 static gchar *
-schema_get_value( xmlNode *node )
-{
-	gchar *value = NULL;
-
-	xmlNode *default_node = search_for_child_node( node, NAXML_KEY_SCHEMA_NODE_DEFAULT );
-	if( default_node ){
-		xmlChar *default_value = xmlNodeGetContent( default_node );
-		if( default_value ){
-			value = g_strdup(( const char * ) default_value );
-			xmlFree( default_value );
-		}
-	}
-
-	return( value );
-}
-
-static gchar *
-schema_get_locale_value( xmlNode *node )
-{
-	gchar *value = NULL;
-
-	xmlNode *locale = search_for_child_node( node, NAXML_KEY_SCHEMA_NODE_LOCALE );
-	if( locale ){
-		xmlNode *default_node = search_for_child_node( locale, NAXML_KEY_SCHEMA_NODE_LOCALE_DEFAULT );
-		if( default_node ){
-			xmlChar *default_value = xmlNodeGetContent( default_node );
-			if( default_value ){
-				value = g_strdup(( const char * ) default_value );
-				xmlFree( default_value );
-			}
-		}
-	}
-
-	return( value );
-}
-
-static gchar *
 schema_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 {
 	gchar *value;
 
 	if( def->localizable ){
-		value = schema_get_locale_value( node );
+		value = get_value_from_child_child_node( node, NAXML_KEY_SCHEMA_NODE_LOCALE, NAXML_KEY_SCHEMA_NODE_LOCALE_DEFAULT );
 	} else {
-		value = schema_get_value( node );
+		value = get_value_from_child_node( node, NAXML_KEY_SCHEMA_NODE_DEFAULT );
 	}
 
 	return( value );
@@ -1283,6 +1250,10 @@ dump_parse_list_parms( NAXMLReader *reader, xmlNode *node )
 
 	code = IMPORTER_CODE_OK;
 
+	xmlChar *path = xmlGetProp( node, ( const xmlChar * ) NAXML_KEY_DUMP_LIST_PARM_BASE );
+	reader->private->item_id = g_path_get_basename(( const gchar * ) path );
+	xmlFree( path );
+
 	return( code );
 }
 
@@ -1291,19 +1262,148 @@ dump_parse_list_parms( NAXMLReader *reader, xmlNode *node )
  * second run: load data
  */
 static guint
-dump_parse_entry_content( NAXMLReader *reader, xmlNode *node )
+dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
 {
+	xmlNode *iter;
+	NAXMLKeyStr *str;
+	int i;
 	guint code;
 
 	code = IMPORTER_CODE_OK;
 
+	for( iter = entry->children ; iter && code == IMPORTER_CODE_OK ; iter = iter->next ){
+
+		if( iter->type != XML_ELEMENT_NODE ){
+			continue;
+		}
+
+		str = NULL;
+		for( i = 0 ; naxml_dump_key_entry_str[i].key && !str ; ++i ){
+			if( !strxcmp( iter->name, naxml_dump_key_entry_str[i].key )){
+				str = naxml_dump_key_entry_str+i;
+			}
+		}
+
+		if( !str ){
+			gchar *node_list = build_key_node_list( naxml_dump_key_entry_str );
+			add_message( reader,
+					ERR_NODE_UNKNOWN,
+					( const char * ) iter->name, iter->line, node_list );
+			g_free( node_list );
+			reader->private->node_ok = FALSE;
+			continue;
+		}
+
+		if( str->reader_found ){
+			add_message( reader,
+					ERR_NODE_ALREADY_FOUND,
+					( const char * ) iter->name, iter->line );
+			reader->private->node_ok = FALSE;
+			continue;
+		}
+
+		str->reader_found = TRUE;
+
+		/* search for the type of the item
+		 */
+		if( !strxcmp( iter->name, NAXML_KEY_DUMP_NODE_KEY )){
+
+			dump_check_for_type( reader, iter );
+
+			if( !reader->private->node_ok ){
+				continue;
+			}
+		}
+	}
+
 	return( code );
 }
 
+/*
+ * check for 'Type'
+ */
+static void
+dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
+{
+	xmlChar *key_content = xmlNodeGetContent( key_node );
+
+	if( !strxcmp( key_content, NAGP_ENTRY_TYPE )){
+		reader->private->type_found = TRUE;
+		gchar *type = get_value_from_child_child_node( key_node->parent, NAXML_KEY_DUMP_NODE_VALUE, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
+
+		if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
+			reader->private->parms->item = NA_OBJECT_ITEM( na_object_action_new());
+
+		} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
+			reader->private->parms->item = NA_OBJECT_ITEM( na_object_menu_new());
+
+		} else {
+			add_message( reader, ERR_NODE_UNKNOWN_TYPE, type, key_node->line );
+			reader->private->node_ok = FALSE;
+		}
+
+		g_free( type );
+	}
+
+	xmlFree( key_content );
+}
+
+/*
+ * string list is converted to GSList, then to a GConf string
+ */
 static gchar *
 dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 {
-	return( NULL );
+	gchar *string;
+	GSList *slist;
+	xmlNode *value_node;
+	xmlNode *list_node;
+	xmlNode *vv_node;
+	xmlChar *text;
+	xmlNode *it;
+
+	string = NULL;
+
+	switch( def->type ){
+		case NAFD_TYPE_STRING:
+		case NAFD_TYPE_LOCALE_STRING:
+		case NAFD_TYPE_UINT:
+		case NAFD_TYPE_BOOLEAN:
+			string = get_value_from_child_child_node( node, NAXML_KEY_DUMP_NODE_VALUE, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
+			break;
+
+		case NAFD_TYPE_STRING_LIST:
+			slist = NULL;
+			value_node = search_for_child_node( node, NAXML_KEY_DUMP_NODE_VALUE );
+
+			if( value_node ){
+				list_node = search_for_child_node( value_node, NAXML_KEY_DUMP_NODE_VALUE_LIST );
+
+				if( list_node ){
+					vv_node = search_for_child_node( list_node, NAXML_KEY_DUMP_NODE_VALUE );
+
+					for( it = vv_node->children ; it ; it = it->next ){
+
+						if( it->type == XML_ELEMENT_NODE &&
+								!strxcmp( it->name, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING )){
+
+							text = xmlNodeGetContent( it );
+							slist = g_slist_append( slist, ( gchar * ) text );
+						}
+
+					}
+				}
+			}
+			string = na_gconf_utils_slist_to_string( slist );
+			na_core_utils_slist_free( slist );
+			break;
+
+		case NAFD_TYPE_POINTER:
+		default:
+			break;
+	}
+
+	return( string );
 }
 
 #if 0
@@ -2173,6 +2273,43 @@ build_root_node_list( void )
 	return( g_string_free( string, FALSE ));
 }
 
+static gchar *
+get_value_from_child_node( xmlNode *node, const gchar *child )
+{
+	gchar *value = NULL;
+
+	xmlNode *value_node = search_for_child_node( node, child );
+	if( value_node ){
+		xmlChar *value_value = xmlNodeGetContent( value_node );
+		if( value_value ){
+			value = g_strdup(( const char * ) value_value );
+			xmlFree( value_value );
+		}
+	}
+
+	return( value );
+}
+
+static gchar *
+get_value_from_child_child_node( xmlNode *node, const gchar *first, const gchar *second )
+{
+	gchar *value = NULL;
+
+	xmlNode *first_node = search_for_child_node( node, first );
+	if( first_node ){
+		xmlNode *second_node = search_for_child_node( first_node, second );
+		if( second_node ){
+			xmlChar *value_value = xmlNodeGetContent( second_node );
+			if( value_value ){
+				value = g_strdup(( const char * ) value_value );
+				xmlFree( value_value );
+			}
+		}
+	}
+
+	return( value );
+}
+
 static gboolean
 is_profile_path( NAXMLReader *reader, xmlChar *text )
 {
@@ -2209,6 +2346,10 @@ reset_node_data( NAXMLReader *reader )
 
 	for( i=0 ; naxml_schema_key_schema_str[i].key ; ++i ){
 		naxml_schema_key_schema_str[i].reader_found = FALSE;
+	}
+
+	for( i=0 ; naxml_dump_key_entry_str[i].key ; ++i ){
+		naxml_dump_key_entry_str[i].reader_found = FALSE;
 	}
 
 	reader->private->node_ok = TRUE;

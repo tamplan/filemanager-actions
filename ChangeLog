@@ -1,5 +1,9 @@
 2009-02-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/naxml-keys.c:
+	* src/io-xml/naxml-keys.h:
+	* src/io-xml/naxml-reader.c: Able to import type 3 XML files.
+
 	* exports/config_1af5a47e-96d9_v1.4.schemas:
 	* src/api/na-data-boxed.h:
 	* src/api/na-ifactory-object-data.h:
