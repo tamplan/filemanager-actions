@@ -80,6 +80,7 @@ gboolean     na_data_boxed_are_equal      ( const NADataBoxed *a, const NADataBo
 gboolean     na_data_boxed_is_valid       ( const NADataBoxed *boxed );
 void         na_data_boxed_dump           ( const NADataBoxed *boxed );
 
+gchar       *na_data_boxed_get_as_string  ( const NADataBoxed *boxed );
 void        *na_data_boxed_get_as_void    ( const NADataBoxed *boxed );
 void         na_data_boxed_get_as_value   ( const NADataBoxed *boxed, GValue *value );
 

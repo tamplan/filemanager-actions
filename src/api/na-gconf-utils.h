@@ -64,6 +64,7 @@ gboolean na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path
 gboolean na_gconf_utils_remove_entry     ( GConfClient *gconf, const gchar *path, gchar **message );
 
 GSList  *na_gconf_utils_slist_from_string( const gchar *string );
+gchar   *na_gconf_utils_slist_to_string  ( GSList *slist );
 
 G_END_DECLS
 

@@ -1,5 +1,12 @@
 2009-02-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-boxed.h:
+	* src/api/na-gconf-utils.h:
+	* src/core/na-data-boxed.c:
+	* src/core/na-factory-object.c:
+	* src/core/na-gconf-utils.c:
+	Make the dump more pretty.
+
 	* exports/action-5c4fa203-b5d0_post_v1.11_type_3.xml:
 	* exports/config-4c4fa203-b5d0_post_v1.11_type_2.schema:
 	* exports/config_1af5a47e-96d9_v1.schemas:

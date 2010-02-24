@@ -677,6 +677,34 @@ na_gconf_utils_slist_from_string( const gchar *value )
 	return( slist );
 }
 
+/**
+ * na_gconf_utils_slist_to_string:
+ * @slist: a #GSList to be displayed.
+ *
+ * Returns: the content of @slist, with the GConf format, as a newly
+ * allocated string which should be g_free() by the caller.
+ */
+gchar *
+na_gconf_utils_slist_to_string( GSList *slist )
+{
+	GSList *is;
+	GString *str = g_string_new( "[" );
+	gboolean first;
+
+	first = TRUE;
+	for( is = slist ; is ; is = is->next ){
+		if( !first ){
+			str = g_string_append( str, "," );
+		}
+		str = g_string_append( str, ( const gchar * ) is->data );
+		first = FALSE;
+	}
+
+	str = g_string_append( str, "]" );
+
+	return( g_string_free( str, FALSE ));
+}
+
 static gboolean
 sync_gconf( GConfClient *gconf, gchar **message )
 {

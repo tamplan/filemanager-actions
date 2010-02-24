@@ -68,6 +68,7 @@ typedef struct {
 	void         ( *dump )            ( const NADataBoxed * );
 	gboolean     ( *are_equal )       ( const NADataBoxed *, const NADataBoxed * );
 	gboolean     ( *is_valid )        ( const NADataBoxed * );
+	gchar *      ( *get_as_string )   ( const NADataBoxed * );
 	void *       ( *get_as_void )     ( const NADataBoxed * );
 	void         ( *get_as_value )    ( const NADataBoxed *, GValue *value );
 	void         ( *set_from_boxed )( NADataBoxed *, const NADataBoxed * );
@@ -92,6 +93,7 @@ static void        string_free( const NADataBoxed *boxed );
 static void        string_dump( const NADataBoxed *boxed );
 static gboolean    string_are_equal( const NADataBoxed *a, const NADataBoxed *b );
 static gboolean    string_is_valid( const NADataBoxed *boxed );
+static gchar      *string_get_as_string( const NADataBoxed *boxed );
 static void       *string_get_as_void( const NADataBoxed *boxed );
 static void        string_get_as_value( const NADataBoxed *boxed, GValue *value );
 static void        string_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *source );
@@ -107,6 +109,7 @@ static void        slist_free( const NADataBoxed *boxed );
 static void        slist_dump( const NADataBoxed *boxed );
 static gboolean    slist_are_equal( const NADataBoxed *a, const NADataBoxed *b );
 static gboolean    slist_is_valid( const NADataBoxed *boxed );
+static gchar      *slist_get_as_string( const NADataBoxed *boxed );
 static void       *slist_get_as_void( const NADataBoxed *boxed );
 static void        slist_get_as_value( const NADataBoxed *boxed, GValue *value );
 static void        slist_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *source );
@@ -119,6 +122,7 @@ static void        bool_free( const NADataBoxed *boxed );
 static void        bool_dump( const NADataBoxed *boxed );
 static gboolean    bool_are_equal( const NADataBoxed *a, const NADataBoxed *b );
 static gboolean    bool_is_valid( const NADataBoxed *boxed );
+static gchar      *bool_get_as_string( const NADataBoxed *boxed );
 static void       *bool_get_as_void( const NADataBoxed *boxed );
 static void        bool_get_as_value( const NADataBoxed *boxed, GValue *value );
 static void        bool_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *source );
@@ -131,6 +135,7 @@ static void        pointer_free( const NADataBoxed *boxed );
 static void        pointer_dump( const NADataBoxed *boxed );
 static gboolean    pointer_are_equal( const NADataBoxed *a, const NADataBoxed *b );
 static gboolean    pointer_is_valid( const NADataBoxed *boxed );
+static gchar      *pointer_get_as_string( const NADataBoxed *boxed );
 static void       *pointer_get_as_void( const NADataBoxed *boxed );
 static void        pointer_get_as_value( const NADataBoxed *boxed, GValue *value );
 static void        pointer_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *source );
@@ -143,6 +148,7 @@ static void        uint_free( const NADataBoxed *boxed );
 static void        uint_dump( const NADataBoxed *boxed );
 static gboolean    uint_are_equal( const NADataBoxed *a, const NADataBoxed *b );
 static gboolean    uint_is_valid( const NADataBoxed *boxed );
+static gchar      *uint_get_as_string( const NADataBoxed *boxed );
 static void       *uint_get_as_void( const NADataBoxed *boxed );
 static void        uint_get_as_value( const NADataBoxed *boxed, GValue *value );
 static void        uint_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *source );
@@ -157,6 +163,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				string_dump,
 				string_are_equal,
 				string_is_valid,
+				string_get_as_string,
 				string_get_as_void,
 				string_get_as_value,
 				string_set_from_boxed,
@@ -170,6 +177,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				string_dump,
 				locale_are_equal,
 				locale_is_valid,
+				string_get_as_string,
 				string_get_as_void,
 				string_get_as_value,
 				string_set_from_boxed,
@@ -183,6 +191,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				slist_dump,
 				slist_are_equal,
 				slist_is_valid,
+				slist_get_as_string,
 				slist_get_as_void,
 				slist_get_as_value,
 				slist_set_from_boxed,
@@ -196,6 +205,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				bool_dump,
 				bool_are_equal,
 				bool_is_valid,
+				bool_get_as_string,
 				bool_get_as_void,
 				bool_get_as_value,
 				bool_set_from_boxed,
@@ -209,6 +219,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				pointer_dump,
 				pointer_are_equal,
 				pointer_is_valid,
+				pointer_get_as_string,
 				pointer_get_as_void,
 				pointer_get_as_value,
 				pointer_set_from_boxed,
@@ -222,6 +233,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				uint_dump,
 				uint_are_equal,
 				uint_is_valid,
+				uint_get_as_string,
 				uint_get_as_void,
 				uint_get_as_value,
 				uint_set_from_boxed,
@@ -229,7 +241,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				uint_set_from_value,
 				uint_set_from_void
 				},
-		{ 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
+		{ 0 }
 };
 
 GType
@@ -524,6 +536,37 @@ na_data_boxed_dump( const NADataBoxed *boxed )
 }
 
 /**
+ * na_data_boxed_get_as_string:
+ * @boxed: the #NADataBoxed whose value is to be set.
+ *
+ * Returns: the value of the @boxed, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+na_data_boxed_get_as_string( const NADataBoxed *boxed )
+{
+	DataBoxedFn *fn;
+	gchar *value;
+
+	g_return_val_if_fail( NA_IS_DATA_BOXED( boxed ), NULL );
+
+	value = NULL;
+
+	if( !boxed->private->dispose_has_run ){
+
+		fn = get_data_boxed_fn( boxed->private->def->type );
+
+		if( fn ){
+			if( fn->get_as_string ){
+				value = ( *fn->get_as_string )( boxed );
+			}
+		}
+	}
+
+	return( value );
+}
+
+/**
  * na_data_boxed_get_as_void:
  * @boxed: the #NADataBoxed whose value is to be set.
  *
@@ -773,6 +816,12 @@ string_is_valid( const NADataBoxed *boxed )
 	return( boxed->private->u.string && strlen( boxed->private->u.string ) > 0 );
 }
 
+static gchar *
+string_get_as_string( const NADataBoxed *boxed )
+{
+	return( g_strdup( boxed->private->u.string ));
+}
+
 static void *
 string_get_as_void( const NADataBoxed *boxed )
 {
@@ -885,6 +934,12 @@ slist_is_valid( const NADataBoxed *boxed )
 	return( boxed->private->u.slist && g_slist_length( boxed->private->u.slist ) > 0 );
 }
 
+static gchar *
+slist_get_as_string( const NADataBoxed *boxed )
+{
+	return( na_gconf_utils_slist_to_string( boxed->private->u.slist ));
+}
+
 static void *
 slist_get_as_void( const NADataBoxed *boxed )
 {
@@ -981,6 +1036,12 @@ bool_is_valid( const NADataBoxed *boxed )
 	return( TRUE );
 }
 
+static gchar *
+bool_get_as_string( const NADataBoxed *boxed )
+{
+	return( g_strdup_printf( "%s", boxed->private->u.boolean ? "True":"False" ));
+}
+
 static void *
 bool_get_as_void( const NADataBoxed *boxed )
 {
@@ -1055,6 +1116,12 @@ pointer_is_valid( const NADataBoxed *boxed )
 	return( boxed->private->u.pointer != NULL );
 }
 
+static gchar *
+pointer_get_as_string( const NADataBoxed *boxed )
+{
+	return( g_strdup_printf( "%p", boxed->private->u.pointer ));
+}
+
 static void *
 pointer_get_as_void( const NADataBoxed *boxed )
 {
@@ -1126,6 +1193,12 @@ static gboolean
 uint_is_valid( const NADataBoxed *boxed )
 {
 	return( boxed->private->u.uint > 0 );
+}
+
+static gchar *
+uint_get_as_string( const NADataBoxed *boxed )
+{
+	return( g_strdup_printf( "%u", boxed->private->u.uint ));
 }
 
 static void *

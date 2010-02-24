@@ -464,13 +464,32 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 void
 na_factory_object_dump( const NAIFactoryObject *object )
 {
+	static const gchar *thisfn = "na_factory_object_dump";
+	static const gchar *prefix = "na-factory-data-";
 	GList *list, *it;
+	guint length;
+	guint l_prefix;
 
+	length = 0;
+	l_prefix = strlen( prefix );
 	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 
 	for( it = list ; it ; it = it->next ){
+		NADataBoxed *boxed = NA_DATA_BOXED( it->data );
+		NADataDef *def = na_data_boxed_get_data_def( boxed );
+		length = MAX( length, strlen( def->name ));
+	}
 
-		na_data_boxed_dump( NA_DATA_BOXED( it->data ));
+	length -= l_prefix;
+	length += 1;
+
+	for( it = list ; it ; it = it->next ){
+		/*na_data_boxed_dump( NA_DATA_BOXED( it->data ));*/
+		NADataBoxed *boxed = NA_DATA_BOXED( it->data );
+		NADataDef *def = na_data_boxed_get_data_def( boxed );
+		gchar *value = na_data_boxed_get_as_string( boxed );
+		g_debug( "%s: %*s=%s", thisfn, length, def->name+l_prefix, value );
+		g_free( value );
 	}
 }
 
