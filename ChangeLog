@@ -1,5 +1,18 @@
 2009-02-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* exports/config_1af5a47e-96d9_v1.4.schemas:
+	* src/api/na-data-boxed.h:
+	* src/api/na-ifactory-object-data.h:
+	* src/core/na-data-boxed.c:
+	* src/core/na-factory-object.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-profile-factory.c:
+	* src/io-xml/naxml-provider.c:
+	* src/io-xml/naxml-reader.c:
+	* src/io-xml/naxml-reader.h: Able to import two profiles.
+
 	* src/api/na-data-boxed.h:
 	* src/api/na-gconf-utils.h:
 	* src/core/na-data-boxed.c:

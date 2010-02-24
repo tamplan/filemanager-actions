@@ -57,6 +57,8 @@ typedef struct {
 	gchar     *root_key;
 	gchar     *list_key;
 	gchar     *element_key;
+	gchar     *key_entry;
+	guint      key_length;
 	guint   ( *fn_root_parms )     ( NAXMLReader *, xmlNode * );
 	guint   ( *fn_list_parms )     ( NAXMLReader *, xmlNode * );
 	guint   ( *fn_element_parms )  ( NAXMLReader *, xmlNode * );
@@ -90,8 +92,6 @@ struct NAXMLReaderPrivate {
 	gboolean      node_ok;
 };
 
-#define SCHEMA_PATH_ID_IDX		4		/* index of item id in a GConf schema key path */
-
 extern NAXMLKeyStr naxml_schema_key_schema_str[];
 
 static GObjectClass *st_parent_class = NULL;
@@ -120,6 +120,8 @@ static RootNodeStr st_root_node_str[] = {
 	{ NAXML_KEY_SCHEMA_ROOT,
 			NAXML_KEY_SCHEMA_LIST,
 			NAXML_KEY_SCHEMA_NODE,
+			NAXML_KEY_SCHEMA_NODE_APPLYTO,
+			6,
 			NULL,
 			NULL,
 			NULL,
@@ -129,6 +131,8 @@ static RootNodeStr st_root_node_str[] = {
 	{ NAXML_KEY_DUMP_ROOT,
 			NAXML_KEY_DUMP_LIST,
 			NAXML_KEY_DUMP_NODE,
+			NAXML_KEY_DUMP_NODE_KEY,
+			1,
 			NULL,
 			dump_parse_list_parms,
 			NULL,
@@ -182,12 +186,12 @@ static GConfReaderStruct reader_str[] = {
 #define ERR_NODE_ALREADY_FOUND		_( "Element %s at line %d already found, ignored." )
 /* i18n: do not translate keywords 'Action' nor 'Menu' */
 #define ERR_NODE_UNKNOWN_TYPE		_( "Unknown type %s found at line %d, while waiting for Action or Menu." )
-#define ERR_PATH_LENGTH				_( "Too many elements in key path %s." )
 #define ERR_MENU_UNWAITED			_( "Unwaited key path %s while importing a menu." )
 #define ERR_ITEM_ID_NOT_FOUND		_( "Item ID not found." )
 #define ERR_NODE_INVALID_ID			_( "Invalid Item ID: waited for %s, found %s at line %d." )
 
 #if 0
+#define ERR_PATH_LENGTH				_( "Too many elements in key path %s." )
 #define ERR_ITEM_LABEL_NOT_FOUND	_( "Item label not found." )
 #define ERR_IGNORED_SCHEMA			_( "Schema is ignored at line %d." )
 #define ERR_UNEXPECTED_NODE			_( "Unexpected '%s' node found at line %d." )
@@ -200,7 +204,12 @@ static GConfReaderStruct reader_str[] = {
 #define ERR_VALUE_ALREADY_SET		_( "Value '%s' already set: new value ignored at line %d." )
 #endif
 
-static void          factory_provider_read_done_action( NAXMLReader *reader, GSList **messages );
+static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text );
+static NADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const NADataDef *def );
+static void          read_done_object_action( NAXMLReader *reader, NAObjectAction *action );
+static void          read_done_object_profile( NAXMLReader *reader, NAObjectProfile *profile );
+static gchar        *read_done_get_next_profile_id( NAXMLReader *reader );
+static void          read_done_load_profile( NAXMLReader *reader, const gchar *profile_id );
 
 static guint         reader_parse_xmldoc( NAXMLReader *reader );
 static guint         iter_on_root_children( NAXMLReader *reader, xmlNode *root );
@@ -209,6 +218,7 @@ static guint         iter_on_list_children( NAXMLReader *reader, xmlNode *first 
 static void          add_message( NAXMLReader *reader, const gchar *format, ... );
 static gchar        *build_key_node_list( NAXMLKeyStr *strlist );
 static gchar        *build_root_node_list( void );
+static gboolean      is_profile_path( NAXMLReader *reader, xmlChar *text );
 static void          reset_node_data( NAXMLReader *reader );
 static xmlNode      *search_for_child_node( xmlNode *node, const gchar *key );
 static int           strxcmp( const xmlChar *a, const char *b );
@@ -620,9 +630,12 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 		if( !reader->private->type_found ){
 			reader->private->parms->item = NA_OBJECT_ITEM( na_object_action_new());
 		}
+	}
 
-		/* now load the data
-		 */
+	/* now load the data
+	 */
+	if( code == IMPORTER_CODE_OK ){
+
 		na_object_set_id( reader->private->parms->item, reader->private->item_id );
 
 		na_ifactory_provider_read_item(
@@ -796,6 +809,22 @@ iter_on_elements_list( NAXMLReader *reader )
 }
 #endif
 
+void
+naxml_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  )
+{
+	static const gchar *thisfn = "naxml_reader_read_start";
+
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+
+	g_debug( "%s: provider=%p, reader_data=%p, object=%p (%s), messages=%p",
+			thisfn,
+			( void * ) provider,
+			( void * ) reader_data,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ),
+			( void * ) messages );
+}
+
 /*
  * this callback function is called by NAIFactoryObject once for each
  * serializable data for the object
@@ -804,49 +833,122 @@ NADataBoxed *
 naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "naxml_reader_read_data";
+	xmlNode *parent_node;
 	GList *ielt;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
-	g_debug( "%s: data=%s", thisfn, def->name );
+	g_debug( "%s: reader_data=%p, object=%p (%s), data=%s",
+			thisfn, ( void * ) reader_data, ( void * ) object, G_OBJECT_TYPE_NAME( object ), def->name );
 
 	if( !def->gconf_entry || !strlen( def->gconf_entry )){
 		g_warning( "%s: GConf entry is not set for NADataDef %s", thisfn, def->name );
 		return( NULL );
 	}
 
-	gboolean found = FALSE;
 	NADataBoxed *boxed = NULL;
 	NAXMLReader *reader = NAXML_READER( reader_data );
 
-	for( ielt = reader->private->nodes ; ielt && !found ; ielt = ielt->next ){
+	/*g_debug( "naxml_reader_read_data: nodes=%p (count=%d)",
+				 ( void * ) reader->private->nodes, g_list_length( reader->private->nodes ));*/
+	for( ielt = reader->private->nodes ; ielt && !boxed ; ielt = ielt->next ){
 
-		xmlNode *schema = ( xmlNode * ) ielt->data;
-		xmlNode *applyto = search_for_child_node( schema, NAXML_KEY_SCHEMA_NODE_APPLYTO );
+		parent_node = ( xmlNode * ) ielt->data;
+		xmlNode *entry_node = search_for_child_node( parent_node, reader->private->root_node_str->key_entry );
 
-		if( !applyto ){
-			g_warning( "%s: no 'applyto' node in schema at line %u", thisfn, schema->line );
+		if( !entry_node ){
+			g_warning( "%s: no '%s' child in node at line %u", thisfn, reader->private->root_node_str->key_entry, parent_node->line );
 
 		} else {
-			xmlChar *text = xmlNodeGetContent( applyto );
-			gchar *entry = g_path_get_basename(( const gchar * ) text );
+			xmlChar *text = xmlNodeGetContent( entry_node );
+			/*g_debug( "naxml_reader_read_data: trying %s", ( const gchar * ) text );*/
 
-			if( !strcmp( entry, def->gconf_entry )){
-				found = TRUE;
-
-				if( reader->private->root_node_str->fn_get_value ){
-					gchar *value = ( *reader->private->root_node_str->fn_get_value )( reader, schema, def );
-					boxed = na_data_boxed_new( def );
-					na_data_boxed_set_from_string( boxed, value );
-					g_free( value );
-				}
+			if( read_data_is_path_adhoc_for_object( reader, object, text )){
+				boxed = read_data_boxed_from_node( reader, text, parent_node, def );
 			}
 
-			g_free( entry );
 			xmlFree( text );
 		}
 	}
+
+	if( boxed ){
+		reader->private->nodes = g_list_remove( reader->private->nodes, parent_node );
+	}
+
+	return( boxed );
+}
+
+static gboolean
+read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text )
+{
+	gboolean adhoc;
+	GSList *path_slist;
+	guint path_length;
+	gchar *node_profile_id;
+	gchar *factory_profile_id;
+
+	adhoc = TRUE;
+	path_slist = na_core_utils_slist_from_split(( const gchar * ) text, "/" );
+	path_length = g_slist_length( path_slist );
+
+	if( NA_IS_OBJECT_ITEM( object )){
+		if( path_length != reader->private->root_node_str->key_length ){
+			adhoc = FALSE;
+		}
+
+	} else if( !is_profile_path( reader, text )){
+		adhoc = FALSE;
+		/*g_debug( "%s not adhoc as not profile path", ( const gchar * ) text );*/
+
+	} else {
+		gchar *key_dirname = g_path_get_dirname(( const gchar * ) text );
+		node_profile_id = g_path_get_basename( key_dirname );
+		g_free( key_dirname );
+
+		factory_profile_id = na_object_get_id( object );
+
+		if( strcmp( node_profile_id, factory_profile_id ) != 0 ){
+			adhoc = FALSE;
+			/*g_debug( "%s not adhoc (%s) as not searched profile %s",
+					( const gchar * ) text, node_profile_id, factory_profile_id );*/
+		}
+
+		g_free( factory_profile_id );
+		g_free( node_profile_id );
+}
+
+	na_core_utils_slist_free( path_slist );
+
+	return( adhoc );
+}
+
+static NADataBoxed *
+read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const NADataDef *def )
+{
+	NADataBoxed *boxed;
+	gchar *entry;
+	gchar *value;
+
+	boxed = NULL;
+	entry = g_path_get_basename(( const gchar * ) text );
+
+	/*g_debug( "read_data_boxed_from_node: node_entry=%s def_gconf=%s",
+			entry, def->gconf_entry );*/
+
+	/* read the value
+	 */
+	if( !strcmp( entry, def->gconf_entry )){
+
+		if( reader->private->root_node_str->fn_get_value ){
+			value = ( *reader->private->root_node_str->fn_get_value )( reader, parent, def );
+			boxed = na_data_boxed_new( def );
+			na_data_boxed_set_from_string( boxed, value );
+			g_free( value );
+		}
+	}
+
+	g_free( entry );
 
 	return( boxed );
 }
@@ -862,21 +964,122 @@ naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, c
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-	g_debug( "%s: provider=%p, reader_data=%p, object=%p, messages=%p",
-			thisfn, ( void * ) provider, ( void * ) reader_data, ( void * ) object, ( void * ) messages );
+	g_debug( "%s: provider=%p, reader_data=%p, object=%p (%s), messages=%p",
+			thisfn,
+			( void * ) provider,
+			( void * ) reader_data,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ),
+			( void * ) messages );
 
 	if( NA_IS_OBJECT_ACTION( object )){
-		factory_provider_read_done_action( NAXML_READER( reader_data ), messages );
+		read_done_object_action( NAXML_READER( reader_data ), NA_OBJECT_ACTION( object ));
+	}
+
+	if( NA_IS_OBJECT_PROFILE( object )){
+		read_done_object_profile( NAXML_READER( reader_data ), NA_OBJECT_PROFILE( object ));
+	}
+
+	g_debug( "quitting naxml_read_done for %s at %p", G_OBJECT_TYPE_NAME( object ), ( void * ) object );
+}
+
+/*
+ * if we have detected a pre-v2 action, then the action_read_done() function
+ * has already allocated and define the corresponding profile
+ * -> deals here with v2 and post, i.e. with profiles
+ *
+ * Also note that profiles order has been introduced in 2.29 serie
+ */
+static void
+read_done_object_action( NAXMLReader *reader, NAObjectAction *action )
+{
+	GSList *order, *ip;
+	gchar *profile_id;
+
+	if( !na_object_get_items_count( reader->private->parms->item )){
+
+		/* first attach potential ordered profiles
+		 */
+		order = na_object_get_items_slist( reader->private->parms->item );
+		for( ip = order ; ip ; ip = ip->next ){
+			read_done_load_profile( reader, ( const gchar * ) ip->data );
+		}
+
+		/* then attach unordered ones
+		 */
+		while( 1 ){
+			profile_id = read_done_get_next_profile_id( reader );
+
+			if( profile_id ){
+				read_done_load_profile( reader, profile_id );
+				g_free( profile_id );
+
+			} else {
+				break;
+			}
+		}
 	}
 }
 
 static void
-factory_provider_read_done_action( NAXMLReader *reader, GSList **messages )
+read_done_object_profile( NAXMLReader *reader, NAObjectProfile *profile )
 {
-	/* do we have a pre-v2 action ?
-	 */
-
+	na_object_attach_profile( reader->private->parms->item, profile );
 }
+
+/*
+ * return the first profile id found in the nodes
+ */
+static gchar *
+read_done_get_next_profile_id( NAXMLReader *reader )
+{
+	gchar *profile_id;
+	GList *ip;
+
+	profile_id = NULL;
+
+	/*g_debug( "read_done_get_next_profile_id: nodes=%p (count=%d)",
+			( void * ) reader->private->nodes, g_list_length( reader->private->nodes ));*/
+	for( ip = reader->private->nodes ; ip && !profile_id ; ip = ip->next ){
+		xmlNode *parent_node = ( xmlNode * ) ip->data;
+		xmlNode *entry_node = search_for_child_node( parent_node, reader->private->root_node_str->key_entry );
+		xmlChar *text = xmlNodeGetContent( entry_node );
+
+		/*g_debug( "text=%s, is_profile=%s",
+					( const gchar * ) text, is_profile_path( reader, text ) ? "True":"False" );*/
+
+		if( is_profile_path( reader, text )){
+			gchar *name = g_path_get_dirname(( const gchar * ) text );
+			profile_id = g_path_get_basename( name );
+			g_free( name );
+
+			if( na_object_get_item( reader->private->parms->item, profile_id )){
+				g_free( profile_id );
+				profile_id = NULL;
+			}
+		}
+
+		xmlFree( text );
+	}
+
+	return( profile_id );
+}
+
+static void
+read_done_load_profile( NAXMLReader *reader, const gchar *profile_id )
+{
+	/*g_debug( "naxml_reader_read_done_load_profile: profile_id=%s", profile_id );*/
+
+	NAObjectProfile *profile = na_object_profile_new();
+
+	na_object_set_id( profile, profile_id );
+
+	na_ifactory_provider_read_item(
+			NA_IFACTORY_PROVIDER( reader->private->importer ),
+			reader,
+			NA_IFACTORY_OBJECT( profile ),
+			&reader->private->parms->messages );
+}
+
 /*
  * 'key' and 'applyto' keys: check the id
  * 'applyto' key: check for type
@@ -960,15 +1163,15 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 static void
 schema_check_for_id( NAXMLReader *reader, xmlNode *iter )
 {
-	guint idx = 1;
+	guint idx = 0;
 
 	if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_KEY )){
-		idx = 2;
+		idx = 1;
 	}
 
 	xmlChar *text = xmlNodeGetContent( iter );
 	gchar **path_elts = g_strsplit(( const gchar * ) text, "/", -1 );
-	gchar *id = g_strdup( path_elts[ SCHEMA_PATH_ID_IDX+idx-1 ] );
+	gchar *id = g_strdup( path_elts[ reader->private->root_node_str->key_length+idx-2 ] );
 	g_strfreev( path_elts );
 	xmlFree( text );
 
@@ -1968,6 +2171,23 @@ build_root_node_list( void )
 	}
 
 	return( g_string_free( string, FALSE ));
+}
+
+static gboolean
+is_profile_path( NAXMLReader *reader, xmlChar *text )
+{
+	gboolean is_profile;
+	GSList *path_slist;
+	guint path_length;
+
+	path_slist = na_core_utils_slist_from_split(( const gchar * ) text, "/" );
+	path_length = g_slist_length( path_slist );
+
+	is_profile = ( path_length == 1+reader->private->root_node_str->key_length );
+
+	na_core_utils_slist_free( path_slist );
+
+	return( is_profile );
 }
 
 #if 0

@@ -54,21 +54,6 @@ NADataDef data_def_id [] = {
 				NULL,
 				FALSE },
 
-	{ NAFO_DATA_LABEL,
-				TRUE,
-				"NAObjectId label",
-				"Main label of the NAObjectId object. " \
-				"Serves as a default for the toolbar label of an action.",
-				NAFD_TYPE_LOCALE_STRING,
-				"",
-				TRUE,
-				TRUE,
-				FALSE,
-				TRUE,
-				"label",
-				NULL,
-				FALSE },
-
 	{ NAFO_DATA_PARENT,
 				FALSE,
 				"NAObjectId Parent",

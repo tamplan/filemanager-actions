@@ -337,6 +337,10 @@ na_factory_object_move_boxed( NAIFactoryObject *target, const NAIFactoryObject *
 			g_object_set_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA, src_list );
 
 			attach_boxed_to_object( target, boxed );
+
+			NADataDef *src_def = na_data_boxed_get_data_def( boxed );
+			NADataDef *tgt_def = na_factory_object_get_data_def( target, src_def->name );
+			na_data_boxed_set_data_def( boxed, tgt_def );
 		}
 	}
 }
@@ -591,7 +595,6 @@ na_factory_object_read_item( NAIFactoryObject *serializable, const NAIFactoryPro
 		NADataGroup *groups = v_get_groups( serializable );
 
 		if( groups ){
-			free_data_boxed_list( serializable );
 			v_read_start( serializable, reader, reader_data, messages );
 
 			NafoRWIter *iter = g_new0( NafoRWIter, 1 );

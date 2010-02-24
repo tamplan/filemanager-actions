@@ -80,18 +80,17 @@ gboolean     na_data_boxed_are_equal      ( const NADataBoxed *a, const NADataBo
 gboolean     na_data_boxed_is_valid       ( const NADataBoxed *boxed );
 void         na_data_boxed_dump           ( const NADataBoxed *boxed );
 
+void         na_data_boxed_set_data_def   ( NADataBoxed *boxed, const NADataDef *def );
+
 gchar       *na_data_boxed_get_as_string  ( const NADataBoxed *boxed );
 void        *na_data_boxed_get_as_void    ( const NADataBoxed *boxed );
 void         na_data_boxed_get_as_value   ( const NADataBoxed *boxed, GValue *value );
 
 void         na_data_boxed_set_default    ( NADataBoxed *boxed );
 void         na_data_boxed_set_from_boxed ( NADataBoxed *boxed, const NADataBoxed *value );
+void         na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value );
 void         na_data_boxed_set_from_value ( NADataBoxed *boxed, const GValue *value );
 void         na_data_boxed_set_from_void  ( NADataBoxed *boxed, const void *value );
-
-/* -- */
-
-void         na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value );
 
 G_END_DECLS
 

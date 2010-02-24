@@ -43,10 +43,10 @@ G_BEGIN_DECLS
 
 #define NA_FACTORY_OBJECT_ID_GROUP			"na-factory-group-id"
 #define NAFO_DATA_ID						"na-factory-data-id"
-#define NAFO_DATA_LABEL						"na-factory-data-label"
 #define NAFO_DATA_PARENT					"na-factory-data-parent"
 
 #define NA_FACTORY_OBJECT_ITEM_GROUP		"na-factory-group-item"
+#define NAFO_DATA_LABEL						"na-factory-data-label"
 #define NAFO_DATA_TOOLTIP					"na-factory-data-tooltip"
 #define NAFO_DATA_ICON						"na-factory-data-icon"
 #define NAFO_DATA_DESCRIPTION				"na-factory-data-description"
@@ -71,6 +71,7 @@ G_BEGIN_DECLS
 #define NA_FACTORY_OBJECT_MENU_GROUP		"na-factory-group-menu"
 
 #define NA_FACTORY_OBJECT_PROFILE_GROUP		"na-factory-group-profile"
+#define NAFO_DATA_DESCNAME					"na-factory-data-descname"
 #define NAFO_DATA_PATH						"na-factory-data-path"
 #define NAFO_DATA_PARAMETERS				"na-factory-data-parameters"
 #define NAFO_DATA_BASENAMES					"na-factory-data-basenames"

@@ -40,6 +40,21 @@ extern NADataDef data_def_id [];			/* defined in na-object-id-factory.c */
 
 static NADataDef data_def_profile [] = {
 
+	{ NAFO_DATA_DESCNAME,
+				TRUE,
+				"NAObjectProfile label",
+				"Main label of the NAObjectProfile profile. " \
+				"May be used as a description for the function of the profile.",
+				NAFD_TYPE_LOCALE_STRING,
+				"",
+				TRUE,
+				TRUE,
+				FALSE,
+				TRUE,
+				"desc-name",
+				NULL,
+				FALSE },
+
 	{ NAFO_DATA_PATH,
 				TRUE,
 				"Command path",

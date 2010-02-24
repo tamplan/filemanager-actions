@@ -40,6 +40,21 @@ static void free_items_list( void * list );
 
 NADataDef data_def_item [] = {
 
+	{ NAFO_DATA_LABEL,
+				TRUE,
+				"NAObjectItem label",
+				"Main label of the NAObjectItem object. " \
+				"Serves as a default for the toolbar label of an action.",
+				NAFD_TYPE_LOCALE_STRING,
+				"",
+				TRUE,
+				TRUE,
+				FALSE,
+				TRUE,
+				"label",
+				NULL,
+				FALSE },
+
 	{ NAFO_DATA_TOOLTIP,
 				TRUE,
 				"Item tooltip",

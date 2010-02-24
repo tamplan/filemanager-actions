@@ -516,6 +516,28 @@ na_data_boxed_is_valid( const NADataBoxed *boxed )
 }
 
 /**
+ * na_data_boxed_set_data_def:
+ * @boxed: this #NADataBoxed object.
+ * @def: the new #NADataDef to be set.
+ *
+ * Changes the #NADataDef a @boxed points to:
+ * -> the new type must be the same that the previous one.
+ * -> value is unchanged.
+ */
+void
+na_data_boxed_set_data_def( NADataBoxed *boxed, const NADataDef *new_def )
+{
+	g_return_if_fail( NA_IS_DATA_BOXED( boxed ));
+	g_return_if_fail( new_def != NULL );
+	g_return_if_fail( new_def->type == boxed->private->def->type );
+
+	if( !boxed->private->dispose_has_run ){
+
+		boxed->private->def = ( NADataDef * ) new_def;
+	}
+}
+
+/**
  * na_data_boxed_dump:
  * @boxed: this #NADataBoxed object.
  *

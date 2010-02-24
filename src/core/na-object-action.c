@@ -371,12 +371,15 @@ ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider
 static gboolean
 check_for_obsoleted_iter( const NAIFactoryObject *object, NADataBoxed *boxed, IterForObsoletedParms *parms )
 {
-	NADataDef *def = na_data_boxed_get_data_def( boxed );
+	NADataDef *action_def = na_data_boxed_get_data_def( boxed );
 
-	if( def->obsoleted ){
-		NADataDef *profile_def = na_factory_object_get_data_def( NA_IFACTORY_OBJECT( parms->profile ), def->name );
+	if( action_def->obsoleted ){
+		NADataDef *profile_def = na_factory_object_get_data_def( NA_IFACTORY_OBJECT( parms->profile ), action_def->name );
 
-		if( profile_def ){
+		if( profile_def && !profile_def->obsoleted ){
+			g_debug( "na_object_action_check_for_obsoleted_iter: " \
+					 "boxed=%p (%s) marked to be moved from action body to profile",
+							 ( void * ) boxed, action_def->name );
 			parms->moved =g_list_prepend( parms->moved, boxed );
 		}
 	}

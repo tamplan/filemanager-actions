@@ -281,7 +281,7 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = ifactory_provider_get_version;
-	iface->read_start = NULL;
+	iface->read_start = naxml_reader_read_start;
 	iface->read_data = naxml_reader_read_data;
 	iface->read_done = naxml_reader_read_done;
 	iface->write_start = NULL;
