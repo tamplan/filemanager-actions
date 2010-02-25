@@ -102,6 +102,9 @@ typedef struct {
 #define IPREFS_RELABEL_ACTIONS				"iprefs-relabel-actions"
 #define IPREFS_RELABEL_PROFILES				"iprefs-relabel-profiles"
 
+#define IPREFS_IMPORT_ITEMS_IMPORT_MODE		"import-mode"
+#define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
+
 /* alphabetical order values
  */
 enum {
@@ -112,8 +115,11 @@ enum {
 
 GType        na_iprefs_get_type( void );
 
-gint         na_iprefs_get_order_mode( NAIPrefs *instance );
-void         na_iprefs_set_order_mode( NAIPrefs *instance, gint mode );
+gint         na_iprefs_get_order_mode   ( NAIPrefs *instance );
+void         na_iprefs_set_order_mode   ( NAIPrefs *instance, gint mode );
+
+guint        na_iprefs_get_import_mode  ( GConfClient *gconf, const gchar *pref );
+void         na_iprefs_set_import_mode  ( GConfClient *gconf, const gchar *pref, guint mode );
 
 GConfClient *na_iprefs_get_gconf_client ( const NAIPrefs *instance );
 

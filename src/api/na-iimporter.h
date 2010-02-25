@@ -41,6 +41,8 @@
  * Nautilus-Actions v 2.30 - API version:  1
  */
 
+#include <gtk/gtk.h>
+
 #include "na-object-item.h"
 
 G_BEGIN_DECLS
@@ -112,21 +114,24 @@ enum {
 
 /* parameters via a structure
  */
-typedef gboolean ( *NAIImporterCheckFn )( const NAObjectItem *, void *fn_data );
+typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void *fn_data );
 
 struct NAIImporterParms {
 	guint              version;			/* i 1: version of this structure */
 	gchar             *uri;				/* i 1: uri of the file to be imported */
 	guint              mode;			/* i 1: import mode */
+	GtkWindow         *window;			/* i 1: a window which will act as a parent of the ask dialog */
 	NAObjectItem      *item;			/*  o1: imported NAObjectItem-derived object */
-	NAIImporterCheckFn fn;				/* i 1: a function to check the existance of the imported item */
-	void              *fn_data;			/* i 1: data function */
+	NAIImporterCheckFn check_fn;		/* i 1: a function to check the existance of the imported item */
+	void              *check_fn_data;	/* i 1: data function */
 	GSList            *messages;		/* io1: a #GSList list of localized strings;
 										 *       the provider may append messages to this list,
 										 *       but shouldn't reinitialize it. */
 };
 
 GType na_iimporter_get_type( void );
+
+guint na_iimporter_ask_user( const NAIImporter *importer, const NAIImporterParms *parms, const NAObjectItem *existing );
 
 G_END_DECLS
 

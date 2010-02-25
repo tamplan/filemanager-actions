@@ -77,8 +77,8 @@ main( int argc, char **argv )
 	parms.uri = uri;
 	parms.mode = IMPORTER_MODE_ASK;
 	parms.item = NULL;
-	parms.fn = NULL;
-	parms.fn_data = NULL;
+	parms.check_fn = NULL;
+	parms.check_fn_data = NULL;
 	parms.messages = NULL;
 
 	guint code = na_importer_import_from_uri( pivot, &parms );

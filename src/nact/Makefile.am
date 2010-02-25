@@ -101,8 +101,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-icommand-tab.h									\
 	nact-iconditions-tab.c								\
 	nact-iconditions-tab.h								\
-	nact-import-ask.c									\
-	nact-import-ask.h									\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
 	nact-main.c											\

@@ -299,12 +299,13 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	gboolean add_about_item;
 	gboolean create_root_menu;
 	gboolean relabel;
-	gint import_mode;
+	guint import_mode;
 	GQuark export_format;
 	GtkWidget *container;
 	GtkWidget *button;
 	gboolean esc_quit, esc_confirm;
 	GtkTreeView *listview;
+	GConfClient *gconf;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
@@ -369,7 +370,8 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 
 	/* third tab: import tool
 	 */
-	import_mode = nact_iprefs_get_import_mode( BASE_WINDOW( editor ), IPREFS_IMPORT_ITEMS_IMPORT_MODE );
+	gconf = gconf_client_get_default();
+	import_mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
 	switch( import_mode ){
 		case IMPORTER_MODE_ASK:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
@@ -468,10 +470,11 @@ save_preferences( NactPreferencesEditor *editor )
 	gint order_mode;
 	gboolean enabled;
 	gboolean relabel;
-	gint import_mode;
+	guint import_mode;
 	GtkWidget *container;
 	GQuark export_format;
 	gboolean esc_quit, esc_confirm;
+	GConfClient *gconf;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
@@ -542,7 +545,8 @@ save_preferences( NactPreferencesEditor *editor )
 			}
 		}
 	}
-	nact_iprefs_set_import_mode( BASE_WINDOW( editor ), IPREFS_IMPORT_ITEMS_IMPORT_MODE, import_mode );
+	gconf = gconf_client_get_default();
+	na_iprefs_set_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE, import_mode );
 
 	/* fourth tab: export tool
 	 */

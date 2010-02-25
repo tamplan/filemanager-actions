@@ -34,7 +34,6 @@
 #endif
 
 #include <api/na-gconf-utils.h>
-#include <api/na-iimporter.h>
 
 #include <core/na-iprefs.h>
 
@@ -45,17 +44,6 @@
  */
 struct NactIPrefsInterfacePrivate {
 	GConfClient *client;
-};
-
-#define DEFAULT_IMPORT_MODE_INT				IMPORTER_MODE_NO_IMPORT
-#define DEFAULT_IMPORT_MODE_STR				"NoImport"
-
-static GConfEnumStringPair import_mode_table[] = {
-	{ IMPORTER_MODE_NO_IMPORT,				DEFAULT_IMPORT_MODE_STR },
-	{ IMPORTER_MODE_RENUMBER,				"Renumber" },
-	{ IMPORTER_MODE_OVERRIDE,				"Override" },
-	{ IMPORTER_MODE_ASK,					"Ask" },
-	{ 0, NULL }
 };
 
 static gboolean st_initialized = FALSE;
@@ -199,76 +187,6 @@ nact_iprefs_set_export_format( const BaseWindow *window, const gchar *name, GQua
 				window,
 				name,
 				g_quark_to_string( format ));
-	}
-}
-
-/**
- * nact_iprefs_get_import_mode:
- * @instance: this #NAIPrefs interface instance.
- * @name: name of the import key to be readen
- *
- * Returns: the import mode currently set.
- *
- * Note: this function returns a suitable default value even if the key
- * is not found in GConf preferences or no schema has been installed.
- *
- * Note: please take care of keeping the default value synchronized with
- * those defined in schemas.
- */
-gint
-nact_iprefs_get_import_mode( const BaseWindow *window, const gchar *name )
-{
-	gint import_mode = DEFAULT_IMPORT_MODE_INT;
-	gint import_int;
-	gchar *import_str;
-	NactApplication *application;
-	NAUpdater *updater;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), DEFAULT_IMPORT_MODE_INT );
-
-	if( st_initialized && !st_finalized ){
-
-		application = NACT_APPLICATION( base_window_get_application( window ));
-		updater = nact_application_get_updater( application );
-
-		import_str = na_iprefs_read_string(
-				NA_IPREFS( updater ),
-				name,
-				DEFAULT_IMPORT_MODE_STR );
-
-		if( gconf_string_to_enum( import_mode_table, import_str, &import_int )){
-			import_mode = import_int;
-		}
-
-		g_free( import_str );
-	}
-
-	return( import_mode );
-}
-
-/**
- * nact_iprefs_set_import_mode:
- * @instance: this #NAIPrefs interface instance.
- * @mode: the new value to be written.
- *
- * Writes the current status of 'import mode' to the GConf
- * preference system.
- */
-void
-nact_iprefs_set_import_mode( const BaseWindow *window, const gchar *name, gint mode )
-{
-	const gchar *import_str;
-
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-
-	if( st_initialized && !st_finalized ){
-
-		import_str = gconf_enum_to_string( import_mode_table, mode );
-
-		nact_iprefs_write_string(
-				window,
-				name,
-				import_str ? import_str : DEFAULT_IMPORT_MODE_STR );
 	}
 }
 

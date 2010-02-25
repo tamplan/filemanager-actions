@@ -77,7 +77,7 @@ GType           nact_main_window_get_type( void );
 NactMainWindow *nact_main_window_new( BaseApplication *application );
 
 NactClipboard  *nact_main_window_get_clipboard     ( const NactMainWindow *window );
-NAObjectItem   *nact_main_window_get_item          ( const NactMainWindow *window, const gchar *uuid );
+NAObjectItem   *nact_main_window_get_item          ( const NactMainWindow *window, const gchar *id );
 gboolean        nact_main_window_has_modified_items( const NactMainWindow *window );
 void            nact_main_window_move_to_deleted   ( NactMainWindow *window, GList *items );
 void            nact_main_window_reload            ( NactMainWindow *window );

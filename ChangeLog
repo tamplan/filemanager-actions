@@ -1,5 +1,23 @@
 2009-02-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iimporter.h:
+	* src/core/Makefile.am:
+	* src/core/na-iimporter.c:
+	* src/core/na-importer-ask.c:
+	* src/core/na-importer-ask.h:
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h:
+	* src/io-xml/naxml-reader.c:
+	* src/nact/Makefile.am:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h:
+	* src/nact/nact-main-window.h:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	* src/test/test-reader.c: ImporterAsk dialog.
+
 	* src/io-xml/naxml-keys.c:
 	* src/io-xml/naxml-keys.h:
 	* src/io-xml/naxml-reader.c: Able to import type 3 XML files.

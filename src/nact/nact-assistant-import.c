@@ -66,12 +66,22 @@ enum {
 	ASSIST_PAGE_DONE
 };
 
+/* a structure which hosts successfully imported files
+ */
 typedef struct {
 	gchar        *uri;
 	NAObjectItem *item;
 	GSList       *msg;
 }
 	ImportUriStruct;
+
+/* a structure to check for existance of imported items
+ */
+typedef struct {
+	NactAssistantImport *assistant;
+	GList               *imported;
+}
+	ImportCheck;
 
 /* private class data
  */
@@ -89,33 +99,34 @@ struct NactAssistantImportPrivate {
 
 static BaseAssistantClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NactAssistantImportClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_dispose( GObject *application );
-static void     instance_finalize( GObject *application );
+static GType         register_type( void );
+static void          class_init( NactAssistantImportClass *klass );
+static void          instance_init( GTypeInstance *instance, gpointer klass );
+static void          instance_dispose( GObject *application );
+static void          instance_finalize( GObject *application );
 
 static NactAssistantImport *assist_new( BaseWindow *parent );
 
-static gchar   *window_get_iprefs_window_id( const BaseWindow *window );
-static gchar   *window_get_dialog_name( const BaseWindow *dialog );
+static gchar        *window_get_iprefs_window_id( const BaseWindow *window );
+static gchar        *window_get_dialog_name( const BaseWindow *dialog );
 
-static void     on_initial_load_dialog( NactAssistantImport *dialog, gpointer user_data );
-static void     on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data );
-static void     runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant );
-static void     runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant );
-static void     on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
-static gboolean has_readable_files( GSList *uris );
-static void     runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant );
-static void     set_import_mode( NactAssistantImport *window, gint mode );
+static void          on_initial_load_dialog( NactAssistantImport *dialog, gpointer user_data );
+static void          on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data );
+static void          runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant );
+static void          runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant );
+static void          on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
+static gboolean      has_readable_files( GSList *uris );
+static void          runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant );
+static void          set_import_mode( NactAssistantImport *window, gint mode );
 
-static void     assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
-static void     prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
-static gint     get_import_mode( NactAssistantImport *window );
-static gchar   *add_import_mode( NactAssistantImport *window, const gchar *text );
-static void     assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
-static void     prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
-static void     free_results( GSList *list );
+static void          assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
+static void          prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
+static gint          get_import_mode( NactAssistantImport *window );
+static gchar        *add_import_mode( NactAssistantImport *window, const gchar *text );
+static void          assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
+static NAObjectItem *check_for_existance( const NAObjectItem *, ImportCheck *check );
+static void          prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
+static void          free_results( GSList *list );
 
 GType
 nact_assistant_import_get_type( void )
@@ -465,11 +476,13 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_import_runtime_init_duplicates";
 	GtkWidget *page;
-	gint mode;
+	guint mode;
+	GConfClient *gconf;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	mode = nact_iprefs_get_import_mode( BASE_WINDOW( window ), IPREFS_IMPORT_ITEMS_IMPORT_MODE );
+	gconf = gconf_client_get_default();
+	mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
 	set_import_mode( window, mode );
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
@@ -583,8 +596,10 @@ get_import_mode( NactAssistantImport *window )
 	mode = IMPORTER_MODE_NO_IMPORT;
 	if( gtk_toggle_button_get_active( renumber_button )){
 		mode = IMPORTER_MODE_RENUMBER;
+
 	} else if( gtk_toggle_button_get_active( override_button )){
 		mode = IMPORTER_MODE_OVERRIDE;
+
 	} else if( gtk_toggle_button_get_active( ask_button )){
 		mode = IMPORTER_MODE_ASK;
 	}
@@ -652,13 +667,14 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	GtkWidget *chooser;
 	GSList *uris, *is;
 	ImportUriStruct *str;
-	GList *items;
+	GList *imported_items;
 	BaseWindow *mainwnd;
 	guint mode;
 	NactApplication *application;
 	NAUpdater *updater;
 	NAIImporterParms parms;
 	guint code;
+	ImportCheck check_str;
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	g_assert( NACT_IS_ASSISTANT_IMPORT( wnd ));
@@ -672,32 +688,36 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( wnd )));
 	updater = nact_application_get_updater( application );
+	imported_items = NULL;
+	check_str.assistant = window;
+	check_str.imported = imported_items;
 
 	/* import actions
 	 * getting results in the same order than uris
 	 * simultaneously building the actions list
 	 */
-	items = NULL;
 	for( is = uris ; is ; is = is->next ){
 
 		parms.version = 1;
 		parms.uri = ( gchar * ) is->data;
 		parms.mode = mode;
+		parms.window = base_window_get_toplevel( base_application_get_main_window( BASE_APPLICATION( application )));
 		parms.messages = NULL;
 		parms.item = NULL;
-		parms.fn = NULL;
-		parms.fn_data = NULL;
+		parms.check_fn = ( NAIImporterCheckFn ) &check_for_existance;
+		parms.check_fn_data = &check_str;
 
 		code = na_importer_import_from_uri( NA_PIVOT( updater ), &parms );
 
 		str = g_new0( ImportUriStruct, 1 );
 		str->uri = g_strdup( parms.uri );
 		str->item = parms.item;
-		str->msg = parms.messages;
+		str->msg = na_core_utils_slist_duplicate( parms.messages );
+		na_core_utils_slist_free( parms.messages );
 
 		if( str->item ){
 			na_object_check_status( str->item );
-			items = g_list_prepend( items, str->item );
+			imported_items = g_list_prepend( imported_items, str->item );
 		}
 
 		window->private->results = g_slist_prepend( window->private->results, str );
@@ -708,9 +728,44 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	/* then insert the list
 	 * assuring that actions will be inserted in the same order as uris
 	 */
-	items = g_list_reverse( items );
-	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( mainwnd ), items, NULL );
-	na_object_unref_items( items );
+	imported_items = g_list_reverse( imported_items );
+	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( mainwnd ), imported_items, NULL );
+	na_object_unref_items( imported_items );
+}
+
+static NAObjectItem *
+check_for_existance( const NAObjectItem *item, ImportCheck *check )
+{
+	NAObjectItem *exists;
+	NactApplication *application;
+	NactMainWindow *main_window;
+	GList *ip;
+
+	exists = NULL;
+	gchar *current_id = na_object_get_id( item );
+	g_debug( "nact_assistant_import_check_for_existance: current_id=%s", current_id );
+
+	/* is the imported item already in the current importation list ?
+	 */
+	for( ip = check->imported ; ip && !exists ; ip = ip->next ){
+		gchar *id = na_object_get_id( ip->data );
+		if( !strcmp( current_id, id )){
+			exists = NA_OBJECT_ITEM( ip->data );
+		}
+		g_free( id );
+	}
+
+	/* else, is it in the main window list ?
+	 */
+	if( !exists ){
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( check->assistant )));
+		main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
+		exists = nact_main_window_get_item( main_window, current_id );
+	}
+
+	g_free( current_id );
+
+	return( exists );
 }
 
 static void
@@ -722,7 +777,8 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	GSList *is, *im;
 	ImportUriStruct *str;
 	GFile *file;
-	gint mode;
+	guint mode;
+	GConfClient *gconf;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -786,7 +842,8 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	g_free( text );
 
 	mode = get_import_mode( window );
-	nact_iprefs_set_import_mode( BASE_WINDOW( window ), IPREFS_IMPORT_ITEMS_IMPORT_MODE, mode );
+	gconf = gconf_client_get_default();
+	na_iprefs_set_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE, mode );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	base_assistant_set_warn_on_cancel( BASE_ASSISTANT( window ), FALSE );

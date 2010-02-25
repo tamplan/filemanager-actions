@@ -65,8 +65,6 @@ typedef struct {
 #define IPREFS_EXPORT_FORMAT_DEFAULT			"GConfEntry"
 
 #define IPREFS_IMPORT_ITEMS_FOLDER_URI			"import-folder-uri"
-#define IPREFS_IMPORT_ITEMS_IMPORT_MODE			"import-mode"
-#define IPREFS_IMPORT_ASK_LAST_MODE				"import-ask-user-last-mode"
 
 #define IPREFS_ASSIST_ESC_QUIT					"assistant-esc-quit"
 #define IPREFS_ASSIST_ESC_CONFIRM				"assistant-esc-confirm"
@@ -83,9 +81,6 @@ GType nact_iprefs_get_type( void );
 
 GQuark nact_iprefs_get_export_format( const BaseWindow *window, const gchar *pref );
 void   nact_iprefs_set_export_format( const BaseWindow *window, const gchar *pref, GQuark format );
-
-gint  nact_iprefs_get_import_mode   ( const BaseWindow *window, const gchar *pref );
-void  nact_iprefs_set_import_mode   ( const BaseWindow *window, const gchar *pref, gint mode );
 
 void  nact_iprefs_migrate_key       ( const BaseWindow *window, const gchar *old_key, const gchar *new_key );
 

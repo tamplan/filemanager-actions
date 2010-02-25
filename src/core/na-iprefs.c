@@ -33,6 +33,7 @@
 #endif
 
 #include <api/na-gconf-utils.h>
+#include <api/na-iimporter.h>
 
 #include "na-iprefs.h"
 
@@ -49,6 +50,17 @@ static GConfEnumStringPair order_mode_table[] = {
 	{ IPREFS_ORDER_ALPHA_ASCENDING ,		"AscendingOrder" },
 	{ IPREFS_ORDER_ALPHA_DESCENDING,		"DescendingOrder" },
 	{ IPREFS_ORDER_MANUAL          ,		"ManualOrder" },
+	{ 0, NULL }
+};
+
+#define DEFAULT_IMPORT_MODE_INT				IMPORTER_MODE_NO_IMPORT
+#define DEFAULT_IMPORT_MODE_STR				"NoImport"
+
+static GConfEnumStringPair import_mode_table[] = {
+	{ IMPORTER_MODE_NO_IMPORT,				DEFAULT_IMPORT_MODE_STR },
+	{ IMPORTER_MODE_RENUMBER,				"Renumber" },
+	{ IMPORTER_MODE_OVERRIDE,				"Override" },
+	{ IMPORTER_MODE_ASK,					"Ask" },
 	{ 0, NULL }
 };
 
@@ -196,6 +208,72 @@ na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 				IPREFS_DISPLAY_ALPHABETICAL_ORDER,
 				order_str ? order_str : DEFAULT_ORDER_MODE_STR );
 	}
+}
+
+/**
+ * na_iprefs_get_import_mode:
+ * @gconf: a #GCongClient client.
+ * @name: name of the import key to be readen
+ *
+ * Returns: the import mode currently set.
+ *
+ * Note: this function returns a suitable default value even if the key
+ * is not found in GConf preferences or no schema has been installed.
+ *
+ * Note: please take care of keeping the default value synchronized with
+ * those defined in schemas.
+ */
+guint
+na_iprefs_get_import_mode( GConfClient *gconf, const gchar *name )
+{
+	gint import_mode = DEFAULT_IMPORT_MODE_INT;
+	gint import_int;
+	gchar *import_str;
+	gchar *path;
+
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+
+	import_str = na_gconf_utils_read_string(
+			gconf,
+			path,
+			TRUE,
+			DEFAULT_IMPORT_MODE_STR );
+
+	if( gconf_string_to_enum( import_mode_table, import_str, &import_int )){
+		import_mode = import_int;
+	}
+
+	g_free( import_str );
+	g_free( path );
+
+	return( import_mode );
+}
+
+/**
+ * na_iprefs_set_import_mode:
+ * @gconf: a #GCongClient client.
+ * @mode: the new value to be written.
+ *
+ * Writes the current status of 'import mode' to the GConf
+ * preference system.
+ */
+void
+na_iprefs_set_import_mode( GConfClient *gconf, const gchar *name, guint mode )
+{
+	const gchar *import_str;
+	gchar *path;
+
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+
+	import_str = gconf_enum_to_string( import_mode_table, mode );
+
+	na_gconf_utils_write_string(
+			gconf,
+			path,
+			import_str ? import_str : DEFAULT_IMPORT_MODE_STR,
+			NULL );
+
+	g_free( path );
 }
 
 /**

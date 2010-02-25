@@ -31,8 +31,9 @@ pkglib_LTLIBRARIES = libna-core.la
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
-	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
+	-DPKGDATADIR=\"$(pkgdatadir)\"						\
+	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_CORE}\"				\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
@@ -65,6 +66,8 @@ libna_core_la_SOURCES = \
 	na-io-provider.h									\
 	na-importer.c										\
 	na-importer.h										\
+	na-importer-ask.c									\
+	na-importer-ask.h									\
 	na-ipivot-consumer.c								\
 	na-ipivot-consumer.h								\
 	na-iprefs.c											\
@@ -96,3 +99,14 @@ libna_core_la_LDFLAGS = \
 	-no-undefined										\
 	-version-number $(VERSION_INFO)						\
 	$(NULL)
+
+pkgdata_DATA = \
+	na-importer-ask.ui									\
+	$(NULL)
+
+EXTRA_DIST = \
+	$(pkgdata_DATA)										\
+	$(NULL)
+
+uninstall-hook:
+	-\rm -fr $(DESTDIR)$(pkgdatadir)

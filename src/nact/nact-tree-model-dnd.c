@@ -32,12 +32,14 @@
 #include <config.h>
 #endif
 
+#include <gconf/gconf-client.h>
 #include <glib/gi18n.h>
 #include <string.h>
 
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
+#include <core/na-iprefs.h>
 #include <core/na-importer.h>
 
 #include "nact-application.h"
@@ -749,12 +751,13 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	GSList *uri_list, *is;
 	NactApplication *application;
 	NAUpdater *updater;
-	gint import_mode;
+	guint import_mode;
 	NactMainWindow *main_window;
 	GtkTreePath *new_dest;
 	GList *object_list;
 	NAIImporterParms parms;
 	guint code;
+	GConfClient *gconf;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	updater = nact_application_get_updater( application );
@@ -767,7 +770,8 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	}
 
 	uri_list = g_slist_reverse( na_core_utils_slist_from_split(( const gchar * ) selection_data->data, "\n" ));
-	import_mode = nact_iprefs_get_import_mode( BASE_WINDOW( main_window ), IPREFS_IMPORT_ITEMS_IMPORT_MODE );
+	gconf = gconf_client_get_default();
+	import_mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
 	object_list = NULL;
 
 	for( is = uri_list ; is ; is = is->next ){
@@ -777,8 +781,8 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		parms.mode = import_mode;
 		parms.messages = NULL;
 		parms.item = NULL;
-		parms.fn = NULL;
-		parms.fn_data = NULL;
+		parms.check_fn = NULL;
+		parms.check_fn_data = NULL;
 
 		code = na_importer_import_from_uri( NA_PIVOT( updater ), &parms );
 

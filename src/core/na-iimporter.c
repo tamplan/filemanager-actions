@@ -34,6 +34,8 @@
 
 #include <api/na-iimporter.h>
 
+#include "na-importer-ask.h"
+
 /* private interface data
  */
 struct NAIImporterInterfacePrivate {
@@ -134,4 +136,25 @@ static guint
 iimporter_get_version( const NAIImporter *instance )
 {
 	return( 1 );
+}
+
+/**
+ * na_iimporter_ask_user:
+ * @importer: this #NAIImporter instance.
+ * @parms: a #NAIImporterParms structure.
+ * @existing: the #NAObjectItem-derived already existing object.
+ *
+ * Ask the user for what to do when an imported item has the same ID
+ * that an already existing one.
+ *
+ * Returns: the definitive import mode.
+ */
+guint
+na_iimporter_ask_user( const NAIImporter *importer, const NAIImporterParms *parms, const NAObjectItem *existing )
+{
+	guint mode;
+
+	mode = na_importer_ask_user( parms, existing );
+
+	return( mode );
 }
