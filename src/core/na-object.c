@@ -660,7 +660,6 @@ na_object_object_unref( NAObject *object )
 	if( !object->private->dispose_has_run ){
 
 		if( NA_IS_OBJECT_ITEM( object )){
-
 			children = na_object_get_items( object );
 
 			for( ic = children ; ic ; ic = ic->next ){

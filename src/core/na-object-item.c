@@ -154,7 +154,7 @@ instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "na_object_item_instance_dispose";
 	NAObjectItem *self;
-	GList *items, *it;
+	GList *children, *it;
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -166,11 +166,11 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		items = na_object_get_items( self );
-		for( it = items ; it ; it = it->next ){
+		children = na_object_get_items( self );
+		for( it = children ; it ; it = it->next ){
 			g_object_unref( it->data );
 		}
-		g_list_free( items );
+		g_list_free( children );
 		na_object_set_items( self, NULL );
 
 		/* chain up to the parent class */
@@ -554,16 +554,16 @@ na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NA
 void
 na_object_item_remove_item( NAObjectItem *item, const NAObjectId *object )
 {
-	GList *childs;
+	GList *children;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
 
 	if( !item->private->dispose_has_run ){
 
-		childs = na_object_get_items( item );
-		childs = g_list_remove( childs, ( gconstpointer ) object );
-		na_object_set_items( item, childs );
+		children = na_object_get_items( item );
+		children = g_list_remove( children, ( gconstpointer ) object );
+		na_object_set_items( item, children );
 	}
 }
 
@@ -683,8 +683,8 @@ na_object_item_unref_items( GList *items )
 	GList *it;
 
 	for( it = items ; it ; it = it->next ){
-
-		na_object_unref( it->data );
+		/*na_object_unref( it->data );*/
+		g_object_unref( it->data );
 	}
 
 	g_list_free( items );

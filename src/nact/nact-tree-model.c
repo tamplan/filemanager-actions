@@ -430,6 +430,8 @@ nact_tree_model_dispose( NactTreeModel *model )
 		ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 
 		gtk_tree_store_clear( ts_model );
+
+		g_debug( "%s: end of tree store clear", thisfn );
 	}
 }
 
@@ -605,6 +607,8 @@ nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean are_profiles_
 		for( it = items ; it ; it = it->next ){
 			duplicate = ( NAObject * ) na_object_duplicate( it->data );
 			fill_tree_store( ts_model, model->private->treeview, duplicate, are_profiles_displayed, NULL );
+			/*g_debug( "%s: before_na_object_unref: duplicate=%p (%s, ref_count=%d)", thisfn,
+					( void * ) duplicate, G_OBJECT_TYPE_NAME( duplicate ), G_OBJECT( duplicate )->ref_count );*/
 			na_object_unref( duplicate );
 		}
 	}
@@ -917,29 +921,25 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 	GList *subitems, *it;
 	GtkTreeIter iter;
 
-	g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
+	g_debug( "%s entering: object=%p (%s, ref_count=%d)", thisfn,
 			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
-	if( NA_IS_OBJECT_MENU( object )){
+	/* an action or a menu
+	 */
+	if( NA_IS_OBJECT_ITEM( object )){
 		append_item( model, treeview, parent, &iter, object );
 		subitems = na_object_get_items( object );
 		for( it = subitems ; it ; it = it->next ){
 			fill_tree_store( model, treeview, it->data, are_profiles_displayed, &iter );
 		}
-	}
 
-	if( NA_IS_OBJECT_ACTION( object )){
-		g_return_if_fail( na_object_get_items_count( object ) >= 1 );
-		append_item( model, treeview, parent, &iter, object );
-		subitems = na_object_get_items( object );
-		for( it = subitems ; it ; it = it->next ){
-			fill_tree_store( model, treeview, it->data, are_profiles_displayed, &iter );
-		}
-	}
-
-	if( NA_IS_OBJECT_PROFILE( object )){
+	} else {
+		g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
 		append_item( model, treeview, parent, &iter, object );
 	}
+
+	/*g_debug( "%s quitting: object=%p (%s, ref_count=%d)", thisfn,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );*/
 }
 
 /*
@@ -959,33 +959,29 @@ filter_visible( GtkTreeModel *store, GtkTreeIter *iter, NactTreeModel *model )
 	/* is a GtkTreeStore */
 
 	gtk_tree_model_get( store, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-	g_object_unref( object );
 
 	if( object ){
+		g_object_unref( object );
 		/*na_object_dump( object );*/
 
-		if( NA_IS_OBJECT_ACTION( object )){
+		/* an action or a menu
+		 */
+		if( NA_IS_OBJECT_ITEM( object )){
 			return( TRUE );
 		}
 
-		if( NA_IS_OBJECT_MENU( object )){
-			return( TRUE );
-		}
-
+		g_return_val_if_fail( NA_IS_OBJECT_PROFILE( object ), FALSE );
 		are_profiles_displayed = NACT_TREE_MODEL( model )->private->are_profiles_displayed;
 
-		if( NA_IS_OBJECT_PROFILE( object )){
-
-			if( !are_profiles_displayed ){
-				return( FALSE );
-			}
-
-			action = NA_OBJECT_ACTION( na_object_get_parent( object ));
-			count = na_object_get_items_count( action );
-			/*g_debug( "action=%p: count=%d", ( void * ) action, count );*/
-			/*return( TRUE );*/
-			return( count > 1 );
+		if( !are_profiles_displayed ){
+			return( FALSE );
 		}
+
+		action = NA_OBJECT_ACTION( na_object_get_parent( object ));
+		count = na_object_get_items_count( action );
+		/*g_debug( "action=%p: count=%d", ( void * ) action, count );*/
+		/*return( TRUE );*/
+		return( count > 1 );
 	}
 
 	return( FALSE );

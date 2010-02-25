@@ -195,9 +195,9 @@ NADataDef data_def_item [] = {
 };
 
 static void
-free_items_list( void * list )
+free_items_list( void *list )
 {
-	static const gchar *thisfn = "na_object_item_enum_free_items_list";
+	static const gchar *thisfn = "na_object_item_factory_free_items_list";
 
 	g_debug( "%s: list=%p (count=%d)", thisfn, list, g_list_length(( GList * ) list ));
 

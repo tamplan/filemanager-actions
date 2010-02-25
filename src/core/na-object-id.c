@@ -137,11 +137,18 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NAObjectIdPrivate, 1 );
 }
 
+/*
+ * note that when the tree store is cleared, Gtk begins with the deepest
+ * levels, so that children are disposed before their parent
+ * as we try to dispose all children when disposing a parent, we have to
+ * remove a disposing child from its parent
+ */
 static void
 instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "na_object_id_instance_dispose";
 	NAObjectId *self;
+	NAObjectItem *parent;
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -150,6 +157,14 @@ instance_dispose( GObject *object )
 	self = NA_OBJECT_ID( object );
 
 	if( !self->private->dispose_has_run ){
+
+		self->private->dispose_has_run = TRUE;
+
+		parent = na_object_get_parent( object );
+		if( parent ){
+			na_object_remove_item( parent, object );
+			na_object_set_parent( object, NULL );
+		}
 
 		self->private->dispose_has_run = TRUE;
 

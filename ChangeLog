@@ -1,5 +1,21 @@
 2009-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix reference count errors in NACT user interface.
+
+	* src/core/na-object-id.c (instance_dispose):
+	Remove the disposing child from its parent childs list.
+
+	* src/core/na-object-item-factory.c (free_items_list):
+	* src/core/na-object-item.c (instance_dispose):
+	* src/core/na-object.c (na_object_object_unref):
+	Fix minor typo.
+
+	* src/core/na-object-item.c (na_object_item_unref_items):
+	Do not recursively unref objects here as this is done in dispose.
+
+	* src/nact/nact-tree-model.c (nact_tree_model_dispose):
+	Add a debug message.
+
 	Make the menus exportable.
 
 	* src/nact/nact-iactions-list.c:
