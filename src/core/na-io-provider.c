@@ -673,6 +673,8 @@ na_io_provider_read_items( const NAPivot *pivot, GSList **messages )
 			break;
 	}
 
+	/* check status here...
+	 */
 	filtered = filter_unwanted_items( pivot, hierarchy );
 	g_list_free( hierarchy );
 

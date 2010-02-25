@@ -837,7 +837,16 @@ string_are_equal( const NADataBoxed *a, const NADataBoxed *b )
 static gboolean
 string_is_valid( const NADataBoxed *boxed )
 {
-	return( boxed->private->u.string && strlen( boxed->private->u.string ) > 0 );
+	gboolean is_valid = TRUE;
+
+	if( boxed->private->def->mandatory ){
+		if( !boxed->private->u.string || !strlen( boxed->private->u.string )){
+			g_debug( "na_data_boxed_string_is_valid: invalid %s: mandatory but empty or null", boxed->private->def->name );
+			is_valid = FALSE;
+		}
+	}
+
+	return( is_valid );
 }
 
 static gchar *
@@ -909,7 +918,16 @@ locale_are_equal( const NADataBoxed *a, const NADataBoxed *b )
 static gboolean
 locale_is_valid( const NADataBoxed *boxed )
 {
-	return( boxed->private->u.string && g_utf8_strlen( boxed->private->u.string, -1 ) > 0 );
+	gboolean is_valid = TRUE;
+
+	if( boxed->private->def->mandatory ){
+		if( !boxed->private->u.string || !g_utf8_strlen( boxed->private->u.string, -1 )){
+			g_debug( "na_data_boxed_string_is_valid: invalid %s: mandatory but empty or null", boxed->private->def->name );
+			is_valid = FALSE;
+		}
+	}
+
+	return( is_valid );
 }
 
 static GParamSpec *
@@ -955,7 +973,16 @@ slist_are_equal( const NADataBoxed *a, const NADataBoxed *b )
 static gboolean
 slist_is_valid( const NADataBoxed *boxed )
 {
-	return( boxed->private->u.slist && g_slist_length( boxed->private->u.slist ) > 0 );
+	gboolean is_valid = TRUE;
+
+	if( boxed->private->def->mandatory ){
+		if( !boxed->private->u.slist || !g_slist_length( boxed->private->u.slist )){
+			g_debug( "na_data_boxed_string_is_valid: invalid %s: mandatory but empty or null", boxed->private->def->name );
+			is_valid = FALSE;
+		}
+	}
+
+	return( is_valid );
 }
 
 static gchar *
@@ -1137,7 +1164,16 @@ pointer_are_equal( const NADataBoxed *a, const NADataBoxed *b )
 static gboolean
 pointer_is_valid( const NADataBoxed *boxed )
 {
-	return( boxed->private->u.pointer != NULL );
+	gboolean is_valid = TRUE;
+
+	if( boxed->private->def->mandatory ){
+		if( !boxed->private->u.pointer ){
+			g_debug( "na_data_boxed_string_is_valid: invalid %s: mandatory but null", boxed->private->def->name );
+			is_valid = FALSE;
+		}
+	}
+
+	return( is_valid );
 }
 
 static gchar *
@@ -1216,7 +1252,7 @@ uint_are_equal( const NADataBoxed *a, const NADataBoxed *b )
 static gboolean
 uint_is_valid( const NADataBoxed *boxed )
 {
-	return( boxed->private->u.uint > 0 );
+	return( TRUE );
 }
 
 static gchar *

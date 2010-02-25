@@ -1,5 +1,27 @@
 2009-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix validity checks.
+
+	* src/core/na-data-boxed.c
+	(string_is_valid, locale_is_valid, slist_is_valid, pointer_is_valid,
+	uint_is_valid): Fix individual validity checks of elementary data.
+
+	* src/core/na-factory-object.c (na_factory_object_is_valid):
+	First check for presence of mandatory data, then check present data.
+
+	* src/core/na-iduplicable.c (na_iduplicable_duplicate):
+	Also duplicate the status of the source object.
+
+	* src/core/na-io-provider.c (na_io_provider_read_items):
+	Add a comment.
+
+	* src/core/na-object-item.c (na_object_item_copy):
+	* src/core/na-object.c (na_object_object_check_status):
+	Fix minor typo.
+
+	* src/nact/nact-tree-model.c (nact_tree_model_fill):
+	No more check status of newly duplicated objects.
+
 	* src/nact/base-window.c (instance_dispose):
 	Only set dispose after having tested for main window.
 

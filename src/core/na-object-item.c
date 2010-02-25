@@ -248,28 +248,28 @@ void
 na_object_item_copy( NAObjectItem *item, const NAObjectItem *source )
 {
 	static const gchar *thisfn = "na_object_item_copy";
-	GList *tgt_childs, *src_childs, *ic;
+	GList *tgt_children, *src_children, *ic;
 	NAObject *dup;
 
-	tgt_childs = na_object_get_items( item );
-	if( tgt_childs ){
+	tgt_children = na_object_get_items( item );
+	if( tgt_children ){
 
-		g_warning( "%s: target %s has already %d childs",
-				thisfn, G_OBJECT_TYPE_NAME( item ), g_list_length( tgt_childs ));
-		na_object_unref_items( tgt_childs );
-		tgt_childs = NULL;
+		g_warning( "%s: target %s has already %d children",
+				thisfn, G_OBJECT_TYPE_NAME( item ), g_list_length( tgt_children ));
+		na_object_unref_items( tgt_children );
+		tgt_children = NULL;
 	}
 
-	src_childs = na_object_get_items( source );
-	for( ic = src_childs ; ic ; ic = ic->next ){
+	src_children = na_object_get_items( source );
+	for( ic = src_children ; ic ; ic = ic->next ){
 
 		dup = ( NAObject * ) na_object_duplicate( ic->data );
 		na_object_set_parent( dup, item );
-		tgt_childs = g_list_prepend( tgt_childs, dup );
+		tgt_children = g_list_prepend( tgt_children, dup );
 	}
 
-	tgt_childs = g_list_reverse( tgt_childs );
-	na_object_set_items( item, tgt_childs );
+	tgt_children = g_list_reverse( tgt_children );
+	na_object_set_items( item, tgt_children );
 }
 
 /**

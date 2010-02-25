@@ -59,6 +59,14 @@ typedef struct {
 }
 	NafoRWIter;
 
+/* while iterating on is_valid
+ */
+typedef struct {
+	NAIFactoryObject  *object;
+	gboolean           is_valid;
+}
+	NafoValidIter;
+
 #if 0
 /* while iterating on set defaults
  */
@@ -78,6 +86,7 @@ extern NAIFactoryObjectInterface *ifactory_object_klass;
 #endif
 
 static gboolean     define_class_properties_iter( const NADataDef *def, GObjectClass *class );
+static gboolean     factory_object_is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data );
 static gboolean     factory_object_read_data_iter( NADataDef *def, NafoRWIter *iter );
 static gboolean     factory_object_write_data_iter( NADataDef *def, NafoRWIter *iter );
 
@@ -430,8 +439,8 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 gboolean
 na_factory_object_is_valid( const NAIFactoryObject *object )
 {
-	static const gchar *thisfn = "na_factory_object_is_valid";
 	gboolean is_valid;
+	NADataGroup *groups;
 	GList *list, *iv;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), FALSE );
@@ -439,17 +448,20 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 	is_valid = TRUE;
 
+	/* mndatory data must be set
+	 */
+	NafoValidIter iter_data;
+	iter_data.object = ( NAIFactoryObject * ) object;
+	iter_data.is_valid = TRUE;
+
+	groups = v_get_groups( object );
+	if( groups ){
+		iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) factory_object_is_valid_mandatory_iter, &iter_data );
+	}
+	is_valid = iter_data.is_valid;
+
 	for( iv = list ; iv && is_valid ; iv = iv->next ){
-
-		NADataBoxed *boxed = NA_DATA_BOXED( iv->data );
-		NADataDef *def = na_data_boxed_get_data_def( boxed );
-		if( def->mandatory ){
-
-			is_valid = na_data_boxed_is_valid( boxed );
-			if( !is_valid ){
-				g_debug( "%s: %s: invalid", thisfn, def->name );
-			}
-		}
+		is_valid = na_data_boxed_is_valid( NA_DATA_BOXED( iv->data ));
 	}
 
 	if( is_valid ){
@@ -457,6 +469,23 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 	}
 
 	return( is_valid );
+}
+
+static gboolean
+factory_object_is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data )
+{
+	NADataBoxed *boxed;
+
+	if( def->mandatory && !def->obsoleted ){
+		boxed = data_boxed_from_name( data->object, def->name );
+		if( !boxed ){
+			g_debug( "na_factory_object_is_valid_mandatory_iter: invalid %s: mandatory but not set", def->name );
+			data->is_valid = FALSE;
+		}
+	}
+
+	/* do not stop iteration while valid */
+	return( !data->is_valid );
 }
 
 /**

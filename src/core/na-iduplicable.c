@@ -249,7 +249,7 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
 {
 	static const gchar *thisfn = "na_iduplicable_duplicate";
 	NAIDuplicable *dup;
-	DuplicableStr *str;
+	DuplicableStr *dup_str, *obj_str;
 
 	g_debug( "%s: object=%p (%s)",
 			thisfn,
@@ -265,9 +265,12 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
 
 		v_copy( dup, object );
 
-		str = get_duplicable_str( dup );
-		str->origin = ( NAIDuplicable * ) object;
-		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE, str );
+		dup_str = get_duplicable_str( dup );
+		obj_str = get_duplicable_str( object );
+
+		dup_str->origin = ( NAIDuplicable * ) object;
+		dup_str->modified = obj_str->modified;
+		dup_str->valid = obj_str->valid;
 	}
 
 	return( dup );

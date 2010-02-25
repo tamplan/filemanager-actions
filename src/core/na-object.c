@@ -379,7 +379,7 @@ void
 na_object_object_check_status( const NAObject *object )
 {
 	static const gchar *thisfn = "na_object_object_check_status";
-	GList *childs, *ic;
+	GList *children, *ic;
 
 	g_debug( "%s: object=%p (%s)",
 			thisfn,
@@ -390,9 +390,9 @@ na_object_object_check_status( const NAObject *object )
 	if( !object->private->dispose_has_run ){
 
 		if( NA_IS_OBJECT_ITEM( object )){
+			children = na_object_get_items( object );
 
-			childs = na_object_get_items( object );
-			for( ic = childs ; ic ; ic = ic->next ){
+			for( ic = children ; ic ; ic = ic->next ){
 				na_object_check_status( ic->data );
 			}
 		}
@@ -762,6 +762,6 @@ na_object_free_hierarchy( GList *hierarchy )
 void
 na_object_object_debug_invalid( const NAObject *object, const gchar *reason )
 {
-	g_debug( "na_object_object_debug_invalid: object is marked invalid for reason \"%s\"", reason );
-	na_object_dump_norec( object );
+	g_debug( "na_object_object_debug_invalid: object %p (%s) is marked invalid for reason \"%s\"",
+			( void * ) object, G_OBJECT_TYPE_NAME( object ), reason );
 }
