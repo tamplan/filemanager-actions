@@ -28,18 +28,50 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_READER_H__
-#define __NAGP_READER_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include <api/na-iio-provider.h>
+#include <string.h>
 
-G_BEGIN_DECLS
+#include "na-gtk-utils.h"
 
-GList       *nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
+/**
+ * na_gtk_utils_search_for_child_widget:
+ * @container: a #GtkContainer, usually the #GtkWindow toplevel.
+ * @name: the name of the searched widget.
+ *
+ * Returns: the searched widget.
+ */
+GtkWidget *
+na_gtk_utils_search_for_child_widget( GtkContainer *container, const gchar *name )
+{
+	GList *children = gtk_container_get_children( container );
+	GList *ic;
+	GtkWidget *found = NULL;
+	GtkWidget *child;
+	const gchar *child_name;
 
-NADataBoxed *nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
-void         nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
+	for( ic = children ; ic && !found ; ic = ic->next ){
 
-G_END_DECLS
+		if( GTK_IS_WIDGET( ic->data )){
+			child = GTK_WIDGET( ic->data );
+			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
 
-#endif /* __NAGP_READER_H__ */
+			if( child_name && strlen( child_name )){
+				/*g_debug( "%s: child=%s", thisfn, child_name );*/
+
+				if( !g_ascii_strcasecmp( name, child_name )){
+					found = child;
+					break;
+
+				} else if( GTK_IS_CONTAINER( child )){
+					found = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( child ), name );
+				}
+			}
+		}
+	}
+
+	g_list_free( children );
+	return( found );
+}

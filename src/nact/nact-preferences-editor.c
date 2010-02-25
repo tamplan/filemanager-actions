@@ -52,7 +52,8 @@ struct NactPreferencesEditorClassPrivate {
 /* private instance data
  */
 struct NactPreferencesEditorPrivate {
-	gboolean dispose_has_run;
+	gboolean     dispose_has_run;
+	GConfClient *gconf;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -169,6 +170,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED,
 			G_CALLBACK( on_base_all_widgets_showed));
 
+	self->private->gconf = gconf_client_get_default();
+
 	self->private->dispose_has_run = FALSE;
 }
 
@@ -185,6 +188,8 @@ instance_dispose( GObject *dialog )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
+
+		g_object_unref( self->private->gconf );
 
 		nact_schemes_list_dispose( BASE_WINDOW( self ));
 		nact_providers_list_dispose( BASE_WINDOW( self ));
@@ -305,7 +310,6 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	GtkWidget *button;
 	gboolean esc_quit, esc_confirm;
 	GtkTreeView *listview;
-	GConfClient *gconf;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
@@ -370,8 +374,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 
 	/* third tab: import tool
 	 */
-	gconf = gconf_client_get_default();
-	import_mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
+	import_mode = na_iprefs_get_import_mode( editor->private->gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
 	switch( import_mode ){
 		case IMPORTER_MODE_ASK:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
@@ -474,7 +477,6 @@ save_preferences( NactPreferencesEditor *editor )
 	GtkWidget *container;
 	GQuark export_format;
 	gboolean esc_quit, esc_confirm;
-	GConfClient *gconf;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
@@ -545,8 +547,7 @@ save_preferences( NactPreferencesEditor *editor )
 			}
 		}
 	}
-	gconf = gconf_client_get_default();
-	na_iprefs_set_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE, import_mode );
+	na_iprefs_set_import_mode( editor->private->gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE, import_mode );
 
 	/* fourth tab: export tool
 	 */

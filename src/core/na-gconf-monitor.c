@@ -129,6 +129,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_GCONF_MONITOR( instance );
 
 	self->private = g_new0( NAGConfMonitorPrivate, 1 );
+
+	self->private->gconf = gconf_client_get_default();
+
+	self->private->dispose_has_run = FALSE;
 }
 
 static void
@@ -147,6 +151,8 @@ instance_dispose( GObject *object )
 		release_monitor( self );
 
 		self->private->dispose_has_run = TRUE;
+
+		g_object_unref( self->private->gconf );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -192,7 +198,6 @@ na_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer
 
 	monitor = g_object_new( NA_GCONF_MONITOR_TYPE, NULL );
 
-	monitor->private->gconf = gconf_client_get_default();
 	monitor->private->path = g_strdup( path );
 	monitor->private->preload = GCONF_CLIENT_PRELOAD_RECURSIVE;
 	monitor->private->handler = handler;
@@ -279,7 +284,5 @@ release_monitor( NAGConfMonitor *monitor )
 			g_warning( "%s: path=%s, error=%s", thisfn, monitor->private->path, error->message );
 			g_error_free( error );
 		}
-
-		g_object_unref( monitor->private->gconf );
 	}
 }

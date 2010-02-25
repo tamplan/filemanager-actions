@@ -1,3 +1,27 @@
+2009-02-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-object-api.h:
+	Distinguish between profile and item on get_label.
+
+	* src/core/na-gtk-utils.c:
+	* src/core/na-gtk-utils.h: New files.
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/core/na-data-boxed.c:
+	* src/core/na-gconf-monitor.c:
+	* src/core/na-importer-ask.c:
+	* src/io-gconf/nagp-gconf-provider.c:
+	* src/io-gconf/nagp-reader.c:
+	* src/io-gconf/nagp-reader.h:
+	Fix objects reading from GConf.
+
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/utils/nautilus-actions-schemas.c:
+	Move GConfClient to private object data, unref on dispose.
+
 2009-02-24 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-iimporter.h:

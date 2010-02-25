@@ -28,18 +28,21 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_READER_H__
-#define __NAGP_READER_H__
+#ifndef __CORE_API_NA_GTK_UTILS_H__
+#define __CORE_API_NA_GTK_UTILS_H__
 
-#include <api/na-iio-provider.h>
+/**
+ * SECTION: na_core_utils
+ * @short_description: Core library utilities.
+ * @include: nautilus-action/na-core-utils.h
+ */
+
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-GList       *nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
-
-NADataBoxed *nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
-void         nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
+GtkWidget *na_gtk_utils_search_for_child_widget( GtkContainer *container, const gchar *name );
 
 G_END_DECLS
 
-#endif /* __NAGP_READER_H__ */
+#endif /* __CORE_API_NA_GTK_UTILS_H__ */

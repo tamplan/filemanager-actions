@@ -213,6 +213,7 @@ write_to_gconf( gchar **msg )
 	g_free( prefix_config );
 
 	gconf_client_suggest_sync( gconf, NULL );
+	g_object_unref( gconf );
 	return( ret );
 }
 

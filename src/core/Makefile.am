@@ -54,6 +54,8 @@ libna_core_la_SOURCES = \
 	na-gconf-utils.c									\
 	na-gnome-vfs-uri.c									\
 	na-gnome-vfs-uri.h									\
+	na-gtk-utils.c										\
+	na-gtk-utils.h										\
 	na-iabout.c											\
 	na-iabout.h											\
 	na-iduplicable.c									\

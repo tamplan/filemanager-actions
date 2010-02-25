@@ -123,6 +123,8 @@ interface_base_finalize( NactIPrefsInterface *klass )
 
 		st_finalized = TRUE;
 
+		g_object_unref( klass->private->client );
+
 		g_free( klass->private );
 	}
 }

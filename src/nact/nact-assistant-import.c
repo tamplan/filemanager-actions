@@ -92,9 +92,10 @@ struct NactAssistantImportClassPrivate {
 /* private instance data
  */
 struct NactAssistantImportPrivate {
-	gboolean  dispose_has_run;
-	GSList   *results;
-	GList    *items;
+	gboolean     dispose_has_run;
+	GConfClient *gconf;
+	GSList      *results;
+	GList       *items;
 };
 
 static BaseAssistantClass *st_parent_class = NULL;
@@ -205,7 +206,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactAssistantImportPrivate, 1 );
 
-	self->private->dispose_has_run = FALSE;
 	self->private->results = NULL;
 
 	base_window_signal_connect(
@@ -219,6 +219,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			G_OBJECT( instance ),
 			BASE_WINDOW_SIGNAL_RUNTIME_INIT,
 			G_CALLBACK( on_runtime_init_dialog ));
+
+	self->private->gconf = gconf_client_get_default();
+
+	self->private->dispose_has_run = FALSE;
 }
 
 static void
@@ -234,6 +238,8 @@ instance_dispose( GObject *window )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
+
+		g_object_unref( self->private->gconf );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -477,12 +483,10 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 	static const gchar *thisfn = "nact_assistant_import_runtime_init_duplicates";
 	GtkWidget *page;
 	guint mode;
-	GConfClient *gconf;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	gconf = gconf_client_get_default();
-	mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
+	mode = na_iprefs_get_import_mode( window->private->gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
 	set_import_mode( window, mode );
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
@@ -778,7 +782,6 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	ImportUriStruct *str;
 	GFile *file;
 	guint mode;
-	GConfClient *gconf;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -842,8 +845,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	g_free( text );
 
 	mode = get_import_mode( window );
-	gconf = gconf_client_get_default();
-	na_iprefs_set_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE, mode );
+	na_iprefs_set_import_mode( window->private->gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE, mode );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	base_assistant_set_warn_on_cancel( BASE_ASSISTANT( window ), FALSE );

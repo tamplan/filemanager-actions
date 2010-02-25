@@ -38,6 +38,7 @@
 
 #include <api/na-object-api.h>
 
+#include "na-gtk-utils.h"
 #include "na-iprefs.h"
 #include "na-importer-ask.h"
 
@@ -75,7 +76,6 @@ static void       on_cancel_clicked( GtkButton *button, NAImporterAsk *editor );
 static void       on_ok_clicked( GtkButton *button, NAImporterAsk *editor );
 static void       get_selected_mode( NAImporterAsk *editor );
 static gboolean   on_dialog_response( NAImporterAsk *editor, gint code );
-static GtkWidget *search_for_child_widget( GtkContainer *container, const gchar *name );
 
 GType
 na_importer_ask_get_type( void )
@@ -146,8 +146,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NAImporterAskPrivate, 1 );
 
-	self->private->dispose_has_run = FALSE;
-
 	self->private->builder = gtk_builder_new();
 
 	error = NULL;
@@ -159,6 +157,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	} else {
 		self->private->toplevel = GTK_WINDOW( gtk_builder_get_object( self->private->builder, "ImporterAskDialog" ));
 	}
+
+	self->private->gconf = gconf_client_get_default();
+
+	self->private->dispose_has_run = FALSE;
 }
 
 static void
@@ -174,9 +176,10 @@ instance_dispose( GObject *dialog )
 
 	if( !self->private->dispose_has_run ){
 
-		g_object_unref( self->private->builder );
-
 		self->private->dispose_has_run = TRUE;
+
+		g_object_unref( self->private->gconf );
+		g_object_unref( self->private->builder );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -245,7 +248,6 @@ na_importer_ask_user( const NAIImporterParms *parms, const NAObjectItem *existin
 
 		dialog->private->parms = ( NAIImporterParms * ) parms;
 		dialog->private->existing = ( NAObjectItem * ) existing;
-		dialog->private->gconf = gconf_client_get_default();
 		dialog->private->mode = na_iprefs_get_import_mode( dialog->private->gconf, IPREFS_IMPORT_ASK_LAST_MODE );
 
 		init_dialog( dialog );
@@ -297,37 +299,37 @@ init_dialog( NAImporterAsk *editor )
 				imported_label, editor->private->parms->uri, existing_label );
 	}
 
-	widget = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "ImporterAskLabel" );
+	widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "ImporterAskLabel" );
 	gtk_label_set_text( GTK_LABEL( widget ), label );
 	g_free( label );
 
 	switch( editor->private->mode ){
 		case IMPORTER_MODE_RENUMBER:
-			button = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
+			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
 			break;
 
 		case IMPORTER_MODE_OVERRIDE:
-			button = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
+			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
 			break;
 
 		case IMPORTER_MODE_NO_IMPORT:
 		default:
-			button = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskNoImportButton" );
+			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskNoImportButton" );
 			break;
 	}
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 
-	button = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
+	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), FALSE );
 
-	button = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "OKButton" );
+	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "OKButton" );
 	g_signal_connect(
 			G_OBJECT( button ),
 			"clicked",
 			G_CALLBACK( on_ok_clicked ),
 			editor );
 
-	button = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "CancelButton" );
+	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "CancelButton" );
 	g_signal_connect(
 			G_OBJECT( button ),
 			"clicked",
@@ -366,12 +368,12 @@ get_selected_mode( NAImporterAsk *editor )
 
 	import_mode = IMPORTER_MODE_NO_IMPORT;
 
-	button = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
+	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
 		import_mode = IMPORTER_MODE_RENUMBER;
 
 	} else {
-		button = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
+		button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
 		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
 			import_mode = IMPORTER_MODE_OVERRIDE;
 		}
@@ -380,7 +382,7 @@ get_selected_mode( NAImporterAsk *editor )
 	editor->private->mode = import_mode;
 	na_iprefs_set_import_mode( editor->private->gconf, IPREFS_IMPORT_ASK_LAST_MODE, editor->private->mode );
 
-	button = search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
+	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	if( keep ){
 		na_iprefs_set_import_mode( editor->private->gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE, import_mode );
@@ -418,37 +420,4 @@ on_dialog_response( NAImporterAsk *editor, gint code )
 	}
 
 	return( FALSE );
-}
-
-static GtkWidget *
-search_for_child_widget( GtkContainer *container, const gchar *name )
-{
-	GList *children = gtk_container_get_children( container );
-	GList *ic;
-	GtkWidget *found = NULL;
-	GtkWidget *child;
-	const gchar *child_name;
-
-	for( ic = children ; ic ; ic = ic->next ){
-		if( GTK_IS_WIDGET( ic->data )){
-			child = GTK_WIDGET( ic->data );
-			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
-			if( child_name && strlen( child_name )){
-				/*g_debug( "%s: child=%s", thisfn, child_name );*/
-				if( !g_ascii_strcasecmp( name, child_name )){
-					found = child;
-					break;
-
-				} else if( GTK_IS_CONTAINER( child )){
-					found = search_for_child_widget( GTK_CONTAINER( child ), name );
-					if( found ){
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	g_list_free( children );
-	return( found );
 }

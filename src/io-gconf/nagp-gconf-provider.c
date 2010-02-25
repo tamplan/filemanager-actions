@@ -151,6 +151,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NagpGConfProviderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+
 	self->private->gconf = gconf_client_get_default();
 	self->private->monitors = install_monitors( self );
 }
@@ -242,8 +243,8 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 
 	iface->get_version = ifactory_provider_get_version;
 	iface->read_start = NULL;
-	iface->read_data = NULL;
-	iface->read_done = NULL;
+	iface->read_data = nagp_reader_read_data;
+	iface->read_done = nagp_reader_read_done;
 	iface->write_start = NULL;
 	iface->write_data = NULL;
 	iface->write_done = NULL;

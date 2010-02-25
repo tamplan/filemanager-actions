@@ -312,6 +312,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_DATA_BOXED( instance );
 
 	self->private = g_new0( NADataBoxedPrivate, 1 );
+
+	self->private->dispose_has_run = FALSE;
 }
 
 static void

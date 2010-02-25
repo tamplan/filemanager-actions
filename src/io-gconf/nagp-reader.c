@@ -34,6 +34,9 @@
 
 #include <string.h>
 
+#include <api/na-data-def.h>
+#include <api/na-data-types.h>
+#include <api/na-ifactory-provider.h>
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 #include <api/na-core-utils.h>
@@ -43,7 +46,21 @@
 #include "nagp-keys.h"
 #include "nagp-reader.h"
 
-static NAObjectItem  *read_item( NagpGConfProvider *provider, const gchar *path );
+typedef struct {
+	gchar        *path;
+	NAObjectItem *parent;
+}
+	ReaderData;
+
+static NAObjectItem  *read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages );
+
+static NADataBoxed   *read_data_item_properties( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *reader_data, const NADataDef *def );
+static NADataBoxed   *read_data_profile_properties( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *reader_data, const NADataDef *def );
+static void           read_done_item( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
+static void           read_done_action( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
+static void           read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
+static void           read_done_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
+#if 0
 static void           read_item_action( NagpGConfProvider *provider, const gchar *path, NAObjectAction *action );
 static void           read_item_action_properties( NagpGConfProvider *provider, GSList *entries, NAObjectAction *action );
 static void           read_item_action_properties_v1( NagpGConfProvider *gconf, GSList *entries, NAObjectAction *action );
@@ -52,7 +69,8 @@ static void           read_item_action_profile_properties( NagpGConfProvider *pr
 static void           read_item_menu( NagpGConfProvider *provider, const gchar *path, NAObjectMenu *menu );
 static void           read_item_menu_properties( NagpGConfProvider *provider, GSList *entries, NAObjectMenu *menu );
 static void           read_object_item_properties( NagpGConfProvider *provider, GSList *entries, NAObjectItem *item );
-
+#endif
+static NADataBoxed   *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
 static gboolean       is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 
 /*
@@ -83,7 +101,7 @@ nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 
 		for( ip = listpath ; ip ; ip = ip->next ){
 
-			item = read_item( self, ( const gchar * ) ip->data );
+			item = read_item( self, ( const gchar * ) ip->data, messages );
 			if( item ){
 				items_list = g_list_prepend( items_list, item );
 			}
@@ -100,13 +118,15 @@ nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
  * path is here the full path to an item
  */
 static NAObjectItem *
-read_item( NagpGConfProvider *provider, const gchar *path )
+read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_gconf_provider_read_item";
 	NAObjectItem *item;
 	gboolean have_type;
 	gchar *full_path;
 	gchar *type;
+	gchar *id;
+	ReaderData *data;
 
 	g_debug( "%s: provider=%p, path=%s", thisfn, ( void * ) provider, path );
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
@@ -123,13 +143,17 @@ read_item( NagpGConfProvider *provider, const gchar *path )
 	 */
 	if( have_type && !strcmp( type, NAGP_VALUE_TYPE_MENU )){
 		item = NA_OBJECT_ITEM( na_object_menu_new());
+#if 0
 		read_item_menu( provider, path, NA_OBJECT_MENU( item ));
+#endif
 
 	/* else this should be an action (no type, or type='Action')
 	 */
 	} else if( !have_type || !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
 		item = NA_OBJECT_ITEM( na_object_action_new());
+#if 0
 		read_item_action( provider, path, NA_OBJECT_ACTION( item ));
+#endif
 
 	} else {
 		g_warning( "%s: unknown type '%s' at %s", thisfn, type, path );
@@ -137,9 +161,186 @@ read_item( NagpGConfProvider *provider, const gchar *path )
 
 	g_free( type );
 
+	if( item ){
+		id = g_path_get_basename( path );
+		na_object_set_id( item, id );
+		g_free( id );
+
+		data = g_new0( ReaderData, 1 );
+		data->path = ( gchar * ) path;
+
+		na_ifactory_provider_read_item(
+				NA_IFACTORY_PROVIDER( provider ),
+				data,
+				NA_IFACTORY_OBJECT( item ),
+				messages );
+
+		g_free( data );
+	}
+
 	return( item );
 }
 
+NADataBoxed *
+nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
+{
+	static const gchar *thisfn = "nagp_reader_read_data";
+	NADataBoxed *boxed;
+
+	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+
+	g_debug( "%s: reader_data=%p, object=%p (%s), data=%s",
+			thisfn,
+			( void * ) reader_data,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ),
+			def->name );
+
+	if( !def->gconf_entry || !strlen( def->gconf_entry )){
+		g_warning( "%s: GConf entry is not set for NADataDef %s", thisfn, def->name );
+		return( NULL );
+	}
+
+	boxed = NULL;
+
+	if( NA_IS_OBJECT_ITEM( object )){
+		boxed = read_data_item_properties( provider, NA_OBJECT_ITEM( object ), ( ReaderData * ) reader_data, def );
+	}
+
+	if( NA_IS_OBJECT_PROFILE( object )){
+		boxed = read_data_profile_properties( provider, NA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, def );
+	}
+
+	return( boxed );
+}
+
+static NADataBoxed *
+read_data_item_properties( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *reader_data, const NADataDef *def )
+{
+	return( get_boxed_from_path( NAGP_GCONF_PROVIDER( provider ), reader_data->path, reader_data, def ));
+}
+
+static NADataBoxed *
+read_data_profile_properties( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *reader_data, const NADataDef *def )
+{
+	return( get_boxed_from_path( NAGP_GCONF_PROVIDER( provider ), reader_data->path, reader_data, def ));
+}
+
+void
+nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  )
+{
+	static const gchar *thisfn = "nagp_reader_read_done";
+
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+
+	g_debug( "%s: provider=%p, reader_data=%p, object=%p (%s), messages=%p",
+			thisfn,
+			( void * ) provider,
+			( void * ) reader_data,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ),
+			( void * ) messages );
+
+	if( NA_IS_OBJECT_ITEM( object )){
+		read_done_item( provider, NA_OBJECT_ITEM( object ), ( ReaderData * ) reader_data, messages );
+	}
+
+	if( NA_IS_OBJECT_ACTION( object )){
+		read_done_action( provider, NA_OBJECT_ACTION( object ), ( ReaderData * ) reader_data, messages );
+	}
+
+	if( NA_IS_OBJECT_PROFILE( object )){
+		read_done_profile( provider, NA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, messages );
+	}
+
+	g_debug( "quitting nagp_read_done for %s at %p", G_OBJECT_TYPE_NAME( object ), ( void * ) object );
+}
+
+static void
+read_done_item( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages )
+{
+	GSList *entries, *ie;
+	gboolean writable;
+	GConfEntry *gconf_entry;
+	const gchar *key;
+
+	data->parent = item;
+
+	entries = na_gconf_utils_get_entries( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
+
+	writable = TRUE;
+	for( ie = entries ; ie && writable ; ie = ie->next ){
+		gconf_entry = ( GConfEntry * ) ie->data;
+		key = gconf_entry_get_key( gconf_entry );
+		writable = is_key_writable( NAGP_GCONF_PROVIDER( provider ), key );
+	}
+
+	g_debug( "nagp_reader_read_done_item: writable=%s", writable ? "True":"False" );
+	na_object_set_readonly( item, !writable );
+}
+
+static void
+read_done_action( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages )
+{
+	GSList *order;
+	GSList *list_profiles;
+	GSList *ip;
+	gchar *profile_path;
+
+	order = na_object_get_items_slist( action );
+	list_profiles = na_gconf_utils_get_subdirs( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
+
+	/* read profiles in the specified order
+	 */
+	for( ip = order ; ip ; ip = ip->next ){
+		profile_path = gconf_concat_dir_and_key( data->path, ( gchar * ) ip->data );
+		g_debug( "nagp_reader_read_done_action: loading profile=%s", ( gchar * ) ip->data );
+		read_done_action_load_profile( provider, data, profile_path, messages );
+		list_profiles = na_core_utils_slist_remove_ascii( list_profiles, profile_path );
+		g_free( profile_path );
+	}
+
+	/* append other profiles
+	 * this is mandatory for pre-2.29 actions which introduced order of profiles
+	 */
+	for( ip = list_profiles ; ip ; ip = ip->next ){
+		g_debug( "nagp_reader_read_done_action: loading profile=%s", ( gchar * ) ip->data );
+		read_done_action_load_profile( provider, data, ( const gchar * ) ip->data, messages );
+	}
+}
+
+static void
+read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages )
+{
+	gchar *id;
+	ReaderData *profile_data;
+
+	NAObjectProfile *profile = na_object_profile_new();
+
+	id = g_path_get_basename( path );
+	na_object_set_id( profile, id );
+	g_free( id );
+
+	profile_data = g_new0( ReaderData, 1 );
+	profile_data->parent = data->parent;
+	profile_data->path = ( gchar * ) path;
+
+	na_ifactory_provider_read_item(
+			NA_IFACTORY_PROVIDER( provider ),
+			profile_data,
+			NA_IFACTORY_OBJECT( profile ),
+			messages );
+
+	g_free( profile_data );
+}
+
+static void
+read_done_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages )
+{
+	na_object_attach_profile( data->parent, profile );
+}
+
+#if 0
 /*
  * load and set the properties of the specified action
  * at least we must have a label, as all other entries can have
@@ -447,6 +648,62 @@ read_object_item_properties( NagpGConfProvider *provider, GSList *entries, NAObj
 		writable = is_key_writable( provider, key );
 	}
 	na_object_set_readonly( item, !writable );
+}
+#endif
+
+static NADataBoxed *
+get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def )
+{
+	static const gchar *thisfn = "nagp_reader_get_boxed_from_path";
+	NADataBoxed *boxed;
+	gboolean have_entry;
+	gchar *str_value;
+	gboolean bool_value;
+	GSList *slist_value;
+	gint int_value;
+
+	boxed = NULL;
+	have_entry = na_gconf_utils_has_entry( provider->private->gconf, path, def->gconf_entry );
+
+	if( have_entry ){
+		boxed = na_data_boxed_new( def );
+		gchar *entry_path = gconf_concat_dir_and_key( path, def->gconf_entry );
+
+		switch( def->type ){
+
+			case NAFD_TYPE_STRING:
+			case NAFD_TYPE_LOCALE_STRING:
+				str_value = na_gconf_utils_read_string( provider->private->gconf, entry_path, FALSE, NULL );
+				na_data_boxed_set_from_string( boxed, str_value );
+				g_free( str_value );
+				break;
+
+			case NAFD_TYPE_BOOLEAN:
+				bool_value = na_gconf_utils_read_bool( provider->private->gconf, entry_path, FALSE, FALSE );
+				na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( bool_value ));
+				break;
+
+			case NAFD_TYPE_STRING_LIST:
+				slist_value = na_gconf_utils_read_string_list( provider->private->gconf, entry_path );
+				na_data_boxed_set_from_void( boxed, slist_value );
+				na_core_utils_slist_free( slist_value );
+				break;
+
+			case NAFD_TYPE_UINT:
+				int_value = na_gconf_utils_read_int( provider->private->gconf, entry_path, FALSE, 0 );
+				na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( int_value ));
+				break;
+
+			default:
+				g_warning( "%s: unknown type=%u for %s", thisfn, def->type, def->name );
+				g_free( boxed );
+				boxed = NULL;
+		}
+
+		g_free( entry_path );
+	}
+
+	return( boxed );
 }
 
 /*
