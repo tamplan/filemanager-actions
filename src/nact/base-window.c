@@ -495,8 +495,6 @@ instance_dispose( GObject *window )
 
 	if( !self->private->dispose_has_run ){
 
-		self->private->dispose_has_run = TRUE;
-
 		if( self->private->save_window_position ){
 			base_iprefs_save_window_position( self );
 		}
@@ -533,6 +531,10 @@ instance_dispose( GObject *window )
 				gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_window ));
 			}
 		}
+
+		/* must dispose _after_ quitting the loop
+		 */
+		self->private->dispose_has_run = TRUE;
 
 		/* release the Gtkbuilder, if any
 		 */

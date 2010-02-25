@@ -1,5 +1,8 @@
 2009-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-window.c (instance_dispose):
+	Only set dispose after having tested for main window.
+
 	* src/api/na-object-api.h:
 	Distinguish between profile and item on get_label.
 
