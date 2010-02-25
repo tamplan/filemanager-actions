@@ -81,6 +81,7 @@ static void     interface_base_finalize( NactIActionsListInterface *klass );
 static void     free_items_callback( NactIActionsList *instance, GList *items );
 static void     free_column_edited_callback( NactIActionsList *instance, NAObject *object, gchar *text, gint column );
 
+static gboolean are_profiles_displayed( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static void     display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactIActionsList *instance );
 static gboolean filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactIActionsList *instance );
 static gboolean filter_selection_is_homogeneous( GtkTreeSelection *selection, NAObject *object );
@@ -90,7 +91,6 @@ static gboolean filter_selection_is_implicitely_selected( NAObject *object );
 static void     filter_selection_set_implicitely_selected_childs( NAObject *object, gboolean select );
 static gboolean have_dnd_mode( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static gboolean have_filter_selection_mode( NactIActionsList *instance, IActionsListInstanceData *ialid );
-static gboolean have_only_actions( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static void     inline_edition( NactIActionsList *instance );
 static gboolean is_iduplicable_proxy( NactIActionsList *instance, IActionsListInstanceData *ialid );
 static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIActionsList *instance );
@@ -661,7 +661,7 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 	static const gchar *thisfn = "nact_iactions_list_fill";
 	GtkTreeView *treeview;
 	NactTreeModel *model;
-	gboolean only_actions;
+	gboolean profiles_are_displayed;
 	IActionsListInstanceData *ialid;
 
 	g_debug( "%s: instance=%p, items=%p", thisfn, ( void * ) instance, ( void * ) items );
@@ -675,11 +675,11 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 		nact_iactions_list_bis_clear_selection( instance, treeview );
 
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
-		only_actions = have_only_actions( instance, ialid );
+		profiles_are_displayed = are_profiles_displayed( instance, ialid );
 
 		ialid->selection_changed_send_allowed = FALSE;
 
-		nact_tree_model_fill( model, items, only_actions );
+		nact_tree_model_fill( model, items, profiles_are_displayed );
 
 		g_list_free( ialid->modified_items );
 		ialid->modified_items = NULL;
@@ -695,7 +695,7 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 		ialid->actions = 0;
 		ialid->profiles = 0;
 
-		if( !only_actions ){
+		if( profiles_are_displayed ){
 			na_object_item_count_items( items, &ialid->menus, &ialid->actions, &ialid->profiles, TRUE );
 			nact_iactions_list_priv_send_list_count_updated_signal( instance, ialid );
 		}
@@ -843,6 +843,16 @@ nact_iactions_list_set_management_mode( NactIActionsList *instance, gint mode )
 		selection = gtk_tree_view_get_selection( treeview );
 		gtk_tree_selection_set_mode( selection, multiple ? GTK_SELECTION_MULTIPLE : GTK_SELECTION_SINGLE );
 	}
+}
+
+static gboolean
+are_profiles_displayed( NactIActionsList *instance, IActionsListInstanceData *ialid )
+{
+	gboolean display;
+
+	display = ( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
+
+	return( display );
 }
 
 /*
@@ -1047,16 +1057,6 @@ have_filter_selection_mode( NactIActionsList *instance, IActionsListInstanceData
 	have_filter = ( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
 
 	return( have_filter );
-}
-
-static gboolean
-have_only_actions( NactIActionsList *instance, IActionsListInstanceData *ialid )
-{
-	gboolean only_actions;
-
-	only_actions = ( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EXPORT );
-
-	return( only_actions );
 }
 
 /*

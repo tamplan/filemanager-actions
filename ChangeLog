@@ -1,5 +1,14 @@
 2009-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	Make the menus exportable.
+
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-tree-model-priv.h:
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h:
+	Change the 'only_actions' semantic by a 'are_profiles_displayed' one.
+	Profiles are actually stored, but not displayed.
+
 	* src/nact/nact-iactions-list.c
 	(nact_iactions_list_initial_load_toplevel):
 	The title of the label column is no more localizable.

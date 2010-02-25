@@ -46,7 +46,7 @@ struct NactTreeModelPrivate {
 	BaseWindow    *window;
 	GtkTreeView   *treeview;
 	gboolean       have_dnd;
-	gboolean       only_actions;
+	gboolean       are_profiles_displayed;
 	NactClipboard *clipboard;
 	gboolean       drag_has_profiles;
 	gboolean       drag_highlight;		/* defined for on_drag_motion handler */
