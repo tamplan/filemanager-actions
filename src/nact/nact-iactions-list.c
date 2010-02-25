@@ -268,7 +268,7 @@ interface_base_init( NactIActionsListInterface *klass )
 		 * nact-iactions-list-status-changed:
 		 *
 		 * This signal is emitted byIActionsList to its implementor
-		 * when the status of an item is changed.
+		 * when the status of an item has changed.
 		 */
 		st_signals[ STATUS_CHANGED ] = g_signal_new(
 				IACTIONS_LIST_SIGNAL_STATUS_CHANGED,
@@ -368,15 +368,19 @@ nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
 		 */
 		/* icon: no header */
 		column = gtk_tree_view_column_new_with_attributes(
-				"", gtk_cell_renderer_pixbuf_new(), "pixbuf", IACTIONS_LIST_ICON_COLUMN, NULL );
+				"icon",
+				gtk_cell_renderer_pixbuf_new(),
+				"pixbuf", IACTIONS_LIST_ICON_COLUMN,
+				NULL );
 		gtk_tree_view_append_column( treeview, column );
 
-		column = gtk_tree_view_column_new();
-		/* i18n: header of the 'label' column in the treeview */
-		gtk_tree_view_column_set_title( column, _( "Label" ));
-		gtk_tree_view_column_set_sort_column_id( column, IACTIONS_LIST_LABEL_COLUMN );
 		renderer = gtk_cell_renderer_text_new();
-		gtk_tree_view_column_pack_start( column, renderer, TRUE );
+		column = gtk_tree_view_column_new_with_attributes(
+				"label",
+				renderer,
+				"text", IACTIONS_LIST_LABEL_COLUMN,
+				NULL );
+		gtk_tree_view_column_set_sort_column_id( column, IACTIONS_LIST_LABEL_COLUMN );
 		gtk_tree_view_column_set_cell_data_func(
 				column, renderer, ( GtkTreeCellDataFunc ) display_label, instance, NULL );
 		gtk_tree_view_append_column( treeview, column );

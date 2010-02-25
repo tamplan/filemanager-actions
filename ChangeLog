@@ -1,5 +1,9 @@
 2009-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iactions-list.c
+	(nact_iactions_list_initial_load_toplevel):
+	The title of the label column is no more localizable.
+
 	Fix validity checks.
 
 	* src/core/na-data-boxed.c
