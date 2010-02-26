@@ -1,3 +1,8 @@
+2009-02-26 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/test/check-po.sh: Test cpompleteness of po/POTFILES.in.
+	* src/test/time.sh: Bench the elapsed build time.
+
 2009-02-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* po/POTFILES.in: Updated.
