@@ -1,5 +1,39 @@
 2009-02-26 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix display of modification status in NACT.
+
+	* src/api/na-iduplicable.h:
+	* src/core/na-iduplicable.c (na_iduplicable_set_modified):
+	New function.
+
+	* src/api/na-object-api.h:
+	* src/api/na-object-item.h:
+	* src/core/na-object-item.c (na_object_item_unref_items_rec):
+	New function.
+
+	* src/core/na-data-boxed.c (string_are_equal):
+	* src/core/na-factory-object.c (na_factory_object_are_equal):
+	* src/core/na-object.c (na_object_object_check_status_up):
+	Rewrite equality tests.
+
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-profile-factory.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile.c:
+	Review one more time default values and initial allocations.
+
+	* src/core/na-pivot.c (instance_dispose, na_pivot_load_items:
+	Only unref the first level of items.
+
+	* src/core/na-updater.c (na_updater_remove_item):
+	Only unref the removed object as it will take care of also unreffing
+	its children if its reference count is correct.
+
+	* src/nact/nact-iactions-list.c (display_label):
+	Add a commented debug line.
+
 	* src/test/check-po.sh: Test cpompleteness of po/POTFILES.in.
 	* src/test/time.sh: Bench the elapsed build time.
 

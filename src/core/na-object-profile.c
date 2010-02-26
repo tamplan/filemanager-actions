@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
 #include <libnautilus-extension/nautilus-file-info.h>
@@ -515,6 +516,7 @@ na_object_profile_new( void )
 	NAObjectProfile *profile;
 
 	profile = g_object_new( NA_OBJECT_PROFILE_TYPE, NULL );
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
 
 	return( profile );
 }
@@ -532,7 +534,7 @@ na_object_profile_new_with_defaults( void )
 	NAObjectProfile *profile = na_object_profile_new();
 
 	na_object_set_id( profile, "profile-zero" );
-	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
+	na_object_set_label( profile, _( "Default profile" ));
 
 	return( profile );
 }

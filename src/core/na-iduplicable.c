@@ -301,6 +301,7 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 	static const gchar *thisfn = "na_iduplicable_check_status";
 	DuplicableStr *str;
 	gboolean was_modified, was_valid;
+	gboolean changed;
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
@@ -311,6 +312,7 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 
 		was_modified = str->modified;
 		was_valid = str->valid;
+		changed = FALSE;
 
 		if( str->origin ){
 			str->modified = !v_are_equal( str->origin, object );
@@ -318,12 +320,28 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 
 		str->valid = v_is_valid( object );
 
-		if(( was_valid && !str->valid ) ||
-			( !was_valid && str->valid ) ||
-			( was_modified && !str->modified ) ||
-			( !was_modified && str->modified )){
+		if( was_modified && !str->modified ){
+			g_debug( "%s: %p (%s) status changed to non-modified",
+					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+			changed = TRUE;
+		} else if ( !was_modified && str->modified ){
+			g_debug( "%s: %p (%s) status changed to modified",
+					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+			changed = TRUE;
+		}
 
-				g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED, object );
+		if( was_valid && !str->valid ){
+			g_debug( "%s: %p (%s) status changed to non-valid",
+					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+			changed = TRUE;
+		} else if( !was_valid && str->valid ){
+			g_debug( "%s: %p (%s) status changed to valid",
+					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+			changed = TRUE;
+		}
+
+		if( changed ){
+			g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED, object );
 		}
 
 #if 0
@@ -440,6 +458,31 @@ na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
 	}
 }
 
+/**
+ * na_iduplicable_set_modified:
+ * @object: the #NAIDuplicable object whose modification status is to be set.
+ * @modified: the new modification status #NAIDuplicable.
+ *
+ * Sets the new modified of a duplicated #NAIDuplicable.
+ */
+void
+na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )
+{
+	DuplicableStr *str;
+
+	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
+
+	if( st_initialized && !st_finalized ){
+
+		str = get_duplicable_str( object );
+
+		if( str->modified != modified ){
+			str->modified = modified;
+			g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED, object );
+		}
+	}
+}
+
 static void
 v_copy( NAIDuplicable *target, const NAIDuplicable *source )
 {
@@ -502,13 +545,16 @@ status_changed_handler( NAIDuplicable *instance, gpointer user_data )
 static void
 propagate_signal_to_consumers( const gchar *signal, NAIDuplicable *instance, gpointer user_data )
 {
+	static const gchar *thisfn = "na_iduplicable_propagate_signals_to_consumers";
 	GList *ic;
+
+	g_return_if_fail( st_interface );
 
 	if( st_initialized && !st_finalized ){
 
-		g_return_if_fail( st_interface );
-		for( ic = st_interface->private->consumers ; ic ; ic = ic->next ){
+		g_debug( "%s: signal=%s, instance=%p, user_data=%p", thisfn, signal, ( void * ) instance, ( void * ) user_data );
 
+		for( ic = st_interface->private->consumers ; ic ; ic = ic->next ){
 			g_signal_emit_by_name( ic->data, signal, user_data );
 		}
 	}

@@ -76,6 +76,7 @@ static gboolean       iduplicable_are_equal_iter( GObjectClass *class, const NAO
 static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
 static gboolean       iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
 
+static void           push_modified_status_up( const NAObject *object, gboolean is_modified );
 static gboolean       dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *user_data );
 static void           dump_tree( GList *tree, gint level );
 static void           iter_on_class_hierarchy( const NAObject *object, HierarchyIterFunc pfn, void *user_data );
@@ -435,19 +436,39 @@ na_object_object_check_status_up( const NAObject *object )
 		is_modified = na_object_is_modified( object );
 		is_valid = na_object_is_valid( object );
 
-		parent = na_object_get_parent( object );
-		if( parent ){
-			na_object_check_status_up( parent );
+		/* if a child becomes modified, then we can safely push this 'modified'
+		 * status up to all its parent hierarchy
+		 */
+		if( !was_modified && is_modified ){
+			push_modified_status_up( object, is_modified );
 		}
 
-		changed =
-			( was_modified && !is_modified ) ||
-			( !was_modified && is_modified ) ||
-			( was_valid && !is_valid ) ||
-			( !was_valid && is_valid );
+		/* but if a child becomes non modified, or its validity status changes,
+		 * then we have to recompute these status for all the parent hierarchy
+		 */
+		changed = (( was_valid && !is_valid ) ||
+				( !was_valid && is_valid ) ||
+				( was_modified && !is_modified ));
+
+		if( changed ){
+			parent = na_object_get_parent( object );
+			if( parent ){
+				na_object_check_status_up( parent );
+			}
+		}
 	}
 
 	return( changed );
+}
+
+static void
+push_modified_status_up( const NAObject *object, gboolean is_modified )
+{
+	NAObject *parent = ( NAObject * ) na_object_get_parent( object );
+	if( parent ){
+		na_iduplicable_set_modified( NA_IDUPLICABLE( parent ), is_modified );
+		push_modified_status_up( parent, is_modified );
+	}
 }
 
 /**
@@ -564,19 +585,19 @@ dump_tree( GList *tree, gint level )
  * @object: a #NAObject-derived object.
  * @origin: must be a duplication of @object.
  *
- * Recursively reset origin of @object and its childs to @origin and
- * its childs), so that @origin appear as the actual origin of @object.
+ * Recursively reset origin of @object and its children to @origin (and
+ * its children), so that @origin appears as the actual origin of @object.
  *
  * The origin of @origin itself is set to NULL.
  *
  * This only works if @origin has just been duplicated from @object,
- * and thus we do not have to check if childs lists are equal.
+ * and thus we do not have to check if children lists are equal.
  */
 void
 na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 {
-	GList *origin_childs, *iorig;
-	GList *object_childs, *iobj;
+	GList *origin_children, *iorig;
+	GList *object_children, *iobj;
 	NAObject *orig_object;
 
 	g_return_if_fail( NA_IS_OBJECT( origin ));
@@ -584,9 +605,9 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 
 	if( !object->private->dispose_has_run && !origin->private->dispose_has_run ){
 
-		origin_childs = na_object_get_items( origin );
-		object_childs = na_object_get_items( object );
-		for( iorig = origin_childs, iobj = object_childs ; iorig && iobj ; iorig = iorig->next, iobj = iobj->next ){
+		origin_children = na_object_get_items( origin );
+		object_children = na_object_get_items( object );
+		for( iorig = origin_children, iobj = object_children ; iorig && iobj ; iorig = iorig->next, iobj = iobj->next ){
 			orig_object = ( NAObject * ) na_object_get_origin( iorig->data );
 			g_return_if_fail( orig_object == iobj->data );
 			na_object_reset_origin( iobj->data, iorig->data );

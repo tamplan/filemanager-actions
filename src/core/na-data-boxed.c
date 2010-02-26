@@ -831,7 +831,10 @@ string_are_equal( const NADataBoxed *a, const NADataBoxed *b )
 	if( !a->private->u.string || !b->private->u.string ){
 		return( FALSE );
 	}
-	return( strcmp( a->private->u.string, b->private->u.string ) == 0 );
+	if( strcmp( a->private->u.string, b->private->u.string ) == 0 ){
+		return( TRUE );
+	}
+	return( FALSE );
 }
 
 static gboolean

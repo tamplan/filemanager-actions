@@ -241,7 +241,7 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 		g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
 
 		if( G_IS_OBJECT( item )){
-			na_object_unref( item );
+			g_object_unref( item );
 		}
 	}
 }

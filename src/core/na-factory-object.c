@@ -380,30 +380,52 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 gboolean
 na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
 {
+	static const gchar *thisfn = "na_factory_object_are_equal";
 	gboolean are_equal;
-	GList *a_list, *b_list, *ia;
+	GList *a_list, *b_list, *ia, *ib;
 
 	are_equal = FALSE;
 
 	a_list = g_object_get_data( G_OBJECT( a ), NA_IFACTORY_OBJECT_PROP_DATA );
 	b_list = g_object_get_data( G_OBJECT( b ), NA_IFACTORY_OBJECT_PROP_DATA );
 
-	if( g_list_length( a_list ) == g_list_length( b_list )){
+	are_equal = TRUE;
+	for( ia = a_list ; ia && are_equal ; ia = ia->next ){
 
-		are_equal = TRUE;
-		for( ia = a_list ; ia && are_equal ; ia = ia->next ){
+		NADataBoxed *a_boxed = NA_DATA_BOXED( ia->data );
+		NADataDef *a_def = na_data_boxed_get_data_def( a_boxed );
+		if( a_def->comparable ){
 
-			NADataBoxed *a_boxed = NA_DATA_BOXED( ia->data );
-			NADataDef *a_def = na_data_boxed_get_data_def( a_boxed );
-			if( a_def->comparable ){
-
-				NADataBoxed *b_boxed = data_boxed_from_name( b, a_def->name );
-				if( b_boxed ){
-					are_equal = na_data_boxed_are_equal( a_boxed, b_boxed );
-
-				} else {
-					are_equal = FALSE;
+			NADataBoxed *b_boxed = data_boxed_from_name( b, a_def->name );
+			if( b_boxed ){
+				are_equal = na_data_boxed_are_equal( a_boxed, b_boxed );
+				if( !are_equal ){
+					g_debug( "%s: %s not equal as %s different", thisfn, G_OBJECT_TYPE_NAME( a ), a_def->name );
 				}
+
+			} else {
+				are_equal = FALSE;
+				g_debug( "%s: %s not equal as %s not set", thisfn, G_OBJECT_TYPE_NAME( a ), a_def->name );
+			}
+		}
+	}
+
+	for( ib = b_list ; ib && are_equal ; ib = ib->next ){
+
+		NADataBoxed *b_boxed = NA_DATA_BOXED( ib->data );
+		NADataDef *b_def = na_data_boxed_get_data_def( b_boxed );
+		if( b_def->comparable ){
+
+			NADataBoxed *a_boxed = data_boxed_from_name( a, b_def->name );
+			if( a_boxed ){
+				are_equal = na_data_boxed_are_equal( a_boxed, b_boxed );
+				if( !are_equal ){
+					g_debug( "%s: %s not equal as %s different", thisfn, G_OBJECT_TYPE_NAME( a ), b_def->name );
+				}
+
+			} else {
+				are_equal = FALSE;
+				g_debug( "%s: %s not equal as %s not set", thisfn, G_OBJECT_TYPE_NAME( a ), b_def->name );
 			}
 		}
 	}
@@ -873,32 +895,6 @@ v_write_done( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, 
 
 	return( code );
 }
-
-#if 0
-/**
- * na_factory_object_set_from_string:
- * @object: this #NAIFactoryObject instance.
- * @property_id: the elementary data id.
- * @string: the string to be set in the element.
- *
- * Set the @object with the @string.
- */
-void
-na_factory_object_set_from_string( NAIFactoryObject *object, guint data_id, const gchar *string )
-{
-	static const gchar *thisfn = "na_factory_object_set_from_string";
-
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
-
-	NADataBoxed *boxed = data_boxed_from_name( object, data_id );
-	if( boxed ){
-		na_data_boxed_set_from_string( boxed, string );
-
-	} else {
-		g_warning( "%s: unknown property id %d", thisfn, data_id );
-	}
-}
-#endif
 
 static void
 attach_boxed_to_object( NAIFactoryObject *object, NADataBoxed *boxed )

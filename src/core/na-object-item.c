@@ -277,7 +277,7 @@ na_object_item_copy( NAObjectItem *item, const NAObjectItem *source )
 
 /**
  * na_object_item_are_equal:
- * @a: the first #NAObjectItem instance.
+ * @a: the first (original) #NAObjectItem instance.
  * @b: the second #NAObjectItem instance.
  *
  * Returns: %TRUE if @a is equal to @b.
@@ -286,14 +286,18 @@ na_object_item_copy( NAObjectItem *item, const NAObjectItem *source )
  * and is triggered after all comparable elementary data (in #NAIFactoryObject
  * sense) have already been successfully compared.
  *
- * We have to deal here with the subitems: comparing childs by their ids
+ * We have to deal here with the subitems: comparing children by their ids
  * between @a and @b.
+ *
+ * Note that, when called from na_object_check_status, the status of children
+ * have already been checked, and so we should be able to rely on them.
  */
 gboolean
 na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b )
 {
+	static const gchar *thisfn = "na_object_item_are_equal";
 	gboolean equal;
-	GList *a_childs, *b_childs, *it;
+	GList *a_children, *b_children, *it;
 	gchar *first_id, *second_id;
 	NAObjectId *first_obj, *second_obj;
 	gint first_pos, second_pos;
@@ -310,51 +314,62 @@ na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b )
 		equal = TRUE;
 
 		if( equal ){
-			a_childs = na_object_get_items( a );
-			b_childs = na_object_get_items( b );
-			equal = ( g_list_length( a_childs ) == g_list_length( b_childs ));
+			a_children = na_object_get_items( a );
+			b_children = na_object_get_items( b );
+			equal = ( g_list_length( a_children ) == g_list_length( b_children ));
+			if( !equal ){
+				g_debug( "%s: %p (%s) not equal as g_list_length not equal",
+						thisfn, ( void * ) b, G_OBJECT_TYPE_NAME( b ));
+			}
 		}
 
 		if( equal ){
-			for( it = a_childs ; it && equal ; it = it->next ){
+			for( it = a_children ; it && equal ; it = it->next ){
 				first_id = na_object_get_id( it->data );
 				second_obj = na_object_get_item( b, first_id );
 				first_pos = -1;
 				second_pos = -1;
+
 				if( second_obj ){
-					first_pos = g_list_position( a_childs, it );
-					second_list = g_list_find( b_childs, second_obj );
-					second_pos = g_list_position( b_childs, second_list );
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-					g_debug( "na_object_item_are_equal: first_pos=%u, second_pos=%u", first_pos, second_pos );
-#endif
+					first_pos = g_list_position( a_children, it );
+					second_list = g_list_find( b_children, second_obj );
+					second_pos = g_list_position( b_children, second_list );
+
 					if( first_pos != second_pos ){
 						equal = FALSE;
-						/*g_debug( "first_id=%s, first_pos=%d, second_pos=%d", first_id, first_pos, second_pos );*/
+						g_debug( "%s: %p (%s) not equal as child %s is at pos %u",
+								thisfn, ( void * ) b, G_OBJECT_TYPE_NAME( b ), first_id, second_pos );
 					}
+
 				} else {
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-					g_debug( "na_object_item_are_equal: id=%s not found in b", first_id );
-#endif
 					equal = FALSE;
-					/*g_debug( "first_id=%s, second not found", first_id );*/
+					g_debug( "%s: %p (%s) not equal as child %s removed",
+							thisfn, ( void * ) b, G_OBJECT_TYPE_NAME( b ), first_id );
 				}
-				/*g_debug( "first_id=%s first_pos=%d second_pos=%d", first_id, first_pos, second_pos );*/
+
 				g_free( first_id );
 			}
 		}
 
 		if( equal ){
-			for( it = b_childs ; it && equal ; it = it->next ){
+			for( it = b_children ; it && equal ; it = it->next ){
 				second_id = na_object_get_id( it->data );
 				first_obj = na_object_get_item( a, second_id );
+
 				if( !first_obj ){
-#if NA_IDUPLICABLE_EDITION_STATUS_DEBUG
-					g_debug( "na_object_item_are_equal: id=%s not found in a", second_id );
-#endif
 					equal = FALSE;
-					/*g_debug( "second_id=%s, first not found", second_id );*/
+					g_debug( "%s: %p (%s) not equal as child %s added",
+							thisfn, ( void * ) b, G_OBJECT_TYPE_NAME( b ), second_id );
+
+				} else {
+					equal = !na_object_is_modified( it->data );
+
+					if( !equal ){
+						g_debug( "%s: %p (%s) not equal as child %s modified",
+								thisfn, ( void * ) b, G_OBJECT_TYPE_NAME( b ), second_id );
+					}
 				}
+
 				g_free( second_id );
 			}
 		}
@@ -641,7 +656,9 @@ na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *prof
  * na_object_item_unref_items:
  * @list: a list of #NAObject-derived items.
  *
- * Recursively unref the #NAObject of the list, freeing the list at last.
+ * Unref only the first level the #NAObject of the list, freeing the list at last.
+ *
+ * This is rather only used by #NAPivot.
  */
 void
 na_object_item_unref_items( GList *items )
@@ -649,8 +666,27 @@ na_object_item_unref_items( GList *items )
 	GList *it;
 
 	for( it = items ; it ; it = it->next ){
-		/*na_object_unref( it->data );*/
 		g_object_unref( it->data );
+	}
+
+	g_list_free( items );
+}
+
+/**
+ * na_object_item_unref_items_rec:
+ * @list: a list of #NAObject-derived items.
+ *
+ * Recursively unref the #NAObject of the list, freeing the list at last.
+ *
+ * This is heavily used by NACT.
+ */
+void
+na_object_item_unref_items_rec( GList *items )
+{
+	GList *it;
+
+	for( it = items ; it ; it = it->next ){
+		na_object_unref( it->data );
 	}
 
 	g_list_free( items );

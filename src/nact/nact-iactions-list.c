@@ -877,6 +877,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	label = na_object_get_label( object );
 	g_object_set( cell, "style-set", FALSE, NULL );
 	g_object_set( cell, "foreground-set", FALSE, NULL );
+	/*g_debug( "nact_iactions_list_display_label: %s %s", G_OBJECT_TYPE_NAME( object ), label );*/
 
 	if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
 

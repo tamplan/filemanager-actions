@@ -105,7 +105,7 @@ static NADataDef data_def_action [] = {
 				"Label of the action in the toolbar. " \
 				"Defaults to main label if empty or not set.",
 				NAFD_TYPE_LOCALE_STRING,
-				NULL,
+				"",
 				TRUE,
 				TRUE,
 				FALSE,

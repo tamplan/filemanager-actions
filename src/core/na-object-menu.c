@@ -386,6 +386,7 @@ na_object_menu_new( void )
 	NAObjectMenu *menu;
 
 	menu = g_object_new( NA_OBJECT_MENU_TYPE, NULL );
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( menu ));
 
 	return( menu );
 }
@@ -404,7 +405,6 @@ na_object_menu_new_with_defaults( void )
 
 	na_object_set_new_id( menu, NULL );
 	na_object_set_label( menu, NEW_NAUTILUS_MENU );
-	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( menu ));
 
 	return( menu );
 }

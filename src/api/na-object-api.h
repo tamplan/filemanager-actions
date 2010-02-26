@@ -122,7 +122,7 @@ G_BEGIN_DECLS
 
 #define na_object_get_items_count( obj )				na_object_item_get_items_count( NA_OBJECT_ITEM( obj ))
 #define na_object_count_items( list, cm, ca, cp, brec )	na_object_item_count_items( list, ( cm ), ( ca ), ( cp ), ( brec ))
-#define na_object_unref_items( tree )					na_object_item_unref_items( tree )
+#define na_object_unref_items( tree )					na_object_item_unref_items_rec( tree )
 
 /* NAObjectAction
  */

@@ -46,7 +46,7 @@ NADataDef data_def_item [] = {
 				"Main label of the NAObjectItem object. " \
 				"Serves as a default for the toolbar label of an action.",
 				NAFD_TYPE_LOCALE_STRING,
-				NULL,
+				"",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -60,7 +60,7 @@ NADataDef data_def_item [] = {
 				"Item tooltip",
 				"Tooltip associated to the item in the context menu or in the toolbar.",
 				NAFD_TYPE_LOCALE_STRING,
-				NULL,
+				"",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -75,7 +75,7 @@ NADataDef data_def_item [] = {
 				"Icon displayed in the context menu and in the toolbar. " \
 				"May be the name of a themed icon, or the full path to any appropriate image.",
 				NAFD_TYPE_LOCALE_STRING,
-				NULL,
+				"",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -90,7 +90,7 @@ NADataDef data_def_item [] = {
 				"Some text which explains the goal of the menu or the action. " \
 				"Will be used, e.g. when displaying available items on a web site.",
 				NAFD_TYPE_LOCALE_STRING,
-				NULL,
+				"",
 				TRUE,
 				TRUE,
 				FALSE,
