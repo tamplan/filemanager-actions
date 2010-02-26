@@ -1,6 +1,45 @@
 2009-02-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-ifactory-object.h:
+	* src/core/na-ifactory-object.c:
+	Remove get_default() function from the interface.
+
+	* src/api/na-object-action.h:
+	* src/core/na-object-action.c (na_object_action_new_with_defaults):
+	New function.
+	Remove ifactory_object_get_default() implementation.
+
+	* src/api/na-object-menu.h:
+	* src/core/na-object-menu.c (na_object_menu_new_with_defaults):
+	New function.
+	Remove ifactory_object_get_default() implementation.
+
+	* src/api/na-object-profile.h:
+	* src/core/na-object-profile.c (na_object_profile_new_with_defaults):
+	New function.
+	Remove ifactory_object_get_default() implementation.
+
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h
+	(na_factory_object_set_defaults): New function.
+	(na_factory_object_attach_with_default): Removed function.
+	Cleanup the code.
+
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-profile-factory.c:
+	Review default values.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-iconditions-tab.c:
+	Fix the display of NULL texts.
+
+	* src/nact/nact-main-menubar.c:
+	* src/utils/nautilus-actions-new.c:
+	Allocate new objects with defaults.
+
+	* src/api/na-ifactory-object.h:
 	* src/api/na-ifactory-provider.h:
 	* src/api/na-object-api.h:
 	* src/api/na-object-item.h:

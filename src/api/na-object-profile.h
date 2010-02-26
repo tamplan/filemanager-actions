@@ -70,6 +70,7 @@ typedef struct {
 GType            na_object_profile_get_type( void );
 
 NAObjectProfile *na_object_profile_new( void );
+NAObjectProfile *na_object_profile_new_with_defaults( void );
 
 void             na_object_profile_set_scheme    ( NAObjectProfile *profile, const gchar *scheme, gboolean selected );
 void             na_object_profile_replace_folder( NAObjectProfile *profile, const gchar *old, const gchar *new );

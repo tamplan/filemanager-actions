@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include <api/na-ifactory-object-data.h>
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
@@ -46,7 +48,7 @@ static NADataDef data_def_profile [] = {
 				"Main label of the NAObjectProfile profile. " \
 				"May be used as a description for the function of the profile.",
 				NAFD_TYPE_LOCALE_STRING,
-				"",
+				N_( "Default profile" ),
 				TRUE,
 				TRUE,
 				FALSE,
@@ -60,7 +62,7 @@ static NADataDef data_def_profile [] = {
 				"Command path",
 				"The path to the command.",
 				NAFD_TYPE_STRING,
-				"",
+				NULL,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -74,7 +76,7 @@ static NADataDef data_def_profile [] = {
 				"Command parameters",
 				"The parameters of the command.",
 				NAFD_TYPE_STRING,
-				"",
+				NULL,
 				TRUE,
 				TRUE,
 				FALSE,
@@ -104,7 +106,7 @@ static NADataDef data_def_profile [] = {
 				"Whether the specified basenames are case sensitive." \
 				"Defaults to 'true'.",
 				NAFD_TYPE_BOOLEAN,
-				"TRUE",
+				"true",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -134,7 +136,7 @@ static NADataDef data_def_profile [] = {
 				"Whether the profile only applies to files." \
 				"Defaults to 'true'",
 				NAFD_TYPE_BOOLEAN,
-				"TRUE",
+				"true",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -149,7 +151,7 @@ static NADataDef data_def_profile [] = {
 				"Whether the profile applies to directories only." \
 				"Defaults to 'false'",
 				NAFD_TYPE_BOOLEAN,
-				"FALSE",
+				"false",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -164,7 +166,7 @@ static NADataDef data_def_profile [] = {
 				"Whether the selection may be multiple." \
 				"Defaults to 'false'.",
 				NAFD_TYPE_BOOLEAN,
-				"FALSE",
+				"false",
 				TRUE,
 				TRUE,
 				FALSE,

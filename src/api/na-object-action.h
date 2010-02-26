@@ -77,6 +77,7 @@ GType na_object_action_get_type( void );
 
 NAObjectAction *na_object_action_new( void );
 NAObjectAction *na_object_action_new_with_profile( void );
+NAObjectAction *na_object_action_new_with_defaults( void );
 
 gchar          *na_object_action_get_new_profile_name( const NAObjectAction *action );
 void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );

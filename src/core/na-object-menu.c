@@ -74,7 +74,6 @@ static gboolean     object_is_valid( const NAObject *object );
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static gchar       *ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *iddef );
 static void         ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
 static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
@@ -127,10 +126,6 @@ register_type( void )
 	type = g_type_register_static( NA_OBJECT_ITEM_TYPE, "NAObjectMenu", &info, 0 );
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
-
-#if 0
-	na_factory_object_register_type( type, menu_id_groups );
-#endif
 
 	return( type );
 }
@@ -265,7 +260,6 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
-	iface->get_default = ifactory_object_get_default;
 	iface->copy = ifactory_object_copy;
 	iface->are_equal = ifactory_object_are_equal;
 	iface->is_valid = ifactory_object_is_valid;
@@ -285,21 +279,6 @@ static NADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( menu_data_groups );
-}
-
-static gchar *
-ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *def )
-{
-	gchar *value;
-
-	value = NULL;
-
-	if( !strcmp( def->name, NAFO_DATA_LABEL )){
-
-		value = g_strdup( NEW_NAUTILUS_MENU );
-	}
-
-	return( value );
 }
 
 static void
@@ -399,9 +378,6 @@ is_valid_label( const NAObjectMenu *menu )
  *
  * Allocates a new #NAObjectMenu object.
  *
- * The new #NAObjectMenu object is initialized with suitable default values,
- * but without any profile.
- *
  * Returns: the newly allocated #NAObjectMenu object.
  */
 NAObjectMenu *
@@ -410,6 +386,25 @@ na_object_menu_new( void )
 	NAObjectMenu *menu;
 
 	menu = g_object_new( NA_OBJECT_MENU_TYPE, NULL );
+
+	return( menu );
+}
+
+/**
+ * na_object_menu_new_with_defaults:
+ *
+ * Allocates a new #NAObjectMenu object, and setup default values.
+ *
+ * Returns: the newly allocated #NAObjectMenu object.
+ */
+NAObjectMenu *
+na_object_menu_new_with_defaults( void )
+{
+	NAObjectMenu *menu = na_object_menu_new();
+
+	na_object_set_new_id( menu, NULL );
+	na_object_set_label( menu, NEW_NAUTILUS_MENU );
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( menu ));
 
 	return( menu );
 }

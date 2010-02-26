@@ -292,7 +292,7 @@ get_action_from_cmdline( void )
 	GSList *schemes;
 	GSList *folders;
 
-	action = na_object_action_new_with_profile();
+	action = na_object_action_new_with_defaults();
 	profile = NA_OBJECT_PROFILE(( GList * ) na_object_get_items( action )->data );
 
 	na_object_set_label( action, label );

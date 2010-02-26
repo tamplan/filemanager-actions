@@ -462,6 +462,9 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		enable_label = ( item && ( NA_IS_OBJECT_MENU( item ) || target_selection || target_background ));
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
 		label = item ? na_object_get_label( item ) : g_strdup( "" );
+		if( !label ){
+			label = g_strdup( "" );
+		}
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		if( item ){
 			check_for_label( instance, GTK_ENTRY( label_widget ), label );
@@ -483,6 +486,9 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
 		label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_get_toolbar_label( NA_OBJECT_ACTION( item )) : g_strdup( "" );
+		if( !label ){
+			label = g_strdup( "" );
+		}
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		g_free( label );
 		toolbar_label_set_sensitive( instance, item );
@@ -490,6 +496,9 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 
 		tooltip_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionTooltipEntry" );
 		tooltip = item ? na_object_get_tooltip( item ) : g_strdup( "" );
+		if( !tooltip ){
+			tooltip = g_strdup( "" );
+		}
 		gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
 		g_free( tooltip );
 		gtk_widget_set_sensitive( tooltip_widget, item != NULL );
@@ -497,6 +506,9 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 		icon = item ? na_object_get_icon( item ) : g_strdup( "" );
+		if( !icon ){
+			icon = g_strdup( "" );
+		}
 		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
 		g_free( icon );
 		gtk_widget_set_sensitive( icon_widget, item != NULL );
@@ -535,6 +547,9 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemID" );
 		label = item ? na_object_get_id( item ) : g_strdup( "" );
+		if( !label ){
+			label = g_strdup( "" );
+		}
 		gtk_label_set_text( GTK_LABEL( label_widget ), label );
 		g_free( label );
 		gtk_widget_set_sensitive( label_widget, item != NULL );

@@ -43,9 +43,6 @@
 #include <api/na-data-boxed.h>
 
 #include "na-factory-object.h"
-#if 0
-#include "na-ifactory-object-priv.h"
-#endif
 #include "na-factory-provider.h"
 
 typedef gboolean ( *NADataDefIterFunc )( NADataDef *def, void *user_data );
@@ -78,28 +75,23 @@ typedef struct {
 }
 	NafoValidIter;
 
-#if 0
 /* while iterating on set defaults
  */
 typedef struct {
 	NAIFactoryObject *object;
-	gboolean          creation;
 }
-	NadfNewIter;
-#endif
+	NafoDefaultIter;
 
 #define NA_IFACTORY_OBJECT_PROP_DATA				"na-ifactory-object-prop-data"
 
 extern gboolean                   ifactory_object_initialized;
 extern gboolean                   ifactory_object_finalized;
-#if 0
-extern NAIFactoryObjectInterface *ifactory_object_klass;
-#endif
 
 static gboolean     define_class_properties_iter( const NADataDef *def, GObjectClass *class );
-static gboolean     factory_object_is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data );
-static gboolean     factory_object_read_data_iter( NADataDef *def, NafoReadIter *iter );
-static gboolean     factory_object_write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIter *iter );
+static gboolean     set_defaults_iter( NADataDef *def, NafoDefaultIter *data );
+static gboolean     is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data );
+static gboolean     read_data_iter( NADataDef *def, NafoReadIter *iter );
+static gboolean     write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIter *iter );
 
 static NADataGroup *v_get_groups( const NAIFactoryObject *object );
 static void         v_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
@@ -114,53 +106,6 @@ static void         attach_boxed_to_object( NAIFactoryObject *object, NADataBoxe
 static NADataBoxed *data_boxed_from_name( const NAIFactoryObject *object, const gchar *name );
 static void         free_data_boxed_list( NAIFactoryObject *object );
 static void         iter_on_data_defs( const NADataGroup *idgroups, gboolean serializable_only, NADataDefIterFunc pfn, void *user_data );
-
-#if 0
-static gboolean     factory_object_init_instance_iter( const NADataDef *def, NAIFactoryObject *object );
-static gchar       *v_get_default( const NAIFactoryObject *object, const NADataDef *def );
-#endif
-
-#if 0
-/**
- * na_factory_object_register_type:
- * @type: the #GType of the implementation class.
- * @groups: a table of #NADataGroup structures which defines the
- *  serializable properties which will be attached to each instance of
- *  this class.
- *
- * Registers the implementation #GType @type.
- */
-void
-na_factory_object_register_type( GType type, const NADataGroup *groups )
-{
-	static const gchar *thisfn = "na_factory_object_register_type";
-	NADataImplement *known;
-	NADataGroup *registered;
-
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
-
-		g_debug( "%s: type=%lu, groups=%p",
-				thisfn, ( unsigned long ) type, ( void * ) groups );
-
-		g_return_if_fail( groups != NULL );
-
-		registered = na_factory_object_get_data_groups_from_type( type );
-		if( registered ){
-			g_warning( "%s: type=%lu: already registered", thisfn, ( unsigned long ) type );
-
-		} else {
-			/* register the implementation
-			 */
-			known = g_new0( NADataImplement, 1 );
-			known->type = type;
-			known->groups = ( NADataGroup * ) groups;
-
-			ifactory_object_klass->private->registered =
-					g_list_prepend( ifactory_object_klass->private->registered, known );
-		}
-	}
-}
-#endif
 
 /**
  * na_factory_object_define_properties:
@@ -183,7 +128,7 @@ na_factory_object_define_properties( GObjectClass *class, const NADataGroup *gro
 
 		/* define class properties
 		 */
-		iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) &define_class_properties_iter, class );
+		iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) define_class_properties_iter, class );
 	}
 }
 
@@ -304,33 +249,62 @@ na_factory_object_iter_on_boxed( const NAIFactoryObject *object, NAFactoryObject
 }
 
 /**
- * na_factory_object_attach_with_default:
+ * na_factory_object_set_defaults:
  * @object: this #NAIFactoryObject object.
- * @name: a #NADataDef name.
  *
- * Attach a new #NADataBoxed element to this @object, initializing it
- * with its default value.
+ * Implement default values in this new @object.
  */
 void
-na_factory_object_attach_with_default( NAIFactoryObject *object, const gchar *name )
+na_factory_object_set_defaults( NAIFactoryObject *object )
 {
-	static const gchar *thisfn = "na_factory_object_attach_with_default";
+	static const gchar *thisfn = "na_factory_object_set_defaults";
+	NADataGroup *groups;
+	NafoDefaultIter *iter_data;
 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
 	if( ifactory_object_initialized && !ifactory_object_finalized ){
 
-		NADataDef *def = na_factory_object_get_data_def( object, name );
-
-		if( !def ){
-			g_warning( "%s: no NADataDef found for %s", thisfn, name );
+		groups = v_get_groups( object );
+		if( !groups ){
+			g_warning( "%s: no NADataGroup found for %s", thisfn, G_OBJECT_TYPE_NAME( object ));
 
 		} else {
-			NADataBoxed *boxed = na_data_boxed_new( def );
-			na_data_boxed_set_default( boxed );
-			attach_boxed_to_object( object, boxed );
+			iter_data = g_new0( NafoDefaultIter, 1 );
+			iter_data->object = object;
+
+			iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) set_defaults_iter, iter_data );
+
+			g_free( iter_data );
 		}
 	}
+}
+
+static gboolean
+set_defaults_iter( NADataDef *def, NafoDefaultIter *data )
+{
+	NADataBoxed *boxed;
+	gboolean is_null;
+
+	if( !def->obsoleted ){
+		if( def->default_value ){
+			is_null = TRUE;
+			boxed = data_boxed_from_name( data->object, def->name );
+			if( boxed ){
+				is_null = ( na_data_boxed_get_as_void( boxed ) == NULL );
+			}
+			if( is_null ){
+				if( !boxed ){
+					boxed = na_data_boxed_new( def );
+					attach_boxed_to_object( data->object, boxed );
+				}
+				na_data_boxed_set_from_string( boxed, def->default_value );
+			}
+		}
+	}
+
+	/* do not stop */
+	return( FALSE );
 }
 
 /**
@@ -467,7 +441,7 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 
 	groups = v_get_groups( object );
 	if( groups ){
-		iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) factory_object_is_valid_mandatory_iter, &iter_data );
+		iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) is_valid_mandatory_iter, &iter_data );
 	}
 	is_valid = iter_data.is_valid;
 
@@ -483,7 +457,7 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 }
 
 static gboolean
-factory_object_is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data )
+is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data )
 {
 	NADataBoxed *boxed;
 
@@ -537,69 +511,6 @@ na_factory_object_dump( const NAIFactoryObject *object )
 	}
 }
 
-#if 0
-/**
- * na_factory_object_init_instance:
- * @object: the #NAIFactoryObject being initialized.
- *
- * Initializes properties attached to the @object.
- *
- * This essentially consists of creating a #NADataBoxed for each
- * defined elementary data, initializing it to its default value.
- */
-void
-na_factory_object_init_instance( NAIFactoryObject *object )
-{
-	static const gchar *thisfn = "na_factory_object_init_instance";
-	NADataGroup *groups;
-
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
-
-	/* do not allocate any NADataBoxed now
-	 * just ensure that the GList which will host them is initialized
-	 */
-	g_object_set_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA, NULL );
-
-	if( FALSE ){
-		groups = na_factory_object_get_data_groups_from_type( G_OBJECT_TYPE( object ));
-		if( groups ){
-			iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) &factory_object_init_instance_iter, object );
-
-		} else {
-			g_warning( "%s: class=%s: groups not found", thisfn, G_OBJECT_TYPE_NAME( object ));
-		}
-	}
-}
-
-static gboolean
-factory_object_init_instance_iter( const NADataDef *def, NAIFactoryObject *object )
-{
-	gboolean stop;
-	GList *list;
-	NADataBoxed *element;
-	NadfDataValue *data;
-	gchar *default_value;
-
-	stop = FALSE;
-
-	default_value = v_get_default( object, def );
-	element = na_data_boxed_new( def );
-	na_data_boxed_set_from_string( element, ( const void * )( default_value ? default_value : def->default_value ));
-	g_free( default_value );
-
-	data = g_new0( NadfDataValue, 1 );
-	data->def = ( NADataDef * ) def;
-	data->element = element;
-
-	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
-	list = g_list_prepend( list, data );
-	g_object_set_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA, list );
-
-	return( stop );
-}
-#endif
-
 /**
  * na_factory_object_finalize_instance:
  * @object: the #NAIFactoryObject being finalized.
@@ -643,7 +554,7 @@ na_factory_object_read_item( NAIFactoryObject *serializable, const NAIFactoryPro
 			iter->reader_data = reader_data;
 			iter->messages = messages;
 
-			iter_on_data_defs( groups, TRUE, ( NADataDefIterFunc ) &factory_object_read_data_iter, iter );
+			iter_on_data_defs( groups, TRUE, ( NADataDefIterFunc ) read_data_iter, iter );
 
 			g_free( iter );
 
@@ -657,7 +568,7 @@ na_factory_object_read_item( NAIFactoryObject *serializable, const NAIFactoryPro
 }
 
 static gboolean
-factory_object_read_data_iter( NADataDef *def, NafoReadIter *iter )
+read_data_iter( NADataDef *def, NafoReadIter *iter )
 {
 	gboolean stop;
 
@@ -725,7 +636,7 @@ na_factory_object_write_item( NAIFactoryObject *serializable, const NAIFactoryPr
 		iter->messages = messages;
 		iter->code = code;
 
-		na_factory_object_iter_on_boxed( serializable, ( NAFactoryObjectIterBoxedFn ) &factory_object_write_data_iter, iter );
+		na_factory_object_iter_on_boxed( serializable, ( NAFactoryObjectIterBoxedFn ) write_data_iter, iter );
 
 		code = iter->code;
 		g_free( iter );
@@ -739,7 +650,7 @@ na_factory_object_write_item( NAIFactoryObject *serializable, const NAIFactoryPr
 }
 
 static gboolean
-factory_object_write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIter *iter )
+write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIter *iter )
 {
 	NADataDef *def = na_data_boxed_get_data_def( boxed );
 
@@ -750,32 +661,6 @@ factory_object_write_data_iter( const NAIFactoryObject *object, NADataBoxed *box
 	/* iter while code is ok */
 	return( iter->code == NA_IIO_PROVIDER_CODE_OK );
 }
-
-#if 0
-/**
- * na_factory_provider_get_data_groups:
- * @type: a previously registered #GType.
- *
- * Returns the #NADataGroups table which has been registered for this @type,
- * or %NULL.
- */
-NADataGroup *
-na_factory_object_get_data_groups_from_type( GType type )
-{
-	GList *it;
-
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
-
-		for( it = ifactory_object_klass->private->registered ; it ; it = it->next ){
-			if((( NADataImplement * ) it->data )->type == type ){
-				return((( NADataImplement * ) it->data )->groups );
-			}
-		}
-	}
-
-	return( NULL );
-}
-#endif
 
 /**
  * na_factory_object_get_as_value:
@@ -948,51 +833,6 @@ v_is_valid( const NAIFactoryObject *object )
 
 	return( is_valid );
 }
-
-#if 0
-/**
- * na_factory_object_new:
- * @type: the GType type of the object we want allocate.
- *
- * Returns: a newly allocated #NAObject-derived object, or %NULL.
- *
- * The function checks that @type has been previously registered in the
- * data factory management system (cf. #na_factory_object_init_class()),
- * and if so invoke an empty constructor with this @type.
- */
-NAIFactoryObject *
-na_factory_object_new( GType type )
-{
-	NAIFactoryObject *object;
-	NADataGroup *groups;
-
-	object = NULL;
-
-	/* check that @type has been registered
-	 */
-	groups = na_factory_object_get_data_groups_from_type( type );
-	if( groups ){
-
-		object = NA_IFACTORY_OBJECT( g_object_new( type, NULL ));
-	}
-
-	return( object );
-}
-
-static gchar *
-v_get_default( const NAIFactoryObject *object, const NADataDef *def )
-{
-	gchar *default_value;
-
-	default_value = NULL;
-
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_default ){
-		default_value = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_default( object, def );
-	}
-
-	return( default_value );
-}
-#endif
 
 static void
 v_read_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )

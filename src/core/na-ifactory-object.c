@@ -111,7 +111,6 @@ interface_base_init( NAIFactoryObjectInterface *klass )
 
 		klass->get_version = ifactory_object_get_version;
 		klass->get_groups = NULL;
-		klass->get_default = NULL;
 		klass->copy = NULL;
 		klass->are_equal = NULL;
 		klass->is_valid = NULL;

@@ -846,7 +846,7 @@ on_new_menu_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	menu = na_object_menu_new();
+	menu = na_object_menu_new_with_defaults();
 	na_object_check_status( menu );
 	items = g_list_prepend( NULL, menu );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
@@ -862,7 +862,7 @@ on_new_action_activated( GtkAction *gtk_action, NactMainWindow *window )
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	action = na_object_action_new_with_profile();
+	action = na_object_action_new_with_defaults();
 	na_object_check_status( action );
 	items = g_list_prepend( NULL, action );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
@@ -885,18 +885,19 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 			TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
 			NULL );
 
-	profile = na_object_profile_new();
+	profile = na_object_profile_new_with_defaults();
 
 	name = na_object_action_get_new_profile_name( action );
-	na_object_set_parent( profile, action );
 	na_object_set_id( profile, name );
+	g_free( name );
+
+	na_object_attach_profile( action, profile );
+
 	na_object_check_status( profile );
 
 	items = g_list_prepend( NULL, profile );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-
 	na_object_unref_items( items );
-	g_free( name );
 }
 
 /*

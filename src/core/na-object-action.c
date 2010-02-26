@@ -81,7 +81,6 @@ static gboolean     object_is_valid( const NAObject *object );
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static gchar       *ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *iddef );
 static void         ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
 static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
@@ -275,7 +274,6 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
-	iface->get_default = ifactory_object_get_default;
 	iface->copy = ifactory_object_copy;
 	iface->are_equal = ifactory_object_are_equal;
 	iface->is_valid = ifactory_object_is_valid;
@@ -295,22 +293,6 @@ static NADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( action_data_groups );
-}
-
-static gchar *
-ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *def )
-{
-	gchar *value;
-
-	value = NULL;
-
-	if( !strcmp( def->name, NAFO_DATA_LABEL ) ||
-		!strcmp( def->name, NAFO_DATA_TOOLBAR_LABEL )){
-
-			value = g_strdup( NEW_NAUTILUS_ACTION );
-	}
-
-	return( value );
 }
 
 static void
@@ -510,6 +492,32 @@ na_object_action_new_with_profile( void )
 	action = na_object_action_new();
 
 	profile = na_object_profile_new();
+	na_object_action_attach_profile( action, profile );
+
+	return( action );
+}
+
+/**
+ * na_object_action_new_with_defaults:
+ *
+ * Allocates a new #NAObjectAction object along with a default profile.
+ * These two objects have suitable default values.
+ *
+ * Returns: the newly allocated #NAObjectAction action.
+ */
+NAObjectAction *
+na_object_action_new_with_defaults( void )
+{
+	NAObjectAction *action;
+	NAObjectProfile *profile;
+
+	action = na_object_action_new();
+	na_object_set_new_id( action, NULL );
+	na_object_set_label( action, NEW_NAUTILUS_ACTION );
+	na_object_set_toolbar_label( action, NEW_NAUTILUS_ACTION );
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( action ));
+
+	profile = na_object_profile_new_with_defaults();
 	na_object_action_attach_profile( action, profile );
 
 	return( action );

@@ -67,6 +67,7 @@ typedef struct {
 GType         na_object_menu_get_type( void );
 
 NAObjectMenu *na_object_menu_new( void );
+NAObjectMenu *na_object_menu_new_with_defaults( void );
 
 G_END_DECLS
 

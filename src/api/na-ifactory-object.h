@@ -85,21 +85,6 @@ typedef struct {
 	NADataGroup * ( *get_groups ) ( const NAIFactoryObject *instance );
 
 	/**
-	 * get_default:
-	 * @instance: this #NAIFactoryObject instance.
-	 * @iddef: the #NADataDef structure which defines the data whose
-	 * default value is searched for.
-	 *
-	 * The @instance may take advantage of this method to setup a default
-	 * value for a specific instance, or even for instances of a class when
-	 * several classes share some elementary data via common #NADataGroup.
-	 *
-	 * Returns: a newly allocated string which defines the suitable
-	 * default value, or %NULL.
-	 */
-	gchar *       ( *get_default )( const NAIFactoryObject *instance, const NADataDef *iddef );
-
-	/**
 	 * copy:
 	 * @instance: the target #NAIFactoryObject instance.
 	 * @source: the source #NAIFactoryObject instance.

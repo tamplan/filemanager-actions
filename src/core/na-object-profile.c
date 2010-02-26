@@ -81,7 +81,6 @@ static gboolean     object_is_valid( const NAObject *object );
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static gchar       *ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *iddef );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
@@ -151,10 +150,6 @@ register_type( void )
 	type = g_type_register_static( NA_OBJECT_ID_TYPE, "NAObjectProfile", &info, 0 );
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
-
-#if 0
-	na_factory_object_register_type( type, profile_id_groups );
-#endif
 
 	return( type );
 }
@@ -295,7 +290,6 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
-	iface->get_default = ifactory_object_get_default;
 	iface->copy = NULL;
 	iface->are_equal = NULL;
 	iface->is_valid = ifactory_object_is_valid;
@@ -315,23 +309,6 @@ static NADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( profile_data_groups );
-}
-
-static gchar *
-ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *def )
-{
-	gchar *value;
-
-	value = NULL;
-
-	if( !strcmp( def->name, NAFO_DATA_ID )){
-		value = g_strdup( PROFILE_NAME_PREFIX "zero" );
-
-	} else if( !strcmp( def->name, NAFO_DATA_LABEL )){
-		value = g_strdup( DEFAULT_PROFILE );
-	}
-
-	return( value );
 }
 
 static gboolean
@@ -542,6 +519,24 @@ na_object_profile_new( void )
 	NAObjectProfile *profile;
 
 	profile = g_object_new( NA_OBJECT_PROFILE_TYPE, NULL );
+
+	return( profile );
+}
+
+/**
+ * na_object_profile_new_with_defaults:
+ *
+ * Allocates a new profile, and set default values.
+ *
+ * Returns: the newly allocated #NAObjectProfile profile.
+ */
+NAObjectProfile *
+na_object_profile_new_with_defaults( void )
+{
+	NAObjectProfile *profile = na_object_profile_new();
+
+	na_object_set_id( profile, "profile-zero" );
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
 
 	return( profile );
 }
