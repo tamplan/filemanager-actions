@@ -1,5 +1,35 @@
 2009-02-26 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix references count mistakes in NACT.
+
+	* src/api/na-object-api.h (na_object_unref_selected_items):
+	New macro, more specifically targeting the tree selections.
+
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h (na_factory_object_finalize_instance):
+	Renamed as na_factory_object_finalize().
+
+	* src/core/na-object-action.c (instance_finalize):
+	* src/core/na-object-item.c (instance_finalize):
+	* src/core/na-object-menu.c (instance_finalize):
+	* src/core/na-object-profile.c (instance_finalize):
+	* src/core/na-object.c (instance_finalize):
+	Move na_object_unref_selected_items() to 
+	na_object:na_factory_object_finalize.
+
+	* src/core/na-pivot.c (instance_dispose, reload_items):
+	Use non-recursive na_object_unref_items() macro.
+
+	* src/nact/nact-assistant-export.c (assist_prepare_confirm):
+	* src/nact/nact-iactions-list.c (free_items_callback):
+	* src/nact/nact-main-menubar.c (on_update_sensitivities):
+	Use recursive na_object_unref_selected_items() macro.
+
+	* src/nact/nact-iactions-list.c (filter_selection):
+	Unref the got object immediately (which was the actual bug).
+
+	* src/test/init-dispose-diff.sh: Fix and optimize.
+
 	Fix display of modification status in NACT.
 
 	* src/api/na-iduplicable.h:

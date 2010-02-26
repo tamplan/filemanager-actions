@@ -312,7 +312,7 @@ instance_dispose( GObject *object )
 		self->private->consumers = NULL;
 
 		/* release item tree */
-		na_object_item_unref_items( self->private->tree );
+		na_object_unref_items( self->private->tree );
 		self->private->tree = NULL;
 
 		/* release the GConf monitoring */
@@ -545,7 +545,7 @@ na_pivot_load_items( NAPivot *pivot )
 
 	if( !pivot->private->dispose_has_run ){
 
-		na_object_item_unref_items( pivot->private->tree );
+		na_object_unref_items( pivot->private->tree );
 
 		messages = NULL;
 

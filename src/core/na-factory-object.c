@@ -534,13 +534,13 @@ na_factory_object_dump( const NAIFactoryObject *object )
 }
 
 /**
- * na_factory_object_finalize_instance:
+ * na_factory_object_finalize:
  * @object: the #NAIFactoryObject being finalized.
  *
  * Clears all data associated with this @object.
  */
 void
-na_factory_object_finalize_instance( NAIFactoryObject *object )
+na_factory_object_finalize( NAIFactoryObject *object )
 {
 	free_data_boxed_list( object );
 }
@@ -927,15 +927,11 @@ data_boxed_from_name( const NAIFactoryObject *object, const gchar *name )
 static void
 free_data_boxed_list( NAIFactoryObject *object )
 {
-	GList *list, *it;
+	GList *list;
 
 	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 
-	for( it = list ; it ; it = it->next ){
-
-		g_object_unref( it->data );
-	}
-
+	g_list_foreach( list, ( GFunc ) g_object_unref, NULL );
 	g_list_free( list );
 
 	g_object_set_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA, NULL );

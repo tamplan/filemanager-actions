@@ -663,12 +663,7 @@ na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *prof
 void
 na_object_item_unref_items( GList *items )
 {
-	GList *it;
-
-	for( it = items ; it ; it = it->next ){
-		g_object_unref( it->data );
-	}
-
+	g_list_foreach( items, ( GFunc ) g_object_unref, NULL );
 	g_list_free( items );
 }
 

@@ -291,7 +291,7 @@ free_items_callback( NactIActionsList *instance, GList *items )
 	g_debug( "nact_iactions_list_free_items_callback: selection=%p (%d items)",
 			( void * ) items, g_list_length( items ));
 
-	na_object_unref_items( items );
+	na_object_unref_selected_items( items );
 }
 
 static void
@@ -931,6 +931,7 @@ filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath 
 	gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 	g_return_val_if_fail( object, FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), FALSE );
+	g_object_unref( object );
 
 	/* if there is not yet any selection, then anything is allowed
 	 */
@@ -947,7 +948,6 @@ filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath 
 	 */
 	if( filter_selection_is_implicitely_selected( object )){
 		g_debug( "%s: implicitely selected item: selection not allowed", thisfn );
-		g_object_unref( object );
 		return( FALSE );
 	}
 
@@ -960,7 +960,6 @@ filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath 
 
 			filter_selection_set_implicitely_selected_childs( object, !path_currently_selected );
 	}
-	g_object_unref( object );
 	return( TRUE );
 }
 

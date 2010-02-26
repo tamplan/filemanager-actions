@@ -834,7 +834,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	/* about always enabled */
 
-	na_object_unref_items( selected_items );
+	na_object_unref_selected_items( selected_items );
 }
 
 static void
@@ -1112,7 +1112,7 @@ on_copy_activated( GtkAction *gtk_action, NactMainWindow *window )
 	clipboard = nact_main_window_get_clipboard( window );
 	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
 	update_clipboard_counters( window );
-	na_object_unref_items( items );
+	na_object_unref_selected_items( items );
 
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
@@ -1260,7 +1260,7 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
 		na_object_unref_items( dup );
 	}
 
-	na_object_unref_items( items );
+	na_object_unref_selected_items( items );
 }
 
 /*
@@ -1402,7 +1402,7 @@ on_dump_selection_activated( GtkAction *action, NactMainWindow *window )
 		na_object_dump( it->data );
 	}
 
-	na_object_unref_items( items );
+	na_object_unref_selected_items( items );
 }
 
 static void

@@ -663,7 +663,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 		text = tmp;
 	}
 
-	na_object_unref_items( actions );
+	na_object_unref_selected_items( actions );
 
 	g_assert( window->private->uri && strlen( window->private->uri ));
 
@@ -736,7 +736,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		}
 	}
 
-	na_object_unref_items( actions );
+	na_object_unref_selected_items( actions );
 }
 
 static void

@@ -59,7 +59,7 @@ void         na_factory_object_copy             ( NAIFactoryObject *target, cons
 gboolean     na_factory_object_are_equal        ( const NAIFactoryObject *a, const NAIFactoryObject *b );
 gboolean     na_factory_object_is_valid         ( const NAIFactoryObject *object );
 void         na_factory_object_dump             ( const NAIFactoryObject *object );
-void         na_factory_object_finalize_instance( NAIFactoryObject *object );
+void         na_factory_object_finalize         ( NAIFactoryObject *object );
 
 void         na_factory_object_read_item        ( NAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 guint        na_factory_object_write_item       ( NAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
