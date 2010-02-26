@@ -167,8 +167,10 @@ typedef struct {
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Called just before the object is serialized.
+	 *
+	 * Returns: a NAIIOProvider operation return code.
 	 */
-	void          ( *write_start )( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	guint         ( *write_start )( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 	/**
 	 * write_done:
@@ -179,8 +181,10 @@ typedef struct {
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Called when the object has been serialized.
+	 *
+	 * Returns: a NAIIOProvider operation return code.
 	 */
-	void          ( *write_done ) ( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	guint         ( *write_done ) ( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 }
 	NAIFactoryObjectInterface;
 

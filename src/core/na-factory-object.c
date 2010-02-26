@@ -38,6 +38,7 @@
 
 #include <api/na-core-utils.h>
 #include <api/na-data-types.h>
+#include <api/na-iio-provider.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-data-boxed.h>
 
@@ -49,7 +50,7 @@
 
 typedef gboolean ( *NADataDefIterFunc )( NADataDef *def, void *user_data );
 
-/* while iterating on read/write item
+/* while iterating on read item
  */
 typedef struct {
 	NAIFactoryObject   *object;
@@ -57,7 +58,17 @@ typedef struct {
 	void               *reader_data;
 	GSList            **messages;
 }
-	NafoRWIter;
+	NafoReadIter;
+
+/* while iterating on write item
+ */
+typedef struct {
+	NAIFactoryProvider *writer;
+	void               *writer_data;
+	GSList            **messages;
+	guint               code;
+}
+	NafoWriteIter;
 
 /* while iterating on is_valid
  */
@@ -87,8 +98,8 @@ extern NAIFactoryObjectInterface *ifactory_object_klass;
 
 static gboolean     define_class_properties_iter( const NADataDef *def, GObjectClass *class );
 static gboolean     factory_object_is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data );
-static gboolean     factory_object_read_data_iter( NADataDef *def, NafoRWIter *iter );
-static gboolean     factory_object_write_data_iter( NADataDef *def, NafoRWIter *iter );
+static gboolean     factory_object_read_data_iter( NADataDef *def, NafoReadIter *iter );
+static gboolean     factory_object_write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIter *iter );
 
 static NADataGroup *v_get_groups( const NAIFactoryObject *object );
 static void         v_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
@@ -96,8 +107,8 @@ static gboolean     v_are_equal( const NAIFactoryObject *a, const NAIFactoryObje
 static gboolean     v_is_valid( const NAIFactoryObject *object );
 static void         v_read_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static void         v_read_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void         v_write_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void         v_write_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        v_write_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        v_write_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 static void         attach_boxed_to_object( NAIFactoryObject *object, NADataBoxed *boxed );
 static NADataBoxed *data_boxed_from_name( const NAIFactoryObject *object, const gchar *name );
@@ -626,7 +637,7 @@ na_factory_object_read_item( NAIFactoryObject *serializable, const NAIFactoryPro
 		if( groups ){
 			v_read_start( serializable, reader, reader_data, messages );
 
-			NafoRWIter *iter = g_new0( NafoRWIter, 1 );
+			NafoReadIter *iter = g_new0( NafoReadIter, 1 );
 			iter->object = serializable;
 			iter->reader = ( NAIFactoryProvider * ) reader;
 			iter->reader_data = reader_data;
@@ -646,7 +657,7 @@ na_factory_object_read_item( NAIFactoryObject *serializable, const NAIFactoryPro
 }
 
 static gboolean
-factory_object_read_data_iter( NADataDef *def, NafoRWIter *iter )
+factory_object_read_data_iter( NADataDef *def, NafoReadIter *iter )
 {
 	gboolean stop;
 
@@ -678,33 +689,26 @@ factory_object_read_data_iter( NADataDef *def, NafoRWIter *iter )
  *  may append messages to this list, but shouldn't reinitialize it.
  *
  * Serializes the object down to the @writer.
+ *
+ * Returns: a NAIIOProvider operation return code.
  */
-void
+guint
 na_factory_object_write_item( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	static const gchar *thisfn = "na_factory_object_write_item";
+	guint code;
 	NADataGroup *groups;
 	gchar *msg;
 
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
-	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( writer ));
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( serializable ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+
+	code = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	groups = v_get_groups( serializable );
+
 	if( groups ){
-
-		v_write_start( serializable, writer, writer_data, messages );
-
-		NafoRWIter *iter = g_new0( NafoRWIter, 1 );
-		iter->object = serializable;
-		iter->reader = ( NAIFactoryProvider * ) writer;
-		iter->reader_data = writer_data;
-		iter->messages = messages;
-
-		iter_on_data_defs( groups, TRUE, ( NADataDefIterFunc ) &factory_object_write_data_iter, iter );
-
-		g_free( iter );
-
-		v_write_done( serializable, writer, writer_data, messages );
+		code = v_write_start( serializable, writer, writer_data, messages );
 
 	} else {
 		msg = g_strdup_printf( "%s: class %s doesn't return any NADataGroup structure",
@@ -712,18 +716,39 @@ na_factory_object_write_item( NAIFactoryObject *serializable, const NAIFactoryPr
 		g_warning( "%s", msg );
 		*messages = g_slist_append( *messages, msg );
 	}
+
+	if( code == NA_IIO_PROVIDER_CODE_OK ){
+
+		NafoWriteIter *iter = g_new0( NafoWriteIter, 1 );
+		iter->writer = ( NAIFactoryProvider * ) writer;
+		iter->writer_data = writer_data;
+		iter->messages = messages;
+		iter->code = code;
+
+		na_factory_object_iter_on_boxed( serializable, ( NAFactoryObjectIterBoxedFn ) &factory_object_write_data_iter, iter );
+
+		code = iter->code;
+		g_free( iter );
+	}
+
+	if( code == NA_IIO_PROVIDER_CODE_OK ){
+		code = v_write_done( serializable, writer, writer_data, messages );
+	}
+
+	return( code );
 }
 
 static gboolean
-factory_object_write_data_iter( NADataDef *def, NafoRWIter *iter )
+factory_object_write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIter *iter )
 {
-	gboolean stop;
+	NADataDef *def = na_data_boxed_get_data_def( boxed );
 
-	stop = FALSE;
+	if( def->serializable && !def->obsoleted ){
+		iter->code = na_factory_provider_write_data( iter->writer, iter->writer_data, object, boxed, iter->messages );
+	}
 
-	/*na_factory_provider_set_value( iter->reader, iter->reader_data, def, iter->messages );*/
-
-	return( stop );
+	/* iter while code is ok */
+	return( iter->code == NA_IIO_PROVIDER_CODE_OK );
 }
 
 #if 0
@@ -985,20 +1010,28 @@ v_read_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, v
 	}
 }
 
-static void
+static guint
 v_write_start( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
+	guint code = NA_IIO_PROVIDER_CODE_OK;
+
 	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start ){
-		NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start( serializable, writer, writer_data, messages );
+		code = NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start( serializable, writer, writer_data, messages );
 	}
+
+	return( code );
 }
 
-static void
+static guint
 v_write_done( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
+	guint code = NA_IIO_PROVIDER_CODE_OK;
+
 	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done ){
-		NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done( serializable, writer, writer_data, messages );
+		code = NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done( serializable, writer, writer_data, messages );
 	}
+
+	return( code );
 }
 
 #if 0

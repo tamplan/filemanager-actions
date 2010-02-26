@@ -38,6 +38,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-iio-provider.h>
 #include <api/na-ifactory-object.h>
 #include <api/na-object-api.h>
 
@@ -83,7 +84,7 @@ static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance
 static gchar       *ifactory_object_get_default( const NAIFactoryObject *instance, const NADataDef *iddef );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void         ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
@@ -352,10 +353,10 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 
 }
 
-static void
+static guint
 ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-
+	return( NA_IIO_PROVIDER_CODE_OK );
 }
 
 static gboolean

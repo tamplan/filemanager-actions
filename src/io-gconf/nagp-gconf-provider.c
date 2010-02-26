@@ -246,8 +246,8 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 	iface->read_data = nagp_reader_read_data;
 	iface->read_done = nagp_reader_read_done;
 	iface->write_start = NULL;
-	iface->write_data = NULL;
-	iface->write_done = NULL;
+	iface->write_data = nagp_writer_write_data;
+	iface->write_done = nagp_writer_write_done;
 }
 
 static guint

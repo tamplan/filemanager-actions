@@ -65,7 +65,7 @@ void         na_factory_object_dump               ( const NAIFactoryObject *obje
 void         na_factory_object_finalize_instance  ( NAIFactoryObject *object );
 
 void         na_factory_object_read_item          ( NAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-void         na_factory_object_write_item         ( NAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+guint        na_factory_object_write_item         ( NAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 void        *na_factory_object_get_as_void        ( const NAIFactoryObject *object, const gchar *name );
 void         na_factory_object_get_as_value       ( const NAIFactoryObject *object, const gchar *name, GValue *value );

@@ -34,7 +34,10 @@
 
 #include <string.h>
 
+#include <api/na-data-def.h>
+#include <api/na-data-types.h>
 #include <api/na-iio-provider.h>
+#include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
 #include <api/na-core-utils.h>
 #include <api/na-gconf-utils.h>
@@ -43,15 +46,21 @@
 #include "nagp-writer.h"
 #include "nagp-keys.h"
 
+typedef struct {
+	gchar *parent_id;
+}
+	WriterData;
+
+#if 0
 static gboolean write_item_action( NagpGConfProvider *gconf, const NAObjectAction *action, GSList **message );
 static gboolean write_item_menu( NagpGConfProvider *gconf, const NAObjectMenu *menu, GSList **message );
 static gboolean write_object_item( NagpGConfProvider *gconf, const NAObjectItem *item, GSList **message );
-
 static gboolean write_str( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **message );
 static gboolean write_bool( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **message );
 static gboolean write_list( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **message );
 
 static gboolean remove_key( NagpGConfProvider *provider, const gchar *uuid, const gchar *key, GSList **messages );
+#endif
 
 /*
  * API function: should only be called through NAIIOProvider interface
@@ -105,7 +114,9 @@ nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 }
 
 /*
- *
+ * update an existing item or write a new one
+ * in all cases, it is much more easy to delete the existing  entries
+ * before trying to write the new ones
  */
 guint
 nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages )
@@ -113,6 +124,7 @@ nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_write_item";
 	NagpGConfProvider *self;
 	guint ret;
+	WriterData *data;
 
 	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
 			thisfn,
@@ -136,6 +148,12 @@ nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 
 	if( ret == NA_IIO_PROVIDER_CODE_OK ){
 
+		data = g_new0( WriterData, 1 );
+
+		na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), data, NA_IFACTORY_OBJECT( item ), messages );
+
+		g_free( data );
+#if 0
 		if( NA_IS_OBJECT_ACTION( item )){
 			if( !write_item_action( self, NA_OBJECT_ACTION( item ), messages )){
 				return( NA_IIO_PROVIDER_CODE_WRITE_ERROR );
@@ -147,6 +165,7 @@ nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 				return( NA_IIO_PROVIDER_CODE_WRITE_ERROR );
 			}
 		}
+#endif
 	}
 
 	gconf_client_suggest_sync( self->private->gconf, NULL );
@@ -154,6 +173,7 @@ nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 	return( ret );
 }
 
+#if 0
 static gboolean
 write_item_action( NagpGConfProvider *provider, const NAObjectAction *action, GSList **messages )
 {
@@ -239,6 +259,7 @@ write_object_item( NagpGConfProvider *provider, const NAObjectItem *item, GSList
 	g_free( uuid );
 	return( ret );
 }
+#endif
 
 /*
  * also delete the schema which may be directly attached to this action
@@ -305,6 +326,124 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	return( ret );
 }
 
+guint
+nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
+									const NAIFactoryObject *object, const NADataBoxed *boxed,
+									GSList **messages )
+{
+	static const gchar *thisfn = "nagp_writer_write_data";
+	guint code;
+	NADataDef *def;
+	gchar *id;
+	gchar *parent_path, *path;
+	gchar *msg;
+	gchar *str_value;
+	gboolean bool_value;
+	GSList *slist_value;
+	guint uint_value;
+	GConfClient *gconf;
+
+	msg = NULL;
+	code = NA_IIO_PROVIDER_CODE_OK;
+	def = na_data_boxed_get_data_def( boxed );
+
+	id = na_object_get_id( object );
+
+	parent_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH,
+			(( WriterData * ) writer_data )->parent_id ?
+					(( WriterData * ) writer_data )->parent_id : id );
+
+	path = (( WriterData * ) writer_data )->parent_id ?
+					gconf_concat_dir_and_key( parent_path, id ) : g_strdup( parent_path );
+
+	gconf = NAGP_GCONF_PROVIDER( provider )->private->gconf;
+
+	switch( def->type ){
+
+		case NAFD_TYPE_STRING:
+		case NAFD_TYPE_LOCALE_STRING:
+			str_value = na_data_boxed_get_as_string( boxed );
+			na_gconf_utils_write_string( gconf, path, str_value, &msg );
+			if( msg ){
+				*messages = g_slist_append( *messages, msg );
+				code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
+			}
+			g_free( str_value );
+			break;
+
+		case NAFD_TYPE_BOOLEAN:
+			bool_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
+			na_gconf_utils_write_bool( gconf, path, bool_value, &msg );
+			if( msg ){
+				*messages = g_slist_append( *messages, msg );
+				code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
+			}
+			break;
+
+		case NAFD_TYPE_STRING_LIST:
+			slist_value = ( GSList * ) na_data_boxed_get_as_void( boxed );
+			na_gconf_utils_write_string_list( gconf, path, slist_value, &msg );
+			if( msg ){
+				*messages = g_slist_append( *messages, msg );
+				code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
+			}
+			na_core_utils_slist_free( slist_value );
+			break;
+
+		case NAFD_TYPE_UINT:
+			uint_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
+			na_gconf_utils_write_int( gconf, path, uint_value, &msg );
+			if( msg ){
+				*messages = g_slist_append( *messages, msg );
+				code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
+			}
+			break;
+
+		default:
+			g_warning( "%s: unknown type=%u for %s", thisfn, def->type, def->name );
+			code = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	}
+
+	g_free( msg );
+	g_free( path );
+	g_free( parent_path );
+	g_free( id );
+
+	return( code );
+}
+
+guint
+nagp_writer_write_done( const NAIFactoryProvider *writer, void *writer_data,
+									const NAIFactoryObject *object,
+									GSList **messages  )
+{
+	guint code;
+	GSList *children_slist, *ic;
+	WriterData *data;
+	NAObjectProfile *profile;
+
+	code = NA_IIO_PROVIDER_CODE_OK;
+
+	if( NA_IS_OBJECT_ACTION( object )){
+		children_slist = na_object_get_items_slist( object );
+
+		for( ic = children_slist ; ic && code == NA_IIO_PROVIDER_CODE_OK ; ic = ic->next ){
+			data = g_new0( WriterData, 1 );
+			data->parent_id = na_object_get_id( object );
+
+			profile = NA_OBJECT_PROFILE( na_object_get_item( object, ic->data ));
+
+			code = na_ifactory_provider_write_item( writer, data, NA_IFACTORY_OBJECT( profile ), messages );
+
+			g_free( data->parent_id );
+			g_free( data );
+		}
+	}
+
+	return( code );
+}
+
+#if 0
 static gboolean
 write_str( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **messages )
 {
@@ -403,3 +542,4 @@ remove_key( NagpGConfProvider *provider, const gchar *uuid, const gchar *key, GS
 
 	return( ret );
 }
+#endif

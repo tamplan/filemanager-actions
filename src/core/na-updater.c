@@ -378,7 +378,6 @@ na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **me
 		}
 
 		if( provider ){
-
 			if( !na_updater_is_item_writable( updater, item, &reason )){
 				ret = ( guint ) reason;
 

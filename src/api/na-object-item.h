@@ -87,12 +87,12 @@ void        na_object_item_insert_at   ( NAObjectItem *object, const NAObjectId 
 void        na_object_item_insert_item ( NAObjectItem *object, const NAObject *item, const NAObject *before );
 void        na_object_item_remove_item ( NAObjectItem *object, const NAObjectId *item );
 
-GSList     *na_object_item_build_items_slist( const NAObjectItem *item );
-
 guint       na_object_item_get_items_count( const NAObjectItem *item );
 
 void        na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
 void        na_object_item_unref_items( GList *items );
+
+void        na_object_item_factory_write_start( NAObjectItem *item );
 
 G_END_DECLS
 

@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <api/na-iio-provider.h>
 #include <api/na-ifactory-provider.h>
 
 #include "na-factory-object.h"
@@ -54,8 +55,8 @@ static guint ifactory_provider_get_version( const NAIFactoryProvider *instance )
 
 static void  v_factory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages );
 static void  v_factory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *serializable, GSList **messages );
-static void  v_factory_provider_write_start( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages );
-static void  v_factory_provider_write_done( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages );
+static guint v_factory_provider_write_start( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages );
+static guint v_factory_provider_write_done( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages );
 
 /**
  * Registers the GType of this interface.
@@ -179,19 +180,33 @@ na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_d
  *  may append messages to this list, but shouldn't reinitialize it.
  *
  * Writes the data down to the FactoryProvider.
+ *
+ * Returns: a NAIIOProvider operation return code.
  */
-void
+guint
 na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages )
 {
-	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( writer ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	guint code;
+
+	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+
+	code = NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
 
 	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
-		v_factory_provider_write_start( writer, writer_data, object, messages );
-		na_factory_object_write_item( object, writer, writer_data, messages );
-		v_factory_provider_write_done( writer, writer_data, object, messages );
+		code = v_factory_provider_write_start( writer, writer_data, object, messages );
+
+		if( code == NA_IIO_PROVIDER_CODE_OK ){
+			code = na_factory_object_write_item( object, writer, writer_data, messages );
+		}
+
+		if( code == NA_IIO_PROVIDER_CODE_OK ){
+			code = v_factory_provider_write_done( writer, writer_data, object, messages );
+		}
 	}
+
+	return( code );
 }
 
 static void
@@ -210,18 +225,26 @@ v_factory_provider_read_done( const NAIFactoryProvider *reader, void *reader_dat
 	}
 }
 
-static void
+static guint
 v_factory_provider_write_start( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages )
 {
+	guint code = NA_IIO_PROVIDER_CODE_OK;
+
 	if( NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_start ){
-		NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_start( writer, writer_data, serializable, messages );
+		code = NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_start( writer, writer_data, serializable, messages );
 	}
+
+	return( code );
 }
 
-static void
+static guint
 v_factory_provider_write_done( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages )
 {
+	guint code = NA_IIO_PROVIDER_CODE_OK;
+
 	if( NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_done ){
-		NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_done( writer, writer_data, serializable, messages );
+		code = NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_done( writer, writer_data, serializable, messages );
 	}
+
+	return( code );
 }

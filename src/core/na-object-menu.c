@@ -35,6 +35,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include <api/na-iio-provider.h>
 #include <api/na-ifactory-object.h>
 #include <api/na-object-api.h>
 
@@ -78,7 +79,8 @@ static void         ifactory_object_copy( NAIFactoryObject *target, const NAIFac
 static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void         ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static gboolean     menu_is_valid( const NAObjectMenu *menu );
 static gboolean     is_valid_label( const NAObjectMenu *menu );
@@ -269,7 +271,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 	iface->is_valid = ifactory_object_is_valid;
 	iface->read_start = NULL;
 	iface->read_done = ifactory_object_read_done;
-	iface->write_start = NULL;
+	iface->write_start = ifactory_object_write_start;
 	iface->write_done = ifactory_object_write_done;
 }
 
@@ -326,10 +328,18 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 
 }
 
-static void
+static guint
+ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+{
+	na_object_item_factory_write_start( NA_OBJECT_ITEM( instance ));
+
+	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
+static guint
 ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-
+	return( NA_IIO_PROVIDER_CODE_OK );
 }
 
 static gboolean

@@ -82,7 +82,7 @@ G_BEGIN_DECLS
 #define na_object_get_parent( obj )						(( NAObjectItem * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PARENT ))
 
 #define na_object_set_id( obj, id )						na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ID, ( const void * )( id ))
-#define na_object_set_label( obj, label )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_LABEL, ( const void * )( label ))
+#define na_object_set_label( obj, label )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), ( NA_IS_OBJECT_PROFILE( obj ) ? NAFO_DATA_DESCNAME : NAFO_DATA_LABEL ), ( const void * )( label ))
 #define na_object_set_parent( obj, parent )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PARENT, ( const void * )( parent ))
 
 #define na_object_sort_alpha_asc( a, b )				na_object_id_sort_alpha_asc( NA_OBJECT_ID( a ), NA_OBJECT_ID( b ))
@@ -120,7 +120,6 @@ G_BEGIN_DECLS
 #define na_object_insert_item( obj, child, sibling )	na_object_item_insert_item( NA_OBJECT_ITEM( obj ), NA_OBJECT( child ), ( NAObject * )( sibling ))
 #define na_object_remove_item( obj, child )				na_object_item_remove_item( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
 
-#define na_object_build_items_slist( obj )				na_object_item_build_items_slist( NA_OBJECT_ITEM( obj ))
 #define na_object_get_items_count( obj )				na_object_item_get_items_count( NA_OBJECT_ITEM( obj ))
 #define na_object_count_items( list, cm, ca, cp, brec )	na_object_item_count_items( list, ( cm ), ( ca ), ( cp ), ( brec ))
 #define na_object_unref_items( tree )					na_object_item_unref_items( tree )

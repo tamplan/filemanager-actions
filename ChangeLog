@@ -1,5 +1,24 @@
 2009-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-ifactory-object.h:
+	* src/api/na-ifactory-provider.h:
+	* src/api/na-object-api.h:
+	* src/api/na-object-item.h:
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h:
+	* src/core/na-factory-provider.c:
+	* src/core/na-factory-provider.h:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile.c:
+	* src/core/na-updater.c:
+	* src/io-gconf/nagp-gconf-provider.c:
+	* src/io-gconf/nagp-writer.c:
+	* src/io-gconf/nagp-writer.h:
+	Implement NAIfactoryProvider in GConf I/O provider writer.
+
 	Fix reference count errors in NACT user interface.
 
 	* src/core/na-object-id.c (instance_dispose):

@@ -120,9 +120,11 @@ typedef struct {
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
+	 * Returns: a NAIIOProvider operation return code.
+	 *
 	 * API called by #NAIFactoryObject just before starting with writing data.
 	 */
-	void          ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
+	guint         ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * write_data:
@@ -136,9 +138,11 @@ typedef struct {
 	 *
 	 * Write the data embedded in @value down to @instance.
 	 *
+	 * Returns: a NAIIOProvider operation return code.
+	 *
 	 * This method must be implemented in order any data be written.
 	 */
-	void          ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataDef *iddef, NADataBoxed *value, GSList **messages );
+	guint         ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages );
 
 	/**
 	 * write_done:
@@ -148,17 +152,19 @@ typedef struct {
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
+	 * Returns: a NAIIOProvider operation return code.
+	 *
 	 * API called by #NAIFactoryObject when all data have been written.
 	 * Implementor may take advantage of this to do some cleanup.
 	 */
-	void          ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
+	guint         ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 }
 	NAIFactoryProviderInterface;
 
 GType na_ifactory_provider_get_type( void );
 
 void  na_ifactory_provider_read_item ( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages );
-void  na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages );
+guint na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages );
 
 G_END_DECLS
 

@@ -31,10 +31,13 @@
 #ifndef __NAGP_WRITE_H__
 #define __NAGP_WRITE_H__
 
+#include <api/na-data-boxed.h>
 #include <api/na-iio-provider.h>
 
 G_BEGIN_DECLS
 
+/* NAIIOProvider interface
+ */
 gboolean nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider );
 
 gboolean nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider );
@@ -42,6 +45,16 @@ gboolean nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider );
 guint    nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **message );
 
 guint    nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **message );
+
+/* NAIFactoryProvider interface
+ */
+guint    nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
+									const NAIFactoryObject *object, const NADataBoxed *boxed,
+									GSList **messages );
+
+guint    nagp_writer_write_done( const NAIFactoryProvider *writer, void *writer_data,
+									const NAIFactoryObject *object,
+									GSList **messages  );
 
 G_END_DECLS
 

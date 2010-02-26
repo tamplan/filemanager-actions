@@ -44,8 +44,12 @@
 
 G_BEGIN_DECLS
 
-NADataBoxed *na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data,
-									NAIFactoryObject *object, const NADataDef *def,
+NADataBoxed *na_factory_provider_read_data ( const NAIFactoryProvider *reader, void *reader_data,
+									const NAIFactoryObject *object, const NADataDef *def,
+									GSList **messages );
+
+guint        na_factory_provider_write_data( const NAIFactoryProvider *writer, void *writer_data,
+									const NAIFactoryObject *object, const NADataBoxed *boxed,
 									GSList **messages );
 
 G_END_DECLS

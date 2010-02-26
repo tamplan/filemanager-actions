@@ -35,6 +35,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
 /* private class data
@@ -67,6 +68,8 @@ static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
 static gchar *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
+
+static void   rebuild_children_slist( NAObjectItem *item );
 
 GType
 na_object_item_get_type( void )
@@ -568,45 +571,6 @@ na_object_item_remove_item( NAObjectItem *item, const NAObjectId *object )
 }
 
 /**
- * na_object_item_build_items_slist:
- * @item: this #NAObjectItem object.
- *
- * Returns: a string list which contains the ordered list of ids of
- * subitems.
- *
- * Note that the returned list is built on each call to this function,
- * and is so an exact image of the current situation.
- *
- * The returned list should be na_core_utils_slist_free() by the caller.
- */
-GSList *
-na_object_item_build_items_slist( const NAObjectItem *item )
-{
-	GSList *slist;
-	GList *subitems, *it;
-	gchar *id;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
-
-	slist = NULL;
-
-	if( !item->private->dispose_has_run ){
-
-		subitems = na_object_get_items( item );
-
-		for( it = subitems ; it ; it = it->next ){
-			NAObjectId *item = NA_OBJECT_ID( it->data );
-			id = na_object_get_id( item );
-			slist = g_slist_prepend( slist, id );
-		}
-
-		slist = g_slist_reverse( slist );
-	}
-
-	return( slist );
-}
-
-/**
  * na_object_item_get_items_count:
  * @item: the #NAObjectItem from which we want a count of subitems.
  *
@@ -663,8 +627,10 @@ na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *prof
 
 		if( NA_IS_OBJECT_MENU( it->data )){
 			*menus += 1;
+
 		} else if( NA_IS_OBJECT_ACTION( it->data )){
 			*actions += 1;
+
 		} else if( NA_IS_OBJECT_PROFILE( it->data )){
 			*profiles += 1;
 		}
@@ -688,4 +654,41 @@ na_object_item_unref_items( GList *items )
 	}
 
 	g_list_free( items );
+}
+
+/**
+ * na_object_item_factory_write_start:
+ * @item: this #NAObjectItem-derived object.
+ *
+ * Rebuild the string list of children.
+ */
+void
+na_object_item_factory_write_start( NAObjectItem *item )
+{
+	rebuild_children_slist( item );
+}
+
+static void
+rebuild_children_slist( NAObjectItem *item )
+{
+	GSList *slist;
+	GList *subitems, *it;
+	gchar *id;
+
+	slist = NULL;
+
+	if( !item->private->dispose_has_run ){
+
+		subitems = na_object_get_items( item );
+
+		for( it = subitems ; it ; it = it->next ){
+			id = na_object_get_id( it->data );
+			slist = g_slist_prepend( slist, id );
+		}
+		slist = g_slist_reverse( slist );
+
+		na_object_set_items_slist( item, slist );
+
+		na_core_utils_slist_free( slist );
+	}
 }
