@@ -1,10 +1,12 @@
 data/nautilus-actions.schemas.in
 src/core/na-iabout.c
+src/core/na-importer-ask.c
+src/core/na-importer-ask.ui
 src/core/na-io-provider.c
 src/core/na-object-action.c
 src/core/na-object-id.c
 src/core/na-object-menu.c
-src/core/na-object-profile.c
+src/core/na-object-profile-factory.c
 src/io-desktop/nadp-desktop-provider.c
 src/io-gconf/nagp-gconf-provider.c
 src/io-xml/naxml-keys.h
@@ -22,11 +24,9 @@ src/nact/nact-assistant-import.c
 src/nact/nact.desktop.in
 src/nact/nact-export-ask.c
 src/nact/nact-export-format.c
-src/nact/nact-iactions-list.c
 src/nact/nact-iaction-tab.c
 src/nact/nact-ibackground-tab.c
 src/nact/nact-icommand-tab.c
-src/nact/nact-import-ask.c
 src/nact/nact-main-menubar.c
 src/nact/nact-main-window.c
 src/nact/nact-preferences.ui
@@ -36,6 +36,7 @@ src/nact/nact-tree-model-dnd.c
 src/nact/nact-window.c
 src/nact/nautilus-actions-config-tool.ui
 src/plugin-menu/nautilus-actions.c
+src/test/test-reader.c
 src/utils/nautilus-actions-new.c
 src/utils/nautilus-actions-run.c
 src/utils/nautilus-actions-schemas.c

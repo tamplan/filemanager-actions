@@ -32,7 +32,6 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n.h>
 #include <string.h>
 
 #include <libnautilus-extension/nautilus-file-info.h>
@@ -58,9 +57,6 @@ struct NAObjectProfileClassPrivate {
 struct NAObjectProfilePrivate {
 	gboolean dispose_has_run;
 };
-
-/* i18n: default label for a new profile */
-#define DEFAULT_PROFILE						N_( "Default profile" )
 
 #define PROFILE_NAME_PREFIX					"profile-"
 

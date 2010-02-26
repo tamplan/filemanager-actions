@@ -1,5 +1,14 @@
 2009-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in: Updated.
+
+	* src/core/na-object-profile.c:
+	Remove no more used default profile.
+
+	* src/core/na-object-profile.c:
+	* src/nact/nact-iactions-list.c:
+	No more include gi18n.h.
+
 	* src/api/na-ifactory-object.h:
 	* src/core/na-ifactory-object.c:
 	Remove get_default() function from the interface.
