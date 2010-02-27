@@ -36,8 +36,6 @@
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
 
-static void free_items_list( void * list );
-
 NADataDef data_def_item [] = {
 
 	{ NAFO_DATA_LABEL,
@@ -52,7 +50,6 @@ NADataDef data_def_item [] = {
 				FALSE,
 				TRUE,
 				"label",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_TOOLTIP,
@@ -66,7 +63,6 @@ NADataDef data_def_item [] = {
 				FALSE,
 				TRUE,
 				"tooltip",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_ICON,
@@ -81,7 +77,6 @@ NADataDef data_def_item [] = {
 				FALSE,
 				TRUE,
 				"icon",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_DESCRIPTION,
@@ -96,21 +91,19 @@ NADataDef data_def_item [] = {
 				FALSE,
 				TRUE,
 				"description",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_SUBITEMS,
-				FALSE,
+				FALSE,			/* not serializable */
 				"Subitems",
 				"List of subitems objects",
 				NAFD_TYPE_POINTER,
 				NULL,
-				FALSE,
-				FALSE,
+				FALSE,			/* not copyable */
+				TRUE,			/*     comparable */
 				FALSE,
 				FALSE,
 				NULL,
-				free_items_list,
 				FALSE },
 
 	{ NAFO_DATA_SUBITEMS_SLIST,
@@ -125,7 +118,6 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				"items",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_ENABLED,
@@ -141,7 +133,6 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				"enabled",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_READONLY,
@@ -160,7 +151,6 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				NULL,
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_PROVIDER,
@@ -173,7 +163,6 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				NULL,
 				NULL,
 				FALSE },
 
@@ -188,20 +177,7 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				NULL,
-				NULL,
 				FALSE },
 
 	{ NULL },
 };
-
-static void
-free_items_list( void *list )
-{
-	static const gchar *thisfn = "na_object_item_factory_free_items_list";
-
-	g_debug( "%s: list=%p (count=%d)", thisfn, list, g_list_length(( GList * ) list ));
-
-	if( list ){
-		/*g_list_free(( GList * ) list );*/
-	}
-}

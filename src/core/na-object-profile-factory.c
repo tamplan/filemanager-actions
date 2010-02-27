@@ -52,7 +52,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				TRUE,
 				"desc-name",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_PATH,
@@ -66,7 +65,6 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				"path",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_PARAMETERS,
@@ -80,7 +78,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"parameters",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_BASENAMES,
@@ -95,7 +92,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"basenames",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_MATCHCASE,
@@ -110,7 +106,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"matchcase",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_MIMETYPES,
@@ -125,7 +120,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"mimetypes",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_ISFILE,
@@ -140,7 +134,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"isfile",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_ISDIR,
@@ -155,7 +148,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"isdir",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_MULTIPLE,
@@ -170,7 +162,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"accept-multiple-files",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_SCHEMES,
@@ -185,7 +176,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"schemes",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_FOLDERS,
@@ -200,7 +190,6 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"folders",
-				NULL,
 				FALSE },
 
 	{ NULL },

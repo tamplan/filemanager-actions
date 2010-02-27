@@ -51,7 +51,6 @@ NADataDef data_def_id [] = {
 				TRUE,
 				FALSE,
 				NULL,
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_PARENT,
@@ -64,7 +63,6 @@ NADataDef data_def_id [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				NULL,
 				NULL,
 				FALSE },
 

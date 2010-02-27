@@ -86,16 +86,6 @@ typedef struct {
 
 	gchar    *gconf_entry;				/* same entry is also used for GConf-based XML docs */
 
-	void   ( *free )( void * );			/* a pointer to a function to free the element data
-										 * a default function is provided for main elementary
-										 * data types:
-										 * - STRING and LOCALE_STRING: g_free
-										 * - STRING_LIST: na_core_utils_slist_free
-										 * - BOOLEAN, UINT, POINTER: none
-										 *
-										 * This may be used mainly when POINTER type is used
-										 * to cast e.g. a GList of items */
-
 	gboolean  obsoleted;				/* whether this data has been obsoleted ?
 										 * if TRUE, then no property will be defined for it
 										 * and the data will not be written when serializing */

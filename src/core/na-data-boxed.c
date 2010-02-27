@@ -322,7 +322,10 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_data_boxed_instance_dispose";
 	NADataBoxed *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_debug( "%s: object=%p (%s), name=%s",
+			thisfn,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ),
+			NA_DATA_BOXED( object )->private->def->name );
 
 	g_return_if_fail( NA_IS_DATA_BOXED( object ));
 
@@ -808,11 +811,7 @@ string_spec( const NADataDef *def )
 static void
 string_free( const NADataBoxed *boxed )
 {
-	if( boxed->private->def->free ){
-		( *boxed->private->def->free )( boxed->private->u.string );
-	} else {
-		g_free( boxed->private->u.string );
-	}
+	g_free( boxed->private->u.string );
 	boxed->private->u.string = NULL;
 }
 
@@ -946,11 +945,7 @@ slist_spec( const NADataDef *def )
 static void
 slist_free( const NADataBoxed *boxed )
 {
-	if( boxed->private->def->free ){
-		( *boxed->private->def->free )( boxed->private->u.slist );
-	} else {
-		na_core_utils_slist_free( boxed->private->u.slist );
-	}
+	na_core_utils_slist_free( boxed->private->u.slist );
 	boxed->private->u.slist = NULL;
 }
 
@@ -1145,9 +1140,6 @@ pointer_spec( const NADataDef *def )
 static void
 pointer_free( const NADataBoxed *boxed )
 {
-	if( boxed->private->def->free ){
-		( *boxed->private->def->free )( boxed->private->u.pointer );
-	}
 	boxed->private->u.pointer = NULL;
 }
 
@@ -1206,6 +1198,7 @@ pointer_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *source )
 static void
 pointer_set_from_string( NADataBoxed *boxed, const gchar *pointer )
 {
+	g_warning( "na_data_boxed_pointer_set_from_string: unrelevant function call" );
 }
 
 static void

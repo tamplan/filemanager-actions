@@ -52,7 +52,6 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				FALSE,
 				"version",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_TARGET_SELECTION,
@@ -66,7 +65,6 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				FALSE,
 				"target-selection",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_TARGET_BACKGROUND,
@@ -80,7 +78,6 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				FALSE,
 				"target-background",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_TARGET_TOOLBAR,
@@ -96,7 +93,6 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				FALSE,
 				"target-toolbar",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_TOOLBAR_LABEL,
@@ -111,7 +107,6 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				TRUE,
 				"toolbar-label",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_TOOLBAR_SAME_LABEL,
@@ -125,7 +120,6 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				FALSE,
 				"toolbar-same-label",
-				NULL,
 				FALSE },
 
 	{ NAFO_DATA_LAST_ALLOCATED,
@@ -139,7 +133,6 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				NULL,
 				NULL,
 				FALSE },
 
@@ -159,7 +152,6 @@ static NADataDef data_def_obsoleted_action [] = {
 				TRUE,
 				FALSE,
 				"path",
-				NULL,
 				TRUE },
 
 	{ NAFO_DATA_PARAMETERS,
@@ -173,7 +165,6 @@ static NADataDef data_def_obsoleted_action [] = {
 				FALSE,
 				FALSE,
 				"parameters",
-				NULL,
 				TRUE },
 
 	{ NAFO_DATA_BASENAMES,
@@ -188,7 +179,6 @@ static NADataDef data_def_obsoleted_action [] = {
 				FALSE,
 				FALSE,
 				"basenames",
-				NULL,
 				TRUE },
 
 	{ NAFO_DATA_MATCHCASE,
@@ -203,7 +193,6 @@ static NADataDef data_def_obsoleted_action [] = {
 				FALSE,
 				FALSE,
 				"matchcase",
-				NULL,
 				TRUE },
 
 	{ NAFO_DATA_MIMETYPES,
@@ -218,7 +207,6 @@ static NADataDef data_def_obsoleted_action [] = {
 				FALSE,
 				FALSE,
 				"mimetypes",
-				NULL,
 				TRUE },
 
 	{ NAFO_DATA_ISFILE,
@@ -233,7 +221,6 @@ static NADataDef data_def_obsoleted_action [] = {
 				FALSE,
 				FALSE,
 				"isfile",
-				NULL,
 				TRUE },
 
 	{ NAFO_DATA_ISDIR,
@@ -248,7 +235,6 @@ static NADataDef data_def_obsoleted_action [] = {
 				FALSE,
 				FALSE,
 				"isdir",
-				NULL,
 				TRUE },
 
 	{ NAFO_DATA_MULTIPLE,
@@ -263,7 +249,6 @@ static NADataDef data_def_obsoleted_action [] = {
 				FALSE,
 				FALSE,
 				"accept-multiple-files",
-				NULL,
 				TRUE },
 
 	{ NAFO_DATA_SCHEMES,
@@ -278,7 +263,6 @@ static NADataDef data_def_obsoleted_action [] = {
 				FALSE,
 				FALSE,
 				"schemes",
-				NULL,
 				TRUE },
 
 	{ NULL },
