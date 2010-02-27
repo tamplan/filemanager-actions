@@ -1,5 +1,17 @@
 2009-02-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-updater.c:
+	* src/core/na-updater.h
+	(na_updater_add_item): Removed function.
+	(na_updater_insert_item): New function.
+
+	* src/io-gconf/nagp-writer.c (nagp_writer_write_data):
+	Fix the path of written data.
+
+	* src/nact/nact-main-menubar.c (on_new_profile_activated): 
+	Do not attach the profile as this is done by the tree model.
+	(save_item): Copy the tree item to the pivot one if it exists.
+
 	* src/core/na-object-item.c (instance_dispose):
 	Set the subitems pointer to NULL before unreffing the children.
 

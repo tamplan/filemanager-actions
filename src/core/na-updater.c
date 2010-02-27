@@ -186,28 +186,39 @@ na_updater_new( void )
 }
 
 /**
- * na_updater_add_item:
- * @updater: this #NAUpdater instance.
- * @item: the #NAObjectItem to be added to the list.
+ * na_updater_insert_item:
+ * @updater: this #NAUpdater object.
+ * @item: a #NAObjectItem-derived object to be inserted in the tree.
+ * @parent_id: the id of the parent, or %NULL.
+ * @pos: the position in the children of the parent, starting at zero, or -1.
  *
- * Adds a new item to the list.
- *
- * We take the provided pointer. The provided @item should so not
- * be g_object_unref() by the caller.
+ * Insert a new item in the global tree.
  */
 void
-na_updater_add_item( NAUpdater *updater, const NAObjectItem *item )
+na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *parent_id, gint pos )
 {
 	GList *tree;
+	NAObjectItem *parent;
 
 	g_return_if_fail( NA_IS_UPDATER( updater ));
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
 	if( !updater->private->dispose_has_run ){
 
+		parent = NULL;
 		g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
-		tree = g_list_append( tree, ( gpointer ) item );
-		g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+
+		if( parent_id ){
+			parent = na_pivot_get_item( NA_PIVOT( updater ), parent_id );
+		}
+
+		if( parent ){
+			na_object_insert_at( parent, item, pos );
+
+		} else {
+			tree = g_list_append( tree, item );
+			g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+		}
 	}
 }
 

@@ -36,6 +36,7 @@
 
 #include <api/na-object-api.h>
 
+#include <core/na-factory-object.h>
 #include <core/na-iabout.h>
 #include <core/na-iprefs.h>
 #include <core/na-ipivot-consumer.h>
@@ -886,12 +887,13 @@ on_new_profile_activated( GtkAction *gtk_action, NactMainWindow *window )
 			NULL );
 
 	profile = na_object_profile_new_with_defaults();
+	na_object_set_label( profile, _( "New profile" ));
 
 	name = na_object_action_get_new_profile_name( action );
 	na_object_set_id( profile, name );
 	g_free( name );
 
-	na_object_attach_profile( action, profile );
+	/*na_object_attach_profile( action, profile );*/
 
 	na_object_check_status( profile );
 
@@ -974,10 +976,12 @@ nact_main_menubar_save_items( NactMainWindow *window )
 static void
 save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 {
+	static const gchar *thisfn = "nact_main_menubar_save_item";
 	NAObjectItem *origin;
 	NAObjectItem *dup_pivot;
 	GList *subitems, *it;
 	NAObjectItem *parent;
+	gchar *parent_id;
 	gint pos;
 	NAIOProvider *provider_before;
 	NAIOProvider *provider_after;
@@ -1002,10 +1006,36 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 				na_object_reset_last_allocated( item );
 			}
 
-			/* do not use NA_OBJECT_ITEM macro as this may return a
-			 * (valid) NULL value
-			 */
 			origin = ( NAObjectItem * ) na_object_get_origin( item );
+			g_debug( "%s: origin=%p", thisfn, ( void * ) origin );
+
+			if( origin ){
+				if( NA_IS_OBJECT_ACTION( item )){
+					subitems = na_object_get_items( origin );
+					na_object_unref_items( subitems );
+				}
+
+				g_debug( "un" );
+				na_factory_object_copy(
+						NA_IFACTORY_OBJECT( origin ), NA_IFACTORY_OBJECT( item ),
+						NA_IS_OBJECT_ACTION( item ));
+				g_debug( "deux" );
+
+			} else {
+				dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
+				na_object_reset_origin( item, dup_pivot );
+
+				pos = -1;
+				parent_id = NULL;
+				parent = na_object_get_parent( item );
+				if( parent ){
+					parent_id = na_object_get_id( parent );
+					pos = na_object_get_position( parent, item );
+				}
+
+				na_updater_insert_item( updater, dup_pivot, parent_id, pos );
+			}
+#if 0
 			parent = NULL;
 			pos = -1;
 
@@ -1031,8 +1061,11 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 			} else {
 				na_updater_add_item( updater, dup_pivot );
 			}
+#endif
 
+			g_debug( "trois" );
 			nact_iactions_list_bis_removed_modified( NACT_IACTIONS_LIST( window ), item );
+			g_debug( "quatre" );
 
 			provider_after = na_object_get_provider( item );
 			if( provider_after != provider_before ){

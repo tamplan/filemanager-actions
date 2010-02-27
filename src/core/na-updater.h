@@ -73,7 +73,7 @@ NAUpdater *na_updater_new( void );
 
 /* update the tree in memory
  */
-void       na_updater_add_item   ( NAUpdater *updater, const NAObjectItem *item );
+void       na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *parent_id, gint pos );
 void       na_updater_remove_item( NAUpdater *updater, NAObject *item );
 
 /* read from / write to the physical storage subsystem

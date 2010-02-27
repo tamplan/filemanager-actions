@@ -335,13 +335,15 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 	guint code;
 	NADataDef *def;
 	gchar *id;
-	gchar *parent_path, *path;
+	gchar *parent_path, *dir_path, *path;
 	gchar *msg;
 	gchar *str_value;
 	gboolean bool_value;
 	GSList *slist_value;
 	guint uint_value;
 	GConfClient *gconf;
+
+	/*g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
 
 	msg = NULL;
 	code = NA_IIO_PROVIDER_CODE_OK;
@@ -353,8 +355,10 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 			(( WriterData * ) writer_data )->parent_id ?
 					(( WriterData * ) writer_data )->parent_id : id );
 
-	path = (( WriterData * ) writer_data )->parent_id ?
+	dir_path = (( WriterData * ) writer_data )->parent_id ?
 					gconf_concat_dir_and_key( parent_path, id ) : g_strdup( parent_path );
+
+	path = gconf_concat_dir_and_key( dir_path, def->gconf_entry );
 
 	gconf = NAGP_GCONF_PROVIDER( provider )->private->gconf;
 
@@ -404,6 +408,8 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 			code = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 	}
 
+	/*g_debug( "%s: gconf=%p, code=%u, path=%s", thisfn, ( void * ) gconf, code, path );*/
+
 	g_free( msg );
 	g_free( path );
 	g_free( parent_path );
@@ -439,6 +445,8 @@ nagp_writer_write_done( const NAIFactoryProvider *writer, void *writer_data,
 			g_free( data );
 		}
 	}
+
+	gconf_client_suggest_sync( NAGP_GCONF_PROVIDER( writer )->private->gconf, NULL );
 
 	return( code );
 }
