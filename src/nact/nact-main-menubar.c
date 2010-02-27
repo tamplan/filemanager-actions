@@ -1015,11 +1015,8 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 					na_object_unref_items( subitems );
 				}
 
-				g_debug( "un" );
 				na_factory_object_copy(
-						NA_IFACTORY_OBJECT( origin ), NA_IFACTORY_OBJECT( item ),
-						NA_IS_OBJECT_ACTION( item ));
-				g_debug( "deux" );
+						NA_IFACTORY_OBJECT( origin ), NA_IFACTORY_OBJECT( item ));
 
 			} else {
 				dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
@@ -1063,9 +1060,7 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 			}
 #endif
 
-			g_debug( "trois" );
 			nact_iactions_list_bis_removed_modified( NACT_IACTIONS_LIST( window ), item );
-			g_debug( "quatre" );
 
 			provider_after = na_object_get_provider( item );
 			if( provider_after != provider_before ){
