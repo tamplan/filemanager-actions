@@ -151,9 +151,6 @@
 	Basenames
 	Schemes
 
-- when appending a profile found but not listed, it should be marked as invalid
-  to be editable in NACT, but not used in runtime plugin
-
 - profile path and parameters should be set together as only one variable
 
 - AssistantExport and AssistantExportAsk should be dynamically displayed
@@ -165,9 +162,6 @@
   but path is defined as string in this same spec
   and icon may be a path -> so what to do with this ?
 
-- NAIDataFactory -> NAIObjectFactory
-  NADataFactory  -> NAObjectFactory
-  NADataElement  -> NADataFactory
-  NadfIdType     -> NADataDef
-  na-idata-factory-enum -> na-idata-factory-def + merge na-idata-factory-str
-  NADataDef: id is suppressed, use name instead
+- segfaults on reload
+
+- check adding/removing profile on desktop/gconf/xml import/export
