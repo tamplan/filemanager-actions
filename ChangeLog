@@ -1,5 +1,8 @@
 2009-02-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-iduplicable.c (na_iduplicable_check_status):
+	An object without any origin is considered modified.
+
 	* src/core/na-iduplicable.c (get_duplicable_str):
 	NAIDuplicable object defaults to not modified.
 

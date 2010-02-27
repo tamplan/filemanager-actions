@@ -316,6 +316,8 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 
 		if( str->origin ){
 			str->modified = !v_are_equal( str->origin, object );
+		} else {
+			str->modified = TRUE;
 		}
 
 		str->valid = v_is_valid( object );
