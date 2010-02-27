@@ -157,7 +157,7 @@ instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "na_object_item_instance_dispose";
 	NAObjectItem *self;
-	GList *children, *it;
+	GList *children;
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -170,11 +170,8 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		children = na_object_get_items( self );
-		for( it = children ; it ; it = it->next ){
-			g_object_unref( it->data );
-		}
-		g_list_free( children );
 		na_object_set_items( self, NULL );
+		na_object_unref_items( children );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -237,15 +234,13 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
  * na_object_item_copy:
  * @item: the target #NAObjectItem instance.
  * @source: the source #NAObjectItem instance.
+ * @recursive: whether the children should be recursively copied.
  *
  * Copies data from @source to @item.
  *
  * This function participates to the #na_iduplicable_duplicate() stack,
  * and is triggered after all copyable elementary data (in #NAIFactoryObject
  * sense) have already been copied themselves.
- *
- * We have to deal here with the subitems: duplicating childs from @source
- * to @item.
  */
 void
 na_object_item_copy( NAObjectItem *item, const NAObjectItem *source )
@@ -255,6 +250,7 @@ na_object_item_copy( NAObjectItem *item, const NAObjectItem *source )
 	NAObject *dup;
 
 	tgt_children = na_object_get_items( item );
+	g_debug( "%s: tgt_children=%p (count=%d)", thisfn, ( void * ) tgt_children, g_list_length( tgt_children ));
 	if( tgt_children ){
 
 		g_warning( "%s: target %s has already %d children",
@@ -580,8 +576,10 @@ na_object_item_remove_item( NAObjectItem *item, const NAObjectId *object )
 	if( !item->private->dispose_has_run ){
 
 		children = na_object_get_items( item );
-		children = g_list_remove( children, ( gconstpointer ) object );
-		na_object_set_items( item, children );
+		if( children ){
+			children = g_list_remove( children, ( gconstpointer ) object );
+			na_object_set_items( item, children );
+		}
 	}
 }
 
@@ -720,6 +718,7 @@ rebuild_children_slist( NAObjectItem *item )
 
 		na_object_set_items_slist( item, slist );
 
+		na_core_utils_slist_dump( slist );
 		na_core_utils_slist_free( slist );
 	}
 }

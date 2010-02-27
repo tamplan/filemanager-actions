@@ -1,5 +1,11 @@
 2009-02-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-item.c (instance_dispose):
+	Set the subitems pointer to NULL before unreffing the children.
+
+	* src/core/na-object.c (instance_finalize):
+	Add a protection when finalizing NADataBoxed.
+
 	* src/core/na-object-action.c (instance_constructed):
 	* src/core/na-object-profile.c (instance_constructed):
 	* src/core/na-object-menu.c (instance_constructed):

@@ -198,7 +198,9 @@ instance_finalize( GObject *object )
 
 	g_free( self->private );
 
-	na_factory_object_finalize( NA_IFACTORY_OBJECT( object ));
+	if( NA_IS_IFACTORY_OBJECT( object )){
+		na_factory_object_finalize( NA_IFACTORY_OBJECT( object ));
+	}
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
