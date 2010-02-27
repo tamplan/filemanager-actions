@@ -1,3 +1,11 @@
+2009-02-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-iduplicable.c (get_duplicable_str):
+	Initialize modification status to TRUE if origin is NULL.
+
+	* src/nact/nact-tree-model.c (nact_tree_model_fill):
+	Recheck modification and validity status of newly duplicated object.
+
 2009-02-26 Pierre Wieser <pwieser@trychlos.org>
 
 	Fix references count mistakes in NACT.

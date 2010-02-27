@@ -606,9 +606,8 @@ nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean are_profiles_
 
 		for( it = items ; it ; it = it->next ){
 			duplicate = ( NAObject * ) na_object_duplicate( it->data );
+			na_object_check_status( duplicate );
 			fill_tree_store( ts_model, model->private->treeview, duplicate, are_profiles_displayed, NULL );
-			/*g_debug( "%s: before_na_object_unref: duplicate=%p (%s, ref_count=%d)", thisfn,
-					( void * ) duplicate, G_OBJECT_TYPE_NAME( duplicate ), G_OBJECT( duplicate )->ref_count );*/
 			na_object_unref( duplicate );
 		}
 	}

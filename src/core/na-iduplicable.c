@@ -577,7 +577,7 @@ get_duplicable_str( const NAIDuplicable *object )
 		str = g_new0( DuplicableStr, 1 );
 
 		str->origin = NULL;
-		str->modified = FALSE;
+		str->modified = TRUE;
 		str->valid = TRUE;
 
 		str->status_changed_handler_id = g_signal_connect(
