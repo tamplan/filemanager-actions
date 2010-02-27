@@ -1,5 +1,10 @@
 2009-02-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-action.c (instance_constructed):
+	* src/core/na-object-profile.c (instance_constructed):
+	* src/core/na-object-menu.c (instance_constructed):
+	Initialize NAIFactoryObject defaults here, rather than in object_new.
+
 	* src/api/na-data-def.h: Remove fn_free() function pointer.
 
 	* src/core/na-data-boxed.c:

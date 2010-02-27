@@ -68,6 +68,7 @@ static NAObjectIdClass *st_parent_class = NULL;
 static GType        register_type( void );
 static void         class_init( NAObjectProfileClass *klass );
 static void         instance_init( GTypeInstance *instance, gpointer klass );
+static void         instance_constructed( GObject *object );
 static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void         instance_dispose( GObject *object );
@@ -164,6 +165,7 @@ class_init( NAObjectProfileClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->constructed = instance_constructed;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
 	object_class->dispose = instance_dispose;
@@ -199,6 +201,27 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NAObjectProfilePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+}
+
+static void
+instance_constructed( GObject *object )
+{
+	static const gchar *thisfn = "na_object_profile_instance_constructed";
+	NAObjectProfile *self;
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
+	self = NA_OBJECT_PROFILE( object );
+
+	if( !self->private->dispose_has_run ){
+
+		na_factory_object_set_defaults( NA_IFACTORY_OBJECT( object ));
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( object );
+		}
+	}
 }
 
 static void
@@ -514,7 +537,6 @@ na_object_profile_new( void )
 	NAObjectProfile *profile;
 
 	profile = g_object_new( NA_OBJECT_PROFILE_TYPE, NULL );
-	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
 
 	return( profile );
 }

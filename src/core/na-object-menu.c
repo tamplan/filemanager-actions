@@ -64,6 +64,7 @@ static NAObjectItemClass *st_parent_class = NULL;
 static GType        register_type( void );
 static void         class_init( NAObjectMenuClass *klass );
 static void         instance_init( GTypeInstance *instance, gpointer klass );
+static void         instance_constructed( GObject *object );
 static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void         instance_dispose( GObject *object );
@@ -142,6 +143,7 @@ class_init( NAObjectMenuClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->constructed = instance_constructed;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
 	object_class->dispose = instance_dispose;
@@ -172,6 +174,27 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_OBJECT_MENU( instance );
 
 	self->private = g_new0( NAObjectMenuPrivate, 1 );
+}
+
+static void
+instance_constructed( GObject *object )
+{
+	static const gchar *thisfn = "na_object_menu_instance_constructed";
+	NAObjectMenu *self;
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+	self = NA_OBJECT_MENU( object );
+
+	if( !self->private->dispose_has_run ){
+
+		na_factory_object_set_defaults( NA_IFACTORY_OBJECT( object ));
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( object );
+		}
+	}
 }
 
 static void
@@ -384,7 +407,6 @@ na_object_menu_new( void )
 	NAObjectMenu *menu;
 
 	menu = g_object_new( NA_OBJECT_MENU_TYPE, NULL );
-	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( menu ));
 
 	return( menu );
 }
