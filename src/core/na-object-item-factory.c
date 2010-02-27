@@ -100,7 +100,7 @@ NADataDef data_def_item [] = {
 				NAFD_TYPE_POINTER,
 				NULL,
 				FALSE,			/* not copyable */
-				TRUE,			/*     comparable */
+				FALSE,			/*     comparable */
 				FALSE,
 				FALSE,
 				NULL,

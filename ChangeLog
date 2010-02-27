@@ -1,5 +1,12 @@
 2009-02-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-iduplicable.c (get_duplicable_str):
+	NAIDuplicable object defaults to not modified.
+
+	* src/core/na-object-item-factory.c:
+	Pointers to list of subitems are not comparable.
+
+	Rewrite the update of the pivot tree where there is a non null origin.
 	* src/core/na-updater.c:
 	* src/core/na-updater.h
 	(na_updater_add_item): Removed function.
