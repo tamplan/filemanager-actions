@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-02-20 19:33+0000\n"
-"PO-Revision-Date: 2010-02-20 21:17+0100\n"
+"POT-Creation-Date: 2010-02-27 23:19+0000\n"
+"PO-Revision-Date: 2010-02-28 14:18+0100\n"
 "Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -21,37 +21,37 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: ../data/nautilus-actions.schemas.in.h:1
-#: ../src/io-xml/na-xml-names.h:144
+#: ../src/io-xml/naxml-keys.h:159
 msgid "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr "izbrana možnost določa, da se vzorci imen datotek upoštevajo velikosti črk."
 
 #: ../data/nautilus-actions.schemas.in.h:2
-#: ../src/io-xml/na-xml-names.h:153
+#: ../src/io-xml/naxml-keys.h:168
 msgid "'true' if the selection can have files, 'false' otherwise"
 msgstr "izbrana možnost omogoča izbiranje datotek"
 
 #: ../data/nautilus-actions.schemas.in.h:3
-#: ../src/io-xml/na-xml-names.h:160
+#: ../src/io-xml/naxml-keys.h:175
 msgid "'true' if the selection can have folders, 'false' otherwise"
 msgstr "izbrana možnost omogoča izbiranje map"
 
 #: ../data/nautilus-actions.schemas.in.h:4
-#: ../src/io-xml/na-xml-names.h:167
+#: ../src/io-xml/naxml-keys.h:182
 msgid "'true' if the selection can have several items, 'false' otherwise"
 msgstr "izbrana možnost omogoča izbiranje več predmetov"
 
 #: ../data/nautilus-actions.schemas.in.h:5
-#: ../src/io-xml/na-xml-names.h:120
+#: ../src/io-xml/naxml-keys.h:135
 msgid "A description name of the profile"
 msgstr "Opisno ime profila"
 
 #: ../data/nautilus-actions.schemas.in.h:6
-#: ../src/io-xml/na-xml-names.h:149
+#: ../src/io-xml/naxml-keys.h:164
 msgid "A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear. This only applies when targeting selection."
 msgstr "Seznam nizov z nadomestnima znakoma '*' ali '?' za skladnjo MIME vrst z izbranimi datotekami. Vsi izbrani predmeti se morajo skladati z vsaj enim od vzorcev, da so prikazani v seznamu. To je uporabljeno samo pri ciljanju izbire."
 
 #: ../data/nautilus-actions.schemas.in.h:7
-#: ../src/io-xml/na-xml-names.h:140
+#: ../src/io-xml/naxml-keys.h:155
 msgid "A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear. This only applies when targeting selection."
 msgstr "Seznam nizov z nadomestnima znakoma '*' ali '?'  za skladnjo imen izbranih datotek(e)/map(e). Izbrani predmeti se morajo skladati z vsaj enim od vzorcev imen datotek, da se pojavijo na seznamu. To je uporabljeno samo pri ciljanju izbire."
 
@@ -63,9 +63,7 @@ msgstr "Doda predmet 'O programu' v Nautilusov vsebinski meni."
 msgid "Ask for a confirmation when quitting by Esc"
 msgstr "Vprašaj za potrditev ob končanju s tipko Esc"
 
-#. i18n: default label for a new profile
 #: ../data/nautilus-actions.schemas.in.h:10
-#: ../src/core/na-object-profile.c:63
 msgid "Default profile"
 msgstr "Privzet profil"
 
@@ -122,17 +120,17 @@ msgid "If TRUE, then a 'Nautilus Actions' item will be defined in the Nautilus c
 msgstr "Izbrana možnost določi 'Dejanja Nautilusa' v vsebinskem meniju Nautilusa in bo osnovni meni za vsa dostopna dejanja."
 
 #: ../data/nautilus-actions.schemas.in.h:24
-#: ../src/io-xml/na-xml-names.h:93
+#: ../src/io-xml/naxml-keys.h:108
 msgid "If the action is disabled, it will never appear in the Nautilus context menu."
 msgstr "V primeru, da je dejanje onemogočeno, se ne bo pojavilo v Nautilusovem vsebinskem meniju."
 
 #: ../data/nautilus-actions.schemas.in.h:25
-#: ../src/io-xml/na-xml-names.h:168
+#: ../src/io-xml/naxml-keys.h:183
 msgid "If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'. This only applies when targeting selection."
 msgstr "Izbrana možnost omogoča izbor več datotek ali map. V nasprotnem primeru bo mogoče izbrati le eno datoteko ali eno mapo. To je uporabljeno samo pri pri ciljni izbiri."
 
 #: ../data/nautilus-actions.schemas.in.h:26
-#: ../src/io-xml/na-xml-names.h:145
+#: ../src/io-xml/naxml-keys.h:160
 msgid "If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'. This only applies when targeting selection."
 msgstr "V primeru skladnje imena datoteke z upoštevanjem velikosti črk, mora biti možnost izbrana. V nasprotnem primeru, če naj se oznaka '*.jpg' sklada tako s 'slika.jpg' in 'slika.JPG', pa ne. To je uporabljeno samo pri ciljni izbiri."
 
@@ -141,7 +139,7 @@ msgid "Import mode"
 msgstr "Uvozni način"
 
 #: ../data/nautilus-actions.schemas.in.h:28
-#: ../src/io-xml/na-xml-names.h:116
+#: ../src/io-xml/naxml-keys.h:131
 msgid "Label of the item in the toolbar"
 msgstr "Oznaka predmeta v orodni vrstici"
 
@@ -186,7 +184,7 @@ msgid "List of items at first level of the hierarchy"
 msgstr "Seznam predmetov na prvi ravni hierarhije"
 
 #: ../data/nautilus-actions.schemas.in.h:39
-#: ../src/io-xml/na-xml-names.h:95
+#: ../src/io-xml/naxml-keys.h:110
 msgid "List of subitem ids"
 msgstr "Seznam id-jev podpredmetov"
 
@@ -271,32 +269,32 @@ msgid "Sort mode"
 msgstr "Način razvrščanja"
 
 #: ../data/nautilus-actions.schemas.in.h:60
-#: ../src/io-xml/na-xml-names.h:107
+#: ../src/io-xml/naxml-keys.h:122
 msgid "Targets background"
 msgstr "Cilja ozadje"
 
 #: ../data/nautilus-actions.schemas.in.h:61
-#: ../src/io-xml/na-xml-names.h:104
+#: ../src/io-xml/naxml-keys.h:119
 msgid "Targets selection"
 msgstr "Cilja izbiro"
 
 #: ../data/nautilus-actions.schemas.in.h:62
-#: ../src/io-xml/na-xml-names.h:109
+#: ../src/io-xml/naxml-keys.h:124
 msgid "Targets toolbar"
 msgstr "Cilja orodno vrstico"
 
 #: ../data/nautilus-actions.schemas.in.h:63
-#: ../src/io-xml/na-xml-names.h:121
+#: ../src/io-xml/naxml-keys.h:136
 msgid "The field is here to give the user a human readable name for a profile in the NACT interface. If not set there will be a default auto generated string set."
 msgstr "Polje je namenjeno ljudem berljivemu imenu profila v NACT vmesniku. V primeru, da polje ni izpolnjeno, bo privzeto določen samodejno ustvarjen niz."
 
 #: ../data/nautilus-actions.schemas.in.h:64
-#: ../src/io-xml/na-xml-names.h:88
+#: ../src/io-xml/naxml-keys.h:103
 msgid "The icon of the menu item"
 msgstr "Ikona predmeta menija"
 
 #: ../data/nautilus-actions.schemas.in.h:65
-#: ../src/io-xml/na-xml-names.h:89
+#: ../src/io-xml/naxml-keys.h:104
 msgid "The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings."
 msgstr "Ikona predmeta menija, ki se bo pojavila ob oznaki v Nautilusovem pojavnem oknu, ko se izbira sklada s pogoji nastavitev videza."
 
@@ -307,27 +305,27 @@ msgstr "Oznaka prikazana poleg ikone Nautilusove orodne vrstice. Prazna oznaka j
 #. GConf schema descriptions
 #.
 #: ../data/nautilus-actions.schemas.in.h:67
-#: ../src/io-xml/na-xml-names.h:81
+#: ../src/io-xml/naxml-keys.h:96
 msgid "The label of the menu item"
 msgstr "Oznaka predmeta menija"
 
 #: ../data/nautilus-actions.schemas.in.h:68
-#: ../src/io-xml/na-xml-names.h:82
+#: ../src/io-xml/naxml-keys.h:97
 msgid "The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings."
 msgstr "Oznaka predmeta v meniju, ki se pojavi v Nautilusovem pojavnem oknu, ko se izbira sklada s pogoji nastavitev videza."
 
 #: ../data/nautilus-actions.schemas.in.h:69
-#: ../src/io-xml/na-xml-names.h:181
+#: ../src/io-xml/naxml-keys.h:196
 msgid "The list of URIs on which the Background item applies"
 msgstr "Seznam URI-jev za katere velja predmet ozadja"
 
 #: ../data/nautilus-actions.schemas.in.h:70
-#: ../src/io-xml/na-xml-names.h:139
+#: ../src/io-xml/naxml-keys.h:154
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr "Seznam vzorcev za skladnjo izbranih datotek in map"
 
 #: ../data/nautilus-actions.schemas.in.h:71
-#: ../src/io-xml/na-xml-names.h:148
+#: ../src/io-xml/naxml-keys.h:163
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr "Seznam vzorcev za skladnjo z MIME vrstami izbranih datotek"
 
@@ -336,7 +334,7 @@ msgid "The list of schemes proposed by default on each new profile. A default de
 msgstr "Seznam privzeto predlaganih shem na vsakem novem profilu. Privzeti seznam je ??? v nastavitveno orodje nautilusovih dejanj, ki ga je mogoče posodobiti."
 
 #: ../data/nautilus-actions.schemas.in.h:73
-#: ../src/io-xml/na-xml-names.h:171
+#: ../src/io-xml/naxml-keys.h:186
 msgid "The list of schemes where the selected files should be located"
 msgstr "Seznam shem kjer bi se morale nahajati izbrane datoteke"
 
@@ -345,7 +343,7 @@ msgid "The order in which I/O providers are tested when we need to write a new i
 msgstr "Vrstni red preskušanja ponudnikov V/I, ko je potrebno zapisati nov predmet v podsistem shrambe."
 
 #: ../data/nautilus-actions.schemas.in.h:75
-#: ../src/io-xml/na-xml-names.h:127
+#: ../src/io-xml/naxml-keys.h:142
 #: ../src/utils/nautilus-actions-new.c:100
 msgid "The parameters of the command"
 msgstr "Parametri ukaza"
@@ -356,34 +354,34 @@ msgid "The parameters of the command to start when the user selects the menu ite
 msgstr "Parametri ukaza za zagon, ko uporabnik izbere predmet menija v Nautilusovem pojavnem oknu. Parametri lahko vsebujejo nekatere posebne žetone, ki so pred zagonom ukaza zamenjani s podatki Nautilusa: %d: osnovna mapa izbranih datotek %f: ime izbrane datoteke ali prve datoteke, če je izbranih več %h: ime gostitelja URI %m: s presledkom ločen seznam osnovnih imen izbranih datotek ali map %M: s presledkom ločen seznam izbranih datoteke ali map vključno s potjo %p: številka vrat prvega URI %R: s presledki ločen seznam izbranih URI-jev %s: shema URI-ja %u: URI %U: uporabniško ime URI %%: znak za odstotek."
 
 #: ../data/nautilus-actions.schemas.in.h:78
-#: ../src/io-xml/na-xml-names.h:124
+#: ../src/io-xml/naxml-keys.h:139
 #: ../src/utils/nautilus-actions-new.c:98
 msgid "The path of the command"
 msgstr "Pot ukaza"
 
 #: ../data/nautilus-actions.schemas.in.h:79
-#: ../src/io-xml/na-xml-names.h:125
+#: ../src/io-xml/naxml-keys.h:140
 msgid "The path of the command to start when the user select the menu item in the Nautilus popup menu."
 msgstr "Pot ukaza za zagon, ko uporabnike izbere predmet menija v pojavnem oknu Nautilusa."
 
 #: ../data/nautilus-actions.schemas.in.h:80
-#: ../src/io-xml/na-xml-names.h:84
+#: ../src/io-xml/naxml-keys.h:99
 #: ../src/utils/nautilus-actions-new.c:82
 msgid "The tooltip of the menu item"
 msgstr "Namig predmeta menija"
 
 #: ../data/nautilus-actions.schemas.in.h:81
-#: ../src/io-xml/na-xml-names.h:85
+#: ../src/io-xml/naxml-keys.h:100
 msgid "The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse."
 msgstr "Namig menijskega predmeta, ki se pojavi v vrstici stanja Nautilusa, ko se kazalo miške pojavi nad predmetom. "
 
 #: ../data/nautilus-actions.schemas.in.h:82
-#: ../src/io-xml/na-xml-names.h:185
+#: ../src/io-xml/naxml-keys.h:200
 msgid "The version of the configuration format"
 msgstr "Različica nastavitvenega zapisa"
 
 #: ../data/nautilus-actions.schemas.in.h:83
-#: ../src/io-xml/na-xml-names.h:186
+#: ../src/io-xml/naxml-keys.h:201
 msgid "The version of the configuration format that will be used to manage backward compatibility."
 msgstr "Različica nastavitvenega zapisa, ki bo uporabljena za upravljanje združljivosti za nazaj."
 
@@ -408,7 +406,7 @@ msgid "This setting is tied in with the 'isfile' setting. The valid combinations
 msgstr "Nastavitev je zvezana z 'isfile' nastavitvijo. Veljavne možnosti so:isfile=PRAV in isdir=NAPAK: izbira lahko vsebuje le datoteke isfile=NAPAKin isdir=PRAV: izbira lahko vsebuje le mape isfile=PRAV in isdir=PRAV: izbira lahko vsebuje tako datoteke kot mape isfile=NAPAKin isdir=NAPAK: je neveljavna možnost (nastavitev se ne more pojaviti). To je uporabljeno samo pri ciljanju izbire."
 
 #: ../data/nautilus-actions.schemas.in.h:89
-#: ../src/io-xml/na-xml-names.h:100
+#: ../src/io-xml/naxml-keys.h:115
 msgid "Type of the item"
 msgstr "Vrsta predmeta"
 
@@ -465,17 +463,17 @@ msgid "Whether the action is candidate to be displayed in Nautilus toolbar. Note
 msgstr "Ali naj bo dejanje kandidat za prikaz v Nautilusovi orodni vrstici. Od Nautilusa 2.26 naprej meniji ne morejo biti kandidati za prikaz v orodni vrstici."
 
 #: ../data/nautilus-actions.schemas.in.h:103
-#: ../src/io-xml/na-xml-names.h:92
+#: ../src/io-xml/naxml-keys.h:107
 msgid "Whether the action is enabled"
 msgstr "Ali je dejanje omogočeno"
 
 #: ../data/nautilus-actions.schemas.in.h:104
-#: ../src/io-xml/na-xml-names.h:108
+#: ../src/io-xml/naxml-keys.h:123
 msgid "Whether the action of menu targets the background Nautilus menus."
 msgstr "Ali naj bo dejanje menija cilja Nautilusove menije ozadja."
 
 #: ../data/nautilus-actions.schemas.in.h:105
-#: ../src/io-xml/na-xml-names.h:105
+#: ../src/io-xml/naxml-keys.h:120
 msgid "Whether the action of menu targets the selection Nautilus menus. This is the historical behavior."
 msgstr "Ali naj dejanje menija cilja izbor menijev Nautilusa. To je bilo obnašanje v prejšnji različici."
 
@@ -532,158 +530,78 @@ msgstr ""
 "Avtorske pravice %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
 "Avtorske pravice %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 
-#: ../src/core/na-io-provider.c:1252
+#: ../src/core/na-importer-ask.c:292
+#, c-format
+msgid "The action \"%s\" imported from \"%s\" has the same identifiant than the already existing \"%s\"."
+msgstr "Dejanje \"%s\" uvoženo iz \"%s\" ima enako določilo kot obstoječe \"%s\"."
+
+#: ../src/core/na-importer-ask.c:298
+#, c-format
+msgid "The menu \"%s\" imported from \"%s\" has the same identifiant than the already existing \"%s\"."
+msgstr "Meni \"%s\" uvožen iz \"%s\" ima enako določilo kot obstoječi \"%s\"."
+
+#: ../src/core/na-io-provider.c:1251
 msgid "Item is read-only."
 msgstr "Predmet je le za branje."
 
-#: ../src/core/na-io-provider.c:1256
+#: ../src/core/na-io-provider.c:1255
 msgid "I/O provider is not willing to write."
 msgstr "V ponudnika V/I ni mogoče pisati."
 
-#: ../src/core/na-io-provider.c:1260
+#: ../src/core/na-io-provider.c:1259
 msgid "No writable I/O provider found."
 msgstr "Ni mogoče najti zapisljivega ponudnika V/I."
 
-#: ../src/core/na-io-provider.c:1264
+#: ../src/core/na-io-provider.c:1263
 msgid "I/O provider has been locked down by an administrator."
 msgstr "Skrbnik je zaklenil ponudnika V/I."
 
-#: ../src/core/na-io-provider.c:1268
+#: ../src/core/na-io-provider.c:1267
 msgid "I/O provider has been locked down by the user."
 msgstr "Uporabnik je zaklenil ponudnika V/I."
 
-#: ../src/core/na-io-provider.c:1272
+#: ../src/core/na-io-provider.c:1271
 msgid "I/O provider implementation lacks of required API."
 msgstr "Podpori V/I ponudnika manjka zahtevana API."
 
-#: ../src/core/na-io-provider.c:1276
+#: ../src/core/na-io-provider.c:1275
 msgid "The whole configuration has been locked down by an administrator."
 msgstr "Skrbnik je zaklenil celotno nastavitev."
 
-#: ../src/core/na-io-provider.c:1284
+#: ../src/core/na-io-provider.c:1283
 #, c-format
 msgid "Item is not writable for an unknown reason (%d)"
 msgstr "Predmet ni zapisljiv zaradi neznanega vzroka (%d)"
 
 #. i18n: default label for a new action
-#: ../src/core/na-object-action.c:55
+#: ../src/core/na-object-action.c:65
 msgid "New Nautilus action"
 msgstr "Novo dejanje Nautilusa"
 
+#: ../src/core/na-object-action.c:358
+msgid "Profile automatically created from pre-v2 action"
+msgstr "Profil je bil samodejno ustvarjen iz dejanja pred različico 2"
+
 #. i18n: copied items have a label as 'Copy of original label'
-#: ../src/core/na-object-id.c:323
+#: ../src/core/na-object-id.c:338
 #, c-format
 msgid "Copy of %s"
 msgstr "Kopija %s"
 
 #. i18n: default label for a new menu
-#: ../src/core/na-object-menu.c:56
+#: ../src/core/na-object-menu.c:58
 msgid "New Nautilus menu"
 msgstr "Nov meni Nautilusa"
 
-#: ../src/io-desktop/nadp-desktop-provider.c:218
+#: ../src/io-desktop/nadp-desktop-provider.c:220
 msgid "Nautilus-Actions Desktop I/O Provider"
 msgstr "Ponudnik V/I namizja dejanj Nautilusa"
 
-#: ../src/io-gconf/nagp-gconf-provider.c:227
+#: ../src/io-gconf/nagp-gconf-provider.c:228
 msgid "Nautilus-Actions GConf I/O Provider"
 msgstr "Ponudnik V/I GConf dejanj Nautilusa"
 
-#: ../src/io-xml/nact-xml-reader.c:123
-#, c-format
-msgid "Unable to parse XML file: %s."
-msgstr "Ni mogoče razčleniti datoteke XML: %s. "
-
-#: ../src/io-xml/nact-xml-reader.c:124
-#, c-format
-msgid "Invalid XML root element: waited for '%s' or '%s', found '%s' at line %d."
-msgstr "Neveljaven korenski XML element: pričakovan '%s' ali '%s', najden '%s' v vrstici %d."
-
-#: ../src/io-xml/nact-xml-reader.c:125
-#, c-format
-msgid "Waited for '%s' node, found (ignored) '%s' at line %d."
-msgstr "Namesto pričakovanega '%s' vozlišča, je bilo najdeno (prezrto) vozlišče '%s' v vrstici %d."
-
-#: ../src/io-xml/nact-xml-reader.c:126
-#, c-format
-msgid "Unexpected (ignored) '%s' node found at line %d."
-msgstr "Najdeno je nepričakovano (prezrto) vozlišče '%s' v vrstici %d."
-
-#: ../src/io-xml/nact-xml-reader.c:127
-#, c-format
-msgid "Schema is ignored at line %d."
-msgstr "Shema v vrstici %d je prezrta."
-
-#: ../src/io-xml/nact-xml-reader.c:128
-#, c-format
-msgid "Unexpected '%s' node found at line %d."
-msgstr "Najdeno nepričakovano vozlišče '%s' v vrstici %d."
-
-#: ../src/io-xml/nact-xml-reader.c:129
-#, c-format
-msgid "Unexpected '%s' entry found at line %d."
-msgstr "Najden nepričakovan vnos '%s' v vrstici %d."
-
-#: ../src/io-xml/nact-xml-reader.c:130
-#, c-format
-msgid "Mandatory node '%s' not found."
-msgstr "Obveznega vozlišča '%s' ni mogoče najti."
-
-#: ../src/io-xml/nact-xml-reader.c:131
-msgid "No value found."
-msgstr "Vrednosti ni mogoče najti."
-
-#: ../src/io-xml/nact-xml-reader.c:132
-#, c-format
-msgid "Invalid UUID: waited for %s, found %s at line %d."
-msgstr "Neveljaven UUID: pričakovan %s, najden %s v vrstici %d."
-
-#: ../src/io-xml/nact-xml-reader.c:133
-#, c-format
-msgid "Invalid content: waited for %s prefix, found %s at line %d."
-msgstr "Neveljavna vsebina: pričakovana predpona %s, najdena %s v vrstici %d."
-
-#: ../src/io-xml/nact-xml-reader.c:134
-#, c-format
-msgid "Invalid UUID %s found at line %d."
-msgstr "Najden je neveljaven UUID %s v vrstici %d."
-
-#: ../src/io-xml/nact-xml-reader.c:135
-#, c-format
-msgid "Already existing action (UUID: %s)."
-msgstr "Dejanje že obstaja (UUID: %s)."
-
-#: ../src/io-xml/nact-xml-reader.c:136
-#, c-format
-msgid "Value '%s' already set: new value ignored at line %d."
-msgstr "Vrednost '%s' je že nastavljena: nova vrednost v vrstici %d je prezrta."
-
-#: ../src/io-xml/nact-xml-reader.c:137
-msgid "UUID not found."
-msgstr "UUID ni mogoče najti."
-
-#: ../src/io-xml/nact-xml-reader.c:138
-msgid "Action label not found."
-msgstr "Oznake dejanja ni mogoče najti. "
-
-#: ../src/io-xml/nact-xml-reader.c:1348
-msgid "Action was renumbered due to user request."
-msgstr "Dejanje je bilo ponovno oštevilčeno zaradi zahteve uporabnika."
-
-#: ../src/io-xml/nact-xml-reader.c:1355
-msgid "Existing action was overriden due to user request."
-msgstr "Obstoječe dejanje je bilo prepisano zaradi zahteve uporabnika."
-
-#: ../src/io-xml/nact-xml-reader.c:1364
-msgid "Import was canceled due to user request."
-msgstr "Uvoz je bil preklican zaradi zahteve uporabnika."
-
-#. i18n: the action has been renumbered during import operation
-#: ../src/io-xml/nact-xml-reader.c:1423
-msgid "(renumbered)"
-msgstr "(ponovno oštevilčeno)"
-
-#: ../src/io-xml/na-xml-names.h:96
+#: ../src/io-xml/naxml-keys.h:111
 msgid ""
 "Ordered list of the IDs of the subitems. This may be actions or menus if the item is a menu, or profiles if the item is an action.\n"
 "If this list doesn't exist or is empty for an action, we load the found profiles in the order of the read operations."
@@ -691,7 +609,7 @@ msgstr ""
 "Razvrščen seznam ID-jev podrejenih predmetov. To so lahko dejanja ali meniji, če je predmet meni, ali profili, če je predmet dejanje.\n"
 "V primeru, da seznam ne obstaja ali je prazen za dejanje, so najdeni profili naloženi v vrstnem redu opravil branja."
 
-#: ../src/io-xml/na-xml-names.h:101
+#: ../src/io-xml/naxml-keys.h:116
 msgid ""
 "Defines if the item is an action or a menu. Possible values are :\n"
 "- \"Action\",\n"
@@ -703,7 +621,7 @@ msgstr ""
 "- \"Menu\".\n"
 "Vrednost je občutljiva za velikost črk in ne sme biti prevedena."
 
-#: ../src/io-xml/na-xml-names.h:110
+#: ../src/io-xml/naxml-keys.h:125
 msgid ""
 "Whether the action is candidate to be displayed in Nautilus toolbar.\n"
 "Note, that as of Nautilus -2.26, menus can not be candidate to toolbar display."
@@ -711,15 +629,15 @@ msgstr ""
 "Ali je dejanje kandidat za prikaz v orodni vrstici Nautilusa.\n"
 "Od Nautilusa 2.26 naprej meniji ne morejo kandidirati za prikaz v orodni vrstici."
 
-#: ../src/io-xml/na-xml-names.h:113
+#: ../src/io-xml/naxml-keys.h:128
 msgid "Whether the labels are the sames"
 msgstr "Ali so oznake enake"
 
-#: ../src/io-xml/na-xml-names.h:114
+#: ../src/io-xml/naxml-keys.h:129
 msgid "Whether the label displayed in the Nautilus toolbar besides of the icon is the same that the main item label."
 msgstr "Ali naj bo oznaka prikazana poleg ikone v orodni vrstici Nautilusa enaka oznaki glavnega premeta."
 
-#: ../src/io-xml/na-xml-names.h:117
+#: ../src/io-xml/naxml-keys.h:132
 msgid ""
 "The label displayed besides of the icon in the Nautilus toolbar.\n"
 "Note that actual display may depend of your own Gnome preferences."
@@ -728,7 +646,7 @@ msgstr ""
 "Dejanski prikaz je lahko odvisen od Gnome nastavitev."
 
 #. too long string for iso c: 665 (max=509)
-#: ../src/io-xml/na-xml-names.h:129
+#: ../src/io-xml/naxml-keys.h:144
 msgid ""
 "The parameters of the command to start when the user selects the menu item in the Nautilus popup menu.\n"
 "\n"
@@ -762,7 +680,7 @@ msgstr ""
 "%U: uporabniško ime URI-ja\n"
 "%%: znak za odstotek"
 
-#: ../src/io-xml/na-xml-names.h:154
+#: ../src/io-xml/naxml-keys.h:169
 msgid ""
 "This setting is tied in with the 'isdir' setting. The valid combinations are:\n"
 "\n"
@@ -778,7 +696,7 @@ msgstr ""
 "isfile=TRUE in isdir=TRUE: izbira lahko vsebuje tako datoteke kot mape\n"
 "isfile=FALSE in isdir=FALSE: je neveljavna možnost (nastavitev se ne more pojaviti). To je uporabljeno samo pri ciljanju izbire."
 
-#: ../src/io-xml/na-xml-names.h:161
+#: ../src/io-xml/naxml-keys.h:176
 msgid ""
 "This setting is tied in with the 'isfile' setting. The valid combinations are:\n"
 "\n"
@@ -795,7 +713,7 @@ msgstr ""
 "isfile=FALSE in isdir=FALSE: je neveljavna možnost (nastavitev se ne more pojaviti). To je uporabljeno samo pri ciljanju izbire."
 
 #. too long string for iso c: 510 (max=509)
-#: ../src/io-xml/na-xml-names.h:173
+#: ../src/io-xml/naxml-keys.h:188
 msgid ""
 "Defines the list of valid schemes to be matched against the selected items. The scheme is the protocol used to access the files. The keyword to use is the one used in the URI.\n"
 "\n"
@@ -830,7 +748,7 @@ msgstr ""
 "\n"
 "Uporabijo se lahko vse sheme, ki jih uporablja Nautilus.To je uporabljeno samo pri ciljanju izbire."
 
-#: ../src/io-xml/na-xml-names.h:182
+#: ../src/io-xml/naxml-keys.h:197
 msgid ""
 "Defines the list of valid URIs to be matched against the current folder.\n"
 " This is only used when targeting background or toolbar. All folders 'under' the specified URI are considered valid."
@@ -838,15 +756,82 @@ msgstr ""
 "Določi seznam veljavnih URI-jev za skladanje s trenutno mapo.\n"
 "To je uporabno le pri ciljanju ozadja ali orodne vrstice. Vse mape 'pod' določenim URI-jem so obravnavane kot veljavne."
 
-#: ../src/io-xml/naxml-provider.c:61
+#: ../src/io-xml/naxml-reader.c:147
+#, c-format
+msgid "Item ID %s already exists."
+msgstr "ID predmeta %s že obstaja."
+
+#: ../src/io-xml/naxml-reader.c:148
+msgid "Item ID not found."
+msgstr "ID predmeta ni mogoče najti."
+
+#: ../src/io-xml/naxml-reader.c:149
+#, c-format
+msgid "Unwaited key path %s while importing a menu."
+msgstr "Nezaželena pot ključa %s med uvažanjem menija."
+
+#: ../src/io-xml/naxml-reader.c:150
+#, c-format
+msgid "Element %s at line %d already found, ignored."
+msgstr "Element %s v vrstici %d je bil že najden, prezrt."
+
+#: ../src/io-xml/naxml-reader.c:151
+#, c-format
+msgid "Invalid item ID: waited for %s, found %s at line %d."
+msgstr "Neveljaven ID predmeta: čakanje na %s, najden %s v vrstici %d."
+
+#: ../src/io-xml/naxml-reader.c:152
+#, c-format
+msgid "Unknown element %s found at line %d while waiting for %s."
+msgstr "Neznan element %s je bil najden v vrstici %d med čakanjem na %s."
+
+#. i18n: do not translate keywords 'Action' nor 'Menu'
+#: ../src/io-xml/naxml-reader.c:154
+#, c-format
+msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
+msgstr "Neznana vrsta %s je bila najdena v vrstici %d med čakanjem na Action ali Menu."
+
+#: ../src/io-xml/naxml-reader.c:155
+#, c-format
+msgid "Invalid XML root element %s found at line %d while waiting for %s."
+msgstr "Neveljaven korenski element XML %s najden v vrstici %d med čakanjem na %s."
+
+#: ../src/io-xml/naxml-reader.c:156
+#, c-format
+msgid "Unable to parse XML file: %s."
+msgstr "Ni mogoče razčleniti datoteke XML: %s. "
+
+#: ../src/io-xml/naxml-reader.c:157
+#, c-format
+msgid "Node %s at line %d has not been dealt with."
+msgstr "Vozlišče %s v vrstici %d ni bilo obravnavano."
+
+#: ../src/io-xml/naxml-reader.c:1322
+msgid "Item was renumbered due to user request."
+msgstr "Predmet je bil preštevilčen zaradi uporabniške zahteve."
+
+#: ../src/io-xml/naxml-reader.c:1328
+msgid "Existing item was overriden due to user request."
+msgstr "Obstoječi predmet je bil prepisan zaradi uporabniške zahteve."
+
+#: ../src/io-xml/naxml-reader.c:1337
+msgid "Import was canceled due to user request."
+msgstr "Uvoz je bil preklican zaradi zahteve uporabnika."
+
+#. i18n: the action has been renumbered during import operation
+#: ../src/io-xml/naxml-reader.c:1376
+msgid "(renumbered)"
+msgstr "(ponovno oštevilčeno)"
+
+#: ../src/io-xml/naxml-provider.c:63
 msgid "Export as a full GConf schema (v_1) file"
 msgstr "Izvozi kot polno datoteko sheme GCong (v_1)"
 
-#: ../src/io-xml/naxml-provider.c:62
+#: ../src/io-xml/naxml-provider.c:64
 msgid "Export as a GConf schema file with full key descriptions"
 msgstr "Izvozi kot datoteko sheme GConf s polnim opisom ključa"
 
-#: ../src/io-xml/naxml-provider.c:63
+#: ../src/io-xml/naxml-provider.c:65
 msgid ""
 "This used to be the historical export format. The exported file may later be imported via :\n"
 "- Import assistant of the Nautilus Actions Configuration Tool,\n"
@@ -856,15 +841,15 @@ msgstr ""
 "- Pomočnika uvoza orodja nastavitev dejanj Nautilusa,\n"
 "- ali preko gconftool-2 --load orodja ukazne vrstice."
 
-#: ../src/io-xml/naxml-provider.c:72
+#: ../src/io-xml/naxml-provider.c:74
 msgid "Export as a light GConf _schema (v2) file"
 msgstr "Izvozi kot lahko datoteko GConf _sheme (r2)"
 
-#: ../src/io-xml/naxml-provider.c:73
+#: ../src/io-xml/naxml-provider.c:75
 msgid "Export as a light GConf schema file"
 msgstr "Izvozi kot datoteko sheme GConf"
 
-#: ../src/io-xml/naxml-provider.c:74
+#: ../src/io-xml/naxml-provider.c:76
 msgid ""
 "The exported file may later be imported via :\n"
 "- Import assistant of the Nautilus Actions Configuration Tool,\n"
@@ -874,15 +859,15 @@ msgstr ""
 "- Pomočnika uvoza orodja nastavitev dejanj Nautilusa,\n"
 "- ali preko gconftool-2 --load orodja ukazne vrstice."
 
-#: ../src/io-xml/naxml-provider.c:82
+#: ../src/io-xml/naxml-provider.c:84
 msgid "Export as a GConf _entry file"
 msgstr "Izvozi kot datoteko _vnosa GConf"
 
-#: ../src/io-xml/naxml-provider.c:83
+#: ../src/io-xml/naxml-provider.c:85
 msgid "Export as a GConf entry file"
 msgstr "Izvozi kot datoteko vnosa GConf"
 
-#: ../src/io-xml/naxml-provider.c:84
+#: ../src/io-xml/naxml-provider.c:86
 msgid ""
 "This should be the preferred format for newly exported actions.\n"
 "The exported file may later be imported via :\n"
@@ -928,7 +913,7 @@ msgstr "Ni mogoče dobiti glavnega okna programa."
 msgid "Are you sure you want to quit this assistant ?"
 msgstr "Ali ste prepričani, da želite končati pomočnika?"
 
-#: ../src/nact/base-window.c:1198
+#: ../src/nact/base-window.c:1200
 #, c-format
 msgid "Unable to load %s XML definition."
 msgstr "Ni mogoče naložiti XML definicije iz %s."
@@ -1016,7 +1001,7 @@ msgstr "Preklopite nazaj na prejšnjo različico."
 #. static const gchar *thisfn = "nact_application_appli_get_application_name";
 #. g_debug( "%s: application=%p", thisfn, ( void * ) application );
 #. i18n: this is the application name, used in window title
-#: ../src/nact/nact-application.c:412
+#: ../src/nact/nact-application.c:413
 msgid "Nautilus Actions Configuration Tool"
 msgstr "Orodje za nastavitev dejanj Nautilusa"
 
@@ -1049,28 +1034,28 @@ msgid "You may not have write permissions on selected folder."
 msgstr "Morda nimate ustreznih dovoljenj za pisanje v izbrano mapo."
 
 #. i18n: the title of the confirm page of the import assistant
-#: ../src/nact/nact-assistant-import.c:545
+#: ../src/nact/nact-assistant-import.c:562
 msgid "About to import selected files:"
 msgstr "Pred uvozom izbranih datotek:"
 
 #. i18n: result of the import assistant
-#: ../src/nact/nact-assistant-import.c:719
+#: ../src/nact/nact-assistant-import.c:790
 msgid "Selected files have been proceeded :"
 msgstr "Izbrane datoteke so bile uvožene:"
 
 #. i18n: indicate that the file has been successfully imported
-#: ../src/nact/nact-assistant-import.c:737
+#: ../src/nact/nact-assistant-import.c:808
 msgid "Import OK"
 msgstr "Uvoz vredu"
 
 #. i18n: this is the globally unique identifier and the label of the newly imported action
-#: ../src/nact/nact-assistant-import.c:743
+#: ../src/nact/nact-assistant-import.c:814
 #, c-format
 msgid "UUID: %s\t%s"
 msgstr "UUID: %s\t%s"
 
 #. i18n: indicate that the file was not iported
-#: ../src/nact/nact-assistant-import.c:754
+#: ../src/nact/nact-assistant-import.c:825
 msgid "Not imported"
 msgstr "Ni uvoženo"
 
@@ -1096,37 +1081,32 @@ msgstr "Vprašaj me"
 msgid "You will be asked each time an item is about to be exported."
 msgstr "Vsakič pred izvažanjem predmeta boste vprašani."
 
-#. i18n: header of the 'label' column in the treeview
-#: ../src/nact/nact-iactions-list.c:376
-msgid "Label"
-msgstr "Oznaka"
-
-#: ../src/nact/nact-iaction-tab.c:514
+#: ../src/nact/nact-iaction-tab.c:526
 msgid "Menu"
 msgstr "Meni"
 
-#: ../src/nact/nact-iaction-tab.c:515
+#: ../src/nact/nact-iaction-tab.c:527
 msgid "<b>Menu properties</b>"
 msgstr "<b>Lastnosti menija</b>"
 
-#: ../src/nact/nact-iaction-tab.c:517
+#: ../src/nact/nact-iaction-tab.c:529
 msgid "Action"
 msgstr "Dejanje"
 
-#: ../src/nact/nact-iaction-tab.c:518
+#: ../src/nact/nact-iaction-tab.c:530
 msgid "<b>Action properties</b>"
 msgstr "<b>Lastnosti dejanja</b>"
 
-#: ../src/nact/nact-iaction-tab.c:662
+#: ../src/nact/nact-iaction-tab.c:677
 msgid "Caution: a label is mandatory for the action or the menu."
 msgstr "Opozorilo: oznaka dejanja ali menija je obvezna."
 
 #. i18n notes: when no icon is selected in the drop-down list
-#: ../src/nact/nact-iaction-tab.c:871
+#: ../src/nact/nact-iaction-tab.c:886
 msgid "None"
 msgstr "Brez"
 
-#: ../src/nact/nact-iaction-tab.c:929
+#: ../src/nact/nact-iaction-tab.c:944
 msgid "Choosing an icon"
 msgstr "Izbor ikone"
 
@@ -1137,312 +1117,311 @@ msgstr "Izbor ikone"
 msgid "Select a folder"
 msgstr "Izbira mape"
 
-#: ../src/nact/nact-icommand-tab.c:413
+#: ../src/nact/nact-icommand-tab.c:422
 msgid "Caution: a label is mandatory for the profile."
 msgstr "Opozorilo: oznaka za profil je obvezna."
 
-#: ../src/nact/nact-icommand-tab.c:571
+#: ../src/nact/nact-icommand-tab.c:580
 msgid "Choosing a command"
 msgstr "Izbiranje ukaza"
 
 #. i18n notes: example strings for the command preview
-#: ../src/nact/nact-icommand-tab.c:650
+#: ../src/nact/nact-icommand-tab.c:659
 msgid "/path/to"
 msgstr "/pot/do"
 
-#: ../src/nact/nact-icommand-tab.c:651
+#: ../src/nact/nact-icommand-tab.c:660
 msgid "file1.txt"
 msgstr "datoteka1.txt"
 
-#: ../src/nact/nact-icommand-tab.c:651
+#: ../src/nact/nact-icommand-tab.c:660
 msgid "file2.txt"
 msgstr "datoteka2.txt"
 
-#: ../src/nact/nact-icommand-tab.c:652
+#: ../src/nact/nact-icommand-tab.c:661
 msgid " folder1"
 msgstr "mapa1"
 
-#: ../src/nact/nact-icommand-tab.c:652
+#: ../src/nact/nact-icommand-tab.c:661
 msgid "folder2"
 msgstr "mapa2"
 
-#: ../src/nact/nact-icommand-tab.c:653
+#: ../src/nact/nact-icommand-tab.c:662
 msgid " file1.txt"
 msgstr "datoteka1.txt"
 
-#: ../src/nact/nact-icommand-tab.c:653
+#: ../src/nact/nact-icommand-tab.c:662
 msgid "folder1"
 msgstr "mapa1"
 
-#: ../src/nact/nact-icommand-tab.c:655
+#: ../src/nact/nact-icommand-tab.c:664
 msgid "test.example.net"
 msgstr "preizkusni.primer.net"
 
-#: ../src/nact/nact-icommand-tab.c:656
+#: ../src/nact/nact-icommand-tab.c:665
 msgid "file.txt"
 msgstr "datoteka.txt"
 
-#: ../src/nact/nact-icommand-tab.c:657
+#: ../src/nact/nact-icommand-tab.c:666
 msgid "folder"
 msgstr "mapa"
 
-#: ../src/nact/nact-icommand-tab.c:658
+#: ../src/nact/nact-icommand-tab.c:667
 msgid "8080"
 msgstr "8080"
 
-#: ../src/nact/nact-icommand-tab.c:662
+#: ../src/nact/nact-icommand-tab.c:671
 msgid "file:///path/to/file1.text"
 msgstr "file:///pot/do/datoteke1.text"
 
-#: ../src/nact/nact-icommand-tab.c:663
+#: ../src/nact/nact-icommand-tab.c:672
 msgid "file:///path/to/file2.text"
 msgstr "file:///pot/do/datoteke2.text"
 
-#: ../src/nact/nact-icommand-tab.c:664
+#: ../src/nact/nact-icommand-tab.c:673
 msgid "file:///path/to/a/dir"
 msgstr "file:///pot/do/mape"
 
-#: ../src/nact/nact-icommand-tab.c:665
+#: ../src/nact/nact-icommand-tab.c:674
 msgid "file:///path/to/another/dir"
 msgstr "file:///pot/do/druge/mape"
 
-#: ../src/nact/nact-icommand-tab.c:838
+#: ../src/nact/nact-icommand-tab.c:847
 msgid "e.g.,"
 msgstr "na primer,"
 
-#: ../src/nact/nact-import-ask.c:302
-#, c-format
-msgid "The action \"%s\" imported from \"%s\" has the same identifiant than the already existing \"%s\"."
-msgstr "Dejanje \"%s\" uvoženo iz \"%s\" ima enako določilo kot obstoječe \"%s\"."
-
-#: ../src/nact/nact-main-menubar.c:164
-#: ../src/nact/nact-main-menubar.c:268
+#: ../src/nact/nact-main-menubar.c:165
+#: ../src/nact/nact-main-menubar.c:269
 msgid "_File"
 msgstr "_Datoteka"
 
-#: ../src/nact/nact-main-menubar.c:165
-#: ../src/nact/nact-main-menubar.c:272
+#: ../src/nact/nact-main-menubar.c:166
+#: ../src/nact/nact-main-menubar.c:273
 msgid "_Edit"
 msgstr "_Uredi"
 
-#: ../src/nact/nact-main-menubar.c:166
+#: ../src/nact/nact-main-menubar.c:167
 msgid "_View"
 msgstr "_Pogled"
 
-#: ../src/nact/nact-main-menubar.c:167
+#: ../src/nact/nact-main-menubar.c:168
 msgid "_Toolbars"
 msgstr "O_rodne vrstice"
 
-#: ../src/nact/nact-main-menubar.c:168
-#: ../src/nact/nact-main-menubar.c:276
+#: ../src/nact/nact-main-menubar.c:169
+#: ../src/nact/nact-main-menubar.c:277
 msgid "_Tools"
 msgstr "_Orodja"
 
-#: ../src/nact/nact-main-menubar.c:169
+#: ../src/nact/nact-main-menubar.c:170
 msgid "_Maintainer"
 msgstr "_Vzdrževalec"
 
-#: ../src/nact/nact-main-menubar.c:170
-#: ../src/nact/nact-main-menubar.c:280
+#: ../src/nact/nact-main-menubar.c:171
+#: ../src/nact/nact-main-menubar.c:281
 msgid "_Help"
 msgstr "Pomo_č"
 
-#: ../src/nact/nact-main-menubar.c:172
+#: ../src/nact/nact-main-menubar.c:173
 msgid "New _menu"
 msgstr "Nov _meni"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
-#: ../src/nact/nact-main-menubar.c:174
+#: ../src/nact/nact-main-menubar.c:175
 msgid "Insert a new menu at the current position"
 msgstr "Vstavitev novega menija na trenutno mesto"
 
-#: ../src/nact/nact-main-menubar.c:176
+#: ../src/nact/nact-main-menubar.c:177
 msgid "_New action"
 msgstr "_Novo dejanje"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New action' item
-#: ../src/nact/nact-main-menubar.c:178
+#: ../src/nact/nact-main-menubar.c:179
 msgid "Define a new action"
 msgstr "Določitev novega dejanja"
 
-#: ../src/nact/nact-main-menubar.c:180
+#: ../src/nact/nact-main-menubar.c:181
 msgid "New _profile"
 msgstr "Nov _profil"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
-#: ../src/nact/nact-main-menubar.c:182
+#: ../src/nact/nact-main-menubar.c:183
 msgid "Define a new profile attached to the current action"
 msgstr "Določitev novega profila pripetega k trenutnemu dejanju"
 
 #. i18n: tooltip displayed in the status bar when selecting 'Save' item
-#: ../src/nact/nact-main-menubar.c:186
+#: ../src/nact/nact-main-menubar.c:187
 msgid "Record all the modified actions. Invalid actions will be silently ignored"
 msgstr "Snemanje vseh spremenjenih dejanj. Neveljavna dejanja bodo tiho prezrta"
 
 #. i18n: tooltip displayed in the status bar when selecting 'Quit' item
-#: ../src/nact/nact-main-menubar.c:190
+#: ../src/nact/nact-main-menubar.c:191
 msgid "Quit the application"
 msgstr "Končaj program"
 
 #. i18n: tooltip displayed in the status bar when selecting the Cut item
-#: ../src/nact/nact-main-menubar.c:194
+#: ../src/nact/nact-main-menubar.c:195
 msgid "Cut the selected item(s) to the clipboard"
 msgstr "Izrez izbranih predmetov na odložišče"
 
 #. i18n: tooltip displayed in the status bar when selecting the Copy item
-#: ../src/nact/nact-main-menubar.c:198
+#: ../src/nact/nact-main-menubar.c:199
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "Kopiranje izbranih predmetov na odložišče"
 
 #. i18n: tooltip displayed in the status bar when selecting the Paste item
-#: ../src/nact/nact-main-menubar.c:202
+#: ../src/nact/nact-main-menubar.c:203
 msgid "Insert the content of the clipboard just before the current position"
 msgstr "Vstavitev vsebine odložišča tik pred trenutno lego"
 
-#: ../src/nact/nact-main-menubar.c:204
+#: ../src/nact/nact-main-menubar.c:205
 msgid "Paste _into"
 msgstr "Prilepi _v"
 
 #. i18n: tooltip displayed in the status bar when selecting the Paste Into item
-#: ../src/nact/nact-main-menubar.c:206
+#: ../src/nact/nact-main-menubar.c:207
 msgid "Insert the content of the clipboard as first child of the current item"
 msgstr "Vstavljanje vsebine odložišča kot prvega podrejenega trenutnega predmeta"
 
-#: ../src/nact/nact-main-menubar.c:208
+#: ../src/nact/nact-main-menubar.c:209
 msgid "D_uplicate"
 msgstr "Pod_voji"
 
 #. i18n: tooltip displayed in the status bar when selecting the Duplicate item
-#: ../src/nact/nact-main-menubar.c:210
+#: ../src/nact/nact-main-menubar.c:211
 msgid "Duplicate the selected item(s)"
 msgstr "Podvojitev izbranih predmetov"
 
 #. i18n: tooltip displayed in the status bar when selecting the Delete item
-#: ../src/nact/nact-main-menubar.c:214
+#: ../src/nact/nact-main-menubar.c:215
 msgid "Delete the selected item(s)"
 msgstr "Izbris izbranih predmetov"
 
-#: ../src/nact/nact-main-menubar.c:216
+#: ../src/nact/nact-main-menubar.c:217
 msgid "_Reload the items"
 msgstr "_Ponovno naloži predmete"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
-#: ../src/nact/nact-main-menubar.c:218
+#: ../src/nact/nact-main-menubar.c:219
 msgid "Cancel your current modifications and reload the initial list of menus and actions"
 msgstr "Preklic trenutnih sprememb in ponovno nalaganje začetnega seznama menijev in dejanj"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
-#: ../src/nact/nact-main-menubar.c:222
+#: ../src/nact/nact-main-menubar.c:223
 msgid "Edit your preferences"
 msgstr "Urejanje vaših nastavitev"
 
-#: ../src/nact/nact-main-menubar.c:224
+#: ../src/nact/nact-main-menubar.c:225
 msgid "_Expand all"
 msgstr "_Razširi vse"
 
 #. i18n: tooltip displayed in the status bar when selecting the Expand all item
-#: ../src/nact/nact-main-menubar.c:226
+#: ../src/nact/nact-main-menubar.c:227
 msgid "Entirely expand the items hierarchy"
 msgstr "Popolna razširitev hierarhije predmetov"
 
-#: ../src/nact/nact-main-menubar.c:228
+#: ../src/nact/nact-main-menubar.c:229
 msgid "_Collapse all"
 msgstr "_Zloži  vse"
 
 #. i18n: tooltip displayed in the status bar when selecting the Collapse all item
-#: ../src/nact/nact-main-menubar.c:230
+#: ../src/nact/nact-main-menubar.c:231
 msgid "Entirely collapse the items hierarchy"
 msgstr "Popolno zlaganje hierarhije predmetov"
 
-#: ../src/nact/nact-main-menubar.c:232
+#: ../src/nact/nact-main-menubar.c:233
 msgid "_Import assistant..."
 msgstr "_Pomočnik uvoza ..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Import item
-#: ../src/nact/nact-main-menubar.c:234
+#: ../src/nact/nact-main-menubar.c:235
 msgid "Import one or more actions from external (XML) files into your configuration"
 msgstr "Uvoz enega ali več dejanj iz zunanjih (XML) datotek v nastavitve"
 
-#: ../src/nact/nact-main-menubar.c:236
+#: ../src/nact/nact-main-menubar.c:237
 msgid "E_xport assistant..."
 msgstr "Pomočnik i_zvoza ..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Export item
-#: ../src/nact/nact-main-menubar.c:238
+#: ../src/nact/nact-main-menubar.c:239
 msgid "Export one or more actions from your configuration to external XML files"
 msgstr "Izvoz enega ali več dejanj iz nastavitev v zunanje XML datoteke."
 
-#: ../src/nact/nact-main-menubar.c:240
+#: ../src/nact/nact-main-menubar.c:241
 msgid "_Dump the selection"
 msgstr "_Izpiši izbiro"
 
 #. i18n: tooltip displayed in the status bar when selecting the Dump selection item
-#: ../src/nact/nact-main-menubar.c:242
+#: ../src/nact/nact-main-menubar.c:243
 msgid "Recursively dump selected items"
 msgstr "Rekurzivno izpiši izbrane predmete"
 
-#: ../src/nact/nact-main-menubar.c:244
+#: ../src/nact/nact-main-menubar.c:245
 msgid "_Brief tree store dump"
 msgstr "_Drevesni pogled razporeditve map"
 
 #. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
-#: ../src/nact/nact-main-menubar.c:246
+#: ../src/nact/nact-main-menubar.c:247
 msgid "Briefly dump the tree store"
 msgstr "Drevesni pogled razporeditve map"
 
-#: ../src/nact/nact-main-menubar.c:248
+#: ../src/nact/nact-main-menubar.c:249
 msgid "_List modified items"
 msgstr "_Razvrsti spremenjene predmete"
 
 #. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
-#: ../src/nact/nact-main-menubar.c:250
+#: ../src/nact/nact-main-menubar.c:251
 msgid "List the modified items"
 msgstr "Razvrstitev spremenjenih predmetov"
 
-#: ../src/nact/nact-main-menubar.c:252
+#: ../src/nact/nact-main-menubar.c:253
 msgid "_Dump the clipboard"
 msgstr "_Izpiši odložišče"
 
 #. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
-#: ../src/nact/nact-main-menubar.c:254
+#: ../src/nact/nact-main-menubar.c:255
 msgid "Dump the content of the clipboard object"
 msgstr "Izpis vsebine predmeta odložišča"
 
 #. i18n: tooltip displayed in the status bar when selecting the Help item
-#: ../src/nact/nact-main-menubar.c:258
+#: ../src/nact/nact-main-menubar.c:259
 msgid "Display help about this program"
 msgstr "Prikaz pomoči o tem programu"
 
 #. i18n: tooltip displayed in the status bar when selecting the About item
-#: ../src/nact/nact-main-menubar.c:262
+#: ../src/nact/nact-main-menubar.c:263
 msgid "Display informations about this program"
 msgstr "Prikaz podrobnosti o tem programu"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
-#: ../src/nact/nact-main-menubar.c:270
+#: ../src/nact/nact-main-menubar.c:271
 msgid "Display the File toolbar"
 msgstr "Prikaz orodne vrstice datoteke"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
-#: ../src/nact/nact-main-menubar.c:274
+#: ../src/nact/nact-main-menubar.c:275
 msgid "Display the Edit toolbar"
 msgstr "Prikaz orodne vrstice urejanja"
 
 #. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
-#: ../src/nact/nact-main-menubar.c:278
+#: ../src/nact/nact-main-menubar.c:279
 msgid "Display the Tools toolbar"
 msgstr "Prikaz orodne vrstice orodij"
 
 #. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
-#: ../src/nact/nact-main-menubar.c:282
+#: ../src/nact/nact-main-menubar.c:283
 msgid "Display the Help toolbar"
 msgstr "Prikaz orodne vrstice pomoči"
 
 #. i18n: note the space at the beginning of the sentence
-#: ../src/nact/nact-main-menubar.c:517
+#: ../src/nact/nact-main-menubar.c:518
 #, c-format
 msgid " %d menus, %d actions, %d profiles are currently displayed"
 msgstr "%d menijev, %d dejanj, %d profilov je trenutno prikazanih"
+
+#: ../src/nact/nact-main-menubar.c:890
+msgid "New profile"
+msgstr "Nov profil"
 
 #: ../src/nact/nact-main-window.c:1305
 msgid "Reloading a fresh list of actions requires that you give up with your current modifications."
@@ -1524,19 +1503,19 @@ msgstr "Nova-shema"
 msgid "New scheme description"
 msgstr "Nov opis sheme"
 
-#: ../src/nact/nact-tree-model-dnd.c:117
+#: ../src/nact/nact-tree-model-dnd.c:119
 msgid "Unable to drop a profile here"
 msgstr "Profila ni mogoče spustiti tukaj"
 
-#: ../src/nact/nact-tree-model-dnd.c:118
+#: ../src/nact/nact-tree-model-dnd.c:120
 msgid "Unable to drop an action or a menu here"
 msgstr "Tukaj ni mogoče spustiti dejanja ali menija"
 
-#: ../src/nact/nact-tree-model-dnd.c:119
+#: ../src/nact/nact-tree-model-dnd.c:121
 msgid "Unable to drop here as parent is not writable"
 msgstr "Profila ni mogoče spustiti tukaj ker nadrejeni predmet ni zapisljiv"
 
-#: ../src/nact/nact-tree-model-dnd.c:120
+#: ../src/nact/nact-tree-model-dnd.c:122
 msgid "Unable to drop here as level zero is not writable"
 msgstr "Ni mogoče spustiti sem, ker raven nič ni zapisljiva"
 
@@ -1559,23 +1538,80 @@ msgstr "Ali ste prepričani, da želite končati brez shranjevanja?"
 
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
 #. i18n: label of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:293
-#: ../src/plugin-menu/nautilus-actions.c:745
+#: ../src/plugin-menu/nautilus-actions.c:290
+#: ../src/plugin-menu/nautilus-actions.c:742
 msgid "Nautilus Actions"
 msgstr "Dejanja Nautilusa"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:747
+#: ../src/plugin-menu/nautilus-actions.c:744
 msgid "A submenu which embeds the currently available Nautilus Actions extensions"
 msgstr "Podmeni ki vključuje trenutno razpoložljive razširitve dejanj Nautilusa"
 
-#: ../src/plugin-menu/nautilus-actions.c:794
+#: ../src/plugin-menu/nautilus-actions.c:791
 msgid "About Nautilus Actions"
 msgstr "O programu"
 
-#: ../src/plugin-menu/nautilus-actions.c:795
+#: ../src/plugin-menu/nautilus-actions.c:792
 msgid "Display information about Nautilus Actions"
 msgstr "Prikaz podrobnosti o programu"
+
+#: ../src/test/test-reader.c:49
+msgid "The URI of the file to be imported"
+msgstr "URI datoteke za uvoz"
+
+#: ../src/test/test-reader.c:49
+#: ../src/utils/nautilus-actions-new.c:116
+#: ../src/utils/nautilus-actions-new.c:125
+#: ../src/utils/nautilus-actions-run.c:61
+msgid "<URI>"
+msgstr "<URI>"
+
+#: ../src/test/test-reader.c:56
+#: ../src/utils/nautilus-actions-new.c:132
+#: ../src/utils/nautilus-actions-run.c:68
+#: ../src/utils/nautilus-actions-schemas.c:67
+msgid "Output the version number"
+msgstr "Odvod številke različice"
+
+#: ../src/test/test-reader.c:106
+msgid "Import a file."
+msgstr "Uvozi datoteko"
+
+#: ../src/test/test-reader.c:120
+#: ../src/utils/nautilus-actions-new.c:261
+#: ../src/utils/nautilus-actions-run.c:190
+#: ../src/utils/nautilus-actions-schemas.c:168
+msgid "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to mail to <maintainer@nautilus-actions.org>.\n"
+msgstr "Poročila o hroščih so dobrodošla na http://bugzilla.gnome.org, lahko jih pošljete tudi na elektronski naslov <maintainer@nautilus-actions.org>.\n"
+
+#: ../src/test/test-reader.c:128
+#: ../src/utils/nautilus-actions-new.c:274
+#: ../src/utils/nautilus-actions-run.c:198
+#: ../src/utils/nautilus-actions-schemas.c:176
+msgid "Miscellaneous options"
+msgstr "Razne možnosti"
+
+#: ../src/test/test-reader.c:149
+#: ../src/utils/nautilus-actions-new.c:167
+#: ../src/utils/nautilus-actions-run.c:109
+#: ../src/utils/nautilus-actions-schemas.c:100
+#, c-format
+msgid "Syntax error: %s\n"
+msgstr "Napaka skladnje: %s\n"
+
+#: ../src/test/test-reader.c:164
+#, c-format
+msgid "Error: uri is mandatory.\n"
+msgstr "Napaka: uri je obvezen.\n"
+
+#: ../src/test/test-reader.c:176
+#: ../src/utils/nautilus-actions-new.c:394
+#: ../src/utils/nautilus-actions-run.c:433
+#: ../src/utils/nautilus-actions-schemas.c:284
+#, c-format
+msgid "Try %s --help for usage.\n"
+msgstr "Poskusite %s --help za izpis podrobnosti o uporabi.\n"
 
 #: ../src/utils/nautilus-actions-new.c:80
 msgid "The label of the menu item (mandatory)"
@@ -1669,12 +1705,6 @@ msgstr "<SHEMA>"
 msgid "The URI of a directory for which folders or toolbar action will be displayed. You must set one option for each folder you need"
 msgstr "URI mape za katero bodo prikazane mape ali dejanje orodne vrstice. Nastaviti morate eno možnost za vsako mapo, ki jo potrebujete"
 
-#: ../src/utils/nautilus-actions-new.c:116
-#: ../src/utils/nautilus-actions-new.c:125
-#: ../src/utils/nautilus-actions-run.c:61
-msgid "<URI>"
-msgstr "<URI>"
-
 #: ../src/utils/nautilus-actions-new.c:123
 msgid "Store the newly created action as a GConf configuration"
 msgstr "Shranjevanje novo ustvarjenega dejanja kot GConf nastavitev"
@@ -1682,19 +1712,6 @@ msgstr "Shranjevanje novo ustvarjenega dejanja kot GConf nastavitev"
 #: ../src/utils/nautilus-actions-new.c:125
 msgid "The URI of the folder where to write the new action as a GConf dump output [default: stdout]"
 msgstr "URI mape za zapis novega dejanja kot GConf odvod izpisa [privzeto:standardni odvod]"
-
-#: ../src/utils/nautilus-actions-new.c:132
-#: ../src/utils/nautilus-actions-run.c:68
-#: ../src/utils/nautilus-actions-schemas.c:67
-msgid "Output the version number"
-msgstr "Odvod številke različice"
-
-#: ../src/utils/nautilus-actions-new.c:167
-#: ../src/utils/nautilus-actions-run.c:109
-#: ../src/utils/nautilus-actions-schemas.c:100
-#, c-format
-msgid "Syntax error: %s\n"
-msgstr "Napaka skladnje: %s\n"
 
 #: ../src/utils/nautilus-actions-new.c:180
 #, c-format
@@ -1737,12 +1754,6 @@ msgstr ""
 " Dejanje je lahko zapisano tudi v mapo odvoda, v datoteko primerno za kasnejši uvoz v NACT.\n"
 " Mogoče je izbrati tudi neposreden zapis dejanja med GConf nastavitve."
 
-#: ../src/utils/nautilus-actions-new.c:261
-#: ../src/utils/nautilus-actions-run.c:190
-#: ../src/utils/nautilus-actions-schemas.c:168
-msgid "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to mail to <maintainer@nautilus-actions.org>.\n"
-msgstr "Poročila o hroščih so dobrodošla na http://bugzilla.gnome.org, lahko jih pošljete tudi na elektronski naslov <maintainer@nautilus-actions.org>.\n"
-
 #: ../src/utils/nautilus-actions-new.c:269
 msgid "Output of the program"
 msgstr "Odvod programa"
@@ -1750,19 +1761,6 @@ msgstr "Odvod programa"
 #: ../src/utils/nautilus-actions-new.c:269
 msgid "Choose where the program creates the action"
 msgstr "Izbor mesta kjer naj program izvede dejanje"
-
-#: ../src/utils/nautilus-actions-new.c:274
-#: ../src/utils/nautilus-actions-run.c:198
-#: ../src/utils/nautilus-actions-schemas.c:176
-msgid "Miscellaneous options"
-msgstr "Razne možnosti"
-
-#: ../src/utils/nautilus-actions-new.c:394
-#: ../src/utils/nautilus-actions-run.c:432
-#: ../src/utils/nautilus-actions-schemas.c:283
-#, c-format
-msgid "Try %s --help for usage.\n"
-msgstr "Poskusite %s --help za izpis podrobnosti o uporabi.\n"
 
 #: ../src/utils/nautilus-actions-run.c:59
 msgid "The internal identifiant of the action to be launched"
@@ -1781,32 +1779,32 @@ msgstr "Napaka: id dejanja je obvezno.\n"
 msgid "Execute an action on the specified target."
 msgstr "Izvede dejanje na določenem cilju."
 
-#: ../src/utils/nautilus-actions-run.c:222
+#: ../src/utils/nautilus-actions-run.c:223
 #, c-format
 msgid "Error: action '%s' doesn't exist.\n"
 msgstr "Napaka: dejanje '%s' ne obstaja.\n"
 
-#: ../src/utils/nautilus-actions-run.c:227
+#: ../src/utils/nautilus-actions-run.c:228
 #, c-format
 msgid "Error: action '%s' is disabled.\n"
 msgstr "Napaka: dejanje '%s' je onemogočeno.\n"
 
-#: ../src/utils/nautilus-actions-run.c:235
+#: ../src/utils/nautilus-actions-run.c:236
 #, c-format
 msgid "Error: action '%s' is not valid.\n"
 msgstr "Napaka: dejanje '%s' ni veljavno.\n"
 
-#: ../src/utils/nautilus-actions-run.c:270
+#: ../src/utils/nautilus-actions-run.c:271
 #, c-format
 msgid "Error: unable to get a connection to session DBus: %s"
 msgstr "Napaka: ni mogoče dobiti povezave s sejo DBus: %s"
 
-#: ../src/utils/nautilus-actions-run.c:281
+#: ../src/utils/nautilus-actions-run.c:282
 #, c-format
 msgid "Error: unable to get a proxy on %s service"
 msgstr "Napaka: ni mogoče dobiti posredniškega strežnika na napravi %s"
 
-#: ../src/utils/nautilus-actions-run.c:291
+#: ../src/utils/nautilus-actions-run.c:292
 #, c-format
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Napaka v klicu GetSelectedPaths: %s"
@@ -1821,8 +1819,36 @@ msgstr "Odvod sheme na standarni izpis"
 msgid "Output the Nautilus Actions GConf schema on stdout."
 msgstr "Odvod Nautilusovih dejanj GConf sheme na  standarni izpis."
 
-#~ msgid "New profile"
-#~ msgstr "Nov profil"
+#~ msgid "Waited for '%s' node, found (ignored) '%s' at line %d."
+#~ msgstr ""
+#~ "Namesto pričakovanega '%s' vozlišča, je bilo najdeno (prezrto) vozlišče '%"
+#~ "s' v vrstici %d."
+#~ msgid "Unexpected (ignored) '%s' node found at line %d."
+#~ msgstr "Najdeno je nepričakovano (prezrto) vozlišče '%s' v vrstici %d."
+#~ msgid "Schema is ignored at line %d."
+#~ msgstr "Shema v vrstici %d je prezrta."
+#~ msgid "Unexpected '%s' node found at line %d."
+#~ msgstr "Najdeno nepričakovano vozlišče '%s' v vrstici %d."
+#~ msgid "Unexpected '%s' entry found at line %d."
+#~ msgstr "Najden nepričakovan vnos '%s' v vrstici %d."
+#~ msgid "Mandatory node '%s' not found."
+#~ msgstr "Obveznega vozlišča '%s' ni mogoče najti."
+#~ msgid "No value found."
+#~ msgstr "Vrednosti ni mogoče najti."
+#~ msgid "Invalid content: waited for %s prefix, found %s at line %d."
+#~ msgstr ""
+#~ "Neveljavna vsebina: pričakovana predpona %s, najdena %s v vrstici %d."
+#~ msgid "Invalid UUID %s found at line %d."
+#~ msgstr "Najden je neveljaven UUID %s v vrstici %d."
+#~ msgid "Already existing action (UUID: %s)."
+#~ msgstr "Dejanje že obstaja (UUID: %s)."
+#~ msgid "Value '%s' already set: new value ignored at line %d."
+#~ msgstr ""
+#~ "Vrednost '%s' je že nastavljena: nova vrednost v vrstici %d je prezrta."
+#~ msgid "Action label not found."
+#~ msgstr "Oznake dejanja ni mogoče najti. "
+#~ msgid "Label"
+#~ msgstr "Oznaka"
 #~ msgid ""
 #~ "URIs parsing test.\n"
 #~ "\n"
