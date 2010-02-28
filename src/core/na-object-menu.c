@@ -64,18 +64,17 @@ static NAObjectItemClass *st_parent_class = NULL;
 static GType        register_type( void );
 static void         class_init( NAObjectMenuClass *klass );
 static void         instance_init( GTypeInstance *instance, gpointer klass );
-static void         instance_constructed( GObject *object );
 static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
+static void         object_copy( NAObject *target, const NAObject *source, gboolean recursive );
 static gboolean     object_is_valid( const NAObject *object );
 
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static void         ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
 static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
@@ -143,7 +142,6 @@ class_init( NAObjectMenuClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
-	object_class->constructed = instance_constructed;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
 	object_class->dispose = instance_dispose;
@@ -151,7 +149,7 @@ class_init( NAObjectMenuClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = NULL;
-	naobject_class->copy = NULL;
+	naobject_class->copy = object_copy;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = object_is_valid;
 
@@ -174,27 +172,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_OBJECT_MENU( instance );
 
 	self->private = g_new0( NAObjectMenuPrivate, 1 );
-}
-
-static void
-instance_constructed( GObject *object )
-{
-	static const gchar *thisfn = "na_object_menu_instance_constructed";
-	NAObjectMenu *self;
-
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
-	self = NA_OBJECT_MENU( object );
-
-	if( !self->private->dispose_has_run ){
-
-		na_factory_object_set_defaults( NA_IFACTORY_OBJECT( object ));
-
-		/* chain up to the parent class */
-		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
-			G_OBJECT_CLASS( st_parent_class )->constructed( object );
-		}
-	}
 }
 
 static void
@@ -264,6 +241,19 @@ instance_finalize( GObject *object )
 	}
 }
 
+static void
+object_copy( NAObject *target, const NAObject *source, gboolean recursive )
+{
+	g_return_if_fail( NA_IS_OBJECT_MENU( target ));
+	g_return_if_fail( NA_IS_OBJECT_MENU( source ));
+
+	if( !NA_OBJECT_MENU( target )->private->dispose_has_run &&
+		!NA_OBJECT_MENU( source )->private->dispose_has_run ){
+
+		na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
+	}
+}
+
 static gboolean
 object_is_valid( const NAObject *object )
 {
@@ -281,7 +271,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
-	iface->copy = ifactory_object_copy;
+	iface->copy = NULL;
 	iface->are_equal = ifactory_object_are_equal;
 	iface->is_valid = ifactory_object_is_valid;
 	iface->read_start = NULL;
@@ -302,12 +292,6 @@ ifactory_object_get_groups( const NAIFactoryObject *instance )
 	return( menu_data_groups );
 }
 
-static void
-ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
-{
-	na_object_item_copy( NA_OBJECT_ITEM( target ), NA_OBJECT_ITEM( source ));
-}
-
 static gboolean
 ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
 {
@@ -325,7 +309,7 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-
+	na_factory_object_set_defaults( instance );
 }
 
 static guint
@@ -422,9 +406,9 @@ NAObjectMenu *
 na_object_menu_new_with_defaults( void )
 {
 	NAObjectMenu *menu = na_object_menu_new();
-
 	na_object_set_new_id( menu, NULL );
 	na_object_set_label( menu, NEW_NAUTILUS_MENU );
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( menu ));
 
 	return( menu );
 }

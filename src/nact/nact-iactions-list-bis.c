@@ -581,13 +581,13 @@ nact_iactions_list_bis_list_modified_items( NactIActionsList *instance )
 }
 
 /**
- * nact_iactions_list_bis_removed_modified:
+ * nact_iactions_list_bis_remove_modified:
  * @instance: this #NactIActionsList instance.
  *
  * Removes the saved item from the modified items list.
  */
 void
-nact_iactions_list_bis_removed_modified( NactIActionsList *instance, const NAObjectItem *item )
+nact_iactions_list_bis_remove_modified( NactIActionsList *instance, const NAObjectItem *item )
 {
 	IActionsListInstanceData *ialid;
 

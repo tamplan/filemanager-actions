@@ -66,6 +66,7 @@ G_BEGIN_DECLS
 
 /* NAObject
  */
+#define na_object_copy( tgt, src, rec )					na_object_object_copy( NA_OBJECT( tgt ), NA_OBJECT( src ), ( rec ))
 #define na_object_dump( obj )							na_object_object_dump( NA_OBJECT( obj ))
 #define na_object_dump_norec( obj )						na_object_object_dump_norec( NA_OBJECT( obj ))
 #define na_object_dump_tree( tree )						na_object_object_dump_tree( tree )

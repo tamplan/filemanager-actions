@@ -327,6 +327,44 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 }
 
 guint
+nagp_writer_write_start( const NAIFactoryProvider *writer, void *writer_data,
+							const NAIFactoryObject *object, GSList **messages  )
+{
+	guint code;
+	gchar *id, *parent_path, *path;
+	gchar *msg;
+
+	code = NA_IIO_PROVIDER_CODE_OK;
+
+	if( NA_IS_OBJECT_ITEM( object )){
+		g_return_val_if_fail(
+				(( WriterData * ) writer_data )->parent_id == NULL,
+				NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+
+		id = na_object_get_id( object );
+		parent_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, id );
+		path = gconf_concat_dir_and_key( parent_path, NAGP_ENTRY_TYPE );
+
+		msg = NULL;
+		na_gconf_utils_write_string(
+				NAGP_GCONF_PROVIDER( writer )->private->gconf,
+				path,
+				NA_IS_OBJECT_ACTION( object ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU,
+				&msg );
+		if( msg ){
+			*messages = g_slist_append( *messages, msg );
+			code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
+		}
+
+		g_free( path );
+		g_free( parent_path );
+		g_free( id );
+	}
+
+	return( code );
+}
+
+guint
 nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 									const NAIFactoryObject *object, const NADataBoxed *boxed,
 									GSList **messages )

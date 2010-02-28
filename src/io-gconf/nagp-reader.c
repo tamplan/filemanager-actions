@@ -175,11 +175,11 @@ nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, co
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
-	g_debug( "%s: reader_data=%p, object=%p (%s), data=%s",
+	/*g_debug( "%s: reader_data=%p, object=%p (%s), data=%s",
 			thisfn,
 			( void * ) reader_data,
 			( void * ) object, G_OBJECT_TYPE_NAME( object ),
-			def->name );
+			def->name );*/
 
 	if( !def->gconf_entry || !strlen( def->gconf_entry )){
 		g_warning( "%s: GConf entry is not set for NADataDef %s", thisfn, def->name );

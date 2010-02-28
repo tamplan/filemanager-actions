@@ -1,4 +1,67 @@
+2009-02-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-ifactory-object.h:
+	* src/core/na-object-item-factory.c:
+	* src/nact/nact-iactions-list-bis.c:
+	* src/nact/nact-iactions-list.h:
+	Fix minor typo.
+
+	* src/api/na-object-api.h:
+	New na_object_copy macro (evaluates as na_object_object_copy).
+
+	* src/api/na-object-item.h (na_object_item_copy): Removed function.
+
+	* src/api/na-object.h:
+	* src/core/na-object.c:.
+	(copy): Add 'recursive' flag.
+	(iduplicable_copy): Use na_object_copy() macro.
+	(na_object_object_copy): New function.
+
+	* src/core/na-factory-object.c (na_factory_object_copy):
+	No more delete all NADataBoxed, but update those who already exist.
+	(write_data_iter): Fix return code.
+
+	* src/core/na-iduplicable.c (na_iduplicable_duplicate):
+	Review the rationale, and ensure that the function is recursive.
+
+	* src/core/na-object-action.c
+	* src/core/na-object-item.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile.c:
+	(instance_constructed): Removed function.
+	(ifactory_object_copy): Removed function.
+	(object_copy): New function, implementation of NAObject::copy.
+
+	* src/core/na-pivot.c (instance_dispose): Add debug message.
+
+	* src/core/na-updater.c (na_updater_remove_item):
+	Only update tree if object has no parent.
+
+	* src/io-gconf/nagp-gconf-provider.c
+	(ifactory_provider_iface_init): Address nagp_writer_write_start().
+
+	* src/io-gconf/nagp-reader.c (nagp_reader_read_data): Comment debug message.
+
+	* src/io-gconf/nagp-writer.c:
+	* src/io-gconf/nagp-writer.h (nagp_writer_write_start): New function.
+	Write the type of the NAObjectItem.
+
+	* src/nact/nact-iaction-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-icommand-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-iconditions-tab.c (on_tab_updatable_selection_changed):
+	As objects have defaults, no more test for null string.
+
+	* src/nact/nact-main-menubar.c
+	(nact_main_menubar_save_items): Dump after check status.
+	(save_item): Use new na_object_copy() macro.
+
+	* src/nact/nact-window.c (nact_window_save_item):
+	Remove superfluous dumps.
+
 2009-02-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-iduplicable.c (na_iduplicable_check_status):
+	An object without any origin is considered modified.
 
 	* src/core/na-iduplicable.c (get_duplicable_str):
 	NAIDuplicable object defaults to not modified.

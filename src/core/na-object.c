@@ -48,13 +48,21 @@ struct NAObjectPrivate {
 	gboolean   dispose_has_run;
 };
 
-/* a structure to iter on the class hierarchy
+/* while iterating on the class hierarchy for are_equal() and is_valid()
  */
 typedef struct {
 	NAObject *object;
 	gboolean  result;
 }
 	HierarchyIter;
+
+/* while iterating on the class hierarchy for object_copy()
+ */
+typedef struct {
+	NAObject *target;
+	gboolean  recursive;
+}
+	CopyIter;
 
 typedef gboolean ( *HierarchyIterFunc )( GObjectClass *class, const NAObject *object, void *user_data );
 
@@ -70,13 +78,13 @@ static void           object_dump( const NAObject *object );
 
 static void           iduplicable_iface_init( NAIDuplicableInterface *iface );
 static void           iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
-static gboolean       iduplicable_copy_iter( GObjectClass *class, const NAObject *target, NAObject *source );
 static gboolean       iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
 static gboolean       iduplicable_are_equal_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
 static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
 static gboolean       iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
 
 static void           push_modified_status_up( const NAObject *object, gboolean is_modified );
+static gboolean       object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data );
 static gboolean       dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *user_data );
 static void           dump_tree( GList *tree, gint level );
 static void           iter_on_class_hierarchy( const NAObject *object, HierarchyIterFunc pfn, void *user_data );
@@ -132,6 +140,7 @@ class_init( NAObjectClass *klass )
 {
 	static const gchar *thisfn = "na_object_class_init";
 	GObjectClass *object_class;
+	NAObjectClass *naobject_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -140,6 +149,12 @@ class_init( NAObjectClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
+
+	naobject_class = NA_OBJECT_CLASS( klass );
+	naobject_class->dump = NULL;
+	naobject_class->copy = NULL;
+	naobject_class->are_equal = NULL;
+	naobject_class->is_valid = NULL;
 
 	klass->private = g_new0( NAObjectClassPrivate, 1 );
 
@@ -235,35 +250,14 @@ iduplicable_iface_init( NAIDuplicableInterface *iface )
 	iface->is_valid = iduplicable_is_valid;
 }
 
+/*
+ * implementation of na_iduplicable::copy interface virtual function
+ * it recursively copies @source to @target
+ */
 static void
 iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
 {
-	g_return_if_fail( NA_IS_OBJECT( target ));
-	g_return_if_fail( NA_IS_OBJECT( source ));
-
-	if( !NA_OBJECT( source )->private->dispose_has_run &&
-		!NA_OBJECT( target )->private->dispose_has_run ){
-
-		if( NA_IS_IFACTORY_OBJECT( source )){
-			na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
-
-		} else {
-			iter_on_class_hierarchy( NA_OBJECT( source ),
-					( HierarchyIterFunc ) &iduplicable_copy_iter, ( void * ) target );
-		}
-	}
-}
-
-static gboolean
-iduplicable_copy_iter( GObjectClass *class, const NAObject *source, NAObject *target )
-{
-	gboolean stop = FALSE;
-
-	if( NA_OBJECT_CLASS( class )->copy ){
-		NA_OBJECT_CLASS( class )->copy( target, source );
-	}
-
-	return( stop );
+	na_object_copy( NA_OBJECT( target ), NA_OBJECT( source ), TRUE );
 }
 
 static gboolean
@@ -473,6 +467,48 @@ push_modified_status_up( const NAObject *object, gboolean is_modified )
 		na_iduplicable_set_modified( NA_IDUPLICABLE( parent ), is_modified );
 		push_modified_status_up( parent, is_modified );
 	}
+}
+
+/**
+ * na_object_object_copy:
+ * @target: the target #NAObject-derived object.
+ * @source: the source #NAObject-derived object.
+ * @recursive: whether the copy should be recursive.
+ *
+ * Copies @source to @target.
+ */
+void
+na_object_object_copy( NAObject *target, const NAObject *source, gboolean recursive )
+{
+	CopyIter *data;
+
+	g_return_if_fail( NA_IS_OBJECT( target ));
+	g_return_if_fail( NA_IS_OBJECT( source ));
+
+	if( !NA_OBJECT( source )->private->dispose_has_run &&
+		!NA_OBJECT( target )->private->dispose_has_run ){
+
+		data = g_new0( CopyIter, 1 );
+		data->target = target;
+		data->recursive = recursive;
+
+		iter_on_class_hierarchy( NA_OBJECT( source ),
+					( HierarchyIterFunc ) object_copy_iter, ( void * ) data );
+
+		g_free( data );
+	}
+}
+
+static gboolean
+object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data )
+{
+	gboolean stop = FALSE;
+
+	if( NA_OBJECT_CLASS( class )->copy ){
+		NA_OBJECT_CLASS( class )->copy( data->target, source, data->recursive );
+	}
+
+	return( stop );
 }
 
 /**

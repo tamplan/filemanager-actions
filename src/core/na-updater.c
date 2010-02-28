@@ -247,13 +247,13 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 
 	if( !updater->private->dispose_has_run ){
 
-		g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
-		tree = g_list_remove( tree, ( gconstpointer ) item );
-		g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
-
-		if( G_IS_OBJECT( item )){
-			g_object_unref( item );
+		if( !na_object_get_parent( item )){
+			g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+			tree = g_list_remove( tree, ( gconstpointer ) item );
+			g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, tree, NULL );
 		}
+
+		g_object_unref( item );
 	}
 }
 

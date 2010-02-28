@@ -89,10 +89,9 @@ typedef struct {
 	 * @instance: the target #NAIFactoryObject instance.
 	 * @source: the source #NAIFactoryObject instance.
 	 *
-	 * This function is triggered when copying one instance to another,
-	 * after all copyable elementary dats have been copied themselves.
-	 * The target @instance may take advantage of this call to do some
-	 * particular copy tasks.
+	 * This function is triggered after having copied @source to
+	 * @instance target. This later may take advantage of this call
+	 * to do some particular copy tasks.
 	 */
 	void          ( *copy )       ( NAIFactoryObject *instance, const NAIFactoryObject *source );
 

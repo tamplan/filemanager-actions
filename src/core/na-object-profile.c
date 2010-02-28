@@ -68,12 +68,12 @@ static NAObjectIdClass *st_parent_class = NULL;
 static GType        register_type( void );
 static void         class_init( NAObjectProfileClass *klass );
 static void         instance_init( GTypeInstance *instance, gpointer klass );
-static void         instance_constructed( GObject *object );
 static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
+static void         object_copy( NAObject *target, const NAObject *source, gboolean recursive );
 static gboolean     object_is_valid( const NAObject *object );
 
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
@@ -165,7 +165,6 @@ class_init( NAObjectProfileClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
-	object_class->constructed = instance_constructed;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
 	object_class->dispose = instance_dispose;
@@ -173,7 +172,7 @@ class_init( NAObjectProfileClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = NULL;
-	naobject_class->copy = NULL;
+	naobject_class->copy = object_copy;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = object_is_valid;
 
@@ -201,27 +200,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NAObjectProfilePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-}
-
-static void
-instance_constructed( GObject *object )
-{
-	static const gchar *thisfn = "na_object_profile_instance_constructed";
-	NAObjectProfile *self;
-
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
-	self = NA_OBJECT_PROFILE( object );
-
-	if( !self->private->dispose_has_run ){
-
-		na_factory_object_set_defaults( NA_IFACTORY_OBJECT( object ));
-
-		/* chain up to the parent class */
-		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
-			G_OBJECT_CLASS( st_parent_class )->constructed( object );
-		}
-	}
 }
 
 static void
@@ -291,6 +269,19 @@ instance_finalize( GObject *object )
 	}
 }
 
+static void
+object_copy( NAObject *target, const NAObject *source, gboolean recursive )
+{
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( target ));
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( source ));
+
+	if( !NA_OBJECT_PROFILE( target )->private->dispose_has_run &&
+		!NA_OBJECT_PROFILE( source )->private->dispose_has_run ){
+
+		na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
+	}
+}
+
 static gboolean
 object_is_valid( const NAObject *object )
 {
@@ -345,7 +336,7 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-
+	na_factory_object_set_defaults( instance );
 }
 
 static guint
@@ -552,9 +543,10 @@ NAObjectProfile *
 na_object_profile_new_with_defaults( void )
 {
 	NAObjectProfile *profile = na_object_profile_new();
-
 	na_object_set_id( profile, "profile-zero" );
+	/* i18n: label for the default profile */
 	na_object_set_label( profile, _( "Default profile" ));
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
 
 	return( profile );
 }

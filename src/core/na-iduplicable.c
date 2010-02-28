@@ -234,13 +234,17 @@ na_iduplicable_dump( const NAIDuplicable *object )
  * na_iduplicable_duplicate:
  * @object: the #NAIDuplicable object to be duplicated.
  *
- * Exactly duplicates a #NAIDuplicable-implemented object.
- * Properties %NA_IDUPLICABLE_PROP_ORIGIN, %PROP_IDUPLICABLE_ISMODIFIED
- * and %PROP_IDUPLICABLE_ISVALID are initialized to their default
- * values.
+ * Exactly duplicates a #NAIDuplicable-implemented object, including
+ * modification and validity status which are copied from @object to
+ * the duplicated one.
  *
- * As %PROP_IDUPLICABLE_ISVALID property is set to %TRUE without any
- * further check, this suppose that only valid objects are duplicated.
+ * Though this function is not recursive by itself, it is widely supposed
+ * everywhere in the program that recursivity is provided but #NAObject
+ * implementation.
+ *
+ * +------------------------------------------------------------------------------+
+ * | na_object_duplicate (aka na_iduplicable_duplicate) is definitively recursive |
+ * +------------------------------------------------------------------------------+
  *
  * Returns: a new #NAIDuplicable.
  */
@@ -316,6 +320,8 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 
 		if( str->origin ){
 			str->modified = !v_are_equal( str->origin, object );
+		} else {
+			str->modified = TRUE;
 		}
 
 		str->valid = v_is_valid( object );

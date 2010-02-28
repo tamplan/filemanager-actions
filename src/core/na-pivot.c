@@ -312,6 +312,7 @@ instance_dispose( GObject *object )
 		self->private->consumers = NULL;
 
 		/* release item tree */
+		g_debug( "%s: tree=%p, count=%u", thisfn, ( void * ) self->private->tree, g_list_length( self->private->tree ));
 		na_object_unref_items( self->private->tree );
 		self->private->tree = NULL;
 
