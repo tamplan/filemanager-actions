@@ -1,5 +1,9 @@
 2009-02-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c
+	(nadp_desktop_file_get_key_file_path):
+	No more invalidate the function.
+
 	* src/api/na-ifactory-object.h:
 	* src/core/na-object-item-factory.c:
 	* src/nact/nact-iactions-list-bis.c:

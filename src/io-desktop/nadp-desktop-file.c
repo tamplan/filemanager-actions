@@ -249,6 +249,30 @@ nadp_desktop_file_new_for_write( const gchar *path )
 	return( ndf );
 }
 
+/**
+ * nadp_desktop_file_get_key_file_path:
+ * @ndf: the #NadpDesktopFile instance.
+ *
+ * Returns: the full pathname of the key file, as a newly allocated
+ * string which should be g_free() by the caller.
+ */
+gchar *
+nadp_desktop_file_get_key_file_path( const NadpDesktopFile *ndf )
+{
+	gchar *path;
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+
+	path = NULL;
+
+	if( !ndf->private->dispose_has_run ){
+
+		path = g_strdup( ndf->private->path );
+	}
+
+	return( path );
+}
+
 /*
  * ndf_new:
  * @path: the full pathname of a .desktop file.
@@ -619,76 +643,6 @@ nadp_desktop_file_get_uint( const NadpDesktopFile *ndf, const gchar *group, cons
 }
 
 #if 0
-/**
- * nadp_desktop_file_get_key_file_path:
- * @ndf: the #NadpDesktopFile instance.
- *
- * Returns: the full pathname of the key file, as a newly allocated
- * string which should be g_free() by the caller.
- */
-gchar *
-nadp_desktop_file_get_key_file_path( const NadpDesktopFile *ndf )
-{
-	gchar *path;
-
-	path = NULL;
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), path );
-
-	if( !ndf->private->dispose_has_run ){
-		path = g_strdup( ndf->private->path );
-	}
-
-	return( path );
-}
-
-/**
- * nadp_desktop_file_get_file_type:
- * @ndf: the #NadpDesktopFile instance.
- *
- * Returns: the value for the Type entry.
- */
-gchar *
-nadp_desktop_file_get_file_type( const NadpDesktopFile *ndf )
-{
-	gchar *type;
-
-	type = NULL;
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), type );
-
-	if( !ndf->private->dispose_has_run ){
-		type = g_key_file_get_locale_string(
-				ndf->private->key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TYPE, NULL, NULL );
-
-		if( !type ){
-			type = g_strdup( "Action" );
-		}
-	}
-
-	return( type );
-}
-
-/**
- * nadp_desktop_file_get_id:
- * @ndf: the #NadpDesktopFile instance.
- *
- * Returns: the id of the file, as a newly allocated string which should
- * be g_free() by the caller.
- */
-gchar *
-nadp_desktop_file_get_id2( const NadpDesktopFile *ndf )
-{
-	gchar *id;
-
-	id = NULL;
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), id );
-
-	if( !ndf->private->dispose_has_run ){
-		id = g_strdup( ndf->private->id );
-	}
-
-	return( id );
-}
-
 /**
  * nadp_desktop_file_get_name:
  * @ndf: the #NadpDesktopFile instance.
